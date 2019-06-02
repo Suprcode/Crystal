@@ -39,7 +39,7 @@ namespace Client.MirScenes.Dialogs
             {
                 HoverIndex = 361,
                 Index = 360,
-                Location = new Point(300, 3),
+                Location = new Point(365, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,

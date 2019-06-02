@@ -64,7 +64,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 116,
                 Sound = SoundList.ButtonA,
-                Hint = "Allow/Disallow Mentor Requests",
+                Hint = GameLanguage.MentorRequests
             };
             AllowButton.Click += (o, e) =>
             {
@@ -94,7 +94,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 215,
                 Sound = SoundList.ButtonA,
-                Hint = "Add Mentor",
+                Hint = GameLanguage.AddMentor
             };
             AddButton.Click += (o, e) =>
             {
@@ -104,7 +104,7 @@ namespace Client.MirScenes.Dialogs
                     return;
                 }
 
-                string message = "Please enter the name of the person you would like to be your Mentor.";
+                string message = GameLanguage.MentorEnterName;
 
                 MirInputBox inputBox = new MirInputBox(message);
 
@@ -127,13 +127,13 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 218,
                 Sound = SoundList.ButtonA,
-                Hint = "Remove Mentor/Mentee",
+                Hint = GameLanguage.RemoveMentorMentee
             };
             RemoveButton.Click += (o, e) =>
             {
                 if (MentorName == "")
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("You don't currently have a Mentorship to cancel.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.NoMentorship, ChatType.System);
                     return;
                 }
 

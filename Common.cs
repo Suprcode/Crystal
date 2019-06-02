@@ -6521,8 +6521,62 @@ public class GameLanguage
                          Read = "Read",
                          Delete = "Delete",
                          BlockList = "Block List",
-                         EnterMailToName = "Please enter the name of the person you would like to mail.";
-                        
+                         EnterMailToName = "Please enter the name of the person you would like to mail.",
+                         AddFriend = "Add",
+                         RemoveFriend = "Remove",
+                         FriendMemo = "Memo",
+                         FriendMail = "Mail",
+                         FriendWhisper = "Whisper",
+                         FriendEnterAddName = "Please enter the name of the person you would like to Add.",
+                         FriendEnterBlockName = "Please enter the name of the person you would like to Block.",
+                         AddMentor = "Add Mentor",
+                         RemoveMentorMentee = "Remove Mentor/Mentee",
+                         MentorRequests = "Allow/Disallow Mentor Requests",
+                         MentorEnterName = "Please enter the name of the person you would like to be your Mentor.",
+                         RestedBuff = "Rested{0}Increases Exp Rate by {1}%{2}",
+
+                         ItemTypeWeapon = "Weapon",
+                         ItemTypeArmour = "Armour",
+                         ItemTypeHelmet = "Helmet",
+                         ItemTypeNecklace = "Necklace",
+                         ItemTypeBracelet = "Bracelet",
+                         ItemTypeRing = "Ring",
+                         ItemTypeAmulet = "Amulet",
+                         ItemTypeBelt = "Belt",
+                         ItemTypeBoots = "Boots",
+                         ItemTypeStone = "Stone",
+                         ItemTypeTorch = "Torch",
+                         ItemTypePotion = "Potion",
+                         ItemTypeOre = "Ore",
+                         ItemTypeMeat = "Meat",
+                         ItemTypeCraftingMaterial = "CraftingMaterial",
+                         ItemTypeScroll = "Scroll",
+                         ItemTypeGem = "Gem",
+                         ItemTypeMount = "Mount",
+                         ItemTypeBook = "Book",
+                         ItemTypeScript = "Script",
+                         ItemTypeReins = "Reins",
+                         ItemTypeBells = "Bells",
+                         ItemTypeSaddle = "Saddle",
+                         ItemTypeRibbon = "Ribbon",
+                         ItemTypeMask = "Mask",
+                         ItemTypeFood = "Food",
+                         ItemTypeHook = "Hook",
+                         ItemTypeFloat = "Float",
+                         ItemTypeBait = "Bait",
+                         ItemTypeFinder = "Finder",
+                         ItemTypeReel = "Reel",
+                         ItemTypeFish = "Fish",
+                         ItemTypeQuest = "Quest",
+                         ItemTypeAwakening = "Awakening",
+                         ItemTypePets = "Pets",
+                         ItemTypeTransform = "Transform",
+
+                         ItemGradeCommon = "Common",
+                         ItemGradeRare = "Rare",
+                         ItemGradeLegendary = "Legendary",
+                         ItemGradeMythical = "Mythical";
+
     //Server
     public static string Welcome = "Welcome to the Legend of {0} Server.",
                          OnlinePlayers = "Online Players: {0}",
@@ -6537,7 +6591,10 @@ public class GameLanguage
                          CannotResurrection = "You cannot use Resurrection Scrolls whilst alive",
                          CanNotDrop = "You cannot drop items on this map",
                          NewMail = "New mail has arrived.",
-                         CouldNotFindPlayer = "Could not find player {0}";
+                         CouldNotFindPlayer = "Could not find player {0}",
+                         BeenPoisoned = "You have been poisoned",
+                         AllowingMentorRequests = "You're now allowing mentor requests.",
+                         BlockingMentorRequests = "You're now blocking mentor requests.";
 
     //common
     public static string LowLevel = "You are not a high enough level.",
@@ -6551,7 +6608,8 @@ public class GameLanguage
 
                          NotFemale = "You are not Female.",
                          NotMale = "You are not Male.",
-                         NotInGuild = "You are not in a guild";
+                         NotInGuild = "You are not in a guild",
+                         NoMentorship = "You don't currently have a Mentorship to cancel.";
 
 
     public static void LoadClientLanguage(string languageIniPath)
@@ -6718,7 +6776,63 @@ public class GameLanguage
         GameLanguage.Read = reader.ReadString("Language", "Read", GameLanguage.Read);
         GameLanguage.Delete = reader.ReadString("Language", "Delete", GameLanguage.Delete);
         GameLanguage.BlockList = reader.ReadString("Language", "BlockList", GameLanguage.BlockList);
-        GameLanguage.EnterMailToName = reader.ReadString("Language", "EnterMailToName", GameLanguage.EnterMailToName);    
+        GameLanguage.EnterMailToName = reader.ReadString("Language", "EnterMailToName", GameLanguage.EnterMailToName);
+        GameLanguage.BeenPoisoned = reader.ReadString("Language", "BeenPoisoned", GameLanguage.BeenPoisoned);
+        GameLanguage.AddFriend = reader.ReadString("Language", "AddFriend", GameLanguage.AddFriend);
+        GameLanguage.RemoveFriend = reader.ReadString("Language", "RemoveFriend", GameLanguage.RemoveFriend);
+        GameLanguage.FriendMemo = reader.ReadString("Language", "FriendMemo", GameLanguage.FriendMemo);
+        GameLanguage.FriendMail = reader.ReadString("Language", "FriendMail", GameLanguage.FriendMail);
+        GameLanguage.FriendWhisper = reader.ReadString("Language", "FriendWhisper", GameLanguage.FriendWhisper);
+        GameLanguage.FriendEnterAddName = reader.ReadString("Language", "FriendEnterAddName", GameLanguage.FriendEnterAddName);
+        GameLanguage.FriendEnterBlockName = reader.ReadString("Language", "FriendEnterBlockName", GameLanguage.FriendEnterBlockName);
+        GameLanguage.AddMentor = reader.ReadString("Language", "AddMentor", GameLanguage.AddMentor);
+        GameLanguage.RemoveMentorMentee = reader.ReadString("Language", "RemoveMentorMentee", GameLanguage.RemoveMentorMentee);
+        GameLanguage.MentorRequests = reader.ReadString("Language", "MentorRequests", GameLanguage.MentorRequests);
+        GameLanguage.MentorEnterName = reader.ReadString("Language", "MentorEnterName", GameLanguage.MentorEnterName);
+        GameLanguage.NoMentorship = reader.ReadString("Language", "NoMentorship", GameLanguage.NoMentorship);
+        GameLanguage.RestedBuff = reader.ReadString("Language", "RestedBuff", GameLanguage.RestedBuff);
+
+        GameLanguage.ItemTypeWeapon = reader.ReadString("Language", "ItemTypeWeapon", GameLanguage.ItemTypeWeapon);
+        GameLanguage.ItemTypeArmour = reader.ReadString("Language", "ItemTypeArmour", GameLanguage.ItemTypeArmour);
+        GameLanguage.ItemTypeHelmet = reader.ReadString("Language", "ItemTypeHelmet", GameLanguage.ItemTypeHelmet);
+        GameLanguage.ItemTypeNecklace = reader.ReadString("Language", "ItemTypeNecklace", GameLanguage.ItemTypeNecklace);
+        GameLanguage.ItemTypeBracelet = reader.ReadString("Language", "ItemTypeBracelet", GameLanguage.ItemTypeBracelet);
+        GameLanguage.ItemTypeRing = reader.ReadString("Language", "ItemTypeRing", GameLanguage.ItemTypeRing);
+        GameLanguage.ItemTypeAmulet = reader.ReadString("Language", "ItemTypeAmulet", GameLanguage.ItemTypeAmulet);
+        GameLanguage.ItemTypeBelt = reader.ReadString("Language", "ItemTypeBelt", GameLanguage.ItemTypeBelt);
+        GameLanguage.ItemTypeBoots = reader.ReadString("Language", "ItemTypeBoots", GameLanguage.ItemTypeBoots);
+        GameLanguage.ItemTypeStone = reader.ReadString("Language", "ItemTypeStone", GameLanguage.ItemTypeStone);
+        GameLanguage.ItemTypeTorch = reader.ReadString("Language", "ItemTypeTorch", GameLanguage.ItemTypeTorch);
+        GameLanguage.ItemTypePotion = reader.ReadString("Language", "ItemTypePotion", GameLanguage.ItemTypePotion);
+        GameLanguage.ItemTypeOre = reader.ReadString("Language", "ItemTypeOre", GameLanguage.ItemTypeOre);
+        GameLanguage.ItemTypeMeat = reader.ReadString("Language", "ItemTypeMeat", GameLanguage.ItemTypeMeat);
+        GameLanguage.ItemTypeCraftingMaterial = reader.ReadString("Language", "ItemTypeCraftingMaterial", GameLanguage.ItemTypeCraftingMaterial);
+        GameLanguage.ItemTypeScroll = reader.ReadString("Language", "ItemTypeScroll", GameLanguage.ItemTypeScroll);
+        GameLanguage.ItemTypeGem = reader.ReadString("Language", "ItemTypeGem", GameLanguage.ItemTypeGem);
+        GameLanguage.ItemTypeMount = reader.ReadString("Language", "ItemTypeMount", GameLanguage.ItemTypeMount);
+        GameLanguage.ItemTypeBook = reader.ReadString("Language", "ItemTypeBook", GameLanguage.ItemTypeBook);
+        GameLanguage.ItemTypeScript = reader.ReadString("Language", "ItemTypeScript", GameLanguage.ItemTypeScript);
+        GameLanguage.ItemTypeReins = reader.ReadString("Language", "ItemTypeReins", GameLanguage.ItemTypeReins);
+        GameLanguage.ItemTypeBells = reader.ReadString("Language", "ItemTypeBells", GameLanguage.ItemTypeBells);
+        GameLanguage.ItemTypeSaddle = reader.ReadString("Language", "ItemTypeSaddle", GameLanguage.ItemTypeSaddle);
+        GameLanguage.ItemTypeRibbon = reader.ReadString("Language", "ItemTypeRibbon", GameLanguage.ItemTypeRibbon);
+        GameLanguage.ItemTypeMask = reader.ReadString("Language", "ItemTypeMask", GameLanguage.ItemTypeMask);
+        GameLanguage.ItemTypeFood = reader.ReadString("Language", "ItemTypeFood", GameLanguage.ItemTypeFood);
+        GameLanguage.ItemTypeHook = reader.ReadString("Language", "ItemTypeHook", GameLanguage.ItemTypeHook);
+        GameLanguage.ItemTypeFloat = reader.ReadString("Language", "ItemTypeFloat", GameLanguage.ItemTypeFloat);
+        GameLanguage.ItemTypeBait = reader.ReadString("Language", "ItemTypeBait", GameLanguage.ItemTypeBait);
+        GameLanguage.ItemTypeFinder = reader.ReadString("Language", "ItemTypeFinder", GameLanguage.ItemTypeFinder);
+        GameLanguage.ItemTypeReel = reader.ReadString("Language", "ItemTypeReel", GameLanguage.ItemTypeReel);
+        GameLanguage.ItemTypeFish = reader.ReadString("Language", "ItemTypeFish", GameLanguage.ItemTypeFish);
+        GameLanguage.ItemTypeQuest = reader.ReadString("Language", "ItemTypeQuest", GameLanguage.ItemTypeQuest);
+        GameLanguage.ItemTypeAwakening = reader.ReadString("Language", "ItemTypeAwakening", GameLanguage.ItemTypeAwakening);
+        GameLanguage.ItemTypePets = reader.ReadString("Language", "ItemTypePets", GameLanguage.ItemTypePets);
+        GameLanguage.ItemTypeTransform = reader.ReadString("Language", "ItemTypeTransform", GameLanguage.ItemTypeTransform);
+
+        GameLanguage.ItemGradeCommon = reader.ReadString("Language", "ItemGradeCommon", GameLanguage.ItemGradeCommon);
+        GameLanguage.ItemGradeRare = reader.ReadString("Language", "ItemGradeRare", GameLanguage.ItemGradeRare);
+        GameLanguage.ItemGradeLegendary = reader.ReadString("Language", "ItemGradeLegendary", GameLanguage.ItemGradeLegendary);
+        GameLanguage.ItemGradeMythical = reader.ReadString("Language", "ItemGradeMythical", GameLanguage.ItemGradeMythical);
     }
 
 
@@ -6876,6 +6990,62 @@ public class GameLanguage
         reader.Write("Language", "Delete", GameLanguage.Delete);
         reader.Write("Language", "BlockList", GameLanguage.BlockList);
         reader.Write("Language", "EnterMailToName", GameLanguage.EnterMailToName);
+        reader.Write("Language", "BeenPoisoned", GameLanguage.BeenPoisoned);
+        reader.Write("Language", "AddFriend", GameLanguage.AddFriend);
+        reader.Write("Language", "RemoveFriend", GameLanguage.RemoveFriend);
+        reader.Write("Language", "FriendMemo", GameLanguage.FriendMemo);
+        reader.Write("Language", "FriendMail", GameLanguage.FriendMail);
+        reader.Write("Language", "FriendWhisper", GameLanguage.FriendWhisper);
+        reader.Write("Language", "FriendEnterAddName", GameLanguage.FriendEnterAddName);
+        reader.Write("Language", "FriendEnterBlockName", GameLanguage.FriendEnterBlockName);
+        reader.Write("Language", "AddMentor", GameLanguage.AddMentor);
+        reader.Write("Language", "RemoveMentorMentee", GameLanguage.RemoveMentorMentee);
+        reader.Write("Language", "MentorRequests", GameLanguage.MentorRequests);
+        reader.Write("Language", "MentorEnterName", GameLanguage.MentorEnterName);
+        reader.Write("Language", "NoMentorship", GameLanguage.NoMentorship);
+        reader.Write("Language", "RestedBuff", GameLanguage.RestedBuff);
+
+        reader.Write("Language", "ItemTypeWeapon", GameLanguage.ItemTypeWeapon);
+        reader.Write("Language", "ItemTypeArmour", GameLanguage.ItemTypeArmour);
+        reader.Write("Language", "ItemTypeHelmet", GameLanguage.ItemTypeHelmet);
+        reader.Write("Language", "ItemTypeNecklace", GameLanguage.ItemTypeNecklace);
+        reader.Write("Language", "ItemTypeBracelet", GameLanguage.ItemTypeBracelet);
+        reader.Write("Language", "ItemTypeRing", GameLanguage.ItemTypeRing);
+        reader.Write("Language", "ItemTypeAmulet", GameLanguage.ItemTypeAmulet);
+        reader.Write("Language", "ItemTypeBelt", GameLanguage.ItemTypeBelt);
+        reader.Write("Language", "ItemTypeBoots", GameLanguage.ItemTypeBoots);
+        reader.Write("Language", "ItemTypeStone", GameLanguage.ItemTypeStone);
+        reader.Write("Language", "ItemTypeTorch", GameLanguage.ItemTypeTorch);
+        reader.Write("Language", "ItemTypePotion", GameLanguage.ItemTypePotion);
+        reader.Write("Language", "ItemTypeOre", GameLanguage.ItemTypeOre);
+        reader.Write("Language", "ItemTypeMeat", GameLanguage.ItemTypeMeat);
+        reader.Write("Language", "ItemTypeCraftingMaterial", GameLanguage.ItemTypeCraftingMaterial);
+        reader.Write("Language", "ItemTypeScroll", GameLanguage.ItemTypeScroll);
+        reader.Write("Language", "ItemTypeGem", GameLanguage.ItemTypeGem);
+        reader.Write("Language", "ItemTypeMount", GameLanguage.ItemTypeMount);
+        reader.Write("Language", "ItemTypeBook", GameLanguage.ItemTypeBook);
+        reader.Write("Language", "ItemTypeScript", GameLanguage.ItemTypeScript);
+        reader.Write("Language", "ItemTypeReins", GameLanguage.ItemTypeReins);
+        reader.Write("Language", "ItemTypeBells", GameLanguage.ItemTypeBells);
+        reader.Write("Language", "ItemTypeSaddle", GameLanguage.ItemTypeSaddle);
+        reader.Write("Language", "ItemTypeRibbon", GameLanguage.ItemTypeRibbon);
+        reader.Write("Language", "ItemTypeMask", GameLanguage.ItemTypeMask);
+        reader.Write("Language", "ItemTypeFood", GameLanguage.ItemTypeFood);
+        reader.Write("Language", "ItemTypeHook", GameLanguage.ItemTypeHook);
+        reader.Write("Language", "ItemTypeFloat", GameLanguage.ItemTypeFloat);
+        reader.Write("Language", "ItemTypeBait", GameLanguage.ItemTypeBait);
+        reader.Write("Language", "ItemTypeFinder", GameLanguage.ItemTypeFinder);
+        reader.Write("Language", "ItemTypeReel", GameLanguage.ItemTypeReel);
+        reader.Write("Language", "ItemTypeFish", GameLanguage.ItemTypeFish);
+        reader.Write("Language", "ItemTypeQuest", GameLanguage.ItemTypeQuest);
+        reader.Write("Language", "ItemTypeAwakening", GameLanguage.ItemTypeAwakening);
+        reader.Write("Language", "ItemTypePets", GameLanguage.ItemTypePets);
+        reader.Write("Language", "ItemTypeTransform", GameLanguage.ItemTypeTransform);
+
+        reader.Write("Language", "ItemGradeCommon", GameLanguage.ItemGradeCommon);
+        reader.Write("Language", "ItemGradeRare", GameLanguage.ItemGradeRare);
+        reader.Write("Language", "ItemGradeLegendary", GameLanguage.ItemGradeLegendary);
+        reader.Write("Language", "ItemGradeMythical", GameLanguage.ItemGradeMythical);
     }
 
 
@@ -6916,6 +7086,9 @@ public class GameLanguage
         GameLanguage.NotInGuild = reader.ReadString("Language", "NotInGuild", GameLanguage.NotInGuild);
         GameLanguage.NewMail = reader.ReadString("Language", "NewMail", GameLanguage.NewMail);
         GameLanguage.CouldNotFindPlayer = reader.ReadString("Language", "CouldNotFindPlayer", GameLanguage.CouldNotFindPlayer);
+        GameLanguage.NoMentorship = reader.ReadString("Language", "NoMentorship", GameLanguage.NoMentorship);
+        GameLanguage.AllowingMentorRequests = reader.ReadString("Language", "AllowingMentorRequests", GameLanguage.AllowingMentorRequests);
+        GameLanguage.BlockingMentorRequests = reader.ReadString("Language", "BlockingMentorRequests", GameLanguage.BlockingMentorRequests);
     }
 
     public static void SaveServerLanguage(string languageIniPath)
@@ -6951,5 +7124,8 @@ public class GameLanguage
         reader.Write("Language", "NotInGuild", GameLanguage.NotInGuild);
         reader.Write("Language", "NewMail", GameLanguage.NewMail);
         reader.Write("Language", "CouldNotFindPlayer", GameLanguage.CouldNotFindPlayer);
+        reader.Write("Language", "NoMentorship", GameLanguage.NoMentorship);
+        reader.Write("Language", "AllowingMentorRequests", GameLanguage.AllowingMentorRequests);
+        reader.Write("Language", "BlockingMentorRequests", GameLanguage.BlockingMentorRequests);
     }
 }
