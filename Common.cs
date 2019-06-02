@@ -6528,8 +6528,12 @@ public class GameLanguage
                          FriendMail = "Mail",
                          FriendWhisper = "Whisper",
                          FriendEnterAddName = "Please enter the name of the person you would like to Add.",
-                         FriendEnterBlockName = "Please enter the name of the person you would like to Block.";
-
+                         FriendEnterBlockName = "Please enter the name of the person you would like to Block.",
+                         AddMentor = "Add Mentor",
+                         RemoveMentorMentee = "Remove Mentor/Mentee",
+                         MentorRequests = "Allow/Disallow Mentor Requests",
+                         MentorEnterName = "Please enter the name of the person you would like to be your Mentor.";
+                      
     //Server
     public static string Welcome = "Welcome to the Legend of {0} Server.",
                          OnlinePlayers = "Online Players: {0}",
@@ -6545,7 +6549,9 @@ public class GameLanguage
                          CanNotDrop = "You cannot drop items on this map",
                          NewMail = "New mail has arrived.",
                          CouldNotFindPlayer = "Could not find player {0}",
-                         BeenPoisoned = "You have been poisoned";
+                         BeenPoisoned = "You have been poisoned",
+                         AllowingMentorRequests = "You're now allowing mentor requests.",
+                         BlockingMentorRequests = "You're now blocking mentor requests.";
 
     //common
     public static string LowLevel = "You are not a high enough level.",
@@ -6559,7 +6565,8 @@ public class GameLanguage
 
                          NotFemale = "You are not Female.",
                          NotMale = "You are not Male.",
-                         NotInGuild = "You are not in a guild";
+                         NotInGuild = "You are not in a guild",
+                         NoMentorship = "You don't currently have a Mentorship to cancel.";
 
 
     public static void LoadClientLanguage(string languageIniPath)
@@ -6735,6 +6742,11 @@ public class GameLanguage
         GameLanguage.FriendWhisper = reader.ReadString("Language", "FriendWhisper", GameLanguage.FriendWhisper);
         GameLanguage.FriendEnterAddName = reader.ReadString("Language", "FriendEnterAddName", GameLanguage.FriendEnterAddName);
         GameLanguage.FriendEnterBlockName = reader.ReadString("Language", "FriendEnterBlockName", GameLanguage.FriendEnterBlockName);
+        GameLanguage.AddMentor = reader.ReadString("Language", "AddMentor", GameLanguage.AddMentor);
+        GameLanguage.RemoveMentorMentee = reader.ReadString("Language", "RemoveMentorMentee", GameLanguage.RemoveMentorMentee);
+        GameLanguage.MentorRequests = reader.ReadString("Language", "MentorRequests", GameLanguage.MentorRequests);
+        GameLanguage.MentorEnterName = reader.ReadString("Language", "MentorEnterName", GameLanguage.MentorEnterName);
+        GameLanguage.NoMentorship = reader.ReadString("Language", "NoMentorship", GameLanguage.NoMentorship);
     }
 
 
@@ -6900,6 +6912,11 @@ public class GameLanguage
         reader.Write("Language", "FriendWhisper", GameLanguage.FriendWhisper);
         reader.Write("Language", "FriendEnterAddName", GameLanguage.FriendEnterAddName);
         reader.Write("Language", "FriendEnterBlockName", GameLanguage.FriendEnterBlockName);
+        reader.Write("Language", "AddMentor", GameLanguage.AddMentor);
+        reader.Write("Language", "RemoveMentorMentee", GameLanguage.RemoveMentorMentee);
+        reader.Write("Language", "MentorRequests", GameLanguage.MentorRequests);
+        reader.Write("Language", "MentorEnterName", GameLanguage.MentorEnterName);
+        reader.Write("Language", "NoMentorship", GameLanguage.NoMentorship);
     }
 
 
@@ -6940,6 +6957,9 @@ public class GameLanguage
         GameLanguage.NotInGuild = reader.ReadString("Language", "NotInGuild", GameLanguage.NotInGuild);
         GameLanguage.NewMail = reader.ReadString("Language", "NewMail", GameLanguage.NewMail);
         GameLanguage.CouldNotFindPlayer = reader.ReadString("Language", "CouldNotFindPlayer", GameLanguage.CouldNotFindPlayer);
+        GameLanguage.NoMentorship = reader.ReadString("Language", "NoMentorship", GameLanguage.NoMentorship);
+        GameLanguage.AllowingMentorRequests = reader.ReadString("Language", "AllowingMentorRequests", GameLanguage.AllowingMentorRequests);
+        GameLanguage.BlockingMentorRequests = reader.ReadString("Language", "BlockingMentorRequests", GameLanguage.BlockingMentorRequests);
     }
 
     public static void SaveServerLanguage(string languageIniPath)
@@ -6975,5 +6995,8 @@ public class GameLanguage
         reader.Write("Language", "NotInGuild", GameLanguage.NotInGuild);
         reader.Write("Language", "NewMail", GameLanguage.NewMail);
         reader.Write("Language", "CouldNotFindPlayer", GameLanguage.CouldNotFindPlayer);
+        reader.Write("Language", "NoMentorship", GameLanguage.NoMentorship);
+        reader.Write("Language", "AllowingMentorRequests", GameLanguage.AllowingMentorRequests);
+        reader.Write("Language", "BlockingMentorRequests", GameLanguage.BlockingMentorRequests);
     }
 }

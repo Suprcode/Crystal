@@ -19128,7 +19128,7 @@ namespace Server.MirObjects
         {
             if (Info.Mentor == 0)
             {
-                ReceiveChat("You don't currently have a Mentorship to cancel.", ChatType.System);
+                ReceiveChat(GameLanguage.NoMentorship, ChatType.System);
                 return;
             }
             CharacterInfo Mentor = Envir.GetCharacterInfo(Info.Mentor);
