@@ -266,11 +266,11 @@ namespace Client.MirScenes
                     _password.NewPassword1TextBox.SetFocus();
                     break;
                 case 4:
-                    MirMessageBox.Show("The AccountID does not exist.");
+                    MirMessageBox.Show(GameLanguage.NoAccountID);
                     _password.AccountIDTextBox.SetFocus();
                     break;
                 case 5:
-                    MirMessageBox.Show("Incorrect Password and AccountID combination.");
+                    MirMessageBox.Show(GameLanguage.IncorrectPasswordAccountID);
                     _password.CurrentPasswordTextBox.SetFocus();
                     _password.CurrentPasswordTextBox.Text = string.Empty;
                     break;
@@ -306,11 +306,11 @@ namespace Client.MirScenes
                     _login.PasswordTextBox.SetFocus();
                     break;
                 case 3:
-                    MirMessageBox.Show("The AccountID does not exist.");
+                    MirMessageBox.Show(GameLanguage.NoAccountID);
                     _login.PasswordTextBox.SetFocus();
                     break;
                 case 4:
-                    MirMessageBox.Show("Incorrect Password and AccountID combination.");
+                    MirMessageBox.Show(GameLanguage.IncorrectPasswordAccountID);
                     _login.PasswordTextBox.Text = string.Empty;
                     _login.PasswordTextBox.SetFocus();
                     break;

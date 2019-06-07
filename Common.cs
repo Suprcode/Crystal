@@ -6575,7 +6575,14 @@ public class GameLanguage
                          ItemGradeCommon = "Common",
                          ItemGradeRare = "Rare",
                          ItemGradeLegendary = "Legendary",
-                         ItemGradeMythical = "Mythical";
+                         ItemGradeMythical = "Mythical",
+                         NoAccountID = "The AccountID does not exist.",
+                         IncorrectPasswordAccountID = "Incorrect Password and AccountID combination.",
+                         GroupSwitch = "Allow/Disallow Group Requests",
+                         GroupAdd = "Add",
+                         GroupRemove = "Remove",
+                         GroupAddEnterName = "Please enter the name of the person you wish to add.",
+                         GroupRemoveEnterName = "Please enter the name of the person you wish to remove.";
 
     //Server
     public static string Welcome = "Welcome to the Legend of {0} Server.",
@@ -6833,6 +6840,14 @@ public class GameLanguage
         GameLanguage.ItemGradeRare = reader.ReadString("Language", "ItemGradeRare", GameLanguage.ItemGradeRare);
         GameLanguage.ItemGradeLegendary = reader.ReadString("Language", "ItemGradeLegendary", GameLanguage.ItemGradeLegendary);
         GameLanguage.ItemGradeMythical = reader.ReadString("Language", "ItemGradeMythical", GameLanguage.ItemGradeMythical);
+
+        GameLanguage.NoAccountID = reader.ReadString("Language", "NoAccountID", GameLanguage.NoAccountID);
+        GameLanguage.IncorrectPasswordAccountID = reader.ReadString("Language", "IncorrectPasswordAccountID", GameLanguage.IncorrectPasswordAccountID);
+        GameLanguage.GroupSwitch = reader.ReadString("Language", "GroupSwitch", GameLanguage.GroupSwitch);
+        GameLanguage.GroupAdd = reader.ReadString("Language", "GroupAdd", GameLanguage.GroupAdd);
+        GameLanguage.GroupRemove = reader.ReadString("Language", "GroupRemove", GameLanguage.GroupRemove);
+        GameLanguage.GroupAddEnterName = reader.ReadString("Language", "GroupAddEnterName", GameLanguage.GroupAddEnterName);
+        GameLanguage.GroupRemoveEnterName = reader.ReadString("Language", "GroupRemoveEnterName", GameLanguage.GroupRemoveEnterName);
     }
 
 
@@ -7046,6 +7061,14 @@ public class GameLanguage
         reader.Write("Language", "ItemGradeRare", GameLanguage.ItemGradeRare);
         reader.Write("Language", "ItemGradeLegendary", GameLanguage.ItemGradeLegendary);
         reader.Write("Language", "ItemGradeMythical", GameLanguage.ItemGradeMythical);
+
+        reader.Write("Language", "NoAccountID", GameLanguage.NoAccountID);
+        reader.Write("Language", "IncorrectPasswordAccountID", GameLanguage.IncorrectPasswordAccountID);
+        reader.Write("Language", "GroupSwitch", GameLanguage.GroupSwitch);
+        reader.Write("Language", "GroupAdd", GameLanguage.GroupAdd);
+        reader.Write("Language", "GroupRemove", GameLanguage.GroupRemove);
+        reader.Write("Language", "GroupAddEnterName", GameLanguage.GroupAddEnterName);
+        reader.Write("Language", "GroupRemoveEnterName", GameLanguage.GroupRemoveEnterName);
     }
 
 
