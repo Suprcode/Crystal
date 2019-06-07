@@ -1652,6 +1652,7 @@ namespace Server.MirObjects
         DelGuildNameList,
         ClearGuildNameList,
         OpenBrowser,
+        GetRandomText,
     }
     public enum CheckType
     {
