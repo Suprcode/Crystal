@@ -15875,6 +15875,11 @@ namespace Server.MirObjects
             }
             else
             {
+                if (MyGuildRank != MyGuild.Ranks[0])
+                {
+                    ReceiveChat("You do not have permission to withdraw gold from the guild!", ChatType.System);
+                    return;
+                }
                 if (MyGuild.Gold < Amount)
                 {
                     ReceiveChat("Insufficient gold.", ChatType.System);
