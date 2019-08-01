@@ -22,7 +22,8 @@ namespace Server.MirNetwork
 
         private TcpClient _client;
         private ConcurrentQueue<Packet> _receiveList;
-        private Queue<Packet> _sendList, _retryList;
+        private ConcurrentQueue<Packet> _sendList; 
+        private Queue<Packet> _retryList;
 
         private bool _disconnecting;
         public bool Connected;
@@ -45,6 +46,7 @@ namespace Server.MirNetwork
         public PlayerObject Player;
         public List<ItemInfo> SentItemInfo = new List<ItemInfo>();
         public List<QuestInfo> SentQuestInfo = new List<QuestInfo>();
+        public List<RecipeInfo> SentRecipeInfo = new List<RecipeInfo>();
         public bool StorageSent;
 
 
@@ -79,7 +81,8 @@ namespace Server.MirNetwork
 
 
             _receiveList = new ConcurrentQueue<Packet>();
-            _sendList = new Queue<Packet>(new[] { new S.Connected() });
+            _sendList = new ConcurrentQueue<Packet>();
+            _sendList.Enqueue(new S.Connected());
             _retryList = new Queue<Packet>();
 
             Connected = true;
@@ -181,6 +184,9 @@ namespace Server.MirNetwork
                 if (!_receiveList.TryDequeue(out p)) continue;
                 TimeOutTime = SMain.Envir.Time + Settings.TimeOut;
                 ProcessPacket(p);
+
+                if (_receiveList == null)
+                    return;
             }
 
             while (_retryList.Count > 0)
@@ -195,9 +201,10 @@ namespace Server.MirNetwork
             if (_sendList == null || _sendList.Count <= 0) return;
 
             List<byte> data = new List<byte>();
-            while (_sendList.Count > 0)
+            while (!_sendList.IsEmpty)
             {
-                Packet p = _sendList.Dequeue();
+                Packet p;
+                if (!_sendList.TryDequeue(out p) || p == null) continue;
                 data.AddRange(p.GetPacketBytes());
             }
 
@@ -340,6 +347,9 @@ namespace Server.MirNetwork
                     break;
                 case (short)ClientPacketIds.BuyItem:
                     BuyItem((C.BuyItem)p);
+                    break;
+                case (short)ClientPacketIds.CraftItem:
+                    CraftItem((C.CraftItem)p);
                     break;
                 case (short)ClientPacketIds.SellItem:
                     SellItem((C.SellItem)p);
@@ -577,6 +587,36 @@ namespace Server.MirNetwork
                     break;
                 case (short)ClientPacketIds.Opendoor:
                     Opendoor((C.Opendoor)p);
+                    break;
+                case (short)ClientPacketIds.GetRentedItems:
+                    GetRentedItems();
+                    break;
+                case (short)ClientPacketIds.ItemRentalRequest:
+                    ItemRentalRequest();
+                    break;
+                case (short)ClientPacketIds.ItemRentalFee:
+                    ItemRentalFee((C.ItemRentalFee)p);
+                    break;
+                case (short)ClientPacketIds.ItemRentalPeriod:
+                    ItemRentalPeriod((C.ItemRentalPeriod)p);
+                    break;
+                case (short)ClientPacketIds.DepositRentalItem:
+                    DepositRentalItem((C.DepositRentalItem)p);
+                    break;
+                case (short)ClientPacketIds.RetrieveRentalItem:
+                    RetrieveRentalItem((C.RetrieveRentalItem)p);
+                    break;
+                case (short)ClientPacketIds.CancelItemRental:
+                    CancelItemRental();
+                    break;
+                case (short)ClientPacketIds.ItemRentalLockFee:
+                    ItemRentalLockFee();
+                    break;
+                case (short)ClientPacketIds.ItemRentalLockItem:
+                    ItemRentalLockItem();
+                    break;
+                case (short)ClientPacketIds.ConfirmItemRental:
+                    ConfirmItemRental();
                     break;
                 default:
                     SMain.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
@@ -1055,7 +1095,7 @@ namespace Server.MirNetwork
                 return;
             }
 
-            if (p.ObjectID == Player.DefaultNPC.ObjectID)
+            if (p.ObjectID == Player.DefaultNPC.ObjectID && Player.NPCID == Player.DefaultNPC.ObjectID)
             {
                 Player.CallDefaultNPC(p.ObjectID, p.Key);
                 return;
@@ -1075,7 +1115,13 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.BuyItem(p.ItemIndex, p.Count);
+            Player.BuyItem(p.ItemIndex, p.Count, p.Type);
+        }
+        private void CraftItem(C.CraftItem p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.CraftItem(p.UniqueID, p.Count, p.Slots);
         }
         private void SellItem(C.SellItem p)
         {
@@ -1328,9 +1374,9 @@ namespace Server.MirNetwork
 
                 Player.AllowMentor = !Player.AllowMentor;
                 if (Player.AllowMentor)
-                    Player.ReceiveChat("You're now allowing mentor requests.", ChatType.Hint);
+                    Player.ReceiveChat(GameLanguage.AllowingMentorRequests, ChatType.Hint);
                 else
-                    Player.ReceiveChat("You're now blocking mentor requests.", ChatType.Hint);
+                    Player.ReceiveChat(GameLanguage.BlockingMentorRequests, ChatType.Hint);
         }
 
         private void CancelMentor(C.CancelMentor p)
@@ -1567,9 +1613,10 @@ namespace Server.MirNetwork
                 //Update the creature info
                 for (int i = 0; i < Player.Info.IntelligentCreatures.Count; i++)
                 {
-                    if (Player.Info.IntelligentCreatures[i].PetType == petUpdate.PetType)
+                    if (Player.SummonedCreatureType != petUpdate.PetType && Player.Info.IntelligentCreatures[i].PetType == petUpdate.PetType)
                     {
-                        Player.Info.IntelligentCreatures[i].CustomName = petUpdate.CustomName;
+                        if (petUpdate.CustomName.Length <= 12)
+                            Player.Info.IntelligentCreatures[i].CustomName = petUpdate.CustomName;
                         Player.Info.IntelligentCreatures[i].SlotIndex = petUpdate.SlotIndex;
                         Player.Info.IntelligentCreatures[i].Filter = petUpdate.Filter;
                         Player.Info.IntelligentCreatures[i].petMode = petUpdate.petMode;
@@ -1659,6 +1706,86 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
             Player.Opendoor(p.DoorIndex);
+        }
+
+        private void GetRentedItems()
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.GetRentedItems();
+        }
+
+        private void ItemRentalRequest()
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.ItemRentalRequest();
+        }
+
+        private void ItemRentalFee(C.ItemRentalFee p)
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.SetItemRentalFee(p.Amount);
+        }
+
+        private void ItemRentalPeriod(C.ItemRentalPeriod p)
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.SetItemRentalPeriodLength(p.Days);
+        }
+
+        private void DepositRentalItem(C.DepositRentalItem p)
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.DepositRentalItem(p.From, p.To);
+        }
+
+        private void RetrieveRentalItem(C.RetrieveRentalItem p)
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.RetrieveRentalItem(p.From, p.To);
+        }
+
+        private void CancelItemRental()
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.CancelItemRental();
+        }
+
+        private void ItemRentalLockFee()
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.ItemRentalLockFee();
+        }
+
+        private void ItemRentalLockItem()
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.ItemRentalLockItem();
+        }
+
+        private void ConfirmItemRental()
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.ConfirmItemRental();
         }
     }
 }

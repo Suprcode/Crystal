@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.IO;
+using System.Windows.Forms;
 using Server.MirDatabase;
 using Server.MirNetwork;
 using Server.MirObjects;
@@ -54,7 +55,9 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
+
         public const int Version = 77;
+
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -115,6 +118,7 @@ namespace Server.MirEnvir
         public DragonInfo DragonInfo = new DragonInfo();
         public List<QuestInfo> QuestInfoList = new List<QuestInfo>();
         public List<GameShopItem> GameShopList = new List<GameShopItem>();
+        public List<RecipeInfo> RecipeInfoList = new List<RecipeInfo>();
         public Dictionary<int, int> GameshopLog = new Dictionary<int, int>();
 
         //User DB
@@ -164,8 +168,10 @@ namespace Server.MirEnvir
         public List<MapRespawn> SavedSpawns = new List<MapRespawn>();
 
         public List<Rank_Character_Info> RankTop = new List<Rank_Character_Info>();
+
         public List<Rank_Character_Info>[] RankClass = new List<Rank_Character_Info>[10];//stupple
         public int[] RankBottomLevel = new int[11];//stupple
+
 
         static Envir()
         {
@@ -175,7 +181,7 @@ namespace Server.MirEnvir
                 new Regex(@"^[A-Za-z0-9]{" + Globals.MinPasswordLength + "," + Globals.MaxPasswordLength + "}$");
             EMailReg = new Regex(@"\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*");
             CharacterReg =
-                new Regex(@"^[A-Za-z0-9]{" + Globals.MinCharacterNameLength + "," + Globals.MaxCharacterNameLength +
+                new Regex(@"^[\u4e00-\u9fa5_A-Za-z0-9]{" + Globals.MinCharacterNameLength + "," + Globals.MaxCharacterNameLength +
                           "}$");
 
             string path = Path.Combine(Settings.EnvirPath,  "DisabledChars.txt");
@@ -200,7 +206,7 @@ namespace Server.MirEnvir
         public static long LastRunTime = 0;
         public int MonsterCount;
 
-        private long warTime, mailTime, guildTime, conquestTime;
+        private long warTime, mailTime, guildTime, conquestTime, rentalItemsTime;
         private int DailyTime = DateTime.Now.Day;
 
         private bool MagicExists(Spell spell)
@@ -415,6 +421,7 @@ namespace Server.MirEnvir
 
             //Custom
             if (!MagicExists(Spell.Portal)) MagicInfoList.Add(new MagicInfo { Name = "Portal", Spell = Spell.Portal, Icon = 1, Level1 = 7, Level2 = 11, Level3 = 14, Need1 = 150, Need2 = 350, Need3 = 700, BaseCost = 3, LevelCost = 2, Range = 9 });
+            if (!MagicExists(Spell.BattleCry)) MagicInfoList.Add(new MagicInfo {  Name = "BattleCry", Spell = Spell.BattleCry, Icon = 42, Level1 = 48, Level2 = 51, Level3 = 55, Need1 = 8000, Need2 = 11000, Need3 = 15000, BaseCost = 22, LevelCost = 10, Range = 0 });
         }
 
         private string CanStartEnvir()
@@ -523,7 +530,11 @@ namespace Server.MirEnvir
                 }
 
                 StartNetwork();
-
+                if (Settings.StartHTTPService)
+                {
+                    http = new HttpServer();
+                    http.Start();
+                }               
                 try
                 {
                     while (Running)
@@ -640,7 +651,7 @@ namespace Server.MirEnvir
                             userTime = Time + Settings.Minute * 5;
                             Broadcast(new S.Chat
                                 {
-                                    Message = string.Format("Online Players: {0}", Players.Count),
+                                    Message = string.Format(GameLanguage.OnlinePlayers, Players.Count),
                                     Type = ChatType.Hint
                                 });
                         }
@@ -675,7 +686,7 @@ namespace Server.MirEnvir
                     // Get the line number from the stack frame
                     var line = frame.GetFileLineNumber();
 
-                    File.AppendAllText(@".\Error.txt",
+                    File.AppendAllText(Settings.ErrorPath + "Error.txt",
                                            string.Format("[{0}] {1} at line {2}{3}", Now, ex, line, Environment.NewLine));
                 }
 
@@ -696,7 +707,7 @@ namespace Server.MirEnvir
                 var line = frame.GetFileLineNumber();
 
                 SMain.Enqueue("[outer workloop error]" + ex);
-                File.AppendAllText(@".\Error.txt",
+                File.AppendAllText(Settings.ErrorPath + "Error.txt",
                                        string.Format("[{0}] {1} at line {2}{3}", Now, ex, line, Environment.NewLine));
             }
             _thread = null;
@@ -773,7 +784,7 @@ namespace Server.MirEnvir
                 if (ex is ThreadInterruptedException) return;
                 SMain.Enqueue(ex);
 
-                File.AppendAllText(@".\Error.txt",
+                File.AppendAllText(Settings.ErrorPath + "Error.txt",
                                        string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
             }
             //Info.Stop = true;
@@ -854,6 +865,11 @@ namespace Server.MirEnvir
                     Conquests[i].Process();
             }
 
+            if (Time >= rentalItemsTime)
+            {
+                rentalItemsTime = Time + Settings.Minute * 5;
+                ProcessRentedItems();
+            }
 
         }
 
@@ -1084,7 +1100,6 @@ namespace Server.MirEnvir
             catch (Exception ex)
             {
             }
-
         }
 
         private void SaveConquests(bool forced = false)
@@ -1253,7 +1268,11 @@ namespace Server.MirEnvir
                     {
                         count = reader.ReadInt32();
                         for (int i = 0; i < count; i++)
-                            MagicInfoList.Add(new MagicInfo(reader, LoadVersion, LoadCustomVersion));
+                        {
+                            var m = new MagicInfo(reader, LoadVersion, LoadCustomVersion);
+                            if(!MagicExists(m.Spell))
+                                MagicInfoList.Add(m);
+                        }
                     }
                     FillMagicInfoList();
                     if (LoadVersion <= 70)
@@ -1285,6 +1304,7 @@ namespace Server.MirEnvir
 
                     if (LoadVersion > 67)
                         RespawnTick = new RespawnTimer(reader);
+
                 }
 
                 Settings.LinkGuildCreationItems(ItemInfoList);
@@ -1446,8 +1466,6 @@ namespace Server.MirEnvir
                 }
 
                 if (count != GuildCount) GuildCount = count;
-
-                
             }
         }
 
@@ -1830,7 +1848,10 @@ namespace Server.MirEnvir
                     MobThreading[i].Interrupt();
                 }
             }
-
+            if (http!=null)
+            {
+                http.Stop();
+            }                     
 
                 while (_thread != null)
                     Thread.Sleep(1);
@@ -1857,6 +1878,14 @@ namespace Server.MirEnvir
             MonsterCount = 0;
 
             LoadDB();
+
+            RecipeInfoList.Clear();
+            foreach (var recipe in Directory.GetFiles(Settings.RecipePath, "*.txt")
+                .Select(path => Path.GetFileNameWithoutExtension(path))
+                .ToArray())
+                RecipeInfoList.Add(new RecipeInfo(recipe));
+
+            SMain.Enqueue(string.Format("{0} Recipes loaded.", RecipeInfoList.Count));
 
             for (int i = 0; i < MapInfoList.Count; i++)
                 MapInfoList[i].CreateMap();
@@ -2148,6 +2177,56 @@ namespace Server.MirEnvir
                 c.Enqueue(new ServerPackets.NewAccount {Result = 8});
             }
         }
+
+        public int HTTPNewAccount(ClientPackets.NewAccount p, string ip)
+        {
+            if (!Settings.AllowNewAccount)
+            {                
+                return 0;
+            }
+
+            if (!AccountIDReg.IsMatch(p.AccountID))
+            {
+                return 1;
+            }
+
+            if (!PasswordReg.IsMatch(p.Password))
+            {
+                return 2;
+            }
+            if (!string.IsNullOrWhiteSpace(p.EMailAddress) && !EMailReg.IsMatch(p.EMailAddress) ||
+                p.EMailAddress.Length > 50)
+            {
+                return 3;
+            }
+
+            if (!string.IsNullOrWhiteSpace(p.UserName) && p.UserName.Length > 20)
+            {
+                return 4;
+            }
+
+            if (!string.IsNullOrWhiteSpace(p.SecretQuestion) && p.SecretQuestion.Length > 30)
+            {
+                return 5;
+            }
+
+            if (!string.IsNullOrWhiteSpace(p.SecretAnswer) && p.SecretAnswer.Length > 30)
+            {
+                return 6;
+            }
+
+            lock (AccountLock)
+            {
+                if (AccountExists(p.AccountID))
+                {
+                    return 7;
+                }
+
+                AccountList.Add(new AccountInfo(p) { Index = ++NextAccountID, CreationIP = ip });
+                return 8;
+            }
+        }
+
         public void ChangePassword(ClientPackets.ChangePassword p, MirConnection c)
         {
             if (!Settings.AllowChangePassword)
@@ -2285,6 +2364,56 @@ namespace Server.MirEnvir
             SMain.Enqueue(account.Connection.SessionID + ", " + account.Connection.IPAddress + ", User logged in.");
             c.Enqueue(new ServerPackets.LoginSuccess { Characters = account.GetSelectInfo() });
         }
+
+        public int HTTPLogin(string AccountID, string Password)
+        {
+            if (!Settings.AllowLogin)
+            {
+                return 0;
+            }
+
+            if (!AccountIDReg.IsMatch(AccountID))
+            {
+                return 1;
+            }
+
+            if (!PasswordReg.IsMatch(Password))
+            {
+                return 2;
+            }
+
+            AccountInfo account = GetAccount(AccountID);
+
+            if (account == null)
+            {
+                return 3;
+            }
+
+            if (account.Banned)
+            {
+                if (account.ExpiryDate > DateTime.Now)
+                {
+                    return 4;
+                }
+                account.Banned = false;
+            }
+            account.BanReason = string.Empty;
+            account.ExpiryDate = DateTime.MinValue;
+            if (String.CompareOrdinal(account.Password, Password) != 0)
+            {
+                if (account.WrongPasswordCount++ >= 5)
+                {
+                    account.Banned = true;
+                    account.BanReason = "Too many Wrong Login Attempts.";
+                    account.ExpiryDate = DateTime.Now.AddMinutes(2);
+                    return 5;
+                }
+                return 6;
+            }
+            account.WrongPasswordCount = 0;
+            return 7;
+        }
+
         public void NewCharacter(ClientPackets.NewCharacter p, MirConnection c, bool IsGm)
         {
             if (!Settings.AllowNewCharacter)
@@ -2532,6 +2661,20 @@ namespace Server.MirEnvir
             return item;
         }
 
+        public UserItem CreateShopItem(ItemInfo info)
+        {
+            if (info == null) return null;
+
+            UserItem item = new UserItem(info)
+            {
+                UniqueID = ++NextUserItemID,
+                CurrentDura = info.Durability,
+                MaxDura = info.Durability,
+            };
+
+            return item;
+        }
+
         public void UpdateItemExpiry(UserItem item)
         {
             //can't have expiry on usable items
@@ -2705,6 +2848,7 @@ namespace Server.MirEnvir
         {
             return MapList.SelectMany(t1 => t1.NPCs.Where(t => t.Info.Name == name)).FirstOrDefault();
         }
+
         /*
         public MonsterInfo GetMonsterInfo(string name)
         {
@@ -2849,6 +2993,119 @@ namespace Server.MirEnvir
                     c.Player.CallDefaultNPC(DefaultNPCType.Daily);
                 }
             }
+        }
+
+        private void ProcessRentedItems()
+        {
+            foreach (var characterInfo in CharacterList)
+            {
+                if (characterInfo.RentedItems.Count <= 0)
+                    continue;
+
+                foreach (var rentedItemInfo in characterInfo.RentedItems)
+                {
+                    if (rentedItemInfo.ItemReturnDate >= Now)
+                        continue;
+
+                    var rentingPlayer = GetCharacterInfo(rentedItemInfo.RentingPlayerName);
+
+                    for (var i = 0; i < rentingPlayer.Inventory.Length; i++)
+                    {
+                        if (rentedItemInfo.ItemId != rentingPlayer?.Inventory[i]?.UniqueID)
+                            continue;
+
+                        var item = rentingPlayer.Inventory[i];
+
+                        if (item?.RentalInformation == null)
+                            continue;
+
+                        if (Now <= item.RentalInformation.ExpiryDate)
+                            continue;
+
+                        ReturnRentalItem(item, item.RentalInformation.OwnerName, rentingPlayer, false);
+                        rentingPlayer.Inventory[i] = null;
+                        rentingPlayer.HasRentedItem = false;
+
+                        if (rentingPlayer.Player == null)
+                            continue;
+
+                        rentingPlayer.Player.ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
+                        rentingPlayer.Player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                        rentingPlayer.Player.RefreshStats();
+                    }
+
+                    for (var i = 0; i < rentingPlayer.Equipment.Length; i++)
+                    {
+                        var item = rentingPlayer.Equipment[i];
+
+                        if (item?.RentalInformation == null)
+                            continue;
+
+                        if (Now <= item.RentalInformation.ExpiryDate)
+                            continue;
+
+                        ReturnRentalItem(item, item.RentalInformation.OwnerName, rentingPlayer, false);
+                        rentingPlayer.Equipment[i] = null;
+                        rentingPlayer.HasRentedItem = false;
+                        
+                        if (rentingPlayer.Player == null)
+                            continue;
+
+                        rentingPlayer.Player.ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
+                        rentingPlayer.Player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                        rentingPlayer.Player.RefreshStats();
+                    }
+                }
+            }
+
+            foreach (var characterInfo in CharacterList)
+            {
+                if (characterInfo.RentedItemsToRemove.Count <= 0)
+                    continue;
+
+                foreach (var rentalInformationToRemove in characterInfo.RentedItemsToRemove)
+                    characterInfo.RentedItems.Remove(rentalInformationToRemove);
+
+                characterInfo.RentedItemsToRemove.Clear();
+            }
+        }
+
+        public bool ReturnRentalItem(UserItem rentedItem, string ownerName, CharacterInfo rentingCharacterInfo, bool removeNow = true)
+        {
+            if (rentedItem.RentalInformation == null)
+                return false;
+
+            var owner = GetCharacterInfo(ownerName);
+            var returnItems = new List<UserItem>();
+
+            foreach (var rentalInformation in owner.RentedItems)
+                if (rentalInformation.ItemId == rentedItem.UniqueID)
+                    owner.RentedItemsToRemove.Add(rentalInformation);
+            
+            rentedItem.RentalInformation.BindingFlags = BindMode.none;
+            rentedItem.RentalInformation.RentalLocked = true;
+            rentedItem.RentalInformation.ExpiryDate = rentedItem.RentalInformation.ExpiryDate.AddDays(1);
+
+            returnItems.Add(rentedItem);
+
+            var mail = new MailInfo(owner.Index, true)
+            {
+                Sender = rentingCharacterInfo.Name,
+                Message = rentedItem.Info.FriendlyName,
+                Items = returnItems
+            };
+
+            mail.Send();
+
+            if (removeNow)
+            {
+                foreach (var rentalInformationToRemove in owner.RentedItemsToRemove)
+                    owner.RentedItems.Remove(rentalInformationToRemove);
+
+                owner.RentedItemsToRemove.Clear();
+            }
+
+            return true;
         }
 
         private void ClearDailyQuests(CharacterInfo info)
@@ -3081,6 +3338,30 @@ namespace Server.MirEnvir
                 }
             }
         }
+
+
+        public void ReloadNPCs()
+        {
+            List<NPCObject> allNpcs = new List<NPCObject>();
+            foreach (var map in MapList)
+            {
+                allNpcs.AddRange(map.NPCs);
+            }
+            foreach (var item in allNpcs)
+            {
+                item.LoadInfo(true);
+            }
+            SMain.Envir.DefaultNPC.LoadInfo(true);
+            SMain.Enqueue("NPCs reloaded...");
+        }
+
+        public void ReloadDrops()
+        {
+            foreach (var item in MonsterInfoList)
+                item.LoadDrops();
+            SMain.Enqueue("Drops reloaded...");
+        }
+   
     }
 }
 

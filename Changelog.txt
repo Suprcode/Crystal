@@ -1,0 +1,26 @@
+27/05/2017
+[Fixes]
+Fixed a server crash when death drops occur.
+
+[Additions]
+Added server notifications for items dropped from monsters. Checkbox in item database to turn on/off.
+
+25/05/2017
+[Fixes]
+Fixed placement issue on rental window.
+Can click rental fee label to input/change fee.
+
+[Additions]
+New Buff UI started. Currently putting all buffs in the same bordered window.
+Removed all Buff drawing from GameScene.
+Can click rental fee label to input/change fee.
+
+19/05/2017
+[Changes & Fixes]
+Some cleanup.
+Added BindMode for Unable To Rent for preventing items to be rented. (Set in item DB).
+Added BindMode for Unable To Disassemble. (Set in item DB).
+Rented items can be dropped on death. If this happens it is returned to owner.
+Benediction Oil now checks for Dont Upgrade flag.
+Awakening now checks for Dont Upgrade flag.
+Rented items now expire correctly if the owner or renting player are logged off.

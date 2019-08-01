@@ -63,7 +63,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 612,
                 Sound = SoundList.ButtonA,
-                Hint = "Allow/Block Marriage"
+                Hint = GameLanguage.SwitchMarriage
             };
             AllowButton.Click += (o, e) => Network.Enqueue(new C.ChangeMarriage());
 
@@ -76,7 +76,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 602,
                 Sound = SoundList.ButtonA,
-                Hint = "Request Marriage"
+                Hint = GameLanguage.RequestMarriage
             };
             RequestButton.Click += (o, e) =>
             {
@@ -98,7 +98,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 618,
                 Sound = SoundList.ButtonA,
-                Hint = "Request Divorce"
+                Hint = GameLanguage.RequestDivorce
             };
             DivorceButton.Click += (o, e) =>
             {
@@ -120,7 +120,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 439,
                 Sound = SoundList.ButtonA,
-                Hint = "Mail Lover"
+                Hint = GameLanguage.MailLover
             };
             MailButton.Click += (o, e) =>
             {
@@ -142,7 +142,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 568,
                 Sound = SoundList.ButtonA,
-                Hint = "Whisper Lover"
+                Hint = GameLanguage.WhisperLover
             };
             WhisperButton.Click += (o, e) =>
             {
@@ -251,7 +251,7 @@ namespace Client.MirScenes.Dialogs
 
 
                 LoverOnlineLabel.Text = "Location: ";
-                AllowButton.Hint = "Allow/Block Marriage";
+                AllowButton.Hint = GameLanguage.SwitchMarriage;
             }
             else
             {

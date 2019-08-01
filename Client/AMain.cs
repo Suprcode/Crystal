@@ -78,7 +78,7 @@ namespace Launcher
                 }
                 else
                 {
-                    MessageBox.Show("Could not get Patch Information.");
+                    MessageBox.Show(GameLanguage.PatchErr);
                     Completed = true;
                     return;
                 }
@@ -112,7 +112,7 @@ namespace Launcher
         
 
         private void BeginDownload()
-        {
+        {           
             if (DownloadList == null) return;
 
             if (DownloadList.Count == 0)
@@ -185,7 +185,7 @@ namespace Launcher
                 }
 
                 DownloadList.Enqueue(old);
-                _totalBytes += old.Compressed;
+                _totalBytes += old.Length;
             }
         }
 

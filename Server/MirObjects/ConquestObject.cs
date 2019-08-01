@@ -161,7 +161,7 @@ namespace Server.MirObjects
         {
             for (int i = 0; i < WallList.Count; i++)
             {
-                WallList[i].Spawn();
+                WallList[i].Spawn(false);
             }
         }
 
@@ -367,32 +367,32 @@ namespace Server.MirObjects
             
             if (StartType != ConquestType.Forced)
             {
-            if (WarIsOn && start > now || finish <= now)
-            {
-                EndWar(Info.Game);
-            }
-            else if (start <= now && finish > now && CheckDay())
-            {
-                if (!WarIsOn)
+                if (WarIsOn && (now > start && finish <= now))
                 {
-                    if (Info.Type == ConquestType.Request)
+                    EndWar(Info.Game);
+                }
+                else if (start <= now && finish > now && CheckDay())
+                {
+                    if (!WarIsOn)
                     {
-                        if (AttackerID != -1)
+                        if (Info.Type == ConquestType.Request)
+                        {
+                            if (AttackerID != -1)
+                            {
+                                GameType = Info.Game;
+                                StartType = Info.Type;
+                                StartWar(Info.Game);
+                            }
+                        }
+                        else
                         {
                             GameType = Info.Game;
                             StartType = Info.Type;
                             StartWar(Info.Game);
                         }
-                    }
-                    else
-                    {
-                        GameType = Info.Game;
-                        StartType = Info.Type;
-                        StartWar(Info.Game);
-                    }
 
+                    }
                 }
-            }
             }
             ScheduleTimer = Envir.Time + Settings.Minute;
         }
@@ -506,9 +506,12 @@ namespace Server.MirObjects
                 FlagList[i].UpdateColour();
             }
 
-            UpdatePlayers(Guild);
-            if (tmpPrevious != null) UpdatePlayers(tmpPrevious);
-            NeedSave = true;
+            if (Guild != null)
+            {
+                UpdatePlayers(Guild);
+                if (tmpPrevious != null) UpdatePlayers(tmpPrevious);
+                NeedSave = true;
+            }
         }
 
         public void UpdatePlayers(GuildObject tempGuild)
@@ -1048,7 +1051,7 @@ namespace Server.MirObjects
         }
 
 
-        public void Spawn()
+        public void Spawn(bool repair)
         {
             if (Wall != null) Wall.Despawn();
 
@@ -1067,6 +1070,8 @@ namespace Server.MirObjects
 
             Wall.Spawn(Conquest.ConquestMap, Info.Location);
 
+            if (repair) Health = Wall.MaxHP;
+
             if (Health == 0)
                 Wall.Die();
             else
@@ -1077,23 +1082,27 @@ namespace Server.MirObjects
 
         public uint GetRepairCost()
         {
-            if (Wall == null) return Info.RepairCost;
+            uint cost = 0;
 
-            if (Wall.MaxHP == Wall.HP) return 0;
-
-            return Info.RepairCost / (Wall.MaxHP / (Wall.MaxHP - Wall.HP));
+            if (Wall.MaxHP == Wall.HP) return cost;
+            if (Wall != null)
+            {
+                if (Info.RepairCost != 0)
+                    cost = Info.RepairCost / (Wall.MaxHP / (Wall.MaxHP - Wall.HP));
+            }
+            return cost;
         }
 
         public void Repair()
         {
             if (Wall == null)
             {
-                Spawn();
+                Spawn(true);
                 return;
             }
 
             if (Wall.Dead)
-                Spawn();
+                Spawn(true);
             else
                 Wall.HP = Wall.MaxHP;
 

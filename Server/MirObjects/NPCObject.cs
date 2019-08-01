@@ -37,8 +37,10 @@ namespace Server.MirObjects
             ConsignKey = "[@CONSIGN]",
             MarketKey = "[@MARKET]",
             ConsignmentsKey = "[@CONSIGNMENT]",
+            CraftKey = "[@CRAFT]",
 
             TradeKey = "[TRADE]",
+            RecipeKey = "[RECIPE]",
             TypeKey = "[TYPES]",
             QuestKey = "[QUESTS]",
 
@@ -70,6 +72,7 @@ namespace Server.MirObjects
         public List<ItemType> Types = new List<ItemType>();
         public List<NPCPage> NPCSections = new List<NPCPage>();
         public List<QuestInfo> Quests = new List<QuestInfo>();
+        public List<RecipeInfo> CraftGoods = new List<RecipeInfo>();
 
         public Dictionary<int, bool> VisibleLog = new Dictionary<int, bool>();
 
@@ -132,6 +135,7 @@ namespace Server.MirObjects
             Goods = new List<UserItem>();
             Types = new List<ItemType>();
             NPCPages = new List<NPCPage>();
+            CraftGoods = new List<RecipeInfo>();
 
             if (Info.IsDefault)
             {
@@ -258,6 +262,7 @@ namespace Server.MirObjects
             ParseGoods(lines);
             ParseTypes(lines);
             ParseQuests(lines);
+            ParseCrafting(lines);
         }
 
         private List<string> ParseInsert(List<string> lines)
@@ -655,6 +660,41 @@ namespace Server.MirObjects
                 }
             }
         }
+        private void ParseCrafting(IList<string> lines)
+        {
+            for (int i = 0; i < lines.Count; i++)
+            {
+                if (!lines[i].ToUpper().StartsWith(RecipeKey)) continue;
+
+                while (++i < lines.Count)
+                {
+                    if (lines[i].StartsWith("[")) return;
+                    if (String.IsNullOrEmpty(lines[i])) continue;
+
+                    var data = lines[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    ItemInfo info = SMain.Envir.GetItemInfo(data[0]);
+                    if (info == null)
+                        continue;
+
+                    RecipeInfo recipe = Envir.RecipeInfoList.SingleOrDefault(x => x.MatchItem(info.Index));
+
+                    if (recipe == null)
+                    {
+                        SMain.Enqueue(string.Format("Could not find recipe: {0}, File: {1}", lines[i], Info.FileName));
+                        continue;
+                    }
+
+                    if (recipe.Ingredients.Count == 0)
+                    {
+                        SMain.Enqueue(string.Format("Could not find ingredients: {0}, File: {1}", lines[i], Info.FileName));
+                        continue;
+                    }
+
+                    CraftGoods.Add(recipe);
+                }
+            }
+        }
 
         public void Call(MonsterObject Monster, string key)//run a semi limited npc script (wont let you do stuff like checkgroup/guild etc)
         {
@@ -802,7 +842,7 @@ namespace Server.MirObjects
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
 
-                    player.Enqueue(new S.NPCGoods { List = Goods, Rate = PriceRate(player) });
+                    player.Enqueue(new S.NPCGoods { List = Goods, Rate = PriceRate(player), Type = PanelType.Buy });
                     break;
                 case SellKey:
                     player.Enqueue(new S.NPCSell());
@@ -811,7 +851,7 @@ namespace Server.MirObjects
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
 
-                    player.Enqueue(new S.NPCGoods { List = Goods, Rate = PriceRate(player) });
+                    player.Enqueue(new S.NPCGoods { List = Goods, Rate = PriceRate(player), Type = PanelType.Buy });
                     player.Enqueue(new S.NPCSell());
                     break;
                 case RepairKey:
@@ -819,6 +859,12 @@ namespace Server.MirObjects
                     break;
                 case SRepairKey:
                     player.Enqueue(new S.NPCSRepair { Rate = PriceRate(player) });
+                    break;
+                case CraftKey:
+                    for (int i = 0; i < CraftGoods.Count; i++)
+                        player.CheckItemInfo(CraftGoods[i].Item.Info);
+
+                    player.Enqueue(new S.NPCGoods { List = (from x in CraftGoods where x.CanCraft(player) select x.Item).ToList(), Rate = PriceRate(player), Type = PanelType.Craft });
                     break;
                 case RefineKey:
                     if (player.Info.CurrentRefine != null)
@@ -851,13 +897,13 @@ namespace Server.MirObjects
                         player.CheckItem(BuyBack[player.Name][i]);
                     }
 
-                    player.Enqueue(new S.NPCGoods { List = BuyBack[player.Name], Rate = PriceRate(player) });
+                    player.Enqueue(new S.NPCGoods { List = BuyBack[player.Name], Rate = PriceRate(player), Type = PanelType.Buy });
                     break;
                 case BuyUsedKey:
                     for (int i = 0; i < UsedGoods.Count; i++)
                         player.CheckItem(UsedGoods[i]);
 
-                    player.Enqueue(new S.NPCGoods { List = UsedGoods, Rate = PriceRate(player) });
+                    player.Enqueue(new S.NPCGoods { List = UsedGoods, Rate = PriceRate(player), Type = PanelType.Buy });
                     break;
                 case ConsignKey:
                     player.Enqueue(new S.NPCConsign());
@@ -895,7 +941,7 @@ namespace Server.MirObjects
                     }
                     else
                     {
-                        player.ReceiveChat("You are not in a guild.", ChatType.System);
+                        player.ReceiveChat(GameLanguage.NotInGuild, ChatType.System);
                     }
                     break;
                 case SendParcelKey:
@@ -1316,8 +1362,10 @@ namespace Server.MirObjects
             }
 
             if (goods == null || count == 0 || count > goods.Info.StackSize) return;
-
-            goods.Count = count;
+            if (isBuyBack && count > goods.Count)
+                count = goods.Count;
+            else
+                goods.Count = count;
 
             uint cost = goods.Price();
             cost = (uint)(cost * PriceRate(player));
@@ -1375,6 +1423,124 @@ namespace Server.MirObjects
 
             item.BuybackExpiryDate = Envir.Now;
             BuyBack[player.Name].Add(item);
+        }
+
+
+        public void Craft(PlayerObject player, ulong index, uint count, int[] slots)
+        {
+            S.CraftItem p = new S.CraftItem();
+
+            RecipeInfo recipe = null;
+
+            for (int i = 0; i < CraftGoods.Count; i++)
+            {
+                if (CraftGoods[i].Item.UniqueID != index) continue;
+                recipe = CraftGoods[i];
+                break;
+            }
+
+            UserItem goods = recipe.Item;
+
+            if (goods == null || count == 0 || count > goods.Info.StackSize)
+            {
+                player.Enqueue(p);
+                return;
+            }
+
+            bool hasItems = true;
+
+            List<int> usedSlots = new List<int>();
+
+            //Check Items
+            foreach (var ingredient in recipe.Ingredients)
+            {
+                uint amount = ingredient.Count * count;
+
+                for (int i = 0; i < slots.Length; i++)
+                {
+                    int slot = slots[i];
+
+                    if (usedSlots.Contains(slot)) continue;
+
+                    if (slot < 0 || slot > player.Info.Inventory.Length) continue;
+
+                    UserItem item = player.Info.Inventory[slot];
+
+                    if (item == null || item.Info != ingredient.Info) continue;
+
+                    usedSlots.Add(slot);
+
+                    if (amount <= item.Count)
+                    {
+                        amount = 0;
+                    }
+                    else
+                    {
+                        hasItems = false;
+                    }
+
+                    break;
+                }
+
+                if (amount > 0)
+                {
+                    hasItems = false;
+                    break;
+                }
+            }
+
+            if (!hasItems)
+            {
+                player.Enqueue(p);
+                return;
+            }
+
+            UserItem craftedItem = Envir.CreateFreshItem(goods.Info);
+            craftedItem.Count = count;
+
+            if (!player.CanGainItem(craftedItem))
+            {
+                player.Enqueue(p);
+                return;
+            }
+            
+            //Take Items
+            foreach (var ingredient in recipe.Ingredients)
+            {
+                uint amount = ingredient.Count * count;
+
+                for (int i = 0; i < slots.Length; i++)
+                {
+                    int slot = slots[i];
+
+                    if (slot < 0) continue;
+
+                    UserItem item = player.Info.Inventory[slot];
+
+                    if (item == null || item.Info != ingredient.Info) continue;
+
+                    if (item.Count > amount)
+                    {
+                        player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = amount });
+                        player.Info.Inventory[slot].Count -= amount;
+                        break;
+                    }
+                    else
+                    {
+                        player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                        amount -= item.Count;
+                        player.Info.Inventory[slot] = null;
+                    }
+
+                    break;
+                }
+            }
+
+            //Give Item
+            player.GainItem(craftedItem);
+
+            p.Success = true;
+            player.Enqueue(p);
         }
     }
 
@@ -1482,7 +1648,15 @@ namespace Server.MirObjects
         OpenGate,
         CloseGate,
         Break,
+
         Humup,//stupple
+
+        //AddGuildNameList,
+        //DelGuildNameList,
+        //ClearGuildNameList,
+        //OpenBrowser,
+        //GetRandomText,
+
     }
     public enum CheckType
     {
@@ -1527,5 +1701,6 @@ namespace Server.MirObjects
         CheckPermission,
         ConquestAvailable,
         ConquestOwner,
+        CheckGuildNameList
     }
 }

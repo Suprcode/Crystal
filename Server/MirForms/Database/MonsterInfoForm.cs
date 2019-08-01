@@ -66,6 +66,7 @@ namespace Server
                 MonsterNameTextBox.Text = string.Empty;
 
                 ImageComboBox.SelectedItem = null;
+                fileNameLabel.Text = "";
                 AITextBox.Text = string.Empty;
                 EffectTextBox.Text = string.Empty;
                 LevelTextBox.Text = string.Empty;
@@ -109,6 +110,7 @@ namespace Server
 
             ImageComboBox.SelectedItem = null;
             ImageComboBox.SelectedItem = info.Image;
+            fileNameLabel.Text = ((int)info.Image).ToString() + ".Lib";
             AITextBox.Text = info.AI.ToString();
             EffectTextBox.Text = info.Effect.ToString();
             LevelTextBox.Text = info.Level.ToString();
@@ -149,6 +151,7 @@ namespace Server
                 if (MonsterNameTextBox.Text != info.Name) MonsterNameTextBox.Text = string.Empty;
 
                 if (ImageComboBox.SelectedItem == null || (Monster)ImageComboBox.SelectedItem != info.Image) ImageComboBox.SelectedItem = null;
+                if (ImageComboBox.SelectedItem == null || (Monster)ImageComboBox.SelectedItem != info.Image) fileNameLabel.Text = "";
                 if (AITextBox.Text != info.AI.ToString()) AITextBox.Text = string.Empty;
                 if (EffectTextBox.Text != info.Effect.ToString()) EffectTextBox.Text = string.Empty;
                 if (LevelTextBox.Text != info.Level.ToString()) LevelTextBox.Text = string.Empty;
@@ -335,13 +338,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MinAC = temp;
@@ -353,13 +355,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MaxAC = temp;
@@ -371,13 +372,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MinMAC = temp;
@@ -389,13 +389,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MaxMAC = temp;
@@ -406,13 +405,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MinDC = temp;
@@ -424,13 +422,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MaxDC = temp;
@@ -442,13 +439,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MinMC = temp;
@@ -460,13 +456,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MaxMC = temp;
@@ -478,13 +473,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MinSC = temp;
@@ -496,13 +490,12 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].MaxSC = temp;
@@ -586,7 +579,8 @@ namespace Server
                 _selectedMonsterInfos[i].CanPush = CanPushCheckBox.Checked;
         }
         private void CanTameCheckBox_CheckedChanged(object sender, EventArgs e)
-        {if (ActiveControl != sender) return;
+        {
+            if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
                 _selectedMonsterInfos[i].CanTame = CanTameCheckBox.Checked;
@@ -622,7 +616,7 @@ namespace Server
             }
 
 
-            string[] monsters = data.Split(new[] {'\t'}, StringSplitOptions.RemoveEmptyEntries);
+            string[] monsters = data.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
 
             for (int i = 1; i < monsters.Length; i++)
@@ -655,8 +649,10 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            {
                 _selectedMonsterInfos[i].Image = (Monster)ImageComboBox.SelectedItem;
-
+                fileNameLabel.Text = ((int)((Monster)ImageComboBox.SelectedItem)).ToString() + ".Lib";
+            }
         }
 
         private void ExportAllButton_Click(object sender, EventArgs e)

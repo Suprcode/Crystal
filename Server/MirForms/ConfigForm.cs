@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Server
@@ -20,6 +21,10 @@ namespace Server
             TimeOutTextBox.Text = Settings.TimeOut.ToString();
             MaxUserTextBox.Text = Settings.MaxUser.ToString();
 
+            StartHTTPCheckBox.Checked = Settings.StartHTTPService;
+            HTTPIPAddressTextBox.Text = Settings.HTTPIPAddress;
+            HTTPTrustedIPAddressTextBox.Text = Settings.HTTPTrustedIPAddress;
+
             AccountCheckBox.Checked = Settings.AllowNewAccount;
             PasswordCheckBox.Checked = Settings.AllowChangePassword;
             LoginCheckBox.Checked = Settings.AllowLogin;
@@ -32,6 +37,7 @@ namespace Server
 
             SafeZoneBorderCheckBox.Checked = Settings.SafeZoneBorder;
             SafeZoneHealingCheckBox.Checked = Settings.SafeZoneHealing;
+            gameMasterEffect_CheckBox.Checked = Settings.GameMasterEffect;
 
             SaveDelayTextBox.Text = Settings.SaveDelay.ToString();
 
@@ -59,6 +65,13 @@ namespace Server
             IPAddress tempIP;
             if (IPAddress.TryParse(IPAddressTextBox.Text, out tempIP))
                 Settings.IPAddress = tempIP.ToString();
+
+            Settings.StartHTTPService = StartHTTPCheckBox.Checked;
+            if (tryParseHttp())
+                Settings.HTTPIPAddress = HTTPIPAddressTextBox.Text.ToString();
+
+            if (tryParseTrustedHttp())
+                Settings.HTTPTrustedIPAddress = HTTPTrustedIPAddressTextBox.Text.ToString();
 
             ushort tempshort;
             int tempint;
@@ -92,6 +105,7 @@ namespace Server
 
             Settings.SafeZoneBorder = SafeZoneBorderCheckBox.Checked;
             Settings.SafeZoneHealing = SafeZoneHealingCheckBox.Checked;
+            Settings.GameMasterEffect = gameMasterEffect_CheckBox.Checked;
         }
 
         private void IPAddressCheck(object sender, EventArgs e)
@@ -141,6 +155,39 @@ namespace Server
         private void SafeZoneHealingCheckBox_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void HTTPIPAddressTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            ActiveControl.BackColor = !tryParseHttp() ? Color.Red : SystemColors.Window;
+        }
+
+
+        private void HTTPTrustedIPAddressTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            ActiveControl.BackColor = !tryParseTrustedHttp() ? Color.Red : SystemColors.Window;
+        }
+
+        bool tryParseHttp()
+        {
+            if ((HTTPIPAddressTextBox.Text.StartsWith("http://") || HTTPIPAddressTextBox.Text.StartsWith("https://")) && HTTPIPAddressTextBox.Text.EndsWith("/"))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        bool tryParseTrustedHttp()
+        {
+            string pattern = @"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}:[0-9]{2,5}";
+            return Regex.IsMatch(HTTPTrustedIPAddressTextBox.Text, pattern);
+        }
+
+        private void StartHTTPCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.StartHTTPService = StartHTTPCheckBox.Checked;
         }
     }
 }

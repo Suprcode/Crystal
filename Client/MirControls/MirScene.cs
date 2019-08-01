@@ -190,6 +190,9 @@ namespace Client.MirControls
                 case (short)ServerPacketIds.NewQuestInfo:
                     NewQuestInfo((S.NewQuestInfo)p);
                     break;
+                case (short)ServerPacketIds.NewRecipeInfo:
+                    NewRecipeInfo((S.NewRecipeInfo)p);
+                    break;
             }
         }
 
@@ -203,12 +206,22 @@ namespace Client.MirControls
             GameScene.QuestInfoList.Add(info.Info);
         }
 
+        private void NewRecipeInfo(S.NewRecipeInfo info)
+        {
+            GameScene.RecipeInfoList.Add(info.Info);
+
+            GameScene.Bind(info.Info.Item);
+
+            for (int j = 0; j < info.Info.Ingredients.Count; j++)
+                GameScene.Bind(info.Info.Ingredients[j]);
+        }
+
         private static void Disconnect(S.Disconnect p)
         {
             switch (p.Reason)
             {
                 case 0:
-                    MirMessageBox.Show("Disconnected: Server is shutting down.", true);
+                    MirMessageBox.Show(GameLanguage.ShuttingDown, true);
                     break;
                 case 1:
                     MirMessageBox.Show("Disconnected: Another user logged onto your account.", true);

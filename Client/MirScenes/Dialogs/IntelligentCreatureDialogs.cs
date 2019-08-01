@@ -725,9 +725,9 @@ namespace Client.MirScenes.Dialogs
             CreatureInfo2.Text = GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.Info2;
             //Expire
             if (GameScene.User.IntelligentCreatures[selectedCreature].ExpireTime == -9999)
-                CreatureDeadline.Text = "Expire: Never";
+                CreatureDeadline.Text = string.Format(GameLanguage.ExpireNever);
             else
-                CreatureDeadline.Text = string.Format("Expire: {0}", Functions.PrintTimeSpanFromSeconds(GameScene.User.IntelligentCreatures[selectedCreature].ExpireTime));
+                CreatureDeadline.Text = string.Format(GameLanguage.Expire, Functions.PrintTimeSpanFromSeconds(GameScene.User.IntelligentCreatures[selectedCreature].ExpireTime));
             //
             if (GameScene.User.IntelligentCreatures[selectedCreature].MaintainFoodTime == 0)
                 CreatureMaintainFoodBuff.Text = "0";
@@ -816,7 +816,7 @@ namespace Client.MirScenes.Dialogs
 
             if (!GameScene.User.IntelligentCreatures.Any())
             {
-                MirMessageBox messageBox = new MirMessageBox("You do not own any creatures.", MirMessageBoxButtons.OK);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.NoCreatures, MirMessageBoxButtons.OK);
                 messageBox.Show();
                 return;
             }
@@ -1067,6 +1067,22 @@ namespace Client.MirScenes.Dialogs
                     AnimDefaultDelay = 300;
                     AnimExIdx = 880;
                     AnimExCount = 9;
+                    AnimExDelay = 300;
+                    break;
+                case IntelligentCreatureType.AngryBird:
+                    AnimDefaultIdx = 1400;
+                    AnimDefaultCount = 12;
+                    AnimDefaultDelay = 300;
+                    AnimExIdx = 1332;
+                    AnimExCount = 12;
+                    AnimExDelay = 300;
+                    break;
+                case IntelligentCreatureType.Foxey:
+                    AnimDefaultIdx = 1430;
+                    AnimDefaultCount = 9;
+                    AnimDefaultDelay = 300;
+                    AnimExIdx = 1439;
+                    AnimExCount = 8;
                     AnimExDelay = 300;
                     break;
                 case IntelligentCreatureType.None:

@@ -27,19 +27,27 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <AssemblyVersion>2017.6.25.1919</AssemblyVersion>
+    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>True</UpdateAssemblyInfoVersion>
+    <AssemblyInfoVersionSettings>YearStamp.MonthStamp.DayStamp.TimeStamp</AssemblyInfoVersionSettings>
+    <AssemblyVersionSettings>YearStamp.MonthStamp.DayStamp.TimeStamp</AssemblyVersionSettings>
+    <AssemblyFileVersionSettings>YearStamp.MonthStamp.DayStamp.TimeStamp</AssemblyFileVersionSettings>
+    <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Server\</OutputPath>
+    <OutputPath>..\Build\Server\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <UseVSHostingProcess>false</UseVSHostingProcess>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -67,6 +75,8 @@
       <Private>True</Private>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -78,6 +88,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\ClientPackets.cs">
@@ -91,6 +102,7 @@
     </Compile>
     <Compile Include="MirDatabase\MailInfo.cs" />
     <Compile Include="MirDatabase\ConquestInfo.cs" />
+    <Compile Include="MirDatabase\RecipeInfo.cs" />
     <Compile Include="MirEnvir\Reporting.cs" />
     <Compile Include="MirEnvir\RespawnTimer.cs" />
     <Compile Include="MirForms\Account\PlayerInfoForm.cs">
@@ -116,6 +128,9 @@
     </Compile>
     <Compile Include="MirForms\Database\MagicInfoForm.Designer.cs">
       <DependentUpon>MagicInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MirForms\ListViewNF.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="MirForms\Systems\ConquestInfoForm.cs">
       <SubType>Form</SubType>
@@ -156,9 +171,6 @@
     <Compile Include="MirEnvir\Dragon.cs" />
     <Compile Include="MirEnvir\Map.cs" />
     <Compile Include="MirDatabase\MapInfo.cs" />
-    <Compile Include="MirForms\ListViewNF.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="MirForms\ConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -262,6 +274,7 @@
     <Compile Include="MirObjects\Monsters\ManectricKing.cs" />
     <Compile Include="MirObjects\Monsters\TrollBomber.cs" />
     <Compile Include="MirObjects\Monsters\ManectricBlest.cs" />
+    <Compile Include="MirObjects\Monsters\VenomSpider.cs" />
     <Compile Include="MirObjects\Monsters\WingedTigerLord.cs" />
     <Compile Include="MirObjects\Monsters\Tornado.cs" />
     <Compile Include="MirObjects\Monsters\Hugger.cs" />
@@ -386,6 +399,8 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\HttpServer.cs" />
+    <Compile Include="Utils\HttpService.cs" />
     <EmbeddedResource Include="MirForms\Account\AccountInfoForm.resx">
       <DependentUpon>AccountInfoForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -496,7 +511,6 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

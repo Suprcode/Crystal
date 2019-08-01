@@ -18,13 +18,15 @@ namespace Server
                             ConquestsPath = @".\Conquests\",
                             NPCPath = EnvirPath + @".\NPCs\",
                             GoodsPath = EnvirPath + @".\Goods\",
+                            RecipePath = EnvirPath + @"Recipe\",
                             QuestPath = EnvirPath + @".\Quests\",
                             DropPath = EnvirPath + @".\Drops\",
                             RoutePath = EnvirPath + @".\Routes\",
                             NameListPath = EnvirPath + @".\NameLists\",
                             ValuePath = EnvirPath + @".\Values\",
                             ReportPath = @".\Reports\",
-                            LogPath = @".\Logs\";
+                            LogPath = @".\Logs\",
+                            ErrorPath = LogPath + @".\Errors\";
 
 
 
@@ -58,6 +60,10 @@ namespace Server
                              RelogDelay = 50,
                              MaxIP = 5;
 
+        //HTTP
+        public static bool StartHTTPService = false;
+        public static string HTTPIPAddress = "http://127.0.0.1:5679/";
+        public static string HTTPTrustedIPAddress = "127.0.0.1:5679";
 
         //Permission
         public static bool AllowNewAccount = true,
@@ -74,6 +80,7 @@ namespace Server
         //Optional
         public static bool SafeZoneBorder = false,
                            SafeZoneHealing = false,
+                           GameMasterEffect = false,
                            GatherOrbsPerLevel = true,
                            ExpMobLevelDifference = true;
 
@@ -144,7 +151,8 @@ namespace Server
 
         public static string HealRing = "Healing",
                              FireRing = "FireBall",
-                             ParalysisRing = "Paralysis";
+                             ParalysisRing = "Paralysis",
+                             BlinkSkill = "Blink";
 
         public static string PKTownMapName = "3";
         public static int PKTownPositionX = 848,
@@ -155,7 +163,7 @@ namespace Server
 
 
         //IntelligentCreature
-        public static string[] IntelligentCreatureNameList = { "BabyPig", "Chick", "Kitten", "BabySkeleton", "Baekdon", "Wimaen", "BlackKitten", "BabyDragon", "OlympicFlame", "BabySnowMan", "Frog", "BabyMonkey" };
+        public static string[] IntelligentCreatureNameList = { "BabyPig", "Chick", "Kitten", "BabySkeleton", "Baekdon", "Wimaen", "BlackKitten", "BabyDragon", "OlympicFlame", "BabySnowMan", "Frog", "BabyMonkey", "AngryBird", "Foxey" };
         public static string CreatureBlackStoneName = "BlackCreatureStone";
 
         //Fishing Settings
@@ -255,6 +263,8 @@ namespace Server
         public static List<long> Guild_ExperienceList = new List<long>();
         public static List<int> Guild_MembercapList = new List<int>();
         public static List<GuildBuffInfo> Guild_BuffList = new List<GuildBuffInfo>();
+        public static long GroupInviteDelay { get; internal set; } = 2000;
+        public static long TradeDelay { get; internal set; } = 2000;
 
         public static void LoadVersion()
         {
@@ -272,7 +282,7 @@ namespace Server
         }
 
         public static void Load()
-        {
+        {            
             //General
             VersionPath = Reader.ReadString("General", "VersionPath", VersionPath);
             CheckVersion = Reader.ReadBoolean("General", "CheckVersion", CheckVersion);
@@ -290,6 +300,11 @@ namespace Server
             MaxUser = Reader.ReadUInt16("Network", "MaxUser", MaxUser);
             MaxIP = Reader.ReadUInt16("Network", "MaxIP", MaxIP);
 
+            //HTTP
+            StartHTTPService = Reader.ReadBoolean("Network", "StartHTTPService", StartHTTPService);
+            HTTPIPAddress = Reader.ReadString("Network", "HTTPIPAddress", HTTPIPAddress);
+            HTTPTrustedIPAddress = Reader.ReadString("Network", "HTTPTrustedIPAddress", HTTPTrustedIPAddress);
+
             //Permission
             AllowNewAccount = Reader.ReadBoolean("Permission", "AllowNewAccount", AllowNewAccount);
             AllowChangePassword = Reader.ReadBoolean("Permission", "AllowChangePassword", AllowChangePassword);
@@ -306,6 +321,7 @@ namespace Server
             SafeZoneHealing = Reader.ReadBoolean("Optional", "SafeZoneHealing", SafeZoneHealing);
             GatherOrbsPerLevel = Reader.ReadBoolean("Optional", "GatherOrbsPerLevel", GatherOrbsPerLevel);
             ExpMobLevelDifference = Reader.ReadBoolean("Optional", "ExpMobLevelDifference", ExpMobLevelDifference);
+            GameMasterEffect = Reader.ReadBoolean("Optional", "GameMasterEffect", GameMasterEffect);
 
             //Database
             SaveDelay = Reader.ReadInt32("Database", "SaveDelay", SaveDelay);
@@ -358,6 +374,8 @@ namespace Server
             ToadName = Reader.ReadString("Game", "ToadName", ToadName);
             SnakeTotemName = Reader.ReadString("Game", "SnakeTotemName", SnakeTotemName);
             SnakesName = Reader.ReadString("Game", "SnakesName", SnakesName);
+            GroupInviteDelay = Reader.ReadInt64("Game", "GroupInviteDelay", GroupInviteDelay);
+            TradeDelay = Reader.ReadInt64("Game", "TradeDelay", TradeDelay);
 
             //Rested
             RestedPeriod = Reader.ReadInt32("Rested", "Period", RestedPeriod);
@@ -368,6 +386,7 @@ namespace Server
             //Items
             HealRing = Reader.ReadString("Items", "HealRing", HealRing);
             FireRing = Reader.ReadString("Items", "FireRing", FireRing);
+            BlinkSkill = Reader.ReadString("Items", "BlinkSkill", BlinkSkill);
 
             //PKTown
             PKTownMapName = Reader.ReadString("PKTown", "PKTownMapName", PKTownMapName);
@@ -429,6 +448,12 @@ namespace Server
                 Directory.CreateDirectory(NameListPath);
             if (!Directory.Exists(LogPath))
                 Directory.CreateDirectory(LogPath);
+            if (!Directory.Exists(ErrorPath))
+                Directory.CreateDirectory(ErrorPath);
+            if (!Directory.Exists(ReportPath))
+                Directory.CreateDirectory(ReportPath);
+            if (!Directory.Exists(RecipePath))
+                Directory.CreateDirectory(RecipePath);
 
             string fileName = Path.Combine(Settings.NPCPath, DefaultNPCFilename + ".txt");
 
@@ -468,6 +493,8 @@ namespace Server
             LoadMentor();
             LoadGoods();
             LoadGem();
+            //Languahe
+            GameLanguage.LoadServerLanguage(ConfigPath + "Language.ini");
         }
         public static void Save()
         {
@@ -487,6 +514,11 @@ namespace Server
             Reader.Write("Network", "MaxUser", MaxUser);
             Reader.Write("Network", "MaxIP", MaxIP);
 
+            //HTTP
+            Reader.Write("Network", "StartHTTPService", StartHTTPService);
+            Reader.Write("Network", "HTTPIPAddress", HTTPIPAddress);
+            Reader.Write("Network", "HTTPTrustedIPAddress", HTTPTrustedIPAddress);
+
             //Permission
             Reader.Write("Permission", "AllowNewAccount", AllowNewAccount);
             Reader.Write("Permission", "AllowChangePassword", AllowChangePassword);
@@ -503,6 +535,7 @@ namespace Server
             Reader.Write("Optional", "SafeZoneHealing", SafeZoneHealing);
             Reader.Write("Optional", "GatherOrbsPerLevel", GatherOrbsPerLevel);
             Reader.Write("Optional", "ExpMobLevelDifference", ExpMobLevelDifference);
+            Reader.Write("Optional", "GameMasterEffect", GameMasterEffect);
 
             //Database
             Reader.Write("Database", "SaveDelay", SaveDelay);
@@ -561,6 +594,8 @@ namespace Server
             Reader.Write("Game", "ToadName", ToadName);
             Reader.Write("Game", "SnakeTotemName", SnakeTotemName);
             Reader.Write("Game", "SnakesName", SnakesName);
+            Reader.Write("Game", "GroupInviteDelay", GroupInviteDelay);
+            Reader.Write("Game", "TradeDelay", TradeDelay);
 
             Reader.Write("Rested", "Period", RestedPeriod);
             Reader.Write("Rested", "BuffLength", RestedBuffLength);
@@ -569,6 +604,7 @@ namespace Server
 
             Reader.Write("Items", "HealRing", HealRing);
             Reader.Write("Items", "FireRing", FireRing);
+            Reader.Write("Items", "BlinkSkill", BlinkSkill);
 
             Reader.Write("PKTown", "PKTownMapName", PKTownMapName);
             Reader.Write("PKTown", "PKTownPositionX", PKTownPositionX);
@@ -576,7 +612,7 @@ namespace Server
 
             Reader.Write("DropGold", "DropGold", DropGold);
             Reader.Write("DropGold", "MaxDropGold", MaxDropGold);
-
+            
             Reader.Write("Items", "MaxMagicResist", MaxMagicResist);
             Reader.Write("Items", "MagicResistWeight", MagicResistWeight);
             Reader.Write("Items", "MaxPoisonResist", MaxPoisonResist);

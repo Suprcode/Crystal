@@ -399,6 +399,73 @@ namespace Server.MirObjects
         public abstract int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true);
         public abstract int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility);
 
+        public virtual int GetArmour(DefenceType type, MapObject attacker, out bool hit)
+        {
+            var armour = 0;
+            hit = true;
+            switch (type)
+            {
+                case DefenceType.ACAgility:
+                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        hit = false;
+                    }
+                    armour = GetDefencePower(MinAC, MaxAC);
+                    break;
+                case DefenceType.AC:
+                    armour = GetDefencePower(MinAC, MaxAC);
+                    break;
+                case DefenceType.MACAgility:
+                    if (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        hit = false;
+                    }
+                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        hit = false;
+                    }
+                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    break;
+                case DefenceType.MAC:
+                    if (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        hit = false;
+                    }
+                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    break;
+                case DefenceType.Agility:
+                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        hit = false;
+                    }
+                    break;
+            }
+            return armour;
+        }
+
+        public virtual void ApplyNegativeEffects(PlayerObject attacker, DefenceType type, ushort LevelOffset)
+        {
+            if (attacker.HasParalysisRing && type != DefenceType.MAC && type != DefenceType.MACAgility && 1 == Envir.Random.Next(1, 15))
+            {
+                ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, attacker);
+            }
+            if ((attacker.Freezing > 0) && (Settings.PvpCanFreeze) && type != DefenceType.MAC && type != DefenceType.MACAgility)
+            {
+                if ((Envir.Random.Next(Settings.FreezingAttackWeight) < attacker.Freezing) && (Envir.Random.Next(LevelOffset) == 0))
+                    ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = Math.Min(10, (3 + Envir.Random.Next(attacker.Freezing))), TickSpeed = 1000 }, attacker);
+            }
+            if (attacker.PoisonAttack > 0 && type != DefenceType.MAC && type != DefenceType.MACAgility)
+            {
+                if ((Envir.Random.Next(Settings.PoisonAttackWeight) < attacker.PoisonAttack) && (Envir.Random.Next(LevelOffset) == 0))
+                    ApplyPoison(new Poison { PType = PoisonType.Green, Duration = 5, TickSpeed = 1000, Value = Math.Min(10, 3 + Envir.Random.Next(attacker.PoisonAttack)) }, attacker);
+            }
+        }
+
         public abstract int Struck(int damage, DefenceType type = DefenceType.ACAgility);
 
         public abstract bool IsFriendlyTarget(PlayerObject ally);

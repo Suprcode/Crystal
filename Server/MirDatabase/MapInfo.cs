@@ -16,7 +16,7 @@ namespace Server.MirDatabase
         public byte MapDarkLight = 0, MineIndex = 0;
 
         public bool NoTeleport, NoReconnect, NoRandom, NoEscape, NoRecall, NoDrug, NoPosition, NoFight,
-            NoThrowItem, NoDropPlayer, NoDropMonster, NoNames, NoMount, NeedBridle, Fight, NeedHole, Fire, Lightning;
+            NoThrowItem, NoDropPlayer, NoDropMonster, NoNames, NoMount, NeedBridle, Fight, NeedHole, Fire, Lightning, NoTownTeleport;
 
         public string NoReconnectMap = string.Empty;
         public int FireDamage, LightningDamage;
@@ -68,7 +68,8 @@ namespace Server.MirDatabase
 
             NoTeleport = reader.ReadBoolean();
             NoReconnect = reader.ReadBoolean();
-            NoReconnectMap = reader.ReadString();
+            NoReconnectMap = reader.ReadString();           
+
             NoRandom = reader.ReadBoolean();
             NoEscape = reader.ReadBoolean();
             NoRecall = reader.ReadBoolean();
@@ -101,8 +102,9 @@ namespace Server.MirDatabase
             NoFight = reader.ReadBoolean();
 
             if (Envir.LoadVersion < 53) return;
-                Music = reader.ReadUInt16(); 
-
+                Music = reader.ReadUInt16();
+            if (Envir.LoadVersion < 78) return;
+            NoTownTeleport = reader.ReadBoolean();
         }
 
         public void Save(BinaryWriter writer)
@@ -155,8 +157,8 @@ namespace Server.MirDatabase
             writer.Write(NoFight);
 
             writer.Write(Music);
+            writer.Write(NoTownTeleport);
 
-            
         }
 
 
@@ -170,11 +172,6 @@ namespace Server.MirDatabase
             }
 
             Map map = new Map(this);
-
-            if(map.Info.FileName == "orc25")
-            {
-
-            }
 
             if (!map.Load()) return;
 

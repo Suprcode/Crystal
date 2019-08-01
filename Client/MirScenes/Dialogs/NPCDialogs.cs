@@ -387,7 +387,8 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.NPCAwakeDialog.Hide();
             GameScene.Scene.RefineDialog.Hide();
             GameScene.Scene.StorageDialog.Hide();
-            GameScene.Scene.TrustMerchantDialog.Hide();          
+            GameScene.Scene.TrustMerchantDialog.Hide();
+            GameScene.Scene.InventoryDialog.Location = new Point(0, 0);
         }
 
         public void Show()
@@ -412,6 +413,8 @@ namespace Client.MirScenes.Dialogs
 
         public bool usePearls = false;//pearl currency
 
+        public PanelType PType;
+
         public NPCGoodsDialog()
         {
             Index = 1000;
@@ -432,6 +435,16 @@ namespace Client.MirScenes.Dialogs
                 {
                     SelectedItem = ((MirGoodsCell)o).Item;
                     Update();
+
+                    if (PType == PanelType.Craft)
+                    {
+                        GameScene.Scene.CraftDialog.ResetCells();
+                        GameScene.Scene.CraftDialog.RefreshCraftCells(SelectedItem);
+
+                        if (GameScene.Scene.CraftDialog.Visible) ;
+                        else
+                            GameScene.Scene.CraftDialog.Show();
+                    }
                 };
                 Cells[i].MouseWheel += NPCGoodsPanel_MouseWheel;
                 Cells[i].DoubleClick += (o, e) => BuyItem();
@@ -550,7 +563,7 @@ namespace Client.MirScenes.Dialogs
                     maxQuantity = GameScene.Gold / (SelectedItem.Price() / SelectedItem.Count);
                     if (maxQuantity == 0)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You do no have enough Gold.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowGold, ChatType.System);
                         return;
                     }
                 }
@@ -570,7 +583,7 @@ namespace Client.MirScenes.Dialogs
                 {
                     if (amountBox.Amount > 0)
                     {
-                        Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.UniqueID, Count = amountBox.Amount });
+                        Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.UniqueID, Count = amountBox.Amount, Type = PanelType.Buy });
                     }
                 };
 
@@ -580,7 +593,7 @@ namespace Client.MirScenes.Dialogs
             {
                 if (SelectedItem.Info.Price > GameScene.Gold)
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough gold.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowGold, ChatType.System);
                     return;
                 }
 
@@ -601,7 +614,7 @@ namespace Client.MirScenes.Dialogs
                 }
 
 
-                Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.UniqueID, Count = 1 });
+                Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.UniqueID, Count = 1, Type = PanelType.Buy });
             }
         }
 
@@ -666,6 +679,27 @@ namespace Client.MirScenes.Dialogs
             Update();
         }
 
+        public void UpdatePanelType(PanelType type)
+        {
+            PType = type;
+
+            if (PType == PanelType.Buy)
+            {
+                BuyButton.Index = 312;
+                BuyButton.HoverIndex = 313;
+                BuyButton.PressedIndex = 314;
+
+                BuyLabel.Index = 27;
+                BuyButton.Visible = true;
+            }
+            else if (PType == PanelType.Craft)
+            {
+                BuyLabel.Index = 12;
+                BuyButton.Visible = false;
+
+                GameScene.Scene.CraftDialog.Show();
+            }
+        }
 
         public void NewGoods(List<UserItem> list)
         {
@@ -688,11 +722,19 @@ namespace Client.MirScenes.Dialogs
         public void Hide()
         {
             Visible = false;
+            if (GameScene.Scene.CraftDialog.Visible)
+                GameScene.Scene.CraftDialog.Hide();
         }
         public void Show()
         {
-            GameScene.Scene.InventoryDialog.Show();
+            for (int i = 0; i < Cells.Length; i++)
+            {
+                Cells[i].Recipe = PType == PanelType.Craft;
+            }
+
             Visible = true;
+
+            GameScene.Scene.InventoryDialog.Show();
         }
     }
     public sealed class NPCDropDialog : MirImageControl
@@ -766,7 +808,7 @@ namespace Client.MirScenes.Dialogs
         private void NPCDropPanel_AfterDraw(object sender, EventArgs e)
         {
             if (Hold)
-                Libraries.Prguse.Draw(403, 91 + DisplayLocation.X, 39 + DisplayLocation.Y);
+                Libraries.Title.Draw(295, 114 + DisplayLocation.X, 36 + DisplayLocation.Y);
         }
 
         private void NPCDropPanel_Click(object sender, EventArgs e)
@@ -813,7 +855,7 @@ namespace Client.MirScenes.Dialogs
                         TargetItem = null;
                         return;
                     }
-                    GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough gold.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowGold, ChatType.System);
                     break;
                 case PanelType.SpecialRepair:
                     if ((TargetItem.Info.Bind.HasFlag(BindMode.DontRepair)) || (TargetItem.Info.Bind.HasFlag(BindMode.NoSRepair)))
@@ -827,7 +869,7 @@ namespace Client.MirScenes.Dialogs
                         TargetItem = null;
                         return;
                     }
-                    GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough gold.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowGold, ChatType.System);
                     break;
                 case PanelType.Consign:
                     if (TargetItem.Info.Bind.HasFlag(BindMode.DontStore))
@@ -1509,6 +1551,244 @@ namespace Client.MirScenes.Dialogs
         }
     }
 
+
+    public sealed class CraftDialog : MirImageControl
+    {
+        public static UserItem RecipeItem;
+        public static UserItem[] IngredientSlots = new UserItem[16];
+
+        public List<KeyValuePair<MirItemCell, ulong>> Selected = new List<KeyValuePair<MirItemCell, ulong>>();
+
+        public MirItemCell[] Grid;
+        public static UserItem[] ShadowItems = new UserItem[16];
+
+        public MirButton CraftButton, CloseButton;
+
+        public CraftDialog()
+        {
+            Index = 1002;
+            Library = Libraries.Prguse;
+            Location = new Point(0, 0);
+            Sort = true;
+            BeforeDraw += CraftDialog_BeforeDraw;
+            Movable = true;
+
+            Grid = new MirItemCell[4 * 4];
+            for (int x = 0; x < 4; x++)
+            {
+                for (int y = 0; y < 4; y++)
+                {
+                    int idx = 4 * y + x;
+                    Grid[idx] = new MirItemCell
+                    {
+                        ItemSlot = idx,
+                        GridType = MirGridType.Craft,
+                        Library = Libraries.Items,
+                        Parent = this,
+                        Size = new Size(34, 32),
+                        Location = new Point(x * 34 + 12 + x, y * 32 + 37 + y),
+                        Border = true,
+                        BorderColour = Color.Lime
+                    };
+                    Grid[idx].Click += Grid_Click;
+                }
+            }
+
+            CloseButton = new MirButton
+            {
+                Index = 360,
+                HoverIndex = 361,
+                PressedIndex = 362,
+                Location = new Point(139, 3),
+                Library = Libraries.Prguse2,
+                Parent = this,
+                Sound = SoundList.ButtonA,
+            };
+            CloseButton.Click += (o, e) => Hide();
+
+            CraftButton = new MirButton
+            {
+                HoverIndex = 337,
+                Index = 336,
+                Location = new Point(41, 177),
+                Library = Libraries.Title,
+                Parent = this,
+                PressedIndex = 338,
+                Sound = SoundList.ButtonA,
+                GrayScale = true,
+                Enabled = false
+            };
+            CraftButton.Click += (o, e) => CraftItem();
+        }
+
+        void CraftDialog_BeforeDraw(object sender, EventArgs e)
+        {
+            if (!GameScene.Scene.InventoryDialog.Visible)
+            {
+                Hide();
+                return;
+            }
+        }
+
+
+        private void Grid_Click(object sender, EventArgs e)
+        {
+            MirItemCell cell = (MirItemCell)sender;
+
+            if (cell == null || cell.ShadowItem == null)
+                return;
+
+            if (GameScene.SelectedCell == null || GameScene.SelectedCell.GridType != MirGridType.Inventory || GameScene.SelectedCell.Locked)
+                return;
+
+            if (GameScene.SelectedCell.Item.Info != cell.ShadowItem.Info || cell.Item != null)
+                return;
+
+
+            cell.Item = GameScene.SelectedCell.Item;
+
+            Selected.Add(new KeyValuePair<MirItemCell, ulong>(GameScene.SelectedCell, GameScene.SelectedCell.Item.UniqueID));
+
+            GameScene.SelectedCell.Locked = true;
+            GameScene.SelectedCell = null;
+
+            RefreshCraftCells(RecipeItem);
+        }
+
+        public void Hide()
+        {
+            if (!Visible) return;
+
+            Visible = false;
+
+            ResetCells();
+        }
+
+        public void Show()
+        {
+            Visible = true;
+
+            Location = new Point(GameScene.Scene.InventoryDialog.Location.X, GameScene.Scene.InventoryDialog.Location.Y + 236);
+        }
+
+        private void CraftItem()
+        {
+            if (RecipeItem == null) return;
+
+            uint max = 99;
+            for (int i = 0; i < Grid.Length; i++)
+            {
+                if (Grid[i] == null || Grid[i].Item == null) continue;
+
+                uint temp = Grid[i].Item.Count / Grid[i].ShadowItem.Count;
+
+                if (temp < max) max = temp;
+            }
+
+            if (max > RecipeItem.Info.StackSize)
+                max = RecipeItem.Info.StackSize;
+
+            //TODO - Check Max slots spare against slots to be used (stacksize/quantity)
+            //TODO - GetMaxItemGain
+
+            if (RecipeItem.Weight > (MapObject.User.MaxBagWeight - MapObject.User.CurrentBagWeight))
+            {
+                GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough weight.", ChatType.System);
+                return;
+            }
+
+            if (max > 1)
+            {
+                MirAmountBox amountBox = new MirAmountBox("Craft Amount:", RecipeItem.Info.Image, max, 0, max);
+
+                amountBox.OKButton.Click += (o, e) =>
+                {
+                    if (amountBox.Amount > 0)
+                    {
+                        if (!HasCraftItems(RecipeItem, amountBox.Amount))
+                        {
+                            GameScene.Scene.ChatDialog.ReceiveChat("You do not have the required ingredients.", ChatType.System);
+                            return;
+                        }
+
+                        Network.Enqueue(new C.CraftItem { UniqueID = RecipeItem.UniqueID, Count = amountBox.Amount, Slots = Selected.Select(x => x.Key.ItemSlot).ToArray() });
+                    }
+                };
+
+                amountBox.Show();
+            }
+            else
+            {
+                Network.Enqueue(new C.CraftItem { UniqueID = RecipeItem.UniqueID, Count = 1, Slots = Selected.Select(x => x.Key.ItemSlot).ToArray() });
+            }
+        }
+
+        private bool HasCraftItems(UserItem item, uint count)
+        {
+            for (int i = 0; i < Grid.Length; i++)
+            {
+                if (Grid[i].ShadowItem == null) continue;
+
+                if (Grid[i].Item == null || Grid[i].Item.Count < (Grid[i].ShadowItem.Count * count)) return false;
+            }
+
+            return true;
+        }
+
+        public void ResetCells()
+        {
+            RecipeItem = null;
+            for (int j = 0; j < Grid.Length; j++)
+            {
+                IngredientSlots[j] = null;
+                ShadowItems[j] = null;
+            }
+
+            for (int i = 0; i < Selected.Count; i++)
+            {
+                Selected[i].Key.Locked = false;
+            }
+
+            Selected.Clear();
+        }
+
+        public MirItemCell GetCell(ulong id)
+        {
+            for (int i = 0; i < Grid.Length; i++)
+            {
+                if (Grid[i].Item == null || Grid[i].Item.UniqueID != id) continue;
+                return Grid[i];
+            }
+            return null;
+        }
+
+        public void RefreshCraftCells(UserItem selectedItem)
+        {
+            RecipeItem = selectedItem;
+
+            CraftButton.Enabled = true;
+            CraftButton.GrayScale = false;
+
+            ClientRecipeInfo recipe = GameScene.RecipeInfoList.SingleOrDefault(x => x.Item.ItemIndex == selectedItem.ItemIndex);
+
+            for (int i = 0; i < recipe.Ingredients.Count; i++)
+            {
+                if (i >= IngredientSlots.Length) break;
+
+                ShadowItems[i] = recipe.Ingredients[i];
+
+                bool needItem = Grid[i].Item == null || Grid[i].Item.Count < Grid[i].ShadowItem.Count;
+
+                if (needItem)
+                {
+                    CraftButton.Enabled = false;
+                    CraftButton.GrayScale = true;
+                }
+            }
+        }
+    }
+
+
     public sealed class RefineDialog : MirImageControl
     {
         public MirItemCell[] Grid;
@@ -1589,6 +1869,7 @@ namespace Client.MirScenes.Dialogs
         public MirItemCell[] Grid;
         public MirButton Storage1Button, Storage2Button, RentButton, ProtectButton, CloseButton;
         public MirImageControl LockedPage;
+        public MirLabel RentalLabel;
 
         public StorageDialog()
         {
@@ -1642,7 +1923,6 @@ namespace Client.MirScenes.Dialogs
             };
             Storage2Button.Click += (o, e) =>
             {
-                
                 RefreshStorage2();
             };
             RentButton = new MirButton
@@ -1654,20 +1934,22 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(283, 33),
                 Parent = this,
                 Sound = SoundList.ButtonA,
-                Visible = false,
+                Visible = true,
             };
             RentButton.Click += (o, e) =>
             {
-                if (GameScene.Storage.Length == 80)
-                {
-                    MirMessageBox messageBox = new MirMessageBox("Are you sure you would like to buy 80 extra slots for 20,000,000 gold?", MirMessageBoxButtons.OKCancel);
+                MirMessageBox messageBox;
 
-                    messageBox.OKButton.Click += (o1, a) =>
-                    {
-                        Network.Enqueue(new C.Chat { Message = "@ADDSTORAGE" });
-                    };
-                    messageBox.Show();
-                }
+                if (GameScene.User.HasExpandedStorage)
+                    messageBox = new MirMessageBox(GameLanguage.ExtendYourRentalPeriod, MirMessageBoxButtons.OKCancel);
+                else
+                    messageBox = new MirMessageBox(GameLanguage.ExtraStorage, MirMessageBoxButtons.OKCancel);
+
+                messageBox.OKButton.Click += (o1, a) =>
+                {
+                    Network.Enqueue(new C.Chat { Message = "@ADDSTORAGE" });
+                };
+                messageBox.Show();
             };
 
             ProtectButton = new MirButton
@@ -1679,7 +1961,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 115,
                 Sound = SoundList.ButtonA,
-                Visible = false
+                Visible = true
             };
             CloseButton = new MirButton
             {
@@ -1692,6 +1974,17 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
             };
             CloseButton.Click += (o, e) => Hide();
+
+            RentalLabel = new MirLabel
+            {
+                Parent = this,
+                Location = new Point(40, 322),
+                AutoSize = true,
+                DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
+                NotControl = true,
+                Text = GameLanguage.ExpandedStorageLocked,
+                ForeColour = Color.Red
+            };
 
             Grid = new MirItemCell[10 * 16];
 
@@ -1748,6 +2041,7 @@ namespace Client.MirScenes.Dialogs
 
             RentButton.Visible = false;
             LockedPage.Visible = false;
+            RentalLabel.Visible = false;
         }
 
         public void RefreshStorage2()
@@ -1759,20 +2053,26 @@ namespace Client.MirScenes.Dialogs
             Storage2Button.Index = 745;
             Storage2Button.HoverIndex = 745;
 
-            if (GameScene.User.AddedStorage)
+            RentalLabel.Visible = true;
+
+            if (GameScene.User.HasExpandedStorage)
             {
-                RentButton.Visible = false;
+                RentButton.Visible = true;
                 LockedPage.Visible = false;
+                RentalLabel.Text = GameLanguage.ExpandedStorageExpiresOn + GameScene.User.ExpandedStorageExpiryTime.ToString();
+                RentalLabel.ForeColour = Color.White;
             }
             else
             {
+                RentalLabel.Text = GameLanguage.ExpandedStorageLocked;
+                RentalLabel.ForeColour = Color.Red;
                 RentButton.Visible = true;
                 LockedPage.Visible = true;
             }
 
             foreach (var grid in Grid)
             {
-                if (grid.ItemSlot < 80 || !GameScene.User.AddedStorage)
+                if (grid.ItemSlot < 80 || !GameScene.User.HasExpandedStorage)
                     grid.Visible = false;
                 else
                     grid.Visible = true;

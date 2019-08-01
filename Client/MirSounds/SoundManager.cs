@@ -191,6 +191,13 @@ namespace Client.MirSounds
             WalkWaterR = 10030,
             RunWaterL = 10031,
             RunWaterR = 10032,
+            HorseWalkL = 10033,
+            HorseWalkR = 10034,
+            HorseRun = 10035,
+            WalkSnowL = 10036,
+            WalkSnowR = 10037,
+            RunSnowL = 10038,
+            RunSnowR = 10039,
 
             //Weapon Swing
             SwingShort = 10050,
@@ -263,6 +270,8 @@ namespace Client.MirSounds
             PetOlympic = 10508,
             PetFrog = 10510,
             PetMonkey = 10511,
+            PetAngryBird = 10512,
+            PetFoxey = 10513,
             PetPickup = 10520;
     }
 }

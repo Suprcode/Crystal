@@ -142,7 +142,7 @@ namespace Server
             NoMountCheckbox.Checked = mi.NoMount;
             NeedBridleCheckbox.Checked = mi.NeedBridle;
             //MineIndextextBox.Text = mi.MineIndex.ToString();
-
+            NoTownTeleportCheckbox.Checked = mi.NoTownTeleport;
             for (int i = 1; i < _selectedMapInfos.Count; i++)
             {
                 mi = _selectedMapInfos[i];
@@ -179,6 +179,7 @@ namespace Server
 
                 if (NoMountCheckbox.Checked != mi.NoMount) NoMountCheckbox.Checked = false;
                 if (NeedBridleCheckbox.Checked != mi.NeedBridle) NeedBridleCheckbox.Checked = false;
+                if (NoTownTeleportCheckbox.Checked != mi.NoTownTeleport) NoTownTeleportCheckbox.Checked = false;
             }
 
             UpdateSafeZoneInterface();
@@ -1372,99 +1373,11 @@ namespace Server
             if (ofd.FileName == string.Empty) return;
 
             MirForms.ConvertMapInfo.Path = ofd.FileName;
-
             MirForms.ConvertMapInfo.Start(Envir);
-
-            for (int i = 0; i < MirForms.ConvertMapInfo.MapInfo.Count; i++)
-            {
-
-                MapInfo mi = new MapInfo
-                {
-                    Index = ++Envir.MapIndex,
-                    FileName = MirForms.ConvertMapInfo.MapInfo[i].MapFile,
-                    Title = MirForms.ConvertMapInfo.MapInfo[i].MapName.Replace('*', ' '),
-                    NoTeleport = MirForms.ConvertMapInfo.MapInfo[i].NoTeleport,
-                    NoReconnect = MirForms.ConvertMapInfo.MapInfo[i].NoReconnect,
-                    NoRandom = MirForms.ConvertMapInfo.MapInfo[i].NoRandom,
-                    NoEscape = MirForms.ConvertMapInfo.MapInfo[i].NoEscape,
-                    NoRecall = MirForms.ConvertMapInfo.MapInfo[i].NoRecall,
-                    NoDrug = MirForms.ConvertMapInfo.MapInfo[i].NoDrug,
-                    NoPosition = MirForms.ConvertMapInfo.MapInfo[i].NoPositionMove,
-                    NoThrowItem = MirForms.ConvertMapInfo.MapInfo[i].NoThrowItem,
-                    NoDropPlayer = MirForms.ConvertMapInfo.MapInfo[i].NoPlayerDrop,
-                    NoDropMonster = MirForms.ConvertMapInfo.MapInfo[i].NoMonsterDrop,
-                    NoNames = MirForms.ConvertMapInfo.MapInfo[i].NoNames,
-                    Fight = MirForms.ConvertMapInfo.MapInfo[i].Fight,
-                    NoFight = MirForms.ConvertMapInfo.MapInfo[i].NoFight,
-                    Fire = MirForms.ConvertMapInfo.MapInfo[i].Fire,
-                    Lightning = MirForms.ConvertMapInfo.MapInfo[i].Lightning,
-                    Light = MirForms.ConvertMapInfo.MapInfo[i].Light,
-                    MiniMap = MirForms.ConvertMapInfo.MapInfo[i].MiniMapNumber,
-                    BigMap = MirForms.ConvertMapInfo.MapInfo[i].BigMapNumber,
-                    Music = MirForms.ConvertMapInfo.MapInfo[i].MusicNumber,
-                    MineIndex = (byte)MirForms.ConvertMapInfo.MapInfo[i].MineIndex,
-                };
-
-
-                if (mi.NoReconnect == true)
-                    mi.NoReconnectMap = MirForms.ConvertMapInfo.MapInfo[i].ReconnectMap;
-                if (mi.Fire == true)
-                    mi.FireDamage = MirForms.ConvertMapInfo.MapInfo[i].FireDamage;
-                if (mi.Lightning == true)
-                    mi.LightningDamage = MirForms.ConvertMapInfo.MapInfo[i].LightningDamage;
-                if (MirForms.ConvertMapInfo.MapInfo[i].MapLight == true)
-                    mi.MapDarkLight = MirForms.ConvertMapInfo.MapInfo[i].MapLightValue;
-
-                Envir.MapInfoList.Add(mi);
-            }
-
-            for (int j = 0; j < MirForms.ConvertMapInfo.MapMovements.Count; j++)
-            {
-                try
-                {
-                    MovementInfo newmoveinfo = new MovementInfo();
-
-                    newmoveinfo.MapIndex = Convert.ToInt16(MirForms.ConvertMapInfo.MapMovements[j].toMap);
-
-                    newmoveinfo.Source = new Point
-                        (Convert.ToInt16(MirForms.ConvertMapInfo.MapMovements[j].fromX),
-                        (Convert.ToInt16(MirForms.ConvertMapInfo.MapMovements[j].fromY)));
-
-                    newmoveinfo.Destination = new Point
-                        (Convert.ToInt16(MirForms.ConvertMapInfo.MapMovements[j].toX),
-                        (Convert.ToInt16(MirForms.ConvertMapInfo.MapMovements[j].toY)));
-
-                    newmoveinfo.NeedHole = false;
-                    newmoveinfo.NeedMove = false;
-
-                    Envir.MapInfoList[Envir.MapInfoList.FindIndex(a => a.Index == (MirForms.ConvertMapInfo.MapMovements[j].fromIndex))].Movements.Add(newmoveinfo);
-                }
-                catch (Exception)
-                {
-                    continue;
-                }
-            }
-
-            for (int i = 0; i < MirForms.ConvertMapInfo.MineInfo.Count; i++)
-            {
-                MineZone mz = new MineZone();
-
-                try
-                {
-                    mz.Location = MirForms.ConvertMapInfo.MineInfo[i].Location;
-                    mz.Size = (ushort)MirForms.ConvertMapInfo.MineInfo[i].Range;
-                    mz.Mine = (byte)MirForms.ConvertMapInfo.MineInfo[i].MineIndex;
-
-                    Envir.MapInfoList[MirForms.ConvertMapInfo.MineInfo[i].MapIndex - 1].MineZones.Add(mz);
-                }
-                catch (Exception) { continue; }
-            }
-
 
             MirForms.ConvertMapInfo.End();
             UpdateInterface();
 
-            MessageBox.Show("Map Info Import Complete");
         }
         private void ExportMapInfoButton_Click(object sender, EventArgs e)
         {
@@ -1472,67 +1385,48 @@ namespace Server
 
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.InitialDirectory = Application.StartupPath + @"\Exports";
+            sfd.FileName = "MapInfoExport";
             sfd.Filter = "Text File|*.txt";
             sfd.ShowDialog();
 
             if (sfd.FileName == string.Empty) return;
-
             for (int i = 0; i < _selectedMapInfos.Count; i++)
             {
                 using (StreamWriter sw = File.AppendText(sfd.FileNames[0]))
                 {
-                    string attributes = string.Empty;
+                    string textOut = string.Empty;
+                    textOut += string.Format("[{0} {1}]", _selectedMapInfos[i].FileName, _selectedMapInfos[i].Title.Replace(' ', '*'));
 
-                    attributes += " LIGHT(" + _selectedMapInfos[i].Light + ")";
-                    attributes += " MINIMAP(" + _selectedMapInfos[i].MiniMap + ")";
-                    attributes += " BIGMAP(" + _selectedMapInfos[i].BigMap + ")";
-                    attributes += " MAPLIGHT(" + _selectedMapInfos[i].MapDarkLight + ")";
-                    attributes += " MINE(" + _selectedMapInfos[i].MineIndex + ")";
-                    attributes += " MUSIC(" + _selectedMapInfos[i].Music + ")";
+                    textOut += " LIGHT(" + _selectedMapInfos[i].Light + ")";
+                    textOut += " MINIMAP(" + _selectedMapInfos[i].MiniMap + ")";
+                    textOut += " BIGMAP(" + _selectedMapInfos[i].BigMap + ")";
+                    textOut += " MAPLIGHT(" + _selectedMapInfos[i].MapDarkLight + ")";
+                    textOut += " MINE(" + _selectedMapInfos[i].MineIndex + ")";
+                    textOut += " MUSIC(" + _selectedMapInfos[i].Music + ")";
+                    textOut += PrintMapAttributes(_selectedMapInfos[i]);
+                    sw.WriteLine(textOut);
 
-                    if (_selectedMapInfos[i].NoTeleport)
-                        attributes += " NOTELEPORT";
-                    if (_selectedMapInfos[i].NoReconnect)
-                        attributes += " NORECONNECT(" + _selectedMapInfos[i].NoReconnectMap + ")";
-                    if (_selectedMapInfos[i].NoRandom)
-                        attributes += " NORANDOMMOVE";
-                    if (_selectedMapInfos[i].NoEscape)
-                        attributes += " NOESCAPE";
-                    if (_selectedMapInfos[i].NoRecall)
-                        attributes += " NORECALL";
-                    if (_selectedMapInfos[i].NoDrug)
-                        attributes += " NODRUG";
-                    if (_selectedMapInfos[i].NoPosition)
-                        attributes += " NOPOSITIONMOVE";
-                    if (_selectedMapInfos[i].NoThrowItem)
-                        attributes += " NOTHROWITEM";
-                    if (_selectedMapInfos[i].NoDropPlayer)
-                        attributes += " NOPLAYERDROP";
-                    if (_selectedMapInfos[i].NoDropMonster)
-                        attributes += " NOMONSTERDROP";
-                    if (_selectedMapInfos[i].NoNames)
-                        attributes += " NONAMES";
-                    if (_selectedMapInfos[i].NoFight)
-                        attributes += " NOFIGHT";
-                    if (_selectedMapInfos[i].Fight)
-                        attributes += " FIGHT";
-                    if (_selectedMapInfos[i].Fire)
-                        attributes += " FIRE(" + _selectedMapInfos[i].FireDamage + ")";
-                    if (_selectedMapInfos[i].Lightning)
-                        attributes += " LIGHTNING(" + _selectedMapInfos[i].LightningDamage + ")";
-
-                    sw.WriteLine("[{0} {1}]{2}", _selectedMapInfos[i].FileName, _selectedMapInfos[i].Title.Replace(' ', '*'), attributes);
-
+                    //STARTZONE(0,150,150,50) || SAFEZONE(0,150,150,50)
+                    for (int j = 0; j < _selectedMapInfos[i].SafeZones.Count; j++)
+                    {
+                        string safeZoneOut = _selectedMapInfos[i].SafeZones[j].StartPoint ? "STARTZONE" : "SAFEZONE";
+                        safeZoneOut += "(" + _selectedMapInfos[i].FileName + "," +
+                            _selectedMapInfos[i].SafeZones[j].Size.ToString() + "," +
+                            _selectedMapInfos[i].SafeZones[j].Location.X.ToString() + "," +
+                            _selectedMapInfos[i].SafeZones[j].Location.Y.ToString() + ")";
+                        sw.WriteLine(safeZoneOut);
+                    }
                     for (int j = 0; j < _selectedMapInfos[i].Movements.Count; j++)
                     {
                         try
                         {
-                            string movement = string.Format("{0} {1} {2} {3} {4}", // 0 1,1 -> 1 2,2
+                            string movement = string.Format("{0} {1} {2} {3} {4} {5}", // 0 1,1 -> 1 2,2
                                _selectedMapInfos[i].FileName,
                                _selectedMapInfos[i].Movements[j].Source.X + "," + _selectedMapInfos[i].Movements[j].Source.Y,
                                "->",
                                Envir.MapInfoList[_selectedMapInfos[i].Movements[j].MapIndex - 1].FileName,
-                               _selectedMapInfos[i].Movements[j].Destination.X + "," + _selectedMapInfos[i].Movements[j].Destination.Y);
+                               _selectedMapInfos[i].Movements[j].Destination.X + "," + _selectedMapInfos[i].Movements[j].Destination.Y,
+                               (_selectedMapInfos[i].Movements[j].NeedHole ? "NEEDHOLE " : "") + (_selectedMapInfos[i].Movements[j].NeedMove ? "NEEDMOVE " : "") + (_selectedMapInfos[i].Movements[j].ConquestIndex > 0 ? "NEEDCONQUEST(" + _selectedMapInfos[i].Movements[j].ConquestIndex + ")" : ""));
 
                             sw.WriteLine(movement);
                         }
@@ -1541,7 +1435,6 @@ namespace Server
                             continue;
                         }
                     }
-
                     for (int j = 0; j < _selectedMapInfos[i].MineZones.Count; j++)
                     {
                         try
@@ -1552,7 +1445,6 @@ namespace Server
                                _selectedMapInfos[i].MineZones[j].Location.X.ToString(),
                                _selectedMapInfos[i].MineZones[j].Location.Y.ToString(),
                                _selectedMapInfos[i].MineZones[j].Size.ToString());
-
                             sw.WriteLine(mineZones);
                         }
                         catch
@@ -1564,7 +1456,29 @@ namespace Server
             }
             MessageBox.Show("Map Info Export Complete");
         }
-
+        private String PrintMapAttributes(MapInfo map)
+        {
+            string textOut = string.Empty;
+            if (map.NoTeleport) textOut += " NOTELEPORT";
+            if (map.NoReconnect) textOut += " NORECONNECT(" + map.NoReconnectMap + ")";
+            if (map.NoRandom) textOut += " NORANDOMMOVE";
+            if (map.NoEscape) textOut += " NOESCAPE";
+            if (map.NoRecall) textOut += " NORECALL";
+            if (map.NoDrug) textOut += " NODRUG";
+            if (map.NoPosition) textOut += " NOPOSITIONMOVE";
+            if (map.NoThrowItem) textOut += " NOTHROWITEM";
+            if (map.NoDropPlayer) textOut += " NOPLAYERDROP";
+            if (map.NoDropMonster) textOut += " NOMONSTERDROP";
+            if (map.NoNames) textOut += " NONAMES";
+            if (map.NoMount) textOut += " NOMOUNT";
+            if (map.NeedBridle) textOut += "NEEDBRIDLE";
+            if (map.NoFight) textOut += " NOFIGHT";
+            if (map.Fight) textOut += " FIGHT";
+            if (map.Fire) textOut += " FIRE(" + map.FireDamage + ")";
+            if (map.Lightning) textOut += " LIGHTNING(" + map.LightningDamage + ")";
+            if (map.NoTownTeleport) textOut += " NOTownTeleport";
+            return textOut;
+        }
         private void ImportMonGenButton_Click(object sender, EventArgs e)
         {
             bool hasImported = false;
@@ -1577,12 +1491,12 @@ namespace Server
             {
                 try
                 {
-                    int monsterIndex = Envir.MonsterInfoList.FindIndex(a => a.Name.Replace(" ", "") == MirForms.ConvertMonGenInfo.monGenList[i].Name.Replace('*', ' '));
+                    int monsterIndex = Envir.MonsterInfoList.Find(a => a.Name.Replace(" ", "") == MirForms.ConvertMonGenInfo.monGenList[i].Name.Replace('*', ' ')).Index;
                     if (monsterIndex == -1) continue;
 
                     RespawnInfo respawnInfo = new RespawnInfo
                     {
-                        MonsterIndex = monsterIndex + 1,
+                        MonsterIndex = monsterIndex,
                         Location = new Point(MirForms.ConvertMonGenInfo.monGenList[i].X, MirForms.ConvertMonGenInfo.monGenList[i].Y),
                         Count = (ushort)MirForms.ConvertMonGenInfo.monGenList[i].Count,
                         Spread = (ushort)MirForms.ConvertMonGenInfo.monGenList[i].Range,
@@ -1654,11 +1568,19 @@ namespace Server
 
             MirForms.VisualMapInfo.VForm VForm = new MirForms.VisualMapInfo.VForm();
             MirForms.VisualMapInfo.Class.VisualizerGlobal.MapInfo = _selectedMapInfos[0];
+            VForm.FormClosed += VForm_Disposed;
+
             VForm.ShowDialog();
 
             _selectedMapInfos[0] = MirForms.VisualMapInfo.Class.VisualizerGlobal.MapInfo;
             UpdateMineZoneInterface();
             UpdateRespawnInterface();
+        }
+
+        private void VForm_Disposed(object sender, EventArgs e)
+        {
+            RefreshRespawnList();
+            RefreshMineZoneList();
         }
 
         private void MineComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -1711,7 +1633,6 @@ namespace Server
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
-
 
             ActiveControl.BackColor = SystemColors.Window;
 
@@ -1790,6 +1711,14 @@ namespace Server
                 _selectedMovementInfos[i].ConquestIndex = info.Index;
 
             RefreshMovementList();
+        }
+
+        private void NoTownTeleportCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+                _selectedMapInfos[i].NoTownTeleport = NoTownTeleportCheckbox.Checked;
         }
     }
 }

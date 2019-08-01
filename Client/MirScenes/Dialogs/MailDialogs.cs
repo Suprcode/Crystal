@@ -126,11 +126,11 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(75, 414),
                 Sound = SoundList.ButtonA,
-                Hint = "Send"
+                Hint = GameLanguage.Send
             };
             SendButton.Click += (o, e) =>
                 {
-                    MirInputBox inputBox = new MirInputBox("Please enter the name of the person you would like to mail.");
+                    MirInputBox inputBox = new MirInputBox(GameLanguage.EnterMailToName);
 
                     inputBox.OKButton.Click += (o1, e1) =>
                     {
@@ -152,7 +152,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(102, 414),
                 Sound = SoundList.ButtonA,
-                Hint = "Reply"
+                Hint = GameLanguage.Reply
             };
             ReplyButton.Click += (o, e) =>
             {
@@ -170,7 +170,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(129, 414),
                 Sound = SoundList.ButtonA,
-                Hint = "Read"
+                Hint = GameLanguage.Read
             };
             ReadButton.Click += (o, e) =>
             {
@@ -195,7 +195,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(156, 414),
                 Sound = SoundList.ButtonA,
-                Hint = "Delete"
+                Hint = GameLanguage.Delete
             };
             DeleteButton.Click += (o, e) =>
             {
@@ -229,7 +229,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(183, 414),
                 Sound = SoundList.ButtonA,
-                Hint = "Block List"
+                Hint = GameLanguage.BlockList
             };
 
             BugReportButton = new MirButton

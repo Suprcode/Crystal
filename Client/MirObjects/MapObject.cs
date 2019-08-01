@@ -34,7 +34,7 @@ namespace Client.MirObjects
 
         public bool Blend = true;
 
-        public uint TradeGoldAmount;
+        
 
         public byte PercentHealth;
         public long HealthTime;
@@ -156,11 +156,14 @@ namespace Client.MirObjects
                     };
                     break;
                 case BuffType.MagicBooster:
-                    Effects.Add(new BuffEffect(Libraries.Magic3, 90, 6, 1200, this, true, type) { Repeat = true });
+					Effects.Add(new BuffEffect(Libraries.Magic3, 90, 6, 1200, this, true, type) { Repeat = true });
                     break;
                 case BuffType.PetEnhancer:
                     Effects.Add(new BuffEffect(Libraries.Magic3, 230, 6, 1200, this, true, type) { Repeat = true });
                     break;
+				case BuffType.GameMaster:
+					Effects.Add(new BuffEffect(Libraries.CHumEffect[5], 0, 1416, 1200, this, true, type) { Repeat = true });
+					break;
             }
         }
         public void RemoveBuffEffect(BuffType type)

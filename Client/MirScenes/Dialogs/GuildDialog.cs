@@ -111,7 +111,6 @@ namespace Client.MirScenes.Dialogs
         public MirButton StorageGoldAdd, StorageGoldRemove, StorageGoldIcon;
         public MirItemCell[] StorageGrid;
         public MirButton StorageUpButton, StorageDownButton, StoragePositionBar;
-        public bool StorageRequested = false;
         public int StorageIndex = 1;
         #endregion
 
@@ -2221,8 +2220,7 @@ namespace Client.MirScenes.Dialogs
                 case 2:
                     StoragePage.Visible = true;
                     StorageButton.Index = 106;
-                    if (!StorageRequested)
-                        Network.Enqueue(new C.GuildStorageItemChange() { Type = 2 });
+                    Network.Enqueue(new C.GuildStorageItemChange() { Type = 3 });
                     break;
                 case 3:
                     RankPage.Visible = true;
@@ -2270,7 +2268,7 @@ namespace Client.MirScenes.Dialogs
 
             if (MapControl.User.GuildName == "")
             {
-                MirMessageBox messageBox = new MirMessageBox("You are not in a guild.", MirMessageBoxButtons.OK);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.NotInGuild, MirMessageBoxButtons.OK);
                 messageBox.Show();
                 return;
             }

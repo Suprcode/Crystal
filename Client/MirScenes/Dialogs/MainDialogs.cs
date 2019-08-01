@@ -89,7 +89,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1905,
                 Sound = SoundList.ButtonA,
-                Hint = "Inventory (" + CMain.InputKeys.GetKey(KeybindOptions.Inventory) + ")"
+                Hint = string.Format(GameLanguage.Inventory, CMain.InputKeys.GetKey(KeybindOptions.Inventory))
             };
             InventoryButton.Click += (o, e) =>
             {
@@ -108,7 +108,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1902,
                 Sound = SoundList.ButtonA,
-                Hint = "Character (" + CMain.InputKeys.GetKey(KeybindOptions.Equipment) + ")"
+                Hint = string.Format(GameLanguage.Character, CMain.InputKeys.GetKey(KeybindOptions.Equipment))
             };
             CharacterButton.Click += (o, e) =>
             {
@@ -130,7 +130,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1908,
                 Sound = SoundList.ButtonA,
-                Hint = "Skills (" + CMain.InputKeys.GetKey(KeybindOptions.Skills) + ")"
+                Hint = string.Format(GameLanguage.Skills, CMain.InputKeys.GetKey(KeybindOptions.Skills))
             };
             SkillButton.Click += (o, e) =>
             {
@@ -152,7 +152,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1911,
                 Sound = SoundList.ButtonA,
-                Hint = "Quests (" + CMain.InputKeys.GetKey(KeybindOptions.Quests) + ")"
+                Hint = string.Format(GameLanguage.Quests, CMain.InputKeys.GetKey(KeybindOptions.Quests))
             };
             QuestButton.Click += (o, e) =>
             {
@@ -170,7 +170,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1914,
                 Sound = SoundList.ButtonA,
-                Hint = "Options (" + CMain.InputKeys.GetKey(KeybindOptions.Options) + ")"
+                Hint = string.Format(GameLanguage.Options, CMain.InputKeys.GetKey(KeybindOptions.Options))
             };
             OptionButton.Click += (o, e) =>
             {
@@ -188,7 +188,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1962,
                 Sound = SoundList.ButtonC,
-                Hint = "Menu"
+                Hint = GameLanguage.Menu
             };
             MenuButton.Click += (o, e) =>
             {
@@ -205,7 +205,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 828,
                 Sound = SoundList.ButtonC,
-                Hint = "Game Shop (" + CMain.InputKeys.GetKey(KeybindOptions.GameShop) + ")"
+                Hint = string.Format(GameLanguage.GameShop, CMain.InputKeys.GetKey(KeybindOptions.GameShop))
             };
             GameShopButton.Click += (o, e) =>
             {
@@ -320,7 +320,7 @@ namespace Client.MirScenes.Dialogs
             {
                 Parent = this,
                 Location = new Point(this.Size.Width - 105, 101),
-                Size = new Size(26, 14),
+                Size = new Size(40, 14),
             };
 
             SpaceLabel = new MirLabel
@@ -376,38 +376,38 @@ namespace Client.MirScenes.Dialogs
             switch (GameScene.Scene.AMode)
             {
                 case AttackMode.Peace:
-                    AModeLabel.Text = "[Mode: Peaceful]";
+                    AModeLabel.Text = GameLanguage.AttackMode_Peace;
                     break;
                 case AttackMode.Group:
-                    AModeLabel.Text = "[Mode: Group]";
+                    AModeLabel.Text = GameLanguage.AttackMode_Group;
                     break;
                 case AttackMode.Guild:
-                    AModeLabel.Text = "[Mode: Guild]";
+                    AModeLabel.Text = GameLanguage.AttackMode_Guild;
                     break;
                 case AttackMode.EnemyGuild:
-                    AModeLabel.Text = "[Mode: Enemy Guild]";
+                    AModeLabel.Text = GameLanguage.AttackMode_EnemyGuild;
                     break;
                 case AttackMode.RedBrown:
-                    AModeLabel.Text = "[Mode: Red/Brown]";
+                    AModeLabel.Text = GameLanguage.AttackMode_RedBrown;
                     break;
                 case AttackMode.All:
-                    AModeLabel.Text = "[Mode: Attack All]";
+                    AModeLabel.Text = GameLanguage.AttackMode_All;
                     break;
             }
 
             switch (GameScene.Scene.PMode)
             {
                 case PetMode.Both:
-                    PModeLabel.Text = "[Pet: Attack and Move]";
+                    PModeLabel.Text = GameLanguage.PetMode_Both;
                     break;
                 case PetMode.MoveOnly:
-                    PModeLabel.Text = "[Pet: Do Not Attack]";
+                    PModeLabel.Text = GameLanguage.PetMode_MoveOnly;
                     break;
                 case PetMode.AttackOnly:
-                    PModeLabel.Text = "[Pet: Do Not Move]";
+                    PModeLabel.Text = GameLanguage.PetMode_AttackOnly;
                     break;
                 case PetMode.None:
-                    PModeLabel.Text = "[Pet: Do Not Attack or Move]";
+                    PModeLabel.Text = GameLanguage.PetMode_None;
                     break;
             }
 
@@ -1127,7 +1127,7 @@ namespace Client.MirScenes.Dialogs
     }
     public sealed class ChatControlBar : MirImageControl
     {
-        public MirButton SizeButton, SettingsButton, NormalButton, ShoutButton, WhisperButton, LoverButton, MentorButton, GroupButton, GuildButton, ReportButton;
+        public MirButton SizeButton, SettingsButton, NormalButton, ShoutButton, WhisperButton, LoverButton, MentorButton, GroupButton, GuildButton, ReportButton, TradeButton;
 
         public ChatControlBar()
         {
@@ -1145,7 +1145,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(Settings.Resolution != 800 ? 574 : 350, 1),
                 Visible = true,
                 Sound = SoundList.ButtonA,
-                Hint = "Size"
+                Hint = GameLanguage.Size
             };
             SizeButton.Click += (o, e) =>
             {
@@ -1164,7 +1164,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(Settings.Resolution != 800 ? 596 : 372, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Chat Settings"
+                Hint = GameLanguage.ChatSettings
             };
             SettingsButton.Click += (o, e) =>
             {
@@ -1186,7 +1186,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(12, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "All"
+                Hint = GameLanguage.Chat_All
             };
             NormalButton.Click += (o, e) =>
             {
@@ -1202,7 +1202,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(34, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Shout"
+                Hint = GameLanguage.Chat_Short
             };
             ShoutButton.Click += (o, e) =>
             {
@@ -1218,7 +1218,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(56, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Whisper"
+                Hint = GameLanguage.Chat_Whisper
             };
             WhisperButton.Click += (o, e) =>
             {
@@ -1234,7 +1234,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(78, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Lover"
+                Hint = GameLanguage.Chat_Lover
             };
             LoverButton.Click += (o, e) =>
             {
@@ -1250,7 +1250,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(100, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Mentor"
+                Hint = GameLanguage.Chat_Mentor
             };
             MentorButton.Click += (o, e) =>
             {
@@ -1266,7 +1266,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(122, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Group"
+                Hint = GameLanguage.Chat_Group
             };
             GroupButton.Click += (o, e) =>
             {
@@ -1282,13 +1282,26 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(144, 1),
                 Sound = SoundList.ButtonA,
-                Hint = "Guild"
+                Hint = GameLanguage.Chat_Guild
             };
             GuildButton.Click += (o, e) =>
             {
                 Settings.ShowGuildChat = !Settings.ShowGuildChat;
                 ToggleChatFilter("Guild");
             };
+
+            TradeButton = new MirButton
+            {
+                Index = 2004,
+                HoverIndex = 2005,
+                PressedIndex = 2006,
+                Library = Libraries.Prguse,
+                Location = new Point(166, 1),
+                Parent = this,
+                Sound = SoundList.ButtonC,
+                Hint = string.Format(GameLanguage.Trade, CMain.InputKeys.GetKey(KeybindOptions.Trade)),
+            };
+            TradeButton.Click += (o, e) => Network.Enqueue(new C.TradeRequest());
 
             ReportButton = new MirButton
             {
@@ -1456,8 +1469,7 @@ namespace Client.MirScenes.Dialogs
             {
                 int openLevel = (GameScene.User.Inventory.Length - 46) / 4;
                 int openGold = (1000000 + openLevel * 1000000);
-                MirMessageBox messageBox = new MirMessageBox(string.Format("Are you sure you would like to unlock 4 extra slots for {0:###,###} gold ?\n" +
-                                                    "This will take your inventory space up to {1} slots in total.", openGold, GameScene.User.Inventory.Length + 4), MirMessageBoxButtons.OKCancel);
+                MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ExtraSlots4, openGold), MirMessageBoxButtons.OKCancel);
 
                 messageBox.OKButton.Click += (o, a) =>
                 {
@@ -1559,8 +1571,7 @@ namespace Client.MirScenes.Dialogs
         {
             if (GameScene.User.Inventory.Length == 46 && sender == ItemButton2)
             {
-                MirMessageBox messageBox = new MirMessageBox("Are you sure you would like to buy 8 extra slots for 1,000,000 gold?\n" +
-                    "Next purchase you can unlock 4 extra slots up to a maximum of 40 slots.", MirMessageBoxButtons.OKCancel);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ExtraSlots8, MirMessageBoxButtons.OKCancel);
 
                 messageBox.OKButton.Click += (o, a) =>
                 {
@@ -1743,6 +1754,7 @@ namespace Client.MirScenes.Dialogs
                         NotControl = true,
                         UseOffSet = true,
                         Blending = true,
+                        BlendingRate = 1F
                     };
                     animEffect.AfterAnimation += (o, e) => animEffect.Dispose();
                     SoundManager.PlaySound(20000 + (ushort)Spell.MagicShield * 10);
@@ -1788,7 +1800,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1928,
                 Sound = SoundList.ButtonA,
-                Hint = "Rotate"
+                Hint = GameLanguage.Rotate
             };
             RotateButton.Click += (o, e) => Flip();
 
@@ -1801,7 +1813,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1925,
                 Sound = SoundList.ButtonA,
-                Hint = "Close (" + CMain.InputKeys.GetKey(KeybindOptions.Belt) + ")"
+                Hint = string.Format(GameLanguage.Close, CMain.InputKeys.GetKey(KeybindOptions.Belt))
             };
             CloseButton.Click += (o, e) => Hide();
 
@@ -2078,7 +2090,7 @@ namespace Client.MirScenes.Dialogs
                     //string key = m.Key > 8 ? string.Format("CTRL F{0}", i) : string.Format("F{0}", m.Key);
 
                     Cells[i - 1].Index = magic.Icon*2;
-                    Cells[i - 1].Hint = string.Format("{0}\nMP: {1}\nCooldown: {2}\nKey: {3}", magic.Spell,
+                    Cells[i - 1].Hint = string.Format("{0}\nMP: {1}\nCooldown: {2}\nKey: {3}", magic.Name,
                         (magic.BaseCost + (magic.LevelCost * magic.Level)), Functions.PrintTimeSpanFromMilliSeconds(magic.Delay), key);
 
                     KeyNameLabels[i - 1].Text = "";
@@ -2334,7 +2346,7 @@ namespace Client.MirScenes.Dialogs
                 AttkSpdLabel.Text = string.Format("{0}", MapObject.User.ASpeed);
                 AccLabel.Text = string.Format("+{0}", MapObject.User.Accuracy);
                 AgilLabel.Text = string.Format("+{0}", MapObject.User.Agility);
-                LuckLabel.Text = string.Format("+{0}", MapObject.User.Luck);
+                LuckLabel.Text = string.Format("{0}", MapObject.User.Luck);
             };
 
             StatePage = new MirImageControl
@@ -3016,7 +3028,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(4, 131),
                 Library = Libraries.Prguse,
                 Sound = SoundList.ButtonA,
-                Hint = "Mail"
+                Hint = GameLanguage.Mail
             };
             MailButton.Click += (o, e) => GameScene.Scene.MailListDialog.Toggle();
 
@@ -3039,7 +3051,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(25, 131),
                 Library = Libraries.Prguse,
                 Sound = SoundList.ButtonA,
-                Hint = "BigMap (" + CMain.InputKeys.GetKey(KeybindOptions.Bigmap) +")"
+                Hint = string.Format(GameLanguage.BigMap, CMain.InputKeys.GetKey(KeybindOptions.Bigmap))
             };
             BigMapButton.Click += (o, e) => GameScene.Scene.BigMapDialog.Toggle();
 
@@ -3563,6 +3575,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 433,
                 Sound = SoundList.ButtonA,
+                Hint = "Invite to Group",
             };
             GroupButton.Click += (o, e) =>
             {
@@ -3591,6 +3604,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 436,
                 Sound = SoundList.ButtonA,
+                Hint = "Add to Friends List",
             };
             FriendButton.Click += (o, e) =>
             {
@@ -3606,6 +3620,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 439,
                 Sound = SoundList.ButtonA,
+                Hint = "Send Mail",
             };
             MailButton.Click += (o, e) => GameScene.Scene.MailComposeLetterDialog.ComposeMail(Name);
 
@@ -3618,6 +3633,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 525,
                 Sound = SoundList.ButtonA,
+                Hint = "Trade",
             };
             TradeButton.Click += (o, e) => Network.Enqueue(new C.TradeRequest());
 
@@ -4308,7 +4324,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Title,
                 Location = new Point(3, 12),
                 PressedIndex = 635,
-                Hint = "Exit (" + CMain.InputKeys.GetKey(KeybindOptions.Exit) + ")"
+                Hint = string.Format(GameLanguage.Exit, CMain.InputKeys.GetKey(KeybindOptions.Exit))
             };
             ExitButton.Click += (o, e) => GameScene.Scene.QuitGame();
 
@@ -4320,7 +4336,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Title,
                 Location = new Point(3, 31),
                 PressedIndex = 638,
-                Hint = "Log Out (" + CMain.InputKeys.GetKey(KeybindOptions.Logout) + ")"
+                Hint = string.Format(GameLanguage.LogOut, CMain.InputKeys.GetKey(KeybindOptions.Logout))
             };
             LogOutButton.Click += (o, e) => GameScene.Scene.LogOut();
 
@@ -4333,7 +4349,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 50),
-                Hint = "Help (" + CMain.InputKeys.GetKey(KeybindOptions.Help) + ")"
+                Hint = string.Format(GameLanguage.Help, CMain.InputKeys.GetKey(KeybindOptions.Help))
             };
             HelpButton.Click += (o, e) =>
             {
@@ -4351,7 +4367,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(3, 69),
                 Visible = false,
-                Hint = "Keybinds"
+                Hint = GameLanguage.Keybinds
             };
             KeyboardLayoutButton.Click += (o, e) =>
             {
@@ -4368,7 +4384,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 88),
-                Hint = "Ranking (" + CMain.InputKeys.GetKey(KeybindOptions.Ranking) + ")"
+                Hint = string.Format(GameLanguage.Ranking, CMain.InputKeys.GetKey(KeybindOptions.Ranking))
                 //Visible = false
             };
             RankingButton.Click += (o, e) =>
@@ -4401,7 +4417,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse2,
                 Location = new Point(3, 126),
-                Hint = "Creatures (" + CMain.InputKeys.GetKey(KeybindOptions.Creature) + ")"
+                Hint = string.Format(GameLanguage.Creatures, CMain.InputKeys.GetKey(KeybindOptions.Creature))
             };
             IntelligentCreatureButton.Click += (o, e) =>
             {
@@ -4417,7 +4433,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 145),
-                Hint = "Mount (" + CMain.InputKeys.GetKey(KeybindOptions.MountWindow) + ")"
+                Hint = string.Format(GameLanguage.Mount, CMain.InputKeys.GetKey(KeybindOptions.MountWindow))
             };
             RideButton.Click += (o, e) =>
             {
@@ -4434,7 +4450,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 164),
-                Hint = "Fishing (" + CMain.InputKeys.GetKey(KeybindOptions.Fishing) + ")"
+                Hint = string.Format(GameLanguage.Fishing, CMain.InputKeys.GetKey(KeybindOptions.Fishing))
             };
             FishingButton.Click += (o, e) =>
             {
@@ -4452,7 +4468,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(3, 183),
                 Visible = true,
-                Hint = "Friends (" + CMain.InputKeys.GetKey(KeybindOptions.Friends) + ")"
+                Hint = string.Format(GameLanguage.Friends, CMain.InputKeys.GetKey(KeybindOptions.Friends))
             };
             FriendButton.Click += (o, e) =>
             {
@@ -4470,7 +4486,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(3, 202),
                 Visible = true,
-                Hint = "Mentor (" + CMain.InputKeys.GetKey(KeybindOptions.Mentor) + ")"
+                Hint = string.Format(GameLanguage.Mentor, CMain.InputKeys.GetKey(KeybindOptions.Mentor))
             };
             MentorButton.Click += (o, e) =>
             {
@@ -4489,7 +4505,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Location = new Point(3, 221),
                 Visible = true,
-                Hint = "Relationship (" + CMain.InputKeys.GetKey(KeybindOptions.Relationship) + ")"
+                Hint = string.Format(GameLanguage.Relationship, CMain.InputKeys.GetKey(KeybindOptions.Relationship))
             };
             RelationshipButton.Click += (o, e) =>
             {
@@ -4506,7 +4522,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 240),
-                Hint = "Groups (" + CMain.InputKeys.GetKey(KeybindOptions.Group) + ")"
+                Hint = string.Format(GameLanguage.Groups, CMain.InputKeys.GetKey(KeybindOptions.Group))
             };
             GroupButton.Click += (o, e) =>
             {
@@ -4523,7 +4539,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 259),
-                Hint = "Guild (" + CMain.InputKeys.GetKey(KeybindOptions.Guilds) + ")"
+                Hint = string.Format(GameLanguage.Guild, CMain.InputKeys.GetKey(KeybindOptions.Guilds))
             };
             GuildButton.Click += (o, e) =>
             {
@@ -4635,7 +4651,7 @@ namespace Client.MirScenes.Dialogs
         {
             Magic = magic;
 
-            NameLabel.Text = Magic.Spell.ToString();
+            NameLabel.Text = Magic.Name;
 
             LevelLabel.Text = Magic.Level.ToString();
             switch (Magic.Level)
@@ -4749,7 +4765,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Size = new Size(230, 32),
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.WordBreak,
-                Text = string.Format("Select the Key for: {0}", magic.Spell)
+                Text = string.Format(GameLanguage.SelectKey, magic.Name)
             };
 
             NoneButton = new MirButton
@@ -5123,7 +5139,7 @@ namespace Client.MirScenes.Dialogs
                 HoverIndex = 2111,
                 PressedIndex = 2112,
                 Sound = SoundList.ButtonA,
-                Hint = "Dura Panel"
+                Hint = GameLanguage.DuraPanel
             };
             Character.Click += (o, e) =>
             {

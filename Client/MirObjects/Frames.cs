@@ -456,12 +456,12 @@ namespace Client.MirObjects
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, -4, 500));
             frame.Frames.Add(MirAction.Show, new Frame(4, 8, -8, 200));
-            frame.Frames.Add(MirAction.Hide, new Frame(11, 8, -8, 200) { Reverse = true });
-            frame.Frames.Add(MirAction.Attack1, new Frame(12, 6, 0, 100));
-            frame.Frames.Add(MirAction.Struck, new Frame(60, 2, 0, 200));
-            frame.Frames.Add(MirAction.Die, new Frame(76, 10, 0, 100));
-            frame.Frames.Add(MirAction.Dead, new Frame(85, 1, 9, 1000));
-            frame.Frames.Add(MirAction.Revive, new Frame(76, 10, 0, 100) { Reverse = true });
+            frame.Frames.Add(MirAction.Hide, new Frame(12, 8, -8, 200) { Reverse = true });
+            frame.Frames.Add(MirAction.Attack1, new Frame(20, 6, 0, 100));
+            frame.Frames.Add(MirAction.Struck, new Frame(68, 2, 0, 200));
+            frame.Frames.Add(MirAction.Die, new Frame(84, 10, 0, 100));
+            frame.Frames.Add(MirAction.Dead, new Frame(93, 1, 9, 1000));
+            frame.Frames.Add(MirAction.Revive, new Frame(84, 10, 0, 100) { Reverse = true });
 
             //4 - ForestYeti, CaveMaggot, FrostYeti
             Monsters.Add(frame = new FrameSet());
@@ -2277,7 +2277,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Struck, new Frame(400, 4, 0, 200));
             frame.Frames.Add(MirAction.Die, new Frame(432, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(441, 1, 9, 1000));
-            frame.Frames.Add(MirAction.Revive, new Frame(4432, 10, 0, 100) { Reverse = true });
+            frame.Frames.Add(MirAction.Revive, new Frame(432, 10, 0, 100) { Reverse = true });
 
             //177 - SnowYeti
             Monsters.Add(frame = new FrameSet());
@@ -2728,6 +2728,28 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Attack4, new Frame(296, 9, 0, 100));         //backflip
             frame.Frames.Add(MirAction.Die, new Frame(224, 8, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(304, 1, 8, 1000));
+
+            //12 - AngryBird
+            HelperPets.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 0, 500));
+            frame.Frames.Add(MirAction.Walking, new Frame(48, 6, 0, 100));
+            frame.Frames.Add(MirAction.Attack1, new Frame(96, 7, 0, 100));         // pickup??
+            frame.Frames.Add(MirAction.Attack2, new Frame(152, 8, 0, 100));         //bow
+            frame.Frames.Add(MirAction.Attack3, new Frame(216, 9, 0, 100));         //spin?
+            frame.Frames.Add(MirAction.Attack4, new Frame(296, 9, 0, 100));         //hover?
+            frame.Frames.Add(MirAction.Die, new Frame(224, 8, 0, 100));
+            frame.Frames.Add(MirAction.Dead, new Frame(304, 1, 8, 1000));
+
+            //13 - Foxey
+            HelperPets.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 8, 0, 500));
+            frame.Frames.Add(MirAction.Walking, new Frame(64, 6, 0, 100));          //
+            frame.Frames.Add(MirAction.Attack1, new Frame(112, 8, 0, 100));         // pickup??
+            frame.Frames.Add(MirAction.Attack2, new Frame(176, 10, 0, 100));         //bow
+            frame.Frames.Add(MirAction.Attack3, new Frame(256, 10, 0, 100));         //spin?
+            frame.Frames.Add(MirAction.Attack4, new Frame(336, 10, 0, 100));         //hover?
+            frame.Frames.Add(MirAction.Die, new Frame(224, 8, 0, 100));
+            frame.Frames.Add(MirAction.Dead, new Frame(258, 1, 8, 1000));
 
             #endregion
 

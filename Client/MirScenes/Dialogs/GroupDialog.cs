@@ -83,6 +83,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 116,
                 Sound = SoundList.ButtonA,
+                Hint = GameLanguage.GroupSwitch
             };
             SwitchButton.Click += (o, e) => Network.Enqueue(new C.SwitchGroup { AllowGroup = !AllowGroup });
 
@@ -95,6 +96,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 135,
                 Sound = SoundList.ButtonA,
+                Hint = GameLanguage.GroupAdd
             };
             AddButton.Click += (o, e) => AddMember();
 
@@ -107,6 +109,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 138,
                 Sound = SoundList.ButtonA,
+                Hint = GameLanguage.GroupRemove
             };
             DelButton.Click += (o, e) => DelMember();
 
@@ -187,7 +190,7 @@ namespace Client.MirScenes.Dialogs
                 return;
             }
 
-            MirInputBox inputBox = new MirInputBox("Please enter the name of the person you wish to group.");
+            MirInputBox inputBox = new MirInputBox(GameLanguage.GroupAddEnterName);
 
             inputBox.OKButton.Click += (o, e) =>
             {
@@ -205,7 +208,7 @@ namespace Client.MirScenes.Dialogs
                 return;
             }
 
-            MirInputBox inputBox = new MirInputBox("Please enter the name of the person you wish to group.");
+            MirInputBox inputBox = new MirInputBox(GameLanguage.GroupRemoveEnterName);
 
             inputBox.OKButton.Click += (o, e) =>
             {

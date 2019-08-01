@@ -72,6 +72,9 @@ namespace Server.MirDatabase
         public byte MentalStateLvl;
 
         public UserItem[] Inventory = new UserItem[46], Equipment = new UserItem[14], Trade = new UserItem[10], QuestInventory = new UserItem[40], Refine = new UserItem[16];
+        public List<ItemRentalInformation> RentedItems = new List<ItemRentalInformation>();
+        public List<ItemRentalInformation> RentedItemsToRemove = new List<ItemRentalInformation>();
+        public bool HasRentedItem;
         public UserItem CurrentRefine = null;
         public long CollectTime = 0;
         public List<UserMagic> Magics = new List<UserMagic>();
@@ -334,6 +337,15 @@ namespace Server.MirDatabase
                     Friends.Add(new FriendInfo(reader));
             }
 
+            if (Envir.LoadVersion > 75)
+            {
+                count = reader.ReadInt32();
+                for (var i = 0; i < count; i++)
+                    RentedItems.Add(new ItemRentalInformation(reader));
+
+                HasRentedItem = reader.ReadBoolean();
+            }
+
             if (Envir.LoadVersion > 59)
             {
                 Married = reader.ReadInt32();
@@ -353,7 +365,6 @@ namespace Server.MirDatabase
                     GSpurchases.Add(reader.ReadInt32(), reader.ReadInt32());
                 }
             }
-
         }
 
         public void Save(BinaryWriter writer)
@@ -483,6 +494,12 @@ namespace Server.MirDatabase
             writer.Write(Friends.Count);
             for (int i = 0; i < Friends.Count; i++)
                 Friends[i].Save(writer);
+
+            writer.Write(RentedItems.Count);
+            foreach (var rentedItemInformation in RentedItems)
+                rentedItemInformation.Save(writer);
+
+            writer.Write(HasRentedItem);
 
             writer.Write(Married);
             writer.Write(MarriedDate.ToBinary());
@@ -701,7 +718,9 @@ namespace Server.MirDatabase
                                                 OlympicFlame,
                                                 BabySnowMan,
                                                 Frog,
-                                                Monkey;
+                                                Monkey,
+                                                AngryBird,
+                                                Foxey;
 
         public IntelligentCreatureType PetType;
 
@@ -735,6 +754,8 @@ namespace Server.MirDatabase
             BabySnowMan = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.BabySnowMan, Icon = 509, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 11, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 11, CanProduceBlackStone = true, Info = "Can pickup items (11x11 auto/semi-auto, 11x11 mouse).", Info1 = "Can produce BlackStones." };
             Frog = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.Frog, Icon = 510, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 11, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 11, CanProduceBlackStone = true, Info = "Can pickup items (11x11 auto/semi-auto, 11x11 mouse).", Info1 = "Can produce BlackStones." };
             Monkey = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.BabyMonkey, Icon = 511, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 11, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 11, CanProduceBlackStone = true, Info = "Can pickup items (11x11 auto/semi-auto, 11x11 mouse).", Info1 = "Can produce BlackStones." };
+            AngryBird = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.AngryBird, Icon = 512, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 11, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 11, CanProduceBlackStone = true, Info = "Can pickup items (11x11 auto/semi-auto, 11x11 mouse).", Info1 = "Can produce BlackStones." };
+            Foxey = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.Foxey, Icon = 513, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 11, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 11, CanProduceBlackStone = true, Info = "Can pickup items (11x11 auto/semi-auto, 11x11 mouse).", Info1 = "Can produce BlackStones." };
         }
 
         public IntelligentCreatureInfo()
