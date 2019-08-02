@@ -712,44 +712,44 @@ namespace Client.MirObjects
             {
                 switch (User.Class)
                 {
-                    case MirClass.Warrior:
-                        if (!quest.ClassNeeded.HasFlag(RequiredClass.Warrior))
+                    case MirClass.战士:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.战士))
                             return false;
                         break;
-                    case MirClass.Wizard:
-                        if (!quest.ClassNeeded.HasFlag(RequiredClass.Wizard))
+                    case MirClass.法师:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.法师))
                             return false;
                         break;
-                    case MirClass.Taoist:
-                        if (!quest.ClassNeeded.HasFlag(RequiredClass.Taoist))
+                    case MirClass.道士:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.道士))
                             return false;
                         break;
-                    case MirClass.Assassin:
-                        if (!quest.ClassNeeded.HasFlag(RequiredClass.Assassin))
+                    case MirClass.刺客:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.刺客))
                             return false;
                         break;
-                    case MirClass.Archer:
-                        if (!quest.ClassNeeded.HasFlag(RequiredClass.Archer))
+                    case MirClass.弓箭手:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.弓箭手))
                             return false;
                         break;
-                    case MirClass.HighWarrior:
-                        if (!quest.ClassNeeded.HasFlag(RequiredClass.HighWarrior))
+                    case MirClass.碧血武士:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.碧血武士))
                             return false;
                         break;
-                    case MirClass.HighWizard:
-                        if (!quest.ClassNeeded.HasFlag(RequiredClass.HighWizard))
+                    case MirClass.虹玄法师:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.虹玄法师))
                             return false;
                         break;
-                    case MirClass.HighTaoist:
-                        if (!quest.ClassNeeded.HasFlag(RequiredClass.HighTaoist))
+                    case MirClass.翊仙道士:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.翊仙道士))
                             return false;
                         break;
-                    case MirClass.HighAssassin:
-                        if (!quest.ClassNeeded.HasFlag(RequiredClass.HighAssassin))
+                    case MirClass.飞燕刺客:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.飞燕刺客))
                             return false;
                         break;
-                    case MirClass.HighArcher:
-                        if (!quest.ClassNeeded.HasFlag(RequiredClass.HighArcher))
+                    case MirClass.暗鬼弓手:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.暗鬼弓手))
                             return false;
                         break;
                 }

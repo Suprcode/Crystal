@@ -219,9 +219,9 @@ namespace Server
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(38, 167);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(41, 12);
+            this.label11.Size = new System.Drawing.Size(35, 12);
             this.label11.TabIndex = 18;
-            this.label11.Text = "Music:";
+            this.label11.Text = "音乐:";
             // 
             // MusicTextBox
             // 
@@ -236,9 +236,9 @@ namespace Server
             this.label33.AutoSize = true;
             this.label33.Location = new System.Drawing.Point(16, 141);
             this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(65, 12);
+            this.label33.Size = new System.Drawing.Size(59, 12);
             this.label33.TabIndex = 16;
-            this.label33.Text = "Mine Type:";
+            this.label33.Text = "矿区类型:";
             // 
             // MineComboBox
             // 
@@ -255,9 +255,9 @@ namespace Server
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(129, 91);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(53, 12);
+            this.label15.Size = new System.Drawing.Size(47, 12);
             this.label15.TabIndex = 14;
-            this.label15.Text = "Big Map:";
+            this.label15.Text = "大地图:";
             // 
             // BigMapTextBox
             // 
@@ -283,27 +283,27 @@ namespace Server
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(38, 115);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(47, 12);
+            this.label5.Size = new System.Drawing.Size(35, 12);
             this.label5.TabIndex = 12;
-            this.label5.Text = "Lights:";
+            this.label5.Text = "灯光:";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(16, 17);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(65, 12);
+            this.label1.Size = new System.Drawing.Size(59, 12);
             this.label1.TabIndex = 4;
-            this.label1.Text = "Map Index:";
+            this.label1.Text = "地图索引:";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(23, 91);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(59, 12);
+            this.label4.Size = new System.Drawing.Size(47, 12);
             this.label4.TabIndex = 10;
-            this.label4.Text = "Mini Map:";
+            this.label4.Text = "小地图:";
             // 
             // MapIndexTextBox
             // 
@@ -327,9 +327,9 @@ namespace Server
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(19, 43);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(65, 12);
+            this.label2.Size = new System.Drawing.Size(47, 12);
             this.label2.TabIndex = 6;
-            this.label2.Text = "File Name:";
+            this.label2.Text = "文件名:";
             // 
             // MapNameTextBox
             // 
@@ -352,9 +352,9 @@ namespace Server
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(14, 67);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(59, 12);
+            this.label3.Size = new System.Drawing.Size(47, 12);
             this.label3.TabIndex = 8;
-            this.label3.Text = "Map Name:";
+            this.label3.Text = "地图名:";
             // 
             // tabPage6
             // 
@@ -386,17 +386,17 @@ namespace Server
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage6.Size = new System.Drawing.Size(532, 226);
             this.tabPage6.TabIndex = 5;
-            this.tabPage6.Text = "Attributes";
+            this.tabPage6.Text = "属性";
             this.tabPage6.UseVisualStyleBackColor = true;
             // 
             // NoTownTeleportCheckbox
             // 
             this.NoTownTeleportCheckbox.AutoSize = true;
-            this.NoTownTeleportCheckbox.Location = new System.Drawing.Point(340, 110);
+            this.NoTownTeleportCheckbox.Location = new System.Drawing.Point(16, 170);
             this.NoTownTeleportCheckbox.Name = "NoTownTeleportCheckbox";
-            this.NoTownTeleportCheckbox.Size = new System.Drawing.Size(114, 16);
+            this.NoTownTeleportCheckbox.Size = new System.Drawing.Size(120, 16);
             this.NoTownTeleportCheckbox.TabIndex = 44;
-            this.NoTownTeleportCheckbox.Text = "No TownTeleport";
+            this.NoTownTeleportCheckbox.Text = "禁止使用传送戒指";
             this.NoTownTeleportCheckbox.UseVisualStyleBackColor = true;
             this.NoTownTeleportCheckbox.CheckedChanged += new System.EventHandler(this.NoTownTeleportCheckbox_CheckedChanged);
             // 
@@ -407,7 +407,7 @@ namespace Server
             this.NoFightCheckbox.Name = "NoFightCheckbox";
             this.NoFightCheckbox.Size = new System.Drawing.Size(72, 16);
             this.NoFightCheckbox.TabIndex = 43;
-            this.NoFightCheckbox.Text = "No Fight";
+            this.NoFightCheckbox.Text = "不能打架";
             this.NoFightCheckbox.UseVisualStyleBackColor = true;
             this.NoFightCheckbox.CheckedChanged += new System.EventHandler(this.NoFightCheckbox_CheckedChanged);
             // 
@@ -416,9 +416,9 @@ namespace Server
             this.NeedBridleCheckbox.AutoSize = true;
             this.NeedBridleCheckbox.Location = new System.Drawing.Point(174, 148);
             this.NeedBridleCheckbox.Name = "NeedBridleCheckbox";
-            this.NeedBridleCheckbox.Size = new System.Drawing.Size(90, 16);
+            this.NeedBridleCheckbox.Size = new System.Drawing.Size(72, 16);
             this.NeedBridleCheckbox.TabIndex = 42;
-            this.NeedBridleCheckbox.Text = "Need Bridle";
+            this.NeedBridleCheckbox.Text = "需要缰绳";
             this.NeedBridleCheckbox.UseVisualStyleBackColor = true;
             this.NeedBridleCheckbox.CheckedChanged += new System.EventHandler(this.NeedBridleCheckbox_CheckedChanged);
             // 
@@ -427,20 +427,20 @@ namespace Server
             this.NoMountCheckbox.AutoSize = true;
             this.NoMountCheckbox.Location = new System.Drawing.Point(174, 104);
             this.NoMountCheckbox.Name = "NoMountCheckbox";
-            this.NoMountCheckbox.Size = new System.Drawing.Size(72, 16);
+            this.NoMountCheckbox.Size = new System.Drawing.Size(96, 16);
             this.NoMountCheckbox.TabIndex = 41;
-            this.NoMountCheckbox.Text = "No Mount";
+            this.NoMountCheckbox.Text = "不能使用坐骑";
             this.NoMountCheckbox.UseVisualStyleBackColor = true;
             this.NoMountCheckbox.CheckedChanged += new System.EventHandler(this.NoMountCheckbox_CheckedChanged);
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(338, 87);
+            this.label19.Location = new System.Drawing.Point(372, 87);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(89, 12);
+            this.label19.Size = new System.Drawing.Size(65, 12);
             this.label19.TabIndex = 40;
-            this.label19.Text = "Map Dark Light";
+            this.label19.Text = "地图黑暗光";
             // 
             // MapDarkLighttextBox
             // 
@@ -455,9 +455,9 @@ namespace Server
             this.NoNamesCheckbox.AutoSize = true;
             this.NoNamesCheckbox.Location = new System.Drawing.Point(174, 82);
             this.NoNamesCheckbox.Name = "NoNamesCheckbox";
-            this.NoNamesCheckbox.Size = new System.Drawing.Size(72, 16);
+            this.NoNamesCheckbox.Size = new System.Drawing.Size(84, 16);
             this.NoNamesCheckbox.TabIndex = 38;
-            this.NoNamesCheckbox.Text = "No Names";
+            this.NoNamesCheckbox.Text = "不显示名字";
             this.NoNamesCheckbox.UseVisualStyleBackColor = true;
             this.NoNamesCheckbox.CheckedChanged += new System.EventHandler(this.NoNamesCheckbox_CheckedChanged);
             // 
@@ -466,9 +466,9 @@ namespace Server
             this.NoDropMonsterCheckbox.AutoSize = true;
             this.NoDropMonsterCheckbox.Location = new System.Drawing.Point(174, 60);
             this.NoDropMonsterCheckbox.Name = "NoDropMonsterCheckbox";
-            this.NoDropMonsterCheckbox.Size = new System.Drawing.Size(126, 16);
+            this.NoDropMonsterCheckbox.Size = new System.Drawing.Size(102, 16);
             this.NoDropMonsterCheckbox.TabIndex = 37;
-            this.NoDropMonsterCheckbox.Text = "No Drop (Monster)";
+            this.NoDropMonsterCheckbox.Text = "不掉落 (怪物)";
             this.NoDropMonsterCheckbox.UseVisualStyleBackColor = true;
             this.NoDropMonsterCheckbox.CheckedChanged += new System.EventHandler(this.NoDropMonsterCheckbox_CheckedChanged);
             // 
@@ -477,9 +477,9 @@ namespace Server
             this.NoDropPlayerCheckbox.AutoSize = true;
             this.NoDropPlayerCheckbox.Location = new System.Drawing.Point(174, 38);
             this.NoDropPlayerCheckbox.Name = "NoDropPlayerCheckbox";
-            this.NoDropPlayerCheckbox.Size = new System.Drawing.Size(120, 16);
+            this.NoDropPlayerCheckbox.Size = new System.Drawing.Size(102, 16);
             this.NoDropPlayerCheckbox.TabIndex = 36;
-            this.NoDropPlayerCheckbox.Text = "No Drop (Player)";
+            this.NoDropPlayerCheckbox.Text = "不掉落 (玩家)";
             this.NoDropPlayerCheckbox.UseVisualStyleBackColor = true;
             this.NoDropPlayerCheckbox.CheckedChanged += new System.EventHandler(this.NoDropPlayerCheckbox_CheckedChanged);
             // 
@@ -488,9 +488,9 @@ namespace Server
             this.NoThrowItemCheckbox.AutoSize = true;
             this.NoThrowItemCheckbox.Location = new System.Drawing.Point(174, 16);
             this.NoThrowItemCheckbox.Name = "NoThrowItemCheckbox";
-            this.NoThrowItemCheckbox.Size = new System.Drawing.Size(102, 16);
+            this.NoThrowItemCheckbox.Size = new System.Drawing.Size(84, 16);
             this.NoThrowItemCheckbox.TabIndex = 35;
-            this.NoThrowItemCheckbox.Text = "No Throw Item";
+            this.NoThrowItemCheckbox.Text = "不能扔东西";
             this.NoThrowItemCheckbox.UseVisualStyleBackColor = true;
             this.NoThrowItemCheckbox.CheckedChanged += new System.EventHandler(this.NoThrowItemCheckbox_CheckedChanged);
             // 
@@ -499,9 +499,9 @@ namespace Server
             this.NoPositionCheckbox.AutoSize = true;
             this.NoPositionCheckbox.Location = new System.Drawing.Point(15, 148);
             this.NoPositionCheckbox.Name = "NoPositionCheckbox";
-            this.NoPositionCheckbox.Size = new System.Drawing.Size(90, 16);
+            this.NoPositionCheckbox.Size = new System.Drawing.Size(72, 16);
             this.NoPositionCheckbox.TabIndex = 34;
-            this.NoPositionCheckbox.Text = "No Position";
+            this.NoPositionCheckbox.Text = "不能用毒";
             this.NoPositionCheckbox.UseVisualStyleBackColor = true;
             this.NoPositionCheckbox.CheckedChanged += new System.EventHandler(this.NoPositionCheckbox_CheckedChanged);
             // 
@@ -510,9 +510,9 @@ namespace Server
             this.NoDrugCheckbox.AutoSize = true;
             this.NoDrugCheckbox.Location = new System.Drawing.Point(16, 126);
             this.NoDrugCheckbox.Name = "NoDrugCheckbox";
-            this.NoDrugCheckbox.Size = new System.Drawing.Size(66, 16);
+            this.NoDrugCheckbox.Size = new System.Drawing.Size(72, 16);
             this.NoDrugCheckbox.TabIndex = 33;
-            this.NoDrugCheckbox.Text = "No Drug";
+            this.NoDrugCheckbox.Text = "不能喝药";
             this.NoDrugCheckbox.UseVisualStyleBackColor = true;
             this.NoDrugCheckbox.CheckedChanged += new System.EventHandler(this.NoDrugCheckbox_CheckedChanged);
             // 
@@ -521,9 +521,9 @@ namespace Server
             this.NoRecallCheckbox.AutoSize = true;
             this.NoRecallCheckbox.Location = new System.Drawing.Point(16, 104);
             this.NoRecallCheckbox.Name = "NoRecallCheckbox";
-            this.NoRecallCheckbox.Size = new System.Drawing.Size(78, 16);
+            this.NoRecallCheckbox.Size = new System.Drawing.Size(96, 16);
             this.NoRecallCheckbox.TabIndex = 32;
-            this.NoRecallCheckbox.Text = "No Recall";
+            this.NoRecallCheckbox.Text = "禁止召唤同伴";
             this.NoRecallCheckbox.UseVisualStyleBackColor = true;
             this.NoRecallCheckbox.CheckedChanged += new System.EventHandler(this.NoRecallCheckbox_CheckedChanged);
             // 
@@ -532,9 +532,9 @@ namespace Server
             this.NoEscapeCheckbox.AutoSize = true;
             this.NoEscapeCheckbox.Location = new System.Drawing.Point(16, 82);
             this.NoEscapeCheckbox.Name = "NoEscapeCheckbox";
-            this.NoEscapeCheckbox.Size = new System.Drawing.Size(78, 16);
+            this.NoEscapeCheckbox.Size = new System.Drawing.Size(84, 16);
             this.NoEscapeCheckbox.TabIndex = 31;
-            this.NoEscapeCheckbox.Text = "No Escape";
+            this.NoEscapeCheckbox.Text = "不能用地牢";
             this.NoEscapeCheckbox.UseVisualStyleBackColor = true;
             this.NoEscapeCheckbox.CheckedChanged += new System.EventHandler(this.NoEscapeCheckbox_CheckedChanged);
             // 
@@ -543,9 +543,9 @@ namespace Server
             this.NoRandomCheckbox.AutoSize = true;
             this.NoRandomCheckbox.Location = new System.Drawing.Point(16, 60);
             this.NoRandomCheckbox.Name = "NoRandomCheckbox";
-            this.NoRandomCheckbox.Size = new System.Drawing.Size(78, 16);
+            this.NoRandomCheckbox.Size = new System.Drawing.Size(84, 16);
             this.NoRandomCheckbox.TabIndex = 30;
-            this.NoRandomCheckbox.Text = "No Random";
+            this.NoRandomCheckbox.Text = "不能用随机";
             this.NoRandomCheckbox.UseVisualStyleBackColor = true;
             this.NoRandomCheckbox.CheckedChanged += new System.EventHandler(this.NoRandomCheckbox_CheckedChanged);
             // 
@@ -567,7 +567,7 @@ namespace Server
             // 
             // NoReconnectTextbox
             // 
-            this.NoReconnectTextbox.Location = new System.Drawing.Point(118, 36);
+            this.NoReconnectTextbox.Location = new System.Drawing.Point(103, 36);
             this.NoReconnectTextbox.Name = "NoReconnectTextbox";
             this.NoReconnectTextbox.Size = new System.Drawing.Size(49, 21);
             this.NoReconnectTextbox.TabIndex = 27;
@@ -576,33 +576,33 @@ namespace Server
             // LightningCheckbox
             // 
             this.LightningCheckbox.AutoSize = true;
-            this.LightningCheckbox.Location = new System.Drawing.Point(341, 60);
+            this.LightningCheckbox.Location = new System.Drawing.Point(374, 60);
             this.LightningCheckbox.Name = "LightningCheckbox";
-            this.LightningCheckbox.Size = new System.Drawing.Size(78, 16);
+            this.LightningCheckbox.Size = new System.Drawing.Size(72, 16);
             this.LightningCheckbox.TabIndex = 26;
-            this.LightningCheckbox.Text = "Lightning";
+            this.LightningCheckbox.Text = "全亮地图";
             this.LightningCheckbox.UseVisualStyleBackColor = true;
             this.LightningCheckbox.CheckedChanged += new System.EventHandler(this.LightningCheckbox_CheckedChanged);
             // 
             // FireCheckbox
             // 
             this.FireCheckbox.AutoSize = true;
-            this.FireCheckbox.Location = new System.Drawing.Point(341, 38);
+            this.FireCheckbox.Location = new System.Drawing.Point(374, 38);
             this.FireCheckbox.Name = "FireCheckbox";
-            this.FireCheckbox.Size = new System.Drawing.Size(48, 16);
+            this.FireCheckbox.Size = new System.Drawing.Size(72, 16);
             this.FireCheckbox.TabIndex = 25;
-            this.FireCheckbox.Text = "Fire";
+            this.FireCheckbox.Text = "有火地图";
             this.FireCheckbox.UseVisualStyleBackColor = true;
             this.FireCheckbox.CheckStateChanged += new System.EventHandler(this.FireCheckbox_CheckStateChanged);
             // 
             // FightCheckbox
             // 
             this.FightCheckbox.AutoSize = true;
-            this.FightCheckbox.Location = new System.Drawing.Point(341, 15);
+            this.FightCheckbox.Location = new System.Drawing.Point(374, 16);
             this.FightCheckbox.Name = "FightCheckbox";
-            this.FightCheckbox.Size = new System.Drawing.Size(54, 16);
+            this.FightCheckbox.Size = new System.Drawing.Size(60, 16);
             this.FightCheckbox.TabIndex = 23;
-            this.FightCheckbox.Text = "Fight";
+            this.FightCheckbox.Text = "PK地图";
             this.FightCheckbox.UseVisualStyleBackColor = true;
             this.FightCheckbox.CheckedChanged += new System.EventHandler(this.FightCheckbox_CheckedChanged);
             // 
@@ -611,9 +611,9 @@ namespace Server
             this.NoReconnectCheckbox.AutoSize = true;
             this.NoReconnectCheckbox.Location = new System.Drawing.Point(16, 38);
             this.NoReconnectCheckbox.Name = "NoReconnectCheckbox";
-            this.NoReconnectCheckbox.Size = new System.Drawing.Size(96, 16);
+            this.NoReconnectCheckbox.Size = new System.Drawing.Size(84, 16);
             this.NoReconnectCheckbox.TabIndex = 22;
-            this.NoReconnectCheckbox.Text = "No Reconnect";
+            this.NoReconnectCheckbox.Text = "下线后跳至";
             this.NoReconnectCheckbox.UseVisualStyleBackColor = true;
             this.NoReconnectCheckbox.CheckedChanged += new System.EventHandler(this.NoReconnectCheckbox_CheckedChanged);
             // 
@@ -622,9 +622,9 @@ namespace Server
             this.NoTeleportCheckbox.AutoSize = true;
             this.NoTeleportCheckbox.Location = new System.Drawing.Point(16, 16);
             this.NoTeleportCheckbox.Name = "NoTeleportCheckbox";
-            this.NoTeleportCheckbox.Size = new System.Drawing.Size(90, 16);
+            this.NoTeleportCheckbox.Size = new System.Drawing.Size(72, 16);
             this.NoTeleportCheckbox.TabIndex = 21;
-            this.NoTeleportCheckbox.Text = "No Teleport";
+            this.NoTeleportCheckbox.Text = "不能传送";
             this.NoTeleportCheckbox.UseVisualStyleBackColor = true;
             this.NoTeleportCheckbox.CheckedChanged += new System.EventHandler(this.NoTeleportCheckbox_CheckedChanged);
             // 
@@ -638,7 +638,7 @@ namespace Server
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(532, 226);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Safe Zones";
+            this.tabPage3.Text = "安全区";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // RemoveSZButton
@@ -647,7 +647,7 @@ namespace Server
             this.RemoveSZButton.Name = "RemoveSZButton";
             this.RemoveSZButton.Size = new System.Drawing.Size(75, 21);
             this.RemoveSZButton.TabIndex = 8;
-            this.RemoveSZButton.Text = "Remove";
+            this.RemoveSZButton.Text = "移除";
             this.RemoveSZButton.UseVisualStyleBackColor = true;
             this.RemoveSZButton.Click += new System.EventHandler(this.RemoveSZButton_Click);
             // 
@@ -657,7 +657,7 @@ namespace Server
             this.AddSZButton.Name = "AddSZButton";
             this.AddSZButton.Size = new System.Drawing.Size(75, 21);
             this.AddSZButton.TabIndex = 7;
-            this.AddSZButton.Text = "Add";
+            this.AddSZButton.Text = "增加";
             this.AddSZButton.UseVisualStyleBackColor = true;
             this.AddSZButton.Click += new System.EventHandler(this.AddSZButton_Click);
             // 
@@ -704,7 +704,7 @@ namespace Server
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(35, 12);
             this.label14.TabIndex = 8;
-            this.label14.Text = "Size:";
+            this.label14.Text = "大小:";
             // 
             // SizeTextBox
             // 
@@ -738,9 +738,9 @@ namespace Server
             this.StartPointCheckBox.AutoSize = true;
             this.StartPointCheckBox.Location = new System.Drawing.Point(61, 82);
             this.StartPointCheckBox.Name = "StartPointCheckBox";
-            this.StartPointCheckBox.Size = new System.Drawing.Size(90, 16);
+            this.StartPointCheckBox.Size = new System.Drawing.Size(108, 16);
             this.StartPointCheckBox.TabIndex = 5;
-            this.StartPointCheckBox.Text = "Start Point";
+            this.StartPointCheckBox.Text = "游戏角色出生点";
             this.StartPointCheckBox.UseVisualStyleBackColor = true;
             this.StartPointCheckBox.CheckedChanged += new System.EventHandler(this.StartPointCheckBox_CheckedChanged);
             // 
@@ -770,7 +770,7 @@ namespace Server
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(532, 226);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Respawns";
+            this.tabPage2.Text = "刷怪";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // RPasteButton
@@ -779,7 +779,7 @@ namespace Server
             this.RPasteButton.Name = "RPasteButton";
             this.RPasteButton.Size = new System.Drawing.Size(75, 21);
             this.RPasteButton.TabIndex = 22;
-            this.RPasteButton.Text = "Paste";
+            this.RPasteButton.Text = "粘贴";
             this.RPasteButton.UseVisualStyleBackColor = true;
             this.RPasteButton.Click += new System.EventHandler(this.RPasteButton_Click);
             // 
@@ -789,7 +789,7 @@ namespace Server
             this.RCopyButton.Name = "RCopyButton";
             this.RCopyButton.Size = new System.Drawing.Size(75, 21);
             this.RCopyButton.TabIndex = 21;
-            this.RCopyButton.Text = "Copy";
+            this.RCopyButton.Text = "复制";
             this.RCopyButton.UseVisualStyleBackColor = true;
             // 
             // RemoveRButton
@@ -798,7 +798,7 @@ namespace Server
             this.RemoveRButton.Name = "RemoveRButton";
             this.RemoveRButton.Size = new System.Drawing.Size(75, 21);
             this.RemoveRButton.TabIndex = 16;
-            this.RemoveRButton.Text = "Remove";
+            this.RemoveRButton.Text = "移除";
             this.RemoveRButton.UseVisualStyleBackColor = true;
             this.RemoveRButton.Click += new System.EventHandler(this.RemoveRButton_Click);
             // 
@@ -808,7 +808,7 @@ namespace Server
             this.AddRButton.Name = "AddRButton";
             this.AddRButton.Size = new System.Drawing.Size(75, 21);
             this.AddRButton.TabIndex = 15;
-            this.AddRButton.Text = "Add";
+            this.AddRButton.Text = "增加";
             this.AddRButton.UseVisualStyleBackColor = true;
             this.AddRButton.Click += new System.EventHandler(this.AddRButton_Click);
             // 
@@ -861,9 +861,9 @@ namespace Server
             this.chkrespawnsave.AutoSize = true;
             this.chkrespawnsave.Location = new System.Drawing.Point(25, 101);
             this.chkrespawnsave.Name = "chkrespawnsave";
-            this.chkrespawnsave.Size = new System.Drawing.Size(186, 16);
+            this.chkrespawnsave.Size = new System.Drawing.Size(132, 16);
             this.chkrespawnsave.TabIndex = 25;
-            this.chkrespawnsave.Text = "Save respawnticks on reboot";
+            this.chkrespawnsave.Text = "重启时保存刷新时间";
             this.chkrespawnsave.UseVisualStyleBackColor = true;
             this.chkrespawnsave.CheckedChanged += new System.EventHandler(this.chkrespawnsave_CheckedChanged);
             // 
@@ -872,9 +872,9 @@ namespace Server
             this.chkRespawnEnableTick.AutoSize = true;
             this.chkRespawnEnableTick.Location = new System.Drawing.Point(25, 85);
             this.chkRespawnEnableTick.Name = "chkRespawnEnableTick";
-            this.chkRespawnEnableTick.Size = new System.Drawing.Size(150, 16);
+            this.chkRespawnEnableTick.Size = new System.Drawing.Size(84, 16);
             this.chkRespawnEnableTick.TabIndex = 24;
-            this.chkRespawnEnableTick.Text = "Use tickbased respawn";
+            this.chkRespawnEnableTick.Text = "按时间刷新";
             this.chkRespawnEnableTick.UseVisualStyleBackColor = true;
             this.chkRespawnEnableTick.CheckedChanged += new System.EventHandler(this.chkRespawnEnableTick_CheckedChanged);
             // 
@@ -903,9 +903,9 @@ namespace Server
             this.label34.AutoSize = true;
             this.label34.Location = new System.Drawing.Point(22, 147);
             this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(41, 12);
+            this.label34.Size = new System.Drawing.Size(35, 12);
             this.label34.TabIndex = 21;
-            this.label34.Text = "Route:";
+            this.label34.Text = "路径:";
             // 
             // RoutePathTextBox
             // 
@@ -938,9 +938,9 @@ namespace Server
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(22, 123);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(41, 12);
+            this.label8.Size = new System.Drawing.Size(35, 12);
             this.label8.TabIndex = 16;
-            this.label8.Text = "Delay:";
+            this.label8.Text = "延迟:";
             // 
             // DelayTextBox
             // 
@@ -958,9 +958,9 @@ namespace Server
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(11, 15);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(53, 12);
+            this.label7.Size = new System.Drawing.Size(35, 12);
             this.label7.TabIndex = 14;
-            this.label7.Text = "Monster:";
+            this.label7.Text = "怪物:";
             // 
             // MonsterInfoComboBox
             // 
@@ -977,9 +977,9 @@ namespace Server
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(108, 64);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(47, 12);
+            this.label6.Size = new System.Drawing.Size(35, 12);
             this.label6.TabIndex = 12;
-            this.label6.Text = "Spread:";
+            this.label6.Text = "扩散:";
             // 
             // SpreadTextBox
             // 
@@ -1013,9 +1013,9 @@ namespace Server
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(21, 64);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(41, 12);
+            this.label10.Size = new System.Drawing.Size(35, 12);
             this.label10.TabIndex = 8;
-            this.label10.Text = "Count:";
+            this.label10.Text = "数量:";
             // 
             // CountTextBox
             // 
@@ -1055,7 +1055,7 @@ namespace Server
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage4.Size = new System.Drawing.Size(532, 226);
             this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Movements";
+            this.tabPage4.Text = "地图连接";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // RemoveMButton
@@ -1064,7 +1064,7 @@ namespace Server
             this.RemoveMButton.Name = "RemoveMButton";
             this.RemoveMButton.Size = new System.Drawing.Size(75, 21);
             this.RemoveMButton.TabIndex = 12;
-            this.RemoveMButton.Text = "Remove";
+            this.RemoveMButton.Text = "移除";
             this.RemoveMButton.UseVisualStyleBackColor = true;
             this.RemoveMButton.Click += new System.EventHandler(this.RemoveMButton_Click);
             // 
@@ -1074,7 +1074,7 @@ namespace Server
             this.AddMButton.Name = "AddMButton";
             this.AddMButton.Size = new System.Drawing.Size(75, 21);
             this.AddMButton.TabIndex = 11;
-            this.AddMButton.Text = "Add";
+            this.AddMButton.Text = "增加";
             this.AddMButton.UseVisualStyleBackColor = true;
             this.AddMButton.Click += new System.EventHandler(this.AddMButton_Click);
             // 
@@ -1127,9 +1127,9 @@ namespace Server
             this.NeedMoveMCheckBox.AutoSize = true;
             this.NeedMoveMCheckBox.Location = new System.Drawing.Point(14, 134);
             this.NeedMoveMCheckBox.Name = "NeedMoveMCheckBox";
-            this.NeedMoveMCheckBox.Size = new System.Drawing.Size(78, 16);
+            this.NeedMoveMCheckBox.Size = new System.Drawing.Size(72, 16);
             this.NeedMoveMCheckBox.TabIndex = 18;
-            this.NeedMoveMCheckBox.Text = "Need Move";
+            this.NeedMoveMCheckBox.Text = "需要移动";
             this.NeedMoveMCheckBox.UseVisualStyleBackColor = true;
             this.NeedMoveMCheckBox.CheckedChanged += new System.EventHandler(this.NeedScriptMCheckBox_CheckedChanged);
             // 
@@ -1138,9 +1138,9 @@ namespace Server
             this.NeedHoleMCheckBox.AutoSize = true;
             this.NeedHoleMCheckBox.Location = new System.Drawing.Point(14, 113);
             this.NeedHoleMCheckBox.Name = "NeedHoleMCheckBox";
-            this.NeedHoleMCheckBox.Size = new System.Drawing.Size(78, 16);
+            this.NeedHoleMCheckBox.Size = new System.Drawing.Size(72, 16);
             this.NeedHoleMCheckBox.TabIndex = 17;
-            this.NeedHoleMCheckBox.Text = "Need Hole";
+            this.NeedHoleMCheckBox.Text = "需要洞穴";
             this.NeedHoleMCheckBox.UseVisualStyleBackColor = true;
             this.NeedHoleMCheckBox.CheckedChanged += new System.EventHandler(this.NeedHoleMCheckBox_CheckedChanged);
             // 
@@ -1151,7 +1151,7 @@ namespace Server
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(47, 12);
             this.label22.TabIndex = 16;
-            this.label22.Text = "To Map:";
+            this.label22.Text = "到地图:";
             // 
             // DestMapComboBox
             // 
@@ -1170,7 +1170,7 @@ namespace Server
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(35, 12);
             this.label18.TabIndex = 14;
-            this.label18.Text = "To Y:";
+            this.label18.Text = "到 Y:";
             // 
             // DestYTextBox
             // 
@@ -1189,7 +1189,7 @@ namespace Server
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(35, 12);
             this.label21.TabIndex = 13;
-            this.label21.Text = "To X:";
+            this.label21.Text = "到 X:";
             // 
             // DestXTextBox
             // 
@@ -1205,9 +1205,9 @@ namespace Server
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(108, 30);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(47, 12);
+            this.label16.Size = new System.Drawing.Size(35, 12);
             this.label16.TabIndex = 10;
-            this.label16.Text = "From Y:";
+            this.label16.Text = "从 Y:";
             // 
             // SourceYTextBox
             // 
@@ -1223,9 +1223,9 @@ namespace Server
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(13, 30);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(47, 12);
+            this.label20.Size = new System.Drawing.Size(35, 12);
             this.label20.TabIndex = 3;
-            this.label20.Text = "From X:";
+            this.label20.Text = "从 X:";
             // 
             // SourceXTextBox
             // 
@@ -1260,7 +1260,7 @@ namespace Server
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage7.Size = new System.Drawing.Size(532, 226);
             this.tabPage7.TabIndex = 6;
-            this.tabPage7.Text = "MineZones";
+            this.tabPage7.Text = "矿区";
             this.tabPage7.UseVisualStyleBackColor = true;
             // 
             // MZDeletebutton
@@ -1269,7 +1269,7 @@ namespace Server
             this.MZDeletebutton.Name = "MZDeletebutton";
             this.MZDeletebutton.Size = new System.Drawing.Size(75, 21);
             this.MZDeletebutton.TabIndex = 12;
-            this.MZDeletebutton.Text = "Remove";
+            this.MZDeletebutton.Text = "移除";
             this.MZDeletebutton.UseVisualStyleBackColor = true;
             this.MZDeletebutton.Click += new System.EventHandler(this.MZDeletebutton_Click);
             // 
@@ -1279,7 +1279,7 @@ namespace Server
             this.MZAddbutton.Name = "MZAddbutton";
             this.MZAddbutton.Size = new System.Drawing.Size(75, 21);
             this.MZAddbutton.TabIndex = 11;
-            this.MZAddbutton.Text = "Add";
+            this.MZAddbutton.Text = "增加";
             this.MZAddbutton.UseVisualStyleBackColor = true;
             this.MZAddbutton.Click += new System.EventHandler(this.MZAddbutton_Click);
             // 
@@ -1307,9 +1307,9 @@ namespace Server
             this.label27.AutoSize = true;
             this.label27.Location = new System.Drawing.Point(12, 16);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(65, 12);
+            this.label27.Size = new System.Drawing.Size(59, 12);
             this.label27.TabIndex = 14;
-            this.label27.Text = "Mine Type:";
+            this.label27.Text = "矿区类型:";
             // 
             // MineZoneComboBox
             // 
@@ -1346,7 +1346,7 @@ namespace Server
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(35, 12);
             this.label31.TabIndex = 8;
-            this.label31.Text = "Size:";
+            this.label31.Text = "大小:";
             // 
             // MZSizetextBox
             // 
@@ -1394,7 +1394,7 @@ namespace Server
             this.RemoveButton.Name = "RemoveButton";
             this.RemoveButton.Size = new System.Drawing.Size(75, 21);
             this.RemoveButton.TabIndex = 6;
-            this.RemoveButton.Text = "Remove";
+            this.RemoveButton.Text = "移除";
             this.RemoveButton.UseVisualStyleBackColor = true;
             this.RemoveButton.Click += new System.EventHandler(this.RemoveButton_Click);
             // 
@@ -1404,7 +1404,7 @@ namespace Server
             this.AddButton.Name = "AddButton";
             this.AddButton.Size = new System.Drawing.Size(75, 21);
             this.AddButton.TabIndex = 5;
-            this.AddButton.Text = "Add";
+            this.AddButton.Text = "增加";
             this.AddButton.UseVisualStyleBackColor = true;
             this.AddButton.Click += new System.EventHandler(this.AddButton_Click);
             // 
@@ -1427,7 +1427,7 @@ namespace Server
             this.PasteMapButton.Name = "PasteMapButton";
             this.PasteMapButton.Size = new System.Drawing.Size(75, 21);
             this.PasteMapButton.TabIndex = 24;
-            this.PasteMapButton.Text = "Paste";
+            this.PasteMapButton.Text = "粘贴";
             this.PasteMapButton.UseVisualStyleBackColor = true;
             this.PasteMapButton.Click += new System.EventHandler(this.PasteMapButton_Click);
             // 
@@ -1437,7 +1437,7 @@ namespace Server
             this.CopyMapButton.Name = "CopyMapButton";
             this.CopyMapButton.Size = new System.Drawing.Size(75, 21);
             this.CopyMapButton.TabIndex = 23;
-            this.CopyMapButton.Text = "Copy";
+            this.CopyMapButton.Text = "复制";
             this.CopyMapButton.UseVisualStyleBackColor = true;
             // 
             // ImportMapInfoButton
@@ -1446,7 +1446,7 @@ namespace Server
             this.ImportMapInfoButton.Name = "ImportMapInfoButton";
             this.ImportMapInfoButton.Size = new System.Drawing.Size(87, 21);
             this.ImportMapInfoButton.TabIndex = 25;
-            this.ImportMapInfoButton.Text = "Import MapInfo";
+            this.ImportMapInfoButton.Text = "导入地图";
             this.ImportMapInfoButton.UseVisualStyleBackColor = true;
             this.ImportMapInfoButton.Click += new System.EventHandler(this.ImportMapInfoButton_Click);
             // 
@@ -1456,7 +1456,7 @@ namespace Server
             this.ExportMapInfoButton.Name = "ExportMapInfoButton";
             this.ExportMapInfoButton.Size = new System.Drawing.Size(87, 21);
             this.ExportMapInfoButton.TabIndex = 26;
-            this.ExportMapInfoButton.Text = "Export MapInfo";
+            this.ExportMapInfoButton.Text = "导出地图";
             this.ExportMapInfoButton.UseVisualStyleBackColor = true;
             this.ExportMapInfoButton.Click += new System.EventHandler(this.ExportMapInfoButton_Click);
             // 
@@ -1466,7 +1466,7 @@ namespace Server
             this.ImportMongenButton.Name = "ImportMongenButton";
             this.ImportMongenButton.Size = new System.Drawing.Size(86, 21);
             this.ImportMongenButton.TabIndex = 27;
-            this.ImportMongenButton.Text = "Import Spawns";
+            this.ImportMongenButton.Text = "导入刷怪";
             this.ImportMongenButton.UseVisualStyleBackColor = true;
             this.ImportMongenButton.Click += new System.EventHandler(this.ImportMonGenButton_Click);
             // 
@@ -1476,7 +1476,7 @@ namespace Server
             this.ExportMongenButton.Name = "ExportMongenButton";
             this.ExportMongenButton.Size = new System.Drawing.Size(86, 21);
             this.ExportMongenButton.TabIndex = 28;
-            this.ExportMongenButton.Text = "Export Spawns";
+            this.ExportMongenButton.Text = "导出刷怪";
             this.ExportMongenButton.UseVisualStyleBackColor = true;
             this.ExportMongenButton.Click += new System.EventHandler(this.ExportMonGenButton_Click);
             // 
@@ -1486,7 +1486,7 @@ namespace Server
             this.VisualizerButton.Name = "VisualizerButton";
             this.VisualizerButton.Size = new System.Drawing.Size(75, 21);
             this.VisualizerButton.TabIndex = 31;
-            this.VisualizerButton.Text = "Visualizer";
+            this.VisualizerButton.Text = "虚拟显示";
             this.VisualizerButton.UseVisualStyleBackColor = true;
             this.VisualizerButton.Click += new System.EventHandler(this.VisualizerButton_Click);
             // 
@@ -1507,7 +1507,7 @@ namespace Server
             this.Controls.Add(this.AddButton);
             this.Controls.Add(this.MapInfoListBox);
             this.Name = "MapInfoForm";
-            this.Text = "Map Info";
+            this.Text = "地图列表";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MapInfoForm_FormClosed);
             this.MapTabs.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);

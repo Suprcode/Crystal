@@ -122,7 +122,7 @@ namespace Client.MirGraphics
                                           UpArcHair = new MLibrary[9],
                                           UpArcHumEffect = new MLibrary[3],
 
-                                          
+                                          UpMounts = new MLibrary[5],
                                           UpFishingM = new MLibrary[2],
                                           UpFishingF = new MLibrary[2],
 
@@ -150,7 +150,7 @@ namespace Client.MirGraphics
 			for (int i = 0; i < CHumEffect.Length; i++)
                 CHumEffect[i] = new MLibrary(Settings.CHumEffectPath + i.ToString("00"));
 
-            //Assassin
+            //刺客
             for (int i = 0; i < AArmours.Length; i++)
                 AArmours[i] = new MLibrary(Settings.AArmourPath + i.ToString("00"));
 
@@ -166,7 +166,7 @@ namespace Client.MirGraphics
             for (int i = 0; i < AHumEffect.Length; i++)
                 AHumEffect[i] = new MLibrary(Settings.AHumEffectPath + i.ToString("00"));
 
-            //Archer
+            //弓箭手
             for (int i = 0; i < ARArmours.Length; i++)
                 ARArmours[i] = new MLibrary(Settings.ARArmourPath + i.ToString("00"));
 
@@ -265,7 +265,8 @@ namespace Client.MirGraphics
             for (int i = 0; i < UpArcHumEffect.Length; i++)
                 UpArcHumEffect[i] = new MLibrary(Settings.UpArcHumEffectPath + i.ToString("00"));
 
-           
+            for (int i = 0; i < UpMounts.Length; i++)
+                UpMounts[i] = new MLibrary(Settings.UpMountPath + i.ToString("00"));
 
             for (int i = 0; i < UpFishingM.Length; i++)
                 UpFishingM[i] = new MLibrary(Settings.UpFishingPath + i.ToString("00M"));

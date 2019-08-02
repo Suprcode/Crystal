@@ -4510,7 +4510,7 @@ namespace ServerPackets
         }
     }
 
-    public sealed class UserAttackMove : Packet//warrior skill - SlashingBurst move packet 
+    public sealed class UserAttackMove : Packet//战士 skill - SlashingBurst move packet 
     {
         public override short Index
         {

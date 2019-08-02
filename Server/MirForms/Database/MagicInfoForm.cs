@@ -31,73 +31,73 @@ namespace Server
 
         private void UpdateMagicForm(byte field = 0)
         {
-            _selectedMagicInfo = (MagicInfo)MagiclistBox.SelectedItem;
+             _selectedMagicInfo = (MagicInfo)MagiclistBox.SelectedItem;
 
-            lblBookValid.BackColor = SystemColors.Window;
+             lblBookValid.BackColor = SystemColors.Window;
 
-            if (_selectedMagicInfo == null)
-            {
-                tabControl1.Enabled = false;
-                lblBookValid.Text = "Searching";
-                lblSelected.Text = "Selected Skill: none";
-                lblDamageExample.Text = "";
-                lblDamageExplained.Text = "";
-                txtSkillIcon.Text = "0";
-                txtSkillLvl1Points.Text = "0";
-                txtSkillLvl1Req.Text = "0";
-                txtSkillLvl2Points.Text = "0";
-                txtSkillLvl2Req.Text = "0";
-                txtSkillLvl3Points.Text = "0";
-                txtSkillLvl3Req.Text = "0";
-                txtMPBase.Text = "0";
-                txtMPIncrease.Text = "0";
-                txtDelayBase.Text = "0";
-                txtDelayReduction.Text = "0";
-                txtDmgBaseMin.Text = "0";
-                txtDmgBaseMax.Text = "0";
-                txtDmgBonusMin.Text = "0";
-                txtDmgBonusMax.Text = "0";
-                textBox1.Text = "0";
-                textBox2.Text = "0";
+             if (_selectedMagicInfo == null)
+             {
+                 tabControl1.Enabled = false;
+                 lblBookValid.Text = "Searching";
+                 lblSelected.Text = "Selected Skill: none";
+                 lblDamageExample.Text = "";
+                 lblDamageExplained.Text = "";
+                 txtSkillIcon.Text = "0";
+                 txtSkillLvl1Points.Text = "0";
+                 txtSkillLvl1Req.Text = "0";
+                 txtSkillLvl2Points.Text = "0";
+                 txtSkillLvl2Req.Text = "0";
+                 txtSkillLvl3Points.Text = "0";
+                 txtSkillLvl3Req.Text = "0";
+                 txtMPBase.Text = "0";
+                 txtMPIncrease.Text = "0";
+                 txtDelayBase.Text = "0";
+                 txtDelayReduction.Text = "0";
+                 txtDmgBaseMin.Text = "0";
+                 txtDmgBaseMax.Text = "0";
+                 txtDmgBonusMin.Text = "0";
+                 txtDmgBonusMax.Text = "0";
+                 textBox1.Text = "0";
+                 textBox2.Text = "0";
             }
-            else
-            {
-                tabControl1.Enabled = true;
-                lblSelected.Text = "Selected Skill: " + _selectedMagicInfo.ToString();
-                lblDamageExample.Text = string.Format("Damage @ Skill level 0: {0:000}-{1:000}   |||   level 1: {2:000}-{3:000}   |||   level 2: {4:000}-{5:000}   |||   level 3: {6:000}-{7:000} |||   level 4: {8:000}-{9:000}", GetMinPower(0), GetMaxPower(0), GetMinPower(1), GetMaxPower(1), GetMinPower(2), GetMaxPower(2), GetMinPower(3), GetMaxPower(3), GetMinPower(4), GetMaxPower(4));
-                lblDamageExplained.Text = string.Format("Damage: {{Random(minstat-maxstat) + [<(random({0}-{1})/4) X (skill level +1)> + random<{2}-{3}>]}}  X  {{{4} + (skill level * {5})}}", _selectedMagicInfo.MPowerBase, _selectedMagicInfo.MPowerBase + _selectedMagicInfo.MPowerBonus, _selectedMagicInfo.PowerBase, _selectedMagicInfo.PowerBonus + _selectedMagicInfo.PowerBase, _selectedMagicInfo.MultiplierBase, _selectedMagicInfo.MultiplierBonus);
-                txtSkillIcon.Text = _selectedMagicInfo.Icon.ToString();
-                txtSkillLvl1Points.Text = _selectedMagicInfo.Need1.ToString();
-                txtSkillLvl1Req.Text = _selectedMagicInfo.Level1.ToString();
-                txtSkillLvl2Points.Text = _selectedMagicInfo.Need2.ToString();
-                txtSkillLvl2Req.Text = _selectedMagicInfo.Level2.ToString();
-                txtSkillLvl3Points.Text = _selectedMagicInfo.Need3.ToString();
-                txtSkillLvl3Req.Text = _selectedMagicInfo.Level3.ToString();
-                textBox1.Text = _selectedMagicInfo.Need4.ToString();
-                textBox2.Text = _selectedMagicInfo.Level4.ToString();
-                txtMPBase.Text = _selectedMagicInfo.BaseCost.ToString();
-                txtMPIncrease.Text = _selectedMagicInfo.LevelCost.ToString();
-                txtDelayBase.Text = _selectedMagicInfo.DelayBase.ToString();
-                txtDelayReduction.Text = _selectedMagicInfo.DelayReduction.ToString();
-                txtDmgBaseMin.Text = _selectedMagicInfo.PowerBase.ToString();
-                txtDmgBaseMax.Text = (_selectedMagicInfo.PowerBase + _selectedMagicInfo.PowerBonus).ToString();
-                txtDmgBonusMin.Text = _selectedMagicInfo.MPowerBase.ToString();
-                txtDmgBonusMax.Text = (_selectedMagicInfo.MPowerBase + _selectedMagicInfo.MPowerBonus).ToString();
-                if (field != 1)
+             else
+             {
+                 tabControl1.Enabled = true;
+                 lblSelected.Text = "Selected Skill: " + _selectedMagicInfo.ToString();
+                 lblDamageExample.Text = string.Format("Damage @ Skill level 0: {0:000}-{1:000}   |||   level 1: {2:000}-{3:000}   |||   level 2: {4:000}-{5:000}   |||   level 3: {6:000}-{7:000} |||   level 4: {8:000}-{9:000}", GetMinPower(0), GetMaxPower(0), GetMinPower(1), GetMaxPower(1), GetMinPower(2), GetMaxPower(2), GetMinPower(3), GetMaxPower(3), GetMinPower(4), GetMaxPower(4));
+                 lblDamageExplained.Text = string.Format("Damage: {{Random(minstat-maxstat) + [<(random({0}-{1})/4) X (skill level +1)> + random<{2}-{3}>]}}  X  {{{4} + (skill level * {5})}}", _selectedMagicInfo.MPowerBase, _selectedMagicInfo.MPowerBase + _selectedMagicInfo.MPowerBonus, _selectedMagicInfo.PowerBase, _selectedMagicInfo.PowerBonus + _selectedMagicInfo.PowerBase, _selectedMagicInfo.MultiplierBase, _selectedMagicInfo.MultiplierBonus);
+                 txtSkillIcon.Text = _selectedMagicInfo.Icon.ToString();
+                 txtSkillLvl1Points.Text = _selectedMagicInfo.Need1.ToString();
+                 txtSkillLvl1Req.Text = _selectedMagicInfo.Level1.ToString();
+                 txtSkillLvl2Points.Text = _selectedMagicInfo.Need2.ToString();
+                 txtSkillLvl2Req.Text = _selectedMagicInfo.Level2.ToString();
+                 txtSkillLvl3Points.Text = _selectedMagicInfo.Need3.ToString();
+                 txtSkillLvl3Req.Text = _selectedMagicInfo.Level3.ToString();
+                 textBox1.Text = _selectedMagicInfo.Need4.ToString();
+                 textBox2.Text = _selectedMagicInfo.Level4.ToString();
+                 txtMPBase.Text = _selectedMagicInfo.BaseCost.ToString();
+                 txtMPIncrease.Text = _selectedMagicInfo.LevelCost.ToString();
+                 txtDelayBase.Text = _selectedMagicInfo.DelayBase.ToString();
+                 txtDelayReduction.Text = _selectedMagicInfo.DelayReduction.ToString();
+                 txtDmgBaseMin.Text = _selectedMagicInfo.PowerBase.ToString();
+                 txtDmgBaseMax.Text = (_selectedMagicInfo.PowerBase + _selectedMagicInfo.PowerBonus).ToString();
+                 txtDmgBonusMin.Text = _selectedMagicInfo.MPowerBase.ToString();
+                 txtDmgBonusMax.Text = (_selectedMagicInfo.MPowerBase + _selectedMagicInfo.MPowerBonus).ToString();
+                 if (field != 1)
                     txtDmgMultBase.Text = _selectedMagicInfo.MultiplierBase.ToString();
-                if (field != 2)
-                    txtDmgMultBoost.Text = _selectedMagicInfo.MultiplierBonus.ToString();
-                txtRange.Text = _selectedMagicInfo.Range.ToString();
-                ItemInfo Book = Envir.GetBook((short)_selectedMagicInfo.Spell);
-                if (Book != null)
-                {
-                    lblBookValid.Text = Book.Name;
-                }
-                else
-                {
-                    lblBookValid.Text = "No book found";
-                    lblBookValid.BackColor = Color.Red;
-                }
+                 if (field != 2)
+                 txtDmgMultBoost.Text = _selectedMagicInfo.MultiplierBonus.ToString();
+                 txtRange.Text = _selectedMagicInfo.Range.ToString();
+                 ItemInfo Book = Envir.GetBook((short)_selectedMagicInfo.Spell);
+                 if (Book != null)
+                 {
+                     lblBookValid.Text = Book.Name;
+                 }
+                 else
+                 {
+                     lblBookValid.Text = "No book found";
+                     lblBookValid.BackColor = Color.Red;
+                 }
 
                 checkBox1.Checked = _selectedMagicInfo.HumUpTrain;
             }
@@ -107,7 +107,7 @@ namespace Server
         private int GetMaxPower(byte level)
         {
             if (_selectedMagicInfo == null) return 0;
-            return (int)Math.Round((((_selectedMagicInfo.MPowerBase + _selectedMagicInfo.MPowerBonus) / 4F) * (level + 1) + (_selectedMagicInfo.PowerBase + _selectedMagicInfo.PowerBonus)) * (_selectedMagicInfo.MultiplierBase + (level * _selectedMagicInfo.MultiplierBonus)));
+            return (int)Math.Round((((_selectedMagicInfo.MPowerBase + _selectedMagicInfo.MPowerBonus) / 4F) * (level + 1) + (_selectedMagicInfo.PowerBase + _selectedMagicInfo.PowerBonus))* (_selectedMagicInfo.MultiplierBase + (level * _selectedMagicInfo.MultiplierBonus)));
         }
         private int GetMinPower(byte level)
         {
@@ -121,6 +121,8 @@ namespace Server
             this.MagiclistBox = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
             this.lblDamageExample = new System.Windows.Forms.Label();
             this.lblDamageExplained = new System.Windows.Forms.Label();
             this.lblSelected = new System.Windows.Forms.Label();
@@ -138,7 +140,6 @@ namespace Server
             this.label17 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label20 = new System.Windows.Forms.Label();
             this.txtRange = new System.Windows.Forms.TextBox();
@@ -153,7 +154,6 @@ namespace Server
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.label24 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -175,6 +175,8 @@ namespace Server
             this.label1 = new System.Windows.Forms.Label();
             this.lblBookValid = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.label25 = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -225,6 +227,24 @@ namespace Server
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Basics";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(14, 38);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(59, 12);
+            this.label24.TabIndex = 12;
+            this.label24.Text = "技能名字:";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(168, 38);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(23, 12);
+            this.label23.TabIndex = 11;
+            this.label23.Text = "书:";
             // 
             // lblDamageExample
             // 
@@ -392,15 +412,6 @@ namespace Server
             this.label15.TabIndex = 0;
             this.label15.Text = "伤害升值";
             // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(168, 38);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(23, 12);
-            this.label23.TabIndex = 11;
-            this.label23.Text = "书:";
-            // 
             // panel3
             // 
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -537,18 +548,11 @@ namespace Server
             this.label9.TabIndex = 0;
             this.label9.Text = "技能消耗MP值";
             // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(14, 38);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(59, 12);
-            this.label24.TabIndex = 12;
-            this.label24.Text = "技能名字:";
-            // 
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.label26);
+            this.panel1.Controls.Add(this.label25);
             this.panel1.Controls.Add(this.checkBox1);
             this.panel1.Controls.Add(this.textBox1);
             this.panel1.Controls.Add(this.textBox2);
@@ -574,7 +578,7 @@ namespace Server
             // 
             this.checkBox1.AutoSize = true;
             this.checkBox1.ForeColor = System.Drawing.Color.Red;
-            this.checkBox1.Location = new System.Drawing.Point(24, 99);
+            this.checkBox1.Location = new System.Drawing.Point(48, 111);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(90, 16);
             this.checkBox1.TabIndex = 13;
@@ -584,7 +588,7 @@ namespace Server
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(169, 121);
+            this.textBox1.Location = new System.Drawing.Point(169, 142);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(46, 21);
             this.textBox1.TabIndex = 16;
@@ -592,7 +596,7 @@ namespace Server
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(57, 121);
+            this.textBox2.Location = new System.Drawing.Point(57, 142);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(46, 21);
             this.textBox2.TabIndex = 14;
@@ -734,6 +738,24 @@ namespace Server
             this.lblBookValid.Size = new System.Drawing.Size(119, 12);
             this.lblBookValid.TabIndex = 0;
             this.lblBookValid.Text = "Searching for books";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(10, 145);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(41, 12);
+            this.label25.TabIndex = 17;
+            this.label25.Text = "等级 4";
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(110, 145);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(41, 12);
+            this.label26.TabIndex = 18;
+            this.label26.Text = "技能点";
             // 
             // MagicInfoForm
             // 
@@ -920,7 +942,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-            _selectedMagicInfo.PowerBonus = (ushort)(temp - _selectedMagicInfo.PowerBase);
+            _selectedMagicInfo.PowerBonus =  (ushort)(temp - _selectedMagicInfo.PowerBase);
             UpdateMagicForm();
         }
 
@@ -976,7 +998,7 @@ namespace Server
             if (ActiveControl != sender) return;
             byte temp = 0;
             if (!IsValid(ref temp)) return;
-
+            
             ActiveControl.BackColor = SystemColors.Window;
             _selectedMagicInfo.Range = temp;
         }
@@ -1028,10 +1050,10 @@ namespace Server
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
+                        
+                _selectedMagicInfo.HumUpTrain = checkBox1.Checked;
 
-            _selectedMagicInfo.HumUpTrain = checkBox1.Checked;
-
-
+           
 
         }
     }

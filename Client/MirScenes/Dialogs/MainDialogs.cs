@@ -37,7 +37,7 @@ namespace Client.MirScenes.Dialogs
 
         public bool HPOnly
         {
-            get { return User != null && User.Class == MirClass.Warrior && User.Level < 26; }
+            get { return User != null && User.Class == MirClass.战士 && User.Level < 26; }
         }
 
         public MainDialog()
@@ -424,10 +424,10 @@ namespace Client.MirScenes.Dialogs
             switch (Settings.SkillMode)
             {
                 case true:
-                    SModeLabel.Text = "[Skill Mode: ~]";
+                    SModeLabel.Text = "[技能模式: ~]";
                     break;
                 case false:
-                    SModeLabel.Text = "[Skill Mode: Ctrl]";
+                    SModeLabel.Text = "[技能模式: Ctrl]";
                     break;
             }
 
@@ -2214,23 +2214,23 @@ namespace Client.MirScenes.Dialogs
                 {
                     switch (GameScene.User.Class)
                     {
-                        case MirClass.HighWarrior:
+                        case MirClass.碧血武士:
                             JobStaetItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsWarM : Libraries.StateItemsWarW;
                             Libraries.Prguse.Draw(330 + (MapObject.User.Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
-                        case MirClass.HighWizard:
+                        case MirClass.虹玄法师:
                             JobStaetItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsWizM : Libraries.StateItemsWizW;
                             Libraries.Prguse.Draw(332 + (MapObject.User.Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
-                        case MirClass.HighTaoist:
+                        case MirClass.翊仙道士:
                             JobStaetItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsTaoM : Libraries.StateItemsTaoW;
                             Libraries.Prguse.Draw(334 + (MapObject.User.Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
-                        case MirClass.HighAssassin:
+                        case MirClass.飞燕刺客:
                             JobStaetItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsAssM : Libraries.StateItemsAssW;
                             Libraries.Prguse.Draw(336 + (MapObject.User.Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
-                        case MirClass.HighArcher:
+                        case MirClass.暗鬼弓手:
                             JobStaetItems = MapObject.User.Gender == MirGender.Male ? Libraries.StateItemsArcM : Libraries.StateItemsArcW;
                             Libraries.Prguse.Draw(320 + (MapObject.User.Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
@@ -2265,19 +2265,19 @@ namespace Client.MirScenes.Dialogs
                         {
                             switch (GameScene.User.Class)
                             {
-                                case MirClass.HighWarrior:
+                                case MirClass.碧血武士:
                                     wingOffset = GameScene.User.WingEffect == 1 ? 10 : 20;
                                     break;
-                                case MirClass.HighWizard:
+                                case MirClass.虹玄法师:
                                     wingOffset = GameScene.User.WingEffect == 1 ? 12 : 22;
                                     break;
-                                case MirClass.HighTaoist:
+                                case MirClass.翊仙道士:
                                     wingOffset = GameScene.User.WingEffect == 1 ? 14 : 24;
                                     break;
-                                case MirClass.HighAssassin:
+                                case MirClass.飞燕刺客:
                                     wingOffset = GameScene.User.WingEffect == 1 ? 16 : 26;
                                     break;
-                                case MirClass.HighArcher:
+                                case MirClass.暗鬼弓手:
                                     wingOffset = GameScene.User.WingEffect == 1 ? 18 : 28;
                                     break;
                                 default:
@@ -2914,38 +2914,38 @@ namespace Client.MirScenes.Dialogs
 
             switch (MapObject.User.Class)
             {
-                case MirClass.Warrior:
+                case MirClass.战士:
                     ClassImage.Index = 100;// + offSet * 5;
                     break;
-                case MirClass.Wizard:
+                case MirClass.法师:
                     ClassImage.Index = 101;// + offSet * 5;
                     break;
-                case MirClass.Taoist:
+                case MirClass.道士:
                     ClassImage.Index = 102;// + offSet * 5;
                     break;
-                case MirClass.Assassin:
+                case MirClass.刺客:
                     ClassImage.Index = 103;// + offSet * 5;
                     break;
-                case MirClass.Archer:
+                case MirClass.弓箭手:
                     ClassImage.Index = 104;// + offSet * 5;
                     break;
-                case MirClass.HighWarrior://stupple
+                case MirClass.碧血武士://stupple
                     ClassImage.Index = 100;
                     CharacterPage.Index = 379;
                     break;
-                case MirClass.HighWizard:
+                case MirClass.虹玄法师:
                     ClassImage.Index = 101;
                     CharacterPage.Index = 379;
                     break;
-                case MirClass.HighTaoist:
+                case MirClass.翊仙道士:
                     ClassImage.Index = 102;
                     CharacterPage.Index = 379;
                     break;
-                case MirClass.HighAssassin:
+                case MirClass.飞燕刺客:
                     ClassImage.Index = 103;
                     CharacterPage.Index = 379;
                     break;
-                case MirClass.HighArcher:
+                case MirClass.暗鬼弓手:
                     ClassImage.Index = 104;
                     CharacterPage.Index = 379;
                     break;
@@ -3376,21 +3376,21 @@ namespace Client.MirScenes.Dialogs
                 switch (WeaponCell.Item.Shape / 100)
                 {
                     default:
-                        return Class == MirClass.Wizard || Class == MirClass.Warrior || Class == MirClass.Taoist;
+                        return Class == MirClass.法师 || Class == MirClass.战士 || Class == MirClass.道士;
                     case 1:
-                        return Class == MirClass.Assassin;
+                        return Class == MirClass.刺客;
                     case 2:
-                        return Class == MirClass.Archer;
+                        return Class == MirClass.弓箭手;
                     case 3:
-                        return Class == MirClass.HighWarrior;
+                        return Class == MirClass.碧血武士;
                     case 4:
-                        return Class == MirClass.HighWizard;
+                        return Class == MirClass.虹玄法师;
                     case 5:
-                        return Class == MirClass.HighTaoist;
+                        return Class == MirClass.翊仙道士;
                     case 6:
-                        return Class == MirClass.HighAssassin;
+                        return Class == MirClass.飞燕刺客;
                     case 7:
-                        return Class == MirClass.HighArcher;
+                        return Class == MirClass.暗鬼弓手;
                 }
             }
         }//stupple hum up end
@@ -3435,23 +3435,23 @@ namespace Client.MirScenes.Dialogs
                 {
                     switch (Class)
                     {
-                        case MirClass.HighWarrior:
+                        case MirClass.碧血武士:
                             JobStaetItems = Gender == MirGender.Male ? Libraries.StateItemsWarM : Libraries.StateItemsWarW;
                             Libraries.Prguse.Draw(330 + (Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
-                        case MirClass.HighWizard:
+                        case MirClass.虹玄法师:
                             JobStaetItems = Gender == MirGender.Male ? Libraries.StateItemsWizM : Libraries.StateItemsWizW;
                             Libraries.Prguse.Draw(332 + (Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
-                        case MirClass.HighTaoist:
+                        case MirClass.翊仙道士:
                             JobStaetItems = Gender == MirGender.Male ? Libraries.StateItemsTaoM : Libraries.StateItemsTaoW;
                             Libraries.Prguse.Draw(334 + (Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
-                        case MirClass.HighAssassin:
+                        case MirClass.飞燕刺客:
                             JobStaetItems = Gender == MirGender.Male ? Libraries.StateItemsAssM : Libraries.StateItemsAssW;
                             Libraries.Prguse.Draw(336 + (Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
-                        case MirClass.HighArcher:
+                        case MirClass.暗鬼弓手:
                             JobStaetItems = Gender == MirGender.Male ? Libraries.StateItemsArcM : Libraries.StateItemsArcW;
                             Libraries.Prguse.Draw(320 + (Gender == MirGender.Male ? 0 : 1), new Point(DisplayLocation.X, DisplayLocation.Y), Color.White, true, 1F);
                             break;
@@ -3490,19 +3490,19 @@ namespace Client.MirScenes.Dialogs
                         {
                             switch (Class)
                             {
-                                case MirClass.HighWarrior:
+                                case MirClass.碧血武士:
                                     wingOffset = WingEffect == 1 ? 10 : 20;
                                     break;
-                                case MirClass.HighWizard:
+                                case MirClass.虹玄法师:
                                     wingOffset = WingEffect == 1 ? 12 : 22;
                                     break;
-                                case MirClass.HighTaoist:
+                                case MirClass.翊仙道士:
                                     wingOffset = WingEffect == 1 ? 14 : 24;
                                     break;
-                                case MirClass.HighAssassin:
+                                case MirClass.飞燕刺客:
                                     wingOffset = WingEffect == 1 ? 16 : 26;
                                     break;
-                                case MirClass.HighArcher:
+                                case MirClass.暗鬼弓手:
                                     wingOffset = WingEffect == 1 ? 18 : 28;
                                     break;
                                 default:
@@ -3542,10 +3542,10 @@ namespace Client.MirScenes.Dialogs
                     Libraries.StateItems.Draw(HelmetCell.Item.Info.Image, new Point(DisplayLocation.X, DisplayLocation.Y - 20), Color.White, true, 1F);
                 else
                 {
-                    int hair = 441 + Hair + (Class == MirClass.Assassin ? 20 : 0) + (Gender == MirGender.Male ? 0 : 40);
+                    int hair = 441 + Hair + (Class == MirClass.刺客 ? 20 : 0) + (Gender == MirGender.Male ? 0 : 40);
 
-                    int offSetX = Class == MirClass.Assassin ? (Gender == MirGender.Male ? 6 : 4) : 0;
-                    int offSetY = Class == MirClass.Assassin ? (Gender == MirGender.Male ? 25 : 18) : 0;
+                    int offSetX = Class == MirClass.刺客 ? (Gender == MirGender.Male ? 6 : 4) : 0;
+                    int offSetY = Class == MirClass.刺客 ? (Gender == MirGender.Male ? 25 : 18) : 0;
 
                     Libraries.Prguse.Draw(hair, new Point(DisplayLocation.X + offSetX, DisplayLocation.Y + offSetY - 20), Color.White, true, 1F);
                 }
@@ -3800,38 +3800,38 @@ namespace Client.MirScenes.Dialogs
 
             switch (Class)
             {
-                case MirClass.Warrior:
+                case MirClass.战士:
                     ClassImage.Index = 100;// + offSet * 5;
                     break;
-                case MirClass.Wizard:
+                case MirClass.法师:
                     ClassImage.Index = 101;// + offSet * 5;
                     break;
-                case MirClass.Taoist:
+                case MirClass.道士:
                     ClassImage.Index = 102;// + offSet * 5;
                     break;
-                case MirClass.Assassin:
+                case MirClass.刺客:
                     ClassImage.Index = 103;// + offSet * 5;
                     break;
-                case MirClass.Archer:
+                case MirClass.弓箭手:
                     ClassImage.Index = 104;// + offSet * 5;
                     break;
-                case MirClass.HighWarrior://stupple
+                case MirClass.碧血武士://stupple
                     ClassImage.Index = 100;
                     CharacterPage.Index = 379;
                     break;
-                case MirClass.HighWizard:
+                case MirClass.虹玄法师:
                     ClassImage.Index = 101;
                     CharacterPage.Index = 379;
                     break;
-                case MirClass.HighTaoist:
+                case MirClass.翊仙道士:
                     ClassImage.Index = 102;
                     CharacterPage.Index = 379;
                     break;
-                case MirClass.HighAssassin:
+                case MirClass.飞燕刺客:
                     ClassImage.Index = 103;
                     CharacterPage.Index = 379;
                     break;
-                case MirClass.HighArcher:
+                case MirClass.暗鬼弓手:
                     ClassImage.Index = 104;
                     CharacterPage.Index = 379;
                     break;

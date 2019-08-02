@@ -1044,7 +1044,7 @@ namespace Server.MirNetwork
         private void ChangePMode(C.ChangePMode p)
         {
             if (Stage != GameStage.Game) return;
-            if (Player.Class != MirClass.Wizard && Player.Class != MirClass.Taoist && Player.Pets.Count == 0)
+            if (Player.Class != MirClass.法师 && Player.Class != MirClass.道士 && Player.Pets.Count == 0)
                 return;
 
             Player.PMode = p.Mode;

@@ -110,44 +110,44 @@ namespace Server
                           RestedExpBonus = 5,
                           RestedMaxBonus = 24;
 
-        public static string SkeletonName = "BoneFamiliar",
-                             ShinsuName = "Shinsu",
-                             BugBatName = "BugBat",
-                             Zuma1 = "ZumaStatue",
-                             Zuma2 = "ZumaGuardian",
-                             Zuma3 = "ZumaArcher",
-                             Zuma4 = "WedgeMoth",
-                             Zuma5 = "ZumaArcher3",
-                             Zuma6 = "ZumaStatue3",
-                             Zuma7 = "ZumaGuardian3",
-                             Turtle1 = "RedTurtle",
-                             Turtle2 = "GreenTurtle",
-                             Turtle3 = "BlueTurtle",
-                             Turtle4 = "TowerTurtle",
-                             Turtle5 = "FinialTurtle",
-                             BoneMonster1 = "BoneSpearman",
-                             BoneMonster2 = "BoneBlademan",
-                             BoneMonster3 = "BoneArcher",
-                             BoneMonster4 = "BoneCaptain",
-                             BehemothMonster1 = "Hugger",
-                             BehemothMonster2 = "PoisonHugger",
-                             BehemothMonster3 = "MutatedHugger",
-                             HellKnight1 = "HellKnight1",
-                             HellKnight2 = "HellKnight2",
-                             HellKnight3 = "HellKnight3",
-                             HellKnight4 = "HellKnight4",
-                             HellBomb1 = "HellBomb1",
-                             HellBomb2 = "HellBomb2",
-                             HellBomb3 = "HellBomb3",
-                             WhiteSnake = "WhiteSerpent",
-                             AngelName = "HolyDeva",
-                             BombSpiderName = "BombSpider",
-                             CloneName = "Clone",
-                             AssassinCloneName = "AssassinClone",
-                             VampireName = "VampireSpider",
-                             ToadName = "SpittingToad",
-                             SnakeTotemName = "SnakeTotem",
-                             SnakesName = "CharmedSnake";
+        public static string SkeletonName = "变异骷髅",
+                             ShinsuName = "神兽",
+                             BugBatName = "蝙蝠",
+                             Zuma1 = "祖玛雕像",
+                             Zuma2 = "祖玛卫士",
+                             Zuma3 = "远古祖玛弓箭手",
+                             Zuma4 = "楔蛾",
+                             Zuma5 = "祖玛弓箭手3",
+                             Zuma6 = "祖玛雕像3",
+                             Zuma7 = "祖玛卫士3",
+                             Turtle1 = "红海龟",
+                             Turtle2 = "绿海龟",
+                             Turtle3 = "蓝海龟",
+                             Turtle4 = "玄武龟",
+                             Turtle5 = "幽冥龟",
+                             BoneMonster1 = "骷髅长枪兵",
+                             BoneMonster2 = "远古骷髅刀斧手",
+                             BoneMonster3 = "骷髅弓箭手",
+                             BoneMonster4 = "骷髅武将",
+                             BehemothMonster1 = "爆炸蜘蛛",
+                             BehemothMonster2 = "紫电蜘蛛",
+                             BehemothMonster3 = "爆炸蜘蛛",
+                             HellKnight1 = "寒冰守护神",
+                             HellKnight2 = "炎火守护神",
+                             HellKnight3 = "紫电守护神",
+                             HellKnight4 = "赤雷守护神",
+                             HellBomb1 = "寒冰球",
+                             HellBomb2 = "紫电球",
+                             HellBomb3 = "赤炎球",
+                             WhiteSnake = "白蛇(任务)",
+                             AngelName = "精灵",
+                             BombSpiderName = "爆裂蜘蛛",
+                             CloneName = "分身",
+                             AssassinCloneName = "刺客分身",
+                             VampireName = "吸血蜘蛛",
+                             ToadName = "蟾蜍",
+                             SnakeTotemName = "蛇图腾",
+                             SnakesName = "鬼魅蛇";
 
         public static string HealRing = "Healing",
                              FireRing = "FireBall",
@@ -163,8 +163,8 @@ namespace Server
 
 
         //IntelligentCreature
-        public static string[] IntelligentCreatureNameList = { "BabyPig", "Chick", "Kitten", "BabySkeleton", "Baekdon", "Wimaen", "BlackKitten", "BabyDragon", "OlympicFlame", "BabySnowMan", "Frog", "BabyMonkey", "AngryBird", "Foxey" };
-        public static string CreatureBlackStoneName = "BlackCreatureStone";
+        public static string[] IntelligentCreatureNameList = { "猪宝宝", "鸡宝宝", "调皮的猫咪", "外星人", "小白猪", "纸人宝宝", "可爱的猫咪", "魔龙宝宝", "圣火宝宝", "雪人宝宝", "青蛙宝宝", "猴宝宝", "(灵物)猴子", "哈士奇" };
+        public static string CreatureBlackStoneName = "黑色石头";
 
         //Fishing Settings
         public static int FishingAttempts = 30;
@@ -172,7 +172,7 @@ namespace Server
         public static int FishingSuccessMultiplier = 10;
         public static long FishingDelay = 0;
         public static int FishingMobSpawnChance = 5;
-        public static string FishingMonster = "GiantKeratoid";
+        public static string FishingMonster = "巨型多角虫";
 
         //Mail Settings
         public static bool MailAutoSendGold = false;
@@ -193,7 +193,7 @@ namespace Server
         public static byte RefineItemStatReduce = 15;
         public static int RefineCost = 125;
 
-        public static string RefineOreName = "BlackIronOre";
+        public static string RefineOreName = "黑铁矿石";
 
         //Marriage Settings
         public static int LoverEXPBonus = 5;
@@ -222,9 +222,9 @@ namespace Server
 
 
         //character settings
-        private static String[] BaseStatClassNames = { "Warrior", "Wizard", "Taoist", "Assassin", "Archer", "HighWarrior", "HighWizard", "HighTaoist", "HighAssassin", "HighArcher"  };
-        public static BaseStats[] ClassBaseStats = new BaseStats[10] { new BaseStats(MirClass.Warrior), new BaseStats(MirClass.Wizard), new BaseStats(MirClass.Taoist), new BaseStats(MirClass.Assassin), new BaseStats(MirClass.Archer),
-                                                                       new BaseStats(MirClass.HighWarrior), new BaseStats(MirClass.HighWizard), new BaseStats(MirClass.HighTaoist), new BaseStats(MirClass.HighAssassin), new BaseStats(MirClass.HighArcher) };//stupple
+        private static String[] BaseStatClassNames = { "战士", "法师", "道士", "刺客", "弓箭手", "碧血武士", "虹玄法师", "翊仙道士", "飞燕刺客", "暗鬼弓手"  };
+        public static BaseStats[] ClassBaseStats = new BaseStats[10] { new BaseStats(MirClass.战士), new BaseStats(MirClass.法师), new BaseStats(MirClass.道士), new BaseStats(MirClass.刺客), new BaseStats(MirClass.弓箭手),
+                                                                       new BaseStats(MirClass.碧血武士), new BaseStats(MirClass.虹玄法师), new BaseStats(MirClass.翊仙道士), new BaseStats(MirClass.飞燕刺客), new BaseStats(MirClass.暗鬼弓手) };//stupple
 
         public static List<RandomItemStat> RandomItemStatsList = new List<RandomItemStat>();
         public static List<MineSet> MineSetList = new List<MineSet>();

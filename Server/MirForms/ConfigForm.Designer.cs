@@ -94,7 +94,7 @@
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(75, 21);
             this.SaveButton.TabIndex = 6;
-            this.SaveButton.Text = "Close";
+            this.SaveButton.Text = "关闭";
             this.SaveButton.UseVisualStyleBackColor = true;
             this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
@@ -125,7 +125,7 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(407, 275);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Version";
+            this.tabPage1.Text = "通用";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // groupBox1
@@ -139,7 +139,7 @@
             this.groupBox1.Size = new System.Drawing.Size(395, 59);
             this.groupBox1.TabIndex = 25;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Version Info";
+            this.groupBox1.Text = "版本信息";
             // 
             // label11
             // 
@@ -148,7 +148,7 @@
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(53, 12);
             this.label11.TabIndex = 23;
-            this.label11.Text = "Database";
+            this.label11.Text = "数据库";
             // 
             // DBVersionLabel
             // 
@@ -175,7 +175,7 @@
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(41, 12);
             this.label10.TabIndex = 22;
-            this.label10.Text = "Server";
+            this.label10.Text = "服务器";
             // 
             // RelogDelayTextBox
             // 
@@ -193,7 +193,7 @@
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(77, 12);
             this.label7.TabIndex = 20;
-            this.label7.Text = "Relog Delay:";
+            this.label7.Text = "重登录延迟:";
             // 
             // VersionCheckBox
             // 
@@ -202,7 +202,7 @@
             this.VersionCheckBox.Name = "VersionCheckBox";
             this.VersionCheckBox.Size = new System.Drawing.Size(168, 16);
             this.VersionCheckBox.TabIndex = 3;
-            this.VersionCheckBox.Text = "Check for client version";
+            this.VersionCheckBox.Text = "检查版本";
             this.VersionCheckBox.UseVisualStyleBackColor = true;
             // 
             // VPathBrowseButton
@@ -230,7 +230,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(83, 12);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Version Path:";
+            this.label1.Text = "版本路径:";
             // 
             // tabPage2
             // 
@@ -253,7 +253,7 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(407, 275);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Network";
+            this.tabPage2.Text = "网络";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // label15
@@ -317,7 +317,7 @@
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(59, 12);
             this.label5.TabIndex = 16;
-            this.label5.Text = "Max User:";
+            this.label5.Text = "最大用户数:";
             // 
             // TimeOutTextBox
             // 
@@ -335,7 +335,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 12);
             this.label4.TabIndex = 14;
-            this.label4.Text = "TimeOut:";
+            this.label4.Text = "超时:";
             // 
             // PortTextBox
             // 
@@ -353,7 +353,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(35, 12);
             this.label3.TabIndex = 12;
-            this.label3.Text = "Port:";
+            this.label3.Text = "端口:";
             // 
             // IPAddressTextBox
             // 
@@ -371,7 +371,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(71, 12);
             this.label2.TabIndex = 10;
-            this.label2.Text = "IP Address:";
+            this.label2.Text = "IP地址:";
             // 
             // tabPage3
             // 
@@ -391,7 +391,7 @@
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage3.Size = new System.Drawing.Size(407, 275);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Permissions";
+            this.tabPage3.Text = "权限";
             this.tabPage3.UseVisualStyleBackColor = true;
             this.tabPage3.Click += new System.EventHandler(this.tabPage3_Click);
             // 
@@ -402,7 +402,7 @@
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(137, 12);
             this.label9.TabIndex = 16;
-            this.label9.Text = "Max Resolution Allowed";
+            this.label9.Text = "最大允许分辨率";
             // 
             // label8
             // 
@@ -428,7 +428,7 @@
             this.AllowArcherCheckBox.Name = "AllowArcherCheckBox";
             this.AllowArcherCheckBox.Size = new System.Drawing.Size(228, 16);
             this.AllowArcherCheckBox.TabIndex = 13;
-            this.AllowArcherCheckBox.Text = "Allow Creation of the Archer Class";
+            this.AllowArcherCheckBox.Text = "允许创建弓箭手";
             this.AllowArcherCheckBox.UseVisualStyleBackColor = true;
             // 
             // AllowAssassinCheckBox
@@ -438,7 +438,7 @@
             this.AllowAssassinCheckBox.Name = "AllowAssassinCheckBox";
             this.AllowAssassinCheckBox.Size = new System.Drawing.Size(240, 16);
             this.AllowAssassinCheckBox.TabIndex = 12;
-            this.AllowAssassinCheckBox.Text = "Allow Creation of the Assassin Class";
+            this.AllowAssassinCheckBox.Text = "允许创建刺客";
             this.AllowAssassinCheckBox.UseVisualStyleBackColor = true;
             // 
             // StartGameCheckBox
@@ -448,7 +448,7 @@
             this.StartGameCheckBox.Name = "StartGameCheckBox";
             this.StartGameCheckBox.Size = new System.Drawing.Size(258, 16);
             this.StartGameCheckBox.TabIndex = 11;
-            this.StartGameCheckBox.Text = "Allow Characters to Login to Game World";
+            this.StartGameCheckBox.Text = "允许开始游戏";
             this.StartGameCheckBox.UseVisualStyleBackColor = true;
             // 
             // DCharacterCheckBox
@@ -458,7 +458,7 @@
             this.DCharacterCheckBox.Name = "DCharacterCheckBox";
             this.DCharacterCheckBox.Size = new System.Drawing.Size(168, 16);
             this.DCharacterCheckBox.TabIndex = 10;
-            this.DCharacterCheckBox.Text = "Allow Character Deletion";
+            this.DCharacterCheckBox.Text = "允许删除角色";
             this.DCharacterCheckBox.UseVisualStyleBackColor = true;
             // 
             // NCharacterCheckBox
@@ -468,7 +468,7 @@
             this.NCharacterCheckBox.Name = "NCharacterCheckBox";
             this.NCharacterCheckBox.Size = new System.Drawing.Size(192, 16);
             this.NCharacterCheckBox.TabIndex = 9;
-            this.NCharacterCheckBox.Text = "Allow New Character Creation";
+            this.NCharacterCheckBox.Text = "允许新建角色";
             this.NCharacterCheckBox.UseVisualStyleBackColor = true;
             // 
             // LoginCheckBox
@@ -478,7 +478,7 @@
             this.LoginCheckBox.Name = "LoginCheckBox";
             this.LoginCheckBox.Size = new System.Drawing.Size(162, 16);
             this.LoginCheckBox.TabIndex = 8;
-            this.LoginCheckBox.Text = "Allow Accounts To Login";
+            this.LoginCheckBox.Text = "允许登录";
             this.LoginCheckBox.UseVisualStyleBackColor = true;
             // 
             // PasswordCheckBox
@@ -488,7 +488,7 @@
             this.PasswordCheckBox.Name = "PasswordCheckBox";
             this.PasswordCheckBox.Size = new System.Drawing.Size(240, 16);
             this.PasswordCheckBox.TabIndex = 7;
-            this.PasswordCheckBox.Text = "Allow Users To Change Their Password";
+            this.PasswordCheckBox.Text = "允许修改密码";
             this.PasswordCheckBox.UseVisualStyleBackColor = true;
             // 
             // AccountCheckBox
@@ -498,7 +498,7 @@
             this.AccountCheckBox.Name = "AccountCheckBox";
             this.AccountCheckBox.Size = new System.Drawing.Size(180, 16);
             this.AccountCheckBox.TabIndex = 6;
-            this.AccountCheckBox.Text = "Allow New Account Creation";
+            this.AccountCheckBox.Text = "允许新建账号";
             this.AccountCheckBox.UseVisualStyleBackColor = true;
             // 
             // tabPage4
@@ -511,7 +511,7 @@
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage4.Size = new System.Drawing.Size(407, 275);
             this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Database";
+            this.tabPage4.Text = "数据库";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // label12
@@ -539,7 +539,7 @@
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(71, 12);
             this.label6.TabIndex = 24;
-            this.label6.Text = "Save Delay:";
+            this.label6.Text = "保存延时:";
             // 
             // tabPage5
             // 
@@ -551,7 +551,7 @@
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage5.Size = new System.Drawing.Size(407, 275);
             this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "Optional";
+            this.tabPage5.Text = "可选项";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
             // gameMasterEffect_CheckBox
@@ -571,7 +571,7 @@
             this.SafeZoneHealingCheckBox.Name = "SafeZoneHealingCheckBox";
             this.SafeZoneHealingCheckBox.Size = new System.Drawing.Size(210, 16);
             this.SafeZoneHealingCheckBox.TabIndex = 1;
-            this.SafeZoneHealingCheckBox.Text = "Enable auto-healing in SafeZone";
+            this.SafeZoneHealingCheckBox.Text = "安全区回血";
             this.SafeZoneHealingCheckBox.UseVisualStyleBackColor = true;
             this.SafeZoneHealingCheckBox.CheckedChanged += new System.EventHandler(this.SafeZoneHealingCheckBox_CheckedChanged);
             // 
@@ -582,7 +582,7 @@
             this.SafeZoneBorderCheckBox.Name = "SafeZoneBorderCheckBox";
             this.SafeZoneBorderCheckBox.Size = new System.Drawing.Size(150, 16);
             this.SafeZoneBorderCheckBox.TabIndex = 0;
-            this.SafeZoneBorderCheckBox.Text = "Show SafeZone Borders";
+            this.SafeZoneBorderCheckBox.Text = "安全区边框";
             this.SafeZoneBorderCheckBox.UseVisualStyleBackColor = true;
             this.SafeZoneBorderCheckBox.CheckedChanged += new System.EventHandler(this.SafeZoneBorderCheckBox_CheckedChanged);
             // 
@@ -610,7 +610,7 @@
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.configTabs);
             this.Name = "ConfigForm";
-            this.Text = "Server Config Form";
+            this.Text = "配置";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ConfigForm_FormClosed);
             this.configTabs.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);

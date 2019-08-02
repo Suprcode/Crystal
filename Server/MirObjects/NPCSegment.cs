@@ -1024,6 +1024,12 @@ namespace Server.MirObjects
                     if (parts.Length < 2) return;                    
                     acts.Add(new NPCActions(ActionType.OpenBrowser, parts[1]));
                     break;
+                case "GETRANDOMTEXT":
+                    if (parts.Length < 3) return;
+                    match = Regex.Match(parts[2], @"[A-Z][0-9]", RegexOptions.IgnoreCase);
+                    if (match.Success)
+                        acts.Add(new NPCActions(ActionType.GetRandomText, parts[1], parts[2]));
+                    break;
             }
 
         }
@@ -1051,7 +1057,7 @@ namespace Server.MirObjects
             var oneValRegex = new Regex(@"(.*?)\(((.*?))\)");
             var twoValRegex = new Regex(@"(.*?)\(((.*?),(.*?))\)");
             ConquestObject Conquest;
-            ConquestArcherObject Archer;
+            ConquestArcherObject 弓箭手;
             ConquestGateObject Gate;
             ConquestWallObject Wall;
             ConquestSiegeObject Siege;
@@ -1093,18 +1099,18 @@ namespace Server.MirObjects
                         Conquest = SMain.Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
                         if (Conquest == null) return "Not Found";
 
-                        Archer = Conquest.ArcherList.FirstOrDefault(x => x.Index == intVal2);
-                        if (Archer == null) return "Not Found";
+                        弓箭手 = Conquest.ArcherList.FirstOrDefault(x => x.Index == intVal2);
+                        if (弓箭手 == null) return "Not Found";
 
-                        if (Archer.Info.Name == "" || Archer.Info.Name == null)
+                        if (弓箭手.Info.Name == "" || 弓箭手.Info.Name == null)
                             newValue = "Conquest Guard";
                         else
-                            newValue = Archer.Info.Name;
+                            newValue = 弓箭手.Info.Name;
 
-                        if (Archer.GetRepairCost() == 0)
+                        if (弓箭手.GetRepairCost() == 0)
                             newValue += " - [ Still Alive ]";
                         else
-                            newValue += " - [ " + Archer.GetRepairCost().ToString("#,##0") + " gold ]";
+                            newValue += " - [ " + 弓箭手.GetRepairCost().ToString("#,##0") + " gold ]";
                     }
                     break;
                 case "CONQUESTGATE()":
@@ -2314,14 +2320,14 @@ namespace Server.MirObjects
                                 break;
                             }
 
-                            ConquestArcherObject Archer = Conquest.ArcherList.FirstOrDefault(g => g.Info.Index == tempInt2);
-                            if (Archer == null || Archer.GetRepairCost() == 0)
+                            ConquestArcherObject 弓箭手 = Conquest.ArcherList.FirstOrDefault(g => g.Info.Index == tempInt2);
+                            if (弓箭手 == null || 弓箭手.GetRepairCost() == 0)
                             {
                                 failed = true;
                                 break;
                             }
                             if (player.MyGuild != null)
-                                failed = (player.MyGuild.Gold < Archer.GetRepairCost());
+                                failed = (player.MyGuild.Gold < 弓箭手.GetRepairCost());
                             else
                                 failed = true;
                         }
@@ -2893,20 +2899,20 @@ namespace Server.MirObjects
 
                         switch (mirClass)
                         {
-                            case MirClass.Warrior:
-                                player.Info.Class = MirClass.Warrior;
+                            case MirClass.战士:
+                                player.Info.Class = MirClass.战士;
                                 break;
-                            case MirClass.Taoist:
-                                player.Info.Class = MirClass.Taoist;
+                            case MirClass.道士:
+                                player.Info.Class = MirClass.道士;
                                 break;
-                            case MirClass.Wizard:
-                                player.Info.Class = MirClass.Wizard;
+                            case MirClass.法师:
+                                player.Info.Class = MirClass.法师;
                                 break;
-                            case MirClass.Assassin:
-                                player.Info.Class = MirClass.Assassin;
+                            case MirClass.刺客:
+                                player.Info.Class = MirClass.刺客;
                                 break;
-                            case MirClass.Archer:
-                                player.Info.Class = MirClass.Archer;
+                            case MirClass.弓箭手:
+                                player.Info.Class = MirClass.弓箭手;
                                 break;
                         }
                         break;
@@ -3508,6 +3514,19 @@ namespace Server.MirObjects
                         break;
                     case ActionType.OpenBrowser:
                         player.Enqueue(new S.OpenBrowser { Url = param[0]});
+                        break;
+                    case ActionType.GetRandomText:
+                        string randomTextPath = Settings.NPCPath + param[0];
+                        if (!File.Exists(randomTextPath))
+                        {
+                            SMain.Enqueue(string.Format("the randomTextFile:{0} does not exist.",randomTextPath));
+                        }
+                        else {
+                            var lines = File.ReadAllLines(randomTextPath);
+                            int index = SMain.Envir.Random.Next(0,lines.Length);
+                            string randomText = lines[index];
+                            AddVariable(player, param[1], randomText);
+                        }                        
                         break;
                 }
             }

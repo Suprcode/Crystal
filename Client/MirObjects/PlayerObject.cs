@@ -49,21 +49,21 @@ namespace Client.MirObjects
                 switch (Weapon / 100)
                 {
                     default:
-                        return Class == MirClass.Wizard || Class == MirClass.Warrior || Class == MirClass.Taoist;
+                        return Class == MirClass.法师 || Class == MirClass.战士 || Class == MirClass.道士;
                     case 1:
-                        return Class == MirClass.Assassin;
+                        return Class == MirClass.刺客;
                     case 2:
-                        return Class == MirClass.Archer;
+                        return Class == MirClass.弓箭手;
                     case 3://stupple
-                        return Class == MirClass.HighWarrior;
+                        return Class == MirClass.碧血武士;
                     case 4:
-                        return Class == MirClass.HighWizard;
+                        return Class == MirClass.虹玄法师;
                     case 5:
-                        return Class == MirClass.HighTaoist;
+                        return Class == MirClass.翊仙道士;
                     case 6:
-                        return Class == MirClass.HighAssassin;
+                        return Class == MirClass.飞燕刺客;
                     case 7:
-                        return Class == MirClass.HighArcher;
+                        return Class == MirClass.暗鬼弓手;
                 }
             }
         }
@@ -372,8 +372,8 @@ namespace Client.MirObjects
 
                 switch (Class)
                 {
-                    #region Archer
-                    case MirClass.Archer:
+                    #region 弓箭手
+                    case MirClass.弓箭手:
 
                         #region WeaponType
                         if (HasClassWeapon)
@@ -493,8 +493,8 @@ namespace Client.MirObjects
                     #endregion
 
 
-                    #region Assassin
-                    case MirClass.Assassin:
+                    #region 刺客
+                    case MirClass.刺客:
 
                         #region WeaponType
                         if (HasClassWeapon || Weapon < 0)
@@ -623,9 +623,9 @@ namespace Client.MirObjects
 
 
                     #region Others
-                    case MirClass.Warrior:
-                    case MirClass.Taoist:
-                    case MirClass.Wizard:
+                    case MirClass.战士:
+                    case MirClass.道士:
+                    case MirClass.法师:
 
                         #region Armours
                         BodyLibrary = Armour < Libraries.CArmours.Length ? Libraries.CArmours[Armour] : Libraries.CArmours[0];
@@ -669,7 +669,7 @@ namespace Client.MirObjects
                         break;
                     #endregion
                     #region High War //stupple
-                    case MirClass.HighWarrior:
+                    case MirClass.碧血武士:
 
                         #region WeaponType
                         if (HasClassWeapon)
@@ -755,9 +755,6 @@ namespace Client.MirObjects
                         {
                             WingLibrary = (WingEffect - 1) < (altAnim ? Libraries.UpWarHumEffect.Length : Libraries.UpCHumEffect.Length) ? (altAnim ? Libraries.UpWarHumEffect[WingEffect - 1] : Libraries.UpCHumEffect[WingEffect - 1]) : null;
                         }
-
-
-
                         #endregion
 
                         #region Offsets
@@ -772,7 +769,7 @@ namespace Client.MirObjects
                     #endregion
 
                     #region High Wiz //stupple
-                    case MirClass.HighWizard:
+                    case MirClass.虹玄法师:
 
                         #region WeaponType
                         if (HasClassWeapon)
@@ -853,15 +850,11 @@ namespace Client.MirObjects
                         }
                         #endregion
 
-
                         #region WingEffects
                         if (WingEffect > 0 && WingEffect < 100)
                         {
                             WingLibrary = (WingEffect - 1) < (altAnim ? Libraries.UpWizHumEffect.Length : Libraries.UpCHumEffect.Length) ? (altAnim ? Libraries.UpWizHumEffect[WingEffect - 1] : Libraries.UpCHumEffect[WingEffect - 1]) : null;
-
                         }
-                        
-
                         #endregion
 
                         #region Offsets
@@ -876,7 +869,7 @@ namespace Client.MirObjects
                     #endregion
 
                     #region High Tao //stupple
-                    case MirClass.HighTaoist:
+                    case MirClass.翊仙道士:
 
                         #region WeaponType
                         if (HasClassWeapon)
@@ -976,7 +969,7 @@ namespace Client.MirObjects
                     #endregion
 
                     #region High Ass //stupple
-                    case MirClass.HighAssassin:
+                    case MirClass.飞燕刺客:
 
                         #region WeaponType
                         if (HasClassWeapon)
@@ -1078,9 +1071,7 @@ namespace Client.MirObjects
                     #endregion
 
                     #region High Arc //stupple
-                    case MirClass.HighArcher:
-
-
+                    case MirClass.暗鬼弓手:
 
                         #region WeaponType
                         if (HasClassWeapon)
@@ -1092,13 +1083,13 @@ namespace Client.MirObjects
                                 case MirAction.AttackRange1:
                                 case MirAction.AttackRange2:
                                 case MirAction.AttackRange3:
-                                //case MirAction.Jump:
+                                case MirAction.Jump:
                                     altAnim = true;
                                     break;
                             }
                         }
-                        if (CurrentAction == MirAction.Jump) altAnim = true;
-                        //ResetFramePos(altAnim, 5);
+
+                        ResetFramePos(altAnim, 5);
                         #endregion
 
                         #region Armours
@@ -1157,11 +1148,10 @@ namespace Client.MirObjects
                         #region WingEffects
                         if (WingEffect > 0 && WingEffect < 100)
                         {
-
                             WingLibrary = (WingEffect - 1) < (altAnim ? Libraries.UpArcHumEffect.Length : Libraries.UpCHumEffect.Length) ? (altAnim ? Libraries.UpArcHumEffect[WingEffect - 1] : Libraries.UpCHumEffect[WingEffect - 1]) : null;
                         }
-                         
                         #endregion
+
                         #region Offsets
                         ArmourOffSet = Gender == MirGender.Male ? 0 : altAnim ? 384 : 1112;
                         HairOffSet = Gender == MirGender.Male ? 0 : altAnim ? 384 : 1112;
@@ -1186,8 +1176,6 @@ namespace Client.MirObjects
             if (MountType > -1 && RidingMount && showMount)
             {
                 MountLibrary = MountType < Libraries.Mounts.Length ? Libraries.Mounts[MountType] : null;
-
-
             }
             else
             {
@@ -1475,7 +1463,7 @@ namespace Client.MirObjects
 
                 if (CurrentAction == MirAction.Standing)
                 {
-                    if ((Class == MirClass.Archer || Class == MirClass.HighArcher) && HasClassWeapon)
+                    if (Class == MirClass.弓箭手 || Class == MirClass.暗鬼弓手 && HasClassWeapon)
                         CurrentAction = MirAction.Standing;
                     else
                         CurrentAction = CMain.Time > StanceTime ? MirAction.Standing : MirAction.Stance;
@@ -1603,12 +1591,12 @@ namespace Client.MirObjects
                     case MirAction.Attack1:
                         switch (Class)
                         {
-                            case MirClass.Archer:
-                            case MirClass.HighArcher:
+                            case MirClass.弓箭手:
+                            case MirClass.暗鬼弓手:
                                 Frames.Frames.TryGetValue(CurrentAction, out Frame);
                                 break;
-                            case MirClass.HighAssassin:
-                            case MirClass.Assassin:
+                            case MirClass.飞燕刺客:
+                            case MirClass.刺客:
                                 if(GameScene.DoubleSlash)
                                     Frames.Frames.TryGetValue(MirAction.Attack1, out Frame);
                                 else if (CMain.Shift)
@@ -1817,7 +1805,7 @@ namespace Client.MirObjects
                 }
 
                 //ArcherTest - Need to check for bow weapon only
-                if ((Class == MirClass.Archer || Class == MirClass.HighArcher) && HasClassWeapon)
+                if ((Class == MirClass.弓箭手 || Class == MirClass.暗鬼弓手) && HasClassWeapon)
                 {
                     switch (CurrentAction)
                     {
@@ -1830,8 +1818,8 @@ namespace Client.MirObjects
                     }
                 }
 
-                //Assassin sneekyness
-                if ((Class == MirClass.Assassin || Class == MirClass.HighAssassin) && Sneaking && (CurrentAction == MirAction.Walking || CurrentAction == MirAction.Running))
+                //刺客 sneekyness
+                if ((Class == MirClass.刺客 || Class == MirClass.飞燕刺客) && Sneaking && (CurrentAction == MirAction.Walking || CurrentAction == MirAction.Running))
                 {
                     Frames.Frames.TryGetValue(MirAction.Sneek, out Frame);
                 }
@@ -2150,7 +2138,7 @@ namespace Client.MirObjects
                             if (ob.Race != ObjectType.Player) break;
                             PlayerObject player = ((PlayerObject)ob);
                             StruckWeapon = player.Weapon;
-                            if (player.Class != MirClass.Assassin || StruckWeapon == -1) break;
+                            if (player.Class != MirClass.刺客 || StruckWeapon == -1) break;
                             StruckWeapon = 1;
                             break;
                         }
@@ -5195,7 +5183,7 @@ namespace Client.MirObjects
             }
 
             int add = 0;
-            if (Class != MirClass.Assassin) //Archer to add?
+            if (Class != MirClass.刺客) //弓箭手 to add?
                 switch (Armour)
                 {
                     case 3:
@@ -5282,12 +5270,12 @@ namespace Client.MirObjects
                 return;
             }
 
-            if (Weapon >= 0 && Class == MirClass.Assassin || Class == MirClass.HighAssassin)
+            if (Weapon >= 0 && Class == MirClass.刺客 || Class == MirClass.飞燕刺客)
             {
                 SoundManager.PlaySound(SoundList.SwingShort);
                 return;
             }
-            if (Weapon >= 0 && Class == MirClass.HighWarrior)//stupple
+            if (Weapon >= 0 && Class == MirClass.碧血武士)//stupple
             {
                 switch (Weapon)
                 {
@@ -5298,7 +5286,7 @@ namespace Client.MirObjects
                 return;
             }
 
-            if (Weapon >= 0 && Class == MirClass.HighWizard)
+            if (Weapon >= 0 && Class == MirClass.虹玄法师)
             {
                 switch (Weapon)
                 {
@@ -5309,7 +5297,7 @@ namespace Client.MirObjects
                 return;
             }
 
-            if (Weapon >= 0 && Class == MirClass.HighTaoist)
+            if (Weapon >= 0 && Class == MirClass.翊仙道士)
             {
                 switch (Weapon)
                 {
@@ -5320,7 +5308,7 @@ namespace Client.MirObjects
                 return;
             }
 
-            if ((Class == MirClass.Archer || Class == MirClass.HighArcher) && HasClassWeapon)
+            if ((Class == MirClass.弓箭手 || Class == MirClass.暗鬼弓手) && HasClassWeapon)
             {
                 return;
             }
@@ -5458,7 +5446,7 @@ namespace Client.MirObjects
                 else
                     DrawWeapon2();
 
-                if ((Class == MirClass.Archer || Class == MirClass.HighArcher) && HasClassWeapon)
+                if ((Class == MirClass.弓箭手 || Class == MirClass.暗鬼弓手) && HasClassWeapon)
                     DrawWeapon2();
             }
 

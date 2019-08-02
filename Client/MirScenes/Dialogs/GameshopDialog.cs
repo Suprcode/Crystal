@@ -283,7 +283,7 @@ namespace Client.MirScenes.Dialogs
             };
             War.Click += (o, e) =>
             {
-                ClassFilter = "Warrior";
+                ClassFilter = "战士";
                 TypeFilter = "Show All";
                 GetCategories();
                 ResetClass();
@@ -300,7 +300,7 @@ namespace Client.MirScenes.Dialogs
             };
             Sin.Click += (o, e) =>
             {
-                ClassFilter = "Assassin";
+                ClassFilter = "刺客";
                 TypeFilter = "Show All";
                 GetCategories();
                 ResetClass();
@@ -317,7 +317,7 @@ namespace Client.MirScenes.Dialogs
             };
             Tao.Click += (o, e) =>
             {
-                ClassFilter = "Taoist";
+                ClassFilter = "道士";
                 TypeFilter = "Show All";
                 GetCategories();
                 ResetClass();
@@ -334,7 +334,7 @@ namespace Client.MirScenes.Dialogs
             };
             Wiz.Click += (o, e) =>
             {
-                ClassFilter = "Wizard";
+                ClassFilter = "法师";
                 TypeFilter = "Show All";
                 GetCategories();
                 ResetClass();
@@ -351,7 +351,7 @@ namespace Client.MirScenes.Dialogs
             };
             Arch.Click += (o, e) =>
             {
-                ClassFilter = "Archer";
+                ClassFilter = "弓箭手";
                 TypeFilter = "Show All";
                 GetCategories();
                 ResetClass();
@@ -595,11 +595,11 @@ namespace Client.MirScenes.Dialogs
             Arch.Index = 766;
 
             if (ClassFilter == "Show All") ALL.Index = 752;
-            if (ClassFilter == "Warrior") War.Index = 755;
-            if (ClassFilter == "Assassin") Sin.Index = 758;
-            if (ClassFilter == "Taoist") Tao.Index = 761;
-            if (ClassFilter == "Wizard") Wiz.Index = 764;
-            if (ClassFilter == "Archer") Arch.Index = 767;
+            if (ClassFilter == "战士") War.Index = 755;
+            if (ClassFilter == "刺客") Sin.Index = 758;
+            if (ClassFilter == "道士") Tao.Index = 761;
+            if (ClassFilter == "法师") Wiz.Index = 764;
+            if (ClassFilter == "弓箭手") Arch.Index = 767;
         }
 
         public void GetCategories()
