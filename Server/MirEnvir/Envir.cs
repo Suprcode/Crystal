@@ -56,7 +56,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
 
-        public const int Version = 77;
+        public const int Version = 78;
 
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
@@ -3154,6 +3154,8 @@ namespace Server.MirEnvir
         }
 
         int RankCount = 100;//could make this a global but it made sence since this is only used here, it should stay here
+        private HttpServer http;
+
         public int InsertRank(List<Rank_Character_Info> Ranking, Rank_Character_Info NewRank)
         {
             if (Ranking.Count == 0)

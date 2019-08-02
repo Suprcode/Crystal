@@ -1651,11 +1651,11 @@ namespace Server.MirObjects
 
         Humup,//stupple
 
-        //AddGuildNameList,
-        //DelGuildNameList,
-        //ClearGuildNameList,
-        //OpenBrowser,
-        //GetRandomText,
+        AddGuildNameList,
+        DelGuildNameList,
+        ClearGuildNameList,
+        OpenBrowser,
+        GetRandomText,
 
     }
     public enum CheckType

@@ -158,6 +158,7 @@ namespace Client.MirScenes
         public List<OutPutMessage> OutputMessages = new List<OutPutMessage>();
 
         public long OutputDelay;
+        
 
         public GameScene()
         {
@@ -717,28 +718,28 @@ namespace Client.MirScenes
                 case Spell.Thrusting:
                     if (CMain.Time < ToggleTime) return;
                     Thrusting = !Thrusting;
-                    ChatDialog.ReceiveChat(Thrusting ? "Use Thrusting." : "Do not use Thrusting.", ChatType.Hint);
+                    ChatDialog.ReceiveChat(Thrusting ? "开启刺杀剑术." : "关闭刺杀剑术.", ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
                     Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = Thrusting });
                     break;
                 case Spell.HalfMoon:
                     if (CMain.Time < ToggleTime) return;
                     HalfMoon = !HalfMoon;
-                    ChatDialog.ReceiveChat(HalfMoon ? "Use Half Moon." : "Do not use Half Moon.", ChatType.Hint);
+                    ChatDialog.ReceiveChat(HalfMoon ? "开启半月弯刀." : "关闭半月弯刀.", ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
                     Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = HalfMoon });
                     break;
                 case Spell.CrossHalfMoon:
                     if (CMain.Time < ToggleTime) return;
                     CrossHalfMoon = !CrossHalfMoon;
-                    ChatDialog.ReceiveChat(CrossHalfMoon ? "Use Cross Half Moon." : "Do not use Cross Half Moon.", ChatType.Hint);
+                    ChatDialog.ReceiveChat(CrossHalfMoon ? "开启圆月弯刀." : "关闭圆月弯刀.", ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
                     Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = CrossHalfMoon });
                     break;
                 case Spell.DoubleSlash:
                     if (CMain.Time < ToggleTime) return;
                     DoubleSlash = !DoubleSlash;
-                    ChatDialog.ReceiveChat(DoubleSlash ? "Use Double Slash." : "Do not use Double Slash.", ChatType.Hint);
+                    ChatDialog.ReceiveChat(DoubleSlash ? "开启双刀术." : "关闭双刀术.", ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
                     Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = DoubleSlash });
                     break;
@@ -1625,64 +1626,8 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.GetRentedItems:
                     RentedItems((S.GetRentedItems) p);
                     break;
-
-            }
-        }
-
-        public void CreateBuff(Buff buff)
-        {
-            string text = "";
-            int buffImage = BuffImage(buff.Type);
-
-            MLibrary buffLibrary = Libraries.BuffIcon;
-
-            if (buffImage >= 20000)
-            {
-                buffImage -= 20000;
-                buffLibrary = Libraries.MagIcon;
-            }
-
-            if (buffImage >= 10000)
-            {
-                buffImage -= 10000;
-                buffLibrary = Libraries.Prguse2;
-            }
-
-            MirImageControl image = new MirImageControl
-            {
-                Library = buffLibrary,
-                Parent = this,
-                Visible = true,
-                Sort = false,
-                Index = buffImage
-            };
-
-            new MirLabel
-            {
-                DrawFormat = TextFormatFlags.Right,
-                NotControl = true,
-                ForeColour = Color.Yellow,
-                Location = new Point(-7, 10),
-                Size = new Size(30, 20),
-                Parent = image
-            };
-            
-            switch (buff.Type)
-            {
-                case BuffType.UltimateEnhancer:
-                    if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer || GameScene.User.Class == MirClass.HighWizard || GameScene.User.Class == MirClass.HighArcher)
-                    {
-                        text = string.Format("MC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
-                    }
-                    else if (GameScene.User.Class == MirClass.Taoist || GameScene.User.Class == MirClass.HighTaoist)
-                    {
-                        text = string.Format("SC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
-                    }
-                    else
-                    {
-                        text = string.Format("DC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
-                    }
-
+                case (short)ServerPacketIds.ItemRentalRequest:
+                    ItemRentalRequest((S.ItemRentalRequest)p);
                     break;
                 case (short)ServerPacketIds.ItemRentalFee:
                     ItemRentalFee((S.ItemRentalFee)p);
@@ -1717,157 +1662,6 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.OpenBrowser:                  
                     OpenBrowser((S.OpenBrowser)p);
                     break;
-
-            }
-
-            if (text != "") GameScene.Scene.ChatDialog.ReceiveChat(text, ChatType.Hint);
-            BuffList.Insert(0, image);
-        }
-        public void UpdateBuffs()
-        {
-            for (int i = 0; i < BuffList.Count; i++)
-            {
-                MirImageControl image = BuffList[i];
-                Buff buff = Buffs[i];
-
-                int buffImage = BuffImage(buff.Type);
-                MLibrary buffLibrary = Libraries.BuffIcon;
-
-                //ArcherSpells - VampireShot,PoisonShot
-                if (buffImage >= 20000)
-                {
-                    buffImage -= 20000;
-                    buffLibrary = Libraries.MagIcon;
-                }
-
-                if (buffImage >= 10000)
-                {
-                    buffImage -= 10000;
-                    buffLibrary = Libraries.Prguse2;
-                }
-
-                image.Location = new Point((Settings.ScreenWidth - 150) - i * 23 + ((10 * 23) * (i / 10)), 2 + ((i / 10) * 25));
-                image.Hint = buff.ToString();
-                image.Index = buffImage;
-                image.Library = buffLibrary;
-                image.Visible = MainDialog.Visible;
-
-                if (!buff.Infinite && Math.Round((buff.Expire - CMain.Time) / 1000D) <= 5)
-                {
-                    double time = (buff.Expire - CMain.Time) / 100D;
-
-                    if (Math.Round(time) % 10 < 5) image.Index = -1;
-                }
-
-                //((MirLabel)image.Controls[0]).Text = buff.Infinite ? "" : timeRemaining.ToString();   
-            }
-        }
- 
-        public int BuffImage(BuffType type)
-        {
-            switch (type)
-            {
-                //Skills
-                case BuffType.Fury:
-                    return 76;
-                case BuffType.Rage:
-                    return 49;
-                case BuffType.ImmortalSkin:
-                    return 80;
-                case BuffType.CounterAttack:
-                    return 7;
-
-                case BuffType.MagicBooster:
-                    return 73;
-                case BuffType.MagicShield:
-                    return 30;
-
-                case BuffType.Hiding:
-                    return 17;
-                case BuffType.Haste:
-                    return 60;
-                case BuffType.SoulShield:
-                    return 13;
-                case BuffType.BlessedArmour:
-                    return 14;
-                case BuffType.ProtectionField:
-                    return 50;
-                case BuffType.UltimateEnhancer:
-                    return 35;
-                case BuffType.Curse:
-                    return 45;
-                case BuffType.EnergyShield:
-                    return 57;
-
-                case BuffType.SwiftFeet:
-                    return 67;
-                case BuffType.LightBody:
-                    return 68;
-                case BuffType.MoonLight:
-                    return 65;
-                case BuffType.DarkBody:
-                    return 70;
-
-                case BuffType.Concentration:
-                    return 96;
-                case BuffType.VampireShot:
-                    return 100;
-                case BuffType.PoisonShot:
-                    return 102;
-                case BuffType.MentalState:
-                    return 199;
-
-                //Special
-                case BuffType.GameMaster:
-                    return 173;
-                case BuffType.General:
-                    return 182;
-                case BuffType.HumUp://stupple need changing
-                    return 186;//508
-                case BuffType.Exp:
-                    return 260;
-                case BuffType.Drop:
-                    return 162;
-                case BuffType.Gold:
-                    return 168;
-                case BuffType.Knapsack:
-                case BuffType.BagWeight:
-                    return 235;
-                case BuffType.Transform:
-                    return 241;
-                case BuffType.Mentor:
-                    return 248;
-                case BuffType.Mentee:
-                    return 248;
-                case BuffType.RelationshipEXP:
-                    return 201;
-                case BuffType.Guild:
-                    return 203;
-                case BuffType.Rested:
-                    return 240;
-                case BuffType.TemporalFlux:
-                    return 261;
-
-                //Stats
-                case BuffType.Impact:
-                    return 249;
-                case BuffType.Magic:
-                    return 165;
-                case BuffType.Taoist:
-                    return 250;
-                case BuffType.Storm:
-                    return 170;
-                case BuffType.HealthAid:
-                    return 161;
-                case BuffType.ManaAid:
-                    return 169;
-                case BuffType.Defence:
-                    return 166;
-                case BuffType.MagicDefence:
-                    return 158;
-                case BuffType.WonderDrug:
-                    return 252;
-
                 default:
                     base.ProcessPacket(p);
                     break;
