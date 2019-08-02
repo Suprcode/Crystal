@@ -1092,13 +1092,13 @@ namespace Client.MirObjects
                                 case MirAction.AttackRange1:
                                 case MirAction.AttackRange2:
                                 case MirAction.AttackRange3:
-                                case MirAction.Jump:
+                                //case MirAction.Jump:
                                     altAnim = true;
                                     break;
                             }
                         }
-
-                        ResetFramePos(altAnim, 5);
+                        if (CurrentAction == MirAction.Jump) altAnim = true;
+                        //ResetFramePos(altAnim, 5);
                         #endregion
 
                         #region Armours

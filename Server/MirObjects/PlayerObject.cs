@@ -5904,8 +5904,8 @@ namespace Server.MirObjects
                     spell = Spell.Focus;
                 }
 
-                int distance = Functions.MaxDistance(CurrentLocation, target.CurrentLocation);
-                int damage = GetAttackPower(MinMC, MaxMC);
+                int distance = Functions.MaxDistance(CurrentLocation, target.CurrentLocation);//弓手伤害
+                int damage = GetAttackPower(MinDC, MaxDC);
                 damage = (int)(damage * Math.Max(1, (distance * 0.35)));//range boost
                 damage = ApplyArcherState(damage);
                 int chanceToHit = 60 + (Focus ? 30 : 0) - (int)(distance * 1.5);
