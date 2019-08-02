@@ -7116,7 +7116,7 @@ namespace Client.MirScenes
             #endregion
 
             #region CLASS
-            if (realItem.RequiredClass != RequiredClass.None)
+            if (realItem.RequiredClass != RequiredClass.全部)
             {
                 count++;
                 Color colour = Color.White;

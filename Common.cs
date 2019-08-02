@@ -965,10 +965,10 @@ public enum RequiredClass : byte
     翊仙道士 = 13,
     飞燕刺客 = 14,
     暗鬼弓手 = 15,
-    羽化 = 碧血武士 | 虹玄法师 | 翊仙道士 | 飞燕刺客 | 暗鬼弓手,
+    羽化职业 = 碧血武士 | 虹玄法师 | 翊仙道士 | 飞燕刺客 | 暗鬼弓手,
     战丨法丨道 = 战士 | 法师 | 道士,
-    None = Low | 羽化,
-    Low = 战士 | 法师 | 道士 | 刺客 | 弓箭手,
+    全部 = 战法道刺弓 | 羽化职业,
+    战法道刺弓 = 战士 | 法师 | 道士 | 刺客 | 弓箭手,
     
 
 
@@ -2614,7 +2614,7 @@ public class ItemInfo
     public ItemType Type;
     public ItemGrade Grade;
     public RequiredType RequiredType = RequiredType.Level;
-    public RequiredClass RequiredClass = RequiredClass.None;
+    public RequiredClass RequiredClass = RequiredClass.全部;
     public RequiredGender RequiredGender = RequiredGender.None;
     public ItemSet Set;
 

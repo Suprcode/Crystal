@@ -708,7 +708,7 @@ namespace Client.MirObjects
             if (quest.MinLevelNeeded > User.Level || quest.MaxLevelNeeded < User.Level)
                 return false;
 
-            if (!quest.ClassNeeded.HasFlag(RequiredClass.None))
+            if (!quest.ClassNeeded.HasFlag(RequiredClass.全部))
             {
                 switch (User.Class)
                 {
