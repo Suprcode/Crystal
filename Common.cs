@@ -6631,13 +6631,7 @@ public class GameLanguage
                          GroupAdd = "Add",
                          GroupRemove = "Remove",
                          GroupAddEnterName = "Please enter the name of the person you wish to add.",
-                         GroupRemoveEnterName = "Please enter the name of the person you wish to remove.",
-                         TooHeavyToHold = "It is too heavy to Hold.",
-                         SwitchMarriage = "Allow/Block Marriage",
-                         RequestMarriage = "Request Marriage",
-                         RequestDivorce = "Request Divorce",
-                         MailLover = "Mail Lover",
-                         WhisperLover = "Whisper Lover";
+                         GroupRemoveEnterName = "Please enter the name of the person you wish to remove.";
 
     //Server
     public static string Welcome = "Welcome to the Legend of {0} Server.",
@@ -6903,12 +6897,6 @@ public class GameLanguage
         GameLanguage.GroupRemove = reader.ReadString("Language", "GroupRemove", GameLanguage.GroupRemove);
         GameLanguage.GroupAddEnterName = reader.ReadString("Language", "GroupAddEnterName", GameLanguage.GroupAddEnterName);
         GameLanguage.GroupRemoveEnterName = reader.ReadString("Language", "GroupRemoveEnterName", GameLanguage.GroupRemoveEnterName);
-        GameLanguage.TooHeavyToHold = reader.ReadString("Language", "TooHeavyToHold", GameLanguage.TooHeavyToHold);
-        GameLanguage.SwitchMarriage = reader.ReadString("Language", "SwitchMarriage", GameLanguage.SwitchMarriage);
-        GameLanguage.RequestMarriage = reader.ReadString("Language", "RequestMarriage", GameLanguage.RequestMarriage);
-        GameLanguage.RequestDivorce = reader.ReadString("Language", "RequestDivorce", GameLanguage.RequestDivorce);
-        GameLanguage.MailLover = reader.ReadString("Language", "MailLover", GameLanguage.MailLover);
-        GameLanguage.WhisperLover = reader.ReadString("Language", "WhisperLover", GameLanguage.WhisperLover);
     }
 
 
@@ -7130,12 +7118,6 @@ public class GameLanguage
         reader.Write("Language", "GroupRemove", GameLanguage.GroupRemove);
         reader.Write("Language", "GroupAddEnterName", GameLanguage.GroupAddEnterName);
         reader.Write("Language", "GroupRemoveEnterName", GameLanguage.GroupRemoveEnterName);
-        reader.Write("Language", "TooHeavyToHold", GameLanguage.TooHeavyToHold);
-        reader.Write("Language", "SwitchMarriage", GameLanguage.SwitchMarriage);
-        reader.Write("Language", "RequestMarriage", GameLanguage.RequestMarriage);
-        reader.Write("Language", "RequestDivorce", GameLanguage.RequestDivorce);
-        reader.Write("Language", "MailLover", GameLanguage.MailLover);
-        reader.Write("Language", "WhisperLover", GameLanguage.WhisperLover);
     }
 
 

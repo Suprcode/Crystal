@@ -1024,12 +1024,6 @@ namespace Server.MirObjects
                     if (parts.Length < 2) return;                    
                     acts.Add(new NPCActions(ActionType.OpenBrowser, parts[1]));
                     break;
-                case "GETRANDOMTEXT":
-                    if (parts.Length < 3) return;
-                    match = Regex.Match(parts[2], @"[A-Z][0-9]", RegexOptions.IgnoreCase);
-                    if (match.Success)
-                        acts.Add(new NPCActions(ActionType.GetRandomText, parts[1], parts[2]));
-                    break;
             }
 
         }
@@ -3514,19 +3508,6 @@ namespace Server.MirObjects
                         break;
                     case ActionType.OpenBrowser:
                         player.Enqueue(new S.OpenBrowser { Url = param[0]});
-                        break;
-                    case ActionType.GetRandomText:
-                        string randomTextPath = Settings.NPCPath + param[0];
-                        if (!File.Exists(randomTextPath))
-                        {
-                            SMain.Enqueue(string.Format("the randomTextFile:{0} does not exist.",randomTextPath));
-                        }
-                        else {
-                            var lines = File.ReadAllLines(randomTextPath);
-                            int index = SMain.Envir.Random.Next(0,lines.Length);
-                            string randomText = lines[index];
-                            AddVariable(player, param[1], randomText);
-                        }                        
                         break;
                 }
             }
