@@ -1081,15 +1081,14 @@ namespace Client.MirObjects
                                 case MirAction.Walking:
                                 case MirAction.Running:
                                 case MirAction.AttackRange1:
-                                case MirAction.AttackRange2:
-                                case MirAction.AttackRange3:
+                                case MirAction.AttackRange2:                                
                                 case MirAction.Jump:
                                     altAnim = true;
                                     break;
                             }
                         }
-                        if (CurrentAction == MirAction.Jump) altAnim = true;
-                        //ResetFramePos(altAnim, 5);
+                        
+                        ResetFramePos(altAnim, 5);
                         #endregion
 
                         #region Armours
@@ -1592,10 +1591,10 @@ namespace Client.MirObjects
                         switch (Class)
                         {
                             case MirClass.弓箭手:
-                            case MirClass.暗鬼弓手:
+ 
                                 Frames.Frames.TryGetValue(CurrentAction, out Frame);
                                 break;
-                            case MirClass.飞燕刺客:
+
                             case MirClass.刺客:
                                 if(GameScene.DoubleSlash)
                                     Frames.Frames.TryGetValue(MirAction.Attack1, out Frame);
@@ -5275,38 +5274,7 @@ namespace Client.MirObjects
                 SoundManager.PlaySound(SoundList.SwingShort);
                 return;
             }
-            if (Weapon >= 0 && Class == MirClass.碧血武士)//stupple
-            {
-                switch (Weapon)
-                {
-                    default:
-                        SoundManager.PlaySound(SoundList.SwingSword);
-                        break;
-                }
-                return;
-            }
 
-            if (Weapon >= 0 && Class == MirClass.虹玄法师)
-            {
-                switch (Weapon)
-                {
-                    default:
-                        SoundManager.PlaySound(SoundList.SwingShort);
-                        break;
-                }
-                return;
-            }
-
-            if (Weapon >= 0 && Class == MirClass.翊仙道士)
-            {
-                switch (Weapon)
-                {
-                    default:
-                        SoundManager.PlaySound(SoundList.SwingClub);
-                        break;
-                }
-                return;
-            }
 
             if ((Class == MirClass.弓箭手 || Class == MirClass.暗鬼弓手) && HasClassWeapon)
             {

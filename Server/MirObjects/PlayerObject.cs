@@ -5857,14 +5857,14 @@ namespace Server.MirObjects
             return result;
         }
 
-        public void RangeAttack(MirDirection dir, Point location, uint targetID)
+        public void RangeAttack(MirDirection dir, Point location, uint targetID)//弓手伤害
         {
             LogTime = Envir.Time + Globals.LogDelay;
 
             if (Info.Equipment[(int)EquipmentSlot.Weapon] == null) return;
             ItemInfo RealItem = Functions.GetRealItem(Info.Equipment[(int)EquipmentSlot.Weapon].Info, Info.Level, Info.Class, Envir.ItemInfoList);
-
-            if ((RealItem.Shape / 100) != 2) return;
+            
+            //if ((RealItem.Shape / 700) != 2) return;
             if (Functions.InRange(CurrentLocation, location, Globals.MaxAttackRange) == false) return;
 
             MapObject target = null;

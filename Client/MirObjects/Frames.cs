@@ -145,12 +145,12 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Sneek, new Frame(464, 6, 0, 100 ));
             frame.Frames.Add(MirAction.DashAttack, new Frame(80, 3, 3, 100 ));
             //弓箭手
-            frame.Frames.Add(MirAction.WalkingBow, new Frame(0, 6, 0, 100 ));
-            frame.Frames.Add(MirAction.RunningBow, new Frame(48, 6, 0, 100 ));
-            frame.Frames.Add(MirAction.AttackRange1, new Frame(96, 8, 0, 100 ));
-            frame.Frames.Add(MirAction.AttackRange2, new Frame(160, 8, 0, 100 ));
-            frame.Frames.Add(MirAction.AttackRange3, new Frame(224, 8, 0, 100 ));
-            frame.Frames.Add(MirAction.Jump, new Frame(288, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.WalkingBow, new Frame(0, 6, 2, 100));
+            frame.Frames.Add(MirAction.RunningBow, new Frame(64, 6, 2, 100));
+            frame.Frames.Add(MirAction.AttackRange1, new Frame(128, 8, 0, 100));
+            frame.Frames.Add(MirAction.AttackRange2, new Frame(192, 8, 0, 100));
+            frame.Frames.Add(MirAction.AttackRange3, new Frame(256, 8, 0, 100));
+            frame.Frames.Add(MirAction.Jump, new Frame(320, 9, 0, 100));
             //Mounts
             frame.Frames.Add(MirAction.MountStanding, new Frame(592, 4, 0, 500 ));
             frame.Frames.Add(MirAction.MountWalking, new Frame(624, 8, 0, 100 ));
