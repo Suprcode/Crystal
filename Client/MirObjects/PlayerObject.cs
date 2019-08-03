@@ -1088,8 +1088,8 @@ namespace Client.MirObjects
                                     break;
                             }
                         }
-
-                        ResetFramePos(altAnim, 5);
+                        if (CurrentAction == MirAction.Jump) altAnim = true;
+                        //ResetFramePos(altAnim, 5);
                         #endregion
 
                         #region Armours
