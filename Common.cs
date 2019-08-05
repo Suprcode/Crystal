@@ -952,7 +952,7 @@ public enum SpecialItemMode : short
 
 [Flags]
 [Obfuscation(Feature = "renaming", Exclude = true)]
-public enum RequiredClass : byte
+public enum RequiredClass : ushort
 {
     
     战士 = 1,
@@ -960,16 +960,16 @@ public enum RequiredClass : byte
     道士 = 4,
     刺客 = 8,
     弓箭手 = 16,
-    碧血武士 = 11,
-    虹玄法师 = 12,
-    翊仙道士 = 13,
-    飞燕刺客 = 14,
-    暗鬼弓手 = 15,
-    羽化职业 = 碧血武士 | 虹玄法师 | 翊仙道士 | 飞燕刺客 | 暗鬼弓手,
-    战丨法丨道 = 战士 | 法师 | 道士,
-    全部  = 战法道刺弓 | 羽化职业,
-    战法道刺弓 = 战士 | 法师 | 道士 | 刺客 | 弓箭手,
-    
+    战法道 = 战士 | 法师 | 道士,
+    碧血武士 = 32,
+    虹玄法师 = 64,
+    翊仙道士 = 128,
+    飞燕刺客 = 256,
+    暗鬼弓手 = 512,   
+    hig = 碧血武士 | 虹玄法师 | 翊仙道士 | 飞燕刺客 | 暗鬼弓手,   
+    low = 战法道 | 刺客 | 弓箭手,
+    None = low | hig,
+
 
 
 }
@@ -2495,7 +2495,7 @@ public static class Functions
         {
             ItemInfo info = ItemList[i];
             if (info.Name.StartsWith(Origin.Name))
-                if (((byte)info.RequiredClass == (1 << (byte)job)) && (Origin.RequiredGender == info.RequiredGender))
+                if (((ushort)info.RequiredClass == (1 << (byte)job)) && (Origin.RequiredGender == info.RequiredGender))
                     return info;
         }
         return Origin;
@@ -2508,7 +2508,7 @@ public static class Functions
         {
             ItemInfo info = ItemList[i];
             if (info.Name.StartsWith(Origin.Name))
-                if ((byte)info.RequiredClass == (1 << (byte)job))
+                if ((ushort)info.RequiredClass == (1 << (byte)job))
                     if ((info.RequiredType == RequiredType.Level) && (info.RequiredAmount <= level) && (output.RequiredAmount <= info.RequiredAmount) && (Origin.RequiredGender == info.RequiredGender))
                         output = info;
         }
@@ -2614,7 +2614,7 @@ public class ItemInfo
     public ItemType Type;
     public ItemGrade Grade;
     public RequiredType RequiredType = RequiredType.Level;
-    public RequiredClass RequiredClass = RequiredClass.全部;
+    public RequiredClass RequiredClass = RequiredClass.None;
     public RequiredGender RequiredGender = RequiredGender.None;
     public ItemSet Set;
 
@@ -2681,7 +2681,7 @@ public class ItemInfo
         Type = (ItemType) reader.ReadByte();
         if (version >= 40) Grade = (ItemGrade)reader.ReadByte();
         RequiredType = (RequiredType) reader.ReadByte();
-        RequiredClass = (RequiredClass) reader.ReadByte();
+        RequiredClass = (RequiredClass) reader.ReadInt16();
         RequiredGender = (RequiredGender) reader.ReadByte();
         if(version >= 17) Set = (ItemSet)reader.ReadByte();
 
@@ -2810,7 +2810,7 @@ public class ItemInfo
         writer.Write((byte) Type);
         writer.Write((byte) Grade);
         writer.Write((byte) RequiredType);
-        writer.Write((byte) RequiredClass);
+        writer.Write((ushort) RequiredClass);
         writer.Write((byte) RequiredGender);
         writer.Write((byte) Set);
 
@@ -2992,7 +2992,7 @@ public class ItemInfo
         return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26}," +
                              "{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46},{47},{48},{49},{50},{51}," +
                              "{52},{53},{54},{55},{56},{57},{58},{59},{60},{61},{62},{63}",
-            Name, (byte)Type, (byte)Grade, (byte)RequiredType, (byte)RequiredClass, (byte)RequiredGender, (byte)Set, Shape, Weight, Light, RequiredAmount, MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC,
+            Name, (byte)Type, (byte)Grade, (byte)RequiredType, (ushort)RequiredClass, (byte)RequiredGender, (byte)Set, Shape, Weight, Light, RequiredAmount, MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC,
             MinMC, MaxMC, MinSC, MaxSC, Accuracy, Agility, HP, MP, AttackSpeed, Luck, BagWeight, HandWeight, WearWeight, StartItem, Image, Durability, Price,
             StackSize, Effect, Strong, MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, HPrate, MPrate, CriticalRate, CriticalDamage, NeedIdentify,
             ShowGroupPickup, MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, ClassBased, LevelBased, (short)Bind, Reflect, HpDrainRate, (short)Unique,
@@ -3933,7 +3933,7 @@ public class ClientQuestInfo
         MinLevelNeeded = reader.ReadInt32();
         MaxLevelNeeded = reader.ReadInt32();
         QuestNeeded = reader.ReadInt32();
-        ClassNeeded = (RequiredClass)reader.ReadByte();
+        ClassNeeded = (RequiredClass)reader.ReadInt16();
         Type = (QuestType)reader.ReadByte();
         RewardGold = reader.ReadUInt32();
         RewardExp = reader.ReadUInt32();
