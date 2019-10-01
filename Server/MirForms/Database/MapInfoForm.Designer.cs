@@ -158,6 +158,7 @@ namespace Server
             this.ExportMongenButton = new System.Windows.Forms.Button();
             this.VisualizerButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.NoReincarnation = new System.Windows.Forms.CheckBox();
             this.MapTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -358,6 +359,7 @@ namespace Server
             // 
             // tabPage6
             // 
+            this.tabPage6.Controls.Add(this.NoReincarnation);
             this.tabPage6.Controls.Add(this.NoTownTeleportCheckbox);
             this.tabPage6.Controls.Add(this.NoFightCheckbox);
             this.tabPage6.Controls.Add(this.NeedBridleCheckbox);
@@ -663,8 +665,8 @@ namespace Server
             // 
             // SafeZoneInfoPanel
             // 
-            this.SafeZoneInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.SafeZoneInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.SafeZoneInfoPanel.Controls.Add(this.label12);
             this.SafeZoneInfoPanel.Controls.Add(this.SZYTextBox);
@@ -746,7 +748,7 @@ namespace Server
             // 
             // SafeZoneInfoListBox
             // 
-            this.SafeZoneInfoListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.SafeZoneInfoListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)));
             this.SafeZoneInfoListBox.FormattingEnabled = true;
             this.SafeZoneInfoListBox.ItemHeight = 12;
@@ -1080,8 +1082,8 @@ namespace Server
             // 
             // MovementInfoPanel
             // 
-            this.MovementInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.MovementInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.MovementInfoPanel.Controls.Add(this.label25);
             this.MovementInfoPanel.Controls.Add(this.ConquestComboBox);
@@ -1238,7 +1240,7 @@ namespace Server
             // 
             // MovementInfoListBox
             // 
-            this.MovementInfoListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.MovementInfoListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)));
             this.MovementInfoListBox.FormattingEnabled = true;
             this.MovementInfoListBox.ItemHeight = 12;
@@ -1285,8 +1287,8 @@ namespace Server
             // 
             // MineZonepanel
             // 
-            this.MineZonepanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.MineZonepanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.MineZonepanel.Controls.Add(this.label27);
             this.MineZonepanel.Controls.Add(this.MineZoneComboBox);
@@ -1377,7 +1379,7 @@ namespace Server
             // 
             // MZListlistBox
             // 
-            this.MZListlistBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.MZListlistBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)));
             this.MZListlistBox.FormattingEnabled = true;
             this.MZListlistBox.ItemHeight = 12;
@@ -1410,7 +1412,7 @@ namespace Server
             // 
             // MapInfoListBox
             // 
-            this.MapInfoListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.MapInfoListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)));
             this.MapInfoListBox.FormattingEnabled = true;
             this.MapInfoListBox.ItemHeight = 12;
@@ -1489,6 +1491,17 @@ namespace Server
             this.VisualizerButton.Text = "Visualizer";
             this.VisualizerButton.UseVisualStyleBackColor = true;
             this.VisualizerButton.Click += new System.EventHandler(this.VisualizerButton_Click);
+            // 
+            // NoReincarnation
+            // 
+            this.NoReincarnation.AutoSize = true;
+            this.NoReincarnation.Location = new System.Drawing.Point(15, 183);
+            this.NoReincarnation.Name = "NoReincarnation";
+            this.NoReincarnation.Size = new System.Drawing.Size(109, 17);
+            this.NoReincarnation.TabIndex = 45;
+            this.NoReincarnation.Text = "No Reincarnation";
+            this.NoReincarnation.UseVisualStyleBackColor = true;
+            this.NoReincarnation.CheckedChanged += new System.EventHandler(this.NoReincarnation_CheckedChanged);
             // 
             // MapInfoForm
             // 
@@ -1656,5 +1669,6 @@ namespace Server
         private ComboBox ConquestComboBox;
         private Label label25;
         private CheckBox NoTownTeleportCheckbox;
+        private CheckBox NoReincarnation;
     }
 }
