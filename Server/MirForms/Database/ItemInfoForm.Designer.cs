@@ -31,6 +31,7 @@
             this.ItemInfoPanel = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.globalDropNotify_CheckBox = new System.Windows.Forms.CheckBox();
             this.CanAwaken = new System.Windows.Forms.CheckBox();
             this.label56 = new System.Windows.Forms.Label();
             this.TooltipTextBox = new System.Windows.Forms.TextBox();
@@ -191,7 +192,7 @@
             this.ExportSelectedButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
             this.Gameshop_button = new System.Windows.Forms.Button();
-            this.globalDropNotify_CheckBox = new System.Windows.Forms.CheckBox();
+            this.noMailBox = new System.Windows.Forms.CheckBox();
             this.ItemInfoPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -282,6 +283,17 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // globalDropNotify_CheckBox
+            // 
+            this.globalDropNotify_CheckBox.AutoSize = true;
+            this.globalDropNotify_CheckBox.Location = new System.Drawing.Point(468, 340);
+            this.globalDropNotify_CheckBox.Name = "globalDropNotify_CheckBox";
+            this.globalDropNotify_CheckBox.Size = new System.Drawing.Size(128, 17);
+            this.globalDropNotify_CheckBox.TabIndex = 124;
+            this.globalDropNotify_CheckBox.Text = "Notify Server on Drop";
+            this.globalDropNotify_CheckBox.UseVisualStyleBackColor = true;
+            this.globalDropNotify_CheckBox.CheckedChanged += new System.EventHandler(this.globalDropNotify_CheckBox_CheckedChanged);
             // 
             // CanAwaken
             // 
@@ -1465,6 +1477,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.noMailBox);
             this.tabPage3.Controls.Add(this.unableToDisassemble_CheckBox);
             this.tabPage3.Controls.Add(this.unableToRent_CheckBox);
             this.tabPage3.Controls.Add(this.NoWeddingRingcheckbox);
@@ -1907,16 +1920,16 @@
             this.Gameshop_button.UseVisualStyleBackColor = true;
             this.Gameshop_button.Click += new System.EventHandler(this.Gameshop_button_Click);
             // 
-            // globalDropNotify_CheckBox
+            // noMailBox
             // 
-            this.globalDropNotify_CheckBox.AutoSize = true;
-            this.globalDropNotify_CheckBox.Location = new System.Drawing.Point(468, 340);
-            this.globalDropNotify_CheckBox.Name = "globalDropNotify_CheckBox";
-            this.globalDropNotify_CheckBox.Size = new System.Drawing.Size(128, 17);
-            this.globalDropNotify_CheckBox.TabIndex = 124;
-            this.globalDropNotify_CheckBox.Text = "Notify Server on Drop";
-            this.globalDropNotify_CheckBox.UseVisualStyleBackColor = true;
-            this.globalDropNotify_CheckBox.CheckedChanged += new System.EventHandler(this.globalDropNotify_CheckBox_CheckedChanged);
+            this.noMailBox.AutoSize = true;
+            this.noMailBox.Location = new System.Drawing.Point(21, 343);
+            this.noMailBox.Name = "noMailBox";
+            this.noMailBox.Size = new System.Drawing.Size(98, 17);
+            this.noMailBox.TabIndex = 119;
+            this.noMailBox.Text = "Unable To Mail";
+            this.noMailBox.UseVisualStyleBackColor = true;
+            this.noMailBox.CheckedChanged += new System.EventHandler(this.noMailBox_CheckedChanged);
             // 
             // ItemInfoForm
             // 
@@ -2120,5 +2133,6 @@
         private System.Windows.Forms.CheckBox unableToDisassemble_CheckBox;
         private System.Windows.Forms.CheckBox globalDropNotify_CheckBox;
         private System.Windows.Forms.CheckBox BlinkcheckBox;
+        private System.Windows.Forms.CheckBox noMailBox;
     }
 }
