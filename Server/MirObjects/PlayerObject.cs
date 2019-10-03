@@ -6638,7 +6638,8 @@ namespace Server.MirObjects
                     TrapHexagon(magic, target == null ? location : target.CurrentLocation, out cast);
                     break;
                 case Spell.Reincarnation:
-                    Reincarnation(magic, target == null ? null : target as PlayerObject, out cast);
+                    if (!CurrentMap.Info.NoReincarnation)
+                        Reincarnation(magic, target == null ? null : target as PlayerObject, out cast);
                     break;
                 case Spell.Curse:
                     Curse(magic, target == null ? location : target.CurrentLocation, out cast);
@@ -11255,6 +11256,12 @@ namespace Server.MirObjects
                             Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
                             break;
                         case 6: //ResurrectionScroll
+                            if (CurrentMap.Info.NoReincarnation)
+                            {
+                                ReceiveChat(string.Format("Cannot use on this map"), ChatType.System);
+                                Enqueue(p);
+                                return;
+                            }
                             if (Dead)
                             {
                                 MP = MaxMP;
@@ -17444,6 +17451,13 @@ namespace Server.MirObjects
                     if(item.Info.Bind.HasFlag(BindMode.DontTrade))
                     {
                         ReceiveChat(string.Format("{0} cannot be mailed", item.FriendlyName), ChatType.System);
+                        return;
+                    }
+
+                    if (item.Info.Bind.HasFlag(BindMode.NoMail))
+                    {
+                        ReceiveChat(string.Format("{0} cannot be mailed", item.FriendlyName), ChatType.System);
+                        Enqueue(new S.MailSent { Result = -1 });
                         return;
                     }
 

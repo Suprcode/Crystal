@@ -143,6 +143,7 @@ namespace Server
             NeedBridleCheckbox.Checked = mi.NeedBridle;
             //MineIndextextBox.Text = mi.MineIndex.ToString();
             NoTownTeleportCheckbox.Checked = mi.NoTownTeleport;
+            NoReincarnation.Checked = mi.NoReincarnation;
             for (int i = 1; i < _selectedMapInfos.Count; i++)
             {
                 mi = _selectedMapInfos[i];
@@ -180,6 +181,7 @@ namespace Server
                 if (NoMountCheckbox.Checked != mi.NoMount) NoMountCheckbox.Checked = false;
                 if (NeedBridleCheckbox.Checked != mi.NeedBridle) NeedBridleCheckbox.Checked = false;
                 if (NoTownTeleportCheckbox.Checked != mi.NoTownTeleport) NoTownTeleportCheckbox.Checked = false;
+                if (NoReincarnation.Checked != mi.NoReincarnation) NoReincarnation.Checked = false;
             }
 
             UpdateSafeZoneInterface();
@@ -1719,6 +1721,13 @@ namespace Server
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
                 _selectedMapInfos[i].NoTownTeleport = NoTownTeleportCheckbox.Checked;
+        }
+
+        private void NoReincarnation_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+                _selectedMapInfos[i].NoReincarnation = NoReincarnation.Checked;
         }
     }
 }

@@ -923,7 +923,8 @@ public enum BindMode : short
     NoSRepair = 1024,//0x0400
     NoWeddingRing = 2048,//0x0800
     UnableToRent = 4096,
-    UnableToDisassemble = 8192
+    UnableToDisassemble = 8192,
+    NoMail = 16384
 }
 
 [Flags]

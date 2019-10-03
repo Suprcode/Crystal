@@ -16,7 +16,8 @@ namespace Server.MirDatabase
         public byte MapDarkLight = 0, MineIndex = 0;
 
         public bool NoTeleport, NoReconnect, NoRandom, NoEscape, NoRecall, NoDrug, NoPosition, NoFight,
-            NoThrowItem, NoDropPlayer, NoDropMonster, NoNames, NoMount, NeedBridle, Fight, NeedHole, Fire, Lightning, NoTownTeleport;
+            NoThrowItem, NoDropPlayer, NoDropMonster, NoNames, NoMount, NeedBridle, Fight, NeedHole, Fire, Lightning, 
+            NoTownTeleport, NoReincarnation;
 
         public string NoReconnectMap = string.Empty;
         public int FireDamage, LightningDamage;
@@ -105,6 +106,8 @@ namespace Server.MirDatabase
                 Music = reader.ReadUInt16();
             if (Envir.LoadVersion < 78) return;
             NoTownTeleport = reader.ReadBoolean();
+            if (Envir.LoadVersion < 79) return;
+            NoReincarnation = reader.ReadBoolean();
         }
 
         public void Save(BinaryWriter writer)
@@ -158,6 +161,7 @@ namespace Server.MirDatabase
 
             writer.Write(Music);
             writer.Write(NoTownTeleport);
+            writer.Write(NoReincarnation);
 
         }
 
