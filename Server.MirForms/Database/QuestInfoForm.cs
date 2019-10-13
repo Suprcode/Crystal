@@ -206,7 +206,7 @@ namespace Server
             if (Quests.Count == 0) return;
 
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.InitialDirectory = Application.StartupPath + @"\Exports";
+            sfd.InitialDirectory = Path.Combine(Application.StartupPath, "Exports");
             sfd.Filter = "Text File|*.txt";
             sfd.ShowDialog();
 
@@ -378,7 +378,7 @@ namespace Server
         {
             if (QFileNameTextBox.Text == string.Empty) return;
 
-            var scriptPath = Settings.QuestPath + QFileNameTextBox.Text + ".txt";
+            var scriptPath = Path.Combine(Settings.QuestPath, QFileNameTextBox.Text + ".txt");
 
             if (File.Exists(scriptPath))
                 Process.Start(scriptPath);

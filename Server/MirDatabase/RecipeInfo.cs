@@ -45,7 +45,7 @@ namespace Server.MirDatabase
 
         private void LoadIngredients(string recipe)
         {
-            List<string> lines = File.ReadAllLines(Settings.RecipePath + recipe + ".txt").ToList();
+            List<string> lines = File.ReadAllLines(Path.Combine(Settings.RecipePath, recipe + ".txt")).ToList();
 
             Ingredients = new List<UserItem>();
 

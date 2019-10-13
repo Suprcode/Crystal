@@ -361,9 +361,9 @@ namespace Server.MirForms.VisualMapInfo.Class
         {
             try
             {
-                if (File.Exists(@".\Maps\" + mapFile + ".map"))
+                if (File.Exists(Path.Combine("Maps", mapFile + ".map")))
                 {
-                    byte[] fileBytes = File.ReadAllBytes(@".\Maps\" + mapFile + ".map");
+                    byte[] fileBytes = File.ReadAllBytes(Path.Combine("Maps", mapFile + ".map"));
 
                     switch (FindType(fileBytes))
                     {

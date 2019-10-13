@@ -26,7 +26,7 @@ namespace Server
         {
             if (MessageLog.Count < 100)
                 MessageLog.Enqueue(String.Format("[{0}]: {1} - {2}" + Environment.NewLine, DateTime.Now, ex.TargetSite, ex));
-            File.AppendAllText(Settings.LogPath + "Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+            File.AppendAllText(Path.Combine(Settings.LogPath, "Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt"),
                                String.Format("[{0}]: {1} - {2}" + Environment.NewLine, DateTime.Now, ex.TargetSite, ex));
         }
 
@@ -34,7 +34,7 @@ namespace Server
         {
             if (DebugLog.Count < 100)
                 DebugLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
-            File.AppendAllText(Settings.LogPath + "DebugLog (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+            File.AppendAllText(Path.Combine(Settings.LogPath, "DebugLog (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt"),
                                String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
         }
 
@@ -42,7 +42,7 @@ namespace Server
         {
             if (ChatLog.Count < 100)
                 ChatLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
-            File.AppendAllText(Settings.LogPath + "ChatLog (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+            File.AppendAllText(Path.Combine(Settings.LogPath, "ChatLog (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt"),
                                String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
         }
 
@@ -50,7 +50,7 @@ namespace Server
         {
             if (MessageLog.Count < 100)
                 MessageLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
-            File.AppendAllText(Settings.LogPath + "Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
+            File.AppendAllText(Path.Combine(Settings.LogPath, "Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt"),
                                String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
         }
     }
