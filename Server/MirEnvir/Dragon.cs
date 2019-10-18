@@ -70,7 +70,7 @@ namespace Server.MirEnvir
                 }
                 LinkedMonster = MonsterObject.GetMonster(info);
 
-                Map map = SMain.Envir.GetMapByNameAndInstance(Info.MapFileName);
+                Map map = Envir.GetMapByNameAndInstance(Info.MapFileName);
                 if (map == null)
                 {
                     SMain.Enqueue("Failed to load Dragon (bad map name): " + Info.MapFileName);

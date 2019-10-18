@@ -472,7 +472,7 @@ namespace Server.MirEnvir
                         Respawns.Add(info);
 
                         if ((info.Info.SaveRespawnTime) && (info.Info.RespawnTicks != 0))
-                            SMain.Envir.SavedSpawns.Add(info);
+                            Envir.SavedSpawns.Add(info);
                     }
 
 
@@ -2307,6 +2307,11 @@ namespace Server.MirEnvir
     }
     public class MapRespawn
     {
+        protected static Envir Envir
+        {
+            get { return SMain.Envir; }
+        }
+
         public RespawnInfo Info;
         public MonsterInfo Monster;
         public Map Map;
@@ -2320,7 +2325,7 @@ namespace Server.MirEnvir
         public MapRespawn(RespawnInfo info)
         {
             Info = info;
-            Monster = SMain.Envir.GetMonsterInfo(info.MonsterIndex);
+            Monster = Envir.GetMonsterInfo(info.MonsterIndex);
 
             LoadRoutes();
         }

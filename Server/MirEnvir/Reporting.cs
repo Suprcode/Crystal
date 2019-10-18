@@ -12,6 +12,11 @@ namespace Server.MirEnvir
 {
     public class Reporting
     {
+        protected static Envir Envir
+        {
+            get { return SMain.Envir; }
+        }
+
         public PlayerObject Player;
         public List<Action> Actions = new List<Action>();
 
@@ -300,7 +305,7 @@ namespace Server.MirEnvir
         {
             if (!DoLog || Player.Info == null) return;
 
-            action.Time = SMain.Envir.Now;
+            action.Time = Envir.Now;
             action.Player = Player.Name;
 
             Actions.Add(action);
@@ -313,7 +318,7 @@ namespace Server.MirEnvir
         {
             if (!DoLog || Actions.Count < 1) return;
 
-            string filename = SMain.Envir.Now.Date.ToString(@"yyyy-MM-dd");
+            string filename = Envir.Now.Date.ToString(@"yyyy-MM-dd");
             string fullPath = _baseDir + @"\" + filename + ".txt";
 
             try

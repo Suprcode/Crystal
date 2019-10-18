@@ -52,6 +52,16 @@ namespace Server.MirEnvir
 
     public class Envir
     {
+        protected static Envir MainEnvir
+        {
+            get { return SMain.Envir; }
+        }
+
+        protected static Envir EditEnvir
+        {
+            get { return SMain.EditEnvir; }
+        }
+
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
@@ -655,7 +665,7 @@ namespace Server.MirEnvir
                         if (Time >= SpawnTime)
                         {
                             SpawnTime = Time + (Settings.Second * 10);//technicaly this limits the respawn tick code to a minimum of 10 second each but lets assume it's not meant to be this accurate
-                            SMain.Envir.RespawnTick.Process();
+                            MainEnvir.RespawnTick.Process();
                         }
 
                         //   if (Players.Count == 0) Thread.Sleep(1);
@@ -1281,7 +1291,7 @@ namespace Server.MirEnvir
                         for (int i = 0; i < count; i++)
                         {
                             GameShopItem item = new GameShopItem(reader, LoadVersion, LoadCustomVersion);
-                            if (SMain.Envir.BindGameShop(item))
+                            if (MainEnvir.BindGameShop(item))
                             {
                                 GameShopList.Add(item);
                             }
@@ -2781,11 +2791,11 @@ namespace Server.MirEnvir
             return false;
         }
 
-        public bool BindGameShop(GameShopItem item, bool EditEnvir = true)
+        public bool BindGameShop(GameShopItem item, bool editEnvir = true)
         {
-            for (int i = 0; i < SMain.EditEnvir.ItemInfoList.Count; i++)
+            for (int i = 0; i < EditEnvir.ItemInfoList.Count; i++)
             {
-                ItemInfo info = SMain.EditEnvir.ItemInfoList[i];
+                ItemInfo info = EditEnvir.ItemInfoList[i];
                 if (info.Index != item.ItemIndex) continue;
                 item.Info = info;
 
@@ -3141,7 +3151,7 @@ namespace Server.MirEnvir
 
         public void ClearGameshopLog()
         {
-            SMain.Envir.GameshopLog.Clear();
+            MainEnvir.GameshopLog.Clear();
 
             for (int i = 0; i < AccountList.Count; i++)
             {
@@ -3354,7 +3364,7 @@ namespace Server.MirEnvir
             {
                 item.LoadInfo(true);
             }
-            SMain.Envir.DefaultNPC.LoadInfo(true);
+            MainEnvir.DefaultNPC.LoadInfo(true);
             SMain.Enqueue("NPCs reloaded...");
         }
 

@@ -14,6 +14,11 @@ namespace Server.MirObjects
 {
     public class NPCSegment
     {
+        protected static Envir Envir
+        {
+            get { return SMain.Envir; }
+        }
+
         public NPCPage Page;
 
         public readonly string Key;
@@ -1081,7 +1086,7 @@ namespace Server.MirObjects
             switch (innerMatch)
             {
                 case "MONSTERCOUNT()":
-                    Map map = SMain.Envir.GetMapByNameAndInstance(oneValMatch.Groups[2].Captures[0].Value.ToUpper());
+                    Map map = Envir.GetMapByNameAndInstance(oneValMatch.Groups[2].Captures[0].Value.ToUpper());
                     newValue = map == null ? "N/A" : map.MonsterCount.ToString();
                     break;
                 case "CONQUESTGUARD()":
@@ -1093,7 +1098,7 @@ namespace Server.MirObjects
                     if (int.TryParse(val1.Replace("%", ""), out intVal1) && int.TryParse(val2.Replace("%", ""), out intVal2))
                     {
 
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
+                        Conquest = Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
                         if (Conquest == null) return "Not Found";
 
                         Archer = Conquest.ArcherList.FirstOrDefault(x => x.Index == intVal2);
@@ -1116,7 +1121,7 @@ namespace Server.MirObjects
 
                     if (int.TryParse(val1.Replace("%", ""), out intVal1) && int.TryParse(val2.Replace("%", ""), out intVal2))
                     {
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
+                        Conquest = Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
                         if (Conquest == null) return "Not Found";
 
                         Gate = Conquest.GateList.FirstOrDefault(x => x.Index == intVal2);
@@ -1139,7 +1144,7 @@ namespace Server.MirObjects
 
                     if (int.TryParse(val1.Replace("%", ""), out intVal1) && int.TryParse(val2.Replace("%", ""), out intVal2))
                     {
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
+                        Conquest = Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
                         if (Conquest == null) return "Not Found";
 
                         Wall = Conquest.WallList.FirstOrDefault(x => x.Index == intVal2);
@@ -1162,7 +1167,7 @@ namespace Server.MirObjects
 
                     if (int.TryParse(val1.Replace("%", ""), out intVal1) && int.TryParse(val2.Replace("%", ""), out intVal2))
                     {
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
+                        Conquest = Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
                         if (Conquest == null) return "Not Found";
 
                         Siege = Conquest.SiegeList.FirstOrDefault(x => x.Index == intVal2);
@@ -1184,7 +1189,7 @@ namespace Server.MirObjects
 
                     if (int.TryParse(val1.Replace("%", ""), out intVal1))
                     {
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
+                        Conquest = Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
                         if (Conquest == null) return string.Empty;
                         if (Conquest.Guild == null) return "No Owner";
 
@@ -1196,7 +1201,7 @@ namespace Server.MirObjects
 
                     if (int.TryParse(val1.Replace("%", ""), out intVal1))
                     {
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
+                        Conquest = Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
                         if (Conquest == null) return string.Empty;
 
                         newValue = Conquest.GoldStorage.ToString();
@@ -1207,7 +1212,7 @@ namespace Server.MirObjects
 
                     if (int.TryParse(val1.Replace("%", ""), out intVal1))
                     {
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
+                        Conquest = Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
                         if (Conquest == null) return string.Empty;
 
                         newValue = Conquest.npcRate.ToString() + "%";
@@ -1218,14 +1223,14 @@ namespace Server.MirObjects
 
                     if (int.TryParse(val1.Replace("%", ""), out intVal1))
                     {
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
+                        Conquest = Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
                         if (Conquest == null) return "Conquest Not Found";
                         if (Conquest.AttackerID == -1) return "No War Scheduled";
 
-                        if (SMain.Envir.GuildList.FirstOrDefault(x => x.Guildindex == Conquest.AttackerID) == null)
+                        if (Envir.GuildList.FirstOrDefault(x => x.Guildindex == Conquest.AttackerID) == null)
                             newValue = "No War Scheduled";
                         else
-                            newValue = (SMain.Envir.GuildList.FirstOrDefault(x => x.Guildindex == Conquest.AttackerID).Name);
+                            newValue = (Envir.GuildList.FirstOrDefault(x => x.Guildindex == Conquest.AttackerID).Name);
                     }
                     break;
                 case "OUTPUT()":
@@ -1332,7 +1337,7 @@ namespace Server.MirObjects
                     newValue = DateTime.Now.ToShortDateString();
                     break;
                 case "USERCOUNT":
-                    newValue = SMain.Envir.PlayerCount.ToString(CultureInfo.InvariantCulture);
+                    newValue = Envir.PlayerCount.ToString(CultureInfo.InvariantCulture);
                     break;
                 case "PKPOINT":
                     newValue = player.PKPoints.ToString();
@@ -1410,7 +1415,7 @@ namespace Server.MirObjects
                     newValue = DateTime.Now.ToShortDateString();
                     break;
                 case "USERCOUNT":
-                    newValue = SMain.Envir.PlayerCount.ToString(CultureInfo.InvariantCulture);
+                    newValue = Envir.PlayerCount.ToString(CultureInfo.InvariantCulture);
                     break;
                 case "GUILDWARTIME":
                     newValue = Settings.Guild_WarTime.ToString();
@@ -1483,7 +1488,7 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        map = SMain.Envir.GetMapByNameAndInstance(param[2], tempInt2);
+                        map = Envir.GetMapByNameAndInstance(param[2], tempInt2);
                         if (map == null)
                         {
                             failed = true;
@@ -1501,7 +1506,7 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        map = SMain.Envir.GetMapByNameAndInstance(param[2], tempInt2);
+                        map = Envir.GetMapByNameAndInstance(param[2], tempInt2);
                         if (map == null)
                         {
                             failed = true;
@@ -1513,7 +1518,7 @@ namespace Server.MirObjects
                         break;
 
                     case CheckType.CheckExactMon:
-                        if (SMain.Envir.GetMonsterInfo(param[0]) == null)
+                        if (Envir.GetMonsterInfo(param[0]) == null)
                         {
                             failed = true;
                             break;
@@ -1525,14 +1530,14 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        map = SMain.Envir.GetMapByNameAndInstance(param[3], tempInt2);
+                        map = Envir.GetMapByNameAndInstance(param[3], tempInt2);
                         if (map == null)
                         {
                             failed = true;
                             break;
                         }
 
-                        failed = (!Compare(param[1], SMain.Envir.Objects.Count((
+                        failed = (!Compare(param[1], Envir.Objects.Count((
                             d => d.CurrentMap == map &&
                                 d.Race == ObjectType.Monster &&
                                 string.Equals(d.Name.Replace(" ", ""), param[0], StringComparison.OrdinalIgnoreCase) &&
@@ -1547,7 +1552,7 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        failed = 0 != SMain.Envir.Random.Next(0, tempInt);
+                        failed = 0 != Envir.Random.Next(0, tempInt);
                         break;
                     case CheckType.CheckCalc:
                         int left;
@@ -1675,7 +1680,7 @@ namespace Server.MirObjects
                         break;
 
                     case CheckType.CheckMap:
-                        map = SMain.Envir.GetMapByNameAndInstance(param[0]);
+                        map = Envir.GetMapByNameAndInstance(param[0]);
 
                         failed = Monster.CurrentMap != map;
                         break;
@@ -1686,7 +1691,7 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        map = SMain.Envir.GetMapByNameAndInstance(param[2], tempInt2);
+                        map = Envir.GetMapByNameAndInstance(param[2], tempInt2);
                         if (map == null)
                         {
                             failed = true;
@@ -1704,7 +1709,7 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        map = SMain.Envir.GetMapByNameAndInstance(param[2], tempInt2);
+                        map = Envir.GetMapByNameAndInstance(param[2], tempInt2);
                         if (map == null)
                         {
                             failed = true;
@@ -1716,7 +1721,7 @@ namespace Server.MirObjects
                         break;
 
                     case CheckType.CheckExactMon:
-                        if (SMain.Envir.GetMonsterInfo(param[0]) == null)
+                        if (Envir.GetMonsterInfo(param[0]) == null)
                         {
                             failed = true;
                             break;
@@ -1728,14 +1733,14 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        map = SMain.Envir.GetMapByNameAndInstance(param[3], tempInt2);
+                        map = Envir.GetMapByNameAndInstance(param[3], tempInt2);
                         if (map == null)
                         {
                             failed = true;
                             break;
                         }
 
-                        failed = (!Compare(param[1], SMain.Envir.Objects.Count((
+                        failed = (!Compare(param[1], Envir.Objects.Count((
                             d => d.CurrentMap == map &&
                                 d.Race == ObjectType.Monster &&
                                 string.Equals(d.Name.Replace(" ", ""), param[0], StringComparison.OrdinalIgnoreCase) &&
@@ -1750,7 +1755,7 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        failed = 0 != SMain.Envir.Random.Next(0, tempInt);
+                        failed = 0 != Envir.Random.Next(0, tempInt);
                         break;
                     case CheckType.CheckCalc:
                         int left;
@@ -1895,7 +1900,7 @@ namespace Server.MirObjects
 
                         bool checkDura = ushort.TryParse(param[2], out dura);
 
-                        var info = SMain.Envir.GetItemInfo(param[0]);
+                        var info = Envir.GetItemInfo(param[0]);
 
                         foreach (var item in player.Info.Inventory.Where(item => item != null && item.Info == info))
                         {
@@ -2031,7 +2036,7 @@ namespace Server.MirObjects
                         break;
 
                     case CheckType.CheckMap:
-                        Map map = SMain.Envir.GetMapByNameAndInstance(param[0]);
+                        Map map = Envir.GetMapByNameAndInstance(param[0]);
 
                         failed = player.CurrentMap != map;
                         break;
@@ -2059,7 +2064,7 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        map = SMain.Envir.GetMapByNameAndInstance(param[2], tempInt2);
+                        map = Envir.GetMapByNameAndInstance(param[2], tempInt2);
                         if (map == null)
                         {
                             failed = true;
@@ -2077,7 +2082,7 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        map = SMain.Envir.GetMapByNameAndInstance(param[2], tempInt2);
+                        map = Envir.GetMapByNameAndInstance(param[2], tempInt2);
                         if (map == null)
                         {
                             failed = true;
@@ -2089,7 +2094,7 @@ namespace Server.MirObjects
                         break;
 
                     case CheckType.CheckExactMon:
-                        if (SMain.Envir.GetMonsterInfo(param[0]) == null)
+                        if (Envir.GetMonsterInfo(param[0]) == null)
                         {
                             failed = true;
                             break;
@@ -2101,14 +2106,14 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        map = SMain.Envir.GetMapByNameAndInstance(param[3], tempInt2);
+                        map = Envir.GetMapByNameAndInstance(param[3], tempInt2);
                         if (map == null)
                         {
                             failed = true;
                             break;
                         }
 
-                        failed = (!Compare(param[1], SMain.Envir.Objects.Count((
+                        failed = (!Compare(param[1], Envir.Objects.Count((
                             d => d.CurrentMap == map &&
                                 d.Race == ObjectType.Monster &&
                                 string.Equals(d.Name.Replace(" ", ""), param[0], StringComparison.OrdinalIgnoreCase) &&
@@ -2123,7 +2128,7 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        failed = 0 != SMain.Envir.Random.Next(0, tempInt);
+                        failed = 0 != Envir.Random.Next(0, tempInt);
                         break;
 
                     case CheckType.Groupleader:
@@ -2287,7 +2292,7 @@ namespace Server.MirObjects
 
                         try
                         {
-                            ConquestObject Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                            ConquestObject Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                             if (Conquest == null)
                             {
                                 failed = true;
@@ -2310,7 +2315,7 @@ namespace Server.MirObjects
 
                         try
                         {
-                            ConquestObject Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                            ConquestObject Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                             if (Conquest == null)
                             {
                                 failed = true;
@@ -2343,7 +2348,7 @@ namespace Server.MirObjects
 
                         try
                         {
-                            ConquestObject Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                            ConquestObject Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                             if (Conquest == null)
                             {
                                 failed = true;
@@ -2376,7 +2381,7 @@ namespace Server.MirObjects
 
                         try
                         {
-                            ConquestObject Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                            ConquestObject Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                             if (Conquest == null)
                             {
                                 failed = true;
@@ -2409,7 +2414,7 @@ namespace Server.MirObjects
 
                         try
                         {
-                            ConquestObject Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                            ConquestObject Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                             if (Conquest == null)
                             {
                                 failed = true;
@@ -2459,7 +2464,7 @@ namespace Server.MirObjects
 
                         try
                         {
-                            ConquestObject Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                            ConquestObject Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                             if (Conquest == null)
                             {
                                 failed = true;
@@ -2486,7 +2491,7 @@ namespace Server.MirObjects
 
                         try
                         {
-                            ConquestObject Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                            ConquestObject Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                             if (Conquest == null)
                             {
                                 failed = true;
@@ -2560,7 +2565,7 @@ namespace Server.MirObjects
                 switch (act.Type)
                 {
                     case ActionType.Move:
-                        Map map = SMain.Envir.GetMapByNameAndInstance(param[0]);
+                        Map map = Envir.GetMapByNameAndInstance(param[0]);
                         if (map == null) return;
 
                         if (!int.TryParse(param[1], out x)) return;
@@ -2578,7 +2583,7 @@ namespace Server.MirObjects
                         if (!int.TryParse(param[2], out x)) return;
                         if (!int.TryParse(param[3], out y)) return;
 
-                        map = SMain.Envir.GetMapByNameAndInstance(param[0], instanceId);
+                        map = Envir.GetMapByNameAndInstance(param[0], instanceId);
                         if (map == null) return;
                         player.Teleport(map, new Point(x, y));
                         break;
@@ -2655,7 +2660,7 @@ namespace Server.MirObjects
                     case ActionType.GiveItem:
                         if (param.Count < 2 || !uint.TryParse(param[1], out count)) count = 1;
 
-                        info = SMain.Envir.GetItemInfo(param[0]);
+                        info = Envir.GetItemInfo(param[0]);
 
                         if (info == null)
                         {
@@ -2665,7 +2670,7 @@ namespace Server.MirObjects
 
                         while (count > 0)
                         {
-                            UserItem item = SMain.Envir.CreateFreshItem(info);
+                            UserItem item = Envir.CreateFreshItem(info);
 
                             if (item == null)
                             {
@@ -2691,7 +2696,7 @@ namespace Server.MirObjects
 
                     case ActionType.TakeItem:
                         if (param.Count < 2 || !uint.TryParse(param[1], out count)) count = 1;
-                        info = SMain.Envir.GetItemInfo(param[0]);
+                        info = Envir.GetItemInfo(param[0]);
 
                         ushort dura;
                         bool checkDura = ushort.TryParse(param[2], out dura);
@@ -2740,7 +2745,7 @@ namespace Server.MirObjects
                         byte petcount = 0;
                         byte petlevel = 0;
 
-                        monInfo = SMain.Envir.GetMonsterInfo(param[0]);
+                        monInfo = Envir.GetMonsterInfo(param[0]);
                         if (monInfo == null) return;
 
                         if (param.Count > 1)
@@ -2757,7 +2762,7 @@ namespace Server.MirObjects
                             monster.Master = player;
                             monster.MaxPetLevel = 7;
                             monster.Direction = player.Direction;
-                            monster.ActionTime = SMain.Envir.Time + 1000;
+                            monster.ActionTime = Envir.Time + 1000;
                             monster.Spawn(player.CurrentMap, player.CurrentLocation);
                             player.Pets.Add(monster);
                         }
@@ -2876,7 +2881,7 @@ namespace Server.MirObjects
 
                         if (param.Count < 1)
                         {
-                            player.Info.Hair = (byte)SMain.Envir.Random.Next(0, 9);
+                            player.Info.Hair = (byte)Envir.Random.Next(0, 9);
                         }
                         else
                         {
@@ -2924,7 +2929,7 @@ namespace Server.MirObjects
                         if (!Enum.TryParse(param[1], true, out chatType)) return;
 
                         p = new S.Chat { Message = param[0], Type = chatType };
-                        SMain.Envir.Broadcast(p);
+                        Envir.Broadcast(p);
                         break;
 
                     case ActionType.GiveSkill:
@@ -3015,10 +3020,10 @@ namespace Server.MirObjects
                         if (Param1 == null || Param2 == 0 || Param3 == 0) return;
                         if (!byte.TryParse(param[1], out tempByte)) return;
 
-                        map = SMain.Envir.GetMapByNameAndInstance(Param1, Param1Instance);
+                        map = Envir.GetMapByNameAndInstance(Param1, Param1Instance);
                         if (map == null) return;
 
-                        monInfo = SMain.Envir.GetMonsterInfo(param[0]);
+                        monInfo = Envir.GetMonsterInfo(param[0]);
                         if (monInfo == null) return;
 
                         for (int j = 0; j < tempByte; j++)
@@ -3026,7 +3031,7 @@ namespace Server.MirObjects
                             MonsterObject monster = MonsterObject.GetMonster(monInfo);
                             if (monster == null) return;
                             monster.Direction = 0;
-                            monster.ActionTime = SMain.Envir.Time + 1000;
+                            monster.ActionTime = Envir.Time + 1000;
                             monster.Spawn(map, new Point(Param2, Param3));
                         }
                         break;
@@ -3039,7 +3044,7 @@ namespace Server.MirObjects
                         Map tempMap = player.CurrentMap;
                         Point tempPoint = player.CurrentLocation;
 
-                        action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time + (tempLong * 1000), player.NPCID, tempString, tempMap, tempPoint);
+                        action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCID, tempString, tempMap, tempPoint);
                         player.ActionList.Add(action);
 
                         break;
@@ -3056,7 +3061,7 @@ namespace Server.MirObjects
                         {
                             var groupMember = player.GroupMembers[j];
 
-                            action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time + (tempLong * 1000), player.NPCID, tempString, tempMap, tempPoint);
+                            action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCID, tempString, tempMap, tempPoint);
                             groupMember.ActionList.Add(action);
                         }
                         break;
@@ -3071,14 +3076,14 @@ namespace Server.MirObjects
                     case ActionType.DelayGoto:
                         if (!long.TryParse(param[0], out tempLong)) return;
 
-                        action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time + (tempLong * 1000), player.NPCID, "[" + param[1] + "]");
+                        action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCID, "[" + param[1] + "]");
                         player.ActionList.Add(action);
                         break;
 
                     case ActionType.MonClear:
                         if (!int.TryParse(param[1], out tempInt)) return;
 
-                        map = SMain.Envir.GetMapByNameAndInstance(param[0], tempInt);
+                        map = Envir.GetMapByNameAndInstance(param[0], tempInt);
                         if (map == null) return;
                         
                         foreach (var cell in map.Cells)
@@ -3114,7 +3119,7 @@ namespace Server.MirObjects
                         if (!int.TryParse(param[2], out x)) return;
                         if (!int.TryParse(param[3], out y)) return;
 
-                        map = SMain.Envir.GetMapByNameAndInstance(param[0], tempInt);
+                        map = Envir.GetMapByNameAndInstance(param[0], tempInt);
                         if (map == null) return;
 
                         for (int j = 0; j < player.GroupMembers.Count(); j++)
@@ -3192,7 +3197,7 @@ namespace Server.MirObjects
                         {
                             Type = (BuffType)(byte)Enum.Parse(typeof(BuffType), param[0], true),
                             Caster = player,
-                            ExpireTime = SMain.Envir.Time + tempLong * 1000,
+                            ExpireTime = Envir.Time + tempLong * 1000,
                             Values = intValues,
                             Infinite = tempBool,
                             Visible = tempBool2
@@ -3211,7 +3216,7 @@ namespace Server.MirObjects
                             if (player.Buffs[j].Type != bType) continue;
 
                             player.Buffs[j].Infinite = false;
-                            player.Buffs[j].ExpireTime = SMain.Envir.Time;
+                            player.Buffs[j].ExpireTime = Envir.Time;
                         }
                         break;
 
@@ -3219,7 +3224,7 @@ namespace Server.MirObjects
                         {
                             if (player.MyGuild != null) return;
 
-                            GuildObject guild = SMain.Envir.GetGuild(param[0]);
+                            GuildObject guild = Envir.GetGuild(param[0]);
 
                             if (guild == null) return;
 
@@ -3271,7 +3276,7 @@ namespace Server.MirObjects
 
                         if (param.Count < 2 || !uint.TryParse(param[1], out count)) count = 1;
 
-                        info = SMain.Envir.GetItemInfo(param[0]);
+                        info = Envir.GetItemInfo(param[0]);
 
                         if (info == null)
                         {
@@ -3281,7 +3286,7 @@ namespace Server.MirObjects
 
                         while (count > 0 && mailInfo.Items.Count < 5)
                         {
-                            UserItem item = SMain.Envir.CreateFreshItem(info);
+                            UserItem item = Envir.CreateFreshItem(info);
 
                             if (item == null)
                             {
@@ -3318,7 +3323,7 @@ namespace Server.MirObjects
 
                         for (int j = 0; j < player.GroupMembers.Count(); j++)
                         {
-                            action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time, player.NPCID, "[" + param[0] + "]");
+                            action = new DelayedAction(DelayedType.NPC, Envir.Time, player.NPCID, "[" + param[0] + "]");
                             player.GroupMembers[j].ActionList.Add(action);
                         }
                         break;
@@ -3362,7 +3367,7 @@ namespace Server.MirObjects
                         break;
                     case ActionType.ConquestGuard:
                         if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                         if (Conquest == null) return;
 
                         if (!int.TryParse(param[1], out tempInt)) return;
@@ -3381,7 +3386,7 @@ namespace Server.MirObjects
                         break;
                     case ActionType.ConquestGate:
                         if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                         if (Conquest == null) return;
 
                         if (!int.TryParse(param[1], out tempInt)) return;
@@ -3397,7 +3402,7 @@ namespace Server.MirObjects
                         break;
                     case ActionType.ConquestWall:
                         if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                         if (Conquest == null) return;
 
                         if (!int.TryParse(param[1], out tempInt)) return;
@@ -3418,7 +3423,7 @@ namespace Server.MirObjects
                         break;
                     case ActionType.ConquestSiege:
                         if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                         if (Conquest == null) return;
 
                         if (!int.TryParse(param[1], out tempInt)) return;
@@ -3437,7 +3442,7 @@ namespace Server.MirObjects
                         break;
                     case ActionType.TakeConquestGold:
                         if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                         if (Conquest == null) return;
 
                         if (player.MyGuild != null && player.MyGuild.Guildindex == Conquest.Owner)
@@ -3449,7 +3454,7 @@ namespace Server.MirObjects
                         break;
                     case ActionType.SetConquestRate:
                         if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                         if (Conquest == null) return;
 
                         if (!byte.TryParse(param[1], out tempByte)) return;
@@ -3460,7 +3465,7 @@ namespace Server.MirObjects
                         break;
                     case ActionType.StartConquest:
                         if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                         if (Conquest == null) return;
                         ConquestGame tempGame;
 
@@ -3475,7 +3480,7 @@ namespace Server.MirObjects
                         break;
                     case ActionType.ScheduleConquest:
                         if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                         if (Conquest == null) return;
 
                         if (player.MyGuild != null && player.MyGuild.Guildindex != Conquest.Owner && !Conquest.WarIsOn)
@@ -3485,7 +3490,7 @@ namespace Server.MirObjects
                         break;
                     case ActionType.OpenGate:
                         if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                         if (Conquest == null) return;
 
                         if (!int.TryParse(param[1], out tempInt)) return;
@@ -3496,7 +3501,7 @@ namespace Server.MirObjects
                         break;
                     case ActionType.CloseGate:
                         if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = SMain.Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                         if (Conquest == null) return;
 
                         if (!int.TryParse(param[1], out tempInt)) return;
@@ -3516,7 +3521,7 @@ namespace Server.MirObjects
                         }
                         else {
                             var lines = File.ReadAllLines(randomTextPath);
-                            int index = SMain.Envir.Random.Next(0,lines.Length);
+                            int index = Envir.Random.Next(0,lines.Length);
                             string randomText = lines[index];
                             AddVariable(player, param[1], randomText);
                         }                        
@@ -3564,7 +3569,7 @@ namespace Server.MirObjects
                         if (!Enum.TryParse(param[1], true, out chatType)) return;
 
                         p = new S.Chat { Message = param[0], Type = chatType };
-                        SMain.Envir.Broadcast(p);
+                        Envir.Broadcast(p);
                         break;
 
                     /* //mobs have no real "delayed" npc code so not added this yet
@@ -3600,10 +3605,10 @@ namespace Server.MirObjects
                         if (Param1 == null || Param2 == 0 || Param3 == 0) return;
                         if (!byte.TryParse(param[1], out tempByte)) return;
 
-                        map = SMain.Envir.GetMapByNameAndInstance(Param1, Param1Instance);
+                        map = Envir.GetMapByNameAndInstance(Param1, Param1Instance);
                         if (map == null) return;
 
-                        monInfo = SMain.Envir.GetMonsterInfo(param[0]);
+                        monInfo = Envir.GetMonsterInfo(param[0]);
                         if (monInfo == null) return;
 
                         for (int j = 0; j < tempByte; j++)
@@ -3611,14 +3616,14 @@ namespace Server.MirObjects
                             MonsterObject monster = MonsterObject.GetMonster(monInfo);
                             if (monster == null) return;
                             monster.Direction = 0;
-                            monster.ActionTime = SMain.Envir.Time + 1000;
+                            monster.ActionTime = Envir.Time + 1000;
                             monster.Spawn(map, new Point(Param2, Param3));
                         }
                         break;
                     case ActionType.MonClear:
                         if (!int.TryParse(param[1], out tempInt)) return;
 
-                        map = SMain.Envir.GetMapByNameAndInstance(param[0], tempInt);
+                        map = Envir.GetMapByNameAndInstance(param[0], tempInt);
                         if (map == null) return;
 
                         foreach (var cell in map.Cells)
@@ -3698,7 +3703,7 @@ namespace Server.MirObjects
                         {
                             Type = (BuffType)(byte)Enum.Parse(typeof(BuffType), param[0], true),
                             Caster = Monster,
-                            ExpireTime = SMain.Envir.Time + tempLong * 1000,
+                            ExpireTime = Envir.Time + tempLong * 1000,
                             Values = intValues,
                             Infinite = tempBool,
                             Visible = tempBool2
@@ -3717,7 +3722,7 @@ namespace Server.MirObjects
                             if (Monster.Buffs[j].Type != bType) continue;
 
                             Monster.Buffs[j].Infinite = false;
-                            Monster.Buffs[j].ExpireTime = SMain.Envir.Time;
+                            Monster.Buffs[j].ExpireTime = Envir.Time;
                         }
                         break;
 
@@ -3773,7 +3778,7 @@ namespace Server.MirObjects
                         if (!Enum.TryParse(param[1], true, out chatType)) return;
 
                         p = new S.Chat { Message = param[0], Type = chatType };
-                        SMain.Envir.Broadcast(p);
+                        Envir.Broadcast(p);
                         break;
 
                     case ActionType.Break:
@@ -3803,10 +3808,10 @@ namespace Server.MirObjects
                         if (Param1 == null || Param2 == 0 || Param3 == 0) return;
                         if (!byte.TryParse(param[1], out tempByte)) return;
 
-                        map = SMain.Envir.GetMapByNameAndInstance(Param1, Param1Instance);
+                        map = Envir.GetMapByNameAndInstance(Param1, Param1Instance);
                         if (map == null) return;
 
-                        monInfo = SMain.Envir.GetMonsterInfo(param[0]);
+                        monInfo = Envir.GetMonsterInfo(param[0]);
                         if (monInfo == null) return;
 
                         for (int j = 0; j < tempByte; j++)
@@ -3814,7 +3819,7 @@ namespace Server.MirObjects
                             MonsterObject monster = MonsterObject.GetMonster(monInfo);
                             if (monster == null) return;
                             monster.Direction = 0;
-                            monster.ActionTime = SMain.Envir.Time + 1000;
+                            monster.ActionTime = Envir.Time + 1000;
                             monster.Spawn(map, new Point(Param2, Param3));
                         }
                         break;
@@ -3822,7 +3827,7 @@ namespace Server.MirObjects
                     case ActionType.MonClear:
                         if (!int.TryParse(param[1], out tempInt)) return;
 
-                        map = SMain.Envir.GetMapByNameAndInstance(param[0], tempInt);
+                        map = Envir.GetMapByNameAndInstance(param[0], tempInt);
                         if (map == null) return;
 
                         foreach (var cell in map.Cells)

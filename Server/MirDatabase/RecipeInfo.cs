@@ -26,14 +26,14 @@ namespace Server.MirDatabase
 
         public RecipeInfo(string name)
         {
-            ItemInfo itemInfo = SMain.Envir.GetItemInfo(name);
+            ItemInfo itemInfo = Envir.GetItemInfo(name);
             if (itemInfo == null)
             {
                 SMain.Enqueue(string.Format("Could not find Item: {0}", name));
                 return;
             }
 
-            Item = SMain.Envir.CreateShopItem(itemInfo);
+            Item = Envir.CreateShopItem(itemInfo);
 
             LoadIngredients(name);
         }
@@ -62,7 +62,7 @@ namespace Server.MirDatabase
                         {
                             var data = lines[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                            ItemInfo info = SMain.Envir.GetItemInfo(data[0]);
+                            ItemInfo info = Envir.GetItemInfo(data[0]);
 
                             if (info == null)
                             {
@@ -74,7 +74,7 @@ namespace Server.MirDatabase
                             if (data.Length == 2)
                                 uint.TryParse(data[1], out count);
 
-                            UserItem ingredient = SMain.Envir.CreateShopItem(info);
+                            UserItem ingredient = Envir.CreateShopItem(info);
 
                             ingredient.Count = count > info.StackSize ? info.StackSize : count;
 

@@ -242,7 +242,7 @@ namespace Server.MirObjects
         {
             get
             {
-                return SMain.Envir.DefaultNPC;
+                return Envir.DefaultNPC;
             }
         }
 
@@ -543,7 +543,7 @@ namespace Server.MirObjects
             SetBind();
 
             Level = 1;
-            Hair = (byte)SMain.Envir.Random.Next(0, 9);
+            Hair = (byte)Envir.Random.Next(0, 9);
 
 
             for (int i = 0; i < Envir.StartItems.Count; i++)
@@ -803,7 +803,7 @@ namespace Server.MirObjects
             if (Concentrating && !ConcentrateInterrupted && (ConcentrateInterruptTime != 0))
             {
                 //check for reenable
-                if (ConcentrateInterruptTime <= SMain.Envir.Time)
+                if (ConcentrateInterruptTime <= Envir.Time)
                 {
                     ConcentrateInterruptTime = 0;
                     UpdateConcentration();//Update & send to client
@@ -1762,9 +1762,9 @@ namespace Server.MirObjects
             if ((LastRankUpdate + 3600 * 1000) > Envir.Time)
             {
                 LastRankUpdate = Envir.Time;
-                if ((Level >= SMain.Envir.RankBottomLevel[0]) || (Level >= SMain.Envir.RankBottomLevel[(byte)Class + 1]))
+                if ((Level >= Envir.RankBottomLevel[0]) || (Level >= Envir.RankBottomLevel[(byte)Class + 1]))
                 {
-                    SMain.Envir.CheckRankUpdate(Info);
+                    Envir.CheckRankUpdate(Info);
                 }
             }
         }
@@ -1794,10 +1794,10 @@ namespace Server.MirObjects
             }
             Report.Levelled(Level);
             if (IsGM) return;
-            if ((Level >= SMain.Envir.RankBottomLevel[0]) || (Level >= SMain.Envir.RankBottomLevel[(byte)Class + 1]))
+            if ((Level >= Envir.RankBottomLevel[0]) || (Level >= Envir.RankBottomLevel[(byte)Class + 1]))
             {
 
-                SMain.Envir.CheckRankUpdate(Info);
+                Envir.CheckRankUpdate(Info);
             }
         }
 
@@ -2202,9 +2202,9 @@ namespace Server.MirObjects
             
             if (IsGM) return;
             LastRankUpdate = Envir.Time;
-            if ((Level >= SMain.Envir.RankBottomLevel[0]) || (Level >= SMain.Envir.RankBottomLevel[(byte)Class + 1]))
+            if ((Level >= Envir.RankBottomLevel[0]) || (Level >= Envir.RankBottomLevel[(byte)Class + 1]))
             {
-                SMain.Envir.CheckRankUpdate(Info);
+                Envir.CheckRankUpdate(Info);
             }
 
         }
@@ -4225,7 +4225,7 @@ namespace Server.MirObjects
 
                         if (instanceID < 1) instanceID = 1;
 
-                        var map = SMain.Envir.GetMapByNameAndInstance(parts[1], instanceID);
+                        var map = Envir.GetMapByNameAndInstance(parts[1], instanceID);
                         if (map == null)
                         {
                             ReceiveChat((string.Format("Map {0}:[{1}] could not be found", parts[1], instanceID)), ChatType.System);
@@ -4716,7 +4716,7 @@ namespace Server.MirObjects
 
                         if (parts.Length < 2)
                         {
-                            Info.Hair = (byte)SMain.Envir.Random.Next(0, 9);
+                            Info.Hair = (byte)Envir.Random.Next(0, 9);
                         }
                         else
                         {
@@ -5080,7 +5080,7 @@ namespace Server.MirObjects
                     case "CREATEMAPINSTANCE": //TEST CODE
                         if (!IsGM || parts.Length < 2) return;
 
-                        map = SMain.Envir.GetMapByNameAndInstance(parts[1]);
+                        map = Envir.GetMapByNameAndInstance(parts[1]);
 
                         if (map == null)
                         {
@@ -5483,10 +5483,10 @@ namespace Server.MirObjects
             if (Concentrating)
             {
                 if (ConcentrateInterrupted)
-                    ConcentrateInterruptTime = SMain.Envir.Time + 3000;// needs adjusting
+                    ConcentrateInterruptTime = Envir.Time + 3000;// needs adjusting
                 else
                 {
-                    ConcentrateInterruptTime = SMain.Envir.Time + 3000;// needs adjusting
+                    ConcentrateInterruptTime = Envir.Time + 3000;// needs adjusting
                     ConcentrateInterrupted = true;
                     UpdateConcentration();//Update & send to client
                 }
@@ -5573,10 +5573,10 @@ namespace Server.MirObjects
             if (Concentrating)
             {
                 if (ConcentrateInterrupted)
-                    ConcentrateInterruptTime = SMain.Envir.Time + 3000;// needs adjusting
+                    ConcentrateInterruptTime = Envir.Time + 3000;// needs adjusting
                 else
                 {
-                    ConcentrateInterruptTime = SMain.Envir.Time + 3000;// needs adjusting
+                    ConcentrateInterruptTime = Envir.Time + 3000;// needs adjusting
                     ConcentrateInterrupted = true;
                     UpdateConcentration();//Update & send to client
                 }
@@ -5755,10 +5755,10 @@ namespace Server.MirObjects
                 if (Concentrating)
                 {
                     if (ConcentrateInterrupted)
-                        ConcentrateInterruptTime = SMain.Envir.Time + 3000;// needs adjusting
+                        ConcentrateInterruptTime = Envir.Time + 3000;// needs adjusting
                     else
                     {
-                        ConcentrateInterruptTime = SMain.Envir.Time + 3000;// needs adjusting
+                        ConcentrateInterruptTime = Envir.Time + 3000;// needs adjusting
                         ConcentrateInterrupted = true;
                         UpdateConcentration();//Update & send to client
                     }
@@ -5831,7 +5831,7 @@ namespace Server.MirObjects
                 damage = (int)(damage * Math.Max(1, (distance * 0.35)));//range boost
                 damage = ApplyArcherState(damage);
                 int chanceToHit = 60 + (Focus ? 30 : 0) - (int)(distance * 1.5);
-                int hitChance = SMain.Envir.Random.Next(100); // Randomise a number between minimum chance and 100       
+                int hitChance = Envir.Random.Next(100); // Randomise a number between minimum chance and 100       
 
                 if (hitChance < chanceToHit)
                 {
@@ -9476,7 +9476,7 @@ namespace Server.MirObjects
                 }
                 else
                 {
-                    NPCObject obj = SMain.Envir.Objects.FirstOrDefault(x => x.ObjectID == npcid) as NPCObject;
+                    NPCObject obj = Envir.Objects.FirstOrDefault(x => x.ObjectID == npcid) as NPCObject;
 
                     if (obj != null)
                         obj.Call(this, page);
@@ -14249,7 +14249,7 @@ namespace Server.MirObjects
 
             key = string.Format("[@_{0}]", key);
 
-            DelayedAction action = new DelayedAction(DelayedType.NPC, SMain.Envir.Time + 0, DefaultNPC.ObjectID, key);
+            DelayedAction action = new DelayedAction(DelayedType.NPC, Envir.Time + 0, DefaultNPC.ObjectID, key);
             ActionList.Add(action);
 
             Enqueue(new S.NPCUpdate { NPCID = DefaultNPC.ObjectID });
@@ -17030,7 +17030,7 @@ namespace Server.MirObjects
 
                     while (count > 0)
                     {
-                        UserItem item = SMain.Envir.CreateFreshItem(carryItem.Item);
+                        UserItem item = Envir.CreateFreshItem(carryItem.Item);
 
                         if (item.Info.StackSize > count)
                         {

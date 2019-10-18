@@ -10,6 +10,16 @@ namespace Server.MirDatabase
 {
     public class MonsterInfo
     {
+        protected static Envir Envir
+        {
+            get { return SMain.Envir; }
+        }
+
+        protected static Envir EditEnvir
+        {
+            get { return SMain.EditEnvir; }
+        }
+
         public int Index;
         public string Name = string.Empty;
 
@@ -254,8 +264,8 @@ namespace Server.MirDatabase
 
             //if (28 + count * 3 > data.Length) return;
 
-            info.Index = ++SMain.EditEnvir.MonsterIndex;
-            SMain.EditEnvir.MonsterInfoList.Add(info);
+            info.Index = ++EditEnvir.MonsterIndex;
+            EditEnvir.MonsterInfoList.Add(info);
         }
         public string ToText()
         {
@@ -273,6 +283,11 @@ namespace Server.MirDatabase
 
     public class DropInfo
     {
+        protected static Envir Envir
+        {
+            get { return SMain.Envir; }
+        }
+
         public int Chance;
         public ItemInfo Item;
         public uint Gold;
@@ -294,7 +309,7 @@ namespace Server.MirDatabase
             }
             else
             {
-                info.Item = SMain.Envir.GetItemInfo(parts[1]);
+                info.Item = Envir.GetItemInfo(parts[1]);
                 if (info.Item == null) return null;
 
                 if (parts.Length > 2)

@@ -139,7 +139,7 @@ namespace Server.MirObjects
 
             if (Info.IsDefault)
             {
-                SMain.Envir.CustomCommands.Clear();
+                Envir.CustomCommands.Clear();
             }
         }
         public void LoadGoods()
@@ -168,7 +168,7 @@ namespace Server.MirObjects
                     for (int k = 0; k < count; k++)
                     {
                         UserItem item = new UserItem(reader, version, customversion);
-                        if (SMain.Envir.BindItem(item))
+                        if (Envir.BindItem(item))
                             UsedGoods.Add(item);
                     }
                 }
@@ -208,7 +208,7 @@ namespace Server.MirObjects
 
                         if (!match.Success) continue;
 
-                        SMain.Envir.CustomCommands.Add(match.Groups[1].Value);
+                        Envir.CustomCommands.Add(match.Groups[1].Value);
                     }
                 }
 
@@ -610,7 +610,7 @@ namespace Server.MirObjects
 
                     var data = lines[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                    ItemInfo info = SMain.Envir.GetItemInfo(data[0]);
+                    ItemInfo info = Envir.GetItemInfo(data[0]);
                     if (info == null)
                         continue;
                     UserItem goods = new UserItem(info) { CurrentDura = info.Durability, MaxDura = info.Durability };
@@ -646,7 +646,7 @@ namespace Server.MirObjects
 
                     if (index == 0) continue;
 
-                    QuestInfo info = SMain.Envir.GetQuestInfo(Math.Abs(index));
+                    QuestInfo info = Envir.GetQuestInfo(Math.Abs(index));
 
                     if (info == null) return;
 
@@ -673,7 +673,7 @@ namespace Server.MirObjects
 
                     var data = lines[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                    ItemInfo info = SMain.Envir.GetItemInfo(data[0]);
+                    ItemInfo info = Envir.GetItemInfo(data[0]);
                     if (info == null)
                         continue;
 
@@ -1071,7 +1071,7 @@ namespace Server.MirObjects
 
             if (Envir.Time > UsedGoodsTime)
             {
-                UsedGoodsTime = SMain.Envir.Time + (Settings.Minute * Settings.GoodsBuyBackTime);
+                UsedGoodsTime = Envir.Time + (Settings.Minute * Settings.GoodsBuyBackTime);
                 ProcessGoods();
             }
 

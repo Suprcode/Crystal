@@ -8,6 +8,11 @@ namespace Server.MirDatabase
 {
     public class DragonInfo
     {
+        protected static Envir Envir
+        {
+            get { return SMain.Envir; }
+        }
+
         public bool Enabled;
         public string MapFileName, MonsterName, BodyName;
         public Point Location, DropAreaTop, DropAreaBottom;
@@ -158,7 +163,7 @@ namespace Server.MirDatabase
                 else
                 {
                     if (parts.Length < 3) return null;
-                    info.Item = SMain.Envir.GetItemInfo(parts[1]);
+                    info.Item = Envir.GetItemInfo(parts[1]);
                     if (info.Item == null) return null;
                     if (!byte.TryParse(parts[2], out info.level)) return null;
                 }

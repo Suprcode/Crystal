@@ -110,9 +110,9 @@ namespace Server.MirObjects.Monsters
                     if (CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, 1))
                         Target.InTrapRock = false;
                 }
-                if (Info.HasDieScript && (SMain.Envir.MonsterNPC != null))
+                if (Info.HasDieScript && (Envir.MonsterNPC != null))
                 {
-                    SMain.Envir.MonsterNPC.Call(this,string.Format("[@_DIE({0})]", Info.Index));
+                    Envir.MonsterNPC.Call(this,string.Format("[@_DIE({0})]", Info.Index));
                 }
 
 

@@ -25,6 +25,11 @@ namespace Server.MirObjects
 
     public class DelayedAction
     {
+        protected static Envir Envir
+        {
+            get { return SMain.Envir; }
+        }
+
         public DelayedType Type;
         public long Time;
         public long StartTime;
@@ -34,7 +39,7 @@ namespace Server.MirObjects
 
         public DelayedAction(DelayedType type, long time, params object[] p)
         {
-            StartTime = SMain.Envir.Time;
+            StartTime = Envir.Time;
             Type = type;
             Time = time;
             Params = p;

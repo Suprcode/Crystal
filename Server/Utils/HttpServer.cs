@@ -3,11 +3,16 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using Server.MirEnvir;
 
 namespace Server
 {
     class HttpServer : HttpService {
-       
+        protected static Envir Envir
+        {
+            get { return SMain.Envir; }
+        }
+
         Thread thread;
 
         public HttpServer() {
@@ -58,13 +63,13 @@ namespace Server
                         p.UserName = name;
                         p.SecretQuestion = question;
                         p.SecretAnswer = answer;
-                        int result = SMain.Envir.HTTPNewAccount(p,ip);
+                        int result = Envir.HTTPNewAccount(p,ip);
                         WriteResponse(response, result.ToString());
                         break;
                     case "/login":
                         id = request.QueryString["id"].ToString();
                         psd = request.QueryString["psd"].ToString();
-                        result = SMain.Envir.HTTPLogin(id, psd);
+                        result = Envir.HTTPLogin(id, psd);
                         WriteResponse(response, result.ToString());                        
                         break;
                     case "/addnamelist":

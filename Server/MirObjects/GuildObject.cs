@@ -108,7 +108,7 @@ namespace Server.MirObjects
                     UserId = reader.ReadInt64()
                 };
                 
-                if (SMain.Envir.BindItem(Guilditem.Item) && j < StoredItems.Length)
+                if (Envir.BindItem(Guilditem.Item) && j < StoredItems.Length)
                     StoredItems[j] = Guilditem;
             }
             int BuffCount = reader.ReadInt32();
