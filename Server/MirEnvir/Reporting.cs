@@ -39,7 +39,7 @@ namespace Server.MirEnvir
         {
             Player = player;
 
-            string baseDir = @Settings.ReportPath + player.Name;
+            string baseDir = @Settings.ReportPath + player.Name + "_player";
 
             try
             {
