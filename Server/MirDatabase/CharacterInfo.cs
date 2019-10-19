@@ -5,7 +5,6 @@ using System.IO;
 using Server.MirEnvir;
 using Server.MirNetwork;
 using Server.MirObjects;
-using System.Windows.Forms;
 
 namespace Server.MirDatabase
 {
@@ -39,8 +38,6 @@ namespace Server.MirDatabase
 
         public bool Deleted;
         public DateTime DeleteDate;
-
-        public ListViewItem ListItem;
 
         //Marriage
         public int Married = 0;
@@ -520,21 +517,6 @@ namespace Server.MirDatabase
                 writer.Write(item.Key);
                 writer.Write(item.Value);
             }
-        }
-
-        public ListViewItem CreateListView()
-        {
-            if (ListItem != null)
-                ListItem.Remove();
-
-            ListItem = new ListViewItem(Index.ToString()) { Tag = this };
-
-            ListItem.SubItems.Add(Name);
-            ListItem.SubItems.Add(Level.ToString());
-            ListItem.SubItems.Add(Class.ToString());
-            ListItem.SubItems.Add(Gender.ToString());
-
-            return ListItem;
         }
 
         public SelectInfo ToSelectInfo()

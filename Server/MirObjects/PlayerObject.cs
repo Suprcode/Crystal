@@ -9,7 +9,6 @@ using Server.MirEnvir;
 using Server.MirNetwork;
 using S = ServerPackets;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using Server.MirObjects.Monsters;
 
 namespace Server.MirObjects

@@ -128,6 +128,18 @@ namespace Server
             }
         }
 
+        private ListViewItem CreateListView(CharacterInfo character)
+        {
+            ListViewItem ListItem = new ListViewItem(character.Index.ToString()) { Tag = character };
+
+            ListItem.SubItems.Add(character.Name);
+            ListItem.SubItems.Add(character.Level.ToString());
+            ListItem.SubItems.Add(character.Class.ToString());
+            ListItem.SubItems.Add(character.Gender.ToString());
+
+            return ListItem;
+        }
+
         private void ProcessPlayersOnlineTab()
         {
             if (PlayersOnlineListView.Items.Count != Envir.Players.Count)
@@ -138,7 +150,7 @@ namespace Server
                 {
                     Server.MirDatabase.CharacterInfo character = Envir.Players[i].Info;
 
-                    ListViewItem tempItem = character.CreateListView();
+                    ListViewItem tempItem = CreateListView(character);
 
                     PlayersOnlineListView.Items.Add(tempItem);
                 }

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Net.Sockets;
-using System.Windows.Forms;
 using System.IO;
 using Server.MirEnvir;
 
@@ -102,7 +101,8 @@ namespace Server.MirNetwork
                 if (Envir.Time > NextSendTime)
                 {
                     NextSendTime = Envir.Time + 10000;
-                    string output = string.Format("c;/NoName/{0}/CrystalM2/{1}//;", Envir.PlayerCount, Application.ProductVersion);
+                    string output = string.Format("c;/NoName/{0}/CrystalM2/{1}//;", Envir.PlayerCount,
+                                                  Assembly.GetCallingAssembly().GetName().Version);
 
                     BeginSend(Encoding.ASCII.GetBytes(output));
                 }
