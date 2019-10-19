@@ -15365,8 +15365,7 @@ namespace Server.MirObjects
 
             if (player.CurrentMap.Info.NoGroup)
             {
-                ReceiveChat(player.Name + " cannot accept invites on solo maps.", ChatType.System);
-                player.ReceiveChat(player.Name + " cannot accept invites on solo maps.", ChatType.System);
+                ReceiveChat("Group invites cannot be sent here.", ChatType.System);
                 return;
             }
 
@@ -15479,8 +15478,7 @@ namespace Server.MirObjects
 
             if (GroupInvitation.CurrentMap.Info.NoGroup)
             {
-                ReceiveChat(GroupInvitation.Name + " cannot accept invites on solo maps.", ChatType.System);
-                GroupInvitation.ReceiveChat(GroupInvitation.Name + " cannot accept invites on solo maps.", ChatType.System);
+                ReceiveChat("Group invites cannot be sent here.", ChatType.System);
                 GroupInvitation = null;
                 return;
             }
