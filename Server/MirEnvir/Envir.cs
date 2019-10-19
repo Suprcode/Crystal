@@ -1044,7 +1044,7 @@ namespace Server.MirEnvir
                         File.Delete(oldfilename + "o");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
@@ -1109,7 +1109,7 @@ namespace Server.MirEnvir
                         File.Delete(oldfilename + "o");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
@@ -1149,7 +1149,7 @@ namespace Server.MirEnvir
                         File.Delete(oldfilename + "o");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 
             }
@@ -1198,7 +1198,7 @@ namespace Server.MirEnvir
                         File.Delete(oldfilename + "o");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
 
@@ -1662,7 +1662,6 @@ namespace Server.MirEnvir
                 ConquestGateObject tempGate;
                 ConquestWallObject tempWall;
                 ConquestSiegeObject tempSiege;
-                ConquestFlagObject tempFlag;
 
                 for (int i = 0; i < ConquestInfos.Count; i++)
                 {

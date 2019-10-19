@@ -1697,14 +1697,14 @@ namespace Server.MirNetwork
 
             return;
 
-            Image.Add(p.Image);
+            // Image.Add(p.Image);
 
-            if (p.ImageChunk >= p.ImageSize)
-            {
-                System.Drawing.Image image = Functions.ByteArrayToImage(Functions.CombineArray(Image));
-                image.Save("Reported-" + Player.Name + "-" + DateTime.Now.ToString("yyMMddHHmmss") + ".jpg");
-                Image.Clear();
-            }
+            // if (p.ImageChunk >= p.ImageSize)
+            // {
+            //     System.Drawing.Image image = Functions.ByteArrayToImage(Functions.CombineArray(Image));
+            //     image.Save("Reported-" + Player.Name + "-" + DateTime.Now.ToString("yyMMddHHmmss") + ".jpg");
+            //     Image.Clear();
+            // }
         }
         private void GetRanking(C.GetRanking p)
         {

@@ -35,6 +35,7 @@
     <AssemblyVersionSettings>YearStamp.MonthStamp.DayStamp.TimeStamp</AssemblyVersionSettings>
     <AssemblyFileVersionSettings>YearStamp.MonthStamp.DayStamp.TimeStamp</AssemblyFileVersionSettings>
     <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
+    <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -75,8 +76,6 @@
       <Private>True</Private>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
