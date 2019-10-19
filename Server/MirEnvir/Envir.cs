@@ -2069,7 +2069,14 @@ namespace Server.MirEnvir
 
         private void Connection(IAsyncResult result)
         {
-            if (!Running || !_listener.Server.IsBound) return;
+            try
+            {
+                if (!Running || !_listener.Server.IsBound) return;
+            }
+            catch (Exception e)
+            {
+                SMain.Enqueue(e.ToString());
+            }
 
             try
             {
