@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netcoreapp2.1</TargetFrameworks>
+    <OutputPath>..\Build\Server\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\ClientPackets.cs">
+      <Link>MirNetwork\ClientPackets.cs</Link>
+    </Compile>
+    <Compile Include="..\Common.cs">
+      <Link>Common.cs</Link>
+    </Compile>
+    <Compile Include="..\ServerPackets.cs">
+      <Link>MirNetwork\ServerPackets.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="4.6.0" />
+  </ItemGroup>
+</Project>

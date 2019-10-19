@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Server</RootNamespace>
     <AssemblyName>Server</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -69,9 +69,6 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Server\MessageQueue.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="Microsoft.VisualBasic.PowerPacks.Vs, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Components\PowerPacks\Microsoft.VisualBasic.PowerPacks.Vs.dll</HintPath>
@@ -94,20 +91,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\ClientPackets.cs">
-      <Link>MirNetwork\ClientPackets.cs</Link>
-    </Compile>
-    <Compile Include="..\Common.cs">
-      <Link>Common.cs</Link>
-    </Compile>
-    <Compile Include="..\ServerPackets.cs">
-      <Link>MirNetwork\ServerPackets.cs</Link>
-    </Compile>
-    <Compile Include="..\Server\MirDatabase\MailInfo.cs" />
-    <Compile Include="..\Server\MirDatabase\ConquestInfo.cs" />
-    <Compile Include="..\Server\MirDatabase\RecipeInfo.cs" />
-    <Compile Include="..\Server\MirEnvir\Reporting.cs" />
-    <Compile Include="..\Server\MirEnvir\RespawnTimer.cs" />
+    <ProjectReference Include="..\Server\Server.Library.csproj" />
     <Compile Include="Account\PlayerInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -153,34 +137,18 @@
     <Compile Include="Database\ItemInfoForm.Designer.cs">
       <DependentUpon>ItemInfoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="..\Server\MirDatabase\AccountInfo.cs" />
     <Compile Include="Account\AccountInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Account\AccountInfoForm.Designer.cs">
       <DependentUpon>AccountInfoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="..\Server\MirDatabase\AuctionInfo.cs" />
-    <Compile Include="..\Server\MirDatabase\CharacterInfo.cs" />
-    <Compile Include="..\Server\MirDatabase\DragonInfo.cs" />
-    <Compile Include="..\Server\MirDatabase\MagicInfo.cs" />
-    <Compile Include="..\Server\MirDatabase\MonsterInfo.cs" />
-    <Compile Include="..\Server\MirDatabase\MovementInfo.cs" />
-    <Compile Include="..\Server\MirDatabase\NPCInfo.cs" />
-    <Compile Include="..\Server\MirDatabase\QuestInfo.cs" />
-    <Compile Include="..\Server\MirDatabase\QuestProgressInfo.cs" />
-    <Compile Include="..\Server\MirDatabase\RespawnInfo.cs" />
-    <Compile Include="..\Server\MirDatabase\SafeZoneInfo.cs" />
-    <Compile Include="..\Server\MirEnvir\Dragon.cs" />
-    <Compile Include="..\Server\MirEnvir\Map.cs" />
-    <Compile Include="..\Server\MirDatabase\MapInfo.cs" />
     <Compile Include="ConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ConfigForm.Designer.cs">
       <DependentUpon>ConfigForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="..\Server\MirEnvir\Envir.cs" />
     <Compile Include="Database\MapInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -254,122 +222,6 @@
     <Compile Include="VisualMapInfo\VForm.Designer.cs">
       <DependentUpon>VForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="..\Server\MirNetwork\MirConnection.cs" />
-    <Compile Include="..\Server\MirNetwork\MirStatusConnection.cs" />
-    <Compile Include="..\Server\MirObjects\ConquestObject.cs" />
-    <Compile Include="..\Server\MirObjects\DecoObject.cs" />
-    <Compile Include="..\Server\MirObjects\DelayedAction.cs" />
-    <Compile Include="..\Server\MirObjects\GuildObject.cs" />
-    <Compile Include="..\Server\MirObjects\IntelligentCreatureObject.cs" />
-    <Compile Include="..\Server\MirObjects\ItemObject.cs" />
-    <Compile Include="..\Server\MirObjects\MapObject.cs" />
-    <Compile Include="..\Server\MirObjects\MonsterObject.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\HellBomb.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\FlameAssassin.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\FlameMage.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\FlameScythe.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\HellLord.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\HellKnight.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\IcePillar.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\FlameSpear.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\FlameQueen.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\TrollKing.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\ManectricKing.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\TrollBomber.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\ManectricBlest.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\VenomSpider.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\WingedTigerLord.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\Tornado.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\Hugger.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\PoisonHugger.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\WitchDoctor.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\AxeSkeleton.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\Behemoth.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\BlockingObject.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\BoneFamiliar.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\BugBagMaggot.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\CannibalPlant.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\CastleGate.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\CaveMaggot.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\BoneSpearman.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\BoneLord.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\BombSpider.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\BlackFoxman.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\CharmedSnake.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\ConquestArcher.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\CrazyManworm.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\DarkDevourer.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\FinialTurtle.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\FlamingMutant.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\Football.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\HellKeeper.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\HellCannibal.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\HellSlasher.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\HellPirate.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\HumanAssassin.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\HumanWizard.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\DragonStatue.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\EvilMirBody.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\EvilMir.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\HedgeKekTal.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\GreatFoxSpirit.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\LightTurtle.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\ManectricClaw.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\MutatedManworm.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\Wall.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\Runaway.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\Gate.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\SnakeTotem.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\SpittingToad.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\StoningStatue.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\TalkingMonster.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\ThunderElement.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\GuardianRock.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\TownArcher.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\Trainer.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\TrapRock.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\TurtleKing.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\VampireSpider.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\WhiteFoxman.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\RedFoxman.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\OmaKing.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\YinDevilNode.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\RootSpider.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\HolyDeva.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\CrystalSpider.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\Yimoogi.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\SandWorm.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\FrostTiger.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\MinotaurKing.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\LeftGuard.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\RightGuard.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\ToxicGhoul.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\Khazard.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\ShamanZombie.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\RevivingZombie.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\DigOutZombie.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\DarkDevil.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\Deer.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\EvilCentipede.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\FlamingWooma.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\Guard.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\HarvestMonster.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\IncarnatedGhoul.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\IncarnatedZT.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\KingScorpion.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\RedMoonEvil.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\RedThunderZuma.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\Shinsu.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\SpittingSpider.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\Tree.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\WoomaTaurus.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\ZumaMonster.cs" />
-    <Compile Include="..\Server\MirObjects\Monsters\ZumaTaurus.cs" />
-    <Compile Include="..\Server\MirObjects\NPCObject.cs" />
-    <Compile Include="..\Server\MirObjects\NPCPage.cs" />
-    <Compile Include="..\Server\MirObjects\NPCSegment.cs" />
-    <Compile Include="..\Server\MirObjects\PlayerObject.cs" />
-    <Compile Include="..\Server\MirObjects\SpellObject.cs" />
     <Compile Include="Database\QuestInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -393,7 +245,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="..\Server\Settings.cs" />
     <Compile Include="SMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -402,8 +253,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\Server\Utils\HttpServer.cs" />
-    <Compile Include="..\Server\Utils\HttpService.cs" />
     <EmbeddedResource Include="Account\AccountInfoForm.resx">
       <DependentUpon>AccountInfoForm.cs</DependentUpon>
     </EmbeddedResource>

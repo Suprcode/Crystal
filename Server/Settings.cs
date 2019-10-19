@@ -6,7 +6,7 @@ using Server.MirDatabase;
 
 namespace Server
 {
-    internal static class Settings
+    public static class Settings
     {
         private static MessageQueue MessageQueue
         {
