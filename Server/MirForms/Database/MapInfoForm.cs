@@ -144,6 +144,7 @@ namespace Server
             //MineIndextextBox.Text = mi.MineIndex.ToString();
             NoTownTeleportCheckbox.Checked = mi.NoTownTeleport;
             NoReincarnation.Checked = mi.NoReincarnation;
+            noGroup.Checked = mi.NoGroup;
             for (int i = 1; i < _selectedMapInfos.Count; i++)
             {
                 mi = _selectedMapInfos[i];
@@ -182,6 +183,7 @@ namespace Server
                 if (NeedBridleCheckbox.Checked != mi.NeedBridle) NeedBridleCheckbox.Checked = false;
                 if (NoTownTeleportCheckbox.Checked != mi.NoTownTeleport) NoTownTeleportCheckbox.Checked = false;
                 if (NoReincarnation.Checked != mi.NoReincarnation) NoReincarnation.Checked = false;
+                if (noGroup.Checked != mi.NoGroup) noGroup.Checked = false;
             }
 
             UpdateSafeZoneInterface();
@@ -1728,6 +1730,13 @@ namespace Server
             if (ActiveControl != sender) return;
             for (int i = 0; i < _selectedMapInfos.Count; i++)
                 _selectedMapInfos[i].NoReincarnation = NoReincarnation.Checked;
+        }
+
+        private void noGroup_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+                _selectedMapInfos[i].NoGroup = noGroup.Checked;
         }
     }
 }

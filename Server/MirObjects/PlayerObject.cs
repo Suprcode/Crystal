@@ -9777,6 +9777,13 @@ namespace Server.MirObjects
             if (mapChanged)
             {
                 CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
+                if (CurrentMap.Info.NoGroup &&
+                    GroupMembers.Count > 0 &&
+                    AllowGroup)
+                {
+                    SwitchGroup(false);
+                    AllowGroup = true;
+                }
             }
 
             if (Info.Married != 0)
@@ -9845,6 +9852,14 @@ namespace Server.MirObjects
             if (mapChanged)
             {
                 CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
+                if (CurrentMap.Info.NoGroup &&
+                    GroupMembers != null &&
+                    GroupMembers.Count > 0 &&
+                    AllowGroup)
+                {
+                    SwitchGroup(false);
+                    AllowGroup = true;
+                }
 
                 if (Info.Married != 0)
                 {
@@ -15348,6 +15363,13 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (player.CurrentMap.Info.NoGroup)
+            {
+                ReceiveChat(player.Name + " cannot accept invites on solo maps.", ChatType.System);
+                player.ReceiveChat(player.Name + " cannot accept invites on solo maps.", ChatType.System);
+                return;
+            }
+
             SwitchGroup(true);
             player.Enqueue(new S.GroupInvite { Name = Name });
             player.GroupInvitation = this;
@@ -15453,6 +15475,14 @@ namespace Server.MirObjects
             {
                 GroupInvitation.GroupMembers = new List<PlayerObject> { GroupInvitation };
                 GroupInvitation.Enqueue(new S.AddMember { Name = GroupInvitation.Name });
+            }
+
+            if (GroupInvitation.CurrentMap.Info.NoGroup)
+            {
+                ReceiveChat(GroupInvitation.Name + " cannot accept invites on solo maps.", ChatType.System);
+                GroupInvitation.ReceiveChat(GroupInvitation.Name + " cannot accept invites on solo maps.", ChatType.System);
+                GroupInvitation = null;
+                return;
             }
 
             Packet p = new S.AddMember { Name = Name };
