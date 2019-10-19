@@ -12,7 +12,7 @@ namespace Server.MirDatabase
     {
         protected static Envir EditEnvir
         {
-            get { return SMain.EditEnvir; }
+            get { return Envir.Edit; }
         }
 
         public int Index;

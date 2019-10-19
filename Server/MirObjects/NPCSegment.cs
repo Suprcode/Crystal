@@ -16,7 +16,12 @@ namespace Server.MirObjects
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
+        }
+
+        protected static MessageQueue MessageQueue
+        {
+            get { return MessageQueue.Instance; }
         }
 
         public NPCPage Page;
@@ -1570,7 +1575,7 @@ namespace Server.MirObjects
                         }
                         catch (ArgumentException)
                         {
-                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[1], Key));
+                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[1], Key));
                             return true;
                         }
                         break;
@@ -1629,7 +1634,7 @@ namespace Server.MirObjects
                         }
                         catch (ArgumentException)
                         {
-                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
                             return true;
                         }
                         break;
@@ -1773,7 +1778,7 @@ namespace Server.MirObjects
                         }
                         catch (ArgumentException)
                         {
-                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[1], Key));
+                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[1], Key));
                             return true;
                         }
                         break;
@@ -1831,7 +1836,7 @@ namespace Server.MirObjects
                         }
                         catch (ArgumentException)
                         {
-                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
                             return true;
                         }
                         break;
@@ -1849,7 +1854,7 @@ namespace Server.MirObjects
                         }
                         catch (ArgumentException)
                         {
-                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
                             return true;
                         }
                         break;
@@ -1866,7 +1871,7 @@ namespace Server.MirObjects
                         }
                         catch (ArgumentException)
                         {
-                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
                             return true;
                         }
                         break;
@@ -1883,7 +1888,7 @@ namespace Server.MirObjects
                         }
                         catch (ArgumentException)
                         {
-                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
                             return true;
                         }
                         break;
@@ -2017,7 +2022,7 @@ namespace Server.MirObjects
                         }
                         catch (ArgumentException)
                         {
-                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
                             return true;
                         }
                         break;
@@ -2211,7 +2216,7 @@ namespace Server.MirObjects
                         }
                         catch (ArgumentException)
                         {
-                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[1], Key));
+                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[1], Key));
                             return true;
                         }
                         break;
@@ -2302,7 +2307,7 @@ namespace Server.MirObjects
                         }
                         catch (ArgumentException)
                         {
-                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
                             return true;
                         }
                         break;
@@ -2335,7 +2340,7 @@ namespace Server.MirObjects
                         }
                         catch (ArgumentException)
                         {
-                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
                             return true;
                         }
                         break;
@@ -2368,7 +2373,7 @@ namespace Server.MirObjects
                         }
                         catch (ArgumentException)
                         {
-                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
                             return true;
                         }
                         break;
@@ -2401,7 +2406,7 @@ namespace Server.MirObjects
                         }
                         catch (ArgumentException)
                         {
-                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
                             return true;
                         }
                         break;
@@ -2434,7 +2439,7 @@ namespace Server.MirObjects
                         }
                         catch (ArgumentException)
                         {
-                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
                             return true;
                         }
                         break;
@@ -2478,7 +2483,7 @@ namespace Server.MirObjects
                         }
                         catch (ArgumentException)
                         {
-                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
                             return true;
                         }
                         break;
@@ -2505,7 +2510,7 @@ namespace Server.MirObjects
                         }
                         catch (ArgumentException)
                         {
-                            SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
                             return true;
                         }
                         break;
@@ -2664,7 +2669,7 @@ namespace Server.MirObjects
 
                         if (info == null)
                         {
-                            SMain.Enqueue(string.Format("Failed to get ItemInfo: {0}, Page: {1}", param[0], Key));
+                            MessageQueue.Enqueue(string.Format("Failed to get ItemInfo: {0}, Page: {1}", param[0], Key));
                             break;
                         }
 
@@ -2674,7 +2679,7 @@ namespace Server.MirObjects
 
                             if (item == null)
                             {
-                                SMain.Enqueue(string.Format("Failed to create UserItem: {0}, Page: {1}", param[0], Key));
+                                MessageQueue.Enqueue(string.Format("Failed to create UserItem: {0}, Page: {1}", param[0], Key));
                                 return;
                             }
 
@@ -2703,7 +2708,7 @@ namespace Server.MirObjects
 
                         if (info == null)
                         {
-                            SMain.Enqueue(string.Format("Failed to get ItemInfo: {0}, Page: {1}", param[0], Key));
+                            MessageQueue.Enqueue(string.Format("Failed to get ItemInfo: {0}, Page: {1}", param[0], Key));
                             break;
                         }
 
@@ -3156,7 +3161,7 @@ namespace Server.MirObjects
                             }
                             catch (ArgumentException)
                             {
-                                SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[1], Key));
+                                MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[1], Key));
                             }
                         }
                         else
@@ -3280,7 +3285,7 @@ namespace Server.MirObjects
 
                         if (info == null)
                         {
-                            SMain.Enqueue(string.Format("Failed to get ItemInfo: {0}, Page: {1}", param[0], Key));
+                            MessageQueue.Enqueue(string.Format("Failed to get ItemInfo: {0}, Page: {1}", param[0], Key));
                             break;
                         }
 
@@ -3290,7 +3295,7 @@ namespace Server.MirObjects
 
                             if (item == null)
                             {
-                                SMain.Enqueue(string.Format("Failed to create UserItem: {0}, Page: {1}", param[0], Key));
+                                MessageQueue.Enqueue(string.Format("Failed to create UserItem: {0}, Page: {1}", param[0], Key));
                                 return;
                             }
 
@@ -3517,7 +3522,7 @@ namespace Server.MirObjects
                         string randomTextPath = Settings.NPCPath + param[0];
                         if (!File.Exists(randomTextPath))
                         {
-                            SMain.Enqueue(string.Format("the randomTextFile:{0} does not exist.",randomTextPath));
+                            MessageQueue.Enqueue(string.Format("the randomTextFile:{0} does not exist.",randomTextPath));
                         }
                         else {
                             var lines = File.ReadAllLines(randomTextPath);
@@ -3662,7 +3667,7 @@ namespace Server.MirObjects
                             }
                             catch (ArgumentException)
                             {
-                                SMain.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[1], Key));
+                                MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[1], Key));
                             }
                         }
                         else

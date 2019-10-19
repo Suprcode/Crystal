@@ -14,7 +14,12 @@ namespace Server.MirEnvir
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
+        }
+
+        protected static MessageQueue MessageQueue
+        {
+            get { return MessageQueue.Instance; }
         }
 
         public PlayerObject Player;
@@ -60,7 +65,7 @@ namespace Server.MirEnvir
                 // Get the line number from the stack frame
                 var line = frame.GetFileLineNumber();
 
-                SMain.Enqueue("Could not save player reporting");
+                MessageQueue.Enqueue("Could not save player reporting");
                 File.AppendAllText(Settings.ErrorPath + "Error.txt",
                 string.Format("[{0}] {1} at line {2}{3}", DateTime.Now, ex, line, Environment.NewLine));
             }
@@ -335,7 +340,7 @@ namespace Server.MirEnvir
                 // Get the line number from the stack frame
                 var line = frame.GetFileLineNumber();
 
-                SMain.Enqueue("Could not save player reporting");
+                MessageQueue.Enqueue("Could not save player reporting");
                 File.AppendAllText(Settings.ErrorPath + "Error.txt",
                 string.Format("[{0}] {1} at line {2}{3}", DateTime.Now, ex, line, Environment.NewLine));
                 return;
@@ -361,7 +366,7 @@ namespace Server.MirEnvir
                     // Get the line number from the stack frame
                     var line = frame.GetFileLineNumber();
 
-                    SMain.Enqueue("Could not save player reporting");
+                    MessageQueue.Enqueue("Could not save player reporting");
                     File.AppendAllText(Settings.ErrorPath + "Error.txt",
                     string.Format("[{0}] {1} at line {2}{3}", DateTime.Now, ex, line, Environment.NewLine));
                     break;

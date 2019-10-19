@@ -15,7 +15,6 @@ namespace Server.MirObjects
 {
     public sealed class NPCObject : MapObject
     {
-
         public override ObjectType Race
         {
             get { return ObjectType.Merchant; }
@@ -128,7 +127,7 @@ namespace Server.MirObjects
                     ParseScript(lines);
             }
             else
-                SMain.Enqueue(string.Format("File Not Found: {0}, NPC: {1}", Info.FileName, Info.Name));
+                MessageQueue.Enqueue(string.Format("File Not Found: {0}, NPC: {1}", Info.FileName, Info.Name));
         }
         public void ClearInfo()
         {
@@ -280,7 +279,7 @@ namespace Server.MirObjects
                 string path = Path.Combine(Settings.EnvirPath, split[1].Substring(1, split[1].Length - 2));
 
                 if (!File.Exists(path))
-                    SMain.Enqueue(string.Format("File Not Found: {0}, NPC: {1}", path, Info.Name));
+                    MessageQueue.Enqueue(string.Format("File Not Found: {0}, NPC: {1}", path, Info.Name));
                 else
                     newLines = File.ReadAllLines(path).ToList();
 
@@ -616,7 +615,7 @@ namespace Server.MirObjects
                     UserItem goods = new UserItem(info) { CurrentDura = info.Durability, MaxDura = info.Durability };
                     if (goods == null || Goods.Contains(goods))
                     {
-                        SMain.Enqueue(string.Format("Could not find Item: {0}, File: {1}", lines[i], Info.FileName));
+                        MessageQueue.Enqueue(string.Format("Could not find Item: {0}, File: {1}", lines[i], Info.FileName));
                         continue;
                     }
                     uint count = 1;
@@ -681,13 +680,13 @@ namespace Server.MirObjects
 
                     if (recipe == null)
                     {
-                        SMain.Enqueue(string.Format("Could not find recipe: {0}, File: {1}", lines[i], Info.FileName));
+                        MessageQueue.Enqueue(string.Format("Could not find recipe: {0}, File: {1}", lines[i], Info.FileName));
                         continue;
                     }
 
                     if (recipe.Ingredients.Count == 0)
                     {
-                        SMain.Enqueue(string.Format("Could not find ingredients: {0}, File: {1}", lines[i], Info.FileName));
+                        MessageQueue.Enqueue(string.Format("Could not find ingredients: {0}, File: {1}", lines[i], Info.FileName));
                         continue;
                     }
 
@@ -764,7 +763,7 @@ namespace Server.MirObjects
 
                     if (!found)
                     {
-                        SMain.Enqueue(string.Format("Player: {0} was prevented access to NPC key: '{1}' ", player.Name, key));
+                        MessageQueue.Enqueue(string.Format("Player: {0} was prevented access to NPC key: '{1}' ", player.Name, key));
                         return;
                     }
                 }

@@ -12,7 +12,12 @@ namespace Server.MirDatabase
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
+        }
+
+        protected static MessageQueue MessageQueue
+        {
+            get { return MessageQueue.Instance; }
         }
 
         public UserItem Item;
@@ -29,7 +34,7 @@ namespace Server.MirDatabase
             ItemInfo itemInfo = Envir.GetItemInfo(name);
             if (itemInfo == null)
             {
-                SMain.Enqueue(string.Format("Could not find Item: {0}", name));
+                MessageQueue.Enqueue(string.Format("Could not find Item: {0}", name));
                 return;
             }
 
@@ -66,7 +71,7 @@ namespace Server.MirDatabase
 
                             if (info == null)
                             {
-                                SMain.Enqueue(string.Format("Could not find Item: {0}, Recipe: {1}", lines[i], recipe));
+                                MessageQueue.Enqueue(string.Format("Could not find Item: {0}, Recipe: {1}", lines[i], recipe));
                                 continue;
                             }
 
@@ -110,7 +115,7 @@ namespace Server.MirDatabase
                             }
                             catch
                             {
-                                SMain.Enqueue(string.Format("Could not parse option: {0}, Value: {1}", data[0], data[1]));
+                                MessageQueue.Enqueue(string.Format("Could not parse option: {0}, Value: {1}", data[0], data[1]));
                                 continue;
                             }
                         }

@@ -12,12 +12,17 @@ namespace Server.MirDatabase
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
 
         protected static Envir EditEnvir
         {
-            get { return SMain.EditEnvir; }
+            get { return Envir.Edit; }
+        }
+
+        protected static MessageQueue MessageQueue
+        {
+            get { return MessageQueue.Instance; }
         }
 
         public int Index;
@@ -196,7 +201,7 @@ namespace Server.MirDatabase
                 DropInfo drop = DropInfo.FromLine(lines[i]);
                 if (drop == null)
                 {
-                    SMain.Enqueue(string.Format("Could not load Drop: {0}, Line {1}", Name, lines[i]));
+                    MessageQueue.Enqueue(string.Format("Could not load Drop: {0}, Line {1}", Name, lines[i]));
                     continue;
                 }
 
@@ -285,7 +290,7 @@ namespace Server.MirDatabase
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
 
         public int Chance;

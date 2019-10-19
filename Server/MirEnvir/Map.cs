@@ -13,9 +13,14 @@ namespace Server.MirEnvir
     {
         private static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
-        
+
+        protected static MessageQueue MessageQueue
+        {
+            get { return MessageQueue.Instance; }
+        }
+
         public MapInfo Info;
 
         public int Thread = 0;
@@ -492,10 +497,10 @@ namespace Server.MirEnvir
             }
             catch (Exception ex)
             {
-                SMain.Enqueue(ex);
+                MessageQueue.Enqueue(ex);
             }
 
-            SMain.Enqueue("Failed to Load Map: " + Info.FileName);
+            MessageQueue.Enqueue("Failed to Load Map: " + Info.FileName);
             return false;
         }
 
@@ -2309,7 +2314,7 @@ namespace Server.MirEnvir
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
 
         public RespawnInfo Info;

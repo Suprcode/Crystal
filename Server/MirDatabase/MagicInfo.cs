@@ -12,7 +12,7 @@ namespace Server.MirDatabase
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
 
         public string Name;
@@ -94,7 +94,7 @@ namespace Server.MirDatabase
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
 
         public Spell Spell;

@@ -357,7 +357,7 @@ namespace Server.MirObjects
             if (Account.AdminAccount)
             {
                 IsGM = true;
-                SMain.Enqueue(string.Format("{0} is now a GM", Name));
+                MessageQueue.Enqueue(string.Format("{0} is now a GM", Name));
             }
 
             if (Level == 0) NewCharacter();
@@ -420,7 +420,7 @@ namespace Server.MirObjects
                     }
                     catch
                     {
-                        SMain.EnqueueDebugging(Name + " Pet logout was null on logout : " + pet != null ? pet.Name : "" + " " + pet.CurrentMap != null ? pet.CurrentMap.Info.FileName : "");
+                        MessageQueue.EnqueueDebugging(Name + " Pet logout was null on logout : " + pet != null ? pet.Name : "" + " " + pet.CurrentMap != null ? pet.CurrentMap.Info.FileName : "");
                     }
                 }
             }
@@ -491,7 +491,7 @@ namespace Server.MirObjects
 
             string logReason = LogOutReason(reason);
 
-            SMain.Enqueue(logReason);
+            MessageQueue.Enqueue(logReason);
 
             Fishing = false;
 
@@ -2198,7 +2198,7 @@ namespace Server.MirObjects
 
             Report.Connected(Connection.IPAddress);
 
-            SMain.Enqueue(string.Format("{0} has connected.", Info.Name));
+            MessageQueue.Enqueue(string.Format("{0} has connected.", Info.Name));
             
             if (IsGM) return;
             LastRankUpdate = Envir.Time;
@@ -3449,20 +3449,20 @@ namespace Server.MirObjects
         {
             if (string.IsNullOrEmpty(message)) return;
 
-            SMain.EnqueueChat(string.Format("{0}: {1}", Name, message));
+            MessageQueue.EnqueueChat(string.Format("{0}: {1}", Name, message));
 
             if (GMLogin)
             {
                 if (message == GMPassword)
                 {
                     IsGM = true;
-                    SMain.Enqueue(string.Format("{0} is now a GM", Name));
+                    MessageQueue.Enqueue(string.Format("{0} is now a GM", Name));
                     ReceiveChat("You have been made a GM", ChatType.System);
                     Envir.RemoveRank(Info);//remove gm chars from ranking to avoid causing bugs in rank list
                 }
                 else
                 {
-                    SMain.Enqueue(string.Format("{0} attempted a GM login", Name));
+                    MessageQueue.Enqueue(string.Format("{0} attempted a GM login", Name));
                     ReceiveChat("Incorrect login password", ChatType.System);
                 }
                 GMLogin = false;
@@ -3746,7 +3746,7 @@ namespace Server.MirObjects
                         data.Deleted = false;
 
                         ReceiveChat(string.Format("Player {0} has been restored by", data.Name), ChatType.System);
-                        SMain.Enqueue(string.Format("Player {0} has been restored by {1}", data.Name, Name));
+                        MessageQueue.Enqueue(string.Format("Player {0} has been restored by {1}", data.Name, Name));
 
                         break;
 
@@ -3768,7 +3768,7 @@ namespace Server.MirObjects
                         }
 
                         ReceiveChat(string.Format("Player {0} has been changed to {1}", data.Name, data.Gender), ChatType.System);
-                        SMain.Enqueue(string.Format("Player {0} has been changed to {1} by {2}", data.Name, data.Gender, Name));
+                        MessageQueue.Enqueue(string.Format("Player {0} has been changed to {1} by {2}", data.Name, data.Gender, Name));
 
                         if (data.Player != null)
                             data.Player.Connection.LogOut();
@@ -3794,7 +3794,7 @@ namespace Server.MirObjects
                                 player.LevelUp();
 
                                 ReceiveChat(string.Format("Player {0} has been Leveled {1} -> {2}.", player.Name, old, player.Level), ChatType.System);
-                                SMain.Enqueue(string.Format("Player {0} has been Leveled {1} -> {2} by {3}", player.Name, old, player.Level, Name));
+                                MessageQueue.Enqueue(string.Format("Player {0} has been Leveled {1} -> {2} by {3}", player.Name, old, player.Level, Name));
                                 return;
                             }
                         }
@@ -3813,7 +3813,7 @@ namespace Server.MirObjects
                                 LevelUp();
 
                                 ReceiveChat(string.Format("{0} {1} -> {2}.", GameLanguage.LevelUp, old, Level), ChatType.System);
-                                SMain.Enqueue(string.Format("Player {0} has been Leveled {1} -> {2} by {3}", Name, old, Level, Name));
+                                MessageQueue.Enqueue(string.Format("Player {0} has been Leveled {1} -> {2} by {3}", Name, old, Level, Name));
                                 return;
                             }
                         }
@@ -3853,7 +3853,7 @@ namespace Server.MirObjects
                         }
 
                         ReceiveChat(string.Format("{0} x{1} has been created.", iInfo.Name, tempCount), ChatType.System);
-                        SMain.Enqueue(string.Format("Player {0} has attempted to Create {1} x{2}", Name, iInfo.Name, tempCount));
+                        MessageQueue.Enqueue(string.Format("Player {0} has attempted to Create {1} x{2}", Name, iInfo.Name, tempCount));
                         break;
                     case "CLEARBUFFS":
                         foreach (var buff in Buffs)
@@ -4377,7 +4377,7 @@ namespace Server.MirObjects
                             count = uint.MaxValue - player.Account.Gold;
 
                         player.GainGold(count);
-                        SMain.Enqueue(string.Format("Player {0} has been given {1} gold", player.Name, count));
+                        MessageQueue.Enqueue(string.Format("Player {0} has been given {1} gold", player.Name, count));
                         break;
 
                     case "GIVEPEARLS":
@@ -4406,9 +4406,9 @@ namespace Server.MirObjects
 
                         player.IntelligentCreatureGainPearls((int)count);
                         if (count > 1)
-                            SMain.Enqueue(string.Format("Player {0} has been given {1} pearls", player.Name, count));
+                            MessageQueue.Enqueue(string.Format("Player {0} has been given {1} pearls", player.Name, count));
                         else
-                            SMain.Enqueue(string.Format("Player {0} has been given {1} pearl", player.Name, count));
+                            MessageQueue.Enqueue(string.Format("Player {0} has been given {1} pearl", player.Name, count));
                         break;
                     case "GIVECREDIT":
                         if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
@@ -4435,7 +4435,7 @@ namespace Server.MirObjects
                             count = uint.MaxValue - player.Account.Credit;
 
                         player.GainCredit(count);
-                        SMain.Enqueue(string.Format("Player {0} has been given {1} credit", player.Name, count));
+                        MessageQueue.Enqueue(string.Format("Player {0} has been given {1} credit", player.Name, count));
                         break;
                     case "GIVESKILL":
                         if ((!IsGM && !Settings.TestServer) || parts.Length < 3) return;
@@ -4701,7 +4701,7 @@ namespace Server.MirObjects
                         data.Class = mirClass;
 
                         ReceiveChat(string.Format("Player {0} has been changed to {1}", data.Name, data.Class), ChatType.System);
-                        SMain.Enqueue(string.Format("Player {0} has been changed to {1} by {2}", data.Name, data.Class, Name));
+                        MessageQueue.Enqueue(string.Format("Player {0} has been changed to {1} by {2}", data.Name, data.Class, Name));
 
                         if (data.Player != null)
                             data.Player.Connection.LogOut();
@@ -5121,7 +5121,7 @@ namespace Server.MirObjects
                         }
                         else return;
                         ReceiveChat(string.Format("{0} War Started.", tempConq.Info.Name), ChatType.System);
-                        SMain.Enqueue(string.Format("{0} War Started.", tempConq.Info.Name));
+                        MessageQueue.Enqueue(string.Format("{0} War Started.", tempConq.Info.Name));
                         break;
                     case "RESETCONQUEST":
                         //Needs some work, but does job for now.
@@ -14789,7 +14789,7 @@ namespace Server.MirObjects
 
                     if (auction.Sold && auction.Expired)
                     {
-                        SMain.Enqueue(string.Format("Auction both sold and Expired {0}", Account.AccountID));
+                        MessageQueue.Enqueue(string.Format("Auction both sold and Expired {0}", Account.AccountID));
                         return;
                     }
 
@@ -17883,7 +17883,7 @@ namespace Server.MirObjects
             }
             if (!petFound)
             {
-                SMain.EnqueueDebugging(string.Format("{0}: SummonedCreature no longer exists?!?. {1}", Name, SummonedCreatureType.ToString()));
+                MessageQueue.EnqueueDebugging(string.Format("{0}: SummonedCreature no longer exists?!?. {1}", Name, SummonedCreatureType.ToString()));
                 CreatureSummoned = false;
                 SummonedCreatureType = IntelligentCreatureType.None;
             }
@@ -19132,7 +19132,7 @@ namespace Server.MirObjects
 
             if (Lover == null)
             {
-                SMain.EnqueueDebugging(Name + " is married but couldn't find marriage ID " + Info.Married);
+                MessageQueue.EnqueueDebugging(Name + " is married but couldn't find marriage ID " + Info.Married);
                 return;
             }
 
@@ -19390,7 +19390,7 @@ namespace Server.MirObjects
 
             if (Mentor == null)
             {
-                SMain.EnqueueDebugging(Name + " is mentored but couldn't find mentor ID " + Info.Mentor);
+                MessageQueue.EnqueueDebugging(Name + " is mentored but couldn't find mentor ID " + Info.Mentor);
                 return;
             }
 
@@ -19461,7 +19461,7 @@ namespace Server.MirObjects
             if (Product == null)
             {
                 ReceiveChat("You're trying to buy an item that isn't in the shop.", ChatType.System);
-                SMain.EnqueueDebugging(Info.Name + " is trying to buy Something that doesn't exist.");
+                MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy Something that doesn't exist.");
                 return;
             }
 
@@ -19487,7 +19487,7 @@ namespace Server.MirObjects
                 {
                     ReceiveChat("You're trying to buy more of this item than is available.", ChatType.System);
                     GameShopStock(Product);
-                    SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Stock isn't available.");
+                    MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Stock isn't available.");
                     return;
                 }
             }
@@ -19498,7 +19498,7 @@ namespace Server.MirObjects
             
             if (stockAvailable)
             {
-                SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Stock is available");
+                MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Stock is available");
                 if (Product.CreditPrice * Quantity < Account.Credit)
                 {
                     canAfford = true;
@@ -19516,7 +19516,7 @@ namespace Server.MirObjects
                     {
 
                         ReceiveChat("You don't have enough currency for your purchase.", ChatType.System);
-                        SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - not enough currency.");
+                        MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - not enough currency.");
                         return;
                     }
                 }
@@ -19528,7 +19528,7 @@ namespace Server.MirObjects
 
             if (canAfford)
             {
-                SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Has enough currency.");
+                MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Has enough currency.");
                 Account.Gold -= GoldCost;
                 Account.Credit -= CreditCost;
 
@@ -19613,7 +19613,7 @@ namespace Server.MirObjects
                 };
                 mail.Send();
 
-            SMain.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Purchases Sent!");
+            MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Purchases Sent!");
             ReceiveChat("Your purchases have been sent to your Mailbox.", ChatType.Hint);
         }
             

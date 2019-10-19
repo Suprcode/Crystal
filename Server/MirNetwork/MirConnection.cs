@@ -17,7 +17,12 @@ namespace Server.MirNetwork
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
+        }
+
+        protected static MessageQueue MessageQueue
+        {
+            get { return MessageQueue.Instance; }
         }
 
         public readonly int SessionID;
@@ -70,13 +75,13 @@ namespace Server.MirNetwork
 
                     if (connCount >= Settings.MaxIP)
                     {
-                        SMain.EnqueueDebugging(IPAddress + ", Maximum connections reached.");
+                        MessageQueue.EnqueueDebugging(IPAddress + ", Maximum connections reached.");
                         conn.SendDisconnect(5);
                     }
                 }
             }
 
-            SMain.Enqueue(IPAddress + ", Connected.");
+            MessageQueue.Enqueue(IPAddress + ", Connected.");
 
             _client = client;
             _client.NoDelay = true;
@@ -624,7 +629,7 @@ namespace Server.MirNetwork
                     ConfirmItemRental();
                     break;
                 default:
-                    SMain.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
+                    MessageQueue.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
                     break;
             }
         }
@@ -710,11 +715,11 @@ namespace Server.MirNetwork
 
                     BeginSend(data);
                     SoftDisconnect(10);
-                    SMain.Enqueue(SessionID + ", Disconnnected - Wrong Client Version.");
+                    MessageQueue.Enqueue(SessionID + ", Disconnnected - Wrong Client Version.");
                     return;
                 }
 
-            SMain.Enqueue(SessionID + ", " + IPAddress + ", Client version matched.");
+            MessageQueue.Enqueue(SessionID + ", " + IPAddress + ", Client version matched.");
             Enqueue(new S.ClientVersion { Result = 1 });
 
             Stage = GameStage.Login;
@@ -730,21 +735,21 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Login) return;
 
-            SMain.Enqueue(SessionID + ", " + IPAddress + ", New account being created.");
+            MessageQueue.Enqueue(SessionID + ", " + IPAddress + ", New account being created.");
             Envir.NewAccount(p, this);
         }
         private void ChangePassword(C.ChangePassword p)
         {
             if (Stage != GameStage.Login) return;
 
-            SMain.Enqueue(SessionID + ", " + IPAddress + ", Password being changed.");
+            MessageQueue.Enqueue(SessionID + ", " + IPAddress + ", Password being changed.");
             Envir.ChangePassword(p, this);
         }
         private void Login(C.Login p)
         {
             if (Stage != GameStage.Login) return;
 
-            SMain.Enqueue(SessionID + ", " + IPAddress + ", User logging in.");
+            MessageQueue.Enqueue(SessionID + ", " + IPAddress + ", User logging in.");
             Envir.Login(p, this);
         }
         private void NewCharacter(C.NewCharacter p)

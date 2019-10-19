@@ -11,12 +11,12 @@ namespace Server.MirDatabase
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
 
         protected static Envir EditEnvir
         {
-            get { return SMain.EditEnvir; }
+            get { return Envir.Edit; }
         }
 
         public int Index;

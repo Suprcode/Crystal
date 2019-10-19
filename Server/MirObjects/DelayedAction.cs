@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Server.MirEnvir;
 
 namespace Server.MirObjects
 {
@@ -27,7 +28,7 @@ namespace Server.MirObjects
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
 
         public DelayedType Type;
