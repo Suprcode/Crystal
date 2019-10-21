@@ -6,6 +6,11 @@ using System.Text;
 namespace Server
 {
     abstract class HttpService {
+        protected static MessageQueue MessageQueue
+        {
+            get { return MessageQueue.Instance; }
+        }
+
         protected string host;
         HttpListener listener;
         bool is_active = true;
@@ -28,11 +33,11 @@ namespace Server
                     listener.Prefixes.Add(s);
                 }
                 listener.Start();
-                SMain.Enqueue("HttpService started.");
+                MessageQueue.Enqueue("HttpService started.");
             }
             catch (Exception err)
             {
-                SMain.Enqueue("HttpService start failed! Error:" + err);
+                MessageQueue.Enqueue("HttpService start failed! Error:" + err);
                 return;
             }
          

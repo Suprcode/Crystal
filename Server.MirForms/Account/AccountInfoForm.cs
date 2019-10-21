@@ -54,6 +54,33 @@ namespace Server
             expiryDateHeader.Width = -2;
         }
 
+        private void Update(ListViewItem ListItem, AccountInfo account)
+        {
+            ListItem.SubItems[0].Text = account.Index.ToString();
+            ListItem.SubItems[1].Text = account.AccountID;
+            ListItem.SubItems[2].Text = account.Password;
+            ListItem.SubItems[3].Text = account.UserName;
+            ListItem.SubItems[4].Text = account.AdminAccount.ToString();
+            ListItem.SubItems[5].Text = account.Banned.ToString();
+            ListItem.SubItems[6].Text = account.BanReason;
+            ListItem.SubItems[7].Text = account.ExpiryDate.ToString();
+        }
+
+        private ListViewItem CreateListView(AccountInfo account)
+        {
+            ListViewItem ListItem = new ListViewItem(account.Index.ToString()) {Tag = account};
+
+            ListItem.SubItems.Add(account.AccountID);
+            ListItem.SubItems.Add(account.Password);
+            ListItem.SubItems.Add(account.UserName);
+            ListItem.SubItems.Add(account.AdminAccount.ToString());
+            ListItem.SubItems.Add(account.Banned.ToString());
+            ListItem.SubItems.Add(account.BanReason);
+            ListItem.SubItems.Add(account.ExpiryDate.ToString());
+
+            return ListItem;
+        }
+
         public void RefreshInterface()
         {
             if (InvokeRequired)
@@ -78,7 +105,7 @@ namespace Server
                 {
                     AccountInfo account = accounts[i];
 
-                    ListViewItem tempItem = account.CreateListView();
+                    ListViewItem tempItem = CreateListView(account);
 
                     AccountInfoListView.Items.Add(tempItem);
                 }
@@ -191,7 +218,7 @@ namespace Server
 
                 ActiveControl.BackColor = SystemColors.Window;
                 _selectedAccountInfos[0].AccountID = ActiveControl.Text;
-                _selectedAccountInfos[0].Update();
+                Update(AccountInfoListView.SelectedItems[0], _selectedAccountInfos[0]);
 
                 AutoResize();
                 AccountInfoListView.EndUpdate();
@@ -206,7 +233,7 @@ namespace Server
             for (int i = 0; i < _selectedAccountInfos.Count; i++)
             {
                 _selectedAccountInfos[i].Password = ActiveControl.Text;
-                _selectedAccountInfos[i].Update();
+                Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
             }
 
             AutoResize();
@@ -221,7 +248,7 @@ namespace Server
             for (int i = 0; i < _selectedAccountInfos.Count; i++)
             {
                 _selectedAccountInfos[i].UserName = ActiveControl.Text;
-                _selectedAccountInfos[i].Update();
+                Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
             }
 
             AutoResize();
@@ -281,7 +308,7 @@ namespace Server
             {
                 _selectedAccountInfos[i].Banned = true;
                 _selectedAccountInfos[i].ExpiryDate = expiry;
-                _selectedAccountInfos[i].Update();
+                Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
             }
 
             RefreshInterface();
@@ -300,7 +327,7 @@ namespace Server
             {
                 _selectedAccountInfos[i].Banned = true;
                 _selectedAccountInfos[i].ExpiryDate = expiry;
-                _selectedAccountInfos[i].Update();
+                Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
             }
 
             RefreshInterface();
@@ -318,7 +345,7 @@ namespace Server
             {
                 _selectedAccountInfos[i].Banned = true;
                 _selectedAccountInfos[i].ExpiryDate = DateTime.MaxValue;
-                _selectedAccountInfos[i].Update();
+                Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
             }
 
             RefreshInterface();
@@ -334,7 +361,7 @@ namespace Server
             for (int i = 0; i < _selectedAccountInfos.Count; i++)
             {
                 _selectedAccountInfos[i].Banned = false;
-                _selectedAccountInfos[i].Update();
+                Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
             }
             AutoResize();
             AccountInfoListView.EndUpdate();
@@ -348,7 +375,7 @@ namespace Server
             for (int i = 0; i < _selectedAccountInfos.Count; i++)
             {
                 _selectedAccountInfos[i].BanReason = ActiveControl.Text;
-                _selectedAccountInfos[i].Update();
+                Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
             }
 
             AutoResize();
@@ -372,7 +399,7 @@ namespace Server
             for (int i = 0; i < _selectedAccountInfos.Count; i++)
             {
                 _selectedAccountInfos[i].ExpiryDate = temp;
-                _selectedAccountInfos[i].Update();
+                Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
             }
 
             AutoResize();
@@ -399,7 +426,7 @@ namespace Server
             for (int i = 0; i < _selectedAccountInfos.Count; i++)
             {
                 _selectedAccountInfos[i].AdminAccount = AdminCheckBox.CheckState == CheckState.Checked ? true : false;
-                _selectedAccountInfos[i].Update();
+                Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
             }
             AutoResize();
             AccountInfoListView.EndUpdate();

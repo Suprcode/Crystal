@@ -12,12 +12,17 @@ namespace Server.MirObjects
 {
     public abstract class MapObject
     {
-        protected static Envir Envir
+        protected static MessageQueue MessageQueue
         {
-            get { return SMain.Envir; }
+            get { return MessageQueue.Instance; }
         }
 
-        public readonly uint ObjectID = SMain.Envir.ObjectID;
+        protected static Envir Envir
+        {
+            get { return Envir.Main; }
+        }
+
+        public readonly uint ObjectID = Envir.ObjectID;
 
         public abstract ObjectType Race { get; }
 

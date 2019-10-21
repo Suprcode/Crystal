@@ -14,7 +14,7 @@ namespace Server.MirObjects
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
 
         public ConquestInfo Info;
@@ -846,7 +846,7 @@ namespace Server.MirObjects
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
 
         public int Index;
@@ -1017,7 +1017,7 @@ namespace Server.MirObjects
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
 
         public int Index;
@@ -1114,7 +1114,7 @@ namespace Server.MirObjects
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
 
         public int Index;
@@ -1213,7 +1213,7 @@ namespace Server.MirObjects
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
 
         public int Index;

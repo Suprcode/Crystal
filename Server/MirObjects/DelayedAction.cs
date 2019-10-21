@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Server.MirEnvir;
 
 namespace Server.MirObjects
 {
@@ -25,6 +26,11 @@ namespace Server.MirObjects
 
     public class DelayedAction
     {
+        protected static Envir Envir
+        {
+            get { return Envir.Main; }
+        }
+
         public DelayedType Type;
         public long Time;
         public long StartTime;
@@ -34,7 +40,7 @@ namespace Server.MirObjects
 
         public DelayedAction(DelayedType type, long time, params object[] p)
         {
-            StartTime = SMain.Envir.Time;
+            StartTime = Envir.Time;
             Type = type;
             Time = time;
             Params = p;

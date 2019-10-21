@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 
-namespace Server
+namespace Server.MirForms
 {
     static class Program
     {
