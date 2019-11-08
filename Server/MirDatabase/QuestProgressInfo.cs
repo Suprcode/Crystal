@@ -10,6 +10,11 @@ namespace Server.MirDatabase
 {
     public class QuestProgressInfo
     {
+        protected static Envir Envir
+        {
+            get { return Envir.Main; }
+        }
+
         public int Index;
 
         public QuestInfo Info;
@@ -42,7 +47,7 @@ namespace Server.MirDatabase
         {
             Index = index;
 
-            Info = SMain.Envir.QuestInfoList.FirstOrDefault(e => e.Index == index);
+            Info = Envir.QuestInfoList.FirstOrDefault(e => e.Index == index);
 
             foreach (var kill in Info.KillTasks)
                 KillTaskCount.Add(0);
@@ -59,7 +64,7 @@ namespace Server.MirDatabase
         public QuestProgressInfo(BinaryReader reader)
         {
             Index = reader.ReadInt32();
-            Info = SMain.Envir.QuestInfoList.FirstOrDefault(e => e.Index == Index);
+            Info = Envir.QuestInfoList.FirstOrDefault(e => e.Index == Index);
 
             StartDateTime = DateTime.FromBinary(reader.ReadInt64());
             EndDateTime = DateTime.FromBinary(reader.ReadInt64());

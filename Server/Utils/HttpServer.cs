@@ -9,7 +9,6 @@ namespace Server
 {
     class HttpServer : HttpService
     {
-
         Thread thread;
 
         public HttpServer()

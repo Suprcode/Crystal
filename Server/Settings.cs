@@ -6,8 +6,13 @@ using Server.MirDatabase;
 
 namespace Server
 {
-    internal static class Settings
+    public static class Settings
     {
+        private static MessageQueue MessageQueue
+        {
+            get { return MessageQueue.Instance; }
+        }
+
         public const int Day = 24 * Hour, Hour = 60 * Minute, Minute = 60 * Second, Second = 1000;
 
         public const string EnvirPath = @".\Envir\",
@@ -275,7 +280,7 @@ namespace Server
             }
             catch (Exception ex)
             {
-                SMain.Enqueue(ex);
+                MessageQueue.Enqueue(ex);
             }
         }
 

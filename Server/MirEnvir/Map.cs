@@ -13,9 +13,14 @@ namespace Server.MirEnvir
     {
         private static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
-        
+
+        protected static MessageQueue MessageQueue
+        {
+            get { return MessageQueue.Instance; }
+        }
+
         public MapInfo Info;
 
         public int Thread = 0;
@@ -472,7 +477,7 @@ namespace Server.MirEnvir
                         Respawns.Add(info);
 
                         if ((info.Info.SaveRespawnTime) && (info.Info.RespawnTicks != 0))
-                            SMain.Envir.SavedSpawns.Add(info);
+                            Envir.SavedSpawns.Add(info);
                     }
 
 
@@ -492,10 +497,10 @@ namespace Server.MirEnvir
             }
             catch (Exception ex)
             {
-                SMain.Enqueue(ex);
+                MessageQueue.Enqueue(ex);
             }
 
-            SMain.Enqueue("Failed to Load Map: " + Info.FileName);
+            MessageQueue.Enqueue("Failed to Load Map: " + Info.FileName);
             return false;
         }
 
@@ -2307,6 +2312,11 @@ namespace Server.MirEnvir
     }
     public class MapRespawn
     {
+        protected static Envir Envir
+        {
+            get { return Envir.Main; }
+        }
+
         public RespawnInfo Info;
         public MonsterInfo Monster;
         public Map Map;
@@ -2320,7 +2330,7 @@ namespace Server.MirEnvir
         public MapRespawn(RespawnInfo info)
         {
             Info = info;
-            Monster = SMain.Envir.GetMonsterInfo(info.MonsterIndex);
+            Monster = Envir.GetMonsterInfo(info.MonsterIndex);
 
             LoadRoutes();
         }

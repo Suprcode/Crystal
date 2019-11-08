@@ -60,6 +60,11 @@ namespace Server.MirEnvir
 
     public class RespawnTimer
     {
+        protected static Envir Envir
+        {
+            get { return Envir.Main; }
+        }
+
         public byte BaseSpawnRate = 20;//amount of minutes between respawnticks (with no bonus)
         public ulong CurrentTickcounter = 0; //counter used to respawn everything
         public long LastTick = 0; //what 'time' was the last tick?
@@ -71,14 +76,14 @@ namespace Server.MirEnvir
         {
             RespawnTickOption Option = new RespawnTickOption { UserCount = 0, DelayLoss = 1.0 };
             Respawn.Add(Option);
-            //LastTick = SMain.Envir.Time;
+            //LastTick = Envir.Time;
         }
 
         public RespawnTimer(BinaryReader reader)
         {
             BaseSpawnRate = reader.ReadByte();
             CurrentTickcounter = reader.ReadUInt64();
-            LastTick = SMain.Envir.Time;
+            LastTick = Envir.Time;
             Respawn.Clear();
             int Optioncount = reader.ReadInt32();
             for (int i = 0; i < Optioncount; i++)
@@ -103,21 +108,21 @@ namespace Server.MirEnvir
             //by always rechecking tickspeed we reduce the chance of having respawns get silly on situations where usercount goes up or down fast (like say after a server reboot)
             GetTickSpeed();
 
-            if (SMain.Envir.Time >= (LastTick + CurrentDelay))
+            if (Envir.Time >= (LastTick + CurrentDelay))
             {
                 CurrentTickcounter++;
                 if (CurrentTickcounter == long.MaxValue) //by using long instead of ulong here you basicaly have a huge safe zone on the respawn ticks of mobs
                 {
                     CurrentTickcounter = 0;
                 }
-                LastTick = SMain.Envir.Time;
+                LastTick = Envir.Time;
             }
         }
 
         public void GetTickSpeed()
         {
-            if (LastUsercount == SMain.Envir.PlayerCount) return;
-            LastUsercount = SMain.Envir.PlayerCount;
+            if (LastUsercount == Envir.PlayerCount) return;
+            LastUsercount = Envir.PlayerCount;
             double bonus = 1.0;
             foreach (RespawnTickOption Option in Respawn)
             {

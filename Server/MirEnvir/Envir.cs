@@ -7,7 +7,6 @@ using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.IO;
-using System.Windows.Forms;
 using Server.MirDatabase;
 using Server.MirNetwork;
 using Server.MirObjects;
@@ -52,10 +51,27 @@ namespace Server.MirEnvir
 
     public class Envir
     {
+        private static readonly Envir _Main = new Envir(), _Edit = new Envir();
+
+        public static Envir Main
+        {
+            get { return _Main; }
+        }
+
+        public static Envir Edit
+        {
+            get { return _Edit; }
+        }
+
+        protected static MessageQueue MessageQueue
+        {
+            get { return MessageQueue.Instance; }
+        }
+
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 78;
+        public const int Version = 79;
         public const int CustomVersion = 0;
         public const string DatabasePath = @".\Server.MirDB";
         public const string AccountPath = @".\Server.MirADB";
@@ -504,7 +520,7 @@ namespace Server.MirEnvir
                 string canstartserver = CanStartEnvir();
                 if (canstartserver != "true")
                 {
-                    SMain.Enqueue(canstartserver);
+                    MessageQueue.Enqueue(canstartserver);
                     StopEnvir();
                     _thread = null;
                     Stop();
@@ -655,7 +671,7 @@ namespace Server.MirEnvir
                         if (Time >= SpawnTime)
                         {
                             SpawnTime = Time + (Settings.Second * 10);//technicaly this limits the respawn tick code to a minimum of 10 second each but lets assume it's not meant to be this accurate
-                            SMain.Envir.RespawnTick.Process();
+                            Main.RespawnTick.Process();
                         }
 
                         //   if (Players.Count == 0) Thread.Sleep(1);
@@ -667,7 +683,7 @@ namespace Server.MirEnvir
                 }
                 catch (Exception ex)
                 {
-                    SMain.Enqueue(ex);
+                    MessageQueue.Enqueue(ex);
 
                     lock (Connections)
                     {
@@ -702,7 +718,7 @@ namespace Server.MirEnvir
                 // Get the line number from the stack frame
                 var line = frame.GetFileLineNumber();
 
-                SMain.Enqueue("[outer workloop error]" + ex);
+                MessageQueue.Enqueue("[outer workloop error]" + ex);
                 File.AppendAllText(Settings.ErrorPath + "Error.txt",
                                        string.Format("[{0}] {1} at line {2}{3}", Now, ex, line, Environment.NewLine));
             }
@@ -778,7 +794,7 @@ namespace Server.MirEnvir
             catch (Exception ex)
             {
                 if (ex is ThreadInterruptedException) return;
-                SMain.Enqueue(ex);
+                MessageQueue.Enqueue(ex);
 
                 File.AppendAllText(Settings.ErrorPath + "Error.txt",
                                        string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
@@ -948,7 +964,7 @@ namespace Server.MirEnvir
             }
             catch (Exception ex)
             {
-                SMain.Enqueue(ex);
+                MessageQueue.Enqueue(ex);
             }
         }
 
@@ -1028,7 +1044,7 @@ namespace Server.MirEnvir
                         File.Delete(oldfilename + "o");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
@@ -1093,7 +1109,7 @@ namespace Server.MirEnvir
                         File.Delete(oldfilename + "o");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
@@ -1133,7 +1149,7 @@ namespace Server.MirEnvir
                         File.Delete(oldfilename + "o");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 
             }
@@ -1182,7 +1198,7 @@ namespace Server.MirEnvir
                         File.Delete(oldfilename + "o");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
 
@@ -1281,7 +1297,7 @@ namespace Server.MirEnvir
                         for (int i = 0; i < count; i++)
                         {
                             GameShopItem item = new GameShopItem(reader, LoadVersion, LoadCustomVersion);
-                            if (SMain.Envir.BindGameShop(item))
+                            if (Main.BindGameShop(item))
                             {
                                 GameShopList.Add(item);
                             }
@@ -1492,7 +1508,7 @@ namespace Server.MirEnvir
                     DropInfo drop = DropInfo.FromLine(lines[j]);
                     if (drop == null)
                     {
-                        SMain.Enqueue(string.Format("Could not load fishing drop: {0}", lines[j]));
+                        MessageQueue.Enqueue(string.Format("Could not load fishing drop: {0}", lines[j]));
                         continue;
                     }
 
@@ -1535,7 +1551,7 @@ namespace Server.MirEnvir
                 DropInfo drop = DropInfo.FromLine(lines[i]);
                 if (drop == null)
                 {
-                    SMain.Enqueue(string.Format("Could not load Awakening drop: {0}", lines[i]));
+                    MessageQueue.Enqueue(string.Format("Could not load Awakening drop: {0}", lines[i]));
                     continue;
                 }
 
@@ -1574,7 +1590,7 @@ namespace Server.MirEnvir
                 DropInfo drop = DropInfo.FromLine(lines[i]);
                 if (drop == null)
                 {
-                    SMain.Enqueue(string.Format("Could not load strongbox drop: {0}", lines[i]));
+                    MessageQueue.Enqueue(string.Format("Could not load strongbox drop: {0}", lines[i]));
                     continue;
                 }
 
@@ -1614,7 +1630,7 @@ namespace Server.MirEnvir
                 DropInfo drop = DropInfo.FromLine(lines[i]);
                 if (drop == null)
                 {
-                    SMain.Enqueue(string.Format("Could not load blackstone drop: {0}", lines[i]));
+                    MessageQueue.Enqueue(string.Format("Could not load blackstone drop: {0}", lines[i]));
                     continue;
                 }
 
@@ -1646,7 +1662,6 @@ namespace Server.MirEnvir
                 ConquestGateObject tempGate;
                 ConquestWallObject tempWall;
                 ConquestSiegeObject tempSiege;
-                ConquestFlagObject tempFlag;
 
                 for (int i = 0; i < ConquestInfos.Count; i++)
                 {
@@ -1857,7 +1872,7 @@ namespace Server.MirEnvir
         {
             (new Thread(() =>
             {
-                SMain.Enqueue("Server rebooting...");
+                MessageQueue.Enqueue("Server rebooting...");
                 Stop();
                 Start();
             })).Start();
@@ -1881,11 +1896,11 @@ namespace Server.MirEnvir
                 .ToArray())
                 RecipeInfoList.Add(new RecipeInfo(recipe));
 
-            SMain.Enqueue(string.Format("{0} Recipes loaded.", RecipeInfoList.Count));
+            MessageQueue.Enqueue(string.Format("{0} Recipes loaded.", RecipeInfoList.Count));
 
             for (int i = 0; i < MapInfoList.Count; i++)
                 MapInfoList[i].CreateMap();
-            SMain.Enqueue(string.Format("{0} Maps Loaded.", MapInfoList.Count));
+            MessageQueue.Enqueue(string.Format("{0} Maps Loaded.", MapInfoList.Count));
 
             for (int i = 0; i < ItemInfoList.Count; i++)
             {
@@ -1900,7 +1915,7 @@ namespace Server.MirEnvir
             LoadAwakeningMaterials();
             LoadStrongBoxDrops();
             LoadBlackStoneDrops();
-            SMain.Enqueue("Drops Loaded.");
+            MessageQueue.Enqueue("Drops Loaded.");
 
             if (DragonInfo.Enabled)
             {
@@ -1910,14 +1925,14 @@ namespace Server.MirEnvir
                     if (DragonSystem.Load()) DragonSystem.Info.LoadDrops();
                 }
 
-                SMain.Enqueue("Dragon Loaded.");
+                MessageQueue.Enqueue("Dragon Loaded.");
             }
 
             DefaultNPC = new NPCObject(new NPCInfo() { Name = "DefaultNPC", FileName = Settings.DefaultNPCFilename, IsDefault = true });
             MonsterNPC = new NPCObject(new NPCInfo() { Name = "MonsterNPC", FileName = Settings.MonsterNPCFilename, IsDefault = true });
             RobotNPC = new NPCObject(new NPCInfo() { Name = "RobotNPC", FileName = Settings.RobotNPCFilename, IsDefault = true, IsRobot = true });
 
-            SMain.Enqueue("Envir Started.");
+            MessageQueue.Enqueue("Envir Started.");
         }
         private void StartNetwork()
         {
@@ -1939,7 +1954,7 @@ namespace Server.MirEnvir
                 _StatusPort.Start();
                 _StatusPort.BeginAcceptTcpClient(StatusConnection, null);
             }
-            SMain.Enqueue("Network Started.");
+            MessageQueue.Enqueue("Network Started.");
 
             //FixGuilds();
         }
@@ -1958,7 +1973,7 @@ namespace Server.MirEnvir
 
             GC.Collect();
 
-            SMain.Enqueue("Envir Stopped.");
+            MessageQueue.Enqueue("Envir Stopped.");
         }
         private void StopNetwork()
         {
@@ -2004,7 +2019,7 @@ namespace Server.MirEnvir
 
 
             StatusConnections.Clear();
-            SMain.Enqueue("Network Stopped.");
+            MessageQueue.Enqueue("Network Stopped.");
         }
 
         private void CleanUp()
@@ -2069,7 +2084,14 @@ namespace Server.MirEnvir
 
         private void Connection(IAsyncResult result)
         {
-            if (!Running || !_listener.Server.IsBound) return;
+            try
+            {
+                if (!Running || !_listener.Server.IsBound) return;
+            }
+            catch (Exception e)
+            {
+                MessageQueue.Enqueue(e.ToString());
+            }
 
             try
             {
@@ -2079,7 +2101,7 @@ namespace Server.MirEnvir
             }
             catch (Exception ex)
             {
-                SMain.Enqueue(ex);
+                MessageQueue.Enqueue(ex);
             }
             finally
             {
@@ -2103,7 +2125,7 @@ namespace Server.MirEnvir
             }
             catch (Exception ex)
             {
-                SMain.Enqueue(ex);
+                MessageQueue.Enqueue(ex);
             }
             finally
             {
@@ -2357,7 +2379,7 @@ namespace Server.MirEnvir
             account.LastDate = Now;
             account.LastIP = c.IPAddress;
 
-            SMain.Enqueue(account.Connection.SessionID + ", " + account.Connection.IPAddress + ", User logged in.");
+            MessageQueue.Enqueue(account.Connection.SessionID + ", " + account.Connection.IPAddress + ", User logged in.");
             c.Enqueue(new ServerPackets.LoginSuccess { Characters = account.GetSelectInfo() });
         }
 
@@ -2774,11 +2796,11 @@ namespace Server.MirEnvir
             return false;
         }
 
-        public bool BindGameShop(GameShopItem item, bool EditEnvir = true)
+        public bool BindGameShop(GameShopItem item, bool editEnvir = true)
         {
-            for (int i = 0; i < SMain.EditEnvir.ItemInfoList.Count; i++)
+            for (int i = 0; i < Edit.ItemInfoList.Count; i++)
             {
-                ItemInfo info = SMain.EditEnvir.ItemInfoList[i];
+                ItemInfo info = Edit.ItemInfoList[i];
                 if (info.Index != item.ItemIndex) continue;
                 item.Info = info;
 
@@ -3134,7 +3156,7 @@ namespace Server.MirEnvir
 
         public void ClearGameshopLog()
         {
-            SMain.Envir.GameshopLog.Clear();
+            Main.GameshopLog.Clear();
 
             for (int i = 0; i < AccountList.Count; i++)
             {
@@ -3145,7 +3167,7 @@ namespace Server.MirEnvir
             }
 
             ResetGS = false;
-            SMain.Enqueue("Gameshop Purchase Logs Cleared.");
+            MessageQueue.Enqueue("Gameshop Purchase Logs Cleared.");
 
         }
 
@@ -3347,15 +3369,15 @@ namespace Server.MirEnvir
             {
                 item.LoadInfo(true);
             }
-            SMain.Envir.DefaultNPC.LoadInfo(true);
-            SMain.Enqueue("NPCs reloaded...");
+            Main.DefaultNPC.LoadInfo(true);
+            MessageQueue.Enqueue("NPCs reloaded...");
         }
 
         public void ReloadDrops()
         {
             foreach (var item in MonsterInfoList)
                 item.LoadDrops();
-            SMain.Enqueue("Drops reloaded...");
+            MessageQueue.Enqueue("Drops reloaded...");
         }
    
     }
