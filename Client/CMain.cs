@@ -140,6 +140,14 @@ namespace Client
             {
                 SaveError(ex.ToString());
             }
+            if (e.KeyCode == Keys.F10)
+            {
+                e.Handled = true;
+                if (GameScene.Scene != null)
+                {
+                    GameScene.Scene.F10();
+                }
+            }
         }
         public static void CMain_MouseMove(object sender, MouseEventArgs e)
         {

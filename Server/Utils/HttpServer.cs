@@ -48,7 +48,7 @@ namespace Server
                     case "/":
                         WriteResponse(response, GameLanguage.GameName);
                         break;
-                    case "/regist":
+                    case "/newaccount":
                         string id = request.QueryString["id"].ToString();
                         string psd = request.QueryString["psd"].ToString();
                         string email = request.QueryString["email"].ToString();
@@ -65,43 +65,13 @@ namespace Server
                         p.SecretAnswer = answer;
                         int result = SMain.Envir.HTTPNewAccount(p, ip);
                         WriteResponse(response, result.ToString());
-                        break;
-                    //case "/login":
-                    //    id = request.QueryString["id"].ToString();
-                    //    psd = request.QueryString["psd"].ToString();
-                    //    result = SMain.Envir.HTTPLogin(id, psd);
-                    //    WriteResponse(response, result.ToString());                        
-                    //    break;
-                    //case "/changepsd":
-                    //    id = request.QueryString["id"].ToString();
-                    //    psd = request.QueryString["psd"].ToString();
-                    //    string psd2 = request.QueryString["psd2"].ToString();
-                    //    var change = new ClientPackets.ChangePassword();
-                    //    change.AccountID = id;
-                    //    change.CurrentPassword = psd;
-                    //    change.NewPassword = psd2;
-                    //    result = SMain.Envir.HTTPChangePassword(change);
-                    //    WriteResponse(response, result.ToString());
-                    //    SMain.Enqueue("新用户注册：(6)" + result.ToString());
-                    //    break;
-                    case "/ban":
-                        id = request.QueryString["id"].ToString();
-                        string reason = request.QueryString["reason"].ToString();
-                        ban(id, reason);
-                        WriteResponse(response, "true");
-                        break;
+                        break;                               
                     case "/addnamelist":
                         id = request.QueryString["id"].ToString();
                         string fileName = request.QueryString["fileName"].ToString();
                         addNameList(id, fileName);
                         WriteResponse(response, "true");
-                        break;
-                    case "/givecredit":
-                        id = request.QueryString["id"].ToString();
-                        string amount = request.QueryString["amount"];
-                        var isOK = giveCredit(id, amount);
-                        WriteResponse(response, isOK.ToString());
-                        break;
+                        break;              
                     case "/broadcast":
                         string msg = request.QueryString["msg"];
                         if (msg.Length < 5)
@@ -125,21 +95,7 @@ namespace Server
             {
                 WriteResponse(response, "request error: " + error);
             }
-        }
-        void ban(string accountID, string reason)
-        {
-            for (int i = 0; i < SMain.Envir.AccountList.Count; i++)
-            {
-                if (String.Compare(SMain.Envir.AccountList[i].AccountID, accountID, StringComparison.OrdinalIgnoreCase) == 0)
-                {
-                    var banAccount = SMain.Envir.AccountList[i];
-                    banAccount.Banned = true;
-                    banAccount.BanReason = reason;
-                    banAccount.ExpiryDate = DateTime.MaxValue;
-                    banAccount.Update();
-                }
-            }
-        }
+        }      
 
         void addNameList(string playerName, string fileName)
         {
@@ -157,32 +113,12 @@ namespace Server
                     line.WriteLine(playerName);
                 }
             }
-        }
-        bool giveCredit(string id, string amount)
-        {
-            uint credit;
-            var player = SMain.Envir.GetPlayer(id);
-            if (player == null)
-            {
-                return false;
-            }
-            if (!uint.TryParse(amount, out credit)) return false;
-            if (credit + player.Account.Credit >= uint.MaxValue)
-                credit = uint.MaxValue - player.Account.Credit;
-            player.GainCredit(credit);
-            return true;
-        }
+        }    
 
         public override void OnPostRequest(HttpListenerRequest request, HttpListenerResponse response)
         {
             Console.WriteLine("POST request: {0}", request.Url);
         }
-    }
-
-    public class JsonResult
-    {
-        public bool success;
-        public string content;
     }
 
 }
