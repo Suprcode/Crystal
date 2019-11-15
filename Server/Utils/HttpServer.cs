@@ -3,30 +3,29 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
-using Server.MirEnvir;
+using S = ServerPackets;
 
 namespace Server
 {
-    class HttpServer : HttpService {
-        protected static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
-
+    class HttpServer : HttpService
+    {
         Thread thread;
 
-        public HttpServer() {
-            host = Settings.HTTPIPAddress;          
+        public HttpServer()
+        {
+            host = Settings.HTTPIPAddress;
         }
 
-        public void Start() {
+        public void Start()
+        {
             thread = new Thread(new ThreadStart(Listen));
             thread.Start();
         }
 
-        public new void Stop() {
+        public new void Stop()
+        {
             base.Stop();
-            if (thread!=null)
+            if (thread != null)
             {
                 thread.Abort();
             }
@@ -34,11 +33,11 @@ namespace Server
 
 
         public override void OnGetRequest(HttpListenerRequest request, HttpListenerResponse response)
-		{
+        {
             string url = request.Url.PathAndQuery;
             if (url.Contains("?"))
             {
-                url = url.Substring(0,url.IndexOf("?"));
+                url = url.Substring(0, url.IndexOf("?"));
                 url = url.ToLower();
             }
             try
@@ -48,7 +47,7 @@ namespace Server
                     case "/":
                         WriteResponse(response, GameLanguage.GameName);
                         break;
-                    case "/regist":
+                    case "/newaccount":
                         string id = request.QueryString["id"].ToString();
                         string psd = request.QueryString["psd"].ToString();
                         string email = request.QueryString["email"].ToString();
@@ -63,19 +62,27 @@ namespace Server
                         p.UserName = name;
                         p.SecretQuestion = question;
                         p.SecretAnswer = answer;
-                        int result = Envir.HTTPNewAccount(p,ip);
+                        int result = SMain.Envir.HTTPNewAccount(p, ip);
                         WriteResponse(response, result.ToString());
-                        break;
-                    case "/login":
-                        id = request.QueryString["id"].ToString();
-                        psd = request.QueryString["psd"].ToString();
-                        result = Envir.HTTPLogin(id, psd);
-                        WriteResponse(response, result.ToString());                        
-                        break;
+                        break;                               
                     case "/addnamelist":
                         id = request.QueryString["id"].ToString();
-                        string fileName = request.QueryString["fileName"].ToString();                   
+                        string fileName = request.QueryString["fileName"].ToString();
                         addNameList(id, fileName);
+                        WriteResponse(response, "true");
+                        break;              
+                    case "/broadcast":
+                        string msg = request.QueryString["msg"];
+                        if (msg.Length < 5)
+                        {
+                            WriteResponse(response, "short");
+                            return;
+                        }
+                        SMain.Envir.Broadcast(new S.Chat
+                        {
+                            Message = msg.Trim(),
+                            Type = ChatType.Shout2
+                        });
                         WriteResponse(response, "true");
                         break;
                     default:
@@ -87,12 +94,16 @@ namespace Server
             {
                 WriteResponse(response, "request error: " + error);
             }
-        }
+        }      
 
-        void addNameList(string playerName,string fileName) {
+        void addNameList(string playerName, string fileName)
+        {
             fileName = Settings.NameListPath + fileName;
             string sDirectory = Path.GetDirectoryName(fileName);
             Directory.CreateDirectory(sDirectory);
+            if (!File.Exists(fileName))
+                File.Create(fileName).Close();
+
             string tempString = fileName;
             if (File.ReadAllLines(tempString).All(t => playerName != t))
             {
@@ -101,10 +112,10 @@ namespace Server
                     line.WriteLine(playerName);
                 }
             }
-        }
+        }    
 
-
-        public override void OnPostRequest(HttpListenerRequest request, HttpListenerResponse response) {
+        public override void OnPostRequest(HttpListenerRequest request, HttpListenerResponse response)
+        {
             Console.WriteLine("POST request: {0}", request.Url);
         }
     }

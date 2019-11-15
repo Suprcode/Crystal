@@ -1,25 +1,24 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
 using System.Text;
 
 namespace Server
 {
-    abstract class HttpService {
-        protected static MessageQueue MessageQueue
-        {
-            get { return MessageQueue.Instance; }
-        }
-
+    abstract class HttpService
+    {
         protected string host;
         HttpListener listener;
         bool is_active = true;
 
-        public HttpService() {
+        public HttpService()
+        {
         }
 
-        public void Listen() {
-            if (!HttpListener.IsSupported) {
+        public void Listen()
+        {
+            if (!HttpListener.IsSupported)
+            {
                 throw new System.InvalidOperationException(
                     "To use HttpListener the operating system must be Windows XP SP2 or Server 2003 or higher.");
             }
@@ -33,16 +32,17 @@ namespace Server
                     listener.Prefixes.Add(s);
                 }
                 listener.Start();
-                MessageQueue.Enqueue("HttpService started.");
+                SMain.Enqueue("HttpService started.");
             }
             catch (Exception err)
             {
-                MessageQueue.Enqueue("HttpService start failed! Error:" + err);
+                SMain.Enqueue("HttpService start failed! Error:" + err);
                 return;
             }
-         
 
-            while (is_active) {
+
+            while (is_active)
+            {
                 try
                 {
                     HttpListenerContext context = listener.GetContext();
@@ -53,9 +53,11 @@ namespace Server
                     Console.WriteLine("Connection: {0}", request.KeepAlive ? "Keep-Alive" : "close");
                     Console.WriteLine("Host: {0}", request.UserHostName);
                     HttpListenerResponse response = context.Response;
-                    if (request.UserHostAddress != Settings.HTTPTrustedIPAddress)
+                    var clientIP = context.Request.RemoteEndPoint.Address.ToString();
+
+                    if (clientIP != Settings.HTTPTrustedIPAddress)
                     {
-                        WriteResponse(response, "");
+                        WriteResponse(response, "notrusted:" + clientIP);
                         continue;
                     }
                     if (request.HttpMethod == "GET")
@@ -67,16 +69,17 @@ namespace Server
                         OnPostRequest(request, response);
                     }
                 }
-                catch{}
+                catch { }
             }
         }
 
-        public void Stop() {
+        public void Stop()
+        {
             is_active = false;
-            if (listener != null)
+            if (listener != null && listener.IsListening)
             {
                 listener.Stop();
-            }           
+            }
         }
 
         public abstract void OnGetRequest(HttpListenerRequest request, HttpListenerResponse response);
