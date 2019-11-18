@@ -14,10 +14,7 @@ namespace Server.MirForms.VisualMapInfo
     {
         ShapeContainer Canvas = new ShapeContainer();
 
-        public Envir Envir
-        {
-            get { return SMain.EditEnvir; }
-        }
+        public Envir Envir => SMain.EditEnvir;
 
         public Point MouseDownLocation;
 
@@ -90,10 +87,8 @@ namespace Server.MirForms.VisualMapInfo
             Canvas.Parent = MapImage;
             Canvas.BringToFront();
 
-            MapDetailsLabel.Text = string.Format("Map Name: {0}   Width: {1}   Height: {2}",
-                VisualizerGlobal.MapInfo.Title,
-                VisualizerGlobal.ClippingMap.Width,
-                VisualizerGlobal.ClippingMap.Height);
+            MapDetailsLabel.Text =
+                $"Map Name: {VisualizerGlobal.MapInfo.Title}   Width: {VisualizerGlobal.ClippingMap.Width}   Height: {VisualizerGlobal.ClippingMap.Height}";
         }
 
         private void InitializeMineInfo()

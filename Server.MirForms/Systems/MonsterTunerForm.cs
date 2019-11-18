@@ -2,23 +2,13 @@
 using Server.MirEnvir;
 using Server.MirObjects;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Server.MirForms.Systems
 {
     public partial class MonsterTunerForm : Form
     {
-        public Envir Envir
-        {
-            get { return SMain.Envir; }
-        }
+        public Envir Envir => SMain.Envir;
 
         public MonsterTunerForm()
         {

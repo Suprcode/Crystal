@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using Server.MirEnvir;
 
@@ -13,10 +8,7 @@ namespace Server
 {
     public partial class BalanceConfigForm : Form
     {
-        public Envir Envir
-        {
-            get { return SMain.EditEnvir; }
-        }
+        public Envir Envir => SMain.EditEnvir;
         public byte SelectedClassID = 0;
 
         public bool BaseStatsChanged = false;

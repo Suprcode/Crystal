@@ -21,10 +21,7 @@ namespace Server.MirForms.VisualMapInfo.Control
         public ushort tempRange;
         public ushort Range
         {
-            get
-            {
-                return (ushort)(tempRange);
-            }
+            get => (ushort)(tempRange);
             set
             {
                 if (value > 0)
@@ -39,7 +36,7 @@ namespace Server.MirForms.VisualMapInfo.Control
                 RegionHighlight.Left = (X - value) * VisualizerGlobal.ZoomLevel;
                 RegionHighlight.Top = (Y - value) * VisualizerGlobal.ZoomLevel;
 
-                Details.Text = string.Format("X: {0} | Y: {1} | Range: {2}", X.ToString(), Y.ToString(), Range.ToString());
+                Details.Text = $"X: {X.ToString()} | Y: {Y.ToString()} | Range: {Range.ToString()}";
             }
         }
 
@@ -205,7 +202,7 @@ namespace Server.MirForms.VisualMapInfo.Control
 
             MineComboBox.SelectedIndex = MineIndex;
 
-            Details.Text = string.Format("X: {0} | Y: {1} | Range: {2}", X.ToString(), Y.ToString(), Range.ToString());
+            Details.Text = $"X: {X.ToString()} | Y: {Y.ToString()} | Range: {Range.ToString()}";
         }
 
         private void Details_DoubleClick(object sender, EventArgs e)

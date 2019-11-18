@@ -14,10 +14,7 @@ namespace Server
     {
         public string QuestListPath = Path.Combine(Settings.ExportPath, "QuestList.txt");
 
-        public Envir Envir
-        {
-            get { return SMain.EditEnvir; }
-        }
+        public Envir Envir => SMain.EditEnvir;
 
         private List<QuestInfo> _selectedQuestInfos;
 
@@ -392,8 +389,7 @@ namespace Server
                 File.Create(scriptPath).Close();
 
                 File.WriteAllText(scriptPath,
-                    string.Format("{0}\r\n\r\n{1}\r\n\r\n{2}\r\n\r\n{3}\r\n\r\n{4}\r\n\r\n{5}\r\n\r\n{6}\r\n\r\n{7}\r\n\r\n{8}\r\n\r\n{9}\r\n\r\n{10}",
-                    "[@Description]", "[@TaskDescription]", "[@Completion]", "[@KillTasks]", "[@ItemTasks]", "[@FlagTasks]", "[@CarryItems]", "[@FixedRewards]", "[@SelectRewards]", "[@ExpReward]", "[@GoldReward]"));
+                    $"{"[@Description]"}\r\n\r\n{"[@TaskDescription]"}\r\n\r\n{"[@Completion]"}\r\n\r\n{"[@KillTasks]"}\r\n\r\n{"[@ItemTasks]"}\r\n\r\n{"[@FlagTasks]"}\r\n\r\n{"[@CarryItems]"}\r\n\r\n{"[@FixedRewards]"}\r\n\r\n{"[@SelectRewards]"}\r\n\r\n{"[@ExpReward]"}\r\n\r\n{"[@GoldReward]"}");
 
                 Process.Start(scriptPath);
             }

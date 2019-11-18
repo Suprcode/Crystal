@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows.Forms;
 using Server.MirDatabase;
 using Server.MirEnvir;
-using Server.MirObjects;
 
 namespace Server
 {
@@ -14,10 +13,7 @@ namespace Server
     {
         public string MonsterListPath = Path.Combine(Settings.ExportPath, "MonsterList.txt");
 
-        public Envir Envir
-        {
-            get { return SMain.EditEnvir; }
-        }
+        public Envir Envir => SMain.EditEnvir;
 
         private List<MonsterInfo> _selectedMonsterInfos;
 
