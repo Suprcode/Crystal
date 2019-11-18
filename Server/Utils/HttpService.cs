@@ -3,15 +3,15 @@ using System.IO;
 using System.Net;
 using System.Text;
 
-namespace Server
+namespace Server.Library.Utils
 {
-    abstract class HttpService
+    internal abstract class HttpService
     {
-        protected string host;
-        HttpListener listener;
-        bool is_active = true;
+        protected string Host;
+        private HttpListener _listener;
+        private bool _isActive = true;
 
-        public HttpService()
+        protected HttpService()
         {
         }
 
@@ -19,47 +19,51 @@ namespace Server
         {
             if (!HttpListener.IsSupported)
             {
-                throw new System.InvalidOperationException(
+                throw new InvalidOperationException(
                     "To use HttpListener the operating system must be Windows XP SP2 or Server 2003 or higher.");
             }
-            string[] prefixes = new string[] { host };
+            string[] prefixes = { Host };
 
-            listener = new HttpListener();
+            _listener = new HttpListener();
             try
             {
-                foreach (string s in prefixes)
+                foreach (var s in prefixes)
                 {
-                    listener.Prefixes.Add(s);
+                    _listener.Prefixes.Add(s);
                 }
-                listener.Start();
-                SMain.Enqueue("HttpService started.");
+                _listener.Start();
+                MessageQueue.Instance.Enqueue("HttpService started.");
             }
             catch (Exception err)
             {
-                SMain.Enqueue("HttpService start failed! Error:" + err);
+                MessageQueue.Instance.Enqueue("HttpService start failed! Error:" + err);
                 return;
             }
 
 
-            while (is_active)
+            while (_isActive)
             {
                 try
                 {
-                    HttpListenerContext context = listener.GetContext();
-                    HttpListenerRequest request = context.Request;
+                    var context = _listener.GetContext();
+                    var request = context.Request;
                     Console.WriteLine("{0} {1} HTTP/1.1", request.HttpMethod, request.RawUrl);
                     Console.WriteLine("User-Agent: {0}", request.UserAgent);
                     Console.WriteLine("Accept-Encoding: {0}", request.Headers["Accept-Encoding"]);
                     Console.WriteLine("Connection: {0}", request.KeepAlive ? "Keep-Alive" : "close");
                     Console.WriteLine("Host: {0}", request.UserHostName);
-                    HttpListenerResponse response = context.Response;
-                    var clientIP = context.Request.RemoteEndPoint.Address.ToString();
-
-                    if (clientIP != Settings.HTTPTrustedIPAddress)
+                    var response = context.Response;
+                    if (context.Request.RemoteEndPoint != null)
                     {
-                        WriteResponse(response, "notrusted:" + clientIP);
-                        continue;
+                        var clientIp = context.Request.RemoteEndPoint.Address.ToString();
+
+                        if (clientIp != Settings.HTTPTrustedIPAddress)
+                        {
+                            WriteResponse(response, "notrusted:" + clientIp);
+                            continue;
+                        }
                     }
+
                     if (request.HttpMethod == "GET")
                     {
                         OnGetRequest(request, response);
@@ -75,10 +79,10 @@ namespace Server
 
         public void Stop()
         {
-            is_active = false;
-            if (listener != null && listener.IsListening)
+            _isActive = false;
+            if (_listener != null && _listener.IsListening)
             {
-                listener.Stop();
+                _listener.Stop();
             }
         }
 
@@ -94,8 +98,8 @@ namespace Server
             }
             finally
             {
-                Stream output = response.OutputStream;
-                StreamWriter writer = new StreamWriter(output);
+                var output = response.OutputStream;
+                var writer = new StreamWriter(output);
                 writer.Write(responseString);
                 writer.Close();
             }

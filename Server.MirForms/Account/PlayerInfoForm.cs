@@ -1,12 +1,7 @@
 ﻿using Server.MirDatabase;
 using Server.MirObjects;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Server
@@ -43,10 +38,11 @@ namespace Server
             NameTextBox.Text = Character.Name;
             LevelTextBox.Text = Character.Level.ToString();
 
-            GoldLabel.Text = String.Format("{0:n0}", Character.AccountInfo.Gold);
+            GoldLabel.Text = $"{Character.AccountInfo.Gold:n0}";
 
             if (Character.Player != null)
-                CurrentMapLabel.Text = string.Format("{0} {1}:{2}", Character.Player.CurrentMap.Info.FileName, Character.CurrentLocation.X, Character.CurrentLocation.Y);
+                CurrentMapLabel.Text =
+                    $"{Character.Player.CurrentMap.Info.FileName} {Character.CurrentLocation.X}:{Character.CurrentLocation.Y}";
             else
                 CurrentMapLabel.Text = "OFFLINE";
 

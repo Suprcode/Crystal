@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using Server.MirEnvir;
 
@@ -14,10 +8,7 @@ namespace Server
 {
     public partial class SystemInfoForm : Form
     {
-        public Envir Envir
-        {
-            get { return SMain.EditEnvir; }
-        }
+        public Envir Envir => SMain.EditEnvir;
 
         public bool FishingChanged = false, MailChanged = false, GoodsChanged = false, RefineChanged = false, MarriageChanged = false, MentorChanged = false, GemChanged = false, SpawnChanged = false;
 
@@ -146,7 +137,7 @@ namespace Server
                 {
                     pnlSpawnTickConfig.Enabled = true;
                     RespawnTickOption Option = (RespawnTickOption)lbSpawnTickList.SelectedItem;
-                    txtSpawnTickSpeed.Text = string.Format("{0:0.0}", Option.DelayLoss);
+                    txtSpawnTickSpeed.Text = $"{Option.DelayLoss:0.0}";
                     txtSpawnTickUsers.Text = Option.UserCount.ToString();
                 }
             }

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Windows.Forms;
 using Server.MirEnvir;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Linq;
 using Server.MirDatabase;
 using Server.MirForms.Systems;
 
@@ -12,20 +8,11 @@ namespace Server
 {
     public partial class SMain : Form
     {
-        public static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
+        public static Envir Envir => Envir.Main;
 
-        public static Envir EditEnvir
-        {
-            get { return Envir.Edit; }
-        }
+        public static Envir EditEnvir => Envir.Edit;
 
-        protected static MessageQueue MessageQueue
-        {
-            get { return MessageQueue.Instance; }
-        }
+        protected static MessageQueue MessageQueue => MessageQueue.Instance;
 
         public SMain()
         {
@@ -75,23 +62,23 @@ namespace Server
         {
             try
             {
-                Text = string.Format("Total: {0}, Real: {1}", Envir.LastCount, Envir.LastRealCount);
-                PlayersLabel.Text = string.Format("Players: {0}", Envir.Players.Count);
-                MonsterLabel.Text = string.Format("Monsters: {0}", Envir.MonsterCount);
-                ConnectionsLabel.Text = string.Format("Connections: {0}", Envir.Connections.Count);
+                Text = $"Total: {Envir.LastCount}, Real: {Envir.LastRealCount}";
+                PlayersLabel.Text = $"Players: {Envir.Players.Count}";
+                MonsterLabel.Text = $"Monsters: {Envir.MonsterCount}";
+                ConnectionsLabel.Text = $"Connections: {Envir.Connections.Count}";
 
                 if (Settings.Multithreaded && (Envir.MobThreads != null))
                 {
-                    CycleDelayLabel.Text = string.Format("CycleDelays: {0:0000}", Envir.LastRunTime);
+                    CycleDelayLabel.Text = $"CycleDelays: {Envir.LastRunTime:0000}";
                     for (int i = 0; i < Envir.MobThreads.Length; i++)
                     {
                         if (Envir.MobThreads[i] == null) break;
-                        CycleDelayLabel.Text = CycleDelayLabel.Text + string.Format("|{0:0000}", Envir.MobThreads[i].LastRunTime);
+                        CycleDelayLabel.Text = CycleDelayLabel.Text + $"|{Envir.MobThreads[i].LastRunTime:0000}";
 
                     }
                 }
                 else
-                    CycleDelayLabel.Text = string.Format("CycleDelay: {0}", Envir.LastRunTime);
+                    CycleDelayLabel.Text = $"CycleDelay: {Envir.LastRunTime}";
 
                 while (!MessageQueue.MessageLog.IsEmpty)
                 {
@@ -148,7 +135,7 @@ namespace Server
 
                 for (int i = PlayersOnlineListView.Items.Count; i < Envir.Players.Count; i++)
                 {
-                    Server.MirDatabase.CharacterInfo character = Envir.Players[i].Info;
+                    CharacterInfo character = Envir.Players[i].Info;
 
                     ListViewItem tempItem = CreateListView(character);
 

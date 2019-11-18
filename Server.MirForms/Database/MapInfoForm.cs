@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -13,10 +12,7 @@ namespace Server
 {
     public partial class MapInfoForm : Form
     {
-        public Envir Envir
-        {
-            get { return SMain.EditEnvir; }
-        }
+        public Envir Envir => SMain.EditEnvir;
 
         private List<MapInfo> _selectedMapInfos;
         private List<SafeZoneInfo> _selectedSafeZoneInfos;
@@ -1397,7 +1393,7 @@ namespace Server
                 using (StreamWriter sw = File.AppendText(sfd.FileNames[0]))
                 {
                     string textOut = string.Empty;
-                    textOut += string.Format("[{0} {1}]", _selectedMapInfos[i].FileName, _selectedMapInfos[i].Title.Replace(' ', '*'));
+                    textOut += $"[{_selectedMapInfos[i].FileName} {_selectedMapInfos[i].Title.Replace(' ', '*')}]";
 
                     textOut += " LIGHT(" + _selectedMapInfos[i].Light + ")";
                     textOut += " MINIMAP(" + _selectedMapInfos[i].MiniMap + ")";
@@ -1422,13 +1418,8 @@ namespace Server
                     {
                         try
                         {
-                            string movement = string.Format("{0} {1} {2} {3} {4} {5}", // 0 1,1 -> 1 2,2
-                               _selectedMapInfos[i].FileName,
-                               _selectedMapInfos[i].Movements[j].Source.X + "," + _selectedMapInfos[i].Movements[j].Source.Y,
-                               "->",
-                               Envir.MapInfoList[_selectedMapInfos[i].Movements[j].MapIndex - 1].FileName,
-                               _selectedMapInfos[i].Movements[j].Destination.X + "," + _selectedMapInfos[i].Movements[j].Destination.Y,
-                               (_selectedMapInfos[i].Movements[j].NeedHole ? "NEEDHOLE " : "") + (_selectedMapInfos[i].Movements[j].NeedMove ? "NEEDMOVE " : "") + (_selectedMapInfos[i].Movements[j].ConquestIndex > 0 ? "NEEDCONQUEST(" + _selectedMapInfos[i].Movements[j].ConquestIndex + ")" : ""));
+                            string movement =
+                                $"{_selectedMapInfos[i].FileName} {_selectedMapInfos[i].Movements[j].Source.X + "," + _selectedMapInfos[i].Movements[j].Source.Y} {"->"} {Envir.MapInfoList[_selectedMapInfos[i].Movements[j].MapIndex - 1].FileName} {_selectedMapInfos[i].Movements[j].Destination.X + "," + _selectedMapInfos[i].Movements[j].Destination.Y} {(_selectedMapInfos[i].Movements[j].NeedHole ? "NEEDHOLE " : "") + (_selectedMapInfos[i].Movements[j].NeedMove ? "NEEDMOVE " : "") + (_selectedMapInfos[i].Movements[j].ConquestIndex > 0 ? "NEEDCONQUEST(" + _selectedMapInfos[i].Movements[j].ConquestIndex + ")" : "")}";
 
                             sw.WriteLine(movement);
                         }
@@ -1441,12 +1432,8 @@ namespace Server
                     {
                         try
                         {
-                            string mineZones = string.Format("MINEZONE {0} -> {1} {2} {3} {4}", // MINEZONE 0 -> 1 100 200 50
-                               _selectedMapInfos[i].FileName,
-                               _selectedMapInfos[i].MineZones[j].Mine.ToString(),
-                               _selectedMapInfos[i].MineZones[j].Location.X.ToString(),
-                               _selectedMapInfos[i].MineZones[j].Location.Y.ToString(),
-                               _selectedMapInfos[i].MineZones[j].Size.ToString());
+                            string mineZones =
+                                $"MINEZONE {_selectedMapInfos[i].FileName} -> {_selectedMapInfos[i].MineZones[j].Mine.ToString()} {_selectedMapInfos[i].MineZones[j].Location.X.ToString()} {_selectedMapInfos[i].MineZones[j].Location.Y.ToString()} {_selectedMapInfos[i].MineZones[j].Size.ToString()}";
                             sw.WriteLine(mineZones);
                         }
                         catch
@@ -1546,15 +1533,8 @@ namespace Server
 
                         if (mob == null) continue;
 
-                        string Output = string.Format("{0} {1} {2} {3} {4} {5} {6} {7}",
-                            _selectedMapInfos[i].FileName,
-                            _selectedMapInfos[i].Respawns[j].Location.X,
-                            _selectedMapInfos[i].Respawns[j].Location.Y,
-                            mob.Name.Replace(' ', '*'),
-                           _selectedMapInfos[i].Respawns[j].Spread,
-                           _selectedMapInfos[i].Respawns[j].Count,
-                           _selectedMapInfos[i].Respawns[j].Delay,
-                           _selectedMapInfos[i].Respawns[j].Direction);
+                        string Output =
+                            $"{_selectedMapInfos[i].FileName} {_selectedMapInfos[i].Respawns[j].Location.X} {_selectedMapInfos[i].Respawns[j].Location.Y} {mob.Name.Replace(' ', '*')} {_selectedMapInfos[i].Respawns[j].Spread} {_selectedMapInfos[i].Respawns[j].Count} {_selectedMapInfos[i].Respawns[j].Delay} {_selectedMapInfos[i].Respawns[j].Direction}";
 
                         sw.WriteLine(Output);
                     }

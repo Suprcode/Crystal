@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Server.MirEnvir;
 
@@ -15,10 +12,7 @@ namespace Server
     {
         public string ItemListPath = Path.Combine(Settings.ExportPath, "ItemList.txt");
 
-        public Envir Envir
-        {
-            get { return SMain.EditEnvir; }
-        }
+        public Envir Envir => SMain.EditEnvir;
         private List<ItemInfo> _selectedItemInfos;
 
         public class ComboBoxItem
