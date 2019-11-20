@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using Server.MirEnvir;
 
@@ -13,10 +7,7 @@ namespace Server
 {
     public partial class GuildInfoForm : Form
     {
-        public Envir Envir
-        {
-            get { return SMain.EditEnvir; }
-        }
+        public Envir Envir => SMain.EditEnvir;
 
         public bool GuildsChanged = false;
         GuildBuffInfo SelectedBuff;
@@ -111,7 +102,7 @@ namespace Server
             {
                 SelectedBuff  = (GuildBuffInfo)BuffList.SelectedItem;
                 BuffPanel.Enabled = true;
-                BufflblIndex.Text = string.Format("Index:  {0}", SelectedBuff.Id);
+                BufflblIndex.Text = $"Index:  {SelectedBuff.Id}";
                 BufftxtName.Text = SelectedBuff.name;
                 BuffTxtLevelReq.Text = SelectedBuff.LevelRequirement.ToString();
                 BufftxtPointsReq.Text = SelectedBuff.PointsRequirement.ToString();

@@ -27,7 +27,7 @@ namespace Server.MirForms.VisualMapInfo.Class
         public static bool FocusMode = false;
         public static bool FocusModeActive
         {
-            get { return FocusMode; }
+            get => FocusMode;
             set
             {
                 FocusMode = value;

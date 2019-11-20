@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections;
 
@@ -59,26 +52,14 @@ namespace Server
 
             public int SortColumn
             {
-                set
-                {
-                    _columnToSort = value;
-                }
-                get
-                {
-                    return _columnToSort;
-                }
+                set => _columnToSort = value;
+                get => _columnToSort;
             }
 
             public SortOrder Order
             {
-                set
-                {
-                    _orderOfSort = value;
-                }
-                get
-                {
-                    return _orderOfSort;
-                }
+                set => _orderOfSort = value;
+                get => _orderOfSort;
             }
 
         }

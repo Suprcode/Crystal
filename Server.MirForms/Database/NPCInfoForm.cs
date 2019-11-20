@@ -14,10 +14,7 @@ namespace Server
     {
         public string NPCListPath = Path.Combine(Settings.ExportPath, "NPCList.txt");
 
-        public Envir Envir
-        {
-            get { return SMain.EditEnvir; }
-        }
+        public Envir Envir => SMain.EditEnvir;
 
         private List<NPCInfo> _selectedNPCInfos;
 

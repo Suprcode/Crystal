@@ -8,10 +8,7 @@ namespace Server
 {
     public partial class DragonInfoForm : Form
     {
-        public Envir Envir
-        {
-            get { return SMain.Envir; }
-        }
+        public Envir Envir => SMain.Envir;
 
         public DragonInfoForm()
         {

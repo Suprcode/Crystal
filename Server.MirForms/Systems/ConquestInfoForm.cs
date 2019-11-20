@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using Server.MirDatabase;
 using Server.MirEnvir;
@@ -13,10 +9,7 @@ namespace Server
 {
     public partial class ConquestInfoForm : Form
     {
-        public Envir Envir
-        {
-            get { return SMain.EditEnvir; }
-        }
+        public Envir Envir => SMain.EditEnvir;
 
         private ConquestInfo selectedConquest;
         private ConquestArcherInfo selectedArcher;

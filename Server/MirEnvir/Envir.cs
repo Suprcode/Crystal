@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.IO;
+using Server.Library.Utils;
 using Server.MirDatabase;
 using Server.MirNetwork;
 using Server.MirObjects;
@@ -21,52 +22,34 @@ namespace Server.MirEnvir
         public long StartTime = 0;
         public long EndTime = 0;
         public LinkedList<MapObject> ObjectsList = new LinkedList<MapObject>();
-        public LinkedListNode<MapObject> current = null;
-        public Boolean Stop = false;
+        public LinkedListNode<MapObject> _current = null;
+        public bool Stop = false;
     }
 
     public class RandomProvider
     {
         private static int seed = Environment.TickCount;
-        private static ThreadLocal<Random> RandomWrapper = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref seed)));
+        private static readonly ThreadLocal<Random> RandomWrapper = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref seed)));
 
-        public static Random GetThreadRadom()
-        {
-            return RandomWrapper.Value;
-        }
+        public static Random GetThreadRandom() =>
+            RandomWrapper.Value;
 
-        public int Next()
-        {
-            return RandomWrapper.Value.Next();
-        }
-        public int Next(int maxValue)
-        {
-            return RandomWrapper.Value.Next(maxValue);
-        }
-        public int Next(int minValue, int maxValue)
-        {
-            return RandomWrapper.Value.Next(minValue, maxValue);
-        }
+        public int Next() =>
+            RandomWrapper.Value.Next();
+        public int Next(int maxValue) =>
+            RandomWrapper.Value.Next(maxValue);
+        public int Next(int minValue, int maxValue) =>
+            RandomWrapper.Value.Next(minValue, maxValue);
     }
 
     public class Envir
     {
-        private static readonly Envir _Main = new Envir(), _Edit = new Envir();
+        public static Envir Main { get; } = new Envir();
 
-        public static Envir Main
-        {
-            get { return _Main; }
-        }
+        public static Envir Edit { get; } = new Envir();
 
-        public static Envir Edit
-        {
-            get { return _Edit; }
-        }
-
-        protected static MessageQueue MessageQueue
-        {
-            get { return MessageQueue.Instance; }
-        }
+        protected static MessageQueue MessageQueue =>
+            MessageQueue.Instance;
 
         public static object AccountLock = new object();
         public static object LoadLock = new object();
@@ -90,25 +73,17 @@ namespace Server.MirEnvir
         public RespawnTimer RespawnTick = new RespawnTimer();
         private static List<string> DisabledCharNames = new List<string>();
 
-        public DateTime Now
-        {
-            get { return _startTime.AddMilliseconds(Time); }
-        }
+        public DateTime Now =>
+            _startTime.AddMilliseconds(Time);
 
         public bool Running { get; private set; }
 
 
         private static uint _objectID;
-        public uint ObjectID
-        {
-            get { return ++_objectID; }
-        }
+        public uint ObjectID => ++_objectID;
 
         public static int _playerCount;
-        public int PlayerCount
-        {
-            get { return Players.Count; }
-        }
+        public int PlayerCount => Players.Count;
 
         public RandomProvider Random = new RandomProvider();
 
@@ -196,7 +171,7 @@ namespace Server.MirEnvir
                 new Regex(@"^[\u4e00-\u9fa5_A-Za-z0-9]{" + Globals.MinCharacterNameLength + "," + Globals.MaxCharacterNameLength +
                           "}$");
 
-            string path = Path.Combine(Settings.EnvirPath,  "DisabledChars.txt");
+            var path = Path.Combine(Settings.EnvirPath,  "DisabledChars.txt");
             DisabledCharNames.Clear();
             if (!File.Exists(path))
             {
@@ -204,9 +179,9 @@ namespace Server.MirEnvir
             }
             else
             {
-                string[] lines = File.ReadAllLines(path);
+                var lines = File.ReadAllLines(path);
 
-                for (int i = 0; i < lines.Length; i++)
+                for (var i = 0; i < lines.Length; i++)
                 {
                     if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
                     DisabledCharNames.Add(lines[i].ToUpper());
@@ -223,7 +198,7 @@ namespace Server.MirEnvir
 
         private bool MagicExists(Spell spell)
         {
-            for (int i = 0; i < MagicInfoList.Count; i++ )
+            for (var i = 0; i < MagicInfoList.Count; i++ )
             {
                 if (MagicInfoList[i].Spell == spell) return true;
             }
@@ -232,7 +207,7 @@ namespace Server.MirEnvir
 
         private void UpdateMagicInfo()
         {
-            for (int i = 0; i < MagicInfoList.Count; i++)
+            for (var i = 0; i < MagicInfoList.Count; i++)
             {
                 switch(MagicInfoList[i].Spell)
                 {
@@ -495,21 +470,21 @@ namespace Server.MirEnvir
             {
                 Time = Stopwatch.ElapsedMilliseconds;
 
-                long conTime = Time;
-                long saveTime = Time + Settings.SaveDelay * Settings.Minute;
-                long userTime = Time + Settings.Minute * 5;
-                long SpawnTime = Time;
-                long processTime = Time + 1000;
-                long StartTime = Time;
+                var conTime = Time;
+                var saveTime = Time + Settings.SaveDelay * Settings.Minute;
+                var userTime = Time + Settings.Minute * 5;
+                var SpawnTime = Time;
+                var processTime = Time + 1000;
+                var StartTime = Time;
 
-                int processCount = 0;
-                int processRealCount = 0;
+                var processCount = 0;
+                var processRealCount = 0;
 
                 LinkedListNode<MapObject> current = null;
 
                 if (Settings.Multithreaded)
                 {
-                    for (int j = 0; j < MobThreads.Length; j++)
+                    for (var j = 0; j < MobThreads.Length; j++)
                     {
                         MobThreads[j] = new MobThread();
                         MobThreads[j].Id = j;
@@ -517,7 +492,7 @@ namespace Server.MirEnvir
                 }
 
                 StartEnvir();
-                string canstartserver = CanStartEnvir();
+                var canstartserver = CanStartEnvir();
                 if (canstartserver != "true")
                 {
                     MessageQueue.Enqueue(canstartserver);
@@ -529,15 +504,12 @@ namespace Server.MirEnvir
 
                 if (Settings.Multithreaded)
                 {
-                    for (int j = 0; j < MobThreads.Length; j++)
+                    for (var j = 0; j < MobThreads.Length; j++)
                     {
-                        MobThread Info = MobThreads[j];
-                        if (j > 0) //dont start up 0 
-                        {
-                            MobThreading[j] = new Thread(() => ThreadLoop(Info));
-                            MobThreading[j].IsBackground = true;
-                            MobThreading[j].Start();
-                        }
+                        var Info = MobThreads[j];
+                        if (j <= 0) continue;
+                        MobThreading[j] = new Thread(() => ThreadLoop(Info)) {IsBackground = true};
+                        MobThreading[j].Start();
                     }
                 }
 
@@ -571,7 +543,7 @@ namespace Server.MirEnvir
 
                             lock (Connections)
                             {
-                                for (int i = Connections.Count - 1; i >= 0; i--)
+                                for (var i = Connections.Count - 1; i >= 0; i--)
                                 {
                                     Connections[i].Process();
                                 }
@@ -579,7 +551,7 @@ namespace Server.MirEnvir
 
                             lock (StatusConnections)
                             {
-                                for (int i = StatusConnections.Count - 1; i >= 0; i--)
+                                for (var i = StatusConnections.Count - 1; i >= 0; i--)
                                 {
                                     StatusConnections[i].Process();
                                 }
@@ -598,15 +570,13 @@ namespace Server.MirEnvir
 
                         if (Settings.Multithreaded)
                         {
-                            for (int j = 1; j < MobThreads.Length; j++)
+                            for (var j = 1; j < MobThreads.Length; j++)
                             {
-                                MobThread Info = MobThreads[j];
+                                var Info = MobThreads[j];
 
-                                if (Info.Stop == true)
-                                {
-                                    Info.EndTime = Time + 10;
-                                    Info.Stop = false;
-                                }
+                                if (!Info.Stop) continue;
+                                Info.EndTime = Time + 10;
+                                Info.Stop = false;
                             }
                             lock (_locker)
                             {
@@ -616,36 +586,34 @@ namespace Server.MirEnvir
                             ThreadLoop(MobThreads[0]);
                         }
 
-                        Boolean TheEnd = false;
-                        long Start = Stopwatch.ElapsedMilliseconds;
-                        while ((!TheEnd) && (Stopwatch.ElapsedMilliseconds - Start < 20))
+                        var TheEnd = false;
+                        var Start = Stopwatch.ElapsedMilliseconds;
+                        while (!TheEnd && Stopwatch.ElapsedMilliseconds - Start < 20)
                         {
                             if (current == null)
                             {
                                 TheEnd = true;
                                 break;
                             }
-                            else
-                            {
-                                LinkedListNode<MapObject> next = current.Next;
-                                if (!Settings.Multithreaded || ((current.Value.Race != ObjectType.Monster) || (current.Value.Master != null)))
-                                {
-                                    if (Time > current.Value.OperateTime)
-                                    {
 
-                                        current.Value.Process();
-                                        current.Value.SetOperateTime();
-                                    }
-                                    processCount++;
+                            var next = current.Next;
+                            if (!Settings.Multithreaded || current.Value.Race != ObjectType.Monster || current.Value.Master != null)
+                            {
+                                if (Time > current.Value.OperateTime)
+                                {
+
+                                    current.Value.Process();
+                                    current.Value.SetOperateTime();
                                 }
-                                current = next;
+                                processCount++;
                             }
+                            current = next;
                         }
 
-                        for (int i = 0; i < MapList.Count; i++)
+                        for (var i = 0; i < MapList.Count; i++)
                             MapList[i].Process();
 
-                        if (DragonSystem != null) DragonSystem.Process();
+                        DragonSystem?.Process();
 
                         Process();
 
@@ -670,7 +638,7 @@ namespace Server.MirEnvir
 
                         if (Time >= SpawnTime)
                         {
-                            SpawnTime = Time + (Settings.Second * 10);//technicaly this limits the respawn tick code to a minimum of 10 second each but lets assume it's not meant to be this accurate
+                            SpawnTime = Time + Settings.Second * 10;//technicaly this limits the respawn tick code to a minimum of 10 second each but lets assume it's not meant to be this accurate
                             Main.RespawnTick.Process();
                         }
 
@@ -687,7 +655,7 @@ namespace Server.MirEnvir
 
                     lock (Connections)
                     {
-                        for (int i = Connections.Count - 1; i >= 0; i--)
+                        for (var i = Connections.Count - 1; i >= 0; i--)
                             Connections[i].SendDisconnect(3);
                     }
 
@@ -699,7 +667,7 @@ namespace Server.MirEnvir
                     var line = frame.GetFileLineNumber();
 
                     File.AppendAllText(Settings.ErrorPath + "Error.txt",
-                                           string.Format("[{0}] {1} at line {2}{3}", Now, ex, line, Environment.NewLine));
+                        $"[{Now}] {ex} at line {line}{Environment.NewLine}");
                 }
 
                 StopNetwork();
@@ -720,7 +688,7 @@ namespace Server.MirEnvir
 
                 MessageQueue.Enqueue("[outer workloop error]" + ex);
                 File.AppendAllText(Settings.ErrorPath + "Error.txt",
-                                       string.Format("[{0}] {1} at line {2}{3}", Now, ex, line, Environment.NewLine));
+                    $"[{Now}] {ex} at line {line}{Environment.NewLine}");
             }
             _thread = null;
 
@@ -729,65 +697,58 @@ namespace Server.MirEnvir
         private void ThreadLoop(MobThread Info)
         {
             Info.Stop = false;
-            long starttime = Time;
+            var starttime = Time;
             try
             {
 
-                bool stopping = false;
-                if (Info.current == null)
-                    Info.current = Info.ObjectsList.First;
-                stopping = Info.current == null;
+                var stopping = false;
+                if (Info._current == null)
+                    Info._current = Info.ObjectsList.First;
+                stopping = Info._current == null;
                 //while (stopping == false)
                 while (Running)
                 {
-                    if (Info.current == null)
-                        Info.current = Info.ObjectsList.First;
+                    if (Info._current == null)
+                        Info._current = Info.ObjectsList.First;
                     else
                     {
-                        LinkedListNode<MapObject> next = Info.current.Next;
+                        var next = Info._current.Next;
 
                         //if we reach the end of our list > go back to the top (since we are running threaded, we dont want the system to sit there for xxms doing nothing)
-                        if (Info.current == Info.ObjectsList.Last)
+                        if (Info._current == Info.ObjectsList.Last)
                         {
                             next = Info.ObjectsList.First;
                             Info.LastRunTime = (Info.LastRunTime + (Time - Info.StartTime)) / 2;
                             //Info.LastRunTime = (Time - Info.StartTime) /*> 0 ? (Time - Info.StartTime) : Info.LastRunTime */;
                             Info.StartTime = Time;
                         }
-                        if (Time > Info.current.Value.OperateTime)
+                        if (Time > Info._current.Value.OperateTime)
                         {
-                            if (Info.current.Value.Master == null)//since we are running multithreaded, dont allow pets to be processed (unless you constantly move pets into their map appropriate thead)
+                            if (Info._current.Value.Master == null)//since we are running multithreaded, dont allow pets to be processed (unless you constantly move pets into their map appropriate thead)
                             {
-                                Info.current.Value.Process();
-                                Info.current.Value.SetOperateTime();
+                                Info._current.Value.Process();
+                                Info._current.Value.SetOperateTime();
                             }
                         }
-                        Info.current = next;
+                        Info._current = next;
                     }
                     //if it's the main thread > make it loop till the subthreads are done, else make it stop after 'endtime'
                     if (Info.Id == 0)
                     {
                         stopping = true;
-                        for (int x = 1; x < MobThreads.Length; x++)
+                        for (var x = 1; x < MobThreads.Length; x++)
                             if (MobThreads[x].Stop == false)
                                 stopping = false;
-                        if (stopping)
-                        {
-                            Info.Stop = stopping;
-                            return;
-                        }
+                        if (!stopping) continue;
+                        Info.Stop = stopping;
+                        return;
                     }
-                    else
+
+                    if (Stopwatch.ElapsedMilliseconds <= Info.EndTime || !Running) continue;
+                    Info.Stop = true;
+                    lock (_locker)
                     {
-                        if ((Stopwatch.ElapsedMilliseconds > Info.EndTime) && Running)
-                        {
-                            Info.Stop = true;
-                            lock (_locker)
-                            {
-                                while (Info.Stop) Monitor.Wait(_locker);
-                            }
-                        }
-                        
+                        while (Info.Stop) Monitor.Wait(_locker);
                     }
                 }
             }
@@ -797,16 +758,16 @@ namespace Server.MirEnvir
                 MessageQueue.Enqueue(ex);
 
                 File.AppendAllText(Settings.ErrorPath + "Error.txt",
-                                       string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
+                    $"[{Now}] {ex}{Environment.NewLine}");
             }
             //Info.Stop = true;
         }
 
         private void AdjustLights()
         {
-            LightSetting oldLights = Lights;
+            var oldLights = Lights;
 
-            int hours = (Now.Hour * 2) % 24;
+            var hours = Now.Hour * 2 % 24;
             if (hours == 6 || hours == 7)
                 Lights = LightSetting.Dawn;
             else if (hours >= 8 && hours <= 15)
@@ -832,15 +793,13 @@ namespace Server.MirEnvir
 
             if(Time >= warTime)
             {
-                for (int i = GuildsAtWar.Count - 1; i >= 0; i--)
+                for (var i = GuildsAtWar.Count - 1; i >= 0; i--)
                 {
                     GuildsAtWar[i].TimeRemaining -= Settings.Minute;
 
-                    if (GuildsAtWar[i].TimeRemaining < 0)
-                    {
-                        GuildsAtWar[i].EndWar();
-                        GuildsAtWar.RemoveAt(i);
-                    }
+                    if (GuildsAtWar[i].TimeRemaining >= 0) continue;
+                    GuildsAtWar[i].EndWar();
+                    GuildsAtWar.RemoveAt(i);
                 }
                 
                 warTime = Time + Settings.Minute;
@@ -848,9 +807,9 @@ namespace Server.MirEnvir
 
             if (Time >= mailTime)
             {
-                for (int i = Mail.Count - 1; i >= 0; i--)
+                for (var i = Mail.Count - 1; i >= 0; i--)
                 {
-                    MailInfo mail = Mail[i];
+                    var mail = Mail[i];
 
                     if(mail.Receive())
                     {
@@ -858,13 +817,13 @@ namespace Server.MirEnvir
                     }
                 }
 
-                mailTime = Time + (Settings.Minute * 1);
+                mailTime = Time + Settings.Minute * 1;
             }
 
             if (Time >= guildTime)
             {
-                guildTime = Time + (Settings.Minute);
-                for (int i = 0; i < GuildList.Count; i++)
+                guildTime = Time + Settings.Minute;
+                for (var i = 0; i < GuildList.Count; i++)
                 {
                     GuildList[i].Process();
                 }
@@ -872,33 +831,31 @@ namespace Server.MirEnvir
 
             if (Time >= conquestTime)
             {
-                conquestTime = Time + (Settings.Second * 10);
-                for (int i = 0; i < Conquests.Count; i++)
+                conquestTime = Time + Settings.Second * 10;
+                for (var i = 0; i < Conquests.Count; i++)
                     Conquests[i].Process();
             }
 
-            if (Time >= rentalItemsTime)
-            {
-                rentalItemsTime = Time + Settings.Minute * 5;
-                ProcessRentedItems();
-            }
+            if (Time < rentalItemsTime) return;
+            rentalItemsTime = Time + Settings.Minute * 5;
+            ProcessRentedItems();
 
         }
 
         public void Broadcast(Packet p)
         {
-            for (int i = 0; i < Players.Count; i++) Players[i].Enqueue(p);
+            for (var i = 0; i < Players.Count; i++) Players[i].Enqueue(p);
         }
 
         public void RequiresBaseStatUpdate()
         {
-            for (int i = 0; i < Players.Count; i++) Players[i].HasUpdatedBaseStats = false;
+            for (var i = 0; i < Players.Count; i++) Players[i].HasUpdatedBaseStats = false;
         }
 
         public void SaveDB()
         {
-            using (FileStream stream = File.Create(DatabasePath))
-            using (BinaryWriter writer = new BinaryWriter(stream))
+            using (var stream = File.Create(DatabasePath))
+            using (var writer = new BinaryWriter(stream))
             {
                 writer.Write(Version);
                 writer.Write(CustomVersion);
@@ -912,36 +869,36 @@ namespace Server.MirEnvir
                 writer.Write(RespawnIndex);
 
                 writer.Write(MapInfoList.Count);
-                for (int i = 0; i < MapInfoList.Count; i++)
+                for (var i = 0; i < MapInfoList.Count; i++)
                     MapInfoList[i].Save(writer);
 
                 writer.Write(ItemInfoList.Count);
-                for (int i = 0; i < ItemInfoList.Count; i++)
+                for (var i = 0; i < ItemInfoList.Count; i++)
                     ItemInfoList[i].Save(writer);
 
                 writer.Write(MonsterInfoList.Count);
-                for (int i = 0; i < MonsterInfoList.Count; i++)
+                for (var i = 0; i < MonsterInfoList.Count; i++)
                     MonsterInfoList[i].Save(writer);
 
                 writer.Write(NPCInfoList.Count);
-                for (int i = 0; i < NPCInfoList.Count; i++)
+                for (var i = 0; i < NPCInfoList.Count; i++)
                     NPCInfoList[i].Save(writer);
 
                 writer.Write(QuestInfoList.Count);
-                for (int i = 0; i < QuestInfoList.Count; i++)
+                for (var i = 0; i < QuestInfoList.Count; i++)
                     QuestInfoList[i].Save(writer);
 
                 DragonInfo.Save(writer);
                 writer.Write(MagicInfoList.Count);
-                for (int i = 0; i < MagicInfoList.Count; i++)
+                for (var i = 0; i < MagicInfoList.Count; i++)
                     MagicInfoList[i].Save(writer);
 
                 writer.Write(GameShopList.Count);
-                for (int i = 0; i < GameShopList.Count; i++)
+                for (var i = 0; i < GameShopList.Count; i++)
                     GameShopList[i].Save(writer);
 
                 writer.Write(ConquestInfos.Count);
-                for (int i = 0; i < ConquestInfos.Count; i++)
+                for (var i = 0; i < ConquestInfos.Count; i++)
                     ConquestInfos[i].Save(writer);
 
                 RespawnTick.Save(writer);
@@ -954,13 +911,13 @@ namespace Server.MirEnvir
 
             try
             {
-                using (FileStream stream = File.Create(AccountPath + "n"))
+                using (var stream = File.Create(AccountPath + "n"))
                     SaveAccounts(stream);
                 if (File.Exists(AccountPath))
                     File.Move(AccountPath, AccountPath + "o");
                 File.Move(AccountPath + "n", AccountPath);
                 if (File.Exists(AccountPath + "o"))
-                File.Delete(AccountPath + "o");
+                    File.Delete(AccountPath + "o");
             }
             catch (Exception ex)
             {
@@ -970,7 +927,7 @@ namespace Server.MirEnvir
 
         private void SaveAccounts(Stream stream)
         {
-            using (BinaryWriter writer = new BinaryWriter(stream))
+            using (var writer = new BinaryWriter(stream))
             {
                 writer.Write(Version);
                 writer.Write(CustomVersion);
@@ -980,17 +937,17 @@ namespace Server.MirEnvir
                 writer.Write(GuildList.Count);
                 writer.Write(NextGuildID);
                 writer.Write(AccountList.Count);
-                for (int i = 0; i < AccountList.Count; i++)
+                for (var i = 0; i < AccountList.Count; i++)
                     AccountList[i].Save(writer);
 
                 writer.Write(NextAuctionID);
                 writer.Write(Auctions.Count);
-                foreach (AuctionInfo auction in Auctions)
+                foreach (var auction in Auctions)
                     auction.Save(writer);
 
                 writer.Write(NextMailID);
                 writer.Write(Mail.Count);
-                foreach (MailInfo mail in Mail)
+                foreach (var mail in Mail)
                         mail.Save(writer);
 
                 writer.Write(GameshopLog.Count);
@@ -1001,9 +958,9 @@ namespace Server.MirEnvir
                 }
 
                 writer.Write(SavedSpawns.Count);
-                foreach (MapRespawn Spawn in SavedSpawns)
+                foreach (var Spawn in SavedSpawns)
                 {
-                    RespawnSave Save = new RespawnSave { RespawnIndex = Spawn.Info.RespawnIndex, NextSpawnTick = Spawn.NextSpawnTick, Spawned = (Spawn.Count >= (Spawn.Info.Count * spawnmultiplyer)) };
+                    var Save = new RespawnSave { RespawnIndex = Spawn.Info.RespawnIndex, NextSpawnTick = Spawn.NextSpawnTick, Spawned = Spawn.Count >= Spawn.Info.Count * spawnmultiplyer };
                     Save.save(writer);
                 }
             }
@@ -1012,37 +969,35 @@ namespace Server.MirEnvir
         private void SaveGuilds(bool forced = false)
         {
             if (!Directory.Exists(Settings.GuildPath)) Directory.CreateDirectory(Settings.GuildPath);
-            for (int i = 0; i < GuildList.Count; i++)
+            for (var i = 0; i < GuildList.Count; i++)
             {
                 if (GuildList[i].NeedSave || forced)
                 {
                     GuildList[i].NeedSave = false;
-                    MemoryStream mStream = new MemoryStream();
-                    BinaryWriter writer = new BinaryWriter(mStream);
+                    var mStream = new MemoryStream();
+                    var writer = new BinaryWriter(mStream);
                     GuildList[i].Save(writer);
-                    FileStream fStream = new FileStream(Settings.GuildPath + i.ToString() + ".mgdn", FileMode.Create);
-                    byte[] data = mStream.ToArray();
+                    var fStream = new FileStream(Settings.GuildPath + i + ".mgdn", FileMode.Create);
+                    var data = mStream.ToArray();
                     fStream.BeginWrite(data, 0, data.Length, EndSaveGuildsAsync, fStream);
                 }
             }
         }
         private void EndSaveGuildsAsync(IAsyncResult result)
         {
-            FileStream fStream = result.AsyncState as FileStream;
+            var fStream = result.AsyncState as FileStream;
             try
             {
-                if (fStream != null)
-                {
-                    string oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
-                    string newfilename = fStream.Name;
-                    fStream.EndWrite(result);
-                    fStream.Dispose();
-                    if (File.Exists(oldfilename))
-                        File.Move(oldfilename, oldfilename + "o");
-                    File.Move(newfilename, oldfilename);
-                    if (File.Exists(oldfilename + "o"))
-                        File.Delete(oldfilename + "o");
-                }
+                if (fStream == null) return;
+                var oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
+                var newfilename = fStream.Name;
+                fStream.EndWrite(result);
+                fStream.Dispose();
+                if (File.Exists(oldfilename))
+                    File.Move(oldfilename, oldfilename + "o");
+                File.Move(newfilename, oldfilename);
+                if (File.Exists(oldfilename + "o"))
+                    File.Delete(oldfilename + "o");
             }
             catch (Exception)
             {
@@ -1053,15 +1008,15 @@ namespace Server.MirEnvir
         {
             if (!Directory.Exists(Settings.GoodsPath)) Directory.CreateDirectory(Settings.GoodsPath);
 
-            for (int i = 0; i < MapList.Count; i++)
+            for (var i = 0; i < MapList.Count; i++)
             {
-                Map map = MapList[i];
+                var map = MapList[i];
 
                 if (map.NPCs.Count < 1) continue;
 
-                for (int j = 0; j < map.NPCs.Count; j++)
+                for (var j = 0; j < map.NPCs.Count; j++)
                 {
-                    NPCObject npc = map.NPCs[j];
+                    var npc = map.NPCs[j];
 
                     if (forced)
                     {
@@ -1070,23 +1025,23 @@ namespace Server.MirEnvir
 
                     if (!npc.NeedSave) continue;
 
-                    string path = Settings.GoodsPath + npc.Info.Index.ToString() + ".msdn";
+                    var path = Settings.GoodsPath + npc.Info.Index + ".msdn";
 
-                    MemoryStream mStream = new MemoryStream();
-                    BinaryWriter writer = new BinaryWriter(mStream);
-                    int Temp = 9999;
+                    var mStream = new MemoryStream();
+                    var writer = new BinaryWriter(mStream);
+                    var Temp = 9999;
                     writer.Write(Temp);
                     writer.Write(Version);
                     writer.Write(CustomVersion);
                     writer.Write(npc.UsedGoods.Count);
 
-                    for (int k = 0; k < npc.UsedGoods.Count; k++)
+                    for (var k = 0; k < npc.UsedGoods.Count; k++)
                     {
                         npc.UsedGoods[k].Save(writer);
                     }
 
-                    FileStream fStream = new FileStream(path, FileMode.Create);
-                    byte[] data = mStream.ToArray();
+                    var fStream = new FileStream(path, FileMode.Create);
+                    var data = mStream.ToArray();
                     fStream.BeginWrite(data, 0, data.Length, EndSaveGoodsAsync, fStream);
                 }
             }
@@ -1095,19 +1050,17 @@ namespace Server.MirEnvir
         {
             try
             {
-                FileStream fStream = result.AsyncState as FileStream;
-                if (fStream != null)
-                {
-                    string oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
-                    string newfilename = fStream.Name;
-                    fStream.EndWrite(result);
-                    fStream.Dispose();
-                    if (File.Exists(oldfilename))
-                        File.Move(oldfilename, oldfilename + "o");
-                    File.Move(newfilename, oldfilename);
-                    if (File.Exists(oldfilename + "o"))
-                        File.Delete(oldfilename + "o");
-                }
+                var fStream = result.AsyncState as FileStream;
+                if (fStream == null) return;
+                var oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
+                var newfilename = fStream.Name;
+                fStream.EndWrite(result);
+                fStream.Dispose();
+                if (File.Exists(oldfilename))
+                    File.Move(oldfilename, oldfilename + "o");
+                File.Move(newfilename, oldfilename);
+                if (File.Exists(oldfilename + "o"))
+                    File.Delete(oldfilename + "o");
             }
             catch (Exception)
             {
@@ -1117,37 +1070,33 @@ namespace Server.MirEnvir
         private void SaveConquests(bool forced = false)
         {
             if (!Directory.Exists(Settings.ConquestsPath)) Directory.CreateDirectory(Settings.ConquestsPath);
-            for (int i = 0; i < Conquests.Count; i++)
+            for (var i = 0; i < Conquests.Count; i++)
             {
-                if (Conquests[i].NeedSave || forced)
-                {
-                    Conquests[i].NeedSave = false;
-                    MemoryStream mStream = new MemoryStream();
-                    BinaryWriter writer = new BinaryWriter(mStream);
-                    Conquests[i].Save(writer);
-                    FileStream fStream = new FileStream(Settings.ConquestsPath + Conquests[i].Info.Index.ToString() + ".mcdn", FileMode.Create);
-                    byte[] data = mStream.ToArray();
-                    fStream.BeginWrite(data, 0, data.Length, EndSaveConquestsAsync, fStream);
-                }
+                if (!Conquests[i].NeedSave && !forced) continue;
+                Conquests[i].NeedSave = false;
+                var mStream = new MemoryStream();
+                var writer = new BinaryWriter(mStream);
+                Conquests[i].Save(writer);
+                var fStream = new FileStream(Settings.ConquestsPath + Conquests[i].Info.Index + ".mcdn", FileMode.Create);
+                var data = mStream.ToArray();
+                fStream.BeginWrite(data, 0, data.Length, EndSaveConquestsAsync, fStream);
             }
         }
         private void EndSaveConquestsAsync(IAsyncResult result)
         {
-            FileStream fStream = result.AsyncState as FileStream;
+            var fStream = result.AsyncState as FileStream;
             try
             {
-                if (fStream != null)
-                {
-                    string oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
-                    string newfilename = fStream.Name;
-                    fStream.EndWrite(result);
-                    fStream.Dispose();
-                    if (File.Exists(oldfilename))
-                        File.Move(oldfilename, oldfilename + "o");
-                    File.Move(newfilename, oldfilename);
-                    if (File.Exists(oldfilename + "o"))
-                        File.Delete(oldfilename + "o");
-                }
+                if (fStream == null) return;
+                var oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
+                var newfilename = fStream.Name;
+                fStream.EndWrite(result);
+                fStream.Dispose();
+                if (File.Exists(oldfilename))
+                    File.Move(oldfilename, oldfilename + "o");
+                File.Move(newfilename, oldfilename);
+                if (File.Exists(oldfilename + "o"))
+                    File.Delete(oldfilename + "o");
             }
             catch (Exception)
             {
@@ -1162,33 +1111,34 @@ namespace Server.MirEnvir
             Saving = true;
             
 
-            using (MemoryStream mStream = new MemoryStream())
+            using (var mStream = new MemoryStream())
             {
                 if (File.Exists(AccountPath))
                 {
                     if (!Directory.Exists(BackUpPath)) Directory.CreateDirectory(BackUpPath);
-                    string fileName = string.Format("Accounts {0:0000}-{1:00}-{2:00} {3:00}-{4:00}-{5:00}.bak", Now.Year, Now.Month, Now.Day, Now.Hour, Now.Minute, Now.Second);
+                    var fileName =
+                        $"Accounts {Now.Year:0000}-{Now.Month:00}-{Now.Day:00} {Now.Hour:00}-{Now.Minute:00}-{Now.Second:00}.bak";
                     if (File.Exists(Path.Combine(BackUpPath, fileName))) File.Delete(Path.Combine(BackUpPath, fileName));
                     File.Move(AccountPath, Path.Combine(BackUpPath, fileName));
                 }
 
                 SaveAccounts(mStream);
-                FileStream fStream = new FileStream(AccountPath + "n", FileMode.Create);
+                var fStream = new FileStream(AccountPath + "n", FileMode.Create);
 
-                byte[] data = mStream.ToArray();
+                var data = mStream.ToArray();
                 fStream.BeginWrite(data, 0, data.Length, EndSaveAccounts, fStream);
             }
 
         }
         private void EndSaveAccounts(IAsyncResult result)
         {
-            FileStream fStream = result.AsyncState as FileStream;
+            var fStream = result.AsyncState as FileStream;
             try
             {
                 if (fStream != null)
                 {
-                    string oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
-                    string newfilename = fStream.Name;
+                    var oldfilename = fStream.Name.Substring(0, fStream.Name.Length - 1);
+                    var newfilename = fStream.Name;
                     fStream.EndWrite(result);
                     fStream.Dispose();
                     if (File.Exists(oldfilename))
@@ -1212,8 +1162,8 @@ namespace Server.MirEnvir
                 if (!File.Exists(DatabasePath))
                     SaveDB();
 
-                using (FileStream stream = File.OpenRead(DatabasePath))
-                using (BinaryReader reader = new BinaryReader(stream))
+                using (var stream = File.OpenRead(DatabasePath))
+                using (var reader = new BinaryReader(stream))
                 {
                     LoadVersion = reader.ReadInt32();
                     if (LoadVersion > 57)
@@ -1241,45 +1191,44 @@ namespace Server.MirEnvir
                         RespawnIndex = reader.ReadInt32();
 
 
-                    int count = reader.ReadInt32();
+                    var count = reader.ReadInt32();
                     MapInfoList.Clear();
-                    for (int i = 0; i < count; i++)
+                    for (var i = 0; i < count; i++)
                         MapInfoList.Add(new MapInfo(reader));
 
                     count = reader.ReadInt32();
                     ItemInfoList.Clear();
-                    for (int i = 0; i < count; i++)
+                    for (var i = 0; i < count; i++)
                     {
                         ItemInfoList.Add(new ItemInfo(reader, LoadVersion, LoadCustomVersion));
-                        if ((ItemInfoList[i] != null) && (ItemInfoList[i].RandomStatsId < Settings.RandomItemStatsList.Count))
+                        if (ItemInfoList[i] != null && ItemInfoList[i].RandomStatsId < Settings.RandomItemStatsList.Count)
                         {
                             ItemInfoList[i].RandomStats = Settings.RandomItemStatsList[ItemInfoList[i].RandomStatsId];
                         }
                     }
                     count = reader.ReadInt32();
                     MonsterInfoList.Clear();
-                    for (int i = 0; i < count; i++)
+                    for (var i = 0; i < count; i++)
                         MonsterInfoList.Add(new MonsterInfo(reader));
 
                     if (LoadVersion > 33)
                     {
                         count = reader.ReadInt32();
                         NPCInfoList.Clear();
-                        for (int i = 0; i < count; i++)
+                        for (var i = 0; i < count; i++)
                             NPCInfoList.Add(new NPCInfo(reader));
 
                         count = reader.ReadInt32();
                         QuestInfoList.Clear();
-                        for (int i = 0; i < count; i++)
+                        for (var i = 0; i < count; i++)
                             QuestInfoList.Add(new QuestInfo(reader));
                     }
 
-                    if (LoadVersion >= 11) DragonInfo = new DragonInfo(reader);
-                    else DragonInfo = new DragonInfo();
+                    DragonInfo = LoadVersion >= 11 ? new DragonInfo(reader) : new DragonInfo();
                     if (LoadVersion >= 58)
                     {
                         count = reader.ReadInt32();
-                        for (int i = 0; i < count; i++)
+                        for (var i = 0; i < count; i++)
                         {
                             var m = new MagicInfo(reader, LoadVersion, LoadCustomVersion);
                             if(!MagicExists(m.Spell))
@@ -1294,9 +1243,9 @@ namespace Server.MirEnvir
                     {
                         count = reader.ReadInt32();
                         GameShopList.Clear();
-                        for (int i = 0; i < count; i++)
+                        for (var i = 0; i < count; i++)
                         {
-                            GameShopItem item = new GameShopItem(reader, LoadVersion, LoadCustomVersion);
+                            var item = new GameShopItem(reader, LoadVersion, LoadCustomVersion);
                             if (Main.BindGameShop(item))
                             {
                                 GameShopList.Add(item);
@@ -1308,7 +1257,7 @@ namespace Server.MirEnvir
                     {
                         ConquestInfos.Clear();
                         count = reader.ReadInt32();
-                        for (int i = 0; i < count; i++)
+                        for (var i = 0; i < count; i++)
                         {
                             ConquestInfos.Add(new ConquestInfo(reader));
                         }
@@ -1327,7 +1276,7 @@ namespace Server.MirEnvir
         public void LoadAccounts()
         {
             //reset ranking
-            for (int i = 0; i < RankClass.Count(); i++)
+            for (var i = 0; i < RankClass.Count(); i++)
             {
                 if (RankClass[i] != null)
                     RankClass[i].Clear();
@@ -1335,7 +1284,7 @@ namespace Server.MirEnvir
                     RankClass[i] = new List<Rank_Character_Info>();
             }
             RankTop.Clear();
-            for (int i = 0; i < RankBottomLevel.Count(); i++)
+            for (var i = 0; i < RankBottomLevel.Count(); i++)
             {
                 RankBottomLevel[i] = 0;
             }
@@ -1346,8 +1295,8 @@ namespace Server.MirEnvir
                 if (!File.Exists(AccountPath))
                     SaveAccounts();
 
-                using (FileStream stream = File.OpenRead(AccountPath))
-                using (BinaryReader reader = new BinaryReader(stream))
+                using (var stream = File.OpenRead(AccountPath))
+                using (var reader = new BinaryReader(stream))
                 {
                     LoadVersion = reader.ReadInt32();
                     if (LoadVersion > 57) LoadCustomVersion = reader.ReadInt32();
@@ -1361,10 +1310,10 @@ namespace Server.MirEnvir
                         NextGuildID = reader.ReadInt32();
                     }
 
-                    int count = reader.ReadInt32();
+                    var count = reader.ReadInt32();
                     AccountList.Clear();
                     CharacterList.Clear();
-                    for (int i = 0; i < count; i++)
+                    for (var i = 0; i < count; i++)
                     {
                         AccountList.Add(new AccountInfo(reader));
                         CharacterList.AddRange(AccountList[i].Characters);
@@ -1372,7 +1321,7 @@ namespace Server.MirEnvir
 
                     if (LoadVersion < 7) return;
 
-                    foreach (AuctionInfo auction in Auctions)
+                    foreach (var auction in Auctions)
                         auction.CharacterInfo.AccountInfo.Auctions.Remove(auction);
                     Auctions.Clear();
 
@@ -1380,9 +1329,9 @@ namespace Server.MirEnvir
                         NextAuctionID = reader.ReadUInt64();
 
                     count = reader.ReadInt32();
-                    for (int i = 0; i < count; i++)
+                    for (var i = 0; i < count; i++)
                     {
-                        AuctionInfo auction = new AuctionInfo(reader, LoadVersion, LoadCustomVersion);
+                        var auction = new AuctionInfo(reader, LoadVersion, LoadCustomVersion);
 
                         if (!BindItem(auction.Item) || !BindCharacter(auction)) continue;
 
@@ -1392,7 +1341,7 @@ namespace Server.MirEnvir
 
                     if (LoadVersion == 7)
                     {
-                        foreach (AuctionInfo auction in Auctions)
+                        foreach (var auction in Auctions)
                         {
                             if (auction.Sold && auction.Expired) auction.Expired = false;
 
@@ -1407,7 +1356,7 @@ namespace Server.MirEnvir
                         Mail.Clear();
 
                         count = reader.ReadInt32();
-                        for (int i = 0; i < count; i++)
+                        for (var i = 0; i < count; i++)
                         {
                             Mail.Add(new MailInfo(reader, LoadVersion, LoadCustomVersion));
                         }
@@ -1415,8 +1364,8 @@ namespace Server.MirEnvir
 
                     if(LoadVersion >= 63)
                     {
-                        int logCount = reader.ReadInt32();
-                        for (int i = 0; i < logCount; i++)
+                        var logCount = reader.ReadInt32();
+                        for (var i = 0; i < logCount; i++)
                         {
                             GameshopLog.Add(reader.ReadInt32(), reader.ReadInt32());
                         }
@@ -1424,25 +1373,22 @@ namespace Server.MirEnvir
                         if (ResetGS) ClearGameshopLog();
                     }
 
-                    if (LoadVersion >= 68)
+                    if (LoadVersion < 68) return;
                     {
-                        int SaveCount = reader.ReadInt32();
-                        for (int i = 0; i < SaveCount; i++)
+                        var SaveCount = reader.ReadInt32();
+                        for (var i = 0; i < SaveCount; i++)
                         {
-                            RespawnSave Saved = new RespawnSave(reader);
-                            foreach (MapRespawn Respawn in SavedSpawns)
+                            var Saved = new RespawnSave(reader);
+                            foreach (var Respawn in SavedSpawns)
                             {
-                                if (Respawn.Info.RespawnIndex == Saved.RespawnIndex)
+                                if (Respawn.Info.RespawnIndex != Saved.RespawnIndex) continue;
+                                Respawn.NextSpawnTick = Saved.NextSpawnTick;
+                                if (!Saved.Spawned || Respawn.Info.Count * spawnmultiplyer <= Respawn.Count)
+                                    continue;
+                                var mobcount = Respawn.Info.Count * spawnmultiplyer - Respawn.Count;
+                                for (var j = 0; j < mobcount; j++)
                                 {
-                                    Respawn.NextSpawnTick = Saved.NextSpawnTick;
-                                    if ((Saved.Spawned) && ((Respawn.Info.Count * spawnmultiplyer) > Respawn.Count))
-                                    {
-                                        int mobcount = (Respawn.Info.Count * spawnmultiplyer) - Respawn.Count;
-                                        for (int j = 0; j < mobcount; j++)
-                                        {
-                                            Respawn.Spawn();
-                                        }
-                                    }
+                                    Respawn.Spawn();
                                 }
                             }
 
@@ -1456,25 +1402,23 @@ namespace Server.MirEnvir
         {
             lock (LoadLock)
             {
-                int count = 0;
+                var count = 0;
 
                 GuildList.Clear();
 
-                for (int i = 0; i < GuildCount; i++)
+                for (var i = 0; i < GuildCount; i++)
                 {
                     GuildObject newGuild;
-                    if (File.Exists(Settings.GuildPath + i.ToString() + ".mgd"))
-                    {
-                        using (FileStream stream = File.OpenRead(Settings.GuildPath + i.ToString() + ".mgd"))
-                        using (BinaryReader reader = new BinaryReader(stream))
-                            newGuild = new GuildObject(reader);
+                    if (!File.Exists(Settings.GuildPath + i + ".mgd")) continue;
+                    using (var stream = File.OpenRead(Settings.GuildPath + i + ".mgd"))
+                    using (var reader = new BinaryReader(stream))
+                        newGuild = new GuildObject(reader);
     
-                        //if (!newGuild.Ranks.Any(a => (byte)a.Options == 255)) continue;
-                        //if (GuildList.Any(e => e.Name == newGuild.Name)) continue;
-                        GuildList.Add(newGuild);
+                    //if (!newGuild.Ranks.Any(a => (byte)a.Options == 255)) continue;
+                    //if (GuildList.Any(e => e.Name == newGuild.Name)) continue;
+                    GuildList.Add(newGuild);
 
-                        count++;
-                    }
+                    count++;
                 }
 
                 if (count != GuildCount) GuildCount = count;
@@ -1487,28 +1431,28 @@ namespace Server.MirEnvir
             
             for (byte i = 0; i <= 19; i++)
             {
-                string path = Path.Combine(Settings.DropPath, Settings.FishingDropFilename + ".txt");
+                var path = Path.Combine(Settings.DropPath, Settings.FishingDropFilename + ".txt");
 
                 path = path.Replace("00", i.ToString("D2"));
 
                 if (!File.Exists(path) && i < 2)
                 {
-                    FileStream newfile = File.Create(path);
+                    var newfile = File.Create(path);
                     newfile.Close();
                 }
 
                 if (!File.Exists(path)) continue;
 
-                string[] lines = File.ReadAllLines(path);
+                var lines = File.ReadAllLines(path);
 
-                for (int j = 0; j < lines.Length; j++)
+                for (var j = 0; j < lines.Length; j++)
                 {
                     if (lines[j].StartsWith(";") || string.IsNullOrWhiteSpace(lines[j])) continue;
 
-                    DropInfo drop = DropInfo.FromLine(lines[j]);
+                    var drop = DropInfo.FromLine(lines[j]);
                     if (drop == null)
                     {
-                        MessageQueue.Enqueue(string.Format("Could not load fishing drop: {0}", lines[j]));
+                        MessageQueue.Enqueue($"Could not load fishing drop: {lines[j]}");
                         continue;
                     }
 
@@ -1533,25 +1477,25 @@ namespace Server.MirEnvir
         {
             AwakeningDrops.Clear();
 
-            string path = Path.Combine(Settings.DropPath, Settings.AwakeningDropFilename + ".txt");
+            var path = Path.Combine(Settings.DropPath, Settings.AwakeningDropFilename + ".txt");
 
             if (!File.Exists(path))
             {
-                FileStream newfile = File.Create(path);
+                var newfile = File.Create(path);
                 newfile.Close();
 
             }
 
-            string[] lines = File.ReadAllLines(path);
+            var lines = File.ReadAllLines(path);
 
-            for (int i = 0; i < lines.Length; i++)
+            for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
 
-                DropInfo drop = DropInfo.FromLine(lines[i]);
+                var drop = DropInfo.FromLine(lines[i]);
                 if (drop == null)
                 {
-                    MessageQueue.Enqueue(string.Format("Could not load Awakening drop: {0}", lines[i]));
+                    MessageQueue.Enqueue($"Could not load Awakening drop: {lines[i]}");
                     continue;
                 }
 
@@ -1573,24 +1517,24 @@ namespace Server.MirEnvir
         {
             StrongboxDrops.Clear();
 
-            string path = Path.Combine(Settings.DropPath, Settings.StrongboxDropFilename + ".txt");
+            var path = Path.Combine(Settings.DropPath, Settings.StrongboxDropFilename + ".txt");
 
             if (!File.Exists(path))
             {
-                FileStream newfile = File.Create(path);
+                var newfile = File.Create(path);
                 newfile.Close();
             }
 
-            string[] lines = File.ReadAllLines(path);
+            var lines = File.ReadAllLines(path);
 
-            for (int i = 0; i < lines.Length; i++)
+            for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
 
-                DropInfo drop = DropInfo.FromLine(lines[i]);
+                var drop = DropInfo.FromLine(lines[i]);
                 if (drop == null)
                 {
-                    MessageQueue.Enqueue(string.Format("Could not load strongbox drop: {0}", lines[i]));
+                    MessageQueue.Enqueue($"Could not load strongbox drop: {lines[i]}");
                     continue;
                 }
 
@@ -1612,25 +1556,25 @@ namespace Server.MirEnvir
         {
             BlackstoneDrops.Clear();
 
-            string path = Path.Combine(Settings.DropPath, Settings.BlackstoneDropFilename + ".txt");
+            var path = Path.Combine(Settings.DropPath, Settings.BlackstoneDropFilename + ".txt");
 
             if (!File.Exists(path))
             {
-                FileStream newfile = File.Create(path);
+                var newfile = File.Create(path);
                 newfile.Close();
 
             }
 
-            string[] lines = File.ReadAllLines(path);
+            var lines = File.ReadAllLines(path);
 
-            for (int i = 0; i < lines.Length; i++)
+            for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
 
-                DropInfo drop = DropInfo.FromLine(lines[i]);
+                var drop = DropInfo.FromLine(lines[i]);
                 if (drop == null)
                 {
-                    MessageQueue.Enqueue(string.Format("Could not load blackstone drop: {0}", lines[i]));
+                    MessageQueue.Enqueue($"Could not load blackstone drop: {lines[i]}");
                     continue;
                 }
 
@@ -1652,37 +1596,34 @@ namespace Server.MirEnvir
         {
             lock (LoadLock)
             {
-                int count = 0;
+                var count = 0;
 
                 Conquests.Clear();
 
-                ConquestObject newConquest;
                 Map tempMap;
                 ConquestArcherObject tempArcher;
                 ConquestGateObject tempGate;
                 ConquestWallObject tempWall;
                 ConquestSiegeObject tempSiege;
 
-                for (int i = 0; i < ConquestInfos.Count; i++)
+                for (var i = 0; i < ConquestInfos.Count; i++)
                 {
-                    newConquest = null;
+                    ConquestObject newConquest;
                     tempMap = GetMap(ConquestInfos[i].MapIndex);
 
                     if (tempMap == null) continue;
 
-                    if (File.Exists(Settings.ConquestsPath + ConquestInfos[i].Index.ToString() + ".mcd"))
+                    if (File.Exists(Settings.ConquestsPath + ConquestInfos[i].Index + ".mcd"))
                     {
-                        using (FileStream stream = File.OpenRead(Settings.ConquestsPath + ConquestInfos[i].Index.ToString() + ".mcd"))
-                        using (BinaryReader reader = new BinaryReader(stream))
+                        using (var stream = File.OpenRead(Settings.ConquestsPath + ConquestInfos[i].Index + ".mcd"))
+                        using (var reader = new BinaryReader(stream))
                             newConquest = new ConquestObject(reader) { Info = ConquestInfos[i], ConquestMap = tempMap };
 
-                        for (int k = 0; k < GuildList.Count; k++)
+                        for (var k = 0; k < GuildList.Count; k++)
                         {
-                            if (newConquest.Owner == GuildList[k].Guildindex)
-                            {
-                                newConquest.Guild = GuildList[k];
-                                GuildList[k].Conquest = newConquest;
-                            }
+                            if (newConquest.Owner != GuildList[k].Guildindex) continue;
+                            newConquest.Guild = GuildList[k];
+                            GuildList[k].Conquest = newConquest;
                         }
 
                         Conquests.Add(newConquest);
@@ -1698,7 +1639,7 @@ namespace Server.MirEnvir
                     }
 
                     //Bind Info to Saved Archer objects or create new objects
-                    for (int j = 0; j < ConquestInfos[i].ConquestGuards.Count; j++)
+                    for (var j = 0; j < ConquestInfos[i].ConquestGuards.Count; j++)
                     {
                         tempArcher = newConquest.ArcherList.FirstOrDefault(x => x.Index == ConquestInfos[i].ConquestGuards[j].Index);
 
@@ -1714,14 +1655,14 @@ namespace Server.MirEnvir
                     }
 
                     //Remove archers that have been removed from DB
-                    for (int j = 0; j < newConquest.ArcherList.Count; j++)
+                    for (var j = 0; j < newConquest.ArcherList.Count; j++)
                     {
                         if (newConquest.ArcherList[j].Info == null)
                             newConquest.ArcherList.Remove(newConquest.ArcherList[j]);
                     }
 
                     //Bind Info to Saved Gate objects or create new objects
-                    for (int j = 0; j < ConquestInfos[i].ConquestGates.Count; j++)
+                    for (var j = 0; j < ConquestInfos[i].ConquestGates.Count; j++)
                     {
                         tempGate = newConquest.GateList.FirstOrDefault(x => x.Index == ConquestInfos[i].ConquestGates[j].Index);
 
@@ -1737,20 +1678,20 @@ namespace Server.MirEnvir
                     }
 
                     //Bind Info to Saved Flag objects or create new objects
-                    for (int j = 0; j < ConquestInfos[i].ConquestFlags.Count; j++)
+                    for (var j = 0; j < ConquestInfos[i].ConquestFlags.Count; j++)
                     {
                         newConquest.FlagList.Add(new ConquestFlagObject { Info = ConquestInfos[i].ConquestFlags[j], Index = ConquestInfos[i].ConquestFlags[j].Index, Conquest = newConquest });
                     }
 
                     //Remove Gates that have been removed from DB
-                    for (int j = 0; j < newConquest.GateList.Count; j++)
+                    for (var j = 0; j < newConquest.GateList.Count; j++)
                     {
                         if (newConquest.GateList[j].Info == null)
                             newConquest.GateList.Remove(newConquest.GateList[j]);
                     }
 
                     //Bind Info to Saved Wall objects or create new objects
-                    for (int j = 0; j < ConquestInfos[i].ConquestWalls.Count; j++)
+                    for (var j = 0; j < ConquestInfos[i].ConquestWalls.Count; j++)
                     {
                         tempWall = newConquest.WallList.FirstOrDefault(x => x.Index == ConquestInfos[i].ConquestWalls[j].Index);
 
@@ -1766,7 +1707,7 @@ namespace Server.MirEnvir
                     }
 
                     //Remove Walls that have been removed from DB
-                    for (int j = 0; j < newConquest.WallList.Count; j++)
+                    for (var j = 0; j < newConquest.WallList.Count; j++)
                     {
                         if (newConquest.WallList[j].Info == null)
                             newConquest.WallList.Remove(newConquest.WallList[j]);
@@ -1774,7 +1715,7 @@ namespace Server.MirEnvir
 
                     
                     //Bind Info to Saved Siege objects or create new objects
-                    for (int j = 0; j < ConquestInfos[i].ConquestSieges.Count; j++)
+                    for (var j = 0; j < ConquestInfos[i].ConquestSieges.Count; j++)
                     {
                         tempSiege = newConquest.SiegeList.FirstOrDefault(x => x.Index == ConquestInfos[i].ConquestSieges[j].Index);
 
@@ -1790,16 +1731,16 @@ namespace Server.MirEnvir
                     }
 
                     //Remove Siege that have been removed from DB
-                    for (int j = 0; j < newConquest.SiegeList.Count; j++)
+                    for (var j = 0; j < newConquest.SiegeList.Count; j++)
                     {
                         if (newConquest.SiegeList[j].Info == null)
                             newConquest.SiegeList.Remove(newConquest.SiegeList[j]);
                     }
 
                     //Bind Info to Saved Flag objects or create new objects
-                    for (int j = 0; j < ConquestInfos[i].ControlPoints.Count; j++)
+                    for (var j = 0; j < ConquestInfos[i].ControlPoints.Count; j++)
                     {
-                        ConquestFlagObject cp = null;
+                        ConquestFlagObject cp;
                         newConquest.ControlPoints.Add(cp = new ConquestFlagObject { Info = ConquestInfos[i].ControlPoints[j], Index = ConquestInfos[i].ControlPoints[j].Index, Conquest = newConquest }, new Dictionary<GuildObject, int>());
 
                         cp.Spawn();
@@ -1818,7 +1759,7 @@ namespace Server.MirEnvir
 
         private bool BindCharacter(AuctionInfo auction)
         {
-            for (int i = 0; i < CharacterList.Count; i++)
+            for (var i = 0; i < CharacterList.Count; i++)
             {
                 if (CharacterList[i].Index != auction.CharacterIndex) continue;
 
@@ -1849,33 +1790,31 @@ namespace Server.MirEnvir
             }
 
             //simply intterupt all the mob threads if they are running (will give an invisible error on them but fastest way of getting rid of them on shutdowns)
-            for (int i = 1; i < MobThreading.Length; i++)
+            for (var i = 1; i < MobThreading.Length; i++)
             {
                 if (MobThreads[i] != null)
                     MobThreads[i].EndTime = Time + 9999;
-                if ((MobThreading[i] != null) &&
-                    (MobThreading[i].ThreadState != System.Threading.ThreadState.Stopped) && (MobThreading[i].ThreadState != System.Threading.ThreadState.Unstarted))
+                if (MobThreading[i] != null &&
+                    MobThreading[i].ThreadState != System.Threading.ThreadState.Stopped && MobThreading[i].ThreadState != System.Threading.ThreadState.Unstarted)
                 {
                     MobThreading[i].Interrupt();
                 }
             }
-            if (http!=null)
-            {
-                http.Stop();
-            }                     
 
-                while (_thread != null)
+            http?.Stop();
+
+            while (_thread != null)
                     Thread.Sleep(1);
         }
 
         public void Reboot()
         {
-            (new Thread(() =>
+            new Thread(() =>
             {
                 MessageQueue.Enqueue("Server rebooting...");
                 Stop();
                 Start();
-            })).Start();
+            }).Start();
         }
         
         private void StartEnvir()
@@ -1896,19 +1835,19 @@ namespace Server.MirEnvir
                 .ToArray())
                 RecipeInfoList.Add(new RecipeInfo(recipe));
 
-            MessageQueue.Enqueue(string.Format("{0} Recipes loaded.", RecipeInfoList.Count));
+            MessageQueue.Enqueue($"{RecipeInfoList.Count} Recipes loaded.");
 
-            for (int i = 0; i < MapInfoList.Count; i++)
+            for (var i = 0; i < MapInfoList.Count; i++)
                 MapInfoList[i].CreateMap();
-            MessageQueue.Enqueue(string.Format("{0} Maps Loaded.", MapInfoList.Count));
+            MessageQueue.Enqueue($"{MapInfoList.Count} Maps Loaded.");
 
-            for (int i = 0; i < ItemInfoList.Count; i++)
+            for (var i = 0; i < ItemInfoList.Count; i++)
             {
                 if (ItemInfoList[i].StartItem)
                     StartItems.Add(ItemInfoList[i]);
             }
 
-            for (int i = 0; i < MonsterInfoList.Count; i++)
+            for (var i = 0; i < MonsterInfoList.Count; i++)
                 MonsterInfoList[i].LoadDrops();
 
             LoadFishingDrops();
@@ -1980,24 +1919,24 @@ namespace Server.MirEnvir
             _listener.Stop();
             lock (Connections)
             {
-                for (int i = Connections.Count - 1; i >= 0; i--)
+                for (var i = Connections.Count - 1; i >= 0; i--)
                     Connections[i].SendDisconnect(0);
             }
 
             if (StatusPortEnabled)
             {
                 _StatusPort.Stop();
-                for (int i = StatusConnections.Count - 1; i >= 0; i--)
+                for (var i = StatusConnections.Count - 1; i >= 0; i--)
                     StatusConnections[i].SendDisconnect();
             }
 
-            long expire = Time + 5000;
+            var expire = Time + 5000;
 
             while (Connections.Count != 0 && Stopwatch.ElapsedMilliseconds < expire)
             {
                 Time = Stopwatch.ElapsedMilliseconds;
 
-                for (int i = Connections.Count - 1; i >= 0; i--)
+                for (var i = Connections.Count - 1; i >= 0; i--)
                     Connections[i].Process();
 
                 Thread.Sleep(1);
@@ -2011,7 +1950,7 @@ namespace Server.MirEnvir
             {
                 Time = Stopwatch.ElapsedMilliseconds;
 
-                for (int i = StatusConnections.Count - 1; i >= 0; i--)
+                for (var i = StatusConnections.Count - 1; i >= 0; i--)
                     StatusConnections[i].Process();
 
                 Thread.Sleep(1);
@@ -2024,16 +1963,16 @@ namespace Server.MirEnvir
 
         private void CleanUp()
         {
-            for (int i = 0; i < CharacterList.Count; i++)
+            for (var i = 0; i < CharacterList.Count; i++)
             {
-                CharacterInfo info = CharacterList[i];
+                var info = CharacterList[i];
 
                 if (info.Deleted)
                 {
                     #region Mentor Cleanup
                     if (info.Mentor > 0)
                     {
-                        CharacterInfo Mentor = GetCharacterInfo(info.Mentor);
+                        var Mentor = GetCharacterInfo(info.Mentor);
 
                         if (Mentor != null)
                         {
@@ -2051,7 +1990,7 @@ namespace Server.MirEnvir
                     #region Marriage Cleanup
                     if (info.Married > 0)
                     {
-                        CharacterInfo Lover = GetCharacterInfo(info.Married);
+                        var Lover = GetCharacterInfo(info.Married);
 
                         info.Married = 0;
                         info.MarriedDate = DateTime.Now;
@@ -2071,7 +2010,7 @@ namespace Server.MirEnvir
 
                 if(info.Mail.Count > Settings.MailCapacity)
                 {
-                    for (int j = (info.Mail.Count - 1 - (int)Settings.MailCapacity); j >= 0; j--)
+                    for (var j = info.Mail.Count - 1 - (int)Settings.MailCapacity; j >= 0; j--)
                     {
                         if (info.Mail[j].DateOpened > DateTime.Now && info.Mail[j].Collected && info.Mail[j].Items.Count == 0 && info.Mail[j].Gold == 0)
                         {
@@ -2095,7 +2034,7 @@ namespace Server.MirEnvir
 
             try
             {
-                TcpClient tempTcpClient = _listener.EndAcceptTcpClient(result);
+                var tempTcpClient = _listener.EndAcceptTcpClient(result);
                 lock (Connections)
                     Connections.Add(new MirConnection(++_sessionID, tempTcpClient));
             }
@@ -2119,7 +2058,7 @@ namespace Server.MirEnvir
 
             try
             {
-                TcpClient tempTcpClient = _StatusPort.EndAcceptTcpClient(result);
+                var tempTcpClient = _StatusPort.EndAcceptTcpClient(result);
                 lock (StatusConnections)
                     StatusConnections.Add(new MirStatusConnection(tempTcpClient));
             }
@@ -2271,7 +2210,7 @@ namespace Server.MirEnvir
                 return;
             }
 
-            AccountInfo account = GetAccount(p.AccountID);
+            var account = GetAccount(p.AccountID);
 
             if (account == null)
             {
@@ -2291,7 +2230,7 @@ namespace Server.MirEnvir
             account.BanReason = string.Empty;
             account.ExpiryDate = DateTime.MinValue;
 
-            if (String.CompareOrdinal(account.Password, p.CurrentPassword) != 0)
+            if (string.CompareOrdinal(account.Password, p.CurrentPassword) != 0)
             {
                 c.Enqueue(new ServerPackets.ChangePassword {Result = 5});
                 return;
@@ -2319,7 +2258,7 @@ namespace Server.MirEnvir
                 c.Enqueue(new ServerPackets.Login { Result = 2 });
                 return;
             }
-            AccountInfo account = GetAccount(p.AccountID);
+            var account = GetAccount(p.AccountID);
 
             if (account == null)
             {
@@ -2344,7 +2283,7 @@ namespace Server.MirEnvir
                 account.ExpiryDate = DateTime.MinValue;
 
 
-            if (String.CompareOrdinal(account.Password, p.Password) != 0)
+            if (string.CompareOrdinal(account.Password, p.Password) != 0)
             {
                 if (account.WrongPasswordCount++ >= 5)
                 {
@@ -2367,8 +2306,7 @@ namespace Server.MirEnvir
 
             lock (AccountLock)
             {
-                if (account.Connection != null)
-                    account.Connection.SendDisconnect(1);
+                account.Connection?.SendDisconnect(1);
 
                 account.Connection = c;
             }
@@ -2400,7 +2338,7 @@ namespace Server.MirEnvir
                 return 2;
             }
 
-            AccountInfo account = GetAccount(AccountID);
+            var account = GetAccount(AccountID);
 
             if (account == null)
             {
@@ -2417,7 +2355,7 @@ namespace Server.MirEnvir
             }
             account.BanReason = string.Empty;
             account.ExpiryDate = DateTime.MinValue;
-            if (String.CompareOrdinal(account.Password, Password) != 0)
+            if (string.CompareOrdinal(account.Password, Password) != 0)
             {
                 if (account.WrongPasswordCount++ >= 5)
                 {
@@ -2446,7 +2384,7 @@ namespace Server.MirEnvir
                 return;
             }
 
-            if ((!IsGm) && (DisabledCharNames.Contains(p.Name.ToUpper())))
+            if (!IsGm && DisabledCharNames.Contains(p.Name.ToUpper()))
             {
                 c.Enqueue(new ServerPackets.NewCharacter { Result = 1 });
                 return;
@@ -2465,16 +2403,16 @@ namespace Server.MirEnvir
                 return;
             }
 
-            if((p.Class == MirClass.Assassin && !Settings.AllowCreateAssassin) ||
-                (p.Class == MirClass.Archer && !Settings.AllowCreateArcher))
+            if(p.Class == MirClass.Assassin && !Settings.AllowCreateAssassin ||
+                p.Class == MirClass.Archer && !Settings.AllowCreateArcher)
             {
                 c.Enqueue(new ServerPackets.NewCharacter { Result = 3 });
                 return;
             }
 
-            int count = 0;
+            var count = 0;
 
-            for (int i = 0; i < c.Account.Characters.Count; i++)
+            for (var i = 0; i < c.Account.Characters.Count; i++)
             {
                 if (c.Account.Characters[i].Deleted) continue;
 
@@ -2493,7 +2431,7 @@ namespace Server.MirEnvir
                     return;
                 }
 
-                CharacterInfo info = new CharacterInfo(p, c) { Index = ++NextCharacterID, AccountInfo = c.Account };
+                var info = new CharacterInfo(p, c) { Index = ++NextCharacterID, AccountInfo = c.Account };
 
                 c.Account.Characters.Add(info);
                 CharacterList.Add(info);
@@ -2504,16 +2442,16 @@ namespace Server.MirEnvir
 
         public bool AccountExists(string accountID)
         {
-                for (int i = 0; i < AccountList.Count; i++)
-                    if (String.Compare(AccountList[i].AccountID, accountID, StringComparison.OrdinalIgnoreCase) == 0)
+                for (var i = 0; i < AccountList.Count; i++)
+                    if (string.Compare(AccountList[i].AccountID, accountID, StringComparison.OrdinalIgnoreCase) == 0)
                         return true;
 
                 return false;
         }
         public bool CharacterExists(string name)
         {
-            for (int i = 0; i < CharacterList.Count; i++)
-                if (String.Compare(CharacterList[i].Name, name, StringComparison.OrdinalIgnoreCase) == 0)
+            for (var i = 0; i < CharacterList.Count; i++)
+                if (string.Compare(CharacterList[i].Name, name, StringComparison.OrdinalIgnoreCase) == 0)
                     return true;
 
             return false;
@@ -2521,8 +2459,8 @@ namespace Server.MirEnvir
 
         private AccountInfo GetAccount(string accountID)
         {
-                for (int i = 0; i < AccountList.Count; i++)
-                    if (String.Compare(AccountList[i].AccountID, accountID, StringComparison.OrdinalIgnoreCase) == 0)
+                for (var i = 0; i < AccountList.Count; i++)
+                    if (string.Compare(AccountList[i].AccountID, accountID, StringComparison.OrdinalIgnoreCase) == 0)
                         return AccountList[i];
 
                 return null;
@@ -2531,9 +2469,9 @@ namespace Server.MirEnvir
         {
             if (string.IsNullOrEmpty(accountID)) return new List<AccountInfo>(AccountList);
 
-            List<AccountInfo> list = new List<AccountInfo>();
+            var list = new List<AccountInfo>();
 
-            for (int i = 0; i < AccountList.Count; i++)
+            for (var i = 0; i < AccountList.Count; i++)
             {
                 if (match)
                 {
@@ -2554,11 +2492,11 @@ namespace Server.MirEnvir
         {
             if (string.IsNullOrEmpty(playerName)) return new List<AccountInfo>(AccountList);
 
-            List<AccountInfo> list = new List<AccountInfo>();
+            var list = new List<AccountInfo>();
 
-            for (int i = 0; i < AccountList.Count; i++)
+            for (var i = 0; i < AccountList.Count; i++)
             {
-                for (int j = 0; j < AccountList[i].Characters.Count; j++)
+                for (var j = 0; j < AccountList[i].Characters.Count; j++)
                 {
                     if (match)
                     {
@@ -2645,7 +2583,7 @@ namespace Server.MirEnvir
 
         public UserItem CreateFreshItem(ItemInfo info)
         {
-            UserItem item = new UserItem(info)
+            var item = new UserItem(info)
                 {
                     UniqueID = ++NextUserItemID,
                     CurrentDura = info.Durability,
@@ -2664,7 +2602,7 @@ namespace Server.MirEnvir
         {
             if (info == null) return null;
 
-            UserItem item = new UserItem(info)
+            var item = new UserItem(info)
                 {
                     UniqueID = ++NextUserItemID,
                     MaxDura = info.Durability,
@@ -2683,7 +2621,7 @@ namespace Server.MirEnvir
         {
             if (info == null) return null;
 
-            UserItem item = new UserItem(info)
+            var item = new UserItem(info)
             {
                 UniqueID = ++NextUserItemID,
                 CurrentDura = info.Durability,
@@ -2699,20 +2637,20 @@ namespace Server.MirEnvir
             if (item.Info.Type == ItemType.Scroll || item.Info.Type == ItemType.Potion || 
                 item.Info.Type == ItemType.Transform || item.Info.Type == ItemType.Script) return;
 
-            ExpireInfo expiryInfo = new ExpireInfo();
+            var expiryInfo = new ExpireInfo();
 
-            Regex r = new Regex(@"\[(.*?)\]");
-            Match expiryMatch = r.Match(item.Info.Name);
+            var r = new Regex(@"\[(.*?)\]");
+            var expiryMatch = r.Match(item.Info.Name);
 
             if (expiryMatch.Success)
             {
-                string parameter = expiryMatch.Groups[1].Captures[0].Value;
+                var parameter = expiryMatch.Groups[1].Captures[0].Value;
 
                 var numAlpha = new Regex("(?<Numeric>[0-9]*)(?<Alpha>[a-zA-Z]*)");
                 var match = numAlpha.Match(parameter);
 
-                string alpha = match.Groups["Alpha"].Value;
-                int num = 0;
+                var alpha = match.Groups["Alpha"].Value;
+                var num = 0;
 
                 int.TryParse(match.Groups["Numeric"].Value, out num);
 
@@ -2745,49 +2683,49 @@ namespace Server.MirEnvir
         public void UpgradeItem(UserItem item)
         {
             if (item.Info.RandomStats == null) return;
-            RandomItemStat stat = item.Info.RandomStats;
-            if ((stat.MaxDuraChance > 0) && (Random.Next(stat.MaxDuraChance) == 0))
+            var stat = item.Info.RandomStats;
+            if (stat.MaxDuraChance > 0 && Random.Next(stat.MaxDuraChance) == 0)
             {
-                int dura = RandomomRange(stat.MaxDuraMaxStat, stat.MaxDuraStatChance);
+                var dura = RandomomRange(stat.MaxDuraMaxStat, stat.MaxDuraStatChance);
                 item.MaxDura = (ushort)Math.Min(ushort.MaxValue, item.MaxDura + dura * 1000);
                 item.CurrentDura = (ushort)Math.Min(ushort.MaxValue, item.CurrentDura + dura * 1000);
             }
 
-            if ((stat.MaxAcChance > 0) && (Random.Next(stat.MaxAcChance) == 0)) item.AC = (byte)(RandomomRange(stat.MaxAcMaxStat-1, stat.MaxAcStatChance)+1);
-            if ((stat.MaxMacChance > 0) && (Random.Next(stat.MaxMacChance) == 0)) item.MAC = (byte)(RandomomRange(stat.MaxMacMaxStat-1, stat.MaxMacStatChance)+1);
-            if ((stat.MaxDcChance > 0) && (Random.Next(stat.MaxDcChance) == 0)) item.DC = (byte)(RandomomRange(stat.MaxDcMaxStat-1, stat.MaxDcStatChance)+1);
-            if ((stat.MaxMcChance > 0) && (Random.Next(stat.MaxScChance) == 0)) item.MC = (byte)(RandomomRange(stat.MaxMcMaxStat-1, stat.MaxMcStatChance)+1);
-            if ((stat.MaxScChance > 0) && (Random.Next(stat.MaxMcChance) == 0)) item.SC = (byte)(RandomomRange(stat.MaxScMaxStat-1, stat.MaxScStatChance)+1);
-            if ((stat.AccuracyChance > 0) && (Random.Next(stat.AccuracyChance) == 0)) item.Accuracy = (byte)(RandomomRange(stat.AccuracyMaxStat-1, stat.AccuracyStatChance)+1);
-            if ((stat.AgilityChance > 0) && (Random.Next(stat.AgilityChance) == 0)) item.Agility = (byte)(RandomomRange(stat.AgilityMaxStat-1, stat.AgilityStatChance)+1);
-            if ((stat.HpChance > 0) && (Random.Next(stat.HpChance) == 0)) item.HP = (byte)(RandomomRange(stat.HpMaxStat-1, stat.HpStatChance)+1);
-            if ((stat.MpChance > 0) && (Random.Next(stat.MpChance) == 0)) item.MP = (byte)(RandomomRange(stat.MpMaxStat-1, stat.MpStatChance)+1);
-            if ((stat.StrongChance > 0) && (Random.Next(stat.StrongChance) == 0)) item.Strong = (byte)(RandomomRange(stat.StrongMaxStat-1, stat.StrongStatChance)+1);
-            if ((stat.MagicResistChance > 0) && (Random.Next(stat.MagicResistChance) == 0)) item.MagicResist = (byte)(RandomomRange(stat.MagicResistMaxStat-1, stat.MagicResistStatChance)+1);
-            if ((stat.PoisonResistChance > 0) && (Random.Next(stat.PoisonResistChance) == 0)) item.PoisonResist = (byte)(RandomomRange(stat.PoisonResistMaxStat-1, stat.PoisonResistStatChance)+1);
-            if ((stat.HpRecovChance > 0) && (Random.Next(stat.HpRecovChance) == 0)) item.HealthRecovery = (byte)(RandomomRange(stat.HpRecovMaxStat-1, stat.HpRecovStatChance)+1);
-            if ((stat.MpRecovChance > 0) && (Random.Next(stat.MpRecovChance) == 0)) item.ManaRecovery = (byte)(RandomomRange(stat.MpRecovMaxStat-1, stat.MpRecovStatChance)+1);
-            if ((stat.PoisonRecovChance > 0) && (Random.Next(stat.PoisonRecovChance) == 0)) item.PoisonRecovery = (byte)(RandomomRange(stat.PoisonRecovMaxStat-1, stat.PoisonRecovStatChance)+1);
-            if ((stat.CriticalRateChance > 0) && (Random.Next(stat.CriticalRateChance) == 0)) item.CriticalRate = (byte)(RandomomRange(stat.CriticalRateMaxStat-1, stat.CriticalRateStatChance)+1);
-            if ((stat.CriticalDamageChance > 0) && (Random.Next(stat.CriticalDamageChance) == 0)) item.CriticalDamage = (byte)(RandomomRange(stat.CriticalDamageMaxStat-1, stat.CriticalDamageStatChance)+1);
-            if ((stat.FreezeChance > 0) && (Random.Next(stat.FreezeChance) == 0)) item.Freezing = (byte)(RandomomRange(stat.FreezeMaxStat-1, stat.FreezeStatChance)+1);
-            if ((stat.PoisonAttackChance > 0) && (Random.Next(stat.PoisonAttackChance) == 0)) item.PoisonAttack = (byte)(RandomomRange(stat.PoisonAttackMaxStat-1, stat.PoisonAttackStatChance)+1);
-            if ((stat.AttackSpeedChance > 0) && (Random.Next(stat.AttackSpeedChance) == 0)) item.AttackSpeed = (sbyte)(RandomomRange(stat.AttackSpeedMaxStat-1, stat.AttackSpeedStatChance)+1);
-            if ((stat.LuckChance > 0) && (Random.Next(stat.LuckChance) == 0)) item.Luck = (sbyte)(RandomomRange(stat.LuckMaxStat-1, stat.LuckStatChance)+1);
-            if ((stat.CurseChance > 0) && (Random.Next(100) <= stat.CurseChance)) item.Cursed = true;
+            if (stat.MaxAcChance > 0 && Random.Next(stat.MaxAcChance) == 0) item.AC = (byte)(RandomomRange(stat.MaxAcMaxStat-1, stat.MaxAcStatChance)+1);
+            if (stat.MaxMacChance > 0 && Random.Next(stat.MaxMacChance) == 0) item.MAC = (byte)(RandomomRange(stat.MaxMacMaxStat-1, stat.MaxMacStatChance)+1);
+            if (stat.MaxDcChance > 0 && Random.Next(stat.MaxDcChance) == 0) item.DC = (byte)(RandomomRange(stat.MaxDcMaxStat-1, stat.MaxDcStatChance)+1);
+            if (stat.MaxMcChance > 0 && Random.Next(stat.MaxScChance) == 0) item.MC = (byte)(RandomomRange(stat.MaxMcMaxStat-1, stat.MaxMcStatChance)+1);
+            if (stat.MaxScChance > 0 && Random.Next(stat.MaxMcChance) == 0) item.SC = (byte)(RandomomRange(stat.MaxScMaxStat-1, stat.MaxScStatChance)+1);
+            if (stat.AccuracyChance > 0 && Random.Next(stat.AccuracyChance) == 0) item.Accuracy = (byte)(RandomomRange(stat.AccuracyMaxStat-1, stat.AccuracyStatChance)+1);
+            if (stat.AgilityChance > 0 && Random.Next(stat.AgilityChance) == 0) item.Agility = (byte)(RandomomRange(stat.AgilityMaxStat-1, stat.AgilityStatChance)+1);
+            if (stat.HpChance > 0 && Random.Next(stat.HpChance) == 0) item.HP = (byte)(RandomomRange(stat.HpMaxStat-1, stat.HpStatChance)+1);
+            if (stat.MpChance > 0 && Random.Next(stat.MpChance) == 0) item.MP = (byte)(RandomomRange(stat.MpMaxStat-1, stat.MpStatChance)+1);
+            if (stat.StrongChance > 0 && Random.Next(stat.StrongChance) == 0) item.Strong = (byte)(RandomomRange(stat.StrongMaxStat-1, stat.StrongStatChance)+1);
+            if (stat.MagicResistChance > 0 && Random.Next(stat.MagicResistChance) == 0) item.MagicResist = (byte)(RandomomRange(stat.MagicResistMaxStat-1, stat.MagicResistStatChance)+1);
+            if (stat.PoisonResistChance > 0 && Random.Next(stat.PoisonResistChance) == 0) item.PoisonResist = (byte)(RandomomRange(stat.PoisonResistMaxStat-1, stat.PoisonResistStatChance)+1);
+            if (stat.HpRecovChance > 0 && Random.Next(stat.HpRecovChance) == 0) item.HealthRecovery = (byte)(RandomomRange(stat.HpRecovMaxStat-1, stat.HpRecovStatChance)+1);
+            if (stat.MpRecovChance > 0 && Random.Next(stat.MpRecovChance) == 0) item.ManaRecovery = (byte)(RandomomRange(stat.MpRecovMaxStat-1, stat.MpRecovStatChance)+1);
+            if (stat.PoisonRecovChance > 0 && Random.Next(stat.PoisonRecovChance) == 0) item.PoisonRecovery = (byte)(RandomomRange(stat.PoisonRecovMaxStat-1, stat.PoisonRecovStatChance)+1);
+            if (stat.CriticalRateChance > 0 && Random.Next(stat.CriticalRateChance) == 0) item.CriticalRate = (byte)(RandomomRange(stat.CriticalRateMaxStat-1, stat.CriticalRateStatChance)+1);
+            if (stat.CriticalDamageChance > 0 && Random.Next(stat.CriticalDamageChance) == 0) item.CriticalDamage = (byte)(RandomomRange(stat.CriticalDamageMaxStat-1, stat.CriticalDamageStatChance)+1);
+            if (stat.FreezeChance > 0 && Random.Next(stat.FreezeChance) == 0) item.Freezing = (byte)(RandomomRange(stat.FreezeMaxStat-1, stat.FreezeStatChance)+1);
+            if (stat.PoisonAttackChance > 0 && Random.Next(stat.PoisonAttackChance) == 0) item.PoisonAttack = (byte)(RandomomRange(stat.PoisonAttackMaxStat-1, stat.PoisonAttackStatChance)+1);
+            if (stat.AttackSpeedChance > 0 && Random.Next(stat.AttackSpeedChance) == 0) item.AttackSpeed = (sbyte)(RandomomRange(stat.AttackSpeedMaxStat-1, stat.AttackSpeedStatChance)+1);
+            if (stat.LuckChance > 0 && Random.Next(stat.LuckChance) == 0) item.Luck = (sbyte)(RandomomRange(stat.LuckMaxStat-1, stat.LuckStatChance)+1);
+            if (stat.CurseChance > 0 && Random.Next(100) <= stat.CurseChance) item.Cursed = true;
         }
 
         public int RandomomRange(int count, int rate)
         {
-            int x = 0;
-            for (int i = 0; i < count; i++) if (Random.Next(rate) == 0) x++;
+            var x = 0;
+            for (var i = 0; i < count; i++) if (Random.Next(rate) == 0) x++;
             return x;
         }
         public bool BindItem(UserItem item)
         {
-            for (int i = 0; i < ItemInfoList.Count; i++)
+            for (var i = 0; i < ItemInfoList.Count; i++)
             {
-                ItemInfo info = ItemInfoList[i];
+                var info = ItemInfoList[i];
                 if (info.Index != item.ItemIndex) continue;
                 item.Info = info;
 
@@ -2798,9 +2736,9 @@ namespace Server.MirEnvir
 
         public bool BindGameShop(GameShopItem item, bool editEnvir = true)
         {
-            for (int i = 0; i < Edit.ItemInfoList.Count; i++)
+            for (var i = 0; i < Edit.ItemInfoList.Count; i++)
             {
-                ItemInfo info = Edit.ItemInfoList[i];
+                var info = Edit.ItemInfoList[i];
                 if (info.Index != item.ItemIndex) continue;
                 item.Info = info;
 
@@ -2811,7 +2749,7 @@ namespace Server.MirEnvir
 
         public bool BindSlotItems(UserItem item)
         {           
-            for (int i = 0; i < item.Slots.Length; i++)
+            for (var i = 0; i < item.Slots.Length; i++)
             {
                 if (item.Slots[i] == null) continue;
 
@@ -2825,9 +2763,9 @@ namespace Server.MirEnvir
 
         public bool BindQuest(QuestProgressInfo quest)
         {
-            for (int i = 0; i < QuestInfoList.Count; i++)
+            for (var i = 0; i < QuestInfoList.Count; i++)
             {
-                QuestInfo info = QuestInfoList[i];
+                var info = QuestInfoList[i];
                 if (info.Index != quest.Index) continue;
                 quest.Info = info;
                 return true;
@@ -2845,7 +2783,7 @@ namespace Server.MirEnvir
             if (instanceValue < 0) instanceValue = 0;
             if (instanceValue > 0) instanceValue--;
 
-            var instanceMapList = MapList.Where(t => String.Equals(t.Info.FileName, name, StringComparison.CurrentCultureIgnoreCase)).ToList();
+            var instanceMapList = MapList.Where(t => string.Equals(t.Info.FileName, name, StringComparison.CurrentCultureIgnoreCase)).ToList();
             return instanceValue < instanceMapList.Count() ? instanceMapList[instanceValue] : null;
         }
 
@@ -2856,7 +2794,7 @@ namespace Server.MirEnvir
 
         public MonsterInfo GetMonsterInfo(int index)
         {
-            for (int i = 0; i < MonsterInfoList.Count; i++)
+            for (var i = 0; i < MonsterInfoList.Count; i++)
                 if (MonsterInfoList[i].Index == index) return MonsterInfoList[i];
 
             return null;
@@ -2867,24 +2805,11 @@ namespace Server.MirEnvir
             return MapList.SelectMany(t1 => t1.NPCs.Where(t => t.Info.Name == name)).FirstOrDefault();
         }
 
-        /*
-        public MonsterInfo GetMonsterInfo(string name)
-        {
-            for (int i = 0; i < MonsterInfoList.Count; i++)
-            {
-                MonsterInfo info = MonsterInfoList[i];
-                //if (info.Name != name && !info.Name.Replace(" ", "").StartsWith(name, StringComparison.OrdinalIgnoreCase)) continue;
-                if (String.Compare(info.Name, name, StringComparison.OrdinalIgnoreCase) != 0 && String.Compare(info.Name.Replace(" ", ""), name.Replace(" ", ""), StringComparison.OrdinalIgnoreCase) != 0) continue;
-                return info;
-            }
-            return null;
-        }
-        */
         public MonsterInfo GetMonsterInfo(string name, bool Strict = false)
         {
-            for (int i = 0; i < MonsterInfoList.Count; i++)
+            for (var i = 0; i < MonsterInfoList.Count; i++)
             {
-                MonsterInfo info = MonsterInfoList[i];
+                var info = MonsterInfoList[i];
                 if (Strict)
                 {
                     if (info.Name != name) continue;
@@ -2893,7 +2818,7 @@ namespace Server.MirEnvir
                 else
                 {
                     //if (info.Name != name && !info.Name.Replace(" ", "").StartsWith(name, StringComparison.OrdinalIgnoreCase)) continue;
-                    if (String.Compare(info.Name, name, StringComparison.OrdinalIgnoreCase) != 0 && String.Compare(info.Name.Replace(" ", ""), name.Replace(" ", ""), StringComparison.OrdinalIgnoreCase) != 0) continue;
+                    if (string.Compare(info.Name, name, StringComparison.OrdinalIgnoreCase) != 0 && string.Compare(info.Name.Replace(" ", ""), name.Replace(" ", ""), StringComparison.OrdinalIgnoreCase) != 0) continue;
                     return info;
                 }
             }
@@ -2901,15 +2826,15 @@ namespace Server.MirEnvir
         }
         public PlayerObject GetPlayer(string name)
         {
-            for (int i = 0; i < Players.Count; i++)
-                if (String.Compare(Players[i].Name, name, StringComparison.OrdinalIgnoreCase) == 0)
+            for (var i = 0; i < Players.Count; i++)
+                if (string.Compare(Players[i].Name, name, StringComparison.OrdinalIgnoreCase) == 0)
                     return Players[i];
 
             return null;
         }
         public PlayerObject GetPlayer(uint PlayerId)
         {
-            for (int i = 0; i < Players.Count; i++)
+            for (var i = 0; i < Players.Count; i++)
                 if (Players[i].Info.Index == PlayerId)
                     return Players[i];
 
@@ -2917,8 +2842,8 @@ namespace Server.MirEnvir
         }
         public CharacterInfo GetCharacterInfo(string name)
         {
-            for (int i = 0; i < CharacterList.Count; i++)
-                if (String.Compare(CharacterList[i].Name, name, StringComparison.OrdinalIgnoreCase) == 0)
+            for (var i = 0; i < CharacterList.Count; i++)
+                if (string.Compare(CharacterList[i].Name, name, StringComparison.OrdinalIgnoreCase) == 0)
                     return CharacterList[i];
 
             return null;
@@ -2926,7 +2851,7 @@ namespace Server.MirEnvir
 
         public CharacterInfo GetCharacterInfo(int index)
         {
-            for (int i = 0; i < CharacterList.Count; i++)
+            for (var i = 0; i < CharacterList.Count; i++)
                 if (CharacterList[i].Index == index)
                     return CharacterList[i];
 
@@ -2935,9 +2860,9 @@ namespace Server.MirEnvir
 
         public ItemInfo GetItemInfo(int index)
         {
-            for (int i = 0; i < ItemInfoList.Count; i++)
+            for (var i = 0; i < ItemInfoList.Count; i++)
             {
-                ItemInfo info = ItemInfoList[i];
+                var info = ItemInfoList[i];
                 if (info.Index != index) continue;
                 return info;
             }
@@ -2945,10 +2870,10 @@ namespace Server.MirEnvir
         }
         public ItemInfo GetItemInfo(string name)
         {
-            for (int i = 0; i < ItemInfoList.Count; i++)
+            for (var i = 0; i < ItemInfoList.Count; i++)
             {
-                ItemInfo info = ItemInfoList[i];
-                if (String.Compare(info.Name.Replace(" ", ""), name, StringComparison.OrdinalIgnoreCase) != 0) continue;
+                var info = ItemInfoList[i];
+                if (string.Compare(info.Name.Replace(" ", ""), name, StringComparison.OrdinalIgnoreCase) != 0) continue;
                 return info;
             }
             return null;
@@ -2960,10 +2885,10 @@ namespace Server.MirEnvir
 
         public ItemInfo GetBook(short Skill)
         {
-            for (int i = 0; i < ItemInfoList.Count; i++)
+            for (var i = 0; i < ItemInfoList.Count; i++)
             {
-                ItemInfo info = ItemInfoList[i];
-                if ((info.Type != ItemType.Book) || (info.Shape != Skill)) continue;
+                var info = ItemInfoList[i];
+                if (info.Type != ItemType.Book || info.Shape != Skill) continue;
                 return info;
             }
             return null;
@@ -2971,10 +2896,9 @@ namespace Server.MirEnvir
 
         public void MessageAccount(AccountInfo account, string message, ChatType type)
         {
-            if (account == null) return;
-            if (account.Characters == null) return;
+            if (account?.Characters == null) return;
 
-            for (int i = 0; i < account.Characters.Count; i++)
+            for (var i = 0; i < account.Characters.Count; i++)
             {
                 if (account.Characters[i].Player == null) continue;
                 account.Characters[i].Player.ReceiveChat(message, type);
@@ -2983,16 +2907,16 @@ namespace Server.MirEnvir
         }
         public GuildObject GetGuild(string name)
         {
-            for (int i = 0; i < GuildList.Count; i++)
+            for (var i = 0; i < GuildList.Count; i++)
             {
-                if (String.Compare(GuildList[i].Name.Replace(" ", ""), name, StringComparison.OrdinalIgnoreCase) != 0) continue;
+                if (string.Compare(GuildList[i].Name.Replace(" ", ""), name, StringComparison.OrdinalIgnoreCase) != 0) continue;
                 return GuildList[i];
             }
             return null;
         }
         public GuildObject GetGuild(int index)
         {
-            for (int i = 0; i < GuildList.Count; i++)
+            for (var i = 0; i < GuildList.Count; i++)
                 if (GuildList[i].Guildindex == index)
                     return GuildList[i];
             return null;
@@ -3000,16 +2924,13 @@ namespace Server.MirEnvir
 
         public void ProcessNewDay()
         {
-            foreach (CharacterInfo c in CharacterList)
+            foreach (var c in CharacterList)
             {
                 ClearDailyQuests(c);
 
                 c.NewDay = true;
 
-                if(c.Player != null)
-                {
-                    c.Player.CallDefaultNPC(DefaultNPCType.Daily);
-                }
+                c.Player?.CallDefaultNPC(DefaultNPCType.Daily);
             }
         }
 
@@ -3132,7 +3053,7 @@ namespace Server.MirEnvir
             {
                 if (quest.Type != QuestType.Daily) continue;
 
-                for (int i = 0; i < info.CompletedQuests.Count; i++)
+                for (var i = 0; i < info.CompletedQuests.Count; i++)
                 {
                     if (info.CompletedQuests[i] != quest.Index) continue;
 
@@ -3140,15 +3061,12 @@ namespace Server.MirEnvir
                 } 
             }
 
-            if (info.Player != null)
-            {
-                info.Player.GetCompletedQuests();
-            }       
+            info.Player?.GetCompletedQuests();
         }
 
         public GuildBuffInfo FindGuildBuffInfo(int Id)
         {
-            for (int i = 0; i < Settings.Guild_BuffList.Count; i++)
+            for (var i = 0; i < Settings.Guild_BuffList.Count; i++)
                 if (Settings.Guild_BuffList[i].Id == Id)
                     return Settings.Guild_BuffList[i];
             return null;
@@ -3158,9 +3076,9 @@ namespace Server.MirEnvir
         {
             Main.GameshopLog.Clear();
 
-            for (int i = 0; i < AccountList.Count; i++)
+            for (var i = 0; i < AccountList.Count; i++)
             {
-                for (int f = 0; f < AccountList[i].Characters.Count; f++)
+                for (var f = 0; f < AccountList[i].Characters.Count; f++)
                 {
                     AccountList[i].Characters[f].GSpurchases.Clear();
                 }
@@ -3172,6 +3090,7 @@ namespace Server.MirEnvir
         }
 
         int RankCount = 100;//could make this a global but it made sence since this is only used here, it should stay here
+
         public int InsertRank(List<Rank_Character_Info> Ranking, Rank_Character_Info NewRank)
         {
             if (Ranking.Count == 0)
@@ -3179,35 +3098,39 @@ namespace Server.MirEnvir
                 Ranking.Add(NewRank);
                 return Ranking.Count;
             }
-            for (int i = 0; i < Ranking.Count; i++)
+
+            for (var i = 0; i < Ranking.Count; i++)
             {
-               //if level is lower
-               if (Ranking[i].level < NewRank.level)
-               {
-                    Ranking.Insert(i, NewRank);
-                    return i+1;
-                }
-                //if exp is lower but level = same
-                if ((Ranking[i].level == NewRank.level) && (Ranking[i].Experience < NewRank.Experience))
+                //if level is lower
+                if (Ranking[i].level < NewRank.level)
                 {
-                   Ranking.Insert(i, NewRank);
-                   return i+1;
+                    Ranking.Insert(i, NewRank);
+                    return i + 1;
+                }
+
+                //if exp is lower but level = same
+                if (Ranking[i].level == NewRank.level && Ranking[i].Experience < NewRank.Experience)
+                {
+                    Ranking.Insert(i, NewRank);
+                    return i + 1;
                 }
             }
+
             if (Ranking.Count < RankCount)
             {
                 Ranking.Add(NewRank);
                 return Ranking.Count;
             }
+
             return 0;
         }
 
         public bool TryAddRank(List<Rank_Character_Info> Ranking, CharacterInfo info, byte type)
         {
-            Rank_Character_Info NewRank = new Rank_Character_Info() { Name = info.Name, Class = info.Class, Experience = info.Experience, level = info.Level, PlayerId = info.Index, info = info };
-            int NewRankIndex = InsertRank(Ranking, NewRank);
+            var NewRank = new Rank_Character_Info() { Name = info.Name, Class = info.Class, Experience = info.Experience, level = info.Level, PlayerId = info.Index, info = info };
+            var NewRankIndex = InsertRank(Ranking, NewRank);
             if (NewRankIndex == 0) return false;
-            for (int i = NewRankIndex; i < Ranking.Count; i++ )
+            for (var i = NewRankIndex; i < Ranking.Count; i++ )
             {
                 SetNewRank(Ranking[i], i + 1, type);
             }
@@ -3217,33 +3140,29 @@ namespace Server.MirEnvir
 
         public int FindRank(List<Rank_Character_Info> Ranking, CharacterInfo info, byte type)
         {
-            int startindex = info.Rank[type];
+            var startindex = info.Rank[type];
             if (startindex > 0) //if there's a previously known rank then the user can only have gone down in the ranking (or stayed the same)
             {
-                for (int i = startindex-1; i < Ranking.Count; i++)
+                for (var i = startindex-1; i < Ranking.Count; i++)
                 {
                     if (Ranking[i].Name == info.Name)
                         return i;
                 }
                 info.Rank[type] = 0;//set the rank to 0 to tell future searches it's not there anymore
             }
-            else //if there's no previously known ranking then technicaly it shouldnt be listed, but check anyway?
-            {
-                //currently not used so not coded it < if there's a reason to, easy to add :p
-            }
             return -1;//index can be 0
         }
 
         public bool UpdateRank(List<Rank_Character_Info> Ranking, CharacterInfo info, byte type)
         {
-            int CurrentRank = FindRank(Ranking, info, type);
+            var CurrentRank = FindRank(Ranking, info, type);
             if (CurrentRank == -1) return false;//not in ranking list atm
             
-            int NewRank = CurrentRank;
+            var NewRank = CurrentRank;
             //next find our updated rank
-            for (int i = CurrentRank-1; i >= 0; i-- )
+            for (var i = CurrentRank-1; i >= 0; i-- )
             {
-                if ((Ranking[i].level > info.Level) || ((Ranking[i].level == info.Level) && (Ranking[i].Experience > info.Experience))) break;
+                if (Ranking[i].level > info.Level || Ranking[i].level == info.Level && Ranking[i].Experience > info.Experience) break;
                     NewRank =i;
             }
 
@@ -3254,7 +3173,7 @@ namespace Server.MirEnvir
             {//if we gained any ranks
                 Ranking.Insert(NewRank, Ranking[CurrentRank]);
                 Ranking.RemoveAt(CurrentRank + 1);
-                for (int i = NewRank + 1; i < Math.Min(Ranking.Count, CurrentRank +1); i++)
+                for (var i = NewRank + 1; i < Math.Min(Ranking.Count, CurrentRank +1); i++)
                 {
                     SetNewRank(Ranking[i], i + 1, type);
                 }
@@ -3266,15 +3185,14 @@ namespace Server.MirEnvir
 
         public void SetNewRank(Rank_Character_Info Rank, int Index, byte type)
         {
-            CharacterInfo Player = Rank.info as CharacterInfo;
-            if (Player == null) return;
+            if (!(Rank.info is CharacterInfo Player)) return;
             Player.Rank[type] = Index;
         }
 
         public void RemoveRank(CharacterInfo info)
         {
             List<Rank_Character_Info> Ranking;
-            int Rankindex = -1;
+            var Rankindex = -1;
             //first check overall top           
             if (info.Level >= RankBottomLevel[0])
             {
@@ -3283,21 +3201,21 @@ namespace Server.MirEnvir
                 if (Rankindex >= 0)
                 {
                     Ranking.RemoveAt(Rankindex);
-                    for (int i = Rankindex; i < Ranking.Count(); i++)
+                    for (var i = Rankindex; i < Ranking.Count(); i++)
                     {
                         SetNewRank(Ranking[i], i, 0);
                     }
                 }
             }
             //next class based top
-            if (info.Level >= RankBottomLevel[(byte)info.Class + 1])
+            if (info.Level < RankBottomLevel[(byte) info.Class + 1]) return;
             {
                 Ranking = RankTop;
                 Rankindex = FindRank(Ranking, info, 1);
                 if (Rankindex >= 0)
                 {
                     Ranking.RemoveAt(Rankindex);
-                    for (int i = Rankindex; i < Ranking.Count(); i++)
+                    for (var i = Rankindex; i < Ranking.Count(); i++)
                     {
                         SetNewRank(Ranking[i], i, 1);
                     }
@@ -3348,19 +3266,18 @@ namespace Server.MirEnvir
                         }
                     }
                 }
-                if (Ranking.Count >= RankCount)
-                {
-                    NewRank = Ranking[Ranking.Count -1];
-                    if (NewRank != null)
-                        RankBottomLevel[(byte)info.Class + 1] = NewRank.level;
-                }
+
+                if (Ranking.Count < RankCount) return;
+                NewRank = Ranking[Ranking.Count -1];
+                if (NewRank != null)
+                    RankBottomLevel[(byte)info.Class + 1] = NewRank.level;
             }
         }
 
 
         public void ReloadNPCs()
         {
-            List<NPCObject> allNpcs = new List<NPCObject>();
+            var allNpcs = new List<NPCObject>();
             foreach (var map in MapList)
             {
                 allNpcs.AddRange(map.NPCs);
@@ -3382,4 +3299,3 @@ namespace Server.MirEnvir
    
     }
 }
-

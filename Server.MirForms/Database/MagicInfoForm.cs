@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using Server.MirDatabase;
 using System.Windows.Forms;
 using Server.MirEnvir;
@@ -14,10 +9,7 @@ namespace Server
     public partial class MagicInfoForm : Form
     {
 
-        public Envir Envir
-        {
-            get { return SMain.EditEnvir; }
-        }
+        public Envir Envir => SMain.EditEnvir;
 
         private MagicInfo _selectedMagicInfo;
 
@@ -62,8 +54,10 @@ namespace Server
              {
                  tabControl1.Enabled = true;
                  lblSelected.Text = "Selected Skill: " + _selectedMagicInfo.ToString();
-                 lblDamageExample.Text = string.Format("Damage @ Skill level 0: {0:000}-{1:000}   |||   level 1: {2:000}-{3:000}   |||   level 2: {4:000}-{5:000}   |||   level 3: {6:000}-{7:000}", GetMinPower(0), GetMaxPower(0), GetMinPower(1), GetMaxPower(1), GetMinPower(2), GetMaxPower(2), GetMinPower(3), GetMaxPower(3));
-                 lblDamageExplained.Text = string.Format("Damage: {{Random(minstat-maxstat) + [<(random({0}-{1})/4) X (skill level +1)> + random<{2}-{3}>]}}  X  {{{4} + (skill level * {5})}}", _selectedMagicInfo.MPowerBase, _selectedMagicInfo.MPowerBase + _selectedMagicInfo.MPowerBonus, _selectedMagicInfo.PowerBase, _selectedMagicInfo.PowerBonus + _selectedMagicInfo.PowerBase, _selectedMagicInfo.MultiplierBase, _selectedMagicInfo.MultiplierBonus);
+                 lblDamageExample.Text =
+                     $"Damage @ Skill level 0: {GetMinPower(0):000}-{GetMaxPower(0):000}   |||   level 1: {GetMinPower(1):000}-{GetMaxPower(1):000}   |||   level 2: {GetMinPower(2):000}-{GetMaxPower(2):000}   |||   level 3: {GetMinPower(3):000}-{GetMaxPower(3):000}";
+                 lblDamageExplained.Text =
+                     $"Damage: {{Random(minstat-maxstat) + [<(random({_selectedMagicInfo.MPowerBase}-{_selectedMagicInfo.MPowerBase + _selectedMagicInfo.MPowerBonus})/4) X (skill level +1)> + random<{_selectedMagicInfo.PowerBase}-{_selectedMagicInfo.PowerBonus + _selectedMagicInfo.PowerBase}>]}}  X  {{{_selectedMagicInfo.MultiplierBase} + (skill level * {_selectedMagicInfo.MultiplierBonus})}}";
                  txtSkillIcon.Text = _selectedMagicInfo.Icon.ToString();
                  txtSkillLvl1Points.Text = _selectedMagicInfo.Need1.ToString();
                  txtSkillLvl1Req.Text = _selectedMagicInfo.Level1.ToString();
