@@ -53,8 +53,9 @@ namespace Server.MirNetwork
             }
             catch (Exception ex)
             {
-                File.AppendAllText(Settings.LogPath + "Error Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
-                                           String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
+                File.AppendAllText(Path.Combine(Settings.LogPath,
+                                                "Error Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt"),
+                                   String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
             }
         }
 
@@ -109,8 +110,9 @@ namespace Server.MirNetwork
             }
             catch (Exception ex)
             {
-                File.AppendAllText(Settings.LogPath + "Error Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
-                                           String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
+                File.AppendAllText(Path.Combine(Settings.LogPath,
+                                                "Error Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt"),
+                                   String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
             }
         }
         public void Disconnect()
@@ -129,8 +131,9 @@ namespace Server.MirNetwork
             }
             catch (Exception ex)
             {
-                File.AppendAllText(Settings.LogPath + "Error Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
-                                           String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
+                File.AppendAllText(Path.Combine(Settings.LogPath,
+                                                "Error Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt"),
+                                   String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
             }
         }
         public void SendDisconnect()

@@ -203,7 +203,7 @@ namespace Server.MirObjects
                     if (quoteMatch.Success)
                         listPath = quoteMatch.Groups[1].Captures[0].Value;
 
-                    var fileName = Settings.NameListPath + listPath;
+                    var fileName = Path.Combine(Settings.NameListPath, listPath);
 
                     string sDirectory = Path.GetDirectoryName(fileName);
                     Directory.CreateDirectory(sDirectory);
@@ -223,7 +223,7 @@ namespace Server.MirObjects
                     if (quoteMatch.Success)
                         listPath = quoteMatch.Groups[1].Captures[0].Value;
 
-                    fileName = Settings.NameListPath + listPath;
+                    fileName = Path.Combine(Settings.NameListPath, listPath);
 
                     sDirectory = Path.GetDirectoryName(fileName);
                     Directory.CreateDirectory(sDirectory);
@@ -534,7 +534,7 @@ namespace Server.MirObjects
                     if (quoteMatch.Success)
                         listPath = quoteMatch.Groups[1].Captures[0].Value;
 
-                    fileName = Settings.NameListPath + listPath;
+                    fileName = Path.Combine(Settings.NameListPath, listPath);
 
                     string sDirectory = Path.GetDirectoryName(fileName);
                     Directory.CreateDirectory(sDirectory);
@@ -556,7 +556,7 @@ namespace Server.MirObjects
                     if (quoteMatch.Success)
                         listPath = quoteMatch.Groups[1].Captures[0].Value;
 
-                    fileName = Settings.NameListPath + listPath;
+                    fileName = Path.Combine(Settings.NameListPath, listPath);
 
                     sDirectory = Path.GetDirectoryName(fileName);
                     Directory.CreateDirectory(sDirectory);
@@ -577,7 +577,7 @@ namespace Server.MirObjects
                     if (quoteMatch.Success)
                         listPath = quoteMatch.Groups[1].Captures[0].Value;
 
-                    fileName = Settings.NameListPath + listPath;
+                    fileName = Path.Combine(Settings.NameListPath, listPath);
 
                     sDirectory = Path.GetDirectoryName(fileName);
                     Directory.CreateDirectory(sDirectory);
@@ -597,7 +597,7 @@ namespace Server.MirObjects
                     if (quoteMatch.Success)
                         listPath = quoteMatch.Groups[1].Captures[0].Value;
 
-                    fileName = Settings.NameListPath + listPath;
+                    fileName = Path.Combine(Settings.NameListPath, listPath);
 
                     sDirectory = Path.GetDirectoryName(fileName);
                     Directory.CreateDirectory(sDirectory);
@@ -616,7 +616,7 @@ namespace Server.MirObjects
                     if (quoteMatch.Success)
                         listPath = quoteMatch.Groups[1].Captures[0].Value;
 
-                    fileName = Settings.NameListPath + listPath;
+                    fileName = Path.Combine(Settings.NameListPath, listPath);
 
                     sDirectory = Path.GetDirectoryName(fileName);
                     Directory.CreateDirectory(sDirectory);
@@ -635,7 +635,7 @@ namespace Server.MirObjects
                     if (quoteMatch.Success)
                         listPath = quoteMatch.Groups[1].Captures[0].Value;
 
-                    fileName = Settings.NameListPath + listPath;
+                    fileName = Path.Combine(Settings.NameListPath, listPath);
 
                     sDirectory = Path.GetDirectoryName(fileName);
                     Directory.CreateDirectory(sDirectory);
@@ -948,7 +948,7 @@ namespace Server.MirObjects
 
                     if (quoteMatch.Success)
                     {
-                        fileName = Settings.ValuePath + quoteMatch.Groups[1].Captures[0].Value;
+                        fileName = Path.Combine(Settings.ValuePath, quoteMatch.Groups[1].Captures[0].Value);
 
                         string group = parts[parts.Length - 2];
                         string key = parts[parts.Length - 1];
@@ -970,7 +970,7 @@ namespace Server.MirObjects
 
                     if (matchCol.Count > 0 && matchCol[0].Success)
                     {
-                        fileName = Settings.ValuePath + matchCol[0].Groups[1].Captures[0].Value;
+                        fileName = Path.Combine(Settings.ValuePath, matchCol[0].Groups[1].Captures[0].Value);
 
                         string value = parts[parts.Length - 1];
 
@@ -3519,7 +3519,7 @@ namespace Server.MirObjects
                         player.Enqueue(new S.OpenBrowser { Url = param[0]});
                         break;
                     case ActionType.GetRandomText:
-                        string randomTextPath = Settings.NPCPath + param[0];
+                        string randomTextPath = Path.Combine(Settings.NPCPath, param[0]);
                         if (!File.Exists(randomTextPath))
                         {
                             MessageQueue.Enqueue(string.Format("the randomTextFile:{0} does not exist.",randomTextPath));
