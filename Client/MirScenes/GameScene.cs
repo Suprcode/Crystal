@@ -5493,8 +5493,14 @@ namespace Client.MirScenes
                     return Color.DarkOrange;
                 case ItemGrade.Mythical:
                     return Color.Plum;
+                case ItemGrade.Uncommon:
+                    return Color.LimeGreen;
+                case ItemGrade.Unique:
+                    return Color.Gold;
+                case ItemGrade.Set:
+                    return Color.Lime;
                 default:
-                    return Color.Yellow;
+                    return Color.NavajoWhite;
             }
         }
 
@@ -5546,7 +5552,16 @@ namespace Client.MirScenes
                     break;
                 case ItemGrade.Mythical:
                     GradeString = GameLanguage.ItemGradeMythical;
-                    break;              
+                    break;
+                case ItemGrade.Uncommon:
+                    GradeString = GameLanguage.ItemGradeUncommon;
+                    break;
+                case ItemGrade.Unique:
+                    GradeString = GameLanguage.ItemGradeUnique;
+                    break;
+                case ItemGrade.Set:
+                    GradeString = GameLanguage.ItemGradeSet;
+                    break;
             }
             MirLabel nameLabel = new MirLabel
             {
