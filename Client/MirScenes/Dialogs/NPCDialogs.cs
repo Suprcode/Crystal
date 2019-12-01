@@ -1628,6 +1628,7 @@ namespace Client.MirScenes.Dialogs
                 Hide();
                 return;
             }
+            Location = new Point(GameScene.Scene.InventoryDialog.Location.X, GameScene.Scene.InventoryDialog.Location.Y + 236);
         }
 
 
