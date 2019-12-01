@@ -5539,7 +5539,7 @@ namespace Client.MirScenes
             string GradeString = "";
             switch (HoverItem.Info.Grade)
             {
-                case ItemGrade.None:                   
+                case ItemGrade.None:
                     break;
                 case ItemGrade.Common:
                     GradeString = GameLanguage.ItemGradeCommon;
@@ -5570,12 +5570,12 @@ namespace Client.MirScenes
                 Location = new Point(4, 4),
                 OutLine = true,
                 Parent = ItemLabel,
-                Text = HoverItem.Info.Grade != ItemGrade.None ? string.Format("{0}{1}{2}", HoverItem.Info.FriendlyName, "\n", GradeString) : 
+                Text = HoverItem.Info.Grade != ItemGrade.None ? string.Format("{0}{1}{2}", HoverItem.Info.FriendlyName, "\n", GradeString) :
                 (HoverItem.Info.Type == ItemType.Pets && HoverItem.Info.Shape == 26 && HoverItem.Info.Effect != 7) ? "WonderDrug" : HoverItem.Info.FriendlyName,
             };
 
             if (HoverItem.RefineAdded > 0)
-            nameLabel.Text = "(*)" + nameLabel.Text;
+                nameLabel.Text = "(*)" + nameLabel.Text;
 
             ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, nameLabel.DisplayRectangle.Right + 4),
                 Math.Max(ItemLabel.Size.Height, nameLabel.DisplayRectangle.Bottom));
@@ -5592,19 +5592,22 @@ namespace Client.MirScenes
                 switch (HoverItem.Info.Type)
                 {
                     case ItemType.Amulet:
-                        text += string.Format(" Usage {0}/{1}", HoverItem.CurrentDura, HoverItem.MaxDura);
+                        text += string.Format("\nUsage: {0}/{1}", HoverItem.CurrentDura, HoverItem.MaxDura);
                         break;
                     case ItemType.Ore:
-                        text += string.Format(" Purity {0}", Math.Round(HoverItem.CurrentDura / 1000M));
+                        text += string.Format("\nPurity: {0}", Math.Round(HoverItem.CurrentDura / 1000M));
                         break;
                     case ItemType.Meat:
-                        text += string.Format(" Quality {0}", Math.Round(HoverItem.CurrentDura / 1000M));
+                        text += string.Format("\nQuality: {0}", Math.Round(HoverItem.CurrentDura / 1000M));
                         break;
                     case ItemType.Mount:
-                        text += string.Format(" Loyalty {0} / {1}", HoverItem.CurrentDura, HoverItem.MaxDura);
+                        text += string.Format("\nStamina: {0} / {1}", HoverItem.CurrentDura, HoverItem.MaxDura);
                         break;
                     case ItemType.Food:
-                        text += string.Format(" Nutrition {0}", HoverItem.CurrentDura);
+                        text += string.Format("\nMount Food\nRestores {0} Stamina.", HoverItem.CurrentDura);
+                        break;
+                    case ItemType.Fish:
+                        text += string.Format("\n______________________\n\nYour fish weighed in at:\n{0:####lb #oz}\n", HoverItem.CurrentDura);
                         break;
                     case ItemType.Gem:
                         break;
@@ -5616,18 +5619,32 @@ namespace Client.MirScenes
                         if (HoverItem.Info.Shape == 26)//WonderDrug
                         {
                             string strTime = Functions.PrintTimeSpanFromSeconds((HoverItem.CurrentDura * 3600), false);
-                            text += string.Format("\n {0} {1}", GameLanguage.Durability, strTime);
+                            text += "\n" + string.Format(GameLanguage.Durability, " {0} {1}", strTime);
                         }
                         break;
                     default:
-                        text += string.Format(" {0} {1}/{2}", GameLanguage.Durability, Math.Round(HoverItem.CurrentDura / 1000M),
-                                                   Math.Round(HoverItem.MaxDura / 1000M));
+                        //text += string.Format(" {0} {1}/{2}", GameLanguage.Durability, Math.Round(HoverItem.CurrentDura / 1000M),
+                        //                           Math.Round(HoverItem.MaxDura / 1000M));
+                        if (HoverItem.MaxDura > realItem.Durability)
+                        {
+                            text += "\n" + string.Format(GameLanguage.Durability + " {0}/{1}   (+{2})",
+                                Math.Round(HoverItem.CurrentDura / 1000M),
+                                Math.Round(HoverItem.MaxDura / 1000M),
+                                Math.Round(HoverItem.MaxDura / 1000M) - Math.Round(realItem.Durability / 1000M));
+                        }
+                        else
+                        {
+                            text += "\n" + string.Format(GameLanguage.Durability + " {0}/{1}",
+                                Math.Round(HoverItem.CurrentDura / 1000M),
+                                Math.Round(HoverItem.MaxDura / 1000M),
+                                Math.Round(HoverItem.MaxDura / 1000M) - Math.Round(realItem.Durability / 1000M));
+                        }
                         break;
                 }
             }
 
             String WedRingName = "";
-            if (HoverItem.WeddingRing == -1)
+            if (HoverItem.WeddingRing == -1 && HoverItem.Weight > 0)
             {
                 string InfoLanguageString = "";
                 switch (HoverItem.Info.Type)
@@ -5743,8 +5760,12 @@ namespace Client.MirScenes
                         InfoLanguageString = GameLanguage.ItemTypeTransform;
                         break;
                 }
-                WedRingName = string.Format(GameLanguage.WedRingName, InfoLanguageString, "\n" , GameLanguage.Weight, HoverItem.Weight + text);
+                WedRingName = string.Format(GameLanguage.WedRingName, InfoLanguageString, "\n", GameLanguage.Weight, HoverItem.Weight + text);
             }
+            else if (HoverItem.WeddingRing == -1 && HoverItem.Weight <= 0)
+            {
+                WedRingName = HoverItem.Info.Type.ToString() + text;
+            }              
             else
             {
                 WedRingName = string.Format(GameLanguage.WedRingName, GameLanguage.WeddingRing, "\n", GameLanguage.Weight, HoverItem.Weight + text);
@@ -5760,9 +5781,9 @@ namespace Client.MirScenes
                 Text = WedRingName
             };
 
-            ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, etcLabel.DisplayRectangle.Right + 4),
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, etcLabel.DisplayRectangle.Right + 4),
                 Math.Max(ItemLabel.Size.Height, etcLabel.DisplayRectangle.Bottom + 4));
-
+            
             #region OUTLINE
             MirControl outLine = new MirControl
             {
