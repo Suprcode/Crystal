@@ -96,7 +96,7 @@ namespace Server.Library.Utils
 
         void AddNameList(string playerName, string fileName)
         {
-            fileName = Settings.NameListPath + fileName;
+            fileName = Path.Combine(Settings.NameListPath, fileName);
             var sDirectory = Path.GetDirectoryName(fileName);
             Directory.CreateDirectory(sDirectory ?? throw new InvalidOperationException());
             if (!File.Exists(fileName))

@@ -1382,7 +1382,7 @@ namespace Server
             if (_selectedMapInfos.Count == 0) return;
 
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.InitialDirectory = Application.StartupPath + @"\Exports";
+            sfd.InitialDirectory = Path.Combine(Application.StartupPath, "Exports");
             sfd.FileName = "MapInfoExport";
             sfd.Filter = "Text File|*.txt";
             sfd.ShowDialog();
@@ -1517,7 +1517,7 @@ namespace Server
             if (_selectedMapInfos.Count == 0) return;
 
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.InitialDirectory = Application.StartupPath + @"\Exports";
+            sfd.InitialDirectory = Path.Combine(Application.StartupPath, "Exports");
             sfd.Filter = "Text File|*.txt";
             sfd.ShowDialog();
 

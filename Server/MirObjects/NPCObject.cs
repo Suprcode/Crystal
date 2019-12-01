@@ -143,7 +143,7 @@ namespace Server.MirObjects
         }
         public void LoadGoods()
         {
-            string path = Settings.GoodsPath + Info.Index.ToString() + ".msd";
+            string path = Path.Combine(Settings.GoodsPath, Info.Index.ToString() + ".msd");
 
             if (!File.Exists(path)) return;
 
