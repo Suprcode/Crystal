@@ -49,7 +49,7 @@ namespace Server.MirEnvir
         {
             Player = player;
 
-            string baseDir = @Settings.ReportPath + player.Name + "_player";
+            string baseDir = Path.Combine(Settings.ReportPath, player.Name + "_player");
 
             try
             {
@@ -324,7 +324,7 @@ namespace Server.MirEnvir
             if (!DoLog || Actions.Count < 1) return;
 
             string filename = Envir.Now.Date.ToString(@"yyyy-MM-dd");
-            string fullPath = _baseDir + @"\" + filename + ".txt";
+            string fullPath = Path.Combine(_baseDir, filename + ".txt");
 
             try
             {

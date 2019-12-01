@@ -56,9 +56,9 @@ namespace Server.MirEnvir
 
         public const int Version = 79;
         public const int CustomVersion = 0;
-        public const string DatabasePath = @".\Server.MirDB";
-        public const string AccountPath = @".\Server.MirADB";
-        public const string BackUpPath = @".\Back Up\";
+        public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
+        public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
+        public static readonly string BackUpPath = Path.Combine(".", "Back Up");
         public bool ResetGS = false;
 
         private static readonly Regex AccountIDReg, PasswordReg, EMailReg, CharacterReg;
@@ -666,7 +666,7 @@ namespace Server.MirEnvir
                     // Get the line number from the stack frame
                     var line = frame.GetFileLineNumber();
 
-                    File.AppendAllText(Settings.ErrorPath + "Error.txt",
+                    File.AppendAllText(Path.Combine(Settings.ErrorPath, "Error.txt"),
                         $"[{Now}] {ex} at line {line}{Environment.NewLine}");
                 }
 
@@ -687,7 +687,7 @@ namespace Server.MirEnvir
                 var line = frame.GetFileLineNumber();
 
                 MessageQueue.Enqueue("[outer workloop error]" + ex);
-                File.AppendAllText(Settings.ErrorPath + "Error.txt",
+                File.AppendAllText(Path.Combine(Settings.ErrorPath, "Error.txt"),
                     $"[{Now}] {ex} at line {line}{Environment.NewLine}");
             }
             _thread = null;
@@ -757,7 +757,7 @@ namespace Server.MirEnvir
                 if (ex is ThreadInterruptedException) return;
                 MessageQueue.Enqueue(ex);
 
-                File.AppendAllText(Settings.ErrorPath + "Error.txt",
+                File.AppendAllText(Path.Combine(Settings.ErrorPath, "Error.txt"),
                     $"[{Now}] {ex}{Environment.NewLine}");
             }
             //Info.Stop = true;
@@ -977,7 +977,7 @@ namespace Server.MirEnvir
                     var mStream = new MemoryStream();
                     var writer = new BinaryWriter(mStream);
                     GuildList[i].Save(writer);
-                    var fStream = new FileStream(Settings.GuildPath + i + ".mgdn", FileMode.Create);
+                    var fStream = new FileStream(Path.Combine(Settings.GuildPath, i + ".mgdn"), FileMode.Create);
                     var data = mStream.ToArray();
                     fStream.BeginWrite(data, 0, data.Length, EndSaveGuildsAsync, fStream);
                 }
@@ -1025,7 +1025,7 @@ namespace Server.MirEnvir
 
                     if (!npc.NeedSave) continue;
 
-                    var path = Settings.GoodsPath + npc.Info.Index + ".msdn";
+                    var path = Path.Combine(Settings.GoodsPath, npc.Info.Index + ".msdn");
 
                     var mStream = new MemoryStream();
                     var writer = new BinaryWriter(mStream);
@@ -1077,7 +1077,7 @@ namespace Server.MirEnvir
                 var mStream = new MemoryStream();
                 var writer = new BinaryWriter(mStream);
                 Conquests[i].Save(writer);
-                var fStream = new FileStream(Settings.ConquestsPath + Conquests[i].Info.Index + ".mcdn", FileMode.Create);
+                var fStream = new FileStream(Path.Combine(Settings.ConquestsPath, Conquests[i].Info.Index + ".mcdn"), FileMode.Create);
                 var data = mStream.ToArray();
                 fStream.BeginWrite(data, 0, data.Length, EndSaveConquestsAsync, fStream);
             }
@@ -1409,8 +1409,8 @@ namespace Server.MirEnvir
                 for (var i = 0; i < GuildCount; i++)
                 {
                     GuildObject newGuild;
-                    if (!File.Exists(Settings.GuildPath + i + ".mgd")) continue;
-                    using (var stream = File.OpenRead(Settings.GuildPath + i + ".mgd"))
+                    if (!File.Exists(Path.Combine(Settings.GuildPath, i + ".mgd"))) continue;
+                    using (var stream = File.OpenRead(Path.Combine(Settings.GuildPath, i + ".mgd")))
                     using (var reader = new BinaryReader(stream))
                         newGuild = new GuildObject(reader);
     
@@ -1613,9 +1613,9 @@ namespace Server.MirEnvir
 
                     if (tempMap == null) continue;
 
-                    if (File.Exists(Settings.ConquestsPath + ConquestInfos[i].Index + ".mcd"))
+                    if (File.Exists(Path.Combine(Settings.ConquestsPath, ConquestInfos[i].Index + ".mcd")))
                     {
-                        using (var stream = File.OpenRead(Settings.ConquestsPath + ConquestInfos[i].Index + ".mcd"))
+                        using (var stream = File.OpenRead(Path.Combine(Settings.ConquestsPath, ConquestInfos[i].Index + ".mcd")))
                         using (var reader = new BinaryReader(stream))
                             newConquest = new ConquestObject(reader) { Info = ConquestInfos[i], ConquestMap = tempMap };
 
