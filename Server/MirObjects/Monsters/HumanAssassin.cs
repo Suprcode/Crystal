@@ -246,7 +246,11 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-            if (AttackDamage >= 500) Die();
+            if (AttackDamage >= 500) 
+            {   
+                Die();
+                return;
+            }
 
             ShockTime = 0;
 
