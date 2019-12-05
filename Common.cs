@@ -813,6 +813,7 @@ public enum ItemType : byte
 	Awakening = 35,
     Pets = 36,
     Transform = 37,
+    Charm = 38,
 }
 
 public enum MirGridType : byte

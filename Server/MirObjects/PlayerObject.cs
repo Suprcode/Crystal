@@ -309,6 +309,9 @@ namespace Server.MirObjects
         public bool HasTeleportRing, HasProtectionRing, HasRevivalRing;
         public bool HasMuscleRing, HasClearRing, HasParalysisRing, HasProbeNecklace, NoDuraLoss;
 
+        public bool HasCharmExpBuffItem, HasCharmDropBuffItem;
+        public int CharmExpBuffValue = 0, CharmDropBuffValue = 0;
+
         public PlayerObject MarriageProposal;
         public PlayerObject DivorceProposal;
         public PlayerObject MentorRequest;
@@ -818,6 +821,8 @@ namespace Server.MirObjects
             bool hiding = false;
             bool isGM = false;
             bool mentalState = false;
+            bool CharmExpBuff = false;
+            bool CharmDropBuff = false;
 
             for (int i = Buffs.Count - 1; i >= 0; i--)
             {
@@ -839,6 +844,14 @@ namespace Server.MirObjects
                     case BuffType.GameMaster:
                         isGM = true;
                         if (!IsGM) removeBuff = true;
+                        break;
+                    case BuffType.Exp:
+                        CharmExpBuff = true;
+                        if (!HasCharmExpBuffItem) removeBuff = true;
+                        break;
+                    case BuffType.Drop:
+                        CharmDropBuff = true;
+                        if (!HasCharmDropBuffItem) removeBuff = true;
                         break;
                 }
 
@@ -869,6 +882,16 @@ namespace Server.MirObjects
             if (IsGM && !isGM)
             {
                 AddBuff(new Buff { Type = BuffType.GameMaster, Caster = this, ExpireTime = Envir.Time + 100, Values = new int[] { 0 }, Infinite = true, Visible = Settings.GameMasterEffect });
+            }
+
+            if (HasCharmExpBuffItem && !CharmExpBuff)
+            {
+                AddBuff(new Buff { Type = BuffType.Exp, Caster = this, ExpireTime = Envir.Time + 100, Values = new int[] { CharmExpBuffValue }, Infinite = true });
+            }
+
+            if (HasCharmDropBuffItem && !CharmDropBuff)
+            {
+                AddBuff(new Buff { Type = BuffType.Drop, Caster = this, ExpireTime = Envir.Time + 100, Values = new int[] { CharmDropBuffValue }, Infinite = true });
             }
         }
         private void ProcessRegen()
@@ -2546,6 +2569,7 @@ namespace Server.MirObjects
             }
             RefreshLevelStats();
             RefreshBagWeight();
+            RefreshBagStats();
             RefreshEquipmentStats();
             RefreshItemSetStats();
             RefreshMirSetStats();
@@ -2657,6 +2681,79 @@ namespace Server.MirObjects
                 if (item != null)
                     CurrentBagWeight = (ushort)Math.Min(ushort.MaxValue, CurrentBagWeight + item.Weight);
             }
+        }
+
+        private void RefreshBagStats()
+        {
+            HasCharmExpBuffItem = false;
+            HasCharmDropBuffItem = false;
+            CharmExpBuffValue = 0;
+            CharmDropBuffValue = 0;
+
+            for (int i = 0; i < Info.Inventory.Length; i++)
+            {
+                UserItem temp = Info.Inventory[i];
+                if (temp == null) continue;
+                ItemInfo RealItem = Functions.GetRealItem(temp.Info, Info.Level, Info.Class, Envir.ItemInfoList);
+                if (temp != null && temp.Info.Type == ItemType.Charm)
+                {
+                    MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + RealItem.MinAC);
+                    MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + RealItem.MaxAC + temp.AC);
+                    MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + RealItem.MinMAC);
+                    MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + RealItem.MaxMAC + temp.MAC);
+
+                    MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + RealItem.MinDC);
+                    MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + RealItem.MaxDC + temp.DC);
+                    MinMC = (ushort)Math.Min(ushort.MaxValue, MinMC + RealItem.MinMC);
+                    MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + RealItem.MaxMC + temp.MC);
+                    MinSC = (ushort)Math.Min(ushort.MaxValue, MinSC + RealItem.MinSC);
+                    MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + RealItem.MaxSC + temp.SC);
+
+                    Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + RealItem.Accuracy + temp.Accuracy);
+                    Agility = (byte)Math.Min(byte.MaxValue, Agility + RealItem.Agility + temp.Agility);
+
+                    MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + RealItem.HP + temp.HP);
+                    MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + RealItem.MP + temp.MP);
+
+                    ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + temp.AttackSpeed + RealItem.AttackSpeed)));
+
+                    MaxBagWeight = (ushort)Math.Max(ushort.MinValue, (Math.Min(ushort.MaxValue, MaxBagWeight + RealItem.BagWeight)));
+                    MaxWearWeight = (ushort)Math.Max(ushort.MinValue, (Math.Min(byte.MaxValue, MaxWearWeight + RealItem.WearWeight)));
+                    MaxHandWeight = (ushort)Math.Max(ushort.MinValue, (Math.Min(byte.MaxValue, MaxHandWeight + RealItem.HandWeight)));
+
+                    MagicResist = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, MagicResist + temp.MagicResist + RealItem.MagicResist)));
+                    PoisonResist = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonResist + temp.PoisonResist + RealItem.PoisonResist)));
+                    HealthRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, HealthRecovery + temp.HealthRecovery + RealItem.HealthRecovery)));
+                    SpellRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, SpellRecovery + temp.ManaRecovery + RealItem.SpellRecovery)));
+                    PoisonRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonRecovery + temp.PoisonRecovery + RealItem.PoisonRecovery)));
+                    CriticalRate = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, CriticalRate + temp.CriticalRate + RealItem.CriticalRate)));
+                    CriticalDamage = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, CriticalDamage + temp.CriticalDamage + RealItem.CriticalDamage)));
+                    Holy = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Holy + RealItem.Holy)));
+                    Freezing = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Freezing + temp.Freezing + RealItem.Freezing)));
+                    PoisonAttack = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonAttack + temp.PoisonAttack + RealItem.PoisonAttack)));
+                    Reflect = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Reflect + RealItem.Reflect)));
+                    HpDrainRate = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, HpDrainRate + RealItem.HpDrainRate)));
+
+
+                    switch (temp.Info.Shape)
+                    {
+                        case 3:
+                            if (temp.Info.Luck + temp.Luck > 0)
+                            {
+                                CharmExpBuffValue += temp.Info.Luck + temp.Luck;
+                                HasCharmExpBuffItem = true;
+                            }
+                            if (temp.Info.Strong + temp.Strong > 0)
+                            {
+                                CharmDropBuffValue += temp.Info.Strong + temp.Strong;
+                                HasCharmDropBuffItem = true;
+                            }
+                            break;
+                    }
+                }
+
+            }
+            UpdateCharmBuffs();
         }
 
         private void RefreshEquipmentStats()
@@ -10904,6 +11001,7 @@ namespace Server.MirObjects
                 Account.Storage[to] = temp;
                 Info.Inventory[from] = null;
                 RefreshBagWeight();
+                RefreshBagStats();
 
                 Report.ItemMoved("StoreItem", temp, MirGridType.Inventory, MirGridType.Storage, from, to);
 
@@ -10973,6 +11071,7 @@ namespace Server.MirObjects
 
                 p.Success = true;
                 RefreshBagWeight();
+                RefreshBagStats();
                 Enqueue(p);
 
                 return;
@@ -11501,7 +11600,7 @@ namespace Server.MirObjects
             if (item.Count > 1) item.Count--;
             else Info.Inventory[index] = null;
             RefreshBagWeight();
-
+            RefreshBagStats();
             Report.ItemChanged("UseItem", item, 1, 1);
 
             p.Success = true;
@@ -12436,7 +12535,7 @@ namespace Server.MirObjects
             p.Success = true;
             Enqueue(p);
             RefreshBagWeight();
-
+            RefreshBagStats();
             Report.ItemChanged("DropItem", temp, count, 1);
         }
         public void DropGold(uint gold)
@@ -12662,7 +12761,7 @@ namespace Server.MirObjects
 
             AddItem(item);
             RefreshBagWeight();
-
+            RefreshBagStats();
         }
         public void GainItemMail(UserItem item, int reason)
         {
@@ -14189,6 +14288,25 @@ namespace Server.MirObjects
                     Buffs[i].Values[0] = (byte)options;
                     Enqueue(new S.AddBuff { Type = Buffs[i].Type, Caster = Buffs[i].Caster.Name, Expire = Buffs[i].ExpireTime - Envir.Time, Values = Buffs[i].Values, Infinite = Buffs[i].Infinite, ObjectID = ObjectID, Visible = Buffs[i].Visible });
                     break;
+                }
+            }
+        }
+
+        private void UpdateCharmBuffs()
+        {
+            if (!HasCharmExpBuffItem && !HasCharmDropBuffItem) return;
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                switch (Buffs[i].Type)
+                {
+                    case BuffType.Exp:
+                        Buffs[i].Values[0] = CharmExpBuffValue;
+                        Enqueue(new S.AddBuff { Type = Buffs[i].Type, Caster = Buffs[i].Caster.Name, Expire = Buffs[i].ExpireTime - Envir.Time, Values = Buffs[i].Values, Infinite = Buffs[i].Infinite, ObjectID = ObjectID, Visible = Buffs[i].Visible });
+                        break;
+                    case BuffType.Drop:
+                        Buffs[i].Values[0] = CharmDropBuffValue;
+                        Enqueue(new S.AddBuff { Type = Buffs[i].Type, Caster = Buffs[i].Caster.Name, Expire = Buffs[i].ExpireTime - Envir.Time, Values = Buffs[i].Values, Infinite = Buffs[i].Infinite, ObjectID = ObjectID, Visible = Buffs[i].Visible });
+                        break;
                 }
             }
         }
@@ -15987,6 +16105,7 @@ namespace Server.MirObjects
                     MyGuild.StoredItems[to] = new GuildStorageItem() { Item = Info.Inventory[from], UserId = Info.Index };
                     Info.Inventory[from] = null;
                     RefreshBagWeight();
+                    RefreshBagStats();
                     MyGuild.SendItemInfo(MyGuild.StoredItems[to].Item);
                     MyGuild.SendServerPacket(new S.GuildStorageItemChange() { Type = 0, User = Info.Index, Item = MyGuild.StoredItems[to], To = to, From = from });
                     MyGuild.NeedSave = true;
@@ -16034,6 +16153,7 @@ namespace Server.MirObjects
                     MyGuild.StoredItems[from] = null;
                     MyGuild.SendServerPacket(new S.GuildStorageItemChange() { Type = 1, User = Info.Index, To = to, From = from });
                     RefreshBagWeight();
+                    RefreshBagStats();
                     MyGuild.NeedSave = true;
                     break;
                 case 2: // Move Item
@@ -16291,6 +16411,7 @@ namespace Server.MirObjects
 
                 p.Success = true;
                 RefreshBagWeight();
+                RefreshBagStats();
                 TradeItem();
 
                 Report.ItemMoved("RetrieveTradeItem", temp, MirGridType.Trade, MirGridType.Inventory, from, to);
