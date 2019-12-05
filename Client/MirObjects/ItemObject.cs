@@ -7,6 +7,7 @@ using Client.MirGraphics;
 using Client.MirScenes;
 using S = ServerPackets;
 using System.Text.RegularExpressions;
+using Client.MirControls;
 
 namespace Client.MirObjects
 {
@@ -23,9 +24,21 @@ namespace Client.MirObjects
 
         public Size Size;
 
+        public MirAnimatedControl _effect;
+        public ItemGrade Grade;
 
         public ItemObject(uint objectID) : base(objectID)
         {
+            _effect = new MirAnimatedControl()
+            {
+                Animated = true,
+                AnimationCount = 10,
+                AnimationDelay = 100,
+                Index = 0,
+                Library = Libraries.ItemEffects,
+                Loop = true,
+                Blending = true,
+            };
         }
 
 
@@ -44,6 +57,7 @@ namespace Client.MirObjects
             Size = BodyLibrary.GetTrueSize(DrawFrame);
 
             DrawY = CurrentLocation.Y;
+            Grade = info.Grade;
 
         }
         public void Load(S.ObjectGold info)
@@ -103,6 +117,41 @@ namespace Client.MirObjects
                 DisplayRectangle.X + (DisplayRectangle.Width - NameLabel.Size.Width) / 2,
                 DisplayRectangle.Y + (DisplayRectangle.Height - NameLabel.Size.Height) / 2 - 20);
             NameLabel.Draw();
+        }
+
+        public void DrawGradeEffect()
+        {
+            if (Grade > ItemGrade.Common)
+            {
+                switch (Grade)
+                {
+                    case ItemGrade.Rare:
+                        _effect.BackColour = Color.DeepSkyBlue;
+                        _effect.ForeColour = Color.DeepSkyBlue;
+                        break;
+                    case ItemGrade.Legendary:
+                        _effect.BackColour = Color.DarkOrange;
+                        _effect.ForeColour = Color.DarkOrange;
+                        break;
+                    case ItemGrade.Mythical:
+                        _effect.BackColour = Color.Purple;
+                        _effect.ForeColour = Color.Purple;
+                        break;
+                    case ItemGrade.Uncommon:
+                        _effect.BackColour = Color.LimeGreen;
+                        _effect.ForeColour = Color.LimeGreen;
+                        break;
+                    case ItemGrade.Unique:
+                        _effect.BackColour = Color.Gold;
+                        _effect.ForeColour = Color.Gold;
+                        break;
+                    case ItemGrade.Set:
+                        _effect.BackColour = Color.Lime;
+                        _effect.ForeColour = Color.Lime;
+                        break;
+                }
+                Libraries.ItemEffects.DrawBlend(0 + _effect.Index, new Point(DrawLocation.X, DrawLocation.Y), _effect.BackColour, true, 10F);
+            }
         }
 
         public override void DrawBehindEffects(bool effectsEnabled)

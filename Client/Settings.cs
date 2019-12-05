@@ -130,7 +130,8 @@ namespace Client
             DuraView = false,
             DisplayDamage = true,
             TargetDead = false,
-            ExpandedBuffWindow = true;
+            ExpandedBuffWindow = true,
+            ItemFloorGlow = false;
 
         public static int[,] SkillbarLocation = new int[2, 2] { { 0, 0 }, { 216, 0 }  };
 
@@ -222,6 +223,7 @@ namespace Client
             TargetDead = Reader.ReadBoolean("Game", "TargetDead", TargetDead);
             ExpandedBuffWindow = Reader.ReadBoolean("Game", "ExpandedBuffWindow", ExpandedBuffWindow);
             DuraView = Reader.ReadBoolean("Game", "DuraWindow", DuraView);
+            ItemFloorGlow = Reader.ReadBoolean("Game", "ItemFloorGlow", ItemFloorGlow);
 
             for (int i = 0; i < SkillbarLocation.Length / 2; i++)
             {
@@ -294,6 +296,7 @@ namespace Client
             Reader.Write("Game", "TargetDead", TargetDead);
             Reader.Write("Game", "ExpandedBuffWindow", ExpandedBuffWindow);
             Reader.Write("Game", "DuraWindow", DuraView);
+            Reader.Write("Game", "ItemFloorGlow", ItemFloorGlow);
 
             for (int i = 0; i < SkillbarLocation.Length / 2; i++)
             {
