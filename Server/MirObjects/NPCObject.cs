@@ -909,11 +909,11 @@ namespace Server.MirObjects
                     break;
                 case MarketKey:
                     player.UserMatch = false;
-                    player.GetMarket(string.Empty, ItemType.Nothing);
+                    player.GetMarket(string.Empty, ItemType.Nothing, ItemGrade.None);
                     break;
                 case ConsignmentsKey:
                     player.UserMatch = true;
-                    player.GetMarket(string.Empty, ItemType.Nothing);
+                    player.GetMarket(string.Empty, ItemType.Nothing, ItemGrade.None);
                     break;
                 case GuildCreateKey:
                     if (player.Info.Level < Settings.Guild_RequiredLevel)
