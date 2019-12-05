@@ -606,7 +606,11 @@ public enum Monster : ushort
     Ram1 = 400,
     Ram2 = 401,
     Kite = 402,
-    
+
+    SoldierAnt = 423,
+    ShooterAnt = 424,
+    ArmouredAnt = 425,
+    FeederAnt = 426,
 
     EvilMir = 900,
     EvilMirBody = 901,
