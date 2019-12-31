@@ -228,7 +228,7 @@ namespace Launcher
                             BeginDownload();
                         };
 
-                    if (Settings.P_NeedLogin) client.Credentials = new NetworkCredential(Settings.AccountID, Settings.Password);
+                    if (Settings.P_NeedLogin) client.Credentials = new NetworkCredential(Settings.P_Login, Settings.P_Password);
 
 
                     _stopwatch = Stopwatch.StartNew();
@@ -253,7 +253,7 @@ namespace Launcher
                 using (WebClient client = new WebClient())
                 {
                     if (Settings.P_NeedLogin)
-                        client.Credentials = new NetworkCredential(Settings.P_Login, Settings.Password);
+                        client.Credentials = new NetworkCredential(Settings.P_Login, Settings.P_Password);
                     else
                         client.Credentials = new NetworkCredential("", "");
 
