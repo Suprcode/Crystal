@@ -39,7 +39,11 @@ namespace Server.MirDatabase
         public List<string> CompletionDescription = new List<string>(); 
 
         public int RequiredMinLevel, RequiredMaxLevel, RequiredQuest;
+<<<<<<< HEAD
         public RequiredClass RequiredClass = RequiredClass.战法道;
+=======
+        public RequiredClass RequiredClass = RequiredClass.None;
+>>>>>>> parent of 2ffc5db... 2
 
         public QuestType Type;
 
