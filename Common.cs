@@ -960,29 +960,18 @@ public enum RequiredClass : ushort
     道士 = 4,
     刺客 = 8,
     弓箭手 = 16,
-<<<<<<< HEAD
+
     战法道 = 战士 | 法师 | 道士,
     碧血武士 = 32,
     虹玄法师 = 64,
     翊仙道士 = 128,
     飞燕刺客 = 256,
     暗鬼弓手 = 512,   
-    hig = 碧血武士 | 虹玄法师 | 翊仙道士 | 飞燕刺客 | 暗鬼弓手,   
-    low = 战法道 | 刺客 | 弓箭手,
-    None = low | hig,
+    //hig = 碧血武士 | 虹玄法师 | 翊仙道士 | 飞燕刺客 | 暗鬼弓手,   
+    //low = 战法道 | 刺客 | 弓箭手,
+    //None = low | hig,
 
-=======
-    碧血武士 = 11,
-    虹玄法师 = 12,
-    翊仙道士 = 13,
-    飞燕刺客 = 14,
-    暗鬼弓手 = 15,
-    羽化 = 碧血武士 | 虹玄法师 | 翊仙道士 | 飞燕刺客 | 暗鬼弓手,
-    战丨法丨道 = 战士 | 法师 | 道士,
-    None = Low | 羽化,
-    Low = 战士 | 法师 | 道士 | 刺客 | 弓箭手,
-    
->>>>>>> parent of 2ffc5db... 2
+
 
 
 }
@@ -2627,7 +2616,7 @@ public class ItemInfo
     public ItemType Type;
     public ItemGrade Grade;
     public RequiredType RequiredType = RequiredType.Level;
-    public RequiredClass RequiredClass = RequiredClass.None;
+    public RequiredClass RequiredClass = RequiredClass.战法道;
     public RequiredGender RequiredGender = RequiredGender.None;
     public ItemSet Set;
 
