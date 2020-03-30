@@ -304,11 +304,11 @@ namespace Client.MirScenes.Dialogs
                     case BuffType.UltimateEnhancer:
                         switch (GameScene.User.Class)
                         {
-                            case MirClass.Wizard:
-                            case MirClass.Archer:
+                            case MirClass.法师:
+                            case MirClass.弓箭手:
                                 buffMc += buff.Values[0];
                                 break;
-                            case MirClass.Taoist:
+                            case MirClass.道士:
                                 buffSc += buff.Values[0];
                                 break;
                             default:
@@ -380,7 +380,7 @@ namespace Client.MirScenes.Dialogs
                         buffMc += buff.Values[0];
                         break;
 
-                    case BuffType.Taoist:
+                    case BuffType.道士:
                         buffSc += buff.Values[0];
                         break;
 
@@ -583,7 +583,7 @@ namespace Client.MirScenes.Dialogs
                     return 249;
                 case BuffType.Magic:
                     return 165;
-                case BuffType.Taoist:
+                case BuffType.道士:
                     return 250;
                 case BuffType.Storm:
                     return 170;

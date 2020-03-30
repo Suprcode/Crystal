@@ -1922,20 +1922,35 @@ namespace Server.MirObjects
         {
             switch (Class)
             {
-                case MirClass.Warrior:
-                    if (!info.RequiredClass.HasFlag(RequiredClass.Warrior)) return false;
+                case MirClass.战士:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.战士)) return false;
                     break;
-                case MirClass.Wizard:
-                    if (!info.RequiredClass.HasFlag(RequiredClass.Wizard)) return false;
+                case MirClass.法师:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.法师)) return false;
                     break;
-                case MirClass.Taoist:
-                    if (!info.RequiredClass.HasFlag(RequiredClass.Taoist)) return false;
+                case MirClass.道士:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.道士)) return false;
                     break;
-                case MirClass.Assassin:
-                    if (!info.RequiredClass.HasFlag(RequiredClass.Assassin)) return false;
+                case MirClass.刺客:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.刺客)) return false;
                     break;
-                case MirClass.Archer:
-                    if (!info.RequiredClass.HasFlag(RequiredClass.Archer)) return false;
+                case MirClass.弓箭手:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.弓箭手)) return false;
+                    break;
+                case MirClass.碧血武士:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.碧血武士)) return false;
+                    break;
+                case MirClass.虹玄法师:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.虹玄法师)) return false;
+                    break;
+                case MirClass.翊仙道士:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.翊仙道士)) return false;
+                    break;
+                case MirClass.飞燕刺客:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.飞燕刺客)) return false;
+                    break;
+                case MirClass.暗鬼弓手:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.暗鬼弓手)) return false;
                     break;
                 default:
                     return false;
@@ -2136,7 +2151,7 @@ namespace Server.MirObjects
             GetObjectsPassive();
             Enqueue(new S.TimeOfDay { Lights = Envir.Lights });
             Enqueue(new S.ChangeAMode { Mode = AMode });
-            //if (Class == MirClass.Wizard || Class == MirClass.Taoist)//why could an war, sin, archer not have pets?
+            //if (Class == MirClass.法师 || Class == MirClass.道士)//why could an war, sin, 弓箭手 not have pets?
                 Enqueue(new S.ChangePMode { Mode = PMode });
             Enqueue(new S.SwitchGroup { AllowGroup = AllowGroup });
 
@@ -2651,20 +2666,36 @@ namespace Server.MirObjects
             MaxHandWeight = (ushort)Math.Min(ushort.MaxValue, 12 + Level / Settings.ClassBaseStats[(byte)Class].HandWeightGain * Level);
             switch (Class)
             {
-                case MirClass.Warrior:
+                case MirClass.战士:
                     MaxHP = (ushort)Math.Min(ushort.MaxValue, 14 + (Level / Settings.ClassBaseStats[(byte)Class].HpGain + Settings.ClassBaseStats[(byte)Class].HpGainRate + Level / 20F) * Level);
                     MaxMP = (ushort)Math.Min(ushort.MaxValue, 11 + (Level * 3.5F) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
                     break;
-                case MirClass.Wizard:
+                case MirClass.法师:
                     MaxMP = (ushort)Math.Min(ushort.MaxValue, 13 + ((Level / 5F + 2F) * 2.2F * Level) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
                     break;
-                case MirClass.Taoist:
+                case MirClass.道士:
                     MaxMP = (ushort)Math.Min(ushort.MaxValue, (13 + Level / 8F * 2.2F * Level) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
                     break;
-                case MirClass.Assassin:
+                case MirClass.刺客:
                     MaxMP = (ushort)Math.Min(ushort.MaxValue, (11 + Level * 5F) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
                     break;
-                case MirClass.Archer:
+                case MirClass.弓箭手:
+                    MaxMP = (ushort)Math.Min(ushort.MaxValue, (11 + Level * 4F) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
+                    break;
+                case MirClass.碧血武士://stupple
+                    MaxHP = (ushort)Math.Min(ushort.MaxValue, 14 + (Level / Settings.ClassBaseStats[(byte)Class].HpGain + Settings.ClassBaseStats[(byte)Class].HpGainRate + Level / 20F) * Level);
+                    MaxMP = (ushort)Math.Min(ushort.MaxValue, 11 + (Level * 3.5F) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
+                    break;
+                case MirClass.虹玄法师:
+                    MaxMP = (ushort)Math.Min(ushort.MaxValue, 13 + ((Level / 5F + 2F) * 2.2F * Level) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
+                    break;
+                case MirClass.翊仙道士:
+                    MaxMP = (ushort)Math.Min(ushort.MaxValue, (13 + Level / 8F * 2.2F * Level) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
+                    break;
+                case MirClass.飞燕刺客:
+                    MaxMP = (ushort)Math.Min(ushort.MaxValue, (11 + Level * 5F) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
+                    break;
+                case MirClass.暗鬼弓手:
                     MaxMP = (ushort)Math.Min(ushort.MaxValue, (11 + Level * 4F) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
                     break;
             }
@@ -3304,11 +3335,11 @@ namespace Server.MirObjects
                         MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
                         break;
                     case BuffType.UltimateEnhancer:
-                        if (Class == MirClass.Wizard || Class == MirClass.Archer)
+                        if (Class == MirClass.法师 || Class == MirClass.弓箭手 || Class == MirClass.虹玄法师 || Class == MirClass.暗鬼弓手)
                         {
                             MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + buff.Values[0]);
                         }
-                        else if (Class == MirClass.Taoist)
+                        else if (Class == MirClass.道士 || Class == MirClass.翊仙道士)
                         {
                             MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + buff.Values[0]);
                         }
@@ -3340,6 +3371,49 @@ namespace Server.MirObjects
                         MaxMC = (ushort)Math.Max(ushort.MinValue, MaxMC - rMaxMC);
                         MaxSC = (ushort)Math.Max(ushort.MinValue, MaxSC - rMaxSC);
                         ASpeed = (sbyte)Math.Min(sbyte.MaxValue, (Math.Max(sbyte.MinValue, ASpeed - rASpeed)));
+                        break;
+
+                    case BuffType.HumUp://stupple
+                        switch (Class)
+                        {
+                            case MirClass.碧血武士:
+                                MaxHP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxHP + 220));
+                                MaxMP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxMP + 130));
+                                HealthRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, HealthRecovery + 10));
+                                SpellRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, SpellRecovery + 10));
+                                MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxBagWeight + 80));
+                                break;
+                            case MirClass.虹玄法师:
+                                MaxHP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxHP + 140));
+                                MaxMP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxMP + 210));
+                                HealthRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, HealthRecovery + 10));
+                                SpellRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, SpellRecovery + 10));
+                                MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxBagWeight + 80));
+                                break;
+                            case MirClass.翊仙道士:
+                                MaxHP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxHP + 170));
+                                MaxMP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxMP + 180));
+                                HealthRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, HealthRecovery + 10));
+                                SpellRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, SpellRecovery + 10));
+                                MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxBagWeight + 80));
+                                break;
+                            case MirClass.飞燕刺客:
+                                MaxHP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxHP + 195));
+                                MaxMP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxMP + 155));
+                                HealthRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, HealthRecovery + 10));
+                                SpellRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, SpellRecovery + 10));
+                                MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxBagWeight + 80));
+                                break;
+                            case MirClass.暗鬼弓手:
+                                MaxHP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxHP + 160));
+                                MaxMP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxMP + 200));
+                                HealthRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, HealthRecovery + 10));
+                                SpellRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, SpellRecovery + 10));
+                                MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxBagWeight + 80));
+                                break;
+                            default:
+                                break;
+                        }
                         break;
                     case BuffType.MagicBooster:
                         MinMC = (ushort)Math.Min(ushort.MaxValue, MinMC + buff.Values[0]);
@@ -3378,7 +3452,7 @@ namespace Server.MirObjects
                     case BuffType.Magic:
                         MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + buff.Values[0]);
                         break;
-                    case BuffType.Taoist:
+                    case BuffType.道士:
                         MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + buff.Values[0]);
                         break;
                     case BuffType.Storm:
@@ -4804,7 +4878,10 @@ namespace Server.MirObjects
                         if (data.Player != null)
                             data.Player.Connection.LogOut();
                         break;
-
+                    case "HUMUP"://stupple
+                        if (!IsGM) return;
+                        Humup();
+                        break;
                     case "DIE":
                         LastHitter = null;
                         Die();
@@ -5878,14 +5955,14 @@ namespace Server.MirObjects
             return result;
         }
 
-        public void RangeAttack(MirDirection dir, Point location, uint targetID)
+        public void RangeAttack(MirDirection dir, Point location, uint targetID)//弓手伤害
         {
             LogTime = Envir.Time + Globals.LogDelay;
 
             if (Info.Equipment[(int)EquipmentSlot.Weapon] == null) return;
             ItemInfo RealItem = Functions.GetRealItem(Info.Equipment[(int)EquipmentSlot.Weapon].Info, Info.Level, Info.Class, Envir.ItemInfoList);
-
-            if ((RealItem.Shape / 100) != 2) return;
+            
+            //if ((RealItem.Shape / 700) != 2) return;
             if (Functions.InRange(CurrentLocation, location, Globals.MaxAttackRange) == false) return;
 
             MapObject target = null;
@@ -5925,7 +6002,7 @@ namespace Server.MirObjects
                 }
 
                 int distance = Functions.MaxDistance(CurrentLocation, target.CurrentLocation);
-                int damage = GetAttackPower(MinMC, MaxMC);
+                int damage = GetAttackPower(MinDC, MaxDC);
                 damage = (int)(damage * Math.Max(1, (distance * 0.35)));//range boost
                 damage = ApplyArcherState(damage);
                 int chanceToHit = 60 + (Focus ? 30 : 0) - (int)(distance * 1.5);
@@ -6926,7 +7003,7 @@ namespace Server.MirObjects
 
             if (spell == null)
             {
-                ReceiveChat("Skill requires meditation.", ChatType.System);
+                ReceiveChat("技能需要气功.", ChatType.System);
                 return;
             }
 
@@ -7002,7 +7079,7 @@ namespace Server.MirObjects
         }
         #endregion
 
-        #region Wizard Skills
+        #region 法师 Skills
         private bool Fireball(MapObject target, UserMagic magic)
         {
             if (target == null || !target.IsAttackTarget(this) || !CanFly(target.CurrentLocation)) return false;
@@ -7339,7 +7416,7 @@ namespace Server.MirObjects
 
         #endregion
 
-        #region Taoist Skills
+        #region 道士 Skills
         private void Healing(MapObject target, UserMagic magic)
         {
             if (target == null || !target.IsFriendlyTarget(this)) return;
@@ -7808,7 +7885,7 @@ namespace Server.MirObjects
         }
         #endregion
 
-        #region Warrior Skills
+        #region 战士 Skills
         private void Entrapment(MapObject target, UserMagic magic)
         {
             if (target == null || !target.IsAttackTarget(this)) return;
@@ -8181,7 +8258,7 @@ namespace Server.MirObjects
         }
         #endregion
 
-        #region Assassin Skills
+        #region 刺客 Skills
 
         private void HeavenlySword(UserMagic magic)
         {
@@ -8439,7 +8516,7 @@ namespace Server.MirObjects
         }
         #endregion
 
-        #region Archer Skills
+        #region 弓箭手 Skills
 
         private int ApplyArcherState(int damage)
         {
@@ -9184,7 +9261,7 @@ namespace Server.MirObjects
                     LevelMagic(magic);
                     //
                     ElementalBarrier = true;
-                    ElementalBarrierLv = (byte)((int)magic.Level);//compensate for lower mc then wizard
+                    ElementalBarrierLv = (byte)((int)magic.Level);//compensate for lower mc then 法师
                     ElementalBarrierTime = Envir.Time + ((int)data[1] + barrierPower) * 1000;
                     CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierUp }, CurrentLocation);
                     break;
@@ -9749,6 +9826,18 @@ namespace Server.MirObjects
 
                     magic.Experience += exp;
                     if (magic.Experience >= magic.Info.Need3)
+                    {
+                        magic.Level++;
+                        magic.Experience = 0;
+                        RefreshStats();
+                    }
+                    break;
+                case 3:///stupple
+                    if (Level < magic.Info.Level4 || magic.Info.HumUpTrain == false || (byte)Class <= 4)
+                        return;
+
+                    magic.Experience += exp;
+                    if (magic.Experience >= magic.Info.Need4)
                     {
                         magic.Level++;
                         magic.Experience = 0;
@@ -11261,7 +11350,7 @@ namespace Server.MirObjects
                                 AddBuff(new Buff { Type = BuffType.Magic, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxMC + item.MC } });
 
                             if ((item.Info.MaxSC + item.SC) > 0)
-                                AddBuff(new Buff { Type = BuffType.Taoist, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxSC + item.SC } });
+                                AddBuff(new Buff { Type = BuffType.道士, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.MaxSC + item.SC } });
 
                             if ((item.Info.AttackSpeed + item.AttackSpeed) > 0)
                                 AddBuff(new Buff { Type = BuffType.Storm, Caster = this, ExpireTime = Envir.Time + time * Settings.Minute, Values = new int[] { item.Info.AttackSpeed + item.AttackSpeed } });
@@ -12828,31 +12917,59 @@ namespace Server.MirObjects
 
             switch (Class)
             {
-                case MirClass.Warrior:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Warrior))
+                case MirClass.战士:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.战士))
                     {
                         ReceiveChat("Warriors cannot use this item.", ChatType.System);
                         return false;
                     }
                     break;
-                case MirClass.Wizard:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Wizard))
+                case MirClass.法师:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.法师))
                     {
                         ReceiveChat("Wizards cannot use this item.", ChatType.System);
                         return false;
                     }
                     break;
-                case MirClass.Taoist:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Taoist))
+                case MirClass.道士:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.道士))
                     {
                         ReceiveChat("Taoists cannot use this item.", ChatType.System);
                         return false;
                     }
                     break;
-                case MirClass.Assassin:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Assassin))
+                case MirClass.刺客:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.刺客))
                     {
                         ReceiveChat("Assassins cannot use this item.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case MirClass.碧血武士:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.碧血武士))
+                    {
+                        ReceiveChat("HighWarriors cannot use this item.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case MirClass.虹玄法师:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.虹玄法师))
+                    {
+                        ReceiveChat("HighWizards cannot use this item.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case MirClass.翊仙道士:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.翊仙道士))
+                    {
+                        ReceiveChat("HighTaoists cannot use this item.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case MirClass.飞燕刺客:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.飞燕刺客))
+                    {
+                        ReceiveChat("HighAssassins cannot use this item.", ChatType.System);
                         return false;
                     }
                     break;
@@ -12985,7 +13102,7 @@ namespace Server.MirObjects
 
                                 if (MyGuild == null)
                                 {
-                                    ReceiveChat("You must be in a guild to use this skill", ChatType.Hint);
+                                    ReceiveChat("您必须在行会中才能使用此技能", ChatType.Hint);
                                     return false;
                                 }
                                 if (MyGuildRank != MyGuild.Ranks[0])
@@ -13202,22 +13319,38 @@ namespace Server.MirObjects
 
             switch (Class)
             {
-                case MirClass.Warrior:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Warrior))
+                case MirClass.战士:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.战士))
                         return false;
                     break;
-                case MirClass.Wizard:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Wizard))
+                case MirClass.法师:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.法师))
                         return false;
                     break;
-                case MirClass.Taoist:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Taoist))
+                case MirClass.道士:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.道士))
                         return false;
                     break;
-                case MirClass.Assassin:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Assassin))
+                case MirClass.刺客:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.刺客))
                         return false;
                     break;
+                case MirClass.碧血武士:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.碧血武士))
+                        return false;
+                    break;
+                case MirClass.虹玄法师:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.虹玄法师))
+                        return false;
+                    break;
+                case MirClass.翊仙道士:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.翊仙道士))
+                        return false;
+                    break;
+                case MirClass.飞燕刺客:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.飞燕刺客))
+                        return false;
+                    break;                 
             }
 
             switch (item.Info.RequiredType)
@@ -13350,7 +13483,7 @@ namespace Server.MirObjects
                 }
             }
 
-            ReceiveChat("You cannot carry anymore quest items.", ChatType.System);
+            ReceiveChat("您无法再携带任务物品.", ChatType.System);
 
             return false;
         }
@@ -17130,13 +17263,13 @@ namespace Server.MirObjects
 
             if (CurrentQuests.Count >= Globals.MaxConcurrentQuests)
             {
-                ReceiveChat("Maximum amount of quests already taken.", ChatType.System);
+                ReceiveChat("任务满了.", ChatType.System);
                 return;
             }
 
             if (CompletedQuests.Contains(index))
             {
-                ReceiveChat("Quest has already been completed.", ChatType.System);
+                ReceiveChat("任务已完成.", ChatType.System);
                 return;
             }
 
@@ -17155,7 +17288,7 @@ namespace Server.MirObjects
 
             if (!canAccept)
             {
-                ReceiveChat("Could not accept quest.", ChatType.System);
+                ReceiveChat("不能接受任务.", ChatType.System);
                 return;
             }
 
@@ -17188,7 +17321,7 @@ namespace Server.MirObjects
 
                         GainQuestItem(item);
 
-                        Report.ItemChanged("AcceptQuest", item, item.Count, 2);
+                        Report.ItemChanged("接受任务", item, item.Count, 2);
                     }
                 }
             }
@@ -17275,7 +17408,7 @@ namespace Server.MirObjects
 
             if (!CanGainItems(rewardItems.ToArray()))
             {
-                ReceiveChat("Cannot hand in quest whilst bag is full.", ChatType.System);
+                ReceiveChat("背包满时不能提交任务.", ChatType.System);
                 return;
             }
 
@@ -17343,7 +17476,7 @@ namespace Server.MirObjects
 
             if (!shared)
             {
-                ReceiveChat("Quest could not be shared with anyone.", ChatType.System);
+                ReceiveChat("任务不能与任何人共享.", ChatType.System);
             }
         }
 
@@ -17404,7 +17537,7 @@ namespace Server.MirObjects
                     GainQuestItem(item);
                     quest.ProcessItem(Info.QuestInventory);
 
-                    Enqueue(new S.SendOutputMessage { Message = string.Format("You found {0}.", item.FriendlyName), Type = OutputMessageType.Quest });
+                    Enqueue(new S.SendOutputMessage { Message = string.Format("您发现 {0}.", item.FriendlyName), Type = OutputMessageType.Quest });
 
                     SendUpdateQuest(quest, QuestState.Update);
 
@@ -17439,7 +17572,7 @@ namespace Server.MirObjects
             {
                 quest.ProcessKill(mInfo);
 
-                Enqueue(new S.SendOutputMessage { Message = string.Format("You killed {0}.", mInfo.GameName), Type = OutputMessageType.Quest });
+                Enqueue(new S.SendOutputMessage { Message = string.Format("你杀了 {0}.", mInfo.GameName), Type = OutputMessageType.Quest });
 
                 SendUpdateQuest(quest, QuestState.Update);
             }
@@ -19824,10 +19957,87 @@ namespace Server.MirObjects
         }
         #endregion
 
-        private long[] LastRankRequest = new long[6];
+        #region Humup & Transform //stupple
+        public void Humup()
+        {
+            if (Level < 60)
+            {
+                ReceiveChat("您需要达到60级才能羽化成仙.", ChatType.System);
+                return;
+            }
+
+            foreach (UserItem eqItem in Info.Equipment)
+            {
+                if (eqItem != null)
+                {
+                    ReceiveChat("请把身上物品全部取下.", ChatType.System);
+                    return;
+                }
+            }
+
+            switch (Class)
+            {
+                case MirClass.战士:
+                    Info.Class = MirClass.碧血武士;
+                    break;
+                case MirClass.法师:
+                    Info.Class = MirClass.虹玄法师;
+                    break;
+                case MirClass.道士:
+                    Info.Class = MirClass.翊仙道士;
+                    break;
+                case MirClass.刺客:
+                    Info.Class = MirClass.飞燕刺客;
+                    break;
+                case MirClass.弓箭手:
+                    Info.Class = MirClass.暗鬼弓手;
+                    break;
+                default:
+                    return;
+            }
+
+            foreach (var ob in Envir.Players)//// allow user to see whta going off
+            {
+                ob.ReceiveChat(string.Format("玩家{0}羽化成仙成为{1} .", Name, (Info.Class)), ChatType.Announcement);
+            }
+
+            Enqueue(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.HumUpEffect });
+            Enqueue(new S.HumUpPlayer { ObjectID = ObjectID, Class = Class, Location = CurrentLocation });
+            Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.HumUpEffect });
+            Broadcast(new S.HumUpPlayer { ObjectID = ObjectID, Class = Class, Location = CurrentLocation });
+            ReceiveChat("请退出游戏重新连接.", ChatType.System);
+
+            AddBuff(new Buff { Type = BuffType.HumUp, Caster = this, ExpireTime = Envir.Time + 100, Infinite = true });
+        }
+
+     
+
+ 
+        public MirClass GetBeforeHumupClass()
+        {
+            switch (Class)
+            {
+                case MirClass.碧血武士:
+                    return MirClass.战士;
+                case MirClass.虹玄法师:
+                    return MirClass.法师;
+                case MirClass.翊仙道士:
+                    return MirClass.道士;
+                case MirClass.飞燕刺客:
+                    return MirClass.刺客;
+                case MirClass.暗鬼弓手:
+                    return MirClass.弓箭手;
+                default:
+                    return Class;
+            }
+        }
+
+        #endregion
+
+        private long[] LastRankRequest = new long[11];
         public void GetRanking(byte RankType)
         {
-            if (RankType > 6) return;
+            if (RankType > 11) return;
             if ((LastRankRequest[RankType] != 0) && ((LastRankRequest[RankType] + 300 * 1000) > Envir.Time)) return;
             LastRankRequest[RankType] = Envir.Time;
             if (RankType == 0)
@@ -19859,13 +20069,13 @@ namespace Server.MirObjects
         {
             if (Dead)
             {
-                ReceiveChat("Unable to rent items while dead.", ChatType.System);
+                ReceiveChat("死亡时无法租用物品.", ChatType.System);
                 return;
             }
 
             if (ItemRentalPartner != null)
             {
-                ReceiveChat("You are already renting an item to another player.", ChatType.System);
+                ReceiveChat("您已经将物品租给其他玩家.", ChatType.System);
                 return;
             }
 
@@ -19886,51 +20096,51 @@ namespace Server.MirObjects
 
             if (targetPlayer == null)
             {
-                ReceiveChat("Face the player you would like to rent an item too.", ChatType.System);
+                ReceiveChat("面对玩家,你想租给的一个玩家.", ChatType.System);
                 return;
             }
 
             if (Info.RentedItems.Count >= 3)
             {
-                ReceiveChat("Unable to rent more than 3 items at a time.", ChatType.System);
+                ReceiveChat("一次不能租用超过 3 件物品.", ChatType.System);
                 return;
             }
 
             if (targetPlayer.Info.HasRentedItem)
             {
-                ReceiveChat($"{targetPlayer.Name} is unable to rent anymore items at this time.", ChatType.System);
+                ReceiveChat($"{targetPlayer.Name} 此时无法再租用物品.", ChatType.System);
                 return;
             }
 
             if (!Functions.FacingEachOther(Direction, CurrentLocation, targetPlayer.Direction,
                 targetPlayer.CurrentLocation))
             {
-                ReceiveChat("Face the player you would like to rent an item too.", ChatType.System);
+                ReceiveChat("面对玩家,你想租给的一个玩家.", ChatType.System);
                 return;
             }
 
             if (targetPlayer == this)
             {
-                ReceiveChat("You are unable to rent items to yourself.", ChatType.System);
+                ReceiveChat("您无法将物品出租给自己.", ChatType.System);
                 return;
             }
 
             if (targetPlayer.Dead)
             {
-                ReceiveChat($"Unable to rent items to {targetPlayer.Name} while dead.", ChatType.System);
+                ReceiveChat($"无法将物品租赁给 {targetPlayer.Name} 死亡.", ChatType.System);
                 return;
             }
 
             if (!Functions.InRange(targetPlayer.CurrentLocation, CurrentLocation, Globals.DataRange)
                 || targetPlayer.CurrentMap != CurrentMap)
             {
-                ReceiveChat($"{targetPlayer.Name} is not within range.", ChatType.System);
+                ReceiveChat($"{targetPlayer.Name} 不在范围内.", ChatType.System);
                 return;
             }
 
             if (targetPlayer.ItemRentalPartner != null)
             {
-                ReceiveChat($"{targetPlayer.Name} is currently busy, try again soon.", ChatType.System);
+                ReceiveChat($"{targetPlayer.Name} 当前忙,请尽快重试.", ChatType.System);
                 return;
             }
 
@@ -20004,21 +20214,21 @@ namespace Server.MirObjects
 
             if (item.RentalInformation?.RentalLocked == true)
             {
-                ReceiveChat($"Unable to rent {item.FriendlyName} until {item.RentalInformation.ExpiryDate}", ChatType.System);
+                ReceiveChat($"无法租赁	 {item.FriendlyName} 到 {item.RentalInformation.ExpiryDate}", ChatType.System);
                 Enqueue(packet);
                 return;
             }
 
             if (item.Info.Bind.HasFlag(BindMode.UnableToRent))
             {
-                ReceiveChat($"Unable to rent {item.FriendlyName}", ChatType.System);
+                ReceiveChat($"无法租赁	 {item.FriendlyName}", ChatType.System);
                 Enqueue(packet);
                 return;
             }
 
             if (item.RentalInformation != null && item.RentalInformation.BindingFlags.HasFlag(BindMode.UnableToRent))
             {
-                ReceiveChat($"Unable to rent {item.FriendlyName} as it belongs to {item.RentalInformation.OwnerName}", ChatType.System);
+                ReceiveChat($"无法租赁	 {item.FriendlyName} 因为它属于 {item.RentalInformation.OwnerName}", ChatType.System);
                 Enqueue(packet);
                 return;
             }
@@ -20031,7 +20241,7 @@ namespace Server.MirObjects
                 packet.Success = true;
                 RefreshBagWeight();
                 UpdateRentalItem();
-                Report.ItemMoved("DepositRentalItem", item, MirGridType.Inventory, MirGridType.Renting, from, to);
+                Report.ItemMoved("存租赁物品", item, MirGridType.Inventory, MirGridType.Renting, from, to);
             }
 
             Enqueue(packet);
@@ -20064,7 +20274,7 @@ namespace Server.MirObjects
 
             if (item.Weight + CurrentBagWeight > MaxBagWeight)
             {
-                ReceiveChat("Item is too heavy to retrieve.", ChatType.System);
+                ReceiveChat("物品太重,无法拾取.", ChatType.System);
                 Enqueue(packet);
                 return;
             }
@@ -20077,7 +20287,7 @@ namespace Server.MirObjects
                 packet.Success = true;
                 RefreshBagWeight();
                 UpdateRentalItem();
-                Report.ItemMoved("RetrieveRentalItem", item, MirGridType.Renting, MirGridType.Inventory, from, to);
+                Report.ItemMoved("提取租赁物品", item, MirGridType.Renting, MirGridType.Inventory, from, to);
             }
 
             Enqueue(packet);
@@ -20121,7 +20331,7 @@ namespace Server.MirObjects
                         rentalPair[i].Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                         rentalPair[i].ItemRentalDepositedItem = null;
 
-                        Report.ItemMailed("Cancel Item Rental", item, item.Count, 1);
+                        Report.ItemMailed("取消物品租赁", item, item.Count, 1);
 
                         continue;
                     }
@@ -20138,7 +20348,7 @@ namespace Server.MirObjects
                             rentalPair[i].GainItemMail(item, 1);
                             rentalPair[i].Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
-                            Report.ItemMailed("Cancel Item Rental", item, item.Count, 1);
+                            Report.ItemMailed("取消物品租赁", item, item.Count, 1);
                         }
 
                         rentalPair[i].ItemRentalDepositedItem = null;
@@ -20152,7 +20362,7 @@ namespace Server.MirObjects
                     rentalPair[i].GainGold(rentalPair[i].ItemRentalFeeAmount);
                     rentalPair[i].ItemRentalFeeAmount = 0;
 
-                    Report.GoldChanged("CancelItemRental", rentalPair[i].ItemRentalFeeAmount, false);
+                    Report.GoldChanged("取消物品租赁", rentalPair[i].ItemRentalFeeAmount, false);
                 }
 
                 rentalPair[i].ItemRentalPartner = null;
@@ -20176,7 +20386,7 @@ namespace Server.MirObjects
             if (ItemRentalFeeLocked && ItemRentalPartner.ItemRentalItemLocked)
                 ItemRentalPartner.Enqueue(new S.CanConfirmItemRental());
             else if (ItemRentalFeeLocked && !ItemRentalPartner.ItemRentalItemLocked)
-                ItemRentalPartner.ReceiveChat($"{Name} has locked in the rental fee.", ChatType.System);
+                ItemRentalPartner.ReceiveChat($"{Name} 已锁定租赁费.", ChatType.System);
 
             Enqueue(p);
         }
@@ -20197,7 +20407,7 @@ namespace Server.MirObjects
             if (ItemRentalItemLocked && ItemRentalPartner.ItemRentalFeeLocked)
                 Enqueue(new S.CanConfirmItemRental());
             else if (ItemRentalItemLocked && !ItemRentalPartner.ItemRentalFeeLocked)
-                ItemRentalPartner.ReceiveChat($"{Name} has locked in the rental item.", ChatType.System);
+                ItemRentalPartner.ReceiveChat($"{Name} 已锁定租赁物品.", ChatType.System);
 
 
             Enqueue(p);
@@ -20261,10 +20471,10 @@ namespace Server.MirObjects
 
             if (!ItemRentalPartner.CanGainItem(ItemRentalDepositedItem))
             {
-                ReceiveChat($"{ItemRentalPartner.Name} is unable to receive the item.", ChatType.System);
+                ReceiveChat($"{ItemRentalPartner.Name} 无法接收物品.", ChatType.System);
                 Enqueue(new S.CancelItemRental());
 
-                ItemRentalPartner.ReceiveChat("Unable to accept the rental item.", ChatType.System);
+                ItemRentalPartner.ReceiveChat("无法接受租赁物品。", ChatType.System);
                 ItemRentalPartner.Enqueue(new S.CancelItemRental());
 
                 return;
@@ -20272,10 +20482,10 @@ namespace Server.MirObjects
 
             if (!CanGainGold(ItemRentalPartner.ItemRentalFeeAmount))
             {
-                ReceiveChat("You are unable to receive any more gold.", ChatType.System);
+                ReceiveChat("您无法再收到任何金币.", ChatType.System);
                 Enqueue(new S.CancelItemRental());
 
-                ItemRentalPartner.ReceiveChat($"{Name} is unable to receive any more gold.", ChatType.System);
+                ItemRentalPartner.ReceiveChat($"{Name} 无法接收任何更多的金币.", ChatType.System);
                 ItemRentalPartner.Enqueue(new S.CancelItemRental());
 
                 return;
@@ -20303,10 +20513,10 @@ namespace Server.MirObjects
 
             ItemRentalPartner.GainItem(item);
             ItemRentalPartner.Info.HasRentedItem = true;
-            ItemRentalPartner.ReceiveChat($"You have rented {item.FriendlyName} from {Name} until {item.RentalInformation.ExpiryDate}", ChatType.System);
+            ItemRentalPartner.ReceiveChat($"您租赁了	 {item.FriendlyName} 从 {Name} 到 {item.RentalInformation.ExpiryDate}", ChatType.System);
 
             GainGold(ItemRentalPartner.ItemRentalFeeAmount);
-            ReceiveChat($"Received {ItemRentalPartner.ItemRentalFeeAmount} gold for item rental.", ChatType.System);
+            ReceiveChat($"收到 {ItemRentalPartner.ItemRentalFeeAmount} 金币物品租赁.", ChatType.System);
             ItemRentalPartner.ItemRentalFeeAmount = 0;
 
             Enqueue(new S.ConfirmItemRental());

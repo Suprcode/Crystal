@@ -9,6 +9,7 @@ namespace Client.MirObjects
     {
         public static FrameSet Players;
         public static List<FrameSet> NPCs; //Make Array
+        public static List<FrameSet> HighPlayers;
         public static List<FrameSet> Monsters;
         public static List<FrameSet> HelperPets; //IntelligentCreature
         public static List<FrameSet> Gates;
@@ -22,6 +23,8 @@ namespace Client.MirObjects
             NPCs = new List<FrameSet>();
 
             Monsters = new List<FrameSet>();
+
+            HighPlayers = new List<FrameSet>();
 
             Players = new FrameSet();
 
@@ -55,11 +58,11 @@ namespace Client.MirObjects
             Players.Frames.Add(MirAction.Mine, new Frame(184, 6, 0, 100, 216, 6, 0, 100));
             Players.Frames.Add(MirAction.Lunge, new Frame(139, 1, 5, 1000, 300, 1, 5, 1000)); //slashingburst test
 
-            //Assassin
+            //刺客
             Players.Frames.Add(MirAction.Sneek, new Frame(464, 6, 0, 100, 496, 6, 0, 100));
             Players.Frames.Add(MirAction.DashAttack, new Frame(80, 3, 3, 100, 112, 3, 3, 100));
 
-            //Archer
+            //弓箭手
             Players.Frames.Add(MirAction.WalkingBow, new Frame(0, 6, 0, 100, 0, 6, 0, 100));
             Players.Frames.Add(MirAction.RunningBow, new Frame(48, 6, 0, 100, 48, 6, 0, 100));
             Players.Frames.Add(MirAction.AttackRange1, new Frame(96, 8, 0, 100, 96, 8, 0, 100));
@@ -80,7 +83,246 @@ namespace Client.MirObjects
             Players.Frames.Add(MirAction.FishingReel, new Frame(744, 8, 0, 100));
 
             #endregion
+            #region HighPlayer Frames
+            HighPlayers.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 4, 200,0,6,2,200 ));
+            frame.Frames.Add(MirAction.Walking, new Frame(64, 6, 2, 100 ,64,6,2,100));
+            frame.Frames.Add(MirAction.Running, new Frame(128, 6, 2, 100,128,6,2,100 ));
+            frame.Frames.Add(MirAction.Stance, new Frame(256, 1, 0, 800,256,1,0,800 ));
+            frame.Frames.Add(MirAction.Stance2, new Frame(460, 1, 7, 800 ,460,1,7,800));
+            frame.Frames.Add(MirAction.Attack1, new Frame(264, 6, 2, 100,264,6,2,100 ));
+            frame.Frames.Add(MirAction.Attack2, new Frame(328, 6, 2, 100,328,6,2,100 ));
+            frame.Frames.Add(MirAction.Attack3, new Frame(392, 8, 0, 100 ,392,8,0,100));
+            frame.Frames.Add(MirAction.Attack4, new Frame(328, 6, 2, 100,328,6,2,100 ));
+            frame.Frames.Add(MirAction.Spell, new Frame(456, 6, 2, 100,456,6,2,100 ));
+            frame.Frames.Add(MirAction.Harvest, new Frame(520, 2, 0, 300 ,520,2,0,300));
+            frame.Frames.Add(MirAction.Struck, new Frame(192, 3, 5, 100,192,3,5,100 ));
+            frame.Frames.Add(MirAction.Die, new Frame(536, 4, 4, 100,536,4,4,100 ));
+            frame.Frames.Add(MirAction.Dead, new Frame(539, 1, 7, 800,539,1,7,800 ));
+            frame.Frames.Add(MirAction.Revive, new Frame(536, 4, 4, 100,536,4,4,100 ));
+            frame.Frames.Add(MirAction.Mine, new Frame(328, 6, 2, 100,328,6,2,100 ));
+            //刺客
+            frame.Frames.Add(MirAction.Sneek, new Frame(464, 6, 0, 100 ));
+            frame.Frames.Add(MirAction.DashAttack, new Frame(80, 3, 3, 100 ));
+            //弓箭手
+            frame.Frames.Add(MirAction.WalkingBow, new Frame(0, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.RunningBow, new Frame(64, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.AttackRange1, new Frame(128, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.AttackRange2, new Frame(192, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.AttackRange3, new Frame(256, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.Jump, new Frame(320, 9, 0, 100 ));
+            //Mounts
+            frame.Frames.Add(MirAction.MountStanding, new Frame(792, 4, 4, 500 ));
+            frame.Frames.Add(MirAction.MountWalking, new Frame(856, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.MountRunning, new Frame(920, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.MountStruck, new Frame(984, 3, 5, 100 ));
+            frame.Frames.Add(MirAction.MountAttack, new Frame(1048, 6, 2, 100 ));
+            //Fishing
+            frame.Frames.Add(MirAction.FishingCast, new Frame(600, 8, 0, 100));
+            frame.Frames.Add(MirAction.FishingWait, new Frame(664, 6, 2, 120));
+            frame.Frames.Add(MirAction.FishingReel, new Frame(728, 8, 0, 100));
+            #endregion
 
+            #region 碧血武士 Frames
+            HighPlayers.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 2, 200,0,6,2,200 ));
+            frame.Frames.Add(MirAction.Walking, new Frame(64, 6, 2, 100 ,64,6,2,100));
+            frame.Frames.Add(MirAction.Running, new Frame(128, 6, 2, 100,128,6,2,100 ));
+            frame.Frames.Add(MirAction.Stance, new Frame(336, 6, 2, 200,336,6,2,200 ));
+            frame.Frames.Add(MirAction.Stance2, new Frame(660, 1, 7, 800,660,1,7,800 ));
+            frame.Frames.Add(MirAction.Attack1, new Frame(400, 6, 2, 100 ,400,6,2,100));
+            frame.Frames.Add(MirAction.Attack2, new Frame(464, 6, 2, 100,464,6,2,100 ));
+            frame.Frames.Add(MirAction.Attack3, new Frame(720, 8, 0, 100,720,8,0,100 ));
+            frame.Frames.Add(MirAction.Attack4, new Frame(464, 6, 2, 100,464,6,2,100 ));
+            frame.Frames.Add(MirAction.Spell, new Frame(656, 6, 2, 100 ,656,6,2,100));
+            frame.Frames.Add(MirAction.Harvest, new Frame(320, 2, 0, 300,320,2,0,300 ));
+            frame.Frames.Add(MirAction.Struck, new Frame(192, 3, 5, 100,192,3,5,100 ));
+            frame.Frames.Add(MirAction.Die, new Frame(256, 8, 0, 100 ,256,8,0,100));
+            frame.Frames.Add(MirAction.Dead, new Frame(263, 1, 7, 800,263,1,7,800 ));
+            frame.Frames.Add(MirAction.Revive, new Frame(256, 8, 0, 100,256,8,0,100 ));
+            frame.Frames.Add(MirAction.Mine, new Frame(392, 8, 0, 100,382,8,0,100 ));
+            //刺客
+            frame.Frames.Add(MirAction.Sneek, new Frame(464, 6, 0, 100 ));
+            frame.Frames.Add(MirAction.DashAttack, new Frame(80, 3, 3, 100 ));
+            //弓箭手
+            frame.Frames.Add(MirAction.WalkingBow, new Frame(0, 6, 2, 100));
+            frame.Frames.Add(MirAction.RunningBow, new Frame(64, 6, 2, 100));
+            frame.Frames.Add(MirAction.AttackRange1, new Frame(128, 8, 0, 100));
+            frame.Frames.Add(MirAction.AttackRange2, new Frame(192, 8, 0, 100));
+            frame.Frames.Add(MirAction.AttackRange3, new Frame(256, 8, 0, 100));
+            frame.Frames.Add(MirAction.Jump, new Frame(320, 9, 0, 100));
+            //Mounts
+            frame.Frames.Add(MirAction.MountStanding, new Frame(592, 4, 0, 500 ));
+            frame.Frames.Add(MirAction.MountWalking, new Frame(624, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.MountRunning, new Frame(688, 6, 0, 100 ));
+            frame.Frames.Add(MirAction.MountStruck, new Frame(736, 3, 0, 100 ));
+            frame.Frames.Add(MirAction.MountAttack, new Frame(760, 6, 0, 100 ));
+            //Fishing
+            frame.Frames.Add(MirAction.FishingCast, new Frame(416, 8, 0, 100));
+            frame.Frames.Add(MirAction.FishingWait, new Frame(480, 6, 0, 120));
+            frame.Frames.Add(MirAction.FishingReel, new Frame(528, 8, 0, 100));
+            #endregion
+
+            #region 虹玄法师 Frames
+            HighPlayers.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 2, 200 ));
+            frame.Frames.Add(MirAction.Walking, new Frame(64, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Running, new Frame(128, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Stance, new Frame(336, 6, 2, 200 ));
+            frame.Frames.Add(MirAction.Stance2, new Frame(660, 1, 7, 800 ));
+            frame.Frames.Add(MirAction.Attack1, new Frame(400, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Attack2, new Frame(464, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Attack3, new Frame(528, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Attack4, new Frame(464, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Spell, new Frame(656, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Harvest, new Frame(320, 2, 0, 300 ));
+            frame.Frames.Add(MirAction.Struck, new Frame(192, 3, 5, 100 ));
+            frame.Frames.Add(MirAction.Die, new Frame(256, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.Dead, new Frame(263, 1, 7, 800 ));
+            frame.Frames.Add(MirAction.Revive, new Frame(256, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.Mine, new Frame(392, 8, 0, 100 ));
+            //刺客
+            frame.Frames.Add(MirAction.Sneek, new Frame(464, 6, 0, 100 ));
+            frame.Frames.Add(MirAction.DashAttack, new Frame(80, 3, 3, 100 ));
+            //弓箭手
+            frame.Frames.Add(MirAction.WalkingBow, new Frame(0, 6, 0, 100 ));
+            frame.Frames.Add(MirAction.RunningBow, new Frame(48, 6, 0, 100 ));
+            frame.Frames.Add(MirAction.AttackRange1, new Frame(96, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.AttackRange2, new Frame(160, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.AttackRange3, new Frame(224, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.Jump, new Frame(288, 8, 0, 100 ));
+            //Mounts
+            frame.Frames.Add(MirAction.MountStanding, new Frame(592, 4, 0, 500 ));
+            frame.Frames.Add(MirAction.MountWalking, new Frame(624, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.MountRunning, new Frame(688, 6, 0, 100 ));
+            frame.Frames.Add(MirAction.MountStruck, new Frame(736, 3, 0, 100 ));
+            frame.Frames.Add(MirAction.MountAttack, new Frame(760, 6, 0, 100 ));
+            //Fishing
+            frame.Frames.Add(MirAction.FishingCast, new Frame(416, 8, 0, 100));
+            frame.Frames.Add(MirAction.FishingWait, new Frame(480, 6, 0, 120));
+            frame.Frames.Add(MirAction.FishingReel, new Frame(528, 8, 0, 100));
+            #endregion
+
+            #region 翊仙道士 Frames
+            HighPlayers.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 2, 200 ));
+            frame.Frames.Add(MirAction.Walking, new Frame(64, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Running, new Frame(128, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Stance, new Frame(336, 6, 2, 200 ));
+            frame.Frames.Add(MirAction.Stance2, new Frame(660, 1, 7, 800 ));
+            frame.Frames.Add(MirAction.Attack1, new Frame(400, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Attack2, new Frame(464, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Attack3, new Frame(528, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Attack4, new Frame(464, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Spell, new Frame(656, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Harvest, new Frame(320, 2, 0, 300 ));
+            frame.Frames.Add(MirAction.Struck, new Frame(192, 3, 5, 100 ));
+            frame.Frames.Add(MirAction.Die, new Frame(256, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.Dead, new Frame(263, 1, 7, 800 ));
+            frame.Frames.Add(MirAction.Revive, new Frame(256, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.Mine, new Frame(392, 8, 0, 100 ));
+
+            //刺客
+            frame.Frames.Add(MirAction.Sneek, new Frame(464, 6, 0, 100 ));
+            frame.Frames.Add(MirAction.DashAttack, new Frame(80, 3, 3, 100 ));
+            //弓箭手
+            frame.Frames.Add(MirAction.WalkingBow, new Frame(0, 6, 0, 100 ));
+            frame.Frames.Add(MirAction.RunningBow, new Frame(48, 6, 0, 100 ));
+            frame.Frames.Add(MirAction.AttackRange1, new Frame(96, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.AttackRange2, new Frame(160, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.AttackRange3, new Frame(224, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.Jump, new Frame(288, 8, 0, 100 ));
+            //Mounts
+            frame.Frames.Add(MirAction.MountStanding, new Frame(592, 4, 0, 500 ));
+            frame.Frames.Add(MirAction.MountWalking, new Frame(624, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.MountRunning, new Frame(688, 6, 0, 100 ));
+            frame.Frames.Add(MirAction.MountStruck, new Frame(736, 3, 0, 100 ));
+            frame.Frames.Add(MirAction.MountAttack, new Frame(760, 6, 0, 100 ));
+            //Fishing
+            frame.Frames.Add(MirAction.FishingCast, new Frame(416, 8, 0, 100));
+            frame.Frames.Add(MirAction.FishingWait, new Frame(480, 6, 0, 120));
+            frame.Frames.Add(MirAction.FishingReel, new Frame(528, 8, 0, 100));
+            #endregion
+
+            #region 飞燕刺客 Frames
+            HighPlayers.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 2, 200 ));
+            frame.Frames.Add(MirAction.Walking, new Frame(128, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Running, new Frame(192, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Stance, new Frame(400, 6, 2, 200 ));
+            frame.Frames.Add(MirAction.Stance2, new Frame(660, 1, 7, 800 ));
+            frame.Frames.Add(MirAction.Attack1, new Frame(464, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Attack2, new Frame(592, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Attack3, new Frame(848, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.Attack4, new Frame(528, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Spell, new Frame(784, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Harvest, new Frame(384, 2, 0, 300 ));
+            frame.Frames.Add(MirAction.Struck, new Frame(256, 3, 5, 100 ));
+            frame.Frames.Add(MirAction.Die, new Frame(320, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.Dead, new Frame(327, 1, 7, 800 ));
+            frame.Frames.Add(MirAction.Revive, new Frame(320, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.Mine, new Frame(392, 8, 0, 100 ));
+            //刺客
+            frame.Frames.Add(MirAction.Sneek, new Frame(64, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.DashAttack, new Frame(192, 3, 5, 100 ));
+            //弓箭手
+            frame.Frames.Add(MirAction.WalkingBow, new Frame(0, 6, 0, 100 ));
+            frame.Frames.Add(MirAction.RunningBow, new Frame(48, 6, 0, 100 ));
+            frame.Frames.Add(MirAction.AttackRange1, new Frame(96, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.AttackRange2, new Frame(160, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.AttackRange3, new Frame(224, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.Jump, new Frame(288, 8, 0, 100 ));
+            //Mounts
+            frame.Frames.Add(MirAction.MountStanding, new Frame(592, 4, 0, 500 ));
+            frame.Frames.Add(MirAction.MountWalking, new Frame(624, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.MountRunning, new Frame(688, 6, 0, 100 ));
+            frame.Frames.Add(MirAction.MountStruck, new Frame(736, 3, 0, 100 ));
+            frame.Frames.Add(MirAction.MountAttack, new Frame(760, 6, 0, 100 ));
+            //Fishing
+            frame.Frames.Add(MirAction.FishingCast, new Frame(416, 8, 0, 100));
+            frame.Frames.Add(MirAction.FishingWait, new Frame(480, 6, 0, 120));
+            frame.Frames.Add(MirAction.FishingReel, new Frame(528, 8, 0, 100));
+            #endregion
+
+            #region 暗鬼弓手 Frames
+            HighPlayers.Add(frame = new FrameSet());
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 6, 2, 200 ));
+            frame.Frames.Add(MirAction.Walking, new Frame(0, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Running, new Frame(64, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Stance, new Frame(336, 6, 2, 200 ));
+            frame.Frames.Add(MirAction.Stance2, new Frame(660, 1, 7, 800 ));
+            frame.Frames.Add(MirAction.Attack1, new Frame(128, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Attack2, new Frame(192, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Attack3, new Frame(256, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Attack4, new Frame(256, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Spell, new Frame(656, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.Harvest, new Frame(320, 2, 0, 300 ));
+            frame.Frames.Add(MirAction.Struck, new Frame(192, 3, 5, 100 ));
+            frame.Frames.Add(MirAction.Die, new Frame(256, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.Dead, new Frame(263, 1, 7, 800 ));
+            frame.Frames.Add(MirAction.Revive, new Frame(256, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.Mine, new Frame(392, 8, 0, 100 ));
+            //刺客
+            frame.Frames.Add(MirAction.Sneek, new Frame(464, 6, 0, 100 ));
+            frame.Frames.Add(MirAction.DashAttack, new Frame(80, 3, 3, 100 ));
+            //弓箭手
+            frame.Frames.Add(MirAction.WalkingBow, new Frame(0, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.RunningBow, new Frame(64, 6, 2, 100 ));
+            frame.Frames.Add(MirAction.AttackRange1, new Frame(128, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.AttackRange2, new Frame(192, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.AttackRange3, new Frame(256, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.Jump, new Frame(320, 8, 0, 100 ));
+            //Mounts
+            frame.Frames.Add(MirAction.MountStanding, new Frame(592, 4, 0, 500 ));
+            frame.Frames.Add(MirAction.MountWalking, new Frame(624, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.MountRunning, new Frame(688, 6, 0, 100 ));
+            frame.Frames.Add(MirAction.MountStruck, new Frame(736, 3, 0, 100 ));
+            frame.Frames.Add(MirAction.MountAttack, new Frame(760, 6, 0, 100 ));
+            //Fishing
+            frame.Frames.Add(MirAction.FishingCast, new Frame(416, 8, 0, 100 ));
+            frame.Frames.Add(MirAction.FishingWait, new Frame(480, 6, 0, 120 ));
+            frame.Frames.Add(MirAction.FishingReel, new Frame(528, 8, 0, 100 ));
+            #endregion
             /*
              * NPCS
              */
@@ -647,7 +889,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Attack1, new Frame(32, 6, 0, 100));
 
-            //49 - VampireSpider (Archer SummonVampire)
+            //49 - VampireSpider (弓箭手 SummonVampire)
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Show, new Frame(24, 6, 0, 150));
             frame.Frames.Add(MirAction.Hide, new Frame(29, 6, 0, 150) { Reverse = true });
@@ -658,7 +900,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(216, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(225, 1, 9, 1000));
 
-            //50 - SpittingToad (Archer SummonToad)
+            //50 - SpittingToad (弓箭手 SummonToad)
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.AttackRange1, new Frame(32, 9, 0, 100));
@@ -668,7 +910,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Show, new Frame(211, 4, 0, 100) { Reverse = true });
             frame.Frames.Add(MirAction.Dead, new Frame(137, 1, 9, 1000));
 
-            //51 - SnakeTotem (Archer SummonSnakes Totem)
+            //51 - SnakeTotem (弓箭手 SummonSnakes Totem)
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 2, -2, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(0, 2, -2, 100));
@@ -676,7 +918,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(0, 1, -1, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(0, 1, -1, 100));
 
-            //52 - CharmedSnake (Archer SummonSnakes Snake)
+            //52 - CharmedSnake (弓箭手 SummonSnakes Snake)
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 5, 0, 200));
             frame.Frames.Add(MirAction.Walking, new Frame(0, 5, 0, 100));
@@ -685,7 +927,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Die, new Frame(52, 8, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(59, 1, 7, 1000));
 
-            //53 - HighAssassin
+            //53 - 飞燕刺客
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
             frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 100));
@@ -1815,7 +2057,7 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Dead, new Frame(681, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(672, 10, 0, 100) { Reverse = true });
 
-            //156 - StoningSpider //Archer Summon
+            //156 - StoningSpider //弓箭手 Summon
             Monsters.Add(frame = new FrameSet());
             frame.Frames.Add(MirAction.Standing, new Frame(0, 2, -0, 500));
             frame.Frames.Add(MirAction.Attack1, new Frame(16, 4, 0, 100));

@@ -49,15 +49,22 @@ namespace Server
                  txtDmgBaseMax.Text = "0";
                  txtDmgBonusMin.Text = "0";
                  txtDmgBonusMax.Text = "0";
-             }
+                 textBox1.Text = "0";
+                 textBox2.Text = "0";
+            }
              else
              {
                  tabControl1.Enabled = true;
                  lblSelected.Text = "Selected Skill: " + _selectedMagicInfo.ToString();
+<<<<<<< HEAD:Server.MirForms/Database/MagicInfoForm.cs
                  lblDamageExample.Text =
                      $"Damage @ Skill level 0: {GetMinPower(0):000}-{GetMaxPower(0):000}   |||   level 1: {GetMinPower(1):000}-{GetMaxPower(1):000}   |||   level 2: {GetMinPower(2):000}-{GetMaxPower(2):000}   |||   level 3: {GetMinPower(3):000}-{GetMaxPower(3):000}";
                  lblDamageExplained.Text =
                      $"Damage: {{Random(minstat-maxstat) + [<(random({_selectedMagicInfo.MPowerBase}-{_selectedMagicInfo.MPowerBase + _selectedMagicInfo.MPowerBonus})/4) X (skill level +1)> + random<{_selectedMagicInfo.PowerBase}-{_selectedMagicInfo.PowerBonus + _selectedMagicInfo.PowerBase}>]}}  X  {{{_selectedMagicInfo.MultiplierBase} + (skill level * {_selectedMagicInfo.MultiplierBonus})}}";
+=======
+                 lblDamageExample.Text = string.Format("Damage @ Skill level 0: {0:000}-{1:000}   |||   level 1: {2:000}-{3:000}   |||   level 2: {4:000}-{5:000}   |||   level 3: {6:000}-{7:000} |||   level 4: {8:000}-{9:000}", GetMinPower(0), GetMaxPower(0), GetMinPower(1), GetMaxPower(1), GetMinPower(2), GetMaxPower(2), GetMinPower(3), GetMaxPower(3), GetMinPower(4), GetMaxPower(4));
+                 lblDamageExplained.Text = string.Format("Damage: {{Random(minstat-maxstat) + [<(random({0}-{1})/4) X (skill level +1)> + random<{2}-{3}>]}}  X  {{{4} + (skill level * {5})}}", _selectedMagicInfo.MPowerBase, _selectedMagicInfo.MPowerBase + _selectedMagicInfo.MPowerBonus, _selectedMagicInfo.PowerBase, _selectedMagicInfo.PowerBonus + _selectedMagicInfo.PowerBase, _selectedMagicInfo.MultiplierBase, _selectedMagicInfo.MultiplierBonus);
+>>>>>>> master:Server/MirForms/Database/MagicInfoForm.cs
                  txtSkillIcon.Text = _selectedMagicInfo.Icon.ToString();
                  txtSkillLvl1Points.Text = _selectedMagicInfo.Need1.ToString();
                  txtSkillLvl1Req.Text = _selectedMagicInfo.Level1.ToString();
@@ -65,6 +72,8 @@ namespace Server
                  txtSkillLvl2Req.Text = _selectedMagicInfo.Level2.ToString();
                  txtSkillLvl3Points.Text = _selectedMagicInfo.Need3.ToString();
                  txtSkillLvl3Req.Text = _selectedMagicInfo.Level3.ToString();
+                 textBox1.Text = _selectedMagicInfo.Need4.ToString();
+                 textBox2.Text = _selectedMagicInfo.Level4.ToString();
                  txtMPBase.Text = _selectedMagicInfo.BaseCost.ToString();
                  txtMPIncrease.Text = _selectedMagicInfo.LevelCost.ToString();
                  txtDelayBase.Text = _selectedMagicInfo.DelayBase.ToString();
@@ -88,8 +97,10 @@ namespace Server
                      lblBookValid.Text = "No book found";
                      lblBookValid.BackColor = Color.Red;
                  }
-                this.textBoxName.Text = _selectedMagicInfo.Name;
-             }
+
+                checkBox1.Checked = _selectedMagicInfo.HumUpTrain;
+            }
+
         }
 
         private int GetMaxPower(byte level)
@@ -109,6 +120,8 @@ namespace Server
             this.MagiclistBox = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
             this.lblDamageExample = new System.Windows.Forms.Label();
             this.lblDamageExplained = new System.Windows.Forms.Label();
             this.lblSelected = new System.Windows.Forms.Label();
@@ -141,6 +154,9 @@ namespace Server
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.txtSkillLvl3Points = new System.Windows.Forms.TextBox();
             this.txtSkillLvl2Points = new System.Windows.Forms.TextBox();
             this.txtSkillLvl1Points = new System.Windows.Forms.TextBox();
@@ -158,9 +174,8 @@ namespace Server
             this.label1 = new System.Windows.Forms.Label();
             this.lblBookValid = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.textBoxName = new System.Windows.Forms.TextBox();
-            this.label23 = new System.Windows.Forms.Label();
-            this.label24 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -176,7 +191,7 @@ namespace Server
             this.MagiclistBox.ItemHeight = 12;
             this.MagiclistBox.Location = new System.Drawing.Point(0, 0);
             this.MagiclistBox.Name = "MagiclistBox";
-            this.MagiclistBox.Size = new System.Drawing.Size(225, 542);
+            this.MagiclistBox.Size = new System.Drawing.Size(225, 678);
             this.MagiclistBox.TabIndex = 0;
             this.MagiclistBox.SelectedIndexChanged += new System.EventHandler(this.MagiclistBox_SelectedIndexChanged);
             // 
@@ -187,20 +202,19 @@ namespace Server
             this.tabControl1.Location = new System.Drawing.Point(225, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(702, 542);
+            this.tabControl1.Size = new System.Drawing.Size(826, 678);
             this.tabControl1.TabIndex = 1;
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.label24);
-            this.tabPage1.Controls.Add(this.label23);
-            this.tabPage1.Controls.Add(this.textBoxName);
             this.tabPage1.Controls.Add(this.lblDamageExample);
             this.tabPage1.Controls.Add(this.lblDamageExplained);
             this.tabPage1.Controls.Add(this.lblSelected);
             this.tabPage1.Controls.Add(this.panel4);
+            this.tabPage1.Controls.Add(this.label23);
             this.tabPage1.Controls.Add(this.panel3);
             this.tabPage1.Controls.Add(this.panel2);
+            this.tabPage1.Controls.Add(this.label24);
             this.tabPage1.Controls.Add(this.panel1);
             this.tabPage1.Controls.Add(this.txtSkillIcon);
             this.tabPage1.Controls.Add(this.label1);
@@ -208,37 +222,55 @@ namespace Server
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(694, 516);
+            this.tabPage1.Size = new System.Drawing.Size(818, 652);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Basics";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(14, 38);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(59, 12);
+            this.label24.TabIndex = 12;
+            this.label24.Text = "技能名字:";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(168, 38);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(23, 12);
+            this.label23.TabIndex = 11;
+            this.label23.Text = "书:";
+            // 
             // lblDamageExample
             // 
             this.lblDamageExample.AutoSize = true;
-            this.lblDamageExample.Location = new System.Drawing.Point(11, 394);
+            this.lblDamageExample.Location = new System.Drawing.Point(11, 464);
             this.lblDamageExample.Name = "lblDamageExample";
             this.lblDamageExample.Size = new System.Drawing.Size(89, 12);
             this.lblDamageExample.TabIndex = 0;
-            this.lblDamageExample.Text = "Damage example";
+            this.lblDamageExample.Text = "伤害 @技能等级";
             // 
             // lblDamageExplained
             // 
             this.lblDamageExplained.AutoSize = true;
-            this.lblDamageExplained.Location = new System.Drawing.Point(11, 366);
+            this.lblDamageExplained.Location = new System.Drawing.Point(11, 436);
             this.lblDamageExplained.Name = "lblDamageExplained";
-            this.lblDamageExplained.Size = new System.Drawing.Size(47, 12);
+            this.lblDamageExplained.Size = new System.Drawing.Size(35, 12);
             this.lblDamageExplained.TabIndex = 9;
-            this.lblDamageExplained.Text = "Damage:";
+            this.lblDamageExplained.Text = "伤害:";
             // 
             // lblSelected
             // 
             this.lblSelected.AutoSize = true;
             this.lblSelected.Location = new System.Drawing.Point(20, 3);
             this.lblSelected.Name = "lblSelected";
-            this.lblSelected.Size = new System.Drawing.Size(101, 12);
+            this.lblSelected.Size = new System.Drawing.Size(65, 12);
             this.lblSelected.TabIndex = 8;
-            this.lblSelected.Text = "Selected skill: ";
+            this.lblSelected.Text = "选中技能: ";
             // 
             // panel4
             // 
@@ -256,7 +288,7 @@ namespace Server
             this.panel4.Controls.Add(this.label17);
             this.panel4.Controls.Add(this.label16);
             this.panel4.Controls.Add(this.label15);
-            this.panel4.Location = new System.Drawing.Point(14, 166);
+            this.panel4.Location = new System.Drawing.Point(14, 236);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(233, 191);
             this.panel4.TabIndex = 6;
@@ -284,18 +316,18 @@ namespace Server
             this.label21.AutoSize = true;
             this.label21.Location = new System.Drawing.Point(12, 160);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(197, 12);
+            this.label21.Size = new System.Drawing.Size(137, 12);
             this.label21.TabIndex = 12;
-            this.label21.Text = "Damage multiplyer boost/skilllvl";
+            this.label21.Text = "每等级多人释放技能伤害";
             // 
             // label22
             // 
             this.label22.AutoSize = true;
             this.label22.Location = new System.Drawing.Point(12, 134);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(137, 12);
+            this.label22.Size = new System.Drawing.Size(101, 12);
             this.label22.TabIndex = 11;
-            this.label22.Text = "Damage multiplyer base";
+            this.label22.Text = "多人释放基础伤害";
             // 
             // txtDmgBonusMax
             // 
@@ -321,18 +353,18 @@ namespace Server
             this.label18.AutoSize = true;
             this.label18.Location = new System.Drawing.Point(12, 108);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(161, 12);
+            this.label18.Size = new System.Drawing.Size(95, 12);
             this.label18.TabIndex = 8;
-            this.label18.Text = "Maximum skill lvl 3 damage";
+            this.label18.Text = "最大技能3级伤害";
             // 
             // label19
             // 
             this.label19.AutoSize = true;
             this.label19.Location = new System.Drawing.Point(12, 82);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(167, 12);
+            this.label19.Size = new System.Drawing.Size(95, 12);
             this.label19.TabIndex = 7;
-            this.label19.Text = "Minimum skill lvl 3 damage:";
+            this.label19.Text = "最低技能3级伤害";
             // 
             // txtDmgBaseMax
             // 
@@ -357,27 +389,27 @@ namespace Server
             this.label17.AutoSize = true;
             this.label17.Location = new System.Drawing.Point(12, 56);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(119, 12);
+            this.label17.Size = new System.Drawing.Size(77, 12);
             this.label17.TabIndex = 2;
-            this.label17.Text = "Maximum base damage";
+            this.label17.Text = "最大基础伤害";
             // 
             // label16
             // 
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(12, 30);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(125, 12);
+            this.label16.Size = new System.Drawing.Size(77, 12);
             this.label16.TabIndex = 1;
-            this.label16.Text = "Minimum base damage:";
+            this.label16.Text = "最小基础伤害";
             // 
             // label15
             // 
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(5, 8);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(95, 12);
+            this.label15.Size = new System.Drawing.Size(53, 12);
             this.label15.TabIndex = 0;
-            this.label15.Text = "Damage settings";
+            this.label15.Text = "伤害升值";
             // 
             // panel3
             // 
@@ -389,7 +421,7 @@ namespace Server
             this.panel3.Controls.Add(this.label14);
             this.panel3.Controls.Add(this.label13);
             this.panel3.Controls.Add(this.label12);
-            this.panel3.Location = new System.Drawing.Point(253, 166);
+            this.panel3.Location = new System.Drawing.Point(253, 236);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(216, 191);
             this.panel3.TabIndex = 5;
@@ -398,11 +430,11 @@ namespace Server
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(12, 77);
+            this.label20.Location = new System.Drawing.Point(21, 76);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(113, 12);
+            this.label20.Size = new System.Drawing.Size(77, 24);
             this.label20.TabIndex = 15;
-            this.label20.Text = "Range (0 No limit)";
+            this.label20.Text = "技能伤害范围\r\n (0 无限制)";
             // 
             // txtRange
             // 
@@ -435,27 +467,27 @@ namespace Server
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(12, 50);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(137, 12);
+            this.label14.Size = new System.Drawing.Size(89, 12);
             this.label14.TabIndex = 2;
-            this.label14.Text = "Decrease / skill level";
+            this.label14.Text = "每一级减少延迟";
             // 
             // label13
             // 
             this.label13.AutoSize = true;
             this.label13.Location = new System.Drawing.Point(12, 25);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(65, 12);
+            this.label13.Size = new System.Drawing.Size(77, 12);
             this.label13.TabIndex = 1;
-            this.label13.Text = "Base delay";
+            this.label13.Text = "技能基础延迟";
             // 
             // label12
             // 
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(12, 8);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(149, 12);
+            this.label12.Size = new System.Drawing.Size(101, 12);
             this.label12.TabIndex = 0;
-            this.label12.Text = "Delay (in milliseconds!)";
+            this.label12.Text = "技能延迟 (毫秒!)";
             // 
             // panel2
             // 
@@ -465,9 +497,9 @@ namespace Server
             this.panel2.Controls.Add(this.label11);
             this.panel2.Controls.Add(this.label10);
             this.panel2.Controls.Add(this.label9);
-            this.panel2.Location = new System.Drawing.Point(253, 53);
+            this.panel2.Location = new System.Drawing.Point(253, 52);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(216, 107);
+            this.panel2.Size = new System.Drawing.Size(216, 178);
             this.panel2.TabIndex = 4;
             // 
             // txtMPIncrease
@@ -493,31 +525,36 @@ namespace Server
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(12, 50);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(137, 12);
+            this.label11.Size = new System.Drawing.Size(125, 12);
             this.label11.TabIndex = 2;
-            this.label11.Text = "MP increase each level";
+            this.label11.Text = "技能等级消耗MP基础值";
             // 
             // label10
             // 
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(12, 25);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(83, 12);
+            this.label10.Size = new System.Drawing.Size(101, 12);
             this.label10.TabIndex = 1;
-            this.label10.Text = "Base mp usage";
+            this.label10.Text = "技能消耗MP基础值";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(12, 6);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(53, 12);
+            this.label9.Size = new System.Drawing.Size(77, 12);
             this.label9.TabIndex = 0;
-            this.label9.Text = "MP usage";
+            this.label9.Text = "技能消耗MP值";
             // 
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.label26);
+            this.panel1.Controls.Add(this.label25);
+            this.panel1.Controls.Add(this.checkBox1);
+            this.panel1.Controls.Add(this.textBox1);
+            this.panel1.Controls.Add(this.textBox2);
             this.panel1.Controls.Add(this.txtSkillLvl3Points);
             this.panel1.Controls.Add(this.txtSkillLvl2Points);
             this.panel1.Controls.Add(this.txtSkillLvl1Points);
@@ -533,8 +570,36 @@ namespace Server
             this.panel1.Controls.Add(this.label2);
             this.panel1.Location = new System.Drawing.Point(13, 53);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(234, 107);
+            this.panel1.Size = new System.Drawing.Size(234, 177);
             this.panel1.TabIndex = 3;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.ForeColor = System.Drawing.Color.Red;
+            this.checkBox1.Location = new System.Drawing.Point(48, 111);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(90, 16);
+            this.checkBox1.TabIndex = 13;
+            this.checkBox1.Text = "羽化4级技能";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(169, 142);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(46, 21);
+            this.textBox1.TabIndex = 16;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(57, 142);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(46, 21);
+            this.textBox2.TabIndex = 14;
+            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // txtSkillLvl3Points
             // 
@@ -565,27 +630,27 @@ namespace Server
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(110, 75);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(77, 12);
+            this.label6.Size = new System.Drawing.Size(41, 12);
             this.label6.TabIndex = 9;
-            this.label6.Text = "Skill points";
+            this.label6.Text = "技能点";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(110, 50);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(77, 12);
+            this.label7.Size = new System.Drawing.Size(41, 12);
             this.label7.TabIndex = 8;
-            this.label7.Text = "Skill points";
+            this.label7.Text = "技能点";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(110, 25);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(77, 12);
+            this.label8.Size = new System.Drawing.Size(41, 12);
             this.label8.TabIndex = 7;
-            this.label8.Text = "Skill points";
+            this.label8.Text = "技能点";
             // 
             // txtSkillLvl3Req
             // 
@@ -616,36 +681,36 @@ namespace Server
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(13, 75);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(47, 12);
+            this.label5.Size = new System.Drawing.Size(41, 12);
             this.label5.TabIndex = 3;
-            this.label5.Text = "level 3";
+            this.label5.Text = "等级 3";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(13, 50);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(47, 12);
+            this.label4.Size = new System.Drawing.Size(41, 12);
             this.label4.TabIndex = 2;
-            this.label4.Text = "level 2";
+            this.label4.Text = "等级 2";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(13, 25);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(47, 12);
+            this.label3.Size = new System.Drawing.Size(41, 12);
             this.label3.TabIndex = 1;
-            this.label3.Text = "level 1";
+            this.label3.Text = "等级 1";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(6, 6);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(203, 12);
+            this.label2.Size = new System.Drawing.Size(77, 12);
             this.label2.TabIndex = 0;
-            this.label2.Text = "Skill level increase requirements";
+            this.label2.Text = "技能升级需求";
             // 
             // txtSkillIcon
             // 
@@ -660,9 +725,9 @@ namespace Server
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(250, 23);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 12);
+            this.label1.Size = new System.Drawing.Size(65, 12);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Skill icon: ";
+            this.label1.Text = "技能图标: ";
             // 
             // lblBookValid
             // 
@@ -673,39 +738,31 @@ namespace Server
             this.lblBookValid.TabIndex = 0;
             this.lblBookValid.Text = "Searching for books";
             // 
-            // textBoxName
+            // label25
             // 
-            this.textBoxName.Location = new System.Drawing.Point(89, 18);
-            this.textBoxName.Name = "textBoxName";
-            this.textBoxName.Size = new System.Drawing.Size(112, 21);
-            this.textBoxName.TabIndex = 10;
-            this.textBoxName.TextChanged += new System.EventHandler(this.textBoxName_TextChanged);
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(10, 145);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(41, 12);
+            this.label25.TabIndex = 17;
+            this.label25.Text = "等级 4";
             // 
-            // label23
+            // label26
             // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(181, 3);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(35, 12);
-            this.label23.TabIndex = 11;
-            this.label23.Text = "book:";
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(20, 23);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(65, 12);
-            this.label24.TabIndex = 12;
-            this.label24.Text = "SkillName:";
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(110, 145);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(41, 12);
+            this.label26.TabIndex = 18;
+            this.label26.Text = "技能点";
             // 
             // MagicInfoForm
             // 
-            this.ClientSize = new System.Drawing.Size(927, 542);
+            this.ClientSize = new System.Drawing.Size(1051, 678);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.MagiclistBox);
             this.Name = "MagicInfoForm";
-            this.Text = "Magic Settings";
+            this.Text = "技能设置";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MagicInfoForm_FormClosed);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -968,18 +1025,35 @@ namespace Server
             UpdateMagicForm(2);
         }
 
-        private void textBoxName_TextChanged(object sender, EventArgs e)
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
-            _selectedMagicInfo.Name = ActiveControl.Text;
-            UpdateMagicForm();
-            if (ActiveControl.Text == "")
-            {
-                ActiveControl.BackColor = Color.Red;
-            }
-            else {
-                ActiveControl.BackColor = SystemColors.Window;              
-            }            
+            byte temp = 0;
+            if (!IsValid(ref temp)) return;
+
+            ActiveControl.BackColor = SystemColors.Window;
+            _selectedMagicInfo.Level4 = temp;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            ushort temp = 0;
+            if (!IsValid(ref temp)) return;
+
+            ActiveControl.BackColor = SystemColors.Window;
+            _selectedMagicInfo.Need4 = temp;
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+                        
+                _selectedMagicInfo.HumUpTrain = checkBox1.Checked;
+
+           
+
         }
     }
 }

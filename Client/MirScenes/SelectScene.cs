@@ -135,7 +135,7 @@ namespace Client.MirScenes
             };
             CharacterDisplay.AfterDraw += (o, e) =>
             {
-               // if (_selected >= 0 && _selected < Characters.Count && characters[_selected].Class == MirClass.Wizard)
+               // if (_selected >= 0 && _selected < Characters.Count && characters[_selected].Class == MirClass.法师)
                     Libraries.ChrSel.DrawBlend(CharacterDisplay.Index + 560, CharacterDisplay.DisplayLocationWithoutOffSet, Color.White, true);
             };
             
@@ -461,20 +461,35 @@ namespace Client.MirScenes
 
                 switch ((MirClass)Characters[_selected].Class)
                 {
-                    case MirClass.Warrior:
+                    case MirClass.战士:
                         CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 20 : 300; //220 : 500;
                         break;
-                    case MirClass.Wizard:
+                    case MirClass.法师:
                         CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 40 : 320; //240 : 520;
                         break;
-                    case MirClass.Taoist:
+                    case MirClass.道士:
                         CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 60 : 340; //260 : 540;
                         break;
-                    case MirClass.Assassin:
+                    case MirClass.刺客:
                         CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 80 : 360; //280 : 560;
                         break;
-                    case MirClass.Archer:
+                    case MirClass.弓箭手:
                         CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 100 : 140; //160 : 180;
+                        break;
+                    case MirClass.碧血武士:
+                        CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 220 : 500; //220 : 500;
+                        break;
+                    case MirClass.虹玄法师:
+                        CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 240 : 520; //240 : 520;
+                        break;
+                    case MirClass.翊仙道士:
+                        CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 260 : 540; //260 : 540;
+                        break;
+                    case MirClass.飞燕刺客:
+                        CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 280 : 560; //280 : 560;
+                        break;
+                    case MirClass.暗鬼弓手:
+                        CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 160 : 180; //160 : 180;
                         break;
                 }
 
@@ -612,7 +627,7 @@ namespace Client.MirScenes
                     };
                 CharacterDisplay.AfterDraw += (o, e) =>
                     {
-                        if (_class == MirClass.Wizard)
+                        if (_class == MirClass.法师)
                             Libraries.ChrSel.DrawBlend(CharacterDisplay.Index + 560, CharacterDisplay.DisplayLocationWithoutOffSet, Color.White, true);
                     };
 
@@ -629,7 +644,7 @@ namespace Client.MirScenes
                     };
                 WarriorButton.Click += (o, e) =>
                     {
-                        _class = MirClass.Warrior;
+                        _class = MirClass.战士;
                         UpdateInterface();
                     };
 
@@ -646,7 +661,7 @@ namespace Client.MirScenes
                     };
                 WizardButton.Click += (o, e) =>
                     {
-                        _class = MirClass.Wizard;
+                        _class = MirClass.法师;
                         UpdateInterface();
                     };
 
@@ -663,7 +678,7 @@ namespace Client.MirScenes
                     };
                 TaoistButton.Click += (o, e) =>
                     {
-                        _class = MirClass.Taoist;
+                        _class = MirClass.道士;
                         UpdateInterface();
                     };
 
@@ -679,7 +694,7 @@ namespace Client.MirScenes
                     };
                 AssassinButton.Click += (o, e) =>
                     {
-                        _class = MirClass.Assassin;
+                        _class = MirClass.刺客;
                         UpdateInterface();
                     };
 
@@ -695,7 +710,7 @@ namespace Client.MirScenes
                 };
                 ArcherButton.Click += (o, e) =>
                 {
-                    _class = MirClass.Archer;
+                    _class = MirClass.弓箭手;
                     UpdateInterface();
                 };
 
@@ -807,30 +822,55 @@ namespace Client.MirScenes
 
                 switch (_class)
                 {
-                    case MirClass.Warrior:
+                    case MirClass.战士:
                         WarriorButton.Index = 2427;
                         Description.Text = WarriorDescription;
                         CharacterDisplay.Index = (byte)_gender == 0 ? 20 : 300; //220 : 500;
                         break;
-                    case MirClass.Wizard:
+                    case MirClass.法师:
                         WizardButton.Index = 2430;
                         Description.Text = WizardDescription;
                         CharacterDisplay.Index = (byte)_gender == 0 ? 40 : 320; //240 : 520;
                         break;
-                    case MirClass.Taoist:
+                    case MirClass.道士:
                         TaoistButton.Index = 2433;
                         Description.Text = TaoistDescription;
                         CharacterDisplay.Index = (byte)_gender == 0 ? 60 : 340; //260 : 540;
                         break;
-                    case MirClass.Assassin:
+                    case MirClass.刺客:
                         AssassinButton.Index = 2436;
                         Description.Text = AssassinDescription;
                         CharacterDisplay.Index = (byte)_gender == 0 ? 80 : 360; //280 : 560;
                         break;
-                    case MirClass.Archer:
+                    case MirClass.弓箭手:
                         ArcherButton.Index = 2439;
                         Description.Text = ArcherDescription;
                         CharacterDisplay.Index = (byte)_gender == 0 ? 100 : 140; //160 : 180;
+                        break;
+                    case MirClass.碧血武士:
+                        WarriorButton.Index = 2427;
+                        Description.Text = WarriorDescription;
+                        CharacterDisplay.Index = (byte)_gender == 0 ? 220 : 500; //220 : 500;
+                        break;
+                    case MirClass.虹玄法师:
+                        WizardButton.Index = 2430;
+                        Description.Text = WizardDescription;
+                        CharacterDisplay.Index = (byte)_gender == 0 ? 240 : 520; //240 : 520;
+                        break;
+                    case MirClass.翊仙道士:
+                        TaoistButton.Index = 2433;
+                        Description.Text = TaoistDescription;
+                        CharacterDisplay.Index = (byte)_gender == 0 ? 260 : 540; //260 : 540;
+                        break;
+                    case MirClass.飞燕刺客:
+                        AssassinButton.Index = 2436;
+                        Description.Text = AssassinDescription;
+                        CharacterDisplay.Index = (byte)_gender == 0 ? 280 : 560; //280 : 560;
+                        break;
+                    case MirClass.暗鬼弓手:
+                        ArcherButton.Index = 2439;
+                        Description.Text = ArcherDescription;
+                        CharacterDisplay.Index = (byte)_gender == 0 ? 160 : 180; //160 : 180;
                         break;
                 }
 
@@ -841,7 +881,7 @@ namespace Client.MirScenes
         {
             public MirLabel NameLabel, LevelLabel, ClassLabel;
             public bool Selected;
-            
+
             public CharacterButton()
             {
                 Index = 44; //45 locked
@@ -892,7 +932,7 @@ namespace Client.MirScenes
 
                 Library = Libraries.Title;
 
-                Index = 660 + (byte) info.Class;
+                Index = 660 + (byte)info.Class - (info.Class > MirClass.弓箭手 ? 5 : 0);
 
                 if (Selected) Index += 5;
 
@@ -900,7 +940,7 @@ namespace Client.MirScenes
                 NameLabel.Text = info.Name;
                 LevelLabel.Text = info.Level.ToString();
                 ClassLabel.Text = info.Class.ToString();
-                
+
                 NameLabel.Visible = true;
                 LevelLabel.Visible = true;
                 ClassLabel.Visible = true;

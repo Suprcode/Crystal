@@ -56,7 +56,8 @@ Client/Client.csproj
 /Client/obj
 /AutoPatcherAdmin/obj
 
-/Build
+
 *.ide-wal
 *.ide
 *.ide-shm
+

@@ -159,7 +159,7 @@ namespace Server.MirDatabase
                 DropInfo info = new DropInfo();
 
                 if (!int.TryParse(parts[0].Substring(2), out info.Chance)) return null;
-                if (string.Compare(parts[1], "Gold", StringComparison.OrdinalIgnoreCase) == 0)
+                if (string.Compare(parts[1], "金币", StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     if (parts.Length < 4) return null;
                     if (!uint.TryParse(parts[2], out info.Gold) || info.Gold == 0) return null;

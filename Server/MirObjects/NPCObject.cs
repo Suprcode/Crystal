@@ -1647,11 +1647,15 @@ namespace Server.MirObjects
         OpenGate,
         CloseGate,
         Break,
+
+        Humup,//stupple
+
         AddGuildNameList,
         DelGuildNameList,
         ClearGuildNameList,
         OpenBrowser,
         GetRandomText,
+
     }
     public enum CheckType
     {

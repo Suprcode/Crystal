@@ -489,7 +489,7 @@ namespace Client.MirObjects
                 case Monster.CharmedSnake://SummonSnakes Snake
                     Frames = FrameSet.Monsters[52];
                     break;
-                case Monster.HighAssassin:
+                case Monster.飞燕刺客:
                     Frames = FrameSet.Monsters[53];
                     break;
                 case Monster.DarkDustPile:
@@ -1651,7 +1651,7 @@ namespace Client.MirObjects
                             if (ob.Race != ObjectType.Player) break;
                             PlayerObject player = ((PlayerObject)ob);
                             StruckWeapon = player.Weapon;
-                            if (player.Class != MirClass.Assassin || StruckWeapon == -1) break; //Archer?
+                            if (player.Class != MirClass.刺客 || StruckWeapon == -1) break; //弓箭手?
                             StruckWeapon = 1;
                             break;
                         }

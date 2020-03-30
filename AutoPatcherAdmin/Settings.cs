@@ -4,12 +4,16 @@
     {
         private static readonly InIReader Reader = new InIReader(@".\PatchAdmin.ini");
 
+        // 配置文件默认设置
         public static string Client = @"S:\Patch\";
         public static string Host = @"ftp://212.67.209.184/";
         public static string Login = string.Empty;
         public static string Password = string.Empty;
         public static bool AllowCleanUp = true;
 
+        /// <summary>
+        /// 配置文件加载
+        /// </summary>
         public static void Load()
         {
             Client = Reader.ReadString("AutoPatcher", "Client", Client);
@@ -20,6 +24,9 @@
             AllowCleanUp = Reader.ReadBoolean("AutoPatcher", "AllowCleanUp", AllowCleanUp);
         }
 
+        /// <summary>
+        /// 配置文件保存
+        /// </summary>
         public static void Save()
         {
             Reader.Write("AutoPatcher", "Client", Client);

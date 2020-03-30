@@ -5,6 +5,9 @@ using System.IO;
 
 namespace AutoPatcherAdmin
 {
+    /// <summary>
+    /// 配置文件读取
+    /// </summary>
     public class InIReader
     {
         #region Fields

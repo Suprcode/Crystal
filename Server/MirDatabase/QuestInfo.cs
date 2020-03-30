@@ -54,7 +54,11 @@ namespace Server.MirDatabase
         public List<string> CompletionDescription = new List<string>(); 
 
         public int RequiredMinLevel, RequiredMaxLevel, RequiredQuest;
+<<<<<<< HEAD
+        public RequiredClass RequiredClass = RequiredClass.战法道;
+=======
         public RequiredClass RequiredClass = RequiredClass.None;
+>>>>>>> parent of 2ffc5db... 2
 
         public QuestType Type;
 
@@ -90,7 +94,7 @@ namespace Server.MirDatabase
             }
 
             RequiredQuest = reader.ReadInt32();
-            RequiredClass = (RequiredClass)reader.ReadByte();
+            RequiredClass = (RequiredClass)reader.ReadUInt16();
             Type = (QuestType)reader.ReadByte();
             GotoMessage = reader.ReadString();
             KillMessage = reader.ReadString();
@@ -109,7 +113,7 @@ namespace Server.MirDatabase
             writer.Write(RequiredMinLevel);
             writer.Write(RequiredMaxLevel);
             writer.Write(RequiredQuest);
-            writer.Write((byte)RequiredClass);
+            writer.Write((ushort)RequiredClass);
             writer.Write((byte)Type);
             writer.Write(GotoMessage);
             writer.Write(KillMessage);
@@ -343,24 +347,44 @@ namespace Server.MirDatabase
 
             switch (player.Class)
             {
-                case MirClass.Warrior:
-                    if (!RequiredClass.HasFlag(RequiredClass.Warrior))
+                case MirClass.战士:
+                    if (!RequiredClass.HasFlag(RequiredClass.战士))
                         return false;
                     break;
-                case MirClass.Wizard:
-                    if (!RequiredClass.HasFlag(RequiredClass.Wizard))
+                case MirClass.法师:
+                    if (!RequiredClass.HasFlag(RequiredClass.法师))
                         return false;
                     break;
-                case MirClass.Taoist:
-                    if (!RequiredClass.HasFlag(RequiredClass.Taoist))
+                case MirClass.道士:
+                    if (!RequiredClass.HasFlag(RequiredClass.道士))
                         return false;
                     break;
-                case MirClass.Assassin:
-                    if (!RequiredClass.HasFlag(RequiredClass.Assassin))
+                case MirClass.刺客:
+                    if (!RequiredClass.HasFlag(RequiredClass.刺客))
                         return false;
                     break;
-                case MirClass.Archer:
-                    if (!RequiredClass.HasFlag(RequiredClass.Archer))
+                case MirClass.弓箭手:
+                    if (!RequiredClass.HasFlag(RequiredClass.弓箭手))
+                        return false;
+                    break;
+                case MirClass.碧血武士:
+                    if (!RequiredClass.HasFlag(RequiredClass.碧血武士))
+                        return false;
+                    break;
+                case MirClass.虹玄法师:
+                    if (!RequiredClass.HasFlag(RequiredClass.虹玄法师))
+                        return false;
+                    break;
+                case MirClass.翊仙道士:
+                    if (!RequiredClass.HasFlag(RequiredClass.翊仙道士))
+                        return false;
+                    break;
+                case MirClass.飞燕刺客:
+                    if (!RequiredClass.HasFlag(RequiredClass.飞燕刺客))
+                        return false;
+                    break;
+                case MirClass.暗鬼弓手:
+                    if (!RequiredClass.HasFlag(RequiredClass.暗鬼弓手))
                         return false;
                     break;
             }
@@ -431,7 +455,7 @@ namespace Server.MirDatabase
         public string ToText()
         {
             return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
-                Name, Group, (byte)Type, FileName, GotoMessage, KillMessage, ItemMessage, FlagMessage, RequiredMinLevel, RequiredMaxLevel, RequiredQuest, (byte)RequiredClass);
+                Name, Group, (byte)Type, FileName, GotoMessage, KillMessage, ItemMessage, FlagMessage, RequiredMinLevel, RequiredMaxLevel, RequiredQuest, (ushort)RequiredClass);
         }
 
         public override string ToString()
