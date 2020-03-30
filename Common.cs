@@ -969,27 +969,17 @@ public enum RequiredClass : ushort
     道士 = 4,
     刺客 = 8,
     弓箭手 = 16,
-<<<<<<< HEAD
 
-=======
->>>>>>> parent of 97b4099... 323
 
     战法道 = 战士 | 法师 | 道士,
     碧血武士 = 32,
     虹玄法师 = 64,
     翊仙道士 = 128,
     飞燕刺客 = 256,
-    暗鬼弓手 = 512,   
-    //hig = 碧血武士 | 虹玄法师 | 翊仙道士 | 飞燕刺客 | 暗鬼弓手,   
-    //low = 战法道 | 刺客 | 弓箭手,
-    //None = low | hig,
-
-
-<<<<<<< HEAD
-
-=======
->>>>>>> parent of 97b4099... 323
-
+    暗鬼弓手 = 512,
+    hig = 碧血武士 | 虹玄法师 | 翊仙道士 | 飞燕刺客 | 暗鬼弓手,
+    low = 战法道 | 刺客 | 弓箭手,
+    None = low | hig,
 
 }
 [Flags]
@@ -2633,13 +2623,10 @@ public class ItemInfo
     public ItemType Type;
     public ItemGrade Grade;
     public RequiredType RequiredType = RequiredType.Level;
-<<<<<<< HEAD
 
     public RequiredClass RequiredClass = RequiredClass.None;
 
-=======
-    public RequiredClass RequiredClass = RequiredClass.战法道;
->>>>>>> parent of 97b4099... 323
+
     public RequiredGender RequiredGender = RequiredGender.None;
     public ItemSet Set;
 
@@ -6639,6 +6626,20 @@ public class GameLanguage
                          ItemGradeRare = "稀有",
                          ItemGradeLegendary = "传奇",
                          ItemGradeMythical = "神话",
+                         ItemGradeUncommon = "非凡",
+
+
+                         ItemGradeUnique = "罕见",
+                    
+               
+                        ItemGradeSet = "配套",
+
+
+
+
+
+
+
                          NoAccountID = "帐户ID不存在..",
                          IncorrectPasswordAccountID = "密码和帐户ID组合不正确.",
                          GroupSwitch = "允许/不允许组请求",

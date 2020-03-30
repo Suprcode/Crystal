@@ -189,12 +189,10 @@ namespace Server.MirDatabase
                     IsTempSpell = IsTempSpell,
                     Delay = GetDelay(),
                     Range = Info.Range,
-<<<<<<< HEAD
-                    CastTime = (CastTime != 0) && (Envir.Time > CastTime)? Envir.Time - CastTime: 0
-=======
+
                     IsHumUpTrain = Info.HumUpTrain,
-                    CastTime = (CastTime != 0) && (SMain.Envir.Time > CastTime)? SMain.Envir.Time - CastTime: 0
->>>>>>> master
+                    CastTime = (CastTime != 0) && (Envir.Time > CastTime)? Envir.Time - CastTime: 0
+
             };
         }
 

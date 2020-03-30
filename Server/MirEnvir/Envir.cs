@@ -54,12 +54,9 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-<<<<<<< HEAD
-        public const int Version = 79;
-=======
 
-        public const int Version = 78;
->>>>>>> master
+        public const int Version = 79;
+
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
@@ -1646,13 +1643,10 @@ namespace Server.MirEnvir
                         tempMap.Conquest.Add(newConquest);
                     }
 
-<<<<<<< HEAD
+
                     //Bind Info to Saved Archer objects or create new objects
                     for (var j = 0; j < ConquestInfos[i].ConquestGuards.Count; j++)
-=======
-                    //Bind Info to Saved 弓箭手 objects or create new objects
-                    for (int j = 0; j < ConquestInfos[i].ConquestGuards.Count; j++)
->>>>>>> master
+
                     {
                         tempArcher = newConquest.ArcherList.FirstOrDefault(x => x.Index == ConquestInfos[i].ConquestGuards[j].Index);
 
@@ -2416,13 +2410,10 @@ namespace Server.MirEnvir
                 return;
             }
 
-<<<<<<< HEAD
-            if(p.Class == MirClass.Assassin && !Settings.AllowCreateAssassin ||
-                p.Class == MirClass.Archer && !Settings.AllowCreateArcher)
-=======
+
             if((p.Class == MirClass.刺客 && !Settings.AllowCreateAssassin) ||
                 (p.Class == MirClass.弓箭手 && !Settings.AllowCreateArcher))
->>>>>>> master
+
             {
                 c.Enqueue(new ServerPackets.NewCharacter { Result = 3 });
                 return;

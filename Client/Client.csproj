@@ -96,14 +96,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ionic.Zlib">
-      <HintPath>D:\mir2-master\Components\dotnet zlib\Ionic.Zlib.dll</HintPath>
+      <HintPath>..\..\..\mir2\Components\dotnet zlib\Ionic.Zlib.dll</HintPath>
     </Reference>
     <Reference Include="ManagedSquish">
-      <HintPath>D:\mir2-master\Components\Squish 2.0\ManagedSquish.dll</HintPath>
+      <HintPath>..\..\..\mir2\Components\Squish 2.0\ManagedSquish.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
-
       <HintPath>DirectX\Microsoft.DirectX.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
@@ -117,7 +116,6 @@
     <Reference Include="Microsoft.DirectX.DirectSound, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>DirectX\Microsoft.DirectX.DirectSound.dll</HintPath>
-
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -38,10 +38,10 @@ namespace Client.MirObjects
                     case Monster.SSabukWall2:
                     case Monster.SSabukWall3:
                         return new Point(-10, 0);
-                        break;
+                      
                     case Monster.GiGateEast:
                         return new Point(-45, 7);
-                        break;
+                       
                     default:
                         return new Point(0, 0);
                 }
@@ -1246,7 +1246,7 @@ namespace Client.MirObjects
                 case Monster.Foxey:
                     BodyLibrary = Libraries.Pets[((ushort)BaseImage) - 10000];
                     break;
-                    break;
+                   
             }
 
             if (ActionFeed.Count == 0)

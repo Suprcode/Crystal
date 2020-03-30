@@ -192,10 +192,9 @@
             this.ExportSelectedButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
             this.Gameshop_button = new System.Windows.Forms.Button();
-<<<<<<< HEAD:Server.MirForms/Database/ItemInfoForm.Designer.cs
+
             this.noMailBox = new System.Windows.Forms.CheckBox();
-=======
->>>>>>> master:Server/MirForms/Database/ItemInfoForm.Designer.cs
+
             this.ItemInfoPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -290,19 +289,13 @@
             // globalDropNotify_CheckBox
             // 
             this.globalDropNotify_CheckBox.AutoSize = true;
-<<<<<<< HEAD:Server.MirForms/Database/ItemInfoForm.Designer.cs
-            this.globalDropNotify_CheckBox.Location = new System.Drawing.Point(468, 340);
-            this.globalDropNotify_CheckBox.Name = "globalDropNotify_CheckBox";
-            this.globalDropNotify_CheckBox.Size = new System.Drawing.Size(128, 17);
-            this.globalDropNotify_CheckBox.TabIndex = 124;
-            this.globalDropNotify_CheckBox.Text = "Notify Server on Drop";
-=======
+
             this.globalDropNotify_CheckBox.Location = new System.Drawing.Point(468, 314);
             this.globalDropNotify_CheckBox.Name = "globalDropNotify_CheckBox";
             this.globalDropNotify_CheckBox.Size = new System.Drawing.Size(96, 16);
             this.globalDropNotify_CheckBox.TabIndex = 124;
             this.globalDropNotify_CheckBox.Text = "物品掉落通知";
->>>>>>> master:Server/MirForms/Database/ItemInfoForm.Designer.cs
+
             this.globalDropNotify_CheckBox.UseVisualStyleBackColor = true;
             this.globalDropNotify_CheckBox.CheckedChanged += new System.EventHandler(this.globalDropNotify_CheckBox_CheckedChanged);
             // 
@@ -1932,7 +1925,7 @@
             this.Gameshop_button.UseVisualStyleBackColor = true;
             this.Gameshop_button.Click += new System.EventHandler(this.Gameshop_button_Click);
             // 
-<<<<<<< HEAD:Server.MirForms/Database/ItemInfoForm.Designer.cs
+
             // noMailBox
             // 
             this.noMailBox.AutoSize = true;
@@ -1944,8 +1937,7 @@
             this.noMailBox.UseVisualStyleBackColor = true;
             this.noMailBox.CheckedChanged += new System.EventHandler(this.noMailBox_CheckedChanged);
             // 
-=======
->>>>>>> master:Server/MirForms/Database/ItemInfoForm.Designer.cs
+
             // ItemInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);

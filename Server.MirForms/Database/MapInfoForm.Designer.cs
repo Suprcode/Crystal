@@ -220,11 +220,9 @@ namespace Server
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(38, 181);
             this.label11.Name = "label11";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
+
             this.label11.Size = new System.Drawing.Size(38, 13);
-=======
-            this.label11.Size = new System.Drawing.Size(35, 12);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.label11.TabIndex = 18;
             this.label11.Text = "音乐:";
             // 
@@ -241,11 +239,9 @@ namespace Server
             this.label33.AutoSize = true;
             this.label33.Location = new System.Drawing.Point(16, 153);
             this.label33.Name = "label33";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
+
             this.label33.Size = new System.Drawing.Size(60, 13);
-=======
-            this.label33.Size = new System.Drawing.Size(59, 12);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.label33.TabIndex = 16;
             this.label33.Text = "矿区类型:";
             // 
@@ -264,11 +260,9 @@ namespace Server
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(129, 99);
             this.label15.Name = "label15";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.label15.Size = new System.Drawing.Size(49, 13);
-=======
+
             this.label15.Size = new System.Drawing.Size(47, 12);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.label15.TabIndex = 14;
             this.label15.Text = "大地图:";
             // 
@@ -296,11 +290,9 @@ namespace Server
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(38, 125);
             this.label5.Name = "label5";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.label5.Size = new System.Drawing.Size(38, 13);
-=======
+
             this.label5.Size = new System.Drawing.Size(35, 12);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.label5.TabIndex = 12;
             this.label5.Text = "灯光:";
             // 
@@ -309,11 +301,9 @@ namespace Server
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(16, 18);
             this.label1.Name = "label1";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.label1.Size = new System.Drawing.Size(60, 13);
-=======
+
             this.label1.Size = new System.Drawing.Size(59, 12);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.label1.TabIndex = 4;
             this.label1.Text = "地图索引:";
             // 
@@ -322,11 +312,9 @@ namespace Server
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(23, 99);
             this.label4.Name = "label4";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.label4.Size = new System.Drawing.Size(53, 13);
-=======
+
             this.label4.Size = new System.Drawing.Size(47, 12);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.label4.TabIndex = 10;
             this.label4.Text = "小地图:";
             // 
@@ -352,11 +340,9 @@ namespace Server
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(19, 47);
             this.label2.Name = "label2";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.label2.Size = new System.Drawing.Size(57, 13);
-=======
+
             this.label2.Size = new System.Drawing.Size(47, 12);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.label2.TabIndex = 6;
             this.label2.Text = "文件名:";
             // 
@@ -381,11 +367,9 @@ namespace Server
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(14, 73);
             this.label3.Name = "label3";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.label3.Size = new System.Drawing.Size(62, 13);
-=======
+
             this.label3.Size = new System.Drawing.Size(47, 12);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.label3.TabIndex = 8;
             this.label3.Text = "地图名:";
             // 
@@ -437,15 +421,11 @@ namespace Server
             // NoTownTeleportCheckbox
             // 
             this.NoTownTeleportCheckbox.AutoSize = true;
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.NoTownTeleportCheckbox.Location = new System.Drawing.Point(340, 119);
-            this.NoTownTeleportCheckbox.Name = "NoTownTeleportCheckbox";
-            this.NoTownTeleportCheckbox.Size = new System.Drawing.Size(109, 17);
-=======
+
             this.NoTownTeleportCheckbox.Location = new System.Drawing.Point(16, 170);
             this.NoTownTeleportCheckbox.Name = "NoTownTeleportCheckbox";
             this.NoTownTeleportCheckbox.Size = new System.Drawing.Size(120, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.NoTownTeleportCheckbox.TabIndex = 44;
             this.NoTownTeleportCheckbox.Text = "禁止使用传送戒指";
             this.NoTownTeleportCheckbox.UseVisualStyleBackColor = true;
@@ -467,11 +447,9 @@ namespace Server
             this.NeedBridleCheckbox.AutoSize = true;
             this.NeedBridleCheckbox.Location = new System.Drawing.Point(174, 160);
             this.NeedBridleCheckbox.Name = "NeedBridleCheckbox";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.NeedBridleCheckbox.Size = new System.Drawing.Size(81, 17);
-=======
+
             this.NeedBridleCheckbox.Size = new System.Drawing.Size(72, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.NeedBridleCheckbox.TabIndex = 42;
             this.NeedBridleCheckbox.Text = "需要缰绳";
             this.NeedBridleCheckbox.UseVisualStyleBackColor = true;
@@ -482,11 +460,9 @@ namespace Server
             this.NoMountCheckbox.AutoSize = true;
             this.NoMountCheckbox.Location = new System.Drawing.Point(174, 113);
             this.NoMountCheckbox.Name = "NoMountCheckbox";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.NoMountCheckbox.Size = new System.Drawing.Size(73, 17);
-=======
+
             this.NoMountCheckbox.Size = new System.Drawing.Size(96, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.NoMountCheckbox.TabIndex = 41;
             this.NoMountCheckbox.Text = "不能使用坐骑";
             this.NoMountCheckbox.UseVisualStyleBackColor = true;
@@ -495,15 +471,11 @@ namespace Server
             // label19
             // 
             this.label19.AutoSize = true;
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.label19.Location = new System.Drawing.Point(338, 94);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(80, 13);
-=======
+
             this.label19.Location = new System.Drawing.Point(372, 87);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(65, 12);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.label19.TabIndex = 40;
             this.label19.Text = "地图黑暗光";
             // 
@@ -520,11 +492,9 @@ namespace Server
             this.NoNamesCheckbox.AutoSize = true;
             this.NoNamesCheckbox.Location = new System.Drawing.Point(174, 89);
             this.NoNamesCheckbox.Name = "NoNamesCheckbox";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.NoNamesCheckbox.Size = new System.Drawing.Size(76, 17);
-=======
+
             this.NoNamesCheckbox.Size = new System.Drawing.Size(84, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.NoNamesCheckbox.TabIndex = 38;
             this.NoNamesCheckbox.Text = "不显示名字";
             this.NoNamesCheckbox.UseVisualStyleBackColor = true;
@@ -535,11 +505,9 @@ namespace Server
             this.NoDropMonsterCheckbox.AutoSize = true;
             this.NoDropMonsterCheckbox.Location = new System.Drawing.Point(174, 65);
             this.NoDropMonsterCheckbox.Name = "NoDropMonsterCheckbox";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.NoDropMonsterCheckbox.Size = new System.Drawing.Size(113, 17);
-=======
+
             this.NoDropMonsterCheckbox.Size = new System.Drawing.Size(102, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.NoDropMonsterCheckbox.TabIndex = 37;
             this.NoDropMonsterCheckbox.Text = "不掉落 (怪物)";
             this.NoDropMonsterCheckbox.UseVisualStyleBackColor = true;
@@ -550,11 +518,9 @@ namespace Server
             this.NoDropPlayerCheckbox.AutoSize = true;
             this.NoDropPlayerCheckbox.Location = new System.Drawing.Point(174, 41);
             this.NoDropPlayerCheckbox.Name = "NoDropPlayerCheckbox";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.NoDropPlayerCheckbox.Size = new System.Drawing.Size(104, 17);
-=======
+
             this.NoDropPlayerCheckbox.Size = new System.Drawing.Size(102, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.NoDropPlayerCheckbox.TabIndex = 36;
             this.NoDropPlayerCheckbox.Text = "不掉落 (玩家)";
             this.NoDropPlayerCheckbox.UseVisualStyleBackColor = true;
@@ -565,11 +531,9 @@ namespace Server
             this.NoThrowItemCheckbox.AutoSize = true;
             this.NoThrowItemCheckbox.Location = new System.Drawing.Point(174, 17);
             this.NoThrowItemCheckbox.Name = "NoThrowItemCheckbox";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.NoThrowItemCheckbox.Size = new System.Drawing.Size(96, 17);
-=======
+
             this.NoThrowItemCheckbox.Size = new System.Drawing.Size(84, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.NoThrowItemCheckbox.TabIndex = 35;
             this.NoThrowItemCheckbox.Text = "不能扔东西";
             this.NoThrowItemCheckbox.UseVisualStyleBackColor = true;
@@ -580,11 +544,9 @@ namespace Server
             this.NoPositionCheckbox.AutoSize = true;
             this.NoPositionCheckbox.Location = new System.Drawing.Point(15, 160);
             this.NoPositionCheckbox.Name = "NoPositionCheckbox";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.NoPositionCheckbox.Size = new System.Drawing.Size(80, 17);
-=======
+
             this.NoPositionCheckbox.Size = new System.Drawing.Size(72, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.NoPositionCheckbox.TabIndex = 34;
             this.NoPositionCheckbox.Text = "不能用毒";
             this.NoPositionCheckbox.UseVisualStyleBackColor = true;
@@ -595,11 +557,9 @@ namespace Server
             this.NoDrugCheckbox.AutoSize = true;
             this.NoDrugCheckbox.Location = new System.Drawing.Point(16, 137);
             this.NoDrugCheckbox.Name = "NoDrugCheckbox";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.NoDrugCheckbox.Size = new System.Drawing.Size(66, 17);
-=======
+
             this.NoDrugCheckbox.Size = new System.Drawing.Size(72, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.NoDrugCheckbox.TabIndex = 33;
             this.NoDrugCheckbox.Text = "不能喝药";
             this.NoDrugCheckbox.UseVisualStyleBackColor = true;
@@ -610,11 +570,9 @@ namespace Server
             this.NoRecallCheckbox.AutoSize = true;
             this.NoRecallCheckbox.Location = new System.Drawing.Point(16, 113);
             this.NoRecallCheckbox.Name = "NoRecallCheckbox";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.NoRecallCheckbox.Size = new System.Drawing.Size(73, 17);
-=======
+
             this.NoRecallCheckbox.Size = new System.Drawing.Size(96, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.NoRecallCheckbox.TabIndex = 32;
             this.NoRecallCheckbox.Text = "禁止召唤同伴";
             this.NoRecallCheckbox.UseVisualStyleBackColor = true;
@@ -625,11 +583,9 @@ namespace Server
             this.NoEscapeCheckbox.AutoSize = true;
             this.NoEscapeCheckbox.Location = new System.Drawing.Point(16, 89);
             this.NoEscapeCheckbox.Name = "NoEscapeCheckbox";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.NoEscapeCheckbox.Size = new System.Drawing.Size(79, 17);
-=======
+
             this.NoEscapeCheckbox.Size = new System.Drawing.Size(84, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.NoEscapeCheckbox.TabIndex = 31;
             this.NoEscapeCheckbox.Text = "不能用地牢";
             this.NoEscapeCheckbox.UseVisualStyleBackColor = true;
@@ -640,11 +596,9 @@ namespace Server
             this.NoRandomCheckbox.AutoSize = true;
             this.NoRandomCheckbox.Location = new System.Drawing.Point(16, 65);
             this.NoRandomCheckbox.Name = "NoRandomCheckbox";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.NoRandomCheckbox.Size = new System.Drawing.Size(83, 17);
-=======
+
             this.NoRandomCheckbox.Size = new System.Drawing.Size(84, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.NoRandomCheckbox.TabIndex = 30;
             this.NoRandomCheckbox.Text = "不能用随机";
             this.NoRandomCheckbox.UseVisualStyleBackColor = true;
@@ -668,11 +622,9 @@ namespace Server
             // 
             // NoReconnectTextbox
             // 
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.NoReconnectTextbox.Location = new System.Drawing.Point(118, 39);
-=======
+
             this.NoReconnectTextbox.Location = new System.Drawing.Point(103, 36);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.NoReconnectTextbox.Name = "NoReconnectTextbox";
             this.NoReconnectTextbox.Size = new System.Drawing.Size(49, 20);
             this.NoReconnectTextbox.TabIndex = 27;
@@ -681,15 +633,11 @@ namespace Server
             // LightningCheckbox
             // 
             this.LightningCheckbox.AutoSize = true;
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
-            this.LightningCheckbox.Location = new System.Drawing.Point(341, 65);
-            this.LightningCheckbox.Name = "LightningCheckbox";
-            this.LightningCheckbox.Size = new System.Drawing.Size(69, 17);
-=======
+
             this.LightningCheckbox.Location = new System.Drawing.Point(374, 60);
             this.LightningCheckbox.Name = "LightningCheckbox";
             this.LightningCheckbox.Size = new System.Drawing.Size(72, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.LightningCheckbox.TabIndex = 26;
             this.LightningCheckbox.Text = "全亮地图";
             this.LightningCheckbox.UseVisualStyleBackColor = true;
@@ -698,15 +646,11 @@ namespace Server
             // FireCheckbox
             // 
             this.FireCheckbox.AutoSize = true;
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
+
             this.FireCheckbox.Location = new System.Drawing.Point(341, 41);
             this.FireCheckbox.Name = "FireCheckbox";
             this.FireCheckbox.Size = new System.Drawing.Size(43, 17);
-=======
-            this.FireCheckbox.Location = new System.Drawing.Point(374, 38);
-            this.FireCheckbox.Name = "FireCheckbox";
-            this.FireCheckbox.Size = new System.Drawing.Size(72, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.FireCheckbox.TabIndex = 25;
             this.FireCheckbox.Text = "有火地图";
             this.FireCheckbox.UseVisualStyleBackColor = true;
@@ -715,15 +659,11 @@ namespace Server
             // FightCheckbox
             // 
             this.FightCheckbox.AutoSize = true;
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
+
             this.FightCheckbox.Location = new System.Drawing.Point(341, 16);
             this.FightCheckbox.Name = "FightCheckbox";
             this.FightCheckbox.Size = new System.Drawing.Size(49, 17);
-=======
-            this.FightCheckbox.Location = new System.Drawing.Point(374, 16);
-            this.FightCheckbox.Name = "FightCheckbox";
-            this.FightCheckbox.Size = new System.Drawing.Size(60, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.FightCheckbox.TabIndex = 23;
             this.FightCheckbox.Text = "PK地图";
             this.FightCheckbox.UseVisualStyleBackColor = true;
@@ -734,11 +674,9 @@ namespace Server
             this.NoReconnectCheckbox.AutoSize = true;
             this.NoReconnectCheckbox.Location = new System.Drawing.Point(16, 41);
             this.NoReconnectCheckbox.Name = "NoReconnectCheckbox";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
+
             this.NoReconnectCheckbox.Size = new System.Drawing.Size(96, 17);
-=======
-            this.NoReconnectCheckbox.Size = new System.Drawing.Size(84, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.NoReconnectCheckbox.TabIndex = 22;
             this.NoReconnectCheckbox.Text = "下线后跳至";
             this.NoReconnectCheckbox.UseVisualStyleBackColor = true;
@@ -749,11 +687,9 @@ namespace Server
             this.NoTeleportCheckbox.AutoSize = true;
             this.NoTeleportCheckbox.Location = new System.Drawing.Point(16, 17);
             this.NoTeleportCheckbox.Name = "NoTeleportCheckbox";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
+
             this.NoTeleportCheckbox.Size = new System.Drawing.Size(82, 17);
-=======
-            this.NoTeleportCheckbox.Size = new System.Drawing.Size(72, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.NoTeleportCheckbox.TabIndex = 21;
             this.NoTeleportCheckbox.Text = "不能传送";
             this.NoTeleportCheckbox.UseVisualStyleBackColor = true;
@@ -869,11 +805,9 @@ namespace Server
             this.StartPointCheckBox.AutoSize = true;
             this.StartPointCheckBox.Location = new System.Drawing.Point(61, 89);
             this.StartPointCheckBox.Name = "StartPointCheckBox";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
+
             this.StartPointCheckBox.Size = new System.Drawing.Size(75, 17);
-=======
-            this.StartPointCheckBox.Size = new System.Drawing.Size(108, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.StartPointCheckBox.TabIndex = 5;
             this.StartPointCheckBox.Text = "游戏角色出生点";
             this.StartPointCheckBox.UseVisualStyleBackColor = true;
@@ -994,11 +928,9 @@ namespace Server
             this.chkrespawnsave.AutoSize = true;
             this.chkrespawnsave.Location = new System.Drawing.Point(25, 109);
             this.chkrespawnsave.Name = "chkrespawnsave";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
+
             this.chkrespawnsave.Size = new System.Drawing.Size(164, 17);
-=======
-            this.chkrespawnsave.Size = new System.Drawing.Size(132, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.chkrespawnsave.TabIndex = 25;
             this.chkrespawnsave.Text = "重启时保存刷新时间";
             this.chkrespawnsave.UseVisualStyleBackColor = true;
@@ -1009,11 +941,9 @@ namespace Server
             this.chkRespawnEnableTick.AutoSize = true;
             this.chkRespawnEnableTick.Location = new System.Drawing.Point(25, 92);
             this.chkRespawnEnableTick.Name = "chkRespawnEnableTick";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
+
             this.chkRespawnEnableTick.Size = new System.Drawing.Size(137, 17);
-=======
-            this.chkRespawnEnableTick.Size = new System.Drawing.Size(84, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.chkRespawnEnableTick.TabIndex = 24;
             this.chkRespawnEnableTick.Text = "按时间刷新";
             this.chkRespawnEnableTick.UseVisualStyleBackColor = true;
@@ -1044,11 +974,9 @@ namespace Server
             this.label34.AutoSize = true;
             this.label34.Location = new System.Drawing.Point(22, 159);
             this.label34.Name = "label34";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
+
             this.label34.Size = new System.Drawing.Size(39, 13);
-=======
-            this.label34.Size = new System.Drawing.Size(35, 12);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.label34.TabIndex = 21;
             this.label34.Text = "路径:";
             // 
@@ -1083,11 +1011,9 @@ namespace Server
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(22, 133);
             this.label8.Name = "label8";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
+
             this.label8.Size = new System.Drawing.Size(37, 13);
-=======
-            this.label8.Size = new System.Drawing.Size(35, 12);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.label8.TabIndex = 16;
             this.label8.Text = "延迟:";
             // 
@@ -1107,11 +1033,9 @@ namespace Server
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(11, 16);
             this.label7.Name = "label7";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
+
             this.label7.Size = new System.Drawing.Size(48, 13);
-=======
-            this.label7.Size = new System.Drawing.Size(35, 12);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.label7.TabIndex = 14;
             this.label7.Text = "怪物:";
             // 
@@ -1130,11 +1054,9 @@ namespace Server
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(108, 69);
             this.label6.Name = "label6";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
+
             this.label6.Size = new System.Drawing.Size(44, 13);
-=======
-            this.label6.Size = new System.Drawing.Size(35, 12);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.label6.TabIndex = 12;
             this.label6.Text = "扩散:";
             // 
@@ -1170,11 +1092,9 @@ namespace Server
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(21, 69);
             this.label10.Name = "label10";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
+
             this.label10.Size = new System.Drawing.Size(38, 13);
-=======
-            this.label10.Size = new System.Drawing.Size(35, 12);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.label10.TabIndex = 8;
             this.label10.Text = "数量:";
             // 
@@ -1288,11 +1208,9 @@ namespace Server
             this.NeedMoveMCheckBox.AutoSize = true;
             this.NeedMoveMCheckBox.Location = new System.Drawing.Point(14, 145);
             this.NeedMoveMCheckBox.Name = "NeedMoveMCheckBox";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
+
             this.NeedMoveMCheckBox.Size = new System.Drawing.Size(82, 17);
-=======
-            this.NeedMoveMCheckBox.Size = new System.Drawing.Size(72, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.NeedMoveMCheckBox.TabIndex = 18;
             this.NeedMoveMCheckBox.Text = "需要移动";
             this.NeedMoveMCheckBox.UseVisualStyleBackColor = true;
@@ -1303,11 +1221,9 @@ namespace Server
             this.NeedHoleMCheckBox.AutoSize = true;
             this.NeedHoleMCheckBox.Location = new System.Drawing.Point(14, 122);
             this.NeedHoleMCheckBox.Name = "NeedHoleMCheckBox";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
+
             this.NeedHoleMCheckBox.Size = new System.Drawing.Size(77, 17);
-=======
-            this.NeedHoleMCheckBox.Size = new System.Drawing.Size(72, 16);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.NeedHoleMCheckBox.TabIndex = 17;
             this.NeedHoleMCheckBox.Text = "需要洞穴";
             this.NeedHoleMCheckBox.UseVisualStyleBackColor = true;
@@ -1374,11 +1290,9 @@ namespace Server
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(108, 33);
             this.label16.Name = "label16";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
+
             this.label16.Size = new System.Drawing.Size(43, 13);
-=======
-            this.label16.Size = new System.Drawing.Size(35, 12);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.label16.TabIndex = 10;
             this.label16.Text = "从 Y:";
             // 
@@ -1396,11 +1310,9 @@ namespace Server
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(13, 33);
             this.label20.Name = "label20";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
+
             this.label20.Size = new System.Drawing.Size(43, 13);
-=======
-            this.label20.Size = new System.Drawing.Size(35, 12);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.label20.TabIndex = 3;
             this.label20.Text = "从 X:";
             // 
@@ -1483,11 +1395,9 @@ namespace Server
             this.label27.AutoSize = true;
             this.label27.Location = new System.Drawing.Point(12, 17);
             this.label27.Name = "label27";
-<<<<<<< HEAD:Server.MirForms/Database/MapInfoForm.Designer.cs
+
             this.label27.Size = new System.Drawing.Size(60, 13);
-=======
-            this.label27.Size = new System.Drawing.Size(59, 12);
->>>>>>> master:Server/MirForms/Database/MapInfoForm.Designer.cs
+
             this.label27.TabIndex = 14;
             this.label27.Text = "矿区类型:";
             // 
