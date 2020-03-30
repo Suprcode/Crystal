@@ -969,7 +969,10 @@ public enum RequiredClass : ushort
     道士 = 4,
     刺客 = 8,
     弓箭手 = 16,
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of 97b4099... 323
 
     战法道 = 战士 | 法师 | 道士,
     碧血武士 = 32,
@@ -982,7 +985,10 @@ public enum RequiredClass : ushort
     //None = low | hig,
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of 97b4099... 323
 
 
 }
@@ -2627,9 +2633,13 @@ public class ItemInfo
     public ItemType Type;
     public ItemGrade Grade;
     public RequiredType RequiredType = RequiredType.Level;
+<<<<<<< HEAD
 
     public RequiredClass RequiredClass = RequiredClass.None;
 
+=======
+    public RequiredClass RequiredClass = RequiredClass.战法道;
+>>>>>>> parent of 97b4099... 323
     public RequiredGender RequiredGender = RequiredGender.None;
     public ItemSet Set;
 
