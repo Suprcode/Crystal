@@ -1085,6 +1085,14 @@ namespace Client.MirScenes.Dialogs
                     AnimExCount = 8;
                     AnimExDelay = 300;
                     break;
+                case IntelligentCreatureType.MedicalRat:
+                    AnimDefaultIdx = 1550;
+                    AnimDefaultCount = 8;
+                    AnimDefaultDelay = 300;
+                    AnimExIdx = 1560;
+                    AnimExCount = 16;
+                    AnimExDelay = 300;
+                    break;
                 case IntelligentCreatureType.None:
                     AnimDefaultIdx = 539;
                     AnimDefaultCount = 1;
