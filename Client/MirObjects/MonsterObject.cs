@@ -158,7 +158,7 @@ namespace Client.MirObjects
                 case Monster.BabyMonkey:
                 case Monster.AngryBird:
                 case Monster.Foxey:
-                case Monster.MedicialRat:
+                case Monster.MedicalRat:
                     BodyLibrary = Libraries.Pets[((ushort)BaseImage) - 10000];
                     break;
                 case Monster.SabukGate:
@@ -1016,7 +1016,7 @@ namespace Client.MirObjects
                 case Monster.BabyMonkey:
                 case Monster.AngryBird:
                 case Monster.Foxey:
-                case Monster.MedicialRat:
+                case Monster.MedicalRat:
                     Frames = FrameSet.HelperPets[((ushort)BaseImage) - 10000];
                     break;
                 case Monster.SabukGate:
@@ -1240,7 +1240,7 @@ namespace Client.MirObjects
                 case Monster.BabyMonkey:
                 case Monster.AngryBird:
                 case Monster.Foxey:
-                case Monster.MedicialRat:
+                case Monster.MedicalRat:
                     BodyLibrary = Libraries.Pets[((ushort)BaseImage) - 10000];
                     break;
                     break;
@@ -2978,7 +2978,7 @@ namespace Client.MirObjects
                 case Monster.BabyMonkey:
                 case Monster.AngryBird:
                 case Monster.Foxey:
-                case Monster.MedicialRat:
+                case Monster.MedicalRat:
                     SoundManager.PlaySound(petSound);
                     break;
             }
@@ -3763,7 +3763,7 @@ namespace Client.MirObjects
                 case Monster.BabyMonkey:
                 case Monster.AngryBird:
                 case Monster.Foxey:
-                case Monster.MedicialRat:
+                case Monster.MedicalRat:
                     yOffset = -20;
                     break;
             }
@@ -3838,7 +3838,7 @@ namespace Client.MirObjects
                 case Monster.BabyMonkey:
                 case Monster.AngryBird:
                 case Monster.Foxey:
-                case Monster.MedicialRat:
+                case Monster.MedicalRat:
                     yOffset = 20;
                     break;
             }
