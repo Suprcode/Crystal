@@ -11550,7 +11550,7 @@ namespace Server.MirObjects
                 break;
             }
 
-            if (temp == null || count >= temp.Count || FreeSpace(array) == 0)
+            if (temp == null || count >= temp.Count || FreeSpace(array) == 0 || count < 1)
             {
                 Enqueue(p);
                 return;
@@ -12391,7 +12391,7 @@ namespace Server.MirObjects
                 break;
             }
 
-            if (temp == null || index == -1 || count > temp.Count)
+            if (temp == null || index == -1 || count > temp.Count || count < 1)
             {
                 Enqueue(p);
                 return;
@@ -14308,7 +14308,7 @@ namespace Server.MirObjects
 
         public void BuyItem(ulong index, uint count, PanelType type)
         {
-            if (Dead) return;
+            if (Dead || count < 1) return;
 
             if (NPCPage == null ||
                 !(String.Equals(NPCPage.Key, NPCObject.BuySellKey, StringComparison.CurrentCultureIgnoreCase) ||
@@ -14330,7 +14330,7 @@ namespace Server.MirObjects
         }
         public void CraftItem(ulong index, uint count, int[] slots)
         {
-            if (Dead) return;
+            if (Dead || count < 1) return;
 
             if (NPCPage == null) return;
 
