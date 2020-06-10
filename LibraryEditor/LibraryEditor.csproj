@@ -72,7 +72,7 @@
       <HintPath>..\Components\DotNetZlib\Ionic.Zlib.dll</HintPath>
     </Reference>
     <Reference Include="ManagedSquish">
-      <HintPath>..\Components\Squish2\ManagedSquish.dll</HintPath>
+      <HintPath>..\Components\Squish\ManagedSquish.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
