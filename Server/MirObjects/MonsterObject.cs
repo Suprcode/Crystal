@@ -1856,7 +1856,7 @@ namespace Server.MirObjects
             }
             else if (attacker.Info.AI == 58) // Tao Guard - attacks Pets
             {
-                if (Info.AI != 1 && Info.AI != 2 && Info.AI != 3) //Not Dear/Hen/Tree
+                if (Info.AI != 1 && Info.AI != 2 && Info.AI != 3 && (Master == null || Master.AMode != AttackMode.Peace)) //Not Dear/Hen/Tree or PeacefulPet
                     return true;
             }
             else if (Master != null) //Pet Attacked
