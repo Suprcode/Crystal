@@ -7232,7 +7232,7 @@ namespace Server.MirObjects
 
             Point location = Functions.PointMove(CurrentLocation, Direction, 1);
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 1500, this, magic, location, Direction, damageFinish, (int)(damageFinish * 0.6));
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 900, this, magic, location, Direction, damageFinish, (int)(damageFinish * 0.6));
 
             CurrentMap.ActionList.Add(action);
         }
