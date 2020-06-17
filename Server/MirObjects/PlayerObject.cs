@@ -6521,6 +6521,12 @@ namespace Server.MirObjects
                     Hiding(magic);
                     break;
                 case Spell.Haste:
+                    if (target == null)
+                    {
+                        target = this;
+                        targetID = ObjectID;
+                    }
+                    break;
                 case Spell.LightBody:
                     ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic));
                     break;
