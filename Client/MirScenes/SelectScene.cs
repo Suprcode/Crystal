@@ -418,7 +418,9 @@ namespace Client.MirScenes
             if (p.Resolution < 1024 || Settings.Resolution < 1024) Settings.Resolution = 800;
             else if (p.Resolution < 1366 || Settings.Resolution < 1280) Settings.Resolution = 1024;
             else if (p.Resolution < 1366 || Settings.Resolution < 1366) Settings.Resolution = 1280;//not adding an extra setting for 1280 on server cause well it just depends on the aspect ratio of your screen
-            else if (p.Resolution >= 1366 && Settings.Resolution >= 1366) Settings.Resolution = 1366;
+            else if (p.Resolution < 1920 || Settings.Resolution < 1920) Settings.Resolution = 1366;
+            else if (p.Resolution < 3840 || Settings.Resolution < 3840) Settings.Resolution = 1920;
+            else if (p.Resolution >= 3840 && Settings.Resolution >= 3840) Settings.Resolution = 3840;
 
             switch (p.Result)
             {
@@ -441,6 +443,10 @@ namespace Client.MirScenes
                         CMain.SetResolution(1280, 800);
                     else if (Settings.Resolution == 1366)
                         CMain.SetResolution(1366, 768);
+                    else if (Settings.Resolution == 1920)
+                        CMain.SetResolution(1920, 1080);
+                    else if (Settings.Resolution == 3840)
+                        CMain.SetResolution(3840, 2160);
                     ActiveScene = new GameScene();
                     Dispose();
                     break;
