@@ -17309,6 +17309,7 @@ namespace Server.MirObjects
                 if (itm == null) continue;
 
                 bool itemRequired = false;
+                bool isCarryItem = false;
 
                 foreach (QuestProgressInfo quest in CurrentQuests)
                 {
@@ -17320,9 +17321,18 @@ namespace Server.MirObjects
                             break;
                         }
                     }
+
+                    foreach (QuestItemTask carryItem in quest.Info.CarryItems)
+                    {
+                        if (carryItem.Item == itm.Info)
+                        {
+                            isCarryItem = true;
+                            break;
+                        }
+                    }
                 }
 
-                if (!itemRequired)
+                if (!itemRequired && !isCarryItem)
                 {
                     Info.QuestInventory[i] = null;
                     Enqueue(new S.DeleteQuestItem { UniqueID = itm.UniqueID, Count = itm.Count });
