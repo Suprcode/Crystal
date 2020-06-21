@@ -524,32 +524,65 @@ namespace Client
 
             location = new Point(-location.X, -location.Y);
 
-            string text = string.Format("[{0} Server {1}] {2} {3:hh\\:mm\\:ss}", 
-                Settings.P_ServerName.Length > 0 ? Settings.P_ServerName : "Crystal", 
-                MapControl.User != null ? MapControl.User.Name : "", 
-                Now.ToShortDateString(), 
+            string text = string.Format("[{0} - {1}] {2} {3:hh\\:mm\\:ss}",
+                Settings.P_ServerName.Length > 0 ? Settings.P_ServerName : "Mir Insomnia",
+                MapControl.User != null ? MapControl.User.Name : "",
+                Now.ToShortDateString(),
                 Now.TimeOfDay);
 
-            using (Bitmap image = GetImage(Handle, new Rectangle(location, ClientSize)))
-            using (Graphics graphics = Graphics.FromImage(image))
+            if (Settings.FullScreen)
             {
-                StringFormat sf = new StringFormat();
-                sf.LineAlignment = StringAlignment.Center;
-                sf.Alignment = StringAlignment.Center;
-
-                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 3, 10), sf);
-                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 4, 9), sf);
-                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 5, 10), sf);
-                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 4, 11), sf);
-                graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.White, new Point((Settings.ScreenWidth / 2) + 4, 10), sf);//SandyBrown               
-
+                //BACK BUFFER?
+                Surface backbuffer = DXManager.Device.GetBackBuffer(0, 0, BackBufferType.Mono);
                 string path = Path.Combine(Application.StartupPath, @"Screenshots\");
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
 
-                int count = Directory.GetFiles(path, "*.png").Length;
+                int count = Directory.GetFiles(path, "*.Jpeg").Length;
+                SurfaceLoader.Save(Path.Combine(path, string.Format("Image {0}.bmp", count)), ImageFileFormat.Bmp, backbuffer);
+                backbuffer.Dispose();
 
-                image.Save(Path.Combine(path, string.Format("Image {0}.Png", count)), ImageFormat.Png);
+                Bitmap image = new Bitmap(Path.Combine(path, string.Format("Image {0}.bmp", count)));
+
+                using (Graphics graphics = Graphics.FromImage(image))
+                {
+                    StringFormat sf = new StringFormat();
+                    sf.LineAlignment = StringAlignment.Center;
+                    sf.Alignment = StringAlignment.Center;
+
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 3, 10), sf);
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 4, 9), sf);
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 5, 10), sf);
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 4, 11), sf);
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.White, new Point((Settings.ScreenWidth / 2) + 4, 10), sf);//SandyBrown                             
+                }
+                image.Save(Path.Combine(path, string.Format("Image {0}.Jpeg", count)), ImageFormat.Jpeg);
+                image.Dispose();
+                File.Delete(Path.Combine(path, string.Format("Image {0}.bmp", count)));
+            }
+            else
+            {
+                using (Bitmap image = GetImage(Handle, new Rectangle(location, ClientSize)))
+                using (Graphics graphics = Graphics.FromImage(image))
+                {
+                    StringFormat sf = new StringFormat();
+                    sf.LineAlignment = StringAlignment.Center;
+                    sf.Alignment = StringAlignment.Center;
+
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 3, 10), sf);
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 4, 9), sf);
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 5, 10), sf);
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 4, 11), sf);
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.White, new Point((Settings.ScreenWidth / 2) + 4, 10), sf);//SandyBrown               
+
+                    string path = Path.Combine(Application.StartupPath, @"Screenshots\");
+                    if (!Directory.Exists(path))
+                        Directory.CreateDirectory(path);
+
+                    int count = Directory.GetFiles(path, "*.Jpeg").Length;
+
+                    image.Save(Path.Combine(path, string.Format("Image {0}.Jpeg", count)), ImageFormat.Jpeg);
+                }
             }
         }
 
