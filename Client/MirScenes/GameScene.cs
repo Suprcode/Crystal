@@ -5486,7 +5486,7 @@ namespace Client.MirScenes
             switch (grade)
             {
                 case ItemGrade.Common:
-                    return Color.Yellow;
+                    return Color.White;
                 case ItemGrade.Rare:
                     return Color.DeepSkyBlue;
                 case ItemGrade.Legendary:
@@ -5494,7 +5494,7 @@ namespace Client.MirScenes
                 case ItemGrade.Mythical:
                     return Color.Plum;
                 default:
-                    return Color.Yellow;
+                    return Color.White;
             }
         }
 
