@@ -524,15 +524,15 @@ namespace Client.MirScenes.Dialogs
                 NameLabel.Text = Listing.Item.FriendlyName;
                 PriceLabel.Text = Listing.Price.ToString("###,###,##0");
 
-                NameLabel.ForeColour = Listing.Item.IsAdded ? Color.Cyan : Color.White;
+                NameLabel.ForeColour = Listing.Item.IsAdded ? Color.LimeGreen : Color.White;
 
                 if (Listing.Price > 10000000) //10Mil
                     PriceLabel.ForeColour = Color.Red;
-                else if (listing.Price > 1000000) //1Million
+                else if (listing.Price > 1000000) //1Mil
                     PriceLabel.ForeColour = Color.Orange;
-                else if (listing.Price > 100000) //1Million
+                else if (listing.Price > 100000) //100k
                     PriceLabel.ForeColour = Color.Green;
-                else if (listing.Price > 10000) //1Million
+                else if (listing.Price > 10000) //10k
                     PriceLabel.ForeColour = Color.DeepSkyBlue;
                 else
                     PriceLabel.ForeColour = Color.White;

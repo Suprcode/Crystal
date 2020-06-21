@@ -64,7 +64,7 @@ namespace Server.MirObjects
             Item = item;
 
             if (Item.IsAdded)
-                NameColour = Color.Cyan;
+                NameColour = Color.LimeGreen;
 			else
 			{
 				if (item.Info.Grade == ItemGrade.None)
@@ -89,7 +89,7 @@ namespace Server.MirObjects
             Item = item;
 
 			if (Item.IsAdded)
-				NameColour = Color.Cyan;
+				NameColour = Color.LimeGreen;
 			else
 			{
 				if (item.Info.Grade == ItemGrade.None)
