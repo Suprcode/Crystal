@@ -914,6 +914,8 @@ namespace Server.MirObjects
         {
             uint cost = 0;
 
+            if (Gate == null) return 0;
+
             if (Gate.MaxHP == Gate.HP) return cost;
 
             if (Gate != null)
