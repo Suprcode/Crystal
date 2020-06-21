@@ -8951,14 +8951,7 @@ namespace Server.MirObjects
                     target.ExplosionInflictedTime = 0;
                     target.ExplosionInflictedStage = 0;
 
-                    for (int i = 0; i < target.Buffs.Count; i++)
-                    {
-                        if (target.Buffs[i].Type == BuffType.Curse)
-                        {
-                            target.Buffs.RemoveAt(i);
-                            break;
-                        }
-                    }
+                    target.RemoveBuff(BuffType.Curse);
 
                     target.PoisonList.Clear();
                     target.OperateTime = 0;
