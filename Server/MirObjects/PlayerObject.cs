@@ -7028,7 +7028,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Pets.Count(t => !t.Dead) >= magic.Level + 2) return;
+            if (Pets.Count(t => !t.Dead && t.GetType() != typeof(IntelligentCreatureObject)) >= magic.Level + 2) return;
             int rate = (int)(target.MaxHP / 100);
             if (rate <= 2) rate = 2;
             else rate *= 2;
