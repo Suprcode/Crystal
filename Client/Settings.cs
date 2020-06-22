@@ -63,6 +63,10 @@ namespace Client
         public static bool LogChat = true;
         public static int RemainingErrorLogs = 100;
 
+        //Custom
+        public static string BugReportContact = "GameMasterName";
+
+
         //Graphics
         public static bool FullScreen = true, TopMost = true;
         public static string FontName = "Tahoma"; //"MS Sans Serif"
@@ -179,7 +183,10 @@ namespace Client
             if (!Directory.Exists(DataPath)) Directory.CreateDirectory(DataPath);
             if (!Directory.Exists(MapPath)) Directory.CreateDirectory(MapPath);
             if (!Directory.Exists(SoundPath)) Directory.CreateDirectory(SoundPath);
-           
+
+            //Custom
+            BugReportContact = Reader.ReadString("Custom", "BugReportContact", BugReportContact);
+
             //Graphics
             FullScreen = Reader.ReadBoolean("Graphics", "FullScreen", FullScreen);
             TopMost = Reader.ReadBoolean("Graphics", "AlwaysOnTop", TopMost);
@@ -266,6 +273,10 @@ namespace Client
 
         public static void Save()
         {
+
+            //Custom
+            Reader.Write("Custom", "BugReportContact", BugReportContact);
+
             //Graphics
             Reader.Write("Graphics", "FullScreen", FullScreen);
             Reader.Write("Graphics", "AlwaysOnTop", TopMost);

@@ -243,9 +243,11 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
                 Hint = "Report Bug"
             };
+            BugReportButton.Click += (o, e) =>
+            {
+                GameScene.Scene.MailComposeLetterDialog.ComposeMail(Settings.BugReportContact);
+            };
             #endregion
-
-            
         }
 
         public void Reset()

@@ -604,7 +604,27 @@ public enum Monster : ushort
     Ram1 = 400,
     Ram2 = 401,
     Kite = 402,
-    
+
+    /* wiki.mironline.co.uk/Monster_Database - un-named monsters lib files are in client but they dont load??
+    XManEatingPlant = 403,
+    XBallThing = 404,
+    XIceSnail = 405,
+    XWalrusWarrior = 406,
+    XSealArcher = 407,
+    XWalrusKing = 408,
+    XQueenPlant = 409,
+    XSpearGuard = 410,
+    XIceGriffin= 411,
+    XWillSmith = 412,
+    XIceKing = 413,
+    XScroll = 414,
+    XGreenScroll = 415,
+    XRedScroll = 416,
+    XYellowScroll = 417,
+    XApprenticeMage=418,
+    XMage=419,
+    XHighSorceror=420,
+    */
 
     EvilMir = 900,
     EvilMirBody = 901,
