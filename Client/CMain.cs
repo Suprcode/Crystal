@@ -140,7 +140,7 @@ namespace Client
             {
                 SaveError(ex.ToString());
             }
-            if (e.KeyCode == Keys.F10)
+            if (e.KeyCode == Keys.F10 || e.KeyCode == Keys.C)
             {
                 e.Handled = true;
                 if (GameScene.Scene != null)
