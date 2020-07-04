@@ -997,6 +997,12 @@ namespace Client.MirControls
             if (Parent != null) Parent.Redraw();
 
         }
+        #region Font
+        public virtual System.Drawing.Font ScaleFont(System.Drawing.Font font)
+        {
+            return new System.Drawing.Font(font.Name, font.Size * 96f / CMain.Graphics.DpiX, font.Style);
+        }
+        #endregion
 
         #region Disposable
         public bool IsDisposed { get; private set; }
