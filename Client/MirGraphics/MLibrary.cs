@@ -52,17 +52,17 @@ namespace Client.MirGraphics
         public static readonly MLibrary
             Deco = new MLibrary(Settings.DataPath + "Deco");
 
-        public static readonly MLibrary[] CArmours = new MLibrary[42],
+        public static readonly MLibrary[] CArmours = new MLibrary[99],
                                           CWeapons = new MLibrary[55],
 										  CWeaponEffect = new MLibrary[67],
 										  CHair = new MLibrary[9],
                                           CHumEffect = new MLibrary[6],
-                                          AArmours = new MLibrary[17],
+                                          AArmours = new MLibrary[99],
                                           AWeaponsL = new MLibrary[14],
                                           AWeaponsR = new MLibrary[14],
                                           AHair = new MLibrary[9],
                                           AHumEffect = new MLibrary[3],
-                                          ARArmours = new MLibrary[17],
+                                          ARArmours = new MLibrary[99],
                                           ARWeapons = new MLibrary[19],
                                           ARWeaponsS = new MLibrary[19],
                                           ARHair = new MLibrary[9],

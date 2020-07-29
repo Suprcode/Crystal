@@ -4136,8 +4136,8 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Library = Libraries.Prguse,
                 Location = new Point(3, 69),
-                Visible = false,
-                Hint = GameLanguage.Keybinds
+                Visible = true,
+                Hint = "Keyboard (" + CMain.InputKeys.GetKey(KeybindOptions.Keybind) + ")"
             };
             KeyboardLayoutButton.Click += (o, e) =>
             {

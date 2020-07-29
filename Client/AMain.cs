@@ -316,7 +316,7 @@ namespace Launcher
             if (File.Exists(Settings.P_Client + oldClientName)) File.Delete(Settings.P_Client + oldClientName);
 
             Launch_pb.Enabled = false;
-            ProgressCurrent_pb.Width = 5;
+            ProgressCurrent_pb.Width = 550;
             TotalProg_pb.Width = 5;
             Version_label.Text = "Version " + Application.ProductVersion;
 
@@ -517,14 +517,13 @@ namespace Launcher
                     //FileLabel.Text = string.Format("{0}, ({1:#,##0} MB) / ({2:#,##0} MB)", _currentFile.FileName, _currentBytes / 1024 / 1024, _currentFile.Compressed / 1024 / 1024);
                     CurrentFile_label.Text = string.Format("{0}", _currentFile.FileName);
                     SpeedLabel.Text = (_currentBytes / 1024F / _stopwatch.Elapsed.TotalSeconds).ToString("#,##0.##") + "KB/s";
-                    CurrentPercent_label.Text = ((int)(100 * _currentBytes / _currentFile.Compressed)).ToString() + "%";
-                    ProgressCurrent_pb.Width = (int)( 5.5 * (100 * _currentBytes / _currentFile.Compressed));
+                    CurrentPercent_label.Text = ((int)(100 * _currentBytes / _currentFile.Length)).ToString() + "%";
+                    ProgressCurrent_pb.Width = (int)( 5.5 * (100 * _currentBytes / _currentFile.Length));
                 }
                 TotalPercent_label.Text = ((int)(100 * (_completedBytes + _currentBytes) / _totalBytes)).ToString() + "%";
                 TotalProg_pb.Width = (int)(5.5 * (100 * (_completedBytes + _currentBytes) / _totalBytes));
             }
-            catch
-
+            catch (Exception ex)
             {
                 
             }

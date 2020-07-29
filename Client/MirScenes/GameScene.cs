@@ -106,8 +106,7 @@ namespace Client.MirScenes
         public ItemRentalDialog ItemRentalDialog;
 
         public BuffDialog BuffsDialog;
-
-        //not added yet
+        
         public KeyboardLayoutDialog KeyboardLayoutDialog;
 
         public static List<ItemInfo> ItemInfoList = new List<ItemInfo>();
@@ -195,7 +194,8 @@ namespace Client.MirScenes
             NPCAwakeDialog = new NPCAwakeDialog { Parent = this, Visible = false };
 
             HelpDialog = new HelpDialog { Parent = this, Visible = false };
-            
+            KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
+
             MountDialog = new MountDialog { Parent = this, Visible = false };
             FishingDialog = new FishingDialog { Parent = this, Visible = false };
             FishingStatusDialog = new FishingStatusDialog { Parent = this, Visible = false };
@@ -313,8 +313,11 @@ namespace Client.MirScenes
         }
         private void GameScene_KeyDown(object sender, KeyEventArgs e)
         {
-            //bool skillMode = Settings.SkillMode ? CMain.Tilde : CMain.Ctrl;
-            //bool altBind = skillMode ? Settings.SkillSet : !Settings.SkillSet;
+            if (GameScene.Scene.KeyboardLayoutDialog.WaitingForBind != null)
+            {
+                GameScene.Scene.KeyboardLayoutDialog.CheckNewInput(e);
+                return;
+            }
 
             foreach (KeyBind KeyCheck in CMain.InputKeys.Keylist)
             {
@@ -617,6 +620,10 @@ namespace Client.MirScenes
                     case KeybindOptions.Help:
                         if (!HelpDialog.Visible) HelpDialog.Show();
                         else HelpDialog.Hide();
+                        break;
+                    case KeybindOptions.Keybind:
+                        if (!KeyboardLayoutDialog.Visible) KeyboardLayoutDialog.Show();
+                        else KeyboardLayoutDialog.Hide();
                         break;
                     case KeybindOptions.Autorun:
                         MapControl.AutoRun = !MapControl.AutoRun;
