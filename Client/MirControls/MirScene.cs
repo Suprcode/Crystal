@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using Client.MirGraphics;
 using Client.MirNetwork;
@@ -187,6 +188,9 @@ namespace Client.MirControls
                 case (short)ServerPacketIds.NewItemInfo:
                     NewItemInfo((S.NewItemInfo) p);
                     break;
+                case (short)ServerPacketIds.NewChatItem:
+                    NewChatItem((S.NewChatItem)p);
+                    break;
                 case (short)ServerPacketIds.NewQuestInfo:
                     NewQuestInfo((S.NewQuestInfo)p);
                     break;
@@ -199,6 +203,14 @@ namespace Client.MirControls
         private void NewItemInfo(S.NewItemInfo info)
         {
             GameScene.ItemInfoList.Add(info.Info);
+        }
+
+        private void NewChatItem(S.NewChatItem p)
+        {
+            if (GameScene.ChatItemList.Any(x => x.UniqueID == p.Item.UniqueID)) return;
+
+            GameScene.Bind(p.Item);
+            GameScene.ChatItemList.Add(p.Item);
         }
 
         private void NewQuestInfo(S.NewQuestInfo info)

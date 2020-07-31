@@ -1285,6 +1285,7 @@ public enum ServerPacketIds : short
     Chat,
     ObjectChat,
     NewItemInfo,
+    NewChatItem,
     MoveItem,
     EquipItem,
     MergeItem,
@@ -2129,6 +2130,45 @@ public static class Globals
                       ConsignmentCost = 5000,
                       MinConsignment = 5000,
                       MaxConsignment = 50000000;
+}
+
+
+public static class RegexFunctions
+{
+    public static Regex ChatItemLinks = new Regex(@"<(.*?/.*?)>");
+
+    public enum RegexMatchEvalType
+    {
+        ChatLinkName
+    }
+
+    private static string RegexReplace(string text, Regex regex, MatchEvaluator ev)
+    {
+        try
+        {
+            return regex.Replace(text, ev);
+        }
+        catch
+        {
+            return text;
+        }
+    }
+
+    private static MatchEvaluator GetMatchEv(RegexMatchEvalType type)
+    {
+        switch (type)
+        {
+            case RegexMatchEvalType.ChatLinkName:
+                return m => m.Groups[1].Captures[0].Value.Split('/')[0];
+            default:
+                return null;
+        }
+    }
+
+    public static string CleanChatString(string text)
+    {
+        return RegexReplace(text, ChatItemLinks, GetMatchEv(RegexMatchEvalType.ChatLinkName));
+    }
 }
 
 public static class Functions
@@ -4805,6 +4845,8 @@ public abstract class Packet
                 return new S.ObjectChat();
             case (short)ServerPacketIds.NewItemInfo:
                 return new S.NewItemInfo();
+            case (short)ServerPacketIds.NewChatItem:
+                return new S.NewChatItem();
             case (short)ServerPacketIds.MoveItem:
                 return new S.MoveItem();
             case (short)ServerPacketIds.EquipItem:
@@ -5656,16 +5698,44 @@ public class RandomItemStat
 
 public class ChatItem
 {
-    public long RecievedTick = 0;
-    public ulong ID = 0;
-    public UserItem ItemStats;
+    public ulong UniqueID;
+    public string Title;
+    public MirGridType Grid;
+
+    public string RegexInternalName
+    {
+        get { return $"<{Title.Replace("(", "\\(").Replace(")", "\\)")}>"; }
+    }
+
+    public string InternalName
+    {
+        get { return $"<{Title}/{UniqueID}>"; }
+    }
+
+    public ChatItem() { }
+
+    public ChatItem(BinaryReader reader)
+    {
+        UniqueID = reader.ReadUInt64();
+        Title = reader.ReadString();
+        Grid = (MirGridType)reader.ReadByte();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(UniqueID);
+        writer.Write(Title);
+        writer.Write((byte)Grid);
+    }
 }
+
 
 public class UserId
 {
     public long Id = 0;
     public string UserName = "";
 }
+
 
 #region ItemSets
 
@@ -6619,7 +6689,7 @@ public class GameLanguage
                          LowDC = "You do not have enough DC.",
                          LowMC = "You do not have enough MC.",
                          LowSC = "You do not have enough SC.",
-                         GameName = "Legend of Mir2",
+                         GameName = "Legend of Mir 2",
                          ExpandedStorageExpiresOn = "Expanded Storage Expires On",
 
                          NotFemale = "You are not Female.",

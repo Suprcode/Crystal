@@ -361,16 +361,6 @@ namespace Client.MirScenes.Dialogs
 
         }
 
-        public void Show()
-        {
-            Visible = true;
-        }
-
-        public void Hide()
-        {
-            Visible = false;
-        }
-
         public void Process()
         {
             switch (GameScene.Scene.AMode)
@@ -465,9 +455,7 @@ namespace Client.MirScenes.Dialogs
 
         private void Label_SizeChanged(object sender, EventArgs e)
         {
-            MirLabel l = sender as MirLabel;
-
-            if (l == null) return;
+            if (!(sender is MirLabel l)) return;
 
             l.Location = new Point(50 - (l.Size.Width / 2), l.Location.Y);
         }
@@ -548,6 +536,9 @@ namespace Client.MirScenes.Dialogs
         public List<ChatHistory> FullHistory = new List<ChatHistory>();
         public List<ChatHistory> History = new List<ChatHistory>();
         public List<MirLabel> ChatLines = new List<MirLabel>();
+
+        public List<ChatItem> LinkedItems = new List<ChatItem>();
+        public List<MirLabel> LinkedItemButtons = new List<MirLabel>();
 
         public MirButton HomeButton, UpButton, EndButton, DownButton, PositionBar;
         public MirImageControl CountBar;
@@ -680,14 +671,17 @@ namespace Client.MirScenes.Dialogs
             PositionBar.OnMoving += PositionBar_OnMoving;
         }
 
-        public void Show()
+        public void SetChatText(string newText)
         {
-            Visible = true;
-        }
+            string newMsg = ChatTextBox.Text += newText;
 
-        public void Hide()
-        {
-            Visible = false;
+            if (newMsg.Length > Globals.MaxChatLength) return;
+
+            ChatTextBox.Text = newMsg;
+            ChatTextBox.SetFocus();
+            ChatTextBox.Visible = true;
+            ChatTextBox.TextBox.SelectionLength = 0;
+            ChatTextBox.TextBox.SelectionStart = ChatTextBox.Text.Length;
         }
 
         private void ChatTextBox_KeyPress(object sender, KeyPressEventArgs e)
@@ -712,7 +706,8 @@ namespace Client.MirScenes.Dialogs
 
                         Network.Enqueue(new C.Chat
                         {
-                            Message = msg
+                            Message = msg,
+                            LinkedItems = new List<ChatItem>(LinkedItems)
                         });
 
                         if (ChatTextBox.Text[0] == '/')
@@ -724,11 +719,13 @@ namespace Client.MirScenes.Dialogs
                     }
                     ChatTextBox.Visible = false;
                     ChatTextBox.Text = string.Empty;
+                    LinkedItems.Clear();
                     break;
                 case (char)Keys.Escape:
                     e.Handled = true;
                     ChatTextBox.Visible = false;
                     ChatTextBox.Text = string.Empty;
+                    LinkedItems.Clear();
                     break;
             }
         }
@@ -765,7 +762,7 @@ namespace Client.MirScenes.Dialogs
                 case ChatType.Announcement:
                     backColour = Color.Blue;
                     foreColour = Color.White;
-                    GameScene.Scene.ChatNoticeDialog.ShowNotice(text);
+                    GameScene.Scene.ChatNoticeDialog.ShowNotice(RegexFunctions.CleanChatString(text));
                     break;
                 case ChatType.Shout:
                     backColour = Color.Yellow;
@@ -821,18 +818,41 @@ namespace Client.MirScenes.Dialogs
                     break;
             }
 
-            int chatWidth = Settings.Resolution != 800 ? 614 : 390;
             List<string> chat = new List<string>();
 
+            int chatWidth = Settings.Resolution != 800 ? 614 : 390;
             int index = 0;
+            int matchCount = 0;
+
             for (int i = 1; i < text.Length; i++)
+            {
+                if (i - index < 0) continue;
+
                 if (TextRenderer.MeasureText(CMain.Graphics, text.Substring(index, i - index), ChatFont).Width > chatWidth)
                 {
-                    chat.Add(text.Substring(index, i - index - 1));
-                    index = i - 1;
-                }
-            chat.Add(text.Substring(index, text.Length - index));
+                    int offset = i - index;
+                    int newIndex = i - 1;
 
+                    var itemLinkMatches = RegexFunctions.ChatItemLinks.Matches(text.Substring(index)).Cast<Match>();
+
+                    if (itemLinkMatches.Any())
+                    {
+                        var match = itemLinkMatches.SingleOrDefault(x => (x.Index < (i - index)) && (x.Index + x.Length > offset - 1));
+
+                        if (match != null)
+                        {
+                            offset = match.Index;
+                            newIndex = match.Index;
+                        }
+                    }
+
+                    chat.Add(text.Substring(index, offset - 1));
+                    index = newIndex;
+                }
+            }
+
+            chat.Add(text.Substring(index, text.Length - index));
+            
             if (StartIndex == History.Count - LineCount)
                 StartIndex += chat.Count;
 
@@ -878,7 +898,11 @@ namespace Client.MirScenes.Dialogs
             for (int i = 0; i < ChatLines.Count; i++)
                 ChatLines[i].Dispose();
 
+            for (int i = 0; i < LinkedItemButtons.Count; i++)
+                LinkedItemButtons[i].Dispose();
+
             ChatLines.Clear();
+            LinkedItemButtons.Clear();
 
             if (StartIndex >= History.Count) StartIndex = History.Count - 1;
             if (StartIndex < 0) StartIndex = 0;
@@ -910,8 +934,7 @@ namespace Client.MirScenes.Dialogs
 
                 temp.Click += (o, e) =>
                 {
-                    MirLabel l = o as MirLabel;
-                    if (l == null) return;
+                    if (!(o is MirLabel l)) return;
 
                     string[] parts = l.Text.Split(':', ' ');
                     if (parts.Length == 0) return;
@@ -925,12 +948,68 @@ namespace Client.MirScenes.Dialogs
                     ChatTextBox.TextBox.SelectionStart = ChatTextBox.Text.Length;
                 };
 
+                string currentLine = History[i].Text;
+
+                int oldLength = currentLine.Length;
+
+                foreach (Match match in RegexFunctions.ChatItemLinks.Matches(currentLine).Cast<Match>().OrderBy(o => o.Index).ToList())
+                {
+                    int offSet = oldLength - currentLine.Length;
+
+                    Capture capture = match.Groups[1].Captures[0];
+                    string[] values = capture.Value.Split('/');
+                    currentLine = currentLine.Remove(capture.Index - 1 - offSet, capture.Length + 2).Insert(capture.Index - 1 - offSet, values[0]);
+                    string text = currentLine.Substring(0, capture.Index - 1 - offSet) + " ";
+                    Size size = TextRenderer.MeasureText(CMain.Graphics, text, temp.Font, temp.Size, TextFormatFlags.TextBoxControl);
+
+                    ChatLink(values[0], ulong.Parse(values[1]), temp.Location.Add(new Point(size.Width - 10, 0)));
+                }
+
+                temp.Text = currentLine;
 
                 y += 13;
                 if (i - StartIndex == LineCount - 1) break;
             }
 
         }
+
+        private void ChatLink(string name, ulong uniqueID, Point p)
+        {
+            UserItem item = GameScene.ChatItemList.FirstOrDefault(x => x.UniqueID == uniqueID);
+
+            if (item != null)
+            {
+                MirLabel temp = new MirLabel
+                {
+                    AutoSize = true,
+                    Visible = true,
+                    Parent = this,
+                    Location = p,
+                    Text = name,
+                    ForeColour = Color.Blue,
+                    Sound = SoundList.ButtonC,
+                    Font = ChatFont,
+                    OutLine = false,
+                };
+
+                temp.MouseEnter += (o, e) => temp.ForeColour = Color.Red;
+                temp.MouseLeave += (o, e) =>
+                {
+                    GameScene.Scene.DisposeItemLabel();
+                    temp.ForeColour = Color.Blue;
+                };
+                temp.MouseDown += (o, e) => temp.ForeColour = Color.Blue;
+                temp.MouseUp += (o, e) => temp.ForeColour = Color.Red;
+
+                temp.Click += (o, e) =>
+                {
+                    GameScene.Scene.CreateItemLabel(item);
+                };
+
+                LinkedItemButtons.Add(temp);
+            }
+        }
+
 
         private void ChatPanel_KeyDown(object sender, KeyEventArgs e)
         {
@@ -1381,16 +1460,6 @@ namespace Client.MirScenes.Dialogs
                     break;
             }
         }
-
-        public void Show()
-        {
-            Visible = true;
-        }
-
-        public void Hide()
-        {
-            Visible = false;
-        }
     }
     public sealed class InventoryDialog : MirImageControl
     {
@@ -1686,17 +1755,6 @@ namespace Client.MirScenes.Dialogs
             GoldLabel.Text = GameScene.Gold.ToString("###,###,##0");
         }
 
-        public void Hide()
-        {
-            Visible = false;
-        }
-
-        public void Show()
-        {
-            Visible = true;
-
-            //RefreshInventory();
-        }
 
         private void WeightBar_BeforeDraw(object sender, EventArgs e)
         {
@@ -1840,16 +1898,6 @@ namespace Client.MirScenes.Dialogs
 
             if (Libraries.Prguse != null)
                 Libraries.Prguse.Draw(Index + 1, DisplayLocation, Color.White, false, 0.5F);
-        }
-
-        public void Hide()
-        {
-            Visible = false;
-        }
-
-        public void Show()
-        {
-            Visible = true;
         }
 
         public void Flip()
@@ -2155,7 +2203,7 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        public void Show()
+        public override void Show()
         {
             if (Visible) return;
             if (!HasSkill) return;
@@ -2164,7 +2212,7 @@ namespace Client.MirScenes.Dialogs
             Update();
         }
 
-        public void Hide()
+        public override void Hide()
         {
             if (!Visible) return;
             Settings.SkillBar = false;
@@ -2752,13 +2800,7 @@ namespace Client.MirScenes.Dialogs
             };
         }
 
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
-
-        public void Show()
+        public override void Show()
         {
             if (Visible) return;
             Visible = true;
@@ -2885,7 +2927,7 @@ namespace Client.MirScenes.Dialogs
         public MirButton ToggleButton, BigMapButton, MailButton;
         public MirLabel LocationLabel, MapNameLabel;
         private float _fade = 1F;
-        private bool _bigMode = true, _realBigMode = true;
+        private bool _bigMode = true;
 
         public MirLabel AModeLabel, PModeLabel;
 
@@ -3082,8 +3124,7 @@ namespace Client.MirScenes.Dialogs
 
                 #region NPC Quest Icons
 
-                NPCObject npc = ob as NPCObject;
-                if (npc != null && npc.GetAvailableQuests(true).Any())
+                if (ob is NPCObject npc && npc.GetAvailableQuests(true).Any())
                 {
                     string text = "";
                     Color color = Color.Empty;
@@ -3140,16 +3181,6 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        public void Show()
-        {
-            Visible = true;
-        }
-
-        public void Hide()
-        {
-            Visible = false;
-        }
-
         public void Toggle()
         {
             if (_fade == 0F)
@@ -3184,8 +3215,6 @@ namespace Client.MirScenes.Dialogs
             LocationLabel.Location = new Point(46, y);
             LightSetting.Location = new Point(102, y);
 
-            _realBigMode = false;
-
             GameScene.Scene.DuraStatusPanel.Location = new Point(GameScene.Scene.MiniMapDialog.Location.X + 86,
             GameScene.Scene.MiniMapDialog.Size.Height);
         }
@@ -3200,8 +3229,6 @@ namespace Client.MirScenes.Dialogs
             LocationLabel.Location = new Point(46, y);
             LightSetting.Location = new Point(102, y);
 
-            _realBigMode = true;
-
             GameScene.Scene.DuraStatusPanel.Location = new Point(GameScene.Scene.MiniMapDialog.Location.X + 86,
             GameScene.Scene.MiniMapDialog.Size.Height);
         }
@@ -3212,8 +3239,6 @@ namespace Client.MirScenes.Dialogs
             if (map == null) return;
             MapNameLabel.Text = map.Title;
             LocationLabel.Text = Functions.PointToString(MapObject.User.CurrentLocation);
-
-            int offset = _realBigMode ? 0 : 108;
 
             GameScene.Scene.MainDialog.SModeLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
             (GameScene.Scene.MiniMapDialog.Size.Height + 150) - Settings.ScreenHeight);
@@ -3625,17 +3650,6 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
-
-        public void Show()
-        {
-            if (Visible) return;
-            Visible = true;
-        }
 
     }
     public sealed class OptionDialog : MirImageControl
@@ -4048,16 +4062,6 @@ namespace Client.MirScenes.Dialogs
 
         }
 
-        public void Show()
-        {
-            Visible = true;
-        }
-
-        public void Hide()
-        {
-            Visible = false;
-        }
-
     }
     public sealed class MenuDialog : MirImageControl
     {
@@ -4320,15 +4324,6 @@ namespace Client.MirScenes.Dialogs
 
         }
 
-        public void Show()
-        {
-            Visible = true;
-        }
-
-        public void Hide()
-        {
-            Visible = false;
-        }
 
     }
     public sealed class MagicButton : MirControl
@@ -4920,16 +4915,6 @@ namespace Client.MirScenes.Dialogs
             };
         }
 
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
-        public void Show()
-        {
-            if (Visible) return;
-            Visible = true;
-        }
     }
     public sealed class CharacterDuraPanel : MirImageControl
     {
@@ -5158,13 +5143,13 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        public void Hide()
+        public override void Hide()
         {
             if (!Visible) return;
             Visible = false;
             GameScene.Scene.DuraStatusPanel.Character.Index = 2113;
         }
-        public void Show()
+        public override void Show()
         {
             if (Visible) return;
             Visible = true;

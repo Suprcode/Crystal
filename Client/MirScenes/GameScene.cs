@@ -111,7 +111,7 @@ namespace Client.MirScenes
 
         public static List<ItemInfo> ItemInfoList = new List<ItemInfo>();
         public static List<UserId> UserIdList = new List<UserId>();
-        public static List<ChatItem> ChatItemList = new List<ChatItem>();
+        public static List<UserItem> ChatItemList = new List<UserItem>();
         public static List<ClientQuestInfo> QuestInfoList = new List<ClientQuestInfo>();
         public static List<GameShopItem> GameShopInfoList = new List<GameShopItem>();
         public static List<ClientRecipeInfo> RecipeInfoList = new List<ClientRecipeInfo>();
@@ -1804,7 +1804,7 @@ namespace Client.MirScenes
             {
                 MapObject ob = MapControl.Objects[i];
                 if (ob.ObjectID != p.ObjectID) continue;
-                ob.Chat(p.Text);
+                ob.Chat(RegexFunctions.CleanChatString(p.Text));
                 return;
             }
 
@@ -4605,12 +4605,12 @@ namespace Client.MirScenes
 
         private void ChatItemStats(S.ChatItemStats p)
         {
-            for (int i = 0; i < ChatItemList.Count; i++)
-                if (ChatItemList[i].ID == p.ChatItemId)
-                {
-                    ChatItemList[i].ItemStats = p.Stats;
-                    ChatItemList[i].RecievedTick = CMain.Time;
-                }
+            //for (int i = 0; i < ChatItemList.Count; i++)
+            //    if (ChatItemList[i].ID == p.ChatItemId)
+            //    {
+            //        ChatItemList[i].ItemStats = p.Stats;
+            //        ChatItemList[i].RecievedTick = CMain.Time;
+            //    }
         }
 
         private void GuildInvite(S.GuildInvite p)

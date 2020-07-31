@@ -687,6 +687,12 @@ namespace Client.MirControls
             _sound = SoundList.None;
         }
 
+        public virtual void Show()
+        {
+            if (Visible) return;
+            Visible = true;
+        }
+
         public virtual void Hide()
         {
             if (!Visible) return;
@@ -946,8 +952,7 @@ namespace Client.MirControls
             if (!Enabled)
                 return;
 
-            if (MouseWheel != null)
-                MouseWheel(this, e);
+            MouseWheel?.Invoke(this, e);
         }
         public virtual void OnKeyPress(KeyPressEventArgs e)
         {

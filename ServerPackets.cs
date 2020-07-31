@@ -948,6 +948,25 @@ namespace ServerPackets
             Info.Save(writer);
         }
     }
+    public sealed class NewChatItem : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.NewChatItem; }
+        }
+
+        public UserItem Item;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Item = new UserItem(reader);
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            Item.Save(writer);
+        }
+    }
     public sealed class MoveItem : Packet
     {
         public override short Index

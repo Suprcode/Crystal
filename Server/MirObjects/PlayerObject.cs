@@ -3444,7 +3444,7 @@ namespace Server.MirObjects
             }
         }
 
-        public void Chat(string message)
+        public void Chat(string message, List<ChatItem> linkedItems = null)
         {
             if (string.IsNullOrEmpty(message)) return;
 
@@ -3497,6 +3497,8 @@ namespace Server.MirObjects
 
                 ChatTime = Envir.Time + 2000;
             }
+
+            message = ProcessChatItems(message, linkedItems);
 
             string[] parts;
 
@@ -5338,6 +5340,59 @@ namespace Server.MirObjects
                 Enqueue(p);
                 Broadcast(p);
             }
+        }
+
+        private string ProcessChatItems(string text, List<ChatItem> chatItems)
+        {
+            if (chatItems == null)
+                return text;
+
+            foreach (var chatItem in chatItems)
+            {
+                Regex r = new Regex(chatItem.RegexInternalName, RegexOptions.IgnoreCase);
+
+                text = r.Replace(text, chatItem.InternalName, 1);
+
+                UserItem[] array;
+
+                switch (chatItem.Grid)
+                {
+                    case MirGridType.Inventory:
+                        array = Info.Inventory;
+                        break;
+                    case MirGridType.Storage:
+                        array = Info.AccountInfo.Storage;
+                        break;
+                    default:
+                        continue;
+                }
+
+                UserItem item = null;
+
+                for (int i = 0; i < array.Length; i++)
+                {
+                    item = array[i];
+                    if (item == null || item.UniqueID != chatItem.UniqueID) continue;
+                    break;
+                }
+
+                if (item != null)
+                {
+                    for (int i = CurrentMap.Players.Count - 1; i >= 0; i--)
+                    {
+                        PlayerObject player = CurrentMap.Players[i];
+                        if (player == this) continue;
+
+                        if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
+                            player.CheckItem(item);
+                    }
+
+                    Broadcast(new S.NewChatItem { Item = item });
+                    Enqueue(new S.NewChatItem { Item = item });
+                }
+            }
+
+            return text;
         }
 
         public void Turn(MirDirection dir)

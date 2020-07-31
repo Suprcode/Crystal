@@ -903,7 +903,7 @@ namespace Server.MirNetwork
 
             if (Stage != GameStage.Game) return;
 
-            Player.Chat(p.Message);
+            Player.Chat(p.Message, p.LinkedItems);
         }
 
         private void MoveItem(C.MoveItem p)

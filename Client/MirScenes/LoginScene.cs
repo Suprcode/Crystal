@@ -439,12 +439,10 @@ namespace Client.MirScenes
                         Size = new Size(136, 12),
                         MaxLength = Globals.MaxAccountIDLength
                 };
-                AccountIDTextBox.SetFocus();
+
                 AccountIDTextBox.TextBox.TextChanged += AccountIDTextBox_TextChanged;
                 AccountIDTextBox.TextBox.KeyPress += TextBox_KeyPress;
                 AccountIDTextBox.Text = Settings.AccountID;
-
-
 
                 PasswordTextBox = new MirTextBox
                     {
@@ -531,12 +529,7 @@ namespace Client.MirScenes
                 Network.Enqueue(new C.Login {AccountID = AccountIDTextBox.Text, Password = PasswordTextBox.Text});
             }
 
-            public void Hide()
-            {
-                if (!Visible) return;
-                Visible = false;
-            }
-            public void Show()
+            public override void Show()
             {
                 if (Visible) return;
                 Visible = true;

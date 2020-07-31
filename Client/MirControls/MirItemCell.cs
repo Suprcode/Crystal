@@ -216,6 +216,26 @@ namespace Client.MirControls
                 case MouseButtons.Left:
                     if (Item != null && GameScene.SelectedCell == null)
                         PlayItemSound();
+
+                    if (CMain.Ctrl)
+                    {
+                        if (Item != null)
+                        {
+                            string text = string.Format("<{0}> ", Item.Name);
+
+                            if (GameScene.Scene.ChatDialog.ChatTextBox.Text.Length + text.Length > Globals.MaxChatLength)
+                            {
+                                GameScene.Scene.ChatDialog.ReceiveChat("Unable to link item, message exceeds allowed length", ChatType.System);
+                                return;
+                            }
+
+                            GameScene.Scene.ChatDialog.LinkedItems.Add(new ChatItem { UniqueID = Item.UniqueID, Title = Item.Name, Grid = GridType });
+                            GameScene.Scene.ChatDialog.SetChatText(text);
+                        }
+
+                        break;
+                    }
+
                     if (CMain.Shift)
                     {
                         if (GridType == MirGridType.Inventory || GridType == MirGridType.Storage)
