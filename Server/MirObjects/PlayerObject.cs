@@ -3443,7 +3443,6 @@ namespace Server.MirObjects
                 }
             }
         }
-
         public void Chat(string message, List<ChatItem> linkedItems = null)
         {
             if (string.IsNullOrEmpty(message)) return;
@@ -3498,8 +3497,6 @@ namespace Server.MirObjects
                 ChatTime = Envir.Time + 2000;
             }
 
-            message = ProcessChatItems(message, linkedItems);
-
             string[] parts;
 
             message = message.Replace("$pos", Functions.PointToString(CurrentLocation));
@@ -3540,6 +3537,8 @@ namespace Server.MirObjects
                     return;
                 }
 
+                message = ProcessChatItems(message, new List<PlayerObject> { player }, linkedItems);
+
                 ReceiveChat(string.Format("/{0}", message), ChatType.WhisperOut);
                 player.ReceiveChat(string.Format("{0}=>{1}", Name, message.Remove(0, parts[0].Length)), ChatType.WhisperIn);
             }
@@ -3548,6 +3547,8 @@ namespace Server.MirObjects
                 if (GroupMembers == null) return;
                 //Group
                 message = String.Format("{0}:{1}", Name, message.Remove(0, 2));
+
+                message = ProcessChatItems(message, GroupMembers, linkedItems);
 
                 p = new S.ObjectChat { ObjectID = ObjectID, Text = message, Type = ChatType.Group };
 
@@ -3560,6 +3561,9 @@ namespace Server.MirObjects
 
                 //Guild
                 message = message.Remove(0, 2);
+
+                message = ProcessChatItems(message, MyGuild.GetOnlinePlayers(), linkedItems);
+
                 MyGuild.SendMessage(String.Format("{0}: {1}", Name, message));
 
             }
@@ -3581,6 +3585,8 @@ namespace Server.MirObjects
                     ReceiveChat(string.Format("{0} isn't online.", Mentor.Name), ChatType.System);
                     return;
                 }
+
+                message = ProcessChatItems(message, new List<PlayerObject> { player }, linkedItems);
 
                 ReceiveChat(string.Format("{0}: {1}", Name, message), ChatType.Mentor);
                 player.ReceiveChat(string.Format("{0}: {1}", Name, message), ChatType.Mentor);
@@ -3604,6 +3610,8 @@ namespace Server.MirObjects
 
                 if (HasMapShout)
                 {
+                    message = ProcessChatItems(message, CurrentMap.Players, linkedItems);
+
                     p = new S.Chat { Message = message, Type = ChatType.Shout2 };
                     HasMapShout = false;
 
@@ -3615,6 +3623,8 @@ namespace Server.MirObjects
                 }
                 else if (HasServerShout)
                 {
+                    message = ProcessChatItems(message, Envir.Players, linkedItems);
+
                     p = new S.Chat { Message = message, Type = ChatType.Shout3 };
                     HasServerShout = false;
 
@@ -3626,14 +3636,24 @@ namespace Server.MirObjects
                 }
                 else
                 {
-                    p = new S.Chat { Message = message, Type = ChatType.Shout };
+                    List<PlayerObject> playersInRange = new List<PlayerObject>();
 
-                    //Envir.Broadcast(p);
                     for (int i = 0; i < CurrentMap.Players.Count; i++)
                     {
                         if (!Functions.InRange(CurrentLocation, CurrentMap.Players[i].CurrentLocation, Globals.DataRange * 2)) continue;
-                        CurrentMap.Players[i].Enqueue(p);
+
+                        playersInRange.Add(CurrentMap.Players[i]);
                     }
+
+                    message = ProcessChatItems(message, playersInRange, linkedItems);
+
+                    p = new S.Chat { Message = message, Type = ChatType.Shout };
+
+                    for (int i = 0; i < playersInRange.Count; i++)
+                    {
+                        playersInRange[i].Enqueue(p);
+                    }
+
                 }
 
             }
@@ -3649,12 +3669,14 @@ namespace Server.MirObjects
 
                 CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
                 PlayerObject player = Envir.GetPlayer(Lover.Name);
-            
+
                 if (player == null)
                 {
                     ReceiveChat(string.Format("{0} isn't online.", Lover.Name), ChatType.System);
                     return;
                 }
+
+                message = ProcessChatItems(message, new List<PlayerObject> { player }, linkedItems);
 
                 ReceiveChat(string.Format("{0}: {1}", Name, message), ChatType.Relationship);
                 player.ReceiveChat(string.Format("{0}: {1}", Name, message), ChatType.Relationship);
@@ -3665,13 +3687,15 @@ namespace Server.MirObjects
 
                 message = String.Format("(*){0}:{1}", Name, message.Remove(0, 2));
 
+                message = ProcessChatItems(message, Envir.Players, linkedItems);
+
                 p = new S.Chat { Message = message, Type = ChatType.Announcement };
 
                 Envir.Broadcast(p);
             }
             else if (message.StartsWith("@"))
             {
-                
+
                 //Command
                 message = message.Remove(0, 1);
                 parts = message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -4141,7 +4165,7 @@ namespace Server.MirObjects
                                 break;
                             }
                         }
-                        
+
                         using (System.IO.FileStream stream = System.IO.File.Create(string.Format("Character Backups/{0}", tempInfo.Name)))
                         {
                             using (System.IO.BinaryWriter writer = new System.IO.BinaryWriter(stream))
@@ -4175,7 +4199,7 @@ namespace Server.MirObjects
                                     {
                                         CharacterInfo tt = new CharacterInfo(reader);
 
-                                        if(Envir.AccountList[i].Characters[j].Index != tt.Index)
+                                        if (Envir.AccountList[i].Characters[j].Index != tt.Index)
                                         {
                                             ReceiveChat("Player name was matched however IDs did not. Likely due to player being recreated. Player not restored", ChatType.System);
                                             return;
@@ -4186,9 +4210,9 @@ namespace Server.MirObjects
                                 }
                             }
                         }
-                        
+
                         Envir.BeginSaveAccounts();
-                    break;
+                        break;
 
                     case "MOVE":
                         if (!IsGM && !HasTeleportRing && !Settings.TestServer) return;
@@ -4515,7 +4539,7 @@ namespace Server.MirObjects
                     case "LEAVEGUILD":
                         if (MyGuild == null) return;
                         if (MyGuildRank == null) return;
-                        if(MyGuild.IsAtWar())
+                        if (MyGuild.IsAtWar())
                         {
                             ReceiveChat("Cannot leave guild whilst at war.", ChatType.System);
                             return;
@@ -5109,7 +5133,7 @@ namespace Server.MirObjects
                             ReceiveChat(string.Format("You need to be in a guild to start a War"), ChatType.System);
                             return;
                         }
-                
+
                         else if (!int.TryParse(parts[1], out ConquestID)) return;
 
                         ConquestObject tempConq = Envir.Conquests.FirstOrDefault(t => t.Info.Index == ConquestID);
@@ -5216,7 +5240,7 @@ namespace Server.MirObjects
 
                         ushort flag = (ushort)Envir.Random.Next(12);
 
-                        if(parts.Length > 1)
+                        if (parts.Length > 1)
                         {
                             ushort temp;
 
@@ -5335,6 +5359,8 @@ namespace Server.MirObjects
             {
                 message = String.Format("{0}:{1}", CurrentMap.Info.NoNames ? "?????" : Name, message);
 
+                message = ProcessChatItems(message, null, linkedItems);
+
                 p = new S.ObjectChat { ObjectID = ObjectID, Text = message, Type = ChatType.Normal };
 
                 Enqueue(p);
@@ -5342,10 +5368,12 @@ namespace Server.MirObjects
             }
         }
 
-        private string ProcessChatItems(string text, List<ChatItem> chatItems)
+        private string ProcessChatItems(string text, List<PlayerObject> recipients, List<ChatItem> chatItems)
         {
             if (chatItems == null)
+            {
                 return text;
+            }
 
             foreach (var chatItem in chatItems)
             {
@@ -5378,17 +5406,47 @@ namespace Server.MirObjects
 
                 if (item != null)
                 {
-                    for (int i = CurrentMap.Players.Count - 1; i >= 0; i--)
+                    if (recipients == null)
                     {
-                        PlayerObject player = CurrentMap.Players[i];
-                        if (player == this) continue;
+                        for (int i = CurrentMap.Players.Count - 1; i >= 0; i--)
+                        {
+                            PlayerObject player = CurrentMap.Players[i];
+                            if (player == this) continue;
 
-                        if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
+                            if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
+                            {
+                                player.CheckItem(item);
+
+                                if (!player.Connection.SentChatItem.Contains(item))
+                                {
+                                    player.Enqueue(new S.NewChatItem { Item = item });
+                                    player.Connection.SentChatItem.Add(item);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < recipients.Count; i++)
+                        {
+                            PlayerObject player = recipients[i];
+                            if (player == this) continue;
+
                             player.CheckItem(item);
+
+                            if (!player.Connection.SentChatItem.Contains(item))
+                            {
+                                player.Enqueue(new S.NewChatItem { Item = item });
+                                player.Connection.SentChatItem.Add(item);
+                            }
+                        }
                     }
 
-                    Broadcast(new S.NewChatItem { Item = item });
-                    Enqueue(new S.NewChatItem { Item = item });
+                    if (!Connection.SentChatItem.Contains(item))
+                    {
+                        Enqueue(new S.NewChatItem { Item = item });
+                        Connection.SentChatItem.Add(item);
+                    }
                 }
             }
 

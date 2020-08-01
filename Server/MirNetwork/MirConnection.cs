@@ -57,6 +57,7 @@ namespace Server.MirNetwork
         public List<ItemInfo> SentItemInfo = new List<ItemInfo>();
         public List<QuestInfo> SentQuestInfo = new List<QuestInfo>();
         public List<RecipeInfo> SentRecipeInfo = new List<RecipeInfo>();
+        public List<UserItem> SentChatItem = new List<UserItem>(); //TODO - Add Expiry time
         public bool StorageSent;
 
 

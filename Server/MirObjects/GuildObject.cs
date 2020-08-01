@@ -209,6 +209,21 @@ namespace Server.MirObjects
                 }
         }
 
+        public List<PlayerObject> GetOnlinePlayers()
+        {
+            List<PlayerObject> players = new List<PlayerObject>();
+
+            for (int i = 0; i < Ranks.Count; i++)
+                for (int j = 0; j < Ranks[i].Members.Count; j++)
+                {
+                    PlayerObject player = (PlayerObject)Ranks[i].Members[j].Player;
+                    if (player != null)
+                        players.Add(player);
+                }
+
+            return players;
+        }
+
         public void PlayerLogged(PlayerObject member, bool online, bool New = false)
         {
             for (int i = 0; i < Ranks.Count; i++)
