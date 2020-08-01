@@ -145,7 +145,7 @@ namespace Client.MirControls
             }
         }
 
-        public void Show()
+        public override void Show()
         {
             if (Parent != null) return;
 

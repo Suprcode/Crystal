@@ -218,16 +218,6 @@ namespace Client.MirScenes.Dialogs
             _lockButton.Enabled = true;
             _setRentalPeriodButton.Enabled = true;
         }
-
-        private void Hide()
-        {
-            Visible = false;
-        }
-
-        private void Show()
-        {
-            Visible = true;
-        }
     }
 
     public sealed class GuestItemRentingDialog : MirImageControl
@@ -346,16 +336,6 @@ namespace Client.MirScenes.Dialogs
         private void Unlock()
         {
             _lockButton.Index = 250;
-        }
-
-        private void Hide()
-        {
-            Visible = false;
-        }
-
-        public void Show()
-        {
-            Visible = true;
         }
     }
 }

@@ -129,6 +129,7 @@ namespace Client
             NameView = true,
             HPView = true,
             TransparentChat = false,
+            ModeView = false,
             DuraView = false,
             DisplayDamage = true,
             TargetDead = false,
@@ -218,6 +219,7 @@ namespace Client
             DropView = Reader.ReadBoolean("Game", "DropView", DropView);
             NameView = Reader.ReadBoolean("Game", "NameView", NameView);
             HPView = Reader.ReadBoolean("Game", "HPMPView", HPView);
+            ModeView = Reader.ReadBoolean("Game", "ModeView", ModeView);
             FontName = Reader.ReadString("Game", "FontName", FontName);
             TransparentChat = Reader.ReadBoolean("Game", "TransparentChat", TransparentChat);
             DisplayDamage = Reader.ReadBoolean("Game", "DisplayDamage", DisplayDamage);
@@ -290,6 +292,7 @@ namespace Client
             Reader.Write("Game", "DropView", DropView);
             Reader.Write("Game", "NameView", NameView);
             Reader.Write("Game", "HPMPView", HPView);
+            Reader.Write("Game", "ModeView", ModeView);
             Reader.Write("Game", "FontName", FontName);
             Reader.Write("Game", "TransparentChat", TransparentChat);
             Reader.Write("Game", "DisplayDamage", DisplayDamage);

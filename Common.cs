@@ -26,6 +26,22 @@ public enum PanelType : byte
     ReplaceWedRing,
 }
 
+
+public enum MarketItemType : byte
+{
+    Consign,
+    Auction,
+    GameShop
+}
+
+public enum MarketPanelType : byte
+{
+    Market,
+    Consign,
+    Auction,
+    GameShop
+}
+
 public enum BlendMode : sbyte
 {
     NONE = -1,
@@ -165,7 +181,8 @@ public enum DefaultNPCType : byte
     OnAcceptQuest,
     OnFinishQuest,
     Daily,
-    TalkMonster
+    TalkMonster,
+    Client
 }
 
 public enum IntelligentCreatureType : byte
@@ -2129,7 +2146,10 @@ public static class Globals
                       ConsignmentLength = 7,
                       ConsignmentCost = 5000,
                       MinConsignment = 5000,
-                      MaxConsignment = 50000000;
+                      MaxConsignment = 50000000,
+                      AuctionCost = 5000,
+                      MinStartingBid = 0,
+                      MaxStartingBid = 50000;
 }
 
 
@@ -3869,11 +3889,12 @@ public class ClientAuction
     public UserItem Item;
     public string Seller = string.Empty;
     public uint Price;
-    public DateTime ConsignmentDate;
+    public DateTime ConsignmentDate = DateTime.MinValue;
+    public MarketItemType ItemType;
 
     public ClientAuction()
     {
-        
+
     }
     public ClientAuction(BinaryReader reader)
     {
@@ -3882,6 +3903,7 @@ public class ClientAuction
         Seller = reader.ReadString();
         Price = reader.ReadUInt32();
         ConsignmentDate = DateTime.FromBinary(reader.ReadInt64());
+        ItemType = (MarketItemType)reader.ReadByte();
     }
     public void Save(BinaryWriter writer)
     {
@@ -3890,6 +3912,7 @@ public class ClientAuction
         writer.Write(Seller);
         writer.Write(Price);
         writer.Write(ConsignmentDate.ToBinary());
+        writer.Write((byte)ItemType);
     }
 }
 
@@ -6451,7 +6474,7 @@ public class GameLanguage
                          AttackMode_All = "[Mode: Attack All]",
 
                          LogOutTip = "Do you want to log out of Legend of Mir?",
-                         ExitTip = "Do you want to quit Legend of Mir?？",
+                         ExitTip = "Do you want to quit Legend of Mir?",
                          DiedTip = "You have died, Do you want to revive in town?",
                          DropTip = "Are you sure you want to drop {0}?",
 

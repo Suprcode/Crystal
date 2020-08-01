@@ -14,7 +14,9 @@ namespace Client.MirScenes.Dialogs
 {
     public class MailListDialog : MirImageControl
     {
+        MirImageControl TitleLabel;
         MirButton HelpButton, CloseButton;
+        MirLabel TitleTypeLabel, TitleSenderLabel, TitleMessageLabel;
         //Send / Reply (Can only reply if index exists, button will disapear if not) / Read / Delete / Block List / Bug Report (new system??)
 
         MirLabel PageLabel;
@@ -38,11 +40,49 @@ namespace Client.MirScenes.Dialogs
             Sort = true;
             Location = new Point((Settings.ScreenWidth - Size.Width) - 150, 5);
 
+            TitleLabel = new MirImageControl
+            {
+                Index = 7,
+                Library = Libraries.Title,
+                Location = new Point(18, 9),
+                Parent = this
+            };
+
+            TitleTypeLabel = new MirLabel
+            {
+                Text = "TYPE",
+                Parent = this,
+                Font = new Font(Settings.FontName, Settings.FontSize - 1, FontStyle.Italic),
+                DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
+                Size = new Size(37, 19),
+                Location = new Point(8, 34)
+            };
+
+            TitleSenderLabel = new MirLabel
+            {
+                Text = "SENDER",
+                Parent = this,
+                Font = new Font(Settings.FontName, Settings.FontSize - 1, FontStyle.Italic),
+                DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
+                Size = new Size(132, 19),
+                Location = new Point(47, 34)
+            };
+
+            TitleMessageLabel = new MirLabel
+            {
+                Text = "MESSAGE",
+                Parent = this,
+                Font = new Font(Settings.FontName, Settings.FontSize - 1, FontStyle.Italic),
+                DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
+                Size = new Size(122, 19),
+                Location = new Point(181, 34)
+            };
+
             CloseButton = new MirButton
             {
                 HoverIndex = 361,
                 Index = 360,
-                Location = new Point(Size.Width - 27, 3),
+                Location = new Point(Size.Width - 24, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
@@ -229,7 +269,9 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(183, 414),
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.BlockList
+                Hint = GameLanguage.BlockList,
+                GrayScale = true,
+                Enabled = false
             };
 
             BugReportButton = new MirButton
@@ -241,7 +283,9 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(210, 414),
                 Sound = SoundList.ButtonA,
-                Hint = "Report Bug"
+                Hint = "Report Bug",
+                GrayScale = true,
+                Enabled = false
             };
             #endregion
 
@@ -354,7 +398,7 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        public void Show()
+        public override void Show()
         {
             if (Visible) return;
             Visible = true;
@@ -362,7 +406,7 @@ namespace Client.MirScenes.Dialogs
             UpdateInterface();
         }
 
-        public void Hide()
+        public override void Hide()
         {
             if (!Visible) return;
             Visible = false;
@@ -634,18 +678,12 @@ namespace Client.MirScenes.Dialogs
             CancelButton.Click += (o, e) => Hide();
         }
 
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
-
-        public void ComposeMail(string recipientName)
+        public void ComposeMail(string recipientName, string message = "")
         {
             if (string.IsNullOrEmpty(recipientName)) return;
 
             RecipientNameLabel.Text = recipientName;
-            MessageTextBox.Text = string.Empty;
+            MessageTextBox.Text = message;
 
             MessageTextBox.SetFocus();
 
@@ -829,7 +867,7 @@ namespace Client.MirScenes.Dialogs
             };
         }
 
-        public void Hide()
+        public override void Hide()
         {
             if (!Visible) return;
             Visible = false;
@@ -1072,12 +1110,6 @@ namespace Client.MirScenes.Dialogs
 
             Visible = true;
         }
-
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
     }
     public class MailReadParcelDialog : MirImageControl
     {
@@ -1243,12 +1275,6 @@ namespace Client.MirScenes.Dialogs
                     item.Item = null;
                 }
             }
-        }
-
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
         }
     }
 }

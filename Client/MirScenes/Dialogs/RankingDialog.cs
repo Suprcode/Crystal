@@ -174,14 +174,14 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        public void Show()
+        public override void Show()
         {
             if (Visible) return;
             Visible = true;
             RequestRanks(RankType);
         }
 
-        public void Hide()
+        public override void Hide()
         {
             if (!Visible) return;
             Visible = false;

@@ -213,18 +213,6 @@ namespace Client.MirScenes.Dialogs
             };
         }
 
-
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
-        public void Show()
-        {
-            if (Visible) return;
-            Visible = true;
-        }
-
         public void UpdateInterface()
         {
             LoverNameLabel.Text = "Lover:  " + LoverName;

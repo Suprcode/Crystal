@@ -16,7 +16,15 @@ namespace AutoPatcherAdmin
 
         public List<FileInformation> OldList, NewList;
         public Queue<FileInformation> UploadList;
+        public Queue<FileInformation> DownloadList;
+
         private Stopwatch _stopwatch = Stopwatch.StartNew();
+
+        public bool Completed;
+        long _currentBytes;
+        private int _fileCount, _currentCount;
+
+        private FileInformation _currentFile;
 
         long _totalBytes, _completedBytes;
 
@@ -31,89 +39,19 @@ namespace AutoPatcherAdmin
             AllowCleanCheckBox.Checked = Settings.AllowCleanUp;
         }
 
-        private void ProcessButton_Click(object sender, EventArgs e)
+        private void CompleteDownload()
         {
-            try
-            {
-                ProcessButton.Enabled = false;
-                Settings.Client = ClientTextBox.Text;
-                Settings.Host = HostTextBox.Text;
-                Settings.Login = LoginTextBox.Text;
-                Settings.Password = PasswordTextBox.Text;
-                Settings.AllowCleanUp = AllowCleanCheckBox.Checked;
+            FileLabel.Text = "Complete...";
+            SizeLabel.Text = "Complete...";
+            SpeedLabel.Text = "Complete...";
+            ActionLabel.Text = "Complete...";
 
-                OldList = new List<FileInformation>();
-                NewList = new List<FileInformation>();
-                UploadList = new Queue<FileInformation>();
+            progressBar1.Value = 100;
+            progressBar2.Value = 100;
 
-                byte[] data = Download(PatchFileName);
+            DownloadExistingButton.Enabled = true;
 
-                if (data != null)
-                {
-                    using (MemoryStream stream = new MemoryStream(data))
-                    using (BinaryReader reader = new BinaryReader(stream))
-                        ParseOld(reader);
-                }
-
-                ActionLabel.Text = "Checking Files...";
-                Refresh();
-                
-                CheckFiles();
-
-                for (int i = 0; i < NewList.Count; i++)
-                {
-                    FileInformation info = NewList[i];
-
-                    if (InExcludeList(info.FileName)) continue;
-
-                    if (NeedUpdate(info))
-                    {
-                        UploadList.Enqueue(info);
-                        _totalBytes += info.Length;
-                    }
-                    else
-                    {
-                        for (int o = 0; o < OldList.Count; o++)
-                        {
-                            if (OldList[o].FileName != info.FileName) continue;
-                            NewList[i] = OldList[o];
-                            break;
-                        }
-                    }
-                }
-
-                BeginUpload();
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-                ActionLabel.Text = "Error...";
-            }
-
-        }
-
-        private void BeginUpload()
-        {
-            if (UploadList == null ) return;
-
-            if (UploadList.Count == 0)
-            {
-                CleanUp();
-
-                Upload(new FileInformation {FileName = PatchFileName}, CreateNew());
-                UploadList = null;
-                ActionLabel.Text = string.Format("Complete...");
-                ProcessButton.Enabled = true;
-                return;
-            }
-
-            ActionLabel.Text = string.Format("Uploading... Files: {0}, Total Size: {1:#,##0}MB (Uncompressed)", UploadList.Count, (_totalBytes - _completedBytes)/1048576);
-
-            progressBar1.Value = (int) (_completedBytes*100/_totalBytes) > 100 ? 100 : (int) (_completedBytes*100/_totalBytes);
-
-            FileInformation info = UploadList.Dequeue();
-            Upload(info, File.ReadAllBytes(Settings.Client + (info.FileName == "AutoPatcher.gz" ? "AutoPatcher.exe" : info.FileName)));
+            Completed = true;
         }
 
         private void CleanUp()
@@ -198,29 +136,36 @@ namespace AutoPatcherAdmin
 
                 if (old.Length != info.Length) return true;
                 if (old.Creation != info.Creation) return true;
-
                 return false;
             }
             return true;
         }
 
+        public DateTime TrimMilliseconds(DateTime dt)
+        {
+            return new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second, 0, dt.Kind);
+        }
+
         public FileInformation GetFileInformation(string fileName)
         {
+            if (!File.Exists(fileName))
+            {
+                return null;
+            }
+
             FileInfo info = new FileInfo(fileName);
 
             FileInformation file =  new FileInformation
-                {
-                    FileName = fileName.Remove(0, Settings.Client.Length),
-                    Length = (int) info.Length,
-                    Creation = info.LastWriteTime
-                };
-
+            {
+                FileName = fileName.Remove(0, Settings.Client.Length),
+                Length = (int)info.Length,
+                Creation = info.LastWriteTime
+            };
             if (file.FileName == "AutoPatcher.exe")
                 file.FileName = "AutoPatcher.gz";
 
             return file;
         }
-
 
         public byte[] Download(string fileName)
         {
@@ -237,6 +182,89 @@ namespace AutoPatcherAdmin
                 return null;
             }
         }
+
+        public void Download(FileInformation info)
+        {
+            string fileName = info.FileName.Replace(@"\", "/");
+
+            if (fileName != "PList.gz")
+                fileName += ".gz";
+
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    client.DownloadProgressChanged += (o, e) =>
+                    {
+                        _currentBytes = e.BytesReceived;
+
+                        int value = (int)(100 * _currentBytes / _currentFile.Length);
+                        progressBar2.Value = value > progressBar2.Maximum ? progressBar2.Maximum : value;
+
+                        FileLabel.Text = fileName;
+                        SizeLabel.Text = string.Format("{0} KB / {1} KB", _currentBytes / 1024, _currentFile.Length / 1024);
+                        SpeedLabel.Text = (_currentBytes / 1024F / _stopwatch.Elapsed.TotalSeconds).ToString("#,##0.##") + "KB/s";
+                    };
+                    client.DownloadDataCompleted += (o, e) =>
+                    {
+                        if (e.Error != null)
+                        {
+                            File.AppendAllText(@".\Error.txt",
+                                   string.Format("[{0}] {1}{2}", DateTime.Now, info.FileName + " could not be downloaded. (" + e.Error.Message + ")", Environment.NewLine));
+                        }
+                        else
+                        {
+                            _currentCount++;
+                            _completedBytes += _currentBytes;
+                            _currentBytes = 0;
+                            _stopwatch.Stop();
+
+                            if (!Directory.Exists(Settings.Client + Path.GetDirectoryName(info.FileName)))
+                                Directory.CreateDirectory(Settings.Client + Path.GetDirectoryName(info.FileName));
+
+                            File.WriteAllBytes(Settings.Client + info.FileName, e.Result);
+                            File.SetLastWriteTime(Settings.Client + info.FileName, info.Creation);
+                        }
+                        BeginDownload();
+                    };
+
+                    client.Credentials = new NetworkCredential(Settings.Login, Settings.Password);
+
+                    progressBar1.Value = (int)(_completedBytes * 100 / _totalBytes) > 100 ? 100 : (int)(_completedBytes * 100 / _totalBytes);
+
+                    _stopwatch = Stopwatch.StartNew();
+                    client.DownloadDataAsync(new Uri(Settings.Host + fileName));
+                }
+            }
+            catch
+            {
+                MessageBox.Show(string.Format("Failed to download file: {0}", fileName));
+            }
+        }
+        private void BeginDownload()
+        {
+            if (DownloadList == null) return;
+
+            if (DownloadList.Count == 0)
+            {
+                DownloadList = null;
+                _currentFile = null;
+                CompleteDownload();
+                DownloadExistingButton.Enabled = true;
+
+                CleanUp();
+                return;
+            }
+
+            ActionLabel.Text = string.Format("Downloading... Files: {0}, Total Size: {1:#,##0}MB (Uncompressed)", DownloadList.Count, (_totalBytes - _completedBytes) / 1048576);
+
+            progressBar1.Value = (int)(_completedBytes * 100 / _totalBytes) > 100 ? 100 : (int)(_completedBytes * 100 / _totalBytes);
+
+            _currentFile = DownloadList.Dequeue();
+
+            Download(_currentFile);
+        }
+
         public void Upload(FileInformation info, byte[] raw, bool retry = true)
         {
             string fileName = info.FileName.Replace(@"\", "/");
@@ -288,6 +316,29 @@ namespace AutoPatcherAdmin
 
                 client.UploadDataAsync(new Uri(Settings.Host + fileName), data);
             }
+        }
+
+        private void BeginUpload()
+        {
+            if (UploadList == null) return;
+
+            if (UploadList.Count == 0)
+            {
+                CleanUp();
+
+                Upload(new FileInformation { FileName = PatchFileName }, CreateNew());
+                UploadList = null;
+                ActionLabel.Text = string.Format("Complete...");
+                ProcessButton.Enabled = true;
+                return;
+            }
+
+            ActionLabel.Text = string.Format("Uploading... Files: {0}, Total Size: {1:#,##0}MB (Uncompressed)", UploadList.Count, (_totalBytes - _completedBytes) / 1048576);
+
+            progressBar1.Value = (int)(_completedBytes * 100 / _totalBytes) > 100 ? 100 : (int)(_completedBytes * 100 / _totalBytes);
+
+            FileInformation info = UploadList.Dequeue();
+            Upload(info, File.ReadAllBytes(Settings.Client + (info.FileName == "AutoPatcher.gz" ? "AutoPatcher.exe" : info.FileName)));
         }
 
         public void CheckDirectory(string directory)
@@ -391,6 +442,127 @@ namespace AutoPatcherAdmin
             }
 
             Upload(new FileInformation { FileName = PatchFileName }, CreateNew());
+        }
+
+        private void ProcessButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ProcessButton.Enabled = false;
+                Settings.Client = ClientTextBox.Text;
+                Settings.Host = HostTextBox.Text;
+                Settings.Login = LoginTextBox.Text;
+                Settings.Password = PasswordTextBox.Text;
+                Settings.AllowCleanUp = AllowCleanCheckBox.Checked;
+
+                OldList = new List<FileInformation>();
+                NewList = new List<FileInformation>();
+                UploadList = new Queue<FileInformation>();
+
+                byte[] data = Download(PatchFileName);
+
+                if (data != null)
+                {
+                    using (MemoryStream stream = new MemoryStream(data))
+                    using (BinaryReader reader = new BinaryReader(stream))
+                        ParseOld(reader);
+                }
+
+                ActionLabel.Text = "Checking Files...";
+                Refresh();
+
+                CheckFiles();
+
+                for (int i = 0; i < NewList.Count; i++)
+                {
+                    FileInformation info = NewList[i];
+
+                    if (InExcludeList(info.FileName)) continue;
+
+                    if (NeedUpdate(info))
+                    {
+                        UploadList.Enqueue(info);
+                        _totalBytes += info.Length;
+                    }
+                    else
+                    {
+                        for (int o = 0; o < OldList.Count; o++)
+                        {
+                            if (OldList[o].FileName != info.FileName) continue;
+                            NewList[i] = OldList[o];
+                            break;
+                        }
+                    }
+                }
+
+                BeginUpload();
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                ActionLabel.Text = "Error...";
+            }
+
+        }
+
+        private void DownloadExistingButton_Click(object sender, EventArgs e)
+        {
+            DownloadExistingButton.Enabled = false;
+            Settings.Client = ClientTextBox.Text;
+            Settings.Host = HostTextBox.Text;
+            Settings.Login = LoginTextBox.Text;
+            Settings.Password = PasswordTextBox.Text;
+            Settings.AllowCleanUp = AllowCleanCheckBox.Checked;
+
+            DownloadList = new Queue<FileInformation>();
+            OldList = new List<FileInformation>();
+
+            _totalBytes = 0;
+            _currentCount = 0;
+            _fileCount = 0;
+
+            try
+            {
+                byte[] data = Download(PatchFileName);
+
+                if (data != null)
+                {
+                    using (MemoryStream stream = new MemoryStream(data))
+                    using (BinaryReader reader = new BinaryReader(stream))
+                        ParseOld(reader);
+
+                    for (int i = 0; i < OldList.Count; i++)
+                    {
+                        var old = OldList[i];
+                        _currentCount++;
+
+                        FileInformation info = GetFileInformation(Settings.Client + old.FileName);
+
+                        if (info == null || old.Length != info.Length || old.Creation != info.Creation)
+                        {
+                            DownloadList.Enqueue(old);
+                            _totalBytes += old.Length;
+                        }
+                    }
+
+                    _fileCount = DownloadList.Count;
+                    BeginDownload();
+                }
+                else
+                {
+                    MessageBox.Show("No existing patch list found");
+                    CompleteDownload();
+                    DownloadExistingButton.Enabled = true;
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Error");
+                CompleteDownload();
+                DownloadExistingButton.Enabled = true;
+            }
         }
 
         private void SourceLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

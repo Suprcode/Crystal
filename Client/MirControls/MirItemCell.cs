@@ -22,7 +22,7 @@ namespace Client.MirControls
                     return NPCDropDialog.TargetItem;
 
                 if (GridType == MirGridType.TrustMerchant)
-                    return TrustMerchantDialog.Selected != null ? TrustMerchantDialog.Selected.Listing.Item : null;
+                    return TrustMerchantDialog.SellItemSlot;
 
                 if (GridType == MirGridType.Renting)
                     return ItemRentingDialog.RentalItem;
@@ -40,6 +40,8 @@ namespace Client.MirControls
                     NPCDropDialog.TargetItem = value;
                 else if (GridType == MirGridType.Renting)
                     ItemRentingDialog.RentalItem = value;
+                else if (GridType == MirGridType.TrustMerchant)
+                    TrustMerchantDialog.SellItemSlot = value;
                 else if (GridType == MirGridType.GuestRenting)
                     GuestItemRentingDialog.GuestLoanItem = value;
                 else if (ItemArray != null && _itemSlot >= 0 && _itemSlot < ItemArray.Length)
@@ -200,7 +202,7 @@ namespace Client.MirControls
         {
             if (Locked) return;
 
-            if (GameScene.PickedUpGold || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant || GridType == MirGridType.QuestInventory) return;
+            if (GameScene.PickedUpGold || GridType == MirGridType.Inspect || GridType == MirGridType.QuestInventory) return;
 
             if(GameScene.SelectedCell == null && (GridType == MirGridType.Mail)) return;
 

@@ -379,7 +379,7 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        public void Hide()
+        public override void Hide()
         {
             Visible = false;
             GameScene.Scene.NPCGoodsDialog.Hide();
@@ -391,7 +391,7 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.InventoryDialog.Location = new Point(0, 0);
         }
 
-        public void Show()
+        public override void Show()
         {
             GameScene.Scene.InventoryDialog.Location = new Point(Size.Width + 5, 0);
             Visible = true;
@@ -719,13 +719,13 @@ namespace Client.MirScenes.Dialogs
 
 
 
-        public void Hide()
+        public override void Hide()
         {
             Visible = false;
             if (GameScene.Scene.CraftDialog.Visible)
                 GameScene.Scene.CraftDialog.Hide();
         }
-        public void Show()
+        public override void Show()
         {
             for (int i = 0; i < Cells.Length; i++)
             {
@@ -1154,7 +1154,7 @@ namespace Client.MirScenes.Dialogs
             InfoLabel.Text = text;
         }
 
-        public void Hide()
+        public override void Hide()
         {
             if (OldCell != null)
             {
@@ -1164,7 +1164,7 @@ namespace Client.MirScenes.Dialogs
             }
             Visible = false;
         }
-        public void Show()
+        public override void Show()
         {
             Hold = false;
             GameScene.Scene.InventoryDialog.Show();
@@ -1522,7 +1522,7 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        public void Hide()
+        public override void Hide()
         {
             foreach (var item in ItemCells)
             {
@@ -1542,7 +1542,7 @@ namespace Client.MirScenes.Dialogs
             Visible = false;
         }
 
-        public void Show()
+        public override void Show()
         {
             Visible = true;
 
@@ -1655,7 +1655,7 @@ namespace Client.MirScenes.Dialogs
             RefreshCraftCells(RecipeItem);
         }
 
-        public void Hide()
+        public override void Hide()
         {
             if (!Visible) return;
 
@@ -1664,7 +1664,7 @@ namespace Client.MirScenes.Dialogs
             ResetCells();
         }
 
-        public void Show()
+        public override void Show()
         {
             Visible = true;
 
@@ -1829,15 +1829,10 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        public void Hide()
+        public override void Hide()
         {
             Visible = false;
             RefineCancel();
-        }
-
-        public void Show()
-        {
-            Visible = true;
         }
 
         public void RefineCancel()
@@ -2009,12 +2004,7 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        public void Hide()
-        {
-            Visible = false;
-        }
-
-        public void Show()
+        public override void Show()
         {
             GameScene.Scene.InventoryDialog.Show();
             RefreshStorage1();

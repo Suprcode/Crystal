@@ -54,7 +54,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int Version = 79;
+        public const int Version = 80;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
@@ -473,6 +473,7 @@ namespace Server.MirEnvir
                 var conTime = Time;
                 var saveTime = Time + Settings.SaveDelay * Settings.Minute;
                 var userTime = Time + Settings.Minute * 5;
+                var auctionTime = Time;
                 var SpawnTime = Time;
                 var processTime = Time + 1000;
                 var StartTime = Time;
@@ -634,6 +635,12 @@ namespace Server.MirEnvir
                                     Message = string.Format(GameLanguage.OnlinePlayers, Players.Count),
                                     Type = ChatType.Hint
                                 });
+                        }
+
+                        if (Time >= auctionTime)
+                        {
+                            auctionTime = Time + Settings.Minute * 10;
+                            ProcessAuction();
                         }
 
                         if (Time >= SpawnTime)
@@ -839,7 +846,50 @@ namespace Server.MirEnvir
             if (Time < rentalItemsTime) return;
             rentalItemsTime = Time + Settings.Minute * 5;
             ProcessRentedItems();
+        }
 
+        private void ProcessAuction()
+        {
+            LinkedListNode<AuctionInfo> current = Auctions.First;
+
+            while (current != null)
+            {
+                AuctionInfo info = current.Value;
+
+                if (!info.Expired && !info.Sold && Now >= info.ConsignmentDate.AddDays(Globals.ConsignmentLength))
+                {
+                    if (info.ItemType == MarketItemType.Auction && info.CurrentBid > info.Price)
+                    {
+                        if (info.CurrentBuyerInfo.AccountInfo.Gold < info.CurrentBid)
+                        {
+                            info.Expired = true;
+                        }
+                        else
+                        {
+                            string message = string.Format("You won {0} for {1:#,##0} Gold.", info.Item.Name, info.CurrentBid);
+
+                            info.Sold = true;
+                            MailCharacter(info.CurrentBuyerInfo, info.Item, customMessage: message);
+
+                            info.CurrentBuyerInfo.AccountInfo.Gold -= info.CurrentBid;
+ 
+                            if (info.CurrentBuyerInfo.Player != null)
+                            {
+                                info.CurrentBuyerInfo.Player.Enqueue(new S.LoseGold { Gold = info.CurrentBid });
+                            }
+
+                            MessageAccount(info.CurrentBuyerInfo.AccountInfo, string.Format("You bought {0} for {1:#,##0} Gold", info.Item.Name, info.CurrentBid), ChatType.Hint);
+                            MessageAccount(info.SellerInfo.AccountInfo, string.Format("You sold {0} for {1:#,##0} Gold", info.Item.Name, info.CurrentBid), ChatType.Hint);
+                        }
+                    }
+                    else
+                    {
+                        info.Expired = true;
+                    }
+                }
+
+                current = current.Next;
+            }
         }
 
         public void Broadcast(Packet p)
@@ -1322,7 +1372,7 @@ namespace Server.MirEnvir
                     if (LoadVersion < 7) return;
 
                     foreach (var auction in Auctions)
-                        auction.CharacterInfo.AccountInfo.Auctions.Remove(auction);
+                        auction.SellerInfo.AccountInfo.Auctions.Remove(auction);
                     Auctions.Clear();
 
                     if (LoadVersion >= 8)
@@ -1336,7 +1386,7 @@ namespace Server.MirEnvir
                         if (!BindItem(auction.Item) || !BindCharacter(auction)) continue;
 
                         Auctions.AddLast(auction);
-                        auction.CharacterInfo.AccountInfo.Auctions.AddLast(auction);
+                        auction.SellerInfo.AccountInfo.Auctions.AddLast(auction);
                     }
 
                     if (LoadVersion == 7)
@@ -1759,15 +1809,21 @@ namespace Server.MirEnvir
 
         private bool BindCharacter(AuctionInfo auction)
         {
-            for (var i = 0; i < CharacterList.Count; i++)
+            for (int i = 0; i < CharacterList.Count; i++)
             {
-                if (CharacterList[i].Index != auction.CharacterIndex) continue;
-
-                auction.CharacterInfo = CharacterList[i];
-                return true;
+                if (CharacterList[i].Index == auction.SellerIndex)
+                {
+                    auction.SellerInfo = CharacterList[i];
+                    return true;
+                }
+                else if (CharacterList[i].Index == auction.CurrentBuyerIndex)
+                {
+                    auction.SellerInfo = CharacterList[i];
+                    return true;
+                }
             }
-            return false;
 
+            return false;
         }
 
         public void Start()
@@ -2905,6 +2961,37 @@ namespace Server.MirEnvir
                 return;
             }
         }
+
+
+        public void MailCharacter(CharacterInfo info, UserItem item, int reason = 0, string customMessage = null)
+        {
+            string sender = "Bichon Administrator";
+            string message = "You have been mailed an item due to the following reason:\r\n\r\n";
+
+            switch (reason)
+            {
+                case 1:
+                    message += "Could not return item to bag after trade.";
+                    break;
+                case 99:
+                    message += "Code didn't correctly handle checking inventory space.";
+                    break;
+                default:
+                    message += customMessage ?? "No reason provided.";
+                    break;
+            }
+
+            MailInfo mail = new MailInfo(info.Index)
+            {
+                Sender = sender,
+                Message = message
+            };
+
+            mail.Items.Add(item);
+
+            mail.Send();
+        }
+
         public GuildObject GetGuild(string name)
         {
             for (var i = 0; i < GuildList.Count; i++)

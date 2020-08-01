@@ -331,12 +331,6 @@ namespace Client.MirScenes.Dialogs
             WaitingForBind = null;
             UpdateText();
         }
-
-        public void Show()
-        {
-            if (Visible) return;
-            Visible = true;
-        }
     }
 
     public sealed class KeybindRow : MirControl

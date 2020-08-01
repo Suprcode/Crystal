@@ -217,17 +217,5 @@ namespace Client.MirScenes.Dialogs
             };
             inputBox.Show();
         }
-
-
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
-        public void Show()
-        {
-            if (Visible) return;
-            Visible = true;
-        }
     }
 }

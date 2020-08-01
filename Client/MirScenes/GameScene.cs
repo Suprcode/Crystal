@@ -69,6 +69,8 @@ namespace Client.MirScenes
         public TradeDialog TradeDialog;
         public GuestTradeDialog GuestTradeDialog;
 
+        public CustomPanel1 CustomPanel1;
+
         //public SkillBarDialog SkillBarDialog;
         public List<SkillBarDialog> SkillBarDialogs = new List<SkillBarDialog>();
         public ChatOptionDialog ChatOptionDialog;
@@ -209,6 +211,8 @@ namespace Client.MirScenes
             DuraStatusPanel = new DuraStatusDialog { Parent = this, Visible = true };
             TradeDialog = new TradeDialog { Parent = this, Visible = false };
             GuestTradeDialog = new GuestTradeDialog { Parent = this, Visible = false };
+
+            CustomPanel1 = new CustomPanel1(this) { Visible = false };
 
             //SkillBarDialog = new SkillBarDialog { Parent = this, Visible = false };
             SkillBarDialog Bar1 = new SkillBarDialog { Parent = this, Visible = false, BarIndex = 0 };
@@ -679,6 +683,66 @@ namespace Client.MirScenes
             else CharacterDialog.Hide();
         }
 
+        public void ChangeSkillMode(bool? ctrl)
+        {
+            if (Settings.SkillMode || ctrl == true)
+            {
+                Settings.SkillMode = false;
+                GameScene.Scene.ChatDialog.ReceiveChat("<SkillMode Ctrl>", ChatType.Hint);
+                GameScene.Scene.OptionDialog.ToggleSkillButtons(true);
+            }
+            else if (!Settings.SkillMode || ctrl == false)
+            {
+                Settings.SkillMode = true;
+                GameScene.Scene.ChatDialog.ReceiveChat("<SkillMode ~>", ChatType.Hint);
+                GameScene.Scene.OptionDialog.ToggleSkillButtons(false);
+            }
+        }
+
+        public void ChangePetMode()
+        {
+            switch (PMode)
+            {
+                case PetMode.Both:
+                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.MoveOnly });
+                    return;
+                case PetMode.MoveOnly:
+                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.AttackOnly });
+                    return;
+                case PetMode.AttackOnly:
+                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.None });
+                    return;
+                case PetMode.None:
+                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.Both });
+                    return;
+            }
+        }
+
+        public void ChangeAttackMode()
+        {
+            switch (AMode)
+            {
+                case AttackMode.Peace:
+                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Group });
+                    return;
+                case AttackMode.Group:
+                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Guild });
+                    return;
+                case AttackMode.Guild:
+                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.EnemyGuild });
+                    return;
+                case AttackMode.EnemyGuild:
+                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.RedBrown });
+                    return;
+                case AttackMode.RedBrown:
+                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.All });
+                    return;
+                case AttackMode.All:
+                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Peace });
+                    return;
+            }
+        }
+
         public void UseSpell(int key)
         {
             if (User.RidingMount || User.Fishing) return;
@@ -979,8 +1043,10 @@ namespace Client.MirScenes
             MapControl.Process();
             MainDialog.Process();
             InventoryDialog.Process();
+            CustomPanel1.Process();
             GameShopDialog.Process();
             MiniMapDialog.Process();
+
             foreach (SkillBarDialog Bar in Scene.SkillBarDialogs)
                 Bar.Process();
 
@@ -2578,7 +2644,6 @@ namespace Client.MirScenes
         }
         private void ChangePMode(S.ChangePMode p)
         {
-
             PMode = p.Mode;
             switch (p.Mode)
             {
@@ -2595,9 +2660,8 @@ namespace Client.MirScenes
                     ChatDialog.ReceiveChat(GameLanguage.PetMode_None, ChatType.Hint);
                     break;
             }
-
-            MainDialog.PModeLabel.Visible = true;
         }
+
         private void ObjectItem(S.ObjectItem p)
         {
             ItemObject ob = new ItemObject(p.ObjectID);

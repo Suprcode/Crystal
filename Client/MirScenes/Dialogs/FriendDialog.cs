@@ -388,14 +388,14 @@ namespace Client.MirScenes.Dialogs
             return selectedIndex;
         }
 
-        public void Hide()
+        public override void Hide()
         {
             if (!Visible) return;
             Visible = false;
 
             GameScene.Scene.MemoDialog.Hide();
         }
-        public void Show()
+        public override void Show()
         {
             if (Visible) return;
             Visible = true;
@@ -555,12 +555,7 @@ namespace Client.MirScenes.Dialogs
             #endregion
         }
 
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
-        public void Show()
+        public override void Show()
         {
             if (Visible) return;
             Visible = true;

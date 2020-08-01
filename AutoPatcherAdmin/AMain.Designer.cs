@@ -50,6 +50,7 @@
             this.ListButton = new System.Windows.Forms.Button();
             this.SourceLinkLabel = new System.Windows.Forms.LinkLabel();
             this.AllowCleanCheckBox = new System.Windows.Forms.CheckBox();
+            this.DownloadExistingButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // ClientTextBox
@@ -118,7 +119,7 @@
             // 
             // ProcessButton
             // 
-            this.ProcessButton.Location = new System.Drawing.Point(99, 139);
+            this.ProcessButton.Location = new System.Drawing.Point(12, 140);
             this.ProcessButton.Name = "ProcessButton";
             this.ProcessButton.Size = new System.Drawing.Size(75, 23);
             this.ProcessButton.TabIndex = 9;
@@ -214,7 +215,7 @@
             // 
             // ListButton
             // 
-            this.ListButton.Location = new System.Drawing.Point(278, 139);
+            this.ListButton.Location = new System.Drawing.Point(309, 139);
             this.ListButton.Name = "ListButton";
             this.ListButton.Size = new System.Drawing.Size(75, 23);
             this.ListButton.TabIndex = 20;
@@ -243,11 +244,22 @@
             this.AllowCleanCheckBox.Text = "Allow Clean Up";
             this.AllowCleanCheckBox.UseVisualStyleBackColor = true;
             // 
+            // DownloadExistingButton
+            // 
+            this.DownloadExistingButton.Location = new System.Drawing.Point(169, 140);
+            this.DownloadExistingButton.Name = "DownloadExistingButton";
+            this.DownloadExistingButton.Size = new System.Drawing.Size(134, 23);
+            this.DownloadExistingButton.TabIndex = 23;
+            this.DownloadExistingButton.Text = "Download Existing Data";
+            this.DownloadExistingButton.UseVisualStyleBackColor = true;
+            this.DownloadExistingButton.Click += new System.EventHandler(this.DownloadExistingButton_Click);
+            // 
             // AMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(396, 290);
+            this.ClientSize = new System.Drawing.Size(392, 292);
+            this.Controls.Add(this.DownloadExistingButton);
             this.Controls.Add(this.AllowCleanCheckBox);
             this.Controls.Add(this.SourceLinkLabel);
             this.Controls.Add(this.ListButton);
@@ -302,6 +314,7 @@
         private System.Windows.Forms.Button ListButton;
         private System.Windows.Forms.LinkLabel SourceLinkLabel;
         private System.Windows.Forms.CheckBox AllowCleanCheckBox;
+        private System.Windows.Forms.Button DownloadExistingButton;
     }
 }
 

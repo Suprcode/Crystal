@@ -1226,13 +1226,28 @@ namespace ClientPackets
         public override short Index { get { return (short)ClientPacketIds.MarketSearch; } }
 
         public string Match = string.Empty;
+        public ItemType Type = 0;
+        public bool Usermode = false;
+        public short MinShape = 0, MaxShape = 5000;
+        public MarketPanelType MarketType = MarketPanelType.Market;
+
         protected override void ReadPacket(BinaryReader reader)
         {
             Match = reader.ReadString();
+            Type = (ItemType)reader.ReadByte();
+            Usermode = reader.ReadBoolean();
+            MinShape = reader.ReadInt16();
+            MaxShape = reader.ReadInt16();
+            MarketType = (MarketPanelType)reader.ReadByte();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(Match);
+            writer.Write((Byte)Type);
+            writer.Write(Usermode);
+            writer.Write(MinShape);
+            writer.Write(MaxShape);
+            writer.Write((byte)MarketType);
         }
     }
     public sealed class MarketRefresh : Packet
@@ -1265,14 +1280,17 @@ namespace ClientPackets
         public override short Index { get { return (short)ClientPacketIds.MarketBuy; } }
 
         public ulong AuctionID;
+        public uint BidPrice;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             AuctionID = reader.ReadUInt64();
+            BidPrice = reader.ReadUInt32();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(AuctionID);
+            writer.Write(BidPrice);
         }
     }
     public sealed class MarketGetBack : Packet

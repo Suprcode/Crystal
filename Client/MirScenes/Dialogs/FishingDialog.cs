@@ -140,13 +140,7 @@ namespace Client.MirScenes.Dialogs
             Libraries.StateItems.Draw(FishingImage, new Point(Location.X + 10, Location.Y + 40), Color.White, false);
         }
 
-
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
-        public void Show()
+        public override void Show()
         {
             if (Visible) return;
 
@@ -393,17 +387,6 @@ namespace Client.MirScenes.Dialogs
                 Network.Enqueue(new C.FishingCast { CastOut = false });
             Hide();
 
-        }
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
-        public void Show()
-        {
-            if (Visible) return;
-
-            Visible = true;
         }
 
     }

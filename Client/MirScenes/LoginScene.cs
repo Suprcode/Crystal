@@ -1155,7 +1155,7 @@ namespace Client.MirScenes
                     });
             }
             
-            public void Show()
+            public override void Show()
             {
                 if (Visible) return;
                 Visible = true;
@@ -1367,7 +1367,7 @@ namespace Client.MirScenes
                     });
             }
 
-            public void Show()
+            public override void Show()
             {
                 if (Visible) return;
                 Visible = true;

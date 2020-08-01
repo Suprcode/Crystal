@@ -281,7 +281,7 @@ namespace Launcher
             this.ProgEnd_pb.BackColor = System.Drawing.Color.Transparent;
             this.ProgEnd_pb.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ProgEnd_pb.Image = global::Client.Properties.Resources.NEW_Progress_End__Green_;
-            this.ProgEnd_pb.Location = new System.Drawing.Point(608, 491);
+            this.ProgEnd_pb.Location = new System.Drawing.Point(608, 490);
             this.ProgEnd_pb.Name = "ProgEnd_pb";
             this.ProgEnd_pb.Size = new System.Drawing.Size(4, 15);
             this.ProgEnd_pb.TabIndex = 25;

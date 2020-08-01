@@ -375,18 +375,6 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        public void Show()
-        {
-            if (Visible) return;
-            Visible = true;
-        }
-
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
-
         public void Toggle()
         {
             if (!Visible)

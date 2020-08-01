@@ -35,6 +35,8 @@ namespace Client.MirScenes.Dialogs
         public MirControl HealthOrb;
         public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, CharacterName, ExperienceLabel, GoldLabel, WeightLabel, SpaceLabel, AModeLabel, PModeLabel, SModeLabel, PingLabel;
 
+        public MirButton CustomButton1, CustomButton2;
+
         public bool HPOnly
         {
             get { return User != null && User.Class == MirClass.Warrior && User.Level < 26; }
@@ -330,6 +332,38 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(26, 14),
             };
 
+            CustomButton1 = new MirButton
+            {
+                Index = 2164,
+                HoverIndex = 2165,
+                PressedIndex = 2166,
+                Library = Libraries.Prguse,
+                Parent = this,
+                Location = new Point(this.Size.Width - 160, 65),
+                Size = new Size(20, 20),
+                Sound = SoundList.ButtonA,
+                Visible = !Settings.ModeView
+            };
+            CustomButton1.Click += (o, e) =>
+            {
+                GameScene.Scene.CustomPanel1.Toggle();
+            };
+
+            CustomButton2 = new MirButton
+            {
+                Index = 2167,
+                HoverIndex = 2168,
+                PressedIndex = 2169,
+                Library = Libraries.Prguse,
+                Parent = this,
+                Location = new Point(this.Size.Width - 160, 90),
+                Size = new Size(20, 20),
+                Sound = SoundList.ButtonA
+            };
+            CustomButton2.Click += (o, e) =>
+            {
+                Network.Enqueue(new C.CallNPC { ObjectID = uint.MaxValue });
+            };
 
             AModeLabel = new MirLabel
             {
@@ -338,6 +372,7 @@ namespace Client.MirScenes.Dialogs
                 OutLineColour = Color.Black,
                 Parent = this,
                 Location = new Point(Settings.Resolution != 800 ? 899 : 675, Settings.Resolution != 800 ? -448 : -280),
+                Visible = Settings.ModeView
             };
 
             PModeLabel = new MirLabel
@@ -347,7 +382,7 @@ namespace Client.MirScenes.Dialogs
                 OutLineColour = Color.Black,
                 Parent = this,
                 Location = new Point(230, 125),
-                Visible = false
+                Visible = Settings.ModeView
             };
 
             SModeLabel = new MirLabel
@@ -357,8 +392,8 @@ namespace Client.MirScenes.Dialogs
                 OutLineColour = Color.Black,
                 Parent = this,
                 Location = new Point(Settings.Resolution != 800 ? 899 : 675, Settings.Resolution != 800 ? -463 : -295),
+                Visible = Settings.ModeView
             };
-
         }
 
         public void Process()
@@ -3887,7 +3922,7 @@ namespace Client.MirScenes.Dialogs
         }
 
 
-        private void ToggleSkillButtons(bool Ctrl)
+        public void ToggleSkillButtons(bool Ctrl)
         {
             foreach (KeyBind KeyCheck in CMain.InputKeys.Keylist)
             {
@@ -5156,6 +5191,135 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.DuraStatusPanel.Character.Index = 2110;
 
             GetCharacterDura();
+        }
+    }
+
+    public sealed class CustomPanel1 : MirImageControl
+    {
+        public MirButton Button1, Button2, Button3;
+
+        public string AMode, PMode, SMode;
+
+        public CustomPanel1(MirControl parent)
+        {
+            Index = 2179;
+            Library = Libraries.Prguse;
+            Size = new Size(24, 61);
+            Parent = parent;
+
+            Location = new Point(Parent.Size.Width - 161, Parent.Size.Height - 138);
+
+            Button1 = new MirButton //Skill
+            {
+                Index = 2173,
+                HoverIndex = 2174,
+                PressedIndex = 2175,
+                Library = Libraries.Prguse,
+                Parent = this,
+                Size = new Size(16, 16),
+                Location = new Point(3, 3),
+                Hint = "SkillMode"
+            };
+            Button1.Click += (o, e) =>
+            {
+                GameScene.Scene.ChangeSkillMode(null);
+            };
+
+            Button2 = new MirButton //Pet
+            {
+                Index = 2170,
+                HoverIndex = 2171,
+                PressedIndex = 2172,
+                Library = Libraries.Prguse,
+                Parent = this,
+                Size = new Size(16, 16),
+                Location = new Point(3, 20),
+                Hint = "PetMode"
+            };
+            Button2.Click += (o, e) =>
+            {
+                GameScene.Scene.ChangePetMode();
+            };
+
+            Button3 = new MirButton //Player
+            {
+                Index = 2176,
+                HoverIndex = 2177,
+                PressedIndex = 2178,
+                Library = Libraries.Prguse,
+                Parent = this,
+                Size = new Size(16, 16),
+                Location = new Point(3, 37),
+                Hint = "AttackMode"
+            };
+            Button3.Click += (o, e) =>
+            {
+                GameScene.Scene.ChangeAttackMode();
+            };
+        }
+
+        public void Process()
+        {
+            switch (GameScene.Scene.AMode)
+            {
+                case AttackMode.Peace:
+                    AMode = "[Mode: Peaceful]";
+                    break;
+                case AttackMode.Group:
+                    AMode = "[Mode: Group]";
+                    break;
+                case AttackMode.Guild:
+                    AMode = "[Mode: Guild]";
+                    break;
+                case AttackMode.EnemyGuild:
+                    AMode = "[Mode: Enemy Guild]";
+                    break;
+                case AttackMode.RedBrown:
+                    AMode = "[Mode: Red/Brown]";
+                    break;
+                case AttackMode.All:
+                    AMode = "[Mode: Attack All]";
+                    break;
+            }
+
+            switch (GameScene.Scene.PMode)
+            {
+                case PetMode.Both:
+                    PMode = "[Mode: Attack and Move]";
+                    break;
+                case PetMode.MoveOnly:
+                    PMode = "[Mode: Do Not Attack]";
+                    break;
+                case PetMode.AttackOnly:
+                    PMode = "[Mode: Do Not Move]";
+                    break;
+                case PetMode.None:
+                    PMode = "[Mode: Do Not Attack or Move]";
+                    break;
+            }
+
+            switch (Settings.SkillMode)
+            {
+                case true:
+                    SMode = "[Mode: ~]";
+                    break;
+                case false:
+                    SMode = "[Mode: Ctrl]";
+                    break;
+            }
+
+            //GameScene.Scene.MiniMapDialog.AModeLabel.Text = AMode;
+            //GameScene.Scene.MiniMapDialog.PModeLabel.Text = PMode;
+            //GameScene.Scene.MiniMapDialog.SModeLabel.Text = SMode;
+
+            Button1.Hint = string.Format("Skill Mode\r\n{0}", SMode);
+            Button2.Hint = string.Format("Pet Mode ({1})\r\n{0}", PMode, CMain.InputKeys.GetKey(KeybindOptions.ChangePetmode));
+            Button3.Hint = string.Format("Attack Mode ({1})\r\n{0}", AMode, CMain.InputKeys.GetKey(KeybindOptions.ChangeAttackmode));
+        }
+
+        public void Toggle()
+        {
+            Visible = !Visible;
         }
     }
 }

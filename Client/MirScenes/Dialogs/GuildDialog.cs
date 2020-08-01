@@ -2257,12 +2257,8 @@ namespace Client.MirScenes.Dialogs
         #endregion
 
         #region GuildDialogChecks
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
-        public void Show()
+
+        public override void Show()
         {
             if (Visible) return;
 

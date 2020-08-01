@@ -263,7 +263,7 @@ namespace Client.MirScenes.Dialogs
 
         }
 
-        public void Show()
+        public override void Show()
         {
             if (Visible) return;
             Visible = true;
@@ -275,7 +275,7 @@ namespace Client.MirScenes.Dialogs
             DisplayInfo();
         }
 
-        public void Hide()
+        public override void Hide()
         {
             if (!Visible) return;
             Visible = false;
@@ -642,17 +642,6 @@ namespace Client.MirScenes.Dialogs
             Show();
         }
 
-        private void Show()
-        {
-            if (Visible) return;
-            Visible = true;
-        }
-
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
     }
     public sealed class QuestDiaryDialog : MirImageControl
     {
@@ -784,18 +773,14 @@ namespace Client.MirScenes.Dialogs
             }
             TaskGroups.Clear();
         }
-        public void Show()
+        public override void Show()
         {
             if (Visible) return;
             Visible = true;
 
             DisplayQuests();
         }
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
+
         public void Toggle()
         {
             if (!Visible)
@@ -929,16 +914,6 @@ namespace Client.MirScenes.Dialogs
             Settings.SaveTrackedQuests(GameScene.User.Name);
         }
 
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
-        public void Show()
-        {
-            if (Visible) return;
-            Visible = true;
-        }
     }
 
     //Sub controls
