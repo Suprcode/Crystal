@@ -76,9 +76,9 @@ namespace Launcher
             this.ActionLabel.BackColor = System.Drawing.Color.Transparent;
             this.ActionLabel.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ActionLabel.ForeColor = System.Drawing.Color.Gray;
-            this.ActionLabel.Location = new System.Drawing.Point(439, 468);
+            this.ActionLabel.Location = new System.Drawing.Point(504, 465);
             this.ActionLabel.Name = "ActionLabel";
-            this.ActionLabel.Size = new System.Drawing.Size(173, 18);
+            this.ActionLabel.Size = new System.Drawing.Size(108, 18);
             this.ActionLabel.TabIndex = 4;
             this.ActionLabel.Text = "1423MB/2000MB";
             this.ActionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -91,10 +91,10 @@ namespace Launcher
             this.SpeedLabel.BackColor = System.Drawing.Color.Transparent;
             this.SpeedLabel.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SpeedLabel.ForeColor = System.Drawing.Color.Gray;
-            this.SpeedLabel.Location = new System.Drawing.Point(156, 530);
+            this.SpeedLabel.Location = new System.Drawing.Point(350, 469);
             this.SpeedLabel.Name = "SpeedLabel";
             this.SpeedLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.SpeedLabel.Size = new System.Drawing.Size(265, 16);
+            this.SpeedLabel.Size = new System.Drawing.Size(71, 16);
             this.SpeedLabel.TabIndex = 13;
             this.SpeedLabel.Text = "Speed";
             this.SpeedLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -339,6 +339,7 @@ namespace Launcher
             this.BackgroundImage = global::Client.Properties.Resources.pfffft;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(800, 548);
+            this.Controls.Add(this.SpeedLabel);
             this.Controls.Add(this.Credit_label);
             this.Controls.Add(this.Version_label);
             this.Controls.Add(this.TotalPercent_label);
@@ -350,7 +351,6 @@ namespace Launcher
             this.Controls.Add(this.ProgressCurrent_pb);
             this.Controls.Add(this.TotalProg_pb);
             this.Controls.Add(this.Launch_pb);
-            this.Controls.Add(this.SpeedLabel);
             this.Controls.Add(this.ActionLabel);
             this.Controls.Add(this.Movement_panel);
             this.DoubleBuffered = true;
