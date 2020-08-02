@@ -55,7 +55,6 @@ namespace Server.MirObjects
             BuyUsedKey = "[@BUYUSED]";
 
 
-        //public static Regex Regex = new Regex(@"[^\{\}]<.*?/(.*?)>");
         public static Regex Regex = new Regex(@"<.*?/(\@.*?)>");
         public NPCInfo Info;
         private const long TurnDelay = 10000;
@@ -717,7 +716,7 @@ namespace Server.MirObjects
             }
         }
 
-        public void Call(string key) //run a verry limited npc script (should really only be used to spawn mobs or something)
+        public void Call(string key) //run a very limited npc script (should really only be used to spawn mobs or something)
         {
             key = key.ToUpper();
 
@@ -985,7 +984,7 @@ namespace Server.MirObjects
             }
         }
 
-        #region overrides
+        #region Overrides
         public override void Process(DelayedAction action)
         {
             throw new NotSupportedException();
@@ -1423,8 +1422,6 @@ namespace Server.MirObjects
             item.BuybackExpiryDate = Envir.Now;
             BuyBack[player.Name].Add(item);
         }
-
-
         public void Craft(PlayerObject player, ulong index, uint count, int[] slots)
         {
             S.CraftItem p = new S.CraftItem();

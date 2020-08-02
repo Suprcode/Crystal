@@ -54,6 +54,7 @@ namespace Server.MirDatabase
         {
 
         }
+
         public AccountInfo(C.NewAccount p)
         {
             AccountID = p.AccountID;

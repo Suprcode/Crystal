@@ -436,9 +436,9 @@ namespace Client.MirScenes.Dialogs
                     break;
             }
 
-            if ((GameScene.Scene.PingTime) > 100)
+            if ((CMain.PingTime) > 100)
             {
-                PingLabel.Text = string.Format("Ping: {0}", GameScene.Scene.PingTime);
+                PingLabel.Text = string.Format("Ping: {0}", CMain.PingTime);
                 PingLabel.Visible = true;
             }
             else

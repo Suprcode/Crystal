@@ -99,22 +99,6 @@ namespace Server.MirObjects
 
             return key;
         }
-        public string FindVariable(string key)
-        {
-            Regex regex = new Regex(@"\%[A-Za-z][0-9]");
-
-            if (!regex.Match(key).Success) return key;
-
-            string tempKey = key.Substring(1);
-            /* //hoping i truly dont need that :p
-            foreach (KeyValuePair<string, string> t in player.NPCVar)
-            {
-                if (String.Equals(t.Key, tempKey, StringComparison.CurrentCultureIgnoreCase)) return t.Value;
-            }
-            */
-            return key;
-        }
-
 
         public void ParseCheck(string line)
         {
@@ -1445,7 +1429,7 @@ namespace Server.MirObjects
             for (int i = 0; i < CheckList.Count; i++)
             {
                 NPCChecks check = CheckList[i];
-                List<string> param = check.Params.Select(t => FindVariable(t)).ToList();
+                List<string> param = check.Params.ToList();
 
                 uint tempUint;
                 int tempInt;
@@ -1591,7 +1575,6 @@ namespace Server.MirObjects
             return true;
 
         }
-
         public bool Check(MonsterObject Monster)
         {
             var failed = false;
@@ -1794,7 +1777,6 @@ namespace Server.MirObjects
             return true;
 
         }
-
         public bool Check(PlayerObject player)
         {
             var failed = false;
@@ -2525,6 +2507,102 @@ namespace Server.MirObjects
             Success(player);
             return true;
 
+        }
+
+        private void Act(IList<NPCActions> acts)
+        {
+            for (var i = 0; i < acts.Count; i++)
+            {
+                string tempString = string.Empty;
+                int tempInt;
+                byte tempByte;
+                Packet p;
+
+                MonsterInfo monInfo;
+
+                NPCActions act = acts[i];
+                List<string> param = act.Params.ToList();
+                Map map;
+                ChatType chatType;
+                switch (act.Type)
+                {
+                    case ActionType.ClearNameList:
+                        tempString = param[0];
+                        File.WriteAllLines(tempString, new string[] { });
+                        break;
+
+                    case ActionType.GlobalMessage:
+                        if (!Enum.TryParse(param[1], true, out chatType)) return;
+
+                        p = new S.Chat { Message = param[0], Type = chatType };
+                        Envir.Broadcast(p);
+                        break;
+
+                    case ActionType.Break:
+                        Page.BreakFromSegments = true;
+                        break;
+
+                    case ActionType.Param1:
+                        if (!int.TryParse(param[1], out tempInt)) return;
+
+                        Param1 = param[0];
+                        Param1Instance = tempInt;
+                        break;
+
+                    case ActionType.Param2:
+                        if (!int.TryParse(param[0], out tempInt)) return;
+
+                        Param2 = tempInt;
+                        break;
+
+                    case ActionType.Param3:
+                        if (!int.TryParse(param[0], out tempInt)) return;
+
+                        Param3 = tempInt;
+                        break;
+
+                    case ActionType.Mongen:
+                        if (Param1 == null || Param2 == 0 || Param3 == 0) return;
+                        if (!byte.TryParse(param[1], out tempByte)) return;
+
+                        map = Envir.GetMapByNameAndInstance(Param1, Param1Instance);
+                        if (map == null) return;
+
+                        monInfo = Envir.GetMonsterInfo(param[0]);
+                        if (monInfo == null) return;
+
+                        for (int j = 0; j < tempByte; j++)
+                        {
+                            MonsterObject monster = MonsterObject.GetMonster(monInfo);
+                            if (monster == null) return;
+                            monster.Direction = 0;
+                            monster.ActionTime = Envir.Time + 1000;
+                            monster.Spawn(map, new Point(Param2, Param3));
+                        }
+                        break;
+
+                    case ActionType.MonClear:
+                        if (!int.TryParse(param[1], out tempInt)) return;
+
+                        map = Envir.GetMapByNameAndInstance(param[0], tempInt);
+                        if (map == null) return;
+
+                        foreach (var cell in map.Cells)
+                        {
+                            if (cell == null || cell.Objects == null) continue;
+
+                            for (int j = 0; j < cell.Objects.Count(); j++)
+                            {
+                                MapObject ob = cell.Objects[j];
+
+                                if (ob.Race != ObjectType.Monster) continue;
+                                if (ob.Dead) continue;
+                                ob.Die();
+                            }
+                        }
+                        break;
+                }
+            }
         }
         private void Act(IList<NPCActions> acts, PlayerObject player)
         {
@@ -3312,8 +3390,6 @@ namespace Server.MirObjects
 
                             mailInfo.Items.Add(item);
                         }
-
-
                         break;
 
                     case ActionType.SendMail:
@@ -3756,102 +3832,7 @@ namespace Server.MirObjects
                 }
             }
         }
-        private void Act(IList<NPCActions> acts)
-        {
 
-            for (var i = 0; i < acts.Count; i++)
-            {
-                string tempString = string.Empty;
-                int tempInt;
-                byte tempByte;
-                Packet p;
-
-                MonsterInfo monInfo;
-
-                NPCActions act = acts[i];
-                List<string> param = act.Params.Select(t => FindVariable(t)).ToList();
-                Map map;
-                ChatType chatType;
-                switch (act.Type)
-                {
-                    case ActionType.ClearNameList:
-                        tempString = param[0];
-                        File.WriteAllLines(tempString, new string[] { });
-                        break;
-
-                    case ActionType.GlobalMessage:
-                        if (!Enum.TryParse(param[1], true, out chatType)) return;
-
-                        p = new S.Chat { Message = param[0], Type = chatType };
-                        Envir.Broadcast(p);
-                        break;
-
-                    case ActionType.Break:
-                        Page.BreakFromSegments = true;
-                        break;
-
-                    case ActionType.Param1:
-                        if (!int.TryParse(param[1], out tempInt)) return;
-
-                        Param1 = param[0];
-                        Param1Instance = tempInt;
-                        break;
-
-                    case ActionType.Param2:
-                        if (!int.TryParse(param[0], out tempInt)) return;
-
-                        Param2 = tempInt;
-                        break;
-
-                    case ActionType.Param3:
-                        if (!int.TryParse(param[0], out tempInt)) return;
-
-                        Param3 = tempInt;
-                        break;
-
-                    case ActionType.Mongen:
-                        if (Param1 == null || Param2 == 0 || Param3 == 0) return;
-                        if (!byte.TryParse(param[1], out tempByte)) return;
-
-                        map = Envir.GetMapByNameAndInstance(Param1, Param1Instance);
-                        if (map == null) return;
-
-                        monInfo = Envir.GetMonsterInfo(param[0]);
-                        if (monInfo == null) return;
-
-                        for (int j = 0; j < tempByte; j++)
-                        {
-                            MonsterObject monster = MonsterObject.GetMonster(monInfo);
-                            if (monster == null) return;
-                            monster.Direction = 0;
-                            monster.ActionTime = Envir.Time + 1000;
-                            monster.Spawn(map, new Point(Param2, Param3));
-                        }
-                        break;
-
-                    case ActionType.MonClear:
-                        if (!int.TryParse(param[1], out tempInt)) return;
-
-                        map = Envir.GetMapByNameAndInstance(param[0], tempInt);
-                        if (map == null) return;
-
-                        foreach (var cell in map.Cells)
-                        {
-                            if (cell == null || cell.Objects == null) continue;
-
-                            for (int j = 0; j < cell.Objects.Count(); j++)
-                            {
-                                MapObject ob = cell.Objects[j];
-
-                                if (ob.Race != ObjectType.Monster) continue;
-                                if (ob.Dead) continue;
-                                ob.Die();
-                            }
-                        }
-                        break;
-                }
-            }
-        }
         private void Success(PlayerObject player)
         {
             Act(ActList, player);

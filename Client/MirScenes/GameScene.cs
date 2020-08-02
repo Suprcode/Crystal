@@ -152,9 +152,6 @@ namespace Client.MirScenes
         public static bool Slaying, Thrusting, HalfMoon, CrossHalfMoon, DoubleSlash, TwinDrakeBlade, FlamingSword;
         public static long SpellTime;
 
-        public long PingTime;
-        public long NextPing = 10000;
-
         public MirLabel[] OutputLines = new MirLabel[10];
         public List<OutPutMessage> OutputMessages = new List<OutPutMessage>();
 
@@ -917,9 +914,9 @@ namespace Client.MirScenes
                 CanMove = false;
 
 
-            if (CMain.Time >= NextPing)
+            if (CMain.Time >= CMain.NextPing)
             {
-                NextPing = CMain.Time + 60000;
+                CMain.NextPing = CMain.Time + 60000;
                 Network.Enqueue(new C.KeepAlive() { Time = CMain.Time });
             }
 
@@ -1719,7 +1716,7 @@ namespace Client.MirScenes
         private void KeepAlive(S.KeepAlive p)
         {
             if (p.Time == 0) return;
-            PingTime = (CMain.Time - p.Time);
+            CMain.PingTime = (CMain.Time - p.Time);
         }
         private void MapInformation(S.MapInformation p)
         {

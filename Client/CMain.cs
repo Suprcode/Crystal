@@ -38,7 +38,15 @@ namespace Client
         private static int _fps;
         public static int FPS;
 
+        public static long PingTime;
+        public static long NextPing = 10000;
+
         public static bool Shift, Alt, Ctrl, Tilde;
+        public static double BytesSent, BytesReceived;
+
+        public static string DebugText = "";
+
+
         public static KeyBindSettings InputKeys = new KeyBindSettings();
 
         public CMain()
@@ -323,8 +331,25 @@ namespace Client
                 MirAnimatedButton.Animations[i].UpdateOffSet();
 
             CreateHintLabel();
-            CreateDebugLabel();
- 
+
+            if (Settings.DebugMode)
+            {
+                CreateDebugLabel();
+            }
+            else
+            {
+                if (DebugBaseLabel != null && DebugBaseLabel.IsDisposed == false)
+                {
+                    DebugBaseLabel.Dispose();
+                    DebugBaseLabel = null;
+                }
+                if (DebugTextLabel != null && DebugTextLabel.IsDisposed == false)
+                {
+                    DebugTextLabel.Dispose();
+                    DebugTextLabel = null;
+                }
+            }
+
         }
         private static void RenderEnvironment()
         {
@@ -364,22 +389,20 @@ namespace Client
 
         private static void CreateDebugLabel()
         {
-            if (!Settings.DebugMode) return;
-
             if (DebugBaseLabel == null || DebugBaseLabel.IsDisposed)
             {
                 DebugBaseLabel = new MirControl
-                    {
-                        BackColour = Color.FromArgb(50, 50, 50),
-                        Border = true,
-                        BorderColour = Color.Black,
-                        DrawControlTexture = true,
-                        Location = new Point(5, 5),
-                        NotControl = true,
-                        Opacity = 0.5F
-                    };
+                {
+                    BackColour = Color.FromArgb(50, 50, 50),
+                    Border = true,
+                    BorderColour = Color.Black,
+                    DrawControlTexture = true,
+                    Location = new Point(5, 5),
+                    NotControl = true,
+                    Opacity = 0.5F
+                };
             }
-            
+
             if (DebugTextLabel == null || DebugTextLabel.IsDisposed)
             {
                 DebugTextLabel = new MirLabel
@@ -394,31 +417,22 @@ namespace Client
             }
 
             if (DebugOverride) return;
-            
+
+
             string text;
             if (MirControl.MouseControl != null)
             {
                 text = string.Format("FPS: {0}", FPS);
 
                 if (MirControl.MouseControl is MapControl)
-                {
                     text += string.Format(", Co Ords: {0}", MapControl.MapLocation);
 
-                    //text += "\r\n";
-
-                    //var cell = GameScene.Scene.MapControl.M2CellInfo[MapControl.MapLocation.X, MapControl.MapLocation.Y];
-
-                    //if (cell != null)
-                    //{
-                    //    text += string.Format("BackImage : {0}. BackIndex : {1}. MiddleImage : {2}. MiddleIndex {3}. FrontImage : {4}. FrontIndex : {5}", cell.BackImage, cell.BackIndex, cell.MiddleImage, cell.MiddleIndex, cell.FrontImage, cell.FrontIndex);
-                    //}
-                }
-
                 if (MirScene.ActiveScene is GameScene)
-                {
-                    //text += "\r\n";
                     text += string.Format(", Objects: {0}", MapControl.Objects.Count);
-                }
+
+                if (MirScene.ActiveScene is GameScene && !string.IsNullOrEmpty(DebugText))
+                    text += string.Format(", Debug: {0}", DebugText);
+
                 if (MirObjects.MapObject.MouseObject != null)
                 {
                     text += string.Format(", Target: {0}", MirObjects.MapObject.MouseObject.Name);
@@ -432,7 +446,10 @@ namespace Client
             {
                 text = string.Format("FPS: {0}", FPS);
             }
-            
+
+            text += string.Format(", Ping: {0}", PingTime);
+
+            text += string.Format(", Sent: {0}, Received: {1}", Functions.ConvertByteSize(BytesSent), Functions.ConvertByteSize(BytesReceived));           
 
             DebugTextLabel.Text = text;
         }

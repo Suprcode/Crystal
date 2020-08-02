@@ -48,8 +48,7 @@ namespace Server.MirEnvir
 
         public static Envir Edit { get; } = new Envir();
 
-        protected static MessageQueue MessageQueue =>
-            MessageQueue.Instance;
+        protected static MessageQueue MessageQueue => MessageQueue.Instance;
 
         public static object AccountLock = new object();
         public static object LoadLock = new object();
@@ -118,15 +117,15 @@ namespace Server.MirEnvir
         public LinkedList<AuctionInfo> Auctions = new LinkedList<AuctionInfo>();
         public int GuildCount, NextGuildID;
         public List<GuildObject> GuildList = new List<GuildObject>();
-       
+
 
         //Live Info
+        public bool Saving = false;
         public List<Map> MapList = new List<Map>();
         public List<SafeZoneInfo> StartPoints = new List<SafeZoneInfo>(); 
         public List<ItemInfo> StartItems = new List<ItemInfo>();
         public List<MailInfo> Mail = new List<MailInfo>();
         public List<PlayerObject> Players = new List<PlayerObject>();
-        public bool Saving = false;
         public LightSetting Lights;
         public LinkedList<MapObject> Objects = new LinkedList<MapObject>();
 
@@ -138,7 +137,7 @@ namespace Server.MirEnvir
         //multithread vars
         readonly object _locker = new object();
         public MobThread[] MobThreads = new MobThread[Settings.ThreadLimit];
-        private Thread[] MobThreading = new Thread[Settings.ThreadLimit];
+        private readonly Thread[] MobThreading = new Thread[Settings.ThreadLimit];
         public int spawnmultiplyer = 1;//set this to 2 if you want double spawns (warning this can easely lag your server far beyond what you imagine)
 
         public List<string> CustomCommands = new List<string>();
@@ -283,8 +282,6 @@ namespace Server.MirEnvir
                         MagicInfoList[i].MultiplierBase = 1f;
                         MagicInfoList[i].MultiplierBonus = 0.4f;
                         break;
-                        //archer
-                        //no changes :p
                 }
             }
         }
@@ -581,9 +578,9 @@ namespace Server.MirEnvir
                             }
                             lock (_locker)
                             {
-                                Monitor.PulseAll(_locker);         // changing a blocking condition. (this makes the threads wake up!)
+                                Monitor.PulseAll(_locker); //changing a blocking condition. (this makes the threads wake up!)
                             }
-                            //run the first loop in the main thread so the main thread automaticaly 'halts' untill the other threads are finished
+                            //run the first loop in the main thread so the main thread automaticaly 'halts' until the other threads are finished
                             ThreadLoop(MobThreads[0]);
                         }
 
@@ -645,7 +642,7 @@ namespace Server.MirEnvir
 
                         if (Time >= SpawnTime)
                         {
-                            SpawnTime = Time + Settings.Second * 10;//technicaly this limits the respawn tick code to a minimum of 10 second each but lets assume it's not meant to be this accurate
+                            SpawnTime = Time + Settings.Second * 10; //technically this limits the respawn tick code to a minimum of 10 second each but lets assume it's not meant to be this accurate
                             Main.RespawnTick.Process();
                         }
 
@@ -697,14 +694,14 @@ namespace Server.MirEnvir
                 File.AppendAllText(Path.Combine(Settings.ErrorPath, "Error.txt"),
                     $"[{Now}] {ex} at line {line}{Environment.NewLine}");
             }
-            _thread = null;
 
+            _thread = null;
         }
         
         private void ThreadLoop(MobThread Info)
         {
             Info.Stop = false;
-            var starttime = Time;
+
             try
             {
 
@@ -712,7 +709,7 @@ namespace Server.MirEnvir
                 if (Info._current == null)
                     Info._current = Info.ObjectsList.First;
                 stopping = Info._current == null;
-                //while (stopping == false)
+
                 while (Running)
                 {
                     if (Info._current == null)
@@ -731,7 +728,7 @@ namespace Server.MirEnvir
                         }
                         if (Time > Info._current.Value.OperateTime)
                         {
-                            if (Info._current.Value.Master == null)//since we are running multithreaded, dont allow pets to be processed (unless you constantly move pets into their map appropriate thead)
+                            if (Info._current.Value.Master == null) //since we are running multithreaded, dont allow pets to be processed (unless you constantly move pets into their map appropriate thead)
                             {
                                 Info._current.Value.Process();
                                 Info._current.Value.SetOperateTime();
@@ -739,13 +736,18 @@ namespace Server.MirEnvir
                         }
                         Info._current = next;
                     }
+
                     //if it's the main thread > make it loop till the subthreads are done, else make it stop after 'endtime'
                     if (Info.Id == 0)
                     {
                         stopping = true;
                         for (var x = 1; x < MobThreads.Length; x++)
+                        {
                             if (MobThreads[x].Stop == false)
+                            {
                                 stopping = false;
+                            }
+                        }
                         if (!stopping) continue;
                         Info.Stop = stopping;
                         return;
@@ -767,7 +769,7 @@ namespace Server.MirEnvir
                 File.AppendAllText(Path.Combine(Settings.ErrorPath, "Error.txt"),
                     $"[{Now}] {ex}{Environment.NewLine}");
             }
-            //Info.Stop = true;
+
         }
 
         private void AdjustLights()
@@ -791,7 +793,6 @@ namespace Server.MirEnvir
 
         public void Process()
         {        
-            //if we get to a new day : reset daily's
             if (Now.Day != DailyTime)
             {
                 DailyTime = Now.Day;
@@ -845,6 +846,7 @@ namespace Server.MirEnvir
 
             if (Time < rentalItemsTime) return;
             rentalItemsTime = Time + Settings.Minute * 5;
+
             ProcessRentedItems();
         }
 
@@ -2873,7 +2875,6 @@ namespace Server.MirEnvir
                 }
                 else
                 {
-                    //if (info.Name != name && !info.Name.Replace(" ", "").StartsWith(name, StringComparison.OrdinalIgnoreCase)) continue;
                     if (string.Compare(info.Name, name, StringComparison.OrdinalIgnoreCase) != 0 && string.Compare(info.Name.Replace(" ", ""), name.Replace(" ", ""), StringComparison.OrdinalIgnoreCase) != 0) continue;
                     return info;
                 }
@@ -3173,10 +3174,9 @@ namespace Server.MirEnvir
 
             ResetGS = false;
             MessageQueue.Enqueue("Gameshop Purchase Logs Cleared.");
-
         }
 
-        int RankCount = 100;//could make this a global but it made sence since this is only used here, it should stay here
+        private readonly int RankCount = 100;
 
         public int InsertRank(List<Rank_Character_Info> Ranking, Rank_Character_Info NewRank)
         {
