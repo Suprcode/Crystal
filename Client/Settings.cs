@@ -8,7 +8,7 @@ namespace Client
     class Settings
     {
         public const long CleanDelay = 600000;
-        public static int ScreenWidth = 800, ScreenHeight = 600;
+        public static int ScreenWidth = 1024, ScreenHeight = 768;
         private static InIReader Reader = new InIReader(@".\Mir2Config.ini");
 
         private static bool _useTestConfig;

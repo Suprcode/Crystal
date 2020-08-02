@@ -91,7 +91,7 @@ namespace Launcher
             this.SpeedLabel.BackColor = System.Drawing.Color.Transparent;
             this.SpeedLabel.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SpeedLabel.ForeColor = System.Drawing.Color.Gray;
-            this.SpeedLabel.Location = new System.Drawing.Point(347, 532);
+            this.SpeedLabel.Location = new System.Drawing.Point(156, 530);
             this.SpeedLabel.Name = "SpeedLabel";
             this.SpeedLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.SpeedLabel.Size = new System.Drawing.Size(265, 16);
@@ -184,9 +184,9 @@ namespace Launcher
             this.Version_label.BackColor = System.Drawing.Color.Transparent;
             this.Version_label.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Version_label.ForeColor = System.Drawing.Color.Gray;
-            this.Version_label.Location = new System.Drawing.Point(672, 533);
+            this.Version_label.Location = new System.Drawing.Point(582, 530);
             this.Version_label.Name = "Version_label";
-            this.Version_label.Size = new System.Drawing.Size(120, 13);
+            this.Version_label.Size = new System.Drawing.Size(210, 13);
             this.Version_label.TabIndex = 31;
             this.Version_label.Text = "Version 1.0.0.0";
             this.Version_label.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -256,7 +256,7 @@ namespace Launcher
             this.Credit_label.BackColor = System.Drawing.Color.Transparent;
             this.Credit_label.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Credit_label.ForeColor = System.Drawing.Color.Gray;
-            this.Credit_label.Location = new System.Drawing.Point(9, 532);
+            this.Credit_label.Location = new System.Drawing.Point(12, 530);
             this.Credit_label.Name = "Credit_label";
             this.Credit_label.Size = new System.Drawing.Size(114, 13);
             this.Credit_label.TabIndex = 30;

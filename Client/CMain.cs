@@ -576,7 +576,6 @@ namespace Client
             DXManager.Device.Present();
 
             DXManager.Device.Dispose();
-
             Settings.ScreenWidth = width;
             Settings.ScreenHeight = height;
             Program.Form.ClientSize = new Size(width, height);

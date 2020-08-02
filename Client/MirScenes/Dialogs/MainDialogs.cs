@@ -5203,7 +5203,7 @@ namespace Client.MirScenes.Dialogs
             Size = new Size(24, 61);
             Parent = parent;
 
-            Location = new Point(Parent.Size.Width - 161, Parent.Size.Height - 138);
+            Location = new Point(((Settings.ScreenWidth / 2) - (Size.Width / 2)) + 362, Settings.ScreenHeight - Size.Height - 77);
 
             Button1 = new MirButton //Skill
             {

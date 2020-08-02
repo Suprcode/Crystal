@@ -29,24 +29,20 @@ namespace Launcher
 
         private void Res1_pb_Click(object sender, EventArgs e)
         {
-            resolutionChoice(800);
+            resolutionChoice(1024);
         }
 
         public void resolutionChoice(int res)
         {
-            Res1_pb.Image = Client.Properties.Resources.Radio_Unactive;
             Res2_pb.Image = Client.Properties.Resources.Radio_Unactive;
             Res3_pb.Image = Client.Properties.Resources.Radio_Unactive;
             Res4_pb.Image = Client.Properties.Resources.Radio_Unactive;
 
-            if (res == 800) Res1_pb.Image = Client.Properties.Resources.Config_Radio_On;
-            else if (res == 1024) Res2_pb.Image = Client.Properties.Resources.Config_Radio_On;
+            if (res == 1024) Res2_pb.Image = Client.Properties.Resources.Config_Radio_On;
             else if (res == 1366) Res3_pb.Image = Client.Properties.Resources.Config_Radio_On;
             else if (res == 1280) Res4_pb.Image = Client.Properties.Resources.Config_Radio_On;
 
             Settings.Resolution = res;
-
-
         }
 
         private void Res2_pb_Click(object sender, EventArgs e)
