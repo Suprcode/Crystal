@@ -480,7 +480,6 @@ namespace Server.MirEnvir
                             Envir.SavedSpawns.Add(info);
                     }
 
-
                     for (int i = 0; i < Info.NPCs.Count; i++)
                     {
                         NPCInfo info = Info.NPCs[i];
@@ -491,7 +490,9 @@ namespace Server.MirEnvir
 
                     for (int i = 0; i < Info.SafeZones.Count; i++)
                         CreateSafeZone(Info.SafeZones[i]);
+
                     CreateMine();
+
                     return true;
                 }
             }

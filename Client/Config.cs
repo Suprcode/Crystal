@@ -37,10 +37,12 @@ namespace Launcher
             Res2_pb.Image = Client.Properties.Resources.Radio_Unactive;
             Res3_pb.Image = Client.Properties.Resources.Radio_Unactive;
             Res4_pb.Image = Client.Properties.Resources.Radio_Unactive;
+            Res5_pb.Image = Client.Properties.Resources.Radio_Unactive;
 
             if (res == 1024) Res2_pb.Image = Client.Properties.Resources.Config_Radio_On;
             else if (res == 1366) Res3_pb.Image = Client.Properties.Resources.Config_Radio_On;
             else if (res == 1280) Res4_pb.Image = Client.Properties.Resources.Config_Radio_On;
+            else if (res == 1920) Res5_pb.Image = Client.Properties.Resources.Config_Radio_On;
 
             Settings.Resolution = res;
         }
@@ -182,5 +184,9 @@ namespace Launcher
             resolutionChoice(1280);
         }
 
+        private void Res5_pb_Click(object sender, EventArgs e)
+        {
+            resolutionChoice(1920);
+        }
     }
 }
