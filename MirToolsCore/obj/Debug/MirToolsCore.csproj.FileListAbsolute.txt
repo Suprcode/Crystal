@@ -1,0 +1,6 @@
+C:\Users\Paul McGinley\Documents\LoM CSharp Git\mir2\MirToolsCore\bin\Debug\MirToolsCore.dll
+C:\Users\Paul McGinley\Documents\LoM CSharp Git\mir2\MirToolsCore\bin\Debug\MirToolsCore.pdb
+C:\Users\Paul McGinley\Documents\LoM CSharp Git\mir2\MirToolsCore\obj\Debug\MirToolsCore.csprojAssemblyReference.cache
+C:\Users\Paul McGinley\Documents\LoM CSharp Git\mir2\MirToolsCore\obj\Debug\MirToolsCore.csproj.CoreCompileInputs.cache
+C:\Users\Paul McGinley\Documents\LoM CSharp Git\mir2\MirToolsCore\obj\Debug\MirToolsCore.dll
+C:\Users\Paul McGinley\Documents\LoM CSharp Git\mir2\MirToolsCore\obj\Debug\MirToolsCore.pdb

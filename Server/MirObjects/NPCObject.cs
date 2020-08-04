@@ -52,7 +52,9 @@ namespace Server.MirObjects
             DowngradeKey = "[@DOWNGRADE]",
             ResetKey = "[@RESET]",
             PearlBuyKey = "[@PEARLBUY]",
-            BuyUsedKey = "[@BUYUSED]";
+            BuyUsedKey = "[@BUYUSED]",
+            
+            NPCSpeakKey = "[NPCSPEAK]";
 
 
         //public static Regex Regex = new Regex(@"[^\{\}]<.*?/(.*?)>");
@@ -72,6 +74,10 @@ namespace Server.MirObjects
         public List<NPCPage> NPCSections = new List<NPCPage>();
         public List<QuestInfo> Quests = new List<QuestInfo>();
         public List<RecipeInfo> CraftGoods = new List<RecipeInfo>();
+
+        public List<NPCSpeak> NPCSpeakList = new List<NPCSpeak>();
+        public byte NPCSpeakLine = 0;
+        public long NPCSpeakLineDelayTime = 0;
 
         public Dictionary<int, bool> VisibleLog = new Dictionary<int, bool>();
 
@@ -135,6 +141,7 @@ namespace Server.MirObjects
             Types = new List<ItemType>();
             NPCPages = new List<NPCPage>();
             CraftGoods = new List<RecipeInfo>();
+            NPCSpeakList = new List<NPCSpeak>();
 
             if (Info.IsDefault)
             {
@@ -262,6 +269,7 @@ namespace Server.MirObjects
             ParseTypes(lines);
             ParseQuests(lines);
             ParseCrafting(lines);
+            ParseNPCSpeak(lines);
         }
 
         private List<string> ParseInsert(List<string> lines)
@@ -694,6 +702,30 @@ namespace Server.MirObjects
                 }
             }
         }
+        private void ParseNPCSpeak(IList<string> lines)
+        {
+            for (int i = 0; i < lines.Count; i++)
+            {
+                if (!lines[i].ToUpper().StartsWith(NPCSpeak)) continue;
+
+                while (++i < lines.Count)
+                {
+                    if (lines[i].StartsWith("[")) return;
+                    if (String.IsNullOrEmpty(lines[i])) continue;
+
+                    var data = lines[i].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (data.Length != 2) continue;
+
+                    NPCSpeakList.Add(new MirObjects.NPCSpeak
+                    {
+                        Delay = Convert.ToUInt16(data[0]),
+                        Message = data[1]
+                    });
+
+                    // SMain.Enqueue(string.Format("Could not find Item: {0}, File: {1}", lines[i], Info.FileName));                       
+                }
+            }
+        }
 
         public void Call(MonsterObject Monster, string key)//run a semi limited npc script (wont let you do stuff like checkgroup/guild etc)
         {
@@ -1061,6 +1093,24 @@ namespace Server.MirObjects
         public override void Process()
         {
             base.Process();
+
+            // NPCSpeak
+            if (NPCSpeakList.Count > 0)
+            {
+                if (NPCSpeakLine == 0 && NPCSpeakLineDelayTime == 0) NPCSpeakLineDelayTime = Envir.Time + NPCSpeakList[NPCSpeakLine].Delay;
+
+                if (Envir.Time > NPCSpeakLineDelayTime)
+                {
+                    var displayName = Name.Split('_');
+
+                    foreach (var player in FindNearby(7 /* Change this to a NPC specific variable ? */)) Broadcast(new S.ObjectChat { ObjectID = this.ObjectID, Text = ((displayName.Length > 1) ? displayName[1] : displayName[0]) + ": " + NPCSpeakList[NPCSpeakLine].Message, Type = ChatType.Normal });
+
+                    if (NPCSpeakLine == NPCSpeakList.Count - 1) NPCSpeakLine = 0;
+                    else NPCSpeakLine++;
+
+                    NPCSpeakLineDelayTime = Envir.Time + NPCSpeakList[NPCSpeakLine].Delay;
+                }
+            }
 
             if (Envir.Time > TurnTime)
             {
@@ -1569,6 +1619,12 @@ namespace Server.MirObjects
 
             Params.AddRange(p);
         }
+    }
+
+    public class NPCSpeak
+    {
+        public string Message = string.Empty;
+        public UInt16 Delay = 0;
     }
 
     public enum ActionType
