@@ -485,7 +485,7 @@ namespace Server.MirEnvir
                         NPCInfo info = Info.NPCs[i];
                         if (!ValidPoint(info.Location)) continue;
 
-                        AddObject(new NPCObject(info) {CurrentMap = this});
+                        AddObject(new NPCObject(info) { CurrentMap = this });
                     }
 
                     for (int i = 0; i < Info.SafeZones.Count; i++)
@@ -741,9 +741,9 @@ namespace Server.MirEnvir
                 if ((respawn.Info.RespawnTicks != 0) && (Envir.RespawnTick.CurrentTickcounter < respawn.NextSpawnTick)) continue;
                 if ((respawn.Info.RespawnTicks == 0) && (Envir.Time < respawn.RespawnTime)) continue;
 
-                if (respawn.Count < (respawn.Info.Count * Envir.spawnmultiplyer))
+                if (respawn.Count < (respawn.Info.Count * Envir.SpawnMultiplier))
                 {
-                    int count = (respawn.Info.Count * Envir.spawnmultiplyer) - respawn.Count;
+                    int count = (respawn.Info.Count * Envir.SpawnMultiplier) - respawn.Count;
 
                     for (int c = 0; c < count; c++)
                         Success = respawn.Spawn();

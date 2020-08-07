@@ -48,12 +48,12 @@ namespace Server
         public static bool EnforceDBChecks = true;
 
         public static string DefaultNPCFilename = "00Default";
+        public static string MonsterNPCFilename = "00Monster";
+        public static string RobotNPCFilename = "00Robot";
         public static string FishingDropFilename = "00Fishing";
 	    public static string AwakeningDropFilename = "00Awakening";
         public static string StrongboxDropFilename = "00Strongbox";
         public static string BlackstoneDropFilename = "00Blackstone";
-        public static string MonsterNPCFilename = "00Monster";
-        public static string RobotNPCFilename = "00Robot";
 
         //Network
         public static string IPAddress = "127.0.0.1";

@@ -97,7 +97,7 @@ namespace Server.MirEnvir
         
 
         //Server DB
-        public int MapIndex, ItemIndex, MonsterIndex, NPCIndex, QuestIndex, GameshopIndex, ConquestIndex, RespawnIndex;
+        public int MapIndex, ItemIndex, MonsterIndex, NPCIndex, QuestIndex, GameshopIndex, ConquestIndex, RespawnIndex, ScriptIndex;
         public List<MapInfo> MapInfoList = new List<MapInfo>();
         public List<ItemInfo> ItemInfoList = new List<ItemInfo>();
         public List<MonsterInfo> MonsterInfoList = new List<MonsterInfo>();
@@ -128,6 +128,7 @@ namespace Server.MirEnvir
         public List<PlayerObject> Players = new List<PlayerObject>();
         public LightSetting Lights;
         public LinkedList<MapObject> Objects = new LinkedList<MapObject>();
+        public Dictionary<int, NPCScript> Scripts = new Dictionary<int, NPCScript>();
 
         public List<ConquestInfo> ConquestInfos = new List<ConquestInfo>();
         public List<ConquestObject> Conquests = new List<ConquestObject>();
@@ -138,13 +139,13 @@ namespace Server.MirEnvir
         readonly object _locker = new object();
         public MobThread[] MobThreads = new MobThread[Settings.ThreadLimit];
         private readonly Thread[] MobThreading = new Thread[Settings.ThreadLimit];
-        public int spawnmultiplyer = 1;//set this to 2 if you want double spawns (warning this can easely lag your server far beyond what you imagine)
+        public int SpawnMultiplier = 1;//set this to 2 if you want double spawns (warning this can easily lag your server far beyond what you imagine)
 
         public List<string> CustomCommands = new List<string>();
         public Dragon DragonSystem;
-        public NPCObject DefaultNPC;
-        public NPCObject MonsterNPC;
-        public NPCObject RobotNPC;
+        public NPCScript DefaultNPC;
+        public NPCScript MonsterNPC;
+        public NPCScript RobotNPC;
 
         public List<DropInfo> FishingDrops = new List<DropInfo>();
         public List<DropInfo> AwakeningDrops = new List<DropInfo>();
@@ -161,14 +162,10 @@ namespace Server.MirEnvir
         static HttpServer http;
         static Envir()
         {
-            AccountIDReg =
-                new Regex(@"^[A-Za-z0-9]{" + Globals.MinAccountIDLength + "," + Globals.MaxAccountIDLength + "}$");
-            PasswordReg =
-                new Regex(@"^[A-Za-z0-9]{" + Globals.MinPasswordLength + "," + Globals.MaxPasswordLength + "}$");
+            AccountIDReg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinAccountIDLength + "," + Globals.MaxAccountIDLength + "}$");
+            PasswordReg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinPasswordLength + "," + Globals.MaxPasswordLength + "}$");
             EMailReg = new Regex(@"\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*");
-            CharacterReg =
-                new Regex(@"^[\u4e00-\u9fa5_A-Za-z0-9]{" + Globals.MinCharacterNameLength + "," + Globals.MaxCharacterNameLength +
-                          "}$");
+            CharacterReg = new Regex(@"^[\u4e00-\u9fa5_A-Za-z0-9]{" + Globals.MinCharacterNameLength + "," + Globals.MaxCharacterNameLength + "}$");
 
             var path = Path.Combine(Settings.EnvirPath,  "DisabledChars.txt");
             DisabledCharNames.Clear();
@@ -1012,7 +1009,7 @@ namespace Server.MirEnvir
                 writer.Write(SavedSpawns.Count);
                 foreach (var Spawn in SavedSpawns)
                 {
-                    var Save = new RespawnSave { RespawnIndex = Spawn.Info.RespawnIndex, NextSpawnTick = Spawn.NextSpawnTick, Spawned = Spawn.Count >= Spawn.Info.Count * spawnmultiplyer };
+                    var Save = new RespawnSave { RespawnIndex = Spawn.Info.RespawnIndex, NextSpawnTick = Spawn.NextSpawnTick, Spawned = Spawn.Count >= Spawn.Info.Count * SpawnMultiplier };
                     Save.save(writer);
                 }
             }
@@ -1435,9 +1432,9 @@ namespace Server.MirEnvir
                             {
                                 if (Respawn.Info.RespawnIndex != Saved.RespawnIndex) continue;
                                 Respawn.NextSpawnTick = Saved.NextSpawnTick;
-                                if (!Saved.Spawned || Respawn.Info.Count * spawnmultiplyer <= Respawn.Count)
+                                if (!Saved.Spawned || Respawn.Info.Count * SpawnMultiplier <= Respawn.Count)
                                     continue;
-                                var mobcount = Respawn.Info.Count * spawnmultiplyer - Respawn.Count;
+                                var mobcount = Respawn.Info.Count * SpawnMultiplier - Respawn.Count;
                                 for (var j = 0; j < mobcount; j++)
                                 {
                                     Respawn.Spawn();
@@ -1925,9 +1922,9 @@ namespace Server.MirEnvir
                 MessageQueue.Enqueue("Dragon Loaded.");
             }
 
-            DefaultNPC = new NPCObject(new NPCInfo() { Name = "DefaultNPC", FileName = Settings.DefaultNPCFilename, IsDefault = true });
-            MonsterNPC = new NPCObject(new NPCInfo() { Name = "MonsterNPC", FileName = Settings.MonsterNPCFilename, IsDefault = true });
-            RobotNPC = new NPCObject(new NPCInfo() { Name = "RobotNPC", FileName = Settings.RobotNPCFilename, IsDefault = true, IsRobot = true });
+            DefaultNPC = new NPCScript((uint)Random.Next(1000000, 1999999), Settings.DefaultNPCFilename, NPCScriptType.AutoPlayer);
+            MonsterNPC = new NPCScript((uint)Random.Next(2000000, 2999999), Settings.MonsterNPCFilename, NPCScriptType.AutoMonster);
+            RobotNPC = new NPCScript((uint)Random.Next(3000000, 3999999), Settings.RobotNPCFilename, NPCScriptType.Robot);
 
             MessageQueue.Enqueue("Envir Started.");
         }
@@ -3362,19 +3359,28 @@ namespace Server.MirEnvir
         }
 
 
-        public void ReloadNPCs()
+        public void ReloadNPCs(Map map)
         {
-            var allNpcs = new List<NPCObject>();
-            foreach (var map in MapList)
+            if (map == null)
             {
-                allNpcs.AddRange(map.NPCs);
+                for (int i = 0; i < MapList.Count; i++)
+                {
+                    ReloadNPCs(MapList[i]);
+                }
+
+                Main.DefaultNPC.LoadInfo();
+                Main.MonsterNPC.LoadInfo();
+                Main.RobotNPC.LoadInfo();
+
+                MessageQueue.Enqueue("NPCs reloaded...");
             }
-            foreach (var item in allNpcs)
+            else
             {
-                item.LoadInfo(true);
+                for (int i = 0; i < map.NPCs.Count; i++)
+                {
+                    map.NPCs[i].LoadScript();
+                }
             }
-            Main.DefaultNPC.LoadInfo(true);
-            MessageQueue.Enqueue("NPCs reloaded...");
         }
 
         public void ReloadDrops()

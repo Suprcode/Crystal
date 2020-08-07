@@ -9344,8 +9344,7 @@ namespace Client.MirScenes
 
         private static void OnMouseClick(object sender, EventArgs e)
         {
-            MouseEventArgs me = e as MouseEventArgs;
-            if (me == null) return;
+            if (!(e is MouseEventArgs me)) return;
 
             if (AwakeningAction == true) return;
             switch (me.Button)
@@ -9364,18 +9363,6 @@ namespace Client.MirScenes
                             GameScene.NPCTime = CMain.Time + 5000;
                             GameScene.NPCID = npc.ObjectID;
                             Network.Enqueue(new C.CallNPC { ObjectID = npc.ObjectID, Key = "[@Main]" });
-                        }
-
-                        MonsterObject mon = MapObject.MouseObject as MonsterObject;
-                        if (mon != null && mon.AI == 201)
-                        {
-                            GameScene.Scene.NPCDialog.Hide();
-
-                            if (CMain.Time <= GameScene.NPCTime) return;
-
-                            GameScene.NPCTime = CMain.Time + 5000;
-
-                            Network.Enqueue(new C.TalkMonsterNPC { ObjectID = mon.ObjectID });
                         }
                     }
                     break;

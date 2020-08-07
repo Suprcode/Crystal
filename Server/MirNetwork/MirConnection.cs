@@ -354,9 +354,6 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.CallNPC:
                     CallNPC((C.CallNPC)p);
                     break;
-                case (short)ClientPacketIds.TalkMonsterNPC:
-                    TalkMonsterNPC((C.TalkMonsterNPC)p);
-                    break;
                 case (short)ClientPacketIds.BuyItem:
                     BuyItem((C.BuyItem)p);
                     break;
@@ -1105,9 +1102,9 @@ namespace Server.MirNetwork
                 return;
             }
 
-            if (p.ObjectID == Player.DefaultNPC.ObjectID && Player.NPCID == Player.DefaultNPC.ObjectID)
+            if (p.ObjectID == Player.DefaultNPC.LoadedObjectID && Player.NPCObjectID == Player.DefaultNPC.LoadedObjectID)
             {
-                Player.CallDefaultNPC(p.ObjectID, p.Key);
+                Player.CallDefaultNPC(p.Key);
                 return;
             }
 
@@ -1118,13 +1115,6 @@ namespace Server.MirNetwork
             }
 
             Player.CallNPC(p.ObjectID, p.Key);
-        }
-
-        private void TalkMonsterNPC(C.TalkMonsterNPC p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.TalkMonster(p.ObjectID);
         }
 
         private void BuyItem(C.BuyItem p)
@@ -1697,7 +1687,7 @@ namespace Server.MirNetwork
 
             Player.NPCInputStr = p.Value;
 
-            Player.CallNPC(Player.NPCID, p.PageName);
+            Player.CallNPC(Player.NPCObjectID, p.PageName);
         }
 
         public List<byte[]> Image = new List<byte[]>();

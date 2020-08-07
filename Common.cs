@@ -181,7 +181,6 @@ public enum DefaultNPCType : byte
     OnAcceptQuest,
     OnFinishQuest,
     Daily,
-    TalkMonster,
     Client
 }
 
@@ -1564,7 +1563,6 @@ public enum ClientPacketIds : short
     RangeAttack,
     Harvest,
     CallNPC,
-    TalkMonsterNPC,
     BuyItem,
     SellItem,
     CraftItem,
@@ -4639,8 +4637,6 @@ public abstract class Packet
                 return new C.Harvest();
             case (short)ClientPacketIds.CallNPC:
                 return new C.CallNPC();
-            case (short)ClientPacketIds.TalkMonsterNPC:
-                return new C.TalkMonsterNPC();
             case (short)ClientPacketIds.BuyItem:
                 return new C.BuyItem();
             case (short)ClientPacketIds.SellItem:

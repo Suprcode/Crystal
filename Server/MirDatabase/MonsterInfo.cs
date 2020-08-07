@@ -304,6 +304,11 @@ namespace Server.MirDatabase
         {
             string[] parts = s.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
 
+            if (parts.Length < 2)
+            {
+                return null;
+            }
+
             DropInfo info = new DropInfo();
 
             if (!int.TryParse(parts[0].Substring(2), out info.Chance)) return null;

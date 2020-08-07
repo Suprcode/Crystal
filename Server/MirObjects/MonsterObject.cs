@@ -222,12 +222,6 @@ namespace Server.MirObjects
                     return new StoningStatue(info);
                 //unfinished END
 
-
-                case 200://custom
-                    return new Runaway(info);
-                case 201://custom
-                    return new TalkingMonster(info);
-
                 default:
                     return new MonsterObject(info);
             }

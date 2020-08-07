@@ -113,7 +113,7 @@ namespace Server.MirObjects
             var regexFlag = new Regex(@"\[(.*?)\]");
             var regexQuote = new Regex("\"([^\"]*)\"");
 
-            Match quoteMatch = null;
+            Match quoteMatch;
 
             switch (parts[0].ToUpper())
             {
@@ -503,6 +503,29 @@ namespace Server.MirObjects
                     acts.Add(new NPCActions(ActionType.Goto, parts[1]));
                     break;
 
+                case "CALL":
+                    if (parts.Length < 2) return;
+
+                    quoteMatch = regexQuote.Match(line);
+
+                    string listPath = parts[1];
+
+                    if (quoteMatch.Success)
+                    {
+                        listPath = quoteMatch.Groups[1].Captures[0].Value;
+                    }
+                    
+                    fileName = Path.Combine(Settings.NPCPath, listPath + ".txt");
+
+                    if (!File.Exists(fileName)) return;
+
+                    var script = new NPCScript(0, listPath, NPCScriptType.Called);
+
+                    Page.ScriptCalls.Add(script.ScriptID);
+
+                    acts.Add(new NPCActions(ActionType.Call, script.ScriptID.ToString()));
+                    break;
+
                 case "BREAK":
                     acts.Add(new NPCActions(ActionType.Break));
                     break;
@@ -513,7 +536,7 @@ namespace Server.MirObjects
 
                     quoteMatch = regexQuote.Match(line);
 
-                    string listPath = parts[1];
+                    listPath = parts[1];
 
                     if (quoteMatch.Success)
                         listPath = quoteMatch.Groups[1].Captures[0].Value;
@@ -1229,7 +1252,7 @@ namespace Server.MirObjects
                     for (int i = 0; i < player.CurrentMap.NPCs.Count; i++)
                     {
                         NPCObject ob = player.CurrentMap.NPCs[i];
-                        if (ob.ObjectID != player.NPCID) continue;
+                        if (ob.ObjectID != player.NPCObjectID) continue;
                         newValue = ob.Name.Replace("_", " ");
                     }
                     break;
@@ -1575,14 +1598,14 @@ namespace Server.MirObjects
             return true;
 
         }
-        public bool Check(MonsterObject Monster)
+        public bool Check(MonsterObject monster)
         {
             var failed = false;
 
             for (int i = 0; i < CheckList.Count; i++)
             {
                 NPCChecks check = CheckList[i];
-                List<string> param = check.Params.Select(t => FindVariable(Monster, t)).ToList();
+                List<string> param = check.Params.Select(t => FindVariable(monster, t)).ToList();
 
                 for (int j = 0; j < param.Count; j++)
                 {
@@ -1592,7 +1615,7 @@ namespace Server.MirObjects
 
                     foreach (var part in parts)
                     {
-                        param[j] = param[j].Replace(part, ReplaceValue(Monster, part));
+                        param[j] = param[j].Replace(part, ReplaceValue(monster, part));
                     }
                 }
 
@@ -1613,7 +1636,7 @@ namespace Server.MirObjects
 
                         try
                         {
-                            failed = !Compare(param[0], Monster.Level, tempByte);
+                            failed = !Compare(param[0], monster.Level, tempByte);
                         }
                         catch (ArgumentException)
                         {
@@ -1664,13 +1687,13 @@ namespace Server.MirObjects
 
                         var target = new Point { X = x, Y = y };
 
-                        failed = !Functions.InRange(Monster.CurrentLocation, target, range);
+                        failed = !Functions.InRange(monster.CurrentLocation, target, range);
                         break;
 
                     case CheckType.CheckMap:
                         map = Envir.GetMapByNameAndInstance(param[0]);
 
-                        failed = Monster.CurrentMap != map;
+                        failed = monster.CurrentMap != map;
                         break;
                     case CheckType.CheckHum:
                         if (!int.TryParse(param[1], out tempInt) || !int.TryParse(param[3], out tempInt2))
@@ -1769,11 +1792,11 @@ namespace Server.MirObjects
 
                 if (!failed) continue;
 
-                Failed(Monster);
+                Failed(monster);
                 return false;
             }
 
-            Success(Monster);
+            Success(monster);
             return true;
 
         }
@@ -2136,7 +2159,7 @@ namespace Server.MirObjects
                         for (int j = 0; j < player.CurrentMap.NPCs.Count; j++)
                         {
                             NPCObject ob = player.CurrentMap.NPCs[j];
-                            if (ob.ObjectID != player.NPCID) continue;
+                            if (ob.ObjectID != player.NPCObjectID) continue;
                             target = ob.CurrentLocation;
                             break;
                         }
@@ -3051,7 +3074,14 @@ namespace Server.MirObjects
                         break;
 
                     case ActionType.Goto:
-                        DelayedAction action = new DelayedAction(DelayedType.NPC, -1, player.NPCID, "[" + param[0] + "]");
+                        DelayedAction action = new DelayedAction(DelayedType.NPC, -1, player.NPCObjectID, "[" + param[0] + "]");
+                        player.ActionList.Add(action);
+                        break;
+
+                    case ActionType.Call:
+                        if (!int.TryParse(param[0], out int scriptID)) return;
+
+                        action = new DelayedAction(DelayedType.NPC, -1, player.NPCObjectID, "[@MAIN]", scriptID);
                         player.ActionList.Add(action);
                         break;
 
@@ -3127,7 +3157,7 @@ namespace Server.MirObjects
                         Map tempMap = player.CurrentMap;
                         Point tempPoint = player.CurrentLocation;
 
-                        action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCID, tempString, tempMap, tempPoint);
+                        action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCObjectID, tempString, tempMap, tempPoint);
                         player.ActionList.Add(action);
 
                         break;
@@ -3144,7 +3174,7 @@ namespace Server.MirObjects
                         {
                             var groupMember = player.GroupMembers[j];
 
-                            action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCID, tempString, tempMap, tempPoint);
+                            action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCObjectID, tempString, tempMap, tempPoint);
                             groupMember.ActionList.Add(action);
                         }
                         break;
@@ -3159,7 +3189,7 @@ namespace Server.MirObjects
                     case ActionType.DelayGoto:
                         if (!long.TryParse(param[0], out tempLong)) return;
 
-                        action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCID, "[" + param[1] + "]");
+                        action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCObjectID, "[" + param[1] + "]");
                         player.ActionList.Add(action);
                         break;
 
@@ -3404,7 +3434,7 @@ namespace Server.MirObjects
 
                         for (int j = 0; j < player.GroupMembers.Count(); j++)
                         {
-                            action = new DelayedAction(DelayedType.NPC, Envir.Time, player.NPCID, "[" + param[0] + "]");
+                            action = new DelayedAction(DelayedType.NPC, Envir.Time, player.NPCObjectID, "[" + param[0] + "]");
                             player.GroupMembers[j].ActionList.Add(action);
                         }
                         break;
@@ -3610,7 +3640,7 @@ namespace Server.MirObjects
                 }
             }
         }
-        private void Act(IList<NPCActions> acts, MonsterObject Monster)
+        private void Act(IList<NPCActions> acts, MonsterObject monster)
         {
 
             for (var i = 0; i < acts.Count; i++)
@@ -3625,7 +3655,7 @@ namespace Server.MirObjects
                 MonsterInfo monInfo;
 
                 NPCActions act = acts[i];
-                List<string> param = act.Params.Select(t => FindVariable(Monster, t)).ToList();
+                List<string> param = act.Params.Select(t => FindVariable(monster, t)).ToList();
 
                 for (int j = 0; j < param.Count; j++)
                 {
@@ -3635,7 +3665,7 @@ namespace Server.MirObjects
 
                     foreach (var part in parts)
                     {
-                        param[j] = param[j].Replace(part, ReplaceValue(Monster, part));
+                        param[j] = param[j].Replace(part, ReplaceValue(monster, part));
                     }
                 }
                 Map map;
@@ -3644,7 +3674,7 @@ namespace Server.MirObjects
                 {
                     case ActionType.GiveHP:
                         if (!int.TryParse(param[0], out tempInt)) return;
-                        Monster.ChangeHP(tempInt);
+                        monster.ChangeHP(tempInt);
                         break;
                     case ActionType.GlobalMessage:
                         if (!Enum.TryParse(param[1], true, out chatType)) return;
@@ -3694,11 +3724,11 @@ namespace Server.MirObjects
 
                         for (int j = 0; j < tempByte; j++)
                         {
-                            MonsterObject monster = MonsterObject.GetMonster(monInfo);
-                            if (monster == null) return;
-                            monster.Direction = 0;
-                            monster.ActionTime = Envir.Time + 1000;
-                            monster.Spawn(map, new Point(Param2, Param3));
+                            MonsterObject mob = MonsterObject.GetMonster(monInfo);
+                            if (mob == null) return;
+                            mob.Direction = 0;
+                            mob.ActionTime = Envir.Time + 1000;
+                            mob.Spawn(map, new Point(Param2, Param3));
                         }
                         break;
                     case ActionType.MonClear:
@@ -3724,7 +3754,7 @@ namespace Server.MirObjects
 
                     case ActionType.Mov:
                         string value = param[0];
-                        AddVariable(Monster, value, param[1]);
+                        AddVariable(monster, value, param[1]);
                         break;
 
                     case ActionType.Calc:
@@ -3739,7 +3769,7 @@ namespace Server.MirObjects
                             try
                             {
                                 int result = Calculate(param[1], left, right);
-                                AddVariable(Monster, param[3].Replace("-", ""), result.ToString());
+                                AddVariable(monster, param[3].Replace("-", ""), result.ToString());
                             }
                             catch (ArgumentException)
                             {
@@ -3748,7 +3778,7 @@ namespace Server.MirObjects
                         }
                         else
                         {
-                            AddVariable(Monster, param[3].Replace("-", ""), param[0] + param[2]);
+                            AddVariable(monster, param[3].Replace("-", ""), param[0] + param[2]);
                         }
                         break;
 
@@ -3783,14 +3813,14 @@ namespace Server.MirObjects
                         Buff buff = new Buff
                         {
                             Type = (BuffType)(byte)Enum.Parse(typeof(BuffType), param[0], true),
-                            Caster = Monster,
+                            Caster = monster,
                             ExpireTime = Envir.Time + tempLong * 1000,
                             Values = intValues,
                             Infinite = tempBool,
                             Visible = tempBool2
                         };
 
-                        Monster.AddBuff(buff);
+                        monster.AddBuff(buff);
                         break;
 
                     case ActionType.RemoveBuff:
@@ -3798,12 +3828,12 @@ namespace Server.MirObjects
 
                         BuffType bType = (BuffType)(byte)Enum.Parse(typeof(BuffType), param[0]);
 
-                        for (int j = 0; j < Monster.Buffs.Count; j++)
+                        for (int j = 0; j < monster.Buffs.Count; j++)
                         {
-                            if (Monster.Buffs[j].Type != bType) continue;
+                            if (monster.Buffs[j].Type != bType) continue;
 
-                            Monster.Buffs[j].Infinite = false;
-                            Monster.Buffs[j].ExpireTime = Envir.Time;
+                            monster.Buffs[j].Infinite = false;
+                            monster.Buffs[j].ExpireTime = Envir.Time;
                         }
                         break;
 
@@ -3817,7 +3847,7 @@ namespace Server.MirObjects
                         string loadedString = reader.ReadString(header, key, "");
 
                         if (loadedString == "") break;
-                        AddVariable(Monster, val, loadedString);
+                        AddVariable(monster, val, loadedString);
                         break;
 
                     case ActionType.SaveValue:
