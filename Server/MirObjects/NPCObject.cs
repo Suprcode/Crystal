@@ -38,14 +38,15 @@ namespace Server.MirObjects
         public int ScriptID { get; set; }
 
         public NPCInfo Info;
-        private const long TurnDelay = 10000;
-        public long TurnTime, UsedGoodsTime, VisTime;
+        private const long TurnDelay = 10000, SpeechDelay = 5000;
+        public long TurnTime, UsedGoodsTime, VisTime, SpeechTime;
         public bool Visible = true;
 
         public Dictionary<int, bool> VisibleLog = new Dictionary<int, bool>();
 
         public ConquestObject Conq;
         public List<QuestInfo> Quests = new List<QuestInfo>();
+        public List<NPCSpeech> Speech = new List<NPCSpeech>();
 
         public List<UserItem> UsedGoods = new List<UserItem>();
         public Dictionary<string, List<UserItem>> BuyBack = new Dictionary<string, List<UserItem>>();
@@ -237,6 +238,22 @@ namespace Server.MirObjects
 
                 }
             }
+
+            if (Speech.Count > 0 && Envir.Time > SpeechTime)
+            {
+                var nearby = FindNearby(4);
+
+                SpeechTime = Envir.Time + (SpeechDelay * (nearby ? Envir.Random.Next(1, 13) : 1));
+
+                if (nearby)
+                {
+                    var maxWeight = Speech.Max(x => x.Weight);
+
+                    var speech = Speech.OrderBy(x => x.GetWeight(Envir.Random, maxWeight)).Last();
+
+                    Broadcast(new S.ObjectChat { ObjectID = this.ObjectID, Text = $"{Info.Name.Split('_')[0]}:{speech.Message}", Type = ChatType.Normal });
+                }
+            }
         }
 
         public override void SetOperateTime()
@@ -310,6 +327,42 @@ namespace Server.MirObjects
                     }
                 }
             }
+        }
+
+        public bool FindNearby(int distance)
+        {
+            for (int d = 0; d <= distance; d++)
+            {
+                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++)
+                {
+                    if (y < 0) continue;
+                    if (y >= CurrentMap.Height) break;
+
+                    for (int x = CurrentLocation.X - d; x <= CurrentLocation.X + d; x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2)
+                    {
+                        if (x < 0) continue;
+                        if (x >= CurrentMap.Width) break;
+                        if (!CurrentMap.ValidPoint(x, y)) continue;
+                        Cell cell = CurrentMap.GetCell(x, y);
+                        if (cell.Objects == null) continue;
+
+                        for (int i = 0; i < cell.Objects.Count; i++)
+                        {
+                            MapObject ob = cell.Objects[i];
+                            switch (ob.Race)
+                            {
+                                case ObjectType.Player:
+                                    if (ob == this || ob.Dead) continue;
+                                    return true;
+                                default:
+                                    continue;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         public override Packet GetInfo()
@@ -415,4 +468,17 @@ namespace Server.MirObjects
         #endregion
 
     }
+
+
+    public class NPCSpeech
+    {
+        public int Weight { get; set; }
+        public string Message { get; set; }
+
+        public int GetWeight(RandomProvider rnd, int max)
+        {
+            return rnd.Next(Weight, max + 100);
+        }
+    }
+
 }

@@ -66,7 +66,8 @@ namespace Server.MirObjects
             TradeKey = "[TRADE]",
             RecipeKey = "[RECIPE]",
             TypeKey = "[TYPES]",
-            QuestKey = "[QUESTS]";
+            QuestKey = "[QUESTS]",
+            SpeechKey = "[SPEECH]";
 
 
         public List<ItemType> Types = new List<ItemType>();
@@ -285,6 +286,7 @@ namespace Server.MirObjects
             ParseTypes(lines);
             ParseQuests(lines);
             ParseCrafting(lines);
+            ParseSpeech(lines);
         }
 
         private List<string> ParseInsert(List<string> lines)
@@ -370,6 +372,7 @@ namespace Server.MirObjects
 
             return lines;
         }
+
 
         private List<NPCPage> ParsePages(IList<string> lines, string key = MainKey)
         {
@@ -654,6 +657,13 @@ namespace Server.MirObjects
             {
                 if (!lines[i].ToUpper().StartsWith(QuestKey)) continue;
 
+                var loadedNPC = NPCObject.Get(LoadedObjectID);
+
+                if (loadedNPC == null)
+                {
+                    return;
+                }
+
                 while (++i < lines.Count)
                 {
                     if (lines[i].StartsWith("[")) return;
@@ -667,18 +677,41 @@ namespace Server.MirObjects
 
                     if (info == null) return;
 
-                    var loadedNPC = NPCObject.Get(LoadedObjectID);
+                    if (index > 0)
+                        info.NpcIndex = LoadedObjectID;
+                    else
+                        info.FinishNpcIndex = LoadedObjectID;
 
-                    if (loadedNPC != null)
-                    {
-                        if (index > 0)
-                            info.NpcIndex = LoadedObjectID;
-                        else
-                            info.FinishNpcIndex = LoadedObjectID;
+                    if (loadedNPC.Quests.All(x => x != info))
+                        loadedNPC.Quests.Add(info);
 
-                        if (loadedNPC.Quests.All(x => x != info))
-                            loadedNPC.Quests.Add(info);
-                    }
+                }
+            }
+        }
+
+
+        private void ParseSpeech(IList<string> lines)
+        {
+            var loadedNPC = NPCObject.Get(LoadedObjectID);
+
+            if (loadedNPC == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < lines.Count; i++)
+            {
+                if (!lines[i].ToUpper().StartsWith(SpeechKey)) continue;
+
+                while (++i < lines.Count)
+                {
+                    if (String.IsNullOrEmpty(lines[i])) continue;
+
+                    var parts = lines[i].Split(' ');
+
+                    if (parts.Length < 2 || !int.TryParse(parts[0], out int weight)) return;
+
+                    loadedNPC.Speech.Add(new NPCSpeech { Weight = weight, Message = lines[i].Substring(parts[0].Length + 1) });
                 }
             }
         }
