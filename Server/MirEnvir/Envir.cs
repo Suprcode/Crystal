@@ -1808,21 +1808,24 @@ namespace Server.MirEnvir
 
         private bool BindCharacter(AuctionInfo auction)
         {
+            bool bound = false;
+
             for (int i = 0; i < CharacterList.Count; i++)
             {
                 if (CharacterList[i].Index == auction.SellerIndex)
                 {
                     auction.SellerInfo = CharacterList[i];
-                    return true;
+                    bound = true;
                 }
+
                 else if (CharacterList[i].Index == auction.CurrentBuyerIndex)
                 {
-                    auction.SellerInfo = CharacterList[i];
-                    return true;
+                    auction.CurrentBuyerInfo = CharacterList[i];
+                    bound = true;
                 }
             }
 
-            return false;
+            return bound;
         }
 
         public void Start()
