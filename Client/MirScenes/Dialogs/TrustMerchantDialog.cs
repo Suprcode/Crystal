@@ -1439,6 +1439,7 @@ namespace Client.MirScenes.Dialogs
 
 
                 SellerLabel.Text = Listing.Seller;
+                SellerLabel.ForeColour = Color.White;
 
                 if (UserMode)
                 {
