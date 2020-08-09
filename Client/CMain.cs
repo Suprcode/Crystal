@@ -376,12 +376,6 @@ namespace Client
                     DXManager.Device.Present();
                 }
             }
-            catch (Direct3D9Exception ex)
-            {
-                SaveError(ex.ToString());
-
-                DXManager.AttemptRecovery();
-            }
             catch (Exception ex)
             {
                 SaveError(ex.ToString());
