@@ -11,7 +11,8 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirSounds;
-using Microsoft.DirectX.Direct3D;
+using SlimDX;
+using SlimDX.Direct3D9;
 using Font = System.Drawing.Font;
 using S = ServerPackets;
 using C = ClientPackets;
@@ -3155,7 +3156,7 @@ namespace Client.MirScenes.Dialogs
                 else
                     colour = Color.FromArgb(255, 0, 0);
 
-                DXManager.Sprite.Draw2D(DXManager.RadarTexture, Point.Empty, 0, new PointF((int)(x - 0.5F), (int)(y - 0.5F)), colour);
+                DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), new Vector3?(Vector3.Zero), new Vector3((float)(x - 0.5), (float)(y - 0.5), 0.0F), colour);
 
                 #region NPC Quest Icons
 
@@ -4898,7 +4899,7 @@ namespace Client.MirScenes.Dialogs
                 else
                     colour = Color.FromArgb(255, 0, 0);
 
-                DXManager.Sprite.Draw2D(DXManager.RadarTexture, Point.Empty, 0, new PointF((int)(x - 0.5F), (int)(y - 0.5F)), colour);
+                DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), new Vector3?(Vector3.Zero), new Vector3((float)(x - 0.5), (float)(y - 0.5), 0.0F), colour);
             }
         }
 

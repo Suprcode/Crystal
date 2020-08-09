@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirScenes;
-using Microsoft.DirectX.Direct3D;
+using SlimDX.Direct3D9;
 using S = ServerPackets;
 using C = ClientPackets;
 
@@ -61,7 +61,6 @@ namespace Client.MirControls
             {
                 DXManager.ControlList.Add(this);
                 ControlTexture = new Texture(DXManager.Device, Size.Width, Size.Height, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
-                ControlTexture.Disposing += ControlTexture_Disposing;
                 TextureSize = Size;
             }
             Surface oldSurface = DXManager.CurrentSurface;

@@ -14,7 +14,7 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirScenes;
 using Client.MirSounds;
-using Microsoft.DirectX.Direct3D;
+using SlimDX.Direct3D9;
 using Font = System.Drawing.Font;
 
 namespace Client
@@ -376,7 +376,7 @@ namespace Client
                     DXManager.Device.Present();
                 }
             }
-            catch (DeviceLostException)
+            catch (Direct3D9Exception)
             {
             }
             catch (Exception ex)

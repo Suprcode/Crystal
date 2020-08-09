@@ -2,7 +2,7 @@
 using System.Drawing;
 using Client.MirGraphics;
 using Client.MirScenes;
-using Microsoft.DirectX;
+using SlimDX;
 using System.Text.RegularExpressions;
 
 namespace Client.MirControls

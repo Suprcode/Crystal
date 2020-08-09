@@ -4,8 +4,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using Client.MirGraphics;
 using Client.MirSounds;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+using SlimDX;
+using SlimDX.Direct3D9;
 
 namespace Client.MirControls
 {
@@ -142,7 +142,6 @@ namespace Client.MirControls
             {
                 DXManager.ControlList.Add(this);
                 ControlTexture = new Texture(DXManager.Device, Size.Width, Size.Height, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
-                ControlTexture.Disposing += ControlTexture_Disposing;
                 TextureSize = Size;
             }
 
@@ -736,7 +735,7 @@ namespace Client.MirControls
             float oldOpacity = DXManager.Opacity;
 
             DXManager.SetOpacity(Opacity);
-            DXManager.Sprite.Draw2D(ControlTexture, Point.Empty, 0F, DisplayLocation, Color.White);
+            DXManager.Sprite.Draw(ControlTexture, new Rectangle(0, 0, Size.Width, Size.Height), new Vector3?(Vector3.Zero), new Vector3?(new Vector3((float)(DisplayLocation.X), (float)(DisplayLocation.Y), 0.0f)), Color.White);
             DXManager.SetOpacity(oldOpacity);
 
             CleanTime = CMain.Time + Settings.CleanDelay;

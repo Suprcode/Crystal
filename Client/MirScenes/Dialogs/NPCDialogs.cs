@@ -11,7 +11,6 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirSounds;
-using Microsoft.DirectX.Direct3D;
 using Font = System.Drawing.Font;
 using S = ServerPackets;
 using C = ClientPackets;

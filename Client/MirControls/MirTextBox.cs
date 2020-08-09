@@ -3,8 +3,8 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Client.MirGraphics;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+using SlimDX;
+using SlimDX.Direct3D9;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
@@ -307,14 +307,13 @@ namespace Client.MirControls
                 DXManager.ControlList.Add(this);
 
                 ControlTexture = new Texture(DXManager.Device, Size.Width, Size.Height, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
-                ControlTexture.Disposing += ControlTexture_Disposing;
                 TextureSize = Size;
             }
 
             Point caret = GetCaretPosition();
 
-            using (GraphicsStream stream = ControlTexture.LockRectangle(0, LockFlags.Discard))
-            using (Bitmap bm = new Bitmap(Size.Width, Size.Height, Size.Width * 4, PixelFormat.Format32bppArgb, (IntPtr)stream.InternalDataPointer))
+            DataRectangle stream = ControlTexture.LockRectangle(0, LockFlags.Discard);
+            using (Bitmap bm = new Bitmap(Size.Width, Size.Height, Size.Width * 4, PixelFormat.Format32bppArgb, stream.Data.DataPointer))
             {
                 TextBox.DrawToBitmap(bm, new Rectangle(0, 0, Size.Width, Size.Height));
                 using (Graphics graphics = Graphics.FromImage(bm))
