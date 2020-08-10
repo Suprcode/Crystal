@@ -5937,7 +5937,26 @@ namespace Server.MirObjects
                 }
 
                 int distance = Functions.MaxDistance(CurrentLocation, target.CurrentLocation);
-                int damage = GetAttackPower(MinMC, MaxMC);
+                int minDamage = Math.Max(MinDC, MinMC);
+                int maxDamage = Math.Max(MaxDC, MaxMC);
+
+                if (minDamage == MinDC && maxDamage == MaxDC)
+                {
+                    //we have a dc main
+                }
+                else if (minDamage == MinMC && maxDamage == MaxMC)
+                {
+                    //we have an mc main
+                }
+                else if (minDamage == MinDC && maxDamage == MaxMC)
+                {
+                    minDamage = MinMC;//we have lower dc then mc, but max mc is higher so lets make it an mc roll 
+                }
+                else if (minDamage == MinMC && maxDamage == MaxDC)
+                {
+                    minDamage = MinDC;//we have lower mc then dc, but max dc is higher so lets make it an dc roll 
+                }
+                int damage = GetAttackPower(minDamage, maxDamage);
                 damage = (int)(damage * Math.Max(1, (distance * 0.35)));//range boost
                 damage = ApplyArcherState(damage);
                 int chanceToHit = 60 + (Focus ? 30 : 0) - (int)(distance * 1.5);
