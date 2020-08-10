@@ -1708,6 +1708,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.OpenBrowser:                  
                     OpenBrowser((S.OpenBrowser)p);
                     break;
+                case (short)ServerPacketIds.playSound:
+                    playThesound((S.playSound)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
@@ -8419,6 +8422,11 @@ namespace Client.MirScenes
 
         private void OpenBrowser(S.OpenBrowser p) {
             BrowserHelper.OpenDefaultBrowser(p.Url);
+        }
+
+        public void playThesound(S.playSound p)
+        {
+            SoundManager.PlaySound(p.sound, false);
         }
 
 

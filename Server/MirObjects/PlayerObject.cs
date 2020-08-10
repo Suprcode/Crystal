@@ -20404,6 +20404,11 @@ namespace Server.MirObjects
         }
 
         #endregion
+
+        public void PlaySound(int number)
+        {
+            Enqueue(new S.playSound { sound = number });
+        }
     }
 }
 

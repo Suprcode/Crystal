@@ -1516,7 +1516,8 @@ public enum ServerPacketIds : short
     CanConfirmItemRental,
     ConfirmItemRental,
     NewRecipeInfo,
-    OpenBrowser
+    OpenBrowser,
+    playSound,
 }
 
 public enum ClientPacketIds : short
@@ -5302,6 +5303,8 @@ public abstract class Packet
                 return new S.NewRecipeInfo();
             case (short)ServerPacketIds.OpenBrowser:
                 return new S.OpenBrowser();
+            case (short)ServerPacketIds.playSound:
+                return new S.playSound();
             default:
                 return null;
         }

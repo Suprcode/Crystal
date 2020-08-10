@@ -5687,4 +5687,22 @@ namespace ServerPackets
             writer.Write(Url);
         }
     }
+    public sealed class playSound : Packet
+    {
+        public int sound;
+
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.playSound; }
+        }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            sound = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(sound);
+        }
+    }
 }
