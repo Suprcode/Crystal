@@ -5917,7 +5917,7 @@ namespace Server.MirObjects
 
             UserMagic magic;
             Spell spell = Spell.None;
-            bool Focus = false;
+            bool focus = false;
 
             if (target != null && !CanFly(target.CurrentLocation) && (Info.MentalState != 1))
             {
@@ -5931,16 +5931,21 @@ namespace Server.MirObjects
 
                 if (magic != null && Envir.Random.Next(5) <= magic.Level)
                 {
-                    Focus = true;
+                    focus = true;
                     LevelMagic(magic);
                     spell = Spell.Focus;
                 }
 
                 int distance = Functions.MaxDistance(CurrentLocation, target.CurrentLocation);
-                int damage = GetAttackPower(MinMC, MaxMC);
-                damage = (int)(damage * Math.Max(1, (distance * 0.35)));//range boost
+
+                int damage = GetRangeAttackPower(MinDC, MaxDC, distance);
+
                 damage = ApplyArcherState(damage);
-                int chanceToHit = 60 + (Focus ? 30 : 0) - (int)(distance * 1.5);
+
+                int chanceToHit = (100 + Settings.RangeAccuracyBonus - ((100 / Globals.MaxAttackRange) * distance)) * (focus ? 2 : 1);
+
+                if (chanceToHit < 0) chanceToHit = 0;
+
                 int hitChance = Envir.Random.Next(100); // Randomise a number between minimum chance and 100       
 
                 if (hitChance < chanceToHit)
@@ -5970,9 +5975,8 @@ namespace Server.MirObjects
             AttackTime = Envir.Time + AttackSpeed;
             ActionTime = Envir.Time + 550;
             RegenTime = Envir.Time + RegenDelay;
-
-            return;
         }
+
         public void Attack(MirDirection dir, Spell spell)
         {
             LogTime = Envir.Time + Globals.LogDelay;
@@ -8456,8 +8460,12 @@ namespace Server.MirObjects
         private int ApplyArcherState(int damage)
         {
             UserMagic magic = GetMagic(Spell.MentalState);
+
             if (magic != null)
+            {
                 LevelMagic(magic);
+            }
+
             int dmgpenalty = 100;
             switch (Info.MentalState)
             {
@@ -8475,10 +8483,11 @@ namespace Server.MirObjects
         {
             if (target == null || !target.IsAttackTarget(this)) return false;
             if ((Info.MentalState != 1) && !CanFly(target.CurrentLocation)) return false;
+
             int distance = Functions.MaxDistance(CurrentLocation, target.CurrentLocation);
-            int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
-            damage = (int)(damage * Math.Max(1, (distance * 0.45)));//range boost
+            int damage = magic.GetDamage(GetRangeAttackPower(MinMC, MaxMC, distance));
             damage = ApplyArcherState(damage);
+
             int delay = distance * 50 + 500; //50 MS per Step
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target);
@@ -8491,10 +8500,11 @@ namespace Server.MirObjects
         {
             if (target == null || !target.IsAttackTarget(this)) return false;
             if ((Info.MentalState != 1) && !CanFly(target.CurrentLocation)) return false;
+
             int distance = Functions.MaxDistance(CurrentLocation, target.CurrentLocation);
-            int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
-            damage = (int)(damage * Math.Max(1, (distance * 0.25)));//range boost
+            int damage = magic.GetDamage(GetRangeAttackPower(MinMC, MaxMC, distance));
             damage = ApplyArcherState(damage);
+
             int delay = distance * 50 + 500; //50 MS per Step
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target);
@@ -8649,10 +8659,9 @@ namespace Server.MirObjects
         {
             if (target == null || !target.IsAttackTarget(this)) return;
             if ((Info.MentalState != 1) && !CanFly(target.CurrentLocation)) return;
+
             int distance = Functions.MaxDistance(CurrentLocation, target.CurrentLocation);
-            int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
-            if (magic.Spell != Spell.CrippleShot)
-                damage = (int)(damage * Math.Max(1, (distance * 0.4)));//range boost
+            int damage = magic.GetDamage(GetRangeAttackPower(MinMC, MaxMC, distance));
             damage = ApplyArcherState(damage);
 
             int delay = distance * 50 + 500; //50 MS per Step
@@ -8666,7 +8675,7 @@ namespace Server.MirObjects
             if ((Info.MentalState != 1) && !CanFly(target.CurrentLocation)) return;
 
             int distance = Functions.MaxDistance(CurrentLocation, target.CurrentLocation);
-            int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
+            int damage = magic.GetDamage(GetRangeAttackPower(MinMC, MaxMC, distance));
             damage = ApplyArcherState(damage);
 
             int delay = distance * 50 + 500; //50 MS per Step

@@ -251,9 +251,11 @@ namespace Server
                     MaxPoisonRecovery = 6,
                     MaxLuck = 10;
 
-        public static Boolean PvpCanResistMagic = false,
+        public static bool PvpCanResistMagic = false,
                               PvpCanResistPoison = false,
                               PvpCanFreeze = false;
+
+        public static byte RangeAccuracyBonus = 0;
 
         //Guild related settings
         public static byte Guild_RequiredLevel = 22, Guild_PointPerLevel = 0;
@@ -420,6 +422,8 @@ namespace Server
             PvpCanResistMagic = Reader.ReadBoolean("Items","PvpCanResistMagic",PvpCanResistMagic);
             PvpCanResistPoison = Reader.ReadBoolean("Items", "PvpCanResistPoison", PvpCanResistPoison);
             PvpCanFreeze = Reader.ReadBoolean("Items", "PvpCanFreeze", PvpCanFreeze);
+
+            RangeAccuracyBonus = Reader.ReadByte("Bonus", "RangeAccuracyBonus", RangeAccuracyBonus);
 
             //IntelligentCreature
             for (int i = 0; i < IntelligentCreatureNameList.Length; i++)
@@ -637,6 +641,8 @@ namespace Server
             Reader.Write("Items", "PvpCanResistMagic", PvpCanResistMagic);
             Reader.Write("Items", "PvpCanResistPoison", PvpCanResistPoison);
             Reader.Write("Items", "PvpCanFreeze", PvpCanFreeze);
+
+            Reader.Write("Bonus", "RangeAccuracyBonus", RangeAccuracyBonus);
 
             //IntelligentCreature
             for (int i = 0; i < IntelligentCreatureNameList.Length; i++)
