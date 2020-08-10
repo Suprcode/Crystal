@@ -1044,6 +1044,10 @@ namespace Server.MirObjects
                     if (match.Success)
                         acts.Add(new NPCActions(ActionType.GetRandomText, parts[1], parts[2]));
                     break;
+                case "PLAYSOUND":
+                    if (parts.Length < 2) return;
+                    acts.Add(new NPCActions(ActionType.PlaySound, parts[1]));
+                    break;
             }
 
         }
@@ -3636,6 +3640,10 @@ namespace Server.MirObjects
                             string randomText = lines[index];
                             AddVariable(player, param[1], randomText);
                         }                        
+                        break;
+                    case ActionType.PlaySound:
+                        if (!int.TryParse(param[0], out int soundID)) return;
+                        player.Enqueue(new S.PlaySound { Sound = soundID });
                         break;
                 }
             }

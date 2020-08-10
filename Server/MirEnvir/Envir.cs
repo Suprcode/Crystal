@@ -3109,7 +3109,7 @@ namespace Server.MirEnvir
                 if (rentalInformation.ItemId == rentedItem.UniqueID)
                     owner.RentedItemsToRemove.Add(rentalInformation);
             
-            rentedItem.RentalInformation.BindingFlags = BindMode.none;
+            rentedItem.RentalInformation.BindingFlags = BindMode.None;
             rentedItem.RentalInformation.RentalLocked = true;
             rentedItem.RentalInformation.ExpiryDate = rentedItem.RentalInformation.ExpiryDate.AddDays(1);
 

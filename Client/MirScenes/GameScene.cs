@@ -1708,6 +1708,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.OpenBrowser:                  
                     OpenBrowser((S.OpenBrowser)p);
                     break;
+                case (short)ServerPacketIds.PlaySound:
+                    PlaySound((S.PlaySound)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
@@ -7238,7 +7241,7 @@ namespace Client.MirScenes
 
             #region DONT_DEATH_DROP
 
-            if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.Bind.HasFlag(BindMode.DontDeathdrop))
+            if (HoverItem.Info.Bind != BindMode.None && HoverItem.Info.Bind.HasFlag(BindMode.DontDeathdrop))
             {
                 count++;
                 MirLabel DONT_DEATH_DROPLabel = new MirLabel
@@ -7259,7 +7262,7 @@ namespace Client.MirScenes
 
             #region DONT_DROP
 
-            if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.Bind.HasFlag(BindMode.DontDrop))
+            if (HoverItem.Info.Bind != BindMode.None && HoverItem.Info.Bind.HasFlag(BindMode.DontDrop))
             {
                 count++;
                 MirLabel DONT_DROPLabel = new MirLabel
@@ -7280,7 +7283,7 @@ namespace Client.MirScenes
 
             #region DONT_UPGRADE
 
-            if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.Bind.HasFlag(BindMode.DontUpgrade))
+            if (HoverItem.Info.Bind != BindMode.None && HoverItem.Info.Bind.HasFlag(BindMode.DontUpgrade))
             {
                 count++;
                 MirLabel DONT_UPGRADELabel = new MirLabel
@@ -7301,7 +7304,7 @@ namespace Client.MirScenes
 
             #region DONT_SELL
 
-            if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.Bind.HasFlag(BindMode.DontSell))
+            if (HoverItem.Info.Bind != BindMode.None && HoverItem.Info.Bind.HasFlag(BindMode.DontSell))
             {
                 count++;
                 MirLabel DONT_SELLLabel = new MirLabel
@@ -7322,7 +7325,7 @@ namespace Client.MirScenes
 
             #region DONT_TRADE
 
-            if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.Bind.HasFlag(BindMode.DontTrade))
+            if (HoverItem.Info.Bind != BindMode.None && HoverItem.Info.Bind.HasFlag(BindMode.DontTrade))
             {
                 count++;
                 MirLabel DONT_TRADELabel = new MirLabel
@@ -7343,7 +7346,7 @@ namespace Client.MirScenes
 
             #region DONT_STORE
 
-            if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.Bind.HasFlag(BindMode.DontStore))
+            if (HoverItem.Info.Bind != BindMode.None && HoverItem.Info.Bind.HasFlag(BindMode.DontStore))
             {
                 count++;
                 MirLabel DONT_STORELabel = new MirLabel
@@ -7364,7 +7367,7 @@ namespace Client.MirScenes
 
             #region DONT_REPAIR
 
-            if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.Bind.HasFlag(BindMode.DontRepair))
+            if (HoverItem.Info.Bind != BindMode.None && HoverItem.Info.Bind.HasFlag(BindMode.DontRepair))
             {
                 count++;
                 MirLabel DONT_REPAIRLabel = new MirLabel
@@ -7385,7 +7388,7 @@ namespace Client.MirScenes
 
             #region DONT_SPECIALREPAIR
 
-            if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.Bind.HasFlag(BindMode.NoSRepair))
+            if (HoverItem.Info.Bind != BindMode.None && HoverItem.Info.Bind.HasFlag(BindMode.NoSRepair))
             {
                 count++;
                 MirLabel DONT_REPAIRLabel = new MirLabel
@@ -7406,7 +7409,7 @@ namespace Client.MirScenes
 
             #region BREAK_ON_DEATH
 
-            if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.Bind.HasFlag(BindMode.BreakOnDeath))
+            if (HoverItem.Info.Bind != BindMode.None && HoverItem.Info.Bind.HasFlag(BindMode.BreakOnDeath))
             {
                 count++;
                 MirLabel DONT_REPAIRLabel = new MirLabel
@@ -7427,7 +7430,7 @@ namespace Client.MirScenes
 
             #region DONT_DESTROY_ON_DROP
 
-            if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.Bind.HasFlag(BindMode.DestroyOnDrop))
+            if (HoverItem.Info.Bind != BindMode.None && HoverItem.Info.Bind.HasFlag(BindMode.DestroyOnDrop))
             {
                 count++;
                 MirLabel DONT_DODLabel = new MirLabel
@@ -7448,7 +7451,7 @@ namespace Client.MirScenes
 
             #region NoWeddingRing
 
-            if (HoverItem.Info.Bind != BindMode.none && HoverItem.Info.Bind.HasFlag(BindMode.NoWeddingRing))
+            if (HoverItem.Info.Bind != BindMode.None && HoverItem.Info.Bind.HasFlag(BindMode.NoWeddingRing))
             {
                 count++;
                 MirLabel No_WedLabel = new MirLabel
@@ -8420,7 +8423,10 @@ namespace Client.MirScenes
         private void OpenBrowser(S.OpenBrowser p) {
             BrowserHelper.OpenDefaultBrowser(p.Url);
         }
-
+        public void PlaySound(S.PlaySound p)
+        {
+            SoundManager.PlaySound(p.Sound, false);
+        }
 
         #region Disposable
 

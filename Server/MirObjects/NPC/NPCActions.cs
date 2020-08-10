@@ -99,5 +99,6 @@ namespace Server.MirObjects
         ClearGuildNameList,
         OpenBrowser,
         GetRandomText,
+        PlaySound,
     }
 }

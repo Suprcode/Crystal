@@ -927,7 +927,7 @@ public enum PoisonType : ushort
 
 public enum BindMode : short
 {
-    none = 0,
+    None = 0,
     DontDeathdrop = 1,//0x0001
     DontDrop = 2,//0x0002
     DontSell = 4,//0x0004
@@ -976,6 +976,7 @@ public enum RequiredClass : byte
     WarWizTao = Warrior | Wizard | Taoist,
     None = WarWizTao | Assassin | Archer
 }
+
 [Flags]
 [Obfuscation(Feature = "renaming", Exclude = true)]
 public enum RequiredGender : byte
@@ -984,6 +985,7 @@ public enum RequiredGender : byte
     Female = 2,
     None = Male | Female
 }
+
 [Obfuscation(Feature = "renaming", Exclude = true)]
 public enum RequiredType : byte
 {
@@ -1468,7 +1470,6 @@ public enum ServerPacketIds : short
     ObjectLevelEffects,
     SetBindingShot,
     SendOutputMessage,
-
     NPCAwakening,
     NPCDisassemble,
     NPCDowngrade,
@@ -1476,14 +1477,12 @@ public enum ServerPacketIds : short
     AwakeningNeedMaterials,
     AwakeningLockedItem,
     Awakening,
-
     ReceiveMail,
     MailLockedItem,
     MailSendRequest,
     MailSent,
     ParcelCollected,
     MailCost,
-
 	ResizeInventory,
     ResizeStorage,
     NewIntelligentCreature,
@@ -1491,7 +1490,6 @@ public enum ServerPacketIds : short
     IntelligentCreatureEnableRename,
     IntelligentCreaturePickup,
     NPCPearlGoods,
-
     TransformUpdate,
     FriendUpdate,
     LoverUpdate,
@@ -1502,7 +1500,6 @@ public enum ServerPacketIds : short
     GameShopStock,
     Rankings,
     Opendoor,
-
     GetRentedItems,
     ItemRentalRequest,
     ItemRentalFee,
@@ -1516,7 +1513,8 @@ public enum ServerPacketIds : short
     CanConfirmItemRental,
     ConfirmItemRental,
     NewRecipeInfo,
-    OpenBrowser
+    OpenBrowser,
+    PlaySound
 }
 
 public enum ClientPacketIds : short
@@ -2705,7 +2703,7 @@ public class ItemInfo
     public bool CanAwakening;
     public byte MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, HpDrainRate;
     
-    public BindMode Bind = BindMode.none;
+    public BindMode Bind = BindMode.None;
     public byte Reflect;
     public SpecialItemMode Unique = SpecialItemMode.None;
     public byte RandomStatsId;
@@ -3506,7 +3504,7 @@ public class ExpireInfo
 public class RentalInformation
 {
     public string OwnerName;
-    public BindMode BindingFlags = BindMode.none;
+    public BindMode BindingFlags = BindMode.None;
     public DateTime ExpiryDate;
     public bool RentalLocked;
 
@@ -5302,6 +5300,8 @@ public abstract class Packet
                 return new S.NewRecipeInfo();
             case (short)ServerPacketIds.OpenBrowser:
                 return new S.OpenBrowser();
+            case (short)ServerPacketIds.PlaySound:
+                return new S.PlaySound();
             default:
                 return null;
         }
