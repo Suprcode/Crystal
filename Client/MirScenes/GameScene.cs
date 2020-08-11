@@ -8276,6 +8276,12 @@ namespace Client.MirScenes
             return "";
         }
 
+        public class UserId
+        {
+            public long Id = 0;
+            public string UserName = "";
+        }
+
         public class OutPutMessage
         {
             public string Message;
@@ -10038,12 +10044,12 @@ namespace Client.MirScenes
             if (M2CellInfo[p.X, p.Y].DoorIndex == 0) return true;
             Door DoorInfo = GetDoor(M2CellInfo[p.X, p.Y].DoorIndex);
             if (DoorInfo == null) return false;//if the door doesnt exist then it isnt even being shown on screen (and cant be open lol)
-            if ((DoorInfo.DoorState == 0) || (DoorInfo.DoorState == 3))
+            if ((DoorInfo.DoorState == 0) || (DoorInfo.DoorState == DoorState.Closing))
             {
                 Network.Enqueue(new C.Opendoor() { DoorIndex = DoorInfo.index });
                 return false;
             }
-            if ((DoorInfo.DoorState == 2) && (DoorInfo.LastTick + 4000 > CMain.Time))
+            if ((DoorInfo.DoorState == DoorState.Open) && (DoorInfo.LastTick + 4000 > CMain.Time))
             {
                 Network.Enqueue(new C.Opendoor() { DoorIndex = DoorInfo.index });
             }
@@ -10217,36 +10223,38 @@ namespace Client.MirScenes
         {
             for (int i = 0; i < Doors.Count; i++)
             {
-                if ((Doors[i].DoorState == 1) || (Doors[i].DoorState == 3))
+                if ((Doors[i].DoorState == DoorState.Opening) || (Doors[i].DoorState == DoorState.Closing))
                 {
                     if (Doors[i].LastTick + 50 < CMain.Time)
                     {
                         Doors[i].LastTick = CMain.Time;
                         Doors[i].ImageIndex++;
-                        if (Doors[i].ImageIndex == 1)//change the 1 if you want to actualy animate doors opening/closing
+
+                        if (Doors[i].ImageIndex == 1)//change the 1 if you want to animate doors opening/closing
                         {
                             Doors[i].ImageIndex = 0;
-                            Doors[i].DoorState = (byte)(++Doors[i].DoorState % 4);
+                            Doors[i].DoorState = (DoorState)Enum.ToObject(typeof(DoorState), ((byte)++Doors[i].DoorState % 4));
                         }
+
                         FloorValid = false;
                     }
                 }
-                if (Doors[i].DoorState == 2)
+                if (Doors[i].DoorState == DoorState.Open)
                 {
                     if (Doors[i].LastTick + 5000 < CMain.Time)
                     {
                         Doors[i].LastTick = CMain.Time;
-                        Doors[i].DoorState = 3;
+                        Doors[i].DoorState = DoorState.Closing;
                         FloorValid = false;
                     }
                 }
             }
         }
-        public void OpenDoor(byte Index, bool Closed)
+        public void OpenDoor(byte Index, bool closed)
         {
             Door Info = GetDoor(Index);
             if (Info == null) return;
-            Info.DoorState = (byte)(Closed? 3: Info.DoorState == 2? 2: 1);
+            Info.DoorState = (closed ? DoorState.Closing : Info.DoorState == DoorState.Open ? DoorState.Open : DoorState.Opening);
             Info.ImageIndex = 0;
             Info.LastTick = CMain.Time;
         }

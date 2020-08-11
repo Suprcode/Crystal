@@ -2453,7 +2453,7 @@ namespace Server.MirObjects
                         }
                         break;
                     case CheckType.CheckPermission:
-                        RankOptions guildPermissions;
+                        GuildRankOptions guildPermissions;
                         if (!Enum.TryParse(param[0], true, out guildPermissions))
                         {
                             failed = true;

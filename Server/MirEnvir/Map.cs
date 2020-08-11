@@ -64,7 +64,7 @@ namespace Server.MirEnvir
             for (int i = 0; i < Doors.Count; i++)
                 if (Doors[i].index == DoorIndex)
                 {
-                    Doors[i].DoorState = 2;
+                    Doors[i].DoorState = DoorState.Open;
                     Doors[i].LastTick = Envir.Time;
                     return true;
                 }
@@ -625,7 +625,7 @@ namespace Server.MirEnvir
         public bool CheckDoorOpen(Point location)
         {
             if (DoorIndex[location.X, location.Y] == null) return true;
-            if (DoorIndex[location.X, location.Y].DoorState != 2) return false;
+            if (DoorIndex[location.X, location.Y].DoorState != DoorState.Open) return false;
             return true;
         }
 
@@ -635,7 +635,7 @@ namespace Server.MirEnvir
             //process doors
             for (int i = 0; i < Doors.Count; i++)
             {
-                if ((Doors[i].DoorState == 2) && (Doors[i].LastTick + 5000 < Envir.Time))
+                if ((Doors[i].DoorState == DoorState.Open) && (Doors[i].LastTick + 5000 < Envir.Time))
                 {
                     Doors[i].DoorState = 0;
                     //broadcast that door is closed
@@ -650,30 +650,29 @@ namespace Server.MirEnvir
                 for (int i = Players.Count - 1; i >= 0; i--)
                 {
                     PlayerObject player = Players[i];
-                    Point Location;
+                    Point location;
                     if (Envir.Random.Next(4) == 0)
                     {
-                        Location = player.CurrentLocation;          
+                        location = player.CurrentLocation;          
                     }
                     else
-                        Location = new Point(player.CurrentLocation.X - 10 + Envir.Random.Next(20), player.CurrentLocation.Y - 10 + Envir.Random.Next(20));
+                        location = new Point(player.CurrentLocation.X - 10 + Envir.Random.Next(20), player.CurrentLocation.Y - 10 + Envir.Random.Next(20));
 
-                    if (!ValidPoint(Location)) continue;
+                    if (!ValidPoint(location)) continue;
 
-                    SpellObject Lightning = null;
-                    Lightning = new SpellObject
+                    SpellObject lightning = new SpellObject
                     {
                         Spell = Spell.MapLightning,
                         Value = Envir.Random.Next(Info.LightningDamage),
                         ExpireTime = Envir.Time + (1000),
                         TickSpeed = 500,
                         Caster = null,
-                        CurrentLocation = Location,
+                        CurrentLocation = location,
                         CurrentMap = this,
                         Direction = MirDirection.Up
                     };
-                    AddObject(Lightning);
-                    Lightning.Spawned();
+                    AddObject(lightning);
+                    lightning.Spawned();
                 }
             }
             if ((Info.Fire) && Envir.Time > FireTime)

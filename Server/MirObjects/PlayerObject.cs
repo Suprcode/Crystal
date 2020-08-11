@@ -279,7 +279,7 @@ namespace Server.MirObjects
 
         public bool CanCreateGuild = false;
         public GuildObject MyGuild = null;
-        public Rank MyGuildRank = null;
+        public GuildRank MyGuildRank = null;
         public GuildObject PendingGuildInvite = null;
         public bool GuildNoticeChanged = true; //set to false first time client requests notice list, set to true each time someone in guild edits notice
         public bool GuildMembersChanged = true;//same as above but for members
@@ -5179,7 +5179,7 @@ namespace Server.MirObjects
                         break;
                     case "GATES":
 
-                        if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(RankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
+                        if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(GuildRankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
                         {
                             ReceiveChat(string.Format("You don't have access to control any gates at the moment."), ChatType.System);
                             return;
@@ -5229,7 +5229,7 @@ namespace Server.MirObjects
                         break;
 
                     case "CHANGEFLAG":
-                        if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(RankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
+                        if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(GuildRankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
                         {
                             ReceiveChat(string.Format("You don't have access to change any flags at the moment."), ChatType.System);
                             return;
@@ -5256,7 +5256,7 @@ namespace Server.MirObjects
                         break;
                     case "CHANGEFLAGCOLOUR":
                         {
-                            if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(RankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
+                            if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(GuildRankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
                             {
                                 ReceiveChat(string.Format("You don't have access to change any flags at the moment."), ChatType.System);
                                 return;
@@ -6463,7 +6463,7 @@ namespace Server.MirObjects
             }
         }
 
-        public void GetMinePayout(MineSet Mine)
+        public void GetMinePayout(MineInfo Mine)
         {
             if ((Mine.Drops == null) || (Mine.Drops.Count == 0)) return;
             if (FreeSpace(Info.Inventory) == 0) return;
@@ -13527,7 +13527,7 @@ namespace Server.MirObjects
             string guildname = "";
             string guildrank = "";
             GuildObject Guild = null;
-            Rank GuildRank = null;
+            GuildRank GuildRank = null;
             if (player.GuildIndex != -1)
             {
                 Guild = Envir.GetGuild(player.GuildIndex);
@@ -15769,7 +15769,7 @@ namespace Server.MirObjects
             //check if we have the required items
             for (int i = 0; i < Settings.Guild_CreationCostList.Count; i++)
             {
-                ItemVolume Required = Settings.Guild_CreationCostList[i];
+                GuildItemVolume Required = Settings.Guild_CreationCostList[i];
                 if (Required.Item == null)
                 {
                     if (Info.AccountInfo.Gold < Required.Amount)
@@ -15812,7 +15812,7 @@ namespace Server.MirObjects
             //take the required items
             for (int i = 0; i < Settings.Guild_CreationCostList.Count; i++)
             {
-                ItemVolume Required = Settings.Guild_CreationCostList[i];
+                GuildItemVolume Required = Settings.Guild_CreationCostList[i];
                 if (Required.Item == null)
                 {
                     if (Info.AccountInfo.Gold >= Required.Amount)
@@ -15878,7 +15878,7 @@ namespace Server.MirObjects
             switch (ChangeType)
             {
                 case 0: //add member
-                    if (!MyGuildRank.Options.HasFlag(RankOptions.CanRecruit))
+                    if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanRecruit))
                     {
                         ReceiveChat("You are not allowed to recruit new members!", ChatType.System);
                         return;
@@ -15916,7 +15916,7 @@ namespace Server.MirObjects
                     player.PendingGuildInvite = MyGuild;
                     break;
                 case 1: //delete member
-                    if (!MyGuildRank.Options.HasFlag(RankOptions.CanKick))
+                    if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanKick))
                     {
                         ReceiveChat("You are not allowed to remove members!", ChatType.System);
                         return;
@@ -15929,7 +15929,7 @@ namespace Server.MirObjects
                     }
                     break;
                 case 2: //promote member (and it'll auto create a new rank at bottom if the index > total ranks!)
-                    if (!MyGuildRank.Options.HasFlag(RankOptions.CanChangeRank))
+                    if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanChangeRank))
                     {
                         ReceiveChat("You are not allowed to change other members rank!", ChatType.System);
                         return;
@@ -15938,7 +15938,7 @@ namespace Server.MirObjects
                     MyGuild.ChangeRank(this, Name, RankIndex, RankName);
                     break;
                 case 3: //change rank name
-                    if (!MyGuildRank.Options.HasFlag(RankOptions.CanChangeRank))
+                    if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanChangeRank))
                     {
                         ReceiveChat("You are not allowed to change ranks!", ChatType.System);
                         return;
@@ -15956,7 +15956,7 @@ namespace Server.MirObjects
                         return;
                     break;
                 case 4: //new rank
-                    if (!MyGuildRank.Options.HasFlag(RankOptions.CanChangeRank))
+                    if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanChangeRank))
                     {
                         ReceiveChat("You are not allowed to change ranks!", ChatType.System);
                         return;
@@ -15969,7 +15969,7 @@ namespace Server.MirObjects
                     MyGuild.NewRank(this);
                     break;
                 case 5: //change rank setting
-                    if (!MyGuildRank.Options.HasFlag(RankOptions.CanChangeRank))
+                    if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanChangeRank))
                     {
                         ReceiveChat("You are not allowed to change ranks!", ChatType.System);
                         return;
@@ -15991,7 +15991,7 @@ namespace Server.MirObjects
                 ReceiveChat(GameLanguage.NotInGuild, ChatType.System);
                 return;
             }
-            if (!MyGuildRank.Options.HasFlag(RankOptions.CanChangeNotice))
+            if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanChangeNotice))
             {
 
                 ReceiveChat("You are not allowed to change the guild notice!", ChatType.System);
@@ -16159,7 +16159,7 @@ namespace Server.MirObjects
             switch (Type)
             {
                 case 0://store
-                    if (!MyGuildRank.Options.HasFlag(RankOptions.CanStoreItem))
+                    if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanStoreItem))
                     {
                         Enqueue(p);
                         ReceiveChat("You do not have permission to store items in guild storage.", ChatType.System);
@@ -16204,7 +16204,7 @@ namespace Server.MirObjects
                     MyGuild.NeedSave = true;
                     break;
                 case 1://retrieve
-                    if (!MyGuildRank.Options.HasFlag(RankOptions.CanRetrieveItem))
+                    if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanRetrieveItem))
                     {
 
                         ReceiveChat("You do not have permission to retrieve items from guild storage.", ChatType.System);
@@ -16250,7 +16250,7 @@ namespace Server.MirObjects
                     break;
                 case 2: // Move Item
                     GuildStorageItem q = null;
-                    if (!MyGuildRank.Options.HasFlag(RankOptions.CanStoreItem))
+                    if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanStoreItem))
                     {
                         Enqueue(p);
                         ReceiveChat("You do not have permission to move items in guild storage.", ChatType.System);
@@ -16372,7 +16372,7 @@ namespace Server.MirObjects
                     Enqueue(new S.GuildBuffList() { GuildBuffs = Settings.Guild_BuffList });
                     break;
                 case 1://buy the buff
-                    if (!MyGuildRank.Options.HasFlag(RankOptions.CanActivateBuff))
+                    if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanActivateBuff))
                     {
                         ReceiveChat("You do not have the correct guild rank.", ChatType.System);
                         return;
@@ -16392,7 +16392,7 @@ namespace Server.MirObjects
                     MyGuild.NewBuff(Id);
                     break;
                 case 2://activate the buff
-                    if (!MyGuildRank.Options.HasFlag(RankOptions.CanActivateBuff))
+                    if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanActivateBuff))
                     {
                         ReceiveChat("You do not have the correct guild rank.", ChatType.System);
                         return;

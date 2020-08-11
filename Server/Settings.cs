@@ -229,7 +229,7 @@ namespace Server
         private static String[] BaseStatClassNames = { "Warrior", "Wizard", "Taoist", "Assassin", "Archer" };
         public static BaseStats[] ClassBaseStats = new BaseStats[5] { new BaseStats(MirClass.Warrior), new BaseStats(MirClass.Wizard), new BaseStats(MirClass.Taoist), new BaseStats(MirClass.Assassin), new BaseStats(MirClass.Archer) };
         public static List<RandomItemStat> RandomItemStatsList = new List<RandomItemStat>();
-        public static List<MineSet> MineSetList = new List<MineSet>();
+        public static List<MineInfo> MineSetList = new List<MineInfo>();
         
         //item related settings
         public static byte MaxMagicResist = 6,
@@ -263,7 +263,7 @@ namespace Server
         public static uint Guild_WarCost = 3000;
         public static long Guild_WarTime = 180;
 
-        public static List<ItemVolume> Guild_CreationCostList = new List<ItemVolume>();
+        public static List<GuildItemVolume> Guild_CreationCostList = new List<GuildItemVolume>();
         public static List<long> Guild_ExperienceList = new List<long>();
         public static List<int> Guild_MembercapList = new List<int>();
         public static List<GuildBuffInfo> Guild_BuffList = new List<GuildBuffInfo>();
@@ -930,17 +930,17 @@ namespace Server
         {
             if (!File.Exists(Path.Combine(ConfigPath, "Mines.ini")))
             {
-                MineSetList.Add(new MineSet(1));
-                MineSetList.Add(new MineSet(2));
+                MineSetList.Add(new MineInfo(1));
+                MineSetList.Add(new MineInfo(2));
                 SaveMines();
                 return;
             }
             InIReader reader = new InIReader(Path.Combine(ConfigPath, "Mines.ini"));
             int i = 0;
-            MineSet Mine;
+            MineInfo Mine;
             while (reader.ReadByte("Mine" + i.ToString(), "SpotRegenRate", 255) != 255)
             {
-                Mine = new MineSet();
+                Mine = new MineInfo();
                 Mine.Name = reader.ReadString("Mine" + i.ToString(), "Name", Mine.Name);
                 Mine.SpotRegenRate = reader.ReadByte("Mine" + i.ToString(), "SpotRegenRate", Mine.SpotRegenRate);
                 Mine.MaxStones = reader.ReadByte("Mine" + i.ToString(), "MaxStones", Mine.MaxStones);
@@ -971,7 +971,7 @@ namespace Server
         {
             File.Delete(Path.Combine(ConfigPath, "Mines.ini"));
             InIReader reader = new InIReader(Path.Combine(ConfigPath, "Mines.ini"));
-            MineSet Mine;
+            MineInfo Mine;
             for (int i = 0; i < MineSetList.Count; i++)
             {
                 Mine = MineSetList[i];
@@ -1000,8 +1000,8 @@ namespace Server
         {
             if (!File.Exists(Path.Combine(ConfigPath, "GuildSettings.ini")))
             {
-                Guild_CreationCostList.Add(new ItemVolume(){Amount = 1000000});
-                Guild_CreationCostList.Add(new ItemVolume(){ItemName = "WoomaHorn",Amount = 1});
+                Guild_CreationCostList.Add(new GuildItemVolume(){Amount = 1000000});
+                Guild_CreationCostList.Add(new GuildItemVolume(){ItemName = "WoomaHorn",Amount = 1});
                 return;
             }
             InIReader reader = new InIReader(Path.Combine(ConfigPath, "GuildSettings.ini"));
@@ -1014,7 +1014,7 @@ namespace Server
             int i = 0;
             while (reader.ReadUInt32("Required-" + i.ToString(),"Amount",0) != 0)
             {
-                Guild_CreationCostList.Add(new ItemVolume()
+                Guild_CreationCostList.Add(new GuildItemVolume()
                 {
                     ItemName = reader.ReadString("Required-" + i.ToString(), "ItemName", ""),
                     Amount = reader.ReadUInt32("Required-" + i.ToString(), "Amount", 0)

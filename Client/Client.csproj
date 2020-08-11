@@ -121,22 +121,22 @@
     <Compile Include="..\ServerPackets.cs">
       <Link>MirNetwork\ServerPackets.cs</Link>
     </Compile>
-    <Compile Include="AMain.cs">
+    <Compile Include="Forms\AMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AMain.Designer.cs">
+    <Compile Include="Forms\AMain.Designer.cs">
       <DependentUpon>AMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="CMain.cs">
+    <Compile Include="Forms\CMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CMain.Designer.cs">
+    <Compile Include="Forms\CMain.Designer.cs">
       <DependentUpon>CMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Config.cs">
+    <Compile Include="Forms\Config.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Config.designer.cs">
+    <Compile Include="Forms\Config.designer.cs">
       <DependentUpon>Config.cs</DependentUpon>
     </Compile>
     <Compile Include="KeyBindSettings.cs" />
@@ -211,13 +211,13 @@
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Utils\BrowserHelper.cs" />
-    <EmbeddedResource Include="AMain.resx">
+    <EmbeddedResource Include="Forms\AMain.resx">
       <DependentUpon>AMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CMain.resx">
+    <EmbeddedResource Include="Forms\CMain.resx">
       <DependentUpon>CMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Config.resx">
+    <EmbeddedResource Include="Forms\Config.resx">
       <DependentUpon>Config.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

@@ -860,7 +860,7 @@ namespace Client.MirControls
                                     GameScene.Scene.ChatDialog.ReceiveChat("You cannot swap items.", ChatType.System);
                                     return;
                                 }
-                                if (!GuildDialog.MyOptions.HasFlag(RankOptions.CanRetrieveItem))
+                                if (!GuildDialog.MyOptions.HasFlag(GuildRankOptions.CanRetrieveItem))
                                 {
                                     GameScene.Scene.ChatDialog.ReceiveChat("Insufficient rights to retrieve items.", ChatType.System);
                                     return;
@@ -1189,7 +1189,7 @@ namespace Client.MirControls
                             case MirGridType.GuildStorage: //From Guild Storage
                                 if (GameScene.SelectedCell.GridType == MirGridType.GuildStorage)
                                 {                                    
-                                    if (!GuildDialog.MyOptions.HasFlag(RankOptions.CanStoreItem))
+                                    if (!GuildDialog.MyOptions.HasFlag(GuildRankOptions.CanStoreItem))
                                     {
                                         GameScene.Scene.ChatDialog.ReceiveChat("Insufficient rights to store items.", ChatType.System);
                                         return;
@@ -1215,7 +1215,7 @@ namespace Client.MirControls
                                         GameScene.Scene.ChatDialog.ReceiveChat("You cannot swap items.", ChatType.System);
                                         return;
                                     }
-                                    if (!GuildDialog.MyOptions.HasFlag(RankOptions.CanStoreItem))
+                                    if (!GuildDialog.MyOptions.HasFlag(GuildRankOptions.CanStoreItem))
                                     {
                                         GameScene.Scene.ChatDialog.ReceiveChat("Insufficient rights to store items.", ChatType.System);
                                         return;

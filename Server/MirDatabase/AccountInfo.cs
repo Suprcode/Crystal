@@ -5,7 +5,6 @@ using Server.MirNetwork;
 using Server.MirEnvir;
 using C = ClientPackets;
 
-
 namespace Server.MirDatabase
 {
     public class AccountInfo

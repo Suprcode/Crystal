@@ -156,8 +156,8 @@ namespace Server.MirEnvir
         public List<GuildAtWar> GuildsAtWar = new List<GuildAtWar>();
         public List<MapRespawn> SavedSpawns = new List<MapRespawn>();
 
-        public List<Rank_Character_Info> RankTop = new List<Rank_Character_Info>();
-        public List<Rank_Character_Info>[] RankClass = new List<Rank_Character_Info>[5];
+        public List<RankCharacterInfo> RankTop = new List<RankCharacterInfo>();
+        public List<RankCharacterInfo>[] RankClass = new List<RankCharacterInfo>[5];
         public int[] RankBottomLevel = new int[6];
         static HttpServer http;
         static Envir()
@@ -1330,7 +1330,7 @@ namespace Server.MirEnvir
                 if (RankClass[i] != null)
                     RankClass[i].Clear();
                 else
-                    RankClass[i] = new List<Rank_Character_Info>();
+                    RankClass[i] = new List<RankCharacterInfo>();
             }
             RankTop.Clear();
             for (var i = 0; i < RankBottomLevel.Count(); i++)
@@ -3178,7 +3178,7 @@ namespace Server.MirEnvir
 
         private readonly int RankCount = 100;
 
-        public int InsertRank(List<Rank_Character_Info> Ranking, Rank_Character_Info NewRank)
+        public int InsertRank(List<RankCharacterInfo> Ranking, RankCharacterInfo NewRank)
         {
             if (Ranking.Count == 0)
             {
@@ -3212,9 +3212,9 @@ namespace Server.MirEnvir
             return 0;
         }
 
-        public bool TryAddRank(List<Rank_Character_Info> Ranking, CharacterInfo info, byte type)
+        public bool TryAddRank(List<RankCharacterInfo> Ranking, CharacterInfo info, byte type)
         {
-            var NewRank = new Rank_Character_Info() { Name = info.Name, Class = info.Class, Experience = info.Experience, level = info.Level, PlayerId = info.Index, info = info };
+            var NewRank = new RankCharacterInfo() { Name = info.Name, Class = info.Class, Experience = info.Experience, level = info.Level, PlayerId = info.Index, info = info };
             var NewRankIndex = InsertRank(Ranking, NewRank);
             if (NewRankIndex == 0) return false;
             for (var i = NewRankIndex; i < Ranking.Count; i++ )
@@ -3225,7 +3225,7 @@ namespace Server.MirEnvir
             return true;
         }
 
-        public int FindRank(List<Rank_Character_Info> Ranking, CharacterInfo info, byte type)
+        public int FindRank(List<RankCharacterInfo> Ranking, CharacterInfo info, byte type)
         {
             var startindex = info.Rank[type];
             if (startindex > 0) //if there's a previously known rank then the user can only have gone down in the ranking (or stayed the same)
@@ -3240,7 +3240,7 @@ namespace Server.MirEnvir
             return -1;//index can be 0
         }
 
-        public bool UpdateRank(List<Rank_Character_Info> Ranking, CharacterInfo info, byte type)
+        public bool UpdateRank(List<RankCharacterInfo> Ranking, CharacterInfo info, byte type)
         {
             var CurrentRank = FindRank(Ranking, info, type);
             if (CurrentRank == -1) return false;//not in ranking list atm
@@ -3270,7 +3270,7 @@ namespace Server.MirEnvir
             return true;
         }
 
-        public void SetNewRank(Rank_Character_Info Rank, int Index, byte type)
+        public void SetNewRank(RankCharacterInfo Rank, int Index, byte type)
         {
             if (!(Rank.info is CharacterInfo Player)) return;
             Player.Rank[type] = Index;
@@ -3278,7 +3278,7 @@ namespace Server.MirEnvir
 
         public void RemoveRank(CharacterInfo info)
         {
-            List<Rank_Character_Info> Ranking;
+            List<RankCharacterInfo> Ranking;
             var Rankindex = -1;
             //first check overall top           
             if (info.Level >= RankBottomLevel[0])
@@ -3312,8 +3312,8 @@ namespace Server.MirEnvir
 
         public void CheckRankUpdate(CharacterInfo info)
         {
-            List<Rank_Character_Info> Ranking;
-            Rank_Character_Info NewRank;
+            List<RankCharacterInfo> Ranking;
+            RankCharacterInfo NewRank;
             
             //first check overall top           
             if (info.Level >= RankBottomLevel[0])

@@ -184,7 +184,7 @@ namespace Server
         private void GuildAddCreatItembutton_Click(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
-            Settings.Guild_CreationCostList.Add(new ItemVolume());
+            Settings.Guild_CreationCostList.Add(new GuildItemVolume());
             GuildCreateListcomboBox.Items.Add(Settings.Guild_CreationCostList.Count - 1);
             GuildCreateListcomboBox.SelectedIndex = Settings.Guild_CreationCostList.Count - 1;
             UpdateGuildInterface();
