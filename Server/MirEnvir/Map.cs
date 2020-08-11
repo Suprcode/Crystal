@@ -681,31 +681,30 @@ namespace Server.MirEnvir
                 for (int i = Players.Count - 1; i >= 0; i--)
                 {
                     PlayerObject player = Players[i];
-                    Point Location;
+                    Point location;
                     if (Envir.Random.Next(4) == 0)
                     {
-                        Location = player.CurrentLocation;
+                        location = player.CurrentLocation;
 
                     }
                     else
-                        Location = new Point(player.CurrentLocation.X - 10 + Envir.Random.Next(20), player.CurrentLocation.Y - 10 + Envir.Random.Next(20));
+                        location = new Point(player.CurrentLocation.X - 10 + Envir.Random.Next(20), player.CurrentLocation.Y - 10 + Envir.Random.Next(20));
 
-                    if (!ValidPoint(Location)) continue;
+                    if (!ValidPoint(location)) continue;
 
-                    SpellObject Lightning = null;
-                    Lightning = new SpellObject
+                    SpellObject lightning = new SpellObject
                     {
                         Spell = Spell.MapLava,
                         Value = Envir.Random.Next(Info.FireDamage),
                         ExpireTime = Envir.Time + (1000),
                         TickSpeed = 500,
                         Caster = null,
-                        CurrentLocation = Location,
+                        CurrentLocation = location,
                         CurrentMap = this,
                         Direction = MirDirection.Up
                     };
-                    AddObject(Lightning);
-                    Lightning.Spawned();
+                    AddObject(lightning);
+                    lightning.Spawned();
                 }
             }
 
@@ -811,6 +810,7 @@ namespace Server.MirEnvir
                     break;
             }
         }
+
         private void CompleteMagic(IList<object> data)
         {
             bool train = false;

@@ -186,8 +186,8 @@ namespace Client
             list.Add(InputKey);
             InputKey = new KeyBind { Group = "Dialogs", Description = "Mount Open/Close", function = KeybindOptions.MountWindow, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.J };
             list.Add(InputKey);
-            //InputKey = new KeyBind { Group = "Dialogs", Description = "Fishing Open/Close", function = KeybindOptions.Fishing, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.N };
-            //list.Add(InputKey);
+            InputKey = new KeyBind { Group = "Dialogs", Description = "Fishing Open/Close", function = KeybindOptions.Fishing, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.N };
+            list.Add(InputKey);
             InputKey = new KeyBind { Group = "Dialogs", Description = "Skillbar Open/Close", function = KeybindOptions.Skillbar, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.R };
             list.Add(InputKey);
             InputKey = new KeyBind { Group = "Dialogs", Description = "Mentor Open/Close", function = KeybindOptions.Mentor, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.None };
