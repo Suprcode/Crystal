@@ -8750,7 +8750,7 @@ namespace Client.MirScenes
             DrawBackground();
 
             if (FloorValid)
-                DXManager.Sprite.Draw(DXManager.FloorTexture, new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight), new Vector3?(Vector3.Zero), new Vector3?(Vector3.Zero), Color.White);
+                DXManager.Sprite.Draw(DXManager.FloorTexture, new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight), Vector3.Zero, Vector3.Zero, Color.White);
 
             DrawObjects();
 
@@ -8810,7 +8810,7 @@ namespace Client.MirScenes
             float oldOpacity = DXManager.Opacity;
 
             DXManager.SetOpacity(Opacity);
-            DXManager.Sprite.Draw(ControlTexture, new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight), new Vector3?(Vector3.Zero), new Vector3?(Vector3.Zero), Color.White);
+            DXManager.Sprite.Draw(ControlTexture, new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight), Vector3.Zero, Vector3.Zero, Color.White);
             DXManager.SetOpacity(oldOpacity);
 
             CleanTime = CMain.Time + Settings.CleanDelay;
@@ -9228,7 +9228,7 @@ namespace Client.MirScenes
                     if (DXManager.Lights[LightRange] != null && !DXManager.Lights[LightRange].Disposed)
                     {
                         p.Offset(-(DXManager.LightSizes[LightRange].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[LightRange].Y / 2) - (CellHeight / 2) -5);
-                        DXManager.Sprite.Draw(DXManager.Lights[LightRange], new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight), new Vector3?(Vector3.Zero), new Vector3((float)p.X, (float)p.Y, 0.0F), lightColour);
+                        DXManager.Sprite.Draw(DXManager.Lights[LightRange], new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight), Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), lightColour);
                     }
 
                 }
@@ -9246,7 +9246,7 @@ namespace Client.MirScenes
                     if (DXManager.Lights[light] != null && !DXManager.Lights[light].Disposed)
                     {
                         p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
-                        DXManager.Sprite.Draw(DXManager.Lights[light], new Rectangle(0, 0, DXManager.LightSizes[light].X, DXManager.LightSizes[light].Y), new Vector3?(Vector3.Zero), new Vector3((float)p.X, (float)p.Y, 0.0F), effect.LightColour);
+                        DXManager.Sprite.Draw(DXManager.Lights[light], new Rectangle(0, 0, DXManager.LightSizes[light].X, DXManager.LightSizes[light].Y), Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), effect.LightColour);
                     }
 
                 }
@@ -9270,7 +9270,7 @@ namespace Client.MirScenes
                     if (DXManager.Lights[light] != null && !DXManager.Lights[light].Disposed)
                     {
                         p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
-                        DXManager.Sprite.Draw(DXManager.Lights[light], new Rectangle(0, 0, DXManager.LightSizes[light].X, DXManager.LightSizes[light].Y), new Vector3?(Vector3.Zero), new Vector3((float)p.X, (float)p.Y, 0.0F), Color.White);
+                        DXManager.Sprite.Draw(DXManager.Lights[light], new Rectangle(0, 0, DXManager.LightSizes[light].X, DXManager.LightSizes[light].Y), Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), Color.White);
                     }
                 }
             }
@@ -9328,7 +9328,7 @@ namespace Client.MirScenes
                     if (DXManager.Lights[light] != null && !DXManager.Lights[light].Disposed)
                     {
                         p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2) + 10, -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
-                        DXManager.Sprite.Draw(DXManager.Lights[light], new Rectangle(0, 0, DXManager.LightSizes[light].X, DXManager.LightSizes[light].Y), new Vector3?(Vector3.Zero), new Vector3((float)p.X, (float)p.Y, 0.0F), lightIntensity);
+                        DXManager.Sprite.Draw(DXManager.Lights[light], new Rectangle(0, 0, DXManager.LightSizes[light].X, DXManager.LightSizes[light].Y), Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), lightIntensity);
                     }
                 }
             }
@@ -9340,7 +9340,7 @@ namespace Client.MirScenes
             DXManager.Device.SetRenderState(SlimDX.Direct3D9.RenderState.SourceBlend, Blend.DestinationColor);
             DXManager.Device.SetRenderState(SlimDX.Direct3D9.RenderState.DestinationBlend, Blend.BothInverseSourceAlpha);
 
-            DXManager.Sprite.Draw(DXManager.LightTexture, new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight), new Vector3?(Vector3.Zero), new Vector3?(Vector3.Zero), Color.White);
+            DXManager.Sprite.Draw(DXManager.LightTexture, new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight), Vector3.Zero, Vector3.Zero, Color.White);
             DXManager.Sprite.End();
             DXManager.Sprite.Begin(SpriteFlags.AlphaBlend);
         }

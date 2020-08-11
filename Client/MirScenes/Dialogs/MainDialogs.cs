@@ -3156,7 +3156,7 @@ namespace Client.MirScenes.Dialogs
                 else
                     colour = Color.FromArgb(255, 0, 0);
 
-                DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), new Vector3?(Vector3.Zero), new Vector3((float)(x - 0.5), (float)(y - 0.5), 0.0F), colour);
+                DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(x - 0.5), (float)(y - 0.5), 0.0F), colour);
 
                 #region NPC Quest Icons
 
@@ -4899,7 +4899,7 @@ namespace Client.MirScenes.Dialogs
                 else
                     colour = Color.FromArgb(255, 0, 0);
 
-                DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), new Vector3?(Vector3.Zero), new Vector3((float)(x - 0.5), (float)(y - 0.5), 0.0F), colour);
+                DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(x - 0.5), (float)(y - 0.5), 0.0F), colour);
             }
         }
 

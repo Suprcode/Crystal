@@ -40,7 +40,7 @@ namespace Server
         //General
         public static string VersionPath = Path.Combine(".", "Mir2.Exe");
         public static bool CheckVersion = true;
-        public static byte[] VersionHash;
+        public static List<byte[]> VersionHashes;
         public static string GMPassword = "C#Mir 4.0";
         public static bool Multithreaded = true;
         public static int ThreadLimit = 2;
@@ -274,10 +274,17 @@ namespace Server
         {
             try
             {
-                if (File.Exists(VersionPath))
-                    using (FileStream stream = new FileStream(VersionPath, FileMode.Open, FileAccess.Read))
-                    using (MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider())
-                        VersionHash = md5.ComputeHash(stream);
+                VersionHashes = new List<byte[]>();
+
+                var paths = VersionPath.Split(',');
+
+                foreach (var path in paths)
+                {
+                    if (File.Exists(path))
+                        using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+                        using (MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider())
+                            VersionHashes.Add(md5.ComputeHash(stream));
+                }
             }
             catch (Exception ex)
             {

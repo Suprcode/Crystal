@@ -624,7 +624,7 @@ namespace Client.MirGraphics
                 return;
 
 
-            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), new Vector3?(Vector3.Zero), new Vector3((float)x, (float)y, 0.0F), Color.White);
+            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), Vector3.Zero, new Vector3((float)x, (float)y, 0.0F), Color.White);
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
         public void Draw(int index, Point point, Color colour, bool offSet = false)
@@ -639,7 +639,7 @@ namespace Client.MirGraphics
             if (point.X >= Settings.ScreenWidth || point.Y >= Settings.ScreenHeight || point.X + mi.Width < 0 || point.Y + mi.Height < 0)
                 return;
 
-            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), new Vector3?(Vector3.Zero), new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
+            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), Vector3.Zero, new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
 
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
@@ -659,7 +659,7 @@ namespace Client.MirGraphics
             float oldOpacity = DXManager.Opacity;
             DXManager.SetOpacity(opacity);
 
-            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), new Vector3?(Vector3.Zero), new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
+            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), Vector3.Zero, new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
 
             DXManager.SetOpacity(oldOpacity);
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
@@ -680,7 +680,7 @@ namespace Client.MirGraphics
             bool oldBlend = DXManager.Blending;
             DXManager.SetBlend(true, rate);
 
-            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), new Vector3?(Vector3.Zero), new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
+            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), Vector3.Zero, new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
 
             DXManager.SetBlend(oldBlend);
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
@@ -704,7 +704,7 @@ namespace Client.MirGraphics
             if (section.Bottom > mi.Height)
                 section.Height -= section.Bottom - mi.Height;
 
-            DXManager.Sprite.Draw(mi.Image, section, new Vector3?(Vector3.Zero), new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
+            DXManager.Sprite.Draw(mi.Image, section, Vector3.Zero, new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
 
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
@@ -728,7 +728,7 @@ namespace Client.MirGraphics
             float oldOpacity = DXManager.Opacity;
             DXManager.SetOpacity(opacity);
 
-            DXManager.Sprite.Draw(mi.Image, section, new Vector3?(Vector3.Zero), new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
+            DXManager.Sprite.Draw(mi.Image, section, Vector3.Zero, new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
 
             DXManager.SetOpacity(oldOpacity);
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
@@ -748,7 +748,7 @@ namespace Client.MirGraphics
 
             Matrix matrix = Matrix.Scaling(scaleX, scaleY, 0);
             DXManager.Sprite.Transform = matrix;
-            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), new Vector3?(Vector3.Zero), new Vector3((float)point.X / scaleX, (float)point.Y / scaleY, 0.0F), Color.White);
+            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), Vector3.Zero, new Vector3((float)point.X / scaleX, (float)point.Y / scaleY, 0.0F), Color.White);
             DXManager.Sprite.Transform = Matrix.Identity;
 
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
@@ -766,11 +766,11 @@ namespace Client.MirGraphics
             if (point.X >= Settings.ScreenWidth || point.Y >= Settings.ScreenHeight || point.X + mi.Width < 0 || point.Y + mi.Height < 0)
                 return;
 
-            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), new Vector3?(Vector3.Zero), new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
+            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), Vector3.Zero, new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
 
             if (mi.HasMask)
             {
-                DXManager.Sprite.Draw(mi.MaskImage, new Rectangle(0, 0, mi.Width, mi.Height), new Vector3?(Vector3.Zero), new Vector3((float)point.X, (float)point.Y, 0.0F), Tint);
+                DXManager.Sprite.Draw(mi.MaskImage, new Rectangle(0, 0, mi.Width, mi.Height), Vector3.Zero, new Vector3((float)point.X, (float)point.Y, 0.0F), Tint);
             }
 
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
@@ -791,7 +791,7 @@ namespace Client.MirGraphics
             if (x + mi.Width < 0 || y + mi.Height < 0)
                 return;
 
-            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), new Vector3?(Vector3.Zero), new Vector3(x, y, 0.0F), Color.White);
+            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), Vector3.Zero, new Vector3(x, y, 0.0F), Color.White);
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
         public void DrawUpBlend(int index, Point point)
@@ -810,7 +810,7 @@ namespace Client.MirGraphics
             bool oldBlend = DXManager.Blending;
             DXManager.SetBlend(true, 1);
 
-            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), new Vector3?(Vector3.Zero), new Vector3((float)point.X, (float)point.Y, 0.0F), Color.White);
+            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), Vector3.Zero, new Vector3((float)point.X, (float)point.Y, 0.0F), Color.White);
 
             DXManager.SetBlend(oldBlend);
             mi.CleanTime = CMain.Time + Settings.CleanDelay;

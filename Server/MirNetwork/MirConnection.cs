@@ -704,19 +704,32 @@ namespace Server.MirNetwork
             if (Stage != GameStage.None) return;
 
             if (Settings.CheckVersion)
-                if (!Functions.CompareBytes(Settings.VersionHash, p.VersionHash))
+            {
+                bool match = false;
+
+                foreach (var hash in Settings.VersionHashes)
+                {
+                    if (Functions.CompareBytes(hash, p.VersionHash))
+                    {
+                        match = true;
+                        break;
+                    }
+                }
+
+                if (!match)
                 {
                     Disconnecting = true;
 
                     List<byte> data = new List<byte>();
 
-                    data.AddRange(new S.ClientVersion {Result = 0}.GetPacketBytes());
+                    data.AddRange(new S.ClientVersion { Result = 0 }.GetPacketBytes());
 
                     BeginSend(data);
                     SoftDisconnect(10);
                     MessageQueue.Enqueue(SessionID + ", Disconnnected - Wrong Client Version.");
                     return;
                 }
+            }
 
             MessageQueue.Enqueue(SessionID + ", " + IPAddress + ", Client version matched.");
             Enqueue(new S.ClientVersion { Result = 1 });
