@@ -229,7 +229,7 @@ namespace Server
         private static String[] BaseStatClassNames = { "Warrior", "Wizard", "Taoist", "Assassin", "Archer" };
         public static BaseStats[] ClassBaseStats = new BaseStats[5] { new BaseStats(MirClass.Warrior), new BaseStats(MirClass.Wizard), new BaseStats(MirClass.Taoist), new BaseStats(MirClass.Assassin), new BaseStats(MirClass.Archer) };
         public static List<RandomItemStat> RandomItemStatsList = new List<RandomItemStat>();
-        public static List<MineInfo> MineSetList = new List<MineInfo>();
+        public static List<MineSet> MineSetList = new List<MineSet>();
         
         //item related settings
         public static byte MaxMagicResist = 6,
@@ -930,27 +930,27 @@ namespace Server
         {
             if (!File.Exists(Path.Combine(ConfigPath, "Mines.ini")))
             {
-                MineSetList.Add(new MineInfo(1));
-                MineSetList.Add(new MineInfo(2));
+                MineSetList.Add(new MineSet(1));
+                MineSetList.Add(new MineSet(2));
                 SaveMines();
                 return;
             }
             InIReader reader = new InIReader(Path.Combine(ConfigPath, "Mines.ini"));
             int i = 0;
-            MineInfo Mine;
+            MineSet mine;
             while (reader.ReadByte("Mine" + i.ToString(), "SpotRegenRate", 255) != 255)
             {
-                Mine = new MineInfo();
-                Mine.Name = reader.ReadString("Mine" + i.ToString(), "Name", Mine.Name);
-                Mine.SpotRegenRate = reader.ReadByte("Mine" + i.ToString(), "SpotRegenRate", Mine.SpotRegenRate);
-                Mine.MaxStones = reader.ReadByte("Mine" + i.ToString(), "MaxStones", Mine.MaxStones);
-                Mine.HitRate = reader.ReadByte("Mine" + i.ToString(), "HitRate", Mine.HitRate);
-                Mine.DropRate = reader.ReadByte("Mine" + i.ToString(), "DropRate", Mine.DropRate);
-                Mine.TotalSlots = reader.ReadByte("Mine" + i.ToString(), "TotalSlots", Mine.TotalSlots);
+                mine = new MineSet();
+                mine.Name = reader.ReadString("Mine" + i.ToString(), "Name", mine.Name);
+                mine.SpotRegenRate = reader.ReadByte("Mine" + i.ToString(), "SpotRegenRate", mine.SpotRegenRate);
+                mine.MaxStones = reader.ReadByte("Mine" + i.ToString(), "MaxStones", mine.MaxStones);
+                mine.HitRate = reader.ReadByte("Mine" + i.ToString(), "HitRate", mine.HitRate);
+                mine.DropRate = reader.ReadByte("Mine" + i.ToString(), "DropRate", mine.DropRate);
+                mine.TotalSlots = reader.ReadByte("Mine" + i.ToString(), "TotalSlots", mine.TotalSlots);
                 int j = 0;
                 while (reader.ReadByte("Mine" + i.ToString(), "D" + j.ToString() + "-MinSlot", 255) != 255)
                 {
-                    Mine.Drops.Add(new MineDrop()
+                    mine.Drops.Add(new MineDrop()
                         {
                             ItemName = reader.ReadString("Mine" + i.ToString(), "D" + j.ToString() + "-ItemName", ""),
                             MinSlot = reader.ReadByte("Mine" + i.ToString(), "D" + j.ToString() + "-MinSlot", 255),
@@ -962,7 +962,7 @@ namespace Server
                         });
                     j++;
                 }
-                MineSetList.Add(Mine);
+                MineSetList.Add(mine);
                 i++;
             }
 
@@ -971,20 +971,20 @@ namespace Server
         {
             File.Delete(Path.Combine(ConfigPath, "Mines.ini"));
             InIReader reader = new InIReader(Path.Combine(ConfigPath, "Mines.ini"));
-            MineInfo Mine;
+            MineSet mine;
             for (int i = 0; i < MineSetList.Count; i++)
             {
-                Mine = MineSetList[i];
-                reader.Write("Mine" + i.ToString(), "Name", Mine.Name);
-                reader.Write("Mine" + i.ToString(), "SpotRegenRate", Mine.SpotRegenRate);
-                reader.Write("Mine" + i.ToString(), "MaxStones", Mine.MaxStones);
-                reader.Write("Mine" + i.ToString(), "HitRate", Mine.HitRate);
-                reader.Write("Mine" + i.ToString(), "DropRate", Mine.DropRate);
-                reader.Write("Mine" + i.ToString(), "TotalSlots", Mine.TotalSlots);
+                mine = MineSetList[i];
+                reader.Write("Mine" + i.ToString(), "Name", mine.Name);
+                reader.Write("Mine" + i.ToString(), "SpotRegenRate", mine.SpotRegenRate);
+                reader.Write("Mine" + i.ToString(), "MaxStones", mine.MaxStones);
+                reader.Write("Mine" + i.ToString(), "HitRate", mine.HitRate);
+                reader.Write("Mine" + i.ToString(), "DropRate", mine.DropRate);
+                reader.Write("Mine" + i.ToString(), "TotalSlots", mine.TotalSlots);
                 
-                for (int j = 0; j < Mine.Drops.Count; j++)
+                for (int j = 0; j < mine.Drops.Count; j++)
                 {
-                    MineDrop Drop = Mine.Drops[j];
+                    MineDrop Drop = mine.Drops[j];
                     reader.Write("Mine" + i.ToString(), "D" + j.ToString() + "-ItemName", Drop.ItemName);
                     reader.Write("Mine" + i.ToString(), "D" + j.ToString() + "-MinSlot", Drop.MinSlot);
                     reader.Write("Mine" + i.ToString(), "D" + j.ToString() + "-MaxSlot", Drop.MaxSlot);

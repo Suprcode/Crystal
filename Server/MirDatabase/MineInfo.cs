@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Server.MirDatabase
 {
-    public class MineInfo
+    public class MineSet
     {
         public string Name = string.Empty;
         public byte SpotRegenRate = 5;
@@ -17,7 +17,7 @@ namespace Server.MirDatabase
         public List<MineDrop> Drops = new List<MineDrop>();
         private bool DropsSet = false;
 
-        public MineInfo(byte mineType = 0)
+        public MineSet(byte mineType = 0)
         {
             switch (mineType)
             {
@@ -59,7 +59,7 @@ namespace Server.MirDatabase
     {
         public byte StonesLeft = 0;
         public long LastRegenTick = 0;
-        public MineInfo Mine;
+        public MineSet Mine;
     }
 
     public class MineDrop

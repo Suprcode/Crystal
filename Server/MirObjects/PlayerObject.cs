@@ -6463,7 +6463,7 @@ namespace Server.MirObjects
             }
         }
 
-        public void GetMinePayout(MineInfo Mine)
+        public void GetMinePayout(MineSet Mine)
         {
             if ((Mine.Drops == null) || (Mine.Drops.Count == 0)) return;
             if (FreeSpace(Info.Inventory) == 0) return;

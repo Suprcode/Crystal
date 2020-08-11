@@ -108,7 +108,7 @@ namespace Server
         {
             if (ActiveControl != sender) return;
             MinesChanged = true;
-            Settings.MineSetList.Add(new MineInfo());
+            Settings.MineSetList.Add(new MineSet());
             //MineIndexcomboBox.Items.Add(Settings.MineSetList.Count);
             MineIndexcomboBox.Items.Add(new ListItem(String.Empty, Settings.MineSetList.Count.ToString()));
             MineIndexcomboBox.SelectedIndex = Settings.MineSetList.Count - 1;
