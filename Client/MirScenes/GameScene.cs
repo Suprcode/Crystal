@@ -109,7 +109,7 @@ namespace Client.MirScenes
         public ItemRentalDialog ItemRentalDialog;
 
         public BuffDialog BuffsDialog;
-        
+
         public KeyboardLayoutDialog KeyboardLayoutDialog;
 
         public static List<ItemInfo> ItemInfoList = new List<ItemInfo>();
@@ -199,7 +199,7 @@ namespace Client.MirScenes
             MountDialog = new MountDialog { Parent = this, Visible = false };
             FishingDialog = new FishingDialog { Parent = this, Visible = false };
             FishingStatusDialog = new FishingStatusDialog { Parent = this, Visible = false };
-            
+
             GroupDialog = new GroupDialog { Parent = this, Visible = false };
             GuildDialog = new GuildDialog { Parent = this, Visible = false };
 
@@ -221,9 +221,9 @@ namespace Client.MirScenes
             ChatNoticeDialog = new ChatNoticeDialog { Parent = this, Visible = false };
 
             QuestListDialog = new QuestListDialog { Parent = this, Visible = false };
-            QuestDetailDialog = new QuestDetailDialog {Parent = this, Visible = false};
+            QuestDetailDialog = new QuestDetailDialog { Parent = this, Visible = false };
             QuestTrackingDialog = new QuestTrackingDialog { Parent = this, Visible = false };
-            QuestLogDialog = new QuestDiaryDialog {Parent = this, Visible = false};
+            QuestLogDialog = new QuestDiaryDialog { Parent = this, Visible = false };
 
             RankingDialog = new RankingDialog { Parent = this, Visible = false };
 
@@ -252,7 +252,7 @@ namespace Client.MirScenes
             GuestItemRentDialog = new GuestItemRentDialog { Parent = this, Visible = false };
             ItemRentalDialog = new ItemRentalDialog { Parent = this, Visible = false };
 
-            BuffsDialog = new BuffDialog {Parent = this, Visible = true};
+            BuffsDialog = new BuffDialog { Parent = this, Visible = true };
 
             //not added yet
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
@@ -711,7 +711,7 @@ namespace Client.MirScenes
         {
             if (User.RidingMount || User.Fishing) return;
 
-            if(!User.HasClassWeapon && User.Weapon >= 0)
+            if (!User.HasClassWeapon && User.Weapon >= 0)
             {
                 ChatDialog.ReceiveChat("You must be wearing a suitable weapon to perform this skill", ChatType.System);
                 return;
@@ -898,7 +898,6 @@ namespace Client.MirScenes
             for (int i = 0; i < OutputLines.Length; i++)
                 OutputLines[i].Draw();
         }
-
         public override void Process()
         {
             if (MapControl == null || User == null)
@@ -5768,6 +5767,9 @@ namespace Client.MirScenes
                     case ItemType.Transform:
                         InfoLanguageString = GameLanguage.ItemTypeTransform;
                         break;
+                    case ItemType.Deco:
+                        InfoLanguageString = GameLanguage.ItemTypeDeco;
+                        break;
                 }
                 WedRingName = string.Format(GameLanguage.WedRingName, InfoLanguageString, "\n" , GameLanguage.Weight, HoverItem.Weight + text);
             }
@@ -9445,6 +9447,7 @@ namespace Client.MirScenes
 
                 return;
             }
+
             if (GameScene.PickedUpGold)
             {
                 MirAmountBox amountBox = new MirAmountBox(GameLanguage.DropAmount, 116, GameScene.Gold);
@@ -9460,8 +9463,6 @@ namespace Client.MirScenes
                 amountBox.Show();
                 GameScene.PickedUpGold = false;
             }
-
-
 
             if (MapObject.MouseObject != null && !MapObject.MouseObject.Dead && !(MapObject.MouseObject is ItemObject) &&
                 !(MapObject.MouseObject is NPCObject) && !(MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 64)

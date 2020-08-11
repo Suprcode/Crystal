@@ -4751,16 +4751,14 @@ namespace Server.MirObjects
                         }
                         break;
 
-                    case "DECO": //TEST CODE
+                    case "DECO":
                         if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 
-                        ushort tempShort = 0;
-
-                        ushort.TryParse(parts[1], out tempShort);
+                        int.TryParse(parts[1], out tempInt);
 
                         DecoObject decoOb = new DecoObject
                         {
-                            Image = tempShort,
+                            Image = tempInt,
                             CurrentMap = CurrentMap,
                             CurrentLocation = CurrentLocation,
                         };
@@ -4769,6 +4767,7 @@ namespace Server.MirObjects
                         decoOb.Spawned();
 
                         Enqueue(decoOb.GetInfo());
+
                         break;
 
                     case "ADJUSTPKPOINT":
@@ -5948,20 +5947,18 @@ namespace Server.MirObjects
 
                 int hitChance = Envir.Random.Next(100); // Randomise a number between minimum chance and 100       
 
+                int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500 + 50; //50 MS per Step
+
                 if (hitChance < chanceToHit)
                 {
                     if (target.CurrentLocation != location)
                         location = target.CurrentLocation;
-
-                    int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500 + 50; //50 MS per Step
 
                     DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, target, damage, DefenceType.ACAgility, true);
                     ActionList.Add(action);
                 }
                 else
                 {
-                    int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500 + 50; //50 MS per Step
-
                     DelayedAction action = new DelayedAction(DelayedType.DamageIndicator, Envir.Time + delay, target, DamageType.Miss);
                     ActionList.Add(action);
                 }
@@ -11608,6 +11605,21 @@ namespace Server.MirObjects
                     int tType = item.Info.Shape;
 
                     AddBuff(new Buff { Type = BuffType.Transform, Caster = this, ExpireTime = Envir.Time + tTime * 1000, Values = new int[] { tType } });
+                    break;
+                case ItemType.Deco:
+
+                    DecoObject decoOb = new DecoObject
+                    {
+                        Image = item.Info.Shape,
+                        CurrentMap = CurrentMap,
+                        CurrentLocation = CurrentLocation,
+                    };
+
+                    CurrentMap.AddObject(decoOb);
+                    decoOb.Spawned();
+
+                    Enqueue(decoOb.GetInfo());
+
                     break;
                 default:
                     return;

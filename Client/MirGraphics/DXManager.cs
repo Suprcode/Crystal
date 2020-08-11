@@ -134,7 +134,6 @@ namespace Client.MirGraphics
             CurrentSurface = MainSurface;
             Device.SetRenderTarget(0, MainSurface);
 
-
             if (RadarTexture == null || RadarTexture.Disposed)
             {
                 RadarTexture = new Texture(Device, 2, 2, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);

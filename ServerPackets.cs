@@ -4712,13 +4712,13 @@ namespace ServerPackets
 
         public uint ObjectID;
         public Point Location;
-        public ushort Image;
+        public int Image;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             ObjectID = reader.ReadUInt32();
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
-            Image = reader.ReadUInt16();
+            Image = reader.ReadInt32();
         }
 
         protected override void WritePacket(BinaryWriter writer)

@@ -314,6 +314,7 @@ namespace Server.MirObjects
         public bool CanFly(Point target)
         {
             Point location = CurrentLocation;
+
             while (location != target)
             {
                 MirDirection dir = Functions.DirectionFromPoint(location, target);
@@ -323,7 +324,6 @@ namespace Server.MirObjects
                 if (location.X < 0 || location.Y < 0 || location.X >= CurrentMap.Width || location.Y >= CurrentMap.Height) return false;
 
                 if (!CurrentMap.GetCell(location).Valid) return false;
-
             }
 
             return true;
