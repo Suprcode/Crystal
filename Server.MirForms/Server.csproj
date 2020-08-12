@@ -90,7 +90,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Server\Server.Library.csproj" />
+    <ProjectReference Include="..\Server\Server.Library.csproj">
+      <Project>{AF5F4517-CE06-4D20-9BFF-1860C6604021}</Project>
+      <Name>Server.Library</Name>
+    </ProjectReference>
     <Compile Include="Account\PlayerInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>

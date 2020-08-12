@@ -12,7 +12,7 @@ namespace Client.Utils
 {
     public class BrowserHelper
     {
-        public static void OpenChrometBrowser(string url)
+        private static void OpenChrometBrowser(string url)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace Client.Utils
             }
         }
 
-        public static void OpenIetBrowser(string url)
+        private static void OpenIetBrowser(string url)
         {
             try
             {

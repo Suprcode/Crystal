@@ -6889,7 +6889,7 @@ namespace Server.MirObjects
                 int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC) + orbPower);
                 int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500; //50 MS per Step
 
-                DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target);
+                DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target, target.CurrentLocation);
                 ActionList.Add(action);
             }
             else
@@ -7024,7 +7024,7 @@ namespace Server.MirObjects
 
             int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500; //50 MS per Step
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target, target.CurrentLocation);
 
             //if(magic.Info.Spell == Spell.GreatFireBall && magic.Level >= 3 && target.Race == ObjectType.Monster)
             //{
@@ -7199,7 +7199,7 @@ namespace Server.MirObjects
 
             if (target.Undead) damage = (int)(damage * 1.5F);
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, damage, target);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, damage, target, target.CurrentLocation);
 
             ActionList.Add(action);
         }
@@ -7263,7 +7263,7 @@ namespace Server.MirObjects
 
             if (!target.Undead) damage = (int)(damage * 1.5F);
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, damage, target);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, damage, target, target.CurrentLocation);
 
             ActionList.Add(action);
         }
@@ -7390,7 +7390,7 @@ namespace Server.MirObjects
 
             int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500; //50 MS per Step
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target, target.CurrentLocation);
 
             ActionList.Add(action);
             ConsumeItem(item, 1);
@@ -8487,7 +8487,7 @@ namespace Server.MirObjects
 
             int delay = distance * 50 + 500; //50 MS per Step
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target, target.CurrentLocation);
 
             ActionList.Add(action);
 
@@ -8504,11 +8504,11 @@ namespace Server.MirObjects
 
             int delay = distance * 50 + 500; //50 MS per Step
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target, target.CurrentLocation);
 
             ActionList.Add(action);
 
-            action = new DelayedAction(DelayedType.Magic, Envir.Time + delay + 50, magic, damage, target);
+            action = new DelayedAction(DelayedType.Magic, Envir.Time + delay + 50, magic, damage, target, target.CurrentLocation);
 
             ActionList.Add(action);
 
@@ -8576,7 +8576,7 @@ namespace Server.MirObjects
             int power = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
             int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500; //50 MS per Step
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, power, target);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, power, target, target.CurrentLocation);
             ActionList.Add(action);
             return true;
         }
@@ -8647,7 +8647,7 @@ namespace Server.MirObjects
             int value = (int)duration;
             int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500; //50 MS per Step
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, value, target);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, value, target, target.CurrentLocation);
             ActionList.Add(action);
 
             cast = true;
@@ -8663,7 +8663,7 @@ namespace Server.MirObjects
 
             int delay = distance * 50 + 500; //50 MS per Step
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target, target.CurrentLocation);
             ActionList.Add(action);
         }
         public void NapalmShot(MapObject target, UserMagic magic)
@@ -8766,8 +8766,10 @@ namespace Server.MirObjects
             UserMagic magic = (UserMagic)data[0];
             int value;
             MapObject target;
+            Point targetLocation;
             Point location;
             MonsterObject monster;
+
             switch (magic.Spell)
             {
                 #region FireBall, GreatFireBall, ThunderBolt, SoulFireBall, FlameDisruptor
@@ -8781,8 +8783,9 @@ namespace Server.MirObjects
                 case Spell.DoubleShot:
                     value = (int)data[1];
                     target = (MapObject)data[2];
+                    targetLocation = (Point)data[3];
 
-                    if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+                    if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null || !Functions.InRange(target.CurrentLocation, targetLocation, 2)) return;
                     if (target.Attacked(this, value, DefenceType.MAC, false) > 0) LevelMagic(magic);
                     break;
 
@@ -8792,8 +8795,9 @@ namespace Server.MirObjects
                 case Spell.FrostCrunch:
                     value = (int)data[1];
                     target = (MapObject)data[2];
+                    targetLocation = (Point)data[3];
 
-                    if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+                    if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null || !Functions.InRange(target.CurrentLocation, targetLocation, 2)) return;
                     if (target.Attacked(this, value, DefenceType.MAC, false) > 0)
                     {
                         if (Level + (target.Race == ObjectType.Player ? 2 : 10) >= target.Level && Envir.Random.Next(target.Race == ObjectType.Player ? 100 : 20) <= magic.Level)
@@ -9210,8 +9214,9 @@ namespace Server.MirObjects
                 case Spell.ElementalShot:
                     value = (int)data[1];
                     target = (MapObject)data[2];
+                    targetLocation = (Point)data[3];
 
-                    if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null)
+                    if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null || !Functions.InRange(target.CurrentLocation, targetLocation, 2))
                     {
                         //destroy orbs
                         ElementsLevel = 0;
@@ -9234,8 +9239,9 @@ namespace Server.MirObjects
                 case Spell.DelayedExplosion:
                     value = (int)data[1];
                     target = (MapObject)data[2];
+                    targetLocation = (Point)data[3];
 
-                    if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+                    if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null || !Functions.InRange(target.CurrentLocation, targetLocation, 2)) return;
                     if (target.Attacked(this, value, DefenceType.MAC, false) > 0) LevelMagic(magic);
 
                     target.ApplyPoison(new Poison
@@ -9258,8 +9264,9 @@ namespace Server.MirObjects
                 case Spell.BindingShot:
                     value = (int)data[1];
                     target = (MapObject)data[2];
+                    targetLocation = (Point)data[3];
 
-                    if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+                    if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null || !Functions.InRange(target.CurrentLocation, targetLocation, 2)) return;
                     if (((MonsterObject)target).ShockTime >= Envir.Time) return;//Already shocked
 
                     Point place = target.CurrentLocation;
@@ -9322,8 +9329,9 @@ namespace Server.MirObjects
                 case Spell.CrippleShot:
                     value = (int)data[1];
                     target = (MapObject)data[2];
+                    targetLocation = (Point)data[3];
 
-                    if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+                    if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null || !Functions.InRange(target.CurrentLocation, targetLocation, 2)) return;
                     if (target.Attacked(this, value, DefenceType.MAC, false) == 0) return;
 
                     int buffTime = 5 + (5 * magic.Level);
@@ -9494,9 +9502,8 @@ namespace Server.MirObjects
                 #endregion
 
             }
-
-
         }
+
         private void CompleteMine(IList<object> data)
         {
             MapObject target = (MapObject)data[0];

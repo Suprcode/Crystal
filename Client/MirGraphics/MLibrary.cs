@@ -507,7 +507,6 @@ namespace Client.MirGraphics
                 CurrentVersion = _reader.ReadInt32();
                 if (CurrentVersion != LibVersion)
                 {
-                    //cant use a directx based error popup cause it could be the lib file containing the interface is invalid :(
                     System.Windows.Forms.MessageBox.Show("Wrong version, expecting lib version: " + LibVersion.ToString() + " found version: " + CurrentVersion.ToString() + ".", _fileName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error, System.Windows.Forms.MessageBoxDefaultButton.Button1);
                     System.Windows.Forms.Application.Exit();
                     return;
