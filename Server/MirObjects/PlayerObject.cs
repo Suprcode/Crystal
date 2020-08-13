@@ -389,13 +389,7 @@ namespace Server.MirObjects
                     }
                 }
             }
-
-            var script = new NPCScript(ObjectID, "XtremeMenu", NPCScriptType.Normal);
-
-            STOREDSCRIPTID = script.ScriptID; //STORE THIS
         }
-
-        public int STOREDSCRIPTID;
 
         public void StopGame(byte reason)
         {
@@ -5348,10 +5342,6 @@ namespace Server.MirObjects
                         }
                         else ReceiveChat(string.Format("Unable to delete skill, skill not found"), ChatType.Hint);
 
-                        break;
-                    case "RUNSCRIPT":
-                        var script1 = NPCScript.Get(STOREDSCRIPTID);
-                        script1.Call(this, this.ObjectID, "[@main]");
                         break;
                     default:
                         break;
