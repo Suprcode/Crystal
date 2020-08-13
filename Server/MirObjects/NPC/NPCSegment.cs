@@ -3879,7 +3879,6 @@ namespace Server.MirObjects
             parseSay = ParseSay(player, parseSay);
 
             player.NPCSpeech.AddRange(parseSay);
-            //player.Enqueue(new S.NPCResponse { Page = parseSay });
         }
 
         private void Failed(PlayerObject player)
@@ -3890,7 +3889,6 @@ namespace Server.MirObjects
             parseElseSay = ParseSay(player, parseElseSay);
 
             player.NPCSpeech.AddRange(parseElseSay);
-            //player.Enqueue(new S.NPCResponse { Page = parseElseSay });
         }
 
         private void Success(MonsterObject Monster)

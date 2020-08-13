@@ -142,10 +142,9 @@ namespace Server.MirEnvir
         public int SpawnMultiplier = 1;//set this to 2 if you want double spawns (warning this can easily lag your server far beyond what you imagine)
 
         public List<string> CustomCommands = new List<string>();
+
         public Dragon DragonSystem;
-        public NPCScript DefaultNPC;
-        public NPCScript MonsterNPC;
-        public NPCScript RobotNPC;
+        public NPCScript DefaultNPC, MonsterNPC, RobotNPC;
 
         public List<DropInfo> FishingDrops = new List<DropInfo>();
         public List<DropInfo> AwakeningDrops = new List<DropInfo>();
@@ -468,9 +467,10 @@ namespace Server.MirEnvir
                 var saveTime = Time + Settings.SaveDelay * Settings.Minute;
                 var userTime = Time + Settings.Minute * 5;
                 var auctionTime = Time;
-                var SpawnTime = Time;
+                var spawnTime = Time;
+                var robotTime = Time;
                 var processTime = Time + 1000;
-                var StartTime = Time;
+                var startTime = Time;
 
                 var processCount = 0;
                 var processRealCount = 0;
@@ -559,8 +559,8 @@ namespace Server.MirEnvir
 
                         if (current == Objects.First)
                         {
-                            LastRunTime = Time - StartTime;
-                            StartTime = Time;
+                            LastRunTime = Time - startTime;
+                            startTime = Time;
                         }
 
                         if (Settings.Multithreaded)
@@ -637,18 +637,21 @@ namespace Server.MirEnvir
                             ProcessAuction();
                         }
 
-                        if (Time >= SpawnTime)
+                        if (Time >= spawnTime)
                         {
-                            SpawnTime = Time + Settings.Second * 10; //technically this limits the respawn tick code to a minimum of 10 second each but lets assume it's not meant to be this accurate
+                            spawnTime = Time + Settings.Second * 10;
                             Main.RespawnTick.Process();
+                        }
+
+                        if (Time >= robotTime)
+                        {
+                            robotTime = Time + Settings.Minute;
+                            Robot.Process(RobotNPC);
                         }
 
                         //   if (Players.Count == 0) Thread.Sleep(1);
                         //   GC.Collect();
-
-
                     }
-
                 }
                 catch (Exception ex)
                 {
@@ -3392,6 +3395,5 @@ namespace Server.MirEnvir
                 item.LoadDrops();
             MessageQueue.Enqueue("Drops reloaded...");
         }
-   
     }
 }

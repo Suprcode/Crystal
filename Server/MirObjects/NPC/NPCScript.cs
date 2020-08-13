@@ -260,17 +260,11 @@ namespace Server.MirObjects
                         MobInfo.HasDieScript = true;
                     }
                 }
-
                 else if (Type == NPCScriptType.Robot)
                 {
-                    //min,hour,day,month
-
                     if (lines[i].ToUpper().Contains("TIME"))
                     {
-                        Regex regex = new Regex(@"\(([0-9]{1,2}),([0-9]{1,2}),([0-9]{1,1}),([0-9]{1,2})\)");
-                        Match match = regex.Match(lines[i]);
-
-                        if (!match.Success) continue;
+                        Robot.AddRobot(lines[i].ToUpper());
                     }
                 }
 
