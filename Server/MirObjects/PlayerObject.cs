@@ -389,7 +389,14 @@ namespace Server.MirObjects
                     }
                 }
             }
+
+            var script = new NPCScript(ObjectID, "XtremeMenu", NPCScriptType.Normal);
+
+            STOREDSCRIPTID = script.ScriptID; //STORE THIS
         }
+
+        public int STOREDSCRIPTID;
+
         public void StopGame(byte reason)
         {
             if (Node == null) return;
@@ -5342,6 +5349,10 @@ namespace Server.MirObjects
                         else ReceiveChat(string.Format("Unable to delete skill, skill not found"), ChatType.Hint);
 
                         break;
+                    case "RUNSCRIPT":
+                        var script1 = NPCScript.Get(STOREDSCRIPTID);
+                        script1.Call(this, this.ObjectID, "[@main]");
+                        break;
                     default:
                         break;
                 }
@@ -9601,8 +9612,6 @@ namespace Server.MirObjects
             {
                 var script = NPCScript.Get(scriptIndex);
                 script.Call(this, npcid, page.ToUpper());
-
-                CallNPCNextPage();
             }
         }
         private void CompletePoison(IList<object> data)

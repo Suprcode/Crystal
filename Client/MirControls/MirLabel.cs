@@ -236,6 +236,7 @@ namespace Client.MirControls
                         TextRenderer.DrawText(graphics, Text, Font, new Rectangle(1, 0, Size.Width, Size.Height), ForeColour, DrawFormat);
                 }
             }
+
             ControlTexture.UnlockRectangle(0);
             DXManager.Sprite.Flush();
             TextureValid = true;

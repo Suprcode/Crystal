@@ -154,19 +154,17 @@ namespace Client.MirControls
             TextureValid = true;
             surface.Dispose();
         }
-        protected void ControlTexture_Disposing(object sender, EventArgs e)
-        {
-            ControlTexture = null;
-            TextureValid = false;
-            TextureSize = Size.Empty;
 
-            DXManager.ControlList.Remove(this);
-        }
         internal void DisposeTexture()
         {
             if (ControlTexture == null || ControlTexture.Disposed) return;
 
             ControlTexture.Dispose();
+            ControlTexture = null;
+            TextureValid = false;
+            TextureSize = Size.Empty;
+
+            DXManager.ControlList.Remove(this);
         }
         #endregion
 
