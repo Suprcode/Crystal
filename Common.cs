@@ -2149,6 +2149,8 @@ public static class Globals
                       AuctionCost = 5000,
                       MinStartingBid = 0,
                       MaxStartingBid = 50000;
+
+    public static int[] FishingRodShapes = new int[] { 49, 50 };
 }
 
 
@@ -2714,6 +2716,10 @@ public class ItemInfo
     public bool IsConsumable
     {
         get { return Type == ItemType.Potion || Type == ItemType.Scroll || Type == ItemType.Food || Type == ItemType.Transform || Type == ItemType.Script; }
+    }
+    public bool IsFishingRod
+    {
+        get { return Globals.FishingRodShapes.Contains(Shape); }
     }
 
     public string FriendlyName
