@@ -2755,8 +2755,8 @@ namespace Server.MirEnvir
             if (stat.MaxAcChance > 0 && Random.Next(stat.MaxAcChance) == 0) item.AC = (byte)(RandomomRange(stat.MaxAcMaxStat-1, stat.MaxAcStatChance)+1);
             if (stat.MaxMacChance > 0 && Random.Next(stat.MaxMacChance) == 0) item.MAC = (byte)(RandomomRange(stat.MaxMacMaxStat-1, stat.MaxMacStatChance)+1);
             if (stat.MaxDcChance > 0 && Random.Next(stat.MaxDcChance) == 0) item.DC = (byte)(RandomomRange(stat.MaxDcMaxStat-1, stat.MaxDcStatChance)+1);
-            if (stat.MaxMcChance > 0 && Random.Next(stat.MaxScChance) == 0) item.MC = (byte)(RandomomRange(stat.MaxMcMaxStat-1, stat.MaxMcStatChance)+1);
-            if (stat.MaxScChance > 0 && Random.Next(stat.MaxMcChance) == 0) item.SC = (byte)(RandomomRange(stat.MaxScMaxStat-1, stat.MaxScStatChance)+1);
+            if (stat.MaxMcChance > 0 && Random.Next(stat.MaxMcChance) == 0) item.MC = (byte)(RandomomRange(stat.MaxMcMaxStat-1, stat.MaxMcStatChance)+1);
+            if (stat.MaxScChance > 0 && Random.Next(stat.MaxScChance) == 0) item.SC = (byte)(RandomomRange(stat.MaxScMaxStat-1, stat.MaxScStatChance)+1);
             if (stat.AccuracyChance > 0 && Random.Next(stat.AccuracyChance) == 0) item.Accuracy = (byte)(RandomomRange(stat.AccuracyMaxStat-1, stat.AccuracyStatChance)+1);
             if (stat.AgilityChance > 0 && Random.Next(stat.AgilityChance) == 0) item.Agility = (byte)(RandomomRange(stat.AgilityMaxStat-1, stat.AgilityStatChance)+1);
             if (stat.HpChance > 0 && Random.Next(stat.HpChance) == 0) item.HP = (byte)(RandomomRange(stat.HpMaxStat-1, stat.HpStatChance)+1);

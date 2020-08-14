@@ -419,12 +419,13 @@ namespace Server.MirObjects
 
         public override void Spawned()
         {
-            base.Spawned();
             ActionTime = Envir.Time + 2000;
             if (Info.HasSpawnScript && (Envir.MonsterNPC != null))
             {
                 Envir.MonsterNPC.Call(this,string.Format("[@_SPAWN({0})]", Info.Index));
             }
+
+            base.Spawned();
         }
 
         protected virtual void RefreshBase()
@@ -1140,7 +1141,6 @@ namespace Server.MirObjects
                         DamageRate += 0.5F;
                         break;
                     case PoisonType.Slow:
-
                         MoveSpeed = (ushort)Math.Min(3500, MoveSpeed + 100);
                         AttackSpeed = (ushort)Math.Min(3500, AttackSpeed + 100);
  

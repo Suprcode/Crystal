@@ -8010,7 +8010,7 @@ namespace Client.MirScenes
                         HoverItem.Info.ToolTip = string.Format("Increase AC {0}-{0} for {1}.", HoverItem.AC + realItem.MaxAC, strTime);
                         break;
                     case 5://amc low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase AMC {0}-{0} for {1}.", HoverItem.MAC + realItem.MaxAC, strTime);
+                        HoverItem.Info.ToolTip = string.Format("Increase MAC {0}-{0} for {1}.", HoverItem.MAC + realItem.MaxMAC, strTime);
                         break;
                     case 6://speed low/med/high
                         HoverItem.Info.ToolTip = string.Format("Increase AttackSpeed by {0} for {1}.", HoverItem.AttackSpeed + realItem.AttackSpeed, strTime);

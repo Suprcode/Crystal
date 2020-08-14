@@ -871,9 +871,9 @@ namespace Client.MirScenes.Dialogs
                     GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowGold, ChatType.System);
                     break;
                 case PanelType.Consign:
-                    if (TargetItem.Info.Bind.HasFlag(BindMode.DontStore))
+                    if (TargetItem.Info.Bind.HasFlag(BindMode.DontStore) || TargetItem.Info.Bind.HasFlag(BindMode.DontSell))
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("Cannot store this item.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat("Cannot consign this item.", ChatType.System);
                         return;
                     }
                     MirAmountBox box = new MirAmountBox("Consignment Price:", TargetItem.Image, Globals.MaxConsignment, Globals.MinConsignment)

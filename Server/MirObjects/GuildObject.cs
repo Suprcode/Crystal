@@ -819,8 +819,8 @@ namespace Server.MirObjects
             GuildA.WarringGuilds.Remove(GuildB);
             GuildB.WarringGuilds.Remove(GuildA);
 
-            GuildA.SendMessage(string.Format("War ended with {0}.", GuildB.Name, ChatType.Guild));
-            GuildB.SendMessage(string.Format("War ended with {0}.", GuildA.Name, ChatType.Guild));
+            GuildA.SendMessage(string.Format("War ended with {0}.", GuildB.Name), ChatType.Guild);
+            GuildB.SendMessage(string.Format("War ended with {0}.", GuildA.Name), ChatType.Guild);
             GuildA.UpdatePlayersColours();
             GuildB.UpdatePlayersColours();
         }

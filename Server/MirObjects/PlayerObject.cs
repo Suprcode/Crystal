@@ -5002,7 +5002,7 @@ namespace Server.MirObjects
                                     ReceiveChat("--Monster Info--", ChatType.System2);
                                     ReceiveChat(string.Format("ID : {0}, Name : {1}", monOb.Info.Index, monOb.Name), ChatType.System2);
                                     ReceiveChat(string.Format("Level : {0}, X : {1}, Y : {2}", monOb.Level, monOb.CurrentLocation.X, monOb.CurrentLocation.Y), ChatType.System2);
-                                    ReceiveChat(string.Format("HP : {0}, MinDC : {1}, MaxDC : {1}", monOb.Info.HP, monOb.MinDC, monOb.MaxDC), ChatType.System2);
+                                    ReceiveChat(string.Format("HP : {0}, MinDC : {1}, MaxDC : {2}", monOb.Info.HP, monOb.MinDC, monOb.MaxDC), ChatType.System2);
                                     break;
                                 case ObjectType.Merchant:
                                     NPCObject npcOb = (NPCObject)ob;
@@ -7141,7 +7141,8 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Pets.Count(t => !t.Dead) >= magic.Level + 2) return;
+            if (Pets.Count(t => !t.Dead && t.GetType() != typeof(IntelligentCreatureObject)) >= magic.Level + 2) return;
+
             int rate = (int)(target.MaxHP / 100);
             if (rate <= 2) rate = 2;
             else rate *= 2;
@@ -9073,14 +9074,7 @@ namespace Server.MirObjects
                     target.ExplosionInflictedTime = 0;
                     target.ExplosionInflictedStage = 0;
 
-                    for (int i = 0; i < target.Buffs.Count; i++)
-                    {
-                        if (target.Buffs[i].Type == BuffType.Curse)
-                        {
-                            target.Buffs.RemoveAt(i);
-                            break;
-                        }
-                    }
+                    target.RemoveBuff(BuffType.Curse);
 
                     target.PoisonList.Clear();
                     target.OperateTime = 0;
@@ -10752,6 +10746,12 @@ namespace Server.MirObjects
             }
 
             if (temp.WeddingRing != -1)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (temp.Info.Bind.HasFlag(BindMode.DontStore) && grid == MirGridType.Storage)
             {
                 Enqueue(p);
                 return;
@@ -17551,9 +17551,19 @@ namespace Server.MirObjects
                 if (itm == null) continue;
 
                 bool itemRequired = false;
+                bool isCarryItem = false;
 
                 foreach (QuestProgressInfo quest in CurrentQuests)
                 {
+                    foreach (QuestItemTask carryItem in quest.Info.CarryItems)
+                    {
+                        if (carryItem.Item == itm.Info)
+                        {
+                            isCarryItem = true;
+                            break;
+                        }
+                    }
+
                     foreach (QuestItemTask task in quest.Info.ItemTasks)
                     {
                         if (task.Item == itm.Info)
@@ -17564,7 +17574,7 @@ namespace Server.MirObjects
                     }
                 }
 
-                if (!itemRequired)
+                if (!itemRequired && !isCarryItem)
                 {
                     Info.QuestInventory[i] = null;
                     Enqueue(new S.DeleteQuestItem { UniqueID = itm.UniqueID, Count = itm.Count });
@@ -18413,7 +18423,10 @@ namespace Server.MirObjects
 
             foreach (FriendInfo friend in Info.Friends)
             {
-                friends.Add(friend.CreateClientFriend());
+                if (friend.Info != null)
+                {
+                    friends.Add(friend.CreateClientFriend());
+                }
             }
 
             Enqueue(new S.FriendUpdate { Friends = friends });

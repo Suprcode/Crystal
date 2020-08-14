@@ -2824,7 +2824,9 @@ namespace Server.MirObjects
                             if (item.Info != info) continue;
 
                             if (checkDura)
-                                if (item.CurrentDura < dura) continue;
+                            {
+                                if (item.CurrentDura < (dura * 1000)) continue;
+                            }
 
                             if (count > item.Count)
                             {
