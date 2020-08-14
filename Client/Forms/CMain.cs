@@ -87,6 +87,7 @@ namespace Client
                 
                 DXManager.Create();
                 SoundManager.Create();
+                CenterToScreen();
             }
             catch (Exception ex)
             {
@@ -584,15 +585,15 @@ namespace Client
         {
             if (Settings.ScreenWidth == width && Settings.ScreenHeight == height) return;
 
-            DXManager.Device.Clear(ClearFlags.Target, Color.Black, 0, 0);
-            DXManager.Device.Present();
-
-            DXManager.Device.Dispose();
             Settings.ScreenWidth = width;
             Settings.ScreenHeight = height;
             Program.Form.ClientSize = new Size(width, height);
 
-            DXManager.Create();
+            DXManager.Device.Clear(ClearFlags.Target, Color.Black, 0, 0);
+            DXManager.Device.Present();
+            DXManager.ResetDevice();
+
+            Program.Form.CenterToScreen();
         }
             
 
