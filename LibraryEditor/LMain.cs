@@ -23,7 +23,7 @@ namespace LibraryEditor
         public LMain()
         {
             InitializeComponent();
-
+    
             SendMessage(PreviewListView.Handle, 4149, 0, 5242946); //80 x 66
 
             this.AllowDrop = true;
@@ -44,6 +44,7 @@ namespace LibraryEditor
                 if (PreviewListView.Items.Count > 0)
                     PreviewListView.Items[0].Selected = true;
             }
+
         }
 
         private void Form1_DragDrop(object sender, DragEventArgs e)

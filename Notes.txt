@@ -1,5 +1,0 @@
-In development features - may need revisiting / refactoring / finishing
-
--NPC $INPUTSTR, method it sets page names and calls (would be better in ProcessPage? bool AwaitingInput at top)
-
--Character deletion code after x days, or under x level after y days

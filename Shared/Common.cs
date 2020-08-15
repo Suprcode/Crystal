@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
+
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using C = ClientPackets;
 using S = ServerPackets;
 using System.Linq;
+using System.Drawing;
 
 public enum PanelType : byte
 {
@@ -2595,20 +2595,6 @@ public static class Functions
         }
 
         return newString;
-    }
-
-    public static byte[] ImageToByteArray(Image imageIn)
-    {
-        MemoryStream ms = new MemoryStream();
-        imageIn.Save(ms, ImageFormat.Gif);
-        return ms.ToArray();
-    }
-
-    public static Image ByteArrayToImage(byte[] byteArrayIn)
-    {
-        MemoryStream ms = new MemoryStream(byteArrayIn);
-        Image returnImage = Image.FromStream(ms);
-        return returnImage;
     }
 
     public static IEnumerable<byte[]> SplitArray(byte[] value, int bufferLength)

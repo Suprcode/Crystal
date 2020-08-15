@@ -70,7 +70,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.panel = new System.Windows.Forms.Panel();
             this.ImageBox = new System.Windows.Forms.PictureBox();
-            this.PreviewListView = new LibraryEditor.FixedListView();
+            this.tabControl = new System.Windows.Forms.TabControl();
+            this.tabImages = new System.Windows.Forms.TabPage();
+            this.PreviewListView = new FixedListViewControl.FixedListView();
             this.ImageList = new System.Windows.Forms.ImageList(this.components);
             this.OpenLibraryDialog = new System.Windows.Forms.OpenFileDialog();
             this.SaveLibraryDialog = new System.Windows.Forms.SaveFileDialog();
@@ -94,6 +96,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.ZoomTrackBar)).BeginInit();
             this.panel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ImageBox)).BeginInit();
+            this.tabControl.SuspendLayout();
+            this.tabImages.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -106,7 +110,7 @@
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
             this.MainMenu.Name = "MainMenu";
             this.MainMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.MainMenu.Size = new System.Drawing.Size(1008, 24);
+            this.MainMenu.Size = new System.Drawing.Size(1036, 24);
             this.MainMenu.TabIndex = 0;
             this.MainMenu.Text = "menuStrip1";
             // 
@@ -263,8 +267,8 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.PreviewListView);
-            this.splitContainer1.Size = new System.Drawing.Size(1008, 684);
+            this.splitContainer1.Panel2.Controls.Add(this.tabControl);
+            this.splitContainer1.Size = new System.Drawing.Size(1036, 684);
             this.splitContainer1.SplitterDistance = 325;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -305,7 +309,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.panel);
-            this.splitContainer2.Size = new System.Drawing.Size(1008, 325);
+            this.splitContainer2.Size = new System.Drawing.Size(1036, 325);
             this.splitContainer2.SplitterDistance = 240;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -555,7 +559,7 @@
             this.panel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel.Location = new System.Drawing.Point(0, 0);
             this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(762, 323);
+            this.panel.Size = new System.Drawing.Size(790, 323);
             this.panel.TabIndex = 1;
             // 
             // ImageBox
@@ -568,6 +572,27 @@
             this.ImageBox.TabIndex = 0;
             this.ImageBox.TabStop = false;
             // 
+            // tabControl
+            // 
+            this.tabControl.Controls.Add(this.tabImages);
+            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl.Location = new System.Drawing.Point(0, 0);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(1034, 353);
+            this.tabControl.TabIndex = 0;
+            // 
+            // tabImages
+            // 
+            this.tabImages.Controls.Add(this.PreviewListView);
+            this.tabImages.Location = new System.Drawing.Point(4, 22);
+            this.tabImages.Name = "tabImages";
+            this.tabImages.Padding = new System.Windows.Forms.Padding(3);
+            this.tabImages.Size = new System.Drawing.Size(1026, 327);
+            this.tabImages.TabIndex = 0;
+            this.tabImages.Text = "Images";
+            this.tabImages.UseVisualStyleBackColor = true;
+            // 
             // PreviewListView
             // 
             this.PreviewListView.Activation = System.Windows.Forms.ItemActivation.OneClick;
@@ -576,9 +601,9 @@
             this.PreviewListView.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(142)))), ((int)(((byte)(152)))), ((int)(((byte)(156)))));
             this.PreviewListView.HideSelection = false;
             this.PreviewListView.LargeImageList = this.ImageList;
-            this.PreviewListView.Location = new System.Drawing.Point(0, 0);
+            this.PreviewListView.Location = new System.Drawing.Point(3, 3);
             this.PreviewListView.Name = "PreviewListView";
-            this.PreviewListView.Size = new System.Drawing.Size(1006, 353);
+            this.PreviewListView.Size = new System.Drawing.Size(1020, 321);
             this.PreviewListView.TabIndex = 0;
             this.PreviewListView.UseCompatibleStateImageBehavior = false;
             this.PreviewListView.VirtualMode = true;
@@ -618,7 +643,7 @@
             this.statusStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.statusStrip.Location = new System.Drawing.Point(0, 708);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(1008, 22);
+            this.statusStrip.Size = new System.Drawing.Size(1036, 22);
             this.statusStrip.TabIndex = 2;
             this.statusStrip.Text = "statusStrip";
             // 
@@ -640,7 +665,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1008, 730);
+            this.ClientSize = new System.Drawing.Size(1036, 730);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.MainMenu);
@@ -669,6 +694,8 @@
             this.panel.ResumeLayout(false);
             this.panel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ImageBox)).EndInit();
+            this.tabControl.ResumeLayout(false);
+            this.tabImages.ResumeLayout(false);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -689,7 +716,7 @@
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private FixedListView PreviewListView;
+
         private System.Windows.Forms.ImageList ImageList;
         private System.Windows.Forms.Button AddButton;
         private System.Windows.Forms.Label HeightLabel;
@@ -728,7 +755,9 @@
         private System.Windows.Forms.CheckBox checkBoxQuality;
         private System.Windows.Forms.CheckBox checkBoxPreventAntiAliasing;
         private System.Windows.Forms.NumericUpDown nudJump;
-
+        private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.TabPage tabImages;
+        private FixedListViewControl.FixedListView PreviewListView;
     }
 }
 

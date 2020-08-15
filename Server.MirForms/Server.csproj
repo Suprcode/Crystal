@@ -342,6 +342,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <ProjectReference Include="..\Shared\Shared.csproj">
+      <Project>{19625ca5-42f9-4bf5-aa1c-c8dfd4eb7833}</Project>
+      <Name>Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

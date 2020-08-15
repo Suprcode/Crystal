@@ -882,7 +882,6 @@ namespace Client.MirGraphics
 
         public MImage(BinaryReader reader)
         {
-
             //read layer 1
             Width = reader.ReadInt16();
             Height = reader.ReadInt16();
@@ -908,13 +907,11 @@ namespace Client.MirGraphics
 
         public unsafe void CreateTexture(BinaryReader reader)
         {
-
             int w = Width;// + (4 - Width % 4) % 4;
             int h = Height;// + (4 - Height % 4) % 4;
-            DataRectangle stream = null;
 
             Image = new Texture(DXManager.Device, w, h, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
-            stream = Image.LockRectangle(0, LockFlags.Discard);
+            DataRectangle stream = Image.LockRectangle(0, LockFlags.Discard);
             Data = (byte*)stream.Data.DataPointer;
 
             byte[] decomp = DecompressImage(reader.ReadBytes(Length));
