@@ -8851,7 +8851,7 @@ namespace Client.MirScenes
                     if (x >= Width) break;
                     drawX = (x - User.Movement.X + OffSetX) * CellWidth - OffSetX + User.OffSetMove.X; //Moving OffSet
                     if ((M2CellInfo[x, y].BackImage == 0) || (M2CellInfo[x, y].BackIndex == -1)) continue;
-                    index = (M2CellInfo[x, y].BackImage & 0x1FFFF) - 1;
+                    index = (M2CellInfo[x, y].BackImage & 0x1FFFFFFF) - 1;
                     Libraries.MapLibs[M2CellInfo[x, y].BackIndex].Draw(index, drawX, drawY);
                 }
             }
