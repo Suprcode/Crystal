@@ -217,7 +217,7 @@ namespace Launcher
             this.CurrentFile_label.Name = "CurrentFile_label";
             this.CurrentFile_label.Size = new System.Drawing.Size(362, 17);
             this.CurrentFile_label.TabIndex = 27;
-            this.CurrentFile_label.Text = "Up to date.";
+            this.CurrentFile_label.Text = "Checking Files.";
             this.CurrentFile_label.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.CurrentFile_label.Visible = false;
             // 
