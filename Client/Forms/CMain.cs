@@ -681,7 +681,6 @@ namespace Client
                     m.Result = IntPtr.Zero;
                     return;
                 }
-                break;
             }
 
             base.WndProc(ref m);
