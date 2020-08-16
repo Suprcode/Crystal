@@ -148,14 +148,6 @@ namespace Client
             {
                 SaveError(ex.ToString());
             }
-            if (e.KeyCode == Keys.F10)
-            {
-                e.Handled = true;
-                if (GameScene.Scene != null)
-                {
-                    GameScene.Scene.F10();
-                }
-            }
         }
         public static void CMain_MouseMove(object sender, MouseEventArgs e)
         {
@@ -677,6 +669,21 @@ namespace Client
                 GameScene.Scene.ChatDialog.ReceiveChat(string.Format(GameLanguage.CannotLeaveGame, (GameScene.LogTime - CMain.Time) / 1000), ChatType.System);
                 e.Cancel = true;
             }
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+
+            if (m.Msg == 0x0112) // WM_SYSCOMMAND
+            {
+                if (m.WParam.ToInt32() == 0xF100) // SC_KEYMENU
+                {
+                    m.Result = IntPtr.Zero;
+                    return;
+                }
+            }
+
+            base.WndProc(ref m);
         }
     }
 }
