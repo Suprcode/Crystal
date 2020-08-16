@@ -10185,33 +10185,12 @@ namespace Server.MirObjects
         }
         public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
-
-
-            for (int i = 0; i < Buffs.Count; i++)
-            {
-                switch (Buffs[i].Type)
-                {
-                    case BuffType.MoonLight:
-                    case BuffType.DarkBody:
-                        Buffs[i].ExpireTime = 0;
-                        break;
-                    case BuffType.EnergyShield:
-                        int rate = Buffs[i].Values[0];
-
-                        if (Envir.Random.Next(rate) == 0)
-                        {
-                            if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
-                                SetHP(MaxHP);
-                            else
-                                ChangeHP(Buffs[i].Values[1]);
-                        }
-                        break;
-                }
-            }
-
             var armour = GetArmour(type, attacker, out bool hit);
+
             if (!hit)
+            {
                 return 0;
+            }
 
             armour = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(armour * ArmourRate))));
             damage = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(damage * DamageRate))));
@@ -10241,6 +10220,28 @@ namespace Server.MirObjects
             {
                 BroadcastDamageIndicator(DamageType.Miss);
                 return 0;
+            }
+
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                switch (Buffs[i].Type)
+                {
+                    case BuffType.MoonLight:
+                    case BuffType.DarkBody:
+                        Buffs[i].ExpireTime = 0;
+                        break;
+                    case BuffType.EnergyShield:
+                        int rate = Buffs[i].Values[0];
+
+                        if (Envir.Random.Next(rate) == 0)
+                        {
+                            if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
+                                SetHP(MaxHP);
+                            else
+                                ChangeHP(Buffs[i].Values[1]);
+                        }
+                        break;
+                }
             }
 
             if ((attacker.CriticalRate * Settings.CriticalRateWeight) > Envir.Random.Next(100))
@@ -10281,7 +10282,6 @@ namespace Server.MirObjects
                 OperateTime = 0;
             }
 
-
             LastHitter = attacker;
             LastHitTime = Envir.Time + 10000;
             RegenTime = Envir.Time + RegenDelay;
@@ -10312,31 +10312,12 @@ namespace Server.MirObjects
         }
         public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
         {
-            for (int i = 0; i < Buffs.Count; i++)
-            {
-                switch (Buffs[i].Type)
-                {
-                    case BuffType.MoonLight:
-                    case BuffType.DarkBody:
-                        Buffs[i].ExpireTime = 0;
-                        break;
-                    case BuffType.EnergyShield:
-                        int rate = Buffs[i].Values[0];
-
-                        if (Envir.Random.Next(rate < 2 ? 2 : rate) == 0)
-                        {
-                            if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
-                                SetHP(MaxHP);
-                            else
-                                ChangeHP(Buffs[i].Values[1]);
-                        }
-                        break;
-                }
-            }
-
             var armour = GetArmour(type, attacker, out bool hit);
+
             if (!hit)
+            {
                 return 0;
+            }
 
             if (Envir.Random.Next(100) < Reflect)
             {
@@ -10361,6 +10342,28 @@ namespace Server.MirObjects
             {
                 BroadcastDamageIndicator(DamageType.Miss);
                 return 0;
+            }
+
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                switch (Buffs[i].Type)
+                {
+                    case BuffType.MoonLight:
+                    case BuffType.DarkBody:
+                        Buffs[i].ExpireTime = 0;
+                        break;
+                    case BuffType.EnergyShield:
+                        int rate = Buffs[i].Values[0];
+
+                        if (Envir.Random.Next(rate < 2 ? 2 : rate) == 0)
+                        {
+                            if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
+                                SetHP(MaxHP);
+                            else
+                                ChangeHP(Buffs[i].Values[1]);
+                        }
+                        break;
+                }
             }
 
             if (MagicShield)
