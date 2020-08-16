@@ -6174,7 +6174,7 @@ namespace Server.MirObjects
                 if (magic != null)
                 {
                     if (FatalSword)
-                        damageFinal = magic.GetDamage(damageBase);
+                        damageBase = magic.GetDamage(damageBase);
 
                     if (!FatalSword && Envir.Random.Next(10) == 0)
                         FatalSword = true;
@@ -9114,7 +9114,6 @@ namespace Server.MirObjects
                     {
                         ReincarnationTarget.Enqueue(new S.RequestReincarnation { });
                         LevelMagic(magic);
-                        ReincarnationReady = false;
                     }
                     break;
 
@@ -14605,9 +14604,18 @@ namespace Server.MirObjects
                     return;
                 }
 
-                uint cost = (uint)(temp.RepairPrice() * script.PriceRate(this));
-
-                uint baseCost = (uint)(temp.RepairPrice() * script.PriceRate(this, true));
+                uint cost;
+                uint baseCost;
+                if (!special)
+                {
+                    cost = (uint)(temp.RepairPrice() * script.PriceRate(this));
+                    baseCost = (uint)(temp.RepairPrice() * script.PriceRate(this, true));
+                }
+                else
+                {
+                    cost = (uint)(temp.RepairPrice() * 3 * script.PriceRate(this));
+                    baseCost = (uint)(temp.RepairPrice() * 3 * script.PriceRate(this, true));
+                }
 
                 if (cost > Account.Gold) return;
 
@@ -15290,6 +15298,7 @@ namespace Server.MirObjects
                             newItem.Count = item.Count;
                             newItem.Slots = item.Slots;
                             newItem.Awake = item.Awake;
+                            newItem.ExpireInfo = item.ExpireInfo;
 
                             Info.Inventory[i] = newItem;
 
