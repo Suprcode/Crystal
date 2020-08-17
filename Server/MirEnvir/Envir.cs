@@ -125,7 +125,6 @@ namespace Server.MirEnvir
         public List<Map> MapList = new List<Map>();
         public List<SafeZoneInfo> StartPoints = new List<SafeZoneInfo>(); 
         public List<ItemInfo> StartItems = new List<ItemInfo>();
-        public List<MailInfo> Mail = new List<MailInfo>();
         public List<PlayerObject> Players = new List<PlayerObject>();
         public LightSetting Lights;
         public LinkedList<MapObject> Objects = new LinkedList<MapObject>();
@@ -189,7 +188,7 @@ namespace Server.MirEnvir
         public static long LastRunTime = 0;
         public int MonsterCount;
 
-        private long warTime, mailTime, guildTime, conquestTime, rentalItemsTime;
+        private long warTime, guildTime, conquestTime, rentalItemsTime;
         private int DailyTime = DateTime.Now.Day;
 
         private bool MagicExists(Spell spell)
@@ -814,21 +813,6 @@ namespace Server.MirEnvir
                 warTime = Time + Settings.Minute;
             }
 
-            if (Time >= mailTime)
-            {
-                for (var i = Mail.Count - 1; i >= 0; i--)
-                {
-                    var mail = Mail[i];
-
-                    if(mail.Receive())
-                    {
-                        //collected mail ok
-                    }
-                }
-
-                mailTime = Time + Settings.Minute * 1;
-            }
-
             if (Time >= guildTime)
             {
                 guildTime = Time + Settings.Minute;
@@ -999,9 +983,6 @@ namespace Server.MirEnvir
                     auction.Save(writer);
 
                 writer.Write(NextMailID);
-                writer.Write(Mail.Count);
-                foreach (var mail in Mail)
-                        mail.Save(writer);
 
                 writer.Write(GameshopLog.Count);
                 foreach (var item in GameshopLog)
@@ -1389,12 +1370,20 @@ namespace Server.MirEnvir
 
                     NextMailID = reader.ReadUInt64();
 
-                    Mail.Clear();
-
-                    count = reader.ReadInt32();
-                    for (var i = 0; i < count; i++)
+                    if (LoadVersion <= 80)
                     {
-                        Mail.Add(new MailInfo(reader, LoadVersion, LoadCustomVersion));
+                        count = reader.ReadInt32();
+                        for (var i = 0; i < count; i++)
+                        {
+                            var mail = new MailInfo(reader, LoadVersion, LoadCustomVersion);
+
+                            mail.RecipientInfo = GetCharacterInfo(mail.RecipientIndex);
+
+                            if (mail.RecipientInfo != null)
+                            {
+                                mail.RecipientInfo.Mail.Add(mail); //add to players inbox
+                            }
+                        }
                     }
 
                     if (LoadVersion >= 63)

@@ -133,34 +133,19 @@ namespace Server.MirEnvir
                 }
             }
 
-            if (Envir.Mail.Contains(this)) return;
-
-            Envir.Mail.Add(this); //add to postbox
-
-            DateSent = DateTime.Now;
-        }
-
-        public bool Receive()
-        {
-            if (!Sent) return false; //mail not sent yet
-
             if (RecipientInfo == null)
             {
                 RecipientInfo = Envir.GetCharacterInfo(RecipientIndex);
-
-                if (RecipientInfo == null) return false;
             }
 
             RecipientInfo.Mail.Add(this); //add to players inbox
-            
-            if(RecipientInfo.Player != null)
+
+            if (RecipientInfo.Player != null)
             {
                 RecipientInfo.Player.NewMail = true; //notify player of new mail  --check in player process
             }
 
-            Envir.Mail.Remove(this); //remove from postbox
-
-            return true;
+            DateSent = DateTime.Now;
         }
 
         public ClientMail CreateClientMail()
