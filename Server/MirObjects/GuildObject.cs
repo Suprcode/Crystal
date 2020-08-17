@@ -100,8 +100,8 @@ namespace Server.MirObjects
             int ItemCount = reader.ReadInt32();
             for (int j = 0; j < ItemCount; j++)
             {
-                if (Envir.Version > 28)
-                    if (!reader.ReadBoolean()) continue;
+                if (!reader.ReadBoolean()) continue;
+
                 GuildStorageItem Guilditem = new GuildStorageItem()
                 {
                     Item = new UserItem(reader, version, customversion),

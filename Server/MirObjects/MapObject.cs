@@ -862,18 +862,11 @@ namespace Server.MirObjects
             ObjectID = reader.ReadUInt32();
             ExpireTime = reader.ReadInt64();
 
-            if (Envir.LoadVersion < 56)
-            {
-                Values = new int[] { reader.ReadInt32() };
-            }
-            else
-            {
-                Values = new int[reader.ReadInt32()];
+            Values = new int[reader.ReadInt32()];
 
-                for (int i = 0; i < Values.Length; i++)
-                {
-                    Values[i] = reader.ReadInt32();
-                }
+            for (int i = 0; i < Values.Length; i++)
+            {
+                Values[i] = reader.ReadInt32();
             }
 
             Infinite = reader.ReadBoolean();

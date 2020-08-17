@@ -53,7 +53,7 @@ namespace Server.MirDatabase
             MiniMap = reader.ReadUInt16();
             Light = (LightSetting) reader.ReadByte();
 
-            if (Envir.LoadVersion >= 3) BigMap = reader.ReadUInt16();
+            BigMap = reader.ReadUInt16();
 
             int count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
@@ -63,18 +63,13 @@ namespace Server.MirDatabase
             for (int i = 0; i < count; i++)
                 Respawns.Add(new RespawnInfo(reader, Envir.LoadVersion, Envir.LoadCustomVersion));
 
-            if (Envir.LoadVersion <= 33)
-            {
-                count = reader.ReadInt32();
-                for (int i = 0; i < count; i++)
-                    NPCs.Add(new NPCInfo(reader));
-            }
+            count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+                NPCs.Add(new NPCInfo(reader));
 
             count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
                 Movements.Add(new MovementInfo(reader));
-
-            if (Envir.LoadVersion < 14) return;
 
             NoTeleport = reader.ReadBoolean();
             NoReconnect = reader.ReadBoolean();
@@ -90,29 +85,20 @@ namespace Server.MirDatabase
             NoDropMonster = reader.ReadBoolean();
             NoNames = reader.ReadBoolean();
             Fight = reader.ReadBoolean();
-            if (Envir.LoadVersion == 14) NeedHole = reader.ReadBoolean();
             Fire = reader.ReadBoolean();
             FireDamage = reader.ReadInt32();
             Lightning = reader.ReadBoolean();
             LightningDamage = reader.ReadInt32();
-            if (Envir.LoadVersion < 23) return;
             MapDarkLight = reader.ReadByte();
-            if (Envir.LoadVersion < 26) return;
             count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
                 MineZones.Add(new MineZone(reader));
-            if (Envir.LoadVersion < 27) return;
             MineIndex = reader.ReadByte();
-
-            if (Envir.LoadVersion < 33) return;
             NoMount = reader.ReadBoolean();
             NeedBridle = reader.ReadBoolean();
-
-            if (Envir.LoadVersion < 42) return;
             NoFight = reader.ReadBoolean();
+            Music = reader.ReadUInt16();
 
-            if (Envir.LoadVersion < 53) return;
-                Music = reader.ReadUInt16();
             if (Envir.LoadVersion < 78) return;
             NoTownTeleport = reader.ReadBoolean();
             if (Envir.LoadVersion < 79) return;

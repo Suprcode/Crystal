@@ -2727,13 +2727,13 @@ public class ItemInfo
         Index = reader.ReadInt32();
         Name = reader.ReadString();
         Type = (ItemType) reader.ReadByte();
-        if (version >= 40) Grade = (ItemGrade)reader.ReadByte();
+        Grade = (ItemGrade)reader.ReadByte();
         RequiredType = (RequiredType) reader.ReadByte();
         RequiredClass = (RequiredClass) reader.ReadByte();
         RequiredGender = (RequiredGender) reader.ReadByte();
-        if(version >= 17) Set = (ItemSet)reader.ReadByte();
+        Set = (ItemSet)reader.ReadByte();
 
-        Shape = version >= 30 ? reader.ReadInt16() : reader.ReadSByte();
+        Shape = reader.ReadInt16();
         Weight = reader.ReadByte();
         Light = reader.ReadByte();
         RequiredAmount = reader.ReadByte();
@@ -2754,16 +2754,8 @@ public class ItemInfo
         MaxMC = reader.ReadByte();
         MinSC = reader.ReadByte();
         MaxSC = reader.ReadByte();
-        if (version < 25)
-        {
-            HP = reader.ReadByte();
-            MP = reader.ReadByte();
-        }
-        else
-        {
-            HP = reader.ReadUInt16();
-            MP = reader.ReadUInt16();
-        }
+        HP = reader.ReadUInt16();
+        MP = reader.ReadUInt16();
         Accuracy = reader.ReadByte();
         Agility = reader.ReadByte();
 
@@ -2776,72 +2768,45 @@ public class ItemInfo
         HandWeight = reader.ReadByte();
         WearWeight = reader.ReadByte();
 
-        if (version >= 9) Effect = reader.ReadByte();
-        if (version >= 20)
-        {
-            Strong = reader.ReadByte();
-            MagicResist = reader.ReadByte();
-            PoisonResist = reader.ReadByte();
-            HealthRecovery = reader.ReadByte();
-            SpellRecovery = reader.ReadByte();
-            PoisonRecovery = reader.ReadByte();
-            HPrate = reader.ReadByte();
-            MPrate = reader.ReadByte();
-            CriticalRate = reader.ReadByte();
-            CriticalDamage = reader.ReadByte();
-            byte bools = reader.ReadByte();
-            NeedIdentify = (bools & 0x01) == 0x01;
-            ShowGroupPickup = (bools & 0x02) == 0x02;
-            ClassBased = (bools & 0x04) == 0x04;
-            LevelBased = (bools & 0x08) == 0x08;
-            CanMine = (bools & 0x10) == 0x10;
+        Effect = reader.ReadByte();
+        Strong = reader.ReadByte();
+        MagicResist = reader.ReadByte();
+        PoisonResist = reader.ReadByte();
+        HealthRecovery = reader.ReadByte();
+        SpellRecovery = reader.ReadByte();
+        PoisonRecovery = reader.ReadByte();
+        HPrate = reader.ReadByte();
+        MPrate = reader.ReadByte();
+        CriticalRate = reader.ReadByte();
+        CriticalDamage = reader.ReadByte();
+        byte bools = reader.ReadByte();
+        NeedIdentify = (bools & 0x01) == 0x01;
+        ShowGroupPickup = (bools & 0x02) == 0x02;
+        ClassBased = (bools & 0x04) == 0x04;
+        LevelBased = (bools & 0x08) == 0x08;
+        CanMine = (bools & 0x10) == 0x10;
 
-            if (version >= 77)
-                GlobalDropNotify = (bools & 0x20) == 0x20;
+        if (version >= 77)
+            GlobalDropNotify = (bools & 0x20) == 0x20;
 
-            MaxAcRate = reader.ReadByte();
-            MaxMacRate = reader.ReadByte();
-            Holy = reader.ReadByte();
-            Freezing = reader.ReadByte();
-            PoisonAttack = reader.ReadByte();
-            if (version < 55)
-            {
-                Bind = (BindMode)reader.ReadByte();
-            }
-            else
-            {
-                Bind = (BindMode)reader.ReadInt16();
-            }
-            
-        }
-        if (version >= 21)
-        {
-            Reflect = reader.ReadByte();
-            HpDrainRate = reader.ReadByte();
-            Unique = (SpecialItemMode)reader.ReadInt16();
-        }
-        if (version >= 24)
-        {
-            RandomStatsId = reader.ReadByte();
-        }
-        else
-        {
-            RandomStatsId = 255;
-            if ((Type == ItemType.Weapon) || (Type == ItemType.Armour) || (Type == ItemType.Helmet) || (Type == ItemType.Necklace) || (Type == ItemType.Bracelet) || (Type == ItemType.Ring) || (Type == ItemType.Mount))
-                RandomStatsId = (byte)Type;
-            if ((Type == ItemType.Belt) || (Type == ItemType.Boots))
-                RandomStatsId = 7;
-        }
+        MaxAcRate = reader.ReadByte();
+        MaxMacRate = reader.ReadByte();
+        Holy = reader.ReadByte();
+        Freezing = reader.ReadByte();
+        PoisonAttack = reader.ReadByte();
+        Bind = (BindMode)reader.ReadInt16();
+        Reflect = reader.ReadByte();
+        HpDrainRate = reader.ReadByte();
+        Unique = (SpecialItemMode)reader.ReadInt16();
+        RandomStatsId = reader.ReadByte();
 
-        if (version >= 40) CanFastRun = reader.ReadBoolean();
+        CanFastRun = reader.ReadBoolean();
 
-        if (version >= 41)
-        {
-            CanAwakening = reader.ReadBoolean();
-            bool isTooltip = reader.ReadBoolean();
-            if (isTooltip)
-                ToolTip = reader.ReadString();
-        }
+        CanAwakening = reader.ReadBoolean();
+        bool isTooltip = reader.ReadBoolean();
+        if (isTooltip)
+            ToolTip = reader.ReadString();
+
         if (version < 70) //before db version 70 all specialitems had wedding rings disabled, after that it became a server option
         {
             if ((Type == ItemType.Ring) &&  (Unique != SpecialItemMode.None))
@@ -3140,7 +3105,6 @@ public class UserItem
         AttackSpeed = reader.ReadSByte();
         Luck = reader.ReadSByte();
 
-        if (version <= 19) return;
         SoulBoundId = reader.ReadInt32();
         byte Bools = reader.ReadByte();        
         Identified = (Bools & 0x01) == 0x01;
@@ -3157,8 +3121,6 @@ public class UserItem
         PoisonAttack = reader.ReadByte();
         
 
-        if (version <= 31) return;
-
         int count = reader.ReadInt32();
         for (int i = 0; i < count; i++)
         {
@@ -3167,19 +3129,12 @@ public class UserItem
             Slots[i] = item;
         }
 
-        if (version <= 38) return;
-
         GemCount = reader.ReadUInt32();
-
-        if (version <= 40) return;
 
         Awake = new Awake(reader);
 
-        if (version <= 56) return;
-
         RefinedValue = (RefinedValue)reader.ReadByte();
         RefineAdded = reader.ReadByte();
-        if (version < 60) return;
         WeddingRing = reader.ReadInt32();
 
         if (version < 65) return;

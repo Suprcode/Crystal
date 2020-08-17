@@ -77,12 +77,9 @@ namespace Server.MirDatabase
             for (int i = 0; i < count; i++)
                 ItemTaskCount.Add(reader.ReadInt64());
 
-            if (Envir.LoadVersion >= 37)
-            {
-                count = reader.ReadInt32();
-                for (int i = 0; i < count; i++)
-                    FlagTaskSet.Add(reader.ReadBoolean());
-            }
+            count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+                FlagTaskSet.Add(reader.ReadBoolean());
         }
 
         public void Save(BinaryWriter writer)

@@ -26,10 +26,7 @@ namespace Server.MirDatabase
             Source = new Point(reader.ReadInt32(), reader.ReadInt32());
             Destination = new Point(reader.ReadInt32(), reader.ReadInt32());
 
-            if (Envir.LoadVersion < 16) return;
             NeedHole = reader.ReadBoolean();
-
-            if (Envir.LoadVersion < 48) return;
             NeedMove = reader.ReadBoolean();
 
             if (Envir.LoadVersion < 69) return;

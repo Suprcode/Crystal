@@ -44,19 +44,16 @@ namespace Server.MirDatabase
         public NPCInfo() { }
         public NPCInfo(BinaryReader reader)
         {
-            if (Envir.LoadVersion > 33)
-            {
-                Index = reader.ReadInt32();
-                MapIndex = reader.ReadInt32();
+            Index = reader.ReadInt32();
+            MapIndex = reader.ReadInt32();
 
-                int count = reader.ReadInt32();
-                for (int i = 0; i < count; i++)
-                    CollectQuestIndexes.Add(reader.ReadInt32());
+            int count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+                CollectQuestIndexes.Add(reader.ReadInt32());
 
-                count = reader.ReadInt32();
-                for (int i = 0; i < count; i++)
-                    FinishQuestIndexes.Add(reader.ReadInt32());
-            }
+            count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+                FinishQuestIndexes.Add(reader.ReadInt32());
 
             FileName = reader.ReadString();
             Name = reader.ReadString();

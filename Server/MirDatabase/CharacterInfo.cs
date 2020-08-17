@@ -208,136 +208,83 @@ namespace Server.MirDatabase
                 Magics[i].CastTime = 0;
             }
 
-            if (Envir.LoadVersion < 2) return;
-
             Thrusting = reader.ReadBoolean();
             HalfMoon = reader.ReadBoolean();
             CrossHalfMoon = reader.ReadBoolean();
             DoubleSlash = reader.ReadBoolean();
 
-            if(Envir.LoadVersion > 46)
-            {
-                MentalState = reader.ReadByte();
-            }
-
-            if (Envir.LoadVersion < 4) return;
+            MentalState = reader.ReadByte();
 
             count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
                 Pets.Add(new PetInfo(reader));
 
-
-            if (Envir.LoadVersion < 5) return;
-
             AllowGroup = reader.ReadBoolean();
-
-            if (Envir.LoadVersion < 12) return;
-
-            if (Envir.LoadVersion == 12) count = reader.ReadInt32();
 
             for (int i = 0; i < Globals.FlagIndexCount; i++)
                 Flags[i] = reader.ReadBoolean();
 
-            if (Envir.LoadVersion > 27)
-                GuildIndex = reader.ReadInt32();
+            GuildIndex = reader.ReadInt32();
 
-            if (Envir.LoadVersion > 30)
-                AllowTrade = reader.ReadBoolean();
+            AllowTrade = reader.ReadBoolean();
 
-            if (Envir.LoadVersion > 33)
+            count = reader.ReadInt32();
+
+            for (int i = 0; i < count; i++)
             {
-                count = reader.ReadInt32();
+                QuestProgressInfo quest = new QuestProgressInfo(reader);
+                if (Envir.BindQuest(quest))
+                    CurrentQuests.Add(quest);
+            }
 
-                for (int i = 0; i < count; i++)
+            count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+            {
+                Buff buff = new Buff(reader);
+
+                if (Envir.LoadVersion == 51)
                 {
-                    QuestProgressInfo quest = new QuestProgressInfo(reader);
-                    if (Envir.BindQuest(quest))
-                        CurrentQuests.Add(quest);
+                    buff.Caster = Envir.GetObject(reader.ReadUInt32());
                 }
+
+                Buffs.Add(buff);
             }
 
-            if(Envir.LoadVersion > 42)
-            {
-                count = reader.ReadInt32();
-                for (int i = 0; i < count; i++)
-                {
-                    Buff buff = new Buff(reader);
-
-                    if (Envir.LoadVersion == 51)
-                    {
-                        buff.Caster = Envir.GetObject(reader.ReadUInt32());
-                    }
-
-                    Buffs.Add(buff);
-                }
-            }
-
-            if(Envir.LoadVersion > 43)
-            {
-                count = reader.ReadInt32();
-                for (int i = 0; i < count; i++)
-                    Mail.Add(new MailInfo(reader, Envir.LoadVersion, Envir.LoadCustomVersion));
-            }
+            count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+                Mail.Add(new MailInfo(reader, Envir.LoadVersion, Envir.LoadCustomVersion));
 
             //IntelligentCreature
-            if (Envir.LoadVersion > 44)
+            count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
             {
-                count = reader.ReadInt32();
-                for (int i = 0; i < count; i++)
-                {
-                    UserIntelligentCreature creature = new UserIntelligentCreature(reader);
-                    if (creature.Info == null) continue;
-                    IntelligentCreatures.Add(creature);
-                }
-
-                if (Envir.LoadVersion == 45)
-                {
-                    var old1 = (IntelligentCreatureType)reader.ReadByte();
-                    var old2 = reader.ReadBoolean();
-                }
-
-                PearlCount = reader.ReadInt32();
+                UserIntelligentCreature creature = new UserIntelligentCreature(reader);
+                if (creature.Info == null) continue;
+                IntelligentCreatures.Add(creature);
             }
 
-            if (Envir.LoadVersion > 49)
+            if (Envir.LoadVersion == 45)
             {
-                count = reader.ReadInt32();
-                for (int i = 0; i < count; i++)
-                    CompletedQuests.Add(reader.ReadInt32());
+                var old1 = (IntelligentCreatureType)reader.ReadByte();
+                var old2 = reader.ReadBoolean();
             }
 
-            if (Envir.LoadVersion > 50 && Envir.LoadVersion < 54)
-            {
-                count = reader.ReadInt32();
-                for (int i = 0; i < count; i++)
-                {
-                    Poison poison = new Poison(reader);
+            PearlCount = reader.ReadInt32();
 
-                    if (Envir.LoadVersion == 51)
-                    {
-                        poison.Owner = Envir.GetObject(reader.ReadUInt32());
-                    }
+            count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+                CompletedQuests.Add(reader.ReadInt32());
 
-                    Poisons.Add(poison);
-                }
-            }
+            if (reader.ReadBoolean()) CurrentRefine = new UserItem(reader, Envir.LoadVersion, Envir.LoadCustomVersion);
+            if (CurrentRefine != null)
+                Envir.BindItem(CurrentRefine);
 
-            if (Envir.LoadVersion > 56)
-            {
-                if (reader.ReadBoolean()) CurrentRefine = new UserItem(reader, Envir.LoadVersion, Envir.LoadCustomVersion);
-                  if (CurrentRefine != null)
-                    Envir.BindItem(CurrentRefine);
+            CollectTime = reader.ReadInt64();
+            CollectTime += Envir.Time;
 
-                CollectTime = reader.ReadInt64();
-                CollectTime += Envir.Time;
-            }
-
-            if (Envir.LoadVersion > 58)
-            {
-                count = reader.ReadInt32();
-                for (int i = 0; i < count; i++)
-                    Friends.Add(new FriendInfo(reader));
-            }
+            count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+                Friends.Add(new FriendInfo(reader));
 
             if (Envir.LoadVersion > 75)
             {
@@ -348,15 +295,12 @@ namespace Server.MirDatabase
                 HasRentedItem = reader.ReadBoolean();
             }
 
-            if (Envir.LoadVersion > 59)
-            {
-                Married = reader.ReadInt32();
-                MarriedDate = DateTime.FromBinary(reader.ReadInt64());
-                Mentor = reader.ReadInt32();
-                MentorDate = DateTime.FromBinary(reader.ReadInt64());
-                isMentor = reader.ReadBoolean();
-                MentorExp = reader.ReadInt64();
-            }
+            Married = reader.ReadInt32();
+            MarriedDate = DateTime.FromBinary(reader.ReadInt64());
+            Mentor = reader.ReadInt32();
+            MentorDate = DateTime.FromBinary(reader.ReadInt64());
+            isMentor = reader.ReadBoolean();
+            MentorExp = reader.ReadInt64();
 
             if (Envir.LoadVersion >= 63)
             {

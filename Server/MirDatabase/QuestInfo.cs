@@ -83,11 +83,8 @@ namespace Server.MirDatabase
             FileName = reader.ReadString();
             RequiredMinLevel = reader.ReadInt32();
 
-            if (Envir.LoadVersion >= 38)
-            {
-                RequiredMaxLevel = reader.ReadInt32();
-                if (RequiredMaxLevel == 0) RequiredMaxLevel = ushort.MaxValue;
-            }
+            RequiredMaxLevel = reader.ReadInt32();
+            if (RequiredMaxLevel == 0) RequiredMaxLevel = ushort.MaxValue;
 
             RequiredQuest = reader.ReadInt32();
             RequiredClass = (RequiredClass)reader.ReadByte();
@@ -95,7 +92,7 @@ namespace Server.MirDatabase
             GotoMessage = reader.ReadString();
             KillMessage = reader.ReadString();
             ItemMessage = reader.ReadString();
-            if(Envir.LoadVersion >= 37) FlagMessage = reader.ReadString();
+            FlagMessage = reader.ReadString();
 
             LoadInfo();
         }

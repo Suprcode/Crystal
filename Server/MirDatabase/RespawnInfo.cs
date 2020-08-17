@@ -40,10 +40,7 @@ namespace Server.MirDatabase
             Delay = reader.ReadUInt16();
             Direction = reader.ReadByte();
 
-            if (Envir.LoadVersion >= 36)
-            {
-                RoutePath = reader.ReadString();
-            }
+            RoutePath = reader.ReadString();
 
             if (Version > 67)
             {

@@ -53,7 +53,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int MinVersion = 50;
+        public const int MinVersion = 60;
         public const int Version = 80;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
@@ -1208,28 +1208,34 @@ namespace Server.MirEnvir
             Saving = false;
         }
 
-        public void LoadDB()
+        public bool LoadDB()
         {
             lock (LoadLock)
             {
                 if (!File.Exists(DatabasePath))
+                {
                     SaveDB();
+                }
 
                 using (var stream = File.OpenRead(DatabasePath))
                 using (var reader = new BinaryReader(stream))
                 {
                     LoadVersion = reader.ReadInt32();
-                    if (LoadVersion > 57)
-                        LoadCustomVersion = reader.ReadInt32();
+                    LoadCustomVersion = reader.ReadInt32();
+
+                    if (LoadVersion < MinVersion)
+                    {
+                        MessageQueue.Enqueue($"Cannot load a database version {Envir.LoadVersion}. Mininum supported is {Envir.MinVersion}.");
+                        return false;
+                    }
+
                     MapIndex = reader.ReadInt32();
                     ItemIndex = reader.ReadInt32();
                     MonsterIndex = reader.ReadInt32();
 
-                    if (LoadVersion > 33)
-                    {
-                        NPCIndex = reader.ReadInt32();
-                        QuestIndex = reader.ReadInt32();
-                    }
+                    NPCIndex = reader.ReadInt32();
+                    QuestIndex = reader.ReadInt32();
+
                     if (LoadVersion >= 63)
                     {
                         GameshopIndex = reader.ReadInt32();
@@ -1264,29 +1270,23 @@ namespace Server.MirEnvir
                     for (var i = 0; i < count; i++)
                         MonsterInfoList.Add(new MonsterInfo(reader));
 
-                    if (LoadVersion > 33)
-                    {
-                        count = reader.ReadInt32();
-                        NPCInfoList.Clear();
-                        for (var i = 0; i < count; i++)
-                            NPCInfoList.Add(new NPCInfo(reader));
+                    count = reader.ReadInt32();
+                    NPCInfoList.Clear();
+                    for (var i = 0; i < count; i++)
+                        NPCInfoList.Add(new NPCInfo(reader));
 
-                        count = reader.ReadInt32();
-                        QuestInfoList.Clear();
-                        for (var i = 0; i < count; i++)
-                            QuestInfoList.Add(new QuestInfo(reader));
-                    }
+                    count = reader.ReadInt32();
+                    QuestInfoList.Clear();
+                    for (var i = 0; i < count; i++)
+                        QuestInfoList.Add(new QuestInfo(reader));
 
-                    DragonInfo = LoadVersion >= 11 ? new DragonInfo(reader) : new DragonInfo();
-                    if (LoadVersion >= 58)
+                    DragonInfo = new DragonInfo(reader);
+                    count = reader.ReadInt32();
+                    for (var i = 0; i < count; i++)
                     {
-                        count = reader.ReadInt32();
-                        for (var i = 0; i < count; i++)
-                        {
-                            var m = new MagicInfo(reader, LoadVersion, LoadCustomVersion);
-                            if(!MagicExists(m.Spell))
-                                MagicInfoList.Add(m);
-                        }
+                        var m = new MagicInfo(reader, LoadVersion, LoadCustomVersion);
+                        if (!MagicExists(m.Spell))
+                            MagicInfoList.Add(m);
                     }
                     FillMagicInfoList();
                     if (LoadVersion <= 70)
@@ -1324,6 +1324,7 @@ namespace Server.MirEnvir
                 Settings.LinkGuildCreationItems(ItemInfoList);
             }
 
+            return true;
         }
 
         public void LoadAccounts()
@@ -1342,7 +1343,6 @@ namespace Server.MirEnvir
                 RankBottomLevel[i] = 0;
             }
 
-
             lock (LoadLock)
             {
                 if (!File.Exists(AccountPath))
@@ -1352,16 +1352,13 @@ namespace Server.MirEnvir
                 using (var reader = new BinaryReader(stream))
                 {
                     LoadVersion = reader.ReadInt32();
-                    if (LoadVersion > 57) LoadCustomVersion = reader.ReadInt32();
+                    LoadCustomVersion = reader.ReadInt32();
                     NextAccountID = reader.ReadInt32();
                     NextCharacterID = reader.ReadInt32();
                     NextUserItemID = reader.ReadUInt64();
 
-                    if (LoadVersion > 27)
-                    {
-                        GuildCount = reader.ReadInt32();
-                        NextGuildID = reader.ReadInt32();
-                    }
+                    GuildCount = reader.ReadInt32();
+                    NextGuildID = reader.ReadInt32();
 
                     var count = reader.ReadInt32();
                     AccountList.Clear();
@@ -1372,14 +1369,12 @@ namespace Server.MirEnvir
                         CharacterList.AddRange(AccountList[i].Characters);
                     }
 
-                    if (LoadVersion < 7) return;
-
                     foreach (var auction in Auctions)
                         auction.SellerInfo.AccountInfo.Auctions.Remove(auction);
                     Auctions.Clear();
 
-                    if (LoadVersion >= 8)
-                        NextAuctionID = reader.ReadUInt64();
+                    NextAuctionID = reader.ReadUInt64();
+
 
                     count = reader.ReadInt32();
                     for (var i = 0; i < count; i++)
@@ -1392,30 +1387,17 @@ namespace Server.MirEnvir
                         auction.SellerInfo.AccountInfo.Auctions.AddLast(auction);
                     }
 
-                    if (LoadVersion == 7)
-                    {
-                        foreach (var auction in Auctions)
-                        {
-                            if (auction.Sold && auction.Expired) auction.Expired = false;
+                    NextMailID = reader.ReadUInt64();
 
-                            auction.AuctionID = ++NextAuctionID;
-                        }
+                    Mail.Clear();
+
+                    count = reader.ReadInt32();
+                    for (var i = 0; i < count; i++)
+                    {
+                        Mail.Add(new MailInfo(reader, LoadVersion, LoadCustomVersion));
                     }
 
-                    if(LoadVersion > 43)
-                    {
-                        NextMailID = reader.ReadUInt64();
-
-                        Mail.Clear();
-
-                        count = reader.ReadInt32();
-                        for (var i = 0; i < count; i++)
-                        {
-                            Mail.Add(new MailInfo(reader, LoadVersion, LoadCustomVersion));
-                        }
-                    }
-
-                    if(LoadVersion >= 63)
+                    if (LoadVersion >= 63)
                     {
                         var logCount = reader.ReadInt32();
                         for (var i = 0; i < logCount; i++)
@@ -1426,7 +1408,7 @@ namespace Server.MirEnvir
                         if (ResetGS) ClearGameshopLog();
                     }
 
-                    if (LoadVersion < 68) return;
+                    if (LoadVersion >= 68)
                     {
                         var SaveCount = reader.ReadInt32();
                         for (var i = 0; i < SaveCount; i++)
@@ -1444,7 +1426,6 @@ namespace Server.MirEnvir
                                     Respawn.Spawn();
                                 }
                             }
-
                         }
                     }
                 }
