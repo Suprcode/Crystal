@@ -1410,8 +1410,8 @@ namespace Server.MirEnvir
 
                     if (LoadVersion >= 68)
                     {
-                        var SaveCount = reader.ReadInt32();
-                        for (var i = 0; i < SaveCount; i++)
+                        var saveCount = reader.ReadInt32();
+                        for (var i = 0; i < saveCount; i++)
                         {
                             var Saved = new RespawnSave(reader);
                             foreach (var Respawn in SavedSpawns)

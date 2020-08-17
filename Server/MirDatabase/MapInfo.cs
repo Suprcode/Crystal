@@ -65,10 +65,6 @@ namespace Server.MirDatabase
 
             count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
-                NPCs.Add(new NPCInfo(reader));
-
-            count = reader.ReadInt32();
-            for (int i = 0; i < count; i++)
                 Movements.Add(new MovementInfo(reader));
 
             NoTeleport = reader.ReadBoolean();
