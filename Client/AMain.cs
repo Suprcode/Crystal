@@ -452,6 +452,11 @@ namespace Launcher
             else ProgTotalEnd_pb.Visible = true;
         }
 
+        private void Version_label_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void Main_browser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             if (Main_browser.Url.AbsolutePath != "blank") Main_browser.Visible = true;
@@ -543,8 +548,8 @@ namespace Launcher
 
         private void Credit_label_Click(object sender, EventArgs e)
         {
-            if (Credit_label.Text == "Powered by Crystal M2") Credit_label.Text = "Designed by Breezer";
-            else Credit_label.Text = "Powered by Crystal M2";
+            if (Credit_label.Text == "Powered by BlackClover") Credit_label.Text = "Designed by BlackClover";
+            else Credit_label.Text = "Powered by BlackClover";
         }
 
         private void AMain_FormClosed(object sender, FormClosedEventArgs e)

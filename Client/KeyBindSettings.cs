@@ -69,6 +69,7 @@ namespace Client
         Minimap,
         Bigmap,
         Trade,
+        Rental,
         ChangeAttackmode,
         AttackmodePeace,
         AttackmodeGroup,
@@ -238,29 +239,29 @@ namespace Client
             Keylist.Add(InputKey);
             InputKey = new KeyBind { function = KeybindOptions.Pickup, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.Tab };
             Keylist.Add(InputKey);
-            InputKey = new KeyBind { function = KeybindOptions.Belt1, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.D1 };
+            InputKey = new KeyBind { function = KeybindOptions.Belt1, RequireAlt = 2, RequireShift = 0, RequireTilde = 2, RequireCtrl = 2, Key = Keys.D1 };
             Keylist.Add(InputKey);
-            InputKey = new KeyBind { function = KeybindOptions.Belt1Alt, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.NumPad1 };
+            InputKey = new KeyBind { function = KeybindOptions.Belt1Alt, RequireAlt = 2, RequireShift = 0, RequireTilde = 2, RequireCtrl = 2, Key = Keys.NumPad1 };
             Keylist.Add(InputKey);
-            InputKey = new KeyBind { function = KeybindOptions.Belt2, RequireAlt = 0, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.D2 };
+            InputKey = new KeyBind { function = KeybindOptions.Belt2, RequireAlt = 0, RequireShift = 0, RequireTilde = 2, RequireCtrl = 2, Key = Keys.D2 };
             Keylist.Add(InputKey);
-            InputKey = new KeyBind { function = KeybindOptions.Belt2Alt, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.NumPad2 };
+            InputKey = new KeyBind { function = KeybindOptions.Belt2Alt, RequireAlt = 2, RequireShift = 0, RequireTilde = 2, RequireCtrl = 2, Key = Keys.NumPad2 };
             Keylist.Add(InputKey);
-            InputKey = new KeyBind { function = KeybindOptions.Belt3, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.D3 };
+            InputKey = new KeyBind { function = KeybindOptions.Belt3, RequireAlt = 2, RequireShift = 0, RequireTilde = 2, RequireCtrl = 2, Key = Keys.D3 };
             Keylist.Add(InputKey);
-            InputKey = new KeyBind { function = KeybindOptions.Belt3Alt, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.NumPad3 };
+            InputKey = new KeyBind { function = KeybindOptions.Belt3Alt, RequireAlt = 2, RequireShift = 0, RequireTilde = 2, RequireCtrl = 2, Key = Keys.NumPad3 };
             Keylist.Add(InputKey);
-            InputKey = new KeyBind { function = KeybindOptions.Belt4, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.D4 };
+            InputKey = new KeyBind { function = KeybindOptions.Belt4, RequireAlt = 2, RequireShift = 0, RequireTilde = 2, RequireCtrl = 2, Key = Keys.D4 };
             Keylist.Add(InputKey);
-            InputKey = new KeyBind { function = KeybindOptions.Belt4Alt, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.NumPad4 };
+            InputKey = new KeyBind { function = KeybindOptions.Belt4Alt, RequireAlt = 2, RequireShift = 0, RequireTilde = 2, RequireCtrl = 2, Key = Keys.NumPad4 };
             Keylist.Add(InputKey);
-            InputKey = new KeyBind { function = KeybindOptions.Belt5, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.D5 };
+            InputKey = new KeyBind { function = KeybindOptions.Belt5, RequireAlt = 2, RequireShift = 0, RequireTilde = 2, RequireCtrl = 2, Key = Keys.D5 };
             Keylist.Add(InputKey);
-            InputKey = new KeyBind { function = KeybindOptions.Belt5Alt, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.NumPad5 };
+            InputKey = new KeyBind { function = KeybindOptions.Belt5Alt, RequireAlt = 2, RequireShift = 0, RequireTilde = 2, RequireCtrl = 2, Key = Keys.NumPad5 };
             Keylist.Add(InputKey);
-            InputKey = new KeyBind { function = KeybindOptions.Belt6, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.D6 };
+            InputKey = new KeyBind { function = KeybindOptions.Belt6, RequireAlt = 2, RequireShift = 0, RequireTilde = 2, RequireCtrl = 2, Key = Keys.D6 };
             Keylist.Add(InputKey);
-            InputKey = new KeyBind { function = KeybindOptions.Belt6Alt, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.NumPad6 };
+            InputKey = new KeyBind { function = KeybindOptions.Belt6Alt, RequireAlt = 2, RequireShift = 0, RequireTilde = 2, RequireCtrl = 2, Key = Keys.NumPad6 };
             Keylist.Add(InputKey);
             InputKey = new KeyBind { function = KeybindOptions.Logout, RequireAlt = 1, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.X };
             Keylist.Add(InputKey);
@@ -275,6 +276,8 @@ namespace Client
             InputKey = new KeyBind { function = KeybindOptions.Bigmap, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.B };
             Keylist.Add(InputKey);
             InputKey = new KeyBind { function = KeybindOptions.Trade, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.T };
+            Keylist.Add(InputKey);
+            InputKey = new KeyBind { function = KeybindOptions.Rental, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 0, Key = Keys.A };
             Keylist.Add(InputKey);
             InputKey = new KeyBind { function = KeybindOptions.ChangeAttackmode, RequireAlt = 2, RequireShift = 0, RequireTilde = 2, RequireCtrl = 1, Key = Keys.H };
             Keylist.Add(InputKey);

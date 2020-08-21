@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -11,7 +11,8 @@
     <AssemblyName>Client</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -28,13 +29,21 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <AssemblyVersion>2017.5.28.2240</AssemblyVersion>
+    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>True</UpdateAssemblyInfoVersion>
+    <AssemblyVersionSettings>YearStamp.MonthStamp.DayStamp.TimeStamp</AssemblyVersionSettings>
+    <AssemblyFileVersionSettings>YearStamp.MonthStamp.DayStamp.TimeStamp</AssemblyFileVersionSettings>
+    <AssemblyInfoVersionSettings>YearStamp.MonthStamp.DayStamp.TimeStamp</AssemblyInfoVersionSettings>
+    <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Client\</OutputPath>
+    <OutputPath>..\..\..\New Client\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>1</WarningLevel>
@@ -50,7 +59,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Client\</OutputPath>
+    <OutputPath>..\..\..\Client\</OutputPath>
     <DefineConstants>
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -89,23 +98,19 @@
   <ItemGroup>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Client\DirectX\Microsoft.DirectX.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>DirectX\Microsoft.DirectX.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Client\DirectX\Microsoft.DirectX.Direct3D.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>DirectX\Microsoft.DirectX.Direct3D.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2909.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Client\DirectX\Microsoft.DirectX.Direct3DX.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>DirectX\Microsoft.DirectX.Direct3DX.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.DirectX.DirectSound, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Client\DirectX\Microsoft.DirectX.DirectSound.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>DirectX\Microsoft.DirectX.DirectSound.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -146,6 +151,7 @@
     <Compile Include="Config.designer.cs">
       <DependentUpon>Config.cs</DependentUpon>
     </Compile>
+    <Compile Include="Custom\LoginNoticeDialog.cs" />
     <Compile Include="KeyBindSettings.cs" />
     <Compile Include="MirControls\MirGameShopCell.cs" />
     <Compile Include="MirControls\MirAmountBox.cs" />
@@ -178,6 +184,8 @@
     <Compile Include="MirObjects\PlayerObject.cs" />
     <Compile Include="MirObjects\SpellObject.cs" />
     <Compile Include="MirObjects\UserObject.cs" />
+    <Compile Include="MirScenes\Dialogs\BossInfoDialog.cs" />
+    <Compile Include="MirScenes\Dialogs\BuffDialog.cs" />
     <Compile Include="MirScenes\Dialogs\ChatNoticeDialog.cs" />
     <Compile Include="MirScenes\Dialogs\ChatOptionDialog.cs" />
     <Compile Include="MirScenes\Dialogs\FishingDialog.cs" />
@@ -188,6 +196,7 @@
     <Compile Include="MirScenes\Dialogs\HelpDialog.cs" />
     <Compile Include="MirScenes\Dialogs\IntelligentCreatureDialogs.cs" />
     <Compile Include="MirScenes\Dialogs\KeyboardLayoutDialog.cs" />
+    <Compile Include="MirScenes\Dialogs\ItemRentingDialog.cs" />
     <Compile Include="MirScenes\Dialogs\MailDialogs.cs" />
     <Compile Include="MirScenes\Dialogs\MainDialogs.cs" />
     <Compile Include="MirScenes\Dialogs\MentorDialog.cs" />
@@ -195,6 +204,8 @@
     <Compile Include="MirScenes\Dialogs\NPCDialogs.cs" />
     <Compile Include="MirScenes\Dialogs\RankingDialog.cs" />
     <Compile Include="MirScenes\Dialogs\RelationshipDialog.cs" />
+    <Compile Include="MirScenes\Dialogs\ItemRentalDialog.cs" />
+    <Compile Include="MirScenes\Dialogs\ItemRentDialog.cs" />
     <Compile Include="MirScenes\Dialogs\ReportDialog.cs" />
     <Compile Include="MirScenes\Dialogs\TradeDialogs.cs" />
     <Compile Include="MirScenes\Dialogs\TrustMerchantDialog.cs" />

@@ -7,7 +7,7 @@ namespace Client
 {
     class Settings
     {
-        public const long CleanDelay = 600000;
+        public const long CleanDelay = 5000;
         public static int ScreenWidth = 800, ScreenHeight = 600;
         private static InIReader Reader = new InIReader(@".\Mir2Config.ini");
 
@@ -39,6 +39,8 @@ namespace Client
                             NPCPath = @".\Data\NPC\",
                             CArmourPath = @".\Data\CArmour\",
                             CWeaponPath = @".\Data\CWeapon\",
+                            CWeaponEffectPath = @".\Data\CWeaponEffect\",
+                            WingEffectPath = @".\Data\WingEffect\",
                             CHairPath = @".\Data\CHair\",
                             AArmourPath = @".\Data\AArmour\",
                             AWeaponPath = @".\Data\AWeapon\",
@@ -67,12 +69,12 @@ namespace Client
         public static string FontName = "Tahoma"; //"MS Sans Serif"
         public static bool FPSCap = true;
         public static int MaxFPS = 100;
-        public static int Resolution = 1024;
+        public static int Resolution = 1366;
         public static bool DebugMode = false;
 
         //Network
-        public static bool UseConfig = false;
-        public static string IPAddress = "127.0.0.1";
+        public static bool UseConfig = true;
+        public static string IPAddress = "144.91.76.105";
         public static int Port = 7000;
         public const int TimeOut = 5000;
 
@@ -112,9 +114,12 @@ namespace Client
             }
         }
 
+        public static string ServerTimeZone = "GMT Standard Time";
+
         //Game
         public static string AccountID = "",
                              Password = "";
+
         public static bool
             SkillMode = false,
             SkillBar = true,
@@ -127,7 +132,20 @@ namespace Client
             TransparentChat = false,
             DuraView = false,
             DisplayDamage = true,
-            TargetDead = false;
+            TargetDead = false,
+            ExpandedBuffWindow = true,
+            AllowTrade = true,
+            NpcName = true,
+            MonsterName = true;
+
+        public static bool  MissIndicator = false,
+                            DamageIndicator = false,
+                            MagicDamageIndicator = false,
+                            CriticalIndicator = false,
+                            HealIndicator = false,
+                            ManaRecovIndicator = false,
+                            BossHPBar = true,
+                            MobLightEffect = true;
 
         public static int[,] SkillbarLocation = new int[2, 2] { { 0, 0 }, { 216, 0 }  };
 
@@ -158,15 +176,17 @@ namespace Client
 
         //AutoPatcher
         public static bool P_Patcher = true;
-        public static string P_Host = @""; //ftp://212.67.209.184
+        public static string P_Host = @"http://StreetOfMir2.Com/BlackClover/"; //ftp://212.67.209.184
         public static string P_PatchFileName = @"PList.gz";
         public static bool P_NeedLogin = false;
         public static string P_Login = string.Empty;
         public static string P_Password = string.Empty;
         public static string P_ServerName = string.Empty;
-        public static string P_BrowserAddress = "http://launcher.mir2wiki.com/web/";
+        public static string P_BrowserAddress = "https://launcher.mironline.co.uk/web/";
         public static string P_Client = Application.StartupPath + "\\";
         public static bool P_AutoStart = false;
+
+        public static string C_DonateLink = "";
 
         public static void Load()
         {
@@ -214,7 +234,19 @@ namespace Client
             TransparentChat = Reader.ReadBoolean("Game", "TransparentChat", TransparentChat);
             DisplayDamage = Reader.ReadBoolean("Game", "DisplayDamage", DisplayDamage);
             TargetDead = Reader.ReadBoolean("Game", "TargetDead", TargetDead);
+            ExpandedBuffWindow = Reader.ReadBoolean("Game", "ExpandedBuffWindow", ExpandedBuffWindow);
             DuraView = Reader.ReadBoolean("Game", "DuraWindow", DuraView);
+            MonsterName = Reader.ReadBoolean("Game", "MonsterName", MonsterName);//Ice
+            NpcName = Reader.ReadBoolean("Game", "NpcName", NpcName);//Ice
+
+            MissIndicator = Reader.ReadBoolean("Custom", "MissIndicator", MissIndicator);
+            DamageIndicator = Reader.ReadBoolean("Custom", "DamageIndicator", DamageIndicator);
+            MagicDamageIndicator = Reader.ReadBoolean("Custom", "MagicDamageIndicator", MagicDamageIndicator);
+            CriticalIndicator = Reader.ReadBoolean("Custom", "CriticalIndicator", CriticalIndicator);
+            HealIndicator = Reader.ReadBoolean("Custom", "HealIndicator", HealIndicator);
+            ManaRecovIndicator = Reader.ReadBoolean("Custom", "ManaRecovIndicator", ManaRecovIndicator);
+            BossHPBar = Reader.ReadBoolean("Custom", "BossHPBar", BossHPBar);
+            MobLightEffect = Reader.ReadBoolean("Custom", "MobLightEffect", MobLightEffect);
 
             for (int i = 0; i < SkillbarLocation.Length / 2; i++)
             {
@@ -255,6 +287,7 @@ namespace Client
             if (!P_Host.EndsWith("/")) P_Host += "/";
             if (P_Host.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) P_Host = P_Host.Insert(0, "http://");
             if (P_BrowserAddress.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) P_BrowserAddress = P_BrowserAddress.Insert(0, "http://");
+            if (C_DonateLink.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) C_DonateLink = C_DonateLink.Insert(0, "https://paypal.me/BlackCloverMir2?locale.x=en_US");
         }
 
         public static void Save()
@@ -285,7 +318,19 @@ namespace Client
             Reader.Write("Game", "TransparentChat", TransparentChat);
             Reader.Write("Game", "DisplayDamage", DisplayDamage);
             Reader.Write("Game", "TargetDead", TargetDead);
+            Reader.Write("Game", "ExpandedBuffWindow", ExpandedBuffWindow);
             Reader.Write("Game", "DuraWindow", DuraView);
+            Reader.Write("Game", "MonsterName", MonsterName);//Ice
+            Reader.Write("Game", "NpcName", NpcName);//Ice
+
+            Reader.Write("Custom", "MissIndicator", MissIndicator);
+            Reader.Write("Custom", "DamageIndicator", DamageIndicator);
+            Reader.Write("Custom", "MagicDamageIndicator", MagicDamageIndicator);
+            Reader.Write("Custom", "CriticalIndicator", CriticalIndicator);
+            Reader.Write("Custom", "HealIndicator", HealIndicator);
+            Reader.Write("Custom", "ManaRecovIndicator", ManaRecovIndicator);
+            Reader.Write("Custom", "BossHPBar", BossHPBar);
+            Reader.Write("Custom", "MobLightEffect", MobLightEffect);
 
             for (int i = 0; i < SkillbarLocation.Length / 2; i++)
             {
@@ -323,6 +368,7 @@ namespace Client
             Reader.Write("Launcher", "ServerName", P_ServerName);
             Reader.Write("Launcher", "Browser", P_BrowserAddress);
             Reader.Write("Launcher", "AutoStart", P_AutoStart);
+            Reader.Write("GameSettings", "Donation", C_DonateLink);
         }
 
         public static void LoadTrackedQuests(string Charname)
@@ -333,6 +379,7 @@ namespace Client
                 TrackedQuests[i] = Reader.ReadInt32("Q-" + Charname, "Quest-" + i.ToString(), -1);
             }
         }
+
         public static void SaveTrackedQuests(string Charname)
         {
             //Quests
