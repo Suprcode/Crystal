@@ -9,24 +9,6 @@ using C = ClientPackets;
 using S = ServerPackets;
 using System.Linq;
 
-
-public enum PanelType : byte
-{
-    Buy = 0,
-    Sell,
-    Repair,
-    SpecialRepair,
-    Consign,
-    Craft,
-    Refine,
-    CheckRefine,
-    Disassemble,
-    Downgrade,
-    Reset,
-    CollectRefine,
-    ReplaceWedRing,
-}
-
 public enum BlendMode : sbyte
 {
     NONE = -1,
@@ -45,8 +27,20 @@ public enum DamageType : byte
     Hit = 0,
     Miss = 1,
     Critical = 2,
-    Heal = 3,
-    Mana = 4
+    Hp = 3,
+    Mp = 4,
+    MagicalHit = 5,
+    GreenPoison = 6,
+    Bleeding = 7,
+    Burning = 8,
+    ElementFire = 200,
+    ElementEarth = 201,
+    ElementWater = 202,
+    ElementAir = 203,
+    ElementWind = 204,
+    ElementHoly = 205,
+    ElementDark = 206,
+    ElementPhantom = 207
 }
 
 [Flags]
@@ -75,14 +69,15 @@ public enum LevelEffects : byte
     None = 0,
     Mist = 0x0001,
     RedDragon = 0x0002,
-    BlueDragon = 0x0004
+    BlueDragon = 0x0004,
+    GmHead = 0x0008,
 }
 
 public enum OutputMessageType : byte
 {
-    Normal,
+    Normal, 
     Quest,
-    Guild
+    Guild,
 }
 
 public enum ItemGrade : byte
@@ -94,6 +89,7 @@ public enum ItemGrade : byte
     Mythical = 4,
     Godly = 5,
     Unique = 6,
+    Quest = 7,
 }
 public enum StatType : byte
 {
@@ -120,7 +116,13 @@ public enum StatType : byte
     Freezing = 20,
     Holy = 21,
     Durability = 22,
-    Unknown = 23
+    Unknown = 23,
+    Update = 24,
+    CriticalRate = 25,
+    CriticalDamage = 26,
+    HpDrainRate = 27,
+    Reflect = 28,
+    Socket = 29
 }
 public enum RefinedValue : byte
 {
@@ -147,7 +149,13 @@ public enum QuestIcon : byte
     ExclamationBlue = 5,
     QuestionBlue = 6,
     ExclamationGreen = 52,
-    QuestionGreen = 53
+    QuestionGreen = 53,
+    ExclamationRed = 54,
+    QuestionRed = 55,
+    ExclamationDarkBlue = 56,
+    QuestionDarkBlue = 57,
+    ExclamationOrange = 58,
+    QuestionOrange = 59,
 }
 
 public enum QuestState : byte
@@ -170,7 +178,8 @@ public enum DefaultNPCType : byte
     OnAcceptQuest,
     OnFinishQuest,
     Daily,
-    TalkMonster
+    TalkMonster,
+    EventReward
 }
 
 public enum IntelligentCreatureType : byte
@@ -188,7 +197,8 @@ public enum IntelligentCreatureType : byte
     BabySnowMan = 9,
     Frog = 10,
     BabyMonkey = 11,
-    AngryBird = 12
+    AngryBird = 12,
+    Foxey = 13
 }
 
 //1 blank mob files
@@ -348,7 +358,7 @@ public enum Monster : ushort
     HighAssassin = 146,
     DarkDustPile = 147,
     DarkBrownWolf = 148,
-    Football = 149,
+    Football = 149, 
     GingerBreadman = 150,
     HalloweenScythe = 151,
     GhastlyLeecher = 152,
@@ -357,54 +367,54 @@ public enum Monster : ushort
     CrazyManworm = 155,
     MudPile = 156,
     TailedLion = 157,
-    Behemoth = 158,//done BOSS
-    DarkDevourer = 159,//done
-    PoisonHugger = 160,//done
-    Hugger = 161,//done
-    MutatedHugger = 162,//done
-    DreamDevourer = 163,//done
-    Treasurebox = 164,//done
-    SnowPile = 165,//done
-    Snowman = 166,//done
-    SnowTree = 167,//done
-    GiantEgg = 168,//done
-    RedTurtle = 169,//done
-    GreenTurtle = 170,//done
-    BlueTurtle = 171,//done
+    Behemoth = 158,
+    DarkDevourer = 159,
+    PoisonHugger = 160,
+    Hugger = 161,
+    MutatedHugger = 162,
+    DreamDevourer = 163,
+    Treasurebox = 164,
+    SnowPile = 165,
+    Snowman = 166,
+    SnowTree = 167,
+    GiantEgg = 168,
+    RedTurtle = 169,
+    GreenTurtle = 170,
+    BlueTurtle = 171,
     Catapult = 172, //not added frames //special 3 states in 1 
     SabukWallSection = 173, //not added frames
     NammandWallSection = 174, //not added frames
     SiegeRepairman = 175, //not added frames
-    BlueSanta = 176,//done
-    BattleStandard = 177,//done
-    ArcherGuard2 = 178,//done
-    RedYimoogi = 179,//done
+    BlueSanta = 176,
+    BattleStandard = 177,
+    ArcherGuard2 = 178,
+    RedYimoogi = 179,
     LionRiderMale = 180, //frames not added
     LionRiderFemale = 181, //frames not added
-    Tornado = 182,//done
-    FlameTiger = 183,//done
-    WingedTigerLord = 184,//done BOSS
-    TowerTurtle = 185,//done
-    FinialTurtle = 186,//done
-    TurtleKing = 187,//done BOSS
-    DarkTurtle = 188,//done
-    LightTurtle = 189,//done  
-    DarkSwordOma = 190,//done
-    DarkAxeOma = 191,//done
-    DarkCrossbowOma = 192,//done
-    DarkWingedOma = 193,//done
-    BoneWhoo = 194,//done
-    DarkSpider = 195,//done
-    ViscusWorm = 196,//done
-    ViscusCrawler = 197,//done
-    CrawlerLave = 198,//done
-    DarkYob = 199,//done
+    Tornado = 182,
+    FlameTiger = 183,
+    WingedTigerLord = 184,
+    TowerTurtle = 185,
+    FinialTurtle = 186,
+    TurtleKing = 187,
+    DarkTurtle = 188,
+    LightTurtle = 189, 
+    DarkSwordOma = 190,
+    DarkAxeOma = 191,
+    DarkCrossbowOma = 192,
+    DarkWingedOma = 193,
+    BoneWhoo = 194,
+    DarkSpider = 195,
+    ViscusWorm = 196,
+    ViscusCrawler = 197,
+    CrawlerLave = 198,
+    DarkYob = 199,
 
     FlamingMutant = 200,//FINISH
-    StoningStatue = 201,//FINISH BOSS
-    FlyingStatue = 202,//FINISH
-    ValeBat = 203,//done
-    Weaver = 204,//done
+    StoningStatue = 201,
+    FlyingStatue = 202,
+    ValeBat = 203,
+    Weaver = 204,
     VenomWeaver = 205,//done
     CrackingWeaver = 206,//done
     ArmingWeaver = 207,//done
@@ -442,17 +452,17 @@ public enum Monster : ushort
     FlameMage = 239,//done
     FlameScythe = 240,//done
     FlameAssassin = 241,//done
-    FlameQueen = 242, //finish BOSS
+    FlameQueen = 242, //done
     HellKnight1 = 243,//done
     HellKnight2 = 244,//done
     HellKnight3 = 245,//done
     HellKnight4 = 246,//done
     HellLord = 247,//done BOSS
     WaterGuard = 248,//done
-    IceGuard = 249,
-    ElementGuard = 250,
-    DemonGuard = 251,
-    KingGuard = 252,
+    IceGuard = 249,// done
+    ElementGuard = 250,//done
+    DemonGuard = 251,//done
+    KingGuard = 252,//done
     Snake10 = 253,//done
     Snake11 = 254,//done
     Snake12 = 255,//done
@@ -474,13 +484,13 @@ public enum Monster : ushort
     BloodBaboon = 270,
     HardenRhino = 271,
     AncientBringer = 272,
-    FightingCat = 273,
-    FireCat = 274,
-    CatWidow = 275,
-    StainHammerCat = 276,
-    BlackHammerCat = 277,
-    StrayCat = 278,
-    CatShaman = 279,
+    FightingCat = 273,//done
+    FireCat = 274,//done
+    CatWidow = 275,//done
+    StainHammerCat = 276,//done
+    BlackHammerCat = 277,//done
+    StrayCat = 278,//done
+    CatShaman = 279,//done
     Jar1 = 280,
     Jar2 = 281,
     SeedingsGeneral = 282,
@@ -489,15 +499,15 @@ public enum Monster : ushort
     Bunny = 285,
     Tucson = 286,
     TucsonFighter = 287,
-    TucsonMage = 288,
-    TucsonWarrior = 289,
-    Armadillo = 290,
-    ArmadilloElder = 291,
+    TucsonMage = 288,//done
+    TucsonWarrior = 289,//done
+    Armadillo = 290,//done
+    ArmadilloElder = 291,//done
     TucsonEgg = 292,
     PlaguedTucson = 293,
-    SandSnail = 294,
-    CannibalTentacles = 295,
-    TucsonGeneral = 296,
+    SandSnail = 294,//done
+    CannibalTentacles = 295,//done
+    TucsonGeneral = 296,//done
     GasToad = 297,
     Mantis = 298,
     SwampWarrior = 299,
@@ -603,11 +613,29 @@ public enum Monster : ushort
     Reindeer = 397, //frames not added
     AngryReindeer = 398,
     CargoBox = 399,
+    
     Ram1 = 400,
     Ram2 = 401,
     Kite = 402,
+    SnowFlower = 403,
+    SnowMouse = 404,
+    SnowSnail = 405,
+    SnowFlowerQueen = 409,
+    SecretPaper1 = 414,
+    SecretPaper2 = 415,
+    SecretPaper3 = 416,
+    SecretPaper4 = 417,
 
-    FireFox = 430,
+    FDung = 427,
+    FDark = 428,
+    FWoomaSoldier = 429,
+    FWoomaFighter = 430,
+    FWoomaWarrior = 431,
+    FFlamingWooma = 432,
+    FWoomaGuardian = 433,
+    FWoomaTaurus = 434,
+    MWoomaTaurus = 435,
+    Vulture = 436,
 
     OrcDagger = 437,
     OrcMiner = 438,
@@ -621,6 +649,7 @@ public enum Monster : ushort
     OrcCommander = 446,
     OrcMutant = 447,
     OrcGeneral = 448,
+    SandDragon = 449,
 
     BoneFamiliar1 = 450,
     BoneFamiliar2 = 451,
@@ -632,18 +661,33 @@ public enum Monster : ushort
     SuperShinsu4 = 457,
     SuperShinsu5 = 458,
 
+    AncCaveBat = 459,
+    AncCaveMaggot = 460,
+    AncScorpion = 461,
+    AncSkeleton = 462,
+    AncBoneFighter = 463,
+    AncAxeSkeleton = 464,
+    AncBoneWarrior = 465,
+    AncBoneElite = 466,
 
-    Monk = 480,
-    Assassin = 481,
-    Wizzard = 482,
-    Archer = 483,
-    Taoist = 484,
-    Warrior = 485,
+    BeastKing = 471,
+
+    GonRyunAch = 480,
+    GonRyunSin = 481,
+    GonRyunMag = 482,
+    GonRyunTao = 483,
+    GonRyunHam = 484,
+    GonRyunAchie = 485,
+    GonRyunWar = 486,
+    GonRyunBow = 487,
+    GonRyunSword = 488,
+    GonRyunSiner = 489,
+    GonRyunCaptin = 490,
 
     HolyDeva1 = 499,
+    HolyDragon = 500,
+    HolyDragon1 = 501,
 
-    Emperor = 500,
-    Taganda = 501,
     NumaMage = 502,
     NumaAxemen = 503,
     NumaFighter = 504,
@@ -651,60 +695,115 @@ public enum Monster : ushort
     NumaClubber = 506,
     NumaBladesmen = 507,
     NumaMacemen = 508,
+    FalconLord = 509,
+    BearMinotaur = 510,
+    Pillar = 511,
+    PumpkinHead = 512,
+    SquidSnail = 513,
+    SpawnerHut = 514,
+    RockDemon = 515,
+    PoolFlag = 516,
+    WalkingDemon = 517,
+    AntQueen = 518,
+    Seal = 519,
+    GateKeeper = 520,
+    WareWolf = 521,
+    RNumaMage = 522,
+    SoilderAnt = 523,
+    FlamingDemon = 524,
+    SlitherSerpent = 525,
+    RNumaAxemen = 526,
+    WhalingSpirit = 527,
+    PhantonDemong = 528,
+    OmaChieftain = 529,
+    SKoreanFlag = 530,
+    MutatedZombie = 531,
+    BattonPumeler = 532,
+    RedKnight = 533,
+    BlueKnight = 534,
+    DarkBark = 535,
+    IceAmazonSpearer = 536,
+    AncientDemon0 = 537,
+    AncientDemon1 = 538,
+    GreenLizard = 539,
+    SandShark = 540,
+    Cactus = 541,
+    SandSummoner = 542,
+    AmazonClubber = 543,
+    WalkingBlueDemon = 544,
+    AncientDemon2 = 545,
+    AncientDemon3 = 546,
+    AncientDemon4 = 547,
+    ConflictedDemon = 548,
+    Emperor = 549,
+    FemaleVillager = 550,
+    WhiteMonkey = 551,
+    RNumaSlicer = 552,
+    RNumaClibber = 553,
+    SpectialSpirit = 554,
+    AncientRedKnight = 555,
+    BatLord = 556,
+    AncientKing = 557,
+    BrownMonkey = 558,
+    WhiteMonkey1 = 559,
+    AmazonSpearer = 560,
+    AmazonFighter = 561,
+    AncientElephant = 562,
+    AncientGoldGriffen = 563,
+    AncientWhiteGriffen = 564,
+    JinCaptain = 565,
+    JinRightGuard = 566,
+    JinLeftGuard = 567,
+    JinLord = 568,
+    AncientLord = 569,
+    AncientLord0 = 570,
+    AncientBoar = 571,
+    IceQueen = 572,
+    SandDemon = 573,
+    RNumaRagingBull = 574,
+    AncientNumaMage = 575,
+    Bones0 = 576,
+    SpikeSlinger = 577,
+    BoneArm = 578,
+    AxeDemon = 579,
+    FlamingCatapult = 580,
+    TormentedDemon = 581,
+    FatAxeDemon = 582,
+    Taganda = 583,
+    SandPillar = 584,
+    ChestOGoodies = 595,
+    Bones1 = 586,
+    Dino0 = 587,
+    Dino1 = 588,
+    MutatedDino = 589,
+    FinnedDinp = 590,
+    ClawedDino = 591,
+    SpikedDino = 592,
+    Dino2 = 593,
+    DinoLord = 594,
+    Dino3 = 595,
+    AncientArcher = 596,
+    MinotaurLord = 597,
+    AncientSprirt0 = 598,
+    AncientSpirit1 = 599,
+    AncientHorsement = 600,
+    AncientLord1 = 601,
+    TwoHandedAxement = 602,
+    ForstWarewolf = 603,
+    FrostWolf = 604,
+    DemonHook = 605,
+    DemonLord0 = 606,
+    FlyingSerpentLord = 607,
+    AncientGuardian = 608,
+    AncientFighter = 609,
+    AncientSoilder = 610,
+    AncientShaman = 611,
+    AncientScout = 612,
+    DemonizedZombie = 613,
+    DemonizedMage = 614,
+    PortalDoor = 615,
+    DemonAxement = 616,
 
-
-    WarriorRider = 509,
-    SwordMan = 510,
-    BladeFighter = 511,
-    DemonHook = 512,
-    TormentedDemon = 513,
-    RedSwordsMan = 514,
-    ClawedDemon = 515,
-    ClawLord = 516,
-    RiderKing = 517,
-
-    MutantDino = 518,
-    WalkingDemon = 519,
-    Demon = 520,
-    HungryDemon = 521,
-    MutantDemon = 522,
-    SpikeSlinger = 523,
-    DemonLord = 524,
-    DemonKing = 525,
-
-    AngelFighter = 526,
-    WhiteAngel = 527,
-    RedAngel = 528,
-    GreenAngel = 529,
-    MagicalLord = 530,
-    AngelQueen = 531,
-
-    YellowLizard = 532,
-    BlackLizard = 533,
-    GreenLizard = 534,
-    OrangeLizard = 535,
-    RedLizard = 536,
-    QueenGuard = 537,
-    LizardQueen = 538,
-
-    SunkenBigRat = 539,
-    SunkenArcher = 540,
-    SunkenFighter = 541,
-    SunkenWarrior = 542,
-    SunkenBlackBoar = 543,
-    SunkenRedBoar = 544,
-    SunkenLord = 545,
-    SunkenKing = 546,
-
-    KnightFighter22 = 547,
-    KnightFighter23 = 548,
-    KnightFighter24 = 549,
-    KnightFighter25 = 550,
-    KnightFighter26 = 551,
-    BlackKnight = 552,
-    RedKnight = 553,
-    KnightLord = 554,
-    KnightKing = 555,
 
     EvilMir = 900,
     EvilMirBody = 901,
@@ -737,6 +836,7 @@ public enum Monster : ushort
     Frog = 10010,//unknown
     BabyMonkey = 10011,//unknown
     AngryBird = 10012,
+    Foxey = 10013,
 }
 
 public enum MirAction : byte
@@ -755,11 +855,6 @@ public enum MirAction : byte
     Attack3,
     Attack4,
     Attack5,
-    AlmightyPush,
-    PheonixExplosion,
-    FireExplode,
-    YinYangBurst,
-    FlyingThrust,
     AttackRange1,
     AttackRange2,
     AttackRange3,
@@ -825,7 +920,15 @@ public enum MirClass : byte
     Wizard = 1,
     Taoist = 2,
     Assassin = 3,
-    Archer = 4
+    Archer = 4,
+    NONE
+}
+
+public enum HeroState : byte
+{
+    Unspawned = 0,
+    Dead = 1,
+    Spawned = 2,
 }
 
 public enum MirDirection : byte
@@ -842,14 +945,15 @@ public enum MirDirection : byte
 
 public enum ObjectType : byte
 {
-    None = 0,
+    None= 0,
     Player = 1,
     Item = 2,
     Merchant = 3,
     Spell = 4,
     Monster = 5,
     Deco = 6,
-    Creature = 7
+    Creature = 7,
+    Hero = 8
 }
 
 public enum ChatType : byte
@@ -870,9 +974,14 @@ public enum ChatType : byte
     Mentor = 13,
     Shout2 = 14,
     Shout3 = 15,
-    BossLandShout = 16,
-    LMSShout = 17,
-    GlobalShout =18
+    Event = 16,
+}
+
+public enum WearType : byte
+{
+    All = 0,
+    Hero = 1,
+    Player = 2,
 }
 
 public enum ItemType : byte
@@ -911,14 +1020,16 @@ public enum ItemType : byte
     Reel = 32,
     Fish = 33,
     Quest = 34,
-    Awakening = 35,
+	Awakening = 35,
     Pets = 36,
     Transform = 37,
-    Crystal = 38,
-    ShoulderPads = 39,
-    Trinket = 40,
-    Medal = 41,
-    Poison = 42,
+    Poison = 38,
+    Medals = 39,
+    Shield = 40,
+    Pads = 41,
+    Crystal = 42,
+    Trinket = 43,
+    RuneStone = 60
 }
 
 public enum MirGridType : byte
@@ -940,9 +1051,13 @@ public enum MirGridType : byte
     AwakenItem = 14,
     Mail = 15,
     Refine = 16,
-    Renting = 17,
-    GuestRenting = 18,
-    Craft = 19
+    HeroInventory = 17,
+    HeroEquipment = 18,
+    HeroQuestInventory = 19,
+    TMPanel = 20,
+    Socketing = 21,
+    Crafting = 22,
+    AddSocket = 23
 }
 
 public enum EquipmentSlot : byte
@@ -961,11 +1076,12 @@ public enum EquipmentSlot : byte
     Boots = 11,
     Stone = 12,
     Mount = 13,
-    Crystal = 14,
-    ShoulderPads = 15,
-    Trinket = 16,
-    Medal = 17,
-    Poison = 18,
+    Poison = 14,
+    Medals = 15,
+    Shield = 16,
+    Pads = 17,
+    Crystal = 18,
+    Trinket = 19
 }
 
 public enum MountSlot : byte
@@ -1008,6 +1124,16 @@ public enum PetMode : byte
 
 [Flags]
 [Obfuscation(Feature = "renaming", Exclude = true)]
+
+public enum HeroMode : byte
+{
+    Offensive = 0,
+    Defensive = 1,
+    Guard = 2,
+    DontMove = 3,
+    DontAttack = 4,
+
+}
 public enum PoisonType : ushort
 {
     None = 0,
@@ -1019,7 +1145,9 @@ public enum PoisonType : ushort
     Paralysis = 32,
     DelayedExplosion = 64,
     Bleeding = 128,
-    LRParalysis = 256
+    LRParalysis = 256,
+    Trap = 512,
+    Burning = 1024,
 }
 
 [Flags]
@@ -1040,8 +1168,8 @@ public enum BindMode : short
     BindOnEquip = 512,//0x0200
     NoSRepair = 1024,//0x0400
     NoWeddingRing = 2048,//0x0800
-    UnableToRent = 4096,
-    UnableToDisassemble = 8192
+    UnableToDisassemble = 4096, //0x1600
+    NoMail = 8192//0x3200
 }
 
 [Flags]
@@ -1092,87 +1220,7 @@ public enum RequiredType : byte
     MC = 4,
     SC = 5,
 }
-[Obfuscation(Feature = "renaming", Exclude = true)]
-public enum RequiredType1 : byte
-{
-    None = 0,
-    ItemSet = 1,
-}
-[Obfuscation(Feature = "renaming", Exclude = true)]
-public enum RequiredType2 : byte
-{
-    None = 0,
-    BlueMir = 1,
-    DarkMir = 2,
-    GreenMir = 3,
-    GoldMir = 4,
-    PurpleMir = 5,
-    RedMir = 6,
-    SilverMir = 7,
-    YellowMir = 8,
-    Smash = 9,
-    HwanDevil = 10,
-    Purity = 11,
-    RedOrchid = 12,
-    FiveString = 13,
-    RedFlower = 14,
-    Mundane = 15,
-    NokChi = 16,
-    TaoProtect = 17,
-}
-[Obfuscation(Feature = "renaming", Exclude = true)]
-public enum RequiredType3 : byte
-{
-    None = 0,
-    Parts = 1,
-}
-[Obfuscation(Feature = "renaming", Exclude = true)]
-public enum RequiredType4 : byte
-{
-    None = 0,
-    BlueMir = 1,
-    DarkMir = 2,
-    GreenMir = 3,
-    GoldMir = 4,
-    PurpleMir = 5,
-    RedMir = 6,
-    SilverMir = 7,
-    YellowMir = 8,
-    Smash = 9,
-    HwanDevil = 10,
-    Purity = 11,
-    RedOrchid = 12,
-    FiveString = 13,
-    RedFlower = 14,
-    Mundane = 15,
-    NokChi = 16,
-    TaoProtect = 17,
-}
-[Obfuscation(Feature = "renaming", Exclude = true)]
-public enum RequiredType5 : byte
-{
-    None = 0,
-    SetBonus = 1,
 
-}
-[Obfuscation(Feature = "renaming", Exclude = true)]
-public enum RequiredType6 : byte
-{
-    None = 0,
-    Warrior = 1,
-    Wizard = 2,
-    Taoist = 3,
-    Smash = 4,
-    HwanDevil = 5,
-    Purity = 6,
-    RedOrchid = 7,
-    FiveString = 8,
-    RedFlower = 9,
-    Mundane = 10,
-    NokChi = 11,
-    TaoProtect = 12,
-
-}
 [Obfuscation(Feature = "renaming", Exclude = true)]
 public enum ItemSet : byte
 {
@@ -1207,14 +1255,7 @@ public enum ItemSet : byte
     Oppressive = 28,
     Paeok = 29,
     Sulgwan = 30,
-    BlueMir = 31,
-    DarkMir = 32,
-    GreenMir = 33,
-    GoldMir = 34,
-    PurpleMir = 35,
-    RedMir = 36,
-    SilverMir = 37,
-    YellowMir = 38,
+    BlueFrost = 31,
 }
 
 [Obfuscation(Feature = "renaming", Exclude = true)]
@@ -1234,20 +1275,17 @@ public enum Spell : byte
     LionRoar = 9,
     CrossHalfMoon = 10,
     BladeAvalanche = 11,
-    ProtectionField = 12,
-    Rage = 13,
-    CounterAttack = 14,
-    SlashingBurst = 15,
-    Fury = 16,
-    ImmortalSkin = 17,
+    Fury = 12,
+    ProtectionField = 13,
+    Rage = 14,
+    CounterAttack = 15,
+    SliceNDice = 16,
+    SlashingBurst = 17,
     BladeStorm = 18,
-    BladeDancer = 19,
-    IceSword = 20,
-    FlyingThrust = 21,
-    WhirlWind = 22,
-    FuryWaves = 23,
-    ShadowStep = 24,
+    ImmortalSkin = 19,
 
+
+    
     //Wizard
     FireBall = 31,
     Repulsion = 32,
@@ -1272,11 +1310,7 @@ public enum Spell : byte
     MagicBooster = 51,
     MeteorStrike = 52,
     IceThrust = 53,
-    FastMove = 54,
-    StormEscape = 55,
-    PheonixExplosion = 56,
-    AlmightyPush = 57,
-    FireExplode = 58,
+    Blink = 54,
 
 
     //Taoist
@@ -1300,15 +1334,10 @@ public enum Spell : byte
     Reincarnation = 79,
     SummonHolyDeva = 80,
     Curse = 81,
-    Plague = 82,
-    PoisonCloud = 83,
-    EnergyShield = 84,
-    PetEnhancer = 85,
-    HealingCircle = 86,
-    SoulBooster = 87,
-    SummonFireFox = 88,
-    YinYangBurst = 89,
-    HeavenAndHell = 90,
+    PoisonCloud = 82,
+    EnergyShield = 83,
+    PetEnhancer = 84,
+    Plague = 85,
 
     //Assassin
     FatalSword = 91,
@@ -1327,11 +1356,9 @@ public enum Spell : byte
     Hemorrhage = 104,
     CrescentSlash = 105,
     MoonMist = 106,
+    ShadowStep = 107,
 
-
-    SwordsOfLight = 107,
-    TaoAvalanche = 108,
-
+    SoulReaper = 108, // Hero
     //Archer
     Focus = 121,
     StraightShot = 122,
@@ -1356,8 +1383,39 @@ public enum Spell : byte
     MentalState = 141,
 
     //Custom
-    Blink = 151,
     Portal = 152,
+    FuryWaves = 153,
+    FrozenRains = 154,
+    HeadShot = 155,
+    LavaKing = 156,
+    DragNet = 158,
+    YinYangTiger = 159,
+    HolyShield = 160,
+    BlazingSword = 161,
+    SummonHolyDragon = 162,
+
+    //  Recodes from Dual skills
+    BrokenSoul = 163,
+    DragonTears = 164,
+    ThunderRolls = 165,
+    StarPower = 166,
+    SoulEater = 167,
+    GodsHand = 168,
+    Judgement = 169,
+    SoulStealer = 170,
+
+
+    StormEscape = 180,
+    FastMove = 181,
+    DragonFlames = 182,
+    ThunderClap = 183,
+    ChopChopStar = 184,
+    SoulEaterSwamp = 185,
+    HandOfGod = 186,
+    BrokenSoulCut = 187, //hero
+    FireSpray = 188,
+    HealingCircle = 189,
+    LastJudgement = 190,
 
     //Map Events
     DigOutZombie = 200,
@@ -1366,7 +1424,15 @@ public enum Spell : byte
     MapLava = 203,
     MapQuake1 = 204,
     MapQuake2 = 205,
-    FireExplodeFW = 206
+    CrystalBeastBlizz = 206,
+    MobFireWall = 207,
+    MobSoulShield = 208,
+    MobBlessedArmour = 209,
+    MobPoisonCloud = 210,
+    MobMeteorStrike = 211,
+    MobBlizzard = 212,
+    Armadilo = 213,
+    SpecialMob = 255,
 }
 
 public enum SpellEffect : byte
@@ -1381,6 +1447,7 @@ public enum SpellEffect : byte
     MagicShieldDown,
     CounterAttackUp,
     CounterAttackDown,
+    FireSprayHit,
     GreatFoxSpirit,
     Entrapment,
     Reflect,
@@ -1401,41 +1468,148 @@ public enum SpellEffect : byte
     Behemoth,
     Stunned,
     IcePillar,
-    GeneralJinmYo,
-    GeneralJinmYo1,
-    FlyingStatue,
-    FlyingStatue1,
+    #region Weapon Effects
+    CrystalBeastSpin,
+    CrystalBeastExplosion,
+    CrystalBeastSplash,
+    CrystalBeastBlast,
+    GFBHit,
+    PsnHit,
+    SFBHit,
+    Shocking,
+    UEnhance,
+    TDBEff0,
+    TDBEff1,
+    Cake,
+    CircleEff,
+    PurpleBlastEff,
+    BubbleEff,
+    ExplosionEff,
+    RainbowEff,
+    GoldenBubble,
+    PurpleExplosion,
+    GreenExplosion,
+    Swirling,
+    EyeEff,
+    PhoenixEff,
+    ElectricExplosion,
+    TrapEff,
+    CastingBlizzard,
+    BlizzardCast,
     CHM,
-    OmaBlest,
-    FlameField,
-    FireBang,
-    HumanTwinDrakeBlade,
+    #endregion
+    MutantWeb,
+    MutantWebHold,
+    FlyingStatueCast,
+    FlyingStatuePurple,
+    FlyingStatueGreen,
+    StainHammerCatHit,
+    BlackHammerCatSmash,
+    KingGuardHold,
+    KingGuardSmash,
+    HumanFireBall,
+    HumanThunderBolt,
+    HumanRepulse,
+    HumanFireWallCast,
+    HumanBlizzardCast,
+    HumanMeteorCast,
+    HumanMagicShield,
     HumanFlamingSword,
+    HumanTwinDrakeBlade,
+    HumanHalfMoon,
     HumanCrossHalfMoon,
-    HumanBladeStorm,
+    HumanThrusting,
+    HumanRage,
+    HumanSoulFireBall,
+    HumanPoisoning,
     HumanCurseCast,
-    HumanRepulsion,
-    HumanTaoField,
-    HumanFireBang,
-    Taganda,
-    Taganda0,
-    Taganda1,
-    Taganda2,
-    Emperor,
-    Emperor1,
-    KnightFlameSpin,
+    HumanCastBlessArm,
+    HumanCastSoulShield,
+    HumanCastPoisonCloud,
+    DragonFlamesEffect,
+    BrokenSoulCutEffect,
+    ThunderClapEffect,
+    LastJudgementEffect,
+    ChopChopStarEffect,
+    SoulEaterSwampEffect,
+    HandOfGodEffect,
+    TucsonGeneralEffect,
+    LavaBurning,
+    Jar2Effect,
+    RestlessJarSpawn,
+    RestlessJarSpawnOnPlayer,
+    RestlessJarMultipleHit,
+    RestlessJarTornado,
+    MoonMist,
+    FalconShield,
+    BearFlameSpin,
+
+}
+
+public class HumansMonsterSettings
+{
+    public string HumansName = string.Empty;
+    public MirClass MobsClass;
+    public MirGender MobsGender;
+    public short Weapon, Armour;
+    public byte Wing, Hair, Light;
+
+    public HumansMonsterSettings() { }
+}
+
+public class MonitorToolUsers
+{
+    public int Index;
+    public string UserName;
+    public string Password;
+    public byte Permissions;
+    public MonitorToolUsers() { }
+}
+
+public class BoardInfo
+{
+    public bool Notice;
+
+    public string Text, Name;
+
+    public DateTime Date;
+
+    public BoardInfo()
+    {
+        Notice = false;
+        Text = string.Empty;
+        Name = string.Empty;
+        Date = DateTime.Now;
+    }
+
+    public BoardInfo(BinaryReader reader)
+    {
+        Notice = reader.ReadBoolean();
+        Text = reader.ReadString();
+        Name = reader.ReadString();
+        Date = DateTime.FromBinary(reader.ReadInt64());
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Notice);
+        writer.Write(Text);
+        writer.Write(Name);
+        writer.Write(Date.ToBinary());
+    }
 }
 
 public enum BuffType : byte
 {
     None = 0,
-    Global,
 
     //magics
-    TemporalFlux,
     HealthRecovery,
     ManaRecovery,
+    TemporalFlux,
+    ShadowStepFlux,
     Hiding,
+    Cloak,
     Haste,
     SwiftFeet,
     Fury,
@@ -1443,6 +1617,7 @@ public enum BuffType : byte
     BlessedArmour,
     LightBody,
     UltimateEnhancer,
+    UltimateEnhancerQuest,
     ProtectionField,
     Rage,
     Curse,
@@ -1451,26 +1626,24 @@ public enum BuffType : byte
     Concentration,
     VampireShot,
     PoisonShot,
-    Blizzard,
-    MeteorStrike,
-    HeavenAndHell,
-    PoisonCloud,
+    CounterAttack,
     MentalState,
     EnergyShield,
     MagicBooster,
-    SoulBooster,
     PetEnhancer,
     ImmortalSkin,
     MagicShield,
-    CounterAttack,
+    HumUp,
+    Global,
+    FastMove,
 
     //special
     GameMaster = 100,
     General,
     Exp,
-    Exp2,
-    NewbieExp,
+    ExpQuest,
     Drop,
+    DropQuest,
     Gold,
     BagWeight,
     Transform,
@@ -1481,23 +1654,39 @@ public enum BuffType : byte
     Prison,
     Rested,
 
-    VIP,
-    CloverBuff,
-    CloverPotion,
-
     //stats
     Impact = 200,
     Magic,
     Taoist,
     Storm,
+    StormQuest,
+    Accuracy,
+    AccuracyQuest,
+    Agility,
     HealthAid,
     ManaAid,
     Defence,
     MagicDefence,
     WonderDrug,
-    WeeklyBuff,
+    Knapsack,
+    VIP,
+    HeroBuff,
+    MoonMist,
     NewbieGuild,
-    Knapsack
+    Group,
+    //  Socket Skills
+    PinPoint,
+    Evasive,
+    Enrage,
+    IronWall,
+    SpeedyMagician,
+    //  Hero
+    HeroEnergyShield = 230,
+    MobDebuff = 231,
+    CombinedBuff = 240,
+
+    LoverRecall = 250,
+    SwBuff = 251
 }
 
 public enum DefenceType : byte
@@ -1513,9 +1702,6 @@ public enum DefenceType : byte
 
 public enum ServerPacketIds : short
 {
-    SetVIP,
-    SetCloverBuff,
-    LogNotice,
     Connected,
     ClientVersion,
     Disconnect,
@@ -1535,6 +1721,8 @@ public enum ServerPacketIds : short
     StartGameDelay,
     MapInformation,
     UserInformation,
+    HeroInformation,
+    HeroStats,
     UserLocation,
     ObjectPlayer,
     ObjectRemove,
@@ -1546,11 +1734,15 @@ public enum ServerPacketIds : short
     NewItemInfo,
     MoveItem,
     EquipItem,
+    HeroEquipItem,
     MergeItem,
     RemoveItem,
+    HeroRemoveItem,
     RemoveSlotItem,
     TakeBackItem,
+    HeroInventoryToInventory,
     StoreItem,
+    InventoryToHeroInventory,
     SplitItem,
     SplitItem1,
     DepositRefineItem,
@@ -1560,16 +1752,18 @@ public enum ServerPacketIds : short
     DepositTradeItem,
     RetrieveTradeItem,
     UseItem,
+    HeroUseItem,
     DropItem,
-    RefreshMagic,
-    RefreshStats,
     PlayerUpdate,
+    UpdateItemInfo,
+    RefreshStats,
     PlayerInspect,
     LogOutSuccess,
     LogOutFailed,
     TimeOfDay,
     ChangeAMode,
     ChangePMode,
+    ChangeHMode,
     ObjectItem,
     ObjectGold,
     GainedItem,
@@ -1584,6 +1778,8 @@ public enum ServerPacketIds : short
     DamageIndicator,
     DuraChanged,
     HealthChanged,
+    HeroHealthChanged,
+    HeroStatsChanged,
     DeleteItem,
     Death,
     ObjectDied,
@@ -1591,7 +1787,9 @@ public enum ServerPacketIds : short
     ObjectColourChanged,
     ObjectGuildNameChanged,
     GainExperience,
+    HeroGainExperience,
     LevelChanged,
+    HeroLevelChanged,
     ObjectLeveled,
     ObjectHarvest,
     ObjectHarvested,
@@ -1615,12 +1813,14 @@ public enum ServerPacketIds : short
     NPCReplaceWedRing,
     NPCStorage,
     SellItem,
-    CraftItem,
     RepairItem,
     ItemRepaired,
     NewMagic,
+    RefreshMagic,
+    HeroNewMagic,
     RemoveMagic,
     MagicLeveled,
+    HeroMagicLeveled,
     Magic,
     MagicDelay,
     MagicCast,
@@ -1654,6 +1854,7 @@ public enum ServerPacketIds : short
     NPCConsign,
     NPCMarket,
     NPCMarketPage,
+    GuildTerritoryPage,
     ConsignItem,
     MarketFail,
     MarketSuccess,
@@ -1691,6 +1892,7 @@ public enum ServerPacketIds : short
     CompleteQuest,
     ShareQuest,
     NewQuestInfo,
+    RefreshQuestInfo,
     GainedQuestItem,
     DeleteQuestItem,
     CancelReincarnation,
@@ -1727,7 +1929,10 @@ public enum ServerPacketIds : short
     MailSent,
     ParcelCollected,
     MailCost,
-    ResizeInventory,
+	ResizeInventory,
+    ResizeHeroInventory,
+    ComboHero,
+    ComboStance,
     ResizeStorage,
     NewIntelligentCreature,
     UpdateIntelligentCreatureList,
@@ -1737,28 +1942,58 @@ public enum ServerPacketIds : short
 
     TransformUpdate,
     FriendUpdate,
+    SetVIP,
+    SetHumUp,
+    SetAutoPot,
+    SetHero,
+    SetHeroSpawned,
+    SetHeroLocked,
     LoverUpdate,
     MentorUpdate,
     GuildBuffList,
     NPCRequestInput,
     GameShopInfo,
+    HeroStashInfo,
+    HeroStashActivate,
     GameShopStock,
     Rankings,
     Opendoor,
-
-    GetRentedItems,
-    ItemRentalRequest,
-    ItemRentalFee,
-    ItemRentalPeriod,
-    DepositRentalItem,
-    RetrieveRentalItem,
-    UpdateRentalItem,
-    CancelItemRental,
-    ItemRentalLock,
-    ItemRentalPartnerLock,
-    CanConfirmItemRental,
-    ConfirmItemRental,
-    NewRecipeInfo
+    MobHealthChanged,
+    Crafting,
+    CraftingRecipe,
+    UpdatePlayerRecipes,
+    UpdateQuestInfo,
+    GainShieldExperience,
+    CreateHero,
+    ItemGainLevel,
+    RecipieShopContents,
+    PurchaseResult,
+    EESocketDisplay,
+    EERuneSocketResult,
+    EEOpenSocketDialog,
+    EERemoveRune,
+    EEHeroRank,
+    EEOpenGuildBoardDialog,
+    OpenRankDialog,
+    OpenHeroRankDialog,
+    CustomAIEffect,
+    LogNotice,
+    EEClientCompletedQuests,
+    EEClientAvailableQuests,
+    ItemInfoList,
+    RefreshHeroCap,
+    LeavePublicEvent,
+    ActivateEvent,
+    DeactivateEvent,
+    EnterPublicEvent,
+    HelmetChange,
+    ToggleBuff,
+    ExternalToolLogin,
+    ToolStats,
+    ToolPlayerList,
+    BRList,
+    LMSDialog,
+    BigMapQuestLocations,
 }
 
 public class LogNotice
@@ -1801,13 +2036,18 @@ public enum ClientPacketIds : short
     Chat,
     MoveItem,
     StoreItem,
+    InventoryToHeroInventory,
     TakeBackItem,
+    HeroInventoryToInventory,
     MergeItem,
     EquipItem,
+    HeroEquipItem,
     RemoveItem,
+    HeroRemoveItem,
     RemoveSlotItem,
     SplitItem,
     UseItem,
+    HeroUseItem,
     DropItem,
     DepositRefineItem,
     RetrieveRefineItem,
@@ -1820,8 +2060,10 @@ public enum ClientPacketIds : short
     DropGold,
     PickUp,
     Inspect,
+    HeroRunTo,
     ChangeAMode,
     ChangePMode,
+    ChangeHMode,
     ChangeTrade,
     Attack,
     RangeAttack,
@@ -1830,11 +2072,12 @@ public enum ClientPacketIds : short
     TalkMonsterNPC,
     BuyItem,
     SellItem,
-    CraftItem,
     RepairItem,
     BuyItemBack,
     SRepairItem,
     MagicKey,
+    HeroMagicKey,
+    AutoPotUpdate,
     Magic,
     SwitchGroup,
     AddMember,
@@ -1846,6 +2089,7 @@ public enum ClientPacketIds : short
     MarketSearch,
     MarketRefresh,
     MarketPage,
+    GuildTerritoryPage,
     MarketBuy,
     MarketGetBack,
     RequestUserName,
@@ -1883,6 +2127,7 @@ public enum ClientPacketIds : short
     AcceptReincarnation,
     CancelReincarnation,
     CombineItem,
+    StashHero,
 
     SetConcentration,
     AwakeningNeedMaterials,
@@ -1914,17 +2159,26 @@ public enum ClientPacketIds : short
     ReportIssue,
     GetRanking,
     Opendoor,
-
-    GetRentedItems,
-    ItemRentalRequest,
-    ItemRentalFee,
-    ItemRentalPeriod,
-    DepositRentalItem,
-    RetrieveRentalItem,
-    CancelItemRental,
-    ItemRentalLockFee,
-    ItemRentalLockItem,
-    ConfirmItemRental
+    RequestCraft,
+    GetCrafts,
+    CollectCraft,
+    CreateHero,
+    ComboSpell,
+    RecipieShop,
+    BuyRecipie,
+    EERequestSocketInfo,
+    EESocketItem,
+    EERemoveRune,
+    EEHeroRank,
+    HeroUseMagic,
+    ChangeHeroMove,
+    CheckClientItemFile,
+    ExternalToolLogin,
+    ToolStats,
+    ReportCheat,
+    AdjustGuildTax,
+    LMS_Signup,
+    Get_LMS_BR,
 }
 
 public enum ConquestType : byte
@@ -1936,10 +2190,11 @@ public enum ConquestType : byte
 
 public enum ConquestGame : byte
 {
-    None = 0,
-    SabukWall = 1,
-    MudWall = 2,
-    Robot = 3
+    CapturePalace = 0,
+    KingOfHill = 1,
+    Random = 2,
+    Classic = 3,
+    ControlPoints = 4
 }
 
 public class InIReader
@@ -2019,9 +2274,8 @@ public class InIReader
     #region Read
     public bool ReadBoolean(string section, string key, bool Default)
     {
-        bool result;
 
-        if (!bool.TryParse(FindValue(section, key), out result))
+        if (!bool.TryParse(FindValue(section, key), out bool result))
         {
             result = Default;
             Write(section, key, Default);
@@ -2032,9 +2286,8 @@ public class InIReader
 
     public byte ReadByte(string section, string key, byte Default)
     {
-        byte result;
-
-        if (!byte.TryParse(FindValue(section, key), out result))
+        
+        if (!byte.TryParse(FindValue(section, key), out byte result))
         {
             result = Default;
             Write(section, key, Default);
@@ -2046,9 +2299,8 @@ public class InIReader
 
     public sbyte ReadSByte(string section, string key, sbyte Default)
     {
-        sbyte result;
-
-        if (!sbyte.TryParse(FindValue(section, key), out result))
+        
+        if (!sbyte.TryParse(FindValue(section, key), out sbyte result))
         {
             result = Default;
             Write(section, key, Default);
@@ -2060,9 +2312,8 @@ public class InIReader
 
     public ushort ReadUInt16(string section, string key, ushort Default)
     {
-        ushort result;
-
-        if (!ushort.TryParse(FindValue(section, key), out result))
+        
+        if (!ushort.TryParse(FindValue(section, key), out ushort result))
         {
             result = Default;
             Write(section, key, Default);
@@ -2074,9 +2325,9 @@ public class InIReader
 
     public short ReadInt16(string section, string key, short Default)
     {
-        short result;
 
-        if (!short.TryParse(FindValue(section, key), out result))
+
+        if (!short.TryParse(FindValue(section, key), out short result))
         {
             result = Default;
             Write(section, key, Default);
@@ -2088,9 +2339,9 @@ public class InIReader
 
     public uint ReadUInt32(string section, string key, uint Default)
     {
-        uint result;
 
-        if (!uint.TryParse(FindValue(section, key), out result))
+
+        if (!uint.TryParse(FindValue(section, key), out uint result))
         {
             result = Default;
             Write(section, key, Default);
@@ -2101,9 +2352,8 @@ public class InIReader
 
     public int ReadInt32(string section, string key, int Default)
     {
-        int result;
-
-        if (!int.TryParse(FindValue(section, key), out result))
+        
+        if (!int.TryParse(FindValue(section, key), out int result))
         {
             result = Default;
             Write(section, key, Default);
@@ -2114,9 +2364,8 @@ public class InIReader
 
     public ulong ReadUInt64(string section, string key, ulong Default)
     {
-        ulong result;
-
-        if (!ulong.TryParse(FindValue(section, key), out result))
+        
+        if (!ulong.TryParse(FindValue(section, key), out ulong result))
         {
             result = Default;
             Write(section, key, Default);
@@ -2127,9 +2376,8 @@ public class InIReader
 
     public long ReadInt64(string section, string key, long Default)
     {
-        long result;
-
-        if (!long.TryParse(FindValue(section, key), out result))
+        
+        if (!long.TryParse(FindValue(section, key), out long result))
         {
             result = Default;
             Write(section, key, Default);
@@ -2141,9 +2389,8 @@ public class InIReader
 
     public float ReadSingle(string section, string key, float Default)
     {
-        float result;
-
-        if (!float.TryParse(FindValue(section, key), out result))
+        
+        if (!float.TryParse(FindValue(section, key), out float result))
         {
             result = Default;
             Write(section, key, Default);
@@ -2154,9 +2401,8 @@ public class InIReader
 
     public double ReadDouble(string section, string key, double Default)
     {
-        double result;
-
-        if (!double.TryParse(FindValue(section, key), out result))
+        
+        if (!double.TryParse(FindValue(section, key), out double result))
         {
             result = Default;
             Write(section, key, Default);
@@ -2167,9 +2413,8 @@ public class InIReader
 
     public decimal ReadDecimal(string section, string key, decimal Default)
     {
-        decimal result;
-
-        if (!decimal.TryParse(FindValue(section, key), out result))
+        
+        if (!decimal.TryParse(FindValue(section, key), out decimal result))
         {
             result = Default;
             Write(section, key, Default);
@@ -2193,9 +2438,8 @@ public class InIReader
 
     public char ReadChar(string section, string key, char Default)
     {
-        char result;
-
-        if (!char.TryParse(FindValue(section, key), out result))
+        
+        if (!char.TryParse(FindValue(section, key), out char result))
         {
             result = Default;
             Write(section, key, Default);
@@ -2207,13 +2451,12 @@ public class InIReader
     public Point ReadPoint(string section, string key, Point Default)
     {
         string temp = FindValue(section, key);
-        int tempX, tempY;
-        if (temp == null || !int.TryParse(temp.Split(',')[0], out tempX))
+        if (temp == null || !int.TryParse(temp.Split(',')[0], out int tempX))
         {
             Write(section, key, Default);
             return Default;
         }
-        if (!int.TryParse(temp.Split(',')[1], out tempY))
+        if (!int.TryParse(temp.Split(',')[1], out int tempY))
         {
             Write(section, key, Default);
             return Default;
@@ -2225,13 +2468,12 @@ public class InIReader
     public Size ReadSize(string section, string key, Size Default)
     {
         string temp = FindValue(section, key);
-        int tempX, tempY;
-        if (!int.TryParse(temp.Split(',')[0], out tempX))
+        if (!int.TryParse(temp.Split(',')[0], out int tempX))
         {
             Write(section, key, Default);
             return Default;
         }
-        if (!int.TryParse(temp.Split(',')[1], out tempY))
+        if (!int.TryParse(temp.Split(',')[1], out int tempY))
         {
             Write(section, key, Default);
             return Default;
@@ -2242,9 +2484,8 @@ public class InIReader
 
     public TimeSpan ReadTimeSpan(string section, string key, TimeSpan Default)
     {
-        TimeSpan result;
 
-        if (!TimeSpan.TryParse(FindValue(section, key), out result))
+        if (!TimeSpan.TryParse(FindValue(section, key), out TimeSpan result))
         {
             result = Default;
             Write(section, key, Default);
@@ -2256,9 +2497,8 @@ public class InIReader
 
     public float ReadFloat(string section, string key, float Default)
     {
-        float result;
 
-        if (!float.TryParse(FindValue(section, key), out result))
+        if (!float.TryParse(FindValue(section, key), out float result))
         {
             result = Default;
             Write(section, key, Default);
@@ -2384,15 +2624,15 @@ public static class Globals
 
         MinCharacterNameLength = 3,
         MaxCharacterNameLength = 15,
-        MaxCharacterCount = 4,
+        MaxCharacterCount = 3,
 
-        MaxChatLength = 90,
+        MaxChatLength = 116,// it's not this btw
 
         MaxGroup = 15,
-
+        
         MaxAttackRange = 9,
 
-        MaxDragonLevel = 13,
+        MaxDragonLevel = 12,
 
         FlagIndexCount = 1999,
 
@@ -2402,13 +2642,13 @@ public static class Globals
 
         DataRange = 14;//Was 24
 
-    public static float Commission = 0.01F;
+    public static float Commission = 0.05F;
 
     public const uint SearchDelay = 50,
-                      ConsignmentLength = 14,
+                      ConsignmentLength = 7,
                       ConsignmentCost = 1000,
-                      MinConsignment = 1000,
-                      MaxConsignment = 4000000000;
+                      MinConsignment = 50,
+                      MaxConsignment = 50000000;
 
 }
 
@@ -2425,19 +2665,63 @@ public static class Functions
         return true;
     }
 
+
+    /// <summary>
+    /// Get the outter points of a circle
+    /// </summary>
+    /// <param name="info">The centeral location</param>
+    /// <param name="radius"></param>
+    /// <returns></returns>
+    public static List<Point> GetCircleLocations(Point info, int radius)
+    {
+        List<Point> list = new List<Point>();
+        int x, y, r2;
+        r2 = radius * radius;
+        list.Add(new Point(info.X, info.Y + radius));
+        list.Add(new Point(info.X, info.Y - radius));
+        list.Add(new Point(info.X + radius, info.Y));
+        list.Add(new Point(info.X - radius, info.Y));
+        for (x = -radius; x <= radius; x++)
+        {
+            y = (int)(Math.Sqrt(r2 - x * x) + 0.5);
+            while (x < y)
+            {
+                list.Add(new Point(info.X + x, info.Y + y));
+                list.Add(new Point(info.X + x, info.Y - y));
+                list.Add(new Point(info.X - x, info.Y + y));
+                list.Add(new Point(info.X - x, info.Y - y));
+
+                list.Add(new Point(info.X + y, info.Y + x));
+                list.Add(new Point(info.X + y, info.Y - x));
+                list.Add(new Point(info.X + y, info.Y + x));
+                list.Add(new Point(info.X - y, info.Y + x));
+                list.Add(new Point(info.X - y, info.Y - x));
+                x += 1;
+                y = (int)(Math.Sqrt(r2 - x * x) + 0.5);
+            }
+            if (x == y)
+            {
+                list.Add(new Point(info.X + x, info.Y + y));
+                list.Add(new Point(info.X + x, info.Y - y));
+                list.Add(new Point(info.X - x, info.Y + y));
+                list.Add(new Point(info.X - x, info.Y - y));
+            }
+        }
+        return list;
+    }
+
     public static bool TryParse(string s, out Point temp)
     {
         temp = Point.Empty;
-        int tempX, tempY;
         if (String.IsNullOrWhiteSpace(s)) return false;
 
         string[] data = s.Split(',');
         if (data.Length <= 1) return false;
 
-        if (!Int32.TryParse(data[0], out tempX))
+        if (!Int32.TryParse(data[0], out int tempX))
             return false;
 
-        if (!Int32.TryParse(data[1], out tempY))
+        if (!Int32.TryParse(data[1], out int tempY))
             return false;
 
         temp = new Point(tempX, tempY);
@@ -2463,11 +2747,19 @@ public static class Functions
     {
         return String.Format("{0}, {1}", p.X, p.Y);
     }
+
     public static bool InRange(Point a, Point b, int i)
     {
         return Math.Abs(a.X - b.X) <= i && Math.Abs(a.Y - b.Y) <= i;
     }
-
+    /// <summary>
+    /// Checks if both Objects are facing each other
+    /// </summary>
+    /// <param name="dirA">Player A's current facing Direction</param>
+    /// <param name="pointA">Player A's current Location</param>
+    /// <param name="dirB">Player B's current facing Direction</param>
+    /// <param name="pointB">Player B's current Location</param>
+    /// <returns></returns>
     public static bool FacingEachOther(MirDirection dirA, Point pointA, MirDirection dirB, Point pointB)
     {
         if (dirA == DirectionFromPoint(pointA, pointB) && dirB == DirectionFromPoint(pointB, pointA))
@@ -2689,7 +2981,7 @@ public static class Functions
                 p.Offset(-1, 0);
                 break;
             case MirDirection.DownLeft:
-                p.Offset(-1, -1);
+                p.Offset(-1,-1);
                 break;
             case MirDirection.Left:
                 p.Offset(0, -1);
@@ -2748,7 +3040,7 @@ public static class Functions
         {
             ItemInfo info = ItemList[i];
             if (info.Name.StartsWith(Origin.Name))
-                if ((info.RequiredType == RequiredType.Level) && (info.RequiredType1 == RequiredType1.None) && (info.RequiredType2 == RequiredType2.None) && (info.RequiredType3 == RequiredType3.None) && (info.RequiredType4 == RequiredType4.None) && (info.RequiredType5 == RequiredType5.None) && (info.RequiredType6 == RequiredType6.None) && (info.RequiredAmount <= level) && (output.RequiredAmount < info.RequiredAmount) && (Origin.RequiredGender == info.RequiredGender))
+                if ((info.RequiredType == RequiredType.Level) && (info.RequiredAmount <= level) && (output.RequiredAmount < info.RequiredAmount) && (Origin.RequiredGender == info.RequiredGender))
                     output = info;
         }
         return output;
@@ -2772,8 +3064,8 @@ public static class Functions
         {
             ItemInfo info = ItemList[i];
             if (info.Name.StartsWith(Origin.Name))
-                    if ((byte)info.RequiredClass == (1 << (byte)job))
-                    if ((info.RequiredType == RequiredType.Level) && (info.RequiredType1 == RequiredType1.None) && (info.RequiredType2 == RequiredType2.None) && (info.RequiredType3 == RequiredType3.None) && (info.RequiredType4 == RequiredType4.None) && (info.RequiredType5 == RequiredType5.None) && (info.RequiredType6 == RequiredType6.None) && (info.RequiredAmount <= level) && (output.RequiredAmount <= info.RequiredAmount) && (Origin.RequiredGender == info.RequiredGender))
+                if ((byte)info.RequiredClass == (1 << (byte)job))
+                    if ((info.RequiredType == RequiredType.Level) && (info.RequiredAmount <= level) && (output.RequiredAmount <= info.RequiredAmount) && (Origin.RequiredGender == info.RequiredGender))
                         output = info;
         }
         return output;
@@ -2839,9 +3131,19 @@ public static class Functions
         return rv;
     }
 
-    internal static ItemInfo GetRealItem(object info, ushort level, MirClass @class, List<ItemInfo> itemInfoList)
+    internal static string ReplaceFirst(string text, string search, string replace)
     {
-        throw new NotImplementedException();
+        int pos = text.IndexOf(search);
+        if (pos < 0)
+        {
+            return text;
+        }
+        return text.Substring(0, pos) + replace + text.Substring(pos + search.Length);
+    }
+
+    public static int GetPercentage(int percent, int origNumber)
+    {
+        return origNumber * percent / 100;
     }
 }
 
@@ -2853,29 +3155,56 @@ public class SelectInfo
     public MirClass Class;
     public MirGender Gender;
     public DateTime LastAccess;
+    public bool HumUp;
 
-    public SelectInfo()
-    { }
-    public SelectInfo(BinaryReader reader)
-    {
-        Index = reader.ReadInt32();
-        Name = reader.ReadString();
-        Level = reader.ReadUInt16();
-        Class = (MirClass)reader.ReadByte();
-        Gender = (MirGender)reader.ReadByte();
-        LastAccess = DateTime.FromBinary(reader.ReadInt64());
-    }
-    public void Save(BinaryWriter writer)
-    {
-        writer.Write(Index);
-        writer.Write(Name);
-        writer.Write(Level);
-        writer.Write((byte)Class);
-        writer.Write((byte)Gender);
-        writer.Write(LastAccess.ToBinary());
-    }
+        public SelectInfo()
+        { }
+        public SelectInfo(BinaryReader reader)
+        {
+            Index = reader.ReadInt32();
+            Name = reader.ReadString();
+            Level = reader.ReadUInt16();
+            Class = (MirClass)reader.ReadByte();
+            Gender = (MirGender)reader.ReadByte();
+            LastAccess = DateTime.FromBinary(reader.ReadInt64());
+            HumUp = reader.ReadBoolean();
+        }
+        public void Save(BinaryWriter writer)
+        {
+            writer.Write(Index);
+            writer.Write(Name);
+            writer.Write(Level);
+            writer.Write((byte)Class);
+            writer.Write((byte)Gender);
+            writer.Write(LastAccess.ToBinary());
+            writer.Write(HumUp);
+        }
 }
 
+public enum ElementPos : byte
+{
+    None = 0,
+    Water = 1,
+    Earth = 2,
+    Air = 4,
+    Wind = 5,
+    Holy = 6,
+    Dark = 7,
+    Phantom = 8,
+    Fire = 9
+}
+public enum ElementNeg : byte
+{
+    None = 0,
+    Water = 1,
+    Earth = 2,
+    Air = 4,
+    Wind = 5,
+    Holy = 6,
+    Dark = 7,
+    Phantom = 8,
+    Fire = 9
+}
 public class ItemInfo
 {
     public int Index;
@@ -2883,12 +3212,6 @@ public class ItemInfo
     public ItemType Type;
     public ItemGrade Grade;
     public RequiredType RequiredType = RequiredType.Level;
-    public RequiredType1 RequiredType1 = RequiredType1.None;
-    public RequiredType2 RequiredType2 = RequiredType2.None;
-    public RequiredType3 RequiredType3 = RequiredType3.None;
-    public RequiredType4 RequiredType4 = RequiredType4.None;
-    public RequiredType5 RequiredType5 = RequiredType5.None;
-    public RequiredType6 RequiredType6 = RequiredType6.None;
     public RequiredClass RequiredClass = RequiredClass.None;
     public RequiredGender RequiredGender = RequiredGender.None;
     public ItemSet Set;
@@ -2902,36 +3225,77 @@ public class ItemInfo
 
     public uint Price, StackSize = 1;
 
-    public byte Accuracy, Agility;
-    public ushort MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC, HP, MP;
+    public ushort MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC, Accuracy, Agility;
+    public ushort HP, MP;
     public sbyte AttackSpeed, Luck;
     public byte BagWeight, HandWeight, WearWeight;
 
     public bool StartItem;
     public byte Effect;
-    public byte ItemEffect;
-    public byte ArmEffect;
-    public byte WepEffect;
-    public byte WingEffect;
+    public byte WeaponEffects;
+    public byte ItemGlow;
 
     public byte Strong;
-    public ushort ManaRecovery, HealthRecovery;
-    public byte MagicResist, PoisonResist, PoisonRecovery, HPrate, MPrate;
+    public byte MagicResist, PoisonResist, HealthRecovery, ManaRecovery, PoisonRecovery, HPrate, MPrate;
     public byte CriticalRate, CriticalDamage;
     public bool NeedIdentify, ShowGroupPickup, GlobalDropNotify;
     public bool ClassBased;
+    public bool HumUpBased;
+    public bool HumUpRestricted;
+    public WearType WearType = WearType.All;
+    public WearType LvlableBy = WearType.All;
+
     public bool LevelBased;
     public bool CanMine;
     public bool CanFastRun;
     public bool CanAwakening;
     public byte MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, HpDrainRate;
-
+    public int UpdateTo;
+    public string UpdateToName = string.Empty;
+    
     public BindMode Bind = BindMode.none;
     public byte Reflect;
     public SpecialItemMode Unique = SpecialItemMode.None;
     public byte RandomStatsId;
     public RandomItemStat RandomStats;
     public string ToolTip = string.Empty;
+
+    public bool AllowLvlSys = false;
+    public bool AllowRandomStats = false;
+
+    public int[] LevelWeapLooks = new int[10];
+    public int[] LevelArmourLooks = new int[10];
+    public int[] LevelItemLooks = new int[10];
+    public int[] LevelWeapEffect = new int[10];
+    public int[] LevelItemGlow = new int[10];
+    public int[] LevelArmourEffect = new int[10];
+
+    public int[] LvlSysExp = new int[10];
+
+    public int[] LvlSysMinAC = new int[10];
+    public int[] LvlSysMaxAC = new int[10];
+
+    public int[] LvlSysMinMAC = new int[10];
+    public int[] LvlSysMaxMAC = new int[10];
+
+    public int[] LvlSysMinSC = new int[10];
+    public int[] LvlSysMaxSC = new int[10];
+
+    public int[] LvlSysMinMC = new int[10];
+    public int[] LvlSysMaxMC = new int[10];
+
+    public int[] LvlSysMinDC = new int[10];
+    public int[] LvlSysMaxDC = new int[10];
+
+    public byte MinSocket = 0, MaxSocket = 0;
+    public ElementPos PositiveElement = ElementPos.None;
+    public ElementNeg NegativeElement = ElementNeg.None;
+
+    public byte PositiveElementAmount = 0;
+    public byte NegativeElementAmount = 0;
+
+    public byte BaseRate, BaseRateDrop, MaxStats, MaxGemStat;
+    public byte SocketAdd;
 
     public static ItemInfo CloneItem(ItemInfo item)
     {
@@ -2947,6 +3311,11 @@ public class ItemInfo
             CanFastRun = item.CanFastRun,
             CanMine = item.CanMine,
             ClassBased = item.ClassBased,
+            HumUpBased = item.HumUpBased,
+            HumUpRestricted = item.HumUpRestricted,
+            WearType = item.WearType,
+            LvlableBy = item.LvlableBy,
+            UpdateTo = item.UpdateTo,
             CriticalDamage = item.CriticalDamage,
             CriticalRate = item.CriticalRate,
             Durability = item.Durability,
@@ -3003,6 +3372,44 @@ public class ItemInfo
             Unique = item.Unique,
             WearWeight = item.WearWeight,
             Weight = item.Weight,
+            WeaponEffects = item.WeaponEffects,
+            ItemGlow = item.ItemGlow,
+            AllowLvlSys = item.AllowLvlSys,
+            AllowRandomStats = item.AllowRandomStats,
+            LvlSysExp = item.LvlSysExp,
+
+            LvlSysMinAC = item.LvlSysMinAC,
+            LvlSysMaxAC = item.LvlSysMaxAC,
+
+            LvlSysMinMAC = item.LvlSysMinMAC,
+            LvlSysMaxMAC = item.LvlSysMaxMAC,
+
+            LvlSysMinSC = item.LvlSysMinSC,
+            LvlSysMaxSC = item.LvlSysMaxSC,
+
+            LvlSysMinDC = item.LvlSysMinDC,
+            LvlSysMaxDC = item.LvlSysMaxDC,
+
+            LvlSysMinMC = item.LvlSysMinMC,
+            LvlSysMaxMC = item.LvlSysMaxMC,
+
+            MinSocket = item.MinSocket,
+            MaxSocket = item.MaxSocket,
+
+            PositiveElement = item.PositiveElement,
+            PositiveElementAmount = item.PositiveElementAmount,
+
+            NegativeElement = item.NegativeElement,
+            NegativeElementAmount = item.NegativeElementAmount,
+            LevelArmourLooks = item.LevelArmourLooks,
+            LevelWeapLooks = item.LevelWeapLooks,
+            LevelItemLooks = item.LevelItemLooks,
+            LevelWeapEffect = item.LevelWeapEffect,
+            BaseRate = item.BaseRate,
+            BaseRateDrop = item.BaseRateDrop,
+            MaxStats = item.MaxStats,
+            MaxGemStat = item.MaxGemStat,
+            SocketAdd = item.SocketAdd
         };
 
         return Clone;
@@ -3010,6 +3417,7 @@ public class ItemInfo
 
     public void UpdateItem(ItemInfo item)
     {
+        UpdateToName = item.UpdateToName;
         Accuracy = item.Accuracy;
         Agility = item.Agility;
         AttackSpeed = item.AttackSpeed;
@@ -3019,6 +3427,11 @@ public class ItemInfo
         CanFastRun = item.CanFastRun;
         CanMine = item.CanMine;
         ClassBased = item.ClassBased;
+        HumUpBased = item.HumUpBased;
+        HumUpRestricted = item.HumUpRestricted;
+        WearType = item.WearType;
+        LvlableBy = item.LvlableBy;
+        UpdateTo = item.UpdateTo;
         CriticalDamage = item.CriticalDamage;
         CriticalRate = item.CriticalRate;
         Durability = item.Durability;
@@ -3076,6 +3489,44 @@ public class ItemInfo
         Unique = item.Unique;
         WearWeight = item.WearWeight;
         Weight = item.Weight;
+        WeaponEffects = item.WeaponEffects;
+        ItemGlow = item.ItemGlow;
+        AllowLvlSys = item.AllowLvlSys;
+        AllowRandomStats = item.AllowRandomStats;
+        LvlSysExp = item.LvlSysExp;
+
+        LvlSysMinAC = item.LvlSysMinAC;
+        LvlSysMaxAC = item.LvlSysMaxAC;
+
+        LvlSysMinMAC = item.LvlSysMinMAC;
+        LvlSysMaxMAC = item.LvlSysMaxMAC;
+
+        LvlSysMinSC = item.LvlSysMinSC;
+        LvlSysMaxSC = item.LvlSysMaxSC;
+
+        LvlSysMinDC = item.LvlSysMinDC;
+        LvlSysMaxDC = item.LvlSysMaxDC;
+
+        LvlSysMinMC = item.LvlSysMinMC;
+        LvlSysMaxMC = item.LvlSysMaxMC;
+
+        MinSocket = item.MinSocket;
+        MaxSocket = item.MaxSocket;
+
+        PositiveElement = item.PositiveElement;
+        PositiveElementAmount = item.PositiveElementAmount;
+
+        NegativeElement = item.NegativeElement;
+        NegativeElementAmount = item.NegativeElementAmount;
+        LevelArmourLooks = item.LevelArmourLooks;
+        LevelWeapLooks = item.LevelWeapLooks;
+        LevelItemLooks = item.LevelItemLooks;
+        LevelWeapEffect = item.LevelWeapEffect;
+        BaseRate = item.BaseRate;
+        BaseRateDrop = item.BaseRateDrop;
+        MaxStats = item.MaxStats;
+        MaxGemStat = item.MaxGemStat;
+        SocketAdd = item.SocketAdd;
     }
 
     public bool IsConsumable
@@ -3085,7 +3536,7 @@ public class ItemInfo
 
     public string FriendlyName
     {
-        get
+        get 
         {
             string temp = Name;
             temp = Regex.Replace(temp, @"\d+$", string.Empty); //hides end numbers
@@ -3094,26 +3545,20 @@ public class ItemInfo
             return temp;
         }
     }
-
+    
     public ItemInfo()
     {
     }
-    public ItemInfo(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
+    public ItemInfo(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue, bool client = false)
     {
         Index = reader.ReadInt32();
         Name = reader.ReadString();
-        Type = (ItemType)reader.ReadByte();
+        Type = (ItemType) reader.ReadByte();
         if (version >= 40) Grade = (ItemGrade)reader.ReadByte();
-        RequiredType = (RequiredType)reader.ReadByte();
-        RequiredType1 = (RequiredType1)reader.ReadByte();
-        RequiredType2 = (RequiredType2)reader.ReadByte();
-        RequiredType3 = (RequiredType3)reader.ReadByte();
-        RequiredType4 = (RequiredType4)reader.ReadByte();
-        RequiredType5 = (RequiredType5)reader.ReadByte();
-        RequiredType6 = (RequiredType6)reader.ReadByte();
-        RequiredClass = (RequiredClass)reader.ReadByte();
-        RequiredGender = (RequiredGender)reader.ReadByte();
-        if (version >= 17) Set = (ItemSet)reader.ReadByte();
+        RequiredType = (RequiredType) reader.ReadByte();
+        RequiredClass = (RequiredClass) reader.ReadByte();
+        RequiredGender = (RequiredGender) reader.ReadByte();
+        if(version >= 17) Set = (ItemSet)reader.ReadByte();
 
         Shape = version >= 30 ? reader.ReadInt16() : reader.ReadSByte();
         Weight = reader.ReadByte();
@@ -3125,22 +3570,19 @@ public class ItemInfo
 
         StackSize = reader.ReadUInt32();
         Price = reader.ReadUInt32();
-        
 
-        if (version < 25)
+        if (version < 105)
         {
-            MinAC = (ushort)reader.ReadByte();
-            MaxAC = (ushort)reader.ReadByte();
-            MinMAC = (ushort)reader.ReadByte();
-            MaxMAC = (ushort)reader.ReadByte();
-            MinDC = (ushort)reader.ReadByte();
-            MaxDC = (ushort)reader.ReadByte();
-            MinMC = (ushort)reader.ReadByte();
-            MaxMC = (ushort)reader.ReadByte();
-            MinSC = (ushort)reader.ReadByte();
-            MaxSC = (ushort)reader.ReadByte();
-            HP = reader.ReadByte();
-            MP = reader.ReadByte();
+            MinAC = reader.ReadByte();
+            MaxAC = reader.ReadByte();
+            MinMAC = reader.ReadByte();
+            MaxMAC = reader.ReadByte();
+            MinDC = reader.ReadByte();
+            MaxDC = reader.ReadByte();
+            MinMC = reader.ReadByte();
+            MaxMC = reader.ReadByte();
+            MinSC = reader.ReadByte();
+            MaxSC = reader.ReadByte();
         }
         else
         {
@@ -3154,11 +3596,29 @@ public class ItemInfo
             MaxMC = reader.ReadUInt16();
             MinSC = reader.ReadUInt16();
             MaxSC = reader.ReadUInt16();
+        }
+
+        if (version < 25)
+        {
+            HP = reader.ReadByte();
+            MP = reader.ReadByte();
+        }
+        else
+        {
             HP = reader.ReadUInt16();
             MP = reader.ReadUInt16();
         }
-        Accuracy = reader.ReadByte();
-        Agility = reader.ReadByte();
+
+        if (version < 105)
+        {
+            Accuracy = reader.ReadByte();
+            Agility = reader.ReadByte();
+        }
+        else
+        {
+            Accuracy = reader.ReadUInt16();
+            Agility = reader.ReadUInt16();
+        }
 
         Luck = reader.ReadSByte();
         AttackSpeed = reader.ReadSByte();
@@ -3170,17 +3630,13 @@ public class ItemInfo
         WearWeight = reader.ReadByte();
 
         if (version >= 9) Effect = reader.ReadByte();
-        if (version >= 10) ItemEffect = reader.ReadByte();
-        if (version >= 11) ArmEffect = reader.ReadByte();
-        if (version >= 12) WepEffect = reader.ReadByte();
-        if (version >= 13) WingEffect = reader.ReadByte();
         if (version >= 20)
         {
             Strong = reader.ReadByte();
             MagicResist = reader.ReadByte();
             PoisonResist = reader.ReadByte();
-            HealthRecovery = reader.ReadUInt16();
-            ManaRecovery = reader.ReadUInt16();
+            HealthRecovery = reader.ReadByte();
+            ManaRecovery = reader.ReadByte();
             PoisonRecovery = reader.ReadByte();
             HPrate = reader.ReadByte();
             MPrate = reader.ReadByte();
@@ -3209,7 +3665,7 @@ public class ItemInfo
             {
                 Bind = (BindMode)reader.ReadInt16();
             }
-
+            
         }
         if (version >= 21)
         {
@@ -3241,34 +3697,205 @@ public class ItemInfo
         }
         if (version < 70) //before db version 70 all specialitems had wedding rings disabled, after that it became a server option
         {
-            if ((Type == ItemType.Ring) && (Unique != SpecialItemMode.None))
+            if ((Type == ItemType.Ring) &&  (Unique != SpecialItemMode.None))
                 Bind |= BindMode.NoWeddingRing;
         }
+
+        if (version > 71)
+        {
+            WeaponEffects = reader.ReadByte();
+        }
+
+        if (version > 76)
+        {
+            ItemGlow = reader.ReadByte();
+        }
+
+        if (version > 81)
+        {
+            HumUpBased = reader.ReadBoolean();
+        }
+
+        if (version > 83)
+        {
+            HumUpRestricted = reader.ReadBoolean();
+        }
+
+        if (version > 95)
+        {
+           UpdateTo  = reader.ReadInt32();
+        }
+
+        if (version > 97)
+        {
+            WearType = (WearType)reader.ReadByte();
+        }
+
+         AllowLvlSys = reader.ReadBoolean();
+        //  maybe I can fix jps shitty code like this lol
+        if (version < 134)
+        {
+            for (int i = 0; i < LvlSysExp.Length; i++)
+                LvlSysExp[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMinAC.Length; i++)
+                LvlSysMinAC[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMaxAC.Length; i++)
+                LvlSysMaxAC[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMinMAC.Length; i++)
+                LvlSysMinMAC[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMaxMAC.Length; i++)
+                LvlSysMaxMAC[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMinDC.Length; i++)
+                LvlSysMinDC[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMaxDC.Length; i++)
+                LvlSysMaxDC[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMinMC.Length; i++)
+                LvlSysMinMC[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMaxMC.Length; i++)
+                LvlSysMaxMC[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMinSC.Length; i++)
+                LvlSysMinSC[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMaxSC.Length; i++)
+                LvlSysMaxSC[i] = reader.ReadInt32();
+            LvlableBy = (WearType)reader.ReadByte();
+            AllowRandomStats = reader.ReadBoolean();
+            MinSocket = reader.ReadByte();
+            MaxSocket = reader.ReadByte();
+            PositiveElement = (ElementPos)reader.ReadByte();
+            PositiveElementAmount = reader.ReadByte();
+            NegativeElement = (ElementNeg)reader.ReadByte();
+            NegativeElementAmount = reader.ReadByte();
+            if (version > 128)
+            {
+                for (int i = 0; i < LevelArmourLooks.Length; i++)
+                    LevelArmourLooks[i] = reader.ReadInt32();
+                for (int i = 0; i < LevelWeapLooks.Length; i++)
+                    LevelWeapLooks[i] = reader.ReadInt32();
+                for (int i = 0; i < LevelItemLooks.Length; i++)
+                    LevelItemLooks[i] = reader.ReadInt32();
+            }
+
+            if (version > 130)
+            {
+                BaseRate = reader.ReadByte();
+                BaseRateDrop = reader.ReadByte();
+                MaxStats = reader.ReadByte();
+                MaxGemStat = reader.ReadByte();
+            }
+
+            if (version > 131)
+            {
+                SocketAdd = reader.ReadByte();
+            }
+
+            if (version > 132)
+            {
+
+                for (int i = 0; i < LevelWeapEffect.Length; i++)
+                    LevelWeapEffect[i] = reader.ReadInt32();
+            }
+        }
+        else
+        {
+            if (AllowLvlSys)
+            {
+                for (int i = 0; i < LvlSysExp.Length; i++)
+                    LvlSysExp[i] = reader.ReadInt32();
+
+                for (int i = 0; i < LvlSysMinAC.Length; i++)
+                    LvlSysMinAC[i] = reader.ReadInt32();
+
+                for (int i = 0; i < LvlSysMaxAC.Length; i++)
+                    LvlSysMaxAC[i] = reader.ReadInt32();
+
+                for (int i = 0; i < LvlSysMinMAC.Length; i++)
+                    LvlSysMinMAC[i] = reader.ReadInt32();
+
+                for (int i = 0; i < LvlSysMaxMAC.Length; i++)
+                    LvlSysMaxMAC[i] = reader.ReadInt32();
+
+                for (int i = 0; i < LvlSysMinDC.Length; i++)
+                    LvlSysMinDC[i] = reader.ReadInt32();
+
+                for (int i = 0; i < LvlSysMaxDC.Length; i++)
+                    LvlSysMaxDC[i] = reader.ReadInt32();
+
+                for (int i = 0; i < LvlSysMinMC.Length; i++)
+                    LvlSysMinMC[i] = reader.ReadInt32();
+
+                for (int i = 0; i < LvlSysMaxMC.Length; i++)
+                    LvlSysMaxMC[i] = reader.ReadInt32();
+
+                for (int i = 0; i < LvlSysMinSC.Length; i++)
+                    LvlSysMinSC[i] = reader.ReadInt32();
+
+                for (int i = 0; i < LvlSysMaxSC.Length; i++)
+                    LvlSysMaxSC[i] = reader.ReadInt32();
+                for (int i = 0; i < LevelArmourLooks.Length; i++)
+                    LevelArmourLooks[i] = reader.ReadInt32();
+                for (int i = 0; i < LevelWeapLooks.Length; i++)
+                    LevelWeapLooks[i] = reader.ReadInt32();
+                for (int i = 0; i < LevelItemLooks.Length; i++)
+                    LevelItemLooks[i] = reader.ReadInt32();
+                for (int i = 0; i < LevelWeapEffect.Length; i++)
+                    LevelWeapEffect[i] = reader.ReadInt32();
+                if (version > 134)
+                {
+                    for (int i = 0; i < LevelArmourEffect.Length; i++)
+                        LevelArmourEffect[i] = reader.ReadInt32();
+                    for (int i = 0; i < LevelItemGlow.Length; i++)
+                        LevelItemGlow[i] = reader.ReadInt32();
+                }
+            }
+            LvlableBy = (WearType)reader.ReadByte();
+            AllowRandomStats = reader.ReadBoolean();
+            MinSocket = reader.ReadByte();
+            MaxSocket = reader.ReadByte();
+            PositiveElement = (ElementPos)reader.ReadByte();
+            PositiveElementAmount = reader.ReadByte();
+            NegativeElement = (ElementNeg)reader.ReadByte();
+            NegativeElementAmount = reader.ReadByte();
+            if (version > 130)
+            {
+                BaseRate = reader.ReadByte();
+                BaseRateDrop = reader.ReadByte();
+                MaxStats = reader.ReadByte();
+                MaxGemStat = reader.ReadByte();
+            }
+
+            if (version > 131)
+            {
+                SocketAdd = reader.ReadByte();
+            }
+        }
+        
     }
-
-
 
     public void Save(BinaryWriter writer)
     {
         writer.Write(Index);
         writer.Write(Name);
-        writer.Write((byte)Type);
-        writer.Write((byte)Grade);
-        writer.Write((byte)RequiredType);
-        writer.Write((byte)RequiredType1);
-        writer.Write((byte)RequiredType2);
-        writer.Write((byte)RequiredType3);
-        writer.Write((byte)RequiredType4);
-        writer.Write((byte)RequiredType5);
-        writer.Write((byte)RequiredType6);
-        writer.Write((byte)RequiredClass);
-        writer.Write((byte)RequiredGender);
-        writer.Write((byte)Set);
+        writer.Write((byte) Type);
+        writer.Write((byte) Grade);
+        writer.Write((byte) RequiredType);
+        writer.Write((byte) RequiredClass);
+        writer.Write((byte) RequiredGender);
+        writer.Write((byte) Set);
 
         writer.Write(Shape);
         writer.Write(Weight);
         writer.Write(Light);
-        writer.Write(RequiredAmount);
+        writer.Write(RequiredAmount);     
 
         writer.Write(Image);
         writer.Write(Durability);
@@ -3301,10 +3928,6 @@ public class ItemInfo
         writer.Write(WearWeight);
 
         writer.Write(Effect);
-        writer.Write(ItemEffect);
-        writer.Write(ArmEffect);
-        writer.Write(WepEffect);
-        writer.Write(WingEffect);
         writer.Write(Strong);
         writer.Write(MagicResist);
         writer.Write(PoisonResist);
@@ -3334,17 +3957,114 @@ public class ItemInfo
         writer.Write((short)Unique);
         writer.Write(RandomStatsId);
         writer.Write(CanFastRun);
-        writer.Write(CanAwakening);
+		writer.Write(CanAwakening);
         writer.Write(ToolTip != null);
         if (ToolTip != null)
             writer.Write(ToolTip);
+
+        writer.Write(WeaponEffects);
+        writer.Write(ItemGlow);
+        writer.Write(HumUpBased);
+        writer.Write(HumUpRestricted);
+        writer.Write(UpdateTo);
+        writer.Write((byte)WearType);
+
+
+        
+        writer.Write(AllowLvlSys);
+        if (AllowLvlSys)
+        {
+            for (int i = 0; i < LvlSysExp.Length; i++)
+            {
+                writer.Write(LvlSysExp[i]);
+            }
+
+            for (int i = 0; i < LvlSysMinAC.Length; i++)
+            {
+                writer.Write(LvlSysMinAC[i]);
+            }
+            for (int i = 0; i < LvlSysMaxAC.Length; i++)
+            {
+                writer.Write(LvlSysMaxAC[i]);
+            }
+
+            for (int i = 0; i < LvlSysMinMAC.Length; i++)
+            {
+                writer.Write(LvlSysMinMAC[i]);
+            }
+            for (int i = 0; i < LvlSysMaxMAC.Length; i++)
+            {
+                writer.Write(LvlSysMaxMAC[i]);
+            }
+
+            for (int i = 0; i < LvlSysMinDC.Length; i++)
+            {
+                writer.Write(LvlSysMinDC[i]);
+            }
+            for (int i = 0; i < LvlSysMaxDC.Length; i++)
+            {
+                writer.Write(LvlSysMaxDC[i]);
+            }
+
+            for (int i = 0; i < LvlSysMinMC.Length; i++)
+            {
+                writer.Write(LvlSysMinMC[i]);
+            }
+            for (int i = 0; i < LvlSysMaxMC.Length; i++)
+            {
+                writer.Write(LvlSysMaxMC[i]);
+            }
+
+            for (int i = 0; i < LvlSysMinSC.Length; i++)
+            {
+                writer.Write(LvlSysMinSC[i]);
+            }
+            for (int i = 0; i < LvlSysMaxSC.Length; i++)
+            {
+                writer.Write(LvlSysMaxSC[i]);
+            }
+            for (int i = 0; i < LevelArmourLooks.Length; i++)
+                writer.Write(LevelArmourLooks[i]);
+
+            for (int i = 0; i < LevelWeapLooks.Length; i++)
+                writer.Write(LevelWeapLooks[i]);
+
+            for (int i = 0; i < LevelItemLooks.Length; i++)
+                writer.Write(LevelItemLooks[i]);
+
+            for (int i = 0; i < LevelWeapEffect.Length; i++)
+                writer.Write(LevelWeapEffect[i]);
+
+            for (int i = 0; i < LevelArmourEffect.Length; i++)
+                writer.Write(LevelArmourEffect[i]);
+            for (int i = 0; i < LevelItemGlow.Length; i++)
+                writer.Write(LevelItemGlow[i]);
+        }
+        writer.Write((byte)LvlableBy);
+        writer.Write(AllowRandomStats);
+
+
+        writer.Write(MinSocket);
+        writer.Write(MaxSocket);
+        writer.Write((byte)PositiveElement);
+        writer.Write(PositiveElementAmount);
+        writer.Write((byte)NegativeElement);
+        writer.Write(NegativeElementAmount);
+
+
+        writer.Write(BaseRate);
+        writer.Write(BaseRateDrop);
+        writer.Write(MaxStats);
+        writer.Write(MaxGemStat);
+
+        writer.Write(SocketAdd);
     }
 
     public static ItemInfo FromText(string text)
     {
         string[] data = text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-        if (data.Length < 33) return null;
+        if (data.Length < 69) return null;
 
         ItemInfo info = new ItemInfo { Name = data[0] };
 
@@ -3370,8 +4090,8 @@ public class ItemInfo
         if (!ushort.TryParse(data[18], out info.MaxMC)) return null;
         if (!ushort.TryParse(data[19], out info.MinSC)) return null;
         if (!ushort.TryParse(data[20], out info.MaxSC)) return null;
-        if (!byte.TryParse(data[21], out info.Accuracy)) return null;
-        if (!byte.TryParse(data[22], out info.Agility)) return null;
+        if (!ushort.TryParse(data[21], out info.Accuracy)) return null;
+        if (!ushort.TryParse(data[22], out info.Agility)) return null;
         if (!ushort.TryParse(data[23], out info.HP)) return null;
         if (!ushort.TryParse(data[24], out info.MP)) return null;
 
@@ -3394,8 +4114,8 @@ public class ItemInfo
         if (!byte.TryParse(data[36], out info.Strong)) return null;
         if (!byte.TryParse(data[37], out info.MagicResist)) return null;
         if (!byte.TryParse(data[38], out info.PoisonResist)) return null;
-        if (!ushort.TryParse(data[39], out info.HealthRecovery)) return null;
-        if (!ushort.TryParse(data[40], out info.ManaRecovery)) return null;
+        if (!byte.TryParse(data[39], out info.HealthRecovery)) return null;
+        if (!byte.TryParse(data[40], out info.ManaRecovery)) return null;
         if (!byte.TryParse(data[41], out info.PoisonRecovery)) return null;
         if (!byte.TryParse(data[42], out info.HPrate)) return null;
         if (!byte.TryParse(data[43], out info.MPrate)) return null;
@@ -3417,25 +4137,194 @@ public class ItemInfo
         if (!byte.TryParse(data[59], out info.RandomStatsId)) return null;
         if (!bool.TryParse(data[60], out info.CanMine)) return null;
         if (!bool.TryParse(data[61], out info.CanFastRun)) return null;
-        if (!bool.TryParse(data[62], out info.CanAwakening)) return null;
-        if (!Enum.TryParse(data[63], out info.RequiredType1)) return null;
-        if (!Enum.TryParse(data[64], out info.RequiredType2)) return null;
-        if (!Enum.TryParse(data[65], out info.RequiredType3)) return null;
-        if (!Enum.TryParse(data[66], out info.RequiredType4)) return null;
-        if (!Enum.TryParse(data[67], out info.RequiredType5)) return null;
-        if (!Enum.TryParse(data[68], out info.RequiredType6)) return null;
-        if (!byte.TryParse(data[69], out info.ItemEffect)) return null;
-        if (!byte.TryParse(data[70], out info.ArmEffect)) return null;
-        if (!byte.TryParse(data[71], out info.WepEffect)) return null;
-        if (!byte.TryParse(data[72], out info.WingEffect)) return null;
-        if (data[73] == "-")
+		if (!bool.TryParse(data[62], out info.CanAwakening)) return null;
+        if (data[63] == "-")
             info.ToolTip = "";
         else
         {
-            info.ToolTip = data[73];
+            info.ToolTip = data[63];
             info.ToolTip = info.ToolTip.Replace("&^&", "\r\n");
         }
+        if (!byte.TryParse(data[64], out info.WeaponEffects)) return null;
+        if (!byte.TryParse(data[65], out info.ItemGlow)) return null;
+        if (!bool.TryParse(data[66], out info.HumUpBased)) return null;
+        if (!bool.TryParse(data[67], out info.HumUpRestricted)) return null;
+        if (!int.TryParse(data[68], out info.UpdateTo)) return null;
+        if (!Enum.TryParse(data[69], out info.WearType)) return null;
+        if (!Enum.TryParse(data[70], out info.LvlableBy)) return null;
+        if (!byte.TryParse(data[71], out info.MinSocket))
+            return null;
+        if (!byte.TryParse(data[72], out info.MaxSocket))
+            return null;
+        if (!Enum.TryParse(data[73], out info.PositiveElement))
+            return null;
+        if (!byte.TryParse(data[74], out info.PositiveElementAmount))
+            return null;
+        if (!Enum.TryParse(data[75], out info.NegativeElement))
+            return null;
+        if (!byte.TryParse(data[76], out info.NegativeElementAmount))
+            return null;
+        if (data[77] != null &&
+            data[77].Length > 0)
+        {
+            string[] tmp = data[77].Split(' ');
+            int[] levelarray = new int[tmp.Length];
+            for (int i = 0; i < tmp.Length; i++)
+            {
+                if (!int.TryParse(tmp[i], out levelarray[i]))
+                    continue;
+            }
+            info.LvlSysExp = levelarray;
+            if (info.LvlSysExp == null)
+                return null;
+        }
+        if (data[78] != null &&
+            data[78].Length > 0)
+        {
+            string[] tmp = data[78].Split(' ');
+            int[] levelarray = new int[tmp.Length];
+            for (int i = 0; i < tmp.Length; i++)
+            {
+                if (!int.TryParse(tmp[i], out levelarray[i]))
+                    continue;
+            }
+            info.LvlSysMinAC = levelarray;
+            if (info.LvlSysMinAC == null)
+                return null;
+        }
+        if (data[79] != null &&
+            data[79].Length > 0)
+        {
+            string[] tmp = data[79].Split(' ');
+            int[] levelarray = new int[tmp.Length];
+            for (int i = 0; i < tmp.Length; i++)
+            {
+                if (!int.TryParse(tmp[i], out levelarray[i]))
+                    continue;
+            }
+            info.LvlSysMaxAC = levelarray;
+            if (info.LvlSysMaxAC == null)
+                return null;
+        }
+        if (data[80] != null &&
+            data[80].Length > 0)
+        {
+            string[] tmp = data[80].Split(' ');
+            int[] levelarray = new int[tmp.Length];
+            for (int i = 0; i < tmp.Length; i++)
+            {
+                if (!int.TryParse(tmp[i], out levelarray[i]))
+                    continue;
+            }
+            info.LvlSysMinMAC = levelarray;
+            if (info.LvlSysMinMAC == null)
+                return null;
+        }
+        if (data[81] != null &&
+            data[81].Length > 0)
+        {
+            string[] tmp = data[81].Split(' ');
+            int[] levelarray = new int[tmp.Length];
+            for (int i = 0; i < tmp.Length; i++)
+            {
+                if (!int.TryParse(tmp[i], out levelarray[i]))
+                    continue;
+            }
+            info.LvlSysMaxMAC = levelarray;
+            if (info.LvlSysMaxMAC == null)
+                return null;
+        }
+        if (data[82] != null &&
+            data[82].Length > 0)
+        {
+            string[] tmp = data[82].Split(' ');
+            int[] levelarray = new int[tmp.Length];
+            for (int i = 0; i < tmp.Length; i++)
+            {
+                if (!int.TryParse(tmp[i], out levelarray[i]))
+                    continue;
+            }
+            info.LvlSysMinDC = levelarray;
+            if (info.LvlSysMinDC == null)
+                return null;
+        }
+        if (data[83] != null &&
+            data[83].Length > 0)
+        {
+            string[] tmp = data[83].Split(' ');
+            int[] levelarray = new int[tmp.Length];
+            for (int i = 0; i < tmp.Length; i++)
+            {
+                if (!int.TryParse(tmp[i], out levelarray[i]))
+                    continue;
+            }
+            info.LvlSysMaxDC = levelarray;
+            if (info.LvlSysMaxDC == null)
+                return null;
+        }
 
+        if (data[84] != null &&
+            data[84].Length > 0)
+        {
+            string[] tmp = data[84].Split(' ');
+            int[] levelarray = new int[tmp.Length];
+            for (int i = 0; i < tmp.Length; i++)
+            {
+                if (!int.TryParse(tmp[i], out levelarray[i]))
+                    continue;
+            }
+            info.LvlSysMinMC = levelarray;
+            if (info.LvlSysMinMC == null)
+                return null;
+        }
+        if (data[85] != null &&
+            data[85].Length > 0)
+        {
+            string[] tmp = data[85].Split(' ');
+            int[] levelarray = new int[tmp.Length];
+            for (int i = 0; i < tmp.Length; i++)
+            {
+                if (!int.TryParse(tmp[i], out levelarray[i]))
+                    continue;
+            }
+            info.LvlSysMaxMC = levelarray;
+            if (info.LvlSysMaxMC == null)
+                return null;
+        }
+        if (data[86] != null &&
+            data[86].Length > 0)
+        {
+            string[] tmp = data[86].Split(' ');
+            int[] levelarray = new int[tmp.Length];
+            for (int i = 0; i < tmp.Length; i++)
+            {
+                if (!int.TryParse(tmp[i], out levelarray[i]))
+                    continue;
+            }
+            info.LvlSysMinSC = levelarray;
+            if (info.LvlSysMinSC == null)
+                return null;
+        }
+        if (data[87] != null &&
+            data[87].Length > 0)
+        {
+            string[] tmp = data[87].Split(' ');
+            int[] levelarray = new int[tmp.Length];
+            for (int i = 0; i < tmp.Length; i++)
+            {
+                if (!int.TryParse(tmp[i], out levelarray[i]))
+                    continue;
+            }
+            info.LvlSysMaxSC = levelarray;
+            if (info.LvlSysMaxSC == null)
+                return null;
+        }
+        if (!bool.TryParse(data[88], out info.AllowLvlSys)) return null;
+        if (!bool.TryParse(data[89], out info.AllowRandomStats)) return null;
+        if (!byte.TryParse(data[90], out info.BaseRate)) return null;
+        if (!byte.TryParse(data[91], out info.BaseRateDrop)) return null;
+        if (!byte.TryParse(data[92], out info.MaxStats)) return null;
+        if (!byte.TryParse(data[93], out info.MaxGemStat)) return null;
         return info;
 
     }
@@ -3453,15 +4342,65 @@ public class ItemInfo
         {
             TransToolTip = TransToolTip.Replace("\r\n", "&^&");
         }
+        string levelarray = "";
+        string minACarray = "";
+        string maxACarray = "";
+        string minMACarray = "";
+        string maxMACarray = "";
+        string minDCarray = "";
+        string maxDCarray = "";
+        string minMCarray = "";
+        string maxMCarray = "";
+        string minSCarray = "";
+        string maxSCarray = "";
+        for (int i = 0; i < LvlSysExp.Length; i++)              //  77       
+            levelarray += string.Format("{0} ", LvlSysExp[i]);
+        
+        for (int i = 0; i < LvlSysMinAC.Length; i++)            //  78
+            minACarray += string.Format("{0} ", LvlSysMinAC[i]);
+        for (int i = 0; i < LvlSysMaxAC.Length; i++)            //  79
+            maxACarray += string.Format("{0} ", LvlSysMaxAC[i]);
+
+        for (int i = 0; i < LvlSysMinMAC.Length; i++)           //  80
+            minMACarray += string.Format("{0} ", LvlSysMinMAC[i]);
+        for (int i = 0; i < LvlSysMaxMAC.Length; i++)           //  81
+            maxMACarray += string.Format("{0} ", LvlSysMaxMAC[i]);
+
+        for (int i = 0; i < LvlSysMinDC.Length; i++)            //  82
+            minDCarray += string.Format("{0} ", LvlSysMinDC[i]);
+        for (int i = 0; i < LvlSysMaxDC.Length; i++)            //  83
+            maxDCarray += string.Format("{0} ", LvlSysMaxDC[i]);
+        for (int i = 0; i < LvlSysMinMC.Length; i++)            //  84
+            minMCarray += string.Format("{0} ", LvlSysMinMC[i]);
+        for (int i = 0; i < LvlSysMaxMC.Length; i++)            //  85
+            maxMCarray += string.Format("{0} ", LvlSysMaxMC[i]);
+        for (int i = 0; i < LvlSysMinSC.Length; i++)            //  86
+            minSCarray += string.Format("{0} ", LvlSysMinSC[i]);
+        for (int i = 0; i < LvlSysMaxSC.Length; i++)            //  87
+            maxSCarray += string.Format("{0} ", LvlSysMaxSC[i]);
 
         return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26}," +
                              "{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46},{47},{48},{49},{50},{51}," +
-                             "{52},{53},{54},{55},{56},{57},{58},{59},{60},{61},{62},{63},{64},{65},{66},{67},{68},{69},{70},{71},{72},{73}",
+                             "{52},{53},{54},{55},{56},{57},{58},{59},{60},{61},{62},{63},{64},{65},{66},{67},{68},{69},{70},{71},{72},{73},{74},{75},{76}," +
+                             "{77},{78},{79},{80},{81},{82},{83},{84},{85},{86},{87},{88},{89},{90},{91},{92},{93}",
             Name, (byte)Type, (byte)Grade, (byte)RequiredType, (byte)RequiredClass, (byte)RequiredGender, (byte)Set, Shape, Weight, Light, RequiredAmount, MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC,
             MinMC, MaxMC, MinSC, MaxSC, Accuracy, Agility, HP, MP, AttackSpeed, Luck, BagWeight, HandWeight, WearWeight, StartItem, Image, Durability, Price,
             StackSize, Effect, Strong, MagicResist, PoisonResist, HealthRecovery, ManaRecovery, PoisonRecovery, HPrate, MPrate, CriticalRate, CriticalDamage, NeedIdentify,
             ShowGroupPickup, MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, ClassBased, LevelBased, (short)Bind, Reflect, HpDrainRate, (short)Unique,
-            RandomStatsId, CanMine, CanFastRun, CanAwakening, (byte)RequiredType1, (byte)RequiredType2, (byte)RequiredType3, (byte)RequiredType4, (byte)RequiredType5, (byte)RequiredType6, ItemEffect, ArmEffect, WepEffect, WingEffect, TransToolTip);
+            RandomStatsId, CanMine, CanFastRun, CanAwakening, TransToolTip, WeaponEffects, ItemGlow, HumUpBased, HumUpRestricted, UpdateTo, (byte)WearType, (byte)LvlableBy, MinSocket, MaxSocket, (byte)PositiveElement, PositiveElementAmount, (byte)NegativeElement, NegativeElementAmount,
+            levelarray,
+            minACarray,
+            maxACarray,
+            minMACarray,
+            maxMACarray,
+            minDCarray,
+            maxDCarray,
+            minMCarray,
+            maxMCarray,
+            minSCarray,
+            maxSCarray,
+            AllowLvlSys,
+            AllowRandomStats, BaseRate, BaseRateDrop, MaxStats, MaxGemStat);
     }
 
     public override string ToString()
@@ -3470,6 +4409,143 @@ public class ItemInfo
     }
 
 }
+
+#region Socket System Pete107 Edens-Elite Network
+public enum SocketType : byte
+{
+    DestructionBonus1 = 1,
+    DestructionBonus2 = 2,
+    DestructionBonus3 = 3,
+    DestructionBonus4 = 4,
+    DestructionBonus5 = 5,
+
+    MagicBonus1 = 6,
+    MagicBonus2 = 7,
+    MagicBonus3 = 8,
+    MagicBonus4 = 9,
+    MagicBonus5 = 10,
+
+    SpiritBonus1 = 11,
+    SpiritBonus2 = 12,
+    SpiritBonus3 = 13,
+    SpiritBonus4 = 14,
+    SpiritBonus5 = 15,
+
+    HealthBonus1 = 16,
+    HealthBonus2 = 17,
+    HealthBonus3 = 18,
+    HealthBonus4 = 19,
+    HealthBonus5 = 20,
+
+    ManaBonus1 = 21,
+    ManaBonus2 = 22,
+    ManaBonus3 = 23,
+    ManaBonus4 = 24,
+    ManaBonus5 = 25,
+
+    HealthRegenBonus1 = 26,
+    HealthRegenBonus2 = 27,
+    HealthRegenBonus3 = 28,
+    HealthRegenBonus4 = 29,
+    HealthRegenBonus5 = 30,
+
+    ManaRegenBonus1 = 31,
+    ManaRegenBonus2 = 32,
+    ManaRegenBonus3 = 33,
+    ManaRegenBonus4 = 34,
+    ManaRegenBonus5 = 35,
+
+    ReflectBonus1 = 36,
+    ReflectBonus2 = 37,
+    ReflectBonus3 = 38,
+    ReflectBonus4 = 39,
+    ReflectBonus5 = 40,
+
+    CritRateBonus1 = 41,
+    CritRateBonus2 = 42,
+    CritRateBonus3 = 43,
+    CritRateBonus4 = 44,
+    CritRateBonus5 = 45,
+
+    CritDmgBonus1 = 46,
+    CritDmgBonus2 = 47,
+    CritDmgBonus3 = 48,
+    CritDmgBonus4 = 49,
+    CritDmgBonus5 = 50,
+
+    HPDrainBonus1 = 51,
+    HPDrainBonus2 = 52,
+    HPDrainBonus3 = 53,
+    HPDrainBonus4 = 54,
+    HPDrainBonus5 = 55,
+
+    //  Small Accuracy Boost
+    PinPoint = 100,
+
+    //  Small Attack Speed & Crit bonus.
+    Enrage = 105,
+
+    //  Decent Defense.
+    IronWall = 110,
+
+    //  Small Agility Boost
+    Evasive = 115,
+
+    //  Speedy magician
+    SpeedyMagician = 120,
+    NONE = 255,
+}
+
+public class Sockets
+{
+    //  Depends on how many Socket Slots an item can have.
+    public byte Slot;
+
+    //  We'll get this from UserItem
+    public string SocketItemName;
+
+    //  We'll have a few types of socket items
+    public bool CanRemove;
+
+    //  The Item used within the socket.
+    public UserItem SocketedItem;
+
+    public SocketType SocketItemType;
+
+    public Sockets()
+    {
+
+    }
+
+    public Sockets(BinaryReader reader, int version = int.MaxValue)
+    {
+        Slot = reader.ReadByte();
+        bool validItem = reader.ReadBoolean();
+        if (validItem)
+        {
+            SocketedItem = new UserItem(reader, version);
+            SocketItemName = reader.ReadString();
+            CanRemove = reader.ReadBoolean();
+            SocketItemType = (SocketType)reader.ReadByte();
+        }
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Slot);
+        bool validItem = SocketedItem == null ? false : true;
+        writer.Write(validItem);
+        if (validItem)
+        {
+            SocketedItem.Save(writer);
+            writer.Write(SocketItemName);
+            writer.Write(CanRemove);
+            writer.Write((byte)SocketItemType);
+        }
+    }
+}
+#endregion
+
 public class UserItem
 {
     public ulong UniqueID;
@@ -3478,8 +4554,12 @@ public class UserItem
     public ItemInfo Info;
     public ushort CurrentDura, MaxDura;
     public uint Count = 1, GemCount = 0;
-
-    public byte AC, MAC, DC, MC, SC, Accuracy, Agility, HP, MP, Strong, MagicResist, PoisonResist, HealthRecovery, ManaRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Freezing, PoisonAttack;
+    public ushort MinAC, MaxAC;
+    public ushort MinMAC, MaxMAC;
+    public ushort MinDC, MaxDC;
+    public ushort MinMC, MaxMC;
+    public ushort MinSC, MaxSC;
+    public byte AC, MAC, DC, MC, SC, Accuracy, Agility, HP, MP, Strong, MagicResist, PoisonResist, HealthRecovery, ManaRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Freezing, PoisonAttack, HpDrainRate, Reflect, SocketAdd;
     public sbyte AttackSpeed, Luck;
 
     public RefinedValue RefinedValue = RefinedValue.None;
@@ -3492,14 +4572,33 @@ public class UserItem
 
     public int WeddingRing = -1;
 
+    //  Gem | Orb cap = 5
     public UserItem[] Slots = new UserItem[5];
 
     public DateTime BuybackExpiryDate;
 
     public ExpireInfo ExpireInfo;
-    public RentalInformation RentalInformation;
 
-    public Awake Awake = new Awake();
+	public Awake Awake = new Awake();
+
+    public byte ShieldLevel = 0;
+    public long ShieldExp;
+    public long NeedShieldExp;
+
+    public int LvlSysExpGained;
+    public int LvlSystem;
+
+    public string GTInvite { get; set; } = string.Empty;
+
+    public List<Sockets> Sockets = new List<Sockets>();
+    public byte SocketCount = 0;
+
+    public ElementPos ElementPositive = ElementPos.None;
+    public ElementNeg ElementNegative = ElementNeg.None;
+
+    public byte PositiveElementAdded = 0;
+    public byte NegativeElementAdded = 0;
+
     public bool IsAdded
     {
         get
@@ -3511,14 +4610,14 @@ public class UserItem
 
     public uint Weight
     {
-        get { return Info.Type == ItemType.Amulet ? Info.Weight : Info.Weight * Count; }
+        get { return Info.Type == ItemType.Amulet ? Info.Weight : Info.Weight*Count; }
     }
 
     public string Name
     {
-        get { return Count > 1 ? string.Format("{0} ({1})", Info.Name, Count) : Info.Name; }
+        get { return Count > 1 ? string.Format("{0} ({1})", Info.Name, Count) : Info.Name; }   
     }
-
+    
     public string FriendlyName
     {
         get { return Count > 1 ? string.Format("{0} ({1})", Info.FriendlyName, Count) : Info.FriendlyName; }
@@ -3547,7 +4646,6 @@ public class UserItem
         DC = reader.ReadByte();
         MC = reader.ReadByte();
         SC = reader.ReadByte();
-
         Accuracy = reader.ReadByte();
         Agility = reader.ReadByte();
         HP = reader.ReadByte();
@@ -3558,7 +4656,7 @@ public class UserItem
 
         if (version <= 19) return;
         SoulBoundId = reader.ReadInt32();
-        byte Bools = reader.ReadByte();
+        byte Bools = reader.ReadByte();        
         Identified = (Bools & 0x01) == 0x01;
         Cursed = (Bools & 0x02) == 0x02;
         Strong = reader.ReadByte();
@@ -3571,7 +4669,7 @@ public class UserItem
         CriticalDamage = reader.ReadByte();
         Freezing = reader.ReadByte();
         PoisonAttack = reader.ReadByte();
-
+        
 
         if (version <= 31) return;
 
@@ -3601,13 +4699,57 @@ public class UserItem
         if (version < 65) return;
 
         if (reader.ReadBoolean())
+        {
             ExpireInfo = new ExpireInfo(reader, version, Customversion);
+        }
+        
+        if (version > 89)
+        {
+            ShieldLevel = reader.ReadByte();
+            ShieldExp = reader.ReadInt64();
+        }
+        if (version > 90)
+            NeedShieldExp = reader.ReadInt64();
 
-        if (version < 76)
-            return;
+        if (version > 99)
+        {
+            LvlSysExpGained = reader.ReadInt32();
+            LvlSystem = reader.ReadInt32();
+        }
 
-        if (reader.ReadBoolean())
-            RentalInformation = new RentalInformation(reader, version, Customversion);
+        if (version > 112)
+            GTInvite = reader.ReadString();
+        if (version > 125)
+        {
+            ElementPositive = (ElementPos)reader.ReadByte();
+            PositiveElementAdded = reader.ReadByte();
+            ElementNegative = (ElementNeg)reader.ReadByte();
+            NegativeElementAdded = reader.ReadByte();
+
+            SocketCount = reader.ReadByte();
+
+
+            count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+            {
+                Sockets socket = new Sockets(reader, version);
+                Sockets.Add(socket);
+            }
+        }
+        if (version > 148)
+        {
+            MinAC = reader.ReadUInt16();
+            MaxAC = reader.ReadUInt16();
+            MinMAC = reader.ReadUInt16();
+            MaxMAC = reader.ReadUInt16();
+            MinDC = reader.ReadUInt16();
+            MaxDC = reader.ReadUInt16();
+            MinMC = reader.ReadUInt16();
+            MaxMC = reader.ReadUInt16();
+            MinSC = reader.ReadUInt16();
+            MaxSC = reader.ReadUInt16();
+        }
+
     }
 
     public void Save(BinaryWriter writer)
@@ -3634,7 +4776,7 @@ public class UserItem
         writer.Write(AttackSpeed);
         writer.Write(Luck);
         writer.Write(SoulBoundId);
-        byte Bools = 0;
+        byte Bools=0;        
         if (Identified) Bools |= 0x01;
         if (Cursed) Bools |= 0x02;
         writer.Write(Bools);
@@ -3660,7 +4802,7 @@ public class UserItem
 
         writer.Write(GemCount);
 
-
+       
         Awake.Save(writer);
 
         writer.Write((byte)RefinedValue);
@@ -3669,10 +4811,40 @@ public class UserItem
         writer.Write(WeddingRing);
 
         writer.Write(ExpireInfo != null);
-        ExpireInfo?.Save(writer);
 
-        writer.Write(RentalInformation != null);
-        RentalInformation?.Save(writer);
+        if (ExpireInfo != null)
+        {
+            ExpireInfo.Save(writer);
+        }
+        writer.Write(ShieldLevel);
+        writer.Write(ShieldExp);
+        writer.Write(NeedShieldExp);
+
+        writer.Write(LvlSysExpGained);
+        writer.Write(LvlSystem);
+
+        writer.Write(GTInvite);
+        
+        writer.Write((byte)ElementPositive);
+        writer.Write(PositiveElementAdded);
+        writer.Write((byte)ElementNegative);
+        writer.Write(NegativeElementAdded);
+
+        writer.Write(SocketCount);
+        writer.Write(Sockets.Count);
+        for (int i = 0; i < Sockets.Count; i++)
+            Sockets[i].Save(writer);
+
+        writer.Write(MinAC);
+        writer.Write(MaxAC);
+        writer.Write(MinMAC);
+        writer.Write(MaxMAC);
+        writer.Write(MinDC);
+        writer.Write(MaxDC);
+        writer.Write(MinMC);
+        writer.Write(MaxMC);
+        writer.Write(MinSC);
+        writer.Write(MaxSC);
     }
 
 
@@ -3683,7 +4855,7 @@ public class UserItem
         uint p = Info.Price;
 
 
-        if (Info.Durability > 0)
+        if (Info.Durability > 0)//Dura
         {
             float r = ((Info.Price / 2F) / Info.Durability);
 
@@ -3694,40 +4866,87 @@ public class UserItem
             else
                 r = 0;
 
-            p = (uint)Math.Floor(p / 2F + ((p / 2F) * r) + Info.Price / 2F);
+            p = (uint)Math.Floor(p / 2F + ((p / 2F) * r) + Info.Price / 2F);//Standard price
         }
 
-
-        p = (uint)(p * ((AC + MAC + DC + MC + SC + Accuracy + Agility + HP + MP + AttackSpeed + Luck + Strong + MagicResist + PoisonResist + HealthRecovery + ManaRecovery + PoisonRecovery + CriticalRate + CriticalDamage + Freezing + PoisonAttack) * 0.01F + 1F));
-
-
+        //  Stats
+        p = (uint)(p * ((AC + MAC + DC + MC + SC + Accuracy + Agility + HP + MP + AttackSpeed + Luck + Strong + MagicResist + PoisonResist + HealthRecovery + ManaRecovery + PoisonRecovery + CriticalRate + CriticalDamage + Freezing + PoisonAttack) * 0.1F + 1F));
+        
+        //  Final Price * number of items in stack
         return p * Count;
     }
+
+    public void ItemLevelUp(ushort level, MirClass job, MirGender gender, List<ItemInfo> list)
+    {
+        ItemInfo realItem = Functions.GetRealItem(Info, level, job, list);
+        if (Info.AllowRandomStats)
+        {
+            
+            Random rand = new Random(DateTime.Now.Millisecond);
+            
+            MC = (byte)Math.Min(byte.MaxValue, MC + rand.Next(0, realItem.LvlSysMaxMC[LvlSystem - 1]));
+            DC = (byte)Math.Min(byte.MaxValue, DC + rand.Next(0, realItem.LvlSysMaxDC[LvlSystem - 1]));
+            SC = (byte)Math.Min(byte.MaxValue, SC + rand.Next(0, realItem.LvlSysMaxSC[LvlSystem - 1]));
+
+            AC = (byte)Math.Min(byte.MaxValue, AC + rand.Next(0, realItem.LvlSysMaxAC[LvlSystem - 1]));
+            MAC = (byte)Math.Min(byte.MaxValue, MAC + rand.Next(0, realItem.LvlSysMaxMAC[LvlSystem - 1]));
+        }
+        else
+        {
+            MC = (byte)Math.Min(byte.MaxValue, MC + realItem.LvlSysMaxMC[LvlSystem - 1]);
+            DC = (byte)Math.Min(byte.MaxValue, DC + realItem.LvlSysMaxDC[LvlSystem - 1]);
+            SC = (byte)Math.Min(byte.MaxValue, SC + realItem.LvlSysMaxSC[LvlSystem - 1]);
+
+            AC = (byte)Math.Min(byte.MaxValue, AC + realItem.LvlSysMaxAC[LvlSystem - 1]);
+            MAC = (byte)Math.Min(byte.MaxValue, MAC + realItem.LvlSysMaxMAC[LvlSystem - 1]);
+        }
+    }
+
+    public bool ItemGainExp(int exp)
+    {
+        if (!Info.AllowLvlSys) return false;
+        if (LvlSystem == Info.LvlSysExp.Length - 1) return false;
+        if (Info.LvlSysExp[LvlSystem] == 0) return false;
+
+        LvlSysExpGained += exp;
+
+        var loop = true;
+        var lvlUP = false;
+        while(loop)
+        {
+            if (LvlSystem < Info.LvlSysExp.Length - 1 && Info.LvlSysExp[LvlSystem] != 0 && LvlSysExpGained >= Info.LvlSysExp[LvlSystem])
+            {
+                LvlSysExpGained -= Info.LvlSysExp[LvlSystem];
+                LvlSystem++;
+                lvlUP = true;
+            }
+            else
+                loop = false;
+        }
+
+        return lvlUP;
+    }
+
+
     public uint RepairPrice()
     {
-        if (Info == null || Info.Durability == 0)
-            return 0;
+        if (Info == null || Info.Durability == 0) return 0;
 
         var p = Info.Price;
 
         if (Info.Durability > 0)
         {
             p = (uint)Math.Floor(MaxDura * ((Info.Price / 2F) / Info.Durability) + Info.Price / 2F);
-            p = (uint)(p * ((AC + MAC + DC + MC + SC + Accuracy + Agility + HP + MP + AttackSpeed + Luck + Strong + MagicResist + PoisonResist + HealthRecovery + ManaRecovery + PoisonRecovery + CriticalRate + CriticalDamage + Freezing + PoisonAttack) * 0.01F + 1F));
+            p = (uint)(p * ((AC + MAC + DC + MC + SC + Accuracy + Agility + HP + MP + AttackSpeed + Luck + Strong + MagicResist + PoisonResist + HealthRecovery + ManaRecovery + PoisonRecovery + CriticalRate + CriticalDamage + Freezing + PoisonAttack) * 0.1F + 1F));
 
         }
 
-        var cost = p * Count - Price();
-
-        if (RentalInformation == null)
-            return cost;
-
-        return cost * 2;
+        return (p * Count) - Price();
     }
 
     public uint Quality()
     {
-        uint q = (uint)(AC + MAC + DC + MC + SC + Accuracy + Agility + HP + MP + AttackSpeed + Luck + Strong + MagicResist + PoisonResist + HealthRecovery + ManaRecovery + PoisonRecovery + CriticalRate + CriticalDamage + Freezing + PoisonAttack + Awake.getAwakeLevel() + 1);
+        uint q = (uint)(AC + MAC + DC + MC + SC + Accuracy + Agility + HP + MP + AttackSpeed + Luck + Strong + MagicResist + PoisonResist + HealthRecovery + ManaRecovery + PoisonRecovery + CriticalRate + CriticalDamage + Freezing + PoisonAttack + Awake.AwakeLevel+ 1);
 
         return q;
     }
@@ -3736,10 +4955,10 @@ public class UserItem
     {
         if (Info == null) return 0;
 
-        uint p = 150000;
+        uint p = 1500;
 
-        p = (uint)((p * (1 + Awake.getAwakeLevel() * 2)) * (uint)Info.Grade);
-
+        p = (uint)((p * (1 + Awake.AwakeLevel* 2)) * (uint)Info.Grade);
+       
         return p;
     }
 
@@ -3747,9 +4966,9 @@ public class UserItem
     {
         if (Info == null) return 0;
 
-        uint p = 150000 * (uint)Info.Grade;
+        uint p = 1500 * (uint)Info.Grade;
 
-        p = (uint)(p * ((AC + MAC + DC + MC + SC + Accuracy + Agility + HP + MP + AttackSpeed + Luck + Strong + MagicResist + PoisonResist + HealthRecovery + ManaRecovery + PoisonRecovery + CriticalRate + CriticalDamage + Freezing + PoisonAttack + Awake.getAwakeLevel()) * 0.1F + 1F));
+        p = (uint)(p * ((AC + MAC + DC + MC + SC + Accuracy + Agility + HP + MP + AttackSpeed + Luck + Strong + MagicResist + PoisonResist + HealthRecovery + ManaRecovery + PoisonRecovery + CriticalRate + CriticalDamage + Freezing + PoisonAttack + Awake.AwakeLevel) * 0.1F + 1F));
 
         return p;
     }
@@ -3758,9 +4977,9 @@ public class UserItem
     {
         if (Info == null) return 0;
 
-        uint p = 300000;
+        uint p = 3000;
 
-        p = (uint)((p * (1 + (Awake.getAwakeLevel() + 1) * 2)) * (uint)Info.Grade);
+        p = (uint)((p * (1 + (Awake.AwakeLevel+ 1) * 2)) * (uint)Info.Grade);
 
         return p;
     }
@@ -3769,13 +4988,13 @@ public class UserItem
     {
         if (Info == null) return 0;
 
-        uint p = 300000 * (uint)Info.Grade;
+        uint p = 3000 * (uint)Info.Grade;
 
         p = (uint)(p * ((AC + MAC + DC + MC + SC + Accuracy + Agility + HP + MP + AttackSpeed + Luck + Strong + MagicResist + PoisonResist + HealthRecovery + ManaRecovery + PoisonRecovery + CriticalRate + CriticalDamage + Freezing + PoisonAttack) * 0.2F + 1F));
 
         return p;
     }
-    public void SetSlotSize() //set slot size in db?
+    public void SetSlotSize()
     {
         int amount = 0;
 
@@ -3788,7 +5007,7 @@ public class UserItem
                     amount = 5;
                 break;
             case ItemType.Weapon:
-                if (Info.Shape == 949 || Info.Shape == 950)
+                if (Info.Shape == 49 || Info.Shape == 50)
                     amount = 5;
                 break;
         }
@@ -3804,48 +5023,37 @@ public class UserItem
         {
             switch (Info.Type)
             {
-                #region Poison Stack Image changes
+                #region Amulet and Poison Stack Image changes
                 case ItemType.Amulet:
                     if (Info.StackSize > 0)
                     {
                         switch (Info.Shape)
                         {
                             case 0: //Amulet
-                                if (Count >= 5000) return 3662;
-                                if (Count >= 1000) return 3661;
-                                if (Count >= 500) return 3660;
-                                return Info.Image;
-                        }
-                    }
-                    break;
-                #endregion
-
-                #region Poison Stack Image changes
-                case ItemType.Poison:
-                    if (Info.StackSize > 0)
-                    {
-                        switch (Info.Shape)
-                        {
+                                if (Count >= 300) return 3662;
+                                if (Count >= 200) return 3661;
+                                if (Count >= 100) return 3660;
+                                return 3660;
                             case 1: //Grey Poison
-                                if (Count >= 5000) return 3675;
-                                if (Count >= 1000) return 2960;
-                                if (Count >= 500) return 3674;
+                                if (Count >= 150) return 3675;
+                                if (Count >= 100) return 2960;
+                                if (Count >= 50) return 3674;
                                 return 3673;
                             case 2: //Yellow Poison
-                                if (Count >= 5000) return 3672;
-                                if (Count >= 1000) return 2961;
-                                if (Count >= 500) return 3671;
+                                if (Count >= 150) return 3672;
+                                if (Count >= 100) return 2961;
+                                if (Count >= 50) return 3671;
                                 return 3670;
                         }
                     }
                     break;
-                    #endregion
-            }
+                }
 
-
-            return Info.Image;
-        }
-    }
+            #endregion
+            
+			return Info.Image;
+			}
+		}
 
     public UserItem Clone()
     {
@@ -3865,7 +5073,13 @@ public class UserItem
             Agility = Agility,
             HP = HP,
             MP = MP,
-
+            MinAC = MinAC,
+            MaxAC = MaxAC,
+            MinDC = MinDC,
+            MaxDC = MaxDC,
+            MinMAC = MinMAC,
+            MinMC = MinMC,
+            MinSC = MinSC,
             AttackSpeed = AttackSpeed,
             Luck = Luck,
 
@@ -3891,8 +5105,18 @@ public class UserItem
             RefineAdded = RefineAdded,
 
             ExpireInfo = ExpireInfo,
-            RentalInformation = RentalInformation
-        };
+            ShieldLevel = ShieldLevel,
+            ShieldExp = ShieldExp,
+            NeedShieldExp = NeedShieldExp,
+            LvlSystem = LvlSystem,
+            LvlSysExpGained = LvlSysExpGained,
+            NegativeElementAdded = NegativeElementAdded,
+            ElementNegative = ElementNegative,
+            ElementPositive = ElementPositive,
+            PositiveElementAdded = PositiveElementAdded,
+            SocketCount = SocketCount,
+            Sockets = Sockets
+            };
 
         return item;
     }
@@ -3919,33 +5143,6 @@ public class ExpireInfo
     }
 }
 
-public class RentalInformation
-{
-    public string OwnerName;
-    public BindMode BindingFlags = BindMode.none;
-    public DateTime ExpiryDate;
-    public bool RentalLocked;
-
-    public RentalInformation()
-    { }
-
-    public RentalInformation(BinaryReader reader, int version = int.MaxValue, int CustomVersion = int.MaxValue)
-    {
-        OwnerName = reader.ReadString();
-        BindingFlags = (BindMode)reader.ReadInt16();
-        ExpiryDate = DateTime.FromBinary(reader.ReadInt64());
-        RentalLocked = reader.ReadBoolean();
-    }
-
-    public void Save(BinaryWriter writer)
-    {
-        writer.Write(OwnerName);
-        writer.Write((short)BindingFlags);
-        writer.Write(ExpiryDate.ToBinary());
-        writer.Write(RentalLocked);
-    }
-}
-
 public class GameShopItem
 {
     public int ItemIndex;
@@ -3963,6 +5160,7 @@ public class GameShopItem
     public DateTime Date;
     public bool CanBuyGold = false;
     public bool CanBuyCredit = false;
+
 
     public GameShopItem()
     {
@@ -4010,8 +5208,10 @@ public class GameShopItem
 
         return n;
     }
+
     public GameShopItem(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
     {
+        //The index is fucked on the items
         ItemIndex = reader.ReadInt32();
         GIndex = reader.ReadInt32();
         GoldPrice = reader.ReadUInt32();
@@ -4024,8 +5224,11 @@ public class GameShopItem
         Deal = reader.ReadBoolean();
         TopItem = reader.ReadBoolean();
         Date = DateTime.FromBinary(reader.ReadInt64());
-        CanBuyGold = reader.ReadBoolean();
-        CanBuyCredit = reader.ReadBoolean();
+        if (version > 84)
+        {
+            CanBuyGold = reader.ReadBoolean();
+            CanBuyCredit = reader.ReadBoolean();
+        }
     }
 
     public GameShopItem(BinaryReader reader, bool packet = false)
@@ -4068,29 +5271,178 @@ public class GameShopItem
 
     public override string ToString()
     {
-        return string.Format("{0}: {1}", GIndex, Info.Name);
+        return string.Format("{0}: {1}", GIndex, Info != null ? Info.Name : "NONE");
     }
 
 }
 
+
+#region Crafting Structure
+
+public class PlayerRecipes
+{
+    public byte Recipe;
+    public bool Learnt;
+    public long CurrentCraftTime;
+    public bool Finishedcraft;
+    public bool Notified;
+    public bool Collected;
+    public bool InProgress;
+    public PlayerRecipes()
+    {
+
+    }
+
+    public PlayerRecipes(BinaryReader reader, int version = int.MaxValue)
+    {
+        Recipe = reader.ReadByte();
+        Learnt = reader.ReadBoolean();
+        if (version > 88)
+        {
+
+            CurrentCraftTime = reader.ReadInt64();
+            Finishedcraft = reader.ReadBoolean();
+            Notified = reader.ReadBoolean();
+            Collected = reader.ReadBoolean();
+            InProgress = reader.ReadBoolean();
+        }
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Recipe);
+        writer.Write(Learnt);
+        writer.Write(CurrentCraftTime);
+        writer.Write(Finishedcraft);
+        writer.Write(Notified);
+        writer.Write(Collected);
+        writer.Write(InProgress);
+    }
+}
+
+/// <summary>
+/// Under construction
+/// </summary>
+public class CraftItem
+{
+    public byte Recipie;
+    public string Category = string.Empty;
+    public string RecipeName = string.Empty;
+    public List<CraftItemRequirement> Requirments = new List<CraftItemRequirement>();
+    public ItemInfo ItemResult;
+    public uint GoldRequired;
+    public ushort LevelRequired;
+    public MirClass RequiredClass;
+    
+    public byte RequiredTimeDay;
+    public byte RequiredTimeHour;
+    public byte RequiredTimeMinute;
+
+    public byte CraftSuccessRate = 100;
+
+
+    public CraftItem()
+    {
+
+    }
+    
+    public CraftItem(BinaryReader reader, int version = int.MaxValue)
+    {
+        Recipie = reader.ReadByte();
+        RecipeName = reader.ReadString();
+        int count = reader.ReadInt32();
+        for (int i = 0; i < count; i++)
+            Requirments.Add(new CraftItemRequirement(reader,version));
+
+        bool validItem = reader.ReadBoolean();
+        if (validItem)
+            ItemResult = new ItemInfo(reader, version);
+        GoldRequired = reader.ReadUInt32();
+        LevelRequired = reader.ReadUInt16();
+        RequiredClass = (MirClass)reader.ReadByte();
+        RequiredTimeDay = reader.ReadByte();
+        RequiredTimeHour = reader.ReadByte();
+        RequiredTimeMinute = reader.ReadByte();
+        CraftSuccessRate = reader.ReadByte();
+        if (version > 128)
+            Category = reader.ReadString();
+        
+    }
+
+    public void Save(BinaryWriter writer, bool packet = false)
+    {
+        writer.Write(Recipie);
+        writer.Write(RecipeName);
+        writer.Write(Requirments.Count);
+        for (int i = 0; i < Requirments.Count; i++)
+            Requirments[i].Save(writer);
+        bool validItem = ItemResult != null ? true : false;
+        writer.Write(validItem);
+        if (validItem)
+            ItemResult.Save(writer);
+       
+        writer.Write(GoldRequired);
+        writer.Write(LevelRequired);
+        writer.Write((byte)RequiredClass);
+        
+        writer.Write(RequiredTimeDay);
+        writer.Write(RequiredTimeHour);
+        writer.Write(RequiredTimeMinute);
+        writer.Write(CraftSuccessRate);
+        writer.Write(Category);
+    }
+
+    public override string ToString()
+    {
+        return string.Format("{0}: {1}", Recipie, RecipeName);
+    }
+}
+
+public class CraftItemRequirement
+{
+    public ItemInfo Item;
+    public int Amount;
+    public int ItemIndex;
+    public CraftItemRequirement() { }
+
+    public CraftItemRequirement(BinaryReader reader, int version = int.MaxValue)
+    {
+        ItemIndex = reader.ReadInt32();
+
+        Amount = reader.ReadInt32();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        /*
+        bool validItem = Item != null ? true : false;
+        writer.Write(validItem);//oopsie
+        if (validItem)
+            Item.Save(writer);
+        */
+        writer.Write(ItemIndex);
+        writer.Write(Amount);
+    }
+    public override string ToString()
+    {
+        return string.Format("{0}: {1}", ItemIndex, Amount);
+    }
+}
+#endregion
+
+#region Awaking
 public class Awake
 {
     //Awake Option
-    public static byte AwakeSuccessRate = 100;
-    public static byte AwakeHitRate = 100;
-    public static int MaxAwakeLevel = 3;
+    public static byte AwakeSuccessRate = 70;
+    public static byte AwakeHitRate = 70;
+    public static int MaxAwakeLevel = 5;
     public static byte Awake_WeaponRate = 1;
     public static byte Awake_HelmetRate = 1;
-    public static byte Awake_ArmorRate = 20;
-    public static byte Awake_BraceletRate = 1;
-    public static byte Awake_RingRate = 1;
-    public static byte Awake_BeltRate = 1;
-    public static byte Awake_BootsRate = 1;
-    public static byte Awake_NecklaceRate = 1;
-
+    public static byte Awake_ArmorRate = 5;
     public static byte AwakeChanceMin = 1;
-    public static float[] AwakeMaterialRate = new float[6] { 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F };
-    public static byte[] AwakeChanceMax = new byte[6] { 1, 2, 3, 4, 5, 6 };
+    public static float[] AwakeMaterialRate = new float[4] { 1.0F, 1.0F, 1.0F, 1.0F };
+    public static byte[] AwakeChanceMax = new byte[4] { 1, 2, 3, 4 };
     public static List<List<byte>[]> AwakeMaterials = new List<List<byte>[]>();
 
     public AwakeType type;
@@ -4123,30 +5475,28 @@ public class Awake
 
     public bool IsMaxLevel() { return listAwake.Count == Awake.MaxAwakeLevel; }
 
-    public int getAwakeLevel() { return listAwake.Count; }
+    public int AwakeLevel => listAwake.Count;
 
-    public byte getAwakeValue()
+    public byte AwakeValue
     {
-        byte total = 0;
-
-        foreach (byte value in listAwake)
+        get
         {
-            total += value;
-        }
+            byte total = 0;
 
-        return total;
+            foreach (byte value in listAwake)
+            {
+                total += value;
+            }
+
+            return total;
+        }
     }
 
     public bool CheckAwakening(UserItem item, AwakeType type)
     {
-        if (item.Info.Bind.HasFlag(BindMode.DontUpgrade))
-            return false;
+        if (item.Info.CanAwakening != true) return false;
 
-        if (item.Info.CanAwakening != true)
-            return false;
-
-        if (item.Info.Grade == ItemGrade.None)
-            return false;
+        if (item.Info.Grade == ItemGrade.None) return false;
 
         if (IsMaxLevel()) return false;
 
@@ -4175,70 +5525,6 @@ public class Awake
                 else
                     return false;
             }
-
-            else if (item.Info.Type == ItemType.Boots)
-            {
-                if (type == AwakeType.AC ||
-                    type == AwakeType.MAC)
-                {
-                    this.type = type;
-                    return true;
-                }
-                else
-                    return false;
-            }
-
-            else if (item.Info.Type == ItemType.Belt)
-            {
-                if (type == AwakeType.AC ||
-                    type == AwakeType.MAC)
-                {
-                    this.type = type;
-                    return true;
-                }
-                else
-                    return false;
-            }
-
-            else if (item.Info.Type == ItemType.Bracelet)
-            {
-                if (type == AwakeType.DC ||
-                    type == AwakeType.MC ||
-                    type == AwakeType.SC)
-                {
-                    this.type = type;
-                    return true;
-                }
-                else
-                    return false;
-            }
-
-            else if (item.Info.Type == ItemType.Ring)
-            {
-                if (type == AwakeType.DC ||
-                    type == AwakeType.MC ||
-                    type == AwakeType.SC)
-                {
-                    this.type = type;
-                    return true;
-                }
-                else
-                    return false;
-            }
-
-            else if (item.Info.Type == ItemType.Necklace)
-            {
-                if (type == AwakeType.DC ||
-                    type == AwakeType.MC ||
-                    type == AwakeType.SC)
-                {
-                    this.type = type;
-                    return true;
-                }
-                else
-                    return false;
-            }
-
             else if (item.Info.Type == ItemType.Armour)
             {
                 if (type == AwakeType.HPMP)
@@ -4277,8 +5563,7 @@ public class Awake
         }
         else
         {
-            int idx;
-            isHit = makeHit(1, out idx);
+            isHit = makeHit(1, out int idx);
             return 0;
         }
     }
@@ -4301,14 +5586,13 @@ public class Awake
         }
     }
 
-    public int getAwakeLevelValue(int i) { return listAwake[i]; }
+    public int GetAwakeLevelValue(int i) { return listAwake[i]; }
 
-    public byte getDC() { return (type == AwakeType.DC ? getAwakeValue() : (byte)0); }
-    public byte getMC() { return (type == AwakeType.MC ? getAwakeValue() : (byte)0); }
-    public byte getSC() { return (type == AwakeType.SC ? getAwakeValue() : (byte)0); }
-    public byte getAC() { return (type == AwakeType.AC ? getAwakeValue() : (byte)0); }
-    public byte getMAC() { return (type == AwakeType.MAC ? getAwakeValue() : (byte)0); }
-    public byte getHPMP() { return (type == AwakeType.HPMP ? getAwakeValue() : (byte)0); }
+    public byte DC => (type == AwakeType.DC ? AwakeValue : (byte)0); public byte getMC() { return (type == AwakeType.MC ? AwakeValue: (byte)0); }
+    public byte getSC() { return (type == AwakeType.SC ? AwakeValue: (byte)0); }
+    public byte getAC() { return (type == AwakeType.AC ? AwakeValue: (byte)0); }
+    public byte getMAC() { return (type == AwakeType.MAC ? AwakeValue: (byte)0); }
+    public byte getHPMP() { return (type == AwakeType.HPMP ? AwakeValue: (byte)0); }
 
     private bool[] makeHit(int maxValue, out int makeValue)
     {
@@ -4339,9 +5623,8 @@ public class Awake
         int minValue = AwakeChanceMin;
         int maxValue = (AwakeChanceMax[(int)item.Info.Grade - 1] < AwakeChanceMin) ? AwakeChanceMin : AwakeChanceMax[(int)item.Info.Grade - 1];
 
-        int result;
 
-        bool[] returnValue = makeHit(maxValue, out result);
+        bool[] returnValue = makeHit(maxValue, out int result);
 
         switch (item.Info.Type)
         {
@@ -4351,23 +5634,8 @@ public class Awake
             case ItemType.Armour:
                 result *= (int)Awake_ArmorRate;
                 break;
-            case ItemType.Bracelet:
-                result *= (int)Awake_BraceletRate;
-                break;
             case ItemType.Helmet:
                 result *= (int)Awake_HelmetRate;
-                break;
-            case ItemType.Ring:
-                result *= (int)Awake_RingRate;
-                break;
-            case ItemType.Belt:
-                result *= (int)Awake_BeltRate;
-                break;
-            case ItemType.Boots:
-                result *= (int)Awake_BootsRate;
-                break;
-            case ItemType.Necklace:
-                result *= (int)Awake_NecklaceRate;
                 break;
             default:
                 result = 0;
@@ -4379,13 +5647,14 @@ public class Awake
         return returnValue;
     }
 }
+#endregion
 
 public class ClientMagic
 {
     public Spell Spell;
     public byte BaseCost, LevelCost, Icon;
-    public byte Level1, Level2, Level3;
-    public ushort Need1, Need2, Need3;
+    public byte Level1, Level2, Level3 , Level4 , Level5;
+    public ushort Need1, Need2, Need3 , Need4 , Need5;
 
     public byte Level, Key, Range;
     public ushort Experience;
@@ -4393,18 +5662,19 @@ public class ClientMagic
     public bool IsTempSpell;
     public long CastTime, Delay;
 
+    public bool HumUpEnable;
+    public bool OverrideHumUp;
     public ushort PowerBase, PowerBonus;
     public ushort MPowerBase, MPowerBonus;
     public float MultiplierBase = 1.0f, MultiplierBonus;
     public ushort PvPPowerBase, PvPPowerBonus;
     public ushort PvPMPowerBase, PvPMPowerBonus;
     public float PvPMultiplierBase = 1.0f, PvPMultiplierBonus;
-
     public ClientMagic()
     {
     }
 
-    public ClientMagic(BinaryReader reader)
+    public ClientMagic(BinaryReader reader, int version = int.MaxValue)
     {
         Spell = (Spell)reader.ReadByte();
 
@@ -4414,9 +5684,15 @@ public class ClientMagic
         Level1 = reader.ReadByte();
         Level2 = reader.ReadByte();
         Level3 = reader.ReadByte();
+        Level4 = reader.ReadByte();
+        Level5 = reader.ReadByte();
         Need1 = reader.ReadUInt16();
         Need2 = reader.ReadUInt16();
         Need3 = reader.ReadUInt16();
+        Need4 = reader.ReadUInt16();
+        Need5 = reader.ReadUInt16();
+
+        HumUpEnable = reader.ReadBoolean();
 
         Level = reader.ReadByte();
         Key = reader.ReadByte();
@@ -4426,6 +5702,7 @@ public class ClientMagic
 
         Range = reader.ReadByte();
         CastTime = reader.ReadInt64();
+        OverrideHumUp = reader.ReadBoolean();
         PowerBase = reader.ReadUInt16();
         PowerBonus = reader.ReadUInt16();
         MPowerBase = reader.ReadUInt16();
@@ -4450,9 +5727,15 @@ public class ClientMagic
         writer.Write(Level1);
         writer.Write(Level2);
         writer.Write(Level3);
+        writer.Write(Level4);
+        writer.Write(Level5);
         writer.Write(Need1);
         writer.Write(Need2);
         writer.Write(Need3);
+        writer.Write(Need4);
+        writer.Write(Need5);
+
+        writer.Write(HumUpEnable);
 
         writer.Write(Level);
         writer.Write(Key);
@@ -4462,6 +5745,7 @@ public class ClientMagic
 
         writer.Write(Range);
         writer.Write(CastTime);
+        writer.Write(OverrideHumUp);
         writer.Write(PowerBase);
         writer.Write(PowerBonus);
         writer.Write(MPowerBase);
@@ -4475,7 +5759,7 @@ public class ClientMagic
         writer.Write(PvPPowerBase);
         writer.Write(PvPPowerBonus);
     }
-
+   
 }
 
 public class ClientAuction
@@ -4483,12 +5767,12 @@ public class ClientAuction
     public ulong AuctionID;
     public UserItem Item;
     public string Seller = string.Empty;
-    public uint Price;
+    public uint Price , ggPrice;
     public DateTime ConsignmentDate;
 
     public ClientAuction()
     {
-
+        
     }
     public ClientAuction(BinaryReader reader)
     {
@@ -4496,6 +5780,7 @@ public class ClientAuction
         Item = new UserItem(reader);
         Seller = reader.ReadString();
         Price = reader.ReadUInt32();
+        ggPrice = reader.ReadUInt32();
         ConsignmentDate = DateTime.FromBinary(reader.ReadInt64());
     }
     public void Save(BinaryWriter writer)
@@ -4504,6 +5789,7 @@ public class ClientAuction
         Item.Save(writer);
         writer.Write(Seller);
         writer.Write(Price);
+        writer.Write(ggPrice);
         writer.Write(ConsignmentDate.ToBinary());
     }
 }
@@ -4546,6 +5832,35 @@ public class RobotInfo
 
 }
 
+public class ClientAvailableQuests
+{
+    public int Index;
+    public string Name;
+    public string Group;
+    public int MinLevel, MaxLevel;
+    
+
+    public ClientAvailableQuests() { }
+    public ClientAvailableQuests(BinaryReader reader)
+    {
+        Index = reader.ReadInt32();
+        Name = reader.ReadString();
+        Group = reader.ReadString();
+        MinLevel = reader.ReadInt32();
+        MaxLevel = reader.ReadInt32();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Index);
+        writer.Write(Name);
+        writer.Write(Group);
+        writer.Write(MinLevel);
+        writer.Write(MaxLevel);
+    }
+}
+
+
 public class ClientQuestInfo
 {
     public int Index;
@@ -4555,7 +5870,7 @@ public class ClientQuestInfo
     public string Name, Group;
     public List<string> Description = new List<string>();
     public List<string> TaskDescription = new List<string>();
-    public List<string> CompletionDescription = new List<string>();
+    public List<string> CompletionDescription = new List<string>(); 
 
     public int MinLevelNeeded, MaxLevelNeeded;
     public int QuestNeeded;
@@ -4563,11 +5878,19 @@ public class ClientQuestInfo
 
     public QuestType Type;
 
+    public bool Hero;
+
+    public bool percentageExp;
+    public bool autoComplete;
     public uint RewardGold;
     public uint RewardExp;
     public uint RewardCredit;
+    public uint ItemEXPReward;
     public List<QuestItemReward> RewardsFixedItem = new List<QuestItemReward>();
     public List<QuestItemReward> RewardsSelectItem = new List<QuestItemReward>();
+    public List<BuffReward> BuffRewards = new List<BuffReward>();
+
+    public int time;
 
     public uint FinishNPCIndex;
 
@@ -4608,7 +5931,7 @@ public class ClientQuestInfo
 
         count = reader.ReadInt32();
 
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++ )
             RewardsFixedItem.Add(new QuestItemReward(reader));
 
         count = reader.ReadInt32();
@@ -4616,7 +5939,18 @@ public class ClientQuestInfo
         for (int i = 0; i < count; i++)
             RewardsSelectItem.Add(new QuestItemReward(reader));
 
+        count = reader.ReadInt32();
+
+        for (int i = 0; i < count; i++)
+            BuffRewards.Add(new BuffReward(reader));
+
         FinishNPCIndex = reader.ReadUInt32();
+        percentageExp = reader.ReadBoolean();
+        autoComplete = reader.ReadBoolean();
+
+        time = reader.ReadInt32();
+        Hero = reader.ReadBoolean();
+        ItemEXPReward = reader.ReadUInt32();
     }
     public void Save(BinaryWriter writer)
     {
@@ -4656,7 +5990,18 @@ public class ClientQuestInfo
         for (int i = 0; i < RewardsSelectItem.Count; i++)
             RewardsSelectItem[i].Save(writer);
 
+        writer.Write(BuffRewards.Count);
+
+        for (int i = 0; i < BuffRewards.Count; i++)
+            BuffRewards[i].Save(writer);
+
         writer.Write(FinishNPCIndex);
+        writer.Write(percentageExp);
+        writer.Write(autoComplete);
+
+        writer.Write(time);
+        writer.Write(Hero);
+        writer.Write(ItemEXPReward);
     }
 
     public QuestIcon GetQuestIcon(bool taken = false, bool completed = false)
@@ -4668,27 +6013,27 @@ public class ClientQuestInfo
             case QuestType.General:
             case QuestType.Repeatable:
                 if (completed)
-                    icon = QuestIcon.QuestionYellow;
+                    icon = Hero ? QuestIcon.QuestionRed : QuestIcon.QuestionYellow;
                 else if (taken)
                     icon = QuestIcon.QuestionWhite;
                 else
-                    icon = QuestIcon.ExclamationYellow;
+                    icon = Hero ? QuestIcon.ExclamationRed : QuestIcon.ExclamationYellow;
                 break;
             case QuestType.Daily:
                 if (completed)
-                    icon = QuestIcon.QuestionBlue;
+                    icon = Hero ? QuestIcon.QuestionDarkBlue: QuestIcon.QuestionBlue;
                 else if (taken)
                     icon = QuestIcon.QuestionWhite;
                 else
-                    icon = QuestIcon.ExclamationBlue;
+                    icon = Hero ? QuestIcon.ExclamationDarkBlue : QuestIcon.ExclamationBlue;
                 break;
             case QuestType.Story:
                 if (completed)
-                    icon = QuestIcon.QuestionGreen;
+                    icon = Hero ? QuestIcon.QuestionOrange : QuestIcon.QuestionGreen;
                 else if (taken)
                     icon = QuestIcon.QuestionWhite;
                 else
-                    icon = QuestIcon.ExclamationGreen;
+                    icon = Hero ? QuestIcon.ExclamationOrange : QuestIcon.ExclamationGreen;
                 break;
         }
 
@@ -4708,15 +6053,17 @@ public class ClientQuestProgress
     public bool Completed;
     public bool New;
 
+    public int EndTime;
+
     public QuestIcon Icon
     {
-        get
+        get 
         {
-            return QuestInfo.GetQuestIcon(Taken, Completed);
+            return QuestInfo.GetQuestIcon(Taken, Completed); 
         }
     }
 
-    public ClientQuestProgress() { }
+    public ClientQuestProgress(){ }
 
     public ClientQuestProgress(BinaryReader reader)
     {
@@ -4730,6 +6077,10 @@ public class ClientQuestProgress
         Taken = reader.ReadBoolean();
         Completed = reader.ReadBoolean();
         New = reader.ReadBoolean();
+        EndTime = reader.ReadInt32();
+        bool gotInfo = reader.ReadBoolean();
+        if (gotInfo)
+            QuestInfo = new ClientQuestInfo(reader);
     }
 
     public void Save(BinaryWriter writer)
@@ -4744,6 +6095,37 @@ public class ClientQuestProgress
         writer.Write(Taken);
         writer.Write(Completed);
         writer.Write(New);
+        writer.Write(EndTime);
+        if (QuestInfo != null)
+        {
+            writer.Write(true);
+            QuestInfo.Save(writer);
+        }
+        else
+            writer.Write(false);
+    }
+}
+
+public class BuffReward
+{
+    public BuffType buff;
+    public int amount;
+    public long time;
+
+    public BuffReward() { }
+
+    public BuffReward(BinaryReader reader)
+    {
+        buff = (BuffType)reader.ReadByte();
+        amount = reader.ReadInt32();
+        time = reader.ReadInt64();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write((byte)buff);
+        writer.Write(amount);
+        writer.Write(time);
     }
 }
 
@@ -4995,9 +6377,9 @@ public class IntelligentCreatureItemFilter
         }
         else
             if (!PetPickupGold && !PetPickupWeapons && !PetPickupArmours && !PetPickupHelmets && !PetPickupBoots && !PetPickupBelts && !PetPickupAccessories && !PetPickupOthers)
-        {
-            PetPickupAll = true;
-        }
+            {
+                PetPickupAll = true;
+            }
     }
 
     public IntelligentCreatureItemFilter(BinaryReader reader)
@@ -5065,8 +6447,10 @@ public class ClientIntelligentCreature
         petMode = (IntelligentCreaturePickupMode)reader.ReadByte();
 
         CreatureRules = new IntelligentCreatureRules(reader);
-        Filter = new IntelligentCreatureItemFilter(reader);
-        Filter.PickupGrade = (ItemGrade)reader.ReadByte();
+        Filter = new IntelligentCreatureItemFilter(reader)
+        {
+            PickupGrade = (ItemGrade)reader.ReadByte()
+        };
         MaintainFoodTime = reader.ReadInt64();
     }
 
@@ -5117,11 +6501,12 @@ public abstract class Packet
                 short id = reader.ReadInt16();
 
                 p = IsServer ? GetClientPacket(id) : GetServerPacket(id);
-                if (p == null) return null;
+                if (p == null)
+                    return null;
 
                 p.ReadPacket(reader);
             }
-            catch
+            catch (Exception)
             {
                 return null;
                 //return new C.Disconnect();
@@ -5187,6 +6572,8 @@ public abstract class Packet
                 return new C.StartGame();
             case (short)ClientPacketIds.LogOut:
                 return new C.LogOut();
+            case (short)ClientPacketIds.StashHero:
+                return new C.StashHero();
             case (short)ClientPacketIds.Turn:
                 return new C.Turn();
             case (short)ClientPacketIds.Walk:
@@ -5199,20 +6586,30 @@ public abstract class Packet
                 return new C.MoveItem();
             case (short)ClientPacketIds.StoreItem:
                 return new C.StoreItem();
+            case (short)ClientPacketIds.InventoryToHeroInventory:
+                return new C.InventoryToHeroInventory();
             case (short)ClientPacketIds.TakeBackItem:
                 return new C.TakeBackItem();
+            case (short)ClientPacketIds.HeroInventoryToInventory:
+                return new C.HeroInventoryToInventory();
             case (short)ClientPacketIds.MergeItem:
                 return new C.MergeItem();
             case (short)ClientPacketIds.EquipItem:
                 return new C.EquipItem();
+            case (short)ClientPacketIds.HeroEquipItem:
+                return new C.HeroEquipItem();
             case (short)ClientPacketIds.RemoveItem:
                 return new C.RemoveItem();
+            case (short)ClientPacketIds.HeroRemoveItem:
+                return new C.HeroRemoveItem();
             case (short)ClientPacketIds.RemoveSlotItem:
                 return new C.RemoveSlotItem();
             case (short)ClientPacketIds.SplitItem:
                 return new C.SplitItem();
             case (short)ClientPacketIds.UseItem:
                 return new C.UseItem();
+            case (short)ClientPacketIds.HeroUseItem:
+                return new C.HeroUseItem();
             case (short)ClientPacketIds.DropItem:
                 return new C.DropItem();
             case (short)ClientPacketIds.DepositRefineItem:
@@ -5237,10 +6634,14 @@ public abstract class Packet
                 return new C.PickUp();
             case (short)ClientPacketIds.Inspect:
                 return new C.Inspect();
+            case (short)ClientPacketIds.HeroRunTo:
+                return new C.HeroRunTo();
             case (short)ClientPacketIds.ChangeAMode:
                 return new C.ChangeAMode();
             case (short)ClientPacketIds.ChangePMode:
                 return new C.ChangePMode();
+            case (short)ClientPacketIds.ChangeHMode:
+                return new C.ChangeHMode();
             case (short)ClientPacketIds.ChangeTrade:
                 return new C.ChangeTrade();
             case (short)ClientPacketIds.Attack:
@@ -5257,8 +6658,6 @@ public abstract class Packet
                 return new C.BuyItem();
             case (short)ClientPacketIds.SellItem:
                 return new C.SellItem();
-            case (short)ClientPacketIds.CraftItem:
-                return new C.CraftItem();
             case (short)ClientPacketIds.RepairItem:
                 return new C.RepairItem();
             case (short)ClientPacketIds.BuyItemBack:
@@ -5267,6 +6666,10 @@ public abstract class Packet
                 return new C.SRepairItem();
             case (short)ClientPacketIds.MagicKey:
                 return new C.MagicKey();
+            case (short)ClientPacketIds.HeroMagicKey:
+                return new C.HeroMagicKey();
+            case (short)ClientPacketIds.AutoPotUpdate:
+                return new C.AutoPotUpdate();
             case (short)ClientPacketIds.Magic:
                 return new C.Magic();
             case (short)ClientPacketIds.SwitchGroup:
@@ -5289,6 +6692,8 @@ public abstract class Packet
                 return new C.MarketRefresh();
             case (short)ClientPacketIds.MarketPage:
                 return new C.MarketPage();
+            case (short)ClientPacketIds.GuildTerritoryPage:
+                return new C.GuildTerritoryPage();
             case (short)ClientPacketIds.MarketBuy:
                 return new C.MarketBuy();
             case (short)ClientPacketIds.MarketGetBack:
@@ -5363,7 +6768,7 @@ public abstract class Packet
                 return new C.CombineItem();
             case (short)ClientPacketIds.SetConcentration:
                 return new C.SetConcentration();
-            case (short)ClientPacketIds.AwakeningNeedMaterials:
+			case (short)ClientPacketIds.AwakeningNeedMaterials:
                 return new C.AwakeningNeedMaterials();
             case (short)ClientPacketIds.AwakeningLockedItem:
                 return new C.AwakeningLockedItem();
@@ -5409,30 +6814,50 @@ public abstract class Packet
                 return new C.NPCConfirmInput();
             case (short)ClientPacketIds.ReportIssue:
                 return new C.ReportIssue();
+            case (short)ClientPacketIds.ComboSpell:
+                return new C.ComboSpell();
             case (short)ClientPacketIds.GetRanking:
                 return new C.GetRanking();
             case (short)ClientPacketIds.Opendoor:
                 return new C.Opendoor();
-            case (short)ClientPacketIds.GetRentedItems:
-                return new C.GetRentedItems();
-            case (short)ClientPacketIds.ItemRentalRequest:
-                return new C.ItemRentalRequest();
-            case (short)ClientPacketIds.ItemRentalFee:
-                return new C.ItemRentalFee();
-            case (short)ClientPacketIds.ItemRentalPeriod:
-                return new C.ItemRentalPeriod();
-            case (short)ClientPacketIds.DepositRentalItem:
-                return new C.DepositRentalItem();
-            case (short)ClientPacketIds.RetrieveRentalItem:
-                return new C.RetrieveRentalItem();
-            case (short)ClientPacketIds.CancelItemRental:
-                return new C.CancelItemRental();
-            case (short)ClientPacketIds.ItemRentalLockFee:
-                return new C.ItemRentalLockFee();
-            case (short)ClientPacketIds.ItemRentalLockItem:
-                return new C.ItemRentalLockItem();
-            case (short)ClientPacketIds.ConfirmItemRental:
-                return new C.ConfirmItemRental();
+            case (short)ClientPacketIds.GetCrafts:
+                return new C.GetRecipes();
+            case (short)ClientPacketIds.RequestCraft:
+                return new C.RequestCraft();
+            case (short)ClientPacketIds.CollectCraft:
+                return new C.CollectCraft();
+            case (short)ClientPacketIds.CreateHero:
+                return new C.HeroCreation();
+            case (short)ClientPacketIds.BuyRecipie:
+                return new C.BuyRecipe();
+            case (short)ClientPacketIds.RecipieShop:
+                return new C.GetRecipeShop();
+            case (short)ClientPacketIds.EERequestSocketInfo:
+                return new C.RequestSocketInfo();
+            case (short)ClientPacketIds.EESocketItem:
+                return new C.SocketRuneStone();
+            case (short)ClientPacketIds.EERemoveRune:
+                return new C.RemoveRune();
+            case (short)ClientPacketIds.EEHeroRank:
+                return new C.GetHeroRank();
+            case (short)ClientPacketIds.HeroUseMagic:
+                return new C.HeroUseMagic();
+            case (short)ClientPacketIds.ChangeHeroMove:
+                return new C.ChangeHeroMoveBehaviour();
+            case (short)ClientPacketIds.CheckClientItemFile:
+                return new C.CheckItemFileVersion();
+            case (short)ClientPacketIds.ExternalToolLogin:
+                return new C.ExternalToolLogin();
+            case (short)ClientPacketIds.ToolStats:
+                return new C.RequestStats();
+            case (short)ClientPacketIds.ReportCheat:
+                return new C.ReportCheat();
+            case (short)ClientPacketIds.AdjustGuildTax:
+                return new C.AdjustGuildTax();
+            case (short)ClientPacketIds.LMS_Signup:
+                return new C.BR_Signup();
+            case (short)ClientPacketIds.Get_LMS_BR:
+                return new C.Get_BR_Matches();
             default:
                 return null;
         }
@@ -5442,12 +6867,6 @@ public abstract class Packet
     {
         switch (index)
         {
-            case (short)ServerPacketIds.SetVIP:
-                return new S.SetVIP();
-            case (short)ServerPacketIds.SetCloverBuff:
-                return new S.SetCloverBuff();
-            case (short)ServerPacketIds.LogNotice:
-                return new S.UpdateLogNotice();
             case (short)ServerPacketIds.Connected:
                 return new S.Connected();
             case (short)ServerPacketIds.ClientVersion:
@@ -5481,11 +6900,15 @@ public abstract class Packet
             case (short)ServerPacketIds.StartGameBanned:
                 return new S.StartGameBanned();
             case (short)ServerPacketIds.StartGameDelay:
-                return new S.StartGameDelay();
+                return new S.StartGameDelay();       
             case (short)ServerPacketIds.MapInformation:
                 return new S.MapInformation();
             case (short)ServerPacketIds.UserInformation:
                 return new S.UserInformation();
+            case (short)ServerPacketIds.HeroInformation:
+                return new S.HeroInformation();
+            case (short)ServerPacketIds.HeroStats:
+                return new S.HeroStats();
             case (short)ServerPacketIds.UserLocation:
                 return new S.UserLocation();
             case (short)ServerPacketIds.ObjectPlayer:
@@ -5508,16 +6931,24 @@ public abstract class Packet
                 return new S.MoveItem();
             case (short)ServerPacketIds.EquipItem:
                 return new S.EquipItem();
+            case (short)ServerPacketIds.HeroEquipItem:
+                return new S.HeroEquipItem();
             case (short)ServerPacketIds.MergeItem:
                 return new S.MergeItem();
             case (short)ServerPacketIds.RemoveItem:
                 return new S.RemoveItem();
+            case (short)ServerPacketIds.HeroRemoveItem:
+                return new S.HeroRemoveItem();
             case (short)ServerPacketIds.RemoveSlotItem:
                 return new S.RemoveSlotItem();
             case (short)ServerPacketIds.TakeBackItem:
                 return new S.TakeBackItem();
+            case (short)ServerPacketIds.HeroInventoryToInventory:
+                return new S.HeroInventoryToInventory();
             case (short)ServerPacketIds.StoreItem:
                 return new S.StoreItem();
+            case (short)ServerPacketIds.InventoryToHeroInventory:
+                return new S.InventoryToHeroInventory();
             case (short)ServerPacketIds.DepositRefineItem:
                 return new S.DepositRefineItem();
             case (short)ServerPacketIds.RetrieveRefineItem:
@@ -5534,14 +6965,16 @@ public abstract class Packet
                 return new S.SplitItem1();
             case (short)ServerPacketIds.UseItem:
                 return new S.UseItem();
+            case (short)ServerPacketIds.HeroUseItem:
+                return new S.HeroUseItem();
             case (short)ServerPacketIds.DropItem:
                 return new S.DropItem();
-            case (short)ServerPacketIds.RefreshMagic:
-                return new S.RefreshMagic();
-            case (short)ServerPacketIds.RefreshStats:
-                return new S.RefreshStats();
             case (short)ServerPacketIds.PlayerUpdate:
                 return new S.PlayerUpdate();
+            case (short)ServerPacketIds.UpdateItemInfo:
+                return new S.UpdateItemInfo();
+            case (short)ServerPacketIds.RefreshStats:
+                return new S.RefreshStats();
             case (short)ServerPacketIds.PlayerInspect:
                 return new S.PlayerInspect();
             case (short)ServerPacketIds.LogOutSuccess:
@@ -5554,6 +6987,8 @@ public abstract class Packet
                 return new S.ChangeAMode();
             case (short)ServerPacketIds.ChangePMode:
                 return new S.ChangePMode();
+            case (short)ServerPacketIds.ChangeHMode:
+                return new S.ChangeHMode();
             case (short)ServerPacketIds.ObjectItem:
                 return new S.ObjectItem();
             case (short)ServerPacketIds.ObjectGold:
@@ -5582,6 +7017,10 @@ public abstract class Packet
                 return new S.DuraChanged();
             case (short)ServerPacketIds.HealthChanged:
                 return new S.HealthChanged();
+            case (short)ServerPacketIds.HeroHealthChanged:
+                return new S.HeroHealthChanged();
+            case (short)ServerPacketIds.HeroStatsChanged:
+                return new S.HeroStatsChanged();
             case (short)ServerPacketIds.DeleteItem:
                 return new S.DeleteItem();
             case (short)ServerPacketIds.Death:
@@ -5598,6 +7037,10 @@ public abstract class Packet
                 return new S.GainExperience();
             case (short)ServerPacketIds.LevelChanged:
                 return new S.LevelChanged();
+            case (short)ServerPacketIds.HeroGainExperience:
+                return new S.HeroGainExperience();
+            case (short)ServerPacketIds.HeroLevelChanged:
+                return new S.HeroLevelChanged();
             case (short)ServerPacketIds.ObjectLeveled:
                 return new S.ObjectLeveled();
             case (short)ServerPacketIds.ObjectHarvest:
@@ -5630,7 +7073,7 @@ public abstract class Packet
                 return new S.NPCSell();
             case (short)ServerPacketIds.NPCRepair:
                 return new S.NPCRepair();
-            case (short)ServerPacketIds.NPCSRepair:
+            case (short)ServerPacketIds.NPCSRepair: 
                 return new S.NPCSRepair();
             case (short)ServerPacketIds.NPCRefine:
                 return new S.NPCRefine();
@@ -5644,16 +7087,20 @@ public abstract class Packet
                 return new S.NPCStorage();
             case (short)ServerPacketIds.SellItem:
                 return new S.SellItem();
-            case (short)ServerPacketIds.CraftItem:
-                return new S.CraftItem();
             case (short)ServerPacketIds.RepairItem:
                 return new S.RepairItem();
             case (short)ServerPacketIds.ItemRepaired:
                 return new S.ItemRepaired();
             case (short)ServerPacketIds.NewMagic:
                 return new S.NewMagic();
+            case (short)ServerPacketIds.RefreshMagic:
+                return new S.RefreshMagic();
+            case (short)ServerPacketIds.HeroNewMagic:
+                return new S.HeroNewMagic();
             case (short)ServerPacketIds.MagicLeveled:
                 return new S.MagicLeveled();
+            case (short)ServerPacketIds.HeroMagicLeveled:
+                return new S.HeroMagicLeveled();
             case (short)ServerPacketIds.Magic:
                 return new S.Magic();
             case (short)ServerPacketIds.MagicDelay:
@@ -5720,6 +7167,8 @@ public abstract class Packet
                 return new S.NPCMarket();
             case (short)ServerPacketIds.NPCMarketPage:
                 return new S.NPCMarketPage();
+            case (short)ServerPacketIds.GuildTerritoryPage:
+                return new S.GuildTerritoryPage();
             case (short)ServerPacketIds.ConsignItem:
                 return new S.ConsignItem();
             case (short)ServerPacketIds.MarketFail:
@@ -5798,6 +7247,8 @@ public abstract class Packet
                 return new S.ShareQuest();
             case (short)ServerPacketIds.NewQuestInfo:
                 return new S.NewQuestInfo();
+            case (short)ServerPacketIds.RefreshQuestInfo:
+                return new S.RefreshQuestInfo();
             case (short)ServerPacketIds.GainedQuestItem:
                 return new S.GainedQuestItem();
             case (short)ServerPacketIds.DeleteQuestItem:
@@ -5840,7 +7291,7 @@ public abstract class Packet
                 return new S.SetBindingShot();
             case (short)ServerPacketIds.SendOutputMessage:
                 return new S.SendOutputMessage();
-            case (short)ServerPacketIds.NPCAwakening:
+			case (short)ServerPacketIds.NPCAwakening:
                 return new S.NPCAwakening();
             case (short)ServerPacketIds.NPCDisassemble:
                 return new S.NPCDisassemble();
@@ -5866,6 +7317,12 @@ public abstract class Packet
                 return new S.ParcelCollected();
             case (short)ServerPacketIds.MailCost:
                 return new S.MailCost();
+			case (short)ServerPacketIds.ResizeHeroInventory:
+                return new S.ResizeHeroInventory();
+            case (short)ServerPacketIds.ComboHero:
+                return new S.ComboHero();
+            case (short)ServerPacketIds.ComboStance:
+                return new S.ComboStance();
             case (short)ServerPacketIds.ResizeInventory:
                 return new S.ResizeInventory();
             case (short)ServerPacketIds.ResizeStorage:
@@ -5882,6 +7339,18 @@ public abstract class Packet
                 return new S.NPCPearlGoods();
             case (short)ServerPacketIds.FriendUpdate:
                 return new S.FriendUpdate();
+            case (short)ServerPacketIds.SetVIP:
+                return new S.SetVIP();
+            case (short)ServerPacketIds.SetHumUp:
+                return new S.SetHumUp();
+            case (short)ServerPacketIds.SetAutoPot:
+                return new S.SetAutoPot();
+            case (short)ServerPacketIds.SetHero:
+                return new S.SetHero();
+            case (short)ServerPacketIds.SetHeroSpawned:
+                return new S.SetHeroSpawned();
+            case (short)ServerPacketIds.SetHeroLocked:
+                return new S.SetHeroLocked();
             case (short)ServerPacketIds.LoverUpdate:
                 return new S.LoverUpdate();
             case (short)ServerPacketIds.MentorUpdate:
@@ -5890,6 +7359,10 @@ public abstract class Packet
                 return new S.GuildBuffList();
             case (short)ServerPacketIds.GameShopInfo:
                 return new S.GameShopInfo();
+            case (short)ServerPacketIds.HeroStashInfo:
+                return new S.HeroStashInfo();
+            case (short)ServerPacketIds.HeroStashActivate:
+                return new S.HeroStashActivate();
             case (short)ServerPacketIds.GameShopStock:
                 return new S.GameShopStock();
             case (short)ServerPacketIds.NPCRequestInput:
@@ -5898,43 +7371,376 @@ public abstract class Packet
                 return new S.Rankings();
             case (short)ServerPacketIds.Opendoor:
                 return new S.Opendoor();
-            case (short)ServerPacketIds.GetRentedItems:
-                return new S.GetRentedItems();
-            case (short)ServerPacketIds.ItemRentalRequest:
-                return new S.ItemRentalRequest();
-            case (short)ServerPacketIds.ItemRentalFee:
-                return new S.ItemRentalFee();
-            case (short)ServerPacketIds.ItemRentalPeriod:
-                return new S.ItemRentalPeriod();
-            case (short)ServerPacketIds.DepositRentalItem:
-                return new S.DepositRentalItem();
-            case (short)ServerPacketIds.RetrieveRentalItem:
-                return new S.RetrieveRentalItem();
-            case (short)ServerPacketIds.UpdateRentalItem:
-                return new S.UpdateRentalItem();
-            case (short)ServerPacketIds.CancelItemRental:
-                return new S.CancelItemRental();
-            case (short)ServerPacketIds.ItemRentalLock:
-                return new S.ItemRentalLock();
-            case (short)ServerPacketIds.ItemRentalPartnerLock:
-                return new S.ItemRentalPartnerLock();
-            case (short)ServerPacketIds.CanConfirmItemRental:
-                return new S.CanConfirmItemRental();
-            case (short)ServerPacketIds.ConfirmItemRental:
-                return new S.ConfirmItemRental();
-            case (short)ServerPacketIds.NewRecipeInfo:
-                return new S.NewRecipeInfo();
+            case (short)ServerPacketIds.MobHealthChanged:
+                return new S.MobHealthChanged();
+            case (short)ServerPacketIds.Crafting:
+                return new S.Crafting();
+            case (short)ServerPacketIds.UpdatePlayerRecipes:
+                return new S.UpdatePlayerRecipes();
+            case (short)ServerPacketIds.GainShieldExperience:
+                return new S.GainShieldEXP();
+            case (short)ServerPacketIds.ItemGainLevel:
+                return new S.ItemGainLevel();
+            case (short)ServerPacketIds.CreateHero:
+                return new S.HeroCreation();
+            case (short)ServerPacketIds.RecipieShopContents:
+                return new S.RecipieShopContents();
+            case (short)ServerPacketIds.PurchaseResult:
+                return new S.PurchaseResult();
+            case (short)ServerPacketIds.EESocketDisplay:
+                return new S.GetSocketInfo();
+            case (short)ServerPacketIds.EERuneSocketResult:
+                return new S.AddRuneResult();
+            case (short)ServerPacketIds.EEOpenSocketDialog:
+                return new S.OpenSocketDialog();
+            case (short)ServerPacketIds.EERemoveRune:
+                return new S.RemoveRune();
+            case (short)ServerPacketIds.EEHeroRank:
+                return new S.HeroRanking();
+            case (short)ServerPacketIds.EEOpenGuildBoardDialog:
+                return new S.OpenGuildBoardDialog();
+            case (short)ServerPacketIds.OpenRankDialog:
+                return new S.OpenRankDialog();
+            case (short)ServerPacketIds.OpenHeroRankDialog:
+                return new S.OpenHeroRankDialog();
+            case (short)ServerPacketIds.LogNotice:
+                return new S.UpdateLogNotice();
+            case (short)ServerPacketIds.EEClientCompletedQuests:
+                return new S.ClientCompletedQuests();
+            case (short)ServerPacketIds.EEClientAvailableQuests:
+                return new S.ClientAvaileQuests();
+            case (short)ServerPacketIds.ItemInfoList:
+                return new S.ItemInfoList();
+            case (short)ServerPacketIds.RefreshHeroCap:
+                return new S.RefreshHeroCap();
+            case (short)ServerPacketIds.LeavePublicEvent:
+                return new S.LeavePublicEvent();
+            case (short)ServerPacketIds.ActivateEvent:
+                return new S.ActivateEvent();
+            case (short)ServerPacketIds.DeactivateEvent:
+                return new S.DeactivateEvent();
+            case (short)ServerPacketIds.EnterPublicEvent:
+                return new S.EnterOrUpdatePublicEvent();
+            case (short)ServerPacketIds.HelmetChange:
+                return new S.UpdateHelmet();
+            case (short)ServerPacketIds.ToggleBuff:
+                return new S.ToggleBuff();
+            case (short)ServerPacketIds.ExternalToolLogin:
+                return new S.ExternalToolLogin();
+            case (short)ServerPacketIds.ToolStats:
+                return new S.ToolStats();
+            case (short)ServerPacketIds.ToolPlayerList:
+                return new S.ToolPlayerList();
+            case (short)ServerPacketIds.BRList:
+                return new S.LMS_BRs();
+            case (short)ServerPacketIds.LMSDialog:
+                return new S.OpenLMSDialog();
+            case (short)ServerPacketIds.BigMapQuestLocations:
+                return new S.BigMapQuestLocations();
             default:
                 return null;
         }
     }
 }
 
+public class ShieldUpgradeConfig
+{
+    public byte MinDC, MedDC, MaxDC, MinDCRate, MedDCRate, MaxDCRate;
+    public byte MinMC, MedMC, MaxMC, MinMCRate, MedMCRate, MaxMCRate;
+    public byte MinSC, MedSC, MaxSC, MinSCRate, MedSCRate, MaxSCRate;
+    public byte MinAC, MedAC, MaxAC, MinACRate, MedACRate, MaxACRate;
+    public byte MinAMC, MedAMC, MaxAMC, MinAMCRate, MedAMCRate, MaxAMCRate;
+    public byte MinHP, MedHP, MaxHP, MinHPRate, MedHPRate, MaxHPRate;
+    public byte MinMP, MedMP, MaxMP, MinMPRate, MedMPRate, MaxMPRate;
+    public byte MinAcc, MedAcc, MaxAcc, MinAccRate, MedAccRate, MaxAccRate;
+    public byte MinAgil, MedAgil, MaxAgil, MinAgilRate, MedAgilRate, MaxAgilRate;
+    public byte MinCrit, MedCrit, MaxCrit, MinCritRate, MedCritRate, MaxCritRate;
+    public byte MinCritDmg, MedCritDmg, MaxCritDmg, MinCritDmgRate, MedCritDmgRate, MaxCritDmgRate;
+
+    public ShieldUpgradeConfig(ItemGrade Grade)
+    {
+        switch (Grade)
+        {
+            case ItemGrade.Common:
+                MinDC = 0;
+                MedDC = 0;
+                MaxDC = 0;
+                MinDCRate = 0;
+                MedDCRate = 0;
+                MaxDCRate = 0;
+                MinMC = 0;
+                MedMC = 0;
+                MaxMC = 0;
+                MinMCRate = 0;
+                MedMCRate = 0;
+                MaxMCRate = 0;
+                MinSC = 0;
+                MedSC = 0;
+                MaxSC = 0;
+                MinSCRate = 0;
+                MedSCRate = 0;
+                MaxSCRate = 0;
+                MinAC = 0;
+                MedAC = 0;
+                MaxAC = 0;
+                MinACRate = 0;
+                MedACRate = 0;
+                MaxACRate = 0;
+                MinAMC = 0;
+                MedAMC = 0;
+                MaxAMC = 0;
+                MinAMCRate = 0;
+                MedAMCRate = 0;
+                MaxAMCRate = 0;
+                MinHP = 0;
+                MedHP = 0;
+                MaxHP = 0;
+                MinHPRate = 0;
+                MedHPRate = 0;
+                MaxHPRate = 0;
+                MinMP = 0;
+                MedMP = 0;
+                MaxMP = 0;
+                MinMPRate = 0;
+                MedMPRate = 0;
+                MaxMPRate = 0;
+                MinAcc = 0;
+                MedAcc = 0;
+                MaxAcc = 0;
+                MinAccRate = 0;
+                MedAccRate = 0;
+                MaxAccRate = 0;
+                MinAgil = 0;
+                MedAgil = 0;
+                MaxAgil = 0;
+                MinAgilRate = 0;
+                MedAgilRate = 0;
+                MaxAgilRate = 0;
+                MinCrit = 0;
+                MedCrit = 0;
+                MaxCrit = 0;
+                MinCritRate = 0;
+                MedCritRate = 0;
+                MaxCritRate = 0;
+                MinCritDmg = 0;
+                MedCritDmg = 0;
+                MaxCritDmg = 0;
+                MinCritDmgRate = 0;
+                MedCritDmgRate = 0;
+                MaxCritDmgRate = 0;
+                break;
+            case ItemGrade.Rare:
+                MinDC = 0;
+                MedDC = 0;
+                MaxDC = 0;
+                MinDCRate = 0;
+                MedDCRate = 0;
+                MaxDCRate = 0;
+                MinMC = 0;
+                MedMC = 0;
+                MaxMC = 0;
+                MinMCRate = 0;
+                MedMCRate = 0;
+                MaxMCRate = 0;
+                MinSC = 0;
+                MedSC = 0;
+                MaxSC = 0;
+                MinSCRate = 0;
+                MedSCRate = 0;
+                MaxSCRate = 0;
+                MinAC = 0;
+                MedAC = 0;
+                MaxAC = 0;
+                MinACRate = 0;
+                MedACRate = 0;
+                MaxACRate = 0;
+                MinAMC = 0;
+                MedAMC = 0;
+                MaxAMC = 0;
+                MinAMCRate = 0;
+                MedAMCRate = 0;
+                MaxAMCRate = 0;
+                MinHP = 0;
+                MedHP = 0;
+                MaxHP = 0;
+                MinHPRate = 0;
+                MedHPRate = 0;
+                MaxHPRate = 0;
+                MinMP = 0;
+                MedMP = 0;
+                MaxMP = 0;
+                MinMPRate = 0;
+                MedMPRate = 0;
+                MaxMPRate = 0;
+                MinAcc = 0;
+                MedAcc = 0;
+                MaxAcc = 0;
+                MinAccRate = 0;
+                MedAccRate = 0;
+                MaxAccRate = 0;
+                MinAgil = 0;
+                MedAgil = 0;
+                MaxAgil = 0;
+                MinAgilRate = 0;
+                MedAgilRate = 0;
+                MaxAgilRate = 0;
+                MinCrit = 0;
+                MedCrit = 0;
+                MaxCrit = 0;
+                MinCritRate = 0;
+                MedCritRate = 0;
+                MaxCritRate = 0;
+                MinCritDmg = 0;
+                MedCritDmg = 0;
+                MaxCritDmg = 0;
+                MinCritDmgRate = 0;
+                MedCritDmgRate = 0;
+                MaxCritDmgRate = 0;
+                break;
+            case ItemGrade.Legendary:
+                MinDC = 0;
+                MedDC = 0;
+                MaxDC = 0;
+                MinDCRate = 0;
+                MedDCRate = 0;
+                MaxDCRate = 0;
+                MinMC = 0;
+                MedMC = 0;
+                MaxMC = 0;
+                MinMCRate = 0;
+                MedMCRate = 0;
+                MaxMCRate = 0;
+                MinSC = 0;
+                MedSC = 0;
+                MaxSC = 0;
+                MinSCRate = 0;
+                MedSCRate = 0;
+                MaxSCRate = 0;
+                MinAC = 0;
+                MedAC = 0;
+                MaxAC = 0;
+                MinACRate = 0;
+                MedACRate = 0;
+                MaxACRate = 0;
+                MinAMC = 0;
+                MedAMC = 0;
+                MaxAMC = 0;
+                MinAMCRate = 0;
+                MedAMCRate = 0;
+                MaxAMCRate = 0;
+                MinHP = 0;
+                MedHP = 0;
+                MaxHP = 0;
+                MinHPRate = 0;
+                MedHPRate = 0;
+                MaxHPRate = 0;
+                MinMP = 0;
+                MedMP = 0;
+                MaxMP = 0;
+                MinMPRate = 0;
+                MedMPRate = 0;
+                MaxMPRate = 0;
+                MinAcc = 0;
+                MedAcc = 0;
+                MaxAcc = 0;
+                MinAccRate = 0;
+                MedAccRate = 0;
+                MaxAccRate = 0;
+                MinAgil = 0;
+                MedAgil = 0;
+                MaxAgil = 0;
+                MinAgilRate = 0;
+                MedAgilRate = 0;
+                MaxAgilRate = 0;
+                MinCrit = 0;
+                MedCrit = 0;
+                MaxCrit = 0;
+                MinCritRate = 0;
+                MedCritRate = 0;
+                MaxCritRate = 0;
+                MinCritDmg = 0;
+                MedCritDmg = 0;
+                MaxCritDmg = 0;
+                MinCritDmgRate = 0;
+                MedCritDmgRate = 0;
+                MaxCritDmgRate = 0;
+                break;
+            case ItemGrade.Mythical:
+                MinDC = 0;
+                MedDC = 0;
+                MaxDC = 0;
+                MinDCRate = 0;
+                MedDCRate = 0;
+                MaxDCRate = 0;
+                MinMC = 0;
+                MedMC = 0;
+                MaxMC = 0;
+                MinMCRate = 0;
+                MedMCRate = 0;
+                MaxMCRate = 0;
+                MinSC = 0;
+                MedSC = 0;
+                MaxSC = 0;
+                MinSCRate = 0;
+                MedSCRate = 0;
+                MaxSCRate = 0;
+                MinAC = 0;
+                MedAC = 0;
+                MaxAC = 0;
+                MinACRate = 0;
+                MedACRate = 0;
+                MaxACRate = 0;
+                MinAMC = 0;
+                MedAMC = 0;
+                MaxAMC = 0;
+                MinAMCRate = 0;
+                MedAMCRate = 0;
+                MaxAMCRate = 0;
+                MinHP = 0;
+                MedHP = 0;
+                MaxHP = 0;
+                MinHPRate = 0;
+                MedHPRate = 0;
+                MaxHPRate = 0;
+                MinMP = 0;
+                MedMP = 0;
+                MaxMP = 0;
+                MinMPRate = 0;
+                MedMPRate = 0;
+                MaxMPRate = 0;
+                MinAcc = 0;
+                MedAcc = 0;
+                MaxAcc = 0;
+                MinAccRate = 0;
+                MedAccRate = 0;
+                MaxAccRate = 0;
+                MinAgil = 0;
+                MedAgil = 0;
+                MaxAgil = 0;
+                MinAgilRate = 0;
+                MedAgilRate = 0;
+                MaxAgilRate = 0;
+                MinCrit = 0;
+                MedCrit = 0;
+                MaxCrit = 0;
+                MinCritRate = 0;
+                MedCritRate = 0;
+                MaxCritRate = 0;
+                MinCritDmg = 0;
+                MedCritDmg = 0;
+                MaxCritDmg = 0;
+                MinCritDmgRate = 0;
+                MedCritDmgRate = 0;
+                MaxCritDmgRate = 0;
+                break;
+        }  
+    }
+}
+
 public class BaseStats
 {
     public float HpGain, HpGainRate, MpGainRate, BagWeightGain, WearWeightGain, HandWeightGain;
-    public ushort MinAc, MaxAc, MinMac, MaxMac, MinDc, MaxDc, MinMc, MaxMc, MinSc, MaxSc;
-    public byte StartAgility, StartAccuracy, StartCriticalRate, StartCriticalDamage, CritialRateGain, CriticalDamageGain;
+    public byte MinAc, MaxAc, MinMac, MaxMac, MinDc, MaxDc, MinMc, MaxMc, MinSc, MaxSc, StartAgility, StartAccuracy, StartCriticalRate, StartCriticalDamage, CritialRateGain, CriticalDamageGain;
 
     public BaseStats(MirClass Job)
     {
@@ -6040,7 +7846,7 @@ public class BaseStats
                 HpGain = 4F;
                 HpGainRate = 3.25F;
                 MpGainRate = 0;
-                BagWeightGain = 4F; //done
+                BagWeightGain = 4F;
                 WearWeightGain = 33F;
                 HandWeightGain = 30F;
                 MinAc = 0;
@@ -6067,16 +7873,16 @@ public class BaseStats
         HpGain = reader.ReadSingle();
         HpGainRate = reader.ReadSingle();
         MpGainRate = reader.ReadSingle();
-        MinAc = reader.ReadUInt16();
-        MaxAc = reader.ReadUInt16();
-        MinMac = reader.ReadUInt16();
-        MaxMac = reader.ReadUInt16();
-        MinDc = reader.ReadUInt16();
-        MaxDc = reader.ReadUInt16();
-        MinMc = reader.ReadUInt16();
-        MaxMc = reader.ReadUInt16();
-        MinSc = reader.ReadUInt16();
-        MaxSc = reader.ReadUInt16();
+        MinAc = reader.ReadByte();
+        MaxAc = reader.ReadByte();
+        MinMac = reader.ReadByte();
+        MaxMac = reader.ReadByte();
+        MinDc = reader.ReadByte();
+        MaxDc = reader.ReadByte();
+        MinMc = reader.ReadByte();
+        MaxMc = reader.ReadByte();
+        MinSc = reader.ReadByte();
+        MaxSc = reader.ReadByte();
         StartAccuracy = reader.ReadByte();
         StartAgility = reader.ReadByte();
         StartCriticalRate = reader.ReadByte();
@@ -6151,7 +7957,7 @@ public class RandomItemStat
                 break;
             case ItemType.Ring:
                 SetRing();
-                break;
+                break; 
             case ItemType.Mount:
                 SetMount();
                 break;
@@ -6163,7 +7969,7 @@ public class RandomItemStat
         MaxDuraChance = 2;
         MaxDuraStatChance = 13;
         MaxDuraMaxStat = 13;
-
+        
         MaxDcChance = 15;
         MaxDcStatChance = 15;
         MaxDcMaxStat = 13;
@@ -6179,7 +7985,7 @@ public class RandomItemStat
         AttackSpeedChance = 60;
         AttackSpeedStatChance = 30;
         AttackSpeedMaxStat = 3;
-
+        
         StrongChance = 24;
         StrongStatChance = 20;
         StrongMaxStat = 2;
@@ -6306,7 +8112,7 @@ public class RandomItemStat
         MaxAcChance = 20;
         MaxAcStatChance = 30;
         MaxAcMaxStat = 6;
-        
+
         MaxMacChance = 20;
         MaxMacStatChance = 30;
         MaxMacMaxStat = 6;
@@ -6332,7 +8138,7 @@ public class RandomItemStat
         MaxAcChance = 25;
         MaxAcStatChance = 20;
         MaxAcMaxStat = 6;
-        
+
         MaxMacChance = 25;
         MaxMacStatChance = 20;
         MaxMacMaxStat = 6;
@@ -6356,10 +8162,44 @@ public class RandomItemStat
     }
 }
 
+public class GTMap
+{
+    public int index;
+    public string Name;
+    public string Owner;
+    public string Leader;
+    public int price;
+    public int days;
+
+    public GTMap()
+    {
+
+    }
+
+    public GTMap(BinaryReader reader)
+    {
+        index = reader.ReadInt32();
+        Name = reader.ReadString();
+        Owner = reader.ReadString();
+        Leader = reader.ReadString();
+        price = reader.ReadInt32();
+        days = reader.ReadInt32();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(index);
+        writer.Write(Name);
+        writer.Write(Owner);
+        writer.Write(Leader);
+        writer.Write(price);
+        writer.Write(days);
+    }
+
+}
+
 public class ChatItem
 {
-    public long RecievedTick = 0;
-    public ulong ID = 0;
     public UserItem ItemStats;
 }
 
@@ -6413,14 +8253,7 @@ public class ItemSets
                 case ItemSet.Oppressive:
                 case ItemSet.Paeok:
                 case ItemSet.Sulgwan:
-                case ItemSet.BlueMir:
-                case ItemSet.DarkMir:
-                case ItemSet.GreenMir:
-                case ItemSet.GoldMir:
-                case ItemSet.PurpleMir:
-                case ItemSet.RedMir:
-                case ItemSet.SilverMir:
-                case ItemSet.YellowMir:
+                case ItemSet.BlueFrost:
                     return 5;
                 default:
                     return 0;
@@ -6457,14 +8290,14 @@ public class MineSet
         {
             case 1:
                 TotalSlots = 120;
-                Drops.Add(new MineDrop() { ItemName = "GoldOre", MinSlot = 1, MaxSlot = 2, MinDura = 3, MaxDura = 16, BonusChance = 20, MaxBonusDura = 10 });
+                Drops.Add(new MineDrop(){ItemName = "GoldOre", MinSlot = 1, MaxSlot = 2, MinDura = 3, MaxDura = 16, BonusChance = 20, MaxBonusDura = 10});
                 Drops.Add(new MineDrop() { ItemName = "SilverOre", MinSlot = 3, MaxSlot = 20, MinDura = 3, MaxDura = 16, BonusChance = 20, MaxBonusDura = 10 });
                 Drops.Add(new MineDrop() { ItemName = "CopperOre", MinSlot = 21, MaxSlot = 45, MinDura = 3, MaxDura = 16, BonusChance = 20, MaxBonusDura = 10 });
                 Drops.Add(new MineDrop() { ItemName = "BlackIronOre", MinSlot = 46, MaxSlot = 56, MinDura = 3, MaxDura = 16, BonusChance = 20, MaxBonusDura = 10 });
                 break;
             case 2:
                 TotalSlots = 100;
-                Drops.Add(new MineDrop() { ItemName = "PlatinumOre", MinSlot = 1, MaxSlot = 2, MinDura = 3, MaxDura = 16, BonusChance = 20, MaxBonusDura = 10 });
+                Drops.Add(new MineDrop(){ItemName = "PlatinumOre", MinSlot = 1, MaxSlot = 2, MinDura = 3, MaxDura = 16, BonusChance = 20, MaxBonusDura = 10});
                 Drops.Add(new MineDrop() { ItemName = "RubyOre", MinSlot = 3, MaxSlot = 20, MinDura = 3, MaxDura = 16, BonusChance = 20, MaxBonusDura = 10 });
                 Drops.Add(new MineDrop() { ItemName = "NephriteOre", MinSlot = 21, MaxSlot = 45, MinDura = 3, MaxDura = 16, BonusChance = 20, MaxBonusDura = 10 });
                 Drops.Add(new MineDrop() { ItemName = "AmethystOre", MinSlot = 46, MaxSlot = 56, MinDura = 3, MaxDura = 16, BonusChance = 20, MaxBonusDura = 10 });
@@ -6552,11 +8385,11 @@ public class Rank
     public List<GuildMember> Members = new List<GuildMember>();
     public string Name = "";
     public int Index = 0;
-    public RankOptions Options = (RankOptions)0;
-    public Rank()
+    public RankOptions Options = 0;
+    public Rank() 
     {
     }
-    public Rank(BinaryReader reader, bool Offline = false)
+    public Rank(BinaryReader reader, bool Offline = false, int version = int.MaxValue)
     {
         Name = reader.ReadString();
         Options = (RankOptions)reader.ReadByte();
@@ -6590,7 +8423,7 @@ public class GuildStorageItem
         Item = new UserItem(reader);
         UserId = reader.ReadInt64();
     }
-    public void save(BinaryWriter writer)
+    public void Save(BinaryWriter writer)
     {
         Item.Save(writer);
         writer.Write(UserId);
@@ -6607,7 +8440,7 @@ public class GuildMember
     public bool Online;
 
     public GuildMember()
-    { }
+    {}
     public GuildMember(BinaryReader reader, bool Offline = false)
     {
         name = reader.ReadString();
@@ -6615,7 +8448,7 @@ public class GuildMember
         LastLogin = DateTime.FromBinary(reader.ReadInt64());
         hasvoted = reader.ReadBoolean();
         Online = reader.ReadBoolean();
-        Online = Offline ? false : Online;
+        Online = Offline ? false: Online;
     }
     public void save(BinaryWriter writer)
     {
@@ -6656,8 +8489,8 @@ public class GuildBuffInfo
     public byte BuffMc;
     public byte BuffSc;
     public byte BuffAttack;
-    public int BuffMaxHp;
-    public int BuffMaxMp;
+    public int  BuffMaxHp;
+    public int  BuffMaxMp;
     public byte BuffMineRate;
     public byte BuffGemRate;
     public byte BuffFishRate;
@@ -6666,7 +8499,7 @@ public class GuildBuffInfo
     public byte BuffSkillRate;
     public byte BuffHpRegen;
     public byte BuffMPRegen;
-
+    
     public byte BuffDropRate;
     public byte BuffGoldRate;
 
@@ -6706,31 +8539,31 @@ public class GuildBuffInfo
 
     public GuildBuffInfo(InIReader reader, int i)
     {
-        Id = reader.ReadInt32("Buff-" + i.ToString(), "Id", 0);
+        Id  = reader.ReadInt32("Buff-" + i.ToString(), "Id",0);
         Icon = reader.ReadInt32("Buff-" + i.ToString(), "Icon", 0);
-        name = reader.ReadString("Buff-" + i.ToString(), "Name", "");
-        LevelRequirement = reader.ReadByte("Buff-" + i.ToString(), "LevelReq", 0);
-        PointsRequirement = reader.ReadByte("Buff-" + i.ToString(), "PointsReq", 1);
-        TimeLimit = reader.ReadInt32("Buff-" + i.ToString(), "TimeLimit", 0); ;
-        ActivationCost = reader.ReadInt32("Buff-" + i.ToString(), "ActivationCost", 0);
-        BuffAc = reader.ReadByte("Buff-" + i.ToString(), "BuffAc", 0);
-        BuffMac = reader.ReadByte("Buff-" + i.ToString(), "BuffMAC", 0);
-        BuffDc = reader.ReadByte("Buff-" + i.ToString(), "BuffDc", 0);
-        BuffMc = reader.ReadByte("Buff-" + i.ToString(), "BuffMc", 0);
-        BuffSc = reader.ReadByte("Buff-" + i.ToString(), "BuffSc", 0);
-        BuffMaxHp = reader.ReadInt32("Buff-" + i.ToString(), "BuffMaxHp", 0);
-        BuffMaxMp = reader.ReadInt32("Buff-" + i.ToString(), "BuffMaxMp", 0);
-        BuffMineRate = reader.ReadByte("Buff-" + i.ToString(), "BuffMineRate", 0);
-        BuffGemRate = reader.ReadByte("Buff-" + i.ToString(), "BuffGemRate", 0);
-        BuffFishRate = reader.ReadByte("Buff-" + i.ToString(), "BuffFishRate", 0);
-        BuffExpRate = reader.ReadByte("Buff-" + i.ToString(), "BuffExpRate", 0);
-        BuffCraftRate = reader.ReadByte("Buff-" + i.ToString(), "BuffCraftRate", 0);
-        BuffSkillRate = reader.ReadByte("Buff-" + i.ToString(), "BuffSkillRate", 0);
-        BuffHpRegen = reader.ReadByte("Buff-" + i.ToString(), "BuffHpRegen", 0);
-        BuffMPRegen = reader.ReadByte("Buff-" + i.ToString(), "BuffMpRegen", 0);
-        BuffAttack = reader.ReadByte("Buff-" + i.ToString(), "BuffAttack", 0);
-        BuffDropRate = reader.ReadByte("Buff-" + i.ToString(), "BuffDropRate", 0);
-        BuffGoldRate = reader.ReadByte("Buff-" + i.ToString(), "BuffGoldRate", 0);
+        name = reader.ReadString("Buff-" + i.ToString(), "Name","");
+        LevelRequirement = reader.ReadByte("Buff-" + i.ToString(), "LevelReq",0);
+        PointsRequirement = reader.ReadByte("Buff-" + i.ToString(), "PointsReq",1);
+        TimeLimit = reader.ReadInt32("Buff-" + i.ToString(), "TimeLimit",0);;
+        ActivationCost = reader.ReadInt32("Buff-" + i.ToString(), "ActivationCost",0);
+        BuffAc = reader.ReadByte("Buff-" + i.ToString(), "BuffAc",0);
+        BuffMac = reader.ReadByte("Buff-" + i.ToString(), "BuffMAC",0);
+        BuffDc = reader.ReadByte("Buff-" + i.ToString(), "BuffDc",0);
+        BuffMc = reader.ReadByte("Buff-" + i.ToString(), "BuffMc",0);
+        BuffSc = reader.ReadByte("Buff-" + i.ToString(), "BuffSc",0);
+        BuffMaxHp = reader.ReadInt32("Buff-" + i.ToString(), "BuffMaxHp",0);
+        BuffMaxMp = reader.ReadInt32("Buff-" + i.ToString(), "BuffMaxMp",0);
+        BuffMineRate = reader.ReadByte("Buff-" + i.ToString(), "BuffMineRate",0);
+        BuffGemRate = reader.ReadByte("Buff-" + i.ToString(), "BuffGemRate",0);
+        BuffFishRate = reader.ReadByte("Buff-" + i.ToString(), "BuffFishRate",0);
+        BuffExpRate = reader.ReadByte("Buff-" + i.ToString(), "BuffExpRate",0);
+        BuffCraftRate = reader.ReadByte("Buff-" + i.ToString(), "BuffCraftRate",0);
+        BuffSkillRate = reader.ReadByte("Buff-" + i.ToString(), "BuffSkillRate",0);
+        BuffHpRegen = reader.ReadByte("Buff-" + i.ToString(), "BuffHpRegen",0);
+        BuffMPRegen = reader.ReadByte("Buff-" + i.ToString(), "BuffMpRegen",0);
+        BuffAttack = reader.ReadByte("Buff-" + i.ToString(), "BuffAttack",0);
+        BuffDropRate = reader.ReadByte("Buff-" + i.ToString(), "BuffDropRate",0);
+        BuffGoldRate = reader.ReadByte("Buff-" + i.ToString(), "BuffGoldRate",0);
     }
 
     public void Save(InIReader reader, int i)
@@ -6863,7 +8696,7 @@ public class GuildBuffInfo
         }
         if (BuffExpRate > 0)
         {
-            text += string.Format("Increases Experience {0}%.", BuffExpRate);
+            text += string.Format("Increases Experience by: {0}%.", BuffExpRate);
             if (text != "") text += "\n";
         }
         if (BuffCraftRate > 0)
@@ -6873,7 +8706,7 @@ public class GuildBuffInfo
         }
         if (BuffSkillRate > 0)
         {
-            text += string.Format("Increases Skill training +{0}.", BuffSkillRate);
+            text += string.Format("Increases Skill training by: {0}.", BuffSkillRate);
             if (text != "") text += "\n";
         }
         if (BuffAttack > 0)
@@ -6888,7 +8721,7 @@ public class GuildBuffInfo
         }
         if (BuffGoldRate > 0)
         {
-            text += string.Format("Goldrate increased by: {0}%.", BuffGoldRate);
+            text += string.Format("Goldrate increased by: 0-{0}.", BuffGoldRate);
             if (text != "") text += "\n";
         }
 
@@ -6945,7 +8778,7 @@ public class GuildBuff
 
         return answer;
     }
-
+    
     public string ShowStats()
     {
         if (Info == null) return "";
@@ -6990,7 +8823,6 @@ public class Rank_Character_Info
         Name = reader.ReadString();
         level = reader.ReadInt32();
         Class = (MirClass)reader.ReadByte();
-
     }
     public void Save(BinaryWriter writer)
     {
@@ -7012,61 +8844,905 @@ public class Door
     public Point Location;
 }
 
-public class ItemRentalInformation
+public static class Ext
 {
-    public ulong ItemId;
-    public string ItemName;
-    public string RentingPlayerName;
-    public DateTime ItemReturnDate;
-
-    public ItemRentalInformation()
-    { }
-
-    public ItemRentalInformation(BinaryReader reader)
+    public static bool In<T>(this T val, params T[] values) where T : struct
     {
-        ItemId = reader.ReadUInt64();
-        ItemName = reader.ReadString();
-        RentingPlayerName = reader.ReadString();
-        ItemReturnDate = DateTime.FromBinary(reader.ReadInt64());
-    }
-
-    public void Save(BinaryWriter writer)
-    {
-        writer.Write(ItemId);
-        writer.Write(ItemName);
-        writer.Write(RentingPlayerName);
-        writer.Write(ItemReturnDate.ToBinary());
+        return values.Contains(val);
     }
 }
-public class ClientRecipeInfo
-{
-    public UserItem Item;
-    public List<UserItem> Ingredients = new List<UserItem>();
 
-    public ClientRecipeInfo()
+#region RecipeShop Pete107 - IceMan
+public class RecipeShopForClient
+{
+    public int Index;
+    public UserItem ItemBeingSold;
+
+    //  Important, ensure the price is >= to the set price on the actual item or people will exploit it no matter how little profit
+    public uint ItemPrice;
+
+    public RecipeShopForClient()
     {
 
     }
 
-    public ClientRecipeInfo(BinaryReader reader)
+    public RecipeShopForClient(BinaryReader reader)
     {
-        Item = new UserItem(reader);
-
-        int count = reader.ReadInt32();
-        for (int i = 0; i < count; i++)
+        Index = reader.ReadInt32();
+        //  Check if an Item was Saved
+        bool hasItem = reader.ReadBoolean();
+        if (hasItem)
         {
-            Ingredients.Add(new UserItem(reader));
+            //  Item was Saved so load it
+            ItemBeingSold = new UserItem(reader);
+            //  Set the price
+            ItemPrice = reader.ReadUInt32();
+
         }
     }
 
     public void Save(BinaryWriter writer)
     {
-        Item.Save(writer);
-
-        writer.Write(Ingredients.Count);
-        foreach (var ingredient in Ingredients)
+        writer.Write(Index);
+        //  Save true if the item is Valid other wise it'll be false
+        writer.Write(ItemBeingSold != null ? true : false);
+        if (ItemBeingSold != null)
         {
-            ingredient.Save(writer);
+            //  Save the item
+            ItemBeingSold.Save(writer);
+            //  Save the Price
+            writer.Write(ItemPrice);
         }
+    }
+}
+
+public class RecipeShop
+{
+    public int Index;
+    public ItemInfo ItemBeingSold;
+
+    //  Important, ensure the price is >= to the set price on the actual item or people will exploit it no matter how little profit
+    public uint ItemPrice;
+
+    public RecipeShop()
+    {
+
+    }
+
+    public RecipeShop(BinaryReader reader, int version = int.MaxValue)
+    {
+        Index = reader.ReadInt32();
+        bool hadItem = reader.ReadBoolean();
+        //  Check if an Item was Saved
+        if (hadItem)
+        {
+            //  Item was Saved so load it
+            ItemBeingSold = new ItemInfo(reader, version);
+            //  Set the price
+            ItemPrice = reader.ReadUInt32();
+            
+        }
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Index);
+        //  Save true if the item is Valid other wise it'll be false
+        writer.Write(ItemBeingSold != null ? true : false);
+        if (ItemBeingSold != null)
+        {
+            //  Save the item
+            ItemBeingSold.Save(writer);
+            //  Save the Price
+            writer.Write(ItemPrice);            
+        }
+    }
+
+    public override string ToString()
+    {
+        if (ItemBeingSold == null)
+            return string.Format("[{0}]", Index);
+        else
+            return string.Format("[{0}] {1}", Index, ItemBeingSold.Name.Length > 0 ? ItemBeingSold.Name : "ERROR");
+    }
+}
+#endregion
+
+
+public class SocketPassiveBuff
+{
+    public SocketType _Type;
+    public long Duration;
+    public long CoolDown;
+    public byte Chance;
+    public int Val1;
+    public int Val2;
+    public int Val3;
+    public int Val4;
+}
+
+public class HeroRank
+{
+    //  Index   -   Get owners Name from this
+    public int Owner;
+    //  Players NAme
+    public string OwnerName;
+    //  Level
+    public int Level;
+    //  Exp
+    public long Experience;
+    //  Name    -   Heroes Name
+    public string Name;
+    //  Class
+    public MirClass HeroesClass;
+    //  Gender
+    public MirGender HeroesGender;
+    //  Last Update Time
+    public long LastUpdateTime;
+    //  Last Rank
+    public byte LastRank;
+    //  Rank Now
+    public byte Rank;
+
+    public HeroRank()
+    {
+        
+    }
+
+    public HeroRank(BinaryReader reader)
+    {
+        Owner = reader.ReadInt32();
+        OwnerName = reader.ReadString();
+        Level = reader.ReadInt32();
+        Experience = reader.ReadInt64();
+        Name = reader.ReadString();
+        HeroesClass = (MirClass)reader.ReadByte();
+        HeroesGender = (MirGender)reader.ReadByte();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Owner);
+        writer.Write(OwnerName);
+        writer.Write(Level);
+        writer.Write(Experience);
+        writer.Write(Name);
+        writer.Write((byte)HeroesClass);
+        writer.Write((byte)HeroesGender);
+    }
+
+    public void UpdateTime(long tmp)
+    {
+        if (LastUpdateTime > tmp)
+            return;
+        else
+            LastUpdateTime = tmp;
+    }
+}
+
+public enum HeroBehaviour
+{
+    None = 0,
+    //  Close to the master as much as possible (I.E doesn't run around/away)
+    CloseMaster = 1,
+    //  Only for Wizard & Tao Heroes (It's the fear movement) 
+    Kite = 2,
+}
+
+public enum HeroEXPShare
+{
+    None = 0,
+    Equal = 1,
+    Damage = 2,
+    Default = 3
+}
+
+#region Achievement System
+[Obfuscation(Feature = "renaming", Exclude = true)]
+public class PlayerLogin
+{
+
+}
+[Obfuscation(Feature = "renaming", Exclude = true)]
+public class LoginReward
+{
+
+}
+[Obfuscation(Feature = "renaming", Exclude = true)]
+public class PlayerJournal
+{
+
+}
+[Obfuscation(Feature = "renaming", Exclude = true)]
+public class PlayerAchievment
+{
+    public Achievement Info;
+    public long Progress;   //  #/#
+    public bool Complete;
+    public bool Claimed;
+    public DateTime CompleteDate;
+    public DateTime StartDate;
+}
+/// <summary>
+/// The Achievement data that will be held on the Server and Displayed on the Client depending on if they meet the requirements for the Achievement.
+/// </summary>
+[Obfuscation(Feature = "renaming", Exclude = true)]
+public class Achievement
+{
+    /// <summary>
+    /// Index is used to identify a unique Achievement.
+    /// </summary>
+    public int Index;
+    /// <summary>
+    /// The title of the Achievement.
+    /// </summary>
+    public string Name;
+    /// <summary>
+    /// The description of the Achievement which will be Display on the client.
+    /// </summary>
+    public string Description;
+    /// <summary>
+    /// Default set to true to use the LevelRequired and/or AchievementRequired values.
+    /// </summary>
+    public bool RequirementsNeeded = true;
+    /// <summary>
+    /// If the RequirementsNeeded is true we will check if the player is the right level to start the Achievement.
+    /// </summary>
+    public uint LevelRequired;
+    /// <summary>
+    /// If the RequirementsNeeded is true we will check if the player has completed a specific Achievement, use this for Chain Achievements.
+    /// </summary>
+    public uint AchievementRequired;
+    /// <summary>
+    /// Multiple Options allowed.
+    /// </summary>
+    public AchievementType Type = AchievementType.None;
+    /// <summary>
+    /// The Achievement Point(s) that are rewarded upon completion.
+    /// </summary>
+    public uint AchievementPointReward;
+    /// <summary>
+    /// The Experience that is rewarded upon completion.
+    /// </summary>
+    public long ExperienceReward;
+    /// <summary>
+    /// The Gold that is rewarded upon completion.
+    /// </summary>
+    public long GoldReward;
+    /// <summary>
+    /// The Credit(s) that is rewarded upon completion.
+    /// </summary>
+    public long CreditReward;
+    /// <summary>
+    /// An array of Item index(es) which can hold a maximum of 10.
+    /// </summary>
+    public int[] ItemRewards = new int[10];
+    /// <summary>
+    /// A value of 0 = Give or 1 = Pick will determine if the user has a choice of reward(s).
+    /// </summary>
+    public byte[] RewardFlags = new byte[]
+    {
+        0,  //  0
+        0,  //  1
+        0,  //  2
+        0,  //  3
+        0,  //  4
+        0,  //  5
+        0,  //  6
+        0,  //  7
+        0,  //  8
+        0,  //  9
+    };
+    /// <summary>
+    /// The Monster(s) and it's/their amount required to complete the Achievement.
+    /// </summary>
+    public List<MonsterKill> MobKills = new List<MonsterKill>();
+    /// <summary>
+    /// The Quest(s) required to complete the Achievement.
+    /// </summary>
+    public List<QuestCompletions> QuestInfos = new List<QuestCompletions>();
+    /// <summary>
+    /// The Item(s) and it's/their amount(s) required to complete the Achievement.
+    /// </summary>
+    public List<ItemsRequired> ItemsRequired = new List<ItemsRequired>();
+    /// <summary>
+    /// The Achievement(s) required to complete the Achievement.
+    /// </summary>
+    public List<AchievementsComplete> AchievementsCompleted = new List<AchievementsComplete>();
+    /// <summary>
+    /// The Level required to compelete the Achievement.
+    /// </summary>
+    public uint LevelGained;
+    /// <summary>
+    /// The Amount of Gold gained in a lifetime required to complete the Achievement.
+    /// </summary>
+    public long TotalGoldGained;
+    /// <summary>
+    /// The Number of Player Kill(s) required to complete the Achievement.
+    /// </summary>
+    public ushort PlayerKills;
+    /// <summary>
+    /// The Index of the skill required to complete the Achievement.
+    /// </summary>
+    public int SkillIndex;
+}
+[Obfuscation(Feature = "renaming", Exclude = true)]
+public class AchievementsComplete
+{
+    public int AchievementIndex;
+}
+[Obfuscation(Feature = "renaming", Exclude = true)]
+public class ItemsRequired
+{
+    public int ItemIndex;
+    public ushort Amount;
+}
+[Obfuscation(Feature = "renaming", Exclude = true)]
+public class QuestCompletions
+{
+    public int QuestIndex;
+}
+[Obfuscation(Feature = "renaming", Exclude = true)]
+public class MonsterKill
+{
+    public int MonsterIndex;
+    public ushort KillAmount;
+}
+[Flags]
+[Obfuscation(Feature = "renaming", Exclude = true)] 
+public enum AchievementType : uint
+{
+    None = 0,
+    //  Kill 1 Mob
+    MobKill = 1,
+    //  Kill x Mobs
+    MobKills = 2,
+    //  Enter X Map
+    MapEnter = 4,
+    //  Complete X Quest
+    CompleteQuest = 8,
+    //  Gain X Item
+    GainItem = 16,
+    //  Reach x Level
+    LevelGained = 32,
+    //  Earn X Gold in a lifetime
+    GoldGained = 64,
+    //  Complete X Many Achievements
+    AchievementsCompleted = 128,
+    //  Kill x Players
+    PlayerKills = 256,
+    //  Skill Gained
+    SkillGained = 512,
+    //  Gain x Many items
+    GainItems = 1024,
+    //  Gained a hero
+    GainHero = 2048,
+    //  Hero Gained x Level
+    HeroLevel = 4096,
+    //  Hero Gained X Skill
+    HeroGainSkill = 8192,
+    //  Hero Quest Completed
+    HeroCompleteQuest = 16384
+}
+#endregion
+
+#region Mob Ai system
+/// <summary>
+/// The attack Type (will determine the kind of effects used (I.E Client side))
+/// </summary>
+public enum AIAttackType
+{
+    Default = 0,
+    Melee = 1,
+    Range = 2,
+    AOE = 3,
+    Heal = 4,
+    Buff = 5,
+    Debuff = 6
+}
+/// <summary>
+/// The style of the Attack to be used.
+/// </summary>
+public enum AIAttackStyle
+{
+    Default = 0,
+    MeleeSingle = 1,
+    MeleeMulti = 2,
+    RangeSingle = 3,
+    RangeMulti = 4,
+    AOESelf = 5,
+    AOETarget = 6,
+    HealSelf = 7,
+    HealTarget = 8,
+    HealArea = 9,
+    BuffSelf = 10,
+    BuffTarget = 11,
+    BuffArea = 12,
+    DebuffSelf = 13,
+    DebuffTarget = 14,
+    DebuffArea = 15
+}
+/// <summary>
+/// Which kind of Object to Attack
+/// </summary>
+public enum AIAttackTargetType
+{
+    None = 0,
+    Player = 1,
+    Monster = 2,
+    Hero = 3,
+}
+/// <summary>
+/// Which class target to favour
+/// </summary>
+public enum AIAttackTargetClass
+{
+    None = 0,
+    Warrior = 0,
+    Wizard = 1,
+    Taoist = 3,
+    Assasin = 4,
+    Archer = 5,
+}
+/// <summary>
+/// It's walking Behaviour
+/// </summary>
+public enum AIWalkType
+{
+    Default = 0,
+    RunAway = 1,
+    Kite = 2, // Like ZumaArcher
+    StandStill = 3,
+}
+/// <summary>
+/// The poisons it can ignore
+/// </summary>
+public enum AIAntiPoison : short
+{
+    None = 0,
+    Green = 1,
+    Red = 2,
+    Slow = 4,
+    Frozen = 8,
+    Stun = 16,
+    Paralysis = 32,
+    DelayedExplosion = 64,
+    Bleeding = 128,
+    LRParalysis = 256,
+    Trap = 512,
+    Burning = 1024,
+}
+/// <summary>
+/// Normal Health or Staged health (I.E 15x 65535 HP)
+/// </summary>
+public enum AIHealthType
+{
+    Default = 0,
+    Staged = 1,
+}
+/// <summary>
+/// The Debuffs it can apply to it's target(s)
+/// </summary>
+public enum AIDebuffType
+{
+    None = 0,
+    StatDC = 1,
+    StatMC = 2,
+    StatSC = 3,
+    StatAC = 4,
+    StatMAC = 5,
+    StatHP = 6,
+    StatMP = 7,
+    StatAcc = 8,
+    StatAgil = 9,
+    StatSpeed = 10,
+    StatAll = 11
+}
+/// <summary>
+/// The Buffs the Mob can give
+/// </summary>
+public enum AIBuffType
+{
+    StatDC = 0,
+    StatMC = 1,
+    StatSC = 2,
+    StatAC = 3,
+    StatMAC = 4,
+    StatHP = 6,
+    StatMP = 7,
+    StatAcc = 8,
+    StatAgil = 9,
+    StatSpeed = 10,
+    StatAll = 11
+}
+
+/// <summary>
+/// The Strength of the Mob vs the Class
+/// </summary>
+public enum AIStrongVs
+{
+    None = 0,
+    Warrior = 0,
+    Wizard = 1,
+    Taoist = 3,
+    Assasin = 4,
+    Archer = 5,
+    Mob = 6
+}
+/// <summary>
+/// The mob will be weak vs this kind of attacker/target
+/// </summary>
+public enum AIWeakVs
+{
+    None = 0,
+    Warrior = 0,
+    Wizard = 1,
+    Taoist = 3,
+    Assasin = 4,
+    Archer = 5,
+    Mob = 6,
+}
+
+public enum AIAttackEffect : ushort
+{
+    None,
+    FatalSword,
+    Teleport,
+    Healing,
+    RedMoonEvil,
+    TwinDrakeBlade,
+    MagicShieldUp,
+    MagicShieldDown,
+    FireSprayHit,
+    GreatFoxSpirit,
+    Entrapment,
+    Reflect,
+    Critical,
+    Mine,
+    ElementalBarrierUp,
+    ElementalBarrierDown,
+    DelayedExplosion,
+    MPEater,
+    Hemorrhage,
+    Bleeding,
+    AwakeningSuccess,
+    AwakeningFail,
+    AwakeningMiss,
+    AwakeningHit,
+    StormEscape,
+    TurtleKing,
+    Behemoth,
+    Stunned,
+    IcePillar,
+    #region Weapon Effects
+    CrystalBeastSpin,
+    CrystalBeastExplosion,
+    CrystalBeastSplash,
+    CrystalBeastBlast,
+    GFBHit,
+    PsnHit,
+    SFBHit,
+    Shocking,
+    UEnhance,
+    TDBEff0,
+    TDBEff1,
+    Cake,
+    CircleEff,
+    PurpleBlastEff,
+    BubbleEff,
+    ExplosionEff,
+    RainbowEff,
+    GoldenBubble,
+    PurpleExplosion,
+    GreenExplosion,
+    Swirling,
+    EyeEff,
+    PhoenixEff,
+    ElectricExplosion,
+    TrapEff,
+    CastingBlizzard,
+    BlizzardCast,
+    CHM,
+    #endregion
+    MutantWeb,
+    MutantWebHold,
+    FlyingStatueCast,
+    FlyingStatuePurple,
+    FlyingStatueGreen,
+    StainHammerCatHit,
+    BlackHammerCatSmash,
+    KingGuardHold,
+    KingGuardSmash,
+    HumanFireBall,
+    HumanThunderBolt,
+    HumanRepulse,
+    HumanFireWallCast,
+    HumanBlizzardCast,
+    HumanMeteorCast,
+    HumanMagicShield,
+    HumanFlamingSword,
+    HumanTwinDrakeBlade,
+    HumanHalfMoon,
+    HumanCrossHalfMoon,
+    HumanThrusting,
+    HumanRage,
+    HumanSoulFireBall,
+    HumanPoisoning,
+    HumanCurseCast,
+    HumanCastBlessArm,
+    HumanCastSoulShield,
+    HumanCastPoisonCloud,
+    DragonFlamesEffect,
+    BrokenSoulCutEffect,
+    ThunderClapEffect,
+    LastJudgementEffect,
+    ChopChopStarEffect,
+    SoulEaterSwampEffect,
+    HandOfGodEffect,
+    TucsonGeneralEffect,
+    LavaBurning,
+    Jar2Effect,
+    RestlessJarSpawn,
+    RestlessJarSpawnOnPlayer,
+    RestlessJarMultipleHit,
+    RestlessJarTornado,
+    MoonMist
+}
+
+
+public class AIAttack
+{
+    public AIAttackType AttackType = AIAttackType.Melee;
+    public AIAttackStyle AttackStyle = AIAttackStyle.Default;
+    public AIAttackEffect AttackEffect = AIAttackEffect.None;
+    public AIDebuffType Debuff = AIDebuffType.None;
+    public byte DebuffDuration;
+    public bool Steal = false;
+    public byte StealPercent = 0;
+    public byte StealDuration = 0;
+    public long Delay;
+
+    public AIAttack()
+    {
+
+    }
+
+    public AIAttack(BinaryReader reader, int version = int.MaxValue)
+    {
+        AttackType = (AIAttackType)reader.ReadByte();
+        AttackStyle = (AIAttackStyle)reader.ReadByte();
+        AttackEffect = (AIAttackEffect)reader.ReadUInt16();
+        Debuff = (AIDebuffType)reader.ReadByte();
+        DebuffDuration = reader.ReadByte();
+        Steal = reader.ReadBoolean();
+        StealPercent = reader.ReadByte();
+        StealDuration = reader.ReadByte();
+        Delay = reader.ReadInt64();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write((byte)AttackType);
+        writer.Write((byte)AttackStyle);
+        writer.Write((byte)AttackEffect);
+        writer.Write((byte)Debuff);
+        writer.Write(DebuffDuration);
+        writer.Write(Steal);
+        writer.Write(StealPercent);
+        writer.Write(StealDuration);
+        writer.Write(Delay);
+    }
+}
+
+#endregion
+
+public class ClientQuestCompleted
+{
+    public int Index;
+    public string QuestName;
+    public string Category;
+    public DateTime CompleteDateTime;
+
+    public ClientQuestCompleted() { }
+    public ClientQuestCompleted(BinaryReader reader)
+    {
+        Index = reader.ReadInt32();
+        QuestName = reader.ReadString();
+        Category = reader.ReadString();
+        CompleteDateTime = DateTime.FromBinary(reader.ReadInt64());
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Index);
+        writer.Write(QuestName);
+        writer.Write(Category);
+        writer.Write(CompleteDateTime.ToBinary());
+    }
+}
+
+
+public enum EventType : sbyte
+{
+    None = 0,
+    MonsterSlay = 1,
+    Invasion = 2,
+    DailyBoss = 3,
+    WeeklyBoss = 4
+}
+
+public class MonsterEventObjective
+{
+    public string MonsterName;
+    public int MonsterTotalCount;
+    public int MonsterAliveCount;
+    public MonsterEventObjective()
+    {
+
+    }
+    public MonsterEventObjective(BinaryReader reader)
+    {
+        MonsterName = reader.ReadString();
+        MonsterTotalCount = reader.ReadInt32();
+        MonsterAliveCount = reader.ReadInt32();
+    }
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(MonsterName);
+        writer.Write(MonsterTotalCount);
+        writer.Write(MonsterAliveCount);
+    }
+
+
+}
+
+public class MapQuestLocationClient
+{
+    public Point Location;
+    public QuestIcon Icon = QuestIcon.None;
+
+
+    public MapQuestLocationClient() { }
+    public MapQuestLocationClient(BinaryReader reader)
+    {
+        Location = new Point(reader.ReadInt32(), reader.ReadInt32());
+        Icon = (QuestIcon)reader.ReadByte();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Location.X);
+        writer.Write(Location.Y);
+        writer.Write((byte)Icon);
+    }
+}
+
+public class MapEventClientSide
+{
+    public int Index;
+    public Point Location;
+    public int Size;
+    public bool IsActive;
+    public string EventName;
+    public EventType EventType = EventType.MonsterSlay;
+    public MapEventClientSide()
+    {
+
+    }
+    public MapEventClientSide(BinaryReader reader)
+    {
+        Index = reader.ReadInt32();
+        Size = reader.ReadInt32();
+        IsActive = reader.ReadBoolean();
+        EventName = reader.ReadString();
+
+        int x = reader.ReadInt32();
+        int y = reader.ReadInt32();
+        Location = new Point(x, y);
+
+        EventType = (EventType) reader.ReadSByte();
+    }
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Index);
+        writer.Write(Size);
+        writer.Write(IsActive);
+        writer.Write(EventName);
+
+        writer.Write(Location.X);
+        writer.Write(Location.Y);
+        writer.Write((sbyte) EventType);
+    }
+}
+
+public class ToolOnlinePlayerListItem
+{
+    public string PlayerName;
+    public ushort PlayerLevel;
+    public string PlayerGuild;
+    public string PlayerCurrentMap;
+    public string PlayerCurrentLocation;
+    public ulong AccountGold, AccountCredit;
+
+    public ToolOnlinePlayerListItem(BinaryReader reader)
+    {
+        PlayerName = reader.ReadString();
+        PlayerLevel = reader.ReadUInt16();
+        PlayerGuild = reader.ReadString();
+        PlayerCurrentMap = reader.ReadString();
+        PlayerCurrentLocation = reader.ReadString();
+        AccountGold = reader.ReadUInt64();
+        AccountCredit = reader.ReadUInt64();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(PlayerName);
+        writer.Write(PlayerLevel);
+        writer.Write(PlayerGuild);
+        writer.Write(PlayerCurrentMap);
+        writer.Write(PlayerCurrentLocation);
+        writer.Write(AccountGold);
+        writer.Write(AccountCredit);
+    }
+    public ToolOnlinePlayerListItem() { }
+}
+
+public class LMS_BR_ClientInfo
+{
+    public bool SignedUp;
+    public byte PlayersSignedUp;
+    public LMS_BR_ClientInfo()
+    {
+
+    }
+
+    public LMS_BR_ClientInfo(BinaryReader reader)
+    {
+        SignedUp = reader.ReadBoolean();
+        PlayersSignedUp = reader.ReadByte();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(SignedUp);
+        writer.Write(PlayersSignedUp);
+    }
+}
+
+public class SWBuffInfo
+{
+    /// <summary>
+    /// 0 = Flat, 1 = Percent
+    /// </summary>
+    public byte Type = 0;
+    /// <summary>
+    /// 0 = Warrior, 1 = Wizard, 2 = Taoist, 3 = Assasin, 4 = Archer
+    /// </summary>
+    public List<ClassBuffInfo> BuffInfo = new List<ClassBuffInfo>(4);
+    /// <summary>
+    /// EXP rate boost
+    /// </summary>
+    public byte EXPBoost = 0;
+    /// <summary>
+    /// Drop rate boost
+    /// </summary>
+    public byte DropBoost = 0;
+}
+
+public class ClassBuffInfo
+{
+    public MirClass ClassInfo;
+    public byte MinAC, MaxAC;
+    public byte MinMAC, MaxMAC;
+    public byte MinDC, MaxDC;
+    public byte MinMC, MaxMC;
+    public byte MinSC, MaxSC;
+    public byte Accuracy, ASpeed, Agility;
+    public ushort HP, MP;
+
+    public ClassBuffInfo()
+    {
+
     }
 }

@@ -45,13 +45,18 @@ Temporary Items
 # Visual Studio Solution User Options
 Legend of Mir.v11.suo
 Legend of Mir.v12.suo
-.vs/Legend of Mir/v15/.suo
 Legend of Mir.sln.DotSettings.user
-Client/Client.csproj
 /Server/obj
 /LibraryViewer/obj
 /LibraryViewer/bin
 /LibraryEditor/obj
 /Client/obj
 /AutoPatcherAdmin/obj
-
+*.suo
+/.vs/Mir IceMan/v15/Server/sqlite3/storage.ide-wal
+/.vs/Mir IceMan/v15/Server/sqlite3/storage.ide-shm
+/.vs/Mir IceMan/v15/Server/sqlite3/storage.ide
+/.vs/Mir IceMan/v15/Server/sqlite3/db.lock
+*.cache
+/.vs/EdensElite - ProjectX/v15/Server/sqlite3/db.lock
+/.vs/EdensElite - ProjectX/v15/Server/sqlite3/storage.ide
