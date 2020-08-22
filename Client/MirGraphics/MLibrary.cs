@@ -5,6 +5,8 @@ using System.Threading;
 using SlimDX;
 using SlimDX.Direct3D9;
 using System.IO.Compression;
+using Frame = Client.MirObjects.Frame;
+using Client.MirObjects;
 
 namespace Client.MirGraphics
 {
@@ -67,11 +69,11 @@ namespace Client.MirGraphics
                                           ARWeaponsS = new MLibrary[19],
                                           ARHair = new MLibrary[9],
                                           ARHumEffect = new MLibrary[3],
-                                          Monsters = new MLibrary[406],
-                                          Gates = new MLibrary[2],
+                                          Monsters = new MLibrary[465],
+                                          Gates = new MLibrary[15],
                                           Flags = new MLibrary[12],
                                           Mounts = new MLibrary[12],
-                                          NPCs = new MLibrary[200],
+                                          NPCs = new MLibrary[235],
                                           Fishing = new MLibrary[2],
                                           Pets = new MLibrary[15],
                                           Transform = new MLibrary[28],
@@ -475,17 +477,23 @@ namespace Client.MirGraphics
     public sealed class MLibrary
     {
         private const string Extention = ".Lib";
-        public const int LibVersion = 2;
+        public const int LibVersion = 3;
 
         private readonly string _fileName;
 
         private MImage[] _images;
+        private FrameSet _frames;
         private int[] _indexList;
         private int _count;
         private bool _initialized;
 
         private BinaryReader _reader;
         private FileStream _fStream;
+
+        public FrameSet Frames
+        {
+            get { return _frames; }
+        }
 
         public MLibrary(string filename)
         {
@@ -494,29 +502,51 @@ namespace Client.MirGraphics
 
         public void Initialize()
         {
-            int CurrentVersion = 0;
             _initialized = true;
 
             if (!File.Exists(_fileName))
                 return;
+
             try
             {
-
                 _fStream = new FileStream(_fileName, FileMode.Open, FileAccess.Read);
                 _reader = new BinaryReader(_fStream);
-                CurrentVersion = _reader.ReadInt32();
-                if (CurrentVersion != LibVersion)
+                int currentVersion = _reader.ReadInt32();
+                if (currentVersion < 2)
                 {
-                    System.Windows.Forms.MessageBox.Show("Wrong version, expecting lib version: " + LibVersion.ToString() + " found version: " + CurrentVersion.ToString() + ".", _fileName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error, System.Windows.Forms.MessageBoxDefaultButton.Button1);
+                    System.Windows.Forms.MessageBox.Show("Wrong version, expecting lib version: " + LibVersion.ToString() + " found version: " + currentVersion.ToString() + ".", _fileName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error, System.Windows.Forms.MessageBoxDefaultButton.Button1);
                     System.Windows.Forms.Application.Exit();
                     return;
                 }
                 _count = _reader.ReadInt32();
+
+                int frameSeek = 0;
+                if (currentVersion >= 3)
+                {
+                    frameSeek = _reader.ReadInt32();
+                }
+
                 _images = new MImage[_count];
                 _indexList = new int[_count];
 
                 for (int i = 0; i < _count; i++)
                     _indexList[i] = _reader.ReadInt32();
+
+                if (currentVersion >= 3)
+                {
+                    _fStream.Seek(frameSeek, SeekOrigin.Begin);
+
+                    var frameCount = _reader.ReadInt32();
+
+                    if (frameCount > 0)
+                    {
+                        _frames = new FrameSet();
+                        for (int i = 0; i < frameCount; i++)
+                        {
+                            _frames.Add((MirAction)_reader.ReadByte(), new Frame(_reader));
+                        }
+                    }
+                }
             }
             catch (Exception)
             {
@@ -815,30 +845,6 @@ namespace Client.MirGraphics
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
 
-        //public bool VisiblePixel(int index, Point point, bool accurate)
-        //{
-        //    if (!CheckImage(index)) return false;
-        //    bool output = false;
-        //    output = _images[index].VisiblePixel(point, accurate);
-        //    if (output) return true;
-        //    Point targetpoint;
-        //    if (!accurate) //allow for some extra space arround your mouse
-        //    {
-        //        int[] realRanges = new int[]{0,1,3,6,10,15,21};//do not edit this
-        //        //edit this to set how big you want the 'inaccuracy' to be (bear in mind bigger = takes more for your client to calculate)
-        //        //dont make it higher then 6 tho (or add more value sin realranges)
-        //        int range = 2;
-                
-        //        for (int i = 0; i < (8 * realRanges[range]); i++)
-        //        {
-        //            targetpoint = Functions.PointMove(point, (MirDirection)(i % 8), (int)(i/8));
-        //            output |= _images[index].VisiblePixel(targetpoint, accurate);
-        //            if (output) return true;
-        //        }
-        //    }
-        //    return output;
-        //}
-
         public bool VisiblePixel(int index, Point point, bool accuate)
         {
             if (!CheckImage(index))
@@ -856,7 +862,6 @@ namespace Client.MirGraphics
 
             return false;
         }
-
     }
 
     public sealed class MImage
@@ -878,7 +883,6 @@ namespace Client.MirGraphics
         public Size TrueSize;
 
         public unsafe byte* Data;
-
 
         public MImage(BinaryReader reader)
         {

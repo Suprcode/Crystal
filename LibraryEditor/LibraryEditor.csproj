@@ -68,8 +68,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FixedListViewControl">
-      <HintPath>..\FixedListViewControl\bin\Release\FixedListViewControl.dll</HintPath>
+    <Reference Include="FixedListViewControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Components\FixedListViewControl.dll</HintPath>
     </Reference>
     <Reference Include="Ionic.Zlib, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -90,7 +91,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Properties\Settings.settings" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings1.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Frames.cs" />
@@ -102,7 +106,7 @@
       <DependentUpon>LMain.cs</DependentUpon>
     </Compile>
     <Compile Include="LockBitmap.cs" />
-    <Compile Include="MLibrary.cs" />
+    <Compile Include="MLibraryV1.cs" />
     <Compile Include="MLibraryV0.cs" />
     <Compile Include="MLibraryV2.cs" />
     <Compile Include="Program.cs" />
@@ -112,13 +116,18 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Settings.Designer.cs" />
+    <Compile Include="Properties\Settings1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="WeMadeLibrary.cs" />
     <Compile Include="WTLLibrary.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="LMain.resx">
       <DependentUpon>LMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -129,9 +138,7 @@
   <ItemGroup>
     <Content Include="lizard.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Shared\Shared.csproj">
       <Project>{19625ca5-42f9-4bf5-aa1c-c8dfd4eb7833}</Project>

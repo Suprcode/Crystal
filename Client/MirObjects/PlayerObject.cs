@@ -112,7 +112,7 @@ namespace Client.MirObjects
         public PlayerObject(uint objectID)
             : base(objectID)
         {
-            Frames = FrameSet.Players;
+            Frames = FrameSet.Player;
         }
 
         public void Load(S.ObjectPlayer info)
@@ -287,15 +287,15 @@ namespace Client.MirObjects
                 {
                     case MirAction.Standing:
                     case MirAction.Jump:
-                        Frames.Frames.TryGetValue(MirAction.Standing, out Frame);
+                        Frames.TryGetValue(MirAction.Standing, out Frame);
                         break;
                     case MirAction.Walking:
                     case MirAction.WalkingBow:
-                        Frames.Frames.TryGetValue(MirAction.Walking, out Frame);
+                        Frames.TryGetValue(MirAction.Walking, out Frame);
                         break;
                     case MirAction.Running:
                     case MirAction.RunningBow:
-                        Frames.Frames.TryGetValue(MirAction.Running, out Frame);
+                        Frames.TryGetValue(MirAction.Running, out Frame);
                         break;
                     case MirAction.Attack1:
                     case MirAction.Attack2:
@@ -304,7 +304,7 @@ namespace Client.MirObjects
                     case MirAction.AttackRange1:
                     case MirAction.AttackRange2:
                     case MirAction.AttackRange3:
-                        Frames.Frames.TryGetValue(MirAction.Attack1, out Frame);
+                        Frames.TryGetValue(MirAction.Attack1, out Frame);
                         break;
                 }
 
@@ -953,7 +953,7 @@ namespace Client.MirObjects
 
                 if (Fishing) CurrentAction = MirAction.FishingWait;
 
-                Frames.Frames.TryGetValue(CurrentAction, out Frame);
+                Frames.TryGetValue(CurrentAction, out Frame);
                 FrameIndex = 0;
                 EffectFrameIndex = 0;
 
@@ -1050,55 +1050,55 @@ namespace Client.MirObjects
                     case MirAction.Pushed:
                         if (this == User)
                             MapControl.InputDelay = CMain.Time + 500;
-                        Frames.Frames.TryGetValue(MirAction.Walking, out Frame);
+                        Frames.TryGetValue(MirAction.Walking, out Frame);
                         break;
                     case MirAction.DashL:
                     case MirAction.DashR:
-                        Frames.Frames.TryGetValue(MirAction.Running, out Frame);
+                        Frames.TryGetValue(MirAction.Running, out Frame);
                         break;
                     case MirAction.DashAttack:
-                        Frames.Frames.TryGetValue(MirAction.DashAttack, out Frame);
+                        Frames.TryGetValue(MirAction.DashAttack, out Frame);
                         break;
                     case MirAction.DashFail:
-                        Frames.Frames.TryGetValue(RidingMount ? MirAction.MountStanding : MirAction.Standing, out Frame);
-                        //Frames.Frames.TryGetValue(MirAction.Standing, out Frame);
+                        Frames.TryGetValue(RidingMount ? MirAction.MountStanding : MirAction.Standing, out Frame);
+                        //Frames.TryGetValue(MirAction.Standing, out Frame);
                         //CanSetAction = false;
                         break;
                     case MirAction.Jump:
-                        Frames.Frames.TryGetValue(MirAction.Jump, out Frame);
+                        Frames.TryGetValue(MirAction.Jump, out Frame);
                         break;
                     case MirAction.Attack1:
                         switch (Class)
                         {
                             case MirClass.Archer:
-                                Frames.Frames.TryGetValue(CurrentAction, out Frame);
+                                Frames.TryGetValue(CurrentAction, out Frame);
                                 break;
                             case MirClass.Assassin:
                                 if(GameScene.DoubleSlash)
-                                    Frames.Frames.TryGetValue(MirAction.Attack1, out Frame);
+                                    Frames.TryGetValue(MirAction.Attack1, out Frame);
                                 else if (CMain.Shift)
-                                    Frames.Frames.TryGetValue(CMain.Random.Next(100) >= 20 ? (CMain.Random.Next(100) > 40 ? MirAction.Attack1 : MirAction.Attack4) : (CMain.Random.Next(100) > 10 ? MirAction.Attack2 : MirAction.Attack3), out Frame);
+                                    Frames.TryGetValue(CMain.Random.Next(100) >= 20 ? (CMain.Random.Next(100) > 40 ? MirAction.Attack1 : MirAction.Attack4) : (CMain.Random.Next(100) > 10 ? MirAction.Attack2 : MirAction.Attack3), out Frame);
                                 else
-                                    Frames.Frames.TryGetValue(CMain.Random.Next(100) >= 40 ? MirAction.Attack1 : MirAction.Attack4, out Frame);
+                                    Frames.TryGetValue(CMain.Random.Next(100) >= 40 ? MirAction.Attack1 : MirAction.Attack4, out Frame);
                                 break;
                             default:
                                 if (CMain.Shift && TargetObject == null)
-                                    Frames.Frames.TryGetValue(CMain.Random.Next(100) >= 20 ? MirAction.Attack1 : MirAction.Attack3, out Frame);
+                                    Frames.TryGetValue(CMain.Random.Next(100) >= 20 ? MirAction.Attack1 : MirAction.Attack3, out Frame);
                                 else
-                                    Frames.Frames.TryGetValue(CurrentAction, out Frame);
+                                    Frames.TryGetValue(CurrentAction, out Frame);
                                 break;
                         }
                         break;
                     case MirAction.Attack4:
                         Spell = (Spell)action.Params[0];
-                        Frames.Frames.TryGetValue(Spell == Spell.TwinDrakeBlade || Spell == Spell.FlamingSword ? MirAction.Attack1 : CurrentAction, out Frame);
+                        Frames.TryGetValue(Spell == Spell.TwinDrakeBlade || Spell == Spell.FlamingSword ? MirAction.Attack1 : CurrentAction, out Frame);
                         break;
                     case MirAction.Spell:
                         Spell = (Spell)action.Params[0];
                         switch (Spell)
                         {
                             case Spell.ShoulderDash:
-                                Frames.Frames.TryGetValue(MirAction.Running, out Frame);
+                                Frames.TryGetValue(MirAction.Running, out Frame);
                                 CurrentAction = MirAction.DashL;
                                 Direction = olddirection;
                                 CurrentLocation = Functions.PointMove(CurrentLocation, Direction, 1);
@@ -1111,7 +1111,7 @@ namespace Client.MirObjects
                                 }
                                 break;
                             case Spell.BladeAvalanche:
-                                Frames.Frames.TryGetValue(MirAction.Attack3, out Frame);
+                                Frames.TryGetValue(MirAction.Attack3, out Frame);
                                 if (this == User)
                                 {
                                     MapControl.NextAction = CMain.Time + 2500;
@@ -1119,7 +1119,7 @@ namespace Client.MirObjects
                                 }
                                 break;
                             case Spell.SlashingBurst:
-                                 Frames.Frames.TryGetValue(MirAction.Attack1, out Frame);
+                                 Frames.TryGetValue(MirAction.Attack1, out Frame);
                                 if (this == User)
                                 {
                                     MapControl.NextAction = CMain.Time + 2000; // 80%
@@ -1127,7 +1127,7 @@ namespace Client.MirObjects
                                 }
                                 break;
                             case Spell.CounterAttack:
-                                Frames.Frames.TryGetValue(MirAction.Attack1, out Frame);
+                                Frames.TryGetValue(MirAction.Attack1, out Frame);
                                 if (this == User)
                                 {
                                     GameScene.AttackTime = CMain.Time + User.AttackSpeed;
@@ -1136,7 +1136,7 @@ namespace Client.MirObjects
                                 }
                                 break;
                             case Spell.PoisonSword:
-                                Frames.Frames.TryGetValue(MirAction.Attack1, out Frame);
+                                Frames.TryGetValue(MirAction.Attack1, out Frame);
                                 if (this == User)
                                 {
                                     MapControl.NextAction = CMain.Time + 2000; // 80%
@@ -1144,7 +1144,7 @@ namespace Client.MirObjects
                                 }
                                 break;
                             case Spell.HeavenlySword:
-                                Frames.Frames.TryGetValue(MirAction.Attack2, out Frame);
+                                Frames.TryGetValue(MirAction.Attack2, out Frame);
                                 if (this == User)
                                 {
                                     MapControl.NextAction = CMain.Time + 1200;
@@ -1152,7 +1152,7 @@ namespace Client.MirObjects
                                 }
                                 break;
                             case Spell.CrescentSlash:
-                                Frames.Frames.TryGetValue(MirAction.Attack3, out Frame);
+                                Frames.TryGetValue(MirAction.Attack3, out Frame);
                                 if (this == User)
                                 {
                                     MapControl.NextAction = CMain.Time + 2500;
@@ -1167,13 +1167,13 @@ namespace Client.MirObjects
 
                                     if (JumpDistance != 0)
                                     {
-                                        Frames.Frames.TryGetValue(MirAction.DashAttack, out Frame);
+                                        Frames.TryGetValue(MirAction.DashAttack, out Frame);
                                         CurrentAction = MirAction.DashAttack;
                                         CurrentLocation = Functions.PointMove(CurrentLocation, Direction, JumpDistance);
                                     }
                                     else
                                     {
-                                        Frames.Frames.TryGetValue(CMain.Random.Next(100) >= 40 ? MirAction.Attack1 : MirAction.Attack4, out Frame);
+                                        Frames.TryGetValue(CMain.Random.Next(100) >= 40 ? MirAction.Attack1 : MirAction.Attack4, out Frame);
                                     }
 
                                     if (this == User)
@@ -1185,7 +1185,7 @@ namespace Client.MirObjects
                                 }
                                 break;
                             case Spell.StraightShot:
-                                Frames.Frames.TryGetValue(MirAction.AttackRange2, out Frame);
+                                Frames.TryGetValue(MirAction.AttackRange2, out Frame);
                                 CurrentAction = MirAction.AttackRange2;
                                 if (this == User)
                                 {
@@ -1194,7 +1194,7 @@ namespace Client.MirObjects
                                 }
                                 break;
                             case Spell.DoubleShot:                          
-                                Frames.Frames.TryGetValue(MirAction.AttackRange2, out Frame);
+                                Frames.TryGetValue(MirAction.AttackRange2, out Frame);
                                 CurrentAction = MirAction.AttackRange2;
                                 if (this == User)
                                 {
@@ -1203,7 +1203,7 @@ namespace Client.MirObjects
                                 }
                                 break;
                             case Spell.ExplosiveTrap:
-                                Frames.Frames.TryGetValue(MirAction.Harvest, out Frame);
+                                Frames.TryGetValue(MirAction.Harvest, out Frame);
                                 CurrentAction = MirAction.Harvest;
                                 ArcherLayTrap = true;
                                 if (this == User)
@@ -1216,7 +1216,7 @@ namespace Client.MirObjects
                                 }
                                 break;
                             case Spell.DelayedExplosion:
-                                Frames.Frames.TryGetValue(MirAction.AttackRange2, out Frame);
+                                Frames.TryGetValue(MirAction.AttackRange2, out Frame);
                                 CurrentAction = MirAction.AttackRange2;
                                 if (this == User)
                                 {
@@ -1228,7 +1228,7 @@ namespace Client.MirObjects
                                 {
                                     int sLevel = (byte)action.Params[3];
                                     GetBackStepDistance(sLevel);
-                                    Frames.Frames.TryGetValue(MirAction.Jump, out Frame);
+                                    Frames.TryGetValue(MirAction.Jump, out Frame);
                                     CurrentAction = MirAction.Jump;
                                     CurrentLocation = Functions.PointMove(CurrentLocation, Functions.ReverseDirection(Direction), JumpDistance);
                                     if (this == User)
@@ -1242,7 +1242,7 @@ namespace Client.MirObjects
                             case Spell.ElementalShot:
                                 if (HasElements && !ElementCasted)
                                 {
-                                    Frames.Frames.TryGetValue(MirAction.AttackRange2, out Frame);
+                                    Frames.TryGetValue(MirAction.AttackRange2, out Frame);
                                     CurrentAction = MirAction.AttackRange2;
                                     if (this == User)
                                     {
@@ -1250,7 +1250,7 @@ namespace Client.MirObjects
                                         GameScene.SpellTime = CMain.Time + 1500; //Spell Delay
                                     }
                                 }
-                                else Frames.Frames.TryGetValue(CurrentAction, out Frame);
+                                else Frames.TryGetValue(CurrentAction, out Frame);
                                 if (ElementCasted) ElementCasted = false;
                                 break;
                             case Spell.BindingShot:
@@ -1261,7 +1261,7 @@ namespace Client.MirObjects
                             case Spell.SummonVampire:
                             case Spell.SummonToad:
                             case Spell.SummonSnakes:
-                                Frames.Frames.TryGetValue(MirAction.AttackRange2, out Frame);
+                                Frames.TryGetValue(MirAction.AttackRange2, out Frame);
                                 CurrentAction = MirAction.AttackRange2;
                                 if (this == User)
                                 {
@@ -1270,13 +1270,13 @@ namespace Client.MirObjects
                                 }
                                 break;
                             default:
-                                Frames.Frames.TryGetValue(CurrentAction, out Frame);
+                                Frames.TryGetValue(CurrentAction, out Frame);
                                 break;
                         }
                         
                         break;
                     default:
-                        Frames.Frames.TryGetValue(CurrentAction, out Frame);
+                        Frames.TryGetValue(CurrentAction, out Frame);
                         break;
 
                 }
@@ -1287,10 +1287,10 @@ namespace Client.MirObjects
                     switch (CurrentAction)
                     {
                         case MirAction.Walking:
-                            Frames.Frames.TryGetValue(MirAction.WalkingBow, out Frame);
+                            Frames.TryGetValue(MirAction.WalkingBow, out Frame);
                             break;
                         case MirAction.Running:
-                            Frames.Frames.TryGetValue(MirAction.RunningBow, out Frame);
+                            Frames.TryGetValue(MirAction.RunningBow, out Frame);
                             break;
                     }
                 }
@@ -1298,7 +1298,7 @@ namespace Client.MirObjects
                 //Assassin sneekyness
                 if (Class == MirClass.Assassin && Sneaking && (CurrentAction == MirAction.Walking || CurrentAction == MirAction.Running))
                 {
-                    Frames.Frames.TryGetValue(MirAction.Sneek, out Frame);
+                    Frames.TryGetValue(MirAction.Sneek, out Frame);
                 }
 
                 SetLibraries();

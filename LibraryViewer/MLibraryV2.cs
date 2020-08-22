@@ -13,11 +13,13 @@ namespace LibraryViewer
 {
     public sealed class MLibraryV2
     {
-        public const int LibVersion = 2;
+        public const int LibVersion = 3;
+
         public static bool Load = true;
         public string FileName;
 
         public List<MImage> Images = new List<MImage>();
+
         public List<int> IndexList = new List<int>();
         public int Count;
         private bool _initialized;
@@ -43,15 +45,23 @@ namespace LibraryViewer
             _stream = new FileStream(FileName, FileMode.Open, FileAccess.ReadWrite);
             _reader = new BinaryReader(_stream);
             CurrentVersion = _reader.ReadInt32();
-            if (CurrentVersion != LibVersion)
+
+            if (CurrentVersion < 2)
             {
                 MessageBox.Show("Wrong version, expecting lib version: " + LibVersion.ToString() + " found version: " + CurrentVersion.ToString() + ".", "Failed to open", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                Program.LoadFailed = true;
                 return;
             }
+
             Count = _reader.ReadInt32();
+
             Images = new List<MImage>();
             IndexList = new List<int>();
+
+            int frameSeek = 0;
+            if (CurrentVersion >= 3)
+            {
+                frameSeek = _reader.ReadInt32();
+            }
 
             for (int i = 0; i < Count; i++)
                 IndexList.Add(_reader.ReadInt32());
@@ -67,44 +77,6 @@ namespace LibraryViewer
         {
             if (_stream != null)
                 _stream.Dispose();
-            // if (_reader != null)
-            //     _reader.Dispose();
-        }
-
-        public void Save()
-        {
-            Close();
-
-            MemoryStream stream = new MemoryStream();
-            BinaryWriter writer = new BinaryWriter(stream);
-
-            Count = Images.Count;
-            IndexList.Clear();
-
-            int offSet = 8 + Count * 4;
-            for (int i = 0; i < Count; i++)
-            {
-                IndexList.Add((int)stream.Length + offSet);
-                Images[i].Save(writer);
-                //Images[i] = null;
-            }
-
-            writer.Flush();
-            byte[] fBytes = stream.ToArray();
-            //  writer.Dispose();
-
-            _stream = File.Create(FileName);
-            writer = new BinaryWriter(_stream);
-            writer.Write(LibVersion);
-            writer.Write(Count);
-            for (int i = 0; i < Count; i++)
-                writer.Write(IndexList[i]);
-
-            writer.Write(fBytes);
-            writer.Flush();
-            writer.Close();
-            writer.Dispose();
-            Close();
         }
 
         private void CheckImage(int index)
@@ -191,6 +163,14 @@ namespace LibraryViewer
         public void AddImage(Bitmap image, short x, short y)
         {
             MImage mImage = new MImage(image) { X = x, Y = y };
+
+            Count++;
+            Images.Add(mImage);
+        }
+
+        public void AddImage(Bitmap image, Bitmap maskImage, short x, short y)
+        {
+            MImage mImage = new MImage(image, maskImage) { X = x, Y = y };
 
             Count++;
             Images.Add(mImage);
@@ -389,7 +369,7 @@ namespace LibraryViewer
 
                 if (w == 0 || h == 0)
                     return;
-
+                if ((w < 2) || (h < 2)) return;
                 Image = new Bitmap(w, h);
 
                 BitmapData data = Image.LockBits(new Rectangle(0, 0, w, h), ImageLockMode.ReadWrite,
@@ -400,12 +380,6 @@ namespace LibraryViewer
                 Marshal.Copy(dest, 0, data.Scan0, dest.Length);
 
                 Image.UnlockBits(data);
-
-                //if (Image.Width > 0 && Image.Height > 0)
-                //{
-                //    Guid id = Guid.NewGuid();
-                //    Image.Save(id + ".bmp", ImageFormat.Bmp);
-                //}
 
                 dest = null;
 
@@ -419,16 +393,24 @@ namespace LibraryViewer
                         return;
                     }
 
-                    MaskImage = new Bitmap(w, h);
+                    try
+                    {
+                        MaskImage = new Bitmap(w, h);
 
-                    data = MaskImage.LockBits(new Rectangle(0, 0, w, h), ImageLockMode.ReadWrite,
-                                                     PixelFormat.Format32bppArgb);
+                        data = MaskImage.LockBits(new Rectangle(0, 0, w, h), ImageLockMode.ReadWrite,
+                                                         PixelFormat.Format32bppArgb);
 
-                    dest = Decompress(MaskFBytes);
+                        dest = Decompress(MaskFBytes);
 
-                    Marshal.Copy(dest, 0, data.Scan0, dest.Length);
+                        Marshal.Copy(dest, 0, data.Scan0, dest.Length);
 
-                    Image.UnlockBits(data);
+                        MaskImage.UnlockBits(data);
+                    }
+                    catch (Exception ex)
+                    {
+                        File.AppendAllText(@".\Error.txt",
+                                       string.Format("[{0}] {1}{2}", DateTime.Now, ex, Environment.NewLine));
+                    }
                 }
 
                 dest = null;

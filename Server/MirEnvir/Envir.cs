@@ -188,8 +188,8 @@ namespace Server.MirEnvir
         public static long LastRunTime = 0;
         public int MonsterCount;
 
-        private long warTime, guildTime, conquestTime, rentalItemsTime;
-        private int DailyTime = DateTime.Now.Day;
+        private long warTime, guildTime, conquestTime, rentalItemsTime, auctionTime, spawnTime, robotTime;
+        private int dailyTime = DateTime.Now.Day;
 
         private bool MagicExists(Spell spell)
         {
@@ -465,10 +465,7 @@ namespace Server.MirEnvir
 
                 var conTime = Time;
                 var saveTime = Time + Settings.SaveDelay * Settings.Minute;
-                var userTime = Time + Settings.Minute * 5;
-                var auctionTime = Time;
-                var spawnTime = Time;
-                var robotTime = Time;
+                var userTime = Time + Settings.Minute * 5;             
                 var processTime = Time + 1000;
                 var startTime = Time;
 
@@ -528,7 +525,6 @@ namespace Server.MirEnvir
                             processRealCount = 0;
                             processTime = Time + 1000;
                         }
-
 
                         if (conTime != Time)
                         {
@@ -629,24 +625,6 @@ namespace Server.MirEnvir
                                     Message = string.Format(GameLanguage.OnlinePlayers, Players.Count),
                                     Type = ChatType.Hint
                                 });
-                        }
-
-                        if (Time >= auctionTime)
-                        {
-                            auctionTime = Time + Settings.Minute * 10;
-                            ProcessAuction();
-                        }
-
-                        if (Time >= spawnTime)
-                        {
-                            spawnTime = Time + Settings.Second * 10;
-                            Main.RespawnTick.Process();
-                        }
-
-                        if (Time >= robotTime)
-                        {
-                            robotTime = Time + Settings.Minute;
-                            Robot.Process(RobotNPC);
                         }
 
                         //   if (Players.Count == 0) Thread.Sleep(1);
@@ -793,14 +771,15 @@ namespace Server.MirEnvir
 
         public void Process()
         {        
-            if (Now.Day != DailyTime)
+            if (Now.Day != dailyTime)
             {
-                DailyTime = Now.Day;
+                dailyTime = Now.Day;
                 ProcessNewDay();
             }
 
             if(Time >= warTime)
             {
+                warTime = Time + Settings.Minute;
                 for (var i = GuildsAtWar.Count - 1; i >= 0; i--)
                 {
                     GuildsAtWar[i].TimeRemaining -= Settings.Minute;
@@ -809,8 +788,6 @@ namespace Server.MirEnvir
                     GuildsAtWar[i].EndWar();
                     GuildsAtWar.RemoveAt(i);
                 }
-                
-                warTime = Time + Settings.Minute;
             }
 
             if (Time >= guildTime)
@@ -826,13 +803,34 @@ namespace Server.MirEnvir
             {
                 conquestTime = Time + Settings.Second * 10;
                 for (var i = 0; i < Conquests.Count; i++)
+                {
                     Conquests[i].Process();
+                }
             }
 
-            if (Time < rentalItemsTime) return;
-            rentalItemsTime = Time + Settings.Minute * 5;
+            if (Time >= rentalItemsTime)
+            {
+                rentalItemsTime = Time + Settings.Minute * 5;
+                ProcessRentedItems();
+            }
 
-            ProcessRentedItems();
+            if (Time >= auctionTime)
+            {
+                auctionTime = Time + Settings.Minute * 10;
+                ProcessAuction();
+            }
+
+            if (Time >= spawnTime)
+            {
+                spawnTime = Time + Settings.Second * 10;
+                Main.RespawnTick.Process();
+            }
+
+            if (Time >= robotTime)
+            {
+                robotTime = Time + Settings.Minute;
+                Robot.Process(RobotNPC);
+            }
         }
 
         private void ProcessAuction()

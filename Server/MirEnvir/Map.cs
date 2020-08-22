@@ -632,15 +632,14 @@ namespace Server.MirEnvir
         public void Process()
         {
             ProcessRespawns();
-            //process doors
+
             for (int i = 0; i < Doors.Count; i++)
             {
                 if ((Doors[i].DoorState == DoorState.Open) && (Doors[i].LastTick + 5000 < Envir.Time))
                 {
                     Doors[i].DoorState = 0;
-                    //broadcast that door is closed
-                    Broadcast(new S.Opendoor() { DoorIndex = Doors[i].index, Close = true }, Doors[i].Location);
 
+                    Broadcast(new S.Opendoor() { DoorIndex = Doors[i].index, Close = true }, Doors[i].Location);
                 }
             }
 
@@ -675,6 +674,7 @@ namespace Server.MirEnvir
                     lightning.Spawned();
                 }
             }
+
             if ((Info.Fire) && Envir.Time > FireTime)
             {
                 FireTime = Envir.Time + Envir.Random.Next(3000, 15000);
@@ -727,7 +727,6 @@ namespace Server.MirEnvir
                     InactiveCount = 0;
                 }
             }
-
         }
 
         private void ProcessRespawns()

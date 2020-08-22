@@ -9,7 +9,12 @@ using System.Runtime.InteropServices;
 
 namespace LibraryEditor
 {
-    public sealed class MLibraryv0
+    /// <summary>
+    /// V0 Library
+    /// DXT1 Images
+    /// No versioning supported
+    /// </summary>
+    public sealed class MLibraryV0
     {
         public static bool Load = true;
         public string FileName;
@@ -22,7 +27,7 @@ namespace LibraryEditor
         private BinaryReader _reader;
         private FileStream _stream;
 
-        public MLibraryv0(string filename)
+        public MLibraryV0(string filename)
         {
             FileName = filename;
             Initialize();

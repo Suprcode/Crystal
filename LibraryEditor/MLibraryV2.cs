@@ -11,13 +11,21 @@ using System.Windows.Forms;
 
 namespace LibraryEditor
 {
+    /// <summary>
+    /// V2 Library
+    /// Uses DXT5 Images
+    /// Supports Frames (When at LibVersion 3)
+    /// </summary>
     public sealed class MLibraryV2
     {
-        public const int LibVersion = 2;
+        public const int LibVersion = 3;
+
         public static bool Load = true;
         public string FileName;
 
         public List<MImage> Images = new List<MImage>();
+        public Dictionary<MirAction, Frame> Frames = new Dictionary<MirAction, Frame>();
+
         public List<int> IndexList = new List<int>();
         public int Count;
         private bool _initialized;
@@ -43,14 +51,23 @@ namespace LibraryEditor
             _stream = new FileStream(FileName, FileMode.Open, FileAccess.ReadWrite);
             _reader = new BinaryReader(_stream);
             CurrentVersion = _reader.ReadInt32();
-            if (CurrentVersion != LibVersion)
+
+            if (CurrentVersion < 2)
             {
                 MessageBox.Show("Wrong version, expecting lib version: " + LibVersion.ToString() + " found version: " + CurrentVersion.ToString() + ".", "Failed to open", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
+
             Count = _reader.ReadInt32();
+
             Images = new List<MImage>();
             IndexList = new List<int>();
+
+            int frameSeek = 0;
+            if (CurrentVersion >= 3)
+            {
+                frameSeek = _reader.ReadInt32();
+            }
 
             for (int i = 0; i < Count; i++)
                 IndexList.Add(_reader.ReadInt32());
@@ -60,14 +77,23 @@ namespace LibraryEditor
 
             for (int i = 0; i < Count; i++)
                 CheckImage(i);
+
+            if (CurrentVersion >= 3)
+            {
+                _stream.Seek(frameSeek, SeekOrigin.Begin);
+
+                var frameCount = _reader.ReadInt32();
+                for (int i = 0; i < frameCount; i++)
+                {
+                    Frames.Add((MirAction)_reader.ReadByte(), new Frame(_reader));
+                }
+            }
         }
 
         public void Close()
         {
             if (_stream != null)
                 _stream.Dispose();
-            // if (_reader != null)
-            //     _reader.Dispose();
         }
 
         public void Save()
@@ -80,26 +106,39 @@ namespace LibraryEditor
             Count = Images.Count;
             IndexList.Clear();
 
-            int offSet = 8 + Count * 4;
+            int offSet = (4 + 4 + 4) + (Count * 4);
             for (int i = 0; i < Count; i++)
             {
                 IndexList.Add((int)stream.Length + offSet);
                 Images[i].Save(writer);
-                //Images[i] = null;
             }
+
+            var frameSeek = (int)stream.Length + offSet;
 
             writer.Flush();
             byte[] fBytes = stream.ToArray();
-            //  writer.Dispose();
 
             _stream = File.Create(FileName);
             writer = new BinaryWriter(_stream);
+
             writer.Write(LibVersion);
+
             writer.Write(Count);
+
+            writer.Write(frameSeek);
+
             for (int i = 0; i < Count; i++)
                 writer.Write(IndexList[i]);
 
             writer.Write(fBytes);
+
+            writer.Write(Frames.Keys.Count);
+            foreach (var action in Frames.Keys)
+            {
+                writer.Write((byte)action);
+                Frames[action].Save(writer);
+            }
+
             writer.Flush();
             writer.Close();
             writer.Dispose();
@@ -408,12 +447,6 @@ namespace LibraryEditor
 
                 Image.UnlockBits(data);
 
-                //if (Image.Width > 0 && Image.Height > 0)
-                //{
-                //    Guid id = Guid.NewGuid();
-                //    Image.Save(id + ".bmp", ImageFormat.Bmp);
-                //}
-
                 dest = null;
 
                 if (HasMask)
@@ -439,7 +472,7 @@ namespace LibraryEditor
 
                         MaskImage.UnlockBits(data);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         File.AppendAllText(@".\Error.txt",
                                        string.Format("[{0}] {1}{2}", DateTime.Now, ex, Environment.NewLine));

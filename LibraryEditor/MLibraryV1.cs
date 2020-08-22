@@ -11,13 +11,18 @@ using System.Windows.Forms;
 
 namespace LibraryEditor
 {
-    public sealed class MLibrary
+    /// <summary>
+    /// V1 Library
+    /// Uses DXT1 Images
+    /// </summary>
+    public sealed class MLibraryV1
     {
         public const int LibVersion = 1;
         public static bool Load = true;
         public string FileName;
         
         public List<MImage> Images = new List<MImage>();
+
         public List<int> IndexList = new List<int>();
         public int Count;
         private bool _initialized;
@@ -25,7 +30,7 @@ namespace LibraryEditor
         private BinaryReader _reader;
         private FileStream _stream;
 
-        public MLibrary(string filename)
+        public MLibraryV1(string filename)
         {
             FileName = filename;
             Initialize();
@@ -530,16 +535,16 @@ namespace LibraryEditor
 
                 Preview = new Bitmap(64, 64);
 
-                    using (Graphics g = Graphics.FromImage(Preview))
-                    {
-                        g.InterpolationMode = InterpolationMode.NearestNeighbor;//HighQualityBicubic
-                        g.Clear(Color.Transparent);
-                        int w = Math.Min((int)Width, 64);
-                        int h = Math.Min((int)Height, 64);
-                        g.DrawImage(Image, new Rectangle((64 - w) / 2, (64 - h) / 2, w, h), new Rectangle(0, 0, Width, Height), GraphicsUnit.Pixel);
+                using (Graphics g = Graphics.FromImage(Preview))
+                {
+                    g.InterpolationMode = InterpolationMode.NearestNeighbor;//HighQualityBicubic
+                    g.Clear(Color.Transparent);
+                    int w = Math.Min((int)Width, 64);
+                    int h = Math.Min((int)Height, 64);
+                    g.DrawImage(Image, new Rectangle((64 - w) / 2, (64 - h) / 2, w, h), new Rectangle(0, 0, Width, Height), GraphicsUnit.Pixel);
 
-                        g.Save();
-                    }
+                    g.Save();
+                }
             }
         }
     }

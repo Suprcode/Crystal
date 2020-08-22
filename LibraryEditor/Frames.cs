@@ -6,10 +6,9 @@ using System.Windows.Forms;
 
 namespace LibraryEditor
 {
+    public class FrameSet : Dictionary<MirAction, Frame> { }
     public class Frame
     {
-        public MirAction Action { get; set; }
-
         public int Start { get; set; }
         public int Count { get; set; }
         public int Skip { get; set; }
@@ -24,38 +23,61 @@ namespace LibraryEditor
         public bool Blend { get; set; }
 
 
-        DataGridViewComboBoxColumn CreateComboBoxWithEnums()
+        public static Dictionary<MirAction, Frame> DefaultMonsterFrameSet = new Dictionary<MirAction, Frame>
         {
-            var cell = new DataGridViewComboBoxColumn
-            {
-                DataSource = Enum.GetValues(typeof(MirAction)),
-                DataPropertyName = "Action",
-                Name = "Action"
-            };
+            { MirAction.Standing, new Frame(0, 4, 0, 500) },
+            { MirAction.Walking, new Frame(32, 6, 0, 100) },
+            { MirAction.Attack1, new Frame(80, 6, 0, 100) },
+            { MirAction.Struck, new Frame(128, 2, 0, 200) },
+            { MirAction.Die, new Frame(144, 10, 0, 100) },
+            { MirAction.Dead, new Frame(153, 1, 9, 1000) },
+            { MirAction.Revive, new Frame(144, 10, 0, 100) { Reverse = true } }
+        };
 
-            return cell;
+        public static Dictionary<MirAction, Frame> DefaultNPCFrameSet = new Dictionary<MirAction, Frame>
+        {
+            { MirAction.Standing, new Frame(0, 4, 0, 450) },
+            { MirAction.Harvest, new Frame(12, 10, 0, 200) }
+        };
+
+        public Frame(int start, int count, int skip, int interval, int effectstart = 0, int effectcount = 0, int effectskip = 0, int effectinterval = 0)
+        {
+            Start = start;
+            Count = count;
+            Skip = skip;
+            Interval = interval;
+            EffectStart = effectstart;
+            EffectCount = effectcount;
+            EffectSkip = effectskip;
+            EffectInterval = effectinterval;
         }
 
-        DataGridViewCheckBoxColumn CreateCheckbox(string name)
+        public Frame(BinaryReader reader)
         {
-            var cell = new DataGridViewCheckBoxColumn
-            {
-                DataPropertyName = name,
-                Name = name
-            };
-
-            return cell;
+            Start = reader.ReadInt32();
+            Count = reader.ReadInt32();
+            Skip = reader.ReadInt32();
+            Interval = reader.ReadInt32();
+            EffectStart = reader.ReadInt32();
+            EffectCount = reader.ReadInt32();
+            EffectSkip = reader.ReadInt32();
+            EffectInterval = reader.ReadInt32();
+            Reverse = reader.ReadBoolean();
+            Blend = reader.ReadBoolean();
         }
 
-        DataGridViewTextBoxColumn CreateTextbox(string name)
+        public void Save(BinaryWriter writer)
         {
-            var cell = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = name,
-                Name = name,
-            };
-
-            return cell;
+            writer.Write(Start);
+            writer.Write(Count);
+            writer.Write(Skip);
+            writer.Write(Interval);
+            writer.Write(EffectStart);
+            writer.Write(EffectCount);
+            writer.Write(EffectSkip);
+            writer.Write(EffectInterval);
+            writer.Write(Reverse);
+            writer.Write(Blend);
         }
     }
 }

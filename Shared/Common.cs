@@ -202,12 +202,7 @@ public enum IntelligentCreatureType : byte
     MedicalRat = 14,
 }
 
-//1 blank mob files
-//7 mob frames not added
-//2 blank frame sets (92, 173)
-//4 mob frames duplicate of other frame sets
-
-//TODO: add 2 missing frames in to blank frames, remove 2 duplicate frames (leaving no blanks and 2 duplicates)
+//3 blank mob files
 public enum Monster : ushort
 {
     Guard = 0,
@@ -382,13 +377,13 @@ public enum Monster : ushort
     RedTurtle = 169,//done
     GreenTurtle = 170,//done
     BlueTurtle = 171,//done
-        Catapult = 172, //not added frames //special 3 states in 1 
-        SabukWallSection = 173, //not added frames
-        NammandWallSection = 174, //not added frames
-        SiegeRepairman = 175, //not added frames
+    Catapult1 = 172, //not added frames
+    Catapult2 = 173, //not added frames
+        Blank1 = 174,
+    SiegeRepairman = 175, //not added frames
     BlueSanta = 176,//done
     BattleStandard = 177,//done
-    //ArcherGuard2 = 178,//done
+        Blank2 = 178,
     RedYimoogi = 179,//done
     LionRiderMale = 180, //frames not added
     LionRiderFemale = 181, //frames not added
@@ -441,7 +436,7 @@ public enum Monster : ushort
     ChaosGhost = 227,//done
     ManectricBlest = 228,//done
     ManectricKing = 229,//done
-    FrozenDoor = 230,//done
+        Blank3 = 230,
     IcePillar = 231,//done
     FrostYeti = 232,//done
     ManectricSlave = 233,//done
@@ -618,7 +613,68 @@ public enum Monster : ushort
     Ram1 = 400,
     Ram2 = 401,
     Kite = 402,
-    
+    PurpleFaeFlower = 403,
+    Furball = 404,
+    GlacierSnail = 405,
+    FurbolgWarrior = 406,
+    FurbolgArcher = 407,
+    FurbolgCommander = 408,
+    RedFaeFlower = 409,
+    FurbolgGuard = 410,
+    GlacierBeast = 411,
+    GlacierWarrior = 412,
+    ShardGuardian = 413,
+    WarriorScroll = 414,
+    TaoistScroll = 415,
+    WizardScroll = 416,
+    AssassinScroll = 417,
+    HoodedSummoner = 418, //Summons Scrolls
+    HoodedIceMage = 419,
+    HoodedPriest = 420,
+    ShardMaiden = 421,
+    KingKong = 422,
+    WarBear = 423,
+    ReaperPriest = 424,
+    ReaperWizard = 425,
+    ReaperAssassin = 426,
+    LivingVines = 427,
+    BlueMonk = 428,
+    MutantBeserker = 429,
+    MutantGuardian = 430,
+    MutantHighPriest = 431,
+    MysteriousMage = 432,
+    FeatheredWolf = 433,
+    MysteriousAssassin = 434,
+    MysteriousMonk = 435,
+    ManEatingPlant = 436,
+    HammerDwarf = 437,
+    ArcherDwarf = 438,
+    NobleWarrior = 439,
+    NobleArcher = 440,
+    NoblePriest = 441,
+    NobleAssassin = 442,
+    Swain = 443,
+    RedMutantPlant = 444,
+    BlueMutantPlant = 445,
+    UndeadHammerDwarf = 446,
+    UndeadDwarfArcher = 447,
+    AncientStoneGolem = 448,
+    Serpentirian = 449,
+
+    Butcher = 450,
+    Riklebites = 451,
+    FeralTundraFurbolg = 452,
+    FeralFlameFurbolg = 453,
+    ArcaneTotem = 454,
+    SpectralWraith = 455,
+    BabyMagmaDragon = 456,
+    BloodLord = 457,
+    SerpentLord = 458,
+    MirEmperor = 459,
+    MutantManEatingPlant = 460,
+    MutantWarg = 461,
+    GrassElemental = 462,
+    RockElemental = 463,
 
     EvilMir = 900,
     EvilMirBody = 901,
@@ -637,6 +693,11 @@ public enum Monster : ushort
     SSabukWall1 = 957,
     SSabukWall2 = 958,
     SSabukWall3 = 959,
+    NammandGate1 = 960, //Not Coded
+    NammandGate2 = 961, //Not Coded
+    SabukWallSection = 962, //Not Coded
+    NammandWallSection = 963, //Not Coded
+    FrozenDoor = 964, //Not Coded
 
     BabyPig = 10000,//Permanent
     Chick = 10001,//Special

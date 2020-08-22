@@ -18,11 +18,11 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>..\Build\Server Tools\LibraryViewer\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>3</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -36,11 +36,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ionic.Zlib">
-      <HintPath>Components\dotnet zlib\Ionic.Zlib.dll</HintPath>
-    </Reference>
     <Reference Include="ManagedSquish">
-      <HintPath>Components\Squish 2.0\ManagedSquish.dll</HintPath>
+      <HintPath>..\Components\Squish 2.0\ManagedSquish.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
