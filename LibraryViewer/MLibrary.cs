@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace LibraryViewer
 {
-    public sealed class MLibraryV2
+    public sealed class MLibrary
     {
         public const int LibVersion = 3;
 
@@ -27,7 +27,7 @@ namespace LibraryViewer
         private BinaryReader _reader;
         private FileStream _stream;
 
-        public MLibraryV2(string filename)
+        public MLibrary(string filename)
         {
             FileName = filename;
             Initialize();
@@ -103,39 +103,6 @@ namespace LibraryViewer
             }
         }
 
-        public Point GetOffSet(int index)
-        {
-            if (!_initialized)
-                Initialize();
-
-            if (Images == null || index < 0 || index >= Images.Count)
-                return Point.Empty;
-
-            if (Images[index] == null)
-            {
-                _stream.Seek(IndexList[index], SeekOrigin.Begin);
-                Images[index] = new MImage(_reader);
-            }
-
-            return new Point(Images[index].X, Images[index].Y);
-        }
-
-        public Size GetSize(int index)
-        {
-            if (!_initialized)
-                Initialize();
-            if (Images == null || index < 0 || index >= Images.Count)
-                return Size.Empty;
-
-            if (Images[index] == null)
-            {
-                _stream.Seek(IndexList[index], SeekOrigin.Begin);
-                Images[index] = new MImage(_reader);
-            }
-
-            return new Size(Images[index].Width, Images[index].Height);
-        }
-
         public MImage GetMImage(int index)
         {
             if (index < 0 || index >= Images.Count)
@@ -160,37 +127,6 @@ namespace LibraryViewer
             return image.Preview;
         }
 
-        public void AddImage(Bitmap image, short x, short y)
-        {
-            MImage mImage = new MImage(image) { X = x, Y = y };
-
-            Count++;
-            Images.Add(mImage);
-        }
-
-        public void AddImage(Bitmap image, Bitmap maskImage, short x, short y)
-        {
-            MImage mImage = new MImage(image, maskImage) { X = x, Y = y };
-
-            Count++;
-            Images.Add(mImage);
-        }
-
-        public void ReplaceImage(int Index, Bitmap image, short x, short y)
-        {
-            MImage mImage = new MImage(image) { X = x, Y = y };
-
-            Images[Index] = mImage;
-        }
-
-        public void InsertImage(int index, Bitmap image, short x, short y)
-        {
-            MImage mImage = new MImage(image) { X = x, Y = y };
-
-            Count++;
-            Images.Insert(index, mImage);
-        }
-
         public void RemoveImage(int index)
         {
             if (Images == null || Count <= 1)
@@ -202,31 +138,6 @@ namespace LibraryViewer
             Count--;
 
             Images.RemoveAt(index);
-        }
-
-        public static bool CompareBytes(byte[] a, byte[] b)
-        {
-            if (a == b) return true;
-
-            if (a == null || b == null || a.Length != b.Length) return false;
-
-            for (int i = 0; i < a.Length; i++) if (a[i] != b[i]) return false;
-
-            return true;
-        }
-
-        public void RemoveBlanks(bool safe = false)
-        {
-            for (int i = Count - 1; i >= 0; i--)
-            {
-                if (Images[i].FBytes == null || Images[i].FBytes.Length <= 24)
-                {
-                    if (!safe)
-                        RemoveImage(i);
-                    else if (Images[i].X == 0 && Images[i].Y == 0)
-                        RemoveImage(i);
-                }
-            }
         }
 
         public sealed class MImage
@@ -269,74 +180,6 @@ namespace LibraryViewer
                     MaskLength = reader.ReadInt32();
                     MaskFBytes = reader.ReadBytes(MaskLength);
                 }
-            }
-
-            public MImage(byte[] image, short Width, short Height)//only use this when converting from old to new type!
-            {
-                FBytes = image;
-                this.Width = Width;
-                this.Height = Height;
-            }
-
-            public MImage(Bitmap image)
-            {
-                if (image == null)
-                {
-                    FBytes = new byte[0];
-                    return;
-                }
-
-                Width = (short)image.Width;
-                Height = (short)image.Height;
-
-                Image = image;// FixImageSize(image);
-                FBytes = ConvertBitmapToArray(Image);
-            }
-
-            public MImage(Bitmap image, Bitmap Maskimage)
-            {
-                if (image == null)
-                {
-                    FBytes = new byte[0];
-                    return;
-                }
-
-                Width = (short)image.Width;
-                Height = (short)image.Height;
-                Image = image;// FixImageSize(image);
-                FBytes = ConvertBitmapToArray(Image);
-                if (Maskimage == null)
-                {
-                    MaskFBytes = new byte[0];
-                    return;
-                }
-                HasMask = true;
-                MaskWidth = (short)Maskimage.Width;
-                MaskHeight = (short)Maskimage.Height;
-                MaskImage = Maskimage;// FixImageSize(Maskimage);
-                MaskFBytes = ConvertBitmapToArray(MaskImage);
-            }
-
-            private Bitmap FixImageSize(Bitmap input)
-            {
-                int w = input.Width + (4 - input.Width % 4) % 4;
-                int h = input.Height + (4 - input.Height % 4) % 4;
-
-                if (input.Width != w || input.Height != h)
-                {
-                    Bitmap temp = new Bitmap(w, h);
-                    using (Graphics g = Graphics.FromImage(temp))
-                    {
-                        g.Clear(Color.Transparent);
-                        g.InterpolationMode = InterpolationMode.NearestNeighbor;
-                        g.DrawImage(input, 0, 0);
-                        g.Save();
-                    }
-                    input.Dispose();
-                    input = temp;
-                }
-
-                return input;
             }
 
             private unsafe byte[] ConvertBitmapToArray(Bitmap input)
@@ -414,29 +257,6 @@ namespace LibraryViewer
                 }
 
                 dest = null;
-            }
-
-
-            public void Save(BinaryWriter writer)
-            {
-                writer.Write(Width);
-                writer.Write(Height);
-                writer.Write(X);
-                writer.Write(Y);
-                writer.Write(ShadowX);
-                writer.Write(ShadowY);
-                writer.Write(HasMask ? (byte)(Shadow | 0x80) : (byte)Shadow);
-                writer.Write(FBytes.Length);
-                writer.Write(FBytes);
-                if (HasMask)
-                {
-                    writer.Write(MaskWidth);
-                    writer.Write(MaskHeight);
-                    writer.Write(MaskX);
-                    writer.Write(MaskY);
-                    writer.Write(MaskFBytes.Length);
-                    writer.Write(MaskFBytes);
-                }
             }
 
             public static byte[] Compress(byte[] raw)

@@ -299,7 +299,7 @@ namespace Server
 
         private void PlayersOnlineListView_DoubleClick(object sender, EventArgs e)
         {
-            ListViewNF list = (ListViewNF)sender;
+            CustomFormControl.ListViewNF list = (CustomFormControl.ListViewNF)sender;
 
             if (list.SelectedItems.Count > 0)
             {

@@ -387,6 +387,7 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.RefineDialog.Hide();
             GameScene.Scene.StorageDialog.Hide();
             GameScene.Scene.TrustMerchantDialog.Hide();
+            GameScene.Scene.QuestListDialog.Hide();
             GameScene.Scene.InventoryDialog.Location = new Point(0, 0);
         }
 
@@ -972,7 +973,7 @@ namespace Client.MirScenes.Dialogs
 
             if (GameScene.SelectedCell != null && PType == PanelType.Downgrade)
             {
-                if (GameScene.SelectedCell.Item.Awake.getAwakeLevel() != 0)
+                if (GameScene.SelectedCell.Item.Awake.GetAwakeLevel() != 0)
                 {
                     TargetItem = GameScene.SelectedCell.Item;
                     OldCell = GameScene.SelectedCell;
@@ -1355,7 +1356,7 @@ namespace Client.MirScenes.Dialogs
             }
             else
             {
-                if (Items[0].Awake.getAwakeLevel() == 0)
+                if (Items[0].Awake.GetAwakeLevel() == 0)
                 {
                     SelectAwakeType.Items.Add("Select Upgrade Type.");
                     if (Items[0].Info.Type == ItemType.Weapon)
@@ -1376,10 +1377,10 @@ namespace Client.MirScenes.Dialogs
                 }
                 else
                 {
-                    SelectAwakeType.Items.Add(getAwakeTypeText(Items[0].Awake.type));
-                    if (CurrentAwakeType != Items[0].Awake.type)
+                    SelectAwakeType.Items.Add(getAwakeTypeText(Items[0].Awake.Type));
+                    if (CurrentAwakeType != Items[0].Awake.Type)
                     {
-                        CurrentAwakeType = Items[0].Awake.type;
+                        CurrentAwakeType = Items[0].Awake.Type;
                         OnAwakeTypeSelect(0);
                     }
                 }

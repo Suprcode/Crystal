@@ -924,7 +924,7 @@ namespace LibraryEditor
         private void defaultMonsterFramesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _library.Frames.Clear();
-            _library.Frames = new Dictionary<MirAction, Frame>(Frame.DefaultMonsterFrameSet);
+            _library.Frames = new FrameSet(FrameSet.DefaultMonsterFrameSet);
 
             UpdateFrameGridView();
         }
@@ -932,7 +932,7 @@ namespace LibraryEditor
         private void defaultNPCFramesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _library.Frames.Clear();
-            _library.Frames = new Dictionary<MirAction, Frame>(Frame.DefaultNPCFrameSet);
+            _library.Frames = new FrameSet(FrameSet.DefaultNPCFrameSet);
 
             UpdateFrameGridView();
         }
@@ -1090,7 +1090,7 @@ namespace LibraryEditor
         private FrameSet GetFrameSetByImage(Monster image)
         {
             //REMOVE THE BELOW EXCEPTION ONCE THE DESIRED CODE HAS BEEN ADDED          
-            throw new NotImplementedException("The method 'GetFrameSetByImage' must be updated before this this be used");
+            throw new NotImplementedException("The method 'GetFrameSetByImage' must be updated before this function can be used");
 
             //UNCOMMENT THE CODE BELOW, IT SERVES AS AN EXAMPLE OF HOW TO MATCH IMAGES UP TO THE CORRECT FRAMES
             //List<FrameSet> FrameList = new List<FrameSet>();

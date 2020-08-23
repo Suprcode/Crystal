@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Server.MirEnvir;
+using Server.MirObjects;
 
 namespace Server
 {
@@ -133,9 +134,8 @@ namespace Server
         private void GuildMinOwnerLeveltextBox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
-            byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
+            if (!byte.TryParse(ActiveControl.Text, out byte temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -148,9 +148,8 @@ namespace Server
         private void GuildPPLtextBox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
-            byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
+            if (!byte.TryParse(ActiveControl.Text, out byte temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -163,9 +162,8 @@ namespace Server
         private void GuildExpratetextBox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
-            byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
+            if (!byte.TryParse(ActiveControl.Text, out byte temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -225,9 +223,8 @@ namespace Server
         {
             if (ActiveControl != sender) return;
             if (GuildLevelListcomboBox.SelectedItem == null) return;
-            uint temp;
 
-            if (!uint.TryParse(ActiveControl.Text, out temp))
+            if (!uint.TryParse(ActiveControl.Text, out uint temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -272,9 +269,8 @@ namespace Server
         {
             if (ActiveControl != sender) return;
             if (GuildLevelListcomboBox.SelectedItem == null) return;
-            long temp;
 
-            if (!long.TryParse(ActiveControl.Text, out temp))
+            if (!long.TryParse(ActiveControl.Text, out long temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -290,9 +286,8 @@ namespace Server
         {
             if (ActiveControl != sender) return;
             if (GuildLevelListcomboBox.SelectedItem == null) return;
-            int temp;
 
-            if (!int.TryParse(ActiveControl.Text, out temp))
+            if (!int.TryParse(ActiveControl.Text, out int temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -308,9 +303,8 @@ namespace Server
         private void WarLengthTextBox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
-            long temp;
 
-            if (!long.TryParse(ActiveControl.Text, out temp))
+            if (!long.TryParse(ActiveControl.Text, out long temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -323,9 +317,8 @@ namespace Server
         private void WarCostTextBox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
-            uint temp;
 
-            if (!uint.TryParse(ActiveControl.Text, out temp))
+            if (!uint.TryParse(ActiveControl.Text, out uint temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -377,9 +370,13 @@ namespace Server
             for (int i = 0; i < Settings.Guild_BuffList.Count; i++)
                 if (Index < Settings.Guild_BuffList[i].Id)
                     Index = Settings.Guild_BuffList[i].Id;
-            GuildBuffInfo NewBuff = new GuildBuffInfo();
-            NewBuff.Id = ++Index;
-            NewBuff.name = "Buff " + Index.ToString();
+
+            GuildBuffInfo NewBuff = new GuildBuffInfo
+            {
+                Id = ++Index,
+                name = "Buff " + Index.ToString()
+            };
+
             Settings.Guild_BuffList.Add(NewBuff);
             BuffList.Items.Add(NewBuff);
             GuildsChanged = true;   

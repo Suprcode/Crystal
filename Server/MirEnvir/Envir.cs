@@ -851,7 +851,7 @@ namespace Server.MirEnvir
                         }
                         else
                         {
-                            string message = string.Format("You won {0} for {1:#,##0} Gold.", info.Item.Name, info.CurrentBid);
+                            string message = string.Format("You won {0} for {1:#,##0} Gold.", info.Item.FriendlyName, info.CurrentBid);
 
                             info.Sold = true;
                             MailCharacter(info.CurrentBuyerInfo, info.Item, customMessage: message);
@@ -863,8 +863,8 @@ namespace Server.MirEnvir
                                 info.CurrentBuyerInfo.Player.Enqueue(new S.LoseGold { Gold = info.CurrentBid });
                             }
 
-                            MessageAccount(info.CurrentBuyerInfo.AccountInfo, string.Format("You bought {0} for {1:#,##0} Gold", info.Item.Name, info.CurrentBid), ChatType.Hint);
-                            MessageAccount(info.SellerInfo.AccountInfo, string.Format("You sold {0} for {1:#,##0} Gold", info.Item.Name, info.CurrentBid), ChatType.Hint);
+                            MessageAccount(info.CurrentBuyerInfo.AccountInfo, string.Format("You bought {0} for {1:#,##0} Gold", info.Item.FriendlyName, info.CurrentBid), ChatType.Hint);
+                            MessageAccount(info.SellerInfo.AccountInfo, string.Format("You sold {0} for {1:#,##0} Gold", info.Item.FriendlyName, info.CurrentBid), ChatType.Hint);
                         }
                     }
                     else
@@ -993,7 +993,7 @@ namespace Server.MirEnvir
                 foreach (var Spawn in SavedSpawns)
                 {
                     var Save = new RespawnSave { RespawnIndex = Spawn.Info.RespawnIndex, NextSpawnTick = Spawn.NextSpawnTick, Spawned = Spawn.Count >= Spawn.Info.Count * SpawnMultiplier };
-                    Save.save(writer);
+                    Save.Save(writer);
                 }
             }
         }
@@ -2665,7 +2665,7 @@ namespace Server.MirEnvir
         {
             //can't have expiry on usable items
             if (item.Info.Type == ItemType.Scroll || item.Info.Type == ItemType.Potion || 
-                item.Info.Type == ItemType.Transform || item.Info.Type == ItemType.Script) return;
+                item.Info.Type == ItemType.Transform || item.Info.Type == ItemType.Script || item.Info.Type == ItemType.Deco) return;
 
             var expiryInfo = new ExpireInfo();
 

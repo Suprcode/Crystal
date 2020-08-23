@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Windows.Forms;
 
-namespace FixedListViewControl
+namespace CustomFormControl
 {
     public class FixedListView : ListView
     {

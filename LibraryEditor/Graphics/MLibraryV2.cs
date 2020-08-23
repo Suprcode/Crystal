@@ -24,7 +24,7 @@ namespace LibraryEditor
         public string FileName;
 
         public List<MImage> Images = new List<MImage>();
-        public Dictionary<MirAction, Frame> Frames = new Dictionary<MirAction, Frame>();
+        public FrameSet Frames = new FrameSet();
 
         public List<int> IndexList = new List<int>();
         public int Count;
@@ -433,9 +433,8 @@ namespace LibraryEditor
                 int w = Width;// +(4 - Width % 4) % 4;
                 int h = Height;// +(4 - Height % 4) % 4;
 
-                if (w == 0 || h == 0)
-                    return;
-                if ((w < 2) || (h < 2)) return;
+                if (w < 2 || h < 2) return;
+
                 Image = new Bitmap(w, h);
 
                 BitmapData data = Image.LockBits(new Rectangle(0, 0, w, h), ImageLockMode.ReadWrite,

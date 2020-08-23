@@ -65,7 +65,7 @@
     <Compile Include="LoadSettings.Designer.cs">
       <DependentUpon>LoadSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="MLibraryV2.cs" />
+    <Compile Include="MLibrary.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="LMain.resx">

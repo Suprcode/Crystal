@@ -24,7 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{760C9C75
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Controls", "Controls", "{B1B084A4-CC76-41FF-94C1-67D37475C2B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FixedListViewControl", "Controls\FixedListViewControl\FixedListViewControl.csproj", "{22D64468-4312-4558-B25D-99BFF85CAA96}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomFormControl", "Controls\FixedListViewControl\CustomFormControl.csproj", "{22D64468-4312-4558-B25D-99BFF85CAA96}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{19625CA5-42F9-4BF5-AA1C-C8DFD4EB7833}"
 EndProject

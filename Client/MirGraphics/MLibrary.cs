@@ -563,7 +563,6 @@ namespace Client.MirGraphics
             if (_images == null || index < 0 || index >= _images.Length)
                 return false;
 
-
             if (_images[index] == null)
             {
                 _fStream.Position = _indexList[index];
@@ -1093,6 +1092,4 @@ namespace Client.MirGraphics
             }
         }
     }
-
-
 }

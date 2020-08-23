@@ -45,7 +45,7 @@ namespace Server
             this.GlobalMessageTextBox = new System.Windows.Forms.TextBox();
             this.ChatLogTextBox = new System.Windows.Forms.TextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.PlayersOnlineListView = new Server.ListViewNF();
+            this.PlayersOnlineListView = new CustomFormControl.ListViewNF();
             this.indexHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.nameHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.levelHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -684,7 +684,7 @@ namespace Server
         private GroupBox groupBox1;
         private Button GlobalMessageButton;
         private TextBox GlobalMessageTextBox;
-        private ListViewNF PlayersOnlineListView;
+        private CustomFormControl.ListViewNF PlayersOnlineListView;
         private ColumnHeader nameHeader;
         private ColumnHeader levelHeader;
         private ColumnHeader classHeader;

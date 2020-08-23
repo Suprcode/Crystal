@@ -1,4 +1,5 @@
-﻿namespace Server
+﻿
+namespace Server
 {
     partial class AccountInfoForm
     {
@@ -66,7 +67,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.FilterPlayerTextBox = new System.Windows.Forms.TextBox();
-            this.AccountInfoListView = new Server.ListViewNF();
+            this.AccountInfoListView = new CustomFormControl.ListViewNF();
             this.indexHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.accountIDHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.passwordHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -558,7 +559,7 @@
         #endregion
 
         private System.Windows.Forms.Button CreateButton;
-        private ListViewNF AccountInfoListView;
+        private CustomFormControl.ListViewNF AccountInfoListView;
         private System.Windows.Forms.ColumnHeader indexHeader;
         private System.Windows.Forms.ColumnHeader accountIDHeader;
         private System.Windows.Forms.Label label1;

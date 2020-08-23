@@ -3966,9 +3966,11 @@ namespace ServerPackets
             From = reader.ReadInt32();
             User = reader.ReadInt32();
             if (!reader.ReadBoolean()) return;
-            Item = new GuildStorageItem();
-            Item.UserId = reader.ReadInt64();
-            Item.Item = new UserItem(reader);
+            Item = new GuildStorageItem
+            {
+                UserId = reader.ReadInt64(),
+                Item = new UserItem(reader)
+            };
         }
         protected override void WritePacket(BinaryWriter writer)
         {

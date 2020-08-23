@@ -7,8 +7,8 @@
     <ProjectGuid>{22D64468-4312-4558-B25D-99BFF85CAA96}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FixedListViewControl</RootNamespace>
-    <AssemblyName>FixedListViewControl</AssemblyName>
+    <RootNamespace>CustomFormControl</RootNamespace>
+    <AssemblyName>CustomFormControl</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -43,6 +43,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FixedListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ListViewNF.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

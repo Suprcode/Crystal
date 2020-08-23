@@ -13,8 +13,7 @@ namespace Server.MirEnvir
         public ulong NextSpawnTick = 0;
         public int RespawnIndex = 0;
 
-        public RespawnSave()
-        { }
+        public RespawnSave() { }
 
         public RespawnSave(BinaryReader reader)
         {
@@ -23,7 +22,7 @@ namespace Server.MirEnvir
             RespawnIndex = reader.ReadInt32();
         }
 
-        public void save(BinaryWriter writer)
+        public void Save(BinaryWriter writer)
         {
             writer.Write(Spawned);
             writer.Write(NextSpawnTick);
@@ -36,10 +35,8 @@ namespace Server.MirEnvir
         public int UserCount = 1;
         public double DelayLoss = 1.0;
 
-        public RespawnTickOption()
-        {
+        public RespawnTickOption() { }
 
-        }
         public RespawnTickOption(BinaryReader reader)
         {
             UserCount = reader.ReadInt32();

@@ -8,7 +8,6 @@ using System.Drawing;
 
 namespace Server.MirObjects
 {
-
     public class GuildObject
     {
         protected static Envir Envir
@@ -253,13 +252,11 @@ namespace Server.MirObjects
         public void SendGuildStatus(PlayerObject member)
         {
             string gName = Name;
-            string conquest = "";
-
-                if (Conquest != null)
-                {
-                    conquest = "[" + Conquest.Info.Name + "]";
-                    gName = gName + conquest;
-                }
+            if (Conquest != null)
+            {
+                string conquest = "[" + Conquest.Info.Name + "]";
+                gName += conquest;
+            }
 
             member.Enqueue(new ServerPackets.GuildStatus()
                 {
@@ -280,27 +277,27 @@ namespace Server.MirObjects
                 });
         }
 
-        public void NewMember(PlayerObject newmember)
+        public void NewMember(PlayerObject newMember)
         {
             if (Ranks.Count < 2)
                 Ranks.Add(new GuildRank() { Name = "Members", Index = 1});
             GuildRank currentrank = Ranks[Ranks.Count - 1];
-            GuildMember Member = new GuildMember() { name = newmember.Info.Name, Player = newmember, Id = newmember.Info.Index, LastLogin = Envir.Now, Online = true };
+            GuildMember Member = new GuildMember() { name = newMember.Info.Name, Player = newMember, Id = newMember.Info.Index, LastLogin = Envir.Now, Online = true };
             currentrank.Members.Add(Member);
-            PlayerLogged(newmember, true, true);
+            PlayerLogged(newMember, true, true);
             Membercount++;
             NeedSave = true;
         }
 
-        public bool ChangeRank(PlayerObject Self, string membername, byte RankIndex, string RankName = "Members")
+        public bool ChangeRank(PlayerObject self, string memberName, byte rankIndex, string rankName = "Members")
         {
-            if ((Self.MyGuild != this) || (Self.MyGuildRank == null)) return false;
-            if (RankIndex >= Ranks.Count) return false;
+            if ((self.MyGuild != this) || (self.MyGuildRank == null)) return false;
+            if (rankIndex >= Ranks.Count) return false;
             GuildMember Member = null;
             GuildRank MemberRank = null;
             for (int i = 0; i < Ranks.Count; i++)
                 for (int j = 0; j < Ranks[i].Members.Count; j++)
-                    if (Ranks[i].Members[j].name == membername)
+                    if (Ranks[i].Members[j].name == memberName)
                     {
                         Member = Ranks[i].Members[j];
                         MemberRank = Ranks[i];
@@ -310,20 +307,20 @@ namespace Server.MirObjects
             Found:
             if (Member == null) return false;
 
-            MirDatabase.CharacterInfo Character = Envir.GetCharacterInfo(membername);
+            MirDatabase.CharacterInfo Character = Envir.GetCharacterInfo(memberName);
             if (Character == null) return false;
-            if ((RankIndex == 0) && (Character.Level < Settings.Guild_RequiredLevel))
+            if ((rankIndex == 0) && (Character.Level < Settings.Guild_RequiredLevel))
             {
-                Self.ReceiveChat(String.Format("A guild leader needs to be at least level {0}", Settings.Guild_RequiredLevel), ChatType.System);
+                self.ReceiveChat(String.Format("A guild leader needs to be at least level {0}", Settings.Guild_RequiredLevel), ChatType.System);
                 return false;
             }
 
-            if ((MemberRank.Index >= Self.MyGuildRank.Index) && (Self.MyGuildRank.Index != 0))return false;
+            if ((MemberRank.Index >= self.MyGuildRank.Index) && (self.MyGuildRank.Index != 0))return false;
             if (MemberRank.Index == 0)
             {
                 if (MemberRank.Members.Count <= 2)
                 {
-                    Self.ReceiveChat("A guild needs at least 2 leaders.", ChatType.System);
+                    self.ReceiveChat("A guild needs at least 2 leaders.", ChatType.System);
                     return false;
                 }
                 for (int i = 0; i < MemberRank.Members.Count; i++)
@@ -331,24 +328,26 @@ namespace Server.MirObjects
                     if ((MemberRank.Members[i].Player != null) && (MemberRank.Members[i] != Member))
                         goto AllOk;
                 }
-                Self.ReceiveChat("You need at least 1 leader online.", ChatType.System);
+                self.ReceiveChat("You need at least 1 leader online.", ChatType.System);
                 return false;
             }
 
             AllOk:
-            Ranks[RankIndex].Members.Add(Member);
+            Ranks[rankIndex].Members.Add(Member);
             MemberRank.Members.Remove(Member);
 
-            MemberRank = Ranks[RankIndex];
+            MemberRank = Ranks[rankIndex];
 
-            List<GuildRank> NewRankList = new List<GuildRank>();
-            NewRankList.Add(Ranks[RankIndex]);
+            List<GuildRank> NewRankList = new List<GuildRank>
+            {
+                Ranks[rankIndex]
+            };
             NeedSave = true;
             PlayerObject player = (PlayerObject)Member.Player;
             if (player != null)
             {
-                player.MyGuildRank = Ranks[RankIndex];
-                player.Enqueue(new ServerPackets.GuildMemberChange() { Name = Self.Info.Name, Status = (byte)8, Ranks = NewRankList });
+                player.MyGuildRank = Ranks[rankIndex];
+                player.Enqueue(new ServerPackets.GuildMemberChange() { Name = self.Info.Name, Status = (byte)8, Ranks = NewRankList });
                 player.BroadcastInfo();
             }
 
@@ -374,8 +373,10 @@ namespace Server.MirObjects
             GuildRank NewRank = new GuildRank(){Index = NewIndex, Name = String.Format("Rank-{0}",NewIndex), Options = (GuildRankOptions)0};
             Ranks.Insert(NewIndex, NewRank);
             Ranks[Ranks.Count - 1].Index = Ranks.Count - 1;
-            List<GuildRank> NewRankList = new List<GuildRank>();
-            NewRankList.Add(NewRank);
+            List<GuildRank> NewRankList = new List<GuildRank>
+            {
+                NewRank
+            };
             SendServerPacket(new ServerPackets.GuildMemberChange() { Name = Self.Name, Status = (byte)6, Ranks = NewRankList});
             NeedSave = true;
             return true;
@@ -399,8 +400,10 @@ namespace Server.MirObjects
             }
             Ranks[RankIndex].Options = Enabled == "true" ? Ranks[RankIndex].Options |= (GuildRankOptions)(1 << Option) : Ranks[RankIndex].Options ^= (GuildRankOptions)(1 << Option);
 
-            List<GuildRank> NewRankList = new List<GuildRank>();
-            NewRankList.Add(Ranks[RankIndex]);
+            List<GuildRank> NewRankList = new List<GuildRank>
+            {
+                Ranks[RankIndex]
+            };
             SendServerPacket(new ServerPackets.GuildMemberChange() { Name = Self.Name, Status = (byte)7, Ranks = NewRankList });
             NeedSave = true;
             return true;
@@ -426,13 +429,14 @@ namespace Server.MirObjects
             if (RankIndex >= Ranks.Count)
                 return false;
             Ranks[RankIndex].Name = RankName;
-            PlayerObject player = null;
-            List<GuildRank> NewRankList = new List<GuildRank>();
-            NewRankList.Add(Ranks[RankIndex]);
+            List<GuildRank> NewRankList = new List<GuildRank>
+            {
+                Ranks[RankIndex]
+            };
             for (int i = 0; i < Ranks.Count; i++)
                 for (int j = 0; j < Ranks[i].Members.Count; j++)
                 {
-                    player = (PlayerObject)Ranks[i].Members[j].Player;
+                    PlayerObject player = (PlayerObject)Ranks[i].Members[j].Player;
                     if (player != null)
                     {
                         player.Enqueue(new ServerPackets.GuildMemberChange() { Name = Self.Info.Name, Status = (byte)7, Ranks = NewRankList });
@@ -493,28 +497,27 @@ namespace Server.MirObjects
             return true;
         }
 
-        public void MemberDeleted(string name, PlayerObject formermember, bool kickself)
+        public void MemberDeleted(string name, PlayerObject formerMember, bool kickSelf)
         {
-            PlayerObject player = null;
             for (int i = 0; i < Ranks.Count; i++)
                 for (int j = 0; j < Ranks[i].Members.Count; j++)
                 {
-                    if ((Ranks[i].Members[j].Player != null) && (Ranks[i].Members[j].Player != formermember))
+                    if ((Ranks[i].Members[j].Player != null) && (Ranks[i].Members[j].Player != formerMember))
                     {
-                        player = (PlayerObject)Ranks[i].Members[j].Player;
-                        player.Enqueue(new ServerPackets.GuildMemberChange() { Name = name, Status = (byte)(kickself ? 4:3) });
+                        PlayerObject player = (PlayerObject)Ranks[i].Members[j].Player;
+                        player.Enqueue(new ServerPackets.GuildMemberChange() { Name = name, Status = (byte)(kickSelf ? 4:3) });
                         player.GuildMembersChanged = true;
                     }
                 }
-            if (formermember != null)
+            if (formerMember != null)
             {
-                formermember.Info.GuildIndex = -1;
-                formermember.MyGuild = null;
-                formermember.MyGuildRank = null;
-                formermember.ReceiveChat(kickself ? "You have left your guild." : "You have been removed from your guild.", ChatType.Guild);
-                formermember.RefreshStats();
-                formermember.Enqueue(new ServerPackets.GuildStatus() { GuildName = "", GuildRankName = "", MyOptions = (GuildRankOptions)0 });
-                formermember.BroadcastInfo();
+                formerMember.Info.GuildIndex = -1;
+                formerMember.MyGuild = null;
+                formerMember.MyGuildRank = null;
+                formerMember.ReceiveChat(kickSelf ? "You have left your guild." : "You have been removed from your guild.", ChatType.Guild);
+                formerMember.RefreshStats();
+                formerMember.Enqueue(new ServerPackets.GuildStatus() { GuildName = "", GuildRankName = "", MyOptions = (GuildRankOptions)0 });
+                formerMember.BroadcastInfo();
             }
         }
 
@@ -530,12 +533,11 @@ namespace Server.MirObjects
         {
             Notice = notice;
             NeedSave = true;
-            PlayerObject player = null;
             for (int i = 0; i < Ranks.Count; i++)
                 for (int j = 0; j < Ranks[i].Members.Count; j++)
                     if (Ranks[i].Members[j].Player != null)
                     {
-                        player = (PlayerObject)Ranks[i].Members[j].Player;
+                        PlayerObject player = (PlayerObject)Ranks[i].Members[j].Player;
                         player.GuildNoticeChanged = true;
                     }
             SendServerPacket(new ServerPackets.GuildNoticeChange() { update = -1 });
@@ -543,11 +545,10 @@ namespace Server.MirObjects
 
         public void SendServerPacket(Packet p)
         {
-            PlayerObject player = null;
             for (int i = 0; i < Ranks.Count; i++)
                 for (int j = 0; j < Ranks[i].Members.Count; j++)
                 {
-                    player = (PlayerObject)Ranks[i].Members[j].Player;
+                    PlayerObject player = (PlayerObject)Ranks[i].Members[j].Player;
                     if (player != null)
                         player.Enqueue(p);
                 }
@@ -555,11 +556,10 @@ namespace Server.MirObjects
 
         public void SendItemInfo(UserItem Item)
         {
-            PlayerObject player = null;
             for (int i = 0; i < Ranks.Count; i++)
                 for (int j = 0; j < Ranks[i].Members.Count; j++)
                 {
-                    player = (PlayerObject)Ranks[i].Members[j].Player;
+                    PlayerObject player = (PlayerObject)Ranks[i].Members[j].Player;
                     if (player != null)
                     {
                         player.CheckItem(Item);
@@ -643,12 +643,11 @@ namespace Server.MirObjects
 
         public void UpdatePlayersColours()
         {
-            //in a way this is a horrible spam situation, it should only broadcast to your  own guild or enemy or allies guild but not sure i wanna code yet another broadcast for that
-            PlayerObject player = null;
             for (int i = 0; i < Ranks.Count; i++)
                 for (int j = 0; j < Ranks[i].Members.Count; j++)
                 {
-                    player = (PlayerObject)Ranks[i].Members[j].Player;
+                    //in a way this is a horrible spam situation, it should only broadcast to your  own guild or enemy or allies guild but not sure i wanna code yet another broadcast for that
+                    PlayerObject player = (PlayerObject)Ranks[i].Members[j].Player;
                     if (player != null)
                     {
                         //player.Enqueue(player.GetInfoEx(player));
@@ -751,8 +750,10 @@ namespace Server.MirObjects
             }
 
             BuffList.Add(Buff);
-            List<GuildBuff> NewBuff = new List<GuildBuff>();
-            NewBuff.Add(Buff);
+            List<GuildBuff> NewBuff = new List<GuildBuff>
+            {
+                Buff
+            };
             SendServerPacket(new ServerPackets.GuildBuffList { ActiveBuffs = NewBuff });
             //now tell everyone our new sparepoints
             for (int i = 0; i < Ranks.Count; i++)
@@ -779,8 +780,10 @@ namespace Server.MirObjects
             Buff.Active = true;
             Buff.ActiveTimeRemaining = Buff.Info.TimeLimit;
             Gold -= (uint)Buff.Info.ActivationCost;
-            List<GuildBuff> NewBuff = new List<GuildBuff>();
-            NewBuff.Add(Buff);
+            List<GuildBuff> NewBuff = new List<GuildBuff>
+            {
+                Buff
+            };
             SendServerPacket(new ServerPackets.GuildBuffList { ActiveBuffs = NewBuff });
             SendServerPacket(new ServerPackets.GuildStorageGoldChange() { Type = 2, Name = "", Amount = (uint)Buff.Info.ActivationCost });
             NeedSave = true;
@@ -824,5 +827,12 @@ namespace Server.MirObjects
             GuildA.UpdatePlayersColours();
             GuildB.UpdatePlayersColours();
         }
+    }
+
+    public class GuildItemVolume
+    {
+        public ItemInfo Item;
+        public string ItemName;
+        public uint Amount;
     }
 }

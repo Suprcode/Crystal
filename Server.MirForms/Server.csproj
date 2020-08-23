@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Server</RootNamespace>
     <AssemblyName>Server</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -90,9 +90,14 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Controls\FixedListViewControl\CustomFormControl.csproj">
+      <Project>{22d64468-4312-4558-b25d-99bff85caa96}</Project>
+      <Name>CustomFormControl</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Server\Server.Library.csproj">
       <Project>{AF5F4517-CE06-4D20-9BFF-1860C6604021}</Project>
       <Name>Server.Library</Name>
+      <Private>True</Private>
     </ProjectReference>
     <Compile Include="Account\PlayerInfoForm.cs">
       <SubType>Form</SubType>
@@ -117,9 +122,6 @@
     </Compile>
     <Compile Include="Database\MagicInfoForm.Designer.cs">
       <DependentUpon>MagicInfoForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ListViewNF.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Systems\ConquestInfoForm.cs">
       <SubType>Form</SubType>
@@ -333,6 +335,7 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -345,6 +348,7 @@
     <ProjectReference Include="..\Shared\Shared.csproj">
       <Project>{19625ca5-42f9-4bf5-aa1c-c8dfd4eb7833}</Project>
       <Name>Shared</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
