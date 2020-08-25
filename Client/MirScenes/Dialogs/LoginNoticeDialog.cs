@@ -45,7 +45,7 @@ namespace Client.MirScenes.Dialogs
                 Index = 633,
                 HoverIndex = 634,
                 PressedIndex = 635,
-                Location = new Point(285, 4),
+                Location = new Point(278, 6),
                 Library = Libraries.Title,
                 Parent = this,
                 Sound = SoundList.ButtonA,
@@ -58,7 +58,7 @@ namespace Client.MirScenes.Dialogs
                 HoverIndex = 194,
                 Index = 193,
                 Library = Libraries.Title,
-                Location = new Point(120, 441),
+                Location = new Point(120, 436),
                 Parent = this,
                 PressedIndex = 195,
             };
@@ -72,7 +72,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse2,
                 Parent = this,
                 Size = new Size(16, 14),
-                Location = new Point(292, 33),
+                Location = new Point(293, 33),
                 Sound = SoundList.ButtonA,
                 Visible = false
             };
@@ -94,7 +94,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 475,
                 Parent = this,
                 Size = new Size(16, 14),
-                Location = new Point(292, 416),
+                Location = new Point(293, 416),
                 Sound = SoundList.ButtonA,
                 Visible = true
             };
@@ -114,7 +114,7 @@ namespace Client.MirScenes.Dialogs
                 HoverIndex = 206,
                 PressedIndex = 206,
                 Library = Libraries.Prguse2,
-                Location = new Point(292, 48),
+                Location = new Point(293, 48),
                 Parent = this,
                 Movable = true,
                 Sound = SoundList.None,
@@ -125,7 +125,7 @@ namespace Client.MirScenes.Dialogs
 
         private void PositionBar_OnMoving(object sender, MouseEventArgs e)
         {
-            int x = 292;
+            int x = 293;
             int y = PositionBar.Location.Y;
 
             if (y >= 418) y = 418;
@@ -167,7 +167,7 @@ namespace Client.MirScenes.Dialogs
 
             int interval = 108 / (CurrentLines.Count - MaximumLines);
 
-            int x = 292;
+            int x = 293;
             int y = 48 + (_index * interval);
 
             if (y >= 418) y = 418;
