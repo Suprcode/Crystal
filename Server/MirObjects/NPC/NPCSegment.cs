@@ -1048,8 +1048,17 @@ namespace Server.MirObjects
                     if (parts.Length < 2) return;
                     acts.Add(new NPCActions(ActionType.PlaySound, parts[1]));
                     break;
-            }
+                case "SETTIMER":
+                    if (parts.Length < 4) return;
 
+                    acts.Add(new NPCActions(ActionType.SetTimer, parts[1], parts[2], parts[3]));
+                    break;
+                case "EXPIRETIMER":
+                    if (parts.Length < 2) return;
+
+                    acts.Add(new NPCActions(ActionType.ExpireTimer, parts[1]));
+                    break;
+            }
         }
 
         public List<string> ParseSay(PlayerObject player, List<string> speech)
@@ -3641,11 +3650,20 @@ namespace Server.MirObjects
                             int index = Envir.Random.Next(0,lines.Length);
                             string randomText = lines[index];
                             AddVariable(player, param[1], randomText);
-                        }                        
+                        }
                         break;
                     case ActionType.PlaySound:
                         if (!int.TryParse(param[0], out int soundID)) return;
                         player.Enqueue(new S.PlaySound { Sound = soundID });
+                        break;
+
+                    case ActionType.SetTimer:
+                        if (!int.TryParse(param[1], out int seconds) || !byte.TryParse(param[2], out byte type)) return;
+
+                        player.SetTimer(param[0], seconds, type);
+                        break;
+                    case ActionType.ExpireTimer:
+                        player.ExpireTimer(param[0]);
                         break;
                 }
             }

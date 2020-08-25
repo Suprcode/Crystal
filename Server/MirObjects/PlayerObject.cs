@@ -501,7 +501,6 @@ namespace Server.MirObjects
             Info.LastDate = Envir.Now;
 
             Report.Disconnected(logReason);
-            Report.ForceSave();
 
             CleanUp();
         }
@@ -1377,7 +1376,7 @@ namespace Server.MirObjects
                             Info.Equipment[i] = null;
                             Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                             ReceiveChat($"Your {item.FriendlyName} shattered upon death.", ChatType.System2);
-                            Report.ItemChanged("Death Drop", item, item.Count, 1);
+                            Report.ItemChanged(item, item.Count, 1);
                         }
                     }
                     if (ItemSets.Any(set => set.Set == ItemSet.Spirit && !set.SetComplete))
@@ -1387,7 +1386,7 @@ namespace Server.MirObjects
                             Info.Equipment[i] = null;
                             Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
-                            Report.ItemChanged("Death Drop", item, item.Count, 1);
+                            Report.ItemChanged(item, item.Count, 1);
                         }
                     }
 
@@ -1411,7 +1410,7 @@ namespace Server.MirObjects
                         Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = count });
                         item.Count -= count;
 
-                        Report.ItemChanged("Death Drop", item, count, 1);
+                        Report.ItemChanged( item, count, 1);
                     }
                     else if (Envir.Random.Next(30) == 0)
                     {
@@ -1421,7 +1420,7 @@ namespace Server.MirObjects
                             Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
    
                             ReceiveChat($"You died and {item.Info.FriendlyName} has been returned to it's owner.", ChatType.Hint);
-                            Report.ItemMailed("Death Dropped Rental Item", item, 1, 1);
+                            Report.ItemMailed(item, 1, 1);
 
                             continue;
                         }
@@ -1438,7 +1437,7 @@ namespace Server.MirObjects
                         Info.Equipment[i] = null;
                         Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
-                        Report.ItemChanged("Death Drop", item, item.Count, 1);
+                        Report.ItemChanged(item, item.Count, 1);
                     }
                 }
 
@@ -1481,7 +1480,7 @@ namespace Server.MirObjects
                     Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = count });
                     item.Count -= count;
 
-                    Report.ItemChanged("DeathDrop", item, count, 1);
+                    Report.ItemChanged(item, count, 1);
                 }
                 else if (Envir.Random.Next(10) == 0)
                 {
@@ -1491,7 +1490,7 @@ namespace Server.MirObjects
                         Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
                         ReceiveChat($"You died and {item.Info.FriendlyName} has been returned to has been returned to it's owner.", ChatType.Hint);
-                        Report.ItemMailed("Death Dropped Rental Item", item, 1, 1);
+                        Report.ItemMailed(item, 1, 1);
 
                         continue;
                     }
@@ -1508,7 +1507,7 @@ namespace Server.MirObjects
                     Info.Inventory[i] = null;
                     Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
-                    Report.ItemChanged("DeathDrop", item, item.Count, 1);
+                    Report.ItemChanged(item, item.Count, 1);
                 }
             }
 
@@ -1537,7 +1536,7 @@ namespace Server.MirObjects
                         Info.Equipment[i] = null;
                         Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                         ReceiveChat($"Your {item.FriendlyName} shattered upon death.", ChatType.System2);
-                        Report.ItemChanged("RedDeathDrop", item, item.Count, 1);
+                        Report.ItemChanged(item, item.Count, 1, "RedDeathDrop");
                     }
 
                     if (item.Count > 1)
@@ -1560,7 +1559,7 @@ namespace Server.MirObjects
                         Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = count });
                         item.Count -= count;
 
-                        Report.ItemChanged("RedDeathDrop", item, count, 1);
+                        Report.ItemChanged(item, count, 1, "RedDeathDrop");
                     }
                     else if (Envir.Random.Next(10) == 0)
                     {
@@ -1570,7 +1569,7 @@ namespace Server.MirObjects
                             Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
                             ReceiveChat($"You died and {item.Info.FriendlyName} has been returned to it's owner.", ChatType.Hint);
-                            Report.ItemMailed("Death Dropped Rental Item", item, 1, 1);
+                            Report.ItemMailed(item, 1, 1, "Death Dropped Rental Item");
 
                             continue;
                         }
@@ -1587,7 +1586,7 @@ namespace Server.MirObjects
                         Info.Equipment[i] = null;
                         Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
-                        Report.ItemChanged("RedDeathDrop", item, item.Count, 1);
+                        Report.ItemChanged(item, item.Count, 1, "RedDeathDrop");
                     }
                 }
 
@@ -1612,7 +1611,7 @@ namespace Server.MirObjects
                     Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
                     ReceiveChat($"You died and {item.Info.FriendlyName} has been returned to it's owner.", ChatType.Hint);
-                    Report.ItemMailed("Death Dropped Rental Item", item, 1, 1);
+                    Report.ItemMailed(item, 1, 1, "Death Dropped Rental Item");
 
                     continue;
                 }
@@ -1629,7 +1628,7 @@ namespace Server.MirObjects
                 Info.Inventory[i] = null;
                 Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
-                Report.ItemChanged("RedDeathDrop", item, item.Count, 1);
+                Report.ItemChanged(item, item.Count, 1, "RedDeathDrop");
             }
 
             RefreshStats();
@@ -5343,6 +5342,17 @@ namespace Server.MirObjects
                         else ReceiveChat(string.Format("Unable to delete skill, skill not found"), ChatType.Hint);
 
                         break;
+                    case "SETTIMER":
+                        if (parts.Length < 4) return;
+
+                        string key = parts[1];
+
+                        if (!int.TryParse(parts[2], out int seconds)) return;
+                        if (!byte.TryParse(parts[3], out byte timerType)) return;
+
+                        SetTimer(key, seconds, timerType);
+
+                        break;
                     default:
                         break;
                 }
@@ -6487,7 +6497,7 @@ namespace Server.MirObjects
                     if (CanGainItem(item, false))
                     {
                         GainItem(item);
-                        Report.ItemChanged("MinePayout", item, item.Count, 2);
+                        Report.ItemChanged(item, item.Count, 2);
                     }
                     return;
                 }
@@ -9677,7 +9687,7 @@ namespace Server.MirObjects
             Enqueue(new S.DeleteItem { UniqueID = slotItem.UniqueID, Count = 1 });
             Info.Equipment[(int)EquipmentSlot.Weapon].Slots[(int)type] = null;
 
-            Report.ItemChanged("FishingConsumable", slotItem, 1, 1);
+            Report.ItemChanged(slotItem, 1, 1);
         }
         private void DamagedFishingItem(FishingSlot type, int lossDura)
         {
@@ -9973,7 +9983,7 @@ namespace Server.MirObjects
                 Stacking = true;
             }
 
-            Report.MapChange("Teleported", oldMap.Info, CurrentMap.Info);
+            Report.MapChange(oldMap.Info, CurrentMap.Info);
 
             return true;
         }
@@ -10680,7 +10690,7 @@ namespace Server.MirObjects
                 Enqueue(p);
                 RefreshStats();
 
-                Report.ItemMoved("EquipSlotItem", temp, grid, gridTo, index, to);
+                Report.ItemMoved(temp, grid, gridTo, index, to);
 
                 return;
             }
@@ -10774,7 +10784,7 @@ namespace Server.MirObjects
                 RefreshStats();
                 Broadcast(GetUpdateInfo());
 
-                Report.ItemMoved("RemoveItem", temp, MirGridType.Equipment, grid, index, to);
+                Report.ItemMoved(temp, MirGridType.Equipment, grid, index, to);
 
                 return;
             }
@@ -10888,7 +10898,7 @@ namespace Server.MirObjects
                 RefreshStats();
                 Broadcast(GetUpdateInfo());
 
-                Report.ItemMoved("RemoveSlotItem", temp, grid, gridTo, index, to);
+                Report.ItemMoved(temp, grid, gridTo, index, to);
 
                 return;
             }
@@ -10941,7 +10951,7 @@ namespace Server.MirObjects
             {
                 if (array[from] == null)
                 {
-                    Report.ItemError("MoveItem", grid, grid, from, to);
+                    Report.ItemError(grid, grid, from, to);
                     ReceiveChat("Item Move Error - Please report the item you tried to move and the time", ChatType.System);
                     Enqueue(p);
                     return;
@@ -10950,11 +10960,11 @@ namespace Server.MirObjects
                 UserItem i = array[to];
                 array[to] = array[from];
 
-                Report.ItemMoved("MoveItem", array[to], grid, grid, from, to);
+                Report.ItemMoved(array[to], grid, grid, from, to);
 
                 array[from] = i;
 
-                Report.ItemMoved("MoveItem", array[from], grid, grid, to, from);
+                Report.ItemMoved(array[from], grid, grid, to, from);
                 
                 p.Success = true;
                 Enqueue(p);
@@ -11025,7 +11035,7 @@ namespace Server.MirObjects
                 Info.Inventory[from] = null;
                 RefreshBagWeight();
 
-                Report.ItemMoved("StoreItem", temp, MirGridType.Inventory, MirGridType.Storage, from, to);
+                Report.ItemMoved(temp, MirGridType.Inventory, MirGridType.Storage, from, to);
 
                 p.Success = true;
                 Enqueue(p);
@@ -11089,7 +11099,7 @@ namespace Server.MirObjects
                 Info.Inventory[to] = temp;
                 Account.Storage[from] = null;
 
-                Report.ItemMoved("TakeBackStoreItem", temp, MirGridType.Storage, MirGridType.Inventory, from, to);
+                Report.ItemMoved(temp, MirGridType.Storage, MirGridType.Inventory, from, to);
 
                 p.Success = true;
                 RefreshBagWeight();
@@ -11207,11 +11217,11 @@ namespace Server.MirObjects
 
                 array[index] = Info.Equipment[to];
 
-                Report.ItemMoved("RemoveItem", temp, MirGridType.Equipment, grid, to, index);
+                Report.ItemMoved(temp, MirGridType.Equipment, grid, to, index, "RemoveItem");
 
                 Info.Equipment[to] = temp;
 
-                Report.ItemMoved("EquipItem", temp, grid, MirGridType.Equipment, index, to);
+                Report.ItemMoved(temp, grid, MirGridType.Equipment, index, to);
 
                 p.Success = true;
                 Enqueue(p);
@@ -11637,7 +11647,7 @@ namespace Server.MirObjects
             else Info.Inventory[index] = null;
             RefreshBagWeight();
 
-            Report.ItemChanged("UseItem", item, 1, 1);
+            Report.ItemChanged(item, 1, 1);
 
             p.Success = true;
             Enqueue(p);
@@ -11695,8 +11705,12 @@ namespace Server.MirObjects
 
             temp.Count -= count;
 
+            var originalItem = temp;
+
             temp = Envir.CreateFreshItem(temp.Info);
             temp.Count = count;
+
+            Report.ItemSplit(originalItem, temp, grid);
 
             p.Success = true;
             Enqueue(p);
@@ -11853,10 +11867,12 @@ namespace Server.MirObjects
 
 
             UserItem tempTo = null;
+            int toIndex = -1;
 
             for (int i = 0; i < arrayTo.Length; i++)
             {
                 if (arrayTo[i] == null || arrayTo[i].UniqueID != toID) continue;
+                toIndex = i;
                 tempTo = arrayTo[i];
                 break;
             }
@@ -11889,6 +11905,8 @@ namespace Server.MirObjects
                 tempFrom.Count -= tempTo.Info.StackSize - tempTo.Count;
                 tempTo.Count = tempTo.Info.StackSize;
             }
+
+            Report.ItemMerged(tempFrom, tempTo, index, toIndex, gridFrom, gridTo);
 
             TradeUnlock();
 
@@ -12230,7 +12248,7 @@ namespace Server.MirObjects
                         {
                             //item destroyed
                             ReceiveChat("Item has been destroyed.", ChatType.Hint);
-                            Report.ItemChanged("CombineItem (Item Destroyed)", Info.Inventory[indexTo], 1, 1);
+                            Report.ItemChanged(Info.Inventory[indexTo], 1, 1, "CombineItem (Item Destroyed)");
 
                             Info.Inventory[indexTo] = null;
                             p.Destroy = true;
@@ -12283,7 +12301,7 @@ namespace Server.MirObjects
             if (tempFrom.Count > 1) tempFrom.Count--;
             else Info.Inventory[indexFrom] = null;
 
-            Report.ItemCombined("CombineItem", tempFrom, tempTo, indexFrom, indexTo, MirGridType.Inventory);
+            Report.ItemCombined(tempFrom, tempTo, indexFrom, indexTo, MirGridType.Inventory);
 
             //item merged ok
             TradeUnlock();
@@ -12572,7 +12590,7 @@ namespace Server.MirObjects
             Enqueue(p);
             RefreshBagWeight();
 
-            Report.ItemChanged("DropItem", temp, count, 1);
+            Report.ItemChanged(temp, count, 1);
         }
         public void DropGold(uint gold)
         {
@@ -12620,7 +12638,7 @@ namespace Server.MirObjects
 
                     GainItem(item.Item);
 
-                    Report.ItemChanged("PickUpItem", item.Item, item.Item.Count, 2);
+                    Report.ItemChanged(item.Item, item.Item.Count, 2);
 
                     CurrentMap.RemoveObject(ob);
                     ob.Despawn();
@@ -14177,8 +14195,6 @@ namespace Server.MirObjects
         public override void ReceiveChat(string text, ChatType type)
         {
             Enqueue(new S.Chat { Message = text, Type = type });
-
-            Report.ChatMessage(text);
         }
 
         public void ReceiveOutputMessage(string text, OutputMessageType type)
@@ -16473,7 +16489,7 @@ namespace Server.MirObjects
                 RefreshBagWeight();
                 TradeItem();
 
-                Report.ItemMoved("DepositTradeItem", temp, MirGridType.Inventory, MirGridType.Trade, from, to);
+                Report.ItemMoved(temp, MirGridType.Inventory, MirGridType.Trade, from, to);
                 
                 p.Success = true;
                 Enqueue(p);
@@ -16522,7 +16538,7 @@ namespace Server.MirObjects
                 RefreshBagWeight();
                 TradeItem();
 
-                Report.ItemMoved("RetrieveTradeItem", temp, MirGridType.Trade, MirGridType.Inventory, from, to);
+                Report.ItemMoved(temp, MirGridType.Trade, MirGridType.Inventory, from, to);
             }
 
             Enqueue(p);
@@ -16774,12 +16790,12 @@ namespace Server.MirObjects
                         TradePair[o].GainItem(u);
                         TradePair[p].Info.Trade[i] = null;
 
-                        Report.ItemMoved("TradeConfirm", u, MirGridType.Trade, MirGridType.Inventory, i, -99, string.Format("Trade from {0} to {1}", TradePair[p].Name, TradePair[o].Name));
+                        Report.ItemMoved(u, MirGridType.Trade, MirGridType.Inventory, i, -99, string.Format("Trade from {0} to {1}", TradePair[p].Name, TradePair[o].Name));
                     }
 
                     if (TradePair[p].TradeGoldAmount > 0)
                     {
-                        Report.GoldChanged("TradeConfirm", TradePair[p].TradeGoldAmount, true, string.Format("Trade from {0} to {1}", TradePair[p].Name, TradePair[o].Name));
+                        Report.GoldChanged(TradePair[p].TradeGoldAmount, true, string.Format("Trade from {0} to {1}", TradePair[p].Name, TradePair[o].Name));
 
                         TradePair[o].GainGold(TradePair[p].TradeGoldAmount);
                         TradePair[p].TradeGoldAmount = 0;
@@ -16817,7 +16833,7 @@ namespace Server.MirObjects
                         if(FreeSpace(TradePair[p].Info.Inventory) < 1)
                         {
                             TradePair[p].GainItemMail(temp, 1);
-                            Report.ItemMailed("TradeCancel", temp, temp.Count, 1);
+                            Report.ItemMailed(temp, temp.Count, 1);
 
                             TradePair[p].Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
                             TradePair[p].Info.Trade[t] = null;
@@ -16836,7 +16852,7 @@ namespace Server.MirObjects
                             else //Send item to mailbox if it can no longer be stored
                             {
                                 TradePair[p].GainItemMail(temp, 1);
-                                Report.ItemMailed("TradeCancel", temp, temp.Count, 1);
+                                Report.ItemMailed(temp, temp.Count, 1);
 
                                 TradePair[p].Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
                             }
@@ -16850,7 +16866,7 @@ namespace Server.MirObjects
                     //Put back deposited gold
                     if (TradePair[p].TradeGoldAmount > 0)
                     {
-                        Report.GoldChanged("TradeCancel", TradePair[p].TradeGoldAmount, false);
+                        Report.GoldChanged(TradePair[p].TradeGoldAmount, false);
 
                         TradePair[p].GainGold(TradePair[p].TradeGoldAmount);
                         TradePair[p].TradeGoldAmount = 0;
@@ -17105,7 +17121,7 @@ namespace Server.MirObjects
                         else
                         {
                             GainItem(dropItem);
-                            Report.ItemChanged("FishedItem", dropItem, dropItem.Count, 2);
+                            Report.ItemChanged(dropItem, dropItem.Count, 2);
                         }
 
                         if (Envir.Random.Next(100 - Settings.FishingMobSpawnChance) == 0)
@@ -17296,7 +17312,7 @@ namespace Server.MirObjects
 
                         GainQuestItem(item);
 
-                        Report.ItemChanged("AcceptQuest", item, item.Count, 2);
+                        Report.ItemChanged(item, item.Count, 2);
                     }
                 }
             }
@@ -17484,7 +17500,7 @@ namespace Server.MirObjects
                     if (player.CheckNeedQuestItem(item, gainItem))
                     {
                         itemCollected = true;
-                        player.Report.ItemChanged("WinQuestItem", item, item.Count, 2);
+                        player.Report.ItemChanged(item, item.Count, 2, "CheckGroupQuestItem (WinQuestItem)");
                     }
                 }
             }
@@ -17493,7 +17509,7 @@ namespace Server.MirObjects
                 if (CheckNeedQuestItem(item, gainItem))
                 {
                     itemCollected = true;
-                    Report.ItemChanged("WinQuestItem", item, item.Count, 2);
+                    Report.ItemChanged(item, item.Count, 2, "CheckGroupQuestItem (WinQuestItem)");
                 }
             }
 
@@ -17516,7 +17532,7 @@ namespace Server.MirObjects
 
                     SendUpdateQuest(quest, QuestState.Update);
 
-                    Report.ItemChanged("WinQuestItem", item, item.Count, 2);
+                    Report.ItemChanged(item, item.Count, 2, "CheckNeedQuestItem (WinQuestItem)");
                 }
                 return true;
             }
@@ -18498,7 +18514,7 @@ namespace Server.MirObjects
                 Info.Inventory[from] = null;
                 RefreshBagWeight();
 
-                Report.ItemMoved("DepositRefineItems", temp, MirGridType.Inventory, MirGridType.Refine, from, to);
+                Report.ItemMoved(temp, MirGridType.Inventory, MirGridType.Refine, from, to);
 
                 p.Success = true;
                 Enqueue(p);
@@ -18543,7 +18559,7 @@ namespace Server.MirObjects
                 Info.Inventory[to] = temp;
                 Info.Refine[from] = null;
 
-                Report.ItemMoved("TakeBackRefineItems", temp, MirGridType.Refine, MirGridType.Inventory, from, to);
+                Report.ItemMoved(temp, MirGridType.Refine, MirGridType.Inventory, from, to);
 
                 p.Success = true;
                 RefreshBagWeight();
@@ -19790,8 +19806,8 @@ namespace Server.MirObjects
                 Account.Gold -= GoldCost;
                 Account.Credit -= CreditCost;
 
-                Report.GoldChanged("GameShop", GoldCost, true, Product.Info.FriendlyName);
-                Report.CreditChanged("GameShop", CreditCost, true, Product.Info.FriendlyName);
+                Report.GoldChanged(GoldCost, true, Product.Info.FriendlyName);
+                Report.CreditChanged(CreditCost, true, Product.Info.FriendlyName);
 
                 if (GoldCost != 0) Enqueue(new S.LoseGold { Gold = GoldCost });
                 if (CreditCost != 0) Enqueue(new S.LoseCredit { Credit = CreditCost });
@@ -19830,7 +19846,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            Report.ItemGSBought("GameShop", Product, Quantity, CreditCost, GoldCost);
+            Report.ItemGSBought(Product, Quantity, CreditCost, GoldCost);
 
             uint quantity = (Quantity * Product.Count);
 
@@ -20148,7 +20164,7 @@ namespace Server.MirObjects
                 packet.Success = true;
                 RefreshBagWeight();
                 UpdateRentalItem();
-                Report.ItemMoved("DepositRentalItem", item, MirGridType.Inventory, MirGridType.Renting, from, to);
+                Report.ItemMoved(item, MirGridType.Inventory, MirGridType.Renting, from, to);
             }
 
             Enqueue(packet);
@@ -20194,7 +20210,7 @@ namespace Server.MirObjects
                 packet.Success = true;
                 RefreshBagWeight();
                 UpdateRentalItem();
-                Report.ItemMoved("RetrieveRentalItem", item, MirGridType.Renting, MirGridType.Inventory, from, to);
+                Report.ItemMoved(item, MirGridType.Renting, MirGridType.Inventory, from, to);
             }
 
             Enqueue(packet);
@@ -20238,7 +20254,7 @@ namespace Server.MirObjects
                         rentalPair[i].Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                         rentalPair[i].ItemRentalDepositedItem = null;
 
-                        Report.ItemMailed("Cancel Item Rental", item, item.Count, 1);
+                        Report.ItemMailed(item, item.Count, 1);
 
                         continue;
                     }
@@ -20255,7 +20271,7 @@ namespace Server.MirObjects
                             rentalPair[i].GainItemMail(item, 1);
                             rentalPair[i].Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
-                            Report.ItemMailed("Cancel Item Rental", item, item.Count, 1);
+                            Report.ItemMailed(item, item.Count, 1);
                         }
 
                         rentalPair[i].ItemRentalDepositedItem = null;
@@ -20269,7 +20285,7 @@ namespace Server.MirObjects
                     rentalPair[i].GainGold(rentalPair[i].ItemRentalFeeAmount);
                     rentalPair[i].ItemRentalFeeAmount = 0;
 
-                    Report.GoldChanged("CancelItemRental", rentalPair[i].ItemRentalFeeAmount, false);
+                    Report.GoldChanged(rentalPair[i].ItemRentalFeeAmount, false);
                 }
 
                 rentalPair[i].ItemRentalPartner = null;
@@ -20436,6 +20452,21 @@ namespace Server.MirObjects
         }
 
         #endregion
+
+        
+        public void SetTimer(string key, int seconds, byte type = 0)
+        {
+            if (seconds < 0) seconds = 0;
+
+            Timer t = new Timer(key, seconds, type);
+
+            Enqueue(new S.SetTimer { Key = t.Key, Seconds = t.Seconds, Type = t.Type });
+        }
+
+        public void ExpireTimer(string key)
+        {
+            Enqueue(new S.ExpireTimer { Key = key });
+        }
     }
 }
 

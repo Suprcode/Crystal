@@ -16,6 +16,10 @@ namespace Server.MirNetwork
         {
             get { return Envir.Main; }
         }
+        protected static MessageQueue MessageQueue
+        {
+            get { return MessageQueue.Instance; }
+        }
 
         public readonly string IPAddress;
         private TcpClient _client;
@@ -53,9 +57,7 @@ namespace Server.MirNetwork
             }
             catch (Exception ex)
             {
-                File.AppendAllText(Path.Combine(Settings.LogPath,
-                                                "Error Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt"),
-                                   String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
+                MessageQueue.Enqueue(ex);
             }
         }
 
@@ -110,9 +112,7 @@ namespace Server.MirNetwork
             }
             catch (Exception ex)
             {
-                File.AppendAllText(Path.Combine(Settings.LogPath,
-                                                "Error Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt"),
-                                   String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
+                MessageQueue.Enqueue(ex);
             }
         }
         public void Disconnect()
@@ -131,9 +131,7 @@ namespace Server.MirNetwork
             }
             catch (Exception ex)
             {
-                File.AppendAllText(Path.Combine(Settings.LogPath,
-                                                "Error Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt"),
-                                   String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
+                MessageQueue.Enqueue(ex);
             }
         }
         public void SendDisconnect()

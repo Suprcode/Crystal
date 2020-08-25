@@ -62,3 +62,4 @@ Client/Client.csproj
 Release
 Debug
 obj
+packages

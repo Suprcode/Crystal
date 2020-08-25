@@ -768,10 +768,11 @@ namespace Server.MirEnvir
                         {
                             respawn.ErrorCount++;
 
-                            File.AppendAllText(Path.Combine(Settings.ErrorPath, "SpawnErrors.txt"),
-                                String.Format("[{5}]Failed to spawn: mapindex: {0} ,mob info: index: {1} spawncoords ({2}:{3}) range {4}", respawn.Map.Info.Index, respawn.Info.MonsterIndex, respawn.Info.Location.X, respawn.Info.Location.Y, respawn.Info.Spread, DateTime.Now)
-                                       + Environment.NewLine);
-                            //*/
+                            Logger.GetLogger(LogType.Spawn).Info($"Failed to spawn: " +
+                                $"mapindex: {respawn.Map.Info.Index}, " +
+                                $"mob info: index: {respawn.Info.MonsterIndex}, " +
+                                $"spawncoords ({respawn.Info.Location.X}:{respawn.Info.Location.Y}), " +
+                                $"range {respawn.Info.Spread}");
                         }
 
                     }

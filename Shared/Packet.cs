@@ -831,6 +831,10 @@ public abstract class Packet
                 return new S.OpenBrowser();
             case (short)ServerPacketIds.PlaySound:
                 return new S.PlaySound();
+            case (short)ServerPacketIds.SetTimer:
+                return new S.SetTimer();
+            case (short)ServerPacketIds.ExpireTimer:
+                return new S.ExpireTimer();
             default:
                 return null;
         }

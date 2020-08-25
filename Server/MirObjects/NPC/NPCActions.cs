@@ -100,5 +100,7 @@ namespace Server.MirObjects
         OpenBrowser,
         GetRandomText,
         PlaySound,
+        SetTimer,
+        ExpireTimer
     }
 }

@@ -29,11 +29,7 @@ namespace Server
             DropPath = Path.Combine(EnvirPath, "Drops"),
             RoutePath = Path.Combine(EnvirPath, "Routes"),
             NameListPath = Path.Combine(EnvirPath, "NameLists"),
-            ValuePath = Path.Combine(EnvirPath, "Values"),
-            ReportPath = Path.Combine(".", "Reports"),
-            LogPath = Path.Combine(".", "Logs"),
-            ErrorPath = Path.Combine(LogPath, "Errors");
-
+            ValuePath = Path.Combine(EnvirPath, "Values");
 
         private static readonly InIReader Reader = new InIReader(Path.Combine(ConfigPath, "Setup.ini"));
 
@@ -456,16 +452,9 @@ namespace Server
             if (!Directory.Exists(ExportPath))
                 Directory.CreateDirectory(ExportPath);
             if (!Directory.Exists(RoutePath))
-                Directory.CreateDirectory(RoutePath);
-            
+                Directory.CreateDirectory(RoutePath);         
             if (!Directory.Exists(NameListPath))
                 Directory.CreateDirectory(NameListPath);
-            if (!Directory.Exists(LogPath))
-                Directory.CreateDirectory(LogPath);
-            if (!Directory.Exists(ErrorPath))
-                Directory.CreateDirectory(ErrorPath);
-            if (!Directory.Exists(ReportPath))
-                Directory.CreateDirectory(ReportPath);
             if (!Directory.Exists(RecipePath))
                 Directory.CreateDirectory(RecipePath);
 

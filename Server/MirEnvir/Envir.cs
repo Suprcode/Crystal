@@ -633,8 +633,6 @@ namespace Server.MirEnvir
                 }
                 catch (Exception ex)
                 {
-                    MessageQueue.Enqueue(ex);
-
                     lock (Connections)
                     {
                         for (var i = Connections.Count - 1; i >= 0; i--)
@@ -648,8 +646,7 @@ namespace Server.MirEnvir
                     // Get the line number from the stack frame
                     var line = frame.GetFileLineNumber();
 
-                    File.AppendAllText(Path.Combine(Settings.ErrorPath, "Error.txt"),
-                        $"[{Now}] {ex} at line {line}{Environment.NewLine}");
+                    MessageQueue.Enqueue($"[inner workloop error. Line {line}]" + ex);
                 }
 
                 StopNetwork();
@@ -668,9 +665,7 @@ namespace Server.MirEnvir
                 // Get the line number from the stack frame
                 var line = frame.GetFileLineNumber();
 
-                MessageQueue.Enqueue("[outer workloop error]" + ex);
-                File.AppendAllText(Path.Combine(Settings.ErrorPath, "Error.txt"),
-                    $"[{Now}] {ex} at line {line}{Environment.NewLine}");
+                MessageQueue.Enqueue($"[outer workloop error. Line {line}]" + ex);
             }
 
             _thread = null;
@@ -742,12 +737,9 @@ namespace Server.MirEnvir
             catch (Exception ex)
             {
                 if (ex is ThreadInterruptedException) return;
-                MessageQueue.Enqueue(ex);
 
-                File.AppendAllText(Path.Combine(Settings.ErrorPath, "Error.txt"),
-                    $"[{Now}] {ex}{Environment.NewLine}");
+                MessageQueue.Enqueue($"[threadloop error]" + ex);
             }
-
         }
 
         private void AdjustLights()

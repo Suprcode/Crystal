@@ -581,8 +581,8 @@ namespace Client
             Settings.ScreenHeight = height;
             Program.Form.ClientSize = new Size(width, height);
 
-            DXManager.Device.Clear(ClearFlags.Target, Color.Black, 0, 0);
-            DXManager.Device.Present();
+            //DXManager.Device.Clear(ClearFlags.Target, Color.Black, 0, 0);
+            //DXManager.Device.Present();
             DXManager.ResetDevice();
 
             Program.Form.CenterToScreen();

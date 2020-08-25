@@ -112,6 +112,8 @@ namespace Client.MirScenes
 
         public KeyboardLayoutDialog KeyboardLayoutDialog;
 
+        public TimerDialog TimerControl;
+
         public static List<ItemInfo> ItemInfoList = new List<ItemInfo>();
         public static List<UserId> UserIdList = new List<UserId>();
         public static List<UserItem> ChatItemList = new List<UserItem>();
@@ -212,7 +214,6 @@ namespace Client.MirScenes
 
             CustomPanel1 = new CustomPanel1(this) { Visible = false };
 
-            //SkillBarDialog = new SkillBarDialog { Parent = this, Visible = false };
             SkillBarDialog Bar1 = new SkillBarDialog { Parent = this, Visible = false, BarIndex = 0 };
             SkillBarDialogs.Add(Bar1);
             SkillBarDialog Bar2 = new SkillBarDialog { Parent = this, Visible = false, BarIndex = 1 };
@@ -243,7 +244,6 @@ namespace Client.MirScenes
             MemoDialog = new MemoDialog { Parent = this, Visible = false };
             MentorDialog = new MentorDialog { Parent = this, Visible = false };
             GameShopDialog = new GameShopDialog { Parent = this, Visible = false };
-
             ReportDialog = new ReportDialog { Parent = this, Visible = false };
 
             ItemRentingDialog = new ItemRentingDialog { Parent = this, Visible = false };
@@ -253,9 +253,9 @@ namespace Client.MirScenes
             ItemRentalDialog = new ItemRentalDialog { Parent = this, Visible = false };
 
             BuffsDialog = new BuffDialog { Parent = this, Visible = true };
-
-            //not added yet
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
+
+            TimerControl = new TimerDialog { Parent = this, Visible = false };
 
             for (int i = 0; i < OutputLines.Length; i++)
                 OutputLines[i] = new MirLabel
@@ -903,12 +903,13 @@ namespace Client.MirScenes
             else
                 CanMove = false;
 
-
             if (CMain.Time >= CMain.NextPing)
             {
                 CMain.NextPing = CMain.Time + 60000;
                 Network.Enqueue(new C.KeepAlive() { Time = CMain.Time });
             }
+
+            TimerControl.Process();
 
             MirItemCell cell = MouseControl as MirItemCell;
 
@@ -1699,6 +1700,12 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.PlaySound:
                     PlaySound((S.PlaySound)p);
+                    break;
+                case (short)ServerPacketIds.SetTimer:
+                    SetTimer((S.SetTimer)p);
+                    break;
+                case (short)ServerPacketIds.ExpireTimer:
+                    ExpireTimer((S.ExpireTimer)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -8425,9 +8432,19 @@ namespace Client.MirScenes
         private void OpenBrowser(S.OpenBrowser p) {
             BrowserHelper.OpenDefaultBrowser(p.Url);
         }
+
         public void PlaySound(S.PlaySound p)
         {
             SoundManager.PlaySound(p.Sound, false);
+        }
+        private void SetTimer(S.SetTimer p)
+        {
+            GameScene.Scene.TimerControl.AddTimer(p);
+        }
+
+        private void ExpireTimer(S.ExpireTimer p)
+        {
+            GameScene.Scene.TimerControl.ExpireTimer(p.Key);
         }
 
         #region Disposable

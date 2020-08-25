@@ -5707,4 +5707,42 @@ namespace ServerPackets
             writer.Write(Sound);
         }
     }
+
+    public sealed class SetTimer : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.SetTimer; } }
+
+        public string Key;
+        public byte Type;
+        public int Seconds;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Key = reader.ReadString();
+            Type = reader.ReadByte();
+            Seconds = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Key);
+            writer.Write(Type);
+            writer.Write(Seconds);
+        }
+    }
+
+    public sealed class ExpireTimer : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.ExpireTimer; } }
+
+        public string Key;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Key = reader.ReadString();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Key);
+        }
+    }
 }

@@ -179,6 +179,7 @@
     <Compile Include="MirScenes\Dialogs\MainDialogs.cs" />
     <Compile Include="MirScenes\Dialogs\MentorDialog.cs" />
     <Compile Include="MirScenes\Dialogs\MountDialog.cs" />
+    <Compile Include="MirScenes\Dialogs\TimerDialog.cs" />
     <Compile Include="MirScenes\Dialogs\TrustMerchantDialog.cs" />
     <Compile Include="MirScenes\Dialogs\NPCDialogs.cs" />
     <Compile Include="MirScenes\Dialogs\RankingDialog.cs" />
