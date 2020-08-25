@@ -23,8 +23,9 @@ namespace Client.MirScenes.Dialogs
 {
     public sealed class NPCDialog : MirImageControl
     {
-        public static Regex R = new Regex(@"<(.*?/\@.*?)>");
-        public static Regex C = new Regex(@"{(.*?/.*?)}");
+        public static Regex R = new Regex(@"<((.*?)\/(\@.*?))>");
+        public static Regex C = new Regex(@"{((.*?)\/(.*?))}");
+        public static Regex L = new Regex(@"\[((.*?)\/(.*?))\]");
 
         public MirButton CloseButton, UpButton, DownButton, PositionBar, QuestButton;
         public MirLabel[] TextLabel;
@@ -276,6 +277,7 @@ namespace Client.MirScenes.Dialogs
 
                 List<Match> matchList = R.Matches(currentLine).Cast<Match>().ToList();
                 matchList.AddRange(C.Matches(currentLine).Cast<Match>());
+                matchList.AddRange(L.Matches(currentLine).Cast<Match>());
 
                 int oldLength = currentLine.Length;
 
@@ -284,16 +286,21 @@ namespace Client.MirScenes.Dialogs
                     int offSet = oldLength - currentLine.Length;
 
                     Capture capture = match.Groups[1].Captures[0];
-                    string[] values = capture.Value.Split('/');
-                    currentLine = currentLine.Remove(capture.Index - 1 - offSet, capture.Length + 2).Insert(capture.Index - 1 - offSet, values[0]);
+                    string txt = match.Groups[2].Captures[0].Value;
+                    string action = match.Groups[3].Captures[0].Value;
+
+                    currentLine = currentLine.Remove(capture.Index - 1 - offSet, capture.Length + 2).Insert(capture.Index - 1 - offSet, txt);
                     string text = currentLine.Substring(0, capture.Index - 1 - offSet) + " ";
                     Size size = TextRenderer.MeasureText(CMain.Graphics, text, TextLabel[i].Font, TextLabel[i].Size, TextFormatFlags.TextBoxControl);
 
                     if (R.Match(match.Value).Success)
-                        NewButton(values[0], values[1], TextLabel[i].Location.Add(new Point(size.Width - 10, 0)));
+                        NewButton(txt, action, TextLabel[i].Location.Add(new Point(size.Width - 10, 0)));
 
                     if (C.Match(match.Value).Success)
-                        NewColour(values[0], values[1], TextLabel[i].Location.Add(new Point(size.Width - 10, 0)));
+                        NewColour(txt, action, TextLabel[i].Location.Add(new Point(size.Width - 10, 0)));
+
+                    if (L.Match(match.Value).Success)
+                        NewButton(txt, null, TextLabel[i].Location.Add(new Point(size.Width - 10, 0)), action);
                 }
 
                 TextLabel[i].Text = currentLine;
@@ -302,10 +309,8 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        private void NewButton(string text, string key, Point p)
+        private void NewButton(string text, string key, Point p, string link = "")
         {
-            key = string.Format("[{0}]", key);
-
             MirLabel temp = new MirLabel
             {
                 AutoSize = true,
@@ -317,26 +322,39 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonC,
                 Font = font
             };
-            //Fontstyle.Underline;
 
             temp.MouseEnter += (o, e) => temp.ForeColour = Color.Red;
             temp.MouseLeave += (o, e) => temp.ForeColour = Color.Yellow;
             temp.MouseDown += (o, e) => temp.ForeColour = Color.Yellow;
             temp.MouseUp += (o, e) => temp.ForeColour = Color.Red;
 
-            temp.Click += (o, e) =>
+            if (!string.IsNullOrEmpty(link))
             {
-                if (key == "[@Exit]")
+                temp.Click += (o, e) =>
                 {
-                    Hide();
-                    return;
-                }
+                    if (link.Length > 0 && link.Contains("http") && link.Contains("://"))
+                    {
+                        System.Diagnostics.Process.Start(link);
+                    }
+                };
+            }
+            else
+            {
+                temp.Click += (o, e) =>
+                {
+                    if (key == "[@Exit]")
+                    {
+                        Hide();
+                        return;
+                    }
 
-                if (CMain.Time <= GameScene.NPCTime) return;
+                    if (CMain.Time <= GameScene.NPCTime) return;
 
-                GameScene.NPCTime = CMain.Time + 5000;
-                Network.Enqueue(new C.CallNPC { ObjectID = GameScene.NPCID, Key = key });
-            };
+                    GameScene.NPCTime = CMain.Time + 5000;
+                    Network.Enqueue(new C.CallNPC { ObjectID = GameScene.NPCID, Key = $"[{key}]" });
+                };
+            }
+
             temp.MouseWheel += NPCDialog_MouseWheel;
 
             TextButtons.Add(temp);

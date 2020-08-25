@@ -2078,6 +2078,8 @@ namespace Server.MirObjects
                 }
             }
 
+            Enqueue(new S.UpdateNotice { Notice = Settings.Notice });
+
             Spawned();
 
             SetLevelEffects();

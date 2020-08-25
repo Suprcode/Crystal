@@ -5745,4 +5745,24 @@ namespace ServerPackets
             writer.Write(Key);
         }
     }
+
+    public sealed class UpdateNotice : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.UpdateNotice; }
+        }
+
+        public Notice Notice = new Notice();
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Notice = new Notice(reader);
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            Notice.Save(writer);
+        }
+    }
 }

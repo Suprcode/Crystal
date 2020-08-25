@@ -29,10 +29,12 @@ namespace Server
             DropPath = Path.Combine(EnvirPath, "Drops"),
             RoutePath = Path.Combine(EnvirPath, "Routes"),
             NameListPath = Path.Combine(EnvirPath, "NameLists"),
-            ValuePath = Path.Combine(EnvirPath, "Values");
+            ValuePath = Path.Combine(EnvirPath, "Values"),
+            NoticePath = Path.Combine(EnvirPath, "Notice.txt");
 
         private static readonly InIReader Reader = new InIReader(Path.Combine(ConfigPath, "Setup.ini"));
 
+        public static Notice Notice;
 
         //General
         public static string VersionPath = Path.Combine(".", "Mir2.Exe");
@@ -496,9 +498,44 @@ namespace Server
             LoadMentor();
             LoadGoods();
             LoadGem();
-            //Languahe
+            LoadNotice();
+
             GameLanguage.LoadServerLanguage(Path.Combine(ConfigPath, "Language.ini"));
         }
+
+        public static void LoadNotice()
+        {
+            Notice = new Notice();
+
+            if (!File.Exists(NoticePath))
+            {
+                FileStream NewFile = File.Create(NoticePath);
+                NewFile.Close();
+            }
+
+            var lines = File.ReadAllLines(NoticePath);
+
+            if (lines.Length == 0)
+            {
+                return;
+            }
+
+            var links = new List<string>();
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                var line = lines[i];
+
+                if (string.Compare(line, "TITLE", false) > 0 && line.Contains("="))
+                {
+                    Notice.Title = line.Split('=')[1];
+                    continue;
+                }
+
+                Notice.Message += line + "\r\n";
+            }
+        }
+
         public static void Save()
         {
             //General

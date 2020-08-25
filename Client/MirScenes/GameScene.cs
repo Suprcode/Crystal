@@ -111,6 +111,7 @@ namespace Client.MirScenes
         public BuffDialog BuffsDialog;
 
         public KeyboardLayoutDialog KeyboardLayoutDialog;
+        public NoticeDialog NoticeDialog;
 
         public TimerDialog TimerControl;
 
@@ -197,6 +198,7 @@ namespace Client.MirScenes
 
             HelpDialog = new HelpDialog { Parent = this, Visible = false };
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
+            NoticeDialog = new NoticeDialog { Parent = this, Visible = false };
 
             MountDialog = new MountDialog { Parent = this, Visible = false };
             FishingDialog = new FishingDialog { Parent = this, Visible = false };
@@ -475,6 +477,7 @@ namespace Client.MirScenes
                         MailReadLetterDialog.Hide();
                         MailReadParcelDialog.Hide();
                         ItemRentalDialog.Visible = false;
+                        NoticeDialog.Hide();
 
 
 
@@ -1706,6 +1709,9 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.ExpireTimer:
                     ExpireTimer((S.ExpireTimer)p);
+                    break;
+                case (short)ServerPacketIds.UpdateNotice:
+                    ShowNotice((S.UpdateNotice)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -8445,6 +8451,11 @@ namespace Client.MirScenes
         private void ExpireTimer(S.ExpireTimer p)
         {
             GameScene.Scene.TimerControl.ExpireTimer(p.Key);
+        }
+
+        public void ShowNotice(S.UpdateNotice p)
+        {
+            NoticeDialog.Update(p.Notice);
         }
 
         #region Disposable

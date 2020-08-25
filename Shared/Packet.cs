@@ -835,6 +835,8 @@ public abstract class Packet
                 return new S.SetTimer();
             case (short)ServerPacketIds.ExpireTimer:
                 return new S.ExpireTimer();
+            case (short)ServerPacketIds.UpdateNotice:
+                return new S.UpdateNotice();
             default:
                 return null;
         }

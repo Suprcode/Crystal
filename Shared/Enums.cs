@@ -1557,7 +1557,8 @@ public enum ServerPacketIds : short
     OpenBrowser,
     PlaySound,
     SetTimer,
-    ExpireTimer
+    ExpireTimer,
+    UpdateNotice
 }
 
 public enum ClientPacketIds : short
