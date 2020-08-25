@@ -831,6 +831,8 @@ public abstract class Packet
                 return new S.OpenBrowser();
             case (short)ServerPacketIds.PlaySound:
                 return new S.PlaySound();
+            case (short)ServerPacketIds.LogNotice:
+                return new S.UpdateLogNotice();
             default:
                 return null;
         }

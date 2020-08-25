@@ -112,6 +112,8 @@ namespace Client.MirScenes
 
         public KeyboardLayoutDialog KeyboardLayoutDialog;
 
+        public LoginNoticeDialog LoginNoticeDialog;
+
         public static List<ItemInfo> ItemInfoList = new List<ItemInfo>();
         public static List<UserId> UserIdList = new List<UserId>();
         public static List<UserItem> ChatItemList = new List<UserItem>();
@@ -256,6 +258,7 @@ namespace Client.MirScenes
 
             //not added yet
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
+            LoginNoticeDialog = new LoginNoticeDialog { Parent = this, Visible = false };
 
             for (int i = 0; i < OutputLines.Length; i++)
                 OutputLines[i] = new MirLabel
@@ -475,6 +478,7 @@ namespace Client.MirScenes
                         MailReadLetterDialog.Hide();
                         MailReadParcelDialog.Hide();
                         ItemRentalDialog.Visible = false;
+                        LoginNoticeDialog.Hide();
 
 
 
@@ -1699,6 +1703,9 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.PlaySound:
                     PlaySound((S.PlaySound)p);
+                    break;
+                case (short)ServerPacketIds.LogNotice:
+                    ShowLogNotice((S.UpdateLogNotice)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -8428,6 +8435,29 @@ namespace Client.MirScenes
         public void PlaySound(S.PlaySound p)
         {
             SoundManager.PlaySound(p.Sound, false);
+        }
+
+        public void ShowLogNotice(S.UpdateLogNotice p)
+        {
+
+            string[] stringSeps = new string[] { "\r\n" };
+            LoginNoticeDialog.notice = p.list;
+            List<string> temp = new List<string>();
+            for (int i = 0; i < p.list.Count; i++)
+            {
+                if (i == 0)
+                    temp.Add("Welcome to Legend of Mir 2!");
+                temp.Add(p.list[i].Title);
+                if (p.list[i].LogString.Contains("\r\n"))
+                {
+                    string[] lines = p.list[i].LogString.Split(stringSeps, StringSplitOptions.None);
+                    foreach (string s in lines)
+                        temp.Add(s);
+                }
+                temp.Add("Thanks for playing!");
+            }
+            LoginNoticeDialog.NewText(temp);
+            LoginNoticeDialog.Visible = true;
         }
 
         #region Disposable

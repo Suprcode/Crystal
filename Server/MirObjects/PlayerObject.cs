@@ -2078,7 +2078,7 @@ namespace Server.MirObjects
                     }
                 }
             }
-
+            Enqueue(new S.UpdateLogNotice { list = Envir.LoginNotice });
             Spawned();
 
             SetLevelEffects();

@@ -1,4 +1,5 @@
-﻿﻿using System;
+﻿using Shared;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -5706,5 +5707,30 @@ namespace ServerPackets
         {
             writer.Write(Sound);
         }
+    }
+
+    public sealed class UpdateLogNotice : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.LogNotice; }
+        }
+
+        public List<LogNotice> list = new List<LogNotice>();
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            int count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+                list.Add(new LogNotice(reader));
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(list.Count);
+            for (int i = 0; i < list.Count; i++)
+                list[i].Save(writer);
+        }
+
     }
 }

@@ -1555,7 +1555,8 @@ public enum ServerPacketIds : short
     ConfirmItemRental,
     NewRecipeInfo,
     OpenBrowser,
-    PlaySound
+    PlaySound,
+    LogNotice
 }
 
 public enum ClientPacketIds : short

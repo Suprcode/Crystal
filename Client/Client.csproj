@@ -175,6 +175,7 @@
     <Compile Include="MirScenes\Dialogs\IntelligentCreatureDialogs.cs" />
     <Compile Include="MirScenes\Dialogs\KeyboardLayoutDialog.cs" />
     <Compile Include="MirScenes\Dialogs\ItemRentingDialog.cs" />
+    <Compile Include="MirScenes\Dialogs\LoginNoticeDialog.cs" />
     <Compile Include="MirScenes\Dialogs\MailDialogs.cs" />
     <Compile Include="MirScenes\Dialogs\MainDialogs.cs" />
     <Compile Include="MirScenes\Dialogs\MentorDialog.cs" />

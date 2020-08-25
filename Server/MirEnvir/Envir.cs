@@ -12,6 +12,7 @@ using Server.MirDatabase;
 using Server.MirNetwork;
 using Server.MirObjects;
 using S = ServerPackets;
+using Shared;
 
 namespace Server.MirEnvir
 {
@@ -159,6 +160,8 @@ namespace Server.MirEnvir
         public List<RankCharacterInfo>[] RankClass = new List<RankCharacterInfo>[5];
         public int[] RankBottomLevel = new int[6];
         static HttpServer http;
+        public List<LogNotice> LoginNotice = new List<LogNotice>();
+        public string LoginNoticeDir = @".\LoginNotice.txt";
         static Envir()
         {
             AccountIDReg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinAccountIDLength + "," + Globals.MaxAccountIDLength + "}$");
@@ -199,7 +202,40 @@ namespace Server.MirEnvir
             }
             return false;
         }
+        public void LoadLogNotice()
+        {
+            LoginNotice.Clear();
+            string[] contents = File.ReadAllLines(LoginNoticeDir);
+            LogNotice temp = new LogNotice();
+            for (int i = 0; i < contents.Length; i++)
+            {
 
+                if (contents[i].Contains("LINK") &&
+                    string.Compare(contents[i], "LINK", false) > 0)
+                {
+                    string[] splitStr = contents[i].Split('=');
+                    temp.Link = splitStr[1];
+                }
+                else
+                if (contents[i].Contains("TITLE") &&
+                    string.Compare(contents[i], "TITLE", false) > 0)
+                {
+                    string[] splitStr = contents[i].Split('=');
+                    temp.Title = splitStr[1];//first line after open brace is title
+                }
+                else
+                if (!contents[i].Contains("{@") &&
+                    !contents[i].Contains("@}"))
+                    temp.LogString += contents[i] + "\r\n";
+
+                if (i <= contents.Length &&
+                    contents[i] == "@}")
+                {
+                    LoginNotice.Add(temp);
+                    temp = new LogNotice();
+                }
+            }
+        }
         private void UpdateMagicInfo()
         {
             for (var i = 0; i < MagicInfoList.Count; i++)
@@ -1849,6 +1885,7 @@ namespace Server.MirEnvir
         
         private void StartEnvir()
         {
+            LoadLogNotice();
             Players.Clear();
             StartPoints.Clear();
             StartItems.Clear();
