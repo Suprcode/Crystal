@@ -42,12 +42,12 @@ namespace Client.MirScenes.Dialogs
 
             CloseButton = new MirButton
             {
-                Index = 633,
-                HoverIndex = 634,
-                PressedIndex = 635,
-                Location = new Point(278, 6),
-                Library = Libraries.Title,
+                Index = 360,
+                HoverIndex = 361,
+                PressedIndex = 362,
+                Library = Libraries.Prguse2,
                 Parent = this,
+                Location = new Point(289, 3),
                 Sound = SoundList.ButtonA,
             };
             CloseButton.Click += (o, e) => Hide();
@@ -94,7 +94,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 475,
                 Parent = this,
                 Size = new Size(16, 14),
-                Location = new Point(293, 416),
+                Location = new Point(293, 418),
                 Sound = SoundList.ButtonA,
                 Visible = true
             };
