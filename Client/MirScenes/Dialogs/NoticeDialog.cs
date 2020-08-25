@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Client.MirSounds;
 using System.Text.RegularExpressions;
 using Shared;
+using System.Globalization;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -188,22 +189,22 @@ namespace Client.MirScenes.Dialogs
             PositionBar.Location = new Point(x, y);
         }
 
-        public void Update(Notice newNotice)
+        public void Update(Notice notice)
         {
-            this.Notice = newNotice;
+            this.Notice = notice;
 
             List<string> temp = new List<string>();
 
-            string[] lines = newNotice.Message.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+            if (string.IsNullOrWhiteSpace(notice.Message))
+            {
+                return;
+            }
+
+            string[] lines = notice.Message.Split(new string[] { "\r\n" }, StringSplitOptions.None);
 
             foreach (string line in lines)
             {
                 temp.Add(line);
-            }
-
-            if (temp.Count == 0)
-            {
-                return;
             }
 
             NewText(temp);
@@ -341,7 +342,7 @@ namespace Client.MirScenes.Dialogs
 
             temp.Click += (o, e) =>
             {
-                if (link.Length > 0 && link.Contains("http") && link.Contains("://"))
+                if (link.StartsWith("http://", true, CultureInfo.InvariantCulture))
                 {
                     System.Diagnostics.Process.Start(link);
                 }

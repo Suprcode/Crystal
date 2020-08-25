@@ -332,7 +332,7 @@ namespace Client.MirScenes.Dialogs
             {
                 temp.Click += (o, e) =>
                 {
-                    if (link.Length > 0 && link.Contains("http") && link.Contains("://"))
+                    if (link.StartsWith("http://", true, CultureInfo.InvariantCulture))
                     {
                         System.Diagnostics.Process.Start(link);
                     }
