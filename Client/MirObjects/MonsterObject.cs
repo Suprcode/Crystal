@@ -52,7 +52,7 @@ namespace Client.MirObjects
         public byte Effect;
         public bool Skeleton;
 
-        public FrameSet Frames;
+        public FrameSet Frames = new FrameSet();
         public Frame Frame;
         public int FrameIndex, FrameInterval, EffectFrameIndex, EffectFrameInterval;
 
@@ -225,7 +225,10 @@ namespace Client.MirObjects
                     Frames = FrameSet.HellBomb[((ushort)BaseImage) - 903];
                     break;
                 default:
-                    Frames = BodyLibrary.Frames ?? FrameSet.DefaultMonster;
+                    if (BodyLibrary != null)
+                    {
+                        Frames = BodyLibrary.Frames ?? FrameSet.DefaultMonster;
+                    }
                     break;
             }
 
@@ -235,7 +238,11 @@ namespace Client.MirObjects
             if (CurrentAction == MirAction.Standing)
             {
                 PlayAppearSound();
-                FrameIndex = CMain.Random.Next(Frame.Count);
+
+                if (Frame != null)
+                {
+                    FrameIndex = CMain.Random.Next(Frame.Count);
+                }
             }
             else if(CurrentAction == MirAction.SitDown)
             {

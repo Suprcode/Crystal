@@ -2078,7 +2078,10 @@ namespace Server.MirObjects
                 }
             }
 
-            Enqueue(new S.UpdateNotice { Notice = Settings.Notice });
+            if (!string.IsNullOrWhiteSpace(Settings.Notice.Message) && Settings.Notice.LastUpdate > Info.LastDate)
+            {
+                Enqueue(new S.UpdateNotice { Notice = Settings.Notice });
+            }
 
             Spawned();
 

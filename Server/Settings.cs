@@ -520,6 +520,8 @@ namespace Server
                 return;
             }
 
+            Notice.LastUpdate = File.GetLastWriteTime(NoticePath);
+
             var links = new List<string>();
 
             for (int i = 0; i < lines.Length; i++)
