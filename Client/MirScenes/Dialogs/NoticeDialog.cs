@@ -14,7 +14,7 @@ namespace Client.MirScenes.Dialogs
     public sealed class NoticeDialog : MirImageControl
     {
         public static Regex C = new Regex(@"{((.*?)\/(.*?))}");
-        public static Regex L = new Regex(@"\[((.*?)\/(.*?))\]");
+        public static Regex L = new Regex(@"\(((.*?)\/(.*?))\)");
 
         public MirButton CloseButton, UpButton, DownButton, PositionBar, OkButton;
         public MirLabel[] TextLabel;

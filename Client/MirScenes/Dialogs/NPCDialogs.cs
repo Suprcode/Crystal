@@ -25,7 +25,7 @@ namespace Client.MirScenes.Dialogs
     {
         public static Regex R = new Regex(@"<((.*?)\/(\@.*?))>");
         public static Regex C = new Regex(@"{((.*?)\/(.*?))}");
-        public static Regex L = new Regex(@"\[((.*?)\/(.*?))\]");
+        public static Regex L = new Regex(@"\(((.*?)\/(.*?))\)");
 
         public MirButton CloseButton, UpButton, DownButton, PositionBar, QuestButton;
         public MirLabel[] TextLabel;
