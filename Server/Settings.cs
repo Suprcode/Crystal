@@ -86,6 +86,7 @@ namespace Server
                            GameMasterEffect = false,
                            GatherOrbsPerLevel = true,
                            ExpMobLevelDifference = true;
+        public static int LineMessageTimer = 10;
 
         //Database
         public static int SaveDelay = 5;
@@ -332,6 +333,7 @@ namespace Server
             GatherOrbsPerLevel = Reader.ReadBoolean("Optional", "GatherOrbsPerLevel", GatherOrbsPerLevel);
             ExpMobLevelDifference = Reader.ReadBoolean("Optional", "ExpMobLevelDifference", ExpMobLevelDifference);
             GameMasterEffect = Reader.ReadBoolean("Optional", "GameMasterEffect", GameMasterEffect);
+            LineMessageTimer = Reader.ReadInt32("Optional", "LineMessageTimer", LineMessageTimer);
 
             //Database
             SaveDelay = Reader.ReadInt32("Database", "SaveDelay", SaveDelay);
@@ -578,6 +580,7 @@ namespace Server
             Reader.Write("Optional", "GatherOrbsPerLevel", GatherOrbsPerLevel);
             Reader.Write("Optional", "ExpMobLevelDifference", ExpMobLevelDifference);
             Reader.Write("Optional", "GameMasterEffect", GameMasterEffect);
+            Reader.Write("Optional", "LineMessageTimer", LineMessageTimer);
 
             //Database
             Reader.Write("Database", "SaveDelay", SaveDelay);
