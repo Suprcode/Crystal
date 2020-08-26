@@ -159,6 +159,11 @@ namespace Server.MirEnvir
         public List<RankCharacterInfo>[] RankClass = new List<RankCharacterInfo>[5];
         public int[] RankBottomLevel = new int[6];
         static HttpServer http;
+        public List<string> LineMessages = new List<string>();
+        public string LineMessageDir = @".\LineMessage.txt";
+        public long lineMessageTime;
+        public int LastLineMessage = 0;
+
         static Envir()
         {
             AccountIDReg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinAccountIDLength + "," + Globals.MaxAccountIDLength + "}$");
@@ -198,6 +203,22 @@ namespace Server.MirEnvir
                 if (MagicInfoList[i].Spell == spell) return true;
             }
             return false;
+        }
+
+        public void LoadLineMessages()
+        {
+            if (!File.Exists(LineMessageDir))
+            {
+                File.Create(LineMessageDir);
+            }
+            else
+            {
+                LastLineMessage = 0;
+                LineMessages.Clear();
+                string[] lines = File.ReadAllLines(LineMessageDir);
+                foreach (string s in lines)
+                    LineMessages.Add(s);
+            }
         }
 
         private void UpdateMagicInfo()
@@ -607,6 +628,20 @@ namespace Server.MirEnvir
                         DragonSystem?.Process();
 
                         Process();
+
+                        if (Time >= lineMessageTime)
+                        {
+                            Broadcast(new S.Chat
+                            {
+                                Message = string.Format("{0}", LineMessages[LastLineMessage]),
+                                Type = ChatType.Shout2
+                            });
+                            LastLineMessage = Random.Next(LineMessages.Count); //This makes the lines random, comment this out and uncomment the next 3 lines if you want them to cycle in order.
+                            //LastLineMessage++;
+                            //if (LastLineMessage > LineMessages.Count - 1)
+                            //    LastLineMessage = 0;
+                            lineMessageTime = Time + Settings.Minute * 1;
+                        }
 
                         if (Time >= saveTime)
                         {
@@ -1294,7 +1329,7 @@ namespace Server.MirEnvir
 
                 Settings.LinkGuildCreationItems(ItemInfoList);
             }
-
+            LoadLineMessages();
             return true;
         }
 
