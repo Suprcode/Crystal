@@ -94,6 +94,8 @@ namespace Client.MirObjects
             ShockTime = CMain.Time + info.ShockTime;
             BindingShotCenter = info.BindingShotCenter;
 
+            Buffs = info.Buffs;
+
             if (Stage != info.ExtraByte)
             {
                 switch (BaseImage)
@@ -265,6 +267,16 @@ namespace Client.MirObjects
                         Effects.Add(new Effect(Libraries.Effect, 680, 20, 20 * Frame.Interval, this) { DrawBehind = true, Repeat = true });
                         break;
                 }
+            }
+
+            ProcessBuffs();
+
+        }
+        public void ProcessBuffs()
+        {
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                AddBuffEffect(Buffs[i]);
             }
         }
 

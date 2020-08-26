@@ -2229,8 +2229,9 @@ namespace Server.MirObjects
                     Poison = CurrentPoison,
                     Hidden = Hidden,
                     ShockTime = (ShockTime > 0 ? ShockTime - Envir.Time : 0),
-                    BindingShotCenter = BindingShotCenter
-                };
+                    BindingShotCenter = BindingShotCenter,
+                    Buffs = Buffs.Where(d => d.Visible).Select(e => e.Type).ToList()
+            };
         }
 
         public override void ReceiveChat(string text, ChatType type)
