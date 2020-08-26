@@ -1037,7 +1037,7 @@ namespace Server.MirObjects
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
 
-                    player.Enqueue(new S.NPCPearlGoods { List = Goods, Rate = PriceRate(player) });
+                    player.Enqueue(new S.NPCPearlGoods { List = Goods, Rate = PriceRate(player), Type = PanelType.Buy });
                     break;
             }
         }

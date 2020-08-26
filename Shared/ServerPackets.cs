@@ -5194,6 +5194,7 @@ namespace ServerPackets
 
         public List<UserItem> List = new List<UserItem>();
         public float Rate;
+        public PanelType Type;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -5203,6 +5204,8 @@ namespace ServerPackets
                 List.Add(new UserItem(reader));
 
             Rate = reader.ReadSingle();
+
+            Type = (PanelType)reader.ReadByte();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
@@ -5212,6 +5215,7 @@ namespace ServerPackets
                 List[i].Save(writer);
 
             writer.Write(Rate);
+            writer.Write((byte)Type);
         }
     }
 

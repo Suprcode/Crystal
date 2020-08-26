@@ -5387,7 +5387,9 @@ namespace Client.MirScenes
             if (!NPCDialog.Visible) return;
             NPCGoodsDialog.usePearls = true;
             NPCGoodsDialog.NewGoods(p.List);
+            NPCGoodsDialog.UpdatePanelType(p.Type);
             NPCGoodsDialog.Show();
+
         }
 
         private void FriendUpdate(S.FriendUpdate p)
