@@ -389,6 +389,8 @@ namespace Server.MirObjects
                     }
                 }
             }
+
+            Info.LastLoginDate = Envir.Now;
         }
 
         public void StopGame(byte reason)
@@ -498,7 +500,7 @@ namespace Server.MirObjects
             Fishing = false;
 
             Info.LastIP = Connection.IPAddress;
-            Info.LastDate = Envir.Now;
+            Info.LastLogoutDate = Envir.Now;
 
             Report.Disconnected(logReason);
 
@@ -2078,7 +2080,7 @@ namespace Server.MirObjects
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(Settings.Notice.Message) && Settings.Notice.LastUpdate > Info.LastDate)
+            if (!string.IsNullOrWhiteSpace(Settings.Notice.Message) && Settings.Notice.LastUpdate > Info.LastLogoutDate)
             {
                 Enqueue(new S.UpdateNotice { Notice = Settings.Notice });
             }
@@ -2190,9 +2192,9 @@ namespace Server.MirObjects
                     Enqueue(new S.GuildBuffList() { ActiveBuffs = MyGuild.BuffList});
             }
 
-            if (InSafeZone && Info.LastDate > DateTime.MinValue)
+            if (InSafeZone && Info.LastLogoutDate > DateTime.MinValue)
             {
-                double totalMinutes = (Envir.Now - Info.LastDate).TotalMinutes;
+                double totalMinutes = (Envir.Now - Info.LastLogoutDate).TotalMinutes;
 
                 _restedCounter = (int)(totalMinutes * 60);
             }

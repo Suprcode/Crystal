@@ -845,7 +845,7 @@ namespace Server.MirNetwork
             info.BanReason = string.Empty;
             info.ExpiryDate = DateTime.MinValue;
 
-            long delay = (long) (Envir.Now - info.LastDate).TotalMilliseconds;
+            long delay = (long) (Envir.Now - info.LastLogoutDate).TotalMilliseconds;
 
 
             //if (delay < Settings.RelogDelay)

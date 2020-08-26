@@ -34,7 +34,8 @@ namespace Server.MirDatabase
         public DateTime ChatBanExpiryDate;
 
         public string LastIP = string.Empty;
-        public DateTime LastDate;
+        public DateTime LastLogoutDate;
+        public DateTime LastLoginDate;
 
         public bool Deleted;
         public DateTime DeleteDate;
@@ -142,7 +143,12 @@ namespace Server.MirDatabase
             ExpiryDate = DateTime.FromBinary(reader.ReadInt64());
 
             LastIP = reader.ReadString();
-            LastDate = DateTime.FromBinary(reader.ReadInt64());
+            LastLogoutDate = DateTime.FromBinary(reader.ReadInt64());
+
+            if (Envir.LoadVersion > 81)
+            {
+                LastLoginDate = DateTime.FromBinary(reader.ReadInt64());
+            }
 
             Deleted = reader.ReadBoolean();
             DeleteDate = DateTime.FromBinary(reader.ReadInt64());
@@ -330,7 +336,8 @@ namespace Server.MirDatabase
             writer.Write(ExpiryDate.ToBinary());
 
             writer.Write(LastIP);
-            writer.Write(LastDate.ToBinary());
+            writer.Write(LastLogoutDate.ToBinary());
+            writer.Write(LastLoginDate.ToBinary());
 
             writer.Write(Deleted);
             writer.Write(DeleteDate.ToBinary());
@@ -475,7 +482,7 @@ namespace Server.MirDatabase
                     Level = Level,
                     Class = Class,
                     Gender = Gender,
-                    LastAccess = LastDate
+                    LastAccess = LastLogoutDate
                 };
         }
 
