@@ -1219,6 +1219,9 @@ namespace Server.MirObjects
 
                 Buffs.RemoveAt(i);
 
+                if (buff.Visible)
+                    Broadcast(new S.RemoveBuff { Type = buff.Type, ObjectID = ObjectID });
+
                 switch (buff.Type)
                 {
                     case BuffType.MoonLight:
