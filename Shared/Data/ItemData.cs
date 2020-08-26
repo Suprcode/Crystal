@@ -1165,6 +1165,7 @@ public class ItemSets
                 case ItemSet.FiveString:
                 case ItemSet.Bone:
                 case ItemSet.Bug:
+                case ItemSet.DarkGhost:
                     return 3;
                 case ItemSet.Recall:
                     return 4;
@@ -1180,6 +1181,8 @@ public class ItemSets
                 case ItemSet.Oppressive:
                 case ItemSet.Paeok:
                 case ItemSet.Sulgwan:
+                case ItemSet.BlueFrostH:
+                case ItemSet.BlueFrost:
                     return 5;
                 default:
                     return 0;
