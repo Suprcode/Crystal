@@ -800,6 +800,10 @@ namespace Client.MirScenes.Dialogs
                     foreColour = Color.White;
                     GameScene.Scene.ChatNoticeDialog.ShowNotice(RegexFunctions.CleanChatString(text));
                     break;
+                case ChatType.LineMessage:
+                    backColour = Color.Blue;
+                    foreColour = Color.White;
+                    break;
                 case ChatType.Shout:
                     backColour = Color.Yellow;
                     foreColour = Color.Black;
@@ -907,6 +911,7 @@ namespace Client.MirScenes.Dialogs
                 switch (FullHistory[i].Type)
                 {
                     case ChatType.Normal:
+                    case ChatType.LineMessage:
                         if (Settings.FilterNormalChat) continue;
                         break;
                     case ChatType.WhisperIn:
@@ -914,6 +919,8 @@ namespace Client.MirScenes.Dialogs
                         if (Settings.FilterWhisperChat) continue;
                         break;
                     case ChatType.Shout:
+                    case ChatType.Shout2:
+                    case ChatType.Shout3:
                         if (Settings.FilterShoutChat) continue;
                         break;
                     case ChatType.System:

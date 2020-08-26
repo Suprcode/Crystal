@@ -71,7 +71,9 @@ namespace Server.MirEnvir
 
         public long Time { get; private set; }
         public RespawnTimer RespawnTick = new RespawnTimer();
+
         private static List<string> DisabledCharNames = new List<string>();
+        private static List<string> LineMessages = new List<string>();
 
         public DateTime Now =>
             _startTime.AddMilliseconds(Time);
@@ -165,23 +167,6 @@ namespace Server.MirEnvir
             PasswordReg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinPasswordLength + "," + Globals.MaxPasswordLength + "}$");
             EMailReg = new Regex(@"\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*");
             CharacterReg = new Regex(@"^[\u4e00-\u9fa5_A-Za-z0-9]{" + Globals.MinCharacterNameLength + "," + Globals.MaxCharacterNameLength + "}$");
-
-            var path = Path.Combine(Settings.EnvirPath,  "DisabledChars.txt");
-            DisabledCharNames.Clear();
-            if (!File.Exists(path))
-            {
-                File.WriteAllText(path,"");
-            }
-            else
-            {
-                var lines = File.ReadAllLines(path);
-
-                for (var i = 0; i < lines.Length; i++)
-                {
-                    if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
-                    DisabledCharNames.Add(lines[i].ToUpper());
-                }
-            }
         }
 
         public static int LastCount = 0, LastRealCount = 0;
@@ -465,7 +450,8 @@ namespace Server.MirEnvir
 
                 var conTime = Time;
                 var saveTime = Time + Settings.SaveDelay * Settings.Minute;
-                var userTime = Time + Settings.Minute * 5;             
+                var userTime = Time + Settings.Minute * 5;
+                var lineMessageTime = Time + Settings.Minute * 2;
                 var processTime = Time + 1000;
                 var startTime = Time;
 
@@ -625,6 +611,16 @@ namespace Server.MirEnvir
                                     Message = string.Format(GameLanguage.OnlinePlayers, Players.Count),
                                     Type = ChatType.Hint
                                 });
+                        }
+
+                        if (LineMessages.Count > 0 && Time >= lineMessageTime)
+                        {
+                            lineMessageTime = Time + Settings.Minute * 2;
+                            Broadcast(new S.Chat
+                            {
+                                Message = LineMessages[Random.Next(LineMessages.Count)],
+                                Type = ChatType.LineMessage
+                            });
                         }
 
                         //   if (Players.Count == 0) Thread.Sleep(1);
@@ -1259,6 +1255,7 @@ namespace Server.MirEnvir
                         if (!MagicExists(m.Spell))
                             MagicInfoList.Add(m);
                     }
+
                     FillMagicInfoList();
                     if (LoadVersion <= 70)
                         UpdateMagicInfo();
@@ -1770,6 +1767,50 @@ namespace Server.MirEnvir
             }
         }
 
+        public void LoadDisabledChars()
+        {
+            DisabledCharNames.Clear();
+
+            var path = Path.Combine(Settings.EnvirPath, "DisabledChars.txt");
+
+            if (!File.Exists(path))
+            {
+                File.WriteAllText(path, "");
+            }
+            else
+            {
+                var lines = File.ReadAllLines(path);
+
+                for (var i = 0; i < lines.Length; i++)
+                {
+                    if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
+                    DisabledCharNames.Add(lines[i].ToUpper());
+                }
+            }
+        }
+
+        public void LoadLineMessages()
+        {
+            LineMessages.Clear();
+
+            var path = Path.Combine(Settings.EnvirPath, "LineMessage.txt");
+
+            if (!File.Exists(path))
+            {
+                File.WriteAllText(path, "");
+            }
+            else
+            {
+                var lines = File.ReadAllLines(path);
+
+                for (var i = 0; i < lines.Length; i++)
+                {
+                    if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
+                    LineMessages.Add(lines[i]);
+                }
+            }
+        }
+
         private bool BindCharacter(AuctionInfo auction)
         {
             bool bound = false;
@@ -1851,14 +1892,6 @@ namespace Server.MirEnvir
 
             LoadDB();
 
-            RecipeInfoList.Clear();
-            foreach (var recipe in Directory.GetFiles(Settings.RecipePath, "*.txt")
-                .Select(path => Path.GetFileNameWithoutExtension(path))
-                .ToArray())
-                RecipeInfoList.Add(new RecipeInfo(recipe));
-
-            MessageQueue.Enqueue($"{RecipeInfoList.Count} Recipes loaded.");
-
             for (var i = 0; i < MapInfoList.Count; i++)
                 MapInfoList[i].CreateMap();
             MessageQueue.Enqueue($"{MapInfoList.Count} Maps Loaded.");
@@ -1877,6 +1910,17 @@ namespace Server.MirEnvir
             LoadStrongBoxDrops();
             LoadBlackStoneDrops();
             MessageQueue.Enqueue("Drops Loaded.");
+
+            RecipeInfoList.Clear();
+            foreach (var recipe in Directory.GetFiles(Settings.RecipePath, "*.txt")
+                .Select(path => Path.GetFileNameWithoutExtension(path))
+                .ToArray())
+                RecipeInfoList.Add(new RecipeInfo(recipe));
+
+            MessageQueue.Enqueue($"{RecipeInfoList.Count} Recipes Loaded.");
+
+            LoadDisabledChars();
+            LoadLineMessages();
 
             if (DragonInfo.Enabled)
             {
