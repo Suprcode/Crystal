@@ -5899,6 +5899,17 @@ namespace Server.MirObjects
                     ob.ProcessSpell(this);
                     //break;
                 }
+
+                SafeZoneInfo szi = CurrentMap.GetSafeZone(CurrentLocation);
+
+                if (szi != null)
+                {
+                    BindLocation = szi.Location;
+                    BindMapIndex = CurrentMapIndex;
+                    InSafeZone = true;
+                }
+                else
+                    InSafeZone = false;
             }
 
             ActionTime = Envir.Time + 500;
@@ -8070,7 +8081,6 @@ namespace Server.MirObjects
 
             if (travel > 0 && !wall)
             {
-
                 if (target != null) target.Attacked(this, magic.GetDamage(0), DefenceType.None, false);
                 LevelMagic(magic);
             }

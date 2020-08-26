@@ -221,12 +221,12 @@ namespace Server.MirObjects
                 }
                 else
                 {
-
                     int StartTime = ((Info.HourStart * 60) + Info.MinuteStart);
                     int FinishTime = ((Info.HourEnd * 60) + Info.MinuteEnd);
                     int CurrentTime = ((DateTime.Now.Hour * 60) + DateTime.Now.Minute);
 
                     if (Info.TimeVisible)
+                    {
                         if (StartTime > CurrentTime || FinishTime <= CurrentTime)
                         {
                             if (Visible) Hide();
@@ -235,7 +235,7 @@ namespace Server.MirObjects
                         {
                             if (!Visible) Show();
                         }
-
+                    }
                 }
             }
 
