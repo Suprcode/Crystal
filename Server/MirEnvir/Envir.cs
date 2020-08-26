@@ -615,7 +615,7 @@ namespace Server.MirEnvir
 
                         if (LineMessages.Count > 0 && Time >= lineMessageTime)
                         {
-                            lineMessageTime = Time + Settings.Minute * 2;
+                            lineMessageTime = Time + Settings.Minute * Settings.LineMessageTimer;
                             Broadcast(new S.Chat
                             {
                                 Message = LineMessages[Random.Next(LineMessages.Count)],
