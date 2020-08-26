@@ -1191,7 +1191,7 @@ public class ItemSets
     {
         get
         {
-            return Count == Amount;
+            return Count >= Amount;
         }
     }
 }
