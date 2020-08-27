@@ -1892,6 +1892,14 @@ namespace Server.MirEnvir
 
             LoadDB();
 
+            RecipeInfoList.Clear();
+            foreach (var recipe in Directory.GetFiles(Settings.RecipePath, "*.txt")
+                .Select(path => Path.GetFileNameWithoutExtension(path))
+                .ToArray())
+                RecipeInfoList.Add(new RecipeInfo(recipe));
+
+            MessageQueue.Enqueue($"{RecipeInfoList.Count} Recipes Loaded.");
+
             for (var i = 0; i < MapInfoList.Count; i++)
                 MapInfoList[i].CreateMap();
             MessageQueue.Enqueue($"{MapInfoList.Count} Maps Loaded.");
@@ -1910,14 +1918,6 @@ namespace Server.MirEnvir
             LoadStrongBoxDrops();
             LoadBlackStoneDrops();
             MessageQueue.Enqueue("Drops Loaded.");
-
-            RecipeInfoList.Clear();
-            foreach (var recipe in Directory.GetFiles(Settings.RecipePath, "*.txt")
-                .Select(path => Path.GetFileNameWithoutExtension(path))
-                .ToArray())
-                RecipeInfoList.Add(new RecipeInfo(recipe));
-
-            MessageQueue.Enqueue($"{RecipeInfoList.Count} Recipes Loaded.");
 
             LoadDisabledChars();
             LoadLineMessages();
