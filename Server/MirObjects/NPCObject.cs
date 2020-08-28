@@ -65,14 +65,9 @@ namespace Server.MirObjects
             LoadScript();
         }
 
-        public void LoadScript()
+        private void LoadScript()
         {
-            if (ScriptID > 0)
-            {
-                Envir.Scripts.Remove(ScriptID);
-            }
-
-            var script = new NPCScript(ObjectID, Info.FileName, NPCScriptType.Normal);
+            var script = NPCScript.GetOrAdd(ObjectID, Info.FileName, NPCScriptType.Normal);
 
             ScriptID = script.ScriptID;
         }
@@ -469,7 +464,6 @@ namespace Server.MirObjects
 
     }
 
-
     public class NPCSpeech
     {
         public int Weight { get; set; }
@@ -480,5 +474,4 @@ namespace Server.MirObjects
             return rnd.Next(Weight, max + 100);
         }
     }
-
 }

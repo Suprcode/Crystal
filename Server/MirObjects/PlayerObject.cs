@@ -4404,9 +4404,9 @@ namespace Server.MirObjects
                     case "RELOADNPCS":
                         if (!IsGM) return;
 
-                        Envir.ReloadNPCs(CurrentMap);
+                        Envir.ReloadNPCs();
 
-                        ReceiveChat("NPCs Reloaded.", ChatType.Hint);
+                        ReceiveChat("NPC Scripts Reloaded.", ChatType.Hint);
                         break;
 
                     case "GIVEGOLD":
@@ -5133,21 +5133,6 @@ namespace Server.MirObjects
                         ReceiveChat(hintstring, ChatType.Hint);
                         break;
 
-                    case "CREATEMAPINSTANCE": //TEST CODE
-                        if (!IsGM || parts.Length < 2) return;
-
-                        map = Envir.GetMapByNameAndInstance(parts[1]);
-
-                        if (map == null)
-                        {
-                            ReceiveChat(string.Format("Map {0} does not exist", parts[1]), ChatType.System);
-                            return;
-                        }
-
-                        MapInfo mapInfo = map.Info;
-                        mapInfo.CreateInstance();
-                        ReceiveChat(string.Format("Map instance created for map {0}", mapInfo.FileName), ChatType.System);
-                        break;
                     case "STARTCONQUEST":
                         //Needs some work, but does job for now.
                         if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
@@ -14606,7 +14591,7 @@ namespace Server.MirObjects
                     {
                         if (!callingNPC.BuyBack.ContainsKey(Name)) callingNPC.BuyBack[Name] = new List<UserItem>();
 
-                        if (callingNPC.BuyBack[Name].Count >= Settings.GoodsBuyBackMaxStored)
+                        if (Settings.GoodsBuyBackMaxStored > 0 && callingNPC.BuyBack[Name].Count >= Settings.GoodsBuyBackMaxStored)
                             callingNPC.BuyBack[Name].RemoveAt(0);
 
                         temp.BuybackExpiryDate = Envir.Now;

@@ -3370,28 +3370,16 @@ namespace Server.MirEnvir
         }
 
 
-        public void ReloadNPCs(Map map)
+        public void ReloadNPCs()
         {
-            if (map == null)
-            {
-                for (int i = 0; i < MapList.Count; i++)
-                {
-                    ReloadNPCs(MapList[i]);
-                }
+            var keys = Scripts.Keys;
 
-                Main.DefaultNPC.LoadInfo();
-                Main.MonsterNPC.LoadInfo();
-                Main.RobotNPC.LoadInfo();
-
-                MessageQueue.Enqueue("NPCs reloaded...");
-            }
-            else
+            foreach (var key in keys)
             {
-                for (int i = 0; i < map.NPCs.Count; i++)
-                {
-                    map.NPCs[i].LoadScript();
-                }
+                Scripts[key].Load();
             }
+
+            MessageQueue.Enqueue("NPC Scripts reloaded...");
         }
 
         public void ReloadDrops()

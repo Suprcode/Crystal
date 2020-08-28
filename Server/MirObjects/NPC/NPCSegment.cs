@@ -519,7 +519,7 @@ namespace Server.MirObjects
 
                     if (!File.Exists(fileName)) return;
 
-                    var script = new NPCScript(0, listPath, NPCScriptType.Called);
+                    var script = NPCScript.GetOrAdd(0, listPath, NPCScriptType.Called);
 
                     Page.ScriptCalls.Add(script.ScriptID);
 

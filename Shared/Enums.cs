@@ -96,6 +96,7 @@ public enum ItemGrade : byte
     Legendary = 3,
     Mythical = 4,
 }
+
 public enum StatType : byte
 {
     AC = 0,

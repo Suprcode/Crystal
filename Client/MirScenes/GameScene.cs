@@ -10509,7 +10509,6 @@ namespace Client.MirScenes
 
             return text;
         }
-
     }
 }
 

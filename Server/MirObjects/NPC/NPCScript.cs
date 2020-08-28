@@ -30,6 +30,18 @@ namespace Server.MirObjects
             return Envir.Scripts[index];
         }
 
+        public static NPCScript GetOrAdd(uint loadedObjectID, string fileName, NPCScriptType type)
+        {
+            var script = Envir.Scripts.SingleOrDefault(x => x.Value.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase) && x.Value.LoadedObjectID == loadedObjectID).Value;
+
+            if (script != null)
+            {
+                return script;
+            }
+
+            return new NPCScript(loadedObjectID, fileName, type);
+        }
+
         public readonly int ScriptID;
         public readonly uint LoadedObjectID;
         public readonly NPCScriptType Type;
@@ -85,10 +97,15 @@ namespace Server.MirObjects
             FileName = fileName;
             Type = type;
 
-            LoadInfo();
-            LoadGoods();
+            Load();
 
             Envir.Scripts.Add(ScriptID, this);
+        }
+
+        public void Load()
+        {
+            LoadInfo();
+            LoadGoods();
         }
 
         public float PriceRate(PlayerObject player, bool baseRate = false)
@@ -147,11 +164,6 @@ namespace Server.MirObjects
         }
         public void ClearInfo()
         {
-            foreach (var id in NPCPages.SelectMany(x => x.ScriptCalls))
-            {
-                Envir.Scripts.Remove(id);
-            }
-
             Goods = new List<UserItem>();
             Types = new List<ItemType>();
             NPCPages = new List<NPCPage>();

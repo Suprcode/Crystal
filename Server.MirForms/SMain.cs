@@ -413,7 +413,7 @@ namespace Server
 
         private void reloadNPCsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Envir.ReloadNPCs(null);
+            Envir.ReloadNPCs();
         }
 
         private void reloadDropsToolStripMenuItem_Click(object sender, EventArgs e)
