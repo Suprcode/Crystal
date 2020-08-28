@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace LibraryEditor
@@ -76,7 +77,8 @@ namespace LibraryEditor
             {
                 _fStream.Seek(0, SeekOrigin.Begin);
                 buffer = _bReader.ReadBytes(48);
-                _nType = (byte)(buffer[26] == 64 ? 2 : buffer[2] == 73 ? 3 : _nType);
+                var desc = Encoding.UTF8.GetString(buffer, 1, 20);
+                _nType = desc == "WEMADE Entertainment" ? _nType : (byte)(buffer[26] == 64 ? 2 : buffer[2] == 73 ? 3 : _nType);
                 if (_nType == 0)
                 {
                     _palette = new int[_bReader.ReadInt32()];
