@@ -125,7 +125,7 @@ public class GameLanguage
                          WeaponSpiritFire = "Your weapon is glowed by spirit of fire.",
                          SpiritsFireDisappeared = "The spirits of fire disappeared.",
                          WeddingRing = "WeddingRing",
-                         WedRingName = "{0}{1}{2} {3}",
+                         ItemTextFormat = "{0}{1}{2} {3}",
                          DropAmount = "Drop Amount:",
                          LowMana = "Not Enough Mana to cast.",
                          NoCreatures = "You do not own any creatures.",
@@ -399,7 +399,7 @@ public class GameLanguage
         GameLanguage.WeaponSpiritFire = reader.ReadString("Language", "WeaponSpiritFire", GameLanguage.WeaponSpiritFire);
         GameLanguage.SpiritsFireDisappeared = reader.ReadString("Language", "SpiritsFireDisappeared", GameLanguage.SpiritsFireDisappeared);
         GameLanguage.WeddingRing = reader.ReadString("Language", "WeddingRing", GameLanguage.WeddingRing);
-        GameLanguage.WedRingName = reader.ReadString("Language", "WedRingName", GameLanguage.WedRingName);
+        GameLanguage.ItemTextFormat = reader.ReadString("Language", "WedRingName", GameLanguage.ItemTextFormat);
         GameLanguage.DropAmount = reader.ReadString("Language", "DropAmount", GameLanguage.DropAmount);
         GameLanguage.LowMana = reader.ReadString("Language", "LowMana", GameLanguage.LowMana);
 
@@ -626,7 +626,7 @@ public class GameLanguage
         reader.Write("Language", "WeaponSpiritFire", GameLanguage.WeaponSpiritFire);
         reader.Write("Language", "SpiritsFireDisappeared", GameLanguage.SpiritsFireDisappeared);
         reader.Write("Language", "WeddingRing", GameLanguage.WeddingRing);
-        reader.Write("Language", "WedRingName", GameLanguage.WedRingName);
+        reader.Write("Language", "WedRingName", GameLanguage.ItemTextFormat);
         reader.Write("Language", "DropAmount", GameLanguage.DropAmount);
         reader.Write("Language", "LowMana", GameLanguage.LowMana);
 

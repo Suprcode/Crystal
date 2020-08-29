@@ -5609,7 +5609,7 @@ namespace Client.MirScenes
             };
 
             if (HoverItem.RefineAdded > 0)
-            nameLabel.Text = "(*)" + nameLabel.Text;
+                nameLabel.Text = "(*)" + nameLabel.Text;
 
             ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, nameLabel.DisplayRectangle.Right + 4),
                 Math.Max(ItemLabel.Size.Height, nameLabel.DisplayRectangle.Bottom));
@@ -5660,132 +5660,130 @@ namespace Client.MirScenes
                 }
             }
 
-            String WedRingName = "";
-            if (HoverItem.WeddingRing == -1)
+            string baseText = "";
+            switch (HoverItem.Info.Type)
             {
-                string InfoLanguageString = "";
-                switch (HoverItem.Info.Type)
-                {
-                    case ItemType.Nothing:
-                        break;
-                    case ItemType.Weapon:
-                        InfoLanguageString = GameLanguage.ItemTypeWeapon;
-                        break;
-                    case ItemType.Armour:
-                        InfoLanguageString = GameLanguage.ItemTypeArmour;
-                        break;
-                    case ItemType.Helmet:
-                        InfoLanguageString = GameLanguage.ItemTypeHelmet;
-                        break;
-                    case ItemType.Necklace:
-                        InfoLanguageString = GameLanguage.ItemTypeNecklace;
-                        break;
-                    case ItemType.Bracelet:
-                        InfoLanguageString = GameLanguage.ItemTypeBracelet;
-                        break;
-                    case ItemType.Ring:
-                        InfoLanguageString = GameLanguage.ItemTypeRing;
-                        break;
-                    case ItemType.Amulet:
-                        InfoLanguageString = GameLanguage.ItemTypeAmulet;
-                        break;
-                    case ItemType.Belt:
-                        InfoLanguageString = GameLanguage.ItemTypeBelt;
-                        break;
-                    case ItemType.Boots:
-                        InfoLanguageString = GameLanguage.ItemTypeBoots;
-                        break;
-                    case ItemType.Stone:
-                        InfoLanguageString = GameLanguage.ItemTypeStone;
-                        break;
-                    case ItemType.Torch:
-                        InfoLanguageString = GameLanguage.ItemTypeTorch;
-                        break;
-                    case ItemType.Potion:
-                        InfoLanguageString = GameLanguage.ItemTypePotion;
-                        break;
-                    case ItemType.Ore:
-                        InfoLanguageString = GameLanguage.ItemTypeOre;
-                        break;
-                    case ItemType.Meat:
-                        InfoLanguageString = GameLanguage.ItemTypeMeat;
-                        break;
-                    case ItemType.CraftingMaterial:
-                        InfoLanguageString = GameLanguage.ItemTypeCraftingMaterial;
-                        break;
-                    case ItemType.Scroll:
-                        InfoLanguageString = GameLanguage.ItemTypeScroll;
-                        break;
-                    case ItemType.Gem:
-                        InfoLanguageString = GameLanguage.ItemTypeGem;
-                        break;
-                    case ItemType.Mount:
-                        InfoLanguageString = GameLanguage.ItemTypeMount;
-                        break;
-                    case ItemType.Book:
-                        InfoLanguageString = GameLanguage.ItemTypeBook;
-                        break;
-                    case ItemType.Script:
-                        InfoLanguageString = GameLanguage.ItemTypeScript;
-                        break;
-                    case ItemType.Reins:
-                        InfoLanguageString = GameLanguage.ItemTypeReins;
-                        break;
-                    case ItemType.Bells:
-                        InfoLanguageString = GameLanguage.ItemTypeBells;
-                        break;
-                    case ItemType.Saddle:
-                        InfoLanguageString = GameLanguage.ItemTypeSaddle;
-                        break;
-                    case ItemType.Ribbon:
-                        InfoLanguageString = GameLanguage.ItemTypeRibbon;
-                        break;
-                    case ItemType.Mask:
-                        InfoLanguageString = GameLanguage.ItemTypeMask;
-                        break;
-                    case ItemType.Food:
-                        InfoLanguageString = GameLanguage.ItemTypeFood;
-                        break;
-                    case ItemType.Hook:
-                        InfoLanguageString = GameLanguage.ItemTypeHook;
-                        break;
-                    case ItemType.Float:
-                        InfoLanguageString = GameLanguage.ItemTypeFloat;
-                        break;
-                    case ItemType.Bait:
-                        InfoLanguageString = GameLanguage.ItemTypeBait;
-                        break;
-                    case ItemType.Finder:
-                        InfoLanguageString = GameLanguage.ItemTypeFinder;
-                        break;
-                    case ItemType.Reel:
-                        InfoLanguageString = GameLanguage.ItemTypeReel;
-                        break;
-                    case ItemType.Fish:
-                        InfoLanguageString = GameLanguage.ItemTypeFish;
-                        break;
-                    case ItemType.Quest:
-                        InfoLanguageString = GameLanguage.ItemTypeQuest;
-                        break;
-                    case ItemType.Awakening:
-                        InfoLanguageString = GameLanguage.ItemTypeAwakening;
-                        break;
-                    case ItemType.Pets:
-                        InfoLanguageString = GameLanguage.ItemTypePets;
-                        break;
-                    case ItemType.Transform:
-                        InfoLanguageString = GameLanguage.ItemTypeTransform;
-                        break;
-                    case ItemType.Deco:
-                        InfoLanguageString = GameLanguage.ItemTypeDeco;
-                        break;
-                }
-                WedRingName = string.Format(GameLanguage.WedRingName, InfoLanguageString, "\n" , GameLanguage.Weight, HoverItem.Weight + text);
+                case ItemType.Nothing:
+                    break;
+                case ItemType.Weapon:
+                    baseText = GameLanguage.ItemTypeWeapon;
+                    break;
+                case ItemType.Armour:
+                    baseText = GameLanguage.ItemTypeArmour;
+                    break;
+                case ItemType.Helmet:
+                    baseText = GameLanguage.ItemTypeHelmet;
+                    break;
+                case ItemType.Necklace:
+                    baseText = GameLanguage.ItemTypeNecklace;
+                    break;
+                case ItemType.Bracelet:
+                    baseText = GameLanguage.ItemTypeBracelet;
+                    break;
+                case ItemType.Ring:
+                    baseText = GameLanguage.ItemTypeRing;
+                    break;
+                case ItemType.Amulet:
+                    baseText = GameLanguage.ItemTypeAmulet;
+                    break;
+                case ItemType.Belt:
+                    baseText = GameLanguage.ItemTypeBelt;
+                    break;
+                case ItemType.Boots:
+                    baseText = GameLanguage.ItemTypeBoots;
+                    break;
+                case ItemType.Stone:
+                    baseText = GameLanguage.ItemTypeStone;
+                    break;
+                case ItemType.Torch:
+                    baseText = GameLanguage.ItemTypeTorch;
+                    break;
+                case ItemType.Potion:
+                    baseText = GameLanguage.ItemTypePotion;
+                    break;
+                case ItemType.Ore:
+                    baseText = GameLanguage.ItemTypeOre;
+                    break;
+                case ItemType.Meat:
+                    baseText = GameLanguage.ItemTypeMeat;
+                    break;
+                case ItemType.CraftingMaterial:
+                    baseText = GameLanguage.ItemTypeCraftingMaterial;
+                    break;
+                case ItemType.Scroll:
+                    baseText = GameLanguage.ItemTypeScroll;
+                    break;
+                case ItemType.Gem:
+                    baseText = GameLanguage.ItemTypeGem;
+                    break;
+                case ItemType.Mount:
+                    baseText = GameLanguage.ItemTypeMount;
+                    break;
+                case ItemType.Book:
+                    baseText = GameLanguage.ItemTypeBook;
+                    break;
+                case ItemType.Script:
+                    baseText = GameLanguage.ItemTypeScript;
+                    break;
+                case ItemType.Reins:
+                    baseText = GameLanguage.ItemTypeReins;
+                    break;
+                case ItemType.Bells:
+                    baseText = GameLanguage.ItemTypeBells;
+                    break;
+                case ItemType.Saddle:
+                    baseText = GameLanguage.ItemTypeSaddle;
+                    break;
+                case ItemType.Ribbon:
+                    baseText = GameLanguage.ItemTypeRibbon;
+                    break;
+                case ItemType.Mask:
+                    baseText = GameLanguage.ItemTypeMask;
+                    break;
+                case ItemType.Food:
+                    baseText = GameLanguage.ItemTypeFood;
+                    break;
+                case ItemType.Hook:
+                    baseText = GameLanguage.ItemTypeHook;
+                    break;
+                case ItemType.Float:
+                    baseText = GameLanguage.ItemTypeFloat;
+                    break;
+                case ItemType.Bait:
+                    baseText = GameLanguage.ItemTypeBait;
+                    break;
+                case ItemType.Finder:
+                    baseText = GameLanguage.ItemTypeFinder;
+                    break;
+                case ItemType.Reel:
+                    baseText = GameLanguage.ItemTypeReel;
+                    break;
+                case ItemType.Fish:
+                    baseText = GameLanguage.ItemTypeFish;
+                    break;
+                case ItemType.Quest:
+                    baseText = GameLanguage.ItemTypeQuest;
+                    break;
+                case ItemType.Awakening:
+                    baseText = GameLanguage.ItemTypeAwakening;
+                    break;
+                case ItemType.Pets:
+                    baseText = GameLanguage.ItemTypePets;
+                    break;
+                case ItemType.Transform:
+                    baseText = GameLanguage.ItemTypeTransform;
+                    break;
+                case ItemType.Deco:
+                    baseText = GameLanguage.ItemTypeDeco;
+                    break;
             }
-            else
+
+            if (HoverItem.WeddingRing != -1)
             {
-                WedRingName = string.Format(GameLanguage.WedRingName, GameLanguage.WeddingRing, "\n", GameLanguage.Weight, HoverItem.Weight + text);
+                baseText = GameLanguage.WeddingRing;
             }
+
+            baseText = string.Format(GameLanguage.ItemTextFormat, baseText, string.IsNullOrEmpty(baseText) ? "" : "\n", GameLanguage.Weight, HoverItem.Weight + text);
 
             MirLabel etcLabel = new MirLabel
             {
@@ -5794,7 +5792,7 @@ namespace Client.MirScenes
                 Location = new Point(4, nameLabel.DisplayRectangle.Bottom),
                 OutLine = true,
                 Parent = ItemLabel,
-                Text = WedRingName
+                Text = baseText
             };
 
             ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, etcLabel.DisplayRectangle.Right + 4),
@@ -5857,7 +5855,7 @@ namespace Client.MirScenes
             #region Dura gem
             minValue = realItem.Durability;
 
-            if (minValue > 0 &&  realItem.Type == ItemType.Gem)
+            if (minValue > 0 && realItem.Type == ItemType.Gem)
             {
                 count++;
                 text = string.Format("Adds {0}Durability", minValue / 1000);
