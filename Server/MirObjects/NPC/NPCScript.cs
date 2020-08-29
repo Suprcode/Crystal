@@ -89,7 +89,7 @@ namespace Server.MirObjects
         public List<NPCPage> NPCSections = new List<NPCPage>();
         public List<NPCPage> NPCPages = new List<NPCPage>();
 
-        public NPCScript(uint loadedObjectID, string fileName, NPCScriptType type)
+        private NPCScript(uint loadedObjectID, string fileName, NPCScriptType type)
         {
             ScriptID = ++Envir.ScriptIndex;
 

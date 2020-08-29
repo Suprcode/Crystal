@@ -34,7 +34,6 @@ namespace Server.MirObjects
             return null;
         }
 
-
         public int ScriptID { get; set; }
 
         public NPCInfo Info;
