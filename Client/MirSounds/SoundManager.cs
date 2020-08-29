@@ -91,8 +91,6 @@ namespace Client.MirSounds
                 return;
             }
 
-
-
             if (IndexList.ContainsKey(index))
                 Sounds.Add(new SoundLibrary(index, IndexList[index], loop));
             else
