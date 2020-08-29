@@ -399,7 +399,7 @@ public class GameLanguage
         GameLanguage.WeaponSpiritFire = reader.ReadString("Language", "WeaponSpiritFire", GameLanguage.WeaponSpiritFire);
         GameLanguage.SpiritsFireDisappeared = reader.ReadString("Language", "SpiritsFireDisappeared", GameLanguage.SpiritsFireDisappeared);
         GameLanguage.WeddingRing = reader.ReadString("Language", "WeddingRing", GameLanguage.WeddingRing);
-        GameLanguage.ItemTextFormat = reader.ReadString("Language", "WedRingName", GameLanguage.ItemTextFormat);
+        GameLanguage.ItemTextFormat = reader.ReadString("Language", "ItemTextFormat", GameLanguage.ItemTextFormat);
         GameLanguage.DropAmount = reader.ReadString("Language", "DropAmount", GameLanguage.DropAmount);
         GameLanguage.LowMana = reader.ReadString("Language", "LowMana", GameLanguage.LowMana);
 
@@ -626,7 +626,7 @@ public class GameLanguage
         reader.Write("Language", "WeaponSpiritFire", GameLanguage.WeaponSpiritFire);
         reader.Write("Language", "SpiritsFireDisappeared", GameLanguage.SpiritsFireDisappeared);
         reader.Write("Language", "WeddingRing", GameLanguage.WeddingRing);
-        reader.Write("Language", "WedRingName", GameLanguage.ItemTextFormat);
+        reader.Write("Language", "ItemTextFormat", GameLanguage.ItemTextFormat);
         reader.Write("Language", "DropAmount", GameLanguage.DropAmount);
         reader.Write("Language", "LowMana", GameLanguage.LowMana);
 
