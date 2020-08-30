@@ -135,9 +135,6 @@ namespace Client.MirControls
         }
         protected virtual void CreateTexture()
         {
-            if (ControlTexture != null && !ControlTexture.Disposed && Size != TextureSize)
-                ControlTexture.Dispose();
-
             if (ControlTexture == null || ControlTexture.Disposed)
             {
                 DXManager.ControlList.Add(this);

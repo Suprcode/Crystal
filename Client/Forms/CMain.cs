@@ -340,20 +340,18 @@ namespace Client
                     Thread.Sleep(1);
                     return;
                 }
-                else
-                {
-                    DXManager.Device.Clear(ClearFlags.Target, Color.CornflowerBlue, 0, 0);
-                    DXManager.Device.BeginScene();
-                    DXManager.Sprite.Begin(SpriteFlags.AlphaBlend);
-                    DXManager.SetSurface(DXManager.MainSurface);
 
-                    if (MirScene.ActiveScene != null)
-                        MirScene.ActiveScene.Draw();
+                DXManager.Device.Clear(ClearFlags.Target, Color.CornflowerBlue, 0, 0);
+                DXManager.Device.BeginScene();
+                DXManager.Sprite.Begin(SpriteFlags.AlphaBlend);
+                DXManager.SetSurface(DXManager.MainSurface);
 
-                    DXManager.Sprite.End();
-                    DXManager.Device.EndScene();
-                    DXManager.Device.Present();
-                }
+                if (MirScene.ActiveScene != null)
+                    MirScene.ActiveScene.Draw();
+
+                DXManager.Sprite.End();
+                DXManager.Device.EndScene();
+                DXManager.Device.Present();
             }
             catch (Direct3D9Exception ex)
             {

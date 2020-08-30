@@ -11,8 +11,6 @@ using Blend = SlimDX.Direct3D9.Blend;
 
 namespace Client.MirGraphics
 {
-
-
     class DXManager
     {
         public static List<MImage> TextureList = new List<MImage>();
@@ -252,23 +250,18 @@ namespace Client.MirGraphics
             try
             {
                 Result result = DXManager.Device.TestCooperativeLevel();
-                if (result.Code == ResultCode.DeviceLost.Code)
+
+                if (result.Code == ResultCode.DeviceLost.Code) return;
+
+                if (result.Code == ResultCode.DeviceNotReset.Code)
                 {
+                    DXManager.ResetDevice();
                     return;
                 }
 
-                int code = result.Code;
-                if (code == ResultCode.DeviceNotReset.Code)
-                {
-                    DXManager.ResetDevice();
-                }
-                else
-                {
-                    if (code != ResultCode.Success.Code)
-                        return;
+                if (result.Code != ResultCode.Success.Code) return;
 
-                    DXManager.DeviceLost = false;
-                }
+                DXManager.DeviceLost = false;
             }
             catch
             {
@@ -312,6 +305,7 @@ namespace Client.MirGraphics
             catch
             {
             }
+
             try
             {
                 MainSurface = Device.GetBackBuffer(0, 0);
