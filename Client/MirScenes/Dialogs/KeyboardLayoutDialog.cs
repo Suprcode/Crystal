@@ -136,7 +136,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 122,
                 Library = Libraries.Title,
                 Size = new Size(72, 25),
-                Location = new Point(20, 395),
+                Location = new Point(30, 400),
                 Parent = this,
                 Visible = true,
             };
@@ -172,7 +172,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Sound = SoundList.ButtonA,
                 Parent = this,
-                Location = new Point(105, 401)
+                Location = new Point(105, 406)
             };
             EnforceButton.Click += EnforceButton_Click;
 
@@ -183,7 +183,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Parent = this,
                 NotControl = true,
-                Location = new Point(105, 401)
+                Location = new Point(105, 406)
             };
 
             EnforceButtonLabel = new MirLabel
@@ -191,7 +191,7 @@ namespace Client.MirScenes.Dialogs
                 Visible = true,
                 NotControl = true,
                 Parent = this,
-                Location = new Point(120, 399),
+                Location = new Point(120, 404),
                 AutoSize = true,
                 Text = "Assign Rule: Strict"
             };
