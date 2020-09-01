@@ -21,6 +21,7 @@ namespace LibraryEditor
                     openFileWith = args[0];
                 }
             }
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new LMain());

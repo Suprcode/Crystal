@@ -38,20 +38,10 @@ namespace LibraryEditor
             this.AllowDrop = true;
             this.DragEnter += new DragEventHandler(Form1_DragEnter);
             this.DragDrop += new DragEventHandler(Form1_DragDrop);
-            if (Program.openFileWith.Length > 0 &&
-                File.Exists(Program.openFileWith))
+
+            if (Program.openFileWith.Length > 0 && File.Exists(Program.openFileWith))
             {
-                _library = new MLibraryV2(Program.openFileWith);
-                PreviewListView.VirtualListSize = _library.Images.Count;
-
-                // Show .Lib path in application title.
-                FileInfo fileInfo = new FileInfo(Program.openFileWith);
-                this.Text = fileInfo.FullName.ToString();
-                OpenLibraryDialog.FileName = fileInfo.Name;
-                PreviewListView.SelectedIndices.Clear();
-
-                if (PreviewListView.Items.Count > 0)
-                    PreviewListView.Items[0].Selected = true;
+                OpenLibrary(Program.openFileWith);
             }
         }
 
@@ -257,17 +247,22 @@ namespace LibraryEditor
         {
             if (OpenLibraryDialog.ShowDialog() != DialogResult.OK) return;
 
+            OpenLibrary(OpenLibraryDialog.FileName);
+        }
+
+        private void OpenLibrary(string filename)
+        {
             ClearInterface();
             ImageList.Images.Clear();
             PreviewListView.Items.Clear();
             _indexList.Clear();
 
             if (_library != null) _library.Close();
-            _library = new MLibraryV2(OpenLibraryDialog.FileName);
+            _library = new MLibraryV2(filename);
             PreviewListView.VirtualListSize = _library.Images.Count;
 
             // Show .Lib path in application title.
-            this.Text = OpenLibraryDialog.FileName.ToString();
+            this.Text = filename;
 
             PreviewListView.SelectedIndices.Clear();
 
