@@ -411,6 +411,15 @@ namespace LibraryEditor
                 }
                 int index = 0;
 
+                if (bytes.Length <= 1)
+                {
+                    Image.UnlockBits(data);
+                    Image.Dispose();
+                    Image = null;
+                    MaskImage.Dispose();
+                    return;
+                }
+
                 int* scan0 = (int*)data.Scan0;
                 {
                     for (int y = Height - 1; y >= 0; y--)
