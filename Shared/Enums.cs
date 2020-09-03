@@ -372,7 +372,7 @@ public enum Monster : ushort
     BlueTurtle = 171,//done
     Catapult1 = 172, //not added frames
     Catapult2 = 173, //not added frames
-    Blank1 = 174,
+    OldSpittingSpider = 174,
     SiegeRepairman = 175, //not added frames
     BlueSanta = 176,//done
     BattleStandard = 177,//done
@@ -900,7 +900,8 @@ public enum MirGridType : byte
     Refine = 16,
     Renting = 17,
     GuestRenting = 18,
-    Craft = 19
+    Craft = 19,
+    Tool = 20
 }
 
 public enum EquipmentSlot : byte
