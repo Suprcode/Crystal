@@ -77,8 +77,9 @@ namespace LibraryEditor
             {
                 _fStream.Seek(0, SeekOrigin.Begin);
                 buffer = _bReader.ReadBytes(48);
-                var desc = Encoding.UTF8.GetString(buffer, 1, 20);
-                _nType = desc == "WEMADE Entertainment" ? _nType : (byte)(buffer[26] == 64 ? 2 : buffer[2] == 73 ? 3 : _nType);
+                //var desc = Encoding.UTF8.GetString(buffer, 1, 20);
+                _nType = (byte)(buffer[40] == 1 ? 2 : buffer[2] == 73 ? 3 : _nType);
+
                 if (_nType == 0)
                 {
                     _palette = new int[_bReader.ReadInt32()];
@@ -188,13 +189,6 @@ namespace LibraryEditor
             {
                 library.Save();
             }
-
-            // Operation finished.
-            // System.Windows.Forms.MessageBox.Show("Converted " + fileName + " successfully.",
-            //    "Wemade Information",
-            //        System.Windows.Forms.MessageBoxButtons.OK,
-            //            System.Windows.Forms.MessageBoxIcon.Information,
-            //                System.Windows.Forms.MessageBoxDefaultButton.Button1);
         }
 
         public class WeMadeImage
