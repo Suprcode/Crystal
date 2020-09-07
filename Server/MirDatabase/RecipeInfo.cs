@@ -30,7 +30,7 @@ namespace Server.MirDatabase
         public List<MirClass> RequiredClass = new List<MirClass>();
         public MirGender? RequiredGender = null;
 
-        public byte Possibility = 100; //TODO
+        public byte Chance = 100;
         public uint Gold = 0;
 
         public RecipeInfo(string name)
@@ -79,12 +79,12 @@ namespace Server.MirDatabase
                                 case "amount":
                                     Item.Count = uint.Parse(data[1]);
                                     break;
-                                case "possibility":
-                                    Possibility = byte.Parse(data[1]);
+                                case "chance":
+                                    Chance = byte.Parse(data[1]);
 
-                                    if (Possibility > 100)
+                                    if (Chance > 100)
                                     {
-                                        Possibility = 100;
+                                        Chance = 100;
                                     }
                                     break;
                                 case "gold":
@@ -232,7 +232,7 @@ namespace Server.MirDatabase
             ClientRecipeInfo clientInfo = new ClientRecipeInfo
             {
                 Gold = Gold,
-                Possibility = Possibility,
+                Chance = Chance,
                 Item = Item.Clone(),
                 Tools = Tools.Select(x => x).ToList(),
                 Ingredients = Ingredients.Select(x => x).ToList()

@@ -1393,7 +1393,7 @@ namespace Server.MirObjects
             player.Account.Gold -= recipe.Gold;
             player.Enqueue(new S.LoseGold { Gold = recipe.Gold });
 
-            if (Envir.Random.Next(100) >= recipe.Possibility)
+            if (Envir.Random.Next(100) >= recipe.Chance)
             {
                 player.ReceiveChat("Crafting attempt failed.", ChatType.System);
             }
