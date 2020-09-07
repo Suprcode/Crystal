@@ -74,7 +74,10 @@ public class ClientMagic
 
 public class ClientRecipeInfo
 {
+    public uint Gold;
+    public byte Possibility;
     public UserItem Item;
+    public List<UserItem> Tools = new List<UserItem>();
     public List<UserItem> Ingredients = new List<UserItem>();
 
     public ClientRecipeInfo() { }
@@ -82,9 +85,18 @@ public class ClientRecipeInfo
 
     public ClientRecipeInfo(BinaryReader reader)
     {
+        Gold = reader.ReadUInt32();
+        Possibility = reader.ReadByte();
+
         Item = new UserItem(reader);
 
         int count = reader.ReadInt32();
+        for (int i = 0; i < count; i++)
+        {
+            Tools.Add(new UserItem(reader));
+        }
+
+        count = reader.ReadInt32();
         for (int i = 0; i < count; i++)
         {
             Ingredients.Add(new UserItem(reader));
@@ -93,7 +105,15 @@ public class ClientRecipeInfo
 
     public void Save(BinaryWriter writer)
     {
+        writer.Write(Gold);
+        writer.Write(Possibility);
         Item.Save(writer);
+
+        writer.Write(Tools.Count);
+        foreach (var tool in Tools)
+        {
+            tool.Save(writer);
+        }
 
         writer.Write(Ingredients.Count);
         foreach (var ingredient in Ingredients)

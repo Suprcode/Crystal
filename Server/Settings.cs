@@ -66,7 +66,7 @@ namespace Server
         //HTTP
         public static bool StartHTTPService = false;
         public static string HTTPIPAddress = "http://127.0.0.1:5679/";
-        public static string HTTPTrustedIPAddress = "127.0.0.1:5679";
+        public static string HTTPTrustedIPAddress = "127.0.0.1";
 
         //Permission
         public static bool AllowNewAccount = true,
@@ -220,10 +220,10 @@ namespace Server
 
         //Goods Settings
         public static bool GoodsOn = true;
-        public static uint GoodsMaxStored = 50;
+        public static uint GoodsMaxStored = 15;
         public static uint GoodsBuyBackTime = 60;
         public static uint GoodsBuyBackMaxStored = 20;
-
+        public static bool GoodsHideAddedStats = true;
 
         //character settings
         private static readonly String[] BaseStatClassNames = { "Warrior", "Wizard", "Taoist", "Assassin", "Archer" };
@@ -1396,6 +1396,7 @@ namespace Server
             GoodsMaxStored = reader.ReadUInt32("Goods", "MaxStored", GoodsMaxStored);
             GoodsBuyBackTime = reader.ReadUInt32("Goods", "BuyBackTime", GoodsBuyBackTime);
             GoodsBuyBackMaxStored = reader.ReadUInt32("Goods", "BuyBackMaxStored", GoodsBuyBackMaxStored);
+            GoodsHideAddedStats = reader.ReadBoolean("Goods", "HideAddedStats", GoodsHideAddedStats);
         }
         public static void SaveGoods()
         {
@@ -1405,6 +1406,7 @@ namespace Server
             reader.Write("Goods", "MaxStored", GoodsMaxStored);
             reader.Write("Goods", "BuyBackTime", GoodsBuyBackTime);
             reader.Write("Goods", "BuyBackMaxStored", GoodsBuyBackMaxStored);
+            reader.Write("Goods", "HideAddedStats", GoodsHideAddedStats);
         }
 
     }

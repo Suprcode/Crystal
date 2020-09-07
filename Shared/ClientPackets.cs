@@ -806,8 +806,8 @@ namespace ClientPackets
         {
             UniqueID = reader.ReadUInt64();
             Count = reader.ReadUInt32();
-            Slots = new int[reader.ReadInt32()];
 
+            Slots = new int[reader.ReadInt32()];
             for (int i = 0; i < Slots.Length; i++)
             {
                 Slots[i] = reader.ReadInt32();
@@ -817,8 +817,8 @@ namespace ClientPackets
         {
             writer.Write(UniqueID);
             writer.Write(Count);
-            writer.Write(Slots.Length);
 
+            writer.Write(Slots.Length);
             for (int i = 0; i < Slots.Length; i++)
             {
                 writer.Write(Slots[i]);

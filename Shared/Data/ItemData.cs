@@ -399,6 +399,8 @@ public class UserItem
     public ExpireInfo ExpireInfo;
     public RentalInformation RentalInformation;
 
+    public bool IsShopItem;
+
     public Awake Awake = new Awake();
     public bool IsAdded
     {
@@ -493,6 +495,11 @@ public class UserItem
 
         if (reader.ReadBoolean())
             RentalInformation = new RentalInformation(reader, version, Customversion);
+
+        if (version < 83) return;
+        {
+            IsShopItem = reader.ReadBoolean();
+        }
     }
 
     public void Save(BinaryWriter writer)
@@ -558,6 +565,8 @@ public class UserItem
 
         writer.Write(RentalInformation != null);
         RentalInformation?.Save(writer);
+
+        writer.Write(IsShopItem);
     }
 
 
@@ -766,7 +775,9 @@ public class UserItem
             RefineAdded = RefineAdded,
 
             ExpireInfo = ExpireInfo,
-            RentalInformation = RentalInformation
+            RentalInformation = RentalInformation,
+
+            IsShopItem = IsShopItem
         };
 
         return item;

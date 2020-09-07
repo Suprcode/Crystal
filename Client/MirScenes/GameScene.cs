@@ -52,6 +52,8 @@ namespace Client.MirScenes
         public MenuDialog MenuDialog;
         public NPCDialog NPCDialog;
         public NPCGoodsDialog NPCGoodsDialog;
+        public NPCGoodsDialog NPCSubGoodsDialog;
+        public NPCGoodsDialog NPCCraftGoodsDialog;
         public NPCDropDialog NPCDropDialog;
         public NPCAwakeDialog NPCAwakeDialog;
         public HelpDialog HelpDialog;
@@ -150,7 +152,7 @@ namespace Client.MirScenes
         public static uint NPCID;
         public static float NPCRate;
         public static uint DefaultNPCID;
-
+        public static bool HideAddedStoreStats;
 
         public long ToggleTime;
         public static bool Slaying, Thrusting, HalfMoon, CrossHalfMoon, DoubleSlash, TwinDrakeBlade, FlamingSword;
@@ -192,7 +194,9 @@ namespace Client.MirScenes
             OptionDialog = new OptionDialog { Parent = this, Visible = false };
             MenuDialog = new MenuDialog { Parent = this, Visible = false };
             NPCDialog = new NPCDialog { Parent = this, Visible = false };
-            NPCGoodsDialog = new NPCGoodsDialog { Parent = this, Visible = false };
+            NPCGoodsDialog = new NPCGoodsDialog(PanelType.Buy) { Parent = this, Visible = false };
+            NPCSubGoodsDialog = new NPCGoodsDialog(PanelType.BuySub) { Parent = this, Visible = false };
+            NPCCraftGoodsDialog = new NPCGoodsDialog(PanelType.Craft) { Parent = this, Visible = false };
             NPCDropDialog = new NPCDropDialog { Parent = this, Visible = false };
             NPCAwakeDialog = new NPCAwakeDialog { Parent = this, Visible = false };
 
@@ -469,14 +473,14 @@ namespace Client.MirScenes
                         QuestLogDialog.Hide();
                         NPCAwakeDialog.Hide();
                         RefineDialog.Hide();
-                        BigMapDialog.Visible = false;
+                        BigMapDialog.Hide();
                         if (FishingStatusDialog.bEscExit) FishingStatusDialog.Cancel();
                         MailComposeLetterDialog.Hide();
                         MailComposeParcelDialog.Hide();
                         MailListDialog.Hide();
                         MailReadLetterDialog.Hide();
                         MailReadParcelDialog.Hide();
-                        ItemRentalDialog.Visible = false;
+                        ItemRentalDialog.Hide();
                         NoticeDialog.Hide();
 
 
@@ -3151,6 +3155,8 @@ namespace Client.MirScenes
                 NPCDialog.Hide();
 
             NPCGoodsDialog.Hide();
+            NPCSubGoodsDialog.Hide();
+            NPCCraftGoodsDialog.Hide();
             NPCDropDialog.Hide();
             StorageDialog.Hide();
             NPCAwakeDialog.Hide();
@@ -3159,6 +3165,7 @@ namespace Client.MirScenes
             TrustMerchantDialog.Hide();
             QuestListDialog.Hide();
         }
+
         private void NPCUpdate(S.NPCUpdate p)
         {
             GameScene.NPCID = p.NPCID; //Updates the client with the correct NPC ID if it's manually called from the client
@@ -3377,14 +3384,46 @@ namespace Client.MirScenes
             }
 
             NPCRate = p.Rate;
+            HideAddedStoreStats = p.HideAddedStats;
+
             if (!NPCDialog.Visible) return;
-            NPCGoodsDialog.usePearls = false;
-            NPCGoodsDialog.NewGoods(p.List);
-            NPCGoodsDialog.UpdatePanelType(p.Type);
-            NPCGoodsDialog.Show();
 
-
+            switch (p.Type)
+            {
+                case PanelType.Buy:
+                    NPCGoodsDialog.UsePearls = false;
+                    NPCGoodsDialog.NewGoods(p.List);
+                    NPCGoodsDialog.Show();
+                    break;
+                case PanelType.BuySub:
+                    NPCSubGoodsDialog.UsePearls = false;
+                    NPCSubGoodsDialog.NewGoods(p.List);
+                    NPCSubGoodsDialog.Show();
+                    break;
+                case PanelType.Craft:
+                    NPCCraftGoodsDialog.UsePearls = false;
+                    NPCCraftGoodsDialog.NewGoods(p.List);
+                    NPCCraftGoodsDialog.Show();
+                    CraftDialog.Show();
+                    break;
+            }
         }
+        private void NPCPearlGoods(S.NPCPearlGoods p)
+        {
+            for (int i = 0; i < p.List.Count; i++)
+            {
+                p.List[i].Info = GetInfo(p.List[i].ItemIndex);
+            }
+
+            NPCRate = p.Rate;
+
+            if (!NPCDialog.Visible) return;
+
+            NPCGoodsDialog.UsePearls = true;
+            NPCGoodsDialog.NewGoods(p.List);
+            NPCGoodsDialog.Show();
+        }
+
         private void NPCSell()
         {
             if (!NPCDialog.Visible) return;
@@ -3488,23 +3527,7 @@ namespace Client.MirScenes
         {
             if (!p.Success) return;
 
-            for (int i = 0; i < CraftDialog.Selected.Count; i++)
-            {
-                MirItemCell cell = CraftDialog.Selected[i].Key;
-                ulong oldItem = CraftDialog.Selected[i].Value;
-
-                if (cell.Item == null || cell.Item.UniqueID != oldItem)
-                {
-                    MirItemCell gridCell = CraftDialog.GetCell(oldItem);
-
-                    if (gridCell != null)
-                        gridCell.Item = null;
-                    cell.Locked = false;
-                }
-            }
-
-            CraftDialog.RefreshCraftCells(CraftDialog.RecipeItem);
-
+            CraftDialog.UpdateCraftCells();
             User.RefreshStats();
         }
         private void ItemRepaired(S.ItemRepaired p)
@@ -5376,22 +5399,6 @@ namespace Client.MirScenes
             }
         }
 
-        private void NPCPearlGoods(S.NPCPearlGoods p)
-        {
-            for (int i = 0; i < p.List.Count; i++)
-            {
-                p.List[i].Info = GetInfo(p.List[i].ItemIndex);
-            }
-
-            NPCRate = p.Rate;
-            if (!NPCDialog.Visible) return;
-            NPCGoodsDialog.usePearls = true;
-            NPCGoodsDialog.NewGoods(p.List);
-            NPCGoodsDialog.UpdatePanelType(p.Type);
-            NPCGoodsDialog.Show();
-
-        }
-
         private void FriendUpdate(S.FriendUpdate p)
         {
             GameScene.Scene.FriendDialog.Friends = p.Friends;
@@ -5572,10 +5579,10 @@ namespace Client.MirScenes
             GuildBuffLabel = null;
         }
 
-        public MirControl NameInfoLabel(UserItem item, bool Inspect = false)
+        public MirControl NameInfoLabel(UserItem item, bool inspect = false, bool hideDura = false)
         {
-            ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
-            MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
+            ushort level = inspect ? InspectDialog.Level : MapObject.User.Level;
+            MirClass job = inspect ? InspectDialog.Class : MapObject.User.Class;
             HoverItem = item;
             ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
 
@@ -5616,12 +5623,7 @@ namespace Client.MirScenes
 
             string text = "";
 
-            if (HoverItem.Info.StackSize > 1)
-            {
-                text += string.Format(GameLanguage.Count, HoverItem.Count);
-            }
-
-            if (HoverItem.Info.Durability > 0)
+            if (HoverItem.Info.Durability > 0 && !hideDura)
             {
                 switch (HoverItem.Info.Type)
                 {
@@ -5629,10 +5631,10 @@ namespace Client.MirScenes
                         text += string.Format(" Usage {0}/{1}", HoverItem.CurrentDura, HoverItem.MaxDura);
                         break;
                     case ItemType.Ore:
-                        text += string.Format(" Purity {0}", Math.Round(HoverItem.CurrentDura / 1000M));
+                        text += string.Format(" Purity {0}", Math.Floor(HoverItem.CurrentDura / 1000M));
                         break;
                     case ItemType.Meat:
-                        text += string.Format(" Quality {0}", Math.Round(HoverItem.CurrentDura / 1000M));
+                        text += string.Format(" Quality {0}", Math.Floor(HoverItem.CurrentDura / 1000M));
                         break;
                     case ItemType.Mount:
                         text += string.Format(" Loyalty {0} / {1}", HoverItem.CurrentDura, HoverItem.MaxDura);
@@ -5654,8 +5656,8 @@ namespace Client.MirScenes
                         }
                         break;
                     default:
-                        text += string.Format(" {0} {1}/{2}", GameLanguage.Durability, Math.Round(HoverItem.CurrentDura / 1000M),
-                                                   Math.Round(HoverItem.MaxDura / 1000M));
+                        text += string.Format(" {0} {1}/{2}", GameLanguage.Durability, Math.Floor(HoverItem.CurrentDura / 1000M),
+                                                   Math.Floor(HoverItem.MaxDura / 1000M));
                         break;
                 }
             }
@@ -5814,7 +5816,7 @@ namespace Client.MirScenes
 
             return outLine;
         }
-        public MirControl AttackInfoLabel(UserItem item, bool Inspect = false)
+        public MirControl AttackInfoLabel(UserItem item, bool Inspect = false, bool hideAdded = false)
         {
             ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
             MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
@@ -5878,7 +5880,7 @@ namespace Client.MirScenes
             #region DC
             minValue = realItem.MinDC;
             maxValue = realItem.MaxDC;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.DC : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.DC : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -5908,7 +5910,7 @@ namespace Client.MirScenes
 
             minValue = realItem.MinMC;
             maxValue = realItem.MaxMC;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.MC : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.MC : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -5938,7 +5940,7 @@ namespace Client.MirScenes
 
             minValue = realItem.MinSC;
             maxValue = realItem.MaxSC;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.SC : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.SC : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -5968,7 +5970,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Luck;
             maxValue = 0;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.Luck : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.Luck : 0;
 
             if (minValue != 0 || addValue != 0)
             {
@@ -6009,7 +6011,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Accuracy;
             maxValue = 0;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.Accuracy : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.Accuracy : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6065,7 +6067,7 @@ namespace Client.MirScenes
 
             minValue = realItem.AttackSpeed;
             maxValue = 0;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.AttackSpeed : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AttackSpeed : 0;
 
             if (minValue != 0 || maxValue != 0 || addValue != 0)
             {
@@ -6102,7 +6104,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Freezing;
             maxValue = 0;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.Freezing : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.Freezing : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6132,7 +6134,7 @@ namespace Client.MirScenes
 
             minValue = realItem.PoisonAttack;
             maxValue = 0;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.PoisonAttack : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.PoisonAttack : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6162,7 +6164,7 @@ namespace Client.MirScenes
 
             minValue = realItem.CriticalRate;
             maxValue = 0;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.CriticalRate : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.CriticalRate : 0;
 
             if ((minValue > 0 || maxValue > 0 || addValue > 0) && (realItem.Type != ItemType.Gem))
             {
@@ -6193,7 +6195,7 @@ namespace Client.MirScenes
 
             minValue = realItem.CriticalDamage;
             maxValue = 0;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.CriticalDamage : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.CriticalDamage : 0;
 
             if ((minValue > 0 || maxValue > 0 || addValue > 0) && (realItem.Type != ItemType.Gem))
             {
@@ -6291,7 +6293,7 @@ namespace Client.MirScenes
             }
             return null;
         }
-        public MirControl DefenceInfoLabel(UserItem item, bool Inspect = false)
+        public MirControl DefenceInfoLabel(UserItem item, bool Inspect = false, bool hideAdded = false)
         {
             ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
             MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
@@ -6333,7 +6335,7 @@ namespace Client.MirScenes
 
             minValue = realItem.MinAC;
             maxValue = realItem.MaxAC;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.AC : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AC : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6379,7 +6381,7 @@ namespace Client.MirScenes
 
             minValue = realItem.MinMAC;
             maxValue = realItem.MaxMAC;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.MAC : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.MAC : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6414,7 +6416,7 @@ namespace Client.MirScenes
 
             minValue = realItem.HP;
             maxValue = 0;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.HP : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.HP : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6442,7 +6444,7 @@ namespace Client.MirScenes
 
             minValue = realItem.MP;
             maxValue = 0;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.MP : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.MP : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6570,7 +6572,7 @@ namespace Client.MirScenes
 
             minValue = realItem.HealthRecovery;
             maxValue = 0;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.HealthRecovery : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.HealthRecovery : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6596,7 +6598,7 @@ namespace Client.MirScenes
 
             minValue = realItem.SpellRecovery;
             maxValue = 0;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.ManaRecovery : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.ManaRecovery : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6622,7 +6624,7 @@ namespace Client.MirScenes
 
             minValue = realItem.PoisonRecovery;
             maxValue = 0;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.PoisonRecovery : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.PoisonRecovery : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6648,7 +6650,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Agility;
             maxValue = 0;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.Agility : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.Agility : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6674,7 +6676,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Strong;
             maxValue = 0;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.Strong : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.Strong : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6700,7 +6702,7 @@ namespace Client.MirScenes
 
             minValue = realItem.PoisonResist;
             maxValue = 0;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.PoisonResist : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.PoisonResist : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6730,7 +6732,7 @@ namespace Client.MirScenes
 
             minValue = realItem.MagicResist;
             maxValue = 0;
-            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.MagicResist : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.MagicResist : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -7237,7 +7239,7 @@ namespace Client.MirScenes
             }
             return null;
         }
-        public MirControl BindInfoLabel(UserItem item, bool Inspect = false)
+        public MirControl BindInfoLabel(UserItem item, bool Inspect = false, bool hideAdded = false)
         {
             ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
             MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
@@ -7518,7 +7520,7 @@ namespace Client.MirScenes
 
             #region CURSED
 
-            if ((!HoverItem.Info.NeedIdentify || HoverItem.Identified) && HoverItem.Cursed)
+            if ((!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) && HoverItem.Cursed)
             {
                 count++;
                 MirLabel CURSEDLabel = new MirLabel
@@ -8090,7 +8092,7 @@ namespace Client.MirScenes
             return null;
         }
 
-        public void CreateItemLabel(UserItem item, bool Inspect = false)
+        public void CreateItemLabel(UserItem item, bool inspect = false, bool hideDura = false, bool hideAdded = false)
         {
             if (item == null)
             {
@@ -8100,8 +8102,8 @@ namespace Client.MirScenes
             }
 
             if (item == HoverItem && ItemLabel != null && !ItemLabel.IsDisposed) return;
-            ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
-            MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
+            ushort level = inspect ? InspectDialog.Level : MapObject.User.Level;
+            MirClass job = inspect ? InspectDialog.Class : MapObject.User.Class;
             HoverItem = item;
             ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
 
@@ -8113,29 +8115,28 @@ namespace Client.MirScenes
                 DrawControlTexture = true,
                 NotControl = true,
                 Parent = this,
-                Opacity = 0.7F,
-              //  Visible = false
+                Opacity = 0.7F
             };
 
             //Name Info Label
             MirControl[] outlines = new MirControl[9];
-            outlines[0] = NameInfoLabel(item, Inspect);
+            outlines[0] = NameInfoLabel(item, inspect, hideDura);
             //Attribute Info1 Label - Attack Info
-            outlines[1] = AttackInfoLabel(item, Inspect);
+            outlines[1] = AttackInfoLabel(item, inspect, hideAdded);
             //Attribute Info2 Label - Defence Info
-            outlines[2] = DefenceInfoLabel(item, Inspect);
+            outlines[2] = DefenceInfoLabel(item, inspect, hideAdded);
             //Attribute Info3 Label - Weight Info
-            outlines[3] = WeightInfoLabel(item, Inspect);
+            outlines[3] = WeightInfoLabel(item, inspect);
             //Awake Info Label
-            outlines[4] = AwakeInfoLabel(item, Inspect);
+            outlines[4] = AwakeInfoLabel(item, inspect);
             //need Info Label
-            outlines[5] = NeedInfoLabel(item, Inspect);
+            outlines[5] = NeedInfoLabel(item, inspect);
             //Bind Info Label
-            outlines[6] = BindInfoLabel(item, Inspect);
+            outlines[6] = BindInfoLabel(item, inspect, hideAdded);
             //Overlap Info Label
-            outlines[7] = OverlapInfoLabel(item, Inspect);
+            outlines[7] = OverlapInfoLabel(item, inspect);
             //Story Label
-            outlines[8] = StoryInfoLabel(item, Inspect);
+            outlines[8] = StoryInfoLabel(item, inspect);
 
             foreach (var outline in outlines)
             {

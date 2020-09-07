@@ -186,7 +186,7 @@ namespace Server
 
         bool tryParseTrustedHttp()
         {
-            string pattern = @"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}:[0-9]{2,5}";
+            string pattern = @"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}";
             return Regex.IsMatch(HTTPTrustedIPAddressTextBox.Text, pattern);
         }
 

@@ -75,6 +75,8 @@ namespace Server.MirObjects
         {
             if (!Settings.GoodsOn) return;
 
+            var script = NPCScript.Get(ScriptID);
+
             List<UserItem> deleteList = new List<UserItem>();
 
             foreach (var playerGoods in BuyBack)
@@ -89,7 +91,14 @@ namespace Server.MirObjects
                     {
                         deleteList.Add(BuyBack[playerGoods.Key][i]);
 
-                        if (UsedGoods.Count >= Settings.GoodsMaxStored)
+                        if (script.UsedTypes.Count != 0 && !script.UsedTypes.Contains(item.Info.Type))
+                        {
+                            continue;
+                        }
+
+                        var multiCount = UsedGoods.Count(x => x.Info.Index == item.Info.Index);
+
+                        if (multiCount >= Settings.GoodsMaxStored)
                         {
                             UserItem nonAddedItem = UsedGoods.FirstOrDefault(e => e.IsAdded == false);
 
@@ -124,7 +133,6 @@ namespace Server.MirObjects
 
         public override bool IsAttackTarget(PlayerObject attacker)
         {
-            // throw new NotSupportedException();
             return false;
         }
         public override bool IsFriendlyTarget(PlayerObject ally)
@@ -137,7 +145,6 @@ namespace Server.MirObjects
         }
         public override bool IsAttackTarget(MonsterObject attacker)
         {
-            //   throw new NotSupportedException();
             return false;
         }
 

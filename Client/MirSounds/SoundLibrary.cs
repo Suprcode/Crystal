@@ -91,8 +91,8 @@ namespace Client.MirSounds
                 buffer.Play(0, 0);
                 _bufferList.Add(buffer);
             }
-
         }
+
         public void Stop()
         {
             if (_bufferList == null || _bufferList.Count == 0) return;

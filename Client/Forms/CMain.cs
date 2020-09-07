@@ -517,8 +517,10 @@ namespace Client
             DXManager.ResetDevice();
 
             if (MirScene.ActiveScene == GameScene.Scene)
-                GameScene.Scene.MapControl.FloorValid = false;
-            GameScene.Scene.TextureValid = false;
+            {
+                GameScene.Scene.MapControl.FloorValid = false; 
+                GameScene.Scene.TextureValid = false;
+            }        
         }
 
         public void CreateScreenShot()

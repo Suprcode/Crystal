@@ -2,12 +2,14 @@
 
 public enum PanelType : byte
 {
-    Buy = 0,
+    Buy,
+    BuySub,
+    Craft,
+
     Sell,
     Repair,
     SpecialRepair,
     Consign,
-    Craft,
     Refine,
     CheckRefine,
     Disassemble,
@@ -195,7 +197,7 @@ public enum IntelligentCreatureType : byte
     MedicalRat = 14,
 }
 
-//3 blank mob files
+//2 blank mob files
 public enum Monster : ushort
 {
     Guard = 0,
@@ -900,8 +902,7 @@ public enum MirGridType : byte
     Refine = 16,
     Renting = 17,
     GuestRenting = 18,
-    Craft = 19,
-    Tool = 20
+    Craft = 19
 }
 
 public enum EquipmentSlot : byte

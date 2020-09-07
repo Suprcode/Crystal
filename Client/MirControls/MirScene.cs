@@ -17,14 +17,12 @@ namespace Client.MirControls
         private static MouseButtons _buttons;
         private static long _lastClickTime;
         private static MirControl _clickedControl;
-        //private bool _redraw;
 
         protected MirScene()
         {
             DrawControlTexture = true;
             BackColour = Color.Magenta;
             Size = new Size(Settings.ScreenWidth, Settings.ScreenHeight);
-
         }
 
         public override sealed Size Size
@@ -32,7 +30,6 @@ namespace Client.MirControls
             get { return base.Size; }
             set { base.Size = value; }
         }
-
 
         public override void Draw()
         {
@@ -67,7 +64,6 @@ namespace Client.MirControls
             Surface surface = ControlTexture.GetSurfaceLevel(0);
             DXManager.SetSurface(surface);
 
-
             DXManager.Device.Clear(ClearFlags.Target, BackColour, 0, 0);
 
             BeforeDrawControl();
@@ -80,7 +76,6 @@ namespace Client.MirControls
             DXManager.SetSurface(oldSurface);
             TextureValid = true;
             surface.Dispose();
-
         }
 
         public override void OnMouseDown(MouseEventArgs e)
@@ -148,6 +143,7 @@ namespace Client.MirControls
             _lastClickTime = CMain.Time;
             _buttons = e.Button;
         }
+
         public override void OnMouseDoubleClick(MouseEventArgs e)
         {
             if (!Enabled)
@@ -222,6 +218,9 @@ namespace Client.MirControls
             GameScene.RecipeInfoList.Add(info.Info);
 
             GameScene.Bind(info.Info.Item);
+
+            for (int j = 0; j < info.Info.Tools.Count; j++)
+                GameScene.Bind(info.Info.Tools[j]);
 
             for (int j = 0; j < info.Info.Ingredients.Count; j++)
                 GameScene.Bind(info.Info.Ingredients[j]);

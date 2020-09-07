@@ -456,8 +456,8 @@ namespace Client.MirScenes
                     }
 
                     ActiveScene = new GameScene();
-                    DXManager.ResetDevice();
                     Dispose();
+                    DXManager.ResetDevice();
                     break;
             }
         }

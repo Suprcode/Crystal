@@ -78,11 +78,13 @@ namespace Server.MirObjects
             TradeKey = "[TRADE]",
             RecipeKey = "[RECIPE]",
             TypeKey = "[TYPES]",
+            UsedTypeKey = "[USEDTYPES]",
             QuestKey = "[QUESTS]",
             SpeechKey = "[SPEECH]";
 
 
         public List<ItemType> Types = new List<ItemType>();
+        public List<ItemType> UsedTypes = new List<ItemType>();
         public List<UserItem> Goods = new List<UserItem>();
         public List<RecipeInfo> CraftGoods = new List<RecipeInfo>();
 
@@ -166,6 +168,7 @@ namespace Server.MirObjects
         {
             Goods = new List<UserItem>();
             Types = new List<ItemType>();
+            UsedTypes = new List<ItemType>();
             NPCPages = new List<NPCPage>();
             CraftGoods = new List<RecipeInfo>();
 
@@ -620,8 +623,21 @@ namespace Server.MirObjects
                 {
                     if (String.IsNullOrEmpty(lines[i])) continue;
 
-                    if (!int.TryParse(lines[i], out int index)) return;
+                    if (!int.TryParse(lines[i], out int index)) break;
                     Types.Add((ItemType)index);
+                }
+            }
+
+            for (int i = 0; i < lines.Count; i++)
+            {
+                if (!lines[i].ToUpper().StartsWith(UsedTypeKey)) continue;
+
+                while (++i < lines.Count)
+                {
+                    if (String.IsNullOrEmpty(lines[i])) continue;
+
+                    if (!int.TryParse(lines[i], out int index)) break;
+                    UsedTypes.Add((ItemType)index);
                 }
             }
         }
@@ -641,7 +657,9 @@ namespace Server.MirObjects
                     ItemInfo info = Envir.GetItemInfo(data[0]);
                     if (info == null)
                         continue;
-                    UserItem goods = new UserItem(info) { CurrentDura = info.Durability, MaxDura = info.Durability };
+
+                    UserItem goods = Envir.CreateShopItem(info);
+
                     if (goods == null || Goods.Contains(goods))
                     {
                         MessageQueue.Enqueue(string.Format("Could not find Item: {0}, File: {1}", lines[i], FileName));
@@ -650,8 +668,9 @@ namespace Server.MirObjects
                     uint count = 1;
                     if (data.Length == 2)
                         uint.TryParse(data[1], out count);
+
                     goods.Count = count;
-                    goods.UniqueID = (ulong)i;
+                    goods.UniqueID = (uint)i;
 
                     Goods.Add(goods);
                 }
@@ -894,22 +913,38 @@ namespace Server.MirObjects
         {
             List<UserItem> allGoods = new List<UserItem>();
 
-            switch (page.Key.ToUpper())
+            var key = page.Key.ToUpper();
+
+            switch (key)
             {
                 case BuyKey:
+                case BuySellKey:
+                    var sentGoods = new List<UserItem>(Goods);
+
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
 
-                    player.Enqueue(new S.NPCGoods { List = Goods, Rate = PriceRate(player), Type = PanelType.Buy });
+                    if (Settings.GoodsOn)
+                    {
+                        var callingNPC = NPCObject.Get(player.NPCObjectID);
+
+                        if (callingNPC != null)
+                        {
+                            for (int i = 0; i < callingNPC.UsedGoods.Count; i++)
+                                player.CheckItem(callingNPC.UsedGoods[i]);
+                        }
+
+                        sentGoods.AddRange(callingNPC.UsedGoods);
+                    }
+
+                    player.Enqueue(new S.NPCGoods { List = sentGoods, Rate = PriceRate(player), Type = PanelType.Buy, HideAddedStats = Settings.GoodsHideAddedStats });
+
+                    if (key == BuySellKey)
+                    {
+                        player.Enqueue(new S.NPCSell());
+                    }
                     break;
                 case SellKey:
-                    player.Enqueue(new S.NPCSell());
-                    break;
-                case BuySellKey:
-                    for (int i = 0; i < Goods.Count; i++)
-                        player.CheckItem(Goods[i]);
-
-                    player.Enqueue(new S.NPCGoods { List = Goods, Rate = PriceRate(player), Type = PanelType.Buy });
                     player.Enqueue(new S.NPCSell());
                     break;
                 case RepairKey:
@@ -949,31 +984,37 @@ namespace Server.MirObjects
                     break;
                 case BuyBackKey:
                     {
-                        var callingNPC = NPCObject.Get(player.NPCObjectID);
-
-                        if (callingNPC != null)
+                        if (Settings.GoodsOn)
                         {
-                            if (!callingNPC.BuyBack.ContainsKey(player.Name)) callingNPC.BuyBack[player.Name] = new List<UserItem>();
+                            var callingNPC = NPCObject.Get(player.NPCObjectID);
 
-                            for (int i = 0; i < callingNPC.BuyBack[player.Name].Count; i++)
+                            if (callingNPC != null)
                             {
-                                player.CheckItem(callingNPC.BuyBack[player.Name][i]);
-                            }
+                                if (!callingNPC.BuyBack.ContainsKey(player.Name)) callingNPC.BuyBack[player.Name] = new List<UserItem>();
 
-                            player.Enqueue(new S.NPCGoods { List = callingNPC.BuyBack[player.Name], Rate = PriceRate(player), Type = PanelType.Buy });
+                                for (int i = 0; i < callingNPC.BuyBack[player.Name].Count; i++)
+                                {
+                                    player.CheckItem(callingNPC.BuyBack[player.Name][i]);
+                                }
+
+                                player.Enqueue(new S.NPCGoods { List = callingNPC.BuyBack[player.Name], Rate = PriceRate(player), Type = PanelType.Buy });
+                            }
                         }
                     }
                     break;
                 case BuyUsedKey:
                     {
-                        var callingNPC = NPCObject.Get(player.NPCObjectID);
-
-                        if (callingNPC != null)
+                        if (Settings.GoodsOn)
                         {
-                            for (int i = 0; i < callingNPC.UsedGoods.Count; i++)
-                                player.CheckItem(callingNPC.UsedGoods[i]);
+                            var callingNPC = NPCObject.Get(player.NPCObjectID);
 
-                            player.Enqueue(new S.NPCGoods { List = callingNPC.UsedGoods, Rate = PriceRate(player), Type = PanelType.Buy });
+                            if (callingNPC != null)
+                            {
+                                for (int i = 0; i < callingNPC.UsedGoods.Count; i++)
+                                    player.CheckItem(callingNPC.UsedGoods[i]);
+
+                                player.Enqueue(new S.NPCGoods { List = callingNPC.UsedGoods, Rate = PriceRate(player), Type = PanelType.BuySub, HideAddedStats = Settings.GoodsHideAddedStats });
+                            }
                         }
                     }
                     break;
@@ -1118,7 +1159,7 @@ namespace Server.MirObjects
 
             if (!player.CanGainItem(item)) return;
 
-            if (player.NPCPage.Key.ToUpper() == PearlBuyKey)//pearl currency
+            if (player.NPCPage.Key.ToUpper() == PearlBuyKey)
             {
                 player.Info.PearlCount -= (int)cost;
             }
@@ -1144,13 +1185,19 @@ namespace Server.MirObjects
 
                 callingNPC.NeedSave = true;
 
-                player.Enqueue(new S.NPCGoods { List = newGoodsList, Rate = PriceRate(player) });
+                player.Enqueue(new S.NPCGoods 
+                { 
+                    List = newGoodsList, 
+                    Rate = PriceRate(player), 
+                    HideAddedStats = Settings.GoodsHideAddedStats, 
+                    Type = player.NPCPage.Key.ToUpper() == BuyUsedKey ? PanelType.BuySub : PanelType.Buy 
+                });
             }
 
             if (isBuyBack)
             {
                 callingNPC.BuyBack[player.Name].Remove(goods); //If used or buyback will destroy whole stack instead of reducing to remaining quantity
-                player.Enqueue(new S.NPCGoods { List = callingNPC.BuyBack[player.Name], Rate = PriceRate(player) });
+                player.Enqueue(new S.NPCGoods { List = callingNPC.BuyBack[player.Name], Rate = PriceRate(player), HideAddedStats = false });
             }
         }
         public void Sell(PlayerObject player, UserItem item)
@@ -1178,11 +1225,47 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (player.Account.Gold < recipe.Gold)
+            {
+                player.Enqueue(p);
+                return;
+            }
+
             bool hasItems = true;
 
             List<int> usedSlots = new List<int>();
 
-            //Check Items
+            //Check Tools
+            foreach (var tool in recipe.Tools)
+            {
+                for (int i = 0; i < slots.Length; i++)
+                {
+                    int slot = slots[i];
+
+                    if (usedSlots.Contains(slot)) continue;
+
+                    if (slot < 0 || slot > player.Info.Inventory.Length) continue;
+
+                    UserItem item = player.Info.Inventory[slot];
+
+                    if (item == null || item.Info != tool.Info) continue;
+
+                    usedSlots.Add(slot);
+
+                    if ((uint)Math.Floor(item.CurrentDura / 1000M) < count)
+                    {
+                        hasItems = false;
+                        break;
+                    }
+                }
+
+                if (!hasItems)
+                {
+                    break;
+                }
+            }
+
+            //Check Ingredients
             foreach (var ingredient in recipe.Ingredients)
             {
                 uint amount = ingredient.Count * count;
@@ -1201,15 +1284,19 @@ namespace Server.MirObjects
 
                     usedSlots.Add(slot);
 
-                    if (amount <= item.Count)
-                    {
-                        amount = 0;
-                    }
-                    else
+                    if (ingredient.CurrentDura < ingredient.MaxDura && ingredient.CurrentDura > item.CurrentDura)
                     {
                         hasItems = false;
+                        break;
                     }
 
+                    if (amount > item.Count)
+                    {
+                        hasItems = false;
+                        break;
+                    }
+
+                    amount = 0;
                     break;
                 }
 
@@ -1220,14 +1307,20 @@ namespace Server.MirObjects
                 }
             }
 
-            if (!hasItems)
+            if (!hasItems || usedSlots.Count != (recipe.Tools.Count + recipe.Ingredients.Count))
+            {
+                player.Enqueue(p);
+                return;
+            }
+
+            if (count > (goods.Info.StackSize / goods.Count) || count < 1)
             {
                 player.Enqueue(p);
                 return;
             }
 
             UserItem craftedItem = Envir.CreateFreshItem(goods.Info);
-            craftedItem.Count = count;
+            craftedItem.Count = goods.Count * count;
 
             if (!player.CanGainItem(craftedItem))
             {
@@ -1235,7 +1328,32 @@ namespace Server.MirObjects
                 return;
             }
 
-            //Take Items
+            List<int> usedSlots2 = new List<int>();
+
+            //Use Tool Durability
+            foreach (var tool in recipe.Tools)
+            {
+                for (int i = 0; i < slots.Length; i++)
+                {
+                    int slot = slots[i];
+
+                    if (usedSlots2.Contains(slot)) continue;
+
+                    if (slot < 0 || slot > player.Info.Inventory.Length) continue;
+
+                    UserItem item = player.Info.Inventory[slot];
+
+                    if (item == null || item.Info != tool.Info) continue;
+
+                    usedSlots2.Add(slot);
+
+                    player.DamageItem(item, (int)(count * 1000), true);
+
+                    break;
+                }
+            }
+
+            //Take Ingredients
             foreach (var ingredient in recipe.Ingredients)
             {
                 uint amount = ingredient.Count * count;
@@ -1244,11 +1362,15 @@ namespace Server.MirObjects
                 {
                     int slot = slots[i];
 
-                    if (slot < 0) continue;
+                    if (usedSlots2.Contains(slot)) continue;
+
+                    if (slot < 0 || slot > player.Info.Inventory.Length) continue;
 
                     UserItem item = player.Info.Inventory[slot];
 
                     if (item == null || item.Info != ingredient.Info) continue;
+
+                    usedSlots2.Add(slot);
 
                     if (item.Count > amount)
                     {
@@ -1267,8 +1389,19 @@ namespace Server.MirObjects
                 }
             }
 
-            //Give Item
-            player.GainItem(craftedItem);
+            //Take Gold
+            player.Account.Gold -= recipe.Gold;
+            player.Enqueue(new S.LoseGold { Gold = recipe.Gold });
+
+            if (Envir.Random.Next(100) >= recipe.Possibility)
+            {
+                player.ReceiveChat("Crafting attempt failed.", ChatType.System);
+            }
+            else
+            {
+                //Give Item
+                player.GainItem(craftedItem);
+            }
 
             p.Success = true;
             player.Enqueue(p);

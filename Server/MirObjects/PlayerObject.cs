@@ -1973,6 +1973,11 @@ namespace Server.MirObjects
 
             CheckItemInfo(info.Item.Info);
 
+            foreach (var tool in info.Tools)
+            {
+                CheckItemInfo(tool.Info);
+            }
+
             foreach (var ingredient in info.Ingredients)
             {
                 CheckItemInfo(ingredient.Info);
@@ -13462,7 +13467,7 @@ namespace Server.MirObjects
             if (!NoDuraLoss)
                 DamageItem(Info.Equipment[(int)EquipmentSlot.Weapon], Envir.Random.Next(4) + 1);
         }
-        private void DamageItem(UserItem item, int amount, bool isChanged = false)
+        public void DamageItem(UserItem item, int amount, bool isChanged = false)
         {
             if (item == null || item.CurrentDura == 0 || item.Info.Type == ItemType.Amulet) return;
             if ((item.WeddingRing == Info.Married) && (Info.Equipment[(int)EquipmentSlot.RingL].UniqueID == item.UniqueID)) return;
@@ -18727,14 +18732,14 @@ namespace Server.MirObjects
                     TotalMC += (short)(Ingredient.Info.MinMC + Ingredient.Info.MaxMC + Ingredient.MC);
                     TotalSC += (short)(Ingredient.Info.MinSC + Ingredient.Info.MaxSC + Ingredient.SC);
                     RequiredLevel += Ingredient.Info.RequiredAmount;
-                    if (Math.Round(Ingredient.MaxDura / 1000M) == Math.Round(Ingredient.Info.Durability / 1000M)) Durability++;
-                    if (Math.Round(Ingredient.CurrentDura / 1000M) == Math.Round(Ingredient.MaxDura / 1000M)) CurrentDura++;
+                    if (Math.Floor(Ingredient.MaxDura / 1000M) == Math.Floor(Ingredient.Info.Durability / 1000M)) Durability++;
+                    if (Math.Floor(Ingredient.CurrentDura / 1000M) == Math.Floor(Ingredient.MaxDura / 1000M)) CurrentDura++;
                     ItemAmount++;
                 }
 
                 if (Ingredient.Info.FriendlyName == Settings.RefineOreName)
                 {
-                    OrePurity += (short)Math.Round(Ingredient.CurrentDura / 1000M);
+                    OrePurity += (short)Math.Floor(Ingredient.CurrentDura / 1000M);
                     OreAmount++;
                 }
 

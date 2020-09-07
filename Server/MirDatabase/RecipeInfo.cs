@@ -22,12 +22,16 @@ namespace Server.MirDatabase
 
         public UserItem Item;
         public List<UserItem> Ingredients;
+        public List<UserItem> Tools;
 
         public List<int> RequiredFlag = new List<int>();
         public ushort? RequiredLevel = null;
         public List<int> RequiredQuest = new List<int>();
         public List<MirClass> RequiredClass = new List<MirClass>();
         public MirGender? RequiredGender = null;
+
+        public byte Possibility = 100; //TODO
+        public uint Gold = 0;
 
         public RecipeInfo(string name)
         {
@@ -47,6 +51,7 @@ namespace Server.MirDatabase
         {
             List<string> lines = File.ReadAllLines(Path.Combine(Settings.RecipePath, recipe + ".txt")).ToList();
 
+            Tools = new List<UserItem>();
             Ingredients = new List<UserItem>();
 
             var mode = "ingredients";
@@ -63,6 +68,50 @@ namespace Server.MirDatabase
 
                 switch (mode)
                 {
+                    case "recipe":
+                        {
+                            var data = lines[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                            if (data.Length < 2) continue;
+
+                            switch (data[0].ToLower())
+                            {
+                                case "amount":
+                                    Item.Count = uint.Parse(data[1]);
+                                    break;
+                                case "possibility":
+                                    Possibility = byte.Parse(data[1]);
+
+                                    if (Possibility > 100)
+                                    {
+                                        Possibility = 100;
+                                    }
+                                    break;
+                                case "gold":
+                                    Gold = uint.Parse(data[1]);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        break;
+                    case "tools":
+                        {
+                            var data = lines[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                            ItemInfo info = Envir.GetItemInfo(data[0]);
+
+                            if (info == null)
+                            {
+                                MessageQueue.Enqueue(string.Format("Could not find Tool: {0}, Recipe: {1}", lines[i], recipe));
+                                continue;
+                            }
+
+                            UserItem tool = Envir.CreateShopItem(info);
+
+                            Tools.Add(tool);
+                        }
+                        break;
                     case "ingredients":
                         {
                             var data = lines[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -71,15 +120,18 @@ namespace Server.MirDatabase
 
                             if (info == null)
                             {
-                                MessageQueue.Enqueue(string.Format("Could not find Item: {0}, Recipe: {1}", lines[i], recipe));
+                                MessageQueue.Enqueue(string.Format("Could not find Ingredient: {0}, Recipe: {1}", lines[i], recipe));
                                 continue;
                             }
 
+                            UserItem ingredient = Envir.CreateShopItem(info);
+
                             uint count = 1;
-                            if (data.Length == 2)
+                            if (data.Length >= 2)
                                 uint.TryParse(data[1], out count);
 
-                            UserItem ingredient = Envir.CreateShopItem(info);
+                            if (data.Length >= 3)
+                                ushort.TryParse(data[2], out ingredient.CurrentDura);
 
                             ingredient.Count = count > info.StackSize ? info.StackSize : count;
 
@@ -100,10 +152,24 @@ namespace Server.MirDatabase
                                         RequiredLevel = ushort.Parse(data[1]);
                                         break;
                                     case "class":
-                                        RequiredClass.Add((MirClass)byte.Parse(data[1]));
+                                        if (Enum.TryParse<MirClass>(data[1], true, out MirClass cls))
+                                        {
+                                            RequiredClass.Add(cls);
+                                        }
+                                        else
+                                        {
+                                            RequiredClass.Add((MirClass)byte.Parse(data[1]));
+                                        }
                                         break;
                                     case "gender":
-                                        RequiredGender = (MirGender)byte.Parse(data[1]);
+                                        if (Enum.TryParse<MirGender>(data[1], true, out MirGender gender))
+                                        {
+                                            RequiredGender = gender;
+                                        }
+                                        else
+                                        {
+                                            RequiredGender = (MirGender)byte.Parse(data[1]);
+                                        }
                                         break;
                                     case "flag":
                                         RequiredFlag.Add(int.Parse(data[1]));
@@ -165,7 +231,10 @@ namespace Server.MirDatabase
         {
             ClientRecipeInfo clientInfo = new ClientRecipeInfo
             {
+                Gold = Gold,
+                Possibility = Possibility,
                 Item = Item.Clone(),
+                Tools = Tools.Select(x => x).ToList(),
                 Ingredients = Ingredients.Select(x => x).ToList()
             };
 

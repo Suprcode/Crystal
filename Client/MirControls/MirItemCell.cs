@@ -13,7 +13,6 @@ namespace Client.MirControls
 {
     public sealed class MirItemCell : MirImageControl
     {
-
         public UserItem Item
         {
             get
@@ -56,7 +55,7 @@ namespace Client.MirControls
         {
             get
             {
-                if (GridType == MirGridType.Craft && _itemSlot >= 0 && _itemSlot < ItemArray.Length)
+                if ((GridType == MirGridType.Craft) && _itemSlot >= 0 && _itemSlot < ItemArray.Length)
                     return CraftDialog.ShadowItems[_itemSlot];
 
                 return null;
@@ -73,7 +72,7 @@ namespace Client.MirControls
                         return MapObject.User.Inventory;
                     case MirGridType.Equipment:
                         return MapObject.User.Equipment;
-                    case MirGridType.BuyBack:
+                   // case MirGridType.BuyBack:
                         //return BuyBackPanel.Goods;
                     case MirGridType.Storage:
                         return GameScene.Storage;
@@ -98,7 +97,7 @@ namespace Client.MirControls
                     case MirGridType.Refine:
                         return GameScene.Refine;
                     case MirGridType.Craft:
-                        return CraftDialog.IngredientSlots;
+                        return CraftDialog.Slots;
 
                     default:
                         throw new NotImplementedException();
@@ -109,7 +108,7 @@ namespace Client.MirControls
 
         public override bool Border
         {
-            get { return (GameScene.SelectedCell == this || MouseControl == this || Locked) && GridType != MirGridType.DropPanel && (GridType != MirGridType.Craft); }
+            get { return (GameScene.SelectedCell == this || MouseControl == this || Locked) && !(GridType == MirGridType.DropPanel || GridType == MirGridType.Craft); }
         }
 
         private bool _locked;
@@ -204,7 +203,7 @@ namespace Client.MirControls
 
             if (GameScene.PickedUpGold || GridType == MirGridType.Inspect || GridType == MirGridType.QuestInventory) return;
 
-            if(GameScene.SelectedCell == null && (GridType == MirGridType.Mail)) return;
+            if (GameScene.SelectedCell == null && (GridType == MirGridType.Mail)) return;
 
             base.OnMouseClick(e);
             
@@ -1999,14 +1998,6 @@ namespace Client.MirControls
 
         protected internal override void DrawControl()
         {
-            /*
-            if (GameScene.SelectedCell == this || Locked)
-            {
-                base.DrawControl();
-            }
-
-            if (Locked) return;
-            */
             if (Item != null && GameScene.SelectedCell != this && Locked != true)
             {
                 CreateDisposeLabel();
@@ -2019,10 +2010,15 @@ namespace Client.MirControls
 
                     Point offSet = new Point((Size.Width - imgSize.Width) / 2, (Size.Height - imgSize.Height) / 2);
 
+                    if (GridType == MirGridType.Craft)
+                    {
+                        Libraries.Prguse.Draw(1121, DisplayLocation.Add(new Point(-2, -1)), Color.White, UseOffSet, 0.8F);
+                    }
+
                     Library.Draw(image, DisplayLocation.Add(offSet), ForeColour, UseOffSet, 1F);
                 }
             }
-            else if (Item != null && (GameScene.SelectedCell == this  || Locked))
+            else if (Item != null && (GameScene.SelectedCell == this || Locked))
             {
                 CreateDisposeLabel();
 
@@ -2049,6 +2045,11 @@ namespace Client.MirControls
 
                     Point offSet = new Point((Size.Width - imgSize.Width) / 2, (Size.Height - imgSize.Height) / 2);
 
+                    if (GridType == MirGridType.Craft)
+                    {
+                        Libraries.Prguse.Draw(1121, DisplayLocation.Add(new Point(-2, -1)), Color.White, UseOffSet, 0.8F);
+                    }
+
                     Library.Draw(image, DisplayLocation.Add(offSet), Color.DimGray, UseOffSet, 0.8F);
                 }
             }
@@ -2066,7 +2067,7 @@ namespace Client.MirControls
                 if (Item != null)
                     GameScene.Scene.CreateItemLabel(Item);
                 else if (ShadowItem != null)
-                    GameScene.Scene.CreateItemLabel(ShadowItem);
+                    GameScene.Scene.CreateItemLabel(ShadowItem, false, ShadowItem.CurrentDura == ShadowItem.MaxDura);
             }
         }
         protected override void OnMouseLeave()
@@ -2102,7 +2103,6 @@ namespace Client.MirControls
             if (ShadowItem != null)
             {
                 CountLabel.ForeColour = (Item == null || ShadowItem.Count > Item.Count) ? Color.Red : Color.LimeGreen;
-
                 CountLabel.Text = string.Format("{0}/{1}", Item == null ? 0 : Item.Count, ShadowItem.Count);
             }
             else

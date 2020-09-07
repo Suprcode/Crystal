@@ -2621,6 +2621,7 @@ namespace ServerPackets
         public List<UserItem> List = new List<UserItem>();
         public float Rate;
         public PanelType Type;
+        public bool HideAddedStats;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -2631,6 +2632,8 @@ namespace ServerPackets
 
             Rate = reader.ReadSingle();
             Type = (PanelType)reader.ReadByte();
+
+            HideAddedStats = reader.ReadBoolean();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
@@ -2641,6 +2644,8 @@ namespace ServerPackets
 
             writer.Write(Rate);
             writer.Write((byte)Type);
+
+            writer.Write(HideAddedStats);
         }
     }
     public sealed class NPCSell : Packet
