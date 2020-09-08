@@ -497,9 +497,8 @@ public class UserItem
             RentalInformation = new RentalInformation(reader, version, Customversion);
 
         if (version < 83) return;
-        {
-            IsShopItem = reader.ReadBoolean();
-        }
+
+        IsShopItem = reader.ReadBoolean();
     }
 
     public void Save(BinaryWriter writer)
