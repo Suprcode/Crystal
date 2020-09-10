@@ -2564,7 +2564,6 @@ namespace Server.MirObjects
             RefreshSkills();
             RefreshBuffs();
             RefreshStatCaps();
-            RefreshMountStats();
             RefreshGuildBuffs();
 
             //Location Stats ?
@@ -2772,12 +2771,12 @@ namespace Server.MirObjects
                     if (RealItem.Unique.HasFlag(SpecialItemMode.Flame))
                     {
                         skillsToAdd.Add(Settings.FireRing);
-                        skillsToRemove.Remove(Settings.FireRing);
+                        //skillsToRemove.Remove(Settings.FireRing);
                     }
                     if (RealItem.Unique.HasFlag(SpecialItemMode.Healing))
                     {
                         skillsToAdd.Add(Settings.HealRing);
-                        skillsToRemove.Remove(Settings.HealRing);
+                        //skillsToRemove.Remove(Settings.HealRing);
                     }
                     if (RealItem.Unique.HasFlag(SpecialItemMode.Probe)) HasProbeNecklace = true;
                     if (RealItem.Unique.HasFlag(SpecialItemMode.Skill)) SkillNeckBoost = 3;
@@ -2785,13 +2784,15 @@ namespace Server.MirObjects
                     if (RealItem.Unique.HasFlag(SpecialItemMode.Blink))
                     {
                         skillsToAdd.Add(Settings.BlinkSkill);
-                        skillsToRemove.Remove(Settings.BlinkSkill);
+                        //skillsToRemove.Remove(Settings.BlinkSkill);
                     }
                 }
                 if (RealItem.CanFastRun)
                 {
                     FastRun = true;
                 }
+
+                RefreshSocketStats(temp, skillsToAdd, ref Macrate, ref Acrate, ref HPrate, ref MPrate);
 
                 if (RealItem.Type == ItemType.Armour)
                 {
@@ -2839,7 +2840,7 @@ namespace Server.MirObjects
             MaxMAC = (ushort)Math.Min(ushort.MaxValue, (((double)Macrate / 100) + 1) * MaxMAC);
 
             AddTempSkills(skillsToAdd);
-            RemoveTempSkills(skillsToRemove);
+            RemoveTempSkills(skillsToRemove.Except(skillsToAdd));
 
             if (HasMuscleRing)
             {
@@ -2861,6 +2862,105 @@ namespace Server.MirObjects
             {
                 RefreshMount(false);
             }
+        }
+
+
+        private void RefreshSocketStats(UserItem equipItem, List<string> skillsToAdd, ref short Macrate, ref short Acrate, ref short HPrate, ref short MPrate)
+        {
+            if (equipItem == null) return;
+
+            if (equipItem.Info.Type == ItemType.Weapon && equipItem.Info.IsFishingRod)
+            {
+                return;
+            }
+
+            if (equipItem.Info.Type == ItemType.Mount && !RidingMount)
+            {
+                return;
+            }
+
+            for (int j = 0; j < equipItem.Slots.Length; j++)
+            {
+                UserItem temp = equipItem.Slots[j];
+                if (temp == null) continue;
+
+                ItemInfo RealItem = Functions.GetRealItem(temp.Info, Info.Level, Info.Class, Envir.ItemInfoList);
+                if (RealItem.Type == ItemType.Weapon || RealItem.Type == ItemType.Torch)
+                    CurrentHandWeight = (byte)Math.Min(byte.MaxValue, CurrentHandWeight + temp.Weight);
+                else
+                    CurrentWearWeight = (byte)Math.Min(byte.MaxValue, CurrentWearWeight + temp.Weight);
+
+                if (temp.CurrentDura == 0 && temp.Info.Durability > 0) continue;
+
+                MinAC = (byte)Math.Min(byte.MaxValue, MinAC + RealItem.MinAC);
+                MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + RealItem.MaxAC + temp.AC);
+                MinMAC = (byte)Math.Min(byte.MaxValue, MinMAC + RealItem.MinMAC);
+                MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + RealItem.MaxMAC + temp.MAC);
+
+                MinDC = (byte)Math.Min(byte.MaxValue, MinDC + RealItem.MinDC);
+                MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + RealItem.MaxDC + temp.DC);
+                MinMC = (byte)Math.Min(byte.MaxValue, MinMC + RealItem.MinMC);
+                MaxMC = (byte)Math.Min(byte.MaxValue, MaxMC + RealItem.MaxMC + temp.MC);
+                MinSC = (byte)Math.Min(byte.MaxValue, MinSC + RealItem.MinSC);
+                MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + RealItem.MaxSC + temp.SC);
+
+                Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + RealItem.Accuracy + temp.Accuracy);
+                Agility = (byte)Math.Min(byte.MaxValue, Agility + RealItem.Agility + temp.Agility);
+
+                MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + RealItem.HP + temp.HP);
+                MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + RealItem.MP + temp.MP);
+
+                ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + temp.AttackSpeed + RealItem.AttackSpeed)));
+                Luck = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, Luck + temp.Luck + RealItem.Luck)));
+
+                MaxBagWeight = (ushort)Math.Max(ushort.MinValue, (Math.Min(ushort.MaxValue, MaxBagWeight + RealItem.BagWeight)));
+                MaxWearWeight = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, MaxWearWeight + RealItem.WearWeight)));
+                MaxHandWeight = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, MaxHandWeight + RealItem.HandWeight)));
+                HPrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, HPrate + RealItem.HPrate));
+                MPrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, MPrate + RealItem.MPrate));
+                Acrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, Acrate + RealItem.MaxAcRate));
+                Macrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, Macrate + RealItem.MaxMacRate));
+                MagicResist = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, MagicResist + temp.MagicResist + RealItem.MagicResist)));
+                PoisonResist = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonResist + temp.PoisonResist + RealItem.PoisonResist)));
+                HealthRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, HealthRecovery + temp.HealthRecovery + RealItem.HealthRecovery)));
+                SpellRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, SpellRecovery + temp.ManaRecovery + RealItem.SpellRecovery))); //TODO - CHECK THIS
+                PoisonRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonRecovery + temp.PoisonRecovery + RealItem.PoisonRecovery)));
+                CriticalRate = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, CriticalRate + temp.CriticalRate + RealItem.CriticalRate)));
+                CriticalDamage = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, CriticalDamage + temp.CriticalDamage + RealItem.CriticalDamage)));
+                Holy = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Holy + RealItem.Holy)));
+                Freezing = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Freezing + temp.Freezing + RealItem.Freezing)));
+                PoisonAttack = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonAttack + temp.PoisonAttack + RealItem.PoisonAttack)));
+                Reflect = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Reflect + RealItem.Reflect)));
+                HpDrainRate = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, HpDrainRate + RealItem.HpDrainRate)));
+
+                if (RealItem.Light > Light) Light = RealItem.Light;
+                if (RealItem.Unique != SpecialItemMode.None)
+                {
+                    if (RealItem.Unique.HasFlag(SpecialItemMode.Paralize)) HasParalysisRing = true;
+                    if (RealItem.Unique.HasFlag(SpecialItemMode.Teleport)) HasTeleportRing = true;
+                    if (RealItem.Unique.HasFlag(SpecialItemMode.Clearring)) HasClearRing = true;
+                    if (RealItem.Unique.HasFlag(SpecialItemMode.Protection)) HasProtectionRing = true;
+                    if (RealItem.Unique.HasFlag(SpecialItemMode.Revival)) HasRevivalRing = true;
+                    if (RealItem.Unique.HasFlag(SpecialItemMode.Muscle)) HasMuscleRing = true;
+                    if (RealItem.Unique.HasFlag(SpecialItemMode.Flame))
+                    {
+                        skillsToAdd.Add(Settings.FireRing);
+                    }
+                    if (RealItem.Unique.HasFlag(SpecialItemMode.Healing))
+                    {
+                        skillsToAdd.Add(Settings.HealRing);
+                    }
+                    if (RealItem.Unique.HasFlag(SpecialItemMode.Probe)) HasProbeNecklace = true;
+                    if (RealItem.Unique.HasFlag(SpecialItemMode.Skill)) SkillNeckBoost = 3;
+                    if (RealItem.Unique.HasFlag(SpecialItemMode.NoDuraLoss)) NoDuraLoss = true; 
+                    if (RealItem.Unique.HasFlag(SpecialItemMode.Blink))
+                    {
+                        skillsToAdd.Add(Settings.BlinkSkill);
+                    }
+                }
+            }
+
+            //TODO - Add Socket bonuses
         }
 
         private void RefreshItemSetStats()
@@ -3109,47 +3209,6 @@ namespace Server.MirObjects
             PoisonRecovery = Math.Min(Settings.MaxPoisonRecovery, PoisonRecovery);
             SpellRecovery = Math.Min(Settings.MaxManaRegen, SpellRecovery);
             HpDrainRate = Math.Min((byte)100, HpDrainRate);
-        }
-
-        public void RefreshMountStats()
-        {
-            if (!RidingMount || !Mount.HasMount) return;
-
-            UserItem[] Slots = Mount.Slots;
-
-            for (int i = 0; i < Slots.Length; i++)
-            {
-                UserItem temp = Slots[i];
-                if (temp == null) continue;
-
-                ItemInfo RealItem = Functions.GetRealItem(temp.Info, Info.Level, Info.Class, Envir.ItemInfoList);
-
-                CurrentWearWeight = (ushort)Math.Min(ushort.MaxValue, CurrentWearWeight + temp.Weight);
-
-                if (temp.CurrentDura == 0 && temp.Info.Durability > 0) continue;
-
-                MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + RealItem.MinAC);
-                MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + RealItem.MaxAC + temp.AC);
-                MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + RealItem.MinMAC);
-                MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + RealItem.MaxMAC + temp.MAC);
-
-                MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + RealItem.MinDC);
-                MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + RealItem.MaxDC + temp.DC);
-                MinMC = (ushort)Math.Min(ushort.MaxValue, MinMC + RealItem.MinMC);
-                MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + RealItem.MaxMC + temp.MC);
-                MinSC = (ushort)Math.Min(ushort.MaxValue, MinSC + RealItem.MinSC);
-                MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + RealItem.MaxSC + temp.SC);
-
-                Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + RealItem.Accuracy + temp.Accuracy);
-                Agility = (byte)Math.Min(byte.MaxValue, Agility + RealItem.Agility + temp.Agility);
-
-                MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + RealItem.HP + temp.HP);
-                MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + RealItem.MP + temp.MP);
-
-                ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + temp.AttackSpeed + RealItem.AttackSpeed)));
-                Luck = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, Luck + temp.Luck + RealItem.Luck)));
-            }
-            
         }
 
         #endregion
@@ -10595,7 +10654,7 @@ namespace Server.MirObjects
             Enqueue(new S.AddBuff { Type = b.Type, Caster = Name, Expire = b.ExpireTime - Envir.Time, Values = b.Values, Infinite = b.Infinite, ObjectID = ObjectID, Visible = b.Visible });
         }
 
-        public void EquipSlotItem(MirGridType grid, ulong id, int to, MirGridType gridTo)
+        public void EquipSlotItem(MirGridType grid, ulong id, int to, MirGridType gridTo, ulong idTo)
         {
             S.EquipSlotItem p = new S.EquipSlotItem { Grid = grid, UniqueID = id, To = to, GridTo = gridTo, Success = false };
 
@@ -10608,6 +10667,23 @@ namespace Server.MirObjects
                     break;
                 case MirGridType.Fishing:
                     Item = Info.Equipment[(int)EquipmentSlot.Weapon];
+                    break;
+                case MirGridType.Socket:
+                    UserItem temp2;
+                    for (int i = 0; i < Info.Equipment.Length; i++)
+                    {
+                        temp2 = Info.Equipment[i];
+                        if (temp2 == null || temp2.UniqueID != idTo) continue;
+                        Item = temp2;
+                        break;
+                    }
+                    for (int i = 0; i < Info.Inventory.Length; i++)
+                    {
+                        temp2 = Info.Inventory[i];
+                        if (temp2 == null || temp2.UniqueID != idTo) continue;
+                        Item = temp2;
+                        break;
+                    }
                     break;
                 default:
                     Enqueue(p);
@@ -10695,12 +10771,17 @@ namespace Server.MirObjects
                 return;
             }
 
-            if ((temp.SoulBoundId != -1) && (temp.SoulBoundId != Info.Index))
+            if ((Item.Info.IsFishingRod || Item.Info.Type == ItemType.Mount) && temp.Info.Type == ItemType.Socket)
             {
                 Enqueue(p);
                 return;
             }
 
+            if ((temp.SoulBoundId != -1) && (temp.SoulBoundId != Info.Index))
+            {
+                Enqueue(p);
+                return;
+            }
 
             if (CanUseItem(temp))
             {
@@ -10825,7 +10906,7 @@ namespace Server.MirObjects
 
             Enqueue(p);
         }
-        public void RemoveSlotItem(MirGridType grid, ulong id, int to, MirGridType gridTo)
+        public void RemoveSlotItem(MirGridType grid, ulong id, int to, MirGridType gridTo, ulong idFrom)
         {
             S.RemoveSlotItem p = new S.RemoveSlotItem { Grid = grid, UniqueID = id, To = to, GridTo = gridTo, Success = false };
             UserItem[] array;
@@ -10873,6 +10954,23 @@ namespace Server.MirObjects
                     break;
                 case MirGridType.Fishing:
                     temp = Info.Equipment[(int)EquipmentSlot.Weapon];
+                    break;
+                case MirGridType.Socket:
+                    UserItem temp2;
+                    for (int i = 0; i < Info.Equipment.Length; i++)
+                    {
+                        temp2 = Info.Equipment[i];
+                        if (temp2 == null || temp2.UniqueID != idFrom) continue;
+                        temp = temp2;
+                        break;
+                    }
+                    for (int i = 0; i < Info.Inventory.Length; i++)
+                    {
+                        temp2 = Info.Inventory[i];
+                        if (temp2 == null || temp2.UniqueID != idFrom) continue;
+                        temp = temp2;
+                        break;
+                    }
                     break;
                 default:
                     Enqueue(p);
@@ -13104,6 +13202,8 @@ namespace Server.MirObjects
                         ReceiveChat("Can only be used with a fishing rod", ChatType.System);
                         return false;
                     }
+                    break;
+                case ItemType.Socket:
                     break;
                 case ItemType.Pets:
                     switch (item.Info.Shape)
@@ -17077,6 +17177,7 @@ namespace Server.MirObjects
                         break;
                 }
             }
+
             FishingNibbleChance = 5 + Envir.Random.Next(nibbleMin, nibbleMax);
 
             if (cast) FishingChance = Settings.FishingSuccessStart + (int)successStat + (FishingChanceCounter != 0 ? Envir.Random.Next(failedAddSuccessMin, failedAddSuccessMax) : 0) + (FishingChanceCounter * Settings.FishingSuccessMultiplier); //10 //10
@@ -17151,7 +17252,7 @@ namespace Server.MirObjects
                         if (dropItem == null)
                             ReceiveChat("Your fish got away!", ChatType.System);
                         else if (FreeSpace(Info.Inventory) < 1)
-                            ReceiveChat("You do not have enough space in your bag.", ChatType.System);
+                            ReceiveChat(GameLanguage.NoBagSpace, ChatType.System);
                         else
                         {
                             GainItem(dropItem);

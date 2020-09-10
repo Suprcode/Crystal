@@ -180,6 +180,7 @@
     <Compile Include="MirScenes\Dialogs\MentorDialog.cs" />
     <Compile Include="MirScenes\Dialogs\MountDialog.cs" />
     <Compile Include="MirScenes\Dialogs\NoticeDialog.cs" />
+    <Compile Include="MirScenes\Dialogs\SocketDialog.cs" />
     <Compile Include="MirScenes\Dialogs\TimerDialog.cs" />
     <Compile Include="MirScenes\Dialogs\TrustMerchantDialog.cs" />
     <Compile Include="MirScenes\Dialogs\NPCDialogs.cs" />

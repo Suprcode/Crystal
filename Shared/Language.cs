@@ -261,7 +261,8 @@ public class GameLanguage
                          NotFemale = "You are not Female.",
                          NotMale = "You are not Male.",
                          NotInGuild = "You are not in a guild",
-                         NoMentorship = "You don't currently have a Mentorship to cancel.";
+                         NoMentorship = "You don't currently have a Mentorship to cancel.",
+                         NoBagSpace = "You do not have enough space.";
 
 
     public static void LoadClientLanguage(string languageIniPath)
@@ -409,6 +410,7 @@ public class GameLanguage
         GameLanguage.NoMount = reader.ReadString("Language", "NoMount", GameLanguage.NoMount);
         GameLanguage.NoFishingRod = reader.ReadString("Language", "NoFishingRod", GameLanguage.NoFishingRod);
         GameLanguage.NotInGuild = reader.ReadString("Language", "NotInGuild", GameLanguage.NotInGuild);
+        GameLanguage.NoBagSpace = reader.ReadString("Language", "NoBagSpace", GameLanguage.NoBagSpace);
         GameLanguage.AttemptingConnect = reader.ReadString("Language", "AttemptingConnect", GameLanguage.AttemptingConnect);
 
         GameLanguage.CreatingCharactersDisabled = reader.ReadString("Language", "CreatingCharactersDisabled", GameLanguage.CreatingCharactersDisabled);
@@ -637,6 +639,7 @@ public class GameLanguage
         reader.Write("Language", "NoFishingRod", GameLanguage.NoFishingRod);
         reader.Write("Language", "NotInGuild", GameLanguage.NotInGuild);
         reader.Write("Language", "AttemptingConnect", GameLanguage.AttemptingConnect);
+        reader.Write("Language", "NoBagSpace", GameLanguage.NoBagSpace);
 
         reader.Write("Language", "CreatingCharactersDisabled", GameLanguage.CreatingCharactersDisabled);
         reader.Write("Language", "InvalidCharacterName", GameLanguage.InvalidCharacterName);
@@ -768,6 +771,7 @@ public class GameLanguage
         GameLanguage.NewMail = reader.ReadString("Language", "NewMail", GameLanguage.NewMail);
         GameLanguage.CouldNotFindPlayer = reader.ReadString("Language", "CouldNotFindPlayer", GameLanguage.CouldNotFindPlayer);
         GameLanguage.NoMentorship = reader.ReadString("Language", "NoMentorship", GameLanguage.NoMentorship);
+        GameLanguage.NoBagSpace = reader.ReadString("Language", "NoBagSpace", GameLanguage.NoBagSpace);
         GameLanguage.AllowingMentorRequests = reader.ReadString("Language", "AllowingMentorRequests", GameLanguage.AllowingMentorRequests);
         GameLanguage.BlockingMentorRequests = reader.ReadString("Language", "BlockingMentorRequests", GameLanguage.BlockingMentorRequests);
     }
@@ -806,6 +810,7 @@ public class GameLanguage
         reader.Write("Language", "NewMail", GameLanguage.NewMail);
         reader.Write("Language", "CouldNotFindPlayer", GameLanguage.CouldNotFindPlayer);
         reader.Write("Language", "NoMentorship", GameLanguage.NoMentorship);
+        reader.Write("Language", "NoBagSpace", GameLanguage.NoBagSpace);
         reader.Write("Language", "AllowingMentorRequests", GameLanguage.AllowingMentorRequests);
         reader.Write("Language", "BlockingMentorRequests", GameLanguage.BlockingMentorRequests);
     }

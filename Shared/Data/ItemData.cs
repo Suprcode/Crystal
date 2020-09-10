@@ -48,6 +48,8 @@ public class ItemInfo
     public RandomItemStat RandomStats;
     public string ToolTip = string.Empty;
 
+    public byte Slots;
+
 
     public bool IsConsumable
     {
@@ -154,6 +156,12 @@ public class ItemInfo
         CanFastRun = reader.ReadBoolean();
 
         CanAwakening = reader.ReadBoolean();
+
+        if (version > 83)
+        {
+            Slots = reader.ReadByte();
+        }
+
         bool isTooltip = reader.ReadBoolean();
         if (isTooltip)
             ToolTip = reader.ReadString();
@@ -244,6 +252,8 @@ public class ItemInfo
         writer.Write(RandomStatsId);
         writer.Write(CanFastRun);
         writer.Write(CanAwakening);
+        writer.Write(Slots);
+
         writer.Write(ToolTip != null);
         if (ToolTip != null)
             writer.Write(ToolTip);
@@ -327,11 +337,13 @@ public class ItemInfo
         if (!bool.TryParse(data[60], out info.CanMine)) return null;
         if (!bool.TryParse(data[61], out info.CanFastRun)) return null;
         if (!bool.TryParse(data[62], out info.CanAwakening)) return null;
-        if (data[63] == "-")
+        if (!byte.TryParse(data[63], out info.Slots)) return null;
+
+        if (data[64] == "-")
             info.ToolTip = "";
         else
         {
-            info.ToolTip = data[63];
+            info.ToolTip = data[64];
             info.ToolTip = info.ToolTip.Replace("&^&", "\r\n");
         }
 
@@ -355,12 +367,12 @@ public class ItemInfo
 
         return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26}," +
                              "{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46},{47},{48},{49},{50},{51}," +
-                             "{52},{53},{54},{55},{56},{57},{58},{59},{60},{61},{62},{63}",
+                             "{52},{53},{54},{55},{56},{57},{58},{59},{60},{61},{62},{63},{64}",
             Name, (byte)Type, (byte)Grade, (byte)RequiredType, (byte)RequiredClass, (byte)RequiredGender, (byte)Set, Shape, Weight, Light, RequiredAmount, MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC,
             MinMC, MaxMC, MinSC, MaxSC, Accuracy, Agility, HP, MP, AttackSpeed, Luck, BagWeight, HandWeight, WearWeight, StartItem, Image, Durability, Price,
             StackSize, Effect, Strong, MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, HPrate, MPrate, CriticalRate, CriticalDamage, NeedIdentify,
             ShowGroupPickup, MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, ClassBased, LevelBased, (short)Bind, Reflect, HpDrainRate, (short)Unique,
-            RandomStatsId, CanMine, CanFastRun, CanAwakening, TransToolTip);
+            RandomStatsId, CanMine, CanFastRun, CanAwakening, Slots, TransToolTip);
     }
 
     public override string ToString()
@@ -392,7 +404,7 @@ public class UserItem
 
     public int WeddingRing = -1;
 
-    public UserItem[] Slots = new UserItem[5];
+    public UserItem[] Slots = new UserItem[0];
 
     public DateTime BuybackExpiryDate;
 
@@ -470,6 +482,9 @@ public class UserItem
 
 
         int count = reader.ReadInt32();
+
+        SetSlotSize(count);
+
         for (int i = 0; i < count; i++)
         {
             if (reader.ReadBoolean()) continue;
@@ -668,27 +683,30 @@ public class UserItem
 
         return p;
     }
-    public void SetSlotSize() //set slot size in db?
+    public void SetSlotSize(int? size = null)
     {
-        int amount = 0;
-
-        switch (Info.Type)
+        if (size == null)
         {
-            case ItemType.Mount:
-                if (Info.Shape < 7)
-                    amount = 4;
-                else if (Info.Shape < 12)
-                    amount = 5;
-                break;
-            case ItemType.Weapon:
-                if (Info.Shape == 49 || Info.Shape == 50)
-                    amount = 5;
-                break;
+            switch (Info.Type)
+            {
+                case ItemType.Mount:
+                    if (Info.Shape < 7)
+                        size = 4;
+                    else if (Info.Shape < 12)
+                        size = 5;
+                    break;
+                case ItemType.Weapon:
+                    if (Info.Shape == 49 || Info.Shape == 50)
+                        size = 5;
+                    break;
+            }
         }
 
-        if (amount == Slots.Length) return;
+        if (size == null && Info == null) return;
+        if (size != null && size == Slots.Length) return;
+        if (size == null && Info != null && Info.Slots == Slots.Length) return;
 
-        Array.Resize(ref Slots, amount);
+        Array.Resize(ref Slots, size ?? Info.Slots);
     }
 
     public ushort Image

@@ -73,6 +73,7 @@ namespace Client.MirScenes
         public GuestTradeDialog GuestTradeDialog;
 
         public CustomPanel1 CustomPanel1;
+        public SocketDialog SocketDialog;
 
         //public SkillBarDialog SkillBarDialog;
         public List<SkillBarDialog> SkillBarDialogs = new List<SkillBarDialog>();
@@ -129,7 +130,7 @@ namespace Client.MirScenes
         public static UserItem[] Storage = new UserItem[80];
         public static UserItem[] GuildStorage = new UserItem[112];
         public static UserItem[] Refine = new UserItem[16];
-        public static UserItem HoverItem;
+        public static UserItem HoverItem, SelectedItem;
         public static MirItemCell SelectedCell;
 
         public static bool PickedUpGold;
@@ -219,6 +220,7 @@ namespace Client.MirScenes
             GuestTradeDialog = new GuestTradeDialog { Parent = this, Visible = false };
 
             CustomPanel1 = new CustomPanel1(this) { Visible = false };
+            SocketDialog = new SocketDialog { Parent = this, Visible = false };
 
             SkillBarDialog Bar1 = new SkillBarDialog { Parent = this, Visible = false, BarIndex = 0 };
             SkillBarDialogs.Add(Bar1);
@@ -1943,6 +1945,9 @@ namespace Client.MirScenes
 
             switch (p.GridTo)
             {
+                case MirGridType.Socket:
+                    toCell = SocketDialog.Grid[p.To];
+                    break;
                 case MirGridType.Mount:
                     toCell = MountDialog.Grid[p.To];
                     break;
@@ -2113,6 +2118,9 @@ namespace Client.MirScenes
 
             switch (p.Grid)
             {
+                case MirGridType.Socket:
+                    fromCell = SocketDialog.GetCell(p.UniqueID);
+                    break;
                 case MirGridType.Mount:
                     fromCell = MountDialog.GetCell(p.UniqueID);
                     break;
@@ -7067,6 +7075,87 @@ namespace Client.MirScenes
             }
             return null;
         }
+        public MirControl SocketInfoLabel(UserItem item, bool Inspect = false)
+        {
+            ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
+            MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
+            HoverItem = item;
+            ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
+
+            ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
+
+
+            int count = 0;
+
+            #region SOCKET
+
+            for (int i = 0; i < item.Slots.Length; i++)
+            {
+                count++;
+                MirLabel SOCKETLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.Yellow,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    //Text = string.Format("Hand Weight + {0}", minValue + addValue)
+                    Text = string.Format("Socket : {0}", item.Slots[i] == null ? "Empty" : item.Slots[i].FriendlyName)
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, SOCKETLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, SOCKETLabel.DisplayRectangle.Bottom));
+            }
+
+            #endregion
+
+            if (count > 0)
+            {
+                #region SOCKET
+
+                if (realItem.Slots > 0)
+                {
+                    count++;
+                    MirLabel SOCKETLabel = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.White,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = "Ctrl + Right Click To Open Sockets"
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, SOCKETLabel.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, SOCKETLabel.DisplayRectangle.Bottom));
+                }
+
+                #endregion
+
+                ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
+
+                #region OUTLINE
+                MirControl outLine = new MirControl
+                {
+                    BackColour = Color.FromArgb(255, 50, 50, 50),
+                    Border = true,
+                    BorderColour = Color.Gray,
+                    NotControl = true,
+                    Parent = ItemLabel,
+                    Opacity = 0.4F,
+                    Location = new Point(0, 0)
+                };
+                outLine.Size = ItemLabel.Size;
+                #endregion
+
+                return outLine;
+            }
+            else
+            {
+                ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height - 4);
+            }
+            return null;
+        }
         public MirControl NeedInfoLabel(UserItem item, bool Inspect = false)
         {
             ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
@@ -8119,7 +8208,7 @@ namespace Client.MirScenes
             };
 
             //Name Info Label
-            MirControl[] outlines = new MirControl[9];
+            MirControl[] outlines = new MirControl[10];
             outlines[0] = NameInfoLabel(item, inspect, hideDura);
             //Attribute Info1 Label - Attack Info
             outlines[1] = AttackInfoLabel(item, inspect, hideAdded);
@@ -8129,14 +8218,16 @@ namespace Client.MirScenes
             outlines[3] = WeightInfoLabel(item, inspect);
             //Awake Info Label
             outlines[4] = AwakeInfoLabel(item, inspect);
+            //Socket Info Label
+            outlines[5] = SocketInfoLabel(item, inspect);
             //need Info Label
-            outlines[5] = NeedInfoLabel(item, inspect);
+            outlines[6] = NeedInfoLabel(item, inspect);
             //Bind Info Label
-            outlines[6] = BindInfoLabel(item, inspect, hideAdded);
+            outlines[7] = BindInfoLabel(item, inspect, hideAdded);
             //Overlap Info Label
-            outlines[7] = OverlapInfoLabel(item, inspect);
+            outlines[8] = OverlapInfoLabel(item, inspect);
             //Story Label
-            outlines[8] = StoryInfoLabel(item, inspect);
+            outlines[9] = StoryInfoLabel(item, inspect);
 
             foreach (var outline in outlines)
             {
@@ -9260,7 +9351,7 @@ namespace Client.MirScenes
                     if (DXManager.Lights[LightRange] != null && !DXManager.Lights[LightRange].Disposed)
                     {
                         p.Offset(-(DXManager.LightSizes[LightRange].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[LightRange].Y / 2) - (CellHeight / 2) -5);
-                        DXManager.Sprite.Draw(DXManager.Lights[LightRange], new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight), Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), lightColour);
+                        DXManager.Sprite.Draw(DXManager.Lights[LightRange], null, Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), lightColour);
                     }
 
                 }
@@ -9278,7 +9369,7 @@ namespace Client.MirScenes
                     if (DXManager.Lights[light] != null && !DXManager.Lights[light].Disposed)
                     {
                         p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
-                        DXManager.Sprite.Draw(DXManager.Lights[light], new Rectangle(0, 0, DXManager.LightSizes[light].X, DXManager.LightSizes[light].Y), Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), effect.LightColour);
+                        DXManager.Sprite.Draw(DXManager.Lights[light], null, Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), effect.LightColour);
                     }
 
                 }
@@ -9360,7 +9451,7 @@ namespace Client.MirScenes
                     if (DXManager.Lights[light] != null && !DXManager.Lights[light].Disposed)
                     {
                         p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2) + 10, -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
-                        DXManager.Sprite.Draw(DXManager.Lights[light], new Rectangle(0, 0, DXManager.LightSizes[light].X, DXManager.LightSizes[light].Y), Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), lightIntensity);
+                        DXManager.Sprite.Draw(DXManager.Lights[light], null, Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), Color.White);
                     }
                 }
             }

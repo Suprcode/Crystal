@@ -62,7 +62,7 @@ namespace Client.MirObjects
         {
             get
             {
-                return Weapon == 49 || Weapon == 50;
+                return Globals.FishingRodShapes.Contains(Weapon);
             }
         }
 

@@ -2864,6 +2864,12 @@ namespace Client.MirScenes.Dialogs
             ClearCoolDowns();
         }
 
+        public override void Hide()
+        {
+            GameScene.Scene.SocketDialog.Hide();
+            base.Hide();
+        }
+
         public void ShowCharacterPage()
         {
             CharacterPage.Visible = true;

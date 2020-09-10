@@ -1013,7 +1013,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.RemoveSlotItem(p.Grid, p.UniqueID, p.To, p.GridTo);
+            Player.RemoveSlotItem(p.Grid, p.UniqueID, p.To, p.GridTo, p.FromUniqueID);
         }
         private void SplitItem(C.SplitItem p)
         {
@@ -1443,7 +1443,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.EquipSlotItem(p.Grid, p.UniqueID, p.To, p.GridTo);
+            Player.EquipSlotItem(p.Grid, p.UniqueID, p.To, p.GridTo, p.ToUniqueID);
         }
 
         private void FishingCast(C.FishingCast p)
