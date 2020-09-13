@@ -277,6 +277,9 @@ namespace Server
                 RISLuckStatChancetextBox.Text = stat.LuckStatChance.ToString();
                 RISLuckMaxStattextBox.Text = stat.LuckMaxStat.ToString();
                 RISCurseChancetextBox.Text = stat.CurseChance.ToString();
+                RISSlotChancetextBox.Text = stat.SlotChance.ToString();
+                RISSlotStatChancetextBox.Text = stat.SlotStatChance.ToString();
+                RISSlotMaxStattextBox.Text = stat.SlotMaxStat.ToString();
             }
         }
 
@@ -1979,8 +1982,52 @@ namespace Server
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].CurseChance = temp;
         }
 
-        
+        private void RISSlotChancetextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            if (RISIndexcomboBox.SelectedItem == null) return;
+            byte temp;
 
-        
+            if (!byte.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+            RandomItemStatsChanged = true;
+            Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].SlotChance = temp;
+        }
+
+        private void RISSlotStatChancetextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            if (RISIndexcomboBox.SelectedItem == null) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+            RandomItemStatsChanged = true;
+            Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].SlotStatChance = temp;
+        }
+
+        private void RISSlotMaxStattextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            if (RISIndexcomboBox.SelectedItem == null) return;
+            byte temp;
+
+            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1) || temp > 12)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+            RandomItemStatsChanged = true;
+            Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].SlotMaxStat = temp;
+        }
     }
 }

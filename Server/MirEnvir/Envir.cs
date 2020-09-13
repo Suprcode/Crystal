@@ -2778,6 +2778,16 @@ namespace Server.MirEnvir
             if (stat.AttackSpeedChance > 0 && Random.Next(stat.AttackSpeedChance) == 0) item.AttackSpeed = (sbyte)(RandomomRange(stat.AttackSpeedMaxStat-1, stat.AttackSpeedStatChance)+1);
             if (stat.LuckChance > 0 && Random.Next(stat.LuckChance) == 0) item.Luck = (sbyte)(RandomomRange(stat.LuckMaxStat-1, stat.LuckStatChance)+1);
             if (stat.CurseChance > 0 && Random.Next(100) <= stat.CurseChance) item.Cursed = true;
+
+            if (stat.SlotChance > 0 && Random.Next(stat.SlotChance) == 0)
+            {
+                var slot = (byte)(RandomomRange(stat.SlotMaxStat - 1, stat.SlotStatChance) + 1);
+
+                if (slot > item.Info.Slots)
+                {
+                    item.SetSlotSize(slot);
+                }
+            }
         }
 
         public int RandomomRange(int count, int rate)
@@ -2820,8 +2830,6 @@ namespace Server.MirEnvir
 
                 if (!BindItem(item.Slots[i])) return false;
             }
-
-            item.SetSlotSize();
 
             return true;
         }

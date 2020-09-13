@@ -787,9 +787,6 @@ namespace Server
         }
         public static void LoadRandomItemStats()
         {
-            //note: i could have used a flat file system for this which would be faster, 
-            //BUT: it's only loaded @ server startup so speed isnt vital.
-            //and i think settings should be available outside the exe for ppl to edit it easyer + lets ppl share config without forcing ppl to run it in an exe
             if (!File.Exists(Path.Combine(ConfigPath, "RandomItemStats.ini")))
             {
                 RandomItemStatsList.Add(new RandomItemStat());
@@ -876,6 +873,9 @@ namespace Server
                 stat.LuckStatChance = reader.ReadByte("Item" + i.ToString(), "LuckStatChance", 1);
                 stat.LuckMaxStat = reader.ReadByte("Item" + i.ToString(), "LuckMaxStat", 1);
                 stat.CurseChance = reader.ReadByte("Item" + i.ToString(), "CurseChance", 0);
+                stat.SlotChance = reader.ReadByte("Item" + i.ToString(), "SlotChance", 0);
+                stat.SlotStatChance = reader.ReadByte("Item" + i.ToString(), "SlotStatChance", 0);
+                stat.SlotMaxStat = reader.ReadByte("Item" + i.ToString(), "SlotMaxStat", 0);
                 RandomItemStatsList.Add(stat);
                 i++;
             }
@@ -955,6 +955,9 @@ namespace Server
                 reader.Write("Item" + i.ToString(), "LuckStatChance", stat.LuckStatChance);
                 reader.Write("Item" + i.ToString(), "LuckMaxStat", stat.LuckMaxStat);
                 reader.Write("Item" + i.ToString(), "CurseChance", stat.CurseChance);
+                reader.Write("Item" + i.ToString(), "SlotChance", stat.SlotChance);
+                reader.Write("Item" + i.ToString(), "SlotStatChance", stat.SlotStatChance);
+                reader.Write("Item" + i.ToString(), "SlotMaxStat", stat.SlotMaxStat);
             }
         }
 

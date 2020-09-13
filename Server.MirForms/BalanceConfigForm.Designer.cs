@@ -214,6 +214,10 @@
             this.RISMaxDuraChancetextBox = new System.Windows.Forms.TextBox();
             this.label40 = new System.Windows.Forms.Label();
             this.RISIndexcomboBox = new System.Windows.Forms.ComboBox();
+            this.RISSlotChancetextBox = new System.Windows.Forms.TextBox();
+            this.RISSlotStatChancetextBox = new System.Windows.Forms.TextBox();
+            this.RISSlotMaxStattextBox = new System.Windows.Forms.TextBox();
+            this.label64 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -378,7 +382,7 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(632, 689);
+            this.tabControl1.Size = new System.Drawing.Size(632, 756);
             this.tabControl1.TabIndex = 16;
             // 
             // tabPage1
@@ -1114,7 +1118,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(624, 663);
+            this.tabPage4.Size = new System.Drawing.Size(624, 730);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Random Item Stats";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -1141,7 +1145,7 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.RISCurseChancetextBox);
+            this.groupBox3.Controls.Add(this.label64);
             this.groupBox3.Controls.Add(this.label63);
             this.groupBox3.Controls.Add(this.label62);
             this.groupBox3.Controls.Add(this.label61);
@@ -1170,14 +1174,14 @@
             this.groupBox3.Controls.Add(this.groupBox4);
             this.groupBox3.Location = new System.Drawing.Point(6, 30);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(600, 630);
+            this.groupBox3.Size = new System.Drawing.Size(600, 694);
             this.groupBox3.TabIndex = 9;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Random settings";
             // 
             // RISCurseChancetextBox
             // 
-            this.RISCurseChancetextBox.Location = new System.Drawing.Point(88, 607);
+            this.RISCurseChancetextBox.Location = new System.Drawing.Point(32, 592);
             this.RISCurseChancetextBox.MaxLength = 3;
             this.RISCurseChancetextBox.Name = "RISCurseChancetextBox";
             this.RISCurseChancetextBox.Size = new System.Drawing.Size(38, 20);
@@ -1187,7 +1191,7 @@
             // label63
             // 
             this.label63.AutoSize = true;
-            this.label63.Location = new System.Drawing.Point(6, 610);
+            this.label63.Location = new System.Drawing.Point(6, 614);
             this.label63.Name = "label63";
             this.label63.Size = new System.Drawing.Size(76, 13);
             this.label63.TabIndex = 39;
@@ -1393,6 +1397,7 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.RISSlotMaxStattextBox);
             this.groupBox6.Controls.Add(this.RISLuckMaxStattextBox);
             this.groupBox6.Controls.Add(this.RISAttackSpeedMaxStattextBox);
             this.groupBox6.Controls.Add(this.RISPoisonAttackMaxStattextBox);
@@ -1417,7 +1422,7 @@
             this.groupBox6.Controls.Add(this.RISMaxDuraMaxStattextBox);
             this.groupBox6.Location = new System.Drawing.Point(347, 19);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(95, 592);
+            this.groupBox6.Size = new System.Drawing.Size(95, 648);
             this.groupBox6.TabIndex = 3;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Maximum Stats";
@@ -1622,6 +1627,7 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.RISSlotStatChancetextBox);
             this.groupBox5.Controls.Add(this.RISLuckStatChancetextBox);
             this.groupBox5.Controls.Add(this.RISMaxDuraStatChancetextBox);
             this.groupBox5.Controls.Add(this.RISAttackSpeedStatChancetextBox);
@@ -1646,7 +1652,7 @@
             this.groupBox5.Controls.Add(this.RISStrongStatChancetextBox);
             this.groupBox5.Location = new System.Drawing.Point(256, 19);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(85, 592);
+            this.groupBox5.Size = new System.Drawing.Size(85, 648);
             this.groupBox5.TabIndex = 2;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Chance/Stat";
@@ -1851,6 +1857,8 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.RISCurseChancetextBox);
+            this.groupBox4.Controls.Add(this.RISSlotChancetextBox);
             this.groupBox4.Controls.Add(this.RISLuckChancetextBox);
             this.groupBox4.Controls.Add(this.RISAttackSpeedChancetextBox);
             this.groupBox4.Controls.Add(this.RISPoisonAttackChancetextBox);
@@ -1875,7 +1883,7 @@
             this.groupBox4.Controls.Add(this.RISMaxDuraChancetextBox);
             this.groupBox4.Location = new System.Drawing.Point(144, 19);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(106, 592);
+            this.groupBox4.Size = new System.Drawing.Size(106, 648);
             this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Random chance:";
@@ -2097,11 +2105,44 @@
             this.RISIndexcomboBox.TabIndex = 7;
             this.RISIndexcomboBox.SelectedIndexChanged += new System.EventHandler(this.RISIndexcomboBox_SelectedIndexChanged);
             // 
+            // RISSlotChancetextBox
+            // 
+            this.RISSlotChancetextBox.Location = new System.Drawing.Point(32, 618);
+            this.RISSlotChancetextBox.Name = "RISSlotChancetextBox";
+            this.RISSlotChancetextBox.Size = new System.Drawing.Size(38, 20);
+            this.RISSlotChancetextBox.TabIndex = 31;
+            this.RISSlotChancetextBox.TextChanged += new System.EventHandler(this.RISSlotChancetextBox_TextChanged);
+            // 
+            // RISSlotStatChancetextBox
+            // 
+            this.RISSlotStatChancetextBox.Location = new System.Drawing.Point(24, 618);
+            this.RISSlotStatChancetextBox.Name = "RISSlotStatChancetextBox";
+            this.RISSlotStatChancetextBox.Size = new System.Drawing.Size(38, 20);
+            this.RISSlotStatChancetextBox.TabIndex = 53;
+            this.RISSlotStatChancetextBox.TextChanged += new System.EventHandler(this.RISSlotStatChancetextBox_TextChanged);
+            // 
+            // RISSlotMaxStattextBox
+            // 
+            this.RISSlotMaxStattextBox.Location = new System.Drawing.Point(21, 618);
+            this.RISSlotMaxStattextBox.Name = "RISSlotMaxStattextBox";
+            this.RISSlotMaxStattextBox.Size = new System.Drawing.Size(38, 20);
+            this.RISSlotMaxStattextBox.TabIndex = 53;
+            this.RISSlotMaxStattextBox.TextChanged += new System.EventHandler(this.RISSlotMaxStattextBox_TextChanged);
+            // 
+            // label64
+            // 
+            this.label64.AutoSize = true;
+            this.label64.Location = new System.Drawing.Point(6, 640);
+            this.label64.Name = "label64";
+            this.label64.Size = new System.Drawing.Size(30, 13);
+            this.label64.TabIndex = 40;
+            this.label64.Text = "Slots";
+            // 
             // BalanceConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(653, 705);
+            this.ClientSize = new System.Drawing.Size(653, 771);
             this.Controls.Add(this.tabControl1);
             this.Name = "BalanceConfigForm";
             this.Text = "BalanceConfigForm";
@@ -2316,5 +2357,9 @@
         private System.Windows.Forms.Button RISAddIndexbutton;
         private System.Windows.Forms.TextBox RISCurseChancetextBox;
         private System.Windows.Forms.Label label63;
+        private System.Windows.Forms.Label label64;
+        private System.Windows.Forms.TextBox RISSlotMaxStattextBox;
+        private System.Windows.Forms.TextBox RISSlotStatChancetextBox;
+        private System.Windows.Forms.TextBox RISSlotChancetextBox;
     }
 }

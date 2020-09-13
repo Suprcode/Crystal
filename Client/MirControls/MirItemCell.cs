@@ -535,8 +535,21 @@ namespace Client.MirControls
             switch (Item.Info.Type)
             {
                 case ItemType.Socket:
-                    if (GameScene.SelectedItem != null && !GameScene.SelectedItem.Info.IsFishingRod)
+                    if (GameScene.SelectedItem != null && !GameScene.SelectedItem.Info.IsFishingRod && GameScene.SelectedItem.Info.Type != ItemType.Mount)
                     {
+                        switch (Item.Info.Shape)
+                        {
+                            case 1:
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Weapon) return;
+                                break;
+                            case 2:
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Armour) return;
+                                break;
+                            case 3:
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Ring && GameScene.SelectedItem.Info.Type != ItemType.Bracelet && GameScene.SelectedItem.Info.Type != ItemType.Necklace) return;
+                                break;
+                        }
+
                         MirItemCell cell = null;
                         for (int i = 0; i < GameScene.Scene.SocketDialog.Grid.Length; i++)
                         {

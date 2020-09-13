@@ -1239,6 +1239,7 @@ public class RandomItemStat
     public byte FreezeChance, FreezeStatChance, FreezeMaxStat, PoisonAttackChance, PoisonAttackStatChance, PoisonAttackMaxStat;
     public byte AttackSpeedChance, AttackSpeedStatChance, AttackSpeedMaxStat, LuckChance, LuckStatChance, LuckMaxStat;
     public byte CurseChance;
+    public byte SlotChance, SlotStatChance, SlotMaxStat;
 
     public RandomItemStat(ItemType Type = ItemType.Book)
     {
