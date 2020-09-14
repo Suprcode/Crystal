@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using Client;
-
+using System.Linq;
 
 namespace Launcher
 {
@@ -33,7 +33,10 @@ namespace Launcher
         private Point dragCursorPoint;
         private Point dragFormPoint;
 
-        private string oldClientName = "OldClient.exe";
+        private readonly List<string> dependantFiles = new List<string>
+        {
+            "Shared.dll"
+        };
 
         private Config ConfigForm = new Config();
 
@@ -178,9 +181,16 @@ namespace Launcher
 
             if (info == null || old.Length != info.Length || old.Creation != info.Creation)
             {
+                var file = dependantFiles.First(x => x == old.FileName);
+
                 if ((old.FileName.EndsWith(System.AppDomain.CurrentDomain.FriendlyName)))
                 {
-                    File.Move(Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName, Settings.P_Client + oldClientName);
+                    File.Move(Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName, Settings.P_Client + $"Old{System.AppDomain.CurrentDomain.FriendlyName}");
+                    Restart = true;
+                }
+                else if (file != null)
+                {
+                    File.Move(Settings.P_Client + file, Settings.P_Client + $"Old{file}");
                     Restart = true;
                 }
 
@@ -313,7 +323,15 @@ namespace Launcher
         {
             if (Settings.P_BrowserAddress != "") Main_browser.Navigate(new Uri(Settings.P_BrowserAddress));
 
-            if (File.Exists(Settings.P_Client + oldClientName)) File.Delete(Settings.P_Client + oldClientName);
+            if (File.Exists(Settings.P_Client + $"Old{System.AppDomain.CurrentDomain.FriendlyName}"))
+            {
+                File.Delete(Settings.P_Client + $"Old{System.AppDomain.CurrentDomain.FriendlyName}");
+            }
+
+            foreach (var file in dependantFiles)
+            {
+                if (File.Exists(Settings.P_Client + $"Old{file}")) File.Delete(Settings.P_Client + $"Old{file}");
+            }
 
             Launch_pb.Enabled = false;
             ProgressCurrent_pb.Width = 5;
@@ -553,13 +571,12 @@ namespace Launcher
 
         private void MoveOldClientToCurrent()
         {
-            string oldClient = Settings.P_Client + oldClientName;
+            string oldClient = Settings.P_Client + $"Old{System.AppDomain.CurrentDomain.FriendlyName}";
             string currentClient = Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName;
 
             if (!File.Exists(currentClient) && File.Exists(oldClient))
                 File.Move(oldClient, currentClient);
         }
-
     }
 
     public class FileInformation

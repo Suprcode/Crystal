@@ -16721,7 +16721,8 @@ namespace Server.MirObjects
             Cell cell = CurrentMap.GetCell(target);
             PlayerObject player = null;
 
-            if (cell.Objects == null || cell.Objects.Count < 1) {
+            if (cell.Objects == null || cell.Objects.Count == 0) 
+            {
                 ReceiveChat(GameLanguage.FaceToTrade, ChatType.System);
                 return;
             } 

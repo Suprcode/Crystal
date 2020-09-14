@@ -1254,6 +1254,7 @@ public enum SpellEffect : byte
     IcePillar
 }
 
+
 public enum BuffType : byte
 {
     None = 0,
