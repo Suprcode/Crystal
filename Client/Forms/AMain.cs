@@ -181,7 +181,7 @@ namespace Launcher
 
             if (info == null || old.Length != info.Length || old.Creation != info.Creation)
             {
-                var file = dependantFiles.First(x => x == old.FileName);
+                var file = dependantFiles.FirstOrDefault(x => x == old.FileName);
 
                 if ((old.FileName.EndsWith(System.AppDomain.CurrentDomain.FriendlyName)))
                 {
