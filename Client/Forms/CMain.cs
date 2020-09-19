@@ -636,36 +636,12 @@ namespace Client
 
         private Bitmap CaptureScreen()
         {
-            var screenCapture = new FullScreenCapture();
+            Surface backbuffer = DXManager.Device.GetBackBuffer(0, 0);
 
-            Surface s = screenCapture.CaptureScreen();
-            using (var stream = Surface.ToStream(s, ImageFileFormat.Png))
+            using (var stream = Surface.ToStream(backbuffer, ImageFileFormat.Png))
             {
                 Bitmap bitmap = new Bitmap(stream);
                 return bitmap;
-            }
-        }
-
-        public class FullScreenCapture
-        {
-            readonly Device d;
-
-            public FullScreenCapture()
-            {
-                PresentParameters present_params = new PresentParameters
-                {
-                    Windowed = true,
-                    SwapEffect = SwapEffect.Discard
-                };
-
-                d = new Device(new Direct3D(), 0, DeviceType.Hardware, IntPtr.Zero, CreateFlags.SoftwareVertexProcessing, present_params);
-            }
-
-            public Surface CaptureScreen()
-            {
-                Surface s = Surface.CreateOffscreenPlain(d, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, Format.A8R8G8B8, Pool.Scratch);
-                d.GetFrontBufferData(0, s);
-                return s;
             }
         }
 
