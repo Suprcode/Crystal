@@ -44,8 +44,6 @@ namespace Client
         public static bool Shift, Alt, Ctrl, Tilde;
         public static double BytesSent, BytesReceived;
 
-
-
         public static KeyBindSettings InputKeys = new KeyBindSettings();
 
         public CMain()
@@ -529,18 +527,20 @@ namespace Client
 
             location = new Point(-location.X, -location.Y);
 
-            string text = string.Format("[{0} Server {1}] {2} {3:hh\\:mm\\:ss}", 
-                Settings.P_ServerName.Length > 0 ? Settings.P_ServerName : "Crystal", 
-                MapControl.User != null ? MapControl.User.Name : "", 
-                Now.ToShortDateString(), 
+            string text = string.Format("[{0} Server {1}] {2} {3:hh\\:mm\\:ss}",
+                Settings.P_ServerName.Length > 0 ? Settings.P_ServerName : "Crystal",
+                MapControl.User != null ? MapControl.User.Name : "",
+                Now.ToShortDateString(),
                 Now.TimeOfDay);
 
-            using (Bitmap image = GetImage(Handle, new Rectangle(location, ClientSize)))
+            using (Bitmap image = Settings.FullScreen ? CaptureScreen() : GetImage(Handle, new Rectangle(location, ClientSize)))
             using (Graphics graphics = Graphics.FromImage(image))
             {
-                StringFormat sf = new StringFormat();
-                sf.LineAlignment = StringAlignment.Center;
-                sf.Alignment = StringAlignment.Center;
+                StringFormat sf = new StringFormat
+                {
+                    LineAlignment = StringAlignment.Center,
+                    Alignment = StringAlignment.Center
+                };
 
                 graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 3, 10), sf);
                 graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 4, 9), sf);
@@ -554,7 +554,7 @@ namespace Client
 
                 int count = Directory.GetFiles(path, "*.png").Length;
 
-                image.Save(Path.Combine(path, string.Format("Image {0}.Png", count)), ImageFormat.Png);
+                image.Save(Path.Combine(path, string.Format("Image {0}.png", count)), ImageFormat.Png);
             }
         }
 
@@ -609,7 +609,7 @@ namespace Client
         [DllImport("gdi32.dll")]
         public static extern int DeleteObject(IntPtr handle);
 
-        public static Bitmap GetImage(IntPtr handle, Rectangle r)
+        private Bitmap GetImage(IntPtr handle, Rectangle r)
         {
             IntPtr sourceDc = GetWindowDC(handle);
             IntPtr destDc = CreateCompatibleDC(sourceDc);
@@ -633,6 +633,42 @@ namespace Client
 
             return null;
         }
+
+        private Bitmap CaptureScreen()
+        {
+            var screenCapture = new FullScreenCapture();
+
+            Surface s = screenCapture.CaptureScreen();
+            using (var stream = Surface.ToStream(s, ImageFileFormat.Png))
+            {
+                Bitmap bitmap = new Bitmap(stream);
+                return bitmap;
+            }
+        }
+
+        public class FullScreenCapture
+        {
+            readonly Device d;
+
+            public FullScreenCapture()
+            {
+                PresentParameters present_params = new PresentParameters
+                {
+                    Windowed = true,
+                    SwapEffect = SwapEffect.Discard
+                };
+
+                d = new Device(new Direct3D(), 0, DeviceType.Hardware, IntPtr.Zero, CreateFlags.SoftwareVertexProcessing, present_params);
+            }
+
+            public Surface CaptureScreen()
+            {
+                Surface s = Surface.CreateOffscreenPlain(d, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, Format.A8R8G8B8, Pool.Scratch);
+                d.GetFrontBufferData(0, s);
+                return s;
+            }
+        }
+
         #endregion
 
         #region Idle Check
