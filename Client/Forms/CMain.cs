@@ -523,17 +523,13 @@ namespace Client
 
         public void CreateScreenShot()
         {
-            Point location = PointToClient(Location);
-
-            location = new Point(-location.X, -location.Y);
-
             string text = string.Format("[{0} Server {1}] {2} {3:hh\\:mm\\:ss}",
                 Settings.P_ServerName.Length > 0 ? Settings.P_ServerName : "Crystal",
                 MapControl.User != null ? MapControl.User.Name : "",
                 Now.ToShortDateString(),
                 Now.TimeOfDay);
-
-            using (Bitmap image = Settings.FullScreen ? CaptureScreen() : GetImage(Handle, new Rectangle(location, ClientSize)))
+                
+            using (Bitmap image = CaptureScreen())
             using (Graphics graphics = Graphics.FromImage(image))
             {
                 StringFormat sf = new StringFormat
@@ -590,49 +586,6 @@ namespace Client
             
 
         #region ScreenCapture
-
-        [DllImport("user32.dll")]
-        static extern IntPtr GetWindowDC(IntPtr handle);
-        [DllImport("gdi32.dll")]
-        public static extern IntPtr CreateCompatibleDC(IntPtr handle);
-        [DllImport("gdi32.dll")]
-        public static extern IntPtr CreateCompatibleBitmap(IntPtr handle, int width, int height);
-        [DllImport("gdi32.dll")]
-        public static extern IntPtr SelectObject(IntPtr handle, IntPtr handle2);
-        [DllImport("gdi32.dll")]
-        public static extern bool BitBlt(IntPtr handle, int destX, int desty, int width, int height,
-                                         IntPtr handle2, int sourX, int sourY, int flag);
-        [DllImport("gdi32.dll")]
-        public static extern int DeleteDC(IntPtr handle);
-        [DllImport("user32.dll")]
-        public static extern int ReleaseDC(IntPtr handle, IntPtr handle2);
-        [DllImport("gdi32.dll")]
-        public static extern int DeleteObject(IntPtr handle);
-
-        private Bitmap GetImage(IntPtr handle, Rectangle r)
-        {
-            IntPtr sourceDc = GetWindowDC(handle);
-            IntPtr destDc = CreateCompatibleDC(sourceDc);
-
-            IntPtr hBmp = CreateCompatibleBitmap(sourceDc, r.Width, r.Height);
-            if (hBmp != IntPtr.Zero)
-            {
-                IntPtr hOldBmp = SelectObject(destDc, hBmp);
-                BitBlt(destDc, 0, 0, r.Width, r.Height, sourceDc, r.X, r.Y, 0xCC0020); //0, 0, 13369376);
-                SelectObject(destDc, hOldBmp);
-                DeleteDC(destDc);
-                ReleaseDC(handle, sourceDc);
-
-                Bitmap bmp = Image.FromHbitmap(hBmp);
-
-
-                DeleteObject(hBmp);
-
-                return bmp;
-            }
-
-            return null;
-        }
 
         private Bitmap CaptureScreen()
         {
