@@ -658,7 +658,7 @@ namespace Server.MirObjects
                     if (info == null)
                         continue;
 
-                    UserItem goods = Envir.CreateShopItem(info);
+                    UserItem goods = Envir.CreateShopItem(info, (uint)i);
 
                     if (goods == null || Goods.Contains(goods))
                     {
@@ -670,7 +670,6 @@ namespace Server.MirObjects
                         uint.TryParse(data[1], out count);
 
                     goods.Count = count;
-                    goods.UniqueID = (uint)i;
 
                     Goods.Add(goods);
                 }

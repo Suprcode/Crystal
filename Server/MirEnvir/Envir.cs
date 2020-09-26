@@ -114,7 +114,7 @@ namespace Server.MirEnvir
 
         //User DB
         public int NextAccountID, NextCharacterID;
-        public ulong NextUserItemID, NextAuctionID, NextMailID;
+        public ulong NextUserItemID, NextAuctionID, NextMailID, NextRecipeID;
         public List<AccountInfo> AccountList = new List<AccountInfo>();
         public List<CharacterInfo> CharacterList = new List<CharacterInfo>(); 
         public LinkedList<AuctionInfo> Auctions = new LinkedList<AuctionInfo>();
@@ -2682,12 +2682,13 @@ namespace Server.MirEnvir
             return item;
         }
 
-        public UserItem CreateShopItem(ItemInfo info)
+        public UserItem CreateShopItem(ItemInfo info, ulong id)
         {
             if (info == null) return null;
 
             var item = new UserItem(info)
             {
+                UniqueID = id,
                 CurrentDura = info.Durability,
                 MaxDura = info.Durability,
                 IsShopItem = true,
