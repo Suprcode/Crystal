@@ -216,7 +216,7 @@ namespace Client
             list.Add(InputKey);
             InputKey = new KeyBind { Group = "Dialogs", Description = "Ranking Open/Close", function = KeybindOptions.Ranking, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.K };
             list.Add(InputKey);
-            InputKey = new KeyBind { Group = "Dialogs", Description = "Help Open/Close", function = KeybindOptions.Help, RequireAlt = 0, RequireShift = 0, RequireTilde = 2, RequireCtrl = 2, Key = Keys.H };
+            InputKey = new KeyBind { Group = "Dialogs", Description = "Help Open/Close", function = KeybindOptions.Help, RequireAlt = 2, RequireShift = 0, RequireTilde = 2, RequireCtrl = 0, Key = Keys.H };
             list.Add(InputKey);
             InputKey = new KeyBind { Group = "Dialogs", Description = "Keybinds Open/Close", function = KeybindOptions.Keybind, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.U };
             list.Add(InputKey);
