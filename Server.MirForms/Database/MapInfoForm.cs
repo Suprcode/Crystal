@@ -1460,7 +1460,7 @@ namespace Server
             if (map.NoDropMonster) textOut += " NOMONSTERDROP";
             if (map.NoNames) textOut += " NONAMES";
             if (map.NoMount) textOut += " NOMOUNT";
-            if (map.NeedBridle) textOut += "NEEDBRIDLE";
+            if (map.NeedBridle) textOut += " NEEDBRIDLE";
             if (map.NoFight) textOut += " NOFIGHT";
             if (map.Fight) textOut += " FIGHT";
             if (map.Fire) textOut += " FIRE(" + map.FireDamage + ")";
