@@ -244,7 +244,7 @@ namespace Client.MirControls
                 if (T != null && T.Tag != null && T.Tag != null)
                     ((MirTextBox)T.Tag).DialogChanged();
             }
-            
+
             /*
             CMain.Shift = false;
             CMain.Ctrl = false;

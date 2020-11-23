@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
+using System.Windows.Forms;
 using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
-using System.Drawing;
-using System.Windows.Forms;
 using C = ClientPackets;
 
 namespace Client.MirScenes.Dialogs
@@ -163,7 +163,7 @@ namespace Client.MirScenes.Dialogs
         {
             GameScene.User.RentalGoldAmount = 0;
             GameScene.Scene.GuestItemRentDialog.Reset();
-            
+
             RefreshInterface();
             Unlock();
             Hide();

@@ -1,8 +1,8 @@
-﻿using System.IO;
-using System;
-using Client.MirSounds;
-using System.Windows.Forms;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Windows.Forms;
+using Client.MirSounds;
 
 
 namespace Client
@@ -139,7 +139,7 @@ namespace Client
                 Inputkey.RequireCtrl = Reader.ReadByte(Inputkey.function.ToString(), "RequireCtrl", Inputkey.RequireCtrl);
                 string Input = Reader.ReadString(Inputkey.function.ToString(), "RequireKey", Inputkey.Key.ToString());
                 Enum.TryParse(Input, out Inputkey.Key);
-                
+
             }
         }
 
@@ -156,7 +156,7 @@ namespace Client
             Reader.Write("Guide", "09", "");
             Reader.Write("Guide", "10", "To get the value for RequireKey look at:");
             Reader.Write("Guide", "11", "https://msdn.microsoft.com/en-us/library/system.windows.forms.keys(v=vs.110).aspx");
-        
+
             foreach (KeyBind Inputkey in Keylist)
             {
                 Reader.Write(Inputkey.function.ToString(), "RequireAlt", Inputkey.RequireAlt);
@@ -365,5 +365,5 @@ namespace Client
         }
     }
 
-    
+
 }

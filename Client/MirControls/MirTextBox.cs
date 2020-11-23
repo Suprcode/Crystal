@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using Client.MirGraphics;
-using SlimDX;
-using SlimDX.Direct3D9;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
+using System.Linq;
+using System.Windows.Forms;
+using Client.MirGraphics;
+using SharpDX;
+using SharpDX.Direct3D9;
+using Color = System.Drawing.Color;
+using Point = System.Drawing.Point;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace Client.MirControls
 {
@@ -143,7 +146,7 @@ namespace Client.MirControls
         }
 
         #endregion
-        
+
         #region TextBox
 
         public bool CanLoseFocus;
@@ -271,7 +274,7 @@ namespace Client.MirControls
 
             TextBox.VisibleChanged += TextBox_VisibleChanged;
             TextBox.ParentChanged += TextBox_VisibleChanged;
-            TextBox.KeyUp += TextBoxOnKeyUp;  
+            TextBox.KeyUp += TextBoxOnKeyUp;
             TextBox.KeyPress += TextBox_KeyPress;
 
             TextBox.KeyPress += TextBox_NeedRedraw;
@@ -299,10 +302,10 @@ namespace Client.MirControls
             if (Size.Width == 0 || Size.Height == 0)
                 return;
 
-            if (ControlTexture != null && !ControlTexture.Disposed && TextureSize != Size)
+            if (ControlTexture != null && !ControlTexture.IsDisposed && TextureSize != Size)
                 ControlTexture.Dispose();
 
-            if (ControlTexture == null || ControlTexture.Disposed)
+            if (ControlTexture == null || ControlTexture.IsDisposed)
             {
                 DXManager.ControlList.Add(this);
 
@@ -313,9 +316,9 @@ namespace Client.MirControls
             Point caret = GetCaretPosition();
 
             DataRectangle stream = ControlTexture.LockRectangle(0, LockFlags.Discard);
-            using (Bitmap bm = new Bitmap(Size.Width, Size.Height, Size.Width * 4, PixelFormat.Format32bppArgb, stream.Data.DataPointer))
+            using (Bitmap bm = new Bitmap(Size.Width, Size.Height, Size.Width * 4, PixelFormat.Format32bppArgb, stream.DataPointer))
             {
-                TextBox.DrawToBitmap(bm, new Rectangle(0, 0, Size.Width, Size.Height));
+                TextBox.DrawToBitmap(bm, new System.Drawing.Rectangle(0, 0, Size.Width, Size.Height));
                 using (Graphics graphics = Graphics.FromImage(bm))
                 {
                     graphics.DrawImage(bm, Point.Empty);
@@ -397,13 +400,13 @@ namespace Client.MirControls
 
             if (MirScene.ActiveScene != null && MirScene.ActiveScene.Controls.Count > 0)
             {
-                box1 = (MirMessageBox) MirScene.ActiveScene.Controls.FirstOrDefault(ob => ob is MirMessageBox);
-                box2 = (MirInputBox) MirScene.ActiveScene.Controls.FirstOrDefault(O => O is MirInputBox);
-                box3 = (MirAmountBox) MirScene.ActiveScene.Controls.FirstOrDefault(ob => ob is MirAmountBox);
+                box1 = (MirMessageBox)MirScene.ActiveScene.Controls.FirstOrDefault(ob => ob is MirMessageBox);
+                box2 = (MirInputBox)MirScene.ActiveScene.Controls.FirstOrDefault(O => O is MirInputBox);
+                box3 = (MirAmountBox)MirScene.ActiveScene.Controls.FirstOrDefault(ob => ob is MirAmountBox);
             }
 
 
-            if ((box1 != null && box1 != Parent) || (box2 != null && box2 != Parent)  || (box3 != null && box3 != Parent))
+            if ((box1 != null && box1 != Parent) || (box2 != null && box2 != Parent) || (box3 != null && box3 != Parent))
                 TextBox.Visible = false;
             else
                 TextBox.Visible = Visible && TextBox.Parent != null;

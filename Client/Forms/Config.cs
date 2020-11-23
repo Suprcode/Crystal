@@ -5,8 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 using System.Threading;
+using System.Windows.Forms;
 using Client;
 
 namespace Launcher
@@ -80,7 +80,7 @@ namespace Launcher
                 this.ActiveControl = label4;
             }
             else
-            {             
+            {
                 Settings.AccountID = AccountLogin_txt.Text;
                 Settings.Password = AccountPass_txt.Text;
                 Settings.Save();

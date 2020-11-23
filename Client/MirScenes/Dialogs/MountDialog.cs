@@ -1,15 +1,15 @@
-﻿using Client.MirControls;
-using Client.MirGraphics;
-using Client.MirNetwork;
-using Client.MirObjects;
-using Client.MirSounds;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Client.MirControls;
+using Client.MirGraphics;
+using Client.MirNetwork;
+using Client.MirObjects;
+using Client.MirSounds;
 using C = ClientPackets;
 
 namespace Client.MirScenes.Dialogs

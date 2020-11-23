@@ -5,9 +5,12 @@ using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Windows.Forms;
 using Client.MirGraphics;
-using SlimDX;
-using SlimDX.Direct3D9;
+using SharpDX;
+using SharpDX.Direct3D9;
+using Color = System.Drawing.Color;
 using Font = System.Drawing.Font;
+using Point = System.Drawing.Point;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace Client.MirControls
 {
@@ -98,7 +101,7 @@ namespace Client.MirControls
         {
             TextureValid = false;
             GetSize();
-            
+
             if (OutLineChanged != null)
                 OutLineChanged.Invoke(this, e);
         }
@@ -182,11 +185,11 @@ namespace Client.MirControls
 
             _font = ScaleFont(new Font(Settings.FontName, 8F));
             _outLine = true;
-            _outLineColour = Color.Black; 
+            _outLineColour = Color.Black;
             _text = string.Empty;
 
         }
-        
+
         protected override unsafe void CreateTexture()
         {
             if (string.IsNullOrEmpty(Text))
@@ -195,10 +198,10 @@ namespace Client.MirControls
             if (Size.Width == 0 || Size.Height == 0)
                 return;
 
-            if (ControlTexture != null && !ControlTexture.Disposed && TextureSize != Size)
+            if (ControlTexture != null && !ControlTexture.IsDisposed && TextureSize != Size)
                 ControlTexture.Dispose();
 
-            if (ControlTexture == null || ControlTexture.Disposed)
+            if (ControlTexture == null || ControlTexture.IsDisposed)
             {
                 DXManager.ControlList.Add(this);
 
@@ -207,7 +210,7 @@ namespace Client.MirControls
             }
 
             DataRectangle stream = ControlTexture.LockRectangle(0, LockFlags.Discard);
-            using (Bitmap image = new Bitmap(Size.Width, Size.Height, Size.Width * 4, PixelFormat.Format32bppArgb, stream.Data.DataPointer))
+            using (Bitmap image = new Bitmap(Size.Width, Size.Height, Size.Width * 4, PixelFormat.Format32bppArgb, stream.DataPointer))
             {
                 using (Graphics graphics = Graphics.FromImage(image))
                 {
@@ -248,7 +251,7 @@ namespace Client.MirControls
             base.Dispose(disposing);
 
             if (!disposing) return;
-            
+
             AutoSizeChanged = null;
             _autoSize = false;
 

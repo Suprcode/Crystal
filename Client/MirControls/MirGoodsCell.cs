@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
+using System.Text.RegularExpressions;
 using Client.MirGraphics;
 using Client.MirScenes;
-using SlimDX;
-using System.Text.RegularExpressions;
-using System.Linq;
-using System.Collections.Generic;
+using SharpDX;
+using SharpDX.Mathematics.Interop;
+using Color = System.Drawing.Color;
+using Point = System.Drawing.Point;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace Client.MirControls
 {
@@ -91,7 +95,7 @@ namespace Client.MirControls
             }
         }
 
-        protected override Vector2[] BorderInfo
+        protected override RawVector2[] BorderInfo
         {
             get
             {
@@ -101,20 +105,20 @@ namespace Client.MirControls
                 {
                     _borderInfo = new[]
                         {
-                            new Vector2(DisplayRectangle.Left - 1, DisplayRectangle.Top - 1),
-                            new Vector2(DisplayRectangle.Right, DisplayRectangle.Top - 1),
+                            new RawVector2(DisplayRectangle.Left - 1, DisplayRectangle.Top - 1),
+                            new RawVector2(DisplayRectangle.Right, DisplayRectangle.Top - 1),
 
-                            new Vector2(DisplayRectangle.Left - 1, DisplayRectangle.Top - 1),
-                            new Vector2(DisplayRectangle.Left - 1, DisplayRectangle.Bottom),
+                            new RawVector2(DisplayRectangle.Left - 1, DisplayRectangle.Top - 1),
+                            new RawVector2(DisplayRectangle.Left - 1, DisplayRectangle.Bottom),
 
-                            new Vector2(DisplayRectangle.Left - 1, DisplayRectangle.Bottom),
-                            new Vector2(DisplayRectangle.Right, DisplayRectangle.Bottom),
+                            new RawVector2(DisplayRectangle.Left - 1, DisplayRectangle.Bottom),
+                            new RawVector2(DisplayRectangle.Right, DisplayRectangle.Bottom),
 
-                            new Vector2(DisplayRectangle.Right, DisplayRectangle.Top - 1),
-                            new Vector2(DisplayRectangle.Right, DisplayRectangle.Bottom),
+                            new RawVector2(DisplayRectangle.Right, DisplayRectangle.Top - 1),
+                            new RawVector2(DisplayRectangle.Right, DisplayRectangle.Bottom),
 
-                            new Vector2(DisplayRectangle.Left + 40, DisplayRectangle.Bottom),
-                            new Vector2(DisplayRectangle.Left + 40, DisplayRectangle.Top - 1)
+                            new RawVector2(DisplayRectangle.Left + 40, DisplayRectangle.Bottom),
+                            new RawVector2(DisplayRectangle.Left + 40, DisplayRectangle.Top - 1)
                         };
 
                     BorderRectangle = DisplayRectangle;
@@ -142,7 +146,7 @@ namespace Client.MirControls
             if (Item == null || Item.Info == null) return;
 
             Size size = Libraries.Items.GetTrueSize(Item.Image);
-            Point offSet = new Point((40 - size.Width)/2, (32 - size.Height)/2);
+            Point offSet = new Point((40 - size.Width) / 2, (32 - size.Height) / 2);
             Libraries.Items.Draw(Item.Image, offSet.X + DisplayLocation.X, offSet.Y + DisplayLocation.Y);
 
             CountLabel.Draw();

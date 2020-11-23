@@ -173,14 +173,14 @@ namespace Client.MirControls
 
         public override bool IsMouseOver(Point p)
         {
-            return base.IsMouseOver(p) && (!_pixelDetect || Library.VisiblePixel(Index, p.Subtract(DisplayLocation),true) || Moving);
+            return base.IsMouseOver(p) && (!_pixelDetect || Library.VisiblePixel(Index, p.Subtract(DisplayLocation), true) || Moving);
         }
 
         #region Disposable
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            
+
             if (!disposing) return;
 
             DrawImageChanged = null;

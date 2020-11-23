@@ -1,10 +1,10 @@
-﻿using Client.MirControls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Client.MirControls;
 
 namespace Client.MirObjects
 {
@@ -21,7 +21,7 @@ namespace Client.MirObjects
 
         public Damage(string text, int duration, Color colour, int distance = 50)
         {
-            ExpireTime = (long)(CMain.Time + duration);
+            ExpireTime = CMain.Time + duration;
             Text = text;
             Distance = distance;
             Factor = duration / this.Distance;
@@ -49,7 +49,7 @@ namespace Client.MirObjects
                 MapObject.DamageLabelList.Add(DamageLabel);
             }
 
-            displayLocation.Offset((int)(15 - (Text.Length * 3)), (int)(((int)((double)timeRemaining / Factor)) - Distance) - 75 - Offset);
+            displayLocation.Offset(15 - (Text.Length * 3), ((int)(timeRemaining / Factor)) - Distance - 75 - Offset);
 
             DamageLabel.Location = displayLocation;
             DamageLabel.Draw();

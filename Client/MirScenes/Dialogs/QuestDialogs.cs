@@ -11,8 +11,8 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirSounds;
-using S = ServerPackets;
 using C = ClientPackets;
+using S = ServerPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -313,7 +313,7 @@ namespace Client.MirScenes.Dialogs
 
             for (int i = 0; i < Rows.Length; i++)
             {
-                if(Rows[i] != null) Rows[i].Dispose();
+                if (Rows[i] != null) Rows[i].Dispose();
 
                 Rows[i] = null;
             }
@@ -354,7 +354,7 @@ namespace Client.MirScenes.Dialogs
                 };
                 Rows[i].Click += (o, e) =>
                 {
-                    QuestRow row = (QuestRow) o;
+                    QuestRow row = (QuestRow)o;
 
                     if (row.Quest != SelectedQuest)
                     {
@@ -450,7 +450,7 @@ namespace Client.MirScenes.Dialogs
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            
+
             Quests.Clear();
 
             SelectedQuest = null;
@@ -1317,7 +1317,7 @@ namespace Client.MirScenes.Dialogs
     }
     public sealed class QuestRewards : MirControl
     {
-        private readonly MirLabel _goldLabel,  _expLabel, _creditLabel;
+        private readonly MirLabel _goldLabel, _expLabel, _creditLabel;
 
         public ClientQuestProgress Quest;
 
@@ -1378,7 +1378,7 @@ namespace Client.MirScenes.Dialogs
                 goldXOffset = -90;
                 creditXOffset -= 90;
             }
-                
+
 
             if (quest.RewardGold > 0)
                 Libraries.Prguse.Draw(965, DisplayLocation.X + 100 + goldXOffset, DisplayLocation.Y + 2);
@@ -1722,7 +1722,7 @@ namespace Client.MirScenes.Dialogs
                 QuestSingleQuestItem singleQuest = new QuestSingleQuestItem(Quests[i])
                 {
                     Parent = this,
-                    Location = new Point(18, (15 * (i + 1))),
+                    Location = new Point(18, 15 * (i + 1)),
                     Size = new Size(280, 15),
                     Visible = Expanded
                 };

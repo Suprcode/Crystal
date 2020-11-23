@@ -1,12 +1,12 @@
-﻿using Client.MirControls;
-using Client.MirGraphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Drawing;
-using Client.MirSounds;
 using System.Windows.Forms;
+using Client.MirControls;
+using Client.MirGraphics;
+using Client.MirSounds;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -131,7 +131,7 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
             };
             NextButton.Click += (o, e) => Move(1);
-            
+
             PrevButton = new MirButton
             {
                 Index = 197,
@@ -151,7 +151,7 @@ namespace Client.MirScenes.Dialogs
                 Font = new Font(Settings.FontName, 10F, FontStyle.Bold),
                 ForeColour = Color.BurlyWood,
                 Location = new Point(229, 36),
-                Size = new Size(82,22),
+                Size = new Size(82, 22),
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                 //AutoSize = true
             };
@@ -160,11 +160,11 @@ namespace Client.MirScenes.Dialogs
 
             for (int i = 0; i < Rows.Count(); i++)
             {
-                Rows[i] = new RankingRow() 
-                { 
-                    Parent = this, 
+                Rows[i] = new RankingRow()
+                {
+                    Parent = this,
                     Location = new Point(32, 98 + i * 15),
-                    Size = new Size(285,15),
+                    Size = new Size(285, 15),
                 };
             }
             for (int i = 0; i < RankList.Length; i++)
@@ -221,7 +221,7 @@ namespace Client.MirScenes.Dialogs
                 return;
             }
             LastRequest[RankType] = CMain.Time;
-            MirNetwork.Network.Enqueue(new ClientPackets.GetRanking { RankIndex = RankType});
+            MirNetwork.Network.Enqueue(new ClientPackets.GetRanking { RankIndex = RankType });
         }
 
         public void RecieveRanks(List<RankCharacterInfo> Ranking, byte rankType, int MyRank)
@@ -229,7 +229,7 @@ namespace Client.MirScenes.Dialogs
             RankList[rankType].Clear();
             RankList[rankType] = Ranking;
             Rank[rankType] = MyRank;
-            SelectRank(rankType);            
+            SelectRank(rankType);
         }
 
         public void SelectRank(byte rankType)
@@ -240,7 +240,7 @@ namespace Client.MirScenes.Dialogs
                 Rows[i].Clear();
             }
             RowOffset = 0;
-            UpdateRanks();            
+            UpdateRanks();
         }
 
         public void UpdateRanks()

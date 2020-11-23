@@ -4,9 +4,10 @@ using System.Windows.Forms;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirScenes;
-using SlimDX.Direct3D9;
-using S = ServerPackets;
+using Client.Utils;
+using SharpDX.Direct3D9;
 using C = ClientPackets;
+using S = ServerPackets;
 
 namespace Client.MirControls
 {
@@ -51,10 +52,10 @@ namespace Client.MirControls
 
         protected override void CreateTexture()
         {
-            if (ControlTexture != null && !ControlTexture.Disposed && Size != TextureSize)
+            if (ControlTexture != null && !ControlTexture.IsDisposed && Size != TextureSize)
                 ControlTexture.Dispose();
 
-            if (ControlTexture == null || ControlTexture.Disposed)
+            if (ControlTexture == null || ControlTexture.IsDisposed)
             {
                 DXManager.ControlList.Add(this);
                 ControlTexture = new Texture(DXManager.Device, Size.Width, Size.Height, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
@@ -64,7 +65,7 @@ namespace Client.MirControls
             Surface surface = ControlTexture.GetSurfaceLevel(0);
             DXManager.SetSurface(surface);
 
-            DXManager.Device.Clear(ClearFlags.Target, BackColour, 0, 0);
+            DXManager.Device.Clear(ClearFlags.Target, BackColour.ToRawColorBGRA(), 0, 0); ;
 
             BeforeDrawControl();
             DrawChildControls();
@@ -171,17 +172,17 @@ namespace Client.MirControls
         {
             TextureValid = false;
         }
-        
+
         public virtual void ProcessPacket(Packet p)
         {
             switch (p.Index)
             {
                 case (short)ServerPacketIds.Disconnect: // Disconnected
-                    Disconnect((S.Disconnect) p);
+                    Disconnect((S.Disconnect)p);
                     Network.Disconnect();
                     break;
                 case (short)ServerPacketIds.NewItemInfo:
-                    NewItemInfo((S.NewItemInfo) p);
+                    NewItemInfo((S.NewItemInfo)p);
                     break;
                 case (short)ServerPacketIds.NewChatItem:
                     NewChatItem((S.NewChatItem)p);

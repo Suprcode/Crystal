@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Client.MirGraphics;
 using Client.MirScenes;
 using S = ServerPackets;
-using System.Text.RegularExpressions;
 
 namespace Client.MirObjects
 {
     class ItemObject : MapObject
     {
-        public override ObjectType Race{
+        public override ObjectType Race
+        {
             get { return ObjectType.Item; }
         }
 
@@ -111,7 +112,7 @@ namespace Client.MirObjects
 
         public override void DrawEffects(bool effectsEnabled)
         {
-            
+
 
         }
 

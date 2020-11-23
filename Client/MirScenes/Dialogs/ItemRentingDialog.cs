@@ -1,10 +1,9 @@
-﻿using Client.MirControls;
+﻿using System.Drawing;
+using System.Windows.Forms;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
-using System.Drawing;
-using System.Windows.Forms;
-
 using C = ClientPackets;
 
 namespace Client.MirScenes.Dialogs
@@ -18,7 +17,7 @@ namespace Client.MirScenes.Dialogs
 
         private readonly MirLabel _nameLabel, _rentalPeriodLabel;
         private readonly MirButton _lockButton, _setRentalPeriodButton, _confirmButton;
-        
+
         public ItemRentingDialog()
         {
             Index = 238;
@@ -195,7 +194,7 @@ namespace Client.MirScenes.Dialogs
             RentalPeriod = 0;
             _confirmButton.Enabled = false;
             GameScene.User.RentalGoldAmount = 0;
-            
+
             GameScene.Scene.GuestItemRentingDialog.Reset();
 
             Unlock();
@@ -231,7 +230,7 @@ namespace Client.MirScenes.Dialogs
         private string _guestName;
 
         private MirItemCell _guestItemCell;
-    
+
         public GuestItemRentingDialog()
         {
             Index = 238;
@@ -308,7 +307,7 @@ namespace Client.MirScenes.Dialogs
 
             if (GuestLoanItem != null)
                 GameScene.Bind(GuestLoanItem);
-            
+
             Redraw();
         }
 

@@ -2,10 +2,10 @@
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Launcher;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 
 namespace Client
 {
@@ -27,9 +27,9 @@ namespace Client
                 }
             }
 
-            #if DEBUG
-                Settings.UseTestConfig = true;
-            #endif
+#if DEBUG
+            Settings.UseTestConfig = true;
+#endif
 
             try
             {
@@ -105,7 +105,7 @@ namespace Client
             catch (Exception ex)
             {
                 CMain.SaveError(ex.ToString());
-                
+
                 throw;
             }
         }

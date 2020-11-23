@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Client.MirControls;
-using Client.MirGraphics;
-using Client.MirSounds;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
+using Client.MirControls;
+using Client.MirGraphics;
 using Client.MirNetwork;
-
+using Client.MirSounds;
 using C = ClientPackets;
 
 namespace Client.MirScenes.Dialogs
@@ -116,7 +115,7 @@ namespace Client.MirScenes.Dialogs
             if (Visible)
                 RequestRentedItems();
         }
-        
+
         public void ReceiveRentedItems(List<ItemRentalInformation> rentedItems)
         {
             for (var i = 0; i < _itemRows.Length; i++)
@@ -134,7 +133,7 @@ namespace Client.MirScenes.Dialogs
         {
             if (_lastRequestTime > CMain.Now)
                 return;
-            
+
             _lastRequestTime = CMain.Now.AddSeconds(60);
             Network.Enqueue(new ClientPackets.GetRentedItems());
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -10,14 +11,12 @@ using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
+using Client.MirScenes.Dialogs;
 using Client.MirSounds;
-using Font = System.Drawing.Font;
-using S = ServerPackets;
 using C = ClientPackets;
 using Effect = Client.MirObjects.Effect;
-
-using Client.MirScenes.Dialogs;
-using System.Drawing.Imaging;
+using Font = System.Drawing.Font;
+using S = ServerPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -475,7 +474,7 @@ namespace Client.MirScenes.Dialogs
                     if (PType == PanelType.Craft) return;
 
                     BuyItem();
-                };       
+                };
             }
 
             CloseButton = new MirButton
@@ -693,7 +692,7 @@ namespace Client.MirScenes.Dialogs
             {
                 PositionBar.Visible = true;
                 int h = 233 - PositionBar.Size.Height;
-                h = (int)((h / (float)(DisplayGoods.Count - 8)) * StartIndex);
+                h = (int)(h / (float)(DisplayGoods.Count - 8) * StartIndex);
                 PositionBar.Location = new Point(219, 49 + h);
             }
             else
@@ -726,7 +725,7 @@ namespace Client.MirScenes.Dialogs
             if (y < 49) y = 49;
 
             int h = 233 - PositionBar.Size.Height;
-            h = (int)Math.Round(((y - 49) / (h / (float)(DisplayGoods.Count - 8))));
+            h = (int)Math.Round((y - 49) / (h / (float)(DisplayGoods.Count - 8)));
 
             PositionBar.Location = new Point(x, y);
 
@@ -913,12 +912,12 @@ namespace Client.MirScenes.Dialogs
                     GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowGold, ChatType.System);
                     break;
                 case PanelType.SpecialRepair:
-                    if ((TargetItem.Info.Bind.HasFlag(BindMode.DontRepair)) || (TargetItem.Info.Bind.HasFlag(BindMode.NoSRepair)))
+                    if (TargetItem.Info.Bind.HasFlag(BindMode.DontRepair) || TargetItem.Info.Bind.HasFlag(BindMode.NoSRepair))
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("Cannot repair this item.", ChatType.System);
                         return;
                     }
-                    if (GameScene.Gold >= (TargetItem.RepairPrice() * 3) * GameScene.NPCRate)
+                    if (GameScene.Gold >= TargetItem.RepairPrice() * 3 * GameScene.NPCRate)
                     {
                         Network.Enqueue(new C.SRepairItem { UniqueID = TargetItem.UniqueID });
                         TargetItem = null;
@@ -963,7 +962,7 @@ namespace Client.MirScenes.Dialogs
                     {
                         if (GameScene.Scene.RefineDialog.Grid[i].Item != null)
                         {
-                            if (GameScene.Gold >= ((TargetItem.Info.RequiredAmount * 10) * GameScene.NPCRate))
+                            if (GameScene.Gold >= (TargetItem.Info.RequiredAmount * 10 * GameScene.NPCRate))
                             {
                                 Network.Enqueue(new C.RefineItem { UniqueID = TargetItem.UniqueID });
                                 TargetItem = null;
@@ -1183,7 +1182,7 @@ namespace Client.MirScenes.Dialogs
                         text += (TargetItem.RepairPrice() * GameScene.NPCRate).ToString();
                         break;
                     case PanelType.SpecialRepair:
-                        text += ((TargetItem.RepairPrice() * 3) * GameScene.NPCRate).ToString();
+                        text += (TargetItem.RepairPrice() * 3 * GameScene.NPCRate).ToString();
                         break;
                     case PanelType.Disassemble:
                         text += TargetItem.DisassemblePrice().ToString();
@@ -1195,10 +1194,10 @@ namespace Client.MirScenes.Dialogs
                         text += TargetItem.ResetPrice().ToString();
                         break;
                     case PanelType.Refine:
-                        text += ((TargetItem.Info.RequiredAmount * 10) * GameScene.NPCRate).ToString();
+                        text += (TargetItem.Info.RequiredAmount * 10 * GameScene.NPCRate).ToString();
                         break;
                     case PanelType.ReplaceWedRing:
-                        text += ((TargetItem.Info.RequiredAmount * 10) * GameScene.NPCRate).ToString();
+                        text += (TargetItem.Info.RequiredAmount * 10 * GameScene.NPCRate).ToString();
                         break;
                     default: return;
                 }
@@ -1892,7 +1891,7 @@ namespace Client.MirScenes.Dialogs
             }
 
             if (max > (RecipeItem.Info.StackSize / RecipeItem.Count))
-                max = (RecipeItem.Info.StackSize / RecipeItem.Count);
+                max = RecipeItem.Info.StackSize / RecipeItem.Count;
 
             //TODO - Check Max slots spare against slots to be used (stacksize/quantity)
             //TODO - GetMaxItemGain
@@ -1923,10 +1922,10 @@ namespace Client.MirScenes.Dialogs
                             return;
                         }
 
-                        Network.Enqueue(new C.CraftItem 
-                        { 
-                            UniqueID = RecipeItem.UniqueID, 
-                            Count = amountBox.Amount, 
+                        Network.Enqueue(new C.CraftItem
+                        {
+                            UniqueID = RecipeItem.UniqueID,
+                            Count = amountBox.Amount,
                             Slots = Selected.Select(x => x.Key.ItemSlot).ToArray()
                         });
                     }
@@ -1936,10 +1935,10 @@ namespace Client.MirScenes.Dialogs
             }
             else
             {
-                Network.Enqueue(new C.CraftItem 
-                { 
-                    UniqueID = RecipeItem.UniqueID, 
-                    Count = 1, 
+                Network.Enqueue(new C.CraftItem
+                {
+                    UniqueID = RecipeItem.UniqueID,
+                    Count = 1,
                     Slots = Selected.Select(x => x.Key.ItemSlot).ToArray()
                 });
             }

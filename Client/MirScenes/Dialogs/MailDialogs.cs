@@ -1,14 +1,14 @@
-﻿using Client.MirControls;
-using Client.MirGraphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Drawing;
-using Client.MirSounds;
-using Client.MirNetwork;
-using C = ClientPackets;
 using System.Windows.Forms;
+using Client.MirControls;
+using Client.MirGraphics;
+using Client.MirNetwork;
+using Client.MirSounds;
+using C = ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -38,7 +38,7 @@ namespace Client.MirScenes.Dialogs
             Size = new Size(312, 444);
             Movable = true;
             Sort = true;
-            Location = new Point((Settings.ScreenWidth - Size.Width) - 150, 5);
+            Location = new Point(Settings.ScreenWidth - Size.Width - 150, 5);
 
             TitleLabel = new MirImageControl
             {
@@ -176,7 +176,7 @@ namespace Client.MirScenes.Dialogs
                     {
                         //open letter dialog, pass in name
                         GameScene.Scene.MailComposeLetterDialog.ComposeMail(inputBox.InputTextBox.Text);
-                        
+
                         inputBox.Dispose();
                     };
 
@@ -216,7 +216,7 @@ namespace Client.MirScenes.Dialogs
             {
                 if (SelectedMail == null) return;
 
-                if(SelectedMail.Gold > 0 || SelectedMail.Items.Count > 0)
+                if (SelectedMail.Gold > 0 || SelectedMail.Items.Count > 0)
                 {
                     GameScene.Scene.MailReadParcelDialog.ReadMail(SelectedMail);
                 }
@@ -289,7 +289,7 @@ namespace Client.MirScenes.Dialogs
             };
             #endregion
 
-            
+
         }
 
         public void Reset()
@@ -350,7 +350,7 @@ namespace Client.MirScenes.Dialogs
 
                 if (SelectedMail != null)
                 {
-                    if(SelectedMail.MailID == Rows[i].Mail.MailID)
+                    if (SelectedMail.MailID == Rows[i].Mail.MailID)
                     {
                         SelectedMail = Rows[i].Mail;
                     }
@@ -392,7 +392,7 @@ namespace Client.MirScenes.Dialogs
                 Rows[i].UpdateInterface();
             }
 
-            if(SelectedMail != null)
+            if (SelectedMail != null)
             {
                 ReplyButton.Visible = SelectedMail.CanReply;
             }
@@ -536,7 +536,7 @@ namespace Client.MirScenes.Dialogs
                 IconImage.Library = Libraries.Prguse;
             }
 
-            IconImage.Location = new Point((IconArea.Width - IconImage.Size.Width) /2, (IconArea.Height - IconImage.Size.Height) / 2);
+            IconImage.Location = new Point((IconArea.Width - IconImage.Size.Width) / 2, (IconArea.Height - IconImage.Size.Height) / 2);
 
 
             if (!Mail.Opened)
@@ -590,7 +590,7 @@ namespace Client.MirScenes.Dialogs
         protected override void OnMouseEnter()
         {
             base.OnMouseEnter();
-            GameScene.Scene.CreateMailLabel(Mail);          
+            GameScene.Scene.CreateMailLabel(Mail);
         }
         protected override void OnMouseLeave()
         {
@@ -760,9 +760,9 @@ namespace Client.MirScenes.Dialogs
                 HoverIndex = 203,
                 PressedIndex = 203,
                 Location = new Point(73, 56),
-                Size = new Size(20,20),
+                Size = new Size(20, 20),
                 Library = Libraries.Prguse2,
-                Parent = this,             
+                Parent = this,
                 Sound = SoundList.ButtonA,
             };
             StampButton.Click += (o, e) =>
@@ -902,7 +902,7 @@ namespace Client.MirScenes.Dialogs
 
         private void StampParcel()
         {
-            if(!Stamped)
+            if (!Stamped)
             {
                 for (int i = 0; i < GameScene.User.Inventory.Length; i++)
                 {
@@ -1192,7 +1192,7 @@ namespace Client.MirScenes.Dialogs
             };
             CollectButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.CollectParcel { MailID = Mail.MailID }); 
+                Network.Enqueue(new C.CollectParcel { MailID = Mail.MailID });
             };
 
             CancelButton = new MirButton

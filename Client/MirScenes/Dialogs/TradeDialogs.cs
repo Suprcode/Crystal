@@ -1,14 +1,14 @@
-﻿using Client.MirControls;
-using Client.MirGraphics;
-using Client.MirNetwork;
-using Client.MirSounds;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Client.MirControls;
+using Client.MirGraphics;
+using Client.MirNetwork;
+using Client.MirSounds;
 using C = ClientPackets;
 
 namespace Client.MirScenes.Dialogs
@@ -40,7 +40,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 522,
                 Sound = SoundList.ButtonA,
             };
-            ConfirmButton.Click += (o, e) => 
+            ConfirmButton.Click += (o, e) =>
             {
                 ChangeLockState(!GameScene.User.TradeLocked);
                 Network.Enqueue(new C.TradeConfirm { Locked = GameScene.User.TradeLocked });

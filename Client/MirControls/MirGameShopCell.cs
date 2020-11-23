@@ -5,8 +5,8 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirScenes;
-using Client.MirSounds;
 using Client.MirScenes.Dialogs;
+using Client.MirSounds;
 using C = ClientPackets;
 
 namespace Client.MirControls
@@ -153,7 +153,7 @@ namespace Client.MirControls
                 if (CMain.Shift) Quantity += 10;
                 else Quantity++;
 
-                if (((decimal)(Quantity * Item.Count) / Item.Info.StackSize) > 5) Quantity = ((5 * Item.Info.StackSize) / Item.Count) > 99 ? Quantity = 99 : Quantity = (byte)((5 * Item.Info.StackSize) / Item.Count);
+                if (((decimal)(Quantity * Item.Count) / Item.Info.StackSize) > 5) Quantity = (5 * Item.Info.StackSize / Item.Count) > 99 ? Quantity = 99 : Quantity = (byte)(5 * Item.Info.StackSize / Item.Count);
                 if (Quantity >= 99) Quantity = 99;
                 if (Item.Stock != 0 && Quantity > Item.Stock) Quantity = (byte)Item.Stock;
             };
@@ -204,9 +204,9 @@ namespace Client.MirControls
             }
             else
             { //Needs to attempt to pay with gold and credits
-                if (GameScene.Gold >= (((Item.GoldPrice * Quantity) / (Item.CreditPrice * Quantity)) * ((Item.CreditPrice * Quantity) - GameScene.Credit)))
+                if (GameScene.Gold >= (Item.GoldPrice * Quantity / (Item.CreditPrice * Quantity) * ((Item.CreditPrice * Quantity) - GameScene.Credit)))
                 {
-                    GoldCost = ((Item.GoldPrice * Quantity) / (Item.CreditPrice * Quantity)) * ((Item.CreditPrice * Quantity) - GameScene.Credit);
+                    GoldCost = Item.GoldPrice * Quantity / (Item.CreditPrice * Quantity) * ((Item.CreditPrice * Quantity) - GameScene.Credit);
                     CreditCost = GameScene.Credit;
                     if (CreditCost == 0)
                     {
@@ -276,7 +276,7 @@ namespace Client.MirControls
 
         protected internal override void DrawControl()
         {
-            
+
             base.DrawControl();
 
             if (Item == null) return;
@@ -460,7 +460,7 @@ namespace Client.MirControls
                 PreviewImage.Index = 1256 + (8 * (Direction - 1));
 
             PreviewImage.AnimationCount = 8;
-            
+
 
             MountImage.Library = Libraries.Mounts[ViewerItem.Info.Shape];
             MountImage.Index = 32 + (8 * (Direction - 1));
@@ -533,9 +533,9 @@ namespace Client.MirControls
                     PreviewImage.BringToFront();
                     WeaponImage.BringToFront();
                 }
-                    
+
             }
-            
+
             if (ViewerItem.Info.Shape < 100) WeaponImage.Library = Libraries.CWeapons[ViewerItem.Info.Shape];
 
 
@@ -563,7 +563,7 @@ namespace Client.MirControls
             PreviewImage.Library = Libraries.CArmours[ViewerItem.Info.Shape];
             PreviewImage.AnimationCount = 6;
             PreviewImage.Animated = true;
-            
+
         }
 
         private void DrawTransform()

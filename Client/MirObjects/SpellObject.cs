@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using Client.MirGraphics;
 using Client.MirScenes;
-using S = ServerPackets; 
+using S = ServerPackets;
 
 namespace Client.MirObjects
 {
@@ -24,7 +24,7 @@ namespace Client.MirObjects
         public Spell Spell;
         public int FrameCount, FrameInterval, FrameIndex;
         public bool Repeat;
-        
+
 
         public SpellObject(uint objectID) : base(objectID)
         {
@@ -66,7 +66,7 @@ namespace Client.MirObjects
                     break;
                 case Spell.DigOutZombie:
                     BodyLibrary = (ushort)Monster.DigOutZombie < Libraries.Monsters.Count() ? Libraries.Monsters[(ushort)Monster.DigOutZombie] : Libraries.Magic;
-                    DrawFrame = 304 + (byte) Direction;
+                    DrawFrame = 304 + (byte)Direction;
                     FrameCount = 0;
                     Blend = false;
                     break;
@@ -202,7 +202,7 @@ namespace Client.MirObjects
         }
 
         public override void DrawEffects(bool effectsEnabled)
-        { 
+        {
         }
     }
 }

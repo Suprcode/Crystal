@@ -1,14 +1,14 @@
-﻿using Client.MirControls;
-using Client.MirGraphics;
-using Client.MirNetwork;
-using Client.MirSounds;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Client.MirControls;
+using Client.MirGraphics;
+using Client.MirNetwork;
+using Client.MirSounds;
 using C = ClientPackets;
 
 namespace Client.MirScenes.Dialogs
@@ -306,7 +306,7 @@ namespace Client.MirScenes.Dialogs
             int maxPage = filteredFriends.Count / Rows.Length + 1;
             if (maxPage < 1) maxPage = 1;
 
-            PageNumberLabel.Text = (Page + 1) + " / " + maxPage;
+            PageNumberLabel.Text = Page + 1 + " / " + maxPage;
 
             int maxIndex = filteredFriends.Count - 1;
 
@@ -323,7 +323,7 @@ namespace Client.MirScenes.Dialogs
                 Rows[i] = new FriendRow
                 {
                     Friend = filteredFriends[i + StartIndex],
-                    Location = new Point((i % 2) * 115 + 16, 55 + ((i) / 2) * 22),
+                    Location = new Point(i % 2 * 115 + 16, 55 + i / 2 * 22),
                     Parent = this,
                 };
                 Rows[i].Click += (o, e) =>

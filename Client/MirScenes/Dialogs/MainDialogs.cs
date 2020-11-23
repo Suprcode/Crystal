@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -10,16 +11,19 @@ using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
-using Client.MirSounds;
-using SlimDX;
-using SlimDX.Direct3D9;
-using Font = System.Drawing.Font;
-using S = ServerPackets;
-using C = ClientPackets;
-using Effect = Client.MirObjects.Effect;
-
 using Client.MirScenes.Dialogs;
-using System.Drawing.Imaging;
+using Client.MirSounds;
+using Client.Utils;
+using SharpDX;
+using SharpDX.Direct3D9;
+using SharpDX.Mathematics.Interop;
+using C = ClientPackets;
+using Color = System.Drawing.Color;
+using Effect = Client.MirObjects.Effect;
+using Font = System.Drawing.Font;
+using Point = System.Drawing.Point;
+using Rectangle = System.Drawing.Rectangle;
+using S = ServerPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -47,7 +51,7 @@ namespace Client.MirScenes.Dialogs
         {
             Index = Settings.Resolution == 800 ? 0 : Settings.Resolution == 1024 ? 1 : 2;
             Library = Libraries.Prguse;
-            Location = new Point(((Settings.ScreenWidth / 2) - (Size.Width / 2)), Settings.ScreenHeight - Size.Height);
+            Location = new Point((Settings.ScreenWidth / 2) - (Size.Width / 2), Settings.ScreenHeight - Size.Height);
             PixelDetect = true;
 
             PingLabel = new MirLabel
@@ -437,7 +441,7 @@ namespace Client.MirScenes.Dialogs
                     break;
             }
 
-            if ((CMain.PingTime) > 100)
+            if (CMain.PingTime > 100)
             {
                 PingLabel.Text = string.Format("Ping: {0}", CMain.PingTime);
                 PingLabel.Visible = true;
@@ -520,7 +524,7 @@ namespace Client.MirScenes.Dialogs
             }
 
             Rectangle r = new Rectangle(0, 80 - height, hpOnly ? 100 : 50, height);
-            Libraries.Prguse.Draw(orbImage, r, new Point(((Settings.ScreenWidth / 2) - (Size.Width / 2)), HealthOrb.DisplayLocation.Y + 80 - height), Color.White, false);
+            Libraries.Prguse.Draw(orbImage, r, new Point((Settings.ScreenWidth / 2) - (Size.Width / 2), HealthOrb.DisplayLocation.Y + 80 - height), Color.White, false);
 
             if (hpOnly) return;
 
@@ -533,7 +537,7 @@ namespace Client.MirScenes.Dialogs
             if (height > 80) height = 80;
             r = new Rectangle(51, 80 - height, 50, height);
 
-            Libraries.Prguse.Draw(4, r, new Point(((Settings.ScreenWidth / 2) - (Size.Width / 2)) + 51, HealthOrb.DisplayLocation.Y + 80 - height), Color.White, false);
+            Libraries.Prguse.Draw(4, r, new Point((Settings.ScreenWidth / 2) - (Size.Width / 2) + 51, HealthOrb.DisplayLocation.Y + 80 - height), Color.White, false);
         }
 
         private void ExperienceBar_BeforeDraw(object sender, EventArgs e)
@@ -892,7 +896,7 @@ namespace Client.MirScenes.Dialogs
             }
 
             chat.Add(text.Substring(index, text.Length - index));
-            
+
             if (StartIndex == History.Count - LineCount)
                 StartIndex += chat.Count;
 
@@ -953,7 +957,7 @@ namespace Client.MirScenes.Dialogs
             if (History.Count > 1)
             {
                 int h = CountBar.Size.Height - PositionBar.Size.Height;
-                h = (int)((h / (float)(History.Count - 1)) * StartIndex);
+                h = (int)(h / (float)(History.Count - 1) * StartIndex);
                 PositionBar.Location = new Point(Settings.Resolution != 800 ? 619 : 395, 16 + h);
             }
 
@@ -1011,9 +1015,9 @@ namespace Client.MirScenes.Dialogs
 
                         ChatLink(values[0], ulong.Parse(values[1]), temp.Location.Add(new Point(size.Width - 10, 0)));
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
-						//Temporary debug to catch unknown error
+                        //Temporary debug to catch unknown error
                         CMain.SaveError(ex.ToString());
                         CMain.SaveError(currentLine);
                         CMain.SaveError(capture.Value);
@@ -1593,7 +1597,7 @@ namespace Client.MirScenes.Dialogs
             AddButton.Click += (o1, e) =>
             {
                 int openLevel = (GameScene.User.Inventory.Length - 46) / 4;
-                int openGold = (1000000 + openLevel * 1000000);
+                int openGold = 1000000 + openLevel * 1000000;
                 MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ExtraSlots4, openGold), MirMessageBoxButtons.OKCancel);
 
                 messageBox.OKButton.Click += (o, a) =>
@@ -2155,7 +2159,7 @@ namespace Client.MirScenes.Dialogs
                 return CMain.InputKeys.GetKey(KeybindOptions.Bar2Skill8);
             return "";
         }
-                    
+
 
         void MagicKeyDialog_BeforeDraw(object sender, EventArgs e)
         {
@@ -2167,7 +2171,7 @@ namespace Client.MirScenes.Dialogs
             HasSkill = false;
             foreach (var m in GameScene.User.Magics)
             {
-                if ((m.Key < (BarIndex * 8)+1) || (m.Key > ((BarIndex + 1) * 8)+1)) continue;
+                if ((m.Key < (BarIndex * 8) + 1) || (m.Key > ((BarIndex + 1) * 8) + 1)) continue;
                 HasSkill = true;
             }
             if (!Visible) return;
@@ -2193,9 +2197,9 @@ namespace Client.MirScenes.Dialogs
 
                     //string key = m.Key > 8 ? string.Format("CTRL F{0}", i) : string.Format("F{0}", m.Key);
 
-                    Cells[i - 1].Index = magic.Icon*2;
+                    Cells[i - 1].Index = magic.Icon * 2;
                     Cells[i - 1].Hint = string.Format("{0}\nMP: {1}\nCooldown: {2}\nKey: {3}", magic.Name,
-                        (magic.BaseCost + (magic.LevelCost * magic.Level)), Functions.PrintTimeSpanFromMilliSeconds(magic.Delay), key);
+                        magic.BaseCost + (magic.LevelCost * magic.Level), Functions.PrintTimeSpanFromMilliSeconds(magic.Delay), key);
 
                     KeyNameLabels[i - 1].Text = "";
                 }
@@ -2243,7 +2247,7 @@ namespace Client.MirScenes.Dialogs
                         CoolDowns[i] = new MirAnimatedControl
                         {
                             Index = 1260 + startFrame,
-                            AnimationCount = (totalFrames - startFrame),
+                            AnimationCount = totalFrames - startFrame,
                             AnimationDelay = delayPerFrame,
                             Library = Libraries.Prguse2,
                             Parent = this,
@@ -3182,7 +3186,7 @@ namespace Client.MirScenes.Dialogs
                 else
                     colour = Color.FromArgb(255, 0, 0);
 
-                DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(x - 0.5), (float)(y - 0.5), 0.0F), colour);
+                DXManager.Sprite.Draw(DXManager.RadarTexture, colour.ToRawColorBGRA(), new RawRectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(x - 0.5), (float)(y - 0.5), 0.0F));
 
                 #region NPC Quest Icons
 
@@ -3231,7 +3235,7 @@ namespace Client.MirScenes.Dialogs
                         DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                         Text = text,
                         ForeColour = color,
-                        Location = new Point((int)(x - Settings.ScreenWidth + GameScene.Scene.MiniMapDialog.Size.Width) - 6, (int)(y) - 10),
+                        Location = new Point((int)(x - Settings.ScreenWidth + GameScene.Scene.MiniMapDialog.Size.Width) - 6, (int)y - 10),
                         NotControl = true,
                         Visible = true,
                         Modal = true
@@ -3302,17 +3306,17 @@ namespace Client.MirScenes.Dialogs
             MapNameLabel.Text = map.Title;
             LocationLabel.Text = Functions.PointToString(MapObject.User.CurrentLocation);
 
-            GameScene.Scene.MainDialog.SModeLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
-            (GameScene.Scene.MiniMapDialog.Size.Height + 150) - Settings.ScreenHeight);
-            GameScene.Scene.MainDialog.AModeLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
-            (GameScene.Scene.MiniMapDialog.Size.Height + 165) - Settings.ScreenHeight);
-            GameScene.Scene.MainDialog.PModeLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
-            (GameScene.Scene.MiniMapDialog.Size.Height + 180) - Settings.ScreenHeight);
-            GameScene.Scene.MainDialog.PingLabel.Location = new Point((GameScene.Scene.MiniMapDialog.Location.X - 3) - GameScene.Scene.MainDialog.Location.X,
-            (GameScene.Scene.MiniMapDialog.Size.Height + 195) - Settings.ScreenHeight);
+            GameScene.Scene.MainDialog.SModeLabel.Location = new Point(GameScene.Scene.MiniMapDialog.Location.X - 3 - GameScene.Scene.MainDialog.Location.X,
+            GameScene.Scene.MiniMapDialog.Size.Height + 150 - Settings.ScreenHeight);
+            GameScene.Scene.MainDialog.AModeLabel.Location = new Point(GameScene.Scene.MiniMapDialog.Location.X - 3 - GameScene.Scene.MainDialog.Location.X,
+            GameScene.Scene.MiniMapDialog.Size.Height + 165 - Settings.ScreenHeight);
+            GameScene.Scene.MainDialog.PModeLabel.Location = new Point(GameScene.Scene.MiniMapDialog.Location.X - 3 - GameScene.Scene.MainDialog.Location.X,
+            GameScene.Scene.MiniMapDialog.Size.Height + 180 - Settings.ScreenHeight);
+            GameScene.Scene.MainDialog.PingLabel.Location = new Point(GameScene.Scene.MiniMapDialog.Location.X - 3 - GameScene.Scene.MainDialog.Location.X,
+            GameScene.Scene.MiniMapDialog.Size.Height + 195 - Settings.ScreenHeight);
             if (GameScene.Scene.NewMail)
             {
-                double time = (CMain.Time) / 100D;
+                double time = CMain.Time / 100D;
 
                 if (Math.Round(time) % 10 < 5 || GameScene.Scene.NewMailCounter >= 10)
                 {
@@ -3965,7 +3969,7 @@ namespace Client.MirScenes.Dialogs
 
             Point p = e.Location.Subtract(SoundBar.DisplayLocation);
 
-            byte volume = (byte)(p.X / (double)SoundBar.Size.Width * 100);
+            byte volume = (byte)(p.X / SoundBar.Size.Width * 100);
             Settings.Volume = volume;
 
 
@@ -4039,7 +4043,7 @@ namespace Client.MirScenes.Dialogs
 
             Point p = e.Location.Subtract(MusicSoundBar.DisplayLocation);
 
-            byte volume = (byte)(p.X / (double)MusicSoundBar.Size.Width * 100);
+            byte volume = (byte)(p.X / MusicSoundBar.Size.Width * 100);
             Settings.MusicVolume = volume;
 
 
@@ -4531,7 +4535,7 @@ namespace Client.MirScenes.Dialogs
                 CoolDown = new MirAnimatedControl
                 {
                     Index = 1290 + startFrame,
-                    AnimationCount = (totalFrames - startFrame),
+                    AnimationCount = totalFrames - startFrame,
                     AnimationDelay = delayPerFrame,
                     Library = Libraries.Prguse2,
                     Parent = this,
@@ -4925,7 +4929,7 @@ namespace Client.MirScenes.Dialogs
                 else
                     colour = Color.FromArgb(255, 0, 0);
 
-                DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(x - 0.5), (float)(y - 0.5), 0.0F), colour);
+                DXManager.Sprite.Draw(DXManager.RadarTexture, colour.ToRawColorBGRA(), new RawRectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(x - 0.5), (float)(y - 0.5), 0.0F));
             }
         }
 
@@ -4944,7 +4948,7 @@ namespace Client.MirScenes.Dialogs
         public DuraStatusDialog()
         {
             Size = new Size(40, 19);
-            Location = new Point((GameScene.Scene.MiniMapDialog.Location.X + 86), GameScene.Scene.MiniMapDialog.Size.Height);
+            Location = new Point(GameScene.Scene.MiniMapDialog.Location.X + 86, GameScene.Scene.MiniMapDialog.Size.Height);
 
             Character = new MirButton()
             {
@@ -5230,7 +5234,7 @@ namespace Client.MirScenes.Dialogs
             Size = new Size(24, 61);
             Parent = parent;
 
-            Location = new Point(((Settings.ScreenWidth / 2) - (Size.Width / 2)) + 362, Settings.ScreenHeight - Size.Height - 77);
+            Location = new Point((Settings.ScreenWidth / 2) - (Size.Width / 2) + 362, Settings.ScreenHeight - Size.Height - 77);
 
             Button1 = new MirButton //Skill
             {

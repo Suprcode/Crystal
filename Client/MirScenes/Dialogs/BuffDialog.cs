@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
 using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirSounds;
-using System.Drawing;
-using System.Windows.Forms;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -136,7 +136,7 @@ namespace Client.MirScenes.Dialogs
                     buffLibrary = Libraries.Prguse2;
                 }
 
-                image.Location = new Point(Size.Width - 10 - 23 - (i * 23) + ((10 * 23) * (i / 10)), 6 + ((i / 10) * 24));
+                image.Location = new Point(Size.Width - 10 - 23 - (i * 23) + (10 * 23 * (i / 10)), 6 + (i / 10 * 24));
                 image.Hint = Settings.ExpandedBuffWindow ? buff.ToString() : CombinedBuffText();
                 image.Index = buffImage;
                 image.Library = buffLibrary;
@@ -162,7 +162,7 @@ namespace Client.MirScenes.Dialogs
             }
 
             if (IsMouseOver(CMain.MPoint))
-            { 
+            {
                 if (_buffCount == 0 || (!_fadedIn && CMain.Time <= _nextFadeTime))
                     return;
 
@@ -194,7 +194,7 @@ namespace Client.MirScenes.Dialogs
                     _fadedOut = true;
                     _fadedIn = false;
                 }
-                    
+
                 _nextFadeTime = CMain.Time + FadeDelay;
             }
         }
@@ -225,14 +225,14 @@ namespace Client.MirScenes.Dialogs
                 _buffCountLabel.Visible = false;
 
                 _expandCollapseButton.Location = new Point(Size.Width - 15, 0);
-                Size = new Size((_buffCount > 10 ? 10 : _buffCount) * 23, 24 + (_buffCount / 10) * 24);
+                Size = new Size((_buffCount > 10 ? 10 : _buffCount) * 23, 24 + _buffCount / 10 * 24);
             }
             else if (_buffCount > 0 && !Settings.ExpandedBuffWindow)
             {
                 var oldWidth = Size.Width;
 
                 Index = 20;
-            
+
                 var newX = Location.X - Size.Width + oldWidth;
                 var newY = Location.Y;
                 Location = new Point(newX, newY);
@@ -338,7 +338,7 @@ namespace Client.MirScenes.Dialogs
                     case BuffType.ImmortalSkin:
                         buffAc += buff.Values[0];
                         break;
- 
+
                     case BuffType.General:
                         buffExp += buff.Values[0];
 
@@ -440,7 +440,7 @@ namespace Client.MirScenes.Dialogs
                         break;
                 }
             }
-            
+
             if (buffDc > 0)
                 buffText += $"\nIncreased DC: 0-{buffDc}";
 

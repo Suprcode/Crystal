@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using System.Drawing;
 using Client.MirGraphics;
-using System.Collections.Generic;
 
 namespace Client.MirControls
 {
@@ -81,7 +81,7 @@ namespace Client.MirControls
                 _ScrollDown.Location = new Point(Size.Width - 12, 52);
             if (_ScrollPosition != null && !_ScrollPosition.IsDisposed)
                 _ScrollPosition.Location = new Point(Size.Width - 11, 22);
- 
+
         }
         #endregion
 
@@ -104,7 +104,7 @@ namespace Client.MirControls
 
         public MirDropDownBox()
         {
-            BackColour = Color.FromArgb(255,6,6,6);
+            BackColour = Color.FromArgb(255, 6, 6, 6);
             ForeColour = Color.White;
             Enabled = false;
             _label = new MirLabel
@@ -142,14 +142,14 @@ namespace Client.MirControls
                     Visible = false,
                     Location = new Point(0, 15 + (i * 13)),
                     ForeColour = ForeColour,
-                    BackColour = Color.FromArgb(255,20,20,20),
+                    BackColour = Color.FromArgb(255, 20, 20, 20),
                     Font = new Font(Settings.FontName, 8F)
                 };
                 int index = i;
-                _Option[index].MouseEnter += (o, e) => _Option[index].BackColour = Color.FromArgb(255,140,70,0);
+                _Option[index].MouseEnter += (o, e) => _Option[index].BackColour = Color.FromArgb(255, 140, 70, 0);
                 _Option[index].MouseLeave += (o, e) => _Option[index].BackColour = Color.FromArgb(255, 20, 20, 20);
                 _Option[index].MouseDown += (o, e) => _Option[index].BackColour = Color.FromArgb(255, 20, 20, 20);
-                _Option[index].MouseUp += (o, e) => _Option[index].BackColour = Color.FromArgb(255,20,20,20);
+                _Option[index].MouseUp += (o, e) => _Option[index].BackColour = Color.FromArgb(255, 20, 20, 20);
                 _Option[index].Click += (o, e) => SelectOption(index);
 
                 _Option[index].BeforeDraw += (o, e) =>
@@ -191,7 +191,7 @@ namespace Client.MirControls
                 Visible = false
             };
             _ScrollDown.Click += (o, e) => ScrollDown();
-           
+
             _ScrollPosition = new MirButton
             {
                 HoverIndex = 2016,

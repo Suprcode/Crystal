@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -10,15 +11,13 @@ using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
+using Client.MirScenes.Dialogs;
 using Client.MirSounds;
-using SlimDX.Direct3D9;
-using Font = System.Drawing.Font;
-using S = ServerPackets;
+using SharpDX.Direct3D9;
 using C = ClientPackets;
 using Effect = Client.MirObjects.Effect;
-
-using Client.MirScenes.Dialogs;
-using System.Drawing.Imaging;
+using Font = System.Drawing.Font;
+using S = ServerPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -1028,7 +1027,7 @@ namespace Client.MirScenes.Dialogs
         private void UpdatePositionBar()
         {
             int h = 277 - PositionBar.Size.Height;
-            h = (int)((h / (float)(GuildBuffInfos.Count - 8)) * StartIndex);
+            h = (int)(h / (float)(GuildBuffInfos.Count - 8) * StartIndex);
             PositionBar.Location = new Point(203, 39 + h);
         }
 
@@ -1040,7 +1039,7 @@ namespace Client.MirScenes.Dialogs
             if (y < 39) y = 39;
 
             int h = 277 - PositionBar.Size.Height;
-            h = (int)Math.Round(((y - 39) / (h / (float)(GuildBuffInfos.Count - 8))));
+            h = (int)Math.Round((y - 39) / (h / (float)(GuildBuffInfos.Count - 8)));
             PositionBar.Location = new Point(x, y);
             if (h == StartIndex) return;
             StartIndex = h;
@@ -1706,18 +1705,18 @@ namespace Client.MirScenes.Dialogs
                 {
                     if (Offset < MemberScrollIndex)
                     {
-                        if ((MembersShowOfflinesetting) || (Ranks[i].Members[j].Online))
+                        if (MembersShowOfflinesetting || Ranks[i].Members[j].Online)
                             Offset++;
                     }
                     else
                     {
 
                         if ((!MembersShowOfflinesetting) && (Ranks[i].Members[j].Online == false)) continue;
-                        if ((MyOptions.HasFlag(GuildRankOptions.CanChangeRank)) && (Ranks[i].Index >= MyRankId))
+                        if (MyOptions.HasFlag(GuildRankOptions.CanChangeRank) && (Ranks[i].Index >= MyRankId))
                             MembersRanks[RowCount].Enabled = true;
                         else
                             MembersRanks[RowCount].Enabled = false;
-                        if ((MyOptions.HasFlag(GuildRankOptions.CanKick)) && (Ranks[i].Index >= MyRankId) && (Ranks[i].Members[j].name != MapControl.User.Name)/* && (Ranks[i].Index != 0)*/)
+                        if (MyOptions.HasFlag(GuildRankOptions.CanKick) && (Ranks[i].Index >= MyRankId) && (Ranks[i].Members[j].name != MapControl.User.Name)/* && (Ranks[i].Index != 0)*/)
                             MembersDelete[RowCount].Visible = true;
                         else
                             MembersDelete[RowCount].Visible = false;
@@ -2013,7 +2012,7 @@ namespace Client.MirScenes.Dialogs
         {
             switch (e.KeyChar)
             {
-                case (char)'\\':
+                case '\\':
                     e.Handled = true;
                     break;
                 case (char)Keys.Enter:
@@ -2156,7 +2155,7 @@ namespace Client.MirScenes.Dialogs
         #region UpdateNotice
         public void RequestUpdateNotice()
         {
-            if ((NoticeChanged) && (LastNoticeRequest < CMain.Time))
+            if (NoticeChanged && (LastNoticeRequest < CMain.Time))
             {
                 LastNoticeRequest = CMain.Time + 5000;
                 Network.Enqueue(new C.RequestGuildInfo() { Type = 0 });
@@ -2164,7 +2163,7 @@ namespace Client.MirScenes.Dialogs
         }
         public void RequestUpdateMembers()
         {
-            if ((MembersChanged) && (LastMemberRequest < CMain.Time))
+            if (MembersChanged && (LastMemberRequest < CMain.Time))
             {
                 LastMemberRequest = CMain.Time + 5000;
                 Network.Enqueue(new C.RequestGuildInfo() { Type = 1 });
@@ -2245,7 +2244,7 @@ namespace Client.MirScenes.Dialogs
             else
                 RankButton.Visible = false;
 
-            if ((MyOptions.HasFlag(GuildRankOptions.CanStoreItem)) || (MyOptions.HasFlag(GuildRankOptions.CanRetrieveItem)))
+            if (MyOptions.HasFlag(GuildRankOptions.CanStoreItem) || MyOptions.HasFlag(GuildRankOptions.CanRetrieveItem))
                 StorageButton.Visible = true;
             else
                 StorageButton.Visible = false;
@@ -2272,7 +2271,7 @@ namespace Client.MirScenes.Dialogs
 
             if (NoticePage.Visible)
             {
-                if ((NoticeChanged) && (LastNoticeRequest < CMain.Time))
+                if (NoticeChanged && (LastNoticeRequest < CMain.Time))
                 {
                     LastNoticeRequest = CMain.Time + 5000;
                     Network.Enqueue(new C.RequestGuildInfo() { Type = 0 });

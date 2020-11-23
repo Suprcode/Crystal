@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.IO;
 
 namespace Client.MirObjects
 {
@@ -26,7 +26,7 @@ namespace Client.MirObjects
 
         public short TileAnimationImage;
         public short TileAnimationOffset;
-        public byte  TileAnimationFrames;
+        public byte TileAnimationFrames;
 
         public byte Light;
         public byte Unknown;
@@ -51,7 +51,7 @@ namespace Client.MirObjects
         public MapObject FindObject(uint ObjectID)
         {
             return CellObjects.Find(
-                delegate(MapObject mo)
+                delegate (MapObject mo)
             {
                 return mo.ObjectID == ObjectID;
             });
@@ -68,9 +68,9 @@ namespace Client.MirObjects
                     continue;
                 }
 
-                if(CellObjects[i].Race == ObjectType.Monster)
+                if (CellObjects[i].Race == ObjectType.Monster)
                 {
-                    switch(((MonsterObject)CellObjects[i]).BaseImage)
+                    switch (((MonsterObject)CellObjects[i]).BaseImage)
                     {
                         case Monster.PalaceWallLeft:
                         case Monster.PalaceWall1:
@@ -116,7 +116,7 @@ namespace Client.MirObjects
 
         public void Sort()
         {
-            CellObjects.Sort(delegate(MapObject ob1, MapObject ob2)
+            CellObjects.Sort(delegate (MapObject ob1, MapObject ob2)
             {
                 if (ob1.Race == ObjectType.Item && ob2.Race != ObjectType.Item)
                     return -1;
@@ -139,7 +139,7 @@ namespace Client.MirObjects
         public CellInfo[,] MapCells;
         private string FileName;
         private byte[] Bytes;
-        
+
         public MapReader(string FileName)
         {
             this.FileName = FileName;
@@ -204,7 +204,7 @@ namespace Client.MirObjects
             {
                 int W = Bytes[0] + (Bytes[1] << 8);
                 int H = Bytes[2] + (Bytes[3] << 8);
-                if (Bytes.Length > (52 + (W*H*14)))
+                if (Bytes.Length > (52 + (W * H * 14)))
                 {
                     LoadMapType3();
                     return;
@@ -243,17 +243,17 @@ namespace Client.MirObjects
                         MapCells[x, y] = new CellInfo();
                         MapCells[x, y].BackIndex = 0;
                         MapCells[x, y].MiddleIndex = 1;
-                        MapCells[x, y].BackImage = (short)BitConverter.ToInt16(Bytes, offset);
+                        MapCells[x, y].BackImage = BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
-                        MapCells[x, y].MiddleImage = (short)BitConverter.ToInt16(Bytes, offset);
+                        MapCells[x, y].MiddleImage = BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
-                        MapCells[x, y].FrontImage = (short)BitConverter.ToInt16(Bytes, offset);
+                        MapCells[x, y].FrontImage = BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
                         MapCells[x, y].DoorIndex = (byte)(Bytes[offset++] & 0x7F);
                         MapCells[x, y].DoorOffset = Bytes[offset++];
                         MapCells[x, y].FrontAnimationFrame = Bytes[offset++];
                         MapCells[x, y].FrontAnimationTick = Bytes[offset++];
-                        MapCells[x, y].FrontIndex = (short)(Bytes[offset++]+ 2);
+                        MapCells[x, y].FrontIndex = (short)(Bytes[offset++] + 2);
                         MapCells[x, y].Light = Bytes[offset++];
                         if ((MapCells[x, y].BackImage & 0x8000) != 0)
                             MapCells[x, y].BackImage = (MapCells[x, y].BackImage & 0x7FFF) | 0x20000000;
@@ -276,7 +276,7 @@ namespace Client.MirObjects
             try
             {
                 int offSet = 21;
-                   
+
                 int w = BitConverter.ToInt16(Bytes, offSet);
                 offSet += 2;
                 int xor = BitConverter.ToInt16(Bytes, offSet);
@@ -292,20 +292,20 @@ namespace Client.MirObjects
                     for (int y = 0; y < Height; y++)
                     {
                         MapCells[x, y] = new CellInfo
-                            {
-                                BackIndex = 0,
-                                BackImage = (int)(BitConverter.ToInt32(Bytes, offSet) ^ 0xAA38AA38),
-                                MiddleIndex = 1,
-                                MiddleImage = (short)(BitConverter.ToInt16(Bytes, offSet += 4) ^ xor),
-                                FrontImage = (short)(BitConverter.ToInt16(Bytes, offSet += 2) ^ xor),
-                                DoorIndex = (byte)(Bytes[offSet += 2] & 0x7F),
-                                DoorOffset = Bytes[++offSet],
-                                FrontAnimationFrame = Bytes[++offSet],
-                                FrontAnimationTick = Bytes[++offSet],
-                                FrontIndex = (short)(Bytes[++offSet] + 2),
-                                Light = Bytes[++offSet],
-                                Unknown = Bytes[++offSet],
-                            };
+                        {
+                            BackIndex = 0,
+                            BackImage = (int)(BitConverter.ToInt32(Bytes, offSet) ^ 0xAA38AA38),
+                            MiddleIndex = 1,
+                            MiddleImage = (short)(BitConverter.ToInt16(Bytes, offSet += 4) ^ xor),
+                            FrontImage = (short)(BitConverter.ToInt16(Bytes, offSet += 2) ^ xor),
+                            DoorIndex = (byte)(Bytes[offSet += 2] & 0x7F),
+                            DoorOffset = Bytes[++offSet],
+                            FrontAnimationFrame = Bytes[++offSet],
+                            FrontAnimationTick = Bytes[++offSet],
+                            FrontIndex = (short)(Bytes[++offSet] + 2),
+                            Light = Bytes[++offSet],
+                            Unknown = Bytes[++offSet],
+                        };
                         offSet++;
 
                         if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
@@ -332,11 +332,11 @@ namespace Client.MirObjects
                     for (int y = 0; y < Height; y++)
                     {//14
                         MapCells[x, y] = new CellInfo();
-                        MapCells[x, y].BackImage = (short)BitConverter.ToInt16(Bytes, offset);
+                        MapCells[x, y].BackImage = BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
-                        MapCells[x, y].MiddleImage = (short)BitConverter.ToInt16(Bytes, offset);
+                        MapCells[x, y].MiddleImage = BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
-                        MapCells[x, y].FrontImage = (short)BitConverter.ToInt16(Bytes, offset);
+                        MapCells[x, y].FrontImage = BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
                         MapCells[x, y].DoorIndex = (byte)(Bytes[offset++] & 0x7F);
                         MapCells[x, y].DoorOffset = Bytes[offset++];
@@ -374,11 +374,11 @@ namespace Client.MirObjects
                     for (int y = 0; y < Height; y++)
                     {//36
                         MapCells[x, y] = new CellInfo();
-                        MapCells[x, y].BackImage = (short)BitConverter.ToInt16(Bytes, offset);
+                        MapCells[x, y].BackImage = BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
-                        MapCells[x, y].MiddleImage = (short)BitConverter.ToInt16(Bytes, offset);
+                        MapCells[x, y].MiddleImage = BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
-                        MapCells[x, y].FrontImage = (short)BitConverter.ToInt16(Bytes, offset);
+                        MapCells[x, y].FrontImage = BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
                         MapCells[x, y].DoorIndex = (byte)(Bytes[offset++] & 0x7F);
                         MapCells[x, y].DoorOffset = Bytes[offset++];
@@ -388,10 +388,10 @@ namespace Client.MirObjects
                         MapCells[x, y].Light = Bytes[offset++];
                         MapCells[x, y].BackIndex = (short)(Bytes[offset++] + 100);
                         MapCells[x, y].MiddleIndex = (short)(Bytes[offset++] + 110);
-                        MapCells[x, y].TileAnimationImage = (short)BitConverter.ToInt16(Bytes, offset);
+                        MapCells[x, y].TileAnimationImage = BitConverter.ToInt16(Bytes, offset);
                         offset += 7;//2bytes from tileanimframe, 2 bytes always blank?, 2bytes potentialy 'backtiles index', 1byte fileindex for the backtiles?
                         MapCells[x, y].TileAnimationFrames = Bytes[offset++];
-                        MapCells[x, y].TileAnimationOffset = (short)BitConverter.ToInt16(Bytes, offset);
+                        MapCells[x, y].TileAnimationOffset = BitConverter.ToInt16(Bytes, offset);
                         offset += 14; //tons of light, blending, .. related options i hope
                         if ((MapCells[x, y].BackImage & 0x8000) != 0)
                             MapCells[x, y].BackImage = (MapCells[x, y].BackImage & 0x7FFF) | 0x20000000;
@@ -431,7 +431,7 @@ namespace Client.MirObjects
                         offset += 2;
                         MapCells[x, y].MiddleImage = (short)(BitConverter.ToInt16(Bytes, offset) ^ xor);
                         offset += 2;
-                        MapCells[x, y].FrontImage = (short)(BitConverter.ToInt16(Bytes, offset) ^xor);
+                        MapCells[x, y].FrontImage = (short)(BitConverter.ToInt16(Bytes, offset) ^ xor);
                         offset += 2;
                         MapCells[x, y].DoorIndex = (byte)(Bytes[offset++] & 0x7F);
                         MapCells[x, y].DoorOffset = Bytes[offset++];
@@ -458,9 +458,9 @@ namespace Client.MirObjects
             {
                 byte flag = 0;
                 int offset = 20;
-                short Attribute = (short)(BitConverter.ToInt16(Bytes,offset));
-                Width = (int)(BitConverter.ToInt16(Bytes,offset+=2));
-                Height = (int)(BitConverter.ToInt16(Bytes, offset += 2));
+                short Attribute = BitConverter.ToInt16(Bytes, offset);
+                Width = BitConverter.ToInt16(Bytes, offset += 2);
+                Height = BitConverter.ToInt16(Bytes, offset += 2);
                 //ignoring eventfile and fogcolor for now (seems unused in maps i checked)
                 offset = 28;
                 //initiate all cells
@@ -469,37 +469,37 @@ namespace Client.MirObjects
                     for (int y = 0; y < Height; y++)
                         MapCells[x, y] = new CellInfo();
                 //read all back tiles
-                for (int x = 0; x < (Width/2); x++)
-                    for (int y = 0; y < (Height/2); y++)
+                for (int x = 0; x < (Width / 2); x++)
+                    for (int y = 0; y < (Height / 2); y++)
                     {
                         for (int i = 0; i < 4; i++)
                         {
-                            MapCells[(x * 2) + (i % 2), (y * 2) + (i / 2)].BackIndex = (short)(Bytes[offset] != 255? Bytes[offset]+200 : -1);
-                            MapCells[(x*2) + (i % 2), (y*2) + (i / 2)].BackImage = (int)(BitConverter.ToUInt16(Bytes, offset + 1)+1);
+                            MapCells[(x * 2) + (i % 2), (y * 2) + (i / 2)].BackIndex = (short)(Bytes[offset] != 255 ? Bytes[offset] + 200 : -1);
+                            MapCells[(x * 2) + (i % 2), (y * 2) + (i / 2)].BackImage = BitConverter.ToUInt16(Bytes, offset + 1) + 1;
                         }
                         offset += 3;
                     }
                 //read rest of data
-                offset = 28 + (3 * ((Width /2) + (Width %2)) * (Height / 2));
+                offset = 28 + (3 * ((Width / 2) + (Width % 2)) * (Height / 2));
                 for (int x = 0; x < Width; x++)
                     for (int y = 0; y < Height; y++)
                     {
-                        
+
                         flag = Bytes[offset++];
                         MapCells[x, y].MiddleAnimationFrame = Bytes[offset++];
 
-                        MapCells[x, y].FrontAnimationFrame = Bytes[offset] == 255? (byte)0 : Bytes[offset];
+                        MapCells[x, y].FrontAnimationFrame = Bytes[offset] == 255 ? (byte)0 : Bytes[offset];
                         MapCells[x, y].FrontAnimationFrame &= 0x8F;
                         offset++;
                         MapCells[x, y].MiddleAnimationTick = 0;
                         MapCells[x, y].FrontAnimationTick = 0;
-                        MapCells[x,y].FrontIndex = (short)(Bytes[offset] != 255 ? Bytes[offset] + 200 : -1);
+                        MapCells[x, y].FrontIndex = (short)(Bytes[offset] != 255 ? Bytes[offset] + 200 : -1);
                         offset++;
-                        MapCells[x,y].MiddleIndex = (short)(Bytes[offset] != 255 ? Bytes[offset] + 200 : -1);
+                        MapCells[x, y].MiddleIndex = (short)(Bytes[offset] != 255 ? Bytes[offset] + 200 : -1);
                         offset++;
-                        MapCells[x,y].MiddleImage = (ushort)(BitConverter.ToUInt16(Bytes,offset)+1);
+                        MapCells[x, y].MiddleImage = (ushort)(BitConverter.ToUInt16(Bytes, offset) + 1);
                         offset += 2;
-                        MapCells[x, y].FrontImage = (ushort)(BitConverter.ToUInt16(Bytes, offset)+1);
+                        MapCells[x, y].FrontImage = (ushort)(BitConverter.ToUInt16(Bytes, offset) + 1);
                         if ((MapCells[x, y].FrontImage == 1) && (MapCells[x, y].FrontIndex == 200))
                             MapCells[x, y].FrontIndex = -1;
                         offset += 2;
@@ -537,7 +537,7 @@ namespace Client.MirObjects
                     {
                         MapCells[x, y] = new CellInfo();
                         flag = Bytes[offset++];
-                        MapCells[x,y].BackIndex = (short)(Bytes[offset] != 255 ? Bytes[offset]+ 300 : -1);
+                        MapCells[x, y].BackIndex = (short)(Bytes[offset] != 255 ? Bytes[offset] + 300 : -1);
                         offset++;
                         MapCells[x, y].MiddleIndex = (short)(Bytes[offset] != 255 ? Bytes[offset] + 300 : -1);
                         offset++;
@@ -554,7 +554,7 @@ namespace Client.MirObjects
                         MapCells[x, y].MiddleAnimationFrame = Bytes[offset++];
                         MapCells[x, y].FrontAnimationFrame = Bytes[offset] == 255 ? (byte)0 : Bytes[offset];
                         if (MapCells[x, y].FrontAnimationFrame > 0x0F)//assuming shanda used same value not sure
-                            MapCells[x, y].FrontAnimationFrame = (byte)(/*0x80 ^*/ (MapCells[x, y].FrontAnimationFrame & 0x0F));
+                            MapCells[x, y].FrontAnimationFrame = (byte)/*0x80 ^*/ (MapCells[x, y].FrontAnimationFrame & 0x0F);
                         offset++;
                         MapCells[x, y].MiddleAnimationTick = 1;
                         MapCells[x, y].FrontAnimationTick = 1;
@@ -591,10 +591,10 @@ namespace Client.MirObjects
                         MapCells[x, y] = new CellInfo
                         {
                             BackIndex = 0,
-                            BackImage = (int)BitConverter.ToInt32(Bytes, offset),
+                            BackImage = BitConverter.ToInt32(Bytes, offset),
                             MiddleIndex = 1,
-                            MiddleImage = (short)BitConverter.ToInt16(Bytes, offset += 4),
-                            FrontImage = (short)BitConverter.ToInt16(Bytes, offset += 2),
+                            MiddleImage = BitConverter.ToInt16(Bytes, offset += 4),
+                            FrontImage = BitConverter.ToInt16(Bytes, offset += 2),
                             DoorIndex = (byte)(Bytes[offset += 2] & 0x7F),
                             DoorOffset = Bytes[++offset],
                             FrontAnimationFrame = Bytes[++offset],
@@ -619,10 +619,10 @@ namespace Client.MirObjects
 
         private void LoadMapType100()
         {
-            try 
-            { 
+            try
+            {
                 int offset = 4;
-                if ((Bytes[0]!= 1) || (Bytes[1] != 0)) return;//only support version 1 atm
+                if ((Bytes[0] != 1) || (Bytes[1] != 0)) return;//only support version 1 atm
                 Width = BitConverter.ToInt16(Bytes, offset);
                 offset += 2;
                 Height = BitConverter.ToInt16(Bytes, offset);
@@ -632,17 +632,17 @@ namespace Client.MirObjects
                     for (int y = 0; y < Height; y++)
                     {
                         MapCells[x, y] = new CellInfo();
-                        MapCells[x, y].BackIndex = (short)BitConverter.ToInt16(Bytes, offset);
+                        MapCells[x, y].BackIndex = BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
-                        MapCells[x, y].BackImage = (int)BitConverter.ToInt32(Bytes, offset);
+                        MapCells[x, y].BackImage = BitConverter.ToInt32(Bytes, offset);
                         offset += 4;
-                        MapCells[x, y].MiddleIndex = (short)BitConverter.ToInt16(Bytes, offset);
+                        MapCells[x, y].MiddleIndex = BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
-                        MapCells[x, y].MiddleImage = (short)BitConverter.ToInt16(Bytes, offset);
+                        MapCells[x, y].MiddleImage = BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
-                        MapCells[x, y].FrontIndex = (short)BitConverter.ToInt16(Bytes, offset);
+                        MapCells[x, y].FrontIndex = BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
-                        MapCells[x, y].FrontImage = (short)BitConverter.ToInt16(Bytes, offset);
+                        MapCells[x, y].FrontImage = BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
                         MapCells[x, y].DoorIndex = (byte)(Bytes[offset++] & 0x7F);
                         MapCells[x, y].DoorOffset = Bytes[offset++];
@@ -650,9 +650,9 @@ namespace Client.MirObjects
                         MapCells[x, y].FrontAnimationTick = Bytes[offset++];
                         MapCells[x, y].MiddleAnimationFrame = Bytes[offset++];
                         MapCells[x, y].MiddleAnimationTick = Bytes[offset++];
-                        MapCells[x, y].TileAnimationImage = (short)BitConverter.ToInt16(Bytes, offset);
+                        MapCells[x, y].TileAnimationImage = BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
-                        MapCells[x, y].TileAnimationOffset = (short)BitConverter.ToInt16(Bytes, offset);
+                        MapCells[x, y].TileAnimationOffset = BitConverter.ToInt16(Bytes, offset);
                         offset += 2;
                         MapCells[x, y].TileAnimationFrames = Bytes[offset++];
                         MapCells[x, y].Light = Bytes[offset++];

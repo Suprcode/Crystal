@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Forms;
 using Client.MirControls;
 using Client.MirGraphics;
@@ -9,7 +10,7 @@ using Client.MirNetwork;
 using Client.MirSounds;
 using C = ClientPackets;
 using S = ServerPackets;
-using System.Threading;
+
 namespace Client.MirScenes
 {
     public class SelectScene : MirScene
@@ -61,7 +62,7 @@ namespace Client.MirScenes
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter
             };
 
-            var xPoint = ((Settings.ScreenWidth - 200) / 5);
+            var xPoint = (Settings.ScreenWidth - 200) / 5;
 
             StartGameButton = new MirButton
             {
@@ -473,7 +474,7 @@ namespace Client.MirScenes
                 CharacterDisplay.Visible = true;
                 //CharacterDisplay.Index = ((byte)Characters[_selected].Class + 1) * 20 + (byte)Characters[_selected].Gender * 280; 
 
-                switch ((MirClass)Characters[_selected].Class)
+                switch (Characters[_selected].Class)
                 {
                     case MirClass.Warrior:
                         CharacterDisplay.Index = (byte)Characters[_selected].Gender == 0 ? 20 : 300; //220 : 500;

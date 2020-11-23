@@ -7,9 +7,14 @@ using System.Windows.Forms;
 using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirScenes;
-using Client.MirSounds;
 using Client.MirScenes.Dialogs;
-using SlimDX;
+using Client.MirSounds;
+using Client.Utils;
+using SharpDX;
+using SharpDX.Mathematics.Interop;
+using Color = System.Drawing.Color;
+using Point = System.Drawing.Point;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace Client.MirObjects
 {
@@ -35,7 +40,7 @@ namespace Client.MirObjects
 
         public bool Blend = true;
 
-        
+
 
         public byte PercentHealth;
         public long HealthTime;
@@ -55,12 +60,12 @@ namespace Client.MirObjects
         public long ChatTime;
         public int DrawFrame, DrawWingFrame;
         public Point DrawLocation, Movement, FinalDrawLocation, OffSetMove;
-        public Rectangle DisplayRectangle;
+        public System.Drawing.Rectangle DisplayRectangle;
         public int Light, DrawY;
         public long NextMotion, NextMotion2;
         public MirAction CurrentAction;
         public bool SkipFrames;
-        
+
         //Sound
         public int StruckWeapon;
 
@@ -114,7 +119,7 @@ namespace Client.MirObjects
             for (int i = 0; i < Effects.Count; i++)
             {
                 if (!(Effects[i] is BuffEffect)) continue;
-                if (((BuffEffect)(Effects[i])).BuffType == type) return;
+                if (((BuffEffect)Effects[i]).BuffType == type) return;
             }
 
             PlayerObject ob = null;
@@ -157,14 +162,14 @@ namespace Client.MirObjects
                     };
                     break;
                 case BuffType.MagicBooster:
-					Effects.Add(new BuffEffect(Libraries.Magic3, 90, 6, 1200, this, true, type) { Repeat = true });
+                    Effects.Add(new BuffEffect(Libraries.Magic3, 90, 6, 1200, this, true, type) { Repeat = true });
                     break;
                 case BuffType.PetEnhancer:
                     Effects.Add(new BuffEffect(Libraries.Magic3, 230, 6, 1200, this, true, type) { Repeat = true });
                     break;
-				case BuffType.GameMaster:
-					Effects.Add(new BuffEffect(Libraries.CHumEffect[5], 0, 1416, 1200, this, true, type) { Repeat = true });
-					break;
+                case BuffType.GameMaster:
+                    Effects.Add(new BuffEffect(Libraries.CHumEffect[5], 0, 1416, 1200, this, true, type) { Repeat = true });
+                    break;
             }
         }
         public void RemoveBuffEffect(BuffType type)
@@ -179,7 +184,7 @@ namespace Client.MirObjects
             for (int i = 0; i < Effects.Count; i++)
             {
                 if (!(Effects[i] is BuffEffect)) continue;
-                if (((BuffEffect)(Effects[i])).BuffType != type) continue;
+                if (((BuffEffect)Effects[i]).BuffType != type) continue;
                 Effects[i].Repeat = false;
             }
 
@@ -281,7 +286,7 @@ namespace Client.MirObjects
             CreateLabel();
 
             if (NameLabel == null) return;
-            
+
             NameLabel.Text = Name;
             NameLabel.Location = new Point(DisplayRectangle.X + (50 - NameLabel.Size.Width) / 2, DisplayRectangle.Y - (32 - NameLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
             NameLabel.Draw();
@@ -347,51 +352,51 @@ namespace Client.MirObjects
             {
                 if (Poison.HasFlag(PoisonType.Green))
                 {
-                    DXManager.Sprite.Draw(DXManager.PoisonDotBackground, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 7 + (poisoncount * 3)), (float)(DisplayRectangle.Y - 21), 0.0F), Color.Black);
-                    DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 8 + (poisoncount * 3)), (float)(DisplayRectangle.Y - 20), 0.0F), Color.Green);
+                    DXManager.Sprite.Draw(DXManager.PoisonDotBackground, SharpDX.Color.Black, new RawRectangle(0, 0, 2, 2), Vector3.Zero, new Vector3(DisplayRectangle.X + 7 + (poisoncount * 3), DisplayRectangle.Y - 21, 0.0F));
+                    DXManager.Sprite.Draw(DXManager.RadarTexture, SharpDX.Color.Green, new RawRectangle(0, 0, 2, 2), Vector3.Zero, new Vector3(DisplayRectangle.X + 8 + (poisoncount * 3), DisplayRectangle.Y - 20, 0.0F));
 
                     poisoncount++;
                 }
                 if (Poison.HasFlag(PoisonType.Red))
                 {
-                    DXManager.Sprite.Draw(DXManager.PoisonDotBackground, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 7 + (poisoncount * 3)), (float)(DisplayRectangle.Y - 21), 0.0F), Color.Black);
-                    DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 8 + (poisoncount * 3)), (float)(DisplayRectangle.Y - 20), 0.0F), Color.Red);
+                    DXManager.Sprite.Draw(DXManager.PoisonDotBackground, SharpDX.Color.Black, new RawRectangle(0, 0, 2, 2), Vector3.Zero, new Vector3(DisplayRectangle.X + 7 + (poisoncount * 3), DisplayRectangle.Y - 21, 0.0F));
+                    DXManager.Sprite.Draw(DXManager.RadarTexture, SharpDX.Color.Red, new RawRectangle(0, 0, 2, 2), Vector3.Zero, new Vector3(DisplayRectangle.X + 8 + (poisoncount * 3), DisplayRectangle.Y - 20, 0.0F));
                     poisoncount++;
                 }
                 if (Poison.HasFlag(PoisonType.Bleeding))
                 {
-                    DXManager.Sprite.Draw(DXManager.PoisonDotBackground, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 7 + (poisoncount * 3)), (float)(DisplayRectangle.Y - 21), 0.0F), Color.Black);
-                    DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 8 + (poisoncount * 3)), (float)(DisplayRectangle.Y - 20), 0.0F), Color.DarkRed);
+                    DXManager.Sprite.Draw(DXManager.PoisonDotBackground, SharpDX.Color.Black, new RawRectangle(0, 0, 2, 2), Vector3.Zero, new Vector3(DisplayRectangle.X + 7 + (poisoncount * 3), DisplayRectangle.Y - 21, 0.0F));
+                    DXManager.Sprite.Draw(DXManager.RadarTexture, SharpDX.Color.DarkRed, new RawRectangle(0, 0, 2, 2), Vector3.Zero, new Vector3(DisplayRectangle.X + 8 + (poisoncount * 3), DisplayRectangle.Y - 20, 0.0F));
                     poisoncount++;
                 }
                 if (Poison.HasFlag(PoisonType.Slow))
                 {
-                    DXManager.Sprite.Draw(DXManager.PoisonDotBackground, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 7 + (poisoncount * 3)), (float)(DisplayRectangle.Y - 21), 0.0F), Color.Black);
-                    DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 8 + (poisoncount * 3)), (float)(DisplayRectangle.Y - 20), 0.0F), Color.Purple);
+                    DXManager.Sprite.Draw(DXManager.PoisonDotBackground, SharpDX.Color.Black, new RawRectangle(0, 0, 2, 2), Vector3.Zero, new Vector3(DisplayRectangle.X + 7 + (poisoncount * 3), DisplayRectangle.Y - 21, 0.0F));
+                    DXManager.Sprite.Draw(DXManager.RadarTexture, SharpDX.Color.Purple, new RawRectangle(0, 0, 2, 2), Vector3.Zero, new Vector3(DisplayRectangle.X + 8 + (poisoncount * 3), DisplayRectangle.Y - 20, 0.0F));
                     poisoncount++;
                 }
                 if (Poison.HasFlag(PoisonType.Stun))
                 {
-                    DXManager.Sprite.Draw(DXManager.PoisonDotBackground, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 7 + (poisoncount * 3)), (float)(DisplayRectangle.Y - 21), 0.0F), Color.Black);
-                    DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 8 + (poisoncount * 3)), (float)(DisplayRectangle.Y - 20), 0.0F), Color.Yellow);
+                    DXManager.Sprite.Draw(DXManager.PoisonDotBackground, SharpDX.Color.Black, new RawRectangle(0, 0, 2, 2), Vector3.Zero, new Vector3(DisplayRectangle.X + 7 + (poisoncount * 3), DisplayRectangle.Y - 21, 0.0F));
+                    DXManager.Sprite.Draw(DXManager.RadarTexture, SharpDX.Color.Yellow, new RawRectangle(0, 0, 2, 2), Vector3.Zero, new Vector3(DisplayRectangle.X + 8 + (poisoncount * 3), DisplayRectangle.Y - 20, 0.0F));
                     poisoncount++;
                 }
                 if (Poison.HasFlag(PoisonType.Frozen))
                 {
-                    DXManager.Sprite.Draw(DXManager.PoisonDotBackground, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 7 + (poisoncount * 3)), (float)(DisplayRectangle.Y - 21), 0.0F), Color.Black);
-                    DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 8 + (poisoncount * 3)), (float)(DisplayRectangle.Y - 20), 0.0F), Color.Blue);
+                    DXManager.Sprite.Draw(DXManager.PoisonDotBackground, SharpDX.Color.Black, new RawRectangle(0, 0, 2, 2), Vector3.Zero, new Vector3(DisplayRectangle.X + 7 + (poisoncount * 3), DisplayRectangle.Y - 21, 0.0F));
+                    DXManager.Sprite.Draw(DXManager.RadarTexture, SharpDX.Color.Blue, new RawRectangle(0, 0, 2, 2), Vector3.Zero, new Vector3(DisplayRectangle.X + 8 + (poisoncount * 3), DisplayRectangle.Y - 20, 0.0F));
                     poisoncount++;
                 }
                 if (Poison.HasFlag(PoisonType.Paralysis) || Poison.HasFlag(PoisonType.LRParalysis))
                 {
-                    DXManager.Sprite.Draw(DXManager.PoisonDotBackground, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 7 + (poisoncount * 3)), (float)(DisplayRectangle.Y - 21), 0.0F), Color.Black);
-                    DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 8 + (poisoncount * 3)), (float)(DisplayRectangle.Y - 20), 0.0F), Color.Gray);
+                    DXManager.Sprite.Draw(DXManager.PoisonDotBackground, SharpDX.Color.Black, new RawRectangle(0, 0, 2, 2), Vector3.Zero, new Vector3(DisplayRectangle.X + 7 + (poisoncount * 3), DisplayRectangle.Y - 21, 0.0F));
+                    DXManager.Sprite.Draw(DXManager.RadarTexture, SharpDX.Color.Gray, new RawRectangle(0, 0, 2, 2), Vector3.Zero, new Vector3(DisplayRectangle.X + 8 + (poisoncount * 3), DisplayRectangle.Y - 20, 0.0F));
                     poisoncount++;
                 }
                 if (Poison.HasFlag(PoisonType.DelayedExplosion))
                 {
-                    DXManager.Sprite.Draw(DXManager.PoisonDotBackground, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 7 + (poisoncount * 3)), (float)(DisplayRectangle.Y - 21), 0.0F), Color.Black);
-                    DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 8 + (poisoncount * 3)), (float)(DisplayRectangle.Y - 20), 0.0F), Color.Orange);
+                    DXManager.Sprite.Draw(DXManager.PoisonDotBackground, SharpDX.Color.Black, new RawRectangle(0, 0, 2, 2), Vector3.Zero, new Vector3(DisplayRectangle.X + 7 + (poisoncount * 3), DisplayRectangle.Y - 21, 0.0F));
+                    DXManager.Sprite.Draw(DXManager.RadarTexture, SharpDX.Color.Orange, new RawRectangle(0, 0, 2, 2), Vector3.Zero, new Vector3(DisplayRectangle.X + 8 + (poisoncount * 3), DisplayRectangle.Y - 20, 0.0F));
                     poisoncount++;
                 }
             }

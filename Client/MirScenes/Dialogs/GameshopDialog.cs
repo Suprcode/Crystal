@@ -1,14 +1,14 @@
-﻿using Client.MirControls;
-using Client.MirGraphics;
-using Client.MirNetwork;
-using Client.MirSounds;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Client.MirControls;
+using Client.MirGraphics;
+using Client.MirNetwork;
+using Client.MirSounds;
 using C = ClientPackets;
 
 namespace Client.MirScenes.Dialogs
@@ -683,11 +683,11 @@ namespace Client.MirScenes.Dialogs
             }
 
 
-            maxPage = ((decimal)filteredShop.Count / 8);
+            maxPage = (decimal)filteredShop.Count / 8;
             maxPage = Math.Ceiling(maxPage);
             if (maxPage < 1) maxPage = 1;
 
-            PageNumberLabel.Text = (Page + 1) + " / " + maxPage;
+            PageNumberLabel.Text = Page + 1 + " / " + maxPage;
 
             int maxIndex = filteredShop.Count - 1;
 

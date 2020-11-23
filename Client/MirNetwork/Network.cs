@@ -29,7 +29,7 @@ namespace Client.MirNetwork
 
             ConnectAttempt++;
 
-            _client = new TcpClient {NoDelay = true};
+            _client = new TcpClient { NoDelay = true };
             _client.BeginConnect(Settings.IPAddress, Settings.Port, Connection, null);
 
         }
@@ -125,7 +125,7 @@ namespace Client.MirNetwork
         private static void BeginSend(List<byte> data)
         {
             if (_client == null || !_client.Connected || data.Count == 0) return;
-            
+
             try
             {
                 _client.Client.BeginSend(data.ToArray(), 0, data.Count, SocketFlags.None, SendData, null);
@@ -217,7 +217,7 @@ namespace Client.MirNetwork
 
             BeginSend(data);
         }
-        
+
         public static void Enqueue(Packet p)
         {
             if (_sendList != null && p != null)

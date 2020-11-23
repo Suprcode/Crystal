@@ -109,7 +109,7 @@ namespace Client.MirObjects
             ExpandedStorageExpiryTime = info.ExpandedStorageExpiryTime;
 
             Magics = info.Magics;
-            for (int i = 0; i < Magics.Count; i++ )
+            for (int i = 0; i < Magics.Count; i++)
             {
                 if (Magics[i].CastTime > 0)
                     Magics[i].CastTime = CMain.Time - Magics[i].CastTime;
@@ -164,9 +164,9 @@ namespace Client.MirObjects
 
             SetLibraries();
             SetEffects();
-            
+
             if (this == User && Light < 3) Light = 3;
-            AttackSpeed = 1400 - ((ASpeed * 60) + Math.Min(370, (Level * 14)));
+            AttackSpeed = 1400 - ((ASpeed * 60) + Math.Min(370, Level * 14));
             if (AttackSpeed < 550) AttackSpeed = 550;
 
             PercentHealth = (byte)(HP / (float)MaxHP * 100);
@@ -235,13 +235,13 @@ namespace Client.MirObjects
                     MaxMP = (ushort)Math.Min(ushort.MaxValue, 13 + ((Level / 5F + 2F) * 2.2F * Level) + (Level * CoreStats.MpGainRate));
                     break;
                 case MirClass.Taoist:
-                    MaxMP = (ushort)Math.Min(ushort.MaxValue, (13 + Level / 8F * 2.2F * Level) + (Level * CoreStats.MpGainRate));
+                    MaxMP = (ushort)Math.Min(ushort.MaxValue, 13 + Level / 8F * 2.2F * Level + (Level * CoreStats.MpGainRate));
                     break;
                 case MirClass.Assassin:
-                    MaxMP = (ushort)Math.Min(ushort.MaxValue, (11 + Level * 5F) + (Level * CoreStats.MpGainRate));
+                    MaxMP = (ushort)Math.Min(ushort.MaxValue, 11 + Level * 5F + (Level * CoreStats.MpGainRate));
                     break;
                 case MirClass.Archer:
-                    MaxMP = (ushort)Math.Min(ushort.MaxValue, (11 + Level * 4F) + (Level * CoreStats.MpGainRate));
+                    MaxMP = (ushort)Math.Min(ushort.MaxValue, 11 + Level * 4F + (Level * CoreStats.MpGainRate));
                     break;
             }
         }
@@ -259,8 +259,8 @@ namespace Client.MirObjects
         private void RefreshEquipmentStats()
         {
             Weapon = -1;
-			WeaponEffect = 0;
-			Armour = 0;
+            WeaponEffect = 0;
+            Armour = 0;
             WingEffect = 0;
             MountType = -1;
 
@@ -313,30 +313,30 @@ namespace Client.MirObjects
                 MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + RealItem.HP + temp.HP + temp.Awake.GetHPMP());
                 MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + RealItem.MP + temp.MP + temp.Awake.GetHPMP());
 
-                ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + temp.AttackSpeed + RealItem.AttackSpeed)));
-                Luck = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, Luck + temp.Luck + RealItem.Luck)));
+                ASpeed = (sbyte)Math.Max(sbyte.MinValue, Math.Min(sbyte.MaxValue, ASpeed + temp.AttackSpeed + RealItem.AttackSpeed));
+                Luck = (sbyte)Math.Max(sbyte.MinValue, Math.Min(sbyte.MaxValue, Luck + temp.Luck + RealItem.Luck));
 
-                MaxBagWeight = (ushort)Math.Max(ushort.MinValue, (Math.Min(ushort.MaxValue, MaxBagWeight + RealItem.BagWeight)));
-                MaxWearWeight = (ushort)Math.Max(ushort.MinValue, (Math.Min(ushort.MaxValue, MaxWearWeight + RealItem.WearWeight)));
-                MaxHandWeight = (ushort)Math.Max(ushort.MinValue, (Math.Min(ushort.MaxValue, MaxHandWeight + RealItem.HandWeight)));
+                MaxBagWeight = (ushort)Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, MaxBagWeight + RealItem.BagWeight));
+                MaxWearWeight = (ushort)Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, MaxWearWeight + RealItem.WearWeight));
+                MaxHandWeight = (ushort)Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, MaxHandWeight + RealItem.HandWeight));
                 HPrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, HPrate + RealItem.HPrate));
                 MPrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, MPrate + RealItem.MPrate));
                 Acrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, Acrate + RealItem.MaxAcRate));
                 Macrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, Macrate + RealItem.MaxMacRate));
-                MagicResist = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, MagicResist + temp.MagicResist + RealItem.MagicResist)));
-                PoisonResist = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonResist + temp.PoisonResist + RealItem.PoisonResist)));
-                HealthRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, HealthRecovery + temp.HealthRecovery + RealItem.HealthRecovery)));
-                SpellRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, SpellRecovery + temp.ManaRecovery + RealItem.SpellRecovery)));
-                PoisonRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonRecovery + temp.PoisonRecovery + RealItem.PoisonRecovery)));
-                CriticalRate = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, CriticalRate + temp.CriticalRate + RealItem.CriticalRate)));
-                CriticalDamage = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, CriticalDamage + temp.CriticalDamage + RealItem.CriticalDamage)));
-                Holy = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Holy + RealItem.Holy)));
-                Freezing = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Freezing + temp.Freezing + RealItem.Freezing)));
-                PoisonAttack = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonAttack + temp.PoisonAttack + RealItem.PoisonAttack)));
+                MagicResist = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, MagicResist + temp.MagicResist + RealItem.MagicResist));
+                PoisonResist = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, PoisonResist + temp.PoisonResist + RealItem.PoisonResist));
+                HealthRecovery = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, HealthRecovery + temp.HealthRecovery + RealItem.HealthRecovery));
+                SpellRecovery = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, SpellRecovery + temp.ManaRecovery + RealItem.SpellRecovery));
+                PoisonRecovery = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, PoisonRecovery + temp.PoisonRecovery + RealItem.PoisonRecovery));
+                CriticalRate = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, CriticalRate + temp.CriticalRate + RealItem.CriticalRate));
+                CriticalDamage = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, CriticalDamage + temp.CriticalDamage + RealItem.CriticalDamage));
+                Holy = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, Holy + RealItem.Holy));
+                Freezing = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, Freezing + temp.Freezing + RealItem.Freezing));
+                PoisonAttack = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, PoisonAttack + temp.PoisonAttack + RealItem.PoisonAttack));
                 HpDrainRate = (byte)Math.Max(100, Math.Min(byte.MaxValue, HpDrainRate + RealItem.HpDrainRate));
 
 
-                
+
                 if (RealItem.Light > Light) Light = RealItem.Light;
                 if (RealItem.Unique != SpecialItemMode.None)
                 {
@@ -363,13 +363,13 @@ namespace Client.MirObjects
                     Armour = RealItem.Shape;
                     WingEffect = RealItem.Effect;
                 }
-				if (RealItem.Type == ItemType.Weapon)
-				{
-					Weapon = RealItem.Shape;
-					WeaponEffect = RealItem.Effect;
-				}
+                if (RealItem.Type == ItemType.Weapon)
+                {
+                    Weapon = RealItem.Shape;
+                    WeaponEffect = RealItem.Effect;
+                }
 
-				if (RealItem.Type == ItemType.Mount)
+                if (RealItem.Type == ItemType.Mount)
                     MountType = RealItem.Shape;
 
                 if (RealItem.Set == ItemSet.None) continue;
@@ -456,27 +456,27 @@ namespace Client.MirObjects
                 MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + RealItem.HP + temp.HP);
                 MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + RealItem.MP + temp.MP);
 
-                ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + temp.AttackSpeed + RealItem.AttackSpeed)));
-                Luck = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, Luck + temp.Luck + RealItem.Luck)));
+                ASpeed = (sbyte)Math.Max(sbyte.MinValue, Math.Min(sbyte.MaxValue, ASpeed + temp.AttackSpeed + RealItem.AttackSpeed));
+                Luck = (sbyte)Math.Max(sbyte.MinValue, Math.Min(sbyte.MaxValue, Luck + temp.Luck + RealItem.Luck));
 
-                MaxBagWeight = (ushort)Math.Max(ushort.MinValue, (Math.Min(ushort.MaxValue, MaxBagWeight + RealItem.BagWeight)));
-                MaxWearWeight = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, MaxWearWeight + RealItem.WearWeight)));
-                MaxHandWeight = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, MaxHandWeight + RealItem.HandWeight)));
+                MaxBagWeight = (ushort)Math.Max(ushort.MinValue, Math.Min(ushort.MaxValue, MaxBagWeight + RealItem.BagWeight));
+                MaxWearWeight = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, MaxWearWeight + RealItem.WearWeight));
+                MaxHandWeight = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, MaxHandWeight + RealItem.HandWeight));
                 HPrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, HPrate + RealItem.HPrate));
                 MPrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, MPrate + RealItem.MPrate));
                 Acrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, Acrate + RealItem.MaxAcRate));
                 Macrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, Macrate + RealItem.MaxMacRate));
-                MagicResist = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, MagicResist + RealItem.MagicResist)));
-                PoisonResist = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonResist + RealItem.PoisonResist)));
-                HealthRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, HealthRecovery + RealItem.HealthRecovery)));
-                SpellRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, SpellRecovery + RealItem.SpellRecovery)));
-                PoisonRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonRecovery + RealItem.PoisonRecovery)));
-                CriticalRate = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, CriticalRate + RealItem.CriticalRate)));
-                CriticalDamage = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, CriticalDamage + RealItem.CriticalDamage)));
+                MagicResist = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, MagicResist + RealItem.MagicResist));
+                PoisonResist = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, PoisonResist + RealItem.PoisonResist));
+                HealthRecovery = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, HealthRecovery + RealItem.HealthRecovery));
+                SpellRecovery = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, SpellRecovery + RealItem.SpellRecovery));
+                PoisonRecovery = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, PoisonRecovery + RealItem.PoisonRecovery));
+                CriticalRate = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, CriticalRate + RealItem.CriticalRate));
+                CriticalDamage = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, CriticalDamage + RealItem.CriticalDamage));
 
-                Holy = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Holy + RealItem.Holy)));
-                Freezing = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Freezing + RealItem.Freezing)));
-                PoisonAttack = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonAttack + RealItem.PoisonAttack)));
+                Holy = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, Holy + RealItem.Holy));
+                Freezing = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, Freezing + RealItem.Freezing));
+                PoisonAttack = (byte)Math.Max(byte.MinValue, Math.Min(byte.MaxValue, PoisonAttack + RealItem.PoisonAttack));
                 HpDrainRate = (byte)Math.Max(100, Math.Min(byte.MaxValue, HpDrainRate + RealItem.HpDrainRate));
 
 
@@ -500,24 +500,24 @@ namespace Client.MirObjects
         {
             foreach (var s in ItemSets)
             {
-                if ((s.Set == ItemSet.Smash) && 
+                if ((s.Set == ItemSet.Smash) &&
                     ((s.Type.Contains(ItemType.Ring) && s.Type.Contains(ItemType.Bracelet)) || (s.Type.Contains(ItemType.Ring) && s.Type.Contains(ItemType.Necklace)) || (s.Type.Contains(ItemType.Bracelet) && s.Type.Contains(ItemType.Necklace))))
                 {
                     ASpeed = (sbyte)Math.Min(sbyte.MaxValue, ASpeed + 2);
                 }
 
-                if ((s.Set == ItemSet.Purity) && (s.Type.Contains(ItemType.Ring)) && (s.Type.Contains(ItemType.Bracelet)))
+                if ((s.Set == ItemSet.Purity) && s.Type.Contains(ItemType.Ring) && s.Type.Contains(ItemType.Bracelet))
                 {
                     Holy = Math.Min(byte.MaxValue, (byte)(Holy + 3));
                 }
 
-                if ((s.Set == ItemSet.HwanDevil) && (s.Type.Contains(ItemType.Ring)) && (s.Type.Contains(ItemType.Bracelet)))
+                if ((s.Set == ItemSet.HwanDevil) && s.Type.Contains(ItemType.Ring) && s.Type.Contains(ItemType.Bracelet))
                 {
                     MaxWearWeight = (ushort)Math.Min(ushort.MaxValue, MaxWearWeight + 5);
                     MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 20);
                 }
 
-                if ((s.Set == ItemSet.DarkGhost) && (s.Type.Contains(ItemType.Necklace)) && (s.Type.Contains(ItemType.Bracelet)))
+                if ((s.Set == ItemSet.DarkGhost) && s.Type.Contains(ItemType.Necklace) && s.Type.Contains(ItemType.Bracelet))
                 {
                     MaxHP = Math.Min(byte.MaxValue, (byte)(MaxHP + 25));
                 }
@@ -556,7 +556,7 @@ namespace Client.MirObjects
                         MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + 2);
                         break;
                     case ItemSet.FiveString:
-                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + ((MaxHP / 100) * 30));
+                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + (MaxHP / 100 * 30));
                         MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + 2);
                         MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + 2);
                         break;
@@ -763,7 +763,7 @@ namespace Client.MirObjects
                 {
                     case BuffType.Haste:
                     case BuffType.Fury:
-                        ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0])));
+                        ASpeed = (sbyte)Math.Max(sbyte.MinValue, Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0]));
                         break;
                     case BuffType.ImmortalSkin:
                         MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
@@ -808,15 +808,15 @@ namespace Client.MirObjects
                         MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + buff.Values[0]);
                         break;
                     case BuffType.Curse:
-                        ushort rMaxDC = (ushort)(((int)MaxDC / 100) * buff.Values[0]);
-                        ushort rMaxMC = (ushort)(((int)MaxMC / 100) * buff.Values[0]);
-                        ushort rMaxSC = (ushort)(((int)MaxSC / 100) * buff.Values[0]);
-                        byte rASpeed = (byte)(((int)ASpeed / 100) * buff.Values[0]);
+                        ushort rMaxDC = (ushort)(MaxDC / 100 * buff.Values[0]);
+                        ushort rMaxMC = (ushort)(MaxMC / 100 * buff.Values[0]);
+                        ushort rMaxSC = (ushort)(MaxSC / 100 * buff.Values[0]);
+                        byte rASpeed = (byte)(ASpeed / 100 * buff.Values[0]);
 
                         MaxDC = (ushort)Math.Max(ushort.MinValue, MaxDC - rMaxDC);
                         MaxMC = (ushort)Math.Max(ushort.MinValue, MaxMC - rMaxMC);
                         MaxSC = (ushort)Math.Max(ushort.MinValue, MaxSC - rMaxSC);
-                        ASpeed = (sbyte)Math.Min(sbyte.MaxValue, (Math.Max(sbyte.MinValue, ASpeed - rASpeed)));
+                        ASpeed = (sbyte)Math.Min(sbyte.MaxValue, Math.Max(sbyte.MinValue, ASpeed - rASpeed));
                         break;
                     case BuffType.MagicBooster:
                         MinMC = (ushort)Math.Min(ushort.MaxValue, MinMC + buff.Values[0]);
@@ -841,7 +841,7 @@ namespace Client.MirObjects
                         MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + buff.Values[0]);
                         break;
                     case BuffType.Storm:
-                        ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0])));
+                        ASpeed = (sbyte)Math.Max(sbyte.MinValue, Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0]));
                         break;
                     case BuffType.HealthAid:
                         MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + buff.Values[0]);
@@ -873,7 +873,7 @@ namespace Client.MirObjects
                                 MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + buff.Values[1]);
                                 break;
                             case 6:
-                                ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[1])));
+                                ASpeed = (sbyte)Math.Max(sbyte.MinValue, Math.Min(sbyte.MaxValue, ASpeed + buff.Values[1]));
                                 break;
                         }
                         break;
@@ -892,7 +892,7 @@ namespace Client.MirObjects
                 if (Buff == null) continue;
                 if (!Buff.Active) continue;
                 if (Buff.Info == null)
-                Buff.Info = GameScene.Scene.GuildDialog.FindGuildBuffInfo(Buff.Id);
+                    Buff.Info = GameScene.Scene.GuildDialog.FindGuildBuffInfo(Buff.Id);
                 if (Buff.Info == null) continue;
                 MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + Buff.Info.BuffAc);
                 MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + Buff.Info.BuffMac);
@@ -989,7 +989,7 @@ namespace Client.MirObjects
 
             if (CurrentBagWeight + item.Weight > MaxBagWeight)
             {
-                item.Count = (uint)(Math.Max((MaxBagWeight - CurrentBagWeight), uint.MinValue) / item.Info.Weight);
+                item.Count = (uint)(Math.Max(MaxBagWeight - CurrentBagWeight, uint.MinValue) / item.Info.Weight);
                 max = item.Count;
                 if (item.Count == 0)
                 {
@@ -1045,7 +1045,7 @@ namespace Client.MirObjects
 
         public override void SetAction()
         {
-            if (QueuedAction != null )
+            if (QueuedAction != null)
             {
                 if ((ActionFeed.Count == 0) || (ActionFeed.Count == 1 && NextAction.Action == MirAction.Stance))
                 {
@@ -1074,7 +1074,7 @@ namespace Client.MirObjects
             NextMagicDirection = 0;
             NextMagicLocation = Point.Empty;
             NextMagicObject = null;
-        } 
+        }
     }
 }
 

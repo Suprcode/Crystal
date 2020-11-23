@@ -143,13 +143,13 @@ namespace Client.MirControls
             Sound = SoundList.ButtonB;
 
             _label = new MirLabel
-                {
-                    NotControl = true,
-                    Parent = this,
-                    //Font = new Font("Constantia", 8, FontStyle.Italic),
-                    //OutLine = true,
-                    //OutLineColour = Color.FromArgb(255, 70, 50, 30),
-                };
+            {
+                NotControl = true,
+                Parent = this,
+                //Font = new Font("Constantia", 8, FontStyle.Italic),
+                //OutLine = true,
+                //OutLineColour = Color.FromArgb(255, 70, 50, 30),
+            };
         }
 
         protected override void Highlight()

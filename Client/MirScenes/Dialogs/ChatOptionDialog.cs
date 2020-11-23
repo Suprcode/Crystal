@@ -1,10 +1,10 @@
-﻿using Client.MirControls;
-using Client.MirGraphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Drawing;
+using Client.MirControls;
+using Client.MirGraphics;
 using Client.MirSounds;
 
 namespace Client.MirScenes.Dialogs
@@ -243,13 +243,13 @@ namespace Client.MirScenes.Dialogs
             SystemButton.Index = Settings.FilterSystemChat ? 2084 : 2085;
             LoverButton.Index = Settings.FilterLoverChat ? 2076 : 2077;
             MentorButton.Index = Settings.FilterMentorChat ? 2078 : 2079;
-            GroupButton.Index = Settings.FilterGroupChat ? 2080 : 2081; 
+            GroupButton.Index = Settings.FilterGroupChat ? 2080 : 2081;
             GuildButton.Index = Settings.FilterGuildChat ? 2082 : 2083;
         }
 
         private void SwitchTab(int tab = 0)
         {
-            if(tab == 0)
+            if (tab == 0)
             {
                 FilterTabButton.Index = 463;
                 FilterTabButton.PressedIndex = 462;
@@ -272,7 +272,7 @@ namespace Client.MirScenes.Dialogs
                 TransparencyOffButton.Visible = false;
                 TransparencyOnButton.Visible = false;
             }
-            else if(tab == 1)
+            else if (tab == 1)
             {
                 FilterTabButton.Index = 462;
                 FilterTabButton.PressedIndex = 463;
@@ -299,9 +299,9 @@ namespace Client.MirScenes.Dialogs
 
         private void CheckAllFilters()
         {
-            if (!Settings.FilterNormalChat && !Settings.FilterWhisperChat 
+            if (!Settings.FilterNormalChat && !Settings.FilterWhisperChat
                 && !Settings.FilterShoutChat && !Settings.FilterSystemChat
-                && !Settings.FilterLoverChat && !Settings.FilterMentorChat 
+                && !Settings.FilterLoverChat && !Settings.FilterMentorChat
                 && !Settings.FilterGroupChat && !Settings.FilterGuildChat)
             {
                 AllFiltersOff = true;
@@ -315,7 +315,7 @@ namespace Client.MirScenes.Dialogs
         }
         private void ToggleAllFilters()
         {
-            if(AllFiltersOff)
+            if (AllFiltersOff)
             {
                 //turn all filters on
                 Settings.FilterNormalChat = true;

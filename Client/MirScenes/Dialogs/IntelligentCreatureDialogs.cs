@@ -1,14 +1,14 @@
-﻿using Client.MirControls;
-using Client.MirGraphics;
-using Client.MirNetwork;
-using Client.MirSounds;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Client.MirControls;
+using Client.MirGraphics;
+using Client.MirNetwork;
+using Client.MirSounds;
 using C = ClientPackets;
 
 namespace Client.MirScenes.Dialogs
@@ -161,7 +161,7 @@ namespace Client.MirScenes.Dialogs
                     offsetX = (i - 5) * 81;
                     offsetY += 40;
                 }
-                CreatureButtons[i] = new CreatureButton { idx = i, Parent = this, Visible = false, Location = new Point((44 + offsetX), offsetY) };
+                CreatureButtons[i] = new CreatureButton { idx = i, Parent = this, Visible = false, Location = new Point(44 + offsetX, offsetY) };
             }
             #endregion
 
@@ -366,7 +366,7 @@ namespace Client.MirScenes.Dialogs
 
             Rectangle section = new Rectangle
             {
-                Size = new Size((int)((FullnessFG.Size.Width) * percent), FullnessFG.Size.Height)
+                Size = new Size((int)(FullnessFG.Size.Width * percent), FullnessFG.Size.Height)
             };
 
             FullnessFG.Library.Draw(FullnessFG.Index, section, FullnessFG.DisplayLocation, Color.White, false);
@@ -375,7 +375,7 @@ namespace Client.MirScenes.Dialogs
             FullnessNow.Location = new Point(FullnessFG.Location.X + section.Size.Width - 8, FullnessNow.Location.Y);
 
             percent = GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.MinimalFullness / ((double)10000);
-            Size size = new Size((int)((FullnessFG.Size.Width) * percent), FullnessFG.Size.Height);
+            Size size = new Size((int)(FullnessFG.Size.Width * percent), FullnessFG.Size.Height);
 
             FullnessMin.Location = new Point(FullnessFG.Location.X + size.Width - 8, FullnessMin.Location.Y);
         }
@@ -398,7 +398,7 @@ namespace Client.MirScenes.Dialogs
 
             Rectangle section = new Rectangle
             {
-                Size = new Size((int)((BlackStoneImageFG.Size.Width) * percent), BlackStoneImageFG.Size.Height)
+                Size = new Size((int)(BlackStoneImageFG.Size.Width * percent), BlackStoneImageFG.Size.Height)
             };
 
             BlackStoneImageFG.Library.Draw(BlackStoneImageFG.Index, section, BlackStoneImageFG.DisplayLocation, Color.White, false);
@@ -414,7 +414,7 @@ namespace Client.MirScenes.Dialogs
                 HoverLabel.Visible = true;
                 HoverLabel.Text = "Needed " + GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.MinimalFullness.ToString();
                 HoverLabel.Size = new Size(150, 15);
-                HoverLabel.Location = new Point((FullnessMin.Location.X + 8) - (HoverLabel.Size.Width / 2), FullnessFG.Location.Y - 18);
+                HoverLabel.Location = new Point(FullnessMin.Location.X + 8 - (HoverLabel.Size.Width / 2), FullnessFG.Location.Y - 18);
             }
             if (sender == FullnessFG || sender == FullnessBG)
             {
@@ -1126,7 +1126,7 @@ namespace Client.MirScenes.Dialogs
             for (int i = 0; i < CreatureOptions.Length; i++)
             {
                 int offsetY = i * 30;
-                CreatureOptions[i] = new MirCheckBox { Index = 2086, UnTickedIndex = 2086, TickedIndex = 2087, Parent = this, Location = new Point(16, (16 + offsetY)), Library = Libraries.Prguse };
+                CreatureOptions[i] = new MirCheckBox { Index = 2086, UnTickedIndex = 2086, TickedIndex = 2087, Parent = this, Location = new Point(16, 16 + offsetY), Library = Libraries.Prguse };
                 CreatureOptions[i].LabelText = OptionNames[i];
                 CreatureOptions[i].Click += CheckBoxClick;
             }
@@ -1309,7 +1309,7 @@ namespace Client.MirScenes.Dialogs
             }
 
             GradeLabel.Text = GradeStrings[SelectedGrade];
-            GradeType = (ItemGrade)((byte)SelectedGrade);
+            GradeType = (ItemGrade)(byte)SelectedGrade;
 
             GradeLabel.ForeColour = GradeNameColor(GradeType);
         }
@@ -1349,7 +1349,7 @@ namespace Client.MirScenes.Dialogs
 
         public void RefreshGradeFilter()
         {
-            SelectedGrade = (int)((byte)GradeType);
+            SelectedGrade = (byte)GradeType;
             GradeLabel.Text = GradeStrings[SelectedGrade];
             GradeLabel.ForeColour = GradeNameColor(GradeType);
         }

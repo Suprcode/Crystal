@@ -1,15 +1,15 @@
-﻿using Client.MirControls;
-using Client.MirGraphics;
-using Client.MirNetwork;
-using Client.MirObjects;
-using Client.MirSounds;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Client.MirControls;
+using Client.MirGraphics;
+using Client.MirNetwork;
+using Client.MirObjects;
+using Client.MirSounds;
 using C = ClientPackets;
 
 namespace Client.MirScenes.Dialogs
@@ -46,7 +46,7 @@ namespace Client.MirScenes.Dialogs
                 GroupMembers[i] = new MirLabel
                 {
                     AutoSize = true,
-                    Location = new Point(((i + 1) % 2) * 100 + 16, 55 + ((i - 1) / 2) * 20),
+                    Location = new Point((i + 1) % 2 * 100 + 16, 55 + (i - 1) / 2 * 20),
                     Parent = this,
                     NotControl = true,
                 };

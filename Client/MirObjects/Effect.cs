@@ -47,7 +47,7 @@ namespace Client.MirObjects
             Duration = duration;
             Start = starttime == 0 ? CMain.Time : starttime;
 
-            NextFrame = Start + (Duration / Count) * (CurrentFrame + 1);
+            NextFrame = Start + Duration / Count * (CurrentFrame + 1);
             Owner = owner;
             Source = Owner.CurrentLocation;
 
@@ -61,7 +61,7 @@ namespace Client.MirObjects
             Duration = duration;
             Start = starttime == 0 ? CMain.Time : starttime;
 
-            NextFrame = Start + (Duration / Count) * (CurrentFrame + 1);
+            NextFrame = Start + Duration / Count * (CurrentFrame + 1);
             Source = source;
 
             DrawBehind = drawBehind;
@@ -71,7 +71,7 @@ namespace Client.MirObjects
         {
             Start = start;
 
-            NextFrame = Start + (Duration / Count) * (CurrentFrame + 1);
+            NextFrame = Start + Duration / Count * (CurrentFrame + 1);
         }
 
         public virtual void Process()
@@ -91,12 +91,12 @@ namespace Client.MirObjects
                 {
                     CurrentFrame = 0;
                     Start = CMain.Time + Delay;
-                    NextFrame = Start + (Duration / Count) * (CurrentFrame + 1);
+                    NextFrame = Start + Duration / Count * (CurrentFrame + 1);
                 }
                 else
                     Remove();
             }
-            else NextFrame = Start + (Duration / Count) * (CurrentFrame + 1);
+            else NextFrame = Start + Duration / Count * (CurrentFrame + 1);
 
             GameScene.Scene.MapControl.TextureValid = false;
 

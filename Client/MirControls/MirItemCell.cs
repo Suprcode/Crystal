@@ -5,8 +5,8 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirScenes;
-using Client.MirSounds;
 using Client.MirScenes.Dialogs;
+using Client.MirSounds;
 using C = ClientPackets;
 
 namespace Client.MirControls
@@ -206,7 +206,7 @@ namespace Client.MirControls
             if (GameScene.SelectedCell == null && (GridType == MirGridType.Mail)) return;
 
             base.OnMouseClick(e);
-            
+
             Redraw();
 
             switch (e.Button)
@@ -274,7 +274,7 @@ namespace Client.MirControls
                             }
                         }
                     }
-                    
+
                     //Add support for ALT + click to sell quickly
                     else if (CMain.Alt && GameScene.Scene.NPCDropDialog.Visible && GridType == MirGridType.Inventory) // alt sell/repair
                     {
@@ -283,7 +283,7 @@ namespace Client.MirControls
                         GameScene.Scene.NPCDropDialog.ConfirmButton.OnMouseClick(e); //emulate OK to confirm trade
                     }
                     //Add support for ALT + click to sell quickly
-                    
+
                     else MoveItem();
                     break;
             }
@@ -1034,7 +1034,7 @@ namespace Client.MirControls
                                     GameScene.Scene.NPCAwakeDialog.ItemCell_Click();
                                 GameScene.SelectedCell = null;
                                 break;
-                             #endregion
+                            #endregion
 
                             #region From Refine
                             case MirGridType.Refine: //From AwakenItem
@@ -1268,8 +1268,8 @@ namespace Client.MirControls
                                 GameScene.SelectedCell.Locked = true;
                                 GameScene.SelectedCell = null;
                                 return;
-                            #endregion
-                            
+                                #endregion
+
                         }
                         break;
 
@@ -1280,20 +1280,20 @@ namespace Client.MirControls
                         {
                             case MirGridType.GuildStorage: //From Guild Storage
                                 if (GameScene.SelectedCell.GridType == MirGridType.GuildStorage)
-                                {                                    
+                                {
                                     if (!GuildDialog.MyOptions.HasFlag(GuildRankOptions.CanStoreItem))
                                     {
                                         GameScene.Scene.ChatDialog.ReceiveChat("Insufficient rights to store items.", ChatType.System);
                                         return;
                                     }
-                                       
+
                                     //if (ItemArray[ItemSlot] == null)
                                     //{
-                                        Network.Enqueue(new C.GuildStorageItemChange { Type = 2, From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
-                                        Locked = true;
-                                        GameScene.SelectedCell.Locked = true;
-                                        GameScene.SelectedCell = null;
-                                        return;
+                                    Network.Enqueue(new C.GuildStorageItemChange { Type = 2, From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
+                                    Locked = true;
+                                    GameScene.SelectedCell.Locked = true;
+                                    GameScene.SelectedCell = null;
+                                    return;
                                     //}
                                 }
                                 return;
@@ -1393,14 +1393,14 @@ namespace Client.MirControls
                                         return;
                                     }
                                 break;
-                            #endregion
+                                #endregion
                         }
                         break;
 
                     #endregion
 
                     #region To Refine 
-                  
+
                     case MirGridType.Refine:
 
                         switch (GameScene.SelectedCell.GridType)
@@ -1448,7 +1448,7 @@ namespace Client.MirControls
                                 GameScene.SelectedCell.Locked = true;
                                 GameScene.SelectedCell = null;
                                 return;
-                            #endregion
+                                #endregion
                         }
                         break;
 
@@ -1460,7 +1460,7 @@ namespace Client.MirControls
                         switch (GameScene.SelectedCell.GridType)
                         {
                             case MirGridType.Inventory:
-             
+
                                 if (Item == null)
                                 {
                                     Network.Enqueue(new C.DepositRentalItem { From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
@@ -1486,7 +1486,7 @@ namespace Client.MirControls
 
                             switch (_itemSlot)
                             {
-                                    //baseitem
+                                //baseitem
                                 case 0:
                                     {
                                         if ((GameScene.SelectedCell.Item.Info.Type == ItemType.Weapon ||
@@ -1518,11 +1518,11 @@ namespace Client.MirControls
                                         }
                                     }
                                     break;
-                                    //view materials
+                                //view materials
                                 case 1:
                                 case 2:
                                     break;
-                                    //materials
+                                //materials
                                 case 3:
                                 case 4:
                                     {
@@ -1567,11 +1567,11 @@ namespace Client.MirControls
                                                 }
                                                 break;
                                         }
-                                        
+
                                     }
                                     break;
-                                    //SuccessRateUpItem or RandomValueUpItem or CancelDestroyedItem etc.
-                                    //AllCashItem Korea Server Not Implementation.
+                                //SuccessRateUpItem or RandomValueUpItem or CancelDestroyedItem etc.
+                                //AllCashItem Korea Server Not Implementation.
                                 case 5:
                                 case 6:
                                     if (GameScene.SelectedCell.Item.Info.Type == ItemType.Awakening &&
@@ -1592,7 +1592,7 @@ namespace Client.MirControls
 
                             GameScene.SelectedCell = null;
                             MirMessageBox messageBox;
-                           
+
                             switch (errorCode)
                             {
                                 //case -1:
@@ -1635,7 +1635,7 @@ namespace Client.MirControls
                             }
                         }
                         break;
-                    #endregion
+                        #endregion
                 }
 
                 return;
@@ -1695,7 +1695,7 @@ namespace Client.MirControls
 
         private bool CanRemoveItem(UserItem i)
         {
-            if(MapObject.User.RidingMount && i.Info.Type != ItemType.Torch)
+            if (MapObject.User.RidingMount && i.Info.Type != ItemType.Torch)
             {
                 return false;
             }
@@ -2108,7 +2108,7 @@ namespace Client.MirControls
                     }
                     break;
                 case ItemType.Socket:
-                    if (GameScene.SelectedItem == null ||GameScene.SelectedItem.Info.Type == ItemType.Mount || (GameScene.SelectedItem.Info.Type == ItemType.Weapon && GameScene.SelectedItem.Info.IsFishingRod))
+                    if (GameScene.SelectedItem == null || GameScene.SelectedItem.Info.Type == ItemType.Mount || (GameScene.SelectedItem.Info.Type == ItemType.Weapon && GameScene.SelectedItem.Info.IsFishingRod))
                     {
                         return false;
                     }

@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using Client;
-using System.Linq;
 
 namespace Launcher
 {
@@ -21,7 +21,7 @@ namespace Launcher
 
         private FileInformation _currentFile;
         public bool Completed, Checked, CleanFiles, LabelSwitch, ErrorFound;
-        
+
         public List<FileInformation> OldList;
         public Queue<FileInformation> DownloadList;
 
@@ -112,10 +112,10 @@ namespace Launcher
             }
         }
 
-        
+
 
         private void BeginDownload()
-        {           
+        {
             if (DownloadList == null) return;
 
             if (DownloadList.Count == 0)
@@ -151,7 +151,7 @@ namespace Launcher
                     if (!NeedFile(fileNames[i]))
                         File.Delete(fileNames[i]);
                 }
-                catch{}
+                catch { }
             }
         }
         public bool NeedFile(string fileName)
@@ -183,7 +183,7 @@ namespace Launcher
             {
                 var file = dependantFiles.FirstOrDefault(x => x == old.FileName);
 
-                if ((old.FileName.EndsWith(System.AppDomain.CurrentDomain.FriendlyName)))
+                if (old.FileName.EndsWith(System.AppDomain.CurrentDomain.FriendlyName))
                 {
                     File.Move(Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName, Settings.P_Client + $"Old{System.AppDomain.CurrentDomain.FriendlyName}");
                     Restart = true;
@@ -229,11 +229,11 @@ namespace Launcher
                                 _currentBytes = 0;
                                 _stopwatch.Stop();
 
-                            if (!Directory.Exists(Settings.P_Client + Path.GetDirectoryName(info.FileName)))
-                                Directory.CreateDirectory(Settings.P_Client + Path.GetDirectoryName(info.FileName));
+                                if (!Directory.Exists(Settings.P_Client + Path.GetDirectoryName(info.FileName)))
+                                    Directory.CreateDirectory(Settings.P_Client + Path.GetDirectoryName(info.FileName));
 
-                            File.WriteAllBytes(Settings.P_Client + info.FileName, e.Result);
-                            File.SetLastWriteTime(Settings.P_Client + info.FileName, info.Creation);
+                                File.WriteAllBytes(Settings.P_Client + info.FileName, e.Result);
+                                File.SetLastWriteTime(Settings.P_Client + info.FileName, info.Creation);
                             }
                             BeginDownload();
                         };
@@ -431,7 +431,7 @@ namespace Launcher
 
         private void ProgressCurrent_pb_SizeChanged(object sender, EventArgs e)
         {
-            ProgEnd_pb.Location = new Point((ProgressCurrent_pb.Location.X + ProgressCurrent_pb.Width), 490);
+            ProgEnd_pb.Location = new Point(ProgressCurrent_pb.Location.X + ProgressCurrent_pb.Width, 490);
             if (ProgressCurrent_pb.Width == 0) ProgEnd_pb.Visible = false;
             else ProgEnd_pb.Visible = true;
         }
@@ -465,7 +465,7 @@ namespace Launcher
 
         private void TotalProg_pb_SizeChanged(object sender, EventArgs e)
         {
-            ProgTotalEnd_pb.Location = new Point((TotalProg_pb.Location.X + TotalProg_pb.Width), 508);
+            ProgTotalEnd_pb.Location = new Point(TotalProg_pb.Location.X + TotalProg_pb.Width, 508);
             if (TotalProg_pb.Width == 0) ProgTotalEnd_pb.Visible = false;
             else ProgTotalEnd_pb.Visible = true;
         }
@@ -481,7 +481,7 @@ namespace Launcher
             {
                 if (Completed)
                 {
-                    
+
                     ActionLabel.Text = "";
                     CurrentFile_label.Text = "Up to date.";
                     SpeedLabel.Text = "";
@@ -526,7 +526,7 @@ namespace Launcher
                 TotalPercent_label.Visible = true;
 
                 if (LabelSwitch) ActionLabel.Text = string.Format("{0} Files Remaining", _fileCount - _currentCount);
-                else ActionLabel.Text = string.Format("{0:#,##0}MB Remaining",  ((_totalBytes) - (_completedBytes + _currentBytes)) / 1024 / 1024);
+                else ActionLabel.Text = string.Format("{0:#,##0}MB Remaining", (_totalBytes - (_completedBytes + _currentBytes)) / 1024 / 1024);
 
                 //ActionLabel.Text = string.Format("{0:#,##0}MB / {1:#,##0}MB", (_completedBytes + _currentBytes) / 1024 / 1024, _totalBytes / 1024 / 1024);
 
@@ -536,14 +536,14 @@ namespace Launcher
                     CurrentFile_label.Text = string.Format("{0}", _currentFile.FileName);
                     SpeedLabel.Text = (_currentBytes / 1024F / _stopwatch.Elapsed.TotalSeconds).ToString("#,##0.##") + "KB/s";
                     CurrentPercent_label.Text = ((int)(100 * _currentBytes / _currentFile.Length)).ToString() + "%";
-                    ProgressCurrent_pb.Width = (int)( 5.5 * (100 * _currentBytes / _currentFile.Length));
+                    ProgressCurrent_pb.Width = (int)(5.5 * (100 * _currentBytes / _currentFile.Length));
                 }
                 TotalPercent_label.Text = ((int)(100 * (_completedBytes + _currentBytes) / _totalBytes)).ToString() + "%";
                 TotalProg_pb.Width = (int)(5.5 * (100 * (_completedBytes + _currentBytes) / _totalBytes));
             }
             catch (Exception ex)
             {
-                
+
             }
 
         }

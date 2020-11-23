@@ -33,14 +33,14 @@ namespace Client.MirControls
             Label = new MirLabel
             {
                 AutoSize = false,
-               // DrawFormat = StringFormatFlags.FitBlackBox,
+                // DrawFormat = StringFormatFlags.FitBlackBox,
                 Location = new Point(35, 35),
                 Size = new Size(390, 110),
                 Parent = this,
                 Text = message
             };
 
-            
+
             switch (Buttons)
             {
                 case MirMessageBoxButtons.OK:
@@ -254,9 +254,9 @@ namespace Client.MirControls
 
             for (int i = 0; i < Program.Form.Controls.Count; i++)
             {
-                TextBox T = (TextBox) Program.Form.Controls[i];
+                TextBox T = (TextBox)Program.Form.Controls[i];
                 if (T != null && T.Tag != null)
-                    ((MirTextBox) T.Tag).DialogChanged();
+                    ((MirTextBox)T.Tag).DialogChanged();
             }
         }
 

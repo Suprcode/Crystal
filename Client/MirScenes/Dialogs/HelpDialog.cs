@@ -11,8 +11,8 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirSounds;
-using S = ServerPackets;
 using C = ClientPackets;
+using S = ServerPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -117,12 +117,12 @@ namespace Client.MirScenes.Dialogs
 
             Dictionary<string, string> keybinds = new Dictionary<string, string>();
 
-            List<HelpPage> imagePages = new List<HelpPage> { 
-                new HelpPage("Shortcut Information", -1, new ShortcutPage1 { Parent = this } ) { Parent = this, Location = location, Visible = false }, 
-                new HelpPage("Shortcut Information", -1, new ShortcutPage2 { Parent = this } ) { Parent = this, Location = location, Visible = false }, 
-                new HelpPage("Chat Shortcuts", -1, new ShortcutPage3 { Parent = this } ) { Parent = this, Location = location, Visible = false }, 
-                new HelpPage("Movements", 0, null) { Parent = this, Location = location, Visible = false }, 
-                new HelpPage("Attacking", 1, null) { Parent = this, Location = location, Visible = false }, 
+            List<HelpPage> imagePages = new List<HelpPage> {
+                new HelpPage("Shortcut Information", -1, new ShortcutPage1 { Parent = this } ) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Shortcut Information", -1, new ShortcutPage2 { Parent = this } ) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Chat Shortcuts", -1, new ShortcutPage3 { Parent = this } ) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Movements", 0, null) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Attacking", 1, null) { Parent = this, Location = location, Visible = false },
                 new HelpPage("Collecting Items", 2, null) { Parent = this, Location = location, Visible = false },
                 new HelpPage("Health", 3, null) { Parent = this, Location = location, Visible = false },
                 new HelpPage("Skills", 4, null) { Parent = this, Location = location, Visible = false },
@@ -351,7 +351,7 @@ namespace Client.MirScenes.Dialogs
                     Location = new Point(119, 107 + (20 * i)),
                     Size = new Size(400, 23),
                 };
-            }  
+            }
         }
     }
 

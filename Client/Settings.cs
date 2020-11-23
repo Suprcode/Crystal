@@ -1,7 +1,7 @@
-﻿using System.IO;
-using System;
-using Client.MirSounds;
+﻿using System;
+using System.IO;
 using System.Windows.Forms;
+using Client.MirSounds;
 
 namespace Client
 {
@@ -18,7 +18,7 @@ namespace Client
             {
                 return _useTestConfig;
             }
-            set 
+            set
             {
                 if (value == true)
                 {
@@ -39,8 +39,8 @@ namespace Client
                             NPCPath = @".\Data\NPC\",
                             CArmourPath = @".\Data\CArmour\",
                             CWeaponPath = @".\Data\CWeapon\",
-							CWeaponEffectPath = @".\Data\CWeaponEffect\",
-							CHairPath = @".\Data\CHair\",
+                            CWeaponEffectPath = @".\Data\CWeaponEffect\",
+                            CHairPath = @".\Data\CHair\",
                             AArmourPath = @".\Data\AArmour\",
                             AWeaponPath = @".\Data\AWeapon\",
                             AHairPath = @".\Data\AHair\",
@@ -89,11 +89,11 @@ namespace Client
             {
                 if (_volume == value) return;
 
-                _volume = (byte) (value > 100 ? 100 : value);
+                _volume = (byte)(value > 100 ? 100 : value);
 
                 if (_volume == 0)
                     SoundManager.Vol = -10000;
-                else 
+                else
                     SoundManager.Vol = (int)(-3000 + (3000 * (_volume / 100M)));
             }
         }
@@ -135,7 +135,7 @@ namespace Client
             TargetDead = false,
             ExpandedBuffWindow = true;
 
-        public static int[,] SkillbarLocation = new int[2, 2] { { 0, 0 }, { 216, 0 }  };
+        public static int[,] SkillbarLocation = new int[2, 2] { { 0, 0 }, { 216, 0 } };
 
         //Quests
         public static int[] TrackedQuests = new int[5];
@@ -182,7 +182,7 @@ namespace Client
             if (!Directory.Exists(DataPath)) Directory.CreateDirectory(DataPath);
             if (!Directory.Exists(MapPath)) Directory.CreateDirectory(MapPath);
             if (!Directory.Exists(SoundPath)) Directory.CreateDirectory(SoundPath);
-           
+
             //Graphics
             FullScreen = Reader.ReadBoolean("Graphics", "FullScreen", FullScreen);
             TopMost = Reader.ReadBoolean("Graphics", "AlwaysOnTop", TopMost);
@@ -357,8 +357,8 @@ namespace Client
         }
 
 
-      
+
     }
 
-    
+
 }
