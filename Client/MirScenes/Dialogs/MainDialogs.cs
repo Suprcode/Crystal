@@ -4847,7 +4847,7 @@ namespace Client.MirScenes.Dialogs
     
         public BigMapDialog()
         {
-            NotControl = true;
+            NotControl = false;
             Location = new Point(130, 100);
             //Border = true;
             //BorderColour = Color.Lime;
