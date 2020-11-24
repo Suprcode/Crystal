@@ -4839,6 +4839,12 @@ namespace Client.MirScenes.Dialogs
     }
     public sealed class BigMapDialog : MirControl
     {
+	public static Point BigMapMouseLocation;
+	public MirLabel BigMapLocationLabel;
+
+	int BigMap_MouseCoordsProcessing_OffsetX, BigMap_MouseCoordsProcessing_OffsetY;
+	float BigMap_MouseCoordsProcessing_FactorX, BigMap_MouseCoordsProcessing_FactorY;
+    
         public BigMapDialog()
         {
             NotControl = true;
@@ -4847,8 +4853,40 @@ namespace Client.MirScenes.Dialogs
             //BorderColour = Color.Lime;
             BeforeDraw += (o, e) => OnBeforeDraw();
             Sort = true;
+	    
+	    MouseLeave += HideBigMapCoordinates;
+            MouseEnter += ShowBigMapCoordinates;
+            MouseMove += UpdateBigMapCoordinates;
+            MouseMove += (o, e) => BigMapMouseLocation = e.Location;
+
+            BigMapLocationLabel = new MirLabel
+            {
+                Text = "",
+                Parent = this,
+                Location = new Point(0, 400),
+                Size = new Size(56, 600),
+                Visible = false
+            };
+        }
+	
+	private void HideBigMapCoordinates(object sender, System.EventArgs e)
+        {
+            BigMapLocationLabel.Visible = false;
         }
 
+        private void ShowBigMapCoordinates(object sender, System.EventArgs e)
+        {
+            BigMapLocationLabel.Visible = true;
+        }
+
+        private void UpdateBigMapCoordinates(object sender, MouseEventArgs e)
+        {
+            int MouseCoordsOnBigMap_MapValue_X = (int)((BigMapDialog.BigMapMouseLocation.X - BigMap_MouseCoordsProcessing_OffsetX) / BigMap_MouseCoordsProcessing_FactorX);
+            int MouseCoordsOnBigMap_MapValue_Y = (int)((BigMapDialog.BigMapMouseLocation.Y - BigMap_MouseCoordsProcessing_OffsetY) / BigMap_MouseCoordsProcessing_FactorY);
+
+            BigMapLocationLabel.Text = MouseCoordsOnBigMap_MapValue_X.ToString() + "," + MouseCoordsOnBigMap_MapValue_Y.ToString();
+        }
+	
         private void OnBeforeDraw()
         {
             MapControl map = GameScene.Scene.MapControl;
@@ -4880,12 +4918,18 @@ namespace Client.MirScenes.Dialogs
 
             viewRect.X = (Settings.ScreenWidth - viewRect.Width) / 2;
             viewRect.Y = (Settings.ScreenHeight - 120 - viewRect.Height) / 2;
-
+	
+	    BigMap_MouseCoordsProcessing_OffsetX = viewRect.X;
+            BigMap_MouseCoordsProcessing_OffsetY = viewRect.Y;
+	
             Location = viewRect.Location;
             Size = viewRect.Size;
 
             float scaleX = Size.Width / (float)map.Width;
             float scaleY = Size.Height / (float)map.Height;
+
+	    BigMap_MouseCoordsProcessing_FactorX = scaleX;
+            BigMap_MouseCoordsProcessing_FactorY = scaleY;
 
             viewRect.Location = new Point(
                 (int)(scaleX * MapObject.User.CurrentLocation.X) - viewRect.Width / 2,
