@@ -4842,8 +4842,13 @@ namespace Client.MirScenes.Dialogs
     	public static Point BigMapMouseLocation;
         public MirLabel BigMapLocationLabel;
 
-        int BigMap_MouseCoordsProcessing_OffsetX, BigMap_MouseCoordsProcessing_OffsetY, BigMapDialogHeight, BigMapDialogWidth;
+        int BigMap_MouseCoordsProcessing_OffsetX, BigMap_MouseCoordsProcessing_OffsetY;//, BigMapDialogHeight, BigMapDialogWidth;
         float BigMap_MouseCoordsProcessing_FactorX, BigMap_MouseCoordsProcessing_FactorY;
+    
+    	int BigMapCoordsLabelWidth = 60;
+        int BigMapCoordsLabelHeight = 20;
+        int BigMapMousePointerOffsetX = 10;
+        int BigMapMousePointerOffsetY = 10;
     
         public BigMapDialog()
         {
@@ -4876,8 +4881,9 @@ namespace Client.MirScenes.Dialogs
 
         private void ShowBigMapCoordinates(object sender, System.EventArgs e)
         {
-            BigMapLocationLabel.Location = new Point(0, BigMapDialogHeight);
-	    BigMapLocationLabel.Size = new Size(BigMapDialogWidth, 20);
+            //BigMapLocationLabel.Location = new Point(0, BigMapDialogHeight);
+	    //BigMapLocationLabel.Size = new Size(BigMapDialogWidth, 20);
+	    BigMapLocationLabel.Size = new Size(BigMapCoordsLabelWidth, BigMapCoordsLabelHeight);
             BigMapLocationLabel.Visible = true;
         }
 
@@ -4885,7 +4891,9 @@ namespace Client.MirScenes.Dialogs
         {
             int MouseCoordsOnBigMap_MapValue_X = (int)((BigMapDialog.BigMapMouseLocation.X - BigMap_MouseCoordsProcessing_OffsetX) / BigMap_MouseCoordsProcessing_FactorX);
             int MouseCoordsOnBigMap_MapValue_Y = (int)((BigMapDialog.BigMapMouseLocation.Y - BigMap_MouseCoordsProcessing_OffsetY) / BigMap_MouseCoordsProcessing_FactorY);
-
+	    
+	    BigMapLocationLabel.Location = new Point(BigMapDialog.BigMapMouseLocation.X - BigMap_MouseCoordsProcessing_OffsetX + BigMapMousePointerOffsetX, BigMapDialog.BigMapMouseLocation.Y - BigMap_MouseCoordsProcessing_OffsetY + BigMapMousePointerOffsetY);
+	    
             BigMapLocationLabel.Text = MouseCoordsOnBigMap_MapValue_X.ToString() + "," + MouseCoordsOnBigMap_MapValue_Y.ToString();
         }
 
