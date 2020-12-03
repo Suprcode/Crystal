@@ -4841,15 +4841,16 @@ namespace Client.MirScenes.Dialogs
     {
     	public static Point BigMapMouseLocation;
         public MirLabel BigMapLocationLabel;
-
-        int BigMap_MouseCoordsProcessing_OffsetX, BigMap_MouseCoordsProcessing_OffsetY;//, BigMapDialogHeight, BigMapDialogWidth;
-        float BigMap_MouseCoordsProcessing_FactorX, BigMap_MouseCoordsProcessing_FactorY;
+	
+	Rectangle viewRect;
+        float scaleX;
+        float scaleY;
+	
+        int BigMap_MouseCoordsProcessing_OffsetX, BigMap_MouseCoordsProcessing_OffsetY;
     
     	int BigMapCoordsLabelWidth = 60;
         int BigMapCoordsLabelHeight = 20;
-        int BigMapMousePointerOffsetX = 10;
-        int BigMapMousePointerOffsetY = 10;
-    
+            
         public BigMapDialog()
         {
             NotControl = false;
@@ -4881,20 +4882,18 @@ namespace Client.MirScenes.Dialogs
 
         private void ShowBigMapCoordinates(object sender, System.EventArgs e)
         {
-            //BigMapLocationLabel.Location = new Point(0, BigMapDialogHeight);
-	    //BigMapLocationLabel.Size = new Size(BigMapDialogWidth, 20);
-	    BigMapLocationLabel.Size = new Size(BigMapCoordsLabelWidth, BigMapCoordsLabelHeight);
+            BigMapLocationLabel.Location = new Point(viewRect.X, viewRect.Y);
+            BigMapLocationLabel.Size = new Size(viewRect.Size.Width, viewRect.Size.Height);
+	    
             BigMapLocationLabel.Visible = true;
         }
 
         private void UpdateBigMapCoordinates(object sender, MouseEventArgs e)
         {
-            int MouseCoordsOnBigMap_MapValue_X = (int)((BigMapDialog.BigMapMouseLocation.X - BigMap_MouseCoordsProcessing_OffsetX) / BigMap_MouseCoordsProcessing_FactorX);
-            int MouseCoordsOnBigMap_MapValue_Y = (int)((BigMapDialog.BigMapMouseLocation.Y - BigMap_MouseCoordsProcessing_OffsetY) / BigMap_MouseCoordsProcessing_FactorY);
+            int MouseCoordsOnBigMap_MapValue_X = (int)((BigMapDialog.BigMapMouseLocation.X - BigMap_MouseCoordsProcessing_OffsetX) / scaleX);
+            int MouseCoordsOnBigMap_MapValue_Y = (int)((BigMapDialog.BigMapMouseLocation.Y - BigMap_MouseCoordsProcessing_OffsetY) / scaleY);
 	    
-	    BigMapLocationLabel.Location = new Point(BigMapDialog.BigMapMouseLocation.X - BigMap_MouseCoordsProcessing_OffsetX + BigMapMousePointerOffsetX, BigMapDialog.BigMapMouseLocation.Y - BigMap_MouseCoordsProcessing_OffsetY + BigMapMousePointerOffsetY);
-	    
-            BigMapLocationLabel.Text = MouseCoordsOnBigMap_MapValue_X.ToString() + "," + MouseCoordsOnBigMap_MapValue_Y.ToString();
+            BigMapLocationLabel.Hint = string.Format("{0},{1}", MouseCoordsOnBigMap_MapValue_X, MouseCoordsOnBigMap_MapValue_Y);
         }
 
         private void OnBeforeDraw()
@@ -4916,7 +4915,7 @@ namespace Client.MirScenes.Dialogs
 
             TrySort();
 
-            Rectangle viewRect = new Rectangle(0, 0, 600, 400);
+            viewRect = new Rectangle(0, 0, 600, 400);
 
             Size = Libraries.MiniMap.GetSize(index);
 
@@ -4931,14 +4930,12 @@ namespace Client.MirScenes.Dialogs
 
 	    BigMap_MouseCoordsProcessing_OffsetX = viewRect.X;
             BigMap_MouseCoordsProcessing_OffsetY = viewRect.Y;
-            BigMapDialogHeight = viewRect.Height;
-	    BigMapDialogWidth = viewRect.Width;
 
             Location = viewRect.Location;
             Size = viewRect.Size;
 
-            float scaleX = Size.Width / (float)map.Width;
-            float scaleY = Size.Height / (float)map.Height;
+            scaleX = Size.Width / (float)map.Width;
+            scaleY = Size.Height / (float)map.Height;
 
 	    BigMap_MouseCoordsProcessing_FactorX = scaleX;
             BigMap_MouseCoordsProcessing_FactorY = scaleY;
