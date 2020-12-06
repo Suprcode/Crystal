@@ -274,6 +274,16 @@ namespace Client.MirControls
                             }
                         }
                     }
+                    
+                    //Add support for ALT + click to sell quickly
+                    else if (CMain.Alt && GameScene.Scene.NPCDropDialog.Visible && GridType == MirGridType.Inventory) // alt sell/repair
+                    {
+                        MoveItem(); // pickup item
+                        GameScene.Scene.NPCDropDialog.ItemCell.OnMouseClick(e); // emulate click to drop control
+                        GameScene.Scene.NPCDropDialog.ConfirmButton.OnMouseClick(e); //emulate OK to confirm trade
+                    }
+                    //Add support for ALT + click to sell quickly
+                    
                     else MoveItem();
                     break;
             }
