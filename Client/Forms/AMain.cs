@@ -33,11 +33,6 @@ namespace Launcher
         private Point dragCursorPoint;
         private Point dragFormPoint;
 
-        private readonly List<string> dependantFiles = new List<string>
-        {
-            "Shared.dll"
-        };
-
         private Config ConfigForm = new Config();
 
         private bool Restart = false;
@@ -181,16 +176,11 @@ namespace Launcher
 
             if (info == null || old.Length != info.Length || old.Creation != info.Creation)
             {
-                var file = dependantFiles.FirstOrDefault(x => x == old.FileName);
+                if (Path.GetExtension(old.FileName).ToLower() == "dll" || Path.GetExtension(old.FileName).ToLower() == "exe")
+                {
+                    string oldFilename = Path.Combine(Path.GetDirectoryName(old.FileName), ("Old" + Path.GetFileName(old.FileName)));
 
-                if ((old.FileName.EndsWith(System.AppDomain.CurrentDomain.FriendlyName)))
-                {
-                    File.Move(Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName, Settings.P_Client + $"Old{System.AppDomain.CurrentDomain.FriendlyName}");
-                    Restart = true;
-                }
-                else if (file != null)
-                {
-                    File.Move(Settings.P_Client + file, Settings.P_Client + $"Old{file}");
+                    File.Move(Settings.P_Client + old.FileName, oldFilename);
                     Restart = true;
                 }
 
@@ -323,14 +313,11 @@ namespace Launcher
         {
             if (Settings.P_BrowserAddress != "") Main_browser.Navigate(new Uri(Settings.P_BrowserAddress));
 
-            if (File.Exists(Settings.P_Client + $"Old{System.AppDomain.CurrentDomain.FriendlyName}"))
-            {
-                File.Delete(Settings.P_Client + $"Old{System.AppDomain.CurrentDomain.FriendlyName}");
-            }
+            var files = Directory.GetFiles(Settings.P_Client).Where(x => Path.GetFileName(x).StartsWith("Old"));
 
-            foreach (var file in dependantFiles)
+            foreach (var oldFilename in files)
             {
-                if (File.Exists(Settings.P_Client + $"Old{file}")) File.Delete(Settings.P_Client + $"Old{file}");
+                File.Delete(oldFilename);
             }
 
             Launch_pb.Enabled = false;
@@ -343,6 +330,7 @@ namespace Launcher
                 Name_label.Visible = true;
                 Name_label.Text = Settings.P_ServerName;
             }
+
             _workThread = new Thread(Start) { IsBackground = true };
             _workThread.Start();
         }
@@ -571,11 +559,15 @@ namespace Launcher
 
         private void MoveOldClientToCurrent()
         {
-            string oldClient = Settings.P_Client + $"Old{System.AppDomain.CurrentDomain.FriendlyName}";
-            string currentClient = Settings.P_Client + System.AppDomain.CurrentDomain.FriendlyName;
+            var files = Directory.GetFiles(Settings.P_Client).Where(x => Path.GetFileName(x).StartsWith("Old"));
 
-            if (!File.Exists(currentClient) && File.Exists(oldClient))
-                File.Move(oldClient, currentClient);
+            foreach (var oldFilename in files)
+            {
+                string originalFilename = Path.Combine(Path.GetDirectoryName(oldFilename), (Path.GetFileName(oldFilename).Substring(3)));
+
+                if (!File.Exists(originalFilename) && File.Exists(oldFilename))
+                    File.Move(oldFilename, originalFilename);
+            }
         }
     }
 
