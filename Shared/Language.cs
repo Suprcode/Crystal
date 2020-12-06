@@ -230,7 +230,7 @@ public class GameLanguage
                          WhisperLover = "Whisper Lover";
 
     //Server
-    public static string Welcome = "Welcome to the Legend of {0} Server.",
+    public static string Welcome = "Welcome to the {0} Server.",
                          OnlinePlayers = "Online Players: {0}",
                          WeaponLuck = "Luck dwells within your weapon.",
                          WeaponCurse = "Curse dwells within your weapon.",

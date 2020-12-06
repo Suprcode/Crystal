@@ -210,6 +210,13 @@ namespace Client.MirObjects
                 case Monster.FlameTiger:
                     SitDown = info.Extra;
                     break;
+                case Monster.ZumaStatue:
+                case Monster.ZumaGuardian:
+                case Monster.FrozenZumaStatue:
+                case Monster.FrozenZumaGuardian:
+                case Monster.ZumaTaurus:
+                    Stoned = info.Extra;
+                    break;
             }
 
             //Frames
