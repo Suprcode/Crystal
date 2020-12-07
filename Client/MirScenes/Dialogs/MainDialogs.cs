@@ -4839,8 +4839,6 @@ namespace Client.MirScenes.Dialogs
     }
     public sealed class BigMapDialog : MirControl
     {
-    	public static Point BigMapMouseLocation;
-	
 	float ScaleX;
         float ScaleY;
 	
@@ -4856,13 +4854,12 @@ namespace Client.MirScenes.Dialogs
             Sort = true;
 	    
             MouseMove += UpdateBigMapCoordinates;
-            MouseMove += (o, e) => BigMapMouseLocation = e.Location;
         }
 
 	private void UpdateBigMapCoordinates(object sender, MouseEventArgs e)
         {
-            int MouseCoordsOnBigMap_MapValue_X = (int)((BigMapDialog.BigMapMouseLocation.X - BigMap_MouseCoordsProcessing_OffsetX) / ScaleX);
-            int MouseCoordsOnBigMap_MapValue_Y = (int)((BigMapDialog.BigMapMouseLocation.Y - BigMap_MouseCoordsProcessing_OffsetY) / ScaleY);
+            int MouseCoordsOnBigMap_MapValue_X = (int)((e.Location.X - BigMap_MouseCoordsProcessing_OffsetX) / ScaleX);
+            int MouseCoordsOnBigMap_MapValue_Y = (int)((e.Location.Y - BigMap_MouseCoordsProcessing_OffsetY) / ScaleY);
 	    
             this.Hint = string.Format("{0},{1}", MouseCoordsOnBigMap_MapValue_X, MouseCoordsOnBigMap_MapValue_Y);
         }
