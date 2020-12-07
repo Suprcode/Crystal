@@ -4839,14 +4839,29 @@ namespace Client.MirScenes.Dialogs
     }
     public sealed class BigMapDialog : MirControl
     {
+	float ScaleX;
+        float ScaleY;
+	
+        int BigMap_MouseCoordsProcessing_OffsetX, BigMap_MouseCoordsProcessing_OffsetY;
+            
         public BigMapDialog()
         {
-            NotControl = true;
+            NotControl = false;
             Location = new Point(130, 100);
             //Border = true;
             //BorderColour = Color.Lime;
             BeforeDraw += (o, e) => OnBeforeDraw();
             Sort = true;
+	    
+            MouseMove += UpdateBigMapCoordinates;
+        }
+
+	private void UpdateBigMapCoordinates(object sender, MouseEventArgs e)
+        {
+            int MouseCoordsOnBigMap_MapValue_X = (int)((e.Location.X - BigMap_MouseCoordsProcessing_OffsetX) / ScaleX);
+            int MouseCoordsOnBigMap_MapValue_Y = (int)((e.Location.Y - BigMap_MouseCoordsProcessing_OffsetY) / ScaleY);
+	    
+            this.Hint = string.Format("{0},{1}", MouseCoordsOnBigMap_MapValue_X, MouseCoordsOnBigMap_MapValue_Y);
         }
 
         private void OnBeforeDraw()
@@ -4881,15 +4896,18 @@ namespace Client.MirScenes.Dialogs
             viewRect.X = (Settings.ScreenWidth - viewRect.Width) / 2;
             viewRect.Y = (Settings.ScreenHeight - 120 - viewRect.Height) / 2;
 
+	    BigMap_MouseCoordsProcessing_OffsetX = viewRect.X;
+            BigMap_MouseCoordsProcessing_OffsetY = viewRect.Y;
+
             Location = viewRect.Location;
             Size = viewRect.Size;
 
-            float scaleX = Size.Width / (float)map.Width;
-            float scaleY = Size.Height / (float)map.Height;
+            ScaleX = Size.Width / (float)map.Width;
+            ScaleY = Size.Height / (float)map.Height;
 
             viewRect.Location = new Point(
-                (int)(scaleX * MapObject.User.CurrentLocation.X) - viewRect.Width / 2,
-                (int)(scaleY * MapObject.User.CurrentLocation.Y) - viewRect.Height / 2);
+                (int)(ScaleX * MapObject.User.CurrentLocation.X) - viewRect.Width / 2,
+                (int)(ScaleY * MapObject.User.CurrentLocation.Y) - viewRect.Height / 2);
 
             if (viewRect.Right >= Size.Width)
                 viewRect.X = Size.Width - viewRect.Width;
@@ -4901,8 +4919,8 @@ namespace Client.MirScenes.Dialogs
 
             Libraries.MiniMap.Draw(index, Location, Size, Color.FromArgb(255, 255, 255));
 
-            int startPointX = (int)(viewRect.X / scaleX);
-            int startPointY = (int)(viewRect.Y / scaleY);
+            int startPointX = (int)(viewRect.X / ScaleX);
+            int startPointY = (int)(viewRect.Y / ScaleY);
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4910,8 +4928,8 @@ namespace Client.MirScenes.Dialogs
 
 
                 if (ob.Race == ObjectType.Item || ob.Dead || ob.Race == ObjectType.Spell) continue; // || (ob.ObjectID != MapObject.User.ObjectID)
-                float x = ((ob.CurrentLocation.X - startPointX) * scaleX) + Location.X;
-                float y = ((ob.CurrentLocation.Y - startPointY) * scaleY) + Location.Y;
+                float x = ((ob.CurrentLocation.X - startPointX) * ScaleX) + Location.X;
+                float y = ((ob.CurrentLocation.Y - startPointY) * ScaleY) + Location.Y;
 
                 Color colour;
 
