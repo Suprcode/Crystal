@@ -176,7 +176,7 @@ namespace Launcher
 
             if (info == null || old.Length != info.Length || old.Creation != info.Creation)
             {
-                if (Path.GetExtension(old.FileName).ToLower() == "dll" || Path.GetExtension(old.FileName).ToLower() == "exe")
+                if (Path.GetExtension(old.FileName).ToLower() == ".dll" || Path.GetExtension(old.FileName).ToLower() == ".exe")
                 {
                     string oldFilename = Path.Combine(Path.GetDirectoryName(old.FileName), ("Old" + Path.GetFileName(old.FileName)));
 
