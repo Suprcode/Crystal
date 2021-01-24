@@ -235,10 +235,14 @@ namespace LibraryEditor
                     Start++;
                     nX = Start;
                     OffSet += 2;
-                    while (nX < End)
+
+                    while (nX < End && End > 0)
                     {
                         switch (FileBytes[OffSet])
                         {
+                            default: //Unknown
+                                OffSet += 1;
+                                break;
                             case 192: //No Colour
                                 nX += 2;
                                 x += FileBytes[OffSet + 3] << 8 | FileBytes[OffSet + 2];

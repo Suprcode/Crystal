@@ -6,9 +6,9 @@ using SlimDX.Multimedia;
 
 namespace Client.MirSounds
 {
-    public class SoundLibrary : IDisposable
+    public class WavLibrary : ISoundLibrary, IDisposable
     {
-        public int Index;
+        public int Index { get; set; }
 
         private List<SecondarySoundBuffer> _bufferList;
         private WaveStream _stream;
@@ -18,12 +18,21 @@ namespace Client.MirSounds
         private SoundBufferDescription _desc;
         private readonly byte[] _data;
 
-        public SoundLibrary(int index, string fileName, bool loop)
+        public static WavLibrary TryCreate(int index, string fileName, bool loop)
+        {
+            fileName = Path.Combine(Settings.SoundPath, Path.GetFileNameWithoutExtension(fileName) + ".wav");
+
+            if (File.Exists(fileName))
+            {
+                return new WavLibrary(index, fileName, loop);
+            }
+
+            return null;
+        }
+
+        public WavLibrary(int index, string fileName, bool loop)
         {
             Index = index;
-
-            fileName = Path.Combine(Settings.SoundPath, fileName);
-            if (!File.Exists(fileName)) return;
 
             _stream = new WaveStream(fileName);
 

@@ -2544,8 +2544,8 @@ namespace Client.MirObjects
                 case Monster.HellSlasher:
                     switch (CurrentAction)
                     {
-                        case MirAction.Attack2:
-                            if (FrameIndex >= 4 && FrameIndex < 8) Libraries.Monsters[(ushort)Monster.HellSlasher].DrawBlend((304 + FrameIndex + (int)Direction * 4) - 4, DrawLocation, Color.White, true);
+                        case MirAction.Attack1:
+                            if (FrameIndex >= 2 && FrameIndex < 6) Libraries.Monsters[(ushort)Monster.HellSlasher].DrawBlend((304 + FrameIndex + (int)Direction * 4) - 2, DrawLocation, Color.White, true);
                             break;
                     }
                     break;
