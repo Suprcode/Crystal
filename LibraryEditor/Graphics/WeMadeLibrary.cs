@@ -78,7 +78,7 @@ namespace LibraryEditor
                 _fStream.Seek(0, SeekOrigin.Begin);
                 buffer = _bReader.ReadBytes(48);
                 //var desc = Encoding.UTF8.GetString(buffer, 1, 20);
-                _nType = (byte)(buffer[40] == 1 ? 2 : buffer[2] == 73 ? 3 : _nType);
+                _nType = (byte)((buffer[40] == 1 || buffer[40] == 6) ? 2 : buffer[2] == 73 ? 3 : _nType);
 
                 if (_nType == 0)
                 {
