@@ -291,6 +291,8 @@ namespace Server.MirObjects
         
         protected override void FindTarget()
         {
+            if (Dead) return;
+
             if (Fullness < CreatureRules.MinimalFullness) return;
 
             //do automatic pickup/find
