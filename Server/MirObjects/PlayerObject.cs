@@ -18262,18 +18262,26 @@ namespace Server.MirObjects
                 //ExpireTime
                 List<int> releasedPets = new List<int>();
                 CreatureTimeLeftTicker = Envir.Time + CreatureTimeLeftDelay;
+
                 for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
                 {
                     if (Info.IntelligentCreatures[i].ExpireTime == -9999) continue;//permanent
+
                     Info.IntelligentCreatures[i].ExpireTime = Info.IntelligentCreatures[i].ExpireTime - 1;
+
                     if (Info.IntelligentCreatures[i].ExpireTime <= 0)
                     {
                         Info.IntelligentCreatures[i].ExpireTime = 0;
+
                         if (CreatureSummoned && SummonedCreatureType == Info.IntelligentCreatures[i].PetType)
+                        {
                             UnSummonIntelligentCreature(SummonedCreatureType, false);//unsummon creature
+                        }
+
                         releasedPets.Add(i);
                     }
                 }
+
                 for (int i = (releasedPets.Count - 1); i >= 0; i--)//start with largest value
                 {
                     ReceiveChat((string.Format("Creature {0} has expired.", Info.IntelligentCreatures[releasedPets[i]].CustomName)), ChatType.System);
@@ -18289,6 +18297,7 @@ namespace Server.MirObjects
 
                         ((IntelligentCreatureObject)Pets[i]).ProcessBlackStoneProduction();
                         ((IntelligentCreatureObject)Pets[i]).ProcessMaintainFoodBuff();
+
                         break;
                     }
                 }

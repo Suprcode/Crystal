@@ -302,6 +302,8 @@ namespace Server.MirObjects
 
         private void FindItemTarget()
         {
+            if (Master == null) return;
+
             int range = shortcheck ? 4 : CreatureRules.AutoPickupRange;
 
             for (int d = 0; d <= range; d++)

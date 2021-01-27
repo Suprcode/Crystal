@@ -15,11 +15,12 @@ using Client.MirNetwork;
 using Client.MirScenes;
 using Client.MirSounds;
 using SlimDX.Direct3D9;
+using SlimDX.Windows;
 using Font = System.Drawing.Font;
 
 namespace Client
 {
-    public partial class CMain : Form
+    public partial class CMain : RenderForm
     {
         public static MirControl DebugBaseLabel, HintBaseLabel;
         public static MirLabel DebugTextLabel, HintTextLabel, ScreenshotTextLabel;

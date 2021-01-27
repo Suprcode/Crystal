@@ -7,6 +7,7 @@ using SlimDX.Direct3D9;
 using System.IO.Compression;
 using Frame = Client.MirObjects.Frame;
 using Client.MirObjects;
+using System.Text.RegularExpressions;
 
 namespace Client.MirGraphics
 {
@@ -37,7 +38,6 @@ namespace Client.MirGraphics
             Background = new MLibrary(Settings.DataPath + "Background");
 
 
-
         public static readonly MLibrary
             Dragon = new MLibrary(Settings.DataPath + "Dragon");
 
@@ -54,116 +54,67 @@ namespace Client.MirGraphics
         public static readonly MLibrary
             Deco = new MLibrary(Settings.DataPath + "Deco");
 
-        public static readonly MLibrary[] CArmours = new MLibrary[99],
-                                          CWeapons = new MLibrary[55],
-										  CWeaponEffect = new MLibrary[67],
-										  CHair = new MLibrary[9],
-                                          CHumEffect = new MLibrary[6],
-                                          AArmours = new MLibrary[99],
-                                          AWeaponsL = new MLibrary[14],
-                                          AWeaponsR = new MLibrary[14],
-                                          AHair = new MLibrary[9],
-                                          AHumEffect = new MLibrary[3],
-                                          ARArmours = new MLibrary[99],
-                                          ARWeapons = new MLibrary[19],
-                                          ARWeaponsS = new MLibrary[19],
-                                          ARHair = new MLibrary[9],
-                                          ARHumEffect = new MLibrary[3],
-                                          Monsters = new MLibrary[465],
-                                          Gates = new MLibrary[15],
-                                          Flags = new MLibrary[12],
-                                          Mounts = new MLibrary[12],
-                                          NPCs = new MLibrary[235],
-                                          Fishing = new MLibrary[2],
-                                          Pets = new MLibrary[15],
-                                          Transform = new MLibrary[28],
-                                          TransformMounts = new MLibrary[28],
-                                          TransformEffect = new MLibrary[2],
-                                          TransformWeaponEffect = new MLibrary[1];
+        public static MLibrary[] CArmours,
+                                          CWeapons,
+										  CWeaponEffect,
+										  CHair,
+                                          CHumEffect,
+                                          AArmours,
+                                          AWeaponsL,
+                                          AWeaponsR,
+                                          AHair,
+                                          AHumEffect,
+                                          ARArmours,
+                                          ARWeapons,
+                                          ARWeaponsS,
+                                          ARHair,
+                                          ARHumEffect,
+                                          Monsters,
+                                          Gates,
+                                          Flags,
+                                          Mounts,
+                                          NPCs,
+                                          Fishing,
+                                          Pets,
+                                          Transform,
+                                          TransformMounts,
+                                          TransformEffect,
+                                          TransformWeaponEffect;
 
         static Libraries()
         {
             //Wiz/War/Tao
-            for (int i = 0; i < CArmours.Length; i++)
-                CArmours[i] = new MLibrary(Settings.CArmourPath + i.ToString("00"));
-
-            for (int i = 0; i < CHair.Length; i++)
-                CHair[i] = new MLibrary(Settings.CHairPath + i.ToString("00"));
-
-            for (int i = 0; i < CWeapons.Length; i++)
-                CWeapons[i] = new MLibrary(Settings.CWeaponPath + i.ToString("00"));
-
-			for (int i = 0; i < CWeaponEffect.Length; i++)
-				CWeaponEffect[i] = new MLibrary(Settings.CWeaponEffectPath + i.ToString("00"));
-
-			for (int i = 0; i < CHumEffect.Length; i++)
-                CHumEffect[i] = new MLibrary(Settings.CHumEffectPath + i.ToString("00"));
+            InitLibrary(ref CArmours, Settings.CArmourPath, "00");
+            InitLibrary(ref CHair, Settings.CHairPath, "00");
+            InitLibrary(ref CWeapons, Settings.CWeaponPath, "00");
+            InitLibrary(ref CWeaponEffect, Settings.CWeaponEffectPath, "00");
+            InitLibrary(ref CHumEffect, Settings.CHumEffectPath, "00");
 
             //Assassin
-            for (int i = 0; i < AArmours.Length; i++)
-                AArmours[i] = new MLibrary(Settings.AArmourPath + i.ToString("00"));
-
-            for (int i = 0; i < AHair.Length; i++)
-                AHair[i] = new MLibrary(Settings.AHairPath + i.ToString("00"));
-
-            for (int i = 0; i < AWeaponsL.Length; i++)
-                AWeaponsL[i] = new MLibrary(Settings.AWeaponPath + i.ToString("00") + " L");
-
-            for (int i = 0; i < AWeaponsR.Length; i++)
-                AWeaponsR[i] = new MLibrary(Settings.AWeaponPath + i.ToString("00") + " R");
-
-            for (int i = 0; i < AHumEffect.Length; i++)
-                AHumEffect[i] = new MLibrary(Settings.AHumEffectPath + i.ToString("00"));
+            InitLibrary(ref AArmours, Settings.AArmourPath, "00");
+            InitLibrary(ref AHair, Settings.AHairPath, "00");
+            InitLibrary(ref AWeaponsL, Settings.AWeaponPath, "00", " L");
+            InitLibrary(ref AWeaponsR, Settings.AWeaponPath, "00", " R");
+            InitLibrary(ref AHumEffect, Settings.AHumEffectPath, "00");
 
             //Archer
-            for (int i = 0; i < ARArmours.Length; i++)
-                ARArmours[i] = new MLibrary(Settings.ARArmourPath + i.ToString("00"));
-
-            for (int i = 0; i < ARHair.Length; i++)
-                ARHair[i] = new MLibrary(Settings.ARHairPath + i.ToString("00"));
-
-            for (int i = 0; i < ARWeapons.Length; i++)
-                ARWeapons[i] = new MLibrary(Settings.ARWeaponPath + i.ToString("00"));
-
-            for (int i = 0; i < ARWeaponsS.Length; i++)
-                ARWeaponsS[i] = new MLibrary(Settings.ARWeaponPath + i.ToString("00") + " S");
-
-            for (int i = 0; i < ARHumEffect.Length; i++)
-                ARHumEffect[i] = new MLibrary(Settings.ARHumEffectPath + i.ToString("00"));
+            InitLibrary(ref ARArmours, Settings.ARArmourPath, "00");
+            InitLibrary(ref ARHair, Settings.ARHairPath, "00");
+            InitLibrary(ref ARWeapons, Settings.ARWeaponPath, "00");
+            InitLibrary(ref ARWeaponsS, Settings.ARWeaponPath, "00", " S");
+            InitLibrary(ref ARHumEffect, Settings.ARHumEffectPath, "00");
 
             //Other
-            for (int i = 0; i < Monsters.Length; i++)
-                Monsters[i] = new MLibrary(Settings.MonsterPath + i.ToString("000"));
-
-            for (int i = 0; i < Gates.Length; i++)
-                Gates[i] = new MLibrary(Settings.GatePath + i.ToString("00"));
-
-            for (int i = 0; i < Flags.Length; i++)
-                Flags[i] = new MLibrary(Settings.FlagPath + i.ToString("00"));
-
-            for (int i = 0; i < NPCs.Length; i++)
-                NPCs[i] = new MLibrary(Settings.NPCPath + i.ToString("00"));
-
-            for (int i = 0; i < Mounts.Length; i++)
-                Mounts[i] = new MLibrary(Settings.MountPath + i.ToString("00"));
-
-            for (int i = 0; i < Fishing.Length; i++)
-                Fishing[i] = new MLibrary(Settings.FishingPath + i.ToString("00"));
-
-            for (int i = 0; i < Pets.Length; i++)
-                Pets[i] = new MLibrary(Settings.PetsPath + i.ToString("00"));
-
-            for (int i = 0; i < Transform.Length; i++)
-                Transform[i] = new MLibrary(Settings.TransformPath + i.ToString("00"));
-
-            for (int i = 0; i < TransformMounts.Length; i++)
-                TransformMounts[i] = new MLibrary(Settings.TransformMountsPath + i.ToString("00"));
-
-            for (int i = 0; i < TransformEffect.Length; i++)
-                TransformEffect[i] = new MLibrary(Settings.TransformEffectPath + i.ToString("00"));
-
-            for (int i = 0; i < TransformWeaponEffect.Length; i++)
-                TransformWeaponEffect[i] = new MLibrary(Settings.TransformWeaponEffectPath + i.ToString("00"));
+            InitLibrary(ref Monsters, Settings.MonsterPath, "000");
+            InitLibrary(ref Gates, Settings.GatePath, "00");
+            InitLibrary(ref NPCs, Settings.NPCPath, "00");
+            InitLibrary(ref Mounts, Settings.MountPath, "00");
+            InitLibrary(ref Fishing, Settings.FishingPath, "00");
+            InitLibrary(ref Pets, Settings.PetsPath, "00");
+            InitLibrary(ref Transform, Settings.TransformPath, "00");
+            InitLibrary(ref TransformMounts, Settings.TransformMountsPath, "00");
+            InitLibrary(ref TransformEffect, Settings.TransformEffectPath, "00");
+            InitLibrary(ref TransformWeaponEffect, Settings.TransformWeaponEffectPath, "00");
 
             #region Maplibs
             //wemade mir2 (allowed from 0-99)
@@ -235,6 +186,22 @@ namespace Client.MirGraphics
 
             Thread thread = new Thread(LoadGameLibraries) { IsBackground = true };
             thread.Start();
+        }
+
+        static void InitLibrary(ref MLibrary[] library, string path, string toStringValue, string suffix = "")
+        {
+            var allFiles = Directory.GetFiles(path, "*" + suffix + MLibrary.Extention, SearchOption.TopDirectoryOnly);
+
+            var lastFile = allFiles.Length > 0 ? Path.GetFileName(allFiles[allFiles.Length - 1]) : "0";
+
+            var count = int.Parse(Regex.Match(lastFile, @"\d+").Value) + 1;
+
+            library = new MLibrary[count];
+
+            for (int i = 0; i < count; i++)
+            {
+                library[i] = new MLibrary(path + i.ToString(toStringValue) + suffix);
+            }
         }
 
         static void LoadLibraries()
@@ -476,7 +443,7 @@ namespace Client.MirGraphics
 
     public sealed class MLibrary
     {
-        private const string Extention = ".Lib";
+        public const string Extention = ".Lib";
         public const int LibVersion = 3;
 
         private readonly string _fileName;
