@@ -1160,7 +1160,7 @@ namespace Server.MirObjects
 
             if (player.NPCPage.Key.ToUpper() == PearlBuyKey)
             {
-                player.Info.PearlCount -= (int)cost;
+                player.IntelligentCreatureLosePearls((int)cost);
             }
             else
             {

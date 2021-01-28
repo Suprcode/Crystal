@@ -4,6 +4,7 @@
     public const string ProductVersion = "Release";
 
     public const int
+
         MinAccountIDLength = 3,
         MaxAccountIDLength = 15,
 

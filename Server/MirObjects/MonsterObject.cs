@@ -296,6 +296,8 @@ namespace Server.MirObjects
             {
                 switch (Info.AI)
                 {
+                    case 64:
+                        return 0;
                     case 81:
                     case 82:
                         return int.MaxValue;

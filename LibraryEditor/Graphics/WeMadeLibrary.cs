@@ -78,7 +78,7 @@ namespace LibraryEditor
                 _fStream.Seek(0, SeekOrigin.Begin);
                 buffer = _bReader.ReadBytes(48);
                 //var desc = Encoding.UTF8.GetString(buffer, 1, 20);
-                _nType = (byte)(buffer[40] == 1 ? 2 : buffer[2] == 73 ? 3 : _nType);
+                _nType = (byte)((buffer[40] == 1 || buffer[40] == 6) ? 2 : buffer[2] == 73 ? 3 : _nType);
 
                 if (_nType == 0)
                 {
@@ -237,10 +237,14 @@ namespace LibraryEditor
                     Start++;
                     nX = Start;
                     OffSet += 2;
-                    while (nX < End)
+
+                    while (nX < End && End > 0)
                     {
                         switch (FileBytes[OffSet])
                         {
+                            default: //Unknown
+                                OffSet += 1;
+                                break;
                             case 192: //No Colour
                                 nX += 2;
                                 x += FileBytes[OffSet + 3] << 8 | FileBytes[OffSet + 2];

@@ -291,6 +291,8 @@ namespace Server.MirObjects
         
         protected override void FindTarget()
         {
+            if (Dead) return;
+
             if (Fullness < CreatureRules.MinimalFullness) return;
 
             //do automatic pickup/find
@@ -302,6 +304,8 @@ namespace Server.MirObjects
 
         private void FindItemTarget()
         {
+            if (Master == null) return;
+
             int range = shortcheck ? 4 : CreatureRules.AutoPickupRange;
 
             for (int d = 0; d <= range; d++)

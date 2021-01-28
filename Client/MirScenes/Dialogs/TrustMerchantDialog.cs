@@ -437,7 +437,7 @@ namespace Client.MirScenes.Dialogs
                 //Location = new Point(174, 452),
                 //Location = new Point(240, 451),
                 Location = new Point(11, 452),
-                Size = new Size(110, 1),
+                Size = new Size(110, 18),
                 MaxLength = 20,
                 Parent = this,
                 CanLoseFocus = true,
@@ -505,7 +505,7 @@ namespace Client.MirScenes.Dialogs
             PriceTextBox = new MirTextBox
             {
                 Location = new Point(15, 165),
-                Size = new Size(100, 1),
+                Size = new Size(100, 18),
                 MaxLength = 20,
                 Parent = this,
                 CanLoseFocus = true,
