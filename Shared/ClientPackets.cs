@@ -848,12 +848,12 @@ namespace ClientPackets
         public override short Index { get { return (short)ClientPacketIds.BuyItemBack; } }
 
         public ulong UniqueID;
-        public uint Count;
+        public ushort Count;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             UniqueID = reader.ReadUInt64();
-            Count = reader.ReadUInt32();
+            Count = reader.ReadUInt16();
         }
         protected override void WritePacket(BinaryWriter writer)
         {

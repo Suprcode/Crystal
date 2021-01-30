@@ -12828,7 +12828,7 @@ namespace Server.MirObjects
             {
                 if (FreeSpace(Info.Inventory) > 0 && (CurrentBagWeight + item.Weight <= Stats[Stat.BagWeight] || !useWeight)) return true;
 
-                uint count = item.Count;
+                ushort count = item.Count;
 
                 for (int i = 0; i < Info.Inventory.Length; i++)
                 {
@@ -12882,7 +12882,7 @@ namespace Server.MirObjects
 
                 if (items[i].Info.StackSize > 1)
                 {
-                    uint count = items[i].Count;
+                    ushort count = items[i].Count;
 
                     for (int u = 0; u < Info.Inventory.Length; u++)
                     {
@@ -13442,7 +13442,7 @@ namespace Server.MirObjects
             return FreeSpace(array) > 0;
         }
 
-        public bool CheckQuestItem(UserItem uItem, uint count)
+        public bool CheckQuestItem(UserItem uItem, ushort count)
         {
             foreach (var item in Info.QuestInventory.Where(item => item != null && item.Info == uItem.Info))
             {
@@ -15914,7 +15914,8 @@ namespace Server.MirObjects
                 }
                 else
                 {
-                    uint count = Required.Amount;
+                    ushort count = (ushort)Math.Min(Required.Amount, ushort.MaxValue);
+
                     foreach (var item in Info.Inventory.Where(item => item != null && item.Info == Required.Item))
                     {
                         if ((Required.Item.Type == ItemType.Ore) && (item.CurrentDura / 1000 > Required.Amount))
@@ -15925,7 +15926,7 @@ namespace Server.MirObjects
                         if (item.Count > count)
                             count = 0;
                         else
-                            count = count - item.Count;
+                            count = (ushort)(count - item.Count);
                         if (count == 0) break;
                     }
                     if (count != 0)
@@ -15957,12 +15958,7 @@ namespace Server.MirObjects
                 }
                 else
                 {
-                    uint count = Required.Amount;
-
-                    if (count > 999)
-                    {
-                        count = 999;
-                    }
+                    ushort count = (ushort)Math.Min(Required.Amount, ushort.MaxValue);
 
                     for (int o = 0; o < Info.Inventory.Length; o++)
                     {
@@ -17914,12 +17910,12 @@ namespace Server.MirObjects
 
             if (mail.Gold > 0)
             {
-                uint count = mail.Gold;
+                uint gold = mail.Gold;
 
-                if (count + Account.Gold >= uint.MaxValue)
-                    count = uint.MaxValue - Account.Gold;
+                if (gold + Account.Gold >= uint.MaxValue)
+                    gold = uint.MaxValue - Account.Gold;
 
-                GainGold(count);
+                GainGold(gold);
             }
 
             mail.Items = new List<UserItem>();

@@ -1919,7 +1919,7 @@ namespace Client.MirScenes.Dialogs
                 {
                     if (amountBox.Amount > 0)
                     {
-                        if (!HasCraftItems(amountBox.Amount))
+                        if (!HasCraftItems((ushort)amountBox.Amount))
                         {
                             GameScene.Scene.ChatDialog.ReceiveChat("You do not have the required tools or ingredients.", ChatType.System);
                             return;
@@ -1947,7 +1947,7 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        private bool HasCraftItems(uint count)
+        private bool HasCraftItems(ushort count)
         {
             for (int i = 0; i < Grid.Length; i++)
             {

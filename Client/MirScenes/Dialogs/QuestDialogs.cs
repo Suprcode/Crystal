@@ -1571,7 +1571,7 @@ namespace Client.MirScenes.Dialogs
     {
         public ItemInfo Item;
         public UserItem ShowItem;
-        public uint Count;
+        public ushort Count;
 
         public bool Selected;
         public bool Fixed;

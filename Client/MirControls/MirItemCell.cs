@@ -314,7 +314,7 @@ namespace Client.MirControls
 
                 amountBox.OKButton.Click += (o, e) =>
                 {
-                    Network.Enqueue(new C.BuyItemBack { UniqueID = Item.UniqueID, Count = amountBox.Amount });
+                    Network.Enqueue(new C.BuyItemBack { UniqueID = Item.UniqueID, Count = (ushort)amountBox.Amount });
                     Locked = true;
                 };
             }

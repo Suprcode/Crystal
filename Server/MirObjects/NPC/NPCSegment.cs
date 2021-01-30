@@ -1912,10 +1912,10 @@ namespace Server.MirObjects
                         break;
 
                     case CheckType.CheckItem:
-                        uint count;
+                        ushort count;
                         ushort dura;
 
-                        if (!uint.TryParse(param[1], out count))
+                        if (!ushort.TryParse(param[1], out count))
                         {
                             failed = true;
                             break;
