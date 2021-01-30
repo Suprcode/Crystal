@@ -51,8 +51,8 @@ namespace Server.MirObjects
 
         public abstract ushort Level { get; set; }
 
-        public abstract uint Health { get; }
-        public abstract uint MaxHealth { get; }
+        public abstract int Health { get; }
+        public abstract int MaxHealth { get; }
         public byte PercentHealth
         {
             get { return (byte) (Health/(float) MaxHealth*100); }
@@ -67,12 +67,8 @@ namespace Server.MirObjects
         public int AttackSpeed;
 
         public int CurrentHandWeight,
-                   MaxHandWeight, //To Remove
                    CurrentWearWeight,
-                   MaxWearWeight; //To Remove
-
-        public int CurrentBagWeight,
-                      MaxBagWeight; //To Remove
+                   CurrentBagWeight;
 
         public byte MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Holy, Freezing, PoisonAttack; //To Remove
 

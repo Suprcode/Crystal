@@ -67,27 +67,26 @@ namespace Server.MirObjects
             set { Info.Level = value; }
         }
 
-        public override uint Health
+        public override int Health
         {
             get { return HP; }
         }
-        public override uint MaxHealth
+
+        public override int MaxHealth
         {
-            get { return MaxHP; }
+            get { return Stats[Stat.HP]; }
         }
 
-        public ushort HP
+        public int HP
         {
             get { return Info.HP; }
             set { Info.HP = value; }
         }
-        public ushort MP
+        public int MP
         {
             get { return Info.MP; }
             set { Info.MP = value; }
         }
-
-        public ushort MaxHP, MaxMP;
 
         public override AttackMode AMode
         {
@@ -169,7 +168,7 @@ namespace Server.MirObjects
         }
         public bool CanRun
         {
-            get { return !Dead && Envir.Time >= ActionTime && (_stepCounter > 0 || FastRun) && (!Sneaking || ActiveSwiftFeet) && CurrentBagWeight <= MaxBagWeight && !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Frozen); }
+            get { return !Dead && Envir.Time >= ActionTime && (_stepCounter > 0 || FastRun) && (!Sneaking || ActiveSwiftFeet) && CurrentBagWeight <= Stats[Stat.BagWeight] && !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Frozen); }
         }
         public bool CanAttack
         {
@@ -375,8 +374,8 @@ namespace Server.MirObjects
 
             if (HP == 0)
             {
-                SetHP(MaxHP);
-                SetMP(MaxMP);
+                SetHP(Stats[Stat.HP]);
+                SetMP(Stats[Stat.MP]);
 
                 CurrentLocation = BindLocation;
                 CurrentMapIndex = BindMapIndex;
@@ -888,15 +887,15 @@ namespace Server.MirObjects
                 RegenTime = Envir.Time + RegenDelay;
 
 
-                if (HP < MaxHP)
+                if (HP < Stats[Stat.HP])
                 {
-                    healthRegen += (int)(MaxHP * 0.03F) + 1;
+                    healthRegen += (int)(Stats[Stat.HP] * 0.03F) + 1;
                     healthRegen += (int)(healthRegen * ((double)HealthRecovery / Settings.HealthRegenWeight));
                 }
 
-                if (MP < MaxMP)
+                if (MP < Stats[Stat.MP])
                 {
-                    manaRegen += (int)(MaxMP * 0.03F) + 1;
+                    manaRegen += (int)(Stats[Stat.MP] * 0.03F) + 1;
                     manaRegen += (int)(manaRegen * ((double)SpellRecovery / Settings.ManaRegenWeight));
                 }
             }
@@ -964,14 +963,14 @@ namespace Server.MirObjects
             }
 
             if (healthRegen > 0) ChangeHP(healthRegen);
-            if (HP == MaxHP)
+            if (HP == Stats[Stat.HP])
             {
                 PotHealthAmount = 0;
                 HealAmount = 0;
             }
 
             if (manaRegen > 0) ChangeMP(manaRegen);
-            if (MP == MaxMP) PotManaAmount = 0;
+            if (MP == Stats[Stat.MP]) PotManaAmount = 0;
         }
         private void ProcessPoison()
         {
@@ -1190,12 +1189,12 @@ namespace Server.MirObjects
             }
         }
 
-        private void SetHP(ushort amount)
+        private void SetHP(int amount)
         {
             if (HP == amount) return;
 
-            HP = amount <= MaxHP ? amount : MaxHP;
-            HP = GMNeverDie ? MaxHP : HP;
+            HP = amount <= Stats[Stat.HP] ? amount : Stats[Stat.HP];
+            HP = GMNeverDie ? Stats[Stat.HP] : HP;
 
             if (!Dead && HP == 0) Die();
 
@@ -1203,12 +1202,12 @@ namespace Server.MirObjects
             Enqueue(new S.HealthChanged { HP = HP, MP = MP });
             BroadcastHealthChange();
         }
-        private void SetMP(ushort amount)
+        private void SetMP(int amount)
         {
             if (MP == amount) return;
             //was info.MP
-            MP = amount <= MaxMP ? amount : MaxMP;
-            MP = GMNeverDie ? MaxMP : MP;
+            MP = amount <= Stats[Stat.MP] ? amount : Stats[Stat.MP];
+            MP = GMNeverDie ? Stats[Stat.MP] : MP;
 
             // HealthChanged = true;
             Enqueue(new S.HealthChanged { HP = HP, MP = MP });
@@ -1217,20 +1216,21 @@ namespace Server.MirObjects
 
         public void ChangeHP(int amount)
         {
-            //if (amount < 0) amount = (int)(amount * PoisonRate);
-
             if (HasProtectionRing && MP > 0 && amount < 0)
             {
                 ChangeMP(amount);
                 return;
             }
 
-            ushort value = (ushort)Math.Max(ushort.MinValue, Math.Min(MaxHP, HP + amount));
+            if (HP + amount > Stats[Stat.HP])
+                amount = Stats[Stat.HP] - HP;
 
-            if (value == HP) return;
+            if (amount == 0) return;
 
-            HP = value;
-            HP = GMNeverDie ? MaxHP : HP;
+            HP += amount;
+            HP = GMNeverDie ? Stats[Stat.HP] : HP;
+
+            if (HP < 0) HP = 0;
 
             if (!Dead && HP == 0) Die();
 
@@ -1245,12 +1245,15 @@ namespace Server.MirObjects
         }
         public void ChangeMP(int amount)
         {
-            ushort value = (ushort)Math.Max(ushort.MinValue, Math.Min(MaxMP, MP + amount));
+            if (MP + amount > Stats[Stat.MP])
+                amount = Stats[Stat.MP] - MP;
 
-            if (value == MP) return;
+            if (amount == 0) return;
 
-            MP = value;
-            MP = GMNeverDie ? MaxMP : MP;
+            MP += amount;
+            MP = GMNeverDie ? Stats[Stat.MP] : MP;
+
+            if (MP < 0) MP = 0;
 
             // HealthChanged = true;
             Enqueue(new S.HealthChanged { HP = HP, MP = MP });
@@ -1268,7 +1271,7 @@ namespace Server.MirObjects
 
                     if (item == null) continue;
                     if (!(item.Info.Unique.HasFlag(SpecialItemMode.Revival)) || item.CurrentDura < 1000) continue;
-                    SetHP(MaxHP);
+                    SetHP(Stats[Stat.HP]);
                     item.CurrentDura = (ushort)(item.CurrentDura - 1000);
                     Enqueue(new S.DuraChanged { UniqueID = item.UniqueID, CurrentDura = item.CurrentDura });
                     RefreshStats();
@@ -1399,7 +1402,7 @@ namespace Server.MirObjects
                     if (item.Count > 1)
                     {
                         var percent = Envir.RandomomRange(10, 8);
-                        var count = (uint)Math.Ceiling(item.Count / 10F * percent);
+                        var count = (ushort)Math.Ceiling(item.Count / 10F * percent);
 
                         if (count > item.Count)
                             throw new ArgumentOutOfRangeException();
@@ -1469,7 +1472,7 @@ namespace Server.MirObjects
                     if (percent == 0)
                         continue;
 
-                    var count = (uint)Math.Ceiling(item.Count / 10F * percent);
+                    var count = (ushort)Math.Ceiling(item.Count / 10F * percent);
 
                     if (count > item.Count)
                         throw new ArgumentOutOfRangeException();
@@ -1548,7 +1551,7 @@ namespace Server.MirObjects
                     if (item.Count > 1)
                     {
                         var percent = Envir.RandomomRange(10, 4);
-                        var count = (uint)Math.Ceiling(item.Count / 10F * percent);
+                        var count = (ushort)Math.Ceiling(item.Count / 10F * percent);
 
                         if (count > item.Count)
                             throw new ArgumentOutOfRangeException();
@@ -1779,8 +1782,8 @@ namespace Server.MirObjects
         public void LevelUp()
         {
             RefreshStats();
-            SetHP(MaxHP);
-            SetMP(MaxMP);
+            SetHP(Stats[Stat.HP]);
+            SetMP(Stats[Stat.MP]);
 
             CallDefaultNPC(DefaultNPCType.LevelUp);
 
@@ -1832,7 +1835,7 @@ namespace Server.MirObjects
                         temp.Count += item.Count;
                         return;
                     }
-                    item.Count -= temp.Info.StackSize - temp.Count;
+                    item.Count -= (ushort)(temp.Info.StackSize - temp.Count);
                     temp.Count = temp.Info.StackSize;
                 }
             }
@@ -1860,7 +1863,7 @@ namespace Server.MirObjects
                         temp.Count += item.Count;
                         return;
                     }
-                    item.Count -= temp.Info.StackSize - temp.Count;
+                    item.Count -= (ushort)(temp.Info.StackSize - temp.Count);
                     temp.Count = temp.Info.StackSize;
                 }
             }
@@ -2261,12 +2264,12 @@ namespace Server.MirObjects
             }
         }
 
-        public void Revive(uint hp, bool effect)
+        public void Revive(int hp, bool effect)
         {
             if (!Dead) return;
 
             Dead = false;
-            SetHP((ushort)hp);
+            SetHP(hp);
 
             CurrentMap.RemoveObject(this);
             Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
@@ -2319,8 +2322,8 @@ namespace Server.MirObjects
             if (temp == null || !temp.ValidPoint(bindLocation)) return;
 
             Dead = false;
-            SetHP(MaxHP);
-            SetMP(MaxMP);
+            SetHP(Stats[Stat.HP]);
+            SetMP(Stats[Stat.MP]);
             RefreshStats();
 
             CurrentMap.RemoveObject(this);
@@ -2573,8 +2576,8 @@ namespace Server.MirObjects
 
             //Location Stats ?
 
-            if (HP > MaxHP) SetHP(MaxHP);
-            if (MP > MaxMP) SetMP(MaxMP);
+            if (HP > Stats[Stat.HP]) SetHP(Stats[Stat.HP]);
+            if (MP > Stats[Stat.MP]) SetMP(Stats[Stat.MP]);
 
             AttackSpeed = 1400 - ((ASpeed * 60) + Math.Min(370, (Level * 14)));
 
@@ -2582,88 +2585,6 @@ namespace Server.MirObjects
         }
 
         private void RefreshLevelStats()
-        {
-            MaxExperience = Level < Settings.ExperienceList.Count ? Settings.ExperienceList[Level - 1] : 0;
-            MaxHP = 0; MaxMP = 0;
-            MinAC = 0; MaxAC = 0;
-            MinMAC = 0; MaxMAC = 0;
-            MinDC = 0; MaxDC = 0;
-            MinMC = 0; MaxMC = 0;
-            MinSC = 0; MaxSC = 0;
-
-            Accuracy = Settings.ClassBaseStats[(byte)Class].StartAccuracy;
-            Agility = Settings.ClassBaseStats[(byte)Class].StartAgility;
-            CriticalRate = Settings.ClassBaseStats[(byte)Class].StartCriticalRate;
-            CriticalDamage = Settings.ClassBaseStats[(byte)Class].StartCriticalDamage;
-            //Other Stats;
-            MaxBagWeight = 0;
-            MaxWearWeight = 0;
-            MaxHandWeight = 0;
-            ASpeed = 0;
-            Luck = 0;
-            LifeOnHit = 0;
-            HpDrainRate = 0;
-            Reflect = 0;
-            MagicResist = 0;
-            PoisonResist = 0;
-            HealthRecovery = 0;
-            SpellRecovery = 0;
-            PoisonRecovery = 0;
-            Holy = 0;
-            Freezing = 0;
-            PoisonAttack = 0;
-
-            ExpRateOffset = 0;
-            ItemDropRateOffset = 0;
-            MineRate = 0;
-            GemRate = 0;
-            FishRate = 0;
-            CraftRate = 0;
-            GoldDropRateOffset = 0;
-
-            AttackBonus = 0;
-
-            MaxHP = (ushort)Math.Min(ushort.MaxValue, 14 + (Level / Settings.ClassBaseStats[(byte)Class].HpGain + Settings.ClassBaseStats[(byte)Class].HpGainRate) * Level);
-
-            MinAC = (ushort)Math.Min(ushort.MaxValue, Settings.ClassBaseStats[(byte)Class].MinAc > 0 ? Level / Settings.ClassBaseStats[(byte)Class].MinAc : 0);
-            MaxAC = (ushort)Math.Min(ushort.MaxValue, Settings.ClassBaseStats[(byte)Class].MaxAc > 0 ? Level / Settings.ClassBaseStats[(byte)Class].MaxAc : 0);
-            MinMAC = (ushort)Math.Min(ushort.MaxValue, Settings.ClassBaseStats[(byte)Class].MinMac > 0 ? Level / Settings.ClassBaseStats[(byte)Class].MinMac : 0);
-            MaxMAC = (ushort)Math.Min(ushort.MaxValue, Settings.ClassBaseStats[(byte)Class].MaxMac > 0 ? Level / Settings.ClassBaseStats[(byte)Class].MaxMac : 0);
-            MinDC = (ushort)Math.Min(ushort.MaxValue, Settings.ClassBaseStats[(byte)Class].MinDc > 0 ? Level / Settings.ClassBaseStats[(byte)Class].MinDc : 0);
-            MaxDC = (ushort)Math.Min(ushort.MaxValue, Settings.ClassBaseStats[(byte)Class].MaxDc > 0 ? Level / Settings.ClassBaseStats[(byte)Class].MaxDc : 0);
-            MinMC = (ushort)Math.Min(ushort.MaxValue, Settings.ClassBaseStats[(byte)Class].MinMc > 0 ? Level / Settings.ClassBaseStats[(byte)Class].MinMc : 0);
-            MaxMC = (ushort)Math.Min(ushort.MaxValue, Settings.ClassBaseStats[(byte)Class].MaxMc > 0 ? Level / Settings.ClassBaseStats[(byte)Class].MaxMc : 0);
-            MinSC = (ushort)Math.Min(ushort.MaxValue, Settings.ClassBaseStats[(byte)Class].MinSc > 0 ? Level / Settings.ClassBaseStats[(byte)Class].MinSc : 0);
-            MaxSC = (ushort)Math.Min(ushort.MaxValue, Settings.ClassBaseStats[(byte)Class].MaxSc > 0 ? Level / Settings.ClassBaseStats[(byte)Class].MaxSc : 0);
-            CriticalRate = (byte)Math.Min(byte.MaxValue, Settings.ClassBaseStats[(byte)Class].CritialRateGain > 0 ? CriticalRate + (Level / Settings.ClassBaseStats[(byte)Class].CritialRateGain) : CriticalRate);
-            CriticalDamage = (byte)Math.Min(byte.MaxValue, Settings.ClassBaseStats[(byte)Class].CriticalDamageGain > 0 ? CriticalDamage + (Level / Settings.ClassBaseStats[(byte)Class].CriticalDamageGain) : CriticalDamage);
-
-            MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, (50 + Level / Settings.ClassBaseStats[(byte)Class].BagWeightGain * Level));
-            MaxWearWeight = (ushort)Math.Min(ushort.MaxValue, 15 + Level / Settings.ClassBaseStats[(byte)Class].WearWeightGain * Level);
-            MaxHandWeight = (ushort)Math.Min(ushort.MaxValue, 12 + Level / Settings.ClassBaseStats[(byte)Class].HandWeightGain * Level);
-            switch (Class)
-            {
-                case MirClass.Warrior:
-                    MaxHP = (ushort)Math.Min(ushort.MaxValue, 14 + (Level / Settings.ClassBaseStats[(byte)Class].HpGain + Settings.ClassBaseStats[(byte)Class].HpGainRate + Level / 20F) * Level);
-                    MaxMP = (ushort)Math.Min(ushort.MaxValue, 11 + (Level * 3.5F) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
-                    break;
-                case MirClass.Wizard:
-                    MaxMP = (ushort)Math.Min(ushort.MaxValue, 13 + ((Level / 5F + 2F) * 2.2F * Level) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
-                    break;
-                case MirClass.Taoist:
-                    MaxMP = (ushort)Math.Min(ushort.MaxValue, (13 + Level / 8F * 2.2F * Level) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
-                    break;
-                case MirClass.Assassin:
-                    MaxMP = (ushort)Math.Min(ushort.MaxValue, (11 + Level * 5F) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
-                    break;
-                case MirClass.Archer:
-                    MaxMP = (ushort)Math.Min(ushort.MaxValue, (11 + Level * 4F) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
-                    break;
-            }
-
-        }
-
-        private void RefreshLevelStats2()
         {
             MaxExperience = Level < Settings.ExperienceList.Count ? Settings.ExperienceList[Level - 1] : 0;
 
@@ -2730,223 +2651,17 @@ namespace Server.MirObjects
 
         private void RefreshBagWeight()
         {
-            CurrentBagWeight = 0;
-
-            for (int i = 0; i < Info.Inventory.Length; i++)
-            {
-                UserItem item = Info.Inventory[i];
-                if (item != null)
-                    CurrentBagWeight = (ushort)Math.Min(ushort.MaxValue, CurrentBagWeight + item.Weight);
-            }
-        }
-
-        private void RefreshBagWeight2()
-        {
             for (int i = 0; i < Info.Inventory.Length; i++)
             {
                 UserItem item = Info.Inventory[i];
                 if (item != null)
                 {
-                    CurrentBagWeight += (ushort)item.Weight; //TODO - Remove this cast after weight type fixed
+                    CurrentBagWeight += item.Weight;
                 }
             }
         }
 
         private void RefreshEquipmentStats()
-        {
-            short OldLooks_Weapon = Looks_Weapon;
-			short OldLooks_WeaponEffect = Looks_WeaponEffect;
-			short OldLooks_Armour = Looks_Armour;
-            short Old_MountType = MountType;
-            byte OldLooks_Wings = Looks_Wings;
-            byte OldLight = Light;
-
-            Looks_Armour = 0;
-            Looks_Weapon = -1;
-			Looks_WeaponEffect = 0;
-			Looks_Wings = 0;
-            Light = 0;
-            CurrentWearWeight = 0;
-            CurrentHandWeight = 0;
-            MountType = -1;
-
-            HasTeleportRing = false;
-            HasProtectionRing = false;
-            HasRevivalRing = false;
-            HasClearRing = false;
-            HasMuscleRing = false;
-            HasParalysisRing = false;
-            HasProbeNecklace = false;
-            SkillNeckBoost = 1;
-            NoDuraLoss = false;
-            FastRun = false;
-
-            var skillsToAdd = new List<string>();
-            var skillsToRemove = new List<string> { Settings.HealRing, Settings.FireRing, Settings.BlinkSkill };
-            short Macrate = 0, Acrate = 0, HPrate = 0, MPrate = 0;
-            ItemSets.Clear();
-            MirSet.Clear();
-
-            for (int i = 0; i < Info.Equipment.Length; i++)
-            {
-                UserItem temp = Info.Equipment[i];
-                if (temp == null) continue;
-                ItemInfo RealItem = Functions.GetRealItem(temp.Info, Info.Level, Info.Class, Envir.ItemInfoList);
-                if (RealItem.Type == ItemType.Weapon || RealItem.Type == ItemType.Torch)
-                    CurrentHandWeight = (ushort)Math.Min(byte.MaxValue, CurrentHandWeight + temp.Weight);
-                else
-                    CurrentWearWeight = (ushort)Math.Min(byte.MaxValue, CurrentWearWeight + temp.Weight);
-
-                if (temp.CurrentDura == 0 && temp.Info.Durability > 0) continue;
-
-                MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + RealItem.Stats[Stat.MinAC] + temp.Awake.GetAC());
-                MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + RealItem.Stats[Stat.MaxAC] + temp.AddedStats[Stat.MaxAC] + temp.Awake.GetAC());
-                MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + RealItem.Stats[Stat.MinMAC] + temp.Awake.GetMAC());
-                MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + RealItem.Stats[Stat.MaxMAC] + temp.AddedStats[Stat.MaxMAC] + temp.Awake.GetMAC());
-
-                MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + RealItem.Stats[Stat.MinDC] + temp.Awake.GetDC());
-                MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + RealItem.Stats[Stat.MaxDC] + temp.AddedStats[Stat.MaxDC] + temp.Awake.GetDC());
-                MinMC = (ushort)Math.Min(ushort.MaxValue, MinMC + RealItem.Stats[Stat.MinMC] + temp.Awake.GetMC());
-                MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + RealItem.Stats[Stat.MaxMC] + temp.AddedStats[Stat.MaxMC] + temp.Awake.GetMC());
-                MinSC = (ushort)Math.Min(ushort.MaxValue, MinSC + RealItem.Stats[Stat.MinSC] + temp.Awake.GetSC());
-                MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + RealItem.Stats[Stat.MaxSC] + temp.AddedStats[Stat.MaxSC] + temp.Awake.GetSC());
-
-                Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + RealItem.Stats[Stat.Accuracy] + temp.AddedStats[Stat.Accuracy]);
-                Agility = (byte)Math.Min(byte.MaxValue, Agility + RealItem.Stats[Stat.Agility] + temp.AddedStats[Stat.Agility]);
-
-                MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + RealItem.Stats[Stat.HP] + temp.AddedStats[Stat.HP] + temp.Awake.GetHPMP());
-                MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + RealItem.Stats[Stat.MP] + temp.AddedStats[Stat.MP] + temp.Awake.GetHPMP());
-
-                ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + temp.AddedStats[Stat.AttackSpeed] + RealItem.Stats[Stat.AttackSpeed])));
-                Luck = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, Luck + temp.AddedStats[Stat.Luck] + RealItem.Stats[Stat.Luck])));
-
-                MaxBagWeight = (ushort)Math.Max(ushort.MinValue, (Math.Min(ushort.MaxValue, MaxBagWeight + RealItem.Stats[Stat.BagWeight])));
-                MaxWearWeight = (ushort)Math.Max(ushort.MinValue, (Math.Min(byte.MaxValue, MaxWearWeight + RealItem.Stats[Stat.WearWeight])));
-                MaxHandWeight = (ushort)Math.Max(ushort.MinValue, (Math.Min(byte.MaxValue, MaxHandWeight + RealItem.Stats[Stat.HandWeight])));
-                HPrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, HPrate + RealItem.Stats[Stat.HPrate]));
-                MPrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, MPrate + RealItem.Stats[Stat.MPrate]));
-                Acrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, Acrate + RealItem.Stats[Stat.MaxACRate]));
-                Macrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, Macrate + RealItem.Stats[Stat.MaxMACRate]));
-                MagicResist = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, MagicResist + temp.AddedStats[Stat.MagicResist] + RealItem.Stats[Stat.MagicResist])));
-                PoisonResist = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonResist + temp.AddedStats[Stat.PoisonResist] + RealItem.Stats[Stat.PoisonResist])));
-                HealthRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, HealthRecovery + temp.AddedStats[Stat.HealthRecovery] + RealItem.Stats[Stat.HealthRecovery])));
-                SpellRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, SpellRecovery + temp.AddedStats[Stat.SpellRecovery] + RealItem.Stats[Stat.SpellRecovery])));
-                PoisonRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonRecovery + temp.AddedStats[Stat.PoisonRecovery] + RealItem.Stats[Stat.PoisonRecovery])));
-                CriticalRate = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, CriticalRate + temp.AddedStats[Stat.CriticalRate] + RealItem.Stats[Stat.CriticalRate])));
-                CriticalDamage = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, CriticalDamage + temp.AddedStats[Stat.CriticalDamage] + RealItem.Stats[Stat.CriticalDamage])));
-                Holy = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Holy + RealItem.Stats[Stat.Holy])));
-                Freezing = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Freezing + temp.AddedStats[Stat.Freezing] + RealItem.Stats[Stat.Freezing])));
-                PoisonAttack = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonAttack + temp.AddedStats[Stat.PoisonAttack] + RealItem.Stats[Stat.PoisonAttack])));
-                Reflect = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Reflect + RealItem.Stats[Stat.Reflect])));
-                HpDrainRate = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, HpDrainRate + RealItem.Stats[Stat.HpDrainRate])));
-
-                if (RealItem.Light > Light) Light = RealItem.Light;
-                if (RealItem.Unique != SpecialItemMode.None)
-                {
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Paralize)) HasParalysisRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Teleport)) HasTeleportRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Clearring)) HasClearRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Protection)) HasProtectionRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Revival)) HasRevivalRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Muscle)) HasMuscleRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Flame))
-                    {
-                        skillsToAdd.Add(Settings.FireRing);
-                        //skillsToRemove.Remove(Settings.FireRing);
-                    }
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Healing))
-                    {
-                        skillsToAdd.Add(Settings.HealRing);
-                        //skillsToRemove.Remove(Settings.HealRing);
-                    }
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Probe)) HasProbeNecklace = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Skill)) SkillNeckBoost = 3;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.NoDuraLoss)) NoDuraLoss = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Blink))
-                    {
-                        skillsToAdd.Add(Settings.BlinkSkill);
-                        //skillsToRemove.Remove(Settings.BlinkSkill);
-                    }
-                }
-                if (RealItem.CanFastRun)
-                {
-                    FastRun = true;
-                }
-
-                RefreshSocketStats(temp, skillsToAdd, ref Macrate, ref Acrate, ref HPrate, ref MPrate);
-
-                if (RealItem.Type == ItemType.Armour)
-                {
-                    Looks_Armour = RealItem.Shape;
-                    Looks_Wings = RealItem.Effect;
-                }
-
-				if (RealItem.Type == ItemType.Weapon)
-				{
-					Looks_Weapon = RealItem.Shape;
-					Looks_WeaponEffect = RealItem.Effect;
-				}
-
-				if (RealItem.Type == ItemType.Mount)
-                {
-                    MountType = RealItem.Shape;
-                    //RealItem.Effect;
-                }
-
-                if (RealItem.Set == ItemSet.None) continue;
-
-                ItemSets itemSet = ItemSets.Where(set => set.Set == RealItem.Set && !set.Type.Contains(RealItem.Type) && !set.SetComplete).FirstOrDefault();
-
-                if (itemSet != null)
-                {
-                    itemSet.Type.Add(RealItem.Type);
-                    itemSet.Count++;
-                }
-                else
-                {
-                    ItemSets.Add(new ItemSets { Count = 1, Set = RealItem.Set, Type = new List<ItemType> { RealItem.Type } });
-                }
-
-                //Mir Set
-                if (RealItem.Set == ItemSet.Mir)
-                {
-                    if (!MirSet.Contains((EquipmentSlot)i))
-                        MirSet.Add((EquipmentSlot)i);
-                }
-            }
-
-            MaxHP = (ushort)Math.Min(ushort.MaxValue, (((double)HPrate / 100) + 1) * MaxHP);
-            MaxMP = (ushort)Math.Min(ushort.MaxValue, (((double)MPrate / 100) + 1) * MaxMP);
-            MaxAC = (ushort)Math.Min(ushort.MaxValue, (((double)Acrate / 100) + 1) * MaxAC);
-            MaxMAC = (ushort)Math.Min(ushort.MaxValue, (((double)Macrate / 100) + 1) * MaxMAC);
-
-            AddTempSkills(skillsToAdd);
-            RemoveTempSkills(skillsToRemove.Except(skillsToAdd));
-
-            if (HasMuscleRing)
-            {
-                MaxBagWeight = (ushort)(MaxBagWeight * 2);
-                MaxWearWeight = Math.Min(ushort.MaxValue, (ushort)(MaxWearWeight * 2));
-                MaxHandWeight = Math.Min(ushort.MaxValue, (ushort)(MaxHandWeight * 2));
-            }
-            if ((OldLooks_Armour != Looks_Armour) || (OldLooks_Weapon != Looks_Weapon) || (OldLooks_WeaponEffect != Looks_WeaponEffect) || (OldLooks_Wings != Looks_Wings) || (OldLight != Light))
-            {
-                Broadcast(GetUpdateInfo());
-
-                if (Globals.FishingRodShapes.Contains(OldLooks_Weapon) != Globals.FishingRodShapes.Contains(Looks_Weapon))
-                {
-                    Enqueue(GetFishInfo());
-                }
-            }
-
-            if (Old_MountType != MountType)
-            {
-                RefreshMount(false);
-            }
-        }
-
-
-        private void RefreshEquipmentStats2()
         {
             short OldLooks_Weapon = Looks_Weapon;
             short OldLooks_WeaponEffect = Looks_WeaponEffect;
@@ -2997,20 +2712,20 @@ namespace Server.MirObjects
                 Stats.Add(RealItem.Stats);
                 Stats.Add(temp.AddedStats);
 
-                MinAC += temp.Awake.GetAC();
-                MaxAC += temp.Awake.GetAC();
-                MinMAC += temp.Awake.GetMAC();
-                MaxMAC += temp.Awake.GetMAC();
+                Stats[Stat.MinAC] += temp.Awake.GetAC();
+                Stats[Stat.MaxAC] += temp.Awake.GetAC();
+                Stats[Stat.MinMAC] += temp.Awake.GetMAC();
+                Stats[Stat.MaxMAC] += temp.Awake.GetMAC();
 
-                MinDC += temp.Awake.GetDC();
-                MaxDC += temp.Awake.GetDC();
-                MinMC += temp.Awake.GetMC();
-                MaxMC += temp.Awake.GetMC();
-                MinSC += temp.Awake.GetSC();
-                MaxSC += temp.Awake.GetSC();
+                Stats[Stat.MinDC] += temp.Awake.GetDC();
+                Stats[Stat.MaxDC] += temp.Awake.GetDC();
+                Stats[Stat.MinMC] += temp.Awake.GetMC();
+                Stats[Stat.MaxMC] += temp.Awake.GetMC();
+                Stats[Stat.MinSC] += temp.Awake.GetSC();
+                Stats[Stat.MaxSC] += temp.Awake.GetSC();
 
-                MaxHP += temp.Awake.GetHPMP();
-                MaxMP += temp.Awake.GetHPMP();
+                Stats[Stat.HP] += temp.Awake.GetHPMP();
+                Stats[Stat.MP] += temp.Awake.GetHPMP();
 
                 if (RealItem.Light > Light) Light = RealItem.Light;
                 if (RealItem.Unique != SpecialItemMode.None)
@@ -3035,7 +2750,7 @@ namespace Server.MirObjects
                     FastRun = true;
                 }
 
-                RefreshSocketStats2(temp, skillsToAdd);
+                RefreshSocketStats(temp, skillsToAdd);
 
                 if (RealItem.Type == ItemType.Armour)
                 {
@@ -3109,105 +2824,7 @@ namespace Server.MirObjects
         }
 
 
-        private void RefreshSocketStats(UserItem equipItem, List<string> skillsToAdd, ref short Macrate, ref short Acrate, ref short HPrate, ref short MPrate)
-        {
-            if (equipItem == null) return;
-
-            if (equipItem.Info.Type == ItemType.Weapon && equipItem.Info.IsFishingRod)
-            {
-                return;
-            }
-
-            if (equipItem.Info.Type == ItemType.Mount && !RidingMount)
-            {
-                return;
-            }
-
-            for (int j = 0; j < equipItem.Slots.Length; j++)
-            {
-                UserItem temp = equipItem.Slots[j];
-                if (temp == null) continue;
-
-                ItemInfo RealItem = Functions.GetRealItem(temp.Info, Info.Level, Info.Class, Envir.ItemInfoList);
-                if (RealItem.Type == ItemType.Weapon || RealItem.Type == ItemType.Torch)
-                    CurrentHandWeight = (byte)Math.Min(byte.MaxValue, CurrentHandWeight + temp.Weight);
-                else
-                    CurrentWearWeight = (byte)Math.Min(byte.MaxValue, CurrentWearWeight + temp.Weight);
-
-                if (temp.CurrentDura == 0 && temp.Info.Durability > 0) continue;
-
-                MinAC = (byte)Math.Min(byte.MaxValue, MinAC + RealItem.Stats[Stat.MinAC] + temp.AddedStats[Stat.MinAC]);
-                MaxAC = (byte)Math.Min(byte.MaxValue, MaxAC + RealItem.Stats[Stat.MaxAC] + temp.AddedStats[Stat.MaxAC]);
-                MinMAC = (byte)Math.Min(byte.MaxValue, MinMAC + RealItem.Stats[Stat.MinMAC] + temp.AddedStats[Stat.MinMAC]);
-                MaxMAC = (byte)Math.Min(byte.MaxValue, MaxMAC + RealItem.Stats[Stat.MaxMAC] + temp.AddedStats[Stat.MaxMAC]);
-
-                MinDC = (byte)Math.Min(byte.MaxValue, MinDC + RealItem.Stats[Stat.MinDC] + temp.AddedStats[Stat.MinDC]);
-                MaxDC = (byte)Math.Min(byte.MaxValue, MaxDC + RealItem.Stats[Stat.MaxDC] + temp.AddedStats[Stat.MaxDC]);
-                MinMC = (byte)Math.Min(byte.MaxValue, MinMC + RealItem.Stats[Stat.MinMC] + temp.AddedStats[Stat.MinMC]);
-                MaxMC = (byte)Math.Min(byte.MaxValue, MaxMC + RealItem.Stats[Stat.MaxMC] + temp.AddedStats[Stat.MaxMC]);
-                MinSC = (byte)Math.Min(byte.MaxValue, MinSC + RealItem.Stats[Stat.MinSC] + temp.AddedStats[Stat.MinSC]);
-                MaxSC = (byte)Math.Min(byte.MaxValue, MaxSC + RealItem.Stats[Stat.MaxSC] + temp.AddedStats[Stat.MaxSC]);
-
-                Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + RealItem.Stats[Stat.Accuracy] + temp.AddedStats[Stat.Accuracy]);
-                Agility = (byte)Math.Min(byte.MaxValue, Agility + RealItem.Stats[Stat.Agility] + temp.AddedStats[Stat.Agility]);
-
-                MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + RealItem.Stats[Stat.HP] + temp.AddedStats[Stat.HP]);
-                MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + RealItem.Stats[Stat.MP] + temp.AddedStats[Stat.MP]);
-
-                ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + temp.AddedStats[Stat.AttackSpeed] + RealItem.Stats[Stat.AttackSpeed])));
-                Luck = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, Luck + temp.AddedStats[Stat.Luck] + RealItem.Stats[Stat.Luck])));
-
-                MaxBagWeight = (ushort)Math.Max(ushort.MinValue, (Math.Min(ushort.MaxValue, MaxBagWeight + temp.AddedStats[Stat.BagWeight] + RealItem.Stats[Stat.BagWeight])));
-                MaxWearWeight = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, MaxWearWeight + temp.AddedStats[Stat.WearWeight] + RealItem.Stats[Stat.WearWeight])));
-                MaxHandWeight = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, MaxHandWeight + temp.AddedStats[Stat.HandWeight] + RealItem.Stats[Stat.HandWeight])));
-                HPrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, HPrate + temp.AddedStats[Stat.HPrate] + RealItem.Stats[Stat.HPrate]));
-                MPrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, MPrate + temp.AddedStats[Stat.MPrate] + RealItem.Stats[Stat.MPrate]));
-                Acrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, Acrate + temp.AddedStats[Stat.MaxACRate] + RealItem.Stats[Stat.MaxACRate]));
-                Macrate = (short)Math.Max(short.MinValue, Math.Min(short.MaxValue, Macrate + temp.AddedStats[Stat.MaxMACRate] + RealItem.Stats[Stat.MaxMACRate]));
-                MagicResist = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, MagicResist + temp.AddedStats[Stat.MagicResist] + RealItem.Stats[Stat.MagicResist])));
-                PoisonResist = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonResist + temp.AddedStats[Stat.PoisonResist] + RealItem.Stats[Stat.PoisonResist])));
-                HealthRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, HealthRecovery + temp.AddedStats[Stat.HealthRecovery] + RealItem.Stats[Stat.HealthRecovery])));
-                SpellRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, SpellRecovery + temp.AddedStats[Stat.SpellRecovery] + RealItem.Stats[Stat.SpellRecovery]))); //TODO - CHECK THIS
-                PoisonRecovery = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonRecovery + temp.AddedStats[Stat.PoisonRecovery] + RealItem.Stats[Stat.PoisonRecovery])));
-                CriticalRate = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, CriticalRate + temp.AddedStats[Stat.CriticalRate] + RealItem.Stats[Stat.CriticalRate])));
-                CriticalDamage = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, CriticalDamage + temp.AddedStats[Stat.CriticalDamage] + RealItem.Stats[Stat.CriticalDamage])));
-                Holy = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Holy + temp.AddedStats[Stat.Holy] + RealItem.Stats[Stat.Holy])));
-                Freezing = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Freezing + temp.AddedStats[Stat.Freezing]+ RealItem.Stats[Stat.Freezing])));
-                PoisonAttack = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonAttack + temp.AddedStats[Stat.PoisonAttack] + RealItem.Stats[Stat.PoisonAttack])));
-                Reflect = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Reflect + temp.AddedStats[Stat.Reflect] + RealItem.Stats[Stat.Reflect])));
-                HpDrainRate = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, HpDrainRate + temp.AddedStats[Stat.HpDrainRate] + RealItem.Stats[Stat.HpDrainRate])));
-
-                if (RealItem.Light > Light) Light = RealItem.Light;
-                if (RealItem.Unique != SpecialItemMode.None)
-                {
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Paralize)) HasParalysisRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Teleport)) HasTeleportRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Clearring)) HasClearRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Protection)) HasProtectionRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Revival)) HasRevivalRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Muscle)) HasMuscleRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Flame))
-                    {
-                        skillsToAdd.Add(Settings.FireRing);
-                    }
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Healing))
-                    {
-                        skillsToAdd.Add(Settings.HealRing);
-                    }
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Probe)) HasProbeNecklace = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Skill)) SkillNeckBoost = 3;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.NoDuraLoss)) NoDuraLoss = true; 
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Blink))
-                    {
-                        skillsToAdd.Add(Settings.BlinkSkill);
-                    }
-                }
-            }
-
-            //TODO - Add Socket bonuses
-        }
-
-        private void RefreshSocketStats2(UserItem equipItem, List<string> skillsToAdd)
+        private void RefreshSocketStats(UserItem equipItem, List<string> skillsToAdd)
         {
             if (equipItem == null) return;
 
@@ -3261,174 +2878,6 @@ namespace Server.MirObjects
         }
 
         private void RefreshItemSetStats()
-        {
-            foreach (var s in ItemSets)
-            {
-                if ((s.Set == ItemSet.Smash) &&
-                    ((s.Type.Contains(ItemType.Ring) && s.Type.Contains(ItemType.Bracelet)) || (s.Type.Contains(ItemType.Ring) && s.Type.Contains(ItemType.Necklace)) || (s.Type.Contains(ItemType.Bracelet) && s.Type.Contains(ItemType.Necklace))))
-                {
-                    ASpeed = (sbyte)Math.Min(sbyte.MaxValue, ASpeed + 2);
-                }
-
-                if ((s.Set == ItemSet.Purity) && (s.Type.Contains(ItemType.Ring)) && (s.Type.Contains(ItemType.Bracelet)))
-                {
-                    Holy = Math.Min(byte.MaxValue, (byte)(Holy + 3));
-                }
-
-                if ((s.Set == ItemSet.HwanDevil) && (s.Type.Contains(ItemType.Ring)) && (s.Type.Contains(ItemType.Bracelet)))
-                {
-                    MaxWearWeight = (ushort)Math.Min(ushort.MaxValue, MaxWearWeight + 5);
-                    MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 20);
-                }
-
-                if ((s.Set == ItemSet.DarkGhost) && (s.Type.Contains(ItemType.Necklace)) && (s.Type.Contains(ItemType.Bracelet)))
-                {
-                    MaxHP = Math.Min(byte.MaxValue, (byte)(MaxHP + 25));
-                }
-
-                if (!s.SetComplete) continue;
-                switch (s.Set)
-                {
-                    case ItemSet.Mundane:
-                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + 50);
-                        break;
-                    case ItemSet.NokChi:
-                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + 50);
-                        break;
-                    case ItemSet.TaoProtect:
-                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + 30);
-                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + 30);
-                        break;
-                    case ItemSet.RedOrchid:
-                        Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + 2);
-                        HpDrainRate = (byte)Math.Min(byte.MaxValue, HpDrainRate + 10);
-                        break;
-                    case ItemSet.RedFlower:
-                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + 50);
-                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP - 25);
-                        break;
-                    case ItemSet.Smash:
-                        MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + 1);
-                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 3);
-                        break;
-                    case ItemSet.HwanDevil:
-                        MinMC = (ushort)Math.Min(ushort.MaxValue, MinMC + 1);
-                        MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + 2);
-                        break;
-                    case ItemSet.Purity:
-                        MinSC = (ushort)Math.Min(ushort.MaxValue, MinSC + 1);
-                        MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + 2);
-                        break;
-                    case ItemSet.FiveString:
-                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + (((double)MaxHP / 100) * 30));
-                        MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + 2);
-                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + 2);
-                        break;
-                    case ItemSet.Spirit:
-                        MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + 2);
-                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 5);
-                        ASpeed = (sbyte)Math.Min(sbyte.MaxValue, ASpeed + 2);
-                        break;
-                    case ItemSet.Bone:
-                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + 2);
-                        MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + 1);
-                        MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + 1);
-                        break;
-                    case ItemSet.Bug:
-                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 1);
-                        MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + 1);
-                        MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + 1);
-                        MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + 1);
-                        PoisonResist = (byte)Math.Min(byte.MaxValue, PoisonResist + 1);
-                        break;
-                    case ItemSet.WhiteGold:
-                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 2);
-                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + 2);
-                        break;
-                    case ItemSet.WhiteGoldH:
-                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 3);
-                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + 30);
-                        ASpeed = (sbyte)Math.Min(int.MaxValue, ASpeed + 2);
-                        break;
-                    case ItemSet.RedJade:
-                        MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + 2);
-                        MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + 2);
-                        break;
-                    case ItemSet.RedJadeH:
-                        MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + 2);
-                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + 40);
-                        Agility = (byte)Math.Min(byte.MaxValue, Agility + 2);
-                        break;
-                    case ItemSet.Nephrite:
-                        MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + 2);
-                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + 1);
-                        MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + 1);
-                        break;
-                    case ItemSet.NephriteH:
-                        MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + 2);
-                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + 15);
-                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + 20);
-                        Holy = (byte)Math.Min(byte.MaxValue, Holy + 1);
-                        Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + 1);
-                        break;
-                    case ItemSet.Whisker1:
-                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 1);
-                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 25);
-                        break;
-                    case ItemSet.Whisker2:
-                        MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + 1);
-                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 17);
-                        break;
-                    case ItemSet.Whisker3:
-                        MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + 1);
-                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 17);
-                        break;
-                    case ItemSet.Whisker4:
-                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 1);
-                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 20);
-                        break;
-                    case ItemSet.Whisker5:
-                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 1);
-                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 17);
-                        break;
-                    case ItemSet.Hyeolryong:
-                        MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + 2);
-                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + 15);
-                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + 20);
-                        Holy = (byte)Math.Min(byte.MaxValue, Holy + 1);
-                        Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + 1);
-                        break;
-                    case ItemSet.Monitor:
-                        MagicResist = (byte)Math.Min(byte.MaxValue, MagicResist + 1);
-                        PoisonResist = (byte)Math.Min(byte.MaxValue, PoisonResist + 1);
-                        break;
-                    case ItemSet.Oppressive:
-                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + 1);
-                        Agility = (byte)Math.Min(byte.MaxValue, Agility + 1);
-                        break;
-                    case ItemSet.BlueFrost:
-                        MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + 1);
-                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 1);
-                        MinMC = (ushort)Math.Min(ushort.MaxValue, MinMC + 1);
-                        MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + 1);
-                        MaxHandWeight = (ushort)Math.Min(ushort.MaxValue, MaxHandWeight + 1);
-                        MaxWearWeight = (ushort)Math.Min(ushort.MaxValue, MaxWearWeight + 2);
-                        break;
-                    case ItemSet.BlueFrostH:
-                        MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + 1);
-                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 2);
-                        MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + 2);
-                        Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + 1);
-                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + 50);
-                        break;
-                    case ItemSet.DarkGhost:
-                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + 25);
-                        ASpeed = (sbyte)Math.Min(int.MaxValue, ASpeed + 2);
-                        break;
-                }
-            }
-        }
-        private void RefreshItemSetStats2()
         {
             foreach (var s in ItemSets)
             {
@@ -3602,70 +3051,6 @@ namespace Server.MirObjects
         {
             if (MirSet.Count() == 10)
             {
-                MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + 1);
-                MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + 1);
-                MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 70);
-                Luck = (sbyte)Math.Min(sbyte.MaxValue, Luck + 2);
-                ASpeed = (sbyte)Math.Min(int.MaxValue, ASpeed + 2);
-                MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + 70);
-                MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + 80);
-                MagicResist = (byte)Math.Min(byte.MaxValue, MagicResist + 6);
-                PoisonResist = (byte)Math.Min(byte.MaxValue, PoisonResist + 6);
-            }
-
-            if (MirSet.Contains(EquipmentSlot.RingL) && MirSet.Contains(EquipmentSlot.RingR))
-            {
-                MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + 1);
-                MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + 1);
-            }
-            if (MirSet.Contains(EquipmentSlot.BraceletL) && MirSet.Contains(EquipmentSlot.BraceletR))
-            {
-                MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + 1);
-                MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + 1);
-            }
-            if ((MirSet.Contains(EquipmentSlot.RingL) | MirSet.Contains(EquipmentSlot.RingR)) && (MirSet.Contains(EquipmentSlot.BraceletL) | MirSet.Contains(EquipmentSlot.BraceletR)) && MirSet.Contains(EquipmentSlot.Necklace))
-            {
-                MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + 1);
-                MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + 1);
-                MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 30);
-                MaxWearWeight = (ushort)Math.Min(ushort.MaxValue, MaxWearWeight + 17);
-            }
-            if (MirSet.Contains(EquipmentSlot.RingL) && MirSet.Contains(EquipmentSlot.RingR) && MirSet.Contains(EquipmentSlot.BraceletL) && MirSet.Contains(EquipmentSlot.BraceletR) && MirSet.Contains(EquipmentSlot.Necklace))
-            {
-                MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + 1);
-                MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + 1);
-                MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 20);
-                MaxWearWeight = (ushort)Math.Min(ushort.MaxValue, MaxWearWeight + 10);
-            }
-            if (MirSet.Contains(EquipmentSlot.Armour) && MirSet.Contains(EquipmentSlot.Helmet) && MirSet.Contains(EquipmentSlot.Weapon))
-            {
-                MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 2);
-                MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + 1);
-                MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + 1);
-                Agility = (byte)Math.Min(byte.MaxValue, Agility + 1);
-            }
-            if (MirSet.Contains(EquipmentSlot.Armour) && MirSet.Contains(EquipmentSlot.Boots) && MirSet.Contains(EquipmentSlot.Belt))
-            {
-                MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 1);
-                MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + 1);
-                MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + 1);
-                MaxHandWeight = (ushort)Math.Min(ushort.MaxValue, MaxHandWeight + 17);
-            }
-            if (MirSet.Contains(EquipmentSlot.Armour) && MirSet.Contains(EquipmentSlot.Boots) && MirSet.Contains(EquipmentSlot.Belt) && MirSet.Contains(EquipmentSlot.Helmet) && MirSet.Contains(EquipmentSlot.Weapon))
-            {
-                MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + 1);
-                MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 1);
-                MinMC = (ushort)Math.Min(ushort.MaxValue, MinMC + 1);
-                MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + 1);
-                MinSC = (ushort)Math.Min(ushort.MaxValue, MinSC + 1);
-                MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + 1);
-                MaxHandWeight = (ushort)Math.Min(ushort.MaxValue, MaxHandWeight + 17);
-            }
-        }
-        private void RefreshMirSetStats2()
-        {
-            if (MirSet.Count() == 10)
-            {
                 Stats[Stat.MaxAC] += 1;
                 Stats[Stat.MaxMAC] += 1;
                 Stats[Stat.BagWeight] += 70;
@@ -3728,19 +3113,6 @@ namespace Server.MirObjects
         }
 
         public void RefreshStatCaps()
-        {
-            MagicResist = Math.Min(Settings.MaxMagicResist, MagicResist);
-            PoisonResist = Math.Min(Settings.MaxPoisonResist, PoisonResist);
-            CriticalRate = Math.Min(Settings.MaxCriticalRate, CriticalRate);
-            CriticalDamage = Math.Min(Settings.MaxCriticalDamage, CriticalDamage);
-            Freezing = Math.Min(Settings.MaxFreezing, Freezing);
-            PoisonAttack = Math.Min(Settings.MaxPoisonAttack, PoisonAttack);
-            HealthRecovery = Math.Min(Settings.MaxHealthRegen, HealthRecovery);
-            PoisonRecovery = Math.Min(Settings.MaxPoisonRecovery, PoisonRecovery);
-            SpellRecovery = Math.Min(Settings.MaxManaRegen, SpellRecovery);
-            HpDrainRate = Math.Min((byte)100, HpDrainRate);
-        }
-        public void RefreshStatCaps2()
         {
             Stats[Stat.MagicResist] = Math.Min(Settings.MaxMagicResist, Stats[Stat.MagicResist]);
             Stats[Stat.PoisonResist] = Math.Min(Settings.MaxPoisonResist, Stats[Stat.PoisonResist]);
@@ -3815,27 +3187,6 @@ namespace Server.MirObjects
                 switch (magic.Spell)
                 {
                     case Spell.Fencing:
-                        Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + magic.Level * 3);
-                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + (magic.Level + 1) * 3);
-                        break;
-                    case Spell.FatalSword:
-                        Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + magic.Level);
-                        break;
-                    case Spell.SpiritSword:
-                        Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + magic.Level);
-                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + MaxSC * (magic.Level + 1) * 0.1F);
-                        break;
-                }
-            }
-        }
-        private void RefreshSkills2()
-        {
-            for (int i = 0; i < Info.Magics.Count; i++)
-            {
-                UserMagic magic = Info.Magics[i];
-                switch (magic.Spell)
-                {
-                    case Spell.Fencing:
                         Stats[Stat.Accuracy] += magic.Level * 3;
                         Stats[Stat.MaxAC] += (magic.Level + 1) * 3;
                         break;
@@ -3851,165 +3202,6 @@ namespace Server.MirObjects
         }
 
         private void RefreshBuffs()
-        {
-            short Old_TransformType = TransformType;
-
-            TransformType = -1;
-
-            for (int i = 0; i < Buffs.Count; i++)
-            {
-                Buff buff = Buffs[i];
-
-                if (buff.Values == null || buff.Values.Length < 1 || buff.Paused) continue;
-
-                switch (buff.Type)
-                {
-                    case BuffType.Haste:
-                    case BuffType.Fury:
-                        ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0])));
-                        break;
-                    case BuffType.ImmortalSkin:
-                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
-                        MaxDC = (ushort)Math.Max(ushort.MinValue, MaxDC - buff.Values[1]);
-                        break;
-                    case BuffType.SwiftFeet:
-                        ActiveSwiftFeet = true;
-                        break;
-                    case BuffType.LightBody:
-                        Agility = (byte)Math.Min(byte.MaxValue, Agility + buff.Values[0]);
-                        break;
-                    case BuffType.SoulShield:
-                        MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + buff.Values[0]);
-                        break;
-                    case BuffType.BlessedArmour:
-                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
-                        break;
-                    case BuffType.UltimateEnhancer:
-                        if (Class == MirClass.Wizard || Class == MirClass.Archer)
-                        {
-                            MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + buff.Values[0]);
-                        }
-                        else if (Class == MirClass.Taoist)
-                        {
-                            MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + buff.Values[0]);
-                        }
-                        else
-                        {
-                            MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + buff.Values[0]);
-                        }
-                        break;
-                    case BuffType.ProtectionField:
-                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
-                        break;
-                    case BuffType.Rage:
-                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + buff.Values[0]);
-                        break;
-                    case BuffType.CounterAttack:
-                        MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + buff.Values[0]);
-                        MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + buff.Values[0]);
-                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
-                        MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + buff.Values[0]);
-                        break;
-                    case BuffType.Curse:
-
-                        ushort rMaxDC = (ushort)(((int)MaxDC / 100) * buff.Values[0]);
-                        ushort rMaxMC = (ushort)(((int)MaxMC / 100) * buff.Values[0]);
-                        ushort rMaxSC = (ushort)(((int)MaxSC / 100) * buff.Values[0]);
-                        byte rASpeed = (byte)(((int)ASpeed / 100) * buff.Values[0]);
-
-                        MaxDC = (ushort)Math.Max(ushort.MinValue, MaxDC - rMaxDC);
-                        MaxMC = (ushort)Math.Max(ushort.MinValue, MaxMC - rMaxMC);
-                        MaxSC = (ushort)Math.Max(ushort.MinValue, MaxSC - rMaxSC);
-                        ASpeed = (sbyte)Math.Min(sbyte.MaxValue, (Math.Max(sbyte.MinValue, ASpeed - rASpeed)));
-                        break;
-                    case BuffType.MagicBooster:
-                        MinMC = (ushort)Math.Min(ushort.MaxValue, MinMC + buff.Values[0]);
-                        MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + buff.Values[0]);
-                        break;
-
-                    case BuffType.General:
-                        ExpRateOffset = (float)Math.Min(float.MaxValue, ExpRateOffset + buff.Values[0]);
-
-                        if (buff.Values.Length > 1)
-                            ItemDropRateOffset = (float)Math.Min(float.MaxValue, ItemDropRateOffset + buff.Values[1]);
-                        if (buff.Values.Length > 2)
-                            GoldDropRateOffset = (float)Math.Min(float.MaxValue, GoldDropRateOffset + buff.Values[2]);
-                        break;
-                    case BuffType.Rested:
-                    case BuffType.Exp:
-                        ExpRateOffset = (float)Math.Min(float.MaxValue, ExpRateOffset + buff.Values[0]);
-                        break;
-                    case BuffType.Drop:
-                        ItemDropRateOffset = (float)Math.Min(float.MaxValue, ItemDropRateOffset + buff.Values[0]);
-                        break;
-                    case BuffType.Gold:
-                        GoldDropRateOffset = (float)Math.Min(float.MaxValue, GoldDropRateOffset + buff.Values[0]);
-                        break;
-                    case BuffType.Knapsack:
-                    case BuffType.BagWeight:
-                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + buff.Values[0]);
-                        break;
-                    case BuffType.Transform:
-                        TransformType = (short)buff.Values[0];
-                        break;
-
-                    case BuffType.Impact:
-                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + buff.Values[0]);
-                        break;
-                    case BuffType.Magic:
-                        MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + buff.Values[0]);
-                        break;
-                    case BuffType.Taoist:
-                        MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + buff.Values[0]);
-                        break;
-                    case BuffType.Storm:
-                        ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0])));
-                        break;
-                    case BuffType.HealthAid:
-                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + buff.Values[0]);
-                        break;
-                    case BuffType.ManaAid:
-                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + buff.Values[0]);
-                        break;
-                    case BuffType.WonderDrug:
-                        switch (buff.Values[0])
-                        {
-                            case 0:
-                                ExpRateOffset = (float)Math.Min(float.MaxValue, ExpRateOffset + buff.Values[1]);
-                                break;
-                            case 1:
-                                ItemDropRateOffset = (float)Math.Min(float.MaxValue, ItemDropRateOffset + buff.Values[1]);
-                                break;
-                            case 2:
-                                MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + buff.Values[1]);
-                                break;
-                            case 3:
-                                MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + buff.Values[1]);
-                                break;
-                            case 4:
-                                MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + buff.Values[1]);
-                                MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[1]);
-                                break;
-                            case 5:
-                                MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + buff.Values[1]);
-                                MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + buff.Values[1]);
-                                break;
-                            case 6:
-                                ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[1])));
-                                break;
-                        }
-                        break;
-                }
-            }
-
-            if (Old_TransformType != TransformType)
-            {
-                Broadcast(new S.TransformUpdate { ObjectID = ObjectID, TransformType = TransformType });
-            }
-        }
-
-
-        private void RefreshBuffs2()
         {
             short Old_TransformType = TransformType;
 
@@ -4175,35 +3367,6 @@ namespace Server.MirObjects
         }
 
         public void RefreshGuildBuffs()
-        {
-            if (MyGuild == null) return;
-            if (MyGuild.BuffList.Count == 0) return;
-            for (int i = 0; i < MyGuild.BuffList.Count; i++)
-            {
-                GuildBuff Buff = MyGuild.BuffList[i];
-                if ((Buff.Info == null) || (!Buff.Active)) continue;
-                MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + Buff.Info.BuffAc);
-                MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + Buff.Info.BuffMac);
-                MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + Buff.Info.BuffDc);
-                MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + Buff.Info.BuffMc);
-                MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + Buff.Info.BuffSc);
-                AttackBonus = (byte)Math.Min(byte.MaxValue, AttackBonus + Buff.Info.BuffAttack);
-                MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + Buff.Info.BuffMaxHp);
-                MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + Buff.Info.BuffMaxMp);
-                MineRate = (byte)Math.Min(byte.MaxValue,MineRate + Buff.Info.BuffMineRate);
-                GemRate = (byte)Math.Min(byte.MaxValue,GemRate + Buff.Info.BuffGemRate);
-                FishRate = (byte)Math.Min(byte.MaxValue,FishRate + Buff.Info.BuffFishRate);
-                ExpRateOffset = (float)Math.Min(float.MaxValue, ExpRateOffset + Buff.Info.BuffExpRate);
-                CraftRate = (byte)Math.Min(byte.MaxValue, CraftRate + Buff.Info.BuffCraftRate); //needs coding
-                SkillNeckBoost = (byte)Math.Min(byte.MaxValue, SkillNeckBoost + Buff.Info.BuffSkillRate);
-                HealthRecovery = (byte)Math.Min(byte.MaxValue,HealthRecovery + Buff.Info.BuffHpRegen);
-                SpellRecovery = (byte)Math.Min(byte.MaxValue, SpellRecovery + Buff.Info.BuffMPRegen);
-                ItemDropRateOffset = (float)Math.Min(float.MaxValue, ItemDropRateOffset + Buff.Info.BuffDropRate);
-                GoldDropRateOffset = (float)Math.Min(float.MaxValue, GoldDropRateOffset + Buff.Info.BuffGoldRate);
-            }
-        }
-
-        public void RefreshGuildBuffs2()
         {
             if (MyGuild == null) return;
             if (MyGuild.BuffList.Count == 0) return;
@@ -4727,38 +3890,40 @@ namespace Server.MirObjects
                         break;
 
                     case "MAKE":
-                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
-
-                        ItemInfo iInfo = Envir.GetItemInfo(parts[1]);
-                        if (iInfo == null) return;
-
-                        uint count = 1;
-                        if (parts.Length >= 3 && !uint.TryParse(parts[2], out count))
-                            count = 1;
-
-                        var tempCount = count;
-
-                        while (count > 0)
                         {
-                            if (iInfo.StackSize >= count)
+                            if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
+
+                            ItemInfo iInfo = Envir.GetItemInfo(parts[1]);
+                            if (iInfo == null) return;
+
+                            ushort itemCount = 1;
+                            if (parts.Length >= 3 && !ushort.TryParse(parts[2], out itemCount))
+                                itemCount = 1;
+
+                            var tempCount = itemCount;
+
+                            while (itemCount > 0)
                             {
+                                if (iInfo.StackSize >= itemCount)
+                                {
+                                    item = Envir.CreateDropItem(iInfo);
+                                    item.Count = itemCount;
+
+                                    if (CanGainItem(item, false)) GainItem(item);
+
+                                    return;
+                                }
                                 item = Envir.CreateDropItem(iInfo);
-                                item.Count = count;
+                                item.Count = iInfo.StackSize;
+                                itemCount -= iInfo.StackSize;
 
-                                if (CanGainItem(item, false)) GainItem(item);
-
-                                return;
+                                if (!CanGainItem(item, false)) return;
+                                GainItem(item);
                             }
-                            item = Envir.CreateDropItem(iInfo);
-                            item.Count = iInfo.StackSize;
-                            count -= iInfo.StackSize;
 
-                            if (!CanGainItem(item, false)) return;
-                            GainItem(item);
+                            ReceiveChat(string.Format("{0} x{1} has been created.", iInfo.FriendlyName, tempCount), ChatType.System);
+                            MessageQueue.Enqueue(string.Format("Player {0} has attempted to Create {1} x{2}", Name, iInfo.Name, tempCount));
                         }
-
-                        ReceiveChat(string.Format("{0} x{1} has been created.", iInfo.FriendlyName, tempCount), ChatType.System);
-                        MessageQueue.Enqueue(string.Format("Player {0} has attempted to Create {1} x{2}", Name, iInfo.Name, tempCount));
                         break;
                     case "CLEARBUFFS":
                         foreach (var buff in Buffs)
@@ -5190,7 +4355,7 @@ namespace Server.MirObjects
                             return;
                         }
 
-                        count = 1;
+                        uint count = 1;
                         if (parts.Length >= 3 && IsGM)
                             if (!uint.TryParse(parts[2], out count)) count = 1;
 
@@ -6149,8 +5314,8 @@ namespace Server.MirObjects
                         if (parts.Length < 2)
                         {
                             RefreshStats();
-                            SetHP(MaxHP);
-                            SetMP(MaxMP);
+                            SetHP(Stats[Stat.HP]);
+                            SetMP(Stats[Stat.MP]);
                             Revive(MaxHealth, true);
                         }
                         else
@@ -7433,7 +6598,7 @@ namespace Server.MirObjects
                 for (int i = 0; i < Buffs.Count; i++)
                 {
                     if (Buffs[i].Type != BuffType.TemporalFlux) continue;
-                    cost += (int)(MaxMP * 0.3F);
+                    cost += (int)(Stats[Stat.MP] * 0.3F);
                     break;
                 }
 
@@ -11117,8 +10282,8 @@ namespace Server.MirObjects
 
                         if (Envir.Random.Next(rate) == 0)
                         {
-                            if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
-                                SetHP(MaxHP);
+                            if (HP + ((ushort)Buffs[i].Values[1]) >= Stats[Stat.HP])
+                                SetHP(Stats[Stat.HP]);
                             else
                                 ChangeHP(Buffs[i].Values[1]);
                         }
@@ -11239,8 +10404,8 @@ namespace Server.MirObjects
 
                         if (Envir.Random.Next(rate < 2 ? 2 : rate) == 0)
                         {
-                            if (HP + ((ushort)Buffs[i].Values[1]) >= MaxHP)
-                                SetHP(MaxHP);
+                            if (HP + ((ushort)Buffs[i].Values[1]) >= Stats[Stat.HP])
+                                SetHP(Stats[Stat.HP]);
                             else
                                 ChangeHP(Buffs[i].Values[1]);
                         }
@@ -12025,7 +11190,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (temp.Weight + CurrentBagWeight > MaxBagWeight)
+            if (temp.Weight + CurrentBagWeight > Stats[Stat.BagWeight])
             {
                 ReceiveChat("Too heavy to get back.", ChatType.System);
                 Enqueue(p);
@@ -12333,7 +11498,7 @@ namespace Server.MirObjects
                             }
                             if (Dead)
                             {
-                                MP = MaxMP;
+                                MP = Stats[Stat.MP];
                                 Revive(MaxHealth, true);
                             }
                             break;
@@ -12590,7 +11755,7 @@ namespace Server.MirObjects
             p.Success = true;
             Enqueue(p);
         }
-        public void SplitItem(MirGridType grid, ulong id, uint count)
+        public void SplitItem(MirGridType grid, ulong id, ushort count)
         {
             S.SplitItem1 p = new S.SplitItem1 { Grid = grid, UniqueID = id, Count = count, Success = false };
             UserItem[] array;
@@ -12840,7 +12005,7 @@ namespace Server.MirObjects
             }
             else
             {
-                tempFrom.Count -= tempTo.Info.StackSize - tempTo.Count;
+                tempFrom.Count -= (ushort)(tempTo.Info.StackSize - tempTo.Count);
                 tempTo.Count = tempTo.Info.StackSize;
             }
 
@@ -13453,7 +12618,7 @@ namespace Server.MirObjects
             */
             return 0;
         }
-        public void DropItem(ulong id, uint count)
+        public void DropItem(ulong id, ushort count)
         {
             S.DropItem p = new S.DropItem { UniqueID = id, Count = count, Success = false };
             if (Dead)
@@ -13661,7 +12826,7 @@ namespace Server.MirObjects
         {
             if (item.Info.Type == ItemType.Amulet)
             {
-                if (FreeSpace(Info.Inventory) > 0 && (CurrentBagWeight + item.Weight <= MaxBagWeight || !useWeight)) return true;
+                if (FreeSpace(Info.Inventory) > 0 && (CurrentBagWeight + item.Weight <= Stats[Stat.BagWeight] || !useWeight)) return true;
 
                 uint count = item.Count;
 
@@ -13673,19 +12838,19 @@ namespace Server.MirObjects
 
                     if (bagItem.Count + count <= bagItem.Info.StackSize) return true;
 
-                    count -= bagItem.Info.StackSize - bagItem.Count;
+                    count -= (ushort)(bagItem.Info.StackSize - bagItem.Count);
                 }
 
                 return false;
             }
 
-            if (useWeight && CurrentBagWeight + (item.Weight) > MaxBagWeight) return false;
+            if (useWeight && CurrentBagWeight + (item.Weight) > Stats[Stat.BagWeight]) return false;
 
             if (FreeSpace(Info.Inventory) > 0) return true;
 
             if (item.Info.StackSize > 1)
             {
-                uint count = item.Count;
+                ushort count = item.Count;
 
                 for (int i = 0; i < Info.Inventory.Length; i++)
                 {
@@ -13695,7 +12860,7 @@ namespace Server.MirObjects
 
                     if (bagItem.Count + count <= bagItem.Info.StackSize) return true;
 
-                    count -= bagItem.Info.StackSize - bagItem.Count;
+                    count -= (ushort)(bagItem.Info.StackSize - bagItem.Count);
                 }
             }
 
@@ -13704,8 +12869,8 @@ namespace Server.MirObjects
         public bool CanGainItems(UserItem[] items)
         {
             int itemCount = items.Count(e => e != null);
-            uint itemWeight = 0;
-            uint stackOffset = 0;
+            int itemWeight = 0;
+            ushort stackOffset = 0;
 
             if (itemCount < 1) return true;
 
@@ -13732,7 +12897,7 @@ namespace Server.MirObjects
                 }
             }
 
-            if (CurrentBagWeight + (itemWeight) > MaxBagWeight) return false;
+            if (CurrentBagWeight + (itemWeight) > Stats[Stat.BagWeight]) return false;
             if (FreeSpace(Info.Inventory) < itemCount + stackOffset) return false;
 
             return true;
@@ -14238,11 +13403,11 @@ namespace Server.MirObjects
 
             if (item.Info.Type == ItemType.Weapon || item.Info.Type == ItemType.Torch)
             {
-                if (item.Weight - (Info.Equipment[slot] != null ? Info.Equipment[slot].Weight : 0) + CurrentHandWeight > MaxHandWeight)
+                if (item.Weight - (Info.Equipment[slot] != null ? Info.Equipment[slot].Weight : 0) + CurrentHandWeight > Stats[Stat.HandWeight])
                     return false;
             }
             else
-                if (item.Weight - (Info.Equipment[slot] != null ? Info.Equipment[slot].Weight : 0) + CurrentWearWeight > MaxWearWeight)
+                if (item.Weight - (Info.Equipment[slot] != null ? Info.Equipment[slot].Weight : 0) + CurrentWearWeight > Stats[Stat.WearWeight])
                     return false;
 
             if (RidingMount && item.Info.Type != ItemType.Torch)
@@ -14300,7 +13465,7 @@ namespace Server.MirObjects
 
             if (item.Info.StackSize > 1)
             {
-                uint count = item.Count;
+                ushort count = item.Count;
 
                 for (int i = 0; i < Info.QuestInventory.Length; i++)
                 {
@@ -14310,7 +13475,7 @@ namespace Server.MirObjects
 
                     if (bagItem.Count + count <= bagItem.Info.StackSize) return true;
 
-                    count -= bagItem.Info.StackSize - bagItem.Count;
+                    count -= (ushort)(bagItem.Info.StackSize - bagItem.Count);
                 }
             }
 
@@ -14330,7 +13495,7 @@ namespace Server.MirObjects
 
 
         }
-        public void TakeQuestItem(ItemInfo uItem, uint count)
+        public void TakeQuestItem(ItemInfo uItem, ushort count)
         {
             for (int o = 0; o < Info.QuestInventory.Length; o++)
             {
@@ -14383,11 +13548,10 @@ namespace Server.MirObjects
             item.DuraChanged = false;
             RefreshStats();
         }
-        private void ConsumeItem(UserItem item, uint cost)
+        private void ConsumeItem(UserItem item, byte cost)
         {
             item.Count -= cost;
             Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = cost });
-
 
             if (item.Count != 0) return;
 
@@ -14415,6 +13579,7 @@ namespace Server.MirObjects
                 Info.Inventory[i] = null;
                 return;
             }
+
             //Item not found
         }
 
@@ -15374,7 +14539,7 @@ namespace Server.MirObjects
             }
         }
 
-        public void BuyItem(ulong index, uint count, PanelType type)
+        public void BuyItem(ulong index, ushort count, PanelType type)
         {
             if (Dead || count < 1) return;
 
@@ -15397,7 +14562,7 @@ namespace Server.MirObjects
                 }
             }
         }
-        public void CraftItem(ulong index, uint count, int[] slots)
+        public void CraftItem(ulong index, ushort count, int[] slots)
         {
             if (Dead || count < 1) return;
 
@@ -15414,7 +14579,7 @@ namespace Server.MirObjects
         }
 
 
-        public void SellItem(ulong uniqueID, uint count)
+        public void SellItem(ulong uniqueID, ushort count)
         {
             S.SellItem p = new S.SellItem { UniqueID = uniqueID, Count = count };
             if (Dead || count == 0)
@@ -16201,7 +15366,7 @@ namespace Server.MirObjects
 
                     UserItem gainItem = Envir.CreateDropItem(dropList[Envir.Random.Next(dropList.Count)]);
                     if (gainItem == null) continue;
-                    gainItem.Count = (uint)Envir.Random.Next((int)((((int)item.Info.Grade * item.Info.RequiredAmount) / 10) + item.Quality()));
+                    gainItem.Count = (ushort)Envir.Random.Next(Math.Min(ushort.MaxValue, (int)((((byte)item.Info.Grade * item.Info.RequiredAmount) / 10) + item.Quality())));
                     if (gainItem.Count < 1) gainItem.Count = 1;
 
                     GainItem(gainItem);
@@ -16400,7 +15565,7 @@ namespace Server.MirObjects
                             }
                             else if (Info.Inventory[i].Count > currentCount[0])
                             {
-                                Enqueue(new S.DeleteItem { UniqueID = Info.Inventory[i].UniqueID, Count = (uint)currentCount[0] });
+                                Enqueue(new S.DeleteItem { UniqueID = Info.Inventory[i].UniqueID, Count = currentCount[0] });
                                 Info.Inventory[i].Count -= currentCount[0];
                                 currentCount[0] = 0;
                             }
@@ -16416,7 +15581,7 @@ namespace Server.MirObjects
                             }
                             else if (Info.Inventory[i].Count > currentCount[1])
                             {
-                                Enqueue(new S.DeleteItem { UniqueID = Info.Inventory[i].UniqueID, Count = (uint)currentCount[1] });
+                                Enqueue(new S.DeleteItem { UniqueID = Info.Inventory[i].UniqueID, Count = currentCount[1] });
                                 Info.Inventory[i].Count -= currentCount[1];
                                 currentCount[1] = 0;
                             }
@@ -16793,6 +15958,12 @@ namespace Server.MirObjects
                 else
                 {
                     uint count = Required.Amount;
+
+                    if (count > 999)
+                    {
+                        count = 999;
+                    }
+
                     for (int o = 0; o < Info.Inventory.Length; o++)
                     {
                         UserItem item = Info.Inventory[o];
@@ -16813,11 +15984,11 @@ namespace Server.MirObjects
                             continue;
                         }
 
-                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = count });
+                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = (ushort)count });
                         if (count == item.Count)
                             Info.Inventory[o] = null;
                         else
-                            item.Count -= count;
+                            item.Count -= (ushort)count;
                         break;
                     }
                 }
@@ -17200,7 +16371,7 @@ namespace Server.MirObjects
                         Enqueue(p);
                         return;
                     }
-                    if (MaxBagWeight < CurrentBagWeight + MyGuild.StoredItems[from].Item.Weight)
+                    if (Stats[Stat.BagWeight] < CurrentBagWeight + MyGuild.StoredItems[from].Item.Weight)
                     {
                         ReceiveChat("Too overweight to retrieve item.", ChatType.System);
                         Enqueue(p);
@@ -17458,7 +16629,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (temp.Weight + CurrentBagWeight > MaxBagWeight)
+            if (temp.Weight + CurrentBagWeight > Stats[Stat.BagWeight])
             {
                 ReceiveChat("Too heavy to get back.", ChatType.System);
                 Enqueue(p);
@@ -18225,7 +17396,7 @@ namespace Server.MirObjects
             {
                 foreach (QuestItemTask carryItem in info.CarryItems)
                 {
-                    uint count = carryItem.Count;
+                    ushort count = carryItem.Count;
 
                     while (count > 0)
                     {
@@ -18285,7 +17456,7 @@ namespace Server.MirObjects
 
             foreach (var reward in quest.Info.FixedRewards)
             {
-                uint count = reward.Count;
+                ushort count = reward.Count;
 
                 UserItem rewardItem;
 
@@ -18313,7 +17484,7 @@ namespace Server.MirObjects
                 {
                     if (selectedItemIndex != i) continue;
 
-                    uint count = quest.Info.SelectRewards[i].Count;
+                    ushort count = quest.Info.SelectRewards[i].Count;
                     UserItem rewardItem;
 
                     while (count > 0)
@@ -18360,7 +17531,7 @@ namespace Server.MirObjects
 
             foreach (QuestItemTask iTask in quest.Info.ItemTasks)
             {
-                TakeQuestItem(iTask.Item, Convert.ToUInt32(iTask.Count));
+                TakeQuestItem(iTask.Item, iTask.Count);
             }
 
             foreach (UserItem item in rewardItems)
@@ -19494,7 +18665,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (temp.Weight + CurrentBagWeight > MaxBagWeight)
+            if (temp.Weight + CurrentBagWeight > Stats[Stat.BagWeight])
             {
                 ReceiveChat("Too heavy to get back.", ChatType.System);
                 Enqueue(p);
@@ -19786,7 +18957,7 @@ namespace Server.MirObjects
             }
 
 
-            if (Info.CurrentRefine.Info.Weight + CurrentBagWeight > MaxBagWeight)
+            if (Info.CurrentRefine.Info.Weight + CurrentBagWeight > Stats[Stat.BagWeight])
             {
                 ReceiveChat(string.Format("Your {0} is too heavy to get back, try again after reducing your bag weight.", Info.CurrentRefine.FriendlyName), ChatType.System);
                 Enqueue(p);
@@ -20795,7 +19966,7 @@ namespace Server.MirObjects
 
             Report.ItemGSBought(Product, Quantity, CreditCost, GoldCost);
 
-            uint quantity = (Quantity * Product.Count);
+            ushort quantity = (ushort)(Quantity * Product.Count);
 
             if (Product.Info.StackSize <= 1 || quantity == 1)
             {
@@ -21142,7 +20313,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (item.Weight + CurrentBagWeight > MaxBagWeight)
+            if (item.Weight + CurrentBagWeight > Stats[Stat.BagWeight])
             {
                 ReceiveChat("Item is too heavy to retrieve.", ChatType.System);
                 Enqueue(packet);

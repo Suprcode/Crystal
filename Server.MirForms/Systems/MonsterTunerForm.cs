@@ -58,7 +58,7 @@ namespace Server.MirForms.Systems
 
             try
             {
-                monster.HP = uint.Parse(HPTextBox.Text);
+                monster.HP = int.Parse(HPTextBox.Text);
                 monster.Effect = byte.Parse(EffectTextBox.Text);
                 monster.Level = ushort.Parse(LevelTextBox.Text);
                 monster.ViewRange = byte.Parse(ViewRangeTextBox.Text);

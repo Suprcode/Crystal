@@ -2064,7 +2064,7 @@ namespace Client.MirScenes
             }
             else
             {
-                fromCell.Item.Count -= toCell.Item.Info.StackSize - toCell.Item.Count;
+                fromCell.Item.Count -= (ushort)(toCell.Item.Info.StackSize - toCell.Item.Count);
                 toCell.Item.Count = toCell.Item.Info.StackSize;
             }
 
@@ -2958,7 +2958,7 @@ namespace Client.MirScenes
             User.HP = p.HP;
             User.MP = p.MP;
 
-            User.PercentHealth = (byte)(User.HP / (float)User.MaxHP * 100);
+            User.PercentHealth = (byte)(User.HP / (float)User.Stats[Stat.HP] * 100);
         }
 
         private void DeleteQuestItem(S.DeleteQuestItem p)
@@ -5323,7 +5323,7 @@ namespace Client.MirScenes
                         temp.Count += item.Count;
                         return;
                     }
-                    item.Count -= temp.Info.StackSize - temp.Count;
+                    item.Count -= (ushort)(temp.Info.StackSize - temp.Count);
                     temp.Count = temp.Info.StackSize;
                 }
             }
@@ -5472,7 +5472,7 @@ namespace Client.MirScenes
                         temp.Count += item.Count;
                         return;
                     }
-                    item.Count -= temp.Info.StackSize - temp.Count;
+                    item.Count -= (ushort)(temp.Info.StackSize - temp.Count);
                     temp.Count = temp.Info.StackSize;
                 }
             }
@@ -9556,7 +9556,7 @@ namespace Client.MirScenes
                         Network.Enqueue(new C.DropItem
                         {
                             UniqueID = cell.Item.UniqueID,
-                            Count = amountBox.Amount
+                            Count = (ushort)amountBox.Amount
                         });
 
                         cell.Locked = true;
@@ -9895,7 +9895,7 @@ namespace Client.MirScenes
                 for (int i = 0; i < GameScene.Scene.Buffs.Count; i++)
                 {
                     if (GameScene.Scene.Buffs[i].Type != BuffType.TemporalFlux) continue;
-                    cost += (int)(User.MaxMP * 0.3F);
+                    cost += (int)(User.Stats[Stat.MP] * 0.3F);
                 }
             }
 
@@ -10175,8 +10175,8 @@ namespace Client.MirScenes
         private bool CanRun(MirDirection dir)
         {
             if (User.InTrapRock) return false;
-            if (User.CurrentBagWeight > User.MaxBagWeight) return false;
-            if (User.CurrentWearWeight > User.MaxWearWeight) return false;
+            if (User.CurrentBagWeight > User.Stats[Stat.BagWeight]) return false;
+            if (User.CurrentWearWeight > User.Stats[Stat.BagWeight]) return false;
             if (CanWalk(dir) && EmptyCell(Functions.PointMove(User.CurrentLocation, dir, 2)))
             {
                 if (User.RidingMount || User.Sprint && !User.Sneaking)
@@ -10393,7 +10393,7 @@ namespace Client.MirScenes
             {
                 //magic
                 case BuffType.TemporalFlux:
-                    text = string.Format("Temporal Flux\nIncreases cost of next Teleport by: {0} MP.\n", (int)(MapObject.User.MaxMP * 0.3F));
+                    text = string.Format("Temporal Flux\nIncreases cost of next Teleport by: {0} MP.\n", (int)(MapObject.User.Stats[Stat.MP] * 0.3F));
                     break;
                 case BuffType.Hiding:
                     text = "Hiding\nInvisible to many monsters.\n";

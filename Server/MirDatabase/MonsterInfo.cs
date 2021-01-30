@@ -32,7 +32,7 @@ namespace Server.MirDatabase
         public byte AI, Effect, ViewRange = 7, CoolEye;
         public ushort Level;
 
-        public uint HP;
+        public int HP;
         public byte Accuracy, Agility, Light;
         public ushort MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC;
 
@@ -69,7 +69,14 @@ namespace Server.MirDatabase
             ViewRange = reader.ReadByte();
             CoolEye = reader.ReadByte();
 
-            HP = reader.ReadUInt32();
+            if (Envir.LoadVersion <= 84)
+            {
+                HP = (int)reader.ReadUInt32(); //Monster form prevented greater than ushort, so this should never overflow.
+            }
+            else
+            {
+                HP = reader.ReadInt32();
+            }
 
             if (Envir.LoadVersion < 62)
             {
@@ -227,7 +234,7 @@ namespace Server.MirDatabase
             if (!ushort.TryParse(data[4], out info.Level)) return;
             if (!byte.TryParse(data[5], out info.ViewRange)) return;
 
-            if (!uint.TryParse(data[6], out info.HP)) return;
+            if (!int.TryParse(data[6], out info.HP)) return;
 
             if (!ushort.TryParse(data[7], out info.MinAC)) return;
             if (!ushort.TryParse(data[8], out info.MaxAC)) return;

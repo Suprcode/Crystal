@@ -20,8 +20,8 @@ public class ItemInfo
 
     public ushort Image, Durability;
 
-    public uint Price, 
-        StackSize = 1; //TODO: Change to USHORT
+    public uint Price; 
+    public ushort StackSize = 1;
 
     public bool StartItem;
     public byte Effect;
@@ -86,7 +86,15 @@ public class ItemInfo
         Image = reader.ReadUInt16();
         Durability = reader.ReadUInt16();
 
-        StackSize = reader.ReadUInt32();
+        if (version <= 84)
+        {
+            StackSize = (ushort)reader.ReadUInt32();
+        }
+        else
+        {
+            StackSize = reader.ReadUInt16();
+        }
+
         Price = reader.ReadUInt32();
 
         if (version <= 84)
@@ -296,7 +304,7 @@ public class ItemInfo
         if (!ushort.TryParse(data[31], out info.Image)) return null;
         if (!ushort.TryParse(data[32], out info.Durability)) return null;
         if (!uint.TryParse(data[33], out info.Price)) return null;
-        if (!uint.TryParse(data[34], out info.StackSize)) return null;
+        if (!ushort.TryParse(data[34], out info.StackSize)) return null;
         if (!byte.TryParse(data[35], out info.Effect)) return null;
 
         //if (!byte.TryParse(data[36], out info.Strong)) return null;
@@ -385,8 +393,8 @@ public class UserItem
 
     public ItemInfo Info;
     public ushort CurrentDura, MaxDura;
-    public uint Count = 1, //TODO: Change to USHORT
-        GemCount = 0;
+    public ushort Count = 1,
+                GemCount = 0;
 
     public RefinedValue RefinedValue = RefinedValue.None;
     public byte RefineAdded = 0;
@@ -416,7 +424,7 @@ public class UserItem
         get { return AddedStats.Count > 0; }
     }
 
-    public uint Weight
+    public int Weight
     {
         get { return Info.Type == ItemType.Amulet ? Info.Weight : Info.Weight * Count; }
     }
@@ -443,7 +451,14 @@ public class UserItem
         CurrentDura = reader.ReadUInt16();
         MaxDura = reader.ReadUInt16();
 
-        Count = reader.ReadUInt32();
+        if (version <= 84)
+        {
+            Count = (ushort)reader.ReadUInt32();
+        }
+        else
+        {
+            Count = reader.ReadUInt16();
+        }
 
         if (version <= 84)
         {
@@ -494,7 +509,14 @@ public class UserItem
             Slots[i] = item;
         }
 
-        GemCount = reader.ReadUInt32();
+        if (version <= 84)
+        {
+            GemCount = (ushort)reader.ReadUInt32();
+        }
+        else
+        {
+            GemCount = reader.ReadUInt16();
+        }
 
         if (version > 84)
         {
@@ -817,7 +839,7 @@ public class GameShopItem
     public ItemInfo Info;
     public uint GoldPrice = 0;
     public uint CreditPrice = 0;
-    public uint Count = 1;
+    public ushort Count = 1;
     public string Class = "";
     public string Category = "";
     public int Stock = 0;
@@ -836,7 +858,14 @@ public class GameShopItem
         GIndex = reader.ReadInt32();
         GoldPrice = reader.ReadUInt32();
         CreditPrice = reader.ReadUInt32();
-        Count = reader.ReadUInt32();
+        if (version <= 84)
+        {
+            Count = (ushort)reader.ReadUInt32();
+        }
+        else
+        {
+            Count = reader.ReadUInt16();
+        }
         Class = reader.ReadString();
         Category = reader.ReadString();
         Stock = reader.ReadInt32();
@@ -853,7 +882,7 @@ public class GameShopItem
         Info = new ItemInfo(reader);
         GoldPrice = reader.ReadUInt32();
         CreditPrice = reader.ReadUInt32();
-        Count = reader.ReadUInt32();
+        Count = reader.ReadUInt16();
         Class = reader.ReadString();
         Category = reader.ReadString();
         Stock = reader.ReadInt32();

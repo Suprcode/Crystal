@@ -665,9 +665,10 @@ namespace Server.MirObjects
                         MessageQueue.Enqueue(string.Format("Could not find Item: {0}, File: {1}", lines[i], FileName));
                         continue;
                     }
-                    uint count = 1;
+
+                    ushort count = 1;
                     if (data.Length == 2)
-                        uint.TryParse(data[1], out count);
+                        ushort.TryParse(data[1], out count);
 
                     goods.Count = count;
 
@@ -1094,7 +1095,7 @@ namespace Server.MirObjects
             }
         }
 
-        public void Buy(PlayerObject player, ulong index, uint count)
+        public void Buy(PlayerObject player, ulong index, ushort count)
         {
             UserItem goods = null;
 
@@ -1203,7 +1204,7 @@ namespace Server.MirObjects
         {
             /* Handle Item Sale */
         }
-        public void Craft(PlayerObject player, ulong index, uint count, int[] slots)
+        public void Craft(PlayerObject player, ulong index, ushort count, int[] slots)
         {
             S.CraftItem p = new S.CraftItem();
 
@@ -1267,7 +1268,13 @@ namespace Server.MirObjects
             //Check Ingredients
             foreach (var ingredient in recipe.Ingredients)
             {
-                uint amount = ingredient.Count * count;
+                if (ingredient.Count * count > ingredient.Info.StackSize)
+                {
+                    player.Enqueue(p);
+                    return;
+                }
+
+                ushort amount = (ushort)(ingredient.Count * count);
 
                 for (int i = 0; i < slots.Length; i++)
                 {
@@ -1319,7 +1326,7 @@ namespace Server.MirObjects
             }
 
             UserItem craftedItem = Envir.CreateFreshItem(goods.Info);
-            craftedItem.Count = goods.Count * count;
+            craftedItem.Count = (ushort)(goods.Count * count);
 
             if (!player.CanGainItem(craftedItem))
             {
@@ -1355,7 +1362,7 @@ namespace Server.MirObjects
             //Take Ingredients
             foreach (var ingredient in recipe.Ingredients)
             {
-                uint amount = ingredient.Count * count;
+                ushort amount = (ushort)(ingredient.Count * count);
 
                 for (int i = 0; i < slots.Length; i++)
                 {

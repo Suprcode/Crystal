@@ -228,7 +228,7 @@ namespace Server.MirDatabase
         public Point Location;
         public int MobIndex;
         public string Name;
-        public uint RepairCost;
+        public int RepairCost;
 
         public ConquestSiegeInfo()
         {
@@ -241,7 +241,15 @@ namespace Server.MirDatabase
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             MobIndex = reader.ReadInt32();
             Name = reader.ReadString();
-            RepairCost = reader.ReadUInt32();
+
+            if (Envir.LoadVersion <= 84)
+            {
+                RepairCost = (int)reader.ReadUInt32();
+            }
+            else
+            {
+                RepairCost = reader.ReadInt32();
+            }
         }
 
         public void Save(BinaryWriter writer)
@@ -268,7 +276,7 @@ namespace Server.MirDatabase
         public Point Location;
         public int MobIndex;
         public string Name;
-        public uint RepairCost;
+        public int RepairCost;
 
         public ConquestWallInfo()
         {
@@ -281,7 +289,15 @@ namespace Server.MirDatabase
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             MobIndex = reader.ReadInt32();
             Name = reader.ReadString();
-            RepairCost = reader.ReadUInt32();
+
+            if (Envir.LoadVersion <= 84)
+            {
+                RepairCost = (int)reader.ReadUInt32();
+            }
+            else
+            {
+                RepairCost = reader.ReadInt32();
+            }
         }
 
         public void Save(BinaryWriter writer)
@@ -308,7 +324,7 @@ namespace Server.MirDatabase
         public Point Location;
         public int MobIndex;
         public string Name;
-        public uint RepairCost;
+        public int RepairCost;
 
         public ConquestGateInfo()
         {
@@ -321,7 +337,15 @@ namespace Server.MirDatabase
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             MobIndex = reader.ReadInt32();
             Name = reader.ReadString();
-            RepairCost = reader.ReadUInt32();
+
+            if (Envir.LoadVersion <= 84)
+            {
+                RepairCost = (int)reader.ReadUInt32();
+            }
+            else
+            {
+                RepairCost = reader.ReadInt32();
+            }
         }
 
         public void Save(BinaryWriter writer)

@@ -1684,7 +1684,7 @@ namespace Server.MirEnvir
                         }
                         else
                         {
-                            newConquest.GateList.Add(new ConquestGateObject { Info = ConquestInfos[i].ConquestGates[j], Health = uint.MaxValue, Index = ConquestInfos[i].ConquestGates[j].Index, Conquest = newConquest });
+                            newConquest.GateList.Add(new ConquestGateObject { Info = ConquestInfos[i].ConquestGates[j], Health = int.MaxValue, Index = ConquestInfos[i].ConquestGates[j].Index, Conquest = newConquest });
                         }
                     }
 
@@ -1713,7 +1713,7 @@ namespace Server.MirEnvir
                         }
                         else
                         {
-                            newConquest.WallList.Add(new ConquestWallObject { Info = ConquestInfos[i].ConquestWalls[j], Index = ConquestInfos[i].ConquestWalls[j].Index, Health = uint.MaxValue, Conquest = newConquest });
+                            newConquest.WallList.Add(new ConquestWallObject { Info = ConquestInfos[i].ConquestWalls[j], Index = ConquestInfos[i].ConquestWalls[j].Index, Health = int.MaxValue, Conquest = newConquest });
                         }
                     }
 
@@ -1737,7 +1737,7 @@ namespace Server.MirEnvir
                         }
                         else
                         {
-                            newConquest.SiegeList.Add(new ConquestSiegeObject { Info = ConquestInfos[i].ConquestSieges[j], Index = ConquestInfos[i].ConquestSieges[j].Index, Health = uint.MaxValue, Conquest = newConquest });
+                            newConquest.SiegeList.Add(new ConquestSiegeObject { Info = ConquestInfos[i].ConquestSieges[j], Index = ConquestInfos[i].ConquestSieges[j].Index, Health = int.MaxValue, Conquest = newConquest });
                         }
                     }
 

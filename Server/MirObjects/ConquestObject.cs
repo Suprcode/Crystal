@@ -850,7 +850,7 @@ namespace Server.MirObjects
         }
 
         public int Index;
-        public uint Health;
+        public int Health;
 
         public ConquestSiegeInfo Info;
 
@@ -870,7 +870,15 @@ namespace Server.MirObjects
         public ConquestSiegeObject(BinaryReader reader)
         {
             Index = reader.ReadInt32();
-            Health = reader.ReadUInt32();
+
+            if (Envir.LoadVersion <= 84)
+            {
+                Health = (int)reader.ReadUInt32();
+            }
+            else
+            {
+                Health = reader.ReadInt32();
+            }
         }
         public void Save(BinaryWriter writer)
         {
@@ -910,9 +918,9 @@ namespace Server.MirObjects
             Gate.CheckDirection();
         }
 
-        public uint GetRepairCost()
+        public int GetRepairCost()
         {
-            uint cost = 0;
+            int cost = 0;
 
             if (Gate == null) return 0;
 
@@ -1021,7 +1029,7 @@ namespace Server.MirObjects
         }
 
         public int Index;
-        public uint Health;
+        public int Health;
 
         public ConquestWallInfo Info;
 
@@ -1041,7 +1049,15 @@ namespace Server.MirObjects
         public ConquestWallObject(BinaryReader reader)
         {
             Index = reader.ReadInt32();
-            Health = reader.ReadUInt32();
+
+            if (Envir.LoadVersion <= 84)
+            {
+                Health = (int)reader.ReadUInt32();
+            }
+            else
+            {
+                Health = reader.ReadInt32();
+            }
         }
         public void Save(BinaryWriter writer)
         {
@@ -1080,9 +1096,9 @@ namespace Server.MirObjects
             Wall.CheckDirection();
         }
 
-        public uint GetRepairCost()
+        public int GetRepairCost()
         {
-            uint cost = 0;
+            int cost = 0;
 
             if (Wall == null) return 0;
 
@@ -1119,7 +1135,7 @@ namespace Server.MirObjects
         }
 
         public int Index;
-        public uint Health;
+        public int Health;
 
         public ConquestGateInfo Info;
 
@@ -1139,7 +1155,15 @@ namespace Server.MirObjects
         public ConquestGateObject(BinaryReader reader)
         {
             Index = reader.ReadInt32();
-            Health = reader.ReadUInt32();
+
+            if (Envir.LoadVersion <= 84)
+            {
+                Health = (int)reader.ReadUInt32();
+            }
+            else
+            {
+                Health = reader.ReadInt32();
+            }
         }
         public void Save(BinaryWriter writer)
         {
@@ -1177,9 +1201,9 @@ namespace Server.MirObjects
             Gate.CheckDirection();
         }
 
-        public uint GetRepairCost()
+        public int GetRepairCost()
         {
-            uint cost = 0;
+            int cost = 0;
 
             if (Gate == null) return 0;
 

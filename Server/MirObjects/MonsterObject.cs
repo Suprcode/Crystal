@@ -273,17 +273,17 @@ namespace Server.MirObjects
             }
         }
 
-        public override uint Health
+        public override int Health
         {
             get { return HP; }
         }
 
-        public override uint MaxHealth
+        public override int MaxHealth
         {
             get { return MaxHP; }
         }
 
-        public uint HP, MaxHP;
+        public int HP, MaxHP;
         public ushort MoveSpeed;
 
         public virtual uint Experience 
@@ -455,7 +455,7 @@ namespace Server.MirObjects
         {
             RefreshBase();
             
-                MaxHP = (uint)Math.Min(uint.MaxValue, MaxHP + PetLevel * 20);
+                MaxHP = (int)Math.Min(int.MaxValue, MaxHP + PetLevel * 20);
                 MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + PetLevel * 2);
                 MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + PetLevel * 2);
                 MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + PetLevel * 2);
@@ -571,7 +571,7 @@ namespace Server.MirObjects
             Broadcast(new S.ObjectColourChanged { ObjectID = ObjectID, NameColour = NameColour });
         }
 
-        public void SetHP(uint amount)
+        public void SetHP(int amount)
         {
             if (HP == amount) return;
 
@@ -584,12 +584,14 @@ namespace Server.MirObjects
         }
         public virtual void ChangeHP(int amount)
         {
+            if (HP + amount > Stats[Stat.HP])
+                amount = Stats[Stat.HP] - HP;
 
-            uint value = (uint)Math.Max(uint.MinValue, Math.Min(MaxHP, HP + amount));
+            if (amount == 0) return;
 
-            if (value == HP) return;
+            HP += amount;
 
-            HP = value;
+            if (HP < 0) HP = 0;
 
             if (!Dead && HP == 0) Die();
 
@@ -669,7 +671,7 @@ namespace Server.MirObjects
             CurrentMap.MonsterCount--;
         }
 
-        public void Revive(uint hp, bool effect)
+        public void Revive(int hp, bool effect)
         {
             if (!Dead) return;
 

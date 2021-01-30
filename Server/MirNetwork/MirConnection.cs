@@ -1494,7 +1494,7 @@ namespace Server.MirNetwork
 
             if (Player.ReincarnationHost != null && Player.ReincarnationHost.ReincarnationReady)
             {
-                Player.Revive((uint)Player.MaxHP / 2, true);
+                Player.Revive(Player.Stats[Stat.HP] / 2, true);
                 Player.ReincarnationHost = null;
                 return;
             }

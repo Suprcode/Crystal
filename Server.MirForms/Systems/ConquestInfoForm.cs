@@ -641,9 +641,9 @@ namespace Server
             if (selectedConquest == null) return;
             if (ActiveControl != sender) return;
 
-            uint temp;
+            int temp;
 
-            if (!uint.TryParse(ActiveControl.Text, out temp))
+            if (!int.TryParse(ActiveControl.Text, out temp) || temp < 0)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -657,9 +657,9 @@ namespace Server
             if (selectedConquest == null) return;
             if (ActiveControl != sender) return;
 
-            uint temp;
+            int temp;
 
-            if (!uint.TryParse(ActiveControl.Text, out temp))
+            if (!int.TryParse(ActiveControl.Text, out temp) || temp < 0)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -945,9 +945,9 @@ namespace Server
             if (selectedConquest == null) return;
             if (ActiveControl != sender) return;
 
-            uint temp;
+            int temp;
 
-            if (!uint.TryParse(ActiveControl.Text, out temp))
+            if (!int.TryParse(ActiveControl.Text, out temp) || temp < 0)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;

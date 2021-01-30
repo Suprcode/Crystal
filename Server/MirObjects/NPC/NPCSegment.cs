@@ -1291,13 +1291,13 @@ namespace Server.MirObjects
                     newValue = player.HP.ToString(CultureInfo.InvariantCulture);
                     break;
                 case "MAXHP":
-                    newValue = player.MaxHP.ToString(CultureInfo.InvariantCulture);
+                    newValue = player.Stats[Stat.HP].ToString(CultureInfo.InvariantCulture);
                     break;
                 case "MP":
                     newValue = player.MP.ToString(CultureInfo.InvariantCulture);
                     break;
                 case "MAXMP":
-                    newValue = player.MaxMP.ToString(CultureInfo.InvariantCulture);
+                    newValue = player.Stats[Stat.MP].ToString(CultureInfo.InvariantCulture);
                     break;
                 case "GAMEGOLD":
                     newValue = player.Account.Gold.ToString(CultureInfo.InvariantCulture);
@@ -2649,7 +2649,7 @@ namespace Server.MirObjects
                 uint gold;
                 uint credit;
                 uint Pearls;
-                uint count;
+                ushort count;
                 ushort tempuShort;
                 string tempString = string.Empty;
                 int x, y;
@@ -2777,7 +2777,7 @@ namespace Server.MirObjects
                         break;
 
                     case ActionType.GiveItem:
-                        if (param.Count < 2 || !uint.TryParse(param[1], out count)) count = 1;
+                        if (param.Count < 2 || !ushort.TryParse(param[1], out count)) count = 1;
 
                         info = Envir.GetItemInfo(param[0]);
 
@@ -2814,7 +2814,7 @@ namespace Server.MirObjects
                         break;
 
                     case ActionType.TakeItem:
-                        if (param.Count < 2 || !uint.TryParse(param[1], out count)) count = 1;
+                        if (param.Count < 2 || !ushort.TryParse(param[1], out count)) count = 1;
                         info = Envir.GetItemInfo(param[0]);
 
                         ushort dura;
@@ -3402,7 +3402,7 @@ namespace Server.MirObjects
                         if (mailInfo == null) return;
                         if (mailInfo.Items.Count > 5) return;
 
-                        if (param.Count < 2 || !uint.TryParse(param[1], out count)) count = 1;
+                        if (param.Count < 2 || !ushort.TryParse(param[1], out count)) count = 1;
 
                         info = Envir.GetItemInfo(param[0]);
 
@@ -3521,8 +3521,8 @@ namespace Server.MirObjects
 
                         if (player.MyGuild == null || player.MyGuild.Gold < ConquestGate.GetRepairCost()) return;
 
-                        player.MyGuild.Gold -= ConquestGate.GetRepairCost();
-                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = ConquestGate.GetRepairCost() });
+                        player.MyGuild.Gold -= (uint)ConquestGate.GetRepairCost();
+                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = (uint)ConquestGate.GetRepairCost() });
 
                         ConquestGate.Repair();
                         break;
@@ -3538,7 +3538,7 @@ namespace Server.MirObjects
                         //if (ConquestWall.Wall != null)
                         //    if (!ConquestWall.Wall.Dead) return;
 
-                        uint repairCost = ConquestWall.GetRepairCost();
+                        uint repairCost = (uint)ConquestWall.GetRepairCost();
 
                         if (player.MyGuild == null || player.MyGuild.Gold < repairCost) return;
 
@@ -3561,8 +3561,8 @@ namespace Server.MirObjects
 
                         if (player.MyGuild == null || player.MyGuild.Gold < ConquestSiege.GetRepairCost()) return;
 
-                        player.MyGuild.Gold -= ConquestSiege.GetRepairCost();
-                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = ConquestSiege.GetRepairCost() });
+                        player.MyGuild.Gold -= (uint)ConquestSiege.GetRepairCost();
+                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = (uint)ConquestSiege.GetRepairCost() });
 
                         ConquestSiege.Repair();
                         break;

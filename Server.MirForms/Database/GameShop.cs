@@ -280,9 +280,9 @@ namespace Server
         {
             if (ActiveControl != sender) return;
 
-            uint temp;
+            ushort temp;
 
-            if (!uint.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp > 999)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;

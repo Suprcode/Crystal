@@ -597,8 +597,8 @@ namespace Client.MirScenes.Dialogs
 
             if (SelectedItem.Info.StackSize > 1)
             {
-                uint tempCount = SelectedItem.Count;
-                uint maxQuantity = SelectedItem.Info.StackSize;
+                ushort tempCount = SelectedItem.Count;
+                ushort maxQuantity = SelectedItem.Info.StackSize;
 
                 SelectedItem.Count = maxQuantity;
 
@@ -606,7 +606,7 @@ namespace Client.MirScenes.Dialogs
                 {
                     if (SelectedItem.Price() > GameScene.User.PearlCount)
                     {
-                        maxQuantity = GameScene.Gold / (SelectedItem.Price() / SelectedItem.Count);
+                        maxQuantity = Math.Min(ushort.MaxValue, (ushort)(GameScene.Gold / (SelectedItem.Price() / SelectedItem.Count)));
                         if (maxQuantity == 0)
                         {
                             GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Pearls.", ChatType.System);
@@ -617,7 +617,7 @@ namespace Client.MirScenes.Dialogs
 
                 else if (SelectedItem.Price() > GameScene.Gold)
                 {
-                    maxQuantity = GameScene.Gold / (SelectedItem.Price() / SelectedItem.Count);
+                    maxQuantity = Math.Min(ushort.MaxValue, (ushort)(GameScene.Gold / (SelectedItem.Price() / SelectedItem.Count)));
                     if (maxQuantity == 0)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowGold, ChatType.System);
@@ -640,7 +640,7 @@ namespace Client.MirScenes.Dialogs
                 {
                     if (amountBox.Amount > 0)
                     {
-                        Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.UniqueID, Count = amountBox.Amount, Type = PanelType.Buy });
+                        Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.UniqueID, Count = (ushort)amountBox.Amount, Type = PanelType.Buy });
                     }
                 };
 
@@ -654,7 +654,7 @@ namespace Client.MirScenes.Dialogs
                     return;
                 }
 
-                if (SelectedItem.Weight > (MapObject.User.MaxBagWeight - MapObject.User.CurrentBagWeight))
+                if (SelectedItem.Weight > (MapObject.User.Stats[Stat.BagWeight] - MapObject.User.CurrentBagWeight))
                 {
                     GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough weight.", ChatType.System);
                     return;
@@ -1871,33 +1871,35 @@ namespace Client.MirScenes.Dialogs
 
             if (Selected.Count < Recipe.Tools.Count + Recipe.Ingredients.Count) return;
 
-            uint max = 99;
+            ushort max = 99;
 
             //Max quantity based on available ingredients/tools
             for (int i = 0; i < Grid.Length; i++)
             {
                 if (Grid[i] == null || Grid[i].Item == null) continue;
 
-                uint temp = 0;
+                ushort temp = 0;
                 if (i >= _toolCount)
                 {
-                    temp = Grid[i].Item.Count / Grid[i].ShadowItem.Count;
+                    temp = (ushort)(Grid[i].Item.Count / Grid[i].ShadowItem.Count);
                 }
                 else
                 {
-                    temp = (uint)Math.Floor(Grid[i].Item.CurrentDura / 1000M);
+                    temp = (ushort)Math.Floor(Grid[i].Item.CurrentDura / 1000M);
                 }
 
                 if (temp < max) max = temp;
             }
 
             if (max > (RecipeItem.Info.StackSize / RecipeItem.Count))
-                max = (RecipeItem.Info.StackSize / RecipeItem.Count);
+            {
+                max = (ushort)(RecipeItem.Info.StackSize / RecipeItem.Count);
+            }
 
             //TODO - Check Max slots spare against slots to be used (stacksize/quantity)
             //TODO - GetMaxItemGain
 
-            if (RecipeItem.Weight > (MapObject.User.MaxBagWeight - MapObject.User.CurrentBagWeight))
+            if (RecipeItem.Weight > (MapObject.User.Stats[Stat.BagWeight] - MapObject.User.CurrentBagWeight))
             {
                 GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough weight.", ChatType.System);
                 return;
@@ -1926,7 +1928,7 @@ namespace Client.MirScenes.Dialogs
                         Network.Enqueue(new C.CraftItem 
                         { 
                             UniqueID = RecipeItem.UniqueID, 
-                            Count = amountBox.Amount, 
+                            Count = (ushort)amountBox.Amount, 
                             Slots = Selected.Select(x => x.Key.ItemSlot).ToArray()
                         });
                     }

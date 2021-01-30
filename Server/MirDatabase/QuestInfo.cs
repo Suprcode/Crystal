@@ -244,9 +244,9 @@ namespace Server.MirDatabase
             if (line.Length < 1) return;
 
             string[] split = line.Split(' ');
-            uint count = 1;
+            ushort count = 1;
 
-            if (split.Length > 1) uint.TryParse(split[1], out count);
+            if (split.Length > 1) ushort.TryParse(split[1], out count);
 
             ItemInfo mInfo = Envir.GetItemInfo(split[0]);
 
@@ -289,11 +289,11 @@ namespace Server.MirDatabase
             if (line.Length < 1) return null;
 
             string[] split = line.Split(' ');
-            uint count = 1;
+            ushort count = 1;
             string message = "";
 
             ItemInfo mInfo = Envir.GetItemInfo(split[0]);
-            if (split.Length > 1) uint.TryParse(split[1], out count);
+            if (split.Length > 1) ushort.TryParse(split[1], out count);
 
             var match = _regexMessage.Match(line);
             if (match.Success)
@@ -447,7 +447,7 @@ namespace Server.MirDatabase
     public class QuestItemTask
     {
         public ItemInfo Item;
-        public uint Count;
+        public ushort Count;
         public string Message;
     }
 

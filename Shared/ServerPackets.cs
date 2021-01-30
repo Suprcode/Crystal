@@ -463,7 +463,7 @@ namespace ServerPackets
         public Point Location;
         public MirDirection Direction;
         public byte Hair;
-        public ushort HP, MP;
+        public int HP, MP;
         public long Experience, MaxExperience;
 
         public LevelEffects LevelEffects;
@@ -496,8 +496,8 @@ namespace ServerPackets
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             Direction = (MirDirection)reader.ReadByte();
             Hair = reader.ReadByte();
-            HP = reader.ReadUInt16();
-            MP = reader.ReadUInt16();
+            HP = reader.ReadInt32();
+            MP = reader.ReadInt32();
 
             Experience = reader.ReadInt64();
             MaxExperience = reader.ReadInt64();
@@ -1330,14 +1330,14 @@ namespace ServerPackets
 
         public MirGridType Grid;
         public ulong UniqueID;
-        public uint Count;
+        public ushort Count;
         public bool Success;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             Grid = (MirGridType)reader.ReadByte();
             UniqueID = reader.ReadUInt64();
-            Count = reader.ReadUInt32();
+            Count = reader.ReadUInt16();
             Success = reader.ReadBoolean();
         }
 
@@ -1379,13 +1379,13 @@ namespace ServerPackets
         }
 
         public ulong UniqueID;
-        public uint Count;
+        public ushort Count;
         public bool Success;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             UniqueID = reader.ReadUInt64();
-            Count = reader.ReadUInt32();
+            Count = reader.ReadUInt16();
             Success = reader.ReadBoolean();
         }
 
@@ -2124,12 +2124,12 @@ namespace ServerPackets
             get { return (short)ServerPacketIds.HealthChanged; }
         }
 
-        public ushort HP, MP;
+        public int HP, MP;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            HP = reader.ReadUInt16();
-            MP = reader.ReadUInt16();
+            HP = reader.ReadInt32();
+            MP = reader.ReadInt32();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -2146,12 +2146,12 @@ namespace ServerPackets
         }
 
         public ulong UniqueID;
-        public uint Count;
+        public ushort Count;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             UniqueID = reader.ReadUInt64();
-            Count = reader.ReadUInt32();
+            Count = reader.ReadUInt16();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -2769,13 +2769,13 @@ namespace ServerPackets
         public override short Index { get { return (short)ServerPacketIds.SellItem; } }
 
         public ulong UniqueID;
-        public uint Count;
+        public ushort Count;
         public bool Success;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             UniqueID = reader.ReadUInt64();
-            Count = reader.ReadUInt32();
+            Count = reader.ReadUInt16();
             Success = reader.ReadBoolean();
         }
         protected override void WritePacket(BinaryWriter writer)
@@ -4351,12 +4351,12 @@ namespace ServerPackets
         }
 
         public ulong UniqueID;
-        public uint Count;
+        public ushort Count;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             UniqueID = reader.ReadUInt64();
-            Count = reader.ReadUInt32();
+            Count = reader.ReadUInt16();
         }
 
         protected override void WritePacket(BinaryWriter writer)

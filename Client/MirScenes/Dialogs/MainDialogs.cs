@@ -459,8 +459,8 @@ namespace Client.MirScenes.Dialogs
 
             if (Settings.HPView)
             {
-                HealthLabel.Text = string.Format("HP {0}/{1}", User.HP, User.MaxHP);
-                ManaLabel.Text = HPOnly ? "" : string.Format("MP {0}/{1} ", User.MP, User.MaxMP);
+                HealthLabel.Text = string.Format("HP {0}/{1}", User.HP, User.Stats[Stat.HP]);
+                ManaLabel.Text = HPOnly ? "" : string.Format("MP {0}/{1} ", User.MP, User.Stats[Stat.MP]);
                 TopLabel.Text = string.Empty;
                 BottomLabel.Text = string.Empty;
             }
@@ -469,12 +469,12 @@ namespace Client.MirScenes.Dialogs
                 if (HPOnly)
                 {
                     TopLabel.Text = string.Format("{0}\n" + "--", User.HP);
-                    BottomLabel.Text = string.Format("{0}", User.MaxHP);
+                    BottomLabel.Text = string.Format("{0}", User.Stats[Stat.HP]);
                 }
                 else
                 {
                     TopLabel.Text = string.Format(" {0}    {1} \n" + "---------------", User.HP, User.MP);
-                    BottomLabel.Text = string.Format(" {0}    {1} ", User.MaxHP, User.MaxMP);
+                    BottomLabel.Text = string.Format(" {0}    {1} ", User.Stats[Stat.HP], User.Stats[Stat.MP]);
                 }
                 HealthLabel.Text = string.Empty;
                 ManaLabel.Text = string.Empty;
@@ -486,7 +486,7 @@ namespace Client.MirScenes.Dialogs
             GoldLabel.Text = GameScene.Gold.ToString("###,###,##0");
             CharacterName.Text = User.Name;
             SpaceLabel.Text = User.Inventory.Count(t => t == null).ToString();
-            WeightLabel.Text = (MapObject.User.MaxBagWeight - MapObject.User.CurrentBagWeight).ToString();
+            WeightLabel.Text = (MapObject.User.Stats[Stat.BagWeight] - MapObject.User.CurrentBagWeight).ToString();
         }
 
         private void Label_SizeChanged(object sender, EventArgs e)
@@ -501,8 +501,8 @@ namespace Client.MirScenes.Dialogs
             if (Libraries.Prguse == null) return;
 
             int height;
-            if (User != null && User.HP != User.MaxHP)
-                height = (int)(80 * User.HP / (float)User.MaxHP);
+            if (User != null && User.HP != User.Stats[Stat.HP])
+                height = (int)(80 * User.HP / (float)User.Stats[Stat.HP]);
             else
                 height = 80;
 
@@ -524,8 +524,8 @@ namespace Client.MirScenes.Dialogs
 
             if (hpOnly) return;
 
-            if (User.MP != User.MaxMP)
-                height = (int)(80 * User.MP / (float)User.MaxMP);
+            if (User.MP != User.Stats[Stat.MP])
+                height = (int)(80 * User.MP / (float)User.Stats[Stat.MP]);
             else
                 height = 80;
 
@@ -555,7 +555,7 @@ namespace Client.MirScenes.Dialogs
         private void WeightBar_BeforeDraw(object sender, EventArgs e)
         {
             if (WeightBar.Library == null) return;
-            double percent = MapObject.User.CurrentBagWeight / (double)MapObject.User.MaxBagWeight;
+            double percent = MapObject.User.CurrentBagWeight / (double)MapObject.User.Stats[Stat.BagWeight];
             if (percent > 1) percent = 1;
             if (percent <= 0) return;
 
@@ -1816,7 +1816,7 @@ namespace Client.MirScenes.Dialogs
         {
             if (WeightBar.Library == null) return;
 
-            double percent = MapObject.User.CurrentBagWeight / (double)MapObject.User.MaxBagWeight;
+            double percent = MapObject.User.CurrentBagWeight / (double)MapObject.User.Stats[Stat.BagWeight];
             if (percent > 1) percent = 1;
             if (percent <= 0) return;
 
@@ -2363,8 +2363,8 @@ namespace Client.MirScenes.Dialogs
                 DCLabel.Text = string.Format("{0}-{1}", MapObject.User.MinDC, MapObject.User.MaxDC);
                 MCLabel.Text = string.Format("{0}-{1}", MapObject.User.MinMC, MapObject.User.MaxMC);
                 SCLabel.Text = string.Format("{0}-{1}", MapObject.User.MinSC, MapObject.User.MaxSC);
-                HealthLabel.Text = string.Format("{0}/{1}", MapObject.User.HP, MapObject.User.MaxHP);
-                ManaLabel.Text = string.Format("{0}/{1}", MapObject.User.MP, MapObject.User.MaxMP);
+                HealthLabel.Text = string.Format("{0}/{1}", MapObject.User.HP, MapObject.User.Stats[Stat.HP]);
+                ManaLabel.Text = string.Format("{0}/{1}", MapObject.User.MP, MapObject.User.Stats[Stat.MP]);
                 CritRLabel.Text = string.Format("{0}%", MapObject.User.CriticalRate);
                 CritDLabel.Text = string.Format("{0}", MapObject.User.CriticalDamage);
                 AttkSpdLabel.Text = string.Format("{0}", MapObject.User.ASpeed);
@@ -2384,9 +2384,9 @@ namespace Client.MirScenes.Dialogs
             StatePage.BeforeDraw += (o, e) =>
             {
                 ExpPLabel.Text = string.Format("{0:0.##%}", MapObject.User.Experience / (double)MapObject.User.MaxExperience);
-                BagWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentBagWeight, MapObject.User.MaxBagWeight);
-                WearWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentWearWeight, MapObject.User.MaxWearWeight);
-                HandWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentHandWeight, MapObject.User.MaxHandWeight);
+                BagWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentBagWeight, MapObject.User.Stats[Stat.BagWeight]);
+                WearWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentWearWeight, MapObject.User.Stats[Stat.WearWeight]);
+                HandWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentHandWeight, MapObject.User.Stats[Stat.HandWeight]);
                 MagicRLabel.Text = string.Format("+{0}", MapObject.User.MagicResist);
                 PoisonResLabel.Text = string.Format("+{0}", MapObject.User.PoisonResist);
                 HealthRLabel.Text = string.Format("+{0}", MapObject.User.HealthRecovery);
@@ -5069,8 +5069,8 @@ namespace Client.MirScenes.Dialogs
         {
             int Warning = item.MaxDura / 2;
             int Danger = item.MaxDura / 5;
-            uint AmuletWarning = item.Info.StackSize / 2;
-            uint AmuletDanger = item.Info.StackSize / 5;
+            ushort AmuletWarning = (ushort)(item.Info.StackSize / 2);
+            ushort AmuletDanger = (ushort)(item.Info.StackSize / 5);
 
             switch (item.Info.Type)
             {

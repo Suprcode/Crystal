@@ -57,7 +57,7 @@ namespace Server.MirDatabase
         public int BindMapIndex;
         public Point BindLocation;
 
-        public ushort HP, MP;
+        public int HP, MP;
         public long Experience;
 
         public AttackMode AMode;
@@ -159,8 +159,17 @@ namespace Server.MirDatabase
             BindMapIndex = reader.ReadInt32();
             BindLocation = new Point(reader.ReadInt32(), reader.ReadInt32());
 
-            HP = reader.ReadUInt16();
-            MP = reader.ReadUInt16();
+            if (Envir.LoadVersion <= 84)
+            {
+                HP = reader.ReadUInt16();
+                MP = reader.ReadUInt16();
+            }
+            else
+            {
+                HP = reader.ReadInt32();
+                MP = reader.ReadInt32();
+            }
+
             Experience = reader.ReadInt64();
             
             AMode = (AttackMode) reader.ReadByte();
@@ -508,7 +517,8 @@ namespace Server.MirDatabase
     public class PetInfo
     {
         public int MonsterIndex;
-        public uint HP, Experience;
+        public int HP;
+        public uint Experience;
         public byte Level, MaxPetLevel;
 
         public long Time;
@@ -526,7 +536,16 @@ namespace Server.MirDatabase
         {
             MonsterIndex = reader.ReadInt32();
             if (MonsterIndex == 271) MonsterIndex = 275;
-            HP = reader.ReadUInt32();
+
+            if (Envir.LoadVersion <= 84)
+            {
+                HP = (int)reader.ReadUInt32();
+            }
+            else
+            {
+                HP = reader.ReadInt32();
+            }
+
             Experience = reader.ReadUInt32();
             Level = reader.ReadByte();
             MaxPetLevel = reader.ReadByte();

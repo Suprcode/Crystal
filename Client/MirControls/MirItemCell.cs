@@ -260,12 +260,12 @@ namespace Client.MirControls
 
                                 if (Item.Count > 1)
                                 {
-                                    MirAmountBox amountBox = new MirAmountBox("Split Amount:", Item.Image, Item.Count - 1);
+                                    MirAmountBox amountBox = new MirAmountBox("Split Amount:", Item.Image, (uint)(Item.Count - 1));
 
                                     amountBox.OKButton.Click += (o, a) =>
                                     {
                                         if (amountBox.Amount == 0 || amountBox.Amount >= Item.Count) return;
-                                        Network.Enqueue(new C.SplitItem { Grid = GridType, UniqueID = Item.UniqueID, Count = amountBox.Amount });
+                                        Network.Enqueue(new C.SplitItem { Grid = GridType, UniqueID = Item.UniqueID, Count = (ushort)amountBox.Amount });
                                         Locked = true;
                                     };
 
@@ -900,7 +900,7 @@ namespace Client.MirControls
                                     }
                                 }
 
-                                if (GameScene.SelectedCell.Item.Weight + MapObject.User.CurrentBagWeight > MapObject.User.MaxBagWeight)
+                                if (GameScene.SelectedCell.Item.Weight + MapObject.User.CurrentBagWeight > MapObject.User.Stats[Stat.BagWeight])
                                 {
                                     GameScene.Scene.ChatDialog.ReceiveChat("Too heavy to get back.", ChatType.System);
                                     GameScene.SelectedCell = null;
@@ -978,7 +978,7 @@ namespace Client.MirControls
                                     }
                                 }
 
-                                if (GameScene.SelectedCell.Item.Weight + MapObject.User.CurrentBagWeight > MapObject.User.MaxBagWeight)
+                                if (GameScene.SelectedCell.Item.Weight + MapObject.User.CurrentBagWeight > MapObject.User.Stats[Stat.BagWeight])
                                 {
                                     GameScene.Scene.ChatDialog.ReceiveChat("Too heavy to get back.", ChatType.System);
                                     GameScene.SelectedCell = null;
@@ -1051,7 +1051,7 @@ namespace Client.MirControls
                                     }
                                 }
 
-                                if (GameScene.SelectedCell.Item.Weight + MapObject.User.CurrentBagWeight > MapObject.User.MaxBagWeight)
+                                if (GameScene.SelectedCell.Item.Weight + MapObject.User.CurrentBagWeight > MapObject.User.Stats[Stat.BagWeight])
                                 {
                                     GameScene.Scene.ChatDialog.ReceiveChat("Too heavy to get back.", ChatType.System);
                                     GameScene.SelectedCell = null;
@@ -1107,7 +1107,7 @@ namespace Client.MirControls
                                     return;
                                 }
 
-                                if (GameScene.SelectedCell.Item.Weight + MapObject.User.CurrentBagWeight > MapObject.User.MaxBagWeight)
+                                if (GameScene.SelectedCell.Item.Weight + MapObject.User.CurrentBagWeight > MapObject.User.Stats[Stat.BagWeight])
                                 {
                                     GameScene.Scene.ChatDialog.ReceiveChat("Too heavy to get back.", ChatType.System);
                                     GameScene.SelectedCell = null;
@@ -2071,7 +2071,7 @@ namespace Client.MirControls
 
             if (i.Info.Type == ItemType.Weapon || i.Info.Type == ItemType.Torch)
             {
-                if (i.Weight - (Item != null ? Item.Weight : 0) + MapObject.User.CurrentHandWeight > MapObject.User.MaxHandWeight)
+                if (i.Weight - (Item != null ? Item.Weight : 0) + MapObject.User.CurrentHandWeight > MapObject.User.Stats[Stat.HandWeight])
                 {
                     GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.TooHeavyToHold, ChatType.System);
                     return false;
@@ -2079,7 +2079,7 @@ namespace Client.MirControls
             }
             else
             {
-                if (i.Weight - (Item != null ? Item.Weight : 0) + MapObject.User.CurrentWearWeight > MapObject.User.MaxWearWeight)
+                if (i.Weight - (Item != null ? Item.Weight : 0) + MapObject.User.CurrentWearWeight > MapObject.User.Stats[Stat.WearWeight])
                 {
                     GameScene.Scene.ChatDialog.ReceiveChat("It is too heavy to wear.", ChatType.System);
                     return false;
