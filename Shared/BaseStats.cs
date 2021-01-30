@@ -5,6 +5,7 @@ public class BaseStats
     public float HpGain, HpGainRate, MpGainRate, BagWeightGain, WearWeightGain, HandWeightGain;
     public byte MinAc, MaxAc, MinMac, MaxMac, MinDc, MaxDc, MinMc, MaxMc, MinSc, MaxSc, StartAgility, StartAccuracy, StartCriticalRate, StartCriticalDamage, CritialRateGain, CriticalDamageGain;
 
+    //TODO - Change this system so you can generically adjust any stat per level/class
     public BaseStats(MirClass Job)
     {
         switch (Job)

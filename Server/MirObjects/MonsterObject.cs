@@ -358,6 +358,8 @@ namespace Server.MirObjects
         {
             Info = info;
 
+            Stats = new Stats();
+
             Undead = Info.Undead;
             AutoRev = info.AutoRev;
             CoolEye = info.CoolEye > Envir.Random.Next(100);

@@ -56,25 +56,25 @@ namespace Server.MirObjects
         public byte PercentHealth
         {
             get { return (byte) (Health/(float) MaxHealth*100); }
-
         }
 
-        public ushort MinAC, MaxAC, MinMAC, MaxMAC;
-        public ushort MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC;
+        public ushort MinAC, MaxAC, MinMAC, MaxMAC; //To Remove
+        public ushort MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC; //To Remove
 
-        public byte Accuracy, Agility, Light;
-        public sbyte ASpeed, Luck;
+        public byte Accuracy, Agility,  //To Remove
+            Light;
+        public sbyte ASpeed, Luck; //To Remove
         public int AttackSpeed;
 
-        public ushort CurrentHandWeight,
-                   MaxHandWeight,
+        public int CurrentHandWeight,
+                   MaxHandWeight, //To Remove
                    CurrentWearWeight,
-                   MaxWearWeight;
+                   MaxWearWeight; //To Remove
 
-        public ushort CurrentBagWeight,
-                      MaxBagWeight;
+        public int CurrentBagWeight,
+                      MaxBagWeight; //To Remove
 
-        public byte MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Holy, Freezing, PoisonAttack;
+        public byte MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Holy, Freezing, PoisonAttack; //To Remove
 
         public long CellTime, BrownTime, PKPointTime, LastHitTime, EXPOwnerTime;
         public Color NameColour = Color.White;
@@ -164,6 +164,8 @@ namespace Server.MirObjects
         public MapObject Master, LastHitter, EXPOwner, Owner;
         public long ExpireTime, OwnerTime, OperateTime;
         public int OperateDelay = 100;
+
+        public Stats Stats;
 
         public List<MonsterObject> Pets = new List<MonsterObject>();
         public List<Buff> Buffs = new List<Buff>();

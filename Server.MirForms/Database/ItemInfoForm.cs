@@ -230,48 +230,48 @@ namespace Server
             LightTextBox.Text = (info.Light % 15).ToString();
             LightIntensitytextBox.Text = (info.Light / 15).ToString();
 
-            MinACTextBox.Text = info.MinAC.ToString();
-            MaxACTextBox.Text = info.MaxAC.ToString();
-            MinMACTextBox.Text = info.MinMAC.ToString();
-            MaxMACTextBox.Text = info.MaxMAC.ToString();
-            MinDCTextBox.Text = info.MinDC.ToString();
-            MaxDCTextBox.Text = info.MaxDC.ToString();
-            MinMCTextBox.Text = info.MinMC.ToString();
-            MaxMCTextBox.Text = info.MaxMC.ToString();
-            MinSCTextBox.Text = info.MinSC.ToString();
-            MaxSCTextBox.Text = info.MaxSC.ToString();
-            HPTextBox.Text = info.HP.ToString();
-            MPTextBox.Text = info.MP.ToString();
-            AccuracyTextBox.Text = info.Accuracy.ToString();
-            AgilityTextBox.Text = info.Agility.ToString();
-            ASpeedTextBox.Text = info.AttackSpeed.ToString();
-            LuckTextBox.Text = info.Luck.ToString();
+            MinACTextBox.Text = info.Stats[Stat.MinAC].ToString();
+            MaxACTextBox.Text = info.Stats[Stat.MaxAC].ToString();
+            MinMACTextBox.Text = info.Stats[Stat.MinMAC].ToString();
+            MaxMACTextBox.Text = info.Stats[Stat.MaxMAC].ToString();
+            MinDCTextBox.Text = info.Stats[Stat.MinDC].ToString();
+            MaxDCTextBox.Text = info.Stats[Stat.MaxDC].ToString();
+            MinMCTextBox.Text = info.Stats[Stat.MinMC].ToString();
+            MaxMCTextBox.Text = info.Stats[Stat.MaxMC].ToString();
+            MinSCTextBox.Text = info.Stats[Stat.MinSC].ToString();
+            MaxSCTextBox.Text = info.Stats[Stat.MaxSC].ToString();
+            HPTextBox.Text = info.Stats[Stat.HP].ToString();
+            MPTextBox.Text = info.Stats[Stat.MP].ToString();
+            AccuracyTextBox.Text = info.Stats[Stat.Accuracy].ToString();
+            AgilityTextBox.Text = info.Stats[Stat.Agility].ToString();
+            ASpeedTextBox.Text = info.Stats[Stat.AttackSpeed].ToString();
+            LuckTextBox.Text = info.Stats[Stat.Luck].ToString();
 
-            WWeightTextBox.Text = info.WearWeight.ToString();
-            HWeightTextBox.Text = info.HandWeight.ToString();
-            BWeightText.Text = info.BagWeight.ToString();
+            WWeightTextBox.Text = info.Stats[Stat.WearWeight].ToString();
+            HWeightTextBox.Text = info.Stats[Stat.HandWeight].ToString();
+            BWeightText.Text = info.Stats[Stat.BagWeight].ToString();
 
             StartItemCheckBox.Checked = info.StartItem;
             EffectTextBox.Text = info.Effect.ToString();
             SlotsTextBox.Text = info.Slots.ToString();
 
-            PoisonRecoverytextBox.Text = info.PoisonRecovery.ToString();
-            SpellRecoverytextBox.Text = info.SpellRecovery.ToString();
-            MagicResisttextBox.Text = info.MagicResist.ToString();
-            HealthRecoveryTextbox.Text = info.HealthRecovery.ToString();
-            StrongTextbox.Text = info.Strong.ToString();
-            MacRateTextbox.Text = info.MaxMacRate.ToString();
-            ACRateTextbox.Text = info.MaxAcRate.ToString();
-            PoisonResisttextBox.Text = info.PoisonResist.ToString();
-            PoisonAttacktextbox.Text = info.PoisonAttack.ToString();
-            Freezingtextbox.Text = info.Freezing.ToString();
-            Holytextbox.Text = info.Holy.ToString();
-            HPratetextbox.Text = info.HPrate.ToString();
-            MPratetextbox.Text = info.MPrate.ToString();
-            HpDrainRatetextBox.Text = info.HpDrainRate.ToString();
-            CriticalRatetextBox.Text = info.CriticalRate.ToString();
-            CriticalDamagetextBox.Text = info.CriticalDamage.ToString();
-            ReflecttextBox.Text = info.Reflect.ToString();
+            PoisonRecoverytextBox.Text = info.Stats[Stat.PoisonRecovery].ToString();
+            SpellRecoverytextBox.Text = info.Stats[Stat.SpellRecovery].ToString();
+            MagicResisttextBox.Text = info.Stats[Stat.MagicResist].ToString();
+            HealthRecoveryTextbox.Text = info.Stats[Stat.HealthRecovery].ToString();
+            StrongTextbox.Text = info.Stats[Stat.Strong].ToString();
+            MacRateTextbox.Text = info.Stats[Stat.MaxMACRate].ToString();
+            ACRateTextbox.Text = info.Stats[Stat.MaxACRate].ToString();
+            PoisonResisttextBox.Text = info.Stats[Stat.PoisonResist].ToString();
+            PoisonAttacktextbox.Text = info.Stats[Stat.PoisonAttack].ToString();
+            Freezingtextbox.Text = info.Stats[Stat.Freezing].ToString();
+            Holytextbox.Text = info.Stats[Stat.Holy].ToString();
+            HPratetextbox.Text = info.Stats[Stat.HPrate].ToString();
+            MPratetextbox.Text = info.Stats[Stat.MPrate].ToString();
+            HpDrainRatetextBox.Text = info.Stats[Stat.HpDrainRate].ToString();
+            CriticalRatetextBox.Text = info.Stats[Stat.CriticalRate].ToString();
+            CriticalDamagetextBox.Text = info.Stats[Stat.CriticalDamage].ToString();
+            ReflecttextBox.Text = info.Stats[Stat.Reflect].ToString();
 
             LevelBasedcheckbox.Checked = info.LevelBased;
             ClassBasedcheckbox.Checked = info.ClassBased;
@@ -339,48 +339,48 @@ namespace Server
                 if (LightTextBox.Text != (info.Light % 15).ToString()) LightTextBox.Text = string.Empty;
                 if (LightIntensitytextBox.Text != (info.Light / 15).ToString()) LightIntensitytextBox.Text = string.Empty;
 
-                if (MinACTextBox.Text != info.MinAC.ToString()) MinACTextBox.Text = string.Empty;
-                if (MaxACTextBox.Text != info.MaxAC.ToString()) MaxACTextBox.Text = string.Empty;
-                if (MinMACTextBox.Text != info.MinMAC.ToString()) MinMACTextBox.Text = string.Empty;
-                if (MaxMACTextBox.Text != info.MaxMAC.ToString()) MaxMACTextBox.Text = string.Empty;
-                if (MinDCTextBox.Text != info.MinDC.ToString()) MinDCTextBox.Text = string.Empty;
-                if (MaxDCTextBox.Text != info.MaxDC.ToString()) MaxDCTextBox.Text = string.Empty;
-                if (MinMCTextBox.Text != info.MinMC.ToString()) MinMCTextBox.Text = string.Empty;
-                if (MaxMCTextBox.Text != info.MaxMC.ToString()) MaxMCTextBox.Text = string.Empty;
-                if (MinSCTextBox.Text != info.MinSC.ToString()) MinSCTextBox.Text = string.Empty;
-                if (MaxSCTextBox.Text != info.MaxSC.ToString()) MaxSCTextBox.Text = string.Empty;
-                if (HPTextBox.Text != info.HP.ToString()) HPTextBox.Text = string.Empty;
-                if (MPTextBox.Text != info.MP.ToString()) MPTextBox.Text = string.Empty;
-                if (AccuracyTextBox.Text != info.Accuracy.ToString()) AccuracyTextBox.Text = string.Empty;
-                if (AgilityTextBox.Text != info.Agility.ToString()) AgilityTextBox.Text = string.Empty;
-                if (ASpeedTextBox.Text != info.AttackSpeed.ToString()) ASpeedTextBox.Text = string.Empty;
-                if (LuckTextBox.Text != info.Luck.ToString()) LuckTextBox.Text = string.Empty;
+                if (MinACTextBox.Text != info.Stats[Stat.MinAC].ToString()) MinACTextBox.Text = string.Empty;
+                if (MaxACTextBox.Text != info.Stats[Stat.MaxAC].ToString()) MaxACTextBox.Text = string.Empty;
+                if (MinMACTextBox.Text != info.Stats[Stat.MinMAC].ToString()) MinMACTextBox.Text = string.Empty;
+                if (MaxMACTextBox.Text != info.Stats[Stat.MaxMAC].ToString()) MaxMACTextBox.Text = string.Empty;
+                if (MinDCTextBox.Text != info.Stats[Stat.MinDC].ToString()) MinDCTextBox.Text = string.Empty;
+                if (MaxDCTextBox.Text != info.Stats[Stat.MaxDC].ToString()) MaxDCTextBox.Text = string.Empty;
+                if (MinMCTextBox.Text != info.Stats[Stat.MinMC].ToString()) MinMCTextBox.Text = string.Empty;
+                if (MaxMCTextBox.Text != info.Stats[Stat.MaxMC].ToString()) MaxMCTextBox.Text = string.Empty;
+                if (MinSCTextBox.Text != info.Stats[Stat.MinSC].ToString()) MinSCTextBox.Text = string.Empty;
+                if (MaxSCTextBox.Text != info.Stats[Stat.MaxSC].ToString()) MaxSCTextBox.Text = string.Empty;
+                if (HPTextBox.Text != info.Stats[Stat.HP].ToString()) HPTextBox.Text = string.Empty;
+                if (MPTextBox.Text != info.Stats[Stat.MP].ToString()) MPTextBox.Text = string.Empty;
+                if (AccuracyTextBox.Text != info.Stats[Stat.Accuracy].ToString()) AccuracyTextBox.Text = string.Empty;
+                if (AgilityTextBox.Text != info.Stats[Stat.Agility].ToString()) AgilityTextBox.Text = string.Empty;
+                if (ASpeedTextBox.Text != info.Stats[Stat.AttackSpeed].ToString()) ASpeedTextBox.Text = string.Empty;
+                if (LuckTextBox.Text != info.Stats[Stat.Luck].ToString()) LuckTextBox.Text = string.Empty;
 
-                if (WWeightTextBox.Text != info.WearWeight.ToString()) WWeightTextBox.Text = string.Empty;
-                if (HWeightTextBox.Text != info.HandWeight.ToString()) HWeightTextBox.Text = string.Empty;
-                if (BWeightText.Text != info.BagWeight.ToString()) BWeightText.Text = string.Empty;
+                if (WWeightTextBox.Text != info.Stats[Stat.WearWeight].ToString()) WWeightTextBox.Text = string.Empty;
+                if (HWeightTextBox.Text != info.Stats[Stat.HandWeight].ToString()) HWeightTextBox.Text = string.Empty;
+                if (BWeightText.Text != info.Stats[Stat.BagWeight].ToString()) BWeightText.Text = string.Empty;
 
                 if (StartItemCheckBox.Checked != info.StartItem) StartItemCheckBox.CheckState = CheckState.Indeterminate;
                 if (EffectTextBox.Text != info.Effect.ToString()) EffectTextBox.Text = string.Empty;
                 if (SlotsTextBox.Text != info.Slots.ToString()) SlotsTextBox.Text = string.Empty;
 
-                if (PoisonRecoverytextBox.Text != info.PoisonRecovery.ToString()) PoisonRecoverytextBox.Text = string.Empty;
-                if (SpellRecoverytextBox.Text != info.SpellRecovery.ToString()) SpellRecoverytextBox.Text = string.Empty;
-                if (MagicResisttextBox.Text != info.MagicResist.ToString()) MagicResisttextBox.Text = string.Empty;
-                if (HealthRecoveryTextbox.Text != info.HealthRecovery.ToString()) HealthRecoveryTextbox.Text = string.Empty;
-                if (StrongTextbox.Text != info.Strong.ToString()) StrongTextbox.Text = string.Empty;
-                if (MacRateTextbox.Text != info.MaxMacRate.ToString()) MacRateTextbox.Text = string.Empty;
-                if (ACRateTextbox.Text != info.MaxAcRate.ToString()) ACRateTextbox.Text = string.Empty;
-                if (PoisonResisttextBox.Text != info.PoisonResist.ToString()) PoisonResisttextBox.Text = string.Empty;
-                if (PoisonAttacktextbox.Text != info.PoisonAttack.ToString()) PoisonAttacktextbox.Text = string.Empty;
-                if (Freezingtextbox.Text != info.Freezing.ToString()) Freezingtextbox.Text = string.Empty;
-                if (Holytextbox.Text != info.Holy.ToString()) Holytextbox.Text = string.Empty;
-                if (HPratetextbox.Text != info.HPrate.ToString()) HPratetextbox.Text = string.Empty;
-                if (MPratetextbox.Text != info.MPrate.ToString()) MPratetextbox.Text = string.Empty;
-                if (HpDrainRatetextBox.Text != info.HpDrainRate.ToString()) HpDrainRatetextBox.Text = string.Empty;
-                if (CriticalRatetextBox.Text != info.CriticalRate.ToString()) CriticalRatetextBox.Text = string.Empty;
-                if (CriticalDamagetextBox.Text != info.CriticalDamage.ToString()) CriticalDamagetextBox.Text = string.Empty;
-                if (ReflecttextBox.Text != info.Reflect.ToString()) ReflecttextBox.Text = string.Empty;
+                if (PoisonRecoverytextBox.Text != info.Stats[Stat.PoisonRecovery].ToString()) PoisonRecoverytextBox.Text = string.Empty;
+                if (SpellRecoverytextBox.Text != info.Stats[Stat.SpellRecovery].ToString()) SpellRecoverytextBox.Text = string.Empty;
+                if (MagicResisttextBox.Text != info.Stats[Stat.MagicResist].ToString()) MagicResisttextBox.Text = string.Empty;
+                if (HealthRecoveryTextbox.Text != info.Stats[Stat.HealthRecovery].ToString()) HealthRecoveryTextbox.Text = string.Empty;
+                if (StrongTextbox.Text != info.Stats[Stat.Strong].ToString()) StrongTextbox.Text = string.Empty;
+                if (MacRateTextbox.Text != info.Stats[Stat.MaxMACRate].ToString()) MacRateTextbox.Text = string.Empty;
+                if (ACRateTextbox.Text != info.Stats[Stat.MaxACRate].ToString()) ACRateTextbox.Text = string.Empty;
+                if (PoisonResisttextBox.Text != info.Stats[Stat.PoisonResist].ToString()) PoisonResisttextBox.Text = string.Empty;
+                if (PoisonAttacktextbox.Text != info.Stats[Stat.PoisonAttack].ToString()) PoisonAttacktextbox.Text = string.Empty;
+                if (Freezingtextbox.Text != info.Stats[Stat.Freezing].ToString()) Freezingtextbox.Text = string.Empty;
+                if (Holytextbox.Text != info.Stats[Stat.Holy].ToString()) Holytextbox.Text = string.Empty;
+                if (HPratetextbox.Text != info.Stats[Stat.HPrate].ToString()) HPratetextbox.Text = string.Empty;
+                if (MPratetextbox.Text != info.Stats[Stat.MPrate].ToString()) MPratetextbox.Text = string.Empty;
+                if (HpDrainRatetextBox.Text != info.Stats[Stat.HpDrainRate].ToString()) HpDrainRatetextBox.Text = string.Empty;
+                if (CriticalRatetextBox.Text != info.Stats[Stat.CriticalRate].ToString()) CriticalRatetextBox.Text = string.Empty;
+                if (CriticalDamagetextBox.Text != info.Stats[Stat.CriticalDamage].ToString()) CriticalDamagetextBox.Text = string.Empty;
+                if (ReflecttextBox.Text != info.Stats[Stat.Reflect].ToString()) ReflecttextBox.Text = string.Empty;
                 if (LevelBasedcheckbox.Checked != info.LevelBased) LevelBasedcheckbox.CheckState = CheckState.Indeterminate;
                 if (ClassBasedcheckbox.Checked != info.ClassBased) ClassBasedcheckbox.CheckState = CheckState.Indeterminate;
                 if (Bind_dontstorecheckbox.Checked != info.Bind.HasFlag(BindMode.DontStore)) Bind_dontstorecheckbox.CheckState = CheckState.Indeterminate;
@@ -685,7 +685,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].MinAC = temp;
+                _selectedItemInfos[i].Stats[Stat.MinAC] = temp;
         }
         private void MaxACTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -702,7 +702,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].MaxAC = temp;
+                _selectedItemInfos[i].Stats[Stat.MaxAC] = temp;
         }
         private void MinMACTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -719,7 +719,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].MinMAC = temp;
+                _selectedItemInfos[i].Stats[Stat.MinMAC] = temp;
         }
         private void MaxMACTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -737,7 +737,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].MaxMAC = temp;
+                _selectedItemInfos[i].Stats[Stat.MaxMAC] = temp;
         }
         private void MinDCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -755,7 +755,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].MinDC = temp;
+                _selectedItemInfos[i].Stats[Stat.MinDC] = temp;
         }
         private void MaxDCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -773,7 +773,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].MaxDC = temp;
+                _selectedItemInfos[i].Stats[Stat.MaxDC] = temp;
         }
         private void MinMCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -791,7 +791,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].MinMC = temp;
+                _selectedItemInfos[i].Stats[Stat.MinMC] = temp;
         }
         private void MaxMCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -809,7 +809,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].MaxMC = temp;
+                _selectedItemInfos[i].Stats[Stat.MaxMC] = temp;
         }
         private void MinSCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -827,7 +827,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].MinSC = temp;
+                _selectedItemInfos[i].Stats[Stat.MinSC] = temp;
         }
         private void MaxSCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -845,7 +845,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].MaxSC = temp;
+                _selectedItemInfos[i].Stats[Stat.MaxSC] = temp;
         }
         private void HPTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -862,7 +862,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].HP = temp;
+                _selectedItemInfos[i].Stats[Stat.HP] = temp;
         }
         private void MPTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -880,7 +880,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].MP = temp;
+                _selectedItemInfos[i].Stats[Stat.MP] = temp;
         }
         private void AccuracyTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -898,7 +898,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].Accuracy = temp;
+                _selectedItemInfos[i].Stats[Stat.Accuracy] = temp;
         }
         private void AgilityTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -916,7 +916,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].Agility = temp;
+                _selectedItemInfos[i].Stats[Stat.Agility] = temp;
         }
         private void ASpeedTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -934,7 +934,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].AttackSpeed = temp;
+                _selectedItemInfos[i].Stats[Stat.AttackSpeed] = temp;
         }
         private void LuckTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -952,7 +952,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].Luck = temp;
+                _selectedItemInfos[i].Stats[Stat.Luck] = temp;
         }
         private void BWeightText_TextChanged(object sender, EventArgs e)
         {
@@ -970,7 +970,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].BagWeight = temp;
+                _selectedItemInfos[i].Stats[Stat.BagWeight] = temp;
         }
         private void HWeightTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -988,7 +988,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].HandWeight = temp;
+                _selectedItemInfos[i].Stats[Stat.HandWeight] = temp;
         }
         private void WWeightTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -1006,7 +1006,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].WearWeight = temp;
+                _selectedItemInfos[i].Stats[Stat.WearWeight] = temp;
         }
         private void EffectTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -1141,7 +1141,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].MaxAcRate = temp;
+                _selectedItemInfos[i].Stats[Stat.MaxACRate] = temp;
         }
 
         private void MacRateTextbox_TextChanged(object sender, EventArgs e)
@@ -1159,7 +1159,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].MaxMacRate = temp;
+                _selectedItemInfos[i].Stats[Stat.MaxMACRate] = temp;
         }
 
         private void MagicResisttextBox_TextChanged(object sender, EventArgs e)
@@ -1177,7 +1177,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].MagicResist = temp;
+                _selectedItemInfos[i].Stats[Stat.MagicResist] = temp;
         }
 
         private void PoisonResisttextBox_TextChanged(object sender, EventArgs e)
@@ -1195,7 +1195,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].PoisonResist = temp;
+                _selectedItemInfos[i].Stats[Stat.PoisonResist] = temp;
         }
 
         private void HealthRecoveryTextbox_TextChanged(object sender, EventArgs e)
@@ -1213,7 +1213,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].HealthRecovery = temp;
+                _selectedItemInfos[i].Stats[Stat.HealthRecovery] = temp;
         }
 
         private void SpellRecoverytextBox_TextChanged(object sender, EventArgs e)
@@ -1231,7 +1231,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].SpellRecovery = temp;
+                _selectedItemInfos[i].Stats[Stat.SpellRecovery] = temp;
         }
 
         private void PoisonRecoverytextBox_TextChanged(object sender, EventArgs e)
@@ -1249,7 +1249,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].PoisonRecovery = temp;
+                _selectedItemInfos[i].Stats[Stat.PoisonRecovery] = temp;
         }
 
         private void HporMpRatetextbox_TextChanged(object sender, EventArgs e)
@@ -1267,7 +1267,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].HPrate = temp;
+                _selectedItemInfos[i].Stats[Stat.HPrate] = temp;
         }
 
         private void Holytextbox_TextChanged(object sender, EventArgs e)
@@ -1285,7 +1285,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].Holy = temp;
+                _selectedItemInfos[i].Stats[Stat.Holy] = temp;
         }
 
         private void Freezingtextbox_TextChanged(object sender, EventArgs e)
@@ -1303,7 +1303,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].Freezing = temp;
+                _selectedItemInfos[i].Stats[Stat.Freezing] = temp;
         }
 
         private void PoisonAttacktextbox_TextChanged(object sender, EventArgs e)
@@ -1321,7 +1321,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].PoisonAttack = temp;
+                _selectedItemInfos[i].Stats[Stat.PoisonAttack] = temp;
         }
 
         private void ClassBasedcheckbox_CheckedChanged(object sender, EventArgs e)
@@ -1443,7 +1443,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].MPrate = temp;
+                _selectedItemInfos[i].Stats[Stat.MPrate] = temp;
         }
 
         private void HpDrainRatetextBox_TextChanged(object sender, EventArgs e)
@@ -1461,7 +1461,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].HpDrainRate = temp;
+                _selectedItemInfos[i].Stats[Stat.HpDrainRate] = temp;
         }
 
 
@@ -1568,7 +1568,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].Strong = temp;
+                _selectedItemInfos[i].Stats[Stat.Strong] = temp;
         }
 
         private void CriticalRatetextBox_TextChanged(object sender, EventArgs e)
@@ -1586,7 +1586,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].CriticalRate = temp;
+                _selectedItemInfos[i].Stats[Stat.CriticalRate] = temp;
         }
 
         private void CriticalDamagetextBox_TextChanged(object sender, EventArgs e)
@@ -1604,7 +1604,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].CriticalDamage = temp;
+                _selectedItemInfos[i].Stats[Stat.CriticalDamage] = temp;
         }
 
         private void ReflecttextBox_TextChanged(object sender, EventArgs e)
@@ -1622,7 +1622,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].Reflect = temp;
+                _selectedItemInfos[i].Stats[Stat.Reflect] = temp;
         }
 
         private void Bind_DontSpecialRepaircheckBox_CheckedChanged(object sender, EventArgs e)
