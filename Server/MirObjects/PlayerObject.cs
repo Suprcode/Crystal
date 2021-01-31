@@ -106,7 +106,7 @@ namespace Server.MirObjects
         }
         public long MaxExperience;
         public byte LifeOnHit;
-        public byte HpDrainRate;
+
         public float HpDrain = 0;
 
         public float ExpRateOffset = 0;
@@ -207,20 +207,7 @@ namespace Server.MirObjects
         public bool HasElemental;
         public int ElementsLevel;
 
-        private bool _concentrating;
-        public bool Concentrating
-        {
-            get
-            {
-                return _concentrating;
-            }
-            set
-            {
-                if (_concentrating == value) return;
-                _concentrating = value;
-            }
-
-        }
+        private bool Concentrating;
         public bool ConcentrateInterrupted;
         public long ConcentrateInterruptTime;
 
@@ -271,7 +258,7 @@ namespace Server.MirObjects
         public bool ActiveBlizzard, ActiveReincarnation, ActiveSwiftFeet, ReincarnationReady;
         public PlayerObject ReincarnationTarget, ReincarnationHost;
         public long ReincarnationExpireTime;
-        public byte Reflect;
+
         public bool UnlockCurse = false;
         public bool FastRun = false;
         public bool CanGainExp = true;
@@ -890,13 +877,13 @@ namespace Server.MirObjects
                 if (HP < Stats[Stat.HP])
                 {
                     healthRegen += (int)(Stats[Stat.HP] * 0.03F) + 1;
-                    healthRegen += (int)(healthRegen * ((double)HealthRecovery / Settings.HealthRegenWeight));
+                    healthRegen += (int)(healthRegen * ((double)Stats[Stat.HealthRecovery] / Settings.HealthRegenWeight));
                 }
 
                 if (MP < Stats[Stat.MP])
                 {
                     manaRegen += (int)(Stats[Stat.MP] * 0.03F) + 1;
-                    manaRegen += (int)(manaRegen * ((double)SpellRecovery / Settings.ManaRegenWeight));
+                    manaRegen += (int)(manaRegen * ((double)Stats[Stat.SpellRecovery] / Settings.ManaRegenWeight));
                 }
             }
 
@@ -2621,8 +2608,8 @@ namespace Server.MirObjects
             Stats[Stat.MaxMC] = (ushort)Math.Min(ushort.MaxValue, stat.MaxMc > 0 ? Level / stat.MaxMc : 0);
             Stats[Stat.MinSC] = (ushort)Math.Min(ushort.MaxValue, stat.MinSc > 0 ? Level / stat.MinSc : 0);
             Stats[Stat.MaxSC] = (ushort)Math.Min(ushort.MaxValue, stat.MaxSc > 0 ? Level / stat.MaxSc : 0);
-            Stats[Stat.CriticalRate] = (byte)Math.Min(byte.MaxValue, stat.CritialRateGain > 0 ? CriticalRate + (Level / stat.CritialRateGain) : CriticalRate);
-            Stats[Stat.CriticalDamage] = (byte)Math.Min(byte.MaxValue, stat.CriticalDamageGain > 0 ? CriticalDamage + (Level / stat.CriticalDamageGain) : CriticalDamage);
+            Stats[Stat.CriticalRate] = (byte)Math.Min(byte.MaxValue, stat.CritialRateGain > 0 ? Stats[Stat.CriticalRate] + (Level / stat.CritialRateGain) : Stats[Stat.CriticalRate]);
+            Stats[Stat.CriticalDamage] = (byte)Math.Min(byte.MaxValue, stat.CriticalDamageGain > 0 ? Stats[Stat.CriticalDamage] + (Level / stat.CriticalDamageGain) : Stats[Stat.CriticalDamage]);
 
             Stats[Stat.BagWeight] = (ushort)Math.Min(ushort.MaxValue, (50 + Level / stat.BagWeightGain * Level));
             Stats[Stat.WearWeight] = (ushort)Math.Min(ushort.MaxValue, 15 + Level / stat.WearWeightGain * Level);
@@ -2792,8 +2779,8 @@ namespace Server.MirObjects
                 }
             }
 
-            Stats[Stat.HP] = ((Stats[Stat.HPrate] / 100) + 1) * Stats[Stat.HP];
-            Stats[Stat.MP] = ((Stats[Stat.MPrate] / 100) + 1) * Stats[Stat.MP];
+            Stats[Stat.HP] = ((Stats[Stat.HPRate] / 100) + 1) * Stats[Stat.HP];
+            Stats[Stat.MP] = ((Stats[Stat.MPRate] / 100) + 1) * Stats[Stat.MP];
             Stats[Stat.MaxAC] = ((Stats[Stat.MaxACRate] / 100) + 1) * Stats[Stat.MaxAC];
             Stats[Stat.MaxMAC] = ((Stats[Stat.MaxMACRate] / 100) + 1) * Stats[Stat.MaxMAC];
 
@@ -2919,7 +2906,7 @@ namespace Server.MirObjects
                         break;
                     case ItemSet.RedOrchid:
                         Stats[Stat.Accuracy] += 2;
-                        Stats[Stat.HpDrainRate] += 10;
+                        Stats[Stat.HPDrainRate] += 10;
                         break;
                     case ItemSet.RedFlower:
                         Stats[Stat.HP] += 50;
@@ -3123,7 +3110,7 @@ namespace Server.MirObjects
             Stats[Stat.HealthRecovery] = Math.Min(Settings.MaxHealthRegen, Stats[Stat.HealthRecovery]);
             Stats[Stat.PoisonRecovery] = Math.Min(Settings.MaxPoisonRecovery, Stats[Stat.PoisonRecovery]);
             Stats[Stat.SpellRecovery] = Math.Min(Settings.MaxManaRegen, Stats[Stat.SpellRecovery]);
-            Stats[Stat.HpDrainRate] = Math.Min((byte)100, Stats[Stat.HpDrainRate]);
+            Stats[Stat.HPDrainRate] = Math.Min((byte)100, Stats[Stat.HPDrainRate]);
 
             Stats[Stat.MinAC] = Math.Max(0, Stats[Stat.MinAC]);
             Stats[Stat.MaxAC] = Math.Max(0, Stats[Stat.MaxAC]);
@@ -6221,7 +6208,7 @@ namespace Server.MirObjects
                 //Only undead targets
                 if (ob.Undead)
                 {
-                    damageBase = Math.Min(int.MaxValue, damageBase + Holy);
+                    damageBase = Math.Min(int.MaxValue, damageBase + Stats[Stat.Holy]);
                     damageFinal = damageBase;//incase we're not using skills
                 }
 
@@ -7606,7 +7593,7 @@ namespace Server.MirObjects
             int delay = Functions.MaxDistance(CurrentLocation, location) * 50 + 500; //50 MS per Step
             int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]));
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, damage, location, (byte)Envir.Random.Next(PoisonAttack));
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, damage, location, (byte)Envir.Random.Next(Stats[Stat.PoisonAttack]));
 
             ConsumeItem(amulet, 5);
             ConsumeItem(poison, 5);
@@ -8327,7 +8314,7 @@ namespace Server.MirObjects
                         Owner = this,
                         PType = PoisonType.Green,
                         TickSpeed = 1000,
-                        Value = power / 10 + magic.Level + 1 + Envir.Random.Next(PoisonAttack)
+                        Value = power / 10 + magic.Level + 1 + Envir.Random.Next(Stats[Stat.PoisonAttack])
                     }, this);
 
                     target.OperateTime = 0;
@@ -8493,7 +8480,7 @@ namespace Server.MirObjects
                                     DelayedAction action = new DelayedAction(DelayedType.Damage, AttackTime, ob,magic.GetDamage(GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC])), DefenceType.AC, true);
                                     ActionList.Add(action);
                                     success = true;
-                                    if ((((ob.Race != ObjectType.Player) || Settings.PvpCanResistPoison) && (Envir.Random.Next(Settings.PoisonAttackWeight) >= ob.PoisonResist)) && (Envir.Random.Next(15) <= magic.Level + 1))
+                                    if ((((ob.Race != ObjectType.Player) || Settings.PvpCanResistPoison) && (Envir.Random.Next(Settings.PoisonAttackWeight) >= ob.Stats[Stat.PoisonResist])) && (Envir.Random.Next(15) <= magic.Level + 1))
                                     {
                                         DelayedAction pa = new DelayedAction(DelayedType.Poison, AttackTime, ob, PoisonType.Stun, SpellEffect.TwinDrakeBlade, magic.Level + 1, 1000);
                                         ActionList.Add(pa);
@@ -8877,7 +8864,7 @@ namespace Server.MirObjects
                             target.ApplyPoison(new Poison
                             {
                                 Owner = this,
-                                Duration = target.Race == ObjectType.Player ? 2 : 5 + Envir.Random.Next(Freezing),
+                                Duration = target.Race == ObjectType.Player ? 2 : 5 + Envir.Random.Next(Stats[Stat.Freezing]),
                                 PType = PoisonType.Frozen,
                                 TickSpeed = 1000,
                             }, this);
@@ -8949,7 +8936,7 @@ namespace Server.MirObjects
                                 Owner = this,
                                 PType = PoisonType.Green,
                                 TickSpeed = 2000,
-                                Value = value / 15 + magic.Level + 1 + Envir.Random.Next(PoisonAttack)
+                                Value = value / 15 + magic.Level + 1 + Envir.Random.Next(Stats[Stat.PoisonAttack])
                             }, this);
                             break;
                         case 2:
@@ -9452,7 +9439,7 @@ namespace Server.MirObjects
                                                 Owner = this,
                                                 PType = PoisonType.Green,
                                                 TickSpeed = 2000,
-                                                Value = value / 25 + magic.Level + 1 + Envir.Random.Next(PoisonAttack)
+                                                Value = value / 25 + magic.Level + 1 + Envir.Random.Next(Stats[Stat.PoisonAttack])
                                             }, this);
                                             targetob.OperateTime = 0;
                                         }
@@ -9476,7 +9463,7 @@ namespace Server.MirObjects
                                 Owner = this,
                                 PType = PoisonType.Green,
                                 TickSpeed = 2000,
-                                Value = value / 25 + magic.Level + 1 + Envir.Random.Next(PoisonAttack)
+                                Value = value / 25 + magic.Level + 1 + Envir.Random.Next(Stats[Stat.PoisonAttack])
                             }, this);
                             target.OperateTime = 0;
                         }
@@ -9597,7 +9584,7 @@ namespace Server.MirObjects
                 if (userMagic.Spell == Spell.TwinDrakeBlade)
                 {
                     if ((((target.Race != ObjectType.Player) || Settings.PvpCanResistPoison) &&
-                        (Envir.Random.Next(Settings.PoisonAttackWeight) >= target.PoisonResist)) &&
+                        (Envir.Random.Next(Settings.PoisonAttackWeight) >= target.Stats[Stat.PoisonResist])) &&
                         (target.Level < Level + 10 && Envir.Random.Next(target.Race == ObjectType.Player ? 40 : 20) <= userMagic.Level + 1))
                     {
                         target.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = target.Race == ObjectType.Player ? 2 : 2 + userMagic.Level, TickSpeed = 1000 }, this);
@@ -10257,7 +10244,7 @@ namespace Server.MirObjects
 
             damage += attacker.AttackBonus;
 
-            if (Envir.Random.Next(100) < Reflect)
+            if (Envir.Random.Next(100) < Stats[Stat.Reflect])
             {
                 if (attacker.IsAttackTarget(this))
                 {
@@ -10301,10 +10288,10 @@ namespace Server.MirObjects
                 }
             }
 
-            if ((attacker.CriticalRate * Settings.CriticalRateWeight) > Envir.Random.Next(100))
+            if ((attacker.Stats[Stat.CriticalRate] * Settings.CriticalRateWeight) > Envir.Random.Next(100))
             {
                 CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical }, CurrentLocation);
-                damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.CriticalDamage / (double)Settings.CriticalDamageWeight) * 10)));
+                damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.Stats[Stat.CriticalDamage] / (double)Settings.CriticalDamageWeight) * 10)));
                 BroadcastDamageIndicator(DamageType.Critical);
             }
 
@@ -10314,14 +10301,15 @@ namespace Server.MirObjects
                 AddBuff(new Buff { Type = BuffType.MagicShield, Caster = this, ExpireTime = MagicShieldTime, Values = new int[] { MagicShieldLv } });
             }
 
+
             ElementalBarrierTime -= (damage - armour) * 60;
 
             if (attacker.LifeOnHit > 0)
                 attacker.ChangeHP(attacker.LifeOnHit);
 
-            if (attacker.HpDrainRate > 0)
+            if (attacker.Stats[Stat.HPDrainRate] > 0)
             {
-                attacker.HpDrain += Math.Max(0, ((float)(damage - armour) / 100) * attacker.HpDrainRate);
+                attacker.HpDrain += Math.Max(0, ((float)(damage - armour) / 100) * attacker.Stats[Stat.HPDrainRate]);
                 if (attacker.HpDrain > 2)
                 {
                     int HpGain = (int)Math.Floor(attacker.HpDrain);
@@ -10376,7 +10364,7 @@ namespace Server.MirObjects
                 return 0;
             }
 
-            if (Envir.Random.Next(100) < Reflect)
+            if (Envir.Random.Next(100) < Stats[Stat.Reflect])
             {
                 if (attacker.IsAttackTarget(this))
                 {
@@ -10530,7 +10518,7 @@ namespace Server.MirObjects
         public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true)
         {
             if ((Caster != null) && (!NoResist))
-                if (((Caster.Race != ObjectType.Player) || Settings.PvpCanResistPoison) && (Envir.Random.Next(Settings.PoisonResistWeight) < PoisonResist))
+                if (((Caster.Race != ObjectType.Player) || Settings.PvpCanResistPoison) && (Envir.Random.Next(Settings.PoisonResistWeight) < Stats[Stat.PoisonResist]))
                     return;
 
             if (!ignoreDefence && (p.PType == PoisonType.Green))
@@ -10546,7 +10534,7 @@ namespace Server.MirObjects
             if (p.Owner != null && p.Owner.Race == ObjectType.Player && Envir.Time > BrownTime && PKPoints < 200)
                 p.Owner.BrownTime = Envir.Time + Settings.Minute;
 
-            if ((p.PType == PoisonType.Green) || (p.PType == PoisonType.Red)) p.Duration = Math.Max(0, p.Duration - PoisonRecovery);
+            if ((p.PType == PoisonType.Green) || (p.PType == PoisonType.Red)) p.Duration = Math.Max(0, p.Duration - Stats[Stat.PoisonRecovery]);
             if (p.Duration == 0) return;
             if (p.PType == PoisonType.None) return;
 
@@ -12146,7 +12134,7 @@ namespace Server.MirObjects
                         return;
                     }
 
-                    if ((tempTo.GemCount >= tempFrom.Info.Stats[Stat.CriticalDamage]) || (GetCurrentStatCount(tempFrom, tempTo) >= tempFrom.Info.Stats[Stat.HpDrainRate]))
+                    if ((tempTo.GemCount >= tempFrom.Info.Stats[Stat.CriticalDamage]) || (GetCurrentStatCount(tempFrom, tempTo) >= tempFrom.Info.Stats[Stat.HPDrainRate]))
                     {
                         ReceiveChat("Item has already reached maximum added stats", ChatType.Hint);
                         Enqueue(p);
@@ -12528,11 +12516,11 @@ namespace Server.MirObjects
 
             // These may be incomplete. Item definitions may be missing?
 
-            else if (gem.GetTotal(Stat.HPrate) > 0)
-                return Stat.HPrate;
+            else if (gem.GetTotal(Stat.HPRate) > 0)
+                return Stat.HPRate;
 
-            else if (gem.GetTotal(Stat.MPrate) > 0)
-                return Stat.MPrate;
+            else if (gem.GetTotal(Stat.MPRate) > 0)
+                return Stat.MPRate;
 
             else if (gem.GetTotal(Stat.SpellRecovery) > 0)
                 return Stat.SpellRecovery;
@@ -12543,12 +12531,12 @@ namespace Server.MirObjects
             else if (gem.GetTotal(Stat.Strong) > 0)
                 return Stat.Strong;
 
-            else if (gem.GetTotal(Stat.HpDrainRate) > 0)
-                return Stat.HpDrainRate;
+            else if (gem.GetTotal(Stat.HPDrainRate) > 0)
+                return Stat.HPDrainRate;
 
-            else
-                return Stat.None;
+            return Stat.Unknown;
         }
+
         //Gems granting multiple stat types are not compatible with this method.
         private int GetCurrentStatCount(UserItem gem, UserItem item)
         {

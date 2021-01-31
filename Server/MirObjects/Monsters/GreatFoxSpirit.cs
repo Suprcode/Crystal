@@ -63,7 +63,7 @@ namespace Server.MirObjects.Monsters
                     {
                         if (Functions.MaxDistance(CurrentLocation, targets[i].CurrentLocation) > 3)
                         {
-                            if (Envir.Random.Next(Settings.MagicResistWeight) < targets[i].MagicResist) continue;
+                            if (Envir.Random.Next(Settings.MagicResistWeight) < targets[i].Stats[Stat.MagicResist]) continue;
                             if (!targets[i].Teleport(CurrentMap, Functions.PointMove(CurrentLocation, (MirDirection)((byte)Envir.Random.Next(7)), 1)))
                             targets[i].Teleport(CurrentMap, CurrentLocation);
                             return;

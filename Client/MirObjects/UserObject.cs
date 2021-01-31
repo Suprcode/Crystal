@@ -347,8 +347,8 @@ namespace Client.MirObjects
                 }
             }
 
-            Stats[Stat.HP] = ((Stats[Stat.HPrate] / 100) + 1) * Stats[Stat.HP];
-            Stats[Stat.MP] = ((Stats[Stat.MPrate] / 100) + 1) * Stats[Stat.MP];
+            Stats[Stat.HP] = ((Stats[Stat.HPRate] / 100) + 1) * Stats[Stat.HP];
+            Stats[Stat.MP] = ((Stats[Stat.MPRate] / 100) + 1) * Stats[Stat.MP];
             Stats[Stat.MaxAC] = ((Stats[Stat.MaxACRate] / 100) + 1) * Stats[Stat.MaxAC];
             Stats[Stat.MaxMAC] = ((Stats[Stat.MaxMACRate] / 100) + 1) * Stats[Stat.MaxMAC];
 
@@ -450,7 +450,7 @@ namespace Client.MirObjects
                         break;
                     case ItemSet.RedOrchid:
                         Stats[Stat.Accuracy] += 2;
-                        Stats[Stat.HpDrainRate] += 10;
+                        Stats[Stat.HPDrainRate] += 10;
                         break;
                     case ItemSet.RedFlower:
                         Stats[Stat.HP] += 50;

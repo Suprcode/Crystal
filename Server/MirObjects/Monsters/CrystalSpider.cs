@@ -63,11 +63,11 @@ namespace Server.MirObjects.Monsters
 
                 if (target == Target.CurrentLocation)
                 {
-                    if (Envir.Random.Next(Settings.MagicResistWeight) >= Target.MagicResist)
+                    if (Envir.Random.Next(Settings.MagicResistWeight) >= Target.Stats[Stat.MagicResist])
                     {
                         if (Target.Attacked(this, damage, DefenceType.MACAgility) > 0 && Envir.Random.Next(8) == 0)
                         {
-                            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
                             {
                                 int poison = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
 
@@ -96,10 +96,10 @@ namespace Server.MirObjects.Monsters
                         if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
                         {
                             if (!ob.IsAttackTarget(this)) continue;
-                            if (Envir.Random.Next(Settings.MagicResistWeight) < ob.MagicResist) continue;
+                            if (Envir.Random.Next(Settings.MagicResistWeight) < ob.Stats[Stat.MagicResist]) continue;
                             if (ob.Attacked(this, damage, DefenceType.MACAgility) > 0 && Envir.Random.Next(8) == 0)
                             {
-                                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
                                 {
                                     int poison = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
 

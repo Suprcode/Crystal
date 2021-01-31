@@ -52,7 +52,7 @@ namespace Server.MirObjects.Monsters
                         Attack2();
                         break;
                 }
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
                 {
                     if (Envir.Random.Next(15) == 0)
                     {
@@ -91,7 +91,7 @@ namespace Server.MirObjects.Monsters
 
                                     if (targets[i].Attacked(this, damage, DefenceType.ACAgility) > 0)
                                     {
-                                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
                                         {
                                             if (Envir.Random.Next(15) == 0)
                                             {
@@ -143,7 +143,7 @@ namespace Server.MirObjects.Monsters
                     {
                         t.Pushed(this, Direction, 4);
 
-                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= t.PoisonResist)
+                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= t.Stats[Stat.PoisonResist])
                         {
                             if (Envir.Random.Next(3) == 0)
                             {

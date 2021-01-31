@@ -83,7 +83,7 @@ namespace Server.MirObjects.Monsters
 
                 if (Envir.Random.Next(2) == 0)
                 {
-                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
+                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].Stats[Stat.PoisonResist])
                     {
                         int poisonLength = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
 

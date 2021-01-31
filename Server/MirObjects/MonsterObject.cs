@@ -442,6 +442,7 @@ namespace Server.MirObjects
             MoveSpeed = Info.MoveSpeed;
             AttackSpeed = Info.AttackSpeed;
         }
+
         public virtual void RefreshAll()
         {
             RefreshBase();
@@ -465,6 +466,7 @@ namespace Server.MirObjects
 
             RefreshBuffs();
         }
+
         protected virtual void RefreshBuffs()
         {
             for (int i = 0; i < Buffs.Count; i++)
@@ -475,9 +477,6 @@ namespace Server.MirObjects
 
                 switch (buff.Type)
                 {
-                    case BuffType.Haste:
-                        AttackSpeed -= 100 * buff.Values[0];
-                        break;
                     case BuffType.SwiftFeet:
                         MoveSpeed = (ushort)Math.Max(ushort.MinValue, MoveSpeed + 100 * buff.Values[0]);
                         break;
@@ -497,14 +496,10 @@ namespace Server.MirObjects
                         ushort rMaxDC = (ushort)(((int)Stats[Stat.MaxDC] / 100) * buff.Values[0]);
                         ushort rMaxMC = (ushort)(((int)Stats[Stat.MaxMC] / 100) * buff.Values[0]);
                         ushort rMaxSC = (ushort)(((int)Stats[Stat.MaxSC] / 100) * buff.Values[0]);
-                        int rASpeed = (int)((AttackSpeed / 100) * buff.Values[0]);
-                        ushort rMSpeed = (ushort)((MoveSpeed / 100) * buff.Values[0]);
 
                         Stats[Stat.MaxDC] -= rMaxDC;
                         Stats[Stat.MaxMC] -= rMaxMC;
                         Stats[Stat.MaxSC] -= rMaxSC;
-                        AttackSpeed += rASpeed;
-                        MoveSpeed = (ushort)Math.Min(ushort.MaxValue, MoveSpeed + rMSpeed);
                         break;
 
                     case BuffType.PetEnhancer:
@@ -1965,10 +1960,10 @@ namespace Server.MirObjects
                 return 0;
             }
 
-            if ((attacker.CriticalRate * Settings.CriticalRateWeight) > Envir.Random.Next(100))
+            if ((attacker.Stats[Stat.CriticalRate] * Settings.CriticalRateWeight) > Envir.Random.Next(100))
             {
                 Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical });
-                damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.CriticalDamage / (double)Settings.CriticalDamageWeight) * 10)));
+                damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.Stats[Stat.CriticalDamage] / (double)Settings.CriticalDamageWeight) * 10)));
                 BroadcastDamageIndicator(DamageType.Critical);
             }
 
@@ -2013,9 +2008,9 @@ namespace Server.MirObjects
 
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
 
-            if (attacker.HpDrainRate > 0)
+            if (attacker.Stats[Stat.HPDrainRate] > 0)
             {
-                attacker.HpDrain += Math.Max(0, ((float)(damage - armour) / 100) * attacker.HpDrainRate);
+                attacker.HpDrain += Math.Max(0, ((float)(damage - armour) / 100) * attacker.Stats[Stat.HPDrainRate]);
                 if (attacker.HpDrain > 2)
                 {
                     int HpGain = (int)Math.Floor(attacker.HpDrain);

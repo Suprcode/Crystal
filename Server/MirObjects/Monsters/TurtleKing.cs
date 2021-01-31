@@ -196,7 +196,7 @@ namespace Server.MirObjects.Monsters
                 Broadcast(new S.ObjectEffect { ObjectID = Target.ObjectID, Effect = SpellEffect.TurtleKing });
                 if (Target.Attacked(this, damage, DefenceType.MAC) <= 0) return;
 
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
                 {
                     if (Envir.Random.Next(5) == 0)
                         Target.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Slow, TickSpeed = 1000 }, this);

@@ -138,8 +138,8 @@ public class ItemInfo
             Stats[Stat.HealthRecovery] = reader.ReadByte();
             Stats[Stat.SpellRecovery] = reader.ReadByte();
             Stats[Stat.PoisonRecovery] = reader.ReadByte();
-            Stats[Stat.HPrate] = reader.ReadByte();
-            Stats[Stat.MPrate] = reader.ReadByte();
+            Stats[Stat.HPRate] = reader.ReadByte();
+            Stats[Stat.MPRate] = reader.ReadByte();
             Stats[Stat.CriticalRate] = reader.ReadByte();
             Stats[Stat.CriticalDamage] = reader.ReadByte();
         }
@@ -171,7 +171,7 @@ public class ItemInfo
         if (version <= 84)
         {
             Stats[Stat.Reflect] = reader.ReadByte();
-            Stats[Stat.HpDrainRate] = reader.ReadByte();
+            Stats[Stat.HPDrainRate] = reader.ReadByte();
         }
 
         Unique = (SpecialItemMode)reader.ReadInt16();

@@ -161,7 +161,7 @@ namespace Server.MirObjects.Monsters
 
             if (target.Attacked(this, damage, defence) <= 0) return;
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.PoisonResist)
+            if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.Stats[Stat.PoisonResist])
             {
                 if (Envir.Random.Next(2) == 0)
                 {
@@ -188,7 +188,7 @@ namespace Server.MirObjects.Monsters
             {
                 case AttackType.Stomp:
                     {
-                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.PoisonResist)
+                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.Stats[Stat.PoisonResist])
                         {
                             if (Envir.Random.Next(2) == 0)
                             {

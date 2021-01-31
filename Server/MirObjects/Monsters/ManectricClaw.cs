@@ -106,7 +106,7 @@ namespace Server.MirObjects.Monsters
                                 {
                                     if (target.Attacked(this, j <= 1 ? nearDamage : farDamage, DefenceType.MAC) > 0)
                                     {
-                                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.PoisonResist)
+                                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.Stats[Stat.PoisonResist])
                                         {
                                             if (Envir.Random.Next(5) == 0)
                                             {
@@ -125,7 +125,7 @@ namespace Server.MirObjects.Monsters
                                                 target.ApplyPoison(new Poison
                                                 {
                                                     Owner = this,
-                                                    Duration = target.Race == ObjectType.Player ? 2 : 5 + Envir.Random.Next(this.Freezing),
+                                                    Duration = target.Race == ObjectType.Player ? 2 : 5 + Envir.Random.Next(this.Stats[Stat.Freezing]),
                                                     PType = PoisonType.Frozen,
                                                     TickSpeed = 1000,
                                                 }, this);

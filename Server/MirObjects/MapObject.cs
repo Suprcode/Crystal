@@ -33,7 +33,6 @@ namespace Server.MirObjects
 
         private int SpawnThread;
 
-        //Position
         private Map _currentMap;
         public Map CurrentMap
         {
@@ -65,8 +64,6 @@ namespace Server.MirObjects
                    CurrentWearWeight,
                    CurrentBagWeight;
 
-        public byte MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Holy, Freezing, PoisonAttack; //To Remove
-
         public long CellTime, BrownTime, PKPointTime, LastHitTime, EXPOwnerTime;
         public Color NameColour = Color.White;
         
@@ -77,9 +74,9 @@ namespace Server.MirObjects
         public virtual int PKPoints { get; set; }
 
         public ushort PotHealthAmount, PotManaAmount, HealAmount, VampAmount;
-        //public bool HealthChanged;
 
         public float ItemDropRateOffset = 0, GoldDropRateOffset = 0;
+
 
         public bool CoolEye;
         private bool _hidden;
@@ -427,7 +424,7 @@ namespace Server.MirObjects
                     armour = GetDefencePower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.MACAgility:
-                    if (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist)
+                    if (Envir.Random.Next(Settings.MagicResistWeight) < Stats[Stat.MagicResist])
                     {
                         BroadcastDamageIndicator(DamageType.Miss);
                         hit = false;
@@ -440,7 +437,7 @@ namespace Server.MirObjects
                     armour = GetDefencePower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
                 case DefenceType.MAC:
-                    if (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist)
+                    if (Envir.Random.Next(Settings.MagicResistWeight) < Stats[Stat.MagicResist])
                     {
                         BroadcastDamageIndicator(DamageType.Miss);
                         hit = false;
@@ -464,15 +461,15 @@ namespace Server.MirObjects
             {
                 ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, attacker);
             }
-            if ((attacker.Freezing > 0) && (Settings.PvpCanFreeze) && type != DefenceType.MAC && type != DefenceType.MACAgility)
+            if ((attacker.Stats[Stat.Freezing] > 0) && (Settings.PvpCanFreeze) && type != DefenceType.MAC && type != DefenceType.MACAgility)
             {
-                if ((Envir.Random.Next(Settings.FreezingAttackWeight) < attacker.Freezing) && (Envir.Random.Next(LevelOffset) == 0))
-                    ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = Math.Min(10, (3 + Envir.Random.Next(attacker.Freezing))), TickSpeed = 1000 }, attacker);
+                if ((Envir.Random.Next(Settings.FreezingAttackWeight) < attacker.Stats[Stat.Freezing]) && (Envir.Random.Next(LevelOffset) == 0))
+                    ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = Math.Min(10, (3 + Envir.Random.Next(attacker.Stats[Stat.Freezing]))), TickSpeed = 1000 }, attacker);
             }
-            if (attacker.PoisonAttack > 0 && type != DefenceType.MAC && type != DefenceType.MACAgility)
+            if (attacker.Stats[Stat.PoisonAttack] > 0 && type != DefenceType.MAC && type != DefenceType.MACAgility)
             {
-                if ((Envir.Random.Next(Settings.PoisonAttackWeight) < attacker.PoisonAttack) && (Envir.Random.Next(LevelOffset) == 0))
-                    ApplyPoison(new Poison { PType = PoisonType.Green, Duration = 5, TickSpeed = 1000, Value = Math.Min(10, 3 + Envir.Random.Next(attacker.PoisonAttack)) }, attacker);
+                if ((Envir.Random.Next(Settings.PoisonAttackWeight) < attacker.Stats[Stat.PoisonAttack]) && (Envir.Random.Next(LevelOffset) == 0))
+                    ApplyPoison(new Poison { PType = PoisonType.Green, Duration = 5, TickSpeed = 1000, Value = Math.Min(10, 3 + Envir.Random.Next(attacker.Stats[Stat.PoisonAttack])) }, attacker);
             }
         }
 

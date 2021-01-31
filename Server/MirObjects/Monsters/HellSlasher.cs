@@ -55,7 +55,7 @@ namespace Server.MirObjects.Monsters
 
                         ob.Attacked(this, Stats[Stat.MinDC], DefenceType.ACAgility);
 
-                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= ob.PoisonResist)
+                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= ob.Stats[Stat.PoisonResist])
                         {
                             if (Envir.Random.Next(5) == 0)
                             {

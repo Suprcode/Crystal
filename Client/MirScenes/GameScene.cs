@@ -6250,7 +6250,7 @@ namespace Client.MirScenes
 
             #region Hpdrain
 
-            minValue = realItem.Stats[Stat.HpDrainRate];
+            minValue = realItem.Stats[Stat.HPDrainRate];
             maxValue = 0;
             addValue = 0;
 
@@ -6476,7 +6476,7 @@ namespace Client.MirScenes
 
             #region MAXHPRATE
 
-            minValue = realItem.Stats[Stat.HPrate];
+            minValue = realItem.Stats[Stat.HPRate];
             maxValue = 0;
             addValue = 0;
 
@@ -6501,7 +6501,7 @@ namespace Client.MirScenes
 
             #region MAXMPRATE
 
-            minValue = realItem.Stats[Stat.MPrate];
+            minValue = realItem.Stats[Stat.MPRate];
             maxValue = 0;
             addValue = 0;
 

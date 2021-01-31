@@ -38,7 +38,7 @@ namespace Server.MirObjects.Monsters
 
                 Target.Attacked(this, damage, DefenceType.ACAgility);
 
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
                 {
                     if (Envir.Random.Next(4) == 0)
                         Target.ApplyPoison(new Poison { Owner = this, PType = PoisonType.Green, Duration = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);

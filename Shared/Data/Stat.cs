@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 public sealed class Stats
@@ -44,7 +45,7 @@ public sealed class Stats
         int count = reader.ReadInt32();
 
         for (int i = 0; i < count; i++)
-            Values[(Stat)reader.ReadInt32()] = reader.ReadInt32();
+            Values[(Stat)reader.ReadByte()] = reader.ReadInt32();
     }
 
     public void Add(Stats stats)
@@ -59,9 +60,22 @@ public sealed class Stats
 
         foreach (KeyValuePair<Stat, int> pair in Values)
         {
-            writer.Write((int)pair.Key);
+            writer.Write((byte)pair.Key);
             writer.Write(pair.Value);
         }
+    }
+
+    public StatType GetType(Stat stat)
+    {
+        Type type = stat.GetType();
+
+        MemberInfo[] infos = type.GetMember(stat.ToString());
+
+        StatDescription description = infos[0].GetCustomAttribute<StatDescription>();
+
+        if (description == null) return StatType.None;
+
+        return description.Type;
     }
 
     public void Clear()
@@ -73,49 +87,62 @@ public sealed class Stats
 
 public enum Stat : byte
 {
-    MinAC,
-    MaxAC,
-    MinMAC,
-    MaxMAC,
-    MinDC,
-    MaxDC,
-    MinMC,
-    MaxMC,
-    MinSC,
-    MaxSC,
+    MinAC = 0,
+    MaxAC = 1,
+    MinMAC = 2,
+    MaxMAC = 3,
+    MinDC = 4,
+    MaxDC = 5,
+    MinMC = 6,
+    MaxMC = 7,
+    MinSC = 8,
+    MaxSC = 9,
 
-    Accuracy,
-    Agility,
+    Accuracy = 20,
+    Agility = 21,
 
-    HP,
-    MP,
+    HP = 30,
+    MP = 31,
 
-    AttackSpeed,
-    Luck,
+    AttackSpeed = 40,
+    Luck = 41,
 
-    BagWeight,
-    HandWeight,
-    WearWeight,
+    BagWeight = 50,
+    HandWeight = 51,
+    WearWeight = 52,
 
-    Reflect,
-    Strong,
+    Reflect = 60,
+    Strong = 61,
 
-    MagicResist,
-    PoisonResist,
-    HealthRecovery,
-    SpellRecovery,
-    PoisonRecovery,
-    HPrate,
-    MPrate,
-    CriticalRate,
-    CriticalDamage,
-    MaxACRate,
-    MaxMACRate,
+    MagicResist = 70,
+    PoisonResist = 71,
+    HealthRecovery = 72,
+    SpellRecovery = 73,
+    PoisonRecovery = 74,
+    HPRate = 75,
+    MPRate = 76,
+    CriticalRate = 77,
+    CriticalDamage = 78,
+    MaxACRate = 79,
+    MaxMACRate = 80,
 
-    Holy,
-    Freezing,
-    PoisonAttack,
-    HpDrainRate,
+    Holy = 100,
+    Freezing = 101,
+    PoisonAttack = 102,
+    HPDrainRate = 103,
 
+    Unknown = 255
+}
+
+public enum StatType : byte
+{
+    Stack,
+    Set,
     None
+}
+
+public class StatDescription : Attribute
+{
+    public string Title { get; set; }
+    public StatType Type { get; set; }
 }

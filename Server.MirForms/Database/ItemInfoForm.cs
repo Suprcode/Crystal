@@ -266,9 +266,9 @@ namespace Server
             PoisonAttacktextbox.Text = info.Stats[Stat.PoisonAttack].ToString();
             Freezingtextbox.Text = info.Stats[Stat.Freezing].ToString();
             Holytextbox.Text = info.Stats[Stat.Holy].ToString();
-            HPratetextbox.Text = info.Stats[Stat.HPrate].ToString();
-            MPratetextbox.Text = info.Stats[Stat.MPrate].ToString();
-            HpDrainRatetextBox.Text = info.Stats[Stat.HpDrainRate].ToString();
+            HPratetextbox.Text = info.Stats[Stat.HPRate].ToString();
+            MPratetextbox.Text = info.Stats[Stat.MPRate].ToString();
+            HpDrainRatetextBox.Text = info.Stats[Stat.HPDrainRate].ToString();
             CriticalRatetextBox.Text = info.Stats[Stat.CriticalRate].ToString();
             CriticalDamagetextBox.Text = info.Stats[Stat.CriticalDamage].ToString();
             ReflecttextBox.Text = info.Stats[Stat.Reflect].ToString();
@@ -375,9 +375,9 @@ namespace Server
                 if (PoisonAttacktextbox.Text != info.Stats[Stat.PoisonAttack].ToString()) PoisonAttacktextbox.Text = string.Empty;
                 if (Freezingtextbox.Text != info.Stats[Stat.Freezing].ToString()) Freezingtextbox.Text = string.Empty;
                 if (Holytextbox.Text != info.Stats[Stat.Holy].ToString()) Holytextbox.Text = string.Empty;
-                if (HPratetextbox.Text != info.Stats[Stat.HPrate].ToString()) HPratetextbox.Text = string.Empty;
-                if (MPratetextbox.Text != info.Stats[Stat.MPrate].ToString()) MPratetextbox.Text = string.Empty;
-                if (HpDrainRatetextBox.Text != info.Stats[Stat.HpDrainRate].ToString()) HpDrainRatetextBox.Text = string.Empty;
+                if (HPratetextbox.Text != info.Stats[Stat.HPRate].ToString()) HPratetextbox.Text = string.Empty;
+                if (MPratetextbox.Text != info.Stats[Stat.MPRate].ToString()) MPratetextbox.Text = string.Empty;
+                if (HpDrainRatetextBox.Text != info.Stats[Stat.HPDrainRate].ToString()) HpDrainRatetextBox.Text = string.Empty;
                 if (CriticalRatetextBox.Text != info.Stats[Stat.CriticalRate].ToString()) CriticalRatetextBox.Text = string.Empty;
                 if (CriticalDamagetextBox.Text != info.Stats[Stat.CriticalDamage].ToString()) CriticalDamagetextBox.Text = string.Empty;
                 if (ReflecttextBox.Text != info.Stats[Stat.Reflect].ToString()) ReflecttextBox.Text = string.Empty;
@@ -1267,7 +1267,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].Stats[Stat.HPrate] = temp;
+                _selectedItemInfos[i].Stats[Stat.HPRate] = temp;
         }
 
         private void Holytextbox_TextChanged(object sender, EventArgs e)
@@ -1443,7 +1443,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].Stats[Stat.MPrate] = temp;
+                _selectedItemInfos[i].Stats[Stat.MPRate] = temp;
         }
 
         private void HpDrainRatetextBox_TextChanged(object sender, EventArgs e)
@@ -1461,7 +1461,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].Stats[Stat.HpDrainRate] = temp;
+                _selectedItemInfos[i].Stats[Stat.HPDrainRate] = temp;
         }
 
 

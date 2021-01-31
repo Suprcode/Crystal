@@ -54,7 +54,7 @@ namespace Server.MirObjects.Monsters
 
                 if(Info.Effect == 1)
                 {
-                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
                     {
                         Target.ApplyPoison(new Poison
                         {
