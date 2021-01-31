@@ -30,7 +30,7 @@ namespace Server.MirObjects.Monsters
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
 
-                int damage = GetAttackPower(MinMC, MaxMC);
+                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
 
                 List<MapObject> targets = FindAllTargets(3, CurrentLocation);
 
@@ -61,7 +61,7 @@ namespace Server.MirObjects.Monsters
                     break;
                 case 2:
                     {
-                        int damage = GetAttackPower(MinDC, MaxDC);
+                        int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
                         Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 

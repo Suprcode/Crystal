@@ -47,7 +47,7 @@ namespace Server.MirObjects.Monsters
                         ActionTime = Envir.Time + 300;
                         AttackTime = Envir.Time + AttackSpeed;
 
-                        int damage = GetAttackPower(MinDC, MaxDC);
+                        int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                         if (damage == 0) return;
 
                         int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
@@ -83,7 +83,7 @@ namespace Server.MirObjects.Monsters
 
             for (int i = 0; i < targets.Count; i++)
             {
-                ActionList.Add(new DelayedAction(DelayedType.Die, Envir.Time + 500, targets[i], GetAttackPower(MinDC, MaxDC), DefenceType.ACAgility));
+                ActionList.Add(new DelayedAction(DelayedType.Die, Envir.Time + 500, targets[i], GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]), DefenceType.ACAgility));
             }
 
             base.Die();
@@ -100,7 +100,7 @@ namespace Server.MirObjects.Monsters
             if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.PoisonResist)
             {
                 if (Envir.Random.Next(5) == 0)
-                    target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Green, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);
+                    target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Green, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 2000 }, this);
             }
         }
     }

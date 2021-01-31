@@ -102,13 +102,13 @@ namespace Server.Library.MirObjects
                     switch (key)
                     {
                         case "ASpeed":
-                            Owner.ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, Owner.ASpeed + Convert.ToSByte(value))));
+                           // Owner.ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, Owner.ASpeed + Convert.ToSByte(value))));
                             break;
                         case "MinAC":
-                            Owner.MinAC = (ushort)Math.Min(ushort.MaxValue, (Math.Min(ushort.MaxValue, Owner.MinAC + Convert.ToUInt16(value))));
+                           // Owner.MinAC = (ushort)Math.Min(ushort.MaxValue, (Math.Min(ushort.MaxValue, Owner.MinAC + Convert.ToUInt16(value))));
                             break;
                         case "MaxAC":
-                            Owner.MaxAC = (ushort)Math.Min(ushort.MaxValue, (Math.Min(ushort.MaxValue, Owner.MaxAC + Convert.ToUInt16(value))));
+                           // Owner.MaxAC = (ushort)Math.Min(ushort.MaxValue, (Math.Min(ushort.MaxValue, Owner.MaxAC + Convert.ToUInt16(value))));
                             break;
                     }
                 }

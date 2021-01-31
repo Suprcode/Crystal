@@ -280,10 +280,11 @@ namespace Server.MirObjects
 
         public override int MaxHealth
         {
-            get { return MaxHP; }
+            get { return Stats[Stat.HP]; }
         }
 
-        public int HP, MaxHP;
+        public int HP;
+
         public ushort MoveSpeed;
 
         public virtual uint Experience 
@@ -382,7 +383,7 @@ namespace Server.MirObjects
             CurrentMap.AddObject(this);
 
             RefreshAll();
-            SetHP(MaxHP);
+            SetHP(Stats[Stat.HP]);
 
             Spawned();
             Envir.MonsterCount++;
@@ -410,7 +411,7 @@ namespace Server.MirObjects
                     Route.AddRange(Respawn.Route);
 
                 RefreshAll();
-                SetHP(MaxHP);
+                SetHP(Stats[Stat.HP]);
 
                 Spawned();
                 Respawn.Count++;
@@ -434,19 +435,9 @@ namespace Server.MirObjects
 
         protected virtual void RefreshBase()
         {
-            MaxHP = Info.HP;
-            MinAC = Info.MinAC;
-            MaxAC = Info.MaxAC;
-            MinMAC = Info.MinMAC;
-            MaxMAC = Info.MaxMAC;
-            MinDC = Info.MinDC;
-            MaxDC = Info.MaxDC;
-            MinMC = Info.MinMC;
-            MaxMC = Info.MaxMC;
-            MinSC = Info.MinSC;
-            MaxSC = Info.MaxSC;
-            Accuracy = Info.Accuracy;
-            Agility = Info.Agility;
+            Stats.Clear();
+
+            Stats.Add(Info.Stats);
 
             MoveSpeed = Info.MoveSpeed;
             AttackSpeed = Info.AttackSpeed;
@@ -455,13 +446,13 @@ namespace Server.MirObjects
         {
             RefreshBase();
             
-                MaxHP = (int)Math.Min(int.MaxValue, MaxHP + PetLevel * 20);
-                MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + PetLevel * 2);
-                MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + PetLevel * 2);
-                MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + PetLevel * 2);
-                MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + PetLevel * 2);
-                MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + PetLevel);
-                MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + PetLevel);
+            Stats[Stat.HP] += PetLevel * 20;
+            Stats[Stat.MinAC] += PetLevel * 2;
+            Stats[Stat.MaxAC] += PetLevel * 2;
+            Stats[Stat.MinMAC] += PetLevel * 2;
+            Stats[Stat.MaxMAC] += PetLevel * 2;
+            Stats[Stat.MinDC] += PetLevel;
+            Stats[Stat.MaxDC] += PetLevel;
 
             if (Info.Name == Settings.SkeletonName ||Info.Name == Settings.ShinsuName ||Info.Name == Settings.AngelName) 
             {
@@ -485,42 +476,42 @@ namespace Server.MirObjects
                 switch (buff.Type)
                 {
                     case BuffType.Haste:
-                        ASpeed = (sbyte)Math.Max(sbyte.MinValue, (Math.Min(sbyte.MaxValue, ASpeed + buff.Values[0])));
+                        AttackSpeed -= 100 * buff.Values[0];
                         break;
                     case BuffType.SwiftFeet:
                         MoveSpeed = (ushort)Math.Max(ushort.MinValue, MoveSpeed + 100 * buff.Values[0]);
                         break;
                     case BuffType.LightBody:
-                        Agility = (byte)Math.Min(byte.MaxValue, Agility + buff.Values[0]);
+                        Stats[Stat.Agility] += buff.Values[0];
                         break;
                     case BuffType.SoulShield:
-                        MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + buff.Values[0]);
+                        Stats[Stat.MaxMAC] += buff.Values[0];
                         break;
                     case BuffType.BlessedArmour:
-                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
+                        Stats[Stat.MaxAC] += buff.Values[0];
                         break;
                     case BuffType.UltimateEnhancer:
-                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + buff.Values[0]);
+                        Stats[Stat.MaxDC] += buff.Values[0];
                         break;
                     case BuffType.Curse:
-                        ushort rMaxDC = (ushort)(((int)MaxDC / 100) * buff.Values[0]);
-                        ushort rMaxMC = (ushort)(((int)MaxMC / 100) * buff.Values[0]);
-                        ushort rMaxSC = (ushort)(((int)MaxSC / 100) * buff.Values[0]);
-                        sbyte rASpeed = (sbyte)(((int)ASpeed / 100) * buff.Values[0]);
+                        ushort rMaxDC = (ushort)(((int)Stats[Stat.MaxDC] / 100) * buff.Values[0]);
+                        ushort rMaxMC = (ushort)(((int)Stats[Stat.MaxMC] / 100) * buff.Values[0]);
+                        ushort rMaxSC = (ushort)(((int)Stats[Stat.MaxSC] / 100) * buff.Values[0]);
+                        int rASpeed = (int)((AttackSpeed / 100) * buff.Values[0]);
                         ushort rMSpeed = (ushort)((MoveSpeed / 100) * buff.Values[0]);
 
-                        MaxDC = (ushort)Math.Max(ushort.MinValue, MaxDC - rMaxDC);
-                        MaxMC = (ushort)Math.Max(ushort.MinValue, MaxMC - rMaxMC);
-                        MaxSC = (ushort)Math.Max(ushort.MinValue, MaxSC - rMaxSC);
-                        ASpeed = (sbyte)Math.Min(sbyte.MaxValue, (Math.Max(sbyte.MinValue, ASpeed - rASpeed)));
-                        MoveSpeed = (ushort)Math.Max(ushort.MinValue, MoveSpeed - rMSpeed);
+                        Stats[Stat.MaxDC] -= rMaxDC;
+                        Stats[Stat.MaxMC] -= rMaxMC;
+                        Stats[Stat.MaxSC] -= rMaxSC;
+                        AttackSpeed += rASpeed;
+                        MoveSpeed = (ushort)Math.Min(ushort.MaxValue, MoveSpeed + rMSpeed);
                         break;
 
                     case BuffType.PetEnhancer:
-                        MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + buff.Values[0]);
-                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + buff.Values[0]);
-                        MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + buff.Values[1]);
-                        MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[1]);
+                        Stats[Stat.MinDC] += buff.Values[0];
+                        Stats[Stat.MaxDC] += buff.Values[0];
+                        Stats[Stat.MinAC] += buff.Values[1];
+                        Stats[Stat.MaxAC] += buff.Values[1];
                         break;
                 }
 
@@ -575,7 +566,7 @@ namespace Server.MirObjects
         {
             if (HP == amount) return;
 
-            HP = amount <= MaxHP ? amount : MaxHP;
+            HP = amount <= Stats[Stat.HP] ? amount : Stats[Stat.HP];
 
             if (!Dead && HP == 0) Die();
 
@@ -1036,8 +1027,8 @@ namespace Server.MirObjects
                 RegenTime = Envir.Time + RegenDelay;
 
 
-                if (HP < MaxHP)
-                    healthRegen += (int)(MaxHP * 0.022F) + 1;
+                if (HP < Stats[Stat.HP])
+                    healthRegen += (int)(Stats[Stat.HP] * 0.022F) + 1;
             }
 
 
@@ -1058,7 +1049,7 @@ namespace Server.MirObjects
             }
 
             if (healthRegen > 0) ChangeHP(healthRegen);
-            if (HP == MaxHP) HealAmount = 0;
+            if (HP == Stats[Stat.HP]) HealAmount = 0;
         }
         protected virtual void ProcessPoison()
         {
@@ -1603,7 +1594,7 @@ namespace Server.MirObjects
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
             if (damage == 0) return;
 
@@ -2134,16 +2125,16 @@ namespace Server.MirObjects
             switch (type)
             {
                 case DefenceType.ACAgility:
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    armour = GetAttackPower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.AC:
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    armour = GetAttackPower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.MACAgility:
-                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    armour = GetAttackPower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
                 case DefenceType.MAC:
-                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    armour = GetAttackPower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
                 case DefenceType.Agility:
                     break;
@@ -2172,7 +2163,7 @@ namespace Server.MirObjects
 
             if (!ignoreDefence && (p.PType == PoisonType.Green))
             {
-                int armour = GetDefencePower(MinMAC, MaxMAC);
+                int armour = GetAttackPower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
 
                 if (p.Value < armour)
                     p.PType = PoisonType.None;

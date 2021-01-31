@@ -2358,19 +2358,19 @@ namespace Client.MirScenes.Dialogs
             };
             StatusPage.BeforeDraw += (o, e) =>
             {
-                ACLabel.Text = string.Format("{0}-{1}", MapObject.User.MinAC, MapObject.User.MaxAC);
-                MACLabel.Text = string.Format("{0}-{1}", MapObject.User.MinMAC, MapObject.User.MaxMAC);
-                DCLabel.Text = string.Format("{0}-{1}", MapObject.User.MinDC, MapObject.User.MaxDC);
-                MCLabel.Text = string.Format("{0}-{1}", MapObject.User.MinMC, MapObject.User.MaxMC);
-                SCLabel.Text = string.Format("{0}-{1}", MapObject.User.MinSC, MapObject.User.MaxSC);
+                ACLabel.Text = string.Format("{0}-{1}", MapObject.User.Stats[Stat.MinAC], MapObject.User.Stats[Stat.MaxAC]);
+                MACLabel.Text = string.Format("{0}-{1}", MapObject.User.Stats[Stat.MinMAC], MapObject.User.Stats[Stat.MaxMAC]);
+                DCLabel.Text = string.Format("{0}-{1}", MapObject.User.Stats[Stat.MinDC], MapObject.User.Stats[Stat.MaxDC]);
+                MCLabel.Text = string.Format("{0}-{1}", MapObject.User.Stats[Stat.MinMC], MapObject.User.Stats[Stat.MaxMC]);
+                SCLabel.Text = string.Format("{0}-{1}", MapObject.User.Stats[Stat.MinSC], MapObject.User.Stats[Stat.MaxSC]);
                 HealthLabel.Text = string.Format("{0}/{1}", MapObject.User.HP, MapObject.User.Stats[Stat.HP]);
                 ManaLabel.Text = string.Format("{0}/{1}", MapObject.User.MP, MapObject.User.Stats[Stat.MP]);
                 CritRLabel.Text = string.Format("{0}%", MapObject.User.CriticalRate);
                 CritDLabel.Text = string.Format("{0}", MapObject.User.CriticalDamage);
-                AttkSpdLabel.Text = string.Format("{0}", MapObject.User.ASpeed);
-                AccLabel.Text = string.Format("+{0}", MapObject.User.Accuracy);
-                AgilLabel.Text = string.Format("+{0}", MapObject.User.Agility);
-                LuckLabel.Text = string.Format("{0}", MapObject.User.Luck);
+                AttkSpdLabel.Text = string.Format("{0}", MapObject.User.Stats[Stat.AttackSpeed]);
+                AccLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.Accuracy]);
+                AgilLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.Agility]);
+                LuckLabel.Text = string.Format("{0}", MapObject.User.Stats[Stat.Luck]);
             };
 
             StatePage = new MirImageControl

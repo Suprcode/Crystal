@@ -56,7 +56,7 @@ namespace Server.MirObjects.Monsters
 
                     Broadcast(new S.ObjectHide { ObjectID = ObjectID });
 
-                    SetHP(MaxHP);
+                    SetHP(Stats[Stat.HP]);
                 }
             }
 

@@ -7176,27 +7176,27 @@ namespace Client.MirScenes
                         break;
                     case RequiredType.MaxAC:
                         text = string.Format("Required AC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MaxAC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MaxAC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxMAC:
                         text = string.Format("Required MAC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MaxMAC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MaxMAC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxDC:
                         text = string.Format(GameLanguage.RequiredDC, realItem.RequiredAmount);
-                        if (MapObject.User.MaxDC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MaxDC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxMC:
                         text = string.Format(GameLanguage.RequiredMC, realItem.RequiredAmount);
-                        if (MapObject.User.MaxMC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MaxMC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxSC:
                         text = string.Format(GameLanguage.RequiredSC, realItem.RequiredAmount);
-                        if (MapObject.User.MaxSC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MaxSC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxLevel:
@@ -7206,27 +7206,27 @@ namespace Client.MirScenes
                         break;
                     case RequiredType.MinAC:
                         text = string.Format("Required Base AC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MinAC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MinAC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinMAC:
                         text = string.Format("Required Base MAC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MinMAC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MinMAC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinDC:
                         text = string.Format("Required Base DC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MinDC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MinDC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinMC:
                         text = string.Format("Required Base MC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MinMC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MinMC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinSC:
                         text = string.Format("Required Base SC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MinSC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MinSC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     default:

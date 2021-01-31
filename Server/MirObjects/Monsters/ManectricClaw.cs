@@ -71,8 +71,8 @@ namespace Server.MirObjects.Monsters
             MirDirection direction = Direction;
             Cell cell;
 
-            int nearDamage = GetAttackPower(MinDC, MaxDC);
-            int farDamage = GetAttackPower(MinMC, MaxMC);
+            int nearDamage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+            int farDamage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
 
             int col = 3;
             int row = 3;

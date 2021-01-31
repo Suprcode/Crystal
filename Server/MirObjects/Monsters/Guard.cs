@@ -76,7 +76,7 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 500;
             AttackTime = Envir.Time + AttackSpeed;
 
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
             if (Target.Race != ObjectType.Player) damage = int.MaxValue;
 

@@ -58,12 +58,7 @@ namespace Server.MirObjects
             get { return (byte) (Health/(float) MaxHealth*100); }
         }
 
-        public ushort MinAC, MaxAC, MinMAC, MaxMAC; //To Remove
-        public ushort MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC; //To Remove
-
-        public byte Accuracy, Agility,  //To Remove
-            Light;
-        public sbyte ASpeed, Luck; //To Remove
+        public byte Light;
         public int AttackSpeed;
 
         public int CurrentHandWeight,
@@ -238,14 +233,14 @@ namespace Server.MirObjects
             if (min < 0) min = 0;
             if (min > max) max = min;
 
-            if (Luck > 0)
+            if (Stats[Stat.Luck] > 0)
             {
-                if (Luck > Envir.Random.Next(Settings.MaxLuck))
+                if (Stats[Stat.Luck] > Envir.Random.Next(Settings.MaxLuck))
                     return max;
             }
-            else if (Luck < 0)
+            else if (Stats[Stat.Luck] < 0)
             {
-                if (Luck < -Envir.Random.Next(Settings.MaxLuck))
+                if (Stats[Stat.Luck] < -Envir.Random.Next(Settings.MaxLuck))
                     return min;
             }
 
@@ -421,15 +416,15 @@ namespace Server.MirObjects
             switch (type)
             {
                 case DefenceType.ACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy])
                     {
                         BroadcastDamageIndicator(DamageType.Miss);
                         hit = false;
                     }
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    armour = GetDefencePower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.AC:
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    armour = GetDefencePower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.MACAgility:
                     if (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist)
@@ -437,12 +432,12 @@ namespace Server.MirObjects
                         BroadcastDamageIndicator(DamageType.Miss);
                         hit = false;
                     }
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy])
                     {
                         BroadcastDamageIndicator(DamageType.Miss);
                         hit = false;
                     }
-                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    armour = GetDefencePower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
                 case DefenceType.MAC:
                     if (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist)
@@ -450,10 +445,10 @@ namespace Server.MirObjects
                         BroadcastDamageIndicator(DamageType.Miss);
                         hit = false;
                     }
-                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    armour = GetDefencePower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
                 case DefenceType.Agility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy])
                     {
                         BroadcastDamageIndicator(DamageType.Miss);
                         hit = false;

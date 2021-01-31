@@ -82,7 +82,7 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (!ranged && Envir.Random.Next(5) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
@@ -129,7 +129,7 @@ namespace Server.MirObjects.Monsters
         {
             if (Dead) return;
 
-            if (!IsChild && HP <= MaxHP / 10 && !FinalTeleport)
+            if (!IsChild && HP <= Stats[Stat.HP] / 10 && !FinalTeleport)
             {
                 Point teleportlocation = CurrentLocation;
                 if (TeleportRandom(40, 0))

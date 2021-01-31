@@ -1434,7 +1434,7 @@ namespace Server.MirObjects
                     newValue = Monster.HP.ToString(CultureInfo.InvariantCulture);
                     break;
                 case "MAXHP":
-                    newValue = Monster.MaxHP.ToString(CultureInfo.InvariantCulture);
+                    newValue = Monster.Stats[Stat.HP].ToString(CultureInfo.InvariantCulture);
                     break;
                 case "DATE":
                     newValue = DateTime.Now.ToShortDateString();

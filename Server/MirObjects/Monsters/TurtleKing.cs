@@ -30,9 +30,9 @@ namespace Server.MirObjects.Monsters
         {
             if (Dead) return;
 
-            if (MaxHP >= 5)
+            if (Stats[Stat.HP] >= 5)
             {
-                byte stage = (byte)(HP / (MaxHP / 5));
+                byte stage = (byte)(HP / (Stats[Stat.HP] / 5));
 
                 if (stage < _stage)
                 {
@@ -102,7 +102,7 @@ namespace Server.MirObjects.Monsters
         
         private void LineAttack(int distance)
         {
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
             for (int i = 1; i <= distance; i++)
@@ -187,7 +187,7 @@ namespace Server.MirObjects.Monsters
             List<MapObject> targets = FindAllTargets(AttackRange, CurrentLocation);
             if (targets.Count == 0) return;
 
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
             for (int i = 0; i < targets.Count; i++)

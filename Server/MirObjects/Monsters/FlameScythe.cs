@@ -44,7 +44,7 @@ namespace Server.MirObjects.Monsters
 
                 List<MapObject> targets = FindAllTargets(2, Target.CurrentLocation, false);
 
-                int damage = GetAttackPower(MinMC, MaxMC);
+                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
 
                 if (damage > 0 && targets.Count > 0)
                 {

@@ -2579,7 +2579,7 @@ namespace Server.MirObjects
             if (HP > Stats[Stat.HP]) SetHP(Stats[Stat.HP]);
             if (MP > Stats[Stat.MP]) SetMP(Stats[Stat.MP]);
 
-            AttackSpeed = 1400 - ((ASpeed * 60) + Math.Min(370, (Level * 14)));
+            AttackSpeed = 1400 - ((Stats[Stat.AttackSpeed] * 60) + Math.Min(370, (Level * 14)));
 
             if (AttackSpeed < 550) AttackSpeed = 550;
         }
@@ -5043,7 +5043,7 @@ namespace Server.MirObjects
                                     ReceiveChat("--Monster Info--", ChatType.System2);
                                     ReceiveChat(string.Format("ID : {0}, Name : {1}", monOb.Info.Index, monOb.Name), ChatType.System2);
                                     ReceiveChat(string.Format("Level : {0}, X : {1}, Y : {2}", monOb.Level, monOb.CurrentLocation.X, monOb.CurrentLocation.Y), ChatType.System2);
-                                    ReceiveChat(string.Format("HP : {0}, MinDC : {1}, MaxDC : {2}", monOb.Info.HP, monOb.MinDC, monOb.MaxDC), ChatType.System2);
+                                    ReceiveChat(string.Format("HP : {0}, MinDC : {1}, MaxDC : {2}", monOb.Info.HP, monOb.Stats[Stat.MinDC], monOb.Stats[Stat.MaxDC]), ChatType.System2);
                                     break;
                                 case ObjectType.Merchant:
                                     NPCObject npcOb = (NPCObject)ob;
@@ -5379,6 +5379,16 @@ namespace Server.MirObjects
 
                         SetTimer(key, seconds, timerType);
 
+                        break;
+                    case "SETLIGHT":
+                        if ((!IsGM) || parts.Length < 2) return;
+
+                        if (!byte.TryParse(parts[1], out byte light)) return;
+
+                        Light = light;
+
+                        Enqueue(GetUpdateInfo());
+                        Broadcast(GetUpdateInfo());
                         break;
                     default:
                         break;
@@ -5985,7 +5995,7 @@ namespace Server.MirObjects
 
                 int distance = Functions.MaxDistance(CurrentLocation, target.CurrentLocation);
 
-                int damage = GetRangeAttackPower(MinDC, MaxDC, distance);
+                int damage = GetRangeAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC], distance);
 
                 damage = ApplyArcherState(damage);
 
@@ -6154,7 +6164,7 @@ namespace Server.MirObjects
             Point target = Functions.PointMove(CurrentLocation, dir, 1);
 
             //damabeBase = the original damage from your gear (+ bonus from moonlight and darkbody)
-            int damageBase = GetAttackPower(MinDC, MaxDC);
+            int damageBase = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             //damageFinal = the damage you're gonna do with skills added
             int damageFinal;
 
@@ -6235,7 +6245,7 @@ namespace Server.MirObjects
 
                 if (magic != null)
                 {
-                    int baseCount = 1 + Accuracy / 2;
+                    int baseCount = 1 + Stats[Stat.Accuracy] / 2;
                     int maxCount = baseCount + magic.Level * 5;
                     MPEaterCount += Envir.Random.Next(baseCount, maxCount);
                     if (MPEater)
@@ -6247,7 +6257,7 @@ namespace Server.MirObjects
                         S.ObjectEffect p = new S.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.MPEater, EffectType = ObjectID };
                         CurrentMap.Broadcast(p, ob.CurrentLocation);
 
-                        int addMp = 5 * (magic.Level + Accuracy / 4);
+                        int addMp = 5 * (magic.Level + Stats[Stat.Accuracy] / 4);
 
                         if (ob.Race == ObjectType.Player)
                         {
@@ -6278,7 +6288,7 @@ namespace Server.MirObjects
 
                         if (ob == null || ob.Node == null) continue;
 
-                        long calcDuration = magic.Level * 2 + Luck / 6;
+                        long calcDuration = magic.Level * 2 + Stats[Stat.Luck] / 6;
 
                         ob.ApplyPoison(new Poison
                         {
@@ -6286,7 +6296,7 @@ namespace Server.MirObjects
                             Owner = this,
                             PType = PoisonType.Bleeding,
                             TickSpeed = 1000,
-                            Value = MaxDC + 1
+                            Value = Stats[Stat.MaxDC] + 1
                         }, this);
 
                         ob.OperateTime = 0;
@@ -6729,7 +6739,7 @@ namespace Server.MirObjects
                         ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 750, magic, location));
                     break;
                 case Spell.MagicShield:
-                    ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, magic.GetPower(GetAttackPower(MinMC, MaxMC) + 15)));
+                    ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, magic.GetPower(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]) + 15)));
                     break;
                 case Spell.FlameDisruptor:
                     FlameDisruptor(target, magic);
@@ -6863,7 +6873,7 @@ namespace Server.MirObjects
                     if (!ElementalShot(target, magic)) targetID = 0;
                     break;
                 case Spell.ElementalBarrier:
-                    ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, magic.GetPower(GetAttackPower(MinMC, MaxMC))));
+                    ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, magic.GetPower(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]))));
                     break;
                 case Spell.BindingShot:
                     BindingShot(magic, target, out cast);
@@ -6936,7 +6946,7 @@ namespace Server.MirObjects
 
                 int orbPower = GetElementalOrbPower(false);//base power + orbpower
 
-                int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC) + orbPower);
+                int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]) + orbPower);
                 int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500; //50 MS per Step
 
                 DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target, target.CurrentLocation);
@@ -7070,7 +7080,7 @@ namespace Server.MirObjects
         {
             if (target == null || !target.IsAttackTarget(this) || !CanFly(target.CurrentLocation)) return false;
 
-            int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
 
             int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500; //50 MS per Step
 
@@ -7192,7 +7202,7 @@ namespace Server.MirObjects
 
             if (Pets.Count(t => !t.Dead && t.GetType() != typeof(IntelligentCreatureObject)) >= magic.Level + 2) return;
 
-            int rate = (int)(target.MaxHP / 100);
+            int rate = (int)(target.Stats[Stat.HP] / 100);
             if (rate <= 2) rate = 2;
             else rate *= 2;
 
@@ -7201,7 +7211,7 @@ namespace Server.MirObjects
 
             if (target.Master != null)
             {
-                target.SetHP(target.MaxHP / 10);
+                target.SetHP(target.Stats[Stat.HP] / 10);
                 target.Master.Pets.Remove(target);
             }
             else if (target.Respawn != null)
@@ -7227,7 +7237,7 @@ namespace Server.MirObjects
         }
         private void HellFire(UserMagic magic)
         {
-            int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, CurrentLocation, Direction, 4);
             CurrentMap.ActionList.Add(action);
@@ -7246,7 +7256,7 @@ namespace Server.MirObjects
         {
             if (target == null || !target.IsAttackTarget(this)) return;
 
-            int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
 
             if (target.Undead) damage = (int)(damage * 1.5F);
 
@@ -7258,7 +7268,7 @@ namespace Server.MirObjects
         {
             if (target == null || !target.IsAttackTarget(this)) return;
 
-            int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, damage, target);
 
@@ -7266,21 +7276,21 @@ namespace Server.MirObjects
         }
         private void FireBang(UserMagic magic, Point location)
         {
-            int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, location);
             CurrentMap.ActionList.Add(action);
         }
         private void FireWall(UserMagic magic, Point location)
         {
-            int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, location);
             CurrentMap.ActionList.Add(action);
         }
         private void Lightning(UserMagic magic)
         {
-            int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, CurrentLocation, Direction);
             CurrentMap.ActionList.Add(action);
@@ -7310,7 +7320,7 @@ namespace Server.MirObjects
         {
             if (target == null || (target.Race != ObjectType.Player && target.Race != ObjectType.Monster) || !target.IsAttackTarget(this)) return;
 
-            int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
 
             if (!target.Undead) damage = (int)(damage * 1.5F);
 
@@ -7320,7 +7330,7 @@ namespace Server.MirObjects
         }
         private void ThunderStorm(UserMagic magic)
         {
-            int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, CurrentLocation);
             CurrentMap.ActionList.Add(action);
@@ -7359,7 +7369,7 @@ namespace Server.MirObjects
         {
             cast = false;
 
-            int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, location);
 
@@ -7371,7 +7381,7 @@ namespace Server.MirObjects
         {
             cast = false;
 
-            int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, location);
 
@@ -7382,8 +7392,8 @@ namespace Server.MirObjects
 
         private void IceThrust(UserMagic magic)
         {
-            int damageBase = GetAttackPower(MinMC, MaxMC);
-            if (Envir.Random.Next(100) <= (1 + Luck))
+            int damageBase = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+            if (Envir.Random.Next(100) <= (1 + Stats[Stat.Luck]))
                 damageBase += damageBase;
             int damageFinish = magic.GetDamage(damageBase);
 
@@ -7408,7 +7418,7 @@ namespace Server.MirObjects
         {
             if (target == null || !target.IsFriendlyTarget(this)) return;
 
-            int health = magic.GetDamage(GetAttackPower(MinSC, MaxSC) * 2) + Level;
+            int health = magic.GetDamage(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]) * 2) + Level;
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, health, target);
 
@@ -7421,7 +7431,7 @@ namespace Server.MirObjects
             UserItem item = GetPoison(1);
             if (item == null) return false;
 
-            int power = magic.GetDamage(GetAttackPower(MinSC, MaxSC));
+            int power = magic.GetDamage(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]));
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, power, target, item);
             ActionList.Add(action);
@@ -7437,7 +7447,7 @@ namespace Server.MirObjects
 
             if (target == null || !target.IsAttackTarget(this) || !CanFly(target.CurrentLocation)) return false;
 
-            int damage = magic.GetDamage(GetAttackPower(MinSC, MaxSC));
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]));
 
             int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500; //50 MS per Step
 
@@ -7536,7 +7546,7 @@ namespace Server.MirObjects
 
             ConsumeItem(item, 1);
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, GetAttackPower(MinSC, MaxSC) + (magic.Level + 1) * 5);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]) + (magic.Level + 1) * 5);
             ActionList.Add(action);
 
         }
@@ -7549,7 +7559,7 @@ namespace Server.MirObjects
 
             int delay = Functions.MaxDistance(CurrentLocation, location) * 50 + 500; //50 MS per Step
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, GetAttackPower(MinSC, MaxSC) / 2 + (magic.Level + 1) * 2, location);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]) / 2 + (magic.Level + 1) * 2, location);
             CurrentMap.ActionList.Add(action);
         }
         private void SoulShield(UserMagic magic, Point location, out bool cast)
@@ -7561,14 +7571,14 @@ namespace Server.MirObjects
 
             int delay = Functions.MaxDistance(CurrentLocation, location) * 50 + 500; //50 MS per Step
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, GetAttackPower(MinSC, MaxSC) * 2 + (magic.Level + 1) * 10, location);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]) * 2 + (magic.Level + 1) * 10, location);
             CurrentMap.ActionList.Add(action);
 
             ConsumeItem(item, 1);
         }
         private void MassHealing(UserMagic magic, Point location)
         {
-            int value = magic.GetDamage(GetAttackPower(MinSC, MaxSC));
+            int value = magic.GetDamage(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]));
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, value, location);
             CurrentMap.ActionList.Add(action);
@@ -7577,7 +7587,7 @@ namespace Server.MirObjects
         {
             if (target == null) return;
 
-            int value = GetAttackPower(MinSC, MaxSC) + magic.GetPower();
+            int value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]) + magic.GetPower();
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, value, target);
 
@@ -7594,7 +7604,7 @@ namespace Server.MirObjects
             if (poison == null) return;
 
             int delay = Functions.MaxDistance(CurrentLocation, location) * 50 + 500; //50 MS per Step
-            int damage = magic.GetDamage(GetAttackPower(MinSC, MaxSC));
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]));
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, damage, location, (byte)Envir.Random.Next(PoisonAttack));
 
@@ -7761,8 +7771,8 @@ namespace Server.MirObjects
             if (target == null || !target.IsFriendlyTarget(this)) target = this; //offical is only party target
 
             int duration = 30 + 50 * magic.Level;
-            int power = magic.GetPower(GetAttackPower(MinSC, MaxSC));
-            int chance = 9 - (Luck / 3 + magic.Level);
+            int power = magic.GetPower(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]));
+            int chance = 9 - (Stats[Stat.Luck] / 3 + magic.Level);
 
             int[] values = { chance < 2 ? 2 : chance, power };
 
@@ -7788,8 +7798,8 @@ namespace Server.MirObjects
             UserItem item = GetAmulet(1);
             if (item == null) return;
 
-            long expiretime = GetAttackPower(MinSC, MaxSC) * 2 + (magic.Level + 1) * 10;
-            int value = MaxSC >= 5 ? Math.Min(8, MaxSC / 5) : 1;
+            long expiretime = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]) * 2 + (magic.Level + 1) * 10;
+            int value = Stats[Stat.MaxSC] >= 5 ? Math.Min(8, Stats[Stat.MaxSC] / 5) : 1;
 
             switch (target.Race)
             {
@@ -7831,7 +7841,7 @@ namespace Server.MirObjects
                     pType = PoisonType.Red;
             }
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, magic.GetDamage(GetAttackPower(MinSC, MaxSC)), location, pType);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, magic.GetDamage(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC])), location, pType);
             CurrentMap.ActionList.Add(action);
 
             ConsumeItem(item, 1);
@@ -7850,7 +7860,7 @@ namespace Server.MirObjects
 
             int delay = Functions.MaxDistance(CurrentLocation, location) * 50 + 500; //50 MS per Step
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, magic.GetDamage(GetAttackPower(MinSC, MaxSC)), location, 1 + ((magic.Level + 1) * 2));
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, magic.GetDamage(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC])), location, 1 + ((magic.Level + 1) * 2));
             CurrentMap.ActionList.Add(action);
 
         }
@@ -7862,7 +7872,7 @@ namespace Server.MirObjects
 
             if (target == null || target.Race != ObjectType.Monster || !target.IsFriendlyTarget(this)) return;
 
-            int duration = GetAttackPower(MinSC, MaxSC) + magic.GetPower();
+            int duration = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]) + magic.GetPower();
 
             cast = true;
 
@@ -7885,8 +7895,8 @@ namespace Server.MirObjects
         }
         private void BladeAvalanche(UserMagic magic)
         {
-            int damageBase = GetAttackPower(MinDC, MaxDC);
-            if (Envir.Random.Next(0,100) <= (1+Luck)) 
+            int damageBase = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+            if (Envir.Random.Next(0,100) <= (1 + Stats[Stat.Luck])) 
                 damageBase += damageBase;//crit should do something like double dmg, not double max dc dmg!
             int damageFinal = magic.GetDamage(damageBase);
 
@@ -7938,7 +7948,7 @@ namespace Server.MirObjects
             if (count > 0) return;
 
             int duration = 45 + (15 * magic.Level);
-            int value = (int)Math.Round(MaxAC * (0.2 + (0.03 * magic.Level)));
+            int value = (int)Math.Round(Stats[Stat.MaxAC] * (0.2 + (0.03 * magic.Level)));
 
             AddBuff(new Buff { Type = BuffType.ProtectionField, Caster = this, ExpireTime = Envir.Time + duration * 1000, Values = new int[] { value } });
             OperateTime = 0;
@@ -7950,7 +7960,7 @@ namespace Server.MirObjects
             if (count > 0) return;
 
             int duration = 48 + (6 * magic.Level);
-            int value = (int)Math.Round(MaxDC * (0.12 + (0.03 * magic.Level)));
+            int value = (int)Math.Round(Stats[Stat.MaxDC] * (0.12 + (0.03 * magic.Level)));
 
             AddBuff(new Buff { Type = BuffType.Rage, Caster = this, ExpireTime = Envir.Time + duration * 1000, Values = new int[] { value } });
             OperateTime = 0;
@@ -8164,7 +8174,7 @@ namespace Server.MirObjects
             cast = true;
 
             // damage
-            int damageBase = GetAttackPower(MinDC, MaxDC);
+            int damageBase = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             int damageFinal = magic.GetDamage(damageBase);
 
             // objects = this, magic, damage, currentlocation, direction, attackRange
@@ -8225,8 +8235,8 @@ namespace Server.MirObjects
 
             if (CounterAttack == false) return;
 
-            int damageBase = GetAttackPower(MinDC, MaxDC);
-            if (Envir.Random.Next(0, 100) <= Accuracy)
+            int damageBase = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+            if (Envir.Random.Next(0, 100) <= Stats[Stat.Accuracy])
                 damageBase += damageBase;//crit should do something like double dmg, not double max dc dmg!
             int damageFinal = magic.GetDamage(damageBase);
 
@@ -8248,7 +8258,7 @@ namespace Server.MirObjects
 
         private void HeavenlySword(UserMagic magic)
         {
-            int damage = magic.GetDamage(GetAttackPower(MinDC, MaxDC));
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]));
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, CurrentLocation, Direction);
             CurrentMap.ActionList.Add(action);
@@ -8265,7 +8275,7 @@ namespace Server.MirObjects
             for (int i = 0; i < Buffs.Count; i++)
                 if (Buffs[i].Type == BuffType.MoonLight) return;
 
-            AddBuff(new Buff { Type = BuffType.MoonLight, Caster = this, ExpireTime = Envir.Time + (GetAttackPower(MinAC, MaxAC) + (magic.Level + 1) * 5) * 500, Visible = true });
+            AddBuff(new Buff { Type = BuffType.MoonLight, Caster = this, ExpireTime = Envir.Time + (GetAttackPower(Stats[Stat.MinAC], Stats[Stat.MaxAC]) + (magic.Level + 1) * 5) * 500, Visible = true });
             LevelMagic(magic);
         }
         private void Trap(UserMagic magic, MapObject target, out bool cast)
@@ -8293,7 +8303,7 @@ namespace Server.MirObjects
             Point hitPoint;
             Cell cell;
             MirDirection dir = Functions.PreviousDir(Direction);
-            int power = magic.GetDamage(GetAttackPower(MinDC, MaxDC));
+            int power = magic.GetDamage(GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]));
 
             for (int i = 0; i < 5; i++)
             {
@@ -8361,13 +8371,13 @@ namespace Server.MirObjects
             for (int i = 0; i < Buffs.Count; i++)
                 if (Buffs[i].Type == BuffType.DarkBody) return;
 
-            AddBuff(new Buff { Type = BuffType.DarkBody, Caster = this, ExpireTime = Envir.Time + (GetAttackPower(MinAC, MaxAC) + (magic.Level + 1) * 5) * 500, Visible = true });
+            AddBuff(new Buff { Type = BuffType.DarkBody, Caster = this, ExpireTime = Envir.Time + (GetAttackPower(Stats[Stat.MinAC], Stats[Stat.MaxAC]) + (magic.Level + 1) * 5) * 500, Visible = true });
             LevelMagic(magic);
         }
         private void CrescentSlash(UserMagic magic)
         {
-            int damageBase = GetAttackPower(MinDC, MaxDC);
-            if (Envir.Random.Next(0, 100) <= Accuracy)
+            int damageBase = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+            if (Envir.Random.Next(0, 100) <= Stats[Stat.Accuracy])
                 damageBase += damageBase;//crit should do something like double dmg, not double max dc dmg!
             int damageFinal = magic.GetDamage(damageBase);
 
@@ -8480,7 +8490,7 @@ namespace Server.MirObjects
                                 //Only targets
                                 if (ob.IsAttackTarget(this))
                                 {
-                                    DelayedAction action = new DelayedAction(DelayedType.Damage, AttackTime, ob,magic.GetDamage(GetAttackPower(MinDC, MaxDC)), DefenceType.AC, true);
+                                    DelayedAction action = new DelayedAction(DelayedType.Damage, AttackTime, ob,magic.GetDamage(GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC])), DefenceType.AC, true);
                                     ActionList.Add(action);
                                     success = true;
                                     if ((((ob.Race != ObjectType.Player) || Settings.PvpCanResistPoison) && (Envir.Random.Next(Settings.PoisonAttackWeight) >= ob.PoisonResist)) && (Envir.Random.Next(15) <= magic.Level + 1))
@@ -8532,7 +8542,7 @@ namespace Server.MirObjects
             if ((Info.MentalState != 1) && !CanFly(target.CurrentLocation)) return false;
 
             int distance = Functions.MaxDistance(CurrentLocation, target.CurrentLocation);
-            int damage = magic.GetDamage(GetRangeAttackPower(MinMC, MaxMC, distance));
+            int damage = magic.GetDamage(GetRangeAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC], distance));
             damage = ApplyArcherState(damage);
 
             int delay = distance * 50 + 500; //50 MS per Step
@@ -8549,7 +8559,7 @@ namespace Server.MirObjects
             if ((Info.MentalState != 1) && !CanFly(target.CurrentLocation)) return false;
 
             int distance = Functions.MaxDistance(CurrentLocation, target.CurrentLocation);
-            int damage = magic.GetDamage(GetRangeAttackPower(MinMC, MaxMC, distance));
+            int damage = magic.GetDamage(GetRangeAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC], distance));
             damage = ApplyArcherState(damage);
 
             int delay = distance * 50 + 500; //50 MS per Step
@@ -8623,7 +8633,7 @@ namespace Server.MirObjects
         {
             if (target == null || !target.IsAttackTarget(this) || !CanFly(target.CurrentLocation)) return false;
 
-            int power = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
+            int power = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
             int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500; //50 MS per Step
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, power, target, target.CurrentLocation);
@@ -8646,7 +8656,7 @@ namespace Server.MirObjects
                 }
             if (freeTrapSpot == -1) return;
 
-            int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, location, freeTrapSpot);
             CurrentMap.ActionList.Add(action);
         }
@@ -8708,7 +8718,7 @@ namespace Server.MirObjects
             if ((Info.MentalState != 1) && !CanFly(target.CurrentLocation)) return;
 
             int distance = Functions.MaxDistance(CurrentLocation, target.CurrentLocation);
-            int damage = magic.GetDamage(GetRangeAttackPower(MinMC, MaxMC, distance));
+            int damage = magic.GetDamage(GetRangeAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC], distance));
             damage = ApplyArcherState(damage);
 
             int delay = distance * 50 + 500; //50 MS per Step
@@ -8722,7 +8732,7 @@ namespace Server.MirObjects
             if ((Info.MentalState != 1) && !CanFly(target.CurrentLocation)) return;
 
             int distance = Functions.MaxDistance(CurrentLocation, target.CurrentLocation);
-            int damage = magic.GetDamage(GetRangeAttackPower(MinMC, MaxMC, distance));
+            int damage = magic.GetDamage(GetRangeAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC], distance));
             damage = ApplyArcherState(damage);
 
             int delay = distance * 50 + 500; //50 MS per Step
@@ -8746,7 +8756,7 @@ namespace Server.MirObjects
 
         public void OneWithNature(MapObject target, UserMagic magic)
         {
-            int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, CurrentLocation);
             CurrentMap.ActionList.Add(action);
@@ -9054,8 +9064,8 @@ namespace Server.MirObjects
                 #region ImmortalSkin
 
                 case Spell.ImmortalSkin:
-                    int ACvalue = (int)Math.Round(MaxAC * (0.10 + (0.07 * magic.Level)));
-                    int DCValue = (int)Math.Round(MaxDC * (0.05 + (0.01 * magic.Level)));
+                    int ACvalue = (int)Math.Round(Stats[Stat.MaxAC] * (0.10 + (0.07 * magic.Level)));
+                    int DCValue = (int)Math.Round(Stats[Stat.MaxDC] * (0.05 + (0.01 * magic.Level)));
                     AddBuff(new Buff { Type = BuffType.ImmortalSkin, Caster = this, ExpireTime = Envir.Time + 60000 + magic.Level * 1000, Values = new int[] { ACvalue, DCValue }, Visible = true });
                     LevelMagic(magic);
                     break;
@@ -10472,16 +10482,16 @@ namespace Server.MirObjects
             switch (type)
             {
                 case DefenceType.ACAgility:
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    armour = GetAttackPower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.AC:
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    armour = GetAttackPower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.MACAgility:
-                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    armour = GetAttackPower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
                 case DefenceType.MAC:
-                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    armour = GetAttackPower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
                 case DefenceType.Agility:
                     break;
@@ -10525,7 +10535,7 @@ namespace Server.MirObjects
 
             if (!ignoreDefence && (p.PType == PoisonType.Green))
             {
-                int armour = GetDefencePower(MinMAC, MaxMAC);
+                int armour = GetAttackPower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
 
                 if (p.Value < armour)
                     p.PType = PoisonType.None;
@@ -12996,35 +13006,35 @@ namespace Server.MirObjects
                     }
                     break;
                 case RequiredType.MaxAC:
-                    if (MaxAC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MaxAC] < item.Info.RequiredAmount)
                     {
                         ReceiveChat("You do not have enough AC.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MaxMAC:
-                    if (MaxMAC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MaxMAC] < item.Info.RequiredAmount)
                     {
                         ReceiveChat("You do not have enough MAC.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MaxDC:
-                    if (MaxDC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MaxDC] < item.Info.RequiredAmount)
                     {
                         ReceiveChat(GameLanguage.LowDC, ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MaxMC:
-                    if (MaxMC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MaxMC] < item.Info.RequiredAmount)
                     {
                         ReceiveChat(GameLanguage.LowMC, ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MaxSC:
-                    if (MaxSC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MaxSC] < item.Info.RequiredAmount)
                     {
                         ReceiveChat(GameLanguage.LowSC, ChatType.System);
                         return false;
@@ -13038,35 +13048,35 @@ namespace Server.MirObjects
                     }
                     break;
                 case RequiredType.MinAC:
-                    if (MinAC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MinAC] < item.Info.RequiredAmount)
                     {
                         ReceiveChat("You do not have enough Base AC.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MinMAC:
-                    if (MinMAC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MinMAC] < item.Info.RequiredAmount)
                     {
                         ReceiveChat("You do not have enough Base MAC.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MinDC:
-                    if (MinDC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MinDC] < item.Info.RequiredAmount)
                     {
                         ReceiveChat("You do not have enough Base DC.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MinMC:
-                    if (MinMC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MinMC] < item.Info.RequiredAmount)
                     {
                         ReceiveChat("You do not have enough Base MC.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MinSC:
-                    if (MinSC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MinSC] < item.Info.RequiredAmount)
                     {
                         ReceiveChat("You do not have enough Base SC.", ChatType.System);
                         return false;
@@ -13356,23 +13366,23 @@ namespace Server.MirObjects
                         return false;
                     break;
                 case RequiredType.MaxAC:
-                    if (MaxAC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MaxAC] < item.Info.RequiredAmount)
                         return false;
                     break;
                 case RequiredType.MaxMAC:
-                    if (MaxMAC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MaxMAC] < item.Info.RequiredAmount)
                         return false;
                     break;
                 case RequiredType.MaxDC:
-                    if (MaxDC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MaxDC] < item.Info.RequiredAmount)
                         return false;
                     break;
                 case RequiredType.MaxMC:
-                    if (MaxMC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MaxMC] < item.Info.RequiredAmount)
                         return false;
                     break;
                 case RequiredType.MaxSC:
-                    if (MaxSC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MaxSC] < item.Info.RequiredAmount)
                         return false;
                     break;
                 case RequiredType.MaxLevel:
@@ -13380,23 +13390,23 @@ namespace Server.MirObjects
                         return false;
                     break;
                 case RequiredType.MinAC:
-                    if (MinAC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MinAC] < item.Info.RequiredAmount)
                         return false;
                     break;
                 case RequiredType.MinMAC:
-                    if (MinMAC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MinMAC] < item.Info.RequiredAmount)
                         return false;
                     break;
                 case RequiredType.MinDC:
-                    if (MinDC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MinDC] < item.Info.RequiredAmount)
                         return false;
                     break;
                 case RequiredType.MinMC:
-                    if (MinMC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MinMC] < item.Info.RequiredAmount)
                         return false;
                     break;
                 case RequiredType.MinSC:
-                    if (MinSC < item.Info.RequiredAmount)
+                    if (Stats[Stat.MinSC] < item.Info.RequiredAmount)
                         return false;
                     break;
             }
@@ -13598,14 +13608,14 @@ namespace Server.MirObjects
 
             if (item.GetTotal(Stat.Luck) > (Settings.MaxLuck * -1) && Envir.Random.Next(20) == 0)
             {
-                Luck--;
+                Stats[Stat.Luck]--;
                 item.AddedStats[Stat.Luck]--;
                 Enqueue(new S.RefreshItem { Item = item });
                 ReceiveChat(GameLanguage.WeaponCurse, ChatType.System);
             }
             else if (item.GetTotal(Stat.Luck) <= 0 || Envir.Random.Next(10 * item.GetTotal(Stat.Luck)) == 0)
             {
-                Luck++;
+                Stats[Stat.Luck]++;
                 item.AddedStats[Stat.Luck]++;
                 Enqueue(new S.RefreshItem { Item = item });
                 ReceiveChat(GameLanguage.WeaponLuck, ChatType.Hint);

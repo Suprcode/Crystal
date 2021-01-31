@@ -46,7 +46,7 @@ namespace Server.MirObjects.Monsters
             if (!Dead && Sleeping && Envir.Time > WakeUpTime)
             {
                 Sleeping = false;
-                HP = MaxHP;
+                HP = Stats[Stat.HP];
                 return;
             }
 
@@ -75,7 +75,7 @@ namespace Server.MirObjects.Monsters
 
             for (int i = 0; i < targets.Count; i++)
             {
-                int damage = GetAttackPower(MinDC, MaxDC);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) continue;
 
                 targets[i].Attacked(this, damage, DefenceType.MAC);

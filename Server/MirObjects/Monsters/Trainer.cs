@@ -75,11 +75,11 @@ namespace Server.MirObjects.Monsters
             {
                 case DefenceType.AC:
                 case DefenceType.ACAgility:
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    armour = GetAttackPower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.MAC:
                 case DefenceType.MACAgility:
-                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    armour = GetAttackPower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
             }
             if (armour >= damage)
@@ -119,11 +119,11 @@ namespace Server.MirObjects.Monsters
             {
                 case DefenceType.AC:
                 case DefenceType.ACAgility:
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    armour = GetAttackPower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.MAC:
                 case DefenceType.MACAgility:
-                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    armour = GetAttackPower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
             }
             if (armour >= damage)
@@ -199,7 +199,7 @@ namespace Server.MirObjects.Monsters
             if (CanRegen)
             {
                 RegenTime = Envir.Time + RegenDelay;
-                healthRegen += (int)(MaxHP * 0.022F) + 1;
+                healthRegen += (int)(Stats[Stat.HP] * 0.022F) + 1;
             }
             if (healthRegen > 0) ChangeHP(healthRegen);
         }

@@ -31,7 +31,7 @@ namespace Server.MirObjects.Monsters
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
-                int damage = GetAttackPower(MinDC, MaxDC);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
 
                 Target.Attacked(this, damage, DefenceType.ACAgility);
@@ -69,7 +69,7 @@ namespace Server.MirObjects.Monsters
                                         if (!target.IsAttackTarget(this)) continue;
                                         if (Envir.Random.Next(Settings.MagicResistWeight) < target.MagicResist) continue;
 
-                                        target.ApplyPoison(new Poison { PType = PoisonType.Red, Duration = Envir.Random.Next(GetAttackPower(MinSC, MaxSC) / 2), TickSpeed = 1000 }, this);
+                                        target.ApplyPoison(new Poison { PType = PoisonType.Red, Duration = Envir.Random.Next(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]) / 2), TickSpeed = 1000 }, this);
                                     }
                                     break;
                             }

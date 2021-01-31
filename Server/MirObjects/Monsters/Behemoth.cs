@@ -56,7 +56,7 @@ namespace Server.MirObjects.Monsters
                 {
                     if (Envir.Random.Next(15) == 0)
                     {
-                        Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Bleeding, Value = GetAttackPower(MinDC, MinDC), TickSpeed = 1000 }, this);
+                        Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Bleeding, Value = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MinDC]), TickSpeed = 1000 }, this);
                     }
                 }
             }
@@ -82,7 +82,7 @@ namespace Server.MirObjects.Monsters
                                 List<MapObject> targets = FindAllTargets(AttackRange, CurrentLocation);
                                 if (targets.Count == 0) return;
 
-                                int damage = GetAttackPower(MinDC, MaxDC) * 3;
+                                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]) * 3;
                                 if (damage == 0) return;
 
                                 for (int i = 0; i < targets.Count; i++)
@@ -118,7 +118,7 @@ namespace Server.MirObjects.Monsters
 
             if (targets.Count == 0) return;
 
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
             for (int i = 0; i < targets.Count; i++)
             {

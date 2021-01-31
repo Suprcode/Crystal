@@ -54,7 +54,7 @@ namespace Server.MirObjects.Monsters
         private void LineAttack(int distance)
         {
 
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
             for (int i = 1; i <= distance; i++)
@@ -69,7 +69,7 @@ namespace Server.MirObjects.Monsters
                         {
                             if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                             {
-                                int poison = GetAttackPower(MinSC, MaxSC);
+                                int poison = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
 
                                 Target.ApplyPoison(new Poison
                                 {
@@ -101,7 +101,7 @@ namespace Server.MirObjects.Monsters
                             {
                                 if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                                 {
-                                    int poison = GetAttackPower(MinSC, MaxSC);
+                                    int poison = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
 
                                     ob.ApplyPoison(new Poison
                                     {

@@ -33,7 +33,7 @@ namespace Server.MirObjects.Monsters
                 ActionTime = Envir.Time + 300;
                 AttackTime = Envir.Time + AttackSpeed;
 
-                int damage = GetAttackPower(MinDC, MaxDC);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
 
                 Target.Attacked(this, damage, DefenceType.ACAgility);
@@ -41,7 +41,7 @@ namespace Server.MirObjects.Monsters
                 if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                 {
                     if (Envir.Random.Next(4) == 0)
-                        Target.ApplyPoison(new Poison { Owner = this, PType = PoisonType.Green, Duration = GetAttackPower(MinSC,MaxSC), TickSpeed = 1000 }, this);
+                        Target.ApplyPoison(new Poison { Owner = this, PType = PoisonType.Green, Duration = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);
                 }
             }
         }

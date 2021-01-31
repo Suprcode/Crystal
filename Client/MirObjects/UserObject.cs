@@ -14,14 +14,6 @@ namespace Client.MirObjects
 
         public int HP, MP;
 
-        public ushort MinAC, MaxAC,
-                   MinMAC, MaxMAC,
-                   MinDC, MaxDC,
-                   MinMC, MaxMC,
-                   MinSC, MaxSC;
-
-        public byte Accuracy, Agility;
-        public sbyte ASpeed, Luck;
         public int AttackSpeed;
 
         public Stats Stats;
@@ -172,7 +164,7 @@ namespace Client.MirObjects
             SetEffects();
             
             if (this == User && Light < 3) Light = 3;
-            AttackSpeed = 1400 - ((ASpeed * 60) + Math.Min(370, (Level * 14)));
+            AttackSpeed = 1400 - ((Stats[Stat.AttackSpeed] * 60) + Math.Min(370, (Level * 14)));
             if (AttackSpeed < 550) AttackSpeed = 550;
 
             PercentHealth = (byte)(HP / (float)Stats[Stat.HP] * 100);
@@ -238,7 +230,7 @@ namespace Client.MirObjects
                 UserItem item = Inventory[i];
                 if (item != null)
                 {
-                    CurrentBagWeight += (ushort)item.Weight; //TODO - Remove this cast after weight type fixed
+                    CurrentBagWeight += item.Weight;
                 }
             }
         }

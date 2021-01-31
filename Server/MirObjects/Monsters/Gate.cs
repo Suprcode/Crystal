@@ -135,16 +135,16 @@ namespace Server.MirObjects.Monsters
         public override void RepairGate()
         {
             if (HP == 0)
-                Revive(MaxHP, false);
+                Revive(Stats[Stat.HP], false);
             else
-                SetHP(MaxHP);
+                SetHP(Stats[Stat.HP]);
 
             CheckDirection();
         }
 
         protected override int GetDamageLevel()
         {
-            int level = (int)Math.Round((double)(3 * HP) / MaxHP);
+            int level = (int)Math.Round((double)(3 * HP) / Stats[Stat.HP]);
 
             if (level < 1) level = 1;
 

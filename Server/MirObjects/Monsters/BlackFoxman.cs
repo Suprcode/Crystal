@@ -61,7 +61,7 @@ namespace Server.MirObjects.Monsters
         private void LineAttack(int distance)
         {
 
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
             for (int i = 1; i <= distance; i++)

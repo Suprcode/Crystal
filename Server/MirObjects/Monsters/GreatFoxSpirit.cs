@@ -26,9 +26,9 @@ namespace Server.MirObjects.Monsters
         {
             if (Dead) return;
 
-            if (MaxHP >= 4)
+            if (Stats[Stat.HP] >= 4)
             {
-                byte stage = (byte)(4 - (HP / (MaxHP / 4)));
+                byte stage = (byte)(4 - (HP / (Stats[Stat.HP] / 4)));
 
                 if (stage > _stage)
                 {
@@ -97,7 +97,7 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
             ShockTime = 0;

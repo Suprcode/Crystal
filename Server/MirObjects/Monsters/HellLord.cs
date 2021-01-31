@@ -145,7 +145,7 @@ namespace Server.MirObjects.Monsters
                                 spellObj = new SpellObject
                                 {
                                     Spell = Spell.MapQuake1,
-                                    Value = Envir.Random.Next(Envir.Random.Next(MinDC, MaxDC)),
+                                    Value = Envir.Random.Next(Envir.Random.Next(Stats[Stat.MinDC], Stats[Stat.MaxDC])),
                                     ExpireTime = Envir.Time + (2000),
                                     TickSpeed = 500,
                                     Caster = null,
@@ -160,7 +160,7 @@ namespace Server.MirObjects.Monsters
                                 spellObj = new SpellObject
                                 {
                                     Spell = Spell.MapQuake2,
-                                    Value = Envir.Random.Next(Envir.Random.Next(MinDC, MaxDC)),
+                                    Value = Envir.Random.Next(Envir.Random.Next(Stats[Stat.MinDC], Stats[Stat.MaxDC])),
                                     ExpireTime = Envir.Time + (2000),
                                     TickSpeed = 500,
                                     Caster = null,

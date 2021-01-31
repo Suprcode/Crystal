@@ -35,7 +35,7 @@ namespace Server.MirObjects.Monsters
             {
                 RevivalCount++;
 
-                int newhp = MaxHP * (100 - (25 * RevivalCount)) / 100;
+                int newhp = Stats[Stat.HP] * (100 - (25 * RevivalCount)) / 100;
                 Revive(newhp, false);
             }
 

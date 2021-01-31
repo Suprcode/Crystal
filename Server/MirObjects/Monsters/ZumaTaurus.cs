@@ -21,9 +21,9 @@ namespace Server.MirObjects.Monsters
         {
             if (Dead) return;
             
-            if (MaxHP >= 7)
+            if (Stats[Stat.HP] >= 7)
             {
-                byte stage = (byte)(HP / (MaxHP / 7));
+                byte stage = (byte)(HP / (Stats[Stat.HP] / 7));
 
                 if (stage < _stage) SpawnSlaves();
                 _stage = stage;
@@ -50,7 +50,7 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
             Target.Attacked(this, damage, DefenceType.MACAgility);

@@ -184,7 +184,7 @@ namespace Server.MirObjects.Monsters
         }
         private void AttackLogic()
         {
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
             //if (Target.Attacked(this, damage, DefenceType.MAC) <= 0) return;
