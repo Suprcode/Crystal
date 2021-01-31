@@ -131,6 +131,16 @@ public enum Stat : byte
     PoisonAttack = 102,
     HPDrainRate = 103,
 
+    ExpRatePercent = 110,
+    ItemDropRatePercent = 111,
+    GoldDropRatePercent = 112,
+    SkillRatePercent = 113,
+    MineRatePercent = 114,
+    GemRatePercent = 115,
+    FishRatePercent = 116,
+    CraftRatePercent = 117,
+    //AttackBonus
+
     Unknown = 255
 }
 
