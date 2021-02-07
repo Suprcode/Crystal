@@ -148,6 +148,11 @@ namespace Server.MirObjects
             return false;
         }
 
+        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stat, bool visible = false, bool infinite = false, params int[] values)
+        {
+            throw new NotSupportedException();
+        }
+
         public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
             throw new NotSupportedException();

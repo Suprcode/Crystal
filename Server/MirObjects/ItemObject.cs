@@ -414,7 +414,7 @@ namespace Server.MirObjects
             throw new NotSupportedException();
         }
 
-        public override void AddBuff(Buff b)
+        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stat, bool visible = false, bool infinite = false, params int[] values)
         {
             throw new NotSupportedException();
         }

@@ -1259,6 +1259,7 @@ public enum BuffType : byte
     PetEnhancer,
     ImmortalSkin,
     MagicShield,
+    ElementalBarrier,
 
     //special
     GameMaster = 100,
@@ -1487,7 +1488,6 @@ public enum ServerPacketIds : short
     CombineItem,
     ItemUpgraded,
     SetConcentration,
-    SetObjectConcentration,
     SetElemental,
     SetObjectElemental,
     RemoveDelayedExplosion,
@@ -1646,7 +1646,6 @@ public enum ClientPacketIds : short
     CancelReincarnation,
     CombineItem,
 
-    SetConcentration,
     AwakeningNeedMaterials,
     AwakeningLockedItem,
     Awakening,

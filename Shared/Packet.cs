@@ -272,8 +272,6 @@ public abstract class Packet
                 return new C.CancelReincarnation();
             case (short)ClientPacketIds.CombineItem:
                 return new C.CombineItem();
-            case (short)ClientPacketIds.SetConcentration:
-                return new C.SetConcentration();
             case (short)ClientPacketIds.AwakeningNeedMaterials:
                 return new C.AwakeningNeedMaterials();
             case (short)ClientPacketIds.AwakeningLockedItem:
@@ -725,8 +723,6 @@ public abstract class Packet
                 return new S.ItemUpgraded();
             case (short)ServerPacketIds.SetConcentration:
                 return new S.SetConcentration();
-            case (short)ServerPacketIds.SetObjectConcentration:
-                return new S.SetObjectConcentration();
             case (short)ServerPacketIds.SetElemental:
                 return new S.SetElemental();
             case (short)ServerPacketIds.SetObjectElemental:

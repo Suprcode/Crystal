@@ -946,9 +946,6 @@ namespace Client.MirObjects
                         CurrentAction = MirAction.Standing;
                     else
                         CurrentAction = CMain.Time > StanceTime ? MirAction.Standing : MirAction.Stance;
-
-                    if (Concentrating && ConcentrateInterrupted)
-                        Network.Enqueue(new C.SetConcentration { ObjectID = User.ObjectID, Enabled = Concentrating, Interrupted = false });
                 }
 
                 if (Fishing) CurrentAction = MirAction.FishingWait;
@@ -2771,17 +2768,14 @@ namespace Client.MirObjects
                                                             int exIdx = 0;
                                                             if (this == User)
                                                             {
-                                                                //
-                                                                if (GameScene.Scene.Buffs.Where(x => x.Type == BuffType.VampireShot).Any()) exIdx = 20;
-                                                                if (GameScene.Scene.Buffs.Where(x => x.Type == BuffType.PoisonShot).Any()) exIdx = 10;
+                                                                if (GameScene.Scene.Buffs.Any(x => x.Type == BuffType.VampireShot)) exIdx = 20;
+                                                                if (GameScene.Scene.Buffs.Any(x => x.Type == BuffType.PoisonShot)) exIdx = 10;
                                                             }
                                                             else
                                                             {
-                                                                if (Buffs.Where(x => x == BuffType.VampireShot).Any()) exIdx = 20;
-                                                                if (Buffs.Where(x => x == BuffType.PoisonShot).Any()) exIdx = 10;
+                                                                if (Buffs.Any(x => x == BuffType.VampireShot)) exIdx = 20;
+                                                                if (Buffs.Any(x => x == BuffType.PoisonShot)) exIdx = 10;
                                                             }
-
-                                                            //GameScene.Scene.ChatDialog.ReceiveChat("Debug: "+exIdx.ToString(),ChatType.System);
 
                                                             ob.Effects.Add(eff = new Effect(Libraries.Magic3, 2490 + exIdx, 7, 1000, ob));
                                                             SoundManager.PlaySound(20000 + 136 * 10 + 5 + (exIdx / 10));//sound M136-5/7

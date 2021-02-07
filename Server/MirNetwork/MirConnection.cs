@@ -515,9 +515,6 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.CombineItem:
                     CombineItem((C.CombineItem)p);
                     break;
-                case (short)ClientPacketIds.SetConcentration:
-                    SetConcentration((C.SetConcentration)p);
-                    break;
                 case (short)ClientPacketIds.AwakeningNeedMaterials:
                     AwakeningNeedMaterials((C.AwakeningNeedMaterials)p);
                     break;
@@ -1514,13 +1511,6 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.CombineItem(p.IDFrom, p.IDTo);
-        }
-
-        private void SetConcentration(C.SetConcentration p)
-        {
-            if (Stage != GameStage.Game) return;
-
-            Player.ConcentrateInterrupted = p.Interrupted;
         }
 
         private void Awakening(C.Awakening p)

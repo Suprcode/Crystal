@@ -972,7 +972,7 @@ namespace Server.MirEnvir
                                             for (int b = 0; b < target.Buffs.Count; b++)
                                                 if (target.Buffs[b].Type == BuffType.Hiding) return;
 
-                                            target.AddBuff(new Buff { Type = BuffType.Hiding, Caster = player, ExpireTime = Envir.Time + value * 1000 });
+                                            target.AddBuff(BuffType.Hiding, player, (Settings.Second * value), new Stats());
                                             target.OperateTime = 0;
                                             train = true;
                                         }
@@ -1020,7 +1020,12 @@ namespace Server.MirEnvir
                                         //Only targets
                                         if (target.IsFriendlyTarget(player))
                                         {
-                                            target.AddBuff(new Buff { Type = type, Caster = player, ExpireTime = Envir.Time + value * 1000, Values = new int[]{ target.Level / 7 + 4 } });
+                                            var stats = new Stats
+                                            {
+                                                [type == BuffType.SoulShield ? Stat.MaxAC : Stat.MaxMAC] = target.Level / 7 + 4
+                                            };
+
+                                            target.AddBuff(type, player, Settings.Second * value, stats);
                                             target.OperateTime = 0;
                                             train = true;
                                         }
@@ -1727,7 +1732,6 @@ namespace Server.MirEnvir
                     value = (int)data[2];
                     location = (Point)data[3];
                     value2 = (int)data[4];
-                    type = BuffType.Curse;
 
                     for (int y = location.Y - 3; y <= location.Y + 3; y++)
                     {
@@ -1757,7 +1761,16 @@ namespace Server.MirEnvir
                                         if (target.IsAttackTarget(player))
                                         {
                                             target.ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = value, TickSpeed = 1000, Value = value2 }, player);
-                                            target.AddBuff(new Buff { Type = type, Caster = player, ExpireTime = Envir.Time + value * 1000, Values = new int[]{ value2 } });
+
+                                            var stats = new Stats
+                                            {
+                                                [Stat.MaxDCRatePercent] = value2 * -1,
+                                                [Stat.MaxMCRatePercent] = value2 * -1,
+                                                [Stat.MaxSCRatePercent] = value2 * -1,
+                                                [Stat.AttackSpeedRatePercent] = target.Race == ObjectType.Player ? value2 * -1 : 0
+                                            };
+
+                                            target.AddBuff(BuffType.Curse, player, Settings.Second * value, stats);
                                             target.OperateTime = 0;
                                             train = true;
                                         }
@@ -1963,8 +1976,8 @@ namespace Server.MirEnvir
                     value = (int)data[2];
                     location = (Point)data[3];
 
-                    bool hasVampBuff = (player.Buffs.Where(ex => ex.Type == BuffType.VampireShot).ToList().Count() > 0);
-                    bool hasPoisonBuff = (player.Buffs.Where(ex => ex.Type == BuffType.PoisonShot).ToList().Count() > 0);
+                    bool hasVampBuff = (player.Buffs.Any(ex => ex.Type == BuffType.VampireShot));
+                    bool hasPoisonBuff = (player.Buffs.Any(ex => ex.Type == BuffType.PoisonShot));
 
                     for (int y = location.Y - 2; y <= location.Y + 2; y++)
                     {
@@ -2023,15 +2036,15 @@ namespace Server.MirEnvir
                         }
                     }
 
-                    if (hasVampBuff)//Vampire Effect
+                    if (hasVampBuff)
                     {
-                        //cancel out buff
-                        player.AddBuff(new Buff { Type = BuffType.VampireShot, Caster = player, ExpireTime = Envir.Time + 1000, Values = new int[]{ value }, Visible = true, ObjectID = player.ObjectID });
+                        //Expire
+                        player.AddBuff(BuffType.VampireShot, player, Settings.Second * 1, new Stats(), visible: true);
                     }
-                    if (hasPoisonBuff)//Poison Effect
+                    if (hasPoisonBuff)
                     {
-                        //cancel out buff
-                        player.AddBuff(new Buff { Type = BuffType.PoisonShot, Caster = player, ExpireTime = Envir.Time + 1000, Values = new int[]{ value }, Visible = true, ObjectID = player.ObjectID });
+                        //Expire
+                        player.AddBuff(BuffType.PoisonShot, player, Settings.Second * 1, new Stats(), visible: true);
                     }
                     break;
 
@@ -2246,8 +2259,7 @@ namespace Server.MirEnvir
                 PlayerObject player = Players[i];
 
                 if (Functions.InRange(location, player.CurrentLocation, Globals.DataRange))
-                    player.Enqueue(p);
-                    
+                    player.Enqueue(p);                   
             }
         }
 

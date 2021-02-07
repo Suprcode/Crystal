@@ -7,7 +7,7 @@ using System.Text;
 
 public sealed class Stats
 {
-    private SortedDictionary<Stat, int> Values { get; set; } = new SortedDictionary<Stat, int>();
+    public SortedDictionary<Stat, int> Values { get; set; } = new SortedDictionary<Stat, int>();
     public int Count => Values.Sum(pair => Math.Abs(pair.Value));
 
     public int this[Stat stat]
@@ -65,25 +65,19 @@ public sealed class Stats
         }
     }
 
-    public StatType GetType(Stat stat)
-    {
-        Type type = stat.GetType();
-
-        MemberInfo[] infos = type.GetMember(stat.ToString());
-
-        StatDescription description = infos[0].GetCustomAttribute<StatDescription>();
-
-        if (description == null) return StatType.None;
-
-        return description.Type;
-    }
-
     public void Clear()
     {
         Values.Clear();
     }
 }
 
+public enum StatFormula : byte
+{
+    Health,
+    Mana,
+    Weight,
+    Stat
+}
 
 public enum Stat : byte
 {
@@ -98,61 +92,59 @@ public enum Stat : byte
     MinSC = 8,
     MaxSC = 9,
 
-    Accuracy = 20,
-    Agility = 21,
+    Accuracy = 10,
+    Agility = 11,
+    HP = 12,
+    MP = 13,
+    AttackSpeed = 14,
+    Luck = 15,
+    BagWeight = 16,
+    HandWeight = 17,
+    WearWeight = 18,
+    Reflect = 19,
+    Strong = 20,
+    Holy = 21,
+    Freezing = 22,
+    PoisonAttack = 23,
 
-    HP = 30,
-    MP = 31,
+    MagicResist = 30,
+    PoisonResist = 31,
+    HealthRecovery = 32,
+    SpellRecovery = 33,
+    PoisonRecovery = 34,
+    HPRatePercent = 35,
+    MPRatePercent = 36,
+    MaxACRatePercent = 37,
+    MaxMACRatePercent = 38,
+    CriticalRate = 39,
+    CriticalDamage = 40,
+    HPDrainRate = 41,
 
-    AttackSpeed = 40,
-    Luck = 41,
+    ExpRatePercent = 100,
+    ItemDropRatePercent = 101,
+    GoldDropRatePercent = 102,
+    MineRatePercent = 103,
+    GemRatePercent = 104,
+    FishRatePercent = 105,
+    CraftRatePercent = 106,
+    SkillRateMultiplier = 107,
+    AttackBonus = 108,
 
-    BagWeight = 50,
-    HandWeight = 51,
-    WearWeight = 52,
+    MaxDCRatePercent = 110,
+    MaxMCRatePercent = 111,
+    MaxSCRatePercent = 112,
+    AttackSpeedRatePercent = 113,
+    LoverExpRatePercent = 114,
+    MentorDamageRatePercent = 115,
+    MentorExpRatePercent = 116,
 
-    Reflect = 60,
-    Strong = 61,
+    DamageReductionPercent = 117,
 
-    MagicResist = 70,
-    PoisonResist = 71,
-    HealthRecovery = 72,
-    SpellRecovery = 73,
-    PoisonRecovery = 74,
-    HPRate = 75,
-    MPRate = 76,
-    CriticalRate = 77,
-    CriticalDamage = 78,
-    MaxACRate = 79,
-    MaxMACRate = 80,
+    EnergyShieldRate = 118,
+    EnergyShieldHPGain = 119,
 
-    Holy = 100,
-    Freezing = 101,
-    PoisonAttack = 102,
-    HPDrainRate = 103,
-
-    ExpRatePercent = 110,
-    ItemDropRatePercent = 111,
-    GoldDropRatePercent = 112,
-    SkillRatePercent = 113,
-    MineRatePercent = 114,
-    GemRatePercent = 115,
-    FishRatePercent = 116,
-    CraftRatePercent = 117,
-    //AttackBonus
+    ManaPenaltyPercent = 120,
+    TeleportManaPenaltyPercent = 121,
 
     Unknown = 255
-}
-
-public enum StatType : byte
-{
-    Stack,
-    Set,
-    None
-}
-
-public class StatDescription : Attribute
-{
-    public string Title { get; set; }
-    public StatType Type { get; set; }
 }

@@ -579,7 +579,6 @@ namespace Server.MirEnvir
                             {
                                 if (Time > current.Value.OperateTime)
                                 {
-
                                     current.Value.Process();
                                     current.Value.SetOperateTime();
                                 }

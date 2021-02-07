@@ -1236,17 +1236,17 @@ namespace Client.MirScenes.Dialogs
             }
             if (BuffMineRate > 0)
             {
-                text += string.Format("Increases Mining success by: {0}%.", BuffMineRate * 5);
+                text += string.Format("Increases Mining success by: {0}%.", BuffMineRate);
                 if (text != "") text += "\n";
             }
             if (BuffGemRate > 0)
             {
-                text += string.Format("Increases Gem success by: {0}%.", BuffGemRate * 5);
+                text += string.Format("Increases Gem success by: {0}%.", BuffGemRate);
                 if (text != "") text += "\n";
             }
             if (BuffFishRate > 0)
             {
-                text += string.Format("Increases Fishing success by: {0}%.", BuffFishRate * 5);
+                text += string.Format("Increases Fishing success by: {0}%.", BuffFishRate);
                 if (text != "") text += "\n";
             }
             if (BuffExpRate > 0)
@@ -1256,7 +1256,7 @@ namespace Client.MirScenes.Dialogs
             }
             if (BuffCraftRate > 0)
             {
-                text += string.Format("Increases Crafting success by: {0}%.", BuffCraftRate * 5);
+                text += string.Format("Increases Crafting success by: {0}%.", BuffCraftRate);
                 if (text != "") text += "\n";
             }
             if (BuffSkillRate > 0)

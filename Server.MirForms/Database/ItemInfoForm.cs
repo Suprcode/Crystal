@@ -260,14 +260,14 @@ namespace Server
             MagicResisttextBox.Text = info.Stats[Stat.MagicResist].ToString();
             HealthRecoveryTextbox.Text = info.Stats[Stat.HealthRecovery].ToString();
             StrongTextbox.Text = info.Stats[Stat.Strong].ToString();
-            MacRateTextbox.Text = info.Stats[Stat.MaxMACRate].ToString();
-            ACRateTextbox.Text = info.Stats[Stat.MaxACRate].ToString();
+            MacRateTextbox.Text = info.Stats[Stat.MaxMACRatePercent].ToString();
+            ACRateTextbox.Text = info.Stats[Stat.MaxACRatePercent].ToString();
             PoisonResisttextBox.Text = info.Stats[Stat.PoisonResist].ToString();
             PoisonAttacktextbox.Text = info.Stats[Stat.PoisonAttack].ToString();
             Freezingtextbox.Text = info.Stats[Stat.Freezing].ToString();
             Holytextbox.Text = info.Stats[Stat.Holy].ToString();
-            HPratetextbox.Text = info.Stats[Stat.HPRate].ToString();
-            MPratetextbox.Text = info.Stats[Stat.MPRate].ToString();
+            HPratetextbox.Text = info.Stats[Stat.HPRatePercent].ToString();
+            MPratetextbox.Text = info.Stats[Stat.MPRatePercent].ToString();
             HpDrainRatetextBox.Text = info.Stats[Stat.HPDrainRate].ToString();
             CriticalRatetextBox.Text = info.Stats[Stat.CriticalRate].ToString();
             CriticalDamagetextBox.Text = info.Stats[Stat.CriticalDamage].ToString();
@@ -369,14 +369,14 @@ namespace Server
                 if (MagicResisttextBox.Text != info.Stats[Stat.MagicResist].ToString()) MagicResisttextBox.Text = string.Empty;
                 if (HealthRecoveryTextbox.Text != info.Stats[Stat.HealthRecovery].ToString()) HealthRecoveryTextbox.Text = string.Empty;
                 if (StrongTextbox.Text != info.Stats[Stat.Strong].ToString()) StrongTextbox.Text = string.Empty;
-                if (MacRateTextbox.Text != info.Stats[Stat.MaxMACRate].ToString()) MacRateTextbox.Text = string.Empty;
-                if (ACRateTextbox.Text != info.Stats[Stat.MaxACRate].ToString()) ACRateTextbox.Text = string.Empty;
+                if (MacRateTextbox.Text != info.Stats[Stat.MaxMACRatePercent].ToString()) MacRateTextbox.Text = string.Empty;
+                if (ACRateTextbox.Text != info.Stats[Stat.MaxACRatePercent].ToString()) ACRateTextbox.Text = string.Empty;
                 if (PoisonResisttextBox.Text != info.Stats[Stat.PoisonResist].ToString()) PoisonResisttextBox.Text = string.Empty;
                 if (PoisonAttacktextbox.Text != info.Stats[Stat.PoisonAttack].ToString()) PoisonAttacktextbox.Text = string.Empty;
                 if (Freezingtextbox.Text != info.Stats[Stat.Freezing].ToString()) Freezingtextbox.Text = string.Empty;
                 if (Holytextbox.Text != info.Stats[Stat.Holy].ToString()) Holytextbox.Text = string.Empty;
-                if (HPratetextbox.Text != info.Stats[Stat.HPRate].ToString()) HPratetextbox.Text = string.Empty;
-                if (MPratetextbox.Text != info.Stats[Stat.MPRate].ToString()) MPratetextbox.Text = string.Empty;
+                if (HPratetextbox.Text != info.Stats[Stat.HPRatePercent].ToString()) HPratetextbox.Text = string.Empty;
+                if (MPratetextbox.Text != info.Stats[Stat.MPRatePercent].ToString()) MPratetextbox.Text = string.Empty;
                 if (HpDrainRatetextBox.Text != info.Stats[Stat.HPDrainRate].ToString()) HpDrainRatetextBox.Text = string.Empty;
                 if (CriticalRatetextBox.Text != info.Stats[Stat.CriticalRate].ToString()) CriticalRatetextBox.Text = string.Empty;
                 if (CriticalDamagetextBox.Text != info.Stats[Stat.CriticalDamage].ToString()) CriticalDamagetextBox.Text = string.Empty;
@@ -1141,7 +1141,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].Stats[Stat.MaxACRate] = temp;
+                _selectedItemInfos[i].Stats[Stat.MaxACRatePercent] = temp;
         }
 
         private void MacRateTextbox_TextChanged(object sender, EventArgs e)
@@ -1159,7 +1159,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].Stats[Stat.MaxMACRate] = temp;
+                _selectedItemInfos[i].Stats[Stat.MaxMACRatePercent] = temp;
         }
 
         private void MagicResisttextBox_TextChanged(object sender, EventArgs e)
@@ -1267,7 +1267,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].Stats[Stat.HPRate] = temp;
+                _selectedItemInfos[i].Stats[Stat.HPRatePercent] = temp;
         }
 
         private void Holytextbox_TextChanged(object sender, EventArgs e)
@@ -1443,7 +1443,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].Stats[Stat.MPRate] = temp;
+                _selectedItemInfos[i].Stats[Stat.MPRatePercent] = temp;
         }
 
         private void HpDrainRatetextBox_TextChanged(object sender, EventArgs e)

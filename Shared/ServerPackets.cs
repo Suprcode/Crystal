@@ -3340,45 +3340,15 @@ namespace ServerPackets
     {
         public override short Index { get { return (short)ServerPacketIds.AddBuff; } }
 
-        public BuffType Type;
-        public string Caster = string.Empty;
-        public uint ObjectID;
-        public bool Visible;
-        public long Expire;
-        public int[] Values;
-        public bool Infinite;
+        public ClientBuff Buff;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            Type = (BuffType)reader.ReadByte();
-            Caster = reader.ReadString();
-            Visible = reader.ReadBoolean();
-            ObjectID = reader.ReadUInt32();
-            Expire = reader.ReadInt64();
-
-            Values = new int[reader.ReadInt32()];
-            for (int i = 0; i < Values.Length; i++)
-            {
-                Values[i] = reader.ReadInt32();
-            }
-
-            Infinite = reader.ReadBoolean();
+            Buff = new ClientBuff(reader);
         }
         protected override void WritePacket(BinaryWriter writer)
         {
-            writer.Write((byte)Type);
-            writer.Write(Caster);
-            writer.Write(Visible);
-            writer.Write(ObjectID);
-            writer.Write(Expire);
-
-            writer.Write(Values.Length);
-            for (int i = 0; i < Values.Length; i++)
-            {
-                writer.Write(Values[i]);
-            }
-
-            writer.Write(Infinite);
+            Buff.Save(writer);
         }
     }
     public sealed class RemoveBuff : Packet
@@ -4645,27 +4615,7 @@ namespace ServerPackets
             writer.Write(Interrupted);
         }
     }
-    public sealed class SetObjectConcentration : Packet
-    {
-        public override short Index { get { return (short)ServerPacketIds.SetObjectConcentration; } }
-
-        public uint ObjectID;
-        public bool Enabled;
-        public bool Interrupted;
-
-        protected override void ReadPacket(BinaryReader reader)
-        {
-            ObjectID = reader.ReadUInt32();
-            Enabled = reader.ReadBoolean();
-            Interrupted = reader.ReadBoolean();
-        }
-        protected override void WritePacket(BinaryWriter writer)
-        {
-            writer.Write(ObjectID);
-            writer.Write(Enabled);
-            writer.Write(Interrupted);
-        }
-    }
+    
     public sealed class SetElemental : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.SetElemental; } }

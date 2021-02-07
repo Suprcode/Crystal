@@ -33,9 +33,7 @@ namespace Client.MirObjects
         public bool RentalItemLocked;
         public uint RentalGoldAmount;
 
-        public bool HasTeleportRing, HasProtectionRing, HasRevivalRing, HasClearRing,
-            HasMuscleRing, HasParalysisRing, HasFireRing, HasHealRing, HasProbeNecklace, HasSkillNecklace, NoDuraLoss,
-            HasBlinkSkill;
+        public SpecialItemMode ItemMode;
 
         public byte MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Holy, Freezing, PoisonAttack, HpDrainRate;
         public BaseStats CoreStats = new BaseStats(0);
@@ -162,7 +160,19 @@ namespace Client.MirObjects
 
             SetLibraries();
             SetEffects();
-            
+
+            Stats[Stat.HP] += (Stats[Stat.HP] * Stats[Stat.HPRatePercent]) / 100;
+            Stats[Stat.MP] += (Stats[Stat.MP] * Stats[Stat.MPRatePercent]) / 100;
+            Stats[Stat.MaxAC] += (Stats[Stat.MaxAC] * Stats[Stat.MaxACRatePercent]) / 100;
+            Stats[Stat.MaxMAC] += (Stats[Stat.MaxMAC] * Stats[Stat.MaxMACRatePercent]) / 100;
+
+            Stats[Stat.MaxDC] += (Stats[Stat.MaxDC] * Stats[Stat.MaxDCRatePercent]) / 100;
+            Stats[Stat.MaxMC] += (Stats[Stat.MaxMC] * Stats[Stat.MaxMCRatePercent]) / 100;
+            Stats[Stat.MaxSC] += (Stats[Stat.MaxSC] * Stats[Stat.MaxSCRatePercent]) / 100;
+            Stats[Stat.AttackSpeed] += (Stats[Stat.AttackSpeed] * Stats[Stat.AttackSpeedRatePercent]) / 100;
+
+            RefreshStatCaps();
+
             if (this == User && Light < 3) Light = 3;
             AttackSpeed = 1400 - ((Stats[Stat.AttackSpeed] * 60) + Math.Min(370, (Level * 14)));
             if (AttackSpeed < 550) AttackSpeed = 550;
@@ -177,47 +187,9 @@ namespace Client.MirObjects
             Light = 0;
             LifeOnHit = 0;
 
-            Stats[Stat.Accuracy] = CoreStats.StartAccuracy;
-            Stats[Stat.Agility] = CoreStats.StartAgility;
-            Stats[Stat.CriticalRate] = CoreStats.StartCriticalRate;
-            Stats[Stat.CriticalDamage] = CoreStats.StartCriticalDamage;
-
-            Stats[Stat.HP] = (ushort)Math.Min(ushort.MaxValue, 14 + (Level / CoreStats.HpGain + CoreStats.HpGainRate) * Level);
-
-            Stats[Stat.MinAC] = (ushort)Math.Min(ushort.MaxValue, CoreStats.MinAc > 0 ? Level / CoreStats.MinAc : 0);
-            Stats[Stat.MaxAC] = (ushort)Math.Min(ushort.MaxValue, CoreStats.MaxAc > 0 ? Level / CoreStats.MaxAc : 0);
-            Stats[Stat.MinMAC] = (ushort)Math.Min(ushort.MaxValue, CoreStats.MinMac > 0 ? Level / CoreStats.MinMac : 0);
-            Stats[Stat.MaxMAC] = (ushort)Math.Min(ushort.MaxValue, CoreStats.MaxMac > 0 ? Level / CoreStats.MaxMac : 0);
-            Stats[Stat.MinDC] = (ushort)Math.Min(ushort.MaxValue, CoreStats.MinDc > 0 ? Level / CoreStats.MinDc : 0);
-            Stats[Stat.MaxDC] = (ushort)Math.Min(ushort.MaxValue, CoreStats.MaxDc > 0 ? Level / CoreStats.MaxDc : 0);
-            Stats[Stat.MinMC] = (ushort)Math.Min(ushort.MaxValue, CoreStats.MinMc > 0 ? Level / CoreStats.MinMc : 0);
-            Stats[Stat.MaxMC] = (ushort)Math.Min(ushort.MaxValue, CoreStats.MaxMc > 0 ? Level / CoreStats.MaxMc : 0);
-            Stats[Stat.MinSC] = (ushort)Math.Min(ushort.MaxValue, CoreStats.MinSc > 0 ? Level / CoreStats.MinSc : 0);
-            Stats[Stat.MaxSC] = (ushort)Math.Min(ushort.MaxValue, CoreStats.MaxSc > 0 ? Level / CoreStats.MaxSc : 0);
-            Stats[Stat.CriticalRate] = (byte)Math.Min(byte.MaxValue, CoreStats.CritialRateGain > 0 ? CriticalRate + (Level / CoreStats.CritialRateGain) : CriticalRate);
-            Stats[Stat.CriticalDamage] = (byte)Math.Min(byte.MaxValue, CoreStats.CriticalDamageGain > 0 ? CriticalDamage + (Level / CoreStats.CriticalDamageGain) : CriticalDamage);
-            Stats[Stat.BagWeight] = (ushort)Math.Min(ushort.MaxValue, 50 + Level / CoreStats.BagWeightGain * Level);
-            Stats[Stat.WearWeight] = (ushort)Math.Min(ushort.MaxValue, 15 + Level / CoreStats.WearWeightGain * Level);
-            Stats[Stat.HandWeight] = (ushort)Math.Min(ushort.MaxValue, 12 + Level / CoreStats.HandWeightGain * Level);
-
-            switch (Class)
+            foreach (var stat in CoreStats.Stats)
             {
-                case MirClass.Warrior:
-                    Stats[Stat.HP] = (ushort)Math.Min(ushort.MaxValue, 14 + (Level / CoreStats.HpGain + CoreStats.HpGainRate + Level / 20F) * Level);
-                    Stats[Stat.MP] = (ushort)Math.Min(ushort.MaxValue, 11 + (Level * 3.5F) + (Level * CoreStats.MpGainRate));
-                    break;
-                case MirClass.Wizard:
-                    Stats[Stat.MP] = (ushort)Math.Min(ushort.MaxValue, 13 + ((Level / 5F + 2F) * 2.2F * Level) + (Level * CoreStats.MpGainRate));
-                    break;
-                case MirClass.Taoist:
-                    Stats[Stat.MP] = (ushort)Math.Min(ushort.MaxValue, (13 + Level / 8F * 2.2F * Level) + (Level * CoreStats.MpGainRate));
-                    break;
-                case MirClass.Assassin:
-                    Stats[Stat.MP] = (ushort)Math.Min(ushort.MaxValue, (11 + Level * 5F) + (Level * CoreStats.MpGainRate));
-                    break;
-                case MirClass.Archer:
-                    Stats[Stat.MP] = (ushort)Math.Min(ushort.MaxValue, (11 + Level * 4F) + (Level * CoreStats.MpGainRate));
-                    break;
+                Stats[stat.Type] = stat.Calculate(Class, Level);
             }
         }
 
@@ -246,13 +218,7 @@ namespace Client.MirObjects
             CurrentWearWeight = 0;
             CurrentHandWeight = 0;
 
-            HasTeleportRing = false;
-            HasProtectionRing = false;
-            HasMuscleRing = false;
-            HasParalysisRing = false;
-            HasProbeNecklace = false;
-            HasSkillNecklace = false;
-            NoDuraLoss = false;
+            ItemMode = SpecialItemMode.None;
             FastRun = false;
 
             ItemSets.Clear();
@@ -293,15 +259,7 @@ namespace Client.MirObjects
                 if (RealItem.Light > Light) Light = RealItem.Light;
                 if (RealItem.Unique != SpecialItemMode.None)
                 {
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Paralize)) HasParalysisRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Teleport)) HasTeleportRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Clearring)) HasClearRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Protection)) HasProtectionRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Revival)) HasRevivalRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Muscle)) HasMuscleRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Probe)) HasProbeNecklace = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Skill)) HasSkillNecklace = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.NoDuraLoss)) NoDuraLoss = true;
+                    ItemMode |= RealItem.Unique;
                 }
 
                 if (RealItem.CanFastRun)
@@ -347,12 +305,7 @@ namespace Client.MirObjects
                 }
             }
 
-            Stats[Stat.HP] = ((Stats[Stat.HPRate] / 100) + 1) * Stats[Stat.HP];
-            Stats[Stat.MP] = ((Stats[Stat.MPRate] / 100) + 1) * Stats[Stat.MP];
-            Stats[Stat.MaxAC] = ((Stats[Stat.MaxACRate] / 100) + 1) * Stats[Stat.MaxAC];
-            Stats[Stat.MaxMAC] = ((Stats[Stat.MaxMACRate] / 100) + 1) * Stats[Stat.MaxMAC];
-
-            if (HasMuscleRing)
+            if (ItemMode.HasFlag(SpecialItemMode.Muscle))
             {
                 Stats[Stat.BagWeight] = Stats[Stat.BagWeight] * 2;
                 Stats[Stat.WearWeight] = Stats[Stat.WearWeight] * 2;
@@ -395,15 +348,7 @@ namespace Client.MirObjects
                 if (RealItem.Light > Light) Light = RealItem.Light;
                 if (RealItem.Unique != SpecialItemMode.None)
                 {
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Paralize)) HasParalysisRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Teleport)) HasTeleportRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Clearring)) HasClearRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Protection)) HasProtectionRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Revival)) HasRevivalRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Muscle)) HasMuscleRing = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Probe)) HasProbeNecklace = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Skill)) HasSkillNecklace = true;
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.NoDuraLoss)) NoDuraLoss = true;
+                    ItemMode |= RealItem.Unique;
                 }
             }
         }
@@ -672,125 +617,17 @@ namespace Client.MirObjects
 
             for (int i = 0; i < GameScene.Scene.Buffs.Count; i++)
             {
-                Buff buff = GameScene.Scene.Buffs[i];
+                ClientBuff buff = GameScene.Scene.Buffs[i];
+
+                Stats.Add(buff.Stats);
 
                 switch (buff.Type)
                 {
-                    case BuffType.Haste:
-                    case BuffType.Fury:
-                        Stats[Stat.AttackSpeed] += buff.Values[0];
-                        break;
-                    case BuffType.ImmortalSkin:
-                        Stats[Stat.MaxAC] += buff.Values[0];
-                        Stats[Stat.MaxDC] -= buff.Values[1];
-                        break;
                     case BuffType.SwiftFeet:
                         Sprint = true;
                         break;
-                    case BuffType.LightBody:
-                        Stats[Stat.Agility] += buff.Values[0];
-                        break;
-                    case BuffType.SoulShield:
-                        Stats[Stat.MaxMAC] += buff.Values[0];
-                        break;
-                    case BuffType.BlessedArmour:
-                        Stats[Stat.MaxAC] += buff.Values[0];
-                        break;
-                    case BuffType.UltimateEnhancer:
-                        switch (Class)
-                        {
-                            case MirClass.Wizard:
-                            case MirClass.Archer:
-                                Stats[Stat.MaxMC] += buff.Values[0];
-                                break;
-                            case MirClass.Taoist:
-                                Stats[Stat.MaxSC] += buff.Values[0];
-                                break;
-                            case MirClass.Warrior:
-                                Stats[Stat.MaxDC] += buff.Values[0];
-                                break;
-                        }
-                        break;
-                    case BuffType.ProtectionField:
-                        Stats[Stat.MaxAC] += buff.Values[0];
-                        break;
-                    case BuffType.Rage:
-                        Stats[Stat.MaxDC] += buff.Values[0];
-                        break;
-                    case BuffType.CounterAttack:
-                        Stats[Stat.MinAC] += buff.Values[0];
-                        Stats[Stat.MinMAC] += buff.Values[0];
-                        Stats[Stat.MaxAC] += buff.Values[0];
-                        Stats[Stat.MaxMAC] += buff.Values[0];
-                        break;
-                    case BuffType.Curse:
-
-                        ushort rMaxDC = (ushort)(((int)Stats[Stat.MaxDC] / 100) * buff.Values[0]);
-                        ushort rMaxMC = (ushort)(((int)Stats[Stat.MaxMC] / 100) * buff.Values[0]);
-                        ushort rMaxSC = (ushort)(((int)Stats[Stat.MaxSC] / 100) * buff.Values[0]);
-                        byte rASpeed = (byte)(((int)Stats[Stat.AttackSpeed] / 100) * buff.Values[0]);
-
-                        Stats[Stat.MaxDC] -= rMaxDC;
-                        Stats[Stat.MaxMC] -= rMaxMC;
-                        Stats[Stat.MaxSC] -= rMaxSC;
-                        Stats[Stat.AttackSpeed] -= rASpeed;
-                        break;
-                    case BuffType.MagicBooster:
-                        Stats[Stat.MinMC] += buff.Values[0];
-                        Stats[Stat.MaxMC] += buff.Values[0];
-                        break;
-                    case BuffType.Knapsack:
-                    case BuffType.BagWeight:
-                        Stats[Stat.BagWeight] += buff.Values[0];
-                        break;
                     case BuffType.Transform:
                         TransformType = (short)buff.Values[0];
-                        break;
-                    case BuffType.Impact:
-                        Stats[Stat.MaxDC] += buff.Values[0];
-                        break;
-                    case BuffType.Magic:
-                        Stats[Stat.MaxMC] += buff.Values[0];
-                        break;
-                    case BuffType.Taoist:
-                        Stats[Stat.MaxSC] += buff.Values[0];
-                        break;
-                    case BuffType.Storm:
-                        Stats[Stat.AttackSpeed] += buff.Values[0];
-                        break;
-                    case BuffType.HealthAid:
-                        Stats[Stat.HP] += buff.Values[0];
-                        break;
-                    case BuffType.ManaAid:
-                        Stats[Stat.MP] += buff.Values[0];
-                        break;
-                    case BuffType.Defence:
-                        Stats[Stat.MaxAC] += buff.Values[0];
-                        break;
-                    case BuffType.MagicDefence:
-                        Stats[Stat.MaxMAC] += buff.Values[0];
-                        break;
-                    case BuffType.WonderDrug:
-                        switch (buff.Values[0])
-                        {
-                            case 2:
-                                Stats[Stat.HP] += buff.Values[0];
-                                break;
-                            case 3:
-                                Stats[Stat.MP] += buff.Values[0];
-                                break;
-                            case 4:
-                                Stats[Stat.MinAC] += buff.Values[0];
-                                Stats[Stat.MaxAC] += buff.Values[0];
-                                break;
-                            case 5:
-                                Stats[Stat.MinMAC] += buff.Values[0];
-                                Stats[Stat.MaxMAC] += buff.Values[0];
-                                break;
-                            case 6:
-                                Stats[Stat.AttackSpeed] += buff.Values[0];
-                                break;
-                        }
                         break;
                 }
 
@@ -826,6 +663,35 @@ namespace Client.MirObjects
             }
         }
 
+        public void RefreshStatCaps()
+        {
+            //TODO
+            //Stats[Stat.MagicResist] = Math.Min(Settings.MaxMagicResist, Stats[Stat.MagicResist]);
+            //Stats[Stat.PoisonResist] = Math.Min(Settings.MaxPoisonResist, Stats[Stat.PoisonResist]);
+            //Stats[Stat.CriticalRate] = Math.Min(Settings.MaxCriticalRate, Stats[Stat.CriticalRate]);
+            //Stats[Stat.CriticalDamage] = Math.Min(Settings.MaxCriticalDamage, Stats[Stat.CriticalDamage]);
+            //Stats[Stat.Freezing] = Math.Min(Settings.MaxFreezing, Stats[Stat.Freezing]);
+            //Stats[Stat.PoisonAttack] = Math.Min(Settings.MaxPoisonAttack, Stats[Stat.PoisonAttack]);
+            //Stats[Stat.HealthRecovery] = Math.Min(Settings.MaxHealthRegen, Stats[Stat.HealthRecovery]);
+            //Stats[Stat.PoisonRecovery] = Math.Min(Settings.MaxPoisonRecovery, Stats[Stat.PoisonRecovery]);
+            //Stats[Stat.SpellRecovery] = Math.Min(Settings.MaxManaRegen, Stats[Stat.SpellRecovery]);
+            Stats[Stat.HPDrainRate] = Math.Min((byte)100, Stats[Stat.HPDrainRate]);
+
+            Stats[Stat.MinAC] = Math.Max(0, Stats[Stat.MinAC]);
+            Stats[Stat.MaxAC] = Math.Max(0, Stats[Stat.MaxAC]);
+            Stats[Stat.MinMAC] = Math.Max(0, Stats[Stat.MinMAC]);
+            Stats[Stat.MaxMAC] = Math.Max(0, Stats[Stat.MaxMAC]);
+            Stats[Stat.MinDC] = Math.Max(0, Stats[Stat.MinDC]);
+            Stats[Stat.MaxDC] = Math.Max(0, Stats[Stat.MaxDC]);
+            Stats[Stat.MinMC] = Math.Max(0, Stats[Stat.MinMC]);
+            Stats[Stat.MaxMC] = Math.Max(0, Stats[Stat.MaxMC]);
+            Stats[Stat.MinSC] = Math.Max(0, Stats[Stat.MinSC]);
+            Stats[Stat.MaxSC] = Math.Max(0, Stats[Stat.MaxSC]);
+
+            Stats[Stat.MinDC] = Math.Min(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+            Stats[Stat.MinMC] = Math.Min(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+            Stats[Stat.MinSC] = Math.Min(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
+        }
 
         public void BindAllItems()
         {

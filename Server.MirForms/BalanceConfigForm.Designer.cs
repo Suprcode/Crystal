@@ -45,53 +45,15 @@
             this.MaxCriticalDamagetextbox = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label34 = new System.Windows.Forms.Label();
-            this.MaxMacGainRatetextBox = new System.Windows.Forms.TextBox();
-            this.label33 = new System.Windows.Forms.Label();
-            this.MinMacGainRatetextBox = new System.Windows.Forms.TextBox();
-            this.label32 = new System.Windows.Forms.Label();
-            this.MaxAcRateGaintextBox = new System.Windows.Forms.TextBox();
-            this.label31 = new System.Windows.Forms.Label();
-            this.CriticalDamageGaintextBox = new System.Windows.Forms.TextBox();
-            this.label30 = new System.Windows.Forms.Label();
-            this.CriticalRateGaintextBox = new System.Windows.Forms.TextBox();
-            this.label29 = new System.Windows.Forms.Label();
-            this.StartCriticalDamagetextBox = new System.Windows.Forms.TextBox();
-            this.label28 = new System.Windows.Forms.Label();
-            this.StartCriticalRatetextBox = new System.Windows.Forms.TextBox();
-            this.label27 = new System.Windows.Forms.Label();
-            this.StartAgilitytextBox = new System.Windows.Forms.TextBox();
-            this.label26 = new System.Windows.Forms.Label();
-            this.StartAccuracytextBox = new System.Windows.Forms.TextBox();
-            this.label25 = new System.Windows.Forms.Label();
-            this.HandWeightGaintextBox = new System.Windows.Forms.TextBox();
-            this.label24 = new System.Windows.Forms.Label();
-            this.WearWeightGaintextBox = new System.Windows.Forms.TextBox();
-            this.label23 = new System.Windows.Forms.Label();
-            this.BagWeigthGaintextBox = new System.Windows.Forms.TextBox();
-            this.label22 = new System.Windows.Forms.Label();
-            this.MaxScGainRatetextBox = new System.Windows.Forms.TextBox();
-            this.label21 = new System.Windows.Forms.Label();
-            this.MinScGainRatetextBox = new System.Windows.Forms.TextBox();
-            this.label20 = new System.Windows.Forms.Label();
-            this.MaxMcGainRatetextBox = new System.Windows.Forms.TextBox();
-            this.label19 = new System.Windows.Forms.Label();
-            this.MinMcGainRatetextBox = new System.Windows.Forms.TextBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.MaxDcGainRatetextBox = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.MinDcGainRatetextBox = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.MinAcGainRatetextBox = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.HpGaintextBox = new System.Windows.Forms.TextBox();
-            this.MpGainBoosttextBox = new System.Windows.Forms.TextBox();
-            this.HpGainRatetextBox = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
             this.ClassComboBox = new System.Windows.Forms.ComboBox();
+            this.classGridView = new System.Windows.Forms.DataGridView();
+            this.BaseStatType = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.BaseStatFormula = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.BaseStatBase = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BaseStatGain = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BaseStatGainRate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BaseStatMax = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.MaxPoisonRecoverytextBox = new System.Windows.Forms.TextBox();
             this.label39 = new System.Windows.Forms.Label();
@@ -119,7 +81,7 @@
             this.RISDeleteIndexbutton = new System.Windows.Forms.Button();
             this.RISAddIndexbutton = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.RISCurseChancetextBox = new System.Windows.Forms.TextBox();
+            this.label64 = new System.Windows.Forms.Label();
             this.label63 = new System.Windows.Forms.Label();
             this.label62 = new System.Windows.Forms.Label();
             this.label61 = new System.Windows.Forms.Label();
@@ -144,6 +106,7 @@
             this.label42 = new System.Windows.Forms.Label();
             this.label41 = new System.Windows.Forms.Label();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.RISSlotMaxStattextBox = new System.Windows.Forms.TextBox();
             this.RISLuckMaxStattextBox = new System.Windows.Forms.TextBox();
             this.RISAttackSpeedMaxStattextBox = new System.Windows.Forms.TextBox();
             this.RISPoisonAttackMaxStattextBox = new System.Windows.Forms.TextBox();
@@ -167,6 +130,7 @@
             this.RISMaxAcMaxStattextBox = new System.Windows.Forms.TextBox();
             this.RISMaxDuraMaxStattextBox = new System.Windows.Forms.TextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.RISSlotStatChancetextBox = new System.Windows.Forms.TextBox();
             this.RISLuckStatChancetextBox = new System.Windows.Forms.TextBox();
             this.RISMaxDuraStatChancetextBox = new System.Windows.Forms.TextBox();
             this.RISAttackSpeedStatChancetextBox = new System.Windows.Forms.TextBox();
@@ -190,6 +154,8 @@
             this.RISMagicResistStatChancetextBox = new System.Windows.Forms.TextBox();
             this.RISStrongStatChancetextBox = new System.Windows.Forms.TextBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.RISCurseChancetextBox = new System.Windows.Forms.TextBox();
+            this.RISSlotChancetextBox = new System.Windows.Forms.TextBox();
             this.RISLuckChancetextBox = new System.Windows.Forms.TextBox();
             this.RISAttackSpeedChancetextBox = new System.Windows.Forms.TextBox();
             this.RISPoisonAttackChancetextBox = new System.Windows.Forms.TextBox();
@@ -214,13 +180,10 @@
             this.RISMaxDuraChancetextBox = new System.Windows.Forms.TextBox();
             this.label40 = new System.Windows.Forms.Label();
             this.RISIndexcomboBox = new System.Windows.Forms.ComboBox();
-            this.RISSlotChancetextBox = new System.Windows.Forms.TextBox();
-            this.RISSlotStatChancetextBox = new System.Windows.Forms.TextBox();
-            this.RISSlotMaxStattextBox = new System.Windows.Forms.TextBox();
-            this.label64 = new System.Windows.Forms.Label();
+            this.lblClassStatExample = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.classGridView)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -376,475 +339,27 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(632, 756);
+            this.tabControl1.Size = new System.Drawing.Size(674, 731);
             this.tabControl1.TabIndex = 16;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.groupBox1);
-            this.tabPage1.Controls.Add(this.ClassComboBox);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(624, 663);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Class";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.label34);
-            this.groupBox1.Controls.Add(this.MaxMacGainRatetextBox);
-            this.groupBox1.Controls.Add(this.label33);
-            this.groupBox1.Controls.Add(this.MinMacGainRatetextBox);
-            this.groupBox1.Controls.Add(this.label32);
-            this.groupBox1.Controls.Add(this.MaxAcRateGaintextBox);
-            this.groupBox1.Controls.Add(this.label31);
-            this.groupBox1.Controls.Add(this.CriticalDamageGaintextBox);
-            this.groupBox1.Controls.Add(this.label30);
-            this.groupBox1.Controls.Add(this.CriticalRateGaintextBox);
-            this.groupBox1.Controls.Add(this.label29);
-            this.groupBox1.Controls.Add(this.StartCriticalDamagetextBox);
-            this.groupBox1.Controls.Add(this.label28);
-            this.groupBox1.Controls.Add(this.StartCriticalRatetextBox);
-            this.groupBox1.Controls.Add(this.label27);
-            this.groupBox1.Controls.Add(this.StartAgilitytextBox);
-            this.groupBox1.Controls.Add(this.label26);
-            this.groupBox1.Controls.Add(this.StartAccuracytextBox);
-            this.groupBox1.Controls.Add(this.label25);
-            this.groupBox1.Controls.Add(this.HandWeightGaintextBox);
-            this.groupBox1.Controls.Add(this.label24);
-            this.groupBox1.Controls.Add(this.WearWeightGaintextBox);
-            this.groupBox1.Controls.Add(this.label23);
-            this.groupBox1.Controls.Add(this.BagWeigthGaintextBox);
-            this.groupBox1.Controls.Add(this.label22);
-            this.groupBox1.Controls.Add(this.MaxScGainRatetextBox);
-            this.groupBox1.Controls.Add(this.label21);
-            this.groupBox1.Controls.Add(this.MinScGainRatetextBox);
-            this.groupBox1.Controls.Add(this.label20);
-            this.groupBox1.Controls.Add(this.MaxMcGainRatetextBox);
-            this.groupBox1.Controls.Add(this.label19);
-            this.groupBox1.Controls.Add(this.MinMcGainRatetextBox);
-            this.groupBox1.Controls.Add(this.label18);
-            this.groupBox1.Controls.Add(this.MaxDcGainRatetextBox);
-            this.groupBox1.Controls.Add(this.label17);
-            this.groupBox1.Controls.Add(this.MinDcGainRatetextBox);
-            this.groupBox1.Controls.Add(this.label16);
-            this.groupBox1.Controls.Add(this.MinAcGainRatetextBox);
-            this.groupBox1.Controls.Add(this.label13);
-            this.groupBox1.Controls.Add(this.label15);
-            this.groupBox1.Controls.Add(this.HpGaintextBox);
-            this.groupBox1.Controls.Add(this.MpGainBoosttextBox);
-            this.groupBox1.Controls.Add(this.HpGainRatetextBox);
-            this.groupBox1.Controls.Add(this.label14);
-            this.groupBox1.Location = new System.Drawing.Point(6, 33);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(200, 507);
-            this.groupBox1.TabIndex = 13;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Base Stats";
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(6, 150);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(96, 13);
-            this.label34.TabIndex = 48;
-            this.label34.Text = "Max MacGainRate";
-            // 
-            // MaxMacGainRatetextBox
-            // 
-            this.MaxMacGainRatetextBox.Location = new System.Drawing.Point(112, 147);
-            this.MaxMacGainRatetextBox.MaxLength = 3;
-            this.MaxMacGainRatetextBox.Name = "MaxMacGainRatetextBox";
-            this.MaxMacGainRatetextBox.Size = new System.Drawing.Size(38, 20);
-            this.MaxMacGainRatetextBox.TabIndex = 49;
-            this.MaxMacGainRatetextBox.TextChanged += new System.EventHandler(this.MaxMacGainRatetextBox_TextChanged);
-            // 
-            // label33
-            // 
-            this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(6, 127);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(93, 13);
-            this.label33.TabIndex = 46;
-            this.label33.Text = "Min MacGainRate";
-            // 
-            // MinMacGainRatetextBox
-            // 
-            this.MinMacGainRatetextBox.Location = new System.Drawing.Point(112, 124);
-            this.MinMacGainRatetextBox.MaxLength = 3;
-            this.MinMacGainRatetextBox.Name = "MinMacGainRatetextBox";
-            this.MinMacGainRatetextBox.Size = new System.Drawing.Size(38, 20);
-            this.MinMacGainRatetextBox.TabIndex = 47;
-            this.MinMacGainRatetextBox.TextChanged += new System.EventHandler(this.MinMacGainRatetextBox_TextChanged);
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(6, 105);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(88, 13);
-            this.label32.TabIndex = 44;
-            this.label32.Text = "Max AcGainRate";
-            // 
-            // MaxAcRateGaintextBox
-            // 
-            this.MaxAcRateGaintextBox.Location = new System.Drawing.Point(112, 102);
-            this.MaxAcRateGaintextBox.MaxLength = 3;
-            this.MaxAcRateGaintextBox.Name = "MaxAcRateGaintextBox";
-            this.MaxAcRateGaintextBox.Size = new System.Drawing.Size(38, 20);
-            this.MaxAcRateGaintextBox.TabIndex = 45;
-            this.MaxAcRateGaintextBox.TextChanged += new System.EventHandler(this.MaxAcRateGaintextBox_TextChanged);
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(6, 483);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(90, 13);
-            this.label31.TabIndex = 42;
-            this.label31.Text = "Crit Damage Gain";
-            // 
-            // CriticalDamageGaintextBox
-            // 
-            this.CriticalDamageGaintextBox.Location = new System.Drawing.Point(112, 480);
-            this.CriticalDamageGaintextBox.MaxLength = 3;
-            this.CriticalDamageGaintextBox.Name = "CriticalDamageGaintextBox";
-            this.CriticalDamageGaintextBox.Size = new System.Drawing.Size(38, 20);
-            this.CriticalDamageGaintextBox.TabIndex = 43;
-            this.CriticalDamageGaintextBox.TextChanged += new System.EventHandler(this.CriticalDamageGaintextBox_TextChanged);
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(6, 460);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(73, 13);
-            this.label30.TabIndex = 40;
-            this.label30.Text = "Crit Rate Gain";
-            // 
-            // CriticalRateGaintextBox
-            // 
-            this.CriticalRateGaintextBox.Location = new System.Drawing.Point(112, 457);
-            this.CriticalRateGaintextBox.MaxLength = 3;
-            this.CriticalRateGaintextBox.Name = "CriticalRateGaintextBox";
-            this.CriticalRateGaintextBox.Size = new System.Drawing.Size(38, 20);
-            this.CriticalRateGaintextBox.TabIndex = 41;
-            this.CriticalRateGaintextBox.TextChanged += new System.EventHandler(this.CriticalRateGaintextBox_TextChanged);
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(6, 437);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(90, 13);
-            this.label29.TabIndex = 38;
-            this.label29.Text = "Start Crit Damage";
-            // 
-            // StartCriticalDamagetextBox
-            // 
-            this.StartCriticalDamagetextBox.Location = new System.Drawing.Point(112, 434);
-            this.StartCriticalDamagetextBox.MaxLength = 3;
-            this.StartCriticalDamagetextBox.Name = "StartCriticalDamagetextBox";
-            this.StartCriticalDamagetextBox.Size = new System.Drawing.Size(38, 20);
-            this.StartCriticalDamagetextBox.TabIndex = 39;
-            this.StartCriticalDamagetextBox.TextChanged += new System.EventHandler(this.StartCriticalDamagetextBox_TextChanged);
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(6, 415);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(73, 13);
-            this.label28.TabIndex = 36;
-            this.label28.Text = "Start Crit Rate";
-            // 
-            // StartCriticalRatetextBox
-            // 
-            this.StartCriticalRatetextBox.Location = new System.Drawing.Point(112, 412);
-            this.StartCriticalRatetextBox.MaxLength = 3;
-            this.StartCriticalRatetextBox.Name = "StartCriticalRatetextBox";
-            this.StartCriticalRatetextBox.Size = new System.Drawing.Size(38, 20);
-            this.StartCriticalRatetextBox.TabIndex = 37;
-            this.StartCriticalRatetextBox.TextChanged += new System.EventHandler(this.StartCriticalRatetextBox_TextChanged);
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(6, 393);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(59, 13);
-            this.label27.TabIndex = 34;
-            this.label27.Text = "Start Agility";
-            // 
-            // StartAgilitytextBox
-            // 
-            this.StartAgilitytextBox.Location = new System.Drawing.Point(112, 390);
-            this.StartAgilitytextBox.MaxLength = 3;
-            this.StartAgilitytextBox.Name = "StartAgilitytextBox";
-            this.StartAgilitytextBox.Size = new System.Drawing.Size(38, 20);
-            this.StartAgilitytextBox.TabIndex = 35;
-            this.StartAgilitytextBox.TextChanged += new System.EventHandler(this.StartAgilitytextBox_TextChanged);
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(6, 371);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(74, 13);
-            this.label26.TabIndex = 32;
-            this.label26.Text = "StartAccuracy";
-            // 
-            // StartAccuracytextBox
-            // 
-            this.StartAccuracytextBox.Location = new System.Drawing.Point(112, 368);
-            this.StartAccuracytextBox.MaxLength = 3;
-            this.StartAccuracytextBox.Name = "StartAccuracytextBox";
-            this.StartAccuracytextBox.Size = new System.Drawing.Size(38, 20);
-            this.StartAccuracytextBox.TabIndex = 33;
-            this.StartAccuracytextBox.TextChanged += new System.EventHandler(this.StartAccuracytextBox_TextChanged);
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(6, 348);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(89, 13);
-            this.label25.TabIndex = 30;
-            this.label25.Text = "HandWeightGain";
-            // 
-            // HandWeightGaintextBox
-            // 
-            this.HandWeightGaintextBox.Location = new System.Drawing.Point(112, 345);
-            this.HandWeightGaintextBox.MaxLength = 3;
-            this.HandWeightGaintextBox.Name = "HandWeightGaintextBox";
-            this.HandWeightGaintextBox.Size = new System.Drawing.Size(38, 20);
-            this.HandWeightGaintextBox.TabIndex = 31;
-            this.HandWeightGaintextBox.TextChanged += new System.EventHandler(this.HandWeightGaintextBox_TextChanged);
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(6, 326);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(89, 13);
-            this.label24.TabIndex = 28;
-            this.label24.Text = "WearWeightGain";
-            // 
-            // WearWeightGaintextBox
-            // 
-            this.WearWeightGaintextBox.Location = new System.Drawing.Point(112, 323);
-            this.WearWeightGaintextBox.MaxLength = 3;
-            this.WearWeightGaintextBox.Name = "WearWeightGaintextBox";
-            this.WearWeightGaintextBox.Size = new System.Drawing.Size(38, 20);
-            this.WearWeightGaintextBox.TabIndex = 29;
-            this.WearWeightGaintextBox.TextChanged += new System.EventHandler(this.WearWeightGaintextBox_TextChanged);
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(6, 304);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(85, 13);
-            this.label23.TabIndex = 26;
-            this.label23.Text = "BagWeight Gain";
-            // 
-            // BagWeigthGaintextBox
-            // 
-            this.BagWeigthGaintextBox.Location = new System.Drawing.Point(112, 301);
-            this.BagWeigthGaintextBox.MaxLength = 3;
-            this.BagWeigthGaintextBox.Name = "BagWeigthGaintextBox";
-            this.BagWeigthGaintextBox.Size = new System.Drawing.Size(38, 20);
-            this.BagWeigthGaintextBox.TabIndex = 27;
-            this.BagWeigthGaintextBox.TextChanged += new System.EventHandler(this.BagWeigthGaintextBox_TextChanged);
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(6, 282);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(88, 13);
-            this.label22.TabIndex = 24;
-            this.label22.Text = "Max ScGainRate";
-            // 
-            // MaxScGainRatetextBox
-            // 
-            this.MaxScGainRatetextBox.Location = new System.Drawing.Point(112, 279);
-            this.MaxScGainRatetextBox.MaxLength = 3;
-            this.MaxScGainRatetextBox.Name = "MaxScGainRatetextBox";
-            this.MaxScGainRatetextBox.Size = new System.Drawing.Size(38, 20);
-            this.MaxScGainRatetextBox.TabIndex = 25;
-            this.MaxScGainRatetextBox.TextChanged += new System.EventHandler(this.MaxScGainRatetextBox_TextChanged);
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(6, 260);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(85, 13);
-            this.label21.TabIndex = 22;
-            this.label21.Text = "Min ScGainRate";
-            // 
-            // MinScGainRatetextBox
-            // 
-            this.MinScGainRatetextBox.Location = new System.Drawing.Point(112, 257);
-            this.MinScGainRatetextBox.MaxLength = 3;
-            this.MinScGainRatetextBox.Name = "MinScGainRatetextBox";
-            this.MinScGainRatetextBox.Size = new System.Drawing.Size(38, 20);
-            this.MinScGainRatetextBox.TabIndex = 23;
-            this.MinScGainRatetextBox.TextChanged += new System.EventHandler(this.MinScGainRatetextBox_TextChanged);
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(6, 238);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(90, 13);
-            this.label20.TabIndex = 20;
-            this.label20.Text = "Max McGainRate";
-            // 
-            // MaxMcGainRatetextBox
-            // 
-            this.MaxMcGainRatetextBox.Location = new System.Drawing.Point(112, 235);
-            this.MaxMcGainRatetextBox.MaxLength = 3;
-            this.MaxMcGainRatetextBox.Name = "MaxMcGainRatetextBox";
-            this.MaxMcGainRatetextBox.Size = new System.Drawing.Size(38, 20);
-            this.MaxMcGainRatetextBox.TabIndex = 21;
-            this.MaxMcGainRatetextBox.TextChanged += new System.EventHandler(this.MaxMcGainRatetextBox_TextChanged);
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(6, 216);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(87, 13);
-            this.label19.TabIndex = 18;
-            this.label19.Text = "Min McGainRate";
-            // 
-            // MinMcGainRatetextBox
-            // 
-            this.MinMcGainRatetextBox.Location = new System.Drawing.Point(112, 213);
-            this.MinMcGainRatetextBox.MaxLength = 3;
-            this.MinMcGainRatetextBox.Name = "MinMcGainRatetextBox";
-            this.MinMcGainRatetextBox.Size = new System.Drawing.Size(38, 20);
-            this.MinMcGainRatetextBox.TabIndex = 19;
-            this.MinMcGainRatetextBox.TextChanged += new System.EventHandler(this.MinMcGainRatetextBox_TextChanged);
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(6, 194);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(89, 13);
-            this.label18.TabIndex = 16;
-            this.label18.Text = "Max DcGainRate";
-            // 
-            // MaxDcGainRatetextBox
-            // 
-            this.MaxDcGainRatetextBox.Location = new System.Drawing.Point(112, 191);
-            this.MaxDcGainRatetextBox.MaxLength = 3;
-            this.MaxDcGainRatetextBox.Name = "MaxDcGainRatetextBox";
-            this.MaxDcGainRatetextBox.Size = new System.Drawing.Size(38, 20);
-            this.MaxDcGainRatetextBox.TabIndex = 17;
-            this.MaxDcGainRatetextBox.TextChanged += new System.EventHandler(this.MaxDcGainRatetextBox_TextChanged);
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(6, 172);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(86, 13);
-            this.label17.TabIndex = 14;
-            this.label17.Text = "Min DcGainRate";
-            // 
-            // MinDcGainRatetextBox
-            // 
-            this.MinDcGainRatetextBox.Location = new System.Drawing.Point(112, 169);
-            this.MinDcGainRatetextBox.MaxLength = 3;
-            this.MinDcGainRatetextBox.Name = "MinDcGainRatetextBox";
-            this.MinDcGainRatetextBox.Size = new System.Drawing.Size(38, 20);
-            this.MinDcGainRatetextBox.TabIndex = 15;
-            this.MinDcGainRatetextBox.TextChanged += new System.EventHandler(this.MinDcGainRatetextBox_TextChanged);
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(6, 83);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(85, 13);
-            this.label16.TabIndex = 14;
-            this.label16.Text = "Min AcGainRate";
-            // 
-            // MinAcGainRatetextBox
-            // 
-            this.MinAcGainRatetextBox.Location = new System.Drawing.Point(112, 80);
-            this.MinAcGainRatetextBox.MaxLength = 3;
-            this.MinAcGainRatetextBox.Name = "MinAcGainRatetextBox";
-            this.MinAcGainRatetextBox.Size = new System.Drawing.Size(38, 20);
-            this.MinAcGainRatetextBox.TabIndex = 15;
-            this.MinAcGainRatetextBox.TextChanged += new System.EventHandler(this.MinAcGainRatetextBox_TextChanged);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(6, 16);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(43, 13);
-            this.label13.TabIndex = 7;
-            this.label13.Text = "HpGain";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(6, 61);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(71, 13);
-            this.label15.TabIndex = 11;
-            this.label15.Text = "MpGainBoost";
-            // 
-            // HpGaintextBox
-            // 
-            this.HpGaintextBox.Location = new System.Drawing.Point(112, 13);
-            this.HpGaintextBox.MaxLength = 3;
-            this.HpGaintextBox.Name = "HpGaintextBox";
-            this.HpGaintextBox.Size = new System.Drawing.Size(38, 20);
-            this.HpGaintextBox.TabIndex = 8;
-            this.HpGaintextBox.TextChanged += new System.EventHandler(this.HpGaintextBox_TextChanged);
-            // 
-            // MpGainBoosttextBox
-            // 
-            this.MpGainBoosttextBox.Location = new System.Drawing.Point(112, 58);
-            this.MpGainBoosttextBox.MaxLength = 3;
-            this.MpGainBoosttextBox.Name = "MpGainBoosttextBox";
-            this.MpGainBoosttextBox.Size = new System.Drawing.Size(38, 20);
-            this.MpGainBoosttextBox.TabIndex = 12;
-            this.MpGainBoosttextBox.TextChanged += new System.EventHandler(this.MpGainBoosttextBox_TextChanged);
-            // 
-            // HpGainRatetextBox
-            // 
-            this.HpGainRatetextBox.Location = new System.Drawing.Point(112, 36);
-            this.HpGainRatetextBox.MaxLength = 3;
-            this.HpGainRatetextBox.Name = "HpGainRatetextBox";
-            this.HpGainRatetextBox.Size = new System.Drawing.Size(38, 20);
-            this.HpGainRatetextBox.TabIndex = 10;
-            this.HpGainRatetextBox.TextChanged += new System.EventHandler(this.HpGainRatetextBox_TextChanged);
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(6, 39);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(66, 13);
-            this.label14.TabIndex = 9;
-            this.label14.Text = "HpGainRate";
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.ClassComboBox);
+            this.tabPage3.Controls.Add(this.classGridView);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(666, 705);
+            this.tabPage3.TabIndex = 4;
+            this.tabPage3.Text = "Class";
+            this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // ClassComboBox
             // 
@@ -853,8 +368,68 @@
             this.ClassComboBox.Location = new System.Drawing.Point(6, 6);
             this.ClassComboBox.Name = "ClassComboBox";
             this.ClassComboBox.Size = new System.Drawing.Size(92, 21);
-            this.ClassComboBox.TabIndex = 6;
+            this.ClassComboBox.TabIndex = 7;
             this.ClassComboBox.SelectedIndexChanged += new System.EventHandler(this.ClassComboBox_SelectedIndexChanged);
+            // 
+            // classGridView
+            // 
+            this.classGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.classGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.BaseStatType,
+            this.BaseStatFormula,
+            this.BaseStatBase,
+            this.BaseStatGain,
+            this.BaseStatGainRate,
+            this.BaseStatMax});
+            this.classGridView.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.classGridView.Location = new System.Drawing.Point(3, 33);
+            this.classGridView.Name = "classGridView";
+            this.classGridView.Size = new System.Drawing.Size(660, 669);
+            this.classGridView.TabIndex = 0;
+            this.classGridView.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.classGridView_CellValidating);
+            this.classGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.classGridView_CellValueChanged);
+            this.classGridView.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.classGridView_DefaultValuesNeeded);
+            this.classGridView.SelectionChanged += new System.EventHandler(this.classGridView_SelectionChanged);
+            // 
+            // BaseStatType
+            // 
+            this.BaseStatType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.BaseStatType.HeaderText = "Type";
+            this.BaseStatType.Name = "BaseStatType";
+            this.BaseStatType.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.BaseStatType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // BaseStatFormula
+            // 
+            this.BaseStatFormula.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.BaseStatFormula.HeaderText = "Formula";
+            this.BaseStatFormula.Name = "BaseStatFormula";
+            this.BaseStatFormula.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.BaseStatFormula.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // BaseStatBase
+            // 
+            this.BaseStatBase.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.BaseStatBase.HeaderText = "Base";
+            this.BaseStatBase.Name = "BaseStatBase";
+            // 
+            // BaseStatGain
+            // 
+            this.BaseStatGain.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.BaseStatGain.HeaderText = "Gain";
+            this.BaseStatGain.Name = "BaseStatGain";
+            // 
+            // BaseStatGainRate
+            // 
+            this.BaseStatGainRate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.BaseStatGainRate.HeaderText = "GainRate";
+            this.BaseStatGainRate.Name = "BaseStatGainRate";
+            // 
+            // BaseStatMax
+            // 
+            this.BaseStatMax.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.BaseStatMax.HeaderText = "Max";
+            this.BaseStatMax.Name = "BaseStatMax";
             // 
             // tabPage2
             // 
@@ -896,7 +471,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(624, 663);
+            this.tabPage2.Size = new System.Drawing.Size(666, 705);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Itemstats";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -1118,7 +693,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(624, 730);
+            this.tabPage4.Size = new System.Drawing.Size(666, 705);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Random Item Stats";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -1179,14 +754,14 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Random settings";
             // 
-            // RISCurseChancetextBox
+            // label64
             // 
-            this.RISCurseChancetextBox.Location = new System.Drawing.Point(32, 592);
-            this.RISCurseChancetextBox.MaxLength = 3;
-            this.RISCurseChancetextBox.Name = "RISCurseChancetextBox";
-            this.RISCurseChancetextBox.Size = new System.Drawing.Size(38, 20);
-            this.RISCurseChancetextBox.TabIndex = 31;
-            this.RISCurseChancetextBox.TextChanged += new System.EventHandler(this.RISCurseChancetextBox_TextChanged);
+            this.label64.AutoSize = true;
+            this.label64.Location = new System.Drawing.Point(6, 640);
+            this.label64.Name = "label64";
+            this.label64.Size = new System.Drawing.Size(30, 13);
+            this.label64.TabIndex = 40;
+            this.label64.Text = "Slots";
             // 
             // label63
             // 
@@ -1427,6 +1002,14 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Maximum Stats";
             // 
+            // RISSlotMaxStattextBox
+            // 
+            this.RISSlotMaxStattextBox.Location = new System.Drawing.Point(21, 618);
+            this.RISSlotMaxStattextBox.Name = "RISSlotMaxStattextBox";
+            this.RISSlotMaxStattextBox.Size = new System.Drawing.Size(38, 20);
+            this.RISSlotMaxStattextBox.TabIndex = 53;
+            this.RISSlotMaxStattextBox.TextChanged += new System.EventHandler(this.RISSlotMaxStattextBox_TextChanged);
+            // 
             // RISLuckMaxStattextBox
             // 
             this.RISLuckMaxStattextBox.Location = new System.Drawing.Point(21, 566);
@@ -1656,6 +1239,14 @@
             this.groupBox5.TabIndex = 2;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Chance/Stat";
+            // 
+            // RISSlotStatChancetextBox
+            // 
+            this.RISSlotStatChancetextBox.Location = new System.Drawing.Point(24, 618);
+            this.RISSlotStatChancetextBox.Name = "RISSlotStatChancetextBox";
+            this.RISSlotStatChancetextBox.Size = new System.Drawing.Size(38, 20);
+            this.RISSlotStatChancetextBox.TabIndex = 53;
+            this.RISSlotStatChancetextBox.TextChanged += new System.EventHandler(this.RISSlotStatChancetextBox_TextChanged);
             // 
             // RISLuckStatChancetextBox
             // 
@@ -1888,6 +1479,23 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Random chance:";
             // 
+            // RISCurseChancetextBox
+            // 
+            this.RISCurseChancetextBox.Location = new System.Drawing.Point(32, 592);
+            this.RISCurseChancetextBox.MaxLength = 3;
+            this.RISCurseChancetextBox.Name = "RISCurseChancetextBox";
+            this.RISCurseChancetextBox.Size = new System.Drawing.Size(38, 20);
+            this.RISCurseChancetextBox.TabIndex = 31;
+            this.RISCurseChancetextBox.TextChanged += new System.EventHandler(this.RISCurseChancetextBox_TextChanged);
+            // 
+            // RISSlotChancetextBox
+            // 
+            this.RISSlotChancetextBox.Location = new System.Drawing.Point(32, 618);
+            this.RISSlotChancetextBox.Name = "RISSlotChancetextBox";
+            this.RISSlotChancetextBox.Size = new System.Drawing.Size(38, 20);
+            this.RISSlotChancetextBox.TabIndex = 31;
+            this.RISSlotChancetextBox.TextChanged += new System.EventHandler(this.RISSlotChancetextBox_TextChanged);
+            // 
             // RISLuckChancetextBox
             // 
             this.RISLuckChancetextBox.Location = new System.Drawing.Point(32, 566);
@@ -2105,52 +1713,28 @@
             this.RISIndexcomboBox.TabIndex = 7;
             this.RISIndexcomboBox.SelectedIndexChanged += new System.EventHandler(this.RISIndexcomboBox_SelectedIndexChanged);
             // 
-            // RISSlotChancetextBox
+            // lblClassStatExample
             // 
-            this.RISSlotChancetextBox.Location = new System.Drawing.Point(32, 618);
-            this.RISSlotChancetextBox.Name = "RISSlotChancetextBox";
-            this.RISSlotChancetextBox.Size = new System.Drawing.Size(38, 20);
-            this.RISSlotChancetextBox.TabIndex = 31;
-            this.RISSlotChancetextBox.TextChanged += new System.EventHandler(this.RISSlotChancetextBox_TextChanged);
-            // 
-            // RISSlotStatChancetextBox
-            // 
-            this.RISSlotStatChancetextBox.Location = new System.Drawing.Point(24, 618);
-            this.RISSlotStatChancetextBox.Name = "RISSlotStatChancetextBox";
-            this.RISSlotStatChancetextBox.Size = new System.Drawing.Size(38, 20);
-            this.RISSlotStatChancetextBox.TabIndex = 53;
-            this.RISSlotStatChancetextBox.TextChanged += new System.EventHandler(this.RISSlotStatChancetextBox_TextChanged);
-            // 
-            // RISSlotMaxStattextBox
-            // 
-            this.RISSlotMaxStattextBox.Location = new System.Drawing.Point(21, 618);
-            this.RISSlotMaxStattextBox.Name = "RISSlotMaxStattextBox";
-            this.RISSlotMaxStattextBox.Size = new System.Drawing.Size(38, 20);
-            this.RISSlotMaxStattextBox.TabIndex = 53;
-            this.RISSlotMaxStattextBox.TextChanged += new System.EventHandler(this.RISSlotMaxStattextBox_TextChanged);
-            // 
-            // label64
-            // 
-            this.label64.AutoSize = true;
-            this.label64.Location = new System.Drawing.Point(6, 640);
-            this.label64.Name = "label64";
-            this.label64.Size = new System.Drawing.Size(30, 13);
-            this.label64.TabIndex = 40;
-            this.label64.Text = "Slots";
+            this.lblClassStatExample.AutoSize = true;
+            this.lblClassStatExample.Location = new System.Drawing.Point(692, 34);
+            this.lblClassStatExample.Name = "lblClassStatExample";
+            this.lblClassStatExample.Size = new System.Drawing.Size(126, 13);
+            this.lblClassStatExample.TabIndex = 17;
+            this.lblClassStatExample.Text = "Level 1-50 Stat Preview..";
             // 
             // BalanceConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(653, 771);
+            this.ClientSize = new System.Drawing.Size(861, 749);
+            this.Controls.Add(this.lblClassStatExample);
             this.Controls.Add(this.tabControl1);
             this.Name = "BalanceConfigForm";
             this.Text = "BalanceConfigForm";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.BalanceConfigForm_FormClosed);
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.classGridView)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -2166,6 +1750,7 @@
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -2188,7 +1773,6 @@
         private System.Windows.Forms.TextBox MaxCriticalDamagetextbox;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox PoisonAttackWeighttextbox;
@@ -2198,52 +1782,6 @@
         private System.Windows.Forms.TextBox FreezingWeighttextbox;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox MaxFreezingtextbox;
-        private System.Windows.Forms.ComboBox ClassComboBox;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label29;
-        private System.Windows.Forms.TextBox StartCriticalDamagetextBox;
-        private System.Windows.Forms.Label label28;
-        private System.Windows.Forms.TextBox StartCriticalRatetextBox;
-        private System.Windows.Forms.Label label27;
-        private System.Windows.Forms.TextBox StartAgilitytextBox;
-        private System.Windows.Forms.Label label26;
-        private System.Windows.Forms.TextBox StartAccuracytextBox;
-        private System.Windows.Forms.Label label25;
-        private System.Windows.Forms.TextBox HandWeightGaintextBox;
-        private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.TextBox WearWeightGaintextBox;
-        private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.TextBox BagWeigthGaintextBox;
-        private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.TextBox MaxScGainRatetextBox;
-        private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.TextBox MinScGainRatetextBox;
-        private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.TextBox MaxMcGainRatetextBox;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.TextBox MinMcGainRatetextBox;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.TextBox MaxDcGainRatetextBox;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.TextBox MinDcGainRatetextBox;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.TextBox MinAcGainRatetextBox;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.TextBox HpGaintextBox;
-        private System.Windows.Forms.TextBox MpGainBoosttextBox;
-        private System.Windows.Forms.TextBox HpGainRatetextBox;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Label label31;
-        private System.Windows.Forms.TextBox CriticalDamageGaintextBox;
-        private System.Windows.Forms.Label label30;
-        private System.Windows.Forms.TextBox CriticalRateGaintextBox;
-        private System.Windows.Forms.Label label34;
-        private System.Windows.Forms.TextBox MaxMacGainRatetextBox;
-        private System.Windows.Forms.Label label33;
-        private System.Windows.Forms.TextBox MinMacGainRatetextBox;
-        private System.Windows.Forms.Label label32;
-        private System.Windows.Forms.TextBox MaxAcRateGaintextBox;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox CanFreezecheckBox;
         private System.Windows.Forms.CheckBox CanResistPoisoncheckBox;
@@ -2361,5 +1899,15 @@
         private System.Windows.Forms.TextBox RISSlotMaxStattextBox;
         private System.Windows.Forms.TextBox RISSlotStatChancetextBox;
         private System.Windows.Forms.TextBox RISSlotChancetextBox;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.DataGridView classGridView;
+        private System.Windows.Forms.ComboBox ClassComboBox;
+        private System.Windows.Forms.DataGridViewComboBoxColumn BaseStatType;
+        private System.Windows.Forms.DataGridViewComboBoxColumn BaseStatFormula;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BaseStatBase;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BaseStatGain;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BaseStatGainRate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BaseStatMax;
+        private System.Windows.Forms.Label lblClassStatExample;
     }
 }

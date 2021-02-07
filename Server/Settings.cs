@@ -227,7 +227,9 @@ namespace Server
 
         //character settings
         private static readonly String[] BaseStatClassNames = { "Warrior", "Wizard", "Taoist", "Assassin", "Archer" };
+        
         public static BaseStats[] ClassBaseStats = new BaseStats[5] { new BaseStats(MirClass.Warrior), new BaseStats(MirClass.Wizard), new BaseStats(MirClass.Taoist), new BaseStats(MirClass.Assassin), new BaseStats(MirClass.Archer) };
+
         public static List<RandomItemStat> RandomItemStatsList = new List<RandomItemStat>();
         public static List<MineSet> MineSetList = new List<MineSet>();
         
@@ -720,71 +722,64 @@ namespace Server
 
         public static void LoadBaseStats()
         {
-            if (!File.Exists(Path.Combine(ConfigPath, "BaseStats.ini")))
-            {
-                SaveBaseStats();
-                return;
-            }
-
-            InIReader reader = new InIReader(Path.Combine(ConfigPath, "BaseStats.ini"));
-
             for (int i = 0; i < ClassBaseStats.Length; i++)
             {
-                ClassBaseStats[i].HpGain = reader.ReadFloat(BaseStatClassNames[i], "HpGain", ClassBaseStats[i].HpGain);
-                ClassBaseStats[i].HpGainRate = reader.ReadFloat(BaseStatClassNames[i], "HpGainRate", ClassBaseStats[i].HpGainRate);
-                ClassBaseStats[i].MpGainRate = reader.ReadFloat(BaseStatClassNames[i], "MpGainRate", ClassBaseStats[i].MpGainRate);
-                ClassBaseStats[i].BagWeightGain = reader.ReadFloat(BaseStatClassNames[i], "BagWeightGain", ClassBaseStats[i].BagWeightGain);
-                ClassBaseStats[i].WearWeightGain = reader.ReadFloat(BaseStatClassNames[i], "WearWeightGain", ClassBaseStats[i].WearWeightGain);
-                ClassBaseStats[i].HandWeightGain = reader.ReadFloat(BaseStatClassNames[i], "HandWeightGain", ClassBaseStats[i].HandWeightGain);
-                ClassBaseStats[i].MinAc = reader.ReadByte(BaseStatClassNames[i], "MinAc", ClassBaseStats[i].MinAc);
-                ClassBaseStats[i].MaxAc = reader.ReadByte(BaseStatClassNames[i], "MaxAc", ClassBaseStats[i].MaxAc);
-                ClassBaseStats[i].MinMac = reader.ReadByte(BaseStatClassNames[i], "MinMac", ClassBaseStats[i].MinMac);
-                ClassBaseStats[i].MaxMac = reader.ReadByte(BaseStatClassNames[i], "MaxMac", ClassBaseStats[i].MaxMac);
-                ClassBaseStats[i].MinDc = reader.ReadByte(BaseStatClassNames[i], "MinDc", ClassBaseStats[i].MinDc);
-                ClassBaseStats[i].MaxDc = reader.ReadByte(BaseStatClassNames[i], "MaxDc", ClassBaseStats[i].MaxDc);
-                ClassBaseStats[i].MinMc = reader.ReadByte(BaseStatClassNames[i], "MinMc", ClassBaseStats[i].MinMc);
-                ClassBaseStats[i].MaxMc = reader.ReadByte(BaseStatClassNames[i], "MaxMc", ClassBaseStats[i].MaxMc);
-                ClassBaseStats[i].MinSc = reader.ReadByte(BaseStatClassNames[i], "MinSc", ClassBaseStats[i].MinSc);
-                ClassBaseStats[i].MaxSc = reader.ReadByte(BaseStatClassNames[i], "MaxSc", ClassBaseStats[i].MaxSc);
-                ClassBaseStats[i].StartAgility = reader.ReadByte(BaseStatClassNames[i], "StartAgility", ClassBaseStats[i].StartAgility);
-                ClassBaseStats[i].StartAccuracy = reader.ReadByte(BaseStatClassNames[i], "StartAccuracy", ClassBaseStats[i].StartAccuracy);
-                ClassBaseStats[i].StartCriticalRate = reader.ReadByte(BaseStatClassNames[i], "StartCriticalRate", ClassBaseStats[i].StartCriticalRate);
-                ClassBaseStats[i].StartCriticalDamage = reader.ReadByte(BaseStatClassNames[i], "StartCriticalDamage", ClassBaseStats[i].StartCriticalDamage);
-                ClassBaseStats[i].CritialRateGain = reader.ReadByte(BaseStatClassNames[i], "CritialRateGain", ClassBaseStats[i].CritialRateGain);
-                ClassBaseStats[i].CriticalDamageGain = reader.ReadByte(BaseStatClassNames[i], "CriticalDamageGain", ClassBaseStats[i].CriticalDamageGain);
+                if (!File.Exists(Path.Combine(ConfigPath, $"BaseStats{ClassBaseStats[i].Job}.ini")))
+                {
+                    SaveBaseStats(new BaseStats[1] { new BaseStats(ClassBaseStats[i].Job) });
+                    continue;
+                }
+
+                InIReader reader = new InIReader(Path.Combine(ConfigPath, $"BaseStats{ClassBaseStats[i].Job}.ini"));
+
+                ClassBaseStats[i].Stats.Clear();
+
+                foreach (var stat in Enum.GetValues(typeof(Stat)))
+                {
+                    var section = stat.ToString();
+
+                    var formula = reader.ReadString(section, "Formula", null);
+
+                    if (!string.IsNullOrEmpty(formula))
+                    {
+                        var baseStat = new BaseStat((Stat)stat)
+                        {
+                            FormulaType = (StatFormula)Enum.Parse(typeof(StatFormula), formula, true),
+                            Base = reader.ReadInt32(section, "Base", 0),
+                            Gain = reader.ReadFloat(section, "Gain", 0),
+                            GainRate = reader.ReadFloat(section, "GainRate", 0),
+                            Max = reader.ReadInt32(section, "Max", 0)
+                        };
+
+                        ClassBaseStats[i].Stats.Add(baseStat);
+                    }
+                }
             }
         }
-        public static void SaveBaseStats()
+
+        public static void SaveBaseStats(BaseStats[] classStats = null)
         {
-            File.Delete(Path.Combine(ConfigPath, "BaseStats.ini"));
-            InIReader reader = new InIReader(Path.Combine(ConfigPath, "BaseStats.ini"));
-
-            for (int i = 0; i < ClassBaseStats.Length; i++)
+            if (classStats == null)
             {
-                reader.Write(BaseStatClassNames[i], "HpGain", ClassBaseStats[i].HpGain);
-                reader.Write(BaseStatClassNames[i], "HpGainRate", ClassBaseStats[i].HpGainRate);
-                reader.Write(BaseStatClassNames[i], "MpGainRate", ClassBaseStats[i].MpGainRate);
-                reader.Write(BaseStatClassNames[i], "BagWeightGain", ClassBaseStats[i].BagWeightGain);
-                reader.Write(BaseStatClassNames[i], "WearWeightGain", ClassBaseStats[i].WearWeightGain);
-                reader.Write(BaseStatClassNames[i], "HandWeightGain", ClassBaseStats[i].HandWeightGain);
-                reader.Write(BaseStatClassNames[i], "MinAc", ClassBaseStats[i].MinAc);
-                reader.Write(BaseStatClassNames[i], "MaxAc", ClassBaseStats[i].MaxAc);
-                reader.Write(BaseStatClassNames[i], "MinMac", ClassBaseStats[i].MinMac);
-                reader.Write(BaseStatClassNames[i], "MaxMac", ClassBaseStats[i].MaxMac);
-                reader.Write(BaseStatClassNames[i], "MinDc", ClassBaseStats[i].MinDc);
-                reader.Write(BaseStatClassNames[i], "MaxDc", ClassBaseStats[i].MaxDc);
-                reader.Write(BaseStatClassNames[i], "MinMc", ClassBaseStats[i].MinMc);
-                reader.Write(BaseStatClassNames[i], "MaxMc", ClassBaseStats[i].MaxMc);
-                reader.Write(BaseStatClassNames[i], "MinSc", ClassBaseStats[i].MinSc);
-                reader.Write(BaseStatClassNames[i], "MaxSc", ClassBaseStats[i].MaxSc);
-                reader.Write(BaseStatClassNames[i], "StartAgility", ClassBaseStats[i].StartAgility);
-                reader.Write(BaseStatClassNames[i], "StartAccuracy", ClassBaseStats[i].StartAccuracy);
-                reader.Write(BaseStatClassNames[i], "StartCriticalRate", ClassBaseStats[i].StartCriticalRate);
-                reader.Write(BaseStatClassNames[i], "StartCriticalDamage", ClassBaseStats[i].StartCriticalDamage);
-                reader.Write(BaseStatClassNames[i], "CritialRateGain", ClassBaseStats[i].CritialRateGain);
-                reader.Write(BaseStatClassNames[i], "CriticalDamageGain", ClassBaseStats[i].CriticalDamageGain);
+                classStats = ClassBaseStats;
+            }
+
+            foreach (var baseStats in classStats)
+            {
+                File.Delete(Path.Combine(ConfigPath, $"BaseStats{baseStats.Job}.ini"));
+                InIReader reader = new InIReader(Path.Combine(ConfigPath, $"BaseStats{baseStats.Job}.ini"));
+
+                foreach (var stat in baseStats.Stats)
+                {
+                    reader.Write(stat.Type.ToString(), "Formula", stat.FormulaType.ToString());
+                    reader.Write(stat.Type.ToString(), "Base", stat.Base.ToString());
+                    reader.Write(stat.Type.ToString(), "Gain", stat.Gain.ToString());
+                    reader.Write(stat.Type.ToString(), "GainRate", stat.GainRate.ToString());
+                    reader.Write(stat.Type.ToString(), "Max", stat.Max.ToString());
+                }
             }
         }
+
         public static void LoadRandomItemStats()
         {
             if (!File.Exists(Path.Combine(ConfigPath, "RandomItemStats.ini")))
@@ -800,6 +795,7 @@ namespace Server
                 SaveRandomItemStats();
                 return;
             }
+
             InIReader reader = new InIReader(Path.Combine(ConfigPath, "RandomItemStats.ini"));
             int i = 0;
             RandomItemStat stat;

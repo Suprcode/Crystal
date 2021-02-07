@@ -75,9 +75,6 @@ namespace Server.MirObjects
 
         public ushort PotHealthAmount, PotManaAmount, HealAmount, VampAmount;
 
-        public float ItemDropRateOffset = 0, GoldDropRateOffset = 0;
-
-
         public bool CoolEye;
         private bool _hidden;
         
@@ -200,15 +197,16 @@ namespace Server.MirObjects
             if (Target != null && (Target.Node == null || Target.Dead)) Target = null;
             if (Owner != null && Owner.Node == null) Owner = null;
 
-            if (Envir.Time > PKPointTime && PKPoints > 0)
+            if (PKPoints > 0 && Envir.Time > PKPointTime)
             {
                 PKPointTime = Envir.Time + Settings.PKDelay * Settings.Second;
                 PKPoints--;
             }
-            
-            if (LastHitter != null && Envir.Time > LastHitTime)
-                LastHitter = null;
 
+            if (LastHitter != null && Envir.Time > LastHitTime)
+            {
+                LastHitter = null;
+            }
 
             if (EXPOwner != null && Envir.Time > EXPOwnerTime)
             {
@@ -455,20 +453,20 @@ namespace Server.MirObjects
             return armour;
         }
 
-        public virtual void ApplyNegativeEffects(PlayerObject attacker, DefenceType type, ushort LevelOffset)
+        public virtual void ApplyNegativeEffects(PlayerObject attacker, DefenceType type, ushort levelOffset)
         {
-            if (attacker.HasParalysisRing && type != DefenceType.MAC && type != DefenceType.MACAgility && 1 == Envir.Random.Next(1, 15))
+            if (attacker.SpecialMode.HasFlag(SpecialItemMode.Paralize) && type != DefenceType.MAC && type != DefenceType.MACAgility && 1 == Envir.Random.Next(1, 15))
             {
                 ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, attacker);
             }
             if ((attacker.Stats[Stat.Freezing] > 0) && (Settings.PvpCanFreeze) && type != DefenceType.MAC && type != DefenceType.MACAgility)
             {
-                if ((Envir.Random.Next(Settings.FreezingAttackWeight) < attacker.Stats[Stat.Freezing]) && (Envir.Random.Next(LevelOffset) == 0))
+                if ((Envir.Random.Next(Settings.FreezingAttackWeight) < attacker.Stats[Stat.Freezing]) && (Envir.Random.Next(levelOffset) == 0))
                     ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = Math.Min(10, (3 + Envir.Random.Next(attacker.Stats[Stat.Freezing]))), TickSpeed = 1000 }, attacker);
             }
             if (attacker.Stats[Stat.PoisonAttack] > 0 && type != DefenceType.MAC && type != DefenceType.MACAgility)
             {
-                if ((Envir.Random.Next(Settings.PoisonAttackWeight) < attacker.Stats[Stat.PoisonAttack]) && (Envir.Random.Next(LevelOffset) == 0))
+                if ((Envir.Random.Next(Settings.PoisonAttackWeight) < attacker.Stats[Stat.PoisonAttack]) && (Envir.Random.Next(levelOffset) == 0))
                     ApplyPoison(new Poison { PType = PoisonType.Green, Duration = 5, TickSpeed = 1000, Value = Math.Min(10, 3 + Envir.Random.Next(attacker.Stats[Stat.PoisonAttack])) }, attacker);
             }
         }
@@ -500,64 +498,101 @@ namespace Server.MirObjects
         public virtual bool Harvest(PlayerObject player) { return false; }
 
         public abstract void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true);
-        public virtual void AddBuff(Buff b)
+
+        public virtual Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool visible = false, bool infinite = false, params int[] values)
         {
-            switch (b.Type)
+            if (!HasBuff(type, out Buff buff))
+            {
+                buff = new Buff
+                {
+                    Type = type,
+                    Caster = owner,
+                    ObjectID = ObjectID,
+                    Stats = new Stats()
+                };
+
+                Buffs.Add(buff);
+            }
+
+            if (stats == null)
+            {
+                stats = buff.Stats;
+            }
+
+            buff.ExpireTime = Envir.Time + duration;
+            buff.Infinite = infinite;
+            buff.Visible = visible;
+            buff.Stats = stats;
+            buff.Paused = false;
+
+            switch (buff.Type)
             {
                 case BuffType.MoonLight:
-                case BuffType.Hiding:
                 case BuffType.DarkBody:
                     Hidden = true;
-
-                    if (b.Type == BuffType.MoonLight || b.Type == BuffType.DarkBody) Sneaking = true;
-
-                    for (int y = CurrentLocation.Y - Globals.DataRange; y <= CurrentLocation.Y + Globals.DataRange; y++)
-                    {
-                        if (y < 0) continue;
-                        if (y >= CurrentMap.Height) break;
-
-                        for (int x = CurrentLocation.X - Globals.DataRange; x <= CurrentLocation.X + Globals.DataRange; x++)
-                        {
-                            if (x < 0) continue;
-                            if (x >= CurrentMap.Width) break;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
-
-                            Cell cell = CurrentMap.GetCell(x, y);
-
-                            if (!cell.Valid || cell.Objects == null) continue;
-
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
-                                MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Monster) continue;
-
-                                if (ob.Target == this && (!ob.CoolEye || ob.Level < Level)) ob.Target = null;
-                            }
-                        }
-                    }
+                    Sneaking = true;
+                    HideFromTargets();
+                    break;
+                case BuffType.Hiding:
+                    Hidden = true;
+                    HideFromTargets();
                     break;
             }
 
-
-            for (int i = 0; i < Buffs.Count; i++)
-            {
-                if (Buffs[i].Type != b.Type) continue;
-
-                Buffs[i] = b;
-                Buffs[i].Paused = false;
-                return;
-            }
-
-            Buffs.Add(b);
+            return buff;
         }
-        public void RemoveBuff(BuffType b)
+
+        public virtual void RemoveBuff(BuffType b)
         {
             for (int i = 0; i < Buffs.Count; i++)
             {
                 if (Buffs[i].Type != b) continue;
 
                 Buffs[i].Infinite = false;
+                Buffs[i].Paused = false;
                 Buffs[i].ExpireTime = Envir.Time;
+            }
+        }
+
+        public bool HasBuff(BuffType type, out Buff buff)
+        {
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                if (Buffs[i].Type != type) continue;
+
+                buff = Buffs[i];
+                return true;
+            }
+
+            buff = null;
+            return false;
+        }
+
+        protected void HideFromTargets()
+        {
+            for (int y = CurrentLocation.Y - Globals.DataRange; y <= CurrentLocation.Y + Globals.DataRange; y++)
+            {
+                if (y < 0) continue;
+                if (y >= CurrentMap.Height) break;
+
+                for (int x = CurrentLocation.X - Globals.DataRange; x <= CurrentLocation.X + Globals.DataRange; x++)
+                {
+                    if (x < 0) continue;
+                    if (x >= CurrentMap.Width) break;
+                    if (x < 0 || x >= CurrentMap.Width) continue;
+
+                    Cell cell = CurrentMap.GetCell(x, y);
+
+                    if (!cell.Valid || cell.Objects == null) continue;
+
+                    for (int i = 0; i < cell.Objects.Count; i++)
+                    {
+                        MapObject ob = cell.Objects[i];
+                        if (ob.Race != ObjectType.Monster) continue;
+
+                        if (ob.Target == this && (!ob.CoolEye || ob.Level < Level)) ob.Target = null;
+                    }
+                }
             }
         }
 
@@ -829,11 +864,16 @@ namespace Server.MirObjects
 
     public class Buff
     {
+        private Dictionary<string, object> Data { get; set; } = new Dictionary<string, object>();
+
         public BuffType Type;
         public MapObject Caster;
         public bool Visible;
         public uint ObjectID;
         public long ExpireTime;
+
+        public Stats Stats;
+
         public int[] Values;
         public bool Infinite;
 
@@ -842,7 +882,11 @@ namespace Server.MirObjects
 
         public bool Paused;
 
-        public Buff() { }
+        public Buff() 
+        {
+            Stats = new Stats();
+            Data = new Dictionary<string, object>();
+        }
 
         public Buff(BinaryReader reader)
         {
@@ -852,11 +896,24 @@ namespace Server.MirObjects
             ObjectID = reader.ReadUInt32();
             ExpireTime = reader.ReadInt64();
 
-            Values = new int[reader.ReadInt32()];
+            Stats = new Stats(reader);
+            Data = new Dictionary<string, object>();
 
-            for (int i = 0; i < Values.Length; i++)
+            int count = reader.ReadInt32();
+
+            for (int i = 0; i < count; i++)
             {
-                Values[i] = reader.ReadInt32();
+                var key = reader.ReadString();
+                var length = reader.ReadInt32();
+
+                var array = new byte[length];
+
+                for (int j = 0; j < array.Length; j++)
+                {
+                    array[j] = reader.ReadByte();
+                }
+
+                Data[key] = Functions.DeserializeFromBytes(array);
             }
 
             Infinite = reader.ReadBoolean();
@@ -869,13 +926,53 @@ namespace Server.MirObjects
             writer.Write(ObjectID);
             writer.Write(ExpireTime);
 
-            writer.Write(Values.Length);
-            for (int i = 0; i < Values.Length; i++)
+            Stats.Save(writer);
+
+            writer.Write(Data.Count);
+
+            foreach (KeyValuePair<string, object> pair in Data)
             {
-                writer.Write(Values[i]);
+                var bytes = Functions.SerializeToBytes(pair.Value);
+
+                writer.Write(pair.Key);
+                writer.Write(bytes.Length);
+
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    writer.Write(bytes[i]);
+                }
             }
 
             writer.Write(Infinite);
+        }
+
+        public T Get<T>(string key)
+        {
+            if (!Data.TryGetValue(key, out object result))
+            {
+                return default;
+            }
+
+            return (T)result;
+        }
+
+        public void Set(string key, object val)
+        {
+            Data[key] = val;
+        }
+
+        public ClientBuff ToClientBuff()
+        {
+            return new ClientBuff
+            {
+                Type = Type,
+                Caster = Caster?.Name ?? "",
+                ObjectID = ObjectID,
+                Visible = Visible,
+                Infinite = Infinite,
+                ExpireTime = ExpireTime,
+                Stats = new Stats(Stats)
+            };
         }
     }
 }
