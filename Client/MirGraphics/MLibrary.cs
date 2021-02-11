@@ -8,6 +8,7 @@ using System.IO.Compression;
 using Frame = Client.MirObjects.Frame;
 using Client.MirObjects;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace Client.MirGraphics
 {
@@ -190,9 +191,9 @@ namespace Client.MirGraphics
 
         static void InitLibrary(ref MLibrary[] library, string path, string toStringValue, string suffix = "")
         {
-            var allFiles = Directory.GetFiles(path, "*" + suffix + MLibrary.Extention, SearchOption.TopDirectoryOnly);
+            var allFiles = Directory.GetFiles(path, "*" + suffix + MLibrary.Extention, SearchOption.TopDirectoryOnly).OrderBy(x => int.Parse(Regex.Match(x, @"\d+").Value));
 
-            var lastFile = allFiles.Length > 0 ? Path.GetFileName(allFiles[allFiles.Length - 1]) : "0";
+            var lastFile = allFiles.Count() > 0 ? Path.GetFileName(allFiles.Last()) : "0";
 
             var count = int.Parse(Regex.Match(lastFile, @"\d+").Value) + 1;
 
