@@ -369,39 +369,7 @@ namespace Client.MirObjects
                         #region Armours
                         if (altAnim)
                         {
-                            switch (Armour)
-                            {
-                                case 9: //heaven
-                                case 10: //mir
-                                case 11: //oma
-                                case 12: //spirit
-                                    BodyLibrary = Armour + 1 < Libraries.ARArmours.Length ? Libraries.ARArmours[Armour + 1] : Libraries.ARArmours[0];
-                                    break;
-
-                                case 19:
-                                    BodyLibrary = Armour - 5 < Libraries.ARArmours.Length ? Libraries.ARArmours[Armour - 5] : Libraries.ARArmours[0];
-                                    break;
-
-                                case 29:
-                                case 30:
-                                    BodyLibrary = Armour - 14 < Libraries.ARArmours.Length ? Libraries.ARArmours[Armour - 14] : Libraries.ARArmours[0];
-                                    break;
-
-                                case 35:
-                                case 36:
-                                case 37:
-                                case 38:
-                                case 39:
-                                case 40:
-                                case 41:
-                                    BodyLibrary = Armour - 32 < Libraries.ARArmours.Length ? Libraries.ARArmours[Armour - 32] : Libraries.ARArmours[0];
-                                    break;
-
-                                default:
-                                    BodyLibrary = Armour < Libraries.ARArmours.Length ? Libraries.ARArmours[Armour] : Libraries.ARArmours[0];
-                                    break;
-                            }
-
+                            BodyLibrary = Armour < Libraries.ARArmours.Length ? Libraries.ARArmours[Armour] : Libraries.ARArmours[0];
                             HairLibrary = Hair < Libraries.ARHair.Length ? Libraries.ARHair[Hair] : null;
                         }
                         else
@@ -496,45 +464,7 @@ namespace Client.MirObjects
                         #region Armours
                         if (altAnim)
                         {
-                            switch (Armour)
-                            {
-                                case 9: //heaven
-                                case 10: //mir
-                                case 11: //oma
-                                    BodyLibrary = Armour + 3 < Libraries.AArmours.Length ? Libraries.AArmours[Armour + 3] : Libraries.AArmours[0];
-                                    break;
-
-                                case 12: //spirit
-                                    BodyLibrary = Armour + 4 < Libraries.AArmours.Length ? Libraries.AArmours[Armour + 4] : Libraries.AArmours[0];
-                                    break;
-
-                                case 19:
-                                    BodyLibrary = Armour - 3 < Libraries.AArmours.Length ? Libraries.AArmours[Armour - 3] : Libraries.AArmours[0];
-                                    break;
-
-                                case 20:
-                                case 21:
-                                case 22:
-                                case 23: //red bone
-                                case 24:
-                                    BodyLibrary = Armour - 17 < Libraries.AArmours.Length ? Libraries.AArmours[Armour - 17] : Libraries.AArmours[0];
-                                    break;
-
-                                case 28:
-                                case 29:
-                                case 30:
-                                    BodyLibrary = Armour - 20 < Libraries.AArmours.Length ? Libraries.AArmours[Armour - 20] : Libraries.AArmours[0];
-                                    break;
-
-                                case 34:
-                                    BodyLibrary = Armour - 23 < Libraries.AArmours.Length ? Libraries.AArmours[Armour - 23] : Libraries.AArmours[0];
-                                    break;
-
-                                default:
-                                    BodyLibrary = Armour < Libraries.AArmours.Length ? Libraries.AArmours[Armour] : Libraries.AArmours[0];
-                                    break;
-                            }
-
+                            BodyLibrary = Armour < Libraries.AArmours.Length ? Libraries.AArmours[Armour] : Libraries.AArmours[0];
                             HairLibrary = Hair < Libraries.AHair.Length ? Libraries.AHair[Hair] : null;
                         }
                         else
