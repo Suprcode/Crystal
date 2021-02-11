@@ -499,7 +499,7 @@ namespace Server.MirObjects
 
         public abstract void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true);
 
-        public virtual Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool visible = false, bool infinite = false, params int[] values)
+        public virtual Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool visible = false, bool infinite = false, bool stackable = false, params int[] values)
         {
             if (!HasBuff(type, out Buff buff))
             {
@@ -508,21 +508,30 @@ namespace Server.MirObjects
                     Type = type,
                     Caster = owner,
                     ObjectID = ObjectID,
-                    Stats = new Stats()
+                    ExpireTime = Envir.Time + duration
                 };
 
                 Buffs.Add(buff);
             }
-
-            if (stats == null)
+            else if (stackable)
             {
-                stats = buff.Stats;
+                if (!buff.Stats.Equals(stats))
+                {
+                    //TODO - Maybe get the best one instead?
+                    stats = buff.Stats;
+                }
+
+                buff.ExpireTime += duration;
+            }
+            else if (buff.ExpireTime < Envir.Time + duration)
+            {
+                buff.ExpireTime = Envir.Time + duration;
             }
 
-            buff.ExpireTime = Envir.Time + duration;
+            buff.Stackable = stackable;
             buff.Infinite = infinite;
             buff.Visible = visible;
-            buff.Stats = stats;
+            buff.Stats = stats ?? new Stats();
             buff.Paused = false;
 
             switch (buff.Type)
@@ -876,6 +885,7 @@ namespace Server.MirObjects
 
         public int[] Values;
         public bool Infinite;
+        public bool Stackable;
 
         public bool RealTime;
         public DateTime RealTimeExpire;
@@ -896,27 +906,41 @@ namespace Server.MirObjects
             ObjectID = reader.ReadUInt32();
             ExpireTime = reader.ReadInt64();
 
-            Stats = new Stats(reader);
-            Data = new Dictionary<string, object>();
-
-            int count = reader.ReadInt32();
-
-            for (int i = 0; i < count; i++)
+            if (Envir.LoadVersion <= 84)
             {
-                var key = reader.ReadString();
-                var length = reader.ReadInt32();
+                Values = new int[reader.ReadInt32()];
 
-                var array = new byte[length];
-
-                for (int j = 0; j < array.Length; j++)
+                for (int i = 0; i < Values.Length; i++)
                 {
-                    array[j] = reader.ReadByte();
+                    Values[i] = reader.ReadInt32();
                 }
 
-                Data[key] = Functions.DeserializeFromBytes(array);
+                Infinite = reader.ReadBoolean();
             }
+            else
+            {
+                Stackable = reader.ReadBoolean();
 
-            Infinite = reader.ReadBoolean();
+                Stats = new Stats(reader);
+                Data = new Dictionary<string, object>();
+
+                int count = reader.ReadInt32();
+
+                for (int i = 0; i < count; i++)
+                {
+                    var key = reader.ReadString();
+                    var length = reader.ReadInt32();
+
+                    var array = new byte[length];
+
+                    for (int j = 0; j < array.Length; j++)
+                    {
+                        array[j] = reader.ReadByte();
+                    }
+
+                    Data[key] = Functions.DeserializeFromBytes(array);
+                }
+            }
         }
 
         public void Save(BinaryWriter writer)
@@ -925,6 +949,8 @@ namespace Server.MirObjects
             writer.Write(Visible);
             writer.Write(ObjectID);
             writer.Write(ExpireTime);
+
+            writer.Write(Stackable);
 
             Stats.Save(writer);
 
@@ -942,8 +968,6 @@ namespace Server.MirObjects
                     writer.Write(bytes[i]);
                 }
             }
-
-            writer.Write(Infinite);
         }
 
         public T Get<T>(string key)

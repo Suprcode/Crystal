@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-public sealed class Stats
+public sealed class Stats : IEquatable<Stats>
 {
     public SortedDictionary<Stat, int> Values { get; set; } = new SortedDictionary<Stat, int>();
     public int Count => Values.Sum(pair => Math.Abs(pair.Value));
@@ -69,6 +69,16 @@ public sealed class Stats
     {
         Values.Clear();
     }
+
+    public bool Equals(Stats other)
+    {
+        if (Values.Count != other.Values.Count) return false;
+
+        foreach (KeyValuePair<Stat, int> value in Values)
+            if (other[value.Key] != value.Value) return false;
+
+        return true;
+    }
 }
 
 public enum StatFormula : byte
@@ -112,13 +122,18 @@ public enum Stat : byte
     HealthRecovery = 32,
     SpellRecovery = 33,
     PoisonRecovery = 34,
-    HPRatePercent = 35,
-    MPRatePercent = 36,
-    MaxACRatePercent = 37,
-    MaxMACRatePercent = 38,
-    CriticalRate = 39,
-    CriticalDamage = 40,
-    HPDrainRate = 41,
+    CriticalRate = 35,
+    CriticalDamage = 36,
+
+    MaxACRatePercent = 40,
+    MaxMACRatePercent = 41,
+    MaxDCRatePercent = 42,
+    MaxMCRatePercent = 43,
+    MaxSCRatePercent = 44,
+    AttackSpeedRatePercent = 45,
+    HPRatePercent = 46,
+    MPRatePercent = 47,
+    HPDrainRatePercent = 48,
 
     ExpRatePercent = 100,
     ItemDropRatePercent = 101,
@@ -130,21 +145,14 @@ public enum Stat : byte
     SkillRateMultiplier = 107,
     AttackBonus = 108,
 
-    MaxDCRatePercent = 110,
-    MaxMCRatePercent = 111,
-    MaxSCRatePercent = 112,
-    AttackSpeedRatePercent = 113,
-    LoverExpRatePercent = 114,
-    MentorDamageRatePercent = 115,
-    MentorExpRatePercent = 116,
-
-    DamageReductionPercent = 117,
-
-    EnergyShieldRate = 118,
-    EnergyShieldHPGain = 119,
-
-    ManaPenaltyPercent = 120,
-    TeleportManaPenaltyPercent = 121,
+    LoverExpRatePercent = 120,
+    MentorDamageRatePercent = 121,
+    MentorExpRatePercent = 123,
+    DamageReductionPercent = 124,
+    EnergyShieldPercent = 125,
+    EnergyShieldHPGain = 126,
+    ManaPenaltyPercent = 127,
+    TeleportManaPenaltyPercent = 128,
 
     Unknown = 255
 }

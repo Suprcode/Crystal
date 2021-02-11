@@ -2365,8 +2365,8 @@ namespace Client.MirScenes.Dialogs
                 SCLabel.Text = string.Format("{0}-{1}", MapObject.User.Stats[Stat.MinSC], MapObject.User.Stats[Stat.MaxSC]);
                 HealthLabel.Text = string.Format("{0}/{1}", MapObject.User.HP, MapObject.User.Stats[Stat.HP]);
                 ManaLabel.Text = string.Format("{0}/{1}", MapObject.User.MP, MapObject.User.Stats[Stat.MP]);
-                CritRLabel.Text = string.Format("{0}%", MapObject.User.CriticalRate);
-                CritDLabel.Text = string.Format("{0}", MapObject.User.CriticalDamage);
+                CritRLabel.Text = string.Format("{0}%", MapObject.User.Stats[Stat.CriticalRate]);
+                CritDLabel.Text = string.Format("{0}", MapObject.User.Stats[Stat.CriticalDamage]);
                 AttkSpdLabel.Text = string.Format("{0}", MapObject.User.Stats[Stat.AttackSpeed]);
                 AccLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.Accuracy]);
                 AgilLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.Agility]);
@@ -2387,14 +2387,14 @@ namespace Client.MirScenes.Dialogs
                 BagWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentBagWeight, MapObject.User.Stats[Stat.BagWeight]);
                 WearWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentWearWeight, MapObject.User.Stats[Stat.WearWeight]);
                 HandWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentHandWeight, MapObject.User.Stats[Stat.HandWeight]);
-                MagicRLabel.Text = string.Format("+{0}", MapObject.User.MagicResist);
-                PoisonResLabel.Text = string.Format("+{0}", MapObject.User.PoisonResist);
-                HealthRLabel.Text = string.Format("+{0}", MapObject.User.HealthRecovery);
-                ManaRLabel.Text = string.Format("+{0}", MapObject.User.SpellRecovery);
-                PoisonRecLabel.Text = string.Format("+{0}", MapObject.User.PoisonRecovery);
-                HolyTLabel.Text = string.Format("+{0}", MapObject.User.Holy);
-                FreezeLabel.Text = string.Format("+{0}", MapObject.User.Freezing);
-                PoisonAtkLabel.Text = string.Format("+{0}", MapObject.User.PoisonAttack);
+                MagicRLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.MagicResist]);
+                PoisonResLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.PoisonResist]);
+                HealthRLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.HealthRecovery]);
+                ManaRLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.SpellRecovery]);
+                PoisonRecLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.PoisonRecovery]);
+                HolyTLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.Holy]);
+                FreezeLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.Freezing]);
+                PoisonAtkLabel.Text = string.Format("+{0}", MapObject.User.Stats[Stat.PoisonAttack]);
             };
 
 

@@ -4622,33 +4622,6 @@ namespace ServerPackets
 
         public uint ObjectID;
         public bool Enabled;
-        public uint Value;
-        public uint ElementType;
-        public uint ExpLast;
-
-        protected override void ReadPacket(BinaryReader reader)
-        {
-            ObjectID = reader.ReadUInt32();
-            Enabled = reader.ReadBoolean();
-            Value = reader.ReadUInt32();
-            ElementType = reader.ReadUInt32();
-            ExpLast = reader.ReadUInt32();
-        }
-        protected override void WritePacket(BinaryWriter writer)
-        {
-            writer.Write(ObjectID);
-            writer.Write(Enabled);
-            writer.Write(Value);
-            writer.Write(ElementType);
-            writer.Write(ExpLast);
-        }
-    }
-    public sealed class SetObjectElemental : Packet
-    {
-        public override short Index { get { return (short)ServerPacketIds.SetObjectElemental; } }
-
-        public uint ObjectID;
-        public bool Enabled;
         public bool Casted;
         public uint Value;
         public uint ElementType;

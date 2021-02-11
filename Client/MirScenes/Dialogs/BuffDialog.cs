@@ -252,8 +252,7 @@ namespace Client.MirScenes.Dialogs
 
         public string BuffString(ClientBuff buff)
         {
-            //TODO
-            string text = buff.Type.ToString() + "\n";
+            string text = RegexFunctions.SeperateCamelCase(buff.Type.ToString()).Trim() + "\n";
             bool overridestats = false;
 
             switch (buff.Type)
@@ -287,7 +286,7 @@ namespace Client.MirScenes.Dialogs
                     break;
                 case BuffType.EnergyShield:
                     overridestats = true;
-                    text += string.Format("{0}% chance to gain {1} HP when attacked.\n", buff.Stats[Stat.EnergyShieldRate], buff.Stats[Stat.EnergyShieldHPGain]);
+                    text += string.Format("{0}% chance to gain {1} HP when attacked.\n", buff.Stats[Stat.EnergyShieldPercent], buff.Stats[Stat.EnergyShieldHPGain]);
                     break;
                 case BuffType.DarkBody:
                     text += "Invisible to many monsters and able to move.\n";
@@ -301,16 +300,17 @@ namespace Client.MirScenes.Dialogs
                 case BuffType.Concentration:
                     text += "Increases chance on element extraction.\n";
                     break;
-                //    case BuffType.MagicBooster:
-                //        text = string.Format("Magic Booster\nIncreases MC by: {0}-{0}.\nIncreases consumption by {1}%.\n", Values[0], Values[1]);
-                //        break;
+                case BuffType.MagicBooster:
+                    overridestats = true;
+                    text = string.Format("Increases MC by: {0}-{1}.\nIncreases consumption by {2}%.\n", buff.Stats[Stat.MinMC], buff.Stats[Stat.MaxMC], buff.Stats[Stat.ManaPenaltyPercent]);
+                    break;
                 case BuffType.Transform:
                     text = "Disguises your appearance.\n";
                     break;
                 case BuffType.Mentee:
                     text = "Learn skill points twice as quick.\n";
                     break;
-                case BuffType.Guild: //TODO
+                case BuffType.Guild:
                     text += GameScene.Scene.GuildDialog.ActiveStats;
                     break;
             }
@@ -320,8 +320,11 @@ namespace Client.MirScenes.Dialogs
                 foreach (var val in buff.Stats.Values)
                 {
                     var c = val.Value < 0 ? "Decreases" : "Increases";
+                    var key = val.Key;
 
-                    var txt = $"{c} {val.Key} by: {val.Value}{(val.Key.ToString().Contains("Percent") ? "%" : "")}.\n";
+                    var strKey = RegexFunctions.SeperateCamelCase(key.ToString().Replace("Rate", "").Replace("Multiplier", "").Replace("Percent", "")).Trim();
+
+                    var txt = $"{c} {strKey} by: {val.Value}{(key.ToString().Contains("Percent") ? "%" : "")}.\n";
 
                     text += txt;
                 }
@@ -349,8 +352,11 @@ namespace Client.MirScenes.Dialogs
             foreach (var val in stats.Values)
             {
                 var c = val.Value < 0 ? "Decreased" : "Increased";
+                var key = val.Key;
 
-                var txt = $"{c} {val.Key} by: {val.Value}{(val.Key.ToString().Contains("Percent") ? "%" : "")}.\n";
+                var strKey = RegexFunctions.SeperateCamelCase(key.ToString().Replace("Rate", "").Replace("Multiplier", "").Replace("Percent", "")).Trim();
+
+                var txt = $"{c} {strKey} by: {val.Value}{(key.ToString().Contains("Percent") ? "%" : "")}.\n";
 
                 text += txt;
             }

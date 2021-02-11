@@ -817,7 +817,7 @@ namespace Server.MirObjects
 
             if (GetMagic(Spell.MentalState) != null && !mentalState)
             {
-                AddBuff(BuffType.MentalState, this, 0, new Stats(), false, true, Info.MentalState);
+                AddBuff(BuffType.MentalState, this, 0, new Stats(), false, true, false, Info.MentalState);
                 ShowMentalState();
             }
         }
@@ -2116,7 +2116,7 @@ namespace Server.MirObjects
 
             for (int i = 0; i < Info.Buffs.Count; i++)
             {
-                AddBuff(Info.Buffs[i].Type, this, (int)Math.Min(Info.Buffs[i].ExpireTime, int.MaxValue), Info.Buffs[i].Stats, Info.Buffs[i].Visible, Info.Buffs[i].Infinite);       
+                AddBuff(Info.Buffs[i].Type, this, (int)Math.Min(Info.Buffs[i].ExpireTime, int.MaxValue), Info.Buffs[i].Stats, Info.Buffs[i].Visible, Info.Buffs[i].Infinite, Info.Buffs[i].Stackable);       
             }
 
             Info.Buffs.Clear();
@@ -2549,6 +2549,8 @@ namespace Server.MirObjects
 
         private void RefreshBagWeight()
         {
+            CurrentBagWeight = 0;
+
             for (int i = 0; i < Info.Inventory.Length; i++)
             {
                 UserItem item = Info.Inventory[i];
@@ -2795,7 +2797,7 @@ namespace Server.MirObjects
                         break;
                     case ItemSet.RedOrchid:
                         Stats[Stat.Accuracy] += 2;
-                        Stats[Stat.HPDrainRate] += 10;
+                        Stats[Stat.HPDrainRatePercent] += 10;
                         break;
                     case ItemSet.RedFlower:
                         Stats[Stat.HP] += 50;
@@ -2999,7 +3001,7 @@ namespace Server.MirObjects
             Stats[Stat.HealthRecovery] = Math.Min(Settings.MaxHealthRegen, Stats[Stat.HealthRecovery]);
             Stats[Stat.PoisonRecovery] = Math.Min(Settings.MaxPoisonRecovery, Stats[Stat.PoisonRecovery]);
             Stats[Stat.SpellRecovery] = Math.Min(Settings.MaxManaRegen, Stats[Stat.SpellRecovery]);
-            Stats[Stat.HPDrainRate] = Math.Min((byte)100, Stats[Stat.HPDrainRate]);
+            Stats[Stat.HPDrainRatePercent] = Math.Min((byte)100, Stats[Stat.HPDrainRatePercent]);
 
             Stats[Stat.MinAC] = Math.Max(0, Stats[Stat.MinAC]);
             Stats[Stat.MaxAC] = Math.Max(0, Stats[Stat.MaxAC]);
@@ -3115,25 +3117,7 @@ namespace Server.MirObjects
                 GuildBuff buff = MyGuild.BuffList[i];
                 if ((buff.Info == null) || (!buff.Active)) continue;
 
-                Stats[Stat.MaxAC] += buff.Info.BuffAc;
-                Stats[Stat.MaxMAC] += buff.Info.BuffMac;
-                Stats[Stat.MaxDC] += buff.Info.BuffDc;
-                Stats[Stat.MaxMC] += buff.Info.BuffMc;
-                Stats[Stat.MaxSC] += buff.Info.BuffSc;
-                Stats[Stat.HP] += buff.Info.BuffMaxHp;
-                Stats[Stat.MP] += buff.Info.BuffMaxMp;
-                Stats[Stat.HealthRecovery] += buff.Info.BuffHpRegen;
-                Stats[Stat.SpellRecovery] += buff.Info.BuffMPRegen;
-                Stats[Stat.AttackBonus] += buff.Info.BuffAttack;
-
-                Stats[Stat.ExpRatePercent] += buff.Info.BuffExpRate;
-                Stats[Stat.ItemDropRatePercent] += buff.Info.BuffDropRate;
-                Stats[Stat.GoldDropRatePercent] += buff.Info.BuffGoldRate;
-                Stats[Stat.MineRatePercent] += buff.Info.BuffMineRate;
-                Stats[Stat.GemRatePercent] += buff.Info.BuffGemRate;
-                Stats[Stat.FishRatePercent] += buff.Info.BuffFishRate;
-                Stats[Stat.CraftRatePercent] += buff.Info.BuffCraftRate;
-                Stats[Stat.SkillRateMultiplier] += buff.Info.BuffSkillRate;
+                Stats.Add(buff.Info.Stats);
             }
         }
 
@@ -5742,11 +5726,9 @@ namespace Server.MirObjects
 
                 if (chanceToHit < 0) chanceToHit = 0;
 
-                int hitChance = Envir.Random.Next(100); // Randomise a number between minimum chance and 100       
-
                 int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500 + 50; //50 MS per Step
 
-                if (hitChance < chanceToHit)
+                if (Envir.Random.Next(100) < chanceToHit)
                 {
                     if (target.CurrentLocation != location)
                         location = target.CurrentLocation;
@@ -6210,7 +6192,7 @@ namespace Server.MirObjects
                 if (Mine.StonesLeft > 0)
                 {
                     Mine.StonesLeft--;
-                    if (Envir.Random.Next(100) <= (Mine.Mine.HitRate + (Info.Equipment[(int)EquipmentSlot.Weapon].GetTotal(Stat.Accuracy)) * 10))
+                    if (Envir.Random.Next(100) < (Mine.Mine.HitRate + (Info.Equipment[(int)EquipmentSlot.Weapon].GetTotal(Stat.Accuracy)) * 10))
                     {
                         //create some rubble on the floor (or increase whats there)
                         SpellObject Rubble = null;
@@ -6247,7 +6229,7 @@ namespace Server.MirObjects
                         }
 
                         //check if we get a payout
-                        if (Envir.Random.Next(100) <= (Mine.Mine.DropRate + Stats[Stat.MineRatePercent]))
+                        if (Envir.Random.Next(100) < (Mine.Mine.DropRate + Stats[Stat.MineRatePercent]))
                         {
                             GetMinePayout(Mine.Mine);
                         }
@@ -6764,7 +6746,7 @@ namespace Server.MirObjects
                     if (meditateLevel == 3)
                     {
                         Enqueue(new S.SetElemental { ObjectID = ObjectID, Enabled = true, Value = (uint)Settings.OrbsExpList[0], ElementType = 1, ExpLast = (uint)maxOrbs });
-                        Broadcast(new S.SetObjectElemental { ObjectID = ObjectID, Enabled = true, Casted = true, Value = (uint)Settings.OrbsExpList[0], ElementType = 1, ExpLast = (uint)maxOrbs });
+                        Broadcast(new S.SetElemental { ObjectID = ObjectID, Enabled = true, Casted = true, Value = (uint)Settings.OrbsExpList[0], ElementType = 1, ExpLast = (uint)maxOrbs });
                         ElementsLevel = (int)Settings.OrbsExpList[1];
                         orbType = 2;
                     }
@@ -6794,7 +6776,7 @@ namespace Server.MirObjects
             }
 
             Enqueue(new S.SetElemental { ObjectID = ObjectID, Enabled = HasElemental, Value = (uint)ElementsLevel, ElementType = (uint)orbType, ExpLast = (uint)maxOrbs });
-            Broadcast(new S.SetObjectElemental { ObjectID = ObjectID, Enabled = HasElemental, Casted = cast, Value = (uint)ElementsLevel, ElementType = (uint)orbType, ExpLast = (uint)maxOrbs });
+            Broadcast(new S.SetElemental { ObjectID = ObjectID, Enabled = HasElemental, Casted = cast, Value = (uint)ElementsLevel, ElementType = (uint)orbType, ExpLast = (uint)maxOrbs });
         }
 
         public int GetElementalOrbCount()
@@ -7142,7 +7124,7 @@ namespace Server.MirObjects
         private void IceThrust(UserMagic magic)
         {
             int damageBase = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-            if (Envir.Random.Next(100) <= (1 + Stats[Stat.Luck]))
+            if (Envir.Random.Next(100) < (1 + Stats[Stat.Luck]))
                 damageBase += damageBase;
             int damageFinish = magic.GetDamage(damageBase);
 
@@ -7521,13 +7503,14 @@ namespace Server.MirObjects
 
             int duration = 30 + 50 * magic.Level;
             int power = magic.GetPower(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]));
-            int chance = 9 - (Stats[Stat.Luck] / 3 + magic.Level);
+
+            int chance = (10 - (Stats[Stat.Luck] / 3 + magic.Level + 1));
 
             if (chance < 2) chance = 2;
 
             var stats = new Stats 
             { 
-                [Stat.EnergyShieldRate] = chance, 
+                [Stat.EnergyShieldPercent] = (int)Math.Round((1 / (decimal)chance) * 100), 
                 [Stat.EnergyShieldHPGain] = power 
             };
 
@@ -9241,7 +9224,7 @@ namespace Server.MirObjects
                                         if (hasVampBuff)//Vampire Effect
                                         {
                                             //cancel out buff
-                                            AddBuff(BuffType.VampireShot, this, Settings.Second * 1, new Stats(), visible: true);
+                                            AddBuff(BuffType.VampireShot, this, 0, new Stats(), visible: true);
 
                                             target.Attacked(this, value, DefenceType.MAC, false);
                                             if (VampAmount == 0) VampTime = Envir.Time + Settings.Second;
@@ -9250,7 +9233,7 @@ namespace Server.MirObjects
                                         if (hasPoisonBuff)//Poison Effect
                                         {
                                             //cancel out buff
-                                            AddBuff(BuffType.PoisonShot, this, Settings.Second * 1, new Stats(), visible: true);
+                                            AddBuff(BuffType.PoisonShot, this, 0, new Stats(), visible: true);
 
                                             targetob.ApplyPoison(new Poison
                                             {
@@ -10100,9 +10083,9 @@ namespace Server.MirObjects
             }
 
             //EnergyShield
-            if (Stats[Stat.EnergyShieldRate] > 0)
+            if (Stats[Stat.EnergyShieldPercent] > 0)
             {
-                if (Envir.Random.Next(Stats[Stat.EnergyShieldRate]) == 0)
+                if (Envir.Random.Next(100) < Stats[Stat.EnergyShieldPercent])
                 {
                     if (HP + (Stats[Stat.EnergyShieldHPGain]) >= Stats[Stat.HP])
                         SetHP(Stats[Stat.HP]);
@@ -10130,9 +10113,9 @@ namespace Server.MirObjects
                 AddBuff(BuffType.ElementalBarrier, this, duration, null);
             }
 
-            if (attacker.Stats[Stat.HPDrainRate] > 0)
+            if (attacker.Stats[Stat.HPDrainRatePercent] > 0)
             {
-                attacker.HpDrain += Math.Max(0, ((float)(damage - armour) / 100) * attacker.Stats[Stat.HPDrainRate]);
+                attacker.HpDrain += Math.Max(0, ((float)(damage - armour) / 100) * attacker.Stats[Stat.HPDrainRatePercent]);
                 if (attacker.HpDrain > 2)
                 {
                     int HpGain = (int)Math.Floor(attacker.HpDrain);
@@ -10394,14 +10377,14 @@ namespace Server.MirObjects
             PoisonList.Add(p);
         }
 
-        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stat, bool visible = false, bool infinite = false, params int[] values)
+        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stat, bool visible = false, bool infinite = false, bool stackable = false, params int[] values)
         {
             if (HasBuff(type, out Buff b) && b.Infinite != infinite)
             {
                 return b;
             }
 
-            b = base.AddBuff(type, owner, duration, stat, visible, infinite);
+            b = base.AddBuff(type, owner, duration, stat, visible, infinite, stackable, values);
 
             switch (b.Type)
             {
@@ -10442,7 +10425,7 @@ namespace Server.MirObjects
         {
             if (!b.Paused) return;
 
-            AddBuff(b.Type, b.Caster, (int)(b.ExpireTime - Envir.Time), b.Stats, b.Visible, b.Infinite, b.Values);
+            AddBuff(b.Type, b.Caster, (int)(b.ExpireTime - Envir.Time), b.Stats, b.Visible, b.Infinite, b.Stackable, b.Values);
         }
 
         public void EquipSlotItem(MirGridType grid, ulong id, int to, MirGridType gridTo, ulong idTo)
@@ -11236,34 +11219,37 @@ namespace Server.MirObjects
                                 int time = item.Info.Durability;
 
                                 if (item.GetTotal(Stat.MaxDC) > 0)
-                                    AddBuff(BuffType.Impact, this, time * Settings.Minute, new Stats { [Stat.MaxDC] = item.GetTotal(Stat.MaxDC) });
+                                    AddBuff(BuffType.Impact, this, time * Settings.Minute, new Stats { [Stat.MaxDC] = item.GetTotal(Stat.MaxDC) }, stackable: true);
 
                                 if (item.GetTotal(Stat.MaxMC) > 0)
-                                    AddBuff(BuffType.Magic, this, time * Settings.Minute, new Stats { [Stat.MaxMC] = item.GetTotal(Stat.MaxMC) });
+                                    AddBuff(BuffType.Magic, this, time * Settings.Minute, new Stats { [Stat.MaxMC] = item.GetTotal(Stat.MaxMC) }, stackable: true);
 
                                 if (item.GetTotal(Stat.MaxSC) > 0)
-                                    AddBuff(BuffType.Taoist, this, time * Settings.Minute, new Stats { [Stat.MaxSC] = item.GetTotal(Stat.MaxSC) });
+                                    AddBuff(BuffType.Taoist, this, time * Settings.Minute, new Stats { [Stat.MaxSC] = item.GetTotal(Stat.MaxSC) }, stackable: true);
 
                                 if (item.GetTotal(Stat.AttackSpeed) > 0)
-                                    AddBuff(BuffType.Storm, this, time * Settings.Minute, new Stats { [Stat.AttackSpeed] = item.GetTotal(Stat.AttackSpeed) });
+                                    AddBuff(BuffType.Storm, this, time * Settings.Minute, new Stats { [Stat.AttackSpeed] = item.GetTotal(Stat.AttackSpeed) }, stackable: true);
 
                                 if (item.GetTotal(Stat.HP) > 0)
-                                    AddBuff(BuffType.HealthAid, this, time * Settings.Minute, new Stats { [Stat.HP] = item.GetTotal(Stat.HP) });
+                                    AddBuff(BuffType.HealthAid, this, time * Settings.Minute, new Stats { [Stat.HP] = item.GetTotal(Stat.HP) }, stackable: true);
 
                                 if (item.GetTotal(Stat.MP) > 0)
-                                    AddBuff(BuffType.ManaAid, this, time * Settings.Minute, new Stats { [Stat.MP] = item.GetTotal(Stat.MP) });
+                                    AddBuff(BuffType.ManaAid, this, time * Settings.Minute, new Stats { [Stat.MP] = item.GetTotal(Stat.MP) }, stackable: true);
 
                                 if (item.GetTotal(Stat.MaxAC) > 0)
-                                    AddBuff(BuffType.Defence, this, time * Settings.Minute, new Stats { [Stat.MaxAC] = item.GetTotal(Stat.MaxAC) });
+                                    AddBuff(BuffType.Defence, this, time * Settings.Minute, new Stats { [Stat.MaxAC] = item.GetTotal(Stat.MaxAC) }, stackable: true);
 
                                 if (item.GetTotal(Stat.MaxMAC) > 0)
-                                    AddBuff(BuffType.MagicDefence, this, time * Settings.Minute, new Stats { [Stat.MaxMAC] = item.GetTotal(Stat.MaxMAC) });
+                                    AddBuff(BuffType.MagicDefence, this, time * Settings.Minute, new Stats { [Stat.MaxMAC] = item.GetTotal(Stat.MaxMAC) }, stackable: true);
+
+                                if (item.GetTotal(Stat.BagWeight) > 0)
+                                    AddBuff(BuffType.BagWeight, this, time * Settings.Minute, new Stats { [Stat.BagWeight] = item.GetTotal(Stat.BagWeight) }, stackable: true);
                             }
                             break;
                         case 4: //Exp
                             {
                                 int time = item.Info.Durability;
-                                AddBuff(BuffType.Exp, this, Settings.Minute * time, new Stats { [Stat.ExpRatePercent] = item.GetTotal(Stat.Luck) });
+                                AddBuff(BuffType.Exp, this, Settings.Minute * time, new Stats { [Stat.ExpRatePercent] = item.GetTotal(Stat.Luck) }, stackable: true);
                             }
                             break;
                     }
@@ -11461,60 +11447,79 @@ namespace Server.MirObjects
                         switch (item.Info.Shape)
                         {
                             case 20://Mirror
-                                Enqueue(new S.IntelligentCreatureEnableRename());
+                                {
+                                    Enqueue(new S.IntelligentCreatureEnableRename());
+                                }
                                 break;
                             case 21://BlackStone
-                                if (item.Count > 1) item.Count--;
-                                else Info.Inventory[index] = null;
-                                RefreshBagWeight();
-                                p.Success = true;
-                                Enqueue(p);
-                                BlackstoneRewardItem();
+                                {
+                                    if (item.Count > 1) item.Count--;
+                                    else Info.Inventory[index] = null;
+                                    RefreshBagWeight();
+                                    p.Success = true;
+                                    Enqueue(p);
+                                    BlackstoneRewardItem();
+                                }
                                 return;
                             case 22://Nuts
-                                if (CreatureSummoned)
-                                    for (int i = 0; i < Pets.Count; i++)
-                                    {
-                                        if (Pets[i].Info.AI != 64) continue;
-                                        if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
-                                        ((IntelligentCreatureObject)Pets[i]).maintainfoodTime = item.Info.Effect * Settings.Hour / 1000;
-                                        UpdateCreatureMaintainFoodTime(SummonedCreatureType, 0);
-                                        break;
-                                    }
+                                {
+                                    if (CreatureSummoned)
+                                        for (int i = 0; i < Pets.Count; i++)
+                                        {
+                                            if (Pets[i].Info.AI != 64) continue;
+                                            if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
+                                            ((IntelligentCreatureObject)Pets[i]).maintainfoodTime = item.Info.Effect * Settings.Hour / 1000;
+                                            UpdateCreatureMaintainFoodTime(SummonedCreatureType, 0);
+                                            break;
+                                        }
+                                }
                                 break;
                             case 23://FairyMoss, FreshwaterClam, Mackerel, Cherry
-                                if (CreatureSummoned)
-                                    for (int i = 0; i < Pets.Count; i++)
-                                    {
-                                        if (Pets[i].Info.AI != 64) continue;
-                                        if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
-                                        if (((IntelligentCreatureObject)Pets[i]).Fullness < 10000)
-                                            ((IntelligentCreatureObject)Pets[i]).IncreaseFullness(item.Info.Effect * 100);
-                                        break;
-                                    }
+                                {
+                                    if (CreatureSummoned)
+                                        for (int i = 0; i < Pets.Count; i++)
+                                        {
+                                            if (Pets[i].Info.AI != 64) continue;
+                                            if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
+                                            if (((IntelligentCreatureObject)Pets[i]).Fullness < 10000)
+                                                ((IntelligentCreatureObject)Pets[i]).IncreaseFullness(item.Info.Effect * 100);
+                                            break;
+                                        }
+                                }
                                 break;
                             case 24://WonderPill
-                                if (CreatureSummoned)
-                                    for (int i = 0; i < Pets.Count; i++)
-                                    {
-                                        if (Pets[i].Info.AI != 64) continue;
-                                        if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
-                                        if (((IntelligentCreatureObject)Pets[i]).Fullness == 0)
-                                            ((IntelligentCreatureObject)Pets[i]).IncreaseFullness(100);
-                                        break;
-                                    }
+                                {
+                                    if (CreatureSummoned)
+                                        for (int i = 0; i < Pets.Count; i++)
+                                        {
+                                            if (Pets[i].Info.AI != 64) continue;
+                                            if (((IntelligentCreatureObject)Pets[i]).petType != SummonedCreatureType) continue;
+                                            if (((IntelligentCreatureObject)Pets[i]).Fullness == 0)
+                                                ((IntelligentCreatureObject)Pets[i]).IncreaseFullness(100);
+                                            break;
+                                        }
+                                }
                                 break;
                             case 25://Strongbox
-                                byte boxtype = item.Info.Effect;
-                                if (item.Count > 1) item.Count--;
-                                else Info.Inventory[index] = null;
-                                RefreshBagWeight();
-                                p.Success = true;
-                                Enqueue(p);
-                                StrongboxRewardItem(boxtype);
-                                return;
+                                {
+                                    byte boxtype = item.Info.Effect;
+                                    if (item.Count > 1) item.Count--;
+                                    else Info.Inventory[index] = null;
+                                    RefreshBagWeight();
+                                    p.Success = true;
+                                    Enqueue(p);
+                                    StrongboxRewardItem(boxtype);
+                                }
+                                break;
                             case 26://Wonderdrug
                                 {
+                                    if (HasBuff(BuffType.WonderDrug, out _))
+                                    {
+                                        ReceiveChat("WonderDrug buff already active.", ChatType.System);
+                                        Enqueue(p);
+                                        return;
+                                    }
+
                                     var time = item.Info.Durability;
 
                                     AddBuff(BuffType.WonderDrug, this, time * Settings.Minute, new Stats(item.AddedStats));
@@ -11526,7 +11531,7 @@ namespace Server.MirObjects
                                 {
                                     var time = item.Info.Durability;
 
-                                    AddBuff(BuffType.Knapsack, this, Settings.Minute * time, new Stats { [Stat.BagWeight] = item.GetTotal(Stat.Luck) });
+                                    AddBuff(BuffType.Knapsack, this, time * Settings.Minute, new Stats { [Stat.BagWeight] = item.GetTotal(Stat.Luck) }, stackable: true);
                                 }
                                 break;
                         }
@@ -11555,7 +11560,7 @@ namespace Server.MirObjects
                     break;
                 case ItemType.Transform: //Transforms
                     {
-                        AddBuff(BuffType.Transform, this, (Settings.Second * item.Info.Durability), new Stats(), false, false, item.Info.Shape);
+                        AddBuff(BuffType.Transform, this, (Settings.Second * item.Info.Durability), new Stats(), false, false, false, item.Info.Shape);
                     }
                     break;
                 case ItemType.Deco:
@@ -11967,7 +11972,7 @@ namespace Server.MirObjects
                         return;
                     }
 
-                    if ((tempTo.GemCount >= tempFrom.Info.Stats[Stat.CriticalDamage]) || (GetCurrentStatCount(tempFrom, tempTo) >= tempFrom.Info.Stats[Stat.HPDrainRate]))
+                    if ((tempTo.GemCount >= tempFrom.Info.Stats[Stat.CriticalDamage]) || (GetCurrentStatCount(tempFrom, tempTo) >= tempFrom.Info.Stats[Stat.HPDrainRatePercent]))
                     {
                         ReceiveChat("Item has already reached maximum added stats", ChatType.Hint);
                         Enqueue(p);
@@ -12364,8 +12369,8 @@ namespace Server.MirObjects
             else if (gem.GetTotal(Stat.Strong) > 0)
                 return Stat.Strong;
 
-            else if (gem.GetTotal(Stat.HPDrainRate) > 0)
-                return Stat.HPDrainRate;
+            else if (gem.GetTotal(Stat.HPDrainRatePercent) > 0)
+                return Stat.HPDrainRatePercent;
 
             return Stat.Unknown;
         }
@@ -14220,7 +14225,7 @@ namespace Server.MirObjects
                 case Spell.MentalState:
                     Info.MentalState = (byte)((Info.MentalState + 1) % 3);
 
-                    AddBuff(BuffType.MentalState, this, 0, null, false, true, Info.MentalState);
+                    AddBuff(BuffType.MentalState, this, 0, null, false, true, false, Info.MentalState);
                     ShowMentalState();
                     break;
             }
@@ -14252,7 +14257,7 @@ namespace Server.MirObjects
             if (GMNeverDie) options |= GMOptions.Superman;
             if (Observer) options |= GMOptions.Observer;
 
-            AddBuff(BuffType.GameMaster, this, 0, null, Settings.GameMasterEffect, true, (byte)options);
+            AddBuff(BuffType.GameMaster, this, 0, null, Settings.GameMasterEffect, true, false, (byte)options);
         }
 
         public void Opendoor(byte Doorindex)
@@ -18248,14 +18253,14 @@ namespace Server.MirObjects
             switch ((int)dropitem.Info.Effect)
             {
                 case 0://exp low/med/high
-                    dropitem.AddedStats[Stat.Luck] = 5;
-                    if (boxtype > 0) dropitem.AddedStats[Stat.Luck] = 10;
-                    if (boxtype > 1) dropitem.AddedStats[Stat.Luck] = 20;
+                    dropitem.AddedStats[Stat.ExpRatePercent] = 5;
+                    if (boxtype > 0) dropitem.AddedStats[Stat.ExpRatePercent] = 10;
+                    if (boxtype > 1) dropitem.AddedStats[Stat.ExpRatePercent] = 20;
                     break;
                 case 1://drop low/med/high
-                    dropitem.AddedStats[Stat.Luck] = 10;
-                    if (boxtype > 0) dropitem.AddedStats[Stat.Luck] = 20;
-                    if (boxtype > 1) dropitem.AddedStats[Stat.Luck] = 50;
+                    dropitem.AddedStats[Stat.ItemDropRatePercent] = 10;
+                    if (boxtype > 0) dropitem.AddedStats[Stat.ItemDropRatePercent] = 20;
+                    if (boxtype > 1) dropitem.AddedStats[Stat.ItemDropRatePercent] = 50;
                     break;
                 case 2://hp low/med/high
                     dropitem.AddedStats[Stat.HP] = 50;

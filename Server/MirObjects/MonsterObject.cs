@@ -1980,9 +1980,9 @@ namespace Server.MirObjects
 
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
 
-            if (attacker.Stats[Stat.HPDrainRate] > 0)
+            if (attacker.Stats[Stat.HPDrainRatePercent] > 0)
             {
-                attacker.HpDrain += Math.Max(0, ((float)(damage - armour) / 100) * attacker.Stats[Stat.HPDrainRate]);
+                attacker.HpDrain += Math.Max(0, ((float)(damage - armour) / 100) * attacker.Stats[Stat.HPDrainRatePercent]);
                 if (attacker.HpDrain > 2)
                 {
                     int hpGain = (int)Math.Floor(attacker.HpDrain);
@@ -2158,14 +2158,14 @@ namespace Server.MirObjects
             PoisonList.Add(p);
         }
 
-        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stat, bool visible = false, bool infinite = false, params int[] values)
+        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stat, bool visible = false, bool infinite = false, bool stackable = false, params int[] values)
         {
             if (HasBuff(type, out Buff b) && b.Infinite == true)
             {
                 return b;
             }
 
-            b = base.AddBuff(type, owner, duration, Stats, visible, infinite);
+            b = base.AddBuff(type, owner, duration, Stats, visible, infinite, stackable, values);
 
             var packet = new S.AddBuff
             {

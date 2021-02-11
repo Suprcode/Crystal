@@ -875,11 +875,13 @@ namespace Server.MirObjects
 
                     string visible = "";
                     string infinite = "";
+                    string stackable = "";
 
                     if (parts.Length > 3) visible = parts[3];
                     if (parts.Length > 4) infinite = parts[4];
+                    if (parts.Length > 5) stackable = parts[5];
 
-                    acts.Add(new NPCActions(ActionType.GiveBuff, parts[1], parts[2], visible, infinite));
+                    acts.Add(new NPCActions(ActionType.GiveBuff, parts[1], parts[2], visible, infinite, stackable));
                     break;
 
                 case "REMOVEBUFF":
@@ -3373,8 +3375,9 @@ namespace Server.MirObjects
                             int.TryParse(param[1], out int duration);
                             bool.TryParse(param[2], out bool infinite);
                             bool.TryParse(param[3], out bool visible);
+                            bool.TryParse(param[4], out bool stackable);
 
-                            player.AddBuff((BuffType)(byte)Enum.Parse(typeof(BuffType), param[0], true), player, Settings.Second * duration, new Stats(), visible, infinite);
+                            player.AddBuff((BuffType)(byte)Enum.Parse(typeof(BuffType), param[0], true), player, Settings.Second * duration, new Stats(), visible, infinite, stackable);
                         }
                         break;
 
@@ -3918,8 +3921,9 @@ namespace Server.MirObjects
                             int.TryParse(param[1], out int tempInt);
                             bool.TryParse(param[2], out bool infinite);
                             bool.TryParse(param[3], out bool visible);
+                            bool.TryParse(param[4], out bool stackable);
 
-                            monster.AddBuff((BuffType)(byte)Enum.Parse(typeof(BuffType), param[0], true), monster, Settings.Second * tempInt, new Stats(), visible, infinite);
+                            monster.AddBuff((BuffType)(byte)Enum.Parse(typeof(BuffType), param[0], true), monster, Settings.Second * tempInt, new Stats(), visible, infinite, stackable);
                         }
                         break;
 

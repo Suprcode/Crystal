@@ -1289,6 +1289,13 @@ public enum BuffType : byte
     Knapsack
 }
 
+public enum BuffStackType : byte
+{
+    Reset,
+    Duration,
+    Stat
+}
+
 public enum DefenceType : byte
 {
     ACAgility,
@@ -1489,7 +1496,6 @@ public enum ServerPacketIds : short
     ItemUpgraded,
     SetConcentration,
     SetElemental,
-    SetObjectElemental,
     RemoveDelayedExplosion,
     ObjectDeco,
     ObjectSneaking,

@@ -88,7 +88,10 @@ namespace Server.MirObjects.Monsters
                 BroadcastDamageIndicator(DamageType.Miss);
                 return 0;
             }
+
             damage -= armour;
+
+            attacker.GatherElement();
 
             if (_currentAttacker == null)
                 _StartTime = Envir.Time;

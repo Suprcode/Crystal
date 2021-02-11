@@ -225,9 +225,6 @@ namespace Server
         public static uint GoodsBuyBackMaxStored = 20;
         public static bool GoodsHideAddedStats = true;
 
-        //character settings
-        private static readonly String[] BaseStatClassNames = { "Warrior", "Wizard", "Taoist", "Assassin", "Archer" };
-        
         public static BaseStats[] ClassBaseStats = new BaseStats[5] { new BaseStats(MirClass.Warrior), new BaseStats(MirClass.Wizard), new BaseStats(MirClass.Taoist), new BaseStats(MirClass.Assassin), new BaseStats(MirClass.Archer) };
 
         public static List<RandomItemStat> RandomItemStatsList = new List<RandomItemStat>();

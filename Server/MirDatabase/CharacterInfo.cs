@@ -122,14 +122,14 @@ namespace Server.MirDatabase
             Index = reader.ReadInt32();
             Name = reader.ReadString();
 
-             if (Envir.LoadVersion < 62)
-             {
-                 Level = (ushort)reader.ReadByte();
-             }
-             else
-             {
-                 Level = reader.ReadUInt16();
-             }
+            if (Envir.LoadVersion < 62)
+            {
+                Level = (ushort)reader.ReadByte();
+            }
+            else
+            {
+                Level = reader.ReadUInt16();
+            }
  
             Class = (MirClass) reader.ReadByte();
             Gender = (MirGender) reader.ReadByte();

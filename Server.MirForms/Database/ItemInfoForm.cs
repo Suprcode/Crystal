@@ -268,7 +268,7 @@ namespace Server
             Holytextbox.Text = info.Stats[Stat.Holy].ToString();
             HPratetextbox.Text = info.Stats[Stat.HPRatePercent].ToString();
             MPratetextbox.Text = info.Stats[Stat.MPRatePercent].ToString();
-            HpDrainRatetextBox.Text = info.Stats[Stat.HPDrainRate].ToString();
+            HpDrainRatetextBox.Text = info.Stats[Stat.HPDrainRatePercent].ToString();
             CriticalRatetextBox.Text = info.Stats[Stat.CriticalRate].ToString();
             CriticalDamagetextBox.Text = info.Stats[Stat.CriticalDamage].ToString();
             ReflecttextBox.Text = info.Stats[Stat.Reflect].ToString();
@@ -377,7 +377,7 @@ namespace Server
                 if (Holytextbox.Text != info.Stats[Stat.Holy].ToString()) Holytextbox.Text = string.Empty;
                 if (HPratetextbox.Text != info.Stats[Stat.HPRatePercent].ToString()) HPratetextbox.Text = string.Empty;
                 if (MPratetextbox.Text != info.Stats[Stat.MPRatePercent].ToString()) MPratetextbox.Text = string.Empty;
-                if (HpDrainRatetextBox.Text != info.Stats[Stat.HPDrainRate].ToString()) HpDrainRatetextBox.Text = string.Empty;
+                if (HpDrainRatetextBox.Text != info.Stats[Stat.HPDrainRatePercent].ToString()) HpDrainRatetextBox.Text = string.Empty;
                 if (CriticalRatetextBox.Text != info.Stats[Stat.CriticalRate].ToString()) CriticalRatetextBox.Text = string.Empty;
                 if (CriticalDamagetextBox.Text != info.Stats[Stat.CriticalDamage].ToString()) CriticalDamagetextBox.Text = string.Empty;
                 if (ReflecttextBox.Text != info.Stats[Stat.Reflect].ToString()) ReflecttextBox.Text = string.Empty;
@@ -1034,29 +1034,28 @@ namespace Server
 
         private void PasteButton_Click(object sender, EventArgs e)
         {
-            string data = Clipboard.GetText();
+            //string data = Clipboard.GetText();
 
-            if (!data.StartsWith("Item", StringComparison.OrdinalIgnoreCase))
-            {
-                MessageBox.Show("Cannot Paste, Copied data is not Item Information.");
-                return;
-            }
-
-
-            string[] items = data.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
+            //if (!data.StartsWith("Item", StringComparison.OrdinalIgnoreCase))
+            //{
+            //    MessageBox.Show("Cannot Paste, Copied data is not Item Information.");
+            //    return;
+            //}
 
 
-            for (int i = 1; i < items.Length; i++)
-            {
-                ItemInfo info = ItemInfo.FromText(items[i]);
+            //string[] items = data.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
-                if (info == null) continue;
-                info.Index = ++Envir.ItemIndex;
-                Envir.ItemInfoList.Add(info);
 
-            }
+            //for (int i = 1; i < items.Length; i++)
+            //{
+            //    ItemInfo info = ItemInfo.FromText(items[i]);
 
-            UpdateInterface();
+            //    if (info == null) continue;
+            //    info.Index = ++Envir.ItemIndex;
+            //    Envir.ItemInfoList.Add(info);
+            //}
+
+            //UpdateInterface();
         }
 
         private void CopyMButton_Click(object sender, EventArgs e)
@@ -1066,56 +1065,56 @@ namespace Server
 
         private void ExportAllButton_Click(object sender, EventArgs e)
         {
-            ExportItems(Envir.ItemInfoList);
+            //ExportItems(Envir.ItemInfoList);
         }
 
         private void ExportSelectedButton_Click(object sender, EventArgs e)
         {
-            var list = ItemInfoListBox.SelectedItems.Cast<ItemInfo>().ToList();
+            //var list = ItemInfoListBox.SelectedItems.Cast<ItemInfo>().ToList();
 
-            ExportItems(list);
+            //ExportItems(list);
         }
 
         private void ExportItems(IEnumerable<ItemInfo> items)
         {
-            var itemInfos = items as ItemInfo[] ?? items.ToArray();
-            var list = itemInfos.Select(item => item.ToText()).ToList();
+            //var itemInfos = items as ItemInfo[] ?? items.ToArray();
+            //var list = itemInfos.Select(item => item.ToText()).ToList();
 
-            File.WriteAllLines(ItemListPath, list);
+            //File.WriteAllLines(ItemListPath, list);
 
-            MessageBox.Show(itemInfos.Count() + " Items have been exported");
+            //MessageBox.Show(itemInfos.Count() + " Items have been exported");
         }
 
         private void ImportButton_Click(object sender, EventArgs e)
         {
-            string Path = string.Empty;
+            //string Path = string.Empty;
 
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Text File|*.txt";
-            ofd.ShowDialog();
+            //OpenFileDialog ofd = new OpenFileDialog();
+            //ofd.Filter = "Text File|*.txt";
+            //ofd.ShowDialog();
 
-            if (ofd.FileName == string.Empty) return;
+            //if (ofd.FileName == string.Empty) return;
 
-            Path = ofd.FileName;
+            //Path = ofd.FileName;
 
-            string data;
-            using (var sr = new StreamReader(Path))
-            {
-                data = sr.ReadToEnd();
-            }
+            //string data;
+            //using (var sr = new StreamReader(Path))
+            //{
+            //    data = sr.ReadToEnd();
+            //}
 
-            var items = data.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            //var items = data.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
-            var count = 0;
-            foreach (var info in items.Select(ItemInfo.FromText).Where(info => info != null))
-            {
-                count++;
-                info.Index = ++Envir.ItemIndex;
-                Envir.ItemInfoList.Add(info);
-            }
+            //var count = 0;
+            //foreach (var info in items.Select(ItemInfo.FromText).Where(info => info != null))
+            //{
+            //    count++;
+            //    info.Index = ++Envir.ItemIndex;
+            //    Envir.ItemInfoList.Add(info);
+            //}
 
-            MessageBox.Show(count + " Items have been imported");
-            UpdateInterface(true);
+            //MessageBox.Show(count + " Items have been imported");
+            //UpdateInterface(true);
         }
 
         private void ISetComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -1461,7 +1460,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].Stats[Stat.HPDrainRate] = temp;
+                _selectedItemInfos[i].Stats[Stat.HPDrainRatePercent] = temp;
         }
 
 

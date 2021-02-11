@@ -2699,10 +2699,6 @@ namespace Server.MirEnvir
 
         public void UpdateItemExpiry(UserItem item)
         {
-            //can't have expiry on usable items
-            if (item.Info.Type == ItemType.Scroll || item.Info.Type == ItemType.Potion || 
-                item.Info.Type == ItemType.Transform || item.Info.Type == ItemType.Script || item.Info.Type == ItemType.Deco) return;
-
             var expiryInfo = new ExpireInfo();
 
             var r = new Regex(@"\[(.*?)\]");

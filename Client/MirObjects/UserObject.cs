@@ -23,7 +23,6 @@ namespace Client.MirObjects
                       CurrentBagWeight;
 
         public long Experience, MaxExperience;
-        public byte LifeOnHit;
 
         public bool TradeLocked;
         public uint TradeGoldAmount;
@@ -35,7 +34,6 @@ namespace Client.MirObjects
 
         public SpecialItemMode ItemMode;
 
-        public byte MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Holy, Freezing, PoisonAttack, HpDrainRate;
         public BaseStats CoreStats = new BaseStats(0);
 
 
@@ -185,7 +183,6 @@ namespace Client.MirObjects
         private void RefreshLevelStats()
         {
             Light = 0;
-            LifeOnHit = 0;
 
             foreach (var stat in CoreStats.Stats)
             {
@@ -395,7 +392,7 @@ namespace Client.MirObjects
                         break;
                     case ItemSet.RedOrchid:
                         Stats[Stat.Accuracy] += 2;
-                        Stats[Stat.HPDrainRate] += 10;
+                        Stats[Stat.HPDrainRatePercent] += 10;
                         break;
                     case ItemSet.RedFlower:
                         Stats[Stat.HP] += 50;
@@ -651,15 +648,7 @@ namespace Client.MirObjects
 
                 if (buff.Info == null) continue;
 
-                Stats[Stat.MaxAC] += buff.Info.BuffAc;
-                Stats[Stat.MaxMAC] += buff.Info.BuffMac;
-                Stats[Stat.MaxDC] += buff.Info.BuffDc;
-                Stats[Stat.MaxMC] += buff.Info.BuffMc;
-                Stats[Stat.MaxSC] += buff.Info.BuffSc;
-                Stats[Stat.HP] += buff.Info.BuffMaxHp;
-                Stats[Stat.MP] += buff.Info.BuffMaxMp;
-                Stats[Stat.HealthRecovery] += buff.Info.BuffHpRegen;
-                Stats[Stat.SpellRecovery] += buff.Info.BuffMPRegen;
+                Stats.Add(buff.Info.Stats);
             }
         }
 
@@ -675,7 +664,7 @@ namespace Client.MirObjects
             //Stats[Stat.HealthRecovery] = Math.Min(Settings.MaxHealthRegen, Stats[Stat.HealthRecovery]);
             //Stats[Stat.PoisonRecovery] = Math.Min(Settings.MaxPoisonRecovery, Stats[Stat.PoisonRecovery]);
             //Stats[Stat.SpellRecovery] = Math.Min(Settings.MaxManaRegen, Stats[Stat.SpellRecovery]);
-            Stats[Stat.HPDrainRate] = Math.Min((byte)100, Stats[Stat.HPDrainRate]);
+            Stats[Stat.HPDrainRatePercent] = Math.Min((byte)100, Stats[Stat.HPDrainRatePercent]);
 
             Stats[Stat.MinAC] = Math.Max(0, Stats[Stat.MinAC]);
             Stats[Stat.MaxAC] = Math.Max(0, Stats[Stat.MaxAC]);
