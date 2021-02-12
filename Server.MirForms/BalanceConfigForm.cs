@@ -1587,7 +1587,7 @@ namespace Server
                     gainRateCell.ReadOnly = true;
                     gainRateCell.Style.BackColor = Color.LightGray;
                     gainRateCell.Style.ForeColor = Color.DarkGray;
-                } 
+                }
             }
 
             var statType = (Stat)classGridView.Rows[e.RowIndex].Cells["BaseStatType"].Value;
