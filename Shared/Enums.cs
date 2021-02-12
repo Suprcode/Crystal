@@ -979,7 +979,7 @@ public enum SpecialItemMode : short
     None = 0,
     Paralize = 0x0001,
     Teleport = 0x0002,
-    Clearring = 0x0004,
+    ClearRing = 0x0004,
     Protection = 0x0008,
     Revival = 0x0010,
     Muscle = 0x0020,
@@ -1275,6 +1275,8 @@ public enum BuffType : byte
     Guild,
     Prison,
     Rested,
+    Skill,
+    ClearRing,
 
     //stats
     Impact = 200,

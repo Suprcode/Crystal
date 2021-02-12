@@ -7,6 +7,8 @@ public class BaseStats
     public MirClass Job;
     public List<BaseStat> Stats = new List<BaseStat>();
 
+    public Stats Caps = new Stats();
+
     public BaseStats(MirClass job)
     {
         Job = job;
@@ -89,6 +91,16 @@ public class BaseStats
                 break;
                 #endregion
         }
+
+        Caps[Stat.MagicResist] = 2;
+        Caps[Stat.PoisonResist] = 6;
+        Caps[Stat.CriticalRate] = 18;
+        Caps[Stat.CriticalDamage] = 10;
+        Caps[Stat.Freezing] = 6;
+        Caps[Stat.PoisonAttack] = 6;
+        Caps[Stat.HealthRecovery] = 8;
+        Caps[Stat.SpellRecovery] = 8;
+        Caps[Stat.PoisonRecovery] = 6;
     }
 
     public BaseStats(BinaryReader reader)
@@ -106,6 +118,8 @@ public class BaseStats
                 Max = reader.ReadInt32()
             });
         }
+
+        Caps = new Stats(reader);
     }
 
     public void Save(BinaryWriter writer)
@@ -121,6 +135,8 @@ public class BaseStats
             writer.Write(stat.GainRate);
             writer.Write(stat.Max);
         }
+
+        Caps.Save(writer);
     }
 }
 

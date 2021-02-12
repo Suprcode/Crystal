@@ -7711,7 +7711,7 @@ namespace Client.MirScenes
                 #endregion
                 #region Helmet text
                 count++;
-                if (HoverItem.Info.Unique.HasFlag(SpecialItemMode.Clearring))
+                if (HoverItem.Info.Unique.HasFlag(SpecialItemMode.ClearRing))
                 {
                     MirLabel Gemhelmet = new MirLabel
                     {

@@ -300,7 +300,7 @@ namespace Server
 
             ParalysischeckBox.Checked = info.Unique.HasFlag(SpecialItemMode.Paralize);
             TeleportcheckBox.Checked = info.Unique.HasFlag(SpecialItemMode.Teleport);
-            ClearcheckBox.Checked = info.Unique.HasFlag(SpecialItemMode.Clearring);
+            ClearcheckBox.Checked = info.Unique.HasFlag(SpecialItemMode.ClearRing);
             ProtectioncheckBox.Checked = info.Unique.HasFlag(SpecialItemMode.Protection);
             RevivalcheckBox.Checked = info.Unique.HasFlag(SpecialItemMode.Revival);
             MusclecheckBox.Checked = info.Unique.HasFlag(SpecialItemMode.Muscle);
@@ -410,7 +410,7 @@ namespace Server
 
                 if (ParalysischeckBox.Checked != info.Unique.HasFlag(SpecialItemMode.Paralize)) ParalysischeckBox.CheckState = CheckState.Indeterminate;
                 if (TeleportcheckBox.Checked != info.Unique.HasFlag(SpecialItemMode.Teleport)) TeleportcheckBox.CheckState = CheckState.Indeterminate;
-                if (ClearcheckBox.Checked != info.Unique.HasFlag(SpecialItemMode.Clearring)) ClearcheckBox.CheckState = CheckState.Indeterminate;
+                if (ClearcheckBox.Checked != info.Unique.HasFlag(SpecialItemMode.ClearRing)) ClearcheckBox.CheckState = CheckState.Indeterminate;
                 if (ProtectioncheckBox.Checked != info.Unique.HasFlag(SpecialItemMode.Protection)) ProtectioncheckBox.CheckState = CheckState.Indeterminate;
                 if (RevivalcheckBox.Checked != info.Unique.HasFlag(SpecialItemMode.Revival)) RevivalcheckBox.CheckState = CheckState.Indeterminate;
                 if (MusclecheckBox.Checked != info.Unique.HasFlag(SpecialItemMode.Muscle)) MusclecheckBox.CheckState = CheckState.Indeterminate;
@@ -1485,7 +1485,7 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i].Unique = (ClearcheckBox.Checked ? _selectedItemInfos[i].Unique |= SpecialItemMode.Clearring : _selectedItemInfos[i].Unique ^= SpecialItemMode.Clearring);
+                _selectedItemInfos[i].Unique = (ClearcheckBox.Checked ? _selectedItemInfos[i].Unique |= SpecialItemMode.ClearRing : _selectedItemInfos[i].Unique ^= SpecialItemMode.ClearRing);
         }
 
         private void ProtectioncheckBox_CheckedChanged(object sender, EventArgs e)

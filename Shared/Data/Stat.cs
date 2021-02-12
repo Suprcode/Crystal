@@ -142,7 +142,7 @@ public enum Stat : byte
     GemRatePercent = 104,
     FishRatePercent = 105,
     CraftRatePercent = 106,
-    SkillRateMultiplier = 107,
+    SkillGainMultiplier = 107,
     AttackBonus = 108,
 
     LoverExpRatePercent = 120,

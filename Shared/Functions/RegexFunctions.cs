@@ -25,7 +25,7 @@ public static class RegexFunctions
 
     public static string SeperateCamelCase(this string value) 
     { 
-        return Regex.Replace(value, "((?<=[a-z])[A-Z]|[A-Z](?=[a-z]))", " $1"); 
+        return Regex.Replace(value, "((?<=[a-z])[A-Z]|[A-Z](?=[a-z]))", " $1").Trim(); 
     }
 
     private static MatchEvaluator GetMatchEv(RegexMatchEvalType type)

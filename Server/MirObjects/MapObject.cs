@@ -499,7 +499,7 @@ namespace Server.MirObjects
 
         public abstract void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true);
 
-        public virtual Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool visible = false, bool infinite = false, bool stackable = false, params int[] values)
+        public virtual Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool visible = false, bool infinite = false, bool stackable = false, bool refreshStats = true, params int[] values)
         {
             if (!HasBuff(type, out Buff buff))
             {
@@ -543,6 +543,7 @@ namespace Server.MirObjects
                     HideFromTargets();
                     break;
                 case BuffType.Hiding:
+                case BuffType.ClearRing:
                     Hidden = true;
                     HideFromTargets();
                     break;
@@ -560,6 +561,18 @@ namespace Server.MirObjects
                 Buffs[i].Infinite = false;
                 Buffs[i].Paused = false;
                 Buffs[i].ExpireTime = Envir.Time;
+
+                switch(b)
+                {
+                    case BuffType.Hiding:
+                    case BuffType.MoonLight:
+                    case BuffType.DarkBody:
+                        if (!HasAnyBuffs(b, BuffType.ClearRing, BuffType.Hiding, BuffType.MoonLight, BuffType.DarkBody))
+                        {
+                            Hidden = false;
+                        }
+                        break;
+                }
             }
         }
 
@@ -575,6 +588,11 @@ namespace Server.MirObjects
 
             buff = null;
             return false;
+        }
+
+        public bool HasAnyBuffs(BuffType exceptBuff, params BuffType[] types)
+        {
+            return Buffs.Select(x => x.Type).Except(new List<BuffType> { exceptBuff }).Intersect(types).Any();
         }
 
         protected void HideFromTargets()
