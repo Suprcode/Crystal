@@ -229,26 +229,17 @@ namespace Server
 
         public static List<RandomItemStat> RandomItemStatsList = new List<RandomItemStat>();
         public static List<MineSet> MineSetList = new List<MineSet>();
-        
+
         //item related settings
-        public static byte MaxMagicResist = 6,
-                    MagicResistWeight = 10,
-                    MaxPoisonResist = 6,
-                    PoisonResistWeight = 10,
-                    MaxCriticalRate = 18,
-                    CriticalRateWeight = 5,
-                    MaxCriticalDamage = 10,
-                    CriticalDamageWeight = 50,
-                    MaxFreezing = 6,
-                    FreezingAttackWeight = 10,
-                    MaxPoisonAttack = 6,
-                    PoisonAttackWeight = 10,
-                    MaxHealthRegen = 8,
-                    HealthRegenWeight = 10,
-                    MaxManaRegen = 8,
-                    ManaRegenWeight = 10,
-                    MaxPoisonRecovery = 6,
-                    MaxLuck = 10;
+        public static byte MagicResistWeight = 10,
+                            PoisonResistWeight = 10,
+                            CriticalRateWeight = 5,
+                            CriticalDamageWeight = 50,
+                            FreezingAttackWeight = 10,
+                            PoisonAttackWeight = 10,
+                            HealthRegenWeight = 10,
+                            ManaRegenWeight = 10,
+                            MaxLuck = 10;
 
         public static bool PvpCanResistMagic = false,
                               PvpCanResistPoison = false,
@@ -407,23 +398,14 @@ namespace Server
             DropGold = Reader.ReadBoolean("DropGold", "DropGold", DropGold);
             MaxDropGold = Reader.ReadUInt32("DropGold", "MaxDropGold", MaxDropGold);
 
-            MaxMagicResist = Reader.ReadByte("Items","MaxMagicResist",MaxMagicResist);
             MagicResistWeight = Reader.ReadByte("Items","MagicResistWeight",MagicResistWeight);
-            MaxPoisonResist = Reader.ReadByte("Items","MaxPoisonResist",MaxPoisonResist);
             PoisonResistWeight = Reader.ReadByte("Items","PoisonResistWeight",PoisonResistWeight);
-            MaxCriticalRate = Reader.ReadByte("Items","MaxCriticalRate",MaxCriticalRate);
             CriticalRateWeight = Reader.ReadByte("Items","CriticalRateWeight",CriticalRateWeight);
-            MaxCriticalDamage = Reader.ReadByte("Items","MaxCriticalDamage",MaxCriticalDamage);
             CriticalDamageWeight = Math.Max((byte)1,Reader.ReadByte("Items","CriticalDamageWeight",CriticalDamageWeight));
-            MaxFreezing = Reader.ReadByte("Items","MaxFreezing",MaxFreezing);
             FreezingAttackWeight = Reader.ReadByte("Items","FreezingAttackWeight",FreezingAttackWeight);
-            MaxPoisonAttack = Reader.ReadByte("Items","MaxPoisonAttack",MaxPoisonAttack);
             PoisonAttackWeight = Reader.ReadByte("Items","PoisonAttackWeight",PoisonAttackWeight);
-            MaxHealthRegen = Reader.ReadByte("Items", "MaxHealthRegen", MaxHealthRegen);
             HealthRegenWeight = Reader.ReadByte("Items", "HealthRegenWeight", HealthRegenWeight);
-            MaxManaRegen = Reader.ReadByte("Items", "MaxManaRegen", MaxManaRegen);
             ManaRegenWeight = Reader.ReadByte("Items", "ManaRegenWeight", ManaRegenWeight);
-            MaxPoisonRecovery = Reader.ReadByte("Items", "MaxPoisonRecovery", MaxPoisonRecovery);
             MaxLuck = Reader.ReadByte("Items", "MaxLuck", MaxLuck);
 
             PvpCanResistMagic = Reader.ReadBoolean("Items","PvpCanResistMagic",PvpCanResistMagic);
@@ -657,23 +639,14 @@ namespace Server
             Reader.Write("DropGold", "DropGold", DropGold);
             Reader.Write("DropGold", "MaxDropGold", MaxDropGold);
             
-            Reader.Write("Items", "MaxMagicResist", MaxMagicResist);
             Reader.Write("Items", "MagicResistWeight", MagicResistWeight);
-            Reader.Write("Items", "MaxPoisonResist", MaxPoisonResist);
             Reader.Write("Items", "PoisonResistWeight", PoisonResistWeight);
-            Reader.Write("Items", "MaxCriticalRate", MaxCriticalRate);
             Reader.Write("Items", "CriticalRateWeight", CriticalRateWeight);
-            Reader.Write("Items", "MaxCriticalDamage", MaxCriticalDamage);
             Reader.Write("Items", "CriticalDamageWeight", CriticalDamageWeight);
-            Reader.Write("Items", "MaxFreezing", MaxFreezing);
             Reader.Write("Items", "FreezingAttackWeight", FreezingAttackWeight);
-            Reader.Write("Items", "MaxPoisonAttack", MaxPoisonAttack);
             Reader.Write("Items", "PoisonAttackWeight", PoisonAttackWeight);
-            Reader.Write("Items", "MaxHealthRegen", MaxHealthRegen);
             Reader.Write("Items", "HealthRegenWeight", HealthRegenWeight);
-            Reader.Write("Items", "MaxManaRegen", MaxManaRegen);
             Reader.Write("Items", "ManaRegenWeight", ManaRegenWeight);
-            Reader.Write("Items", "MaxPoisonRecovery", MaxPoisonRecovery);
             Reader.Write("Items", "MaxLuck", MaxLuck);
 
             Reader.Write("Items", "PvpCanResistMagic", PvpCanResistMagic);
@@ -730,26 +703,29 @@ namespace Server
                 InIReader reader = new InIReader(Path.Combine(ConfigPath, $"BaseStats{ClassBaseStats[i].Job}.ini"));
 
                 ClassBaseStats[i].Stats.Clear();
+                ClassBaseStats[i].Caps.Clear();
 
                 foreach (var stat in Enum.GetValues(typeof(Stat)))
                 {
-                    var section = stat.ToString();
+                    var key = stat.ToString();
 
-                    var formula = reader.ReadString(section, "Formula", null);
+                    var formula = reader.ReadString(key, "Formula", null, false);
 
                     if (!string.IsNullOrEmpty(formula))
                     {
                         var baseStat = new BaseStat((Stat)stat)
                         {
                             FormulaType = (StatFormula)Enum.Parse(typeof(StatFormula), formula, true),
-                            Base = reader.ReadInt32(section, "Base", 0),
-                            Gain = reader.ReadFloat(section, "Gain", 0),
-                            GainRate = reader.ReadFloat(section, "GainRate", 0),
-                            Max = reader.ReadInt32(section, "Max", 0)
+                            Base = reader.ReadInt32(key, "Base", 0),
+                            Gain = reader.ReadFloat(key, "Gain", 0),
+                            GainRate = reader.ReadFloat(key, "GainRate", 0),
+                            Max = reader.ReadInt32(key, "Max", 0)
                         };
 
                         ClassBaseStats[i].Stats.Add(baseStat);
                     }
+
+                    ClassBaseStats[i].Caps[(Stat)stat] = reader.ReadInt32("Caps", key, 0, false);
                 }
             }
         }
@@ -773,6 +749,11 @@ namespace Server
                     reader.Write(stat.Type.ToString(), "Gain", stat.Gain.ToString());
                     reader.Write(stat.Type.ToString(), "GainRate", stat.GainRate.ToString());
                     reader.Write(stat.Type.ToString(), "Max", stat.Max.ToString());
+                }
+
+                foreach (var item in baseStats.Caps.Values)
+                {
+                    reader.Write("Caps", item.Key.ToString(), item.Value);
                 }
             }
         }

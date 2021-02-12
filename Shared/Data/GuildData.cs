@@ -133,7 +133,7 @@ public class GuildBuffInfo
         Stats[Stat.FishRatePercent] = reader.ReadByte("Buff-" + i.ToString(), "BuffFishRate", 0);
         Stats[Stat.ExpRatePercent] = reader.ReadByte("Buff-" + i.ToString(), "BuffExpRate", 0);
         Stats[Stat.CraftRatePercent] = reader.ReadByte("Buff-" + i.ToString(), "BuffCraftRate", 0);
-        Stats[Stat.SkillRateMultiplier] = reader.ReadByte("Buff-" + i.ToString(), "BuffSkillRate", 0);
+        Stats[Stat.SkillGainMultiplier] = reader.ReadByte("Buff-" + i.ToString(), "BuffSkillRate", 0);
         Stats[Stat.HealthRecovery] = reader.ReadByte("Buff-" + i.ToString(), "BuffHpRegen", 0);
         Stats[Stat.SpellRecovery] = reader.ReadByte("Buff-" + i.ToString(), "BuffMpRegen", 0);
         Stats[Stat.AttackBonus] = reader.ReadByte("Buff-" + i.ToString(), "BuffAttack", 0);
@@ -162,7 +162,7 @@ public class GuildBuffInfo
         reader.Write("Buff-" + i.ToString(), "BuffFishRate", Stats[Stat.FishRatePercent]);
         reader.Write("Buff-" + i.ToString(), "BuffExpRate", Stats[Stat.ExpRatePercent]); ;
         reader.Write("Buff-" + i.ToString(), "BuffCraftRate", Stats[Stat.CraftRatePercent]);
-        reader.Write("Buff-" + i.ToString(), "BuffSkillRate", Stats[Stat.SkillRateMultiplier]);
+        reader.Write("Buff-" + i.ToString(), "BuffSkillRate", Stats[Stat.SkillGainMultiplier]);
         reader.Write("Buff-" + i.ToString(), "BuffHpRegen", Stats[Stat.HealthRecovery]);
         reader.Write("Buff-" + i.ToString(), "BuffMpRegen", Stats[Stat.SpellRecovery]);
         reader.Write("Buff-" + i.ToString(), "BuffAttack", Stats[Stat.AttackBonus]);

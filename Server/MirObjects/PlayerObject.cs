@@ -712,6 +712,18 @@ namespace Server.MirObjects
             {
                 Buff buff = Buffs[i];
 
+                switch (buff.Type)
+                {
+                    case BuffType.Concentration:
+                        if (buff.Get<bool>("Interrupted") && buff.Get<long>("InterruptTime") <= Envir.Time)
+                        {
+                            buff.Set("Interrupted", false);
+                            buff.Set("InterruptTime", (long)0);
+                            UpdateConcentration(true, false);
+                        }
+                        break;
+                }
+             
                 if (Envir.Time <= buff.ExpireTime || buff.Infinite || buff.Paused) continue;
 
                 Buffs.RemoveAt(i);
@@ -724,23 +736,20 @@ namespace Server.MirObjects
 
                 switch (buff.Type)
                 {
-                    case BuffType.MoonLight:
                     case BuffType.Hiding:
+                    case BuffType.MoonLight:
                     case BuffType.DarkBody:
-                        if (!SpecialMode.HasFlag(SpecialItemMode.Clearring)) Hidden = false;
-                        Sneaking = false;
-
-                        for (int j = 0; j < Buffs.Count; j++)
+                        if (!HasAnyBuffs(buff.Type, BuffType.ClearRing, BuffType.Hiding, BuffType.MoonLight, BuffType.DarkBody))
                         {
-                            switch (Buffs[j].Type)
+                            Hidden = false;
+                        }
+                        if (buff.Type == BuffType.MoonLight || buff.Type == BuffType.DarkBody)
+                        {
+                            if (!HasAnyBuffs(buff.Type, BuffType.MoonLight, BuffType.DarkBody))
                             {
-                                case BuffType.Hiding:
-                                case BuffType.MoonLight:
-                                case BuffType.DarkBody:
-                                    if (Buffs[j].Type != buff.Type)
-                                        Buffs[j].ExpireTime = 0;
-                                    break;
+                                Sneaking = false;
                             }
+                            break;
                         }
                         break;
                     case BuffType.Concentration:
@@ -760,22 +769,11 @@ namespace Server.MirObjects
                 refresh = true;
             }
 
-            if (HasBuff(BuffType.Concentration, out Buff concentration))
-            {
-                if (concentration.Get<bool>("Interrupted") && concentration.Get<long>("InterruptTime") <= Envir.Time)
-                {
-                    concentration.Set("Interrupted", false);
-                    concentration.Set("InterruptTime", (long)0);
-                    UpdateConcentration(true, false);
-                }
-            }
-
             if (refresh) RefreshStats();
         }
         private void ProcessInfiniteBuffs()
         {
-            bool hiding = false;
-            bool mentalState = false;
+            bool skill = false, clearRing = false;
 
             for (int i = Buffs.Count - 1; i >= 0; i--)
             {
@@ -787,12 +785,13 @@ namespace Server.MirObjects
 
                 switch (buff.Type)
                 {
-                    case BuffType.Hiding:
-                        hiding = true;
-                        if (!SpecialMode.HasFlag(SpecialItemMode.Clearring)) removeBuff = true;
+                    case BuffType.ClearRing:
+                        clearRing = true;
+                        if (!SpecialMode.HasFlag(SpecialItemMode.ClearRing)) removeBuff = true;
                         break;
-                    case BuffType.MentalState:
-                        mentalState = true;
+                    case BuffType.Skill:
+                        skill = true;
+                        if (!SpecialMode.HasFlag(SpecialItemMode.Skill)) removeBuff = true;
                         break;
                 }
 
@@ -803,22 +802,23 @@ namespace Server.MirObjects
 
                     switch (buff.Type)
                     {
-                        case BuffType.Hiding:
-                            Hidden = false;
+                        case BuffType.ClearRing:
+                            if (!HasAnyBuffs(buff.Type, BuffType.Hiding, BuffType.MoonLight, BuffType.DarkBody))
+                            {
+                                Hidden = false;
+                            }
                             break;
                     }
                 }
             }
 
-            if (SpecialMode.HasFlag(SpecialItemMode.Clearring) && !hiding)
+            if (SpecialMode.HasFlag(SpecialItemMode.ClearRing) && !clearRing)
             {
-                AddBuff(BuffType.Hiding, this, 0, new Stats(), infinite: true);
+                AddBuff(BuffType.ClearRing, this, 0, new Stats(), infinite: true);
             }
-
-            if (GetMagic(Spell.MentalState) != null && !mentalState)
+            if (SpecialMode.HasFlag(SpecialItemMode.Skill) && !skill)
             {
-                AddBuff(BuffType.MentalState, this, 0, new Stats(), false, true, false, Info.MentalState);
-                ShowMentalState();
+                AddBuff(BuffType.Skill, this, 0, new Stats { [Stat.SkillGainMultiplier] = 3 }, false, true);
             }
         }
         private void ProcessRegen()
@@ -1275,14 +1275,7 @@ namespace Server.MirObjects
             Enqueue(new S.Death { Direction = Direction, Location = CurrentLocation });
             Broadcast(new S.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
-            for (int i = 0; i < Buffs.Count; i++)
-            {
-                if (Buffs[i].Type == BuffType.Curse)
-                {
-                    Buffs.RemoveAt(i);
-                    break;
-                }
-            }
+            RemoveBuff(BuffType.Curse);
 
             PoisonList.Clear();
             InTrapRock = false;
@@ -2167,7 +2160,13 @@ namespace Server.MirObjects
                     Envir.CheckRankUpdate(Info);
                 }
             }
+
+            if (GetMagic(Spell.MentalState) != null)
+            {
+                ShowMentalState();
+            }
         }
+
         private void StartGameFailed()
         {
             Enqueue(new S.StartGame { Result = 3 });
@@ -2583,7 +2582,7 @@ namespace Server.MirObjects
 
             FastRun = false;
 
-            Stats[Stat.SkillRateMultiplier] = 1;
+            Stats[Stat.SkillGainMultiplier] = 1;
 
             var skillsToAdd = new List<string>();
             var skillsToRemove = new List<string> { Settings.HealRing, Settings.FireRing, Settings.BlinkSkill };
@@ -2626,8 +2625,6 @@ namespace Server.MirObjects
                 if (RealItem.Unique != SpecialItemMode.None)
                 {
                     SpecialMode |= RealItem.Unique;
-
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Skill)) Stats[Stat.SkillRateMultiplier] = 3;
 
                     if (RealItem.Unique.HasFlag(SpecialItemMode.Flame)) skillsToAdd.Add(Settings.FireRing);
                     if (RealItem.Unique.HasFlag(SpecialItemMode.Healing)) skillsToAdd.Add(Settings.HealRing);
@@ -2744,7 +2741,7 @@ namespace Server.MirObjects
                 {
                     SpecialMode |= RealItem.Unique;
 
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Skill)) Stats[Stat.SkillRateMultiplier] = 3;
+                    if (RealItem.Unique.HasFlag(SpecialItemMode.Skill)) Stats[Stat.SkillGainMultiplier] = 3;
 
                     if (RealItem.Unique.HasFlag(SpecialItemMode.Flame)) skillsToAdd.Add(Settings.FireRing);
                     if (RealItem.Unique.HasFlag(SpecialItemMode.Healing)) skillsToAdd.Add(Settings.HealRing);
@@ -2992,16 +2989,10 @@ namespace Server.MirObjects
 
         public void RefreshStatCaps()
         {
-            Stats[Stat.MagicResist] = Math.Min(Settings.MaxMagicResist, Stats[Stat.MagicResist]);
-            Stats[Stat.PoisonResist] = Math.Min(Settings.MaxPoisonResist, Stats[Stat.PoisonResist]);
-            Stats[Stat.CriticalRate] = Math.Min(Settings.MaxCriticalRate, Stats[Stat.CriticalRate]);
-            Stats[Stat.CriticalDamage] = Math.Min(Settings.MaxCriticalDamage, Stats[Stat.CriticalDamage]);
-            Stats[Stat.Freezing] = Math.Min(Settings.MaxFreezing, Stats[Stat.Freezing]);
-            Stats[Stat.PoisonAttack] = Math.Min(Settings.MaxPoisonAttack, Stats[Stat.PoisonAttack]);
-            Stats[Stat.HealthRecovery] = Math.Min(Settings.MaxHealthRegen, Stats[Stat.HealthRecovery]);
-            Stats[Stat.PoisonRecovery] = Math.Min(Settings.MaxPoisonRecovery, Stats[Stat.PoisonRecovery]);
-            Stats[Stat.SpellRecovery] = Math.Min(Settings.MaxManaRegen, Stats[Stat.SpellRecovery]);
-            Stats[Stat.HPDrainRatePercent] = Math.Min((byte)100, Stats[Stat.HPDrainRatePercent]);
+            foreach (var cap in Settings.ClassBaseStats[(byte)Class].Caps.Values)
+            {
+                Stats[cap.Key] = Math.Min(cap.Value, Stats[cap.Key]);
+            }
 
             Stats[Stat.MinAC] = Math.Max(0, Stats[Stat.MinAC]);
             Stats[Stat.MaxAC] = Math.Max(0, Stats[Stat.MaxAC]);
@@ -3044,8 +3035,7 @@ namespace Server.MirObjects
         {
             foreach (var skill in skillsToRemove)
             {
-                Spell spelltype;
-                if (!Enum.TryParse(skill, out spelltype)) return;
+                if (!Enum.TryParse(skill, out Spell spelltype)) return;
 
                 for (var i = Info.Magics.Count - 1; i >= 0; i--)
                 {
@@ -3089,15 +3079,18 @@ namespace Server.MirObjects
             {
                 Buff buff = Buffs[i];
 
-                if (buff.Values == null || buff.Values.Length == 0 || buff.Paused) continue;
+                if (buff.Paused) continue;
 
                 Stats.Add(buff.Stats);
 
-                switch (buff.Type)
-                {         
-                    case BuffType.Transform:
-                        TransformType = (short)buff.Values[0];
-                        break;
+                if (buff.Values != null && buff.Values.Length > 0)
+                {
+                    switch (buff.Type)
+                    {
+                        case BuffType.Transform:
+                            TransformType = (short)buff.Values[0];
+                            break;
+                    }
                 }
             }
 
@@ -5373,17 +5366,9 @@ namespace Server.MirObjects
                 }
             }
 
-            if (Hidden && !SpecialMode.HasFlag(SpecialItemMode.Clearring))
+            if (Hidden)
             {
-                for (int i = 0; i < Buffs.Count; i++)
-                {
-                    switch (Buffs[i].Type)
-                    {
-                        case BuffType.Hiding:
-                            Buffs[i].ExpireTime = 0;
-                            break;
-                    }
-                }
+                RemoveBuff(BuffType.Hiding);
             }
 
             Direction = dir;
@@ -5411,8 +5396,6 @@ namespace Server.MirObjects
 
 
             CheckConquest();
-
-
 
             CellTime = Envir.Time + 500;
             ActionTime = Envir.Time + GetDelayTime(MoveDelay);
@@ -5468,19 +5451,11 @@ namespace Server.MirObjects
             if (ItemRentalPartner != null)
                 CancelItemRental();
 
-            if (Hidden && !SpecialMode.HasFlag(SpecialItemMode.Clearring) && !Sneaking)
+            if (Hidden && !Sneaking)
             {
-                for (int i = 0; i < Buffs.Count; i++)
-                {
-                    switch (Buffs[i].Type)
-                    {
-                        case BuffType.Hiding:
-                        case BuffType.MoonLight:
-                        case BuffType.DarkBody:
-                            Buffs[i].ExpireTime = 0;
-                            break;
-                    }
-                }
+                RemoveBuff(BuffType.Hiding);
+                RemoveBuff(BuffType.MoonLight);
+                RemoveBuff(BuffType.DarkBody);
             }
 
             Direction = dir;
@@ -5782,14 +5757,15 @@ namespace Server.MirObjects
                     {
                         case BuffType.MoonLight:
                             MoonLightAttack = true;
-                            Buffs[i].ExpireTime = 0;
                             break;
                         case BuffType.DarkBody:
                             DarkBodyAttack = true;
-                            Buffs[i].ExpireTime = 0;
                             break;
                     }
                 }
+
+                RemoveBuff(BuffType.MoonLight);
+                RemoveBuff(BuffType.DarkBody);
             }
 
             byte level = 0;
@@ -6299,16 +6275,8 @@ namespace Server.MirObjects
 
             if (Hidden)
             {
-                for (int i = 0; i < Buffs.Count; i++)
-                {
-                    switch (Buffs[i].Type)
-                    {
-                        case BuffType.MoonLight:
-                        case BuffType.DarkBody:
-                            Buffs[i].ExpireTime = 0;
-                            break;
-                    }
-                }
+                RemoveBuff(BuffType.MoonLight);
+                RemoveBuff(BuffType.DarkBody);
             }
 
             AttackTime = Envir.Time + MoveDelay;
@@ -8095,6 +8063,8 @@ namespace Server.MirObjects
         }
         private void DarkBody(MapObject target, UserMagic magic)
         {
+            if (target == null) return;
+
             MonsterObject monster;
             for (int i = 0; i < Pets.Count; i++)
             {
@@ -8108,8 +8078,6 @@ namespace Server.MirObjects
             MonsterInfo info = Envir.GetMonsterInfo(Settings.AssassinCloneName);
             if (info == null) return;
 
-            if (target == null) return;
-
             LevelMagic(magic);
 
             monster = MonsterObject.GetMonster(info);
@@ -8122,8 +8090,7 @@ namespace Server.MirObjects
 
             monster.Spawn(CurrentMap, CurrentLocation);
 
-            for (int i = 0; i < Buffs.Count; i++)
-                if (Buffs[i].Type == BuffType.DarkBody) return;
+            if (HasBuff(BuffType.DarkBody, out _)) return;
 
             var duration = (GetAttackPower(Stats[Stat.MinAC], Stats[Stat.MaxAC]) + (magic.Level + 1) * 5) * 500;
 
@@ -8792,13 +8759,14 @@ namespace Server.MirObjects
                 #region Hiding
 
                 case Spell.Hiding:
-                    for (int i = 0; i < Buffs.Count; i++)
-                        if (Buffs[i].Type == BuffType.Hiding) return;
+                    {
+                        if (HasBuff(BuffType.Hiding, out _)) return;
 
-                    value = (int)data[1];
+                        value = (int)data[1];
 
-                    AddBuff(BuffType.Hiding, this, Settings.Second * value, new Stats());
-                    LevelMagic(magic);
+                        AddBuff(BuffType.Hiding, this, Settings.Second * value, new Stats());
+                        LevelMagic(magic);
+                    }
                     break;
 
                 #endregion
@@ -8855,11 +8823,12 @@ namespace Server.MirObjects
                 #region MagicShield
 
                 case Spell.MagicShield:
+                    {
+                        if (HasBuff(BuffType.MagicShield, out _)) return;
 
-                    if (HasBuff(BuffType.MagicShield, out _)) return;
-
-                    AddBuff(BuffType.MagicShield, this, Settings.Second * (int)data[1], new Stats { [Stat.DamageReductionPercent] = (magic.Level + 2) * 10 });
-                    LevelMagic(magic);
+                        AddBuff(BuffType.MagicShield, this, Settings.Second * (int)data[1], new Stats { [Stat.DamageReductionPercent] = (magic.Level + 2) * 10 });
+                        LevelMagic(magic);
+                    }
                     break;
 
                 #endregion
@@ -8867,14 +8836,16 @@ namespace Server.MirObjects
                 #region TurnUndead
 
                 case Spell.TurnUndead:
-                    monster = (MonsterObject)data[1];
-                    if (monster == null || !monster.IsAttackTarget(this) || monster.CurrentMap != CurrentMap || monster.Node == null) return;
-                    monster.LastHitter = this;
-                    monster.LastHitTime = Envir.Time + 5000;
-                    monster.EXPOwner = this;
-                    monster.EXPOwnerTime = Envir.Time + 5000;
-                    monster.Die();
-                    LevelMagic(magic);
+                    {
+                        monster = (MonsterObject)data[1];
+                        if (monster == null || !monster.IsAttackTarget(this) || monster.CurrentMap != CurrentMap || monster.Node == null) return;
+                        monster.LastHitter = this;
+                        monster.LastHitTime = Envir.Time + 5000;
+                        monster.EXPOwner = this;
+                        monster.EXPOwnerTime = Envir.Time + 5000;
+                        monster.Die();
+                        LevelMagic(magic);
+                    }
                     break;
 
                 #endregion
@@ -8883,8 +8854,6 @@ namespace Server.MirObjects
 
                 case Spell.MagicBooster:
                     {
-                        //6 + magic.Level
-
                         var stats = new Stats
                         {
                             [Stat.MinMC] = (int)data[1],
@@ -9568,7 +9537,7 @@ namespace Server.MirObjects
                     PlayerObject player = Envir.GetPlayer(Mentor.Name);
                     if (player.CurrentMap == CurrentMap && Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) && !player.Dead)
                     {
-                        if (Stats[Stat.SkillRateMultiplier] == 1)
+                        if (Stats[Stat.SkillGainMultiplier] == 1)
                         {
                             exp *= 2;
                         }
@@ -9576,7 +9545,7 @@ namespace Server.MirObjects
                 }
             }
 
-            exp *= (byte)Math.Min(byte.MaxValue, Stats[Stat.SkillRateMultiplier]);
+            exp *= (byte)Math.Min(byte.MaxValue, Stats[Stat.SkillGainMultiplier]);
             
             if (Level == ushort.MaxValue) exp = byte.MaxValue;
 
@@ -10071,15 +10040,10 @@ namespace Server.MirObjects
                 return 0;
             }
 
-            for (int i = 0; i < Buffs.Count; i++)
+            if (Hidden)
             {
-                switch (Buffs[i].Type)
-                {
-                    case BuffType.MoonLight:
-                    case BuffType.DarkBody:
-                        Buffs[i].ExpireTime = 0;
-                        break;
-                }
+                RemoveBuff(BuffType.MoonLight);
+                RemoveBuff(BuffType.DarkBody);
             }
 
             //EnergyShield
@@ -10194,25 +10158,20 @@ namespace Server.MirObjects
                 return 0;
             }
 
-            for (int i = 0; i < Buffs.Count; i++)
+            if (Hidden)
             {
-                switch (Buffs[i].Type)
-                {
-                    case BuffType.MoonLight:
-                    case BuffType.DarkBody:
-                        Buffs[i].ExpireTime = 0;
-                        break;
-                    case BuffType.EnergyShield:
-                        int rate = Buffs[i].Values[0];
+                RemoveBuff(BuffType.MoonLight);
+                RemoveBuff(BuffType.DarkBody);
+            }
 
-                        if (Envir.Random.Next(rate < 2 ? 2 : rate) == 0)
-                        {
-                            if (HP + ((ushort)Buffs[i].Values[1]) >= Stats[Stat.HP])
-                                SetHP(Stats[Stat.HP]);
-                            else
-                                ChangeHP(Buffs[i].Values[1]);
-                        }
-                        break;
+            if (Stats[Stat.EnergyShieldPercent] > 0)
+            {
+                if (Envir.Random.Next(100) < Stats[Stat.EnergyShieldPercent])
+                {
+                    if (HP + (Stats[Stat.EnergyShieldHPGain]) >= Stats[Stat.HP])
+                        SetHP(Stats[Stat.HP]);
+                    else
+                        ChangeHP(Stats[Stat.EnergyShieldHPGain]);
                 }
             }
 
@@ -10262,18 +10221,11 @@ namespace Server.MirObjects
         public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
         {
             int armour = 0;
+
             if (Hidden)
             {
-                for (int i = 0; i < Buffs.Count; i++)
-                {
-                    switch (Buffs[i].Type)
-                    {
-                        case BuffType.MoonLight:
-                        case BuffType.DarkBody:
-                            Buffs[i].ExpireTime = 0;
-                            break;
-                    }
-                }
+                RemoveBuff(BuffType.MoonLight);
+                RemoveBuff(BuffType.DarkBody);
             }
 
             switch (type)
@@ -10377,14 +10329,9 @@ namespace Server.MirObjects
             PoisonList.Add(p);
         }
 
-        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stat, bool visible = false, bool infinite = false, bool stackable = false, params int[] values)
+        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stat, bool visible = false, bool infinite = false, bool stackable = false, bool refreshStats = true, params int[] values)
         {
-            if (HasBuff(type, out Buff b) && b.Infinite != infinite)
-            {
-                return b;
-            }
-
-            b = base.AddBuff(type, owner, duration, stat, visible, infinite, stackable, values);
+            Buff b = base.AddBuff(type, owner, duration, stat, visible, infinite, stackable, refreshStats, values);
 
             switch (b.Type)
             {
@@ -10408,7 +10355,10 @@ namespace Server.MirObjects
                 Broadcast(packet);
             }
 
-            RefreshStats();
+            if (refreshStats)
+            {
+                RefreshStats();
+            }
 
             return b;
         }
@@ -10425,7 +10375,7 @@ namespace Server.MirObjects
         {
             if (!b.Paused) return;
 
-            AddBuff(b.Type, b.Caster, (int)(b.ExpireTime - Envir.Time), b.Stats, b.Visible, b.Infinite, b.Stackable, b.Values);
+            AddBuff(b.Type, b.Caster, (int)(b.ExpireTime - Envir.Time), b.Stats, b.Visible, b.Infinite, b.Stackable, true, b.Values);
         }
 
         public void EquipSlotItem(MirGridType grid, ulong id, int to, MirGridType gridTo, ulong idTo)
@@ -11515,7 +11465,7 @@ namespace Server.MirObjects
                                 {
                                     if (HasBuff(BuffType.WonderDrug, out _))
                                     {
-                                        ReceiveChat("WonderDrug buff already active.", ChatType.System);
+                                        ReceiveChat("WonderDrug already active.", ChatType.System);
                                         Enqueue(p);
                                         return;
                                     }
@@ -11560,7 +11510,7 @@ namespace Server.MirObjects
                     break;
                 case ItemType.Transform: //Transforms
                     {
-                        AddBuff(BuffType.Transform, this, (Settings.Second * item.Info.Durability), new Stats(), false, false, false, item.Info.Shape);
+                        AddBuff(BuffType.Transform, this, (Settings.Second * item.Info.Durability), new Stats(), false, false, false, true, item.Info.Shape);
                     }
                     break;
                 case ItemType.Deco:
@@ -12260,7 +12210,7 @@ namespace Server.MirObjects
                         return true;
                     break;
                 case 4: //Helmet
-                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.Clearring))
+                    if (Gem.Info.Unique.HasFlag(SpecialItemMode.ClearRing))
                         return true;
                     break;
                 case 5: //necklace
@@ -14225,7 +14175,6 @@ namespace Server.MirObjects
                 case Spell.MentalState:
                     Info.MentalState = (byte)((Info.MentalState + 1) % 3);
 
-                    AddBuff(BuffType.MentalState, this, 0, null, false, true, false, Info.MentalState);
                     ShowMentalState();
                     break;
             }
@@ -14245,6 +14194,8 @@ namespace Server.MirObjects
                     ReceiveChat("Mentalstate: Group mode.", ChatType.Hint);
                     break;
             }
+
+            AddBuff(BuffType.MentalState, this, 0, new Stats(), false, true, false, true, Info.MentalState);
         }
 
         private void UpdateGMBuff()
@@ -14257,7 +14208,7 @@ namespace Server.MirObjects
             if (GMNeverDie) options |= GMOptions.Superman;
             if (Observer) options |= GMOptions.Observer;
 
-            AddBuff(BuffType.GameMaster, this, 0, null, Settings.GameMasterEffect, true, false, (byte)options);
+            AddBuff(BuffType.GameMaster, this, 0, null, Settings.GameMasterEffect, true, false, true, (byte)options);
         }
 
         public void Opendoor(byte Doorindex)

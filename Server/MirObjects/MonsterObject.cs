@@ -473,8 +473,6 @@ namespace Server.MirObjects
             {
                 Buff buff = Buffs[i];
 
-                if (buff.Values == null || buff.Values.Length < 1) continue;
-
                 switch (buff.Type)
                 {
                     case BuffType.SwiftFeet:
@@ -1182,7 +1180,7 @@ namespace Server.MirObjects
             {
                 Buff buff = Buffs[i];
 
-                if (Envir.Time <= buff.ExpireTime) continue;
+                if (Envir.Time <= buff.ExpireTime || buff.Infinite) continue;
 
                 Buffs.RemoveAt(i);
 
@@ -1191,10 +1189,21 @@ namespace Server.MirObjects
 
                 switch (buff.Type)
                 {
-                    case BuffType.MoonLight:
                     case BuffType.Hiding:
+                    case BuffType.MoonLight:
                     case BuffType.DarkBody:
-                        Hidden = false;
+                        if (!HasAnyBuffs(buff.Type, BuffType.ClearRing, BuffType.Hiding, BuffType.MoonLight, BuffType.DarkBody))
+                        {
+                            Hidden = false;
+                        }
+                        if (buff.Type == BuffType.MoonLight || buff.Type == BuffType.DarkBody)
+                        {
+                            if (!HasAnyBuffs(buff.Type, BuffType.MoonLight, BuffType.DarkBody))
+                            {
+                                Sneaking = false;
+                            }
+                            break;
+                        }
                         break;
                 }
 
@@ -1325,7 +1334,6 @@ namespace Server.MirObjects
         }
         protected virtual void FindTarget()
         {
-            //if (CurrentMap.Players.Count < 1) return;
             Map Current = CurrentMap;
 
             for (int d = 0; d <= Info.ViewRange; d++)
@@ -1508,17 +1516,8 @@ namespace Server.MirObjects
 
             if (Hidden)
             {
-                Hidden = false;
-
-                for (int i = 0; i < Buffs.Count; i++)
-                {
-                    if (Buffs[i].Type != BuffType.Hiding) continue;
-
-                    Buffs[i].ExpireTime = 0;
-                    break;
-                }
+                RemoveBuff(BuffType.Hiding);
             }
-
 
             CellTime = Envir.Time + 500;
             ActionTime = Envir.Time + 300;
@@ -2158,14 +2157,14 @@ namespace Server.MirObjects
             PoisonList.Add(p);
         }
 
-        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stat, bool visible = false, bool infinite = false, bool stackable = false, params int[] values)
+        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stat, bool visible = false, bool infinite = false, bool stackable = false, bool refreshStats = true, params int[] values)
         {
             if (HasBuff(type, out Buff b) && b.Infinite == true)
             {
                 return b;
             }
 
-            b = base.AddBuff(type, owner, duration, Stats, visible, infinite, stackable, values);
+            b = base.AddBuff(type, owner, duration, Stats, visible, infinite, stackable, refreshStats, values);
 
             var packet = new S.AddBuff
             {
@@ -2176,7 +2175,10 @@ namespace Server.MirObjects
 
             if (b.Visible) Broadcast(packet);
 
-            RefreshAll();
+            if (refreshStats)
+            {
+                RefreshAll();
+            }
 
             return b;
         }

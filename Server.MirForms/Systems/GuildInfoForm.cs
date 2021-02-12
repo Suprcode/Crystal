@@ -125,7 +125,7 @@ namespace Server
                 BufftxtFishRate.Text = SelectedBuff.Stats[Stat.FishRatePercent].ToString();
                 BufftxtExpRate.Text = SelectedBuff.Stats[Stat.ExpRatePercent].ToString();
                 BufftxtCraftRate.Text = SelectedBuff.Stats[Stat.CraftRatePercent].ToString();
-                BufftxtSkillRate.Text = SelectedBuff.Stats[Stat.SkillRateMultiplier].ToString();
+                BufftxtSkillRate.Text = SelectedBuff.Stats[Stat.SkillGainMultiplier].ToString();
                 BufftxtDropRate.Text = SelectedBuff.Stats[Stat.ItemDropRatePercent].ToString();
                 BufftxtGoldRate.Text = SelectedBuff.Stats[Stat.GoldDropRatePercent].ToString();
             }
@@ -590,7 +590,7 @@ namespace Server
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.Stats[Stat.SkillRateMultiplier] = temp;
+            SelectedBuff.Stats[Stat.SkillGainMultiplier] = temp;
             GuildsChanged = true;
         }
 

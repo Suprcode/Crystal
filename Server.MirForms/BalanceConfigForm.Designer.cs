@@ -28,25 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.MaxMagicResisttextbox = new System.Windows.Forms.TextBox();
             this.MagicResistWeigttextbox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.PoisonResistWeighttextbox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.MaxPoisonResisttextbox = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.CritialRateWeighttextbox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.MaxCriticalRatetextbox = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.CriticalDamagetextbox = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.MaxCriticalDamagetextbox = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.ClassComboBox = new System.Windows.Forms.ComboBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.classGridView = new System.Windows.Forms.DataGridView();
             this.BaseStatType = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.BaseStatFormula = new System.Windows.Forms.DataGridViewComboBoxColumn();
@@ -54,29 +46,24 @@
             this.BaseStatGain = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BaseStatGainRate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BaseStatMax = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ClassComboBox = new System.Windows.Forms.ComboBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.classCapGridView = new System.Windows.Forms.DataGridView();
+            this.CapType = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.MaxPoisonRecoverytextBox = new System.Windows.Forms.TextBox();
-            this.label39 = new System.Windows.Forms.Label();
             this.ManaRegenWeighttextBox = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
-            this.MaxManaRegentextBox = new System.Windows.Forms.TextBox();
-            this.label38 = new System.Windows.Forms.Label();
             this.HealthRegenWeighttextBox = new System.Windows.Forms.TextBox();
             this.label35 = new System.Windows.Forms.Label();
-            this.MaxHealthRegentextBox = new System.Windows.Forms.TextBox();
-            this.label36 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.CanFreezecheckBox = new System.Windows.Forms.CheckBox();
             this.CanResistPoisoncheckBox = new System.Windows.Forms.CheckBox();
             this.CanResistMagiccheckBox = new System.Windows.Forms.CheckBox();
             this.PoisonAttackWeighttextbox = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
-            this.MaxPoisonAttacktextbox = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
             this.FreezingWeighttextbox = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.MaxFreezingtextbox = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.RISDeleteIndexbutton = new System.Windows.Forms.Button();
             this.RISAddIndexbutton = new System.Windows.Forms.Button();
@@ -183,7 +170,10 @@
             this.lblClassStatExample = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.classGridView)).BeginInit();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.classCapGridView)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -192,24 +182,6 @@
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(91, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Max MagicResist:";
-            // 
-            // MaxMagicResisttextbox
-            // 
-            this.MaxMagicResisttextbox.Location = new System.Drawing.Point(121, 10);
-            this.MaxMagicResisttextbox.MaxLength = 3;
-            this.MaxMagicResisttextbox.Name = "MaxMagicResisttextbox";
-            this.MaxMagicResisttextbox.Size = new System.Drawing.Size(38, 20);
-            this.MaxMagicResisttextbox.TabIndex = 1;
-            this.MaxMagicResisttextbox.TextChanged += new System.EventHandler(this.MaxMagicResisttextbox_TextChanged);
             // 
             // MagicResistWeigttextbox
             // 
@@ -231,7 +203,7 @@
             // 
             // PoisonResistWeighttextbox
             // 
-            this.PoisonResistWeighttextbox.Location = new System.Drawing.Point(121, 84);
+            this.PoisonResistWeighttextbox.Location = new System.Drawing.Point(121, 60);
             this.PoisonResistWeighttextbox.MaxLength = 3;
             this.PoisonResistWeighttextbox.Name = "PoisonResistWeighttextbox";
             this.PoisonResistWeighttextbox.Size = new System.Drawing.Size(38, 20);
@@ -241,33 +213,15 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(15, 87);
+            this.label3.Location = new System.Drawing.Point(15, 63);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(105, 13);
             this.label3.TabIndex = 6;
             this.label3.Text = "PoisonResist Weight";
             // 
-            // MaxPoisonResisttextbox
-            // 
-            this.MaxPoisonResisttextbox.Location = new System.Drawing.Point(121, 60);
-            this.MaxPoisonResisttextbox.MaxLength = 3;
-            this.MaxPoisonResisttextbox.Name = "MaxPoisonResisttextbox";
-            this.MaxPoisonResisttextbox.Size = new System.Drawing.Size(38, 20);
-            this.MaxPoisonResisttextbox.TabIndex = 5;
-            this.MaxPoisonResisttextbox.TextChanged += new System.EventHandler(this.MaxPoisonResisttextbox_TextChanged);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(15, 63);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(94, 13);
-            this.label4.TabIndex = 4;
-            this.label4.Text = "Max PoisonResist:";
-            // 
             // CritialRateWeighttextbox
             // 
-            this.CritialRateWeighttextbox.Location = new System.Drawing.Point(121, 132);
+            this.CritialRateWeighttextbox.Location = new System.Drawing.Point(121, 86);
             this.CritialRateWeighttextbox.MaxLength = 3;
             this.CritialRateWeighttextbox.Name = "CritialRateWeighttextbox";
             this.CritialRateWeighttextbox.Size = new System.Drawing.Size(38, 20);
@@ -277,33 +231,15 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(15, 135);
+            this.label5.Location = new System.Drawing.Point(15, 89);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(98, 13);
             this.label5.TabIndex = 10;
             this.label5.Text = "CriticalRate Weight";
             // 
-            // MaxCriticalRatetextbox
-            // 
-            this.MaxCriticalRatetextbox.Location = new System.Drawing.Point(121, 108);
-            this.MaxCriticalRatetextbox.MaxLength = 3;
-            this.MaxCriticalRatetextbox.Name = "MaxCriticalRatetextbox";
-            this.MaxCriticalRatetextbox.Size = new System.Drawing.Size(38, 20);
-            this.MaxCriticalRatetextbox.TabIndex = 9;
-            this.MaxCriticalRatetextbox.TextChanged += new System.EventHandler(this.MaxCriticalRatetextbox_TextChanged);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(15, 111);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(84, 13);
-            this.label6.TabIndex = 8;
-            this.label6.Text = "Max CriticalRate";
-            // 
             // CriticalDamagetextbox
             // 
-            this.CriticalDamagetextbox.Location = new System.Drawing.Point(121, 184);
+            this.CriticalDamagetextbox.Location = new System.Drawing.Point(121, 112);
             this.CriticalDamagetextbox.MaxLength = 3;
             this.CriticalDamagetextbox.Name = "CriticalDamagetextbox";
             this.CriticalDamagetextbox.Size = new System.Drawing.Size(38, 20);
@@ -313,29 +249,11 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(15, 184);
+            this.label7.Location = new System.Drawing.Point(15, 115);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(97, 13);
             this.label7.TabIndex = 14;
             this.label7.Text = "CriticalDmg Weight";
-            // 
-            // MaxCriticalDamagetextbox
-            // 
-            this.MaxCriticalDamagetextbox.Location = new System.Drawing.Point(121, 157);
-            this.MaxCriticalDamagetextbox.MaxLength = 3;
-            this.MaxCriticalDamagetextbox.Name = "MaxCriticalDamagetextbox";
-            this.MaxCriticalDamagetextbox.Size = new System.Drawing.Size(38, 20);
-            this.MaxCriticalDamagetextbox.TabIndex = 13;
-            this.MaxCriticalDamagetextbox.TextChanged += new System.EventHandler(this.MaxCriticalDamagetextbox_TextChanged);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(15, 160);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(101, 13);
-            this.label8.TabIndex = 12;
-            this.label8.Text = "Max CriticalDamage";
             // 
             // tabControl1
             // 
@@ -345,31 +263,31 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(674, 731);
+            this.tabControl1.Size = new System.Drawing.Size(713, 731);
             this.tabControl1.TabIndex = 16;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.ClassComboBox);
-            this.tabPage3.Controls.Add(this.classGridView);
+            this.tabPage3.Controls.Add(this.panel2);
+            this.tabPage3.Controls.Add(this.panel1);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(666, 705);
+            this.tabPage3.Size = new System.Drawing.Size(705, 705);
             this.tabPage3.TabIndex = 4;
             this.tabPage3.Text = "Class";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // ClassComboBox
+            // panel2
             // 
-            this.ClassComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ClassComboBox.FormattingEnabled = true;
-            this.ClassComboBox.Location = new System.Drawing.Point(6, 6);
-            this.ClassComboBox.Name = "ClassComboBox";
-            this.ClassComboBox.Size = new System.Drawing.Size(92, 21);
-            this.ClassComboBox.TabIndex = 7;
-            this.ClassComboBox.SelectedIndexChanged += new System.EventHandler(this.ClassComboBox_SelectedIndexChanged);
+            this.panel2.Controls.Add(this.classGridView);
+            this.panel2.Controls.Add(this.ClassComboBox);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel2.Location = new System.Drawing.Point(3, 3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(493, 699);
+            this.panel2.TabIndex = 9;
             // 
             // classGridView
             // 
@@ -382,14 +300,15 @@
             this.BaseStatGainRate,
             this.BaseStatMax});
             this.classGridView.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.classGridView.Location = new System.Drawing.Point(3, 33);
+            this.classGridView.Location = new System.Drawing.Point(0, 30);
             this.classGridView.Name = "classGridView";
-            this.classGridView.Size = new System.Drawing.Size(660, 669);
+            this.classGridView.Size = new System.Drawing.Size(493, 669);
             this.classGridView.TabIndex = 0;
             this.classGridView.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.classGridView_CellValidating);
             this.classGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.classGridView_CellValueChanged);
             this.classGridView.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.classGridView_DefaultValuesNeeded);
             this.classGridView.SelectionChanged += new System.EventHandler(this.classGridView_SelectionChanged);
+            this.classGridView.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.classGridView_UserDeletedRow);
             // 
             // BaseStatType
             // 
@@ -431,72 +350,82 @@
             this.BaseStatMax.HeaderText = "Max";
             this.BaseStatMax.Name = "BaseStatMax";
             // 
+            // ClassComboBox
+            // 
+            this.ClassComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ClassComboBox.FormattingEnabled = true;
+            this.ClassComboBox.Location = new System.Drawing.Point(3, 3);
+            this.ClassComboBox.Name = "ClassComboBox";
+            this.ClassComboBox.Size = new System.Drawing.Size(92, 21);
+            this.ClassComboBox.TabIndex = 7;
+            this.ClassComboBox.SelectedIndexChanged += new System.EventHandler(this.ClassComboBox_SelectedIndexChanged);
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.classCapGridView);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel1.Location = new System.Drawing.Point(502, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(200, 699);
+            this.panel1.TabIndex = 8;
+            // 
+            // classCapGridView
+            // 
+            this.classCapGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.classCapGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.CapType,
+            this.Value});
+            this.classCapGridView.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.classCapGridView.Location = new System.Drawing.Point(0, 30);
+            this.classCapGridView.Name = "classCapGridView";
+            this.classCapGridView.Size = new System.Drawing.Size(200, 669);
+            this.classCapGridView.TabIndex = 0;
+            this.classCapGridView.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.classCapGridView_CellValidating);
+            this.classCapGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.classCapGridView_CellValueChanged);
+            this.classCapGridView.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.classCapGridView_DefaultValuesNeeded);
+            this.classCapGridView.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.classCapGridView_UserDeletedRow);
+            // 
+            // CapType
+            // 
+            this.CapType.HeaderText = "Cap Type";
+            this.CapType.Name = "CapType";
+            // 
+            // Value
+            // 
+            this.Value.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Value.HeaderText = "Value";
+            this.Value.Name = "Value";
+            // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.MaxPoisonRecoverytextBox);
-            this.tabPage2.Controls.Add(this.label39);
             this.tabPage2.Controls.Add(this.ManaRegenWeighttextBox);
             this.tabPage2.Controls.Add(this.label37);
-            this.tabPage2.Controls.Add(this.MaxManaRegentextBox);
-            this.tabPage2.Controls.Add(this.label38);
             this.tabPage2.Controls.Add(this.HealthRegenWeighttextBox);
             this.tabPage2.Controls.Add(this.label35);
-            this.tabPage2.Controls.Add(this.MaxHealthRegentextBox);
-            this.tabPage2.Controls.Add(this.label36);
             this.tabPage2.Controls.Add(this.groupBox2);
             this.tabPage2.Controls.Add(this.PoisonAttackWeighttextbox);
             this.tabPage2.Controls.Add(this.label11);
-            this.tabPage2.Controls.Add(this.MaxPoisonAttacktextbox);
-            this.tabPage2.Controls.Add(this.label12);
             this.tabPage2.Controls.Add(this.FreezingWeighttextbox);
             this.tabPage2.Controls.Add(this.label10);
-            this.tabPage2.Controls.Add(this.MaxFreezingtextbox);
-            this.tabPage2.Controls.Add(this.label9);
             this.tabPage2.Controls.Add(this.CriticalDamagetextbox);
-            this.tabPage2.Controls.Add(this.label1);
-            this.tabPage2.Controls.Add(this.MaxMagicResisttextbox);
             this.tabPage2.Controls.Add(this.label7);
             this.tabPage2.Controls.Add(this.label2);
-            this.tabPage2.Controls.Add(this.MaxCriticalDamagetextbox);
             this.tabPage2.Controls.Add(this.MagicResistWeigttextbox);
-            this.tabPage2.Controls.Add(this.label8);
-            this.tabPage2.Controls.Add(this.label4);
             this.tabPage2.Controls.Add(this.CritialRateWeighttextbox);
-            this.tabPage2.Controls.Add(this.MaxPoisonResisttextbox);
             this.tabPage2.Controls.Add(this.label5);
             this.tabPage2.Controls.Add(this.label3);
-            this.tabPage2.Controls.Add(this.MaxCriticalRatetextbox);
             this.tabPage2.Controls.Add(this.PoisonResistWeighttextbox);
-            this.tabPage2.Controls.Add(this.label6);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(666, 705);
+            this.tabPage2.Size = new System.Drawing.Size(705, 705);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Itemstats";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // MaxPoisonRecoverytextBox
-            // 
-            this.MaxPoisonRecoverytextBox.Location = new System.Drawing.Point(120, 391);
-            this.MaxPoisonRecoverytextBox.MaxLength = 3;
-            this.MaxPoisonRecoverytextBox.Name = "MaxPoisonRecoverytextBox";
-            this.MaxPoisonRecoverytextBox.Size = new System.Drawing.Size(38, 20);
-            this.MaxPoisonRecoverytextBox.TabIndex = 34;
-            this.MaxPoisonRecoverytextBox.TextChanged += new System.EventHandler(this.MaxPoisonRecoverytextBox_TextChanged);
-            // 
-            // label39
-            // 
-            this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(14, 391);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(97, 13);
-            this.label39.TabIndex = 33;
-            this.label39.Text = "Max Poison Recov";
-            // 
             // ManaRegenWeighttextBox
             // 
-            this.ManaRegenWeighttextBox.Location = new System.Drawing.Point(121, 369);
+            this.ManaRegenWeighttextBox.Location = new System.Drawing.Point(121, 216);
             this.ManaRegenWeighttextBox.MaxLength = 3;
             this.ManaRegenWeighttextBox.Name = "ManaRegenWeighttextBox";
             this.ManaRegenWeighttextBox.Size = new System.Drawing.Size(38, 20);
@@ -506,33 +435,15 @@
             // label37
             // 
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(15, 369);
+            this.label37.Location = new System.Drawing.Point(15, 219);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(95, 13);
             this.label37.TabIndex = 31;
             this.label37.Text = "MP Regen Weight";
             // 
-            // MaxManaRegentextBox
-            // 
-            this.MaxManaRegentextBox.Location = new System.Drawing.Point(121, 346);
-            this.MaxManaRegentextBox.MaxLength = 3;
-            this.MaxManaRegentextBox.Name = "MaxManaRegentextBox";
-            this.MaxManaRegentextBox.Size = new System.Drawing.Size(38, 20);
-            this.MaxManaRegentextBox.TabIndex = 30;
-            this.MaxManaRegentextBox.TextChanged += new System.EventHandler(this.MaxManaRegentextBox_TextChanged);
-            // 
-            // label38
-            // 
-            this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(15, 346);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(92, 13);
-            this.label38.TabIndex = 29;
-            this.label38.Text = "Max Mana Regen";
-            // 
             // HealthRegenWeighttextBox
             // 
-            this.HealthRegenWeighttextBox.Location = new System.Drawing.Point(121, 324);
+            this.HealthRegenWeighttextBox.Location = new System.Drawing.Point(121, 190);
             this.HealthRegenWeighttextBox.MaxLength = 3;
             this.HealthRegenWeighttextBox.Name = "HealthRegenWeighttextBox";
             this.HealthRegenWeighttextBox.Size = new System.Drawing.Size(38, 20);
@@ -542,29 +453,11 @@
             // label35
             // 
             this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(15, 324);
+            this.label35.Location = new System.Drawing.Point(15, 193);
             this.label35.Name = "label35";
             this.label35.Size = new System.Drawing.Size(94, 13);
             this.label35.TabIndex = 27;
             this.label35.Text = "HP Regen Weight";
-            // 
-            // MaxHealthRegentextBox
-            // 
-            this.MaxHealthRegentextBox.Location = new System.Drawing.Point(121, 301);
-            this.MaxHealthRegentextBox.MaxLength = 3;
-            this.MaxHealthRegentextBox.Name = "MaxHealthRegentextBox";
-            this.MaxHealthRegentextBox.Size = new System.Drawing.Size(38, 20);
-            this.MaxHealthRegentextBox.TabIndex = 26;
-            this.MaxHealthRegentextBox.TextChanged += new System.EventHandler(this.MaxHealthRegentextBox_TextChanged);
-            // 
-            // label36
-            // 
-            this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(15, 301);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(96, 13);
-            this.label36.TabIndex = 25;
-            this.label36.Text = "Max Health Regen";
             // 
             // groupBox2
             // 
@@ -613,7 +506,7 @@
             // 
             // PoisonAttackWeighttextbox
             // 
-            this.PoisonAttackWeighttextbox.Location = new System.Drawing.Point(121, 278);
+            this.PoisonAttackWeighttextbox.Location = new System.Drawing.Point(121, 164);
             this.PoisonAttackWeighttextbox.MaxLength = 3;
             this.PoisonAttackWeighttextbox.Name = "PoisonAttackWeighttextbox";
             this.PoisonAttackWeighttextbox.Size = new System.Drawing.Size(38, 20);
@@ -623,33 +516,15 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(15, 278);
+            this.label11.Location = new System.Drawing.Point(15, 167);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(92, 13);
             this.label11.TabIndex = 22;
             this.label11.Text = "PoisonAtk Weight";
             // 
-            // MaxPoisonAttacktextbox
-            // 
-            this.MaxPoisonAttacktextbox.Location = new System.Drawing.Point(121, 255);
-            this.MaxPoisonAttacktextbox.MaxLength = 3;
-            this.MaxPoisonAttacktextbox.Name = "MaxPoisonAttacktextbox";
-            this.MaxPoisonAttacktextbox.Size = new System.Drawing.Size(38, 20);
-            this.MaxPoisonAttacktextbox.TabIndex = 21;
-            this.MaxPoisonAttacktextbox.TextChanged += new System.EventHandler(this.MaxPoisonAttacktextbox_TextChanged);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(15, 255);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(78, 13);
-            this.label12.TabIndex = 20;
-            this.label12.Text = "Max PoisonAtk";
-            // 
             // FreezingWeighttextbox
             // 
-            this.FreezingWeighttextbox.Location = new System.Drawing.Point(121, 230);
+            this.FreezingWeighttextbox.Location = new System.Drawing.Point(121, 138);
             this.FreezingWeighttextbox.MaxLength = 3;
             this.FreezingWeighttextbox.Name = "FreezingWeighttextbox";
             this.FreezingWeighttextbox.Size = new System.Drawing.Size(38, 20);
@@ -659,29 +534,11 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(15, 230);
+            this.label10.Location = new System.Drawing.Point(15, 141);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(84, 13);
             this.label10.TabIndex = 18;
             this.label10.Text = "Freezing Weight";
-            // 
-            // MaxFreezingtextbox
-            // 
-            this.MaxFreezingtextbox.Location = new System.Drawing.Point(121, 207);
-            this.MaxFreezingtextbox.MaxLength = 3;
-            this.MaxFreezingtextbox.Name = "MaxFreezingtextbox";
-            this.MaxFreezingtextbox.Size = new System.Drawing.Size(38, 20);
-            this.MaxFreezingtextbox.TabIndex = 17;
-            this.MaxFreezingtextbox.TextChanged += new System.EventHandler(this.MaxFreezingtextbox_TextChanged);
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(15, 207);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(70, 13);
-            this.label9.TabIndex = 16;
-            this.label9.Text = "Max Freezing";
             // 
             // tabPage4
             // 
@@ -693,7 +550,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(666, 705);
+            this.tabPage4.Size = new System.Drawing.Size(705, 705);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Random Item Stats";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -1716,7 +1573,7 @@
             // lblClassStatExample
             // 
             this.lblClassStatExample.AutoSize = true;
-            this.lblClassStatExample.Location = new System.Drawing.Point(692, 34);
+            this.lblClassStatExample.Location = new System.Drawing.Point(723, 34);
             this.lblClassStatExample.Name = "lblClassStatExample";
             this.lblClassStatExample.Size = new System.Drawing.Size(126, 13);
             this.lblClassStatExample.TabIndex = 17;
@@ -1734,7 +1591,10 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.BalanceConfigForm_FormClosed);
             this.tabControl1.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.classGridView)).EndInit();
+            this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.classCapGridView)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -1755,47 +1615,28 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox MaxMagicResisttextbox;
         private System.Windows.Forms.TextBox MagicResistWeigttextbox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox PoisonResistWeighttextbox;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox MaxPoisonResisttextbox;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox CritialRateWeighttextbox;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox MaxCriticalRatetextbox;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox CriticalDamagetextbox;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox MaxCriticalDamagetextbox;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox PoisonAttackWeighttextbox;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox MaxPoisonAttacktextbox;
-        private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox FreezingWeighttextbox;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TextBox MaxFreezingtextbox;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox CanFreezecheckBox;
         private System.Windows.Forms.CheckBox CanResistPoisoncheckBox;
         private System.Windows.Forms.CheckBox CanResistMagiccheckBox;
-        private System.Windows.Forms.TextBox MaxPoisonRecoverytextBox;
-        private System.Windows.Forms.Label label39;
         private System.Windows.Forms.TextBox ManaRegenWeighttextBox;
         private System.Windows.Forms.Label label37;
-        private System.Windows.Forms.TextBox MaxManaRegentextBox;
-        private System.Windows.Forms.Label label38;
         private System.Windows.Forms.TextBox HealthRegenWeighttextBox;
         private System.Windows.Forms.Label label35;
-        private System.Windows.Forms.TextBox MaxHealthRegentextBox;
-        private System.Windows.Forms.Label label36;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox6;
@@ -1902,12 +1743,17 @@
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.DataGridView classGridView;
         private System.Windows.Forms.ComboBox ClassComboBox;
+        private System.Windows.Forms.Label lblClassStatExample;
+        private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.DataGridViewComboBoxColumn BaseStatType;
         private System.Windows.Forms.DataGridViewComboBoxColumn BaseStatFormula;
         private System.Windows.Forms.DataGridViewTextBoxColumn BaseStatBase;
         private System.Windows.Forms.DataGridViewTextBoxColumn BaseStatGain;
         private System.Windows.Forms.DataGridViewTextBoxColumn BaseStatGainRate;
         private System.Windows.Forms.DataGridViewTextBoxColumn BaseStatMax;
-        private System.Windows.Forms.Label lblClassStatExample;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.DataGridView classCapGridView;
+        private System.Windows.Forms.DataGridViewComboBoxColumn CapType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Value;
     }
 }

@@ -35,6 +35,9 @@ namespace Server
 
             this.BaseStatFormula.ValueType = typeof(StatFormula);
             this.BaseStatFormula.DataSource = Enum.GetValues(typeof(StatFormula));
+
+            this.CapType.ValueType = typeof(Stat);
+            this.CapType.DataSource = Enum.GetValues(typeof(Stat));
         }
 
         private void BalanceConfigForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -64,31 +67,23 @@ namespace Server
         {
             if (ActiveControl != sender) return;
             SelectedClassID = (byte)ClassComboBox.SelectedItem;
+
             Populating = true;
-            UpdateClassGridView();
+            UpdateClassStatGridView();
+            UpdateClassCapGridView();
             Populating = false;
         }
 
         private void UpdateStatInterface()
         {
-            MaxMagicResisttextbox.Text = Settings.MaxMagicResist.ToString();
             MagicResistWeigttextbox.Text = Settings.MagicResistWeight.ToString();
-            MaxPoisonResisttextbox.Text = Settings.MaxPoisonResist.ToString();
             PoisonResistWeighttextbox.Text = Settings.PoisonResistWeight.ToString();
-            MaxCriticalRatetextbox.Text = Settings.MaxCriticalRate.ToString();
             CritialRateWeighttextbox.Text = Settings.CriticalRateWeight.ToString();
-            MaxCriticalDamagetextbox.Text = Settings.MaxCriticalDamage.ToString();
             CriticalDamagetextbox.Text = Settings.CriticalDamageWeight.ToString();
-            MaxPoisonAttacktextbox.Text = Settings.MaxPoisonAttack.ToString();
             PoisonAttackWeighttextbox.Text = Settings.PoisonAttackWeight.ToString();
-            MaxFreezingtextbox.Text = Settings.MaxFreezing.ToString();
             FreezingWeighttextbox.Text = Settings.FreezingAttackWeight.ToString();
-            MaxHealthRegentextBox.Text = Settings.MaxHealthRegen.ToString();
             HealthRegenWeighttextBox.Text = Settings.HealthRegenWeight.ToString();
-            MaxManaRegentextBox.Text = Settings.MaxManaRegen.ToString();
             ManaRegenWeighttextBox.Text = Settings.ManaRegenWeight.ToString();
-            MaxPoisonRecoverytextBox.Text = Settings.MaxPoisonRecovery.ToString();
-
 
             CanFreezecheckBox.Checked = Settings.PvpCanFreeze;
             CanResistPoisoncheckBox.Checked = Settings.PvpCanResistPoison;
@@ -250,20 +245,6 @@ namespace Server
         }
 
         #region ItemStats
-        private void MaxMagicResisttextbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            Settings.MaxMagicResist = temp;
-        }
 
         private void MagicResistWeigttextbox_TextChanged(object sender, EventArgs e)
         {
@@ -278,21 +259,6 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             Settings.MagicResistWeight = temp;
-        }
-
-        private void MaxPoisonResisttextbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            Settings.MaxPoisonResist = temp;
         }
 
         private void PoisonResistWeighttextbox_TextChanged(object sender, EventArgs e)
@@ -310,21 +276,6 @@ namespace Server
             Settings.PoisonResistWeight = temp;
         }
 
-        private void MaxCriticalRatetextbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            Settings.MaxCriticalRate = temp;
-        }
-
         private void CritialRateWeighttextbox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
@@ -338,21 +289,6 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             Settings.CriticalRateWeight = temp;
-        }
-
-        private void MaxCriticalDamagetextbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            Settings.MaxCriticalDamage = Math.Min((byte)1,temp);
         }
 
         private void CriticalDamagetextbox_TextChanged(object sender, EventArgs e)
@@ -370,21 +306,6 @@ namespace Server
             Settings.CriticalDamageWeight = temp;
         }
 
-        private void MaxFreezingtextbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            Settings.MaxFreezing = temp;
-        }
-
         private void FreezingWeighttextbox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
@@ -398,21 +319,6 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             Settings.FreezingAttackWeight = temp;
-        }
-
-        private void MaxPoisonAttacktextbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            Settings.MaxPoisonAttack = temp;
         }
 
         private void PoisonAttackWeighttextbox_TextChanged(object sender, EventArgs e)
@@ -448,21 +354,6 @@ namespace Server
             Settings.PvpCanFreeze = CanFreezecheckBox.Checked;
         }
 
-        private void MaxHealthRegentextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.MaxHealthRegen = temp;
-        }
-
         private void HealthRegenWeighttextBox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
@@ -476,21 +367,6 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
             BaseStatsChanged = true;
             Settings.HealthRegenWeight = temp;
-        }
-
-        private void MaxManaRegentextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.MaxManaRegen = temp;
         }
 
         private void ManaRegenWeighttextBox_TextChanged(object sender, EventArgs e)
@@ -508,20 +384,6 @@ namespace Server
             Settings.ManaRegenWeight = temp;
         }
 
-        private void MaxPoisonRecoverytextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.MaxPoisonRecovery = temp;
-        }
         #endregion
 
         #region RandomItemStat
@@ -1746,6 +1608,48 @@ namespace Server
             }
         }
 
+        private void classGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            UpdateBaseStatData();
+        }
+
+        private void classCapGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            classCapGridView.Rows[e.RowIndex].ErrorText = "";
+
+            if (classCapGridView.Rows[e.RowIndex].IsNewRow) { return; }
+
+            if (e.ColumnIndex == 1)
+            {
+                if (!int.TryParse(e.FormattedValue.ToString(), out _))
+                {
+                    e.Cancel = true;
+                    classCapGridView.Rows[e.RowIndex].ErrorText = "the value must be an integer";
+                }
+            }
+        }
+
+        private void classCapGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            if (classCapGridView.Rows[e.RowIndex].IsNewRow) return;
+
+            var capType = (Stat)classCapGridView.Rows[e.RowIndex].Cells["CapType"].Value;
+
+            UpdateCapStatData();
+            UpdateClassStatExample(capType);
+        }
+
+        private void classCapGridView_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
+        {
+            e.Row.Cells["Value"].Value = 0;
+        }
+
+        private void classCapGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            UpdateCapStatData();
+        }
+
         private void UpdateClassStatExample(Stat type)
         {
             if (Populating) return;
@@ -1758,16 +1662,20 @@ namespace Server
 
             if (stat != null)
             {
+                var cap = classStats.Caps[type];
+
+                if (cap == 0) cap = int.MaxValue;
+
                 for (int level = 1; level <= 50; level++)
                 {
-                    str += string.Format("Level {0}\t: {1}\n", level, stat.Calculate((MirClass)SelectedClassID, level));
+                    str += string.Format("Level {0}\t: {1}\n", level, Math.Min(cap, stat.Calculate((MirClass)SelectedClassID, level)));
                 }
 
                 lblClassStatExample.Text = str;
             }
         }
 
-        private void UpdateClassGridView()
+        private void UpdateClassStatGridView()
         {
             classGridView.Rows.Clear();
 
@@ -1785,6 +1693,23 @@ namespace Server
                 row.Cells["BaseStatGain"].Value = stat.Gain;
                 row.Cells["BaseStatGainRate"].Value = stat.GainRate;
                 row.Cells["BaseStatMax"].Value = stat.Max;
+            }
+        }
+
+        private void UpdateClassCapGridView()
+        {
+            classCapGridView.Rows.Clear();
+
+            BaseStats classStats = Settings.ClassBaseStats[SelectedClassID];
+
+            foreach (var cap in classStats.Caps.Values)
+            {
+                int rowIndex = classCapGridView.Rows.Add();
+
+                var row = classCapGridView.Rows[rowIndex];
+
+                row.Cells["CapType"].Value = cap.Key;
+                row.Cells["Value"].Value = cap.Value;
             }
         }
 
@@ -1825,6 +1750,30 @@ namespace Server
                 classStats.Stats.Add(baseStat);
             }
         }
+
+        private void UpdateCapStatData()
+        {
+            if (Populating) return;
+
+            BaseStatsChanged = true;
+
+            BaseStats classStats = Settings.ClassBaseStats[SelectedClassID];
+
+            classStats.Caps.Clear();
+
+            foreach (DataGridViewRow row in classCapGridView.Rows)
+            {
+                var cells = row.Cells;
+
+                if (cells[0].Value == null || cells[1].Value == null) continue;
+
+                var type = (Stat)row.Cells["CapType"].Value;
+                var value = (int)row.Cells["Value"].Value.ValueOrDefault<int>();
+
+                classStats.Caps[type] = value;
+            }
+        }
+
         #endregion
     }
 }

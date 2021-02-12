@@ -969,8 +969,7 @@ namespace Server.MirEnvir
                                         //Only targets
                                         if (target.IsFriendlyTarget(player))
                                         {
-                                            for (int b = 0; b < target.Buffs.Count; b++)
-                                                if (target.Buffs[b].Type == BuffType.Hiding) return;
+                                            if (target.HasBuff(BuffType.Hiding, out _)) return;
 
                                             target.AddBuff(BuffType.Hiding, player, (Settings.Second * value), new Stats());
                                             target.OperateTime = 0;

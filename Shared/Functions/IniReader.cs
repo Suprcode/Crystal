@@ -78,188 +78,189 @@ public class InIReader
     #endregion
 
     #region Read
-    public bool ReadBoolean(string section, string key, bool Default)
+    public bool ReadBoolean(string section, string key, bool Default, bool writeWhenNull = true)
     {
         bool result;
 
         if (!bool.TryParse(FindValue(section, key), out result))
         {
             result = Default;
-            Write(section, key, Default);
+            if (writeWhenNull) Write(section, key, Default);
         }
 
         return result;
     }
 
-    public byte ReadByte(string section, string key, byte Default)
+    public byte ReadByte(string section, string key, byte Default, bool writeWhenNull = true)
     {
         byte result;
 
         if (!byte.TryParse(FindValue(section, key), out result))
         {
             result = Default;
-            Write(section, key, Default);
+            if (writeWhenNull) Write(section, key, Default);
         }
 
 
         return result;
     }
 
-    public sbyte ReadSByte(string section, string key, sbyte Default)
+    public sbyte ReadSByte(string section, string key, sbyte Default, bool writeWhenNull = true)
     {
         sbyte result;
 
         if (!sbyte.TryParse(FindValue(section, key), out result))
         {
             result = Default;
-            Write(section, key, Default);
+            if (writeWhenNull) Write(section, key, Default);
         }
 
 
         return result;
     }
 
-    public ushort ReadUInt16(string section, string key, ushort Default)
+    public ushort ReadUInt16(string section, string key, ushort Default, bool writeWhenNull = true)
     {
         ushort result;
 
         if (!ushort.TryParse(FindValue(section, key), out result))
         {
             result = Default;
-            Write(section, key, Default);
+            if (writeWhenNull) Write(section, key, Default);
         }
 
 
         return result;
     }
 
-    public short ReadInt16(string section, string key, short Default)
+    public short ReadInt16(string section, string key, short Default, bool writeWhenNull = true)
     {
         short result;
 
         if (!short.TryParse(FindValue(section, key), out result))
         {
             result = Default;
-            Write(section, key, Default);
+            if (writeWhenNull) Write(section, key, Default);
         }
 
 
         return result;
     }
 
-    public uint ReadUInt32(string section, string key, uint Default)
+    public uint ReadUInt32(string section, string key, uint Default, bool writeWhenNull = true)
     {
         uint result;
 
         if (!uint.TryParse(FindValue(section, key), out result))
         {
             result = Default;
-            Write(section, key, Default);
+            if (writeWhenNull) Write(section, key, Default);
         }
 
         return result;
     }
 
-    public int ReadInt32(string section, string key, int Default)
+    public int ReadInt32(string section, string key, int Default, bool writeWhenNull = true)
     {
         int result;
 
         if (!int.TryParse(FindValue(section, key), out result))
         {
             result = Default;
-            Write(section, key, Default);
+            if (writeWhenNull) Write(section, key, Default);
         }
 
         return result;
     }
 
-    public ulong ReadUInt64(string section, string key, ulong Default)
+    public ulong ReadUInt64(string section, string key, ulong Default, bool writeWhenNull = true)
     {
         ulong result;
 
         if (!ulong.TryParse(FindValue(section, key), out result))
         {
             result = Default;
-            Write(section, key, Default);
+            if (writeWhenNull) Write(section, key, Default);
         }
 
         return result;
     }
 
-    public long ReadInt64(string section, string key, long Default)
+    public long ReadInt64(string section, string key, long Default, bool writeWhenNull = true)
     {
         long result;
 
         if (!long.TryParse(FindValue(section, key), out result))
         {
             result = Default;
-            Write(section, key, Default);
+            if (writeWhenNull) Write(section, key, Default);
         }
 
 
         return result;
     }
 
-    public float ReadSingle(string section, string key, float Default)
+    public float ReadSingle(string section, string key, float Default, bool writeWhenNull = true)
     {
         float result;
 
         if (!float.TryParse(FindValue(section, key), out result))
         {
             result = Default;
-            Write(section, key, Default);
+            if (writeWhenNull) Write(section, key, Default);
         }
 
         return result;
     }
 
-    public double ReadDouble(string section, string key, double Default)
+    public double ReadDouble(string section, string key, double Default, bool writeWhenNull = true)
     {
         double result;
 
         if (!double.TryParse(FindValue(section, key), out result))
         {
             result = Default;
-            Write(section, key, Default);
+            if (writeWhenNull) Write(section, key, Default);
         }
 
         return result;
     }
 
-    public decimal ReadDecimal(string section, string key, decimal Default)
+    public decimal ReadDecimal(string section, string key, decimal Default, bool writeWhenNull = true)
     {
         decimal result;
 
         if (!decimal.TryParse(FindValue(section, key), out result))
         {
             result = Default;
-            Write(section, key, Default);
+            if (writeWhenNull) Write(section, key, Default);
         }
 
         return result;
     }
 
-    public string ReadString(string section, string key, string Default)
+    public string ReadString(string section, string key, string Default, bool writeWhenNull = true)
     {
         string result = FindValue(section, key);
 
         if (string.IsNullOrEmpty(result))
         {
             result = Default;
-            Write(section, key, Default);
+
+            if (writeWhenNull) Write(section, key, Default);
         }
 
         return result;
     }
 
-    public char ReadChar(string section, string key, char Default)
+    public char ReadChar(string section, string key, char Default, bool writeWhenNull = true)
     {
         char result;
 
         if (!char.TryParse(FindValue(section, key), out result))
         {
             result = Default;
-            Write(section, key, Default);
+            if (writeWhenNull) Write(section, key, Default);
         }
 
         return result;

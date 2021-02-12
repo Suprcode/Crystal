@@ -3933,13 +3933,7 @@ namespace Server.MirObjects
 
                             BuffType bType = (BuffType)(byte)Enum.Parse(typeof(BuffType), param[0]);
 
-                            for (int j = 0; j < monster.Buffs.Count; j++)
-                            {
-                                if (monster.Buffs[j].Type != bType) continue;
-
-                                monster.Buffs[j].Infinite = false;
-                                monster.Buffs[j].ExpireTime = Envir.Time;
-                            }
+                            monster.RemoveBuff(bType);
                         }
                         break;
 

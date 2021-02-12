@@ -252,7 +252,7 @@ namespace Client.MirScenes.Dialogs
 
         public string BuffString(ClientBuff buff)
         {
-            string text = RegexFunctions.SeperateCamelCase(buff.Type.ToString()).Trim() + "\n";
+            string text = RegexFunctions.SeperateCamelCase(buff.Type.ToString()) + "\n";
             bool overridestats = false;
 
             switch (buff.Type)
@@ -279,6 +279,7 @@ namespace Client.MirScenes.Dialogs
                     }
                     break;
                 case BuffType.Hiding:
+                case BuffType.ClearRing:
                     text += "Invisible to many monsters.\n";
                     break;
                 case BuffType.MoonLight:
@@ -320,11 +321,18 @@ namespace Client.MirScenes.Dialogs
                 foreach (var val in buff.Stats.Values)
                 {
                     var c = val.Value < 0 ? "Decreases" : "Increases";
-                    var key = val.Key;
+                    var key = val.Key.ToString();
 
-                    var strKey = RegexFunctions.SeperateCamelCase(key.ToString().Replace("Rate", "").Replace("Multiplier", "").Replace("Percent", "")).Trim();
+                    var strKey = RegexFunctions.SeperateCamelCase(key.Replace("Rate", "").Replace("Multiplier", "").Replace("Percent", ""));
 
-                    var txt = $"{c} {strKey} by: {val.Value}{(key.ToString().Contains("Percent") ? "%" : "")}.\n";
+                    var sign = "";
+
+                    if (key.Contains("Percent"))
+                        sign = "%";
+                    else if (key.Contains("Multiplier"))
+                        sign = "x";
+
+                    var txt = $"{c} {strKey} by: {val.Value}{sign}.\n";
 
                     text += txt;
                 }
@@ -352,11 +360,18 @@ namespace Client.MirScenes.Dialogs
             foreach (var val in stats.Values)
             {
                 var c = val.Value < 0 ? "Decreased" : "Increased";
-                var key = val.Key;
+                var key = val.Key.ToString();
 
-                var strKey = RegexFunctions.SeperateCamelCase(key.ToString().Replace("Rate", "").Replace("Multiplier", "").Replace("Percent", "")).Trim();
+                var strKey = RegexFunctions.SeperateCamelCase(key.Replace("Rate", "").Replace("Multiplier", "").Replace("Percent", ""));
 
-                var txt = $"{c} {strKey} by: {val.Value}{(key.ToString().Contains("Percent") ? "%" : "")}.\n";
+                var sign = "";
+
+                if (key.Contains("Percent"))
+                    sign = "%";
+                else if (key.Contains("Multiplier"))
+                    sign = "x";
+
+                var txt = $"{c} {strKey} by: {val.Value}{sign}.\n";
 
                 text += txt;
             }
@@ -384,6 +399,7 @@ namespace Client.MirScenes.Dialogs
                     return 30;
 
                 case BuffType.Hiding:
+                case BuffType.ClearRing:
                     return 17;
                 case BuffType.Haste:
                     return 60;
@@ -446,6 +462,8 @@ namespace Client.MirScenes.Dialogs
                     return 240;
                 case BuffType.TemporalFlux:
                     return 261;
+                case BuffType.Skill:
+                    return 200;
 
                 //Stats
                 case BuffType.Impact:

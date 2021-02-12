@@ -520,7 +520,6 @@ namespace Client.MirObjects
             }
         }
 
-
         private void RefreshMirSetStats()
         {
             if (MirSet.Count() == 10)
@@ -654,17 +653,10 @@ namespace Client.MirObjects
 
         public void RefreshStatCaps()
         {
-            //TODO
-            //Stats[Stat.MagicResist] = Math.Min(Settings.MaxMagicResist, Stats[Stat.MagicResist]);
-            //Stats[Stat.PoisonResist] = Math.Min(Settings.MaxPoisonResist, Stats[Stat.PoisonResist]);
-            //Stats[Stat.CriticalRate] = Math.Min(Settings.MaxCriticalRate, Stats[Stat.CriticalRate]);
-            //Stats[Stat.CriticalDamage] = Math.Min(Settings.MaxCriticalDamage, Stats[Stat.CriticalDamage]);
-            //Stats[Stat.Freezing] = Math.Min(Settings.MaxFreezing, Stats[Stat.Freezing]);
-            //Stats[Stat.PoisonAttack] = Math.Min(Settings.MaxPoisonAttack, Stats[Stat.PoisonAttack]);
-            //Stats[Stat.HealthRecovery] = Math.Min(Settings.MaxHealthRegen, Stats[Stat.HealthRecovery]);
-            //Stats[Stat.PoisonRecovery] = Math.Min(Settings.MaxPoisonRecovery, Stats[Stat.PoisonRecovery]);
-            //Stats[Stat.SpellRecovery] = Math.Min(Settings.MaxManaRegen, Stats[Stat.SpellRecovery]);
-            Stats[Stat.HPDrainRatePercent] = Math.Min((byte)100, Stats[Stat.HPDrainRatePercent]);
+            foreach (var cap in CoreStats.Caps.Values)
+            {
+                Stats[cap.Key] = Math.Min(cap.Value, Stats[cap.Key]);
+            }
 
             Stats[Stat.MinAC] = Math.Max(0, Stats[Stat.MinAC]);
             Stats[Stat.MaxAC] = Math.Max(0, Stats[Stat.MaxAC]);
