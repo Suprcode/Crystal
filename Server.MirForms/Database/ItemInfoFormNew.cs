@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,9 +19,21 @@ namespace Server.Database
         public ItemInfoFormNew()
         {
             InitializeComponent();
+            InitializeItemInfoFilters();
             InitializeItemInfoGridView();
 
             UpdateItemInfoGridView();
+
+        }
+
+        private void InitializeItemInfoFilters()
+        {
+            var types = Enum.GetValues(typeof(ItemType));
+            drpFilterType.Items.Add(new System.Web.UI.WebControls.ListItem("", "-1"));
+            foreach (ItemType type in types)
+            {
+                drpFilterType.Items.Add(new System.Web.UI.WebControls.ListItem(type.ToString(), ((byte)type).ToString()));
+            }
         }
 
         private void InitializeItemInfoGridView()
@@ -50,12 +63,26 @@ namespace Server.Database
             itemInfoGridView.Rows.Clear();
 
             var statEnums = Enum.GetValues(typeof(Stat));
+            var bindEnums = Enum.GetValues(typeof(BindMode));
+            var specialEnums = Enum.GetValues(typeof(SpecialItemMode));
 
-            foreach (var stat in statEnums)
+            foreach (Stat stat in statEnums)
             {
+                if (stat == Stat.Unknown) continue;
+
+                var key = stat.ToString();
+                var strKey = RegexFunctions.SeperateCamelCase(key.Replace("Rate", "").Replace("Multiplier", "").Replace("Percent", ""));
+
+                var sign = "";
+
+                if (key.Contains("Percent"))
+                    sign = "%";
+                else if (key.Contains("Multiplier"))
+                    sign = "x";
+
                 var col = new DataGridViewTextBoxColumn
                 {
-                    HeaderText = stat.ToString(),
+                    HeaderText = $"{strKey} {sign}",
                     Name = "Stat" + stat.ToString(),
                     ValueType = typeof(int),
                 };
@@ -63,7 +90,35 @@ namespace Server.Database
                 itemInfoGridView.Columns.Add(col);
             }
 
-            foreach (var item in Envir.ItemInfoList)
+            foreach (BindMode bind in bindEnums)
+            {
+                if (bind == BindMode.None) continue;
+
+                var col = new DataGridViewCheckBoxColumn
+                {
+                    HeaderText = bind.ToString(),
+                    Name = "Bind" + bind.ToString(),
+                    ValueType = typeof(bool),
+                };
+
+                itemInfoGridView.Columns.Add(col);
+            }
+
+            foreach (SpecialItemMode special in specialEnums)
+            {
+                if (special == SpecialItemMode.None) continue;
+
+                var col = new DataGridViewCheckBoxColumn
+                {
+                    HeaderText = special.ToString(),
+                    Name = "Special" + special.ToString(),
+                    ValueType = typeof(bool),
+                };
+
+                itemInfoGridView.Columns.Add(col);
+            }
+
+            foreach (ItemInfo item in Envir.ItemInfoList)
             {
                 int rowIndex = itemInfoGridView.Rows.Add();
 
@@ -91,9 +146,25 @@ namespace Server.Database
                 row.Cells["ItemDurability"].Value = item.Durability;
                 row.Cells["ItemPrice"].Value = item.Price;
 
-                foreach (var stat in statEnums)
+                foreach (Stat stat in statEnums)
                 {
-                    row.Cells["Stat" + stat.ToString()].Value = item.Stats[(Stat)stat];
+                    if (stat == Stat.Unknown) continue;
+
+                    row.Cells["Stat" + stat.ToString()].Value = item.Stats[stat];
+                }
+
+                foreach (BindMode bind in bindEnums)
+                {
+                    if (bind == BindMode.None) continue;
+
+                    row.Cells["Bind" + bind.ToString()].Value = item.Bind.HasFlag(bind);
+                }
+
+                foreach (SpecialItemMode special in specialEnums)
+                {
+                    if (special == SpecialItemMode.None) continue;
+
+                    row.Cells["Special" + special.ToString()].Value = item.Unique.HasFlag(special);
                 }
             }
         }
@@ -169,7 +240,116 @@ namespace Server.Database
 
         private void rbtnViewBinding_CheckedChanged(object sender, EventArgs e)
         {
+            if (rbtnViewBinding.Checked)
+            {
+                foreach (DataGridViewColumn col in itemInfoGridView.Columns)
+                {
+                    if (col.Name == "ItemIndex" || col.Name == "ItemName")
+                    {
+                        continue;
+                    }
 
+                    if (col.Name.StartsWith("Bind"))
+                    {
+                        col.Visible = true;
+                        continue;
+                    }
+
+                    col.Visible = false;
+                }
+            }
+        }
+
+        private void rBtnViewSpecial_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rBtnViewSpecial.Checked)
+            {
+                foreach (DataGridViewColumn col in itemInfoGridView.Columns)
+                {
+                    if (col.Name == "ItemIndex" || col.Name == "ItemName")
+                    {
+                        continue;
+                    }
+
+                    if (col.Name.StartsWith("Special"))
+                    {
+                        col.Visible = true;
+                        continue;
+                    }
+
+                    col.Visible = false;
+                }
+            }
+        }
+
+        private void drpFilterType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateFilter();
+
+            if (drpFilterType.Text == "Gem")
+            {
+                //TODO - Change columns for gems when gem option is chosen.
+            }
+            else
+            {
+
+            }
+        }
+
+        private void txtSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                UpdateFilter();
+
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void UpdateFilter()
+        {
+            var filterText = txtSearch.Text;
+            var filterType = (System.Web.UI.WebControls.ListItem)drpFilterType.SelectedItem;
+
+            foreach (DataGridViewRow row in itemInfoGridView.Rows)
+            {
+                bool visible = true;
+
+                var itemName = (string)row.Cells["ItemName"].Value;
+
+                if (string.IsNullOrEmpty(itemName)) continue;
+
+                var itemType = ((ItemType)row.Cells["ItemType"].Value).ToString();
+
+                if (!string.IsNullOrWhiteSpace(filterText))
+                {
+                    if (itemName.IndexOf(filterText, StringComparison.OrdinalIgnoreCase) < 0)
+                    {
+                        visible = false;
+                    }
+                }
+
+                if (visible && filterType != null && filterType.Text != "")
+                {
+                    if (itemType.IndexOf(filterType.Text, StringComparison.OrdinalIgnoreCase) != 0)
+                    {
+                        visible = false;
+                    }
+                }
+
+                row.Visible = visible;
+            }
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            //TODO - export all visible as CSV
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            //TODO - import all and match on itemname
         }
     }
 }

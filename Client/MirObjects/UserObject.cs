@@ -120,21 +120,6 @@ namespace Client.MirObjects
 
         public override void SetLibraries()
         {
-            /*
-            Weapon = -1;
-            Armour = 0;
-            WingEffect = 0; 
-            if (Equipment != null)
-            {
-                if (Equipment[(int) EquipmentSlot.Weapon] != null)
-                    Weapon = Equipment[(int) EquipmentSlot.Weapon].Info.Shape;
-                if (Equipment[(int)EquipmentSlot.Armour] != null)
-                {
-                    Armour = Equipment[(int)EquipmentSlot.Armour].Info.Shape;
-                    WingEffect = Equipment[(int)EquipmentSlot.Armour].Info.Effect;
-                }
-            }
-            */
             base.SetLibraries();
         }
 
@@ -229,9 +214,9 @@ namespace Client.MirObjects
                 ItemInfo RealItem = Functions.GetRealItem(temp.Info, Level, Class, GameScene.ItemInfoList);
 
                 if (RealItem.Type == ItemType.Weapon || RealItem.Type == ItemType.Torch)
-                    CurrentHandWeight = (ushort)Math.Min(ushort.MaxValue, CurrentHandWeight + temp.Weight);
+                    CurrentHandWeight = (int)Math.Min(int.MaxValue, CurrentHandWeight + temp.Weight);
                 else
-                    CurrentWearWeight = (ushort)Math.Min(ushort.MaxValue, CurrentWearWeight + temp.Weight);
+                    CurrentWearWeight = (int)Math.Min(int.MaxValue, CurrentWearWeight + temp.Weight);
 
                 if (temp.CurrentDura == 0 && RealItem.Durability > 0) continue;
 
@@ -333,9 +318,9 @@ namespace Client.MirObjects
                 ItemInfo RealItem = Functions.GetRealItem(temp.Info, Level, Class, GameScene.ItemInfoList);
 
                 if (RealItem.Type == ItemType.Weapon || RealItem.Type == ItemType.Torch)
-                    CurrentHandWeight = (byte)Math.Min(byte.MaxValue, CurrentHandWeight + temp.Weight);
+                    CurrentHandWeight = (int)Math.Min(int.MaxValue, CurrentHandWeight + temp.Weight);
                 else
-                    CurrentWearWeight = (byte)Math.Min(byte.MaxValue, CurrentWearWeight + temp.Weight);
+                    CurrentWearWeight = (int)Math.Min(int.MaxValue, CurrentWearWeight + temp.Weight);
 
                 if (temp.CurrentDura == 0 && RealItem.Durability > 0) continue;
 

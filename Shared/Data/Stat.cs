@@ -121,7 +121,7 @@ public enum Stat : byte
     PoisonResist = 31,
     HealthRecovery = 32,
     SpellRecovery = 33,
-    PoisonRecovery = 34,
+    PoisonRecovery = 34, //TODO - Should this be in seconds or milliseconds??
     CriticalRate = 35,
     CriticalDamage = 36,
 

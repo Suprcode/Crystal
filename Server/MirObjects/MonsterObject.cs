@@ -1934,7 +1934,7 @@ namespace Server.MirObjects
                 return 0;
             }
 
-            if ((attacker.Stats[Stat.CriticalRate] * Settings.CriticalRateWeight) > Envir.Random.Next(100))
+            if (Envir.Random.Next(100) < (attacker.Stats[Stat.CriticalRate] * Settings.CriticalRateWeight))
             {
                 Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical });
                 damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.Stats[Stat.CriticalDamage] / (double)Settings.CriticalDamageWeight) * 10)));

@@ -401,11 +401,11 @@ namespace Server
             MagicResistWeight = Reader.ReadByte("Items","MagicResistWeight",MagicResistWeight);
             PoisonResistWeight = Reader.ReadByte("Items","PoisonResistWeight",PoisonResistWeight);
             CriticalRateWeight = Reader.ReadByte("Items","CriticalRateWeight",CriticalRateWeight);
-            CriticalDamageWeight = Math.Max((byte)1,Reader.ReadByte("Items","CriticalDamageWeight",CriticalDamageWeight));
+            CriticalDamageWeight = Math.Max((byte)1, Reader.ReadByte("Items","CriticalDamageWeight",CriticalDamageWeight));
             FreezingAttackWeight = Reader.ReadByte("Items","FreezingAttackWeight",FreezingAttackWeight);
             PoisonAttackWeight = Reader.ReadByte("Items","PoisonAttackWeight",PoisonAttackWeight);
-            HealthRegenWeight = Reader.ReadByte("Items", "HealthRegenWeight", HealthRegenWeight);
-            ManaRegenWeight = Reader.ReadByte("Items", "ManaRegenWeight", ManaRegenWeight);
+            HealthRegenWeight = Math.Max((byte)1, Reader.ReadByte("Items", "HealthRegenWeight", HealthRegenWeight));
+            ManaRegenWeight = Math.Max((byte)1, Reader.ReadByte("Items", "ManaRegenWeight", ManaRegenWeight));
             MaxLuck = Reader.ReadByte("Items", "MaxLuck", MaxLuck);
 
             PvpCanResistMagic = Reader.ReadBoolean("Items","PvpCanResistMagic",PvpCanResistMagic);

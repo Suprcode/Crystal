@@ -1848,7 +1848,7 @@ namespace Client.MirScenes.Dialogs
 
                     if (slot == null || ingredient.Info.Index != slot.Info.Index) continue;
                     if (slot.Count < ingredient.Count) continue;
-                    if (slot.CurrentDura < slot.MaxDura && slot.CurrentDura < ingredient.CurrentDura) continue;
+                    if (ingredient.CurrentDura < ingredient.MaxDura && slot.CurrentDura < ingredient.CurrentDura) continue;
 
                     var cell = GameScene.Scene.InventoryDialog.GetCell(slot.UniqueID);
 
@@ -2039,7 +2039,7 @@ namespace Client.MirScenes.Dialogs
             Recipe = GameScene.RecipeInfoList.SingleOrDefault(x => x.Item.ItemIndex == selectedItem.ItemIndex);
 
             RecipeLabel.Text = Recipe.Item.FriendlyName;
-            PossibilityLabel.Text = $"{Recipe.Chance}% Chance of Success";
+            PossibilityLabel.Text = (UserObject.User.Stats[Stat.CraftRatePercent] > 0 ? $"{Math.Min(100, Recipe.Chance + UserObject.User.Stats[Stat.CraftRatePercent])}% (+{UserObject.User.Stats[Stat.CraftRatePercent]}%)" : $"{Recipe.Chance}%") + " Chance of Success";
             GoldLabel.Text = Recipe.Gold.ToString("###,###,##0");
 
             for (int i = 0; i < Slots.Length; i++)

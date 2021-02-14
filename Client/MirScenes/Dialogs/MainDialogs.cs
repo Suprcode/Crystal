@@ -1854,7 +1854,6 @@ namespace Client.MirScenes.Dialogs
                     SoundManager.PlaySound(20000 + (ushort)Spell.MagicShield * 10);
                     break;
             }
-
         }
     }
     public sealed class BeltDialog : MirImageControl
