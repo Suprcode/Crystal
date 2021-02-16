@@ -53,35 +53,49 @@ namespace LibraryEditor
                 Path.GetExtension(files[0]).ToUpper() == ".WZL" ||
                 Path.GetExtension(files[0]).ToUpper() == ".MIZ")
             {
-                try
-                {
-                    ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = 8 };
-                    Parallel.For(0, files.Length, options, i =>
-                    {
-                        if (Path.GetExtension(files[i]) == ".wtl")
-                        {
-                            WTLLibrary WTLlib = new WTLLibrary(files[i]);
-                            WTLlib.ToMLibrary();
-                        }
-                        else
-                        {
-                            WeMadeLibrary WILlib = new WeMadeLibrary(files[i]);
-                            WILlib.ToMLibrary();
-                        }
-                        toolStripProgressBar.Value++;
-                    });
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
-
+                toolStripProgressBar.Maximum = files.Length;
                 toolStripProgressBar.Value = 0;
 
-                MessageBox.Show(
-                    string.Format("Successfully converted {0} {1}",
-                    (OpenWeMadeDialog.FileNames.Length).ToString(),
-                    (OpenWeMadeDialog.FileNames.Length > 1) ? "libraries" : "library"));
+                new Action(() =>
+                {
+                    try
+                    {
+                        ParallelOptions options = new ParallelOptions {MaxDegreeOfParallelism = 8};
+                        Parallel.For(0, files.Length, options, i =>
+                        {
+                            if (Path.GetExtension(files[i]) == ".wtl")
+                            {
+                                WTLLibrary WTLlib = new WTLLibrary(files[i]);
+                                WTLlib.ToMLibrary();
+                            }
+                            else
+                            {
+                                WeMadeLibrary WILlib = new WeMadeLibrary(files[i]);
+                                WILlib.ToMLibrary();
+                            }
+
+                            Invoke(new Action(() =>
+                            {
+                                toolStripProgressBar.Value++;
+                            }));
+
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
+                    }
+
+                    Invoke(new Action(() =>
+                    {
+                        toolStripProgressBar.Value = 0;
+                    }));
+                    
+                    MessageBox.Show(
+                        string.Format("Successfully converted {0} {1}",
+                            (files.Length).ToString(),
+                            (files.Length > 1) ? "libraries" : "library"));
+                }).BeginInvoke(null, null);
             }
             else if (Path.GetExtension(files[0]).ToUpper() == ".LIB")
             {
