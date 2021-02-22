@@ -2895,6 +2895,8 @@ namespace ServerPackets
         public bool Cast;
         public byte Level;
 
+        public List<uint> SecondaryTargetIDs = new List<uint>();
+
         protected override void ReadPacket(BinaryReader reader)
         {
             Spell = (Spell)reader.ReadByte();
@@ -2902,6 +2904,13 @@ namespace ServerPackets
             Target = new Point(reader.ReadInt32(), reader.ReadInt32());
             Cast = reader.ReadBoolean();
             Level = reader.ReadByte();
+
+            var count = reader.ReadInt32();
+            SecondaryTargetIDs = new List<uint>();
+            for (int i = 0; i < count; i++)
+            {
+                SecondaryTargetIDs.Add(reader.ReadUInt32());
+            }
         }
         protected override void WritePacket(BinaryWriter writer)
         {
@@ -2911,6 +2920,13 @@ namespace ServerPackets
             writer.Write(Target.Y);
             writer.Write(Cast);
             writer.Write(Level);
+
+            writer.Write(SecondaryTargetIDs.Count);
+            foreach (var targetID in SecondaryTargetIDs)
+            {
+                writer.Write(targetID);
+            }
+
         }
     }
     public sealed class MagicDelay : Packet
@@ -2961,6 +2977,7 @@ namespace ServerPackets
         public bool Cast;
         public byte Level;
         public bool SelfBroadcast = false;
+        public List<uint> SecondaryTargetIDs = new List<uint>();
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -2970,10 +2987,18 @@ namespace ServerPackets
 
             Spell = (Spell)reader.ReadByte();
             TargetID = reader.ReadUInt32();
+
             Target = new Point(reader.ReadInt32(), reader.ReadInt32());
             Cast = reader.ReadBoolean();
             Level = reader.ReadByte();
             SelfBroadcast = reader.ReadBoolean();
+
+            var count = reader.ReadInt32();
+            SecondaryTargetIDs = new List<uint>();
+            for (int i = 0; i < count; i++)
+            {
+                SecondaryTargetIDs.Add(reader.ReadUInt32());
+            }
         }
         protected override void WritePacket(BinaryWriter writer)
         {
@@ -2984,11 +3009,18 @@ namespace ServerPackets
 
             writer.Write((byte)Spell);
             writer.Write(TargetID);
+
             writer.Write(Target.X);
             writer.Write(Target.Y);
             writer.Write(Cast);
             writer.Write(Level);
             writer.Write(SelfBroadcast);
+
+            writer.Write(SecondaryTargetIDs.Count);
+            foreach (var targetID in SecondaryTargetIDs)
+            {
+                writer.Write(targetID);
+            }
         }
     }
 
@@ -3021,6 +3053,29 @@ namespace ServerPackets
             writer.Write(Time);
         }
     }
+
+    public sealed class ObjectProjectile : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.ObjectProjectile; } }
+
+        public Spell Spell;
+        public uint Source;
+        public uint Destination;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Spell = (Spell)reader.ReadByte();
+            Source = reader.ReadUInt32();
+            Destination = reader.ReadUInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write((byte)Spell);
+            writer.Write(Source);
+            writer.Write(Destination);
+        }
+    }
+
     public sealed class RangeAttack : Packet //ArcherTest
     {
         public override short Index { get { return (short)ServerPacketIds.RangeAttack; } }

@@ -554,6 +554,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.MailCost:
                     MailCost((C.MailCost)p);
                     break;
+                case (short)ClientPacketIds.RequestIntelligentCreatureUpdates://IntelligentCreature
+                    RequestIntelligentCreatureUpdates((C.RequestIntelligentCreatureUpdates)p);
+                    break;
                 case (short)ClientPacketIds.UpdateIntelligentCreature://IntelligentCreature
                     UpdateIntelligentCreature((C.UpdateIntelligentCreature)p);
                     break;
@@ -1597,6 +1600,13 @@ namespace Server.MirNetwork
             uint cost = Player.GetMailCost(p.ItemsIdx, p.Gold, p.Stamped);
 
             Enqueue(new S.MailCost { Cost = cost });
+        }
+
+        private void RequestIntelligentCreatureUpdates(C.RequestIntelligentCreatureUpdates p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.SendIntelligentCreatureUpdates = p.Update;
         }
 
         private void UpdateIntelligentCreature(C.UpdateIntelligentCreature p)//IntelligentCreature

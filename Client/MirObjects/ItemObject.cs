@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace Client.MirObjects
 {
-    class ItemObject : MapObject
+    public class ItemObject : MapObject
     {
         public override ObjectType Race{
             get { return ObjectType.Item; }

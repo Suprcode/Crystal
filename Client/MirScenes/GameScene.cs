@@ -1318,6 +1318,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ObjectMagic:
                     ObjectMagic((S.ObjectMagic)p);
                     break;
+                case (short)ServerPacketIds.ObjectProjectile:
+                    ObjectProjectile((S.ObjectProjectile)p);
+                    break;
                 case (short)ServerPacketIds.ObjectEffect:
                     ObjectEffect((S.ObjectEffect)p);
                     break;
@@ -2869,6 +2872,8 @@ namespace Client.MirScenes
                     MapObject obj = MapControl.Objects[i];
                     if (obj.ObjectID != p.ObjectID) continue;
 
+                    if (obj.Damages.Count > 10) return;
+
                     switch (p.Type)
                     {
                         case DamageType.Hit: //add damage level colours
@@ -2881,7 +2886,6 @@ namespace Client.MirScenes
                             obj.Damages.Add(new Damage("Crit", 1000, obj.Race == ObjectType.Player ? Color.DarkRed : Color.DarkRed, 50) { Offset = 15 });
                             break;
                     }
-
                 }
             }
         }
@@ -3646,6 +3650,7 @@ namespace Client.MirScenes
             User.TargetID = p.TargetID;
             User.TargetPoint = p.Target;
             User.SpellLevel = p.Level;
+            User.SecondaryTargetIDs = p.SecondaryTargetIDs;
 
             if (!p.Cast) return;
 
@@ -3680,12 +3685,43 @@ namespace Client.MirScenes
                 action.Params.Add(p.Target);
                 action.Params.Add(p.Cast);
                 action.Params.Add(p.Level);
+                action.Params.Add(p.SecondaryTargetIDs);
 
                 ob.ActionFeed.Add(action);
                 return;
             }
-
         }
+
+        private void ObjectProjectile(S.ObjectProjectile p)
+        {
+            MapObject source = MapControl.GetObject(p.Source);
+
+            if (source == null) return;
+
+            switch (p.Spell)
+            {
+                case Spell.FireBounce:
+                    {
+                        SoundManager.PlaySound(20000 + (ushort)Spell.GreatFireBall * 10 + 1);
+
+                        Missile missile = source.CreateProjectile(410, Libraries.Magic, true, 6, 30, 4, targetID: p.Destination);
+
+                        if (missile.Target != null)
+                        {
+                            missile.Complete += (o, e) =>
+                            {
+                                var sender = (Missile)o;
+
+                                if (sender.Target.CurrentAction == MirAction.Dead) return;
+                                sender.Target.Effects.Add(new Effect(Libraries.Magic, 570, 10, 600, sender.Target));
+                                SoundManager.PlaySound(20000 + (ushort)Spell.GreatFireBall * 10 + 2);
+                            };
+                        }
+                    }
+                    break;
+            }
+        }
+
         private void ObjectEffect(S.ObjectEffect p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
@@ -4093,6 +4129,8 @@ namespace Client.MirScenes
                 action.Params.Add(p.TargetID);
                 action.Params.Add(p.Target);
                 action.Params.Add(p.Spell);
+                action.Params.Add(new List<uint>());
+
                 ob.ActionFeed.Add(action);
                 return;
             }
@@ -9945,6 +9983,8 @@ namespace Client.MirScenes
                 case Spell.Entrapment:
                 case Spell.Hallucination:
                 case Spell.DarkBody:
+                case Spell.FireBounce:
+                case Spell.MeteorShower:
                     if (User.NextMagicObject != null)
                     {
                         if (!User.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && User.NextMagicObject.Race != ObjectType.Merchant)

@@ -166,8 +166,7 @@ namespace Server
         public static bool DropGold = true;
 
 
-        //IntelligentCreature
-        public static string[] IntelligentCreatureNameList = { "BabyPig", "Chick", "Kitten", "BabySkeleton", "Baekdon", "Wimaen", "BlackKitten", "BabyDragon", "OlympicFlame", "BabySnowMan", "Frog", "BabyMonkey", "AngryBird", "Foxey", "MedicalRat" };
+        //IntelligentCreature      
         public static string CreatureBlackStoneName = "BlackCreatureStone";
 
         //Fishing Settings
@@ -415,8 +414,6 @@ namespace Server
             RangeAccuracyBonus = Reader.ReadByte("Bonus", "RangeAccuracyBonus", RangeAccuracyBonus);
 
             //IntelligentCreature
-            for (int i = 0; i < IntelligentCreatureNameList.Length; i++)
-                IntelligentCreatureNameList[i] = Reader.ReadString("IntelligentCreatures", "Creature" + i.ToString() + "Name", IntelligentCreatureNameList[i]);
             CreatureBlackStoneName = Reader.ReadString("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);
 
             if (!Directory.Exists(EnvirPath))
@@ -656,8 +653,6 @@ namespace Server
             Reader.Write("Bonus", "RangeAccuracyBonus", RangeAccuracyBonus);
 
             //IntelligentCreature
-            for (int i = 0; i < IntelligentCreatureNameList.Length; i++)
-                Reader.Write("IntelligentCreatures", "Creature" + i.ToString() + "Name", IntelligentCreatureNameList[i]);
             Reader.Write("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);
 
             SaveAwakeAttribute();

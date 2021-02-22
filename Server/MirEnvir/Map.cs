@@ -35,6 +35,7 @@ namespace Server.MirEnvir
         public int MonsterCount, InactiveCount;
 
         public List<NPCObject> NPCs = new List<NPCObject>();
+        public List<SpellObject> Spells = new List<SpellObject>();
         public List<PlayerObject> Players = new List<PlayerObject>();
         public List<MapRespawn> Respawns = new List<MapRespawn>();
         public List<DelayedAction> ActionList = new List<DelayedAction>();
@@ -1810,10 +1811,12 @@ namespace Server.MirEnvir
                         if (cast)
                         {
                             player.LevelMagic(magic);
-                            System.Drawing.Point[] Traps = new Point[3];
-                            Traps[0] = front;
-                            Traps[1] = Functions.Left(front, player.Direction);
-                            Traps[2] = Functions.Right(front, player.Direction);
+
+                            System.Drawing.Point[] traps = new Point[3];
+                            traps[0] = front;
+                            traps[1] = Functions.Left(front, player.Direction);
+                            traps[2] = Functions.Right(front, player.Direction);
+
                             for (int i = 0; i <= 2; i++)
                             {
                                 SpellObject ob = new SpellObject
@@ -1823,14 +1826,14 @@ namespace Server.MirEnvir
                                     ExpireTime = Envir.Time + (10 + value / 2) * 1000,
                                     TickSpeed = 500,
                                     Caster = player,
-                                    CurrentLocation = Traps[i],
+                                    CurrentLocation = traps[i],
                                     CurrentMap = this,
                                     ExplosiveTrapID = trapID,
                                     ExplosiveTrapCount = i
                                 };
+
                                 AddObject(ob);
                                 ob.Spawned();
-                                player.ArcherTrapObjectsArray[trapID, i] = ob;
                             }
                         }
                     }
@@ -2067,20 +2070,6 @@ namespace Server.MirEnvir
                         CurrentMap = this,
                     };
 
-                    if (player.PortalObjectsArray[0] == null)
-                    {
-                        player.PortalObjectsArray[0] = spellOb;
-                    }
-                    else
-                    {
-                        player.PortalObjectsArray[1] = spellOb;
-                        player.PortalObjectsArray[1].ExitMap = player.PortalObjectsArray[0].CurrentMap;
-                        player.PortalObjectsArray[1].ExitCoord = player.PortalObjectsArray[0].CurrentLocation;
-
-                        player.PortalObjectsArray[0].ExitMap = player.PortalObjectsArray[1].CurrentMap;
-                        player.PortalObjectsArray[0].ExitCoord = player.PortalObjectsArray[1].CurrentLocation;
-                    }
-
                     AddObject(spellOb);
                     spellOb.Spawned();
                     train = true;
@@ -2198,8 +2187,9 @@ namespace Server.MirEnvir
                 Players.Add((PlayerObject)ob);
                 InactiveTime = Envir.Time;
             }
-            if (ob.Race == ObjectType.Merchant)
-                NPCs.Add((NPCObject)ob);
+
+            if (ob.Race == ObjectType.Merchant) NPCs.Add((NPCObject)ob);
+            if (ob.Race == ObjectType.Spell) Spells.Add((SpellObject)ob);
 
             GetCell(ob.CurrentLocation).Add(ob);
         }
@@ -2208,6 +2198,7 @@ namespace Server.MirEnvir
         {
             if (ob.Race == ObjectType.Player) Players.Remove((PlayerObject)ob);
             if (ob.Race == ObjectType.Merchant) NPCs.Remove((NPCObject)ob);
+            if (ob.Race == ObjectType.Spell) Spells.Remove((SpellObject)ob);
 
             GetCell(ob.CurrentLocation).Remove(ob);
         }
@@ -2222,6 +2213,21 @@ namespace Server.MirEnvir
                     return szi;
             }
             return null;
+        }
+
+        public List<SpellObject> GetSpellObjects(Spell spell ,MapObject caster)
+        {
+            List<SpellObject> spellObjects = new List<SpellObject>();
+
+            for (int i = 0; i < Spells.Count; i++)
+            {
+                if (spell != Spells[i].Spell) continue;
+                if (caster != null && Spells[i].Caster != caster) continue;
+
+                spellObjects.Add(Spells[i]);
+            }
+
+            return spellObjects;
         }
 
         public ConquestObject GetConquest(Point location)

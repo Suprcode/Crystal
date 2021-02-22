@@ -1187,6 +1187,8 @@ public enum Spell : byte
     Blink = 151,
     Portal = 152,
     BattleCry = 153,
+    FireBounce = 154,
+    MeteorShower = 155,
 
     //Map Events
     DigOutZombie = 200,
@@ -1420,6 +1422,7 @@ public enum ServerPacketIds : short
     MagicCast,
     ObjectMagic,
     ObjectEffect,
+    ObjectProjectile,
     RangeAttack,
     Pushed,
     ObjectPushed,
@@ -1671,6 +1674,7 @@ public enum ClientPacketIds : short
 
     UpdateIntelligentCreature,
     IntelligentCreaturePickup,
+    RequestIntelligentCreatureUpdates,
 
     AddFriend,
     RemoveFriend,

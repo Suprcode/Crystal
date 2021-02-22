@@ -1908,7 +1908,24 @@ namespace ClientPackets
         }
     }
 
-    public sealed class UpdateIntelligentCreature : Packet//IntelligentCreature
+    public sealed class RequestIntelligentCreatureUpdates : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RequestIntelligentCreatureUpdates; } }
+
+        public bool Update = false;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Update = reader.ReadBoolean();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Update);
+        }
+    }
+
+    public sealed class UpdateIntelligentCreature : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.UpdateIntelligentCreature; } }
 

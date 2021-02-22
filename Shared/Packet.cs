@@ -298,9 +298,11 @@ public abstract class Packet
                 return new C.MailLockedItem();
             case (short)ClientPacketIds.MailCost:
                 return new C.MailCost();
-            case (short)ClientPacketIds.UpdateIntelligentCreature://IntelligentCreature
+            case (short)ClientPacketIds.RequestIntelligentCreatureUpdates:
+                return new C.RequestIntelligentCreatureUpdates();
+            case (short)ClientPacketIds.UpdateIntelligentCreature:
                 return new C.UpdateIntelligentCreature();
-            case (short)ClientPacketIds.IntelligentCreaturePickup://IntelligentCreature
+            case (short)ClientPacketIds.IntelligentCreaturePickup:
                 return new C.IntelligentCreaturePickup();
             case (short)ClientPacketIds.AddFriend:
                 return new C.AddFriend();
@@ -563,6 +565,8 @@ public abstract class Packet
                 return new S.MagicCast();
             case (short)ServerPacketIds.ObjectMagic:
                 return new S.ObjectMagic();
+            case (short)ServerPacketIds.ObjectProjectile:
+                return new S.ObjectProjectile();
             case (short)ServerPacketIds.ObjectEffect:
                 return new S.ObjectEffect();
             case (short)ServerPacketIds.RangeAttack:

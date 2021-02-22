@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Threading;
@@ -399,6 +400,9 @@ namespace Client
 
             text += string.Format(", Sent: {0}, Received: {1}", Functions.ConvertByteSize(BytesSent), Functions.ConvertByteSize(BytesReceived));
 
+            text += string.Format(", TLC: {0}", DXManager.TextureList.Count(x => x.TextureValid));
+            text += string.Format(", CLC: {0}", DXManager.ControlList.Count(x => x.IsDisposed == false));
+
             if (Settings.FullScreen)
             {
                 if (DebugBaseLabel == null || DebugBaseLabel.IsDisposed)
@@ -519,7 +523,9 @@ namespace Client
             {
                 GameScene.Scene.MapControl.FloorValid = false; 
                 GameScene.Scene.TextureValid = false;
-            }        
+            }
+
+            Program.Form.CenterToScreen();
         }
 
         public void CreateScreenShot()
@@ -644,6 +650,11 @@ namespace Client
                 if (m.WParam.ToInt32() == 0xF100) // SC_KEYMENU
                 {
                     m.Result = IntPtr.Zero;
+                    return;
+                }
+                else if (m.WParam.ToInt32() == 0xF030) // SC_MAXIMISE
+                {
+                    ToggleFullScreen();
                     return;
                 }
             }
