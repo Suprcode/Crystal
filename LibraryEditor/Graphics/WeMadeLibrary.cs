@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -85,6 +86,11 @@ namespace LibraryEditor
                 else if (buffer[2] == 73)
                     _nType = 3;
                 else if (buffer[48] == 32)
+                {
+                    _nType = 5;
+                }
+
+                if ((_nType == 2 || _nType == 0) && _bReader.ReadInt16() == 32)
                 {
                     _nType = 5;
                 }
