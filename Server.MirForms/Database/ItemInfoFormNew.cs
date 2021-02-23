@@ -26,7 +26,7 @@ namespace Server.Database
             InitializeItemInfoFilters();
             InitializeItemInfoGridView();
 
-            UpdateItemInfoGridView();
+            LoadForm();
 
         }
 
@@ -62,7 +62,7 @@ namespace Server.Database
             this.ItemSet.DataSource = Enum.GetValues(typeof(ItemSet));
         }
 
-        private void UpdateItemInfoGridView()
+        private void LoadForm()
         {
             itemInfoGridView.Rows.Clear();
 
@@ -123,6 +123,8 @@ namespace Server.Database
                 int rowIndex = itemInfoGridView.Rows.Add();
 
                 var row = itemInfoGridView.Rows[rowIndex];
+
+                row.Cells["Modified"].Value = false;
 
                 row.Cells["ItemIndex"].Value = item.Index;
                 row.Cells["ItemName"].Value = item.Name;
@@ -204,7 +206,7 @@ namespace Server.Database
             }
         }
 
-        private void Save()
+        private void SaveForm()
         {
             var lastIndex = Envir.ItemInfoList.Max(x => x.Index);
 
@@ -228,6 +230,8 @@ namespace Server.Database
                     int index = (int)row.Cells["ItemIndex"].Value;
 
                     item = Envir.ItemInfoList.FirstOrDefault(x => x.Index == index);
+
+                    if (row.Cells["Modified"].Value != null && (bool)row.Cells["Modified"].Value == false) continue;
                 }
 
                 item.Name = (string)row.Cells["ItemName"].Value;
@@ -295,6 +299,15 @@ namespace Server.Database
         {
             var col = itemInfoGridView.Columns[e.ColumnIndex];
 
+            var cell = itemInfoGridView.Rows[e.RowIndex].Cells[col.Name];
+
+            if (cell.Value != null && e.FormattedValue != null && cell.Value.ToString() == e.FormattedValue.ToString())
+            {
+                return;
+            }
+
+            itemInfoGridView.Rows[e.RowIndex].Cells["Modified"].Value = true;
+
             var val = e.FormattedValue.ToString();
 
             if (col.ValueType == null && col.Name.Length > 4)
@@ -344,6 +357,8 @@ namespace Server.Database
             {
                 foreach (DataGridViewColumn col in itemInfoGridView.Columns)
                 {
+                    if (col.Name == "Modified") continue;
+
                     col.Visible = true;
                     continue;
                 }
@@ -356,7 +371,7 @@ namespace Server.Database
             {
                 foreach (DataGridViewColumn col in itemInfoGridView.Columns)
                 {
-                    if (col.Name == "ItemIndex" || col.Name == "ItemName")
+                    if (col.Name == "ItemIndex" || col.Name == "ItemName" || col.Name == "Modified")
                     {
                         continue;
                     }
@@ -378,7 +393,7 @@ namespace Server.Database
             {
                 foreach (DataGridViewColumn col in itemInfoGridView.Columns)
                 {
-                    if (col.Name == "ItemIndex" || col.Name == "ItemName")
+                    if (col.Name == "ItemIndex" || col.Name == "ItemName" || col.Name == "Modified")
                     {
                         continue;
                     }
@@ -400,7 +415,7 @@ namespace Server.Database
             {
                 foreach (DataGridViewColumn col in itemInfoGridView.Columns)
                 {
-                    if (col.Name == "ItemIndex" || col.Name == "ItemName")
+                    if (col.Name == "ItemIndex" || col.Name == "ItemName" || col.Name == "Modified")
                     {
                         continue;
                     }
@@ -422,7 +437,7 @@ namespace Server.Database
             {
                 foreach (DataGridViewColumn col in itemInfoGridView.Columns)
                 {
-                    if (col.Name == "ItemIndex" || col.Name == "ItemName")
+                    if (col.Name == "ItemIndex" || col.Name == "ItemName" || col.Name == "Modified")
                     {
                         continue;
                     }
@@ -477,6 +492,7 @@ namespace Server.Database
         {
             var row = e.Row;
 
+            row.Cells["Modified"].Value = (bool)true;
             row.Cells["ItemName"].Value = "";
 
             row.Cells["ItemType"].Value = (ItemType)0;
@@ -536,7 +552,7 @@ namespace Server.Database
 
         private void ItemInfoFormNew_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Save();
+            SaveForm();
             Envir.SaveDB();
         }
     }

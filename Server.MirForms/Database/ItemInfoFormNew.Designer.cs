@@ -47,6 +47,7 @@ namespace Server.Database
             this.lblSearch = new System.Windows.Forms.Label();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.Modified = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.ItemIndex = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemType = new System.Windows.Forms.DataGridViewComboBoxColumn();
@@ -80,6 +81,7 @@ namespace Server.Database
             this.itemInfoGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.itemInfoGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.itemInfoGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Modified,
             this.ItemIndex,
             this.ItemName,
             this.ItemType,
@@ -282,6 +284,15 @@ namespace Server.Database
             this.panel2.Size = new System.Drawing.Size(956, 433);
             this.panel2.TabIndex = 2;
             // 
+            // Modified
+            // 
+            this.Modified.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Modified.Frozen = true;
+            this.Modified.HeaderText = "Modified";
+            this.Modified.Name = "Modified";
+            this.Modified.ReadOnly = true;
+            this.Modified.Width = 53;
+            // 
             // ItemIndex
             // 
             this.ItemIndex.Frozen = true;
@@ -426,6 +437,7 @@ namespace Server.Database
         private System.Windows.Forms.ComboBox drpFilterType;
         private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.Button btnImport;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Modified;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemIndex;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemName;
         private System.Windows.Forms.DataGridViewComboBoxColumn ItemType;
