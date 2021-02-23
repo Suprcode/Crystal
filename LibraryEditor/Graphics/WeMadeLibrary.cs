@@ -5,7 +5,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using System;
 
 namespace LibraryEditor
 {

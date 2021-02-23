@@ -2872,7 +2872,7 @@ namespace Client.MirScenes
                     MapObject obj = MapControl.Objects[i];
                     if (obj.ObjectID != p.ObjectID) continue;
 
-                    if (obj.Damages.Count > 10) return;
+                    if (obj.Damages.Count >= 10) return;
 
                     switch (p.Type)
                     {

@@ -32,26 +32,6 @@ namespace Server.Database
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.itemInfoGridView = new System.Windows.Forms.DataGridView();
-            this.ItemIndex = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ItemName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ItemType = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ItemGrade = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ItemRequiredType = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ItemRequiredGender = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ItemRequiredClass = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ItemSet = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ItemRandomStats = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ItemRequiredAmount = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ItemImage = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ItemShape = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ItemEffect = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ItemStackSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ItemSlots = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ItemWeight = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ItemLightRange = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ItemLightIntensity = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ItemDurability = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ItemPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.btnExport = new System.Windows.Forms.Button();
@@ -67,6 +47,26 @@ namespace Server.Database
             this.lblSearch = new System.Windows.Forms.Label();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.ItemIndex = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemType = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.ItemGrade = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.ItemRequiredType = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.ItemRequiredGender = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.ItemRequiredClass = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.ItemSet = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.ItemRandomStatsId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemRequiredAmount = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemImage = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemShape = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemEffect = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemStackSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemSlots = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemWeight = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemLightRange = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemLightIntensity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemDurability = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.itemInfoGridView)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -88,7 +88,7 @@ namespace Server.Database
             this.ItemRequiredGender,
             this.ItemRequiredClass,
             this.ItemSet,
-            this.ItemRandomStats,
+            this.ItemRandomStatsId,
             this.ItemRequiredAmount,
             this.ItemImage,
             this.ItemShape,
@@ -115,111 +115,8 @@ namespace Server.Database
             this.itemInfoGridView.Size = new System.Drawing.Size(956, 433);
             this.itemInfoGridView.TabIndex = 0;
             this.itemInfoGridView.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.itemInfoGridView_CellValidating);
-            // 
-            // ItemIndex
-            // 
-            this.ItemIndex.Frozen = true;
-            this.ItemIndex.HeaderText = "Index";
-            this.ItemIndex.Name = "ItemIndex";
-            this.ItemIndex.ReadOnly = true;
-            // 
-            // ItemName
-            // 
-            this.ItemName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.ItemName.Frozen = true;
-            this.ItemName.HeaderText = "Name";
-            this.ItemName.Name = "ItemName";
-            this.ItemName.Width = 60;
-            // 
-            // ItemType
-            // 
-            this.ItemType.HeaderText = "Type";
-            this.ItemType.Name = "ItemType";
-            // 
-            // ItemGrade
-            // 
-            this.ItemGrade.HeaderText = "Grade";
-            this.ItemGrade.Name = "ItemGrade";
-            // 
-            // ItemRequiredType
-            // 
-            this.ItemRequiredType.HeaderText = "Required Type";
-            this.ItemRequiredType.Name = "ItemRequiredType";
-            // 
-            // ItemRequiredGender
-            // 
-            this.ItemRequiredGender.HeaderText = "Required Gender";
-            this.ItemRequiredGender.Name = "ItemRequiredGender";
-            // 
-            // ItemRequiredClass
-            // 
-            this.ItemRequiredClass.HeaderText = "Required Class";
-            this.ItemRequiredClass.Name = "ItemRequiredClass";
-            // 
-            // ItemSet
-            // 
-            this.ItemSet.HeaderText = "Set";
-            this.ItemSet.Name = "ItemSet";
-            // 
-            // ItemRandomStats
-            // 
-            this.ItemRandomStats.HeaderText = "Random Stats";
-            this.ItemRandomStats.Name = "ItemRandomStats";
-            // 
-            // ItemRequiredAmount
-            // 
-            this.ItemRequiredAmount.HeaderText = "Required Amount";
-            this.ItemRequiredAmount.Name = "ItemRequiredAmount";
-            // 
-            // ItemImage
-            // 
-            this.ItemImage.HeaderText = "Image";
-            this.ItemImage.Name = "ItemImage";
-            // 
-            // ItemShape
-            // 
-            this.ItemShape.HeaderText = "Shape";
-            this.ItemShape.Name = "ItemShape";
-            // 
-            // ItemEffect
-            // 
-            this.ItemEffect.HeaderText = "Effect";
-            this.ItemEffect.Name = "ItemEffect";
-            // 
-            // ItemStackSize
-            // 
-            this.ItemStackSize.HeaderText = "Stack Size";
-            this.ItemStackSize.Name = "ItemStackSize";
-            // 
-            // ItemSlots
-            // 
-            this.ItemSlots.HeaderText = "Slots";
-            this.ItemSlots.Name = "ItemSlots";
-            // 
-            // ItemWeight
-            // 
-            this.ItemWeight.HeaderText = "Weight";
-            this.ItemWeight.Name = "ItemWeight";
-            // 
-            // ItemLightRange
-            // 
-            this.ItemLightRange.HeaderText = "Light Range";
-            this.ItemLightRange.Name = "ItemLightRange";
-            // 
-            // ItemLightIntensity
-            // 
-            this.ItemLightIntensity.HeaderText = "Intensity";
-            this.ItemLightIntensity.Name = "ItemLightIntensity";
-            // 
-            // ItemDurability
-            // 
-            this.ItemDurability.HeaderText = "Durability";
-            this.ItemDurability.Name = "ItemDurability";
-            // 
-            // ItemPrice
-            // 
-            this.ItemPrice.HeaderText = "Price";
-            this.ItemPrice.Name = "ItemPrice";
+            this.itemInfoGridView.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.itemInfoGridView_DefaultValuesNeeded);
+            this.itemInfoGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.itemInfoGridView_UserDeletingRow);
             // 
             // panel1
             // 
@@ -385,6 +282,111 @@ namespace Server.Database
             this.panel2.Size = new System.Drawing.Size(956, 433);
             this.panel2.TabIndex = 2;
             // 
+            // ItemIndex
+            // 
+            this.ItemIndex.Frozen = true;
+            this.ItemIndex.HeaderText = "Index";
+            this.ItemIndex.Name = "ItemIndex";
+            this.ItemIndex.ReadOnly = true;
+            // 
+            // ItemName
+            // 
+            this.ItemName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.ItemName.Frozen = true;
+            this.ItemName.HeaderText = "Name";
+            this.ItemName.Name = "ItemName";
+            this.ItemName.Width = 60;
+            // 
+            // ItemType
+            // 
+            this.ItemType.HeaderText = "Type";
+            this.ItemType.Name = "ItemType";
+            // 
+            // ItemGrade
+            // 
+            this.ItemGrade.HeaderText = "Grade";
+            this.ItemGrade.Name = "ItemGrade";
+            // 
+            // ItemRequiredType
+            // 
+            this.ItemRequiredType.HeaderText = "Required Type";
+            this.ItemRequiredType.Name = "ItemRequiredType";
+            // 
+            // ItemRequiredGender
+            // 
+            this.ItemRequiredGender.HeaderText = "Required Gender";
+            this.ItemRequiredGender.Name = "ItemRequiredGender";
+            // 
+            // ItemRequiredClass
+            // 
+            this.ItemRequiredClass.HeaderText = "Required Class";
+            this.ItemRequiredClass.Name = "ItemRequiredClass";
+            // 
+            // ItemSet
+            // 
+            this.ItemSet.HeaderText = "Set";
+            this.ItemSet.Name = "ItemSet";
+            // 
+            // ItemRandomStatsId
+            // 
+            this.ItemRandomStatsId.HeaderText = "Random Stats";
+            this.ItemRandomStatsId.Name = "ItemRandomStatsId";
+            // 
+            // ItemRequiredAmount
+            // 
+            this.ItemRequiredAmount.HeaderText = "Required Amount";
+            this.ItemRequiredAmount.Name = "ItemRequiredAmount";
+            // 
+            // ItemImage
+            // 
+            this.ItemImage.HeaderText = "Image";
+            this.ItemImage.Name = "ItemImage";
+            // 
+            // ItemShape
+            // 
+            this.ItemShape.HeaderText = "Shape";
+            this.ItemShape.Name = "ItemShape";
+            // 
+            // ItemEffect
+            // 
+            this.ItemEffect.HeaderText = "Effect";
+            this.ItemEffect.Name = "ItemEffect";
+            // 
+            // ItemStackSize
+            // 
+            this.ItemStackSize.HeaderText = "Stack Size";
+            this.ItemStackSize.Name = "ItemStackSize";
+            // 
+            // ItemSlots
+            // 
+            this.ItemSlots.HeaderText = "Slots";
+            this.ItemSlots.Name = "ItemSlots";
+            // 
+            // ItemWeight
+            // 
+            this.ItemWeight.HeaderText = "Weight";
+            this.ItemWeight.Name = "ItemWeight";
+            // 
+            // ItemLightRange
+            // 
+            this.ItemLightRange.HeaderText = "Light Range";
+            this.ItemLightRange.Name = "ItemLightRange";
+            // 
+            // ItemLightIntensity
+            // 
+            this.ItemLightIntensity.HeaderText = "Intensity";
+            this.ItemLightIntensity.Name = "ItemLightIntensity";
+            // 
+            // ItemDurability
+            // 
+            this.ItemDurability.HeaderText = "Durability";
+            this.ItemDurability.Name = "ItemDurability";
+            // 
+            // ItemPrice
+            // 
+            this.ItemPrice.HeaderText = "Price";
+            this.ItemPrice.Name = "ItemPrice";
+            // 
             // ItemInfoFormNew
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -394,6 +396,7 @@ namespace Server.Database
             this.Controls.Add(this.panel1);
             this.Name = "ItemInfoFormNew";
             this.Text = "ItemInfoFormNew";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ItemInfoFormNew_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.itemInfoGridView)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
@@ -431,7 +434,7 @@ namespace Server.Database
         private System.Windows.Forms.DataGridViewComboBoxColumn ItemRequiredGender;
         private System.Windows.Forms.DataGridViewComboBoxColumn ItemRequiredClass;
         private System.Windows.Forms.DataGridViewComboBoxColumn ItemSet;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ItemRandomStats;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ItemRandomStatsId;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemRequiredAmount;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemImage;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemShape;
