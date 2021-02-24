@@ -117,6 +117,7 @@ namespace Server.Database
             this.itemInfoGridView.Size = new System.Drawing.Size(956, 433);
             this.itemInfoGridView.TabIndex = 0;
             this.itemInfoGridView.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.itemInfoGridView_CellValidating);
+            this.itemInfoGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.itemInfoGridView_DataError);
             this.itemInfoGridView.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.itemInfoGridView_DefaultValuesNeeded);
             this.itemInfoGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.itemInfoGridView_UserDeletingRow);
             // 
@@ -287,6 +288,7 @@ namespace Server.Database
             // Modified
             // 
             this.Modified.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Modified.DataPropertyName = "Modified";
             this.Modified.Frozen = true;
             this.Modified.HeaderText = "Modified";
             this.Modified.Name = "Modified";
@@ -295,14 +297,18 @@ namespace Server.Database
             // 
             // ItemIndex
             // 
+            this.ItemIndex.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ItemIndex.DataPropertyName = "ItemIndex";
             this.ItemIndex.Frozen = true;
             this.ItemIndex.HeaderText = "Index";
             this.ItemIndex.Name = "ItemIndex";
             this.ItemIndex.ReadOnly = true;
+            this.ItemIndex.Width = 58;
             // 
             // ItemName
             // 
             this.ItemName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.ItemName.DataPropertyName = "ItemName";
             this.ItemName.Frozen = true;
             this.ItemName.HeaderText = "Name";
             this.ItemName.Name = "ItemName";
@@ -310,91 +316,110 @@ namespace Server.Database
             // 
             // ItemType
             // 
+            this.ItemType.DataPropertyName = "ItemType";
             this.ItemType.HeaderText = "Type";
             this.ItemType.Name = "ItemType";
+            this.ItemType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // ItemGrade
             // 
+            this.ItemGrade.DataPropertyName = "ItemGrade";
             this.ItemGrade.HeaderText = "Grade";
             this.ItemGrade.Name = "ItemGrade";
             // 
             // ItemRequiredType
             // 
+            this.ItemRequiredType.DataPropertyName = "ItemRequiredType";
             this.ItemRequiredType.HeaderText = "Required Type";
             this.ItemRequiredType.Name = "ItemRequiredType";
             // 
             // ItemRequiredGender
             // 
+            this.ItemRequiredGender.DataPropertyName = "ItemRequiredGender";
             this.ItemRequiredGender.HeaderText = "Required Gender";
             this.ItemRequiredGender.Name = "ItemRequiredGender";
             // 
             // ItemRequiredClass
             // 
+            this.ItemRequiredClass.DataPropertyName = "ItemRequiredClass";
             this.ItemRequiredClass.HeaderText = "Required Class";
             this.ItemRequiredClass.Name = "ItemRequiredClass";
             // 
             // ItemSet
             // 
+            this.ItemSet.DataPropertyName = "ItemSet";
             this.ItemSet.HeaderText = "Set";
             this.ItemSet.Name = "ItemSet";
             // 
             // ItemRandomStatsId
             // 
+            this.ItemRandomStatsId.DataPropertyName = "ItemRandomStatsId";
             this.ItemRandomStatsId.HeaderText = "Random Stats";
             this.ItemRandomStatsId.Name = "ItemRandomStatsId";
             // 
             // ItemRequiredAmount
             // 
+            this.ItemRequiredAmount.DataPropertyName = "ItemRequiredAmount";
             this.ItemRequiredAmount.HeaderText = "Required Amount";
             this.ItemRequiredAmount.Name = "ItemRequiredAmount";
             // 
             // ItemImage
             // 
+            this.ItemImage.DataPropertyName = "ItemImage";
             this.ItemImage.HeaderText = "Image";
             this.ItemImage.Name = "ItemImage";
             // 
             // ItemShape
             // 
+            this.ItemShape.DataPropertyName = "ItemShape";
             this.ItemShape.HeaderText = "Shape";
             this.ItemShape.Name = "ItemShape";
             // 
             // ItemEffect
             // 
+            this.ItemEffect.DataPropertyName = "ItemEffect";
             this.ItemEffect.HeaderText = "Effect";
             this.ItemEffect.Name = "ItemEffect";
             // 
             // ItemStackSize
             // 
+            this.ItemStackSize.DataPropertyName = "ItemStackSize";
             this.ItemStackSize.HeaderText = "Stack Size";
             this.ItemStackSize.Name = "ItemStackSize";
             // 
             // ItemSlots
             // 
+            this.ItemSlots.DataPropertyName = "ItemSlots";
             this.ItemSlots.HeaderText = "Slots";
             this.ItemSlots.Name = "ItemSlots";
             // 
             // ItemWeight
             // 
+            this.ItemWeight.DataPropertyName = "ItemWeight";
             this.ItemWeight.HeaderText = "Weight";
             this.ItemWeight.Name = "ItemWeight";
             // 
             // ItemLightRange
             // 
+            this.ItemLightRange.DataPropertyName = "ItemLightRange";
             this.ItemLightRange.HeaderText = "Light Range";
             this.ItemLightRange.Name = "ItemLightRange";
             // 
             // ItemLightIntensity
             // 
+            this.ItemLightIntensity.DataPropertyName = "ItemLightIntensity";
             this.ItemLightIntensity.HeaderText = "Intensity";
             this.ItemLightIntensity.Name = "ItemLightIntensity";
             // 
             // ItemDurability
             // 
+            this.ItemDurability.DataPropertyName = "ItemDurability";
             this.ItemDurability.HeaderText = "Durability";
             this.ItemDurability.Name = "ItemDurability";
             // 
             // ItemPrice
             // 
+            this.ItemPrice.DataPropertyName = "ItemPrice";
             this.ItemPrice.HeaderText = "Price";
             this.ItemPrice.Name = "ItemPrice";
             // 

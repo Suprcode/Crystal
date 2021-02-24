@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using System.Windows.Forms;
 
 namespace Server.Database
@@ -23,11 +24,13 @@ namespace Server.Database
         public ItemInfoFormNew()
         {
             InitializeComponent();
+
             InitializeItemInfoFilters();
             InitializeItemInfoGridView();
 
-            LoadForm();
+            CreateDynamicColumns();
 
+            PopulateTable();
         }
 
         private void InitializeItemInfoFilters()
@@ -42,30 +45,74 @@ namespace Server.Database
 
         private void InitializeItemInfoGridView()
         {
+            Modified.ValueType = typeof(bool);
+            ItemIndex.ValueType = typeof(int);
+            ItemName.ValueType = typeof(string);
+            ItemRandomStatsId.ValueType = typeof(byte);
+            ItemRequiredAmount.ValueType = typeof(byte);
+            ItemImage.ValueType = typeof(ushort);
+            ItemShape.ValueType = typeof(short);
+            ItemEffect.ValueType = typeof(byte);
+            ItemStackSize.ValueType = typeof(ushort);
+            ItemSlots.ValueType = typeof(byte);
+            ItemWeight.ValueType = typeof(byte);
+
+            ItemLightIntensity.ValueType = typeof(byte);
+            ItemLightRange.ValueType = typeof(byte);
+            ItemDurability.ValueType = typeof(ushort);
+            ItemPrice.ValueType = typeof(uint);
+
             //Basic
             this.ItemType.ValueType = typeof(ItemType);
-            this.ItemType.DataSource = Enum.GetValues(typeof(ItemType));
+            this.ItemType.DataSource = Enum2DataTable<ItemType>();
+            this.ItemType.ValueMember = "Value";
+            this.ItemType.DisplayMember = "Display";
 
             this.ItemGrade.ValueType = typeof(ItemGrade);
-            this.ItemGrade.DataSource = Enum.GetValues(typeof(ItemGrade));
+            this.ItemGrade.DataSource = Enum2DataTable<ItemGrade>();
+            this.ItemGrade.ValueMember = "Value";
+            this.ItemGrade.DisplayMember = "Display";
 
             this.ItemRequiredType.ValueType = typeof(RequiredType);
-            this.ItemRequiredType.DataSource = Enum.GetValues(typeof(RequiredType));
+            this.ItemRequiredType.DataSource = Enum2DataTable<RequiredType>();
+            this.ItemRequiredType.ValueMember = "Value";
+            this.ItemRequiredType.DisplayMember = "Display";
 
             this.ItemRequiredGender.ValueType = typeof(RequiredGender);
-            this.ItemRequiredGender.DataSource = Enum.GetValues(typeof(RequiredGender));
+            this.ItemRequiredGender.DataSource = Enum2DataTable<RequiredGender>();
+            this.ItemRequiredGender.ValueMember = "Value";
+            this.ItemRequiredGender.DisplayMember = "Display";
 
             this.ItemRequiredClass.ValueType = typeof(RequiredClass);
-            this.ItemRequiredClass.DataSource = Enum.GetValues(typeof(RequiredClass));
+            this.ItemRequiredClass.DataSource = Enum2DataTable<RequiredClass>();
+            this.ItemRequiredClass.ValueMember = "Value";
+            this.ItemRequiredClass.DisplayMember = "Display";
 
             this.ItemSet.ValueType = typeof(ItemSet);
-            this.ItemSet.DataSource = Enum.GetValues(typeof(ItemSet));
+            this.ItemSet.DataSource = Enum2DataTable<ItemSet>();
+            this.ItemSet.ValueMember = "Value";
+            this.ItemSet.DisplayMember = "Display";
         }
 
-        private void LoadForm()
+        public static DataTable Enum2DataTable<T>()
         {
-            itemInfoGridView.Rows.Clear();
+            DataTable enumTable = new DataTable();
+            enumTable.Columns.Add(new DataColumn("Value", Enum.GetUnderlyingType(typeof(T))));
+            enumTable.Columns.Add(new DataColumn("Display", typeof(string)));
+            DataRow EnumRow;
+            foreach (T E in Enum.GetValues(typeof(T)))
+            {
+                EnumRow = enumTable.NewRow();
+                EnumRow["Value"] = E;
+                EnumRow["Display"] = E.ToString();
+                enumTable.Rows.Add(EnumRow);
+            }
 
+            return enumTable;
+        }
+
+        private void CreateDynamicColumns()
+        {
             foreach (Stat stat in StatEnums)
             {
                 if (stat == Stat.Unknown) continue;
@@ -85,6 +132,7 @@ namespace Server.Database
                     HeaderText = $"{strKey} {sign}",
                     Name = "Stat" + stat.ToString(),
                     ValueType = typeof(int),
+                    DataPropertyName = "Stat" + stat.ToString()
                 };
 
                 itemInfoGridView.Columns.Add(col);
@@ -99,6 +147,7 @@ namespace Server.Database
                     HeaderText = bind.ToString(),
                     Name = "Bind" + bind.ToString(),
                     ValueType = typeof(bool),
+                    DataPropertyName = "Bind" + bind.ToString()
                 };
 
                 itemInfoGridView.Columns.Add(col);
@@ -113,97 +162,92 @@ namespace Server.Database
                     HeaderText = special.ToString(),
                     Name = "Special" + special.ToString(),
                     ValueType = typeof(bool),
+                    DataPropertyName = "Special" + special.ToString()
                 };
 
                 itemInfoGridView.Columns.Add(col);
             }
 
+        }
+
+        private void PopulateTable()
+        {
+            DataTable table = new DataTable("itemInfo");
+
+            foreach (DataGridViewColumn col in itemInfoGridView.Columns)
+            {
+                table.Columns.Add(col.DataPropertyName, col.ValueType);
+            }
+
             foreach (ItemInfo item in Envir.ItemInfoList)
             {
-                int rowIndex = itemInfoGridView.Rows.Add();
+                DataRow row = table.NewRow();
 
-                var row = itemInfoGridView.Rows[rowIndex];
+                row["Modified"] = false;
 
-                row.Cells["Modified"].Value = false;
+                row["ItemIndex"] = item.Index;
+                row["ItemName"] = item.Name;
 
-                row.Cells["ItemIndex"].Value = item.Index;
-                row.Cells["ItemName"].Value = item.Name;
-
-                row.Cells["ItemType"].Value = item.Type;
-                row.Cells["ItemGrade"].Value = item.Grade;
-                row.Cells["ItemRequiredType"].Value = item.RequiredType;
-                row.Cells["ItemRequiredGender"].Value = item.RequiredGender;
-                row.Cells["ItemRequiredClass"].Value = item.RequiredClass;
-                row.Cells["ItemSet"].Value = item.Set;
-                row.Cells["ItemRandomStatsId"].Value = item.RandomStatsId;
-                row.Cells["ItemRequiredAmount"].Value = item.RequiredAmount;
-                row.Cells["ItemImage"].Value = item.Image;
-                row.Cells["ItemShape"].Value = item.Shape;
-                row.Cells["ItemEffect"].Value = item.Effect;
-                row.Cells["ItemStackSize"].Value = item.StackSize;
-                row.Cells["ItemSlots"].Value = item.Slots;
-                row.Cells["ItemWeight"].Value = item.Weight;
-                row.Cells["ItemLightRange"].Value = (byte)(item.Light % 15);
-                row.Cells["ItemLightIntensity"].Value = (byte)(item.Light / 15);
-                row.Cells["ItemDurability"].Value = item.Durability;
-                row.Cells["ItemPrice"].Value = item.Price;
+                row["ItemType"] = item.Type;
+                row["ItemGrade"] = item.Grade;
+                row["ItemRequiredType"] = item.RequiredType;
+                row["ItemRequiredGender"] = item.RequiredGender;
+                row["ItemRequiredClass"] = item.RequiredClass;
+                row["ItemSet"] = item.Set;
+                row["ItemRandomStatsId"] = item.RandomStatsId;
+                row["ItemRequiredAmount"] = item.RequiredAmount;
+                row["ItemImage"] = item.Image;
+                row["ItemShape"] = item.Shape;
+                row["ItemEffect"] = item.Effect;
+                row["ItemStackSize"] = item.StackSize;
+                row["ItemSlots"] = item.Slots;
+                row["ItemWeight"] = item.Weight;
+                row["ItemLightRange"] = (byte)(item.Light % 15);
+                row["ItemLightIntensity"] = (byte)(item.Light / 15);
+                row["ItemDurability"] = item.Durability;
+                row["ItemPrice"] = item.Price;
 
                 foreach (Stat stat in StatEnums)
                 {
                     if (stat == Stat.Unknown) continue;
 
-                    row.Cells["Stat" + stat.ToString()].Value = item.Stats[stat];
+                    row["Stat" + stat.ToString()] = item.Stats[stat];
                 }
 
                 foreach (BindMode bind in BindEnums)
                 {
                     if (bind == BindMode.None) continue;
 
-                    row.Cells["Bind" + bind.ToString()].Value = item.Bind.HasFlag(bind);
+                    row["Bind" + bind.ToString()] = item.Bind.HasFlag(bind);
                 }
 
                 foreach (SpecialItemMode special in SpecialEnums)
                 {
                     if (special == SpecialItemMode.None) continue;
 
-                    row.Cells["Special" + special.ToString()].Value = item.Unique.HasFlag(special);
+                    row["Special" + special.ToString()] = item.Unique.HasFlag(special);
                 }
+
+                table.Rows.Add(row);
             }
+
+            itemInfoGridView.DataSource = table;
         }
 
         private void UpdateFilter()
         {
             var filterText = txtSearch.Text;
-            var filterType = (System.Web.UI.WebControls.ListItem)drpFilterType.SelectedItem;
+            var filterType = ((ListItem)drpFilterType.SelectedItem)?.Value ?? "-1";
 
-            foreach (DataGridViewRow row in itemInfoGridView.Rows)
+            if (string.IsNullOrEmpty(filterText) && filterType == "-1")
             {
-                bool visible = true;
-
-                var itemName = (string)row.Cells["ItemName"].Value;
-
-                if (string.IsNullOrEmpty(itemName)) continue;
-
-                var itemType = ((ItemType)row.Cells["ItemType"].Value).ToString();
-
-                if (!string.IsNullOrWhiteSpace(filterText))
-                {
-                    if (itemName.IndexOf(filterText, StringComparison.OrdinalIgnoreCase) < 0)
-                    {
-                        visible = false;
-                    }
-                }
-
-                if (visible && filterType != null && filterType.Text != "")
-                {
-                    if (itemType.IndexOf(filterType.Text, StringComparison.OrdinalIgnoreCase) != 0)
-                    {
-                        visible = false;
-                    }
-                }
-
-                row.Visible = visible;
+                (itemInfoGridView.DataSource as DataTable).DefaultView.RowFilter = "";
+                return;
             }
+
+            string rowFilter = string.Format("([ItemType] = '{0}' OR '{0}' = -1) AND [ItemName] LIKE '%{1}%'", filterType, filterText);
+
+            (itemInfoGridView.DataSource as DataTable).DefaultView.RowFilter = rowFilter;
         }
 
         private void SaveForm()
@@ -219,7 +263,7 @@ namespace Server.Database
 
                 ItemInfo item;
 
-                if (row.Cells["ItemIndex"].Value == null)
+                if (string.IsNullOrEmpty((string)row.Cells["ItemIndex"].FormattedValue))
                 {
                     Envir.ItemInfoList.Add(item = new ItemInfo());
 
@@ -301,7 +345,7 @@ namespace Server.Database
 
             var cell = itemInfoGridView.Rows[e.RowIndex].Cells[col.Name];
 
-            if (cell.Value != null && e.FormattedValue != null && cell.Value.ToString() == e.FormattedValue.ToString())
+            if (cell.FormattedValue != null && e.FormattedValue != null && cell.FormattedValue.ToString() == e.FormattedValue.ToString())
             {
                 return;
             }
@@ -309,18 +353,6 @@ namespace Server.Database
             itemInfoGridView.Rows[e.RowIndex].Cells["Modified"].Value = true;
 
             var val = e.FormattedValue.ToString();
-
-            if (col.ValueType == null && col.Name.Length > 4)
-            {
-                Type t = typeof(ItemInfo);
-
-                var field = t.GetField(col.Name.Substring(4));
-
-                if (field != null)
-                {
-                    col.ValueType = field.FieldType;
-                }
-            }
 
             itemInfoGridView.Rows[e.RowIndex].ErrorText = "";
 
@@ -554,6 +586,11 @@ namespace Server.Database
         {
             SaveForm();
             Envir.SaveDB();
+        }
+
+        private void itemInfoGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+
         }
     }
 }
