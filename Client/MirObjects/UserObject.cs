@@ -643,6 +643,9 @@ namespace Client.MirObjects
                 Stats[cap.Key] = Math.Min(cap.Value, Stats[cap.Key]);
             }
 
+            Stats[Stat.HP] = Math.Max(0, Stats[Stat.HP]);
+            Stats[Stat.MP] = Math.Max(0, Stats[Stat.MP]);
+
             Stats[Stat.MinAC] = Math.Max(0, Stats[Stat.MinAC]);
             Stats[Stat.MaxAC] = Math.Max(0, Stats[Stat.MaxAC]);
             Stats[Stat.MinMAC] = Math.Max(0, Stats[Stat.MinMAC]);

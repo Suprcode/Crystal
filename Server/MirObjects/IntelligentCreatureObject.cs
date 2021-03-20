@@ -36,7 +36,7 @@ namespace Server.MirObjects
         public long DelayedpickupTicker = 0;
         public const long DelayedpickupDelay = Settings.Second;//1 second
 
-        public long CreatureTimeLeftTicker;
+        public long CreatureTime;
 
         public long BlackstoneTime { get { return CreatureInfo.BlackstoneTime; } set { CreatureInfo.BlackstoneTime = value; } }
         public const long BlackstoneProduceTime = 10800;//3 hours in seconds
@@ -96,6 +96,19 @@ namespace Server.MirObjects
             PetType = (IntelligentCreatureType)info.Effect;
         }
 
+        public override void SetOperateTime()
+        {
+            base.SetOperateTime();
+
+            var time = OperateTime;
+
+            if (CreatureTime < time && CreatureTime > Envir.Time)
+                time = RoamTime;
+
+            if (OperateTime <= Envir.Time || time < OperateTime)
+                OperateTime = time;
+        }
+
         public override void Process()
         {
             RefreshNameColour();
@@ -116,9 +129,9 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Envir.Time > CreatureTimeLeftTicker)
+            if (Envir.Time > CreatureTime)
             {
-                CreatureTimeLeftTicker = Envir.Time + Settings.Second;
+                CreatureTime = Envir.Time + Settings.Second;
 
                 ProcessBlackStoneProduction();
                 ProcessMaintainFoodBuff();
@@ -139,8 +152,12 @@ namespace Server.MirObjects
                     PickupAllItems(Target.CurrentLocation);
                     Target = null;
                     DoDelayedPickup = false;
-                    if(TargetList.Count > 0)
+
+                    if (TargetList.Count > 0)
+                    {
                         TargetList.RemoveAt(0);
+                    }
+
                     if (TargetList.Count == 0)
                     {
                         DoTargetList = false;
@@ -166,7 +183,6 @@ namespace Server.MirObjects
             if (Target == null) ProcessAI();
             else ProcessTarget();
 
-            //ProcessBuffs();
             ProcessRegen();
         }
 

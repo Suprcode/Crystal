@@ -1395,9 +1395,14 @@ namespace Server.MirEnvir
                             foreach (var Respawn in SavedSpawns)
                             {
                                 if (Respawn.Info.RespawnIndex != Saved.RespawnIndex) continue;
+
                                 Respawn.NextSpawnTick = Saved.NextSpawnTick;
+
                                 if (!Saved.Spawned || Respawn.Info.Count * SpawnMultiplier <= Respawn.Count)
+                                {
                                     continue;
+                                }
+
                                 var mobcount = Respawn.Info.Count * SpawnMultiplier - Respawn.Count;
                                 for (var j = 0; j < mobcount; j++)
                                 {

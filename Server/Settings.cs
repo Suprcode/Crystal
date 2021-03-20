@@ -46,6 +46,9 @@ namespace Server
         public static bool TestServer = false;
         public static bool EnforceDBChecks = true;
 
+        public static bool MonsterProcessWhenAlone = false;
+        public static bool MonsterProcessWhenStacked = false;
+
         public static string DefaultNPCFilename = "00Default";
         public static string MonsterNPCFilename = "00Monster";
         public static string RobotNPCFilename = "00Robot";
@@ -106,7 +109,6 @@ namespace Server
                           DropStackSize = 5,
                           PKDelay = 12;
 
-        public static long PetTimeOut = 5;
         public static bool PetSave = false;
 
         public static int RestedPeriod = 60,
@@ -292,6 +294,8 @@ namespace Server
             ThreadLimit = Reader.ReadInt32("General", "ThreadLimit", ThreadLimit);
             TestServer = Reader.ReadBoolean("General", "TestServer", TestServer);
             EnforceDBChecks = Reader.ReadBoolean("General", "EnforceDBChecks", EnforceDBChecks);
+            MonsterProcessWhenAlone = Reader.ReadBoolean("General", "MonsterProcessWhenAlone", MonsterProcessWhenAlone);
+            MonsterProcessWhenStacked = Reader.ReadBoolean("General", "MonsterProcessWhenStacked", MonsterProcessWhenStacked);
 
             //Paths
             IPAddress = Reader.ReadString("Network", "IPAddress", IPAddress);
@@ -333,7 +337,6 @@ namespace Server
             ExpRate = Reader.ReadSingle("Game", "ExpRate", ExpRate);
             ItemTimeOut = Reader.ReadInt32("Game", "ItemTimeOut", ItemTimeOut);
             PlayerDiedItemTimeOut = Reader.ReadInt32("Game", "PlayerDiedItemTimeOut", PlayerDiedItemTimeOut);
-            PetTimeOut = Reader.ReadInt64("Game", "PetTimeOut", PetTimeOut);
             PetSave = Reader.ReadBoolean("Game", "PetSave", PetSave);
             PKDelay = Reader.ReadInt32("Game", "PKDelay", PKDelay);
             SkeletonName = Reader.ReadString("Game", "SkeletonName", SkeletonName);
@@ -528,7 +531,9 @@ namespace Server
             Reader.Write("General", "ThreadLimit", ThreadLimit);
             Reader.Write("General", "TestServer", TestServer);
             Reader.Write("General", "EnforceDBChecks", EnforceDBChecks);
-            
+            Reader.Write("General", "MonsterProcessWhenAlone", MonsterProcessWhenAlone);
+            Reader.Write("General", "MonsterProcessWhenStacked", MonsterProcessWhenStacked);
+
             //Paths
             Reader.Write("Network", "IPAddress", IPAddress);
             Reader.Write("Network", "Port", Port);
@@ -569,7 +574,6 @@ namespace Server
             Reader.Write("Game", "ExpRate", ExpRate);
             Reader.Write("Game", "ItemTimeOut", ItemTimeOut);
             Reader.Write("Game", "PlayerDiedItemTimeOut", PlayerDiedItemTimeOut);
-            Reader.Write("Game", "PetTimeOut", PetTimeOut);
             Reader.Write("Game", "PetSave", PetSave);
             Reader.Write("Game", "PKDelay", PKDelay);
             Reader.Write("Game", "SkeletonName", SkeletonName);

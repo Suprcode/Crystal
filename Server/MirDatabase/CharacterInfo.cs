@@ -521,7 +521,7 @@ namespace Server.MirDatabase
         public uint Experience;
         public byte Level, MaxPetLevel;
 
-        public long Time;
+        public long TameTime;
 
         public PetInfo(MonsterObject ob)
         {

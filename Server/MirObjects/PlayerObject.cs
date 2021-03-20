@@ -383,7 +383,10 @@ namespace Server.MirObjects
                 {
                     try
                     {
-                        Info.Pets.Add(new PetInfo(pet) { Time = Envir.Time });
+                        Info.Pets.Add(new PetInfo(pet) 
+                        { 
+                            TameTime = pet.TameTime - Envir.Time 
+                        });
 
                         Envir.MonsterCount--;
                         pet.CurrentMap.MonsterCount--;
@@ -2085,7 +2088,7 @@ namespace Server.MirObjects
 
                 if (!Settings.PetSave)
                 {
-                    if (info.Time < 1 || (Envir.Time > info.Time + (Settings.PetTimeOut * Settings.Minute))) monster.Die();
+                    monster.TameTime = Envir.Time + info.TameTime;
                 }
             }
 
@@ -2976,6 +2979,9 @@ namespace Server.MirObjects
             {
                 Stats[cap.Key] = Math.Min(cap.Value, Stats[cap.Key]);
             }
+
+            Stats[Stat.HP] = Math.Max(0, Stats[Stat.HP]);
+            Stats[Stat.MP] = Math.Max(0, Stats[Stat.MP]);
 
             Stats[Stat.MinAC] = Math.Max(0, Stats[Stat.MinAC]);
             Stats[Stat.MaxAC] = Math.Max(0, Stats[Stat.MaxAC]);
@@ -6901,7 +6907,11 @@ namespace Server.MirObjects
             target.ShockTime = 0;
             target.OperateTime = 0;
             target.MaxPetLevel = (byte)(1 + magic.Level * 2);
-            //target.TameTime = Envir.Time + (Settings.Minute * 60);
+
+            if (!Settings.PetSave)
+            {
+                target.TameTime = Envir.Time + (Settings.Minute * 60);
+            }
 
             target.Broadcast(new S.ObjectName { ObjectID = target.ObjectID, Name = target.Name });
         }
@@ -10909,7 +10919,7 @@ namespace Server.MirObjects
             for (int i = 0; i < CurrentMap.NPCs.Count; i++)
             {
                 if (CurrentMap.NPCs[i].ObjectID != NPCObjectID) continue;
-                ob = CurrentMap.NPCs[i];
+                ob = CurrentMap.NPCs[i];             
                 break;
             }
 
@@ -13413,7 +13423,7 @@ namespace Server.MirObjects
         {
             var item = Info.Equipment[(int)EquipmentSlot.Weapon];
 
-            if (item == null || item.GetTotal(Stat.Luck) >= 7)
+            if (item == null || item.AddedStats[Stat.Luck] >= 7)
                 return false;
 
             if (item.Info.Bind.HasFlag(BindMode.DontUpgrade))
@@ -13422,14 +13432,14 @@ namespace Server.MirObjects
             if (item.RentalInformation != null && item.RentalInformation.BindingFlags.HasFlag(BindMode.DontUpgrade))
                 return false;
 
-            if (item.GetTotal(Stat.Luck) > (Settings.MaxLuck * -1) && Envir.Random.Next(20) == 0)
+            if (item.AddedStats[Stat.Luck] > (Settings.MaxLuck * -1) && Envir.Random.Next(20) == 0)
             {
                 Stats[Stat.Luck]--;
                 item.AddedStats[Stat.Luck]--;
                 Enqueue(new S.RefreshItem { Item = item });
                 ReceiveChat(GameLanguage.WeaponCurse, ChatType.System);
             }
-            else if (item.GetTotal(Stat.Luck) <= 0 || Envir.Random.Next(10 * item.GetTotal(Stat.Luck)) == 0)
+            else if (item.AddedStats[Stat.Luck] <= 0 || Envir.Random.Next(10 * item.GetTotal(Stat.Luck)) == 0)
             {
                 Stats[Stat.Luck]++;
                 item.AddedStats[Stat.Luck]++;
@@ -14347,6 +14357,7 @@ namespace Server.MirObjects
                 NPCObject ob = CurrentMap.NPCs[i];
                 if (ob.ObjectID != objectID) continue;
                 if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
+
                 ob.CheckVisible(this);
 
                 if (!ob.VisibleLog[Info.Index] || !ob.Visible) return;
@@ -14394,6 +14405,7 @@ namespace Server.MirObjects
             {
                 NPCObject ob = CurrentMap.NPCs[i];
                 if (ob.ObjectID != NPCObjectID) continue;
+                if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
 
                 if (type == PanelType.Buy)
                 {
@@ -14412,6 +14424,7 @@ namespace Server.MirObjects
             {
                 NPCObject ob = CurrentMap.NPCs[i];
                 if (ob.ObjectID != NPCObjectID) continue;
+                if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
 
                 NPCScript script = NPCScript.Get(NPCScriptID);
                 script.Craft(this, index, count, slots);
@@ -14438,6 +14451,7 @@ namespace Server.MirObjects
             {
                 NPCObject ob = CurrentMap.NPCs[n];
                 if (ob.ObjectID != NPCObjectID) continue;
+                if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
 
                 UserItem temp = null;
                 int index = -1;
@@ -14533,6 +14547,7 @@ namespace Server.MirObjects
             {
                 NPCObject ob = CurrentMap.NPCs[n];
                 if (ob.ObjectID != NPCObjectID) continue;
+                if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
 
                 UserItem temp = null;
                 int index = -1;
@@ -14659,6 +14674,7 @@ namespace Server.MirObjects
             {
                 NPCObject ob = CurrentMap.NPCs[n];
                 if (ob.ObjectID != NPCObjectID) continue;
+                if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
 
                 UserItem temp = null;
                 int index = -1;
@@ -14732,6 +14748,7 @@ namespace Server.MirObjects
                 {
                     NPCObject ob = CurrentMap.NPCs[n];
                     if (ob.ObjectID != NPCObjectID) continue;
+                    if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
                     failed = false;
                 }
 
@@ -14831,6 +14848,8 @@ namespace Server.MirObjects
                     NPCObject ob = CurrentMap.NPCs[n];
                     if (ob.ObjectID != NPCObjectID) continue;
 
+                    if (!Functions.InRange(CurrentLocation, ob.CurrentLocation, Globals.DataRange)) return;
+
                     GetMarket(match, type);
                 }
             }
@@ -14885,6 +14904,8 @@ namespace Server.MirObjects
                 {
                     NPCObject ob = CurrentMap.NPCs[n];
                     if (ob.ObjectID != NPCObjectID) continue;
+
+                    if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
 
                     foreach (AuctionInfo auction in Search)
                     {
@@ -14977,6 +14998,7 @@ namespace Server.MirObjects
             {
                 NPCObject ob = CurrentMap.NPCs[n];
                 if (ob.ObjectID != NPCObjectID) continue;
+                if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
 
                 foreach (AuctionInfo auction in Account.Auctions)
                 {

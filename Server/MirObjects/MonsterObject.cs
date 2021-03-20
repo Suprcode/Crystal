@@ -309,10 +309,12 @@ namespace Server.MirObjects
                 }
             }
         }
-        public const int RegenDelay = 10000, EXPOwnerDelay = 5000, SearchDelay = 3000, RoamDelay = 1000, HealDelay = 600, RevivalDelay = 2000;
-        public long ActionTime, MoveTime, AttackTime, RegenTime, DeadTime, SearchTime, RoamTime, HealTime;
+        public const int RegenDelay = 10000, EXPOwnerDelay = 5000, AloneDelay = 3000, SearchDelay = 3000, RoamDelay = 1000, HealDelay = 600, RevivalDelay = 2000;
+        public long ActionTime, MoveTime, AttackTime, RegenTime, DeadTime, AloneTime, SearchTime, RoamTime, HealTime;
         public long ShockTime, RageTime, HallucinationTime;
         public bool BindingShotCenter, PoisonStopRegen = true;
+
+        protected bool Alone = false, Stacking = false;
 
         public byte PetLevel;
         public uint PetExperience;
@@ -419,6 +421,7 @@ namespace Server.MirObjects
                 Envir.MonsterCount++;
                 return true;
             }
+
             return false;
         }
 
@@ -832,7 +835,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if(Master != null && TameTime > 0 && Envir.Time >= TameTime)
+            if (Master != null && TameTime > 0 && Envir.Time >= TameTime)
             {
                 Master.Pets.Remove(this);
                 Master = null;
@@ -857,6 +860,9 @@ namespace Server.MirObjects
         {
             long time = Envir.Time + 2000;
 
+            if (AloneTime < time && AloneTime > Envir.Time)
+                time = AloneTime;
+
             if (DeadTime < time && DeadTime > Envir.Time)
                 time = DeadTime;
 
@@ -880,7 +886,6 @@ namespace Server.MirObjects
 
             if (RoamTime < time && RoamTime > Envir.Time)
                 time = RoamTime;
-
 
             if (ShockTime < time && ShockTime > Envir.Time)
                 time = ShockTime;
@@ -1228,23 +1233,51 @@ namespace Server.MirObjects
                     Target = null;
             }
 
-            ProcessSearch();
-            ProcessRoam();
-            ProcessTarget();
+            CheckAlone();
+
+            if (!Alone || Settings.MonsterProcessWhenAlone)
+            {
+                ProcessStacking();
+
+                if (!Stacking || Settings.MonsterProcessWhenStacked)
+                {
+                    ProcessSearch();
+                    ProcessRoam();
+                    ProcessTarget();
+                }
+            }
         }
-        protected virtual void ProcessSearch()
+
+        protected virtual void CheckAlone()
         {
-            if (Envir.Time < SearchTime) return;
-            if (Master != null && (Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.None)) return;
-            
-            SearchTime = Envir.Time + SearchDelay;
+            if (Envir.Time < AloneTime) return;
 
-            if (CurrentMap.Inactive(5)) return;
+            AloneTime = Envir.Time + AloneDelay;
 
+            if (CurrentMap.Players.Count == 0)
+            {
+                Alone = true;
+                return;
+            }
+
+            for (int i = 0; i < CurrentMap.Players.Count; i++)
+            {
+                if (Functions.InRange(CurrentLocation, CurrentMap.Players[i].CurrentLocation, Globals.DataRange * 2))
+                {
+                    Alone = false;
+                    return;
+                }
+            }
+
+            Alone = true;
+        }
+
+        protected virtual void ProcessStacking()
+        {
             //Stacking or Infront of master - Move
-            bool stacking = CheckStacked();
+            Stacking = CheckStacked();
 
-            if (CanMove && ((Master != null && Master.Front == CurrentLocation) || stacking))
+            if (CanMove && ((Master != null && Master.Front == CurrentLocation) || Stacking))
             {
                 //Walk Randomly
                 if (!Walk(Direction))
@@ -1273,18 +1306,27 @@ namespace Server.MirObjects
                             break;
                     }
                 }
+
+                return;
             }
+        }
+
+        protected virtual void ProcessSearch()
+        {
+            if (Envir.Time < SearchTime) return;
+            if (Master != null && (Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.None)) return;
+            
+            SearchTime = Envir.Time + SearchDelay;
 
             if (Target == null || Envir.Random.Next(3) == 0)
                 FindTarget();
         }
+
         protected virtual void ProcessRoam()
         {
             if (Target != null || Envir.Time < RoamTime) return;
 
             if (ProcessRoute()) return;
-
-            if (CurrentMap.Inactive(30)) return;
 
             if (Master != null)
             {
@@ -1293,6 +1335,7 @@ namespace Server.MirObjects
             }
 
             RoamTime = Envir.Time + RoamDelay;
+       
             if (Envir.Random.Next(10) != 0) return;
 
             switch (Envir.Random.Next(3)) //Face Walk
@@ -1305,6 +1348,7 @@ namespace Server.MirObjects
                     break;
             }
         }
+
         protected virtual void ProcessTarget()
         {
             if (Target == null || !CanAttack) return;
@@ -1312,6 +1356,7 @@ namespace Server.MirObjects
             if (InAttackRange())
             {
                 Attack();
+
                 if (Target.Dead)
                     FindTarget();
 
@@ -1326,12 +1371,14 @@ namespace Server.MirObjects
             
             MoveTo(Target.CurrentLocation);
         }
+
         protected virtual bool InAttackRange()
         {
             if (Target.CurrentMap != CurrentMap) return false;
 
             return Target.CurrentLocation != CurrentLocation && Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
         }
+
         protected virtual void FindTarget()
         {
             Map Current = CurrentMap;
@@ -1470,7 +1517,6 @@ namespace Server.MirObjects
                 
             InSafeZone = CurrentMap.GetSafeZone(CurrentLocation) != null;
 
-
             Cell cell = CurrentMap.GetCell(CurrentLocation);
 
             for (int i = 0; i < cell.Objects.Count; i++)
@@ -1482,10 +1528,8 @@ namespace Server.MirObjects
                 //break;
             }
 
-
             Broadcast(new S.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
         }
-
 
         public virtual bool Walk(MirDirection dir) 
         {
@@ -1554,7 +1598,6 @@ namespace Server.MirObjects
                 Target = null;
                 return;
             }
-
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
