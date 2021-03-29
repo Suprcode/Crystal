@@ -51,13 +51,13 @@ namespace Client.MirGraphics
             new Point(205,156),
             new Point(285,217),
             new Point(365,277),
-            new Point(445,338),
-            new Point(525,399),
-            new Point(685,521),
-            new Point(765,581),
-            new Point(845,642),
-            new Point(925,703),
-            new Point(1005,764)
+            new Point(585,460),
+            new Point(605,581),
+            new Point(765,642),
+            new Point(845,703),
+            new Point(925,764),
+            new Point(1005, 725),
+            new Point(1085,786)
         };
 
         public static void Create()
