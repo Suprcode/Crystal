@@ -45,7 +45,7 @@ namespace Client.MirGraphics
 
         public static bool GrayScale;
 
-        public static Point[] LightSizes =
+        public static readonly Point[] LightSizes =
         {
             new Point(125,95),
             new Point(205,156),
@@ -53,11 +53,11 @@ namespace Client.MirGraphics
             new Point(365,277),
             new Point(445,338),
             new Point(525,399),
-            new Point(605,460),
             new Point(685,521),
             new Point(765,581),
             new Point(845,642),
-            new Point(925,703)
+            new Point(925,703),
+            new Point(1005,764)
         };
 
         public static void Create()
