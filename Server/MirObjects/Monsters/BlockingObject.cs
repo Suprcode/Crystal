@@ -71,13 +71,7 @@ namespace Server.MirObjects.Monsters
 
             if (CurrentMap == null) return;
 
-            for (int i = CurrentMap.Players.Count - 1; i >= 0; i--)
-            {
-                PlayerObject player = CurrentMap.Players[i];
-
-                if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
-                    Broadcast(GetInfo());
-            }
+            Broadcast(GetInfo());
         }
     }
 }
