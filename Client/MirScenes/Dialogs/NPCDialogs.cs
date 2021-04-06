@@ -1827,6 +1827,8 @@ namespace Client.MirScenes.Dialogs
 
                     var cell = GameScene.Scene.InventoryDialog.GetCell(slot.UniqueID);
 
+                    if (cell.Locked) continue;
+
                     Selected.Add(cell, cell.Item.UniqueID);
                     cell.Locked = true;
 
@@ -1851,6 +1853,8 @@ namespace Client.MirScenes.Dialogs
                     if (slot.CurrentDura < slot.MaxDura && slot.CurrentDura < ingredient.CurrentDura) continue;
 
                     var cell = GameScene.Scene.InventoryDialog.GetCell(slot.UniqueID);
+
+                    if (cell.Locked) continue;
 
                     Selected.Add(cell, cell.Item.UniqueID);
                     cell.Locked = true;
