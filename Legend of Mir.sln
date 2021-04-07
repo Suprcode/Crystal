@@ -17,17 +17,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{7A90DE40
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server.Library", "Server\Server.Library.csproj", "{AF5F4517-CE06-4D20-9BFF-1860C6604021}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{760C9C75-B778-416A-9AC6-73F47BD58843}"
-	ProjectSection(SolutionItems) = preProject
-		Code.txt = Code.txt
-		Systems.txt = Systems.txt
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Controls", "Controls", "{B1B084A4-CC76-41FF-94C1-67D37475C2B3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomFormControl", "Controls\FixedListViewControl\CustomFormControl.csproj", "{22D64468-4312-4558-B25D-99BFF85CAA96}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{19625CA5-42F9-4BF5-AA1C-C8DFD4EB7833}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{86F48C1E-ECCA-4D68-927A-08D785720032}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
