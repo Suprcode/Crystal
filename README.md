@@ -1,5 +1,5 @@
-## The Legend of Mir 2
-The Legend of Mir 2 is a sprite-based isometric three dimensional massively multiplayer online role-playing game. Players have the option of playing differnet professions. Taoist, healers who use magical abilities to summon pets to assist in battle, poison targets and heal allies. Warriors, who have the highest defense and attack attributes of all classes. Wizards depend on magic and can kill multiple monsters with ease using spells. Assassins have taken over as the primary melee damage dealing class but have much weaker defense attributes than warriors.
+# The Legend of Mir 2
+The Legend of Mir 2 is a sprite-based isometric three dimensional massively multiplayer online role-playing game. Players have the option of playing different professions. Taoist, healers who use magical abilities to summon pets to assist in battle, poison targets and heal allies. Warriors, who have the highest defense and attack attributes of all classes. Wizards depend on magic and can kill multiple monsters with ease using spells. Assassins have taken over as the primary melee damage dealing class but have much weaker defense attributes than warriors. Archers are a class of great accuracy and strength, using their powerful skills with bows to deal extraordinary damage from range.
 
 ## Crystal Source
 The Legend of Mir 2 Crystal Source is a public repository hosted on GitHub that aims to develop a server and game client written in the programming language of C Sharp (C#).
