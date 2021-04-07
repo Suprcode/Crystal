@@ -24,10 +24,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{19625CA5-42F9-4BF5-AA1C-C8DFD4EB7833}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{86F48C1E-ECCA-4D68-927A-08D785720032}"
-	ProjectSection(SolutionItems) = preProject
-		Notes\Code.txt = Notes\Code.txt
-		Notes\Systems.txt = Notes\Systems.txt
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
