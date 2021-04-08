@@ -809,6 +809,12 @@ namespace Client.MirObjects
                             case Monster.IcePillar:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IcePillar], 26, 6, 8 * 100, this) { Start = CMain.Time + 750 });
                                 break;
+                            case Monster.ElementGuard:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ElementGuard], 320 + (int)Direction * 5, 5, 5 * Frame.Interval, this));
+                                break;
+                            case Monster.KingGuard:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KingGuard], 737, 9, 9 * Frame.Interval, this));
+                                break;
                         }
 
                         TargetID = (uint)action.Params[0];
@@ -828,6 +834,9 @@ namespace Client.MirObjects
                                     ef.Played += (o, e) => SoundManager.PlaySound(20000 + (ushort)Spell.HellFire * 10 + 1);
                                     MapControl.Effects.Add(ef);
                                 }
+                                break;
+                            case Monster.ElementGuard:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ElementGuard], 360 + (int)Direction * 7, 7, 7 * Frame.Interval, this));
                                 break;
                         }
                         break;
@@ -938,6 +947,9 @@ namespace Client.MirObjects
                             case Monster.HellKnight3:
                             case Monster.HellKnight4:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)BaseImage], 448, 10, 600, this));
+                                break;
+                            case Monster.IceGuard:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IceGuard], 256, 6, Frame.Count * Frame.Interval, this));
                                 break;
                         }
                         PlayDieSound();
@@ -1061,6 +1073,7 @@ namespace Client.MirObjects
                                 case Monster.FrozenZumaStatue:
                                 case Monster.FrozenZumaGuardian:
                                 case Monster.ZumaTaurus:
+                                case Monster.DemonGuard:
                                     Stoned = false;
                                     break;
                                 case Monster.Shinsu:
@@ -1104,6 +1117,7 @@ namespace Client.MirObjects
                                 case Monster.FrozenZumaStatue:
                                 case Monster.FrozenZumaGuardian:
                                 case Monster.ZumaTaurus:
+                                case Monster.DemonGuard:
                                     Stoned = true;
                                     return;
                             }
@@ -1264,6 +1278,12 @@ namespace Client.MirObjects
                                                 break;
                                             case Monster.FlameQueen:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlameQueen], 720, 9, Frame.Count * Frame.Interval, this));
+                                                break;
+                                            case Monster.DemonGuard:                                                
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DemonGuard], 288 + (int)Direction * 2, 2, 2 * Frame.Interval, this));
+                                                break;
+                                            case Monster.KingGuard:                                                
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KingGuard], 773, 10, 10 * Frame.Interval, this) { Blend = true });
                                                 break;
                                         }
                                     }
@@ -1693,6 +1713,21 @@ namespace Client.MirObjects
                                                     };
                                                 }
                                                 break;
+                                            case Monster.IceGuard:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IceGuard], 262, 6, 600, ob) { Blend = true });
+                                                    SoundManager.PlaySound(BaseSound + 6);
+                                                }
+                                                break;
+                                            case Monster.KingGuard:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KingGuard], 746, 7, 700, ob) { Blend = true });
+                                                }
+                                                break;
                                         }
                                         break;
                                     }
@@ -1764,6 +1799,14 @@ namespace Client.MirObjects
                                                 if (ob != null)
                                                 {
                                                     ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AncientBringer], 740, 14, 2000, ob));
+                                                    SoundManager.PlaySound(BaseSound + 6);
+                                                }
+                                                break;
+                                            case Monster.IceGuard:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IceGuard], 268, 5, 500, ob) { Blend = true });
                                                     SoundManager.PlaySound(BaseSound + 6);
                                                 }
                                                 break;

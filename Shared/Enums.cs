@@ -450,9 +450,9 @@ public enum Monster : ushort
     HellKnight4 = 246,//done
     HellLord = 247,//done BOSS
     WaterGuard = 248,//done
-    IceGuard = 249,
-    ElementGuard = 250,
-    DemonGuard = 251,
+    IceGuard = 249, // Done (DG)
+    ElementGuard = 250, // Done (DG)
+    DemonGuard = 251, // Done (DG)
     KingGuard = 252,
     Snake10 = 253,//done
     Snake11 = 254,//done
@@ -474,7 +474,7 @@ public enum Monster : ushort
     LightBeast = 269,
     BloodBaboon = 270,
     HardenRhino = 271,
-    AncientBringer = 272,
+    AncientBringer = 272, // Done (DG)
     FightingCat = 273,
     FireCat = 274,
     CatWidow = 275,
@@ -1251,7 +1251,8 @@ public enum SpellEffect : byte
     TurtleKing,
     Behemoth,
     Stunned,
-    IcePillar
+    IcePillar,
+    KingGuard,
 }
 
 
