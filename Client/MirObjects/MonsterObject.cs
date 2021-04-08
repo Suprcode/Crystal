@@ -719,6 +719,9 @@ namespace Client.MirObjects
                             case Monster.ManectricKing:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ManectricKing], 640 + (int)Direction * 10, 10, 10 * 100, this));
                                 break;
+                                                            case Monster.AncientBringer:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AncientBringer], 568 + (int)Direction * 10, 10, 13 * Frame.Interval, this));
+                                break;
                         }
 
                         if ((ushort)BaseImage >= 10000)
@@ -1192,6 +1195,9 @@ namespace Client.MirObjects
                                                 break;
                                             case Monster.Shinsu1:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Shinsu1], 224 + (int)Direction * 6, 6, 6 * Frame.Interval, this));
+                                                break;
+                                            case Monster.AncientBringer:                                                
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AncientBringer], 512 + (int)Direction * 6, 6, 6 * Frame.Interval, this));
                                                 break;
                                         }
                                         break;
@@ -1675,6 +1681,18 @@ namespace Client.MirObjects
                                             case Monster.FlameQueen:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlameQueen], 729, 10, Frame.Count * Frame.Interval, this));
                                                 break;
+                                            case Monster.AncientBringer:
+                                                missile = CreateProjectile(688, Libraries.Monsters[(ushort)Monster.AncientBringer], true, 4, 50, 0, false);
+
+                                                if (missile.Target != null)
+                                                {
+                                                    missile.Complete += (o, e) =>
+                                                    {
+                                                        if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AncientBringer], 720, 10, 1000, missile.Target) { Blend = true });
+                                                    };
+                                                }
+                                                break;
                                         }
                                         break;
                                     }
@@ -1739,6 +1757,14 @@ namespace Client.MirObjects
                                                     {
                                                         missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TrollKing], 298, 6, 600, missile.Target) { Blend = true });
                                                     };
+                                                }
+                                                break;
+                                            case Monster.AncientBringer:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AncientBringer], 740, 14, 2000, ob));
+                                                    SoundManager.PlaySound(BaseSound + 6);
                                                 }
                                                 break;
                                         }
@@ -2926,6 +2952,17 @@ namespace Client.MirObjects
                         case MirAction.Attack2:
                             if (FrameIndex >= 4) Libraries.Monsters[(ushort)Monster.WaterGuard].DrawBlend(264 + (FrameIndex + (int)Direction * 3) - 4, DrawLocation, Color.White, true);
                             break;
+                    }
+                    break;
+                case Monster.AncientBringer:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.AttackRange1:
+                            if (FrameIndex >= 3) Libraries.Monsters[(ushort)Monster.AncientBringer].DrawBlend((648 + FrameIndex + (int)Direction * 5) - 3, DrawLocation, Color.White, true);
+                            break; //on mob
+                        case MirAction.AttackRange2:
+                            if (FrameIndex >= 3) Libraries.Monsters[(ushort)Monster.AncientBringer].DrawBlend((730 + FrameIndex + (int)Direction * 10) - 3, DrawLocation, Color.White, true);
+                            break; //on mob
                     }
                     break;
             }
