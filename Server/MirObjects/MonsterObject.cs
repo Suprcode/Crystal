@@ -214,6 +214,16 @@ namespace Server.MirObjects
                     return new HellBomb(info);
                 case 100:
                     return new VenomSpider(info);
+                case 101:
+                    return new AncientBringer(info);
+                case 102:
+                    return new IceGuard(info);
+                case 103:
+                    return new ElementGuard(info);
+                case 104:
+                    return new DemonGuard(info);
+                case 105:
+                    return new KingGuard(info);
 
                 //unfinished
                 case 253:

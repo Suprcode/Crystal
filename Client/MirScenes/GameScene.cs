@@ -3890,6 +3890,9 @@ namespace Client.MirScenes
                     case SpellEffect.IcePillar:
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IcePillar], 18, 8, 800, ob));
                         break;
+                    case SpellEffect.KingGuard:
+                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KingGuard], 753, 10, 1000, ob) { Blend = false });
+                        break;
                 }
                 return;
             }
