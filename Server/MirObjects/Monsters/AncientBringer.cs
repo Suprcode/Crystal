@@ -57,7 +57,6 @@ namespace Server.MirObjects.Monsters
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
                     LineAttack2(3);//Screaming Attack
                 }
-
             }
             else
             {
@@ -73,11 +72,8 @@ namespace Server.MirObjects.Monsters
                 }
 
             }
-
-
             if (Target.Dead)
                 FindTarget();
-
         }
 
         private void LineAttack1(int distance)
@@ -125,7 +121,6 @@ namespace Server.MirObjects.Monsters
                             Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Paralysis, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);
                         }
                     }
-
                     break;
                 }
             }
@@ -158,22 +153,7 @@ namespace Server.MirObjects.Monsters
             for (int i = 0; i < count; i++)
             {
                 MonsterObject mob = null;
-                switch (Envir.Random.Next(4))
-                {
-                    case 0:
-                        mob = GetMonster(Envir.GetMonsterInfo(Settings.AncientBatName));
-                        break;
-                    case 1:
-                        mob = GetMonster(Envir.GetMonsterInfo(Settings.AncientBatName));
-                        break;
-                    case 2:
-                        mob = GetMonster(Envir.GetMonsterInfo(Settings.AncientBatName));
-                        break;
-                    case 3:
-                        mob = GetMonster(Envir.GetMonsterInfo(Settings.AncientBatName));
-                        break;
-                }
-
+                mob = GetMonster(Envir.GetMonsterInfo(Settings.AncientBatName));                
                 if (mob == null) continue;
 
                 if (!mob.Spawn(CurrentMap, Target.CurrentLocation))

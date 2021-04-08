@@ -453,7 +453,7 @@ public enum Monster : ushort
     IceGuard = 249, // Done (DG)
     ElementGuard = 250, // Done (DG)
     DemonGuard = 251, // Done (DG)
-    KingGuard = 252,
+    KingGuard = 252, // Done (DG)
     Snake10 = 253,//done
     Snake11 = 254,//done
     Snake12 = 255,//done
