@@ -463,12 +463,12 @@ public enum Monster : ushort
     Snake16 = 259,//done
     Snake17 = 260,//done
 
-    DeathCrawler = 261,
-    BurningZombie = 262,
-    MudZombie = 263,
-    FrozenZombie = 264,
-    UndeadWolf = 265,
-    Demonwolf = 266,
+    DeathCrawler = 261, // Done (DG)
+    BurningZombie = 262, // Done (DG)
+    MudZombie = 263, // Done (DG)
+    FrozenZombie = 264, // Done (DG)
+    UndeadWolf = 265, // No AI, basic attack Mob (DG)
+    Demonwolf = 266, // Done (DG)
     WhiteMammoth = 267,
     DarkBeast = 268,
     LightBeast = 269,
