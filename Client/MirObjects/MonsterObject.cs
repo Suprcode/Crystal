@@ -215,6 +215,7 @@ namespace Client.MirObjects
                 case Monster.FrozenZumaStatue:
                 case Monster.FrozenZumaGuardian:
                 case Monster.ZumaTaurus:
+                case Monster.DemonGuard:
                     Stoned = info.Extra;
                     break;
             }
@@ -719,8 +720,11 @@ namespace Client.MirObjects
                             case Monster.ManectricKing:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ManectricKing], 640 + (int)Direction * 10, 10, 10 * 100, this));
                                 break;
-                                                            case Monster.AncientBringer:
+                            case Monster.AncientBringer:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AncientBringer], 568 + (int)Direction * 10, 10, 13 * Frame.Interval, this));
+                                break;
+                            case Monster.MudZombie:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MudZombie], 311, 6, Frame.Count * Frame.Interval, this));
                                 break;
                         }
 
@@ -814,6 +818,10 @@ namespace Client.MirObjects
                                 break;
                             case Monster.KingGuard:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KingGuard], 737, 9, 9 * Frame.Interval, this));
+                                break;
+                            case Monster.Demonwolf:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Demonwolf], 336 + (int)Direction * 9, 6, Frame.Count * Frame.Interval, this));
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Demonwolf], 312 + (int)Direction * 3, 3, 6 * Frame.Interval, this));
                                 break;
                         }
 
@@ -950,6 +958,16 @@ namespace Client.MirObjects
                                 break;
                             case Monster.IceGuard:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IceGuard], 256, 6, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.DeathCrawler:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DeathCrawler], 176 + (int)Direction * 9, 9, Frame.Count * FrameInterval, this));
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DeathCrawler], 272 + (int)Direction * 4, 4, Frame.Count * FrameInterval, this));
+                                break;
+                            case Monster.BurningZombie:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BurningZombie], 373, 10, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.FrozenZombie:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenZombie], 360, 10, Frame.Count * Frame.Interval, this));
                                 break;
                         }
                         PlayDieSound();
@@ -1212,6 +1230,15 @@ namespace Client.MirObjects
                                                 break;
                                             case Monster.AncientBringer:                                                
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AncientBringer], 512 + (int)Direction * 6, 6, 6 * Frame.Interval, this));
+                                                break;
+                                            case Monster.DeathCrawler:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DeathCrawler], 248 + (int)Direction * 3, 3, 3 * Frame.Interval, this));
+                                                break;
+                                            case Monster.BurningZombie:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BurningZombie], 312 + (int)Direction * 5, 5, 2 * Frame.Interval, this));
+                                                break;
+                                            case Monster.FrozenZombie:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenZombie], 312 + (int)Direction * 5, 5, 2 * Frame.Interval, this));
                                                 break;
                                         }
                                         break;
@@ -1728,6 +1755,20 @@ namespace Client.MirObjects
                                                     ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KingGuard], 746, 7, 700, ob) { Blend = true });
                                                 }
                                                 break;
+                                            case Monster.BurningZombie:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BurningZombie], 361, 12, 1000, ob));
+                                                }
+                                                break;
+                                            case Monster.FrozenZombie:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenZombie], 352, 8, 1000, ob));
+                                                }
+                                                break;
                                         }
                                         break;
                                     }
@@ -2029,6 +2070,7 @@ namespace Client.MirObjects
                 case Monster.FrozenZumaStatue:
                 case Monster.FrozenZumaGuardian:
                 case Monster.ZumaTaurus:
+                case Monster.DemonGuard:
                     if (Stoned) return;
                     break;
             }
@@ -3006,6 +3048,22 @@ namespace Client.MirObjects
                         case MirAction.AttackRange2:
                             if (FrameIndex >= 3) Libraries.Monsters[(ushort)Monster.AncientBringer].DrawBlend((730 + FrameIndex + (int)Direction * 10) - 3, DrawLocation, Color.White, true);
                             break; //on mob
+                    }
+                    break;
+                case Monster.BurningZombie:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.AttackRange1:
+                            Libraries.Monsters[(ushort)Monster.BurningZombie].DrawBlend(352 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.MudZombie:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Die:
+                            Libraries.Monsters[(ushort)Monster.MudZombie].DrawBlend(304 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
                     }
                     break;
             }
