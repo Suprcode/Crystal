@@ -224,6 +224,16 @@ namespace Server.MirObjects
                     return new DemonGuard(info);
                 case 105:
                     return new KingGuard(info);
+                case 106:
+                    return new DeathCrawler(info);
+                case 107:
+                    return new BurningZombie(info);
+                case 108:
+                    return new MudZombie(info);
+                case 109:
+                    return new FrozenZombie(info);
+                case 110:
+                    return new DemonWolf(info);
 
                 //unfinished
                 case 253:
