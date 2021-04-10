@@ -234,6 +234,8 @@ namespace Server.MirObjects
                     return new FrozenZombie(info);
                 case 110:
                     return new DemonWolf(info);
+                case 111:
+                    return new WhiteMammoth(info);
 
                 //unfinished
                 case 253:
