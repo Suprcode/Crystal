@@ -469,7 +469,7 @@ public enum Monster : ushort
     FrozenZombie = 264, // Done (DG)
     UndeadWolf = 265, // No AI, basic attack Mob (DG)
     Demonwolf = 266, // Done (DG)
-    WhiteMammoth = 267,
+    WhiteMammoth = 267, // Done (DG)
     DarkBeast = 268,
     LightBeast = 269,
     BloodBaboon = 270,
