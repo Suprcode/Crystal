@@ -470,7 +470,7 @@ public enum Monster : ushort
     UndeadWolf = 265, // No AI, basic attack Mob (DG)
     Demonwolf = 266, // Done (DG)
     WhiteMammoth = 267, // Done (DG)
-    DarkBeast = 268,
+    DarkBeast = 268, // Done (DG)
     LightBeast = 269,
     BloodBaboon = 270,
     HardenRhino = 271,
