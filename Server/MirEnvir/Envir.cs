@@ -2866,6 +2866,7 @@ namespace Server.MirEnvir
 
         public MapObject GetObject(uint objectID)
         {
+            //TODO - Remove this. Have separate permanent lists for NPCs/Spells instead
             return Objects.FirstOrDefault(e => e.ObjectID == objectID);
         }
 
