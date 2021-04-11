@@ -735,6 +735,15 @@ namespace Client.MirObjects
                             case Monster.LightBeast:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.LightBeast], 296 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
                                 break;
+                            case Monster.FireCat:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FireCat], 248 + (int)Direction * 10, 10, 10 * Frame.Interval, this));
+                                break;
+                            case Monster.BlackHammerCat:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BlackHammerCat], 648 + (int)Direction * 11, 11, 14 * Frame.Interval, this));
+                                break;
+                            case Monster.StrayCat:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.StrayCat], 584 + (int)Direction * 6, 6, 6 * Frame.Interval, this));
+                                break;
                         }
 
                         if ((ushort)BaseImage >= 10000)
@@ -831,6 +840,9 @@ namespace Client.MirObjects
                             case Monster.Demonwolf:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Demonwolf], 336 + (int)Direction * 9, 6, Frame.Count * Frame.Interval, this));
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Demonwolf], 312 + (int)Direction * 3, 3, 6 * Frame.Interval, this));
+                                break;
+                            case Monster.CatShaman:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.CatShaman], 738, 8, Frame.Count * Frame.Interval, this));
                                 break;
                         }
 
@@ -1249,6 +1261,9 @@ namespace Client.MirObjects
                                             case Monster.FrozenZombie:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenZombie], 312 + (int)Direction * 5, 5, 2 * Frame.Interval, this));
                                                 break;
+                                            case Monster.FightingCat:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FightingCat], 208 + (int)Direction * 3, 3, 4 * Frame.Interval, this) { Blend = true });
+                                                break;
                                         }
                                         break;
                                     }
@@ -1305,9 +1320,19 @@ namespace Client.MirObjects
                                         }
                                     }
                                     break;
+                                case 2:
+                                    {
+                                        switch (BaseImage)
+                                        {
+                                            case Monster.StainHammerCat:                                                
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.StainHammerCat], 240 + (int)Direction * 4, 4, 4 * Frame.Interval, this));
+                                                break;
+                                        }
+                                    }
+                                    break;
                                 case 3:
                                     {
-                                        switch(BaseImage)
+                                        switch (BaseImage)
                                         {
                                             case Monster.Behemoth:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Behemoth], 768, 10, Frame.Count * Frame.Interval, this));
@@ -1324,9 +1349,19 @@ namespace Client.MirObjects
                                         }
                                     }
                                     break;
+                                case 4:
+                                    {
+                                        switch (BaseImage)
+                                        {
+                                            case Monster.StainHammerCat:                                                
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.StainHammerCat], 272 + (int)Direction * 6, 6, 6 * Frame.Interval, this));
+                                                break;
+                                        }
+                                        break;
+                                    }
                                 case 10:
                                     {
-                                        switch(BaseImage)
+                                        switch (BaseImage)
                                         {
                                             case Monster.StoningStatue:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.StoningStatue], 642, 15, 15 * 100, this));
@@ -1334,9 +1369,19 @@ namespace Client.MirObjects
                                         }
                                     }
                                     break;
+                                case 11:
+                                    {
+                                        switch (BaseImage)
+                                        {
+                                            case Monster.BlackHammerCat:                                                
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BlackHammerCat], 736 + (int)Direction * 8, 8, 800, this));
+                                                break;
+                                        }
+                                    }
+                                    break;
                                 case 19:
                                     {
-                                        switch(BaseImage)
+                                        switch (BaseImage)
                                         {
                                             case Monster.StoningStatue:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.StoningStatue], 624, 8, 8 * 100, this));
@@ -1391,6 +1436,14 @@ namespace Client.MirObjects
                                         case Monster.OlympicFlame:
                                             if (TrackableEffect.GetOwnerEffectID(this.ObjectID, "CreatureSmoke") < 0)
                                                 Effects.Add(new TrackableEffect(new Effect(Libraries.Pets[((ushort)BaseImage) - 10000], 256, 3, 1000, this), "CreatureSmoke"));
+                                            break;
+                                    }
+                                    break;
+                                case 10:
+                                    switch (BaseImage)
+                                    {
+                                        case Monster.StrayCat:                                            
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.StrayCat], 728 + (int)Direction * 10, 10, 1000, this));
                                             break;
                                     }
                                     break;
@@ -1778,6 +1831,13 @@ namespace Client.MirObjects
                                                     ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenZombie], 352, 8, 1000, ob));
                                                 }
                                                 break;
+                                            case Monster.CatShaman:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.CatShaman], 720, 12, 1500, ob) { Blend = false });
+                                                }
+                                                break;
                                         }
                                         break;
                                     }
@@ -1857,6 +1917,14 @@ namespace Client.MirObjects
                                                 if (ob != null)
                                                 {
                                                     ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IceGuard], 268, 5, 500, ob) { Blend = true });
+                                                    SoundManager.PlaySound(BaseSound + 6);
+                                                }
+                                                break;
+                                            case Monster.CatShaman:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.CatShaman], 732, 6, 500, ob));
                                                     SoundManager.PlaySound(BaseSound + 6);
                                                 }
                                                 break;
@@ -3072,6 +3140,72 @@ namespace Client.MirObjects
                     {
                         case MirAction.Die:
                             Libraries.Monsters[(ushort)Monster.MudZombie].DrawBlend(304 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.CatWidow:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Attack2:
+                            if (FrameIndex >= 3) Libraries.Monsters[(ushort)Monster.CatWidow].DrawBlend(256 + FrameIndex + (int)Direction * 3, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.BlackHammerCat:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Standing:
+                            Libraries.Monsters[(ushort)Monster.BlackHammerCat].DrawBlend(336 + FrameIndex + (int)Direction * 4, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Walking:
+                            Libraries.Monsters[(ushort)Monster.BlackHammerCat].DrawBlend(368 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack1:
+                            Libraries.Monsters[(ushort)Monster.BlackHammerCat].DrawBlend(416 + FrameIndex + (int)Direction * 7, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack2:
+                            Libraries.Monsters[(ushort)Monster.BlackHammerCat].DrawBlend(472 + FrameIndex + (int)Direction * 12, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Struck:
+                            Libraries.Monsters[(ushort)Monster.BlackHammerCat].DrawBlend(568 + FrameIndex + (int)Direction * 3, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Die:
+                            Libraries.Monsters[(ushort)Monster.BlackHammerCat].DrawBlend(589 + FrameIndex + (int)Direction * 7, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.StrayCat:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Attack3:
+                            Libraries.Monsters[(ushort)Monster.StrayCat].DrawBlend(632 + FrameIndex + (int)Direction * 12, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.CatShaman:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Standing:
+                            Libraries.Monsters[(ushort)Monster.CatShaman].DrawBlend(360 + FrameIndex + (int)Direction * 4, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Walking:
+                            Libraries.Monsters[(ushort)Monster.CatShaman].DrawBlend(392 + FrameIndex + (int)Direction * 10, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack1:
+                            Libraries.Monsters[(ushort)Monster.CatShaman].DrawBlend(472 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.AttackRange1:
+                            Libraries.Monsters[(ushort)Monster.CatShaman].DrawBlend(520 + FrameIndex + (int)Direction * 7, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.AttackRange2:
+                            Libraries.Monsters[(ushort)Monster.CatShaman].DrawBlend(576 + FrameIndex + (int)Direction * 7, DrawLocation, Color.White, true);
+                            Libraries.Monsters[(ushort)Monster.CatShaman].Draw(746 + FrameIndex, DrawLocation, Color.Black, true);
+                            break;
+                        case MirAction.Struck:
+                            Libraries.Monsters[(ushort)Monster.CatShaman].DrawBlend(632 + FrameIndex + (int)Direction * 2, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Die:
+                            Libraries.Monsters[(ushort)Monster.CatShaman].DrawBlend(648 + FrameIndex + (int)Direction * 9, DrawLocation, Color.White, true);
                             break;
                     }
                     break;
