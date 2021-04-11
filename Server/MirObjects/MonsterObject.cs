@@ -240,6 +240,16 @@ namespace Server.MirObjects
                     return new DarkBeast(info); // USE THIS AI FOR LIGHTBEAST
                 case 113:
                     return new BloodBaboon(info);
+                case 114:
+                    return new CatWidow(info);
+                case 115:
+                    return new StainHammerCat(info);
+                case 116:
+                    return new BlackHammerCat(info);
+                case 117:
+                    return new StrayCat(info);
+                case 118:
+                    return new CatShaman(info);
 
                 //unfinished
                 case 253:
