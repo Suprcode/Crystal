@@ -471,9 +471,9 @@ public enum Monster : ushort
     Demonwolf = 266, // Done (DG)
     WhiteMammoth = 267, // Done (DG)
     DarkBeast = 268, // Done (DG)
-    LightBeast = 269,
-    BloodBaboon = 270,
-    HardenRhino = 271,
+    LightBeast = 269, // Done (DG) - USE DARKBEAST AI
+    BloodBaboon = 270, // Done (DG)
+    HardenRhino = 271, // TODO: AI (Shoulder Dash Attack)
     AncientBringer = 272, // Done (DG)
     FightingCat = 273,
     FireCat = 274,
