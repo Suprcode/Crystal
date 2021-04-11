@@ -236,6 +236,10 @@ namespace Server.MirObjects
                     return new DemonWolf(info);
                 case 111:
                     return new WhiteMammoth(info);
+                case 112:
+                    return new DarkBeast(info); // USE THIS AI FOR LIGHTBEAST
+                case 113:
+                    return new BloodBaboon(info);
 
                 //unfinished
                 case 253:
