@@ -28,37 +28,23 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            if (Envir.Random.Next(3) > 0)
+            if (Envir.Random.Next(5) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-
                 int damage = GetAttackPower(MinDC, MaxDC);
                 if (damage == 0) return;
                 Target.Attacked(this, damage, DefenceType.ACAgility);
-
             }
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                LineAttack(1);
-            }
-
-            if (Target.Dead)
-                FindTarget();
-        }
-
-        private void LineAttack(int distance)
-        {
-            List<MapObject> targets = FindAllTargets(1, CurrentLocation);
-            if (targets.Count == 0) return;
-
-            for (int i = 0; i < 4; i++)
-            {
-                int damage = GetAttackPower(MinDC, MaxDC);
+                int damage = GetAttackPower(MinDC, MaxDC * 2);
                 if (damage == 0) return;
                 Target.Attacked(this, damage, DefenceType.ACAgility);
             }
 
+            if (Target.Dead)
+                FindTarget();
         }
     }
 }

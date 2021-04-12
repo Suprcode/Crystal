@@ -50,12 +50,9 @@ namespace Server.MirObjects.Monsters
                 LineAttack(2);
             }
 
-
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
             ShockTime = 0;
-
-
         }
 
         private void LineAttack(int distance)
