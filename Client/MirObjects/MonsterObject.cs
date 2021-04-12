@@ -618,17 +618,11 @@ namespace Client.MirObjects
                             case Monster.Demonwolf:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Demonwolf], 312 + (int)Direction * 3, 3, Frame.Count * Frame.Interval, this));
                                 break;
-                            case Monster.DarkBeast:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkBeast], 296 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
-                                break;
                             case Monster.HardenRhino:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HardenRhino], 379 + (int)Direction * 6, 6, Frame.Count * Frame.Interval, this));
                                 break;
                             case Monster.AncientBringer:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AncientBringer], 512 + (int)Direction * 6, 6, Frame.Count * Frame.Interval, this));
-                                break;
-                            case Monster.DemonGuard:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DemonGuard], 288 + (int)Direction * 2, 2, Frame.Count * Frame.Interval, this));
                                 break;
                             case Monster.Bear:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Bear], 321 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
@@ -726,9 +720,6 @@ namespace Client.MirObjects
                             case Monster.MudZombie:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MudZombie], 311, 6, Frame.Count * Frame.Interval, this));
                                 break;
-                            case Monster.WhiteMammoth:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WhiteMammoth], 376, 5, Frame.Count * Frame.Interval, this));
-                                break;
                             case Monster.DarkBeast:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkBeast], 296 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
                                 break;
@@ -743,6 +734,9 @@ namespace Client.MirObjects
                                 break;
                             case Monster.StrayCat:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.StrayCat], 584 + (int)Direction * 6, 6, 6 * Frame.Interval, this));
+                                break;
+                            case Monster.BloodBaboon:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BloodBaboon], 312 + (int)Direction * 7, 7, 7 * Frame.Interval, this));
                                 break;
                         }
 
@@ -987,8 +981,8 @@ namespace Client.MirObjects
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IceGuard], 256, 6, Frame.Count * Frame.Interval, this));
                                 break;
                             case Monster.DeathCrawler:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DeathCrawler], 176 + (int)Direction * 9, 9, Frame.Count * FrameInterval, this));
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DeathCrawler], 272 + (int)Direction * 4, 4, Frame.Count * FrameInterval, this));
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DeathCrawler], 304, 9, Frame.Count * Frame.Interval, this));
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DeathCrawler], 313, 11, Frame.Count * Frame.Interval, this));
                                 break;
                             case Monster.BurningZombie:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BurningZombie], 373, 10, Frame.Count * Frame.Interval, this));
@@ -1502,6 +1496,14 @@ namespace Client.MirObjects
                                         case Monster.OlympicFlame:
                                             if (TrackableEffect.GetOwnerEffectID(this.ObjectID, "CreatureSmoke") < 0)
                                                 Effects.Add(new TrackableEffect(new Effect(Libraries.Pets[((ushort)BaseImage) - 10000], 256, 3, 1000, this), "CreatureSmoke"));
+                                            break;
+                                    }
+                                    break;
+                                case 5:
+                                    switch (BaseImage)
+                                    {
+                                        case Monster.WhiteMammoth:
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WhiteMammoth], 376, 5, Frame.Count * Frame.Interval, this));
                                             break;
                                     }
                                     break;

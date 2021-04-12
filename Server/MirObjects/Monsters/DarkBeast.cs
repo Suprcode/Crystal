@@ -25,7 +25,6 @@ namespace Server.MirObjects.Monsters
             ShockTime = 0;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            bool range = !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
@@ -33,7 +32,6 @@ namespace Server.MirObjects.Monsters
             if (Envir.Random.Next(5) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-
                 int damage = GetAttackPower(MinDC, MaxDC);
                 if (damage == 0) return;
                 Target.Attacked(this, damage, DefenceType.ACAgility);
@@ -41,11 +39,11 @@ namespace Server.MirObjects.Monsters
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                LineAttack(2);
+                Attack2();
             }
         }
 
-        private void LineAttack(int distance)
+        private void Attack2()
         {
             int damage = GetAttackPower(MinDC, MaxDC * 2);
             if (damage == 0) return;
@@ -54,7 +52,7 @@ namespace Server.MirObjects.Monsters
             if (Envir.Random.Next(5) == 0)
                 if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                 {
-                    Target.ApplyPoison(new Poison { PType = PoisonType.Red, Duration = 5, TickSpeed = 1000 }, this);
+                    Target.ApplyPoison(new Poison { PType = PoisonType.Bleeding, Duration = 5, TickSpeed = 1000 }, this);
                 }
         }
 
