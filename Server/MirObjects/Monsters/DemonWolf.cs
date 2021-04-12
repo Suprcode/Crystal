@@ -9,6 +9,7 @@ using System.Text;
 
 namespace Server.MirObjects.Monsters
 {
+    // TODO: ADD ATTACK AS PER ANIMATIONS 354 - DASH THROUGH PLAYER ATTACK?
     class DemonWolf : MonsterObject
     {
         protected internal DemonWolf(MonsterInfo info)

@@ -453,7 +453,7 @@ public enum Monster : ushort
     IceGuard = 249, // Done (DG)
     ElementGuard = 250, // Done (DG)
     DemonGuard = 251, // Done (DG)
-    KingGuard = 252, // Done (DG)
+    KingGuard = 252, //TODO: AI Incomplete - Needs revisiting
     Snake10 = 253,//done
     Snake11 = 254,//done
     Snake12 = 255,//done
@@ -486,7 +486,7 @@ public enum Monster : ushort
     Jar2 = 281,
     SeedingsGeneral = 282, // Done (DG)
     RestlessJar = 283,
-    GeneralJinmYo = 284, // AI Incomplete - Thunderbolt and orb at end of lib file, not sure what this does? See notes in AI file (DG).
+    GeneralJinmYo = 284, // TODO: AI Incomplete - Thunderbolt and orb at end of lib file, not sure what this does? See notes in AI file (DG).
     Bunny = 285, 
     Tucson = 286, //No AI or spell animations (DG)
     TucsonFighter = 287, // Use AI 44 - No spell animation (DG)

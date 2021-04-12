@@ -15,20 +15,6 @@ namespace Server.MirObjects.Monsters
         {
         }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
-                Target = null;
-                return;
-            }
-
-            ShockTime = 0;
-
-            Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-        }
-
         public override void Die()
         {
             ActionList.Add(new DelayedAction(DelayedType.Die, Envir.Time + 500));

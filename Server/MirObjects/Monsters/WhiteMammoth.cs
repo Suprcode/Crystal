@@ -20,14 +20,25 @@ namespace Server.MirObjects.Monsters
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
-            if (Envir.Random.Next(10) > 0)
+            if (Envir.Random.Next(8) > 0)
             {
-                base.Attack();
+                if (Envir.Random.Next(6) > 0)
+                {
+                    base.Attack();
+                }
+                else
+                {
+                    Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                    int damage = GetAttackPower(MinDC, MaxDC * 2);
+                    if (damage == 0) return;
+                    Target.Attacked(this, damage);
+                }
+                
             }
             else
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                Attack2();
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+                Attack3();
             }
 
             ShockTime = 0;
@@ -35,10 +46,11 @@ namespace Server.MirObjects.Monsters
             AttackTime = Envir.Time + AttackSpeed;
 
         }
-        private void Attack2()
+        private void Attack3()
         {
             int damage = GetAttackPower(MinDC, MaxDC);
             if (damage == 0) return;
+            Target.Attacked(this, damage);
 
             if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
             {
