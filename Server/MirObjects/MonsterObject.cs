@@ -250,8 +250,19 @@ namespace Server.MirObjects
                     return new StrayCat(info);
                 case 118:
                     return new CatShaman(info);
+                case 119:
+                    return new SeedingsGeneral(info);
+
+                //Case 120 - GeneralJimnYo Unfinished
+                
+                case 121:
+                    return new TucsonMage(info);
+                case 122:
+                    return new TucsonWarrior(info);
 
                 //unfinished
+                case 120:
+                    return new GeneralJinmYo(info); // AI Incomplete - See notes in AI file.
                 case 253:
                     return new FlamingMutant(info);
                 case 254:
