@@ -47,17 +47,15 @@ namespace Server.MirObjects.Monsters
 
             if (!range && Envir.Random.Next(10) > 0)
             {
-                if (Envir.Random.Next(3) > 0)
+                if (Envir.Random.Next(10) > 0)
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                    Attack1(1);
+                    Attack1();
                 }
                 else
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                    Attack2(1);
-
-
+                    Attack2(); 
                 }
             }
             else
@@ -68,24 +66,25 @@ namespace Server.MirObjects.Monsters
 
         }
 
-        private void Attack1(int distance)
+        private void Attack1()
         {
             int damage = GetAttackPower(MinDC, MaxDC);
             if (damage == 0) return;
             Target.Attacked(this, damage, DefenceType.ACAgility);
         }
 
-        private void Attack2(int distance)
+        private void Attack2()
         {
-            int levelgap;
+            int levelgap = 5;
+            int moblevel = this.Level;
+            int targetlevel = Target.Level;
 
-            levelgap = 70 - Target.Level;
-            if (Envir.Random.Next(1) < 3 + levelgap)
+            if ((targetlevel <= moblevel + levelgap))
             {
-                if (Target.Pushed(this, Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation), 2) > 0)
+                if (Target.Pushed(this, Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation), 1) > 0)
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
-                    Attack3(2);
+                    Attack3(1);
                 }
             }
         }

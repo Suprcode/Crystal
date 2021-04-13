@@ -242,8 +242,8 @@ namespace Server.MirObjects
                     return new BloodBaboon(info);
                 case 114:
                     return new CatWidow(info);
-                case 115:
-                    return new StainHammerCat(info);
+                //case 115:
+                //    return new StainHammerCat(info);
                 case 116:
                     return new BlackHammerCat(info);
                 case 117:
@@ -256,9 +256,14 @@ namespace Server.MirObjects
                 //Case 120 - GeneralJimnYo Unfinished
                 
                 case 121:
-                    return new TucsonMage(info);
+                    return new Armadillo(info);
                 case 122:
+                    return new ArmadilloElder(info);
+                case 123:
+                    return new TucsonMage(info);
+                case 124:
                     return new TucsonWarrior(info);
+
 
                 //unfinished
                 case 120:
