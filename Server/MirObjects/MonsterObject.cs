@@ -263,6 +263,10 @@ namespace Server.MirObjects
                     return new TucsonMage(info);
                 case 124:
                     return new TucsonWarrior(info);
+                case 125:
+                    return new TucsonEgg(info);
+                case 126:
+                    return new TucsonEgg1(info); //AI which will spawn TucsonGeneral upon killing the egg.
 
 
                 //unfinished

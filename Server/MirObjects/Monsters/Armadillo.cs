@@ -9,6 +9,8 @@ namespace Server.MirObjects.Monsters
 {
     class Armadillo : DigOutZombie
     {
+        //TODO: Code Attack3 - rolling attack(disengage?)
+
         protected internal Armadillo(MonsterInfo info)
             : base(info)
         {
