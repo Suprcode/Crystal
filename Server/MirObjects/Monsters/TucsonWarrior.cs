@@ -42,7 +42,7 @@ namespace Server.MirObjects.Monsters
 
             bool range = !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
-            if (!range)
+            if (!range && Envir.Random.Next(5) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 Attack1(1);
@@ -52,7 +52,6 @@ namespace Server.MirObjects.Monsters
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
                 Attack2(2);
             }
-
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
@@ -70,6 +69,7 @@ namespace Server.MirObjects.Monsters
             {
                 int damage = GetAttackPower(MinDC, MaxDC);
                 if (damage == 0) return;
+                Target.Attacked(this, damage, DefenceType.ACAgility);
             }
 
         }

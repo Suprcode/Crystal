@@ -40,7 +40,7 @@ namespace Server.MirObjects.Monsters
 
             bool range = !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
-            if (!range && Envir.Random.Next(3) > 0)
+            if (!range && Envir.Random.Next(5) > 0)
             {
                 base.Attack();
             }
