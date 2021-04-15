@@ -84,16 +84,14 @@ namespace Server.MirObjects.Monsters
         private void LineAttack1(int distance)
         {
             int damage = GetAttackPower(MinDC, MaxDC);
-            if (damage == 0) return;
-            base.Attack();
+            if (damage == 0) return;            
             Target.Attacked(this, damage, DefenceType.ACAgility);
         }
 
         private void LineAttack2(int distance)
         {
             int damage = GetAttackPower(MinDC, MaxDC * 2);
-            if (damage == 0) return;
-            base.Attack();
+            if (damage == 0) return;            
             Target.Attacked(this, damage, DefenceType.ACAgility);
         }
 
