@@ -273,6 +273,12 @@ namespace Server.MirObjects
                     return new GasToad(info);
                 case 129:
                     return new Mantis(info);
+                case 130:
+                    return new AssassinBird(info);
+                case 131:
+                    return new RhinoWarrior(info);
+                case 132:
+                    return new RhinoPriest(info);
 
                 //unfinished
                 case 120:
