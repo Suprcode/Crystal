@@ -494,8 +494,8 @@ public enum Monster : ushort
     TucsonWarrior = 289, // Done (DG)
     Armadillo = 290, // Done (DG)
     ArmadilloElder = 291, // Done (DG)
-    TucsonEgg = 292,
-    PlaguedTucson = 293,
+    TucsonEgg = 292, // Done (DG) - 2 AIs added (TucsonEgg1 will spawn TucsonGeneral upon death).
+    PlaguedTucson = 293, //No AI - Basic Attack Mob (DG)
     SandSnail = 294,
     CannibalTentacles = 295,
     TucsonGeneral = 296,
