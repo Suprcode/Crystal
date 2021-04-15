@@ -752,6 +752,9 @@ namespace Client.MirObjects
                             case Monster.Armadillo:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Armadillo], 528 + (int)Direction * 4, 4, 4 * Frame.Interval, this));
                                 break;
+                            case Monster.SandSnail:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SandSnail], 448, 9, 900, this) { Blend = true });
+                                break;
                         }
                         break;
                     case MirAction.Attack4:                   
@@ -1349,6 +1352,9 @@ namespace Client.MirObjects
                                                         Effects.Add(new TrackableEffect(new Effect(Libraries.Pets[((ushort)BaseImage) - 10000], 208, 11, 1500, this), "SnowmanSnow"));
                                                 }
                                                 break;
+                                            case Monster.CannibalTentacles:                                                
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.CannibalTentacles], 400 + (int)Direction * 9, 9, 9 * Frame.Interval, this));
+                                                break;
                                         }
                                     }
                                     break;
@@ -1488,6 +1494,9 @@ namespace Client.MirObjects
                                         case Monster.OlympicFlame:
                                             if (TrackableEffect.GetOwnerEffectID(this.ObjectID, "CreatureFlame") < 0)
                                                 Effects.Add(new TrackableEffect(new Effect(Libraries.Pets[((ushort)BaseImage) - 10000], 280, 4, 800, this), "CreatureFlame"));
+                                            break;
+                                        case Monster.GasToad:
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GasToad], 440, 9, 9 * Frame.Interval, this));
                                             break;
                                     }
                                     break;
@@ -1929,6 +1938,17 @@ namespace Client.MirObjects
                                                 if (ob != null)
                                                 {
                                                     ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GeneralJinmYo], 512, 10, 1000, ob) { Blend = true });
+                                                }
+                                                break;
+                                            case Monster.CannibalTentacles:
+                                                if (MapControl.GetObject(TargetID) != null)
+                                                    CreateProjectile(472, Libraries.Monsters[(ushort)Monster.CannibalTentacles], true, 8, 80, 0, false);
+                                                break;
+                                            case Monster.SwampWarrior:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SwampWarrior], 392, 8, 800, ob) { Blend = true });
                                                 }
                                                 break;
                                         }

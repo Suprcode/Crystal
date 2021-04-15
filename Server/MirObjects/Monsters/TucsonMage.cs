@@ -42,7 +42,10 @@ namespace Server.MirObjects.Monsters
 
             if (!range && Envir.Random.Next(5) > 0)
             {
-                base.Attack();
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                int damage = GetAttackPower(MinDC, MaxDC);
+                if (damage == 0) return;
+                Target.Attacked(this, damage);
             }
             else
             {

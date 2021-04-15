@@ -242,8 +242,8 @@ namespace Server.MirObjects
                     return new BloodBaboon(info);
                 case 114:
                     return new CatWidow(info);
-                //case 115:
-                //    return new StainHammerCat(info);
+                case 115:
+                    return new SandSnail(info);
                 case 116:
                     return new BlackHammerCat(info);
                 case 117:
@@ -267,7 +267,12 @@ namespace Server.MirObjects
                     return new TucsonEgg(info);
                 case 126:
                     return new TucsonEgg1(info); //AI which will spawn TucsonGeneral upon killing the egg.
-
+                case 127:
+                    return new CannibalTentacles(info);
+                case 128:
+                    return new GasToad(info);
+                case 129:
+                    return new Mantis(info);
 
                 //unfinished
                 case 120:
