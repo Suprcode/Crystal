@@ -503,8 +503,8 @@ public enum Monster : ushort
     Mantis = 298, // Done (DG)
     SwampWarrior = 299, // Done (DG)
 
-    AssassinBird = 300,
-    RhinoWarrior = 301,
+    AssassinBird = 300, // Done (DG)
+    RhinoWarrior = 301, // AI Incomplete - Needs water and rock attacks coding (DG).
     RhinoPriest = 302,
     SwampSlime = 303,
     RockGuard = 304,
