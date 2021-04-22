@@ -1633,7 +1633,6 @@ namespace Server.MirObjects
                     }
                 }
 
-                byte tempByte;
                 uint tempUint;
                 int tempInt;
                 int tempInt2;
@@ -1642,20 +1641,22 @@ namespace Server.MirObjects
                 switch (check.Type)
                 {
                     case CheckType.Level:
-                        if (!byte.TryParse(param[1], out tempByte))
                         {
-                            failed = true;
-                            break;
-                        }
+                            if (!ushort.TryParse(param[1], out ushort level))
+                            {
+                                failed = true;
+                                break;
+                            }
 
-                        try
-                        {
-                            failed = !Compare(param[0], monster.Level, tempByte);
-                        }
-                        catch (ArgumentException)
-                        {
-                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
-                            return true;
+                            try
+                            {
+                                failed = !Compare(param[0], monster.Level, level);
+                            }
+                            catch (ArgumentException)
+                            {
+                                MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                                return true;
+                            }
                         }
                         break;
                     case CheckType.CheckDay:
@@ -1835,7 +1836,6 @@ namespace Server.MirObjects
                     }
                 }
 
-                byte tempByte;
                 uint tempUint;
                 int tempInt;
                 int tempInt2;
@@ -1843,20 +1843,22 @@ namespace Server.MirObjects
                 switch (check.Type)
                 {
                     case CheckType.Level:
-                        if (!byte.TryParse(param[1], out tempByte))
                         {
-                            failed = true;
-                            break;
-                        }
+                            if (!ushort.TryParse(param[1], out ushort level))
+                            {
+                                failed = true;
+                                break;
+                            }
 
-                        try
-                        {
-                            failed = !Compare(param[0], player.Level, tempByte);
-                        }
-                        catch (ArgumentException)
-                        {
-                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
-                            return true;
+                            try
+                            {
+                                failed = !Compare(param[0], player.Level, level);
+                            }
+                            catch (ArgumentException)
+                            {
+                                MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                                return true;
+                            }
                         }
                         break;
 
