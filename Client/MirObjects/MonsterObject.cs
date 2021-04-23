@@ -726,6 +726,9 @@ namespace Client.MirObjects
                             case Monster.BloodBaboon:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BloodBaboon], 312 + (int)Direction * 7, 7, 7 * Frame.Interval, this));
                                 break;
+                            case Monster.TwinHeadBeast:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TwinHeadBeast], 352 + (int)Direction * 7, 7, Frame.Count * Frame.Interval, this));
+                                break;
                         }
 
                         if ((ushort)BaseImage >= 10000)
@@ -981,6 +984,9 @@ namespace Client.MirObjects
                             case Monster.FrozenZombie:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenZombie], 360, 10, Frame.Count * Frame.Interval, this));
                                 break;
+                            case Monster.MudWarrior:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MudWarrior], 873, 9, 9 * Frame.Interval, this));
+                                break;
                         }
                         PlayDieSound();
                         break;
@@ -1104,6 +1110,7 @@ namespace Client.MirObjects
                                 case Monster.FrozenZumaGuardian:
                                 case Monster.ZumaTaurus:
                                 case Monster.DemonGuard:
+                                case Monster.MudWarrior:
                                     Stoned = false;
                                     break;
                                 case Monster.Shinsu:
@@ -1150,6 +1157,7 @@ namespace Client.MirObjects
                                 case Monster.FrozenZumaGuardian:
                                 case Monster.ZumaTaurus:
                                 case Monster.DemonGuard:
+                                case Monster.MudWarrior:
                                     Stoned = true;
                                     return;
                             }
@@ -1428,6 +1436,16 @@ namespace Client.MirObjects
                                         {
                                             case Monster.SeedingsGeneral:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SeedingsGeneral], 1136 + (int)Direction * 6, 6, 600, this));
+                                                break;
+                                        }
+                                    }
+                                    break;
+                                case 7:
+                                    {
+                                        switch (BaseImage)
+                                        {
+                                            case Monster.SwampSlime:                                                
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SwampSlime], 368, 9, 900, this) { Blend = true });
                                                 break;
                                         }
                                     }
@@ -1977,6 +1995,22 @@ namespace Client.MirObjects
                                 case 5:
                                     
                                     break;
+                                case 6:
+                                    {
+                                        switch (BaseImage)
+                                        {
+                                            case Monster.MudWarrior:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MudWarrior], 882, 12, 1200, ob) { Blend = false });
+                                                }
+                                                break;
+                                        }
+
+
+                                        break;
+                                    }
                             }
                             NextMotion += FrameInterval;
                         }
