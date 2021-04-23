@@ -471,7 +471,7 @@ public enum Monster : ushort
     Demonwolf = 266, // Done (DG)
     WhiteMammoth = 267, // Done (DG)
     DarkBeast = 268, // Done (DG)
-    LightBeast = 269, // Done (DG) - USE DARKBEAST AI
+    LightBeast = 269, // Done (DG) - USE AI 112 (DARKBEAST)
     BloodBaboon = 270, // Done (DG)
     HardenRhino = 271, // TODO: AI (Shoulder Dash Attack)
     AncientBringer = 272, // Done (DG)
@@ -505,15 +505,15 @@ public enum Monster : ushort
 
     AssassinBird = 300, // Done (DG)
     RhinoWarrior = 301, // AI Incomplete - Needs water and rock attacks coding (DG).
-    RhinoPriest = 302,
-    SwampSlime = 303,
-    RockGuard = 304,
-    MudWarrior = 305,
+    RhinoPriest = 302, // Done (DG)
+    SwampSlime = 303, // Done (DG) - USE AI 113 (BloodBaboon) for Attack2. 
+    RockGuard = 304,  // No spell animations (DG) - USE AI 113 (BloodBaboon) for Attack2.
+    MudWarrior = 305, // Done (DG) - Frames amended (Attack2 changed to AttackRange1)
     SmallPot = 306,
     TreeQueen = 307,
     ShellFighter = 308,
     DarkBaboon = 309,
-    TwinHeadBeast = 310,
+    TwinHeadBeast = 310, // Done (DG) - USE AI 112 (DARKBEAST)
     OmaCannibal = 311,
     OmaBlest = 312,
     OmaSlasher = 313,
