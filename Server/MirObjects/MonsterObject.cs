@@ -279,6 +279,17 @@ namespace Server.MirObjects
                     return new RhinoWarrior(info);
                 case 132:
                     return new RhinoPriest(info);
+                case 133:
+                    return new OmaCannibal(info);
+                case 134:
+                    return new OmaBlest(info);
+                case 135:
+                    return new OmaSlasher(info);
+                case 136:
+                    return new OmaMage(info);
+                case 137:
+                    return new OmaWitchDoctor(info);
+
 
                 //unfinished
                 case 120:
