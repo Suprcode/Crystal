@@ -31,12 +31,12 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
             if (Target.Attacked(this, damage) <= 0) return;
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
             {
                 if (Envir.Random.Next(15) == 0)
                     Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);

@@ -71,7 +71,7 @@ namespace Client.MirScenes.Dialogs
             };
         }
 
-        public void CreateBuff(Buff buff)
+        public void CreateBuff(ClientBuff buff)
         {
             var buffImage = BuffImage(buff.Type);
 
@@ -137,7 +137,7 @@ namespace Client.MirScenes.Dialogs
                 }
 
                 image.Location = new Point(Size.Width - 10 - 23 - (i * 23) + ((10 * 23) * (i / 10)), 6 + ((i / 10) * 24));
-                image.Hint = Settings.ExpandedBuffWindow ? buff.ToString() : CombinedBuffText();
+                image.Hint = Settings.ExpandedBuffWindow ? BuffString(buff) : CombinedBuffText();
                 image.Index = buffImage;
                 image.Library = buffLibrary;
 
@@ -152,10 +152,10 @@ namespace Client.MirScenes.Dialogs
                     image.Opacity = 0.6f;
                 }
 
-                if (buff.Infinite || !(Math.Round((buff.Expire - CMain.Time) / 1000D) <= 5))
+                if (buff.Infinite || !(Math.Round((buff.ExpireTime - CMain.Time) / 1000D) <= 5))
                     continue;
 
-                var time = (buff.Expire - CMain.Time) / 100D;
+                var time = (buff.ExpireTime - CMain.Time) / 100D;
 
                 if (Math.Round(time) % 10 < 5)
                     image.Index = -1;
@@ -247,252 +247,136 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
+
+
+
+        public string BuffString(ClientBuff buff)
+        {
+            string text = RegexFunctions.SeperateCamelCase(buff.Type.ToString()) + "\n";
+            bool overridestats = false;
+
+            switch (buff.Type)
+            {
+                case BuffType.GameMaster:
+                    GMOptions options = (GMOptions)buff.Values[0];
+
+                    if (options.HasFlag(GMOptions.GameMaster)) text += "-Invisible\n";
+                    if (options.HasFlag(GMOptions.Superman)) text += "-Superman\n";
+                    if (options.HasFlag(GMOptions.Observer)) text += "-Observer\n";
+                    break;
+                case BuffType.MentalState:
+                    switch (buff.Values[0])
+                    {
+                        case 0:
+                            text += "Agressive (Full damage)\nCan't shoot over walls.\n";
+                            break;
+                        case 1:
+                            text += "Trick shot (Minimal damage)\nCan shoot over walls.\n";
+                            break;
+                        case 2:
+                            text += "Group Mode (Medium damage)\nDon't steal agro.\n";
+                            break;
+                    }
+                    break;
+                case BuffType.Hiding:
+                case BuffType.ClearRing:
+                    text += "Invisible to many monsters.\n";
+                    break;
+                case BuffType.MoonLight:
+                    text += "Invisible to players and many\nmonsters when at a distance.\n";
+                    break;
+                case BuffType.EnergyShield:
+                    overridestats = true;
+                    text += string.Format("{0}% chance to gain {1} HP when attacked.\n", buff.Stats[Stat.EnergyShieldPercent], buff.Stats[Stat.EnergyShieldHPGain]);
+                    break;
+                case BuffType.DarkBody:
+                    text += "Invisible to many monsters and able to move.\n";
+                    break;
+                case BuffType.VampireShot:
+                    text += "Gives you a vampiric ability\nthat can be released with\ncertain skills.\n";
+                    break;
+                case BuffType.PoisonShot:
+                    text += "Gives you a poison ability\nthat can be released with\ncertain skills.\n";
+                    break;
+                case BuffType.Concentration:
+                    text += "Increases chance on element extraction.\n";
+                    break;
+                case BuffType.MagicBooster:
+                    overridestats = true;
+                    text = string.Format("Increases MC by: {0}-{1}.\nIncreases consumption by {2}%.\n", buff.Stats[Stat.MinMC], buff.Stats[Stat.MaxMC], buff.Stats[Stat.ManaPenaltyPercent]);
+                    break;
+                case BuffType.Transform:
+                    text = "Disguises your appearance.\n";
+                    break;
+                case BuffType.Mentee:
+                    text = "Learn skill points twice as quick.\n";
+                    break;
+                case BuffType.Guild:
+                    text += GameScene.Scene.GuildDialog.ActiveStats;
+                    break;
+            }
+
+            if (!overridestats)
+            {
+                foreach (var val in buff.Stats.Values)
+                {
+                    var c = val.Value < 0 ? "Decreases" : "Increases";
+                    var key = val.Key.ToString();
+
+                    var strKey = RegexFunctions.SeperateCamelCase(key.Replace("Rate", "").Replace("Multiplier", "").Replace("Percent", ""));
+
+                    var sign = "";
+
+                    if (key.Contains("Percent"))
+                        sign = "%";
+                    else if (key.Contains("Multiplier"))
+                        sign = "x";
+
+                    var txt = $"{c} {strKey} by: {val.Value}{sign}.\n";
+
+                    text += txt;
+                }
+            }
+
+            text += buff.Infinite ? GameLanguage.ExpireNever : string.Format(GameLanguage.Expire, Functions.PrintTimeSpanFromSeconds(Math.Round((buff.ExpireTime - CMain.Time) / 1000D)));
+
+            if (!string.IsNullOrEmpty(buff.Caster)) text += string.Format("\nCaster: {0}", buff.Caster);
+
+            return text;
+        }
+
         private string CombinedBuffText()
         {
-            var buffText = string.Empty;
-
-            int buffDc = 0,
-                buffMinMc = 0,
-                buffMc = 0,
-                buffSc = 0,
-                buffAttackSpeed = 0,
-                buffMovementSpeed = 0,
-                buffMinMac = 0,
-                buffMac = 0,
-                buffMinAc = 0,
-                buffAc = 0,
-                buffAgility = 0,
-                buffExp = 0,
-                buffDrop = 0,
-                buffGold = 0,
-                buffHealth = 0,
-                buffMana = 0,
-                buffBagWeight = 0;
-
-            buffText = "Active Buffs";
+            string text = "Active Buffs\n";
+            var stats = new Stats();
 
             for (var i = 0; i < _buffList.Count; i++)
             {
                 var buff = GameScene.Scene.Buffs[i];
 
-                switch (buff.Type)
-                {
-                    case BuffType.Haste:
-                        buffAttackSpeed += buff.Values[0];
-                        break;
-
-                    case BuffType.SwiftFeet:
-                        buffMovementSpeed += buff.Values[0];
-                        break;
-
-                    case BuffType.Fury:
-                        buffAttackSpeed += buff.Values[0];
-                        break;
-
-                    case BuffType.SoulShield:
-                        buffMac += buff.Values[0];
-                        break;
-
-                    case BuffType.BlessedArmour:
-                        buffAc += buff.Values[0];
-                        break;
-
-                    case BuffType.LightBody:
-                        buffAgility += buff.Values[0];
-                        break;
-
-                    case BuffType.UltimateEnhancer:
-                        switch (GameScene.User.Class)
-                        {
-                            case MirClass.Wizard:
-                            case MirClass.Archer:
-                                buffMc += buff.Values[0];
-                                break;
-                            case MirClass.Taoist:
-                                buffSc += buff.Values[0];
-                                break;
-                            default:
-                                buffDc += buff.Values[0];
-                                break;
-                        }
-                        break;
-
-                    case BuffType.ProtectionField:
-                        buffAc += buff.Values[0];
-                        break;
-
-                    case BuffType.Rage:
-                        buffDc += buff.Values[0];
-                        break;
-
-                    case BuffType.CounterAttack:
-                        buffAc += buff.Values[0];
-                        buffMac += buff.Values[0];
-                        break;
-
-                    case BuffType.MagicBooster:
-                        buffMinMc += buff.Values[0];
-                        buffMc += buff.Values[0];
-                        break;
-
-                    case BuffType.ImmortalSkin:
-                        buffAc += buff.Values[0];
-                        break;
- 
-                    case BuffType.General:
-                        buffExp += buff.Values[0];
-
-                        if (buff.Values.Length > 1)
-                            buffDrop += buff.Values[1];
-                        if (buff.Values.Length > 2)
-                            buffGold += buff.Values[2];
-                        break;
-
-                    case BuffType.Exp:
-                        buffExp += buff.Values[0];
-                        break;
-
-                    case BuffType.Drop:
-                        buffDrop += buff.Values[0];
-                        break;
-
-                    case BuffType.Gold:
-                        buffGold += buff.Values[0];
-                        break;
-
-                    case BuffType.BagWeight:
-                        buffBagWeight += buff.Values[0];
-                        break;
-
-                    case BuffType.RelationshipEXP:
-                        buffExp += buff.Values[0];
-                        break;
-
-                    case BuffType.Rested:
-                        buffExp += buff.Values[0];
-                        break;
-
-                    case BuffType.Impact:
-                        buffDc += buff.Values[0];
-                        break;
-
-                    case BuffType.Magic:
-                        buffMc += buff.Values[0];
-                        break;
-
-                    case BuffType.Taoist:
-                        buffSc += buff.Values[0];
-                        break;
-
-                    case BuffType.Storm:
-                        buffAttackSpeed += buff.Values[0];
-                        break;
-
-                    case BuffType.HealthAid:
-                        buffHealth += buff.Values[0];
-                        break;
-
-                    case BuffType.ManaAid:
-                        buffMana += buff.Values[0];
-                        break;
-
-                    case BuffType.Defence:
-                        buffMinAc += buff.Values[0];
-                        buffAc += buff.Values[0];
-                        break;
-
-                    case BuffType.MagicDefence:
-                        buffMinMac += buff.Values[0];
-                        buffMac += buff.Values[0];
-                        break;
-
-                    case BuffType.WonderDrug:
-                        switch (buff.Values[0])
-                        {
-                            case 0:
-                                buffExp += buff.Values[1];
-                                break;
-                            case 1:
-                                buffDrop += buff.Values[1];
-                                break;
-                            case 2:
-                                buffHealth += buff.Values[1];
-                                break;
-                            case 3:
-                                buffMana += buff.Values[1];
-                                break;
-                            case 4:
-                                buffMinAc += buff.Values[1];
-                                buffAc += buff.Values[1];
-                                break;
-                            case 5:
-                                buffMinMac += buff.Values[1];
-                                buffMac += buff.Values[1];
-                                break;
-                            case 6:
-                                buffAttackSpeed += buff.Values[1];
-                                break;
-                        }
-                        break;
-
-                    case BuffType.Knapsack:
-                        buffBagWeight += buff.Values[0];
-                        break;
-                }
+                stats.Add(buff.Stats);
             }
-            
-            if (buffDc > 0)
-                buffText += $"\nIncreased DC: 0-{buffDc}";
 
-            if (buffMinMc > 0 || buffMc > 0)
-                buffText += $"\nIncreased MC: {buffMinMc}-{buffMc}";
+            foreach (var val in stats.Values)
+            {
+                var c = val.Value < 0 ? "Decreased" : "Increased";
+                var key = val.Key.ToString();
 
-            if (buffSc > 0)
-                buffText += $"\nIncreased SC: 0-{buffSc}";
+                var strKey = RegexFunctions.SeperateCamelCase(key.Replace("Rate", "").Replace("Multiplier", "").Replace("Percent", ""));
 
-            if (buffMinAc > 0 || buffAc > 0)
-                buffText += $"\nIncreased AC: {buffMinAc}-{buffAc}";
+                var sign = "";
 
-            if (buffMinMac > 0 || buffMac > 0)
-                buffText += $"\nIncreased MAC: {buffMinMac}-{buffMac}";
+                if (key.Contains("Percent"))
+                    sign = "%";
+                else if (key.Contains("Multiplier"))
+                    sign = "x";
 
-            if (buffAttackSpeed > 0 || buffMovementSpeed > 0 || buffAgility > 0)
-                buffText += "\n";
+                var txt = $"{c} {strKey} by: {val.Value}{sign}.\n";
 
-            if (buffAttackSpeed > 0)
-                buffText += $"\nIncreased Attack Speed: {buffAttackSpeed}";
+                text += txt;
+            }
 
-            if (buffMovementSpeed > 0)
-                buffText += $"\nIncreased Movement Speed: {buffMovementSpeed}";
-
-            if (buffAgility > 0)
-                buffText += $"\nIncreased Agility: {buffAgility}";
-
-            if (buffExp > 0 || buffDrop > 0 || buffGold > 0)
-                buffText += "\n";
-
-            if (buffExp > 0)
-                buffText += $"\nExperience Increased By: {buffExp}%";
-
-            if (buffDrop > 0)
-                buffText += $"\nDrop Rate Increased By: {buffDrop}%";
-
-            if (buffGold > 0)
-                buffText += $"\nGold Rate Increased By: {buffGold}%";
-
-            if (buffHealth > 0 || buffMana > 0 || buffBagWeight > 0)
-                buffText += "\n";
-
-            if (buffHealth > 0)
-                buffText += $"Increased Health: {buffHealth}";
-
-            if (buffMana > 0)
-                buffText += $"Increased Mana: {buffMana}";
-
-            if (buffBagWeight > 0)
-                buffText += $"Increased Bag Weight: {buffBagWeight}";
-
-            return buffText;
+            return text;
         }
 
         private int BuffImage(BuffType type)
@@ -515,6 +399,7 @@ namespace Client.MirScenes.Dialogs
                     return 30;
 
                 case BuffType.Hiding:
+                case BuffType.ClearRing:
                     return 17;
                 case BuffType.Haste:
                     return 60;
@@ -577,6 +462,8 @@ namespace Client.MirScenes.Dialogs
                     return 240;
                 case BuffType.TemporalFlux:
                     return 261;
+                case BuffType.Skill:
+                    return 200;
 
                 //Stats
                 case BuffType.Impact:

@@ -33,7 +33,6 @@ namespace Server.MirObjects
 
         private int SpawnThread;
 
-        //Position
         private Map _currentMap;
         public Map CurrentMap
         {
@@ -51,30 +50,19 @@ namespace Server.MirObjects
 
         public abstract ushort Level { get; set; }
 
-        public abstract uint Health { get; }
-        public abstract uint MaxHealth { get; }
+        public abstract int Health { get; }
+        public abstract int MaxHealth { get; }
         public byte PercentHealth
         {
             get { return (byte) (Health/(float) MaxHealth*100); }
-
         }
 
-        public ushort MinAC, MaxAC, MinMAC, MaxMAC;
-        public ushort MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC;
-
-        public byte Accuracy, Agility, Light;
-        public sbyte ASpeed, Luck;
+        public byte Light;
         public int AttackSpeed;
 
-        public ushort CurrentHandWeight,
-                   MaxHandWeight,
+        public int CurrentHandWeight,
                    CurrentWearWeight,
-                   MaxWearWeight;
-
-        public ushort CurrentBagWeight,
-                      MaxBagWeight;
-
-        public byte MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Holy, Freezing, PoisonAttack;
+                   CurrentBagWeight;
 
         public long CellTime, BrownTime, PKPointTime, LastHitTime, EXPOwnerTime;
         public Color NameColour = Color.White;
@@ -86,9 +74,6 @@ namespace Server.MirObjects
         public virtual int PKPoints { get; set; }
 
         public ushort PotHealthAmount, PotManaAmount, HealAmount, VampAmount;
-        //public bool HealthChanged;
-
-        public float ItemDropRateOffset = 0, GoldDropRateOffset = 0;
 
         public bool CoolEye;
         private bool _hidden;
@@ -165,6 +150,8 @@ namespace Server.MirObjects
         public long ExpireTime, OwnerTime, OperateTime;
         public int OperateDelay = 100;
 
+        public Stats Stats;
+
         public List<MonsterObject> Pets = new List<MonsterObject>();
         public List<Buff> Buffs = new List<Buff>();
 
@@ -210,15 +197,16 @@ namespace Server.MirObjects
             if (Target != null && (Target.Node == null || Target.Dead)) Target = null;
             if (Owner != null && Owner.Node == null) Owner = null;
 
-            if (Envir.Time > PKPointTime && PKPoints > 0)
+            if (PKPoints > 0 && Envir.Time > PKPointTime)
             {
                 PKPointTime = Envir.Time + Settings.PKDelay * Settings.Second;
                 PKPoints--;
             }
-            
-            if (LastHitter != null && Envir.Time > LastHitTime)
-                LastHitter = null;
 
+            if (LastHitter != null && Envir.Time > LastHitTime)
+            {
+                LastHitter = null;
+            }
 
             if (EXPOwner != null && Envir.Time > EXPOwnerTime)
             {
@@ -240,14 +228,14 @@ namespace Server.MirObjects
             if (min < 0) min = 0;
             if (min > max) max = min;
 
-            if (Luck > 0)
+            if (Stats[Stat.Luck] > 0)
             {
-                if (Luck > Envir.Random.Next(Settings.MaxLuck))
+                if (Stats[Stat.Luck] > Envir.Random.Next(Settings.MaxLuck))
                     return max;
             }
-            else if (Luck < 0)
+            else if (Stats[Stat.Luck] < 0)
             {
-                if (Luck < -Envir.Random.Next(Settings.MaxLuck))
+                if (Stats[Stat.Luck] < -Envir.Random.Next(Settings.MaxLuck))
                     return min;
             }
 
@@ -423,39 +411,39 @@ namespace Server.MirObjects
             switch (type)
             {
                 case DefenceType.ACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy])
                     {
                         BroadcastDamageIndicator(DamageType.Miss);
                         hit = false;
                     }
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    armour = GetDefencePower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.AC:
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    armour = GetDefencePower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.MACAgility:
-                    if (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist)
+                    if (Envir.Random.Next(Settings.MagicResistWeight) < Stats[Stat.MagicResist])
                     {
                         BroadcastDamageIndicator(DamageType.Miss);
                         hit = false;
                     }
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy])
                     {
                         BroadcastDamageIndicator(DamageType.Miss);
                         hit = false;
                     }
-                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    armour = GetDefencePower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
                 case DefenceType.MAC:
-                    if (Envir.Random.Next(Settings.MagicResistWeight) < MagicResist)
+                    if (Envir.Random.Next(Settings.MagicResistWeight) < Stats[Stat.MagicResist])
                     {
                         BroadcastDamageIndicator(DamageType.Miss);
                         hit = false;
                     }
-                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    armour = GetDefencePower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
                 case DefenceType.Agility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy)
+                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy])
                     {
                         BroadcastDamageIndicator(DamageType.Miss);
                         hit = false;
@@ -465,21 +453,21 @@ namespace Server.MirObjects
             return armour;
         }
 
-        public virtual void ApplyNegativeEffects(PlayerObject attacker, DefenceType type, ushort LevelOffset)
+        public virtual void ApplyNegativeEffects(PlayerObject attacker, DefenceType type, ushort levelOffset)
         {
-            if (attacker.HasParalysisRing && type != DefenceType.MAC && type != DefenceType.MACAgility && 1 == Envir.Random.Next(1, 15))
+            if (attacker.SpecialMode.HasFlag(SpecialItemMode.Paralize) && type != DefenceType.MAC && type != DefenceType.MACAgility && 1 == Envir.Random.Next(1, 15))
             {
                 ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, attacker);
             }
-            if ((attacker.Freezing > 0) && (Settings.PvpCanFreeze) && type != DefenceType.MAC && type != DefenceType.MACAgility)
+            if ((attacker.Stats[Stat.Freezing] > 0) && (Settings.PvpCanFreeze) && type != DefenceType.MAC && type != DefenceType.MACAgility)
             {
-                if ((Envir.Random.Next(Settings.FreezingAttackWeight) < attacker.Freezing) && (Envir.Random.Next(LevelOffset) == 0))
-                    ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = Math.Min(10, (3 + Envir.Random.Next(attacker.Freezing))), TickSpeed = 1000 }, attacker);
+                if ((Envir.Random.Next(Settings.FreezingAttackWeight) < attacker.Stats[Stat.Freezing]) && (Envir.Random.Next(levelOffset) == 0))
+                    ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = Math.Min(10, (3 + Envir.Random.Next(attacker.Stats[Stat.Freezing]))), TickSpeed = 1000 }, attacker);
             }
-            if (attacker.PoisonAttack > 0 && type != DefenceType.MAC && type != DefenceType.MACAgility)
+            if (attacker.Stats[Stat.PoisonAttack] > 0 && type != DefenceType.MAC && type != DefenceType.MACAgility)
             {
-                if ((Envir.Random.Next(Settings.PoisonAttackWeight) < attacker.PoisonAttack) && (Envir.Random.Next(LevelOffset) == 0))
-                    ApplyPoison(new Poison { PType = PoisonType.Green, Duration = 5, TickSpeed = 1000, Value = Math.Min(10, 3 + Envir.Random.Next(attacker.PoisonAttack)) }, attacker);
+                if ((Envir.Random.Next(Settings.PoisonAttackWeight) < attacker.Stats[Stat.PoisonAttack]) && (Envir.Random.Next(levelOffset) == 0))
+                    ApplyPoison(new Poison { PType = PoisonType.Green, Duration = 5, TickSpeed = 1000, Value = Math.Min(10, 3 + Envir.Random.Next(attacker.Stats[Stat.PoisonAttack])) }, attacker);
             }
         }
 
@@ -510,64 +498,128 @@ namespace Server.MirObjects
         public virtual bool Harvest(PlayerObject player) { return false; }
 
         public abstract void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true);
-        public virtual void AddBuff(Buff b)
+
+        public virtual Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool visible = false, bool infinite = false, bool stackable = false, bool refreshStats = true, params int[] values)
         {
-            switch (b.Type)
+            if (!HasBuff(type, out Buff buff))
+            {
+                buff = new Buff
+                {
+                    Type = type,
+                    Caster = owner,
+                    ObjectID = ObjectID,
+                    ExpireTime = Envir.Time + duration
+                };
+
+                Buffs.Add(buff);
+            }
+            else if (stackable)
+            {
+                if (!buff.Stats.Equals(stats))
+                {
+                    //TODO - Maybe get the best one instead?
+                    stats = buff.Stats;
+                }
+
+                buff.ExpireTime += duration;
+            }
+            else if (buff.ExpireTime < Envir.Time + duration)
+            {
+                buff.ExpireTime = Envir.Time + duration;
+            }
+
+            buff.Stackable = stackable;
+            buff.Infinite = infinite;
+            buff.Visible = visible;
+            buff.Stats = stats ?? new Stats();
+            buff.Paused = false;
+
+            switch (buff.Type)
             {
                 case BuffType.MoonLight:
-                case BuffType.Hiding:
                 case BuffType.DarkBody:
                     Hidden = true;
-
-                    if (b.Type == BuffType.MoonLight || b.Type == BuffType.DarkBody) Sneaking = true;
-
-                    for (int y = CurrentLocation.Y - Globals.DataRange; y <= CurrentLocation.Y + Globals.DataRange; y++)
-                    {
-                        if (y < 0) continue;
-                        if (y >= CurrentMap.Height) break;
-
-                        for (int x = CurrentLocation.X - Globals.DataRange; x <= CurrentLocation.X + Globals.DataRange; x++)
-                        {
-                            if (x < 0) continue;
-                            if (x >= CurrentMap.Width) break;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
-
-                            Cell cell = CurrentMap.GetCell(x, y);
-
-                            if (!cell.Valid || cell.Objects == null) continue;
-
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
-                                MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Monster) continue;
-
-                                if (ob.Target == this && (!ob.CoolEye || ob.Level < Level)) ob.Target = null;
-                            }
-                        }
-                    }
+                    Sneaking = true;
+                    HideFromTargets();
+                    break;
+                case BuffType.Hiding:
+                case BuffType.ClearRing:
+                    Hidden = true;
+                    HideFromTargets();
                     break;
             }
 
-
-            for (int i = 0; i < Buffs.Count; i++)
-            {
-                if (Buffs[i].Type != b.Type) continue;
-
-                Buffs[i] = b;
-                Buffs[i].Paused = false;
-                return;
-            }
-
-            Buffs.Add(b);
+            return buff;
         }
-        public void RemoveBuff(BuffType b)
+
+        public virtual void RemoveBuff(BuffType b)
         {
             for (int i = 0; i < Buffs.Count; i++)
             {
                 if (Buffs[i].Type != b) continue;
 
                 Buffs[i].Infinite = false;
+                Buffs[i].Paused = false;
                 Buffs[i].ExpireTime = Envir.Time;
+
+                switch(b)
+                {
+                    case BuffType.Hiding:
+                    case BuffType.MoonLight:
+                    case BuffType.DarkBody:
+                        if (!HasAnyBuffs(b, BuffType.ClearRing, BuffType.Hiding, BuffType.MoonLight, BuffType.DarkBody))
+                        {
+                            Hidden = false;
+                        }
+                        break;
+                }
+            }
+        }
+
+        public bool HasBuff(BuffType type, out Buff buff)
+        {
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                if (Buffs[i].Type != type) continue;
+
+                buff = Buffs[i];
+                return true;
+            }
+
+            buff = null;
+            return false;
+        }
+
+        public bool HasAnyBuffs(BuffType exceptBuff, params BuffType[] types)
+        {
+            return Buffs.Select(x => x.Type).Except(new List<BuffType> { exceptBuff }).Intersect(types).Any();
+        }
+
+        protected void HideFromTargets()
+        {
+            for (int y = CurrentLocation.Y - Globals.DataRange; y <= CurrentLocation.Y + Globals.DataRange; y++)
+            {
+                if (y < 0) continue;
+                if (y >= CurrentMap.Height) break;
+
+                for (int x = CurrentLocation.X - Globals.DataRange; x <= CurrentLocation.X + Globals.DataRange; x++)
+                {
+                    if (x < 0) continue;
+                    if (x >= CurrentMap.Width) break;
+                    if (x < 0 || x >= CurrentMap.Width) continue;
+
+                    Cell cell = CurrentMap.GetCell(x, y);
+
+                    if (!cell.Valid || cell.Objects == null) continue;
+
+                    for (int i = 0; i < cell.Objects.Count; i++)
+                    {
+                        MapObject ob = cell.Objects[i];
+                        if (ob.Race != ObjectType.Monster) continue;
+
+                        if (ob.Target == this && (!ob.CoolEye || ob.Level < Level)) ob.Target = null;
+                    }
+                }
             }
         }
 
@@ -839,20 +891,30 @@ namespace Server.MirObjects
 
     public class Buff
     {
+        private Dictionary<string, object> Data { get; set; } = new Dictionary<string, object>();
+
         public BuffType Type;
         public MapObject Caster;
         public bool Visible;
         public uint ObjectID;
         public long ExpireTime;
+
+        public Stats Stats;
+
         public int[] Values;
         public bool Infinite;
+        public bool Stackable;
 
         public bool RealTime;
         public DateTime RealTimeExpire;
 
         public bool Paused;
 
-        public Buff() { }
+        public Buff() 
+        {
+            Stats = new Stats();
+            Data = new Dictionary<string, object>();
+        }
 
         public Buff(BinaryReader reader)
         {
@@ -862,14 +924,41 @@ namespace Server.MirObjects
             ObjectID = reader.ReadUInt32();
             ExpireTime = reader.ReadInt64();
 
-            Values = new int[reader.ReadInt32()];
-
-            for (int i = 0; i < Values.Length; i++)
+            if (Envir.LoadVersion <= 84)
             {
-                Values[i] = reader.ReadInt32();
-            }
+                Values = new int[reader.ReadInt32()];
 
-            Infinite = reader.ReadBoolean();
+                for (int i = 0; i < Values.Length; i++)
+                {
+                    Values[i] = reader.ReadInt32();
+                }
+
+                Infinite = reader.ReadBoolean();
+            }
+            else
+            {
+                Stackable = reader.ReadBoolean();
+
+                Stats = new Stats(reader);
+                Data = new Dictionary<string, object>();
+
+                int count = reader.ReadInt32();
+
+                for (int i = 0; i < count; i++)
+                {
+                    var key = reader.ReadString();
+                    var length = reader.ReadInt32();
+
+                    var array = new byte[length];
+
+                    for (int j = 0; j < array.Length; j++)
+                    {
+                        array[j] = reader.ReadByte();
+                    }
+
+                    Data[key] = Functions.DeserializeFromBytes(array);
+                }
+            }
         }
 
         public void Save(BinaryWriter writer)
@@ -879,13 +968,53 @@ namespace Server.MirObjects
             writer.Write(ObjectID);
             writer.Write(ExpireTime);
 
-            writer.Write(Values.Length);
-            for (int i = 0; i < Values.Length; i++)
+            writer.Write(Stackable);
+
+            Stats.Save(writer);
+
+            writer.Write(Data.Count);
+
+            foreach (KeyValuePair<string, object> pair in Data)
             {
-                writer.Write(Values[i]);
+                var bytes = Functions.SerializeToBytes(pair.Value);
+
+                writer.Write(pair.Key);
+                writer.Write(bytes.Length);
+
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    writer.Write(bytes[i]);
+                }
+            }
+        }
+
+        public T Get<T>(string key)
+        {
+            if (!Data.TryGetValue(key, out object result))
+            {
+                return default;
             }
 
-            writer.Write(Infinite);
+            return (T)result;
+        }
+
+        public void Set(string key, object val)
+        {
+            Data[key] = val;
+        }
+
+        public ClientBuff ToClientBuff()
+        {
+            return new ClientBuff
+            {
+                Type = Type,
+                Caster = Caster?.Name ?? "",
+                ObjectID = ObjectID,
+                Visible = Visible,
+                Infinite = Infinite,
+                ExpireTime = ExpireTime,
+                Stats = new Stats(Stats)
+            };
         }
     }
 }

@@ -34,18 +34,18 @@ namespace Server.MirForms.Systems
             LevelTextBox.Text = monster.Level.ToString();
             ViewRangeTextBox.Text = monster.ViewRange.ToString();
             CoolEyeTextBox.Text = monster.CoolEye.ToString();
-            MinACTextBox.Text = monster.MinAC.ToString();
-            MaxACTextBox.Text = monster.MaxAC.ToString();
-            MinMACTextBox.Text = monster.MinMAC.ToString();
-            MaxMACTextBox.Text = monster.MaxMAC.ToString();
-            MinDCTextBox.Text = monster.MinDC.ToString();
-            MaxDCTextBox.Text = monster.MaxDC.ToString();
-            MinMCTextBox.Text = monster.MinMC.ToString();
-            MaxMCTextBox.Text = monster.MaxMC.ToString();
-            MinSCTextBox.Text = monster.MinSC.ToString();
-            MaxSCTextBox.Text = monster.MaxSC.ToString();
-            AccuracyTextBox.Text = monster.Accuracy.ToString();
-            AgilityTextBox.Text = monster.Agility.ToString();
+            MinACTextBox.Text = monster.Stats[Stat.MinAC].ToString();
+            MaxACTextBox.Text = monster.Stats[Stat.MaxAC].ToString();
+            MinMACTextBox.Text = monster.Stats[Stat.MinMAC].ToString();
+            MaxMACTextBox.Text = monster.Stats[Stat.MaxMAC].ToString();
+            MinDCTextBox.Text = monster.Stats[Stat.MinDC].ToString();
+            MaxDCTextBox.Text = monster.Stats[Stat.MaxDC].ToString();
+            MinMCTextBox.Text = monster.Stats[Stat.MinMC].ToString();
+            MaxMCTextBox.Text = monster.Stats[Stat.MaxMC].ToString();
+            MinSCTextBox.Text = monster.Stats[Stat.MinSC].ToString();
+            MaxSCTextBox.Text = monster.Stats[Stat.MaxSC].ToString();
+            AccuracyTextBox.Text = monster.Stats[Stat.Accuracy].ToString();
+            AgilityTextBox.Text = monster.Stats[Stat.Agility].ToString();
             ASpeedTextBox.Text = monster.AttackSpeed.ToString();
             MSpeedTextBox.Text = monster.MoveSpeed.ToString();
         }
@@ -58,23 +58,23 @@ namespace Server.MirForms.Systems
 
             try
             {
-                monster.HP = uint.Parse(HPTextBox.Text);
+                monster.HP = int.Parse(HPTextBox.Text);
                 monster.Effect = byte.Parse(EffectTextBox.Text);
                 monster.Level = ushort.Parse(LevelTextBox.Text);
                 monster.ViewRange = byte.Parse(ViewRangeTextBox.Text);
                 monster.CoolEye = byte.Parse(CoolEyeTextBox.Text);
-                monster.MinAC = ushort.Parse(MinACTextBox.Text);
-                monster.MaxAC = ushort.Parse(MaxACTextBox.Text);
-                monster.MinMAC = ushort.Parse(MinMACTextBox.Text);
-                monster.MaxMAC = ushort.Parse(MaxMACTextBox.Text);
-                monster.MinDC = ushort.Parse(MinDCTextBox.Text);
-                monster.MaxDC = ushort.Parse(MaxDCTextBox.Text);
-                monster.MinMC = ushort.Parse(MinMCTextBox.Text);
-                monster.MaxMC = ushort.Parse(MaxMCTextBox.Text);
-                monster.MinSC = ushort.Parse(MinSCTextBox.Text);
-                monster.MaxSC = ushort.Parse(MaxSCTextBox.Text);
-                monster.Accuracy = byte.Parse(AccuracyTextBox.Text);
-                monster.Agility = byte.Parse(AgilityTextBox.Text);
+                monster.Stats[Stat.MinAC] = ushort.Parse(MinACTextBox.Text);
+                monster.Stats[Stat.MaxAC] = ushort.Parse(MaxACTextBox.Text);
+                monster.Stats[Stat.MinMAC] = ushort.Parse(MinMACTextBox.Text);
+                monster.Stats[Stat.MaxMAC] = ushort.Parse(MaxMACTextBox.Text);
+                monster.Stats[Stat.MinDC] = ushort.Parse(MinDCTextBox.Text);
+                monster.Stats[Stat.MaxDC] = ushort.Parse(MaxDCTextBox.Text);
+                monster.Stats[Stat.MinMC] = ushort.Parse(MinMCTextBox.Text);
+                monster.Stats[Stat.MaxMC] = ushort.Parse(MaxMCTextBox.Text);
+                monster.Stats[Stat.MinSC] = ushort.Parse(MinSCTextBox.Text);
+                monster.Stats[Stat.MaxSC] = ushort.Parse(MaxSCTextBox.Text);
+                monster.Stats[Stat.Accuracy] = byte.Parse(AccuracyTextBox.Text);
+                monster.Stats[Stat.Agility] = byte.Parse(AgilityTextBox.Text);
                 monster.AttackSpeed = ushort.Parse(ASpeedTextBox.Text);
                 monster.MoveSpeed = ushort.Parse(MSpeedTextBox.Text);
             }

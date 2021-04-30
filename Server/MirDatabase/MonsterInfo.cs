@@ -32,9 +32,8 @@ namespace Server.MirDatabase
         public byte AI, Effect, ViewRange = 7, CoolEye;
         public ushort Level;
 
-        public uint HP;
-        public byte Accuracy, Agility, Light;
-        public ushort MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC;
+        public int HP;
+        public byte Light;
 
         public ushort AttackSpeed = 2500, MoveSpeed = 1800;
         public uint Experience;
@@ -46,9 +45,13 @@ namespace Server.MirDatabase
         public bool HasSpawnScript;
         public bool HasDieScript;
 
+        public Stats Stats;
+
         public MonsterInfo()
         {
+            Stats = new Stats();
         }
+
         public MonsterInfo(BinaryReader reader)
         {
             Index = reader.ReadInt32();
@@ -57,6 +60,7 @@ namespace Server.MirDatabase
             Image = (Monster) reader.ReadUInt16();
             AI = reader.ReadByte();
             Effect = reader.ReadByte();
+
             if (Envir.LoadVersion < 62)
             {
                 Level = (ushort)reader.ReadByte();
@@ -69,41 +73,58 @@ namespace Server.MirDatabase
             ViewRange = reader.ReadByte();
             CoolEye = reader.ReadByte();
 
-            HP = reader.ReadUInt32();
+            if (Envir.LoadVersion > 84)
+            {
+                Stats = new Stats(reader);
+            }
+
+            if (Envir.LoadVersion <= 84)
+            {
+                Stats = new Stats();
+                Stats[Stat.HP] = (int)reader.ReadUInt32(); //Monster form prevented greater than ushort, so this should never overflow.
+            }
 
             if (Envir.LoadVersion < 62)
             {
-                MinAC = (ushort)reader.ReadByte();
-                MaxAC = (ushort)reader.ReadByte();
-                MinMAC = (ushort)reader.ReadByte();
-                MaxMAC = (ushort)reader.ReadByte();
-                MinDC = (ushort)reader.ReadByte();
-                MaxDC = (ushort)reader.ReadByte();
-                MinMC = (ushort)reader.ReadByte();
-                MaxMC = (ushort)reader.ReadByte();
-                MinSC = (ushort)reader.ReadByte();
-                MaxSC = (ushort)reader.ReadByte();
+                Stats[Stat.MinAC] = reader.ReadByte();
+                Stats[Stat.MaxAC] = reader.ReadByte();
+                Stats[Stat.MinMAC] = reader.ReadByte();
+                Stats[Stat.MaxMAC] = reader.ReadByte();
+                Stats[Stat.MinDC] = reader.ReadByte();
+                Stats[Stat.MaxDC] = reader.ReadByte();
+                Stats[Stat.MinMC] = reader.ReadByte();
+                Stats[Stat.MaxMC] = reader.ReadByte();
+                Stats[Stat.MinSC] = reader.ReadByte();
+                Stats[Stat.MaxSC] = reader.ReadByte();
             }
             else
             {
-                MinAC = reader.ReadUInt16();
-                MaxAC = reader.ReadUInt16();
-                MinMAC = reader.ReadUInt16();
-                MaxMAC = reader.ReadUInt16();
-                MinDC = reader.ReadUInt16();
-                MaxDC = reader.ReadUInt16();
-                MinMC = reader.ReadUInt16();
-                MaxMC = reader.ReadUInt16();
-                MinSC = reader.ReadUInt16();
-                MaxSC = reader.ReadUInt16();
+                if (Envir.LoadVersion <= 84)
+                {
+                    Stats[Stat.MinAC] = reader.ReadUInt16();
+                    Stats[Stat.MaxAC] = reader.ReadUInt16();
+                    Stats[Stat.MinMAC] = reader.ReadUInt16();
+                    Stats[Stat.MaxMAC] = reader.ReadUInt16();
+                    Stats[Stat.MinDC] = reader.ReadUInt16();
+                    Stats[Stat.MaxDC] = reader.ReadUInt16();
+                    Stats[Stat.MinMC] = reader.ReadUInt16();
+                    Stats[Stat.MaxMC] = reader.ReadUInt16();
+                    Stats[Stat.MinSC] = reader.ReadUInt16();
+                    Stats[Stat.MaxSC] = reader.ReadUInt16();
+                }
             }
 
-            Accuracy = reader.ReadByte();
-            Agility = reader.ReadByte();
+            if (Envir.LoadVersion <= 84)
+            {
+                Stats[Stat.Accuracy] = reader.ReadByte();
+                Stats[Stat.Agility] = reader.ReadByte();
+            }
+
             Light = reader.ReadByte();
 
             AttackSpeed = reader.ReadUInt16();
             MoveSpeed = reader.ReadUInt16();
+
             Experience = reader.ReadUInt32();
 
             CanPush = reader.ReadBoolean();
@@ -131,25 +152,14 @@ namespace Server.MirDatabase
             writer.Write(ViewRange);
             writer.Write(CoolEye);
 
-            writer.Write(HP);
+            Stats.Save(writer);
 
-            writer.Write(MinAC);
-            writer.Write(MaxAC);
-            writer.Write(MinMAC);
-            writer.Write(MaxMAC);
-            writer.Write(MinDC);
-            writer.Write(MaxDC);
-            writer.Write(MinMC);
-            writer.Write(MaxMC);
-            writer.Write(MinSC);
-            writer.Write(MaxSC);
 
-            writer.Write(Accuracy);
-            writer.Write(Agility);
             writer.Write(Light);
 
             writer.Write(AttackSpeed);
             writer.Write(MoveSpeed);
+
             writer.Write(Experience);
 
             writer.Write(CanPush);
@@ -227,20 +237,20 @@ namespace Server.MirDatabase
             if (!ushort.TryParse(data[4], out info.Level)) return;
             if (!byte.TryParse(data[5], out info.ViewRange)) return;
 
-            if (!uint.TryParse(data[6], out info.HP)) return;
+            if (!int.TryParse(data[6], out info.HP)) return;
 
-            if (!ushort.TryParse(data[7], out info.MinAC)) return;
-            if (!ushort.TryParse(data[8], out info.MaxAC)) return;
-            if (!ushort.TryParse(data[9], out info.MinMAC)) return;
-            if (!ushort.TryParse(data[10], out info.MaxMAC)) return;
-            if (!ushort.TryParse(data[11], out info.MinDC)) return;
-            if (!ushort.TryParse(data[12], out info.MaxDC)) return;
-            if (!ushort.TryParse(data[13], out info.MinMC)) return;
-            if (!ushort.TryParse(data[14], out info.MaxMC)) return;
-            if (!ushort.TryParse(data[15], out info.MinSC)) return;
-            if (!ushort.TryParse(data[16], out info.MaxSC)) return;
-            if (!byte.TryParse(data[17], out info.Accuracy)) return;
-            if (!byte.TryParse(data[18], out info.Agility)) return;
+            //if (!ushort.TryParse(data[7], out info.MinAC)) return;
+            //if (!ushort.TryParse(data[8], out info.MaxAC)) return;
+            //if (!ushort.TryParse(data[9], out info.MinMAC)) return;
+            //if (!ushort.TryParse(data[10], out info.MaxMAC)) return;
+            //if (!ushort.TryParse(data[11], out info.MinDC)) return;
+            //if (!ushort.TryParse(data[12], out info.MaxDC)) return;
+            //if (!ushort.TryParse(data[13], out info.MinMC)) return;
+            //if (!ushort.TryParse(data[14], out info.MaxMC)) return;
+            //if (!ushort.TryParse(data[15], out info.MinSC)) return;
+            //if (!ushort.TryParse(data[16], out info.MaxSC)) return;
+            //if (!byte.TryParse(data[17], out info.Accuracy)) return;
+            //if (!byte.TryParse(data[18], out info.Agility)) return;
             if (!byte.TryParse(data[19], out info.Light)) return;
 
             if (!ushort.TryParse(data[20], out info.AttackSpeed)) return;
@@ -266,8 +276,10 @@ namespace Server.MirDatabase
         }
         public string ToText()
         {
-            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27}", Name, (ushort)Image, AI, Effect, Level, ViewRange,
-                HP, MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC, Accuracy, Agility, Light, AttackSpeed, MoveSpeed, Experience, CanTame, CanPush, AutoRev, Undead, CoolEye);
+            return "";// string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27}", Name, (ushort)Image, AI, Effect, Level, ViewRange,
+              //  HP, 
+                //MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC, 
+               // Accuracy, Agility, Light, AttackSpeed, MoveSpeed, Experience, CanTame, CanPush, AutoRev, Undead, CoolEye);
         }
 
         public override string ToString()

@@ -30,11 +30,11 @@ namespace Server.MirObjects
 
         public int Image;
 
-        public override uint Health
+        public override int Health
         {
             get { throw new NotSupportedException(); }
         }
-        public override uint MaxHealth
+        public override int MaxHealth
         {
             get { throw new NotSupportedException(); }
         }

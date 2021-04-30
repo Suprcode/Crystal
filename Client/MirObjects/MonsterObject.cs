@@ -1696,7 +1696,7 @@ namespace Client.MirObjects
                                                 break;
                                             case Monster.BoneLord:
                                                 if (MapControl.GetObject(TargetID) != null)
-                                                    CreateProjectile(784, Libraries.Monsters[(ushort)Monster.BoneLord], true, 6, 30, 0, false);
+                                                    CreateProjectile(784, Libraries.Monsters[(ushort)Monster.BoneLord], true, 6, 30, 0, direction16: false);
                                                 break;
                                             case Monster.RightGuard:
                                                 ob = MapControl.GetObject(TargetID);
@@ -1745,7 +1745,7 @@ namespace Client.MirObjects
                                                     CreateProjectile(38, Libraries.Monsters[(ushort)Monster.CrossbowOma], false, 1, 30, 6);
                                                 break;
                                             case Monster.WingedOma:
-                                                missile = CreateProjectile(224, Libraries.Monsters[(ushort)Monster.WingedOma], false, 6, 30, 0, false);
+                                                missile = CreateProjectile(224, Libraries.Monsters[(ushort)Monster.WingedOma], false, 6, 30, 0, direction16: false);
 
                                                 if (missile.Target != null)
                                                 {
@@ -1835,7 +1835,7 @@ namespace Client.MirObjects
                                                     CreateProjectile(38, Libraries.Monsters[(ushort)Monster.ArcherGuard], false, 3, 30, 6);
                                                 break;
                                             case Monster.FinialTurtle:
-                                                missile = CreateProjectile(272, Libraries.Monsters[(ushort)Monster.FinialTurtle], true, 3, 30, 0, true);
+                                                missile = CreateProjectile(272, Libraries.Monsters[(ushort)Monster.FinialTurtle], true, 3, 30, 0);
 
                                                 if (missile.Target != null)
                                                 {
@@ -1858,7 +1858,7 @@ namespace Client.MirObjects
                                             case Monster.WitchDoctor:
                                                 if (MapControl.GetObject(TargetID) != null)
                                                 {
-                                                    missile = CreateProjectile(313, Libraries.Monsters[(ushort)Monster.WitchDoctor], true, 5, 30, -5, false);
+                                                    missile = CreateProjectile(313, Libraries.Monsters[(ushort)Monster.WitchDoctor], true, 5, 30, -5, direction16: false);
 
                                                     if (missile.Target != null)
                                                     {
@@ -1879,7 +1879,7 @@ namespace Client.MirObjects
                                                 }
                                                 break;
                                             case Monster.TrollBomber:
-                                                missile = CreateProjectile(208, Libraries.Monsters[(ushort)Monster.TrollBomber], false, 4, 40, -4, false);
+                                                missile = CreateProjectile(208, Libraries.Monsters[(ushort)Monster.TrollBomber], false, 4, 40, -4, direction16: false);
 
                                                 if (missile.Target != null)
                                                 {
@@ -1890,7 +1890,7 @@ namespace Client.MirObjects
                                                 }
                                                 break;
                                             case Monster.TrollStoner:
-                                                missile = CreateProjectile(208, Libraries.Monsters[(ushort)Monster.TrollStoner], false, 4, 40, -4, false);
+                                                missile = CreateProjectile(208, Libraries.Monsters[(ushort)Monster.TrollStoner], false, 4, 40, -4, direction16: false);
                                                 break;
                                             case Monster.FlameMage:
                                                 missile = CreateProjectile(544, Libraries.Monsters[(ushort)Monster.FlameMage], true, 3, 20, 0);
@@ -2110,7 +2110,7 @@ namespace Client.MirObjects
                                                 }
                                                 break;
                                             case Monster.TrollKing:
-                                                missile = CreateProjectile(294, Libraries.Monsters[(ushort)Monster.TrollKing], false, 4, 40, -4, false);
+                                                missile = CreateProjectile(294, Libraries.Monsters[(ushort)Monster.TrollKing], false, 4, 40, -4, direction16: false);
 
                                                 if (missile.Target != null)
                                                 {
@@ -2299,6 +2299,7 @@ namespace Client.MirObjects
             else if (CurrentAction == MirAction.Dead && NextAction != null && (NextAction.Action == MirAction.Skeleton || NextAction.Action == MirAction.Revive))
                 SetAction();
         }
+
         public int UpdateFrame()
         {
             if (Frame == null) return 0;
@@ -2308,23 +2309,30 @@ namespace Client.MirObjects
             return ++FrameIndex;
         }
 
-
-        private Missile CreateProjectile(int baseIndex, MLibrary library, bool blend, int count, int interval, int skip, bool direction16 = true)
+        public override Missile CreateProjectile(int baseIndex, MLibrary library, bool blend, int count, int interval, int skip, int lightDistance = 6, bool direction16 = true, Color ? lightColour = null, uint targetID = 0)
         {
-            MapObject ob = MapControl.GetObject(TargetID);
+            if (targetID == 0)
+            {
+                targetID = TargetID;
+            }
 
-            if (ob != null) TargetPoint = ob.CurrentLocation;
+            MapObject ob = MapControl.GetObject(targetID);
 
-            int duration = Functions.MaxDistance(CurrentLocation, TargetPoint) * 50;
+            var targetPoint = TargetPoint;
 
+            if (ob != null) targetPoint = ob.CurrentLocation;
 
-            Missile missile = new Missile(library, baseIndex, duration / interval, duration, this, TargetPoint, direction16)
+            int duration = Functions.MaxDistance(CurrentLocation, targetPoint) * 50;
+
+            Missile missile = new Missile(library, baseIndex, duration / interval, duration, this, targetPoint)
             {
                 Target = ob,
                 Interval = interval,
                 FrameCount = count,
                 Blend = blend,
-                Skip = skip
+                Skip = skip,
+                Light = lightDistance,
+                LightColour = lightColour == null ? Color.White : (Color)lightColour
             };
 
             Effects.Add(missile);

@@ -1159,125 +1159,22 @@ namespace Client.MirScenes.Dialogs
         {
             string text = "";
 
-            byte BuffAc = 0, BuffMac = 0, BuffDc = 0, BuffMc = 0, BuffSc = 0, BuffAttack = 0,
-                BuffMineRate = 0, BuffGemRate = 0, BuffFishRate = 0, BuffExpRate = 0, BuffCraftRate = 0, BuffSkillRate = 0,
-                BuffHpRegen = 0, BuffMPRegen = 0, BuffDropRate = 0, BuffGoldRate = 0;
-
-            int BuffMaxHp = 0, BuffMaxMp = 0;
+            var stats = new Stats();
 
             foreach (GuildBuff buff in EnabledBuffs)
             {
                 if ((buff.Info == null) || (!buff.Active)) continue;
 
-                BuffAc = (byte)Math.Min(byte.MaxValue, BuffAc + buff.Info.BuffAc);
-                BuffMac = (byte)Math.Min(byte.MaxValue, BuffMac + buff.Info.BuffMac);
-                BuffDc = (byte)Math.Min(byte.MaxValue, BuffDc + buff.Info.BuffDc);
-                BuffMc = (byte)Math.Min(byte.MaxValue, BuffMc + buff.Info.BuffMc);
-                BuffSc = (byte)Math.Min(byte.MaxValue, BuffSc + buff.Info.BuffSc);
-                BuffAttack = (byte)Math.Min(byte.MaxValue, BuffAttack + buff.Info.BuffAttack);
-                BuffMaxHp = (ushort)Math.Min(ushort.MaxValue, BuffMaxHp + buff.Info.BuffMaxHp);
-                BuffMaxMp = (ushort)Math.Min(ushort.MaxValue, BuffMaxMp + buff.Info.BuffMaxMp);
-                BuffMineRate = (byte)Math.Min(byte.MaxValue, BuffMineRate + buff.Info.BuffMineRate);
-                BuffGemRate = (byte)Math.Min(byte.MaxValue, BuffGemRate + buff.Info.BuffGemRate);
-                BuffFishRate = (byte)Math.Min(byte.MaxValue, BuffFishRate + buff.Info.BuffFishRate);
-                BuffExpRate = (byte)Math.Min(float.MaxValue, BuffExpRate + buff.Info.BuffExpRate);
-                BuffCraftRate = (byte)Math.Min(byte.MaxValue, BuffCraftRate + buff.Info.BuffCraftRate); //needs coding
-                BuffSkillRate = (byte)Math.Min(byte.MaxValue, BuffSkillRate + buff.Info.BuffSkillRate);
-                BuffHpRegen = (byte)Math.Min(byte.MaxValue, BuffHpRegen + buff.Info.BuffHpRegen);
-                BuffMPRegen = (byte)Math.Min(byte.MaxValue, BuffMPRegen + buff.Info.BuffMPRegen);
-                BuffDropRate = (byte)Math.Min(float.MaxValue, BuffDropRate + buff.Info.BuffDropRate);
-                BuffGoldRate = (byte)Math.Min(float.MaxValue, BuffGoldRate + buff.Info.BuffGoldRate);
+                stats.Add(buff.Info.Stats);
             }
 
-            if (BuffAc > 0)
+            foreach (var val in stats.Values)
             {
-                text += string.Format("Increases AC by: 0-{0}.", BuffAc);
-                if (text != "") text += "\n";
-            }
-            if (BuffMac > 0)
-            {
-                text += string.Format("Increases MAC by: 0-{0}.", BuffMac);
-                if (text != "") text += "\n";
-            }
-            if (BuffDc > 0)
-            {
-                text += string.Format("Increases DC by: 0-{0}.", BuffDc);
-                if (text != "") text += "\n";
-            }
-            if (BuffMc > 0)
-            {
-                text += string.Format("Increases MC by: 0-{0}.", BuffMc);
-                if (text != "") text += "\n";
-            }
-            if (BuffSc > 0)
-            {
-                text += string.Format("Increases SC by: 0-{0}.", BuffSc);
-                if (text != "") text += "\n";
-            }
-            if (BuffMaxHp > 0)
-            {
-                text += string.Format("Increases Hp by: {0}.", BuffMaxHp);
-                if (text != "") text += "\n";
-            }
-            if (BuffMaxMp > 0)
-            {
-                text += string.Format("Increases MP by: {0}.", BuffMaxMp);
-                if (text != "") text += "\n";
-            }
-            if (BuffHpRegen > 0)
-            {
-                text += string.Format("Increases Health regen by: {0}.", BuffHpRegen);
-                if (text != "") text += "\n";
-            }
-            if (BuffMPRegen > 0)
-            {
-                text += string.Format("Increases Mana regen by: {0}.", BuffMPRegen);
-                if (text != "") text += "\n";
-            }
-            if (BuffMineRate > 0)
-            {
-                text += string.Format("Increases Mining success by: {0}%.", BuffMineRate * 5);
-                if (text != "") text += "\n";
-            }
-            if (BuffGemRate > 0)
-            {
-                text += string.Format("Increases Gem success by: {0}%.", BuffGemRate * 5);
-                if (text != "") text += "\n";
-            }
-            if (BuffFishRate > 0)
-            {
-                text += string.Format("Increases Fishing success by: {0}%.", BuffFishRate * 5);
-                if (text != "") text += "\n";
-            }
-            if (BuffExpRate > 0)
-            {
-                text += string.Format("Increases Experience by: {0}%.", BuffExpRate);
-                if (text != "") text += "\n";
-            }
-            if (BuffCraftRate > 0)
-            {
-                text += string.Format("Increases Crafting success by: {0}%.", BuffCraftRate * 5);
-                if (text != "") text += "\n";
-            }
-            if (BuffSkillRate > 0)
-            {
-                text += string.Format("Increases Skill training by: {0}.", BuffSkillRate);
-                if (text != "") text += "\n";
-            }
-            if (BuffAttack > 0)
-            {
-                text += string.Format("Increases Damage by: {0}.", BuffAttack);
-                if (text != "") text += "\n";
-            }
-            if (BuffDropRate > 0)
-            {
-                text += string.Format("Droprate increased by: {0}%.", BuffDropRate);
-                if (text != "") text += "\n";
-            }
-            if (BuffGoldRate > 0)
-            {
-                text += string.Format("Goldrate increased by: 0-{0}.", BuffGoldRate);
-                if (text != "") text += "\n";
+                var c = val.Value < 0 ? "Decreases" : "Increases";
+
+                var txt = $"{c} {val.Key} by: {val.Value}{(val.Key.ToString().Contains("Percent") ? "%" : "")}.\n";
+
+                text += txt;
             }
 
             ActiveStats = text;

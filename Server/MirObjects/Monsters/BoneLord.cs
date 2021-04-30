@@ -39,10 +39,10 @@ namespace Server.MirObjects.Monsters
                 AttackTime = Envir.Time + AttackSpeed;
                 ActionTime = Envir.Time + 300;
 
-                int damage = GetAttackPower(MinDC, MaxDC);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
 
-                if (Envir.Random.Next(Settings.MagicResistWeight) >= Target.MagicResist)
+                if (Envir.Random.Next(Settings.MagicResistWeight) >= Target.Stats[Stat.MagicResist])
                 {
                     int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
 
@@ -64,9 +64,9 @@ namespace Server.MirObjects.Monsters
         {
             if (Target == null) return;
 
-            if (MaxHP >= 3)
+            if (Stats[Stat.HP] >= 3)
             {
-                byte stage = (byte)(HP / (MaxHP / 3));
+                byte stage = (byte)(HP / (Stats[Stat.HP] / 3));
 
                 if (stage < _stage)
                 {

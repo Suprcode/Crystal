@@ -184,13 +184,13 @@ namespace Server.MirObjects.Monsters
         }
         private void AttackLogic()
         {
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
             //if (Target.Attacked(this, damage, DefenceType.MAC) <= 0) return;
             Target.Attacked(this, damage, DefenceType.MAC);
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
             {
                 if (Envir.Random.Next(10) <= PetLevel)
                 {

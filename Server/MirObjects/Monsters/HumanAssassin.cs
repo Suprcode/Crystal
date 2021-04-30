@@ -25,35 +25,26 @@ namespace Server.MirObjects.Monsters
 
         protected override void RefreshBase()
         {
-            MaxHP = 1500;
-            MinAC = Master.MinAC;
-            MaxAC = Master.MaxAC;
-            MinMAC = Master.MinMAC;
-            MaxMAC = Master.MaxMAC;
-            MinDC = Master.MinDC;
-            MaxDC = Master.MaxDC;
-            MinMC = Master.MinMC;
-            MaxMC = Master.MaxMC;
-            MinSC = Master.MinSC;
-            MaxSC = Master.MaxSC;
-            Accuracy = Master.Accuracy;
-            Agility = Master.Agility;
+            Stats.Clear();
+            Stats.Add(Master.Stats);
+
+            Stats[Stat.HP] = 1500;
 
             MoveSpeed = 100;
-            AttackSpeed = Master.ASpeed;
+            AttackSpeed = Master.AttackSpeed;
         }
 
         public override void RefreshAll()
         {
             RefreshBase();
 
-            MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + PetLevel * 20);
-            MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + PetLevel * 2);
-            MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + PetLevel * 2);
-            MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + PetLevel * 2);
-            MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + PetLevel * 2);
-            MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + PetLevel);
-            MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + PetLevel);
+            Stats[Stat.HP] += PetLevel * 20;
+            Stats[Stat.MinAC] += PetLevel * 2;
+            Stats[Stat.MaxAC] += PetLevel * 2;
+            Stats[Stat.MinMAC] += PetLevel * 2;
+            Stats[Stat.MaxMAC] += PetLevel * 2;
+            Stats[Stat.MinDC] += PetLevel;
+            Stats[Stat.MaxDC] += PetLevel;
 
             if (MoveSpeed < 100) MoveSpeed = 100;
             if (AttackSpeed < 100) AttackSpeed = 100;
@@ -109,17 +100,8 @@ namespace Server.MirObjects.Monsters
 
             if (Hidden)
             {
-                Hidden = false;
-
-                for (int i = 0; i < Buffs.Count; i++)
-                {
-                    if (Buffs[i].Type != BuffType.Hiding) continue;
-
-                    Buffs[i].ExpireTime = 0;
-                    break;
-                }
+                RemoveBuff(BuffType.Hiding);
             }
-
 
             CellTime = Envir.Time + 500;
             ActionTime = Envir.Time + 300;
@@ -268,7 +250,7 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             AttackDamage += damage;
 
             if (damage == 0) return;
@@ -309,8 +291,8 @@ namespace Server.MirObjects.Monsters
 
         private void explosionDie()
         {
-            int criticalDamage = Envir.Random.Next(0, 100) <= Accuracy ? MaxDC * 2 : MinDC * 2;
-            int damage = (MinDC / 5 + 4 * (Level / 20)) * criticalDamage / 20 + MaxDC;
+            int criticalDamage = Envir.Random.Next(0, 100) <= Stats[Stat.Accuracy] ? Stats[Stat.MaxDC] * 2 : Stats[Stat.MinDC] * 2;
+            int damage = (Stats[Stat.MinDC] / 5 + 4 * (Level / 20)) * criticalDamage / 20 + Stats[Stat.MaxDC];
 
             for (int i = 0; i < 16; i++)
             {

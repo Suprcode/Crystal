@@ -79,13 +79,13 @@ namespace Server.MirObjects.Monsters
 
             for (int i = 0; i < targets.Count; i++)
             {
-                targets[i].Attacked(this, MaxDC * 3, DefenceType.MACAgility);
+                targets[i].Attacked(this, Stats[Stat.MaxDC] * 3, DefenceType.MACAgility);
 
                 if (Envir.Random.Next(2) == 0)
                 {
-                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
+                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].Stats[Stat.PoisonResist])
                     {
-                        int poisonLength = GetAttackPower(MinMC, MaxMC);
+                        int poisonLength = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
 
                         targets[i].ApplyPoison(new Poison { Owner = this, PType = PoisonType.Stun, Duration = poisonLength, TickSpeed = 1000 }, this);
                         Broadcast(new S.ObjectEffect { ObjectID = targets[i].ObjectID, Effect = SpellEffect.Stunned, Time = (uint)poisonLength * 1000 });
@@ -96,7 +96,7 @@ namespace Server.MirObjects.Monsters
 
         private void LineAttack(int distance)
         {
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
             
             int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500;

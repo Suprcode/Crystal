@@ -125,7 +125,7 @@ namespace Client.MirScenes
         public static List<GameShopItem> GameShopInfoList = new List<GameShopItem>();
         public static List<ClientRecipeInfo> RecipeInfoList = new List<ClientRecipeInfo>();
 
-        public List<Buff> Buffs = new List<Buff>();
+        public List<ClientBuff> Buffs = new List<ClientBuff>();
 
         public static UserItem[] Storage = new UserItem[80];
         public static UserItem[] GuildStorage = new UserItem[112];
@@ -1318,6 +1318,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ObjectMagic:
                     ObjectMagic((S.ObjectMagic)p);
                     break;
+                case (short)ServerPacketIds.ObjectProjectile:
+                    ObjectProjectile((S.ObjectProjectile)p);
+                    break;
                 case (short)ServerPacketIds.ObjectEffect:
                     ObjectEffect((S.ObjectEffect)p);
                     break;
@@ -1557,14 +1560,8 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.SetConcentration:
                     SetConcentration((S.SetConcentration)p);
                     break;
-                case (short)ServerPacketIds.SetObjectConcentration:
-                    SetObjectConcentration((S.SetObjectConcentration)p);
-                    break;
                 case (short)ServerPacketIds.SetElemental:
                     SetElemental((S.SetElemental)p);
-                    break;
-                case (short)ServerPacketIds.SetObjectElemental:
-                    SetObjectElemental((S.SetObjectElemental)p);
                     break;
                 case (short)ServerPacketIds.RemoveDelayedExplosion:
                     RemoveDelayedExplosion((S.RemoveDelayedExplosion)p);
@@ -2064,7 +2061,7 @@ namespace Client.MirScenes
             }
             else
             {
-                fromCell.Item.Count -= toCell.Item.Info.StackSize - toCell.Item.Count;
+                fromCell.Item.Count -= (ushort)(toCell.Item.Info.StackSize - toCell.Item.Count);
                 toCell.Item.Count = toCell.Item.Info.StackSize;
             }
 
@@ -2875,6 +2872,8 @@ namespace Client.MirScenes
                     MapObject obj = MapControl.Objects[i];
                     if (obj.ObjectID != p.ObjectID) continue;
 
+                    if (obj.Damages.Count >= 10) return;
+
                     switch (p.Type)
                     {
                         case DamageType.Hit: //add damage level colours
@@ -2887,7 +2886,6 @@ namespace Client.MirScenes
                             obj.Damages.Add(new Damage("Crit", 1000, obj.Race == ObjectType.Player ? Color.DarkRed : Color.DarkRed, 50) { Offset = 15 });
                             break;
                     }
-
                 }
             }
         }
@@ -2958,7 +2956,7 @@ namespace Client.MirScenes
             User.HP = p.HP;
             User.MP = p.MP;
 
-            User.PercentHealth = (byte)(User.HP / (float)User.MaxHP * 100);
+            User.PercentHealth = (byte)(User.HP / (float)User.Stats[Stat.HP] * 100);
         }
 
         private void DeleteQuestItem(S.DeleteQuestItem p)
@@ -3542,19 +3540,25 @@ namespace Client.MirScenes
         {
             UserItem item = null;
             for (int i = 0; i < User.Inventory.Length; i++)
+            {
                 if (User.Inventory[i] != null && User.Inventory[i].UniqueID == p.UniqueID)
                 {
                     item = User.Inventory[i];
                     break;
                 }
+            }
 
             if (item == null)
+            {
                 for (int i = 0; i < User.Equipment.Length; i++)
+                {
                     if (User.Equipment[i] != null && User.Equipment[i].UniqueID == p.UniqueID)
                     {
                         item = User.Equipment[i];
                         break;
                     }
+                }
+            }
 
             if (item == null) return;
 
@@ -3572,41 +3576,24 @@ namespace Client.MirScenes
         {
             UserItem item = null;
             for (int i = 0; i < User.Inventory.Length; i++)
+            {
                 if (User.Inventory[i] != null && User.Inventory[i].UniqueID == p.Item.UniqueID)
                 {
                     item = User.Inventory[i];
                     break;
                 }
+            }
 
             if (item == null) return;
 
-            item.DC = p.Item.DC;
-            item.MC = p.Item.MC;
-            item.SC = p.Item.SC;
+            item.AddedStats.Clear();
+            item.AddedStats.Add(p.Item.AddedStats);
 
-            item.AC = p.Item.AC;
-            item.MAC = p.Item.MAC;
             item.MaxDura = p.Item.MaxDura;
-
-            item.AttackSpeed = p.Item.AttackSpeed;
-            item.Agility = p.Item.Agility;
-            item.Accuracy = p.Item.Accuracy;
-            item.PoisonAttack = p.Item.PoisonAttack;
-            item.Freezing = p.Item.Freezing;
-            item.MagicResist = p.Item.MagicResist;
-            item.PoisonResist = p.Item.PoisonResist;
             item.RefinedValue = p.Item.RefinedValue;
             item.RefineAdded = p.Item.RefineAdded;
             
-
             GameScene.Scene.InventoryDialog.DisplayItemGridEffect(item.UniqueID, 0);
-
-            //MirAnimatedControl anim = new MirAnimatedControl
-            //{
-            //    Animated = true,
-            //    AnimationCount = 9,
-            //    DisplayLocation = GameScene.Scene.InventoryDialog
-            //};
 
             if (HoverItem == item)
             {
@@ -3622,7 +3609,9 @@ namespace Client.MirScenes
             User.Magics.Add(magic);
             User.RefreshStats();
             foreach (SkillBarDialog Bar in SkillBarDialogs)
+            {
                 Bar.Update();
+            }
         }
 
         private void RemoveMagic(S.RemoveMagic p)
@@ -3630,7 +3619,9 @@ namespace Client.MirScenes
             User.Magics.RemoveAt(p.PlaceId);
             User.RefreshStats();
             foreach (SkillBarDialog Bar in SkillBarDialogs)
+            {
                 Bar.Update();
+            }
         }
 
         private void MagicLeveled(S.MagicLeveled p)
@@ -3659,6 +3650,7 @@ namespace Client.MirScenes
             User.TargetID = p.TargetID;
             User.TargetPoint = p.Target;
             User.SpellLevel = p.Level;
+            User.SecondaryTargetIDs = p.SecondaryTargetIDs;
 
             if (!p.Cast) return;
 
@@ -3693,13 +3685,43 @@ namespace Client.MirScenes
                 action.Params.Add(p.Target);
                 action.Params.Add(p.Cast);
                 action.Params.Add(p.Level);
-
+                action.Params.Add(p.SecondaryTargetIDs);
 
                 ob.ActionFeed.Add(action);
                 return;
             }
-
         }
+
+        private void ObjectProjectile(S.ObjectProjectile p)
+        {
+            MapObject source = MapControl.GetObject(p.Source);
+
+            if (source == null) return;
+
+            switch (p.Spell)
+            {
+                case Spell.FireBounce:
+                    {
+                        SoundManager.PlaySound(20000 + (ushort)Spell.GreatFireBall * 10 + 1);
+
+                        Missile missile = source.CreateProjectile(410, Libraries.Magic, true, 6, 30, 4, targetID: p.Destination);
+
+                        if (missile.Target != null)
+                        {
+                            missile.Complete += (o, e) =>
+                            {
+                                var sender = (Missile)o;
+
+                                if (sender.Target.CurrentAction == MirAction.Dead) return;
+                                sender.Target.Effects.Add(new Effect(Libraries.Magic, 570, 10, 600, sender.Target));
+                                SoundManager.PlaySound(20000 + (ushort)Spell.GreatFireBall * 10 + 2);
+                            };
+                        }
+                    }
+                    break;
+            }
+        }
+
         private void ObjectEffect(S.ObjectEffect p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
@@ -3707,6 +3729,7 @@ namespace Client.MirScenes
                 MapObject ob = MapControl.Objects[i];
                 if (ob.ObjectID != p.ObjectID) continue;
                 PlayerObject player;
+
                 switch (p.Effect)
                 {
                     case SpellEffect.FatalSword:
@@ -3894,9 +3917,9 @@ namespace Client.MirScenes
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KingGuard], 753, 10, 1000, ob) { Blend = false });
                         break;
                 }
+
                 return;
             }
-
         }
 
         private void RangeAttack(S.RangeAttack p)
@@ -3910,6 +3933,7 @@ namespace Client.MirScenes
         {
             User.ActionFeed.Add(new QueuedAction { Action = MirAction.Pushed, Direction = p.Direction, Location = p.Location });
         }
+
         private void ObjectPushed(S.ObjectPushed p)
         {
             if (p.ObjectID == User.ObjectID) return;
@@ -3923,6 +3947,7 @@ namespace Client.MirScenes
                 return;
             }
         }
+
         private void ObjectName(S.ObjectName p)
         {
             if (p.ObjectID == User.ObjectID) return;
@@ -3954,16 +3979,19 @@ namespace Client.MirScenes
         {
             GroupDialog.AllowGroup = p.AllowGroup;
         }
+
         private void DeleteGroup()
         {
             GroupDialog.GroupList.Clear();
             ChatDialog.ReceiveChat("You have left the group.", ChatType.Group);
         }
+
         private void DeleteMember(S.DeleteMember p)
         {
             GroupDialog.GroupList.Remove(p.Name);
             ChatDialog.ReceiveChat(string.Format("-{0} has left the group.", p.Name), ChatType.Group);
         }
+
         private void GroupInvite(S.GroupInvite p)
         {
             MirMessageBox messageBox = new MirMessageBox(string.Format("Do you want to group with {0}?", p.Name), MirMessageBoxButtons.YesNo);
@@ -4035,6 +4063,7 @@ namespace Client.MirScenes
                     break;
             }
         }
+
         private void ObjectHealth(S.ObjectHealth p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
@@ -4046,6 +4075,7 @@ namespace Client.MirScenes
                 return;
             }
         }
+
         private void MapEffect(S.MapEffect p)
         {
             switch (p.Effect)
@@ -4057,6 +4087,7 @@ namespace Client.MirScenes
                     break;
             }
         }
+
         private void ObjectRangeAttack(S.ObjectRangeAttack p)
         {
             if (p.ObjectID == User.ObjectID) return;
@@ -4101,33 +4132,18 @@ namespace Client.MirScenes
                 action.Params.Add(p.TargetID);
                 action.Params.Add(p.Target);
                 action.Params.Add(p.Spell);
+                action.Params.Add(new List<uint>());
+
                 ob.ActionFeed.Add(action);
                 return;
             }
         }
 
-        private void ShowMentalState(Buff buff)
-        {
-            if (buff.Type == BuffType.MentalState)
-            {
-                switch (buff.Values[0])
-                {
-                    case 0:
-                        ChatDialog.ReceiveChat("Mentalstate: Agressive.", ChatType.Hint);
-                        break;
-                    case 1:
-                        ChatDialog.ReceiveChat("Mentalstate: Trick shot.", ChatType.Hint);
-                        break;
-                    case 2:
-                        ChatDialog.ReceiveChat("Mentalstate: Group mode.", ChatType.Hint);
-                        break;
-                }
-
-            }
-        }
         private void AddBuff(S.AddBuff p)
         {
-            Buff buff = new Buff { Type = p.Type, Caster = p.Caster, Expire = CMain.Time + p.Expire, Values = p.Values, Infinite = p.Infinite, ObjectID = p.ObjectID, Visible = p.Visible };
+            ClientBuff buff = p.Buff;
+
+            buff.ExpireTime += CMain.Time;
 
             if (buff.ObjectID == User.ObjectID)
             {
@@ -4137,14 +4153,12 @@ namespace Client.MirScenes
 
                     Buffs[i] = buff;
                     User.RefreshStats();
-                    ShowMentalState(buff);
                     return;
                 }
                 
                 Buffs.Add(buff);
                 BuffsDialog.CreateBuff(buff);
-                User.RefreshStats();
-                ShowMentalState(buff);               
+                User.RefreshStats();     
             }
 
             if (!buff.Visible || buff.ObjectID <= 0) return;
@@ -4165,6 +4179,7 @@ namespace Client.MirScenes
                 }
             }
         }
+
         private void RemoveBuff(S.RemoveBuff p)
         {
             for (int i = 0; i < Buffs.Count; i++)
@@ -4212,6 +4227,7 @@ namespace Client.MirScenes
                 return;
             }
         }
+
         private void ObjectSneaking(S.ObjectSneaking p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
@@ -4253,28 +4269,32 @@ namespace Client.MirScenes
             }
 
             for (int i = 0; i < User.Inventory.Length; i++)
+            {
                 if (User.Inventory[i] != null && User.Inventory[i].UniqueID == p.Item.UniqueID)
                 {
                     User.Inventory[i] = p.Item;
                     User.RefreshStats();
                     return;
                 }
+            }
 
             for (int i = 0; i < User.Equipment.Length; i++)
+            {
                 if (User.Equipment[i] != null && User.Equipment[i].UniqueID == p.Item.UniqueID)
                 {
                     User.Equipment[i] = p.Item;
                     User.RefreshStats();
                     return;
                 }
-
-
+            }
         }
+
         private void ObjectSpell(S.ObjectSpell p)
         {
             SpellObject ob = new SpellObject(p.ObjectID);
             ob.Load(p);
         }
+
         private void ObjectDeco(S.ObjectDeco p)
         {
             DecoObject ob = new DecoObject(p.ObjectID);
@@ -4304,13 +4324,14 @@ namespace Client.MirScenes
             }
 
             User.ActionFeed.Add(new QueuedAction { Action = action, Direction = p.Direction, Location = p.Location });
-
         }
+
         private void UserDashFail(S.UserDashFail p)
         {
             MapControl.NextAction = 0;
             User.ActionFeed.Add(new QueuedAction { Action = MirAction.DashFail, Direction = p.Direction, Location = p.Location });
         }
+
         private void ObjectDash(S.ObjectDash p)
         {
             if (p.ObjectID == User.ObjectID) return;
@@ -4330,6 +4351,7 @@ namespace Client.MirScenes
                 return;
             }
         }
+
         private void ObjectDashFail(S.ObjectDashFail p)
         {
             if (p.ObjectID == User.ObjectID) return;
@@ -4344,6 +4366,7 @@ namespace Client.MirScenes
                 return;
             }
         }
+
         private void UserBackStep(S.UserBackStep p)
         {
             if (User.Direction == p.Direction && User.CurrentLocation == p.Location)
@@ -4353,6 +4376,7 @@ namespace Client.MirScenes
             }
             User.ActionFeed.Add(new QueuedAction { Action = MirAction.Jump, Direction = p.Direction, Location = p.Location });
         }
+
         private void ObjectBackStep(S.ObjectBackStep p)
         {
             if (p.ObjectID == User.ObjectID) return;
@@ -4369,6 +4393,7 @@ namespace Client.MirScenes
                 return;
             }
         }
+
         private void UserDashAttack(S.UserDashAttack p)
         {
             if (User.Direction == p.Direction && User.CurrentLocation == p.Location)
@@ -4379,6 +4404,7 @@ namespace Client.MirScenes
             //User.JumpDistance = p.Distance;
             User.ActionFeed.Add(new QueuedAction { Action = MirAction.DashAttack, Direction = p.Direction, Location = p.Location });
         }
+
         private void ObjectDashAttack(S.ObjectDashAttack p)
         {
             if (p.ObjectID == User.ObjectID) return;
@@ -4395,6 +4421,7 @@ namespace Client.MirScenes
                 return;
             }
         }
+
         private void UserAttackMove(S.UserAttackMove p)//Warrior Skill - SlashingBurst
         {
             MapControl.NextAction = 0;
@@ -4427,7 +4454,6 @@ namespace Client.MirScenes
 
             User.SetAction();
 
-
             User.ActionFeed.Add(new QueuedAction { Action = MirAction.Standing, Direction = p.Direction, Location = p.Location });
         }
 
@@ -4435,44 +4461,21 @@ namespace Client.MirScenes
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
-                MapObject ob = MapControl.Objects[i];
+                if (MapControl.Objects[i].Race != ObjectType.Player) continue;
+
+                PlayerObject ob = MapControl.Objects[i] as PlayerObject;
                 if (ob.ObjectID != p.ObjectID) continue;
-                User.Concentrating = p.Enabled;
-                User.ConcentrateInterrupted = p.Interrupted;
+
+                ob.Concentrating = p.Enabled;
+                ob.ConcentrateInterrupted = p.Interrupted;
+
                 if (p.Enabled && !p.Interrupted)
                 {
-                    int idx = InterruptionEffect.GetOwnerEffectID(User.ObjectID);
+                    int idx = InterruptionEffect.GetOwnerEffectID(ob.ObjectID);
+
                     if (idx < 0)
                     {
-                        //    InterruptionEffect.effectlist[idx] = new InterruptionEffect(Libraries.Magic3, 1860, 8, 8 * 100, User, true);
-                        //else
-                        User.Effects.Add(new InterruptionEffect(Libraries.Magic3, 1860, 8, 8 * 100, User, true));
-                        SoundManager.PlaySound(20000 + 129 * 10);
-                    }
-                }
-                break;
-            }
-        }
-        private void SetObjectConcentration(S.SetObjectConcentration p)
-        {
-            if (p.ObjectID == User.ObjectID) return;
-
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
-
-                ((PlayerObject)ob).Concentrating = p.Enabled;
-                ((PlayerObject)ob).ConcentrateInterrupted = p.Interrupted;
-
-                if (p.Enabled && !p.Interrupted)
-                {
-                    //int idx = InterruptionEffect.GetOwnerEffectID(ob.ObjectID);
-                    //if (idx < 0)
-                    //    InterruptionEffect.effectlist[idx] = new InterruptionEffect(Libraries.Magic3, 1860, 8, 8 * 100, ob, true);
-                    if (((PlayerObject)ob).ConcentratingEffect == null)
-                    {
-                        ((PlayerObject)ob).Effects.Add(((PlayerObject)ob).ConcentratingEffect = new InterruptionEffect(Libraries.Magic3, 1860, 8, 8 * 100, ob, true));
+                        ob.Effects.Add(new InterruptionEffect(Libraries.Magic3, 1860, 8, 8 * 100, ob, true));
                         SoundManager.PlaySound(20000 + 129 * 10);
                     }
                 }
@@ -4482,33 +4485,23 @@ namespace Client.MirScenes
 
         private void SetElemental(S.SetElemental p)
         {
-            if (User.ObjectID != p.ObjectID) return;
-
-            User.HasElements = p.Enabled;
-            User.ElementsLevel = (int)p.Value;
-            int elementType = (int)p.ElementType;
-            int maxExp = (int)p.ExpLast;
-
-            if (p.Enabled && p.ElementType > 0)
-                User.Effects.Add(new ElementsEffect(Libraries.Magic3, 1630 + ((elementType - 1) * 10), 10, 10 * 100, User, true, 1 + (elementType - 1), maxExp, (elementType == 4 || elementType == 3) ? true : false));
-        }
-        private void SetObjectElemental(S.SetObjectElemental p)
-        {
-            if (p.ObjectID == User.ObjectID) return;
-
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
-                MapObject ob = MapControl.Objects[i];
+                if (MapControl.Objects[i].Race != ObjectType.Player) continue;
+
+                PlayerObject ob = MapControl.Objects[i] as PlayerObject;
                 if (ob.ObjectID != p.ObjectID) continue;
 
-                ((PlayerObject)ob).HasElements = p.Enabled;
-                ((PlayerObject)ob).ElementCasted = p.Casted;
-                ((PlayerObject)ob).ElementsLevel = (int)p.Value;
+                ob.HasElements = p.Enabled;
+                ob.ElementCasted = p.Casted && User.ObjectID != p.ObjectID;
+                ob.ElementsLevel = (int)p.Value;
                 int elementType = (int)p.ElementType;
                 int maxExp = (int)p.ExpLast;
 
                 if (p.Enabled && p.ElementType > 0)
-                    ((PlayerObject)ob).Effects.Add(new ElementsEffect(Libraries.Magic3, 1630 + ((elementType - 1) * 10), 10, 10 * 100, ob, true, 1 + (elementType - 1), maxExp));
+                {
+                    ob.Effects.Add(new ElementsEffect(Libraries.Magic3, 1630 + ((elementType - 1) * 10), 10, 10 * 100, ob, true, 1 + (elementType - 1), maxExp, User.ObjectID == p.ObjectID && ((elementType == 4 || elementType == 3))));
+                }
             }
         }
 
@@ -5034,13 +5027,13 @@ namespace Client.MirScenes
                 }
             }
 
-            Buff buff = Buffs.FirstOrDefault(e => e.Type == BuffType.Guild);
+            ClientBuff buff = Buffs.FirstOrDefault(e => e.Type == BuffType.Guild);
 
             if (GuildDialog.EnabledBuffs.Any(e => e.Active))
             {
                 if (buff == null)
                 {
-                    buff = new Buff { Type = BuffType.Guild, ObjectID = User.ObjectID, Caster = "Guild", Infinite = true };
+                    buff = new ClientBuff { Type = BuffType.Guild, ObjectID = User.ObjectID, Caster = "Guild", Infinite = true };
 
                     Buffs.Add(buff);
                     BuffsDialog.CreateBuff(buff);
@@ -5326,7 +5319,7 @@ namespace Client.MirScenes
                         temp.Count += item.Count;
                         return;
                     }
-                    item.Count -= temp.Info.StackSize - temp.Count;
+                    item.Count -= (ushort)(temp.Info.StackSize - temp.Count);
                     temp.Count = temp.Info.StackSize;
                 }
             }
@@ -5475,7 +5468,7 @@ namespace Client.MirScenes
                         temp.Count += item.Count;
                         return;
                     }
-                    item.Count -= temp.Info.StackSize - temp.Count;
+                    item.Count -= (ushort)(temp.Info.StackSize - temp.Count);
                     temp.Count = temp.Info.StackSize;
                 }
             }
@@ -5620,8 +5613,7 @@ namespace Client.MirScenes
                 Location = new Point(4, 4),
                 OutLine = true,
                 Parent = ItemLabel,
-                Text = HoverItem.Info.Grade != ItemGrade.None ? string.Format("{0}{1}{2}", HoverItem.Info.FriendlyName, "\n", GradeString) : 
-                (HoverItem.Info.Type == ItemType.Pets && HoverItem.Info.Shape == 26 && HoverItem.Info.Effect != 7) ? "WonderDrug" : HoverItem.Info.FriendlyName,
+                Text = HoverItem.Info.Grade != ItemGrade.None ? string.Format("{0}{1}{2}", HoverItem.Info.FriendlyName, "\n", GradeString) : HoverItem.Info.FriendlyName,
             };
 
             if (HoverItem.RefineAdded > 0)
@@ -5658,10 +5650,10 @@ namespace Client.MirScenes
                     case ItemType.Transform:
                         break;
                     case ItemType.Pets:
-                        if (HoverItem.Info.Shape == 26)//WonderDrug
+                        if (HoverItem.Info.Shape == 26 || HoverItem.Info.Shape == 28)//WonderDrug, Knapsack
                         {
                             string strTime = Functions.PrintTimeSpanFromSeconds((HoverItem.CurrentDura * 3600), false);
-                            text += string.Format("\n {0} {1}", GameLanguage.Durability, strTime);
+                            text += string.Format(" Duration {0}", strTime);
                         }
                         break;
                     default:
@@ -5849,9 +5841,6 @@ namespace Client.MirScenes
                     if (HoverItem.Info.Shape == 49 || HoverItem.Info.Shape == 50)
                         fishingItem = true;
                     break;
-                case ItemType.Pets:
-                    if (HoverItem.Info.Shape == 26) return null;
-                    break;
                 default:
                     fishingItem = false;
                     break;
@@ -5869,7 +5858,7 @@ namespace Client.MirScenes
             if (minValue > 0 && realItem.Type == ItemType.Gem)
             {
                 count++;
-                text = string.Format("Adds {0}Durability", minValue / 1000);
+                text = string.Format("Adds +{0} Durability", minValue / 1000);
                 MirLabel DuraLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -5887,9 +5876,9 @@ namespace Client.MirScenes
             #endregion
 
             #region DC
-            minValue = realItem.MinDC;
-            maxValue = realItem.MaxDC;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.DC : 0;
+            minValue = realItem.Stats[Stat.MinDC];
+            maxValue = realItem.Stats[Stat.MaxDC];
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.MaxDC] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -5897,7 +5886,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? GameLanguage.DC : GameLanguage.DC2, minValue, maxValue + addValue, addValue);
                 else
-                    text = string.Format("Adds {0}DC",minValue + maxValue + addValue);
+                    text = string.Format("Adds +{0} DC", minValue + maxValue + addValue);
                 MirLabel DCLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -5917,9 +5906,9 @@ namespace Client.MirScenes
 
             #region MC
 
-            minValue = realItem.MinMC;
-            maxValue = realItem.MaxMC;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.MC : 0;
+            minValue = realItem.Stats[Stat.MinMC];
+            maxValue = realItem.Stats[Stat.MaxMC];
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.MaxMC] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -5927,7 +5916,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? GameLanguage.MC : GameLanguage.MC2, minValue, maxValue + addValue, addValue);
                 else
-                    text = string.Format("Adds {0}MC", minValue + maxValue + addValue);
+                    text = string.Format("Adds +{0} MC", minValue + maxValue + addValue);
                 MirLabel MCLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -5947,9 +5936,9 @@ namespace Client.MirScenes
 
             #region SC
 
-            minValue = realItem.MinSC;
-            maxValue = realItem.MaxSC;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.SC : 0;
+            minValue = realItem.Stats[Stat.MinSC];
+            maxValue = realItem.Stats[Stat.MaxSC];
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.MaxSC] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -5957,7 +5946,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? GameLanguage.SC : GameLanguage.SC2, minValue, maxValue + addValue, addValue);
                 else
-                    text = string.Format("Adds {0}SC", minValue + maxValue + addValue);
+                    text = string.Format("Adds +{0} SC", minValue + maxValue + addValue);
                 MirLabel SCLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -5977,9 +5966,9 @@ namespace Client.MirScenes
 
             #region LUCK / SUCCESS
 
-            minValue = realItem.Luck;
+            minValue = realItem.Stats[Stat.Luck];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.Luck : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.Luck] : 0;
 
             if (minValue != 0 || addValue != 0)
             {
@@ -6018,9 +6007,9 @@ namespace Client.MirScenes
 
             #region ACC
 
-            minValue = realItem.Accuracy;
+            minValue = realItem.Stats[Stat.Accuracy];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.Accuracy : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.Accuracy] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6028,7 +6017,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? GameLanguage.Accuracy : GameLanguage.Accuracy2, minValue + addValue, addValue);
                 else
-                    text = string.Format("Adds {0}Accuracy", minValue + maxValue + addValue);
+                    text = string.Format("Adds +{0} Accuracy", minValue + maxValue + addValue);
                 MirLabel ACCLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -6048,7 +6037,7 @@ namespace Client.MirScenes
 
             #region HOLY
 
-            minValue = realItem.Holy;
+            minValue = realItem.Stats[Stat.Holy];
             maxValue = 0;
             addValue = 0;
 
@@ -6074,9 +6063,9 @@ namespace Client.MirScenes
 
             #region ASPEED
 
-            minValue = realItem.AttackSpeed;
+            minValue = realItem.Stats[Stat.AttackSpeed];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AttackSpeed : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.AttackSpeed] : 0;
 
             if (minValue != 0 || maxValue != 0 || addValue != 0)
             {
@@ -6091,7 +6080,7 @@ namespace Client.MirScenes
                     //text = string.Format(addValue > 0 ? "A.Speed: + {0} (+{1})" : "A.Speed: + {0}", minValue + addValue, addValue);
                 }
                 else
-                    text = string.Format("Adds {0}A.Speed", minValue + maxValue + addValue);
+                    text = string.Format("Adds +{0} A.Speed", minValue + maxValue + addValue);
                 MirLabel ASPEEDLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -6111,9 +6100,9 @@ namespace Client.MirScenes
 
             #region FREEZING
 
-            minValue = realItem.Freezing;
+            minValue = realItem.Stats[Stat.Freezing];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.Freezing : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.Freezing] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6121,7 +6110,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? "Freezing: + {0} (+{1})" : "Freezing: + {0}", minValue + addValue, addValue);
                 else
-                    text = string.Format("Adds {0}Freezing", minValue + maxValue + addValue);
+                    text = string.Format("Adds +{0} Freezing", minValue + maxValue + addValue);
                 MirLabel FREEZINGLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -6141,9 +6130,9 @@ namespace Client.MirScenes
 
             #region POISON
 
-            minValue = realItem.PoisonAttack;
+            minValue = realItem.Stats[Stat.PoisonAttack];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.PoisonAttack : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.PoisonAttack] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6151,7 +6140,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? "Poison: + {0} (+{1})" : "Poison: + {0}", minValue + addValue, addValue);
                 else
-                    text = string.Format("Adds {0}Poison", minValue + maxValue + addValue);
+                    text = string.Format("Adds +{0} Poison", minValue + maxValue + addValue);
                 MirLabel POISONLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -6171,9 +6160,9 @@ namespace Client.MirScenes
 
             #region CRITICALRATE / FLEXIBILITY
 
-            minValue = realItem.CriticalRate;
+            minValue = realItem.Stats[Stat.CriticalRate];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.CriticalRate : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.CriticalRate] : 0;
 
             if ((minValue > 0 || maxValue > 0 || addValue > 0) && (realItem.Type != ItemType.Gem))
             {
@@ -6202,9 +6191,9 @@ namespace Client.MirScenes
 
             #region CRITICALDAMAGE
 
-            minValue = realItem.CriticalDamage;
+            minValue = realItem.Stats[Stat.CriticalDamage];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.CriticalDamage : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.CriticalDamage] : 0;
 
             if ((minValue > 0 || maxValue > 0 || addValue > 0) && (realItem.Type != ItemType.Gem))
             {
@@ -6228,7 +6217,7 @@ namespace Client.MirScenes
 
             #region Reflect
 
-            minValue = realItem.Reflect;
+            minValue = realItem.Stats[Stat.Reflect];
             maxValue = 0;
             addValue = 0;
 
@@ -6253,7 +6242,7 @@ namespace Client.MirScenes
 
             #region Hpdrain
 
-            minValue = realItem.HpDrainRate;
+            minValue = realItem.Stats[Stat.HPDrainRatePercent];
             maxValue = 0;
             addValue = 0;
 
@@ -6272,6 +6261,99 @@ namespace Client.MirScenes
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, HPdrainLabel.DisplayRectangle.Right + 4),
                     Math.Max(ItemLabel.Size.Height, HPdrainLabel.DisplayRectangle.Bottom));
+            }
+
+            #endregion
+
+            #region Exp Rate
+
+            minValue = realItem.Stats[Stat.ExpRatePercent];
+            maxValue = 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.ExpRatePercent] : 0;
+
+            if (minValue != 0 || maxValue != 0 || addValue != 0)
+            {
+                string plus = (addValue + minValue < 0) ? "" : "+";
+
+                count++;
+                string negative = "+";
+                if (addValue < 0) negative = "";
+                text = string.Format(addValue != 0 ? "Exp Rate: " + plus + "{0}% ({2}{1}%)" : "Exp Rate: " + plus + "{0}%", minValue + addValue, addValue, negative);
+
+                MirLabel expRateLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = text
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, expRateLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, expRateLabel.DisplayRectangle.Bottom));
+            }
+
+            #endregion
+
+            #region Drop Rate
+
+            minValue = realItem.Stats[Stat.ItemDropRatePercent];
+            maxValue = 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.ItemDropRatePercent] : 0;
+
+            if (minValue != 0 || maxValue != 0 || addValue != 0)
+            {
+                string plus = (addValue + minValue < 0) ? "" : "+";
+
+                count++;
+                string negative = "+";
+                if (addValue < 0) negative = "";
+                text = string.Format(addValue != 0 ? "Drop Rate: " + plus + "{0}% ({2}{1}%)" : "Drop Rate: " + plus + "{0}%", minValue + addValue, addValue, negative);
+
+                MirLabel dropRateLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = text
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, dropRateLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, dropRateLabel.DisplayRectangle.Bottom));
+            }
+
+            #endregion
+
+            #region Gold Rate
+
+            minValue = realItem.Stats[Stat.GoldDropRatePercent];
+            maxValue = 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.GoldDropRatePercent] : 0;
+
+            if (minValue != 0 || maxValue != 0 || addValue != 0)
+            {
+                string plus = (addValue + minValue < 0) ? "" : "+";
+
+                count++;
+                string negative = "+";
+                if (addValue < 0) negative = "";
+                text = string.Format(addValue != 0 ? "Gold Rate: " + plus + "{0}% ({2}{1}%)" : "Gold Rate: " + plus + "{0}%", minValue + addValue, addValue, negative);
+
+                MirLabel goldRateLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = text
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, goldRateLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, goldRateLabel.DisplayRectangle.Bottom));
             }
 
             #endregion
@@ -6326,9 +6408,6 @@ namespace Client.MirScenes
                     if (HoverItem.Info.Shape == 49 || HoverItem.Info.Shape == 50)
                         fishingItem = true;
                     break;
-                case ItemType.Pets:
-                    if (HoverItem.Info.Shape == 26) return null;
-                    break;
                 default:
                     fishingItem = false;
                     break;
@@ -6342,9 +6421,9 @@ namespace Client.MirScenes
             string text = "";
             #region AC
 
-            minValue = realItem.MinAC;
-            maxValue = realItem.MaxAC;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AC : 0;
+            minValue = realItem.Stats[Stat.MinAC];
+            maxValue = realItem.Stats[Stat.MaxAC];
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.MaxAC] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6352,7 +6431,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? GameLanguage.AC : GameLanguage.AC2, minValue, maxValue + addValue, addValue);
                 else
-                    text = string.Format("Adds {0} AC", minValue + maxValue + addValue);
+                    text = string.Format("Adds +{0} AC", minValue + maxValue + addValue);
                 MirLabel ACLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -6388,9 +6467,9 @@ namespace Client.MirScenes
 
             #region MAC
 
-            minValue = realItem.MinMAC;
-            maxValue = realItem.MaxMAC;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.MAC : 0;
+            minValue = realItem.Stats[Stat.MinMAC];
+            maxValue = realItem.Stats[Stat.MaxMAC];
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.MaxMAC] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6398,7 +6477,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? GameLanguage.MAC : GameLanguage.MAC2, minValue, maxValue + addValue, addValue);
                 else
-                    text = string.Format("Adds {0} MAC", minValue + maxValue + addValue);
+                    text = string.Format("Adds +{0} MAC", minValue + maxValue + addValue);
                 MirLabel MACLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -6423,9 +6502,9 @@ namespace Client.MirScenes
 
             #region MAXHP
 
-            minValue = realItem.HP;
+            minValue = realItem.Stats[Stat.HP];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.HP : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.HP] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6438,9 +6517,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format(realItem.Type == ItemType.Potion ? "HP + {0} Recovery" : "MAXHP + {0}", minValue + addValue)
-                    Text = realItem.Type == ItemType.Potion ? 
-                    string.Format(addValue > 0 ? "HP + {0} Recovery (+{1})" : "HP + {0} Recovery", minValue + addValue, addValue)
-                    : string.Format(addValue > 0 ? "Max HP + {0} (+{1})" : "Max HP + {0}", minValue + addValue, addValue)
+                    Text = string.Format(addValue > 0 ? "Max HP + {0} (+{1})" : "Max HP + {0}", minValue + addValue, addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXHPLabel.DisplayRectangle.Right + 4),
@@ -6451,9 +6528,9 @@ namespace Client.MirScenes
 
             #region MAXMP
 
-            minValue = realItem.MP;
+            minValue = realItem.Stats[Stat.MP];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.MP : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.MP] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6466,9 +6543,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format(realItem.Type == ItemType.Potion ? "MP + {0} Recovery" : "MAXMP + {0}", minValue + addValue)
-                    Text = realItem.Type == ItemType.Potion ? 
-                    string.Format(addValue > 0 ? "MP + {0} Recovery (+{1})" : "MP + {0} Recovery", minValue + addValue, addValue)
-                    : string.Format(addValue > 0 ? "Max MP + {0} (+{1})" : "Max MP + {0}", minValue + addValue, addValue)
+                    Text = string.Format(addValue > 0 ? "Max MP + {0} (+{1})" : "Max MP + {0}", minValue + addValue, addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXMPLabel.DisplayRectangle.Right + 4),
@@ -6479,7 +6554,7 @@ namespace Client.MirScenes
 
             #region MAXHPRATE
 
-            minValue = realItem.HPrate;
+            minValue = realItem.Stats[Stat.HPRatePercent];
             maxValue = 0;
             addValue = 0;
 
@@ -6504,7 +6579,7 @@ namespace Client.MirScenes
 
             #region MAXMPRATE
 
-            minValue = realItem.MPrate;
+            minValue = realItem.Stats[Stat.MPRatePercent];
             maxValue = 0;
             addValue = 0;
 
@@ -6529,7 +6604,7 @@ namespace Client.MirScenes
 
             #region MAXACRATE
 
-            minValue = realItem.MaxAcRate;
+            minValue = realItem.Stats[Stat.MaxACRatePercent];
             maxValue = 0;
             addValue = 0;
 
@@ -6554,7 +6629,7 @@ namespace Client.MirScenes
 
             #region MAXMACRATE
 
-            minValue = realItem.MaxMacRate;
+            minValue = realItem.Stats[Stat.MaxMACRatePercent];
             maxValue = 0;
             addValue = 0;
 
@@ -6579,9 +6654,9 @@ namespace Client.MirScenes
 
             #region HEALTH_RECOVERY
 
-            minValue = realItem.HealthRecovery;
+            minValue = realItem.Stats[Stat.HealthRecovery];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.HealthRecovery : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.HealthRecovery] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6593,7 +6668,6 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("HealthRecovery + {0}", minValue + addValue)
                     Text = string.Format(addValue > 0 ? "Health Recovery + {0} (+{1})" : "Health Recovery + {0}", minValue + addValue, addValue)
                 };
 
@@ -6605,9 +6679,9 @@ namespace Client.MirScenes
 
             #region MANA_RECOVERY
 
-            minValue = realItem.SpellRecovery;
+            minValue = realItem.Stats[Stat.SpellRecovery];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.ManaRecovery : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.SpellRecovery] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6631,9 +6705,9 @@ namespace Client.MirScenes
 
             #region POISON_RECOVERY
 
-            minValue = realItem.PoisonRecovery;
+            minValue = realItem.Stats[Stat.PoisonRecovery];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.PoisonRecovery : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.PoisonRecovery] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6657,13 +6731,18 @@ namespace Client.MirScenes
 
             #region AGILITY
 
-            minValue = realItem.Agility;
+            minValue = realItem.Stats[Stat.Agility];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.Agility : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.Agility] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                if (HoverItem.Info.Type != ItemType.Gem)
+                    text = string.Format(addValue > 0 ? GameLanguage.Agility : GameLanguage.Agility2, minValue + addValue, addValue);
+                else
+                    text = string.Format("Adds +{0} Agility", minValue + maxValue + addValue);
+
                 MirLabel AGILITYLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -6671,8 +6750,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("Agility + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? GameLanguage.Agility : GameLanguage.Agility2, minValue + addValue, addValue)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, AGILITYLabel.DisplayRectangle.Right + 4),
@@ -6683,9 +6761,9 @@ namespace Client.MirScenes
 
             #region STRONG
 
-            minValue = realItem.Strong;
+            minValue = realItem.Stats[Stat.Strong];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.Strong : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.Strong] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6709,9 +6787,9 @@ namespace Client.MirScenes
 
             #region POISON_RESIST
 
-            minValue = realItem.PoisonResist;
+            minValue = realItem.Stats[Stat.PoisonResist];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.PoisonResist : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.PoisonResist] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6719,7 +6797,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? "Poison Resist + {0} (+{1})" : "Poison Resist + {0}", minValue + addValue, addValue);
                 else
-                    text = string.Format("Adds {0} Poison Resist", minValue + maxValue + addValue);
+                    text = string.Format("Adds +{0} Poison Resist", minValue + maxValue + addValue);
                 MirLabel POISON_RESISTLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -6727,7 +6805,6 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("Poison Resist + {0}", minValue + addValue)
                     Text = text
                 };
 
@@ -6739,9 +6816,9 @@ namespace Client.MirScenes
 
             #region MAGIC_RESIST
 
-            minValue = realItem.MagicResist;
+            minValue = realItem.Stats[Stat.MagicResist];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.MagicResist : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.MagicResist] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -6749,7 +6826,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? "Magic Resist + {0} (+{1})" : "Magic Resist + {0}", minValue + addValue, addValue);
                 else
-                    text = string.Format("Adds {0} Magic Resist", minValue + maxValue + addValue);
+                    text = string.Format("Adds +{0} Magic Resist", minValue + maxValue + addValue);
                 MirLabel MAGIC_RESISTLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -6809,7 +6886,7 @@ namespace Client.MirScenes
             
             #region HANDWEIGHT
 
-            minValue = realItem.HandWeight;
+            minValue = realItem.Stats[Stat.HandWeight];
             maxValue = 0;
             addValue = 0;
 
@@ -6835,7 +6912,7 @@ namespace Client.MirScenes
 
             #region WEARWEIGHT
 
-            minValue = realItem.WearWeight;
+            minValue = realItem.Stats[Stat.WearWeight];
             maxValue = 0;
             addValue = 0;
 
@@ -6861,7 +6938,7 @@ namespace Client.MirScenes
 
             #region BAGWEIGHT
 
-            minValue = realItem.BagWeight;
+            minValue = realItem.Stats[Stat.BagWeight];
             maxValue = 0;
             addValue = 0;
 
@@ -7179,27 +7256,27 @@ namespace Client.MirScenes
                         break;
                     case RequiredType.MaxAC:
                         text = string.Format("Required AC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MaxAC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MaxAC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxMAC:
                         text = string.Format("Required MAC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MaxMAC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MaxMAC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxDC:
                         text = string.Format(GameLanguage.RequiredDC, realItem.RequiredAmount);
-                        if (MapObject.User.MaxDC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MaxDC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxMC:
                         text = string.Format(GameLanguage.RequiredMC, realItem.RequiredAmount);
-                        if (MapObject.User.MaxMC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MaxMC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxSC:
                         text = string.Format(GameLanguage.RequiredSC, realItem.RequiredAmount);
-                        if (MapObject.User.MaxSC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MaxSC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxLevel:
@@ -7209,27 +7286,27 @@ namespace Client.MirScenes
                         break;
                     case RequiredType.MinAC:
                         text = string.Format("Required Base AC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MinAC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MinAC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinMAC:
                         text = string.Format("Required Base MAC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MinMAC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MinMAC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinDC:
                         text = string.Format("Required Base DC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MinDC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MinDC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinMC:
                         text = string.Format("Required Base MC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MinMC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MinMC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinSC:
                         text = string.Format("Required Base SC : {0}", realItem.RequiredAmount);
-                        if (MapObject.User.MinSC < realItem.RequiredAmount)
+                        if (MapObject.User.Stats[Stat.MinSC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     default:
@@ -7691,7 +7768,7 @@ namespace Client.MirScenes
                 #endregion
                 #region Helmet text
                 count++;
-                if (HoverItem.Info.Unique.HasFlag(SpecialItemMode.Clearring))
+                if (HoverItem.Info.Unique.HasFlag(SpecialItemMode.ClearRing))
                 {
                     MirLabel Gemhelmet = new MirLabel
                     {
@@ -8083,35 +8160,6 @@ namespace Client.MirScenes
             int count = 0;
 
             #region TOOLTIP
-
-            if (realItem.Type == ItemType.Pets && realItem.Shape == 26)//Dynamic wonderDrug
-            {
-                string strTime = Functions.PrintTimeSpanFromSeconds((HoverItem.CurrentDura * 3600), false);
-                switch ((int)realItem.Effect)
-                {
-                    case 0://exp low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase experience gained by {0}% for {1}.", HoverItem.Luck + realItem.Luck, strTime);
-                        break;
-                    case 1://drop low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase droprate by {0}% for {1}.", HoverItem.Luck + realItem.Luck, strTime);
-                        break;
-                    case 2://hp low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase MaxHP +{0} for {1}.", HoverItem.HP + realItem.HP, strTime);
-                        break;
-                    case 3://mp low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase MaxMP +{0} for {1}.", HoverItem.MP + realItem.MP, strTime);
-                        break;
-                    case 4://ac low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase AC {0}-{0} for {1}.", HoverItem.AC + realItem.MaxAC, strTime);
-                        break;
-                    case 5://amc low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase MAC {0}-{0} for {1}.", HoverItem.MAC + realItem.MaxMAC, strTime);
-                        break;
-                    case 6://speed low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase AttackSpeed by {0} for {1}.", HoverItem.AttackSpeed + realItem.AttackSpeed, strTime);
-                        break;
-                }
-            }
 
             if (realItem.Type == ItemType.Scroll && realItem.Shape == 7)//Credit Scroll
             {
@@ -9559,7 +9607,7 @@ namespace Client.MirScenes
                         Network.Enqueue(new C.DropItem
                         {
                             UniqueID = cell.Item.UniqueID,
-                            Count = amountBox.Amount
+                            Count = (ushort)amountBox.Amount
                         });
 
                         cell.Locked = true;
@@ -9895,11 +9943,15 @@ namespace Client.MirScenes
 
             if (magic.Spell == Spell.Teleport || magic.Spell == Spell.Blink || magic.Spell == Spell.StormEscape)
             {
-                for (int i = 0; i < GameScene.Scene.Buffs.Count; i++)
+                if (GameScene.User.Stats[Stat.TeleportManaPenaltyPercent] > 0)
                 {
-                    if (GameScene.Scene.Buffs[i].Type != BuffType.TemporalFlux) continue;
-                    cost += (int)(User.MaxMP * 0.3F);
+                    cost += (cost * GameScene.User.Stats[Stat.TeleportManaPenaltyPercent]) / 100;
                 }
+            }
+
+            if (GameScene.User.Stats[Stat.ManaPenaltyPercent] > 0)
+            {
+                cost += (cost * GameScene.User.Stats[Stat.ManaPenaltyPercent]) / 100;
             }
 
             if (cost > MapObject.User.MP)
@@ -9934,6 +9986,8 @@ namespace Client.MirScenes
                 case Spell.Entrapment:
                 case Spell.Hallucination:
                 case Spell.DarkBody:
+                case Spell.FireBounce:
+                case Spell.MeteorShower:
                     if (User.NextMagicObject != null)
                     {
                         if (!User.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && User.NextMagicObject.Race != ObjectType.Merchant)
@@ -10178,8 +10232,8 @@ namespace Client.MirScenes
         private bool CanRun(MirDirection dir)
         {
             if (User.InTrapRock) return false;
-            if (User.CurrentBagWeight > User.MaxBagWeight) return false;
-            if (User.CurrentWearWeight > User.MaxWearWeight) return false;
+            if (User.CurrentBagWeight > User.Stats[Stat.BagWeight]) return false;
+            if (User.CurrentWearWeight > User.Stats[Stat.BagWeight]) return false;
             if (CanWalk(dir) && EmptyCell(Functions.PointMove(User.CurrentLocation, dir, 2)))
             {
                 if (User.RidingMount || User.Sprint && !User.Sneaking)
@@ -10375,229 +10429,6 @@ namespace Client.MirScenes
             Info.DoorState = (closed ? DoorState.Closing : Info.DoorState == DoorState.Open ? DoorState.Open : DoorState.Opening);
             Info.ImageIndex = 0;
             Info.LastTick = CMain.Time;
-        }
-    }
-
-    public class Buff
-    {
-        public BuffType Type;
-        public string Caster;
-        public bool Visible;
-        public uint ObjectID;
-        public long Expire;
-        public int[] Values;
-        public bool Infinite;
-
-        public override string ToString()
-        {
-            string text = string.Empty;
-
-            switch (Type)
-            {
-                //magic
-                case BuffType.TemporalFlux:
-                    text = string.Format("Temporal Flux\nIncreases cost of next Teleport by: {0} MP.\n", (int)(MapObject.User.MaxMP * 0.3F));
-                    break;
-                case BuffType.Hiding:
-                    text = "Hiding\nInvisible to many monsters.\n";
-                    break;
-                case BuffType.Haste:
-                    text = string.Format("Haste\nIncreases Attack Speed by: {0}.\n", Values[0]);
-                    break;
-                case BuffType.SwiftFeet:
-                    text = string.Format("Swift Feet\nIncreases Move Speed by: {0}.\n", Values[0]);
-                    break;
-                case BuffType.Fury:
-                    text = string.Format("Fury\nIncreases Attack Speed by: {0}.\n", Values[0]);
-                    break;
-                case BuffType.LightBody:
-                    text = string.Format("Light Body\nIncreases Agility by: {0}.\n", Values[0]);
-                    break;
-                case BuffType.SoulShield:
-                    text = string.Format("Soul Shield\nIncreases MAC by: 0-{0}.\n", Values[0]);
-                    break;
-                case BuffType.BlessedArmour:
-                    text = string.Format("Blessed Armour\nIncreases AC by: 0-{0}.\n", Values[0]);
-                    break;
-                case BuffType.ProtectionField:
-                    text = string.Format("Protection Field\nIncreases AC by: 0-{0}.\n", Values[0]);
-                    break;
-                case BuffType.Rage:
-                    text = string.Format("Rage\nIncreases DC by: 0-{0}.\n", Values[0]);
-                    break;
-                case BuffType.ImmortalSkin:
-                    text = string.Format("ImmortalSkin\nIncreases AC by: 0-{0}.\nDecreases DC by: 0-{1}.\n", Values[0], Values[1]);
-                    break;
-                case BuffType.CounterAttack:
-                    text = string.Format("Counter Attack\nIncreases AC/MAC by: {0}-{1}.\n", Values[0], Values[0]);
-                    break;
-                case BuffType.UltimateEnhancer:
-                    if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer)
-                    {
-                        text = string.Format("Ultimate Enhancer\nIncreases MC by: 0-{0}.\n", Values[0]);
-                    }
-                    else if (GameScene.User.Class == MirClass.Taoist)
-                    {
-                        text = string.Format("Ultimate Enhancer\nIncreases SC by: 0-{0}.\n", Values[0]);
-                    }
-                    else
-                    {
-                        text = string.Format("Ultimate Enhancer\nIncreases DC by: 0-{0}.\n", Values[0]);
-                    }
-                    break;
-                case BuffType.EnergyShield:
-                    text = string.Format("Energy Shield\n{0}% chance to gain {1} HP when attacked\n", Math.Round((1 / (decimal)Values[0]) * 100), Values[1]);
-                    break;
-                case BuffType.Curse:
-                    text = string.Format("Cursed\nDecreases DC/MC/SC/ASpeed by: {0}%.\n", Values[0]);
-                    break;
-                case BuffType.MoonLight:
-                    text = "Moon Light\nInvisible to players and many\nmonsters when at a distance.\n";
-                    break;
-                case BuffType.DarkBody:
-                    text = "Dark Body\nInvisible to many monsters and able to move.\n";
-                    break;
-                case BuffType.VampireShot:
-                    text = string.Format("Vampire Shot\nGives you a vampiric ability\nthat can be released with\ncertain skills.\n", Values[0]);
-                    break;
-                case BuffType.PoisonShot:
-                    text = string.Format("Poison Shot\nGives you a poison ability\nthat can be released with\ncertain skills.\n", Values[0]);
-                    break;
-                case BuffType.Concentration:
-                    text = "Concentrating\nIncreases chance on element extraction.\n";
-                    break;
-                case BuffType.MentalState:
-                    switch (Values[0])
-                    {
-                        case 0:
-                            text = string.Format("Agressive (Full damage)\nCan't shoot over walls.\n", Values[0]);
-                            break;
-                        case 1:
-                            text = string.Format("Trick shot (Minimal damage)\nCan shoot over walls.\n", Values[0]);
-                            break;
-                        case 2:
-                            text = string.Format("Group Mode (Medium damage)\nDon't steal agro.\n", Values[0]);
-                            break;
-                    }
-                    break;
-                case BuffType.MagicBooster:
-                    text = string.Format("Magic Booster\nIncreases MC by: {0}-{0}.\nIncreases consumption by {1}%.\n", Values[0], Values[1]);
-                    break;
-                case BuffType.MagicShield:
-                    text = string.Format("Magic Shield\nReduces damage by {0}%.\n", (Values[0] + 2) * 10);
-                    break;
-
-                //special
-                case BuffType.GameMaster:
-                    GMOptions options = (GMOptions)Values[0];
-                    text = string.Format(GameLanguage.GameMaster + "\n");
-
-                    if (options.HasFlag(GMOptions.GameMaster)) text += "-Invisible\n";
-                    if (options.HasFlag(GMOptions.Superman)) text += "-Superman\n";
-                    if (options.HasFlag(GMOptions.Observer)) text += "-Observer\n";
-                    break;
-                case BuffType.General:
-                    text = string.Format("Mirian Advantage\nExpRate increased by {0}%\n", Values[0]);
-
-                    if (Values.Length > 1)
-                        text += string.Format("DropRate increased by {0}%\n", Values[1]);
-                    if (Values.Length > 2)
-                        text += string.Format("GoldRate increased by {0}%\n", Values[2]);
-                    break;
-                case BuffType.Exp:
-                    text = string.Format("Exp Rate\nIncreased by {0}%\n", Values[0]);
-                    break;
-                case BuffType.Gold:
-                    text = string.Format("Gold Rate\nIncreased by {0}%\n", Values[0]);
-                    break;
-                case BuffType.Drop:
-                    text = string.Format("Drop Rate\nIncreased by {0}%\n", Values[0]);
-                    break;
-                case BuffType.BagWeight:
-                    text = string.Format("Bag Weight\nIncreases BagWeight by: {0}.\n", Values[0]);
-                    break;
-                case BuffType.Transform:
-                    text = string.Format("Transform\nDisguises your appearance.\n");
-                    break;
-                case BuffType.RelationshipEXP:
-                    text = string.Format("Love is in the Air\nExpRate increased by: {0}%.\n", Values[0]);
-                    break;
-                case BuffType.Mentee:
-                    text = string.Format("In Training\nLearn skill points twice as quick.\nExpRate increased by: {0}%.\n", Values[0]);
-                    break;
-                case BuffType.Mentor:
-                    text = string.Format("Mentorship Empowerment\nDamage to monsters increased by {0}%.\n", Values[0]);
-                    break;
-                case BuffType.Guild:
-                    text = string.Format("Guild Charge\n");
-                    text += GameScene.Scene.GuildDialog.ActiveStats;
-                    break;
-                case BuffType.Rested:
-                    text = string.Format(GameLanguage.RestedBuff, "\n", Values[0], "\n");
-                    break;
-
-                //stats
-                case BuffType.Impact:
-                    text = string.Format("Impact\nIncreases DC by: 0-{0}.\n", Values[0]);
-                    break;
-                case BuffType.Magic:
-                    text = string.Format("Magic\nIncreases MC by: 0-{0}.\n", Values[0]);
-                    break;
-                case BuffType.Taoist:
-                    text = string.Format("Taoist\nIncreases SC by: 0-{0}.\n", Values[0]);
-                    break;
-                case BuffType.Storm:
-                    text = string.Format("Storm\nIncreases A.Speed by: {0}.\n", Values[0]);
-                    break;
-                case BuffType.HealthAid:
-                    text = string.Format("Health Aid\nIncreases HP by: {0}.\n", Values[0]);
-                    break;
-                case BuffType.ManaAid:
-                    text = string.Format("Mana Aid\nIncreases MP by: {0}.\n", Values[0]);
-                    break;
-                case BuffType.Defence:
-                    text = string.Format("Defence\nIncreases Max AC by: {0}-{0}.\n", Values[0]);
-                    break;
-                case BuffType.MagicDefence:
-                    text = string.Format("Magic Defence\nIncreases Max MAC by: {0}-{0}.\n", Values[0]);
-                    break;
-                case BuffType.WonderDrug:
-                    text = string.Format("Wonder Drug\n");
-                    switch (Values[0])
-                    {
-                        case 0:
-                            text += string.Format("Increases Exp Rate by {0}%\n", Values[1]);
-                            break;
-                        case 1:
-                            text += string.Format("Increases Drop Rate by {0}%\n", Values[1]);
-                            break;
-                        case 2:
-                            text += string.Format("Increases HP by: {0}.\n", Values[1]);
-                            break;
-                        case 3:
-                            text += string.Format("Increases MP by: {0}.\n", Values[1]);
-                            break;
-                        case 4:
-                            text += string.Format("Increases Max AC by: {0}-{0}.\n", Values[1]);
-                            break;
-                        case 5:
-                            text += string.Format("Increases Max MAC by: {0}-{0}.\n", Values[1]);
-                            break;
-                        case 6:
-                            text += string.Format("Increases A.Speed by: {0}.\n", Values[1]);
-                            break;
-                    }
-                    break;
-                case BuffType.Knapsack:
-                    text = string.Format("Knapsack\nIncreases BagWeight by: {0}.\n", Values[0]);
-                    break;
-            }
-
-            text += Infinite ? GameLanguage.ExpireNever : string.Format(GameLanguage.Expire, Functions.PrintTimeSpanFromSeconds(Math.Round((Expire - CMain.Time) / 1000D)));
-
-            if (Caster.Length > 0) text += string.Format("\nCaster: {0}", Caster);
-
-            return text;
         }
     }
 }

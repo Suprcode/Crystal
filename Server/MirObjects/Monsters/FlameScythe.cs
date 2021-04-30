@@ -44,13 +44,13 @@ namespace Server.MirObjects.Monsters
 
                 List<MapObject> targets = FindAllTargets(2, Target.CurrentLocation, false);
 
-                int damage = GetAttackPower(MinMC, MaxMC);
+                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
 
                 if (damage > 0 && targets.Count > 0)
                 {
                     for (int i = 0; i < targets.Count; i++)
                     {
-                        if (Envir.Random.Next(Settings.MagicResistWeight) >= targets[i].MagicResist)
+                        if (Envir.Random.Next(Settings.MagicResistWeight) >= targets[i].Stats[Stat.MagicResist])
                         {
                             DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, targets[i], damage, DefenceType.MACAgility);
                             ActionList.Add(action);

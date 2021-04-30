@@ -20,29 +20,21 @@ public class ItemInfo
 
     public ushort Image, Durability;
 
-    public uint Price, StackSize = 1;
-
-    public byte MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC, Accuracy, Agility;
-    public ushort HP, MP;
-    public sbyte AttackSpeed, Luck;
-    public byte BagWeight, HandWeight, WearWeight;
+    public uint Price; 
+    public ushort StackSize = 1;
 
     public bool StartItem;
     public byte Effect;
 
-    public byte Strong;
-    public byte MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, HPrate, MPrate;
-    public byte CriticalRate, CriticalDamage;
     public bool NeedIdentify, ShowGroupPickup, GlobalDropNotify;
     public bool ClassBased;
     public bool LevelBased;
     public bool CanMine;
     public bool CanFastRun;
     public bool CanAwakening;
-    public byte MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, HpDrainRate;
 
     public BindMode Bind = BindMode.None;
-    public byte Reflect;
+
     public SpecialItemMode Unique = SpecialItemMode.None;
     public byte RandomStatsId;
     public RandomItemStat RandomStats;
@@ -50,6 +42,7 @@ public class ItemInfo
 
     public byte Slots;
 
+    public Stats Stats;
 
     public bool IsConsumable
     {
@@ -72,10 +65,12 @@ public class ItemInfo
         }
     }
 
-    public ItemInfo()
+    public ItemInfo() 
     {
+        Stats = new Stats();
     }
-    public ItemInfo(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
+
+    public ItemInfo(BinaryReader reader, int version = int.MaxValue, int customVersion = int.MaxValue)
     {
         Index = reader.ReadInt32();
         Name = reader.ReadString();
@@ -94,44 +89,65 @@ public class ItemInfo
         Image = reader.ReadUInt16();
         Durability = reader.ReadUInt16();
 
-        StackSize = reader.ReadUInt32();
+        if (version <= 84)
+        {
+            StackSize = (ushort)reader.ReadUInt32();
+        }
+        else
+        {
+            StackSize = reader.ReadUInt16();
+        }
+
         Price = reader.ReadUInt32();
 
-        MinAC = reader.ReadByte();
-        MaxAC = reader.ReadByte();
-        MinMAC = reader.ReadByte();
-        MaxMAC = reader.ReadByte();
-        MinDC = reader.ReadByte();
-        MaxDC = reader.ReadByte();
-        MinMC = reader.ReadByte();
-        MaxMC = reader.ReadByte();
-        MinSC = reader.ReadByte();
-        MaxSC = reader.ReadByte();
-        HP = reader.ReadUInt16();
-        MP = reader.ReadUInt16();
-        Accuracy = reader.ReadByte();
-        Agility = reader.ReadByte();
+        if (version <= 84)
+        {
+            Stats = new Stats();
+            Stats[Stat.MinAC] = reader.ReadByte();
+            Stats[Stat.MaxAC] = reader.ReadByte();
+            Stats[Stat.MinMAC] = reader.ReadByte();
+            Stats[Stat.MaxMAC] = reader.ReadByte();
+            Stats[Stat.MinDC] = reader.ReadByte();
+            Stats[Stat.MaxDC] = reader.ReadByte();
+            Stats[Stat.MinMC] = reader.ReadByte();
+            Stats[Stat.MaxMC] = reader.ReadByte();
+            Stats[Stat.MinSC] = reader.ReadByte();
+            Stats[Stat.MaxSC] = reader.ReadByte();
+            Stats[Stat.HP] = reader.ReadUInt16();
+            Stats[Stat.MP] = reader.ReadUInt16();
+            Stats[Stat.Accuracy] = reader.ReadByte();
+            Stats[Stat.Agility] = reader.ReadByte();
 
-        Luck = reader.ReadSByte();
-        AttackSpeed = reader.ReadSByte();
+            Stats[Stat.Luck] = reader.ReadSByte();
+            Stats[Stat.AttackSpeed] = reader.ReadSByte();
+        }
 
         StartItem = reader.ReadBoolean();
 
-        BagWeight = reader.ReadByte();
-        HandWeight = reader.ReadByte();
-        WearWeight = reader.ReadByte();
+        if (version <= 84)
+        {
+            Stats[Stat.BagWeight] = reader.ReadByte();
+            Stats[Stat.HandWeight] = reader.ReadByte();
+            Stats[Stat.WearWeight] = reader.ReadByte();
+        }
 
         Effect = reader.ReadByte();
-        Strong = reader.ReadByte();
-        MagicResist = reader.ReadByte();
-        PoisonResist = reader.ReadByte();
-        HealthRecovery = reader.ReadByte();
-        SpellRecovery = reader.ReadByte();
-        PoisonRecovery = reader.ReadByte();
-        HPrate = reader.ReadByte();
-        MPrate = reader.ReadByte();
-        CriticalRate = reader.ReadByte();
-        CriticalDamage = reader.ReadByte();
+
+        if (version <= 84)
+        {
+            Stats[Stat.Strong] = reader.ReadByte();
+            Stats[Stat.MagicResist] = reader.ReadByte();
+            Stats[Stat.PoisonResist] = reader.ReadByte();
+            Stats[Stat.HealthRecovery] = reader.ReadByte();
+            Stats[Stat.SpellRecovery] = reader.ReadByte();
+            Stats[Stat.PoisonRecovery] = reader.ReadByte();
+            Stats[Stat.HPRatePercent] = reader.ReadByte();
+            Stats[Stat.MPRatePercent] = reader.ReadByte();
+            Stats[Stat.CriticalRate] = reader.ReadByte();
+            Stats[Stat.CriticalDamage] = reader.ReadByte();
+        }
+
+
         byte bools = reader.ReadByte();
         NeedIdentify = (bools & 0x01) == 0x01;
         ShowGroupPickup = (bools & 0x02) == 0x02;
@@ -140,16 +156,27 @@ public class ItemInfo
         CanMine = (bools & 0x10) == 0x10;
 
         if (version >= 77)
+        {
             GlobalDropNotify = (bools & 0x20) == 0x20;
+        }
 
-        MaxAcRate = reader.ReadByte();
-        MaxMacRate = reader.ReadByte();
-        Holy = reader.ReadByte();
-        Freezing = reader.ReadByte();
-        PoisonAttack = reader.ReadByte();
+        if (version <= 84)
+        {
+            Stats[Stat.MaxACRatePercent] = reader.ReadByte();
+            Stats[Stat.MaxMACRatePercent] = reader.ReadByte();
+            Stats[Stat.Holy] = reader.ReadByte();
+            Stats[Stat.Freezing] = reader.ReadByte();
+            Stats[Stat.PoisonAttack] = reader.ReadByte();
+        }
+
         Bind = (BindMode)reader.ReadInt16();
-        Reflect = reader.ReadByte();
-        HpDrainRate = reader.ReadByte();
+
+        if (version <= 84)
+        {
+            Stats[Stat.Reflect] = reader.ReadByte();
+            Stats[Stat.HPDrainRatePercent] = reader.ReadByte();
+        }
+
         Unique = (SpecialItemMode)reader.ReadInt16();
         RandomStatsId = reader.ReadByte();
 
@@ -160,6 +187,11 @@ public class ItemInfo
         if (version > 83)
         {
             Slots = reader.ReadByte();
+        }
+
+        if (version > 84)
+        {
+            Stats = new Stats(reader);
         }
 
         bool isTooltip = reader.ReadBoolean();
@@ -197,41 +229,10 @@ public class ItemInfo
         writer.Write(StackSize);
         writer.Write(Price);
 
-        writer.Write(MinAC);
-        writer.Write(MaxAC);
-        writer.Write(MinMAC);
-        writer.Write(MaxMAC);
-        writer.Write(MinDC);
-        writer.Write(MaxDC);
-        writer.Write(MinMC);
-        writer.Write(MaxMC);
-        writer.Write(MinSC);
-        writer.Write(MaxSC);
-        writer.Write(HP);
-        writer.Write(MP);
-        writer.Write(Accuracy);
-        writer.Write(Agility);
-
-        writer.Write(Luck);
-        writer.Write(AttackSpeed);
-
         writer.Write(StartItem);
 
-        writer.Write(BagWeight);
-        writer.Write(HandWeight);
-        writer.Write(WearWeight);
-
         writer.Write(Effect);
-        writer.Write(Strong);
-        writer.Write(MagicResist);
-        writer.Write(PoisonResist);
-        writer.Write(HealthRecovery);
-        writer.Write(SpellRecovery);
-        writer.Write(PoisonRecovery);
-        writer.Write(HPrate);
-        writer.Write(MPrate);
-        writer.Write(CriticalRate);
-        writer.Write(CriticalDamage);
+
         byte bools = 0;
         if (NeedIdentify) bools |= 0x01;
         if (ShowGroupPickup) bools |= 0x02;
@@ -240,139 +241,32 @@ public class ItemInfo
         if (CanMine) bools |= 0x10;
         if (GlobalDropNotify) bools |= 0x20;
         writer.Write(bools);
-        writer.Write(MaxAcRate);
-        writer.Write(MaxMacRate);
-        writer.Write(Holy);
-        writer.Write(Freezing);
-        writer.Write(PoisonAttack);
-        writer.Write((short)Bind);
-        writer.Write(Reflect);
-        writer.Write(HpDrainRate);
+        
+        writer.Write((short)Bind);        
         writer.Write((short)Unique);
+
         writer.Write(RandomStatsId);
+
         writer.Write(CanFastRun);
         writer.Write(CanAwakening);
         writer.Write(Slots);
 
+        Stats.Save(writer);
+
         writer.Write(ToolTip != null);
         if (ToolTip != null)
             writer.Write(ToolTip);
+
     }
 
     public static ItemInfo FromText(string text)
     {
-        string[] data = text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-        if (data.Length < 33) return null;
-
-        ItemInfo info = new ItemInfo { Name = data[0] };
-
-        if (!Enum.TryParse(data[1], out info.Type)) return null;
-        if (!Enum.TryParse(data[2], out info.Grade)) return null;
-        if (!Enum.TryParse(data[3], out info.RequiredType)) return null;
-        if (!Enum.TryParse(data[4], out info.RequiredClass)) return null;
-        if (!Enum.TryParse(data[5], out info.RequiredGender)) return null;
-        if (!Enum.TryParse(data[6], out info.Set)) return null;
-        if (!short.TryParse(data[7], out info.Shape)) return null;
-
-        if (!byte.TryParse(data[8], out info.Weight)) return null;
-        if (!byte.TryParse(data[9], out info.Light)) return null;
-        if (!byte.TryParse(data[10], out info.RequiredAmount)) return null;
-
-        if (!byte.TryParse(data[11], out info.MinAC)) return null;
-        if (!byte.TryParse(data[12], out info.MaxAC)) return null;
-        if (!byte.TryParse(data[13], out info.MinMAC)) return null;
-        if (!byte.TryParse(data[14], out info.MaxMAC)) return null;
-        if (!byte.TryParse(data[15], out info.MinDC)) return null;
-        if (!byte.TryParse(data[16], out info.MaxDC)) return null;
-        if (!byte.TryParse(data[17], out info.MinMC)) return null;
-        if (!byte.TryParse(data[18], out info.MaxMC)) return null;
-        if (!byte.TryParse(data[19], out info.MinSC)) return null;
-        if (!byte.TryParse(data[20], out info.MaxSC)) return null;
-        if (!byte.TryParse(data[21], out info.Accuracy)) return null;
-        if (!byte.TryParse(data[22], out info.Agility)) return null;
-        if (!ushort.TryParse(data[23], out info.HP)) return null;
-        if (!ushort.TryParse(data[24], out info.MP)) return null;
-
-        if (!sbyte.TryParse(data[25], out info.AttackSpeed)) return null;
-        if (!sbyte.TryParse(data[26], out info.Luck)) return null;
-
-        if (!byte.TryParse(data[27], out info.BagWeight)) return null;
-
-        if (!byte.TryParse(data[28], out info.HandWeight)) return null;
-        if (!byte.TryParse(data[29], out info.WearWeight)) return null;
-
-        if (!bool.TryParse(data[30], out info.StartItem)) return null;
-
-        if (!ushort.TryParse(data[31], out info.Image)) return null;
-        if (!ushort.TryParse(data[32], out info.Durability)) return null;
-        if (!uint.TryParse(data[33], out info.Price)) return null;
-        if (!uint.TryParse(data[34], out info.StackSize)) return null;
-        if (!byte.TryParse(data[35], out info.Effect)) return null;
-
-        if (!byte.TryParse(data[36], out info.Strong)) return null;
-        if (!byte.TryParse(data[37], out info.MagicResist)) return null;
-        if (!byte.TryParse(data[38], out info.PoisonResist)) return null;
-        if (!byte.TryParse(data[39], out info.HealthRecovery)) return null;
-        if (!byte.TryParse(data[40], out info.SpellRecovery)) return null;
-        if (!byte.TryParse(data[41], out info.PoisonRecovery)) return null;
-        if (!byte.TryParse(data[42], out info.HPrate)) return null;
-        if (!byte.TryParse(data[43], out info.MPrate)) return null;
-        if (!byte.TryParse(data[44], out info.CriticalRate)) return null;
-        if (!byte.TryParse(data[45], out info.CriticalDamage)) return null;
-        if (!bool.TryParse(data[46], out info.NeedIdentify)) return null;
-        if (!bool.TryParse(data[47], out info.ShowGroupPickup)) return null;
-        if (!byte.TryParse(data[48], out info.MaxAcRate)) return null;
-        if (!byte.TryParse(data[49], out info.MaxMacRate)) return null;
-        if (!byte.TryParse(data[50], out info.Holy)) return null;
-        if (!byte.TryParse(data[51], out info.Freezing)) return null;
-        if (!byte.TryParse(data[52], out info.PoisonAttack)) return null;
-        if (!bool.TryParse(data[53], out info.ClassBased)) return null;
-        if (!bool.TryParse(data[54], out info.LevelBased)) return null;
-        if (!Enum.TryParse(data[55], out info.Bind)) return null;
-        if (!byte.TryParse(data[56], out info.Reflect)) return null;
-        if (!byte.TryParse(data[57], out info.HpDrainRate)) return null;
-        if (!Enum.TryParse(data[58], out info.Unique)) return null;
-        if (!byte.TryParse(data[59], out info.RandomStatsId)) return null;
-        if (!bool.TryParse(data[60], out info.CanMine)) return null;
-        if (!bool.TryParse(data[61], out info.CanFastRun)) return null;
-        if (!bool.TryParse(data[62], out info.CanAwakening)) return null;
-        if (!byte.TryParse(data[63], out info.Slots)) return null;
-
-        if (data[64] == "-")
-            info.ToolTip = "";
-        else
-        {
-            info.ToolTip = data[64];
-            info.ToolTip = info.ToolTip.Replace("&^&", "\r\n");
-        }
-
-        return info;
-
+        return null;
     }
 
     public string ToText()
     {
-        string TransToolTip = ToolTip;
-        int length = TransToolTip.Length;
-
-        if (TransToolTip == null || TransToolTip.Length == 0)
-        {
-            TransToolTip = "-";
-        }
-        else
-        {
-            TransToolTip = TransToolTip.Replace("\r\n", "&^&");
-        }
-
-        return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26}," +
-                             "{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46},{47},{48},{49},{50},{51}," +
-                             "{52},{53},{54},{55},{56},{57},{58},{59},{60},{61},{62},{63},{64}",
-            Name, (byte)Type, (byte)Grade, (byte)RequiredType, (byte)RequiredClass, (byte)RequiredGender, (byte)Set, Shape, Weight, Light, RequiredAmount, MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC,
-            MinMC, MaxMC, MinSC, MaxSC, Accuracy, Agility, HP, MP, AttackSpeed, Luck, BagWeight, HandWeight, WearWeight, StartItem, Image, Durability, Price,
-            StackSize, Effect, Strong, MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, HPrate, MPrate, CriticalRate, CriticalDamage, NeedIdentify,
-            ShowGroupPickup, MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, ClassBased, LevelBased, (short)Bind, Reflect, HpDrainRate, (short)Unique,
-            RandomStatsId, CanMine, CanFastRun, CanAwakening, Slots, TransToolTip);
+        return null;
     }
 
     public override string ToString()
@@ -389,10 +283,8 @@ public class UserItem
 
     public ItemInfo Info;
     public ushort CurrentDura, MaxDura;
-    public uint Count = 1, GemCount = 0;
-
-    public byte AC, MAC, DC, MC, SC, Accuracy, Agility, HP, MP, Strong, MagicResist, PoisonResist, HealthRecovery, ManaRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Freezing, PoisonAttack;
-    public sbyte AttackSpeed, Luck;
+    public ushort Count = 1,
+                GemCount = 0;
 
     public RefinedValue RefinedValue = RefinedValue.None;
     public byte RefineAdded = 0;
@@ -414,16 +306,15 @@ public class UserItem
     public bool IsShopItem;
 
     public Awake Awake = new Awake();
+
+    public Stats AddedStats;
+
     public bool IsAdded
     {
-        get
-        {
-            return AC != 0 || MAC != 0 || DC != 0 || MC != 0 || SC != 0 || Accuracy != 0 || Agility != 0 || HP != 0 || MP != 0 || AttackSpeed != 0 || Luck != 0 || Strong != 0 || MagicResist != 0 || PoisonResist != 0 ||
-                HealthRecovery != 0 || ManaRecovery != 0 || PoisonRecovery != 0 || CriticalRate != 0 || CriticalDamage != 0 || Freezing != 0 || PoisonAttack != 0;
-        }
+        get { return AddedStats.Count > 0; }
     }
 
-    public uint Weight
+    public int Weight
     {
         get { return Info.Type == ItemType.Amulet ? Info.Weight : Info.Weight * Count; }
     }
@@ -438,10 +329,11 @@ public class UserItem
         SoulBoundId = -1;
         ItemIndex = info.Index;
         Info = info;
+        AddedStats = new Stats();
 
         SetSlotSize();
     }
-    public UserItem(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
+    public UserItem(BinaryReader reader, int version = int.MaxValue, int customVersion = int.MaxValue)
     {
         UniqueID = reader.ReadUInt64();
         ItemIndex = reader.ReadInt32();
@@ -449,37 +341,52 @@ public class UserItem
         CurrentDura = reader.ReadUInt16();
         MaxDura = reader.ReadUInt16();
 
-        Count = reader.ReadUInt32();
+        if (version <= 84)
+        {
+            Count = (ushort)reader.ReadUInt32();
+        }
+        else
+        {
+            Count = reader.ReadUInt16();
+        }
 
-        AC = reader.ReadByte();
-        MAC = reader.ReadByte();
-        DC = reader.ReadByte();
-        MC = reader.ReadByte();
-        SC = reader.ReadByte();
+        if (version <= 84)
+        {
+            AddedStats = new Stats();
 
-        Accuracy = reader.ReadByte();
-        Agility = reader.ReadByte();
-        HP = reader.ReadByte();
-        MP = reader.ReadByte();
+            AddedStats[Stat.MaxAC] = reader.ReadByte();
+            AddedStats[Stat.MaxMAC] = reader.ReadByte();
+            AddedStats[Stat.MaxDC] = reader.ReadByte();
+            AddedStats[Stat.MaxMC] = reader.ReadByte();
+            AddedStats[Stat.MaxSC] = reader.ReadByte();
 
-        AttackSpeed = reader.ReadSByte();
-        Luck = reader.ReadSByte();
+            AddedStats[Stat.Accuracy] = reader.ReadByte();
+            AddedStats[Stat.Agility] = reader.ReadByte();
+            AddedStats[Stat.HP] = reader.ReadByte();
+            AddedStats[Stat.MP] = reader.ReadByte();
+
+            AddedStats[Stat.AttackSpeed] = reader.ReadSByte();
+            AddedStats[Stat.Luck] = reader.ReadSByte();
+        }
 
         SoulBoundId = reader.ReadInt32();
         byte Bools = reader.ReadByte();
         Identified = (Bools & 0x01) == 0x01;
         Cursed = (Bools & 0x02) == 0x02;
-        Strong = reader.ReadByte();
-        MagicResist = reader.ReadByte();
-        PoisonResist = reader.ReadByte();
-        HealthRecovery = reader.ReadByte();
-        ManaRecovery = reader.ReadByte();
-        PoisonRecovery = reader.ReadByte();
-        CriticalRate = reader.ReadByte();
-        CriticalDamage = reader.ReadByte();
-        Freezing = reader.ReadByte();
-        PoisonAttack = reader.ReadByte();
 
+        if (version <= 84)
+        {
+            AddedStats[Stat.Strong] = reader.ReadByte();
+            AddedStats[Stat.MagicResist] = reader.ReadByte();
+            AddedStats[Stat.PoisonResist] = reader.ReadByte();
+            AddedStats[Stat.HealthRecovery] = reader.ReadByte();
+            AddedStats[Stat.SpellRecovery] = reader.ReadByte();
+            AddedStats[Stat.PoisonRecovery] = reader.ReadByte();
+            AddedStats[Stat.CriticalRate] = reader.ReadByte();
+            AddedStats[Stat.CriticalDamage] = reader.ReadByte();
+            AddedStats[Stat.Freezing] = reader.ReadByte();
+            AddedStats[Stat.PoisonAttack] = reader.ReadByte();
+        }
 
         int count = reader.ReadInt32();
 
@@ -488,11 +395,23 @@ public class UserItem
         for (int i = 0; i < count; i++)
         {
             if (reader.ReadBoolean()) continue;
-            UserItem item = new UserItem(reader, version, Customversion);
+            UserItem item = new UserItem(reader, version, customVersion);
             Slots[i] = item;
         }
 
-        GemCount = reader.ReadUInt32();
+        if (version <= 84)
+        {
+            GemCount = (ushort)reader.ReadUInt32();
+        }
+        else
+        {
+            GemCount = reader.ReadUInt16();
+        }
+
+        if (version > 84)
+        {
+            AddedStats = new Stats(reader);
+        }
 
         Awake = new Awake(reader);
 
@@ -503,13 +422,13 @@ public class UserItem
         if (version < 65) return;
 
         if (reader.ReadBoolean())
-            ExpireInfo = new ExpireInfo(reader, version, Customversion);
+            ExpireInfo = new ExpireInfo(reader, version, customVersion);
 
         if (version < 76)
             return;
 
         if (reader.ReadBoolean())
-            RentalInformation = new RentalInformation(reader, version, Customversion);
+            RentalInformation = new RentalInformation(reader, version, customVersion);
 
         if (version < 83) return;
 
@@ -525,35 +444,12 @@ public class UserItem
         writer.Write(MaxDura);
 
         writer.Write(Count);
-
-        writer.Write(AC);
-        writer.Write(MAC);
-        writer.Write(DC);
-        writer.Write(MC);
-        writer.Write(SC);
-
-        writer.Write(Accuracy);
-        writer.Write(Agility);
-        writer.Write(HP);
-        writer.Write(MP);
-
-        writer.Write(AttackSpeed);
-        writer.Write(Luck);
+       
         writer.Write(SoulBoundId);
         byte Bools = 0;
         if (Identified) Bools |= 0x01;
         if (Cursed) Bools |= 0x02;
         writer.Write(Bools);
-        writer.Write(Strong);
-        writer.Write(MagicResist);
-        writer.Write(PoisonResist);
-        writer.Write(HealthRecovery);
-        writer.Write(ManaRecovery);
-        writer.Write(PoisonRecovery);
-        writer.Write(CriticalRate);
-        writer.Write(CriticalDamage);
-        writer.Write(Freezing);
-        writer.Write(PoisonAttack);
 
         writer.Write(Slots.Length);
         for (int i = 0; i < Slots.Length; i++)
@@ -567,6 +463,7 @@ public class UserItem
         writer.Write(GemCount);
 
 
+        AddedStats.Save(writer);
         Awake.Save(writer);
 
         writer.Write((byte)RefinedValue);
@@ -583,6 +480,10 @@ public class UserItem
         writer.Write(IsShopItem);
     }
 
+    public int GetTotal(Stat type)
+    {
+        return AddedStats[type] + Info.Stats[type];
+    }
 
     public uint Price()
     {
@@ -606,7 +507,7 @@ public class UserItem
         }
 
 
-        p = (uint)(p * ((AC + MAC + DC + MC + SC + Accuracy + Agility + HP + MP + AttackSpeed + Luck + Strong + MagicResist + PoisonResist + HealthRecovery + ManaRecovery + PoisonRecovery + CriticalRate + CriticalDamage + Freezing + PoisonAttack) * 0.1F + 1F));
+        p = (uint)(p * (AddedStats.Count * 0.1F + 1F));
 
 
         return p * Count;
@@ -621,7 +522,7 @@ public class UserItem
         if (Info.Durability > 0)
         {
             p = (uint)Math.Floor(MaxDura * ((Info.Price / 2F) / Info.Durability) + Info.Price / 2F);
-            p = (uint)(p * ((AC + MAC + DC + MC + SC + Accuracy + Agility + HP + MP + AttackSpeed + Luck + Strong + MagicResist + PoisonResist + HealthRecovery + ManaRecovery + PoisonRecovery + CriticalRate + CriticalDamage + Freezing + PoisonAttack) * 0.1F + 1F));
+            p = (uint)(p * (AddedStats.Count * 0.1F + 1F));
 
         }
 
@@ -635,7 +536,7 @@ public class UserItem
 
     public uint Quality()
     {
-        uint q = (uint)(AC + MAC + DC + MC + SC + Accuracy + Agility + HP + MP + AttackSpeed + Luck + Strong + MagicResist + PoisonResist + HealthRecovery + ManaRecovery + PoisonRecovery + CriticalRate + CriticalDamage + Freezing + PoisonAttack + Awake.GetAwakeLevel() + 1);
+        uint q = (uint)(AddedStats.Count + Awake.GetAwakeLevel() + 1);
 
         return q;
     }
@@ -657,7 +558,7 @@ public class UserItem
 
         uint p = 1500 * (uint)Info.Grade;
 
-        p = (uint)(p * ((AC + MAC + DC + MC + SC + Accuracy + Agility + HP + MP + AttackSpeed + Luck + Strong + MagicResist + PoisonResist + HealthRecovery + ManaRecovery + PoisonRecovery + CriticalRate + CriticalDamage + Freezing + PoisonAttack + Awake.GetAwakeLevel()) * 0.1F + 1F));
+        p = (uint)(p * ((AddedStats.Count + Awake.GetAwakeLevel()) * 0.1F + 1F));
 
         return p;
     }
@@ -679,7 +580,7 @@ public class UserItem
 
         uint p = 3000 * (uint)Info.Grade;
 
-        p = (uint)(p * ((AC + MAC + DC + MC + SC + Accuracy + Agility + HP + MP + AttackSpeed + Luck + Strong + MagicResist + PoisonResist + HealthRecovery + ManaRecovery + PoisonRecovery + CriticalRate + CriticalDamage + Freezing + PoisonAttack) * 0.2F + 1F));
+        p = (uint)(p * (AddedStats.Count * 0.2F + 1F));
 
         return p;
     }
@@ -756,36 +657,12 @@ public class UserItem
             MaxDura = MaxDura,
             Count = Count,
             GemCount = GemCount,
-
-            AC = AC,
-            MAC = MAC,
-            DC = DC,
-            MC = MC,
-            SC = SC,
-            Accuracy = Accuracy,
-            Agility = Agility,
-            HP = HP,
-            MP = MP,
-
-            AttackSpeed = AttackSpeed,
-            Luck = Luck,
-
             DuraChanged = DuraChanged,
             SoulBoundId = SoulBoundId,
             Identified = Identified,
             Cursed = Cursed,
-            Strong = Strong,
-            MagicResist = MagicResist,
-            PoisonResist = PoisonResist,
-            HealthRecovery = HealthRecovery,
-            ManaRecovery = ManaRecovery,
-            PoisonRecovery = PoisonRecovery,
-            CriticalRate = CriticalRate,
-            CriticalDamage = CriticalDamage,
-            Freezing = Freezing,
-            PoisonAttack = PoisonAttack,
-
             Slots = Slots,
+            AddedStats = new Stats(AddedStats),
             Awake = Awake,
 
             RefinedValue = RefinedValue,
@@ -852,7 +729,7 @@ public class GameShopItem
     public ItemInfo Info;
     public uint GoldPrice = 0;
     public uint CreditPrice = 0;
-    public uint Count = 1;
+    public ushort Count = 1;
     public string Class = "";
     public string Category = "";
     public int Stock = 0;
@@ -871,7 +748,14 @@ public class GameShopItem
         GIndex = reader.ReadInt32();
         GoldPrice = reader.ReadUInt32();
         CreditPrice = reader.ReadUInt32();
-        Count = reader.ReadUInt32();
+        if (version <= 84)
+        {
+            Count = (ushort)reader.ReadUInt32();
+        }
+        else
+        {
+            Count = reader.ReadUInt16();
+        }
         Class = reader.ReadString();
         Category = reader.ReadString();
         Stock = reader.ReadInt32();
@@ -888,7 +772,7 @@ public class GameShopItem
         Info = new ItemInfo(reader);
         GoldPrice = reader.ReadUInt32();
         CreditPrice = reader.ReadUInt32();
-        Count = reader.ReadUInt32();
+        Count = reader.ReadUInt16();
         Class = reader.ReadString();
         Category = reader.ReadString();
         Stock = reader.ReadInt32();

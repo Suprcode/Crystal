@@ -46,13 +46,13 @@ namespace Server.MirObjects.Monsters
 
             base.ApplyPoison(p, Caster, NoResist, ignoreDefence);
         }
-        public override void AddBuff(Buff b)
+        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool visible = false, bool infinite = false, bool stackable = false, bool refreshStats = true, params int[] values)
         {
-            if (Stoned) return;
+            if (Stoned) return null;
 
-            base.AddBuff(b);
+            return base.AddBuff(type, owner, duration, Stats, visible, infinite, stackable, refreshStats, values);
         }
-        
+
         public override bool IsFriendlyTarget(PlayerObject ally)
         {
             if (Stoned) return false;
@@ -152,17 +152,8 @@ namespace Server.MirObjects.Monsters
 
             if (Hidden)
             {
-                Hidden = false;
-
-                for (int i = 0; i < Buffs.Count; i++)
-                {
-                    if (Buffs[i].Type != BuffType.Hiding) continue;
-
-                    Buffs[i].ExpireTime = 0;
-                    break;
-                }
+                RemoveBuff(BuffType.Hiding);
             }
-
 
             CellTime = Envir.Time + 500;
             ActionTime = Envir.Time + 300;

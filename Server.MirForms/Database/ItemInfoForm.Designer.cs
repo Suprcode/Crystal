@@ -31,6 +31,8 @@
             this.ItemInfoPanel = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label57 = new System.Windows.Forms.Label();
+            this.SlotsTextBox = new System.Windows.Forms.TextBox();
             this.globalDropNotify_CheckBox = new System.Windows.Forms.CheckBox();
             this.CanAwaken = new System.Windows.Forms.CheckBox();
             this.label56 = new System.Windows.Forms.Label();
@@ -193,8 +195,6 @@
             this.ExportSelectedButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
             this.Gameshop_button = new System.Windows.Forms.Button();
-            this.SlotsTextBox = new System.Windows.Forms.TextBox();
-            this.label57 = new System.Windows.Forms.Label();
             this.ItemInfoPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -287,6 +287,23 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label57
+            // 
+            this.label57.AutoSize = true;
+            this.label57.Location = new System.Drawing.Point(522, 102);
+            this.label57.Name = "label57";
+            this.label57.Size = new System.Drawing.Size(33, 13);
+            this.label57.TabIndex = 126;
+            this.label57.Text = "Slots:";
+            // 
+            // SlotsTextBox
+            // 
+            this.SlotsTextBox.Location = new System.Drawing.Point(561, 99);
+            this.SlotsTextBox.Name = "SlotsTextBox";
+            this.SlotsTextBox.Size = new System.Drawing.Size(30, 20);
+            this.SlotsTextBox.TabIndex = 125;
+            this.SlotsTextBox.TextChanged += new System.EventHandler(this.SlotsTextBox_TextChanged);
             // 
             // globalDropNotify_CheckBox
             // 
@@ -1867,22 +1884,26 @@
             // 
             // PasteButton
             // 
+            this.PasteButton.Enabled = false;
             this.PasteButton.Location = new System.Drawing.Point(363, 12);
             this.PasteButton.Name = "PasteButton";
             this.PasteButton.Size = new System.Drawing.Size(53, 23);
             this.PasteButton.TabIndex = 24;
             this.PasteButton.Text = "Paste";
             this.PasteButton.UseVisualStyleBackColor = true;
+            this.PasteButton.Visible = false;
             this.PasteButton.Click += new System.EventHandler(this.PasteButton_Click);
             // 
             // CopyMButton
             // 
+            this.CopyMButton.Enabled = false;
             this.CopyMButton.Location = new System.Drawing.Point(306, 12);
             this.CopyMButton.Name = "CopyMButton";
             this.CopyMButton.Size = new System.Drawing.Size(51, 23);
             this.CopyMButton.TabIndex = 23;
             this.CopyMButton.Text = "Copy";
             this.CopyMButton.UseVisualStyleBackColor = true;
+            this.CopyMButton.Visible = false;
             this.CopyMButton.Click += new System.EventHandler(this.CopyMButton_Click);
             // 
             // ITypeFilterComboBox
@@ -1897,32 +1918,38 @@
             // 
             // ExportAllButton
             // 
+            this.ExportAllButton.Enabled = false;
             this.ExportAllButton.Location = new System.Drawing.Point(710, 12);
             this.ExportAllButton.Name = "ExportAllButton";
             this.ExportAllButton.Size = new System.Drawing.Size(76, 23);
             this.ExportAllButton.TabIndex = 26;
             this.ExportAllButton.Text = "Export All";
             this.ExportAllButton.UseVisualStyleBackColor = true;
+            this.ExportAllButton.Visible = false;
             this.ExportAllButton.Click += new System.EventHandler(this.ExportAllButton_Click);
             // 
             // ExportSelectedButton
             // 
+            this.ExportSelectedButton.Enabled = false;
             this.ExportSelectedButton.Location = new System.Drawing.Point(612, 12);
             this.ExportSelectedButton.Name = "ExportSelectedButton";
             this.ExportSelectedButton.Size = new System.Drawing.Size(94, 23);
             this.ExportSelectedButton.TabIndex = 27;
             this.ExportSelectedButton.Text = "Export Selected";
             this.ExportSelectedButton.UseVisualStyleBackColor = true;
+            this.ExportSelectedButton.Visible = false;
             this.ExportSelectedButton.Click += new System.EventHandler(this.ExportSelectedButton_Click);
             // 
             // ImportButton
             // 
+            this.ImportButton.Enabled = false;
             this.ImportButton.Location = new System.Drawing.Point(531, 12);
             this.ImportButton.Name = "ImportButton";
             this.ImportButton.Size = new System.Drawing.Size(75, 23);
             this.ImportButton.TabIndex = 28;
             this.ImportButton.Text = "Import";
             this.ImportButton.UseVisualStyleBackColor = true;
+            this.ImportButton.Visible = false;
             this.ImportButton.Click += new System.EventHandler(this.ImportButton_Click);
             // 
             // Gameshop_button
@@ -1934,23 +1961,6 @@
             this.Gameshop_button.Text = "+ Gameshop";
             this.Gameshop_button.UseVisualStyleBackColor = true;
             this.Gameshop_button.Click += new System.EventHandler(this.Gameshop_button_Click);
-            // 
-            // SlotsTextBox
-            // 
-            this.SlotsTextBox.Location = new System.Drawing.Point(561, 99);
-            this.SlotsTextBox.Name = "SlotsTextBox";
-            this.SlotsTextBox.Size = new System.Drawing.Size(30, 20);
-            this.SlotsTextBox.TabIndex = 125;
-            this.SlotsTextBox.TextChanged += new System.EventHandler(this.SlotsTextBox_TextChanged);
-            // 
-            // label57
-            // 
-            this.label57.AutoSize = true;
-            this.label57.Location = new System.Drawing.Point(522, 102);
-            this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(33, 13);
-            this.label57.TabIndex = 126;
-            this.label57.Text = "Slots:";
             // 
             // ItemInfoForm
             // 

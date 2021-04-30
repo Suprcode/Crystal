@@ -59,7 +59,7 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
             Target.Attacked(this, damage, DefenceType.MAC);
         }
@@ -82,8 +82,8 @@ namespace Server.MirObjects.Monsters
 
             if (result > 0)
             {
-                if (pusher is PlayerObject) Attacked((PlayerObject)pusher, Math.Max(50, Envir.Random.Next((int)MaxHP)), DefenceType.Repulsion);
-                else if (pusher is MonsterObject) Attacked((MonsterObject)pusher, Math.Max(50, Envir.Random.Next((int)MaxHP)), DefenceType.Repulsion);
+                if (pusher is PlayerObject) Attacked((PlayerObject)pusher, Math.Max(50, Envir.Random.Next(Stats[Stat.HP])), DefenceType.Repulsion);
+                else if (pusher is MonsterObject) Attacked((MonsterObject)pusher, Math.Max(50, Envir.Random.Next(Stats[Stat.HP])), DefenceType.Repulsion);
             }
             return result;
         }

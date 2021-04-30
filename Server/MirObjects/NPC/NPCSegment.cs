@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using S = ServerPackets;
 
@@ -876,11 +875,13 @@ namespace Server.MirObjects
 
                     string visible = "";
                     string infinite = "";
+                    string stackable = "";
 
-                    if (parts.Length > 4) visible = parts[4];
-                    if (parts.Length > 5) infinite = parts[5];
+                    if (parts.Length > 3) visible = parts[3];
+                    if (parts.Length > 4) infinite = parts[4];
+                    if (parts.Length > 5) stackable = parts[5];
 
-                    acts.Add(new NPCActions(ActionType.GiveBuff, parts[1], parts[2], parts[3], visible, infinite));
+                    acts.Add(new NPCActions(ActionType.GiveBuff, parts[1], parts[2], visible, infinite, stackable));
                     break;
 
                 case "REMOVEBUFF":
@@ -1291,13 +1292,13 @@ namespace Server.MirObjects
                     newValue = player.HP.ToString(CultureInfo.InvariantCulture);
                     break;
                 case "MAXHP":
-                    newValue = player.MaxHP.ToString(CultureInfo.InvariantCulture);
+                    newValue = player.Stats[Stat.HP].ToString(CultureInfo.InvariantCulture);
                     break;
                 case "MP":
                     newValue = player.MP.ToString(CultureInfo.InvariantCulture);
                     break;
                 case "MAXMP":
-                    newValue = player.MaxMP.ToString(CultureInfo.InvariantCulture);
+                    newValue = player.Stats[Stat.MP].ToString(CultureInfo.InvariantCulture);
                     break;
                 case "GAMEGOLD":
                     newValue = player.Account.Gold.ToString(CultureInfo.InvariantCulture);
@@ -1434,7 +1435,7 @@ namespace Server.MirObjects
                     newValue = Monster.HP.ToString(CultureInfo.InvariantCulture);
                     break;
                 case "MAXHP":
-                    newValue = Monster.MaxHP.ToString(CultureInfo.InvariantCulture);
+                    newValue = Monster.Stats[Stat.HP].ToString(CultureInfo.InvariantCulture);
                     break;
                 case "DATE":
                     newValue = DateTime.Now.ToShortDateString();
@@ -1632,7 +1633,6 @@ namespace Server.MirObjects
                     }
                 }
 
-                byte tempByte;
                 uint tempUint;
                 int tempInt;
                 int tempInt2;
@@ -1641,20 +1641,22 @@ namespace Server.MirObjects
                 switch (check.Type)
                 {
                     case CheckType.Level:
-                        if (!byte.TryParse(param[1], out tempByte))
                         {
-                            failed = true;
-                            break;
-                        }
+                            if (!ushort.TryParse(param[1], out ushort level))
+                            {
+                                failed = true;
+                                break;
+                            }
 
-                        try
-                        {
-                            failed = !Compare(param[0], monster.Level, tempByte);
-                        }
-                        catch (ArgumentException)
-                        {
-                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
-                            return true;
+                            try
+                            {
+                                failed = !Compare(param[0], monster.Level, level);
+                            }
+                            catch (ArgumentException)
+                            {
+                                MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                                return true;
+                            }
                         }
                         break;
                     case CheckType.CheckDay:
@@ -1834,7 +1836,6 @@ namespace Server.MirObjects
                     }
                 }
 
-                byte tempByte;
                 uint tempUint;
                 int tempInt;
                 int tempInt2;
@@ -1842,20 +1843,22 @@ namespace Server.MirObjects
                 switch (check.Type)
                 {
                     case CheckType.Level:
-                        if (!byte.TryParse(param[1], out tempByte))
                         {
-                            failed = true;
-                            break;
-                        }
+                            if (!ushort.TryParse(param[1], out ushort level))
+                            {
+                                failed = true;
+                                break;
+                            }
 
-                        try
-                        {
-                            failed = !Compare(param[0], player.Level, tempByte);
-                        }
-                        catch (ArgumentException)
-                        {
-                            MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
-                            return true;
+                            try
+                            {
+                                failed = !Compare(param[0], player.Level, level);
+                            }
+                            catch (ArgumentException)
+                            {
+                                MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                                return true;
+                            }
                         }
                         break;
 
@@ -1912,10 +1915,10 @@ namespace Server.MirObjects
                         break;
 
                     case CheckType.CheckItem:
-                        uint count;
+                        ushort count;
                         ushort dura;
 
-                        if (!uint.TryParse(param[1], out count))
+                        if (!ushort.TryParse(param[1], out count))
                         {
                             failed = true;
                             break;
@@ -2646,24 +2649,6 @@ namespace Server.MirObjects
 
             for (var i = 0; i < acts.Count; i++)
             {
-                uint gold;
-                uint credit;
-                uint Pearls;
-                uint count;
-                ushort tempuShort;
-                string tempString = string.Empty;
-                int x, y;
-                int tempInt;
-                byte tempByte;
-                long tempLong;
-                bool tempBool;
-                Packet p;
-
-                ItemInfo info;
-                MonsterInfo monInfo;
-
-                ConquestObject Conquest;
-
                 NPCActions act = acts[i];
                 List<string> param = act.Params.Select(t => FindVariable(player, t)).ToList();
 
@@ -2684,667 +2669,727 @@ namespace Server.MirObjects
                 switch (act.Type)
                 {
                     case ActionType.Move:
-                        Map map = Envir.GetMapByNameAndInstance(param[0]);
-                        if (map == null) return;
+                        {
+                            Map map = Envir.GetMapByNameAndInstance(param[0]);
+                            if (map == null) return;
 
-                        if (!int.TryParse(param[1], out x)) return;
-                        if (!int.TryParse(param[2], out y)) return;
+                            if (!int.TryParse(param[1], out int x)) return;
+                            if (!int.TryParse(param[2], out int y)) return;
 
-                        var coords = new Point(x, y);
+                            var coords = new Point(x, y);
 
-                        if (coords.X > 0 && coords.Y > 0) player.Teleport(map, coords);
-                        else player.TeleportRandom(200, 0, map);
+                            if (coords.X > 0 && coords.Y > 0) player.Teleport(map, coords);
+                            else player.TeleportRandom(200, 0, map);
+                        }
                         break;
 
                     case ActionType.InstanceMove:
-                        int instanceId;
-                        if (!int.TryParse(param[1], out instanceId)) return;
-                        if (!int.TryParse(param[2], out x)) return;
-                        if (!int.TryParse(param[3], out y)) return;
+                        {
+                            if (!int.TryParse(param[1], out int instanceId)) return;
+                            if (!int.TryParse(param[2], out int x)) return;
+                            if (!int.TryParse(param[3], out int y)) return;
 
-                        map = Envir.GetMapByNameAndInstance(param[0], instanceId);
-                        if (map == null) return;
-                        player.Teleport(map, new Point(x, y));
+                            var map = Envir.GetMapByNameAndInstance(param[0], instanceId);
+                            if (map == null) return;
+                            player.Teleport(map, new Point(x, y));
+                        }
                         break;
 
                     case ActionType.GiveGold:
-                        if (!uint.TryParse(param[0], out gold)) return;
+                        {
+                            if (!uint.TryParse(param[0], out uint gold)) return;
 
-                        if (gold + player.Account.Gold >= uint.MaxValue)
-                            gold = uint.MaxValue - player.Account.Gold;
+                            if (gold + player.Account.Gold >= uint.MaxValue)
+                                gold = uint.MaxValue - player.Account.Gold;
 
-                        player.GainGold(gold);
+                            player.GainGold(gold);
+                        }
                         break;
 
                     case ActionType.TakeGold:
-                        if (!uint.TryParse(param[0], out gold)) return;
+                        {
+                            if (!uint.TryParse(param[0], out uint gold)) return;
 
-                        if (gold >= player.Account.Gold) gold = player.Account.Gold;
+                            if (gold >= player.Account.Gold) gold = player.Account.Gold;
 
-                        player.Account.Gold -= gold;
-                        player.Enqueue(new S.LoseGold { Gold = gold });
+                            player.Account.Gold -= gold;
+                            player.Enqueue(new S.LoseGold { Gold = gold });
+                        }
                         break;
                     case ActionType.GiveGuildGold:
-                        if (!uint.TryParse(param[0], out gold)) return;
+                        {
+                            if (!uint.TryParse(param[0], out uint gold)) return;
 
-                        if (gold + player.MyGuild.Gold >= uint.MaxValue)
-                            gold = uint.MaxValue - player.MyGuild.Gold;
+                            if (gold + player.MyGuild.Gold >= uint.MaxValue)
+                                gold = uint.MaxValue - player.MyGuild.Gold;
 
-                        player.MyGuild.Gold += gold;
-                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 3, Amount = gold });
+                            player.MyGuild.Gold += gold;
+                            player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 3, Amount = gold });
+                        }
                         break;
                     case ActionType.TakeGuildGold:
-                        if (!uint.TryParse(param[0], out gold)) return;
+                        {
+                            if (!uint.TryParse(param[0], out uint gold)) return;
 
-                        if (gold >= player.MyGuild.Gold) gold = player.MyGuild.Gold;
+                            if (gold >= player.MyGuild.Gold) gold = player.MyGuild.Gold;
 
-                        player.MyGuild.Gold -= gold;
-                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = gold });
+                            player.MyGuild.Gold -= gold;
+                            player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = gold });
+                        }
                         break;
                     case ActionType.GiveCredit:
-                        if (!uint.TryParse(param[0], out credit)) return;
+                        {
+                            if (!uint.TryParse(param[0], out uint credit)) return;
 
-                        if (credit + player.Account.Credit >= uint.MaxValue)
-                            credit = uint.MaxValue - player.Account.Credit;
+                            if (credit + player.Account.Credit >= uint.MaxValue)
+                                credit = uint.MaxValue - player.Account.Credit;
 
-                        player.GainCredit(credit);
+                            player.GainCredit(credit);
+                        }
                         break;
 
                     case ActionType.TakeCredit:
-                        if (!uint.TryParse(param[0], out credit)) return;
+                        {
+                            if (!uint.TryParse(param[0], out uint credit)) return;
 
-                        if (credit >= player.Account.Credit) credit = player.Account.Credit;
+                            if (credit >= player.Account.Credit) credit = player.Account.Credit;
 
-                        player.Account.Credit -= credit;
-                        player.Enqueue(new S.LoseCredit { Credit = credit });
+                            player.Account.Credit -= credit;
+                            player.Enqueue(new S.LoseCredit { Credit = credit });
+                        }
                         break;
 
                     case ActionType.GivePearls:
-                        if (!uint.TryParse(param[0], out Pearls)) return;
+                        {
+                            if (!uint.TryParse(param[0], out uint pearls)) return;
 
-                        if (Pearls + player.Info.PearlCount >= int.MaxValue)
-                            Pearls = (uint)(int.MaxValue - player.Info.PearlCount);
+                            if (pearls + player.Info.PearlCount >= int.MaxValue)
+                                pearls = (uint)(int.MaxValue - player.Info.PearlCount);
 
-                        player.IntelligentCreatureGainPearls((int)Pearls);
+                            player.IntelligentCreatureGainPearls((int)pearls);
+                        }
                         break;
 
                     case ActionType.TakePearls:
-                        if (!uint.TryParse(param[0], out Pearls)) return;
+                        {
+                            if (!uint.TryParse(param[0], out uint pearls)) return;
 
-                        if (Pearls >= player.Info.PearlCount) Pearls = (uint)player.Info.PearlCount;
+                            if (pearls >= player.Info.PearlCount) pearls = (uint)player.Info.PearlCount;
 
-                        player.IntelligentCreatureLosePearls((int)Pearls);
+                            player.IntelligentCreatureLosePearls((int)pearls);
+                        }
                         break;
 
                     case ActionType.GiveItem:
-                        if (param.Count < 2 || !uint.TryParse(param[1], out count)) count = 1;
-
-                        info = Envir.GetItemInfo(param[0]);
-
-                        if (info == null)
                         {
-                            MessageQueue.Enqueue(string.Format("Failed to get ItemInfo: {0}, Page: {1}", param[0], Key));
-                            break;
-                        }
+                            if (param.Count < 2 || !ushort.TryParse(param[1], out ushort count)) count = 1;
 
-                        while (count > 0)
-                        {
-                            UserItem item = Envir.CreateFreshItem(info);
+                            var info = Envir.GetItemInfo(param[0]);
 
-                            if (item == null)
+                            if (info == null)
                             {
-                                MessageQueue.Enqueue(string.Format("Failed to create UserItem: {0}, Page: {1}", param[0], Key));
-                                return;
+                                MessageQueue.Enqueue(string.Format("Failed to get ItemInfo: {0}, Page: {1}", param[0], Key));
+                                break;
                             }
 
-                            if (item.Info.StackSize > count)
+                            while (count > 0)
                             {
-                                item.Count = count;
-                                count = 0;
-                            }
-                            else
-                            {
-                                count -= item.Info.StackSize;
-                                item.Count = item.Info.StackSize;
-                            }
+                                UserItem item = Envir.CreateFreshItem(info);
 
-                            if (player.CanGainItem(item, false))
-                                player.GainItem(item);
+                                if (item == null)
+                                {
+                                    MessageQueue.Enqueue(string.Format("Failed to create UserItem: {0}, Page: {1}", param[0], Key));
+                                    return;
+                                }
+
+                                if (item.Info.StackSize > count)
+                                {
+                                    item.Count = count;
+                                    count = 0;
+                                }
+                                else
+                                {
+                                    count -= item.Info.StackSize;
+                                    item.Count = item.Info.StackSize;
+                                }
+
+                                if (player.CanGainItem(item, false))
+                                    player.GainItem(item);
+                            }
                         }
                         break;
 
                     case ActionType.TakeItem:
-                        if (param.Count < 2 || !uint.TryParse(param[1], out count)) count = 1;
-                        info = Envir.GetItemInfo(param[0]);
-
-                        ushort dura;
-                        bool checkDura = ushort.TryParse(param[2], out dura);
-
-                        if (info == null)
                         {
-                            MessageQueue.Enqueue(string.Format("Failed to get ItemInfo: {0}, Page: {1}", param[0], Key));
-                            break;
-                        }
+                            if (param.Count < 2 || !ushort.TryParse(param[1], out ushort count)) count = 1;
+                            var info = Envir.GetItemInfo(param[0]);
 
-                        for (int j = 0; j < player.Info.Inventory.Length; j++)
-                        {
-                            UserItem item = player.Info.Inventory[j];
-                            if (item == null) continue;
-                            if (item.Info != info) continue;
+                            ushort dura;
+                            bool checkDura = ushort.TryParse(param[2], out dura);
 
-                            if (checkDura)
+                            if (info == null)
                             {
-                                if (item.CurrentDura < (dura * 1000)) continue;
+                                MessageQueue.Enqueue(string.Format("Failed to get ItemInfo: {0}, Page: {1}", param[0], Key));
+                                break;
                             }
 
-                            if (count > item.Count)
+                            for (int j = 0; j < player.Info.Inventory.Length; j++)
                             {
-                                player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
-                                player.Info.Inventory[j] = null;
+                                UserItem item = player.Info.Inventory[j];
+                                if (item == null) continue;
+                                if (item.Info != info) continue;
 
-                                count -= item.Count;
-                                continue;
+                                if (checkDura)
+                                {
+                                    if (item.CurrentDura < (dura * 1000)) continue;
+                                }
+
+                                if (count > item.Count)
+                                {
+                                    player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                                    player.Info.Inventory[j] = null;
+
+                                    count -= item.Count;
+                                    continue;
+                                }
+
+                                player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = count });
+                                if (count == item.Count)
+                                    player.Info.Inventory[j] = null;
+                                else
+                                    item.Count -= count;
+                                break;
                             }
-
-                            player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = count });
-                            if (count == item.Count)
-                                player.Info.Inventory[j] = null;
-                            else
-                                item.Count -= count;
-                            break;
+                            player.RefreshStats();
                         }
-                        player.RefreshStats();
                         break;
 
                     case ActionType.GiveExp:
-                        uint tempUint;
-                        if (!uint.TryParse(param[0], out tempUint)) return;
-                        player.GainExp(tempUint);
+                        {
+                            uint tempUint;
+                            if (!uint.TryParse(param[0], out tempUint)) return;
+                            player.GainExp(tempUint);
+                        }
                         break;
 
                     case ActionType.GivePet:
-                        byte petcount = 0;
-                        byte petlevel = 0;
-
-                        monInfo = Envir.GetMonsterInfo(param[0]);
-                        if (monInfo == null) return;
-
-                        if (param.Count > 1)
-                            petcount = byte.TryParse(param[1], out petcount) ? Math.Min((byte)5, petcount) : (byte)1;
-
-                        if (param.Count > 2)
-                            petlevel = byte.TryParse(param[2], out petlevel) ? Math.Min((byte)7, petlevel) : (byte)0;
-
-                        for (int j = 0; j < petcount; j++)
                         {
-                            MonsterObject monster = MonsterObject.GetMonster(monInfo);
-                            if (monster == null) return;
-                            monster.PetLevel = petlevel;
-                            monster.Master = player;
-                            monster.MaxPetLevel = 7;
-                            monster.Direction = player.Direction;
-                            monster.ActionTime = Envir.Time + 1000;
-                            monster.Spawn(player.CurrentMap, player.CurrentLocation);
-                            player.Pets.Add(monster);
+                            byte petcount = 0;
+                            byte petlevel = 0;
+
+                            var monInfo = Envir.GetMonsterInfo(param[0]);
+                            if (monInfo == null) return;
+
+                            if (param.Count > 1)
+                                petcount = byte.TryParse(param[1], out petcount) ? Math.Min((byte)5, petcount) : (byte)1;
+
+                            if (param.Count > 2)
+                                petlevel = byte.TryParse(param[2], out petlevel) ? Math.Min((byte)7, petlevel) : (byte)0;
+
+                            for (int j = 0; j < petcount; j++)
+                            {
+                                MonsterObject monster = MonsterObject.GetMonster(monInfo);
+                                if (monster == null) return;
+                                monster.PetLevel = petlevel;
+                                monster.Master = player;
+                                monster.MaxPetLevel = 7;
+                                monster.Direction = player.Direction;
+                                monster.ActionTime = Envir.Time + 1000;
+                                monster.Spawn(player.CurrentMap, player.CurrentLocation);
+                                player.Pets.Add(monster);
+                            }
                         }
                         break;
 
                     case ActionType.RemovePet:
-                        for (int c = player.Pets.Count - 1; c >= 0; c--)
                         {
-                            if (string.Compare(player.Pets[c].Info.Name, param[0], true) != 0) continue;
+                            for (int c = player.Pets.Count - 1; c >= 0; c--)
+                            {
+                                if (string.Compare(player.Pets[c].Info.Name, param[0], true) != 0) continue;
 
-                            player.Pets[c].Die();
+                                player.Pets[c].Die();
+                            }
                         }
                         break;
 
                     case ActionType.ClearPets:
-                        for (int c = player.Pets.Count - 1; c >= 0; c--)
                         {
-                            player.Pets[c].Die();
+                            for (int c = player.Pets.Count - 1; c >= 0; c--)
+                            {
+                                player.Pets[c].Die();
+                            }
                         }
                         break;
 
                     case ActionType.AddNameList:
-                        tempString = param[0];
-                        if (File.ReadAllLines(tempString).All(t => player.Name != t))
                         {
-                            using (var line = File.AppendText(tempString))
+                            var tempString = param[0];
+                            if (File.ReadAllLines(tempString).All(t => player.Name != t))
                             {
-                                line.WriteLine(player.Name);
+                                using (var line = File.AppendText(tempString))
+                                {
+                                    line.WriteLine(player.Name);
+                                }
                             }
                         }
                         break;
 
 
                     case ActionType.AddGuildNameList:
-                        tempString = param[0];
-                        if (player.MyGuild == null) break;
-                        if (File.ReadAllLines(tempString).All(t => player.MyGuild.Name != t))
                         {
-                            using (var line = File.AppendText(tempString))
+                            var tempString = param[0];
+                            if (player.MyGuild == null) break;
+                            if (File.ReadAllLines(tempString).All(t => player.MyGuild.Name != t))
                             {
-                                line.WriteLine(player.MyGuild.Name);
+                                using (var line = File.AppendText(tempString))
+                                {
+                                    line.WriteLine(player.MyGuild.Name);
+                                }
                             }
                         }
                         break;
                     case ActionType.DelNameList:
-                        tempString = param[0];
-                        File.WriteAllLines(tempString, File.ReadLines(tempString).Where(l => l != player.Name).ToList());
+                        {
+                            var tempString = param[0];
+                            File.WriteAllLines(tempString, File.ReadLines(tempString).Where(l => l != player.Name).ToList());
+                        }
                         break;
 
                     case ActionType.DelGuildNameList:
-                        if (player.MyGuild == null) break;
-                        tempString = param[0];
-                        File.WriteAllLines(tempString, File.ReadLines(tempString).Where(l => l != player.MyGuild.Name).ToList());
+                        {
+                            if (player.MyGuild == null) break;
+                            var tempString = param[0];
+                            File.WriteAllLines(tempString, File.ReadLines(tempString).Where(l => l != player.MyGuild.Name).ToList());
+                        }
                         break;
                     case ActionType.ClearNameList:
-                        tempString = param[0];
-                        File.WriteAllLines(tempString, new string[] { });
+                        {
+                            var tempString = param[0];
+                            File.WriteAllLines(tempString, new string[] { });
+                        }
                         break;
                     case ActionType.ClearGuildNameList:
-                        if (player.MyGuild == null) break;
-                        tempString = param[0];
-                        File.WriteAllLines(tempString, new string[] { });
+                        {
+                            if (player.MyGuild == null) break;
+                            var tempString = param[0];
+                            File.WriteAllLines(tempString, new string[] { });
+                        }
                         break;
 
                     case ActionType.GiveHP:
-                        if (!int.TryParse(param[0], out tempInt)) return;
-                        player.ChangeHP(tempInt);
+                        {
+                            if (!int.TryParse(param[0], out int tempInt)) return;
+                            player.ChangeHP(tempInt);
+                        }
                         break;
 
                     case ActionType.GiveMP:
-                        if (!int.TryParse(param[0], out tempInt)) return;
-                        player.ChangeMP(tempInt);
+                        {
+                            if (!int.TryParse(param[0], out int tempInt)) return;
+                            player.ChangeMP(tempInt);
+                        }
                         break;
 
                     case ActionType.ChangeLevel:
-                        if (!ushort.TryParse(param[0], out tempuShort)) return;
-                        tempuShort = Math.Min(ushort.MaxValue, tempuShort);
+                        {
+                            if (!ushort.TryParse(param[0], out ushort tempuShort)) return;
+                            tempuShort = Math.Min(ushort.MaxValue, tempuShort);
 
-                        player.Level = tempuShort;
-                        player.LevelUp();
+                            player.Level = tempuShort;
+                            player.LevelUp();
+                        }
                         break;
 
                     case ActionType.SetPkPoint:
-                        if (!int.TryParse(param[0], out tempInt)) return;
-                        player.PKPoints = tempInt;
+                        {
+                            if (!int.TryParse(param[0], out int tempInt)) return;
+                            player.PKPoints = tempInt;
+                        }
                         break;
 
                     case ActionType.ReducePkPoint:
+                        {
+                            if (!int.TryParse(param[0], out int tempInt)) return;
 
-                        if (!int.TryParse(param[0], out tempInt)) return;
-
-                        player.PKPoints -= tempInt;
-                        if (player.PKPoints < 0) player.PKPoints = 0;
-
+                            player.PKPoints -= tempInt;
+                            if (player.PKPoints < 0) player.PKPoints = 0;
+                        }
                         break;
 
                     case ActionType.IncreasePkPoint:
-                        if (!int.TryParse(param[0], out tempInt)) return;
-                        player.PKPoints += tempInt;
+                        {
+                            if (!int.TryParse(param[0], out int tempInt)) return;
+                            player.PKPoints += tempInt;
+                        }
                         break;
 
                     case ActionType.ChangeGender:
-
-                        switch (player.Info.Gender)
                         {
-                            case MirGender.Male:
-                                player.Info.Gender = MirGender.Female;
-                                break;
-                            case MirGender.Female:
-                                player.Info.Gender = MirGender.Male;
-                                break;
+                            switch (player.Info.Gender)
+                            {
+                                case MirGender.Male:
+                                    player.Info.Gender = MirGender.Female;
+                                    break;
+                                case MirGender.Female:
+                                    player.Info.Gender = MirGender.Male;
+                                    break;
+                            }
                         }
                         break;
 
                     case ActionType.ChangeHair:
-
-                        if (param.Count < 1)
                         {
-                            player.Info.Hair = (byte)Envir.Random.Next(0, 9);
-                        }
-                        else
-                        {
-                            byte.TryParse(param[0], out tempByte);
-
-                            if (tempByte >= 0 && tempByte <= 9)
+                            if (param.Count < 1)
                             {
-                                player.Info.Hair = tempByte;
+                                player.Info.Hair = (byte)Envir.Random.Next(0, 9);
+                            }
+                            else
+                            {
+                                byte.TryParse(param[0], out byte tempByte);
+
+                                if (tempByte >= 0 && tempByte <= 9)
+                                {
+                                    player.Info.Hair = tempByte;
+                                }
                             }
                         }
                         break;
 
                     case ActionType.ChangeClass:
-
-                        MirClass mirClass;
-                        if (!Enum.TryParse(param[0], true, out mirClass)) return;
-
-                        switch (mirClass)
                         {
-                            case MirClass.Warrior:
-                                player.Info.Class = MirClass.Warrior;
-                                break;
-                            case MirClass.Taoist:
-                                player.Info.Class = MirClass.Taoist;
-                                break;
-                            case MirClass.Wizard:
-                                player.Info.Class = MirClass.Wizard;
-                                break;
-                            case MirClass.Assassin:
-                                player.Info.Class = MirClass.Assassin;
-                                break;
-                            case MirClass.Archer:
-                                player.Info.Class = MirClass.Archer;
-                                break;
+                            if (!Enum.TryParse(param[0], true, out MirClass mirClass)) return;
+
+                            switch (mirClass)
+                            {
+                                case MirClass.Warrior:
+                                    player.Info.Class = MirClass.Warrior;
+                                    break;
+                                case MirClass.Taoist:
+                                    player.Info.Class = MirClass.Taoist;
+                                    break;
+                                case MirClass.Wizard:
+                                    player.Info.Class = MirClass.Wizard;
+                                    break;
+                                case MirClass.Assassin:
+                                    player.Info.Class = MirClass.Assassin;
+                                    break;
+                                case MirClass.Archer:
+                                    player.Info.Class = MirClass.Archer;
+                                    break;
+                            }
                         }
                         break;
 
                     case ActionType.LocalMessage:
-                        ChatType chatType;
-                        if (!Enum.TryParse(param[1], true, out chatType)) return;
-                        player.ReceiveChat(param[0], chatType);
+                        {
+                            ChatType chatType;
+                            if (!Enum.TryParse(param[1], true, out chatType)) return;
+                            player.ReceiveChat(param[0], chatType);
+                        }
                         break;
 
                     case ActionType.GlobalMessage:
-                        if (!Enum.TryParse(param[1], true, out chatType)) return;
+                        {
+                            if (!Enum.TryParse(param[1], true, out ChatType chatType)) return;
 
-                        p = new S.Chat { Message = param[0], Type = chatType };
-                        Envir.Broadcast(p);
+                            var p = new S.Chat { Message = param[0], Type = chatType };
+                            Envir.Broadcast(p);
+                        }
                         break;
 
                     case ActionType.GiveSkill:
-                        byte spellLevel = 0;
+                        {
+                            byte spellLevel = 0;
 
-                        Spell skill;
-                        if (!Enum.TryParse(param[0], true, out skill)) return;
+                            Spell skill;
+                            if (!Enum.TryParse(param[0], true, out skill)) return;
 
-                        if (player.Info.Magics.Any(e => e.Spell == skill)) break;
+                            if (player.Info.Magics.Any(e => e.Spell == skill)) break;
 
-                        if (param.Count > 1)
-                            spellLevel = byte.TryParse(param[1], out spellLevel) ? Math.Min((byte)3, spellLevel) : (byte)0;
+                            if (param.Count > 1)
+                                spellLevel = byte.TryParse(param[1], out spellLevel) ? Math.Min((byte)3, spellLevel) : (byte)0;
 
-                        var magic = new UserMagic(skill) { Level = spellLevel };
+                            var magic = new UserMagic(skill) { Level = spellLevel };
 
-                        if (magic.Info == null) return;
+                            if (magic.Info == null) return;
 
-                        player.Info.Magics.Add(magic);
-                        player.Enqueue(magic.GetInfo());
+                            player.Info.Magics.Add(magic);
+                            player.Enqueue(magic.GetInfo());
+                        }
                         break;
 
                     case ActionType.RemoveSkill:
-
-                        if (!Enum.TryParse(param[0], true, out skill)) return;
-
-                        if (!player.Info.Magics.Any(e => e.Spell == skill)) break;
-
-                        for (var j = player.Info.Magics.Count - 1; j >= 0; j--)
                         {
-                            if (player.Info.Magics[j].Spell != skill) continue;
+                            if (!Enum.TryParse(param[0], true, out Spell skill)) return;
 
-                            player.Info.Magics.RemoveAt(j);
-                            player.Enqueue(new S.RemoveMagic { PlaceId = j });
+                            if (!player.Info.Magics.Any(e => e.Spell == skill)) break;
+
+                            for (var j = player.Info.Magics.Count - 1; j >= 0; j--)
+                            {
+                                if (player.Info.Magics[j].Spell != skill) continue;
+
+                                player.Info.Magics.RemoveAt(j);
+                                player.Enqueue(new S.RemoveMagic { PlaceId = j });
+                            }
                         }
-
                         break;
 
                     case ActionType.Goto:
-                        DelayedAction action = new DelayedAction(DelayedType.NPC, -1, player.NPCObjectID, "[" + param[0] + "]");
-                        player.ActionList.Add(action);
+                        {
+                            DelayedAction action = new DelayedAction(DelayedType.NPC, -1, player.NPCObjectID, "[" + param[0] + "]");
+                            player.ActionList.Add(action);
+                        }
                         break;
 
                     case ActionType.Call:
-                        if (!int.TryParse(param[0], out int scriptID)) return;
+                        {
+                            if (!int.TryParse(param[0], out int scriptID)) return;
 
-                        action = new DelayedAction(DelayedType.NPC, -1, player.NPCObjectID, "[@MAIN]", scriptID);
-                        player.ActionList.Add(action);
+                            var action = new DelayedAction(DelayedType.NPC, -1, player.NPCObjectID, "[@MAIN]", scriptID);
+                            player.ActionList.Add(action);
+                        }
                         break;
 
                     case ActionType.Break:
-                        Page.BreakFromSegments = true;
+                        {
+                            Page.BreakFromSegments = true;
+                        }
                         break;
 
                     case ActionType.Set:
-                        int flagIndex;
-                        uint onCheck;
-                        if (!int.TryParse(param[0], out flagIndex)) return;
-                        if (!uint.TryParse(param[1], out onCheck)) return;
-
-                        if (flagIndex < 0 || flagIndex >= Globals.FlagIndexCount) return;
-                        var flagIsOn = Convert.ToBoolean(onCheck);
-
-                        player.Info.Flags[flagIndex] = flagIsOn;
-
-                        for (int f = player.CurrentMap.NPCs.Count - 1; f >= 0; f--)
                         {
-                            if (Functions.InRange(player.CurrentMap.NPCs[f].CurrentLocation, player.CurrentLocation, Globals.DataRange))
-                                player.CurrentMap.NPCs[f].CheckVisible(player);
+                            int flagIndex;
+                            uint onCheck;
+                            if (!int.TryParse(param[0], out flagIndex)) return;
+                            if (!uint.TryParse(param[1], out onCheck)) return;
+
+                            if (flagIndex < 0 || flagIndex >= Globals.FlagIndexCount) return;
+                            var flagIsOn = Convert.ToBoolean(onCheck);
+
+                            player.Info.Flags[flagIndex] = flagIsOn;
+
+                            for (int f = player.CurrentMap.NPCs.Count - 1; f >= 0; f--)
+                            {
+                                if (Functions.InRange(player.CurrentMap.NPCs[f].CurrentLocation, player.CurrentLocation, Globals.DataRange))
+                                    player.CurrentMap.NPCs[f].CheckVisible(player);
+                            }
+
+                            if (flagIsOn) player.CheckNeedQuestFlag(flagIndex);
                         }
-
-                        if (flagIsOn) player.CheckNeedQuestFlag(flagIndex);
-
                         break;
 
                     case ActionType.Param1:
-                        if (!int.TryParse(param[1], out tempInt)) return;
+                        {
+                            if (!int.TryParse(param[1], out int tempInt)) return;
 
-                        Param1 = param[0];
-                        Param1Instance = tempInt;
+                            Param1 = param[0];
+                            Param1Instance = tempInt;
+                        }
                         break;
 
                     case ActionType.Param2:
-                        if (!int.TryParse(param[0], out tempInt)) return;
+                        {
+                            if (!int.TryParse(param[0], out int tempInt)) return;
 
-                        Param2 = tempInt;
+                            Param2 = tempInt;
+                        }
                         break;
 
                     case ActionType.Param3:
-                        if (!int.TryParse(param[0], out tempInt)) return;
+                        {
+                            if (!int.TryParse(param[0], out int tempInt)) return;
 
-                        Param3 = tempInt;
+                            Param3 = tempInt;
+                        }
                         break;
 
                     case ActionType.Mongen:
-                        if (Param1 == null || Param2 == 0 || Param3 == 0) return;
-                        if (!byte.TryParse(param[1], out tempByte)) return;
-
-                        map = Envir.GetMapByNameAndInstance(Param1, Param1Instance);
-                        if (map == null) return;
-
-                        monInfo = Envir.GetMonsterInfo(param[0]);
-                        if (monInfo == null) return;
-
-                        for (int j = 0; j < tempByte; j++)
                         {
-                            MonsterObject monster = MonsterObject.GetMonster(monInfo);
-                            if (monster == null) return;
-                            monster.Direction = 0;
-                            monster.ActionTime = Envir.Time + 1000;
-                            monster.Spawn(map, new Point(Param2, Param3));
+                            if (Param1 == null || Param2 == 0 || Param3 == 0) return;
+                            if (!byte.TryParse(param[1], out byte tempByte)) return;
+
+                            Map map = Envir.GetMapByNameAndInstance(Param1, Param1Instance);
+                            if (map == null) return;
+
+                            var monInfo = Envir.GetMonsterInfo(param[0]);
+                            if (monInfo == null) return;
+
+                            for (int j = 0; j < tempByte; j++)
+                            {
+                                MonsterObject monster = MonsterObject.GetMonster(monInfo);
+                                if (monster == null) return;
+                                monster.Direction = 0;
+                                monster.ActionTime = Envir.Time + 1000;
+                                monster.Spawn(map, new Point(Param2, Param3));
+                            }
                         }
                         break;
 
                     case ActionType.TimeRecall:
-                        if (!long.TryParse(param[0], out tempLong)) return;
+                        {
+                            var tempString = "";
+                            if (!long.TryParse(param[0], out long tempLong)) return;
 
-                        if (param[1].Length > 0) tempString = "[" + param[1] + "]";
+                            if (param[1].Length > 0) tempString = "[" + param[1] + "]";
 
-                        Map tempMap = player.CurrentMap;
-                        Point tempPoint = player.CurrentLocation;
+                            Map tempMap = player.CurrentMap;
+                            Point tempPoint = player.CurrentLocation;
 
-                        action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCObjectID, tempString, tempMap, tempPoint);
-                        player.ActionList.Add(action);
-
+                            var action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCObjectID, tempString, tempMap, tempPoint);
+                            player.ActionList.Add(action);
+                        }
                         break;
 
                     case ActionType.TimeRecallGroup:
-                        if (player.GroupMembers == null) return;
-                        if (!long.TryParse(param[0], out tempLong)) return;
-                        if (param[1].Length > 0) tempString = "[" + param[1] + "]";
-
-                        tempMap = player.CurrentMap;
-                        tempPoint = player.CurrentLocation;
-
-                        for (int j = 0; j < player.GroupMembers.Count(); j++)
                         {
-                            var groupMember = player.GroupMembers[j];
+                            var tempString = "";
+                            if (player.GroupMembers == null) return;
+                            if (!long.TryParse(param[0], out long tempLong)) return;
+                            if (param[1].Length > 0) tempString = "[" + param[1] + "]";
 
-                            action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCObjectID, tempString, tempMap, tempPoint);
-                            groupMember.ActionList.Add(action);
+                            for (int j = 0; j < player.GroupMembers.Count(); j++)
+                            {
+                                var groupMember = player.GroupMembers[j];
+
+                                var action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCObjectID, tempString, player.CurrentMap, player.CurrentLocation);
+                                groupMember.ActionList.Add(action);
+                            }
                         }
                         break;
 
                     case ActionType.BreakTimeRecall:
-                        foreach (DelayedAction ac in player.ActionList.Where(u => u.Type == DelayedType.NPC))
                         {
-                            ac.FlaggedToRemove = true;
+                            foreach (DelayedAction ac in player.ActionList.Where(u => u.Type == DelayedType.NPC))
+                            {
+                                ac.FlaggedToRemove = true;
+                            }
                         }
                         break;
 
                     case ActionType.DelayGoto:
-                        if (!long.TryParse(param[0], out tempLong)) return;
+                        {
+                            if (!long.TryParse(param[0], out long tempLong)) return;
 
-                        action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCObjectID, "[" + param[1] + "]");
-                        player.ActionList.Add(action);
+                            var action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCObjectID, "[" + param[1] + "]");
+                            player.ActionList.Add(action);
+                        }
                         break;
 
                     case ActionType.MonClear:
-                        if (!int.TryParse(param[1], out tempInt)) return;
-
-                        map = Envir.GetMapByNameAndInstance(param[0], tempInt);
-                        if (map == null) return;
-                        
-                        foreach (var cell in map.Cells)
                         {
-                            if (cell == null || cell.Objects == null) continue;
+                            if (!int.TryParse(param[1], out int tempInt)) return;
 
-                            for (int j = 0; j < cell.Objects.Count(); j++)
+                            var map = Envir.GetMapByNameAndInstance(param[0], tempInt);
+                            if (map == null) return;
+
+                            foreach (var cell in map.Cells)
                             {
-                                MapObject ob = cell.Objects[j];
+                                if (cell == null || cell.Objects == null) continue;
 
-                                if (ob.Race != ObjectType.Monster) continue;
-                                if (ob.Dead) continue;
-                                
-                                if (!string.IsNullOrEmpty(param[2]) && string.Compare(param[2], ((MonsterObject)ob).Info.Name, true) != 0)
-                                    continue;
+                                for (int j = 0; j < cell.Objects.Count(); j++)
+                                {
+                                    MapObject ob = cell.Objects[j];
 
-                                ob.Die();
+                                    if (ob.Race != ObjectType.Monster) continue;
+                                    if (ob.Dead) continue;
+
+                                    if (!string.IsNullOrEmpty(param[2]) && string.Compare(param[2], ((MonsterObject)ob).Info.Name, true) != 0)
+                                        continue;
+
+                                    ob.Die();
+                                }
                             }
                         }
                         break;
                     case ActionType.GroupRecall:
-                        if (player.GroupMembers == null) return;
-
-                        for (int j = 0; j < player.GroupMembers.Count(); j++)
                         {
-                            player.GroupMembers[j].Teleport(player.CurrentMap, player.CurrentLocation);
+                            if (player.GroupMembers == null) return;
+
+                            for (int j = 0; j < player.GroupMembers.Count(); j++)
+                            {
+                                player.GroupMembers[j].Teleport(player.CurrentMap, player.CurrentLocation);
+                            }
                         }
                         break;
 
                     case ActionType.GroupTeleport:
-                        if (player.GroupMembers == null) return;
-                        if (!int.TryParse(param[1], out tempInt)) return;
-                        if (!int.TryParse(param[2], out x)) return;
-                        if (!int.TryParse(param[3], out y)) return;
-
-                        map = Envir.GetMapByNameAndInstance(param[0], tempInt);
-                        if (map == null) return;
-
-                        for (int j = 0; j < player.GroupMembers.Count(); j++)
                         {
-                            if (x == 0 || y == 0)
+                            if (player.GroupMembers == null) return;
+                            if (!int.TryParse(param[1], out int tempInt)) return;
+                            if (!int.TryParse(param[2], out int x)) return;
+                            if (!int.TryParse(param[3], out int y)) return;
+
+                            var map = Envir.GetMapByNameAndInstance(param[0], tempInt);
+                            if (map == null) return;
+
+                            for (int j = 0; j < player.GroupMembers.Count(); j++)
                             {
-                                player.GroupMembers[j].TeleportRandom(200, 0, map);
-                            }
-                            else
-                            {
-                                player.GroupMembers[j].Teleport(map, new Point(x, y));
+                                if (x == 0 || y == 0)
+                                {
+                                    player.GroupMembers[j].TeleportRandom(200, 0, map);
+                                }
+                                else
+                                {
+                                    player.GroupMembers[j].Teleport(map, new Point(x, y));
+                                }
                             }
                         }
                         break;
 
                     case ActionType.Mov:
-                        string value = param[0];
-                        AddVariable(player, value, param[1]);
+                        {
+                            string value = param[0];
+                            AddVariable(player, value, param[1]);
+                        }
                         break;
 
                     case ActionType.Calc:
-                        int left;
-                        int right;
-
-                        bool resultLeft = int.TryParse(param[0], out left);
-                        bool resultRight = int.TryParse(param[2], out right);
-
-                        if (resultLeft && resultRight)
                         {
-                            try
+                            int left;
+                            int right;
+
+                            bool resultLeft = int.TryParse(param[0], out left);
+                            bool resultRight = int.TryParse(param[2], out right);
+
+                            if (resultLeft && resultRight)
                             {
-                                int result = Calculate(param[1], left, right);
-                                AddVariable(player, param[3].Replace("-", ""), result.ToString());
+                                try
+                                {
+                                    int result = Calculate(param[1], left, right);
+                                    AddVariable(player, param[3].Replace("-", ""), result.ToString());
+                                }
+                                catch (ArgumentException)
+                                {
+                                    MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[1], Key));
+                                }
                             }
-                            catch (ArgumentException)
+                            else
                             {
-                                MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[1], Key));
+                                AddVariable(player, param[3].Replace("-", ""), param[0] + param[2]);
                             }
-                        }
-                        else
-                        {
-                            AddVariable(player, param[3].Replace("-", ""), param[0] + param[2]);
                         }
                         break;
 
                     case ActionType.GiveBuff:
-
-                        if (!Enum.IsDefined(typeof(BuffType), param[0])) return;
-
-                        tempBool = false;
-                        bool tempBool2 = false;
-
-                        long.TryParse(param[1], out tempLong);
-
-                        string[] stringValues = param[2].Split(',');
-
-                        if (stringValues.Length < 1) return;
-
-                        int[] intValues = new int[stringValues.Length];
-
-                        for (int j = 0; j < intValues.Length; j++)
                         {
-                            int.TryParse(stringValues[j], out intValues[j]);
+                            if (!Enum.IsDefined(typeof(BuffType), param[0])) return;
+
+                            int.TryParse(param[1], out int duration);
+                            bool.TryParse(param[2], out bool infinite);
+                            bool.TryParse(param[3], out bool visible);
+                            bool.TryParse(param[4], out bool stackable);
+
+                            player.AddBuff((BuffType)(byte)Enum.Parse(typeof(BuffType), param[0], true), player, Settings.Second * duration, new Stats(), visible, infinite, stackable);
                         }
-
-                        if (intValues.Length < 1) return;
-
-                        if (param[3].Length > 0)
-                            bool.TryParse(param[3], out tempBool);
-
-                        if (param[4].Length > 0)
-                            bool.TryParse(param[4], out tempBool2);
-
-                        Buff buff = new Buff
-                        {
-                            Type = (BuffType)(byte)Enum.Parse(typeof(BuffType), param[0], true),
-                            Caster = player,
-                            ExpireTime = Envir.Time + tempLong * 1000,
-                            Values = intValues,
-                            Infinite = tempBool,
-                            Visible = tempBool2
-                        };
-
-                        player.AddBuff(buff);
                         break;
 
                     case ActionType.RemoveBuff:
-                        if (!Enum.IsDefined(typeof(BuffType), param[0])) return;
-
-                        BuffType bType = (BuffType)(byte)Enum.Parse(typeof(BuffType), param[0]);
-
-                        for (int j = 0; j < player.Buffs.Count; j++)
                         {
-                            if (player.Buffs[j].Type != bType) continue;
+                            if (!Enum.IsDefined(typeof(BuffType), param[0])) return;
 
-                            player.Buffs[j].Infinite = false;
-                            player.Buffs[j].ExpireTime = Envir.Time;
+                            BuffType bType = (BuffType)(byte)Enum.Parse(typeof(BuffType), param[0]);
+
+                            player.RemoveBuff(bType);
                         }
                         break;
 
@@ -3362,326 +3407,368 @@ namespace Server.MirObjects
                         break;
 
                     case ActionType.RemoveFromGuild:
-                        if (player.MyGuild == null) return;
+                        {
+                            if (player.MyGuild == null) return;
 
-                        if (player.MyGuildRank == null) return;
+                            if (player.MyGuildRank == null) return;
 
-                        player.MyGuild.DeleteMember(player, player.Name);
-
+                            player.MyGuild.DeleteMember(player, player.Name);
+                        }
                         break;
 
                     case ActionType.RefreshEffects:
-                        player.SetLevelEffects();
-                        p = new S.ObjectLevelEffects { ObjectID = player.ObjectID, LevelEffects = player.LevelEffects };
-                        player.Enqueue(p);
-                        player.Broadcast(p);
+                        {
+                            player.SetLevelEffects();
+                            var p = new S.ObjectLevelEffects { ObjectID = player.ObjectID, LevelEffects = player.LevelEffects };
+                            player.Enqueue(p);
+                            player.Broadcast(p);
+                        }
                         break;
 
                     case ActionType.CanGainExp:
-                        bool.TryParse(param[0], out tempBool);
-                        player.CanGainExp = tempBool;
+                        {
+                            bool.TryParse(param[0], out bool tempBool);
+                            player.CanGainExp = tempBool;
+                        }
                         break;
 
                     case ActionType.ComposeMail:
-
-                        mailInfo = new MailInfo(player.Info.Index, false)
                         {
-                            Sender = param[1],
-                            Message = param[0]
-                        };
+                            mailInfo = new MailInfo(player.Info.Index, false)
+                            {
+                                Sender = param[1],
+                                Message = param[0]
+                            };
+                        }
                         break;
                     case ActionType.AddMailGold:
-                        if (mailInfo == null) return;
+                        {
+                            if (mailInfo == null) return;
 
-                        uint.TryParse(param[0], out tempUint);
+                            uint.TryParse(param[0], out uint tempUint);
 
-                        mailInfo.Gold += tempUint;
+                            mailInfo.Gold += tempUint;
+                        }
                         break;
 
                     case ActionType.AddMailItem:
-                        if (mailInfo == null) return;
-                        if (mailInfo.Items.Count > 5) return;
-
-                        if (param.Count < 2 || !uint.TryParse(param[1], out count)) count = 1;
-
-                        info = Envir.GetItemInfo(param[0]);
-
-                        if (info == null)
                         {
-                            MessageQueue.Enqueue(string.Format("Failed to get ItemInfo: {0}, Page: {1}", param[0], Key));
-                            break;
-                        }
+                            if (mailInfo == null) return;
+                            if (mailInfo.Items.Count > 5) return;
 
-                        while (count > 0 && mailInfo.Items.Count < 5)
-                        {
-                            UserItem item = Envir.CreateFreshItem(info);
+                            if (param.Count < 2 || !ushort.TryParse(param[1], out ushort count)) count = 1;
 
-                            if (item == null)
+                            var info = Envir.GetItemInfo(param[0]);
+
+                            if (info == null)
                             {
-                                MessageQueue.Enqueue(string.Format("Failed to create UserItem: {0}, Page: {1}", param[0], Key));
-                                return;
+                                MessageQueue.Enqueue(string.Format("Failed to get ItemInfo: {0}, Page: {1}", param[0], Key));
+                                break;
                             }
 
-                            if (item.Info.StackSize > count)
+                            while (count > 0 && mailInfo.Items.Count < 5)
                             {
-                                item.Count = count;
-                                count = 0;
-                            }
-                            else
-                            {
-                                count -= item.Info.StackSize;
-                                item.Count = item.Info.StackSize;
-                            }
+                                UserItem item = Envir.CreateFreshItem(info);
 
-                            mailInfo.Items.Add(item);
+                                if (item == null)
+                                {
+                                    MessageQueue.Enqueue(string.Format("Failed to create UserItem: {0}, Page: {1}", param[0], Key));
+                                    return;
+                                }
+
+                                if (item.Info.StackSize > count)
+                                {
+                                    item.Count = count;
+                                    count = 0;
+                                }
+                                else
+                                {
+                                    count -= item.Info.StackSize;
+                                    item.Count = item.Info.StackSize;
+                                }
+
+                                mailInfo.Items.Add(item);
+                            }
                         }
                         break;
 
                     case ActionType.SendMail:
-                        if (mailInfo == null) return;
+                        {
+                            if (mailInfo == null) return;
 
-                        mailInfo.Send();
-
+                            mailInfo.Send();
+                        }
                         break;
 
                     case ActionType.GroupGoto:
-                        if (player.GroupMembers == null) return;
-
-                        for (int j = 0; j < player.GroupMembers.Count(); j++)
                         {
-                            action = new DelayedAction(DelayedType.NPC, Envir.Time, player.NPCObjectID, "[" + param[0] + "]");
-                            player.GroupMembers[j].ActionList.Add(action);
+                            if (player.GroupMembers == null) return;
+
+                            for (int j = 0; j < player.GroupMembers.Count(); j++)
+                            {
+                                var action = new DelayedAction(DelayedType.NPC, Envir.Time, player.NPCObjectID, "[" + param[0] + "]");
+                                player.GroupMembers[j].ActionList.Add(action);
+                            }
                         }
                         break;
 
                     case ActionType.EnterMap:
-                        if (player.NPCMoveMap == null || player.NPCMoveCoord.IsEmpty) return;
-                        player.Teleport(player.NPCMoveMap, player.NPCMoveCoord, false);
-                        player.NPCMoveMap = null;
-                        player.NPCMoveCoord = Point.Empty;
+                        {
+                            if (player.NPCMoveMap == null || player.NPCMoveCoord.IsEmpty) return;
+                            player.Teleport(player.NPCMoveMap, player.NPCMoveCoord, false);
+                            player.NPCMoveMap = null;
+                            player.NPCMoveCoord = Point.Empty;
+                        }
                         break;
 
                     case ActionType.MakeWeddingRing:
-                        player.MakeWeddingRing();
+                        {
+                            player.MakeWeddingRing();
+                        }
                         break;
 
                     case ActionType.ForceDivorce:
-                        player.NPCDivorce();
+                        {
+                            player.NPCDivorce();
+                        }
                         break;
 
                     case ActionType.LoadValue:
-                        string val = param[0];
-                        string filePath = param[1];
-                        string header = param[2];
-                        string key = param[3];
+                        {
+                            string val = param[0];
+                            string filePath = param[1];
+                            string header = param[2];
+                            string key = param[3];
 
-                        InIReader reader = new InIReader(filePath);
-                        string loadedString = reader.ReadString(header, key, "");
+                            InIReader reader = new InIReader(filePath);
+                            string loadedString = reader.ReadString(header, key, "");
 
-                        if (loadedString == "") break;
-                        AddVariable(player, val, loadedString);
+                            if (loadedString == "") break;
+                            AddVariable(player, val, loadedString);
+                        }
                         break;
 
                     case ActionType.SaveValue:
-                        filePath = param[0];
-                        header = param[1];
-                        key = param[2];
-                        val = param[3];
+                        {
+                            string filePath = param[0];
+                            string header = param[1];
+                            string key = param[2];
+                            string val = param[3];
 
-                        reader = new InIReader(filePath);
-                        reader.Write(header, key, val);
+                            InIReader reader = new InIReader(filePath);
+                            reader.Write(header, key, val);
+                        }
                         break;
                     case ActionType.ConquestGuard:
-                        if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
-                        if (Conquest == null) return;
+                        {
+                            if (!int.TryParse(param[0], out int tempInt)) return;
+                            var conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                            if (conquest == null) return;
 
-                        if (!int.TryParse(param[1], out tempInt)) return;
-                        ConquestArcherObject ConquestArcher = Conquest.ArcherList.FirstOrDefault(z => z.Index == tempInt);
-                        if (ConquestArcher == null) return;
+                            if (!int.TryParse(param[1], out tempInt)) return;
+                            ConquestArcherObject conquestArcher = conquest.ArcherList.FirstOrDefault(z => z.Index == tempInt);
+                            if (conquestArcher == null) return;
 
-                        if (ConquestArcher.ArcherMonster != null)
-                            if (!ConquestArcher.ArcherMonster.Dead) return;
+                            if (conquestArcher.ArcherMonster != null)
+                                if (!conquestArcher.ArcherMonster.Dead) return;
 
-                        if (player.MyGuild == null || player.MyGuild.Gold < ConquestArcher.GetRepairCost()) return;
+                            if (player.MyGuild == null || player.MyGuild.Gold < conquestArcher.GetRepairCost()) return;
 
-                        player.MyGuild.Gold -= ConquestArcher.GetRepairCost();
-                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = ConquestArcher.GetRepairCost() });
+                            player.MyGuild.Gold -= conquestArcher.GetRepairCost();
+                            player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = conquestArcher.GetRepairCost() });
 
-                        ConquestArcher.Spawn(true);
+                            conquestArcher.Spawn(true);
+                        }
                         break;
                     case ActionType.ConquestGate:
-                        if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
-                        if (Conquest == null) return;
+                        {
+                            if (!int.TryParse(param[0], out int tempInt)) return;
+                            var conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                            if (conquest == null) return;
 
-                        if (!int.TryParse(param[1], out tempInt)) return;
-                        ConquestGateObject ConquestGate = Conquest.GateList.FirstOrDefault(z => z.Index == tempInt);
-                        if (ConquestGate == null) return;
+                            if (!int.TryParse(param[1], out tempInt)) return;
+                            ConquestGateObject conquestGate = conquest.GateList.FirstOrDefault(z => z.Index == tempInt);
+                            if (conquestGate == null) return;
 
-                        if (player.MyGuild == null || player.MyGuild.Gold < ConquestGate.GetRepairCost()) return;
+                            if (player.MyGuild == null || player.MyGuild.Gold < conquestGate.GetRepairCost()) return;
 
-                        player.MyGuild.Gold -= ConquestGate.GetRepairCost();
-                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = ConquestGate.GetRepairCost() });
+                            player.MyGuild.Gold -= (uint)conquestGate.GetRepairCost();
+                            player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = (uint)conquestGate.GetRepairCost() });
 
-                        ConquestGate.Repair();
+                            conquestGate.Repair();
+                        }
                         break;
                     case ActionType.ConquestWall:
-                        if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
-                        if (Conquest == null) return;
+                        {
+                            if (!int.TryParse(param[0], out int tempInt)) return;
+                            var conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                            if (conquest == null) return;
 
-                        if (!int.TryParse(param[1], out tempInt)) return;
-                        ConquestWallObject ConquestWall = Conquest.WallList.FirstOrDefault(z => z.Index == tempInt);
-                        if (ConquestWall == null) return;
+                            if (!int.TryParse(param[1], out tempInt)) return;
+                            ConquestWallObject conquestWall = conquest.WallList.FirstOrDefault(z => z.Index == tempInt);
 
-                        //if (ConquestWall.Wall != null)
-                        //    if (!ConquestWall.Wall.Dead) return;
+                            if (conquestWall == null) return;
 
-                        uint repairCost = ConquestWall.GetRepairCost();
+                            uint repairCost = (uint)conquestWall.GetRepairCost();
 
-                        if (player.MyGuild == null || player.MyGuild.Gold < repairCost) return;
+                            if (player.MyGuild == null || player.MyGuild.Gold < repairCost) return;
 
-                        player.MyGuild.Gold -= repairCost;
-                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = repairCost });
+                            player.MyGuild.Gold -= repairCost;
+                            player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = repairCost });
 
-                        ConquestWall.Repair();
+                            conquestWall.Repair();
+                        }
                         break;
                     case ActionType.ConquestSiege:
-                        if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
-                        if (Conquest == null) return;
+                        {
+                            if (!int.TryParse(param[0], out int tempInt)) return;
+                            var conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                            if (conquest == null) return;
 
-                        if (!int.TryParse(param[1], out tempInt)) return;
-                        ConquestSiegeObject ConquestSiege = Conquest.SiegeList.FirstOrDefault(z => z.Index == tempInt);
-                        if (ConquestSiege == null) return;
+                            if (!int.TryParse(param[1], out tempInt)) return;
+                            ConquestSiegeObject conquestSiege = conquest.SiegeList.FirstOrDefault(z => z.Index == tempInt);
+                            if (conquestSiege == null) return;
 
-                        if (ConquestSiege.Gate != null)
-                            if (!ConquestSiege.Gate.Dead) return;
+                            if (conquestSiege.Gate != null)
+                                if (!conquestSiege.Gate.Dead) return;
 
-                        if (player.MyGuild == null || player.MyGuild.Gold < ConquestSiege.GetRepairCost()) return;
+                            if (player.MyGuild == null || player.MyGuild.Gold < conquestSiege.GetRepairCost()) return;
 
-                        player.MyGuild.Gold -= ConquestSiege.GetRepairCost();
-                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = ConquestSiege.GetRepairCost() });
+                            player.MyGuild.Gold -= (uint)conquestSiege.GetRepairCost();
+                            player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = (uint)conquestSiege.GetRepairCost() });
 
-                        ConquestSiege.Repair();
+                            conquestSiege.Repair();
+                        }
                         break;
                     case ActionType.TakeConquestGold:
-                        if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
-                        if (Conquest == null) return;
-
-                        if (player.MyGuild != null && player.MyGuild.Guildindex == Conquest.Owner)
                         {
-                            player.MyGuild.Gold += Conquest.GoldStorage;
-                            player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 3, Amount = Conquest.GoldStorage });
-                            Conquest.GoldStorage = 0;
+                            if (!int.TryParse(param[0], out int tempInt)) return;
+                            var conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                            if (conquest == null) return;
+
+                            if (player.MyGuild != null && player.MyGuild.Guildindex == conquest.Owner)
+                            {
+                                player.MyGuild.Gold += conquest.GoldStorage;
+                                player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 3, Amount = conquest.GoldStorage });
+                                conquest.GoldStorage = 0;
+                            }
                         }
                         break;
                     case ActionType.SetConquestRate:
-                        if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
-                        if (Conquest == null) return;
-
-                        if (!byte.TryParse(param[1], out tempByte)) return;
-                        if (player.MyGuild != null && player.MyGuild.Guildindex == Conquest.Owner)
                         {
-                            Conquest.npcRate = tempByte;
+                            if (!int.TryParse(param[0], out int tempInt)) return;
+                            var conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                            if (conquest == null) return;
+
+                            if (!byte.TryParse(param[1], out byte tempByte)) return;
+                            if (player.MyGuild != null && player.MyGuild.Guildindex == conquest.Owner)
+                            {
+                                conquest.npcRate = tempByte;
+                            }
                         }
                         break;
                     case ActionType.StartConquest:
-                        if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
-                        if (Conquest == null) return;
-                        ConquestGame tempGame;
-
-                        if (!ConquestGame.TryParse(param[1], out tempGame)) return;
-
-                        if (!Conquest.WarIsOn)
                         {
-                            Conquest.StartType = ConquestType.Forced;
-                            Conquest.GameType = tempGame;
-                            Conquest.StartWar(tempGame);
+                            if (!int.TryParse(param[0], out int tempInt)) return;
+                            var conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                            if (conquest == null) return;
+                            ConquestGame tempGame;
+
+                            if (!ConquestGame.TryParse(param[1], out tempGame)) return;
+
+                            if (!conquest.WarIsOn)
+                            {
+                                conquest.StartType = ConquestType.Forced;
+                                conquest.GameType = tempGame;
+                                conquest.StartWar(tempGame);
+                            }
                         }
                         break;
                     case ActionType.ScheduleConquest:
-                        if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
-                        if (Conquest == null) return;
-
-                        if (player.MyGuild != null && player.MyGuild.Guildindex != Conquest.Owner && !Conquest.WarIsOn)
                         {
-                            Conquest.AttackerID = player.MyGuild.Guildindex;
+                            if (!int.TryParse(param[0], out int tempInt)) return;
+                            var conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                            if (conquest == null) return;
+
+                            if (player.MyGuild != null && player.MyGuild.Guildindex != conquest.Owner && !conquest.WarIsOn)
+                            {
+                                conquest.AttackerID = player.MyGuild.Guildindex;
+                            }
                         }
                         break;
                     case ActionType.OpenGate:
-                        if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
-                        if (Conquest == null) return;
+                        {
+                            if (!int.TryParse(param[0], out int tempInt)) return;
+                            var Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                            if (Conquest == null) return;
 
-                        if (!int.TryParse(param[1], out tempInt)) return;
-                        ConquestGateObject OpenGate = Conquest.GateList.FirstOrDefault(z => z.Index == tempInt);
-                        if (OpenGate == null) return;
-                        if (OpenGate.Gate == null) return;
-                        OpenGate.Gate.OpenDoor();
+                            if (!int.TryParse(param[1], out tempInt)) return;
+                            ConquestGateObject OpenGate = Conquest.GateList.FirstOrDefault(z => z.Index == tempInt);
+                            if (OpenGate == null) return;
+                            if (OpenGate.Gate == null) return;
+                            OpenGate.Gate.OpenDoor();
+                        }
                         break;
                     case ActionType.CloseGate:
-                        if (!int.TryParse(param[0], out tempInt)) return;
-                        Conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
-                        if (Conquest == null) return;
+                        {
+                            if (!int.TryParse(param[0], out int tempInt)) return;
+                            var conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                            if (conquest == null) return;
 
-                        if (!int.TryParse(param[1], out tempInt)) return;
-                        ConquestGateObject CloseGate = Conquest.GateList.FirstOrDefault(z => z.Index == tempInt);
-                        if (CloseGate == null) return;
-                        if (CloseGate.Gate == null) return;
-                        CloseGate.Gate.CloseDoor();
+                            if (!int.TryParse(param[1], out tempInt)) return;
+                            ConquestGateObject CloseGate = conquest.GateList.FirstOrDefault(z => z.Index == tempInt);
+                            if (CloseGate == null) return;
+                            if (CloseGate.Gate == null) return;
+                            CloseGate.Gate.CloseDoor();
+                        }
                         break;
                     case ActionType.OpenBrowser:
-                        player.Enqueue(new S.OpenBrowser { Url = param[0]});
+                        {
+                            player.Enqueue(new S.OpenBrowser { Url = param[0] });
+                        }
                         break;
                     case ActionType.GetRandomText:
-                        string randomTextPath = Path.Combine(Settings.NPCPath, param[0]);
-                        if (!File.Exists(randomTextPath))
                         {
-                            MessageQueue.Enqueue(string.Format("the randomTextFile:{0} does not exist.",randomTextPath));
-                        }
-                        else {
-                            var lines = File.ReadAllLines(randomTextPath);
-                            int index = Envir.Random.Next(0,lines.Length);
-                            string randomText = lines[index];
-                            AddVariable(player, param[1], randomText);
+                            string randomTextPath = Path.Combine(Settings.NPCPath, param[0]);
+                            if (!File.Exists(randomTextPath))
+                            {
+                                MessageQueue.Enqueue(string.Format("the randomTextFile:{0} does not exist.", randomTextPath));
+                            }
+                            else
+                            {
+                                var lines = File.ReadAllLines(randomTextPath);
+                                int index = Envir.Random.Next(0, lines.Length);
+                                string randomText = lines[index];
+                                AddVariable(player, param[1], randomText);
+                            }
                         }
                         break;
                     case ActionType.PlaySound:
-                        if (!int.TryParse(param[0], out int soundID)) return;
-                        player.Enqueue(new S.PlaySound { Sound = soundID });
+                        {
+                            if (!int.TryParse(param[0], out int soundID)) return;
+                            player.Enqueue(new S.PlaySound { Sound = soundID });
+                        }
                         break;
 
                     case ActionType.SetTimer:
-                        if (!int.TryParse(param[1], out int seconds) || !byte.TryParse(param[2], out byte type)) return;
+                        {
+                            if (!int.TryParse(param[1], out int seconds) || !byte.TryParse(param[2], out byte type)) return;
 
-                        player.SetTimer(param[0], seconds, type);
+                            player.SetTimer(param[0], seconds, type);
+                        }
                         break;
                     case ActionType.ExpireTimer:
-                        player.ExpireTimer(param[0]);
+                        {
+                            player.ExpireTimer(param[0]);
+                        }
                         break;
                 }
             }
         }
         private void Act(IList<NPCActions> acts, MonsterObject monster)
         {
-
             for (var i = 0; i < acts.Count; i++)
             {
-                string tempString = string.Empty;
-                int tempInt;
-                byte tempByte;
-                long tempLong;
-                bool tempBool;
-                Packet p;
-
-                MonsterInfo monInfo;
-
                 NPCActions act = acts[i];
                 List<string> param = act.Params.Select(t => FindVariable(monster, t)).ToList();
 
@@ -3696,19 +3783,22 @@ namespace Server.MirObjects
                         param[j] = param[j].Replace(part, ReplaceValue(monster, part));
                     }
                 }
-                Map map;
-                ChatType chatType;
+
                 switch (act.Type)
                 {
                     case ActionType.GiveHP:
-                        if (!int.TryParse(param[0], out tempInt)) return;
-                        monster.ChangeHP(tempInt);
+                        {
+                            if (!int.TryParse(param[0], out int tempInt)) return;
+                            monster.ChangeHP(tempInt);
+                        }
                         break;
                     case ActionType.GlobalMessage:
-                        if (!Enum.TryParse(param[1], true, out chatType)) return;
+                        {
+                            if (!Enum.TryParse(param[1], true, out ChatType chatType)) return;
 
-                        p = new S.Chat { Message = param[0], Type = chatType };
-                        Envir.Broadcast(p);
+                            var p = new S.Chat { Message = param[0], Type = chatType };
+                            Envir.Broadcast(p);
+                        }
                         break;
 
                     /* //mobs have no real "delayed" npc code so not added this yet
@@ -3718,174 +3808,162 @@ namespace Server.MirObjects
                                             break;
                     */
                     case ActionType.Break:
-                        Page.BreakFromSegments = true;
+                        {
+                            Page.BreakFromSegments = true;
+                        }
                         break;
 
                     case ActionType.Param1:
-                        if (!int.TryParse(param[1], out tempInt)) return;
+                        {
+                            if (!int.TryParse(param[1], out int tempInt)) return;
 
-                        Param1 = param[0];
-                        Param1Instance = tempInt;
+                            Param1 = param[0];
+                            Param1Instance = tempInt;
+                        }
                         break;
 
                     case ActionType.Param2:
-                        if (!int.TryParse(param[0], out tempInt)) return;
+                        {
+                            if (!int.TryParse(param[0], out int tempInt)) return;
 
-                        Param2 = tempInt;
+                            Param2 = tempInt;
+                        }
                         break;
 
                     case ActionType.Param3:
-                        if (!int.TryParse(param[0], out tempInt)) return;
+                        {
+                            if (!int.TryParse(param[0], out int tempInt)) return;
 
-                        Param3 = tempInt;
+                            Param3 = tempInt;
+                        }
                         break;
 
                     case ActionType.Mongen:
-                        if (Param1 == null || Param2 == 0 || Param3 == 0) return;
-                        if (!byte.TryParse(param[1], out tempByte)) return;
-
-                        map = Envir.GetMapByNameAndInstance(Param1, Param1Instance);
-                        if (map == null) return;
-
-                        monInfo = Envir.GetMonsterInfo(param[0]);
-                        if (monInfo == null) return;
-
-                        for (int j = 0; j < tempByte; j++)
                         {
-                            MonsterObject mob = MonsterObject.GetMonster(monInfo);
-                            if (mob == null) return;
-                            mob.Direction = 0;
-                            mob.ActionTime = Envir.Time + 1000;
-                            mob.Spawn(map, new Point(Param2, Param3));
+                            if (Param1 == null || Param2 == 0 || Param3 == 0) return;
+                            if (!byte.TryParse(param[1], out byte tempByte)) return;
+
+                            var map = Envir.GetMapByNameAndInstance(Param1, Param1Instance);
+                            if (map == null) return;
+
+                            var monInfo = Envir.GetMonsterInfo(param[0]);
+                            if (monInfo == null) return;
+
+                            for (int j = 0; j < tempByte; j++)
+                            {
+                                MonsterObject mob = MonsterObject.GetMonster(monInfo);
+                                if (mob == null) return;
+                                mob.Direction = 0;
+                                mob.ActionTime = Envir.Time + 1000;
+                                mob.Spawn(map, new Point(Param2, Param3));
+                            }
                         }
                         break;
                     case ActionType.MonClear:
-                        if (!int.TryParse(param[1], out tempInt)) return;
-
-                        map = Envir.GetMapByNameAndInstance(param[0], tempInt);
-                        if (map == null) return;
-
-                        foreach (var cell in map.Cells)
                         {
-                            if (cell == null || cell.Objects == null) continue;
+                            if (!int.TryParse(param[1], out int tempInt)) return;
 
-                            for (int j = 0; j < cell.Objects.Count(); j++)
+                            var map = Envir.GetMapByNameAndInstance(param[0], tempInt);
+                            if (map == null) return;
+
+                            foreach (var cell in map.Cells)
                             {
-                                MapObject ob = cell.Objects[j];
+                                if (cell == null || cell.Objects == null) continue;
 
-                                if (ob.Race != ObjectType.Monster) continue;
-                                if (ob.Dead) continue;
-                                ob.Die();
+                                for (int j = 0; j < cell.Objects.Count(); j++)
+                                {
+                                    MapObject ob = cell.Objects[j];
+
+                                    if (ob.Race != ObjectType.Monster) continue;
+                                    if (ob.Dead) continue;
+                                    ob.Die();
+                                }
                             }
                         }
                         break;
 
                     case ActionType.Mov:
-                        string value = param[0];
-                        AddVariable(monster, value, param[1]);
+                        {
+                            string value = param[0];
+                            AddVariable(monster, value, param[1]);
+                        }
                         break;
 
                     case ActionType.Calc:
-                        int left;
-                        int right;
-
-                        bool resultLeft = int.TryParse(param[0], out left);
-                        bool resultRight = int.TryParse(param[2], out right);
-
-                        if (resultLeft && resultRight)
                         {
-                            try
+                            int left;
+                            int right;
+
+                            bool resultLeft = int.TryParse(param[0], out left);
+                            bool resultRight = int.TryParse(param[2], out right);
+
+                            if (resultLeft && resultRight)
                             {
-                                int result = Calculate(param[1], left, right);
-                                AddVariable(monster, param[3].Replace("-", ""), result.ToString());
+                                try
+                                {
+                                    int result = Calculate(param[1], left, right);
+                                    AddVariable(monster, param[3].Replace("-", ""), result.ToString());
+                                }
+                                catch (ArgumentException)
+                                {
+                                    MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[1], Key));
+                                }
                             }
-                            catch (ArgumentException)
+                            else
                             {
-                                MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[1], Key));
+                                AddVariable(monster, param[3].Replace("-", ""), param[0] + param[2]);
                             }
-                        }
-                        else
-                        {
-                            AddVariable(monster, param[3].Replace("-", ""), param[0] + param[2]);
                         }
                         break;
 
                     case ActionType.GiveBuff:
-
-                        if (!Enum.IsDefined(typeof(BuffType), param[0])) return;
-
-                        tempBool = false;
-                        bool tempBool2 = false;
-
-                        long.TryParse(param[1], out tempLong);
-
-                        string[] stringValues = param[2].Split(',');
-
-                        if (stringValues.Length < 1) return;
-
-                        int[] intValues = new int[stringValues.Length];
-
-                        for (int j = 0; j < intValues.Length; j++)
                         {
-                            int.TryParse(stringValues[j], out intValues[j]);
+                            if (!Enum.IsDefined(typeof(BuffType), param[0])) return;
+
+                            int.TryParse(param[1], out int tempInt);
+                            bool.TryParse(param[2], out bool infinite);
+                            bool.TryParse(param[3], out bool visible);
+                            bool.TryParse(param[4], out bool stackable);
+
+                            monster.AddBuff((BuffType)(byte)Enum.Parse(typeof(BuffType), param[0], true), monster, Settings.Second * tempInt, new Stats(), visible, infinite, stackable);
                         }
-
-                        if (intValues.Length < 1) return;
-
-                        if (param[3].Length > 0)
-                            bool.TryParse(param[3], out tempBool);
-
-                        if (param[4].Length > 0)
-                            bool.TryParse(param[4], out tempBool2);
-
-                        Buff buff = new Buff
-                        {
-                            Type = (BuffType)(byte)Enum.Parse(typeof(BuffType), param[0], true),
-                            Caster = monster,
-                            ExpireTime = Envir.Time + tempLong * 1000,
-                            Values = intValues,
-                            Infinite = tempBool,
-                            Visible = tempBool2
-                        };
-
-                        monster.AddBuff(buff);
                         break;
 
                     case ActionType.RemoveBuff:
-                        if (!Enum.IsDefined(typeof(BuffType), param[0])) return;
-
-                        BuffType bType = (BuffType)(byte)Enum.Parse(typeof(BuffType), param[0]);
-
-                        for (int j = 0; j < monster.Buffs.Count; j++)
                         {
-                            if (monster.Buffs[j].Type != bType) continue;
+                            if (!Enum.IsDefined(typeof(BuffType), param[0])) return;
 
-                            monster.Buffs[j].Infinite = false;
-                            monster.Buffs[j].ExpireTime = Envir.Time;
+                            BuffType bType = (BuffType)(byte)Enum.Parse(typeof(BuffType), param[0]);
+
+                            monster.RemoveBuff(bType);
                         }
                         break;
 
                     case ActionType.LoadValue:
-                        string val = param[0];
-                        string filePath = param[1];
-                        string header = param[2];
-                        string key = param[3];
+                        {
+                            string val = param[0];
+                            string filePath = param[1];
+                            string header = param[2];
+                            string key = param[3];
 
-                        InIReader reader = new InIReader(filePath);
-                        string loadedString = reader.ReadString(header, key, "");
+                            var reader = new InIReader(filePath);
+                            string loadedString = reader.ReadString(header, key, "");
 
-                        if (loadedString == "") break;
-                        AddVariable(monster, val, loadedString);
+                            if (loadedString == "") break;
+                            AddVariable(monster, val, loadedString);
+                        }
                         break;
 
                     case ActionType.SaveValue:
-                        filePath = param[0];
-                        header = param[1];
-                        key = param[2];
-                        val = param[3];
+                        {
+                            string filePath = param[0];
+                            string header = param[1];
+                            string key = param[2];
+                            string val = param[3];
 
-                        reader = new InIReader(filePath);
-                        reader.Write(header, key, val);
+                            var reader = new InIReader(filePath);
+                            reader.Write(header, key, val);
+                        }
                         break;
                 }
             }

@@ -26,9 +26,9 @@ namespace Server.MirObjects.Monsters
         {
             if (Dead) return;
 
-            if (MaxHP >= 4)
+            if (Stats[Stat.HP] >= 4)
             {
-                byte stage = (byte)(4 - (HP / (MaxHP / 4)));
+                byte stage = (byte)(4 - (HP / (Stats[Stat.HP] / 4)));
 
                 if (stage > _stage)
                 {
@@ -63,7 +63,7 @@ namespace Server.MirObjects.Monsters
                     {
                         if (Functions.MaxDistance(CurrentLocation, targets[i].CurrentLocation) > 3)
                         {
-                            if (Envir.Random.Next(Settings.MagicResistWeight) < targets[i].MagicResist) continue;
+                            if (Envir.Random.Next(Settings.MagicResistWeight) < targets[i].Stats[Stat.MagicResist]) continue;
                             if (!targets[i].Teleport(CurrentMap, Functions.PointMove(CurrentLocation, (MirDirection)((byte)Envir.Random.Next(7)), 1)))
                             targets[i].Teleport(CurrentMap, CurrentLocation);
                             return;
@@ -97,7 +97,7 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
             ShockTime = 0;

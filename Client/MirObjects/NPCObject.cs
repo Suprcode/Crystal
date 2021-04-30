@@ -10,7 +10,7 @@ using S = ServerPackets;
 
 namespace Client.MirObjects
 {
-    class NPCObject : MapObject
+    public class NPCObject : MapObject
     {
         public override ObjectType Race
         {

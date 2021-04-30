@@ -52,7 +52,7 @@ namespace Server.MirObjects.Monsters
                 {
                     Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0, TargetID = Target.ObjectID });
 
-                    damage = GetAttackPower(MinDC, MaxDC);
+                    damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
                     List<MapObject> targets = FindAllTargets(1, Target.CurrentLocation);
 
@@ -81,7 +81,7 @@ namespace Server.MirObjects.Monsters
                     Point tar;
                     Cell cell;
 
-                    damage = GetAttackPower(MinDC, MaxDC);
+                    damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
                     for (int i = 0; i < 8; i++)
                     {
@@ -119,11 +119,11 @@ namespace Server.MirObjects.Monsters
                         //Slash
                         Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
-                        damage = GetAttackPower(MinDC, MaxDC);
+                        damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                         action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility, AttackType.SingleSlash);
                         ActionList.Add(action);
 
-                        damage = GetAttackPower(MinDC, MaxDC);
+                        damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                         action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.ACAgility, AttackType.SingleSlash);
                         ActionList.Add(action);
                         break;
@@ -131,7 +131,7 @@ namespace Server.MirObjects.Monsters
                         //Two hand slash
                         Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
-                        damage = GetAttackPower(MinDC, MaxDC);
+                        damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                         action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility, AttackType.SingleSlash);
                         ActionList.Add(action);
                         break;
@@ -157,11 +157,11 @@ namespace Server.MirObjects.Monsters
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            int poisonTime = GetAttackPower(MinSC, MaxSC);
+            int poisonTime = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
 
             if (target.Attacked(this, damage, defence) <= 0) return;
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.PoisonResist)
+            if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.Stats[Stat.PoisonResist])
             {
                 if (Envir.Random.Next(2) == 0)
                 {
@@ -180,7 +180,7 @@ namespace Server.MirObjects.Monsters
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            int poisonTime = GetAttackPower(MinSC, MaxSC);
+            int poisonTime = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
 
             if (target.Attacked(this, damage, defence) <= 0) return;
 
@@ -188,7 +188,7 @@ namespace Server.MirObjects.Monsters
             {
                 case AttackType.Stomp:
                     {
-                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.PoisonResist)
+                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.Stats[Stat.PoisonResist])
                         {
                             if (Envir.Random.Next(2) == 0)
                             {

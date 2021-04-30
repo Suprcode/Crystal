@@ -39,21 +39,21 @@ namespace Server.MirObjects.Monsters
             switch (type)
             {
                 case DefenceType.ACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) return 0;
+                    armour = GetAttackPower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.AC:
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    armour = GetAttackPower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.MACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
-                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) return 0;
+                    armour = GetAttackPower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
                 case DefenceType.MAC:
-                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    armour = GetAttackPower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
                 case DefenceType.Agility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) return 0;
                     break;
             }
 
@@ -93,21 +93,21 @@ namespace Server.MirObjects.Monsters
             switch (type)
             {
                 case DefenceType.ACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) return 0;
+                    armour = GetAttackPower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.AC:
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    armour = GetAttackPower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.MACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
-                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) return 0;
+                    armour = GetAttackPower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
                 case DefenceType.MAC:
-                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    armour = GetAttackPower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
                 case DefenceType.Agility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) return 0;
                     break;
             }
 
@@ -186,7 +186,7 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
             if (damage == 0) return;
 
@@ -195,16 +195,16 @@ namespace Server.MirObjects.Monsters
 
         private void HypnoAttack()
         {
-            int damage = GetAttackPower(MinMC, MaxMC);
+            int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
             if (damage == 0) return;
 
             if (Target.Attacked(this, damage, DefenceType.MACAgility) <= 0) return;
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
             {
                 if (Envir.Random.Next(10) == 0)
                 {
-                    Target.ApplyPoison(new Poison { Owner = this, Duration = GetAttackPower(MinMC, MaxMC), PType = PoisonType.Stun, TickSpeed = 1000 }, this);
+                    Target.ApplyPoison(new Poison { Owner = this, Duration = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]), PType = PoisonType.Stun, TickSpeed = 1000 }, this);
                 }
             }
         }

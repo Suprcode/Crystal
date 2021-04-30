@@ -44,12 +44,12 @@ namespace Server.MirObjects
         public UserItem Item;
 
 
-        public override uint Health
+        public override int Health
         {
             get { throw new NotSupportedException(); }
         }
 
-        public override uint MaxHealth
+        public override int MaxHealth
         {
             get { throw new NotSupportedException(); }
         }
@@ -414,7 +414,7 @@ namespace Server.MirObjects
             throw new NotSupportedException();
         }
 
-        public override void AddBuff(Buff b)
+        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stat, bool visible = false, bool infinite = false, bool stackable = false, bool refreshStats = true, params int[] values)
         {
             throw new NotSupportedException();
         }

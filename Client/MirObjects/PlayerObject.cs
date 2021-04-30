@@ -46,7 +46,7 @@ namespace Client.MirObjects
         {
             get
             {
-                switch (Weapon / 100)
+                switch (Weapon / Globals.ClassWeaponCount)
                 {
                     default:
                         return Class == MirClass.Wizard || Class == MirClass.Warrior || Class == MirClass.Taoist;
@@ -71,6 +71,7 @@ namespace Client.MirObjects
         public int JumpDistance;
         public bool Cast;
         public uint TargetID;
+        public List<uint> SecondaryTargetIDs;
         public Point TargetPoint;
 
         public bool MagicShield;
@@ -876,9 +877,6 @@ namespace Client.MirObjects
                         CurrentAction = MirAction.Standing;
                     else
                         CurrentAction = CMain.Time > StanceTime ? MirAction.Standing : MirAction.Stance;
-
-                    if (Concentrating && ConcentrateInterrupted)
-                        Network.Enqueue(new C.SetConcentration { ObjectID = User.ObjectID, Enabled = Concentrating, Interrupted = false });
                 }
 
                 if (Fishing) CurrentAction = MirAction.FishingWait;
@@ -1382,35 +1380,36 @@ namespace Client.MirObjects
                         //    break;
 
                         case MirAction.AttackRange1: //ArcherTest
-                            GameScene.AttackTime = CMain.Time + User.AttackSpeed + 200;
+                            {
+                                GameScene.AttackTime = CMain.Time + User.AttackSpeed + 200;
 
-                            uint targetID = (uint)action.Params[0];
-                            Point location = (Point)action.Params[1];
+                                uint targetID = (uint)action.Params[0];
+                                Point location = (Point)action.Params[1];
 
-                            Network.Enqueue(new C.RangeAttack { Direction = Direction, Location = CurrentLocation, TargetID = targetID, TargetLocation = location });
+                                Network.Enqueue(new C.RangeAttack { Direction = Direction, Location = CurrentLocation, TargetID = targetID, TargetLocation = location });
+                            }
                             break;
                         case MirAction.AttackRange2:
                         case MirAction.Spell:
-                            Spell = (Spell)action.Params[0];
-                            targetID = (uint)action.Params[1];
-                            location = (Point)action.Params[2];
-
-                            //magic = User.GetMagic(Spell);
-                            //magic.LastCast = CMain.Time;
-
-                            Network.Enqueue(new C.Magic { Spell = Spell, Direction = Direction, TargetID = targetID, Location = location });
-
-                            if (Spell == Spell.FlashDash)
                             {
-                                GameScene.SpellTime = CMain.Time + 250;
-                                MapControl.NextAction = CMain.Time;
+                                Spell = (Spell)action.Params[0];
+                                uint targetID = (uint)action.Params[1];
+                                Point location = (Point)action.Params[2];
+
+                                Network.Enqueue(new C.Magic { Spell = Spell, Direction = Direction, TargetID = targetID, Location = location });
+
+                                if (Spell == Spell.FlashDash)
+                                {
+                                    GameScene.SpellTime = CMain.Time + 250;
+                                    MapControl.NextAction = CMain.Time;
+                                }
+                                else
+                                {
+                                    GameScene.SpellTime = Spell == Spell.FlameField ? CMain.Time + 2500 : CMain.Time + 1800;
+                                    MapControl.NextAction = CMain.Time + 2500;
+                                }
                             }
-                            else
-                            {
-                                GameScene.SpellTime = Spell == Spell.FlameField ? CMain.Time + 2500 : CMain.Time + 1800;
-                                MapControl.NextAction = CMain.Time + 2500;
-                            }
-                            break;
+                            break;                         
                         case MirAction.Harvest:
                             if (ArcherLayTrap)
                             {
@@ -1570,6 +1569,7 @@ namespace Client.MirObjects
                             TargetPoint = (Point)action.Params[2];
                             Cast = (bool)action.Params[3];
                             SpellLevel = (byte)action.Params[4];
+                            SecondaryTargetIDs = (List<uint>)action.Params[5];
                         }
 
                         switch (Spell)
@@ -2127,6 +2127,25 @@ namespace Client.MirObjects
                                 break;
                             #endregion
 
+
+                            #region FireBounce
+
+                            case Spell.FireBounce:
+                                Effects.Add(new Effect(Libraries.Magic, 400, 10, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell.GreatFireBall * 10);
+                                break;
+
+                            #endregion
+
+                            #region MeteorShower
+
+                            case Spell.MeteorShower:
+                                Effects.Add(new Effect(Libraries.Magic, 400, 10, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell.GreatFireBall * 10);
+                                break;
+
+                            #endregion
+
                         }
 
 
@@ -2198,27 +2217,6 @@ namespace Client.MirObjects
         public virtual void ProcessFrames()
         {
             if (Frame == null) return;
-            //thedeath2
-            //slow frame speed
-            //if (Poison == PoisonType.Slow)
-            //{
-            //    if (CurrentAction != MirAction.Standing)
-            //    {
-            //        if (SlowFrameIndex >= 3)
-            //        {
-            //            SlowFrameIndex = 0;
-            //        }
-            //        else
-            //        {
-            //            SlowFrameIndex++;
-            //            return;
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    SlowFrameIndex = 0;
-            //}
 
             switch (CurrentAction)
             {
@@ -2701,17 +2699,14 @@ namespace Client.MirObjects
                                                             int exIdx = 0;
                                                             if (this == User)
                                                             {
-                                                                //
-                                                                if (GameScene.Scene.Buffs.Where(x => x.Type == BuffType.VampireShot).Any()) exIdx = 20;
-                                                                if (GameScene.Scene.Buffs.Where(x => x.Type == BuffType.PoisonShot).Any()) exIdx = 10;
+                                                                if (GameScene.Scene.Buffs.Any(x => x.Type == BuffType.VampireShot)) exIdx = 20;
+                                                                if (GameScene.Scene.Buffs.Any(x => x.Type == BuffType.PoisonShot)) exIdx = 10;
                                                             }
                                                             else
                                                             {
-                                                                if (Buffs.Where(x => x == BuffType.VampireShot).Any()) exIdx = 20;
-                                                                if (Buffs.Where(x => x == BuffType.PoisonShot).Any()) exIdx = 10;
+                                                                if (Buffs.Any(x => x == BuffType.VampireShot)) exIdx = 20;
+                                                                if (Buffs.Any(x => x == BuffType.PoisonShot)) exIdx = 10;
                                                             }
-
-                                                            //GameScene.Scene.ChatDialog.ReceiveChat("Debug: "+exIdx.ToString(),ChatType.System);
 
                                                             ob.Effects.Add(eff = new Effect(Libraries.Magic3, 2490 + exIdx, 7, 1000, ob));
                                                             SoundManager.PlaySound(20000 + 136 * 10 + 5 + (exIdx / 10));//sound M136-5/7
@@ -3322,6 +3317,62 @@ namespace Client.MirObjects
                                         break;
 
                                     #endregion
+
+
+                                    #region FireBounce
+
+                                    case Spell.FireBounce:
+                                        SoundManager.PlaySound(20000 + (ushort)Spell.GreatFireBall * 10 + 1);
+
+                                        missile = CreateProjectile(410, Libraries.Magic, true, 6, 30, 4);
+
+                                        if (missile.Target != null)
+                                        {
+                                            missile.Complete += (o, e) =>
+                                            {
+                                                if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                missile.Target.Effects.Add(new Effect(Libraries.Magic, 570, 10, 600, missile.Target));
+                                                SoundManager.PlaySound(20000 + (ushort)Spell.GreatFireBall * 10 + 2);
+                                            };
+                                        }
+                                        break;
+
+                                    #endregion
+
+                                    #region MeteorShower
+
+                                    case Spell.MeteorShower:
+
+                                        SoundManager.PlaySound(20000 + (ushort)Spell.GreatFireBall * 10 + 1);
+
+                                        var targetIDs = new List<uint> { TargetID };
+
+                                        if (SecondaryTargetIDs != null)
+                                        {
+                                            targetIDs.AddRange(SecondaryTargetIDs);
+                                        }
+
+                                        foreach (var targetID in targetIDs)
+                                        {
+                                            missile = CreateProjectile(410, Libraries.Magic, true, 6, 30, 4, targetID: targetID);
+
+                                            if (missile.Target != null)
+                                            {
+                                                missile.Complete += (o, e) =>
+                                                {
+                                                    var sender = (Missile)o;
+
+                                                    if (sender.Target.CurrentAction == MirAction.Dead) return;
+                                                    sender.Target.Effects.Add(new Effect(Libraries.Magic, 570, 10, 600, sender.Target));
+                                                    SoundManager.PlaySound(20000 + (ushort)Spell.GreatFireBall * 10 + 2);
+                                                };
+                                            }
+                                        }
+                                        
+                                        break;
+
+                                    #endregion
+
                                 }
 
 
@@ -3445,16 +3496,22 @@ namespace Client.MirObjects
         }
 
 
-        private Missile CreateProjectile(int baseIndex, MLibrary library, bool blend, int count, int interval, int skip, int lightDistance = 6, Color? lightColour = null)
+        public override Missile CreateProjectile(int baseIndex, MLibrary library, bool blend, int count, int interval, int skip, int lightDistance = 6, bool direction16 = true, Color? lightColour = null, uint targetID = 0)
         {
-            MapObject ob = MapControl.GetObject(TargetID);
+            if (targetID == 0)
+            {
+                targetID = TargetID;
+            }
 
-            if (ob != null) TargetPoint = ob.CurrentLocation;
+            MapObject ob = MapControl.GetObject(targetID);
 
-            int duration = Functions.MaxDistance(CurrentLocation, TargetPoint) * 50;
+            var targetPoint = TargetPoint;
 
+            if (ob != null) targetPoint = ob.CurrentLocation;
 
-            Missile missile = new Missile(library, baseIndex, duration / interval, duration, this, TargetPoint)
+            int duration = Functions.MaxDistance(CurrentLocation, targetPoint) * 50;
+
+            Missile missile = new Missile(library, baseIndex, duration / interval, duration, this, targetPoint)
             {
                 Target = ob,
                 Interval = interval,

@@ -195,6 +195,11 @@ namespace Client.MirObjects
             }
         }
 
+        public virtual Missile CreateProjectile(int baseIndex, MLibrary library, bool blend, int count, int interval, int skip, int lightDistance = 6, bool direction16 = true, Color? lightColour = null, uint targetID = 0)
+        {
+            return null;
+        }
+
         public void Chat(string text)
         {
             if (ChatLabel != null && !ChatLabel.IsDisposed)
@@ -299,6 +304,7 @@ namespace Client.MirObjects
                 Damage info = Damages[i];
                 if (CMain.Time > info.ExpireTime)
                 {
+                    info.DamageLabel.Dispose();
                     Damages.RemoveAt(i);
                 }
                 else

@@ -110,24 +110,24 @@ namespace Server
                 BufftxtTimeLimit.Text = SelectedBuff.TimeLimit.ToString();
                 BufftxtActivationCost.Text = SelectedBuff.ActivationCost.ToString();
                 bufftxtIcon.Text = SelectedBuff.Icon.ToString();
-                BufftxtAc.Text = SelectedBuff.BuffAc.ToString();
-                BufftxtMac.Text = SelectedBuff.BuffMac.ToString();
-                BufftxtDc.Text = SelectedBuff.BuffDc.ToString();
-                BufftxtMc.Text = SelectedBuff.BuffMc.ToString();
-                BufftxtSc.Text = SelectedBuff.BuffSc.ToString();
-                BufftxtAttack.Text = SelectedBuff.BuffAttack.ToString();
-                BufftxtHpRegen.Text = SelectedBuff.BuffHpRegen.ToString();
-                BufftxtMpRegen.Text = SelectedBuff.BuffMPRegen.ToString();
-                BufftxtMaxHp.Text = SelectedBuff.BuffMaxHp.ToString();
-                BufftxtMaxMp.Text = SelectedBuff.BuffMaxMp.ToString();
-                BufftxtMineRate.Text = SelectedBuff.BuffMineRate.ToString();
-                BufftxtGemRate.Text = SelectedBuff.BuffGemRate.ToString();
-                BufftxtFishRate.Text = SelectedBuff.BuffFishRate.ToString();
-                BufftxtExpRate.Text = SelectedBuff.BuffExpRate.ToString();
-                BufftxtCraftRate.Text = SelectedBuff.BuffCraftRate.ToString();
-                BufftxtSkillRate.Text = SelectedBuff.BuffSkillRate.ToString();
-                BufftxtDropRate.Text = SelectedBuff.BuffDropRate.ToString();
-                BufftxtGoldRate.Text = SelectedBuff.BuffGoldRate.ToString();
+                BufftxtAc.Text = SelectedBuff.Stats[Stat.MaxAC].ToString();
+                BufftxtMac.Text = SelectedBuff.Stats[Stat.MaxMAC].ToString();
+                BufftxtDc.Text = SelectedBuff.Stats[Stat.MaxDC].ToString();
+                BufftxtMc.Text = SelectedBuff.Stats[Stat.MaxMC].ToString();
+                BufftxtSc.Text = SelectedBuff.Stats[Stat.MaxSC].ToString();
+                BufftxtAttack.Text = SelectedBuff.Stats[Stat.AttackBonus].ToString();
+                BufftxtHpRegen.Text = SelectedBuff.Stats[Stat.HealthRecovery].ToString();
+                BufftxtMpRegen.Text = SelectedBuff.Stats[Stat.SpellRecovery].ToString();
+                BufftxtMaxHp.Text = SelectedBuff.Stats[Stat.HP].ToString();
+                BufftxtMaxMp.Text = SelectedBuff.Stats[Stat.MP].ToString();
+                BufftxtMineRate.Text = SelectedBuff.Stats[Stat.MineRatePercent].ToString();
+                BufftxtGemRate.Text = SelectedBuff.Stats[Stat.GemRatePercent].ToString();
+                BufftxtFishRate.Text = SelectedBuff.Stats[Stat.FishRatePercent].ToString();
+                BufftxtExpRate.Text = SelectedBuff.Stats[Stat.ExpRatePercent].ToString();
+                BufftxtCraftRate.Text = SelectedBuff.Stats[Stat.CraftRatePercent].ToString();
+                BufftxtSkillRate.Text = SelectedBuff.Stats[Stat.SkillGainMultiplier].ToString();
+                BufftxtDropRate.Text = SelectedBuff.Stats[Stat.ItemDropRatePercent].ToString();
+                BufftxtGoldRate.Text = SelectedBuff.Stats[Stat.GoldDropRatePercent].ToString();
             }
         }
 
@@ -455,7 +455,7 @@ namespace Server
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.BuffAc = temp;
+            SelectedBuff.Stats[Stat.MaxAC] = temp;
             GuildsChanged = true;
         }
 
@@ -464,7 +464,7 @@ namespace Server
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.BuffMac = temp;
+            SelectedBuff.Stats[Stat.MaxMAC] = temp;
             GuildsChanged = true;
         }
 
@@ -473,7 +473,7 @@ namespace Server
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.BuffDc = temp;
+            SelectedBuff.Stats[Stat.MaxDC] = temp;
             GuildsChanged = true;
         }
 
@@ -482,7 +482,7 @@ namespace Server
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.BuffMc = temp;
+            SelectedBuff.Stats[Stat.MaxMC] = temp;
             GuildsChanged = true;
         }
 
@@ -491,7 +491,7 @@ namespace Server
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.BuffSc = temp;
+            SelectedBuff.Stats[Stat.MaxSC] = temp;
             GuildsChanged = true;
         }
 
@@ -500,7 +500,7 @@ namespace Server
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.BuffAttack = temp;
+            SelectedBuff.Stats[Stat.AttackBonus] = temp;
             GuildsChanged = true;
         }
 
@@ -509,7 +509,7 @@ namespace Server
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.BuffMaxHp = temp;
+            SelectedBuff.Stats[Stat.HP] = temp;
             GuildsChanged = true;
         }
 
@@ -518,7 +518,7 @@ namespace Server
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.BuffMaxMp = temp;
+            SelectedBuff.Stats[Stat.MP] = temp;
             GuildsChanged = true;
         }
 
@@ -527,7 +527,7 @@ namespace Server
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.BuffHpRegen = temp;
+            SelectedBuff.Stats[Stat.HealthRecovery] = temp;
             GuildsChanged = true;
         }
 
@@ -536,7 +536,7 @@ namespace Server
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.BuffMPRegen = temp;
+            SelectedBuff.Stats[Stat.SpellRecovery] = temp;
             GuildsChanged = true;
         }
 
@@ -545,7 +545,7 @@ namespace Server
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.BuffMineRate = temp;
+            SelectedBuff.Stats[Stat.MineRatePercent] = temp;
             GuildsChanged = true;
         }
 
@@ -554,7 +554,7 @@ namespace Server
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.BuffGemRate = temp;
+            SelectedBuff.Stats[Stat.GemRatePercent] = temp;
             GuildsChanged = true;
         }
 
@@ -563,7 +563,7 @@ namespace Server
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.BuffFishRate = temp;
+            SelectedBuff.Stats[Stat.FishRatePercent] = temp;
             GuildsChanged = true;
         }
 
@@ -572,7 +572,7 @@ namespace Server
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.BuffExpRate = temp;
+            SelectedBuff.Stats[Stat.ExpRatePercent] = temp;
             GuildsChanged = true;
         }
 
@@ -581,7 +581,7 @@ namespace Server
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.BuffCraftRate = temp;
+            SelectedBuff.Stats[Stat.CraftRatePercent] = temp;
             GuildsChanged = true;
         }
 
@@ -590,7 +590,7 @@ namespace Server
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.BuffSkillRate = temp;
+            SelectedBuff.Stats[Stat.SkillGainMultiplier] = temp;
             GuildsChanged = true;
         }
 
@@ -599,7 +599,7 @@ namespace Server
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.BuffDropRate = temp;
+            SelectedBuff.Stats[Stat.ItemDropRatePercent] = temp;
             GuildsChanged = true;
         }
 
@@ -608,7 +608,7 @@ namespace Server
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.BuffGoldRate = temp;
+            SelectedBuff.Stats[Stat.GoldDropRatePercent] = temp;
             GuildsChanged = true;
         }
 

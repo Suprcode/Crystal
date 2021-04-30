@@ -23,6 +23,8 @@
 
         MaxDragonLevel = 13,
 
+        ClassWeaponCount = 100,
+
         FlagIndexCount = 1999,
 
         MaxConcurrentQuests = 20,

@@ -53,9 +53,9 @@ namespace Server.MirObjects.Monsters
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
                         if (!ob.IsAttackTarget(this)) continue;
 
-                        ob.Attacked(this, MinDC, DefenceType.ACAgility);
+                        ob.Attacked(this, Stats[Stat.MinDC], DefenceType.ACAgility);
 
-                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= ob.PoisonResist)
+                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= ob.Stats[Stat.PoisonResist])
                         {
                             if (Envir.Random.Next(5) == 0)
                             {
@@ -72,7 +72,7 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
             Target.Attacked(this, damage, DefenceType.ACAgility);

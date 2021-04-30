@@ -19,7 +19,7 @@ namespace Server.MirObjects.Monsters
         {
             int attackerDamage = base.Attacked(attacker, damage, type, damageWeapon);
 
-            int ownDamage = GetAttackPower(MinDC, MaxDC);
+            int ownDamage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
             if (attackerDamage > ownDamage && Envir.Random.Next(2) == 0)
             {
@@ -33,7 +33,7 @@ namespace Server.MirObjects.Monsters
         {
             int attackerDamage = base.Attacked(attacker, damage, type);
 
-            int ownDamage = GetAttackPower(MinDC, MaxDC);
+            int ownDamage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
             if (attackerDamage > ownDamage && Envir.Random.Next(2) == 0)
             {
@@ -51,7 +51,7 @@ namespace Server.MirObjects.Monsters
 
             for (int i = 0; i < targets.Count; i++)
             {
-                if (targets[i].MinDC > Target.MinDC) continue;
+                if (targets[i].Stats[Stat.MinDC] > Target.Stats[Stat.MinDC]) continue;
 
                 CurrentLocation = targets[i].CurrentLocation;
                 Target = targets[i];

@@ -123,6 +123,12 @@
     <Compile Include="Database\GameShop.designer.cs">
       <DependentUpon>GameShop.cs</DependentUpon>
     </Compile>
+    <Compile Include="Database\ItemInfoFormNew.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Database\ItemInfoFormNew.Designer.cs">
+      <DependentUpon>ItemInfoFormNew.cs</DependentUpon>
+    </Compile>
     <Compile Include="Database\MagicInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -277,6 +283,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Database\GameShop.resx">
       <DependentUpon>GameShop.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Database\ItemInfoFormNew.resx">
+      <DependentUpon>ItemInfoFormNew.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Database\MagicInfoForm.resx">
       <DependentUpon>MagicInfoForm.cs</DependentUpon>

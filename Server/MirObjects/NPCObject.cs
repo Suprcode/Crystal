@@ -148,6 +148,11 @@ namespace Server.MirObjects
             return false;
         }
 
+        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stat, bool visible = false, bool infinite = false, bool stackable = false, bool refreshStats = true, params int[] values)
+        {
+            throw new NotSupportedException();
+        }
+
         public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
             throw new NotSupportedException();
@@ -457,12 +462,12 @@ namespace Server.MirObjects
 
         public override MirDirection Direction { get; set; }
 
-        public override uint Health
+        public override int Health
         {
             get { throw new NotSupportedException(); }
         }
 
-        public override uint MaxHealth
+        public override int MaxHealth
         {
             get { throw new NotSupportedException(); }
         }

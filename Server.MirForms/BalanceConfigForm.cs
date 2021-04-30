@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Server.MirEnvir;
+using Shared.Extensions;
 
 namespace Server
 {
@@ -15,6 +16,8 @@ namespace Server
         public bool RandomItemStatsChanged = false;
         public bool GuildsChanged = false;
 
+        public bool Populating = false;
+
         public BalanceConfigForm()
         {
             InitializeComponent();
@@ -23,106 +26,64 @@ namespace Server
             for (int i = 0; i < Settings.RandomItemStatsList.Count; i++)
                 RISIndexcomboBox.Items.Add(i);
 
-            UpdateInterface();
+            UpdateStatInterface();
             UpdateRandomItemStats();
 
+
+            this.BaseStatType.ValueType = typeof(Stat);
+            this.BaseStatType.DataSource = Enum.GetValues(typeof(Stat));
+
+            this.BaseStatFormula.ValueType = typeof(StatFormula);
+            this.BaseStatFormula.DataSource = Enum.GetValues(typeof(StatFormula));
+
+            this.CapType.ValueType = typeof(Stat);
+            this.CapType.DataSource = Enum.GetValues(typeof(Stat));
         }
 
         private void BalanceConfigForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             //save configs
             if (BaseStatsChanged)
+            {
                 Settings.SaveBaseStats();
-            SMain.Envir.RequiresBaseStatUpdate();
-            if (RandomItemStatsChanged)
-                Settings.SaveRandomItemStats();
-            if (GuildsChanged)
-                Settings.SaveGuildSettings();
+                SMain.Envir.RequiresBaseStatUpdate();
+            }
+
+            if (RandomItemStatsChanged) Settings.SaveRandomItemStats();
+            if (GuildsChanged) Settings.SaveGuildSettings();
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            lblClassStatExample.Visible = false;
+
+            if (tabControl1.SelectedTab.Name == "tabPage3")
+            {
+                lblClassStatExample.Visible = true;
+            }
         }
 
         private void ClassComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
             SelectedClassID = (byte)ClassComboBox.SelectedItem;
-            UpdateInterface();
+
+            Populating = true;
+            UpdateClassStatGridView();
+            UpdateClassCapGridView();
+            Populating = false;
         }
 
-        private void UpdateInterface()
+        private void UpdateStatInterface()
         {
-            if (ClassComboBox.SelectedItem == null)
-            {
-                HpGaintextBox.Text = string.Empty;
-                HpGainRatetextBox.Text = string.Empty;
-                MpGainBoosttextBox.Text = string.Empty;
-                MinAcGainRatetextBox.Text = string.Empty;
-                MaxAcRateGaintextBox.Text = string.Empty;
-                MinMacGainRatetextBox.Text = string.Empty;
-                MaxMacGainRatetextBox.Text = string.Empty;
-                MinDcGainRatetextBox.Text = string.Empty;
-                MaxDcGainRatetextBox.Text = string.Empty;
-                MinMcGainRatetextBox.Text = string.Empty;
-                MaxMcGainRatetextBox.Text = string.Empty;
-                MinScGainRatetextBox.Text = string.Empty;
-                MaxScGainRatetextBox.Text = string.Empty;
-                BagWeigthGaintextBox.Text = string.Empty;
-                WearWeightGaintextBox.Text = string.Empty;
-                HandWeightGaintextBox.Text = string.Empty;
-                StartAccuracytextBox.Text = string.Empty;
-                StartAgilitytextBox.Text = string.Empty;
-                StartCriticalRatetextBox.Text = string.Empty;
-                StartCriticalDamagetextBox.Text = string.Empty;
-                CriticalRateGaintextBox.Text = string.Empty;
-                CriticalDamageGaintextBox.Text = string.Empty;
-                MaxHealthRegentextBox.Text = string.Empty;
-                HealthRegenWeighttextBox.Text = string.Empty;
-                MaxManaRegentextBox.Text = string.Empty;
-                ManaRegenWeighttextBox.Text = string.Empty;
-                MaxPoisonRecoverytextBox.Text = string.Empty;
-            }
-            else
-            {
-                BaseStats Stats = Settings.ClassBaseStats[SelectedClassID];
-                HpGaintextBox.Text = Stats.HpGain.ToString();
-                HpGainRatetextBox.Text = Stats.HpGainRate.ToString();
-                MpGainBoosttextBox.Text = Stats.MpGainRate.ToString();
-                MinAcGainRatetextBox.Text = Stats.MinAc.ToString();
-                MaxAcRateGaintextBox.Text = Stats.MaxAc.ToString();
-                MinMacGainRatetextBox.Text = Stats.MinMac.ToString();
-                MaxMacGainRatetextBox.Text = Stats.MaxMac.ToString();
-                MinDcGainRatetextBox.Text = Stats.MinDc.ToString();
-                MaxDcGainRatetextBox.Text = Stats.MaxDc.ToString();
-                MinMcGainRatetextBox.Text = Stats.MinMc.ToString();
-                MaxMcGainRatetextBox.Text = Stats.MaxMc.ToString();
-                MinScGainRatetextBox.Text = Stats.MinSc.ToString();
-                MaxScGainRatetextBox.Text = Stats.MaxSc.ToString();
-                BagWeigthGaintextBox.Text = Stats.BagWeightGain.ToString();
-                WearWeightGaintextBox.Text = Stats.WearWeightGain.ToString();
-                HandWeightGaintextBox.Text = Stats.HandWeightGain.ToString();
-                StartAccuracytextBox.Text = Stats.StartAccuracy.ToString();
-                StartAgilitytextBox.Text = Stats.StartAgility.ToString();
-                StartCriticalRatetextBox.Text = Stats.StartCriticalRate.ToString();
-                StartCriticalDamagetextBox.Text = Stats.StartCriticalDamage.ToString();
-                CriticalRateGaintextBox.Text = Stats.CritialRateGain.ToString();
-                CriticalDamageGaintextBox.Text = Stats.CriticalDamageGain.ToString();
-            }
-            MaxMagicResisttextbox.Text = Settings.MaxMagicResist.ToString();
             MagicResistWeigttextbox.Text = Settings.MagicResistWeight.ToString();
-            MaxPoisonResisttextbox.Text = Settings.MaxPoisonResist.ToString();
             PoisonResistWeighttextbox.Text = Settings.PoisonResistWeight.ToString();
-            MaxCriticalRatetextbox.Text = Settings.MaxCriticalRate.ToString();
             CritialRateWeighttextbox.Text = Settings.CriticalRateWeight.ToString();
-            MaxCriticalDamagetextbox.Text = Settings.MaxCriticalDamage.ToString();
             CriticalDamagetextbox.Text = Settings.CriticalDamageWeight.ToString();
-            MaxPoisonAttacktextbox.Text = Settings.MaxPoisonAttack.ToString();
             PoisonAttackWeighttextbox.Text = Settings.PoisonAttackWeight.ToString();
-            MaxFreezingtextbox.Text = Settings.MaxFreezing.ToString();
             FreezingWeighttextbox.Text = Settings.FreezingAttackWeight.ToString();
-            MaxHealthRegentextBox.Text = Settings.MaxHealthRegen.ToString();
             HealthRegenWeighttextBox.Text = Settings.HealthRegenWeight.ToString();
-            MaxManaRegentextBox.Text = Settings.MaxManaRegen.ToString();
             ManaRegenWeighttextBox.Text = Settings.ManaRegenWeight.ToString();
-            MaxPoisonRecoverytextBox.Text = Settings.MaxPoisonRecovery.ToString();
-
 
             CanFreezecheckBox.Checked = Settings.PvpCanFreeze;
             CanResistPoisoncheckBox.Checked = Settings.PvpCanResistPoison;
@@ -283,20 +244,7 @@ namespace Server
             }
         }
 
-        private void MaxMagicResisttextbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            Settings.MaxMagicResist = temp;
-        }
+        #region ItemStats
 
         private void MagicResistWeigttextbox_TextChanged(object sender, EventArgs e)
         {
@@ -311,21 +259,6 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             Settings.MagicResistWeight = temp;
-        }
-
-        private void MaxPoisonResisttextbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            Settings.MaxPoisonResist = temp;
         }
 
         private void PoisonResistWeighttextbox_TextChanged(object sender, EventArgs e)
@@ -343,21 +276,6 @@ namespace Server
             Settings.PoisonResistWeight = temp;
         }
 
-        private void MaxCriticalRatetextbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            Settings.MaxCriticalRate = temp;
-        }
-
         private void CritialRateWeighttextbox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
@@ -371,21 +289,6 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             Settings.CriticalRateWeight = temp;
-        }
-
-        private void MaxCriticalDamagetextbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            Settings.MaxCriticalDamage = Math.Min((byte)1,temp);
         }
 
         private void CriticalDamagetextbox_TextChanged(object sender, EventArgs e)
@@ -403,21 +306,6 @@ namespace Server
             Settings.CriticalDamageWeight = temp;
         }
 
-        private void MaxFreezingtextbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            Settings.MaxFreezing = temp;
-        }
-
         private void FreezingWeighttextbox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
@@ -431,21 +319,6 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
             Settings.FreezingAttackWeight = temp;
-        }
-
-        private void MaxPoisonAttacktextbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            Settings.MaxPoisonAttack = temp;
         }
 
         private void PoisonAttackWeighttextbox_TextChanged(object sender, EventArgs e)
@@ -481,351 +354,6 @@ namespace Server
             Settings.PvpCanFreeze = CanFreezecheckBox.Checked;
         }
 
-        private void HpGaintextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            float temp;
-
-            if (!float.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].HpGain = temp;
-        }
-
-        private void HpGainRatetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            float temp;
-
-            if (!float.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].HpGainRate = temp;
-        }
-
-        private void MpGainBoosttextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            float temp;
-
-            if (!float.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].MpGainRate = temp;
-        }
-
-        private void BagWeigthGaintextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            float temp;
-
-            if (!float.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].BagWeightGain = temp;
-        }
-
-        private void WearWeightGaintextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            float temp;
-
-            if (!float.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].WearWeightGain = temp;
-        }
-
-        private void HandWeightGaintextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            float temp;
-
-            if (!float.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].HandWeightGain = temp;
-        }
-
-        private void MinAcGainRatetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].MinAc = temp;
-        }
-
-        private void MaxAcRateGaintextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].MaxAc = temp;
-        }
-
-        private void MinMacGainRatetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].MinMac = temp;
-        }
-
-        private void MaxMacGainRatetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].MaxMac = temp;
-        }
-
-        private void MinDcGainRatetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].MinDc = temp;
-        }
-
-        private void MaxDcGainRatetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].MaxDc = temp;
-        }
-
-        private void MinMcGainRatetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].MinMc = temp;
-        }
-
-        private void MaxMcGainRatetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].MaxMc = temp;
-        }
-
-        private void MinScGainRatetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].MinSc = temp;
-        }
-
-        private void MaxScGainRatetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].MaxSc = temp;
-        }
-
-        private void StartAccuracytextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].StartAccuracy = temp;
-        }
-
-        private void StartAgilitytextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].StartAgility = temp;
-        }
-
-        private void StartCriticalRatetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].StartCriticalRate = temp;
-        }
-
-        private void StartCriticalDamagetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].StartCriticalDamage = temp;
-        }
-
-        private void CriticalRateGaintextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].CritialRateGain = temp;
-        }
-
-        private void CriticalDamageGaintextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.ClassBaseStats[SelectedClassID].CriticalDamageGain = temp;
-        }
-
-        private void MaxHealthRegentextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.MaxHealthRegen = temp;
-        }
-
         private void HealthRegenWeighttextBox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
@@ -839,21 +367,6 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
             BaseStatsChanged = true;
             Settings.HealthRegenWeight = temp;
-        }
-
-        private void MaxManaRegentextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
-
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.MaxManaRegen = temp;
         }
 
         private void ManaRegenWeighttextBox_TextChanged(object sender, EventArgs e)
@@ -871,21 +384,9 @@ namespace Server
             Settings.ManaRegenWeight = temp;
         }
 
-        private void MaxPoisonRecoverytextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            byte temp;
+        #endregion
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
-            BaseStatsChanged = true;
-            Settings.MaxPoisonRecovery = temp;
-        }
-
+        #region RandomItemStat
         private void RISIndexcomboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
@@ -2029,5 +1530,250 @@ namespace Server
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].SlotMaxStat = temp;
         }
+        #endregion
+
+        #region Class
+        private void classGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            classGridView.Rows[e.RowIndex].ErrorText = "";
+
+            if (classGridView.Rows[e.RowIndex].IsNewRow) { return; }
+
+            if (e.ColumnIndex == 2 || e.ColumnIndex == 5)
+            {
+                if (!int.TryParse(e.FormattedValue.ToString(), out _))
+                {
+                    e.Cancel = true;
+                    classGridView.Rows[e.RowIndex].ErrorText = "the value must be an integer";
+                }
+            }
+            else if (e.ColumnIndex == 3 || e.ColumnIndex == 4)
+            {
+                if (!float.TryParse(e.FormattedValue.ToString(), out _))
+                {
+                    e.Cancel = true;
+                    classGridView.Rows[e.RowIndex].ErrorText = "the value must be a decimal";
+                }
+            }
+        }
+
+        private void classGridView_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
+        {
+            e.Row.Cells["BaseStatBase"].Value = 0;
+            e.Row.Cells["BaseStatGain"].Value = 0.0F;
+            e.Row.Cells["BaseStatGainRate"].Value = 0.0F;
+            e.Row.Cells["BaseStatMax"].Value = 0;
+        }
+
+        private void classGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            if (classGridView.Rows[e.RowIndex].IsNewRow) return;
+
+            if (classGridView.Columns[e.ColumnIndex].Name == "BaseStatFormula")
+            {
+                var formula = (StatFormula)classGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+
+                var gainRateCell = classGridView.Rows[e.RowIndex].Cells["BaseStatGainRate"];
+
+                if (formula == StatFormula.Health || formula == StatFormula.Mana)
+                {
+                    gainRateCell.ReadOnly = false;
+                    gainRateCell.Style.BackColor = gainRateCell.OwningColumn.DefaultCellStyle.BackColor;
+                    gainRateCell.Style.ForeColor = gainRateCell.OwningColumn.DefaultCellStyle.ForeColor;
+                }
+                else
+                {
+                    gainRateCell.ReadOnly = true;
+                    gainRateCell.Style.BackColor = Color.LightGray;
+                    gainRateCell.Style.ForeColor = Color.DarkGray;
+                }
+            }
+
+            var statType = (Stat)classGridView.Rows[e.RowIndex].Cells["BaseStatType"].Value;
+
+            UpdateBaseStatData();
+            UpdateClassStatExample(statType);
+        }
+
+        private void classGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            if (classGridView.SelectedRows.Count == 1)
+            {
+                var row = classGridView.SelectedRows[0];
+
+                var statType = (Stat)row.Cells["BaseStatType"].Value;
+
+                UpdateClassStatExample(statType);
+            }
+        }
+
+        private void classGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            UpdateBaseStatData();
+        }
+
+        private void classCapGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            classCapGridView.Rows[e.RowIndex].ErrorText = "";
+
+            if (classCapGridView.Rows[e.RowIndex].IsNewRow) { return; }
+
+            if (e.ColumnIndex == 1)
+            {
+                if (!int.TryParse(e.FormattedValue.ToString(), out _))
+                {
+                    e.Cancel = true;
+                    classCapGridView.Rows[e.RowIndex].ErrorText = "the value must be an integer";
+                }
+            }
+        }
+
+        private void classCapGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            if (classCapGridView.Rows[e.RowIndex].IsNewRow) return;
+
+            var capType = (Stat)classCapGridView.Rows[e.RowIndex].Cells["CapType"].Value;
+
+            UpdateCapStatData();
+            UpdateClassStatExample(capType);
+        }
+
+        private void classCapGridView_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
+        {
+            e.Row.Cells["Value"].Value = 0;
+        }
+
+        private void classCapGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            UpdateCapStatData();
+        }
+
+        private void UpdateClassStatExample(Stat type)
+        {
+            if (Populating) return;
+
+            var str = string.Format("{0} - {1}\r\r", ((MirClass)SelectedClassID), type);
+
+            BaseStats classStats = Settings.ClassBaseStats[SelectedClassID];
+
+            var stat = classStats.Stats.FirstOrDefault(x => x.Type == type);
+
+            if (stat != null)
+            {
+                var cap = classStats.Caps[type];
+
+                if (cap == 0) cap = int.MaxValue;
+
+                for (int level = 1; level <= 50; level++)
+                {
+                    str += string.Format("Level {0}\t: {1}\n", level, Math.Min(cap, stat.Calculate((MirClass)SelectedClassID, level)));
+                }
+
+                lblClassStatExample.Text = str;
+            }
+        }
+
+        private void UpdateClassStatGridView()
+        {
+            classGridView.Rows.Clear();
+
+            BaseStats classStats = Settings.ClassBaseStats[SelectedClassID];
+
+            foreach (var stat in classStats.Stats)
+            {
+                int rowIndex = classGridView.Rows.Add();
+
+                var row = classGridView.Rows[rowIndex];
+
+                row.Cells["BaseStatType"].Value = stat.Type;
+                row.Cells["BaseStatFormula"].Value = stat.FormulaType;
+                row.Cells["BaseStatBase"].Value = stat.Base;
+                row.Cells["BaseStatGain"].Value = stat.Gain;
+                row.Cells["BaseStatGainRate"].Value = stat.GainRate;
+                row.Cells["BaseStatMax"].Value = stat.Max;
+            }
+        }
+
+        private void UpdateClassCapGridView()
+        {
+            classCapGridView.Rows.Clear();
+
+            BaseStats classStats = Settings.ClassBaseStats[SelectedClassID];
+
+            foreach (var cap in classStats.Caps.Values)
+            {
+                int rowIndex = classCapGridView.Rows.Add();
+
+                var row = classCapGridView.Rows[rowIndex];
+
+                row.Cells["CapType"].Value = cap.Key;
+                row.Cells["Value"].Value = cap.Value;
+            }
+        }
+
+        private void UpdateBaseStatData()
+        {
+            if (Populating) return;
+
+            BaseStatsChanged = true;
+
+            BaseStats classStats = Settings.ClassBaseStats[SelectedClassID];
+
+            classStats.Stats.Clear();
+
+            foreach (DataGridViewRow row in classGridView.Rows)
+            {
+                var cells = row.Cells;
+
+                if (cells[0].Value == null || cells[1].Value == null) continue;
+
+                var type = (Stat)row.Cells["BaseStatType"].Value;
+                var formula = (StatFormula)row.Cells["BaseStatFormula"].Value;
+
+                if (classStats.Stats.Any(x => x.Type == type))
+                {
+                    MessageBox.Show(string.Format($"The stat '{type}' exists more than once so will not be saved."));
+                    continue;
+                }
+
+                var baseStat = new BaseStat(type)
+                {
+                    FormulaType = (StatFormula)cells["BaseStatFormula"].Value.ValueOrDefault<byte>(),
+                    Base = cells["BaseStatBase"].Value.ValueOrDefault<int>(),
+                    Gain = cells["BaseStatGain"].Value.ValueOrDefault<float>(),
+                    GainRate = cells["BaseStatGainRate"].Value.ValueOrDefault<float>(),
+                    Max = cells["BaseStatMax"].Value.ValueOrDefault<int>()
+                };
+
+                classStats.Stats.Add(baseStat);
+            }
+        }
+
+        private void UpdateCapStatData()
+        {
+            if (Populating) return;
+
+            BaseStatsChanged = true;
+
+            BaseStats classStats = Settings.ClassBaseStats[SelectedClassID];
+
+            classStats.Caps.Clear();
+
+            foreach (DataGridViewRow row in classCapGridView.Rows)
+            {
+                var cells = row.Cells;
+
+                if (cells[0].Value == null || cells[1].Value == null) continue;
+
+                var type = (Stat)row.Cells["CapType"].Value;
+                var value = (int)row.Cells["Value"].Value.ValueOrDefault<int>();
+
+                classStats.Caps[type] = value;
+            }
+        }
+
+        #endregion
     }
 }

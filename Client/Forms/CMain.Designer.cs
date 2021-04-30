@@ -33,13 +33,13 @@
             // 
             // CMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(275, 240);
+            this.ClientSize = new System.Drawing.Size(275, 260);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(200, 213);
             this.Name = "CMain";
             this.Text = "Legend of Mir";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CMain_FormClosing);

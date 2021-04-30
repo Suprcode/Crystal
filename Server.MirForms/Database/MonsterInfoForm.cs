@@ -116,18 +116,18 @@ namespace Server
             HPTextBox.Text = info.HP.ToString();
             ExperienceTextBox.Text = info.Experience.ToString();
 
-            MinACTextBox.Text = info.MinAC.ToString();
-            MaxACTextBox.Text = info.MaxAC.ToString();
-            MinMACTextBox.Text = info.MinMAC.ToString();
-            MaxMACTextBox.Text = info.MaxMAC.ToString();
-            MinDCTextBox.Text = info.MinDC.ToString();
-            MaxDCTextBox.Text = info.MaxDC.ToString();
-            MinMCTextBox.Text = info.MinMC.ToString();
-            MaxMCTextBox.Text = info.MaxMC.ToString();
-            MinSCTextBox.Text = info.MinSC.ToString();
-            MaxSCTextBox.Text = info.MaxSC.ToString();
-            AccuracyTextBox.Text = info.Accuracy.ToString();
-            AgilityTextBox.Text = info.Agility.ToString();
+            MinACTextBox.Text = info.Stats[Stat.MinAC].ToString();
+            MaxACTextBox.Text = info.Stats[Stat.MaxAC].ToString();
+            MinMACTextBox.Text = info.Stats[Stat.MinMAC].ToString();
+            MaxMACTextBox.Text = info.Stats[Stat.MaxMAC].ToString();
+            MinDCTextBox.Text = info.Stats[Stat.MinDC].ToString();
+            MaxDCTextBox.Text = info.Stats[Stat.MaxDC].ToString();
+            MinMCTextBox.Text = info.Stats[Stat.MinMC].ToString();
+            MaxMCTextBox.Text = info.Stats[Stat.MaxMC].ToString();
+            MinSCTextBox.Text = info.Stats[Stat.MinSC].ToString();
+            MaxSCTextBox.Text = info.Stats[Stat.MaxSC].ToString();
+            AccuracyTextBox.Text = info.Stats[Stat.Accuracy].ToString();
+            AgilityTextBox.Text = info.Stats[Stat.Agility].ToString();
             LightTextBox.Text = info.Light.ToString();
 
             ASpeedTextBox.Text = info.AttackSpeed.ToString();
@@ -156,18 +156,18 @@ namespace Server
                 if (HPTextBox.Text != info.HP.ToString()) HPTextBox.Text = string.Empty;
                 if (ExperienceTextBox.Text != info.Experience.ToString()) ExperienceTextBox.Text = string.Empty;
 
-                if (MinACTextBox.Text != info.MinAC.ToString()) MinACTextBox.Text = string.Empty;
-                if (MaxACTextBox.Text != info.MaxAC.ToString()) MaxACTextBox.Text = string.Empty;
-                if (MinMACTextBox.Text != info.MinMAC.ToString()) MinMACTextBox.Text = string.Empty;
-                if (MaxMACTextBox.Text != info.MaxMAC.ToString()) MaxMACTextBox.Text = string.Empty;
-                if (MinDCTextBox.Text != info.MinDC.ToString()) MinDCTextBox.Text = string.Empty;
-                if (MaxDCTextBox.Text != info.MaxDC.ToString()) MaxDCTextBox.Text = string.Empty;
-                if (MinMCTextBox.Text != info.MinMC.ToString()) MinMCTextBox.Text = string.Empty;
-                if (MaxMCTextBox.Text != info.MaxMC.ToString()) MaxMCTextBox.Text = string.Empty;
-                if (MinSCTextBox.Text != info.MinSC.ToString()) MinSCTextBox.Text = string.Empty;
-                if (MaxSCTextBox.Text != info.MaxSC.ToString()) MaxSCTextBox.Text = string.Empty;
-                if (AccuracyTextBox.Text != info.Accuracy.ToString()) AccuracyTextBox.Text = string.Empty;
-                if (AgilityTextBox.Text != info.Agility.ToString()) AgilityTextBox.Text = string.Empty;
+                if (MinACTextBox.Text != info.Stats[Stat.MinAC].ToString()) MinACTextBox.Text = string.Empty;
+                if (MaxACTextBox.Text != info.Stats[Stat.MaxAC].ToString()) MaxACTextBox.Text = string.Empty;
+                if (MinMACTextBox.Text != info.Stats[Stat.MinMAC].ToString()) MinMACTextBox.Text = string.Empty;
+                if (MaxMACTextBox.Text != info.Stats[Stat.MaxMAC].ToString()) MaxMACTextBox.Text = string.Empty;
+                if (MinDCTextBox.Text != info.Stats[Stat.MinDC].ToString()) MinDCTextBox.Text = string.Empty;
+                if (MaxDCTextBox.Text != info.Stats[Stat.MaxDC].ToString()) MaxDCTextBox.Text = string.Empty;
+                if (MinMCTextBox.Text != info.Stats[Stat.MinMC].ToString()) MinMCTextBox.Text = string.Empty;
+                if (MaxMCTextBox.Text != info.Stats[Stat.MaxMC].ToString()) MaxMCTextBox.Text = string.Empty;
+                if (MinSCTextBox.Text != info.Stats[Stat.MinSC].ToString()) MinSCTextBox.Text = string.Empty;
+                if (MaxSCTextBox.Text != info.Stats[Stat.MaxSC].ToString()) MaxSCTextBox.Text = string.Empty;
+                if (AccuracyTextBox.Text != info.Stats[Stat.Accuracy].ToString()) AccuracyTextBox.Text = string.Empty;
+                if (AgilityTextBox.Text != info.Stats[Stat.Agility].ToString()) AgilityTextBox.Text = string.Empty;
                 if (LightTextBox.Text != info.Light.ToString()) LightTextBox.Text = string.Empty;
                 if (ASpeedTextBox.Text != info.AttackSpeed.ToString()) ASpeedTextBox.Text = string.Empty;
                 if (MSpeedTextBox.Text != info.MoveSpeed.ToString()) MSpeedTextBox.Text = string.Empty;
@@ -298,9 +298,9 @@ namespace Server
         {
             if (ActiveControl != sender) return;
 
-            uint temp;
+            int temp;
 
-            if (!uint.TryParse(ActiveControl.Text, out temp))
+            if (!int.TryParse(ActiveControl.Text, out temp) || temp < 0)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -342,7 +342,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
-                _selectedMonsterInfos[i].MinAC = temp;
+                _selectedMonsterInfos[i].Stats[Stat.MinAC] = temp;
         }
         private void MaxACTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -359,7 +359,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
-                _selectedMonsterInfos[i].MaxAC = temp;
+                _selectedMonsterInfos[i].Stats[Stat.MaxAC] = temp;
         }
         private void MinMACTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -376,7 +376,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
-                _selectedMonsterInfos[i].MinMAC = temp;
+                _selectedMonsterInfos[i].Stats[Stat.MinMAC] = temp;
         }
         private void MaxMACTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -393,7 +393,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
-                _selectedMonsterInfos[i].MaxMAC = temp;
+                _selectedMonsterInfos[i].Stats[Stat.MaxMAC] = temp;
         }
         private void MinDCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -409,7 +409,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
-                _selectedMonsterInfos[i].MinDC = temp;
+                _selectedMonsterInfos[i].Stats[Stat.MinDC] = temp;
         }
         private void MaxDCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -426,7 +426,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
-                _selectedMonsterInfos[i].MaxDC = temp;
+                _selectedMonsterInfos[i].Stats[Stat.MaxDC] = temp;
         }
         private void MinMCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -443,7 +443,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
-                _selectedMonsterInfos[i].MinMC = temp;
+                _selectedMonsterInfos[i].Stats[Stat.MinMC] = temp;
         }
         private void MaxMCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -460,7 +460,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
-                _selectedMonsterInfos[i].MaxMC = temp;
+                _selectedMonsterInfos[i].Stats[Stat.MaxMC] = temp;
         }
         private void MinSCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -477,7 +477,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
-                _selectedMonsterInfos[i].MinSC = temp;
+                _selectedMonsterInfos[i].Stats[Stat.MinSC] = temp;
         }
         private void MaxSCTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -494,7 +494,7 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
-                _selectedMonsterInfos[i].MaxSC = temp;
+                _selectedMonsterInfos[i].Stats[Stat.MaxSC] = temp;
         }
         private void AccuracyTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -512,7 +512,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
-                _selectedMonsterInfos[i].Accuracy = temp;
+                _selectedMonsterInfos[i].Stats[Stat.Accuracy] = temp;
         }
         private void AgilityTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -530,7 +530,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
-                _selectedMonsterInfos[i].Agility = temp;
+                _selectedMonsterInfos[i].Stats[Stat.Agility] = temp;
         }
         private void ASpeedTextBox_TextChanged(object sender, EventArgs e)
         {

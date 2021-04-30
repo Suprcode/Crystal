@@ -80,7 +80,7 @@ namespace Server.MirObjects.Monsters
             if (!Dead && Sleeping && Envir.Time > WakeUpTime)
             {
                 Sleeping = false;
-                HP = MaxHP;
+                HP = Stats[Stat.HP];
                 return;
             }
 
@@ -139,17 +139,17 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-            int damage = GetAttackPower(MinDC, DragonLink ? MaxDC + (Envir.DragonSystem.Info.Level - 1 * 10) : MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], DragonLink ? Stats[Stat.MaxDC] + (Envir.DragonSystem.Info.Level - 1 * 10) : Stats[Stat.MaxDC]);
             if (!MassAttack)
                 damage = (int)(damage * 0.75);//make mass attacking do slightly more dmg then targeted
             if (damage == 0) return;
 
             if (Target.Attacked(this, damage, DefenceType.MAC) <= 0) return;
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
             {
                 if (Envir.Random.Next(5) == 0)
-                    Target.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Green, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);
+                    Target.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Green, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 2000 }, this);
                 if (Envir.Random.Next(15) == 0)
                     Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
             }

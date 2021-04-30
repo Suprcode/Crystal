@@ -57,7 +57,7 @@ namespace Server.MirDatabase
         public int BindMapIndex;
         public Point BindLocation;
 
-        public ushort HP, MP;
+        public int HP, MP;
         public long Experience;
 
         public AttackMode AMode;
@@ -122,14 +122,14 @@ namespace Server.MirDatabase
             Index = reader.ReadInt32();
             Name = reader.ReadString();
 
-             if (Envir.LoadVersion < 62)
-             {
-                 Level = (ushort)reader.ReadByte();
-             }
-             else
-             {
-                 Level = reader.ReadUInt16();
-             }
+            if (Envir.LoadVersion < 62)
+            {
+                Level = (ushort)reader.ReadByte();
+            }
+            else
+            {
+                Level = reader.ReadUInt16();
+            }
  
             Class = (MirClass) reader.ReadByte();
             Gender = (MirGender) reader.ReadByte();
@@ -159,8 +159,17 @@ namespace Server.MirDatabase
             BindMapIndex = reader.ReadInt32();
             BindLocation = new Point(reader.ReadInt32(), reader.ReadInt32());
 
-            HP = reader.ReadUInt16();
-            MP = reader.ReadUInt16();
+            if (Envir.LoadVersion <= 84)
+            {
+                HP = reader.ReadUInt16();
+                MP = reader.ReadUInt16();
+            }
+            else
+            {
+                HP = reader.ReadInt32();
+                MP = reader.ReadInt32();
+            }
+
             Experience = reader.ReadInt64();
             
             AMode = (AttackMode) reader.ReadByte();
@@ -508,10 +517,11 @@ namespace Server.MirDatabase
     public class PetInfo
     {
         public int MonsterIndex;
-        public uint HP, Experience;
+        public int HP;
+        public uint Experience;
         public byte Level, MaxPetLevel;
 
-        public long Time;
+        public long TameTime;
 
         public PetInfo(MonsterObject ob)
         {
@@ -526,7 +536,16 @@ namespace Server.MirDatabase
         {
             MonsterIndex = reader.ReadInt32();
             if (MonsterIndex == 271) MonsterIndex = 275;
-            HP = reader.ReadUInt32();
+
+            if (Envir.LoadVersion <= 84)
+            {
+                HP = (int)reader.ReadUInt32();
+            }
+            else
+            {
+                HP = reader.ReadInt32();
+            }
+
             Experience = reader.ReadUInt32();
             Level = reader.ReadByte();
             MaxPetLevel = reader.ReadByte();
@@ -653,22 +672,6 @@ namespace Server.MirDatabase
     {
         public static List<IntelligentCreatureInfo> Creatures = new List<IntelligentCreatureInfo>();
 
-        public static IntelligentCreatureInfo BabyPig,
-                                                Chick,
-                                                Kitten,
-                                                BabySkeleton,
-                                                Baekdon,
-                                                Wimaen,
-                                                BlackKitten,
-                                                BabyDragon,
-                                                OlympicFlame,
-                                                BabySnowMan,
-                                                Frog,
-                                                Monkey,
-                                                AngryBird,
-                                                Foxey,
-                                                MedicalRat;
-
         public IntelligentCreatureType PetType;
 
         public int Icon;
@@ -683,27 +686,23 @@ namespace Server.MirDatabase
 
         public bool CanProduceBlackStone = false;
 
-        public string Info = "";
-        public string Info1 = "Unable to produce BlackStones.";
-        public string Info2 = "Can produce Pearls, used to buy Creature items.";
-
         static IntelligentCreatureInfo()
         {
-            BabyPig = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.BabyPig, Icon = 500, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 3, MinimalFullness = 4000, Info = "Can pickup items (3x3 semi-auto)." };
-            Chick = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.Chick, Icon = 501, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 7, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 7, CanProduceBlackStone = true, Info = "Can pickup items (7x7 auto/semi-auto, 11x11 mouse).", Info1 = "Can produce BlackStones." };
-            Kitten = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.Kitten, Icon = 502, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 3, MinimalFullness = 6000, Info = "Can pickup items (5x5 semi-auto)." };
-            BabySkeleton = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.BabySkeleton, Icon = 503, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 7, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 7, CanProduceBlackStone = true, Info = "Can pickup items (7x7 auto/semi-auto, 11x11 mouse).", Info1 = "Can produce BlackStones." };
-            Baekdon = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.Baekdon, Icon = 504, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 7, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 7, CanProduceBlackStone = true, Info = "Can pickup items (7x7 auto/semi-auto, 11x11 mouse).", Info1 = "Can produce BlackStones." };
-            Wimaen = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.Wimaen, Icon = 505, MousePickupEnabled = true, MousePickupRange = 7, AutoPickupEnabled = true, AutoPickupRange = 5, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 5, MinimalFullness = 5000, Info = "Can pickup items (5x5 auto/semi-auto, 7x7 mouse)." };
-            BlackKitten = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.BlackKitten, Icon = 506, MousePickupEnabled = true, MousePickupRange = 7, AutoPickupEnabled = true, AutoPickupRange = 5, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 5, MinimalFullness = 5000, Info = "Can pickup items (5x5 auto/semi-auto, 7x7 mouse)." };
-            BabyDragon = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.BabyDragon, Icon = 507, MousePickupEnabled = true, MousePickupRange = 7, AutoPickupEnabled = true, AutoPickupRange = 5, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 5, MinimalFullness = 7000, Info = "Can pickup items (5x5 auto/semi-auto, 7x7 mouse)." };
-            OlympicFlame = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.OlympicFlame, Icon = 508, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 11, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 11, CanProduceBlackStone = true, Info = "Can pickup items (11x11 auto/semi-auto, 11x11 mouse).", Info1 = "Can produce BlackStones." };
-            BabySnowMan = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.BabySnowMan, Icon = 509, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 11, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 11, CanProduceBlackStone = true, Info = "Can pickup items (11x11 auto/semi-auto, 11x11 mouse).", Info1 = "Can produce BlackStones." };
-            Frog = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.Frog, Icon = 510, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 11, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 11, CanProduceBlackStone = true, Info = "Can pickup items (11x11 auto/semi-auto, 11x11 mouse).", Info1 = "Can produce BlackStones." };
-            Monkey = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.BabyMonkey, Icon = 511, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 11, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 11, CanProduceBlackStone = true, Info = "Can pickup items (11x11 auto/semi-auto, 11x11 mouse).", Info1 = "Can produce BlackStones." };
-            AngryBird = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.AngryBird, Icon = 512, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 11, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 11, CanProduceBlackStone = true, Info = "Can pickup items (11x11 auto/semi-auto, 11x11 mouse).", Info1 = "Can produce BlackStones." };
-            Foxey = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.Foxey, Icon = 513, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 11, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 11, CanProduceBlackStone = true, Info = "Can pickup items (11x11 auto/semi-auto, 11x11 mouse).", Info1 = "Can produce BlackStones." };
-            MedicalRat = new IntelligentCreatureInfo { PetType = IntelligentCreatureType.MedicalRat, Icon = 514, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 11, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 11, CanProduceBlackStone = true, Info = "Can pickup items (11x11 auto/semi-auto, 11x11 mouse).", Info1 = "Can produce BlackStones." };
+             new IntelligentCreatureInfo { PetType = IntelligentCreatureType.BabyPig, Icon = 500, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 3, MinimalFullness = 4000 };
+             new IntelligentCreatureInfo { PetType = IntelligentCreatureType.Chick, Icon = 501, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 7, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 7, CanProduceBlackStone = true };
+             new IntelligentCreatureInfo { PetType = IntelligentCreatureType.Kitten, Icon = 502, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 3, MinimalFullness = 6000 };
+             new IntelligentCreatureInfo { PetType = IntelligentCreatureType.BabySkeleton, Icon = 503, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 7, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 7, CanProduceBlackStone = true };
+             new IntelligentCreatureInfo { PetType = IntelligentCreatureType.Baekdon, Icon = 504, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 7, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 7, CanProduceBlackStone = true };
+             new IntelligentCreatureInfo { PetType = IntelligentCreatureType.Wimaen, Icon = 505, MousePickupEnabled = true, MousePickupRange = 7, AutoPickupEnabled = true, AutoPickupRange = 5, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 5, MinimalFullness = 5000 };
+             new IntelligentCreatureInfo { PetType = IntelligentCreatureType.BlackKitten, Icon = 506, MousePickupEnabled = true, MousePickupRange = 7, AutoPickupEnabled = true, AutoPickupRange = 5, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 5, MinimalFullness = 5000 };
+             new IntelligentCreatureInfo { PetType = IntelligentCreatureType.BabyDragon, Icon = 507, MousePickupEnabled = true, MousePickupRange = 7, AutoPickupEnabled = true, AutoPickupRange = 5, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 5, MinimalFullness = 7000 };
+             new IntelligentCreatureInfo { PetType = IntelligentCreatureType.OlympicFlame, Icon = 508, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 11, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 11, CanProduceBlackStone = true };
+             new IntelligentCreatureInfo { PetType = IntelligentCreatureType.BabySnowMan, Icon = 509, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 11, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 11, CanProduceBlackStone = true };
+             new IntelligentCreatureInfo { PetType = IntelligentCreatureType.Frog, Icon = 510, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 11, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 11, CanProduceBlackStone = true };
+             new IntelligentCreatureInfo { PetType = IntelligentCreatureType.BabyMonkey, Icon = 511, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 11, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 11, CanProduceBlackStone = true };
+             new IntelligentCreatureInfo { PetType = IntelligentCreatureType.AngryBird, Icon = 512, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 11, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 11, CanProduceBlackStone = true };
+             new IntelligentCreatureInfo { PetType = IntelligentCreatureType.Foxey, Icon = 513, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 11, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 11, CanProduceBlackStone = true };
+             new IntelligentCreatureInfo { PetType = IntelligentCreatureType.MedicalRat, Icon = 514, MousePickupEnabled = true, MousePickupRange = 11, AutoPickupEnabled = true, AutoPickupRange = 11, SemiAutoPickupEnabled = true, SemiAutoPickupRange = 11, CanProduceBlackStone = true };
         }
 
         public IntelligentCreatureInfo()
@@ -733,7 +732,7 @@ namespace Server.MirDatabase
         public string CustomName;
         public int Fullness;
         public int SlotIndex;
-        public long ExpireTime = -9999;//
+        public DateTime Expire;
         public long BlackstoneTime = 0;
         public long MaintainFoodTime = 0;
 
@@ -741,12 +740,12 @@ namespace Server.MirDatabase
         {
             PetType = creatureType;
             Info = IntelligentCreatureInfo.GetCreatureInfo(PetType);
-            CustomName = Settings.IntelligentCreatureNameList[(byte)PetType];
+            CustomName = Envir.Main.GetMonsterInfo(64, (byte)PetType)?.Name ?? PetType.ToString();
             Fullness = 7500;//starts at 75% food
             SlotIndex = slot;
 
-            if (effect > 0) ExpireTime = effect * 86400;//effect holds the amount in days
-            else ExpireTime = -9999;//permanent
+            if (effect > 0) Expire = DateTime.Now.AddDays(effect);//effect holds the amount in days
+            else Expire = DateTime.MinValue;//permanent
 
             BlackstoneTime = 0;
             MaintainFoodTime = 0;
@@ -762,7 +761,18 @@ namespace Server.MirDatabase
             CustomName = reader.ReadString();
             Fullness = reader.ReadInt32();
             SlotIndex = reader.ReadInt32();
-            ExpireTime = reader.ReadInt64();
+
+            var expireTime = reader.ReadInt64();
+
+            if (expireTime == -9999)
+            {
+                Expire = DateTime.MinValue;
+            }
+            else
+            {
+                Expire = DateTime.Now.AddSeconds(expireTime);
+            }
+
             BlackstoneTime = reader.ReadInt64();
 
             petMode = (IntelligentCreaturePickupMode)reader.ReadByte();
@@ -783,7 +793,16 @@ namespace Server.MirDatabase
             writer.Write(CustomName);
             writer.Write(Fullness);
             writer.Write(SlotIndex);
-            writer.Write(ExpireTime);
+
+            if (Expire == DateTime.MinValue)
+            {
+                writer.Write((long)-9999);
+            }
+            else
+            {
+                writer.Write((long)(Expire - DateTime.Now).TotalSeconds);
+            }
+
             writer.Write(BlackstoneTime);
 
             writer.Write((byte)petMode);
@@ -812,7 +831,7 @@ namespace Server.MirDatabase
                 CustomName = CustomName,
                 Fullness = Fullness,
                 SlotIndex = SlotIndex,
-                ExpireTime = ExpireTime,
+                Expire = Expire,
                 BlackstoneTime = BlackstoneTime,
                 MaintainFoodTime = MaintainFoodTime,
 
@@ -827,10 +846,7 @@ namespace Server.MirDatabase
                     AutoPickupRange = Info.AutoPickupRange,
                     SemiAutoPickupEnabled = Info.SemiAutoPickupEnabled,
                     SemiAutoPickupRange = Info.SemiAutoPickupRange,
-                    CanProduceBlackStone = Info.CanProduceBlackStone,
-                    Info = Info.Info,
-                    Info1 = Info.Info1,
-                    Info2 = Info.Info2
+                    CanProduceBlackStone = Info.CanProduceBlackStone
                 },
 
                 Filter = Filter

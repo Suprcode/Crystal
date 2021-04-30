@@ -719,16 +719,28 @@ namespace Client.MirScenes.Dialogs
             int selectedCreature = BeforeAfterDraw();
             if (selectedCreature < 0) return;
 
+            var rules = GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules;
+
+            var semi = rules.SemiAutoPickupEnabled ? string.Format("{0}x{0} {1}{2}{3}", rules.AutoPickupRange, rules.AutoPickupEnabled ? "auto/" : "", rules.SemiAutoPickupEnabled ? "semi-auto" : "", rules.MousePickupEnabled ? ", " : "") : "";
+            var mouse = rules.SemiAutoPickupEnabled ? string.Format("{0}x{0} mouse", rules.MousePickupRange) : "";
+
             CreatureName.Text = GameScene.User.IntelligentCreatures[selectedCreature].CustomName;
-            CreatureInfo.Text = GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.Info;
-            CreatureInfo1.Text = GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.Info1;
-            CreatureInfo2.Text = GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.Info2;
+            CreatureInfo.Text = string.Format("Can pickup items ({0}{1}).", semi, mouse);
+            CreatureInfo1.Text = rules.CanProduceBlackStone ? "Can produce BlackStones." : "";
+            CreatureInfo2.Text = rules.CanProduceBlackStone ? "Can produce Pearls, used to buy Creature items." : "";
+
             //Expire
-            if (GameScene.User.IntelligentCreatures[selectedCreature].ExpireTime == -9999)
+            if (GameScene.User.IntelligentCreatures[selectedCreature].Expire == DateTime.MinValue)
+            {
                 CreatureDeadline.Text = string.Format(GameLanguage.ExpireNever);
+            }
             else
-                CreatureDeadline.Text = string.Format(GameLanguage.Expire, Functions.PrintTimeSpanFromSeconds(GameScene.User.IntelligentCreatures[selectedCreature].ExpireTime));
-            //
+            {
+                var seconds = (GameScene.User.IntelligentCreatures[selectedCreature].Expire - DateTime.Now).TotalSeconds;
+
+                CreatureDeadline.Text = string.Format(GameLanguage.Expire, Functions.PrintTimeSpanFromSeconds(seconds));
+            }
+
             if (GameScene.User.IntelligentCreatures[selectedCreature].MaintainFoodTime == 0)
                 CreatureMaintainFoodBuff.Text = "0";
             else
@@ -809,6 +821,8 @@ namespace Client.MirScenes.Dialogs
             AnimSwitched = false;
             AnimNeedSwitch = false;
             Visible = false;
+
+            Network.Enqueue(new C.RequestIntelligentCreatureUpdates { Update = false });
         }
         public override void Show()
         {
@@ -826,6 +840,7 @@ namespace Client.MirScenes.Dialogs
                 CreatureButtons[0].SelectButton();
             }
 
+            Network.Enqueue(new C.RequestIntelligentCreatureUpdates { Update = true });
 
             Visible = true;
             showing = true;
@@ -835,6 +850,7 @@ namespace Client.MirScenes.Dialogs
             RefreshDialog();
         }
     }
+
     public sealed class CreatureButton : MirControl
     {
         public MirImageControl SelectionImage;

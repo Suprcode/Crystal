@@ -68,23 +68,23 @@ namespace Server.MirObjects.Monsters
 
             for (int i = 0; i < targets.Count; i++)
             {
-                int damage = GetAttackPower(MinDC, MaxDC);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
 
                 if (targets[i].Attacked(this, damage, DefenceType.AC) <= 0) continue;
 
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
+                if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].Stats[Stat.PoisonResist])
                 {
                     switch (Info.Image)
                     {
                         case Monster.HellBomb1:
-                            targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Frozen, Value = GetAttackPower(MinMC, MaxMC), TickSpeed = 2000 }, this);
+                            targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Frozen, Value = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]), TickSpeed = 2000 }, this);
                             break;
                         case Monster.HellBomb2:
-                            targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Stun, Value = GetAttackPower(MinMC, MaxMC), TickSpeed = 2000 }, this);
+                            targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Stun, Value = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]), TickSpeed = 2000 }, this);
                             break;
                         case Monster.HellBomb3:
-                            targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Bleeding, Value = GetAttackPower(MinMC, MaxMC), TickSpeed = 2000 }, this);
+                            targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Bleeding, Value = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]), TickSpeed = 2000 }, this);
                             break;
                     }
                 }

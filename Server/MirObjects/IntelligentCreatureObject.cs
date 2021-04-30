@@ -10,42 +10,47 @@ namespace Server.MirObjects
     public class IntelligentCreatureObject : MonsterObject
     {
         public bool Summoned;
-        public string CustomName = "";
+        public string CustomName { get { return CreatureInfo.CustomName; } set { CreatureInfo.CustomName = value; } }
 
-        public IntelligentCreatureType petType = IntelligentCreatureType.None;
+        public UserIntelligentCreature CreatureInfo;
+
+        public IntelligentCreatureType PetType = IntelligentCreatureType.None;
 
         public ItemGrade GradeFilter = ItemGrade.None;
 
         public IntelligentCreatureRules CreatureRules = new IntelligentCreatureRules();
-        public IntelligentCreatureItemFilter ItemFilter = new IntelligentCreatureItemFilter();
-        public IntelligentCreaturePickupMode CurrentPickupMode = IntelligentCreaturePickupMode.SemiAutomatic;
+        public IntelligentCreatureItemFilter ItemFilter { get { return CreatureInfo.Filter; } set { CreatureInfo.Filter = value; } }
+
+        public IntelligentCreaturePickupMode CurrentPickupMode { get { return CreatureInfo.petMode; } set { CreatureInfo.petMode = value; } }
 
         public List<MapObject> TargetList = new List<MapObject>();
         public bool FillingTargetList = false;
         public bool DoTargetList = false;
         public bool TargetListTargetClean = false;
 
-        public int Fullness = 0;
-        public long fullnessTicker = 0;
-        public const long fullnessDelay = Settings.Second;
+        public int Fullness { get { return CreatureInfo.Fullness; } set { CreatureInfo.Fullness = value; } }
+        public long FullnessTicker = 0;
+        public const long FullnessDelay = Settings.Second;
 
-        public bool doDelayedPickup = false;
-        public long delayedpickupTicker = 0;
-        public const long delayedpickupDelay = Settings.Second;//1 second
+        public bool DoDelayedPickup = false;
+        public long DelayedpickupTicker = 0;
+        public const long DelayedpickupDelay = Settings.Second;//1 second
 
-        public long blackstoneTime = 0;
-        public const long blackstoneProduceTime = 10800;//3 hours in seconds
+        public long CreatureTime;
 
-        public long pearlTicker = 0;
-        public const long pearlProduceCount = 1000;//1000 items = 1 pearl
+        public long BlackstoneTime { get { return CreatureInfo.BlackstoneTime; } set { CreatureInfo.BlackstoneTime = value; } }
+        public const long BlackstoneProduceTime = 10800;//3 hours in seconds
 
-        public long animvariantTicker = 0;
-        public const long animvariantDelay = 10 * Settings.Second;//10 seconds
+        public long PearlTicker = 0;
+        public const long PearlProduceCount = 1000;//1000 items = 1 pearl
 
-        public long maintainfoodTime = 0;
+        public long AnimvariantTicker = 0;
+        public const long AnimvariantDelay = 10 * Settings.Second;//10 seconds
 
-        public long timedSayTicker = 0;
-        public const long timedSayDelay = 20 * Settings.Second;
+        public long MaintainfoodTime { get { return CreatureInfo.MaintainFoodTime; } set { CreatureInfo.MaintainFoodTime = value; } }
+
+        public long TimedSayTicker = 0;
+        public const long TimedSayDelay = 20 * Settings.Second;
 
         private bool shortcheck = true;
 
@@ -88,8 +93,20 @@ namespace Server.MirObjects
             : base(info)
         {
             ActionTime = Envir.Time + 1000;
-            petType = (IntelligentCreatureType)info.Effect;
-            CustomName = info.Name;
+            PetType = (IntelligentCreatureType)info.Effect;
+        }
+
+        public override void SetOperateTime()
+        {
+            base.SetOperateTime();
+
+            var time = OperateTime;
+
+            if (CreatureTime < time && CreatureTime > Envir.Time)
+                time = RoamTime;
+
+            if (OperateTime <= Envir.Time || time < OperateTime)
+                OperateTime = time;
         }
 
         public override void Process()
@@ -112,6 +129,14 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (Envir.Time > CreatureTime)
+            {
+                CreatureTime = Envir.Time + Settings.Second;
+
+                ProcessBlackStoneProduction();
+                ProcessMaintainFoodBuff();
+            }
+
             if (Fullness == 0)//unable to operate with food level 0
             {
                 CreatureTimedSay("I'm starving!!.");
@@ -120,15 +145,19 @@ namespace Server.MirObjects
 
             DecreaseFullness(1);//Decrease Feeding
 
-            if (doDelayedPickup && Target != null && DoTargetList)//delayed pickup
+            if (DoDelayedPickup && Target != null && DoTargetList)//delayed pickup
             {
-                if (Envir.Time > delayedpickupTicker)
+                if (Envir.Time > DelayedpickupTicker)
                 {
                     PickupAllItems(Target.CurrentLocation);
                     Target = null;
-                    doDelayedPickup = false;
-                    if(TargetList.Count > 0)
+                    DoDelayedPickup = false;
+
+                    if (TargetList.Count > 0)
+                    {
                         TargetList.RemoveAt(0);
+                    }
+
                     if (TargetList.Count == 0)
                     {
                         DoTargetList = false;
@@ -154,20 +183,19 @@ namespace Server.MirObjects
             if (Target == null) ProcessAI();
             else ProcessTarget();
 
-            //ProcessBuffs();
             ProcessRegen();
         }
 
         public void ProcessAnimVariant()
         {
             
-            if (Envir.Time > animvariantTicker)
+            if (Envir.Time > AnimvariantTicker)
             {
-                animvariantTicker = Envir.Time + animvariantDelay;
+                AnimvariantTicker = Envir.Time + AnimvariantDelay;
                 ActionTime = Envir.Time + 300;
                 AttackTime = Envir.Time + AttackSpeed;
 
-                switch (petType)
+                switch (PetType)
                 {
                     case IntelligentCreatureType.BabyDragon:
                     case IntelligentCreatureType.OlympicFlame:
@@ -545,8 +573,8 @@ namespace Server.MirObjects
 
         public void DelayedPickup(long delay)
         {
-            delayedpickupTicker = Envir.Time + delay;
-            doDelayedPickup = true;
+            DelayedpickupTicker = Envir.Time + delay;
+            DoDelayedPickup = true;
         }
 
         public void PickupAllItems(Point location)
@@ -662,75 +690,77 @@ namespace Server.MirObjects
         public void IncreaseFullness(int amount)
         {
             if (Fullness >= 10000) return;
-            fullnessTicker = Envir.Time + fullnessDelay;
+            FullnessTicker = Envir.Time + FullnessDelay;
             Fullness += amount;
             if (Fullness < CreatureRules.MinimalFullness) CreatureSay("*Hmmm*");
             else CreatureSay("*Burp*");
             if (Fullness > 10000) Fullness = 10000;
-
-            if (Master != null)
-                ((PlayerObject)Master).UpdateCreatureFullness(petType, Fullness);
         }
+
         public void DecreaseFullness(int amount)
         {
-            if (Fullness <= 0 || maintainfoodTime > 0) return;
+            if (Fullness <= 0 || MaintainfoodTime > 0) return;
 
-            if (Envir.Time > fullnessTicker)
+            if (Envir.Time > FullnessTicker)
             {
-                fullnessTicker = Envir.Time + fullnessDelay;
+                FullnessTicker = Envir.Time + FullnessDelay;
                 Fullness -= amount;
                 if (Fullness < 0) Fullness = 0;
                 if (Fullness < CreatureRules.MinimalFullness) CreatureTimedSay("*Me Hungry*");
-
-                if (Master != null)
-                    ((PlayerObject)Master).UpdateCreatureFullness(petType, Fullness);
             }
         }
 
         public void IncreasePearlProduction()
         {
-            pearlTicker++;
-            if (pearlTicker >= pearlProduceCount)
+            PearlTicker++;
+
+            if (PearlTicker >= PearlProduceCount)
             {
                 if (Master != null)
+                {
                     ((PlayerObject)Master).IntelligentCreatureProducePearl();
-                pearlTicker = 0;
+                }
+
+                PearlTicker = 0;
             }
         }
 
         public void ProcessBlackStoneProduction()
         {
             if (!CreatureRules.CanProduceBlackStone) return;
-            blackstoneTime ++;
-            if (blackstoneTime >= blackstoneProduceTime)
-            {
-                blackstoneTime = blackstoneProduceTime;
-                if (Master != null && ((PlayerObject)Master).IntelligentCreatureProduceBlackStone())
-                    blackstoneTime = 0;//reset
-            }
 
-            if (Master != null)
-                ((PlayerObject)Master).UpdateCreatureBlackstoneTime(petType, blackstoneTime);
+            BlackstoneTime++;
+
+            if (BlackstoneTime >= BlackstoneProduceTime)
+            {
+                if (Master != null)
+                {
+                    ((PlayerObject)Master).IntelligentCreatureProduceBlackStone();
+                }
+
+                BlackstoneTime = 0;
+            }
         }
 
         public void ProcessMaintainFoodBuff()
         {
-            if (maintainfoodTime > 0)
+            if (MaintainfoodTime > 0)
             {
-                maintainfoodTime--;
-                if (maintainfoodTime < 0) maintainfoodTime = 0;
+                MaintainfoodTime--;
 
-                if (Master != null)
-                    ((PlayerObject)Master).UpdateCreatureMaintainFoodTime(petType, maintainfoodTime);
+                if (MaintainfoodTime < 0)
+                {
+                    MaintainfoodTime = 0;
+                }
             }
         }
 
         public void CreatureTimedSay(string message)
         {
-            if (Envir.Time > timedSayTicker)
+            if (Envir.Time > TimedSayTicker)
             {
                 CreatureSay(message);
-                timedSayTicker = Envir.Time + timedSayDelay;
+                TimedSayTicker = Envir.Time + TimedSayDelay;
             }
         }
 
@@ -739,7 +769,7 @@ namespace Server.MirObjects
             if (Master != null)
             {
                 message = String.Format("{0}:{1}", CustomName, message);
-                ((PlayerObject)Master).IntelligentCreatureSay(petType, message);
+                ((PlayerObject)Master).IntelligentCreatureSay(PetType, message);
             }
         }
 
@@ -794,8 +824,8 @@ namespace Server.MirObjects
         {
             base.Spawned();
             Summoned = true;
-            fullnessTicker = Envir.Time + fullnessDelay;
-            animvariantTicker = Envir.Time + animvariantDelay;
+            FullnessTicker = Envir.Time + FullnessDelay;
+            AnimvariantTicker = Envir.Time + AnimvariantDelay;
         }
 
         public override void Die()

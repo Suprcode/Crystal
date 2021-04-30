@@ -690,72 +690,72 @@
             this.label27.AutoSize = true;
             this.label27.Location = new System.Drawing.Point(201, 198);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(58, 13);
+            this.label27.Size = new System.Drawing.Size(69, 13);
             this.label27.TabIndex = 17;
-            this.label27.Text = "Gold Rate:";
+            this.label27.Text = "Gold Rate %:";
             // 
             // label26
             // 
             this.label26.AutoSize = true;
             this.label26.Location = new System.Drawing.Point(201, 172);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(59, 13);
+            this.label26.Size = new System.Drawing.Size(70, 13);
             this.label26.TabIndex = 16;
-            this.label26.Text = "Drop Rate:";
+            this.label26.Text = "Drop Rate %:";
             // 
             // label25
             // 
             this.label25.AutoSize = true;
             this.label25.Location = new System.Drawing.Point(201, 146);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(55, 13);
+            this.label25.Size = new System.Drawing.Size(65, 13);
             this.label25.TabIndex = 15;
-            this.label25.Text = "Skill Rate:";
+            this.label25.Text = "Skill Rate X:";
             // 
             // label24
             // 
             this.label24.AutoSize = true;
             this.label24.Location = new System.Drawing.Point(201, 121);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(58, 13);
+            this.label24.Size = new System.Drawing.Size(69, 13);
             this.label24.TabIndex = 14;
-            this.label24.Text = "Craft Rate:";
+            this.label24.Text = "Craft Rate %:";
             // 
             // label23
             // 
             this.label23.AutoSize = true;
             this.label23.Location = new System.Drawing.Point(201, 95);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(54, 13);
+            this.label23.Size = new System.Drawing.Size(65, 13);
             this.label23.TabIndex = 13;
-            this.label23.Text = "Exp Rate:";
+            this.label23.Text = "Exp Rate %:";
             // 
             // label22
             // 
             this.label22.AutoSize = true;
             this.label22.Location = new System.Drawing.Point(201, 70);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(69, 13);
+            this.label22.Size = new System.Drawing.Size(80, 13);
             this.label22.TabIndex = 12;
-            this.label22.Text = "Fishing Rate:";
+            this.label22.Text = "Fishing Rate %:";
             // 
             // label21
             // 
             this.label21.AutoSize = true;
             this.label21.Location = new System.Drawing.Point(201, 44);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(58, 13);
+            this.label21.Size = new System.Drawing.Size(69, 13);
             this.label21.TabIndex = 11;
-            this.label21.Text = "Gem Rate:";
+            this.label21.Text = "Gem Rate %:";
             // 
             // label20
             // 
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(201, 18);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(59, 13);
+            this.label20.Size = new System.Drawing.Size(70, 13);
             this.label20.TabIndex = 10;
-            this.label20.Text = "Mine Rate:";
+            this.label20.Text = "Mine Rate %:";
             // 
             // label19
             // 

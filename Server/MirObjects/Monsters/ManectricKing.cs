@@ -41,7 +41,7 @@ namespace Server.MirObjects.Monsters
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
-            if((HP * 100 / MaxHP) < 20 && MassAttackTime < Envir.Time)
+            if((HP * 100 / Stats[Stat.HP]) < 20 && MassAttackTime < Envir.Time)
             {
                 ShockTime = 0;
                 ActionTime = Envir.Time + 500;
@@ -53,7 +53,7 @@ namespace Server.MirObjects.Monsters
 
                 if (targets.Count == 0) return;
 
-                int damage = GetAttackPower(MinDC, MaxDC);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
                 for (int i = 0; i < targets.Count; i++)
                 {
@@ -88,7 +88,7 @@ namespace Server.MirObjects.Monsters
 
         private void LineAttack(int distance, bool push = false)
         {
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
             int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500;

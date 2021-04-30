@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 public class IntelligentCreatureRules
 {
@@ -12,10 +13,6 @@ public class IntelligentCreatureRules
     public int SemiAutoPickupRange = 0;
 
     public bool CanProduceBlackStone = false;
-
-    public string Info = "";
-    public string Info1 = "";
-    public string Info2 = "";
 
     public IntelligentCreatureRules()
     {
@@ -32,10 +29,6 @@ public class IntelligentCreatureRules
         SemiAutoPickupRange = reader.ReadInt32();
 
         CanProduceBlackStone = reader.ReadBoolean();
-
-        Info = reader.ReadString();
-        Info1 = reader.ReadString();
-        Info2 = reader.ReadString();
     }
 
     public void Save(BinaryWriter writer)
@@ -49,10 +42,6 @@ public class IntelligentCreatureRules
         writer.Write(SemiAutoPickupRange);
 
         writer.Write(CanProduceBlackStone);
-
-        writer.Write(Info);
-        writer.Write(Info1);
-        writer.Write(Info2);
     }
 }
 
@@ -178,7 +167,7 @@ public class ClientIntelligentCreature
     public string CustomName;
     public int Fullness;
     public int SlotIndex;
-    public long ExpireTime;//in days
+    public DateTime Expire;
     public long BlackstoneTime;
     public long MaintainFoodTime;
 
@@ -200,7 +189,7 @@ public class ClientIntelligentCreature
         CustomName = reader.ReadString();
         Fullness = reader.ReadInt32();
         SlotIndex = reader.ReadInt32();
-        ExpireTime = reader.ReadInt64();
+        Expire = DateTime.FromBinary(reader.ReadInt64());
         BlackstoneTime = reader.ReadInt64();
 
         petMode = (IntelligentCreaturePickupMode)reader.ReadByte();
@@ -221,7 +210,7 @@ public class ClientIntelligentCreature
         writer.Write(CustomName);
         writer.Write(Fullness);
         writer.Write(SlotIndex);
-        writer.Write(ExpireTime);
+        writer.Write(Expire.ToBinary());
         writer.Write(BlackstoneTime);
 
         writer.Write((byte)petMode);

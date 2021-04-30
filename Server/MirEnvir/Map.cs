@@ -31,10 +31,11 @@ namespace Server.MirEnvir
         public Door[,] DoorIndex;
         public List<Door> Doors = new List<Door>();
         public MineSpot[,] Mine;
-        public long LightningTime, FireTime, InactiveTime;
-        public int MonsterCount, InactiveCount;
+        public long LightningTime, FireTime;
+        public int MonsterCount;
 
         public List<NPCObject> NPCs = new List<NPCObject>();
+        public List<SpellObject> Spells = new List<SpellObject>();
         public List<PlayerObject> Players = new List<PlayerObject>();
         public List<MapRespawn> Respawns = new List<MapRespawn>();
         public List<DelayedAction> ActionList = new List<DelayedAction>();
@@ -714,19 +715,6 @@ namespace Server.MirEnvir
                 Process(ActionList[i]);
                 ActionList.RemoveAt(i);
             }
-
-            if (InactiveTime < Envir.Time)
-            {
-                if (!Players.Any())
-                {
-                    InactiveTime = Envir.Time + Settings.Minute;
-                    InactiveCount++;
-                }
-                else
-                {
-                    InactiveCount = 0;
-                }
-            }
         }
 
         private void ProcessRespawns()
@@ -969,10 +957,9 @@ namespace Server.MirEnvir
                                         //Only targets
                                         if (target.IsFriendlyTarget(player))
                                         {
-                                            for (int b = 0; b < target.Buffs.Count; b++)
-                                                if (target.Buffs[b].Type == BuffType.Hiding) return;
+                                            if (target.HasBuff(BuffType.Hiding, out _)) return;
 
-                                            target.AddBuff(new Buff { Type = BuffType.Hiding, Caster = player, ExpireTime = Envir.Time + value * 1000 });
+                                            target.AddBuff(BuffType.Hiding, player, (Settings.Second * value), new Stats());
                                             target.OperateTime = 0;
                                             train = true;
                                         }
@@ -1020,7 +1007,12 @@ namespace Server.MirEnvir
                                         //Only targets
                                         if (target.IsFriendlyTarget(player))
                                         {
-                                            target.AddBuff(new Buff { Type = type, Caster = player, ExpireTime = Envir.Time + value * 1000, Values = new int[]{ target.Level / 7 + 4 } });
+                                            var stats = new Stats
+                                            {
+                                                [type == BuffType.SoulShield ? Stat.MaxAC : Stat.MaxMAC] = target.Level / 7 + 4
+                                            };
+
+                                            target.AddBuff(type, player, Settings.Second * value, stats);
                                             target.OperateTime = 0;
                                             train = true;
                                         }
@@ -1441,7 +1433,7 @@ namespace Server.MirEnvir
                                                         target.ApplyPoison(new Poison
                                                         {
                                                             Owner = player,
-                                                            Duration = target.Race == ObjectType.Player ? 2 : 5 + Envir.Random.Next(player.Freezing),
+                                                            Duration = target.Race == ObjectType.Player ? 2 : 5 + Envir.Random.Next(player.Stats[Stat.Freezing]),
                                                             PType = PoisonType.Frozen,
                                                             TickSpeed = 1000,
                                                         }, player);
@@ -1727,7 +1719,6 @@ namespace Server.MirEnvir
                     value = (int)data[2];
                     location = (Point)data[3];
                     value2 = (int)data[4];
-                    type = BuffType.Curse;
 
                     for (int y = location.Y - 3; y <= location.Y + 3; y++)
                     {
@@ -1757,7 +1748,16 @@ namespace Server.MirEnvir
                                         if (target.IsAttackTarget(player))
                                         {
                                             target.ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = value, TickSpeed = 1000, Value = value2 }, player);
-                                            target.AddBuff(new Buff { Type = type, Caster = player, ExpireTime = Envir.Time + value * 1000, Values = new int[]{ value2 } });
+
+                                            var stats = new Stats
+                                            {
+                                                [Stat.MaxDCRatePercent] = value2 * -1,
+                                                [Stat.MaxMCRatePercent] = value2 * -1,
+                                                [Stat.MaxSCRatePercent] = value2 * -1,
+                                                [Stat.AttackSpeedRatePercent] = target.Race == ObjectType.Player ? value2 * -1 : 0
+                                            };
+
+                                            target.AddBuff(BuffType.Curse, player, Settings.Second * value, stats);
                                             target.OperateTime = 0;
                                             train = true;
                                         }
@@ -1798,10 +1798,12 @@ namespace Server.MirEnvir
                         if (cast)
                         {
                             player.LevelMagic(magic);
-                            System.Drawing.Point[] Traps = new Point[3];
-                            Traps[0] = front;
-                            Traps[1] = Functions.Left(front, player.Direction);
-                            Traps[2] = Functions.Right(front, player.Direction);
+
+                            System.Drawing.Point[] traps = new Point[3];
+                            traps[0] = front;
+                            traps[1] = Functions.Left(front, player.Direction);
+                            traps[2] = Functions.Right(front, player.Direction);
+
                             for (int i = 0; i <= 2; i++)
                             {
                                 SpellObject ob = new SpellObject
@@ -1811,14 +1813,14 @@ namespace Server.MirEnvir
                                     ExpireTime = Envir.Time + (10 + value / 2) * 1000,
                                     TickSpeed = 500,
                                     Caster = player,
-                                    CurrentLocation = Traps[i],
+                                    CurrentLocation = traps[i],
                                     CurrentMap = this,
                                     ExplosiveTrapID = trapID,
                                     ExplosiveTrapCount = i
                                 };
+
                                 AddObject(ob);
                                 ob.Spawned();
-                                player.ArcherTrapObjectsArray[trapID, i] = ob;
                             }
                         }
                     }
@@ -1963,8 +1965,8 @@ namespace Server.MirEnvir
                     value = (int)data[2];
                     location = (Point)data[3];
 
-                    bool hasVampBuff = (player.Buffs.Where(ex => ex.Type == BuffType.VampireShot).ToList().Count() > 0);
-                    bool hasPoisonBuff = (player.Buffs.Where(ex => ex.Type == BuffType.PoisonShot).ToList().Count() > 0);
+                    bool hasVampBuff = (player.Buffs.Any(ex => ex.Type == BuffType.VampireShot));
+                    bool hasPoisonBuff = (player.Buffs.Any(ex => ex.Type == BuffType.PoisonShot));
 
                     for (int y = location.Y - 2; y <= location.Y + 2; y++)
                     {
@@ -2011,7 +2013,7 @@ namespace Server.MirEnvir
                                                 Owner = player,
                                                 PType = PoisonType.Green,
                                                 TickSpeed = 2000,
-                                                Value = value / 15 + magic.Level + 1 + Envir.Random.Next(player.PoisonAttack)
+                                                Value = value / 15 + magic.Level + 1 + Envir.Random.Next(player.Stats[Stat.PoisonAttack])
                                             }, player);
                                             target.OperateTime = 0;
                                         }
@@ -2023,15 +2025,15 @@ namespace Server.MirEnvir
                         }
                     }
 
-                    if (hasVampBuff)//Vampire Effect
+                    if (hasVampBuff)
                     {
-                        //cancel out buff
-                        player.AddBuff(new Buff { Type = BuffType.VampireShot, Caster = player, ExpireTime = Envir.Time + 1000, Values = new int[]{ value }, Visible = true, ObjectID = player.ObjectID });
+                        //Expire
+                        player.AddBuff(BuffType.VampireShot, player, Settings.Second * 1, new Stats(), visible: true);
                     }
-                    if (hasPoisonBuff)//Poison Effect
+                    if (hasPoisonBuff)
                     {
-                        //cancel out buff
-                        player.AddBuff(new Buff { Type = BuffType.PoisonShot, Caster = player, ExpireTime = Envir.Time + 1000, Values = new int[]{ value }, Visible = true, ObjectID = player.ObjectID });
+                        //Expire
+                        player.AddBuff(BuffType.PoisonShot, player, Settings.Second * 1, new Stats(), visible: true);
                     }
                     break;
 
@@ -2054,20 +2056,6 @@ namespace Server.MirEnvir
                         CurrentLocation = location,
                         CurrentMap = this,
                     };
-
-                    if (player.PortalObjectsArray[0] == null)
-                    {
-                        player.PortalObjectsArray[0] = spellOb;
-                    }
-                    else
-                    {
-                        player.PortalObjectsArray[1] = spellOb;
-                        player.PortalObjectsArray[1].ExitMap = player.PortalObjectsArray[0].CurrentMap;
-                        player.PortalObjectsArray[1].ExitCoord = player.PortalObjectsArray[0].CurrentLocation;
-
-                        player.PortalObjectsArray[0].ExitMap = player.PortalObjectsArray[1].CurrentMap;
-                        player.PortalObjectsArray[0].ExitCoord = player.PortalObjectsArray[1].CurrentLocation;
-                    }
 
                     AddObject(spellOb);
                     spellOb.Spawned();
@@ -2184,10 +2172,10 @@ namespace Server.MirEnvir
             if (ob.Race == ObjectType.Player)
             {
                 Players.Add((PlayerObject)ob);
-                InactiveTime = Envir.Time;
             }
-            if (ob.Race == ObjectType.Merchant)
-                NPCs.Add((NPCObject)ob);
+
+            if (ob.Race == ObjectType.Merchant) NPCs.Add((NPCObject)ob);
+            if (ob.Race == ObjectType.Spell) Spells.Add((SpellObject)ob);
 
             GetCell(ob.CurrentLocation).Add(ob);
         }
@@ -2196,6 +2184,7 @@ namespace Server.MirEnvir
         {
             if (ob.Race == ObjectType.Player) Players.Remove((PlayerObject)ob);
             if (ob.Race == ObjectType.Merchant) NPCs.Remove((NPCObject)ob);
+            if (ob.Race == ObjectType.Spell) Spells.Remove((SpellObject)ob);
 
             GetCell(ob.CurrentLocation).Remove(ob);
         }
@@ -2210,6 +2199,21 @@ namespace Server.MirEnvir
                     return szi;
             }
             return null;
+        }
+
+        public List<SpellObject> GetSpellObjects(Spell spell ,MapObject caster)
+        {
+            List<SpellObject> spellObjects = new List<SpellObject>();
+
+            for (int i = 0; i < Spells.Count; i++)
+            {
+                if (spell != Spells[i].Spell) continue;
+                if (caster != null && Spells[i].Caster != caster) continue;
+
+                spellObjects.Add(Spells[i]);
+            }
+
+            return spellObjects;
         }
 
         public ConquestObject GetConquest(Point location)
@@ -2246,8 +2250,7 @@ namespace Server.MirEnvir
                 PlayerObject player = Players[i];
 
                 if (Functions.InRange(location, player.CurrentLocation, Globals.DataRange))
-                    player.Enqueue(p);
-                    
+                    player.Enqueue(p);                   
             }
         }
 
@@ -2274,14 +2277,6 @@ namespace Server.MirEnvir
             {
                 Player.Enqueue(p);
             }    
-        }
-
-        public bool Inactive(int count = 5)
-        {
-            //temporary test for server speed. Stop certain processes if no players.
-            if (InactiveCount > count) return true;
-
-            return false;
         }
     }
     public class Cell

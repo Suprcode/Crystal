@@ -178,7 +178,7 @@ namespace Launcher
             {
                 if (info != null && (Path.GetExtension(old.FileName).ToLower() == ".dll" || Path.GetExtension(old.FileName).ToLower() == ".exe"))
                 {
-                    string oldFilename = Path.Combine(Path.GetDirectoryName(old.FileName), ("Old" + Path.GetFileName(old.FileName)));
+                    string oldFilename = Path.Combine(Path.GetDirectoryName(old.FileName), ("Old__" + Path.GetFileName(old.FileName)));
 
                     File.Move(Settings.P_Client + old.FileName, oldFilename);
                     Restart = true;
@@ -313,12 +313,7 @@ namespace Launcher
         {
             if (Settings.P_BrowserAddress != "") Main_browser.Navigate(new Uri(Settings.P_BrowserAddress));
 
-            var files = Directory.GetFiles(Settings.P_Client).Where(x => Path.GetFileName(x).StartsWith("Old"));
-
-            foreach (var oldFilename in files)
-            {
-                File.Delete(oldFilename);
-            }
+            RepairOldFiles();
 
             Launch_pb.Enabled = false;
             ProgressCurrent_pb.Width = 5;
@@ -495,7 +490,7 @@ namespace Launcher
                     {
                         Program.Restart = true;
 
-                        MoveOldClientToCurrent();
+                        MoveOldFilesToCurrent();
 
                         Close();
                     }
@@ -554,16 +549,33 @@ namespace Launcher
 
         private void AMain_FormClosed(object sender, FormClosedEventArgs e)
         {
-            MoveOldClientToCurrent();
+            MoveOldFilesToCurrent();
         }
 
-        private void MoveOldClientToCurrent()
+        private void RepairOldFiles()
         {
-            var files = Directory.GetFiles(Settings.P_Client).Where(x => Path.GetFileName(x).StartsWith("Old"));
+            var files = Directory.GetFiles(Settings.P_Client, "*", SearchOption.AllDirectories).Where(x => Path.GetFileName(x).StartsWith("Old__"));
 
             foreach (var oldFilename in files)
             {
-                string originalFilename = Path.Combine(Path.GetDirectoryName(oldFilename), (Path.GetFileName(oldFilename).Substring(3)));
+                if (!File.Exists(oldFilename.Replace("Old__", "")))
+                {
+                    File.Move(oldFilename, oldFilename.Replace("Old__", ""));
+                }
+                else
+                {
+                    File.Delete(oldFilename);
+                }
+            }
+        }
+
+        private void MoveOldFilesToCurrent()
+        {
+            var files = Directory.GetFiles(Settings.P_Client, "*", SearchOption.AllDirectories).Where(x => Path.GetFileName(x).StartsWith("Old__"));
+
+            foreach (var oldFilename in files)
+            {
+                string originalFilename = Path.Combine(Path.GetDirectoryName(oldFilename), (Path.GetFileName(oldFilename).Replace("Old__", "")));
 
                 if (!File.Exists(originalFilename) && File.Exists(oldFilename))
                     File.Move(oldFilename, originalFilename);
