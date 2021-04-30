@@ -115,7 +115,7 @@ namespace Client.MirScenes.Dialogs
 
             if (MapObject.User.HasFishingRod && item != null)
             {
-                TitleLabel.Text = item.Name;
+                TitleLabel.Text = item.FriendlyName;
             }
         }
 
@@ -140,19 +140,13 @@ namespace Client.MirScenes.Dialogs
             Libraries.StateItems.Draw(FishingImage, new Point(Location.X + 10, Location.Y + 40), Color.White, false);
         }
 
-
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
-        public void Show()
+        public override void Show()
         {
             if (Visible) return;
 
             if (!GameScene.User.HasFishingRod)
             {
-                MirMessageBox messageBox = new MirMessageBox("You are not holding a fishing rod.", MirMessageBoxButtons.OK);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.NoFishingRod, MirMessageBoxButtons.OK);
                 messageBox.Show();
                 return;
             }
@@ -393,17 +387,6 @@ namespace Client.MirScenes.Dialogs
                 Network.Enqueue(new C.FishingCast { CastOut = false });
             Hide();
 
-        }
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
-        public void Show()
-        {
-            if (Visible) return;
-
-            Visible = true;
         }
 
     }

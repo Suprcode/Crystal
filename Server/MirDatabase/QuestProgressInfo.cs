@@ -10,6 +10,11 @@ namespace Server.MirDatabase
 {
     public class QuestProgressInfo
     {
+        protected static Envir Envir
+        {
+            get { return Envir.Main; }
+        }
+
         public int Index;
 
         public QuestInfo Info;
@@ -42,7 +47,7 @@ namespace Server.MirDatabase
         {
             Index = index;
 
-            Info = SMain.Envir.QuestInfoList.FirstOrDefault(e => e.Index == index);
+            Info = Envir.QuestInfoList.FirstOrDefault(e => e.Index == index);
 
             foreach (var kill in Info.KillTasks)
                 KillTaskCount.Add(0);
@@ -59,7 +64,7 @@ namespace Server.MirDatabase
         public QuestProgressInfo(BinaryReader reader)
         {
             Index = reader.ReadInt32();
-            Info = SMain.Envir.QuestInfoList.FirstOrDefault(e => e.Index == Index);
+            Info = Envir.QuestInfoList.FirstOrDefault(e => e.Index == Index);
 
             StartDateTime = DateTime.FromBinary(reader.ReadInt64());
             EndDateTime = DateTime.FromBinary(reader.ReadInt64());
@@ -72,12 +77,9 @@ namespace Server.MirDatabase
             for (int i = 0; i < count; i++)
                 ItemTaskCount.Add(reader.ReadInt64());
 
-            if (Envir.LoadVersion >= 37)
-            {
-                count = reader.ReadInt32();
-                for (int i = 0; i < count; i++)
-                    FlagTaskSet.Add(reader.ReadBoolean());
-            }
+            count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+                FlagTaskSet.Add(reader.ReadBoolean());
         }
 
         public void Save(BinaryWriter writer)
@@ -312,7 +314,7 @@ namespace Server.MirDatabase
             for (int i = 0; i < Info.ItemTasks.Count; i++)
             {
                 if (string.IsNullOrEmpty(Info.ItemTasks[i].Message))
-                    TaskList.Add(string.Format("Collect {0}: {1}/{2} {3}", Info.ItemTasks[i].Item.Name, ItemTaskCount[i],
+                    TaskList.Add(string.Format("Collect {0}: {1}/{2} {3}", Info.ItemTasks[i].Item.FriendlyName, ItemTaskCount[i],
                         Info.ItemTasks[i].Count, ItemTaskCount[i] >= Info.ItemTasks[i].Count ? "(Completed)" : ""));
                 else
                     TaskList.Add(string.Format("{0} {1}", Info.ItemTasks[i].Message, ItemTaskCount[i] >= Info.ItemTasks[i].Count ? "(Completed)" : ""));

@@ -33,7 +33,6 @@ namespace Client.MirScenes
 
         public LoginScene()
         {
-
             SoundManager.PlaySound(SoundList.IntroMusic, true);
             Disposing += (o, e) => SoundManager.StopSound(SoundList.IntroMusic);
 
@@ -72,15 +71,15 @@ namespace Client.MirScenes
             };
 
             Version = new MirLabel
-                {
-                    AutoSize = true,
-                    BackColour = Color.FromArgb(200, 50, 50, 50),
-                    Border = true,
-                    BorderColour = Color.Black,
-                    Location = new Point(5, 580),
-                    Parent = _background,
-                    Text = string.Format("Version: {0}", Application.ProductVersion),
-                };
+            {
+                AutoSize = true,
+                BackColour = Color.FromArgb(200, 50, 50, 50),
+                Border = true,
+                BorderColour = Color.Black,
+                Location = new Point(5, Settings.ScreenHeight - 20),
+                Parent = _background,
+                Text = string.Format("Build: {0}.{1}.{2}", Globals.ProductCodename, Globals.ProductVersion, Application.ProductVersion),
+            };
 
             TestLabel = new MirImageControl
             {
@@ -127,7 +126,7 @@ namespace Client.MirScenes
         public override void Process()
         {
             if (!Network.Connected && _connectBox.Label != null)
-                _connectBox.Label.Text = string.Format("Attempting to connect to the server.\nAttempt:{0}", Network.ConnectAttempt);
+                _connectBox.Label.Text = string.Format(GameLanguage.AttemptingConnect,"\n\n", Network.ConnectAttempt);
         }
         public override void ProcessPacket(Packet p)
         {
@@ -266,11 +265,11 @@ namespace Client.MirScenes
                     _password.NewPassword1TextBox.SetFocus();
                     break;
                 case 4:
-                    MirMessageBox.Show("The AccountID does not exist.");
+                    MirMessageBox.Show(GameLanguage.NoAccountID);
                     _password.AccountIDTextBox.SetFocus();
                     break;
                 case 5:
-                    MirMessageBox.Show("Incorrect Password and AccountID combination.");
+                    MirMessageBox.Show(GameLanguage.IncorrectPasswordAccountID);
                     _password.CurrentPasswordTextBox.SetFocus();
                     _password.CurrentPasswordTextBox.Text = string.Empty;
                     break;
@@ -306,11 +305,11 @@ namespace Client.MirScenes
                     _login.PasswordTextBox.SetFocus();
                     break;
                 case 3:
-                    MirMessageBox.Show("The AccountID does not exist.");
+                    MirMessageBox.Show(GameLanguage.NoAccountID);
                     _login.PasswordTextBox.SetFocus();
                     break;
                 case 4:
-                    MirMessageBox.Show("Incorrect Password and AccountID combination.");
+                    MirMessageBox.Show(GameLanguage.IncorrectPasswordAccountID);
                     _login.PasswordTextBox.Text = string.Empty;
                     _login.PasswordTextBox.SetFocus();
                     break;
@@ -432,32 +431,30 @@ namespace Client.MirScenes
                     };
                 CloseButton.Click += (o, e) => Program.Form.Close();
 
-                AccountIDTextBox = new MirTextBox
-                    {
-                        Location = new Point(85, 85),
-                        Parent = this,
-                        Size = new Size(136, 12),
-                        MaxLength = Globals.MaxAccountIDLength
-                };
-                AccountIDTextBox.SetFocus();
-                AccountIDTextBox.TextBox.TextChanged += AccountIDTextBox_TextChanged;
-                AccountIDTextBox.TextBox.KeyPress += TextBox_KeyPress;
-                AccountIDTextBox.Text = Settings.AccountID;
-
-
-
                 PasswordTextBox = new MirTextBox
-                    {
-                        Location = new Point(85, 108),
-                        Parent = this,
-                        Password = true,
-                        Size = new Size(136, 15),
-                        MaxLength = Globals.MaxPasswordLength
-                    };
+                {
+                    Location = new Point(85, 108),
+                    Parent = this,
+                    Password = true,
+                    Size = new Size(136, 15),
+                    MaxLength = Globals.MaxPasswordLength
+                };
 
                 PasswordTextBox.TextBox.TextChanged += PasswordTextBox_TextChanged;
                 PasswordTextBox.TextBox.KeyPress += TextBox_KeyPress;
                 PasswordTextBox.Text = Settings.Password;
+
+                AccountIDTextBox = new MirTextBox
+                {
+                    Location = new Point(85, 85),
+                    Parent = this,
+                    Size = new Size(136, 15),
+                    MaxLength = Globals.MaxAccountIDLength
+                };
+
+                AccountIDTextBox.TextBox.TextChanged += AccountIDTextBox_TextChanged;
+                AccountIDTextBox.TextBox.KeyPress += TextBox_KeyPress;
+                AccountIDTextBox.Text = Settings.AccountID;
 
             }
 
@@ -531,12 +528,7 @@ namespace Client.MirScenes
                 Network.Enqueue(new C.Login {AccountID = AccountIDTextBox.Text, Password = PasswordTextBox.Text});
             }
 
-            public void Hide()
-            {
-                if (!Visible) return;
-                Visible = false;
-            }
-            public void Show()
+            public override void Show()
             {
                 if (Visible) return;
                 Visible = true;
@@ -1162,7 +1154,7 @@ namespace Client.MirScenes
                     });
             }
             
-            public void Show()
+            public override void Show()
             {
                 if (Visible) return;
                 Visible = true;
@@ -1374,7 +1366,7 @@ namespace Client.MirScenes
                     });
             }
 
-            public void Show()
+            public override void Show()
             {
                 if (Visible) return;
                 Visible = true;

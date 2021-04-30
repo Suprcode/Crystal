@@ -116,14 +116,14 @@ namespace Client.MirScenes.Dialogs
             if (Visible)
                 RequestRentedItems();
         }
-
+        
         public void ReceiveRentedItems(List<ItemRentalInformation> rentedItems)
         {
             for (var i = 0; i < _itemRows.Length; i++)
             {
                 _itemRows[i].Clear();
 
-                if (rentedItems[i] != null)
+                if (i < rentedItems.Count && rentedItems[i] != null)
                     _itemRows[i].Update(rentedItems[i].ItemName,
                         rentedItems[i].RentingPlayerName,
                         rentedItems[i].ItemReturnDate.ToString(CultureInfo.InvariantCulture));

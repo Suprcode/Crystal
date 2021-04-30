@@ -9,6 +9,11 @@ namespace Server.MirDatabase
 {
     public class RespawnInfo
     {
+        protected static Envir Envir
+        {
+            get { return Envir.Main; }
+        }
+
         public int MonsterIndex;
         public Point Location;
         public ushort Count, Spread, Delay, RandomDelay;
@@ -35,10 +40,7 @@ namespace Server.MirDatabase
             Delay = reader.ReadUInt16();
             Direction = reader.ReadByte();
 
-            if (Envir.LoadVersion >= 36)
-            {
-                RoutePath = reader.ReadString();
-            }
+            RoutePath = reader.ReadString();
 
             if (Version > 67)
             {
@@ -49,7 +51,7 @@ namespace Server.MirDatabase
             }
             else
             {
-                RespawnIndex = ++SMain.Envir.RespawnIndex;
+                RespawnIndex = ++Envir.RespawnIndex;
             }
         }
 

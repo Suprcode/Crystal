@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows.Forms;
 using Server.MirNetwork;
 using Server.MirEnvir;
 using C = ClientPackets;
-
 
 namespace Server.MirDatabase
 {
     public class AccountInfo
     {
+        protected static Envir Envir
+        {
+            get { return Envir.Main; }
+        }
+
         public int Index;
 
         public string AccountID = string.Empty;
@@ -41,7 +44,6 @@ namespace Server.MirDatabase
         public uint Gold;
         public uint Credit;
 
-        public ListViewItem ListItem;
         public MirConnection Connection;
         
         public LinkedList<AuctionInfo> Auctions = new LinkedList<AuctionInfo>();
@@ -51,6 +53,7 @@ namespace Server.MirDatabase
         {
 
         }
+
         public AccountInfo(C.NewAccount p)
         {
             AccountID = p.AccountID;
@@ -61,7 +64,7 @@ namespace Server.MirDatabase
             EMailAddress = p.EMailAddress;
 
             BirthDate = p.BirthDate;
-            CreationDate = SMain.Envir.Now;
+            CreationDate = Envir.Now;
         }
         public AccountInfo(BinaryReader reader)
         {
@@ -110,7 +113,7 @@ namespace Server.MirDatabase
             {
                 if (!reader.ReadBoolean()) continue;
                 UserItem item = new UserItem(reader, Envir.LoadVersion, Envir.LoadCustomVersion);
-                if (SMain.Envir.BindItem(item) && i < Storage.Length)
+                if (Envir.BindItem(item) && i < Storage.Length)
                     Storage[i] = item;
             }
 
@@ -121,10 +124,10 @@ namespace Server.MirDatabase
                 {
                     if (Characters[i] == null) continue;
                     if (Characters[i].Deleted) continue;
-                    if ((DateTime.Now - Characters[i].LastDate).TotalDays > 13) continue;
-                    if ((Characters[i].Level >= SMain.Envir.RankBottomLevel[0]) || (Characters[i].Level >= SMain.Envir.RankBottomLevel[(byte)Characters[i].Class + 1]))
+                    if ((DateTime.Now - Characters[i].LastLogoutDate).TotalDays > 13) continue;
+                    if ((Characters[i].Level >= Envir.RankBottomLevel[0]) || (Characters[i].Level >= Envir.RankBottomLevel[(byte)Characters[i].Class + 1]))
                     {
-                        SMain.Envir.CheckRankUpdate(Characters[i]);
+                        Envir.CheckRankUpdate(Characters[i]);
                     }
                 }
             }
@@ -170,39 +173,6 @@ namespace Server.MirDatabase
                 Storage[i].Save(writer);
             }
             writer.Write(AdminAccount);
-        }
-
-        public ListViewItem CreateListView()
-        {
-            if (ListItem != null)
-                ListItem.Remove();
-
-
-            ListItem = new ListViewItem(Index.ToString()) {Tag = this};
-
-            ListItem.SubItems.Add(AccountID);
-            ListItem.SubItems.Add(Password);
-            ListItem.SubItems.Add(UserName);
-            ListItem.SubItems.Add(AdminAccount.ToString());
-            ListItem.SubItems.Add(Banned.ToString());
-            ListItem.SubItems.Add(BanReason);
-            ListItem.SubItems.Add(ExpiryDate.ToString());
-
-            return ListItem;
-        }
-
-        public void Update()
-        {
-            if (ListItem == null) return;
-
-            ListItem.SubItems[0].Text = Index.ToString();
-            ListItem.SubItems[1].Text = AccountID;
-            ListItem.SubItems[2].Text = Password;
-            ListItem.SubItems[3].Text = UserName;
-            ListItem.SubItems[4].Text = AdminAccount.ToString();
-            ListItem.SubItems[5].Text = Banned.ToString();
-            ListItem.SubItems[6].Text = BanReason;
-            ListItem.SubItems[7].Text = ExpiryDate.ToString();
         }
 
         public List<SelectInfo> GetSelectInfo()

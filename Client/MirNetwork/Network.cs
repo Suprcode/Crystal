@@ -20,7 +20,7 @@ namespace Client.MirNetwork
         private static ConcurrentQueue<Packet> _sendList;
 
         static byte[] _rawData = new byte[0];
-
+        static readonly byte[] _rawBytes = new byte[8 * 1024];
 
         public static void Connect()
         {
@@ -71,11 +71,9 @@ namespace Client.MirNetwork
         {
             if (_client == null || !_client.Connected) return;
 
-            byte[] rawBytes = new byte[8 * 1024];
-
             try
             {
-                _client.Client.BeginReceive(rawBytes, 0, rawBytes.Length, SocketFlags.None, ReceiveData, rawBytes);
+                _client.Client.BeginReceive(_rawBytes, 0, _rawBytes.Length, SocketFlags.None, ReceiveData, _rawBytes);
             }
             catch
             {
@@ -111,8 +109,15 @@ namespace Client.MirNetwork
             Buffer.BlockCopy(rawBytes, 0, _rawData, temp.Length, dataRead);
 
             Packet p;
+            List<byte> data = new List<byte>();
+
             while ((p = Packet.ReceivePacket(_rawData, out _rawData)) != null)
+            {
                 _receiveList.Enqueue(p);
+                data.AddRange(p.GetPacketBytes());
+            }
+
+            CMain.BytesReceived += data.Count;
 
             BeginReceive();
         }
@@ -163,9 +168,7 @@ namespace Client.MirNetwork
                 {
                     while (_receiveList != null && !_receiveList.IsEmpty)
                     {
-                        Packet p;
-
-                        if (!_receiveList.TryDequeue(out p) || p == null) continue;
+                        if (!_receiveList.TryDequeue(out Packet p) || p == null) continue;
                         if (!(p is ServerPackets.Disconnect) && !(p is ServerPackets.ClientVersion)) continue;
 
                         MirScene.ActiveScene.ProcessPacket(p);
@@ -191,8 +194,7 @@ namespace Client.MirNetwork
 
             while (_receiveList != null && !_receiveList.IsEmpty)
             {
-                Packet p;
-                if (!_receiveList.TryDequeue(out p) || p == null) continue;
+                if (!_receiveList.TryDequeue(out Packet p) || p == null) continue;
                 MirScene.ActiveScene.ProcessPacket(p);
             }
 
@@ -207,13 +209,11 @@ namespace Client.MirNetwork
             List<byte> data = new List<byte>();
             while (!_sendList.IsEmpty)
             {
-                Packet p;
-                if (!_sendList.TryDequeue(out p)) continue;
+                if (!_sendList.TryDequeue(out Packet p)) continue;
                 data.AddRange(p.GetPacketBytes());
             }
 
-
-
+            CMain.BytesSent += data.Count;
 
             BeginSend(data);
         }

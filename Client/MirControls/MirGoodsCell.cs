@@ -2,18 +2,23 @@
 using System.Drawing;
 using Client.MirGraphics;
 using Client.MirScenes;
-using Microsoft.DirectX;
+using SlimDX;
 using System.Text.RegularExpressions;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Client.MirControls
 {
     public sealed class MirGoodsCell : MirControl
     {
-        //public ItemInfo Item;
         public UserItem Item;
+
         public MirLabel NameLabel, PriceLabel, CountLabel;
-        public bool usePearls = false;//pearl currency
+        public bool UsePearls = false;
         public bool Recipe = false;
+
+        public bool MultipleAvailable = false;
+        public MirImageControl NewIcon;
 
         public MirGoodsCell()
         {
@@ -21,12 +26,12 @@ namespace Client.MirControls
             BorderColour = Color.Lime;
 
             NameLabel = new MirLabel
-                {
-                    AutoSize = true,
-                    Parent = this,
-                    NotControl = true,
-                    Location = new Point(44, 0),
-                };
+            {
+                AutoSize = true,
+                Parent = this,
+                NotControl = true,
+                Location = new Point(44, 0),
+            };
 
             CountLabel = new MirLabel
             {
@@ -39,12 +44,22 @@ namespace Client.MirControls
             };
 
             PriceLabel = new MirLabel
-                {
-                    AutoSize = true,
-                    Parent = this,
-                    NotControl = true,
-                    Location = new Point(44, 14),
-                };
+            {
+                AutoSize = true,
+                Parent = this,
+                NotControl = true,
+                Location = new Point(44, 14),
+            };
+
+            NewIcon = new MirImageControl
+            {
+                Index = 550,
+                Library = Libraries.Prguse,
+                Parent = this,
+                Location = new Point(190, 5),
+                NotControl = true,
+                Visible = false
+            };
 
             BeforeDraw += (o, e) => Update();
             AfterDraw += (o, e) => DrawItem();
@@ -52,27 +67,27 @@ namespace Client.MirControls
 
         private void Update()
         {
+            NewIcon.Visible = false;
+
             if (Item == null || Item.Info == null) return;
             NameLabel.Text = Item.Info.FriendlyName;
             CountLabel.Text = (Item.Count <= 1) ? "" : Item.Count.ToString();
 
-            if (usePearls)//pearl currency
+            NewIcon.Visible = !Item.IsShopItem || MultipleAvailable;
+
+            if (UsePearls)
             {
-                if (Item.Price() > 1)
-                    PriceLabel.Text = string.Format("Price: {0} pearls", (uint)(Item.Price() * GameScene.NPCRate));
-                else
-                    PriceLabel.Text = string.Format("Price: {0} pearl", (uint)(Item.Price() * GameScene.NPCRate));
+                PriceLabel.Text = string.Format("Price: {0} pearl{1}", (uint)(Item.Price() * GameScene.NPCRate), Item.Price() > 1 ? "s" : "");
+            }
+            else if (Recipe)
+            {
+                ClientRecipeInfo recipe = GameScene.RecipeInfoList.SingleOrDefault(x => x.Item.ItemIndex == Item.ItemIndex);
+
+                PriceLabel.Text = string.Format("Price: {0} gold", (uint)(recipe.Gold * GameScene.NPCRate));
             }
             else
             {
-                if (Recipe)
-                {
-                    PriceLabel.Text = string.Format("Craftable Item");
-                }
-                else
-                {
-                    PriceLabel.Text = string.Format("Price: {0} gold", (uint)(Item.Price() * GameScene.NPCRate));
-                }
+                PriceLabel.Text = string.Format("Price: {0} gold", (uint)(Item.Price() * GameScene.NPCRate));
             }
         }
 
@@ -84,7 +99,6 @@ namespace Client.MirControls
 
                 if (BorderRectangle != DisplayRectangle)
                 {
-
                     _borderInfo = new[]
                         {
                             new Vector2(DisplayRectangle.Left - 1, DisplayRectangle.Top - 1),
@@ -113,16 +127,14 @@ namespace Client.MirControls
         {
             base.OnMouseEnter();
 
-            //if (ShowItem == null) ShowItem = new UserItem(Item) {MaxDura = Item.Durability, CurrentDura = Item.Durability};
-
-            GameScene.Scene.CreateItemLabel(Item);
+            GameScene.Scene.CreateItemLabel(Item, hideAdded: GameScene.HideAddedStoreStats);
         }
+
         protected override void OnMouseLeave()
         {
             base.OnMouseLeave();
             GameScene.Scene.DisposeItemLabel();
             GameScene.HoverItem = null;
-            //ShowItem = null;
         }
 
         private void DrawItem()

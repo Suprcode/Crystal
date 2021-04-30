@@ -230,7 +230,7 @@ namespace Client.MirControls
             Libraries.Items.Draw(ImageIndex, x, y);
         }
 
-        public void Show()
+        public override void Show()
         {
             if (Parent != null) return;
 

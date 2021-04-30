@@ -16,7 +16,7 @@ namespace LibraryViewer
         private readonly Dictionary<int, int> _indexList = new Dictionary<int, int>();
         private List<Bitmap> _LImageList = new List<Bitmap>();
         private List<string> _NameList = new List<string>();
-        private MLibraryV2 _library;
+        private MLibrary _library;
         private string folderName = "";
         private bool showFrontSide = false;
 
@@ -89,7 +89,7 @@ namespace LibraryViewer
                     //DebugBox.Text += fullname + "\r\n";
 
                     if (_library != null) _library.Close();
-                    _library = new MLibraryV2(fullname);
+                    _library = new MLibrary(fullname);
                     if (Program.LoadFailed)
                     {
                         break;

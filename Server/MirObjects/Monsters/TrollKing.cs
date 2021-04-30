@@ -106,9 +106,9 @@ namespace Server.MirObjects.Monsters
 
             if (target.Attacked(this, damage, DefenceType.MACAgility) > 0)
             {
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.PoisonResist)
                 {
-                    Target.ApplyPoison(new Poison
+                    target.ApplyPoison(new Poison
                     {
                         Owner = this,
                         Duration = Envir.Random.Next(MaxMC),

@@ -12,11 +12,17 @@ namespace Server.MirDatabase
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
+        }
+
+        protected static MessageQueue MessageQueue
+        {
+            get { return MessageQueue.Instance; }
         }
 
         public UserItem Item;
         public List<UserItem> Ingredients;
+        public List<UserItem> Tools;
 
         public List<int> RequiredFlag = new List<int>();
         public ushort? RequiredLevel = null;
@@ -24,24 +30,28 @@ namespace Server.MirDatabase
         public List<MirClass> RequiredClass = new List<MirClass>();
         public MirGender? RequiredGender = null;
 
+        public byte Chance = 100;
+        public uint Gold = 0;
+
         public RecipeInfo(string name)
         {
-            ItemInfo itemInfo = SMain.Envir.GetItemInfo(name);
+            ItemInfo itemInfo = Envir.GetItemInfo(name);
             if (itemInfo == null)
             {
-                SMain.Enqueue(string.Format("Could not find Item: {0}", name));
+                MessageQueue.Enqueue(string.Format("Could not find Item: {0}", name));
                 return;
             }
 
-            Item = SMain.Envir.CreateShopItem(itemInfo);
+            Item = Envir.CreateShopItem(itemInfo, ++Envir.NextRecipeID);
 
             LoadIngredients(name);
         }
 
         private void LoadIngredients(string recipe)
         {
-            List<string> lines = File.ReadAllLines(Settings.RecipePath + recipe + ".txt").ToList();
+            List<string> lines = File.ReadAllLines(Path.Combine(Settings.RecipePath, recipe + ".txt")).ToList();
 
+            Tools = new List<UserItem>();
             Ingredients = new List<UserItem>();
 
             var mode = "ingredients";
@@ -58,23 +68,70 @@ namespace Server.MirDatabase
 
                 switch (mode)
                 {
+                    case "recipe":
+                        {
+                            var data = lines[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                            if (data.Length < 2) continue;
+
+                            switch (data[0].ToLower())
+                            {
+                                case "amount":
+                                    Item.Count = uint.Parse(data[1]);
+                                    break;
+                                case "chance":
+                                    Chance = byte.Parse(data[1]);
+
+                                    if (Chance > 100)
+                                    {
+                                        Chance = 100;
+                                    }
+                                    break;
+                                case "gold":
+                                    Gold = uint.Parse(data[1]);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        break;
+                    case "tools":
+                        {
+                            var data = lines[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                            ItemInfo info = Envir.GetItemInfo(data[0]);
+
+                            if (info == null)
+                            {
+                                MessageQueue.Enqueue(string.Format("Could not find Tool: {0}, Recipe: {1}", lines[i], recipe));
+                                continue;
+                            }
+
+                            UserItem tool = Envir.CreateShopItem(info, 0);
+
+                            Tools.Add(tool);
+                        }
+                        break;
                     case "ingredients":
                         {
                             var data = lines[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                            ItemInfo info = SMain.Envir.GetItemInfo(data[0]);
+                            ItemInfo info = Envir.GetItemInfo(data[0]);
 
                             if (info == null)
                             {
-                                SMain.Enqueue(string.Format("Could not find Item: {0}, Recipe: {1}", lines[i], recipe));
+                                MessageQueue.Enqueue(string.Format("Could not find Ingredient: {0}, Recipe: {1}", lines[i], recipe));
                                 continue;
                             }
 
+                            UserItem ingredient = Envir.CreateShopItem(info, 0);
+
                             uint count = 1;
-                            if (data.Length == 2)
+                            if (data.Length >= 2)
                                 uint.TryParse(data[1], out count);
 
-                            UserItem ingredient = SMain.Envir.CreateShopItem(info);
+                            if (data.Length >= 3)
+                                ushort.TryParse(data[2], out ingredient.CurrentDura);
 
                             ingredient.Count = count > info.StackSize ? info.StackSize : count;
 
@@ -95,10 +152,24 @@ namespace Server.MirDatabase
                                         RequiredLevel = ushort.Parse(data[1]);
                                         break;
                                     case "class":
-                                        RequiredClass.Add((MirClass)byte.Parse(data[1]));
+                                        if (Enum.TryParse<MirClass>(data[1], true, out MirClass cls))
+                                        {
+                                            RequiredClass.Add(cls);
+                                        }
+                                        else
+                                        {
+                                            RequiredClass.Add((MirClass)byte.Parse(data[1]));
+                                        }
                                         break;
                                     case "gender":
-                                        RequiredGender = (MirGender)byte.Parse(data[1]);
+                                        if (Enum.TryParse<MirGender>(data[1], true, out MirGender gender))
+                                        {
+                                            RequiredGender = gender;
+                                        }
+                                        else
+                                        {
+                                            RequiredGender = (MirGender)byte.Parse(data[1]);
+                                        }
                                         break;
                                     case "flag":
                                         RequiredFlag.Add(int.Parse(data[1]));
@@ -110,7 +181,7 @@ namespace Server.MirDatabase
                             }
                             catch
                             {
-                                SMain.Enqueue(string.Format("Could not parse option: {0}, Value: {1}", data[0], data[1]));
+                                MessageQueue.Enqueue(string.Format("Could not parse option: {0}, Value: {1}", data[0], data[1]));
                                 continue;
                             }
                         }
@@ -160,7 +231,10 @@ namespace Server.MirDatabase
         {
             ClientRecipeInfo clientInfo = new ClientRecipeInfo
             {
+                Gold = Gold,
+                Chance = Chance,
                 Item = Item.Clone(),
+                Tools = Tools.Select(x => x).ToList(),
                 Ingredients = Ingredients.Select(x => x).ToList()
             };
 

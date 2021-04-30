@@ -13,9 +13,14 @@ namespace Server.MirEnvir
     {
         private static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
-        
+
+        protected static MessageQueue MessageQueue
+        {
+            get { return MessageQueue.Instance; }
+        }
+
         public MapInfo Info;
 
         public int Thread = 0;
@@ -59,7 +64,7 @@ namespace Server.MirEnvir
             for (int i = 0; i < Doors.Count; i++)
                 if (Doors[i].index == DoorIndex)
                 {
-                    Doors[i].DoorState = 2;
+                    Doors[i].DoorState = DoorState.Open;
                     Doors[i].LastTick = Envir.Time;
                     return true;
                 }
@@ -472,30 +477,31 @@ namespace Server.MirEnvir
                         Respawns.Add(info);
 
                         if ((info.Info.SaveRespawnTime) && (info.Info.RespawnTicks != 0))
-                            SMain.Envir.SavedSpawns.Add(info);
+                            Envir.SavedSpawns.Add(info);
                     }
-
 
                     for (int i = 0; i < Info.NPCs.Count; i++)
                     {
                         NPCInfo info = Info.NPCs[i];
                         if (!ValidPoint(info.Location)) continue;
 
-                        AddObject(new NPCObject(info) {CurrentMap = this});
+                        AddObject(new NPCObject(info) { CurrentMap = this });
                     }
 
                     for (int i = 0; i < Info.SafeZones.Count; i++)
                         CreateSafeZone(Info.SafeZones[i]);
+
                     CreateMine();
+
                     return true;
                 }
             }
             catch (Exception ex)
             {
-                SMain.Enqueue(ex);
+                MessageQueue.Enqueue(ex);
             }
 
-            SMain.Enqueue("Failed to Load Map: " + Info.FileName);
+            MessageQueue.Enqueue("Failed to Load Map: " + Info.FileName);
             return false;
         }
 
@@ -619,22 +625,21 @@ namespace Server.MirEnvir
         public bool CheckDoorOpen(Point location)
         {
             if (DoorIndex[location.X, location.Y] == null) return true;
-            if (DoorIndex[location.X, location.Y].DoorState != 2) return false;
+            if (DoorIndex[location.X, location.Y].DoorState != DoorState.Open) return false;
             return true;
         }
 
         public void Process()
         {
             ProcessRespawns();
-            //process doors
+
             for (int i = 0; i < Doors.Count; i++)
             {
-                if ((Doors[i].DoorState == 2) && (Doors[i].LastTick + 5000 < Envir.Time))
+                if ((Doors[i].DoorState == DoorState.Open) && (Doors[i].LastTick + 5000 < Envir.Time))
                 {
                     Doors[i].DoorState = 0;
-                    //broadcast that door is closed
-                    Broadcast(new S.Opendoor() { DoorIndex = Doors[i].index, Close = true }, Doors[i].Location);
 
+                    Broadcast(new S.Opendoor() { DoorIndex = Doors[i].index, Close = true }, Doors[i].Location);
                 }
             }
 
@@ -644,63 +649,62 @@ namespace Server.MirEnvir
                 for (int i = Players.Count - 1; i >= 0; i--)
                 {
                     PlayerObject player = Players[i];
-                    Point Location;
+                    Point location;
                     if (Envir.Random.Next(4) == 0)
                     {
-                        Location = player.CurrentLocation;          
+                        location = player.CurrentLocation;          
                     }
                     else
-                        Location = new Point(player.CurrentLocation.X - 10 + Envir.Random.Next(20), player.CurrentLocation.Y - 10 + Envir.Random.Next(20));
+                        location = new Point(player.CurrentLocation.X - 10 + Envir.Random.Next(20), player.CurrentLocation.Y - 10 + Envir.Random.Next(20));
 
-                    if (!ValidPoint(Location)) continue;
+                    if (!ValidPoint(location)) continue;
 
-                    SpellObject Lightning = null;
-                    Lightning = new SpellObject
+                    SpellObject lightning = new SpellObject
                     {
                         Spell = Spell.MapLightning,
                         Value = Envir.Random.Next(Info.LightningDamage),
                         ExpireTime = Envir.Time + (1000),
                         TickSpeed = 500,
                         Caster = null,
-                        CurrentLocation = Location,
+                        CurrentLocation = location,
                         CurrentMap = this,
                         Direction = MirDirection.Up
                     };
-                    AddObject(Lightning);
-                    Lightning.Spawned();
+                    AddObject(lightning);
+                    lightning.Spawned();
                 }
             }
+
             if ((Info.Fire) && Envir.Time > FireTime)
             {
                 FireTime = Envir.Time + Envir.Random.Next(3000, 15000);
                 for (int i = Players.Count - 1; i >= 0; i--)
                 {
                     PlayerObject player = Players[i];
-                    Point Location;
+                    Point location;
                     if (Envir.Random.Next(4) == 0)
                     {
-                        Location = player.CurrentLocation;
+                        location = player.CurrentLocation;
 
                     }
                     else
-                        Location = new Point(player.CurrentLocation.X - 10 + Envir.Random.Next(20), player.CurrentLocation.Y - 10 + Envir.Random.Next(20));
+                        location = new Point(player.CurrentLocation.X - 10 + Envir.Random.Next(20), player.CurrentLocation.Y - 10 + Envir.Random.Next(20));
 
-                    if (!ValidPoint(Location)) continue;
+                    if (!ValidPoint(location)) continue;
 
-                    SpellObject Lightning = null;
-                    Lightning = new SpellObject
+                    SpellObject lightning = new SpellObject
                     {
                         Spell = Spell.MapLava,
                         Value = Envir.Random.Next(Info.FireDamage),
                         ExpireTime = Envir.Time + (1000),
                         TickSpeed = 500,
                         Caster = null,
-                        CurrentLocation = Location,
+                        CurrentLocation = location,
                         CurrentMap = this,
                         Direction = MirDirection.Up
                     };
-                    AddObject(Lightning);
-                    Lightning.Spawned();
+                    AddObject(lightning);
+                    lightning.Spawned();
                 }
             }
 
@@ -723,7 +727,6 @@ namespace Server.MirEnvir
                     InactiveCount = 0;
                 }
             }
-
         }
 
         private void ProcessRespawns()
@@ -735,9 +738,9 @@ namespace Server.MirEnvir
                 if ((respawn.Info.RespawnTicks != 0) && (Envir.RespawnTick.CurrentTickcounter < respawn.NextSpawnTick)) continue;
                 if ((respawn.Info.RespawnTicks == 0) && (Envir.Time < respawn.RespawnTime)) continue;
 
-                if (respawn.Count < (respawn.Info.Count * Envir.spawnmultiplyer))
+                if (respawn.Count < (respawn.Info.Count * Envir.SpawnMultiplier))
                 {
-                    int count = (respawn.Info.Count * Envir.spawnmultiplyer) - respawn.Count;
+                    int count = (respawn.Info.Count * Envir.SpawnMultiplier) - respawn.Count;
 
                     for (int c = 0; c < count; c++)
                         Success = respawn.Spawn();
@@ -765,10 +768,11 @@ namespace Server.MirEnvir
                         {
                             respawn.ErrorCount++;
 
-                            File.AppendAllText(@".\SpawnErrors.txt",
-                                String.Format("[{5}]Failed to spawn: mapindex: {0} ,mob info: index: {1} spawncoords ({2}:{3}) range {4}", respawn.Map.Info.Index, respawn.Info.MonsterIndex, respawn.Info.Location.X, respawn.Info.Location.Y, respawn.Info.Spread, DateTime.Now)
-                                       + Environment.NewLine);
-                            //*/
+                            Logger.GetLogger(LogType.Spawn).Info($"Failed to spawn: " +
+                                $"mapindex: {respawn.Map.Info.Index}, " +
+                                $"mob info: index: {respawn.Info.MonsterIndex}, " +
+                                $"spawncoords ({respawn.Info.Location.X}:{respawn.Info.Location.Y}), " +
+                                $"range {respawn.Info.Spread}");
                         }
 
                     }
@@ -806,6 +810,7 @@ namespace Server.MirEnvir
                     break;
             }
         }
+
         private void CompleteMagic(IList<object> data)
         {
             bool train = false;
@@ -855,7 +860,7 @@ namespace Server.MirEnvir
                                 if (target.IsAttackTarget(player))
                                 {
                                     if (target.Attacked(player, value, DefenceType.MAC, false) > 0)
-                                        player.LevelMagic(magic);
+                                        train = true;
                                     return;
                                 }
                                 break;
@@ -1903,7 +1908,9 @@ namespace Server.MirEnvir
 
                 case Spell.Trap:
                     value = (int)data[2];
-                    location = (Point)data[3];
+                    //location = (Point)data[3];
+                    MapObject originalTarget = (MapObject)data[3];
+                    location = originalTarget.CurrentLocation;
                     MonsterObject selectTarget = null;
 
                     if (!ValidPoint(location)) break;
@@ -2138,7 +2145,22 @@ namespace Server.MirEnvir
                                 MapObject target = cell.Objects[i];
                                 if (target.Race != ObjectType.Monster) continue;
 
-                                if (Envir.Random.Next(10) >= 4) continue;
+                                if (magic.Level == 0)
+                                {
+                                    if (Envir.Random.Next(60) >= 4) continue;
+                                }
+                                else if (magic.Level == 1)
+                                {
+                                    if (Envir.Random.Next(45) >= 3) continue;
+                                }
+                                else if (magic.Level == 2)
+                                {
+                                    if (Envir.Random.Next(30) >= 2) continue;
+                                }
+                                else if (magic.Level == 3)
+                                {
+                                    if (Envir.Random.Next(15) >= 1) continue;
+                                }
 
                                 if (((MonsterObject)target).Info.CoolEye == 100) continue;
                                 target.Target = player;
@@ -2264,8 +2286,8 @@ namespace Server.MirEnvir
     }
     public class Cell
     {
-        public static readonly Cell HighWall = new Cell { Attribute = CellAttribute.HighWall };
-        public static readonly Cell LowWall = new Cell { Attribute = CellAttribute.LowWall };
+        public static Cell LowWall { get { return new Cell { Attribute = CellAttribute.LowWall }; } }
+        public static Cell HighWall { get { return new Cell { Attribute = CellAttribute.HighWall }; } }
 
         public bool Valid
         {
@@ -2290,6 +2312,11 @@ namespace Server.MirEnvir
     }
     public class MapRespawn
     {
+        protected static Envir Envir
+        {
+            get { return Envir.Main; }
+        }
+
         public RespawnInfo Info;
         public MonsterInfo Monster;
         public Map Map;
@@ -2303,7 +2330,7 @@ namespace Server.MirEnvir
         public MapRespawn(RespawnInfo info)
         {
             Info = info;
-            Monster = SMain.Envir.GetMonsterInfo(info.MonsterIndex);
+            Monster = Envir.GetMonsterInfo(info.MonsterIndex);
 
             LoadRoutes();
         }

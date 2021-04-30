@@ -244,18 +244,12 @@ namespace Client.MirScenes.Dialogs
             Network.Enqueue(new C.Chat { Message = "@ride" });
         }
 
-
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
-        public void Show()
+        public override void Show()
         {
             if (Visible) return;
             if (GameScene.User.MountType < 0)
             {
-                MirMessageBox messageBox = new MirMessageBox("You do not own a mount.", MirMessageBoxButtons.OK);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.NoMount, MirMessageBoxButtons.OK);
                 messageBox.Show();
                 return;
             }

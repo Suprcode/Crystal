@@ -725,9 +725,9 @@ namespace Client.MirScenes.Dialogs
             CreatureInfo2.Text = GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.Info2;
             //Expire
             if (GameScene.User.IntelligentCreatures[selectedCreature].ExpireTime == -9999)
-                CreatureDeadline.Text = "Expire: Never";
+                CreatureDeadline.Text = string.Format(GameLanguage.ExpireNever);
             else
-                CreatureDeadline.Text = string.Format("Expire: {0}", Functions.PrintTimeSpanFromSeconds(GameScene.User.IntelligentCreatures[selectedCreature].ExpireTime));
+                CreatureDeadline.Text = string.Format(GameLanguage.Expire, Functions.PrintTimeSpanFromSeconds(GameScene.User.IntelligentCreatures[selectedCreature].ExpireTime));
             //
             if (GameScene.User.IntelligentCreatures[selectedCreature].MaintainFoodTime == 0)
                 CreatureMaintainFoodBuff.Text = "0";
@@ -801,7 +801,7 @@ namespace Client.MirScenes.Dialogs
             if (GameScene.Scene.IntelligentCreatureOptionsDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsDialog.BringToFront();
         }
 
-        public void Hide()
+        public override void Hide()
         {
             if (!Visible) return;
             if (GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Hide();
@@ -810,13 +810,13 @@ namespace Client.MirScenes.Dialogs
             AnimNeedSwitch = false;
             Visible = false;
         }
-        public void Show()
+        public override void Show()
         {
             if (Visible) return;
 
             if (!GameScene.User.IntelligentCreatures.Any())
             {
-                MirMessageBox messageBox = new MirMessageBox("You do not own any creatures.", MirMessageBoxButtons.OK);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.NoCreatures, MirMessageBoxButtons.OK);
                 messageBox.Show();
                 return;
             }
@@ -1077,6 +1077,22 @@ namespace Client.MirScenes.Dialogs
                     AnimExCount = 12;
                     AnimExDelay = 300;
                     break;
+                case IntelligentCreatureType.Foxey:
+                    AnimDefaultIdx = 1430;
+                    AnimDefaultCount = 9;
+                    AnimDefaultDelay = 300;
+                    AnimExIdx = 1439;
+                    AnimExCount = 8;
+                    AnimExDelay = 300;
+                    break;
+                case IntelligentCreatureType.MedicalRat:
+                    AnimDefaultIdx = 1550;
+                    AnimDefaultCount = 8;
+                    AnimDefaultDelay = 300;
+                    AnimExIdx = 1560;
+                    AnimExCount = 16;
+                    AnimExDelay = 300;
+                    break;
                 case IntelligentCreatureType.None:
                     AnimDefaultIdx = 539;
                     AnimDefaultCount = 1;
@@ -1217,11 +1233,6 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
         public void Show(IntelligentCreatureItemFilter filter)
         {
             if (Visible) return;
@@ -1343,11 +1354,6 @@ namespace Client.MirScenes.Dialogs
             GradeLabel.ForeColour = GradeNameColor(GradeType);
         }
 
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
 
         public void Show(ItemGrade grade)
         {

@@ -4,14 +4,13 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using Client.MirControls;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using Blend = Microsoft.DirectX.Direct3D.Blend;
+using Client.MirScenes;
+using SlimDX;
+using SlimDX.Direct3D9;
+using Blend = SlimDX.Direct3D9.Blend;
 
 namespace Client.MirGraphics
 {
-
-
     class DXManager
     {
         public static List<MImage> TextureList = new List<MImage>();
@@ -35,6 +34,9 @@ namespace Client.MirGraphics
         public static Texture RadarTexture;
         public static List<Texture> Lights = new List<Texture>();
         public static Texture PoisonDotBackground;
+
+        public static Texture FloorTexture, LightTexture;
+        public static Surface FloorSurface, LightSurface;
 
         public static PixelShader GrayScalePixelShader;
         public static PixelShader NormalPixelShader;
@@ -63,7 +65,7 @@ namespace Client.MirGraphics
             Parameters = new PresentParameters
             {
                 BackBufferFormat = Format.X8R8G8B8,
-                PresentFlag = PresentFlag.LockableBackBuffer,
+                PresentFlags = PresentFlags.LockableBackBuffer,
                 BackBufferWidth = Settings.ScreenWidth,
                 BackBufferHeight = Settings.ScreenHeight,
                 SwapEffect = SwapEffect.Discard,
@@ -72,29 +74,26 @@ namespace Client.MirGraphics
             };
 
 
-            Caps devCaps = Manager.GetDeviceCaps(0, DeviceType.Hardware);
+            Direct3D d3d = new Direct3D();
+
+            Capabilities devCaps = d3d.GetDeviceCaps(0, DeviceType.Hardware);
             DeviceType devType = DeviceType.Reference;
             CreateFlags devFlags = CreateFlags.HardwareVertexProcessing;
 
             if (devCaps.VertexShaderVersion.Major >= 2 && devCaps.PixelShaderVersion.Major >= 2)
                 devType = DeviceType.Hardware;
 
-            if (devCaps.DeviceCaps.SupportsHardwareTransformAndLight)
+            if ((devCaps.DeviceCaps & DeviceCaps.HWTransformAndLight) != 0)
                 devFlags = CreateFlags.HardwareVertexProcessing;
 
 
-            if (devCaps.DeviceCaps.SupportsPureDevice)
+            if ((devCaps.DeviceCaps & DeviceCaps.PureDevice) != 0)
                 devFlags |= CreateFlags.PureDevice;
 
 
-            Device = new Device(Manager.Adapters.Default.Adapter, devType, Program.Form, devFlags, Parameters);
+            Device = new Device(d3d, d3d.Adapters.DefaultAdapter.Adapter, devType, Program.Form.Handle, devFlags, Parameters);
 
-            Device.DeviceLost += (o, e) => DeviceLost = true;
-            Device.DeviceResizing += (o, e) => e.Cancel = true;
-            Device.DeviceReset += (o, e) => LoadTextures();
-            Device.Disposing += (o, e) => Clean();
-
-            Device.SetDialogBoxesEnabled(true);
+            Device.SetDialogBoxMode(true);
 
             LoadTextures();
             LoadPixelsShaders();
@@ -108,17 +107,17 @@ namespace Client.MirGraphics
 
             if (System.IO.File.Exists(shaderNormalPath))
             {
-                using (var gs = ShaderLoader.FromFile(shaderNormalPath, null, ShaderFlags.None))
+                using (var gs = ShaderBytecode.AssembleFromFile(shaderNormalPath, ShaderFlags.None))
                     NormalPixelShader = new PixelShader(Device, gs);
             }
             if (System.IO.File.Exists(shaderGrayScalePath))
             {
-                using (var gs = ShaderLoader.FromFile(shaderGrayScalePath, null, ShaderFlags.None))
+                using (var gs = ShaderBytecode.AssembleFromFile(shaderGrayScalePath, ShaderFlags.None))
                     GrayScalePixelShader = new PixelShader(Device, gs);
             }
             if (System.IO.File.Exists(shaderMagicPath))
             {
-                using (var gs = ShaderLoader.FromFile(shaderMagicPath, null, ShaderFlags.None))
+                using (var gs = ShaderBytecode.AssembleFromFile(shaderMagicPath, ShaderFlags.None))
                     MagicPixelShader = new PixelShader(Device, gs);
             }
         }
@@ -129,17 +128,16 @@ namespace Client.MirGraphics
             TextSprite = new Sprite(Device);
             Line = new Line(Device) { Width = 1F };
 
-            MainSurface = Device.GetBackBuffer(0, 0, BackBufferType.Mono);
+            MainSurface = Device.GetBackBuffer(0, 0);
             CurrentSurface = MainSurface;
             Device.SetRenderTarget(0, MainSurface);
-
 
             if (RadarTexture == null || RadarTexture.Disposed)
             {
                 RadarTexture = new Texture(Device, 2, 2, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
 
-                using (GraphicsStream stream = RadarTexture.LockRectangle(0, LockFlags.Discard))
-                using (Bitmap image = new Bitmap(2, 2, 8, PixelFormat.Format32bppArgb, (IntPtr)stream.InternalDataPointer))
+                DataRectangle stream = RadarTexture.LockRectangle(0, LockFlags.Discard);
+                using (Bitmap image = new Bitmap(2, 2, 8, PixelFormat.Format32bppArgb, stream.Data.DataPointer))
                 using (Graphics graphics = Graphics.FromImage(image))
                     graphics.Clear(Color.White);
             }
@@ -147,8 +145,8 @@ namespace Client.MirGraphics
             {
                 PoisonDotBackground = new Texture(Device, 5, 5, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
 
-                using (GraphicsStream stream = PoisonDotBackground.LockRectangle(0, LockFlags.Discard))
-                using (Bitmap image = new Bitmap(5, 5, 20, PixelFormat.Format32bppArgb, (IntPtr)stream.InternalDataPointer))
+                DataRectangle stream = PoisonDotBackground.LockRectangle(0, LockFlags.Discard);
+                using (Bitmap image = new Bitmap(5, 5, 20, PixelFormat.Format32bppArgb, stream.Data.DataPointer))
                 using (Graphics graphics = Graphics.FromImage(image))
                     graphics.Clear(Color.White);
             }
@@ -169,10 +167,11 @@ namespace Client.MirGraphics
                 //int height = 110 + (57 * i);
                 int width = LightSizes[i].X;
                 int height = LightSizes[i].Y;
+
                 Texture light = new Texture(Device, width, height, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
 
-                using (GraphicsStream stream = light.LockRectangle(0, LockFlags.Discard))
-                using (Bitmap image = new Bitmap(width, height, width * 4, PixelFormat.Format32bppArgb, (IntPtr)stream.InternalDataPointer))
+                DataRectangle stream = light.LockRectangle(0, LockFlags.Discard);
+                using (Bitmap image = new Bitmap(width, height, width * 4, PixelFormat.Format32bppArgb, stream.Data.DataPointer))
                 {
                     using (Graphics graphics = Graphics.FromImage(image))
                     {
@@ -214,7 +213,7 @@ namespace Client.MirGraphics
                         }
                     }
                 }
-                light.Disposing += (o, e) => Lights.Remove(light);
+                //light.Disposing += (o, e) => Lights.Remove(light);
                 Lights.Add(light);
             }
         }
@@ -250,26 +249,45 @@ namespace Client.MirGraphics
         {
             try
             {
-                int result;
-                Device.CheckCooperativeLevel(out result);
-                switch ((ResultCode)result)
+                Result result = DXManager.Device.TestCooperativeLevel();
+
+                if (result.Code == ResultCode.DeviceLost.Code) return;
+
+                if (result.Code == ResultCode.DeviceNotReset.Code)
                 {
-                    case ResultCode.DeviceNotReset:
-                        Device.Reset(Parameters);
-                        break;
-                    case ResultCode.DeviceLost:
-                        break;
-                    case ResultCode.Success:
-                        DeviceLost = false;
-                        CurrentSurface = Device.GetBackBuffer(0, 0, BackBufferType.Mono);
-                        Device.SetRenderTarget(0, CurrentSurface);
-                        break;
+                    DXManager.ResetDevice();
+                    return;
                 }
+
+                if (result.Code != ResultCode.Success.Code) return;
+
+                DXManager.DeviceLost = false;
             }
             catch
             {
             }
         }
+
+        public static void ResetDevice()
+        {
+            DXManager.CleanUp();
+            DXManager.DeviceLost = true;
+
+            if (DXManager.Parameters == null) return;
+
+            Size clientSize = Program.Form.ClientSize;
+
+            if (clientSize.Width == 0 || clientSize.Height == 0) return;
+
+            DXManager.Parameters.Windowed = !Settings.FullScreen;
+            DXManager.Parameters.BackBufferWidth = clientSize.Width;
+            DXManager.Parameters.BackBufferHeight = clientSize.Height;
+            DXManager.Parameters.PresentationInterval = Settings.FPSCap ? PresentInterval.Default : PresentInterval.Immediate;
+            DXManager.Device.Reset(DXManager.Parameters);
+
+            DXManager.LoadTextures();
+        }
+
         public static void AttemptRecovery()
         {
             try
@@ -287,9 +305,10 @@ namespace Client.MirGraphics
             catch
             {
             }
+
             try
             {
-                MainSurface = Device.GetBackBuffer(0, 0, BackBufferType.Mono);
+                MainSurface = Device.GetBackBuffer(0, 0);
                 CurrentSurface = MainSurface;
                 Device.SetRenderTarget(0, MainSurface);
             }
@@ -303,21 +322,20 @@ namespace Client.MirGraphics
                 return;
 
             Sprite.Flush();
-            Device.RenderState.AlphaBlendEnable = true;
+            Device.SetRenderState(RenderState.AlphaBlendEnable, true);
             if (opacity >= 1 || opacity < 0)
             {
-                Device.RenderState.SourceBlend = Blend.SourceAlpha;
-                Device.RenderState.DestinationBlend = Blend.InvSourceAlpha;
-                Device.RenderState.AlphaSourceBlend = Blend.One;
-                Device.RenderState.BlendFactor = Color.FromArgb(255, 255, 255, 255);
+                Device.SetRenderState(RenderState.SourceBlend, SlimDX.Direct3D9.Blend.SourceAlpha);
+                Device.SetRenderState(RenderState.DestinationBlend, SlimDX.Direct3D9.Blend.InverseSourceAlpha);
+                Device.SetRenderState(RenderState.SourceBlendAlpha, Blend.One);
+                Device.SetRenderState(RenderState.BlendFactor, Color.FromArgb(255, 255, 255, 255).ToArgb());
             }
             else
             {
-                Device.RenderState.SourceBlend = Blend.BlendFactor;
-                Device.RenderState.DestinationBlend = Blend.InvBlendFactor;
-                Device.RenderState.AlphaSourceBlend = Blend.SourceAlpha;
-                Device.RenderState.BlendFactor = Color.FromArgb((byte)(255 * opacity), (byte)(255 * opacity),
-                                                                (byte)(255 * opacity), (byte)(255 * opacity));
+                Device.SetRenderState(RenderState.SourceBlend, Blend.BlendFactor);
+                Device.SetRenderState(RenderState.DestinationBlend, Blend.InverseBlendFactor);
+                Device.SetRenderState(RenderState.SourceBlendAlpha, Blend.SourceAlpha);
+                Device.SetRenderState(RenderState.BlendFactor, Color.FromArgb((byte)(255 * opacity), (byte)(255 * opacity), (byte)(255 * opacity), (byte)(255 * opacity)).ToArgb());
             }
             Opacity = opacity;
             Sprite.Flush();
@@ -337,23 +355,23 @@ namespace Client.MirGraphics
             if (Blending)
             {
                 Sprite.Begin(SpriteFlags.DoNotSaveState);
-                Device.RenderState.AlphaBlendEnable = true;
+                Device.SetRenderState(RenderState.AlphaBlendEnable, true);
 
                 switch (BlendingMode)
                 {
                     case BlendMode.INVLIGHT:
-                        Device.RenderState.BlendOperation = BlendOperation.Add;
-                        Device.RenderState.SourceBlend = Blend.BlendFactor;
-                        Device.RenderState.DestinationBlend = Blend.InvSourceColor;
+                        Device.SetRenderState(RenderState.BlendOperation, BlendOperation.Add);
+                        Device.SetRenderState(RenderState.SourceBlend, Blend.BlendFactor);
+                        Device.SetRenderState(RenderState.DestinationBlend, Blend.InverseSourceColor);
                         break;
                     default:
-                        Device.RenderState.SourceBlend = Blend.BlendFactor;
-                        Device.RenderState.DestinationBlend = Blend.One;
+                        Device.SetRenderState(RenderState.SourceBlend, Blend.SourceAlpha);
+                        Device.SetRenderState(RenderState.DestinationBlend, Blend.One);
                         break;
                 }
 
-                Device.RenderState.BlendFactor = Color.FromArgb((byte)(255 * BlendingRate), (byte)(255 * BlendingRate),
-                                                                (byte)(255 * BlendingRate), (byte)(255 * BlendingRate));
+                Device.SetRenderState(RenderState.BlendFactor, Color.FromArgb((byte)(255 * BlendingRate), (byte)(255 * BlendingRate),
+                                                                (byte)(255 * BlendingRate), (byte)(255 * BlendingRate)).ToArgb());
             }
             else
                 Sprite.Begin(SpriteFlags.AlphaBlend);
@@ -368,8 +386,8 @@ namespace Client.MirGraphics
 
             Sprite.Flush();
             Device.PixelShader = NormalPixelShader;
-            Device.SetPixelShaderConstant(0, new Vector4(1.0F, 1.0F, 1.0F, blend));
-            Device.SetPixelShaderConstant(1, new Vector4(tintcolor.R / 255, tintcolor.G / 255, tintcolor.B / 255, 1.0F));
+            Device.SetPixelShaderConstant(0, new Vector4[] { new Vector4(1.0F, 1.0F, 1.0F, blend) });
+            Device.SetPixelShaderConstant(1, new Vector4[] { new Vector4(tintcolor.R / 255, tintcolor.G / 255, tintcolor.B / 255, 1.0F) });
             Sprite.Flush();
         }
 
@@ -380,8 +398,8 @@ namespace Client.MirGraphics
 
             Sprite.Flush();
             Device.PixelShader = GrayScalePixelShader;
-            Device.SetPixelShaderConstant(0, new Vector4(1.0F, 1.0F, 1.0F, blend));
-            Device.SetPixelShaderConstant(1, new Vector4(tintcolor.R / 255, tintcolor.G / 255, tintcolor.B / 255, 1.0F));
+            Device.SetPixelShaderConstant(0, new Vector4[] { new Vector4(1.0F, 1.0F, 1.0F, blend) });
+            Device.SetPixelShaderConstant(1, new Vector4[] { new Vector4(tintcolor.R / 255, tintcolor.G / 255, tintcolor.B / 255, 1.0F) });
             Sprite.Flush();
         }
 
@@ -392,8 +410,8 @@ namespace Client.MirGraphics
 
             Sprite.Flush();
             Device.PixelShader = MagicPixelShader;
-            Device.SetPixelShaderConstant(0, new Vector4(1.0F, 1.0F, 1.0F, blend));
-            Device.SetPixelShaderConstant(1, new Vector4(tintcolor.R / 255, tintcolor.G / 255, tintcolor.B / 255, 1.0F));
+            Device.SetPixelShaderConstant(0, new Vector4[] { new Vector4(1.0F, 1.0F, 1.0F, blend) });
+            Device.SetPixelShaderConstant(1, new Vector4[] { new Vector4(tintcolor.R / 255, tintcolor.G / 255, tintcolor.B / 255, 1.0F) });
             Sprite.Flush();
         }
 
@@ -411,10 +429,7 @@ namespace Client.MirGraphics
 
                 if (CMain.Time <= m.CleanTime) continue;
 
-
-                TextureList.RemoveAt(i);
-                if (m.Image != null && !m.Image.Disposed)
-                    m.Image.Dispose();
+                m.DisposeTexture();
             }
 
             for (int i = ControlList.Count - 1; i >= 0; i--)
@@ -433,16 +448,109 @@ namespace Client.MirGraphics
             }
         }
 
+
         private static void CleanUp()
         {
+            if (Sprite != null)
+            {
+                if (!Sprite.Disposed)
+                {
+                    Sprite.Dispose();
+                }
+
+                Sprite = null;
+            }
+
+            if (Line != null)
+            {
+                if (!Line.Disposed)
+                {
+                    Line.Dispose();
+                }
+
+                Line = null;
+            }
+
+            if (CurrentSurface != null)
+            {
+                if (!CurrentSurface.Disposed)
+                {
+                    CurrentSurface.Dispose();
+                }
+
+                CurrentSurface = null;
+            }
+
+            if (PoisonDotBackground != null)
+            {
+                if (!PoisonDotBackground.Disposed)
+                {
+                    PoisonDotBackground.Dispose();
+                }
+
+                PoisonDotBackground = null;
+            }
+
+            if (RadarTexture != null)
+            {
+                if (!RadarTexture.Disposed)
+                {
+                    RadarTexture.Dispose();
+                }
+
+                RadarTexture = null;
+            }
+
+            if (FloorTexture != null)
+            {
+                if (!FloorTexture.Disposed)
+                {
+                    FloorTexture.Dispose();
+                }
+
+                DXManager.FloorTexture = null;
+                GameScene.Scene.MapControl.FloorValid = false;
+
+                if (DXManager.FloorSurface != null && !DXManager.FloorSurface.Disposed)
+                {
+                    DXManager.FloorSurface.Dispose();
+                }
+
+                DXManager.FloorSurface = null;
+            }
+
+            if (LightTexture != null)
+            {
+                if (!LightTexture.Disposed)
+                    LightTexture.Dispose();
+
+                DXManager.LightTexture = null;
+
+                if (DXManager.LightSurface != null && !DXManager.LightSurface.Disposed)
+                {
+                    DXManager.LightSurface.Dispose();
+                }
+
+                DXManager.LightSurface = null;
+            }
+
+            if (Lights != null)
+            {
+                for (int i = 0; i < Lights.Count; i++)
+                {
+                    if (!Lights[i].Disposed)
+                        Lights[i].Dispose();
+                }
+                Lights.Clear();
+            }
+
             for (int i = TextureList.Count - 1; i >= 0; i--)
             {
                 MImage m = TextureList[i];
 
                 if (m == null) continue;
 
-                if (m.Image != null && !m.Image.Disposed)
-                    m.Image.Dispose();
+                m.DisposeTexture();
             }
             TextureList.Clear();
 

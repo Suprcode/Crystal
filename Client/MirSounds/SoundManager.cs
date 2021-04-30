@@ -1,17 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Microsoft.DirectX.DirectSound;
-
+using SlimDX.DirectSound;
 
 namespace Client.MirSounds
 {
     static class SoundManager
     {
-        public static Device Device;
-        private static readonly List<SoundLibrary> Sounds = new List<SoundLibrary>();
+        public static DirectSound Device;
+        private static readonly List<ISoundLibrary> Sounds = new List<ISoundLibrary>();
         private static readonly Dictionary<int, string> IndexList = new Dictionary<int, string>();
 
-        public static SoundLibrary Music;
+        public static ISoundLibrary Music;
 
         private static int _vol;
         public static int Vol
@@ -40,8 +39,10 @@ namespace Client.MirSounds
         {
             if (Program.Form == null || Program.Form.IsDisposed) return;
 
-            Device = new Device();
-            Device.SetCooperativeLevel(Program.Form, CooperativeLevel.Normal);
+            Device = new DirectSound();
+            Device.SetCooperativeLevel(Program.Form.Handle, CooperativeLevel.Normal);
+            Device.IsDefaultPool = false;
+
             LoadSoundList();
         }
         public static void LoadSoundList()
@@ -90,24 +91,25 @@ namespace Client.MirSounds
                 return;
             }
 
-
-
             if (IndexList.ContainsKey(index))
-                Sounds.Add(new SoundLibrary(index, IndexList[index], loop));
+                Sounds.Add(GetSound(index, IndexList[index], loop));
             else
             {
                 string filename;
                 if (index > 20000)
                 {
                     index -= 20000;
-                    filename = string.Format("M{0:0}-{1:0}.wav", index/10, index%10);
-                    Sounds.Add(new SoundLibrary(index + 20000, filename, loop));
+                    filename = string.Format("M{0:0}-{1:0}", index/10, index%10);
+
+                    Sounds.Add(GetSound(index + 20000, filename, loop));
                 }
                 else if (index < 10000)
                 {
+                    filename = string.Format("{0:000}-{1:0}", index/10, index%10);
 
-                    filename = string.Format("{0:000}-{1:0}.wav", index/10, index%10);
-                    Sounds.Add(new SoundLibrary(index, filename, loop));
+                    var sound = GetSound(index, filename, loop);
+
+                    Sounds.Add(GetSound(index, filename, loop));
                 }
             }
         }
@@ -116,7 +118,7 @@ namespace Client.MirSounds
         {
             if (Device == null) return;
 
-            Music = new SoundLibrary(index, index + ".wav", true);
+            Music = GetSound(index, index.ToString(), true);
             Music.SetVolume(MusicVol);
             Music.Play();
         }
@@ -126,6 +128,18 @@ namespace Client.MirSounds
             for (int i = 0; i < Sounds.Count; i++)
                 Sounds[i].Dispose();
             Sounds.Clear();
+        }
+
+        static ISoundLibrary GetSound(int index, string fileName, bool loop)
+        {
+            var sound = WavLibrary.TryCreate(index, fileName, loop);
+
+            if (sound != null)
+            {
+                return sound;
+            }
+
+            return new NullLibrary(index, fileName, loop);
         }
     }
 
@@ -271,6 +285,8 @@ namespace Client.MirSounds
             PetFrog = 10510,
             PetMonkey = 10511,
             PetAngryBird = 10512,
+            PetFoxey = 10513,
+            PetMedicalRat = 10514,
             PetPickup = 10520;
     }
 }

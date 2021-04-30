@@ -10,7 +10,6 @@ using System.Windows.Forms;
 
 namespace Client.MirScenes.Dialogs
 {
-    //thx to Pete107/Petesn00beh for the base of this :p
     public class RankingDialog : MirImageControl
     {
         public MirButton AllButton, WarButton, WizButton, TaoButton, SinButton, ArchButton, Tab7, NextButton, PrevButton;
@@ -20,7 +19,7 @@ namespace Client.MirScenes.Dialogs
         public byte RankType = 0;
         public int RowOffset = 0;
         public RankingRow[] Rows = new RankingRow[20];
-        public List<Rank_Character_Info>[] RankList = new List<Rank_Character_Info>[6];
+        public List<RankCharacterInfo>[] RankList = new List<RankCharacterInfo>[6];
         public int[] Rank = new int[6];
 
         public long[] LastRequest = new long[6];
@@ -28,12 +27,12 @@ namespace Client.MirScenes.Dialogs
 
         public RankingDialog()
         {
-            Index = 1329;
-            Library = Libraries.Prguse2;
+            Index = 728;
+            Library = Libraries.Title;
             //Size = new Size(288, 324);
             Movable = true;
             Sort = true;
-            Location = new Point((800 - Size.Width) / 2, (600 - Size.Height) / 2);
+            Location = new Point((Settings.ScreenWidth - Size.Width) / 2, (Settings.ScreenHeight - Size.Height) / 2);
 
             CloseButton = new MirButton
             {
@@ -170,18 +169,18 @@ namespace Client.MirScenes.Dialogs
             }
             for (int i = 0; i < RankList.Length; i++)
             {
-                RankList[i] = new List<Rank_Character_Info>();
+                RankList[i] = new List<RankCharacterInfo>();
             }
         }
 
-        public void Show()
+        public override void Show()
         {
             if (Visible) return;
             Visible = true;
             RequestRanks(RankType);
         }
 
-        public void Hide()
+        public override void Hide()
         {
             if (!Visible) return;
             Visible = false;
@@ -225,7 +224,7 @@ namespace Client.MirScenes.Dialogs
             MirNetwork.Network.Enqueue(new ClientPackets.GetRanking { RankIndex = RankType});
         }
 
-        public void RecieveRanks(List<Rank_Character_Info> Ranking, byte rankType, int MyRank)
+        public void RecieveRanks(List<RankCharacterInfo> Ranking, byte rankType, int MyRank)
         {
             RankList[rankType].Clear();
             RankList[rankType] = Ranking;
@@ -260,7 +259,7 @@ namespace Client.MirScenes.Dialogs
 
         public sealed class RankingRow : MirControl
         {
-            public Rank_Character_Info Listing;
+            public RankCharacterInfo Listing;
             public MirLabel RankLabel, NameLabel, LevelLabel, ClassLabel;
             public long Index;
 
@@ -324,7 +323,7 @@ namespace Client.MirScenes.Dialogs
                 LevelLabel.Text = string.Empty;
                 ClassLabel.Text = string.Empty;
             }
-            public void Update(Rank_Character_Info listing, int RankIndex)
+            public void Update(RankCharacterInfo listing, int RankIndex)
             {
                 Listing = listing;
                 RankLabel.Text = RankIndex.ToString();

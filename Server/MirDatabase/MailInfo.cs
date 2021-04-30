@@ -10,6 +10,11 @@ namespace Server.MirEnvir
 {
     public class MailInfo
     {
+        protected static Envir Envir
+        {
+            get { return Envir.Main; }
+        }
+
         public ulong MailID;
 
         public string Sender;
@@ -46,7 +51,7 @@ namespace Server.MirEnvir
 
         public MailInfo(int recipientIndex, bool canReply = false)
         {
-            MailID = ++SMain.Envir.NextMailID;
+            MailID = ++Envir.NextMailID;
             RecipientIndex = recipientIndex;
 
             CanReply = canReply;
@@ -65,7 +70,7 @@ namespace Server.MirEnvir
             for (int i = 0; i < count; i++)
             {
                 UserItem item = new UserItem(reader, version, customversion);
-                if (SMain.Envir.BindItem(item))
+                if (Envir.BindItem(item))
                     Items.Add(item);
             }
 
@@ -128,34 +133,19 @@ namespace Server.MirEnvir
                 }
             }
 
-            if (SMain.Envir.Mail.Contains(this)) return;
-
-            SMain.Envir.Mail.Add(this); //add to postbox
-
-            DateSent = DateTime.Now;
-        }
-
-        public bool Receive()
-        {
-            if (!Sent) return false; //mail not sent yet
-
             if (RecipientInfo == null)
             {
-                RecipientInfo = SMain.Envir.GetCharacterInfo(RecipientIndex);
-
-                if (RecipientInfo == null) return false;
+                RecipientInfo = Envir.GetCharacterInfo(RecipientIndex);
             }
 
             RecipientInfo.Mail.Add(this); //add to players inbox
-            
-            if(RecipientInfo.Player != null)
+
+            if (RecipientInfo.Player != null)
             {
                 RecipientInfo.Player.NewMail = true; //notify player of new mail  --check in player process
             }
 
-            SMain.Envir.Mail.Remove(this); //remove from postbox
-
-            return true;
+            DateSent = DateTime.Now;
         }
 
         public ClientMail CreateClientMail()

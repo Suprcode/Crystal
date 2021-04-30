@@ -2,13 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Windows.Forms;
 using Server.MirEnvir;
 
 namespace Server.MirDatabase
 {
     public class MapInfo
     {
+        protected static Envir Envir
+        {
+            get { return Envir.Main; }
+        }
+
+        protected static Envir EditEnvir
+        {
+            get { return Envir.Edit; }
+        }
+
         public int Index;
         public string FileName = string.Empty, Title = string.Empty;
         public ushort MiniMap, BigMap, Music;
@@ -16,7 +25,8 @@ namespace Server.MirDatabase
         public byte MapDarkLight = 0, MineIndex = 0;
 
         public bool NoTeleport, NoReconnect, NoRandom, NoEscape, NoRecall, NoDrug, NoPosition, NoFight,
-            NoThrowItem, NoDropPlayer, NoDropMonster, NoNames, NoMount, NeedBridle, Fight, NeedHole, Fire, Lightning;
+            NoThrowItem, NoDropPlayer, NoDropMonster, NoNames, NoMount, NeedBridle, Fight, NeedHole, Fire, Lightning, 
+            NoTownTeleport, NoReincarnation;
 
         public string NoReconnectMap = string.Empty;
         public int FireDamage, LightningDamage;
@@ -27,8 +37,6 @@ namespace Server.MirDatabase
         public List<NPCInfo> NPCs = new List<NPCInfo>();
         public List<MineZone> MineZones = new List<MineZone>();
         public List<Point> ActiveCoords = new List<Point>();
-
-        public InstanceInfo Instance;
 
         public MapInfo()
         {
@@ -43,7 +51,7 @@ namespace Server.MirDatabase
             MiniMap = reader.ReadUInt16();
             Light = (LightSetting) reader.ReadByte();
 
-            if (Envir.LoadVersion >= 3) BigMap = reader.ReadUInt16();
+            BigMap = reader.ReadUInt16();
 
             int count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
@@ -53,22 +61,14 @@ namespace Server.MirDatabase
             for (int i = 0; i < count; i++)
                 Respawns.Add(new RespawnInfo(reader, Envir.LoadVersion, Envir.LoadCustomVersion));
 
-            if (Envir.LoadVersion <= 33)
-            {
-                count = reader.ReadInt32();
-                for (int i = 0; i < count; i++)
-                    NPCs.Add(new NPCInfo(reader));
-            }
-
             count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
                 Movements.Add(new MovementInfo(reader));
 
-            if (Envir.LoadVersion < 14) return;
-
             NoTeleport = reader.ReadBoolean();
             NoReconnect = reader.ReadBoolean();
-            NoReconnectMap = reader.ReadString();
+            NoReconnectMap = reader.ReadString();           
+
             NoRandom = reader.ReadBoolean();
             NoEscape = reader.ReadBoolean();
             NoRecall = reader.ReadBoolean();
@@ -79,30 +79,24 @@ namespace Server.MirDatabase
             NoDropMonster = reader.ReadBoolean();
             NoNames = reader.ReadBoolean();
             Fight = reader.ReadBoolean();
-            if (Envir.LoadVersion == 14) NeedHole = reader.ReadBoolean();
             Fire = reader.ReadBoolean();
             FireDamage = reader.ReadInt32();
             Lightning = reader.ReadBoolean();
             LightningDamage = reader.ReadInt32();
-            if (Envir.LoadVersion < 23) return;
             MapDarkLight = reader.ReadByte();
-            if (Envir.LoadVersion < 26) return;
             count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
                 MineZones.Add(new MineZone(reader));
-            if (Envir.LoadVersion < 27) return;
             MineIndex = reader.ReadByte();
-
-            if (Envir.LoadVersion < 33) return;
             NoMount = reader.ReadBoolean();
             NeedBridle = reader.ReadBoolean();
-
-            if (Envir.LoadVersion < 42) return;
             NoFight = reader.ReadBoolean();
+            Music = reader.ReadUInt16();
 
-            if (Envir.LoadVersion < 53) return;
-                Music = reader.ReadUInt16(); 
-
+            if (Envir.LoadVersion < 78) return;
+            NoTownTeleport = reader.ReadBoolean();
+            if (Envir.LoadVersion < 79) return;
+            NoReincarnation = reader.ReadBoolean();
         }
 
         public void Save(BinaryWriter writer)
@@ -155,46 +149,30 @@ namespace Server.MirDatabase
             writer.Write(NoFight);
 
             writer.Write(Music);
+            writer.Write(NoTownTeleport);
+            writer.Write(NoReincarnation);
 
-            
         }
 
 
         public void CreateMap()
         {
-            for (int j = 0; j < SMain.Envir.NPCInfoList.Count; j++)
+            for (int j = 0; j < Envir.NPCInfoList.Count; j++)
             {
-                if (SMain.Envir.NPCInfoList[j].MapIndex != Index) continue;
+                if (Envir.NPCInfoList[j].MapIndex != Index) continue;
 
-                NPCs.Add(SMain.Envir.NPCInfoList[j]);
+                NPCs.Add(Envir.NPCInfoList[j]);
             }
 
             Map map = new Map(this);
 
             if (!map.Load()) return;
 
-            SMain.Envir.MapList.Add(map);
-
-            if (Instance == null)
-            {
-                Instance = new InstanceInfo(this, map);
-            }
+            Envir.MapList.Add(map);
 
             for (int i = 0; i < SafeZones.Count; i++)
                 if (SafeZones[i].StartPoint)
-                    SMain.Envir.StartPoints.Add(SafeZones[i]);
-        }
-
-        public void CreateInstance()
-        {
-            if (Instance.MapList.Count == 0) return;
-
-            Map map = new Map(this);
-            if (!map.Load()) return;
-
-            SMain.Envir.MapList.Add(map);
-
-            Instance.AddMap(map);
+                    Envir.StartPoints.Add(SafeZones[i]);
         }
 
         public void CreateSafeZone()
@@ -204,7 +182,7 @@ namespace Server.MirDatabase
 
         public void CreateRespawnInfo()
         {
-            Respawns.Add(new RespawnInfo { RespawnIndex = ++SMain.EditEnvir.RespawnIndex });
+            Respawns.Add(new RespawnInfo { RespawnIndex = ++EditEnvir.RespawnIndex });
         }
 
         public override string ToString()
@@ -323,60 +301,8 @@ namespace Server.MirDatabase
 
 
 
-            info.Index = ++SMain.EditEnvir.MapIndex;
-            SMain.EditEnvir.MapInfoList.Add(info);
-        }
-    }
-
-    public class InstanceInfo
-    {
-        //Constants
-        public int PlayerCap = 2;
-        public int MaxInstanceCount = 10;
-
-        //
-        public MapInfo MapInfo;
-        public List<Map> MapList = new List<Map>();
-
-        /*
-         Notes
-         Create new instance from here if all current maps are full
-         Destroy maps when instance is empty - process loop in map or here?
-         Change NPC INSTANCEMOVE to move and create next available instance
-
-        */
-
-        public InstanceInfo(MapInfo mapInfo, Map map)
-        {
-            MapInfo = mapInfo;
-            AddMap(map);
-        }
-
-        public void AddMap(Map map)
-        {
-            MapList.Add(map);
-        }
-
-        public void RemoveMap(Map map)
-        {
-            MapList.Remove(map);
-        }
-
-        public Map GetFirstAvailableInstance()
-        {
-            for (int i = 0; i < MapList.Count; i++)
-            {
-                Map m = MapList[i];
-
-                if (m.Players.Count < PlayerCap) return m;
-            }
-
-            return null;
-        }
-
-        public void CreateNewInstance()
-        {
-            MapInfo.CreateInstance();
+            info.Index = ++EditEnvir.MapIndex;
+            EditEnvir.MapInfoList.Add(info);
         }
     }
 }

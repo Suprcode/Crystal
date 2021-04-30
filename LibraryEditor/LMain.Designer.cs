@@ -1,4 +1,6 @@
-﻿namespace LibraryEditor
+﻿using System;
+
+namespace LibraryEditor
 {
     partial class LMain
     {
@@ -45,6 +47,11 @@
             this.removeBlanksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.safeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.convertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.populateFramesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultMonsterFramesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultNPCFramesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultPlayerFramesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.autofillFromCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -70,8 +77,23 @@
             this.label1 = new System.Windows.Forms.Label();
             this.panel = new System.Windows.Forms.Panel();
             this.ImageBox = new System.Windows.Forms.PictureBox();
-            this.PreviewListView = new LibraryEditor.FixedListView();
+            this.tabControl = new System.Windows.Forms.TabControl();
+            this.tabImages = new System.Windows.Forms.TabPage();
+            this.PreviewListView = new CustomFormControl.FixedListView();
             this.ImageList = new System.Windows.Forms.ImageList(this.components);
+            this.tabFrames = new System.Windows.Forms.TabPage();
+            this.frameGridView = new System.Windows.Forms.DataGridView();
+            this.FrameAction = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.FrameStart = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FrameCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FrameSkip = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FrameInterval = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FrameEffectStart = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FrameEffectCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FrameEffectSkip = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FrameEffectInterval = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FrameReverse = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.FrameBlend = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.OpenLibraryDialog = new System.Windows.Forms.OpenFileDialog();
             this.SaveLibraryDialog = new System.Windows.Forms.SaveFileDialog();
             this.ImportImageDialog = new System.Windows.Forms.OpenFileDialog();
@@ -80,6 +102,7 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
+            this.FolderLibraryDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.MainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -94,6 +117,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.ZoomTrackBar)).BeginInit();
             this.panel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ImageBox)).BeginInit();
+            this.tabControl.SuspendLayout();
+            this.tabImages.SuspendLayout();
+            this.tabFrames.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.frameGridView)).BeginInit();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -106,7 +133,7 @@
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
             this.MainMenu.Name = "MainMenu";
             this.MainMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.MainMenu.Size = new System.Drawing.Size(1008, 24);
+            this.MainMenu.Size = new System.Drawing.Size(1036, 24);
             this.MainMenu.TabIndex = 0;
             this.MainMenu.Text = "menuStrip1";
             // 
@@ -186,7 +213,8 @@
             this.copyToToolStripMenuItem,
             this.countBlanksToolStripMenuItem,
             this.removeBlanksToolStripMenuItem,
-            this.convertToolStripMenuItem});
+            this.convertToolStripMenuItem,
+            this.populateFramesToolStripMenuItem});
             this.functionsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("functionsToolStripMenuItem.Image")));
             this.functionsToolStripMenuItem.Name = "functionsToolStripMenuItem";
             this.functionsToolStripMenuItem.Size = new System.Drawing.Size(87, 20);
@@ -196,7 +224,7 @@
             // 
             this.copyToToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("copyToToolStripMenuItem.Image")));
             this.copyToToolStripMenuItem.Name = "copyToToolStripMenuItem";
-            this.copyToToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.copyToToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.copyToToolStripMenuItem.Text = "Copy To..";
             this.copyToToolStripMenuItem.ToolTipText = "Copy to a new .Lib or to the end of an exsisting one.";
             this.copyToToolStripMenuItem.Click += new System.EventHandler(this.copyToToolStripMenuItem_Click);
@@ -205,7 +233,7 @@
             // 
             this.countBlanksToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("countBlanksToolStripMenuItem.Image")));
             this.countBlanksToolStripMenuItem.Name = "countBlanksToolStripMenuItem";
-            this.countBlanksToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.countBlanksToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.countBlanksToolStripMenuItem.Text = "Count Blanks";
             this.countBlanksToolStripMenuItem.ToolTipText = "Counts the blank images in the .Lib";
             this.countBlanksToolStripMenuItem.Click += new System.EventHandler(this.countBlanksToolStripMenuItem_Click);
@@ -216,7 +244,7 @@
             this.safeToolStripMenuItem});
             this.removeBlanksToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("removeBlanksToolStripMenuItem.Image")));
             this.removeBlanksToolStripMenuItem.Name = "removeBlanksToolStripMenuItem";
-            this.removeBlanksToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.removeBlanksToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.removeBlanksToolStripMenuItem.Text = "Remove Blanks";
             this.removeBlanksToolStripMenuItem.ToolTipText = "Quick removal of blanks.";
             this.removeBlanksToolStripMenuItem.Click += new System.EventHandler(this.removeBlanksToolStripMenuItem_Click);
@@ -234,10 +262,54 @@
             // 
             this.convertToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("convertToolStripMenuItem.Image")));
             this.convertToolStripMenuItem.Name = "convertToolStripMenuItem";
-            this.convertToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.convertToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.convertToolStripMenuItem.Text = "Converter";
             this.convertToolStripMenuItem.ToolTipText = "Convert Wil/Wzl/Miz to .Lib";
             this.convertToolStripMenuItem.Click += new System.EventHandler(this.convertToolStripMenuItem_Click);
+            // 
+            // populateFramesToolStripMenuItem
+            // 
+            this.populateFramesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.defaultMonsterFramesToolStripMenuItem,
+            this.defaultNPCFramesToolStripMenuItem,
+            this.defaultPlayerFramesToolStripMenuItem,
+            this.autofillFromCodeToolStripMenuItem});
+            this.populateFramesToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("populateFramesToolStripMenuItem.Image")));
+            this.populateFramesToolStripMenuItem.Name = "populateFramesToolStripMenuItem";
+            this.populateFramesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.populateFramesToolStripMenuItem.Text = "Populate Frames";
+            // 
+            // defaultMonsterFramesToolStripMenuItem
+            // 
+            this.defaultMonsterFramesToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("defaultMonsterFramesToolStripMenuItem.Image")));
+            this.defaultMonsterFramesToolStripMenuItem.Name = "defaultMonsterFramesToolStripMenuItem";
+            this.defaultMonsterFramesToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.defaultMonsterFramesToolStripMenuItem.Text = "Default Monster Frames";
+            this.defaultMonsterFramesToolStripMenuItem.Click += new System.EventHandler(this.defaultMonsterFramesToolStripMenuItem_Click);
+            // 
+            // defaultNPCFramesToolStripMenuItem
+            // 
+            this.defaultNPCFramesToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("defaultNPCFramesToolStripMenuItem.Image")));
+            this.defaultNPCFramesToolStripMenuItem.Name = "defaultNPCFramesToolStripMenuItem";
+            this.defaultNPCFramesToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.defaultNPCFramesToolStripMenuItem.Text = "Default NPC Frames";
+            this.defaultNPCFramesToolStripMenuItem.Click += new System.EventHandler(this.defaultNPCFramesToolStripMenuItem_Click);
+            // 
+            // defaultPlayerFramesToolStripMenuItem
+            // 
+            this.defaultPlayerFramesToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("defaultPlayerFramesToolStripMenuItem.Image")));
+            this.defaultPlayerFramesToolStripMenuItem.Name = "defaultPlayerFramesToolStripMenuItem";
+            this.defaultPlayerFramesToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.defaultPlayerFramesToolStripMenuItem.Text = "Default Player Frames";
+            this.defaultPlayerFramesToolStripMenuItem.Click += new System.EventHandler(this.defaultPlayerFramesToolStripMenuItem_Click);
+            // 
+            // autofillFromCodeToolStripMenuItem
+            // 
+            this.autofillFromCodeToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("autofillFromCodeToolStripMenuItem.Image")));
+            this.autofillFromCodeToolStripMenuItem.Name = "autofillFromCodeToolStripMenuItem";
+            this.autofillFromCodeToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.autofillFromCodeToolStripMenuItem.Text = "AutoFill From Code";
+            this.autofillFromCodeToolStripMenuItem.Click += new System.EventHandler(this.autofillNpcFramesToolStripMenuItem_Click);
             // 
             // skinToolStripMenuItem
             // 
@@ -263,8 +335,8 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.PreviewListView);
-            this.splitContainer1.Size = new System.Drawing.Size(1008, 684);
+            this.splitContainer1.Panel2.Controls.Add(this.tabControl);
+            this.splitContainer1.Size = new System.Drawing.Size(1036, 684);
             this.splitContainer1.SplitterDistance = 325;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -305,7 +377,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.panel);
-            this.splitContainer2.Size = new System.Drawing.Size(1008, 325);
+            this.splitContainer2.Size = new System.Drawing.Size(1036, 325);
             this.splitContainer2.SplitterDistance = 240;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -555,7 +627,7 @@
             this.panel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel.Location = new System.Drawing.Point(0, 0);
             this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(762, 323);
+            this.panel.Size = new System.Drawing.Size(790, 323);
             this.panel.TabIndex = 1;
             // 
             // ImageBox
@@ -568,6 +640,29 @@
             this.ImageBox.TabIndex = 0;
             this.ImageBox.TabStop = false;
             // 
+            // tabControl
+            // 
+            this.tabControl.Controls.Add(this.tabImages);
+            this.tabControl.Controls.Add(this.tabFrames);
+            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl.Location = new System.Drawing.Point(0, 0);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(1034, 353);
+            this.tabControl.TabIndex = 0;
+            this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
+            // 
+            // tabImages
+            // 
+            this.tabImages.Controls.Add(this.PreviewListView);
+            this.tabImages.Location = new System.Drawing.Point(4, 22);
+            this.tabImages.Name = "tabImages";
+            this.tabImages.Padding = new System.Windows.Forms.Padding(3);
+            this.tabImages.Size = new System.Drawing.Size(1026, 327);
+            this.tabImages.TabIndex = 0;
+            this.tabImages.Text = "Images";
+            this.tabImages.UseVisualStyleBackColor = true;
+            // 
             // PreviewListView
             // 
             this.PreviewListView.Activation = System.Windows.Forms.ItemActivation.OneClick;
@@ -576,9 +671,9 @@
             this.PreviewListView.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(142)))), ((int)(((byte)(152)))), ((int)(((byte)(156)))));
             this.PreviewListView.HideSelection = false;
             this.PreviewListView.LargeImageList = this.ImageList;
-            this.PreviewListView.Location = new System.Drawing.Point(0, 0);
+            this.PreviewListView.Location = new System.Drawing.Point(3, 3);
             this.PreviewListView.Name = "PreviewListView";
-            this.PreviewListView.Size = new System.Drawing.Size(1006, 353);
+            this.PreviewListView.Size = new System.Drawing.Size(1020, 321);
             this.PreviewListView.TabIndex = 0;
             this.PreviewListView.UseCompatibleStateImageBehavior = false;
             this.PreviewListView.VirtualMode = true;
@@ -591,6 +686,97 @@
             this.ImageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
             this.ImageList.ImageSize = new System.Drawing.Size(64, 64);
             this.ImageList.TransparentColor = System.Drawing.Color.Transparent;
+            // 
+            // tabFrames
+            // 
+            this.tabFrames.Controls.Add(this.frameGridView);
+            this.tabFrames.Location = new System.Drawing.Point(4, 22);
+            this.tabFrames.Name = "tabFrames";
+            this.tabFrames.Size = new System.Drawing.Size(1026, 327);
+            this.tabFrames.TabIndex = 1;
+            this.tabFrames.Text = "Frames";
+            this.tabFrames.UseVisualStyleBackColor = true;
+            // 
+            // frameGridView
+            // 
+            this.frameGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.frameGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.frameGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.FrameAction,
+            this.FrameStart,
+            this.FrameCount,
+            this.FrameSkip,
+            this.FrameInterval,
+            this.FrameEffectStart,
+            this.FrameEffectCount,
+            this.FrameEffectSkip,
+            this.FrameEffectInterval,
+            this.FrameReverse,
+            this.FrameBlend});
+            this.frameGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.frameGridView.Location = new System.Drawing.Point(0, 0);
+            this.frameGridView.Name = "frameGridView";
+            this.frameGridView.Size = new System.Drawing.Size(1026, 327);
+            this.frameGridView.TabIndex = 2;
+            this.frameGridView.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.frameGridView_CellValidating);
+            this.frameGridView.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.frameGridView_DefaultValuesNeeded);
+            // 
+            // FrameAction
+            // 
+            this.FrameAction.HeaderText = "Action";
+            this.FrameAction.Name = "FrameAction";
+            this.FrameAction.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.FrameAction.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // FrameStart
+            // 
+            this.FrameStart.HeaderText = "Start";
+            this.FrameStart.Name = "FrameStart";
+            // 
+            // FrameCount
+            // 
+            this.FrameCount.HeaderText = "Count";
+            this.FrameCount.Name = "FrameCount";
+            // 
+            // FrameSkip
+            // 
+            this.FrameSkip.HeaderText = "Skip";
+            this.FrameSkip.Name = "FrameSkip";
+            // 
+            // FrameInterval
+            // 
+            this.FrameInterval.HeaderText = "Interval";
+            this.FrameInterval.Name = "FrameInterval";
+            // 
+            // FrameEffectStart
+            // 
+            this.FrameEffectStart.HeaderText = "EffectStart";
+            this.FrameEffectStart.Name = "FrameEffectStart";
+            // 
+            // FrameEffectCount
+            // 
+            this.FrameEffectCount.HeaderText = "EffectCount";
+            this.FrameEffectCount.Name = "FrameEffectCount";
+            // 
+            // FrameEffectSkip
+            // 
+            this.FrameEffectSkip.HeaderText = "EffectSkip";
+            this.FrameEffectSkip.Name = "FrameEffectSkip";
+            // 
+            // FrameEffectInterval
+            // 
+            this.FrameEffectInterval.HeaderText = "EffectInterval";
+            this.FrameEffectInterval.Name = "FrameEffectInterval";
+            // 
+            // FrameReverse
+            // 
+            this.FrameReverse.HeaderText = "Reverse";
+            this.FrameReverse.Name = "FrameReverse";
+            // 
+            // FrameBlend
+            // 
+            this.FrameBlend.HeaderText = "Blend";
+            this.FrameBlend.Name = "FrameBlend";
             // 
             // OpenLibraryDialog
             // 
@@ -618,7 +804,7 @@
             this.statusStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.statusStrip.Location = new System.Drawing.Point(0, 708);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(1008, 22);
+            this.statusStrip.Size = new System.Drawing.Size(1036, 22);
             this.statusStrip.TabIndex = 2;
             this.statusStrip.Text = "statusStrip";
             // 
@@ -636,11 +822,15 @@
             this.toolStripProgressBar.Step = 1;
             this.toolStripProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             // 
+            // FolderLibraryDialog
+            // 
+            this.FolderLibraryDialog.ShowNewFolderButton = false;
+            // 
             // LMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1008, 730);
+            this.ClientSize = new System.Drawing.Size(1036, 730);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.MainMenu);
@@ -669,6 +859,10 @@
             this.panel.ResumeLayout(false);
             this.panel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ImageBox)).EndInit();
+            this.tabControl.ResumeLayout(false);
+            this.tabImages.ResumeLayout(false);
+            this.tabFrames.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.frameGridView)).EndInit();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -689,7 +883,7 @@
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private FixedListView PreviewListView;
+
         private System.Windows.Forms.ImageList ImageList;
         private System.Windows.Forms.Button AddButton;
         private System.Windows.Forms.Label HeightLabel;
@@ -728,7 +922,28 @@
         private System.Windows.Forms.CheckBox checkBoxQuality;
         private System.Windows.Forms.CheckBox checkBoxPreventAntiAliasing;
         private System.Windows.Forms.NumericUpDown nudJump;
-
+        private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.TabPage tabImages;
+        private CustomFormControl.FixedListView PreviewListView;
+        private System.Windows.Forms.TabPage tabFrames;
+        private System.Windows.Forms.DataGridView frameGridView;
+        private System.Windows.Forms.ToolStripMenuItem populateFramesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem defaultMonsterFramesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem defaultPlayerFramesToolStripMenuItem;
+        private System.Windows.Forms.FolderBrowserDialog FolderLibraryDialog;
+        private System.Windows.Forms.ToolStripMenuItem autofillFromCodeToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewComboBoxColumn FrameAction;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FrameStart;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FrameCount;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FrameSkip;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FrameInterval;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FrameEffectStart;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FrameEffectCount;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FrameEffectSkip;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FrameEffectInterval;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn FrameReverse;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn FrameBlend;
+        private System.Windows.Forms.ToolStripMenuItem defaultNPCFramesToolStripMenuItem;
     }
 }
 

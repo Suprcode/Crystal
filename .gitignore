@@ -1,29 +1,23 @@
-# Windows image file caches
+# Windows File Cache
 Thumbs.db
 ehthumbs.db
 
-# Folder config file
+# Windows Icon Database
 Desktop.ini
 
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
+# Windows Installer Files
 *.cab
 *.msi
 *.msm
 *.msp
 
-# Windows shortcuts
+# Windows Shortcuts
 *.lnk
 
-# =========================
-# Operating System Files
-# =========================
+# Recycle Bin
+$RECYCLE.BIN/
 
-# OSX
-# =========================
-
+# Macintosh System Files
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -31,28 +25,38 @@ $RECYCLE.BIN/
 # Thumbnails
 ._*
 
-# Files that might appear on external disk
+# External Disk
 .Spotlight-V100
 .Trashes
 
-# Directories potentially created on remote AFP share
+# Remote AFP Share
+.apdisk
 .AppleDB
 .AppleDesktop
-Network Trash Folder
 Temporary Items
-.apdisk
+Network Trash Folder
 
-# Visual Studio Solution User Options
+# Visual Studio User Configuration
+Legend of Mir.sln.DotSettings.user
 Legend of Mir.v11.suo
 Legend of Mir.v12.suo
 .vs/Legend of Mir/v15/.suo
-Legend of Mir.sln.DotSettings.user
-Client/Client.csproj
-/Server/obj
-/LibraryViewer/obj
-/LibraryViewer/bin
-/LibraryEditor/obj
-/Client/obj
-/AutoPatcherAdmin/obj
+.vs/Legend of Mir/v16/.suo
 
+# Visual Studio Build Files
+/Client/obj
+/Server/obj
+/Server.MirForms/obj
+/AutoPatcherAdmin/obj
+/LibraryViewer/obj
+/LibraryEditor/obj
+/LibraryViewer/bin
 /Build
+/.vs
+Packages
+Release
+Debug
+obj
+
+# Custom Files and Folders
+/Notes

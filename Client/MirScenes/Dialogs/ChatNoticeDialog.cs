@@ -84,17 +84,5 @@ namespace Client.MirScenes.Dialogs
             Show();
             CurrentTime = CMain.Time + ViewTime;
         }
-
-        public void Show()
-        {
-            if (Visible) return;
-            Visible = true;
-        }
-
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
     }
 }

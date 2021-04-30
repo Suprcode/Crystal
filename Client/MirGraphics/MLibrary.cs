@@ -2,9 +2,13 @@
 using System.Drawing;
 using System.IO;
 using System.Threading;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+using SlimDX;
+using SlimDX.Direct3D9;
 using System.IO.Compression;
+using Frame = Client.MirObjects.Frame;
+using Client.MirObjects;
+using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace Client.MirGraphics
 {
@@ -35,7 +39,6 @@ namespace Client.MirGraphics
             Background = new MLibrary(Settings.DataPath + "Background");
 
 
-
         public static readonly MLibrary
             Dragon = new MLibrary(Settings.DataPath + "Dragon");
 
@@ -52,123 +55,74 @@ namespace Client.MirGraphics
         public static readonly MLibrary
             Deco = new MLibrary(Settings.DataPath + "Deco");
 
-        public static readonly MLibrary[] CArmours = new MLibrary[42],
-                                          CWeapons = new MLibrary[55],
-										  CWeaponEffect = new MLibrary[67],
-										  CHair = new MLibrary[9],
-                                          CHumEffect = new MLibrary[6],
-                                          AArmours = new MLibrary[17],
-                                          AWeaponsL = new MLibrary[14],
-                                          AWeaponsR = new MLibrary[14],
-                                          AHair = new MLibrary[9],
-                                          AHumEffect = new MLibrary[3],
-                                          ARArmours = new MLibrary[17],
-                                          ARWeapons = new MLibrary[19],
-                                          ARWeaponsS = new MLibrary[19],
-                                          ARHair = new MLibrary[9],
-                                          ARHumEffect = new MLibrary[3],
-                                          Monsters = new MLibrary[406],
-                                          Gates = new MLibrary[2],
-                                          Flags = new MLibrary[12],
-                                          Mounts = new MLibrary[12],
-                                          NPCs = new MLibrary[200],
-                                          Fishing = new MLibrary[2],
-                                          Pets = new MLibrary[13],
-                                          Transform = new MLibrary[28],
-                                          TransformMounts = new MLibrary[28],
-                                          TransformEffect = new MLibrary[2],
-                                          TransformWeaponEffect = new MLibrary[1];
+        public static MLibrary[] CArmours,
+                                          CWeapons,
+										  CWeaponEffect,
+										  CHair,
+                                          CHumEffect,
+                                          AArmours,
+                                          AWeaponsL,
+                                          AWeaponsR,
+                                          AHair,
+                                          AHumEffect,
+                                          ARArmours,
+                                          ARWeapons,
+                                          ARWeaponsS,
+                                          ARHair,
+                                          ARHumEffect,
+                                          Monsters,
+                                          Gates,
+                                          Flags,
+                                          Mounts,
+                                          NPCs,
+                                          Fishing,
+                                          Pets,
+                                          Transform,
+                                          TransformMounts,
+                                          TransformEffect,
+                                          TransformWeaponEffect;
 
         static Libraries()
         {
             //Wiz/War/Tao
-            for (int i = 0; i < CArmours.Length; i++)
-                CArmours[i] = new MLibrary(Settings.CArmourPath + i.ToString("00"));
-
-            for (int i = 0; i < CHair.Length; i++)
-                CHair[i] = new MLibrary(Settings.CHairPath + i.ToString("00"));
-
-            for (int i = 0; i < CWeapons.Length; i++)
-                CWeapons[i] = new MLibrary(Settings.CWeaponPath + i.ToString("00"));
-
-			for (int i = 0; i < CWeaponEffect.Length; i++)
-				CWeaponEffect[i] = new MLibrary(Settings.CWeaponEffectPath + i.ToString("00"));
-
-			for (int i = 0; i < CHumEffect.Length; i++)
-                CHumEffect[i] = new MLibrary(Settings.CHumEffectPath + i.ToString("00"));
+            InitLibrary(ref CArmours, Settings.CArmourPath, "00");
+            InitLibrary(ref CHair, Settings.CHairPath, "00");
+            InitLibrary(ref CWeapons, Settings.CWeaponPath, "00");
+            InitLibrary(ref CWeaponEffect, Settings.CWeaponEffectPath, "00");
+            InitLibrary(ref CHumEffect, Settings.CHumEffectPath, "00");
 
             //Assassin
-            for (int i = 0; i < AArmours.Length; i++)
-                AArmours[i] = new MLibrary(Settings.AArmourPath + i.ToString("00"));
-
-            for (int i = 0; i < AHair.Length; i++)
-                AHair[i] = new MLibrary(Settings.AHairPath + i.ToString("00"));
-
-            for (int i = 0; i < AWeaponsL.Length; i++)
-                AWeaponsL[i] = new MLibrary(Settings.AWeaponPath + i.ToString("00") + " L");
-
-            for (int i = 0; i < AWeaponsR.Length; i++)
-                AWeaponsR[i] = new MLibrary(Settings.AWeaponPath + i.ToString("00") + " R");
-
-            for (int i = 0; i < AHumEffect.Length; i++)
-                AHumEffect[i] = new MLibrary(Settings.AHumEffectPath + i.ToString("00"));
+            InitLibrary(ref AArmours, Settings.AArmourPath, "00");
+            InitLibrary(ref AHair, Settings.AHairPath, "00");
+            InitLibrary(ref AWeaponsL, Settings.AWeaponPath, "00", " L");
+            InitLibrary(ref AWeaponsR, Settings.AWeaponPath, "00", " R");
+            InitLibrary(ref AHumEffect, Settings.AHumEffectPath, "00");
 
             //Archer
-            for (int i = 0; i < ARArmours.Length; i++)
-                ARArmours[i] = new MLibrary(Settings.ARArmourPath + i.ToString("00"));
-
-            for (int i = 0; i < ARHair.Length; i++)
-                ARHair[i] = new MLibrary(Settings.ARHairPath + i.ToString("00"));
-
-            for (int i = 0; i < ARWeapons.Length; i++)
-                ARWeapons[i] = new MLibrary(Settings.ARWeaponPath + i.ToString("00"));
-
-            for (int i = 0; i < ARWeaponsS.Length; i++)
-                ARWeaponsS[i] = new MLibrary(Settings.ARWeaponPath + i.ToString("00") + " S");
-
-            for (int i = 0; i < ARHumEffect.Length; i++)
-                ARHumEffect[i] = new MLibrary(Settings.ARHumEffectPath + i.ToString("00"));
+            InitLibrary(ref ARArmours, Settings.ARArmourPath, "00");
+            InitLibrary(ref ARHair, Settings.ARHairPath, "00");
+            InitLibrary(ref ARWeapons, Settings.ARWeaponPath, "00");
+            InitLibrary(ref ARWeaponsS, Settings.ARWeaponPath, "00", " S");
+            InitLibrary(ref ARHumEffect, Settings.ARHumEffectPath, "00");
 
             //Other
-            for (int i = 0; i < Monsters.Length; i++)
-                Monsters[i] = new MLibrary(Settings.MonsterPath + i.ToString("000"));
-
-            for (int i = 0; i < Gates.Length; i++)
-                Gates[i] = new MLibrary(Settings.GatePath + i.ToString("00"));
-
-            for (int i = 0; i < Flags.Length; i++)
-                Flags[i] = new MLibrary(Settings.FlagPath + i.ToString("00"));
-
-            for (int i = 0; i < NPCs.Length; i++)
-                NPCs[i] = new MLibrary(Settings.NPCPath + i.ToString("00"));
-
-            for (int i = 0; i < Mounts.Length; i++)
-                Mounts[i] = new MLibrary(Settings.MountPath + i.ToString("00"));
-
-            for (int i = 0; i < Fishing.Length; i++)
-                Fishing[i] = new MLibrary(Settings.FishingPath + i.ToString("00"));
-
-            for (int i = 0; i < Pets.Length; i++)
-                Pets[i] = new MLibrary(Settings.PetsPath + i.ToString("00"));
-
-            for (int i = 0; i < Transform.Length; i++)
-                Transform[i] = new MLibrary(Settings.TransformPath + i.ToString("00"));
-
-            for (int i = 0; i < TransformMounts.Length; i++)
-                TransformMounts[i] = new MLibrary(Settings.TransformMountsPath + i.ToString("00"));
-
-            for (int i = 0; i < TransformEffect.Length; i++)
-                TransformEffect[i] = new MLibrary(Settings.TransformEffectPath + i.ToString("00"));
-
-            for (int i = 0; i < TransformWeaponEffect.Length; i++)
-                TransformWeaponEffect[i] = new MLibrary(Settings.TransformWeaponEffectPath + i.ToString("00"));
+            InitLibrary(ref Monsters, Settings.MonsterPath, "000");
+            InitLibrary(ref Gates, Settings.GatePath, "00");
+            InitLibrary(ref NPCs, Settings.NPCPath, "00");
+            InitLibrary(ref Mounts, Settings.MountPath, "00");
+            InitLibrary(ref Fishing, Settings.FishingPath, "00");
+            InitLibrary(ref Pets, Settings.PetsPath, "00");
+            InitLibrary(ref Transform, Settings.TransformPath, "00");
+            InitLibrary(ref TransformMounts, Settings.TransformMountsPath, "00");
+            InitLibrary(ref TransformEffect, Settings.TransformEffectPath, "00");
+            InitLibrary(ref TransformWeaponEffect, Settings.TransformWeaponEffectPath, "00");
 
             #region Maplibs
             //wemade mir2 (allowed from 0-99)
             MapLibs[0] = new MLibrary(Settings.DataPath + "Map\\WemadeMir2\\Tiles");
             MapLibs[1] = new MLibrary(Settings.DataPath + "Map\\WemadeMir2\\Smtiles");
             MapLibs[2] = new MLibrary(Settings.DataPath + "Map\\WemadeMir2\\Objects");
-            for (int i = 2; i < 24; i++)
+            for (int i = 2; i < 27; i++)
             {
                 MapLibs[i + 1] = new MLibrary(Settings.DataPath + "Map\\WemadeMir2\\Objects" + i.ToString());
             }
@@ -233,6 +187,22 @@ namespace Client.MirGraphics
 
             Thread thread = new Thread(LoadGameLibraries) { IsBackground = true };
             thread.Start();
+        }
+
+        static void InitLibrary(ref MLibrary[] library, string path, string toStringValue, string suffix = "")
+        {
+            var allFiles = Directory.GetFiles(path, "*" + suffix + MLibrary.Extention, SearchOption.TopDirectoryOnly).OrderBy(x => int.Parse(Regex.Match(x, @"\d+").Value));
+
+            var lastFile = allFiles.Count() > 0 ? Path.GetFileName(allFiles.Last()) : "0";
+
+            var count = int.Parse(Regex.Match(lastFile, @"\d+").Value) + 1;
+
+            library = new MLibrary[count];
+
+            for (int i = 0; i < count; i++)
+            {
+                library[i] = new MLibrary(path + i.ToString(toStringValue) + suffix);
+            }
         }
 
         static void LoadLibraries()
@@ -474,18 +444,24 @@ namespace Client.MirGraphics
 
     public sealed class MLibrary
     {
-        private const string Extention = ".Lib";
-        public const int LibVersion = 2;
+        public const string Extention = ".Lib";
+        public const int LibVersion = 3;
 
         private readonly string _fileName;
 
         private MImage[] _images;
+        private FrameSet _frames;
         private int[] _indexList;
         private int _count;
         private bool _initialized;
 
         private BinaryReader _reader;
         private FileStream _fStream;
+
+        public FrameSet Frames
+        {
+            get { return _frames; }
+        }
 
         public MLibrary(string filename)
         {
@@ -494,30 +470,51 @@ namespace Client.MirGraphics
 
         public void Initialize()
         {
-            int CurrentVersion = 0;
             _initialized = true;
 
             if (!File.Exists(_fileName))
                 return;
+
             try
             {
-
                 _fStream = new FileStream(_fileName, FileMode.Open, FileAccess.Read);
                 _reader = new BinaryReader(_fStream);
-                CurrentVersion = _reader.ReadInt32();
-                if (CurrentVersion != LibVersion)
+                int currentVersion = _reader.ReadInt32();
+                if (currentVersion < 2)
                 {
-                    //cant use a directx based error popup cause it could be the lib file containing the interface is invalid :(
-                    System.Windows.Forms.MessageBox.Show("Wrong version, expecting lib version: " + LibVersion.ToString() + " found version: " + CurrentVersion.ToString() + ".", _fileName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error, System.Windows.Forms.MessageBoxDefaultButton.Button1);
+                    System.Windows.Forms.MessageBox.Show("Wrong version, expecting lib version: " + LibVersion.ToString() + " found version: " + currentVersion.ToString() + ".", _fileName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error, System.Windows.Forms.MessageBoxDefaultButton.Button1);
                     System.Windows.Forms.Application.Exit();
                     return;
                 }
                 _count = _reader.ReadInt32();
+
+                int frameSeek = 0;
+                if (currentVersion >= 3)
+                {
+                    frameSeek = _reader.ReadInt32();
+                }
+
                 _images = new MImage[_count];
                 _indexList = new int[_count];
 
                 for (int i = 0; i < _count; i++)
                     _indexList[i] = _reader.ReadInt32();
+
+                if (currentVersion >= 3)
+                {
+                    _fStream.Seek(frameSeek, SeekOrigin.Begin);
+
+                    var frameCount = _reader.ReadInt32();
+
+                    if (frameCount > 0)
+                    {
+                        _frames = new FrameSet();
+                        for (int i = 0; i < frameCount; i++)
+                        {
+                            _frames.Add((MirAction)_reader.ReadByte(), new Frame(_reader));
+                        }
+                    }
+                }
             }
             catch (Exception)
             {
@@ -533,7 +530,6 @@ namespace Client.MirGraphics
 
             if (_images == null || index < 0 || index >= _images.Length)
                 return false;
-
 
             if (_images[index] == null)
             {
@@ -624,7 +620,7 @@ namespace Client.MirGraphics
                 return;
 
 
-            DXManager.Sprite.Draw2D(mi.Image, Point.Empty, 0, new PointF(x, y), Color.White);
+            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), Vector3.Zero, new Vector3((float)x, (float)y, 0.0F), Color.White);
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
         public void Draw(int index, Point point, Color colour, bool offSet = false)
@@ -639,9 +635,7 @@ namespace Client.MirGraphics
             if (point.X >= Settings.ScreenWidth || point.Y >= Settings.ScreenHeight || point.X + mi.Width < 0 || point.Y + mi.Height < 0)
                 return;
 
-
-
-            DXManager.Sprite.Draw2D(mi.Image, Point.Empty, 0, point, colour);
+            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), Vector3.Zero, new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
 
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
@@ -661,7 +655,8 @@ namespace Client.MirGraphics
             float oldOpacity = DXManager.Opacity;
             DXManager.SetOpacity(opacity);
 
-            DXManager.Sprite.Draw2D(mi.Image, Point.Empty, 0, point, colour);
+            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), Vector3.Zero, new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
+
             DXManager.SetOpacity(oldOpacity);
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
@@ -681,7 +676,7 @@ namespace Client.MirGraphics
             bool oldBlend = DXManager.Blending;
             DXManager.SetBlend(true, rate);
 
-            DXManager.Sprite.Draw2D(mi.Image, Point.Empty, 0, point, colour);
+            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), Vector3.Zero, new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
 
             DXManager.SetBlend(oldBlend);
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
@@ -705,7 +700,8 @@ namespace Client.MirGraphics
             if (section.Bottom > mi.Height)
                 section.Height -= section.Bottom - mi.Height;
 
-            DXManager.Sprite.Draw2D(mi.Image, section, section.Size, point, colour);
+            DXManager.Sprite.Draw(mi.Image, section, Vector3.Zero, new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
+
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
         public void Draw(int index, Rectangle section, Point point, Color colour, float opacity)
@@ -728,7 +724,7 @@ namespace Client.MirGraphics
             float oldOpacity = DXManager.Opacity;
             DXManager.SetOpacity(opacity);
 
-            DXManager.Sprite.Draw2D(mi.Image, section, section.Size, point, colour);
+            DXManager.Sprite.Draw(mi.Image, section, Vector3.Zero, new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
 
             DXManager.SetOpacity(oldOpacity);
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
@@ -743,7 +739,14 @@ namespace Client.MirGraphics
             if (point.X >= Settings.ScreenWidth || point.Y >= Settings.ScreenHeight || point.X + size.Width < 0 || point.Y + size.Height < 0)
                 return;
 
-            DXManager.Sprite.Draw2D(mi.Image, new Rectangle(Point.Empty, new Size(mi.Width, mi.Height)), size, point, colour);
+            float scaleX = (float)size.Width / mi.Width;
+            float scaleY = (float)size.Height / mi.Height;
+
+            Matrix matrix = Matrix.Scaling(scaleX, scaleY, 0);
+            DXManager.Sprite.Transform = matrix;
+            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), Vector3.Zero, new Vector3((float)point.X / scaleX, (float)point.Y / scaleY, 0.0F), Color.White);
+            DXManager.Sprite.Transform = Matrix.Identity;
+
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
 
@@ -758,11 +761,12 @@ namespace Client.MirGraphics
 
             if (point.X >= Settings.ScreenWidth || point.Y >= Settings.ScreenHeight || point.X + mi.Width < 0 || point.Y + mi.Height < 0)
                 return;
-            DXManager.Sprite.Draw2D(mi.Image, Point.Empty, 0, point, colour);
+
+            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), Vector3.Zero, new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
 
             if (mi.HasMask)
             {
-                DXManager.Sprite.Draw2D(mi.MaskImage, Point.Empty, 0, point, Tint);
+                DXManager.Sprite.Draw(mi.MaskImage, new Rectangle(0, 0, mi.Width, mi.Height), Vector3.Zero, new Vector3((float)point.X, (float)point.Y, 0.0F), Tint);
             }
 
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
@@ -783,8 +787,7 @@ namespace Client.MirGraphics
             if (x + mi.Width < 0 || y + mi.Height < 0)
                 return;
 
-
-            DXManager.Sprite.Draw2D(mi.Image, Point.Empty, 0, new PointF(x, y), Color.White);
+            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), Vector3.Zero, new Vector3(x, y, 0.0F), Color.White);
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
         public void DrawUpBlend(int index, Point point)
@@ -803,35 +806,11 @@ namespace Client.MirGraphics
             bool oldBlend = DXManager.Blending;
             DXManager.SetBlend(true, 1);
 
-            DXManager.Sprite.Draw2D(mi.Image, Point.Empty, 0, point, Color.White);
+            DXManager.Sprite.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), Vector3.Zero, new Vector3((float)point.X, (float)point.Y, 0.0F), Color.White);
 
             DXManager.SetBlend(oldBlend);
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
-
-        //public bool VisiblePixel(int index, Point point, bool accurate)
-        //{
-        //    if (!CheckImage(index)) return false;
-        //    bool output = false;
-        //    output = _images[index].VisiblePixel(point, accurate);
-        //    if (output) return true;
-        //    Point targetpoint;
-        //    if (!accurate) //allow for some extra space arround your mouse
-        //    {
-        //        int[] realRanges = new int[]{0,1,3,6,10,15,21};//do not edit this
-        //        //edit this to set how big you want the 'inaccuracy' to be (bear in mind bigger = takes more for your client to calculate)
-        //        //dont make it higher then 6 tho (or add more value sin realranges)
-        //        int range = 2;
-                
-        //        for (int i = 0; i < (8 * realRanges[range]); i++)
-        //        {
-        //            targetpoint = Functions.PointMove(point, (MirDirection)(i % 8), (int)(i/8));
-        //            output |= _images[index].VisiblePixel(targetpoint, accurate);
-        //            if (output) return true;
-        //        }
-        //    }
-        //    return output;
-        //}
 
         public bool VisiblePixel(int index, Point point, bool accuate)
         {
@@ -850,7 +829,6 @@ namespace Client.MirGraphics
 
             return false;
         }
-
     }
 
     public sealed class MImage
@@ -873,10 +851,8 @@ namespace Client.MirGraphics
 
         public unsafe byte* Data;
 
-
         public MImage(BinaryReader reader)
         {
-
             //read layer 1
             Width = reader.ReadInt16();
             Height = reader.ReadInt16();
@@ -902,20 +878,18 @@ namespace Client.MirGraphics
 
         public unsafe void CreateTexture(BinaryReader reader)
         {
-
             int w = Width;// + (4 - Width % 4) % 4;
             int h = Height;// + (4 - Height % 4) % 4;
-            GraphicsStream stream = null;
 
             Image = new Texture(DXManager.Device, w, h, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
-            stream = Image.LockRectangle(0, LockFlags.Discard);
-            Data = (byte*)stream.InternalDataPointer;
+            DataRectangle stream = Image.LockRectangle(0, LockFlags.Discard);
+            Data = (byte*)stream.Data.DataPointer;
 
             byte[] decomp = DecompressImage(reader.ReadBytes(Length));
 
-            stream.Write(decomp, 0, decomp.Length);
+            stream.Data.Write(decomp, 0, decomp.Length);
 
-            stream.Dispose();
+            stream.Data.Dispose();
             Image.UnlockRectangle(0);
 
             if (HasMask)
@@ -929,26 +903,38 @@ namespace Client.MirGraphics
 
                 decomp = DecompressImage(reader.ReadBytes(Length));
 
-                stream.Write(decomp, 0, decomp.Length);
+                stream.Data.Write(decomp, 0, decomp.Length);
 
-                stream.Dispose();
+                stream.Data.Dispose();
                 MaskImage.UnlockRectangle(0);
             }
 
             DXManager.TextureList.Add(this);
             TextureValid = true;
-            Image.Disposing += (o, e) =>
-            {
-                TextureValid = false;
-                Image = null;
-                MaskImage = null;
-                Data = null;
-                DXManager.TextureList.Remove(this);
-            };
-
 
             CleanTime = CMain.Time + Settings.CleanDelay;
         }
+
+        public unsafe void DisposeTexture()
+        {
+            DXManager.TextureList.Remove(this);
+
+            if (Image != null && !Image.Disposed)
+            {
+                Image.Dispose();
+            }
+
+            if (MaskImage != null && !MaskImage.Disposed)
+            {
+                MaskImage.Dispose();
+            }
+
+            TextureValid = false;
+            Image = null;
+            MaskImage = null;
+            Data = null;
+        }
+
         public unsafe bool VisiblePixel(Point p)
         {
             if (p.X < 0 || p.Y < 0 || p.X >= Width || p.Y >= Height)
@@ -1074,6 +1060,4 @@ namespace Client.MirGraphics
             }
         }
     }
-
-
 }

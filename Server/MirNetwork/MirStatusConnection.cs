@@ -5,13 +5,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Net.Sockets;
-using System.Windows.Forms;
 using System.IO;
+using Server.MirEnvir;
 
 namespace Server.MirNetwork
 {
     public class MirStatusConnection
     {
+        protected static Envir Envir
+        {
+            get { return Envir.Main; }
+        }
+        protected static MessageQueue MessageQueue
+        {
+            get { return MessageQueue.Instance; }
+        }
+
         public readonly string IPAddress;
         private TcpClient _client;
 
@@ -26,7 +35,7 @@ namespace Server.MirNetwork
             {
                 if (_disconnecting == value) return;
                 _disconnecting = value;
-                TimeOutTime = SMain.Envir.Time + 500;
+                TimeOutTime = Envir.Time + 500;
             }
         }
         public readonly long TimeConnected;
@@ -42,14 +51,13 @@ namespace Server.MirNetwork
                 _client = client;
                 _client.NoDelay = true;
 
-                TimeConnected = SMain.Envir.Time;
+                TimeConnected = Envir.Time;
                 TimeOutTime = TimeConnected + Settings.TimeOut;
                 Connected = true;
             }
             catch (Exception ex)
             {
-                File.AppendAllText(Settings.LogPath + "Error Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
-                                           String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
+                MessageQueue.Enqueue(ex);
             }
         }
 
@@ -86,25 +94,25 @@ namespace Server.MirNetwork
                     return;
                 }
 
-                if (SMain.Envir.Time > TimeOutTime || Disconnecting)
+                if (Envir.Time > TimeOutTime || Disconnecting)
                 {
                     Disconnect();
                     return;
                 }
 
 
-                if (SMain.Envir.Time > NextSendTime)
+                if (Envir.Time > NextSendTime)
                 {
-                    NextSendTime = SMain.Envir.Time + 10000;
-                    string output = string.Format("c;/NoName/{0}/CrystalM2/{1}//;", SMain.Envir.PlayerCount, Application.ProductVersion);
+                    NextSendTime = Envir.Time + 10000;
+                    string output = string.Format("c;/NoName/{0}/CrystalM2/{1}//;", Envir.PlayerCount,
+                                                  Assembly.GetCallingAssembly().GetName().Version);
 
                     BeginSend(Encoding.ASCII.GetBytes(output));
                 }
             }
             catch (Exception ex)
             {
-                File.AppendAllText(Settings.LogPath + "Error Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
-                                           String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
+                MessageQueue.Enqueue(ex);
             }
         }
         public void Disconnect()
@@ -115,16 +123,15 @@ namespace Server.MirNetwork
 
                 Connected = false;
 
-                lock (SMain.Envir.StatusConnections)
-                    SMain.Envir.StatusConnections.Remove(this);
+                lock (Envir.StatusConnections)
+                    Envir.StatusConnections.Remove(this);
 
                 if (_client != null) _client.Client.Dispose();
                 _client = null;
             }
             catch (Exception ex)
             {
-                File.AppendAllText(Settings.LogPath + "Error Log (" + DateTime.Now.Date.ToString("dd-MM-yyyy") + ").txt",
-                                           String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, ex.ToString()));
+                MessageQueue.Enqueue(ex);
             }
         }
         public void SendDisconnect()

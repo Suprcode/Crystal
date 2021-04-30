@@ -452,13 +452,13 @@ namespace Client.MirScenes.Dialogs
 
         }
 
-        public void Hide()
+        public override void Hide()
         {
             if (!Visible) return;
             Viewer.Visible = false;
             Visible = false;
         }
-        public void Show()
+        public override void Show()
         {
             if (Visible) return;
             Visible = true;

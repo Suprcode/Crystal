@@ -10,6 +10,11 @@ namespace Server.MirDatabase
 {
     public class MagicInfo
     {
+        protected static Envir Envir
+        {
+            get { return Envir.Main; }
+        }
+
         public string Name;
         public Spell Spell;
         public byte BaseCost, LevelCost, Icon;
@@ -87,6 +92,11 @@ namespace Server.MirDatabase
 
     public class UserMagic
     {
+        protected static Envir Envir
+        {
+            get { return Envir.Main; }
+        }
+
         public Spell Spell;
         public MagicInfo Info;
 
@@ -97,9 +107,9 @@ namespace Server.MirDatabase
 
         private MagicInfo GetMagicInfo(Spell spell)
         {
-            for (int i = 0; i < SMain.Envir.MagicInfoList.Count; i++)
+            for (int i = 0; i < Envir.MagicInfoList.Count; i++)
             {
-                MagicInfo info = SMain.Envir.MagicInfoList[i];
+                MagicInfo info = Envir.MagicInfoList[i];
                 if (info.Spell != spell) continue;
                 return info;
             }
@@ -149,7 +159,8 @@ namespace Server.MirDatabase
         public ClientMagic CreateClientMagic()
         {
             return new ClientMagic
-                {
+            {
+                    Name = Info.Name,
                     Spell = Spell,
                     BaseCost = Info.BaseCost,
                     LevelCost = Info.LevelCost,
@@ -166,7 +177,7 @@ namespace Server.MirDatabase
                     IsTempSpell = IsTempSpell,
                     Delay = GetDelay(),
                     Range = Info.Range,
-                    CastTime = (CastTime != 0) && (SMain.Envir.Time > CastTime)? SMain.Envir.Time - CastTime: 0
+                    CastTime = (CastTime != 0) && (Envir.Time > CastTime)? Envir.Time - CastTime: 0
             };
         }
 
@@ -189,7 +200,7 @@ namespace Server.MirDatabase
         {
             if (Info.MPowerBonus > 0)
             {
-                return SMain.Envir.Random.Next(Info.MPowerBase, Info.MPowerBonus + Info.MPowerBase);
+                return Envir.Random.Next(Info.MPowerBase, Info.MPowerBonus + Info.MPowerBase);
             }
             else
                 return Info.MPowerBase;
@@ -198,7 +209,7 @@ namespace Server.MirDatabase
         {
             if (Info.PowerBonus > 0)
             {
-                return SMain.Envir.Random.Next(Info.PowerBase, Info.PowerBonus + Info.PowerBase);
+                return Envir.Random.Next(Info.PowerBase, Info.PowerBonus + Info.PowerBase);
             }
             else
                 return Info.PowerBase;

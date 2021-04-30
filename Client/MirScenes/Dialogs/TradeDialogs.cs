@@ -188,16 +188,6 @@ namespace Client.MirScenes.Dialogs
             Network.Enqueue(new C.TradeCancel());
         }
 
-        public void Hide()
-        {
-            Visible = false;
-        }
-
-        public void Show()
-        {
-            Visible = true;
-        }
-
         public MirItemCell GetCell(ulong id)
         {
             for (int i = 0; i < Grid.Length; i++)
@@ -292,17 +282,6 @@ namespace Client.MirScenes.Dialogs
             GuestGold = 0;
 
             Hide();
-        }
-
-
-        public void Hide()
-        {
-            Visible = false;
-        }
-
-        public void Show()
-        {
-            Visible = true;
         }
     }
 }

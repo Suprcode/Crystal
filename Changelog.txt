@@ -1,26 +1,1416 @@
-27/05/2017
-[Fixes]
-Fixed a server crash when death drops occur.
-
-[Additions]
-Added server notifications for items dropped from monsters. Checkbox in item database to turn on/off.
-
-25/05/2017
-[Fixes]
-Fixed placement issue on rental window.
-Can click rental fee label to input/change fee.
-
-[Additions]
-New Buff UI started. Currently putting all buffs in the same bordered window.
-Removed all Buff drawing from GameScene.
-Can click rental fee label to input/change fee.
-
-19/05/2017
-[Changes & Fixes]
-Some cleanup.
-Added BindMode for Unable To Rent for preventing items to be rented. (Set in item DB).
-Added BindMode for Unable To Disassemble. (Set in item DB).
-Rented items can be dropped on death. If this happens it is returned to owner.
-Benediction Oil now checks for Dont Upgrade flag.
-Awakening now checks for Dont Upgrade flag.
-Rented items now expire correctly if the owner or renting player are logged off.
+36fd816fa035b6a2de9c39e306d9e0c15d8e1b6e - Fixed Issues
+4193b43bbac9702825f1cf7df55843f9cac91294 - Fixed Mistakes
+5a809197fd71216174d50bdc2d7aacecad85dca8 - Added NuGet Configuration File
+f21d15b944396dcf8c98a645a783b45277b1abc6 - Updated Readme File
+579bc2a70c761b7fc66b0ec4f9d7a39b9bb0bc78 - Added Latest VS Version to Git Ignore File
+dab4000066f2e100ef919b95e2e70ee102f708f6 - Standalone broadcast. (#400)
+940b14a000eaad5b2636ac58c517c7f14fa1d29b - Merge branch 'master' of https://github.com/suprcode/mir2
+117bc15ebe04376937ffd29aac0a0fc0f235968e - Fixed lighting draw sizes on all effects
+2ef71af1421d72de9e26b711ec1ad49134733176 - Add 32bit wil support and buf fix for LibEditor (#391)
+70bb871adea2d79bf747846876d300a0bd201c24 - Removed custom archer and assassin armour ordering
+50c5a4bde24adf47125f0699aaddd8d5759251cd - Fix lib ordering when loading
+76b337faa2bc08dae05c21bc45b8e8411faee2cc - Update LoginScene.cs (#388)
+e5b52d1cdc4770a37465332abae7ac7a419181cd - Bump log4net from 2.0.9 to 2.0.10 in /Server (#389)
+c5a2818653ee5308bdb691cf60db544ed90cb17b - Bump log4net from 2.0.9 to 2.0.10 in /Server.MirForms (#390)
+9ecc3910732d33241da3a0800b777393c2ed465b - fixed :Read WemadeMir3 format! (#387)
+cb0280bef1473951ef1e4d61ae6663f21d875ea9 - Merge branch 'master' of https://github.com/suprcode/mir2
+19ad97080c472db633fff06ba6c685af6bacdb21 - Fixed patcher bug when DLL file doesn't already exist
+0ce662b76acc066789185bbd2dc6a9a476fdf5c3 - Fixed full screen TM Textbox bug
+c937ac89459cd74c29eaff93373918a85f4fd403 - Interfaced sound library to allow new supported file types
+35f9986306236af4faa50af342dd42904677a9df - Merge branch 'master' of https://github.com/Suprcode/mir2
+4bd324af090246d6b72681d318d3fb5f554c0b15 - Fixed patcher extension check
+942d1d7fd7995aca42bf123831bdc9daf02799d9 - Generalised auto patcher restart files
+2407898806ac9451a8283915d8e6e0375b5414f3 - Merge branch 'master' of https://github.com/suprcode/mir2
+0258f5318fe9e7a24db6b8ea012ec88f664f1e01 - Fixed stone monsters
+faa1e1af6d69cd82d14d0443b9a560506165d51d - help keybind fix
+390e103bffa0dcbf6e60047fdabe14136419f77d - Updated help keybind to not allow ctrl pressed
+47478516442231b7e0aafefe924b410289a78362 - Fixed crafting bug
+99d38eb010d95f7d043cd0b387bd72997832ac39 - Screenshot code cleanup
+ae117b8364ee46aba60acc958c8d3baf8da2195d - CreateScreenShot improvements (#374)
+d6f369c41bb3abb4ce366968e8b36695c57f780a - Fullscreen capture improvements
+a1bd689fad37eedaa5a672ccc5eb829a28edbf0b - Fixed screenshots when in full screen
+fc786cf3338ed1a683b112917f4a765dadfa324a - Autopatcher fix
+6541e63d0a8f536165940fd2e13ea37dffac8091 - Added dependant files to autopatcher reboot
+791cf5755505559c47b497d7ebe2ad955760f67a - Added slots to random item stats
+8d03fafe710f4714c2635ce16e1a75c2cca59a6e - Socket items
+66c660f9a9d0c9c3792c10a3e979fb32d7feb243 - Version update
+d62328c925561d84110465cd8dee04061d103849 - Updated wording in recipe script for "Chance of success"
+833d8b6ebc57a0b9435002b678f8ca0d51f36513 - Improved crafting system
+d8294105ba5b39a338d91caec86e82b26ebdd441 - Merge branch 'master' of https://github.com/suprcode/mir2
+09447e3f07a5b8c74ede06a4e236005b36efe5c9 - Fixed Mir2 WIL type format detection
+7cb015d77edfc21c66e9bd5f22a5090ea421ea4f - Added original spitting spider to monster 174
+d5533c53278fff0c5c97fea55d29689c103247a7 - Fixed lib editor convert bug with blank images
+afd4dac22b2b8c204a6cb45b9b5e7eb2b346cc29 - Fixed lib editor to load frames on associated file open with
+313c3b76b7331c71179cc70a9b02fe0142e8f115 - Updated KeyboardLayoutDialog layout
+1604a8e6808ffc17117431fffa46d674fd2dd382 - Moved Ranking Dialog to Title.lib
+917c458d1968959f3693c7d7beca9590d90e22e9 - Fixed client freezing
+568005479622587bbfaf5a1b6c11546e01976f3f - Update language key to correct name
+b9b99b5ece88ebd5ce10562468af7a36845fc962 - Fixed space on Nothing type items
+134636d341d6e2885f22854726a888f0fbec2dbb - Privatised NPCScript constructor
+13d1ae297ca8d50cd140478dd6c3aa480a8ca7b8 - Fixed Music crashing the client
+f0e479fe295eab995cbda0ee3ad331fdd4cf979c - Cache NPC scripts based on FileName
+2a35400a3c3556e7a91665e011e6fd2e0cd67362 - Fixed Lib type 0 format
+e7874cc10723bde0e7ffbaa00ec342d053fa19f8 - Fixed recipe loading
+dfc740479b053c08fa75f42e1e271e0e5baa9891 - Tao guard won't attack pets when player on peaceful
+7c4aa95b4b5f4b455408e22e47e23167f100eb6b - Fixed pearl buy window
+11da67cd3a37e69a87ace405c83503b33e38ca46 - Added 3 new item sets
+1d522381df3139808fbabb7998bc7a930cce17f5 - Renamed LastDate to LastLogoutDate
+1662fdf6dddbcd8105715d3433eae671712bd219 - Remove added set bonus from Smash, Hwan and Purity sets
+1421c52711df30839152e7f3bbf39edf330efcbb - Complete item set allows more than required set to still get the bonus
+68e974fd6a3cea5a5efbabc02f83e4ea0f5d09b0 - Update visible buffs on monsters
+55e216728214e729289ef8486d3d0a53ed165ec3 - Remove visible buff effects from monsters after they expire
+98e433685cf1f0df9ed59be40e6cc92e3fd75821 - Fixed bug when player dashed in to safezone
+57770274984f3211b3b02fbe81ad3048a6db0169 - Updated linemessage time to use setting value
+d5036bfad637331d340ad1e880e46ee10473be1d - Added a setting option for line message timeout (#370)
+192b96d502e5d0cd4ea10b382a02fb7314587bb0 - Added Line Messages
+0d74f27fac119df4766dd4820f0fac97b254d1f7 - Fixed Dragon body
+92b60063f16ee790e1bdfc096743f0aff33bde4e - Case insensitive hyperlinks
+d1a18b41fc032e74dc77492363e47c1b1cee5c56 - Change npc/notice hyperlink format from square brackets to curly brackets
+2637db5a743fa9279403f663110d1bf6cf8c2d5b - Added Login Notice
+07b1715017f16d2521894ae7228dc95ce2709748 - Added Timer
+81644a418bb19744515ab86be80964089bd13dc0 - Updated all player visible Item names to use Friendly Name
+3452af33ac89c560425ecc0101d5bd1e4a54de77 - Added Frame support to Libs
+9468d0204d47205b19e2db6765ada0129576166e - Update version for mail change
+62e39ec46b98d2309869519d74e2d3f1961b37a1 - Send mail directly to character instead of within Envir process
+f87972a3d5cad2c4a597a7b5f382c443be6a5a2e - Fixed missed code removal
+681392802440f558cb663fe81f19512cde9f4605 - Added Minimum supported database Version
+ef8ca69846e904d8d314aff146bbf5956bd11fee - Merge branch 'master' of https://github.com/suprcode/mir2
+18d43615805a73aa77ca8b3e2cc47840264d7025 - .
+20103993a3ecb81a34feccc9ae4bb362c9bae819 - More old bugs fixed
+a49436c1775e12d5b993d3b3a3bdc6d654d0f08e - Moved buff check further down attach method to prevent triggering when missed
+d720c42f0e9985d561fe33bf93e51ea63f9f09bb - Fixed conquest form bug
+6981aab10466bec197f12674bc3b42898b7eecc0 - New map support
+0e927623461f383092842d89e2e71cb8df83c70f - Moved solution items to separate library
+39cbde6e0973e5a6091e3486ad07d90d9091bdec - Fishing rod checks tidied
+5f87d8823a75597da19600a09fc44b6e360cc103 - Fixed higher resolutions
+67d19a59b5858bb37fb718c395258da945bbfe49 - Various reported bug fixes
+66e5be7e78812af8052db65bab05adda37dba711 - Removed debug code
+4d864d234b421067fae75853fa9dcd97fba4eb2b - Label drawing bug fix
+b2df8b35dbaa874fe9f28af17694ff7335839524 - Robot scripts
+8b3ce80d5535b08a0b75c11a2e36cf1b69d6bfa4 - Added projectile 2 coord miss check
+4d29eab048d461c85f7b1eb03e483c2d6d909629 - Cleanup
+d1070171c0c9188c519245d2ee2ffa59f3d57731 - Cleanup
+7141295f38684e4dfc148ff57ebbce98d18b972c - Cleanup
+f03acb3585e5260225450113eb3a737e17e6900a - Added multiple client versions to be allowed
+b23d9813cfa869bc57eb471f899fc8cecbd72d00 - Added Deco Item Type
+f5d4dde9f83c7948932f295b8469b22d6becd42b - Changed Archer base attack to DC
+7c533b60a276c9e27cb6ebb61b240c5c4461d943 - PLAYSOUND NPC Command
+ecc655e2ae50affb77bc96c62cb75289f7226c31 - Removed Direct3D9Exception
+7f710664637bd5c9483a99856a98466d6153f668 - Trust merchant label colour fix
+2f1f0f4b7afa2671c9cda76a0da54d2098de1e69 - Recovery attempt added to DX texture error
+3debe2f2291ac21e666ff38050a3ee0db5808f47 - Converted Client to use SlimDX
+05b333ba6f0936b5982db4cd6a342837fa48a7be - Converted client to use SlimDX
+94c24dc4a93bd5f629e5d4e8fb639a4962277012 - Trust Merchant bug fix
+34781e5b0ee591eef72aa2f7e989261b922ec3be - NPC Speech
+e501447b5cd260ce52e71ecc0b570751d75e75fd - Rewritten NPC Scripts to be independant of NPCObjects
+43f2ad0a55d0efa49b1ff963f08b897fb5b9b970 - 1920 x 1080 resolution
+b84c44b88f34cae0531b4339d81212191cb1fbca - Tidy up and improved debug message
+724f94719959e7347ca9091bb4f4ec04980547e4 - Tidy patcher label positions
+07ab75f99bfb014027a3a36b8edd93a6ea5319fc - Minimum resolution set to 1024
+83d39df08e27f29b81d6462cf300c8a7539bcea0 - Mode change cleanup
+848a6705332e1de493c3dd4d45263df232b7a49b - New TrustMerchantDialog
+b58badfbd808c7ba2f566c06720efc8e019d303f - Chat Item Link fixes
+636a9a4a44dbfa5f764bd83e03a7b0bb813488fd - Chat Item Linking
+5c06fe2f2394a31ca08b728a0c22477df91f3948 - Added back Win10 Textbox fix
+6716fedac2c08e06932064e6a986ce7a348393de - In game KeybindDialog
+2a7bd9cb3df1e80a13445e3f51b3fed8c71696e7 - directx + win10 fix (#360)
+b212ed73763f619511ffdbc2973e397a85b01d7b - Added count check
+8bbc2d2860f8fbc71b84919b6ad10ace55c63466 - Intel Creature (#355)
+e2b3b86a85bc5b28211d6c2d2c19e817c67eb077 - Merge pull request #354 from daneo1989/New-Intelligent-Creature
+e79113b9ad45c689ebcd803304be29c49cfcf0a2 - Merge pull request #351 from zhzhwcn/master
+ca8e7f6acd23d7aa009a816516c811b6a56dc144 - Merge pull request #350 from bing2008/master
+5178f1b3fa4efb793ab62acfcbd4627b5ba57495 - Merge pull request #349 from Pete107/patch-1
+b9ff47b1f60c21e061d7ad18d22df7a6fcf04561 - Merge pull request #348 from Pete107/patch-1
+72fbf98225aeab0af58c66f6c8ba9fa8f50fb818 - Merge pull request #347 from MirageCode/fix-server-paths
+3531f143b6fdb2ab4516d6af176f28065db90808 - Merge pull request #346 from Pete107/master
+5033bd9edfaa4ef7486dbf7acb1c1e6da26af13b - Merge pull request #345 from Pete107/patch-1
+a1d8393378edeab7bb7e639766ee4f0d9fa4c6da - Merge pull request #344 from suixin567/master
+326e9723d3898e5ffc800160e72b0f9d3e5fb203 - Merge pull request #343 from MirageCode/server-library
+a0c29aa573dc5c3cc298f3eef01ada53e0d2816a - Merge pull request #342 from MirageCode/server-library
+9875aea01f86928ee28117f7bbbcb0ea7da20de9 - Merge pull request #340 from louisnorthmore/master
+47bab2c3835d4e86b9b3df7b4ae2c48da444ea26 - Merge pull request #338 from daneo1989/master
+55fa1a9a985f8703bee352857604ef24b9bd1941 - Merge pull request #328 from Pete107/master
+96b5b80543266d31c3f5fab734787f0d1980b2ec - Merge pull request #327 from suixin567/master
+9a0854685408cdaa9a8e041665fb5d17bc2539c1 - Merge pull request #326 from suixin567/master
+c554c615c35bd7ed426aecd1cffbe89ff188084d - Merge pull request #323 from suixin567/master
+71bbed163a73e9159c0442f1d2351a4995f43a64 - Merge pull request #322 from Pete107/master
+ebd2afeeaaa63e52532c44d6dacf8911a8a22b54 - Merge pull request #320 from suixin567/master
+29ce591f5fb19eb0d72b37ce5038840d0596dd3a - Merge pull request #319 from Pete107/master
+504d2867a2dec2d1faba96dbae9b773b4779ef91 - Merge pull request #318 from suixin567/httpbranch
+d7875b0aa71e90d190e03dbc18ee66c166a7206a - Merge pull request #314 from suixin567/AboutMonster
+115530ef916b9d4f49e5d6ace8a5837073eac766 - Merge pull request #312 from suixin567/httpbranch
+48523e76b5a8099709a0385a97832cf68a5ee504 - Merge pull request #313 from suixin567/AboutMonster
+0a0774aea2fdc025b394bb79c6b10634ef8ae5c7 - Merge pull request #309 from suixin567/master
+2332c09d543b5e8cc8e102baaa332e3573f8f56a - Merge pull request #310 from Pete107/master
+c3cbd27ec67e43bc196aea52a7edb54e871c2655 - Merge pull request #305 from suixin567/master
+4b6c0e382cc3cf0540ede67aeddc057154473a83 - Merge pull request #308 from Pete107/master
+909dfa55e0f29eca96e3bfd856870685ae9ec7a2 - Merge pull request #307 from Pete107/master
+e4a3460f13521134bacdacf1f2fa387915685df2 - Merge pull request #306 from Pete107/master
+73e87687d0ee6d64902c60a5b160d1b8575871c0 - Merge pull request #304 from Pete107/master
+07a55aa2abc8540054d84e0f599a24b77d5311b8 - Merge pull request #303 from Pete107/master
+991da236187f48ce83492e1b5d69c05872d75bbf - Merge pull request #301 from Pete107/master
+f8fdf665f735640a98561751faa2f3c2b88d456b - Merge pull request #300 from Pete107/master
+4421c6c7dd79c541fc25eaa67265830e8d804086 - Merge pull request #299 from Pete107/master
+941c04864a7af896f11a25d125295305b5a152da - Merge pull request #298 from Pete107/master
+c5ec9aa56a4e8cdde0356be3ca91d266993f1421 - Update README.md
+d42c0ae6c33e3128aa477892b6881e1e852d4808 - added default autopatch url to config
+abc0eece47eb1862d48b2cf4ae1205ff8cabc2c3 - Merge pull request #297 from RyanTaplin1705/master
+7e52cf014dfbb3f4cefdf655c343e4660caf7811 - Update PlayerObject.cs
+17afbd4cc186d38892bbcdf0a27b33f054de40d7 - Merge pull request #295 from RyanTaplin1705/patch-2
+24fcdd057cfbcbb845d0ae8d3fe58b9ca469ff08 - Update Client.csproj
+8f6a2f4c9209eca7591c441b49079cfadaea5d0f - Update Common.cs
+93881a1f31e7814362c0a25153b355b26542fa11 - Merge branch 'master' of https://github.com/suprcode/mir2
+ceb6947983025462eac8d8506b55a4f56a8de4b8 - fixed sound bug
+9e900f276cce5cdca6d6e2246496f95d1f2bec57 - Merge branch 'master' of https://github.com/Suprcode/mir2
+df6a37e54a82b35849e3f00402f03f7236507040 - guild save fix
+b2940b32c2ad82a252e98420ddec4c83dff3f257 - updated checkcalc to allow string comparison
+eb68d4c017a0378dc52dd1b78b5ce5735998f1f7 - packet fix
+0412b2d91cceb0d607aefd97a5ca805babedd7ad - added back default npc call
+d8f8918bf331e00ae6a6ea05765ed12b23d891e1 - .
+66ccba93e661c98b53da1d716c58d1ff7934488a - removed listview designer
+77bbf23b80711b647d2fe377611c047d063571b3 - fixed weapon bug
+99d382019b04de3fcb4851477ed81b91e04f2cda - Merge branch 'master' of https://github.com/Suprcode/mir2
+75f1eb64d6f062849610e0ac75258271c185d225 - fixed fishing cell bug
+fbeddc2111322dab7c65a04855f539690142e880 - fixed mount bug
+2c05f4bdc4f972fa3972bf87aa7de00ddbe7396f - fixed shoulderdash bug
+3b4751aa3ab0214d9436cc883c9eb4ccfd7ae4fb - fixed shoulderdash bug
+dbc56bbd5ef4a3d75c8517c75c72f8d44ea7f714 - bodge fix on rental bug
+c6fab1f238aba31c268c9e33d440b8ec9440a879 - fixed rented bug again
+8522f6028312e06222f08d2d89aff45750822bc5 - rented bug fix
+efe51ea7d1fa7c227d8c6a5c7f6ced88a39ed374 - fixed more MAC bugs
+66ce06b940f7773317925df73af9f25d8fed9c3b - monster bug fix for mac attacks
+1983cd1e59ab4201b5767912784616e2031e849f - struck bug fix for MAC attacks
+42d4a312d398d09fd5fb2b9b35c058c057ca9704 - fixed mob hp max stat bug
+90028e89b26f61f3238eb08c5fab66b4af420c1d - Fixed MAC attacked bug in player
+219fe5bceeafc1b686dc5359261a96834a48382a - Merge branch 'master' of https://github.com/suprcode/mir2
+0fd0a86e9ca411dcfb9ec81ee30f3e57f7a26cdb - threading packet changes
+df2d9f426a731369f69df2dc3ed32bb0eaf33193 - added multiple quest/flags/classes to recipe condition
+ee16a9e0ee8bcab040ee0b519f8fa1a7dc3153a6 - Buff dialog fix
+1aa8e238d184e925ff3fa4aab860f31b52766892 - Merge branch 'master' of https://github.com/Suprcode/mir2
+7834ddb8bb4148493ddd19d6730721bc60bbc0f4 - Added crafting requirements
+c68727cfbcb11eec641c135252eed929435a5cd0 - .
+f6e31bf827f5c87558533ac2ff3c2f083521c412 - magic list check
+a76b13867582cae6f313e0fd6afb76c4b6a30e02 - craft quantity fix
+85e36ce9e45928d9db4ca0c64ef268c3b153ffcc - fix crafting bug
+240968410ed61aeb77434ccd3a9254fddab921e4 - close craft dialog
+94a2cb26bbee85abcadf299dfde32c9da388cdae - conquest bug fix
+f429f58220d3cacfa4dc1a4a7af24ee2ca44f2f0 - Merge branch 'master' of https://github.com/Suprcode/mir2
+97b32316cdc4d8b45ed6f8f15fb3379aa50286df - Crafting
+7c572b0fb00b037faf502fccac533de7872158b8 - patch fix
+131897d42b4e11bf8afa7c0905fa3481dbfb051d - Merge pull request #48 from Suprcode/farril
+b15e71c7bcb66c181c3600bdae804aaa158efd88 - Merge pull request #47 from Suprcode/farril
+dbe5a9987e31ada7381e1f17ace50689feaa7cdb - Merge pull request #46 from Suprcode/farril
+7459e216c1ba4fa155ff15a89656fea257ec6ee8 - Merge pull request #45 from Suprcode/farril
+799b16aed76d38ae0605a72bbd92208104fee85f - Merge pull request #44 from Suprcode/farril
+466cf1c9b13402d45672642227da4c28ff175757 - Merge pull request #43 from Suprcode/farril
+0b06f005c30ec5192dc120a14e0fae6912267baa - Merge pull request #42 from Suprcode/farril
+8b947d0c5a940e3879bc21062937a23a1c424e3e - Merge pull request #41 from Suprcode/farril
+24012a0456b12270669ae7a0e4a89fc338b5a7c2 - Merge pull request #40 from Suprcode/farril
+8254918df32670e8eb88d0b6fe3cac74af90a31b - Merge pull request #39 from Suprcode/farril
+ffb1453f6314b8ebdbc16888dbfd2967cbcb5893 - Merge pull request #38 from Suprcode/farril
+46bcfab677bfceeb2327ad562991167d3edb0842 - Merge pull request #37 from Suprcode/farril
+6cb9f7abc1af009cae0174c7d287ff77ffb226c4 - Merge pull request #36 from Suprcode/farril
+e4a74599c5077f66560ea3ca8318091102900a44 - Merge pull request #35 from Suprcode/farril
+8af2d7818d7d32b6337b119e424035f29cbafde9 - Merge pull request #34 from Suprcode/farril
+2d9b7eab1fef98b39696505a7775f95c9b916358 - Merge pull request #33 from Suprcode/farril
+3b4706f74aad0f3f673d066420a6405d3a517f8a - Merge pull request #32 from Suprcode/farril
+c588873f20c003759ccff44100ba460056d242c8 - Merge pull request #31 from Suprcode/farril
+d51ba27d00935b0b3ed87723fdc6187c0dd6b788 - Merge pull request #30 from Suprcode/farril
+3060a72f65838522adefe39d8682276097a14897 - Merge pull request #29 from Suprcode/farril
+2466e14953823c79c7609f47de63b6e5c88ed0b6 - Merge pull request #28 from Suprcode/farril
+75d15acd6607ef40c83f4d64e173af8506c403be - Merge pull request #27 from Suprcode/farril
+0800834112b4f67e90bf40c59d1ddeaf915306c2 - Merge pull request #26 from Suprcode/farril
+b84f1ae21deecda97e1e320f7fdc51b2b7a9bab7 - Merge pull request #25 from Suprcode/farril
+4b9c6bb8a7f64c91902c1d804b29bde2dc9e1bc6 - Merge pull request #24 from Suprcode/farril
+59972eeb3dc556af1bd2d05d45c58be9b3a28870 - Merge pull request #23 from Suprcode/farril
+a7395d5d3ea1dea15b234147f6f79a34bcf5d5c4 - Merge pull request #22 from Suprcode/farril
+12223bafb108e41bdad2dafdd01411ed9ce108ff - Merge pull request #21 from Suprcode/farril
+b9bd06ece8e64cf39f0a07181a154806634e7c96 - Merge pull request #20 from Suprcode/farril
+0b4d6c16284cd6764fc54632261eb7c9430209eb - added dropview via tab
+9b9aa0882d1a4d15fcac58b99a382f7fcc61a3e9 - Merge pull request #139 from Suprcode/pull_request
+a81ccd7e59c15021799b6ce05b2e721813fd323c - Merge pull request #138 from Suprcode/pull_request
+6ff18c830b80b0d8b7795bb0bf49c0c1c3b7cdfd - Merge pull request #137 from thedeaths/master
+75e478c2cc0ce4595aed0ee940fada97d3bd2a0d - Merge pull request #136 from Suprcode/pull_request
+37e39263384fde2a23050ab028667a8fc91971bd - Merge pull request #135 from Suprcode/pull_request
+e123b71ac5600859afac01fd20ae21ab375e1885 - Merge branch 'master' of https://github.com/Suprcode/mir2
+cdbb04dd8e8da2f9389f82dcf20f66c573ff42ce - Fixed Score Points Conquest Crash
+0a7c35fde0992bcb12d7907397ddaa21f8c66509 - Merge pull request #133 from Suprcode/pull_request
+805cc3880a563baa022e1b31ff2ced6df733d03d - Merge pull request #132 from Suprcode/pull_request
+69a2c2449d294754577f7718b2d736f05e4d8578 - Merge pull request #131 from Suprcode/pull_request
+d7876b40856b654d0c5d776ea13a64868206e5f1 - Merge pull request #130 from Suprcode/pull_request
+e43cd81c647740d25204ea6423b6c2aefbec347a - Merge pull request #128 from Suprcode/pull_request
+e007dc12269c16de8fc2c3227996a30e3a9bfe89 - Merge pull request #127 from Suprcode/pull_request
+7bd8269ffdc6d9d1ed711a11ceef5afef7642ac6 - commented out broken door code
+f3d5299a6c87011fa0e20fea29b5f8d7ddc3edae - Merge pull request #125 from Suprcode/pull_request
+ef24d96a83bb3963123e1cfe1882b5b70c8cd482 - merge fix
+e31190684c4d9a50fe4e1d5fc7a5c652b8749a05 - Merge pull request #124 from RyanTaplin1705/patch-10
+6e12fca8a90301b3eb6a9d2e7eb22a8ebfbf919d - added sound and changed anim time of immortalskin
+f1f574d43839a57bddebb09cb50aafd1a122ac55 - fixed immortal skin bugs
+43e2ae93178f573ed9bd5e13c27b73f75a44c102 - merge fix
+e88f6c9c6fcefda73ad9eb284e7ab6c49b33e2e6 - Merge branch 'master' of https://github.com/suprcode/mir2
+9e7fa10bb5c50a43fba9d96d244e490920615df7 - Update README.md
+83b858a5e1224f9d20e70a9b66890d21d0003ca1 - Merge pull request #119 from Suprcode/test_server
+baf2e83fa667d084ca30013f2f78ae7bbb5d7870 - upped version to 1.7.0.1
+c3c08312e6cac653df07cf4661d5bcb849c09864 - fixed npc visibility
+c96d8640e593b54ca9a4263d394d1a4f68a1a120 - Merge branch 'master' of https://github.com/suprcode/mir2
+cdfb4a7e21e85d3e62a13b5d70a0bf2a5b555038 - commented out old label variable
+f0f63fb90724748e7da1d3a064d8a788fffb6c61 - Merge branch 'master' of https://github.com/suprcode/mir2
+edd080cf325ee5301ba42887ee3a62a5444d81fd - Merge branch 'master' of https://github.com/suprcode/mir2
+8d7a68c9d852f4b860c60bf7e69ea2e11c4b077e - Merge branch 'master' of https://github.com/suprcode/mir2
+fe6b7e9509bcbac3bb24ee7fce91a25a8c5a6b46 - help bug fix
+f7650a415c7b8b0877b1d0ca38fdf938990b8a86 - fixed dead monster draw order
+57279e233fcde1f30de2eacd31904755eb6df070 - dispose of image after add/import
+4f1ea416d0685d6de6e0206bbef8060e7e73566d - exports placements when exporting images
+c6105696460b1d65ae64d003e78758d04426d34d - added null checks to logout mentor and logout buff (these shouldn't be needed but should stop the error for now)
+888101c41644bc4b1ee60bff8114d62fc23331f6 - fixed autopatcheradmin plist bug
+ede6b449a01802baa4fbdec67d9fd9906d1c5297 - Delete Legend of Mir.v12.suo
+3397b5abe9759a478206d8cf31374b88fab088c5 - Merge pull request #85 from ElijahLOMCN/Resolution
+7c2f4bfdd726e44c50d7183ddfeb9f6fcd846857 - slot placement fix
+54ddf2970b24fb370ce223de45d780633e512fa3 - Merge pull request #84 from lodos3/master
+07291595133fffbace4e9eb0c830a5726a9d36e8 - Merge pull request #83 from Suprcode/test_server
+40fce7bf146e2a78f1fa0f2f2c2bc20e6a365834 - Merge pull request #82 from ElijahLOMCN/Experiment
+ba5aca9301be8f3cd2ce29eb8702b9e5012555b3 - updated assembly info
+30313c1e102169ed95eaedf040fe7b1df9799fc2 - fix levelup bug
+f223f88eb7493417db196bb992dc477092aefe63 - fixed restart launcher bug
+bab445ede8545ae3e57a8d57fbcf9fd7dd0f17c8 - fix again
+b728947b66dda1d4d378f53582101480356b936d - fixed launcher bug
+5b5bec77b6fb3b88b9136f84563f5b491d446c09 - Merge pull request #80 from Suprcode/launcher
+bf1f60a168ea8909e070612c330f4ec91fac2d30 - football AI improved
+721fadc35c520d47aec5964b8877a6cb04dcbd40 - fixed poison bug
+d84c1e7580dfbfb032b7ca952ad1034cb292a7c1 - Merge pull request #74 from Suprcode/far_experimental
+83d4f7dd653d7eff42cc9caf7702c4bdd15e237d - Merge pull request #73 from Suprcode/far_experimental
+dff67484060c1f89a6fd15935bee390b64a069f1 - changed way resolution Y calculated
+114a45b3d073f902e37a2e15af441027dbf6425f - hide left/right interface cap unless on higher resolutions
+39c135404ce7e49603a95c32108b12c2daa16e0d - Merge pull request #72 from ElijahLOMCN/AutoPatcher
+2531b5b3cdcc5b20901fcd51632d803dae6ddde2 - removed duplicate null check
+7e4fe42591029050d3d1aa5f18b491b49863a1e1 - added player null check to inspect
+46a3a5d67c55fb2c36cda4c4698490eded81c58e - minor bug fix to stop an error
+ce4bf13231986326ff1bbb23b212646abe2a87c0 - Merge pull request #71 from Suprcode/far_experimental
+0ad5a6d5665e25210761ba5edd71829f11ae0d6f - updated 1024 interface to use old style
+ff65490d41c877bb044f6940fa6771450b0e3c26 - Merge pull request #70 from ElijahLOMCN/UI_Experiment
+042a645d0d0ca218876afb235c2c13b40a203c09 - Merge pull request #68 from Suprcode/td_experimental
+3b9e72ac44221daa455a3951ae54df5c5bbd1c94 - Merge pull request #67 from Suprcode/far_experimental
+bab5d19c428dcdb2c16d402cf78a880c8df1563b - Merge branch 'master' of https://github.com/suprcode/mir2
+4e9484baf79167cff968ed2a269dbfb5ae90de1e - snaketotem dead delay modified (hopefully fixes crash)
+4b8dc5295b4d32b946ce9120903e3dea6b82eb9c - ffs
+57ba1dbacc5eac9983dbb6165499d3305924847c - small side project: lets you see the colors of all poisons on a target (since its a pain to try and figure out if there's 7different poisons that can be on the same 'mob')
+756af8f7864b75f21f855b2ff766c9c71cb28d65 - - changed poison client side so client actualy has a list of poison types active now (so it can tell if you have more then just 1 poison on you)
+0d3a8f754a067ce0969024a67d2b82e902c9886a - fixes for db version mistakes on several item loading methods
+d01aaa476d124eaef9b03476581d39e30b06296b - just a try catch on the whole workloop to find problems with starting/stopping the loop
+bc93ecb69024f14b1ec992a32db967d9a88fd4de - sorry i fucked up :(
+267fe238610de474d2438ae72ec3d6050d472d6d - fixed a server crash if you walked into another persons portal without being grouped :p
+a00c15c3677ae6a684a82e394d15966d34e27899 - Merge pull request #62 from Suprcode/td_experimental
+a914815fb1663640fdc3e66d84f2b94ed3c42325 - updated client version to 1.2.0
+e86fe0b379b7a8b60e5ce045fb8e790e086fc9a8 - Merge pull request #60 from Suprcode/friend_system
+8339c82d25b1e8aa9f2308d4e251a61d6eea7462 - Merge pull request #59 from Suprcode/td_experimental
+e3644175e25b4f126afa329b5d6ac273d81190cc - fixed manifest again
+8b76332440f6efe7885d8d7bd47b6f08d3d3b9e1 - manifest fix
+75b7c0581c2c47c6ae38fa3a12da934083aa9fe4 - small extra: this lets you easely add extra magic spells using the current example code in FillMagicInfoList
+571960728d4e1e6abd877a894a0097fbbaa3fa56 - updated version
+f33638691672c46b889d14e5727cc4d06cbb6a01 - Merge pull request #58 from Suprcode/td_experimental
+e796632a24bf9765dc0269603485b88f69a702d5 - Merge pull request #57 from UrbanCabbage/master
+2644c66593fef27672fd06e5ee2293566612c1a0 - fixed versioning bug
+487f6e8f759b8ed825518b915e58221bc61f5af3 - Merge pull request #56 from UrbanCabbage/refine_system
+3f6f4c58f29bd810d6967269a30af2ebf11c5294 - Merge pull request #53 from Suprcode/td_experimental
+beb7155b7ce38c3589c5faefc64aa2e459144f45 - Merge pull request #52 from Suprcode/td_experimental
+2b18121e480ffe86cc9ea877d62ee15a017993a1 - fixed duplication
+20e39adc17aea966a04d55e6a6a2afcca7ade342 - Merge branch 'master' of https://github.com/suprcode/mir2 into td_experimental
+f81bf035c5a49f9387ef0f96b1cb254a3a0696d8 - moved down cycle delay
+454e151339c17fbbec28c7d33c6025522a952fe5 - syncing
+50809c77b5d86a93f4cac583e661f7eb92a9ce8d - syncing
+5db5d83eaabe40e341319ccf12806ab6df172057 - Merge branch 'master' of https://github.com/suprcode/mir2 into td_experimental
+cbc9037fed7a10b6f1f9d2411ba60facb64ccfd9 - i've edited a small bit of code in monsterobject.cs that speeds up the server ALOT
+978ac4fbe234a25e536c035302b4f440de4e2a7e - Merge branch 'master' of https://github.com/Suprcode/mir2
+cfa9fd4f4d62648c143d6e3964201a22cd5fe796 - Merge branch 'master' of https://github.com/Suprcode/mir2
+abfcfda1726db1b998704b2c0ca48b5a12f6329b - 1
+5a46cf584ce8bfa4cb7fe2814f289a50e58fc50b - Merge branch 'master' of https://github.com/Suprcode/mir2
+7516188174857e42975dbeb02d7068d351853f54 - Merge branch 'master' of https://github.com/Suprcode/mir2
+2db5d568b7096a08800bcac05c8462444cf034c8 - Merge branch 'master' of https://github.com/Suprcode/mir2
+c9d66c4d3dfc3c72d5ee99ebed6f092e92546dc8 - Merge branch 'master' of https://github.com/Suprcode/mir2
+f2426086a6a49251a72f0a8123939771d6e1aa8c - Merge branch 'master' of https://github.com/Suprcode/mir2
+86bc5d3559edcdeb87ff4e5c11c628c9eea786aa - nothing good i hate git
+36011286e7f83e53d96257d5ec8195a31eae6bc4 - Merge branch 'master' of https://github.com/Suprcode/mir2
+ed0801e76d723d1fae17e1eb85303b52bd45c27b - ignore me fucked up
+e09db6acb577744cd24dce5a72c1a59dae49b84c - Renamed variables from "succes" to "success"
+2c7ad645caecd31f146350ccc8e1befc16c9edc6 - Merge branch 'master' of https://github.com/suprcode/mir2
+52370363ea22101dd946b30746447dec9e14607e - Fixed CHECKEXACTMON bug
+8c5ac82605e3dd0c87ba5086fef6b25419b414d6 - fixed pets being killed crashing the server
+99cf71f65f4cc81b873cc1710f81026f1ef4db13 - Added basic Mail form
+0181c6d0b14e5dc887d4cd124467bc84bf9ca2bf - Couple of mail bug fixes
+bb2f15cdc0573c22e189baf3116c6ca12a5fa805 - fixed counterattack delay
+1182919e0dc695cf06bd1ab1a63a31c5e837868f - Mail Updates
+0e4215a3bccbae08868b98a929aafa94cc8dc053 - - made client display what type of items you can use the gem/orb on
+ca17ed58abb09f7e8ad1060dd41c2550b4016421 - Bug fix - cannot take a quest if already completed
+65a31c83d70021e01849194757b106bc751952b7 - NPC ACT Command "CanGainExp [True/False]" - When false will stop player from gaining exp
+5246b18e249869cdd4eeffacdd21d2e44db6281a - Update README.md
+a28cec8319f5ba1b1f7e7866165d3945e884f7ec - fishing requires atleast 1 bait again
+439a2eeedc452a006e3079d63b81e561573832c3 - fixed server crash on deathdrop
+4bcd2137267adecb4bdfc969bc5be9bb28bb53ee - commit test.
+355595f1749e9d0447292ecc914def0f99aac696 - Test check in
+4bb61a8400e20ac14b3dd249901cedd997b0bb40 - testing if i can commit changes
+1ec62bcb778fef1fae2832648df0d0914d06c34f - All projects added
+21afcf15ca8f86d465f1a54c662ec2f08b3e5a23 - Initial commit
+f3e977660803533bdc7c0360df87c87e49ad6e4c - - each gem item now has it's own setting for succes rate calculations and stat limits
+1f1db8e9eb5677736e02446e2578c63b2b72a0dd - Merge branch 'master' of https://github.com/Suprcode/mir2 into thedeath
+1bfba1183778cf999e6b7640873706d3d2166fb5 - added more detailed disconnect reasons to server
+56724adaf0e5ccdefb876c5c36962a9f4890dde6 - small 50ms change to AttackSpeed
+880a3823470e8d902ff6d103a5e04ad0e296556f - fixes crash if the pet is set to do a delayed recall just as master logs out
+2b3b9dfb075dd747a104a671a4aa8554ca63097e - Merge branch 'master' of https://github.com/Suprcode/mir2 into thedeath
+8ed0c2f4753a95e9229c7662e31e11c268482951 - stupid github wont update if i dont commit my own personal settings :(
+60b2b5a382801c434f3f131d579af8c70a3c761e - Merge branch 'master' of https://github.com/Suprcode/mir2
+37371de51aeaf8c4e984a8d526e048df61be1a30 - fixing bug with fishing allowing you to fish using esc button
+9077641c160cb12c86631d9bb673ef652d9cd15c - fix SnakeTotem not disappearing.
+89b35428652d47f20b5d88e70ab31af6b760b05d - Changed Teleport to Blink (needs Shape 54)
+16895b564eb2ac3e0a0ef484b887ae1fefdcadac - Create .travis.yml
+be3af3c818e9c3e59c297d600dff07780f61fd6d - fixed some fishing label stats
+08dc8c0edd5d4f8082cdebf13dbbb25565383a2f - Fix Creature messing up DB after crash.
+c5f66e11059af6d70c7521c77528b4b0f8d6276a - Fix IntelligentCreatureObject.Attack() NullReference.
+d29f07013e2a577a5e149a967c508b0e5822ad1a - Added MirCheckBox.cs and IntelligentCreatureObject.cs.
+36dffa0ed4897a16b27f02a5a6e53ec9d64c16b3 - Merge pull request #2 from Suprcode/Creature_system
+edbe2e1212f5a277e69a023d73f225b54efa26e9 - fixed breaktimerecall bug
+f0ff216896f3a46504072aacd09303af557ec449 - gave counterattack correct dmg instead of 1000dmg fixed
+ad47db10125fbe4dc26442b8e5cf7a5844c61785 - Get ready to merge.
+55eef173f5adf854e482eeb3ecb6456110bbadde - Merge branch 'master' of https://github.com/suprcode/mir2 into Creature_system
+3e438807eb45c7eb7da070fc69fb950fc3c94213 - Merge remote-tracking branch 'remotes/origin/master' into Creature_system
+c2e8666d024a5eb5d85f39497e24a4c4ce1e020f - solution settings sync.
+baf0e89501e2de6b601af280f02b097811f1df4c - CreatureRenaming now needs mirror Item after first rename.
+0bf320bfe2876e146c10e3311e30f12727777457 - Fix PrintTimespan in creature dialog.
+ee4405031c9737189fc934f0e1be0843c09f8a9f - Merge branch 'Creature_system' of https://github.com/suprcode/mir2 into Creature_system
+d24a9874446588eee68bb1f503d5a7f235f5183e - Finished Pearl production.
+7d76570a1e47cc4647b09d7f4dbeb0776a13fb95 - Finished feeding.
+f1c5dca6d5ea69be56641e3da95501822800a83d - current progress CreatureSystem added.
+fc5b82802271037465432b55c3593702c62864e1 - creature branch commit test
+9edaa53fe009b0c349c69c5985fbd5120745d9ab - Update README.md
+19fae47386382ac69c8f4fb0b650673a674bc426 - fixed npc scroll bug
+bd36f0814cf36d7997b70652b6ea4ac49c58eb17 - added gold buff functionality
+6154bb07cf8797282db2fbbfbbe7bcf446fb8ed9 - added optional parameter to @info [PlayerName]
+f60b559bbb059524b7cfd4e7be8c0f85067be29a - Merge branch 'master' of https://github.com/suprcode/mir2
+f5fb4cba7d8510141f27bf6c340d7b128e8866b8 - fixed negative A.Speed label
+b756e3d4139493b9ff8a38996ed8823947431a31 - Merge branch 'master' of https://github.com/suprcode/mir2
+c33b89fe7719cd4264e2900640c6f58952c2b8d2 - NPC #IF CHECKQUEST [QuestID] [ACTIVE/COMPLETE]
+cc5caed5fba0d012dccea271c1f221b955078e4d - teleport and delayed goto npc bug fix
+e7d6beeb19a679c0410a499acc840c7f9f2e11a2 - Merge branch 'master' of https://github.com/suprcode/mir2
+766d9d24650d69a1e23a72b2e0b2171c98afb1b5 - npc line count bug fix
+927b32457102f86dcad8ab269c297ac461c9489d - moved 2 creature variables from char to player and stopped saving
+d258bfa34bce823af261f4fffa91bf77a9f202d4 - Merge branch 'master' of https://github.com/suprcode/mir2
+b98b30444f110e8f54db28581f2a94a6451ee8ce - Merge branch 'master' of https://github.com/suprcode/mir2
+570fa98940dbf95363b2a7f0cd7b90f001691ed0 - changed some creature timings to const variables
+a35d5dff5dcfb40d234fce9440d40f45344c2dd9 - buyback bug fix
+f3c7d472b525fd87eadf906611eeec5dc17b95ea - Merge pull request #3 from Suprcode/msh-updates
+863e9c3085845bc65729499638a29fa3ecae3bb7 - Merge branch 'master' of https://github.com/suprcode/mir2 into msh-updates
+474857131b9795f60d5f329de22e515a013bd97a - inventory button updates
+ef6e39a96dc03b31846e776944a7afe5c0a2be71 - Merge branch 'master' of https://github.com/suprcode/mir2 into msh-updates
+6f4d4505ee3fdac900fcd5c5e1f571689de6390d - fixed exp bug
+b111067e6cc47d7ca2b7b6c29074dd8c3aaf7b97 - Merge branch 'master' of https://github.com/suprcode/mir2 into msh-updates
+feecf95cc8803b4dcfba1d33310f26bf12fca539 - Added goods form
+7b8564c72e4751bbf1c45652a83e6c4f42d1ec6a - Added chat notice dialog for announcements
+4b5eb56419adb2108d1cb0a521f0f73c101cd159 - HP Regen increases with Level
+e2800201c2d770cb56117f9e8cdaf4d0ffcb4e7f - Merge branch 'master' of https://github.com/suprcode/mir2 into msh-updates
+931aa20c574ebaf9433b68f9a9954ba5efa7312c - Tidied Goods load/save - fixed dupe bug
+50dfd3c53bd9ad2c8080967a2b2368227a080a62 - Load/Save used goods
+b3e25144cba32ab814f2e9b378b0bf6dbf7886ec - added [@BUYSELL] to show both buy/sell at same time
+02c78c4e2f540e9b27b507cd33108eec88d203aa - Items sold to merchants will show up in the main store (no saving yet)
+36b8ccc5fc94045477c124528dcbaa638c68ca51 - added buyback
+85eed7b16e31ded2b5ec15a27244d9b22b55df6a - Merge branch 'master' of https://github.com/suprcode/mir2 into msh-updates
+1cb5d428416edfcbad552e259b0e573089a96eca - added back transparent chat text
+7da3381c2a297f93a75049945d36603fc8d17c12 - bug fix
+f1d85f38f86e87bc6bb1f72e96e49cda46c1568e - Added buyable bag space
+ddc88269be01b1f09dced5e0cffe127e7429f901 - any pet should now have a health bar (even non autorev ones)
+1733d510db646e2a8e42715e61dc4a35e710730b - Merge branch 'master' of https://github.com/Suprcode/mir2
+ec9f52a638acccc196967d25d782ecf03000797e - recoded map lightning/lava so it actualy does dmg (and works on a spot rather then on a player)
+19f0b77ee0da469326defa72e834a7ff058b3f71 - adds cycle time display at top of server exe
+2896e38e3302321147325b223648b2627f7aaa3a - fixed crash when creature picked up a ShowGroupPickup item.
+b39997f9ae98fdae27c141f464a3211e3f63b290 - Merge branch 'master' of https://github.com/Suprcode/mir2
+563939872c3266a4fd430a8927f22598408be65a - silly rev mistake, fixed
+97afe740b58055444dd253526b5316b700fdee93 - fixed mistake when saving guilds and goods files
+4aaef44ef072b31a027c6141ee147f4d2e37221e - fixed argument parsing
+a6e0404900b9b5b9f658226f1b675744a3e0a63c - updated goods search to return null if not found
+2277fcfb7d1b8191052d87576147a2e13a91e9d0 - fixed inventory show bug
+34da595308129d6df61f6567e34e714a80fb2b46 - fixed quest migrate bug
+8a753d6f082ef0262d45c843615e7cf8b383a0a0 - Increased db version to 50
+fada8ed941a1f69de9a906e5b2c693b90d0e55c2 - Merge pull request #6 from Suprcode/creature_updates
+f4aa326155d35c8ddf5bd64801a53483480bea66 - Merge pull request #5 from Suprcode/friend_system
+df49936764c1fd2f8decd95682f59a8ade66ac0c - Merge pull request #4 from astrok100/reincarnation
+223de4a014ff46b56f0fc8314ed24664bca12611 - DefaultNPC Command - [@_MapEnter(MAP)] - Fires when you enter a new map (movement or teleport)
+d36372e0f72dc64eca1cc6100f14293e7d3f4765 - Merge branch 'master' into reincarnation
+f452ed1f007a131c7f8113725e009cb263b17b58 - added reincarnation skill
+cd58edcf122b64f9f09bc7c88b3b42eaa3384f82 - Fixed reincarnation exploit (able to revive at any time)
+01de036935973219d2b638ab178708d1c9b188f3 - Merge branch 'master' of https://github.com/suprcode/mir2 into friend_system
+3fe21221f16b17135940a35ee749d3b1f43546f0 - Changable PK Spawn area
+e82bf05c6c33123eb8e9405fda5754e6630afe1e - added basic server code for friends
+8277a7e0a19e39c25ff3a8225d89012825c30b8f - Pull from master
+f918a98dd4cbff4f4a41ab5ea1f08391dee1b7fd - Merge branch 'master' of https://github.com/suprcode/mir2 into creature_updates
+5a3eec139c3c0955cff9bed2ebf214c88b75e7e5 - added maintainfood buff.(creaturenuts)
+bfd38602783d873b5398e274322d39f4bf23d1f9 - Finished pickupfilter ItemGrade
+cdc2d067d716baac12327c9d0a6e9ca034e0cac5 - added creature release verification.
+2b7577488ba2f035bec6a2fa709747263f20cfbe - Fixed merge conflicts in GameScene.cs , NPCObject.cs , PlayerObject.cs
+3441442bc4a7e6e69dae82080cb6401ce583ecdb - Merge branch 'master' of https://github.com/suprcode/mir2 into creature_updates
+6013c001e7fbc04748822b9e336c126007241f80 - added GMCommand @GIVEPEARLS
+cc86237caf743964cb4eec7652ff6e1cc9927fa7 - master pull
+38dbb3c4e22ff0e0d19d7e3d36aae4a23d240705 - Merge branch 'master' of https://github.com/suprcode/mir2 into creature_updates
+0931fb1c1a6592eb5844d9dbcbd38a9dce3765b6 - added basic CreatureSay.
+bdc6be83192560998a48bab9b189b79f78d54dc3 - changed quest kill tasks so it doesn't need exact mob
+1744d5ba107de67ee7ef6af4273f10bcb3829b64 - Merge branch 'master' of https://github.com/suprcode/mir2
+c94f182773cf04071bb92d57f7f4c3f596010c47 - fixed several npc bugs
+2995c9f2f90a7b5a8e2c866dd045eb312adf6855 - Merge branch 'master' of https://github.com/suprcode/mir2
+76ef99bdf0dd08ed40e72a6d05404296dae2c093 - REMOVEBUFF #ACT Command
+8094eda57bffc05be8a17d8858b34973c2a9d9d2 - moonlight/darkbody modified to be extra sneaky
+ede674f643fc2b43f87452222067ed7b845780e1 - Merge branch 'master' of https://github.com/suprcode/mir2
+a862be7af4c0cae90a7f14995459a7115b68e31c - updated sneakyness
+30a7275929b0ec3dd46d6996ccc4192c6677cf36 - No cooldown if spell doesn't cast
+5b504eba1ebc5401d04f32fbbbee6a85b147c4d6 - active gm abilities added to buff hover
+27ba1a74824b84af704abc87f8114c083787b09e - another heal check to ensure it doesn't insta heal
+201f9e13735f732daffc25fbbc16ebabfe83a3d9 - Merge branch 'master' of https://github.com/suprcode/mir2
+478e9c4103744f44ec654cf2d4119300c4a215f1 - fixed instant heal bug
+96a415e770e733496c6ad5f4dfa6b562f1eb3c72 - Merge branch 'master' of https://github.com/suprcode/mir2
+b78bb96393d1e6a28dcebac09ad887d6b8927af4 - added property to align windows in center of screen easier (regardless of resolution)
+193b4659ecb52ebfa8fe684d781bccfe0bb48b5a - added server side archer attack speed check
+01ecec7a8bd926adb7f92680b14df36b1f85a969 - Merge pull request #18 from RyanTaplin1705/patch-3
+b318e282319d76b3c84a2a1a28cfa25a08913d6b - Merge pull request #19 from RyanTaplin1705/patch-4
+fda61360d13cd4205e6fef94a29a2789aad9e046 - added null check for damage dealing in poison
+6803aacc56af6dba4dc6ef87f4b05de65119f020 - cleared out guild lists on load to stop duplication
+5b7da0411c587843792a59b129dffd6e5ec390a1 - removed skipping mail id's
+76b9937ba80870622538f07aa89ba3dc7ce671aa - Merge pull request #12 from RyanTaplin1705/patch-2
+2038384fa65ba09f0823abd12bdc4652f6a14648 - Merge pull request #11 from RyanTaplin1705/patch-1
+7a12261ea16aa59ebaed67b15c86c39ea1000441 - fixed shift and belt slot bug
+41cf640032f07d145f7da092aff898b9d96de3d2 - fixed npc name dialog showing last on default npcs'
+2465b79fd27a196da8be6d00c3f5093aff9c2716 - Merge pull request #10 from Suprcode/monster_updates
+f088a28745da5da51d48f37a992efe374f0ac88d - Merge pull request #9 from Suprcode/monster_updates
+24fec223346cf2fc83c1486d85939227ccc40c44 - file movement
+d0008181f6fd6e0e6486cfe92796832116a4d288 - added missing files (depreciated npc files)
+3cc6d623405f62b4d1c8a4723611ca0d146331de - Merge pull request #7 from Suprcode/npc_restructure
+d8e5bcbe9d6265ccbc805699a2187fbb206b73ed - fix townrevive bug
+32d232bdddf4ddbdaf7993096420a663df4054ee - fixed pk spawn location bug (again)
+0229d20c3c8ad9d96fee7f9bf4ce364aead20f18 - fixed pk spawn location bug
+d449c818d54d574ff14e395f6a4b0cb6a264d6cc - added all mobs and basic frames (no ai) up to 199
+e758831455140630df382ca9b87fc371b5ae60ec - Merge branch 'master' of https://github.com/suprcode/mir2 into npc_restructure
+24b38e7a1676906f2bf598520dc8b71be2b1d07f - added blank friend buttons
+609b09b977948bb8419dfa8b33d8e6620569856d - Merge branch 'master' of https://github.com/suprcode/mir2 into npc_restructure
+e166ada7d1001262a27d24c25f28c8aaf106d1fd - pk town revive change
+6548e8626dc48658e87f4851ec8e4f9ec134bd19 - Merge branch 'master' of https://github.com/suprcode/mir2 into npc_restructure
+9025fd0b4854b340eebf9a59c6c6bbffe98367ad - inventory fix again
+a63dc3b10acb30c4ea1590f94c5aba8d22344be2 - Merge branch 'master' of https://github.com/suprcode/mir2 into npc_restructure
+8abcf440af6b7a210ca58f9e5323d4d195e101d3 - restructured npc (very much in dev and broken)
+5c6c99fda4f8eb8e69e5bb0e5bf04c00cfa56728 - added monsters 200-249 (basic frames and images, no AI)
+47eebf96ac3e6d4ab0a6595b3092725e5f35a222 - new mob names
+b086e4e7f7f7ddddaf8e1a4c3c0ae399ec6a4e06 - Merge branch 'master' of https://github.com/suprcode/mir2 into monster_updates
+291046b6dca2b85b0f738fc5972312042fd5a4c1 - updated monster frames and names
+e1f9cd36b7034e9b1b9a643a439d411735282ba7 - Remove curse when purified
+698cc9e2bb82da7845001ef282c660bd0f28a39b - Attack range increase from 1 to 5
+93505e853b7a9d85646735ce8c49baa91f33ecf0 - Fixes Green Poison & DelayedExplosion
+b6ef790440cf6492581f42fc9c1a8752278002a4 - Added output value to HP Drain stat
+8d516d53ebcc24947be795a2c61fa0b7690e0221 - Clone MoveTo master before attacking
+6d2c7fadcdca1df7aea1d874d84658a93f6a99ca - Merge pull request #22 from RyanTaplin1705/patch-6
+a8b3025a1a2a279f4d3a7e9506ad9826f451fa22 - Fix purification crash
+37d040c17448045a17f05db2f873af9c1918d837 - Merge pull request #26 from Suprcode/trial_features
+c63801167b531dbdd0a8e5121dbe4e2440b87db8 - Merge pull request #25 from Suprcode/trial_features
+44a775dbe5cad25c58b535033f191169a006d455 - removed old spell delay code
+50374fb23defd57024ccc2415ba4b98b89675581 - Fixed evil mir causing errors
+bc4644046f0a26d88399f34d37e6575b9610b9f4 - Added ability to gain ores as quest Item
+a50cf883f0035ee23d51c3d91617d20536df306a - fixed maxbagweight buff bug
+ecf05cad6fd779fd05034d33602223d779a746b1 - added proto cooldown animations in magic window
+eb0e136177bff38c1ba93ec33a1420309d6c18f4 - started log system
+2006cbbb5be57120572fe8d21cf09f8a13d7e9c1 - added new spell delay system (in dev, mostly untested)
+339171dbacac02eced2364b751436ae7b16d5683 - fixed warrior casting bug
+3e7b76dd4c26e7afd5cdbd3477a5242431e539ce - Merge pull request #28 from msh0411/master
+6b3b17ca6e5424ccf44466e0d5c8526762fff75f - Fix NewbieGuild
+89673bfde46fa1109c5669808e25930e2f5c53e6 - * Add Newbie Guild System
+6dabfd786d8aacc091b8b1b5f34fce4510348f77 - * Fix NPC Frames
+14c38b97ad79f632c97b5da117a1aeb4d621b4ff - fixed not displaying name or player on minimap
+2e2f8dd4cc72fd8cc5e9892d9d24d4ba8e2c8dea - fix for gold under 2k drop
+53251c7adfc0cc4e6d6e9dc74d6bbe8271bfc7a1 - added fishing to all mir2 map types
+59092e0d886f0c588ab228f7e88619acba70f61c - Merge branch 'master' of https://github.com/suprcode/mir2
+bf907bed94d5fbf8f272cfe7921284eab60f3787 - fixed wings and hair on inspect dialog
+a0331140b5a7c795b0387bfc2aa993db006e1f9a - Merge pull request #30 from RyanTaplin1705/patch-7
+4c23fd2344f5c0646102183eda6f8556e10b6dd1 - HealthAid & ManaAid fixes
+931d30ced2c6b7f5e98fd3e1df45dbf38d868712 - ManaAid & HealthAid fixes
+0bd6173bf8650ee84fe25d41e817b3e6b220f814 - fixed curse broadcast error
+f0bf0d17717a98ce329f1e40db63546c433c002f - Merge branch 'master' of https://github.com/suprcode/mir2
+7dccff03ad0a5626ca0d3141e7f2bc8108785d58 - Added pet time out and pet save options
+f8d5f74b2e2554f3d34948f09eb84ebf2b5e1f7b - fixed item split bug
+3a06902527e97ef8153eb369ba674f2e91901fd5 - general fixes
+ad1683a7b2e291ecf12a871990937a0caea6c2b0 - Merge branch 'master' of https://github.com/suprcode/mir2
+ee70aafc1fa89260b1bb15b3d956f3c97fccd240 - fixed damage at max bug
+86e3c9157c1b77320ff41c8aee4293af5a49ca35 - fixed buff crash bug
+288c4aca453bc3f5cf019fc8acb0aab03ae8bcbb - send pet hp to group
+f4a8f9f4c9865cfcc41aa7d5b6e65a90aae526a5 - Merge branch 'master' of https://github.com/suprcode/mir2
+b6666aa9f2f6b740d308c4a9aa41db2508410131 - maybe fixed mount null issue
+f7fad2b9eaa4111e91a2644d4c1a5bfdbb2033f8 - added new library editor
+93097e3efcc1cbab316e77feb39f759a76d24d81 - Create MutatedManworm.cs
+0b6da7b813a3ba751fa04e7e857a88ad7798e77e - Create DarkDevourer.cs
+adf9e7aef53b4a776796b3adc422c77b550f598c - Create CrazyManworm.cs
+09ce8f21df902f1edfebcb917431a9555f2b5b6f - Added new mob AI (not tested)
+b83f19e92ddc07c6ab42d3a08127c83b36d7bf3a - removed unneeded comments
+fec72d60adfe4c0f84ab02fe6dc1335d6fdd6808 - Update PlayerObject.cs
+ad9e0b35bd43eaacc66bd74dd1d85e8133c705b0 - Merge pull request #35 from RyanTaplin1705/patch-8
+88b25f99eda0e4fd927044c04ae1ac3973e3aae0 - Client side bag weight fixes
+a2564aead9b1f95f7c136001521afda7eb0742e4 - Server side bag weight fixes
+45f755d96204219150f67640fbfc4b031d78b863 - Merge pull request #39 from RyanTaplin1705/patch-9
+5c8aa7fcb643fe1a6e69a9b444290b0fc0b7a148 - Murder broadcasting item refresh 
+9e769e12c556348a41615ab7b8ffc14600090da0 - fixed credentials bug in autopatcher
+3ba412bea8e66767ec457c920c80f4927e2ab328 - Merge pull request #46 from UrbanCabbage/master
+a3d45361347c2a0f5888af77806c5d77539fd3d0 - Merge pull request #44 from UrbanCabbage/master
+b8d07d82fc08e5530f451326a7a129258c16f7be - fixed mob spawn export bug
+44e53bcd22e8cc37f6bf5e68f48b30fb13aedb98 - fixed group overflow exp issue
+30fbf2eefb9ad5ceb3429cdb23c31369b23c3376 - EnergyShield spell added
+554711d43a559776edadcf9305d649356c069259 - cancel moonlight and darkbody if you do a spell
+87391e843ac88d4f1e2e5dc9fb2fc2aa64ab114f - fixed transparency on behind effects bug
+f02da846a5995ef009d3e2ba767f3ae16b7fe85f - fixed wonderdrug hover description bug
+8f8fe4cab56445d0d4a0523a5b5b8558f7cc0b0f - monsters no longer drop items if there is no exp owner - should stop guards causing mass drops
+f5622bd2fe2afb8aecce071a606b86359946e544 - can no longer walk between blizzard/meteor casts
+f3af5ca5b60212bcbd4c7f25715d51a407372781 - removed all slow poison effects temporarily with the aim to recode better shortly
+2e4c81b133cd03f3e5e1def27d3337dc7ed3bd6f - routepath no longer empties when using the visualizer
+7a402c4f1b892bf3bef200fa3f0f511d6733a591 - fall back when teleport on top of another object
+5f784f748c1aa609d0ce4e2e2e8ae853d6eb4af1 - ultimate enhancer now gives different stat depending on class
+3a5262b212e9f460fb7acedd57fc58e60f253b8f - added values to gem defence stats
+5c63dcbc0a2f69031773f7b1d5c553a7eb910f41 - added no button to trade dialog buy window
+630ffbe7df07703d44e781bc079aff43ec2a9615 - fixed set bug. they can now stack and shouldn't give stats when they're not meant to
+db5013e483b7759d9772613a18dc3cdc1d6ba126 - added stats show on more types
+5b9585584719e80fd1a9f6faf809b2b3f66403d9 - reset log and brown time on death
+43dc4f7083465b39c8e05e4ca57743c87a5b6c69 - plague recalculated
+5382901a25a5465825ea89dc9b41c28acd33d994 - fix reflect bug
+6e1e3d62e06a8c0a6a7169201403296494489a56 - stop para/poison from working on spells
+6a9698333c02fc07c946829b9a68ccd29edb0575 - stop para/poison from working on spells
+0fc0a5a4ddda5b9f706238066aed12f7c83ab94a - fix MAC typo
+cd1f915aea9ae5a4527b2d923e4c830369d52e2e - refresh stats after clearbag
+8cd2303c11686b6702f607c981353286d6af330a - upped db version
+7e391359ef6251c86858797ac99723de62e16f16 - stopped poisons saving on logout again - caused issues for logged in players in a group
+9bf59255bb4b4e566b8f5349b3def4c4e190fa76 - maybe fix for poison crash
+558146b83047979f51f38e4485bc78bf664f8ea7 - Merge branch 'master' of https://github.com/suprcode/mir2
+88f110aea3ffd9474cd8a01080f6020937a238c1 - no dungeon escape bug fix
+5d8a79470dbc89c1083ae0d2367e5645584ef28e - Update README.md
+be69a9ba02cc2c54df832fe49e2c70e0332fc17d - Update README.md
+7f4995f767fb4a029d3c33f63e55f0c03d4444e2 - Update README.md
+2d37636a825f3b7f49f34314b999d34c653ef214 - fixed weapon refresh bug
+9a25d9fee533a5f403b7b7085f4379ab83753836 - Flags added for NoSpecialRepair, BindOnEquip and BreakOnDeath
+4e1092735b947562b2a3256c99216bc1581db83e - Removed a couple things i left over from previous Commit.
+050f7825a8644ef18b812f4f58961cff7016fe25 - added transform time to label
+c1f20448c77493b9154eac5f7bc6338acc2e4432 - Merge pull request #49 from Suprcode/new_systems
+38631b6e480058ef32490a29c7e1e25ff12dba90 - changed mob power down time
+84a2034901ce7ef2d98c0dc9f0a74e6fc3fd13bf - tidy ups
+28eefb85e6c8a0f84af17e6ba4d0f717ebadab45 - updated portal spell so it's delayed and timed
+2cd3e18274c9a8f3268fa664f322a3349f846b37 - added @toggletransform command
+d6c5b7640d99082dc8d5037f94d5b0a47f2d7ac0 - Merge branch 'master' of https://github.com/suprcode/mir2 into new_systems
+0816e2346791556879ec464866eee0b70df1eb3e - changed transform to consumable type (instead of wearable)
+504f0d5979c21cd74e36774627243033e49af897 - added experimental portal spell
+5f075abd541e3b0f15e63e75ba6847a6667b17fd - added ability to use SAY variables inside #ACT and #IF statements
+591e5623a80a8a8e5c8120477f23bc334bae2ec1 - Merge branch 'master' of https://github.com/suprcode/mir2 into new_systems
+fd15a9f55eb8f2e92ab7adad0f6d86f7bc09ac59 - Merge pull request #45 from msh0411/new_systems
+e897b1618f9a44dd348d385dc275811500dcd2af - added basic map inactivity system
+7943bff448aa833e270d11ca650047c293e64ffe - pet enhancer skill added - rough values
+b38b1a41a7d64003d9f1b28e35c39f1898af8ea6 - added transform effect and weapon libs - not finished
+7fb5b0ede73bdfe0ac49096211154c4cf33af54f - added energyshield sounds
+3479dc5608a704abe3b86c61d0dc90ca1678089e - added icethrust
+f9bcf71ebb4adcdcf38e55f262b459fe996001e8 - reset logtime if kicked from server
+f349cadb928833ed1d88733ad626b21f876cd0e3 - changed deva to retreat back to its master after each attempt to attack (defensive rather than following a monster and staying with it)
+959f3dc1ac6594c775cf3e4120f5be370b2e58d5 - reset cast times on logout
+bc398a26b1cdd54dd931e86b34bfb801bf002b43 - added new buff mechanic to allow multiple values
+6861f7dee0c1bc6df50a22c4cd383003258a7514 - * When the player appears on the map, to modify the monster does not attack the problem directly.
+ed9e053abc5ef147cfff1d2ceea69a4b9a568bff - i've edited a small bit of code in monsterobject.cs that speeds up the server ALOT
+894863ad0c29c6375b2221481e9925c01ef67deb - moved threading to server config
+93443e691a77732920e7a88590d8af1fa2e86323 - - server now suspends threads upon closing (if you closed the exe while threads where waiting to do something, they'd remain open in background (and do nothing lol)
+4397d30697282d2f4f9835845960fc373c8dde4e - Merge branch 'td_experimental' of https://github.com/Suprcode/mir2 into td_experimental
+ffd73333422a2f9c2f397d17cda3034e3a310105 - lol accidentaly stopped main thread from doing any processing, fixed
+4418b4e82be9918cca56f0ee5ba63abd659952ef - thread code v1 i guess :p
+ce8a4461fba10f3080d4fbe728ab26c4508c0062 - Merge branch 'master' of https://github.com/Suprcode/mir2 into td_experimental
+b9a6db67c7e5b276525398f748e5e77e49213ca8 - Merge branch 'master' of https://github.com/Suprcode/mir2 into td_experimental
+45fb0956cbc2301c72d89bd2f82f6d80fc140b61 - lol accidentaly stopped main thread from doing any processing, fixed
+eec6b0f023ce919298168d335d104553f10bd19c - Merge branch 'td_experimental' of https://github.com/suprcode/mir2 into td_experimental
+a77e57cf967e05828405e9fb2429c8920ac18733 - extra fix due to updating to master branch (multithreaded setting is in settings now :p)
+549954c86bda25c13770534667a6ff95d43fe2e7 - Merge branch 'td_experimental' of https://github.com/Suprcode/mir2 into td_experimental
+702e4b2fc46e93b601b54820ef4df478d8bfce47 - small changes to multithread code.
+cdca234f11bc8729f7043daba2b832fcd2974771 - weapon dc doesn't count towards upgrade
+dd0fd6519d9a53c4b5c1e173bff623e56f5eb029 - variable name update
+df9865adaaffe782ad929cafa4b49a11667ac5d9 - Merge branch 'master' of https://github.com/Suprcode/mir2 into refine_system
+dd85196ff2d982272e829debc43914195a14766d - Refining Added
+659590afee2a24aafa9ef73f6b81a5ad86bd576d - Blah
+1ff5fd5ed2b92681b1a217bb1dcffebeb848be2c - Made changes to refine formula to fix durability not being /1000 and rounded.
+a27ab2089ab916ba380bed44eb9e47fd7514147f - Merge branch 'master' of https://github.com/Suprcode/mir2 into td_experimental
+8640bcde2159abb65a3b87246420b2e399b6f0e8 - BACKUP FIRST! (new database version)
+110a38e3e75bf9b0c23b0fdc12de77964d055e26 - Merge branch 'master' of https://github.com/Suprcode/mir2 into td_experimental
+c07e952fde632c7050485a26efcfd213e72d3b9c - DO NOT USE THIS CODE YET!
+552d84056d6ac1d830b875ac4ce4d68265935aab - lol c# being annoying (ye i tried to add a magic form)
+54f78fe380cbd9b7b910400995ee1676ae0281b2 - this adds the dbversion and customversion to all goods/guild files
+55ac7b7f0fb0395b136645536a3b99e48990cc60 - save friends to db
+40679a5801992258cbebbabb7c8e945aa147c691 - changed friends to lazy loading
+09784327aa11913af30583547b85aeb91da9f7ce - added string splitter temp method for memo
+5e35e0f7e42c0089be9859622a998bb63fe5bc95 - Merge branch 'master' of https://github.com/suprcode/mir2 into friend_system
+72f631e7891738cb3afcd2af4bdd0ac54fa92862 - start of memo hover (needs doing better)
+8eff19128dae7dca96909091e196c81a187c8d2f - Merge branch 'master' of https://github.com/suprcode/mir2 into friend_system
+cb216469bf578775a94840996b529694e8b63a0f - friend page buttons
+7ba4959206b805179ae82a1c8db5259d496240b9 - friend labels
+cb681e1b94f796124fe956ca79a3d39f3dffa12a - Merge branch 'master' of https://github.com/suprcode/mir2 into friend_system
+adcf9c92a76d653c62fae19d908044141580d773 - Merge branch 'master' of https://github.com/suprcode/mir2 into friend_system
+b0ac34ca4728c82f31bb6daedfd45c3dd8479306 - Merge branch 'friend_system' of https://github.com/suprcode/mir2 into friend_system
+47aaf722ea21de19db0e05ac4861fb60361329e8 - removed old code
+3e681418545548feed3d7437817382575958cfea - Updated friend system features
+a222baa8594576a70b3ab45860ca8e1545c238b1 - saving friends (commented out for now)
+492c8088eadc290c37e539e42753fb99c6566bf9 - more friend features
+384848329cac8521c8f2cad48f5851c58892eb64 - Merge branch 'master' of https://github.com/suprcode/mir2 into friend_system
+e5c885e716b77c0c16514de4466d5f29a2e2833a - removed the fake playercount value and sending real value now
+7a49eb934b27f6279657b5016fcaea2a4091cb9c - Merge branch 'master' of https://github.com/Suprcode/mir2 into td_experimental
+ca0316b91432f7d14a7930695920e47cddf491d3 - adding mirstatusconnection file
+d2ec25f0764cfe849af27435cffcc3a34e6c73ac - Merge branch 'master' of https://github.com/suprcode/mir2
+47711ddd5294ba41c697fa8ad9a380d960a87bc5 - updated version info
+5f8de546ed0b1694fb990d274067e1f2a85f870e - Merge pull request #66 from ElijahLOMCN/master
+84ddaa1275df96620875db6e18ff21b92d30c008 - Merge pull request #65 from ElijahLOMCN/master
+6af73d187cf5e7f7b4f0d6c208ab72668c025ecf - Merge pull request #64 from ElijahLOMCN/Marriage
+87733db94f0761dad154f22dc4df5620978262e5 - Merge pull request #63 from ElijahLOMCN/Marriage
+1985a2815277865e208c40f032ca59afc5ba68ce - Mentor and Marriage finished.
+c5708877f68ccfbe22677e8c73dbccbf551e59dc - Mostly added Mentor.
+7da9c6b40ffbef2fa079cd8555bfd4a289c3723a - Continued adding Mentor, UI is working and buttons have been added, remove Mentor still needs work and some config still needs doing. No bonuses to Mentorship have been added yet.
+791fb0120426f69df7d95856d7a90d8376bda05a - Marriage System completed.
+6a36063a3ca487291ced8268f6bc9877b37d583f - Mostly complete, couple UI changes required and implement gold costs on the Wedding Ring replacement.
+12dc5a6255bfe961a32cfa5cef0a5a57470c8b9d - Rings now don't lose dura.
+f88c4d24830d9d1432d7337a1dfb458dac193302 - UI now in game, buttons not coded - waiting to find out what they all do.
+62de28a5f39f3afd72ea21c52e0dedd313810d36 - Partially added Marriage System, still need UI working.
+da1adad74c8acaa5982609ec9f9ce49fdfc5d8ca - Added some button hints + added config for Exp bank.
+118340a6e1ea734102de0c1760ed101fd9c4ad79 - Fixed another bug with Mentor.
+8bbd7a99a67427ab689bae523ba41270c1590822 - Fixed a bug with cancelling Mentorship.
+6a9ccb867dba50e81cb868b4d37612ad5ba618bb - I'm an idiot.
+a4bc683fd46f84b1037464b4159972687186ce7a - Merge branch 'master' of https://github.com/suprcode/mir2 into far_experimental
+aa23d69799a069110d8c22caf178238e9d2b5bcd - Merge branch 'far_experimental' of https://github.com/suprcode/mir2 into far_experimental
+66d93325b0668557c1c5a5379fcd5c9e90767290 - Merge branch 'master' of https://github.com/suprcode/mir2 into far_experimental
+a41e4c20f48e0b9ae2ee54d5ab2f2ecd80f736ec - Merge branch 'master' of https://github.com/suprcode/mir2 into far_experimental
+d74f1f26675013e4c0baa820e8a3448690a99f30 - Merge branch 'master' of https://github.com/suprcode/mir2 into far_experimental
+2b3d528a085777b0ffba8fa8371f1498db83effd - cleanup
+1ee059bb9af9b3f706f97134e86273e927dfcdc1 - Merge branch 'master' of https://github.com/suprcode/mir2 into far_experimental
+c28949ec2c2bec886d7fc70ae24cab1b67500c0f - football ai continued
+e4b78932908c5a18e9cdcd33b9cf3ee8bb307858 - added more frame comments
+d19c1c1664fe6bb74330972b4176e8f5a1c6b324 - mob frame tidying
+1a936982b57e964675729cbd816cf98801fb339b - monster tidying - ready to start testing
+9fee3f2bf7a8f999962d2de37cb17ed09add032e - notes
+0701c7e1a2bbf376a82f4ac651208e8533b3bd29 - new mob frames added
+e7dbe0f3bd12f8844d838ba907592ceba3235eaf - Merge branch 'master' of https://github.com/suprcode/mir2 into far_experimental
+1fd9dc56825d47789ac1a51e5ed085efa49fcc1a - added missing progress counter
+ec218a4236cfffeb8c2a4dd4caadf0e56d40d0ff - Merge branch 'master' of https://github.com/suprcode/mir2 into far_experimental
+9cd3002afed93177bed58d8d48fd2e862cc15b5b - Merge branch 'master' of https://github.com/Suprcode/mir2 into td_experimental
+613664df66e880d9c0892a5658386d086c644414 - - moved the envir.start to smain loading at advice of jamie (supposed to help with servers having connection issues @ startup
+2b7c5de28b2a56d473ab2b816531e2bbbb5c1470 - Re-added Football
+1d318229787e3a3542a1bf31de7c7b16a90e4acc - Any resolution can now be used, configurable from Server.
+3ca1076837185d53f0ded711a02a840c0e6c3627 - Merge branch 'master' of https://github.com/suprcode/mir2 into far_experimental
+caa5646f4c45424cc98295f1d81572e6a158bf9a - moved "blink" skill to custom id - 151
+ff202b4f5d9b20aadd23358dce8a1cbb9cae5d82 - Merge branch 'master' of https://github.com/suprcode/mir2 into far_experimental
+adeace642c21cb30c3e429d52e241330d1a02e7a - chattype cleanup
+b263178594cf88b502709a22092c9be0c1c1de5b - drop builder updates
+229c1d2574c88db1f261f3da646f12aaa1d45e63 - added globalmessage command
+f95aa4e4266dcf637eb18749f768b9001e63c24c - Small change to autopatcher
+098744aafb077db8cc986a75ee5da604671de93b - Fixed AutoPatcher
+a2cfd455455fc6a990fd89a74fa265a7dbca57b7 - Merge branch 'master' of https://github.com/suprcode/mir2 into far_experimental
+be8d0194d931c60cdb9f7b3d2e269b8e9138e374 - fixed guild buff bug
+81b4a6f76a437342d28ce39d48d717862ce30b56 - changed guild exp bar to grey
+bc863053f24a14b4f3ec719a3646321aa9a0289b - fixed guild buff icon bug
+a5c8bff63a4dbe214732ced2f3cd924ca3034c48 - Merge branch 'master' of https://github.com/suprcode/mir2 into launcher
+0e80bc82c042ae3b1fb033a0824ee8ab646778c8 - clean up fixes
+86a0684a9fd7f366c235315782a98632ba3c1f8d - fixed small issues
+c622f58c92b3c3db002d7b16ad09b9de725b9b1b - commited missing files
+ddd2e07be90ac9ee3f585207e83551b2ac957641 - commited back original autopatcher
+942015c4911522ea7eca063170bfc5bc53670ca7 - added server/db version labels to server
+9f7947304f20f181efeea23dd3caff2f13c78b02 - launcher fixes
+aa48106522ba8e6b860638d0c4094c364ab4b189 - Merge pull request #78 from ElijahLOMCN/AutoPatcher
+19febd727b44a63fb10c8c69f1eefb2a25b7b900 - Finishing touches to design
+e4fa11fdc929582daae51666dbe290f638d09499 - Merged in Launcher
+8c7279c22f995561a330ac25dd6147f4bd81a764 - Deleted Autopatcher
+8b9bb412a2362c2f2a9fbc23cbb41937cd0a5acc - Merged Launcher into Client
+48362a521032726568cc468125d1fbabb11b4a42 - Deleted files
+d1c36c3debd69640d704d01efcfea4cb262fefce - Level,DC,MC,SC,AC,MAC,HANDWEIGHT,ITEMWEIGHT
+098e04ec2c797e863e199afbe10fae1c00f9221f - fix small level bug
+151a764c365f9027bd6da4af2bea9c3644ca00b1 - remove IsGM when max level
+6440a5f6036fcabfc5cfc53a051444c5046b7eb4 - Merge branch 'master' of https://github.com/suprcode/mir2 into test_server
+c70afc0829b48902f8fa9988736df33a87acc4bf - added $MAP npc display command
+63e2727c6b1766dfb3dec378b28a9f6f8424c0a9 - started test server config
+6941215500f42016b854170ffe7080aef571a509 - Merge branch 'master' of https://github.com/Suprcode/mir2
+a3938032082bbc6fde159924f459c1ae808b734d - gamescene button/ui changes
+6ef6a0aa6626b92c96b5104c5a981c3c7c2498d2 - Changed 1280x960 to 1366x768
+231a4d819964ea0737905c10aa80420c9e19cead - Merge pull request #1 from Suprcode/master
+271d2332911b113b5ef3903c95d0e220abe15c22 - add Y check to deadbody draw
+b45704062a2bbfc11e3f2e668b41e7df5b0857ed - removed test arguments
+8c480dd7eba106cdc3bffa56adf79f9c582f7d1d - Merge pull request #97 from Suprcode/test_server
+e2d3b994ef43fc8f02f9ecf9cd31b05fd83ff495 - upped version to 1.0.6.0
+6c223cdb789183352bf27b8aa3e44a88bfedf125 - fixed client lock up issue
+2b346fd470de0238d6e8e53884796d27af5ade8a - added ability to change effect light distances and colours
+3eaed743336ab7fc90665dfcae782ed6d30d7472 - Merge branch 'test_server' of https://github.com/suprcode/mir2 into test_server
+91ba540042269f53550669c8b0adcbc2fbf1216d - added base comments for expiry info
+ac0d624278a05ecb9b45ce85b2b71acef2d94121 - added basic damage indicator
+546a1141a2f9e0f84dc269f81c449bfb8b470ac2 - added credit npc display command
+acc54096918adf2be102b98c16a4ad9fb0af1332 - Merge branch 'test_server' of https://github.com/suprcode/mir2 into test_server
+8e9c0afba166bf246d71a4159b3e41377bb81496 - Merge branch 'test_server' of https://github.com/suprcode/mir2 into test_server
+9f4b3ba8fbe5e4ff74391ac8da00e5a26e647583 - gameshop
+37c14f6df5383d68cf7627cf32091fbbbf948592 - Merge pull request #91 from ElijahLOMCN/Gameshop
+427398d6db50f27c79dcf01e8930c091218f64fa - Merge pull request #90 from ElijahLOMCN/Gameshop
+0e51eadf63608cf835c20d55f068231463e713d6 - fixed yimoogi bug
+c2bfceed15c0add2b19e42779c62ac3b2e00d031 - added reducepkpoint npccommand
+7f5f45ff47cbdb61b6ccd0ed6d75e1887ca54d1b - moved inventory to better place when npc dialog opens
+6a11630530ad830d7e7df667cba3fb93153318ab - Merge branch 'test_server' of https://github.com/suprcode/mir2 into test_server
+f61bf2bf5d250367500f92815ef0d648d2e98664 - changed screenshot label
+552207885db5a48d8d9e90ef18f367bffefcbb7d - added more connection messages
+0a693926f02bfcc5e09c913ca0e84b3c488a956d - added automatic reboot after managed crash - test server mode only
+3636217b0c13780846b2aa2dc1c9bce468e1c936 - fixed mail message newline bug
+8a16e0aa16b5844498a6e75622a7078be6c17c5a - fixed inputbox position
+50b0b662d5aba22886cc909c175e72fc0f15ab2f - moved inputstr location
+1bae9d379409dd01a3f046c1a09b6500a98baf06 - added packets and client side NPC input code
+5f3cbeb0b7d66e4579cada93e8d1d8770bc7d8c9 - added basic npc password code - no client side code yet
+1b0cc3dd53741ec248c618fac46d22cffccf2ada - Merge branch 'test_server' of https://github.com/suprcode/mir2 into test_server
+8c97cfcbc668a8c057d717f9153354d4dd8e47b3 - cleanup method for deleted characters
+a70a470f32becb0f48f1eb9e0b82c76bb154fcdd - Merge branch 'test_server' of https://github.com/suprcode/mir2 into test_server
+8b136afadd99fc57a59b81a89fb4e74a2e88ac49 - added new in test AI - runaway mob
+18af3457ecd6df53b3d5ef75e34617df13178ec1 - Merge pull request #88 from ElijahLOMCN/Logging
+fafee8746202c095dd8cd9a1ae28202bdc2db86d - Mentor Bug
+c53c0ae3f6f2ae425e1e1bd556a0bc76cc324c01 - Fixed a couple bugs and changed some things
+e6a019c95f90f3bdf64e4b353652a76b2f765037 - Fix animation count.
+0e862201a6980e4fd3b88deb76e2b8f8eb45d3e6 - Break Lover and Mentor on Delete Character
+08e7409bd327613c692fe8076352c63b405680c5 - Merge branch 'master' of https://github.com/Suprcode/mir2 into Experiment
+1ccfeb3555ee34c4cc46d45cf42e92d98dab1144 - -
+c79e4aeacb96bdc0c7a065f72acacc3ad8f4e417 - Merge branch 'master' of https://github.com/ElijahLOMCN/mir2 into Experiment
+aea72f9b38f0e673d9e8cfd236dcab7c930ffcfa - Build Locations
+5fe961d440392a63b4b09d366fda0a54735b0a2c - Merge pull request #1 from Suprcode/master
+14b38595f6ec0fb935c88f6e810978c4c03dae64 - fixed map import/export bug
+c861e32228dd69dba8dbb33b118a112ced50a7a5 - fixed inteli pet bug when player dies
+034315c61d83c709c103cda9071ebe3223c79eec - Added Viewer
+d49adf8130c6a573471b836b1402ca729e76e85e - Merge branch 'test_server' of https://github.com/Suprcode/mir2 into Gameshop
+6df1e4def27e7cce28f31c9957b7eba15985491d - Added GameShop.
+a7f7e1c3bb4f6cf397809a4505adc34d1140b2e4 - Added server side to Gameshop, NO UI working for client yet.
+4e2bfa4ba3a321e949e941eb9b4b5ffb70429ecb - Added Gameshop Form
+01a6bf04870e62b7adbab161645d621b1cc8786f - Merge pull request #92 from ElijahLOMCN/Gameshop
+3e74ccfb9d0750c35792f45b6b38b1a0d28bc907 - Gameshop Complete
+b8cb08c964a48444dd62571857532463c603e4f2 - Merge pull request #94 from ElijahLOMCN/Gameshop
+e462a267c55a721ba82ea492fb8e04b933c48820 - Fixed page bug.
+b8cce11e0642f322dfc1b1c21dc314a1db16d3d5 - Fix Fars Mistake.
+a35714123ee16d7d94ccc64cce0cf7bbb8373d16 - Merge pull request #96 from ElijahLOMCN/Gameshop
+9b6c0c75ff81e0bdac05628ea756c62952eb7c2e - Removed app.config
+ab5c5077ef4616586a161f3e72a83f964d8e64dd - Fixed a placement issue
+017706613374d85f7f63718d42c50ad212abdc21 - Made some edits to Gameshop Server Side
+8d57b30c2ed303fd66b7282e9c81904d2da9efd7 - Merge pull request #117 from ElijahLOMCN/GuildPage
+0b44de2e00cb8cde01be401014d2ab389914ba9f - Merge pull request #116 from Suprcode/test_server
+85ddf0d24490c5e5aa76f6e53171261f5c3f30dc - Merge pull request #111 from Duane01/master
+4d2da766bd656b3ac0df2060497d3a7661ce8a12 - Merge pull request #102 from Duane01/patch-1
+3bb6e57ee3f54fb01a16aec40bbeb774c2c87b9a - Update PlayerObject.cs
+d198f03ead0e8cde66d670609f801c50874108b3 - Update PlayerObject.cs
+1bd18a406424c2ffdc677ba6a12cad2628687923 - Update Common.cs
+8016bfada766050d6626c387d35a8983bbf68e29 - Gem Independence
+330ceb9bbcf30ddbfa0345e180ff03091fbea71e - fixed lib add image bug
+f36a8bf309c443dd4df4cb72d71acebf29542c4b - updated buff icons
+01c32abe7d4e395c9f62c6f0ade0b92b979b3da3 - temporarily broken all buff images - fix soon
+d7171d38cab7ff49a140e1c006065b067fe41179 - renamed buff types to be more readable
+2916c4115eaa25187a0deec867ca0f83c9f53db9 - added test lib load code
+d70d398d714e76b7c834100f63b1acd6a16919de - fixed output path
+89c3a222b9282d811a91611863a84d7d8fe9d08b - Merge pull request #114 from ElijahLOMCN/GuildPage
+4aa29acf9cc3253d63726349f264d06f0d5193ab - added missing backup npc object
+b98197e06f616dad076a3bbc4ec8151d5e05729b - fixed default scripts
+839e39d774bfd8d51b7b880aca9976f8dadc3de6 - added missing library Initializes
+2cd549cf157a298257db1e8f9a35f5ce7581b46f - Merge branch 'test_server' of https://github.com/suprcode/mir2 into test_server
+0f693747db476a01729c95ba87d5c47e66e8db8e - added npc segments
+3f9790a80b2292ef2e0bbdb527f46e92c45e3dbf - fixed namelist bug
+f1c8d123e1037ad654f98d54b371aa4a611f29d6 - added new frog pet
+87c00cd5b6970f5a9564f045155944630c041d75 - added exp label to potion type 4
+5be4366c3961cfd69454cd26b933c8f9a08a6bf2 - Merge branch 'master' of https://github.com/suprcode/mir2 into test_server
+bbef02a6027e28f51820593654259fddd7039b5c - hidden square brackets in item names
+128baf0da65f622ab18d836f4db89c0047d5d885 - awakening fixes
+a64812d9348e75f0f684ff5162bc2698e2974275 - Merge pull request #112 from lodos3/Awake
+dc434140cd0780b9e42d6693db91ae5b1fbdc7b4 - added walkable town archers
+30e6ce3f443e183a44ea048374f791a85bdfe124 - Merge branch 'master' of https://github.com/suprcode/mir2 into test_server
+85dbcabb988254841adb7b78a92d395ca4da8421 - modify vb setting
+9753d1350cc1e06bcf03176eaee07d851f353bb4 - added character wipe button
+2d0e26ae5713c0f7849cb5e30ac2cb3ede601f3c - fix version bug
+21932add53fa4771697a857d4498130617093790 - added map and server shout scrolls
+ad2c9cbd84a35b21c84479388ae26eb65c65a318 - checkpet npc command
+76c80afb37e0fc41b2e612bb1347d7bace47a0d4 - fixed transform frames for archer and assassin
+19c71b46e2993bc3d716d3d11fd838e3f63da207 - item expire timer
+4c7338cf3b1d8709ae5f589c1062040f671abdd8 - Merge branch 'test_server' of https://github.com/suprcode/mir2 into test_server
+c35931fa1a47f33f644a8c2e99a0397e2c7c55e6 - changed error reporting
+641fca8aa455774a574631bfdcc81c921d34857d - Merge pull request #100 from ElijahLOMCN/NPC
+6af3764ade7f46aa74a080d35d51732fa6d4b12a - Fixes
+7d15a06bb361f41061512deaa1371c7cc86b5ce4 - Moved Process to NPCObject
+2fe5810fc7a74d6db313e26fe69955a08bac2f98 - NPC Visibility fixes
+cfd621436b3bb61518eeb654c006ad4ef0fd7047 - Added NPC visibility options.
+84b50fba43117795faa20f24735dc1a7a854c89a - Merge branch 'test_server' of https://github.com/Suprcode/mir2 into Sabuk
+c1b68a5bd6af78a80212abc31f60a96923f10d87 - Testing NPC
+8b444a432a76509018ddc123477e76f82f84788b - AwakeningUI - Finished
+f4c44583ae9ce7d85986fde2a917bad1e282646e - AwakeningUI - Disassemble UI Finished.
+772a7f4b93569c6f7077313e31e0854fb0f0a5cf - AwakenUI Update - Locations.
+a00d6f2f3f545e14fbeb35c9f14da937a8e72306 - Merge pull request #113 from ElijahLOMCN/GuildPage
+3574d6aeeee90d04a179ff5e401a0dafa7dfd14a - Added back TalkingMonsters
+908324bcddfc7952a126b8e2a5b5bab0115644c2 - Guild UI redesign - Merged buff window into it.
+f5701821364262dd73a0d30d011f747edf7faf93 - Merge branch 'test_server' of https://github.com/Suprcode/mir2 into GuildPage
+d3613dd808d88dd55b573a7aae81ec4d438db921 - Merged buff page and fucking scrollers.
+108b846e4b05c336b67bf0af35b174c89ed29109 - Merge pull request #3 from lodos3/GuildPage
+d0485402d0942da314a19fded0972268fdc61532 - Merge branch 'test_server' of https://github.com/Suprcode/mir2
+df1d7cadf29c611b64ce549edef0a9a7d1665215 - Merge pull request #1 from lodos3/GuildPage
+3b38f0cd91c998ea9331302817b46efba4d4fe96 - GuildPage - ToDo - Scrollers / BuffButton
+57447ec1a2aba07345ba227d4618f1af69cf7414 - MirDropDownBox - Changed color to match overall UI
+c571da72304f8cddd5252378ae6791b41aec9a5e - GuildPage UI
+d8246cb4dff3a8fe27e9dd84a5cab757058fb9b9 - GuildPage - Swapped Tabs around (Buff disappears based on RANK).
+54963e8926a0beccf9970d19906b2cbcf58a2218 - GuildPage - Buff/Stat Tabs
+9fbcd526663a90d5e17e3ea93841d17f068d9ae8 - Added retrieve Gold button
+2b1377b01a13ce87d6e7ebb5ad4bf0f0d88ad3ab - Merge branch 'test_server' of https://github.com/Suprcode/mir2 into GuildPage
+bbcb2da1194d9955e43931522efa94496e029ef6 - Merge branch 'test_server' of https://github.com/Suprcode/mir2 into GuildPage
+1a5ff3be5e8f34106c10d2f5f3087bb38b329f01 - Fixed couple bugs
+82d8a572db2df0e88eebb00c4ebb63ca54ae17ea - Merge branch 'GuildPage' of https://github.com/ElijahLOMCN/mir2 into GuildPage
+31e4b8d4d70079cdb040b317384a60c28eccfaa8 - Fixed Buff Page Bug
+c2162dec08e443a1d9bf2b8d5e2b4878ab23d960 - Fixed Buff Page Bug
+465d68bc04a2c6850e91d77b71921654674f50eb - Merge pull request #118 from Duane01/master
+8f0cd75ba5147f5711a0305d49d82356e4f2c678 - StormEscape finished.
+e8de650e0fdb2c6449b635d40f06c19c929221a0 - StormEscape First Draft
+9904a7e92e8dface213445131db53d5f532c9b79 - Changed StormEscape magic library reference.
+37bd2b944d2afcbe6d6c0c961a4cbddc10deb64d - Merge https://github.com/Duane01/mir2
+48fec9ccc6c812642b7d33052e6521425eb936e4 - StormEscape
+9dac397204a5e913d3051f50a84cf7b4b07fe969 - changed version to 1.0.7.2
+9906432a1d60d000997e6957ef59249234ef77d5 - fixed breaktimerecall bug
+d0e0ebe6f0622bbee7aa4a0d1bc3a7f9ff02c57e - improved hasSlotSpace with operators
+9d53b979937e7b6d4a19dab67bd276eb97e18a88 - added "hasbagspace" npc command
+ca42864ace57946db54db93ea949fbba9c9b78a5 - fixed resurrection crash
+e431dbba788fcf73aa6f2966f6ece168bbcf7957 - added unequip to mount and fishing slot items
+30f6e6d4d3134b91f985a1ccae77538c3fb1eeb1 - added rested buff (configurable in server ini)
+19cf62adb5d1877093d103ba60983d4bd418afe9 - Merge branch 'master' of https://github.com/suprcode/mir2 into test_server
+7f533d94d5cb901b371b9725842329e26600d774 - fixed bag weight overflow
+99fb8bee92bdb811c283407e919a2a61b3f665b1 - wonderdrug buff now dynamic and dedicated
+60defe13a0731e0db10a76b6de035beee69c6daf - Merge pull request #123 from Duane01/master
+fc8b724f43626fa18dafaaa61e84fc7819ef555e - Merge https://github.com/Suprcode/mir2
+c6cb64f66f6cf1607518380ec8d8e3c7731bb136 - ImmortalSkin
+1d98626c4d3247dec4345226096efee627511b0e - upped version to 1.7.0.1
+09fbaf584bab3f330048d3be1c105319f1f8d68e - MMW Teleport Added
+5ee11332292af9ee0c3473cde3ad2063b90e552a - CMW Teleport Effect Added
+ec26ad5c2b92b6798644cc3f3ab3e6bb71454829 - Fixed Mutated manworm special attack
+fa3176c6017b162e649bec8b422b3a06dbcd35a1 - PoisonHugger attack images
+7fb25d10a9d15caa04abac92ff5cef1b28e74960 - title and position fixes
+f9b8665c80202db0f9cd0057ae296efdbcd60a0e - dialog fixes
+23bfc3d8c84deff86e741a2242c05580de433763 - Merge branch 'positions' of https://github.com/Suprcode/mir2-private into farril
+2b9ee16c51e84ba4d2cfdca1ea6d6f69131f7fea - position fixes
+e0264882c6277fe67651e5e82c2e025d24e0dc9c - removed unused squish references
+7de095f609f0c7f5b4554b50f388c648d9fe201c - added keypad button code text
+203c8380e5aa52e34f2e06fed1916c67f24f73e7 - fixed pet pearl bug
+0273b38c3b16a60eb69b2a94587d563cd2442801 - add server side fishing check to all other map types (not mir3)
+d73381d4f0b8c907a4453573ddcda128509b4b1d - added ISNEWHUMAN command
+8c701cf65086abd99ab379ec00739c82730271a2 - added lib viewer project
+88d2389e9ae9da591555df7ae0541bca5da81818 - improved npc arg replace
+3f1f6b2ead4a77fc83f9786b38b4ba271b02e2b2 - fixed item shout scroll bug
+8851bcdc666bd66ec36c08962c3308d3ba957124 - fixed lib editor converting to black
+33e977a85c2fbdcc7aa5ae0c4e6308b3680de844 - fixed npc dialog resetting on ESC
+1c4983acd4f34289025a63958613f6558ce811b1 - added blending Options
+a57511b9ad9c0285ee7d952c9b20be78fe58fbee - changed editor to read new lib type
+bdcea02d6e332cf200e5c6899de3c744fb2482dd - added debug label override
+c4f5383150a0a0d249b41b8fd32cd4d1bbe113ce - added light colours to map objects
+ac91365cdcab0275e896725cb862c865b80d61e9 - Merge branch 'master' of https://github.com/Suprcode/mir2 into farril
+6241387e1b7bbbd307e52d8964d9f6967594b010 - slot bug fix
+19395cd73ff4650fe9bcffa8605d5ddaed8a3567 - Merge branch 'master' of https://github.com/Suprcode/mir2 into farril
+5202027dd049c46e16eaecadd1a3f6eb52cc1183 - Merge branch 'master' of https://github.com/Suprcode/mir2 into farril
+c852587ff1ae2ecf33d1136dda3af155cc5e8286 - Merge branch 'master' of https://github.com/Suprcode/mir2 into farril
+1c0cf294b5e50186ffdbde1236b3094afa8964f3 - removed debug check
+18b6b3d78bb6a93a941ca4ebfacb5c1f904592a3 - updated lighting
+f020d083550a208da2d93a6c7a99dd2bd5130425 - committed blocking mob
+7a5ac1f48fa01213ced7508748c4a341e4a6317b - added sabuk gate ai
+fdac2e6ae3fb9c0ccc7f65789dcaf9becbf0d288 - adding dev reporting code
+6d661fb72a79b822b52ecca7059998b6b513526a - test push
+6b27595a4fb142668b636e3733539413bbf421a7 - update positions
+a0aec3104b181cb07b150f6195bc34c87aa3ed1d - Merge branch 'master' of https://github.com/suprcode/mir2 into pull_request
+49cf8f5d5085ea939d21570638d011053d46c763 - Merge pull request #3 from Suprcode/farril
+bdd6b6b438e12815968731f7a4a5abf9d6d8e66a - Merge pull request #2 from Suprcode/farril
+b6d69fea4772aa6afe305d5d8677068ee8492f53 - Merge pull request #1 from Suprcode/Patcher
+fabb7b57a32dfbaaa63c8f791521739277def60d - Merge branch 'master' of https://github.com/Suprcode/mir2-private
+dcff19553c67efa485d49bbc410667d5d968efca - Update README.md
+9910664069666e16645e61d811fc4041772d47de - Removed Compression
+db510d9d84caf2d70506211c4f502369be24e37b - fixed balance form
+7858392fe0c215ecfd7a093d579ba30dc32fd3e0 - Merge branch 'master' of https://github.com/Suprcode/mir2-private into farril
+6a09e18ee945161f35ea7265ac9cdab22a95a4b6 - added lighting object (not used yet)
+edd01dc46e7d1455fd944a18aaa1a1d264bf4450 - updated lighting
+c40ad8c9f1884bd9bf5a8e1db6504f6edab75fec - fixed remove item bug
+9f6b6a59bf3c34a55c3899beb44793fed48b2c23 - added new AI up to mob 200
+e338ded9f78e29ecd093aab1e7626820f9114d1e - shanda sound started
+c8bbdf4f866adc175d5f1d2e8e1150d475bcd6c4 - Merge branch 'master' of https://github.com/Suprcode/mir2-private into farril
+3de4d74f74f986cc78b228e734d849ed2d926b45 - build path
+bc0e824a16f12da5dd443163d2c734271c3cda51 - missing ai files
+2ed2746f7e48fd6080ef5ac688df7b8dc34bc1b7 - Merge branch 'master' of https://github.com/Suprcode/mir2-private into pull_request
+07f2dc6e8b348891df63ed60e58bf2cb2a34096a - Merge pull request #4 from Suprcode/farril
+9c392cc0d738df8d213f1951bfdcc1946c7c7ffd - added missing proj file
+24a25ab8d4e3fab4c73500b9363f2ace1ddf2249 - Merge branch 'master' of https://github.com/Suprcode/mir2-private into pull_request
+15279c6f834f94940ac8887745f1bfddbd529bba - Merge pull request #10 from Suprcode/farril
+b9ce87f43abe49c051f43b0d7d859f801b3a1d90 - Revert "Stopped a Guild that already owns a Conquest from taking another"
+c3c7b4b1230aff3fe4be073abaea833fd50b6982 - Stopped a Guild that already owns a Conquest from taking another
+0c734af93c04434903ee5e73f8c5c2d7ebcaab93 - Merge pull request #7 from Suprcode/farril
+b1e34c0475b80dba22c0ba69126a0ad243c5ac73 - Merge pull request #6 from Suprcode/farril
+8539ef69b5fdc7ab46abc8ed676881876a6c06ab - Merge pull request #5 from Suprcode/Sabuk
+56116c78d45acec04f8bf9c54dcf8c35b2477782 - removed try catch
+58db9ad258164ce152b8a404140719d358fcdc77 - -
+f3de74637d720f4b6bbde2f4308c5dfe084ad126 - Added ResetConquest command
+1cdaa444215b170662841482afcb4632bd47b3b4 - Merge branch 'master' of https://github.com/Suprcode/mir2-private into Sabuk
+8f6a9f4e06953ee3d5fc3b84ce65ae38304b9b3b - Fixed bugs, added NPC commands.
+b903b0341c70eeeb4b31c6228a56e505268a0490 - Add Conquest that i missed.
+36a64801be868a8fc260f123442fdf6f5c1f7a4e - Will add documentation for NPC commands and such ASAP.
+ce09ff3f00f61edf40fe2edd6603bdfb001802fd - Merge branch 'farril' of https://github.com/Suprcode/mir2-private into Sabuk
+b3f399dd38a3c8af6a5f55e3fb0416672f55f1d4 - Continued work on Sabuk
+af5bb4dbdde408541a5688d93656a9e47c3ed3ef - Started to Create Object/Info Datas
+bb26b4f5d6a74b928e723c0c6a8a4b276873a1f7 - Merge branch 'test_server' of https://github.com/Suprcode/mir2 into Sabuk
+673a66ce0d1586bb918e3cf0ce41f2e2fbeb8545 - -
+78c5f844eca59be96275b378265ab85e374713ea - Merge branch 'test_server' of https://github.com/Suprcode/mir2 into Sabuk
+47b40846129ec6e8a76563a96c3c04e0e7c3b74b - Start of SW
+b8a05fca40e95705073d098f579e9219d0eb93b9 - Merge branch 'master' of https://github.com/Suprcode/mir2-private into farril
+0029449717fb3b8e1b339a20749d182308e6acc0 - packet fix
+436f0a7399f522202eaeb286e5d5ca9e6ffcc160 - reboot button
+4551da25b3d688f2ffcd1498a51b7ac3dc5602b0 - added new fishing attributes (100-119)
+b5b78c091379f87103536100940dfc61def1ebe5 - fixed awakening bug
+bee7182da950a3769507bf60bba501a98fd7bc69 - added more lighting options and colours to maps (above 0-10 stays the same)
+6ef73c2bbe3a9203f892add157eb6b357f419c5a - unequip items to bag first, except amulet/poison bags
+3a263cd5283232a79f9c8030e75b4ca6cdd75671 - patcher bug fix
+4624f1efab5c70e350ac82d91121d96a03861bcd - shoulderdash fix
+b53a17cb42f3448d788c07977cf1071335126e7c - pets prioritise killing other pets over their pets (defensive)
+1408c85352ca50b79c403be27e1e301ffc9877a5 - fixed launcher bug
+477422ae580e4cc691978b263c906ba4ec8948fe - added missing monsters (filled in gaps)
+71302ef3cdff01b9d6982cebd74c2d0349542175 - added conquest movement check
+60861816e5d70c86afc69ca6bfbd2b873751d426 - Stopped a Guild that already owns a Conquest from taking another
+a4b9185b10810be1ab7bb0ac26d45affe3ea674a - Merge branch 'master' of https://github.com/Suprcode/mir2-private into farril
+b7716108dd0cd249ddaac2ac8eca9270e8e1711f - ping initial delay
+75416cbe6423dca410ea1ad1bae61c556a0d7bcf - added poison ignore mac
+a8120d3f1043e0d7830b8b961dc4f6dc501c0434 - added forced MagicShield and Poison effect display
+fc7955e1a5a0847f09b03a44a7dce396f3aa3d85 - added TD's respawn tick system
+04d99a853e8eea0331b4577fcf50a1563da40973 - unstack players from npc when it becomes Visible
+81e5b74c81e92a4043cecfa692a8444fd5cebdfa - organised dialog classes
+39af79d287b66ad7377d3c3c2994bb565b61f1e2 - Merge branch 'master' of https://github.com/suprcode/mir2 into pull_request
+93f9c292696db449f0bb63685d58ec59711f0da5 - Merge branch 'master' of https://github.com/Suprcode/mir2-private into pull_request
+d10a627dbc663f9d4c2f25133061f68342cc150b - Merge pull request #11 from Suprcode/farril
+691e57e155a49568083dcb01f34a1dc607089963 - respawn timer
+7e19181ac40dac656244ff53dd9eef3383f2fb81 - Merge branch 'master' of https://github.com/Suprcode/mir2-private into pull_request
+76332051ff5d8630f701b32169a7c20f381d0db0 - Merge pull request #12 from Suprcode/farril
+33756494fc77b6668fd974fa55cc9ce5d451eb64 - fix running mount bug
+cb9ca30b1f7d166f8dc62120896b4a90b3ea6f71 - removed mapviewer proj reference
+21a46706f1079dbac7f76f821617a3f04e74d169 - Merge pull request #134 from Suprcode/pull_request
+9effb2367a9efd46c9a0bef79513967ea49f3c5c - Merge branch 'master' of https://github.com/Suprcode/mir2-private into pull_request
+495cb268f9e230a5d26aab93af06d64939431301 - Merge pull request #14 from Suprcode/farril
+639c82aecf333b18c7a88965eae8ec1bdd6ed8ed - fix defaultnpc bug
+a8ff04e25a2dde93adcf46cbac7f55ec35164480 - Merge pull request #15 from Suprcode/farril
+88ab1e51b43f016e167ac14eaca7e279f3f80ed8 - version update
+f6c197b049afc57cc48c7d4e0171f4e0610aed5b - Merge branch 'master' of https://github.com/Suprcode/mir2 into farril
+acbc6aa0a43d8c26fac54810a501803699519174 - Merge branch 'master' of https://github.com/Suprcode/mir2-private into farril
+2b85bb8f35617060e028090326508450534d359b - lionroar bug fix
+90decc36ab0c317b4dad44190c8d7df8f5ca791d - Merge pull request #17 from Suprcode/farril
+c52eed1b81503785626f8174b32c167b196d4f61 - Merge pull request #16 from Suprcode/farril
+94208df31b8b4494ac38dfa53492d34b4134a4b8 - several exploits/bugs fixed
+6731c18e4068e758df09d5b19d6135c53cdfdff5 - map name to die Reporting
+6cc34b5bfbe7f944d8069223e9d91d68c505dbe3 - version update
+4d176ea79a7512f1211eca303722f0fd85c71096 - fix for bliz and met
+c391a55ba807952e9dd1a9936512a2483bb5a934 - various quality of life changes.
+a70563efdd08960c6313554b830ca6d7e1ecedc4 - Merge pull request #18 from Suprcode/farril
+259f39518607c1d77e893e2aec1e1a13fb82aa41 - Merge branch 'master' of https://github.com/Suprcode/mir2 into farril
+b6af10bf3a066c13e57f04656f975b3a34db770d - level gm command bug fixed
+2c7bef4991be25815d5b37493aa8697c8d150d1c - no changes
+78e522c9138f673d68a5aead554f6c27b7bd7284 - Merge pull request #19 from Suprcode/farril
+cc6c0d4717c032a7d7c46c4d065ca9138f62ef1e - keybind fix
+17c4031920d7e5b2e16a6ca760c75d91a8dfb763 - fix new char button
+649017131e0b8270e58a64281ad9f409d7fb712a - no change
+039f29bbbaf41672e6c37cebbfce2b8dca52a328 - Merge pull request #141 from thedeaths/master
+ff3153c8519228b3ffd4d5d33d2636438c316002 - Merge pull request #140 from Suprcode/pull_request
+c5b57024cc7b217171065dff9830744e4ec22951 - Merge branch 'master' of https://github.com/Suprcode/mir2
+1cff6202001a0abeee59453840d766e7c2b2afb6 - - remove guildbuffs after you leave Guild
+4621c7c8ace4bfddc3f25c7ad9b37da86a6eb32a - version update
+89394fb0d02231a77112813862ebbb8d30d33b93 - Merge pull request #145 from thedeaths/master
+53ad054bd4df6194dc643f68dcbb797277256c4e - Merge pull request #144 from thedeaths/master
+f7044de90ca417b4677f309c81dcbc0e667ac566 - Merge pull request #143 from thedeaths/master
+7c5faa6ceeba7d4ac2fdf017681af51a0ec4916a - Merge pull request #142 from Suprcode/pull_request
+beb03785a1bfa7556e37956093d8c3960aa079b0 - Merge branch 'master' of https://github.com/Suprcode/mir2
+93a7aacb32c4c5d2e2617a08a69bacce231f7498 - - greatfoxspirit> guardianrocks can no longer be killed (exploit) + they deactivate when boss dies now
+86d812817929293edff9a1cbb522bdd107e144c0 - Merge branch 'master' of https://github.com/Suprcode/mir2
+a05d34dbb5a9764c2926a4e7702a806cca044f52 - fixes displacement when casting magic after server crashes
+8a75ffb6c68aa082b692828dca3c1f9b0109c57d - Merge branch 'master' of https://github.com/Suprcode/mir2
+51fe7fb7cb5cc41cf0482d83cf1f44d8e037ceed - made cast times save on relogging
+d1123dd058b536479ea9e8a1700d9220c6f0eb03 - Merge branch 'master' of https://github.com/Suprcode/mir2 into farril
+ac717daa3035c00f043f1ccf85181791b74206fa - fix mail sending non tradable items
+7895a3d01587ce9c8d9e64c5abd8e706ca0ccfa9 - Merge pull request #150 from thedeaths/master
+2c983b6f1b8234f605719095f6ea430662261725 - Merge pull request #149 from thedeaths/master
+88871e9c9d0340debe4884c375127e6f31f7847e - Merge pull request #148 from thedeaths/master
+086845ce94f17ad57319cc43ef9a372d967ed73f - Merge pull request #146 from Suprcode/pull_request
+0fddb19cfb5752858332752df31726a125a83633 - a return went missing using up valuable cpu time :p
+e514be304873faeea8a7b58a776ad43b5e77739c - - fix for defaultnpc exploit
+8710825f5d3db480e93aadff1e34d6649e8e79d5 - - added disabledchars.txt in envir folder
+21fff58cda6025695516358081c5564a6d8ee18c - Merge branch 'master' of https://github.com/Suprcode/mir2
+4252a09718065adf67a30fd2b64f1a2c2f2bbf29 - - server now resets daily's at (server)midnight < so it doesnt matter when you reboot server now: it'll always be resesting daily's at the same Time of day
+ba52f825718bce1fd8e616eabcabd4a13cb5ec9e - Merge pull request #151 from thedeaths/master
+80fc3e99b1d0b9e54be3d22815483e29bcbd20d6 - - ranking updated to top 100 (in theory you can change this value using the variable)
+e38deef2439a5b28d79cd96d4bfed2e35e2894b5 - fix pet attacking in safezone
+97c505382e0e8dc9b69322766cfe4a5dc0081396 - Merge pull request #164 from thedeaths/master
+0ee306a33b6a2a71da27cb56e4ce4fb2f21b8a5f - Merge pull request #163 from thedeaths/master
+a5619230a05a66aaf9fbe79cc589a2d9d5f83360 - Merge pull request #162 from thedeaths/master
+9ad78441168b904c6d0929a423c9a3177dd6fbb9 - Merge pull request #161 from thedeaths/master
+55c85108792804b91d1f0e5143e13211fb4b253c - Merge pull request #160 from thedeaths/master
+e6230b1a9978ffaa7c5ca8acb49630b6e82a5014 - Merge pull request #159 from thedeaths/master
+2661ba6741bd3ecc3778b966b921f439b36af3ef - Merge pull request #158 from thedeaths/master
+ebcb6bc457e3b853d5d33d190a9940cc69280c23 - Merge pull request #157 from thedeaths/master
+8eb9232219a2ff6fa9bbe596e9a64a63bd1165b7 - Merge pull request #156 from thedeaths/master
+e9097283c4c2cf13806c4fa1c777208ebccf4918 - Merge pull request #155 from thedeaths/master
+f47a9b6f771dd6d1aa66835dcd957128d1dca31f - Merge pull request #154 from thedeaths/master
+0745daefdb2323082a2b0197033070c9cf41d932 - Merge pull request #153 from thedeaths/master
+fd53ea449df36e565a4177c4a8d3e7d16fa30bbb - Merge pull request #152 from Suprcode/pull_request
+b1aa4e9c2af1aa33dfbcd93a24617b55c7f3a3b9 - - new settings var: (in ini): playerdieditemtimeout
+67e47543fd2c8ad83ac7acb7e6e5ac64b9f3111b - Merge branch 'master' of https://github.com/Suprcode/mir2
+89449cfaf3317096cd6533f58f5c50ec505233c3 - - stopped exploit with replaceweddingring bypasssing the check to stop special rings :p
+3ca3dd3a11c720011e641176a07e6f8db1795394 - added 00monster.txt npc
+85f671ae7e4f79c3350d0f81692ccbcc851e2a6b - fix so it uses monster call instead of the even more limited direct key call
+ae909e69f065cd067a3997705883888aaab41ea3 - - fixed a bug where you had a cooldown issue on skills learned using @giveskill
+19abc5701bbf02a08da551978e3fadde6e581c4b - - fix for archers arrow attack direction (shift+leftclick on empty spot)
+802e0aa5f9fe5d362e79491e4e438d7a02a193fb - fir for guildbuffs not showing when you joined a guild
+2756b8696c9a191589c876be524537dc7f9d1e7c - added doors :p
+fa9ebe596d9b50fe54e91424fa5296e41687f584 - - fixed client version for far
+f2709c24074a786e35108f4292bf1e84d571e6e9 - oops, fixed
+b7ea69cdb9623f389113308f45521fad71b4acbb - more advanced test to target 'precision'
+f5927fbf7c612d3e69d8ea94c847c983a43f0281 - test with having targeting a tiny bit less 'strict'
+c4e08728ef1690214fd3f23c65f5688727ae3935 - super tiny performance tweak
+f3c24c255c15a7c556ff32d2be6867c98b550408 - added new 'if' check for npc's:
+e9e724833c3e79eb38e9f66dff408d6715ea9339 - trade bug fix
+d3972dafbbeeca759fee3955fa512c65c9aa9e64 - fix for monster not attacking in safezone
+d097807d7b5b4e722f3ebcd4fd86dace6707a43d - Merge pull request #166 from Suprcode/pull_request
+8ff1341ca35b07f3765c8eb34296d84e77ac1184 - Merge pull request #165 from Suprcode/pull_request
+e409321beb82a665424181bc35bdf782e3648063 - more AI
+22c7a99eaabf0795abbd34560de120488c6bf0a7 - more AI
+0f7291bacc4bd929d1e77a8cacafa14c8cb69e2c - fixed lib viewer bug
+f607883dd3472826ec8c6d703620ce208881d533 - fixed several AI
+3f9002c17c732f813dce81a1d6ccff0e76ff8d44 - new monkey pet
+1d6249f47a53186f2dda2f8abe6f84427e438158 - missing checked in
+474a020eab26b8c601105bbcd3d6122d18c6a71f - missing checked in
+c58b29fd4fff6b1ddb52d4b00278f94a3e710197 - changed fishing to not recast if fish found at end
+7b2d7d320a3b8873a3a0bc9c04f65790755fc9ef - fixed mail bug
+f47d0e86b778227f80bc8caa7f3dcb319870a3ba - mob sounds
+345a7d372a2285411a98910dc8e3c5a28821c809 - fixed blizzard cast wings
+16f6c6a8823d4a2e65fa3b6b26798f6823e5e314 - more AI
+a0bf671170fb0d13b99fd3ac02e441f92de21eff - added complete death method
+dbea830c5c63743deef60cac4ef15b35e6477440 - added new mob sounds
+43fcd352eb59ad289db0ff369718eac7681fdf1b - .
+66898f7125f08af569804e610289708b7a73a3d8 - guild war bug fix
+d457a27a1024a91f3ba7c510a9b6babecaed3e96 - global archer attack distance
+ad6c2bf7632bcd765e6e7ad4a6d296bc31923210 - fixed totem
+ce6ad74fd5c7939dac833747b71fcee291667380 - cached walkable map cells
+05e17d96379f40891060bbdc426a91a8c7d15467 - option dialog update
+193f014f36e9893d6bc6e63f5b4ffb073a1270fd - .
+9a4df9759c104054af90a0ad81999d408d4e9e2b - map code fix
+87381c8490f0586fbef4a0dfe4c2acb1b70ae046 - trade bug fix
+4065619335be97477535c5fb58f66b53f90db47f - fixed friend dialog bug
+a0320fff99f4498c29a93fddae012e9822d4ede3 - .
+2a8a788832ebef7e4c22944afd7a6e4014fe82d9 - mailbox capacity added
+674a3317df78d436df945dbd4f3ed02e84a5f17f - version change
+81c88d03723a295eb263a5229b5f7698af2077ee - conquestwall bug fix
+dea3f082bd5319d619ba0528e0e6d356911e93e5 - new step sounds
+532775b3a53d46bad1d6fbae9f46eec97b856e7d - script item belt effect 1
+989e47f68de24885badfe1ad0994e7c2cfd83ce2 - deleteskill npc fix
+8ba5f66683ac77e550d84e8360e69a4328014ccc - TM item name fixes
+120add55bf6ab428a159f164145223860a6981fa - fixed king of the hill bug
+858f98ed3218fa11a5b4021ea595e2921df92d20 - flag update fix
+9b1edfb9a487748f3ba513cb78d84a0411e26dc8 - conquest flags
+df7cbcee6a4df98187a199a8302faee38959d423 - gate command fix
+29d7527c9e8c3f4c3db38f770384054702aa2f76 - gate bug fixes
+042bacf9266a169fe1ea3c2f85ebf95c0f07fe0f - conquest bug fix
+45fbf64f40e8e5f2a66d0eb62ce1c23cf0d5c8f0 - mentor save bug fix
+ddd6295d4d69e129ee77e516805490795282ab9e - added extra storage
+95bd5f805dd8d187ae9bc4d9f9f9a142131356db - map type 0 fix
+ad2dce04fab2b77feff9eab9c0447121200e05ee - blending fix
+d6c2b6d7542949cc5ff7c089e52af35dbfbdfa8a - ADDGUILDNAMELIST
+ab2bf5909d93d91f75034bd4cb4d24e5cb762c55 - Merge branch 'master' of https://github.com/Suprcode/mir2 into farril
+fd251652d53607804d201ddb1983c8f50492722e - .
+8b15b5e4cd8f5457822790e006801a5a198e4d60 - Merge branch 'master' of https://github.com/Suprcode/mir2 into farril
+94ec3d2b71866cf6c599f8bb82d27a8a0386d156 - Merge branch 'master' of https://github.com/Suprcode/mir2-private into farril
+57a291f4dd12eb46ec776f7058d89e455d82a2a5 - .
+22e2ea75e54770ed66ffdd03236b7ff12ad10979 - Merge pull request #208 from RyanTaplin1705/IntelligentCreaturebug
+26fe91594b34f53313e03c9233218f6ef6c7bc08 - Merge pull request #204 from RyanTaplin1705/patch-1
+6cba64597508254ee2dea5a7c3d9caf9be59f3e1 - Merge pull request #206 from RyanTaplin1705/patch-2
+f810618efee09938e41e0752258bb61a3dfef713 - Merge pull request #202 from RyanTaplin1705/patch-6
+1a7d148e1bc9c2484c2a31882979ebe24fcafe20 - Merge pull request #193 from RyanTaplin1705/patch-4
+d5eba6bae641bb6381b33938b8abde1ba1c316eb - Merge pull request #191 from RyanTaplin1705/patch-2
+46dacd7a8307eb1f5af59488ba19183f26b915b3 - Merge pull request #194 from RyanTaplin1705/patch-5
+72d37d116f00d26afb15e24650000cc8fc704758 - Merge pull request #192 from RyanTaplin1705/patch-3
+082a741e6e9389d575a897a3d481f1b0a8b264c2 - Merge pull request #189 from RyanTaplin1705/patch-1
+613cd0d50bbd18050e7d3562a86dd1d871510179 - .
+56195402d6a81dcb54f077c821a3a44eadaf54d3 - .
+43e9289a97bcb9baf3444f2bfe250e7ce9f40dad - Merge pull request #184 from Suprcode/pull_request
+a8c790526f33e338d7bc41fdbff1db786e690053 - Merge pull request #183 from Suprcode/pull_request
+16cd87d759a43ac03a153198ecf9d8b483286404 - Merge pull request #181 from Suprcode/pull_request
+f9bc6d145b5879fa73d701b4692e9fbaaac5d488 - Merge pull request #180 from Suprcode/pull_request
+27b2e8112819e7cb782ac60ec2ccdbf158cd10f4 - Merge pull request #179 from Suprcode/pull_request
+a028e556cfaf94f016a052dd1b52f887d0046581 - Merge pull request #178 from Suprcode/pull_request
+d3c18ead566fdbdadbf6fc0ca562d47ba720fb20 - Merge pull request #175 from Suprcode/pull_request
+2ab99543fb74832519409c5b05c0297b294f40e6 - Merge pull request #174 from Suprcode/pull_request
+ecf6385b745c3d17beebf696f78e88830c3cfe29 - Merge pull request #173 from Suprcode/pull_request
+112c408acae7e76f58f3acb9a6cbe5a3bde2f1b6 - Merge pull request #172 from Suprcode/pull_request
+322ebdcab9b183b5e9234ebde86c6de4967e7a87 - Merge pull request #171 from Suprcode/pull_request
+731b40ceefee35febcb8ab4e98c7b4d18faa17f9 - Allow pet poison to be recognised
+b5f96eee694fd57335083914ffe1609a20d5e3a0 - Stop IZT spawning in stone
+33cb6d198ca56e90724c7356eef36d221de2a692 - Red(PK) name priority
+6fce9b106815c04879303ee16c895c162bac49d9 - GuildStore Greybox - Update client side requestlist
+581e0d329219b1e6f579503b332b3fc0f234e0a2 - GuildStore Greybox - Update server side requestlist/moveitem
+8e04ab03eff6f3e40197e3fdea18bf58f3e50d5f - Fixed #190 GuildStore grey box issue.
+52ce049f71f45a13b9c4ee4c4d9df4887f6e2cc9 - Cleaned up original change
+bf9d997aa36bf827232cbce78818d1f00f5af3fb - Stop ridiculously long IC names 
+a668d28da860cbb9e995d2950837a2c5c61808d9 - Merge pull request #1 from RyanTaplin1705/patch-7
+43435c72c946035a91bbf5c6069dedb8fef2b415 - Add new AI for venomspider
+1621f203c1edb5a313313e23dc2109be27cec5e3 -  Add new AI file for venomspider 
+28394ea75401dacd5948a2815bbf383028b8c3c1 - Typo on ICname.Length
+8104d39cbf70b61262dbbc9d871c767f08c4731c - Flame bug fix #203
+fa807edd0d13a4b34295ae9e68123d09412f929a - typo fix 2
+00e05996397d7536c8c87013db1379d85a262a48 - Merge pull request #217 from RyanTaplin1705/Patches
+4addc66b48b82a9389bbc794a1dd8b28b798769f - Merge pull request #216 from RyanTaplin1705/Patches
+a2b5d34460495f017fd269ea449caaa445351137 - Merge pull request #214 from RyanTaplin1705/patch-3
+ee9ea1d6f6ed9f8158813b9a319e579f8f319e5f - Merge pull request #213 from RyanTaplin1705/patch-2
+295152957542f3264e003d736875117168ed1fe2 - Merge pull request #215 from RyanTaplin1705/Patches
+b9f86f8510d943baae7aeb19afaf46e64114cf77 - Removed StorageRequested bool everywhere; hopefully will fix issue with guild storage not loading #212
+e4510b34807c83b8be7998d2dab6b1eb190f1119 - Various Changes
+b03eca7c3bf0daead251ed321428280e88e97b56 - Change to ES fix
+d51862a895826aa6845e177a272ccd7e94ee036f - Fixed DontStore bind crash issue by petesn00beh
+0610171ced9e2c80c334c1a57c68aaf7fb1b2b7f - Visualizer bug fixes #200
+d69409506b597e478e552f341bec1ae2b1f52915 - Merge conflict resolved.
+ef4703ef66c1f8967780360929641fba0de3b167 - VStudio Update Stuff?
+fee6263a96e39cab8a1744f41f48514759010124 - Added MShield effect
+7e8fb0baaef54947d191c048f3c97129ea963154 - Removed all comments/ BuffType.Hiding from checks
+be3f7fa231094669cdcc35f5283f53930d7a6fc6 - Prevent guildstorage ghost when failed to move
+cb30106ec3335453e5f8e5cd2ff5c7760fc6524a - Guild QoL changes
+6528830543b9de36244d4fcc1ef954cd2f202da2 - bug fixes
+02228185c0b82b69c9eb6a50199ac15f8b096ab5 - quest button animation fix
+f4d799c5bc6ead463e35b7868494eba38a652b43 - .
+02e68f2aae5e5f6a1138fc493f5298e85a295280 - ranking dialog image moved (to better allow for korean updates)
+50d1590c00d1240440d7cce119d5953490318066 - .
+59e657aca3b4adcea5c60d77354e95de4882036f - Merge pull request #231 from Suprcode/pull_request
+75b36743b8560920b477d6f698bb4e672a5ed630 - Merge pull request #228 from CozarXXVIII/master
+72c717af5b35b9ce1200095250b98f54fca84bb7 - Merge pull request #226 from Suprcode/pull_request
+77d3f537cd09963ba5bbd9f07586bc1a29ffdc37 - Merge pull request #225 from Suprcode/pull_request
+059b0784ced1682d56ceddc627292f2c75d3f969 - Merge pull request #223 from RyanTaplin1705/Patches
+08daeb7369fd7b4ee5da33ff9d169daed81a10f9 - Merge pull request #222 from RyanTaplin1705/Patches
+57623f1f6925959dbef7f785a53d40cf555ba655 - Fix crit packet server side.
+af25b7bf8f35caa2cfc86a3fee08b630e348f914 - Can't be a crit if damage is <= 0
+e4d75eea14d293a8714f2888c4376437b268b6ae - Prevent users from buying more than they can retreive.
+47935c1fc76a85c98c5b91deb5a018ce07e1b0a0 - Merge pull request #1 from CozarXXVIII/Intelligent-Creature-AngryBird
+78b971167e0787545f002d315c90cfa97de185f1 - Intelligent Creature update
+b7591a6155c006736e3bff46bc7a90e01a04367e - form bug fix
+9e226d1bb8a72860dec108690b051da55f10c509 - Merge branch 'master' of https://github.com/Suprcode/mir2 into farril
+1656fc65080fee267c8ac7382cc9784824b11eaf - .
+a4a70dedb7710824768fc55984001de6ffeeb253 - Merge pull request #237 from Suprcode/pull_request
+b926db7d1a2817a3c1f39cbcc280009d6c7edffd - Merge pull request #232 from Combie81/master
+11585bc509404f664feea4e0f0934eb10683585f - Update Settings.cs
+d436b54164128a615c44bdb9e1001b9878151b91 - bombspider fix
+52341e224c201da68a68122816259818d9577664 - Server side interface updates
+97d47a65faee4a0599d61707b6fe1d86468a8eb2 - Merge branch 'master' of https://github.com/suprcode/mir2 into pull_request
+2e66d9f3880b4d5eb815e5fc167310da694da482 - Merge branch 'master' of https://github.com/Suprcode/mir2-private into pull_request
+78bc4796e19348604802ea378da44ae98dff4bf9 - Merge branch 'pull_request' of https://github.com/suprcode/mir2 into pull_request
+fac37238a6825e828beafc9bf022121cba918eae - Merge pull request #230 from CozarXXVIII/Bug-Fix
+febc975f21ff8c27ccd0f7f309214ab568837211 - Suggested fix.
+82092eab9a0aac52cce25762e64028277ffbbeea - Custom Update,
+a771497ca47addc27cc80bd2551920cd74d867cb - Bug Fix.
+b3e4be8b6a3d54472bd05778784ff9eed9c6d5b8 - Merge remote-tracking branch 'refs/remotes/Suprcode/master'
+17961133d6c84ef946338d0f4045ad75e33eaf84 - ranking dialog fix
+042c29ebf351c89de50a3b9383213e4d8b5d7966 - Update README.md
+ef58beb46fb51866865237601d461fb1b0d153d3 - Merge pull request #240 from brandc87/master
+0929160b61347c6ccab38fa2ba6eb6b5f4c4a372 - item drop fix
+17a077449048df50aa3efbf27e7ca8d5251a1169 - item floor grade fix
+fe82ec421ea123cd1223ccdc5288d41b7620339b - Merge pull request #239 from Suprcode/pull_request
+f3f56392f4aa3c8fc2e4aa9016392a7e1dad8587 - Option for GM Effect
+0e73e210e9019962c6765862632097eff9ecebff - Change rental times back to days
+3f495f4814de0101499cd6fca42fdb9c96e5a02a - Item rental update
+784ae1a094a530a6c2d407bac1ffd7610853f70c - Merge remote-tracking branch 'Suprcode/master'
+400a7cd6c01068f6059e8588b0dd711e06585fd2 - Merge remote-tracking branch 'refs/remotes/Suprcode/master'
+0a532f9ddaf891592a8361c8e2e8e55a53ca4c20 - Item Rental update
+13755824117a5a0c8dedc3f228593b82a9add281 - Renting system updates
+575ac8ae905efce893551a2114b0588d4c982d3b - Increased repair costs for rented items
+ed2a8f8500a23c1f28864b1669553f2cb1a30cb3 - Remove .idea
+df0299e61205a44ebdb8660f75a743c73e0cb764 - Renting system cleanup
+b5285c53798e71b8be1e1cf292f95eed656b503b - Fix Ranking
+d5d382e709a478324ff5ca80d1a11a8bb22920ba - Renting mangement UI
+52a4c383a61455c3eb0d791924c5df3ec05ad0f5 - Loaning system
+b73640e78fc8fbd9de6f51bf32ecb9aa8fcda2e4 - Merge remote-tracking branch 'refs/remotes/Suprcode/master'
+82fb9801896b39428c03cac4f0f36e6b40a1e21a - Loaning updates
+e72211dd0e3c9e4b894b91da17db2b3e506c898e - Fix inventory position not resetting when closing shop window
+af4ae800094628414e9155da991adcfcb47aa97a - First commit into fork
+8bb7f8248724cddc5f1f05477ed843e7a6f57977 - Merge branch 'master' of https://github.com/Suprcode/mir2 into farril
+2160245eeb31a8f93a92bb5519c51f1e4163792e - helllord fix
+fb6b42521f7a0284bde05d4b1628f259c06c04a0 - Merge pull request #243 from brandc87/master
+f4a7ba9b4b5773a6601bc3fdb09bff87d41c7c10 - Merge pull request #242 from brandc87/master
+51e2d1d2e80c8b52f24b819e53839c267fe5d796 - Merge pull request #241 from Suprcode/pull_request
+5f961824ba6f184df2d2870fc9dc181e1cf538bf - Change rental window keybind
+0cc8e61b7bf98a5918dab525c87aac5074a237cf - Change player drop notifications to on death drop
+9d3fa1e0c79730c1b5f4b10056b53f95fb0e71b5 - Drop notifications for players
+2f94e38319061dca2cf3034fd1c008db75d7ad24 - Fix server crash, add server drop notifications
+3b65df69157174693ad435b4af0917dd37f7caa4 - Merge remote-tracking branch 'refs/remotes/Suprcode/master'
+13633a390c0f5b4963e3ca00b4e5c100f23ba13d - Buff UI
+d7632527873dd2ac0bb452d700e6e02783567839 - Merge remote-tracking branch 'public/master'
+6b43b4f60a4d7e31c995868d4f2a8a1901842c30 - Versioning
+9f888ee242eaaabe172bc8ff5d1d2c6b6332ad2f - Buff UI
+edb76a0638371cea0f0238f8770aebf2f7e987c1 - Merge remote-tracking branch 'refs/remotes/Suprcode/master'
+e774641e767e0505f4e27917c267e62b02105759 - missing files
+008ba0ca4072559c3a176931cdb3b3e622f94281 - fix sound missing
+0cf32810a78c01a6225afb971089bede04153358 - .
+5f41f06d09a61a4a2ee787ee069a24b509fc71af - Merge branch 'master' of https://github.com/Suprcode/mir2 into farril
+5ef6cd188615ba14d3ccc39d69ce83a9a8616769 - command update
+5ff5fdc67a52c642f08ea5a38d3ab6662dc93fa9 - .
+0b21e58a407c1f4e61d33ae5e5ba0bf06328db0c - removepet fix again
+de0a268f60a89e8adc5d82e3bde58d89ab8e400d - removepet bug fix
+94b0c6f6e2b90e8d8cf23425345fb2f081818b5a - Merge pull request #250 from Suprcode/pull_request
+632ca764e35f1f6c84170233134cda181ae771b5 - Merge pull request #249 from Suprcode/pull_request
+b2c70f861b4bda2baeb1f03b3b069b5a60f1ea95 - Merge pull request #248 from Suprcode/pull_request
+ea5ab05232300dffad0069e6783612274e55beea - Merge pull request #244 from Suprcode/pull_request
+148e80a30005a596ed9204bea926fc8f07134836 - Merge branch 'pull_request' of https://github.com/suprcode/mir2 into pull_request
+892289f787490bb51174e077582806c30563c191 - Merge pull request #246 from daneo1989/master
+eeede3eecc46ecb2129848a92748fb60ff1f5be0 - Conquest Wall fix
+0a8b9bacee87c933461a9a32d92672ea6004b160 - Merge branch 'master' of https://github.com/Suprcode/mir2-private into pull_request
+a32c8dafe609e6f6388e94d7a34cef04c8872b92 - Merge branch 'master' of https://github.com/Suprcode/mir2-private into pull_request
+67fb72654f8020a79827d9eadf72e3165ed277b6 - Patch fix
+32473b59fbba9e36f36d53909c1885e6bae94534 - update client ico image
+1cf6d7e4cd1a349ab3dde5556d92304172f57b64 - Add files via upload
+3bc162979ba370b74eeb9d46907f030fc7dbfe7a - Merge pull request #256 from daneo1989/Fixes
+44fad9c12499b6ddcc5bcb29a172f6056b4ec66b - Merge pull request #255 from daneo1989/master
+66e10ee63e998795072d6eaac473183630e8710a - Merge pull request #254 from daneo1989/master
+4113e63645d6af36e1177aee61fc2e0c5fcda04c - Update TurtleKing.cs
+5864c90eb6354c9ab194bd2a75133c00fb86ef96 - Merge pull request #253 from Suprcode/pull_request
+18e9e709fd42b0d056668ddff4051baa6706095d - Merge pull request #252 from Suprcode/master
+26b9bf28192a40904ba5b1dda4e5b81e7285d2b4 - Merge pull request #1 from daneo1989/Fixes
+76774d7d5b13cd9c5d12f6617d021d59ddc670b7 - Sale Hold Button Fix
+1a0c10da728e4e6d2808c306d58e1f471987293f - Merge pull request #2 from daneo1989/Fixes
+ed6b6b2392b32e79562c8742e4517496473230b5 - Fixes / Changes
+2484333c1ab438c984b6598c4d7b7bd4ac8f46f3 - @CREATEGUILD Fix
+c6ae4b77fa33c56c6914dbbbf5b43e27d21d6b39 - Sin Crystal arm fix
+e8b1ccb2aa7493c2262185c149fbfd0441dead7c - Merge pull request #266 from daneo1989/master
+d3db7adfbb5bebd2cc534d1257e06d0a92c8e040 - Merge pull request #264 from daneo1989/master
+9ee7bb29597cc9d477849c303f3c492e3d080ce7 - Merge pull request #258 from daneo1989/master
+b88af5fdf7eb63bea4efd53dcb4526f15dead23b - Merge branch 'master' of https://github.com/Suprcode/mir2-private
+5e203b746c1fd5b5488b76964f89e4b59d382000 - Merge branch 'master' of https://github.com/Suprcode/mir2-private
+3d9cc3708867b4020c6f0c275664d0d4742d0cde - Merge branch 'master' of https://github.com/Suprcode/mir2-private
+f2e789cf1ea3f909e74a289fe8a2d2d6d72a9c80 - Merge branch 'master' of https://github.com/Suprcode/mir2-private
+05a64c7e7688d28c37c7bb2d48c76d0245066614 - Merge pull request #259 from Suprcode/pull_request
+49a1f292b4856eff4980f8e7cd477fe904dea168 - .
+dceee8c930d1b74d19fb766d6d271dd400ae8f33 - Item list now keeps in filter after item name change. taken from zhzhwcn
+ca2656a841aea1477f957c72977113bcda3c6789 - Couple fixes and alterations.
+7848abd1173e7aed34ba16a0843fde95eec76847 - Few fixes.
+dd124d723c2aa4e578d5bf299c82159b73d56cd9 - RequireType update
+e7d4f87ae9826ea50f8088709744c189816d9b98 - BattleCry update
+29b40b89c68989095b1dc72e7394647f67f6055a - fixed mistake
+5ff08318280b6cd6ee803618dc1974f46e429256 - Custom Update
+e4e72af605766efc137e29c041c32039077e85fa - RequireType Update,
+e6c618d345d1ae717d1d013b7d62882256eb5abb - Merge pull request #267 from daneo1989/master
+016faf4a5e5d360e12469c48eaf112fc00c9e438 - Recipe Flag fix
+98605e758fce285578e6c4b49830729efd900e39 - Merge pull request #2 from Suprcode/master
+6e5041024a43ef96619276c57ed949188bcb0600 - Merge pull request #1 from Suprcode/master
+6d334956125ed70c308457b866a59242ddad1dee - Merge pull request #281 from ZathGb/master
+fb2aed639676d835642a5405a04047f536ea1315 - Update MirConnection.cs
+2efb3fd09d0753c454efd36700a35667be3d90e8 - Merge pull request #279 from daneo1989/master
+2f617a9463cd120355619cadf3d3648509928fa9 - New Intel Creature.
+71c2cd90209276315175a334c534eb6faf879286 - Add files via upload
+71b4527b80c06b8ce3e380804f79293eda03a3b2 - Delete MonsterInfo.cs
+16105ea3c7255bddee1304f3073889b69caf72aa - Add files via upload
+7a072950679103f561f529a063835e89da500154 - removed keybind resave on tracked quests update
+516c13ac678b3033b97cbaab959b2126aaf0aa38 - Merge pull request #292 from RyanTaplin1705/patch-1
+f7359f114ced1314cac18f0887931505690501a9 - RespawnInfo Import
+b0c0cca7d5de708da69ac47282f05c770ab5dffe - RespawnInfo Import Fix
+208cdcd86ebf6fe61d2826d01731c02fbcd62434 - Correct ColourBroadcast GetColour reference.
+754b37aa746fcddbbbea8b3bff89e59d38c4fb84 - MapInfo error output
+b63bfd7f36f9e61470a0e5f61ebe7a110bed98de - Comment unused code after removing MapForm data structures
+4370f3970c6ea2e3844dd033c249ad1e31fd3e6b - Updating MapInfo Export
+c739bf8b4143fbdf76a6f1d2d2dbcced9862fad6 - Added the ability to open .lib files with the LibraryEditor.exe, do as you usually do with changing default programs opening a file. (Direct the dialog to the LibraryEditor.exe)
+b9de44f2835fcba4139feacff757000fc6cc99a2 - Fixed empty name on the Export.
+f1f03155d79b7bf2562e1a77f42a96de13a16a22 - Buy back exploit fix. (Able to purchase back more than sold)
+d79341bc646a5d5c1b21ea8e48308943d765a285 - Skill fixes for HellFire & BladeAvalanche.
+2bd6d2c3a02c9bac84cddc2f69c6696f4c686d22 - Merge branch 'master' of https://github.com/Pete107/mir2-1
+a2ac62999c9709b430f505ba11af87485fc953eb - CanRun (Client) check on Wear weight.
+633ed76e20eef7c84f26288bae1d7cc701d3f6ce - Additional fix to the slow bug fixed in previous commit.
+1bd711f6e2c6d6d6d50b937309b1f488e8119d9b - The applying of TDB Poison (Stun) moved in order to prevent the Poison triggering even if you miss.
+7576290833d3f2812310635dbc1c3b0c6ac84302 - Trap Hexagon now mimics Euro casting (by location or target)
+35608f4af7313c4b8246ffad68043f9867a9e08c - Prevent dropping entirely (stop gold dropping) if NoDropMonster flag is set on the Objects current Map.
+e86d150ee1bbe29ea5e2de2484345a0aca45741e - fixed 6 strings format have finished
+22fa32a45de48e60d9761d5db792a00c5d077b92 - 2 strings
+366ca15f3eac439f10ae5da52ea15a8c23818e91 - skill bar skill name display
+21a3b31c83a3e151175ba55d48ffda57b04a895b - Server:
+8a9f065a0735472991606b585d2bd4c79c25d416 - add 1 language string
+aa31f346b8b58bb2e2d8e6c01c3c5f4520fcebf6 - add 1 language string
+9ea66a1e3e6f9eeff58f1dcc30737218eaf572a2 - add 1 language string
+af1dd8a1d4d4fa041ffb234faa4f58c899a50102 - The format is the same as you said~ thank you!
+c6396f65ac43dacf23cb75336ff9375ce70e01d0 - add 7 language strings
+98cd910423f5fdd37386b1c733958d74cb2fad2e - make format consistant
+48b548800968c9e135655ea26ff1d3b52626cd4f - Merge branch 'master' of https://github.com/suixin567/mir2
+2f81904b399b9295de3c06f4797051768c18c4b5 - changed format
+457d434b1752c002b62913cbd19577b3ff137839 - 5 language strings
+4a368d13d3222a07c86191de8d9fe10fe62b49d5 - collect 10 language strings
+3d0080947905dbd5582dc8380fdb597475c104b7 - Continue to add 4 language strings
+be08f88eeaed3b1ef940b522db3d459218864a29 - keep going to add some more language strings
+8226ccf8f1e34bdb8c8b3615c4bc5a97798b4285 - client and server language strings are both independent .
+bbafdf0c9e11b35ef69882b5d17b674b6b919572 - add some language strings
+73e9d07fda4b34d8c8de94a3f071a88b64a6142f - The all language strings is in .ini file, convenient for GM of other languages?
+c934dbbbf13a4cd1463f80ed38f1fa7a4ef14428 - Correct a spelling mistake
+7bcebf84e6d35bb001ef3cfaec3fe54e3896c0c4 - a small format change.
+25db52008086dcab1a0f85dfaea3c6ec3a758361 - SMain Control add tow buttons : reload Npcs and reload Drops
+09140d4f91adf7f809b9f688a7a200788db8b8c2 - Merge pull request #1 from Suprcode/master
+1c641a0535d92e858c36539ac9cc0794dd0da73d - add 14 language strings
+80134cf3f4cd44fccb74382de28c66679d57e8b8 - Fix the Array within loop.
+3e569f8df87d4362e4880061143f93e6733abbf0 - Equipping items (swapping) from storage now checks if the item is storable or not.
+6a920e9d7f472bdf55955d68536fd787d294c680 - a little fiexd
+2d06bc3bfd7c4123e8dcc25f6bcc8d825e423780 - change nobackcity to NoTownTeleport;
+414cf5d03f396973a1974969138241d375656d23 - 4 language strings
+37d7c98dd038a9579639ab3dd65d6a0b6c5ded96 - Merge branch 'master' of https://github.com/suixin567/mir2
+0aad6d54bffc111da7c33fdd30affcc07b0774a0 - Merge branch 'master' into otherFunctions
+2f333df219b98e844578e644c722fc7ff2d11335 - add 5 language strings
+aaf0edb54587ec1286bcd24d7a306b03940cb914 - fixed AMain UI offset error
+b6b0423abd75298813142532669267648ba73507 - Modify the format
+1277fb5042710a9680a7de6349f2ee4b28c29a38 - Fix a spelling errors
+2d25f493605e8bab57879ba9cfd42ab49779f4e2 - ????????????attributes
+e99ee21131e6f58de140ff591522469c5d49c4bd - NPC scripts add one ACT command : OPENBROWSER
+84a0dd5cfcebab93e0daea2cb92448e3ba16691a - Merge pull request #2 from Suprcode/master
+8c04e2744a80cdaf003f01788962e777e80a936e - 5 language strings
+04bb3c968af495c7662a17edb2d116ac8a13ccc3 - add 5 language strings and delete two Spare .ico files
+dd3252b2a06d62cbf712aa42202e48b71ccaca1f - Add monster fileName on monsterInfoForm
+c77111c245cffca0d4881ab62d4a4cdd0951509b - Merge pull request #3 from Suprcode/master
+b9a15e5118eae02e639fded00ec161a23a12e9fa - instance removed from constructor
+f0dc3cffde05d4807edd6236b3fb7f443a6f6667 - a toggle have been added, and default is off.
+ceba5771b5909ffff46bf3d6b3af910721eb7a58 - problem  resolved.
+ca83ee5cb5c0469c7bbf927f94383e22a6562566 - add Trusted IPAddress for HTTPService
+6cdf5cf3b6fab2c1e6cd06ec48df137619a0b8de - HttpServer add tow route :/regist and /addNameList
+f335de48f8328392b5d48bb6ffa05f3f0791d39a - add http service.
+cdfb5abc66e06d198093b7aa7d64fedfaa94f94c - 5 strings
+bbc48e7c9b5857a9a13b7ad1a8da8cf42bf60391 - Merge pull request #5 from Suprcode/master
+63354d0199ace847313d5381aa385f04363f06f2 - support chanese character name.
+a51c52611f248059d5e51039cd99c1b93a2a174c - Merge pull request #6 from Suprcode/master
+5acf27fdb9fde1989b077d2fad327d56263adb05 - Appended GetAmout to return the value instead of using ref.
+cbffd4b9f4f63054073766fb437f509c02212a47 - Fatal Sword Leveling fix (prevent leveling before knowing if hit landed)
+c4ea0aab9e41df028d41bec4470b1108e343ee29 - add 9 language strings delete some imgs
+a7b34b3849bc6a103fc8f890c7ab6f564319c110 - 5 language strings
+08f81b065aed6bdcfccb5735f26ccc84bb41bcec - Merge branch 'master' of https://github.com/suixin567/mir2
+d200f75437873566474012a89a04b31fe787a4de - c# 4->6
+6925360a587dbb4cd937a677e982bee45d5aa96f - Merge branch 'master' of https://github.com/suixin567/mir2
+27ba4dcb8da12ed01bd7f6dd85d11c9b06872635 - Merge pull request #4 from Suprcode/master
+9e8bad98de7407e0ff6053d699b5ec13a37114b5 - ??c#??,
+11f476710058a3e732b367847c1c4438bc243d41 - Trade & Group request delays (prevent people spamming other people with requests)
+8fcef914978688f82cc56ace077735772e8169b4 - 4 strings
+ffe20c71e6f7a26fe1c771e3d2da198a894c5518 - many language strings
+d08e92b5d41d18c994e355c8b7196946cc8dbfb4 - 7 language strings. and remove dx folder
+703a093b943ebc7b95d2dedeb96d771c2fd74a07 - 8 string  and add DriectX lib files
+c1b1f74c331c79a56234f5eaee559a5ebe0dc48a - ??dx
+99da701c5ff6ae9764d7c3294fc8c3021b0339ae - Merge pull request #7 from Suprcode/master
+720cebf8db005d4f32d86f2e0339200a2919a2b3 - 7 language strings.
+567a665028bebd4097cee85d2ed89b4541dcec16 - Merge pull request #9 from Suprcode/master
+3eb6ef5523377c155bea3a43bcb4b4889c4335f1 - add act command getRandomText.
+fcd644d2ffd2a98eeaebe291c2d5d6821f9f6896 - add 6 language strings
+25a875f2d3f1e6c5aed09b802edc30c825a4d104 - Fix bug on armour vs defence type.
+ad7ddcf0b2724d3fd3c6943f49e3c6825b10acc1 - NoReincarnation
+f33c99484f3742925be02ac6409ab6eb00d7af93 - NoMail
+fc29d8152c3a2c3cd039ce5520e233f9f7044e5e - Merge branch 'hotfix/CharnamesCrash#339'
+71ab06e92f6aca608c4b97edf7fd44708ec48856 - Merge branch 'hotfix/CharnamesCrash#339'
+b5002716a291eb8d46d65f94ab81e028049914f5 - Fixes #339 - Certain character names crashing server
+a3f4154daa8e2d0dec4ddf237d4021be4a3f791b - Append _player to end of playername to ensure not a reserved namespace
+b1b485fc4acda59a2a123197449ca897b07f69b1 - Fix all Server build warnings
+634eeb119ae8b297a9411e3ded4273d8999092f8 - Reference Server as a separate project
+e09d31a82a6363af9c5839089a1cb8bd86a8d134 - Remove uses of System.Windows.Forms from Server
+15c68d722e6bf8e5bf57b3bc247fec5e687b03a2 - Move MirForms out of the Server directory
+ec8fdb6db3a004aef2cf7e3088d29a982bb2bfa0 - Factor out use of SMain entirely
+3a87a37a7c60314355c5c320af3d94bea4ee1971 - Factor out uses of SMain.Envir
+97b0df5cea87b26e942b96c25b87002ba41c2edc - Remove Server icons that won't build
+14139a36e518cbc69cec3d87efa9368fe2086b65 - Add Server.Library.csproj to .sln file
+2aa81f8f43398a591625a452c93a03584d5cd55b - hintPath
+6cce086b168230b8ee0f48ffb5570389e562ef86 - Merge branch 'master' into master
+68509d14e9efd41c56e17571baaf3e7ac22486ed - Fixed client F10 Bug ,so the minimize Button is working now!  and clear up HttpServer.cs
+6869a46e2d737b19462857ec275802ae7672a3b9 - vs files ...
+cd001e9c89c33901f12e8571c1a7bf2c8f6fdaed - fixed httpService and fixed a big bug in MapObject.cs
+81f6c96de95ddd4b04413b9d36eb0f4ea9ca7fb9 - Merge pull request #10 from Suprcode/master
+1f06d50b51dde2040b94851164d5f1083535ccfe - Fix Item Strong for DamageItem
+87a54f0b0747bd5f785f3eefeafa835dfcf540f9 - Fixed a build error reported by daneo1989
+30155974050323020118bc6d9f1a2a06232136b3 - Ensure Server paths are combined correctly
+8959c22285a5e482be5a12b76548532233736de4 - Stop Assassin clone attacking after explosion (die)
+7363d04dbffd45f3c0faef42d3894b4ec2af038b - Fix Map Lightning & Lava
+45bdc5c9f551d23d481d4e29a8c38321a833ec03 - fix ftp download code for account/password scene.
+c70500ee900afb9f6b5eb0c0406f884a16d7ab04 - .vs folder should not be included.
+595de8f2dbdffb43ecb0da2825ad68bffad658fa - New Intelligent Creature.
+738f2e872d4090d68af249d6f7c80d5f0d053310 - Refixed F10 bug #344 (#363)
+244e08a2187a262f7058362a3faafb390957c1d8 - Update SelectScene.cs (#373)
+d710815815e8edafc4838ce78f01bc358fcad25a - fix NeedBridle Attribute (#379)
+ba8c68f8b992857d550b47e355fc8c4d1cae3444 - Add Alt+Click to sell support (#376)
+126bdf2b8600f557c36d84e93118ad4324f03603 - Updated BigMapDialog with map coords (#381)
+f27b020337a3e1facd881b77cf5dbbbba9f917ce - Update WeMadeLibrary.cs (#384)
+7c980c539bf928386318fb982ee3801c6bedea75 - Fix exploit with Used goods. (#394)
+e5f0f9b0b9ed366c646c92d14b7b596bd19de8d5 - Changing target framework on a NuGet package. (#393)

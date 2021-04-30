@@ -11,7 +11,7 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirSounds;
-using Microsoft.DirectX.Direct3D;
+using SlimDX.Direct3D9;
 using Font = System.Drawing.Font;
 using S = ServerPackets;
 using C = ClientPackets;
@@ -63,13 +63,13 @@ namespace Client.MirScenes.Dialogs
         public byte ItemCount;
         public byte BuffCount;
         public static int MyRankId;
-        public static RankOptions MyOptions;
-        public List<Rank> Ranks = new List<Rank>();
+        public static GuildRankOptions MyOptions;
+        public List<GuildRank> Ranks = new List<GuildRank>();
         public bool MembersChanged = true;
         public long LastMemberRequest = 0;
         public long LastGuildMsg = 0;
         public long LastRankNameChange = 0;
-        public RankOptions GetMyOptions()
+        public GuildRankOptions GetMyOptions()
         {
             return MyOptions;
         }
@@ -982,7 +982,7 @@ namespace Client.MirScenes.Dialogs
                     Error = "Insufficient points available.";
                 if (GameScene.Scene.GuildDialog.Level < BuffInfo.LevelRequirement)
                     Error = "Guild level too low.";
-                if (!GameScene.Scene.GuildDialog.GetMyOptions().HasFlag(RankOptions.CanActivateBuff))
+                if (!GameScene.Scene.GuildDialog.GetMyOptions().HasFlag(GuildRankOptions.CanActivateBuff))
                     Error = "Guild rank does not allow buff activation.";
                 if (Error != "")
                 {
@@ -1001,7 +1001,7 @@ namespace Client.MirScenes.Dialogs
                     Error = "Buff is still active.";
                 if (GameScene.Scene.GuildDialog.Gold < BuffInfo.ActivationCost)
                     Error = "Insufficient guild funds.";
-                if (!GameScene.Scene.GuildDialog.GetMyOptions().HasFlag(RankOptions.CanActivateBuff))
+                if (!GameScene.Scene.GuildDialog.GetMyOptions().HasFlag(GuildRankOptions.CanActivateBuff))
                     Error = "Guild rank does not allow buff activation.";
                 if (Error != "")
                 {
@@ -1389,17 +1389,17 @@ namespace Client.MirScenes.Dialogs
         #region ButtonResets
         public void ResetButtonStats()
         {
-            if (MyOptions.HasFlag(RankOptions.CanRetrieveItem) || MyOptions.HasFlag(RankOptions.CanStoreItem))
+            if (MyOptions.HasFlag(GuildRankOptions.CanRetrieveItem) || MyOptions.HasFlag(GuildRankOptions.CanStoreItem))
                 StorageButton.Visible = true;
             else
                 StorageButton.Visible = false;
 
-            if (MyOptions.HasFlag(RankOptions.CanChangeRank))
+            if (MyOptions.HasFlag(GuildRankOptions.CanChangeRank))
                 RankButton.Visible = true;
             else
                 RankButton.Visible = false;
 
-            if (MyOptions.HasFlag(RankOptions.CanChangeNotice))
+            if (MyOptions.HasFlag(GuildRankOptions.CanChangeNotice))
                 NoticeEditButton.Visible = true;
             else
                 NoticeEditButton.Visible = false;
@@ -1566,7 +1566,7 @@ namespace Client.MirScenes.Dialogs
         #endregion
 
         #region MembersDialogCode
-        public void NewMembersList(List<Rank> NewRanks)
+        public void NewMembersList(List<GuildRank> NewRanks)
         {
             Ranks = NewRanks;
             MembersChanged = false;
@@ -1625,7 +1625,7 @@ namespace Client.MirScenes.Dialogs
 
         public void AddMember()
         {
-            if (!MyOptions.HasFlag(RankOptions.CanRecruit)) return;
+            if (!MyOptions.HasFlag(GuildRankOptions.CanRecruit)) return;
             if (LastGuildMsg > CMain.Time) return;
             Network.Enqueue(new C.EditGuildMember { ChangeType = 0, Name = MembersRecruitName.Text });
             LastGuildMsg = CMain.Time + 5000;
@@ -1685,7 +1685,7 @@ namespace Client.MirScenes.Dialogs
             {
                 MembersDelete[i].Visible = false;
             }
-            if (MyOptions.HasFlag(RankOptions.CanRecruit))
+            if (MyOptions.HasFlag(GuildRankOptions.CanRecruit))
             {
                 RecruitMemberButton.Visible = true;
                 MembersRecruitName.Visible = true;
@@ -1713,11 +1713,11 @@ namespace Client.MirScenes.Dialogs
                     {
 
                         if ((!MembersShowOfflinesetting) && (Ranks[i].Members[j].Online == false)) continue;
-                        if ((MyOptions.HasFlag(RankOptions.CanChangeRank)) && (Ranks[i].Index >= MyRankId))
+                        if ((MyOptions.HasFlag(GuildRankOptions.CanChangeRank)) && (Ranks[i].Index >= MyRankId))
                             MembersRanks[RowCount].Enabled = true;
                         else
                             MembersRanks[RowCount].Enabled = false;
-                        if ((MyOptions.HasFlag(RankOptions.CanKick)) && (Ranks[i].Index >= MyRankId) && (Ranks[i].Members[j].name != MapControl.User.Name)/* && (Ranks[i].Index != 0)*/)
+                        if ((MyOptions.HasFlag(GuildRankOptions.CanKick)) && (Ranks[i].Index >= MyRankId) && (Ranks[i].Members[j].name != MapControl.User.Name)/* && (Ranks[i].Index != 0)*/)
                             MembersDelete[RowCount].Visible = true;
                         else
                             MembersDelete[RowCount].Visible = false;
@@ -1879,7 +1879,7 @@ namespace Client.MirScenes.Dialogs
         #endregion
 
         #region RankDialogCode
-        public void NewRankRecieved(Rank New)
+        public void NewRankRecieved(GuildRank New)
         {
             int NewIndex = Ranks.Count > 1 ? Ranks.Count - 1 : 1;
             Ranks.Insert(NewIndex, New);
@@ -1887,7 +1887,7 @@ namespace Client.MirScenes.Dialogs
             RefreshMemberList();
             UpdateRanks();
         }
-        public void MyRankChanged(Rank New)
+        public void MyRankChanged(GuildRank New)
         {
             MyOptions = New.Options;
 
@@ -1917,7 +1917,7 @@ namespace Client.MirScenes.Dialogs
             UpdateMembers();
 
         }
-        public void RankChangeRecieved(Rank New)
+        public void RankChangeRecieved(GuildRank New)
         {
             for (int i = 0; i < Ranks.Count; i++)
                 if (Ranks[i].Index == New.Index)
@@ -1965,7 +1965,7 @@ namespace Client.MirScenes.Dialogs
                 LastRankNameChange = long.MaxValue;
             for (int i = 0; i < RanksOptionsStatus.Length; i++)
             {
-                if (Ranks[RanksSelectBox.SelectedIndex].Options.HasFlag((RankOptions)(1 << i)))
+                if (Ranks[RanksSelectBox.SelectedIndex].Options.HasFlag((GuildRankOptions)(1 << i)))
                     RanksOptionsStatus[i].Visible = true;
                 else
                     RanksOptionsStatus[i].Visible = false;
@@ -2229,23 +2229,23 @@ namespace Client.MirScenes.Dialogs
                     break;
             }
         }
-        public void StatusChanged(RankOptions status)
+        public void StatusChanged(GuildRankOptions status)
         {
             Notice.Enabled = false;
             NoticeEditButton.Index = 85;
             MyOptions = status;
 
-            if (MyOptions.HasFlag(RankOptions.CanChangeNotice))
+            if (MyOptions.HasFlag(GuildRankOptions.CanChangeNotice))
                 NoticeEditButton.Visible = true;
             else
                 NoticeEditButton.Visible = false;
 
-            if (MyOptions.HasFlag(RankOptions.CanChangeRank))
+            if (MyOptions.HasFlag(GuildRankOptions.CanChangeRank))
                 RankButton.Visible = true;
             else
                 RankButton.Visible = false;
 
-            if ((MyOptions.HasFlag(RankOptions.CanStoreItem)) || (MyOptions.HasFlag(RankOptions.CanRetrieveItem)))
+            if ((MyOptions.HasFlag(GuildRankOptions.CanStoreItem)) || (MyOptions.HasFlag(GuildRankOptions.CanRetrieveItem)))
                 StorageButton.Visible = true;
             else
                 StorageButton.Visible = false;
@@ -2257,18 +2257,14 @@ namespace Client.MirScenes.Dialogs
         #endregion
 
         #region GuildDialogChecks
-        public void Hide()
-        {
-            if (!Visible) return;
-            Visible = false;
-        }
-        public void Show()
+
+        public override void Show()
         {
             if (Visible) return;
 
             if (MapControl.User.GuildName == "")
             {
-                MirMessageBox messageBox = new MirMessageBox("You are not in a guild.", MirMessageBoxButtons.OK);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.NotInGuild, MirMessageBoxButtons.OK);
                 messageBox.Show();
                 return;
             }

@@ -14,7 +14,7 @@ namespace Server.MirObjects
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
 
         public ConquestInfo Info;
@@ -846,7 +846,7 @@ namespace Server.MirObjects
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
 
         public int Index;
@@ -914,13 +914,13 @@ namespace Server.MirObjects
         {
             uint cost = 0;
 
+            if (Gate == null) return 0;
+
             if (Gate.MaxHP == Gate.HP) return cost;
 
-            if (Gate != null)
-            {
-                if (Info.RepairCost != 0)
-                    cost = Info.RepairCost / (Gate.MaxHP / (Gate.MaxHP - Gate.HP));
-            }
+            if (Info.RepairCost != 0)
+                cost = Info.RepairCost / (Gate.MaxHP / (Gate.MaxHP - Gate.HP));
+
             return cost;
         }
 
@@ -1017,7 +1017,7 @@ namespace Server.MirObjects
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
 
         public int Index;
@@ -1084,12 +1084,13 @@ namespace Server.MirObjects
         {
             uint cost = 0;
 
+            if (Wall == null) return 0;
+
             if (Wall.MaxHP == Wall.HP) return cost;
-            if (Wall != null)
-            {
-                if (Info.RepairCost != 0)
-                    cost = Info.RepairCost / (Wall.MaxHP / (Wall.MaxHP - Wall.HP));
-            }
+
+            if (Info.RepairCost != 0)
+                cost = Info.RepairCost / (Wall.MaxHP / (Wall.MaxHP - Wall.HP));
+
             return cost;
         }
 
@@ -1114,7 +1115,7 @@ namespace Server.MirObjects
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
 
         public int Index;
@@ -1180,13 +1181,13 @@ namespace Server.MirObjects
         {
             uint cost = 0;
 
+            if (Gate == null) return 0;
+
             if (Gate.MaxHP == Gate.HP) return cost;
 
-            if (Gate != null)
-            {
-                if (Info.RepairCost != 0)
-                    cost = Info.RepairCost / (Gate.MaxHP / (Gate.MaxHP - Gate.HP));
-            }
+            if (Info.RepairCost != 0)
+                cost = Info.RepairCost / (Gate.MaxHP / (Gate.MaxHP - Gate.HP));
+
             return cost;
         }
 
@@ -1213,7 +1214,7 @@ namespace Server.MirObjects
     {
         protected static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
 
         public int Index;

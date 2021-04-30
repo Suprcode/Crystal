@@ -8,7 +8,7 @@ namespace Client
     class Settings
     {
         public const long CleanDelay = 600000;
-        public static int ScreenWidth = 800, ScreenHeight = 600;
+        public static int ScreenWidth = 1024, ScreenHeight = 768;
         private static InIReader Reader = new InIReader(@".\Mir2Config.ini");
 
         private static bool _useTestConfig;
@@ -66,6 +66,8 @@ namespace Client
         //Graphics
         public static bool FullScreen = true, TopMost = true;
         public static string FontName = "Tahoma"; //"MS Sans Serif"
+        public static float FontSize = 8F;
+
         public static bool FPSCap = true;
         public static int MaxFPS = 100;
         public static int Resolution = 1024;
@@ -127,6 +129,7 @@ namespace Client
             NameView = true,
             HPView = true,
             TransparentChat = false,
+            ModeView = false,
             DuraView = false,
             DisplayDamage = true,
             TargetDead = false,
@@ -161,7 +164,7 @@ namespace Client
 
         //AutoPatcher
         public static bool P_Patcher = true;
-        public static string P_Host = @""; //ftp://212.67.209.184
+        public static string P_Host = @"http://mirfiles.co.uk/mir2/cmir/patch/";
         public static string P_PatchFileName = @"PList.gz";
         public static bool P_NeedLogin = false;
         public static string P_Login = string.Empty;
@@ -173,10 +176,13 @@ namespace Client
 
         public static void Load()
         {
+            //Languahe
+            GameLanguage.LoadClientLanguage(@".\Language.ini");
+
             if (!Directory.Exists(DataPath)) Directory.CreateDirectory(DataPath);
             if (!Directory.Exists(MapPath)) Directory.CreateDirectory(MapPath);
             if (!Directory.Exists(SoundPath)) Directory.CreateDirectory(SoundPath);
-
+           
             //Graphics
             FullScreen = Reader.ReadBoolean("Graphics", "FullScreen", FullScreen);
             TopMost = Reader.ReadBoolean("Graphics", "AlwaysOnTop", TopMost);
@@ -213,6 +219,7 @@ namespace Client
             DropView = Reader.ReadBoolean("Game", "DropView", DropView);
             NameView = Reader.ReadBoolean("Game", "NameView", NameView);
             HPView = Reader.ReadBoolean("Game", "HPMPView", HPView);
+            ModeView = Reader.ReadBoolean("Game", "ModeView", ModeView);
             FontName = Reader.ReadString("Game", "FontName", FontName);
             TransparentChat = Reader.ReadBoolean("Game", "TransparentChat", TransparentChat);
             DisplayDamage = Reader.ReadBoolean("Game", "DisplayDamage", DisplayDamage);
@@ -285,6 +292,7 @@ namespace Client
             Reader.Write("Game", "DropView", DropView);
             Reader.Write("Game", "NameView", NameView);
             Reader.Write("Game", "HPMPView", HPView);
+            Reader.Write("Game", "ModeView", ModeView);
             Reader.Write("Game", "FontName", FontName);
             Reader.Write("Game", "TransparentChat", TransparentChat);
             Reader.Write("Game", "DisplayDamage", DisplayDamage);
@@ -347,5 +355,10 @@ namespace Client
                 Reader.Write("Q-" + Charname, "Quest-" + i.ToString(), TrackedQuests[i]);
             }
         }
+
+
+      
     }
+
+    
 }

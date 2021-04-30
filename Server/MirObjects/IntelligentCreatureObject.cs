@@ -171,7 +171,7 @@ namespace Server.MirObjects
                 {
                     case IntelligentCreatureType.BabyDragon:
                     case IntelligentCreatureType.OlympicFlame:
-                        if (SMain.Envir.Random.Next(10) > 5)
+                        if (Envir.Random.Next(10) > 5)
                             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
                         else
                             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
@@ -180,7 +180,7 @@ namespace Server.MirObjects
                         Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
                         break;
                     default:
-                        switch(SMain.Envir.Random.Next(10))
+                        switch(Envir.Random.Next(10))
                         {
                             case 0:
                                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
@@ -268,7 +268,7 @@ namespace Server.MirObjects
                 if (!Functions.InRange(CurrentLocation, Master.CurrentLocation, 2))
                     MoveTo(Functions.PointMove(Master.CurrentLocation,Master.Direction, -2));
                 else
-                    if (SMain.Envir.Random.Next(100) >= 60) ProcessAnimVariant();//random anims
+                    if (Envir.Random.Next(100) >= 60) ProcessAnimVariant();//random anims
             }
         }
         
@@ -291,6 +291,8 @@ namespace Server.MirObjects
         
         protected override void FindTarget()
         {
+            if (Dead) return;
+
             if (Fullness < CreatureRules.MinimalFullness) return;
 
             //do automatic pickup/find
@@ -302,6 +304,8 @@ namespace Server.MirObjects
 
         private void FindItemTarget()
         {
+            if (Master == null) return;
+
             int range = shortcheck ? 4 : CreatureRules.AutoPickupRange;
 
             for (int d = 0; d <= range; d++)
@@ -582,11 +586,11 @@ namespace Server.MirObjects
 
                     if (item.Item.Info.ShowGroupPickup && IsMasterGroupMember(Master))
                         for (int j = 0; j < Master.GroupMembers.Count; j++)
-                            Master.GroupMembers[j].ReceiveChat(Name + " Picked up: {" + item.Item.Name + "}", ChatType.Hint);
+                            Master.GroupMembers[j].ReceiveChat(Name + " Picked up: {" + item.Item.FriendlyName + "}", ChatType.Hint);
 
                     if (item.Item.Info.Grade == ItemGrade.Mythical || item.Item.Info.Grade == ItemGrade.Legendary)
                     {
-                        Master.ReceiveChat("Pet Picked up: {" + item.Item.Name + "}", ChatType.Hint);
+                        Master.ReceiveChat("Pet Picked up: {" + item.Item.FriendlyName + "}", ChatType.Hint);
                         ((PlayerObject)Master).Enqueue(new S.IntelligentCreaturePickup { ObjectID = ObjectID });
                     }
 

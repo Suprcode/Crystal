@@ -9,7 +9,7 @@ namespace Server.MirEnvir
 {
     public class Dragon
     {
-        private int ProcessDelay = 2000;
+        private readonly int ProcessDelay = 2000;
         public int DeLevelDelay = 60 * (60 * 1000);
         private long ProcessTime;
         public byte MaxLevel = Globals.MaxDragonLevel;
@@ -19,10 +19,15 @@ namespace Server.MirEnvir
 
         private static Envir Envir
         {
-            get { return SMain.Envir; }
+            get { return Envir.Main; }
         }
 
-        private Point[] BodyLocations = new[]
+        protected static MessageQueue MessageQueue
+        {
+            get { return MessageQueue.Instance; }
+        }
+
+        private readonly Point[] BodyLocations = new[]
         {
             new Point(-3, -1),
             new Point(-3, -0),
@@ -65,29 +70,28 @@ namespace Server.MirEnvir
                 MonsterInfo info = Envir.GetMonsterInfo(Info.MonsterName);
                 if (info == null)
                 {
-                    SMain.Enqueue("Failed to load Dragon (bad monster name): " + Info.MonsterName);
+                    MessageQueue.Enqueue("Failed to load Dragon (bad monster name): " + Info.MonsterName);
                     return false;
                 }
                 LinkedMonster = MonsterObject.GetMonster(info);
 
-                Map map = SMain.Envir.GetMapByNameAndInstance(Info.MapFileName);
+                Map map = Envir.GetMapByNameAndInstance(Info.MapFileName);
                 if (map == null)
                 {
-                    SMain.Enqueue("Failed to load Dragon (bad map name): " + Info.MapFileName);
+                    MessageQueue.Enqueue("Failed to load Dragon (bad map name): " + Info.MapFileName);
                     return false;
                 }
 
                 if (Info.Location.X > map.Width || Info.Location.Y > map.Height)
                 {
-                    SMain.Enqueue("Failed to load Dragon (bad map XY): " + Info.MapFileName);
+                    MessageQueue.Enqueue("Failed to load Dragon (bad map XY): " + Info.MapFileName);
                     return false;
                 }
 
                 if (LinkedMonster.Spawn(map, Info.Location))
                 {
-                    if (LinkedMonster is EvilMir)
+                    if (LinkedMonster is EvilMir mob)
                     {
-                        EvilMir mob = (EvilMir)LinkedMonster;
                         if (mob != null)
                         {
                             mob.DragonLink = true;
@@ -113,10 +117,10 @@ namespace Server.MirEnvir
             }
             catch (Exception ex)
             {
-                SMain.Enqueue(ex);
+                MessageQueue.Enqueue(ex);
             }
 
-            SMain.Enqueue("Failed to load Dragon");
+            MessageQueue.Enqueue("Failed to load Dragon");
             return false;
         }
         public void GainExp(int ammount)
