@@ -5641,7 +5641,7 @@ namespace Server.MirObjects
             if (Info.Equipment[(int)EquipmentSlot.Weapon] == null) return;
             ItemInfo RealItem = Functions.GetRealItem(Info.Equipment[(int)EquipmentSlot.Weapon].Info, Info.Level, Info.Class, Envir.ItemInfoList);
 
-            if ((RealItem.Shape / 100) != 2) return;
+            if ((RealItem.Shape / Globals.ClassWeaponCount) != 2) return;
             if (Functions.InRange(CurrentLocation, location, Globals.MaxAttackRange) == false) return;
 
             MapObject target = null;

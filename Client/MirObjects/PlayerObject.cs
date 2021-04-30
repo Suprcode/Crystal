@@ -46,7 +46,7 @@ namespace Client.MirObjects
         {
             get
             {
-                switch (Weapon / 100)
+                switch (Weapon / Globals.ClassWeaponCount)
                 {
                     default:
                         return Class == MirClass.Wizard || Class == MirClass.Warrior || Class == MirClass.Taoist;
