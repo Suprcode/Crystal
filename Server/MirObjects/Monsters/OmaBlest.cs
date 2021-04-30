@@ -31,7 +31,7 @@ namespace Server.MirObjects.Monsters
             if (Envir.Random.Next(5) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                int damage = GetAttackPower(MinDC, MaxDC);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
                 Target.Attacked(this, damage, DefenceType.ACAgility);
             }
@@ -47,7 +47,7 @@ namespace Server.MirObjects.Monsters
             List<MapObject> targets = FindAllTargets(1, Target.CurrentLocation);
             if (targets.Count == 0) return;
 
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
             for (int i = 0; i < targets.Count; i++)

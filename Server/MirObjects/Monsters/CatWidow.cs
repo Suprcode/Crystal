@@ -31,14 +31,14 @@ namespace Server.MirObjects.Monsters
             if (Envir.Random.Next(5) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                int damage = GetAttackPower(MinDC, MaxDC);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
                 Target.Attacked(this, damage, DefenceType.ACAgility);
             }
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                int damage = GetAttackPower(MinDC, MaxDC * 2);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * 2);
                 if (damage == 0) return;
                 Target.Attacked(this, damage, DefenceType.ACAgility);
             }

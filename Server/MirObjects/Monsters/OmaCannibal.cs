@@ -42,7 +42,7 @@ namespace Server.MirObjects.Monsters
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 ActionTime = Envir.Time + 300;
                 AttackTime = Envir.Time + AttackSpeed;
-                int damage = GetAttackPower(MinDC, MaxDC);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
                 Target.Attacked(this, damage, DefenceType.ACAgility);
             }
@@ -51,14 +51,14 @@ namespace Server.MirObjects.Monsters
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
                 ActionTime = Envir.Time + 300;
                 AttackTime = Envir.Time + AttackSpeed + 500;
-                int damage = GetAttackPower(MinDC, MaxDC);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
                 Target.Attacked(this, damage, DefenceType.MACAgility);
 
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
                 {
                     if (Envir.Random.Next(5) == 0)
-                        Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Green, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 1000 }, this);
+                        Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Green, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);
                 }
 
                 DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MAC);

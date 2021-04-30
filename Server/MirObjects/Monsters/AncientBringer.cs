@@ -78,7 +78,7 @@ namespace Server.MirObjects.Monsters
 
         private void LineAttack1(int distance)
         {
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
             Target.Attacked(this, damage, DefenceType.ACAgility);
         }
@@ -91,7 +91,7 @@ namespace Server.MirObjects.Monsters
             dir = Functions.NextDir(dir);
             Point target = Functions.PointMove(CurrentLocation, dir, 1);
 
-            int damage = GetAttackPower(MinDC, MaxDC * 2);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * 2);
             if (damage == 0) return;
             Target.Attacked(this, damage, DefenceType.ACAgility);
 
@@ -114,11 +114,11 @@ namespace Server.MirObjects.Monsters
 
                     ob.Attacked(this, damage, DefenceType.ACAgility);
 
-                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
                     {
                         if (Envir.Random.Next(5) == 0)
                         {
-                            Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Paralysis, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);
+                            Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Paralysis, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 2000 }, this);
                         }
                     }
                     break;
@@ -128,7 +128,7 @@ namespace Server.MirObjects.Monsters
 
         private void RangeAttack1(int distance)
         {
-            int damage = GetAttackPower(MinMC, MaxMC);
+            int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
             if (damage == 0) return;
             DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MAC);
             Target.Attacked(this, damage, DefenceType.MACAgility);
@@ -136,7 +136,7 @@ namespace Server.MirObjects.Monsters
 
         private void RangeAttack2(int distance)
         {
-            int damage = GetAttackPower(MinMC, MaxMC * 2);
+            int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC] * 2);
             if (damage == 0) return;
             Target.Attacked(this, damage, DefenceType.MACAgility);
 

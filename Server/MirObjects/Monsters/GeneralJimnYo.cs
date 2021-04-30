@@ -88,7 +88,7 @@ namespace Server.MirObjects.Monsters
 
             Point target = Functions.PointMove(CurrentLocation, dir, 1);
 
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
             Target.Attacked(this, damage, DefenceType.AC);
 
@@ -120,7 +120,7 @@ namespace Server.MirObjects.Monsters
             List<MapObject> targets = FindAllTargets(3, Target.CurrentLocation);
             if (targets.Count == 0) return;
 
-            int damage = GetAttackPower(MinDC, MaxDC * 2);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * 2);
             if (damage == 0) return;
 
             for (int i = 0; i < targets.Count; i++)
@@ -133,7 +133,7 @@ namespace Server.MirObjects.Monsters
 
         private void RangeAttack1(int distance)//Standard Ranged Attack
         {
-            int damage = GetAttackPower(MinMC, MaxMC);
+            int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
             if (damage == 0) return;
 
             DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MAC);

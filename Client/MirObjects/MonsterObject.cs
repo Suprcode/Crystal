@@ -1925,7 +1925,7 @@ namespace Client.MirObjects
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlameQueen], 729, 10, Frame.Count * Frame.Interval, this));
                                                 break;
                                             case Monster.AncientBringer:
-                                                missile = CreateProjectile(688, Libraries.Monsters[(ushort)Monster.AncientBringer], true, 4, 50, 0, false);
+                                                missile = CreateProjectile(688, Libraries.Monsters[(ushort)Monster.AncientBringer], true, 4, 50, 0, direction16: false);
 
                                                 if (missile.Target != null)
                                                 {
@@ -1988,7 +1988,7 @@ namespace Client.MirObjects
                                                 break;
                                             case Monster.CannibalTentacles:
                                                 if (MapControl.GetObject(TargetID) != null)
-                                                    CreateProjectile(472, Libraries.Monsters[(ushort)Monster.CannibalTentacles], true, 8, 80, 0, false);
+                                                    CreateProjectile(472, Libraries.Monsters[(ushort)Monster.CannibalTentacles], true, 8, 80, 0, direction16: false);
                                                 break;
                                             case Monster.SwampWarrior:
                                                 ob = MapControl.GetObject(TargetID);
@@ -2018,7 +2018,7 @@ namespace Client.MirObjects
                                     switch(BaseImage)
                                     {
                                         case Monster.OmaCannibal:
-                                            missile = CreateProjectile(360, Libraries.Monsters[(ushort)Monster.OmaCannibal], true, 6, 60, 0, true);
+                                            missile = CreateProjectile(360, Libraries.Monsters[(ushort)Monster.OmaCannibal], true, 6, 60, 0);
 
                                             if (missile.Target != null)
                                             {
@@ -2030,7 +2030,7 @@ namespace Client.MirObjects
                                             }
                                             break;
                                         case Monster.OmaMage:
-                                            missile = CreateProjectile(392, Libraries.Monsters[(ushort)Monster.OmaMage], true, 16, 160, 0, false);
+                                            missile = CreateProjectile(392, Libraries.Monsters[(ushort)Monster.OmaMage], true, 16, 160, 0, direction16: false);
 
                                             if (missile.Target != null)
                                             {
@@ -2145,7 +2145,7 @@ namespace Client.MirObjects
                                                 }
                                                 break;
                                             case Monster.SeedingsGeneral:
-                                                missile = CreateProjectile(1265, Libraries.Monsters[(ushort)Monster.SeedingsGeneral], true, 4, 50, 0, true);
+                                                missile = CreateProjectile(1265, Libraries.Monsters[(ushort)Monster.SeedingsGeneral], true, 4, 50, 0);
 
                                                 if (missile.Target != null)
                                                 {

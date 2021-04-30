@@ -49,21 +49,21 @@ namespace Server.MirObjects.Monsters
             switch (type)
             {
                 case DefenceType.ACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) return 0;
+                    armour = GetDefencePower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.AC:
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    armour = GetDefencePower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.MACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
-                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) return 0;
+                    armour = GetDefencePower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
                 case DefenceType.MAC:
-                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    armour = GetDefencePower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
                 case DefenceType.Agility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) return 0;
                     break;
             }
 
@@ -102,21 +102,21 @@ namespace Server.MirObjects.Monsters
             switch (type)
             {
                 case DefenceType.ACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) return 0;
+                    armour = GetDefencePower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.AC:
-                    armour = GetDefencePower(MinAC, MaxAC);
+                    armour = GetDefencePower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.MACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
-                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) return 0;
+                    armour = GetDefencePower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
                 case DefenceType.MAC:
-                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    armour = GetDefencePower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
                 case DefenceType.Agility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) return 0;
                     break;
             }
 
@@ -190,13 +190,13 @@ namespace Server.MirObjects.Monsters
 
             for (int i = 0; i < targets.Count; i++)
             {
-                int damage = GetAttackPower(MinDC, MaxDC);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
 
                 if (targets[i].Attacked(this, damage, DefenceType.MAC) <= 0) return;
 
                 if (Envir.Random.Next(3) == 0)
-                    targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Green, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);
+                    targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Green, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 2000 }, this);
             }
         }
 

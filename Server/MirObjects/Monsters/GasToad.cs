@@ -36,7 +36,7 @@ namespace Server.MirObjects.Monsters
                 if (Envir.Random.Next(2) > 0)
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                    int damage = GetAttackPower(MinDC, MaxDC);
+                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                     if (damage == 0) return;
                     Target.Attacked(this, damage);
                 }
@@ -56,14 +56,14 @@ namespace Server.MirObjects.Monsters
 
         private void Attack2() //Body Slam Attack
         {
-            int damage = GetAttackPower(MinDC, MaxDC * 2);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * 2);
             if (damage == 0) return;
             Target.Attacked(this, damage);
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
             {
                 if (Envir.Random.Next(5) == 0)
-                    Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Paralysis, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);
+                    Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Paralysis, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 2000 }, this);
             }
 
 
@@ -76,13 +76,13 @@ namespace Server.MirObjects.Monsters
 
             for (int i = 0; i < targets.Count; i++)
             {
-                int damage = GetAttackPower(MinSC, MaxSC);
+                int damage = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
                 if (damage == 0) return;
 
                 if (targets[i].Attacked(this, damage, DefenceType.MAC) <= 0) return;
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
                 {
-                    targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Green, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);
+                    targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Green, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 2000 }, this);
                 }
             }
 

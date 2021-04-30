@@ -51,7 +51,7 @@ namespace Server.MirObjects.Monsters
                 if (Envir.Random.Next(5) > 0)
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                    int damage = GetAttackPower(MinDC, MaxDC);
+                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                     if (damage == 0) return;
                     Target.Attacked(this, damage, DefenceType.ACAgility);
                 }
@@ -68,13 +68,13 @@ namespace Server.MirObjects.Monsters
                 {
                     Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
                     AttackTime = Envir.Time + AttackSpeed + 500;
-                    int damage = GetAttackPower(MinMC, MaxMC);
+                    int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                     if (damage == 0) return;
 
-                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
                     {
                         if (Envir.Random.Next(10) == 0)
-                            Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Green, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 1000 }, this);
+                            Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Green, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);
                     }
 
                     DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MAC);
@@ -99,7 +99,7 @@ namespace Server.MirObjects.Monsters
             List<MapObject> targets = FindAllTargets(3, CurrentLocation);
             if (targets.Count == 0) return;
 
-            int damage = GetAttackPower(MinDC, MaxDC * 2);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * 2);
             if (damage == 0) return;
 
             for (int i = 0; i < targets.Count; i++)
@@ -123,16 +123,16 @@ namespace Server.MirObjects.Monsters
 
                 Broadcast(new S.ObjectEffect { ObjectID = Target.ObjectID, Effect = SpellEffect.KingGuard });
 
-                int damage = GetAttackPower(MinMC, MaxMC * 2);
+                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC] * 2);
                 if (damage == 0) return;
                 Target.Attacked(this, damage, DefenceType.MAC);
 
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
                 {
                     if (Envir.Random.Next(5) == 0)
-                        Target.ApplyPoison(new Poison { Owner = this, Duration = 10, PType = PoisonType.Slow, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 1000 }, this);
+                        Target.ApplyPoison(new Poison { Owner = this, Duration = 10, PType = PoisonType.Slow, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);
                     if (Envir.Random.Next(5) == 0)
-                        Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Paralysis, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 1000 }, this);
+                        Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Paralysis, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);
                 }
             }
         }

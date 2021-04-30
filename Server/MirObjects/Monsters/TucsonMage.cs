@@ -43,7 +43,7 @@ namespace Server.MirObjects.Monsters
             if (!range && Envir.Random.Next(5) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                int damage = GetAttackPower(MinDC, MaxDC);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
                 Target.Attacked(this, damage);
             }
@@ -64,7 +64,7 @@ namespace Server.MirObjects.Monsters
         private void LineAttack(int distance)
         {
 
-            int damage = GetAttackPower(MinMC, MaxMC);
+            int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
             if (damage == 0) return;
 
             for (int i = 1; i <= distance; i++)

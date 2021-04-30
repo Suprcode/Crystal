@@ -49,7 +49,7 @@ namespace Server.MirObjects.Monsters
                 if (Envir.Random.Next(5) > 0)
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                    int damage = GetAttackPower(MinDC, MaxDC);
+                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                     if (damage == 0) return;
                     Target.Attacked(this, damage);
                 }
@@ -80,10 +80,10 @@ namespace Server.MirObjects.Monsters
 
             Point target = Functions.PointMove(CurrentLocation, dir, 1);
 
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;            
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
             {
                 Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Green, TickSpeed = 1000, }, this);
             }
@@ -118,7 +118,7 @@ namespace Server.MirObjects.Monsters
 
         private void RangeAttack1()
         {
-            int damage = GetAttackPower(MinMC, MaxMC);
+            int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
             if (damage == 0) return;
 
             DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MAC);

@@ -29,7 +29,7 @@ namespace Server.MirObjects.Monsters
                 else
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                    int damage = GetAttackPower(MinDC, MaxDC * 2);
+                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * 2);
                     if (damage == 0) return;
                     Target.Attacked(this, damage);
                 }
@@ -48,11 +48,11 @@ namespace Server.MirObjects.Monsters
         }
         private void Attack3()
         {
-            int damage = GetAttackPower(MinDC, MaxDC);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
             Target.Attacked(this, damage);
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
             {
                 Target.ApplyPoison(new Poison { Owner = this, Duration = 3, PType = PoisonType.Stun, TickSpeed = 2000 }, this);
             }

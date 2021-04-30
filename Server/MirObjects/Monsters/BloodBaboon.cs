@@ -41,7 +41,7 @@ namespace Server.MirObjects.Monsters
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
-                int damage = GetAttackPower(MinDC, MaxDC);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;                
 
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
@@ -56,7 +56,7 @@ namespace Server.MirObjects.Monsters
 
         private void LineAttack(int distance)
         {
-            int damage = GetAttackPower(MinDC, MaxDC * 2);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * 2);
             if (damage == 0) return;            
 
             int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //delay for animations         

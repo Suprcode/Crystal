@@ -43,7 +43,7 @@ namespace Server.MirObjects.Monsters
             if (!ranged)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                int damage = GetAttackPower(MinDC, MaxDC);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
                 Target.Attacked(this, damage, DefenceType.ACAgility);
             }
@@ -51,21 +51,21 @@ namespace Server.MirObjects.Monsters
             {
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
                 AttackTime = Envir.Time + AttackSpeed + 500;
-                int damage = GetAttackPower(MinMC, MaxMC);
+                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                 if (damage == 0) return;
 
                 
                 if (Envir.Random.Next(8) > 0) // Random chance to poison
                 {
-                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
                     {
                         if (Envir.Random.Next(1) > 0) // Random chance for poison to be either Green or Red (set to 50/50 chance)
                         {
-                            Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Green, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);
+                            Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Green, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 2000 }, this);
                         }
                         else
                         {
-                            Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Red, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);
+                            Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Red, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 2000 }, this);
                         }
                     }
                 }

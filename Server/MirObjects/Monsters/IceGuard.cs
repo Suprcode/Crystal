@@ -43,7 +43,7 @@ namespace Server.MirObjects.Monsters
             if (!ranged)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                int damage = GetAttackPower(MinDC, MaxDC);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
                 Target.Attacked(this, damage, DefenceType.ACAgility);
             }
@@ -55,18 +55,18 @@ namespace Server.MirObjects.Monsters
                         //Ice Attack
                         Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
                         AttackTime = Envir.Time + AttackSpeed + 500;
-                        int damage = GetAttackPower(MinMC, MaxMC);
+                        int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                         if (damage == 0) return;
 
                         DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MAC);
                         ActionList.Add(action);
 
-                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
                         {
                             if (Envir.Random.Next(5) == 0)
-                                Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Slow, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 1000 }, this);
+                                Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Slow, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);
                             if (Envir.Random.Next(10) == 0)
-                                Target.ApplyPoison(new Poison { Owner = this, Duration = 3, PType = PoisonType.Frozen, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 1000 }, this);
+                                Target.ApplyPoison(new Poison { Owner = this, Duration = 3, PType = PoisonType.Frozen, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);
                         }
 
                     }
@@ -75,7 +75,7 @@ namespace Server.MirObjects.Monsters
                         //Fire Attack
                         Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
                         AttackTime = Envir.Time + AttackSpeed + 500;
-                        int damage = GetAttackPower(MinMC, MaxMC);
+                        int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                         if (damage == 0) return;
 
                         DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MAC);

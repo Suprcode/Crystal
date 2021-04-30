@@ -67,7 +67,7 @@ namespace Server.MirObjects.Monsters
 
             for (int i = 0; i < 4; i++)
             {
-                int damage = GetAttackPower(MinDC, MaxDC);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
                 Target.Attacked(this, damage, DefenceType.ACAgility);
             }
@@ -76,7 +76,7 @@ namespace Server.MirObjects.Monsters
 
         private void Attack2(int distance)
         {
-            int damage = GetAttackPower(MinDC, MaxDC * 2);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * 2);
             if (damage == 0) return;
 
             for (int i = 1; i <= distance; i++)
