@@ -924,6 +924,7 @@ namespace Server.MirObjects
             ObjectID = reader.ReadUInt32();
             ExpireTime = reader.ReadInt64();
 
+
             if (Envir.LoadVersion <= 84)
             {
                 Values = new int[reader.ReadInt32()];
@@ -934,6 +935,9 @@ namespace Server.MirObjects
                 }
 
                 Infinite = reader.ReadBoolean();
+
+                Stats = new Stats();
+                Data = new Dictionary<string, object>();
             }
             else
             {
