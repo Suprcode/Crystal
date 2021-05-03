@@ -500,10 +500,10 @@ public enum Monster : ushort
     PowerUpBead = 319,
     DarkOmaKing = 320,
     CaveMage = 321,
-    Mandrill = 322,
-    PlagueCrab = 323,
-    CreeperPlant = 324,
-    FloatingWraith = 325,
+    Mandrill = 322, // INCOMPLETE - TODO: TELEPORT NEEDS CODING
+    PlagueCrab = 323, // Done (DG) - Note: There are seven frames missing from the DrawEffect in the lib (causes die effect to look off).
+    CreeperPlant = 324, //Done (DG)
+    FloatingWraith = 325, //Done (DG) - Use AI 8 (AxeSkeleton)
     ArmedPlant = 326,
     AvengerPlant = 327,
     Nadz = 328,

@@ -990,6 +990,9 @@ namespace Client.MirObjects
                             case Monster.MudWarrior:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MudWarrior], 873, 9, 9 * Frame.Interval, this));
                                 break;
+                            case Monster.CreeperPlant:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.CreeperPlant], 266, 6, Frame.Count * Frame.Interval, this));
+                                break;
                         }
                         PlayDieSound();
                         break;
@@ -1146,6 +1149,7 @@ namespace Client.MirObjects
                             {
 
                                 case Monster.CannibalPlant:
+                                case Monster.CreeperPlant:
                                 case Monster.EvilCentipede:
                                 case Monster.DigOutZombie:
                                 case Monster.Armadillo:
@@ -1284,6 +1288,9 @@ namespace Client.MirObjects
                                             case Monster.ArmadilloElder:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ArmadilloElder], 488 + (int)Direction * 3, 3, 3 * Frame.Interval, this));
                                                 break;
+                                            case Monster.Mandrill:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Mandrill], 264 + (int)Direction * 2, 2, 2 * Frame.Interval, this));
+                                                break;
                                         }
                                         break;
                                     }
@@ -1315,6 +1322,9 @@ namespace Client.MirObjects
                                         {
                                             case Monster.OmaAssassin:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.OmaAssassin], 312 + (int)Direction * 5, 5, 5 * Frame.Interval, this));
+                                                break;
+                                            case Monster.PlagueCrab:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.PlagueCrab], 488 + (int)Direction * 7, 7, 7 * Frame.Interval, this));
                                                 break;
                                         }
                                         break;
@@ -2011,6 +2021,18 @@ namespace Client.MirObjects
                                                     ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RhinoPriest], 376, 9, 900, ob));
                                                 }
                                                 break;
+                                            case Monster.CreeperPlant:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.CreeperPlant], 250, 6, 600, ob) { Blend = true });
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.CreeperPlant], 256, 10, 1000, ob) { Blend = false });
+                                                }
+                                                break;
+                                            case Monster.FloatingWraith:
+                                                if (MapControl.GetObject(TargetID) != null)
+                                                    CreateProjectile(248, Libraries.Monsters[(ushort)Monster.FloatingWraith], true, 2, 20, 0, direction16: true);
+                                                break;
                                         }
                                         break;
                                     }
@@ -2388,6 +2410,7 @@ namespace Client.MirObjects
             {
                 case Monster.CannibalPlant:
                 case Monster.EvilCentipede:
+                case Monster.CreeperPlant:
                     return;
                 case Monster.ZumaArcher:
                 case Monster.ZumaStatue:
@@ -3476,6 +3499,26 @@ namespace Client.MirObjects
                             break;
                         case MirAction.Die:
                             Libraries.Monsters[(ushort)Monster.OmaWitchDoctor].DrawBlend(727 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.PlagueCrab:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Standing:
+                            Libraries.Monsters[(ushort)Monster.PlagueCrab].DrawBlend(248 + FrameIndex + (int)Direction * 4, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Walking:
+                            Libraries.Monsters[(ushort)Monster.PlagueCrab].DrawBlend(280 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack1:
+                            Libraries.Monsters[(ushort)Monster.PlagueCrab].DrawBlend(328 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Struck:
+                            Libraries.Monsters[(ushort)Monster.PlagueCrab].DrawBlend(392 + FrameIndex + (int)Direction * 3, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Die:
+                            Libraries.Monsters[(ushort)Monster.PlagueCrab].DrawBlend(423 + FrameIndex + (int)Direction * 7, DrawLocation, Color.White, true);
                             break;
                     }
                     break;
