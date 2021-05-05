@@ -163,7 +163,7 @@ namespace Client.MirObjects
                     Effects.Add(new BuffEffect(Libraries.Magic3, 230, 6, 1200, this, true, type) { Repeat = true });
                     break;
 				case BuffType.GameMaster:
-					Effects.Add(new BuffEffect(Libraries.CHumEffect[5], 0, 1416, 1200, this, true, type) { Repeat = true });
+					Effects.Add(new BuffEffect(Libraries.CHumEffect[5], 0, 1, 1200, this, true, type) { Repeat = true });
 					break;
             }
         }

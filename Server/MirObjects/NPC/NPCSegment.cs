@@ -2996,6 +2996,7 @@ namespace Server.MirObjects
                             tempuShort = Math.Min(ushort.MaxValue, tempuShort);
 
                             player.Level = tempuShort;
+                            player.Experience = 0;
                             player.LevelUp();
                         }
                         break;
