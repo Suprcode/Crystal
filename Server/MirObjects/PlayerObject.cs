@@ -14924,6 +14924,12 @@ namespace Server.MirObjects
                             return;
                         }
 
+                        if (!Envir.Auctions.Contains(auction))
+                        {
+                            Enqueue(new S.MarketFail { Reason = 3 });
+                            return;
+                        }
+
                         if (!CanGainItem(auction.Item))
                         {
                             Enqueue(new S.MarketFail { Reason = 5 });
