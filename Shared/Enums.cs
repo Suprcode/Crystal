@@ -504,11 +504,11 @@ public enum Monster : ushort
     PlagueCrab = 323, // Done (DG) - Note: There are seven frames missing from the DrawEffect in the lib (causes die effect to look off).
     CreeperPlant = 324, //Done (DG)
     FloatingWraith = 325, //Done (DG) - Use AI 8 (AxeSkeleton)
-    ArmedPlant = 326,
-    AvengerPlant = 327,
-    Nadz = 328,
-    AvengingSpirit = 329,
-    AvengingWarrior = 330,
+    ArmedPlant = 326, //Done (DG)
+    AvengerPlant = 327, //Done (DG)
+    Nadz = 328, // Done (DG)
+    AvengingSpirit = 329, //Done (DG)
+    AvengingWarrior = 330, //Done (DG)
     AxePlant = 331,
     WoodBox = 332,
     ClawBeast = 333,
