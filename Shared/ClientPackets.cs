@@ -1197,16 +1197,19 @@ namespace ClientPackets
 
         public ulong UniqueID;
         public uint Price;
+        public MarketPanelType Type;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             UniqueID = reader.ReadUInt64();
             Price = reader.ReadUInt32();
+            Type = (MarketPanelType)reader.ReadByte();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(UniqueID);
             writer.Write(Price);
+            writer.Write((byte)Type);
         }
     }
     public sealed class MarketSearch : Packet

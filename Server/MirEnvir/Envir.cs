@@ -3016,7 +3016,10 @@ namespace Server.MirEnvir
                 Message = message
             };
 
-            mail.Items.Add(item);
+            if (item != null)
+            {
+                mail.Items.Add(item);
+            }
 
             mail.Send();
         }

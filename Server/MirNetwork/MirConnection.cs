@@ -1234,7 +1234,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.ConsignItem(p.UniqueID, p.Price);
+            Player.ConsignItem(p.UniqueID, p.Price, p.Type);
         }
         private void MarketSearch(C.MarketSearch p)
         {

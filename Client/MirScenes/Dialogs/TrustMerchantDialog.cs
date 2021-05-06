@@ -528,7 +528,7 @@ namespace Client.MirScenes.Dialogs
             };
             SellItemButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.ConsignItem { UniqueID = SellItemSlot.UniqueID, Price = Amount });
+                Network.Enqueue(new C.ConsignItem { UniqueID = SellItemSlot.UniqueID, Price = Amount, Type = MarketType });
                 SellItemSlot = null;
                 PriceTextBox.Text = null;
                 SellItemButton.Enabled = false;
@@ -1420,7 +1420,7 @@ namespace Client.MirScenes.Dialogs
             {
                 Listing = listing;
                 NameLabel.Text = Listing.Item.FriendlyName;
-                PriceLabel.Text = Listing.Price.ToString("###,###,##0");
+                PriceLabel.Text = String.Format("{0:###,###,##0} {1}", Listing.Price, listing.ItemType == MarketItemType.Auction ? "Bid" : "");
 
                 NameLabel.ForeColour = GameScene.Scene.GradeNameColor(Listing.Item.Info.Grade);
                 if (NameLabel.ForeColour == Color.Yellow)

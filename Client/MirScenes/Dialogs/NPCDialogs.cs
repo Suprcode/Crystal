@@ -941,7 +941,7 @@ namespace Client.MirScenes.Dialogs
                     box.Show();
                     box.OKButton.Click += (o, e) =>
                     {
-                        Network.Enqueue(new C.ConsignItem { UniqueID = TargetItem.UniqueID, Price = box.Amount });
+                        Network.Enqueue(new C.ConsignItem { UniqueID = TargetItem.UniqueID, Price = box.Amount, Type = MarketPanelType.Consign });
                         TargetItem = null;
                     };
                     return;
