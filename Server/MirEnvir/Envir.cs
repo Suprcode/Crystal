@@ -835,27 +835,13 @@ namespace Server.MirEnvir
                 {
                     if (info.ItemType == MarketItemType.Auction && info.CurrentBid > info.Price)
                     {
-                        if (info.CurrentBuyerInfo.AccountInfo.Gold < info.CurrentBid)
-                        {
-                            info.Expired = true;
-                        }
-                        else
-                        {
-                            string message = string.Format("You won {0} for {1:#,##0} Gold.", info.Item.FriendlyName, info.CurrentBid);
+                        string message = string.Format("You won {0} for {1:#,##0} Gold.", info.Item.FriendlyName, info.CurrentBid);
 
-                            info.Sold = true;
-                            MailCharacter(info.CurrentBuyerInfo, info.Item, customMessage: message);
+                        info.Sold = true;
+                        MailCharacter(info.CurrentBuyerInfo, item: info.Item, customMessage: message);
 
-                            info.CurrentBuyerInfo.AccountInfo.Gold -= info.CurrentBid;
- 
-                            if (info.CurrentBuyerInfo.Player != null)
-                            {
-                                info.CurrentBuyerInfo.Player.Enqueue(new S.LoseGold { Gold = info.CurrentBid });
-                            }
-
-                            MessageAccount(info.CurrentBuyerInfo.AccountInfo, string.Format("You bought {0} for {1:#,##0} Gold", info.Item.FriendlyName, info.CurrentBid), ChatType.Hint);
-                            MessageAccount(info.SellerInfo.AccountInfo, string.Format("You sold {0} for {1:#,##0} Gold", info.Item.FriendlyName, info.CurrentBid), ChatType.Hint);
-                        }
+                        MessageAccount(info.CurrentBuyerInfo.AccountInfo, string.Format("You bought {0} for {1:#,##0} Gold", info.Item.FriendlyName, info.CurrentBid), ChatType.Hint);
+                        MessageAccount(info.SellerInfo.AccountInfo, string.Format("You sold {0} for {1:#,##0} Gold", info.Item.FriendlyName, info.CurrentBid), ChatType.Hint);
                     }
                     else
                     {
@@ -2992,10 +2978,11 @@ namespace Server.MirEnvir
         }
 
 
-        public void MailCharacter(CharacterInfo info, UserItem item, int reason = 0, string customMessage = null)
+        public void MailCharacter(CharacterInfo info, UserItem item = null, uint gold = 0, int reason = 0, string customMessage = null)
         {
             string sender = "Bichon Administrator";
-            string message = "You have been mailed an item due to the following reason:\r\n\r\n";
+
+            string message = "You have been mailed due to the following reason:\r\n\r\n";
 
             switch (reason)
             {
@@ -3013,7 +3000,8 @@ namespace Server.MirEnvir
             MailInfo mail = new MailInfo(info.Index)
             {
                 Sender = sender,
-                Message = message
+                Message = message,
+                Gold = gold
             };
 
             if (item != null)

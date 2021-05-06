@@ -12754,7 +12754,7 @@ namespace Server.MirObjects
         }
         public void GainItemMail(UserItem item, int reason)
         {
-            Envir.MailCharacter(Info, item, reason);
+            Envir.MailCharacter(Info, item: item, reason: reason);
         }
 
         private bool DropItem(UserItem item, int range = 1, bool DeathDrop = false)
@@ -14973,7 +14973,7 @@ namespace Server.MirObjects
                             {
                                 string message = string.Format("You have been outbid on {0}. Refunded {1:#,##0} Gold.", auction.Item.FriendlyName, auction.CurrentBid);
 
-                                Envir.MailCharacter(auction.CurrentBuyerInfo, null, customMessage: message);
+                                Envir.MailCharacter(auction.CurrentBuyerInfo, gold: auction.CurrentBid, customMessage: message);
                             }
 
                             auction.CurrentBid = bidPrice;
@@ -15032,6 +15032,13 @@ namespace Server.MirObjects
                         {
                             Enqueue(new S.MarketFail { Reason = 5 });
                             return;
+                        }
+
+                        if (auction.CurrentBuyerInfo != null)
+                        {
+                            string message = string.Format("You have been outbid on {0}. Refunded {1:#,##0} Gold.", auction.Item.FriendlyName, auction.CurrentBid);
+
+                            Envir.MailCharacter(auction.CurrentBuyerInfo, gold: auction.CurrentBid, customMessage: message);
                         }
 
                         Account.Auctions.Remove(auction);
