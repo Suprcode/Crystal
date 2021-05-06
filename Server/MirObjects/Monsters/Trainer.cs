@@ -176,7 +176,6 @@ namespace Server.MirObjects.Monsters
             if (_currentAttacker != null && (_currentAttacker != attacker || _currentAttacker != attacker.Master))
             {
                 OutputAverage();
-                ResetStats();
             }
             
             if (_currentAttacker == null)
