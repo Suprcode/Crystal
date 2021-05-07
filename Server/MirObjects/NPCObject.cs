@@ -24,7 +24,7 @@ namespace Server.MirObjects
         {
             if (objectID == 0) return null;
 
-            var obj = Envir.GetObject(objectID);
+            var obj = Envir.NPCs.SingleOrDefault(x => x.ObjectID == objectID);
 
             if (obj != null && obj is NPCObject)
             {
@@ -59,6 +59,8 @@ namespace Server.MirObjects
 
             Direction = (MirDirection)Envir.Random.Next(3);
             TurnTime = Envir.Time + Envir.Random.Next(100);
+
+            Envir.NPCs.Add(this);
 
             Spawned();
             LoadScript();

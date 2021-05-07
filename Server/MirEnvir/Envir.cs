@@ -54,7 +54,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int MinVersion = 60;
-        public const int Version = 85;
+        public const int Version = 86;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
@@ -128,10 +128,15 @@ namespace Server.MirEnvir
         public List<Map> MapList = new List<Map>();
         public List<SafeZoneInfo> StartPoints = new List<SafeZoneInfo>(); 
         public List<ItemInfo> StartItems = new List<ItemInfo>();
+
         public List<PlayerObject> Players = new List<PlayerObject>();
+        public List<SpellObject> Spells = new List<SpellObject>();
+        public List<NPCObject> NPCs = new List<NPCObject>();
+
         public LightSetting Lights;
         public LinkedList<MapObject> Objects = new LinkedList<MapObject>();
         public Dictionary<int, NPCScript> Scripts = new Dictionary<int, NPCScript>();
+
 
         public List<ConquestInfo> ConquestInfos = new List<ConquestInfo>();
         public List<ConquestObject> Conquests = new List<ConquestObject>();
@@ -2848,12 +2853,6 @@ namespace Server.MirEnvir
 
             var instanceMapList = MapList.Where(t => string.Equals(t.Info.FileName, name, StringComparison.CurrentCultureIgnoreCase)).ToList();
             return instanceValue < instanceMapList.Count() ? instanceMapList[instanceValue] : null;
-        }
-
-        public MapObject GetObject(uint objectID)
-        {
-            //TODO - Remove this. Have separate permanent lists for NPCs/Spells instead
-            return Objects.FirstOrDefault(e => e.ObjectID == objectID);
         }
 
         public MonsterInfo GetMonsterInfo(int index)

@@ -257,11 +257,6 @@ namespace Server.MirDatabase
             {
                 Buff buff = new Buff(reader);
 
-                if (Envir.LoadVersion == 51)
-                {
-                    buff.Caster = Envir.GetObject(reader.ReadUInt32());
-                }
-
                 Buffs.Add(buff);
             }
 
@@ -449,7 +444,7 @@ namespace Server.MirDatabase
             if ((CollectTime - Envir.Time) < 0)
                 CollectTime = 0;
             else
-                CollectTime = CollectTime - Envir.Time;
+                CollectTime -= Envir.Time;
 
             writer.Write(CollectTime);
 

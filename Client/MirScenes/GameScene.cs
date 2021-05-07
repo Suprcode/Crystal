@@ -3639,7 +3639,6 @@ namespace Client.MirScenes
             item.AddedStats.Add(p.Item.AddedStats);
 
             item.MaxDura = p.Item.MaxDura;
-            item.RefinedValue = p.Item.RefinedValue;
             item.RefineAdded = p.Item.RefineAdded;
             
             GameScene.Scene.InventoryDialog.DisplayItemGridEffect(item.UniqueID, 0);

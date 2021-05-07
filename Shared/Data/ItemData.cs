@@ -288,6 +288,7 @@ public class UserItem
 
     public RefinedValue RefinedValue = RefinedValue.None;
     public byte RefineAdded = 0;
+    public int RefineSuccessChance = 0;
 
     public bool DuraChanged;
     public int SoulBoundId = -1;
@@ -417,6 +418,12 @@ public class UserItem
 
         RefinedValue = (RefinedValue)reader.ReadByte();
         RefineAdded = reader.ReadByte();
+
+        if (version > 85)
+        {
+            RefineSuccessChance = reader.ReadInt32();
+        }
+
         WeddingRing = reader.ReadInt32();
 
         if (version < 65) return;
@@ -468,6 +475,7 @@ public class UserItem
 
         writer.Write((byte)RefinedValue);
         writer.Write(RefineAdded);
+        writer.Write(RefineSuccessChance);
 
         writer.Write(WeddingRing);
 
@@ -665,7 +673,6 @@ public class UserItem
             AddedStats = new Stats(AddedStats),
             Awake = Awake,
 
-            RefinedValue = RefinedValue,
             RefineAdded = RefineAdded,
 
             ExpireInfo = ExpireInfo,

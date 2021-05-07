@@ -325,6 +325,7 @@ namespace Server.MirObjects
                 SpawnThread = CurrentMap.Thread;
                 NodeThreaded = Envir.MobThreads[SpawnThread].ObjectsList.AddLast(this);
             }
+
             OperateTime = Envir.Time + Envir.Random.Next(OperateDelay);
 
             InSafeZone = CurrentMap != null && CurrentMap.GetSafeZone(CurrentLocation) != null;
