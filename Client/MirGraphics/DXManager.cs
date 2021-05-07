@@ -565,5 +565,6 @@ namespace Client.MirGraphics
             }
             ControlList.Clear();
         }
+
     }
 }

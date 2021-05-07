@@ -265,6 +265,7 @@ namespace Client.MirControls
                 Size = Size,
                 Visible = Visible,
                 Tag = this,
+                Cursor = CMain.Cursors[(byte)MouseCursor.TextPrompt]
             };
 
             CaretPen = new Pen(ForeColour, 1);

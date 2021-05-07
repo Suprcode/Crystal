@@ -277,6 +277,53 @@ namespace Client.MirScenes
                 };
         }
 
+        private void UpdateMouseCursor()
+        {
+            if (!Settings.UseMouseCursors) return;
+
+            if (GameScene.HoverItem != null)
+            {
+                if (GameScene.SelectedCell != null && GameScene.SelectedCell.Item != null && GameScene.SelectedCell.Item.Info.Type == ItemType.Gem && CMain.Ctrl)
+                {
+                    CMain.SetMouseCursor(MouseCursor.Upgrade);
+                }
+                else
+                {
+                    CMain.SetMouseCursor(MouseCursor.Default);
+                }
+            }
+            else if (MapObject.MouseObject != null)
+            {
+                switch (MapObject.MouseObject.Race)
+                {
+                    case ObjectType.Monster:
+                        CMain.SetMouseCursor(MouseCursor.Attack);
+                        break;
+                    case ObjectType.Merchant:
+                        CMain.SetMouseCursor(MouseCursor.NPCTalk);
+                        break;
+                    case ObjectType.Player:
+                        if (CMain.Shift)
+                        {
+                            CMain.SetMouseCursor(MouseCursor.AttackRed);
+                        }
+                        else
+                        {
+                            CMain.SetMouseCursor(MouseCursor.Default);
+                        }
+                        break;
+                    default:
+                        CMain.SetMouseCursor(MouseCursor.Default);
+                        break;
+                }
+            }
+            else
+            {
+                CMain.SetMouseCursor(MouseCursor.Default);
+            }
+
+        }
+
         public void OutputMessage(string message, OutputMessageType type = OutputMessageType.Normal)
         {
             OutputMessages.Add(new OutPutMessage { Message = message, ExpireTime = CMain.Time + 5000, Type = type });
@@ -1016,6 +1063,8 @@ namespace Client.MirScenes
             DialogProcess();
 
             ProcessOuput();
+
+            UpdateMouseCursor();
         }
 
         public void DialogProcess()

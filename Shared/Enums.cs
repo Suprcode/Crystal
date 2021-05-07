@@ -1,5 +1,17 @@
 ﻿using System;
 
+public enum MouseCursor : byte
+{
+    None,
+    Default,
+    Attack,
+    AttackRed,
+    NPCTalk,
+    TextPrompt,
+    Trash,
+    Upgrade
+}
+
 public enum PanelType : byte
 {
     Buy,

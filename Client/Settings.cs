@@ -56,7 +56,8 @@ namespace Client
                             TransformPath = @".\Data\Transform\",
                             TransformMountsPath = @".\Data\TransformRide2\",
                             TransformEffectPath = @".\Data\TransformEffect\",
-                            TransformWeaponEffectPath = @".\Data\TransformWeaponEffect\";
+                            TransformWeaponEffectPath = @".\Data\TransformWeaponEffect\",
+                            MouseCursorPath = @".\Data\Cursors\";
 
         //Logs
         public static bool LogErrors = true;
@@ -67,6 +68,7 @@ namespace Client
         public static bool FullScreen = true, Borderless = true, TopMost = true;
         public static string FontName = "Tahoma"; //"MS Sans Serif"
         public static float FontSize = 8F;
+        public static bool UseMouseCursors = true;
 
         public static bool FPSCap = true;
         public static int MaxFPS = 100;
@@ -190,6 +192,7 @@ namespace Client
             FPSCap = Reader.ReadBoolean("Graphics", "FPSCap", FPSCap);
             Resolution = Reader.ReadInt32("Graphics", "Resolution", Resolution);
             DebugMode = Reader.ReadBoolean("Graphics", "DebugMode", DebugMode);
+            UseMouseCursors = Reader.ReadBoolean("Graphics", "UseMouseCursors", UseMouseCursors);
 
             //Network
             UseConfig = Reader.ReadBoolean("Network", "UseConfig", UseConfig);
@@ -278,6 +281,7 @@ namespace Client
             Reader.Write("Graphics", "FPSCap", FPSCap);
             Reader.Write("Graphics", "Resolution", Resolution);
             Reader.Write("Graphics", "DebugMode", DebugMode);
+            Reader.Write("Graphics", "UseMouseCursors", UseMouseCursors);
 
             //Sound
             Reader.Write("Sound", "Volume", Volume);

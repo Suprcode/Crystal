@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -6,6 +7,7 @@ using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Threading;
@@ -84,7 +86,10 @@ namespace Client
             try
             {
                 ClientSize = new Size(Settings.ScreenWidth, Settings.ScreenHeight);
-                
+
+                LoadMouseCursors();
+                SetMouseCursor(MouseCursor.Default);
+
                 DXManager.Create();
                 SoundManager.Create();
                 CenterToScreen();
@@ -661,5 +666,68 @@ namespace Client
 
             base.WndProc(ref m);
         }
+
+
+        public static Cursor[] Cursors;
+        public static MouseCursor CurrentCursor = MouseCursor.None;
+        public static void SetMouseCursor(MouseCursor cursor)
+        {
+            if (!Settings.UseMouseCursors) return;
+
+            if (CurrentCursor != cursor)
+            {
+                CurrentCursor = cursor;
+                Program.Form.Cursor = Cursors[(byte)cursor];
+            }
+        }
+
+        private static void LoadMouseCursors()
+        {
+            Cursors = new Cursor[8];
+
+            Cursors[(int)MouseCursor.None] = Program.Form.Cursor;
+
+            string path = $"{Settings.MouseCursorPath}Cursor_Default.CUR";
+            if (File.Exists(path))
+                Cursors[(int)MouseCursor.Default] = LoadCustomCursor(path);
+
+            path = $"{Settings.MouseCursorPath}Cursor_Normal_Atk.CUR";
+            if (File.Exists(path))
+                Cursors[(int)MouseCursor.Attack] = LoadCustomCursor(path);
+
+            path = $"{Settings.MouseCursorPath}Cursor_Compulsion_Atk.CUR";
+            if (File.Exists(path))
+                Cursors[(int)MouseCursor.AttackRed] = LoadCustomCursor(path);
+
+            path = $"{Settings.MouseCursorPath}Cursor_Npc.CUR";
+            if (File.Exists(path))
+                Cursors[(int)MouseCursor.NPCTalk] = LoadCustomCursor(path);
+
+            path = $"{Settings.MouseCursorPath}Cursor_TextPrompt.CUR";
+            if (File.Exists(path))
+                Cursors[(int)MouseCursor.TextPrompt] = LoadCustomCursor(path);
+
+            path = $"{Settings.MouseCursorPath}Cursor_Trash.CUR";
+            if (File.Exists(path))
+                Cursors[(int)MouseCursor.Trash] = LoadCustomCursor(path);
+
+            path = $"{Settings.MouseCursorPath}Cursor_Upgrade.CUR";
+            if (File.Exists(path))
+                Cursors[(int)MouseCursor.Upgrade] = LoadCustomCursor(path);
+        }
+
+        public static Cursor LoadCustomCursor(string path)
+        {
+            IntPtr hCurs = LoadCursorFromFile(path);
+            if (hCurs == IntPtr.Zero) throw new Win32Exception();
+            var curs = new Cursor(hCurs);
+            // Note: force the cursor to own the handle so it gets released properly
+            var fi = typeof(Cursor).GetField("ownHandle", BindingFlags.NonPublic | BindingFlags.Instance);
+            fi.SetValue(curs, true);
+            return curs;
+        }
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        private static extern IntPtr LoadCursorFromFile(string path);
     }
 }

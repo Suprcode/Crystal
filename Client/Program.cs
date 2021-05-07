@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using Launcher;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.ComponentModel;
+using System.Reflection;
 
 namespace Client
 {
