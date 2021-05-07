@@ -60,7 +60,6 @@ namespace Server.MirObjects.Monsters
 
                 if (target == Target.CurrentLocation)
                 {
-
                     int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 700; //50 MS per Step
                     DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.ACAgility);
                     ActionList.Add(action);

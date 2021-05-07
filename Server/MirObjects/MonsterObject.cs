@@ -301,6 +301,16 @@ namespace Server.MirObjects
                     return new AvengingWarrior(info);
                 case 143:
                     return new AxePlant(info);
+                case 144:
+                    return new TurtleGrass(info);
+                case 145:
+                    return new ManTree(info);
+                case 146:
+                    return new FrozenFighter(info);
+                case 147:
+                    return new Bear(info);
+                case 148:
+                    return new FrozenKnight(info);
 
 
                 //unfinished
