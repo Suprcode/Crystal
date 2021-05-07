@@ -1,18 +1,14 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
 using System.Drawing;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
-using System.Linq;
-using System.Text;
 
 namespace Server.MirObjects.Monsters
 {
-    // TODO: ADD ATTACK AS PER ANIMATIONS 354 - DASH THROUGH PLAYER ATTACK?
-    class DemonWolf : MonsterObject
+    class FrozenFighter : MonsterObject
     {
-        protected internal DemonWolf(MonsterInfo info)
+        protected internal FrozenFighter(MonsterInfo info)
             : base(info)
         {
         }
@@ -25,7 +21,7 @@ namespace Server.MirObjects.Monsters
             int x = Math.Abs(Target.CurrentLocation.X - CurrentLocation.X);
             int y = Math.Abs(Target.CurrentLocation.Y - CurrentLocation.Y);
 
-            if (x > 5 || y > 5) return false;
+            if (x > 3 || y > 3) return false;
 
             return (x == 0) || (y == 0) || (x == y);
         }
@@ -46,22 +42,26 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (!ranged)
+            if (!ranged && Envir.Random.Next(3) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
-
-                Target.Attacked(this, damage, DefenceType.MACAgility);
+                Target.Attacked(this, damage, DefenceType.ACAgility);
             }
             else
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                LineAttack(3);
 
-                LineAttack(6);
+                if (Envir.Random.Next(7) == 0)
+                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
+                    {
+                        int poisonLength = 5;
 
-                AttackTime = Envir.Time + AttackSpeed;
-                ActionTime = Envir.Time + 300;
+                        Target.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = poisonLength, TickSpeed = 1000 }, this);
+                        Broadcast(new S.ObjectEffect { ObjectID = Target.ObjectID, Effect = SpellEffect.Stunned, Time = (uint)poisonLength * 1000 });
+                    }
             }
         }
         private void LineAttack(int distance)
@@ -74,7 +74,7 @@ namespace Server.MirObjects.Monsters
                 Point target = Functions.PointMove(CurrentLocation, Direction, i);
 
                 if (target == Target.CurrentLocation)
-                    Target.Attacked(this, damage, DefenceType.MACAgility);
+                    Target.Attacked(this, damage, DefenceType.ACAgility);
                 else
                 {
                     if (!CurrentMap.ValidPoint(target)) continue;
@@ -88,14 +88,7 @@ namespace Server.MirObjects.Monsters
                         if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
                         {
                             if (!ob.IsAttackTarget(this)) continue;
-                            ob.Attacked(this, damage, DefenceType.MACAgility);
-
-                            if (Envir.Random.Next(10) == 0)
-                            {
-                                int poisonLength = 5;
-                                Target.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = poisonLength, TickSpeed = 1000 }, this);
-                                Broadcast(new S.ObjectEffect { ObjectID = Target.ObjectID, Effect = SpellEffect.Stunned, Time = (uint)poisonLength * 1000 });
-                            }
+                            ob.Attacked(this, damage, DefenceType.ACAgility);
                         }
                         else continue;
 
@@ -104,5 +97,27 @@ namespace Server.MirObjects.Monsters
                 }
             }
         }
+
+        protected override void ProcessTarget()
+        {
+            if (Target == null) return;
+
+            if (InAttackRange() && CanAttack)
+            {
+                Attack();
+                if (Target.Dead)
+                    FindTarget();
+                return;
+            }
+
+            if (Envir.Time < ShockTime)
+            {
+                Target = null;
+                return;
+            }
+
+            MoveTo(Target.CurrentLocation);
+        }
     }
 }
+

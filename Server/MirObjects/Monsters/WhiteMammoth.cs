@@ -54,7 +54,9 @@ namespace Server.MirObjects.Monsters
 
             if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
             {
-                Target.ApplyPoison(new Poison { Owner = this, Duration = 3, PType = PoisonType.Stun, TickSpeed = 2000 }, this);
+                int poisonLength = 5;
+                Target.ApplyPoison(new Poison { Owner = this, Duration = poisonLength, PType = PoisonType.Stun, TickSpeed = 2000 }, this);
+                Broadcast(new S.ObjectEffect { ObjectID = Target.ObjectID, Effect = SpellEffect.Stunned, Time = (uint)poisonLength * 1000 });
             }
         }
     }

@@ -1,18 +1,14 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
 using System.Drawing;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
-using System.Linq;
-using System.Text;
 
 namespace Server.MirObjects.Monsters
 {
-    // TODO: ADD ATTACK AS PER ANIMATIONS 354 - DASH THROUGH PLAYER ATTACK?
-    class DemonWolf : MonsterObject
+    class TurtleGrass : ZumaMonster
     {
-        protected internal DemonWolf(MonsterInfo info)
+        protected internal TurtleGrass(MonsterInfo info)
             : base(info)
         {
         }
@@ -25,7 +21,7 @@ namespace Server.MirObjects.Monsters
             int x = Math.Abs(Target.CurrentLocation.X - CurrentLocation.X);
             int y = Math.Abs(Target.CurrentLocation.Y - CurrentLocation.Y);
 
-            if (x > 5 || y > 5) return false;
+            if (x > 2 || y > 2) return false;
 
             return (x == 0) || (y == 0) || (x == y);
         }
@@ -43,26 +39,24 @@ namespace Server.MirObjects.Monsters
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (!ranged)
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                if (damage == 0) return;
-
-                Target.Attacked(this, damage, DefenceType.MACAgility);
+                base.Attack();
             }
             else
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-
-                LineAttack(6);
-
-                AttackTime = Envir.Time + AttackSpeed;
-                ActionTime = Envir.Time + 300;
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                LineAttack(2);
             }
+
+            if (Target.Dead)
+                FindTarget();
+
         }
         private void LineAttack(int distance)
         {
@@ -89,13 +83,6 @@ namespace Server.MirObjects.Monsters
                         {
                             if (!ob.IsAttackTarget(this)) continue;
                             ob.Attacked(this, damage, DefenceType.MACAgility);
-
-                            if (Envir.Random.Next(10) == 0)
-                            {
-                                int poisonLength = 5;
-                                Target.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = poisonLength, TickSpeed = 1000 }, this);
-                                Broadcast(new S.ObjectEffect { ObjectID = Target.ObjectID, Effect = SpellEffect.Stunned, Time = (uint)poisonLength * 1000 });
-                            }
                         }
                         else continue;
 
@@ -104,5 +91,28 @@ namespace Server.MirObjects.Monsters
                 }
             }
         }
+
+        protected override void ProcessTarget()
+        {
+            if (Target == null) return;
+
+            if (InAttackRange() && CanAttack)
+            {
+                Attack();
+                if (Target.Dead)
+                    FindTarget();
+
+                return;
+            }
+
+            if (Envir.Time < ShockTime)
+            {
+                Target = null;
+                return;
+            }
+
+            MoveTo(Target.CurrentLocation);
+        }
     }
 }
+
