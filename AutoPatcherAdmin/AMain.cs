@@ -62,9 +62,10 @@ namespace AutoPatcherAdmin
             {
                 if (NeedFile(OldList[i].FileName)) continue;
 
+                var compressed = OldList[i].Length != OldList[i].Compressed;
                 try
                 {
-                    FtpWebRequest request = (FtpWebRequest) WebRequest.Create(new Uri(Settings.Host + OldList[i].FileName + ".gz"));
+                    FtpWebRequest request = (FtpWebRequest) WebRequest.Create(new Uri(Settings.Host + OldList[i].FileName + (compressed ? ".gz" : "")));
                     request.Credentials = new NetworkCredential(Settings.Login, Settings.Password);
                     request.Method = WebRequestMethods.Ftp.DeleteFile;
                     FtpWebResponse response = (FtpWebResponse) request.GetResponse();
@@ -88,29 +89,40 @@ namespace AutoPatcherAdmin
             return false;
         }
 
-        public void ParseOld(BinaryReader reader)
+        public void GetOldFileList()
         {
-            int count = reader.ReadInt32();
+            OldList = new List<FileInformation>();
 
-            for (int i = 0; i < count; i++)
-                OldList.Add(new FileInformation(reader));
+            byte[] data = Download(PatchFileName);
+
+            if (data != null)
+            {
+                using MemoryStream stream = new MemoryStream(data);
+                using BinaryReader reader = new BinaryReader(stream);
+
+                int count = reader.ReadInt32();
+
+                for (int i = 0; i < count; i++)
+                    OldList.Add(new FileInformation(reader));
+            }
         }
+
         public byte[] CreateNew()
         {
+            using MemoryStream stream = new MemoryStream();
+            using BinaryWriter writer = new BinaryWriter(stream);
 
-            using (MemoryStream stream = new MemoryStream())
-            using (BinaryWriter writer = new BinaryWriter(stream))
-            {
-                writer.Write(NewList.Count);
-                for (int i = 0; i < NewList.Count; i++)
-                    NewList[i].Save(writer);
+            writer.Write(NewList.Count);
+            for (int i = 0; i < NewList.Count; i++)
+                NewList[i].Save(writer);
 
-                return stream.ToArray();
-            }
-
+            return stream.ToArray();
         }
-        public void CheckFiles()
+
+        public void GetNewFileList()
         {
+            NewList = new List<FileInformation>();
+
             string[] files = Directory.GetFiles(Settings.Client, "*.*" ,SearchOption.AllDirectories);
 
             for (int i = 0; i < files.Length; i++)
@@ -127,6 +139,42 @@ namespace AutoPatcherAdmin
             return false;
         }
 
+        public void FixFilenameExtensions()
+        {
+            for (int i = 0; i < OldList.Count; i++)
+            {
+                FileInformation old = OldList[i];
+
+                try
+                {
+                    ActionLabel.Text = old.FileName;
+                    Refresh();
+
+                    if (old.Compressed == old.Length)
+                    {
+                        //exists, but not compressed, lets rename it
+
+                        FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(Settings.Host + "/" + old.FileName + ".gz"));
+                        request.Credentials = new NetworkCredential(Settings.Login, Settings.Password);
+                        request.Method = WebRequestMethods.Ftp.Rename;
+                        request.RenameTo = Path.GetFileName(old.FileName);
+
+                        FtpWebResponse  ftpResponse = (FtpWebResponse)request.GetResponse();
+                        ftpResponse.Close();
+                    }
+                    else
+                    {
+                        //exists, but its compressed and ends with .gz, so its correct
+                    }
+                }
+                catch (WebException ex)
+                {
+                    FtpWebResponse response = (FtpWebResponse)ex.Response;
+                    response.Close();
+                }
+            }
+        }
+
         public bool NeedUpdate(FileInformation info)
         {
             for (int i = 0; i < OldList.Count; i++)
@@ -136,6 +184,7 @@ namespace AutoPatcherAdmin
 
                 if (old.Length != info.Length) return true;
                 if (old.Creation != info.Creation) return true;
+
                 return false;
             }
             return true;
@@ -161,6 +210,7 @@ namespace AutoPatcherAdmin
                 Length = (int)info.Length,
                 Creation = info.LastWriteTime
             };
+
             if (file.FileName == "AutoPatcher.exe")
                 file.FileName = "AutoPatcher.gz";
 
@@ -187,8 +237,10 @@ namespace AutoPatcherAdmin
         {
             string fileName = info.FileName.Replace(@"\", "/");
 
-            if (fileName != "PList.gz")
+            if (fileName != "PList.gz" && (info.Compressed != info.Length || info.Compressed == 0))
+            {
                 fileName += ".gz";
+            }
 
             try
             {
@@ -219,10 +271,19 @@ namespace AutoPatcherAdmin
                             _currentBytes = 0;
                             _stopwatch.Stop();
 
-                            if (!Directory.Exists(Settings.Client + Path.GetDirectoryName(info.FileName)))
-                                Directory.CreateDirectory(Settings.Client + Path.GetDirectoryName(info.FileName));
+                            byte[] raw = e.Result;
 
-                            File.WriteAllBytes(Settings.Client + info.FileName, e.Result);
+                            if (info.Compressed > 0 && info.Compressed != info.Length)
+                            {
+                                raw = Decompress(e.Result);
+                            }
+
+                            if (!Directory.Exists(Settings.Client + Path.GetDirectoryName(info.FileName)))
+                            {
+                                Directory.CreateDirectory(Settings.Client + Path.GetDirectoryName(info.FileName));
+                            }
+
+                            File.WriteAllBytes(Settings.Client + info.FileName, raw);
                             File.SetLastWriteTime(Settings.Client + info.FileName, info.Creation);
                         }
                         BeginDownload();
@@ -269,15 +330,17 @@ namespace AutoPatcherAdmin
         {
             string fileName = info.FileName.Replace(@"\", "/");
 
-            if (fileName != "AutoPatcher.gz" && fileName != "PList.gz")
-                fileName += ".gz";
-
             using (WebClient client = new WebClient())
             {
                 client.Credentials = new NetworkCredential(Settings.Login, Settings.Password);
 
-                byte[] data = !retry ? raw : raw;
+                byte[] data = (!retry || !Settings.CompressFiles || fileName == "PList.gz" || fileName == "AutoPatcher.gz") ? raw : Compress(raw);
                 info.Compressed = data.Length;
+
+                if (fileName != "AutoPatcher.gz" && fileName != "PList.gz" && Settings.CompressFiles)
+                {
+                    fileName += ".gz";
+                }
 
                 client.UploadProgressChanged += (o, e) =>
                     {
@@ -350,29 +413,30 @@ namespace AutoPatcherAdmin
             foreach (string directoryCheck in DirectoryList)
             {
                 Directory += "\\" + directoryCheck;
-            try
-              {
-                        if (string.IsNullOrEmpty(Directory)) return;
 
-                        FtpWebRequest request = (FtpWebRequest)WebRequest.Create(Settings.Host + Directory + "/");
-                        request.Credentials = new NetworkCredential(Settings.Login, Settings.Password);
-                        request.Method = WebRequestMethods.Ftp.MakeDirectory;
+                try
+                {
+                    if (string.IsNullOrEmpty(Directory)) return;
 
-                        request.UsePassive = true;
-                        request.UseBinary = true;
-                        request.KeepAlive = false;
-                        FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-                        Stream ftpStream = response.GetResponseStream();
+                    FtpWebRequest request = (FtpWebRequest)WebRequest.Create(Settings.Host + Directory + "/");
+                    request.Credentials = new NetworkCredential(Settings.Login, Settings.Password);
+                    request.Method = WebRequestMethods.Ftp.MakeDirectory;
 
-                        if (ftpStream != null) ftpStream.Close();
-                        response.Close();
+                    request.UsePassive = true;
+                    request.UseBinary = true;
+                    request.KeepAlive = false;
+                    FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+                    Stream ftpStream = response.GetResponseStream();
 
-              }
-                    catch (WebException ex)
-                    {
-                        FtpWebResponse response = (FtpWebResponse)ex.Response;
-                        response.Close();
-                    }
+                    if (ftpStream != null) ftpStream.Close();
+                    response.Close();
+
+                }
+                catch (WebException ex)
+                {
+                    FtpWebResponse response = (FtpWebResponse)ex.Response;
+                    response.Close();
+                }
             }
         }
 
@@ -414,21 +478,8 @@ namespace AutoPatcherAdmin
             Settings.Login = LoginTextBox.Text;
             Settings.Password = PasswordTextBox.Text;
 
-
-            OldList = new List<FileInformation>();
-            NewList = new List<FileInformation>();
-            byte[] data = Download(PatchFileName);
-
-            if (data != null)
-            {
-                using (MemoryStream stream = new MemoryStream(data))
-                using (BinaryReader reader = new BinaryReader(stream))
-                    ParseOld(reader);
-            }
-
-
-            CheckFiles();
-
+            GetOldFileList();
+            GetNewFileList();
 
             for (int i = 0; i < NewList.Count; i++)
             {
@@ -436,8 +487,15 @@ namespace AutoPatcherAdmin
                 for (int o = 0; o < OldList.Count; o++)
                 {
                     if (OldList[o].FileName != info.FileName) continue;
+
                     NewList[i].Compressed = OldList[o].Compressed;
                     break;
+                }
+
+                if (info.Compressed == 0)
+                {
+                    //We've uploaded a new file which is unknown to the existing PList (or no PList available). Assume this file was uploaded uncompressed and set to file length.
+                    info.Compressed = info.Length;
                 }
             }
 
@@ -455,23 +513,14 @@ namespace AutoPatcherAdmin
                 Settings.Password = PasswordTextBox.Text;
                 Settings.AllowCleanUp = AllowCleanCheckBox.Checked;
 
-                OldList = new List<FileInformation>();
-                NewList = new List<FileInformation>();
                 UploadList = new Queue<FileInformation>();
 
-                byte[] data = Download(PatchFileName);
-
-                if (data != null)
-                {
-                    using (MemoryStream stream = new MemoryStream(data))
-                    using (BinaryReader reader = new BinaryReader(stream))
-                        ParseOld(reader);
-                }
+                GetOldFileList();
 
                 ActionLabel.Text = "Checking Files...";
                 Refresh();
 
-                CheckFiles();
+                GetNewFileList();
 
                 for (int i = 0; i < NewList.Count; i++)
                 {
@@ -506,6 +555,34 @@ namespace AutoPatcherAdmin
 
         }
 
+        private void btnFixGZ_Click(object sender, EventArgs e)
+        {
+            btnFixGZ.Enabled = false;
+
+            Settings.Client = ClientTextBox.Text;
+            Settings.Host = HostTextBox.Text;
+            Settings.Login = LoginTextBox.Text;
+            Settings.Password = PasswordTextBox.Text;
+
+            GetOldFileList();
+            GetNewFileList();
+
+            for (int i = 0; i < NewList.Count; i++)
+            {
+                FileInformation info = NewList[i];
+                for (int o = 0; o < OldList.Count; o++)
+                {
+                    if (OldList[o].FileName != info.FileName) continue;
+                    NewList[i].Compressed = OldList[o].Length;
+                    break;
+                }
+            }
+
+            Upload(new FileInformation { FileName = PatchFileName }, CreateNew());
+
+            FixFilenameExtensions();
+        }
+
         private void DownloadExistingButton_Click(object sender, EventArgs e)
         {
             DownloadExistingButton.Enabled = false;
@@ -516,7 +593,6 @@ namespace AutoPatcherAdmin
             Settings.AllowCleanUp = AllowCleanCheckBox.Checked;
 
             DownloadList = new Queue<FileInformation>();
-            OldList = new List<FileInformation>();
 
             _totalBytes = 0;
             _currentCount = 0;
@@ -524,14 +600,10 @@ namespace AutoPatcherAdmin
 
             try
             {
-                byte[] data = Download(PatchFileName);
+                GetOldFileList();
 
-                if (data != null)
+                if (OldList.Count > 0)
                 {
-                    using (MemoryStream stream = new MemoryStream(data))
-                    using (BinaryReader reader = new BinaryReader(stream))
-                        ParseOld(reader);
-
                     for (int i = 0; i < OldList.Count; i++)
                     {
                         var old = OldList[i];
@@ -586,7 +658,7 @@ namespace AutoPatcherAdmin
 
         public FileInformation()
         {
-
+            Creation = DateTime.Now;
         }
         public FileInformation(BinaryReader reader)
         {

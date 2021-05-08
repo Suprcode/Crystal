@@ -193,8 +193,10 @@ namespace Launcher
         {
             string fileName = info.FileName.Replace(@"\", "/");
 
-            if (fileName != "PList.gz")
+            if (fileName != "PList.gz" && (info.Compressed != info.Length || info.Compressed == 0))
+            {
                 fileName += ".gz";
+            }
 
             try
             {
@@ -219,11 +221,20 @@ namespace Launcher
                                 _currentBytes = 0;
                                 _stopwatch.Stop();
 
-                            if (!Directory.Exists(Settings.P_Client + Path.GetDirectoryName(info.FileName)))
-                                Directory.CreateDirectory(Settings.P_Client + Path.GetDirectoryName(info.FileName));
+                                byte[] raw = e.Result;
 
-                            File.WriteAllBytes(Settings.P_Client + info.FileName, e.Result);
-                            File.SetLastWriteTime(Settings.P_Client + info.FileName, info.Creation);
+                                if (info.Compressed > 0 && info.Compressed != info.Length)
+                                {
+                                    raw = Decompress(e.Result);
+                                }
+
+                                if (!Directory.Exists(Settings.P_Client + Path.GetDirectoryName(info.FileName)))
+                                {
+                                    Directory.CreateDirectory(Settings.P_Client + Path.GetDirectoryName(info.FileName));
+                                }
+
+                                File.WriteAllBytes(Settings.P_Client + info.FileName, raw);
+                                File.SetLastWriteTime(Settings.P_Client + info.FileName, info.Creation);
                             }
                             BeginDownload();
                         };

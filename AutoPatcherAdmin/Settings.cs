@@ -9,6 +9,7 @@
         public static string Login = string.Empty;
         public static string Password = string.Empty;
         public static bool AllowCleanUp = true;
+        public static bool CompressFiles = false;
 
         public static void Load()
         {
@@ -18,6 +19,7 @@
             Password = Reader.ReadString("AutoPatcher", "Password", Password);
 
             AllowCleanUp = Reader.ReadBoolean("AutoPatcher", "AllowCleanUp", AllowCleanUp);
+            CompressFiles = Reader.ReadBoolean("AutoPatcher", "CompressFiles", CompressFiles);
         }
 
         public static void Save()
@@ -27,6 +29,7 @@
             Reader.Write("AutoPatcher", "Login", Login);
             Reader.Write("AutoPatcher", "Password", Password);
             Reader.Write("AutoPatcher", "AllowCleanUp", AllowCleanUp);
+            Reader.Write("AutoPatcher", "CompressFiles", CompressFiles);
         }
     }
 }

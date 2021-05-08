@@ -51,6 +51,7 @@
             this.SourceLinkLabel = new System.Windows.Forms.LinkLabel();
             this.AllowCleanCheckBox = new System.Windows.Forms.CheckBox();
             this.DownloadExistingButton = new System.Windows.Forms.Button();
+            this.btnFixGZ = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // ClientTextBox
@@ -119,7 +120,7 @@
             // 
             // ProcessButton
             // 
-            this.ProcessButton.Location = new System.Drawing.Point(12, 140);
+            this.ProcessButton.Location = new System.Drawing.Point(12, 139);
             this.ProcessButton.Name = "ProcessButton";
             this.ProcessButton.Size = new System.Drawing.Size(75, 23);
             this.ProcessButton.TabIndex = 9;
@@ -246,7 +247,7 @@
             // 
             // DownloadExistingButton
             // 
-            this.DownloadExistingButton.Location = new System.Drawing.Point(169, 140);
+            this.DownloadExistingButton.Location = new System.Drawing.Point(169, 139);
             this.DownloadExistingButton.Name = "DownloadExistingButton";
             this.DownloadExistingButton.Size = new System.Drawing.Size(134, 23);
             this.DownloadExistingButton.TabIndex = 23;
@@ -254,11 +255,22 @@
             this.DownloadExistingButton.UseVisualStyleBackColor = true;
             this.DownloadExistingButton.Click += new System.EventHandler(this.DownloadExistingButton_Click);
             // 
+            // btnFixGZ
+            // 
+            this.btnFixGZ.Location = new System.Drawing.Point(93, 139);
+            this.btnFixGZ.Name = "btnFixGZ";
+            this.btnFixGZ.Size = new System.Drawing.Size(75, 23);
+            this.btnFixGZ.TabIndex = 24;
+            this.btnFixGZ.Text = "Fix *.gz";
+            this.btnFixGZ.UseVisualStyleBackColor = true;
+            this.btnFixGZ.Click += new System.EventHandler(this.btnFixGZ_Click);
+            // 
             // AMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(392, 292);
+            this.Controls.Add(this.btnFixGZ);
             this.Controls.Add(this.DownloadExistingButton);
             this.Controls.Add(this.AllowCleanCheckBox);
             this.Controls.Add(this.SourceLinkLabel);
@@ -315,6 +327,7 @@
         private System.Windows.Forms.LinkLabel SourceLinkLabel;
         private System.Windows.Forms.CheckBox AllowCleanCheckBox;
         private System.Windows.Forms.Button DownloadExistingButton;
+        private System.Windows.Forms.Button btnFixGZ;
     }
 }
 
