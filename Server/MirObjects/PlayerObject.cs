@@ -2096,7 +2096,7 @@ namespace Server.MirObjects
 
             for (int i = 0; i < Info.Buffs.Count; i++)
             {
-                AddBuff(Info.Buffs[i].Type, this, (int)Math.Min(Info.Buffs[i].ExpireTime, int.MaxValue), Info.Buffs[i].Stats, Info.Buffs[i].Visible, Info.Buffs[i].Infinite, Info.Buffs[i].Stackable);       
+                AddBuff(Info.Buffs[i].Type, this, (int)Math.Min(Info.Buffs[i].ExpireTime, int.MaxValue), Info.Buffs[i].Stats, Info.Buffs[i].Visible, Info.Buffs[i].Infinite, Info.Buffs[i].Stackable, true, Info.Buffs[i].Values);       
             }
 
             Info.Buffs.Clear();
@@ -10396,7 +10396,6 @@ namespace Server.MirObjects
 
             var packet = new S.AddBuff { Buff = b.ToClientBuff() };
 
-            packet.Buff.Values = values;
             packet.Buff.ExpireTime -= Envir.Time;
 
             Enqueue(packet);

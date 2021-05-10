@@ -459,8 +459,9 @@ public class ClientBuff
 
     public ClientBuff(BinaryReader reader)
     {
-        Type = (BuffType)reader.ReadByte();
         Caster = null;
+
+        Type = (BuffType)reader.ReadByte();
         Visible = reader.ReadBoolean();
         ObjectID = reader.ReadUInt32();
         ExpireTime = reader.ReadInt64();
@@ -489,7 +490,6 @@ public class ClientBuff
         Stats.Save(writer);
 
         writer.Write(Values.Length);
-
         for (int i = 0; i < Values.Length; i++)
         {
             writer.Write(Values[i]);

@@ -5081,7 +5081,7 @@ namespace Client.MirScenes
             {
                 if (buff == null)
                 {
-                    buff = new ClientBuff { Type = BuffType.Guild, ObjectID = User.ObjectID, Caster = "Guild", Infinite = true };
+                    buff = new ClientBuff { Type = BuffType.Guild, ObjectID = User.ObjectID, Caster = "Guild", Infinite = true, Values = new int[0] };
 
                     Buffs.Add(buff);
                     BuffsDialog.CreateBuff(buff);
@@ -5886,7 +5886,7 @@ namespace Client.MirScenes
                     fishingItem = true;
                     break;
                 case ItemType.Weapon:
-                    if (HoverItem.Info.Shape == 49 || HoverItem.Info.Shape == 50)
+                    if (Globals.FishingRodShapes.Contains(HoverItem.Info.Shape))
                         fishingItem = true;
                     break;
                 default:
@@ -5942,7 +5942,6 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("DC + {0}~{1}", minValue, maxValue + addValue)
                     Text = text
                 };
 
@@ -5972,7 +5971,6 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("MC + {0}~{1}", minValue, maxValue + addValue)
                     Text = text
                 };
 

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -339,6 +340,22 @@ namespace Server.Database
             }
         }
 
+        private int FindRowByItemName(string value)
+        {
+            int rowIndex = -1;
+
+            foreach (DataGridViewRow row in itemInfoGridView.Rows)
+            {
+                if (row.Cells[2].Value?.ToString().Equals(value) ?? false)
+                {
+                    rowIndex = row.Index;
+                    break;
+                }
+            }
+
+            return rowIndex;
+        }
+
         private void itemInfoGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             var col = itemInfoGridView.Columns[e.ColumnIndex];
@@ -355,6 +372,13 @@ namespace Server.Database
             var val = e.FormattedValue.ToString();
 
             itemInfoGridView.Rows[e.RowIndex].ErrorText = "";
+
+            //Only AttackSpeed stat can be negative
+            if (col.ValueType == typeof(int) && col.Name != "StatAttackSpeed" && int.TryParse(val, out int val1) && val1 < 0)
+            {
+                e.Cancel = true;
+                itemInfoGridView.Rows[e.RowIndex].ErrorText = "the value must be a positive integer";
+            }
 
             if (col.ValueType == typeof(int) && !int.TryParse(val, out _))
             {
@@ -512,12 +536,165 @@ namespace Server.Database
 
         private void btnImport_Click(object sender, EventArgs e)
         {
-            //TODO - export all visible as CSV
+            //TODO - import all and match on itemname
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "CSV (*.csv)|*.csv";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                var fileName = ofd.FileName;
+                bool fileError = false;
+
+                var rows = File.ReadAllLines(fileName);
+
+                if (rows.Length > 1)
+                {
+                    var columns = rows[0].Split(',');
+
+                    if (columns.Length < 2)
+                    {
+                        fileError = true;
+                        MessageBox.Show("No columns to import.");
+                    }
+
+                    if (!fileError)
+                    {
+                        itemInfoGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
+
+                        int rowsEdited = 0;
+
+                        for (int i = 1; i < rows.Length; i++)
+                        {
+                            var row = rows[i];
+
+                            var cells = row.Split(',');
+
+                            if (string.IsNullOrWhiteSpace(cells[0]))
+                            {
+                                continue;
+                            }
+
+                            if (cells.Length != columns.Length)
+                            {
+                                fileError = true;
+                                MessageBox.Show($"Row {i} column count does not match the headers column count.");
+                                break;
+                            }
+
+                            var rowIndex = FindRowByItemName(cells[0]);
+            
+                            if (rowIndex == -1)
+                            {
+                                //new
+                            }
+                            else
+                            {
+                                rowsEdited++;
+
+                                for (int j = 0; j < columns.Length; j++)
+                                {
+                                    var column = columns[j];
+
+                                    if (string.IsNullOrWhiteSpace(column))
+                                    {
+                                        continue;
+                                    }
+
+                                    var dataColumn = itemInfoGridView.Columns[column];
+
+                                    if (dataColumn == null)
+                                    {
+                                        fileError = true;
+                                        MessageBox.Show($"Column {column} was not found.");
+                                        break;
+                                    }
+
+                                    itemInfoGridView.BeginEdit(true);
+
+                                    DataGridViewCell dataCell = itemInfoGridView.Rows[rowIndex].Cells[dataColumn.Name];
+
+                                    dataCell.Value = cells[j];
+
+                                    itemInfoGridView.EndEdit();
+                                }
+
+                                if (fileError)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!fileError)
+                        {
+                            MessageBox.Show($"{rowsEdited} rows have been imported.");
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("No rows to import.");
+                }
+            }
         }
 
         private void btnExport_Click(object sender, EventArgs e)
         {
-            //TODO - import all and match on itemname
+            if (itemInfoGridView.Rows.Count > 0)
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "CSV (*.csv)|*.csv";
+                sfd.FileName = "ItemInfo Output.csv";
+                bool fileError = false;
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    if (File.Exists(sfd.FileName))
+                    {
+                        try
+                        {
+                            File.Delete(sfd.FileName);
+                        }
+                        catch (IOException ex)
+                        {
+                            fileError = true;
+                            MessageBox.Show("It wasn't possible to write the data to the disk." + ex.Message);
+                        }
+                    }
+                    if (!fileError)
+                    {
+                        try
+                        {
+                            int columnCount = itemInfoGridView.Columns.Count;
+                            string columnNames = "";
+                            string[] outputCsv = new string[itemInfoGridView.Rows.Count + 1];
+                            for (int i = 2; i < columnCount; i++)
+                            {
+                                columnNames += itemInfoGridView.Columns[i].Name.ToString() + ",";
+                            }
+                            outputCsv[0] += columnNames;
+
+                            for (int i = 1; (i - 1) < itemInfoGridView.Rows.Count; i++)
+                            {
+                                for (int j = 2; j < columnCount; j++)
+                                {
+                                    outputCsv[i] += (itemInfoGridView.Rows[i - 1].Cells[j].Value?.ToString() ?? "") + ",";
+                                }
+                            }
+
+                            File.WriteAllLines(sfd.FileName, outputCsv, Encoding.UTF8);
+                            MessageBox.Show("Data Exported Successfully.", "Info");
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error :" + ex.Message);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("No Record To Export.", "Info");
+            }
         }
 
         private void itemInfoGridView_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
@@ -538,7 +715,7 @@ namespace Server.Database
             row.Cells["ItemImage"].Value = (ushort)0;
             row.Cells["ItemShape"].Value = (short)0;
             row.Cells["ItemEffect"].Value = (byte)0;
-            row.Cells["ItemStackSize"].Value = (ushort)0;
+            row.Cells["ItemStackSize"].Value = (ushort)1;
             row.Cells["ItemSlots"].Value = (byte)0;
             row.Cells["ItemWeight"].Value = (byte)0;
             row.Cells["ItemLightRange"].Value = (byte)0;
