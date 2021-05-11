@@ -75,11 +75,11 @@ namespace Server.MirObjects.Monsters
 
         private void Attack2()
         {
-            int levelgap = 5;
-            int moblevel = this.Level;
-            int targetlevel = Target.Level;
+            int levelGap = 5;
+            int mobLevel = this.Level;
+            int targetLevel = Target.Level;
 
-            if ((targetlevel <= moblevel + levelgap))
+            if ((targetLevel <= mobLevel + levelGap))
             {
                 if (Target.Pushed(this, Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation), 1) > 0)
                 {

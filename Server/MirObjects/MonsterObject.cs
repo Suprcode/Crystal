@@ -311,6 +311,14 @@ namespace Server.MirObjects
                     return new Bear(info);
                 case 148:
                     return new FrozenKnight(info);
+                case 149:
+                    return new IcePhantom(info);
+                case 150:
+                    return new SnowWolf(info);
+                case 151:
+                    return new BlackTortoise(info);
+                case 152:
+                    return new DragonWarrior(info);
 
 
                 //unfinished
