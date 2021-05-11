@@ -944,6 +944,7 @@ namespace Server.MirObjects
             {
                 Stackable = reader.ReadBoolean();
 
+                Values = new int[0];
                 Stats = new Stats(reader);
                 Data = new Dictionary<string, object>();
 

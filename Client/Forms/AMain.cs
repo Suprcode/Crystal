@@ -15,7 +15,6 @@ namespace Launcher
 {
     public partial class AMain : Form
     {
-
         long _totalBytes, _completedBytes, _currentBytes;
         private int _fileCount, _currentCount;
 
@@ -180,8 +179,18 @@ namespace Launcher
                 {
                     string oldFilename = Path.Combine(Path.GetDirectoryName(old.FileName), ("Old__" + Path.GetFileName(old.FileName)));
 
-                    File.Move(Settings.P_Client + old.FileName, oldFilename);
-                    Restart = true;
+                    try
+                    {
+                        File.Move(Settings.P_Client + old.FileName, oldFilename);
+                    }
+                    catch (UnauthorizedAccessException ex)
+                    {
+                        SaveError(ex.ToString());
+                    }
+                    finally
+                    {
+                        Restart = true;
+                    }
                 }
 
                 DownloadList.Enqueue(old);

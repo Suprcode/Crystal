@@ -192,7 +192,7 @@ namespace Launcher
             this.Version_label.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // Main_browser
-            // 
+            //
             this.Main_browser.AllowWebBrowserDrop = false;
             this.Main_browser.IsWebBrowserContextMenuEnabled = false;
             this.Main_browser.Location = new System.Drawing.Point(8, 46);
