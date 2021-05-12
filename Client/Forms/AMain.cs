@@ -189,6 +189,7 @@ namespace Launcher
                     }
                     finally
                     {
+                        //Might cause an infinite loop if it can never gain access
                         Restart = true;
                     }
                 }

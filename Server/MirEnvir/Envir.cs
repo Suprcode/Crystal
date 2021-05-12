@@ -3382,6 +3382,8 @@ namespace Server.MirEnvir
 
         public void ReloadNPCs()
         {
+            SaveGoods(true);
+
             var keys = Scripts.Keys;
 
             foreach (var key in keys)

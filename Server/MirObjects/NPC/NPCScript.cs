@@ -185,6 +185,8 @@ namespace Server.MirObjects
 
             if (loadedNPC != null)
             {
+                loadedNPC.UsedGoods.Clear();
+
                 string path = Path.Combine(Settings.GoodsPath, loadedNPC.Info.Index.ToString() + ".msd");
 
                 if (!File.Exists(path)) return;
