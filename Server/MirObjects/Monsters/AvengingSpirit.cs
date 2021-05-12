@@ -82,10 +82,11 @@ namespace Server.MirObjects.Monsters
         {
             //Repulsion - Attack1 Scream Attack (utilises DelayedAction so player is hit at end of push)
             //need to put Damage Stats (DC/MC/SC) on mob for it to push
-            int levelgap;
+            int levelGap = 5;
+            int mobLevel = this.Level;
+            int targetLevel = Target.Level;
 
-            levelgap = 55 - Target.Level;
-            if (Envir.Random.Next(5) < 3 + levelgap)
+            if ((targetLevel <= mobLevel + levelGap))
             {
                 if (Target.Pushed(this, Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation), 2) > 0)
                 {

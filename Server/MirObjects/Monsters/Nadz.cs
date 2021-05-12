@@ -76,10 +76,11 @@ namespace Server.MirObjects.Monsters
         //need to put Damage Stats (DC/MC/SC) on mob for it to push
         private void PushAttack(int distance)
         {
-            int levelgap;
+            int levelGap = 5;
+            int mobLevel = this.Level;
+            int targetLevel = Target.Level;
 
-            levelgap = 70 - Target.Level;
-            if (Envir.Random.Next(1) < 2 + levelgap)
+            if ((targetLevel <= mobLevel + levelGap))
             {
                 if (Target.Pushed(this, Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation), 2) > 0)
                 {
