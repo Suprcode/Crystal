@@ -166,7 +166,7 @@ namespace Client
 
         //AutoPatcher
         public static bool P_Patcher = true;
-        public static string P_Host = @"http://mirfiles.co.uk/mir2/cmir/patch/";
+        public static string P_Host = @"http://mirfiles.com/mir2/cmir/patch/";
         public static string P_PatchFileName = @"PList.gz";
         public static bool P_NeedLogin = false;
         public static string P_Login = string.Empty;
@@ -178,7 +178,6 @@ namespace Client
 
         public static void Load()
         {
-            //Languahe
             GameLanguage.LoadClientLanguage(@".\Language.ini");
 
             if (!Directory.Exists(DataPath)) Directory.CreateDirectory(DataPath);
@@ -270,6 +269,12 @@ namespace Client
             if (!P_Host.EndsWith("/")) P_Host += "/";
             if (P_Host.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) P_Host = P_Host.Insert(0, "http://");
             if (P_BrowserAddress.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) P_BrowserAddress = P_BrowserAddress.Insert(0, "http://");
+
+            //Temp check to update everyones address
+            if (P_Host.ToLower() == "http://mirfiles.co.uk/mir2/cmir/patch/")
+            {
+                P_Host = "http://mirfiles.com/mir2/cmir/patch/";
+            }
         }
 
         public static void Save()
