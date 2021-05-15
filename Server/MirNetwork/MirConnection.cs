@@ -413,6 +413,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.MarketGetBack:
                     MarketGetBack((C.MarketGetBack)p);
                     return;
+                case (short)ClientPacketIds.MarketSellNow:
+                    MarketSellNow((C.MarketSellNow)p);
+                    return;
                 case (short)ClientPacketIds.RequestUserName:
                     RequestUserName((C.RequestUserName)p);
                     return;
@@ -1266,6 +1269,13 @@ namespace Server.MirNetwork
 
             Player.MarketBuy(p.AuctionID, p.BidPrice);
         }
+        private void MarketSellNow(C.MarketSellNow p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.MarketSellNow(p.AuctionID);
+        }
+
         private void MarketGetBack(C.MarketGetBack p)
         {
             if (Stage != GameStage.Game) return;

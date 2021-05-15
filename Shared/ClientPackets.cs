@@ -1284,6 +1284,21 @@ namespace ClientPackets
             writer.Write(BidPrice);
         }
     }
+    public sealed class MarketSellNow : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.MarketSellNow; } }
+
+        public ulong AuctionID;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            AuctionID = reader.ReadUInt64();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(AuctionID);
+        }
+    }
     public sealed class MarketGetBack : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.MarketGetBack; } }

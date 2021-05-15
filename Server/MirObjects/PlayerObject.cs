@@ -15033,6 +15033,83 @@ namespace Server.MirObjects
             Enqueue(new S.MarketFail { Reason = 7 });
         }
 
+        public void MarketSellNow(ulong auctionID)
+        {
+            if (Dead)
+            {
+                Enqueue(new S.MarketFail { Reason = 0 });
+                return;
+            }
+
+            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.MarketKey, StringComparison.CurrentCultureIgnoreCase))
+            {
+                Enqueue(new S.MarketFail { Reason = 1 });
+                return;
+            }
+
+            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
+            {
+                NPCObject ob = CurrentMap.NPCs[n];
+                if (ob.ObjectID != NPCObjectID) continue;
+                if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
+
+                foreach (AuctionInfo auction in Account.Auctions)
+                {
+                    if (auction.AuctionID != auctionID) continue;
+
+                    if (auction.ItemType != MarketItemType.Auction)
+                    {
+                        return;
+                    }
+
+                    if (auction.CurrentBid <= auction.Price || auction.CurrentBuyerInfo == null)
+                    {
+                        Enqueue(new S.MarketFail { Reason = 9 });
+                        return;
+                    }
+
+                    if (auction.Sold && auction.Expired)
+                    {
+                        MessageQueue.Enqueue(string.Format("Auction both sold and Expired {0}", Account.AccountID));
+                        return;
+                    }
+
+                    if (auction.Expired || auction.Sold || Envir.Now >= auction.ConsignmentDate.AddDays(Globals.ConsignmentLength))
+                    {
+                        Enqueue(new S.MarketFail { Reason = 10 });
+                        return;
+                    }
+
+                    uint cost = auction.CurrentBid;
+
+                    uint gold = (uint)Math.Max(0, cost - cost * Globals.Commission);
+
+                    if (!CanGainGold(auction.CurrentBid))
+                    {
+                        Enqueue(new S.MarketFail { Reason = 8 });
+                        return;
+                    }
+
+                    auction.Sold = true;
+
+                    string message = string.Format("You won {0} for {1:#,##0} Gold.", auction.Item.FriendlyName, auction.CurrentBid);
+
+                    Envir.MailCharacter(auction.CurrentBuyerInfo, item: auction.Item, customMessage: message);
+                    Envir.MessageAccount(auction.CurrentBuyerInfo.AccountInfo, string.Format("You bought {0} for {1:#,##0} Gold", auction.Item.FriendlyName, auction.CurrentBid), ChatType.Hint);
+
+                    Account.Auctions.Remove(auction);
+                    Envir.Auctions.Remove(auction);
+                    GainGold(gold);
+                    Enqueue(new S.MarketSuccess { Message = string.Format("You sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.FriendlyName, cost, gold, cost - gold) });
+                    MarketSearch(MatchName, MatchType);
+                    return;
+                }
+
+            }
+
+            Enqueue(new S.MarketFail { Reason = 7 });
+        }
+
         public void MarketGetBack(ulong auctionID)
         {
             if (Dead)

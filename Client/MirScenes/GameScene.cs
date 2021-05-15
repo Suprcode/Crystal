@@ -4710,7 +4710,13 @@ namespace Client.MirScenes
                     MirMessageBox.Show("You are too far away from the Trust Merchant.");
                     break;
                 case 8:
-                    MirMessageBox.Show("You cannot hold enough gold to get your sale");
+                    MirMessageBox.Show("You cannot hold enough gold to get your sale.");
+                    break;
+                case 9:
+                    MirMessageBox.Show("This item has not met the minimum bid yet.");
+                    break;
+                case 10:
+                    MirMessageBox.Show("Auction has already ended for this item.");
                     break;
             }
 

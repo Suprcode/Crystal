@@ -1634,6 +1634,7 @@ public enum ClientPacketIds : short
     MarketPage,
     MarketBuy,
     MarketGetBack,
+    MarketSellNow,
     RequestUserName,
     RequestChatItem,
     EditGuildMember,
