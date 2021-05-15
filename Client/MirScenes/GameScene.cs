@@ -117,6 +117,8 @@ namespace Client.MirScenes
         public NoticeDialog NoticeDialog;
 
         public TimerDialog TimerControl;
+        public CompassDialog CompassControl;
+
 
         public static List<ItemInfo> ItemInfoList = new List<ItemInfo>();
         public static List<UserId> UserIdList = new List<UserId>();
@@ -264,6 +266,7 @@ namespace Client.MirScenes
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
 
             TimerControl = new TimerDialog { Parent = this, Visible = false };
+            CompassControl = new CompassDialog { Parent = this, Visible = false };
 
             for (int i = 0; i < OutputLines.Length; i++)
                 OutputLines[i] = new MirLabel
@@ -922,7 +925,6 @@ namespace Client.MirScenes
         {
             if (MapControl != null && !MapControl.IsDisposed)
                 MapControl.DrawControl();
-
             base.DrawControl();
 
 
@@ -966,6 +968,7 @@ namespace Client.MirScenes
             }
 
             TimerControl.Process();
+            CompassControl.Process();
 
             MirItemCell cell = MouseControl as MirItemCell;
 
@@ -9003,12 +9006,10 @@ namespace Client.MirScenes
             if (MapObject.User.MouseOver(MouseLocation))
                 MapObject.User.DrawName();
 
-
-
-
             DXManager.SetSurface(oldSurface);
             surface.Dispose();
             TextureValid = true;
+
         }
         protected internal override void DrawControl()
         {
@@ -9023,9 +9024,13 @@ namespace Client.MirScenes
 
             float oldOpacity = DXManager.Opacity;
 
+            if (MapObject.User.Dead) DXManager.SetGrayscale(true);
+
             DXManager.SetOpacity(Opacity);
             DXManager.Sprite.Draw(ControlTexture, new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight), Vector3.Zero, Vector3.Zero, Color.White);
             DXManager.SetOpacity(oldOpacity);
+
+            if (MapObject.User.Dead) DXManager.SetGrayscale(false);
 
             CleanTime = CMain.Time + Settings.CleanDelay;
         }

@@ -40,6 +40,14 @@ namespace Server.MirDatabase
             set { _finishNpcIndex = value; }
         }
 
+        public NPCObject FinishNPC
+        {
+            get
+            {
+                return Envir.NPCs.Single(x => x.ObjectID == FinishNpcIndex);
+            }
+        }
+
         public string 
             Name = string.Empty, 
             Group = string.Empty, 
