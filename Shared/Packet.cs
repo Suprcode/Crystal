@@ -553,6 +553,8 @@ public abstract class Packet
                 return new S.RepairItem();
             case (short)ServerPacketIds.ItemRepaired:
                 return new S.ItemRepaired();
+            case (short)ServerPacketIds.ItemSlotSizeChanged:
+                return new S.ItemSlotSizeChanged();
             case (short)ServerPacketIds.NewMagic:
                 return new S.NewMagic();
             case (short)ServerPacketIds.MagicLeveled:

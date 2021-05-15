@@ -2821,6 +2821,25 @@ namespace ServerPackets
         }
     }
 
+    public sealed class ItemSlotSizeChanged : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.ItemSlotSizeChanged; } }
+
+        public ulong UniqueID;
+        public int SlotSize;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            UniqueID = reader.ReadUInt64();
+            SlotSize = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(UniqueID);
+            writer.Write(SlotSize);
+        }
+    }
+
 
     public sealed class NewMagic : Packet
     {

@@ -11902,7 +11902,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            bool canRepair = false, canUpgrade = false;
+            bool canRepair = false, canUpgrade = false, canSlotUpgrade = false;
 
             if (tempFrom.Info.Type != ItemType.Gem)
             {
@@ -11957,6 +11957,38 @@ namespace Server.MirObjects
                         return;
                     }
                     break;
+                case 7: //slots
+                    if (tempTo.Info.Bind.HasFlag(BindMode.DontUpgrade) || tempTo.Info.Unique != SpecialItemMode.None)
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    if (tempTo.RentalInformation != null && tempTo.RentalInformation.BindingFlags.HasFlag(BindMode.DontUpgrade))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    if (!ValidGemForItem(tempFrom, (byte)tempTo.Info.Type))
+                    {
+                        ReceiveChat("Invalid combination.", ChatType.Hint);
+                        Enqueue(p);
+                        return;
+                    }
+                    if (tempTo.Info.RandomStats == null)
+                    {
+                        ReceiveChat("Item already has max sockets.", ChatType.Hint);
+                        Enqueue(p);
+                        return;
+                    }
+                    if (tempTo.Info.RandomStats.SlotMaxStat <= tempTo.Slots.Length)
+                    {
+                        ReceiveChat("Item already has max sockets.", ChatType.Hint);
+                        Enqueue(p);
+                        return;
+                    }
+
+                    canSlotUpgrade = true;
+                    break;
                 case 3: //gems
                 case 4: //orbs
                     if (tempTo.Info.Bind.HasFlag(BindMode.DontUpgrade) || tempTo.Info.Unique != SpecialItemMode.None)
@@ -11973,7 +12005,7 @@ namespace Server.MirObjects
 
                     if ((tempTo.GemCount >= tempFrom.Info.Stats[Stat.CriticalDamage]) || (GetCurrentStatCount(tempFrom, tempTo) >= tempFrom.Info.Stats[Stat.HPDrainRatePercent]))
                     {
-                        ReceiveChat("Item has already reached maximum added stats", ChatType.Hint);
+                        ReceiveChat("Item has already reached maximum added stats.", ChatType.Hint);
                         Enqueue(p);
                         return;
                     }
@@ -12233,6 +12265,13 @@ namespace Server.MirObjects
                 tempTo.GemCount++;
                 ReceiveChat("Item has been upgraded.", ChatType.Hint);
                 Enqueue(new S.ItemUpgraded { Item = tempTo });
+            }
+
+            if (canSlotUpgrade && Info.Inventory[indexTo] != null)
+            {
+                tempTo.SetSlotSize(tempTo.Slots.Length + 1);
+                ReceiveChat("Item has increased its sockets.", ChatType.Hint);
+                Enqueue(new S.ItemSlotSizeChanged { UniqueID = tempTo.UniqueID, SlotSize = tempTo.Slots.Length });
             }
 
             if (tempFrom.Count > 1) tempFrom.Count--;

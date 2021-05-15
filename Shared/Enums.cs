@@ -1426,6 +1426,7 @@ public enum ServerPacketIds : short
     CraftItem,
     RepairItem,
     ItemRepaired,
+    ItemSlotSizeChanged,
     NewMagic,
     RemoveMagic,
     MagicLeveled,

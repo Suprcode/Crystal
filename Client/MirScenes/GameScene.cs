@@ -1352,6 +1352,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ItemRepaired:
                     ItemRepaired((S.ItemRepaired)p);
                     break;
+                case (short)ServerPacketIds.ItemSlotSizeChanged:
+                    ItemSlotSizeChanged((S.ItemSlotSizeChanged)p);
+                    break;
                 case (short)ServerPacketIds.NewMagic:
                     NewMagic((S.NewMagic)p);
                     break;
@@ -3622,6 +3625,35 @@ namespace Client.MirScenes
                 DisposeItemLabel();
                 CreateItemLabel(item);
             }
+        }
+
+        private void ItemSlotSizeChanged(S.ItemSlotSizeChanged p)
+        {
+            UserItem item = null;
+            for (int i = 0; i < User.Inventory.Length; i++)
+            {
+                if (User.Inventory[i] != null && User.Inventory[i].UniqueID == p.UniqueID)
+                {
+                    item = User.Inventory[i];
+                    break;
+                }
+            }
+
+            if (item == null)
+            {
+                for (int i = 0; i < User.Equipment.Length; i++)
+                {
+                    if (User.Equipment[i] != null && User.Equipment[i].UniqueID == p.UniqueID)
+                    {
+                        item = User.Equipment[i];
+                        break;
+                    }
+                }
+            }
+
+            if (item == null) return;
+
+            item.SetSlotSize(p.SlotSize);
         }
 
         private void ItemUpgraded(S.ItemUpgraded p)
