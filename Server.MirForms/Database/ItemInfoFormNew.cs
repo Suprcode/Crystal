@@ -22,6 +22,8 @@ namespace Server.Database
         private readonly Array BindEnums = Enum.GetValues(typeof(BindMode));
         private readonly Array SpecialEnums = Enum.GetValues(typeof(SpecialItemMode));
 
+        private DataTable Table;
+
         public ItemInfoFormNew()
         {
             InitializeComponent();
@@ -173,16 +175,16 @@ namespace Server.Database
 
         private void PopulateTable()
         {
-            DataTable table = new DataTable("itemInfo");
+            Table = new DataTable("itemInfo");
 
             foreach (DataGridViewColumn col in itemInfoGridView.Columns)
             {
-                table.Columns.Add(col.DataPropertyName, col.ValueType);
+                Table.Columns.Add(col.DataPropertyName, col.ValueType);
             }
 
             foreach (ItemInfo item in Envir.ItemInfoList)
             {
-                DataRow row = table.NewRow();
+                DataRow row = Table.NewRow();
 
                 row["Modified"] = false;
 
@@ -229,10 +231,10 @@ namespace Server.Database
                     row["Special" + special.ToString()] = item.Unique.HasFlag(special);
                 }
 
-                table.Rows.Add(row);
+                Table.Rows.Add(row);
             }
 
-            itemInfoGridView.DataSource = table;
+            itemInfoGridView.DataSource = Table;
         }
 
         private void UpdateFilter()
@@ -340,20 +342,19 @@ namespace Server.Database
             }
         }
 
-        private int FindRowByItemName(string value)
+        private DataRow FindRowByItemName(string value)
         {
-            int rowIndex = -1;
-
-            foreach (DataGridViewRow row in itemInfoGridView.Rows)
+            foreach (DataRow row in Table.Rows)
             {
-                if (row.Cells[2].Value?.ToString().Equals(value) ?? false)
+                var val = row["ItemName"];
+
+                if (val?.ToString().Equals(value) ?? false)
                 {
-                    rowIndex = row.Index;
-                    break;
+                    return row;
                 }
             }
 
-            return rowIndex;
+            return null;
         }
 
         private void itemInfoGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
@@ -536,7 +537,6 @@ namespace Server.Database
 
         private void btnImport_Click(object sender, EventArgs e)
         {
-            //TODO - import all and match on itemname
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "CSV (*.csv)|*.csv";
 
@@ -581,16 +581,19 @@ namespace Server.Database
                                 break;
                             }
 
-                            var rowIndex = FindRowByItemName(cells[0]);
-            
-                            if (rowIndex == -1)
-                            {
-                                //new
-                            }
-                            else
-                            {
-                                rowsEdited++;
+                            var dataRow = FindRowByItemName(cells[0]);
 
+                            itemInfoGridView.BeginEdit(true);
+
+                            if (dataRow == null)
+                            {
+                                dataRow = Table.NewRow();
+
+                                Table.Rows.Add(dataRow);
+                            }
+
+                            try
+                            {
                                 for (int j = 0; j < columns.Length; j++)
                                 {
                                     var column = columns[j];
@@ -609,25 +612,36 @@ namespace Server.Database
                                         break;
                                     }
 
-                                    itemInfoGridView.BeginEdit(true);
-
-                                    DataGridViewCell dataCell = itemInfoGridView.Rows[rowIndex].Cells[dataColumn.Name];
-
-                                    dataCell.Value = cells[j];
-
-                                    itemInfoGridView.EndEdit();
+                                    if (dataColumn.ValueType.IsEnum)
+                                    {
+                                        dataRow[column] = Enum.Parse(dataColumn.ValueType, cells[j]);
+                                    }
+                                    else
+                                    {
+                                        dataRow[column] = cells[j];
+                                    }
                                 }
+                            }
+                            catch(Exception ex)
+                            {
+                                fileError = true;
+                                MessageBox.Show($"Error when importing item {cells[0]}. {ex.Message}");
+                                continue;
+                            }
 
-                                if (fileError)
-                                {
-                                    break;
-                                }
+                            itemInfoGridView.EndEdit();
+
+                            rowsEdited++;
+
+                            if (fileError)
+                            {
+                                break;
                             }
                         }
 
                         if (!fileError)
                         {
-                            MessageBox.Show($"{rowsEdited} rows have been imported.");
+                            MessageBox.Show($"{rowsEdited} items have been imported.");
                         }
                     }
                 }
@@ -677,7 +691,17 @@ namespace Server.Database
                             {
                                 for (int j = 2; j < columnCount; j++)
                                 {
-                                    outputCsv[i] += (itemInfoGridView.Rows[i - 1].Cells[j].Value?.ToString() ?? "") + ",";
+                                    var cell = itemInfoGridView.Rows[i - 1].Cells[j];
+
+                                    var valueType = itemInfoGridView.Columns[j].ValueType;
+                                    if (valueType.IsEnum)
+                                    {
+                                        outputCsv[i] += ((Enum.ToObject(valueType, cell.Value ?? 0))?.ToString() ?? "") + ",";
+                                    }
+                                    else
+                                    {
+                                        outputCsv[i] += (cell.Value?.ToString() ?? "") + ",";
+                                    }
                                 }
                             }
 
@@ -693,7 +717,7 @@ namespace Server.Database
             }
             else
             {
-                MessageBox.Show("No Record To Export.", "Info");
+                MessageBox.Show("No Items To Export.", "Info");
             }
         }
 
