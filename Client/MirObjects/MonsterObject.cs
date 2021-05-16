@@ -4166,29 +4166,7 @@ namespace Client.MirObjects
                         }
                         break;
                     }
-                case Monster.DarkSpirit:
-                    {
-                        switch (CurrentAction)
-                        {
-                            case MirAction.Standing:
-                                Libraries.Monsters[(ushort)Monster.DarkSpirit].DrawBlend((256 + FrameIndex + (int)Direction * 4), DrawLocation, Color.White, true);
-                                break;
-                            case MirAction.Walking:
-                                Libraries.Monsters[(ushort)Monster.DarkSpirit].DrawBlend((288 + FrameIndex + (int)Direction * 6), DrawLocation, Color.White, true);
-                                break;
-                            case MirAction.AttackRange1:
-                                Libraries.Monsters[(ushort)Monster.DarkSpirit].DrawBlend((336 + FrameIndex + (int)Direction * 9), DrawLocation, Color.White, true);
-                                break;
-                            case MirAction.Struck:
-                                Libraries.Monsters[(ushort)Monster.DarkSpirit].DrawBlend((408 + FrameIndex + (int)Direction * 3), DrawLocation, Color.White, true);
-                                break;
-                            case MirAction.Die:
-                                Libraries.Monsters[(ushort)Monster.DarkSpirit].DrawBlend((432 + FrameIndex + (int)Direction * 10), DrawLocation, Color.White, true);
-                                break;
 
-                        }
-                        break;
-                    }
             }
         }
 

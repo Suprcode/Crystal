@@ -64,7 +64,7 @@ namespace Server.MirObjects
                    CurrentWearWeight,
                    CurrentBagWeight;
   
-        public byte  MoisonResist;
+  
 
         public long CellTime, BrownTime, PKPointTime, LastHitTime, EXPOwnerTime;
         public Color NameColour = Color.White;
