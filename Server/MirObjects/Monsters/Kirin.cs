@@ -168,7 +168,7 @@ namespace Server.MirObjects.Monsters
                                 {
                                     if (target.Attacked(this, Damage, DefenceType.MAC) > 0)
                                     {
-                                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.MoisonResist)
+                                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.Stats[Stat.PoisonResist])
                                         {
                                             if (Envir.Random.Next(5) == 0)
                                             {

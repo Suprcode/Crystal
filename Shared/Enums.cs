@@ -574,9 +574,9 @@ public enum Monster : ushort
     FrozenAxeman = 381,// Done (DG)
     FrozenMagician = 382,// Done (DG)
     SnowYeti = 383,// Done (DG)
-    IceCrystalSoldier = 384,
-    DarkWraith = 385,
-    DarkSpirit = 386,
+    IceCrystalSoldier = 384,//Done (DG)
+    DarkWraith = 385,//Done (DG)
+    DarkSpirit = 386,//Done (DG)
     CrystalBeast = 387,
     RedOrb = 388,
     BlueOrb = 389,
