@@ -570,10 +570,10 @@ public enum Monster : ushort
     Guard3 = 377,
     ArcherGuard3 = 378,
     Bunny2 = 379,
-    FrozenMiner = 380,
-    FrozenAxeman = 381,
-    FrozenMagician = 382,
-    SnowYeti = 383,
+    FrozenMiner = 380,// Done (DG)
+    FrozenAxeman = 381,// Done (DG)
+    FrozenMagician = 382,// Done (DG)
+    SnowYeti = 383,// Done (DG)
     IceCrystalSoldier = 384,
     DarkWraith = 385,
     DarkSpirit = 386,
