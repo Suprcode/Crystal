@@ -205,6 +205,10 @@ public static class Functions
     }
 
 
+    public static MirDirection ShiftDirection(MirDirection dir, int i)
+    {
+        return (MirDirection)(((int)dir + i + 8) % 8);
+    }
 
     public static Size Add(this Size p1, Size p2)
     {

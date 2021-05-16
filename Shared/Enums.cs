@@ -529,7 +529,7 @@ public enum Monster : ushort
     WereTiger = 336, // Done (DG) - USE AI 113 (BloodBaboon) for Attack2. 
     KingHydrax = 337, //TODO - BOSS AI
     Hydrax = 338, // Done (DG) - No AI
-    HornedMage = 339,
+    HornedMage = 339,// Done (DG)
     Basiloid = 340,
     HornedArcher = 341,
     ColdArcher = 342,
@@ -566,7 +566,7 @@ public enum Monster : ushort
     Manticore = 373, //TODO - BOSS AI
     DragonWarrior = 374, //Done (DG)
     DragonArcher = 375, //TODO - Wind Arrow spell and Tornado (minion?)    
-    Kirin = 376,
+    Kirin = 376, // Done (DG)
     Guard3 = 377,
     ArcherGuard3 = 378,
     Bunny2 = 379,

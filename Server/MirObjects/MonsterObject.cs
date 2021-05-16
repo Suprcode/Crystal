@@ -319,8 +319,10 @@ namespace Server.MirObjects
                     return new BlackTortoise(info);
                 case 152:
                     return new DragonWarrior(info);
-
-
+                case 153://HornedMage 
+                    return new HornedMage(info);
+                case 154://Kirin
+                    return new Kirin(info);
                 //unfinished
                 case 120:
                     return new GeneralJinmYo(info); // AI Incomplete - See notes in AI file.
