@@ -113,7 +113,7 @@ namespace Server
             ViewRangeTextBox.Text = info.ViewRange.ToString();
             CoolEyeTextBox.Text = info.CoolEye.ToString();
 
-            HPTextBox.Text = info.HP.ToString();
+            HPTextBox.Text = info.Stats[Stat.HP].ToString();
             ExperienceTextBox.Text = info.Experience.ToString();
 
             MinACTextBox.Text = info.Stats[Stat.MinAC].ToString();
@@ -153,7 +153,7 @@ namespace Server
                 if (LevelTextBox.Text != info.Level.ToString()) LevelTextBox.Text = string.Empty;
                 if (ViewRangeTextBox.Text != info.ViewRange.ToString()) ViewRangeTextBox.Text = string.Empty;
                 if (CoolEyeTextBox.Text != info.CoolEye.ToString()) CoolEyeTextBox.Text = string.Empty;
-                if (HPTextBox.Text != info.HP.ToString()) HPTextBox.Text = string.Empty;
+                if (HPTextBox.Text != info.Stats[Stat.HP].ToString()) HPTextBox.Text = string.Empty;
                 if (ExperienceTextBox.Text != info.Experience.ToString()) ExperienceTextBox.Text = string.Empty;
 
                 if (MinACTextBox.Text != info.Stats[Stat.MinAC].ToString()) MinACTextBox.Text = string.Empty;
@@ -309,7 +309,7 @@ namespace Server
 
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++)
-                _selectedMonsterInfos[i].HP = temp;
+                _selectedMonsterInfos[i].Stats[Stat.HP] = temp;
         }
         private void ExperienceTextBox_TextChanged(object sender, EventArgs e)
         {

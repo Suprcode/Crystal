@@ -29,7 +29,7 @@ namespace Server.MirForms.Systems
             if (monster == null) return;
 
             MonsterNameTextBox.Text = monster.Name;
-            HPTextBox.Text = monster.HP.ToString();
+            HPTextBox.Text = monster.Stats[Stat.HP].ToString();
             EffectTextBox.Text = monster.Effect.ToString();
             LevelTextBox.Text = monster.Level.ToString();
             ViewRangeTextBox.Text = monster.ViewRange.ToString();
@@ -58,7 +58,7 @@ namespace Server.MirForms.Systems
 
             try
             {
-                monster.HP = int.Parse(HPTextBox.Text);
+                monster.Stats[Stat.HP] = int.Parse(HPTextBox.Text);
                 monster.Effect = byte.Parse(EffectTextBox.Text);
                 monster.Level = ushort.Parse(LevelTextBox.Text);
                 monster.ViewRange = byte.Parse(ViewRangeTextBox.Text);

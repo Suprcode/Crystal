@@ -32,7 +32,6 @@ namespace Server.MirDatabase
         public byte AI, Effect, ViewRange = 7, CoolEye;
         public ushort Level;
 
-        public int HP;
         public byte Light;
 
         public ushort AttackSpeed = 2500, MoveSpeed = 1800;
@@ -237,7 +236,7 @@ namespace Server.MirDatabase
             if (!ushort.TryParse(data[4], out info.Level)) return;
             if (!byte.TryParse(data[5], out info.ViewRange)) return;
 
-            if (!int.TryParse(data[6], out info.HP)) return;
+            //if (!int.TryParse(data[6], out info.HP)) return;
 
             //if (!ushort.TryParse(data[7], out info.MinAC)) return;
             //if (!ushort.TryParse(data[8], out info.MaxAC)) return;

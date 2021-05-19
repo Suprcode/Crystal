@@ -53,12 +53,13 @@ namespace Server.MirObjects.Monsters
 
             MonsterInfo bInfo = new MonsterInfo
             {
-                HP = this.HP,
                 Image = Monster.EvilMirBody,
                 CanTame = false,
                 CanPush = false,
                 AutoRev = false
-            };        
+            };
+
+            bInfo.Stats[Stat.HP] = this.Stats[Stat.HP];
 
             foreach (var block in BlockArray)
             {
