@@ -530,7 +530,7 @@ public enum Monster : ushort
     KingHydrax = 337, //TODO - BOSS AI
     Hydrax = 338, // Done (DG) - No AI
     HornedMage = 339, // Done (jxtulong)
-    Basiloid = 340,
+    Blank4 = 340,
     HornedArcher = 341,
     ColdArcher = 342,
     HornedWarrior = 343,
