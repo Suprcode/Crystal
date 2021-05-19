@@ -204,7 +204,10 @@ public static class Functions
         return source.Y < dest.Y ? MirDirection.Down : MirDirection.Up;
     }
 
-
+    public static MirDirection ShiftDirection(MirDirection dir, int i)
+    {
+        return (MirDirection)(((int)dir + i + 8) % 8);
+    }
 
     public static Size Add(this Size p1, Size p2)
     {
