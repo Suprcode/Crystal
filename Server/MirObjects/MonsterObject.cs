@@ -319,6 +319,22 @@ namespace Server.MirObjects
                     return new BlackTortoise(info);
                 case 152:
                     return new DragonWarrior(info);
+                case 153://HornedMage 
+                    return new HornedMage(info);
+                case 154://Kirin
+                    return new Kirin(info);
+                case 155:
+                    return new FrozenMiner(info);
+                case 156:
+                    return new FrozenAxeman(info);
+                case 157:
+                    return new FrozenMagician(info);
+                case 158:
+                    return new SnowYeti(info);
+                case 159://
+                    return new IceCrystalSoldier(info);
+                case 160:
+                    return new DarkWraith(info);
 
 
                 //unfinished
