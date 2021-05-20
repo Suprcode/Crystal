@@ -474,7 +474,7 @@ public enum Monster : ushort
     SeedingsGeneral = 282, // Done (DG)
     RestlessJar = 283,
     GeneralJinmYo = 284, // TODO: AI Incomplete - Thunderbolt and orb at end of lib file, not sure what this does? See notes in AI file (DG).
-    Bunny = 285, 
+    Bunny = 285, // No AI
     Tucson = 286, //No AI or spell animations (DG)
     TucsonFighter = 287, // Use AI 44 - No spell animation (DG)
     TucsonMage = 288, // Done (DG)
@@ -531,10 +531,10 @@ public enum Monster : ushort
     Hydrax = 338, // Done (DG) - No AI
     HornedMage = 339, // Done (jxtulong)
     Blank4 = 340,
-    HornedArcher = 341,
-    ColdArcher = 342,
-    HornedWarrior = 343,
-    FloatingRock = 344,
+    HornedArcher = 341, // Incomplete AI (DG) - Need to code the buffs.
+    ColdArcher = 342, // Done (DG) - //TODO - check wemade file for arrow issue
+    HornedWarrior = 343, // TODO - HAS BUFF MECHANIC
+    FloatingRock = 344, // Done (DG)
     ScalyBeast = 345,
     HornedSorceror = 346,
     BoulderSpirit = 347,
