@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using Server.MirDatabase;
@@ -64,6 +64,7 @@ namespace Server.MirObjects.Monsters
 
             if (attack2 && finalDamage > 0)
             {
+                PoisonTarget(5, 5, PoisonType.Bleeding);
                 if (Envir.Random.Next(5) == 0)
                 {
                     if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])

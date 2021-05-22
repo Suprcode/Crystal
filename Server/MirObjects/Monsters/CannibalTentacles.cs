@@ -56,14 +56,14 @@ namespace Server.MirObjects.Monsters
                 else
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                    Attack2();//Halfmoon Attack
+                    Attack2();//Halfmoon Attack with poison
                 }
 
             }
             else
             {
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-                RangeAttack1();//Projectile Attack
+                RangeAttack(Stats[Stat.MinDC], Stats[Stat.MaxDC]);//Projectile Attack
             }
 
 
@@ -113,15 +113,6 @@ namespace Server.MirObjects.Monsters
             }
 
             DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.MAC);
-            ActionList.Add(action);
-        }
-
-        private void RangeAttack1()
-        {
-            int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-            if (damage == 0) return;
-
-            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MAC);
             ActionList.Add(action);
         }
 

@@ -1,4 +1,4 @@
-﻿using Server.MirDatabase;
+using Server.MirDatabase;
 using System.Collections.Generic;
 using S = ServerPackets;
 
@@ -76,6 +76,8 @@ namespace Server.MirObjects.Monsters
 
                         if (finalDamage > 0)
                         {
+                            PoisonTarget(0, 5, PoisonType.Stun, 2000);
+
                             if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
                             {
                                 int poisonLength = 5;

@@ -31,36 +31,82 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            if (Envir.Random.Next(6) > 0)
+            switch (Envir.Random.Next(0, 6))
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-            }
-            else
-            {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                LineAttack(1);
-            }
+                case 0:
+                    {
+                        //Retreat();
+                    }
+                    break;
+                case 1:
+                    {
+                        Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                        int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
-            Target.Attacked(this, damage, DefenceType.ACAgility);
+                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.ACAgility);
+                        ActionList.Add(action);
+                    }
+                    break;
+                default:
+                    {
+                        Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                        int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
+                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.ACAgility);
+                        ActionList.Add(action);
+                    }
+                    break;
+            }
             if (Target.Dead)
                 FindTarget();
-
         }
 
-        private void LineAttack(int distance)
+        private void Retreat()
         {
-            List<MapObject> targets = FindAllTargets(1, CurrentLocation);
-            if (targets.Count == 0) return;
+            ActionTime = Envir.Time;
+            if (!CanMove) return;
 
-            for (int i = 0; i < 4; i++)
+            int travel = 0;
+            bool blocked = false;
+            int jumpDistance = 3;
+            MirDirection jumpDir = Functions.ReverseDirection(Direction);
+            Point location = CurrentLocation;
+            for (int i = 0; i < jumpDistance; i++)
             {
-                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                if (damage == 0) return;
+                location = Functions.PointMove(location, jumpDir, 1);
+                if (!CurrentMap.ValidPoint(location)) break;
+
+                Cell cInfo = CurrentMap.GetCell(location);
+                if (cInfo.Objects != null)
+                    for (int c = 0; c < cInfo.Objects.Count; c++)
+                    {
+                        MapObject ob = cInfo.Objects[c];
+                        if (!ob.Blocking) continue;
+                        blocked = true;
+                        if ((cInfo.Objects == null) || blocked) break;
+                    }
+                if (blocked) break;
+                travel++;
             }
 
+            jumpDistance = travel;
+            if (jumpDistance > 0)
+            {
+                for (int i = 0; i < jumpDistance; i++)
+                {
+                    location = Functions.PointMove(CurrentLocation, jumpDir, 1);
+                    CurrentMap.GetCell(CurrentLocation).Remove(this);
+                    RemoveObjects(jumpDir, 1);
+                    CurrentLocation = location;
+                    CurrentMap.GetCell(CurrentLocation).Add(this);
+                    AddObjects(jumpDir, 1);
+                }
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+            }
+
+
+            //ActionTime = Envir.Time + 300;
+            //CellTime = Envir.Time + 500;
         }
     }
 }

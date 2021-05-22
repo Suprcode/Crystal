@@ -32,23 +32,12 @@ namespace Server.MirObjects.Monsters
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             bool range = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
+            AttackTime = Envir.Time + AttackSpeed;
+            ActionTime = Envir.Time + 300;
+
             if (range)
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-
-                AttackTime = Envir.Time + AttackSpeed;
-                ActionTime = Envir.Time + 300;
-
-                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                if (damage == 0) return;
-
-                if (Envir.Random.Next(Settings.MagicResistWeight) >= Target.Stats[Stat.MagicResist])
-                {
-                    int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
-
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
-                    ActionList.Add(action);
-                }
+                RangeAttack(Stats[Stat.MinDC], Stats[Stat.MaxDC]); // Kept attack stats as DC in case existing servers update to new code.
             }
             else
             {
@@ -57,7 +46,6 @@ namespace Server.MirObjects.Monsters
 
             if (Target.Dead)
                 FindTarget();
-
         }
 
         protected override void ProcessTarget()
