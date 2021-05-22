@@ -3824,6 +3824,12 @@ namespace Server.MirObjects
 
                             player = Envir.GetPlayer(Lover.Name);
 
+                            if (!Settings.WeddingRingRecall)
+                            {
+                                ReceiveChat($"Teleportation via Wedding Ring is disabled.", ChatType.System);
+                                return;
+                            }
+
                             if (player == null)
                             {
                                 ReceiveChat((string.Format("{0} is not online.", Lover.Name)), ChatType.System);

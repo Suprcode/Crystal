@@ -1734,7 +1734,11 @@ namespace Server.MirObjects
 
             if (damage == 0) return;
 
-            Target.Attacked(this, damage);
+
+            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+            ActionList.Add(action);
+
+            //Target.Attacked(this, damage);
         }
 
         public void ReleaseBindingShot()
