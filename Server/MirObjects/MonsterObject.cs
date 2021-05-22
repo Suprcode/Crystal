@@ -335,7 +335,14 @@ namespace Server.MirObjects
                     return new IceCrystalSoldier(info);
                 case 160:
                     return new DarkWraith(info);
-
+                case 161:
+                    return new ColdArcher(info);
+                case 162:
+                    return new HornedArcher(info);
+                case 163:
+                    return new FloatingRock(info);
+                case 164:
+                    return new ScalyBeast(info);
 
                 //unfinished
                 case 120:
