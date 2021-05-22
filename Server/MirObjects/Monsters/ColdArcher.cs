@@ -1,4 +1,7 @@
 ﻿using Server.MirDatabase;
+using Server.MirEnvir;
+using System;
+using System.Collections.Generic;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
@@ -7,6 +10,7 @@ namespace Server.MirObjects.Monsters
     {
         public long FearTime;
         public byte AttackRange = 8;
+        public long BuffTime;
 
         protected internal ColdArcher(MonsterInfo info)
             : base(info)
@@ -15,106 +19,93 @@ namespace Server.MirObjects.Monsters
 
         protected override bool InAttackRange()
         {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
+            if (Target.CurrentMap != CurrentMap) return false;
+
+            return Target.CurrentLocation != CurrentLocation && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
+        }
+
+        protected override void FindTarget()
+        {
+            Map Current = CurrentMap;
+
+            for (int d = 0; d <= Info.ViewRange; d++)
+            {
+                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++)
+                {
+                    if (y < 0) continue;
+                    if (y >= Current.Height) break;
+
+                    for (int x = CurrentLocation.X - d; x <= CurrentLocation.X + d; x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2)
+                    {
+                        if (x < 0) continue;
+                        if (x >= Current.Width) break;
+                        Cell cell = Current.Cells[x, y];
+                        if (cell.Objects == null || !cell.Valid) continue;
+                        for (int i = 0; i < cell.Objects.Count; i++)
+                        {
+                            MapObject ob = cell.Objects[i];
+                            switch (ob.Race)
+                            {
+                                case ObjectType.Monster:
+                                    if (ob == this) continue;
+                                    if (!ob.IsFriendlyTarget(this)) continue;
+                                    if (ob.Hidden) continue;
+                                    Target = ob;
+                                    return;
+                                default:
+                                    continue;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        protected override void CompleteAttack(IList<object> data)
+        {
+            if (Target == null) return;
+
+            List<MapObject> targets = FindAllNearby(12, Target.CurrentLocation);
+
+            for (int i = 0; i < targets.Count; i++)
+            {
+                var target = targets[i];
+                if (target == null || !target.IsFriendlyTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) continue;
+
+                if (target.IsFriendlyTarget(this))
+                {
+                    BuffType type = BuffType.HealthAid;
+
+                    var stats = new Stats
+                    {
+                        [Stat.HP] = 1000
+                    };
+
+                    target.AddBuff(type, this, Settings.Second * 10, stats);
+                    target.OperateTime = 0;
+                }
+            }
         }
 
         protected override void Attack()
         {
-            if (!Target.IsAttackTarget(this))
+            if (Target == null)
+            {
+                return;
+            }
+
+            if (!Target.IsFriendlyTarget(this))
             {
                 Target = null;
                 return;
             }
 
-            ShockTime = 0;
+            int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500;
 
-            Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
+            Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
+            ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + delay)); //Time for projectiles should always be calculated through their distance
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
-            int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
-
-            if (Envir.Random.Next(6) != 0)
-            {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                if (damage == 0) return;
-
-                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.ACAgility);
-                ActionList.Add(action);
-            }
-            else
-            {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
-                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                if (damage == 0) return;
-
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-                {
-
-                    if (Envir.Random.Next(2) == 0)
-                    {
-                        Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Frozen, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);
-                    }
-                }
-                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
-                ActionList.Add(action);
-            }
-
-            if (Target.Dead)
-                FindTarget();
-        }
-
-        protected override void ProcessTarget()
-        {
-            if (Target == null || !CanAttack) return;
-
-            if (InAttackRange() && Envir.Time < FearTime)
-            {
-                Attack();
-                return;
-            }
-
-            FearTime = Envir.Time + 5000;
-
-            if (Envir.Time < ShockTime)
-            {
-                Target = null;
-                return;
-            }
-
-            int dist = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
-
-            if (dist >= AttackRange)
-                MoveTo(Target.CurrentLocation);
-            else
-            {
-                MirDirection dir = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
-
-                if (Walk(dir)) return;
-
-                switch (Envir.Random.Next(2)) //No favour
-                {
-                    case 0:
-                        for (int i = 0; i < 7; i++)
-                        {
-                            dir = Functions.NextDir(dir);
-
-                            if (Walk(dir))
-                                return;
-                        }
-                        break;
-                    default:
-                        for (int i = 0; i < 7; i++)
-                        {
-                            dir = Functions.PreviousDir(dir);
-
-                            if (Walk(dir))
-                                return;
-                        }
-                        break;
-                }
-
-            }
         }
     }
 }

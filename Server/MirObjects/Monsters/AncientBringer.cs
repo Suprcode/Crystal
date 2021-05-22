@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System;
 using System.Drawing;
 using Server.MirDatabase;
@@ -75,8 +75,6 @@ namespace Server.MirObjects.Monsters
 
                     DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.ACAgility, 4);
                     ActionList.Add(action);
-
-                    //LineAttack(3, damage, DefenceType.MACAgility);
                 }
                 else
                 {

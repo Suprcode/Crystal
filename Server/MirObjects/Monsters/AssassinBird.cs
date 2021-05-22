@@ -42,51 +42,27 @@ namespace Server.MirObjects.Monsters
 
             if (!ranged)
             {
-                if (Envir.Random.Next(8) > 0)
+                if (Envir.Random.Next(6) > 0)
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
-                    CompleteAttack();
+                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                    if (damage == 0) return;
+
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.ACAgility);
+                    ActionList.Add(action);
                 }
                 else
-                {
-                    Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });                    
-                    PushAttack();
-                    CompleteAttack();
+                {   
+                    SinglePushAttack(Stats[Stat.MinDC], Stats[Stat.MaxDC], attackType: 1);
                 }
             }
             else
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });                
-                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                if (damage == 0) return;
-
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MACAgility);
-                ActionList.Add(action);
+                RangeAttack(Stats[Stat.MinDC], Stats[Stat.MaxMC]);
             }
 
             if (Target.Dead)
                 FindTarget();
-        }
-
-        private void PushAttack()
-        {   
-            int levelgap = 5;
-            int moblevel = this.Level;
-            int targetlevel = Target.Level;
-
-            if ((targetlevel <= moblevel + levelgap))
-            {
-                Target.Pushed(this, Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation), 3);
-            }
-        }
-
-        private void CompleteAttack()
-        {
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
-
-            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
-            ActionList.Add(action);
         }
 
         protected override void ProcessTarget()
