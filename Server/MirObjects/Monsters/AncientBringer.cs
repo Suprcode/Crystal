@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System;
 using System.Drawing;
 using Server.MirDatabase;
@@ -31,7 +31,6 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -50,26 +49,46 @@ namespace Server.MirObjects.Monsters
                 if (Envir.Random.Next(5) > 0)
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                    Attack1(2); //Normal Double Punch Attack   
+
+                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+
+                    LineAttack(2, damage, DefenceType.ACAgility);
                 }
                 else
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                    Attack2();//Screaming Attack
+
+                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * 2);
+
+                    LineAttack(2, damage, DefenceType.ACAgility);
                 }
             }
             else
             {
                 if (Envir.Random.Next(10) > 0)
                 {
-                    RangeAttack(Stats[Stat.MinMC], Stats[Stat.MaxMC], 0);//Normal Ranged Attack                 
+                    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+
+                    int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+
+                    int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
+
+                    DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.ACAgility, 4);
+                    ActionList.Add(action);
                 }
                 else
                 {
                     Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
-                    RangeAttack(Stats[Stat.MinMC], Stats[Stat.MaxMC], 1);
-                    
-                    SpawnSlaves();//Spawns Bats
+
+                    int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC] * 2);
+
+                    DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.ACAgility, 5);
+                    ActionList.Add(action);
+
+                    if (damage > 0)
+                    {
+                        SpawnSlaves();
+                    }
                 }
 
             }
@@ -77,46 +96,70 @@ namespace Server.MirObjects.Monsters
                 FindTarget();
         }
 
-        private void Attack1(int distance)
+        protected override void CompleteRangeAttack(IList<object> data)
         {
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
-            Target.Attacked(this, damage, DefenceType.ACAgility);
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+            int range = (int)data[3];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            var targets = FindAllTargets(range, target.CurrentLocation);
+
+            for (int i = 0; i < targets.Count; i++)
+            {
+                targets[i].Attacked(this, damage, defence);
+            }
         }
 
-        Cell cell = null;
-
-        private void Attack2()
+        protected override void CompleteAttack(IList<object> data)
         {
-            MirDirection dir = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
-            dir = Functions.NextDir(dir);
-            Point target = Functions.PointMove(CurrentLocation, dir, 1);
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+            bool poison = (bool)data[3];
 
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * 2);
-            if (damage == 0) return;
-            Target.Attacked(this, damage, DefenceType.ACAgility);
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            for (int i = 0; i < 4; i++)
+            var finalDamage = target.Attacked(this, damage, defence);
+
+            if (finalDamage > 0 && poison)
             {
-                target = Functions.PointMove(CurrentLocation, dir, 1);
-                dir = Functions.NextDir(dir);
+                if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.Stats[Stat.PoisonResist])
+                {
+                    if (Envir.Random.Next(5) == 0)
+                    {
+                        target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Paralysis, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 2000 }, this);
+                    }
+                }
+            }
+        }
+
+        private void LineAttack(int distance, int damage, DefenceType defenceType, bool poison = false)
+        {
+            if (damage == 0) return;
+
+            for (int i = 1; i <= distance; i++)
+            {
+                Point target = Functions.PointMove(CurrentLocation, Direction, i);
 
                 if (!CurrentMap.ValidPoint(target)) continue;
 
-                cell = CurrentMap.GetCell(target);
-
+                Cell cell = CurrentMap.GetCell(target);
                 if (cell.Objects == null) continue;
 
                 for (int o = 0; o < cell.Objects.Count; o++)
                 {
                     MapObject ob = cell.Objects[o];
-                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
-                    if (!ob.IsAttackTarget(this)) continue;
+                    if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
+                    {
+                        if (!ob.IsAttackTarget(this)) continue;
 
-                    ob.Attacked(this, damage, DefenceType.ACAgility);
-                    PoisonTarget(5, 5, PoisonType.Paralysis, 2000);
+                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, ob, damage, defenceType, poison);
+                        ActionList.Add(action);
 
-                    break;
+                    }
                 }
             }
         }
@@ -141,6 +184,7 @@ namespace Server.MirObjects.Monsters
                 mob.ActionTime = Envir.Time + 2000;
                 SlaveList.Add(mob);
             }
+
         }
 
         protected override void ProcessTarget()
