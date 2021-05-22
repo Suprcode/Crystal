@@ -1863,6 +1863,8 @@ namespace Server.MirObjects
         }
         public void CheckItemInfo(ItemInfo info, bool dontLoop = false)
         {
+            if (Connection.DBResponse.RecievedItems) return;
+
             if ((dontLoop == false) && (info.ClassBased | info.LevelBased)) //send all potential data so client can display it
             {
                 for (int i = 0; i < Envir.ItemInfoList.Count; i++)
@@ -1889,6 +1891,8 @@ namespace Server.MirObjects
         }
         public void CheckQuestInfo(QuestInfo info)
         {
+            if (Connection.DBResponse.RecievedQuests) return;
+
             if (Connection.SentQuestInfo.Contains(info)) return;
             Enqueue(new S.NewQuestInfo { Info = info.CreateClientQuestInfo() });
             Connection.SentQuestInfo.Add(info);
@@ -14829,9 +14833,10 @@ namespace Server.MirObjects
 
             if (MarketPanelType == MarketPanelType.GameShop)
             {
-                //Search = Envir.GameShopList.Where(x => (MatchType == ItemType.Nothing || x.Info.Type == MatchType)
-                //&& (x.Info.Shape >= MinShapes && x.Info.Shape <= MaxShapes)
-                //&& (string.IsNullOrWhiteSpace(MatchName) || x.Info.Name.Replace(" ", "").IndexOf(MatchName, StringComparison.OrdinalIgnoreCase) >= 0)).ToList();
+                Search = Envir.GameShopListNew.Where(x => (MatchType == ItemType.Nothing || x.Item.Info.Type == MatchType)
+                && (x.Item.Info.Shape >= MinShapes && x.Item.Info.Shape <= MaxShapes)
+                && (string.IsNullOrWhiteSpace(MatchName) || x.Item.Info.Name.Replace(" ", "").IndexOf(MatchName, StringComparison.OrdinalIgnoreCase) >= 0))
+                    .OrderBy(x => x.Item.Info.Name).ToList();
             }
             else
             {
@@ -14853,9 +14858,33 @@ namespace Server.MirObjects
                 listings.Add(Search[i]);
             }
 
-            foreach (var listing in listings)
+            if (MarketPanelType == MarketPanelType.GameShop)
             {
-                clientListings.Add(listing.CreateClientAuction(UserMatch));
+                foreach (var listing in listings)
+                {
+                    var item = Envir.GameShopList.Single(x => (ulong)x.GIndex == listing.AuctionID);
+                    int purchased = 0;
+
+                    if (item.iStock) //Invididual Stock
+                    {
+                        Info.GSpurchases.TryGetValue(item.Info.Index, out purchased);
+                    }
+                    else //Server Stock
+                    {
+                        Envir.GameshopLog.TryGetValue(item.Info.Index, out purchased);
+                    }
+
+                    var stock = item.Stock - purchased;
+
+                    clientListings.Add(listing.CreateClientAuction(UserMatch, stock));
+                }
+            }
+            else
+            {
+                foreach (var listing in listings)
+                {
+                    clientListings.Add(listing.CreateClientAuction(UserMatch));
+                }
             }
 
             for (int i = 0; i < listings.Count; i++)
@@ -14922,8 +14951,19 @@ namespace Server.MirObjects
                     UserItem item = Envir.CreateFreshItem(auction.Item.Info);
 
                     Account.Credit -= auction.Price;
-                    GainItem(item);
-                    Enqueue(new S.MarketSuccess { Message = string.Format("You bought {0} for {1:#,##0} Credit", auction.Item.FriendlyName, auction.Price) });
+
+                    MailInfo mail = new MailInfo(Info.Index)
+                    {
+                        MailID = ++Envir.NextMailID,
+                        Sender = "Gameshop",
+                        Message = "Thank you for your purchase from the Gameshop. Your item(s) are enclosed.",
+                        Items = new List<UserItem> { item }
+                    };
+                    mail.Send();
+
+                    MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + item.Info.FriendlyName + " x " + 1 + " - Purchases Sent!");
+
+                    Enqueue(new S.MarketSuccess { Message = string.Format("You bought {0} for {1:#,##0} Credit. Your purchase has been sent to your Mailbox.", auction.Item.FriendlyName, auction.Price) });
                     MarketSearch(MatchName, MatchType);
 
                     return;
@@ -19974,12 +20014,11 @@ namespace Server.MirObjects
         public void GetGameShop()
         {
             int purchased;
-            GameShopItem item = new GameShopItem();
-            int StockLevel;
+            int stockLevel;
 
             for (int i = 0; i < Envir.GameShopList.Count; i++)
             {
-                item = Envir.GameShopList[i];
+                GameShopItem item = Envir.GameShopList[i];
 
                 if (item.Stock != 0)
                 {
@@ -19994,8 +20033,8 @@ namespace Server.MirObjects
 
                     if (item.Stock - purchased >= 0)
                     {
-                        StockLevel = item.Stock - purchased;
-                        Enqueue(new S.GameShopInfo { Item = item, StockLevel = StockLevel });
+                        stockLevel = item.Stock - purchased;
+                        Enqueue(new S.GameShopInfo { Item = item, StockLevel = stockLevel });
                     }
                 }
                 else

@@ -95,6 +95,9 @@ namespace Server
         public static int SaveDelay = 5;
         public static short CredxGold = 30;
 
+        //Client Database
+        public static bool EnableClientDatabase = false;
+
         //Game
         public static List<long> ExperienceList = new List<long>();
         public static List<long> OrbsExpList = new List<long>();
@@ -333,6 +336,7 @@ namespace Server
             //Database
             SaveDelay = Reader.ReadInt32("Database", "SaveDelay", SaveDelay);
             CredxGold = Reader.ReadInt16("Database", "CredxGold", CredxGold);
+            EnableClientDatabase = Reader.ReadBoolean("Database", "EnableClientDatabase", EnableClientDatabase);
 
             //Game
             DropRate = Reader.ReadSingle("Game", "DropRate", DropRate);
@@ -572,6 +576,7 @@ namespace Server
             //Database
             Reader.Write("Database", "SaveDelay", SaveDelay);
             Reader.Write("Database", "CredxGold", CredxGold);
+            Reader.Write("Database", "EnableClientDatabase", EnableClientDatabase);
 
             //Game
             Reader.Write("Game", "DropRate", DropRate);

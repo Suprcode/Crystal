@@ -1711,7 +1711,9 @@ public enum ClientPacketIds : short
     CancelItemRental,
     ItemRentalLockFee,
     ItemRentalLockItem,
-    ConfirmItemRental
+    ConfirmItemRental,
+
+    ClientDatabase
 }
 
 public enum ConquestType : byte

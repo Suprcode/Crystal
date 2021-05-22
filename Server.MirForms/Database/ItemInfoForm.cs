@@ -1030,6 +1030,7 @@ namespace Server
         private void ItemInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             Envir.SaveDB();
+            Envir.SaveClientDB();
         }
 
         private void PasteButton_Click(object sender, EventArgs e)

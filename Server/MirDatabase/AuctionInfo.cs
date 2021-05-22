@@ -19,11 +19,13 @@ namespace Server.MirDatabase
         public UserItem Item;
         public DateTime ConsignmentDate;
         public uint Price, CurrentBid;
+        public uint CreditPrice;
 
         public int SellerIndex, CurrentBuyerIndex;
         public CharacterInfo SellerInfo, CurrentBuyerInfo;
 
         public bool Expired, Sold;
+        public bool Featured;
 
         public MarketItemType ItemType;
 
@@ -106,7 +108,7 @@ namespace Server.MirDatabase
             return "";
         }
 
-        public ClientAuction CreateClientAuction(bool userMatch)
+        public ClientAuction CreateClientAuction(bool userMatch, int stock = 0)
         {
             return new ClientAuction
             {
@@ -114,8 +116,11 @@ namespace Server.MirDatabase
                 Item = Item,
                 Seller = GetSellerLabel(userMatch),
                 Price = ItemType == MarketItemType.Auction ? CurrentBid : Price,
+                CreditPrice = ItemType == MarketItemType.GameShop ? CreditPrice : 0,
                 ConsignmentDate = ConsignmentDate,
-                ItemType = ItemType
+                ItemType = ItemType,
+                Stock = stock,
+                Featured = Featured
             };
         }
     }

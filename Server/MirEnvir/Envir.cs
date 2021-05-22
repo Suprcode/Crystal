@@ -112,6 +112,11 @@ namespace Server.MirEnvir
         public List<RecipeInfo> RecipeInfoList = new List<RecipeInfo>();
         public List<BuffInfo> BuffInfoList = new List<BuffInfo>();
         public Dictionary<int, int> GameshopLog = new Dictionary<int, int>();
+        public List<AuctionInfo> GameShopListNew = new List<AuctionInfo>();
+
+        //Client DB
+        public string ClientDatabase = Path.Combine(".", "Library.MirCDB");
+        public DateTime ClientDBLastWriteTime = DateTime.MinValue;
 
         //User DB
         public int NextAccountID, NextCharacterID;
@@ -920,6 +925,28 @@ namespace Server.MirEnvir
                 RespawnTick.Save(writer);
             }
         }
+
+        public void SaveClientDB()
+        {
+            if (!Settings.EnableClientDatabase) return;
+
+            using var stream = File.Create(ClientDatabase);
+            using var writer = new BinaryWriter(stream);
+
+            var db = new Shared.ClientDatabase
+            {
+                DataVersion = Version,
+                CustomVersion = CustomVersion,
+                ItemInfoList = ItemInfoList,
+                QuestInfoList = QuestInfoList.Select(x => x.CreateClientQuestInfo()).ToList(),
+                GameShopInfoList = GameShopList
+            };
+
+            db.Write(writer);
+
+        }
+
+
         public void SaveAccounts()
         {
             while (Saving)
@@ -1185,7 +1212,7 @@ namespace Server.MirEnvir
 
                     if (LoadVersion < MinVersion)
                     {
-                        MessageQueue.Enqueue($"Cannot load a database version {Envir.LoadVersion}. Mininum supported is {Envir.MinVersion}.");
+                        MessageQueue.Enqueue($"Cannot load a database version {Envir.LoadVersion}. Minimum supported is {Envir.MinVersion}.");
                         return false;
                     }
 
@@ -1263,7 +1290,20 @@ namespace Server.MirEnvir
                             if (Main.BindGameShop(item))
                             {
                                 GameShopList.Add(item);
+                                var auc = new AuctionInfo
+                                {
+                                    Item = CreateShopItem(item.Info, (ulong)item.GIndex),
+                                    ItemType = MarketItemType.GameShop,
+                                    AuctionID = (ulong)item.GIndex,
+                                    CreditPrice = item.CreditPrice,
+                                    Price = item.GoldPrice,
+                                    Featured = item.Deal
+                                };
+
+                                GameShopListNew.Add(auc);
                             }
+
+                            
                         }
                     }
 
@@ -1889,6 +1929,19 @@ namespace Server.MirEnvir
             MonsterCount = 0;
 
             LoadDB();
+
+            MessageQueue.Enqueue($"Database Loaded.");
+
+            if (Settings.EnableClientDatabase)
+            {
+                if (File.Exists(ClientDatabase))
+                {
+                    var fileInfo = new FileInfo(ClientDatabase);
+
+                    ClientDBLastWriteTime = fileInfo.LastWriteTimeUtc;
+                    MessageQueue.Enqueue("Client Database Enabled.");
+                }
+            }
 
             RecipeInfoList.Clear();
             foreach (var recipe in Directory.GetFiles(Settings.RecipePath, "*.txt")

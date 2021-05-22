@@ -84,6 +84,7 @@ namespace Client
         //Sound
         public static int SoundOverLap = 3;
         private static byte _volume = 100;
+
         public static byte Volume
         {
             get { return _volume; }
@@ -175,6 +176,12 @@ namespace Client
         public static string P_BrowserAddress = "https://launcher.mironline.co.uk/web/";
         public static string P_Client = Application.StartupPath + "\\";
         public static bool P_AutoStart = false;
+
+        //Client Database
+        public static string ClientDatabasePath = Path.Combine(DataPath, "Library.MirCDB");
+        public static bool ClientItemLoaded = false;
+        public static bool ClientQuestLoaded = false;
+        public static bool ClientGameShopLoaded = false;
 
         public static void Load()
         {
@@ -367,9 +374,5 @@ namespace Client
             }
         }
 
-
-      
     }
-
-    
 }

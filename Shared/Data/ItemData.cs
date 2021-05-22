@@ -776,7 +776,7 @@ public class GameShopItem
     {
         ItemIndex = reader.ReadInt32();
         GIndex = reader.ReadInt32();
-        Info = new ItemInfo(reader);
+        if (packet) Info = new ItemInfo(reader);
         GoldPrice = reader.ReadUInt32();
         CreditPrice = reader.ReadUInt32();
         Count = reader.ReadUInt16();

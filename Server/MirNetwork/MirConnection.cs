@@ -8,6 +8,7 @@ using Server.MirObjects;
 using C = ClientPackets;
 using S = ServerPackets;
 using System.Linq;
+using Shared;
 
 namespace Server.MirNetwork
 {
@@ -59,6 +60,8 @@ namespace Server.MirNetwork
         public List<QuestInfo> SentQuestInfo = new List<QuestInfo>();
         public List<RecipeInfo> SentRecipeInfo = new List<RecipeInfo>();
         public List<UserItem> SentChatItem = new List<UserItem>(); //TODO - Add Expiry time
+
+        public ClientDatabaseResponse DBResponse;
 
         public bool StorageSent;
 
@@ -165,6 +168,7 @@ namespace Server.MirNetwork
                 Disconnecting = true;
             }
         }
+
         private void SendData(IAsyncResult result)
         {
             try
@@ -216,6 +220,9 @@ namespace Server.MirNetwork
             {
                 Packet p;
                 if (!_sendList.TryDequeue(out p) || p == null) continue;
+
+                MessageQueue.EnqueueDebugging("Packet Sent: " + (ServerPacketIds)p.Index);
+
                 data.AddRange(p.GetPacketBytes());
             }
 
@@ -734,7 +741,7 @@ namespace Server.MirNetwork
             }
 
             MessageQueue.Enqueue(SessionID + ", " + IPAddress + ", Client version matched.");
-            Enqueue(new S.ClientVersion { Result = 1 });
+            Enqueue(new S.ClientVersion { Result = 1, ClientDBLastWriteTime = Envir.ClientDBLastWriteTime });
 
             Stage = GameStage.Login;
         }
@@ -784,7 +791,6 @@ namespace Server.MirNetwork
 
             CharacterInfo temp = null;
             
-
             for (int i = 0; i < Account.Characters.Count; i++)
 			{
 			    if (Account.Characters[i].Index != p.CharacterIndex) continue;
@@ -850,12 +856,8 @@ namespace Server.MirNetwork
 
             long delay = (long) (Envir.Now - info.LastLogoutDate).TotalMilliseconds;
 
-
-            //if (delay < Settings.RelogDelay)
-            //{
-            //    Enqueue(new S.StartGameDelay { Milliseconds = Settings.RelogDelay - delay });
-            //    return;
-            //}
+            //Set Client DB response
+            DBResponse = p.DBResponse;
 
             Player = new PlayerObject(info, this);
             Player.StartGame();

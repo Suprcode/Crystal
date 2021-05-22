@@ -27,7 +27,7 @@ namespace Client.MirScenes.Dialogs
 
         public MirTextBox SearchTextBox, PriceTextBox;
         public MirButton FindButton, RefreshButton, MailButton, BuyButton, SellNowButton, CloseButton, NextButton, BackButton;
-        public MirImageControl TitleLabel;
+
         public MirLabel ItemLabel, PriceLabel, SellerLabel, PageLabel;
         public MirLabel DateLabel, ExpireLabel;
         public MirLabel NameLabel, TotalPriceLabel, SplitPriceLabel;
@@ -397,7 +397,13 @@ namespace Client.MirScenes.Dialogs
                         case MarketItemType.Consign:
                         case MarketItemType.GameShop:
                             {
-                                MirMessageBox box = new MirMessageBox(string.Format("Are you sure you want to buy {0} for {1:#,##0} {2}?", Selected.Listing.Item.FriendlyName, Selected.Listing.Price, MarketType == MarketPanelType.GameShop ? "Credits" : "Gold"), MirMessageBoxButtons.YesNo);
+                                if ((MarketType == MarketPanelType.GameShop ? GameScene.Credit : GameScene.Gold) < Selected.Listing.Price)
+                                {
+                                    MirMessageBox.Show(MarketType == MarketPanelType.GameShop ? GameLanguage.LowGold : GameLanguage.LowGold);
+                                    break;
+                                }
+
+                                MirMessageBox box = new MirMessageBox(string.Format("Are you sure you want to buy {0} for {1:#,##0} {2}?", Selected.Listing.Item.FriendlyName, Selected.Listing.Price, MarketType == MarketPanelType.GameShop ? GameLanguage.Credit : GameLanguage.Gold), MirMessageBoxButtons.YesNo);
                                 box.YesButton.Click += (o1, e2) =>
                                 {
                                     MarketTime = CMain.Time + 3000;
@@ -909,6 +915,7 @@ namespace Client.MirScenes.Dialogs
                 BuyButton.GrayScale = false;
                 MailButton.Enabled = true;
                 MailButton.GrayScale = false;
+                Selected.BackColour = Color.FromArgb(255, 255, 0, 0);
             }
             else
             {
@@ -1189,8 +1196,8 @@ namespace Client.MirScenes.Dialogs
                     TitleSalePriceLabel.Text = "SALE PRICE";
                     TitleSellLabel.Text = "SELL ITEM";
                     TitleItemLabel.Text = "ITEM";
-                    TitlePriceLabel.Text = "PRICE";
-                    TitleExpiryLabel.Text = "";
+                    TitlePriceLabel.Text = $"PRICE (GOLD)";
+                    TitleExpiryLabel.Text = "PRICE (CREDIT)";
 
                     MarketType = MarketPanelType.GameShop;
                     Network.Enqueue(new C.MarketSearch
@@ -1329,7 +1336,7 @@ namespace Client.MirScenes.Dialogs
         {
             public ClientAuction Listing = null;
 
-            public MirLabel NameLabel, PriceLabel, SellerLabel, ExpireLabel;
+            public MirLabel NameLabel, PriceLabel, SellerLabel, ExpireLabel, CreditLabel;
             public MirImageControl IconImage, SelectedImage;
             public bool Selected = false;
 
@@ -1357,6 +1364,16 @@ namespace Client.MirScenes.Dialogs
                     AutoSize = true,
                     Size = new Size(178, 20),
                     Location = new Point(170, 8),
+                    DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
+                    NotControl = true,
+                    Parent = this,
+                };
+
+                CreditLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    Size = new Size(148, 20),
+                    Location = new Point(256, 8),
                     DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                     NotControl = true,
                     Parent = this,
@@ -1427,10 +1444,10 @@ namespace Client.MirScenes.Dialogs
 
                 IconImage.Location = new Point((IconArea.Width - IconImage.Size.Width) / 2, (IconArea.Height - IconImage.Size.Height) / 2);
 
+                CreditLabel.Visible = Listing.ItemType == MarketItemType.GameShop;
+
                 SellerLabel.Visible = Listing.ItemType == MarketItemType.Consign || Listing.ItemType == MarketItemType.Auction;
                 ExpireLabel.Visible = Listing != null && (Listing.ItemType == MarketItemType.Consign || Listing.ItemType == MarketItemType.Auction);
-
-                if (Listing == null) return;
 
                 ExpireLabel.Text = string.Format("{0:dd/MM/yy HH:mm:ss}", Listing.ConsignmentDate.AddDays(Globals.ConsignmentLength));
             }
@@ -1449,6 +1466,8 @@ namespace Client.MirScenes.Dialogs
                 NameLabel.Text = string.Empty;
                 PriceLabel.Text = string.Empty;
                 SellerLabel.Text = string.Empty;
+
+                CreditLabel.Text = string.Empty;
             }
             public void Update(ClientAuction listing)
             {
@@ -1456,20 +1475,30 @@ namespace Client.MirScenes.Dialogs
                 NameLabel.Text = Listing.Item.FriendlyName;
                 PriceLabel.Text = String.Format("{0:###,###,##0} {1}", Listing.Price, listing.ItemType == MarketItemType.Auction ? "Bid" : "");
 
+                CreditLabel.Text = String.Format("{0:###,###,##0}", Listing.CreditPrice);
+
                 NameLabel.ForeColour = GameScene.Scene.GradeNameColor(Listing.Item.Info.Grade);
+
                 if (NameLabel.ForeColour == Color.Yellow)
                     NameLabel.ForeColour = Color.White;
 
-                if (Listing.Price > 10000000) //10Mil
-                    PriceLabel.ForeColour = Color.Red;
-                else if (listing.Price > 1000000) //1Million
-                    PriceLabel.ForeColour = Color.Orange;
-                else if (listing.Price > 100000) //1Million
-                    PriceLabel.ForeColour = Color.LawnGreen;
-                else if (listing.Price > 10000) //1Million
-                    PriceLabel.ForeColour = Color.DeepSkyBlue;
+                if (Listing.ItemType != MarketItemType.GameShop)
+                {
+                    if (Listing.Price > 10000000) //10Mil
+                        PriceLabel.ForeColour = Color.Red;
+                    else if (listing.Price > 1000000) //1Million
+                        PriceLabel.ForeColour = Color.Orange;
+                    else if (listing.Price > 100000) //1Million
+                        PriceLabel.ForeColour = Color.LawnGreen;
+                    else if (listing.Price > 10000) //1Million
+                        PriceLabel.ForeColour = Color.DeepSkyBlue;
+                    else
+                        PriceLabel.ForeColour = Color.White;
+                }
                 else
+                {
                     PriceLabel.ForeColour = Color.White;
+                }
 
 
                 SellerLabel.Text = Listing.Seller;
@@ -1493,6 +1522,7 @@ namespace Client.MirScenes.Dialogs
                             break;
                     }
                 }
+
                 Visible = true;
             }
             protected override void OnMouseEnter()

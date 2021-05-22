@@ -251,6 +251,7 @@ public class GameLanguage
     //common
     public static string LowLevel = "You are not a high enough level.",
                          LowGold = "Not enough gold.",
+                         LowCredit = "Not enough credit.",
                          LevelUp = "Congratulations! You have leveled up. Your HP and MP have been restored.",
                          LowDC = "You do not have enough DC.",
                          LowMC = "You do not have enough MC.",
@@ -329,6 +330,7 @@ public class GameLanguage
 
         GameLanguage.LowLevel = reader.ReadString("Language", "LowLevel", GameLanguage.LowLevel);
         GameLanguage.LowGold = reader.ReadString("Language", "LowGold", GameLanguage.LowGold);
+        GameLanguage.LowGold = reader.ReadString("Language", "LowCredit", GameLanguage.LowCredit);
         GameLanguage.LowDC = reader.ReadString("Language", "LowDC", GameLanguage.LowDC);
         GameLanguage.LowMC = reader.ReadString("Language", "LowMC", GameLanguage.LowMC);
         GameLanguage.LowSC = reader.ReadString("Language", "LowSC", GameLanguage.LowSC);
@@ -565,6 +567,7 @@ public class GameLanguage
 
         reader.Write("Language", "LowLevel", GameLanguage.LowLevel);
         reader.Write("Language", "LowGold", GameLanguage.LowGold);
+        reader.Write("Language", "LowCredit", GameLanguage.LowCredit);
         reader.Write("Language", "LowDC", GameLanguage.LowDC);
         reader.Write("Language", "LowMC", GameLanguage.LowMC);
         reader.Write("Language", "LowSC", GameLanguage.LowSC);

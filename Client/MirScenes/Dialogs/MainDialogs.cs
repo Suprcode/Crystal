@@ -204,6 +204,8 @@ namespace Client.MirScenes.Dialogs
             {
                 if (!GameScene.Scene.GameShopDialog.Visible) GameScene.Scene.GameShopDialog.Show();
                 else GameScene.Scene.GameShopDialog.Hide();
+                if (!GameScene.Scene.TrustMerchantDialog.Visible) GameScene.Scene.TrustMerchantDialog.Show(true);
+                else GameScene.Scene.TrustMerchantDialog.Hide();
             };
 
             HealthOrb = new MirControl

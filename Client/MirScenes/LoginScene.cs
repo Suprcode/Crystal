@@ -195,6 +195,7 @@ namespace Client.MirScenes
                 case 1:
                     _connectBox.Dispose();
                     _login.Show();
+                    ClientDBLastWriteTime = p.ClientDBLastWriteTime;
                     break;
             }
         }

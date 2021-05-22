@@ -787,6 +787,7 @@ namespace Server.Database
         {
             SaveForm();
             Envir.SaveDB();
+            Envir.SaveClientDB();
         }
 
         private void itemInfoGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)

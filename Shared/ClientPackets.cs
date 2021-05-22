@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Drawing;
+using Shared;
 
 namespace ClientPackets
 {
@@ -24,6 +25,7 @@ namespace ClientPackets
             writer.Write(VersionHash);
         }
     }
+    
     public sealed class Disconnect : Packet
     {
         public override short Index
@@ -37,6 +39,7 @@ namespace ClientPackets
         {
         }
     }
+
     public sealed class KeepAlive : Packet
     {
         public override short Index
@@ -175,15 +178,22 @@ namespace ClientPackets
 
         public int CharacterIndex;
 
+        public ClientDatabaseResponse DBResponse;
+
         protected override void ReadPacket(BinaryReader reader)
         {
             CharacterIndex = reader.ReadInt32();
+
+            DBResponse = new ClientDatabaseResponse(reader);
         }
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(CharacterIndex);
+
+            DBResponse.Save(writer);
         }
     }
+
     public sealed class LogOut : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.LogOut; } }
@@ -2322,4 +2332,5 @@ namespace ClientPackets
         protected override void WritePacket(BinaryWriter writer)
         { }
     }
+
 }

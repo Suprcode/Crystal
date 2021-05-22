@@ -76,8 +76,8 @@ namespace AutoPatcherAdmin
 
                 }
             }
-
         }
+
         public bool NeedFile(string fileName)
         {
             for (int i = 0; i < NewList.Count; i++)

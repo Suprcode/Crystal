@@ -7,6 +7,9 @@ using Client.MirScenes;
 using SlimDX.Direct3D9;
 using S = ServerPackets;
 using C = ClientPackets;
+using System;
+using System.IO;
+using Shared;
 
 namespace Client.MirControls
 {
@@ -17,6 +20,8 @@ namespace Client.MirControls
         private static MouseButtons _buttons;
         private static long _lastClickTime;
         private static MirControl _clickedControl;
+
+        public static DateTime ClientDBLastWriteTime;
 
         protected MirScene()
         {
@@ -254,6 +259,43 @@ namespace Client.MirControls
         }
 
         public abstract void Process();
+
+        protected static ClientDatabaseResponse LoadClientDB()
+        {
+            if (!File.Exists(Settings.ClientDatabasePath)) return null;
+
+            var fileInfo = new FileInfo(Settings.ClientDatabasePath);
+
+            if (ClientDBLastWriteTime != fileInfo.LastWriteTimeUtc) return null;
+
+            using var stream = File.OpenRead(Settings.ClientDatabasePath);
+            using var reader = new BinaryReader(stream);
+
+            var db = new ClientDatabase();
+            db.Read(reader);
+
+            var response = new ClientDatabaseResponse();
+
+            if (db.ItemInfoList.Count > 0)
+            {
+                GameScene.ItemInfoList.AddRange(db.ItemInfoList);
+                response.RecievedItems = true;
+            }
+
+            if (db.QuestInfoList.Count > 0)
+            {
+                GameScene.QuestInfoList.AddRange(db.QuestInfoList);
+                response.RecievedQuests = true;
+            }
+
+            if (db.GameShopInfoList.Count > 0)
+            {
+                GameScene.GameShopInfoList.AddRange(db.GameShopInfoList);
+                response.RecievedGameShopItems = true;
+            }
+
+            return response;
+        }
 
         #region Disposable
 

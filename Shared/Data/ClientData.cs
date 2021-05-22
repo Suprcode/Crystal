@@ -214,9 +214,12 @@ public class ClientAuction
     public ulong AuctionID;
     public UserItem Item;
     public string Seller = string.Empty;
-    public uint Price;
+    public uint Price, CreditPrice;
     public DateTime ConsignmentDate = DateTime.MinValue;
     public MarketItemType ItemType;
+    public int Stock;
+
+    public bool Featured;
 
     public ClientAuction() { }
 
@@ -226,8 +229,11 @@ public class ClientAuction
         Item = new UserItem(reader);
         Seller = reader.ReadString();
         Price = reader.ReadUInt32();
+        CreditPrice = reader.ReadUInt32();
         ConsignmentDate = DateTime.FromBinary(reader.ReadInt64());
         ItemType = (MarketItemType)reader.ReadByte();
+        Stock = reader.ReadInt32();
+        Featured = reader.ReadBoolean();
     }
     public void Save(BinaryWriter writer)
     {
@@ -235,8 +241,11 @@ public class ClientAuction
         Item.Save(writer);
         writer.Write(Seller);
         writer.Write(Price);
+        writer.Write(CreditPrice);
         writer.Write(ConsignmentDate.ToBinary());
         writer.Write((byte)ItemType);
+        writer.Write(Stock);
+        writer.Write(Featured);
     }
 }
 

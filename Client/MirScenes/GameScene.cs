@@ -75,7 +75,6 @@ namespace Client.MirScenes
         public CustomPanel1 CustomPanel1;
         public SocketDialog SocketDialog;
 
-        //public SkillBarDialog SkillBarDialog;
         public List<SkillBarDialog> SkillBarDialogs = new List<SkillBarDialog>();
         public ChatOptionDialog ChatOptionDialog;
         public ChatNoticeDialog ChatNoticeDialog;

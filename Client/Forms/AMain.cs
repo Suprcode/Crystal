@@ -181,7 +181,7 @@ namespace Launcher
 
                     try
                     {
-                        File.Move(Settings.P_Client + old.FileName, oldFilename);
+                        File.Move(Settings.P_Client + old.FileName.TrimStart('\\'), oldFilename.TrimStart('\\'));
                     }
                     catch (UnauthorizedAccessException ex)
                     {

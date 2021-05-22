@@ -336,7 +336,6 @@ namespace Server.MirObjects
                 case 160:
                     return new DarkWraith(info);
 
-
                 //unfinished
                 case 120:
                     return new GeneralJinmYo(info); // AI Incomplete - See notes in AI file.

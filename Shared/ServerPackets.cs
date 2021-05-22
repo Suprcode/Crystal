@@ -51,14 +51,20 @@ namespace ServerPackets
          * 1: Correct Version
          */
 
+        public DateTime ClientDBLastWriteTime;
+
         protected override void ReadPacket(BinaryReader reader)
         {
             Result = reader.ReadByte();
+
+            ClientDBLastWriteTime = DateTime.FromBinary(reader.ReadInt64());
         }
 
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(Result);
+
+            writer.Write(ClientDBLastWriteTime.ToBinary());
         }
     }
     public sealed class Disconnect : Packet
