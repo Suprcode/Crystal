@@ -76,6 +76,16 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (Spell == Spell.FireWall)
+            {
+                if (CurrentMap != Caster?.CurrentMap)
+                {
+                    CurrentMap.RemoveObject(this);
+                    Despawn();
+                    return;
+                }
+            }
+
             if (Spell == Spell.Reincarnation && !Caster.ActiveReincarnation)
             {
                 CurrentMap.RemoveObject(this);

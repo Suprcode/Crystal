@@ -52,13 +52,8 @@ namespace Server.MirObjects.Monsters
                         Attack2();
                         break;
                 }
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-                {
-                    if (Envir.Random.Next(15) == 0)
-                    {
-                        Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Bleeding, Value = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MinDC]), TickSpeed = 1000 }, this);
-                    }
-                }
+
+                PoisonTarget(15, 5, PoisonType.Bleeding);
             }
             else
             {

@@ -50,25 +50,26 @@ namespace Server.MirObjects.Monsters
                 if (Envir.Random.Next(5) > 0)
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                    LineAttack1(2); //Normal Double Punch Attack   
+                    Attack1(2); //Normal Double Punch Attack   
                 }
                 else
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                    LineAttack2(3);//Screaming Attack
+                    Attack2();//Screaming Attack
                 }
             }
             else
             {
                 if (Envir.Random.Next(10) > 0)
                 {
-                    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-                    RangeAttack1(3);//Normal Ranged Attack                 
+                    RangeAttack(Stats[Stat.MinMC], Stats[Stat.MaxMC], 0);//Normal Ranged Attack                 
                 }
                 else
                 {
                     Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
-                    RangeAttack2(3);//Range Attack Which Spawns Bats
+                    RangeAttack(Stats[Stat.MinMC], Stats[Stat.MaxMC], 1);
+                    
+                    SpawnSlaves();//Spawns Bats
                 }
 
             }
@@ -76,7 +77,7 @@ namespace Server.MirObjects.Monsters
                 FindTarget();
         }
 
-        private void LineAttack1(int distance)
+        private void Attack1(int distance)
         {
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
@@ -85,7 +86,7 @@ namespace Server.MirObjects.Monsters
 
         Cell cell = null;
 
-        private void LineAttack2(int distance)
+        private void Attack2()
         {
             MirDirection dir = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
             dir = Functions.NextDir(dir);
@@ -113,34 +114,11 @@ namespace Server.MirObjects.Monsters
                     if (!ob.IsAttackTarget(this)) continue;
 
                     ob.Attacked(this, damage, DefenceType.ACAgility);
+                    PoisonTarget(5, 5, PoisonType.Paralysis, 2000);
 
-                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-                    {
-                        if (Envir.Random.Next(5) == 0)
-                        {
-                            Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Paralysis, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 2000 }, this);
-                        }
-                    }
                     break;
                 }
             }
-        }
-
-        private void RangeAttack1(int distance)
-        {
-            int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-            if (damage == 0) return;
-            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MAC);
-            Target.Attacked(this, damage, DefenceType.MACAgility);
-        }
-
-        private void RangeAttack2(int distance)
-        {
-            int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC] * 2);
-            if (damage == 0) return;
-            Target.Attacked(this, damage, DefenceType.MACAgility);
-
-            SpawnSlaves();
         }
 
         private void SpawnSlaves()
@@ -163,7 +141,6 @@ namespace Server.MirObjects.Monsters
                 mob.ActionTime = Envir.Time + 2000;
                 SlaveList.Add(mob);
             }
-
         }
 
         protected override void ProcessTarget()

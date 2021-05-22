@@ -1241,6 +1241,7 @@ public enum SpellEffect : byte
     Stunned,
     IcePillar,
     KingGuard,
+    MonsterMACBuff
 }
 
 
@@ -1274,6 +1275,7 @@ public enum BuffType : byte
     ImmortalSkin,
     MagicShield,
     ElementalBarrier,
+    MonsterMACBuff,
 
     //special
     GameMaster = 100,

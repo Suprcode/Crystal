@@ -104,13 +104,7 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-                int damageMC = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                AttackTime = Envir.Time + AttackSpeed + 500;
-                if (damageMC == 0) return;
-
-                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damageMC, DefenceType.MAC);
-                ActionList.Add(action);
+                RangeAttack(Stats[Stat.MinMC], Stats[Stat.MaxMC], 0);
             }
         }
 

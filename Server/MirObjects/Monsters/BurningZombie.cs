@@ -3,7 +3,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class BurningZombie : MonsterObject
+    public class BurningZombie : MonsterObject
     {
         protected virtual byte AttackRange
         {
@@ -40,23 +40,19 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+
             if (!ranged)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                if (damage == 0) return;
 
-                Target.Attacked(this, damage, DefenceType.MACAgility);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.ACAgility);
+                ActionList.Add(action);
             }
             else
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-                AttackTime = Envir.Time + AttackSpeed + 500;
-                if (damage == 0) return;
-
-
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MAC);
-                ActionList.Add(action);
+                RangeAttack(Stats[Stat.MinMC], Stats[Stat.MaxMC], 0);
             }
 
 
