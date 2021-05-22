@@ -1347,9 +1347,9 @@ namespace Client.MirObjects
                                             case Monster.Shinsu1:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Shinsu1], 224 + (int)Direction * 6, 6, 6 * Frame.Interval, this));
                                                 break;
-                                            case Monster.AncientBringer:
-                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AncientBringer], 512 + (int)Direction * 6, 6, 6 * Frame.Interval, this));
-                                                break;
+                                            //case Monster.AncientBringer:
+                                            //    Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AncientBringer], 512 + (int)Direction * 6, 6, 6 * Frame.Interval, this));
+                                            //    break;
                                             case Monster.DeathCrawler:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DeathCrawler], 248 + (int)Direction * 3, 3, 3 * Frame.Interval, this));
                                                 break;
@@ -2809,7 +2809,7 @@ namespace Client.MirObjects
 
             int duration = Functions.MaxDistance(CurrentLocation, targetPoint) * 50;
 
-            Missile missile = new Missile(library, baseIndex, duration / interval, duration, this, targetPoint)
+            Missile missile = new Missile(library, baseIndex, duration / interval, duration, this, targetPoint, direction16)
             {
                 Target = ob,
                 Interval = interval,

@@ -43,11 +43,24 @@ namespace Server.MirObjects.Monsters
             if (!range && Envir.Random.Next(3) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                if (damage == 0) return;
+
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+                ActionList.Add(action);
             }
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                LineAttack(2);
+
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                if (damage == 0) return;
+
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+                ActionList.Add(action);
+
+                SmashAttack(2);
             }
 
             ActionTime = Envir.Time + 300;
@@ -55,9 +68,8 @@ namespace Server.MirObjects.Monsters
             ShockTime = 0;
         }
 
-        private void LineAttack(int distance)
+        private void SmashAttack(int distance)
         {
-
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
@@ -67,7 +79,8 @@ namespace Server.MirObjects.Monsters
 
                 if (target == Target.CurrentLocation)
                 {
-                    Target.Attacked(this, damage, DefenceType.ACAgility);
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 1000, Target, damage, DefenceType.ACAgility);
+                    ActionList.Add(action);
                 }
                 else
                 {
@@ -83,7 +96,8 @@ namespace Server.MirObjects.Monsters
                         {
                             if (!ob.IsAttackTarget(this)) continue;
 
-                            ob.Attacked(this, damage, DefenceType.ACAgility);
+                            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 1000, ob, damage, DefenceType.ACAgility);
+                            ActionList.Add(action);
                         }
                         else continue;
 
