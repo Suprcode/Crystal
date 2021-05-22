@@ -29,7 +29,6 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -43,7 +42,6 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
             ShockTime = 0;
-
 
             if (!range && Envir.Random.Next(10) > 0)
             {
@@ -70,7 +68,9 @@ namespace Server.MirObjects.Monsters
         {
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
-            Target.Attacked(this, damage, DefenceType.ACAgility);
+
+            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+            ActionList.Add(action);
         }
 
         private void Attack2()
@@ -83,15 +83,14 @@ namespace Server.MirObjects.Monsters
             {
                 if (Target.Pushed(this, Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation), 1) > 0)
                 {
-                    Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
-                    Attack3(1);
+                    //Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+                    Attack3(2);
                 }
             }
         }
 
         private void Attack3(int distance)
         {
-
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * 2);
             if (damage == 0) return;
 
@@ -101,7 +100,8 @@ namespace Server.MirObjects.Monsters
 
                 if (target == Target.CurrentLocation)
                 {
-                    Target.Attacked(this, damage, DefenceType.ACAgility);
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 1000, Target, damage, DefenceType.ACAgility);
+                    ActionList.Add(action);
                 }
                 else
                 {
@@ -117,7 +117,8 @@ namespace Server.MirObjects.Monsters
                         {
                             if (!ob.IsAttackTarget(this)) continue;
 
-                            ob.Attacked(this, damage, DefenceType.ACAgility);
+                            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 1000, ob, damage, DefenceType.ACAgility);
+                            ActionList.Add(action);
                         }
                         else continue;
 

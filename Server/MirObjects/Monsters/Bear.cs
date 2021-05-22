@@ -44,7 +44,7 @@ namespace Server.MirObjects.Monsters
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.ACAgility);
                 ActionList.Add(action);
 
-                PoisonTarget(6, 5, PoisonType.Bleeding);
+                PoisonTarget(Target, 6, 5, PoisonType.Bleeding);
             }
             if (Target.Dead)
                 FindTarget();

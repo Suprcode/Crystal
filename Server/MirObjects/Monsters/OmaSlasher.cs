@@ -30,10 +30,10 @@ namespace Server.MirObjects.Monsters
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-            HalfmoonAttack(1);
+            Halfmoon(1);
         }
 
-        private void HalfmoonAttack(int distance)
+        private void Halfmoon(int distance)
         {
             MirDirection dir = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
 

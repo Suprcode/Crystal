@@ -33,7 +33,7 @@ namespace Server.MirObjects.Monsters
 
             if (Target.Attacked(this, damage, DefenceType.MACAgility) <= 0) return;
 
-            PoisonTarget(20, 5, PoisonType.Paralysis, 1000);
+            PoisonTarget(Target, 20, 5, PoisonType.Paralysis, 1000);
         }
     }
 }

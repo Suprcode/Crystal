@@ -49,7 +49,7 @@ namespace Server.MirObjects.Monsters
                 AttackTime = Envir.Time + AttackSpeed + 500;
 
                 int damage = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MACAgility);
+                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MACAgility);
                 ActionList.Add(action);
 
                 if(Info.Effect == 1)

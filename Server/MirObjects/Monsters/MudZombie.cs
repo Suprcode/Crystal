@@ -58,11 +58,35 @@ namespace Server.MirObjects.Monsters
                 int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                 if (damage == 0) return;
 
-                PoisonTarget(8, 5, PoisonType.Green, 2000);
-
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MAC);
+                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MAC);
                 ActionList.Add(action);
             }
+        }
+
+        protected override void CompleteAttack(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            target.Attacked(this, damage, defence);
+
+            PoisonTarget(target, 5, 8, PoisonType.Green, 2000);
+        }
+
+        protected override void CompleteRangeAttack(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            target.Attacked(this, damage, defence);
+
+            PoisonTarget(target, 5, 8, PoisonType.Green, 2000);
         }
 
         protected override void LineAttack(int distance, int delay = 500)
@@ -78,8 +102,6 @@ namespace Server.MirObjects.Monsters
                 {
                     DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.MAC);
                     ActionList.Add(action);
-
-                    PoisonTarget(5, 8, PoisonType.Green, 2000);
                 }
                 else
                 {
@@ -97,8 +119,6 @@ namespace Server.MirObjects.Monsters
 
                             DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, DefenceType.AC);
                             ActionList.Add(action);
-
-                            PoisonTarget(5, 8, PoisonType.Green, 2000);
                         }
                         else continue;
 

@@ -3029,17 +3029,17 @@ namespace Server.MirObjects
 
 
         // MONSTER AI ATTACKS \\\
-        protected virtual void PoisonTarget(int chanceToPoison, long poisonDuration, PoisonType poison, long poisonTickSpeed = 1000)
+        protected virtual void PoisonTarget(MapObject target, int chanceToPoison, long poisonDuration, PoisonType poison, long poisonTickSpeed = 1000)
         {
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
+            if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.Stats[Stat.PoisonResist])
             {
                 if (Envir.Random.Next(chanceToPoison) == 0)
                 {
-                    Target.ApplyPoison(new Poison { Owner = this, Duration = poisonDuration, PType = poison, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = poisonTickSpeed }, this);
+                    target.ApplyPoison(new Poison { Owner = this, Duration = poisonDuration, PType = poison, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = poisonTickSpeed }, this);
 
                     if (poison == PoisonType.Stun)
                     {
-                        Broadcast(new S.ObjectEffect { ObjectID = Target.ObjectID, Effect = SpellEffect.Stunned, Time = (uint)poisonDuration * 1000 });
+                        Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.Stunned, Time = (uint)poisonDuration * 1000 });
                     }
                 }
             }
@@ -3124,21 +3124,7 @@ namespace Server.MirObjects
             }
         }
 
-        protected virtual void RangeAttack(int minAttackStat, int maxAttackStat, byte rangeAttackTypeNumber = 0, DefenceType type = DefenceType.MACAgility, int additionalDelay = 500)
-        {
-            Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = rangeAttackTypeNumber });
-            int damage = GetAttackPower(minAttackStat, maxAttackStat);
-            if (damage == 0) return;
-
-            if (Envir.Random.Next(Settings.MagicResistWeight) >= Target.Stats[Stat.MagicResist])
-            {
-                int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + additionalDelay; //50 MS per Step
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, type);
-                ActionList.Add(action);
-            }
-        }
-
-        protected virtual void ArrowAttack(int minAttackStat, int maxAttackStat, DefenceType type = DefenceType.MACAgility, int additionalDelay = 500)
+        protected virtual void ProjectileAttack(int minAttackStat, int maxAttackStat, DefenceType type = DefenceType.ACAgility, int additionalDelay = 500)
         {
             int damage = GetAttackPower(minAttackStat, maxAttackStat);
             if (damage == 0) return;

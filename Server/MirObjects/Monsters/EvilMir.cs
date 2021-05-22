@@ -125,7 +125,7 @@ namespace Server.MirObjects.Monsters
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
                 int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 620; //50 MS per Step
 
-                ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + delay));
+                ActionList.Add(new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay));
             }
             else
             {

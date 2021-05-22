@@ -103,7 +103,7 @@ namespace Server.MirObjects.Monsters
             int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500;
 
             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
-            ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + delay)); //Time for projectiles should always be calculated through their distance
+            ActionList.Add(new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay)); //Time for projectiles should always be calculated through their distance
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
         }

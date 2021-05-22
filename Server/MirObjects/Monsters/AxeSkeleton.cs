@@ -36,7 +36,7 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            ArrowAttack(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+            ProjectileAttack(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
             if (Target.Dead)
                 FindTarget();

@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Server.MirObjects.Monsters
 {
-    class SeedingsGeneral : MonsterObject
+    public class SeedingsGeneral : MonsterObject
     {
         protected virtual byte AttackRange
         {
@@ -31,7 +31,6 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -43,82 +42,82 @@ namespace Server.MirObjects.Monsters
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 2);
 
-            ActionTime = Envir.Time + 300;
-            AttackTime = Envir.Time + AttackSpeed;
-
             if (!ranged && Envir.Random.Next(5) > 0)
             {
+                ActionTime = Envir.Time + 300;
+                AttackTime = Envir.Time + AttackSpeed;
+
                 if (Envir.Random.Next(5) > 0)
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                    LineAttack1(1); //Blood Attack
+                    //Blood Attack
+
+                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                    if (damage == 0) return;
+
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+                    ActionList.Add(action);
                 }
                 else
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                    LineAttack2(1);//Green Splash Attack
+                    //Green Splash Attack
+
+                    int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+                    if (damage == 0) return;
+
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+                    ActionList.Add(action);
                 }
 
             }
             else
             {
+                ActionTime = Envir.Time + 600;
+                AttackTime = Envir.Time + AttackSpeed;
+
                 if (Envir.Random.Next(5) > 0)
                 {
                     Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
-                    RangeAttack2(2);//Blue Fireball Projectile
+                    //Blue Fireball Projectile
+
+                    int damage = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
+                    if (damage == 0) return;
+
+                    int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
+                    DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MACAgility, PoisonType.Frozen);
+                    ActionList.Add(action);
                 }
                 else
                 {
                     Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-                    RangeAttack1(2);//Echo Shout
+                    //Echo Shout
+
+                    int damage = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
+                    if (damage == 0) return;
+
+                    int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
+                    DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MACAgility, PoisonType.Slow);
+                    ActionList.Add(action);
                 }
-
             }
-
-
-            if (Target.Dead)
-                FindTarget();
-
         }
 
-        private void LineAttack1(int distance)
+        protected override void CompleteRangeAttack(IList<object> data)
         {
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;            
-            Target.Attacked(this, damage, DefenceType.ACAgility);
-        }
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+            PoisonType pType = (PoisonType)data[3];
 
-        private void LineAttack2(int distance)
-        {
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * 2);
-            if (damage == 0) return;            
-            Target.Attacked(this, damage, DefenceType.ACAgility);
-        }
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-        private void RangeAttack1(int distance)//Echo Shout
-        {
-            int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-            if (damage == 0) return;
-            Target.Attacked(this, damage, DefenceType.MACAgility);
+            target.Attacked(this, damage, defence);
 
             if (Envir.Random.Next(5) == 0)
-                Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Frozen, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);
-
-            ActionTime = Envir.Time + 600;
-            AttackTime = Envir.Time + AttackSpeed;
-        }
-
-        private void RangeAttack2(int distance)//Blue Fireball Projectile
-        {
-            int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC] * 2);
-            if (damage == 0) return;
-            Target.Attacked(this, damage, DefenceType.MACAgility);
-
-            if (Envir.Random.Next(5) == 0)
-                Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Slow, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);
-
-            ActionTime = Envir.Time + 600;
-            AttackTime = Envir.Time + AttackSpeed;
+            {
+                target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = pType, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);
+            }
         }
 
         protected override void ProcessTarget()

@@ -52,7 +52,7 @@ namespace Server.MirObjects.Monsters
                     {
                         if (Envir.Random.Next(Settings.MagicResistWeight) >= targets[i].Stats[Stat.MagicResist])
                         {
-                            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, targets[i], damage, DefenceType.MACAgility);
+                            DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, targets[i], damage, DefenceType.MACAgility);
                             ActionList.Add(action);
                         }
                     }

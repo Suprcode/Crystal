@@ -104,7 +104,7 @@ namespace Server.MirObjects.Monsters
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
             int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 700; //50 MS per Step
-            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 700, Target, damage, DefenceType.AC);
+            DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 700, Target, damage, DefenceType.AC);
 
             for (int i = 0; i < targets.Count; i++)
             {

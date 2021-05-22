@@ -64,12 +64,35 @@ namespace Server.MirObjects.Monsters
             else
             {
                 //TODO - ADD A SOURCE TO EFFECT FOR CLIENT SO ANIMATION CAN START AT CORRECT PLACE.
-                RangeAttack(Stats[Stat.MinMC], Stats[Stat.MaxMC], 0);  
-                PoisonTarget(7, 5, PoisonType.Green, 1000);
-            }
 
-            if (Target.Dead)
-                FindTarget();
+                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
+                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+                if (damage == 0) return;
+
+                if (Envir.Random.Next(Settings.MagicResistWeight) >= Target.Stats[Stat.MagicResist])
+                {
+                    int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
+                    DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
+                    ActionList.Add(action);
+                }
+
+            }
+        }
+
+        protected override void CompleteRangeAttack(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            var finalDamage = target.Attacked(this, damage, defence);
+
+            if (finalDamage > 0)
+            {
+                PoisonTarget(Target, 7, 5, PoisonType.Green, 1000);
+            }
         }
 
         protected override void ProcessTarget()

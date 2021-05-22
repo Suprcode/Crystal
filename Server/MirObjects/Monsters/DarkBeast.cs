@@ -64,14 +64,7 @@ namespace Server.MirObjects.Monsters
 
             if (attack2 && finalDamage > 0)
             {
-                PoisonTarget(5, 5, PoisonType.Bleeding);
-                if (Envir.Random.Next(5) == 0)
-                {
-                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-                    {
-                        Target.ApplyPoison(new Poison { PType = PoisonType.Bleeding, Duration = 5, TickSpeed = 1000 }, this);
-                    }
-                }
+                PoisonTarget(target, 5, 5, PoisonType.Bleeding);
             }
         }
 

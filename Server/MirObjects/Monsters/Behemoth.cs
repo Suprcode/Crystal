@@ -53,7 +53,7 @@ namespace Server.MirObjects.Monsters
                         break;
                 }
 
-                PoisonTarget(15, 5, PoisonType.Bleeding);
+                PoisonTarget(Target, 15, 5, PoisonType.Bleeding);
             }
             else
             {
