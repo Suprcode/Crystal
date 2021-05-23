@@ -44,24 +44,26 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (!ranged)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                if (damage == 0) return;
 
-                Target.Attacked(this, damage, DefenceType.ACAgility);
-            }
-            else
-            {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-                AttackTime = Envir.Time + AttackSpeed + 500;
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
 
                 DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MAC);
                 ActionList.Add(action);
             }
+            else
+            {
+                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
 
+                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+                if (damage == 0) return;
+
+                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 700, Target, damage, DefenceType.MAC);
+                ActionList.Add(action);
+            }
 
             if (Target.Dead)
                 FindTarget();
