@@ -343,6 +343,8 @@ namespace Server.MirObjects
                     return new FloatingRock(info);
                 case 164:
                     return new ScalyBeast(info);
+                case 165:
+                    return new MudWarrior(info);
 
                 //unfinished
                 case 120:
@@ -3100,6 +3102,7 @@ namespace Server.MirObjects
                 dir = Functions.NextDir(dir);
 
                 if (!CurrentMap.ValidPoint(target)) continue;
+                Broadcast(new S.MapEffect { Effect = SpellEffect.Tester, Location = target, Value = (byte)Direction });
 
                 Cell cell = CurrentMap.GetCell(target);
                 if (cell.Objects == null) continue;
@@ -3116,6 +3119,7 @@ namespace Server.MirObjects
                 }
             }
         }
+    
 
         protected virtual void ProjectileAttack(int minAttackStat, int maxAttackStat, DefenceType type = DefenceType.ACAgility, int additionalDelay = 500)
         {
