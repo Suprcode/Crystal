@@ -188,7 +188,32 @@ namespace Server.MirObjects.Monsters
         public override void Die()
         {
             ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + 300));
+
+            if (Info.Effect == 1)
+            {
+                SpawnSlave();
+            }
+
             base.Die();
         }
+
+
+        private void SpawnSlave()
+        {
+            ActionTime = Envir.Time + 300;
+            AttackTime = Envir.Time + AttackSpeed;
+
+            MonsterObject mob = null;
+            mob = GetMonster(Envir.GetMonsterInfo(Settings.TucsonGeneralEgg));
+
+            if (mob == null) return;
+            if (!mob.Spawn(CurrentMap, Front))
+                mob.Spawn(CurrentMap, CurrentLocation);
+
+            mob.Target = Target;
+            mob.ActionTime = Envir.Time + 2000;
+            SlaveList.Add(mob);
+        }
+
     }
 }

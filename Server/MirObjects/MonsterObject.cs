@@ -266,7 +266,7 @@ namespace Server.MirObjects
                 case 125:
                     return new TucsonEgg(info);
                 case 126:
-                    return new TucsonEgg1(info); //AI which will spawn TucsonGeneral upon killing the egg.
+                    return new SwampWarrior(info);
                 case 127:
                     return new CannibalTentacles(info);
                 case 128:
@@ -3100,6 +3100,7 @@ namespace Server.MirObjects
                 dir = Functions.NextDir(dir);
 
                 if (!CurrentMap.ValidPoint(target)) continue;
+                Broadcast(new S.MapEffect { Effect = SpellEffect.Tester, Location = target, Value = (byte)Direction });
 
                 Cell cell = CurrentMap.GetCell(target);
                 if (cell.Objects == null) continue;

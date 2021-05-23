@@ -2286,7 +2286,7 @@ namespace Client.MirObjects
                                                 break;
                                             case Monster.CannibalTentacles:
                                                 if (MapControl.GetObject(TargetID) != null)
-                                                    CreateProjectile(472, Libraries.Monsters[(ushort)Monster.CannibalTentacles], true, 8, 80, 0, direction16: false);
+                                                    CreateProjectile(472, Libraries.Monsters[(ushort)Monster.CannibalTentacles], true, 8, 100, 0, direction16: false);
                                                 break;
                                             case Monster.SwampWarrior:
                                                 ob = MapControl.GetObject(TargetID);
@@ -3625,14 +3625,6 @@ namespace Client.MirObjects
                             break;
                         case MirAction.AttackRange2:
                             Libraries.Monsters[(ushort)Monster.SeedingsGeneral].DrawBlend(912 + FrameIndex + (int)Direction * 9, DrawLocation, Color.White, true);
-                            break;
-                    }
-                    break;
-                case Monster.GasToad:
-                    switch (CurrentAction)
-                    {
-                        case MirAction.Attack2:
-                            if (FrameIndex >= 3) Libraries.Monsters[(ushort)Monster.GasToad].DrawBlend((360 + FrameIndex - 2 + (int)Direction * 4) - 3, DrawLocation, Color.White, true);
                             break;
                     }
                     break;

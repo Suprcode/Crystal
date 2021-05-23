@@ -49,22 +49,23 @@ namespace Server.MirObjects.Monsters
                 if (Envir.Random.Next(5) > 0)
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                     if (damage == 0) return;
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.AC);
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.AC, false);
                     ActionList.Add(action);
                 }
                 else
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                    Attack2();//Halfmoon Attack with poison
+                    HalfmoonAttack(500);
                 }
-
             }
             else
             {
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
+
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
 
@@ -72,40 +73,23 @@ namespace Server.MirObjects.Monsters
                 DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
                 ActionList.Add(action);
             }
-
-
-            if (Target.Dead)
-                FindTarget();
-
         }
 
-        private void Attack2() //Halfmoon Attack
+        protected override void HalfmoonAttack(int delay = 500)
         {
-            MirDirection dir = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
-
-            dir = Functions.NextDir(dir);
-
-            Point target = Functions.PointMove(CurrentLocation, dir, 1);
+            MirDirection dir = Functions.PreviousDir(Direction);
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;            
-
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-            {
-                Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Green, TickSpeed = 1000, }, this);
-            }
-
-            Cell cell = null;
+            if (damage == 0) return;
 
             for (int i = 0; i < 4; i++)
             {
-                target = Functions.PointMove(CurrentLocation, dir, 1);
+                Point target = Functions.PointMove(CurrentLocation, dir, 1);
                 dir = Functions.NextDir(dir);
 
                 if (!CurrentMap.ValidPoint(target)) continue;
 
-                cell = CurrentMap.GetCell(target);
-
+                Cell cell = CurrentMap.GetCell(target);
                 if (cell.Objects == null) continue;
 
                 for (int o = 0; o < cell.Objects.Count; o++)
@@ -114,14 +98,28 @@ namespace Server.MirObjects.Monsters
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
                     if (!ob.IsAttackTarget(this)) continue;
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, ob, damage, DefenceType.MAC);
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.ACAgility, true);
                     ActionList.Add(action);
                     break;
                 }
             }
+        }
 
-            //DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.MAC);
-            //ActionList.Add(action);
+        protected override void CompleteAttack(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+            bool poison = (bool)data[3];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            var finalDamage = target.Attacked(this, damage, defence);
+
+            if (poison && finalDamage > 0)
+            {
+                PoisonTarget(target, 1, 5, PoisonType.Green, 1000);
+            }
         }
 
         protected override void ProcessTarget()
