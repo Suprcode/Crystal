@@ -4172,6 +4172,10 @@ namespace Client.MirScenes
                     Effect HitWall = new Effect(Libraries.Effect, 8 * p.Value, 3, 240, p.Location) { Light = 0 };
                     MapControl.Effects.Add(HitWall);
                     break;
+                case SpellEffect.Tester:
+                    Effect eff = new Effect(Libraries.Effect, 328, 10, 500, p.Location) { Light = 0 };
+                    MapControl.Effects.Add(eff);
+                    break;
             }
         }
 
@@ -4473,7 +4477,7 @@ namespace Client.MirScenes
                 MapObject ob = MapControl.Objects[i];
                 if (ob.ObjectID != p.ObjectID) continue;
 
-                ((PlayerObject)ob).JumpDistance = p.Distance;
+                ob.JumpDistance = p.Distance;
 
                 ob.ActionFeed.Add(new QueuedAction { Action = MirAction.Jump, Direction = p.Direction, Location = p.Location });
 

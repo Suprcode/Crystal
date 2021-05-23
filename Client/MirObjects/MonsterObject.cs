@@ -315,6 +315,7 @@ namespace Client.MirObjects
                 case MirAction.Walking:
                 case MirAction.Running:
                 case MirAction.Pushed:
+                case MirAction.Jump:
                 case MirAction.DashL:
                 case MirAction.DashR:
                     if (Frame == null)
@@ -324,6 +325,8 @@ namespace Client.MirObjects
                         break;
                     }
                     int i = CurrentAction == MirAction.Running ? 2 : 1;
+
+                    if (CurrentAction == MirAction.Jump) i = -JumpDistance;
 
                     Movement = Functions.PointMove(CurrentLocation, Direction, CurrentAction == MirAction.Pushed ? 0 : -i);
 
@@ -485,6 +488,9 @@ namespace Client.MirObjects
                         int i = CurrentAction == MirAction.Running ? 2 : 1;
                         temp = Functions.PointMove(CurrentLocation, Direction, CurrentAction == MirAction.Pushed ? 0 : -i);
                         break;
+                    case MirAction.Jump:
+                        temp = Functions.PointMove(CurrentLocation, Direction, JumpDistance);
+                        break;
                     default:
                         temp = CurrentLocation;
                         break;
@@ -504,6 +510,9 @@ namespace Client.MirObjects
                 {
                     case MirAction.Pushed:
                         Frames.TryGetValue(MirAction.Walking, out Frame);
+                        break;
+                    case MirAction.Jump:
+                        Frames.TryGetValue(MirAction.Jump, out Frame);
                         break;
                     case MirAction.AttackRange1:
                         if (!Frames.TryGetValue(CurrentAction, out Frame))
@@ -594,6 +603,10 @@ namespace Client.MirObjects
                         break;
                     case MirAction.Pushed:
                         FrameIndex = Frame.Count - 1;
+                        GameScene.Scene.Redraw();
+                        break;
+                    case MirAction.Jump:
+                       // FrameIndex = Frame.Count - 1;
                         GameScene.Scene.Redraw();
                         break;
                     case MirAction.Walking:
@@ -1153,6 +1166,24 @@ namespace Client.MirObjects
                     {
                         FrameIndex = 0;
                         SetAction();
+                    }
+                    break;
+                case MirAction.Jump:
+                    if (CMain.Time >= NextMotion)
+                    {
+                        GameScene.Scene.MapControl.TextureValid = false;
+
+                        if (SkipFrames) UpdateFrame();
+
+                        if (UpdateFrame() >= Frame.Count)
+                        {
+                            FrameIndex = Frame.Count - 1;
+                            SetAction();
+                        }
+                        else
+                        {
+                            NextMotion += FrameInterval;
+                        }
                     }
                     break;
                 case MirAction.Show:

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Server.MirObjects.Monsters
 {
-    class ArmadilloElder : DigOutZombie
+    public class ArmadilloElder : DigOutZombie
     {
         protected internal ArmadilloElder(MonsterInfo info)
             : base(info)
@@ -31,24 +31,22 @@ namespace Server.MirObjects.Monsters
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
-            Target.Attacked(this, damage, DefenceType.ACAgility);
+
+            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.ACAgility);
+            ActionList.Add(action);
 
             if (Envir.Random.Next(4) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                Target.Attacked(this, damage, DefenceType.ACAgility);
+                action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.ACAgility);
+                ActionList.Add(action);
             }
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                Target.Attacked(this, damage, DefenceType.ACAgility);
+                action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.ACAgility);
+                ActionList.Add(action);
             }
-
-
-
-            if (Target.Dead)
-                FindTarget();
-
         }
     }
 }

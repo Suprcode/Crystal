@@ -166,8 +166,6 @@ namespace Server.MirObjects.Monsters
 
         private void SpawnSlave()
         {
-            int count = Math.Min(1, 1 - SlaveList.Count);
-
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 

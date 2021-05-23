@@ -1241,7 +1241,8 @@ public enum SpellEffect : byte
     Stunned,
     IcePillar,
     KingGuard,
-    MonsterMACBuff
+    MonsterMACBuff,
+    Tester
 }
 
 

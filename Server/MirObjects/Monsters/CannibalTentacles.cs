@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Server.MirObjects.Monsters
 {
-    class CannibalTentacles : MonsterObject
+    public class CannibalTentacles : MonsterObject
     {
         protected virtual byte AttackRange
         {
@@ -51,7 +51,9 @@ namespace Server.MirObjects.Monsters
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                     if (damage == 0) return;
-                    Target.Attacked(this, damage);
+
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.AC);
+                    ActionList.Add(action);
                 }
                 else
                 {
@@ -112,13 +114,14 @@ namespace Server.MirObjects.Monsters
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
                     if (!ob.IsAttackTarget(this)) continue;
 
-                    ob.Attacked(this, damage, DefenceType.MAC);
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, ob, damage, DefenceType.MAC);
+                    ActionList.Add(action);
                     break;
                 }
             }
 
-            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.MAC);
-            ActionList.Add(action);
+            //DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.MAC);
+            //ActionList.Add(action);
         }
 
         protected override void ProcessTarget()

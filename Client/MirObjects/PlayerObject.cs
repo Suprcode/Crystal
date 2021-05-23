@@ -68,7 +68,6 @@ namespace Client.MirObjects
 
         public Spell Spell;
         public byte SpellLevel;
-        public int JumpDistance;
         public bool Cast;
         public uint TargetID;
         public List<uint> SecondaryTargetIDs;

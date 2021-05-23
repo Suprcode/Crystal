@@ -5,7 +5,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class DigOutZombie : MonsterObject
+    public class DigOutZombie : MonsterObject
     {
         public bool Visible, DoneDigOut;
         public long VisibleTime, DigOutTime;

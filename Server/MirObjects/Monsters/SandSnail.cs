@@ -8,8 +8,7 @@ using System.Collections.Generic;
 namespace Server.MirObjects.Monsters
 {   
     public class SandSnail : MonsterObject
-    {
-        
+    {   
         protected internal SandSnail(MonsterInfo info)
             : base(info)
         {
@@ -17,7 +16,6 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -38,7 +36,9 @@ namespace Server.MirObjects.Monsters
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                     if (damage == 0) return;
-                    Target.Attacked(this, damage);
+
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+                    ActionList.Add(action);
                 }
                 else
                 {
@@ -64,9 +64,9 @@ namespace Server.MirObjects.Monsters
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
-            Target.Attacked(this, damage, DefenceType.AC);
 
-            Cell cell = null;
+            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.AC);
+            ActionList.Add(action);
 
             for (int i = 0; i < 6; i++)
             {
@@ -75,8 +75,7 @@ namespace Server.MirObjects.Monsters
 
                 if (!CurrentMap.ValidPoint(target)) continue;
 
-                cell = CurrentMap.GetCell(target);
-
+                Cell cell = CurrentMap.GetCell(target);
                 if (cell.Objects == null) continue;
 
                 for (int o = 0; o < cell.Objects.Count; o++)
@@ -85,7 +84,8 @@ namespace Server.MirObjects.Monsters
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
                     if (!ob.IsAttackTarget(this)) continue;
 
-                    ob.Attacked(this, damage, DefenceType.AC);
+                    action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, ob, damage, DefenceType.AC);
+                    ActionList.Add(action);
                     break;
                 }
             }

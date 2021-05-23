@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Server.MirObjects.Monsters
 {
-    class Armadillo : DigOutZombie
+    public class Armadillo : DigOutZombie
     {
         //TODO: Code Attack3 - rolling attack(disengage?)
 
@@ -35,15 +35,22 @@ namespace Server.MirObjects.Monsters
             {
                 case 0:
                     {
-                        //Retreat();
+                        Retreat();
                     }
                     break;
                 case 1:
                     {
                         Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
                         int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                        if (damage == 0) return;
 
-                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.ACAgility);
+                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage / 2, DefenceType.ACAgility);
+                        ActionList.Add(action);
+
+                        action = new DelayedAction(DelayedType.Damage, Envir.Time + 600, Target, damage / 2, DefenceType.ACAgility);
+                        ActionList.Add(action);
+
+                        action = new DelayedAction(DelayedType.Damage, Envir.Time + 800, Target, damage / 2, DefenceType.ACAgility);
                         ActionList.Add(action);
                     }
                     break;
@@ -51,62 +58,39 @@ namespace Server.MirObjects.Monsters
                     {
                         Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                         int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                        if (damage == 0) return;
 
                         DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.ACAgility);
                         ActionList.Add(action);
                     }
                     break;
             }
-            if (Target.Dead)
-                FindTarget();
         }
 
         private void Retreat()
         {
-            ActionTime = Envir.Time;
-            if (!CanMove) return;
-
-            int travel = 0;
-            bool blocked = false;
-            int jumpDistance = 3;
             MirDirection jumpDir = Functions.ReverseDirection(Direction);
-            Point location = CurrentLocation;
-            for (int i = 0; i < jumpDistance; i++)
-            {
-                location = Functions.PointMove(location, jumpDir, 1);
-                if (!CurrentMap.ValidPoint(location)) break;
 
-                Cell cInfo = CurrentMap.GetCell(location);
-                if (cInfo.Objects != null)
-                    for (int c = 0; c < cInfo.Objects.Count; c++)
-                    {
-                        MapObject ob = cInfo.Objects[c];
-                        if (!ob.Blocking) continue;
-                        blocked = true;
-                        if ((cInfo.Objects == null) || blocked) break;
-                    }
-                if (blocked) break;
-                travel++;
+            Point location;
+
+            for (int i = 0; i < 2; i++)
+            {
+                location = Functions.PointMove(CurrentLocation, jumpDir, 1);
+                if (!CurrentMap.ValidPoint(location)) return;
             }
 
-            jumpDistance = travel;
-            if (jumpDistance > 0)
+            for (int i = 0; i < 2; i++)
             {
-                for (int i = 0; i < jumpDistance; i++)
-                {
-                    location = Functions.PointMove(CurrentLocation, jumpDir, 1);
-                    CurrentMap.GetCell(CurrentLocation).Remove(this);
-                    RemoveObjects(jumpDir, 1);
-                    CurrentLocation = location;
-                    CurrentMap.GetCell(CurrentLocation).Add(this);
-                    AddObjects(jumpDir, 1);
-                }
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+                location = Functions.PointMove(CurrentLocation, jumpDir, 1);
+
+                CurrentMap.GetCell(CurrentLocation).Remove(this);
+                RemoveObjects(jumpDir, 1);
+                CurrentLocation = location;
+                CurrentMap.GetCell(CurrentLocation).Add(this);
+                AddObjects(jumpDir, 1);
             }
 
-
-            //ActionTime = Envir.Time + 300;
-            //CellTime = Envir.Time + 500;
+            Broadcast(new S.ObjectBackStep { ObjectID = ObjectID, Direction = Direction, Location = location, Distance = 2 });
         }
     }
 }

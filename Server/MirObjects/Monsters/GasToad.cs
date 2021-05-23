@@ -9,7 +9,6 @@ namespace Server.MirObjects.Monsters
 {
     public class GasToad : MonsterObject
     {
-
         protected internal GasToad(MonsterInfo info)
             : base(info)
         {
@@ -17,7 +16,6 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -38,7 +36,9 @@ namespace Server.MirObjects.Monsters
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                     if (damage == 0) return;
-                    Target.Attacked(this, damage);
+
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+                    ActionList.Add(action);
                 }
                 else
                 {
@@ -58,7 +58,8 @@ namespace Server.MirObjects.Monsters
         {
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * 2);
             if (damage == 0) return;
-            Target.Attacked(this, damage);
+            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+            ActionList.Add(action);
 
             if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
             {

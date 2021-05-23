@@ -32,6 +32,7 @@ namespace Client.MirObjects
         public long DeadTime;
         public byte AI;
         public bool InTrapRock;
+        public int JumpDistance;
 
         public bool Blend = true;
 

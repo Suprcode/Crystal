@@ -3089,26 +3089,19 @@ namespace Server.MirObjects
 
         protected virtual void HalfmoonAttack(int delay = 500)
         {
-            Cell cell = null;
-
-            MirDirection dir = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
-
-            dir = Functions.NextDir(dir);
-
-            Point target = Functions.PointMove(CurrentLocation, dir, 1);
+            MirDirection dir = Functions.PreviousDir(Direction);
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
             for (int i = 0; i < 4; i++)
             {
-                target = Functions.PointMove(CurrentLocation, dir, 1);
+                Point target = Functions.PointMove(CurrentLocation, dir, 1);
                 dir = Functions.NextDir(dir);
 
                 if (!CurrentMap.ValidPoint(target)) continue;
 
-                cell = CurrentMap.GetCell(target);
-
+                Cell cell = CurrentMap.GetCell(target);
                 if (cell.Objects == null) continue;
 
                 for (int o = 0; o < cell.Objects.Count; o++)
