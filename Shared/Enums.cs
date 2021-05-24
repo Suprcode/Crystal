@@ -367,8 +367,8 @@ public enum Monster : ushort
     BattleStandard = 177,//done
     Blank2 = 178,
     RedYimoogi = 179,//done
-    LionRiderMale = 180, //frames not added
-    LionRiderFemale = 181, //frames not added
+    LionRiderMale = 180, //Not Monster - Skin / Transform
+    LionRiderFemale = 181, //Not Monster - Skin / Transform
     Tornado = 182,//done
     FlameTiger = 183,//done
     WingedTigerLord = 184,//done BOSS

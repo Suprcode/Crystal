@@ -2904,6 +2904,12 @@ namespace Client.MirObjects
                     case Monster.PoisonHugger:
                         SoundManager.PlaySound(BaseSound + 9);
                         return;
+                    case Monster.DarkDevourer:
+                    case Monster.DreamDevourer:
+                    case Monster.Yimoogi:
+                    case Monster.RedYimoogi:
+                        SoundManager.PlaySound(BaseSound + 8);
+                        return;
                 }
             }
         }
@@ -2952,25 +2958,6 @@ namespace Client.MirObjects
         {
             switch (BaseImage)
             {
-                case Monster.FrozenMiner:
-                    SoundManager.PlaySound(((ushort)Monster.FrozenMiner * 10) + 3);
-                    break;
-                case Monster.FrozenAxeman:
-                    SoundManager.PlaySound(((ushort)Monster.FrozenAxeman * 10) + 4);
-                    break;
-                case Monster.FrozenMagician:
-                    SoundManager.PlaySound(((ushort)Monster.FrozenMagician * 10) + 4);
-                    break;
-                case Monster.SnowYeti:
-                    SoundManager.PlaySound(((ushort)Monster.SnowYeti * 10) + 4);
-                    break;
-                case Monster.IceCrystalSoldier:
-                    SoundManager.PlaySound(((ushort)Monster.IceCrystalSoldier * 10) + 4);
-                    break;
-                case Monster.DarkSpirit:
-                case Monster.DarkWraith:
-                    SoundManager.PlaySound(((ushort)Monster.DarkWraith * 10) + 4);
-                    break;
                 default:
                     SoundManager.PlaySound(BaseSound + 2);
                     break;
@@ -3042,28 +3029,6 @@ namespace Client.MirObjects
         {
             switch (BaseImage)
             {
-                //TODO - CHECK SOUNDS
-                case Monster.HornedMage:
-                    SoundManager.PlaySound(((ushort)Monster.HornedMage * 10) + 2);
-                    break;
-                case Monster.FrozenMiner:
-                    SoundManager.PlaySound(((ushort)Monster.FrozenMiner * 10) + 1);
-                    break;
-                case Monster.FrozenAxeman:
-                    SoundManager.PlaySound(((ushort)Monster.FrozenAxeman * 10) + 1);
-                    break;
-                case Monster.FrozenMagician:
-                    SoundManager.PlaySound(((ushort)Monster.FrozenMagician * 10) + 3);
-                    break;
-                case Monster.SnowYeti:
-                    SoundManager.PlaySound(((ushort)Monster.SnowYeti * 10) + 1);
-                    break;
-                case Monster.IceCrystalSoldier:
-                    SoundManager.PlaySound(((ushort)Monster.IceCrystalSoldier * 10) + 1);
-                    break;
-                case Monster.DarkWraith:
-                    SoundManager.PlaySound(((ushort)Monster.DarkWraith * 10) + 1);
-                    break;
                 default:
                     SoundManager.PlaySound(BaseSound + 1);
                     break;
@@ -3072,48 +3037,24 @@ namespace Client.MirObjects
 
         public void PlaySecondAttackSound()
         {
-            //SoundManager.PlaySound(BaseSound + 6);
-
             switch (BaseImage)
             {
-
-                case Monster.FrozenMiner:
-                    SoundManager.PlaySound(((ushort)Monster.FrozenMiner * 10) + 2);
-                    break;
-                case Monster.FrozenAxeman:
-                    SoundManager.PlaySound(((ushort)Monster.FrozenAxeman * 10) + 2);
-                    break;
-                case Monster.SnowYeti:
-                    SoundManager.PlaySound(((ushort)Monster.SnowYeti * 10) + 2);
-                    break;
-                case Monster.IceCrystalSoldier:
-                    SoundManager.PlaySound(((ushort)Monster.IceCrystalSoldier * 10) + 2);
-                    break;
-                case Monster.DarkWraith:
-                    SoundManager.PlaySound(((ushort)Monster.DarkWraith * 10) + 2);
-                    break;
                 default:
-                    SoundManager.PlaySound(BaseSound + 1);
+                    SoundManager.PlaySound(BaseSound + 6);
                     break;
 
             }            
         }
+
         public void PlayThirdAttackSound()
         {
             //SoundManager.PlaySound(BaseSound + 7);
 
             switch (BaseImage)
             {
-                case Monster.FrozenAxeman:
-                    SoundManager.PlaySound(((ushort)Monster.FrozenAxeman * 10) + 3);
-                    break;
-                case Monster.DarkWraith:
-                    SoundManager.PlaySound(((ushort)Monster.DarkWraith * 10) + 3);
-                    break;
                 default:
                     SoundManager.PlaySound(BaseSound + 7);
                     break;
-
             }
         }
 
@@ -3127,33 +3068,8 @@ namespace Client.MirObjects
         }
         public void PlayDieSound()
         {
-            SoundManager.PlaySound(BaseSound + 3);
-
             switch (BaseImage)
             {
-                //TODO - CHECK SOUNDS
-                case Monster.HornedMage:
-                    SoundManager.PlaySound(((ushort)Monster.HornedMage * 10) + 3);
-                    break;
-                case Monster.FrozenMiner:
-                    SoundManager.PlaySound(((ushort)Monster.FrozenMiner * 10) + 4);
-                    break;
-                case Monster.FrozenAxeman:
-                    SoundManager.PlaySound(((ushort)Monster.FrozenAxeman * 10) + 5);
-                    break;
-                case Monster.FrozenMagician:
-                    SoundManager.PlaySound(((ushort)Monster.FrozenMagician * 10) + 5);
-                    break;
-                case Monster.SnowYeti:
-                    SoundManager.PlaySound(((ushort)Monster.SnowYeti * 10) + 5);
-                    break;
-                case Monster.IceCrystalSoldier:
-                    SoundManager.PlaySound(((ushort)Monster.IceCrystalSoldier * 10) + 5);
-                    break;
-                case Monster.DarkSpirit:
-                case Monster.DarkWraith:
-                    SoundManager.PlaySound(((ushort)Monster.DarkWraith * 10) + 5);
-                    break;
                 default:
                     SoundManager.PlaySound(BaseSound + 3);
                     break;
@@ -3188,23 +3104,6 @@ namespace Client.MirObjects
         {
             switch (BaseImage)
             {
-                case Monster.HornedMage:
-                    SoundManager.PlaySound(((ushort)Monster.HornedMage * 10) + 1);
-                    break;
-                case Monster.FrozenMagician:
-                    SoundManager.PlaySound(((ushort)Monster.FrozenMagician * 10) + 1);
-                    break;
-                case Monster.SnowYeti:
-                    SoundManager.PlaySound(((ushort)Monster.SnowYeti * 10) + 3);
-                    break;
-                case Monster.IceCrystalSoldier:
-                    SoundManager.PlaySound(((ushort)Monster.IceCrystalSoldier * 10) + 3);
-                    break;
-                case Monster.DarkSpirit:
-                    SoundManager.PlaySound(((ushort)Monster.DarkSpirit * 10) + 1);
-                    break;
-                case Monster.TurtleKing:
-                    return;
                 case Monster.RedThunderZuma:
                 case Monster.FrozenRedZuma:
                 case Monster.KingScorpion:
@@ -3227,6 +3126,10 @@ namespace Client.MirObjects
                 case Monster.FlameScythe:
                 case Monster.FlameAssassin:
                 case Monster.FlameQueen:
+                case Monster.DarkDevourer:
+                case Monster.DreamDevourer:
+                case Monster.Yimoogi:
+                case Monster.RedYimoogi:
                     SoundManager.PlaySound(BaseSound + 5);
                     return;
                 default:
@@ -3238,9 +3141,6 @@ namespace Client.MirObjects
         {
             switch (BaseImage)
             {
-                case Monster.FrozenMagician:
-                    SoundManager.PlaySound(((ushort)Monster.FrozenMagician * 10) + 2);
-                    break;
                 case Monster.TurtleKing:
                     return;
                 default:
@@ -3263,6 +3163,7 @@ namespace Client.MirObjects
         {
             SoundManager.PlaySound(SoundList.PetPickup);
         }
+
         public void PlayPetSound()
         {
             int petSound = (ushort)BaseImage - 10000 + 10500;
