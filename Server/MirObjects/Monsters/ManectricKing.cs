@@ -41,7 +41,7 @@ namespace Server.MirObjects.Monsters
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
-            if((HP * 100 / Stats[Stat.HP]) < 20 && MassAttackTime < Envir.Time)
+            if ((HP * 100 / Stats[Stat.HP]) < 20 && MassAttackTime < Envir.Time)
             {
                 ShockTime = 0;
                 ActionTime = Envir.Time + 500;
@@ -65,63 +65,24 @@ namespace Server.MirObjects.Monsters
 
                 MassAttackTime = Envir.Time + 2000 + (Envir.Random.Next(5) * 1000);
                 ActionTime = Envir.Time + 800;
-                AttackTime = Envir.Time + (AttackSpeed);
+                AttackTime = Envir.Time + AttackSpeed;
                 return;
             }
 
-            if (Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange - 1) 
-                && Envir.Random.Next(3) == 0)
+            if (Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange - 1) && Envir.Random.Next(3) == 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                LineAttack(AttackRange - Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) + 1, true);
+                LineAttack(AttackRange - Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) + 1, 500, DefenceType.ACAgility, true);
             }
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
-                LineAttack(AttackRange);
+                LineAttack(AttackRange, 500, DefenceType.ACAgility, false);
             }
 
             ShockTime = 0;
             ActionTime = Envir.Time + 500;
-            AttackTime = Envir.Time + (AttackSpeed);
-        }
-
-        private void LineAttack(int distance, bool push = false)
-        {
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
-
-            int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500;
-
-            for(int i = distance; i >= 1; i--)
-            {
-                Point target = Functions.PointMove(CurrentLocation, Direction, i);
-
-                if (!CurrentMap.ValidPoint(target)) continue;
-
-                Cell cell = CurrentMap.GetCell(target);
-                if (cell.Objects == null) continue;
-
-                for (int o = 0; o < cell.Objects.Count; o++)
-                {
-                    MapObject ob = cell.Objects[o];
-                    if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
-                    {
-                        if (!ob.IsAttackTarget(this)) continue;
-
-                        if (push)
-                        {
-                            ob.Pushed(this, Direction, distance - 1);
-                        }
-
-                        ob.Attacked(this, damage, DefenceType.ACAgility);
-
-                    }
-                    else continue;
-
-                    break;
-                }
-            }
+            AttackTime = Envir.Time + AttackSpeed;
         }
     }
 }

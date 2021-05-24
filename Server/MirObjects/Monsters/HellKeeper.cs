@@ -147,32 +147,14 @@ namespace Server.MirObjects.Monsters
         {
 
         }
+
         protected override void ProcessTarget()
         {
             if (!CanAttack) return;
 
-            List<MapObject> targets = FindAllTargets(Info.ViewRange, CurrentLocation);
-            if (targets.Count == 0) return;
+            Attack();
 
             ShockTime = 0;
-
-            byte attacktype1 = (byte)(Envir.Random.Next(3) > 0 ? 0 : 1);
-
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = attacktype1 });
-
-            for (int i = 0; i < targets.Count; i++)
-            {
-                Target = targets[i];
-
-                if (attacktype1 == 0)
-                {
-                    Attack();
-                }
-                else
-                {
-                    HypnoAttack();
-                }
-            }
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
@@ -180,31 +162,40 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-            if (!Target.IsAttackTarget(this))
-            {
-                Target = null;
-                return;
-            }
+            byte attacktype1 = (byte)(Envir.Random.Next(3) > 0 ? 0 : 1);
 
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = attacktype1 });
 
-            if (damage == 0) return;
-
-            Target.Attacked(this, damage);
+            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, attacktype1);
+            ActionList.Add(action);
         }
 
-        private void HypnoAttack()
+        protected override void CompleteAttack(IList<object> data)
         {
-            int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-            if (damage == 0) return;
+            int attackType = (int)data[0];
 
-            if (Target.Attacked(this, damage, DefenceType.MACAgility) <= 0) return;
+            List<MapObject> targets = FindAllTargets(Info.ViewRange, CurrentLocation);
+            if (targets.Count == 0) return;
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
+            for (int i = 0; i < targets.Count; i++)
             {
-                if (Envir.Random.Next(10) == 0)
+                Target = targets[i];
+
+                if (attackType == 0)
                 {
-                    Target.ApplyPoison(new Poison { Owner = this, Duration = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]), PType = PoisonType.Stun, TickSpeed = 1000 }, this);
+                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                    if (damage == 0) continue;
+
+                    Target.Attacked(this, damage);
+                }
+                else
+                {
+                    int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+                    if (damage == 0) continue;
+
+                    if (Target.Attacked(this, damage, DefenceType.MACAgility) <= 0) continue;
+
+                    PoisonTarget(Target, 10, damage, PoisonType.Stun, 1000);
                 }
             }
         }

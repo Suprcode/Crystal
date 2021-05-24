@@ -5,7 +5,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class DragonStatue : MonsterObject
+    public class DragonStatue : MonsterObject
     {
         private bool Sleeping;
         private long WakeUpTime;
@@ -59,15 +59,7 @@ namespace Server.MirObjects.Monsters
         }
         protected override void CompleteAttack(IList<object> data)
         {
-            if (Target == null) return;
-
-            if (!Target.IsAttackTarget(this))
-            {
-                Target = null;
-                return;
-            }
-
-            if (Target.CurrentMap != CurrentMap || Target.Node == null) return;
+            if (Target == null || !Target.IsAttackTarget(this) || Target.CurrentMap != CurrentMap || Target.Node == null) return;
 
             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
             List<MapObject> targets = FindAllTargets(2, Target.CurrentLocation);

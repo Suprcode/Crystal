@@ -9,12 +9,11 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class KingScorpion : MonsterObject
+    public class KingScorpion : MonsterObject
     {
         protected internal KingScorpion(MonsterInfo info) : base(info)
         {
         }
-
 
         protected override bool InAttackRange()
         {
@@ -32,7 +31,6 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -59,52 +57,20 @@ namespace Server.MirObjects.Monsters
                     }
             }
 
-
             if (range || Envir.Random.Next(5) == 0)
-                Broadcast(new S.ObjectRangeAttack {ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation});
+            {
+                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                LineAttack(2, 300, DefenceType.MACAgility);
+            }
             else
-                Broadcast(new S.ObjectAttack {ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation});
-
-            LineAttack(2, range);
-
+            {
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                LineAttack(2, 300, DefenceType.ACAgility);
+            }
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
             ShockTime = 0;
-        }
-
-        private void LineAttack(int distance, bool range)
-        {
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
-            
-            for (int i = 1; i <= distance; i++)
-            {
-                Point target = Functions.PointMove(CurrentLocation, Direction, i);
-
-                if (target == Target.CurrentLocation)
-                    Target.Attacked(this, damage, range ? DefenceType.MACAgility : DefenceType.ACAgility);
-                else
-                {
-                    if (!CurrentMap.ValidPoint(target)) continue;
-
-                    Cell cell = CurrentMap.GetCell(target);
-                    if (cell.Objects == null) continue;
-
-                    for (int o = 0; o < cell.Objects.Count; o++)
-                    {
-                        MapObject ob = cell.Objects[o];
-                        if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
-                        {
-                            if (!ob.IsAttackTarget(this)) continue;
-                            ob.Attacked(this, damage, range ? DefenceType.MACAgility : DefenceType.ACAgility);
-                        }
-                        else continue;
-
-                        break;
-                    }
-                }
-            }
         }
     }
 }

@@ -3,7 +3,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class RevivingZombie : MonsterObject
+    public class RevivingZombie : MonsterObject
     {
         public byte RevivalCount;
         public int LifeCount;
@@ -27,7 +27,6 @@ namespace Server.MirObjects.Monsters
             RevivalTime = (4 + Envir.Random.Next(20)) * 1000;
             base.Die();
         }
-
 
         protected override void ProcessAI()
         {

@@ -28,7 +28,6 @@ namespace Server.MirObjects.Monsters
 
             ShockTime = 0;
 
-
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
             ActionTime = Envir.Time + 300;
@@ -50,6 +49,7 @@ namespace Server.MirObjects.Monsters
             {
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
 
+                //TODO - Change to PoisonTarget with equation
                 if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
                 {
                     int levelgap = 50 - Target.Level;
@@ -63,10 +63,6 @@ namespace Server.MirObjects.Monsters
                         }, this);
                 }
             }
-
-            if (Target.Dead)
-                FindTarget();
-
         }
 
         protected override void ProcessTarget()

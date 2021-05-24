@@ -9,7 +9,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class DarkDevil : MonsterObject
+    public class DarkDevil : MonsterObject
     {
         private long _areaTime;
 
@@ -59,7 +59,9 @@ namespace Server.MirObjects.Monsters
             if (targets.Count == 0) return;
 
             for (int i = 0; i < targets.Count; i++)
+            {
                 targets[i].Attacked(this, damage, DefenceType.MACAgility);
+            }
         }
     }
 }

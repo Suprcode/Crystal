@@ -7,7 +7,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class BoneFamiliar : MonsterObject
+    public class BoneFamiliar : MonsterObject
     {
         public bool Summoned;
 
@@ -22,7 +22,6 @@ namespace Server.MirObjects.Monsters
 
             Summoned = true;
         }
-
 
         public override Packet GetInfo()
         {

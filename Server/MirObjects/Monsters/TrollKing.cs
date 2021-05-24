@@ -75,12 +75,8 @@ namespace Server.MirObjects.Monsters
                 }
             }
 
-
             ActionTime = Envir.Time + 500;
             AttackTime = Envir.Time + AttackSpeed;
-
-            if (Target.Dead)
-                FindTarget();
         }
 
         protected override void CompleteAttack(IList<object> data)
@@ -104,20 +100,9 @@ namespace Server.MirObjects.Monsters
 
             target.Attacked(this, damage, defence);
 
-            if (target.Attacked(this, damage, DefenceType.MACAgility) > 0)
-            {
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.Stats[Stat.PoisonResist])
-                {
-                    target.ApplyPoison(new Poison
-                    {
-                        Owner = this,
-                        Duration = Envir.Random.Next(Stats[Stat.MaxMC]),
-                        PType = PoisonType.Stun,
-                        Value = damage,
-                        TickSpeed = 1000
-                    }, this);
-                }
-            }
+            if (target.Attacked(this, damage, DefenceType.MACAgility) <= 0) return;
+
+            PoisonTarget(target, 1, Envir.Random.Next(Stats[Stat.MaxMC]), PoisonType.Stun, 1000);
         }
 
         protected override void ProcessTarget()

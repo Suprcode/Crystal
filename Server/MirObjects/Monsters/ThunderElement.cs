@@ -6,7 +6,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class ThunderElement : MonsterObject
+    public class ThunderElement : MonsterObject
     {
         private MapObject OriginalTarget;
 
@@ -30,8 +30,10 @@ namespace Server.MirObjects.Monsters
                 Target = targets[i];
                 Attack();
             }
+
             Target = OriginalTarget;
         }
+
         protected override void ProcessTarget()
         {
             if (Target == null) return;
@@ -61,7 +63,9 @@ namespace Server.MirObjects.Monsters
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
-            Target.Attacked(this, damage, DefenceType.MAC);
+
+            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MAC);
+            ActionList.Add(action);
         }
 
         public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)

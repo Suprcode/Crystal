@@ -4,11 +4,11 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class YinDevilNode : MonsterObject
+    public class YinDevilNode : MonsterObject
     {
         protected override bool CanMove { get { return false; } }
 
-        protected internal YinDevilNode(MonsterInfo info)
+        protected internal YinDevilNode(MonsterInfo info) 
             : base(info)
         {
         }

@@ -61,15 +61,21 @@ namespace Server.MirObjects.Monsters
                     case 0:
                     case 1:
                         Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
-                        LineAttack(2);
+                        LineAttack(2, 300);
                         break;
                     case 2:
                     case 3:
                         Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                        LineAttack(3);
+                        LineAttack(3, 300);
                         break;
                     case 4:
-                        WaterBlast();
+                        Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+
+                        int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                        if (damage == 0) return;
+
+                        DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MAC);
+                        ActionList.Add(action);
                         break;
                 }
             }
@@ -87,58 +93,54 @@ namespace Server.MirObjects.Monsters
                     Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
 
                     Point target = Functions.PointMove(Target.CurrentLocation, Target.Direction, 1);
-
                     Teleport(CurrentMap, target, true, 6);
                 }
                 else
                 {
-                    WaterBlast();
+                    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+
+                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                    if (damage == 0) return;
+
+                    DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MAC);
+                    ActionList.Add(action);
                 }
             }
             ShockTime = 0;
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
         }
-        
-        private void LineAttack(int distance)
+
+        protected override void CompleteAttack(IList<object> data)
         {
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
 
-            for (int i = 1; i <= distance; i++)
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            if (target.Attacked(this, damage, defence) <= 0) return;
+
+            PoisonTarget(target, 8, 3, PoisonType.Stun, 1000);
+        }
+
+        protected override void CompleteRangeAttack(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            List<MapObject> targets = FindAllTargets(AttackRange, CurrentLocation);
+            if (targets.Count == 0) return;
+
+            for (int i = 0; i < targets.Count; i++)
             {
-                Point target = Functions.PointMove(CurrentLocation, Direction, i);
+                Broadcast(new S.ObjectEffect { ObjectID = Target.ObjectID, Effect = SpellEffect.TurtleKing });
+                if (targets[i].Attacked(this, damage, DefenceType.MAC) <= 0) return;
 
-                if (target == Target.CurrentLocation)
-                {
-                    Target.Attacked(this, damage, DefenceType.ACAgility);
-                }
-                else
-                {
-                    if (!CurrentMap.ValidPoint(target)) continue;
-
-                    Cell cell = CurrentMap.GetCell(target);
-                    if (cell.Objects == null) continue;
-
-                    for (int o = 0; o < cell.Objects.Count; o++)
-                    {
-                        MapObject ob = cell.Objects[o];
-                        if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
-                        {
-                            if (!ob.IsAttackTarget(this)) continue;
-
-                            ob.Attacked(this, damage, DefenceType.ACAgility);
-                        }
-                        else continue;
-
-                        break;
-                    }
-                }
-
-                if (Envir.Random.Next(8) == 0)
-                {
-                    Target.ApplyPoison(new Poison { Owner = this, Duration = 3, PType = PoisonType.Stun, TickSpeed = 1000, }, this);
-                }
+                PoisonTarget(targets[i], 5, 15, PoisonType.Slow, 1000);
+                PoisonTarget(targets[i], 5, 5, PoisonType.Paralysis, 1000);
             }
         }
 
@@ -178,34 +180,6 @@ namespace Server.MirObjects.Monsters
                 mob.ActionTime = Envir.Time + 2000;
                 SlaveList.Add(mob);
             }
-        }
-
-        private void WaterBlast()
-        {
-            Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-
-            List<MapObject> targets = FindAllTargets(AttackRange, CurrentLocation);
-            if (targets.Count == 0) return;
-
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
-
-            for (int i = 0; i < targets.Count; i++)
-            {
-                Target = targets[i];
-                Broadcast(new S.ObjectEffect { ObjectID = Target.ObjectID, Effect = SpellEffect.TurtleKing });
-                if (Target.Attacked(this, damage, DefenceType.MAC) <= 0) return;
-
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-                {
-                    if (Envir.Random.Next(5) == 0)
-                        Target.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Slow, TickSpeed = 1000 }, this);
-                    if (Envir.Random.Next(15) == 0)
-                        Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
-                }
-            }
-
-            return;
         }
     }
 }

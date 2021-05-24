@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Server.MirDatabase;
 using Server.MirEnvir;
@@ -26,56 +27,39 @@ namespace Server.MirObjects.Monsters
             if (Envir.Random.Next(3) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                if (damage == 0) return;
+
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility, false);
+                ActionList.Add(action);
             }
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-
-                MirDirection dir = Functions.PreviousDir(Direction);
-                Point target;
-                Cell cell;
-
-                for (int i = 0; i < 4; i++)
-                {
-                    target = Functions.PointMove(CurrentLocation, Direction, 1);
-                    dir = Functions.NextDir(Direction);
-                    if (target == Front) continue;
-
-                    if (!CurrentMap.ValidPoint(target)) continue;
-
-                    cell = CurrentMap.GetCell(target);
-
-                    if (cell.Objects == null) continue;
-
-                    for (int o = 0; o < cell.Objects.Count; o++)
-                    {
-                        MapObject ob = cell.Objects[o];
-                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
-                        if (!ob.IsAttackTarget(this)) continue;
-
-                        ob.Attacked(this, Stats[Stat.MinDC], DefenceType.ACAgility);
-
-                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= ob.Stats[Stat.PoisonResist])
-                        {
-                            if (Envir.Random.Next(5) == 0)
-                            {
-                                ob.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = Envir.Random.Next(1, 4), TickSpeed = 1000 }, this);
-                            }
-                        }
-                                      
-                        break;
-                    }
-                }
+                HalfmoonAttack(500, DefenceType.AC);
             }
 
             ShockTime = 0;
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
+        }
 
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
+        protected override void CompleteAttack(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+            bool poison = data.Count < 4 || (bool)data[3];
 
-            Target.Attacked(this, damage, DefenceType.ACAgility);
-        }   
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            if (target.Attacked(this, damage, defence) <= 0) return;
+
+            if (poison)
+            {
+                PoisonTarget(Target, 5, Envir.Random.Next(1, 4), PoisonType.Stun, 1000);
+            }
+        }
     }
 }

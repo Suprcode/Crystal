@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Server.MirDatabase;
 using Server.MirEnvir;
@@ -116,6 +117,7 @@ namespace Server.MirObjects.Monsters
 
             if (Target == null || Envir.Random.Next(3) == 0) FindTarget();
         }
+
         protected override void ProcessRoam()
         {
             if (Target != null || Envir.Time < RoamTime) return;
@@ -141,6 +143,7 @@ namespace Server.MirObjects.Monsters
                     break;
             }
         }
+
         protected override void ProcessTarget()
         {
             if (Target == null || !CanAttack) return;
@@ -174,29 +177,29 @@ namespace Server.MirObjects.Monsters
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
-            AttackLogic();
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+            if (damage > 0)
+            {
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MAC);
+                ActionList.Add(action);
+            }
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
             ShockTime = 0;
-
-            if (Target.Dead) FindTarget();
         }
-        private void AttackLogic()
+
+        protected override void CompleteAttack(IList<object> data)
         {
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
 
-            //if (Target.Attacked(this, damage, DefenceType.MAC) <= 0) return;
-            Target.Attacked(this, damage, DefenceType.MAC);
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-            {
-                if (Envir.Random.Next(10) <= PetLevel)
-                {
-                    Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 4 + PetLevel, TickSpeed = 1000 }, this);
-                }
-            }
+            if (target.Attacked(this, damage, defence) <= 0) return;
+
+            PoisonTarget(target, 10 - PetLevel, 4 + PetLevel, PoisonType.Paralysis, 1000);
         }
 
         public override void Die()

@@ -38,6 +38,7 @@ namespace Server.MirObjects.Monsters
             if (range)
             {
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
+
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
 
@@ -49,9 +50,6 @@ namespace Server.MirObjects.Monsters
             {
                 base.Attack();
             }
-
-            if (Target.Dead)
-                FindTarget();
         }
 
         protected override void ProcessTarget()
@@ -121,7 +119,6 @@ namespace Server.MirObjects.Monsters
                 mob.ActionTime = Envir.Time + 2000;
                 SlaveList.Add(mob);
             }
-
         }
     }
 }

@@ -7,7 +7,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class DarkDevourer : MonsterObject
+    public class DarkDevourer : MonsterObject
     {
         private const byte AttackRange = 9;
 
@@ -51,21 +51,6 @@ namespace Server.MirObjects.Monsters
                 int damage = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
                 DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MACAgility);
                 ActionList.Add(action);
-
-                if(Info.Effect == 1)
-                {
-                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-                    {
-                        Target.ApplyPoison(new Poison
-                        {
-                            Owner = this,
-                            Duration = 5,
-                            Value = damage,
-                            PType = PoisonType.Green,
-                            TickSpeed = 1000,
-                        }, this);
-                    }
-                }
             }
 
             ShockTime = 0;
@@ -73,6 +58,22 @@ namespace Server.MirObjects.Monsters
 
             if (Target.Dead)
                 FindTarget();
+        }
+
+        protected override void CompleteRangeAttack(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            if (target.Attacked(this, damage, defence) <= 0) return;
+
+            if (Info.Effect == 1)
+            {
+                PoisonTarget(target, 1, 5, PoisonType.Green, 1000);
+            }
         }
 
         protected override void ProcessTarget()

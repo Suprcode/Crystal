@@ -5,7 +5,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class GuardianRock : MonsterObject
+    public class GuardianRock : MonsterObject
     {
         public bool Active = true;
         protected override bool CanMove { get { return false; } }
@@ -41,6 +41,7 @@ namespace Server.MirObjects.Monsters
 
             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
             PullAttack();
+
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
         }

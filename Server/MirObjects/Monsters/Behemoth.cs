@@ -42,14 +42,23 @@ namespace Server.MirObjects.Monsters
                         base.Attack(); //swipe
                         break;
                     case 3:
-                        Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                        //fire circle
-                        Attack1();
+                        {
+                            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+
+                            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                            if (damage == 0) return;
+
+                            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility, true);
+                            ActionList.Add(action);
+                        }
                         break;
                     case 4:
-                        Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
-                        //push back
-                        Attack2();
+                        {
+                            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+
+                            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, 0, DefenceType.ACAgility, false);
+                            ActionList.Add(action);
+                        }
                         break;
                 }
 
@@ -74,27 +83,12 @@ namespace Server.MirObjects.Monsters
                             {
                                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
-                                List<MapObject> targets = FindAllTargets(AttackRange, CurrentLocation);
-                                if (targets.Count == 0) return;
-
                                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]) * 3;
                                 if (damage == 0) return;
 
-                                for (int i = 0; i < targets.Count; i++)
-                                {
-                                    Broadcast(new S.ObjectEffect { ObjectID = targets[i].ObjectID, Effect = SpellEffect.Behemoth });
+                                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.ACAgility);
+                                ActionList.Add(action);
 
-                                    if (targets[i].Attacked(this, damage, DefenceType.ACAgility) > 0)
-                                    {
-                                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-                                        {
-                                            if (Envir.Random.Next(15) == 0)
-                                            {
-                                                targets[i].ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
-                                            }
-                                        }
-                                    }
-                                }
 
                             }
                             break;
@@ -107,46 +101,68 @@ namespace Server.MirObjects.Monsters
             }
         }
 
-        private void Attack1()
+        protected override void CompleteRangeAttack(IList<object> data)
         {
-            List<MapObject> targets = FindAllTargets(1, CurrentLocation);
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
 
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            List<MapObject> targets = FindAllTargets(AttackRange, CurrentLocation);
             if (targets.Count == 0) return;
-
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
             for (int i = 0; i < targets.Count; i++)
             {
-                targets[i].Attacked(this, damage, DefenceType.AC);
+                Broadcast(new S.ObjectEffect { ObjectID = targets[i].ObjectID, Effect = SpellEffect.Behemoth });
+
+                if (targets[i].Attacked(this, damage, DefenceType.ACAgility) <= 0) continue;
+
+                PoisonTarget(targets[i], 15, 5, PoisonType.Paralysis, 1000);
             }
         }
 
-        private void Attack2()
+        protected override void CompleteAttack(IList<object> data)
         {
-            Point target = Functions.PointMove(CurrentLocation, Direction, 1);
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+            bool fireCircle = (bool)data[3];
 
-            Cell cell = CurrentMap.GetCell(target);
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            if (cell.Objects != null)
+            if (fireCircle) //Firecircle
             {
-                for (int o = 0; o < cell.Objects.Count; o++)
+                List<MapObject> targets = FindAllTargets(1, CurrentLocation);
+
+                if (targets.Count == 0) return;
+
+                for (int i = 0; i < targets.Count; i++)
                 {
-                    MapObject t = cell.Objects[o];
-                    if (t == null || t.Race != ObjectType.Player) continue;
+                    targets[i].Attacked(this, damage, DefenceType.AC);
+                }
+            }
+            else //Push back
+            {
+                Point point = Functions.PointMove(CurrentLocation, Direction, 1);
 
-                    if (t.IsAttackTarget(this))
+                Cell cell = CurrentMap.GetCell(point);
+
+                if (cell.Objects != null)
+                {
+                    for (int o = 0; o < cell.Objects.Count; o++)
                     {
-                        t.Pushed(this, Direction, 4);
+                        MapObject t = cell.Objects[o];
+                        if (t == null || t.Race != ObjectType.Player) continue;
 
-                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= t.Stats[Stat.PoisonResist])
+                        if (t.IsAttackTarget(this))
                         {
-                            if (Envir.Random.Next(3) == 0)
-                            {
-                                t.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Stun, TickSpeed = 1000 }, this);
-                            }
+                            t.Pushed(this, Direction, 4);
+
+                            PoisonTarget(t, 3, 15, PoisonType.Stun, 1000);
                         }
+                        break;
                     }
-                    break;
                 }
             }
         }

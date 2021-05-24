@@ -134,7 +134,7 @@ namespace Server.MirObjects
                 case 59:
                     return new HumanAssassin(info);
                 case 60:
-                    return new VampireSpider(info);
+                    return new VampireSpider(info); //TODO - Clean up
                 case 61:
                     return new SpittingToad(info);
                 case 62:
@@ -3031,11 +3031,13 @@ namespace Server.MirObjects
         // MONSTER AI ATTACKS \\\
         protected virtual void PoisonTarget(MapObject target, int chanceToPoison, long poisonDuration, PoisonType poison, long poisonTickSpeed = 1000)
         {
+            int value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
+
             if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.Stats[Stat.PoisonResist])
             {
                 if (Envir.Random.Next(chanceToPoison) == 0)
                 {
-                    target.ApplyPoison(new Poison { Owner = this, Duration = poisonDuration, PType = poison, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = poisonTickSpeed }, this);
+                    target.ApplyPoison(new Poison { Owner = this, Duration = poisonDuration, PType = poison, Value = value, TickSpeed = poisonTickSpeed }, this);
 
                     if (poison == PoisonType.Stun)
                     {
@@ -3045,19 +3047,36 @@ namespace Server.MirObjects
             }
         }
 
-        protected virtual void LineAttack(int distance, int additionalDelay = 500)
+        protected virtual void LineAttack(int distance, int additionalDelay = 500, DefenceType defenceType = DefenceType.ACAgility, bool push = false)
         {
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+            int damage;
+
+            switch(defenceType)
+            {
+                case DefenceType.MAC:
+                case DefenceType.MACAgility:
+                    damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+                    break;
+                default:
+                    damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                    break;
+            }
+
             if (damage == 0) return;
 
             for (int i = 1; i <= distance; i++)
             {
                 Point target = Functions.PointMove(CurrentLocation, Direction, i);
 
-                if (target == Target.CurrentLocation)
+                if (Target != null && target == Target.CurrentLocation)
                 {
+                    if (push)
+                    {
+                        Target.Pushed(this, Direction, distance - 1);
+                    }
+
                     int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + additionalDelay; //50 MS per Step
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.ACAgility);
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, defenceType);
                     ActionList.Add(action);
                 }
                 else
@@ -3074,20 +3093,24 @@ namespace Server.MirObjects
                         {
                             if (!ob.IsAttackTarget(this)) continue;
 
-                            int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + additionalDelay; //50 MS per Step
-                            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, DefenceType.ACAgility);
+                            if (push)
+                            {
+                                ob.Pushed(this, Direction, distance - 1);
+                            }
+
+                            int delay = Functions.MaxDistance(CurrentLocation, ob.CurrentLocation) * 50 + additionalDelay; //50 MS per Step
+                            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
                             ActionList.Add(action);
                         }
                         else continue;
 
                         break;
                     }
-
                 }
             }
         }
 
-        protected virtual void HalfmoonAttack(int delay = 500)
+        protected virtual void HalfmoonAttack(int delay = 500, DefenceType defenceType = DefenceType.ACAgility)
         {
             MirDirection dir = Functions.PreviousDir(Direction);
 
@@ -3100,7 +3123,6 @@ namespace Server.MirObjects
                 dir = Functions.NextDir(dir);
 
                 if (!CurrentMap.ValidPoint(target)) continue;
-                Broadcast(new S.MapEffect { Effect = SpellEffect.Tester, Location = target, Value = (byte)Direction });
 
                 Cell cell = CurrentMap.GetCell(target);
                 if (cell.Objects == null) continue;
@@ -3111,7 +3133,35 @@ namespace Server.MirObjects
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
                     if (!ob.IsAttackTarget(this)) continue;
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.ACAgility);
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, defenceType);
+                    ActionList.Add(action);
+                    break;
+                }
+            }
+        }
+
+        protected virtual void FullmoonAttack(int delay = 500, DefenceType defenceType = DefenceType.ACAgility)
+        {
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+            if (damage == 0) return;
+
+            for (int i = 0; i < 8; i++)
+            {
+                MirDirection dir = Functions.NextDir(Direction);
+                Point target = Functions.PointMove(CurrentLocation, dir, 1);
+
+                if (!CurrentMap.ValidPoint(target)) continue;
+
+                Cell cell = CurrentMap.GetCell(target);
+                if (cell.Objects == null) continue;
+
+                for (int o = 0; o < cell.Objects.Count; o++)
+                {
+                    MapObject ob = cell.Objects[o];
+                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
+                    if (!ob.IsAttackTarget(this)) continue;
+
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, defenceType);
                     ActionList.Add(action);
                     break;
                 }
@@ -3122,9 +3172,10 @@ namespace Server.MirObjects
         {
             int damage = GetAttackPower(minAttackStat, maxAttackStat);
             if (damage == 0) return;
+
             int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + additionalDelay;
 
-            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, type);
+            DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, type);
             ActionList.Add(action);
         }
 

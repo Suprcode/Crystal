@@ -3,7 +3,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class EvilMirBody : MonsterObject
+    public class EvilMirBody : MonsterObject
     {
         private bool _dragonlink;
         public bool DragonLink

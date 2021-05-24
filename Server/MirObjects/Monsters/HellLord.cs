@@ -110,10 +110,7 @@ namespace Server.MirObjects.Monsters
             AttackTime = Envir.Time + AttackSpeed;
         }
 
-        protected override void Attack()
-        {
-           
-        }
+        protected override void Attack() { }
 
         private void SpawnQuakes()
         {

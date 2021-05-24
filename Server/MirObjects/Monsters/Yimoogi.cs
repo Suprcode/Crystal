@@ -6,7 +6,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class Yimoogi : MonsterObject
+    public class Yimoogi : MonsterObject
     {
         protected byte AttackRange = 7;
         protected byte PoisonAttackRange = 4;
@@ -67,7 +67,6 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this) || NoAttack)
             {
                 Target = null;
@@ -88,7 +87,8 @@ namespace Server.MirObjects.Monsters
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 if (damage == 0) return;
 
-                Target.Attacked(this, damage, DefenceType.MACAgility);
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MACAgility);
+                ActionList.Add(action);
             }
             else
             {
@@ -99,16 +99,7 @@ namespace Server.MirObjects.Monsters
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
-                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-                    {
-                        Target.ApplyPoison(new Poison
-                        {
-                            Owner = this,
-                            Duration = 6,
-                            PType = PoisonType.Red,
-                            TickSpeed = 2000
-                        }, this);
-                    }             
+                    PoisonTarget(Target, 1, 6, PoisonType.Red, 2000);           
                 }
                 else
                 {

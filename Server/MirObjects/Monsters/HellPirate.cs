@@ -26,47 +26,17 @@ namespace Server.MirObjects.Monsters
             if (Envir.Random.Next(3) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+                base.Attack();
             }
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-
-                MirDirection dir = Functions.PreviousDir(Direction);
-                Point target;
-                Cell cell;
-
-                for (int i = 0; i < 8; i++)
-                {
-                    target = Functions.PointMove(CurrentLocation, dir, 1);
-                    dir = Functions.NextDir(dir);
-                    if (target == Front) continue;
-
-                    if (!CurrentMap.ValidPoint(target)) continue;
-
-                    cell = CurrentMap.GetCell(target);
-
-                    if (cell.Objects == null) continue;
-
-                    for (int o = 0; o < cell.Objects.Count; o++)
-                    {
-                        MapObject ob = cell.Objects[o];
-                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
-                        if (!ob.IsAttackTarget(this)) continue;
-
-                        ob.Attacked(this, Stats[Stat.MinDC], DefenceType.Agility);
-                        break;
-                    }
-                }
+                FullmoonAttack();
             }
 
             ShockTime = 0;
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
-
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
-
-            Target.Attacked(this, damage, DefenceType.ACAgility);
         }   
     }
 }

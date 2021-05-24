@@ -28,6 +28,7 @@ namespace Server.MirObjects.Monsters
             }
         }
         protected override bool CanMove { get { return false; } }
+
         public override void Turn(MirDirection dir) { }
 
         public override bool Walk(MirDirection dir) { return false; }

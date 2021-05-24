@@ -6,7 +6,6 @@ using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
 
-
 namespace Server.MirObjects.Monsters
 {
     public class SnakeTotem : MonsterObject

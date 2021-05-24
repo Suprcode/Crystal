@@ -82,7 +82,8 @@ namespace Server.MirObjects.Monsters
 
             if (damage == 0) return;
 
-            Target.Attacked(this, damage, DefenceType.AC);
+            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.AC);
+            ActionList.Add(action);
         }
     }
 }

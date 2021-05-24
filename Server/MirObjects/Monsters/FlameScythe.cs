@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Server.MirObjects.Monsters
 {
-    class FlameScythe : MonsterObject
+    public class FlameScythe : MonsterObject
     {
         public long FearTime;
         public byte AttackRange = 2;
@@ -112,7 +112,6 @@ namespace Server.MirObjects.Monsters
                         }
                         break;
                 }
-
             }
         }
     }

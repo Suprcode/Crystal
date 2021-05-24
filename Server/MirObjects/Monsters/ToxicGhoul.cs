@@ -24,10 +24,8 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
-
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
@@ -35,22 +33,21 @@ namespace Server.MirObjects.Monsters
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
-            if (Target.Attacked(this, damage, DefenceType.MACAgility) > 0 && Envir.Random.Next(8) == 0)
-            {
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-                {
-                    int poison = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
+            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MACAgility);
+            ActionList.Add(action);
+        }
 
-                    Target.ApplyPoison(new Poison
-                    {
-                        Owner = this,
-                        Duration = 5,
-                        PType = PoisonType.Green,
-                        Value = poison,
-                        TickSpeed = 2000
-                    }, this);
-                }
-            }
+        protected override void CompleteAttack(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            if (target.Attacked(this, damage, defence) <= 0) return;
+
+            PoisonTarget(target, 8, 5, PoisonType.Green, 2000);
         }
 
         public override void Die()
@@ -82,6 +79,5 @@ namespace Server.MirObjects.Monsters
                 }
             }
         }
-
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Server.MirDatabase;
 using Server.MirEnvir;
@@ -34,49 +35,40 @@ namespace Server.MirObjects.Monsters
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
 
-                Target.Attacked(this, damage, DefenceType.ACAgility);
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility, false);
+                ActionList.Add(action);
             }
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
-                MirDirection dir = Functions.PreviousDir(Direction);
-                Point location = CurrentLocation;
-                Cell cell;
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, 0, DefenceType.ACAgility, true);
+                ActionList.Add(action);
+            }
+        }
 
-                for (int y = location.Y - 2; y <= location.Y + 2; y++)
+        protected override void CompleteAttack(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+            bool poison = (bool)data[3];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            if (poison)
+            {
+                var targets = FindAllTargets(2, CurrentLocation);
+                if (targets.Count == 0) return;
+
+                for (int i = 0; i < targets.Count; i++)
                 {
-                    if (y < 0) continue;
-                    if (y >= CurrentMap.Height) break;
-
-                    for (int x = location.X - 2; x <= location.X + 2; x++)
-                    {
-                        if (x < 0) continue;
-                        if (x >= CurrentMap.Width) break;
-
-                        cell = CurrentMap.GetCell(x, y);
-
-                        if (!cell.Valid || cell.Objects == null) continue;
-
-                        for (int i = 0; i < cell.Objects.Count; i++)
-                        {
-                            MapObject target = cell.Objects[i];
-                            switch (target.Race)
-                            {
-                                case ObjectType.Player:
-                                case ObjectType.Monster:
-                                    {
-                                        if (!target.IsAttackTarget(this)) continue;
-                                        if (Envir.Random.Next(Settings.MagicResistWeight) < target.Stats[Stat.MagicResist]) continue;
-
-                                        target.ApplyPoison(new Poison { PType = PoisonType.Red, Duration = Envir.Random.Next(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]) / 2), TickSpeed = 1000 }, this);
-                                    }
-                                    break;
-                            }
-                        }
-                    }
+                    PoisonTarget(targets[i], 1, Envir.Random.Next(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]) / 2), PoisonType.Red, 1000);
                 }
-
+            }
+            else
+            {
+                target.Attacked(this, damage, defence);
             }
         }
     }

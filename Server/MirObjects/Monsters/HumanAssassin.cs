@@ -255,7 +255,8 @@ namespace Server.MirObjects.Monsters
 
             if (damage == 0) return;
 
-            Target.Attacked(this, damage);
+            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+            ActionList.Add(action);
         }
 
         public override void Spawned()
@@ -269,7 +270,7 @@ namespace Server.MirObjects.Monsters
         {
             if (Dead) return;
 
-            explosionDie();
+            ExplosionDie();
 
             HP = 0;
             Dead = true;
@@ -289,7 +290,7 @@ namespace Server.MirObjects.Monsters
             CurrentMap.MonsterCount--;
         }
 
-        private void explosionDie()
+        private void ExplosionDie()
         {
             int criticalDamage = Envir.Random.Next(0, 100) <= Stats[Stat.Accuracy] ? Stats[Stat.MaxDC] * 2 : Stats[Stat.MinDC] * 2;
             int damage = (Stats[Stat.MinDC] / 5 + 4 * (Level / 20)) * criticalDamage / 20 + Stats[Stat.MaxDC];

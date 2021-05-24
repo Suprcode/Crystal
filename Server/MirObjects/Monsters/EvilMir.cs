@@ -4,7 +4,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class EvilMir : MonsterObject
+    public class EvilMir : MonsterObject
     {
         public bool Sleeping;
         private bool MassAttack;
@@ -125,7 +125,7 @@ namespace Server.MirObjects.Monsters
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
                 int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 620; //50 MS per Step
 
-                ActionList.Add(new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay));
+                ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + delay));
             }
             else
             {
@@ -146,13 +146,8 @@ namespace Server.MirObjects.Monsters
 
             if (Target.Attacked(this, damage, DefenceType.MAC) <= 0) return;
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-            {
-                if (Envir.Random.Next(5) == 0)
-                    Target.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Green, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 2000 }, this);
-                if (Envir.Random.Next(15) == 0)
-                    Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
-            }
+            PoisonTarget(Target, 5, 15, PoisonType.Green, 2000);
+            PoisonTarget(Target, 5, 5, PoisonType.Paralysis, 1000);
         }
 
         public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
@@ -191,7 +186,6 @@ namespace Server.MirObjects.Monsters
                 Sleeping = true;
                 WakeUpTime = Envir.Time + 5 * (60 * 1000);
             }
-
         }
 
         public MirDirection SetDirection(MirDirection dir)

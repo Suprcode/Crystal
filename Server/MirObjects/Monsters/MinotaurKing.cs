@@ -4,7 +4,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class MinotaurKing : RightGuard
+    public class MinotaurKing : RightGuard
     {
         protected override byte AttackRange
         {

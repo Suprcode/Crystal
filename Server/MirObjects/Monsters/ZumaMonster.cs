@@ -10,7 +10,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class ZumaMonster : MonsterObject
+    public class ZumaMonster : MonsterObject
     {
         public bool Stoned = true;
         public bool AvoidFireWall = true;
@@ -75,6 +75,7 @@ namespace Server.MirObjects.Monsters
 
             base.ProcessAI();
         }
+
         public void Wake()
         {
             if (!Stoned) return;
@@ -83,6 +84,7 @@ namespace Server.MirObjects.Monsters
             Broadcast(new S.ObjectShow { ObjectID = ObjectID });
             ActionTime = Envir.Time + 1000;
         }
+
         public void WakeAll(int dist)
         {
 
@@ -163,8 +165,6 @@ namespace Server.MirObjects.Monsters
 
             Broadcast(new S.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
-
-
             cell = CurrentMap.GetCell(CurrentLocation);
 
             for (int i = 0; i < cell.Objects.Count; i++)
@@ -178,7 +178,6 @@ namespace Server.MirObjects.Monsters
 
             return true;
         }
-
 
         public override Packet GetInfo()
         {

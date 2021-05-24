@@ -8,11 +8,10 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class RedMoonEvil : MonsterObject
+    public class RedMoonEvil : MonsterObject
     {
         protected override bool CanMove { get { return false; } }
-        protected override bool CanRegen { get { return false; } }
-        
+        protected override bool CanRegen { get { return false; } }     
 
         protected internal RedMoonEvil(MonsterInfo info) : base(info)
         {
@@ -33,7 +32,6 @@ namespace Server.MirObjects.Monsters
         {
         }
         public override bool Walk(MirDirection dir) { return false; }
-
 
         public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
         {
@@ -81,7 +79,6 @@ namespace Server.MirObjects.Monsters
 
                 if (EXPOwner == attacker.Master)
                     EXPOwnerTime = Envir.Time + EXPOwnerDelay;
-
             }
 
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
@@ -171,11 +168,11 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
-            Target.Attacked(this, damage, DefenceType.ACAgility);
+            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+            ActionList.Add(action);
 
             Broadcast(new S.ObjectEffect{ ObjectID = Target.ObjectID, Effect = SpellEffect.RedMoonEvil});
         }

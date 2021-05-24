@@ -30,12 +30,10 @@ namespace Server.MirObjects.Monsters
 
             ShockTime = 0;
 
-
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
             //byte spelltype = Envir.Random.Next(2) == 0 ? (byte)1 : (byte)2;
             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
-
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
@@ -45,10 +43,6 @@ namespace Server.MirObjects.Monsters
 
             DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MAC);
             ActionList.Add(action);
-
-            if (Target.Dead)
-                FindTarget();
-
         }
 
         protected override void ProcessTarget()
@@ -109,7 +103,6 @@ namespace Server.MirObjects.Monsters
                         }
                         break;
                 }
-
             }
         }
 

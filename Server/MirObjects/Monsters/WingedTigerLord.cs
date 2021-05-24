@@ -9,7 +9,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class WingedTigerLord : MonsterObject
+    public class WingedTigerLord : MonsterObject
     {
         enum AttackType
         {
@@ -180,21 +180,13 @@ namespace Server.MirObjects.Monsters
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            int poisonTime = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
-
             if (target.Attacked(this, damage, defence) <= 0) return;
 
             switch (type)
             {
                 case AttackType.Stomp:
                     {
-                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.Stats[Stat.PoisonResist])
-                        {
-                            if (Envir.Random.Next(2) == 0)
-                            {
-                                target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Paralysis, Value = poisonTime, TickSpeed = 2000 }, this);
-                            }
-                        }
+                        PoisonTarget(target, 2, 5, PoisonType.Paralysis, 2000);
                     }
                     break;
             }

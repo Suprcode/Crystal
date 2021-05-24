@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Server.MirDatabase;
 using Server.MirEnvir;
@@ -29,7 +30,6 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -38,19 +38,28 @@ namespace Server.MirObjects.Monsters
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-            LineAttack(2);
-
+            LineAttack(2, 300, DefenceType.MACAgility);
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
             ShockTime = 0;
-
-
         }
 
-        private void LineAttack(int distance)
+        protected override void CompleteAttack(IList<object> data)
         {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
 
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            if (target.Attacked(this, damage, defence) <= 0) return;
+
+            PoisonTarget(target, 8, 5, PoisonType.Green, 2000);
+        }
+
+        protected override void LineAttack(int distance, int additionalDelay = 500, DefenceType defenceType = DefenceType.ACAgility)
+        {
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
@@ -58,24 +67,11 @@ namespace Server.MirObjects.Monsters
             {
                 Point target = Functions.PointMove(CurrentLocation, Direction, i);
 
-                if (target == Target.CurrentLocation)
+                if (Target != null && target == Target.CurrentLocation)
                 {
-                    if (Target.Attacked(this, damage, DefenceType.MACAgility) > 0 && Envir.Random.Next(8) == 0)
-                    {
-                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-                        {
-                            int poison = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
-
-                            Target.ApplyPoison(new Poison
-                            {
-                                Owner = this,
-                                Duration = 5,
-                                PType = PoisonType.Green,
-                                Value = poison,
-                                TickSpeed = 2000
-                            }, this);
-                        }
-                    }
+                    int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + additionalDelay; //50 MS per Step
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, defenceType);
+                    ActionList.Add(action);
                 }
                 else
                 {
@@ -91,28 +87,14 @@ namespace Server.MirObjects.Monsters
                         {
                             if (!ob.IsAttackTarget(this)) continue;
 
-                            if (ob.Attacked(this, damage, DefenceType.MACAgility) > 0 && Envir.Random.Next(8) == 0)
-                            {
-                                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-                                {
-                                    int poison = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
-
-                                    ob.ApplyPoison(new Poison
-                                    {
-                                        Owner = this,
-                                        Duration = 5,
-                                        PType = PoisonType.Green,
-                                        Value = poison,
-                                        TickSpeed = 2000
-                                    }, this);
-                                }
-                            }
+                            int delay = Functions.MaxDistance(CurrentLocation, ob.CurrentLocation) * 50 + additionalDelay; //50 MS per Step
+                            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
+                            ActionList.Add(action);
                         }
                         else continue;
 
                         break;
                     }
-
                 }
             }
         }

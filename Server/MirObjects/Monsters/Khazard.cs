@@ -5,7 +5,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class Khazard : MonsterObject
+    public class Khazard : MonsterObject
     {
         public long PullTime;
         public bool Range;
@@ -44,7 +44,6 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;

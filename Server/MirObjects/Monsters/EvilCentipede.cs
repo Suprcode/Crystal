@@ -104,8 +104,8 @@ namespace Server.MirObjects.Monsters
                 Target = targets[i];
                 Attack();
             }
-
         }
+
         protected override void ProcessTarget()
         {
             if (!CanAttack) return;
@@ -115,6 +115,7 @@ namespace Server.MirObjects.Monsters
 
             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + 500));
+
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
         }

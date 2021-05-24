@@ -5,7 +5,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class GreatFoxSpirit : MonsterObject
+    public class GreatFoxSpirit : MonsterObject
     {
         private byte _stage;
         private long RecallTime;
@@ -17,6 +17,7 @@ namespace Server.MirObjects.Monsters
             : base(info)
         {
         }
+
         protected override bool InAttackRange()
         {
             return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
@@ -116,13 +117,24 @@ namespace Server.MirObjects.Monsters
             {
                 Target = targets[i];
                 if (ranged) Broadcast(new S.ObjectEffect { ObjectID = Target.ObjectID, Effect = SpellEffect.GreatFoxSpirit });
-                if (Target.Attacked(this, damage, DefenceType.MAC) <= 0) return;
 
-                if (Envir.Random.Next(5) == 0)
-                    Target.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Slow, TickSpeed = 1000 }, this);
-                if (Envir.Random.Next(15) == 0)
-                    Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MAC);
+                ActionList.Add(action);
             }
+        }
+
+        protected override void CompleteAttack(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            if (target.Attacked(this, damage, defence) <= 0) return;
+
+            PoisonTarget(target, 5, 15, PoisonType.Slow, 1000);
+            PoisonTarget(target, 5, 5, PoisonType.Paralysis, 1000);
         }
 
         public override void Die()

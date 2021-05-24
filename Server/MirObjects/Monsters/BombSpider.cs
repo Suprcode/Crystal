@@ -12,7 +12,7 @@ namespace Server.MirObjects.Monsters
     {
         public long ExplosionTime;
 
-        protected internal BombSpider(MonsterInfo info)
+        protected internal BombSpider(MonsterInfo info) 
             : base(info)
         {
             ExplosionTime = Envir.Time + 1000 * 60 * 5;
@@ -60,6 +60,5 @@ namespace Server.MirObjects.Monsters
                 }
             }
         }
-
     }
 }

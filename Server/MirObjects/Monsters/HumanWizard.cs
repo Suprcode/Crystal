@@ -43,9 +43,6 @@ namespace Server.MirObjects.Monsters
 
             DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MAC);
             ActionList.Add(action);
-
-            if (Target.Dead)
-                FindTarget();
         }
 
         protected override void ProcessAI()

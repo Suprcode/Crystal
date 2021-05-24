@@ -3,7 +3,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class FrostTiger : MonsterObject
+    public class FrostTiger : MonsterObject
     {
         protected byte AttackRange = 6;
         public long SitDownTime;
@@ -25,7 +25,6 @@ namespace Server.MirObjects.Monsters
                 Hidden = value;
                 CurrentMap.Broadcast(new S.ObjectSitDown { ObjectID = ObjectID, Location = CurrentLocation, Direction = Direction, Sitting = value }, CurrentLocation);
             }
-
         }
 
         protected override bool CanAttack
@@ -35,6 +34,7 @@ namespace Server.MirObjects.Monsters
                 return !Sitting && base.CanAttack;
             }
         }
+
         protected override bool CanMove
         {
             get
@@ -42,6 +42,7 @@ namespace Server.MirObjects.Monsters
                 return !Sitting && base.CanMove;
             }
         }
+
         public override bool Walk(MirDirection dir)
         {
             return !Sitting && base.Walk(dir);
@@ -62,7 +63,6 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -83,7 +83,8 @@ namespace Server.MirObjects.Monsters
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 if (damage == 0) return;
 
-                Target.Attacked(this, damage, DefenceType.ACAgility);
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+                ActionList.Add(action);
             }
             else
             {

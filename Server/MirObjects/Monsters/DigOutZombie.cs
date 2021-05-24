@@ -40,7 +40,6 @@ namespace Server.MirObjects.Monsters
             Visible = false;
         }
 
-
         protected override void ProcessAI()
         {
             if (!Dead && Envir.Time > VisibleTime)
@@ -100,7 +99,9 @@ namespace Server.MirObjects.Monsters
         protected override void ProcessSearch()
         {
             if (Visible)
+            {
                 base.ProcessSearch();
+            }
         }
 
         public override Packet GetInfo()
