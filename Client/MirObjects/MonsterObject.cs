@@ -182,6 +182,7 @@ namespace Client.MirObjects
                 case Monster.HellBomb3:
                     BodyLibrary = Libraries.Monsters[(ushort)Monster.HellLord];
                     break;
+                //case Monster.CaveStatue:
                 default:
                     BodyLibrary = Libraries.Monsters[(ushort)BaseImage];
                     break;
@@ -236,6 +237,9 @@ namespace Client.MirObjects
                 case Monster.HellBomb3:
                     Frames = FrameSet.HellBomb[((ushort)BaseImage) - 903];
                     break;
+                //case Monster.CaveStatue:
+                //    Frames = FrameSet.CaveStatue[(byte)Direction];
+                //    break;
                 default:
                     if (BodyLibrary != null)
                     {
@@ -2436,7 +2440,7 @@ namespace Client.MirObjects
                                             }
                                             break;
                                         case Monster.OmaMage:
-                                            missile = CreateProjectile(392, Libraries.Monsters[(ushort)Monster.OmaMage], true, 16, 160, 0, direction16: false);
+                                            missile = CreateProjectile(392, Libraries.Monsters[(ushort)Monster.OmaMage], true, 8, 80, 0, direction16: true);
 
                                             if (missile.Target != null)
                                             {
