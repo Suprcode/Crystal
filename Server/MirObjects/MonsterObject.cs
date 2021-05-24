@@ -3091,20 +3091,25 @@ namespace Server.MirObjects
 
         protected virtual void HalfmoonAttack(int delay = 500)
         {
+            Cell cell = null;
+
             MirDirection dir = Functions.PreviousDir(Direction);
+
+            Point target = Functions.PointMove(CurrentLocation, dir, 1);
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
             for (int i = 0; i < 4; i++)
             {
-                Point target = Functions.PointMove(CurrentLocation, dir, 1);
+                target = Functions.PointMove(CurrentLocation, dir, 1);
                 dir = Functions.NextDir(dir);
 
                 if (!CurrentMap.ValidPoint(target)) continue;
                 Broadcast(new S.MapEffect { Effect = SpellEffect.Tester, Location = target, Value = (byte)Direction });
 
-                Cell cell = CurrentMap.GetCell(target);
+                cell = CurrentMap.GetCell(target);
+
                 if (cell.Objects == null) continue;
 
                 for (int o = 0; o < cell.Objects.Count; o++)
@@ -3113,8 +3118,10 @@ namespace Server.MirObjects
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
                     if (!ob.IsAttackTarget(this)) continue;
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.ACAgility);
-                    ActionList.Add(action);
+                    Broadcast(new S.MapEffect { Effect = SpellEffect.Tester, Location = target, Value = (byte)Direction });
+
+                    DelayedAction action2 = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, DefenceType.ACAgility);
+                    ActionList.Add(action2);
                     break;
                 }
             }
