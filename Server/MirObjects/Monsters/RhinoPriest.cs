@@ -47,7 +47,7 @@ namespace Server.MirObjects.Monsters
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 600, Target, damage, DefenceType.MACAgility);
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 600, Target, damage, DefenceType.ACAgility);
                 ActionList.Add(action);
             }
             else
@@ -93,7 +93,7 @@ namespace Server.MirObjects.Monsters
 
             var finalDamage = target.Attacked(this, damage, defence);
 
-            if (finalDamage > 0 && poison == true)
+            if (finalDamage > 0 && poison)
             {
                 if (Envir.Random.Next(4) > 0)
                 {

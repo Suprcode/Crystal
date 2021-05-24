@@ -67,7 +67,7 @@ namespace Server.MirObjects.Monsters
             PoisonTarget(target, 8, 5, PoisonType.Green, 2000);
         }
 
-        protected override void LineAttack(int distance, int additionalDelay = 500, DefenceType defenceType = DefenceType.ACAgility)
+        protected override void LineAttack(int distance, int additionalDelay = 500, DefenceType defenceType = DefenceType.ACAgility, bool push = false)
         {
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;

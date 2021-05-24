@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Server.MirDatabase;
 using Server.MirEnvir;
@@ -23,11 +24,11 @@ namespace Server.MirObjects.Monsters
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
-            ShockTime = 0;
-
+            
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+
             HalfmoonAttack();
         }
     }
