@@ -46,9 +46,6 @@ namespace Server.MirObjects.Monsters
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
                 ActionList.Add(action);
             }
-
-            if (Target.Dead)
-                FindTarget();
         }
     }
 }

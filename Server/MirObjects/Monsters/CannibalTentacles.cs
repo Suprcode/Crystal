@@ -109,9 +109,7 @@ namespace Server.MirObjects.Monsters
             }
 
             MoveTo(Target.CurrentLocation);
-
         }
     }
-
 }
 

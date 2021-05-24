@@ -72,12 +72,9 @@ namespace Server.MirObjects.Monsters
 
                         if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) continue;
 
-                        var finalDamage = target.Attacked(this, damage);
+                        if (target.Attacked(this, damage) <= 0) continue;
 
-                        if (finalDamage > 0)
-                        {
-                            PoisonTarget(target, 0, 5, PoisonType.Stun, 2000);
-                        }
+                        PoisonTarget(target, 0, 5, PoisonType.Stun, 2000);
                     }
 
                     return;

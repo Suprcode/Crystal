@@ -1,9 +1,10 @@
 ﻿using Server.MirDatabase;
+using System.Collections.Generic;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class ElementGuard : MonsterObject
+    public class ElementGuard : MonsterObject
     {
         protected virtual byte AttackRange
         {
@@ -25,7 +26,6 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -45,53 +45,71 @@ namespace Server.MirObjects.Monsters
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
-                Target.Attacked(this, damage, DefenceType.ACAgility);
+
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MAC, true);
+                ActionList.Add(action);
             }
             else
             {
+                if (Envir.Random.Next(3) > 0)
                 {
-                    if (Envir.Random.Next(3) > 0)
-                    {
-                        //Fire Attack
-                        Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-                        AttackTime = Envir.Time + AttackSpeed + 500;
-                        int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                        if (damage == 0) return;
+                    //Fire Attack
+                    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+                    AttackTime = Envir.Time + AttackSpeed + 500;
 
-                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-                        {
-                            if (Envir.Random.Next(5) == 0)
-                                Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Red, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);
-                        }
+                    int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+                    if (damage == 0) return;
 
-                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MAC);
-                        ActionList.Add(action);
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MAC, false);
+                    ActionList.Add(action);
 
-                    }
-                    else
-                    {
-                        //Fire 2 Attack
-                        Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
-                        AttackTime = Envir.Time + AttackSpeed + 500;
-                        int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                        if (damage == 0) return;
+                }
+                else
+                {
+                    //Fire 2 Attack
+                    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
+                    AttackTime = Envir.Time + AttackSpeed + 500;
+                    int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+                    if (damage == 0) return;
 
-                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-                        {
-                            if (Envir.Random.Next(5) == 0)
-                                Target.ApplyPoison(new Poison { Owner = this, Duration = 3, PType = PoisonType.Green, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);
-                        }
-
-                        DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MAC);
-                        ActionList.Add(action);
-                    }
+                    DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MAC, true);
+                    ActionList.Add(action);
                 }
             }
+        }
 
+        protected override void CompleteAttack(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+            bool poison = (bool)data[3];
 
-            if (Target.Dead)
-                FindTarget();
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
+            if (target.Attacked(this, damage, defence) <= 0) return;
+
+            if (poison)
+            {
+                PoisonTarget(target, 5, 5, PoisonType.Red, 1000);
+            }
+        }
+
+        protected override void CompleteRangeAttack(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+            bool poison = (bool)data[3];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            if (target.Attacked(this, damage, defence) <= 0) return;
+
+            if (poison)
+            {
+                PoisonTarget(target, 5, 3, PoisonType.Green, 1000);
+            }
         }
 
         protected override void ProcessTarget()
@@ -111,7 +129,6 @@ namespace Server.MirObjects.Monsters
             }
 
             MoveTo(Target.CurrentLocation);
-
         }
     }
 }

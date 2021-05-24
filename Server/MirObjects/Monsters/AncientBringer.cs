@@ -98,7 +98,7 @@ namespace Server.MirObjects.Monsters
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
-            int range = (int)data[3];
+            byte range = (byte)data[3];
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 

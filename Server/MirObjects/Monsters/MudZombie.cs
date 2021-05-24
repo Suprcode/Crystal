@@ -45,7 +45,6 @@ namespace Server.MirObjects.Monsters
 
             bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 2);
 
-
             if (!ranged)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
@@ -71,7 +70,7 @@ namespace Server.MirObjects.Monsters
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            target.Attacked(this, damage, defence);
+            if (target.Attacked(this, damage, defence) <= 0) return;
 
             PoisonTarget(target, 5, 8, PoisonType.Green, 2000);
         }
@@ -84,7 +83,7 @@ namespace Server.MirObjects.Monsters
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            target.Attacked(this, damage, defence);
+            if (target.Attacked(this, damage, defence) <= 0) return;
 
             PoisonTarget(target, 5, 8, PoisonType.Green, 2000);
         }

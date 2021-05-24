@@ -172,7 +172,7 @@ namespace Server.MirObjects.Monsters
 
         protected override void CompleteAttack(IList<object> data)
         {
-            int attackType = (int)data[0];
+            byte attackType = (byte)data[0];
 
             List<MapObject> targets = FindAllTargets(Info.ViewRange, CurrentLocation);
             if (targets.Count == 0) return;

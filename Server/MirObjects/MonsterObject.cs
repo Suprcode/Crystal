@@ -223,7 +223,7 @@ namespace Server.MirObjects
                 case 104:
                     return new DemonGuard(info);
                 case 105:
-                    return new KingGuard(info);
+                    return new KingGuard(info); //TODO - cleanup
                 case 106:
                     return new DeathCrawler(info);
                 case 107:
@@ -233,11 +233,11 @@ namespace Server.MirObjects
                 case 109:
                     return new FrozenZombie(info);
                 case 110:
-                    return new DemonWolf(info);
+                    return new DemonWolf(info); //TODO - cleanup
                 case 111:
                     return new WhiteMammoth(info);
                 case 112:
-                    return new DarkBeast(info); // USE THIS AI FOR LIGHTBEAST
+                    return new DarkBeast(info);
                 case 113:
                     return new BloodBaboon(info);
                 case 114:
@@ -252,6 +252,8 @@ namespace Server.MirObjects
                     return new CatShaman(info);
                 case 119:
                     return new SeedingsGeneral(info);
+
+//FAR CHECKED UP TO THIS POINT
 
                 //Case 120 - GeneralJimnYo Unfinished
 

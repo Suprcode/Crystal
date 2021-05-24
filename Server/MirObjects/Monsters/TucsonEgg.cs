@@ -10,7 +10,6 @@ namespace Server.MirObjects.Monsters
     {
         protected override bool CanMove { get { return false; } }
 
-
         protected internal TucsonEgg(MonsterInfo info)
             : base(info)
         {
@@ -179,10 +178,8 @@ namespace Server.MirObjects.Monsters
 
                 if (targets[i].Attacked(this, damage, DefenceType.MAC) <= 0) return;
 
-                if (Envir.Random.Next(3) == 0)
-                    targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Green, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 2000 }, this);
+                PoisonTarget(targets[i], 3, 5, PoisonType.Green, 2000);
             }
-
         }
 
         public override void Die()
@@ -196,7 +193,6 @@ namespace Server.MirObjects.Monsters
 
             base.Die();
         }
-
 
         private void SpawnSlave()
         {
@@ -214,6 +210,5 @@ namespace Server.MirObjects.Monsters
             mob.ActionTime = Envir.Time + 2000;
             SlaveList.Add(mob);
         }
-
     }
 }

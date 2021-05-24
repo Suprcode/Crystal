@@ -61,15 +61,14 @@ namespace Server.MirObjects.Monsters
                 else
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                    //Green Splash Attack
 
+                    //Green Splash Attack
                     int damage = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
                     if (damage == 0) return;
 
                     DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MACAgility);
                     ActionList.Add(action);
                 }
-
             }
             else
             {
@@ -79,8 +78,8 @@ namespace Server.MirObjects.Monsters
                 if (Envir.Random.Next(5) > 0)
                 {
                     Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
-                    //Blue Fireball Projectile
 
+                    //Blue Fireball Projectile
                     int damage = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
                     if (damage == 0) return;
 
@@ -91,8 +90,8 @@ namespace Server.MirObjects.Monsters
                 else
                 {
                     Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-                    //Echo Shout
 
+                    //Echo Shout
                     int damage = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
                     if (damage == 0) return;
 
@@ -112,12 +111,9 @@ namespace Server.MirObjects.Monsters
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            target.Attacked(this, damage, defence);
+            if (target.Attacked(this, damage, defence) <= 0) return;
 
-            if (Envir.Random.Next(5) == 0)
-            {
-                target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = pType, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);
-            }
+            PoisonTarget(target, 5, 5, pType, 1000);
         }
 
         protected override void ProcessTarget()
@@ -137,9 +133,7 @@ namespace Server.MirObjects.Monsters
             }
 
             MoveTo(Target.CurrentLocation);
-
         }
-
     }
 }
 

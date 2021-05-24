@@ -59,15 +59,12 @@ namespace Server.MirObjects.Monsters
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            if (attack)
-            {
-                if (target.Attacked(this, damage, defence) <= 0) return;
-            }
+            if (!attack || target.Attacked(this, damage, defence) <= 0) return;
 
             PoisonTarget(target, 8, 5, PoisonType.Green, 2000);
         }
 
-        protected override void LineAttack(int distance, int additionalDelay = 500, DefenceType defenceType = DefenceType.ACAgility)
+        protected override void LineAttack(int distance, int additionalDelay = 500, DefenceType defenceType = DefenceType.ACAgility, bool push = false)
         {
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
@@ -76,40 +73,28 @@ namespace Server.MirObjects.Monsters
             {
                 Point target = Functions.PointMove(CurrentLocation, Direction, i);
 
-                if (Target != null && target == Target.CurrentLocation)
-                {
-                    if (Envir.Random.Next(Settings.MagicResistWeight) >= Target.Stats[Stat.MagicResist])
-                    {
-                        int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + additionalDelay; //50 MS per Step
-                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, defenceType, false);
-                        ActionList.Add(action);
-                    }
-                }
-                else
-                {
-                    if (!CurrentMap.ValidPoint(target)) continue;
+                if (!CurrentMap.ValidPoint(target)) continue;
 
-                    Cell cell = CurrentMap.GetCell(target);
-                    if (cell.Objects == null) continue;
+                Cell cell = CurrentMap.GetCell(target);
+                if (cell.Objects == null) continue;
 
-                    for (int o = 0; o < cell.Objects.Count; o++)
+                for (int o = 0; o < cell.Objects.Count; o++)
+                {
+                    MapObject ob = cell.Objects[o];
+                    if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
                     {
-                        MapObject ob = cell.Objects[o];
-                        if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
+                        if (!ob.IsAttackTarget(this)) continue;
+
+                        if (Envir.Random.Next(Settings.MagicResistWeight) >= ob.Stats[Stat.MagicResist])
                         {
-                            if (!ob.IsAttackTarget(this)) continue;
-
-                            if (Envir.Random.Next(Settings.MagicResistWeight) >= ob.Stats[Stat.MagicResist])
-                            {
-                                int delay = Functions.MaxDistance(CurrentLocation, ob.CurrentLocation) * 50 + additionalDelay; //50 MS per Step
-                                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType, true);
-                                ActionList.Add(action);
-                            }
+                            int delay = Functions.MaxDistance(CurrentLocation, ob.CurrentLocation) * 50 + additionalDelay; //50 MS per Step
+                            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType, true);
+                            ActionList.Add(action);
                         }
-                        else continue;
-
-                        break;
                     }
+                    else continue;
+
+                    break;
                 }
             }
         }
