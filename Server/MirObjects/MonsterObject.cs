@@ -266,7 +266,7 @@ namespace Server.MirObjects
                 case 125:
                     return new TucsonEgg(info);
                 case 126:
-                    return new TucsonEgg1(info); //AI which will spawn TucsonGeneral upon killing the egg.
+                    return new SwampWarrior(info);
                 case 127:
                     return new CannibalTentacles(info);
                 case 128:
@@ -3091,24 +3091,19 @@ namespace Server.MirObjects
 
         protected virtual void HalfmoonAttack(int delay = 500)
         {
-            Cell cell = null;
-
             MirDirection dir = Functions.PreviousDir(Direction);
-
-            Point target = Functions.PointMove(CurrentLocation, dir, 1);
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
             for (int i = 0; i < 4; i++)
             {
-                target = Functions.PointMove(CurrentLocation, dir, 1);
+                Point target = Functions.PointMove(CurrentLocation, dir, 1);
                 dir = Functions.NextDir(dir);
 
                 if (!CurrentMap.ValidPoint(target)) continue;
-                Broadcast(new S.MapEffect { Effect = SpellEffect.Tester, Location = target, Value = (byte)Direction });
 
-                cell = CurrentMap.GetCell(target);
+                Cell cell = CurrentMap.GetCell(target);
 
                 if (cell.Objects == null) continue;
 

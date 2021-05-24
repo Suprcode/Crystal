@@ -28,6 +28,8 @@ namespace Server.MirObjects.Monsters
 
             if (Envir.Random.Next(5) > 0)
             {
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return; 
                 
@@ -44,15 +46,7 @@ namespace Server.MirObjects.Monsters
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
                 ActionList.Add(action);
 
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-                {
-                    if (Envir.Random.Next(8) == 0)
-                    {
-                        int poisonLength = 6;
-                        Target.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = poisonLength, TickSpeed = 1000 }, this);
-                        Broadcast(new S.ObjectEffect { ObjectID = Target.ObjectID, Effect = SpellEffect.Stunned, Time = (uint)poisonLength * 1000 });
-                    }
-                }
+                PoisonTarget(Target, 8, 6, PoisonType.Stun, 1000);
             }
 
             ShockTime = 0;
