@@ -15,38 +15,32 @@ namespace Server.MirObjects.Monsters
         protected internal CaveStatue(MonsterInfo info)
             : base(info)
         {
-            if(info.Effect == 1)
+            if(info.Effect == 0)
             {
-                Direction = MirDirection.DownLeft;
+                Direction = MirDirection.Up;
                 direction = Direction;
             }
-            if (info.Effect == 2)
+            if (info.Effect == 1)
             {
-                Direction = MirDirection.DownRight;
+                Direction = MirDirection.UpRight;
                 direction = Direction;
             }
-
         }
 
         public override void Spawned()
         {
-            Direction = direction;
-
             base.Spawned();
         }
 
-        public override void Turn(MirDirection dir)
-        {
-        }
+        public override void Turn(MirDirection dir) { }
 
         public override bool Walk(MirDirection dir) { return false; }
 
         protected override void ProcessRoam() { }
 
-
-        protected override bool InAttackRange()
+        protected override void ProcessTarget()
         {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, Info.ViewRange);
+            
         }
     }
 }
