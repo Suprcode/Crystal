@@ -343,6 +343,8 @@ namespace Server.MirObjects
                     return new FloatingRock(info);
                 case 164:
                     return new ScalyBeast(info);
+                case 165:
+                    return new MudWarrior(info);
 
                 //unfinished
                 case 120:
@@ -3100,9 +3102,9 @@ namespace Server.MirObjects
                 dir = Functions.NextDir(dir);
 
                 if (!CurrentMap.ValidPoint(target)) continue;
-                Broadcast(new S.MapEffect { Effect = SpellEffect.Tester, Location = target, Value = (byte)Direction });
 
                 Cell cell = CurrentMap.GetCell(target);
+
                 if (cell.Objects == null) continue;
 
                 for (int o = 0; o < cell.Objects.Count; o++)
@@ -3111,12 +3113,15 @@ namespace Server.MirObjects
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
                     if (!ob.IsAttackTarget(this)) continue;
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.ACAgility);
-                    ActionList.Add(action);
+                    Broadcast(new S.MapEffect { Effect = SpellEffect.Tester, Location = target, Value = (byte)Direction });
+
+                    DelayedAction action2 = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, DefenceType.ACAgility);
+                    ActionList.Add(action2);
                     break;
                 }
             }
         }
+    
 
         protected virtual void ProjectileAttack(int minAttackStat, int maxAttackStat, DefenceType type = DefenceType.ACAgility, int additionalDelay = 500)
         {
