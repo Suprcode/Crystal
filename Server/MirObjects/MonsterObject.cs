@@ -345,6 +345,8 @@ namespace Server.MirObjects
                     return new ScalyBeast(info);
                 case 165:
                     return new MudWarrior(info);
+                case 166:
+                    return new CaveStatue(info);
 
                 //unfinished
                 case 120:
@@ -3121,7 +3123,7 @@ namespace Server.MirObjects
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
                     if (!ob.IsAttackTarget(this)) continue;
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, defenceType);
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
                     ActionList.Add(action);
                     break;
                 }

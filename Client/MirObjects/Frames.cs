@@ -10,7 +10,7 @@ namespace Client.MirObjects
     {
         public static FrameSet Player;
         public static FrameSet DefaultNPC, DefaultMonster;
-        public static List<FrameSet> DragonStatue, GreatFoxSpirit, HellBomb;
+        public static List<FrameSet> DragonStatue, GreatFoxSpirit, HellBomb; //, CaveStatue
 
         static FrameSet()
         {
@@ -141,6 +141,18 @@ namespace Client.MirObjects
             frame.Add(MirAction.Attack1, new Frame(999, 1, -1, 120) { Blend = true });
             frame.Add(MirAction.Struck, new Frame(88, 9, -9, 100) { Blend = true });
             #endregion
+
+            //#region CaveStatues
+            ////CaveStatue1
+            //frame.Add(MirAction.Standing, new Frame(0, 2, -2, 100) { Blend = false });
+            //frame.Add(MirAction.Struck, new Frame(0, 2, -2, 100) { Blend = false });
+            //frame.Add(MirAction.Die, new Frame(2, 8, -8, 100) { Blend = false });
+
+            ////CaveStatue2
+            //frame.Add(MirAction.Standing, new Frame(18, 2, -2, 100) { Blend = false });
+            //frame.Add(MirAction.Struck, new Frame(18, 2, -2, 100) { Blend = false });
+            //frame.Add(MirAction.Die, new Frame(20, 8, -8, 100) { Blend = false });
+            //#endregion
 
             #region Player
             //Common
