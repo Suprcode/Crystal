@@ -23,7 +23,6 @@ namespace Server.MirObjects.Monsters
 
             if (x > 2 || y > 2) return false;
 
-
             return (x <= 1 && y <= 1) || (x == y || x % 2 == y % 2);
         }
 
@@ -46,7 +45,7 @@ namespace Server.MirObjects.Monsters
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                LineAttack(2);
+                LineAttack(2, 250, DefenceType.ACAgility);
             }
 
             ActionTime = Envir.Time + 300;

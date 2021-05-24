@@ -2024,6 +2024,15 @@ namespace Client.MirObjects
                                                 }
                                                 break;
                                             case Monster.Yimoogi:
+                                            case Monster.RedYimoogi:
+                                            case Monster.Snake10:
+                                            case Monster.Snake11:
+                                            case Monster.Snake12:
+                                            case Monster.Snake13:
+                                            case Monster.Snake14:
+                                            case Monster.Snake15:
+                                            case Monster.Snake16:
+                                            case Monster.Snake17:
                                                 ob = MapControl.GetObject(TargetID);
                                                 if (ob != null)
                                                 {
@@ -2908,6 +2917,14 @@ namespace Client.MirObjects
                     case Monster.DreamDevourer:
                     case Monster.Yimoogi:
                     case Monster.RedYimoogi:
+                    case Monster.Snake10:
+                    case Monster.Snake11:
+                    case Monster.Snake12:
+                    case Monster.Snake13:
+                    case Monster.Snake14:
+                    case Monster.Snake15:
+                    case Monster.Snake16:
+                    case Monster.Snake17:
                         SoundManager.PlaySound(BaseSound + 8);
                         return;
                 }
@@ -3130,6 +3147,14 @@ namespace Client.MirObjects
                 case Monster.DreamDevourer:
                 case Monster.Yimoogi:
                 case Monster.RedYimoogi:
+                case Monster.Snake10:
+                case Monster.Snake11:
+                case Monster.Snake12:
+                case Monster.Snake13:
+                case Monster.Snake14:
+                case Monster.Snake15:
+                case Monster.Snake16:
+                case Monster.Snake17:
                     SoundManager.PlaySound(BaseSound + 5);
                     return;
                 default:
