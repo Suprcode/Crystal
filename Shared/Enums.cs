@@ -496,7 +496,7 @@ public enum Monster : ushort
     SwampSlime = 303, // Done (DG) - USE AI 113 (BloodBaboon) for Attack2. 
     RockGuard = 304,  // No spell animations (DG) - USE AI 113 (BloodBaboon) for Attack2.
     MudWarrior = 305, // Done (DG) - Frames amended (Attack2 changed to AttackRange1)
-    SmallPot = 306,
+    TreeGuardian = 306, 
     TreeQueen = 307,
     ShellFighter = 308,
     DarkBaboon = 309, // Done (DG) - USE AI 113 (BloodBaboon) for Attack2. 
@@ -511,7 +511,7 @@ public enum Monster : ushort
     HealingBead = 318, // Minion of DarkOmaKing
     PowerUpBead = 319, // Minion of DarkOmaKing
     DarkOmaKing = 320, //TODO - BOSS AI
-    CaveMage = 321,
+    CaveStatue = 321,
     Mandrill = 322, // INCOMPLETE - TODO: TELEPORT NEEDS CODING
     PlagueCrab = 323, // Done (DG) - Note: There are seven frames missing from the DrawEffect in the lib (causes die effect to look off).
     CreeperPlant = 324, //Done (DG)
