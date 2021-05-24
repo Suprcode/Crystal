@@ -3138,11 +3138,11 @@ namespace Server.MirObjects
             for (int i = 0; i < 8; i++)
             {
                 MirDirection dir = Functions.NextDir(Direction);
-                Point target = Functions.PointMove(CurrentLocation, dir, 1);
+                Point fullmoonTarget = Functions.PointMove(CurrentLocation, dir, 1);
 
-                if (!CurrentMap.ValidPoint(target)) continue;
+                if (!CurrentMap.ValidPoint(fullmoonTarget)) continue;
 
-                Cell cell = CurrentMap.GetCell(target);
+                Cell cell = CurrentMap.GetCell(fullmoonTarget);
 
                 if (cell.Objects == null) continue;
 
@@ -3152,7 +3152,7 @@ namespace Server.MirObjects
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
                     if (!ob.IsAttackTarget(this)) continue;
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, defenceType);
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
                     ActionList.Add(action);
                     break;
                 }
