@@ -75,36 +75,6 @@ namespace Server.MirObjects.Monsters
             }
         }
 
-        protected override void HalfmoonAttack(int delay = 500)
-        {
-            MirDirection dir = Functions.PreviousDir(Direction);
-
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
-
-            for (int i = 0; i < 4; i++)
-            {
-                Point target = Functions.PointMove(CurrentLocation, dir, 1);
-                dir = Functions.NextDir(dir);
-
-                if (!CurrentMap.ValidPoint(target)) continue;
-
-                Cell cell = CurrentMap.GetCell(target);
-                if (cell.Objects == null) continue;
-
-                for (int o = 0; o < cell.Objects.Count; o++)
-                {
-                    MapObject ob = cell.Objects[o];
-                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
-                    if (!ob.IsAttackTarget(this)) continue;
-
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.ACAgility, true);
-                    ActionList.Add(action);
-                    break;
-                }
-            }
-        }
-
         protected override void CompleteAttack(IList<object> data)
         {
             MapObject target = (MapObject)data[0];

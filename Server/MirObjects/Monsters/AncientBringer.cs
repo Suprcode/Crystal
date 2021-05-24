@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Server.MirObjects.Monsters
 {
-    class AncientBringer : MonsterObject
+    public class AncientBringer : MonsterObject
     {
         protected virtual byte AttackRange
         {
@@ -52,7 +52,7 @@ namespace Server.MirObjects.Monsters
 
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
-                    LineAttack(2, damage, DefenceType.ACAgility);
+                    PoisonLineAttack(2, damage, DefenceType.ACAgility);
                 }
                 else
                 {
@@ -60,7 +60,7 @@ namespace Server.MirObjects.Monsters
 
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * 2);
 
-                    LineAttack(2, damage, DefenceType.ACAgility);
+                    PoisonLineAttack(2, damage, DefenceType.ACAgility, true);
                 }
             }
             else
@@ -90,10 +90,7 @@ namespace Server.MirObjects.Monsters
                         SpawnSlaves();
                     }
                 }
-
             }
-            if (Target.Dead)
-                FindTarget();
         }
 
         protected override void CompleteRangeAttack(IList<object> data)
@@ -126,18 +123,13 @@ namespace Server.MirObjects.Monsters
 
             if (finalDamage > 0 && poison)
             {
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.Stats[Stat.PoisonResist])
-                {
-                    if (Envir.Random.Next(5) == 0)
-                    {
-                        target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Paralysis, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 2000 }, this);
-                    }
-                }
+                PoisonTarget(target, 5, 5, PoisonType.Paralysis, 2000);
             }
         }
 
-        private void LineAttack(int distance, int damage, DefenceType defenceType, bool poison = false)
+        protected void PoisonLineAttack(int distance, int additionalDelay = 500, DefenceType defenceType = DefenceType.ACAgility, bool poison = false)
         {
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
             for (int i = 1; i <= distance; i++)
@@ -173,8 +165,7 @@ namespace Server.MirObjects.Monsters
 
             for (int i = 0; i < count; i++)
             {
-                MonsterObject mob = null;
-                mob = GetMonster(Envir.GetMonsterInfo(Settings.AncientBatName));                
+                MonsterObject mob = GetMonster(Envir.GetMonsterInfo(Settings.AncientBatName));                
                 if (mob == null) continue;
 
                 if (!mob.Spawn(CurrentMap, Target.CurrentLocation))
@@ -184,7 +175,6 @@ namespace Server.MirObjects.Monsters
                 mob.ActionTime = Envir.Time + 2000;
                 SlaveList.Add(mob);
             }
-
         }
 
         protected override void ProcessTarget()
@@ -204,8 +194,6 @@ namespace Server.MirObjects.Monsters
             }
 
             MoveTo(Target.CurrentLocation);
-
         }
-
     }
 }

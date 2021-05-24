@@ -3070,44 +3070,30 @@ namespace Server.MirObjects
             {
                 Point target = Functions.PointMove(CurrentLocation, Direction, i);
 
-                if (Target != null && target == Target.CurrentLocation)
+                if (!CurrentMap.ValidPoint(target)) continue;
+
+                Cell cell = CurrentMap.GetCell(target);
+                if (cell.Objects == null) continue;
+
+                for (int o = 0; o < cell.Objects.Count; o++)
                 {
-                    if (push)
+                    MapObject ob = cell.Objects[o];
+                    if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
                     {
-                        Target.Pushed(this, Direction, distance - 1);
-                    }
+                        if (!ob.IsAttackTarget(this)) continue;
 
-                    int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + additionalDelay; //50 MS per Step
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, defenceType);
-                    ActionList.Add(action);
-                }
-                else
-                {
-                    if (!CurrentMap.ValidPoint(target)) continue;
-
-                    Cell cell = CurrentMap.GetCell(target);
-                    if (cell.Objects == null) continue;
-
-                    for (int o = 0; o < cell.Objects.Count; o++)
-                    {
-                        MapObject ob = cell.Objects[o];
-                        if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
+                        if (push)
                         {
-                            if (!ob.IsAttackTarget(this)) continue;
-
-                            if (push)
-                            {
-                                ob.Pushed(this, Direction, distance - 1);
-                            }
-
-                            int delay = Functions.MaxDistance(CurrentLocation, ob.CurrentLocation) * 50 + additionalDelay; //50 MS per Step
-                            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
-                            ActionList.Add(action);
+                            ob.Pushed(this, Direction, distance - 1);
                         }
-                        else continue;
 
-                        break;
+                        int delay = Functions.MaxDistance(CurrentLocation, ob.CurrentLocation) * 50 + additionalDelay; //50 MS per Step
+                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
+                        ActionList.Add(action);
                     }
+                    else continue;
+
+                    break;
                 }
             }
         }
