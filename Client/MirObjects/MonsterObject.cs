@@ -184,7 +184,9 @@ namespace Client.MirObjects
                 case Monster.HellBomb3:
                     BodyLibrary = Libraries.Monsters[(ushort)Monster.HellLord];
                     break;
-                //case Monster.CaveStatue:
+                case Monster.CaveStatue:
+                    BodyLibrary = Libraries.Monsters[(ushort)Monster.CaveStatue];
+                    break;
                 default:
                     BodyLibrary = Libraries.Monsters[(ushort)BaseImage];
                     break;
@@ -239,9 +241,9 @@ namespace Client.MirObjects
                 case Monster.HellBomb3:
                     Frames = FrameSet.HellBomb[((ushort)BaseImage) - 903];
                     break;
-                //case Monster.CaveStatue:
-                //    Frames = FrameSet.CaveStatue[(byte)Direction];
-                //    break;
+                case Monster.CaveStatue:
+                    Frames = FrameSet.CaveStatue[(byte)Direction];
+                    break;
                 default:
                     if (BodyLibrary != null)
                     {
@@ -281,6 +283,9 @@ namespace Client.MirObjects
                     case Monster.GreaterWeaver:
                     case Monster.CrystalWeaver:
                         Effects.Add(new Effect(Libraries.Effect, 680, 20, 20 * Frame.Interval, this) { DrawBehind = true, Repeat = true });
+                        break;
+                    case Monster.CaveStatue:
+                        Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.CaveStatue], 10, 8, 2400, this) { Blend = true, Repeat = true });
                         break;
                 }
             }
