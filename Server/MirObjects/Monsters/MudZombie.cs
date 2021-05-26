@@ -29,8 +29,6 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-            if (Target == null) return;
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -86,6 +84,25 @@ namespace Server.MirObjects.Monsters
             if (target.Attacked(this, damage, defence) <= 0) return;
 
             PoisonTarget(target, 5, 8, PoisonType.Green, 2000);
+        }
+
+        protected override void ProcessTarget()
+        {
+            if (Target == null) return;
+
+            if (InAttackRange() && CanAttack)
+            {
+                Attack();
+                return;
+            }
+
+            if (Envir.Time < ShockTime)
+            {
+                Target = null;
+                return;
+            }
+
+            MoveTo(Target.CurrentLocation);
         }
     }
 }

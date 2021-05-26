@@ -359,10 +359,10 @@ public enum Monster : ushort
     RedTurtle = 169,//done
     GreenTurtle = 170,//done
     BlueTurtle = 171,//done
-    Catapult1 = 172, //not added frames
-    Catapult2 = 173, //not added frames
+    Catapult1 = 172, //SPECIAL
+    Catapult2 = 173, //SPECIAL
     OldSpittingSpider = 174,
-    SiegeRepairman = 175, //not added frames
+    SiegeRepairman = 175, //SPECIAL
     BlueSanta = 176,//done
     BattleStandard = 177,//done
     Blank2 = 178,
@@ -440,7 +440,7 @@ public enum Monster : ushort
     IceGuard = 249, // Done (DG)
     ElementGuard = 250, // Done (DG)
     DemonGuard = 251, // Done (DG)
-    KingGuard = 252, //TODO: AI Incomplete - Needs revisiting
+    KingGuard = 252,
     Snake10 = 253,//done
     Snake11 = 254,//done
     Snake12 = 255,//done
@@ -455,7 +455,7 @@ public enum Monster : ushort
     MudZombie = 263, // Done (DG)
     FrozenZombie = 264, // Done (DG)
     UndeadWolf = 265, // No AI, basic attack Mob (DG)
-    Demonwolf = 266, // Done (DG)
+    DemonWolf = 266, // Done (DG)
     WhiteMammoth = 267, // Done (DG)
     DarkBeast = 268, // Done (DG)
     LightBeast = 269, // Done (DG) - USE AI 112 (DARKBEAST)
@@ -1241,6 +1241,8 @@ public enum SpellEffect : byte
     Stunned,
     IcePillar,
     KingGuard,
+    KingGuard2,
+    DeathCrawlerBreath,
     MonsterMACBuff,
     Tester
 }

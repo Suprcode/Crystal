@@ -3,6 +3,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //TODO - FrozenZombie looks identical to this. Merge???
     public class BurningZombie : MonsterObject
     {
         protected virtual byte AttackRange

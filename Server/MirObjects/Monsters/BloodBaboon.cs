@@ -6,6 +6,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //TODO - AI Looks identical to DarkBeast - Merge???
     public class BloodBaboon : MonsterObject
     {
         protected internal BloodBaboon(MonsterInfo info)

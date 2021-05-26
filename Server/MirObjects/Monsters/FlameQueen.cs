@@ -9,7 +9,7 @@ namespace Server.MirObjects.Monsters
     public class FlameQueen : MonsterObject
     {
         public long FearTime;
-        public byte AttackRange = 7;
+        public byte AttackRange = 3;
         private long MassAttackTime;
 
         protected internal FlameQueen(MonsterInfo info)
@@ -60,7 +60,7 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
-            if (Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange - 1) && Envir.Random.Next(3) == 0)
+            if (!Functions.InRange(CurrentLocation, Target.CurrentLocation, 1) || Envir.Random.Next(3) == 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
