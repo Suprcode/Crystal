@@ -184,6 +184,9 @@ namespace Server.MirObjects
                 case 84:
                     return new WingedTigerLord(info);
 
+                case 85:
+                    return new FlamingMutant(info); //TODO
+
                 case 86:
                     return new ManectricClaw(info);
                 case 87:
@@ -230,8 +233,10 @@ namespace Server.MirObjects
                     return new BurningZombie(info);
                 case 108:
                     return new MudZombie(info);
+
                 case 109:
-                    return new FrozenZombie(info);
+                    return new HardenRhino(info); //TODO
+
                 case 110:
                     return new DemonWolf(info); //TODO - cleanup
                 case 111:
@@ -250,13 +255,22 @@ namespace Server.MirObjects
                     return new StrayCat(info);
                 case 118:
                     return new CatShaman(info);
+
+                case 167:
+                    return new Jar1(info);
+                case 168:
+                    return new Jar2(info);
+
                 case 119:
                     return new SeedingsGeneral(info);
 
-//FAR CHECKED UP TO THIS POINT
+                //FAR CHECKED UP TO THIS POINT
 
-                //Case 120 - GeneralJimnYo Unfinished
+                //case xx:
+                //    return new RestlessJar(info);
 
+                case 120:
+                    return new GeneralJinmYo(info); // AI Incomplete - See notes in AI file.
                 case 121:
                     return new Armadillo(info);
                 case 122:
@@ -321,9 +335,9 @@ namespace Server.MirObjects
                     return new BlackTortoise(info);
                 case 152:
                     return new DragonWarrior(info);
-                case 153://HornedMage 
+                case 153:
                     return new HornedMage(info);
-                case 154://Kirin
+                case 154:
                     return new Kirin(info);
                 case 155:
                     return new FrozenMiner(info);
@@ -333,7 +347,7 @@ namespace Server.MirObjects
                     return new FrozenMagician(info);
                 case 158:
                     return new SnowYeti(info);
-                case 159://
+                case 159:
                     return new IceCrystalSoldier(info);
                 case 160:
                     return new DarkWraith(info);
@@ -351,10 +365,6 @@ namespace Server.MirObjects
                     return new CaveStatue(info);
 
                 //unfinished
-                case 120:
-                    return new GeneralJinmYo(info); // AI Incomplete - See notes in AI file.
-                case 253:
-                    return new FlamingMutant(info);
                 case 254:
                     return new StoningStatue(info);
                 //unfinished END
