@@ -709,6 +709,9 @@ namespace Client.MirObjects
                             case Monster.HellBomb3:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellLord], 97, 8, 8 * Frame.Interval, this));
                                 break;
+                            case Monster.WitchDoctor:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WitchDoctor], 328, 16, 16 * 100, this));
+                                break;
                             case Monster.RhinoWarrior:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RhinoWarrior], 320 + (int)Direction * 7, 7, 7 * Frame.Interval, this));
                                 break;

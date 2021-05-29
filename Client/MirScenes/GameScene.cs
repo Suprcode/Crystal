@@ -3358,6 +3358,8 @@ namespace Client.MirScenes
                     case 5: //WitchDoctor
                         {
                             effect = new Effect(Libraries.Monsters[(ushort)Monster.WitchDoctor], 328, 20, 1000, ob);
+                            SoundManager.PlaySound(((ushort)Monster.WitchDoctor) * 10 + 7);
+                            playDefaultSound = false;
                             break;
                         }
                     case 6: //TurtleKing
@@ -3416,6 +3418,8 @@ namespace Client.MirScenes
                     case 5: //WitchDoctor
                         {
                             ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WitchDoctor], 348, 20, 1000, ob));
+                            SoundManager.PlaySound(((ushort)Monster.WitchDoctor) * 10 + 7);
+                            playDefaultSound = false;
                             break;
                         }
                     case 6: //TurtleKing
