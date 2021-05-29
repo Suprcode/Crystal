@@ -253,10 +253,10 @@ namespace Server.MirObjects
                 case 119:
                     return new SeedingsGeneral(info);
 
-//FAR CHECKED UP TO THIS POINT
+                //FAR CHECKED UP TO THIS POINT
 
-                //Case 120 - GeneralJimnYo Unfinished
-
+                case 120:
+                    return new GeneralJinmYo(info);
                 case 121:
                     return new Armadillo(info);
                 case 122:
@@ -349,10 +349,10 @@ namespace Server.MirObjects
                     return new MudWarrior(info);
                 case 166:
                     return new CaveStatue(info);
+                case 167:
+                    return new TreeQueen(info);
 
-                //unfinished
-                case 120:
-                    return new GeneralJinmYo(info); // AI Incomplete - See notes in AI file.
+                //unfinished                
                 case 253:
                     return new FlamingMutant(info);
                 case 254:
@@ -460,7 +460,7 @@ namespace Server.MirObjects
 
         public int RoutePoint;
         public bool Waiting;
-
+        
         public List<MonsterObject> SlaveList = new List<MonsterObject>();
         public List<RouteInfo> Route = new List<RouteInfo>();
 
@@ -2343,12 +2343,22 @@ namespace Server.MirObjects
 
         public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stat, bool visible = false, bool infinite = false, bool stackable = false, bool refreshStats = true, params int[] values)
         {
-            if (HasBuff(type, out Buff b) && b.Infinite == true)
+            Buff b = base.AddBuff(type, owner, duration, Stats, visible, infinite, stackable, refreshStats, values);
+
+            switch (b.Type)
+            {
+                case BuffType.MonsterMACBuff:
+                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MonsterMACBuff }, CurrentLocation);
+                    break;
+                case BuffType.GeneralJimnyoShield:
+                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.GeneralJinmyoShield }, CurrentLocation);
+                    break;
+            }
+
+            if (HasBuff(type, out b) && b.Infinite == true)
             {
                 return b;
             }
-
-            b = base.AddBuff(type, owner, duration, Stats, visible, infinite, stackable, refreshStats, values);
 
             var packet = new S.AddBuff
             {

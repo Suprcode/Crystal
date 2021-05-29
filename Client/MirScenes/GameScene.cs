@@ -3812,6 +3812,7 @@ namespace Client.MirScenes
                 MapObject ob = MapControl.Objects[i];
                 if (ob.ObjectID != p.ObjectID) continue;
                 PlayerObject player;
+                MonsterObject monster;
 
                 switch (p.Effect)
                 {
@@ -3867,7 +3868,6 @@ namespace Client.MirScenes
                             player.ShieldEffect.Clear();
                             player.ShieldEffect.Remove();
                         }
-
                         player.MagicShield = true;
                         player.Effects.Add(player.ShieldEffect = new Effect(Libraries.Magic, 3890, 3, 600, ob) { Repeat = true });
                         break;
@@ -4002,6 +4002,17 @@ namespace Client.MirScenes
                     case SpellEffect.MonsterMACBuff: //loop - look @ MagicShield for start / loop / end
                         ob.Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.HornedArcher], 477, 10, 1000, ob, true, BuffType.MonsterMACBuff) { Repeat = true });
                         break;
+                    case SpellEffect.GeneralJinmyoShield:
+                        ob.Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.GeneralJinmYo], 529, 7, 700, ob, true, BuffType.GeneralJimnyoShield) { Repeat = true, Light = 1 });
+                        break;
+                    case SpellEffect.TreeQueenGroundRoots://Ground Roots
+                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 48, 10, 1000, ob) { Blend = false });
+                        //ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 57, 9, 1500, ob) { Blend = true });
+                        break;
+                    case SpellEffect.TreeQueenSingleRoot://Single Root
+                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 111, 15, 1500, ob) { Blend = false });
+                        break;
+
                 }
 
                 return;

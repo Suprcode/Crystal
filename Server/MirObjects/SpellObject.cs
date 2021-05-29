@@ -209,7 +209,35 @@ namespace Server.MirObjects
                         ob.Struck(Value, DefenceType.MAC);
                     }
                     break;
+                case Spell.GeneralJinmyoThunder:
+                    {
+                        if (Value == 0) return;
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                        if (ob.Dead) return;
+                        ob.Struck(Value, DefenceType.MAC);
+                    }
+                    break;
+                case Spell.TreeQueenGroundRoots:
+                    {
+                        if (Value == 0) return;
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                        if (ob.Dead) return;
+                        ob.Struck(Value, DefenceType.MAC);
 
+                        if (Envir.Random.Next(3) != 0)
+                        {
+                            ob.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
+                        }
+                    }
+                    break;
+                case Spell.TreeQueenRoot:
+                    {
+                        if (Value == 0) return;
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                        if (ob.Dead) return;
+                        ob.Struck(Value, DefenceType.MAC);
+                    }
+                    break;
                 case Spell.Portal:
                     {
                         if (ob.Race != ObjectType.Player) return;
