@@ -155,6 +155,15 @@ namespace Client.MirObjects
                     MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellLord], 39, 13, 1300, CurrentLocation) { Blend = false });
                     MirSounds.SoundManager.PlaySound(8311);
                     break;
+                case Spell.GeneralJinmyoThunder:                
+                    MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GeneralJinmYo], 522, 7, 700, CurrentLocation) { Blend = true, }); ;                    
+                    break;
+                case Spell.TreeQueenRoot:
+                    MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 111, 15, 1500, CurrentLocation) { Blend = false });
+                    break;
+                case Spell.TreeQueenGroundRoots:
+                    MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 48, 9, 900, CurrentLocation) { Blend = false });
+                    break;
 
                 case Spell.Portal:
                     BodyLibrary = Libraries.Magic2;

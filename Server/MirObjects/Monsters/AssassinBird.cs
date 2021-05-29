@@ -11,8 +11,6 @@ namespace Server.MirObjects.Monsters
         {
         }
 
-        long pushTime;
-
         protected override void Attack()
         {
 

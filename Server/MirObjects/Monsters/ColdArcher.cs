@@ -63,18 +63,24 @@ namespace Server.MirObjects.Monsters
 
         protected override void CompleteAttack(IList<object> data)
         {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+
+
+
             if (Target == null) return;
 
             List<MapObject> targets = FindAllNearby(12, Target.CurrentLocation);
 
             for (int i = 0; i < targets.Count; i++)
             {
-                var target = targets[i];
+                target = targets[i];
                 if (target == null || !target.IsFriendlyTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) continue;
 
                 if (target.IsFriendlyTarget(this))
                 {
-                    BuffType type = BuffType.HealthAid;
+                    BuffType type = BuffType.MonsterMACBuff;
 
                     var stats = new Stats
                     {
@@ -103,7 +109,8 @@ namespace Server.MirObjects.Monsters
             int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500;
 
             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
-            ActionList.Add(new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay)); //Time for projectiles should always be calculated through their distance
+            //ActionList.Add(new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay)); //Time for projectiles should always be calculated through their distance
+            DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, DefenceType.MACAgility);
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
         }
