@@ -1207,7 +1207,10 @@ public enum Spell : byte
     MapLightning = 202,
     MapLava = 203,
     MapQuake1 = 204,
-    MapQuake2 = 205
+    MapQuake2 = 205,
+    GeneralJinmyoThunder = 206,
+    TreeQueenRoot = 207,
+    TreeQueenGroundRoots = 208,
 }
 
 public enum SpellEffect : byte
@@ -1242,6 +1245,15 @@ public enum SpellEffect : byte
     IcePillar,
     KingGuard,
     KingGuard2,
+
+    MonsterMACBuff,
+    GeneralJinmyoShield,    
+    GeneralJinmyoThunder,
+    TreeQueenFireBombardment,
+    TreeQueenGroundRoots,
+    TreeQueenMassRoots,
+    TreeQueenSingleRoot,
+
     DeathCrawlerBreath,
     MonsterMACBuff,
     Tester
@@ -1279,6 +1291,7 @@ public enum BuffType : byte
     MagicShield,
     ElementalBarrier,
     MonsterMACBuff,
+    GeneralJimnyoShield,
 
     //special
     GameMaster = 100,

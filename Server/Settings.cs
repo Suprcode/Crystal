@@ -155,7 +155,11 @@ namespace Server
                              SnakeTotemName = "SnakeTotem",
                              SnakesName = "CharmedSnake",
                              AncientBatName = "AncientBat",
-                             TucsonGeneralEgg = "GeneralTucson";
+                             TucsonGeneralEgg = "GeneralTucson",
+                             GeneralJinmyoMob1 = "StainHammerCat",
+                             GeneralJinmyoMob2 = "BlackHammerCat",
+                             GeneralJinmyoMob3 = "StrayCat",
+                             GeneralJinmyoMob4 = "CatShaman";
 
         public static string HealRing = "Healing",
                              FireRing = "FireBall",
@@ -370,6 +374,10 @@ namespace Server
             HellBomb1 = Reader.ReadString("Game", "HellBomb1", HellBomb1);
             HellBomb2 = Reader.ReadString("Game", "HellBomb2", HellBomb2);
             HellBomb3 = Reader.ReadString("Game", "HellBomb3", HellBomb3);
+            GeneralJinmyoMob1 = Reader.ReadString("Game", "GeneralJinmyoMob1", GeneralJinmyoMob1);
+            GeneralJinmyoMob2 = Reader.ReadString("Game", "GeneralJinmyoMob2", GeneralJinmyoMob2);
+            GeneralJinmyoMob3 = Reader.ReadString("Game", "GeneralJinmyoMob3", GeneralJinmyoMob3);
+            GeneralJinmyoMob4 = Reader.ReadString("Game", "GeneralJinmyoMob4", GeneralJinmyoMob4);
             WhiteSnake = Reader.ReadString("Game", "WhiteSnake", WhiteSnake);
             AngelName = Reader.ReadString("Game", "AngelName", AngelName);
             BombSpiderName = Reader.ReadString("Game", "BombSpiderName", BombSpiderName);
@@ -661,6 +669,11 @@ namespace Server
             Reader.Write("Items", "PvpCanFreeze", PvpCanFreeze);
 
             Reader.Write("Bonus", "RangeAccuracyBonus", RangeAccuracyBonus);
+
+            Reader.Write("Game", "GeneralJinmyoMob1", GeneralJinmyoMob1);
+            Reader.Write("Game", "GeneralJinmyoMob2", GeneralJinmyoMob2);
+            Reader.Write("Game", "GeneralJinmyoMob3", GeneralJinmyoMob3);
+            Reader.Write("Game", "GeneralJinmyoMob4", GeneralJinmyoMob4);
 
             //IntelligentCreature
             Reader.Write("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);

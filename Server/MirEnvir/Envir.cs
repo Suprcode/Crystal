@@ -441,6 +441,10 @@ namespace Server.MirEnvir
                 if (GetMonsterInfo(Settings.ToadName, true) == null) return "Cannot start server without mob: " + Settings.ToadName;
                 if (GetMonsterInfo(Settings.SnakeTotemName, true) == null) return "Cannot start server without mob: " + Settings.SnakeTotemName;
                 if (GetMonsterInfo(Settings.FishingMonster, true) == null) return "Cannot start server without mob: " + Settings.FishingMonster;
+                if (GetMonsterInfo(Settings.GeneralJinmyoMob1, true) == null) return "Cannot start server without mob: " + Settings.GeneralJinmyoMob1;
+                if (GetMonsterInfo(Settings.GeneralJinmyoMob2, true) == null) return "Cannot start server without mob: " + Settings.GeneralJinmyoMob2;
+                if (GetMonsterInfo(Settings.GeneralJinmyoMob3, true) == null) return "Cannot start server without mob: " + Settings.GeneralJinmyoMob3;
+                if (GetMonsterInfo(Settings.GeneralJinmyoMob4, true) == null) return "Cannot start server without mob: " + Settings.GeneralJinmyoMob4;
 
                 if (GetItemInfo(Settings.RefineOreName) == null) return "Cannot start server without item: " + Settings.RefineOreName;
             }
