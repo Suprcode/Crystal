@@ -156,10 +156,10 @@ namespace Server
                              SnakesName = "CharmedSnake",
                              AncientBatName = "AncientBat",
                              TucsonGeneralEgg = "GeneralTucson",
-                             GeneralJinmyoMob1 = "StainHammerCat",
-                             GeneralJinmyoMob2 = "BlackHammerCat",
-                             GeneralJinmyoMob3 = "StrayCat",
-                             GeneralJinmyoMob4 = "CatShaman";
+                             GeneralMeowMeowMob1 = "StainHammerCat",
+                             GeneralMeowMeowMob2 = "BlackHammerCat",
+                             GeneralMeowMeowMob3 = "StrayCat",
+                             GeneralMeowMeowMob4 = "CatShaman";
 
         public static string HealRing = "Healing",
                              FireRing = "FireBall",
@@ -374,10 +374,10 @@ namespace Server
             HellBomb1 = Reader.ReadString("Game", "HellBomb1", HellBomb1);
             HellBomb2 = Reader.ReadString("Game", "HellBomb2", HellBomb2);
             HellBomb3 = Reader.ReadString("Game", "HellBomb3", HellBomb3);
-            GeneralJinmyoMob1 = Reader.ReadString("Game", "GeneralJinmyoMob1", GeneralJinmyoMob1);
-            GeneralJinmyoMob2 = Reader.ReadString("Game", "GeneralJinmyoMob2", GeneralJinmyoMob2);
-            GeneralJinmyoMob3 = Reader.ReadString("Game", "GeneralJinmyoMob3", GeneralJinmyoMob3);
-            GeneralJinmyoMob4 = Reader.ReadString("Game", "GeneralJinmyoMob4", GeneralJinmyoMob4);
+            GeneralMeowMeowMob1 = Reader.ReadString("Game", "GeneralMeowMeowMob1", GeneralMeowMeowMob1);
+            GeneralMeowMeowMob2 = Reader.ReadString("Game", "GeneralMeowMeowMob2", GeneralMeowMeowMob2);
+            GeneralMeowMeowMob3 = Reader.ReadString("Game", "GeneralMeowMeowMob3", GeneralMeowMeowMob3);
+            GeneralMeowMeowMob4 = Reader.ReadString("Game", "GeneralMeowMeowMob4", GeneralMeowMeowMob4);
             WhiteSnake = Reader.ReadString("Game", "WhiteSnake", WhiteSnake);
             AngelName = Reader.ReadString("Game", "AngelName", AngelName);
             BombSpiderName = Reader.ReadString("Game", "BombSpiderName", BombSpiderName);
@@ -670,10 +670,10 @@ namespace Server
 
             Reader.Write("Bonus", "RangeAccuracyBonus", RangeAccuracyBonus);
 
-            Reader.Write("Game", "GeneralJinmyoMob1", GeneralJinmyoMob1);
-            Reader.Write("Game", "GeneralJinmyoMob2", GeneralJinmyoMob2);
-            Reader.Write("Game", "GeneralJinmyoMob3", GeneralJinmyoMob3);
-            Reader.Write("Game", "GeneralJinmyoMob4", GeneralJinmyoMob4);
+            Reader.Write("Game", "GeneralMeowMeowMob1", GeneralMeowMeowMob1);
+            Reader.Write("Game", "GeneralMeowMeowMob2", GeneralMeowMeowMob2);
+            Reader.Write("Game", "GeneralMeowMeowMob3", GeneralMeowMeowMob3);
+            Reader.Write("Game", "GeneralMeowMeowMob4", GeneralMeowMeowMob4);
 
             //IntelligentCreature
             Reader.Write("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Server.MirObjects.Monsters
 {
-    public class ArmadilloElder : DigOutZombie
+    public class ArmadilloElder : Armadillo
     {
         protected internal ArmadilloElder(MonsterInfo info)
             : base(info)
@@ -29,24 +29,38 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
-
-            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.ACAgility);
-            ActionList.Add(action);
-
-            if (Envir.Random.Next(4) > 0)
+            switch (Envir.Random.Next(0, 6))
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.ACAgility);
-                ActionList.Add(action);
+                case 0:
+                    {
+                        Retreat();
+                        _runAway = true;
+                    }
+                    break;
+                case 1:
+                    {
+                        Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                        int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                        if (damage == 0) return;
+
+                        Target.Pushed(this, Direction, 2);
+                    }
+                    break;
+                default:
+                    {
+                        Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                        int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]) * 2;
+                        if (damage == 0) return;
+
+                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.ACAgility);
+                        ActionList.Add(action);
+                    }
+                    break;
             }
-            else
-            {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.ACAgility);
-                ActionList.Add(action);
-            }
+        }
+
+        protected override void CompleteRangeAttack(IList<object> data)
+        {
         }
     }
 }

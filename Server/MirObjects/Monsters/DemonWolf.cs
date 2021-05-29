@@ -9,9 +9,10 @@ using System.Text;
 
 namespace Server.MirObjects.Monsters
 {
-    // TODO: ADD ATTACK AS PER ANIMATIONS 354 - DASH THROUGH PLAYER ATTACK?
     public class DemonWolf : MonsterObject
     {
+        public byte AttackRange = 2;
+
         protected internal DemonWolf(MonsterInfo info)
             : base(info)
         {
@@ -25,9 +26,9 @@ namespace Server.MirObjects.Monsters
             int x = Math.Abs(Target.CurrentLocation.X - CurrentLocation.X);
             int y = Math.Abs(Target.CurrentLocation.Y - CurrentLocation.Y);
 
-            if (x > 5 || y > 5) return false;
+            if (x > 2 || y > 2) return false;
 
-            return (x == 0) || (y == 0) || (x == y);
+            return (x <= 1 && y <= 1) || (x == y || x % 2 == y % 2);
         }
 
         protected override void Attack()
@@ -46,61 +47,37 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-
-            if (!ranged)
+            if (!ranged && Envir.Random.Next(4) > 0)
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MACAgility);
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MACAgility);
                 ActionList.Add(action);
             }
             else
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
-                LineAttack(6);
+                LineAttack(3);
 
-                AttackTime = Envir.Time + AttackSpeed;
-                ActionTime = Envir.Time + 300;
+                MoveTo(Target.CurrentLocation);
             }
         }
-        private void LineAttack(int distance)
+
+        protected override void CompleteAttack(IList<object> data)
         {
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
 
-            for (int i = 1; i <= distance; i++)
-            {
-                Point target = Functions.PointMove(CurrentLocation, Direction, i);
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-                if (target == Target.CurrentLocation)
-                    Target.Attacked(this, damage, DefenceType.MACAgility);
-                else
-                {
-                    if (!CurrentMap.ValidPoint(target)) continue;
+            if (target.Attacked(this, damage, defence) <= 0) return;
 
-                    Cell cell = CurrentMap.GetCell(target);
-                    if (cell.Objects == null) continue;
-
-                    for (int o = 0; o < cell.Objects.Count; o++)
-                    {
-                        MapObject ob = cell.Objects[o];
-                        if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
-                        {
-                            if (!ob.IsAttackTarget(this)) continue;
-                            ob.Attacked(this, damage, DefenceType.MACAgility);
-
-                            //TODO - Move this in to delay
-                            PoisonTarget(Target, 10, 5, PoisonType.Stun, 1000);
-                        }
-                        else continue;
-
-                        break;
-                    }
-                }
-            }
+            PoisonTarget(target, 4, 5, PoisonType.Stun, 1000);
         }
     }
 }

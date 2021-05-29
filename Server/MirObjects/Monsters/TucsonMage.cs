@@ -21,9 +21,9 @@ namespace Server.MirObjects.Monsters
             int x = Math.Abs(Target.CurrentLocation.X - CurrentLocation.X);
             int y = Math.Abs(Target.CurrentLocation.Y - CurrentLocation.Y);
 
-            if (x > 4 || y > 4) return false;
+            if (x > 3 || y > 3) return false;
 
-            return (x <= 4 && y <= 4) || (x == y || x % 4 == y % 4);
+            return (x <= 3 && y <= 3) || (x == y || x % 3 == y % 3);
         }
 
         protected override void Attack()
@@ -41,7 +41,7 @@ namespace Server.MirObjects.Monsters
 
             bool range = !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
-            if (!range && Envir.Random.Next(5) > 0)
+            if (!range && Envir.Random.Next(3) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);

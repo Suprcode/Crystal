@@ -209,7 +209,7 @@ namespace Server.MirObjects
                         ob.Struck(Value, DefenceType.MAC);
                     }
                     break;
-                case Spell.GeneralJinmyoThunder:
+                case Spell.GeneralMeowMeowThunder:
                     {
                         if (Value == 0) return;
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;

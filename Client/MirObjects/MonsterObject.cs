@@ -68,9 +68,6 @@ namespace Client.MirObjects
 
         public Color OldNameColor;
 
-        public bool MonsterMagicShield;
-        public Effect MonsterShieldEffect;
-
         public SpellEffect CurrentEffect;
 
         public MonsterObject(uint objectID) : base(objectID) { }
@@ -625,8 +622,13 @@ namespace Client.MirObjects
                         GameScene.Scene.Redraw();
                         break;
                     case MirAction.Jump:
-                       // FrameIndex = Frame.Count - 1;
-                        GameScene.Scene.Redraw();
+                        PlayJumpSound();
+                        switch (BaseImage)
+                        {
+                            case Monster.Armadillo:
+                                MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)BaseImage], 592, 12, 800, CurrentLocation, CMain.Time + 500));
+                                break;
+                        }
                         break;
                     case MirAction.Walking:
                         GameScene.Scene.Redraw();
@@ -645,11 +647,11 @@ namespace Client.MirObjects
                             case Monster.MinotaurKing:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MinotaurKing], 272 + (int)Direction * 6, 6, Frame.Count * Frame.Interval, this));
                                 break;
-                            case Monster.FlamingMutant:///////////////////////////stupple 
+                            case Monster.FlamingMutant:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlamingMutant], 304 + (int)Direction * 6, 6, Frame.Count * Frame.Interval, this));
                                 break;
                             case Monster.DemonWolf:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DemonWolf], 312 + (int)Direction * 3, 3, Frame.Count * Frame.Interval, this));
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DemonWolf], 336 + (int)Direction * 9, 6, Frame.Count * Frame.Interval, this));
                                 break;
                             case Monster.HardenRhino:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HardenRhino], 379 + (int)Direction * 6, 6, Frame.Count * Frame.Interval, this));
@@ -873,10 +875,6 @@ namespace Client.MirObjects
                                 break;
                             case Monster.KingGuard:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KingGuard], 737, 9, 9 * Frame.Interval, this));
-                                break;
-                            case Monster.DemonWolf:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DemonWolf], 336 + (int)Direction * 9, 6, Frame.Count * Frame.Interval, this));
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DemonWolf], 312 + (int)Direction * 3, 3, 6 * Frame.Interval, this));
                                 break;
                             case Monster.CatShaman:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.CatShaman], 738, 8, Frame.Count * Frame.Interval, this));
@@ -1452,8 +1450,8 @@ namespace Client.MirObjects
                                     {
                                         switch (BaseImage)
                                         {
-                                            case Monster.GeneralJinmYo:
-                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GeneralJinmYo], 416 + (int)Direction * 5, 5, 5 * Frame.Interval, this));
+                                            case Monster.GeneralMeowMeow:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GeneralMeowMeow], 416 + (int)Direction * 5, 5, 5 * Frame.Interval, this));
                                                 break;
                                             case Monster.Armadillo:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Armadillo], 480 + (int)Direction * 2, 2, 2 * Frame.Interval, this));
@@ -1671,6 +1669,9 @@ namespace Client.MirObjects
                                     {
                                         switch (BaseImage)
                                         {
+                                            case Monster.DemonWolf:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DemonWolf], 312 + (int)Direction * 3, 3, 300, this));
+                                                break;
                                             case Monster.TucsonWarrior:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TucsonWarrior], 344 + (int)Direction * 9, 9, 9 * Frame.Interval, this));
                                                 break;
@@ -1696,8 +1697,8 @@ namespace Client.MirObjects
                                     {   
                                         switch (BaseImage)
                                         {
-                                            case Monster.GeneralJinmYo:
-                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GeneralJinmYo], 456 + (int)Direction * 7, 7, 7 * Frame.Interval, this) { Blend = true });
+                                            case Monster.GeneralMeowMeow:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GeneralMeowMeow], 456 + (int)Direction * 7, 7, 7 * Frame.Interval, this) { Blend = true });
                                                 break;
                                             case Monster.FrozenMiner:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenMiner], 462 + (int)Direction * 5, 5, 500, this));
@@ -2335,11 +2336,11 @@ namespace Client.MirObjects
                                                     ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SeedingsGeneral], 1256, 9, 900, ob) { Blend = true });
                                                 }
                                                 break;
-                                            case Monster.GeneralJinmYo:
+                                            case Monster.GeneralMeowMeow:
                                                 ob = MapControl.GetObject(TargetID);
                                                 if (ob != null)
                                                 {
-                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GeneralJinmYo], 512, 10, 1000, ob) { Blend = true });
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GeneralMeowMeow], 512, 10, 1000, ob) { Blend = true });
                                                 }
                                                 break;
                                             case Monster.CannibalTentacles:
@@ -3016,6 +3017,18 @@ namespace Client.MirObjects
             }
             SoundManager.PlaySound(BaseSound);
         }
+
+        public void PlayJumpSound()
+        {
+            switch (BaseImage)
+            {
+                case Monster.Armadillo:
+                case Monster.ArmadilloElder:
+                    SoundManager.PlaySound(BaseSound + 8);
+                    break;
+            }
+        }
+
         public void PlayFlinchSound()
         {
             switch (BaseImage)
@@ -3207,8 +3220,10 @@ namespace Client.MirObjects
                 case Monster.MudZombie:
                 case Monster.FrozenZombie:
                 case Monster.UndeadWolf:
-                case Monster.DemonWolf:
                 case Monster.CatShaman:
+                case Monster.CannibalTentacles:
+                case Monster.SwampWarrior:
+                case Monster.GeneralMeowMeow:
                     SoundManager.PlaySound(BaseSound + 5);
                     return;
                 case Monster.AncientBringer:

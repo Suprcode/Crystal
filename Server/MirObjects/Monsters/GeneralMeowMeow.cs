@@ -18,11 +18,11 @@ namespace Server.MirObjects.Monsters
     /// Summons Slaves periodically
     /// </summary>
 
-    class GeneralJinmYo : MonsterObject
+    public class GeneralMeowMeow : MonsterObject
     {
-        public long spawnTime;        
-        public int shieldUpDuration = Settings.Second * 30;        
-        public long thunderAttackTime = Math.Max(Envir.Time + Envir.Random.Next(2000), Envir.Time + Envir.Random.Next(4000));
+        public long SlaveSpawnTime;        
+        public int ShieldUpDuration;
+        public long ThunderAttackTime;
 
         protected virtual byte AttackRange
         {
@@ -32,9 +32,10 @@ namespace Server.MirObjects.Monsters
             }
         }
 
-        protected internal GeneralJinmYo(MonsterInfo info)
+        protected internal GeneralMeowMeow(MonsterInfo info)
             : base(info)
         {
+            ShieldUpDuration = Settings.Second * 30;
         }
 
         protected override bool InAttackRange()
@@ -64,38 +65,26 @@ namespace Server.MirObjects.Monsters
                     - This monsters damage taken is reduced (50% reduction?)
                     - Every 'x' amount of seconds all players in range are attacked with a thunderbolt
              */
-            bool stage1Bubble = HP < Stats[Stat.HP] / 10 * 8 && this.HP > Stats[Stat.HP] / 10 * 7;
-            bool stage2Bubble = HP < Stats[Stat.HP] / 10 * 5 && this.HP > Stats[Stat.HP] / 10 * 4;
-            bool stage3Bubble = this.HP < Stats[Stat.HP] / 10 * 2 && this.HP > 1;
+
+            var hpPercent = (HP * 100) / Stats[Stat.HP];
+
+            bool stage1Bubble = hpPercent >= 70 && hpPercent <= 80;//HP < Stats[Stat.HP] / 10 * 8 && this.HP > Stats[Stat.HP] / 10 * 7;
+            bool stage2Bubble = hpPercent >= 40 && hpPercent <= 50;//HP < Stats[Stat.HP] / 10 * 5 && this.HP > Stats[Stat.HP] / 10 * 4;
+            bool stage3Bubble = hpPercent <= 20; //this.HP < Stats[Stat.HP] / 10 * 2 && this.HP > 1;
 
             if (stage1Bubble == true || stage2Bubble == true || stage3Bubble == true)
             {
-
                 if (Target != null)
                 {
-                    BuffType type = BuffType.GeneralJimnyoShield;
-
-                    int addedStat1 = 100;
-                    int addedStat2 = 100;
-
-                    if (this.Stats[Stat.MaxAC] + addedStat1 > 65535)
-                    {
-                        addedStat1 = 0;
-                    }
-                    if (this.Stats[Stat.MinAC] + addedStat2 > 65535)
-                    {
-                        addedStat2 = 0;
-                    }
-
                     var stats = new Stats
                     {
-                        [Stat.MaxAC] = this.Stats[Stat.MaxAC] + addedStat1,
-                        [Stat.MinAC] = this.Stats[Stat.MinAC] + addedStat2
+                        [Stat.MaxAC] = 100,
+                        [Stat.MinAC] = 100
                     };
-                    AddBuff(type, this, shieldUpDuration, stats, visible: true);
-                    //Target.ReceiveChat($"BUFF { type } ACTIVATED! ", ChatType.System2);                                        
 
-                    if (Envir.Time > thunderAttackTime)
+                    AddBuff(BuffType.GeneralMeowMeowShield, this, ShieldUpDuration, stats, visible: true);                 
+
+                    if (Envir.Time > ThunderAttackTime)
                     {
                         MassThunderAttack();
                     }
@@ -104,7 +93,6 @@ namespace Server.MirObjects.Monsters
                 }
             }
 
-
             if (!ranged)
             {
                 if (Envir.Random.Next(9) != 0)
@@ -112,6 +100,7 @@ namespace Server.MirObjects.Monsters
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                     if (damage == 0) return;
+
                     DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.ACAgility, false);
                     ActionList.Add(action);
                 }
@@ -120,6 +109,7 @@ namespace Server.MirObjects.Monsters
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]) * 3;
                     if (damage == 0) return;
+
                     DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.AC, true);
                     ActionList.Add(action);
                 }
@@ -129,12 +119,10 @@ namespace Server.MirObjects.Monsters
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
                 int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                 if (damage == 0) return;
-                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MACAgility, true);
+
+                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MACAgility);
                 ActionList.Add(action);
             }
-
-            if (Target.Dead)
-                FindTarget();
         }
 
         protected override void ProcessAI()
@@ -142,10 +130,10 @@ namespace Server.MirObjects.Monsters
             if (Dead) return;
 
             // After first 60 seconds: spawn mobs, then every 60 seconds after, spawn more mobs.
-            if (Target != null && Envir.Time > spawnTime)
+            if (Target != null && Envir.Time > SlaveSpawnTime)
             {
                 SpawnSlaves();
-                spawnTime = Envir.Time + 60000;
+                SlaveSpawnTime = Envir.Time + (Settings.Second * 60);
             }
 
             base.ProcessAI();
@@ -154,29 +142,23 @@ namespace Server.MirObjects.Monsters
         public void MassThunderAttack()
         {
             // Whilst Energy Shield is up, attack all players every few seconds.
-            if (Envir.Time > thunderAttackTime)
+            if (Envir.Time > ThunderAttackTime)
             {
-                SpellObject spellObj = null;
-
                 List<MapObject> targets = FindAllTargets(AttackRange, Target.CurrentLocation);
                 if (targets.Count == 0) return;
 
                 for (int i = 0; i < targets.Count; i++)
                 {
-                    Target = targets[Envir.Random.Next(targets.Count)];
-
-                    Target = targets[i];
-
-                    if (Target.IsAttackTarget(this))
+                    if (targets[i].IsAttackTarget(this))
                     {
-                        spellObj = new SpellObject
+                        var spellObj = new SpellObject
                         {
-                            Spell = Spell.GeneralJinmyoThunder,
-                            Value = Envir.Random.Next(Envir.Random.Next(Stats[Stat.MinMC], Stats[Stat.MaxMC])),
-                            ExpireTime = Envir.Time + (1000),
+                            Spell = Spell.GeneralMeowMeowThunder,
+                            Value = Envir.Random.Next(Stats[Stat.MinMC], Stats[Stat.MaxMC]),
+                            ExpireTime = Envir.Time + 1000,
                             TickSpeed = 500,
                             Caster = null,
-                            CurrentLocation = Target.CurrentLocation,
+                            CurrentLocation = targets[i].CurrentLocation,
                             CurrentMap = CurrentMap,
                             Direction = MirDirection.Up
                         };
@@ -186,12 +168,14 @@ namespace Server.MirObjects.Monsters
                     }
                 }
             }
+
+            ThunderAttackTime = Envir.Time + Math.Max(Envir.Random.Next(2000), Envir.Random.Next(4000));
         }
 
         public override void Spawned()
         {
-            // Begin coutndown timer
-            spawnTime = Envir.Time + 60000;
+            // Begin countdown timer
+            SlaveSpawnTime = Envir.Time + (Settings.Second * 60);
 
             base.Spawned();
         }
@@ -205,7 +189,7 @@ namespace Server.MirObjects.Monsters
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            Target.Attacked(this, damage, DefenceType.AC);
+            target.Attacked(this, damage, defence);
         }
 
         protected override void CompleteRangeAttack(IList<object> data)
@@ -213,21 +197,15 @@ namespace Server.MirObjects.Monsters
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
-            bool aoe = (bool)data[3];            
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            if (aoe)
-            {
-                List<MapObject> targets = FindAllTargets(2, Target.CurrentLocation);
-                if (targets.Count == 0) return;
+            List<MapObject> targets = FindAllTargets(2, Target.CurrentLocation);
+            if (targets.Count == 0) return;
 
-                for (int i = 0; i < targets.Count; i++)
-                {
-                    Target = targets[i];
-                    if (Target.IsAttackTarget(this))
-                        Target.Attacked(this, damage, DefenceType.AC);
-                }
+            for (int i = 0; i < targets.Count; i++)
+            {
+                targets[i].Attacked(this, damage, defence);
             }
         }
 
@@ -241,23 +219,25 @@ namespace Server.MirObjects.Monsters
                 switch (Envir.Random.Next(4))
                 {
                     case 0:
-                        mob = GetMonster(Envir.GetMonsterInfo(Settings.GeneralJinmyoMob1));
+                        mob = GetMonster(Envir.GetMonsterInfo(Settings.GeneralMeowMeowMob1));
                         break;
                     case 1:
-                        mob = GetMonster(Envir.GetMonsterInfo(Settings.GeneralJinmyoMob2));
+                        mob = GetMonster(Envir.GetMonsterInfo(Settings.GeneralMeowMeowMob2));
                         break;
                     case 2:
-                        mob = GetMonster(Envir.GetMonsterInfo(Settings.GeneralJinmyoMob3));
+                        mob = GetMonster(Envir.GetMonsterInfo(Settings.GeneralMeowMeowMob3));
                         break;
                     case 3:
-                        mob = GetMonster(Envir.GetMonsterInfo(Settings.GeneralJinmyoMob4));
+                        mob = GetMonster(Envir.GetMonsterInfo(Settings.GeneralMeowMeowMob4));
                         break;
                 }
 
                 if (mob == null) continue;
 
                 if (!mob.Spawn(CurrentMap, Front))
+                {
                     mob.Spawn(CurrentMap, CurrentLocation);
+                }
 
                 mob.Target = Target;
                 mob.ActionTime = Envir.Time + 2000;
@@ -286,6 +266,5 @@ namespace Server.MirObjects.Monsters
             MoveTo(Target.CurrentLocation);
         }
     }
-
 }
 

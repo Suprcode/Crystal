@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Client.MirGraphics;
+using Client.MirScenes;
+using System;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using Client.MirGraphics;
-using Client.MirScenes;
-using S = ServerPackets; 
+using S = ServerPackets;
 
 namespace Client.MirObjects
 {
@@ -155,8 +153,9 @@ namespace Client.MirObjects
                     MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellLord], 39, 13, 1300, CurrentLocation) { Blend = false });
                     MirSounds.SoundManager.PlaySound(8311);
                     break;
-                case Spell.GeneralJinmyoThunder:                
-                    MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GeneralJinmYo], 522, 7, 700, CurrentLocation) { Blend = true, }); ;                    
+                case Spell.GeneralMeowMeowThunder:                
+                    MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GeneralMeowMeow], 522, 7, 700, CurrentLocation) { Blend = true, });
+                    MirSounds.SoundManager.PlaySound(8321);
                     break;
                 case Spell.TreeQueenRoot:
                     MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 111, 15, 1500, CurrentLocation) { Blend = false });
@@ -174,10 +173,10 @@ namespace Client.MirObjects
                     break;
             }
 
-
             NextMotion = CMain.Time + FrameInterval;
             NextMotion -= NextMotion % 100;
         }
+
         public override void Process()
         {
             if (CMain.Time >= NextMotion)

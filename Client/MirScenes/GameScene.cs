@@ -4011,10 +4011,6 @@ namespace Client.MirScenes
                     case SpellEffect.MonsterMACBuff: //loop - look @ MagicShield for start / loop / end
                         ob.Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.HornedArcher], 477, 10, 1000, ob, true, BuffType.MonsterMACBuff) { Repeat = true });
                         break;
-
-                    case SpellEffect.GeneralJinmyoShield:
-                        ob.Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.GeneralJinmYo], 529, 7, 700, ob, true, BuffType.GeneralJimnyoShield) { Repeat = true, Light = 1 });
-                        break;
                     case SpellEffect.TreeQueenGroundRoots://Ground Roots
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 48, 10, 1000, ob) { Blend = false });
                         //ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 57, 9, 1500, ob) { Blend = true });
@@ -9856,7 +9852,6 @@ namespace Client.MirScenes
                 if (((MapObject.TargetObject.Name.EndsWith(")") || MapObject.TargetObject is PlayerObject) && CMain.Shift) ||
                     (!MapObject.TargetObject.Name.EndsWith(")") && MapObject.TargetObject is MonsterObject))
                 {
-
                     GameScene.LogTime = CMain.Time + Globals.LogDelay;
 
                     if (User.Class == MirClass.Archer && User.HasClassWeapon && !User.RidingMount && !User.Fishing)//ArcherTest - non aggressive targets (player / pets)
@@ -9885,7 +9880,7 @@ namespace Client.MirScenes
 
                     else if (Functions.InRange(MapObject.TargetObject.CurrentLocation, User.CurrentLocation, 1))
                     {
-                        if (CMain.Time > GameScene.AttackTime && CanRideAttack())
+                        if (CMain.Time > GameScene.AttackTime && CanRideAttack() && !User.Poison.HasFlag(PoisonType.Stun))
                         {
                             User.QueuedAction = new QueuedAction { Action = MirAction.Attack1, Direction = Functions.DirectionFromPoint(User.CurrentLocation, MapObject.TargetObject.CurrentLocation), Location = User.CurrentLocation };
                             return;
@@ -9942,12 +9937,13 @@ namespace Client.MirScenes
                     case MouseButtons.Left:
                         if (MapObject.MouseObject is NPCObject || (MapObject.MouseObject is PlayerObject && MapObject.MouseObject != User)) break;
                         if (MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 70) break;
-
+ 
                         if (CMain.Alt && !User.RidingMount)
                         {
                             User.QueuedAction = new QueuedAction { Action = MirAction.Harvest, Direction = direction, Location = User.CurrentLocation };
                             return;
                         }
+
                         if (CMain.Shift)
                         {
                             if (CMain.Time > GameScene.AttackTime && CanRideAttack()) //ArcherTest - shift click
@@ -9955,7 +9951,7 @@ namespace Client.MirScenes
                                 MapObject target = null;
                                 if (MapObject.MouseObject is MonsterObject || MapObject.MouseObject is PlayerObject) target = MapObject.MouseObject;
 
-                                if (User.Class == MirClass.Archer && User.HasClassWeapon && !User.RidingMount)
+                                if (User.Class == MirClass.Archer && User.HasClassWeapon && !User.RidingMount && !User.Poison.HasFlag(PoisonType.Stun))
                                 {
                                     if (target != null)
                                     {
@@ -9978,6 +9974,7 @@ namespace Client.MirScenes
                                 
                                 //stops double slash from being used without empty hand or assassin weapon (otherwise bugs on second swing)
                                 if (GameScene.DoubleSlash && (!User.HasClassWeapon && User.Weapon > -1)) return;
+                                if (User.Poison.HasFlag(PoisonType.Stun)) return;
 
                                 User.QueuedAction = new QueuedAction { Action = MirAction.Attack1, Direction = direction, Location = User.CurrentLocation };
                             }

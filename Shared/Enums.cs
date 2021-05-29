@@ -473,7 +473,7 @@ public enum Monster : ushort
     Jar2 = 281,
     SeedingsGeneral = 282, // Done (DG)
     RestlessJar = 283,
-    GeneralJinmYo = 284, // TODO: AI Incomplete - Thunderbolt and orb at end of lib file, not sure what this does? See notes in AI file (DG).
+    GeneralMeowMeow = 284, // TODO: AI Incomplete - Thunderbolt and orb at end of lib file, not sure what this does? See notes in AI file (DG).
     Bunny = 285, // No AI
     Tucson = 286, //No AI or spell animations (DG)
     TucsonFighter = 287, // Use AI 44 - No spell animation (DG)
@@ -1209,7 +1209,7 @@ public enum Spell : byte
     MapLava = 203,
     MapQuake1 = 204,
     MapQuake2 = 205,
-    GeneralJinmyoThunder = 206,
+    GeneralMeowMeowThunder = 206,
     TreeQueenRoot = 207,
     TreeQueenGroundRoots = 208,
 }
@@ -1246,17 +1246,13 @@ public enum SpellEffect : byte
     IcePillar,
     KingGuard,
     KingGuard2,
-
-    MonsterMACBuff,
-    GeneralJinmyoShield,    
-    GeneralJinmyoThunder,
+    MonsterMACBuff, 
     TreeQueenFireBombardment,
     TreeQueenGroundRoots,
     TreeQueenMassRoots,
     TreeQueenSingleRoot,
-
     DeathCrawlerBreath,
-    MonsterMACBuff,
+
     Tester
 }
 
@@ -1291,8 +1287,10 @@ public enum BuffType : byte
     ImmortalSkin,
     MagicShield,
     ElementalBarrier,
-    MonsterMACBuff,
-    GeneralJimnyoShield,
+
+    //monster
+    MonsterMACBuff = 50,
+    GeneralMeowMeowShield,
 
     //special
     GameMaster = 100,
@@ -1321,7 +1319,7 @@ public enum BuffType : byte
     Defence,
     MagicDefence,
     WonderDrug,
-    Knapsack
+    Knapsack,
 }
 
 public enum BuffStackType : byte

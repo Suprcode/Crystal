@@ -75,6 +75,36 @@ namespace Server.MirObjects.Monsters
             }
         }
 
+        protected override void HalfmoonAttack(int delay = 500, DefenceType defenceType = DefenceType.ACAgility)
+        {
+            MirDirection dir = Functions.PreviousDir(Direction);
+
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+            if (damage == 0) return;
+
+            for (int i = 0; i < 4; i++)
+            {
+                Point target = Functions.PointMove(CurrentLocation, dir, 1);
+                dir = Functions.NextDir(dir);
+
+                if (!CurrentMap.ValidPoint(target)) continue;
+
+                Cell cell = CurrentMap.GetCell(target);
+                if (cell.Objects == null) continue;
+
+                for (int o = 0; o < cell.Objects.Count; o++)
+                {
+                    MapObject ob = cell.Objects[o];
+                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
+                    if (!ob.IsAttackTarget(this)) continue;
+
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType, true);
+                    ActionList.Add(action);
+                    break;
+                }
+            }
+        }
+
         protected override void CompleteAttack(IList<object> data)
         {
             MapObject target = (MapObject)data[0];
@@ -84,9 +114,7 @@ namespace Server.MirObjects.Monsters
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            var finalDamage = target.Attacked(this, damage, defence);
-
-            if (poison && finalDamage > 0)
+            if (poison && target.Attacked(this, damage, defence) > 0)
             {
                 PoisonTarget(target, 1, 5, PoisonType.Green, 1000);
             }

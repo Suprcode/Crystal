@@ -9,11 +9,31 @@ namespace Server.MirObjects.Monsters
 {
     public class Armadillo : DigOutZombie
     {
-        //TODO: Code Attack3 - rolling attack(disengage?)
+        protected bool _runAway;
 
         protected internal Armadillo(MonsterInfo info)
             : base(info)
         {
+        }
+
+        public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
+        {
+            if (_runAway && Envir.Random.Next(4) == 0)
+            {
+                _runAway = false;
+            }
+
+            return base.Attacked(attacker, damage, type, damageWeapon);
+        }
+
+        public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
+        {
+            if (_runAway && Envir.Random.Next(4) == 0)
+            {
+                _runAway = false;
+            }
+
+            return base.Attacked(attacker, damage, type);
         }
 
         protected override void Attack()
@@ -67,7 +87,7 @@ namespace Server.MirObjects.Monsters
             }
         }
 
-        private void Retreat()
+        protected void Retreat()
         {
             MirDirection jumpDir = Functions.ReverseDirection(Direction);
 
@@ -91,6 +111,66 @@ namespace Server.MirObjects.Monsters
             }
 
             Broadcast(new S.ObjectBackStep { ObjectID = ObjectID, Direction = Direction, Location = location, Distance = 2 });
+
+            int damage = Stats[Stat.MaxDC];
+            if (damage == 0) return;
+
+            DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 900, Target, damage, DefenceType.AC);
+            ActionList.Add(action);
+        }
+
+        protected override void CompleteRangeAttack(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            var targets = FindAllTargets(2, CurrentLocation);
+
+            for (int i = 0; i < targets.Count; i++)
+            {
+                if (targets[i].Attacked(this, damage, defence) <= 0)
+                {
+                    _runAway = true;
+                };
+            }
+        }
+
+        protected override void ProcessTarget()
+        {
+            if (_runAway)
+            {
+                if (!CanMove || Target == null) return;
+
+                MirDirection dir = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
+
+                if (Walk(dir)) return;
+
+                switch (Envir.Random.Next(2)) //No favour
+                {
+                    case 0:
+                        for (int i = 0; i < 7; i++)
+                        {
+                            dir = Functions.NextDir(dir);
+
+                            if (Walk(dir))
+                                return;
+                        }
+                        break;
+                    default:
+                        for (int i = 0; i < 7; i++)
+                        {
+                            dir = Functions.PreviousDir(dir);
+
+                            if (Walk(dir))
+                                return;
+                        }
+                        break;
+                }
+            }
+            else base.ProcessTarget();
         }
     }
 }

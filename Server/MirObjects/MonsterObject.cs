@@ -238,7 +238,7 @@ namespace Server.MirObjects
                     return new HardenRhino(info); //TODO
 
                 case 110:
-                    return new DemonWolf(info); //TODO - cleanup
+                    return new DemonWolf(info);
                 case 111:
                     return new WhiteMammoth(info);
                 case 112:
@@ -256,9 +256,9 @@ namespace Server.MirObjects
                 case 118:
                     return new CatShaman(info);
 
-                case 167:
-                    return new Jar1(info);
                 case 168:
+                    return new Jar1(info);
+                case 169:
                     return new Jar2(info);
 
                 case 119:
@@ -267,7 +267,7 @@ namespace Server.MirObjects
                 //FAR CHECKED UP TO THIS POINT
 
                 case 120:
-                    return new GeneralJinmYo(info);
+                    return new GeneralMeowMeow(info);
 
                 //case xx:
                 //    return new RestlessJar(info);
@@ -624,6 +624,8 @@ namespace Server.MirObjects
             for (int i = 0; i < Buffs.Count; i++)
             {
                 Buff buff = Buffs[i];
+
+                Stats.Add(buff.Stats);
 
                 switch (buff.Type)
                 {
@@ -2353,17 +2355,14 @@ namespace Server.MirObjects
             PoisonList.Add(p);
         }
 
-        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stat, bool visible = false, bool infinite = false, bool stackable = false, bool refreshStats = true, params int[] values)
+        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool visible = false, bool infinite = false, bool stackable = false, bool refreshStats = true, params int[] values)
         {
-            Buff b = base.AddBuff(type, owner, duration, Stats, visible, infinite, stackable, refreshStats, values);
+            Buff b = base.AddBuff(type, owner, duration, stats, visible, infinite, stackable, refreshStats, values);
 
             switch (b.Type)
             {
                 case BuffType.MonsterMACBuff:
                     CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MonsterMACBuff }, CurrentLocation);
-                    break;
-                case BuffType.GeneralJimnyoShield:
-                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.GeneralJinmyoShield }, CurrentLocation);
                     break;
             }
 

@@ -167,6 +167,10 @@ namespace Client.MirObjects
 				case BuffType.GameMaster:
 					Effects.Add(new BuffEffect(Libraries.CHumEffect[5], 0, 1, 1200, this, true, type) { Repeat = true });
 					break;
+                case BuffType.GeneralMeowMeowShield:
+                    Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.GeneralMeowMeow], 529, 7, 700, this, true, type) { Repeat = true, Light = 1 });
+                    MirSounds.SoundManager.PlaySound(8322);
+                    break;
             }
         }
         public void RemoveBuffEffect(BuffType type)
