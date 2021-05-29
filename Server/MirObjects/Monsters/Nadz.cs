@@ -50,9 +50,9 @@ namespace Server.MirObjects.Monsters
                 Attack1(3);
             }
             else
-            {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                PushAttack(1);
+            {   
+                SinglePushAttack(Stats[Stat.MinDC], Stats[Stat.MaxDC], attackType: 1);
+                PoisonTarget(Target, 3, 5, PoisonType.Paralysis);                
             }
 
         }
@@ -70,36 +70,6 @@ namespace Server.MirObjects.Monsters
                 if (targets[i].Attacked(this, damage, DefenceType.AC) <= 0) return;
             }
 
-        }
-
-        //Repulsion - Attack2 Scream Attack (utilises DelayedAction so player is hit at end of push)
-        //need to put Damage Stats (DC/MC/SC) on mob for it to push
-        private void PushAttack(int distance)
-        {
-            int levelGap = 5;
-            int mobLevel = this.Level;
-            int targetLevel = Target.Level;
-
-            if ((targetLevel <= mobLevel + levelGap))
-            {
-                if (Target.Pushed(this, Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation), 2) > 0)
-                {
-                    int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                    AttackTime = Envir.Time + AttackSpeed + 500;
-                    if (damage == 0) return;
-
-                    int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
-
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.MAC);
-                    ActionList.Add(action);
-
-                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-                    {
-                        if (Envir.Random.Next(3) == 0)
-                            Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Paralysis, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);
-                    }
-                }
-            }
-        }
+        }       
     }
 }
