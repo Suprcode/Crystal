@@ -61,10 +61,7 @@ namespace Server.MirObjects.Monsters
 
                 if (mob == null) return;
 
-                if (!mob.Spawn(CurrentMap, Front))
-                {
-                    mob.Spawn(CurrentMap, CurrentLocation);
-                }
+                mob.Spawn(CurrentMap, CurrentLocation);
 
                 mob.Target = Target;
                 mob.ActionTime = Envir.Time + 2000;

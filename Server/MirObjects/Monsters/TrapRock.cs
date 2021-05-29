@@ -98,7 +98,10 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            if (Envir.Random.Next(8) == 0 && !ChildRock) Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 3, TickSpeed = 1000 }, this, true);
+            if (Envir.Random.Next(8) == 0 && !ChildRock)
+            {
+                Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 3, TickSpeed = 1000 }, this, true);
+            }
 
             if (Target.Dead)
                 Die();

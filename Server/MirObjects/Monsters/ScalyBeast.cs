@@ -62,13 +62,8 @@ namespace Server.MirObjects.Monsters
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 900, targets[i], damage, DefenceType.MAC);
                 ActionList.Add(action);
 
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-                {
-                    if (Envir.Random.Next(5) == 0)
-                    {
-                        targets[i].ApplyPoison(new Poison { Owner = this, Duration = 4, PType = PoisonType.Paralysis, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);
-                    }
-                }
+                //TODO - Delay this
+                PoisonTarget(Target, 5, 4, PoisonType.Paralysis, 2000);
             }
 
         }

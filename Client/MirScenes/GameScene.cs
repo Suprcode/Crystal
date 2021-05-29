@@ -75,7 +75,6 @@ namespace Client.MirScenes
         public CustomPanel1 CustomPanel1;
         public SocketDialog SocketDialog;
 
-        //public SkillBarDialog SkillBarDialog;
         public List<SkillBarDialog> SkillBarDialogs = new List<SkillBarDialog>();
         public ChatOptionDialog ChatOptionDialog;
         public ChatNoticeDialog ChatNoticeDialog;
@@ -3275,10 +3274,17 @@ namespace Client.MirScenes
         }
         private void Poisoned(S.Poisoned p)
         {
+            var previousPoisons = User.Poison;
+
             User.Poison = p.Poison;
             if (p.Poison.HasFlag(PoisonType.Stun) || p.Poison.HasFlag(PoisonType.Frozen) || p.Poison.HasFlag(PoisonType.Paralysis) || p.Poison.HasFlag(PoisonType.LRParalysis))
             {
-                    User.ClearMagic();
+                User.ClearMagic();
+            }
+
+            if (previousPoisons.HasFlag(PoisonType.Illusion) && !User.Poison.HasFlag(PoisonType.Illusion))
+            {
+                User.IllusionCount = 0;
             }
         }
         private void ObjectPoisoned(S.ObjectPoisoned p)
@@ -9025,8 +9031,11 @@ namespace Client.MirScenes
             //Render Death, 
 
             LightSetting setting = Lights == LightSetting.Normal ? GameScene.Scene.Lights : Lights;
-            if (setting != LightSetting.Day)
+
+            if (setting != LightSetting.Day || GameScene.User.Poison.HasFlag(PoisonType.Illusion))
+            {
                 DrawLights(setting);
+            }
 
             if (Settings.DropView || GameScene.DropViewTime > CMain.Time)
             {
@@ -9410,6 +9419,20 @@ namespace Client.MirScenes
                 Effects[i].Draw();
         }
 
+        private Color GetIllusionLight(Color light)
+        {
+            if (MapObject.User.IllusionTime <= CMain.Time && MapObject.User.IllusionCount < 50)
+            {
+                MapObject.User.IllusionTime = CMain.Time + 100;
+                MapObject.User.IllusionCount++;
+            }
+
+            int count = MapObject.User.IllusionCount;
+            light = Color.FromArgb(255, Math.Max(20, light.R - (count * 5)), Math.Max(20, light.G - (count * 5)), Math.Max(20, light.B - (count * 5)));
+
+            return light;
+        }
+
         private void DrawLights(LightSetting setting)
         {
             if (DXManager.Lights == null || DXManager.Lights.Count == 0) return;
@@ -9424,27 +9447,50 @@ namespace Client.MirScenes
             DXManager.SetSurface(DXManager.LightSurface);
 
             #region Night Lights
-            Color Darkness = Color.Black;
-            switch (MapDarkLight)
+            Color darkness;
+
+            switch (setting)
             {
-                case 1:
-                    Darkness = Color.FromArgb(255, 20, 20, 20);
+                case LightSetting.Night:
+                    {
+                        switch (MapDarkLight)
+                        {
+                            case 1:
+                                darkness = Color.FromArgb(255, 20, 20, 20);
+                                break;
+                            case 2:
+                                darkness = Color.LightSlateGray;
+                                break;
+                            case 3:
+                                darkness = Color.SkyBlue;
+                                break;
+                            case 4:
+                                darkness = Color.Goldenrod;
+                                break;
+                            default:
+                                darkness = Color.Black;
+                                break;
+                        }
+                    }
                     break;
-                case 2:
-                    Darkness = Color.LightSlateGray;
-                    break;
-                case 3:
-                    Darkness = Color.SkyBlue;
-                    break;
-                case 4:
-                    Darkness = Color.Goldenrod;
+                case LightSetting.Evening:
+                case LightSetting.Dawn:
+                    darkness = Color.FromArgb(255, 50, 50, 50);
                     break;
                 default:
-                    Darkness = Color.Black;
+                case LightSetting.Day:
+                    darkness = Color.FromArgb(255, 255, 255, 255);
                     break;
             }
 
-            DXManager.Device.Clear(ClearFlags.Target, setting == LightSetting.Night ? Darkness : Color.FromArgb(255, 50, 50, 50), 0, 0);
+            if (MapObject.User.Poison.HasFlag(PoisonType.Illusion))
+            {
+                darkness = GetIllusionLight(darkness);
+            }
+
+            CMain.DebugText = $"{darkness.A},{darkness.R},{darkness.G},{darkness.B}";
+
+            DXManager.Device.Clear(ClearFlags.Target, darkness, 0, 0);
 
             #endregion
 
@@ -9459,11 +9505,11 @@ namespace Client.MirScenes
                 MapObject ob = Objects[i];
                 if (ob.Light > 0 && (!ob.Dead || ob == MapObject.User || ob.Race == ObjectType.Spell))
                 {
-
                     light = ob.Light;
-                    int LightRange = light % 15;
-                    if (LightRange >= DXManager.Lights.Count)
-                        LightRange = DXManager.Lights.Count - 1;
+
+                    int lightRange = light % 15;
+                    if (lightRange >= DXManager.Lights.Count)
+                        lightRange = DXManager.Lights.Count - 1;
 
                     p = ob.DrawLocation;
 
@@ -9495,13 +9541,18 @@ namespace Client.MirScenes
                         lightColour = Color.FromArgb(255, 120, 120, 120);
                     }
 
-                    if (DXManager.Lights[LightRange] != null && !DXManager.Lights[LightRange].Disposed)
+                    if (MapObject.User.Poison.HasFlag(PoisonType.Illusion))
                     {
-                        p.Offset(-(DXManager.LightSizes[LightRange].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[LightRange].Y / 2) - (CellHeight / 2) -5);
-                        DXManager.Sprite.Draw(DXManager.Lights[LightRange], null, Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), lightColour);
+                        lightColour = GetIllusionLight(lightColour);
                     }
 
+                    if (DXManager.Lights[lightRange] != null && !DXManager.Lights[lightRange].Disposed)
+                    {
+                        p.Offset(-(DXManager.LightSizes[lightRange].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[lightRange].Y / 2) - (CellHeight / 2) -5);
+                        DXManager.Sprite.Draw(DXManager.Lights[lightRange], null, Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), lightColour);
+                    }
                 }
+
                 #region Object Effect Lights
                 if (!Settings.Effect) continue;
                 for (int e = 0; e < ob.Effects.Count; e++)
@@ -9510,13 +9561,20 @@ namespace Client.MirScenes
                     if (!effect.Blend || CMain.Time < effect.Start || (!(effect is Missile) && effect.Light < ob.Light)) continue;
 
                     light = effect.Light;
-
+                    
                     p = effect.DrawLocation;
+
+                    var lightColour = effect.LightColour;
+
+                    if (MapObject.User.Poison.HasFlag(PoisonType.Illusion))
+                    {
+                        lightColour = GetIllusionLight(lightColour);
+                    }
 
                     if (DXManager.Lights[light] != null && !DXManager.Lights[light].Disposed)
                     {
                         p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
-                        DXManager.Sprite.Draw(DXManager.Lights[light], null, Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), effect.LightColour);
+                        DXManager.Sprite.Draw(DXManager.Lights[light], null, Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), lightColour);
                     }
 
                 }
@@ -9537,10 +9595,17 @@ namespace Client.MirScenes
 
                     p = effect.DrawLocation;
 
+                    var lightColour = Color.White;
+
+                    if (MapObject.User.Poison.HasFlag(PoisonType.Illusion))
+                    {
+                        lightColour = GetIllusionLight(lightColour);
+                    }
+
                     if (DXManager.Lights[light] != null && !DXManager.Lights[light].Disposed)
                     {
                         p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
-                        DXManager.Sprite.Draw(DXManager.Lights[light], null, Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), Color.White);
+                        DXManager.Sprite.Draw(DXManager.Lights[light], null, Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), lightColour);
                     }
                 }
             }
@@ -9582,6 +9647,11 @@ namespace Client.MirScenes
                             break;
                     }
 
+                    if (MapObject.User.Poison.HasFlag(PoisonType.Illusion))
+                    {
+                        lightIntensity = GetIllusionLight(lightIntensity);
+                    }
+
                     int fileIndex = M2CellInfo[x, y].FrontIndex;
 
                     p = new Point(
@@ -9598,7 +9668,7 @@ namespace Client.MirScenes
                     if (DXManager.Lights[light] != null && !DXManager.Lights[light].Disposed)
                     {
                         p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2) + 10, -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
-                        DXManager.Sprite.Draw(DXManager.Lights[light], null, Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), Color.White);
+                        DXManager.Sprite.Draw(DXManager.Lights[light], null, Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), lightIntensity);
                     }
                 }
             }

@@ -13,7 +13,7 @@ namespace Server.MirObjects.Monsters
         {
             get
             {
-                return 2;
+                return 6;
             }
         }
 

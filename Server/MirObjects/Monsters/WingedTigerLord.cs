@@ -161,14 +161,7 @@ namespace Server.MirObjects.Monsters
 
             if (target.Attacked(this, damage, defence) <= 0) return;
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.Stats[Stat.PoisonResist])
-            {
-                if (Envir.Random.Next(2) == 0)
-                {
-                    target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Stun, Value = poisonTime, TickSpeed = 2000 }, this);
-                    Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.Stunned, Time = (uint)poisonTime * 1000 });
-                }
-            }
+            PoisonTarget(target, 2, poisonTime, PoisonType.Stun, 2000);
         }
 
         protected override void CompleteAttack(IList<object> data)

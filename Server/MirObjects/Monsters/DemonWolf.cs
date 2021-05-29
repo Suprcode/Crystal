@@ -92,12 +92,8 @@ namespace Server.MirObjects.Monsters
                             if (!ob.IsAttackTarget(this)) continue;
                             ob.Attacked(this, damage, DefenceType.MACAgility);
 
-                            if (Envir.Random.Next(10) == 0)
-                            {
-                                int poisonLength = 5;
-                                Target.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = poisonLength, TickSpeed = 1000 }, this);
-                                Broadcast(new S.ObjectEffect { ObjectID = Target.ObjectID, Effect = SpellEffect.Stunned, Time = (uint)poisonLength * 1000 });
-                            }
+                            //TODO - Move this in to delay
+                            PoisonTarget(Target, 10, 5, PoisonType.Stun, 1000);
                         }
                         else continue;
 

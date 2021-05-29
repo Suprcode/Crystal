@@ -81,16 +81,7 @@ namespace Server.MirObjects.Monsters
             {
                 targets[i].Attacked(this, Stats[Stat.MaxDC] * 3, DefenceType.MACAgility);
 
-                if (Envir.Random.Next(2) == 0)
-                {
-                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].Stats[Stat.PoisonResist])
-                    {
-                        int poisonLength = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-
-                        targets[i].ApplyPoison(new Poison { Owner = this, PType = PoisonType.Stun, Duration = poisonLength, TickSpeed = 1000 }, this);
-                        Broadcast(new S.ObjectEffect { ObjectID = targets[i].ObjectID, Effect = SpellEffect.Stunned, Time = (uint)poisonLength * 1000 });
-                    }
-                }
+                PoisonTarget(targets[i], 2, GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]), PoisonType.Stun, 1000);
             }
         }
 

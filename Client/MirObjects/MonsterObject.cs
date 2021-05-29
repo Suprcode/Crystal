@@ -420,6 +420,8 @@ namespace Client.MirObjects
                 DrawColour = Color.Purple;
             if (Poison.HasFlag(PoisonType.Stun))
                 DrawColour = Color.Yellow;
+            if (Poison.HasFlag(PoisonType.Illusion))
+                DrawColour = Color.MediumVioletRed;
             if (Poison.HasFlag(PoisonType.Frozen))
                 DrawColour = Color.Blue;
             if (Poison.HasFlag(PoisonType.Paralysis) || Poison.HasFlag(PoisonType.LRParalysis))
@@ -1038,12 +1040,6 @@ namespace Client.MirObjects
                             case Monster.FrozenZombie:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenZombie], 360, 10, Frame.Count * Frame.Interval, this));
                                 break;
-                            case Monster.Jar1:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Jar1], 128 + (int)Direction * 3, 3, 300, this, CMain.Time + 300));
-                                break;
-                            case Monster.Jar2:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Jar2], 624 + (int)Direction * 8, 8, 800, this));
-                                break;
                             case Monster.MudWarrior:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MudWarrior], 432, 9, 9 * Frame.Interval, this));
                                 break;
@@ -1359,6 +1355,9 @@ namespace Client.MirObjects
                                                 break;
                                             case Monster.Bear:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Bear], 321 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
+                                                break;
+                                            case Monster.Jar1:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Jar1], 128 + (int)Direction * 3, 3, 300, this));
                                                 break;
                                         }
                                         break;
@@ -1973,6 +1972,13 @@ namespace Client.MirObjects
                                                 break;
                                             case Monster.ColdArcher:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ColdArcher], 336 + (int)Direction * 3, 3, 3 * Frame.Interval, this, drawBehind: true));
+                                                break;
+                                            case Monster.Jar2:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Jar2], 624 + (int)Direction * 8, 8, 800, ob) { Blend = true });
+                                                }
                                                 break;
                                         }
                                         break;
