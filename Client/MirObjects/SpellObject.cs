@@ -149,9 +149,11 @@ namespace Client.MirObjects
                     break;
                 case Spell.MapQuake1:
                     MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellLord], 27, 12, 1200, CurrentLocation) { Blend = false });
+                    MirSounds.SoundManager.PlaySound(8311);
                     break;
                 case Spell.MapQuake2:
                     MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellLord], 39, 13, 1300, CurrentLocation) { Blend = false });
+                    MirSounds.SoundManager.PlaySound(8311);
                     break;
                 case Spell.GeneralJinmyoThunder:                
                     MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GeneralJinmYo], 522, 7, 700, CurrentLocation) { Blend = true, }); ;                    

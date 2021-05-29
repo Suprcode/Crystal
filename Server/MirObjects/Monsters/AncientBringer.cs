@@ -73,7 +73,7 @@ namespace Server.MirObjects.Monsters
 
                     int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
 
-                    DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.ACAgility, 4);
+                    DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.ACAgility, (byte)4);
                     ActionList.Add(action);
                 }
                 else
@@ -82,7 +82,7 @@ namespace Server.MirObjects.Monsters
 
                     int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC] * 2);
 
-                    DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.ACAgility, 5);
+                    DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.ACAgility, (byte)5);
                     ActionList.Add(action);
 
                     if (damage > 0)

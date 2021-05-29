@@ -3999,9 +3999,13 @@ namespace Client.MirScenes
                     case SpellEffect.KingGuard:
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KingGuard], 753, 10, 1000, ob) { Blend = false });
                         break;
+                    case SpellEffect.KingGuard2:
+                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KingGuard], 763, 10, 1000, ob) { Blend = false });
+                        break;
                     case SpellEffect.MonsterMACBuff: //loop - look @ MagicShield for start / loop / end
                         ob.Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.HornedArcher], 477, 10, 1000, ob, true, BuffType.MonsterMACBuff) { Repeat = true });
                         break;
+
                     case SpellEffect.GeneralJinmyoShield:
                         ob.Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.GeneralJinmYo], 529, 7, 700, ob, true, BuffType.GeneralJimnyoShield) { Repeat = true, Light = 1 });
                         break;
@@ -4011,6 +4015,11 @@ namespace Client.MirScenes
                         break;
                     case SpellEffect.TreeQueenSingleRoot://Single Root
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 111, 15, 1500, ob) { Blend = false });
+                        break;
+
+
+                    case SpellEffect.DeathCrawlerBreath:
+                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DeathCrawler], 272 + ((int)ob.Direction * 4), 4, 400, ob) { Blend = true });
                         break;
 
                 }

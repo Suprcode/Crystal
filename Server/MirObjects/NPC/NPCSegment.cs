@@ -1059,6 +1059,17 @@ namespace Server.MirObjects
 
                     acts.Add(new NPCActions(ActionType.ExpireTimer, parts[1]));
                     break;
+
+                case "UNEQUIPITEM":
+                    var type = "";
+
+                    if (parts.Length >= 2)
+                    {
+                        type = parts[1];
+                    }
+
+                    acts.Add(new NPCActions(ActionType.UnequipItem, type));
+                    break;
             }
         }
 
@@ -3761,6 +3772,38 @@ namespace Server.MirObjects
                     case ActionType.ExpireTimer:
                         {
                             player.ExpireTimer(param[0]);
+                        }
+                        break;
+                    case ActionType.UnequipItem:
+                        {
+                            var type = param[0];
+
+                            for (int e = 0; e < player.Info.Equipment.Length; e++)
+                            {
+                                var item = player.Info.Equipment[e];
+
+                                if (item == null) continue;
+
+                                if (!player.CanRemoveItem(MirGridType.Inventory, item) || item.Cursed || item.WeddingRing != -1) continue;
+
+                                for (int k = 0; k < player.Info.Inventory.Length; k++)
+                                {
+                                    var freeSlot = player.Info.Inventory[k];
+
+                                    if (freeSlot != null) continue;
+
+                                    player.Info.Equipment[e] = null;
+                                    player.Info.Inventory[k] = item;
+
+                                    //TODO - Refresh Clients with updated inventory
+
+                                    player.Report.ItemMoved(item, MirGridType.Equipment, MirGridType.Inventory, e, k);
+
+                                    break;
+                                }
+                            }
+
+                            player.RefreshStats();
                         }
                         break;
                 }

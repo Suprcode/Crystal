@@ -13297,7 +13297,7 @@ namespace Server.MirObjects
 
             return true;
         }
-        private bool CanRemoveItem(MirGridType grid, UserItem item)
+        public bool CanRemoveItem(MirGridType grid, UserItem item)
         {
             //Item  Stuck
 
