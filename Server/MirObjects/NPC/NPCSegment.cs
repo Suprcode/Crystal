@@ -3776,7 +3776,7 @@ namespace Server.MirObjects
                         break;
                     case ActionType.UnequipItem:
                         {
-                            var type = param[0];
+                            var slot = param[0];
 
                             for (int e = 0; e < player.Info.Equipment.Length; e++)
                             {
@@ -3784,7 +3784,9 @@ namespace Server.MirObjects
 
                                 if (item == null) continue;
 
-                                if (!string.IsNullOrEmpty(type) && type.ToLower() != item.Info.Type.ToString().ToLower()) continue;
+                                var slotName = (EquipmentSlot)e;
+
+                                if (!string.IsNullOrEmpty(slot) && slot.ToLower() != slotName.ToString().ToLower()) continue;
 
                                 if (!player.CanRemoveItem(MirGridType.Inventory, item) || item.Cursed || item.WeddingRing != -1) continue;
 
