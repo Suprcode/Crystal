@@ -1108,6 +1108,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.UserInformation:
                     UserInformation((S.UserInformation)p);
                     break;
+                case (short)ServerPacketIds.UserSlotsRefresh:
+                    UserSlotsRefresh((S.UserSlotsRefresh)p);
+                    break;
                 case (short)ServerPacketIds.UserLocation:
                     UserLocation((S.UserLocation)p);
                     break;
@@ -1801,6 +1804,11 @@ namespace Client.MirScenes
             foreach (SkillBarDialog Bar in SkillBarDialogs)
                 Bar.Update();
         }
+        private void UserSlotsRefresh(S.UserSlotsRefresh p)
+        {
+            User.SetSlots(p);
+        }
+
         private void UserLocation(S.UserLocation p)
         {
             MapControl.NextAction = 0;
@@ -9435,14 +9443,14 @@ namespace Client.MirScenes
 
         private Color GetIllusionLight(Color light)
         {
-            if (MapObject.User.IllusionTime <= CMain.Time && MapObject.User.IllusionCount < 50)
+            if (MapObject.User.IllusionTime <= CMain.Time && MapObject.User.IllusionCount < 25)
             {
                 MapObject.User.IllusionTime = CMain.Time + 100;
                 MapObject.User.IllusionCount++;
             }
 
             int count = MapObject.User.IllusionCount;
-            light = Color.FromArgb(255, Math.Max(20, light.R - (count * 5)), Math.Max(20, light.G - (count * 5)), Math.Max(20, light.B - (count * 5)));
+            light = Color.FromArgb(255, Math.Max(20, light.R - (count * 10)), Math.Max(20, light.G - (count * 10)), Math.Max(20, light.B - (count * 10)));
 
             return light;
         }

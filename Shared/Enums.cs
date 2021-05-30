@@ -1361,6 +1361,7 @@ public enum ServerPacketIds : short
     StartGameDelay,
     MapInformation,
     UserInformation,
+    UserSlotsRefresh,
     UserLocation,
     ObjectPlayer,
     ObjectRemove,

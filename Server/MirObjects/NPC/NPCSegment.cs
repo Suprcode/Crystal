@@ -3784,6 +3784,8 @@ namespace Server.MirObjects
 
                                 if (item == null) continue;
 
+                                if (!string.IsNullOrEmpty(type) && type.ToLower() != item.Info.Type.ToString().ToLower()) continue;
+
                                 if (!player.CanRemoveItem(MirGridType.Inventory, item) || item.Cursed || item.WeddingRing != -1) continue;
 
                                 for (int k = 0; k < player.Info.Inventory.Length; k++)
@@ -3795,13 +3797,22 @@ namespace Server.MirObjects
                                     player.Info.Equipment[e] = null;
                                     player.Info.Inventory[k] = item;
 
-                                    //TODO - Refresh Clients with updated inventory
-
                                     player.Report.ItemMoved(item, MirGridType.Equipment, MirGridType.Inventory, e, k);
 
                                     break;
                                 }
                             }
+
+                            S.UserSlotsRefresh packet = new S.UserSlotsRefresh
+                            {
+                                Inventory = new UserItem[player.Info.Inventory.Length],
+                                Equipment = new UserItem[player.Info.Equipment.Length],
+                            };
+
+                            player.Info.Inventory.CopyTo(packet.Inventory, 0);
+                            player.Info.Equipment.CopyTo(packet.Equipment, 0);
+
+                            player.Enqueue(packet);
 
                             player.RefreshStats();
                         }

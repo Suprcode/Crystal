@@ -393,6 +393,8 @@ public abstract class Packet
                 return new S.MapInformation();
             case (short)ServerPacketIds.UserInformation:
                 return new S.UserInformation();
+            case (short)ServerPacketIds.UserSlotsRefresh:
+                return new S.UserSlotsRefresh();
             case (short)ServerPacketIds.UserLocation:
                 return new S.UserLocation();
             case (short)ServerPacketIds.ObjectPlayer:

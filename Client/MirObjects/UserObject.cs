@@ -118,6 +118,15 @@ namespace Client.MirObjects
             SetAction();
         }
 
+        public void SetSlots(S.UserSlotsRefresh p)
+        {
+            Inventory = p.Inventory;
+            Equipment = p.Equipment;
+
+            BindAllItems();
+            RefreshStats();
+        }
+
         public override void SetLibraries()
         {
             base.SetLibraries();

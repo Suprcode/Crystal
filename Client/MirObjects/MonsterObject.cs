@@ -710,7 +710,10 @@ namespace Client.MirObjects
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellLord], 97, 8, 8 * Frame.Interval, this));
                                 break;
                             case Monster.WitchDoctor:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WitchDoctor], 328, 16, 16 * 100, this));
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WitchDoctor], 328, 20, 20 * Frame.Interval, this));
+                                break;
+                            case Monster.RestlessJar:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RestlessJar], 384, 7, 7 * Frame.Interval, this));
                                 break;
                             case Monster.RhinoWarrior:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RhinoWarrior], 320 + (int)Direction * 7, 7, 7 * Frame.Interval, this));
@@ -764,6 +767,9 @@ namespace Client.MirObjects
                             case Monster.BloodBaboon:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BloodBaboon], 312 + (int)Direction * 7, 7, 7 * Frame.Interval, this));
                                 break;
+                            case Monster.RestlessJar:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RestlessJar], 391 + (int)Direction * 10, 10, 10 * Frame.Interval, this));
+                                break;
                             case Monster.TwinHeadBeast:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TwinHeadBeast], 352 + (int)Direction * 7, 7, Frame.Count * Frame.Interval, this));
                                 break;
@@ -815,6 +821,7 @@ namespace Client.MirObjects
                         }
                         break;
                     case MirAction.Attack4:
+                        PlayFourthAttackSound();
                         break;
                     case MirAction.AttackRange1:
                         PlayRangeSound();
@@ -884,6 +891,9 @@ namespace Client.MirObjects
                                 break;
                             case Monster.SeedingsGeneral:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SeedingsGeneral], 1184 + (int)Direction * 9, 9, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.RestlessJar:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RestlessJar], 471, 5, 500, this));
                                 break;
                             case Monster.AvengingSpirit:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AvengingSpirit], 344 + (int)Direction * 3, 3, 3 * Frame.Interval, this));
@@ -1879,7 +1889,15 @@ namespace Client.MirObjects
                                             break;
                                     }
                                     break;
-
+                                case 6:
+                                    switch (BaseImage)
+                                    {
+                                        case Monster.RestlessJar:
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RestlessJar], 512, 7, 700, this));
+                                            break;
+                                    }
+                                    break;
+                               
                                 case 10:
                                     switch (BaseImage)
                                     {
@@ -1902,6 +1920,7 @@ namespace Client.MirObjects
 
                         if (UpdateFrame() >= Frame.Count)
                         {
+                            
                             FrameIndex = Frame.Count - 1;
                             SetAction();
                         }
@@ -2285,6 +2304,18 @@ namespace Client.MirObjects
                                                     {
                                                         if (missile.Target.CurrentAction == MirAction.Dead) return;
                                                         missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AncientBringer], 720, 10, 1000, missile.Target) { Blend = true });
+                                                    };
+                                                }
+                                                break;
+                                            case Monster.RestlessJar:
+                                                missile = CreateProjectile(476, Libraries.Monsters[(ushort)Monster.RestlessJar], true, 2, 100, 0, direction16: true);
+
+                                                if (missile.Target != null)
+                                                {
+                                                    missile.Complete += (o, e) =>
+                                                    {
+                                                        if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RestlessJar], 508, 3, 300, missile.Target) { Blend = true });
                                                     };
                                                 }
                                                 break;
@@ -3235,6 +3266,9 @@ namespace Client.MirObjects
                 case Monster.AncientBringer:
                 case Monster.SeedingsGeneral:
                     SoundManager.PlaySound(BaseSound + 7);
+                    return;
+                case Monster.RestlessJar:
+                    SoundManager.PlaySound(BaseSound + 8);
                     return;
                 default:
                     PlayAttackSound();

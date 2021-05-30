@@ -260,9 +260,10 @@ namespace Server.MirObjects
                     return new Jar1(info);
                 case 169:
                     return new Jar2(info);
-
                 case 119:
                     return new SeedingsGeneral(info);
+                case 170:
+                    return new RestlessJar(info);
 
                 //FAR CHECKED UP TO THIS POINT
 
@@ -369,7 +370,7 @@ namespace Server.MirObjects
 
 
 
-                case 170:
+                case 171:
                     return new WoodBox(info);
 
                 case 254:
