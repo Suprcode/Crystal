@@ -4015,9 +4015,8 @@ namespace Client.MirScenes
                     case SpellEffect.MonsterMACBuff: //loop - look @ MagicShield for start / loop / end
                         ob.Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.HornedArcher], 477, 10, 1000, ob, true, BuffType.MonsterMACBuff) { Repeat = true });
                         break;
-                    case SpellEffect.TreeQueenGroundRoots://Ground Roots
-                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 48, 10, 1000, ob) { Blend = false });
-                        //ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 57, 9, 1500, ob) { Blend = true });
+                    case SpellEffect.TreeQueenGroundRoots://Ground Roots / Vines
+                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 48, 10, 1500, ob) { Blend = false });                        
                         break;
                     case SpellEffect.TreeQueenSingleRoot://Single Root
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 111, 15, 1500, ob) { Blend = false });

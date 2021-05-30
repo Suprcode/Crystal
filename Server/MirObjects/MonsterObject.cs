@@ -3199,7 +3199,7 @@ namespace Server.MirObjects
             ActionList.Add(action);
         }
 
-        protected virtual void SinglePushAttack(int minAttackStat, int MaxAttackStat, DefenceType type = DefenceType.AC, int delay = 500, byte attackType = 0)
+        protected virtual void SinglePushAttack(int minAttackStat, int MaxAttackStat, DefenceType type = DefenceType.AC, int delay = 500, byte attackType = 0, int pushDistance = 3)
         {
             //Repulsion - (utilises DelayedAction so player is hit at end of push)
             //need to put Damage Stats (DC/MC/SC) on mob for it to push
@@ -3211,7 +3211,7 @@ namespace Server.MirObjects
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = attackType });
 
-                if (Target.Pushed(this, Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation), 3) > 0)
+                if (Target.Pushed(this, Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation), pushDistance) > 0)
                 {
                     int damage = GetAttackPower(minAttackStat, MaxAttackStat);
                     AttackTime = Envir.Time + AttackSpeed + 300;
