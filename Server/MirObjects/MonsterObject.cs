@@ -367,6 +367,11 @@ namespace Server.MirObjects
                 case 167:
                     return new TreeQueen(info);
 
+
+
+                case 170:
+                    return new WoodBox(info);
+
                 case 254:
                     return new StoningStatue(info);
                 //unfinished END

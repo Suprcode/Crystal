@@ -28,6 +28,10 @@ namespace Server.MirObjects.Monsters
         private int _groundrootCount = 1;
         private long _groundrootSpawnTime;
 
+        public long SlaveSpawnTime;
+        private int slaveSpawnSpreadMin = 10;
+        private int slaveSpawnSpreadMax = 20;
+
         protected virtual byte AttackRange
         {
             get
@@ -46,7 +50,7 @@ namespace Server.MirObjects.Monsters
         {
             if (Target.CurrentMap != CurrentMap) return false;
 
-            return true;        
+            return true;
         }
 
         public override void Turn(MirDirection dir)
@@ -276,6 +280,44 @@ namespace Server.MirObjects.Monsters
 
         }
 
+        private void SpawnSlaves()
+        {
+            int count = Math.Min(2, 6 - SlaveList.Count);
+            int distance = Envir.Random.Next(slaveSpawnSpreadMin, slaveSpawnSpreadMax);
+
+            for (int j = 0; j < CurrentMap.Players.Count; j++)
+            {
+                Point playerLocation = CurrentMap.Players[j].CurrentLocation;
+
+                Point location = new Point(playerLocation.X + Envir.Random.Next(-distance, distance + 1),
+                                             playerLocation.Y + Envir.Random.Next(-distance, distance + 1));
+
+                for (int i = 0; i < count; i++)
+                {
+                    MonsterObject mob = null;
+                    switch (Envir.Random.Next(4))
+                    {
+                        case 0:
+                            mob = GetMonster(Envir.GetMonsterInfo(Settings.TreeQueenMob1)); // RhinoWarrior
+                            break;
+                        case 1:
+                            mob = GetMonster(Envir.GetMonsterInfo(Settings.TreeQueenMob2)); // RhinoPriest
+                            break;
+                        case 2:
+                            mob = GetMonster(Envir.GetMonsterInfo(Settings.TreeQueenMob3)); // RockGuard
+                            break;
+                    }
+
+                    if (mob == null) return;
+
+                    mob.Spawn(CurrentMap, location);
+
+                    mob.ActionTime = Envir.Time + 2000;
+                    SlaveList.Add(mob);
+                }
+            }
+        }
+
         public void Rage()
         {
             if (Dead) return;
@@ -316,12 +358,12 @@ namespace Server.MirObjects.Monsters
 
             SpawnRoots();
 
-            if(Envir.Time > _groundrootSpawnTime)
+            if (Envir.Time > _groundrootSpawnTime)
             {
                 SpawnGroundRoots();
                 _groundrootSpawnTime = Envir.Time + 5000;
             }
-            
+
 
             if (!CanAttack) return;
 
@@ -332,6 +374,28 @@ namespace Server.MirObjects.Monsters
                 Attack();
                 return;
             }
+        }
+
+        public override void Spawned()
+        {
+            // Begin countdown timer
+            SlaveSpawnTime = Envir.Time + (Settings.Second * 45);
+
+            base.Spawned();
+        }
+
+        protected override void ProcessAI()
+        {
+            if (Dead) return;
+
+            // After first 60 seconds: spawn mobs, then every 60 seconds after, spawn more mobs.
+            if (Target != null && Envir.Time > SlaveSpawnTime)
+            {
+                SpawnSlaves();
+                SlaveSpawnTime = Envir.Time + (Settings.Second * 45);
+            }
+
+            base.ProcessAI();
         }
     }
 }

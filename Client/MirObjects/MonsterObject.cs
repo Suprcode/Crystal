@@ -2856,6 +2856,9 @@ namespace Client.MirObjects
                                         case Monster.BoneArcher:
                                             Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BoneSpearman], 224, 8, Frame.Count * FrameInterval, this));
                                             break;
+                                        case Monster.WoodBox:
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WoodBox], 104, 6, 6 * Frame.Interval, this) { Blend = true });
+                                            break;
                                     }
                                     break;
                             }
@@ -3560,14 +3563,6 @@ namespace Client.MirObjects
                             break;
                         case MirAction.Attack3:
                             if (FrameIndex >= 2) Libraries.Monsters[(ushort)Monster.ManectricBlest].DrawBlend((360 + FrameIndex + (int)Direction * 5) - 2, DrawLocation, Color.White, true);
-                            break;
-                    }
-                    break;
-                case Monster.WoodBox:
-                    switch (CurrentAction)
-                    {
-                        case MirAction.Die:
-                            Libraries.Monsters[(ushort)Monster.WoodBox].DrawBlend(103 + FrameIndex + (int)Direction * 20, DrawLocation, Color.White, true);
                             break;
                     }
                     break;

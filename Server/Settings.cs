@@ -159,7 +159,10 @@ namespace Server
                              GeneralMeowMeowMob1 = "StainHammerCat",
                              GeneralMeowMeowMob2 = "BlackHammerCat",
                              GeneralMeowMeowMob3 = "StrayCat",
-                             GeneralMeowMeowMob4 = "CatShaman";
+                             GeneralMeowMeowMob4 = "CatShaman",
+                             TreeQueenMob1 = "RhinoWarrior",
+                             TreeQueenMob2 = "RhinoPriest",
+                             TreeQueenMob3 = "RockGuard";
 
         public static string HealRing = "Healing",
                              FireRing = "FireBall",
@@ -378,6 +381,9 @@ namespace Server
             GeneralMeowMeowMob2 = Reader.ReadString("Game", "GeneralMeowMeowMob2", GeneralMeowMeowMob2);
             GeneralMeowMeowMob3 = Reader.ReadString("Game", "GeneralMeowMeowMob3", GeneralMeowMeowMob3);
             GeneralMeowMeowMob4 = Reader.ReadString("Game", "GeneralMeowMeowMob4", GeneralMeowMeowMob4);
+            TreeQueenMob1 = Reader.ReadString("Game", "TreeQueenMob1", TreeQueenMob1);
+            TreeQueenMob2 = Reader.ReadString("Game", "TreeQueenMob2", TreeQueenMob2);
+            TreeQueenMob3 = Reader.ReadString("Game", "TreeQueenMob3", TreeQueenMob3);
             WhiteSnake = Reader.ReadString("Game", "WhiteSnake", WhiteSnake);
             AngelName = Reader.ReadString("Game", "AngelName", AngelName);
             BombSpiderName = Reader.ReadString("Game", "BombSpiderName", BombSpiderName);
@@ -674,6 +680,10 @@ namespace Server
             Reader.Write("Game", "GeneralMeowMeowMob2", GeneralMeowMeowMob2);
             Reader.Write("Game", "GeneralMeowMeowMob3", GeneralMeowMeowMob3);
             Reader.Write("Game", "GeneralMeowMeowMob4", GeneralMeowMeowMob4);
+
+            Reader.Write("Game", "TreeQueenMob1", TreeQueenMob1);
+            Reader.Write("Game", "TreeQueenMob2", TreeQueenMob2);
+            Reader.Write("Game", "TreeQueenMob3", TreeQueenMob3);
 
             //IntelligentCreature
             Reader.Write("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);
