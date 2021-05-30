@@ -1675,6 +1675,9 @@ namespace Client.MirObjects
                                             case Monster.BlackTortoise:                                                
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BlackTortoise], 366 + (int)Direction * 4, 4, 4 * Frame.Interval, this));
                                                 break;
+                                            case Monster.TreeQueen:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 66, 16, 16 * Frame.Interval, this));
+                                                break;
                                         }
                                     }
                                     break;
