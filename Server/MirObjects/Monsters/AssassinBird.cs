@@ -4,7 +4,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class AssassinBird : MonsterObject
+    public class AssassinBird : MonsterObject
     {
         protected internal AssassinBird(MonsterInfo info)
             : base(info)
@@ -13,7 +13,6 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -40,7 +39,7 @@ namespace Server.MirObjects.Monsters
                 }
                 else
                 {
-                    Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+                    Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * 2);
                     if (damage == 0) return;
 
@@ -50,7 +49,7 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
 
                 SinglePushAttack(Stats[Stat.MinDC], Stats[Stat.MaxDC], delay: 500);
             }

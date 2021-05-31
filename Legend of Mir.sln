@@ -27,6 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{86F48C1E
 	ProjectSection(SolutionItems) = preProject
 		MonsterAttackMethods.txt = MonsterAttackMethods.txt
 		MonsterReferenceVideos.txt = MonsterReferenceVideos.txt
+		Sound Rules.txt = Sound Rules.txt
 	EndProjectSection
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "PatcherWebSite", "PatcherWebSite\", "{C1F2FAE3-485C-4BF4-8939-B44EAD5619D4}"

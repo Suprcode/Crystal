@@ -61,6 +61,7 @@ namespace Server.MirObjects.Monsters
 
         protected override void CompleteRangeAttack(IList<object> data)
         {
+            //Retreat attack does no damage
         }
     }
 }

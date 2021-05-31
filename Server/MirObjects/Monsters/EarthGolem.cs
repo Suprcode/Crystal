@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Server.MirObjects.Monsters
 {
-    class MudWarrior : ZumaMonster
+    class EarthGolem : ZumaMonster
     {
         protected virtual byte AttackRange
         {
@@ -17,7 +17,7 @@ namespace Server.MirObjects.Monsters
             }
         }
 
-        protected internal MudWarrior(MonsterInfo info)
+        protected internal EarthGolem(MonsterInfo info)
             : base(info)
         {
         }

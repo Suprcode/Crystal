@@ -493,9 +493,9 @@ public enum Monster : ushort
     AssassinBird = 300, // Done (DG)
     RhinoWarrior = 301, // AI Incomplete - Needs water and rock attacks coding (DG).
     RhinoPriest = 302, // Done (DG)
-    SwampSlime = 303, // Done (DG) - USE AI 113 (BloodBaboon) for Attack2. 
-    RockGuard = 304,  // No spell animations (DG) - USE AI 113 (BloodBaboon) for Attack2.
-    MudWarrior = 305, // Done (DG) - Frames amended (Attack2 changed to AttackRange1)
+    ElephantMan = 303, // Done (DG)
+    StoneGolem = 304,  // No spell animations (DG) - USE AI 113 (BloodBaboon) for Attack2.
+    EarthGolem = 305, // Done (DG) - Frames amended (Attack2 changed to AttackRange1)
     TreeGuardian = 306, 
     TreeQueen = 307,
     ShellFighter = 308,

@@ -44,17 +44,16 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-            ShockTime = 0;
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
                 return;
             }
 
-
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
+
+            ShockTime = 0;
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;

@@ -235,7 +235,7 @@ namespace Server.MirObjects
                     return new MudZombie(info);
 
                 case 109:
-                    return new HardenRhino(info); //TODO
+                    return new HardenRhino(info);
 
                 case 110:
                     return new DemonWolf(info); //Effect 0/1
@@ -260,18 +260,14 @@ namespace Server.MirObjects
                     return new Jar1(info);
                 case 169:
                     return new Jar2(info);
+
                 case 119:
                     return new SeedingsGeneral(info);
                 case 170:
                     return new RestlessJar(info);
 
-                //FAR CHECKED UP TO THIS POINT
-
                 case 120:
                     return new GeneralMeowMeow(info);
-
-                //case xx:
-                //    return new RestlessJar(info);
 
                 case 121:
                     return new Armadillo(info);
@@ -287,6 +283,9 @@ namespace Server.MirObjects
                     return new SwampWarrior(info);
                 case 127:
                     return new CannibalTentacles(info);
+
+                //TODO - TucsonGeneral
+
                 case 128:
                     return new GasToad(info);
                 case 129:
@@ -294,9 +293,22 @@ namespace Server.MirObjects
                 case 130:
                     return new AssassinBird(info);
                 case 131:
-                    return new RhinoWarrior(info);
+                    return new RhinoWarrior(info); //TODO
                 case 132:
                     return new RhinoPriest(info);
+
+                case 172:
+                    return new ElephantMan(info);
+
+                    //FAR CHECKED UP TO HERE
+
+                case 165:
+                    return new EarthGolem(info);
+                case 166:
+                    return new CaveStatue(info);
+                case 167:
+                    return new TreeQueen(info);
+
                 case 133:
                     return new OmaCannibal(info);
                 case 134:
@@ -361,12 +373,6 @@ namespace Server.MirObjects
                     return new FloatingRock(info);
                 case 164:
                     return new ScalyBeast(info);
-                case 165:
-                    return new MudWarrior(info);
-                case 166:
-                    return new CaveStatue(info);
-                case 167:
-                    return new TreeQueen(info);
 
 
 
@@ -374,8 +380,7 @@ namespace Server.MirObjects
                     return new WoodBox(info);
 
                 case 254:
-                    return new StoningStatue(info);
-                //unfinished END
+                    return new StoningStatue(info); //TODO
 
                 default:
                     return new MonsterObject(info);
@@ -3191,7 +3196,6 @@ namespace Server.MirObjects
             }
         }
     
-
         protected virtual void ProjectileAttack(int minAttackStat, int maxAttackStat, DefenceType type = DefenceType.ACAgility, int additionalDelay = 500)
         {
             int damage = GetAttackPower(minAttackStat, maxAttackStat);

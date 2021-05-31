@@ -117,7 +117,7 @@ namespace Server.MirObjects.Monsters
 
                         for (int i = 0; i < targets.Count; i++)
                         {
-                            if (targets[i].Attacked(this, damage, defence) <= 0) return;
+                            if (targets[i].Attacked(this, damage, defence) <= 0) continue;
                         }
                     }
                     break;
