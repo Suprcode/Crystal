@@ -3285,14 +3285,14 @@ namespace Client.MirScenes
             var previousPoisons = User.Poison;
 
             User.Poison = p.Poison;
-            if (p.Poison.HasFlag(PoisonType.Stun) || p.Poison.HasFlag(PoisonType.Frozen) || p.Poison.HasFlag(PoisonType.Paralysis) || p.Poison.HasFlag(PoisonType.LRParalysis))
+            if (p.Poison.HasFlag(PoisonType.Stun) || p.Poison.HasFlag(PoisonType.Dazed) || p.Poison.HasFlag(PoisonType.Frozen) || p.Poison.HasFlag(PoisonType.Paralysis) || p.Poison.HasFlag(PoisonType.LRParalysis))
             {
                 User.ClearMagic();
             }
 
-            if (previousPoisons.HasFlag(PoisonType.Illusion) && !User.Poison.HasFlag(PoisonType.Illusion))
+            if (previousPoisons.HasFlag(PoisonType.Blindness) && !User.Poison.HasFlag(PoisonType.Blindness))
             {
-                User.IllusionCount = 0;
+                User.BlindCount = 0;
             }
         }
         private void ObjectPoisoned(S.ObjectPoisoned p)
@@ -9053,7 +9053,7 @@ namespace Client.MirScenes
 
             LightSetting setting = Lights == LightSetting.Normal ? GameScene.Scene.Lights : Lights;
 
-            if (setting != LightSetting.Day || GameScene.User.Poison.HasFlag(PoisonType.Illusion))
+            if (setting != LightSetting.Day || GameScene.User.Poison.HasFlag(PoisonType.Blindness))
             {
                 DrawLights(setting);
             }
@@ -9440,15 +9440,15 @@ namespace Client.MirScenes
                 Effects[i].Draw();
         }
 
-        private Color GetIllusionLight(Color light)
+        private Color GetBlindLight(Color light)
         {
-            if (MapObject.User.IllusionTime <= CMain.Time && MapObject.User.IllusionCount < 25)
+            if (MapObject.User.BlindTime <= CMain.Time && MapObject.User.BlindCount < 25)
             {
-                MapObject.User.IllusionTime = CMain.Time + 100;
-                MapObject.User.IllusionCount++;
+                MapObject.User.BlindTime = CMain.Time + 100;
+                MapObject.User.BlindCount++;
             }
 
-            int count = MapObject.User.IllusionCount;
+            int count = MapObject.User.BlindCount;
             light = Color.FromArgb(255, Math.Max(20, light.R - (count * 10)), Math.Max(20, light.G - (count * 10)), Math.Max(20, light.B - (count * 10)));
 
             return light;
@@ -9504,9 +9504,9 @@ namespace Client.MirScenes
                     break;
             }
 
-            if (MapObject.User.Poison.HasFlag(PoisonType.Illusion))
+            if (MapObject.User.Poison.HasFlag(PoisonType.Blindness))
             {
-                darkness = GetIllusionLight(darkness);
+                darkness = GetBlindLight(darkness);
             }
 
             CMain.DebugText = $"{darkness.A},{darkness.R},{darkness.G},{darkness.B}";
@@ -9562,9 +9562,9 @@ namespace Client.MirScenes
                         lightColour = Color.FromArgb(255, 120, 120, 120);
                     }
 
-                    if (MapObject.User.Poison.HasFlag(PoisonType.Illusion))
+                    if (MapObject.User.Poison.HasFlag(PoisonType.Blindness))
                     {
-                        lightColour = GetIllusionLight(lightColour);
+                        lightColour = GetBlindLight(lightColour);
                     }
 
                     if (DXManager.Lights[lightRange] != null && !DXManager.Lights[lightRange].Disposed)
@@ -9587,9 +9587,9 @@ namespace Client.MirScenes
 
                     var lightColour = effect.LightColour;
 
-                    if (MapObject.User.Poison.HasFlag(PoisonType.Illusion))
+                    if (MapObject.User.Poison.HasFlag(PoisonType.Blindness))
                     {
-                        lightColour = GetIllusionLight(lightColour);
+                        lightColour = GetBlindLight(lightColour);
                     }
 
                     if (DXManager.Lights[light] != null && !DXManager.Lights[light].Disposed)
@@ -9618,9 +9618,9 @@ namespace Client.MirScenes
 
                     var lightColour = Color.White;
 
-                    if (MapObject.User.Poison.HasFlag(PoisonType.Illusion))
+                    if (MapObject.User.Poison.HasFlag(PoisonType.Blindness))
                     {
-                        lightColour = GetIllusionLight(lightColour);
+                        lightColour = GetBlindLight(lightColour);
                     }
 
                     if (DXManager.Lights[light] != null && !DXManager.Lights[light].Disposed)
@@ -9668,9 +9668,9 @@ namespace Client.MirScenes
                             break;
                     }
 
-                    if (MapObject.User.Poison.HasFlag(PoisonType.Illusion))
+                    if (MapObject.User.Poison.HasFlag(PoisonType.Blindness))
                     {
-                        lightIntensity = GetIllusionLight(lightIntensity);
+                        lightIntensity = GetBlindLight(lightIntensity);
                     }
 
                     int fileIndex = M2CellInfo[x, y].FrontIndex;
@@ -9891,7 +9891,7 @@ namespace Client.MirScenes
 
                     else if (Functions.InRange(MapObject.TargetObject.CurrentLocation, User.CurrentLocation, 1))
                     {
-                        if (CMain.Time > GameScene.AttackTime && CanRideAttack() && !User.Poison.HasFlag(PoisonType.Stun))
+                        if (CMain.Time > GameScene.AttackTime && CanRideAttack() && !User.Poison.HasFlag(PoisonType.Dazed))
                         {
                             User.QueuedAction = new QueuedAction { Action = MirAction.Attack1, Direction = Functions.DirectionFromPoint(User.CurrentLocation, MapObject.TargetObject.CurrentLocation), Location = User.CurrentLocation };
                             return;
@@ -9962,7 +9962,7 @@ namespace Client.MirScenes
                                 MapObject target = null;
                                 if (MapObject.MouseObject is MonsterObject || MapObject.MouseObject is PlayerObject) target = MapObject.MouseObject;
 
-                                if (User.Class == MirClass.Archer && User.HasClassWeapon && !User.RidingMount && !User.Poison.HasFlag(PoisonType.Stun))
+                                if (User.Class == MirClass.Archer && User.HasClassWeapon && !User.RidingMount && !User.Poison.HasFlag(PoisonType.Dazed))
                                 {
                                     if (target != null)
                                     {
@@ -9985,7 +9985,7 @@ namespace Client.MirScenes
                                 
                                 //stops double slash from being used without empty hand or assassin weapon (otherwise bugs on second swing)
                                 if (GameScene.DoubleSlash && (!User.HasClassWeapon && User.Weapon > -1)) return;
-                                if (User.Poison.HasFlag(PoisonType.Stun)) return;
+                                if (User.Poison.HasFlag(PoisonType.Dazed)) return;
 
                                 User.QueuedAction = new QueuedAction { Action = MirAction.Attack1, Direction = direction, Location = User.CurrentLocation };
                             }

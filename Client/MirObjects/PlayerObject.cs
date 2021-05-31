@@ -801,9 +801,9 @@ namespace Client.MirObjects
                     DrawColour = Color.DarkRed;
                 if (Poison.HasFlag(PoisonType.Slow))
                     DrawColour = Color.Purple;
-                if (Poison.HasFlag(PoisonType.Stun))
+                if (Poison.HasFlag(PoisonType.Stun) || Poison.HasFlag(PoisonType.Dazed))
                     DrawColour = Color.Yellow;
-                if (Poison.HasFlag(PoisonType.Illusion))
+                if (Poison.HasFlag(PoisonType.Blindness))
                     DrawColour = Color.MediumVioletRed;
                 if (Poison.HasFlag(PoisonType.Frozen))
                     DrawColour = Color.Blue;

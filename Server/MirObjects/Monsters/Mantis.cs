@@ -46,7 +46,7 @@ namespace Server.MirObjects.Monsters
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
                 ActionList.Add(action);
 
-                PoisonTarget(Target, 8, 6, PoisonType.Stun, 1000);
+                PoisonTarget(Target, 8, 6, PoisonType.Dazed, 1000);
             }
 
             ShockTime = 0;

@@ -102,7 +102,7 @@ namespace Server.MirObjects.Monsters
 
             if (target.Attacked(this, damage, DefenceType.MACAgility) <= 0) return;
 
-            PoisonTarget(target, 1, Envir.Random.Next(Stats[Stat.MaxMC]), PoisonType.Stun, 1000);
+            PoisonTarget(target, 1, Envir.Random.Next(Stats[Stat.MaxMC]), PoisonType.Dazed, 1000);
         }
 
         protected override void ProcessTarget()

@@ -49,7 +49,7 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            var monsters = Envir.MonsterInfoList.Where(x => x.Level <= Level);
+            var monsters = Envir.MonsterInfoList.Where(x => x.Level <= Level && x.Level >= (Level - 10));
 
             if (monsters.Count() > 0)
             {

@@ -420,9 +420,9 @@ namespace Client.MirObjects
                 DrawColour = Color.DarkRed;
             if (Poison.HasFlag(PoisonType.Slow))
                 DrawColour = Color.Purple;
-            if (Poison.HasFlag(PoisonType.Stun))
+            if (Poison.HasFlag(PoisonType.Stun) || Poison.HasFlag(PoisonType.Dazed))
                 DrawColour = Color.Yellow;
-            if (Poison.HasFlag(PoisonType.Illusion))
+            if (Poison.HasFlag(PoisonType.Blindness))
                 DrawColour = Color.MediumVioletRed;
             if (Poison.HasFlag(PoisonType.Frozen))
                 DrawColour = Color.Blue;
@@ -767,9 +767,9 @@ namespace Client.MirObjects
                             case Monster.BloodBaboon:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BloodBaboon], 312 + (int)Direction * 7, 7, 7 * Frame.Interval, this));
                                 break;
-                            case Monster.RestlessJar:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RestlessJar], 391 + (int)Direction * 10, 10, 10 * Frame.Interval, this));
-                                break;
+                            //case Monster.RestlessJar:
+                            //    Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RestlessJar], 391 + (int)Direction * 10, 10, 10 * Frame.Interval, this));
+                            //    break;
                             case Monster.TwinHeadBeast:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TwinHeadBeast], 352 + (int)Direction * 7, 7, Frame.Count * Frame.Interval, this));
                                 break;
@@ -2635,6 +2635,17 @@ namespace Client.MirObjects
                             Missile missile;
                             switch (FrameIndex)
                             {
+                                case 1:
+                                    {
+                                        switch (BaseImage)
+                                        {
+                                            case Monster.RestlessJar:
+                                                var point = Functions.PointMove(CurrentLocation, Direction, 2);
+                                                MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RestlessJar], 391 + (int)Direction * 10, 10, 10 * Frame.Interval, point));
+                                                break;
+                                        }
+                                        break;
+                                    }
                                 case 2:
                                     {
                                         switch (BaseImage)

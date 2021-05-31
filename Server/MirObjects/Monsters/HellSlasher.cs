@@ -58,7 +58,7 @@ namespace Server.MirObjects.Monsters
 
             if (poison)
             {
-                PoisonTarget(Target, 5, Envir.Random.Next(1, 4), PoisonType.Stun, 1000);
+                PoisonTarget(Target, 5, Envir.Random.Next(1, 4), PoisonType.Dazed, 1000);
             }
         }
     }

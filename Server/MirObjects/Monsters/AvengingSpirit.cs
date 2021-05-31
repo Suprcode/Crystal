@@ -39,6 +39,8 @@ namespace Server.MirObjects.Monsters
             {   
                 if (Envir.Random.Next(3) == 0)
                 {
+                    Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+
                     SinglePushAttack(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 }
                 else

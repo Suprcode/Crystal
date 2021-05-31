@@ -59,7 +59,7 @@ namespace Server.MirObjects.Monsters
                 {
                     if (Envir.Random.Next(2) == 0)
                     {
-                        Target.ApplyPoison(new Poison { Owner = this, Duration = 8, PType = PoisonType.Stun, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);
+                        Target.ApplyPoison(new Poison { Owner = this, Duration = 8, PType = PoisonType.Dazed, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);
                     }
                 }
 

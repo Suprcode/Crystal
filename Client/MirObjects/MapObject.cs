@@ -36,8 +36,8 @@ namespace Client.MirObjects
 
         public bool Blend = true;
 
-        public long IllusionTime;
-        public byte IllusionCount;
+        public long BlindTime;
+        public byte BlindCount;
 
         public byte PercentHealth;
         public long HealthTime;
@@ -381,13 +381,13 @@ namespace Client.MirObjects
                     DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 4, 4), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 8 + (poisoncount * 5)), (float)(DisplayRectangle.Y - 20), 0.0F), Color.Purple);
                     poisoncount++;
                 }
-                if (Poison.HasFlag(PoisonType.Stun))
+                if (Poison.HasFlag(PoisonType.Stun) || Poison.HasFlag(PoisonType.Dazed))
                 {
                     DXManager.Sprite.Draw(DXManager.PoisonDotBackground, new Rectangle(0, 0, 6, 6), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 7 + (poisoncount * 5)), (float)(DisplayRectangle.Y - 21), 0.0F), Color.Black);
                     DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 4, 4), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 8 + (poisoncount * 5)), (float)(DisplayRectangle.Y - 20), 0.0F), Color.Yellow);
                     poisoncount++;
                 }
-                if (Poison.HasFlag(PoisonType.Illusion))
+                if (Poison.HasFlag(PoisonType.Blindness))
                 {
                     DXManager.Sprite.Draw(DXManager.PoisonDotBackground, new Rectangle(0, 0, 6, 6), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 7 + (poisoncount * 5)), (float)(DisplayRectangle.Y - 21), 0.0F), Color.Black);
                     DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 4, 4), Vector3.Zero, new Vector3((float)(DisplayRectangle.X + 8 + (poisoncount * 5)), (float)(DisplayRectangle.Y - 20), 0.0F), Color.MediumVioletRed);

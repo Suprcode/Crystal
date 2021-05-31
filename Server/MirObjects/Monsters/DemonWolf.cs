@@ -11,7 +11,9 @@ namespace Server.MirObjects.Monsters
 {
     public class DemonWolf : MonsterObject
     {
-        public byte AttackRange = 2;
+        private readonly int _MaxPackSize = 5;
+
+        public List<MonsterObject> Pack = new List<MonsterObject>();
 
         protected internal DemonWolf(MonsterInfo info)
             : base(info)
@@ -31,6 +33,15 @@ namespace Server.MirObjects.Monsters
             return (x <= 1 && y <= 1) || (x == y || x % 2 == y % 2);
         }
 
+        protected override void ProcessSearch()
+        {
+            if (Envir.Time < SearchTime) return;
+
+            base.ProcessSearch();
+
+            Pack = FindPackNearby(5);
+        }
+
         protected override void Attack()
         {
             ShockTime = 0;
@@ -41,29 +52,45 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
+
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            if (!ranged && Envir.Random.Next(4) > 0)
+            int damageMultiplier = (Pack.Count > _MaxPackSize ? _MaxPackSize : Pack.Count) + 1;
+
+            if (Info.Effect == 1)
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                if (!ranged && Envir.Random.Next(4) > 0)
+                {
+                    Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
-                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                if (damage == 0) return;
+                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * damageMultiplier);
+                    if (damage == 0) return;
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MACAgility);
-                ActionList.Add(action);
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MACAgility);
+                    ActionList.Add(action);
+                }
+                else
+                {
+                    Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+
+                    LineAttack(3);
+
+                    MoveTo(Target.CurrentLocation);
+                }
             }
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
-                LineAttack(3);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * damageMultiplier);
+                if (damage == 0) return;
 
-                MoveTo(Target.CurrentLocation);
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MACAgility);
+                ActionList.Add(action);
             }
         }
 
@@ -77,7 +104,49 @@ namespace Server.MirObjects.Monsters
 
             if (target.Attacked(this, damage, defence) <= 0) return;
 
-            PoisonTarget(target, 4, 5, PoisonType.Stun, 1000);
+            if (Info.Effect == 1)
+            {
+                PoisonTarget(target, 4, 5, PoisonType.Bleeding, 1000);
+            }
+        }
+
+        public List<MonsterObject> FindPackNearby(int distance)
+        {
+            List<MonsterObject> pack = new List<MonsterObject>();
+
+            for (int d = 0; d <= distance; d++)
+            {
+                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++)
+                {
+                    if (y < 0) continue;
+                    if (y >= CurrentMap.Height) break;
+
+                    for (int x = CurrentLocation.X - d; x <= CurrentLocation.X + d; x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2)
+                    {
+                        if (x < 0) continue;
+                        if (x >= CurrentMap.Width) break;
+                        if (!CurrentMap.ValidPoint(x, y)) continue;
+                        Cell cell = CurrentMap.GetCell(x, y);
+                        if (cell.Objects == null) continue;
+
+                        for (int i = 0; i < cell.Objects.Count; i++)
+                        {
+                            MapObject ob = cell.Objects[i];
+                            switch (ob.Race)
+                            {
+                                case ObjectType.Monster:
+                                    if (ob == this || ob.Dead) continue;
+                                    if (ob.IsAttackTarget(this)) continue;
+                                    if (((MonsterObject)ob).Info.AI != Info.AI) continue;
+                                    pack.Add((MonsterObject)ob);
+                                    continue;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return pack;
         }
     }
 }

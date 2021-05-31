@@ -79,7 +79,7 @@ namespace Server.MirObjects.Monsters
                         PoisonTarget(targets[i], 1, 5, PoisonType.Frozen, 2000);
                         break;
                     case Monster.HellBomb2:
-                        PoisonTarget(targets[i], 1, 5, PoisonType.Stun, 2000);
+                        PoisonTarget(targets[i], 1, 5, PoisonType.Dazed, 2000);
                         break;
                     case Monster.HellBomb3:
                         PoisonTarget(targets[i], 1, 5, PoisonType.Bleeding, 2000);

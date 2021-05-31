@@ -195,7 +195,7 @@ namespace Server.MirObjects.Monsters
 
                     if (Target.Attacked(this, damage, DefenceType.MACAgility) <= 0) continue;
 
-                    PoisonTarget(Target, 10, damage, PoisonType.Stun, 1000);
+                    PoisonTarget(Target, 10, damage, PoisonType.Dazed, 1000);
                 }
             }
         }

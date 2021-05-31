@@ -951,16 +951,17 @@ public enum PetMode : byte
 public enum PoisonType : ushort
 {
     None = 0,
-    Green = 1, //HP Loss, No Effect
-    Red = 2, //Reduced Armour, No Effect
-    Slow = 4, //Reduced Movement/Attack Speed, No Effect
-    Frozen = 8, //NoCast/NoAttack/NoMove/NoWalk, No Effect
-    Stun = 16, //NoCast/IncreaseDamageReceived, Stun Effect
-    Paralysis = 32, //NoCast/NoAttack/NoMove/NoWalk, No Effect
+    Green = 1,
+    Red = 2,
+    Slow = 4,
+    Frozen = 8,
+    Stun = 16,
+    Paralysis = 32,
     DelayedExplosion = 64,
-    Bleeding = 128, //HP Loss, Bleed Effect
-    LRParalysis = 256,//NoAttack/NoMove/NoWalk/CancelsWhenHit, No Effect
-    Illusion = 512
+    Bleeding = 128,
+    LRParalysis = 256,
+    Blindness = 512,
+    Dazed = 1024
 }
 
 [Flags]

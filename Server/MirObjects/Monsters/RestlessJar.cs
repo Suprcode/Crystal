@@ -67,7 +67,7 @@ namespace Server.MirObjects.Monsters
                             {
                                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
-                                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
                                 if (damage == 0) return;
 
                                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MACAgility, (int)1);
@@ -124,7 +124,7 @@ namespace Server.MirObjects.Monsters
                 case 1:
                     {
                         if (target.Attacked(this, damage, defence) <= 0) return;
-                        PoisonTarget(target, 4, 10, PoisonType.Illusion, 1000);
+                        PoisonTarget(target, 4, 10, PoisonType.Blindness, 1000);
                     }
                     break;
                 case 2:

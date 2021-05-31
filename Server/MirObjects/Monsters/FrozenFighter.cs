@@ -54,7 +54,7 @@ namespace Server.MirObjects.Monsters
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
                 LineAttack(3);
 
-                PoisonTarget(Target, 7, 5, PoisonType.Stun, 1000);
+                PoisonTarget(Target, 7, 5, PoisonType.Dazed, 1000);
             }
         }
         //TODO - Remove this/clean it up

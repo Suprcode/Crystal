@@ -238,7 +238,7 @@ namespace Server.MirObjects
                     return new HardenRhino(info); //TODO
 
                 case 110:
-                    return new DemonWolf(info);
+                    return new DemonWolf(info); //Effect 0/1
                 case 111:
                     return new WhiteMammoth(info);
                 case 112:
@@ -282,7 +282,7 @@ namespace Server.MirObjects
                 case 124:
                     return new TucsonWarrior(info);
                 case 125:
-                    return new TucsonEgg(info);
+                    return new TucsonEgg(info); //Effect 0/1
                 case 126:
                     return new SwampWarrior(info);
                 case 127:
@@ -508,7 +508,7 @@ namespace Server.MirObjects
             {
                 return !Dead && Envir.Time > AttackTime && Envir.Time > ActionTime &&
                      (Master == null || Master.PMode == PetMode.AttackOnly || Master.PMode == PetMode.Both || !CurrentMap.Info.NoFight) && !CurrentPoison.HasFlag(PoisonType.Paralysis)
-                       && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Stun) && !CurrentPoison.HasFlag(PoisonType.Frozen);
+                       && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Stun) && !CurrentPoison.HasFlag(PoisonType.Dazed) && !CurrentPoison.HasFlag(PoisonType.Frozen);
             }
         }
 
@@ -1266,6 +1266,8 @@ namespace Server.MirObjects
                         break;
                     case PoisonType.Stun:
                         DamageRate += 0.5F;
+                        break;
+                    case PoisonType.Blindness:
                         break;
                     case PoisonType.Slow:
                         MoveSpeed = (ushort)Math.Min(3500, MoveSpeed + 100);
@@ -2122,6 +2124,7 @@ namespace Server.MirObjects
             }
 
             var armour = GetArmour(type, attacker, out bool hit);
+
             if (!hit)
                 return 0;
 
@@ -3072,9 +3075,9 @@ namespace Server.MirObjects
                 {
                     target.ApplyPoison(new Poison { Owner = this, Duration = poisonDuration, PType = poison, Value = value, TickSpeed = poisonTickSpeed }, this);
 
-                    if (poison == PoisonType.Stun)
+                    if (poison == PoisonType.Dazed)
                     {
-                        Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.Stunned, Time = (uint)poisonDuration * 1000 });
+                        Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.Stunned, Time = (uint)(poisonDuration * poisonTickSpeed) });
                     }
                 }
             }
@@ -3200,7 +3203,7 @@ namespace Server.MirObjects
             ActionList.Add(action);
         }
 
-        protected virtual void SinglePushAttack(int minAttackStat, int MaxAttackStat, DefenceType type = DefenceType.AC, int delay = 500, byte attackType = 0, int pushDistance = 3)
+        protected virtual void SinglePushAttack(int minAttackStat, int MaxAttackStat, DefenceType type = DefenceType.AC, int delay = 500, int pushDistance = 3)
         {
             //Repulsion - (utilises DelayedAction so player is hit at end of push)
             //need to put Damage Stats (DC/MC/SC) on mob for it to push
@@ -3210,8 +3213,6 @@ namespace Server.MirObjects
 
             if ((targetLevel <= mobLevel + levelGap))
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = attackType });
-
                 if (Target.Pushed(this, Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation), pushDistance) > 0)
                 {
                     int damage = GetAttackPower(minAttackStat, MaxAttackStat);

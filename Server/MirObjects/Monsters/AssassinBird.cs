@@ -50,7 +50,9 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
-                SinglePushAttack(Stats[Stat.MinDC], Stats[Stat.MaxDC], attackType: 1, delay: 500);
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+
+                SinglePushAttack(Stats[Stat.MinDC], Stats[Stat.MaxDC], delay: 500);
             }
         }
     }

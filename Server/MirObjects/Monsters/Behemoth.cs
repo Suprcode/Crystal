@@ -159,7 +159,7 @@ namespace Server.MirObjects.Monsters
                         {
                             t.Pushed(this, Direction, 4);
 
-                            PoisonTarget(t, 3, 15, PoisonType.Stun, 1000);
+                            PoisonTarget(t, 3, 15, PoisonType.Dazed, 1000);
                         }
                         break;
                     }

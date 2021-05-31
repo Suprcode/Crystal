@@ -121,7 +121,7 @@ namespace Server.MirObjects.Monsters
 
             if (target.Attacked(this, damage, defence) <= 0) return;
 
-            PoisonTarget(target, 8, 3, PoisonType.Stun, 1000);
+            PoisonTarget(target, 8, 3, PoisonType.Dazed, 1000);
         }
 
         protected override void CompleteRangeAttack(IList<object> data)

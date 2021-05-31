@@ -50,8 +50,12 @@ namespace Server.MirObjects.Monsters
                 Attack1(3);
             }
             else
-            {   
-                SinglePushAttack(Stats[Stat.MinDC], Stats[Stat.MaxDC], attackType: 1);
+            {
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+
+                SinglePushAttack(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+
+                //TODO - This needs adding to complete attack
                 PoisonTarget(Target, 3, 5, PoisonType.Paralysis);                
             }
 

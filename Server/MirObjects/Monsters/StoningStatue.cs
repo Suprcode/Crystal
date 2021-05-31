@@ -81,7 +81,7 @@ namespace Server.MirObjects.Monsters
             {
                 targets[i].Attacked(this, Stats[Stat.MaxDC] * 3, DefenceType.MACAgility);
 
-                PoisonTarget(targets[i], 2, GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]), PoisonType.Stun, 1000);
+                PoisonTarget(targets[i], 2, GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]), PoisonType.Dazed, 1000);
             }
         }
 
