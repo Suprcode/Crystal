@@ -485,7 +485,7 @@ public enum Monster : ushort
     PlaguedTucson = 293, //No AI - Basic Attack Mob (DG)
     SandSnail = 294, // Done (DG)
     CannibalTentacles = 295, // Done (DG)
-    TucsonGeneral = 296,
+    TucsonGeneral = 296, //TODO
     GasToad = 297, // Done (DG)
     Mantis = 298, // Done (DG)
     SwampWarrior = 299, // Done (DG)
@@ -1211,8 +1211,10 @@ public enum Spell : byte
     MapQuake1 = 204,
     MapQuake2 = 205,
     GeneralMeowMeowThunder = 206,
-    TreeQueenRoot = 207,
-    TreeQueenGroundRoots = 208,
+    EarthGolemPile = 207,
+    TreeQueenRoot = 208,
+    TreeQueenMassRoots = 209,
+    TreeQueenGroundRoots = 210,
 }
 
 public enum SpellEffect : byte
@@ -1247,11 +1249,7 @@ public enum SpellEffect : byte
     IcePillar,
     KingGuard,
     KingGuard2,
-    MonsterMACBuff, 
-    TreeQueenFireBombardment,
-    TreeQueenGroundRoots,
-    TreeQueenMassRoots,
-    TreeQueenSingleRoot,
+    MonsterMACBuff,
     DeathCrawlerBreath,
 
     Tester

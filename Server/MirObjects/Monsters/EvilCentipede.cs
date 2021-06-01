@@ -8,7 +8,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class EvilCentipede : MonsterObject
+    public class EvilCentipede : MonsterObject
     {
         public bool Visible;
         public long VisibleTime;

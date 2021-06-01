@@ -154,16 +154,44 @@ namespace Client.MirObjects
                     MirSounds.SoundManager.PlaySound(8311);
                     break;
                 case Spell.GeneralMeowMeowThunder:                
-                    MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GeneralMeowMeow], 522, 7, 700, CurrentLocation) { Blend = true, });
+                    MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GeneralMeowMeow], 522, 7, 700, CurrentLocation) { Blend = true });
                     MirSounds.SoundManager.PlaySound(8321);
                     break;
-                case Spell.TreeQueenRoot:
-                    MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 111, 15, 1500, CurrentLocation) { Blend = false });
+                case Spell.EarthGolemPile:
+                    BodyLibrary = Libraries.Monsters[(ushort)Monster.EarthGolem];
+                    DrawFrame = 441;
+                    FrameInterval = 100;
+                    FrameCount = 12;
+                    Light = 0;
+                    Blend = false;
+                    MirSounds.SoundManager.PlaySound(8331);
+                    break;
+                case Spell.TreeQueenMassRoots:
+                    BodyLibrary = Libraries.Monsters[(ushort)Monster.TreeQueen];
+                    DrawFrame = 82;
+                    FrameInterval = 100;
+                    FrameCount = 15;
+                    Blend = false;
+                    MirSounds.SoundManager.PlaySound(8341);
+                    MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 97, 14, 1400, CurrentLocation) { Blend = true });
                     break;
                 case Spell.TreeQueenGroundRoots:
-                    MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 48, 9, 900, CurrentLocation) { Blend = false });
+                    BodyLibrary = Libraries.Monsters[(ushort)Monster.TreeQueen];
+                    DrawFrame = 48;
+                    FrameInterval = 100;
+                    FrameCount = 9;
+                    Blend = false;
+                    MirSounds.SoundManager.PlaySound(8342);
+                    MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 57, 9, 900, CurrentLocation) { Blend = true });
                     break;
-
+                case Spell.TreeQueenRoot:
+                    BodyLibrary = Libraries.Monsters[(ushort)Monster.TreeQueen];
+                    DrawFrame = 111;
+                    FrameInterval = 100;
+                    FrameCount = 15;
+                    Blend = false;
+                    MirSounds.SoundManager.PlaySound(8343);
+                    break;
                 case Spell.Portal:
                     BodyLibrary = Libraries.Magic2;
                     DrawFrame = 2360;

@@ -34,6 +34,8 @@ namespace Server.MirObjects.Monsters
 
             if (Target != null && !Functions.InRange(CurrentLocation, Target.CurrentLocation, 3) && Envir.Random.Next(3) == 0)
             {
+                Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
+
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
                 DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 1500, Target);

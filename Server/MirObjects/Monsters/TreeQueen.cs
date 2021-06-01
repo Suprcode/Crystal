@@ -15,29 +15,18 @@ namespace Server.MirObjects.Monsters
         protected override bool CanMove { get { return false; } }
         protected override bool CanRegen { get { return false; } }
 
-        private bool _raged = false;
-        private long _rageDelay = Settings.Minute * 2;
-        private long _rageTime;
-
-
-        private int _rootSpreadMin = 5;
-        private int _rootSpreadMax = 15;
-        private int _rootCount = 1;
+        private readonly int _rootSpreadMin = 5;
+        private readonly int _rootSpreadMax = 15;
+        private readonly int _rootCount = 1;
         private long _rootSpawnTime;
 
-        private int _groundrootSpreadMin = 5;
-        private int _groundrootSpreadMax = 25;
-        private int _groundrootCount = 1;
+        private readonly int _groundrootSpreadMin = 5;
+        private readonly int _groundrootSpreadMax = 25;
+        private readonly int _groundrootCountPerPlayer = 2;
         private long _groundRootSpawnTime;
 
-
-        protected virtual byte AttackRange
-        {
-            get
-            {
-                return 10;
-            }
-        }
+        private readonly int _nearMultiplier = 4;
+        private bool _notNear = true;
 
         protected internal TreeQueen(MonsterInfo info)
             : base(info)
@@ -47,16 +36,12 @@ namespace Server.MirObjects.Monsters
 
         protected override bool InAttackRange()
         {
-            if (Target.CurrentMap != CurrentMap) return false;
-
-            return true;
+            return Target.CurrentMap == CurrentMap;
         }
 
-        public override void Turn(MirDirection dir)
-        {
-        }
+        public override void Turn(MirDirection dir) { }
+
         public override bool Walk(MirDirection dir) { return false; }
-
 
         public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
         {
@@ -90,16 +75,18 @@ namespace Server.MirObjects.Monsters
 
             if (!ranged)
             {
+                _notNear = false;
+
                 if (Envir.Random.Next(2) > 0)
                 {
-                        // Fire Bombardment Spell
-                        Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+                    // Fire Bombardment Spell
+                    Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
-                        int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                        if (damage == 0) return;
+                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                    if (damage == 0) return;
 
-                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.ACAgility, true, false);
-                        ActionList.Add(action);                    
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MACAgility, true, false);
+                    ActionList.Add(action);                    
                 }
                 else
                 {
@@ -109,27 +96,14 @@ namespace Server.MirObjects.Monsters
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                     if (damage == 0) return;
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.ACAgility, false, true);
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MACAgility, false, true);
                     ActionList.Add(action);
                 }
             }
             else
             {
-                if (CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange))
-                {
-                    // Mass Roots Spell
-                    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
-
-                    int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                    if (damage == 0) return;
-
-                    DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.ACAgility, true);
-                    ActionList.Add(action);
-                }
+                _notNear = true;
             }
-
-            if (Target.Dead)
-                FindTarget();
         }
 
         protected override void CompleteAttack(IList<object> data)
@@ -144,14 +118,12 @@ namespace Server.MirObjects.Monsters
 
             if (fireBombardment)
             {
-                List<MapObject> targets = FindAllTargets(2, CurrentLocation);
+                List<MapObject> targets = FindAllTargets(3, CurrentLocation);
                 if (targets.Count == 0) return;
 
                 for (int i = 0; i < targets.Count; i++)
                 {
-                    target = targets[i];
-                    if (target.IsAttackTarget(this))
-                        target.Attacked(this, damage, defence);
+                    targets[i].Attacked(this, damage, defence);
                 }
             }
 
@@ -159,40 +131,17 @@ namespace Server.MirObjects.Monsters
             {
                 List<MapObject> targets = FindAllTargets(1, CurrentLocation);
                 if (targets.Count == 0) return;
-                for (int i = 0; i < targets.Count; i++)
-                {
-                    Target = targets[i];
-                    Target.Pushed(this, Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation), 5);
-                }
-            }
-        }
-
-        protected override void CompleteRangeAttack(IList<object> data)
-        {
-            MapObject target = (MapObject)data[0];
-            int damage = (int)data[1];
-            DefenceType defence = (DefenceType)data[2];
-            bool massRoots = (bool)data[3];
-
-            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
-
-            if (massRoots)
-            {
-                List<MapObject> targets = FindAllTargets(2, CurrentLocation);
-                if (targets.Count == 0) return;
 
                 for (int i = 0; i < targets.Count; i++)
                 {
-                    target = targets[i];
-                    if (target.IsAttackTarget(this))
-                        target.Attacked(this, damage, defence);
+                    targets[i].Pushed(this, Functions.DirectionFromPoint(CurrentLocation, targets[i].CurrentLocation), 5);
                 }
             }
         }
 
         private void SpawnRoots()
         {
-            int count = Envir.Random.Next(1, _raged ? _rootCount * 2 : _rootCount);
+            int count = Envir.Random.Next(1, _rootCount);
             int distance = Envir.Random.Next(_rootSpreadMin, _rootSpreadMax);
 
             for (int j = 0; j < CurrentMap.Players.Count; j++)
@@ -211,11 +160,13 @@ namespace Server.MirObjects.Monsters
 
                     if (!CurrentMap.ValidPoint(location)) continue;
 
+                    var expire = Envir.Random.Next(2000);
+
                     SpellObject spellObj = new SpellObject
                     {
                         Spell = Spell.TreeQueenRoot,
                         Value = Envir.Random.Next(Envir.Random.Next(Stats[Stat.MinDC], Stats[Stat.MaxDC])),
-                        ExpireTime = Envir.Time + (1000),
+                        ExpireTime = Envir.Time + 1500 + expire,
                         TickSpeed = 2000,
                         Caster = null,
                         CurrentLocation = location,
@@ -223,7 +174,60 @@ namespace Server.MirObjects.Monsters
                         Direction = MirDirection.Up
                     };
 
-                    DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + Envir.Random.Next(2000), spellObj);
+                    DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + expire, spellObj);
+                    CurrentMap.ActionList.Add(action);
+                }
+            }
+        }
+
+        private void SpawnMassRoots()
+        {
+            Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
+
+            var count = CurrentMap.Players.Count;
+
+            if (count == 0) return;
+
+            var target = CurrentMap.Players[Envir.Random.Next(count)];
+
+            var location = target.CurrentLocation;
+            var show = true;
+
+            for (int y = location.Y - 3; y <= location.Y + 3; y++)
+            {
+                if (y < 0) continue;
+                if (y >= CurrentMap.Height) break;
+
+                for (int x = location.X - 3; x <= location.X + 3; x++)
+                {
+                    if (x < 0) continue;
+                    if (x >= CurrentMap.Width) break;
+
+                    if (location == CurrentLocation) continue;
+
+                    var cell = CurrentMap.GetCell(x, y);
+
+                    if (!cell.Valid) continue;
+
+                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MinDC]);
+
+                    var expire = 500;
+
+                    SpellObject ob = new SpellObject
+                    {
+                        Spell = Spell.TreeQueenMassRoots,
+                        Value = damage,
+                        ExpireTime = Envir.Time + 1500 + expire,
+                        TickSpeed = 1000,
+                        CurrentLocation = new Point(x, y),
+                        CastLocation = location,
+                        Show = show,
+                        CurrentMap = CurrentMap
+                    };
+
+                    show = false;
+
+                    DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + expire, ob);
                     CurrentMap.ActionList.Add(action);
                 }
             }
@@ -231,7 +235,7 @@ namespace Server.MirObjects.Monsters
 
         private void SpawnGroundRoots()
         {
-            int count = Envir.Random.Next(1, _raged ? _groundrootCount * 1 : _groundrootCount);
+            int count = Envir.Random.Next(0, _groundrootCountPerPlayer);
             int distance = Envir.Random.Next(_groundrootSpreadMin, _groundrootSpreadMax);
 
             for (int j = 0; j < CurrentMap.Players.Count; j++)
@@ -250,13 +254,13 @@ namespace Server.MirObjects.Monsters
 
                     if (!CurrentMap.ValidPoint(location)) continue;
 
-                    SpellObject spellObj = null;
+                    var expire = Envir.Random.Next(4000);
 
-                    spellObj = new SpellObject
+                    var spellObj = new SpellObject
                     {
                         Spell = Spell.TreeQueenGroundRoots,
                         Value = Envir.Random.Next(Envir.Random.Next(Stats[Stat.MinDC], Stats[Stat.MaxDC])),
-                        ExpireTime = Envir.Time + (3000),
+                        ExpireTime = Envir.Time + 900 + expire,
                         TickSpeed = 4000,
                         Caster = null,
                         CurrentLocation = location,
@@ -264,22 +268,9 @@ namespace Server.MirObjects.Monsters
                         Direction = MirDirection.Up
                     };
 
-                    DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + Envir.Random.Next(4000), spellObj);
+                    DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + expire, spellObj);
                     CurrentMap.ActionList.Add(action);
                 }
-            }
-        }
-
-        public void Rage()
-        {
-            if (Dead) return;
-
-            if (Stats[Stat.HP] >= 4)
-            {
-                _rageTime = Envir.Time + _rageDelay;
-                _raged = true;
-
-                Broadcast(GetInfo());
             }
         }
 
@@ -303,31 +294,42 @@ namespace Server.MirObjects.Monsters
             };
         }
 
-
         public override void Spawned()
         {
             // Begin timers (stops players from being bombarded with attacks when they enter the room / map).
-            _rootSpawnTime = Envir.Time + (Settings.Second * 8);
-            _groundRootSpawnTime = Envir.Time + (Settings.Second * 19);
+            _rootSpawnTime = Envir.Time + (Settings.Second * 5);
+            _groundRootSpawnTime = Envir.Time + (Settings.Second * 15);
 
             base.Spawned();
         }
 
         protected override void ProcessTarget()
         {
-
             if (CurrentMap.Players.Count == 0) return;
 
-            if(Envir.Time > _rootSpawnTime)
+            if (Envir.Time > _rootSpawnTime)
             {
-                SpawnRoots();
-                _rootSpawnTime = Envir.Time + 10000;
-            }            
+                if (Envir.Random.Next(4) > 0)
+                {
+                    SpawnRoots();
+                }
+                else
+                {
+                    SpawnMassRoots();
+                }
+
+                var next = Envir.Random.Next(1, 2);
+
+                _rootSpawnTime = Envir.Time + (Settings.Second * (_notNear ? next : next * _nearMultiplier));
+            }
 
             if (Envir.Time > _groundRootSpawnTime)
             {
                 SpawnGroundRoots();
-                _groundRootSpawnTime = Envir.Time + 15000;
+
+                var next = Envir.Random.Next(1, 3);
+
+                _groundRootSpawnTime = Envir.Time + (Settings.Second * (_notNear ? next : next * _nearMultiplier));
             }
 
             if (!CanAttack) return;
@@ -340,6 +342,5 @@ namespace Server.MirObjects.Monsters
                 return;
             }
         }
-
     }
 }

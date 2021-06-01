@@ -217,6 +217,22 @@ namespace Server.MirObjects
                         ob.Struck(Value, DefenceType.MAC);
                     }
                     break;
+                case Spell.TreeQueenRoot:
+                    {
+                        if (Value == 0) return;
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                        if (ob.Dead) return;
+                        ob.Struck(Value, DefenceType.MAC);
+                    }
+                    break;
+                case Spell.TreeQueenMassRoots:
+                    {
+                        if (Value == 0) return;
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                        if (ob.Dead) return;
+                        ob.Struck(Value, DefenceType.MAC);
+                    }
+                    break;
                 case Spell.TreeQueenGroundRoots:
                     {
                         if (Value == 0) return;
@@ -224,18 +240,18 @@ namespace Server.MirObjects
                         if (ob.Dead) return;
                         ob.Struck(Value, DefenceType.MAC);
 
-                        if (Envir.Random.Next(3) != 0)
+                        if (Envir.Random.Next(3) > 0)
                         {
                             ob.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
                         }
                     }
                     break;
-                case Spell.TreeQueenRoot:
+                case Spell.EarthGolemPile:
                     {
                         if (Value == 0) return;
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
-                        ob.Struck(Value, DefenceType.MAC);
+                        ob.Struck(Value, DefenceType.AC);
                     }
                     break;
                 case Spell.Portal:
@@ -369,6 +385,8 @@ namespace Server.MirObjects
                 case Spell.PoisonCloud:
                 case Spell.Blizzard:
                 case Spell.MeteorStrike:
+                case Spell.EarthGolemPile:
+                case Spell.TreeQueenMassRoots:
                     if (!Show)
                         return null;
 

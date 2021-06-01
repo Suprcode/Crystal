@@ -2,7 +2,7 @@
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
-{
+{    
     public class AxeSkeleton : MonsterObject
     {
         public long FearTime;

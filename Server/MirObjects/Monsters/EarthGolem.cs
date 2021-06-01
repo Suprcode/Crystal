@@ -7,8 +7,10 @@ using System.Collections.Generic;
 
 namespace Server.MirObjects.Monsters
 {
-    class EarthGolem : ZumaMonster
+    public class EarthGolem : ZumaMonster
     {
+        public long FearTime;
+
         protected virtual byte AttackRange
         {
             get
@@ -27,9 +29,27 @@ namespace Server.MirObjects.Monsters
             return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
         }
 
+        protected override void ProcessAI()
+        {
+            if (!Dead && Envir.Time > ActionTime)
+            {
+                bool stoned = !FindNearby(4);
+
+                if (Stoned && !stoned)
+                {
+                    Wake();
+
+                    AttackTime = Envir.Time + 1500;
+                    ActionTime = Envir.Time + 1500;
+                    MoveTime = Envir.Time + 1500;
+                }
+            }
+
+            base.ProcessAI();
+        }
+
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -51,34 +71,77 @@ namespace Server.MirObjects.Monsters
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
 
-                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MAC);
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MAC);
                 ActionList.Add(action);
             }
             else
             {
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
 
-                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                if (damage == 0) return;
+                var location = Target.CurrentLocation;
+                var show = true;
 
-                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 700, Target, damage, DefenceType.MAC);
-                ActionList.Add(action);
+                for (int y = location.Y - 1; y <= location.Y + 1; y++)
+                {
+                    if (y < 0) continue;
+                    if (y >= CurrentMap.Height) break;
+
+                    for (int x = location.X - 1; x <= location.X + 1; x++)
+                    {
+                        if (x < 0) continue;
+                        if (x >= CurrentMap.Width) break;
+
+                        var cell = CurrentMap.GetCell(x, y);
+
+                        if (!cell.Valid) continue;
+
+                        bool cast = true;
+                        if (cell.Objects != null)
+                            for (int o = 0; o < cell.Objects.Count; o++)
+                            {
+                                MapObject target = cell.Objects[o];
+                                if (target.Race != ObjectType.Spell || ((SpellObject)target).Spell != Spell.EarthGolemPile) continue;
+
+                                cast = false;
+                                break;
+                            }
+
+                        if (!cast) continue;
+
+                        int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MinDC]);
+
+                        SpellObject ob = new SpellObject
+                        {
+                            Spell = Spell.EarthGolemPile,
+                            Value = damage,
+                            ExpireTime = Envir.Time + 1700,
+                            TickSpeed = 1000,
+                            CurrentLocation = new Point(x, y),
+                            CastLocation = location,
+                            Show = show,
+                            CurrentMap = CurrentMap
+                        };
+
+                        show = false;
+
+                        DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + 500, ob);
+                        CurrentMap.ActionList.Add(action);
+                    }
+                }
             }
-
-            if (Target.Dead)
-                FindTarget();
-
         }
 
         protected override void ProcessTarget()
         {
-            if (Target == null) return;
+            if (Target == null || !CanAttack) return;
 
-            if (InAttackRange() && CanAttack)
+            if (InAttackRange() && Envir.Time < FearTime)
             {
                 Attack();
                 return;
             }
+
+            FearTime = Envir.Time + 2000;
 
             if (Envir.Time < ShockTime)
             {
@@ -86,7 +149,39 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
-            MoveTo(Target.CurrentLocation);
+            int dist = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
+
+            if (dist >= AttackRange)
+                MoveTo(Target.CurrentLocation);
+            else
+            {
+                MirDirection dir = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
+
+                if (Walk(dir)) return;
+
+                switch (Envir.Random.Next(2)) //No favour
+                {
+                    case 0:
+                        for (int i = 0; i < 7; i++)
+                        {
+                            dir = Functions.NextDir(dir);
+
+                            if (Walk(dir))
+                                return;
+                        }
+                        break;
+                    default:
+                        for (int i = 0; i < 7; i++)
+                        {
+                            dir = Functions.PreviousDir(dir);
+
+                            if (Walk(dir))
+                                return;
+                        }
+                        break;
+                }
+
+            }
         }
     }
 }

@@ -295,12 +295,10 @@ namespace Server.MirObjects
                 case 131:
                     return new RhinoWarrior(info); //TODO
                 case 132:
-                    return new RhinoPriest(info);
+                    return new RhinoPriest(info); //TODO - Should debuff
 
                 case 172:
                     return new ElephantMan(info);
-
-                    //FAR CHECKED UP TO HERE
 
                 case 165:
                     return new EarthGolem(info);
@@ -308,6 +306,10 @@ namespace Server.MirObjects
                     return new CaveStatue(info);
                 case 167:
                     return new TreeQueen(info);
+
+
+                //FAR CHECKED UP TO HERE
+
 
                 case 133:
                     return new OmaCannibal(info);

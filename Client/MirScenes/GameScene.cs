@@ -4023,13 +4023,6 @@ namespace Client.MirScenes
                     case SpellEffect.MonsterMACBuff: //loop - look @ MagicShield for start / loop / end
                         ob.Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.HornedArcher], 477, 10, 1000, ob, true, BuffType.MonsterMACBuff) { Repeat = true });
                         break;
-                    case SpellEffect.TreeQueenGroundRoots://Ground Roots / Vines
-                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 48, 10, 1500, ob) { Blend = false });                        
-                        break;
-                    case SpellEffect.TreeQueenSingleRoot://Single Root
-                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 111, 15, 1500, ob) { Blend = false });
-                        break;
-
 
                     case SpellEffect.DeathCrawlerBreath:
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DeathCrawler], 272 + ((int)ob.Direction * 4), 4, 400, ob) { Blend = true });
@@ -9413,11 +9406,14 @@ namespace Client.MirScenes
 
             DXManager.SetOpacity(oldOpacity);
 
-            if (MapObject.MouseObject != null && !MapObject.MouseObject.Dead && MapObject.MouseObject != MapObject.TargetObject && MapObject.MouseObject.Blend) //Far
-                MapObject.MouseObject.DrawBlend();
+            if (Settings.HighlightTarget)
+            {
+                if (MapObject.MouseObject != null && !MapObject.MouseObject.Dead && MapObject.MouseObject != MapObject.TargetObject && MapObject.MouseObject.Blend)
+                    MapObject.MouseObject.DrawBlend();
 
-            if (MapObject.TargetObject != null)
-                MapObject.TargetObject.DrawBlend();
+                if (MapObject.TargetObject != null)
+                    MapObject.TargetObject.DrawBlend();
+            }
 
             for (int i = 0; i < Objects.Count; i++)
             {

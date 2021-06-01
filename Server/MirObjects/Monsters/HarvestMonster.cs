@@ -5,7 +5,7 @@ using Server.MirDatabase;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
-{
+{    
     public class HarvestMonster : MonsterObject
     {
         protected short Quality;

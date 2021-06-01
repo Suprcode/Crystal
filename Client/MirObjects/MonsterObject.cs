@@ -939,9 +939,6 @@ namespace Client.MirObjects
                             case Monster.IcePhantom:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IcePhantom], 672, 10, 10 * Frame.Interval, this));
                                 break;
-                            case Monster.TreeQueen:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 97, 14, 1400, this) { Blend = true });
-                                break;
                         }
                         break;
                     case MirAction.AttackRange3:
@@ -1099,9 +1096,6 @@ namespace Client.MirObjects
                                 break;
                             case Monster.AvengingSpirit:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AvengingSpirit], 442 + (int)Direction * 10, 10, 10 * Frame.Interval, this));
-                                break;
-                            case Monster.TreeQueen:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 66, 16, 16 * Frame.Interval, this));
                                 break;
                         }
                         PlayDieSound();
@@ -2563,13 +2557,6 @@ namespace Client.MirObjects
                                     {
                                         switch (BaseImage)
                                         {
-                                            case Monster.EarthGolem:
-                                                ob = MapControl.GetObject(TargetID);
-                                                if (ob != null)
-                                                {
-                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.EarthGolem], 441, 12, 1200, ob) { Blend = false });
-                                                }
-                                                break;
                                             case Monster.FrozenMagician:
                                                 missile = CreateProjectile(560, Libraries.Monsters[(ushort)Monster.FrozenMagician], true, 6, 30, 0);
 
@@ -2798,22 +2785,6 @@ namespace Client.MirObjects
                                         }
                                         break;
                                     }
-                                case 7:
-                                    {
-                                        switch (BaseImage)
-                                        {
-                                            case Monster.TreeQueen://Mass Roots
-                                                ob = MapControl.GetObject(TargetID);
-                                                if (ob != null)
-                                                {
-                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 82, 15, 1500, ob) { Blend = false });                                                                                                       
-                                                }
-                                                break;
-                                        }
-                                        break;
-
-                                    }
-
                                 case 8:
                                     {
                                         switch (BaseImage)

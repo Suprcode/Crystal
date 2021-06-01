@@ -7,28 +7,20 @@ namespace Server.MirObjects.Monsters
 {
     public class CaveStatue : MonsterObject
     {
-
-        MirDirection direction;
-
         protected override bool CanMove { get { return false; } }
+        protected override bool CanAttack { get { return false; } }
+        protected override bool CanRegen { get { return false; } }
 
         protected internal CaveStatue(MonsterInfo info)
             : base(info)
         {
-            if(info.Effect != 0 || info.Effect != 1)
-            {
-                info.Effect = 0;
-            }
-
-            if(info.Effect == 0)
-            {
-                Direction = MirDirection.Up;
-                direction = Direction;
-            }
             if (info.Effect == 1)
             {
                 Direction = MirDirection.UpRight;
-                direction = Direction;
+            }
+            else
+            {
+                Direction = MirDirection.Up;
             }
         }
 
@@ -43,9 +35,6 @@ namespace Server.MirObjects.Monsters
 
         protected override void ProcessRoam() { }
 
-        protected override void ProcessTarget()
-        {
-            
-        }
+        protected override void ProcessTarget() { }
     }
 }
