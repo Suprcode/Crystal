@@ -434,6 +434,10 @@ namespace Client.MirScenes.Dialogs
                 case BuffType.MentalState:
                     return 199;
 
+                //Monster
+                case BuffType.RhinoPriestDebuff:
+                    return 217;
+
                 //Special
                 case BuffType.GameMaster:
                     return 173;

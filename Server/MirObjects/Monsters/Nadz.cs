@@ -30,7 +30,6 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -47,33 +46,45 @@ namespace Server.MirObjects.Monsters
             if (Envir.Random.Next(3) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
-                Attack1(3);
+
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, 0, DefenceType.AC, true);
+                ActionList.Add(action);
             }
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
-                SinglePushAttack(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-
-                //TODO - This needs adding to complete attack
-                PoisonTarget(Target, 3, 5, PoisonType.Paralysis);                
+                SinglePushAttack(Stats[Stat.MinDC], Stats[Stat.MaxDC]);         
             }
-
         }
 
-        //360 degree swing Attack - hits all players within 3 spaces of mob in 360 degrees.
-        private void Attack1(int distance)
+        protected override void CompleteAttack(IList<object> data)
         {
-            List<MapObject> targets = FindAllTargets(3, CurrentLocation);
-            if (targets.Count == 0) return;
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
+            bool halfmoon = data.Count >= 4 && (bool)data[3];
 
-            for (int i = 0; i < targets.Count; i++)
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            if (halfmoon)
             {
-                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                if (damage == 0) return;
-                if (targets[i].Attacked(this, damage, DefenceType.AC) <= 0) return;
-            }
+                List<MapObject> targets = FindAllTargets(3, CurrentLocation);
+                if (targets.Count == 0) return;
 
-        }       
+                for (int i = 0; i < targets.Count; i++)
+                {
+                    int damage2 = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                    if (damage2 == 0) return;
+                    if (targets[i].Attacked(this, damage2, defence) <= 0) return;
+                }
+            }
+            else
+            {
+                if (target.Attacked(this, damage, defence) <= 0) return;
+
+                PoisonTarget(target, 3, 5, PoisonType.Paralysis);
+            }
+        }  
     }
 }

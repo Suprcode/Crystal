@@ -5,7 +5,6 @@ using Server.MirEnvir;
 using S = ServerPackets;
 using System.Collections.Generic;
 
-
 namespace Server.MirObjects.Monsters
 {
     public class OmaBlest : MonsterObject
@@ -31,9 +30,10 @@ namespace Server.MirObjects.Monsters
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
-            if (Envir.Random.Next(1) > 0)
+            if (Envir.Random.Next(2) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 600, Target, damage, DefenceType.ACAgility, false);
                 ActionList.Add(action);
             }
@@ -41,7 +41,7 @@ namespace Server.MirObjects.Monsters
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 600, Target, damage, DefenceType.ACAgility, true);
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 600, Target, damage, DefenceType.AC, true);
                 ActionList.Add(action);
             }
         }
@@ -57,14 +57,13 @@ namespace Server.MirObjects.Monsters
 
             if (aoe)
             {
-                List<MapObject> targets = FindAllTargets(1, Target.CurrentLocation);
+                List<MapObject> targets = FindAllTargets(1, target.CurrentLocation);
                 if (targets.Count == 0) return;
 
                 for (int i = 0; i < targets.Count; i++)
                 {
-                    Target = targets[i];
-                    if (Target.IsAttackTarget(this))
-                        Target.Attacked(this, damage, DefenceType.AC);
+                    if (targets[i].IsAttackTarget(this))
+                        targets[i].Attacked(this, damage, defence);
                 }
             }
             else

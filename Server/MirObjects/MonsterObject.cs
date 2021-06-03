@@ -183,10 +183,8 @@ namespace Server.MirObjects
                     return new Tornado(info);
                 case 84:
                     return new WingedTigerLord(info);
-
                 case 85:
                     return new FlamingMutant(info); //TODO
-
                 case 86:
                     return new ManectricClaw(info);
                 case 87:
@@ -233,10 +231,8 @@ namespace Server.MirObjects
                     return new BurningZombie(info);
                 case 108:
                     return new MudZombie(info);
-
                 case 109:
                     return new HardenRhino(info);
-
                 case 110:
                     return new DemonWolf(info); //Effect 0/1
                 case 111:
@@ -255,20 +251,16 @@ namespace Server.MirObjects
                     return new StrayCat(info);
                 case 118:
                     return new CatShaman(info);
-
                 case 168:
                     return new Jar1(info);
                 case 169:
                     return new Jar2(info);
-
                 case 119:
                     return new SeedingsGeneral(info);
                 case 170:
                     return new RestlessJar(info);
-
                 case 120:
                     return new GeneralMeowMeow(info);
-
                 case 121:
                     return new Armadillo(info);
                 case 122:
@@ -284,102 +276,115 @@ namespace Server.MirObjects
                 case 127:
                     return new CannibalTentacles(info);
 
-                //TODO - TucsonGeneral
+                //128: TODO - TucsonGeneral
 
-                case 128:
-                    return new GasToad(info);
                 case 129:
-                    return new Mantis(info);
+                    return new GasToad(info);
                 case 130:
-                    return new AssassinBird(info);
+                    return new Mantis(info);
                 case 131:
-                    return new RhinoWarrior(info); //TODO
-                case 132:
-                    return new RhinoPriest(info); //TODO - Should debuff
+                    return new AssassinBird(info);
 
-                case 172:
+                //132: Empty AI
+
+                case 133:
+                    return new RhinoPriest(info);
+                case 134:
                     return new ElephantMan(info);
-
-                case 165:
+                case 135:
+                    return new StoneGolem(info);
+                case 136:
                     return new EarthGolem(info);
-                case 166:
-                    return new CaveStatue(info);
-                case 167:
+                case 137:
+                    return new TreeGuardian(info);
+                case 138:
                     return new TreeQueen(info);
 
+                //139: TODO - ShellFighter
+
+                case 140:
+                    return new OmaCannibal(info);
+                case 141:
+                    return new OmaBlest(info);
+                case 142:
+                    return new OmaSlasher(info);
+                case 143:
+                    return new OmaMage(info);
+
+                case 144:
+                    return new OmaWitchDoctor(info); //TODO
+
+                //145: TODO - PowerUpBead(s)
+
+                //146: TODO - DarkOmaKing
+
+                case 147:
+                    return new CaveStatue(info);
+                case 148:
+                    return new PlagueCrab(info);
+                case 149:
+                    return new CreeperPlant(info);
+                case 150:
+                    return new Nadz(info);
+                case 151:
+                    return new AvengingSpirit(info);
+                case 152:
+                    return new AvengingWarrior(info);
+                case 153:
+                    return new AxePlant(info);
+                case 154:
+                    return new WoodBox(info);
 
                 //FAR CHECKED UP TO HERE
 
+                //case 155: TODO - ClawBeast
 
-                case 133:
-                    return new OmaCannibal(info);
-                case 134:
-                    return new OmaBlest(info);
-                case 135:
-                    return new OmaSlasher(info);
-                case 136:
-                    return new OmaMage(info);
-                case 137:
-                    return new OmaWitchDoctor(info);
-                case 138:
-                    return new PlagueCrab(info);
-                case 139:
-                    return new CreeperPlant(info);
-                case 140:
-                    return new Nadz(info);
-                case 141:
-                    return new AvengingSpirit(info);
-                case 142:
-                    return new AvengingWarrior(info);
-                case 143:
-                    return new AxePlant(info);
-                case 144:
-                    return new TurtleGrass(info);
-                case 145:
-                    return new ManTree(info);
-                case 146:
-                    return new FrozenFighter(info);
-                case 147:
-                    return new Bear(info);
-                case 148:
-                    return new FrozenKnight(info);
-                case 149:
-                    return new IcePhantom(info);
-                case 150:
-                    return new SnowWolf(info);
-                case 151:
-                    return new BlackTortoise(info);
-                case 152:
-                    return new DragonWarrior(info);
-                case 153:
-                    return new HornedMage(info);
-                case 154:
-                    return new Kirin(info);
-                case 155:
-                    return new FrozenMiner(info);
-                case 156:
-                    return new FrozenAxeman(info);
+                //case 156: TODO - KillerPlant
+
                 case 157:
+                    return new SackWarrior(info);
+                case 212:
+                    return new TurtleGrass(info);
+                case 213:
+                    return new ManTree(info);
+                case 214:
+                    return new FrozenFighter(info);
+                case 215:
+                    return new Bear(info);
+                case 216:
+                    return new FrozenKnight(info);
+                case 217:
+                    return new IcePhantom(info);
+                case 218:
+                    return new SnowWolf(info);
+                case 219:
+                    return new BlackTortoise(info);
+                case 220:
+                    return new DragonWarrior(info);
+                case 221:
+                    return new HornedMage(info);
+                case 222:
+                    return new Kirin(info);
+                case 223:
+                    return new FrozenMiner(info);
+                case 224:
+                    return new FrozenAxeman(info);
+                case 225:
                     return new FrozenMagician(info);
-                case 158:
+                case 226:
                     return new SnowYeti(info);
-                case 159:
+                case 227:
                     return new IceCrystalSoldier(info);
-                case 160:
+                case 228:
                     return new DarkWraith(info);
-                case 161:
+                case 229:
                     return new ColdArcher(info);
-                case 162:
+                case 230:
                     return new HornedArcher(info);
-                case 163:
+                case 231:
                     return new FloatingRock(info);
-                case 164:
+                case 232:
                     return new ScalyBeast(info);
-
-
-
-                case 171:
-                    return new WoodBox(info);
 
                 case 254:
                     return new StoningStatue(info); //TODO
@@ -3086,6 +3091,90 @@ namespace Server.MirObjects
                     {
                         Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.Stunned, Time = (uint)(poisonDuration * poisonTickSpeed) });
                     }
+                }
+            }
+        }
+
+        protected virtual void TriangleAttack(int distance, int limitWidth = -1, int additionalDelay = 500, DefenceType defenceType = DefenceType.ACAgility, bool push = false)
+        {
+            int damage;
+
+            switch (defenceType)
+            {
+                case DefenceType.MAC:
+                case DefenceType.MACAgility:
+                    damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+                    break;
+                default:
+                    damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                    break;
+            }
+
+            if (damage == 0) return;
+
+            List<Point> points = new List<Point>();
+
+            for (int i = 1; i <= distance; i++)
+            {
+                Point target = Functions.PointMove(CurrentLocation, Direction, i);
+
+                if (!CurrentMap.ValidPoint(target)) continue;
+
+                points.Add(target);
+
+                if (distance > 1)
+                {
+                    Point left = target;
+                    Point right = target;
+
+                    var offset = i - 1;
+
+                    for (int l = 1; l <= offset; l++)
+                    {
+                        if (limitWidth > -1 && l > limitWidth) break;
+
+                        left = Functions.Left(left, Direction);
+                        if (!CurrentMap.ValidPoint(left)) continue;
+                        points.Add(left);
+                    }
+
+                    for (int r = 1; r <= offset; r++)
+                    {
+                        if (limitWidth > -1 && r > limitWidth) break;
+
+                        right = Functions.Right(right, Direction);
+                        if (!CurrentMap.ValidPoint(right)) continue;
+                        points.Add(right);
+                    }
+                }
+            }
+
+            foreach (var point in points)
+            {
+                Broadcast(new S.MapEffect { Effect = SpellEffect.Tester, Location = point, Value = (byte)Direction });
+
+                Cell cell = CurrentMap.GetCell(point);
+                if (cell.Objects == null) continue;
+
+                for (int o = 0; o < cell.Objects.Count; o++)
+                {
+                    MapObject ob = cell.Objects[o];
+                    if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
+                    {
+                        if (!ob.IsAttackTarget(this)) continue;
+
+                        if (push)
+                        {
+                            ob.Pushed(this, Direction, distance - 1);
+                        }
+
+                        int delay = Functions.MaxDistance(CurrentLocation, ob.CurrentLocation) * 50 + additionalDelay; //50 MS per Step
+                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
+                        ActionList.Add(action);
+                    }
+                    else continue;
+
+                    break;
                 }
             }
         }

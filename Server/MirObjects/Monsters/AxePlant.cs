@@ -21,7 +21,7 @@ namespace Server.MirObjects.Monsters
             int x = Math.Abs(Target.CurrentLocation.X - CurrentLocation.X);
             int y = Math.Abs(Target.CurrentLocation.Y - CurrentLocation.Y);
 
-            if (x > 2 || y > 2) return false;
+            if (x > 3 || y > 3) return false;
 
             return (x <= 1 && y <= 1) || (x == y || x % 2 == y % 2);
         }
@@ -43,7 +43,7 @@ namespace Server.MirObjects.Monsters
             ShockTime = 0;
 
             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-            LineAttack(2, 1200);
+            TriangleAttack(3, 1, 800);
         }
     }
 }

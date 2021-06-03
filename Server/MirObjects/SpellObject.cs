@@ -246,6 +246,14 @@ namespace Server.MirObjects
                         }
                     }
                     break;
+                case Spell.StoneGolemQuake:
+                    {
+                        if (Value == 0) return;
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                        if (ob.Dead) return;
+                        ob.Struck(Value, DefenceType.AC);
+                    }
+                    break;
                 case Spell.EarthGolemPile:
                     {
                         if (Value == 0) return;
@@ -385,8 +393,10 @@ namespace Server.MirObjects
                 case Spell.PoisonCloud:
                 case Spell.Blizzard:
                 case Spell.MeteorStrike:
+                case Spell.StoneGolemQuake:
                 case Spell.EarthGolemPile:
                 case Spell.TreeQueenMassRoots:
+                case Spell.TreeQueenGroundRoots:
                     if (!Show)
                         return null;
 

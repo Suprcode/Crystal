@@ -135,6 +135,12 @@
     <Compile Include="Database\MagicInfoForm.Designer.cs">
       <DependentUpon>MagicInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Database\MonsterInfoFormNew.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Database\MonsterInfoFormNew.Designer.cs">
+      <DependentUpon>MonsterInfoFormNew.cs</DependentUpon>
+    </Compile>
     <Compile Include="Systems\ConquestInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -289,6 +295,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Database\MagicInfoForm.resx">
       <DependentUpon>MagicInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Database\MonsterInfoFormNew.resx">
+      <DependentUpon>MonsterInfoFormNew.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Systems\ConquestInfoForm.resx">
       <DependentUpon>ConquestInfoForm.cs</DependentUpon>

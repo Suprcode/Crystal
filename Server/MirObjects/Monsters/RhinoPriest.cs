@@ -100,8 +100,18 @@ namespace Server.MirObjects.Monsters
                     PoisonTarget(target, 4, 5, PoisonType.Frozen, 1000);
                 }
             }
-        }
+            else
+            {
+                var stats = new Stats
+                {
+                    [Stat.MaxDC] = damage * -1,
+                    [Stat.MaxMC] = damage * -1,
+                    [Stat.MaxSC] = damage * -1
+                };
 
+                target.AddBuff(BuffType.RhinoPriestDebuff, this, Settings.Second * (5 + damage), stats);
+            }
+        }
 
         protected override void ProcessTarget()
         {

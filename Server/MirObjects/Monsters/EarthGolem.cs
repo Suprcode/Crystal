@@ -64,7 +64,7 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            if (!ranged)
+            if (!ranged && Envir.Random.Next(3) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
@@ -79,7 +79,6 @@ namespace Server.MirObjects.Monsters
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
 
                 var location = Target.CurrentLocation;
-                var show = true;
 
                 for (int y = location.Y - 1; y <= location.Y + 1; y++)
                 {
@@ -91,40 +90,29 @@ namespace Server.MirObjects.Monsters
                         if (x < 0) continue;
                         if (x >= CurrentMap.Width) break;
 
+                        if (x == CurrentLocation.X && y == CurrentLocation.Y) continue;
+
                         var cell = CurrentMap.GetCell(x, y);
 
                         if (!cell.Valid) continue;
 
-                        bool cast = true;
-                        if (cell.Objects != null)
-                            for (int o = 0; o < cell.Objects.Count; o++)
-                            {
-                                MapObject target = cell.Objects[o];
-                                if (target.Race != ObjectType.Spell || ((SpellObject)target).Spell != Spell.EarthGolemPile) continue;
-
-                                cast = false;
-                                break;
-                            }
-
-                        if (!cast) continue;
-
                         int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MinDC]);
+
+                        var expire = 500;
 
                         SpellObject ob = new SpellObject
                         {
                             Spell = Spell.EarthGolemPile,
                             Value = damage,
-                            ExpireTime = Envir.Time + 1700,
+                            ExpireTime = Envir.Time + 1200 + expire,
                             TickSpeed = 1000,
                             CurrentLocation = new Point(x, y),
                             CastLocation = location,
-                            Show = show,
+                            Show = location.X == x && location.Y == y,
                             CurrentMap = CurrentMap
                         };
 
-                        show = false;
-
-                        DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + 500, ob);
+                        DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + expire, ob);
                         CurrentMap.ActionList.Add(action);
                     }
                 }

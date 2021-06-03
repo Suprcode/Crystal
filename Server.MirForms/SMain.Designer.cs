@@ -94,6 +94,7 @@ namespace Server
             this.respawnsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.monsterTunerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.InterfaceTimer = new System.Windows.Forms.Timer(this.components);
+            this.monsterExperimentalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -419,7 +420,8 @@ namespace Server
             this.questInfoToolStripMenuItem,
             this.magicInfoToolStripMenuItem,
             this.gameshopToolStripMenuItem,
-            this.itemNEWToolStripMenuItem});
+            this.itemNEWToolStripMenuItem,
+            this.monsterExperimentalToolStripMenuItem});
             this.databaseFormsToolStripMenuItem.Name = "databaseFormsToolStripMenuItem";
             this.databaseFormsToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
             this.databaseFormsToolStripMenuItem.Text = "Database";
@@ -427,56 +429,56 @@ namespace Server
             // mapInfoToolStripMenuItem
             // 
             this.mapInfoToolStripMenuItem.Name = "mapInfoToolStripMenuItem";
-            this.mapInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mapInfoToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.mapInfoToolStripMenuItem.Text = "Map";
             this.mapInfoToolStripMenuItem.Click += new System.EventHandler(this.mapInfoToolStripMenuItem_Click);
             // 
             // itemInfoToolStripMenuItem
             // 
             this.itemInfoToolStripMenuItem.Name = "itemInfoToolStripMenuItem";
-            this.itemInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.itemInfoToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.itemInfoToolStripMenuItem.Text = "Item";
             this.itemInfoToolStripMenuItem.Click += new System.EventHandler(this.itemInfoToolStripMenuItem_Click);
             // 
             // monsterInfoToolStripMenuItem
             // 
             this.monsterInfoToolStripMenuItem.Name = "monsterInfoToolStripMenuItem";
-            this.monsterInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.monsterInfoToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.monsterInfoToolStripMenuItem.Text = "Monster";
             this.monsterInfoToolStripMenuItem.Click += new System.EventHandler(this.monsterInfoToolStripMenuItem_Click);
             // 
             // nPCInfoToolStripMenuItem
             // 
             this.nPCInfoToolStripMenuItem.Name = "nPCInfoToolStripMenuItem";
-            this.nPCInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.nPCInfoToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.nPCInfoToolStripMenuItem.Text = "NPC";
             this.nPCInfoToolStripMenuItem.Click += new System.EventHandler(this.nPCInfoToolStripMenuItem_Click);
             // 
             // questInfoToolStripMenuItem
             // 
             this.questInfoToolStripMenuItem.Name = "questInfoToolStripMenuItem";
-            this.questInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.questInfoToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.questInfoToolStripMenuItem.Text = "Quest";
             this.questInfoToolStripMenuItem.Click += new System.EventHandler(this.questInfoToolStripMenuItem_Click);
             // 
             // magicInfoToolStripMenuItem
             // 
             this.magicInfoToolStripMenuItem.Name = "magicInfoToolStripMenuItem";
-            this.magicInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.magicInfoToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.magicInfoToolStripMenuItem.Text = "Magic";
             this.magicInfoToolStripMenuItem.Click += new System.EventHandler(this.magicInfoToolStripMenuItem_Click);
             // 
             // gameshopToolStripMenuItem
             // 
             this.gameshopToolStripMenuItem.Name = "gameshopToolStripMenuItem";
-            this.gameshopToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.gameshopToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.gameshopToolStripMenuItem.Text = "Gameshop";
             this.gameshopToolStripMenuItem.Click += new System.EventHandler(this.gameshopToolStripMenuItem_Click);
             // 
             // itemNEWToolStripMenuItem
             // 
             this.itemNEWToolStripMenuItem.Name = "itemNEWToolStripMenuItem";
-            this.itemNEWToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.itemNEWToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.itemNEWToolStripMenuItem.Text = "Item (Experimental)";
             this.itemNEWToolStripMenuItem.Click += new System.EventHandler(this.itemNEWToolStripMenuItem_Click);
             // 
@@ -620,6 +622,13 @@ namespace Server
             this.InterfaceTimer.Enabled = true;
             this.InterfaceTimer.Tick += new System.EventHandler(this.InterfaceTimer_Tick);
             // 
+            // monsterExperimentalToolStripMenuItem
+            // 
+            this.monsterExperimentalToolStripMenuItem.Name = "monsterExperimentalToolStripMenuItem";
+            this.monsterExperimentalToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.monsterExperimentalToolStripMenuItem.Text = "Monster (Experimental)";
+            this.monsterExperimentalToolStripMenuItem.Click += new System.EventHandler(this.monsterExperimentalToolStripMenuItem_Click);
+            // 
             // SMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -716,6 +725,7 @@ namespace Server
         private ToolStripMenuItem reloadDropsToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem itemNEWToolStripMenuItem;
+        private ToolStripMenuItem monsterExperimentalToolStripMenuItem;
     }
 }
 

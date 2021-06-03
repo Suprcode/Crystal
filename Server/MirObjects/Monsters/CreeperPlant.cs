@@ -5,9 +5,8 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    public class CreeperPlant : HarvestMonster
+    public class CreeperPlant : CannibalPlant
     {
-
         protected virtual byte AttackRange
         {
             get
@@ -16,29 +15,10 @@ namespace Server.MirObjects.Monsters
             }
         }
 
-        public bool Visible;
-        public long VisibleTime;
-
-        protected override bool CanAttack
-        {
-            get
-            {
-                return Visible && base.CanAttack;
-            }
-        }
-        protected override bool CanMove { get { return false; } }
-        public override bool Blocking
-        {
-            get
-            {
-                return Visible && base.Blocking;
-            }
-        }
-
         protected internal CreeperPlant(MonsterInfo info)
             : base(info)
         {
-            Visible = false;
+            
         }
 
         protected override void ProcessAI()
@@ -80,7 +60,6 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -98,9 +77,11 @@ namespace Server.MirObjects.Monsters
             if (!ranged)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                int damageDC = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                if (damageDC == 0) return;
-                Target.Attacked(this, damageDC, DefenceType.ACAgility);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                if (damage == 0) return;
+
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+                ActionList.Add(action);
             }
             else
             {
@@ -108,44 +89,9 @@ namespace Server.MirObjects.Monsters
                 int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                 if (damage == 0) return;
 
-                if (Envir.Random.Next(Settings.MagicResistWeight) >= Target.Stats[Stat.MagicResist])
-                {
-                    int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
-                    DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
-                    ActionList.Add(action);
-                }
+                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MACAgility);
+                ActionList.Add(action);
             }
-        }
-
-
-        public override void Turn(MirDirection dir)
-        {
-        }
-
-        public override bool Walk(MirDirection dir) { return false; }
-
-        public override bool IsAttackTarget(MonsterObject attacker)
-        {
-            return Visible && base.IsAttackTarget(attacker);
-        }
-        public override bool IsAttackTarget(PlayerObject attacker)
-        {
-            return Visible && base.IsAttackTarget(attacker);
-        }
-
-        protected override void ProcessRoam() { }
-
-        protected override void ProcessSearch()
-        {
-            if (Visible)
-                base.ProcessSearch();
-        }
-
-        public override Packet GetInfo()
-        {
-            if (!Visible) return null;
-
-            return base.GetInfo();
         }
     }
 }

@@ -3375,6 +3375,11 @@ namespace Client.MirScenes
                             effect = new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], 946, 10, 500, ob);
                             break;
                         }
+                    case 7: //Mandrill
+                        {
+                            effect = new Effect(Libraries.Monsters[(ushort)Monster.Mandrill], 280, 10, 1000, ob);
+                            break;
+                        }
                     default:
                         {
                             effect = new Effect(Libraries.Magic, 250, 10, 500, ob);
@@ -3433,6 +3438,11 @@ namespace Client.MirScenes
                     case 6: //TurtleKing
                         {
                             ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], 956, 10, 500, ob));
+                            break;
+                        }
+                    case 7: //Mandrill
+                        {
+                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Mandrill], 290, 10, 1000, ob));
                             break;
                         }
                     default:

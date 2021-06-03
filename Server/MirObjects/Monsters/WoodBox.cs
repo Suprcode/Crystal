@@ -7,13 +7,7 @@ namespace Server.MirObjects.Monsters
 {
     public class WoodBox : MonsterObject
     {
-        /// <summary>
-        /// Has no movement / attacks / turn direction
-        /// On death will explode, with Max DC random between x1 and x3.
-        /// </summary>
-
         protected override bool CanMove { get { return false; } }
-
         protected internal WoodBox(MonsterInfo info)
             : base(info)
         {
@@ -44,7 +38,7 @@ namespace Server.MirObjects.Monsters
 
             for (int i = 0; i < targets.Count; i++)
             {
-                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * Envir.Random.Next(1,3));
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * Envir.Random.Next(1, 3));
                 if (damage == 0) return;
 
                 if (targets[i].Attacked(this, damage, DefenceType.ACAgility) <= 0) continue;

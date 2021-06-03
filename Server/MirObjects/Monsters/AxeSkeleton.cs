@@ -6,7 +6,14 @@ namespace Server.MirObjects.Monsters
     public class AxeSkeleton : MonsterObject
     {
         public long FearTime;
-        public byte AttackRange = 6;
+
+        protected virtual byte AttackRange
+        {
+            get
+            {
+                return 6;
+            }
+        }
 
         protected internal AxeSkeleton(MonsterInfo info)
             : base(info)

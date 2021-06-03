@@ -32,21 +32,6 @@ namespace Server.Database
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.itemInfoGridView = new System.Windows.Forms.DataGridView();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.btnExport = new System.Windows.Forms.Button();
-            this.btnImport = new System.Windows.Forms.Button();
-            this.lblFilterType = new System.Windows.Forms.Label();
-            this.groupView = new System.Windows.Forms.GroupBox();
-            this.rBtnViewSpecial = new System.Windows.Forms.RadioButton();
-            this.rbtnViewAll = new System.Windows.Forms.RadioButton();
-            this.rbtnViewBinding = new System.Windows.Forms.RadioButton();
-            this.rbtnViewBasic = new System.Windows.Forms.RadioButton();
-            this.rbtnViewStats = new System.Windows.Forms.RadioButton();
-            this.drpFilterType = new System.Windows.Forms.ComboBox();
-            this.lblSearch = new System.Windows.Forms.Label();
-            this.txtSearch = new System.Windows.Forms.TextBox();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.Modified = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.ItemIndex = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -68,6 +53,21 @@ namespace Server.Database
             this.ItemLightIntensity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemDurability = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.btnExport = new System.Windows.Forms.Button();
+            this.btnImport = new System.Windows.Forms.Button();
+            this.lblFilterType = new System.Windows.Forms.Label();
+            this.groupView = new System.Windows.Forms.GroupBox();
+            this.rBtnViewSpecial = new System.Windows.Forms.RadioButton();
+            this.rbtnViewAll = new System.Windows.Forms.RadioButton();
+            this.rbtnViewBinding = new System.Windows.Forms.RadioButton();
+            this.rbtnViewBasic = new System.Windows.Forms.RadioButton();
+            this.rbtnViewStats = new System.Windows.Forms.RadioButton();
+            this.drpFilterType = new System.Windows.Forms.ComboBox();
+            this.lblSearch = new System.Windows.Forms.Label();
+            this.txtSearch = new System.Windows.Forms.TextBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.itemInfoGridView)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -120,170 +120,6 @@ namespace Server.Database
             this.itemInfoGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.itemInfoGridView_DataError);
             this.itemInfoGridView.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.itemInfoGridView_DefaultValuesNeeded);
             this.itemInfoGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.itemInfoGridView_UserDeletingRow);
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.panel3);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(956, 47);
-            this.panel1.TabIndex = 1;
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.btnExport);
-            this.panel3.Controls.Add(this.btnImport);
-            this.panel3.Controls.Add(this.lblFilterType);
-            this.panel3.Controls.Add(this.groupView);
-            this.panel3.Controls.Add(this.drpFilterType);
-            this.panel3.Controls.Add(this.lblSearch);
-            this.panel3.Controls.Add(this.txtSearch);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(0, 0);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(956, 47);
-            this.panel3.TabIndex = 5;
-            // 
-            // btnExport
-            // 
-            this.btnExport.Location = new System.Drawing.Point(693, 22);
-            this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(75, 23);
-            this.btnExport.TabIndex = 6;
-            this.btnExport.Text = "Export";
-            this.btnExport.UseVisualStyleBackColor = true;
-            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
-            // 
-            // btnImport
-            // 
-            this.btnImport.Location = new System.Drawing.Point(611, 22);
-            this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(75, 23);
-            this.btnImport.TabIndex = 5;
-            this.btnImport.Text = "Import";
-            this.btnImport.UseVisualStyleBackColor = true;
-            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
-            // 
-            // lblFilterType
-            // 
-            this.lblFilterType.AutoSize = true;
-            this.lblFilterType.Location = new System.Drawing.Point(334, 9);
-            this.lblFilterType.Name = "lblFilterType";
-            this.lblFilterType.Size = new System.Drawing.Size(37, 13);
-            this.lblFilterType.TabIndex = 3;
-            this.lblFilterType.Text = "Type :";
-            // 
-            // groupView
-            // 
-            this.groupView.Controls.Add(this.rBtnViewSpecial);
-            this.groupView.Controls.Add(this.rbtnViewAll);
-            this.groupView.Controls.Add(this.rbtnViewBinding);
-            this.groupView.Controls.Add(this.rbtnViewBasic);
-            this.groupView.Controls.Add(this.rbtnViewStats);
-            this.groupView.Location = new System.Drawing.Point(3, 3);
-            this.groupView.Name = "groupView";
-            this.groupView.Size = new System.Drawing.Size(325, 47);
-            this.groupView.TabIndex = 4;
-            this.groupView.TabStop = false;
-            this.groupView.Text = "View Mode";
-            // 
-            // rBtnViewSpecial
-            // 
-            this.rBtnViewSpecial.AutoSize = true;
-            this.rBtnViewSpecial.Location = new System.Drawing.Point(248, 20);
-            this.rBtnViewSpecial.Name = "rBtnViewSpecial";
-            this.rBtnViewSpecial.Size = new System.Drawing.Size(60, 17);
-            this.rBtnViewSpecial.TabIndex = 4;
-            this.rBtnViewSpecial.TabStop = true;
-            this.rBtnViewSpecial.Text = "Special";
-            this.rBtnViewSpecial.UseVisualStyleBackColor = true;
-            this.rBtnViewSpecial.CheckedChanged += new System.EventHandler(this.rBtnViewSpecial_CheckedChanged);
-            // 
-            // rbtnViewAll
-            // 
-            this.rbtnViewAll.AutoSize = true;
-            this.rbtnViewAll.Checked = true;
-            this.rbtnViewAll.Location = new System.Drawing.Point(27, 19);
-            this.rbtnViewAll.Name = "rbtnViewAll";
-            this.rbtnViewAll.Size = new System.Drawing.Size(36, 17);
-            this.rbtnViewAll.TabIndex = 0;
-            this.rbtnViewAll.TabStop = true;
-            this.rbtnViewAll.Text = "All";
-            this.rbtnViewAll.UseVisualStyleBackColor = true;
-            this.rbtnViewAll.CheckedChanged += new System.EventHandler(this.rbtnViewAll_CheckedChanged);
-            // 
-            // rbtnViewBinding
-            // 
-            this.rbtnViewBinding.AutoSize = true;
-            this.rbtnViewBinding.Location = new System.Drawing.Point(181, 19);
-            this.rbtnViewBinding.Name = "rbtnViewBinding";
-            this.rbtnViewBinding.Size = new System.Drawing.Size(60, 17);
-            this.rbtnViewBinding.TabIndex = 3;
-            this.rbtnViewBinding.TabStop = true;
-            this.rbtnViewBinding.Text = "Binding";
-            this.rbtnViewBinding.UseVisualStyleBackColor = true;
-            this.rbtnViewBinding.CheckedChanged += new System.EventHandler(this.rbtnViewBinding_CheckedChanged);
-            // 
-            // rbtnViewBasic
-            // 
-            this.rbtnViewBasic.AutoSize = true;
-            this.rbtnViewBasic.Location = new System.Drawing.Point(69, 19);
-            this.rbtnViewBasic.Name = "rbtnViewBasic";
-            this.rbtnViewBasic.Size = new System.Drawing.Size(51, 17);
-            this.rbtnViewBasic.TabIndex = 1;
-            this.rbtnViewBasic.TabStop = true;
-            this.rbtnViewBasic.Text = "Basic";
-            this.rbtnViewBasic.UseVisualStyleBackColor = true;
-            this.rbtnViewBasic.CheckedChanged += new System.EventHandler(this.rbtnViewBasic_CheckedChanged);
-            // 
-            // rbtnViewStats
-            // 
-            this.rbtnViewStats.AutoSize = true;
-            this.rbtnViewStats.Location = new System.Drawing.Point(126, 19);
-            this.rbtnViewStats.Name = "rbtnViewStats";
-            this.rbtnViewStats.Size = new System.Drawing.Size(49, 17);
-            this.rbtnViewStats.TabIndex = 2;
-            this.rbtnViewStats.TabStop = true;
-            this.rbtnViewStats.Text = "Stats";
-            this.rbtnViewStats.UseVisualStyleBackColor = true;
-            this.rbtnViewStats.CheckedChanged += new System.EventHandler(this.rbtnViewStats_CheckedChanged);
-            // 
-            // drpFilterType
-            // 
-            this.drpFilterType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.drpFilterType.FormattingEnabled = true;
-            this.drpFilterType.Location = new System.Drawing.Point(337, 24);
-            this.drpFilterType.Name = "drpFilterType";
-            this.drpFilterType.Size = new System.Drawing.Size(121, 21);
-            this.drpFilterType.TabIndex = 2;
-            this.drpFilterType.SelectedIndexChanged += new System.EventHandler(this.drpFilterType_SelectedIndexChanged);
-            // 
-            // lblSearch
-            // 
-            this.lblSearch.AutoSize = true;
-            this.lblSearch.Location = new System.Drawing.Point(461, 9);
-            this.lblSearch.Name = "lblSearch";
-            this.lblSearch.Size = new System.Drawing.Size(44, 13);
-            this.lblSearch.TabIndex = 1;
-            this.lblSearch.Text = "Search:";
-            // 
-            // txtSearch
-            // 
-            this.txtSearch.Location = new System.Drawing.Point(464, 25);
-            this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(141, 20);
-            this.txtSearch.TabIndex = 0;
-            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.itemInfoGridView);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 47);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(956, 433);
-            this.panel2.TabIndex = 2;
             // 
             // Modified
             // 
@@ -422,6 +258,170 @@ namespace Server.Database
             this.ItemPrice.DataPropertyName = "ItemPrice";
             this.ItemPrice.HeaderText = "Price";
             this.ItemPrice.Name = "ItemPrice";
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.panel3);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(956, 47);
+            this.panel1.TabIndex = 1;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.btnExport);
+            this.panel3.Controls.Add(this.btnImport);
+            this.panel3.Controls.Add(this.lblFilterType);
+            this.panel3.Controls.Add(this.groupView);
+            this.panel3.Controls.Add(this.drpFilterType);
+            this.panel3.Controls.Add(this.lblSearch);
+            this.panel3.Controls.Add(this.txtSearch);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(0, 0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(956, 47);
+            this.panel3.TabIndex = 5;
+            // 
+            // btnExport
+            // 
+            this.btnExport.Location = new System.Drawing.Point(693, 22);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(75, 23);
+            this.btnExport.TabIndex = 6;
+            this.btnExport.Text = "Export";
+            this.btnExport.UseVisualStyleBackColor = true;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+            // 
+            // btnImport
+            // 
+            this.btnImport.Location = new System.Drawing.Point(611, 22);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(75, 23);
+            this.btnImport.TabIndex = 5;
+            this.btnImport.Text = "Import";
+            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
+            // lblFilterType
+            // 
+            this.lblFilterType.AutoSize = true;
+            this.lblFilterType.Location = new System.Drawing.Point(334, 9);
+            this.lblFilterType.Name = "lblFilterType";
+            this.lblFilterType.Size = new System.Drawing.Size(37, 13);
+            this.lblFilterType.TabIndex = 3;
+            this.lblFilterType.Text = "Type :";
+            // 
+            // groupView
+            // 
+            this.groupView.Controls.Add(this.rBtnViewSpecial);
+            this.groupView.Controls.Add(this.rbtnViewAll);
+            this.groupView.Controls.Add(this.rbtnViewBinding);
+            this.groupView.Controls.Add(this.rbtnViewBasic);
+            this.groupView.Controls.Add(this.rbtnViewStats);
+            this.groupView.Location = new System.Drawing.Point(3, 3);
+            this.groupView.Name = "groupView";
+            this.groupView.Size = new System.Drawing.Size(325, 41);
+            this.groupView.TabIndex = 4;
+            this.groupView.TabStop = false;
+            this.groupView.Text = "View Mode";
+            // 
+            // rBtnViewSpecial
+            // 
+            this.rBtnViewSpecial.AutoSize = true;
+            this.rBtnViewSpecial.Location = new System.Drawing.Point(248, 20);
+            this.rBtnViewSpecial.Name = "rBtnViewSpecial";
+            this.rBtnViewSpecial.Size = new System.Drawing.Size(60, 17);
+            this.rBtnViewSpecial.TabIndex = 4;
+            this.rBtnViewSpecial.TabStop = true;
+            this.rBtnViewSpecial.Text = "Special";
+            this.rBtnViewSpecial.UseVisualStyleBackColor = true;
+            this.rBtnViewSpecial.CheckedChanged += new System.EventHandler(this.rBtnViewSpecial_CheckedChanged);
+            // 
+            // rbtnViewAll
+            // 
+            this.rbtnViewAll.AutoSize = true;
+            this.rbtnViewAll.Checked = true;
+            this.rbtnViewAll.Location = new System.Drawing.Point(27, 19);
+            this.rbtnViewAll.Name = "rbtnViewAll";
+            this.rbtnViewAll.Size = new System.Drawing.Size(36, 17);
+            this.rbtnViewAll.TabIndex = 0;
+            this.rbtnViewAll.TabStop = true;
+            this.rbtnViewAll.Text = "All";
+            this.rbtnViewAll.UseVisualStyleBackColor = true;
+            this.rbtnViewAll.CheckedChanged += new System.EventHandler(this.rbtnViewAll_CheckedChanged);
+            // 
+            // rbtnViewBinding
+            // 
+            this.rbtnViewBinding.AutoSize = true;
+            this.rbtnViewBinding.Location = new System.Drawing.Point(181, 19);
+            this.rbtnViewBinding.Name = "rbtnViewBinding";
+            this.rbtnViewBinding.Size = new System.Drawing.Size(60, 17);
+            this.rbtnViewBinding.TabIndex = 3;
+            this.rbtnViewBinding.TabStop = true;
+            this.rbtnViewBinding.Text = "Binding";
+            this.rbtnViewBinding.UseVisualStyleBackColor = true;
+            this.rbtnViewBinding.CheckedChanged += new System.EventHandler(this.rbtnViewBinding_CheckedChanged);
+            // 
+            // rbtnViewBasic
+            // 
+            this.rbtnViewBasic.AutoSize = true;
+            this.rbtnViewBasic.Location = new System.Drawing.Point(69, 19);
+            this.rbtnViewBasic.Name = "rbtnViewBasic";
+            this.rbtnViewBasic.Size = new System.Drawing.Size(51, 17);
+            this.rbtnViewBasic.TabIndex = 1;
+            this.rbtnViewBasic.TabStop = true;
+            this.rbtnViewBasic.Text = "Basic";
+            this.rbtnViewBasic.UseVisualStyleBackColor = true;
+            this.rbtnViewBasic.CheckedChanged += new System.EventHandler(this.rbtnViewBasic_CheckedChanged);
+            // 
+            // rbtnViewStats
+            // 
+            this.rbtnViewStats.AutoSize = true;
+            this.rbtnViewStats.Location = new System.Drawing.Point(126, 19);
+            this.rbtnViewStats.Name = "rbtnViewStats";
+            this.rbtnViewStats.Size = new System.Drawing.Size(49, 17);
+            this.rbtnViewStats.TabIndex = 2;
+            this.rbtnViewStats.TabStop = true;
+            this.rbtnViewStats.Text = "Stats";
+            this.rbtnViewStats.UseVisualStyleBackColor = true;
+            this.rbtnViewStats.CheckedChanged += new System.EventHandler(this.rbtnViewStats_CheckedChanged);
+            // 
+            // drpFilterType
+            // 
+            this.drpFilterType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.drpFilterType.FormattingEnabled = true;
+            this.drpFilterType.Location = new System.Drawing.Point(337, 24);
+            this.drpFilterType.Name = "drpFilterType";
+            this.drpFilterType.Size = new System.Drawing.Size(121, 21);
+            this.drpFilterType.TabIndex = 2;
+            this.drpFilterType.SelectedIndexChanged += new System.EventHandler(this.drpFilterType_SelectedIndexChanged);
+            // 
+            // lblSearch
+            // 
+            this.lblSearch.AutoSize = true;
+            this.lblSearch.Location = new System.Drawing.Point(461, 9);
+            this.lblSearch.Name = "lblSearch";
+            this.lblSearch.Size = new System.Drawing.Size(44, 13);
+            this.lblSearch.TabIndex = 1;
+            this.lblSearch.Text = "Search:";
+            // 
+            // txtSearch
+            // 
+            this.txtSearch.Location = new System.Drawing.Point(464, 25);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(141, 20);
+            this.txtSearch.TabIndex = 0;
+            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.itemInfoGridView);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(0, 47);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(956, 433);
+            this.panel2.TabIndex = 2;
             // 
             // ItemInfoFormNew
             // 

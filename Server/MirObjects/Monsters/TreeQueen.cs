@@ -7,7 +7,6 @@ using S = ServerPackets;
 using System.Linq;
 using System.Text;
 
-
 namespace Server.MirObjects.Monsters
 {
     public class TreeQueen : MonsterObject
@@ -17,12 +16,10 @@ namespace Server.MirObjects.Monsters
 
         private readonly int _rootSpreadMin = 5;
         private readonly int _rootSpreadMax = 15;
-        private readonly int _rootCount = 1;
+        private readonly int _rootCount = 5;
         private long _rootSpawnTime;
 
-        private readonly int _groundrootSpreadMin = 5;
-        private readonly int _groundrootSpreadMax = 25;
-        private readonly int _groundrootCountPerPlayer = 2;
+        private readonly int _groundrootSpread = 5;
         private long _groundRootSpawnTime;
 
         private readonly int _nearMultiplier = 4;
@@ -141,12 +138,16 @@ namespace Server.MirObjects.Monsters
 
         private void SpawnRoots()
         {
+            if (Dead) return;
+
             int count = Envir.Random.Next(1, _rootCount);
             int distance = Envir.Random.Next(_rootSpreadMin, _rootSpreadMax);
 
             for (int j = 0; j < CurrentMap.Players.Count; j++)
             {
                 Point playerLocation = CurrentMap.Players[j].CurrentLocation;
+
+                bool hit = false;
 
                 for (int i = 0; i < count; i++)
                 {
@@ -156,6 +157,7 @@ namespace Server.MirObjects.Monsters
                     if (Envir.Random.Next(3) == 0)
                     {
                         location = playerLocation;
+                        hit = true;
                     }
 
                     if (!CurrentMap.ValidPoint(location)) continue;
@@ -176,12 +178,19 @@ namespace Server.MirObjects.Monsters
 
                     DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + expire, spellObj);
                     CurrentMap.ActionList.Add(action);
+
+                    if (hit)
+                    {
+                        break;
+                    }
                 }
             }
         }
 
         private void SpawnMassRoots()
         {
+            if (Dead) return;
+
             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
 
             var count = CurrentMap.Players.Count;
@@ -191,7 +200,6 @@ namespace Server.MirObjects.Monsters
             var target = CurrentMap.Players[Envir.Random.Next(count)];
 
             var location = target.CurrentLocation;
-            var show = true;
 
             for (int y = location.Y - 3; y <= location.Y + 3; y++)
             {
@@ -203,7 +211,7 @@ namespace Server.MirObjects.Monsters
                     if (x < 0) continue;
                     if (x >= CurrentMap.Width) break;
 
-                    if (location == CurrentLocation) continue;
+                    if (x == CurrentLocation.X && y == CurrentLocation.Y) continue;
 
                     var cell = CurrentMap.GetCell(x, y);
 
@@ -221,11 +229,9 @@ namespace Server.MirObjects.Monsters
                         TickSpeed = 1000,
                         CurrentLocation = new Point(x, y),
                         CastLocation = location,
-                        Show = show,
+                        Show = location.X == x && location.Y == y,
                         CurrentMap = CurrentMap
                     };
-
-                    show = false;
 
                     DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + expire, ob);
                     CurrentMap.ActionList.Add(action);
@@ -235,41 +241,48 @@ namespace Server.MirObjects.Monsters
 
         private void SpawnGroundRoots()
         {
-            int count = Envir.Random.Next(0, _groundrootCountPerPlayer);
-            int distance = Envir.Random.Next(_groundrootSpreadMin, _groundrootSpreadMax);
+            if (Dead) return;
 
-            for (int j = 0; j < CurrentMap.Players.Count; j++)
+            for (int i = 0; i < CurrentMap.Players.Count; i++)
             {
-                Point playerLocation = CurrentMap.Players[j].CurrentLocation;
+                Point location = new Point(CurrentLocation.X + Envir.Random.Next(-_groundrootSpread, _groundrootSpread + 1),
+                                         CurrentLocation.Y + Envir.Random.Next(-_groundrootSpread, _groundrootSpread + 1));
 
-                for (int i = 0; i < count; i++)
+                for (int y = location.Y - 2; y <= location.Y + 2; y++)
                 {
-                    Point location = new Point(playerLocation.X + Envir.Random.Next(-distance, distance + 1),
-                                             playerLocation.Y + Envir.Random.Next(-distance, distance + 1));
+                    if (y < 0) continue;
+                    if (y >= CurrentMap.Height) break;
 
-                    if (Envir.Random.Next(3) == 0)
+                    for (int x = location.X - 2; x <= location.X + 2; x++)
                     {
-                        location = playerLocation;
+                        if (x < 0) continue;
+                        if (x >= CurrentMap.Width) break;
+
+                        if (x == CurrentLocation.X && y == CurrentLocation.Y) continue;
+
+                        var cell = CurrentMap.GetCell(x, y);
+
+                        if (!cell.Valid) continue;
+
+                        int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MinDC]);
+
+                        var expire = Envir.Random.Next(4000);
+
+                        SpellObject ob = new SpellObject
+                        {
+                            Spell = Spell.TreeQueenGroundRoots,
+                            Value = damage,
+                            ExpireTime = Envir.Time + 900 + expire,
+                            TickSpeed = 1000,
+                            CurrentLocation = new Point(x, y),
+                            CastLocation = location,
+                            Show = location.X == x && location.Y == y,
+                            CurrentMap = CurrentMap
+                        };
+
+                        DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + expire, ob);
+                        CurrentMap.ActionList.Add(action);
                     }
-
-                    if (!CurrentMap.ValidPoint(location)) continue;
-
-                    var expire = Envir.Random.Next(4000);
-
-                    var spellObj = new SpellObject
-                    {
-                        Spell = Spell.TreeQueenGroundRoots,
-                        Value = Envir.Random.Next(Envir.Random.Next(Stats[Stat.MinDC], Stats[Stat.MaxDC])),
-                        ExpireTime = Envir.Time + 900 + expire,
-                        TickSpeed = 4000,
-                        Caster = null,
-                        CurrentLocation = location,
-                        CurrentMap = CurrentMap,
-                        Direction = MirDirection.Up
-                    };
-
-                    DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + expire, spellObj);
-                    CurrentMap.ActionList.Add(action);
                 }
             }
         }
@@ -318,7 +331,7 @@ namespace Server.MirObjects.Monsters
                     SpawnMassRoots();
                 }
 
-                var next = Envir.Random.Next(1, 2);
+                var next = Envir.Random.Next(1, 4);
 
                 _rootSpawnTime = Envir.Time + (Settings.Second * (_notNear ? next : next * _nearMultiplier));
             }
@@ -327,7 +340,7 @@ namespace Server.MirObjects.Monsters
             {
                 SpawnGroundRoots();
 
-                var next = Envir.Random.Next(1, 3);
+                var next = Envir.Random.Next(2, 3);
 
                 _groundRootSpawnTime = Envir.Time + (Settings.Second * (_notNear ? next : next * _nearMultiplier));
             }

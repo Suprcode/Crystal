@@ -48,12 +48,9 @@ namespace Server.MirObjects.Monsters
                 int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                 if (damage == 0) return;
 
-                if (Envir.Random.Next(Settings.MagicResistWeight) >= Target.Stats[Stat.MagicResist])
-                {
-                    int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
-                    DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
-                    ActionList.Add(action);
-                }
+                int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
+                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
+                ActionList.Add(action);
             }
         }
 
@@ -65,12 +62,9 @@ namespace Server.MirObjects.Monsters
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            var finalDamage = target.Attacked(this, damage, defence);
+            if (target.Attacked(this, damage, defence) <= 0) return;
 
-            if (finalDamage > 0)
-            {
-                PoisonTarget(Target, 5, 8, PoisonType.Red);
-            }
+            PoisonTarget(Target, 5, 8, PoisonType.Red);
         }
 
         protected override void ProcessTarget()

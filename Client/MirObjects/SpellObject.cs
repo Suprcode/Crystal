@@ -157,13 +157,24 @@ namespace Client.MirObjects
                     MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GeneralMeowMeow], 522, 7, 700, CurrentLocation) { Blend = true });
                     MirSounds.SoundManager.PlaySound(8321);
                     break;
+                case Spell.StoneGolemQuake:
+                    BodyLibrary = Libraries.Monsters[(ushort)Monster.StoneGolem];
+                    DrawFrame = 368 + (int)Direction * 8;
+                    FrameInterval = 100;
+                    FrameCount = 8;
+                    Light = 0;
+                    Blend = false;
+                    Repeat = false;
+                    MirSounds.SoundManager.PlaySound(8311);
+                    break;
                 case Spell.EarthGolemPile:
                     BodyLibrary = Libraries.Monsters[(ushort)Monster.EarthGolem];
                     DrawFrame = 441;
                     FrameInterval = 100;
-                    FrameCount = 12;
+                    FrameCount = 8;
                     Light = 0;
                     Blend = false;
+                    Repeat = false;
                     MirSounds.SoundManager.PlaySound(8331);
                     break;
                 case Spell.TreeQueenMassRoots:
@@ -172,6 +183,7 @@ namespace Client.MirObjects
                     FrameInterval = 100;
                     FrameCount = 15;
                     Blend = false;
+                    Repeat = false;
                     MirSounds.SoundManager.PlaySound(8341);
                     MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 97, 14, 1400, CurrentLocation) { Blend = true });
                     break;
@@ -181,6 +193,7 @@ namespace Client.MirObjects
                     FrameInterval = 100;
                     FrameCount = 9;
                     Blend = false;
+                    Repeat = false;
                     MirSounds.SoundManager.PlaySound(8342);
                     MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 57, 9, 900, CurrentLocation) { Blend = true });
                     break;
@@ -190,6 +203,7 @@ namespace Client.MirObjects
                     FrameInterval = 100;
                     FrameCount = 15;
                     Blend = false;
+                    Repeat = false;
                     MirSounds.SoundManager.PlaySound(8343);
                     break;
                 case Spell.Portal:

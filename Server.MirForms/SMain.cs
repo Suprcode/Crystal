@@ -434,5 +434,12 @@ namespace Server
 
             form.ShowDialog();
         }
+
+        private void monsterExperimentalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MonsterInfoFormNew form = new MonsterInfoFormNew();
+
+            form.ShowDialog();
+        }
     }
 }

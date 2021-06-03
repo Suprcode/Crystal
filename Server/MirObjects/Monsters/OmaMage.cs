@@ -6,14 +6,6 @@ namespace Server.MirObjects.Monsters
 {
     public class OmaMage : MonsterObject
     {
-        protected virtual byte AttackRange
-        {
-            get
-            {
-                return 8;
-            }
-        }
-
         protected internal OmaMage(MonsterInfo info)
             : base(info)
         {
@@ -21,12 +13,11 @@ namespace Server.MirObjects.Monsters
 
         protected override bool InAttackRange()
         {
-            return CurrentMap == Target.CurrentMap && CanFly(Target.CurrentLocation) && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
+            return CurrentMap == Target.CurrentMap && CanFly(Target.CurrentLocation) && Functions.InRange(CurrentLocation, Target.CurrentLocation, Info.ViewRange);
         }
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -53,8 +44,10 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
                 AttackTime = Envir.Time + AttackSpeed + 500;
+
+                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+                
                 int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                 if (damage == 0) return;
 
@@ -63,9 +56,6 @@ namespace Server.MirObjects.Monsters
                 DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MACAgility, true);
                 ActionList.Add(action);
             }
-
-            if (Target.Dead)
-                FindTarget();
         }
 
         protected override void CompleteRangeAttack(IList<object> data)
@@ -76,13 +66,10 @@ namespace Server.MirObjects.Monsters
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            var finalDamage = target.Attacked(this, damage, defence);
+            if (target.Attacked(this, damage, defence) <= 0) return;
 
-            if (finalDamage > 0)
-            {
-                PoisonTarget(target, 6, 5, PoisonType.Slow, 2000);
-                PoisonTarget(target, 9, 5, PoisonType.Frozen, 2000);
-            }
+            PoisonTarget(target, 6, 5, PoisonType.Slow, 2000);
+            PoisonTarget(target, 9, 5, PoisonType.Frozen, 2000);
         }
 
         protected override void ProcessTarget()

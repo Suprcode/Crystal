@@ -513,7 +513,7 @@ public enum Monster : ushort
     DarkOmaKing = 320, //TODO - BOSS AI
     CaveStatue = 321,
     Mandrill = 322, // INCOMPLETE - TODO: TELEPORT NEEDS CODING
-    PlagueCrab = 323, // Done (DG) - Note: There are seven frames missing from the DrawEffect in the lib (causes die effect to look off).
+    PlagueCrab = 323, // Done (DG)
     CreeperPlant = 324, //Done (DG)
     FloatingWraith = 325, //Done (DG) - Use AI 8 (AxeSkeleton)
     ArmedPlant = 326, //Done (DG)
@@ -539,6 +539,7 @@ public enum Monster : ushort
     HornedSorceror = 346,
     BoulderSpirit = 347,
     HornedCommander = 348,
+
     MoonStone = 349,
     SunStone = 350,
     LightningStone = 351,
@@ -1211,10 +1212,11 @@ public enum Spell : byte
     MapQuake1 = 204,
     MapQuake2 = 205,
     GeneralMeowMeowThunder = 206,
-    EarthGolemPile = 207,
-    TreeQueenRoot = 208,
-    TreeQueenMassRoots = 209,
-    TreeQueenGroundRoots = 210,
+    StoneGolemQuake = 207,
+    EarthGolemPile = 208,
+    TreeQueenRoot = 209,
+    TreeQueenMassRoots = 210,
+    TreeQueenGroundRoots = 211,
 }
 
 public enum SpellEffect : byte
@@ -1290,6 +1292,7 @@ public enum BuffType : byte
     //monster
     MonsterMACBuff = 50,
     GeneralMeowMeowShield,
+    RhinoPriestDebuff,
 
     //special
     GameMaster = 100,
