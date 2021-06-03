@@ -335,22 +335,40 @@ namespace Server.MirObjects
                 case 154:
                     return new WoodBox(info);
 
-                //FAR CHECKED UP TO HERE
-
                 //case 155: TODO - ClawBeast
 
                 //case 156: TODO - KillerPlant
 
                 case 157:
                     return new SackWarrior(info);
+
+                //case 158: TODO - KingHydrax
+
+                case 159:
+                    return new HornedMage(info);
+                case 160:
+                    return new HornedArcher(info); //TODO
+                case 161:
+                    return new ColdArcher(info); //TODO (See video, Arrow fires up)
+
+                //case 162: TODO - HornedWarrior
+
+                case 163:
+                    return new FloatingRock(info);
+                case 164:
+                    return new ScalyBeast(info);
+
+
+
                 case 212:
                     return new TurtleGrass(info);
                 case 213:
                     return new ManTree(info);
-                case 214:
-                    return new FrozenFighter(info);
                 case 215:
                     return new Bear(info);
+
+                case 214:
+                    return new FrozenFighter(info);
                 case 216:
                     return new FrozenKnight(info);
                 case 217:
@@ -361,8 +379,6 @@ namespace Server.MirObjects
                     return new BlackTortoise(info);
                 case 220:
                     return new DragonWarrior(info);
-                case 221:
-                    return new HornedMage(info);
                 case 222:
                     return new Kirin(info);
                 case 223:
@@ -377,14 +393,6 @@ namespace Server.MirObjects
                     return new IceCrystalSoldier(info);
                 case 228:
                     return new DarkWraith(info);
-                case 229:
-                    return new ColdArcher(info);
-                case 230:
-                    return new HornedArcher(info);
-                case 231:
-                    return new FloatingRock(info);
-                case 232:
-                    return new ScalyBeast(info);
 
                 case 254:
                     return new StoningStatue(info); //TODO
@@ -1528,8 +1536,10 @@ namespace Server.MirObjects
             {
                 Attack();
 
-                if (Target.Dead)
+                if (Target != null && Target.Dead)
+                {
                     FindTarget();
+                }
 
                 return;
             }
@@ -1773,19 +1783,14 @@ namespace Server.MirObjects
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
-
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-
             if (damage == 0) return;
-
 
             DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
             ActionList.Add(action);
-
-            //Target.Attacked(this, damage);
         }
 
         public void ReleaseBindingShot()
@@ -3151,8 +3156,6 @@ namespace Server.MirObjects
 
             foreach (var point in points)
             {
-                Broadcast(new S.MapEffect { Effect = SpellEffect.Tester, Location = point, Value = (byte)Direction });
-
                 Cell cell = CurrentMap.GetCell(point);
                 if (cell.Objects == null) continue;
 
@@ -3263,14 +3266,16 @@ namespace Server.MirObjects
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
+            MirDirection dir = Direction;
+
             for (int i = 0; i < 8; i++)
             {
-                MirDirection dir = Functions.NextDir(Direction);
-                Point fullmoonTarget = Functions.PointMove(CurrentLocation, dir, 1);
+                dir = Functions.NextDir(dir);
+                Point point = Functions.PointMove(CurrentLocation, dir, 1);
 
-                if (!CurrentMap.ValidPoint(fullmoonTarget)) continue;
+                if (!CurrentMap.ValidPoint(point)) continue;
 
-                Cell cell = CurrentMap.GetCell(fullmoonTarget);
+                Cell cell = CurrentMap.GetCell(point);
 
                 if (cell.Objects == null) continue;
 

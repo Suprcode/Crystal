@@ -1506,7 +1506,7 @@ namespace Client.MirObjects
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ManTree], 472 + (int)Direction * 2, 2, 2 * Frame.Interval, this));
                                                 break;
                                             case Monster.HornedMage:
-                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedMage], 786, 9, 800, this)/* { Blend = false }*/);
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedMage], 783, 9, 800, this));
                                                 break;
                                             case Monster.DarkWraith:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkWraith], 720 + (int)Direction * 3, 3, 300, this));
@@ -2491,13 +2491,11 @@ namespace Client.MirObjects
                                                 if (MapControl.GetObject(TargetID) != null)
                                                     CreateProjectile(416, Libraries.Monsters[(ushort)Monster.DragonArcher], true, 5, 50, 0);
                                                 break;
-
                                             case Monster.HornedMage:
                                                 ob = MapControl.GetObject(TargetID);
                                                 if (ob != null)
                                                 {
                                                     ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedMage], 768, 9, 800, ob) { Blend = false });
-                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedMage], 780, 9, 800, ob) /*{ Blend = false }*/);
                                                 }
                                                 break;
                                             case Monster.ColdArcher:
@@ -2572,6 +2570,13 @@ namespace Client.MirObjects
                                     {
                                         switch (BaseImage)
                                         {
+                                            case Monster.HornedMage:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedMage], 777, 6, 800, ob) /*{ Blend = false }*/);
+                                                }
+                                                break;
                                             case Monster.FrozenMagician:
                                                 missile = CreateProjectile(560, Libraries.Monsters[(ushort)Monster.FrozenMagician], true, 6, 30, 0);
 
@@ -4330,13 +4335,13 @@ namespace Client.MirObjects
                             case MirAction.Walking:
                                 Libraries.Monsters[(ushort)Monster.HornedMage].DrawBlend((416 + FrameIndex + (int)Direction * 6), DrawLocation, Color.White, true);
                                 break;
-                            case MirAction.AttackRange1:
-                                Libraries.Monsters[(ushort)Monster.HornedMage].DrawBlend((464 + FrameIndex + (int)Direction * 6) - 1, DrawLocation, Color.White, true);
-                                break;
                             case MirAction.Attack1:
+                                Libraries.Monsters[(ushort)Monster.HornedMage].DrawBlend((464 + FrameIndex + (int)Direction * 8), DrawLocation, Color.White, true);
+                                break;
+                            case MirAction.AttackRange1:
                                 Libraries.Monsters[(ushort)Monster.HornedMage].DrawBlend((528 + FrameIndex + (int)Direction * 9), DrawLocation, Color.White, true);
                                 break;
-                            case MirAction.Attack2:
+                            case MirAction.AttackRange2:
                                 Libraries.Monsters[(ushort)Monster.HornedMage].DrawBlend((600 + FrameIndex + (int)Direction * 8), DrawLocation, Color.White, true);
                                 break;
                             case MirAction.Struck:
