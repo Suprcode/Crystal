@@ -206,6 +206,17 @@ namespace Client.MirObjects
                     Repeat = false;
                     MirSounds.SoundManager.PlaySound(8343);
                     break;
+                case Spell.TucsonGeneralRock:
+                    MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TucsonGeneral], 552, 20, 2000, CurrentLocation) { Repeat = false, Blend = false });
+                   // MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TucsonGeneral], 572, 20, 2000, CurrentLocation) { Repeat = false, Blend = true });
+                    BodyLibrary = Libraries.Monsters[(ushort)Monster.TucsonGeneral];
+                    DrawFrame = 572;
+                    FrameInterval = 100;
+                    FrameCount = 20;
+                    Light = 1;
+                    Blend = true;
+                    Repeat = false;
+                    break;
                 case Spell.Portal:
                     BodyLibrary = Libraries.Magic2;
                     DrawFrame = 2360;
@@ -225,7 +236,18 @@ namespace Client.MirObjects
             {
                 if (++FrameIndex >= FrameCount && Repeat)
                     FrameIndex = 0;
+
                 NextMotion = CMain.Time + FrameInterval;
+
+                switch (Spell)
+                {
+                    case Spell.TucsonGeneralRock:
+                        if (FrameIndex == 10)
+                        {
+                            MirSounds.SoundManager.PlaySound(8351);
+                        }
+                        break;
+                }
             }
 
             DrawLocation = new Point((CurrentLocation.X - User.Movement.X + MapControl.OffSetX) * MapControl.CellWidth, (CurrentLocation.Y - User.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);

@@ -133,43 +133,21 @@ namespace Server.MirObjects.Monsters
 
                     if (!CurrentMap.ValidPoint(location)) continue;
 
-                    SpellObject spellObj = null;
+                    var start = Envir.Random.Next(5000);
 
-                    switch (Envir.Random.Next(2))
+                    var spellObj = new SpellObject
                     {
-                        case 0:
-                            {
-                                spellObj = new SpellObject
-                                {
-                                    Spell = Spell.MapQuake1,
-                                    Value = Envir.Random.Next(Envir.Random.Next(Stats[Stat.MinDC], Stats[Stat.MaxDC])),
-                                    ExpireTime = Envir.Time + (2000),
-                                    TickSpeed = 500,
-                                    Caster = null,
-                                    CurrentLocation = location,
-                                    CurrentMap = CurrentMap,
-                                    Direction = MirDirection.Up
-                                };
-                            }
-                            break;
-                        case 1:
-                            {
-                                spellObj = new SpellObject
-                                {
-                                    Spell = Spell.MapQuake2,
-                                    Value = Envir.Random.Next(Envir.Random.Next(Stats[Stat.MinDC], Stats[Stat.MaxDC])),
-                                    ExpireTime = Envir.Time + (2000),
-                                    TickSpeed = 500,
-                                    Caster = null,
-                                    CurrentLocation = location,
-                                    CurrentMap = CurrentMap,
-                                    Direction = MirDirection.Up
-                                };
-                            }
-                            break;
-                    }
+                        Spell = Envir.Random.Next(2) == 0 ? Spell.MapQuake1 : Spell.MapQuake2,
+                        Value = Envir.Random.Next(Envir.Random.Next(Stats[Stat.MinDC], Stats[Stat.MaxDC])),
+                        ExpireTime = Envir.Time + 2000 + start,
+                        TickSpeed = 500,
+                        Caster = null,
+                        CurrentLocation = location,
+                        CurrentMap = CurrentMap,
+                        Direction = MirDirection.Up
+                    };
 
-                    DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + Envir.Random.Next(5000), spellObj);
+                    DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + start, spellObj);
                     CurrentMap.ActionList.Add(action);
                 }
             }

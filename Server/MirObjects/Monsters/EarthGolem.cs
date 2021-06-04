@@ -98,13 +98,13 @@ namespace Server.MirObjects.Monsters
 
                         int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MinDC]);
 
-                        var expire = 500;
+                        var start = 500;
 
                         SpellObject ob = new SpellObject
                         {
                             Spell = Spell.EarthGolemPile,
                             Value = damage,
-                            ExpireTime = Envir.Time + 1200 + expire,
+                            ExpireTime = Envir.Time + 1200 + start,
                             TickSpeed = 1000,
                             CurrentLocation = new Point(x, y),
                             CastLocation = location,
@@ -112,7 +112,7 @@ namespace Server.MirObjects.Monsters
                             CurrentMap = CurrentMap
                         };
 
-                        DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + expire, ob);
+                        DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + start, ob);
                         CurrentMap.ActionList.Add(action);
                     }
                 }

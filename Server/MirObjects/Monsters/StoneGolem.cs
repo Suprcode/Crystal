@@ -75,13 +75,13 @@ namespace Server.MirObjects.Monsters
 
                         int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MinDC]);
 
-                        var expire = 500;
+                        var start = 500;
 
                         SpellObject ob = new SpellObject
                         {
                             Spell = Spell.StoneGolemQuake,
                             Value = damage,
-                            ExpireTime = Envir.Time + 800 + expire,
+                            ExpireTime = Envir.Time + 800 + start,
                             TickSpeed = 1000,
                             Direction = Direction,
                             CurrentLocation = new Point(x, y),
@@ -92,7 +92,7 @@ namespace Server.MirObjects.Monsters
 
                         Broadcast(new S.MapEffect { Effect = SpellEffect.Tester, Location = new Point(x, y), Value = (byte)Direction });
 
-                        DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + expire, ob);
+                        DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + start, ob);
                         CurrentMap.ActionList.Add(action);
                     }
                 }

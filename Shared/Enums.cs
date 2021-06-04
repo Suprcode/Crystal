@@ -1217,6 +1217,7 @@ public enum Spell : byte
     TreeQueenRoot = 209,
     TreeQueenMassRoots = 210,
     TreeQueenGroundRoots = 211,
+    TucsonGeneralRock = 212
 }
 
 public enum SpellEffect : byte

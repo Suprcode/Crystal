@@ -275,9 +275,8 @@ namespace Server.MirObjects
                     return new SwampWarrior(info);
                 case 127:
                     return new CannibalTentacles(info);
-
-                //128: TODO - TucsonGeneral
-
+                case 128:
+                    return new TucsonGeneral(info);
                 case 129:
                     return new GasToad(info);
                 case 130:

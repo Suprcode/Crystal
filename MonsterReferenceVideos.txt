@@ -8,5 +8,6 @@ Pots/Cats = https://www.youtube.com/watch?v=PyRlSs_Wz9o
 
 Rhinos = https://www.youtube.com/watch?v=QWu-B70zR5M
 
-King Hydrax = https://www.youtube.com/watch?v=C2H2cdD8HHI
-Horned Commander = https://www.youtube.com/watch?v=KNNmGI-wFnY
+KingHydrax = https://www.youtube.com/watch?v=C2H2cdD8HHI
+HornedCommander = https://www.youtube.com/watch?v=KNNmGI-wFnY
+TucsonGeneral = https://www.youtube.com/watch?v=2NXZ0xXchrs

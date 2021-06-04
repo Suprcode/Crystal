@@ -1733,6 +1733,9 @@ namespace Client.MirObjects
                                             case Monster.GeneralMeowMeow:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GeneralMeowMeow], 456 + (int)Direction * 7, 7, 7 * Frame.Interval, this) { Blend = true });
                                                 break;
+                                            case Monster.TucsonGeneral:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TucsonGeneral], 544, 8, 8 * Frame.Interval, this));
+                                                break;
                                             case Monster.FrozenMiner:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenMiner], 462 + (int)Direction * 5, 5, 500, this));
                                                 break;
@@ -2756,6 +2759,18 @@ namespace Client.MirObjects
                                                     };
                                                 }
                                                 break;
+                                            case Monster.TucsonGeneral:
+                                                missile = CreateProjectile(592, Libraries.Monsters[(ushort)Monster.TucsonGeneral], true, 9, 30, 0, direction16: true);
+
+                                                if (missile.Target != null)
+                                                {
+                                                    missile.Complete += (o, e) =>
+                                                    {
+                                                        if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TucsonGeneral], 736, 9, 900, missile.Target) { Blend = true });
+                                                    };
+                                                }
+                                                break;
                                             case Monster.RhinoPriest:
                                                 ob = MapControl.GetObject(TargetID);
                                                 if (ob != null)
@@ -2850,6 +2865,25 @@ namespace Client.MirObjects
                         }
                         else
                         {
+                            MapObject ob = null;
+                            Missile missile;
+                            switch (FrameIndex)
+                            {
+                                case 4:
+                                    {
+                                        switch (BaseImage)
+                                        {
+                                            case Monster.TucsonGeneral:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TucsonGeneral], 745, 17, 1000, ob) { Blend = true });
+                                                }
+                                                break;
+                                        }
+                                    }
+                                    break;
+                            }
                             NextMotion += FrameInterval;
                         }
                     }
@@ -3320,6 +3354,8 @@ namespace Client.MirObjects
                 case Monster.RestlessJar:
                     SoundManager.PlaySound(BaseSound + 8);
                     return;
+                case Monster.TucsonGeneral:
+                    return;
                 default:
                     PlayAttackSound();
                     return;
@@ -3329,6 +3365,9 @@ namespace Client.MirObjects
         {
             switch (BaseImage)
             {
+                case Monster.TucsonGeneral:
+                    SoundManager.PlaySound(BaseSound + 5);
+                    return;
                 case Monster.TurtleKing:
                     return;
                 case Monster.KingGuard:
@@ -3349,6 +3388,9 @@ namespace Client.MirObjects
         {
             switch (BaseImage)
             {
+                case Monster.TucsonGeneral:
+                    SoundManager.PlaySound(BaseSound + 7);
+                    return;
                 default:
                     PlayThirdAttackSound();
                     return;
@@ -4216,6 +4258,14 @@ namespace Client.MirObjects
                             break;
                         case MirAction.Die:
                             Libraries.Monsters[(ushort)Monster.CatShaman].DrawBlend(648 + FrameIndex + (int)Direction * 9, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.TucsonGeneral:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Attack1:
+                            if (FrameIndex >= 2) Libraries.Monsters[(ushort)Monster.TucsonGeneral].DrawBlend((504 + FrameIndex + (int)Direction * 5) - 2, DrawLocation, Color.White, true);
                             break;
                     }
                     break;

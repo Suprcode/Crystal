@@ -162,13 +162,13 @@ namespace Server.MirObjects.Monsters
 
                     if (!CurrentMap.ValidPoint(location)) continue;
 
-                    var expire = Envir.Random.Next(2000);
+                    var start = Envir.Random.Next(2000);
 
                     SpellObject spellObj = new SpellObject
                     {
                         Spell = Spell.TreeQueenRoot,
                         Value = Envir.Random.Next(Envir.Random.Next(Stats[Stat.MinDC], Stats[Stat.MaxDC])),
-                        ExpireTime = Envir.Time + 1500 + expire,
+                        ExpireTime = Envir.Time + 1500 + start,
                         TickSpeed = 2000,
                         Caster = null,
                         CurrentLocation = location,
@@ -176,7 +176,7 @@ namespace Server.MirObjects.Monsters
                         Direction = MirDirection.Up
                     };
 
-                    DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + expire, spellObj);
+                    DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + start, spellObj);
                     CurrentMap.ActionList.Add(action);
 
                     if (hit)
@@ -219,13 +219,13 @@ namespace Server.MirObjects.Monsters
 
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MinDC]);
 
-                    var expire = 500;
+                    var start = 500;
 
                     SpellObject ob = new SpellObject
                     {
                         Spell = Spell.TreeQueenMassRoots,
                         Value = damage,
-                        ExpireTime = Envir.Time + 1500 + expire,
+                        ExpireTime = Envir.Time + 1500 + start,
                         TickSpeed = 1000,
                         CurrentLocation = new Point(x, y),
                         CastLocation = location,
@@ -233,7 +233,7 @@ namespace Server.MirObjects.Monsters
                         CurrentMap = CurrentMap
                     };
 
-                    DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + expire, ob);
+                    DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + start, ob);
                     CurrentMap.ActionList.Add(action);
                 }
             }
@@ -266,13 +266,13 @@ namespace Server.MirObjects.Monsters
 
                         int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MinDC]);
 
-                        var expire = Envir.Random.Next(4000);
+                        var start = Envir.Random.Next(4000);
 
                         SpellObject ob = new SpellObject
                         {
                             Spell = Spell.TreeQueenGroundRoots,
                             Value = damage,
-                            ExpireTime = Envir.Time + 900 + expire,
+                            ExpireTime = Envir.Time + 900 + start,
                             TickSpeed = 1000,
                             CurrentLocation = new Point(x, y),
                             CastLocation = location,
@@ -280,7 +280,7 @@ namespace Server.MirObjects.Monsters
                             CurrentMap = CurrentMap
                         };
 
-                        DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + expire, ob);
+                        DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + start, ob);
                         CurrentMap.ActionList.Add(action);
                     }
                 }

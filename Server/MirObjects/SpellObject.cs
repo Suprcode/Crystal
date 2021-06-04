@@ -193,11 +193,9 @@ namespace Server.MirObjects
                     {
                         if (ob is PlayerObject player)
                         {
-                            if (player.Account.AdminAccount && player.Observer)
-                                return;
+                            if (player.Account.AdminAccount && player.Observer) return;
                             player.Struck(Value, DefenceType.MAC);
-                        }
-                        
+                        }                 
                     }
                     break;
                 case Spell.MapQuake1:
@@ -255,6 +253,14 @@ namespace Server.MirObjects
                     }
                     break;
                 case Spell.EarthGolemPile:
+                    {
+                        if (Value == 0) return;
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                        if (ob.Dead) return;
+                        ob.Struck(Value, DefenceType.AC);
+                    }
+                    break;
+                case Spell.TucsonGeneralRock:
                     {
                         if (Value == 0) return;
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
