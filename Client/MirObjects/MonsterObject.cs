@@ -815,6 +815,9 @@ namespace Client.MirObjects
                             case Monster.SandSnail:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SandSnail], 448, 9, 900, this) { Blend = true });
                                 break;
+                            case Monster.PeacockSpider:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.PeacockSpider], 755, 21, 21 * Frame.Interval, this));
+                                break;
                             case Monster.DragonWarrior:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DragonWarrior], 632 + (int)Direction * 4, 4, 8 * Frame.Interval, this));
                                 break;
@@ -926,6 +929,9 @@ namespace Client.MirObjects
                                     ef.Played += (o, e) => SoundManager.PlaySound(20000 + (ushort)Spell.HellFire * 10 + 1);
                                     MapControl.Effects.Add(ef);
                                 }
+                                break;
+                            case Monster.PeacockSpider: //BROKEN
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.PeacockSpider], 776, 30, 30 * Frame.Interval, this));
                                 break;
                             case Monster.OmaWitchDoctor:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.OmaWitchDoctor], 859, 10, 10 * Frame.Interval, this));
@@ -1712,6 +1718,9 @@ namespace Client.MirObjects
                                             case Monster.TucsonWarrior:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TucsonWarrior], 344 + (int)Direction * 9, 9, 9 * Frame.Interval, this));
                                                 break;
+                                            case Monster.PeacockSpider:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.PeacockSpider], 592 + (int)Direction * 9, 9, 9 * Frame.Interval, this));
+                                                break;
                                             case Monster.SackWarrior:                                                
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SackWarrior], 368 + (int)Direction * 2, 2, 2 * Frame.Interval, this));
                                                 break;
@@ -2413,6 +2422,18 @@ namespace Client.MirObjects
                                                 if (ob != null)
                                                 {
                                                     ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SwampWarrior], 392, 8, 800, ob) { Blend = true });
+                                                }
+                                                break;
+                                            case Monster.PeacockSpider:
+                                                missile = CreateProjectile(664, Libraries.Monsters[(ushort)Monster.PeacockSpider], true, 5, 100, 0, direction16: true);
+
+                                                if (missile.Target != null)
+                                                {
+                                                    missile.Complete += (o, e) =>
+                                                    {
+                                                        if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.PeacockSpider], 744, 11, 1100, missile.Target) { Blend = true });
+                                                    };
                                                 }
                                                 break;
                                             case Monster.RhinoPriest:
@@ -3345,6 +3366,7 @@ namespace Client.MirObjects
                 case Monster.CreeperPlant:
                 case Monster.AvengingSpirit:
                 case Monster.AvengingWarrior:
+                case Monster.PeacockSpider:
                     SoundManager.PlaySound(BaseSound + 5);
                     return;
                 case Monster.AncientBringer:

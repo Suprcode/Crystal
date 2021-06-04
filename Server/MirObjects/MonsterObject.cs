@@ -298,9 +298,8 @@ namespace Server.MirObjects
                     return new TreeGuardian(info);
                 case 138:
                     return new TreeQueen(info);
-
-                //139: TODO - ShellFighter
-
+                case 139:
+                    return new PeacockSpider(info); //TODO
                 case 140:
                     return new OmaCannibal(info);
                 case 141:

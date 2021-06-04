@@ -498,7 +498,7 @@ public enum Monster : ushort
     EarthGolem = 305,
     TreeGuardian = 306, 
     TreeQueen = 307,
-    ShellFighter = 308,
+    PeacockSpider = 308,
     DarkBaboon = 309, //AI 113
     TwinHeadBeast = 310, //AI 112
     OmaCannibal = 311, 

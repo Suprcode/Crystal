@@ -103,6 +103,7 @@ namespace LibraryEditor
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.FolderLibraryDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.FrameAnimTimer = new System.Windows.Forms.Timer(this.components);
             this.MainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -224,7 +225,7 @@ namespace LibraryEditor
             // 
             this.copyToToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("copyToToolStripMenuItem.Image")));
             this.copyToToolStripMenuItem.Name = "copyToToolStripMenuItem";
-            this.copyToToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copyToToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.copyToToolStripMenuItem.Text = "Copy To..";
             this.copyToToolStripMenuItem.ToolTipText = "Copy to a new .Lib or to the end of an exsisting one.";
             this.copyToToolStripMenuItem.Click += new System.EventHandler(this.copyToToolStripMenuItem_Click);
@@ -233,7 +234,7 @@ namespace LibraryEditor
             // 
             this.countBlanksToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("countBlanksToolStripMenuItem.Image")));
             this.countBlanksToolStripMenuItem.Name = "countBlanksToolStripMenuItem";
-            this.countBlanksToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.countBlanksToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.countBlanksToolStripMenuItem.Text = "Count Blanks";
             this.countBlanksToolStripMenuItem.ToolTipText = "Counts the blank images in the .Lib";
             this.countBlanksToolStripMenuItem.Click += new System.EventHandler(this.countBlanksToolStripMenuItem_Click);
@@ -244,7 +245,7 @@ namespace LibraryEditor
             this.safeToolStripMenuItem});
             this.removeBlanksToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("removeBlanksToolStripMenuItem.Image")));
             this.removeBlanksToolStripMenuItem.Name = "removeBlanksToolStripMenuItem";
-            this.removeBlanksToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.removeBlanksToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.removeBlanksToolStripMenuItem.Text = "Remove Blanks";
             this.removeBlanksToolStripMenuItem.ToolTipText = "Quick removal of blanks.";
             this.removeBlanksToolStripMenuItem.Click += new System.EventHandler(this.removeBlanksToolStripMenuItem_Click);
@@ -262,7 +263,7 @@ namespace LibraryEditor
             // 
             this.convertToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("convertToolStripMenuItem.Image")));
             this.convertToolStripMenuItem.Name = "convertToolStripMenuItem";
-            this.convertToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.convertToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.convertToolStripMenuItem.Text = "Converter";
             this.convertToolStripMenuItem.ToolTipText = "Convert Wil/Wzl/Miz to .Lib";
             this.convertToolStripMenuItem.Click += new System.EventHandler(this.convertToolStripMenuItem_Click);
@@ -276,7 +277,7 @@ namespace LibraryEditor
             this.autofillFromCodeToolStripMenuItem});
             this.populateFramesToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("populateFramesToolStripMenuItem.Image")));
             this.populateFramesToolStripMenuItem.Name = "populateFramesToolStripMenuItem";
-            this.populateFramesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.populateFramesToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.populateFramesToolStripMenuItem.Text = "Populate Frames";
             // 
             // defaultMonsterFramesToolStripMenuItem
@@ -720,6 +721,7 @@ namespace LibraryEditor
             this.frameGridView.TabIndex = 2;
             this.frameGridView.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.frameGridView_CellValidating);
             this.frameGridView.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.frameGridView_DefaultValuesNeeded);
+            this.frameGridView.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.frameGridView_RowEnter);
             // 
             // FrameAction
             // 
@@ -825,6 +827,10 @@ namespace LibraryEditor
             // FolderLibraryDialog
             // 
             this.FolderLibraryDialog.ShowNewFolderButton = false;
+            // 
+            // FrameAnimTimer
+            // 
+            this.FrameAnimTimer.Tick += new System.EventHandler(this.FrameAnimTimer_Tick);
             // 
             // LMain
             // 
@@ -944,6 +950,7 @@ namespace LibraryEditor
         private System.Windows.Forms.DataGridViewCheckBoxColumn FrameReverse;
         private System.Windows.Forms.DataGridViewCheckBoxColumn FrameBlend;
         private System.Windows.Forms.ToolStripMenuItem defaultNPCFramesToolStripMenuItem;
+        private System.Windows.Forms.Timer FrameAnimTimer;
     }
 }
 

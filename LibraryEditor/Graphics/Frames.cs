@@ -41,6 +41,11 @@ namespace LibraryEditor
         public bool Reverse { get; set; }
         public bool Blend { get; set; }
 
+        public int OffSet
+        {
+            get { return Count + Skip; }
+        }
+
         public Frame(int start, int count, int skip, int interval, int effectstart = 0, int effectcount = 0, int effectskip = 0, int effectinterval = 0)
         {
             Start = start;

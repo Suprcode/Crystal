@@ -958,6 +958,8 @@ namespace LibraryEditor
                 case 0: //Images
                     ImageTabActive = true;
                     FrameTabActive = false;
+                    ImageBox.Location = new Point(0, 0);
+                    FrameAnimTimer.Stop();
                     break;
                 case 1: //Frames
                     ImageTabActive = false;
@@ -1087,6 +1089,66 @@ namespace LibraryEditor
 
                 _library.Frames.Add(action, frame);
             }
+        }
+
+        private void frameGridView_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            var row = frameGridView.Rows[e.RowIndex];
+
+            if (row == null) return;
+
+            var cells = row.Cells;
+
+            if (cells["FrameAction"].Value == null) return;
+
+            var frame = new Frame(cells["FrameStart"].Value.ValueOrDefault<int>(),
+                                        cells["FrameCount"].Value.ValueOrDefault<int>(),
+                                        cells["FrameSkip"].Value.ValueOrDefault<int>(),
+                                        cells["FrameInterval"].Value.ValueOrDefault<int>(),
+                                        cells["FrameEffectStart"].Value.ValueOrDefault<int>(),
+                                        cells["FrameEffectCount"].Value.ValueOrDefault<int>(),
+                                        cells["FrameEffectSkip"].Value.ValueOrDefault<int>(),
+                                        cells["FrameEffectInterval"].Value.ValueOrDefault<int>())
+            {
+                Reverse = cells["FrameReverse"].Value.ValueOrDefault<bool>(),
+                Blend = cells["FrameBlend"].Value.ValueOrDefault<bool>()
+            };
+
+
+            _drawFrame = frame;
+
+            FrameAnimTimer.Interval = frame.Interval;
+            FrameAnimTimer.Start();
+        }
+
+        private Frame _drawFrame;
+        private int _currentFrame;
+        private MirDirection _currentDirection;
+
+        private void FrameAnimTimer_Tick(object sender, EventArgs e)
+        {
+            if (_drawFrame == null) return;
+
+            try
+            {
+                if (_currentFrame >= _drawFrame.Count - 1)
+                {
+                    _currentFrame = 0;
+                    MirDirection[] arr = (MirDirection[])Enum.GetValues(typeof(MirDirection));
+                    int j = Array.IndexOf<MirDirection>(arr, _currentDirection) + 1;
+                    _currentDirection = (arr.Length == j) ? arr[0] : arr[j];
+                }
+
+                var drawFrame = _drawFrame.Start + (_drawFrame.OffSet * (byte)_currentDirection) + _currentFrame;
+
+                _selectedImage = _library.GetMImage(drawFrame);
+
+                ImageBox.Location = new Point(250 + _selectedImage.X, 250 + _selectedImage.Y);
+                ImageBox.Image = _selectedImage.Image;
+
+                _currentFrame++;
+            }
+            catch { }
         }
 
         /// <summary>
