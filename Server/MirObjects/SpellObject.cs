@@ -154,19 +154,19 @@ namespace Server.MirObjects
                     break;
                 case Spell.Blizzard:
                     {
-                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
-                        if (ob.Dead) return;
-                        if (Caster != null && Caster.ActiveBlizzard == false) return;
-                        if (!ob.IsAttackTarget(Caster)) return;
-                        ob.Attacked(Caster, Value, DefenceType.MAC, false);
-                        if (!ob.Dead && Envir.Random.Next(8) == 0)
-                            ob.ApplyPoison(new Poison
-                            {
-                                Duration = 5 + Envir.Random.Next(Caster.Stats[Stat.Freezing]),
-                                Owner = Caster,
-                                PType = PoisonType.Slow,
-                                TickSpeed = 2000,
-                            }, Caster);
+                            if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                            if (ob.Dead) return;
+                            if (Caster != null && Caster.ActiveBlizzard == false) return;
+                            if (!ob.IsAttackTarget(Caster)) return;
+                            ob.Attacked(Caster, Value, DefenceType.MAC, false);
+                            if (!ob.Dead && Envir.Random.Next(8) == 0)
+                                ob.ApplyPoison(new Poison
+                                {
+                                    Duration = 5 + Envir.Random.Next(Caster.Stats[Stat.Freezing]),
+                                    Owner = Caster,
+                                    PType = PoisonType.Slow,
+                                    TickSpeed = 2000,
+                                }, Caster);
                     }
                     break;
                 case Spell.MeteorStrike:
@@ -233,6 +233,11 @@ namespace Server.MirObjects
                     break;
                 case Spell.TreeQueenGroundRoots:
                     {
+                        if (ob == Owner) // Prevents the mob from poisoning itself - need to set Owner = this in mob AI SpellObject.
+                        {
+                            return;
+                        }
+
                         if (Value == 0) return;
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
@@ -291,6 +296,65 @@ namespace Server.MirObjects
                         if (Value < 1)
                         {
                             ExpireTime = 0;
+                        }
+                    }
+                    break;
+                case Spell.FlamingMutantMassWeb:
+                    {
+                        if (ob == Owner) // Prevents the mob from poisoning itself - need to set Owner = this in mob AI SpellObject.
+                        {
+                            return;
+                        }
+
+                        if (Value == 0) return;
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                        if (ob.Dead) return;
+                        ob.Struck(Value, DefenceType.MAC);
+
+                        if ((Envir.Random.Next(6) > 0))
+                        {
+                            ob.ApplyPoison(new Poison { PType = PoisonType.FlamingMutantWeb, Duration = 5, TickSpeed = 1000 }, this);
+                            Broadcast(new S.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.FlamingMutantTargetWeb, Time = 5 });
+                        }
+                    }
+                    break;
+                case Spell.FlyingStatueIceTornado:
+                    {
+                        if (ob == Owner) // Prevents the mob from poisoning itself - need to set Owner = this in mob AI SpellObject.
+                        {
+                            return;
+                        }
+
+                        if (Value == 0) return;
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                        if (ob.Dead) return;
+                        ob.Struck(Value, DefenceType.MAC);
+
+                        if (Envir.Random.Next(8) > 0)
+                        {
+                            ob.ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = 5, TickSpeed = 1000 }, this);
+                        }
+                    }
+                    break;
+                case Spell.MonsterBlizzard:
+                    {
+                        if (ob == Owner) // Prevents the mob from poisoning itself - need to set Owner = this in mob AI SpellObject.
+                        {
+                            return;
+                        }
+
+                        if (Value == 0) return;
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                        if (ob.Dead) return;
+                        ob.Struck(Value, DefenceType.MAC);
+
+                        if (Envir.Random.Next(8) > 0)
+                        {
+                            ob.ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = 8, TickSpeed = 1000 }, this);
+                        }
+                        if (Envir.Random.Next(13) > 0)
+                        {
+                            ob.ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = 5, TickSpeed = 1000 }, this);
                         }
                     }
                     break;
@@ -403,6 +467,9 @@ namespace Server.MirObjects
                 case Spell.EarthGolemPile:
                 case Spell.TreeQueenMassRoots:
                 case Spell.TreeQueenGroundRoots:
+                case Spell.FlamingMutantMassWeb:
+                case Spell.FlyingStatueIceTornado:
+                case Spell.MonsterBlizzard:
                     if (!Show)
                         return null;
 

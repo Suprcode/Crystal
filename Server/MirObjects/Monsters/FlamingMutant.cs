@@ -7,8 +7,17 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    public class FlamingMutant  : MonsterObject
+    /// <summary>    
+    ///  Attack1 - Standard Melee Attack.
+    ///  Attack2 - CrossHalfmoon-type attack (hits everyone within 1-2 cells around it).
+    ///  AttackRange1 - Randomly hits various cells with spiderweb - anyone caught in spiderweb gets paralysed and spiderweb animation on them.
+    ///  AttackRange2 - Dragon headed circle appears on ground, bursts into fire >>>>> (CANNOT FIND THIS SPELL ANIMATION) <<<<<.
+    /// </summary>
+
+    public class FlamingMutant : MonsterObject
     {
+        private const byte AttackRange = 8;
+
         protected internal FlamingMutant(MonsterInfo info)
             : base(info)
         {
@@ -33,51 +42,51 @@ namespace Server.MirObjects.Monsters
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
-            
+
             if (!ranged)
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                if (Envir.Random.Next(2) == 0)
+                {
+                    Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                    if (damage == 0) return;
 
-                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                if (damage == 0) return;
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.ACAgility, false);
+                    ActionList.Add(action);
+                }
+                else
+                {
+                    Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                    if (damage == 0) return;
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.ACAgility, true);
-                ActionList.Add(action);
+                Target.Attacked(this, damage, DefenceType.ACAgility);
             }
             else
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-
-                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                if (damage == 0) return;
-
-                int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 20 + 500; //50 MS per Step
-
-                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
-                ActionList.Add(action);
-            }
-        }
-
-        protected override void CompleteRangeAttack(IList<object> data)
-        {
-            MapObject target = (MapObject)data[0];
-            int damage = (int)data[1];
-            DefenceType defence = (DefenceType)data[2];
-
-            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
-      
-            var targets = FindAllTargets(3, target.CurrentLocation, false);
-
-            for (int i = 0; i < targets.Count; i++)
-            {
-                if (targets[i].Attacked(this, damage, defence) <= 0) continue;
-
-                if (Envir.Random.Next(2) == 0)
+                if (Envir.Random.Next(10) == 0)
                 {
-                    PoisonTarget(targets[i], 1, 5, PoisonType.Paralysis, 1000);
-                    Broadcast(new S.ObjectEffect { ObjectID = targets[i].ObjectID, Effect = SpellEffect.FlamingMutantWeb, Time = 5000 });
+                    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+                    
+                    int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+                    if (damage == 0) return;
+
+                    int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 20 + 500; //50 MS per Step
+
+                    DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
+                    ActionList.Add(action);
                 }
+                else
+                {
+                    MoveTo(Target.CurrentLocation);
+                }
+
             }
+
+
+            if (Target.Dead)
+                FindTarget();
+
         }
 
         protected override void ProcessTarget()

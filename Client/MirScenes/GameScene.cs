@@ -3285,7 +3285,7 @@ namespace Client.MirScenes
             var previousPoisons = User.Poison;
 
             User.Poison = p.Poison;
-            if (p.Poison.HasFlag(PoisonType.Stun) || p.Poison.HasFlag(PoisonType.Dazed) || p.Poison.HasFlag(PoisonType.Frozen) || p.Poison.HasFlag(PoisonType.Paralysis) || p.Poison.HasFlag(PoisonType.LRParalysis))
+            if (p.Poison.HasFlag(PoisonType.Stun) || p.Poison.HasFlag(PoisonType.Dazed) || p.Poison.HasFlag(PoisonType.Frozen) || p.Poison.HasFlag(PoisonType.Paralysis) || p.Poison.HasFlag(PoisonType.LRParalysis) || p.Poison.HasFlag(PoisonType.FlamingMutantWeb))
             {
                 User.ClearMagic();
             }
@@ -4057,11 +4057,12 @@ namespace Client.MirScenes
                     case SpellEffect.MonsterMACBuff: //loop - look @ MagicShield for start / loop / end
                         ob.Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.HornedArcher], 477, 10, 1000, ob, true, BuffType.MonsterMACBuff) { Repeat = true });
                         break;
-
                     case SpellEffect.DeathCrawlerBreath:
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DeathCrawler], 272 + ((int)ob.Direction * 4), 4, 400, ob) { Blend = true });
                         break;
-
+                    case SpellEffect.FlamingMutantTargetWeb:
+                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlamingMutant], 330, 10, 3500, ob) { Blend = false });
+                        break;
                 }
 
                 return;
@@ -9890,7 +9891,7 @@ namespace Client.MirScenes
             if ((MouseControl == this) && (MapButtons != MouseButtons.None)) AutoHit = false;//mouse actions stop mining even when frozen!
             if (!CanRideAttack()) AutoHit = false;
             
-            if (CMain.Time < InputDelay || User.Poison.HasFlag(PoisonType.Paralysis) || User.Poison.HasFlag(PoisonType.LRParalysis) || User.Poison.HasFlag(PoisonType.Frozen) || User.Fishing) return;
+            if (CMain.Time < InputDelay || User.Poison.HasFlag(PoisonType.Paralysis) || User.Poison.HasFlag(PoisonType.LRParalysis) || User.Poison.HasFlag(PoisonType.FlamingMutantWeb) || User.Poison.HasFlag(PoisonType.Frozen) || User.Fishing) return;
             
             if (User.NextMagic != null && !User.RidingMount)
             {
