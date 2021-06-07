@@ -809,6 +809,8 @@ namespace Client.MirObjects
                     DrawColour = Color.Blue;
                 if (Poison.HasFlag(PoisonType.Paralysis) || Poison.HasFlag(PoisonType.LRParalysis))
                     DrawColour = Color.Gray;
+                if (Poison.HasFlag(PoisonType.FlamingMutantWeb))
+                DrawColour = Color.Gray;                
                 if (Poison.HasFlag(PoisonType.DelayedExplosion))
                     DrawColour = Color.Orange;
             }
