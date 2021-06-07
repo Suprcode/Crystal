@@ -15,15 +15,7 @@ namespace Server.MirObjects.Monsters
 
     public class FlyingStatue : MonsterObject
     {
-        public long blizzardCooldown;
-
-        protected virtual byte AttackRange
-        {
-            get
-            {
-                return 12;
-            }
-        }
+        public long _BlizzardCooldown;
 
         protected internal FlyingStatue(MonsterInfo info)
             : base(info)
@@ -32,7 +24,7 @@ namespace Server.MirObjects.Monsters
 
         protected override bool InAttackRange()
         {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
+            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, Info.ViewRange);
         }
 
         protected override void Attack()
@@ -74,87 +66,21 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
-                if (Envir.Random.Next(6) != 0 && Envir.Time > blizzardCooldown)
-                {
-
-                    SpawnIceTornado();
-                }
-                else
-                {
-                    SpawnBlizzard();
-                    blizzardCooldown = Envir.Time + (Settings.Second * Envir.Random.Next(7, 15));
-                }
-            }
-        }
-
-        private void SpawnBlizzard()
-        {
-            if (Dead) return;
-
-            Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
-
-            List<MapObject> getTargetInAttackRange = FindAllTargets(AttackRange, CurrentLocation);
-
-            var count = getTargetInAttackRange.Count;
-
-            if (count == 0) return;
-
-            var target = getTargetInAttackRange[Envir.Random.Next(count)];
-
-            var location = target.CurrentLocation;
-
-            for (int y = location.Y - 3; y <= location.Y + 3; y++)
-            {
-                if (y < 0) continue;
-                if (y >= CurrentMap.Height) break;
-
-                for (int x = location.X - 3; x <= location.X + 3; x++)
-                {
-                    if (x < 0) continue;
-                    if (x >= CurrentMap.Width) break;
-
-                    if (x == CurrentLocation.X && y == CurrentLocation.Y) continue;
-
-                    var cell = CurrentMap.GetCell(x, y);
-
-                    if (!cell.Valid) continue;
-
-                    int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MinMC]) * 2;
-
-                    var start = 500;
-
-                    SpellObject ob = new SpellObject
-                    {
-                        Spell = Spell.MonsterBlizzard,
-                        Value = damage,
-                        ExpireTime = Envir.Time + 2500 + start,
-                        TickSpeed = 1000,
-                        CurrentLocation = new Point(x, y),
-                        CastLocation = location,
-                        Show = location.X == x && location.Y == y,
-                        CurrentMap = CurrentMap,
-                        Owner = this
-                    };
-
-                    DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + start, ob);
-                    CurrentMap.ActionList.Add(action);
-                }
+                SpawnIceTornado();
             }
         }
 
         private void SpawnIceTornado()
         {
-            if (Dead) return;
-
             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
 
-            List<MapObject> getAllTargetsInAttackRange = FindAllTargets(AttackRange, CurrentLocation);
+            List<MapObject> targets = FindAllTargets(Info.ViewRange, CurrentLocation);
 
-            var count = getAllTargetsInAttackRange.Count;
+            var count = targets.Count;
 
             if (count == 0) return;
 
-            var target = getAllTargetsInAttackRange[Envir.Random.Next(count)];
+            var target = targets[Envir.Random.Next(count)];
 
             var location = target.CurrentLocation;
 
@@ -188,7 +114,7 @@ namespace Server.MirObjects.Monsters
                         CastLocation = location,
                         Show = location.X == x && location.Y == y,
                         CurrentMap = CurrentMap,
-                        Owner = this
+                        Caster = this
                     };
 
                     DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + start, ob);
@@ -199,18 +125,11 @@ namespace Server.MirObjects.Monsters
 
         public override void Spawned()
         {
-            // Begin timers (stops players from being bombarded with attacks when they enter the room / map).
-            blizzardCooldown = Envir.Time + (Settings.Second * 10);
-
             base.Spawned();
         }
 
         protected override void ProcessTarget()
         {
-            int dist = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
-            var hpPercent = (HP * 100) / Stats[Stat.HP];
-            bool halfHealth = hpPercent <= 50;
-
             if (Target == null) return;
 
             if (InAttackRange() && CanAttack)
@@ -225,7 +144,12 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
-            if (dist >= AttackRange)
+            var hpPercent = (HP * 100) / Stats[Stat.HP];
+            bool halfHealth = hpPercent <= 50;
+
+            int dist = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
+
+            if (dist >= Info.ViewRange || !halfHealth)
                 MoveTo(Target.CurrentLocation);
             else
             {
@@ -233,31 +157,25 @@ namespace Server.MirObjects.Monsters
 
                 if (Walk(dir)) return;
 
-                switch (Envir.Random.Next(6)) //No favour
+                switch (Envir.Random.Next(2)) //No favour
                 {
                     case 0:
-                    case 1:
-                    case 2:
-                        if (halfHealth == true)
+                        for (int i = 0; i < 7; i++)
                         {
-                            for (int i = 0; i < 7; i++)
-                            {
-                                dir = Functions.NextDir(dir);
+                            dir = Functions.NextDir(dir);
 
-                                if (Walk(dir))
-                                    return;
-                            }
-                        }
-                        else
-                        {
-                            MoveTo(Target.CurrentLocation);
+                            if (Walk(dir))
+                                return;
                         }
                         break;
-                    case 3:
-                    case 4:
-                    case 5:
                     default:
-                        MoveTo(Target.CurrentLocation);
+                        for (int i = 0; i < 7; i++)
+                        {
+                            dir = Functions.PreviousDir(dir);
+
+                            if (Walk(dir))
+                                return;
+                        }
                         break;
                 }
 

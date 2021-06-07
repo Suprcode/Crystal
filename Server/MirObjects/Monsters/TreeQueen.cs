@@ -170,7 +170,7 @@ namespace Server.MirObjects.Monsters
                         Value = Envir.Random.Next(Envir.Random.Next(Stats[Stat.MinDC], Stats[Stat.MaxDC])),
                         ExpireTime = Envir.Time + 1500 + start,
                         TickSpeed = 2000,
-                        Caster = null,
+                        Caster = this,
                         CurrentLocation = location,
                         CurrentMap = CurrentMap,
                         Direction = MirDirection.Up
@@ -230,7 +230,8 @@ namespace Server.MirObjects.Monsters
                         CurrentLocation = new Point(x, y),
                         CastLocation = location,
                         Show = location.X == x && location.Y == y,
-                        CurrentMap = CurrentMap                        
+                        CurrentMap = CurrentMap,
+                        Caster = this
                     };
 
                     DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + start, ob);
@@ -278,7 +279,7 @@ namespace Server.MirObjects.Monsters
                             CastLocation = location,
                             Show = location.X == x && location.Y == y,
                             CurrentMap = CurrentMap,
-                            Owner = this
+                            Caster = this
                         };
 
                         DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + start, ob);

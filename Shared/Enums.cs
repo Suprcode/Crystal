@@ -962,8 +962,7 @@ public enum PoisonType : ushort
     Bleeding = 128,
     LRParalysis = 256,
     Blindness = 512,
-    Dazed = 1024,
-    FlamingMutantWeb = 2048
+    Dazed = 1024
 }
 
 [Flags]
@@ -1219,9 +1218,7 @@ public enum Spell : byte
     TreeQueenMassRoots = 210,
     TreeQueenGroundRoots = 211,
     TucsonGeneralRock = 212,
-    FlamingMutantMassWeb = 213,
-    FlyingStatueIceTornado = 214,
-    MonsterBlizzard = 215
+    FlyingStatueIceTornado = 213
 }
 
 public enum SpellEffect : byte
@@ -1258,8 +1255,6 @@ public enum SpellEffect : byte
     KingGuard2,
     MonsterMACBuff,
     DeathCrawlerBreath,
-    FlamingMutantTargetWeb,
-
     FlamingMutantWeb,
     Tester
 }

@@ -431,7 +431,7 @@ namespace Client.MirObjects
                 DrawColour = Color.MediumVioletRed;
             if (Poison.HasFlag(PoisonType.Frozen))
                 DrawColour = Color.Blue;
-            if (Poison.HasFlag(PoisonType.Paralysis) || Poison.HasFlag(PoisonType.LRParalysis) || Poison.HasFlag(PoisonType.FlamingMutantWeb))
+            if (Poison.HasFlag(PoisonType.Paralysis) || Poison.HasFlag(PoisonType.LRParalysis))
                 DrawColour = Color.Gray;
             if (Poison.HasFlag(PoisonType.DelayedExplosion))
                 DrawColour = Color.Orange;
@@ -887,6 +887,9 @@ namespace Client.MirObjects
                                 break;
                             case Monster.DreamDevourer:
                                 User.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DreamDevourer], 264, 7, 7 * Frame.Interval, User));
+                                break;
+                            case Monster.FlyingStatue:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlyingStatue], 304, 10, 10 * Frame.Interval, this));
                                 break;
                             case Monster.ManectricKing:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ManectricKing], 720, 12, 12 * 100, this));
@@ -1544,25 +1547,7 @@ namespace Client.MirObjects
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FightingCat], 208 + (int)Direction * 3, 3, 4 * Frame.Interval, this) { Blend = true });
                                                 break;
                                             case Monster.FlamingMutant:
-                                                switch ((int)Direction)
-                                                {
-                                                    case 0:
-                                                    case 1:
-                                                    case 2:
-                                                    case 7:                                                    
-                                                        Point flamingMutantSource1 = Functions.PointMove(CurrentLocation, Direction, 1);
-                                                        Effect flamingMutantEf1 = new Effect(Libraries.Monsters[(ushort)Monster.FlamingMutant], 314, 3, 300, flamingMutantSource1, CMain.Time);
-                                                        MapControl.Effects.Add(flamingMutantEf1);
-                                                        break;
-                                                    case 3:
-                                                    case 4:
-                                                    case 5:
-                                                    case 6:
-                                                        Point flamingMutantSource2 = Functions.PointMove(CurrentLocation, Direction, 1);
-                                                        Effect flamingMutantEf2 = new Effect(Libraries.Monsters[(ushort)Monster.FlamingMutant], 317, 3, 300, flamingMutantSource2, CMain.Time);
-                                                        MapControl.Effects.Add(flamingMutantEf2);
-                                                        break;
-                                                }
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlamingMutant], 304, 6, 6 * Frame.Interval, this));
                                                 break;
                                         }
                                     }
@@ -1774,9 +1759,6 @@ namespace Client.MirObjects
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkWraith], 750 + (int)Direction * 5, 5, 500, this));                                                
                                                 Effect ef = new Effect(Libraries.Monsters[(ushort)Monster.DarkWraith], 790, 6, 600, front, CMain.Time);
                                                 MapControl.Effects.Add(ef);
-                                                break;
-                                            case Monster.FlamingMutant:
-                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlamingMutant], 304, 6, 6 * Frame.Interval, this));
                                                 break;
                                         }
                                         break;
@@ -3432,6 +3414,7 @@ namespace Client.MirObjects
                 case Monster.FlameQueen:
                 case Monster.DarkDevourer:
                 case Monster.DreamDevourer:
+                case Monster.FlyingStatue:
                 case Monster.IceGuard:
                 case Monster.ElementGuard:
                 case Monster.KingGuard:

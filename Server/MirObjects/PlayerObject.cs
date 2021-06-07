@@ -157,21 +157,21 @@ namespace Server.MirObjects
 
         public bool CanMove
         {
-            get { return !Dead && Envir.Time >= ActionTime && !Fishing && !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.FlamingMutantWeb) && !CurrentPoison.HasFlag(PoisonType.Frozen); }
+            get { return !Dead && Envir.Time >= ActionTime && !Fishing && !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Frozen); }
         }
         public bool CanWalk
         {
-            get { return !Dead && Envir.Time >= ActionTime && !InTrapRock && !Fishing && !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.FlamingMutantWeb) && !CurrentPoison.HasFlag(PoisonType.Frozen); }
+            get { return !Dead && Envir.Time >= ActionTime && !InTrapRock && !Fishing && !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Frozen); }
         }
         public bool CanRun
         {
-            get { return !Dead && Envir.Time >= ActionTime && (_stepCounter > 0 || FastRun) && (!Sneaking || ActiveSwiftFeet) && CurrentBagWeight <= Stats[Stat.BagWeight] && !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.FlamingMutantWeb) && !CurrentPoison.HasFlag(PoisonType.Frozen); }
+            get { return !Dead && Envir.Time >= ActionTime && (_stepCounter > 0 || FastRun) && (!Sneaking || ActiveSwiftFeet) && CurrentBagWeight <= Stats[Stat.BagWeight] && !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Frozen); }
         }
         public bool CanAttack
         {
             get
             {
-                return !Dead && Envir.Time >= ActionTime && Envir.Time >= AttackTime && !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.LRParalysis)  && !CurrentPoison.HasFlag(PoisonType.FlamingMutantWeb) && !CurrentPoison.HasFlag(PoisonType.Frozen) && Mount.CanAttack && !Fishing;
+                return !Dead && Envir.Time >= ActionTime && Envir.Time >= AttackTime && !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Frozen) && Mount.CanAttack && !Fishing;
             }
         }
 
@@ -184,7 +184,7 @@ namespace Server.MirObjects
             get
             {
                 return !Dead && Envir.Time >= ActionTime && Envir.Time >= SpellTime && !CurrentPoison.HasFlag(PoisonType.Stun) && !CurrentPoison.HasFlag(PoisonType.Dazed) &&
-                    !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.FlamingMutantWeb) && !CurrentPoison.HasFlag(PoisonType.Frozen) && Mount.CanAttack && !Fishing;
+                    !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.Frozen) && Mount.CanAttack && !Fishing;
             }
         }
 
@@ -2460,7 +2460,9 @@ namespace Server.MirObjects
                         else if (ob.Race == ObjectType.Spell)
                         {
                             SpellObject obSpell = (SpellObject)ob;
-                            if ((obSpell.Spell != Spell.ExplosiveTrap) || (IsFriendlyTarget(obSpell.Caster)))
+                            var friendly = obSpell.Caster.Race == ObjectType.Player ? IsFriendlyTarget((PlayerObject)obSpell.Caster) : obSpell.Caster.IsFriendlyTarget((MonsterObject)obSpell.Caster);
+
+                            if (obSpell.Spell != Spell.ExplosiveTrap || friendly)
                                 Enqueue(ob.GetInfo());
                         }
                         else if (ob.Race == ObjectType.Merchant)
@@ -7811,9 +7813,6 @@ namespace Server.MirObjects
 
                 CurrentLocation = location;
 
-
-                
-
                 Enqueue(new S.UserDash { Direction = Direction, Location = location });
                 Broadcast(new S.ObjectDash { ObjectID = ObjectID, Direction = Direction, Location = location });
 
@@ -7849,7 +7848,8 @@ namespace Server.MirObjects
                     SpellObject ob = (SpellObject)cell.Objects[i];
 
                     if (ob.Spell != Spell.FireWall || !IsAttackTarget(ob.Caster)) continue;
-                    Attacked(ob.Caster, ob.Value, DefenceType.MAC, false);
+
+                    Attacked((PlayerObject)ob.Caster, ob.Value, DefenceType.MAC, false);
                     break;
                 }
             }
@@ -10369,7 +10369,7 @@ namespace Server.MirObjects
                 if (PoisonList[i].PType != p.PType) continue;
                 if ((PoisonList[i].PType == PoisonType.Green) && (PoisonList[i].Value > p.Value)) return;//cant cast weak poison to cancel out strong poison
                 if ((PoisonList[i].PType != PoisonType.Green) && ((PoisonList[i].Duration - PoisonList[i].Time) > p.Duration)) return;//cant cast 1 second poison to make a 1minute poison go away!
-                if ((PoisonList[i].PType == PoisonType.Frozen) || (PoisonList[i].PType == PoisonType.Slow) || (PoisonList[i].PType == PoisonType.Paralysis) || (PoisonList[i].PType == PoisonType.LRParalysis) || (PoisonList[i].PType == PoisonType.FlamingMutantWeb)) return;//prevents mobs from being perma frozen/slowed
+                if ((PoisonList[i].PType == PoisonType.Frozen) || (PoisonList[i].PType == PoisonType.Slow) || (PoisonList[i].PType == PoisonType.Paralysis) || (PoisonList[i].PType == PoisonType.LRParalysis)) return;//prevents mobs from being perma frozen/slowed
                 if (p.PType == PoisonType.DelayedExplosion) return;
                 ReceiveChat(GameLanguage.BeenPoisoned, ChatType.System2);
                 PoisonList[i] = p;

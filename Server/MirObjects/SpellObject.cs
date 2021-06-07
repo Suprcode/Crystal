@@ -29,7 +29,7 @@ namespace Server.MirObjects
         }
 
         public long TickTime, StartTime;
-        public PlayerObject Caster;
+        public MapObject Caster;
         public int Value, TickSpeed;
         public Spell Spell;
         public Point CastLocation;
@@ -67,8 +67,8 @@ namespace Server.MirObjects
 
                 if (Spell == Spell.Reincarnation && Caster != null)
                 {
-                    Caster.ReincarnationReady = true;
-                    Caster.ReincarnationExpireTime = Envir.Time + 6000;
+                    ((PlayerObject)Caster).ReincarnationReady = true;
+                    ((PlayerObject)Caster).ReincarnationExpireTime = Envir.Time + 6000;
                 }
 
                 CurrentMap.RemoveObject(this);
@@ -86,7 +86,7 @@ namespace Server.MirObjects
                 }
             }
 
-            if (Spell == Spell.Reincarnation && !Caster.ActiveReincarnation)
+            if (Spell == Spell.Reincarnation && !((PlayerObject)Caster).ActiveReincarnation)
             {
                 CurrentMap.RemoveObject(this);
                 Despawn();
@@ -122,7 +122,7 @@ namespace Server.MirObjects
                         if (ob.Dead) return;
 
                         if (!ob.IsAttackTarget(Caster)) return;
-                        ob.Attacked(Caster, Value, DefenceType.MAC, false);
+                        ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
                     }
                     break;
                 case Spell.Healing: //SafeZone
@@ -140,7 +140,7 @@ namespace Server.MirObjects
                         if (ob.Dead) return;
 
                         if (!ob.IsAttackTarget(Caster)) return;
-                        ob.Attacked(Caster, Value, DefenceType.MAC, false);
+                        ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
                         if (!ob.Dead)
                             ob.ApplyPoison(new Poison
                             {
@@ -156,9 +156,9 @@ namespace Server.MirObjects
                     {
                             if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                             if (ob.Dead) return;
-                            if (Caster != null && Caster.ActiveBlizzard == false) return;
+                            if (Caster != null && ((PlayerObject)Caster).ActiveBlizzard == false) return;
                             if (!ob.IsAttackTarget(Caster)) return;
-                            ob.Attacked(Caster, Value, DefenceType.MAC, false);
+                            ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
                             if (!ob.Dead && Envir.Random.Next(8) == 0)
                                 ob.ApplyPoison(new Poison
                                 {
@@ -173,9 +173,9 @@ namespace Server.MirObjects
                     {
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
-                        if (Caster != null && Caster.ActiveBlizzard == false) return;
+                        if (Caster != null && ((PlayerObject)Caster).ActiveBlizzard == false) return;
                         if (!ob.IsAttackTarget(Caster)) return;
-                        ob.Attacked(Caster, Value, DefenceType.MAC, false);
+                        ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
                     }
                     break;
                 case Spell.ExplosiveTrap:
@@ -185,7 +185,7 @@ namespace Server.MirObjects
                         if (!ob.IsAttackTarget(Caster)) return;
                         if (DetonatedTrap) return;
                         DetonateTrapNow();
-                        ob.Attacked(Caster, Value, DefenceType.MAC, false);
+                        ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
                     }
                     break;
                 case Spell.MapLava:
@@ -209,6 +209,7 @@ namespace Server.MirObjects
                     break;
                 case Spell.GeneralMeowMeowThunder:
                     {
+                        if (ob == Caster) return;
                         if (Value == 0) return;
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
@@ -217,6 +218,7 @@ namespace Server.MirObjects
                     break;
                 case Spell.TreeQueenRoot:
                     {
+                        if (ob == Caster) return;
                         if (Value == 0) return;
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
@@ -225,6 +227,8 @@ namespace Server.MirObjects
                     break;
                 case Spell.TreeQueenMassRoots:
                     {
+                        if (ob == Caster) return;
+
                         if (Value == 0) return;
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
@@ -233,10 +237,7 @@ namespace Server.MirObjects
                     break;
                 case Spell.TreeQueenGroundRoots:
                     {
-                        if (ob == Owner) // Prevents the mob from poisoning itself - need to set Owner = this in mob AI SpellObject.
-                        {
-                            return;
-                        }
+                        if (ob == Caster) return;
 
                         if (Value == 0) return;
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
@@ -299,60 +300,16 @@ namespace Server.MirObjects
                         }
                     }
                     break;
-                case Spell.FlamingMutantMassWeb:
-                    {
-                        if (ob == Owner) // Prevents the mob from poisoning itself - need to set Owner = this in mob AI SpellObject.
-                        {
-                            return;
-                        }
-
-                        if (Value == 0) return;
-                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
-                        if (ob.Dead) return;
-                        ob.Struck(Value, DefenceType.MAC);
-
-                        if ((Envir.Random.Next(6) > 0))
-                        {
-                            ob.ApplyPoison(new Poison { PType = PoisonType.FlamingMutantWeb, Duration = 5, TickSpeed = 1000 }, this);
-                            Broadcast(new S.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.FlamingMutantTargetWeb, Time = 5 });
-                        }
-                    }
-                    break;
                 case Spell.FlyingStatueIceTornado:
                     {
-                        if (ob == Owner) // Prevents the mob from poisoning itself - need to set Owner = this in mob AI SpellObject.
-                        {
-                            return;
-                        }
+                        if (ob == Caster) return;
 
                         if (Value == 0) return;
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
                         ob.Struck(Value, DefenceType.MAC);
 
-                        if (Envir.Random.Next(8) > 0)
-                        {
-                            ob.ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = 5, TickSpeed = 1000 }, this);
-                        }
-                    }
-                    break;
-                case Spell.MonsterBlizzard:
-                    {
-                        if (ob == Owner) // Prevents the mob from poisoning itself - need to set Owner = this in mob AI SpellObject.
-                        {
-                            return;
-                        }
-
-                        if (Value == 0) return;
-                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
-                        if (ob.Dead) return;
-                        ob.Struck(Value, DefenceType.MAC);
-
-                        if (Envir.Random.Next(8) > 0)
-                        {
-                            ob.ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = 8, TickSpeed = 1000 }, this);
-                        }
-                        if (Envir.Random.Next(13) > 0)
+                        if (Envir.Random.Next(8) == 0)
                         {
                             ob.ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = 5, TickSpeed = 1000 }, this);
                         }
@@ -467,9 +424,7 @@ namespace Server.MirObjects
                 case Spell.EarthGolemPile:
                 case Spell.TreeQueenMassRoots:
                 case Spell.TreeQueenGroundRoots:
-                case Spell.FlamingMutantMassWeb:
                 case Spell.FlyingStatueIceTornado:
-                case Spell.MonsterBlizzard:
                     if (!Show)
                         return null;
 
@@ -533,8 +488,8 @@ namespace Server.MirObjects
 
             if (Spell == Spell.Reincarnation && Caster != null && Caster.Node != null)
             {
-                Caster.ActiveReincarnation = false;
-                Caster.Enqueue(new S.CancelReincarnation { });
+                ((PlayerObject)Caster).ActiveReincarnation = false;
+                ((PlayerObject)Caster).Enqueue(new S.CancelReincarnation { });
             }
 
             if (Spell == Spell.ExplosiveTrap && Caster != null)
@@ -575,9 +530,12 @@ namespace Server.MirObjects
                 if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
                 {
                     if ((Caster == null) || (player == null)) continue;
-                    if ((player == Caster) || (player.IsFriendlyTarget(Caster)))
+
+                    var friendly = Caster.Race == ObjectType.Player ? player.IsFriendlyTarget((PlayerObject)Caster) : player.IsFriendlyTarget((MonsterObject)Caster);
+                    if (player == Caster || friendly)
                     {
                         p = GetInfo();
+
                         if (p != null)
                             player.Enqueue(p);
                     }
