@@ -179,7 +179,11 @@ namespace Server.Database
 
         private void SaveForm()
         {
-            var lastIndex = Envir.MonsterInfoList.Max(x => x.Index);
+            int lastIndex = 0;
+            if (Envir.MonsterInfoList.Count > 0)
+            {
+                lastIndex = Envir.MonsterInfoList.Max(x => x.Index);
+            }
 
             foreach (DataGridViewRow row in monsterInfoGridView.Rows)
             {
@@ -409,14 +413,14 @@ namespace Server.Database
 
                             var dataRow = FindRowByMonsterName(cells[0]);
 
-                            monsterInfoGridView.BeginEdit(true);
-
                             if (dataRow == null)
                             {
                                 dataRow = Table.NewRow();
 
                                 Table.Rows.Add(dataRow);
                             }
+
+                            monsterInfoGridView.BeginEdit(true);
 
                             try
                             {
@@ -455,7 +459,7 @@ namespace Server.Database
                                 continue;
                             }
 
-                            monsterInfoGridView.EndEdit();
+                            //monsterInfoGridView.EndEdit();
 
                             rowsEdited++;
 

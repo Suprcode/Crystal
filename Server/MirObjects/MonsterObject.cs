@@ -251,110 +251,121 @@ namespace Server.MirObjects
                     return new StrayCat(info);
                 case 118:
                     return new CatShaman(info);
-                case 168:
-                    return new Jar1(info);
-                case 169:
-                    return new Jar2(info);
                 case 119:
-                    return new SeedingsGeneral(info);
-                case 170:
-                    return new RestlessJar(info);
+                    return new Jar1(info);
                 case 120:
-                    return new GeneralMeowMeow(info);
+                    return new Jar2(info);
                 case 121:
-                    return new Armadillo(info);
+                    return new SeedingsGeneral(info);
                 case 122:
-                    return new ArmadilloElder(info);
+                    return new RestlessJar(info);
                 case 123:
-                    return new TucsonMage(info);
+                    return new GeneralMeowMeow(info);
                 case 124:
-                    return new TucsonWarrior(info);
+                    return new Armadillo(info);
                 case 125:
-                    return new TucsonEgg(info); //Effect 0/1
+                    return new ArmadilloElder(info);
                 case 126:
-                    return new SwampWarrior(info);
+                    return new TucsonMage(info);
                 case 127:
-                    return new CannibalTentacles(info);
+                    return new TucsonWarrior(info);
                 case 128:
-                    return new TucsonGeneral(info);
+                    return new TucsonEgg(info); //Effect 0/1
                 case 129:
-                    return new GasToad(info);
+                    return new SwampWarrior(info);
                 case 130:
-                    return new Mantis(info);
+                    return new CannibalTentacles(info);
                 case 131:
-                    return new AssassinBird(info);
-
-                //132: Empty AI
-
+                    return new TucsonGeneral(info);
+                case 132:
+                    return new GasToad(info);
                 case 133:
-                    return new RhinoPriest(info);
+                    return new Mantis(info);
                 case 134:
-                    return new ElephantMan(info);
+                    return new AssassinBird(info);
                 case 135:
-                    return new StoneGolem(info);
-                case 136:
-                    return new EarthGolem(info);
+                    return new StoningStatue(info); //TODO
+
+                //136: Empty AI, Use for FlyingStatue
+
                 case 137:
-                    return new TreeGuardian(info);
+                    return new RhinoPriest(info);
                 case 138:
-                    return new TreeQueen(info);
+                    return new ElephantMan(info);
                 case 139:
-                    return new PeacockSpider(info); //TODO
+                    return new StoneGolem(info);
                 case 140:
-                    return new OmaCannibal(info);
+                    return new EarthGolem(info);
                 case 141:
-                    return new OmaBlest(info);
+                    return new TreeGuardian(info);
                 case 142:
-                    return new OmaSlasher(info);
+                    return new TreeQueen(info);
                 case 143:
-                    return new OmaMage(info);
-
+                    return new PeacockSpider(info);
                 case 144:
-                    return new OmaWitchDoctor(info); //TODO
-
-                //145: TODO - PowerUpBead(s)
-
-                //146: TODO - DarkOmaKing
-
+                    return new OmaCannibal(info);
+                case 145:
+                    return new OmaBlest(info);
+                case 146:
+                    return new OmaSlasher(info);
                 case 147:
-                    return new CaveStatue(info);
+                    return new OmaMage(info);
                 case 148:
-                    return new PlagueCrab(info);
-                case 149:
-                    return new CreeperPlant(info);
-                case 150:
-                    return new Nadz(info);
+                    return new OmaWitchDoctor(info);
+
+                //149: TODO - PowerUpBead(s)
+
+                //150: TODO - DarkOmaKing
+
                 case 151:
-                    return new AvengingSpirit(info);
+                    return new CaveStatue(info);
                 case 152:
-                    return new AvengingWarrior(info);
+                    return new PlagueCrab(info);
                 case 153:
-                    return new AxePlant(info);
+                    return new CreeperPlant(info);
                 case 154:
+                    return new Nadz(info);
+                case 155:
+                    return new AvengingSpirit(info);
+                case 156:
+                    return new AvengingWarrior(info);
+                case 157:
+                    return new AxePlant(info);
+                case 158:
                     return new WoodBox(info);
 
-                //case 155: TODO - ClawBeast
+                //case 159: TODO - ClawBeast
 
-                //case 156: TODO - KillerPlant
-
-                case 157:
-                    return new SackWarrior(info);
-
-                //case 158: TODO - KingHydrax
-
-                case 159:
-                    return new HornedMage(info);
                 case 160:
+                    return new DarkCaptain(info); //TODO - Uses power beads
+
+                //case 161: TODO - BlueSoul
+
+                case 162:
+                    return new SackWarrior(info);
+                case 163:
+                    return new KingHydrax(info);
+                case 164:
+                    return new HornedMage(info);
+                case 165:
                     return new HornedArcher(info); //TODO
-                case 161:
+                case 166:
                     return new ColdArcher(info); //TODO (See video, Arrow fires up)
 
-                //case 162: TODO - HornedWarrior
+                //case 167: TODO - HornedWarrior
 
-                case 163:
-                    return new FloatingRock(info);
-                case 164:
+                case 168:
+                    return new FloatingRock(info); //TODO - Looks to buff monsters
+                case 169:
                     return new ScalyBeast(info);
+
+                //case 170: TODO - HornedSorceror
+
+                //case 171: TODO - BoulderSpirit
+
+                //case 172: TODO - HornedCommander
+
+
 
 
 
@@ -391,9 +402,6 @@ namespace Server.MirObjects
                     return new IceCrystalSoldier(info);
                 case 228:
                     return new DarkWraith(info);
-
-                case 254:
-                    return new StoningStatue(info); //TODO
 
                 default:
                     return new MonsterObject(info);
@@ -3166,11 +3174,15 @@ namespace Server.MirObjects
 
                         if (push)
                         {
-                            ob.Pushed(this, Direction, distance - 1);
+                            var dir = Functions.DirectionFromPoint(CurrentLocation, ob.CurrentLocation);
+
+                            ob.Pushed(this, dir, distance - 1);
                         }
 
                         int delay = Functions.MaxDistance(CurrentLocation, ob.CurrentLocation) * 50 + additionalDelay; //50 MS per Step
+
                         DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
+
                         ActionList.Add(action);
                     }
                     else continue;
@@ -3259,7 +3271,7 @@ namespace Server.MirObjects
             }
         }
 
-        protected virtual void FullmoonAttack(int delay = 500, DefenceType defenceType = DefenceType.ACAgility)
+        protected virtual void FullmoonAttack(int delay = 500, DefenceType defenceType = DefenceType.ACAgility, int pushDistance = -1)
         {
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
@@ -3282,6 +3294,11 @@ namespace Server.MirObjects
                     MapObject ob = cell.Objects[o];
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
                     if (!ob.IsAttackTarget(this)) continue;
+
+                    if (pushDistance > 0)
+                    {
+                        ob.Pushed(this, Direction, pushDistance);
+                    }
 
                     DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
                     ActionList.Add(action);

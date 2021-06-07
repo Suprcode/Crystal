@@ -10,32 +10,22 @@ namespace Server.MirObjects.Monsters
     {
         protected override bool CanMove { get { return false; } }
 
-        protected virtual byte AttackRange
-        {
-            get
-            {
-                return 7;
-            }
-        }
-
         protected internal FloatingRock(MonsterInfo info)
             : base(info)
         {
         }
 
-        //public override void Turn(MirDirection dir)
-        //{
-        //}
         public override bool Walk(MirDirection dir) { return false; }
+
+        protected override void ProcessRoam() { }
 
         protected override bool InAttackRange()
         {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
+            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, Info.ViewRange);
         }
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -44,7 +34,8 @@ namespace Server.MirObjects.Monsters
 
             ShockTime = 0;
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
+
+            //bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
@@ -53,13 +44,9 @@ namespace Server.MirObjects.Monsters
 
             int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
             if (damage == 0) return;
+
             DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 1000, Target, damage, DefenceType.MAC);
             ActionList.Add(action);
-
-            if (Target.Dead)
-                FindTarget();
         }
-
-        protected override void ProcessRoam() { }
     }
 }

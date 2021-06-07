@@ -539,7 +539,7 @@ namespace LibraryEditor
                         short.TryParse(placements[1], out y);
                 }
 
-                _library.InsertImage(index, image, x, y);
+                _library.InsertImage(index, image, x, y, checkboxRemoveBlackOnImport.Checked);
 
                 toolStripProgressBar.Value++;
             }

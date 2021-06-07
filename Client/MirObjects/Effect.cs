@@ -81,6 +81,7 @@ namespace Client.MirObjects
                 if (Played != null)
                     Played(this, EventArgs.Empty);
             }
+
             if (CMain.Time <= NextFrame) return;
 
             if (Owner != null && Owner.SkipFrames) CurrentFrame++;
@@ -99,9 +100,8 @@ namespace Client.MirObjects
             else NextFrame = Start + (Duration / Count) * (CurrentFrame + 1);
 
             GameScene.Scene.MapControl.TextureValid = false;
-
-
         }
+
         public virtual void Remove()
         {
             if (Owner != null)

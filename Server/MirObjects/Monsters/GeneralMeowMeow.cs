@@ -200,7 +200,7 @@ namespace Server.MirObjects.Monsters
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            List<MapObject> targets = FindAllTargets(2, Target.CurrentLocation);
+            List<MapObject> targets = FindAllTargets(2, target.CurrentLocation);
             if (targets.Count == 0) return;
 
             for (int i = 0; i < targets.Count; i++)

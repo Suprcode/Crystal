@@ -255,7 +255,11 @@ namespace Server.Database
 
         private void SaveForm()
         {
-            var lastIndex = Envir.ItemInfoList.Max(x => x.Index);
+            int lastIndex = 0;
+            if (Envir.MonsterInfoList.Count > 0)
+            {
+                lastIndex = Envir.ItemInfoList.Max(x => x.Index);
+            }
 
             foreach (DataGridViewRow row in itemInfoGridView.Rows)
             {

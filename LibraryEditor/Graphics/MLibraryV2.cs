@@ -249,9 +249,9 @@ namespace LibraryEditor
             Images[Index] = mImage;
         }
 
-        public void InsertImage(int index, Bitmap image, short x, short y)
+        public void InsertImage(int index, Bitmap image, short x, short y, bool removeBlack = true)
         {
-            MImage mImage = new MImage(image) { X = x, Y = y };
+            MImage mImage = new MImage(image, removeBlack) { X = x, Y = y };
 
             Count++;
             Images.Insert(index, mImage);
@@ -344,7 +344,7 @@ namespace LibraryEditor
                 this.Height = Height;
             }
 
-            public MImage(Bitmap image)
+            public MImage(Bitmap image, bool removeBlack = true)
             {
                 if (image == null)
                 {
@@ -356,7 +356,7 @@ namespace LibraryEditor
                 Height = (short)image.Height;
 
                 Image = image;// FixImageSize(image);
-                FBytes = ConvertBitmapToArray(Image);
+                FBytes = ConvertBitmapToArray(Image, removeBlack);
             }
 
             public MImage(Bitmap image, Bitmap Maskimage)
@@ -405,7 +405,7 @@ namespace LibraryEditor
                 return input;
             }
 
-            private unsafe byte[] ConvertBitmapToArray(Bitmap input)
+            private unsafe byte[] ConvertBitmapToArray(Bitmap input, bool removeBlack = true)
             {
                 BitmapData data = input.LockBits(new Rectangle(0, 0, input.Width, input.Height), ImageLockMode.ReadOnly,
                                                  PixelFormat.Format32bppArgb);
@@ -416,10 +416,13 @@ namespace LibraryEditor
 
                 input.UnlockBits(data);
 
-                for (int i = 0; i < pixels.Length; i += 4)
+                if (removeBlack)
                 {
-                    if (pixels[i] == 0 && pixels[i + 1] == 0 && pixels[i + 2] == 0)
-                        pixels[i + 3] = 0; //Make Transparent
+                    for (int i = 0; i < pixels.Length; i += 4)
+                    {
+                        if (pixels[i] == 0 && pixels[i + 1] == 0 && pixels[i + 2] == 0)
+                            pixels[i + 3] = 0; //Make Transparent
+                    }
                 }
 
                 byte[] compressedBytes;

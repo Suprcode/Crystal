@@ -8,6 +8,11 @@ Pots/Cats = https://www.youtube.com/watch?v=PyRlSs_Wz9o
 
 Rhinos = https://www.youtube.com/watch?v=QWu-B70zR5M
 
+GeneralMeowMeow = https://www.youtube.com/watch?v=HuhdiLT5fRA
 KingHydrax = https://www.youtube.com/watch?v=C2H2cdD8HHI
 HornedCommander = https://www.youtube.com/watch?v=KNNmGI-wFnY
 TucsonGeneral = https://www.youtube.com/watch?v=2NXZ0xXchrs
+PeacockSpider = https://www.youtube.com/watch?v=nSZ2VCYkQJQ
+DarkCaptain = https://www.youtube.com/watch?v=gX0RXr6zG10
+
+?? (Bosses) = https://www.youtube.com/watch?v=pQBoatqaKAQ

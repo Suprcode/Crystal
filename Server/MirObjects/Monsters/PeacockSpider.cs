@@ -60,7 +60,7 @@ namespace Server.MirObjects.Monsters
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                     if (damage == 0) return;
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MACAgility, true);
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MACAgility, true, false);
                     ActionList.Add(action);
 
                     _PoisonTime = Envir.Time + 20000;
@@ -74,23 +74,26 @@ namespace Server.MirObjects.Monsters
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                     if (damage == 0) return;
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.ACAgility);
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.ACAgility, false, false);
                     ActionList.Add(action);
                 }
                 else //Front Stomp
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
-                    TriangleAttack(3, 2, 500, DefenceType.ACAgility, true);
+                    TriangleAttack(3, 2, 500, DefenceType.ACAgility, false);
                 }
             }
             else
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
-                int damage = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
-                if (damage == 0) return;
+                if (Envir.Random.Next(5) == 0)
+                {
+                    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
+                    int damage = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
+                    if (damage == 0) return;
 
-                ProjectileAttack(Stats[Stat.MinMC], Stats[Stat.MaxMC], DefenceType.MACAgility);
+                    ProjectileAttack(Stats[Stat.MinMC], Stats[Stat.MaxMC], DefenceType.MACAgility);
+                }
             }
         }
 
@@ -100,6 +103,7 @@ namespace Server.MirObjects.Monsters
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
             bool poisonCloud = data.Count >= 4 && (bool)data[3];
+            bool daze = data.Count < 5 || (bool)data[4];
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
@@ -110,13 +114,19 @@ namespace Server.MirObjects.Monsters
                 for (int i = 0; i < targets.Count; i++)
                 {
                     if (targets[i].Attacked(this, damage, defence) <= 0) continue;
-                    PoisonTarget(targets[i], 2, damage, PoisonType.Green, 1000);
+                    PoisonTarget(targets[i], 2, Envir.Random.Next(2, 6), PoisonType.Green, 1000);
                 }
+
+                return;
             }
-            else
+            if (daze)
             {
-                target.Attacked(this, damage, defence);
+                if (target.Attacked(this, damage, defence) <= 0) return;
+                PoisonTarget(target, 2, Envir.Random.Next(2, 6), PoisonType.Dazed, 1000);
+                return;
             }
+
+            target.Attacked(this, damage, defence);
         }
 
         protected override void CompleteRangeAttack(IList<object> data)

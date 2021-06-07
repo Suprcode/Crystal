@@ -36,8 +36,6 @@ namespace Server.MirObjects.Monsters
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
-            bool range = !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
-
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
             ShockTime = 0;

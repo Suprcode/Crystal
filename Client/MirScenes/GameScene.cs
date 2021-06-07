@@ -3380,6 +3380,13 @@ namespace Client.MirScenes
                             effect = new Effect(Libraries.Monsters[(ushort)Monster.Mandrill], 280, 10, 1000, ob);
                             break;
                         }
+                    case 8: //DarkCaptain
+                        {
+                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkCaptain], 1224, 10, 1000, ob));
+                            SoundManager.PlaySound(((ushort)Monster.DarkCaptain) * 10 + 8);
+                            playDefaultSound = false;
+                            break;
+                        }
                     default:
                         {
                             effect = new Effect(Libraries.Magic, 250, 10, 500, ob);
@@ -3393,8 +3400,10 @@ namespace Client.MirScenes
                     ob.Effects.Add(effect);
                 }
 
-                if(playDefaultSound)
+                if (playDefaultSound)
+                {
                     SoundManager.PlaySound(SoundList.Teleport);
+                }
 
                 return;
             }
@@ -3445,6 +3454,13 @@ namespace Client.MirScenes
                             ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Mandrill], 290, 10, 1000, ob));
                             break;
                         }
+                    case 8: //DarkCaptain
+                        {
+                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkCaptain], 1224, 10, 1000, ob));
+                            SoundManager.PlaySound(((ushort)Monster.DarkCaptain) * 10 + 9);
+                            playDefaultSound = false;
+                            break;
+                        }
                     default:
                         {
                             ob.Effects.Add(new Effect(Libraries.Magic, 260, 10, 500, ob));
@@ -3452,14 +3468,15 @@ namespace Client.MirScenes
                         }
                 }
 
-                if(playDefaultSound)
+                if (playDefaultSound)
+                {
                     SoundManager.PlaySound(SoundList.Teleport);
+                }
 
                 return;
             }
-
-            
         }
+
         private void TeleportIn()
         {
             User.Effects.Add(new Effect(Libraries.Magic, 260, 10, 500, User));
@@ -3963,9 +3980,6 @@ namespace Client.MirScenes
                                 ob.Effects.Add(new DelayedExplosionEffect(Libraries.Magic3, 1590 + ((int)p.EffectType * 10), 8, 1200, ob, true, (int)p.EffectType, 0));
                             }
                         }
-
-                        //else
-                        //    ob.Effects.Add(new DelayedExplosionEffect(Libraries.Magic3, 1590 + ((int)p.EffectType * 10), 8, 1200, ob, true, (int)p.EffectType, 0));
                         break;
                     case SpellEffect.AwakeningSuccess:
                         {
@@ -4025,10 +4039,20 @@ namespace Client.MirScenes
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IcePillar], 18, 8, 800, ob));
                         break;
                     case SpellEffect.KingGuard:
-                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KingGuard], 753, 10, 1000, ob) { Blend = false });
+                        if (p.EffectType == 0)
+                        {
+                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KingGuard], 753, 10, 1000, ob) { Blend = false });
+                        }
+                        else
+                        {
+                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KingGuard], 763, 10, 1000, ob) { Blend = false });
+                        }
                         break;
-                    case SpellEffect.KingGuard2:
-                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KingGuard], 763, 10, 1000, ob) { Blend = false });
+                    case SpellEffect.FlamingMutantWeb:
+                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlamingMutant], 330, 10, 1000, ob) {
+                            Repeat = p.Time > 0,
+                            RepeatUntil = p.Time > 0 ? CMain.Time + p.Time : 0
+                        });
                         break;
                     case SpellEffect.MonsterMACBuff: //loop - look @ MagicShield for start / loop / end
                         ob.Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.HornedArcher], 477, 10, 1000, ob, true, BuffType.MonsterMACBuff) { Repeat = true });
@@ -9246,6 +9270,15 @@ namespace Client.MirScenes
 
         private void DrawObjects()
         {
+            if (Settings.Effect)
+            {
+                for (int i = Effects.Count - 1; i >= 0; i--)
+                {
+                    if (!Effects[i].DrawBehind) continue;
+                    Effects[i].Draw();
+                }
+            }
+
             for (int y = User.Movement.Y - ViewRangeY; y <= User.Movement.Y + ViewRangeY + 25; y++)
             {
                 if (y <= 0) continue;
@@ -9438,12 +9471,15 @@ namespace Client.MirScenes
 
                 Objects[i].DrawDamages();
             }
-            
 
-            if (!Settings.Effect) return;
-
-            for (int i = Effects.Count - 1; i >= 0; i--)
-                Effects[i].Draw();
+            if (Settings.Effect)
+            {
+                for (int i = Effects.Count - 1; i >= 0; i--)
+                {
+                    if (Effects[i].DrawBehind) continue;
+                    Effects[i].Draw();
+                }
+            }
         }
 
         private Color GetBlindLight(Color light)

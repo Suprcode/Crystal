@@ -139,12 +139,12 @@ namespace Server.MirObjects.Monsters
 
                     if (Envir.Random.Next(3) >= 0)
                     {
-                        Broadcast(new S.ObjectEffect { ObjectID = targets[i].ObjectID, Effect = SpellEffect.KingGuard });
+                        Broadcast(new S.ObjectEffect { ObjectID = targets[i].ObjectID, Effect = SpellEffect.KingGuard, EffectType = 0 });
                         PoisonTarget(targets[i], 5, 10, PoisonType.Slow, 1000);
                     }
                     else
                     {
-                        Broadcast(new S.ObjectEffect { ObjectID = targets[i].ObjectID, Effect = SpellEffect.KingGuard2 });
+                        Broadcast(new S.ObjectEffect { ObjectID = targets[i].ObjectID, Effect = SpellEffect.KingGuard, EffectType = 1 });
                         PoisonTarget(targets[i], 5, 10, PoisonType.Paralysis, 1000);
                     }
                 }

@@ -94,7 +94,7 @@ namespace Server.MirObjects.Monsters
                 {
                     targets[i].Attacked(this, Stats[Stat.MaxMC], defence);
 
-                    PoisonTarget(targets[i], 2, damage, PoisonType.Dazed, 1000);
+                    PoisonTarget(targets[i], 2, Envir.Random.Next(5, 10), PoisonType.Dazed, 1000);
                 }
             }
         }

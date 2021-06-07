@@ -485,7 +485,7 @@ public enum Monster : ushort
     PlaguedTucson = 293,
     SandSnail = 294, 
     CannibalTentacles = 295, 
-    TucsonGeneral = 296, //TODO - BOSS AI
+    TucsonGeneral = 296, //BOSS
     GasToad = 297, 
     Mantis = 298, 
     SwampWarrior = 299, 
@@ -506,7 +506,7 @@ public enum Monster : ushort
     OmaSlasher = 313, 
     OmaAssassin = 314, 
     OmaMage = 315, 
-    OmaWitchDoctor = 316, //TODO
+    OmaWitchDoctor = 316,
     LightningBead = 317, // Minion of DarkOmaKing
     HealingBead = 318, // Minion of DarkOmaKing
     PowerUpBead = 319, // Minion of DarkOmaKing
@@ -524,13 +524,13 @@ public enum Monster : ushort
     AxePlant = 331,
     WoodBox = 332,
     ClawBeast = 333, //TODO
-    KillerPlant = 334, //TODO - BOSS AI
+    DarkCaptain = 334, //BOSS - Needs power up bead attack adding
     SackWarrior = 335,
     WereTiger = 336, //AI 113
-    KingHydrax = 337, //TODO - BOSS AI
+    KingHydrax = 337,
     Hydrax = 338,
     HornedMage = 339,
-    Blank4 = 340,
+    BlueSoul = 340, //TODO
     HornedArcher = 341, // Incomplete AI (DG) - Need to code the buffs.
     ColdArcher = 342, // Done (DG) - //TODO - check wemade file for arrow issue
     HornedWarrior = 343, // TODO - HAS BUFF MECHANIC
@@ -1254,7 +1254,7 @@ public enum SpellEffect : byte
     KingGuard2,
     MonsterMACBuff,
     DeathCrawlerBreath,
-
+    FlamingMutantWeb,
     Tester
 }
 

@@ -104,6 +104,7 @@ namespace LibraryEditor
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.FolderLibraryDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.FrameAnimTimer = new System.Windows.Forms.Timer(this.components);
+            this.checkboxRemoveBlackOnImport = new System.Windows.Forms.CheckBox();
             this.MainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -352,6 +353,7 @@ namespace LibraryEditor
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.checkboxRemoveBlackOnImport);
             this.splitContainer2.Panel1.Controls.Add(this.nudJump);
             this.splitContainer2.Panel1.Controls.Add(this.checkBoxPreventAntiAliasing);
             this.splitContainer2.Panel1.Controls.Add(this.checkBoxQuality);
@@ -832,6 +834,18 @@ namespace LibraryEditor
             // 
             this.FrameAnimTimer.Tick += new System.EventHandler(this.FrameAnimTimer_Tick);
             // 
+            // checkboxRemoveBlackOnImport
+            // 
+            this.checkboxRemoveBlackOnImport.AutoSize = true;
+            this.checkboxRemoveBlackOnImport.Checked = true;
+            this.checkboxRemoveBlackOnImport.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkboxRemoveBlackOnImport.Location = new System.Drawing.Point(11, 276);
+            this.checkboxRemoveBlackOnImport.Name = "checkboxRemoveBlackOnImport";
+            this.checkboxRemoveBlackOnImport.Size = new System.Drawing.Size(145, 17);
+            this.checkboxRemoveBlackOnImport.TabIndex = 22;
+            this.checkboxRemoveBlackOnImport.Text = "Remove Black On Import";
+            this.checkboxRemoveBlackOnImport.UseVisualStyleBackColor = true;
+            // 
             // LMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -951,6 +965,7 @@ namespace LibraryEditor
         private System.Windows.Forms.DataGridViewCheckBoxColumn FrameBlend;
         private System.Windows.Forms.ToolStripMenuItem defaultNPCFramesToolStripMenuItem;
         private System.Windows.Forms.Timer FrameAnimTimer;
+        private System.Windows.Forms.CheckBox checkboxRemoveBlackOnImport;
     }
 }
 
