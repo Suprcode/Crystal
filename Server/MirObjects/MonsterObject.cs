@@ -184,7 +184,7 @@ namespace Server.MirObjects
                 case 84:
                     return new WingedTigerLord(info);
                 case 85:
-                    return new FlamingMutant(info); //TODO
+                    return new FlamingMutant(info);
                 case 86:
                     return new ManectricClaw(info);
                 case 87:
@@ -392,6 +392,9 @@ namespace Server.MirObjects
                 case 228:
                     return new DarkWraith(info);
 
+
+                case 253:
+                    return new FlyingStatue(info);
                 case 254:
                     return new StoningStatue(info); //TODO
 
@@ -517,7 +520,7 @@ namespace Server.MirObjects
             {
                 return !Dead && Envir.Time > MoveTime && Envir.Time > ActionTime && Envir.Time > ShockTime &&
                        (Master == null || Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.Both) && !CurrentPoison.HasFlag(PoisonType.Paralysis)
-                       && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Stun) && !CurrentPoison.HasFlag(PoisonType.Frozen);
+                       && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.FlamingMutantWeb) && !CurrentPoison.HasFlag(PoisonType.Stun) && !CurrentPoison.HasFlag(PoisonType.Frozen);
             }
         }
         protected virtual bool CanAttack
@@ -526,7 +529,7 @@ namespace Server.MirObjects
             {
                 return !Dead && Envir.Time > AttackTime && Envir.Time > ActionTime &&
                      (Master == null || Master.PMode == PetMode.AttackOnly || Master.PMode == PetMode.Both || !CurrentMap.Info.NoFight) && !CurrentPoison.HasFlag(PoisonType.Paralysis)
-                       && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Stun) && !CurrentPoison.HasFlag(PoisonType.Dazed) && !CurrentPoison.HasFlag(PoisonType.Frozen);
+                       && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.FlamingMutantWeb) && !CurrentPoison.HasFlag(PoisonType.Stun) && !CurrentPoison.HasFlag(PoisonType.Dazed) && !CurrentPoison.HasFlag(PoisonType.Frozen);
             }
         }
 
@@ -2271,7 +2274,7 @@ namespace Server.MirObjects
 
             for (int i = PoisonList.Count - 1; i >= 0; i--)
             {
-                if (PoisonList[i].PType != PoisonType.LRParalysis) continue;
+                if (PoisonList[i].PType != PoisonType.LRParalysis || PoisonList[i].PType != PoisonType.FlamingMutantWeb) continue;
 
                 PoisonList.RemoveAt(i);
                 OperateTime = 0;
@@ -2365,7 +2368,7 @@ namespace Server.MirObjects
                 if ((PoisonList[i].PType == PoisonType.Green) && (PoisonList[i].Value > p.Value)) return;//cant cast weak poison to cancel out strong poison
                 if ((PoisonList[i].PType != PoisonType.Green) && ((PoisonList[i].Duration - PoisonList[i].Time) > p.Duration)) return;//cant cast 1 second poison to make a 1minute poison go away!
                 if (p.PType == PoisonType.DelayedExplosion) return;
-                if ((PoisonList[i].PType == PoisonType.Frozen) || (PoisonList[i].PType == PoisonType.Slow) || (PoisonList[i].PType == PoisonType.Paralysis) || (PoisonList[i].PType == PoisonType.LRParalysis)) return;//prevents mobs from being perma frozen/slowed
+                if ((PoisonList[i].PType == PoisonType.Frozen) || (PoisonList[i].PType == PoisonType.Slow) || (PoisonList[i].PType == PoisonType.Paralysis) || (PoisonList[i].PType == PoisonType.FlamingMutantWeb) || (PoisonList[i].PType == PoisonType.LRParalysis)) return;//prevents mobs from being perma frozen/slowed
                 PoisonList[i] = p;
                 return;
             }

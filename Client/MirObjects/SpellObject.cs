@@ -224,6 +224,34 @@ namespace Client.MirObjects
                     FrameCount = 8;
                     Blend = true;
                     break;
+                case Spell.FlamingMutantMassWeb:
+                    BodyLibrary = Libraries.Monsters[(ushort)Monster.FlamingMutant];
+                    DrawFrame = 320;
+                    FrameInterval = 100;
+                    FrameCount = 10;
+                    Blend = false;
+                    Repeat = false;
+                    //MirSounds.SoundManager.PlaySound(8342);
+                    break;
+                case Spell.FlyingStatueIceTornado:
+                    BodyLibrary = Libraries.Monsters[(ushort)Monster.FlyingStatue];
+                    DrawFrame = 314;
+                    FrameInterval = 100;
+                    FrameCount = 20;
+                    Blend = true;
+                    Repeat = false;
+                    //MirSounds.SoundManager.PlaySound(8341);
+                    break;
+                case Spell.MonsterBlizzard:
+                    CurrentLocation.Y = Math.Max(0, CurrentLocation.Y - 20);
+                    BodyLibrary = Libraries.Magic2;
+                    DrawFrame = 1550;
+                    FrameInterval = 100;
+                    FrameCount = 30;
+                    Light = 3;
+                    Blend = true;
+                    Repeat = false;
+                    break;
             }
 
             NextMotion = CMain.Time + FrameInterval;

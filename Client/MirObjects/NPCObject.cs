@@ -156,6 +156,7 @@ namespace Client.MirObjects
                     break;
                 case PoisonType.Paralysis:
                 case PoisonType.LRParalysis:
+                //case PoisonType.FlamingMutantWeb:
                     DrawColour = Color.Gray;
                     break;
             }

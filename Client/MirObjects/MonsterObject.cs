@@ -283,8 +283,13 @@ namespace Client.MirObjects
                     case Monster.ValeBat:
                     case Monster.CrackingWeaver:
                     case Monster.GreaterWeaver:
+                        Effects.Add(new Effect(Libraries.Effect, 601, 1, 1 * Frame.Interval, this) { DrawBehind = true, Repeat = true }); // Blue effect                        
+                        break;
                     case Monster.CrystalWeaver:
-                        Effects.Add(new Effect(Libraries.Effect, 680, 20, 20 * Frame.Interval, this) { DrawBehind = true, Repeat = true });
+                    case Monster.FrozenZumaGuardian:
+                    case Monster.FrozenRedZuma:
+                    case Monster.FrozenZumaStatue:
+                        Effects.Add(new Effect(Libraries.Effect, 600, 1, 1 * Frame.Interval, this) { DrawBehind = true, Repeat = true }); // Blue effect
                         break;
                     case Monster.CaveStatue:
                         Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.CaveStatue], 10, 8, 2400, this) { Blend = true, Repeat = true });
@@ -426,7 +431,7 @@ namespace Client.MirObjects
                 DrawColour = Color.MediumVioletRed;
             if (Poison.HasFlag(PoisonType.Frozen))
                 DrawColour = Color.Blue;
-            if (Poison.HasFlag(PoisonType.Paralysis) || Poison.HasFlag(PoisonType.LRParalysis))
+            if (Poison.HasFlag(PoisonType.Paralysis) || Poison.HasFlag(PoisonType.LRParalysis) || Poison.HasFlag(PoisonType.FlamingMutantWeb))
                 DrawColour = Color.Gray;
             if (Poison.HasFlag(PoisonType.DelayedExplosion))
                 DrawColour = Color.Orange;
@@ -653,9 +658,6 @@ namespace Client.MirObjects
                             case Monster.MinotaurKing:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MinotaurKing], 272 + (int)Direction * 6, 6, Frame.Count * Frame.Interval, this));
                                 break;
-                            case Monster.FlamingMutant:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlamingMutant], 304 + (int)Direction * 6, 6, Frame.Count * Frame.Interval, this));
-                                break;
                             case Monster.DemonWolf:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DemonWolf], 336 + (int)Direction * 9, 6, Frame.Count * Frame.Interval, this));
                                 break;
@@ -727,6 +729,9 @@ namespace Client.MirObjects
                             case Monster.AvengingWarrior:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AvengingWarrior], 272 + (int)Direction * 5, 5, 7 * Frame.Interval, this));
                                 break;
+                            case Monster.FlyingStatue:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlyingStatue], 334, 10, 10 * 100, this));
+                                break;
                         }
                         break;
                     case MirAction.Attack2:
@@ -784,6 +789,9 @@ namespace Client.MirObjects
                                 break;
                             case Monster.DragonWarrior:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DragonWarrior], 576, 7, Frame.Count * Frame.Interval, this));
+                                break;
+                            case Monster.FlyingStatue:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlyingStatue], 352, 10, 10 * 100, this));
                                 break;
                         }
 
@@ -860,10 +868,6 @@ namespace Client.MirObjects
                                 break;
                             case Monster.TurtleKing:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], 946, 10, Frame.Count * Frame.Interval, User));
-                                break;
-                            case Monster.FlyingStatue:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlyingStatue], 314, 6, 6 * Frame.Interval, this));
-                                //Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlyingStatue], 329, 5, 5 * Frame.Interval, this)); this should follow the projectile
                                 break;
                             case Monster.HellBolt:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellBolt], 304, 11, 11 * 100, this));
@@ -1367,7 +1371,8 @@ namespace Client.MirObjects
                         }
                     }
                     break;
-                case MirAction.Attack1:
+                case MirAction.Attack1:                    
+
                     if (CMain.Time >= NextMotion)
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
@@ -1523,6 +1528,27 @@ namespace Client.MirObjects
                                             case Monster.FightingCat:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FightingCat], 208 + (int)Direction * 3, 3, 4 * Frame.Interval, this) { Blend = true });
                                                 break;
+                                            case Monster.FlamingMutant:
+                                                switch ((int)Direction)
+                                                {
+                                                    case 0:
+                                                    case 1:
+                                                    case 2:
+                                                    case 7:                                                    
+                                                        Point flamingMutantSource1 = Functions.PointMove(CurrentLocation, Direction, 1);
+                                                        Effect flamingMutantEf1 = new Effect(Libraries.Monsters[(ushort)Monster.FlamingMutant], 314, 3, 300, flamingMutantSource1, CMain.Time);
+                                                        MapControl.Effects.Add(flamingMutantEf1);
+                                                        break;
+                                                    case 3:
+                                                    case 4:
+                                                    case 5:
+                                                    case 6:
+                                                        Point flamingMutantSource2 = Functions.PointMove(CurrentLocation, Direction, 1);
+                                                        Effect flamingMutantEf2 = new Effect(Libraries.Monsters[(ushort)Monster.FlamingMutant], 317, 3, 300, flamingMutantSource2, CMain.Time);
+                                                        MapControl.Effects.Add(flamingMutantEf2);
+                                                        break;
+                                                }
+                                                break;
                                         }
                                     }
                                     break;
@@ -1544,6 +1570,11 @@ namespace Client.MirObjects
                                                 break;
                                             case Monster.ScalyBeast:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ScalyBeast], 344 + (int)Direction * 3, 3, 3 * Frame.Interval, this));
+                                                break;
+                                            case Monster.FlyingStatue:
+                                                Point flyingStatueSource1 = Functions.PointMove(CurrentLocation, Direction, 1);
+                                                Effect flyingStatueEffect1 = new Effect(Libraries.Monsters[(ushort)Monster.FlyingStatue], 344, 8, 800, flyingStatueSource1, CMain.Time);
+                                                MapControl.Effects.Add(flyingStatueEffect1);
                                                 break;
                                         }
                                         break;
@@ -1732,6 +1763,9 @@ namespace Client.MirObjects
                                                 Effect ef = new Effect(Libraries.Monsters[(ushort)Monster.DarkWraith], 790, 6, 600, front, CMain.Time);
                                                 MapControl.Effects.Add(ef);
                                                 break;
+                                            case Monster.FlamingMutant:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlamingMutant], 304, 6, 6 * Frame.Interval, this));
+                                                break;
                                         }
                                         break;
                                     }
@@ -1756,6 +1790,11 @@ namespace Client.MirObjects
                                                 Point bleedEffectLocation = Functions.PointMove(CurrentLocation, Direction, 1);
                                                 Effect bleedEffect = new Effect(Libraries.Monsters[(ushort)Monster.Bear], 312, 9, 900, bleedEffectLocation, CMain.Time);
                                                 MapControl.Effects.Add(bleedEffect);
+                                                break;
+                                            case Monster.FlyingStatue:
+                                                Point flyingStatueSource1 = Functions.PointMove(CurrentLocation, Direction, 1);
+                                                Effect flyingStatueEffect1 = new Effect(Libraries.Monsters[(ushort)Monster.FlyingStatue], 362, 8, 800, flyingStatueSource1, CMain.Time);
+                                                MapControl.Effects.Add(flyingStatueEffect1);
                                                 break;
                                         }
                                         break;
