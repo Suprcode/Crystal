@@ -171,7 +171,7 @@ namespace Client.MirObjects
                     Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.GeneralMeowMeow], 529, 7, 700, this, true, type) { Repeat = true, Light = 1 });
                     MirSounds.SoundManager.PlaySound(8322);
                     break;
-                case BuffType.MonsterMACBuff: //loop - look @ MagicShield for start / loop / end
+                case BuffType.ColdArcherMACBuff: //loop - look @ MagicShield for start / loop / end
                     Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.HornedArcher], 480, 3, 1000, this, true, type) { Blend = true, Repeat = true, Light = 1 });
                     break;
             }

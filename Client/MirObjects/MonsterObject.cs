@@ -2690,25 +2690,8 @@ namespace Client.MirObjects
                                                     };
                                                 }
                                                 break;
-                                            //case Monster.ColdArcher:
-                                            //    missile = CreateProjectile(368, Libraries.Monsters[(ushort)Monster.ColdArcher], true, 2, 100, 0, direction16: false);
-                                            //    if (missile.Target != null)
-                                            //    {
-                                            //        missile.Complete += (o, e) =>
-                                            //        {
-                                            //            if (missile.Target.CurrentAction == MirAction.Dead) return;
-                                            //            missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ColdArcher], 384, 10, 1000, missile.Target) { Blend = true });
-                                            //        };
-                                            //    }
-                                            //    break;
-
                                             case Monster.ColdArcher:
-                                                //ob = MapControl.GetObject(TargetID);
-                                                //if (ob != null)
-                                                //{
-                                                    //Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ColdArcher], 384, 10, 1000, ob) /*{ Blend = false }*/);
-                                                    Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ColdArcher], 368 + (int)Direction * 2, 2, 2 * FrameInterval, this) /*{ Blend = false }*/);
-                                                //}
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ColdArcher], 368 + (int)Direction * 2, 2, 2 * FrameInterval, this));
                                                 break;
                                         }
                                         break;
@@ -2751,8 +2734,7 @@ namespace Client.MirObjects
                                                 ob = MapControl.GetObject(TargetID);
                                                 if (ob != null)
                                                 {
-                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ColdArcher], 384, 10, 1000, ob) /*{ Blend = false }*/);
-                                                    //ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ColdArcher], 367 + (int)Direction * 2, 2, 2 * FrameInterval, ob) /*{ Blend = false }*/);
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ColdArcher], 384, 10, 1000, ob));
                                                 }
                                                 break;
                                                 

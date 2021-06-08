@@ -1291,7 +1291,7 @@ public enum BuffType : byte
     ElementalBarrier,
 
     //monster
-    MonsterMACBuff = 50,
+    ColdArcherMACBuff = 50,
     GeneralMeowMeowShield,
     RhinoPriestDebuff,
 

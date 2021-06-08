@@ -1940,6 +1940,49 @@ namespace Server.MirObjects
             return false;
         }
 
+        protected List<MapObject> FindAllFriends(int dist, Point location, bool needSight = true)
+        {
+            List<MapObject> targets = new List<MapObject>();
+            for (int d = 0; d <= dist; d++)
+            {
+                for (int y = location.Y - d; y <= location.Y + d; y++)
+                {
+                    if (y < 0) continue;
+                    if (y >= CurrentMap.Height) break;
+
+                    for (int x = location.X - d; x <= location.X + d; x += Math.Abs(y - location.Y) == d ? 1 : d * 2)
+                    {
+                        if (x < 0) continue;
+                        if (x >= CurrentMap.Width) break;
+
+                        Cell cell = CurrentMap.GetCell(x, y);
+                        if (!cell.Valid || cell.Objects == null) continue;
+
+                        for (int i = 0; i < cell.Objects.Count; i++)
+                        {
+                            MapObject ob = cell.Objects[i];
+
+                            if (ob == this) continue;
+
+                            switch (ob.Race)
+                            {
+                                case ObjectType.Monster:
+                                case ObjectType.Player:
+                                    if (!ob.IsFriendlyTarget(this)) continue;
+                                    if (ob.Master != Master) continue;
+                                    if (ob.Hidden && (!CoolEye || Level < ob.Level) && needSight) continue;
+                                    targets.Add(ob);
+                                    continue;
+                                default:
+                                    continue;
+                            }
+                        }
+                    }
+                }
+            }
+            return targets;
+        }
+
         public List<MapObject> FindAllNearby(int dist, Point location, bool needSight = true)
         {
             List<MapObject> targets = new List<MapObject>();
