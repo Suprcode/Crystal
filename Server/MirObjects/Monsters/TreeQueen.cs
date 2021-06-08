@@ -167,7 +167,7 @@ namespace Server.MirObjects.Monsters
                     SpellObject spellObj = new SpellObject
                     {
                         Spell = Spell.TreeQueenRoot,
-                        Value = Envir.Random.Next(Envir.Random.Next(Stats[Stat.MinDC], Stats[Stat.MaxDC])),
+                        Value = Envir.Random.Next(Envir.Random.Next(Stats[Stat.MinMC], Stats[Stat.MaxMC])),
                         ExpireTime = Envir.Time + 1500 + start,
                         TickSpeed = 2000,
                         Caster = this,
@@ -217,7 +217,7 @@ namespace Server.MirObjects.Monsters
 
                     if (!cell.Valid) continue;
 
-                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MinDC]);
+                    int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MinMC]);
 
                     var start = 500;
 

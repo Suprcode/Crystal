@@ -73,7 +73,7 @@ namespace Server.MirObjects.Monsters
 
                         if (!cell.Valid) continue;
 
-                        int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MinDC]);
+                        int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MinMC]);
 
                         var start = 500;
 

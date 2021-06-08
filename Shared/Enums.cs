@@ -388,9 +388,9 @@ public enum Monster : ushort
     CrawlerLave = 198,
     DarkYob = 199,
 
-    FlamingMutant = 200,//TODO
+    FlamingMutant = 200,
     StoningStatue = 201, //BOSS
-    FlyingStatue = 202,//TODO
+    FlyingStatue = 202,
     ValeBat = 203,
     Weaver = 204,
     VenomWeaver = 205,
@@ -523,7 +523,7 @@ public enum Monster : ushort
     AvengingWarrior = 330,
     AxePlant = 331,
     WoodBox = 332,
-    ClawBeast = 333, //TODO
+    ClawBeast = 333, //AI 8
     DarkCaptain = 334, //BOSS - Needs power up bead attack adding
     SackWarrior = 335,
     WereTiger = 336, //AI 113

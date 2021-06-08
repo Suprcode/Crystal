@@ -213,6 +213,11 @@ namespace Server.MirObjects
                     return new HellLord(info);
                 case 99:
                     return new HellBomb(info);
+
+//////
+
+
+
                 case 100:
                     return new VenomSpider(info);
                 case 101:
@@ -242,7 +247,7 @@ namespace Server.MirObjects
                 case 113:
                     return new BloodBaboon(info);
                 case 114:
-                    return new CatWidow(info);
+                    return new CatWidow(info); //SAME AI AS ABOVE 2???
                 case 115:
                     return new SandSnail(info);
                 case 116:
@@ -332,37 +337,33 @@ namespace Server.MirObjects
                     return new AxePlant(info);
                 case 158:
                     return new WoodBox(info);
-
-                //case 159: TODO - ClawBeast
-
-                case 160:
+                case 159:
                     return new DarkCaptain(info); //TODO - Uses power beads
-
-                //case 161: TODO - BlueSoul
-
-                case 162:
+                case 160:
+                    return new BlueSoul(info);
+                case 161:
                     return new SackWarrior(info);
-                case 163:
+                case 162:
                     return new KingHydrax(info);
-                case 164:
+                case 163:
                     return new HornedMage(info);
-                case 165:
+                case 164:
                     return new HornedArcher(info); //TODO
-                case 166:
+                case 165:
                     return new ColdArcher(info); //TODO (See video, Arrow fires up)
 
-                //case 167: TODO - HornedWarrior
+                //case 166: TODO - HornedWarrior
 
-                case 168:
+                case 167:
                     return new FloatingRock(info); //TODO - Looks to buff monsters
                 case 169:
                     return new ScalyBeast(info);
 
-                //case 170: TODO - HornedSorceror
+                //case 169: TODO - HornedSorceror
 
-                //case 171: TODO - BoulderSpirit
+                //case 170: TODO - BoulderSpirit
 
-                //case 172: TODO - HornedCommander
+                //case 171: TODO - HornedCommander
 
 
 

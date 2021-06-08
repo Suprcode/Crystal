@@ -89,8 +89,6 @@ namespace Server.MirObjects.Monsters
                 if (Envir.Random.Next(5) == 0)
                 {
                     Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
-                    int damage = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
-                    if (damage == 0) return;
 
                     ProjectileAttack(Stats[Stat.MinMC], Stats[Stat.MaxMC], DefenceType.MACAgility);
                 }

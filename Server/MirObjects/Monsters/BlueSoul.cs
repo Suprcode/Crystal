@@ -5,12 +5,12 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    public class RedFoxman : MonsterObject
+    public class BlueSoul : MonsterObject
     {
-        public long FearTime, TeleportTime;
+        public long FearTime;
         public byte AttackRange = 6;
 
-        protected internal RedFoxman(MonsterInfo info)
+        protected internal BlueSoul(MonsterInfo info)
             : base(info)
         {
         }
@@ -32,8 +32,7 @@ namespace Server.MirObjects.Monsters
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
-            byte spelltype = Envir.Random.Next(2) == 0 ? (byte)1 : (byte)2;
-            Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = spelltype });
+            Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
@@ -41,7 +40,7 @@ namespace Server.MirObjects.Monsters
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
-            DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MAC);
+            DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MACAgility);
             ActionList.Add(action);
         }
 
@@ -49,19 +48,10 @@ namespace Server.MirObjects.Monsters
         {
             if (Target == null || !CanAttack) return;
 
-            if (InAttackRange() && (Envir.Time < FearTime))
+            if (InAttackRange())
             {
-                if (Functions.InRange(CurrentLocation, Target.CurrentLocation, 1) && Envir.Time > TeleportTime && Envir.Random.Next(8) == 0)
-                {
-                    TeleportTime = Envir.Time + 10000;
-                    TeleportRandom(40, 4);
-                    return;
-                }
-                else
-                {
-                    Attack();
-                    return;
-                }
+                Attack();
+                return;
             }
 
             FearTime = Envir.Time + 5000;
@@ -104,24 +94,6 @@ namespace Server.MirObjects.Monsters
                         break;
                 }
             }
-        }
-
-        public override bool TeleportRandom(int attempts, int distance, Map temp = null)
-        {
-            for (int i = 0; i < attempts; i++)
-            {
-                Point location;
-
-                if (distance <= 0)
-                    location = new Point(Envir.Random.Next(CurrentMap.Width), Envir.Random.Next(CurrentMap.Height));
-                else
-                    location = new Point(CurrentLocation.X + Envir.Random.Next(-distance, distance + 1),
-                                         CurrentLocation.Y + Envir.Random.Next(-distance, distance + 1));
-
-                if (Teleport(CurrentMap, location, true, 2)) return true;
-            }
-
-            return false;
         }
     }
 }

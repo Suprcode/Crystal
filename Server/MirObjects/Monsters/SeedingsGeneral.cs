@@ -63,7 +63,7 @@ namespace Server.MirObjects.Monsters
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
                     //Green Splash Attack
-                    int damage = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
+                    int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                     if (damage == 0) return;
 
                     DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MACAgility);
@@ -75,7 +75,7 @@ namespace Server.MirObjects.Monsters
                 ActionTime = Envir.Time + 600;
                 AttackTime = Envir.Time + AttackSpeed;
 
-                int damage = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
+                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                 
                 if (Envir.Random.Next(5) > 0)
                 {
