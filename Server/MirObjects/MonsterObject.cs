@@ -2408,13 +2408,6 @@ namespace Server.MirObjects
         {
             Buff b = base.AddBuff(type, owner, duration, stats, visible, infinite, stackable, refreshStats, values);
 
-            switch (b.Type)
-            {
-                case BuffType.MonsterMACBuff:
-                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MonsterMACBuff }, CurrentLocation);
-                    break;
-            }
-
             if (HasBuff(type, out b) && b.Infinite == true)
             {
                 return b;
