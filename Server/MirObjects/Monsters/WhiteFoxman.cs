@@ -1,4 +1,5 @@
 ﻿using Server.MirDatabase;
+using System.Collections.Generic;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
@@ -42,26 +43,28 @@ namespace Server.MirObjects.Monsters
 
                 int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
 
-                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
+                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MACAgility, false);
                 ActionList.Add(action);
             }
             else
             {
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
 
-                //TODO - Change to PoisonTarget with equation
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-                {
-                    int levelgap = 50 - Target.Level;
-                    if (Envir.Random.Next(20) < 4 + levelgap)
-                        Target.ApplyPoison(new Poison
-                        {
-                            Owner = this,
-                            Duration = 5,
-                            PType = PoisonType.Slow,
-                            TickSpeed = 1000,
-                        }, this);
-                }
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300);
+                ActionList.Add(action);
+            }
+        }
+
+        protected override void CompleteAttack(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            int levelgap = 50 - target.Level;
+
+            if (Envir.Random.Next(20) < 4 + levelgap) {
+                PoisonTarget(target, 1, 5, PoisonType.Slow, 1000);
             }
         }
 

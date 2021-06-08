@@ -23,6 +23,7 @@ namespace Server.MirObjects
                 case 3:
                     return new Tree(info);
                 case 4:
+                    //Common AI: 1 Line Attack with Poison
                     return new SpittingSpider(info);
                 case 5:
                     return new CannibalPlant(info);
@@ -31,10 +32,12 @@ namespace Server.MirObjects
                 case 7:
                     return new CaveMaggot(info);
                 case 8:
+                    //Common AI: 1 Range Projectile Attack with Fear
                     return new AxeSkeleton(info);
                 case 9:
                     return new HarvestMonster(info);
                 case 10:
+                    //Common AI: 1 Magic Attack
                     return new FlamingWooma(info);
                 case 11:
                     return new WoomaTaurus(info);
@@ -73,18 +76,22 @@ namespace Server.MirObjects
                 case 28:
                     return new ToxicGhoul(info);
                 case 29:
+                    //Common AI: 1 Line Attack
                     return new BoneSpearman(info);
                 case 30:
                     return new BoneLord(info);
                 case 31:
+                    //Common AI: 2 Magic Attacks, 1 Close, 1 Range
                     return new RightGuard(info);
                 case 32:
+                    //Common AI: 2 Magic Attacks, 1 Close, 1 Range Projectile
                     return new LeftGuard(info);
                 case 33:
                     return new MinotaurKing(info);
                 case 34:
                     return new FrostTiger(info);
                 case 35:
+                    //Common AI: 1 Line Attack
                     return new SandWorm(info);
                 case 36:
                     return new Yimoogi(info);
@@ -102,6 +109,7 @@ namespace Server.MirObjects
                 case 43:
                     return new OmaKing(info);
                 case 44:
+                    //Common AI: 2 Attacks, 1 Close, 1 Line Attack
                     return new BlackFoxman(info);
                 case 45:
                     return new RedFoxman(info);
@@ -116,6 +124,7 @@ namespace Server.MirObjects
                 case 50:
                     return new GreatFoxSpirit(info);
                 case 51:
+                    //Common AI: 2 Physical Attacks, 1 Close, 1 Range
                     return new HedgeKekTal(info);
                 case 52:
                     return new EvilMir(info);
@@ -146,6 +155,7 @@ namespace Server.MirObjects
                 case 65:
                     return new MutatedManworm(info);
                 case 66:
+                    //Common AI: 2 Close Attacks
                     return new CrazyManworm(info);
                 case 67:
                     return new DarkDevourer(info);
@@ -166,8 +176,10 @@ namespace Server.MirObjects
                 case 75:
                     return new WitchDoctor(info);
                 case 76:
+                    //Common AI: 2 Close Attacks, 1 Normal, 1 Halfmoon
                     return new HellSlasher(info);
                 case 77:
+                    //Common AI: 2 Close Attacks, 1 Normal, 1 Fullmoon
                     return new HellPirate(info);
                 case 78:
                     return new HellCannibal(info);
@@ -198,10 +210,13 @@ namespace Server.MirObjects
                 case 91:
                     return new TrollKing(info);
                 case 92:
+                    //Common AI: 2 Attacks with Fear, 1 Normal, 1 Long Line
                     return new FlameSpear(info);
                 case 93:
+                    //Common AI: 2 Magic Attacks with Fear, 1 Close, 1 Range AOE
                     return new FlameMage(info);
                 case 94:
+                    //Common AI: 2 Magic Attacks with Fear, 1 Close, 1 Close AOE
                     return new FlameScythe(info);
                 case 95:
                     return new FlameAssassin(info);
@@ -213,12 +228,8 @@ namespace Server.MirObjects
                     return new HellLord(info);
                 case 99:
                     return new HellBomb(info);
-
-//////
-
-
-
                 case 100:
+                    //Common AI: 1 Magic Line Attack with Poison
                     return new VenomSpider(info);
                 case 101:
                     return new AncientBringer(info);
@@ -233,6 +244,7 @@ namespace Server.MirObjects
                 case 106:
                     return new DeathCrawler(info);
                 case 107:
+                    //Common AI: 2 Magic Attacks with Rush, 1 Close, 1 Range
                     return new BurningZombie(info);
                 case 108:
                     return new MudZombie(info);
@@ -243,11 +255,12 @@ namespace Server.MirObjects
                 case 111:
                     return new WhiteMammoth(info);
                 case 112:
-                    return new DarkBeast(info);
-                case 113:
-                    return new BloodBaboon(info);
-                case 114:
-                    return new CatWidow(info); //SAME AI AS ABOVE 2???
+                    //Common AI: 2 Close attacks
+                    return new DarkBeast(info); //Effect 0/1
+
+                //113: Blank
+                //114: Blank
+
                 case 115:
                     return new SandSnail(info);
                 case 116:
@@ -289,7 +302,7 @@ namespace Server.MirObjects
                 case 134:
                     return new AssassinBird(info);
                 case 135:
-                    return new StoningStatue(info); //TODO
+                    return new StoningStatue(info);
                 case 136:
                     return new FlyingStatue(info);
                 case 137:
@@ -309,8 +322,10 @@ namespace Server.MirObjects
                 case 144:
                     return new OmaCannibal(info);
                 case 145:
+                    //Common AI: 2 Attacks, 1 Close, 1 Close AOE
                     return new OmaBlest(info);
                 case 146:
+                    //Common AI: 1 Halfmoon Attack
                     return new OmaSlasher(info);
                 case 147:
                     return new OmaMage(info);
@@ -336,10 +351,12 @@ namespace Server.MirObjects
                 case 157:
                     return new AxePlant(info);
                 case 158:
+                    //Common AI: None With Attack On Death
                     return new WoodBox(info);
                 case 159:
                     return new DarkCaptain(info); //TODO - Uses power beads
                 case 160:
+                    //Common AI: 1 Range Attack with Fear
                     return new BlueSoul(info);
                 case 161:
                     return new SackWarrior(info);

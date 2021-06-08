@@ -38,6 +38,7 @@ namespace Server.MirObjects.Monsters
                 {
                     targets[i].Attacked(this, damage, DefenceType.MAC);
 
+                    //TODO - Delay this
                     if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].Stats[Stat.PoisonResist])
                     {
                         if (Envir.Random.Next(5) == 0)

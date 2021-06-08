@@ -9,8 +9,6 @@ namespace Server.MirObjects.Monsters
 {
     public class DarkDevourer : MonsterObject
     {
-        private const byte AttackRange = 9;
-
         protected internal DarkDevourer(MonsterInfo info)
             : base(info)
         {
@@ -18,7 +16,7 @@ namespace Server.MirObjects.Monsters
 
         protected override bool InAttackRange()
         {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
+            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, Info.ViewRange);
         }
 
         protected override void Attack()
@@ -48,16 +46,13 @@ namespace Server.MirObjects.Monsters
 
                 AttackTime = Envir.Time + AttackSpeed + 500;
 
-                int damage = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MACAgility);
                 ActionList.Add(action);
             }
 
             ShockTime = 0;
             AttackTime = Envir.Time + AttackSpeed;
-
-            if (Target.Dead)
-                FindTarget();
         }
 
         protected override void CompleteRangeAttack(IList<object> data)

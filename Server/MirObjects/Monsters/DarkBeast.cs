@@ -7,6 +7,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //Use Effect 1 if bleeding on secondary attack
     public class DarkBeast : MonsterObject
     {
         protected internal DarkBeast(MonsterInfo info)
@@ -48,7 +49,6 @@ namespace Server.MirObjects.Monsters
 
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility, true);
                 ActionList.Add(action);
-
             }
         }
 
@@ -63,7 +63,7 @@ namespace Server.MirObjects.Monsters
 
             if (target.Attacked(this, damage, defence) <= 0) return;
 
-            if (poison)
+            if (poison && Info.Effect == 1)
             {
                 PoisonTarget(target, 5, 5, PoisonType.Bleeding);
             }
