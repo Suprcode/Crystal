@@ -8,7 +8,6 @@ namespace Server.MirObjects.Monsters
 {
     public class ColdArcher : MonsterObject
     {
-        public long FearTime;
         public byte AttackRange = 8;
         public long BuffTime;
 
@@ -50,8 +49,13 @@ namespace Server.MirObjects.Monsters
                                     if (ob == this) continue;
                                     if (!ob.IsFriendlyTarget(this)) continue;
                                     if (ob.Hidden) continue;
+                                    if (ob.Dead) continue;
                                     Target = ob;
-                                    return;
+                                    break;
+                                case ObjectType.Player:
+                                    if (ob.Dead) continue;
+                                    Target = ob;
+                                    break;
                                 default:
                                     continue;
                             }
@@ -67,52 +71,92 @@ namespace Server.MirObjects.Monsters
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
 
-
-
             if (Target == null) return;
 
-            List<MapObject> targets = FindAllNearby(12, Target.CurrentLocation);
-
-            for (int i = 0; i < targets.Count; i++)
+            if (target.IsFriendlyTarget(this))
             {
-                target = targets[i];
-                if (target == null || !target.IsFriendlyTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) continue;
+                List<MapObject> targets = FindAllNearby(12, Target.CurrentLocation);
 
-                if (target.IsFriendlyTarget(this))
+                for (int i = 0; i < targets.Count; i++)
                 {
+                    target = targets[i];
+                    if (target == null || target.CurrentMap != CurrentMap || target.Node == null) continue;
+
+
                     BuffType type = BuffType.MonsterMACBuff;
 
                     var stats = new Stats
                     {
-                        [Stat.HP] = 1000
+                        [Stat.MaxMAC] = this.Stats[Stat.MaxMAC] + 100
                     };
 
-                    target.AddBuff(type, this, Settings.Second * 10, stats);
+                    target.AddBuff(type, this, Settings.Second * 10, stats, visible: true);
                     target.OperateTime = 0;
                 }
             }
+
+                if (!target.IsFriendlyTarget(this))
+                {
+                    target.Attacked(this, damage, defence);
+                }
+            
         }
 
         protected override void Attack()
         {
+            ActionTime = Envir.Time + 300;
+            AttackTime = Envir.Time + AttackSpeed;
+            ShockTime = 0;
+
+            Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
+
+            int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500;
+
             if (Target == null)
             {
                 return;
             }
 
-            if (!Target.IsFriendlyTarget(this))
+            if (Envir.Random.Next(3) != 0)
             {
-                Target = null;
-                return;
+                AttackPlayer();
+            }
+            else
+            {
+                if (Target.IsFriendlyTarget(this) && Envir.Time > BuffTime) // BUFF
+                {
+                    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
+
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, DefenceType.MACAgility);
+                    BuffTime = Envir.Time + 20000;
+                }
+                else
+                {
+                    AttackPlayer(); // Added so that if BuffTime is not up then the mob doesn't just stand there.
+                }
             }
 
-            int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500;
-
-            Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
-            //ActionList.Add(new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay)); //Time for projectiles should always be calculated through their distance
-            DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, DefenceType.MACAgility);
-            ActionTime = Envir.Time + 300;
-            AttackTime = Envir.Time + AttackSpeed;
+            if (Target.Dead)
+            {
+                FindTarget();
+            }
         }
+
+        private void AttackPlayer()
+        {
+            if (!Target.IsFriendlyTarget(this))
+            {
+                int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500;
+
+                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
+
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                if (damage == 0) return;
+
+                DelayedAction action2 = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.ACAgility);
+                ActionList.Add(action2);
+            }
+        }
+
     }
 }

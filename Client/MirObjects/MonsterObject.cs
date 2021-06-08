@@ -2076,9 +2076,6 @@ namespace Client.MirObjects
                                             case Monster.HornedArcher:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedArcher], 336 + (int)Direction * 3, 3, 3 * Frame.Interval, this, drawBehind: true));
                                                 break;
-                                            case Monster.ColdArcher:
-                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ColdArcher], 336 + (int)Direction * 3, 3, 3 * Frame.Interval, this, drawBehind: true));
-                                                break;
                                             case Monster.Jar2:
                                                 missile = CreateProjectile(688, Libraries.Monsters[(ushort)Monster.Jar2], true, 4, 50, 0);
 
@@ -2093,6 +2090,9 @@ namespace Client.MirObjects
                                                 break;
                                             case Monster.HardenRhino:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HardenRhino], 392, 5, 5 * Frame.Interval, this));
+                                                break;
+                                            case Monster.ColdArcher:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ColdArcher], 336 + (int)Direction * 4, 4, 4 * Frame.Interval, this, drawBehind: true));
                                                 break;
                                         }
                                         break;
@@ -2562,19 +2562,7 @@ namespace Client.MirObjects
                                                 {
                                                     ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedMage], 768, 9, 800, ob) { Blend = false });
                                                 }
-                                                break;
-                                            case Monster.ColdArcher:
-                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ColdArcher], 336 + 4 * (int)Direction, 4, 4 * Frame.Interval, this));
-                                                missile = CreateProjectile(368, Libraries.Monsters[(ushort)Monster.ColdArcher], true, 2, 100, 0);
-                                                if (missile.Target != null)
-                                                {
-                                                    missile.Complete += (o, e) =>
-                                                    {
-                                                        if (missile.Target.CurrentAction == MirAction.Dead) return;
-                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ColdArcher], 384, 10, 1000, missile.Target) { Blend = true });
-                                                    };
-                                                }
-                                                break;
+                                                break; 
                                             case Monster.HornedArcher:
                                                 missile = CreateProjectile(360, Libraries.Monsters[(ushort)Monster.HornedArcher], true, 3, 50, 0, direction16: true);
 
@@ -2597,7 +2585,7 @@ namespace Client.MirObjects
                                                 break;
                                         }
                                         break;
-                                    }
+                                    }//end of case 4
                                 case 5:
                                     switch (BaseImage)
                                     {
@@ -2684,6 +2672,26 @@ namespace Client.MirObjects
                                                     };
                                                 }
                                                 break;
+                                            //case Monster.ColdArcher:
+                                            //    missile = CreateProjectile(368, Libraries.Monsters[(ushort)Monster.ColdArcher], true, 2, 100, 0, direction16: false);
+                                            //    if (missile.Target != null)
+                                            //    {
+                                            //        missile.Complete += (o, e) =>
+                                            //        {
+                                            //            if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                            //            missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ColdArcher], 384, 10, 1000, missile.Target) { Blend = true });
+                                            //        };
+                                            //    }
+                                            //    break;
+
+                                            case Monster.ColdArcher:
+                                                //ob = MapControl.GetObject(TargetID);
+                                                //if (ob != null)
+                                                //{
+                                                    //Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ColdArcher], 384, 10, 1000, ob) /*{ Blend = false }*/);
+                                                    Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ColdArcher], 368 + (int)Direction * 2, 2, 2 * FrameInterval, this) /*{ Blend = false }*/);
+                                                //}
+                                                break;
                                         }
                                         break;
                                     }
@@ -2714,6 +2722,22 @@ namespace Client.MirObjects
                                                     SoundManager.PlaySound(BaseSound + 6);
                                                 }
                                                 break;
+                                        }
+                                        break;
+                                    }
+                                case 9:
+                                    {
+                                        switch (BaseImage)
+                                        {
+                                            case Monster.ColdArcher:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ColdArcher], 384, 10, 1000, ob) /*{ Blend = false }*/);
+                                                    //ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ColdArcher], 367 + (int)Direction * 2, 2, 2 * FrameInterval, ob) /*{ Blend = false }*/);
+                                                }
+                                                break;
+                                                
                                         }
                                         break;
                                     }
