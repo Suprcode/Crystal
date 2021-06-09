@@ -13,19 +13,6 @@ namespace Server.MirObjects.Monsters
         {
         }
 
-        protected override bool InAttackRange()
-        {
-            if (Target.CurrentMap != CurrentMap) return false;
-            if (Target.CurrentLocation == CurrentLocation) return false;
-
-            int x = Math.Abs(Target.CurrentLocation.X - CurrentLocation.X);
-            int y = Math.Abs(Target.CurrentLocation.Y - CurrentLocation.Y);
-
-            if (x > 2 || y > 2) return false;
-
-            return (x == 0) || (y == 0) || (x == y);
-        }
-
         protected override void Attack()
         {
             ShockTime = 0;
@@ -44,53 +31,20 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            if (!ranged)
+            if (Envir.Random.Next(6) != 0)
             {
                 base.Attack();
             }
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                LineAttack(2);
+                SinglePushAttack(Stats[Stat.MinDC], Stats[Stat.MaxDC],DefenceType.AC);
             }
 
             if (Target.Dead)
                 FindTarget();
-
         }
-        private void LineAttack(int distance)
-        {
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
-
-            for (int i = 1; i <= distance; i++)
-            {
-                Point target = Functions.PointMove(CurrentLocation, Direction, i);
-
-                if (target == Target.CurrentLocation)
-                    Target.Attacked(this, damage, DefenceType.MACAgility);
-                else
-                {
-                    if (!CurrentMap.ValidPoint(target)) continue;
-
-                    Cell cell = CurrentMap.GetCell(target);
-                    if (cell.Objects == null) continue;
-
-                    for (int o = 0; o < cell.Objects.Count; o++)
-                    {
-                        MapObject ob = cell.Objects[o];
-                        if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
-                        {
-                            if (!ob.IsAttackTarget(this)) continue;
-                            ob.Attacked(this, damage, DefenceType.MACAgility);
-                        }
-                        else continue;
-
-                        break;
-                    }
-                }
-            }
-        }
+        
 
         protected override void ProcessTarget()
         {
