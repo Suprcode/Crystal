@@ -224,6 +224,7 @@ namespace Client.MirObjects
                 case Monster.ZumaTaurus:
                 case Monster.DemonGuard:
                 case Monster.Turtlegrass:
+                case Monster.ManTree:
                 case Monster.EarthGolem:
                     Stoned = info.Extra;
                     break;
@@ -1948,6 +1949,9 @@ namespace Client.MirObjects
                                         case Monster.FrozenAxeman:
                                             Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenAxeman], 588 + (int)Direction * 3, 3, 300, this));
                                             break;
+                                        case Monster.ManTree:
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ManTree], 504 + (int)Direction * 2, 2, 200, this));
+                                            break;
                                     }
                                     break;
                                 case 5:
@@ -1955,6 +1959,11 @@ namespace Client.MirObjects
                                     {
                                         case Monster.WhiteMammoth:
                                             Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WhiteMammoth], 376, 5, Frame.Count * Frame.Interval, this));
+                                            break;
+                                        case Monster.ManTree:
+                                            Point source = Functions.PointMove(CurrentLocation, Direction, 1);
+                                            Effect ef = new Effect(Libraries.Monsters[(ushort)Monster.ManTree], 520, 8, 800, source, CMain.Time, drawBehind: true);
+                                            MapControl.Effects.Add(ef);
                                             break;
                                     }
                                     break;
@@ -2536,13 +2545,6 @@ namespace Client.MirObjects
                                                         if (missile.Target.CurrentAction == MirAction.Dead) return;
                                                         missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AvengingWarrior], 392, 7, 700, missile.Target) { Blend = true });
                                                     };
-                                                }
-                                                break;
-                                            case Monster.ManTree:
-                                                ob = MapControl.GetObject(TargetID);
-                                                if (ob != null)
-                                                {
-                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ManTree], 520, 8, 1000, ob));
                                                 }
                                                 break;
                                             case Monster.ClawBeast:
@@ -3210,6 +3212,7 @@ namespace Client.MirObjects
                 case Monster.ZumaTaurus:
                 case Monster.DemonGuard:
                 case Monster.Turtlegrass:
+                case Monster.ManTree:
                 case Monster.EarthGolem:
                     if (Stoned) return;
                     break;
@@ -4673,7 +4676,33 @@ namespace Client.MirObjects
                     }
                     break;
 
-            } //END OF DRAW EFFECTS
+                    // DOESN'T LINE UP
+                    // TODO - MANTREE EFFECT - THINK THIS IS AN EFFECT ON THE MOBS FACE AND IS ONLY VISIBLE WHEN MOB'S FACE IS VISIBLE?
+                //case Monster.ManTree:
+                //    {
+                //        switch (CurrentAction)
+                //        {
+                //            case MirAction.Standing:
+                //                Libraries.Monsters[(ushort)Monster.ManTree].DrawBlend((528 + FrameIndex + (int)Direction * 4), DrawLocation, Color.White, true);
+                //                break;
+                //            case MirAction.Walking:
+                //                Libraries.Monsters[(ushort)Monster.ManTree].DrawBlend((560 + FrameIndex + (int)Direction * 6), DrawLocation, Color.White, true);
+                //                break;
+                //            case MirAction.Attack1:
+                //                Libraries.Monsters[(ushort)Monster.ManTree].DrawBlend((608 + FrameIndex + (int)Direction * 8), DrawLocation, Color.White, true);
+                //                break;
+                //            case MirAction.Attack2:
+                //                Libraries.Monsters[(ushort)Monster.ManTree].DrawBlend((672 + FrameIndex + (int)Direction * 10), DrawLocation, Color.White, true);
+                //                break;
+                //            case MirAction.Attack3:
+                //                Libraries.Monsters[(ushort)Monster.ManTree].DrawBlend((752 + FrameIndex + (int)Direction * 10), DrawLocation, Color.White, true);
+                //                break;
+
+                //        }
+                //        break;
+                //    }
+
+                        } //END OF DRAW EFFECTS
         }
 
         public override void DrawName()
