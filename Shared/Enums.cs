@@ -382,7 +382,7 @@ public enum Monster : ushort
     DarkCrossbowOma = 192,
     DarkWingedOma = 193,
     BoneWhoo = 194,
-    DarkSpider = 195,
+    DarkSpider = 195, // USE AI 8
     ViscusWorm = 196,
     ViscusCrawler = 197,
     CrawlerLave = 198,

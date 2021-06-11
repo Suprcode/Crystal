@@ -381,6 +381,9 @@ namespace Server.MirObjects
 
                 //case 171: TODO - HornedCommander
 
+                case 172:
+                    return new WaterDragon(info);
+
 
 
 
@@ -391,11 +394,11 @@ namespace Server.MirObjects
                     return new ManTree(info);
                 case 215:
                     return new Bear(info);
-
                 case 214:
                     return new FrozenFighter(info);
                 case 216:
                     return new FrozenKnight(info);
+
                 case 217:
                     return new IcePhantom(info);
                 case 218:

@@ -59,7 +59,7 @@ namespace Server.MirObjects.Monsters
             if (Envir.Random.Next(3) > 0)
             {
                 if (InAttackRange())
-                    Attack(); //TODO - NEEDS DELAY ADDING
+                    Attack();
             }
             else RangeAttack();
 
@@ -68,6 +68,33 @@ namespace Server.MirObjects.Monsters
                 Target = null;
                 return;
             }
+        }
+
+        protected override void Attack()
+        {
+
+            if (!Target.IsAttackTarget(this))
+            {
+                Target = null;
+                return;
+            }
+
+            ShockTime = 0;
+
+            Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
+
+            ActionTime = Envir.Time + 300;
+            AttackTime = Envir.Time + AttackSpeed;
+
+
+            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+            if (damage == 0) return;
+
+            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 600, Target, damage, DefenceType.ACAgility, false);
+            ActionList.Add(action);
+
         }
 
         public void RangeAttack()
@@ -92,7 +119,7 @@ namespace Server.MirObjects.Monsters
             {
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
                 if (damage == 0) return;
-                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
+                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 100 + delay, Target, damage, DefenceType.MACAgility);
                 ActionList.Add(action);
             }
             else
@@ -100,7 +127,7 @@ namespace Server.MirObjects.Monsters
 
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
                 if (damage == 0) return;
-                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage * 3 / 2, DefenceType.MACAgility);
+                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 250 + delay, Target, damage * 3 / 2, DefenceType.MACAgility);
                 ActionList.Add(action);
             }
         }
