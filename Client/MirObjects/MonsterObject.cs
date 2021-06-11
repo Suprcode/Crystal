@@ -1274,7 +1274,7 @@ namespace Client.MirObjects
                                 case Monster.DemonGuard:
                                 case Monster.EarthGolem:
                                 case Monster.Turtlegrass:
-                                case Monster.ManTree:
+                                case Monster.ManTree:                                
                                     Stoned = false;
                                     break;
                                 case Monster.Shinsu:
@@ -1320,6 +1320,7 @@ namespace Client.MirObjects
                             switch (BaseImage)
                             {
                                 case Monster.CannibalPlant:
+                                case Monster.WaterDragon:
                                 case Monster.CreeperPlant:
                                 case Monster.EvilCentipede:
                                 case Monster.DigOutZombie:
@@ -1553,6 +1554,11 @@ namespace Client.MirObjects
                                             case Monster.FlamingMutant:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlamingMutant], 304, 6, 6 * Frame.Interval, this));
                                                 break;
+                                            case Monster.WaterDragon:
+                                                Point source2 = Functions.PointMove(CurrentLocation, Direction, 1);
+                                                Effect ef2 = new Effect(Libraries.Monsters[(ushort)Monster.WaterDragon], 905, 9, 900, source2, CMain.Time + 300);
+                                                MapControl.Effects.Add(ef2); 
+                                                break;
                                         }
                                     }
                                     break;
@@ -1577,6 +1583,12 @@ namespace Client.MirObjects
                                                 Effect flyingStatueEffect1 = new Effect(Libraries.Monsters[(ushort)Monster.FlyingStatue], 344, 8, 800, flyingStatueSource1, CMain.Time);
                                                 MapControl.Effects.Add(flyingStatueEffect1);
                                                 break;
+                                            case Monster.FrozenMagician:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenMagician], 840 + (int)Direction * 4, 4, 400, this));
+                                                Point source1 = Functions.PointMove(CurrentLocation, Direction, 1);
+                                                Effect ef = new Effect(Libraries.Monsters[(ushort)Monster.FrozenMagician], 872, 6, 600, source1, CMain.Time + 300);
+                                                MapControl.Effects.Add(ef);
+                                                break;
                                         }
                                         break;
                                     }
@@ -1588,12 +1600,6 @@ namespace Client.MirObjects
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenMiner], 432 + (int)Direction * 3, 3, 300, this));
                                                 Point source = Functions.PointMove(CurrentLocation, Direction, 1);
                                                 Effect ef = new Effect(Libraries.Monsters[(ushort)Monster.FrozenMiner], 456, 6, 600, source, CMain.Time + 300);
-                                                MapControl.Effects.Add(ef);
-                                                break;
-                                            case Monster.FrozenMagician:
-                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenMagician], 840 + (int)Direction * 4, 4, 400, this));
-                                                source = Functions.PointMove(CurrentLocation, Direction, 1);
-                                                ef = new Effect(Libraries.Monsters[(ushort)Monster.FrozenMagician], 872, 6, 600, source, CMain.Time + 300);
                                                 MapControl.Effects.Add(ef);
                                                 break;
                                             case Monster.SnowYeti:
@@ -1951,6 +1957,11 @@ namespace Client.MirObjects
                                             break;
                                         case Monster.ManTree:
                                             Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ManTree], 504 + (int)Direction * 2, 2, 200, this));
+                                            break;
+                                        case Monster.DragonWarrior:
+                                            Point source = Functions.PointMove(CurrentLocation, Direction, 1);
+                                            Effect effect = new Effect(Libraries.Monsters[(ushort)Monster.DragonWarrior], 664, 6, 600, source, CMain.Time + 300);
+                                            MapControl.Effects.Add(effect); 
                                             break;
                                     }
                                     break;
@@ -2603,6 +2614,30 @@ namespace Client.MirObjects
                                                     SoundManager.PlaySound(BaseSound + 6);
                                                 }
                                                 break;
+                                            case Monster.WaterDragon:
+                                                missile = CreateProjectile(800, Libraries.Monsters[(ushort)Monster.WaterDragon], true, 6, 60, 0, direction16: true);
+
+                                                if (missile.Target != null)
+                                                {
+                                                    missile.Complete += (o, e) =>
+                                                    {
+                                                        if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WaterDragon], 896, 9, 900, missile.Target) { Blend = true });
+                                                    };
+                                                }
+                                                break;
+                                            case Monster.DarkSpirit:
+                                                missile = CreateProjectile(512, Libraries.Monsters[(ushort)Monster.DarkSpirit], true, 6, 60, 0);
+
+                                                if (missile.Target != null)
+                                                {
+                                                    missile.Complete += (o, e) =>
+                                                    {
+                                                        if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkSpirit], 608, 10, 1000, missile.Target));
+                                                    };
+                                                }
+                                                break;
                                         }
                                         break;
                                     }//end of case 4
@@ -3199,6 +3234,7 @@ namespace Client.MirObjects
             switch (BaseImage)
             {
                 case Monster.CannibalPlant:
+                case Monster.WaterDragon:
                 case Monster.EvilCentipede:
                 case Monster.CreeperPlant:
                     return;
@@ -4556,7 +4592,7 @@ namespace Client.MirObjects
                             Libraries.Monsters[(ushort)Monster.IcePhantom].DrawBlend(536 + FrameIndex + (int)Direction * 3, DrawLocation, Color.White, true);
                             break;
                         case MirAction.Die:
-                            Libraries.Monsters[(ushort)Monster.IcePhantom].DrawBlend(560 + FrameIndex + (int)Direction * 10, DrawLocation, Color.White, true);                            
+                            Libraries.Monsters[(ushort)Monster.IcePhantom].DrawBlend(560 + FrameIndex + (int)Direction * 10, DrawLocation, Color.White, true);
                             break;
                     }
                     break;
@@ -4668,41 +4704,74 @@ namespace Client.MirObjects
                         break;
                     }
                 case Monster.FloatingRock:
-                    switch (CurrentAction)
                     {
-                        case MirAction.AttackRange1:
-                            Libraries.Monsters[(ushort)Monster.FloatingRock].DrawBlend(215 + FrameIndex + 10, DrawLocation, Color.White, true);
-                            break;
+                        switch (CurrentAction)
+                        {
+                            case MirAction.AttackRange1:
+                                Libraries.Monsters[(ushort)Monster.FloatingRock].DrawBlend(215 + FrameIndex + 10, DrawLocation, Color.White, true);
+                                break;
+                        }
+                        break;
                     }
-                    break;
+                case Monster.FrostTiger:
+                    {
+                        if (Effect == 1)
+                            switch (CurrentAction)
+                            {
+                                case MirAction.Standing:
+                                    Libraries.Monsters[(ushort)Monster.ManTree].DrawBlend((528 + FrameIndex + (int)Direction * 4), DrawLocation, Color.Gray, true);
+                                    break;
+                                case MirAction.Walking:
+                                    Libraries.Monsters[(ushort)Monster.ManTree].DrawBlend((560 + FrameIndex + (int)Direction * 6), DrawLocation, Color.Gray, true);
+                                    break;
+                                case MirAction.Attack1:
+                                    Libraries.Monsters[(ushort)Monster.ManTree].DrawBlend((608 + FrameIndex + (int)Direction * 6), DrawLocation, Color.Gray, true);
+                                    break;
+                                case MirAction.Struck:
+                                    Libraries.Monsters[(ushort)Monster.ManTree].DrawBlend((656 + FrameIndex + (int)Direction * 2), DrawLocation, Color.Gray, true);
+                                    break;
+                                case MirAction.Die:
+                                    Libraries.Monsters[(ushort)Monster.ManTree].DrawBlend((672 + FrameIndex + (int)Direction * 10), DrawLocation, Color.Gray, true);
+                                    break;
+                                case MirAction.AttackRange1:
+                                    Libraries.Monsters[(ushort)Monster.ManTree].DrawBlend((752 + FrameIndex + (int)Direction * 6), DrawLocation, Color.Gray, true);
+                                    break;
+                                case MirAction.SitDown:
+                                    Libraries.Monsters[(ushort)Monster.ManTree].DrawBlend((800 + FrameIndex + (int)Direction * 4), DrawLocation, Color.Gray, true);
+                                    break;
+                            }
+                        break;
+                    }
+                case Monster.WaterDragon:
+                    {
+                        switch (CurrentAction)
+                        {
+                            case MirAction.Show:
+                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(400 + FrameIndex + 8, DrawLocation, Color.White, true);
+                                break;
+                            case MirAction.Standing:
+                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(464 + FrameIndex + 6, DrawLocation, Color.White, true);
+                                break;
+                            case MirAction.AttackRange1:
+                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(512 + FrameIndex + 8, DrawLocation, Color.White, true);
+                                break;
+                            case MirAction.Attack1:
+                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(576 + FrameIndex + 10, DrawLocation, Color.White, true);
+                                break;
+                            case MirAction.Struck:
+                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(656 + FrameIndex + 3, DrawLocation, Color.White, true);
+                                break;
+                            case MirAction.Die:
+                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(680 + FrameIndex + 15, DrawLocation, Color.White, true);
+                                break;
+                            case MirAction.Hide:
+                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(400 + FrameIndex + 8, DrawLocation, Color.White, true); //needs reversing
+                                break;
+                        }
+                        break;
+                    }
 
-                    // DOESN'T LINE UP
-                    // TODO - MANTREE EFFECT - THINK THIS IS AN EFFECT ON THE MOBS FACE AND IS ONLY VISIBLE WHEN MOB'S FACE IS VISIBLE?
-                //case Monster.ManTree:
-                //    {
-                //        switch (CurrentAction)
-                //        {
-                //            case MirAction.Standing:
-                //                Libraries.Monsters[(ushort)Monster.ManTree].DrawBlend((528 + FrameIndex + (int)Direction * 4), DrawLocation, Color.White, true);
-                //                break;
-                //            case MirAction.Walking:
-                //                Libraries.Monsters[(ushort)Monster.ManTree].DrawBlend((560 + FrameIndex + (int)Direction * 6), DrawLocation, Color.White, true);
-                //                break;
-                //            case MirAction.Attack1:
-                //                Libraries.Monsters[(ushort)Monster.ManTree].DrawBlend((608 + FrameIndex + (int)Direction * 8), DrawLocation, Color.White, true);
-                //                break;
-                //            case MirAction.Attack2:
-                //                Libraries.Monsters[(ushort)Monster.ManTree].DrawBlend((672 + FrameIndex + (int)Direction * 10), DrawLocation, Color.White, true);
-                //                break;
-                //            case MirAction.Attack3:
-                //                Libraries.Monsters[(ushort)Monster.ManTree].DrawBlend((752 + FrameIndex + (int)Direction * 10), DrawLocation, Color.White, true);
-                //                break;
-
-                //        }
-                //        break;
-                //    }
-
-                        } //END OF DRAW EFFECTS
+            } //END OF DRAW EFFECTS
         }
 
         public override void DrawName()
