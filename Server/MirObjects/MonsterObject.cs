@@ -331,11 +331,10 @@ namespace Server.MirObjects
                     return new OmaMage(info);
                 case 148:
                     return new OmaWitchDoctor(info);
-
-                //149: TODO - PowerUpBead(s)
-
-                //150: TODO - DarkOmaKing
-
+                case 149:
+                    return new PowerBead(info); //Effect 0/1/2
+                case 150:
+                    return new DarkOmaKing(info);
                 case 151:
                     return new CaveStatue(info);
                 case 152:
@@ -367,7 +366,7 @@ namespace Server.MirObjects
                 case 164:
                     return new HornedArcher(info); //TODO
                 case 165:
-                    return new ColdArcher(info); //TODO (See video, Arrow fires up)
+                    return new ColdArcher(info);
 
                 //case 166: TODO - HornedWarrior
 
@@ -626,6 +625,7 @@ namespace Server.MirObjects
         public override void Spawned()
         {
             ActionTime = Envir.Time + 2000;
+
             if (Info.HasSpawnScript && (Envir.MonsterNPC != null))
             {
                 Envir.MonsterNPC.Call(this,string.Format("[@_SPAWN({0})]",Info.Index));
@@ -1940,7 +1940,7 @@ namespace Server.MirObjects
             return false;
         }
 
-        protected List<MapObject> FindAllFriends(int dist, Point location, bool needSight = true)
+        protected List<MapObject> FindAllFriends(int dist, Point location, bool needSight = true, bool ownAI = true)
         {
             List<MapObject> targets = new List<MapObject>();
             for (int d = 0; d <= dist; d++)
@@ -1968,6 +1968,8 @@ namespace Server.MirObjects
                             {
                                 case ObjectType.Monster:
                                 case ObjectType.Player:
+                                    if (ob.Dead) continue;
+                                    if (!ownAI && ob.Race == ObjectType.Monster && ((MonsterObject)ob).Info.AI == Info.AI) continue;
                                     if (!ob.IsFriendlyTarget(this)) continue;
                                     if (ob.Master != Master) continue;
                                     if (ob.Hidden && (!CoolEye || Level < ob.Level) && needSight) continue;
@@ -2312,6 +2314,7 @@ namespace Server.MirObjects
             ChangeHP(armour - damage);
             return damage - armour;
         }
+
         public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
         {
             if (Target == null && attacker.IsAttackTarget(this))
@@ -3324,40 +3327,46 @@ namespace Server.MirObjects
             }
         }
 
-        protected virtual void FullmoonAttack(int delay = 500, DefenceType defenceType = DefenceType.ACAgility, int pushDistance = -1)
+        protected virtual void FullmoonAttack(int delay = 500, DefenceType defenceType = DefenceType.ACAgility, int pushDistance = -1, int distance = 1)
         {
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
 
             MirDirection dir = Direction;
 
-            for (int i = 0; i < 8; i++)
+            bool pushed = false;
+
+            for (int j = 1; j <= distance; j++)
             {
-                dir = Functions.NextDir(dir);
-                Point point = Functions.PointMove(CurrentLocation, dir, 1);
-
-                if (!CurrentMap.ValidPoint(point)) continue;
-
-                Cell cell = CurrentMap.GetCell(point);
-
-                if (cell.Objects == null) continue;
-
-                for (int o = 0; o < cell.Objects.Count; o++)
+                for (int i = 0; i < 8; i++)
                 {
-                    MapObject ob = cell.Objects[o];
-                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
-                    if (!ob.IsAttackTarget(this)) continue;
+                    dir = Functions.NextDir(dir);
+                    Point point = Functions.PointMove(CurrentLocation, dir, j);
 
-                    if (pushDistance > 0)
+                    if (!CurrentMap.ValidPoint(point)) continue;
+
+                    Cell cell = CurrentMap.GetCell(point);
+
+                    if (cell.Objects == null) continue;
+
+                    for (int o = 0; o < cell.Objects.Count; o++)
                     {
-                        ob.Pushed(this, Direction, pushDistance);
-                    }
+                        MapObject ob = cell.Objects[o];
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
+                        if (!ob.IsAttackTarget(this)) continue;
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
-                    ActionList.Add(action);
-                    break;
+                        if (pushDistance > 0 && !pushed)
+                        {
+                            ob.Pushed(this, Direction, pushDistance);
+                            pushed = true;
+                        }
+
+                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
+                        ActionList.Add(action);
+                        break;
+                    }
                 }
-            }
+            }     
         }
     
         protected virtual void ProjectileAttack(int minAttackStat, int maxAttackStat, DefenceType type = DefenceType.ACAgility, int additionalDelay = 500)

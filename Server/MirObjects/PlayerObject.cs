@@ -8936,17 +8936,23 @@ namespace Server.MirObjects
                     if (target == null || !target.IsFriendlyTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
                     if (Envir.Random.Next(4) > magic.Level || target.PoisonList.Count == 0) return;
 
-                    target.ExplosionInflictedTime = 0;
-                    target.ExplosionInflictedStage = 0;
-
                     target.RemoveBuff(BuffType.Curse);
+
+                    if (target.PoisonList.Any(x => x.PType == PoisonType.DelayedExplosion))
+                    {
+                        target.ExplosionInflictedTime = 0;
+                        target.ExplosionInflictedStage = 0;
+
+                        if (target.ObjectID == ObjectID)
+                        {
+                            Enqueue(new S.RemoveDelayedExplosion { ObjectID = target.ObjectID });
+                        }
+
+                        target.Broadcast(new S.RemoveDelayedExplosion { ObjectID = target.ObjectID });
+                    }
 
                     target.PoisonList.Clear();
                     target.OperateTime = 0;
-
-                    if (target.ObjectID == ObjectID)
-                        Enqueue(new S.RemoveDelayedExplosion { ObjectID = target.ObjectID });
-                    target.Broadcast(new S.RemoveDelayedExplosion { ObjectID = target.ObjectID });
 
                     LevelMagic(magic);
                     break;

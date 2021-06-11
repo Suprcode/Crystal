@@ -211,6 +211,9 @@ namespace Client.MirObjects
                 case Monster.HellKnight2:
                 case Monster.HellKnight3:
                 case Monster.HellKnight4:
+                case Monster.LightningBead:
+                case Monster.HealingBead:
+                case Monster.PowerUpBead:
                     if (!info.Extra) ActionFeed.Add(new QueuedAction { Action = MirAction.Appear, Direction = Direction, Location = CurrentLocation });
                     break;
                 case Monster.FrostTiger:
@@ -840,6 +843,12 @@ namespace Client.MirObjects
                         break;
                     case MirAction.Attack4:
                         PlayFourthAttackSound();
+                        switch (BaseImage)
+                        {
+                            case Monster.DarkOmaKing:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkOmaKing], 1702, 13, 13 * Frame.Interval, this));
+                                break;
+                        }
                         break;
                     case MirAction.AttackRange1:
                         PlayRangeSound();
@@ -1552,6 +1561,9 @@ namespace Client.MirObjects
                                             case Monster.FlamingMutant:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlamingMutant], 304, 6, 6 * Frame.Interval, this));
                                                 break;
+                                            case Monster.DarkOmaKing:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkOmaKing], 1568 + (int)Direction * 4, 4, 4 * Frame.Interval, this));
+                                                break;
                                         }
                                     }
                                     break;
@@ -1685,6 +1697,11 @@ namespace Client.MirObjects
                                                 break;
                                             case Monster.CannibalTentacles:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.CannibalTentacles], 400 + (int)Direction * 9, 9, 9 * Frame.Interval, this));
+                                                break;
+                                            case Monster.DarkOmaKing:
+                                                SoundManager.PlaySound(BaseSound + 6, false, 800);
+                                                SoundManager.PlaySound(BaseSound + 6, false, 1500);
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkOmaKing], 1600, 30, 30 * Frame.Interval, this));
                                                 break;
                                         }
                                     }
@@ -2538,6 +2555,34 @@ namespace Client.MirObjects
                                                     };
                                                 }
                                                 break;
+                                            case Monster.LightningBead:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.LightningBead], 65, 12, 1200, ob));
+                                                }
+                                                break;
+                                            case Monster.HealingBead:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HealingBead], 61, 11, 1100, ob));
+                                                }
+                                                break;
+                                            case Monster.PowerUpBead:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.PowerUpBead], 64, 6, 600, ob));
+                                                }
+                                                break;
+                                            case Monster.DarkOmaKing:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkOmaKing], 1715, 13, 1300, ob.CurrentLocation));
+                                                }
+                                                break;
                                             case Monster.ManTree:
                                                 ob = MapControl.GetObject(TargetID);
                                                 if (ob != null)
@@ -3157,6 +3202,9 @@ namespace Client.MirObjects
                 case Monster.HellKnight2:
                 case Monster.HellKnight3:
                 case Monster.HellKnight4:
+                case Monster.LightningBead:
+                case Monster.HealingBead:
+                case Monster.PowerUpBead:
                     SoundManager.PlaySound(BaseSound + 0);
                     return;
                 case Monster.BoneFamiliar:
@@ -3472,6 +3520,7 @@ namespace Client.MirObjects
                 case Monster.FlamingMutant:
                 case Monster.KingHydrax:
                 case Monster.DarkCaptain:
+                case Monster.DarkOmaKing:
                     SoundManager.PlaySound(BaseSound + 5);
                     return;
                 case Monster.AncientBringer:
@@ -4664,6 +4713,98 @@ namespace Client.MirObjects
                         }
                         break;
                     }
+                case Monster.LightningBead:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Standing:
+                            Libraries.Monsters[(ushort)Monster.LightningBead].DrawBlend(30 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.AttackRange1:
+                            Libraries.Monsters[(ushort)Monster.LightningBead].DrawBlend(37 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Struck:
+                            Libraries.Monsters[(ushort)Monster.LightningBead].DrawBlend(43 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Die:
+                            Libraries.Monsters[(ushort)Monster.LightningBead].DrawBlend(50 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Appear:
+                            Libraries.Monsters[(ushort)Monster.LightningBead].DrawBlend(58 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.HealingBead:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Standing:
+                            Libraries.Monsters[(ushort)Monster.HealingBead].DrawBlend(30 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.AttackRange1:
+                            Libraries.Monsters[(ushort)Monster.HealingBead].DrawBlend(37 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Struck:
+                            Libraries.Monsters[(ushort)Monster.HealingBead].DrawBlend(43 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Die:
+                            Libraries.Monsters[(ushort)Monster.HealingBead].DrawBlend(46 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Appear:
+                            Libraries.Monsters[(ushort)Monster.HealingBead].DrawBlend(54 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.PowerUpBead:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Standing:
+                            Libraries.Monsters[(ushort)Monster.PowerUpBead].DrawBlend(30 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.AttackRange1:
+                            Libraries.Monsters[(ushort)Monster.PowerUpBead].DrawBlend(37 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Struck:
+                            Libraries.Monsters[(ushort)Monster.PowerUpBead].DrawBlend(43 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Die:
+                            Libraries.Monsters[(ushort)Monster.PowerUpBead].DrawBlend(49 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Appear:
+                            Libraries.Monsters[(ushort)Monster.PowerUpBead].DrawBlend(58 + FrameIndex, DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
+                case Monster.DarkOmaKing:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Standing:
+                            Libraries.Monsters[(ushort)Monster.DarkOmaKing].DrawBlend((784 + FrameIndex + (int)Direction * 10), DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Walking:
+                            Libraries.Monsters[(ushort)Monster.DarkOmaKing].DrawBlend((864 + FrameIndex + (int)Direction * 6), DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack1:
+                            Libraries.Monsters[(ushort)Monster.DarkOmaKing].DrawBlend((912 + FrameIndex + (int)Direction * 9), DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack2:
+                            Libraries.Monsters[(ushort)Monster.DarkOmaKing].DrawBlend((984 + FrameIndex + (int)Direction * 34), DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack3:
+                            Libraries.Monsters[(ushort)Monster.DarkOmaKing].DrawBlend((1256 + FrameIndex + (int)Direction * 8), DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Attack4:
+                            Libraries.Monsters[(ushort)Monster.DarkOmaKing].DrawBlend((1320 + FrameIndex + (int)Direction * 9), DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.AttackRange1:
+                            Libraries.Monsters[(ushort)Monster.DarkOmaKing].DrawBlend((1392 + FrameIndex + (int)Direction * 9), DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Struck:
+                            Libraries.Monsters[(ushort)Monster.DarkOmaKing].DrawBlend((1464 + FrameIndex + (int)Direction * 3), DrawLocation, Color.White, true);
+                            break;
+                        case MirAction.Die:
+                            Libraries.Monsters[(ushort)Monster.DarkOmaKing].DrawBlend((1488 + FrameIndex + (int)Direction * 10), DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
                 case Monster.FloatingRock:
                     switch (CurrentAction)
                     {

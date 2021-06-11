@@ -665,6 +665,7 @@ namespace Client.MirScenes
                             MiniMapDialog.Show();
                             CharacterDuraPanel.Show();
                             DuraStatusPanel.Show();
+                            BuffsDialog.Show();
                         }
                         else
                         {
@@ -675,6 +676,7 @@ namespace Client.MirScenes
                             MiniMapDialog.Hide();
                             CharacterDuraPanel.Hide();
                             DuraStatusPanel.Hide();
+                            BuffsDialog.Hide();
                         }
                         break;
                     case KeybindOptions.DropView:
@@ -1067,6 +1069,8 @@ namespace Client.MirScenes
             ProcessOuput();
 
             UpdateMouseCursor();
+
+            SoundManager.ProcessDelayedSounds();
         }
 
         public void DialogProcess()

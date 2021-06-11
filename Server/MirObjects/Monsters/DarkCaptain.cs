@@ -70,6 +70,18 @@ namespace Server.MirObjects.Monsters
                 _OrbTime = Envir.Time + 30000 + Envir.Random.Next(0, 10000);
 
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+
+                var attempts = 4;
+                var distance = 4;
+
+                for (int i = 0; i < attempts; i++)
+                {
+                    var location = new Point(CurrentLocation.X + Envir.Random.Next(-distance, distance + 1),
+                                         CurrentLocation.Y + Envir.Random.Next(-distance, distance + 1));
+
+                    if (PowerBead.SpawnRandom(this, location)) break;
+                }           
+
                 return;
             }
 
@@ -144,6 +156,20 @@ namespace Server.MirObjects.Monsters
             Direction = Functions.DirectionFromPoint(location, Target.CurrentLocation);
 
             Teleport(CurrentMap, location, true, Info.Effect);
+        }
+
+        public override void Die()
+        {
+            base.Die();
+
+            //Kill Minions
+            for (int i = SlaveList.Count - 1; i >= 0; i--)
+            {
+                if (!SlaveList[i].Dead && SlaveList[i].Node != null)
+                {
+                    SlaveList[i].Die();
+                }
+            }
         }
     }
 }

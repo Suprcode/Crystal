@@ -232,6 +232,15 @@ namespace Client.MirObjects
                     Repeat = false;
                     MirSounds.SoundManager.PlaySound(8303);
                     break;
+                case Spell.DarkOmaKingNuke:
+                    BodyLibrary = Libraries.Monsters[(ushort)Monster.DarkOmaKing];
+                    DrawFrame = 1630 + (int)Direction * 9;
+                    FrameInterval = 100;
+                    FrameCount = 9;
+                    Blend = true;
+                    Repeat = false;
+                    MirSounds.SoundManager.PlaySound(((ushort)Monster.DarkOmaKing * 10) + 9);
+                    break;
             }
 
             NextMotion = CMain.Time + FrameInterval;

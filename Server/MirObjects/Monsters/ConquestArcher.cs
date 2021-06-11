@@ -15,7 +15,10 @@ namespace Server.MirObjects.Monsters
             get { return Route.Count > 0 && !Dead && Envir.Time > MoveTime && Envir.Time > ActionTime && Envir.Time > ShockTime; }
         }
 
-        protected internal ConquestArcher(MonsterInfo info) : base(info) { }
+        protected internal ConquestArcher(MonsterInfo info) 
+            : base(info) 
+        { 
+        }
 
         public override bool IsAttackTarget(MonsterObject attacker) { return false; }
 

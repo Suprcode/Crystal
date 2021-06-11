@@ -109,13 +109,13 @@ namespace Server.MirObjects.Monsters
 
             if (target.IsFriendlyTarget(this))
             {
-                var stats = new Stats
-                {
-                    [Stat.MaxMAC] = 100
-                };
+                var friends = FindAllFriends(4, target.CurrentLocation);
 
-                target.AddBuff(BuffType.ColdArcherMACBuff, this, Settings.Second * 10, stats, visible: true);
-                target.OperateTime = 0;
+                for (int i = 0; i < friends.Count; i++)
+                {
+                    friends[i].AddBuff(BuffType.ColdArcherBuff, this, Settings.Second * 10, new Stats { [Stat.MaxMAC] = 100 }, visible: true);
+                    friends[i].OperateTime = 0;
+                }
             }
             else if (target.IsAttackTarget(this))
             {

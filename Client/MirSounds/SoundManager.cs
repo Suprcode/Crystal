@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using SlimDX.DirectSound;
 
 namespace Client.MirSounds
@@ -9,6 +10,8 @@ namespace Client.MirSounds
         public static DirectSound Device;
         private static readonly List<ISoundLibrary> Sounds = new List<ISoundLibrary>();
         private static readonly Dictionary<int, string> IndexList = new Dictionary<int, string>();
+
+        private static readonly List<KeyValuePair<long, int>> DelayList = new List<KeyValuePair<long, int>>();
 
         public static ISoundLibrary Music;
 
@@ -34,6 +37,21 @@ namespace Client.MirSounds
                 _musicVol = value;
             }
         }
+
+        public static void ProcessDelayedSounds()
+        {
+            if (DelayList.Count == 0) return;
+
+            var sounds = DelayList.Where(x => x.Key <= CMain.Time).ToList();
+
+            foreach (var sound in sounds)
+            {
+                DelayList.Remove(sound);
+
+                PlaySound(sound.Value);
+            }
+        }
+
 
         public static void Create()
         {
@@ -78,8 +96,14 @@ namespace Client.MirSounds
             }
         }
 
-        public static void PlaySound(int index, bool loop = false)
+        public static void PlaySound(int index, bool loop = false, int delay = 0)
         {
+            if (delay > 0)
+            {
+                DelayList.Add(new KeyValuePair<long, int>(CMain.Time + delay, index));
+                return;
+            }
+
             if (Device == null) return;
             
             if (_vol <= -3000) return;

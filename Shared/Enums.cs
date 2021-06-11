@@ -1218,7 +1218,8 @@ public enum Spell : byte
     TreeQueenMassRoots = 210,
     TreeQueenGroundRoots = 211,
     TucsonGeneralRock = 212,
-    FlyingStatueIceTornado = 213
+    FlyingStatueIceTornado = 213,
+    DarkOmaKingNuke = 214
 }
 
 public enum SpellEffect : byte
@@ -1291,9 +1292,10 @@ public enum BuffType : byte
     ElementalBarrier,
 
     //monster
-    ColdArcherMACBuff = 50,
+    ColdArcherBuff = 50,
     GeneralMeowMeowShield,
     RhinoPriestDebuff,
+    PowerBeadBuff,
 
     //special
     GameMaster = 100,
