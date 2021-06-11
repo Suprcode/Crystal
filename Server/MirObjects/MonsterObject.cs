@@ -1444,12 +1444,9 @@ namespace Server.MirObjects
             {
                 ProcessStacking();
 
-                if (!Stacking || Settings.MonsterProcessWhenStacked)
-                {
-                    ProcessSearch();
-                    ProcessRoam();
-                    ProcessTarget();
-                }
+                ProcessSearch();
+                ProcessRoam();
+                ProcessTarget();
             }
         }
 

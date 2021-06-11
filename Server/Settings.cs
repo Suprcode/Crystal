@@ -47,7 +47,6 @@ namespace Server
         public static bool EnforceDBChecks = true;
 
         public static bool MonsterProcessWhenAlone = false;
-        public static bool MonsterProcessWhenStacked = false;
 
         public static string DefaultNPCFilename = "00Default";
         public static string MonsterNPCFilename = "00Monster";
@@ -301,7 +300,6 @@ namespace Server
             TestServer = Reader.ReadBoolean("General", "TestServer", TestServer);
             EnforceDBChecks = Reader.ReadBoolean("General", "EnforceDBChecks", EnforceDBChecks);
             MonsterProcessWhenAlone = Reader.ReadBoolean("General", "MonsterProcessWhenAlone", MonsterProcessWhenAlone);
-            MonsterProcessWhenStacked = Reader.ReadBoolean("General", "MonsterProcessWhenStacked", MonsterProcessWhenStacked);
 
             //Paths
             IPAddress = Reader.ReadString("Network", "IPAddress", IPAddress);
@@ -544,7 +542,6 @@ namespace Server
             Reader.Write("General", "TestServer", TestServer);
             Reader.Write("General", "EnforceDBChecks", EnforceDBChecks);
             Reader.Write("General", "MonsterProcessWhenAlone", MonsterProcessWhenAlone);
-            Reader.Write("General", "MonsterProcessWhenStacked", MonsterProcessWhenStacked);
 
             //Paths
             Reader.Write("Network", "IPAddress", IPAddress);
