@@ -1429,6 +1429,7 @@ namespace Client.MirObjects
                         {
                             switch (FrameIndex)
                             {
+
                                 case 1:
                                     {
                                         switch (BaseImage)
@@ -1444,6 +1445,9 @@ namespace Client.MirObjects
                                                 break;
                                             case Monster.Jar2:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Jar2], 624 + (int)Direction * 8, 8, 800, this));
+                                                break;
+                                            case Monster.AntCommander:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AntCommander], 368 + (int)Direction * 8, 8, 8 * Frame.Interval, this));
                                                 break;
                                         }
                                         break;
@@ -1787,6 +1791,10 @@ namespace Client.MirObjects
                                                 Effect ef = new Effect(Libraries.Monsters[(ushort)Monster.DarkWraith], 790, 6, 600, front, CMain.Time);
                                                 MapControl.Effects.Add(ef);
                                                 break;
+                                            case Monster.AntCommander:
+                                                Effect ef1 = new Effect(Libraries.Monsters[(ushort)Monster.AntCommander], 484, 6, 600, front, CMain.Time);
+                                                MapControl.Effects.Add(ef1);
+                                                break;
                                         }
                                         break;
                                     }
@@ -1808,13 +1816,11 @@ namespace Client.MirObjects
                                                 MapControl.Effects.Add(ef);
                                                 break;
                                             case Monster.Bear:
-                                                Point bleedEffectLocation = Functions.PointMove(CurrentLocation, Direction, 1);
-                                                Effect bleedEffect = new Effect(Libraries.Monsters[(ushort)Monster.Bear], 312, 9, 900, bleedEffectLocation, CMain.Time);
+                                                Effect bleedEffect = new Effect(Libraries.Monsters[(ushort)Monster.Bear], 312, 9, 900, front, CMain.Time);
                                                 MapControl.Effects.Add(bleedEffect);
                                                 break;
                                             case Monster.FlyingStatue:
-                                                Point flyingStatueSource1 = Functions.PointMove(CurrentLocation, Direction, 1);
-                                                Effect flyingStatueEffect1 = new Effect(Libraries.Monsters[(ushort)Monster.FlyingStatue], 362, 8, 800, flyingStatueSource1, CMain.Time);
+                                                Effect flyingStatueEffect1 = new Effect(Libraries.Monsters[(ushort)Monster.FlyingStatue], 362, 8, 800, front, CMain.Time);
                                                 MapControl.Effects.Add(flyingStatueEffect1);
                                                 break;
                                         }
@@ -2678,15 +2684,15 @@ namespace Client.MirObjects
                                                     };
                                                 }
                                                 break;
-                                            case Monster.DarkSpirit:
-                                                missile = CreateProjectile(512, Libraries.Monsters[(ushort)Monster.DarkSpirit], true, 6, 60, 0);
+                                            case Monster.AntCommander:
+                                                missile = CreateProjectile(432, Libraries.Monsters[(ushort)Monster.AntCommander], true, 3, 100, 0, direction16: true);
 
                                                 if (missile.Target != null)
                                                 {
                                                     missile.Complete += (o, e) =>
                                                     {
                                                         if (missile.Target.CurrentAction == MirAction.Dead) return;
-                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkSpirit], 608, 10, 1000, missile.Target));
+                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AntCommander], 480, 3, 300, missile.Target) { Blend = true });
                                                     };
                                                 }
                                                 break;
@@ -2738,6 +2744,18 @@ namespace Client.MirObjects
                                                 ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MudZombie], 304, 7, 700, ob) { Blend = false } );
                                             }
                                             break;
+                                        case Monster.DarkSpirit:
+                                            missile = CreateProjectile(512, Libraries.Monsters[(ushort)Monster.DarkSpirit], true, 6, 60, 0);
+
+                                            if (missile.Target != null)
+                                            {
+                                                missile.Complete += (o, e) =>
+                                                {
+                                                    if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                    missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkSpirit], 608, 10, 1000, missile.Target));
+                                                };
+                                            }
+                                            break;
                                     }
 
                                     break;
@@ -2767,17 +2785,6 @@ namespace Client.MirObjects
                                                 Point source = Functions.PointMove(CurrentLocation, Direction, 1);
                                                 Effect ef = new Effect(Libraries.Monsters[(ushort)Monster.IceCrystalSoldier], 476, 8, 800, source, CMain.Time);
                                                 MapControl.Effects.Add(ef);
-                                                break;
-                                            case Monster.DarkSpirit:
-                                                missile = CreateProjectile(512, Libraries.Monsters[(ushort)Monster.DarkSpirit], false, 6, 20, 0);
-                                                if (missile.Target != null)
-                                                {
-                                                    missile.Complete += (o, e) =>
-                                                    {
-                                                        if (missile.Target.CurrentAction == MirAction.Dead) return;
-                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkSpirit], 608, 10, 1000, missile.Target, 0, false));
-                                                    };
-                                                }
                                                 break;
                                             case Monster.ColdArcher:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ColdArcher], 368 + (int)Direction * 2, 2, 2 * FrameInterval, this));

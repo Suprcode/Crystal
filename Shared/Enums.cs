@@ -577,7 +577,7 @@ public enum Monster : ushort
     SnowYeti = 383, // Done (jxtulong)
     IceCrystalSoldier = 384, // Done (jxtulong)
     DarkWraith = 385, // Done (jxtulong)
-    DarkSpirit = 386,
+    DarkSpirit = 386, // Use AI 8 (AxeSkeleton)
     CrystalBeast = 387,
     RedOrb = 388,
     BlueOrb = 389,
@@ -586,11 +586,11 @@ public enum Monster : ushort
     WhiteOrb = 392,
     FatalLotus = 393,
     AntCommander = 394,
-    CargoBoxwithlogo = 395,
-    Doe = 396,
+    CargoBoxwithlogo = 395, // Done - Use CargoBox AI.
+    Doe = 396, // TELEPORT = EFFECT 9
     Reindeer = 397, //frames not added
     AngryReindeer = 398,
-    CargoBox = 399,
+    CargoBox = 399, // Done - Basically a Pinata.
 
     Ram1 = 400,
     Ram2 = 401,
@@ -1256,7 +1256,7 @@ public enum SpellEffect : byte
     KingGuard2,    
     DeathCrawlerBreath,
     FlamingMutantWeb,
-    Tester
+    Tester    
 }
 
 
