@@ -1,6 +1,7 @@
 ﻿using Server.MirDatabase;
 using S = ServerPackets;
 using System.Collections.Generic;
+using System;
 
 namespace Server.MirObjects.Monsters
 {
@@ -107,6 +108,30 @@ namespace Server.MirObjects.Monsters
             }
 
             MoveTo(Target.CurrentLocation);
+        }
+
+        public override void Die()
+        {
+            SpawnSlaves();
+            base.Die();
+        }
+
+        private void SpawnSlaves()
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                MonsterObject mob = null;
+                mob = GetMonster(Envir.GetMonsterInfo(Settings.KingHydraxMob));
+
+                if (mob == null) continue;
+
+                if (!mob.Spawn(CurrentMap, Front))
+                    mob.Spawn(CurrentMap, CurrentLocation);
+
+                mob.Target = Target;
+                mob.ActionTime = Envir.Time + 2000;
+                SlaveList.Add(mob);
+            }
         }
     }
 }

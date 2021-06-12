@@ -381,6 +381,13 @@ namespace Server.MirObjects
 
                 case 172:
                     return new WaterDragon(info);
+                case 173: //Attack 1 - basic attack (500ms delay) // Attack 2 - SinglePushAttack();
+                    return new WereTiger(info);
+                case 174:
+                    return new AntCommander(info);
+
+
+
 
                 case 212:
                     return new TurtleGrass(info);
