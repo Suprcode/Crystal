@@ -158,7 +158,8 @@ namespace Server
                              GeneralMeowMeowMob1 = "StainHammerCat",
                              GeneralMeowMeowMob2 = "BlackHammerCat",
                              GeneralMeowMeowMob3 = "StrayCat",
-                             GeneralMeowMeowMob4 = "CatShaman";
+                             GeneralMeowMeowMob4 = "CatShaman",
+                             KingHydraxMob = "Hydrax";
 
         public static string HealRing = "Healing",
                              FireRing = "FireBall",
@@ -376,6 +377,7 @@ namespace Server
             GeneralMeowMeowMob2 = Reader.ReadString("Game", "GeneralMeowMeowMob2", GeneralMeowMeowMob2);
             GeneralMeowMeowMob3 = Reader.ReadString("Game", "GeneralMeowMeowMob3", GeneralMeowMeowMob3);
             GeneralMeowMeowMob4 = Reader.ReadString("Game", "GeneralMeowMeowMob4", GeneralMeowMeowMob4);
+            KingHydraxMob = Reader.ReadString("Game", "KingHydraxMob", KingHydraxMob);
             WhiteSnake = Reader.ReadString("Game", "WhiteSnake", WhiteSnake);
             AngelName = Reader.ReadString("Game", "AngelName", AngelName);
             BombSpiderName = Reader.ReadString("Game", "BombSpiderName", BombSpiderName);
@@ -671,6 +673,8 @@ namespace Server
             Reader.Write("Game", "GeneralMeowMeowMob2", GeneralMeowMeowMob2);
             Reader.Write("Game", "GeneralMeowMeowMob3", GeneralMeowMeowMob3);
             Reader.Write("Game", "GeneralMeowMeowMob4", GeneralMeowMeowMob4);
+
+            Reader.Write("Game", "KingHydraxMob", KingHydraxMob);
 
             //IntelligentCreature
             Reader.Write("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);
