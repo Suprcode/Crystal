@@ -89,7 +89,7 @@ namespace Server.MirObjects
                 case 33:
                     return new MinotaurKing(info);
                 case 34:
-                    return new FrostTiger(info);
+                    return new FrostTiger(info); //Effect 0/1
                 case 35:
                     //Common AI: 1 Line Attack
                     return new SandWorm(info);
@@ -353,7 +353,7 @@ namespace Server.MirObjects
                     //Common AI: None With Attack On Death
                     return new WoodBox(info);
                 case 159:
-                    return new DarkCaptain(info); //TODO - Uses power beads
+                    return new DarkCaptain(info);
                 case 160:
                     //Common AI: 1 Range Attack with Fear
                     return new BlueSoul(info);
@@ -364,29 +364,23 @@ namespace Server.MirObjects
                 case 163:
                     return new HornedMage(info);
                 case 164:
-                    return new HornedArcher(info); //TODO
+                    return new HornedArcher(info); //Effect 0/1
                 case 165:
-                    return new ColdArcher(info);
-
-                //case 166: TODO - HornedWarrior
-
+                    return new HornedWarrior(info); //TODO
+                case 166:
+                    return new FloatingRock(info);
                 case 167:
-                    return new FloatingRock(info); //TODO - Looks to buff monsters
-                case 169:
                     return new ScalyBeast(info);
 
-                //case 169: TODO - HornedSorceror
+                //case 168: TODO - HornedSorceror
 
-                //case 170: TODO - BoulderSpirit
+                //case 169: TODO - BoulderSpirit //Spawned by HornedCommander - explode when near
 
-                //case 171: TODO - HornedCommander
+                //case 170: TODO - HornedCommander
+
 
                 case 172:
                     return new WaterDragon(info);
-
-
-
-
 
                 case 212:
                     return new TurtleGrass(info);

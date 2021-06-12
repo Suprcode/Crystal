@@ -168,8 +168,6 @@ namespace Server.MirObjects.Monsters
 
             List<MapObject> targets = FindAllTargets(7, CurrentLocation, false);
 
-            if (targets.Count == 0) return;
-
             for (int i = 0; i < targets.Count; i++)
             {
                 int delay = Functions.MaxDistance(CurrentLocation, targets[i].CurrentLocation) * 50 + 500; //50 MS per Step

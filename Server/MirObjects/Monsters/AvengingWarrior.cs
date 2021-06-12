@@ -6,7 +6,7 @@ namespace Server.MirObjects.Monsters
 {
     public class AvengingWarrior : MonsterObject
     {
-        public byte AttackRange = 7;
+        public byte AttackRange = 6;
 
         protected internal AvengingWarrior(MonsterInfo info)
             : base(info)
@@ -34,7 +34,7 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            if (!ranged)
+            if (!ranged && Envir.Random.Next(5) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);

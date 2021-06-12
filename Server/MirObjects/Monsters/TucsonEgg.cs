@@ -199,16 +199,15 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            MonsterObject mob = null;
-            mob = GetMonster(Envir.GetMonsterInfo(Settings.TucsonGeneralEgg));
+            var mob = GetMonster(Envir.GetMonsterInfo(Settings.TucsonGeneralEgg));
 
             if (mob == null) return;
+
             if (!mob.Spawn(CurrentMap, Front))
                 mob.Spawn(CurrentMap, CurrentLocation);
 
             mob.Target = Target;
             mob.ActionTime = Envir.Time + 2000;
-            SlaveList.Add(mob);
         }
     }
 }

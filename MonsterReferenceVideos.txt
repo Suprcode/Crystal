@@ -28,3 +28,7 @@ DarkCaptain = https://www.youtube.com/watch?v=gX0RXr6zG10
 
 
 TucsonGeneral = https://www.youtube.com/watch?v=2NXZ0xXchrs
+
+HornedWarrior + Others = https://www.youtube.com/watch?v=M59ZDpiKJ5M&t=65s
+HornedWarrior + Others = https://www.youtube.com/watch?v=C71jvoBxB7Y
+HornedSorcerer = https://www.youtube.com/watch?v=UgHyLUMnzho

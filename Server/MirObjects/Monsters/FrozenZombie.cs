@@ -5,14 +5,6 @@ namespace Server.MirObjects.Monsters
 {
     public class FrozenZombie : MonsterObject
     {
-        protected virtual byte AttackRange
-        {
-            get
-            {
-                return 8;
-            }
-        }
-
         protected internal FrozenZombie(MonsterInfo info)
             : base(info)
         {
@@ -20,7 +12,7 @@ namespace Server.MirObjects.Monsters
 
         protected override bool InAttackRange()
         {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
+            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, Info.ViewRange);
         }
 
         protected override void Attack()

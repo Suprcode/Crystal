@@ -171,11 +171,25 @@ namespace Client.MirObjects
                     Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.GeneralMeowMeow], 529, 7, 700, this, true, type) { Repeat = true, Light = 1 });
                     MirSounds.SoundManager.PlaySound(8322);
                     break;
-                case BuffType.ColdArcherBuff:
-                    Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.HornedArcher], 480, 3, 1000, this, true, type) { Blend = true, Repeat = true });
-                    break;
                 case BuffType.PowerBeadBuff:
                     Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.PowerUpBead], 64, 6, 600, this, true, type) { Blend = true, Repeat = true });
+                    break;
+                case BuffType.HornedArcherBuff:
+                    Effects.Add(effect = new BuffEffect(Libraries.Monsters[(ushort)Monster.HornedArcher], 468, 6, 600, this, true, type) { Repeat = false });
+                    effect.Complete += (o, e) =>
+                    {
+                        Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.HornedArcher], 474, 3, 1000, this, true, type) { Blend = true, Repeat = true });
+                    };
+                    break;
+                case BuffType.ColdArcherBuff:
+                    Effects.Add(effect = new BuffEffect(Libraries.Monsters[(ushort)Monster.HornedArcher], 477, 7, 700, this, true, type) { Repeat = false });
+                    effect.Complete += (o, e) =>
+                    {
+                        Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.HornedArcher], 484, 3, 1000, this, true, type) { Blend = true, Repeat = true });
+                    };
+                    break;
+                case BuffType.HornedWarriorShield:
+                    Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.HornedWarrior], 912, 18, 1800, this, true, type) { Repeat = true });
                     break;
             }
         }

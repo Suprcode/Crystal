@@ -12,9 +12,12 @@ namespace Server.MirObjects.Monsters
         private long _OrbTime;
         private long _MassThunderTime;
 
-        protected int AttackRange
+        protected virtual byte AttackRange
         {
-            get { return 5; }
+            get
+            {
+                return 6;
+            }
         }
 
         protected internal DarkOmaKing(MonsterInfo info) 

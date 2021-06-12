@@ -1,27 +1,49 @@
 ﻿using Server.MirDatabase;
+using System.Collections.Generic;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    // TODO - 3 BUFFS TO CODE
-    // Can buff all mobs around it
-    // Look at Yin/Yan Devil Nodes from Past Bichon?
-    // Add their spell effects to SpellObjects.cs
-    // Loop the animation while the buff is active.
-
-    public class HornedArcher : MonsterObject
+    public class HornedArcher : AxeSkeleton
     {
-        public long FearTime;
-        public byte AttackRange = 8;
+        public long BuffTime;
 
         protected internal HornedArcher(MonsterInfo info)
             : base(info)
         {
         }
 
-        protected override bool InAttackRange()
+        protected override void ProcessTarget()
         {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
+            if (Envir.Time > BuffTime)
+            {
+                var friends = FindAllFriends(Info.ViewRange, CurrentLocation);
+
+                if (friends.Count > 0)
+                {
+                    var friend = friends[Envir.Random.Next(friends.Count)];
+
+                    int delay = Functions.MaxDistance(CurrentLocation, friend.CurrentLocation) * 50 + 500;
+
+                    Direction = Functions.DirectionFromPoint(CurrentLocation, friend.CurrentLocation);
+
+                    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = friend.ObjectID, Type = 1 });
+
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, friend, 0, DefenceType.MACAgility);
+
+                    ActionList.Add(action);
+
+                    BuffTime = Envir.Time + 20000;
+                    ActionTime = Envir.Time + 300;
+                    AttackTime = Envir.Time + AttackSpeed;
+                    ShockTime = 0;
+                    return;
+                }
+
+                BuffTime = Envir.Time + 10000;
+            }
+
+            base.ProcessTarget();
         }
 
         protected override void Attack()
@@ -35,92 +57,55 @@ namespace Server.MirObjects.Monsters
             ShockTime = 0;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
+
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
-            int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
 
-            if (Envir.Random.Next(6) != 0)
-            {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                if (damage == 0) return;
+            Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
 
-                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.ACAgility);
-                ActionList.Add(action);
-            }
-            else
-            {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
-                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                if (damage == 0) return;
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+            if (damage == 0) return;
 
-                //TODO - Move this in to delay
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-                {
-                    if (Envir.Random.Next(2) == 0)
-                    {
-                        Target.ApplyPoison(new Poison { Owner = this, Duration = 8, PType = PoisonType.Dazed, Value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]), TickSpeed = 1000 }, this);
-                    }
-                }
+            int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500;
 
-                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
-                ActionList.Add(action);
-            }
-
-            if (Target.Dead)
-                FindTarget();
+            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.ACAgility);
+            ActionList.Add(action);
         }
 
-        protected override void ProcessTarget()
+        protected override void CompleteAttack(IList<object> data)
         {
-            if (Target == null || !CanAttack) return;
+            MapObject target = (MapObject)data[0];
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
 
-            if (InAttackRange() && Envir.Time < FearTime)
+            if (target == null || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            if (target.IsFriendlyTarget(this))
             {
-                Attack();
-                return;
-            }
+                var friends = FindAllFriends(4, target.CurrentLocation);
 
-            FearTime = Envir.Time + 5000;
+                var min = Stats[Stat.MinMC];
+                var max = Stats[Stat.MaxMC];
 
-            if (Envir.Time < ShockTime)
-            {
-                Target = null;
-                return;
-            }
-
-            int dist = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
-
-            if (dist >= AttackRange)
-                MoveTo(Target.CurrentLocation);
-            else
-            {
-                MirDirection dir = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
-
-                if (Walk(dir)) return;
-
-                switch (Envir.Random.Next(2)) //No favour
+                for (int i = 0; i < friends.Count; i++)
                 {
-                    case 0:
-                        for (int i = 0; i < 7; i++)
-                        {
-                            dir = Functions.NextDir(dir);
+                    if (Info.Effect == 0)
+                    {
+                        var stats = new Stats { [Stat.MinDC] = min, [Stat.MaxDC] = max, [Stat.MinMC] = min, [Stat.MaxMC] = max };
+                        friends[i].AddBuff(BuffType.HornedArcherBuff, this, Settings.Second * 10, stats, visible: true);
+                    }
+                    else if (Info.Effect == 1)
+                    {
+                        var stats = new Stats { [Stat.MinAC] = min, [Stat.MaxAC] = max, [Stat.MinMAC] = min, [Stat.MaxMAC] = max };
+                        friends[i].AddBuff(BuffType.ColdArcherBuff, this, Settings.Second * 10, stats, visible: true);
+                    }
 
-                            if (Walk(dir))
-                                return;
-                        }
-                        break;
-                    default:
-                        for (int i = 0; i < 7; i++)
-                        {
-                            dir = Functions.PreviousDir(dir);
-
-                            if (Walk(dir))
-                                return;
-                        }
-                        break;
+                    friends[i].OperateTime = 0;
                 }
-
+            }
+            else if (target.IsAttackTarget(this))
+            {
+                target.Attacked(this, damage, defence);
             }
         }
     }

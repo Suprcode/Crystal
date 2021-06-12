@@ -15,7 +15,7 @@ namespace Server.MirObjects.Monsters
         {
             get
             {
-                return 8;
+                return 6;
             }
         }
 

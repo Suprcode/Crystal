@@ -6,14 +6,6 @@ namespace Server.MirObjects.Monsters
 {
     public class OmaCannibal : MonsterObject
     {
-        protected virtual byte AttackRange
-        {
-            get
-            {
-                return 8;
-            }
-        }
-
         protected internal OmaCannibal(MonsterInfo info)
             : base(info)
         {
@@ -21,7 +13,7 @@ namespace Server.MirObjects.Monsters
 
         protected override bool InAttackRange()
         {
-            return CurrentMap == Target.CurrentMap && CanFly(Target.CurrentLocation) && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
+            return CurrentMap == Target.CurrentMap && CanFly(Target.CurrentLocation) && Functions.InRange(CurrentLocation, Target.CurrentLocation, Info.ViewRange);
         }
 
         protected override void Attack()
