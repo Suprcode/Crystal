@@ -41,12 +41,16 @@ namespace Server.MirObjects.Monsters
             if (!ranged) base.Attack();
             else
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                LineAttack(3, 300, DefenceType.MACAgility);
-
                 ActionTime = Envir.Time + 300;
                 AttackTime = Envir.Time + AttackSpeed;
                 ShockTime = 0;
+
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                if (damage == 0) return;
+
+                LineAttack(damage, 3, 300, DefenceType.MACAgility);
             }
         }
 
@@ -64,11 +68,8 @@ namespace Server.MirObjects.Monsters
             PoisonTarget(target, 8, 5, PoisonType.Green, 2000);
         }
 
-        protected override void LineAttack(int distance, int additionalDelay = 500, DefenceType defenceType = DefenceType.ACAgility, bool push = false)
+        protected override void LineAttack(int damage, int distance, int additionalDelay = 500, DefenceType defenceType = DefenceType.ACAgility, bool push = false)
         {
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
-
             for (int i = 1; i <= distance; i++)
             {
                 Point target = Functions.PointMove(CurrentLocation, Direction, i);

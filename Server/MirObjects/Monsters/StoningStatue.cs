@@ -50,26 +50,30 @@ namespace Server.MirObjects.Monsters
 
             if (Envir.Time < _areaTime)
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0});
-                LineAttack(AttackRange);
-
                 ActionTime = Envir.Time + 300;
                 AttackTime = Envir.Time + AttackSpeed;
 
-                return;
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                if (damage == 0) return;
+
+                LineAttack(damage, AttackRange);
             }
+            else
+            {
+                _areaTime = Envir.Time + 5000 + Envir.Random.Next(10) * 1000;
 
-            _areaTime = Envir.Time + 5000 + Envir.Random.Next(10) * 1000;
+                ActionTime = Envir.Time + 500;
+                AttackTime = Envir.Time + (AttackSpeed * 2);
 
-            ActionTime = Envir.Time + 500;
-            AttackTime = Envir.Time + (AttackSpeed * 2);
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                var damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+                if (damage == 0) return;
 
-            var damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-            if (damage == 0) return;
-
-            ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + 1600, Target, 0, DefenceType.MACAgility, true));
+                ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + 1600, Target, 0, DefenceType.MACAgility, true));
+            }
         }
 
         protected override void CompleteAttack(IList<object> data)

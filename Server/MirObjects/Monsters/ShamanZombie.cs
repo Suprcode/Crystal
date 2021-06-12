@@ -37,14 +37,17 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
+            AttackTime = Envir.Time + AttackSpeed;
+            ActionTime = Envir.Time + 300;
+
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
-            LineAttack(6, 300, DefenceType.MACAgility);
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+            if (damage == 0) return;
 
-            AttackTime = Envir.Time + AttackSpeed;
-            ActionTime = Envir.Time + 300;
+            LineAttack(damage, 6, 300, DefenceType.MACAgility);
         }
 
         protected override void ProcessTarget()

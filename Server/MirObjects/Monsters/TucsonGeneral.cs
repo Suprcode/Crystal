@@ -113,7 +113,7 @@ namespace Server.MirObjects.Monsters
                     int damage = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
                     if (damage == 0) return;
 
-                    ProjectileAttack(Stats[Stat.MinSC], Stats[Stat.MaxSC], DefenceType.MACAgility);
+                    ProjectileAttack(damage, DefenceType.MACAgility);
                 }
                 else
                 {

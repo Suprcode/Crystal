@@ -54,7 +54,9 @@ namespace Server.MirObjects.Monsters
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
-                SinglePushAttack(Stats[Stat.MinDC], Stats[Stat.MaxDC]);         
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+
+                SinglePushAttack(damage);
             }
         }
 

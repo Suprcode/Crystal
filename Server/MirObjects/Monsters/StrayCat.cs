@@ -64,7 +64,11 @@ namespace Server.MirObjects.Monsters
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
-                LineAttack(2, 1000);
+
+                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+                if (damage == 0) return;
+
+                LineAttack(damage, 2, 1000);
             }
 
         }
@@ -79,17 +83,16 @@ namespace Server.MirObjects.Monsters
             {
                 if (Target.Pushed(this, Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation), 1) > 0)
                 {
-                    //Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
-                    LineAttack(2, 1000);
+                    int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+                    if (damage == 0) return;
+
+                    LineAttack(damage, 2, 1000);
                 }
             }
         }
 
-        protected override void LineAttack(int distance, int additionalDelay = 500, DefenceType defenceType = DefenceType.ACAgility, bool push = false)
+        protected override void LineAttack(int damage, int distance, int additionalDelay = 500, DefenceType defenceType = DefenceType.ACAgility, bool push = false)
         {
-            int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-            if (damage == 0) return;
-
             for (int i = 1; i <= distance; i++)
             {
                 Point target = Functions.PointMove(CurrentLocation, Direction, i);

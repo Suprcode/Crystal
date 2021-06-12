@@ -34,6 +34,10 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
+            ActionTime = Envir.Time + 300;
+            AttackTime = Envir.Time + AttackSpeed;
+            ShockTime = 0;
+
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
             bool range = !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
@@ -45,12 +49,12 @@ namespace Server.MirObjects.Monsters
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                LineAttack(2, 250, DefenceType.ACAgility);
-            }
 
-            ActionTime = Envir.Time + 300;
-            AttackTime = Envir.Time + AttackSpeed;
-            ShockTime = 0;
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                if (damage == 0) return;
+
+                LineAttack(damage, 2, 250, DefenceType.ACAgility);
+            }
         }
     }
 }

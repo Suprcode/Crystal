@@ -45,6 +45,9 @@ namespace Server.MirObjects.Monsters
 
             if (!ranged)
             {
+                ActionTime = Envir.Time + 300;
+                AttackTime = Envir.Time + AttackSpeed;
+
                 var hpPercent = (HP * 100) / Stats[Stat.HP];
 
                 switch (Envir.Random.Next(3))
@@ -52,9 +55,9 @@ namespace Server.MirObjects.Monsters
                     case 0: //Spin
                     case 1:
                         {
-                            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-
                             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+
+                            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                             if (damage == 0) return;
 
                             DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MACAgility, (int)0);
@@ -65,9 +68,9 @@ namespace Server.MirObjects.Monsters
                         {
                             if (hpPercent >= 50) //Tornado
                             {
-                                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-
                                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
+
+                                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                                 if (damage == 0) return;
 
                                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MACAgility, (int)1);
@@ -75,9 +78,9 @@ namespace Server.MirObjects.Monsters
                             }
                             else //Stomp
                             {
-                                int damage = Stats[Stat.MaxDC];
-
                                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+
+                                int damage = Stats[Stat.MaxDC];
                                 if (damage == 0) return;
 
                                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MACAgility, (int)2);
@@ -86,17 +89,18 @@ namespace Server.MirObjects.Monsters
                         }
                         break;
                 }
-
-                ActionTime = Envir.Time + 300;
-                AttackTime = Envir.Time + AttackSpeed;
             }
             else
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
-                ProjectileAttack(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-
                 ActionTime = Envir.Time + 300;
                 AttackTime = Envir.Time + (AttackSpeed * 2);
+
+                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
+
+                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+                if (damage == 0) return;
+
+                ProjectileAttack(damage);
             }
         }
 

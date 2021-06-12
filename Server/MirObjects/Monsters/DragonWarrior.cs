@@ -39,14 +39,23 @@ namespace Server.MirObjects.Monsters
                 else
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                    HalfmoonAttack();
+
+                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                    if (damage == 0) return;
+
+                    HalfmoonAttack(damage);
                 }
             }
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
                 //Shield Bash Attack
-                SinglePushAttack(Stats[Stat.MinDC],Stats[Stat.MaxDC]);
+
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+
+                SinglePushAttack(damage);
+
+                //TODO - Delay
                 PoisonTarget(Target, 3, 5, PoisonType.Dazed);
             }
 

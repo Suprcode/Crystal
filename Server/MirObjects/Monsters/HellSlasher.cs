@@ -37,7 +37,11 @@ namespace Server.MirObjects.Monsters
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                HalfmoonAttack(500, DefenceType.AC);
+
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                if (damage == 0) return;
+
+                HalfmoonAttack(damage, 500, DefenceType.AC);
             }
 
             ShockTime = 0;

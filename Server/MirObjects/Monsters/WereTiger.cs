@@ -6,7 +6,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class WereTiger : MonsterObject
+    public class WereTiger : MonsterObject
     {
         protected internal WereTiger(MonsterInfo info)
             : base(info)
@@ -42,11 +42,9 @@ namespace Server.MirObjects.Monsters
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                SinglePushAttack(Stats[Stat.MinDC], Stats[Stat.MaxDC], DefenceType.AC);
-            }
 
-            if (Target.Dead)
-                FindTarget();
+                SinglePushAttack(damage, DefenceType.AC);
+            }
         }
 
 
@@ -57,9 +55,6 @@ namespace Server.MirObjects.Monsters
             if (InAttackRange() && CanAttack)
             {
                 Attack();
-                if (Target.Dead)
-                    FindTarget();
-
                 return;
             }
 

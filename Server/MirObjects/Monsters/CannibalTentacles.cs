@@ -67,12 +67,9 @@ namespace Server.MirObjects.Monsters
             }
         }
 
-        protected override void HalfmoonAttack(int delay = 500, DefenceType defenceType = DefenceType.ACAgility)
+        protected override void HalfmoonAttack(int damage, int delay = 500, DefenceType defenceType = DefenceType.ACAgility)
         {
             MirDirection dir = Functions.PreviousDir(Direction);
-
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
 
             for (int i = 0; i < 4; i++)
             {

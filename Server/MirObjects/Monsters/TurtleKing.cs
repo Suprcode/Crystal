@@ -51,6 +51,10 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
+            ShockTime = 0;
+            ActionTime = Envir.Time + 300;
+            AttackTime = Envir.Time + AttackSpeed;
+
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, CloseRange);
 
@@ -60,22 +64,36 @@ namespace Server.MirObjects.Monsters
                 {
                     case 0:
                     case 1:
-                        Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
-                        LineAttack(2, 300);
+                        {
+                            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+
+                            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                            if (damage == 0) return;
+
+                            LineAttack(damage, 2, 300);
+                        }
                         break;
                     case 2:
                     case 3:
-                        Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                        LineAttack(3, 300);
+                        {
+                            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+
+                            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                            if (damage == 0) return;
+
+                            LineAttack(damage, 3, 300);
+                        }
                         break;
                     case 4:
-                        Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                        {
+                            Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
-                        int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                        if (damage == 0) return;
+                            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                            if (damage == 0) return;
 
-                        DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MAC);
-                        ActionList.Add(action);
+                            DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MAC);
+                            ActionList.Add(action);
+                        }
                         break;
                 }
             }
@@ -106,9 +124,6 @@ namespace Server.MirObjects.Monsters
                     ActionList.Add(action);
                 }
             }
-            ShockTime = 0;
-            ActionTime = Envir.Time + 300;
-            AttackTime = Envir.Time + AttackSpeed;
         }
 
         protected override void CompleteAttack(IList<object> data)

@@ -29,7 +29,10 @@ namespace Server.MirObjects.Monsters
 
             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
-            HalfmoonAttack();
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+            if (damage == 0) return;
+
+            HalfmoonAttack(damage);
         }
     }
 }

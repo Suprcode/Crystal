@@ -34,6 +34,10 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
+            ActionTime = Envir.Time + 300;
+            AttackTime = Envir.Time + AttackSpeed;
+            ShockTime = 0;
+
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
             bool range = !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
@@ -58,12 +62,11 @@ namespace Server.MirObjects.Monsters
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
                 ActionList.Add(action);
 
-                LineAttack(2, 300);
-            }
+                damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                if (damage == 0) return;
 
-            ActionTime = Envir.Time + 300;
-            AttackTime = Envir.Time + AttackSpeed;
-            ShockTime = 0;
+                LineAttack(damage, 2, 300);
+            }
         }
     }
 }

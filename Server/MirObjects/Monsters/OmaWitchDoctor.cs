@@ -70,13 +70,14 @@ namespace Server.MirObjects.Monsters
                     int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                     if (damage == 0) return;
                     
-                    LineAttack(6, 500, DefenceType.MACAgility);
+                    LineAttack(damage, 6, 500, DefenceType.MACAgility);
                 }
                 else
                 {
                     AttackTime = Envir.Time + AttackSpeed + 500;
 
                     Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
+
                     int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);             
                     if (damage == 0) return;
 

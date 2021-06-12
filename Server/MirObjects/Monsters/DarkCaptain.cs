@@ -103,7 +103,7 @@ namespace Server.MirObjects.Monsters
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
 
-                LineAttack(2, 300, DefenceType.ACAgility, Envir.Random.Next(5) == 0);
+                LineAttack(damage, 2, 300, DefenceType.ACAgility, Envir.Random.Next(5) == 0);
             }
             else
             {
@@ -112,7 +112,10 @@ namespace Server.MirObjects.Monsters
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
                 //PushAttack
-                FullmoonAttack(500, DefenceType.ACAgility, Envir.Random.Next(1, 3));
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                if (damage == 0) return;
+
+                FullmoonAttack(damage, 500, DefenceType.ACAgility, Envir.Random.Next(1, 3));
             }
         }
 

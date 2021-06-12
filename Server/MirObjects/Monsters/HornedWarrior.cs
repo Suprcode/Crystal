@@ -81,7 +81,7 @@ namespace Server.MirObjects.Monsters
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
-                WideLineAttack(4, 500, DefenceType.ACAgility, false, 3);
+                WideLineAttack(damage, 4, 500, DefenceType.ACAgility, false, 3);
             }
         }
 
@@ -89,7 +89,9 @@ namespace Server.MirObjects.Monsters
         {
             if (Target == null || !CanAttack) return;
 
-            if (InAttackRange() && !HasBuff(BuffType.HornedWarriorShield, out _))
+            var buff = HasBuff(BuffType.HornedWarriorShield, out _);
+
+            if (InAttackRange() && !buff)
             {
                 Attack();
                 return;
@@ -101,9 +103,7 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
-            int dist = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
-
-            if (dist >= AttackRange)
+            if (!buff)
                 MoveTo(Target.CurrentLocation);
             else
             {

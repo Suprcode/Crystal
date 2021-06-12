@@ -69,13 +69,9 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            int damage;
-
             if (!ranged && Envir.Random.Next(3) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                if (damage == 0) return;
 
                 List<MapObject> targets = FindAllTargets(1, CurrentLocation);
                 if (targets.Count == 0) return;
@@ -93,23 +89,23 @@ namespace Server.MirObjects.Monsters
                             if (targets[i].Pushed(this, Functions.DirectionFromPoint(CurrentLocation, targets[i].CurrentLocation), 3 + Envir.Random.Next(3)) > 0
                             && Envir.Random.Next(8) == 0)
                             {
-                                if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].Stats[Stat.PoisonResist])
-                                {
-                                    targets[i].ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this, true);
-                                }
+                                PoisonTarget(targets[i], 1, 5, PoisonType.Paralysis, 1000, true);
                             }
                         }
                     }
                 }
 
-                LineAttack(2, 300, DefenceType.ACAgility);
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                if (damage == 0) return;
+
+                LineAttack(damage, 2, 300, DefenceType.ACAgility);
             }
             else
             {
                 AttackTime = Envir.Time + AttackSpeed + 500;
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
-                damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                 if (damage == 0) return;
 
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MAC);

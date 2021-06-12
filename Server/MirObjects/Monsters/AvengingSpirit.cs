@@ -38,7 +38,9 @@ namespace Server.MirObjects.Monsters
 
                 if (Envir.Random.Next(3) == 0)
                 {
-                    SinglePushAttack(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+
+                    SinglePushAttack(damage);
                 }
                 else
                 {

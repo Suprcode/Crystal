@@ -41,7 +41,11 @@ namespace Server.MirObjects.Monsters
             ShockTime = 0;
 
             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
-            LineAttack(4, 500, DefenceType.MACAgility);
+
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+            if (damage == 0) return;
+
+            LineAttack(damage, 4, 500, DefenceType.MACAgility);
         }
     }
 }

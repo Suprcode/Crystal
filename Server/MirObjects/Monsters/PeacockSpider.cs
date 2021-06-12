@@ -71,6 +71,7 @@ namespace Server.MirObjects.Monsters
                 if (Envir.Random.Next(3) > 0) //Normal
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                     if (damage == 0) return;
 
@@ -81,7 +82,10 @@ namespace Server.MirObjects.Monsters
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
-                    TriangleAttack(3, 2, 500, DefenceType.ACAgility, false);
+                    var damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                    if (damage == 0) return;
+
+                    TriangleAttack(damage, 3, 2, 500, DefenceType.ACAgility, false);
                 }
             }
             else
@@ -90,7 +94,10 @@ namespace Server.MirObjects.Monsters
                 {
                     Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
 
-                    ProjectileAttack(Stats[Stat.MinMC], Stats[Stat.MaxMC], DefenceType.MACAgility);
+                    int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+                    if (damage == 0) return;
+
+                    ProjectileAttack(damage, DefenceType.MACAgility);
                 }
             }
         }

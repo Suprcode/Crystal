@@ -35,13 +35,17 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
-            Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-            LineAttack(2, 300, DefenceType.ACAgility);
-
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
             ShockTime = 0;
+
+            Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
+            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+            if (damage == 0) return;
+
+            LineAttack(damage, 2, 300, DefenceType.ACAgility);
         }
 
         protected override void CompleteAttack(IList<object> data)

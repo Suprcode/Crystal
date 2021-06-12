@@ -41,7 +41,11 @@ namespace Server.MirObjects.Monsters
             ShockTime = 0;
 
             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-            TriangleAttack(3, 1, 800);
+
+            var damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+            if (damage == 0) return;
+
+            TriangleAttack(damage, 3, 1, 800);
         }
     }
 }
