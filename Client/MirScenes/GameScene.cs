@@ -3393,7 +3393,7 @@ namespace Client.MirScenes
                         }
                     case 9: //Doe
                         {
-                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Doe], 208, 10, 1000, ob);
+                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Doe], 208, 10, 1000, ob));
                             SoundManager.PlaySound(((ushort)Monster.Doe) * 10 + 7);
                             playDefaultSound = false;
                             break;
@@ -3474,7 +3474,7 @@ namespace Client.MirScenes
                         }
                     case 9: //Doe
                         {
-                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Doe], 208, 10, 1000, ob);
+                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Doe], 208, 10, 1000, ob));
                             SoundManager.PlaySound(((ushort)Monster.Doe) * 10 + 7);
                             playDefaultSound = false;
                             break;

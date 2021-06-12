@@ -366,7 +366,7 @@ namespace Server.MirObjects
                 case 164:
                     return new HornedArcher(info); //Effect 0/1
                 case 165:
-                    return new HornedWarrior(info); //TODO
+                    return new HornedWarrior(info);
                 case 166:
                     return new FloatingRock(info);
                 case 167:
@@ -3294,6 +3294,93 @@ namespace Server.MirObjects
                     else continue;
 
                     break;
+                }
+            }
+        }
+
+        protected virtual void WideLineAttack(int distance, int additionalDelay = 500, DefenceType defenceType = DefenceType.ACAgility, bool push = false, int width = 3)
+        {
+            int damage;
+
+            switch (defenceType)
+            {
+                case DefenceType.MAC:
+                case DefenceType.MACAgility:
+                    damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+                    break;
+                default:
+                    damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                    break;
+            }
+
+            if (damage == 0) return;
+
+            if (width <= 2)
+            {
+                width = 3;
+            }
+
+            var even = width % 2 == 0;
+
+            if (even)
+            {
+                width--;
+            }
+
+            var startPoints = new List<Point>
+            {
+                CurrentLocation 
+            };
+
+            var half = (width - 1) / 2;
+
+            var leftLoc = CurrentLocation;
+            var rightLoc = CurrentLocation;
+
+            for (int j = 0; j < half; j++)
+            {
+                leftLoc = Functions.Left(leftLoc, Direction);
+                rightLoc = Functions.Right(rightLoc, Direction);
+
+                startPoints.Add(leftLoc);
+                startPoints.Add(rightLoc);
+            }
+
+            for (int j = 0; j < startPoints.Count; j++)
+            {
+                var point = startPoints[j];
+
+                for (int i = 1; i <= distance; i++)
+                {
+                    Point target = Functions.PointMove(point, Direction, i);
+
+                    Broadcast(new S.MapEffect { Effect = SpellEffect.Tester, Location = target, Value = (byte)Direction });
+
+                    if (!CurrentMap.ValidPoint(target)) continue;
+
+                    Cell cell = CurrentMap.GetCell(target);
+                    if (cell.Objects == null) continue;
+
+                    for (int o = 0; o < cell.Objects.Count; o++)
+                    {
+                        MapObject ob = cell.Objects[o];
+                        if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
+                        {
+                            if (!ob.IsAttackTarget(this)) continue;
+
+                            if (push)
+                            {
+                                ob.Pushed(this, Direction, distance - 1);
+                            }
+
+                            int delay = Functions.MaxDistance(CurrentLocation, ob.CurrentLocation) * 50 + additionalDelay; //50 MS per Step
+                            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
+                            ActionList.Add(action);
+                        }
+                        else continue;
+
+                        break;
+                    }
                 }
             }
         }

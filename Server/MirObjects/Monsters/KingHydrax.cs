@@ -112,16 +112,20 @@ namespace Server.MirObjects.Monsters
 
         public override void Die()
         {
-            SpawnSlaves();
+            ActionList.Add(new DelayedAction(DelayedType.Die, Envir.Time + 1000));
             base.Die();
+        }
+
+        protected override void CompleteDeath(IList<object> data)
+        {
+            SpawnSlaves();
         }
 
         private void SpawnSlaves()
         {
             for (int i = 0; i < 2; i++)
             {
-                MonsterObject mob = null;
-                mob = GetMonster(Envir.GetMonsterInfo(Settings.KingHydraxMob));
+                var mob = GetMonster(Envir.GetMonsterInfo(Settings.KingHydraxMob));
 
                 if (mob == null) continue;
 
@@ -130,7 +134,6 @@ namespace Server.MirObjects.Monsters
 
                 mob.Target = Target;
                 mob.ActionTime = Envir.Time + 2000;
-                SlaveList.Add(mob);
             }
         }
     }

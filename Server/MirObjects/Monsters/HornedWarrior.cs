@@ -1,4 +1,5 @@
 ﻿using Server.MirDatabase;
+using System;
 using System.Collections.Generic;
 using S = ServerPackets;
 
@@ -7,17 +8,24 @@ namespace Server.MirObjects.Monsters
     public class HornedWarrior : MonsterObject
     {
         private long _ShieldTime;
+        protected byte AttackRange = 4;
 
         protected internal HornedWarrior(MonsterInfo info)
             : base(info)
-        {
-            _ShieldTime = Envir.Time + 15000;
+        {       
         }
 
         protected override bool InAttackRange()
         {
-            //TODO - Line in range
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, 3);
+            if (Target.CurrentMap != CurrentMap) return false;
+            if (Target.CurrentLocation == CurrentLocation) return false;
+
+            int x = Math.Abs(Target.CurrentLocation.X - CurrentLocation.X);
+            int y = Math.Abs(Target.CurrentLocation.Y - CurrentLocation.Y);
+
+            if (x > AttackRange || y > AttackRange) return false;
+
+            return (x <= 1 && y <= 1) || (x == y || x % 2 == y % 2);
         }
 
         protected override void Attack()
@@ -73,10 +81,7 @@ namespace Server.MirObjects.Monsters
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
-                TriangleAttack(3, 2);
-
-                //DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.ACAgility);
-                //ActionList.Add(action);
+                WideLineAttack(4, 500, DefenceType.ACAgility, false, 3);
             }
         }
 
@@ -96,30 +101,37 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
-            MirDirection dir = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
+            int dist = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
 
-            if (Walk(dir)) return;
-
-            switch (Envir.Random.Next(2)) //No favour
+            if (dist >= AttackRange)
+                MoveTo(Target.CurrentLocation);
+            else
             {
-                case 0:
-                    for (int i = 0; i < 7; i++)
-                    {
-                        dir = Functions.NextDir(dir);
+                MirDirection dir = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
 
-                        if (Walk(dir))
-                            return;
-                    }
-                    break;
-                default:
-                    for (int i = 0; i < 7; i++)
-                    {
-                        dir = Functions.PreviousDir(dir);
+                if (Walk(dir)) return;
 
-                        if (Walk(dir))
-                            return;
-                    }
-                    break;
+                switch (Envir.Random.Next(2)) //No favour
+                {
+                    case 0:
+                        for (int i = 0; i < 7; i++)
+                        {
+                            dir = Functions.NextDir(dir);
+
+                            if (Walk(dir))
+                                return;
+                        }
+                        break;
+                    default:
+                        for (int i = 0; i < 7; i++)
+                        {
+                            dir = Functions.PreviousDir(dir);
+
+                            if (Walk(dir))
+                                return;
+                        }
+                        break;
+                }
             }
         }
     }
