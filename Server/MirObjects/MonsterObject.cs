@@ -373,8 +373,8 @@ namespace Server.MirObjects
                     return new ScalyBeast(info);
                 case 168:
                     return new WereTiger(info);
-
-                //case 169: TODO - HornedSorceror
+                case 169:
+                    return new HornedSorceror(info);
 
                 //case 170: TODO - BoulderSpirit //Spawned by HornedCommander - explode when near
 

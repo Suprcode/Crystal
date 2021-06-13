@@ -90,8 +90,6 @@ namespace Server.MirObjects.Monsters
                             CurrentMap = CurrentMap
                         };
 
-                        Broadcast(new S.MapEffect { Effect = SpellEffect.Tester, Location = new Point(x, y), Value = (byte)Direction });
-
                         DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + start, ob);
                         CurrentMap.ActionList.Add(action);
                     }

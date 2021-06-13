@@ -1219,7 +1219,8 @@ public enum Spell : byte
     TreeQueenGroundRoots = 211,
     TucsonGeneralRock = 212,
     FlyingStatueIceTornado = 213,
-    DarkOmaKingNuke = 214
+    DarkOmaKingNuke = 214,
+    HornedSorcererDustTornado = 215,
 }
 
 public enum SpellEffect : byte

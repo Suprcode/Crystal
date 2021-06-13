@@ -1,5 +1,6 @@
 ﻿using Client.MirGraphics;
 using Client.MirScenes;
+using Client.MirSounds;
 using System;
 using System.Drawing;
 using System.Linq;
@@ -117,7 +118,7 @@ namespace Client.MirObjects
                         FrameInterval = 100;
                         FrameCount = 9;
                         Repeat = false;
-                        MirSounds.SoundManager.PlaySound(20000 + 124 * 10 + 5);//Boom for all players in range
+                        SoundManager.PlaySound(20000 + 124 * 10 + 5);//Boom for all players in range
                     }
                     else
                     {
@@ -138,24 +139,24 @@ namespace Client.MirObjects
                     break;
                 case Spell.MapLightning:
                     MapControl.Effects.Add(new Effect(Libraries.Dragon, 400 + (CMain.Random.Next(3) * 10), 5, 600, CurrentLocation));
-                    MirSounds.SoundManager.PlaySound(8301);
+                    SoundManager.PlaySound(8301);
                     break;
                 case Spell.MapLava:
                     MapControl.Effects.Add(new Effect(Libraries.Dragon, 440, 20, 1600, CurrentLocation) { Blend = false });
                     MapControl.Effects.Add(new Effect(Libraries.Dragon, 470, 10, 800, CurrentLocation));
-                    MirSounds.SoundManager.PlaySound(8302);
+                    SoundManager.PlaySound(8302);
                     break;
                 case Spell.MapQuake1:
                     MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellLord], 27, 12, 1200, CurrentLocation) { Blend = false });
-                    MirSounds.SoundManager.PlaySound(8311);
+                    SoundManager.PlaySound(8304);
                     break;
                 case Spell.MapQuake2:
                     MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellLord], 39, 13, 1300, CurrentLocation) { Blend = false });
-                    MirSounds.SoundManager.PlaySound(8311);
+                    SoundManager.PlaySound(8304);
                     break;
                 case Spell.GeneralMeowMeowThunder:                
                     MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GeneralMeowMeow], 522, 7, 700, CurrentLocation) { Blend = true });
-                    MirSounds.SoundManager.PlaySound(8321);
+                    SoundManager.PlaySound(8321);
                     break;
                 case Spell.StoneGolemQuake:
                     BodyLibrary = Libraries.Monsters[(ushort)Monster.StoneGolem];
@@ -165,7 +166,7 @@ namespace Client.MirObjects
                     Light = 0;
                     Blend = false;
                     Repeat = false;
-                    MirSounds.SoundManager.PlaySound(8311);
+                    SoundManager.PlaySound(8304);
                     break;
                 case Spell.EarthGolemPile:
                     BodyLibrary = Libraries.Monsters[(ushort)Monster.EarthGolem];
@@ -175,7 +176,7 @@ namespace Client.MirObjects
                     Light = 0;
                     Blend = false;
                     Repeat = false;
-                    MirSounds.SoundManager.PlaySound(8331);
+                    SoundManager.PlaySound(8331);
                     break;
                 case Spell.TreeQueenMassRoots:
                     BodyLibrary = Libraries.Monsters[(ushort)Monster.TreeQueen];
@@ -184,7 +185,7 @@ namespace Client.MirObjects
                     FrameCount = 15;
                     Blend = false;
                     Repeat = false;
-                    MirSounds.SoundManager.PlaySound(8341);
+                    SoundManager.PlaySound(8341);
                     MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 97, 14, 1400, CurrentLocation) { Blend = true });
                     break;
                 case Spell.TreeQueenGroundRoots:
@@ -194,7 +195,7 @@ namespace Client.MirObjects
                     FrameCount = 9;
                     Blend = false;
                     Repeat = false;
-                    MirSounds.SoundManager.PlaySound(8342);
+                    SoundManager.PlaySound(8342);
                     MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 57, 9, 900, CurrentLocation) { Blend = true });
                     break;
                 case Spell.TreeQueenRoot:
@@ -204,7 +205,7 @@ namespace Client.MirObjects
                     FrameCount = 15;
                     Blend = false;
                     Repeat = false;
-                    MirSounds.SoundManager.PlaySound(8343);
+                    SoundManager.PlaySound(8343);
                     break;
                 case Spell.TucsonGeneralRock:
                     MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TucsonGeneral], 552, 20, 2000, CurrentLocation) { Repeat = false, Blend = false });
@@ -230,7 +231,7 @@ namespace Client.MirObjects
                     FrameCount = 20;
                     Blend = true;
                     Repeat = false;
-                    MirSounds.SoundManager.PlaySound(8303);
+                    SoundManager.PlaySound(8303);
                     break;
                 case Spell.DarkOmaKingNuke:
                     BodyLibrary = Libraries.Monsters[(ushort)Monster.DarkOmaKing];
@@ -239,7 +240,16 @@ namespace Client.MirObjects
                     FrameCount = 9;
                     Blend = true;
                     Repeat = false;
-                    MirSounds.SoundManager.PlaySound(((ushort)Monster.DarkOmaKing * 10) + 9);
+                    SoundManager.PlaySound(((ushort)Monster.DarkOmaKing * 10) + 9);
+                    break;
+                case Spell.HornedSorcererDustTornado:
+                    BodyLibrary = Libraries.Monsters[(ushort)Monster.HornedSorceror];
+                    DrawFrame = 634;
+                    FrameInterval = 100;
+                    FrameCount = 10;
+                    Blend = true;
+                    Repeat = true;
+                    SoundManager.PlaySound(8306);
                     break;
             }
 
@@ -259,10 +269,10 @@ namespace Client.MirObjects
                 switch (Spell)
                 {
                     case Spell.TucsonGeneralRock:
-                        if (FrameIndex == 10)
-                        {
-                            MirSounds.SoundManager.PlaySound(8351);
-                        }
+                        if (FrameIndex == 10) SoundManager.PlaySound(8305);
+                        break;
+                    case Spell.HornedSorcererDustTornado:
+                        if (FrameIndex == 0 && CMain.Random.Next(3) == 0) SoundManager.PlaySound(8306);
                         break;
                 }
             }

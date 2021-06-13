@@ -341,6 +341,7 @@ namespace Client.MirObjects
                 case MirAction.Jump:
                 case MirAction.DashL:
                 case MirAction.DashR:
+                case MirAction.DashAttack:
                     if (Frame == null)
                     {
                         OffSetMove = Point.Empty;
@@ -350,6 +351,7 @@ namespace Client.MirObjects
                     int i = CurrentAction == MirAction.Running ? 2 : 1;
 
                     if (CurrentAction == MirAction.Jump) i = -JumpDistance;
+                    if (CurrentAction == MirAction.DashAttack) i = JumpDistance;
 
                     Movement = Functions.PointMove(CurrentLocation, Direction, CurrentAction == MirAction.Pushed ? 0 : -i);
 
@@ -516,6 +518,7 @@ namespace Client.MirObjects
                         temp = Functions.PointMove(CurrentLocation, Direction, CurrentAction == MirAction.Pushed ? 0 : -i);
                         break;
                     case MirAction.Jump:
+                    case MirAction.DashAttack:
                         temp = Functions.PointMove(CurrentLocation, Direction, JumpDistance);
                         break;
                     default:
@@ -540,6 +543,9 @@ namespace Client.MirObjects
                         break;
                     case MirAction.Jump:
                         Frames.TryGetValue(MirAction.Jump, out Frame);
+                        break;
+                    case MirAction.DashAttack:
+                        Frames.TryGetValue(MirAction.DashAttack, out Frame);
                         break;
                     case MirAction.AttackRange1:
                         if (!Frames.TryGetValue(CurrentAction, out Frame))
@@ -641,6 +647,9 @@ namespace Client.MirObjects
                                 MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)BaseImage], 592, 12, 800, CurrentLocation, CMain.Time + 500));
                                 break;
                         }
+                        break;
+                    case MirAction.DashAttack:
+                        PlayDashSound();
                         break;
                     case MirAction.Walking:
                         GameScene.Scene.Redraw();
@@ -804,9 +813,12 @@ namespace Client.MirObjects
                             case Monster.FlyingStatue:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlyingStatue], 352, 10, 10 * 100, this));
                                 break;
-                            //case Monster.HornedWarrior:
-                            //    Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedWarrior], 768 + (int)Direction * 8, 8, Frame.Count * Frame.Interval, this));
-                            //    break;
+                            case Monster.HornedSorceror:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedSorceror], 552 + (int)Direction * 9, 9, 900, this));
+                                break;
+                                //case Monster.HornedWarrior:
+                                //    Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedWarrior], 768 + (int)Direction * 8, 8, Frame.Count * Frame.Interval, this));
+                                //    break;
                         }
 
                         if ((ushort)BaseImage >= 10000)
@@ -854,6 +866,9 @@ namespace Client.MirObjects
                                 break;
                         }
                         break;
+                    case MirAction.Attack5:
+                        PlayFithAttackSound();
+                        break;
                     case MirAction.AttackRange1:
                         PlayRangeSound();
                         switch (BaseImage)
@@ -894,12 +909,6 @@ namespace Client.MirObjects
                                 break;
                             case Monster.WitchDoctor:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WitchDoctor], 304, 9, 9 * 100, this));
-                                break;
-                            case Monster.DarkDevourer:
-                                User.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkDevourer], 480, 7, 7 * Frame.Interval, User));
-                                break;
-                            case Monster.DreamDevourer:
-                                User.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DreamDevourer], 264, 7, 7 * Frame.Interval, User));
                                 break;
                             case Monster.FlyingStatue:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlyingStatue], 304, 10, 10 * Frame.Interval, this));
@@ -1268,6 +1277,37 @@ namespace Client.MirObjects
                         }
                     }
                     break;
+                case MirAction.DashAttack:
+                    if (CMain.Time >= NextMotion)
+                    {
+                        GameScene.Scene.MapControl.TextureValid = false;
+
+                        if (SkipFrames) UpdateFrame();
+
+                        if (UpdateFrame() >= Frame.Count)
+                        {
+                            FrameIndex = Frame.Count - 1;
+                            SetAction();
+                        }
+                        else
+                        {
+                            switch (FrameIndex)
+                            {
+                                case 4:
+                                    {
+                                        switch (BaseImage)
+                                        {
+                                            case Monster.HornedSorceror:
+                                                MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedSorceror], 644 + (int)Direction * 5, 5, 500, CurrentLocation));
+                                                break;
+                                        }
+                                    }
+                                    break;
+                            }
+                            NextMotion += FrameInterval;
+                        }
+                    }
+                    break;
                 case MirAction.Show:
                     if (CMain.Time >= NextMotion)
                     {
@@ -1591,22 +1631,23 @@ namespace Client.MirObjects
                                     {
                                         switch (BaseImage)
                                         {
+                                            case Monster.FlyingStatue:
+                                                MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlyingStatue], 344, 8, 800, front, CMain.Time));
+                                                break;
                                             case Monster.OmaAssassin:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.OmaAssassin], 312 + (int)Direction * 5, 5, 5 * Frame.Interval, this));
                                                 break;
                                             case Monster.PlagueCrab:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.PlagueCrab], 488 + (int)Direction * 7, 7, 7 * Frame.Interval, this));
                                                 break;
-                                            case Monster.FrozenAxeman:
-                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenAxeman], 528 + (int)Direction * 3, 3, 300, this));
-                                                break;
                                             case Monster.ScalyBeast:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ScalyBeast], 344 + (int)Direction * 3, 3, 3 * Frame.Interval, this));
                                                 break;
-                                            case Monster.FlyingStatue:
-                                                Point flyingStatueSource1 = Functions.PointMove(CurrentLocation, Direction, 1);
-                                                Effect flyingStatueEffect1 = new Effect(Libraries.Monsters[(ushort)Monster.FlyingStatue], 344, 8, 800, flyingStatueSource1, CMain.Time);
-                                                MapControl.Effects.Add(flyingStatueEffect1);
+                                            case Monster.HornedSorceror:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedSorceror], 536 + (int)Direction * 2, 2, 2 * Frame.Interval, this));
+                                                break;
+                                            case Monster.FrozenAxeman:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenAxeman], 528 + (int)Direction * 3, 3, 300, this));
                                                 break;
                                             case Monster.FrozenMagician:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenMagician], 840 + (int)Direction * 4, 4, 400, this));
@@ -1974,6 +2015,17 @@ namespace Client.MirObjects
                                             case Monster.DarkWraith:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkWraith], 796 + (int)Direction * 5, 5, 500, this));
                                                 break;
+                                        case Monster.HornedSorceror:
+                                                int loops = 10;
+                                                int duration = 500;
+
+                                                for (int i = 0; i < loops; i++)
+                                                {
+                                                    SoundManager.PlaySound(BaseSound + 7, false, 0 + (i* duration));
+                                                }
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedSorceror], 971 + (int)Direction * 5, 5, duration, this) { Repeat = true, RepeatUntil = CMain.Time + (loops * duration) });
+                                                FrameInterval = 5000;
+                                            break;
                                         }
                                     }
                                     break;
@@ -2011,6 +2063,10 @@ namespace Client.MirObjects
                                             Effect ef = new Effect(Libraries.Monsters[(ushort)Monster.ManTree], 520, 8, 800, source, CMain.Time, drawBehind: true);
                                             MapControl.Effects.Add(ef);
                                             break;
+                                        case Monster.HornedSorceror:
+                                            SoundManager.PlaySound(BaseSound + 5);
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedSorceror], 624, 10, 1000, this));
+                                            break;
                                     }
                                     break;
                                 case 6:
@@ -2021,7 +2077,6 @@ namespace Client.MirObjects
                                             break;
                                     }
                                     break;
-                               
                                 case 10:
                                     switch (BaseImage)
                                     {
@@ -2031,6 +2086,12 @@ namespace Client.MirObjects
                                     }
                                     break;
                             }
+
+                            if (BaseImage == Monster.HornedSorceror && FrameIndex != 3)
+                            {
+                                FrameInterval = 100;
+                            }
+
                             NextMotion += FrameInterval;
                         }
                     }
@@ -2045,6 +2106,24 @@ namespace Client.MirObjects
                         if (UpdateFrame() >= Frame.Count)
                         {
                             
+                            FrameIndex = Frame.Count - 1;
+                            SetAction();
+                        }
+                        else
+                        {
+                            NextMotion += FrameInterval;
+                        }
+                    }
+                    break;
+                case MirAction.Attack5:
+                    if (CMain.Time >= NextMotion)
+                    {
+                        GameScene.Scene.MapControl.TextureValid = false;
+
+                        if (SkipFrames) UpdateFrame();
+
+                        if (UpdateFrame() >= Frame.Count)
+                        {
                             FrameIndex = Frame.Count - 1;
                             SetAction();
                         }
@@ -2122,6 +2201,20 @@ namespace Client.MirObjects
                                         {
                                             case Monster.LeftGuard:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.LeftGuard], 336 + (int)Direction * 3, 3, 3 * Frame.Interval, this));
+                                                break;
+                                            case Monster.DreamDevourer:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DreamDevourer], 264, 7, 7 * Frame.Interval, ob));
+                                                }
+                                                break;
+                                            case Monster.DarkDevourer:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkDevourer], 480, 7, 7 * Frame.Interval, ob));
+                                                }
                                                 break;
                                             case Monster.ManectricClaw:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ManectricClaw], 304 + (int)Direction * 10, 10, 10 * Frame.Interval, this));
@@ -3375,6 +3468,16 @@ namespace Client.MirObjects
             }
         }
 
+        public void PlayDashSound()
+        {
+            switch (BaseImage)
+            {
+                case Monster.HornedSorceror:
+                    SoundManager.PlaySound(BaseSound + 9);
+                    break;
+            }
+        }
+
         public void PlayFlinchSound()
         {
             switch (BaseImage)
@@ -3472,6 +3575,7 @@ namespace Client.MirObjects
             switch (BaseImage)
             {
                 case Monster.DarkCaptain:
+                case Monster.HornedSorceror:
                     return;
                 default:
                     SoundManager.PlaySound(BaseSound + 7);
@@ -3483,6 +3587,12 @@ namespace Client.MirObjects
         {
             SoundManager.PlaySound(BaseSound + 8);
         }
+
+        public void PlayFithAttackSound()
+        {
+            SoundManager.PlaySound(BaseSound + 9);
+        }
+
         public void PlaySwingSound()
         {
             switch (BaseImage)

@@ -325,6 +325,15 @@ namespace Server.MirObjects
                         ob.ApplyPoison(new Poison { PType = PoisonType.Dazed, Duration = 5, TickSpeed = 1000 }, this);
                     }
                     break;
+                case Spell.HornedSorcererDustTornado:
+                    {
+                        if (ob == Caster) return;
+                        if (Value == 0) return;
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                        if (ob.Dead) return;
+                        ob.Struck(Value, DefenceType.AC);
+                    }
+                    break;
             }
         }
 
@@ -436,6 +445,7 @@ namespace Server.MirObjects
                 case Spell.TreeQueenGroundRoots:
                 case Spell.FlyingStatueIceTornado:
                 case Spell.DarkOmaKingNuke:
+                case Spell.HornedSorcererDustTornado:
                     if (!Show)
                         return null;
 

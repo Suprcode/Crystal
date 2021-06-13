@@ -2820,6 +2820,11 @@ namespace Client.MirScenes
                                 action = new QueuedAction { Action = MirAction.Attack4, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
                                 break;
                             }
+                        case 4:
+                            {
+                                action = new QueuedAction { Action = MirAction.Attack5, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
+                                break;
+                            }
                     }
                 }
                 action.Params.Add(p.Spell);
@@ -4577,7 +4582,7 @@ namespace Client.MirScenes
                 MapObject ob = MapControl.Objects[i];
                 if (ob.ObjectID != p.ObjectID) continue;
 
-                ((PlayerObject)ob).JumpDistance = p.Distance;
+                ob.JumpDistance = p.Distance;
 
                 ob.ActionFeed.Add(new QueuedAction { Action = MirAction.DashAttack, Direction = p.Direction, Location = p.Location });
 
