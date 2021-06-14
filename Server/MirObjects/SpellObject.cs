@@ -552,8 +552,7 @@ namespace Server.MirObjects
                 {
                     if ((Caster == null) || (player == null)) continue;
 
-                    var friendly = Caster.Race == ObjectType.Player ? player.IsFriendlyTarget((PlayerObject)Caster) : player.IsFriendlyTarget((MonsterObject)Caster);
-                    if (player == Caster || friendly)
+                    if ((player == Caster) || player.IsFriendlyTarget(Caster))
                     {
                         p = GetInfo();
 

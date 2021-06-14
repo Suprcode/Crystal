@@ -487,6 +487,19 @@ namespace Server.MirObjects
 
         public abstract int Struck(int damage, DefenceType type = DefenceType.ACAgility);
 
+        public bool IsFriendlyTarget(MapObject ally)
+        {
+            switch (ally.Race)
+            {
+                case ObjectType.Player:
+                    return IsFriendlyTarget((PlayerObject)ally);
+                case ObjectType.Monster:
+                    return IsFriendlyTarget((MonsterObject)ally);
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
         public abstract bool IsFriendlyTarget(PlayerObject ally);
         public abstract bool IsFriendlyTarget(MonsterObject ally);
 

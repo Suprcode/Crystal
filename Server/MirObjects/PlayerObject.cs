@@ -2460,9 +2460,8 @@ namespace Server.MirObjects
                         else if (ob.Race == ObjectType.Spell)
                         {
                             SpellObject obSpell = (SpellObject)ob;
-                            var friendly = obSpell.Caster.Race == ObjectType.Player ? IsFriendlyTarget((PlayerObject)obSpell.Caster) : obSpell.Caster.IsFriendlyTarget((MonsterObject)obSpell.Caster);
 
-                            if (obSpell.Spell != Spell.ExplosiveTrap || friendly)
+                            if ((obSpell.Spell != Spell.ExplosiveTrap) || (obSpell.Caster != null && IsFriendlyTarget(obSpell.Caster)))
                                 Enqueue(ob.GetInfo());
                         }
                         else if (ob.Race == ObjectType.Merchant)
