@@ -379,7 +379,7 @@ namespace Server.MirObjects
                 //case 170: TODO - BoulderSpirit //Spawned by HornedCommander - explode when near
 
                 case 171:
-                    return new HornedCommander(info); //TODO
+                    return new HornedCommander(info); //TODO Effect 10
 
 
                 case 172:

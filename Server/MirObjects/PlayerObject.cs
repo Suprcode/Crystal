@@ -2445,12 +2445,6 @@ namespace Server.MirObjects
                         MapObject ob = cell.Objects[i];
                         if (ob == this) continue;
 
-                        if (ob.Race == ObjectType.Deco)
-                        {
-                            var tt = 0;
-
-                            tt++;
-                        }
                         //if (ob.Race == ObjectType.Player && ob.Observer) continue;
                         if (ob.Race == ObjectType.Player)
                         {

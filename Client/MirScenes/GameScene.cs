@@ -3403,6 +3403,11 @@ namespace Client.MirScenes
                             playDefaultSound = false;
                             break;
                         }
+                    case 10: //HornedCommander
+                        {
+                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedCommander], 928, 10, 1000, ob));
+                            break;
+                        }
                     default:
                         {
                             effect = new Effect(Libraries.Magic, 250, 10, 500, ob);
@@ -3482,6 +3487,11 @@ namespace Client.MirScenes
                             ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Doe], 208, 10, 1000, ob));
                             SoundManager.PlaySound(((ushort)Monster.Doe) * 10 + 7);
                             playDefaultSound = false;
+                            break;
+                        }
+                    case 10: //HornedCommander
+                        {
+                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedCommander], 928, 10, 1000, ob));
                             break;
                         }
                     default:
