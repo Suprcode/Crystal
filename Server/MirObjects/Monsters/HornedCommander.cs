@@ -180,7 +180,5 @@ namespace Server.MirObjects.Monsters
                 ActionList.Add(action);
             }
         }
-
-
     }
 }
