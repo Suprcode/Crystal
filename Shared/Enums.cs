@@ -507,10 +507,10 @@ public enum Monster : ushort
     OmaAssassin = 314, 
     OmaMage = 315, 
     OmaWitchDoctor = 316,
-    LightningBead = 317, // Minion of DarkOmaKing
-    HealingBead = 318, // Minion of DarkOmaKing
-    PowerUpBead = 319, // Minion of DarkOmaKing
-    DarkOmaKing = 320, //TODO - BOSS AI
+    LightningBead = 317, //Effect 0, AI 149
+    HealingBead = 318, //Effect 1, AI 149
+    PowerUpBead = 319, //Effect 2, AI 14
+    DarkOmaKing = 320, //BOSS
     CaveStatue = 321,
     Mandrill = 322, // EFFECT 7, AI 65
     PlagueCrab = 323,
@@ -524,28 +524,28 @@ public enum Monster : ushort
     AxePlant = 331,
     WoodBox = 332,
     ClawBeast = 333, //AI 8
-    DarkCaptain = 334, //BOSS - Needs power up bead attack adding
+    DarkCaptain = 334, //BOSS
     SackWarrior = 335,
     WereTiger = 336, //AI 112
     KingHydrax = 337,
     Hydrax = 338,
     HornedMage = 339,
-    BlueSoul = 340, //TODO
-    HornedArcher = 341, // Incomplete AI (DG) - Need to code the buffs.
-    ColdArcher = 342, // Done (DG) - //TODO - check wemade file for arrow issue
-    HornedWarrior = 343, // TODO - HAS BUFF MECHANIC
-    FloatingRock = 344, // Done (DG)
-    ScalyBeast = 345, //Done
+    BlueSoul = 340,
+    HornedArcher = 341,
+    ColdArcher = 342,
+    HornedWarrior = 343,
+    FloatingRock = 344,
+    ScalyBeast = 345,
     HornedSorceror = 346,
     BoulderSpirit = 347,
-    HornedCommander = 348,
+    HornedCommander = 348, //BOSS
 
-    MoonStone = 349,
-    SunStone = 350,
-    LightningStone = 351,
+    MoonStone = 349, //TODO
+    SunStone = 350, //TODO
+    LightningStone = 351, //TODO
     Turtlegrass = 352, // Done (DG)
     ManTree = 353, //Done (DG)
-    Bear = 354, //Done (DG)
+    Bear = 354,  //Effect 1, AI 112
     Leopard = 355, // Basic mob (No AI or spell animations) (DG)
     ChieftainArcher = 356,
     ChieftainSword = 357, //TODO - BOSS AI
@@ -1221,6 +1221,8 @@ public enum Spell : byte
     FlyingStatueIceTornado = 213,
     DarkOmaKingNuke = 214,
     HornedSorcererDustTornado = 215,
+    HornedCommanderRockFall = 216,
+    HornedCommanderRockSpike = 217
 }
 
 public enum SpellEffect : byte
@@ -1299,6 +1301,7 @@ public enum BuffType : byte
     RhinoPriestDebuff,
     PowerBeadBuff,
     HornedWarriorShield,
+    HornedCommanderShield,
 
     //special
     GameMaster = 100,

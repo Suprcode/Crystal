@@ -302,8 +302,8 @@ namespace Client.MirObjects
             }
 
             ProcessBuffs();
-
         }
+
         public void ProcessBuffs()
         {
             for (int i = 0; i < Buffs.Count; i++)
@@ -401,7 +401,6 @@ namespace Client.MirObjects
             }
 
             #endregion
-
 
             DrawY = Movement.Y > CurrentLocation.Y ? Movement.Y : CurrentLocation.Y;
 
@@ -504,6 +503,7 @@ namespace Client.MirObjects
                 QueuedAction action = ActionFeed[0];
                 ActionFeed.RemoveAt(0);
 
+                CurrentActionLevel = 0;
                 CurrentAction = action.Action;
                 CurrentLocation = action.Location;
                 Direction = action.Direction;
@@ -659,6 +659,7 @@ namespace Client.MirObjects
                         GameScene.Scene.Redraw();
                         break;
                     case MirAction.Attack1:
+                        CurrentActionLevel = (byte)action.Params[1];
                         PlayAttackSound();
                         switch (BaseImage)
                         {
@@ -752,6 +753,7 @@ namespace Client.MirObjects
                         }
                         break;
                     case MirAction.Attack2:
+                        CurrentActionLevel = (byte)action.Params[1];
                         PlaySecondAttackSound();
                         switch (BaseImage)
                         {
@@ -816,9 +818,6 @@ namespace Client.MirObjects
                             case Monster.HornedSorceror:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedSorceror], 552 + (int)Direction * 9, 9, 900, this));
                                 break;
-                                //case Monster.HornedWarrior:
-                                //    Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedWarrior], 768 + (int)Direction * 8, 8, Frame.Count * Frame.Interval, this));
-                                //    break;
                         }
 
                         if ((ushort)BaseImage >= 10000)
@@ -827,6 +826,7 @@ namespace Client.MirObjects
                         }
                         break;
                     case MirAction.Attack3:
+                        CurrentActionLevel = (byte)action.Params[1];
                         PlayThirdAttackSound();
                         switch (BaseImage)
                         {
@@ -858,6 +858,7 @@ namespace Client.MirObjects
                         }
                         break;
                     case MirAction.Attack4:
+                        CurrentActionLevel = (byte)action.Params[1];
                         PlayFourthAttackSound();
                         switch (BaseImage)
                         {
@@ -867,6 +868,7 @@ namespace Client.MirObjects
                         }
                         break;
                     case MirAction.Attack5:
+                        CurrentActionLevel = (byte)action.Params[1];
                         PlayFithAttackSound();
                         break;
                     case MirAction.AttackRange1:
@@ -2012,25 +2014,30 @@ namespace Client.MirObjects
                                         case Monster.GasToad:
                                             Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GasToad], 440, 9, 9 * Frame.Interval, this));
                                             break;
-                                    }
-                                    break;
-                                case 2:
-                                    switch (BaseImage)
-                                    {
                                         case Monster.HornedCommander:
                                             {
-                                                int loops = 5;
-                                                int duration = 350;
+                                                //Spin
+                                                int loops = CurrentActionLevel;
+                                                int duration = 7 * FrameInterval;
+                                                int totalDuration = loops * duration;
 
-                                                for (int i = 0; i < loops; i++)
+                                                if (FrameLoop == null)
                                                 {
-                                                    SoundManager.PlaySound(BaseSound + 7, false, 0 + (i * duration));
+                                                    for (int i = 0; i < loops; i++)
+                                                    {
+                                                        SoundManager.PlaySound(8451, false, 0 + (i * duration));
+                                                    }
+
+                                                    Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedCommander], 808 + (int)Direction * 7, 7, duration, this) { Repeat = true, RepeatUntil = CMain.Time + totalDuration });
                                                 }
-                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedCommander], 808 + (int)Direction * 7, 7, duration, this) { Repeat = true, RepeatUntil = CMain.Time + (loops * duration) });
-                                                FrameInterval = loops * duration;
+
+                                                LoopFrame(FrameIndex, 3, FrameInterval, totalDuration);
+
                                             }
                                             break;
                                     }
+                                    break;
+                                case 2:
                                     break;
                                 case 3:
                                     {
@@ -2044,15 +2051,20 @@ namespace Client.MirObjects
                                                 break;
                                             case Monster.HornedSorceror:
                                                 {
-                                                    int loops = 10;
-                                                    int duration = 500;
+                                                    int loops = CurrentActionLevel;
+                                                    int duration = 5 * FrameInterval;
+                                                    int totalDuration = loops * duration;
 
-                                                    for (int i = 0; i < loops; i++)
+                                                    if (FrameLoop == null)
                                                     {
-                                                        SoundManager.PlaySound(BaseSound + 7, false, 0 + (i * duration));
+                                                        for (int i = 0; i < loops; i++)
+                                                        {
+                                                            SoundManager.PlaySound(BaseSound + 7, false, 0 + (i * duration));
+                                                        }
+                                                        Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedSorceror], 971 + (int)Direction * 5, 5, duration, this) { Repeat = true, RepeatUntil = CMain.Time + totalDuration });
                                                     }
-                                                    Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedSorceror], 971 + (int)Direction * 5, 5, duration, this) { Repeat = true, RepeatUntil = CMain.Time + (loops * duration) });
-                                                    FrameInterval = loops * duration;
+
+                                                    LoopFrame(FrameIndex, 1, FrameInterval, totalDuration);
                                                 }
                                                 break;
                                         }
@@ -2097,6 +2109,7 @@ namespace Client.MirObjects
                                             Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedSorceror], 624, 10, 10 * Frame.Interval, this));
                                             break;
                                         case Monster.HornedCommander:
+                                            SoundManager.PlaySound(8452, false);
                                             Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedCommander], 864, 8, 8 * Frame.Interval, this));
                                             break;
                                     }
@@ -2119,9 +2132,6 @@ namespace Client.MirObjects
                                     break;
                             }
 
-                            if (BaseImage == Monster.HornedSorceror && FrameIndex != 3) FrameInterval = 100;
-                            else if (BaseImage == Monster.HornedCommander && FrameIndex != 2) FrameInterval = 100;
-
                             NextMotion += FrameInterval;
                         }
                     }
@@ -2143,28 +2153,41 @@ namespace Client.MirObjects
                         {
                             switch (FrameIndex)
                             {
-                                case 2:
+                                case 1:
                                     switch (BaseImage)
                                     {
                                         case Monster.HornedCommander:
                                             {
-                                                int loops = 5;
-                                                int duration = 250;
+                                                //Rockfall
+                                                int loops = CurrentActionLevel;
+                                                int duration = 5 * FrameInterval;
+                                                int totalDuration = loops * duration;
 
-                                                for (int i = 0; i < loops; i++)
+                                                if (FrameLoop == null)
                                                 {
-                                                    SoundManager.PlaySound(BaseSound + 7, false, 0 + (i * duration));
+                                                    for (int i = 0; i < loops; i++)
+                                                    {
+                                                        SoundManager.PlaySound(8453, false, 0 + (i * duration));
+                                                    }
+
+                                                    Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedCommander], 1026 + (int)Direction * 5, 5, duration, this) { Repeat = true, RepeatUntil = CMain.Time + totalDuration });
                                                 }
 
-                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedCommander], 1026 + (int)Direction * 5, 5, duration, this) { Repeat = true, RepeatUntil = CMain.Time + (loops * duration) });
-                                                FrameInterval = loops * duration;
+                                                LoopFrame(FrameIndex, 3, FrameInterval, totalDuration);
                                             }
                                             break;
                                     }
                                     break;
+                                case 5:
+                                    switch (BaseImage)
+                                    {
+                                        case Monster.HornedCommander:
+                                            SoundManager.PlaySound(8454);
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedCommander], 1078 + (int)Direction * 8, 8, 8 * Frame.Interval, this));
+                                            break;
+                                    }                                      
+                                    break;
                             }
-
-                            if (BaseImage == Monster.HornedCommander && FrameIndex != 2) FrameInterval = 100;
 
                             NextMotion += FrameInterval;
                         }
@@ -2184,6 +2207,21 @@ namespace Client.MirObjects
                         }
                         else
                         {
+                            switch (FrameIndex)
+                            {
+                                case 4:
+                                    {
+                                        switch (BaseImage)
+                                        {
+                                            case Monster.HornedCommander:
+                                                LoopFrame(FrameIndex, 2, FrameInterval, CurrentActionLevel * 1000);
+                                                break;
+                                        }
+                                        break;
+                                    }
+                                    break;
+                            }
+
                             NextMotion += FrameInterval;
                         }
                     }
@@ -3330,6 +3368,9 @@ namespace Client.MirObjects
                                         case Monster.WoodBox:
                                             Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.WoodBox], 104, 6, 6 * Frame.Interval, this) { Blend = true });
                                             break;
+                                        case Monster.BoulderSpirit:
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BoulderSpirit], 64, 8, 8 * Frame.Interval, this) { Blend = true });
+                                            break;
                                     }
                                     break;
                                 case 5:
@@ -3382,6 +3423,19 @@ namespace Client.MirObjects
         public int UpdateFrame()
         {
             if (Frame == null) return 0;
+
+            if (FrameLoop != null)
+            {
+                if (FrameLoop.CurrentCount > FrameLoop.Loops)
+                {
+                    FrameLoop = null;
+                }
+                else if (FrameIndex >= FrameLoop.End)
+                {
+                    FrameIndex = FrameLoop.Start - 1;
+                    FrameLoop.CurrentCount++;
+                }
+            }
 
             if (Frame.Reverse) return Math.Abs(--FrameIndex);
 
@@ -3638,6 +3692,7 @@ namespace Client.MirObjects
             {
                 case Monster.DarkCaptain:
                 case Monster.HornedSorceror:
+                case Monster.HornedCommander:
                     return;
                 default:
                     SoundManager.PlaySound(BaseSound + 7);
@@ -3647,7 +3702,14 @@ namespace Client.MirObjects
 
         public void PlayFourthAttackSound()
         {
-            SoundManager.PlaySound(BaseSound + 8);
+            switch (BaseImage)
+            {
+                case Monster.HornedCommander:
+                    return;
+                default:
+                    SoundManager.PlaySound(BaseSound + 8);
+                    return;
+            }
         }
 
         public void PlayFithAttackSound()
@@ -3794,6 +3856,7 @@ namespace Client.MirObjects
                 case Monster.KingGuard:
                 case Monster.TreeGuardian:
                 case Monster.DarkCaptain:
+                case Monster.HornedCommander:
                     SoundManager.PlaySound(BaseSound + 7);
                     return;
                 case Monster.AncientBringer:

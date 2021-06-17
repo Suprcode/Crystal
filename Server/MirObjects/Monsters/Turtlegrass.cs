@@ -6,7 +6,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class TurtleGrass : ZumaMonster
+    public class TurtleGrass : ZumaMonster
     {
         protected internal TurtleGrass(MonsterInfo info)
             : base(info)
@@ -24,7 +24,6 @@ namespace Server.MirObjects.Monsters
             }
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
@@ -41,9 +40,6 @@ namespace Server.MirObjects.Monsters
 
                 SinglePushAttack(damage, DefenceType.AC);
             }
-
-            if (Target.Dead)
-                FindTarget();
         }
         
 
@@ -54,8 +50,6 @@ namespace Server.MirObjects.Monsters
             if (InAttackRange() && CanAttack)
             {
                 Attack();
-                if (Target.Dead)
-                    FindTarget();
 
                 return;
             }

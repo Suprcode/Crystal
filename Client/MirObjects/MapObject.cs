@@ -61,8 +61,10 @@ namespace Client.MirObjects
         public int Light, DrawY;
         public long NextMotion, NextMotion2;
         public MirAction CurrentAction;
+        public byte CurrentActionLevel;
         public bool SkipFrames;
-        
+        public FrameLoop FrameLoop = null;
+
         //Sound
         public int StruckWeapon;
 
@@ -190,6 +192,13 @@ namespace Client.MirObjects
                     break;
                 case BuffType.HornedWarriorShield:
                     Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.HornedWarrior], 912, 18, 1800, this, true, type) { Repeat = true });
+                    break;
+                case BuffType.HornedCommanderShield:
+                    Effects.Add(effect = new BuffEffect(Libraries.Monsters[(ushort)Monster.HornedCommander], 1173, 1, 100, this, true, type) { Repeat = false, Light = 1 });
+                    effect.Complete += (o, e) =>
+                    {
+                        Effects.Add(new BuffEffect(Libraries.Monsters[(ushort)Monster.HornedCommander], 1174, 16, 1600, this, true, type) { Repeat = true, Light = 1 });
+                    };
                     break;
             }
         }
@@ -438,6 +447,28 @@ namespace Client.MirObjects
 
         public abstract void DrawEffects(bool effectsEnabled);
 
+        protected void LoopFrame(int start, int frameCount, int frameInterval, int duration)
+        {
+            if (FrameLoop == null)
+            {
+                FrameLoop = new FrameLoop
+                {
+                    Start = start,
+                    End = start + frameCount - 1,
+                    Loops = (duration / (frameInterval * frameCount)) - 1 //Remove 1 count as we've already done a loop before this is checked
+                };
+            }
+        }
+    }
+
+    public class FrameLoop
+    {
+        public MirAction Action { get; set; }
+        public int Start { get; set; }
+        public int End { get; set; }
+        public int Loops { get; set; }
+
+        public int CurrentCount { get; set; }
     }
 
 }

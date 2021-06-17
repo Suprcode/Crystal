@@ -92,7 +92,7 @@ namespace Server.MirObjects.Monsters
                     location = new Point(CurrentLocation.X + Envir.Random.Next(-distance, distance + 1),
                                          CurrentLocation.Y + Envir.Random.Next(-distance, distance + 1));
 
-                if (Teleport(CurrentMap, location, true, Info.Effect)) return true;
+                if (Teleport(CurrentMap, location, true, 9)) return true;
             }
 
             return false;

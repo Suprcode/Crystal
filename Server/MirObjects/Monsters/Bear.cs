@@ -45,9 +45,6 @@ namespace Server.MirObjects.Monsters
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.ACAgility, true);
                 ActionList.Add(action);
             }
-
-            if (Target.Dead)
-                FindTarget();
         }
 
         protected override void CompleteAttack(IList<object> data)
@@ -59,9 +56,9 @@ namespace Server.MirObjects.Monsters
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            var finalDamage = target.Attacked(this, damage, defence);
+            if (target.Attacked(this, damage, defence) <= 0) return;
 
-            if (finalDamage > 0 && poison)
+            if (poison)
             {
                 PoisonTarget(target, 2, 5, PoisonType.Bleeding);
             }

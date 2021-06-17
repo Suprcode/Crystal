@@ -446,6 +446,8 @@ namespace Server.MirEnvir
                 if (GetMonsterInfo(Settings.GeneralMeowMeowMob3, true) == null) return "Cannot start server without mob: " + Settings.GeneralMeowMeowMob3;
                 if (GetMonsterInfo(Settings.GeneralMeowMeowMob4, true) == null) return "Cannot start server without mob: " + Settings.GeneralMeowMeowMob4;
                 if (GetMonsterInfo(Settings.KingHydraxMob, true) == null) return "Cannot start server without mob: " + Settings.KingHydraxMob;
+                if (GetMonsterInfo(Settings.HornedCommanderMob, true) == null) return "Cannot start server without mob: " + Settings.HornedCommanderMob;
+                if (GetMonsterInfo(Settings.HornedCommanderBombMob, true) == null) return "Cannot start server without mob: " + Settings.HornedCommanderBombMob;
 
                 if (GetItemInfo(Settings.RefineOreName) == null) return "Cannot start server without item: " + Settings.RefineOreName;
             }

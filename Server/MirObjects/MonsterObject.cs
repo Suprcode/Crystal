@@ -375,11 +375,14 @@ namespace Server.MirObjects
                     return new WereTiger(info);
                 case 169:
                     return new HornedSorceror(info);
-
-                //case 170: TODO - BoulderSpirit //Spawned by HornedCommander - explode when near
-
+                case 170:
+                    return new BoulderSpirit(info);
                 case 171:
-                    return new HornedCommander(info); //TODO Effect 10
+                    return new HornedCommander(info); //TODO
+
+                //case 172: MoonSunLightningStone //TODO
+
+
 
 
                 case 172:
@@ -388,14 +391,12 @@ namespace Server.MirObjects
                     return new AntCommander(info);
 
 
-
-
                 case 212:
                     return new TurtleGrass(info);
                 case 213:
                     return new ManTree(info);
                 case 215:
-                    return new Bear(info);
+                    return new Bear(info); //TODO - DELETE, Dupe AI
                 case 214:
                     return new FrozenFighter(info);
                 case 216:
@@ -483,6 +484,14 @@ namespace Server.MirObjects
         public override int MaxHealth
         {
             get { return Stats[Stat.HP]; }
+        }
+
+        public int HealthPercent
+        { 
+            get 
+            { 
+                return (Health * 100) / MaxHealth; 
+            } 
         }
 
         public int HP;
@@ -1137,7 +1146,6 @@ namespace Server.MirObjects
                 time = Buffs[i].ExpireTime;
             }
 
-
             if (OperateTime <= Envir.Time || time < OperateTime)
                 OperateTime = time;
         }
@@ -1419,11 +1427,19 @@ namespace Server.MirObjects
                         break;
                 }
 
+                ProcessBuffEnd(buff);
+
                 refresh = true;
             }
 
             if (refresh) RefreshAll();
         }
+
+        protected virtual void ProcessBuffEnd(Buff buff)
+        {
+
+        }
+
         protected virtual void ProcessAI()
         {
             if (Dead) return;
@@ -1778,7 +1794,6 @@ namespace Server.MirObjects
             InSafeZone = CurrentMap.GetSafeZone(CurrentLocation) != null;
 
             Broadcast(new S.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-
 
             cell = CurrentMap.GetCell(CurrentLocation);
 

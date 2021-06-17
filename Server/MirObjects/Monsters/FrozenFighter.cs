@@ -7,7 +7,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class FrozenFighter : MonsterObject
+    public class FrozenFighter : MonsterObject
     {
         protected internal FrozenFighter(MonsterInfo info)
             : base(info)
@@ -69,22 +69,19 @@ namespace Server.MirObjects.Monsters
             DefenceType defence = (DefenceType)data[2];
             bool lineAttack = (bool)data[3];
 
-
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
             if (lineAttack)
             {
-
                 for (int i = 1; i <= 2; i++)
                 {
                     Point lineTarget = Functions.PointMove(CurrentLocation, Direction, i);
 
                     if (lineTarget == target.CurrentLocation)
                     {
-                        target.Attacked(this, damage, DefenceType.ACAgility);
+                        if (target.Attacked(this, damage, DefenceType.ACAgility) <= 0) continue;
                         PoisonTarget(target, 7, 5, PoisonType.Dazed, 1000);
                     }
-
                     else
                     {
                         if (!CurrentMap.ValidPoint(lineTarget)) continue;
@@ -98,7 +95,7 @@ namespace Server.MirObjects.Monsters
                             if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
                             {
                                 if (!ob.IsAttackTarget(this)) continue;
-                                ob.Attacked(this, damage, DefenceType.ACAgility);
+                                if (ob.Attacked(this, damage, DefenceType.ACAgility) <= 0) continue;
 
                                 PoisonTarget(ob, 7, 5, PoisonType.Dazed, 1000);
                             }
@@ -117,8 +114,7 @@ namespace Server.MirObjects.Monsters
             if (InAttackRange() && CanAttack)
             {
                 Attack();
-                if (Target.Dead)
-                    FindTarget();
+
                 return;
             }
 

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Server.MirObjects.Monsters
 {
-    class ManTree : ZumaMonster
+    public class ManTree : ZumaMonster
     {
         protected internal ManTree(MonsterInfo info)
             : base(info)
@@ -26,17 +26,17 @@ namespace Server.MirObjects.Monsters
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);            
 
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
-
             AttackTime = Envir.Time + AttackSpeed;
             ActionTime = Envir.Time + 300;
 
             if (Envir.Random.Next(8) > 0)
             {
+                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+
                 if (Envir.Random.Next(4) > 0)
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                    if (damage == 0) return;
 
                     DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 600, Target, damage, DefenceType.ACAgility, false, false);
                     ActionList.Add(action);
@@ -44,6 +44,7 @@ namespace Server.MirObjects.Monsters
                 else
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                    if (damage == 0) return;
 
                     DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 600, Target, damage, DefenceType.ACAgility, true, false);
                     ActionList.Add(action);
@@ -51,14 +52,14 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
+                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+                if (damage == 0) return;
 
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 600, Target, damage, DefenceType.ACAgility, false, true);
                 ActionList.Add(action);
             }
-
-            if (Target.Dead)
-                FindTarget();
         }
 
         protected override void CompleteAttack(IList<object> data)
@@ -67,7 +68,7 @@ namespace Server.MirObjects.Monsters
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
             bool halfMoonAttack = (bool)data[3];
-            bool bouldSmashAttack = (bool)data[4];
+            bool boulderSmashAttack = (bool)data[4];
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
@@ -95,9 +96,11 @@ namespace Server.MirObjects.Monsters
                         break;
                     }
                 }
+
+                return;
             }
 
-            if (bouldSmashAttack)
+            if (boulderSmashAttack)
             {
                 List<MapObject> targets = FindAllTargets(1, target.CurrentLocation);
                 if (targets.Count == 0) return;
@@ -106,15 +109,15 @@ namespace Server.MirObjects.Monsters
                 {
                     if (targets[i].IsAttackTarget(this))
                     {
-                        targets[i].Attacked(this, damage, defence);
+                        if (targets[i].Attacked(this, damage, defence) <= 0) continue;
                         PoisonTarget(targets[Envir.Random.Next(targets.Count)], 5, 5, PoisonType.Stun);
                     }
                 }
+
+                return;
             }
-            else
-            {
-                target.Attacked(this, damage, defence);
-            }
+
+            target.Attacked(this, damage, defence);
         }
     }
 }

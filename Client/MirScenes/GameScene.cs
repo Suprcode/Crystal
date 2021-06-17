@@ -3356,17 +3356,17 @@ namespace Client.MirScenes
                 {
                     case 1: //Yimoogi
                         {
-                            effect = new Effect(Libraries.Magic2, 1300, 10, 500, ob);
+                            effect = new Effect(Libraries.Magic2, 1300, 10, 500, ob.CurrentLocation);
                             break;
                         }
                     case 2: //RedFoxman
                         {
-                            effect = new Effect(Libraries.Monsters[(ushort)Monster.RedFoxman], 243, 10, 500, ob);
+                            effect = new Effect(Libraries.Monsters[(ushort)Monster.RedFoxman], 243, 10, 500, ob.CurrentLocation);
                             break;
                         }
                     case 4: //MutatedManWorm
                         {
-                            effect = new Effect(Libraries.Monsters[(ushort)Monster.MutatedManworm], 272, 6, 500, ob);
+                            effect = new Effect(Libraries.Monsters[(ushort)Monster.MutatedManworm], 272, 6, 500, ob.CurrentLocation);
 
                             SoundManager.PlaySound(((ushort)Monster.MutatedManworm) * 10 + 7);
                             playDefaultSound = false;
@@ -3374,52 +3374,59 @@ namespace Client.MirScenes
                         }
                     case 5: //WitchDoctor
                         {
-                            effect = new Effect(Libraries.Monsters[(ushort)Monster.WitchDoctor], 328, 20, 1000, ob);
+                            effect = new Effect(Libraries.Monsters[(ushort)Monster.WitchDoctor], 328, 20, 1000, ob.CurrentLocation);
                             SoundManager.PlaySound(((ushort)Monster.WitchDoctor) * 10 + 7);
                             playDefaultSound = false;
                             break;
                         }
                     case 6: //TurtleKing
                         {
-                            effect = new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], 946, 10, 500, ob);
+                            effect = new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], 946, 10, 500, ob.CurrentLocation);
                             break;
                         }
                     case 7: //Mandrill
                         {
-                            effect = new Effect(Libraries.Monsters[(ushort)Monster.Mandrill], 280, 10, 1000, ob);
+                            effect = new Effect(Libraries.Monsters[(ushort)Monster.Mandrill], 280, 10, 1000, ob.CurrentLocation);
                             break;
                         }
                     case 8: //DarkCaptain
                         {
-                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkCaptain], 1224, 10, 1000, ob));
+                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkCaptain], 1224, 10, 1000, ob.CurrentLocation));
                             SoundManager.PlaySound(((ushort)Monster.DarkCaptain) * 10 + 8);
                             playDefaultSound = false;
                             break;
                         }
                     case 9: //Doe
                         {
-                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Doe], 208, 10, 1000, ob));
+                            effect = new Effect(Libraries.Monsters[(ushort)Monster.Doe], 208, 10, 1000, ob.CurrentLocation);
                             SoundManager.PlaySound(((ushort)Monster.Doe) * 10 + 7);
                             playDefaultSound = false;
                             break;
                         }
                     case 10: //HornedCommander
                         {
-                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedCommander], 928, 10, 1000, ob));
+                            MapControl.Effects.Add(effect = new Effect(Libraries.Monsters[(ushort)Monster.HornedCommander], 928, 10, 1000, ob.CurrentLocation));
+                            SoundManager.PlaySound(8455);
+                            playDefaultSound = false;
                             break;
                         }
                     default:
                         {
-                            effect = new Effect(Libraries.Magic, 250, 10, 500, ob);
+                            effect = new Effect(Libraries.Magic, 250, 10, 500, ob.CurrentLocation);
                             break;
                         }
                 }
 
-                if (effect != null)
-                {
-                    effect.Complete += (o, e) => ob.Remove();
-                    ob.Effects.Add(effect);
-                }
+                //Doesn't seem to have ever worked properly - Meant to remove object after animation complete, however due to server mechanics will always
+                //instantly remove object and never play TeleportOut animation. Changing to a MapEffect - not ideal as theres no delay.
+
+                MapControl.Effects.Add(effect);
+
+                //if (effect != null)
+                //{
+                //    effect.Complete += (o, e) => ob.Remove();
+                //    ob.Effects.Add(effect);
+                //}
 
                 if (playDefaultSound)
                 {
@@ -3492,6 +3499,8 @@ namespace Client.MirScenes
                     case 10: //HornedCommander
                         {
                             ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedCommander], 928, 10, 1000, ob));
+                            SoundManager.PlaySound(8455);
+                            playDefaultSound = false;
                             break;
                         }
                     default:

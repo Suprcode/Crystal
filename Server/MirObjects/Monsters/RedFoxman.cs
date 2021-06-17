@@ -32,7 +32,7 @@ namespace Server.MirObjects.Monsters
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
-            byte spelltype = Envir.Random.Next(2) == 0 ? (byte)1 : (byte)2;
+            byte spelltype = Envir.Random.Next(2) == 0 ? (byte)0 : (byte)1;
             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = spelltype });
 
             ActionTime = Envir.Time + 300;
@@ -51,10 +51,10 @@ namespace Server.MirObjects.Monsters
 
             if (InAttackRange() && (Envir.Time < FearTime))
             {
-                if (Functions.InRange(CurrentLocation, Target.CurrentLocation, 1) && Envir.Time > TeleportTime && Envir.Random.Next(8) == 0)
+                if (Functions.InRange(CurrentLocation, Target.CurrentLocation, 1) && Envir.Time > TeleportTime && Envir.Random.Next(1) == 0)
                 {
                     TeleportTime = Envir.Time + 10000;
-                    TeleportRandom(40, 4);
+                    TeleportRandom(40, 14);
                     return;
                 }
                 else

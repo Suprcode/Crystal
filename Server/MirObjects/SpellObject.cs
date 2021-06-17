@@ -154,19 +154,19 @@ namespace Server.MirObjects
                     break;
                 case Spell.Blizzard:
                     {
-                            if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
-                            if (ob.Dead) return;
-                            if (Caster != null && ((PlayerObject)Caster).ActiveBlizzard == false) return;
-                            if (!ob.IsAttackTarget(Caster)) return;
-                            ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
-                            if (!ob.Dead && Envir.Random.Next(8) == 0)
-                                ob.ApplyPoison(new Poison
-                                {
-                                    Duration = 5 + Envir.Random.Next(Caster.Stats[Stat.Freezing]),
-                                    Owner = Caster,
-                                    PType = PoisonType.Slow,
-                                    TickSpeed = 2000,
-                                }, Caster);
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                        if (ob.Dead) return;
+                        if (Caster != null && ((PlayerObject)Caster).ActiveBlizzard == false) return;
+                        if (!ob.IsAttackTarget(Caster)) return;
+                        ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
+                        if (!ob.Dead && Envir.Random.Next(8) == 0)
+                            ob.ApplyPoison(new Poison
+                            {
+                                Duration = 5 + Envir.Random.Next(Caster.Stats[Stat.Freezing]),
+                                Owner = Caster,
+                                PType = PoisonType.Slow,
+                                TickSpeed = 2000,
+                            }, Caster);
                     }
                     break;
                 case Spell.MeteorStrike:
@@ -209,39 +209,44 @@ namespace Server.MirObjects
                     break;
                 case Spell.GeneralMeowMeowThunder:
                     {
-                        if (ob == Caster) return;
-                        if (Value == 0) return;
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
+                        if (ob == Caster) return;
+                        if (!ob.IsAttackTarget(Caster)) return;
+
+                        if (Value == 0) return;
                         ob.Struck(Value, DefenceType.MAC);
                     }
                     break;
                 case Spell.TreeQueenRoot:
                     {
-                        if (ob == Caster) return;
-                        if (Value == 0) return;
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
+                        if (ob == Caster) return;
+                        if (!ob.IsAttackTarget(Caster)) return;
+
+                        if (Value == 0) return;
                         ob.Struck(Value, DefenceType.MAC);
                     }
                     break;
                 case Spell.TreeQueenMassRoots:
                     {
-                        if (ob == Caster) return;
-
-                        if (Value == 0) return;
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
+                        if (ob == Caster) return;
+                        if (!ob.IsAttackTarget(Caster)) return;
+
+                        if (Value == 0) return;
                         ob.Struck(Value, DefenceType.MAC);
                     }
                     break;
                 case Spell.TreeQueenGroundRoots:
                     {
-                        if (ob == Caster) return;
-
-                        if (Value == 0) return;
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
+                        if (ob == Caster) return;
+                        if (!ob.IsAttackTarget(Caster)) return;
+
                         ob.Struck(Value, DefenceType.MAC);
 
                         if (Envir.Random.Next(3) > 0)
@@ -252,25 +257,34 @@ namespace Server.MirObjects
                     break;
                 case Spell.StoneGolemQuake:
                     {
-                        if (Value == 0) return;
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
+                        if (ob == Caster) return;
+                        if (!ob.IsAttackTarget(Caster)) return;
+
+                        if (Value == 0) return;
                         ob.Struck(Value, DefenceType.AC);
                     }
                     break;
                 case Spell.EarthGolemPile:
                     {
-                        if (Value == 0) return;
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
+                        if (ob == Caster) return;
+                        if (!ob.IsAttackTarget(Caster)) return;
+
+                        if (Value == 0) return;
                         ob.Struck(Value, DefenceType.AC);
                     }
                     break;
                 case Spell.TucsonGeneralRock:
                     {
-                        if (Value == 0) return;
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
+                        if (ob == Caster) return;
+                        if (!ob.IsAttackTarget(Caster)) return;
+
+                        if (Value == 0) return;
                         ob.Struck(Value, DefenceType.AC);
                     }
                     break;
@@ -302,11 +316,11 @@ namespace Server.MirObjects
                     break;
                 case Spell.FlyingStatueIceTornado:
                     {
-                        if (ob == Caster) return;
-
-                        if (Value == 0) return;
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
+                        if (ob == Caster) return;
+                        if (!ob.IsAttackTarget(Caster)) return;
+
                         ob.Struck(Value, DefenceType.MAC);
 
                         if (Envir.Random.Next(8) == 0)
@@ -317,20 +331,35 @@ namespace Server.MirObjects
                     break;
                 case Spell.DarkOmaKingNuke:
                     {
-                        if (Value == 0) return;
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
-                        ob.Struck(Value, DefenceType.AC);
+                        if (ob == Caster) return;
+                        if (!ob.IsAttackTarget(Caster)) return;
 
+                        ob.Struck(Value, DefenceType.AC);
                         ob.ApplyPoison(new Poison { PType = PoisonType.Dazed, Duration = 5, TickSpeed = 1000 }, this);
                     }
                     break;
                 case Spell.HornedSorcererDustTornado:
                     {
-                        if (ob == Caster) return;
-                        if (Value == 0) return;
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
+                        if (ob == Caster) return;
+                        if (!ob.IsAttackTarget(Caster)) return;
+
+                        if (Value == 0) return;
+                        ob.Struck(Value, DefenceType.AC);
+                    }
+                    break;
+                case Spell.HornedCommanderRockFall:
+                case Spell.HornedCommanderRockSpike:
+                    {
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                        if (ob.Dead) return;
+                        if (ob == Caster) return;
+                        if (!ob.IsAttackTarget(Caster)) return;
+
+                        if (Value == 0) return;
                         ob.Struck(Value, DefenceType.AC);
                     }
                     break;
@@ -446,6 +475,8 @@ namespace Server.MirObjects
                 case Spell.FlyingStatueIceTornado:
                 case Spell.DarkOmaKingNuke:
                 case Spell.HornedSorcererDustTornado:
+                case Spell.HornedCommanderRockFall:
+                case Spell.HornedCommanderRockSpike:
                     if (!Show)
                         return null;
 

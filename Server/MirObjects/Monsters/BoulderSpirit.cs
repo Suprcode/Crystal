@@ -1,28 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using Server.MirDatabase;
+using Server.MirEnvir;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    public class WoodBox : MonsterObject
+    public class BoulderSpirit : MonsterObject
     {
         protected override bool CanMove { get { return false; } }
-        protected internal WoodBox(MonsterInfo info)
+        protected override bool CanAttack { get { return false; } }
+        protected override bool CanRegen { get { return false; } }
+
+        protected internal BoulderSpirit(MonsterInfo info)
             : base(info)
         {
         }
-
-        protected override void Attack() { }
-
-        public override void Turn(MirDirection dir) { }
-
-        public override bool Walk(MirDirection dir) { return false; }
-
-        protected override void ProcessRoam() { }
-
-        protected override void ProcessTarget()
+        public override bool Walk(MirDirection dir)
         {
+            return false;
+        }
+
+        protected override void ProcessAI()
+        {
+            if (Dead) return;
+
+            var targets = FindAllTargets(Info.ViewRange, CurrentLocation, true);
+
+            if (targets.Count > 0)
+            {
+                Die();
+            }
         }
 
         public override void Die()
@@ -33,7 +41,7 @@ namespace Server.MirObjects.Monsters
 
         protected override void CompleteDeath(IList<object> data)
         {
-            List<MapObject> targets = FindAllTargets(1, CurrentLocation, false);
+            var targets = FindAllTargets(Info.ViewRange, CurrentLocation, false);
             if (targets.Count == 0) return;
 
             for (int i = 0; i < targets.Count; i++)

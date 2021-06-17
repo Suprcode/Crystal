@@ -99,6 +99,7 @@ namespace Server.MirObjects.Monsters
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
+                    //TODO - Delay this
                     PoisonTarget(Target, 1, 6, PoisonType.Red, 2000);           
                 }
                 else
@@ -109,10 +110,6 @@ namespace Server.MirObjects.Monsters
                     ActionList.Add(action);
                 }
             }
-
-
-            if (Target.Dead)
-                FindTarget();
 
         }
 

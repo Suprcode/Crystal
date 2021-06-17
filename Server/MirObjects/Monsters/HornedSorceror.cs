@@ -11,7 +11,7 @@ namespace Server.MirObjects.Monsters
     {
         private long _TornadoTime;
         private long _ChargedStompTime;
-        private bool _Charging;
+        private bool _Immune;
 
         protected virtual byte AttackRange
         {
@@ -33,12 +33,12 @@ namespace Server.MirObjects.Monsters
 
         public override bool IsAttackTarget(MonsterObject attacker)
         {
-            return !_Charging && base.IsAttackTarget(attacker);
+            return !_Immune && base.IsAttackTarget(attacker);
         }
 
         public override bool IsAttackTarget(PlayerObject attacker)
         {
-            return !_Charging && base.IsAttackTarget(attacker);
+            return !_Immune && base.IsAttackTarget(attacker);
         }
 
         protected override void Attack()
@@ -56,28 +56,31 @@ namespace Server.MirObjects.Monsters
 
             AttackTime = Envir.Time + AttackSpeed;
 
-            var hpPercent = (HP * 100) / MaxHealth;
-
             //Charged Stomp
-            if (Envir.Time > _ChargedStompTime && hpPercent < 90 && Envir.Random.Next(4) == 0)
+            if (Envir.Time > _ChargedStompTime && HealthPercent < 90 && Envir.Random.Next(4) == 0)
             {
+                byte stompLoops = (byte)Envir.Random.Next(5, 10);
+                int stompDuration = stompLoops * 500;
+
                 _ChargedStompTime = Envir.Time + 20000;
-                ActionTime = Envir.Time + 5800;
 
-                _Charging = true;
+                ActionTime = Envir.Time + (stompDuration) + 500;
+                AttackTime = Envir.Time + (stompDuration) + 500 + AttackSpeed;
 
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+                _Immune = true;
 
-                int damage = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2, Level = stompLoops });
+
+                int damage = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]) * stompLoops;
                 if (damage == 0) return;
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 5500, Target, damage, DefenceType.AC, true);
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + stompDuration + 500, Target, damage, DefenceType.AC, true);
                 ActionList.Add(action);
                 return;
             }
 
             //Dust Tornado
-            if (Envir.Time > _TornadoTime && hpPercent < 90 && Envir.Random.Next(4) == 0)
+            if (Envir.Time > _TornadoTime && HealthPercent < 90 && Envir.Random.Next(4) == 0)
             {
                 _TornadoTime = Envir.Time + 15000;
 
@@ -202,7 +205,7 @@ namespace Server.MirObjects.Monsters
 
             Point location;
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 3; i++)
             {
                 location = Functions.PointMove(CurrentLocation, jumpDir, 1);
                 if (!CurrentMap.ValidPoint(location)) return;
@@ -258,7 +261,7 @@ namespace Server.MirObjects.Monsters
             DefenceType defence = (DefenceType)data[2];
             bool aoe = data.Count >= 4 && (bool)data[3];
 
-            _Charging = false;
+            _Immune = false;
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
