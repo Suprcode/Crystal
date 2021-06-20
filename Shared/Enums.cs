@@ -1267,7 +1267,7 @@ public enum BuffType : byte
 {
     None = 0,
 
-    //magics
+    //Magics
     TemporalFlux,
     Hiding,
     Haste,
@@ -1294,7 +1294,7 @@ public enum BuffType : byte
     MagicShield,
     ElementalBarrier,
 
-    //monster
+    //Monster
     HornedArcherBuff = 50,
     ColdArcherBuff,
     GeneralMeowMeowShield,
@@ -1303,7 +1303,7 @@ public enum BuffType : byte
     HornedWarriorShield,
     HornedCommanderShield,
 
-    //special
+    //Special
     GameMaster = 100,
     General,
     Exp,
@@ -1320,7 +1320,7 @@ public enum BuffType : byte
     Skill,
     ClearRing,
 
-    //stats
+    //Stats
     Impact = 200,
     Magic,
     Taoist,
@@ -1333,11 +1333,23 @@ public enum BuffType : byte
     Knapsack,
 }
 
+[Flags]
+public enum BuffProperty : byte
+{
+    None = 0,
+    RemoveOnDeath = 1,
+    RemoveOnExit = 2,
+    Debuff = 4
+}
+
 public enum BuffStackType : byte
 {
+    None,
     Reset,
     Duration,
-    Stat
+    Stat,
+    StatAndDuration,
+    Infinite
 }
 
 public enum DefenceType : byte

@@ -54,7 +54,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int MinVersion = 60;
-        public const int Version = 87;
+        public const int Version = 88;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
@@ -1897,6 +1897,12 @@ namespace Server.MirEnvir
 
             LoadDB();
 
+            BuffInfoList.Clear();
+            foreach (var buff in BuffInfo.Load())
+                BuffInfoList.Add(buff);
+
+            MessageQueue.Enqueue($"{BuffInfoList.Count} Buffs Loaded.");
+
             RecipeInfoList.Clear();
             foreach (var recipe in Directory.GetFiles(Settings.RecipePath, "*.txt")
                 .Select(path => Path.GetFileNameWithoutExtension(path))
@@ -2945,6 +2951,7 @@ namespace Server.MirEnvir
             }
             return null;
         }
+
         public ItemInfo GetItemInfo(string name)
         {
             for (var i = 0; i < ItemInfoList.Count; i++)
@@ -2955,6 +2962,7 @@ namespace Server.MirEnvir
             }
             return null;
         }
+
         public QuestInfo GetQuestInfo(int index)
         {
             return QuestInfoList.FirstOrDefault(info => info.Index == index);
@@ -2969,6 +2977,19 @@ namespace Server.MirEnvir
                 return info;
             }
             return null;
+        }
+
+        public BuffInfo GetBuffInfo(BuffType type)
+        {
+            for (int i = 0; i < BuffInfoList.Count; i++)
+            {
+                var info = BuffInfoList[i];
+                if (info.Type != type) continue;
+
+                return info;
+            }
+
+            throw new NotImplementedException($"{type} has not been implemented.");
         }
 
         public void MessageAccount(AccountInfo account, string message, ChatType type)

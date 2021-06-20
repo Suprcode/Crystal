@@ -92,12 +92,12 @@ namespace Server.MirObjects.Monsters
                     if (Info.Effect == 0)
                     {
                         var stats = new Stats { [Stat.MinDC] = min, [Stat.MaxDC] = max, [Stat.MinMC] = min, [Stat.MaxMC] = max };
-                        friends[i].AddBuff(BuffType.HornedArcherBuff, this, Settings.Second * 10, stats, visible: true);
+                        friends[i].AddBuff(BuffType.HornedArcherBuff, this, Settings.Second * 10, stats);
                     }
                     else if (Info.Effect == 1)
                     {
                         var stats = new Stats { [Stat.MinAC] = min, [Stat.MaxAC] = max, [Stat.MinMAC] = min, [Stat.MaxMAC] = max };
-                        friends[i].AddBuff(BuffType.ColdArcherBuff, this, Settings.Second * 10, stats, visible: true);
+                        friends[i].AddBuff(BuffType.ColdArcherBuff, this, Settings.Second * 10, stats);
                     }
 
                     friends[i].OperateTime = 0;

@@ -2028,12 +2028,12 @@ namespace Server.MirEnvir
                     if (hasVampBuff)
                     {
                         //Expire
-                        player.AddBuff(BuffType.VampireShot, player, Settings.Second * 1, new Stats(), visible: true);
+                        player.AddBuff(BuffType.VampireShot, player, Settings.Second * 1, new Stats());
                     }
                     if (hasPoisonBuff)
                     {
                         //Expire
-                        player.AddBuff(BuffType.PoisonShot, player, Settings.Second * 1, new Stats(), visible: true);
+                        player.AddBuff(BuffType.PoisonShot, player, Settings.Second * 1, new Stats());
                     }
                     break;
 

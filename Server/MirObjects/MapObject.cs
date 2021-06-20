@@ -526,13 +526,12 @@ namespace Server.MirObjects
 
         public abstract void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true);
 
-        public virtual Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool visible = false, bool infinite = false, bool stackable = false, bool refreshStats = true, params int[] values)
+        public virtual Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool refreshStats = true, params int[] values)
         {
             if (!HasBuff(type, out Buff buff))
             {
-                buff = new Buff
+                buff = new Buff(type)
                 {
-                    Type = type,
                     Caster = owner,
                     ObjectID = ObjectID,
                     ExpireTime = Envir.Time + duration
@@ -540,24 +539,43 @@ namespace Server.MirObjects
 
                 Buffs.Add(buff);
             }
-            else if (stackable)
+            else
             {
-                if (!buff.Stats.Equals(stats))
+                switch (buff.StackType)
                 {
-                    //TODO - Maybe get the best one instead?
-                    stats = buff.Stats;
+                    case BuffStackType.Duration:
+                        {
+                            if (!buff.Stats.Equals(stats))
+                            {
+                                stats = buff.Stats;
+                            }
+
+                            buff.ExpireTime += duration;
+                        }
+                        break;
+                    case BuffStackType.Stat:
+                        {
+                            buff.Stats.Add(stats);
+                        }
+                        break;
+                    case BuffStackType.StatAndDuration:
+                        {
+                            buff.Stats.Add(stats);
+
+                            buff.ExpireTime += duration;
+                        }
+                        break;
+                    case BuffStackType.Reset:
+                        {
+                            if (buff.ExpireTime < Envir.Time + duration)
+                            {
+                                buff.ExpireTime = Envir.Time + duration;
+                            }
+                        }
+                        break;
                 }
-
-                buff.ExpireTime += duration;
-            }
-            else if (buff.ExpireTime < Envir.Time + duration)
-            {
-                buff.ExpireTime = Envir.Time + duration;
             }
 
-            buff.Stackable = stackable;
-            buff.Infinite = infinite;
-            buff.Visible = visible;
             buff.Stats = stats ?? new Stats();
             buff.Values = values ?? new int[0];
             buff.Paused = false;
@@ -586,7 +604,7 @@ namespace Server.MirObjects
             {
                 if (Buffs[i].Type != b) continue;
 
-                Buffs[i].Infinite = false;
+                Buffs[i].FlagForRemoval = true;
                 Buffs[i].Paused = false;
                 Buffs[i].ExpireTime = Envir.Time;
 
@@ -919,36 +937,63 @@ namespace Server.MirObjects
 
     public class Buff
     {
+        protected static Envir Envir
+        {
+            get { return Envir.Main; }
+        }
+
         private Dictionary<string, object> Data { get; set; } = new Dictionary<string, object>();
 
-        public BuffType Type;
+        public BuffInfo Info;
         public MapObject Caster;
-        public bool Visible;
         public uint ObjectID;
         public long ExpireTime;
 
         public Stats Stats;
 
         public int[] Values;
-        public bool Infinite;
-        public bool Stackable;
 
         public bool RealTime;
         public DateTime RealTimeExpire;
 
+        public bool FlagForRemoval;
         public bool Paused;
 
-        public Buff() 
+        public BuffType Type
         {
+            get { return Info.Type; }
+        }
+
+        public BuffStackType StackType
+        {
+            get { return Info.StackType; }
+        }
+
+        public BuffProperty Properties
+        {
+            get { return Info.Properties; }
+        }
+
+        public Buff(BuffType type)
+        {
+            Info = Envir.GetBuffInfo(type);
             Stats = new Stats();
             Data = new Dictionary<string, object>();
         }
 
         public Buff(BinaryReader reader)
         {
-            Type = (BuffType)reader.ReadByte();
+            var type = (BuffType)reader.ReadByte();
+
+            Info = Envir.GetBuffInfo(type);
+
             Caster = null;
-            Visible = reader.ReadBoolean();
+
+            if (Envir.LoadVersion < 88)
+            {
+                var visible = reader.ReadBoolean();
+            }
+
             ObjectID = reader.ReadUInt32();
             ExpireTime = reader.ReadInt64();
 
@@ -961,14 +1006,20 @@ namespace Server.MirObjects
                     Values[i] = reader.ReadInt32();
                 }
 
-                Infinite = reader.ReadBoolean();
+                if (Envir.LoadVersion < 88)
+                {
+                    var infinite = reader.ReadBoolean();
+                }
 
                 Stats = new Stats();
                 Data = new Dictionary<string, object>();
             }
             else
             {
-                Stackable = reader.ReadBoolean();
+                if (Envir.LoadVersion < 88)
+                {
+                    var stackable = reader.ReadBoolean();
+                }
 
                 Values = new int[0];
                 Stats = new Stats(reader);
@@ -1008,11 +1059,8 @@ namespace Server.MirObjects
         public void Save(BinaryWriter writer)
         {
             writer.Write((byte)Type);
-            writer.Write(Visible);
             writer.Write(ObjectID);
             writer.Write(ExpireTime);
-
-            writer.Write(Stackable);
 
             Stats.Save(writer);
 
@@ -1061,8 +1109,8 @@ namespace Server.MirObjects
                 Type = Type,
                 Caster = Caster?.Name ?? "",
                 ObjectID = ObjectID,
-                Visible = Visible,
-                Infinite = Infinite,
+                Visible = Info.Visible,
+                Infinite = StackType == BuffStackType.Infinite,
                 ExpireTime = ExpireTime,
                 Stats = new Stats(Stats),
                 Values = Values

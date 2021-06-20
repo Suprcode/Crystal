@@ -62,7 +62,7 @@ namespace Server.MirObjects.Monsters
 
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
 
-                AddBuff(BuffType.HornedWarriorShield, this, Settings.Second * 10, stats, visible: true);
+                AddBuff(BuffType.HornedWarriorShield, this, Settings.Second * 10, stats);
 
                 return;
             }

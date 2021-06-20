@@ -1400,11 +1400,11 @@ namespace Server.MirObjects
             {
                 Buff buff = Buffs[i];
 
-                if (Envir.Time <= buff.ExpireTime || buff.Infinite) continue;
+                if (Envir.Time <= buff.ExpireTime || buff.StackType == BuffStackType.Infinite) continue;
 
                 Buffs.RemoveAt(i);
 
-                if (buff.Visible)
+                if (buff.Info.Visible)
                     Broadcast(new S.RemoveBuff { Type = buff.Type, ObjectID = ObjectID });
 
                 switch (buff.Type)
@@ -2467,11 +2467,11 @@ namespace Server.MirObjects
             PoisonList.Add(p);
         }
 
-        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool visible = false, bool infinite = false, bool stackable = false, bool refreshStats = true, params int[] values)
+        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool refreshStats = true, params int[] values)
         {
-            Buff b = base.AddBuff(type, owner, duration, stats, visible, infinite, stackable, refreshStats, values);
+            Buff b = base.AddBuff(type, owner, duration, stats, refreshStats, values);
 
-            if (HasBuff(type, out b) && b.Infinite == true)
+            if (HasBuff(type, out b) && b.StackType == BuffStackType.Infinite)
             {
                 return b;
             }
@@ -2483,7 +2483,7 @@ namespace Server.MirObjects
 
             packet.Buff.ExpireTime -= Envir.Time;
 
-            if (b.Visible) Broadcast(packet);
+            if (b.Info.Visible) Broadcast(packet);
 
             if (refreshStats)
             {
@@ -2512,7 +2512,7 @@ namespace Server.MirObjects
                 Hidden = Hidden,
                 ShockTime = (ShockTime > 0 ? ShockTime - Envir.Time : 0),
                 BindingShotCenter = BindingShotCenter,
-                Buffs = Buffs.Where(d => d.Visible).Select(e => e.Type).ToList()
+                Buffs = Buffs.Where(d => d.Info.Visible).Select(e => e.Type).ToList()
             };
         }
 

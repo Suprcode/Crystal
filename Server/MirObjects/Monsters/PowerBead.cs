@@ -109,9 +109,16 @@ namespace Server.MirObjects.Monsters
             {
                 if (target.IsFriendlyTarget(this))
                 {
-                    if (target.PoisonList.Count == 0) return;
+                    for (int i = 0; i < target.Buffs.Count; i++)
+                    {
+                        var buff = target.Buffs[i];
 
-                    target.RemoveBuff(BuffType.Curse);
+                        if (!buff.Properties.HasFlag(BuffProperty.Debuff)) continue;
+
+                        target.RemoveBuff(buff.Type);
+                    }
+
+                    if (target.PoisonList.Count == 0) return;
 
                     if (target.PoisonList.Any(x => x.PType == PoisonType.DelayedExplosion))
                     {
@@ -132,7 +139,7 @@ namespace Server.MirObjects.Monsters
                     var protect = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                     if (protect == 0) return;
 
-                    target.AddBuff(BuffType.PowerBeadBuff, this, Info.AttackSpeed, new Stats { [Stat.MaxAC] = protect, [Stat.MaxMAC] = protect }, visible: true);
+                    target.AddBuff(BuffType.PowerBeadBuff, this, Info.AttackSpeed, new Stats { [Stat.MaxAC] = protect, [Stat.MaxMAC] = protect });
                     target.OperateTime = 0;
                 }
             }

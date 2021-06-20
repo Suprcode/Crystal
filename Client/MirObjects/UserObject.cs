@@ -103,8 +103,7 @@ namespace Client.MirObjects
             Magics = info.Magics;
             for (int i = 0; i < Magics.Count; i++ )
             {
-                if (Magics[i].CastTime > 0)
-                    Magics[i].CastTime = CMain.Time - Magics[i].CastTime;
+                Magics[i].CastTime = CMain.Time + Magics[i].CastTime;
             }
 
             IntelligentCreatures = info.IntelligentCreatures;//IntelligentCreature
@@ -605,9 +604,9 @@ namespace Client.MirObjects
         {
             TransformType = -1;
 
-            for (int i = 0; i < GameScene.Scene.Buffs.Count; i++)
+            for (int i = 0; i < GameScene.Scene.BuffsDialog.Buffs.Count; i++)
             {
-                ClientBuff buff = GameScene.Scene.Buffs[i];
+                ClientBuff buff = GameScene.Scene.BuffsDialog.Buffs[i];
 
                 Stats.Add(buff.Stats);
 
@@ -620,7 +619,6 @@ namespace Client.MirObjects
                         TransformType = (short)buff.Values[0];
                         break;
                 }
-
             }
         }
 

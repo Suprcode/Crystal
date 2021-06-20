@@ -130,7 +130,7 @@ namespace Server.MirObjects.Monsters
                 Skeleton = Harvested,
                 Poison = CurrentPoison,
                 Hidden = Hidden,
-                Buffs = Buffs.Where(d => d.Visible).Select(e => e.Type).ToList(),
+                Buffs = Buffs.Where(d => d.Info.Visible).Select(e => e.Type).ToList(),
             };
         }
     }

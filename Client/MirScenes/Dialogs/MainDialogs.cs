@@ -2006,7 +2006,7 @@ namespace Client.MirScenes.Dialogs
         public MirLabel[] KeyNameLabels = new MirLabel[8];
         public MirLabel BindNumberLabel = new MirLabel();
 
-        public MirAnimatedControl[] CoolDowns = new MirAnimatedControl[8];
+        public MirImageControl[] CoolDowns = new MirImageControl[8];
 
         public SkillBarDialog()
         {
@@ -2050,15 +2050,13 @@ namespace Client.MirScenes.Dialogs
                         GameScene.Scene.UseSpell(j + (8 * BarIndex));
                     };
 
-                CoolDowns[i] = new MirAnimatedControl
+                CoolDowns[i] = new MirImageControl
                 {
                     Library = Libraries.Prguse2,
                     Parent = this,
                     Location = new Point(i * 25 + 15, 3),
                     NotControl = true,
                     UseOffSet = true,
-                    Loop = false,
-                    Animated = false,
                     Opacity = 0.6F
                 };
             }
@@ -2149,6 +2147,7 @@ namespace Client.MirScenes.Dialogs
                 if ((m.Key < (BarIndex * 8)+1) || (m.Key > ((BarIndex + 1) * 8)+1)) continue;
                 HasSkill = true;
             }
+
             if (!Visible) return;
             Index = 2190;
             _switchBindsButton.Index = 2247;
@@ -2178,8 +2177,6 @@ namespace Client.MirScenes.Dialogs
 
                     KeyNameLabels[i - 1].Text = "";
                 }
-
-                CoolDowns[i - 1].Dispose();
             }
         }
 
@@ -2204,10 +2201,12 @@ namespace Client.MirScenes.Dialogs
                     int totalFrames = 22;
                     long timeLeft = magic.CastTime + magic.Delay - CMain.Time;
 
-                    if (timeLeft < 100 || (CoolDowns[i] != null && CoolDowns[i].Animated))
+                    if (timeLeft < 100)
                     {
-                        if (timeLeft > 0)
-                            CoolDowns[i].Dispose();
+                        if (timeLeft > 0) { 
+                            CoolDowns[i].Visible = false;
+                           // CoolDowns[i].Dispose();
+                        }
                         else
                             continue;
                     }
@@ -2215,24 +2214,10 @@ namespace Client.MirScenes.Dialogs
                     int delayPerFrame = (int)(magic.Delay / totalFrames);
                     int startFrame = totalFrames - (int)(timeLeft / delayPerFrame);
 
-                    if ((CMain.Time <= magic.CastTime + magic.Delay) && magic.CastTime > 0)
+                    if ((CMain.Time <= magic.CastTime + magic.Delay))
                     {
-                        CoolDowns[i].Dispose();
-
-                        CoolDowns[i] = new MirAnimatedControl
-                        {
-                            Index = 1260 + startFrame,
-                            AnimationCount = (totalFrames - startFrame),
-                            AnimationDelay = delayPerFrame,
-                            Library = Libraries.Prguse2,
-                            Parent = this,
-                            Location = new Point(i * 25 + 15, 3),
-                            NotControl = true,
-                            UseOffSet = true,
-                            Loop = false,
-                            Animated = true,
-                            Opacity = 0.6F
-                        };
+                        CoolDowns[i].Visible = true;
+                        CoolDowns[i].Index = 1260 + startFrame;
                     }
                 }
             }
@@ -2811,8 +2796,6 @@ namespace Client.MirScenes.Dialogs
 
                 StartIndex += 7;
                 RefreshInterface();
-
-                ClearCoolDowns();
             };
 
             BackButton = new MirButton
@@ -2830,8 +2813,6 @@ namespace Client.MirScenes.Dialogs
 
                 StartIndex -= 7;
                 RefreshInterface();
-
-                ClearCoolDowns();
             };
         }
 
@@ -2839,8 +2820,6 @@ namespace Client.MirScenes.Dialogs
         {
             if (Visible) return;
             Visible = true;
-
-            ClearCoolDowns();
         }
 
         public override void Hide()
@@ -2896,16 +2875,6 @@ namespace Client.MirScenes.Dialogs
             StateButton.Index = -1;
             SkillButton.Index = 503;
             StartIndex = 0;
-
-            ClearCoolDowns();
-        }
-
-        private void ClearCoolDowns()
-        {
-            for (int i = 0; i < Magics.Length; i++)
-            {
-                Magics[i].CoolDown.Dispose();
-            }
         }
 
         private void RefreshInterface()
@@ -4369,7 +4338,7 @@ namespace Client.MirScenes.Dialogs
         public MirButton SkillButton;
         public MirLabel LevelLabel, NameLabel, ExpLabel, KeyLabel;
         public ClientMagic Magic;
-        public MirAnimatedControl CoolDown;
+        public MirImageControl CoolDown;
 
         public MagicButton()
         {
@@ -4436,16 +4405,14 @@ namespace Client.MirScenes.Dialogs
                 NotControl = true,
             };
 
-            CoolDown = new MirAnimatedControl
+            CoolDown = new MirImageControl
             {
                 Library = Libraries.Prguse2,
                 Parent = this,
                 Location = new Point(36, 0),
+                Opacity = 0.6F,
                 NotControl = true,
                 UseOffSet = true,
-                Loop = false,
-                Animated = false,
-                Opacity = 0.6F
             };
         }
 
@@ -4498,29 +4465,19 @@ namespace Client.MirScenes.Dialogs
 
             long timeLeft = Magic.CastTime + Magic.Delay - CMain.Time;
 
-            if (timeLeft < 100 || (CoolDown != null && CoolDown.Animated)) return;
+            if (timeLeft < 100)
+            {
+                CoolDown.Visible = false;
+                return;
+            }
 
             int delayPerFrame = (int)(Magic.Delay / totalFrames);
             int startFrame = totalFrames - (int)(timeLeft / delayPerFrame);
 
-            if ((CMain.Time <= Magic.CastTime + Magic.Delay) && Magic.CastTime > 0)
+            if ((CMain.Time <= Magic.CastTime + Magic.Delay))
             {
-                CoolDown.Dispose();
-
-                CoolDown = new MirAnimatedControl
-                {
-                    Index = 1290 + startFrame,
-                    AnimationCount = (totalFrames - startFrame),
-                    AnimationDelay = delayPerFrame,
-                    Library = Libraries.Prguse2,
-                    Parent = this,
-                    Location = new Point(36, 0),
-                    NotControl = true,
-                    UseOffSet = true,
-                    Loop = false,
-                    Animated = true,
-                    Opacity = 0.6F
-                };
+                CoolDown.Visible = true;
+                CoolDown.Index = 1290 + startFrame;
             }
         }
     }

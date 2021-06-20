@@ -126,8 +126,6 @@ namespace Client.MirScenes
         public static List<GameShopItem> GameShopInfoList = new List<GameShopItem>();
         public static List<ClientRecipeInfo> RecipeInfoList = new List<ClientRecipeInfo>();
 
-        public List<ClientBuff> Buffs = new List<ClientBuff>();
-
         public static UserItem[] Storage = new UserItem[80];
         public static UserItem[] GuildStorage = new UserItem[112];
         public static UserItem[] Refine = new UserItem[16];
@@ -262,6 +260,7 @@ namespace Client.MirScenes
             ItemRentalDialog = new ItemRentalDialog { Parent = this, Visible = false };
 
             BuffsDialog = new BuffDialog { Parent = this, Visible = true };
+
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
 
             TimerControl = new TimerDialog { Parent = this, Visible = false };
@@ -783,7 +782,7 @@ namespace Client.MirScenes
             switch (magic.Spell)
             {
                 case Spell.CounterAttack:
-                    if ((CMain.Time < magic.CastTime + magic.Delay) && magic.CastTime != 0)
+                    if ((CMain.Time < magic.CastTime + magic.Delay))
                     {
                         if (CMain.Time >= OutputDelay)
                         {
@@ -3304,6 +3303,7 @@ namespace Client.MirScenes
                 User.BlindCount = 0;
             }
         }
+
         private void ObjectPoisoned(S.ObjectPoisoned p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
@@ -4334,17 +4334,18 @@ namespace Client.MirScenes
 
             if (buff.ObjectID == User.ObjectID)
             {
-                for (int i = 0; i < Buffs.Count; i++)
+                for (int i = 0; i < BuffsDialog.Buffs.Count; i++)
                 {
-                    if (Buffs[i].Type != buff.Type) continue;
+                    if (BuffsDialog.Buffs[i].Type != buff.Type) continue;
 
-                    Buffs[i] = buff;
+                    BuffsDialog.Buffs[i] = buff;
                     User.RefreshStats();
                     return;
                 }
-                
-                Buffs.Add(buff);
+
+                BuffsDialog.Buffs.Add(buff);
                 BuffsDialog.CreateBuff(buff);
+
                 User.RefreshStats();     
             }
 
@@ -4369,11 +4370,11 @@ namespace Client.MirScenes
 
         private void RemoveBuff(S.RemoveBuff p)
         {
-            for (int i = 0; i < Buffs.Count; i++)
+            for (int i = 0; i < BuffsDialog.Buffs.Count; i++)
             {
-                if (Buffs[i].Type != p.Type || User.ObjectID != p.ObjectID) continue;
+                if (BuffsDialog.Buffs[i].Type != p.Type || User.ObjectID != p.ObjectID) continue;
 
-                switch (Buffs[i].Type)
+                switch (BuffsDialog.Buffs[i].Type)
                 {
                     case BuffType.SwiftFeet:
                         User.Sprint = false;
@@ -4383,8 +4384,8 @@ namespace Client.MirScenes
                         break;
                 }
 
-                Buffs.RemoveAt(i);
                 BuffsDialog.RemoveBuff(i);
+                BuffsDialog.Buffs.RemoveAt(i);
             }
 
             if (User.ObjectID == p.ObjectID)
@@ -5220,7 +5221,7 @@ namespace Client.MirScenes
                 }
             }
 
-            ClientBuff buff = Buffs.FirstOrDefault(e => e.Type == BuffType.Guild);
+            ClientBuff buff = BuffsDialog.Buffs.FirstOrDefault(e => e.Type == BuffType.Guild);
 
             if (GuildDialog.EnabledBuffs.Any(e => e.Active))
             {
@@ -5228,7 +5229,7 @@ namespace Client.MirScenes
                 {
                     buff = new ClientBuff { Type = BuffType.Guild, ObjectID = User.ObjectID, Caster = "Guild", Infinite = true, Values = new int[0] };
 
-                    Buffs.Add(buff);
+                    BuffsDialog.Buffs.Add(buff);
                     BuffsDialog.CreateBuff(buff);
                 }
 
@@ -10200,7 +10201,7 @@ namespace Client.MirScenes
                 return;
             }
 
-            if ((CMain.Time <= magic.CastTime + magic.Delay) && magic.CastTime > 0)
+            if ((CMain.Time <= magic.CastTime + magic.Delay))
             {
                 if (CMain.Time >= OutputDelay)
                 {

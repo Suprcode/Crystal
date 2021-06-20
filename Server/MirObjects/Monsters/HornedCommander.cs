@@ -32,7 +32,7 @@ namespace Server.MirObjects.Monsters
                 if (CurrentMap == null) return Point.Empty;
 
                 //Should be spawned on "HY01_morae_chon". Change me to correct centre if its spawned on another map.
-                return new Point(28, 30);
+                return new Point(26, 32);
             }
         }
 
@@ -86,7 +86,7 @@ namespace Server.MirObjects.Monsters
 
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 4, Level = _ShieldSeconds });
 
-                AddBuff(BuffType.HornedCommanderShield, this, Settings.Second * _ShieldSeconds, new Stats(), visible: true);
+                AddBuff(BuffType.HornedCommanderShield, this, Settings.Second * _ShieldSeconds, new Stats());
 
                 SpawnSlave();
                 return;

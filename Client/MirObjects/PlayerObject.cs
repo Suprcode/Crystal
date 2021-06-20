@@ -2700,8 +2700,8 @@ namespace Client.MirObjects
                                                             int exIdx = 0;
                                                             if (this == User)
                                                             {
-                                                                if (GameScene.Scene.Buffs.Any(x => x.Type == BuffType.VampireShot)) exIdx = 20;
-                                                                if (GameScene.Scene.Buffs.Any(x => x.Type == BuffType.PoisonShot)) exIdx = 10;
+                                                                if (GameScene.Scene.BuffsDialog.Buffs.Any(x => x.Type == BuffType.VampireShot)) exIdx = 20;
+                                                                if (GameScene.Scene.BuffsDialog.Buffs.Any(x => x.Type == BuffType.PoisonShot)) exIdx = 10;
                                                             }
                                                             else
                                                             {

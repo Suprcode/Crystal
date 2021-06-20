@@ -82,7 +82,7 @@ namespace Server.MirObjects.Monsters
                         [Stat.MinAC] = 100
                     };
 
-                    AddBuff(BuffType.GeneralMeowMeowShield, this, ShieldUpDuration, stats, visible: true);                 
+                    AddBuff(BuffType.GeneralMeowMeowShield, this, ShieldUpDuration, stats);                 
 
                     if (Envir.Time > ThunderAttackTime)
                     {
