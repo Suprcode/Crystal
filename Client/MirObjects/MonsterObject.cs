@@ -803,9 +803,6 @@ namespace Client.MirObjects
                             case Monster.DarkCaptain:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkCaptain], 1214, 10, 10 * Frame.Interval, this));
                                 break;
-                            case Monster.Turtlegrass:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Turtlegrass], 360 + (int)Direction * 6, 6, 6 * Frame.Interval, this));
-                                break;
                             case Monster.FrozenFighter:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenFighter], 384 + (int)Direction * 5, 5, 5 * Frame.Interval, this));
                                 break;
@@ -1121,9 +1118,6 @@ namespace Client.MirObjects
                             case Monster.SackWarrior:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SackWarrior], 384, 9, Frame.Count * Frame.Interval, this));
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SackWarrior], 393, 10, Frame.Count * Frame.Interval, this));
-                                break;
-                            case Monster.Bear:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Bear], 353, 9, Frame.Count * Frame.Interval, this));
                                 break;
                             case Monster.FrozenSoldier:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenSoldier], 256, 10, Frame.Count * Frame.Interval, this));
@@ -1851,6 +1845,9 @@ namespace Client.MirObjects
                                                 break;
                                             case Monster.HornedWarrior:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedWarrior], 832 + (int)Direction * 10, 10, 10 * Frame.Interval, this));
+                                                break;
+                                            case Monster.Turtlegrass:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Turtlegrass], 360 + (int)Direction * 6, 6, 6 * Frame.Interval, this));
                                                 break;
                                             case Monster.AntCommander:
                                                 Effect ef1 = new Effect(Libraries.Monsters[(ushort)Monster.AntCommander], 484, 6, 600, front, CMain.Time);
@@ -3378,6 +3375,9 @@ namespace Client.MirObjects
                                     {
                                         case Monster.KingHydrax:
                                             Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KingHydrax], 543 + (int)Direction * 7, 7, 700, this));
+                                            break;
+                                        case Monster.Bear:
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Bear], 353, 9, Frame.Count * Frame.Interval, this));
                                             break;
                                     }
                                     break;

@@ -87,7 +87,6 @@ namespace Server.MirObjects.Monsters
 
         public void WakeAll(int dist)
         {
-
             for (int y = CurrentLocation.Y - dist; y <= CurrentLocation.Y + dist; y++)
             {
                 if (y < 0) continue;

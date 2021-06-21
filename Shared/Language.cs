@@ -45,6 +45,7 @@ public class GameLanguage
                          Guild = "Guild ({0})",
                          Expire = "Expire: {0}",
                          ExpireNever = "Expire: Never",
+                         ExpirePaused = "Expire: Paused",
                          Never = "Never",
                          Trade = "Trade ({0})",
                          Size = "Size",
@@ -322,6 +323,7 @@ public class GameLanguage
         GameLanguage.GameMaster = reader.ReadString("Language", "GameMaster", GameLanguage.GameMaster);
         GameLanguage.Expire = reader.ReadString("Language", "Expire", GameLanguage.Expire);
         GameLanguage.ExpireNever = reader.ReadString("Language", "ExpireNever", GameLanguage.ExpireNever);
+        GameLanguage.ExpirePaused = reader.ReadString("Language", "ExpirePaused", GameLanguage.ExpirePaused);
         GameLanguage.Never = reader.ReadString("Language", "Never", GameLanguage.Never);
 
         GameLanguage.PatchErr = reader.ReadString("Language", "PatchErr", GameLanguage.PatchErr);
@@ -559,6 +561,7 @@ public class GameLanguage
 
         reader.Write("Language", "Expire", GameLanguage.Expire);
         reader.Write("Language", "ExpireNever", GameLanguage.ExpireNever);
+        reader.Write("Language", "ExpirePaused", GameLanguage.ExpirePaused);
         reader.Write("Language", "Never", GameLanguage.Never);
         reader.Write("Language", "PatchErr", GameLanguage.PatchErr);
         reader.Write("Language", "LastOnline", GameLanguage.LastOnline);

@@ -52,9 +52,8 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
-                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                 if (damage == 0) return;
 
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 600, Target, damage, DefenceType.ACAgility, false, true);

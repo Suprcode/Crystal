@@ -3508,6 +3508,28 @@ namespace ServerPackets
             writer.Write(ObjectID);
         }
     }
+    public sealed class PauseBuff : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.PauseBuff; } }
+
+        public BuffType Type;
+        public uint ObjectID;
+        public bool Paused;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Type = (BuffType)reader.ReadByte();
+            ObjectID = reader.ReadUInt32();
+            Paused = reader.ReadBoolean();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write((byte)Type);
+            writer.Write(ObjectID);
+            writer.Write(Paused);
+        }
+    }
+
     public sealed class ObjectHidden : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.ObjectHidden; } }

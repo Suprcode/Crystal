@@ -450,6 +450,7 @@ public class ClientBuff
     public long ExpireTime;
     public bool Infinite;
     public Stats Stats;
+    public bool Paused;
 
     public int[] Values;
 
@@ -467,6 +468,7 @@ public class ClientBuff
         ObjectID = reader.ReadUInt32();
         ExpireTime = reader.ReadInt64();
         Infinite = reader.ReadBoolean();
+        Paused = reader.ReadBoolean();
 
         Stats = new Stats(reader);
 
@@ -487,6 +489,7 @@ public class ClientBuff
         writer.Write(ObjectID);
         writer.Write(ExpireTime);
         writer.Write(Infinite);
+        writer.Write(Paused);
 
         Stats.Save(writer);
 

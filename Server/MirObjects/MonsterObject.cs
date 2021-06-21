@@ -378,52 +378,59 @@ namespace Server.MirObjects
                 case 170:
                     return new BoulderSpirit(info);
                 case 171:
-                    return new HornedCommander(info); //TODO
+                    return new HornedCommander(info);
 
-                //case 172: MoonSunLightningStone //TODO
+                //case 172: MoonSunLightningStone
 
-
-
-
-                case 172:
-                    return new WaterDragon(info);
-                case 174:
-                    return new AntCommander(info);
-
-
-                case 212:
+                case 173:
                     return new TurtleGrass(info);
-                case 213:
+                case 174:
                     return new ManTree(info);
-                case 215:
-                    return new Bear(info); //TODO - DELETE, Dupe AI
-                case 214:
-                    return new FrozenFighter(info);
-                case 216:
-                    return new FrozenKnight(info);
 
-                case 217:
+                case 175:
+                    return new FrozenFighter(info);
+                case 176:
+                    return new FrozenKnight(info);
+                case 177:
                     return new IcePhantom(info);
-                case 218:
+                case 178:
                     return new SnowWolf(info);
-                case 219:
+
+                //case 179: SnowWolfKing
+
+                case 180:
+                    return new WaterDragon(info);
+                case 181:
                     return new BlackTortoise(info);
-                case 220:
+
+                //case 182: Manticore
+
+                case 183:
                     return new DragonWarrior(info);
-                case 222:
+
+                //case 184: DragonArcher
+
+                case 185:
                     return new Kirin(info);
-                case 223:
+                case 186:
                     return new FrozenMiner(info);
-                case 224:
+                case 187:
                     return new FrozenAxeman(info);
-                case 225:
+                case 188:
                     return new FrozenMagician(info);
-                case 226:
+                case 189:
                     return new SnowYeti(info);
-                case 227:
+                case 190:
                     return new IceCrystalSoldier(info);
-                case 228:
+                case 191:
                     return new DarkWraith(info);
+
+                //case 192: CrystalBeast
+                //case 193: RedOrb
+                //case 194: FatalLotus
+
+                case 195:
+                    return new AntCommander(info);
 
                 default:
                     return new MonsterObject(info);

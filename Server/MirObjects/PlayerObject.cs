@@ -10434,7 +10434,10 @@ namespace Server.MirObjects
 
             var packet = new S.AddBuff { Buff = b.ToClientBuff() };
 
-            packet.Buff.ExpireTime -= Envir.Time;
+            if (!b.Paused)
+            {
+                packet.Buff.ExpireTime -= Envir.Time;
+            }
 
             Enqueue(packet);
 
@@ -10451,19 +10454,22 @@ namespace Server.MirObjects
             return b;
         }
 
-        public void PauseBuff(Buff b)
+        public override void PauseBuff(Buff b)
         {
             if (b.Paused) return;
 
-            b.ExpireTime -= Envir.Time;
-            b.Paused = true;
-            Enqueue(new S.RemoveBuff { Type = b.Type, ObjectID = ObjectID });
+            base.PauseBuff(b);
+
+            Enqueue(new S.PauseBuff { Type = b.Type, ObjectID = ObjectID, Paused = true });
         }
-        public void UnpauseBuff(Buff b)
+
+        public override void UnpauseBuff(Buff b)
         {
             if (!b.Paused) return;
 
-            AddBuff(b.Type, b.Caster, (int)(b.ExpireTime - Envir.Time), b.Stats, true, b.Values);
+            base.UnpauseBuff(b);
+
+            Enqueue(new S.PauseBuff { Type = b.Type, ObjectID = ObjectID, Paused = false });
         }
 
         public void EquipSlotItem(MirGridType grid, ulong id, int to, MirGridType gridTo, ulong idTo)
@@ -14335,7 +14341,7 @@ namespace Server.MirObjects
             if (GMNeverDie) options |= GMOptions.Superman;
             if (Observer) options |= GMOptions.Observer;
 
-            AddBuff(BuffType.GameMaster, this, 0, null, Settings.GameMasterEffect, (byte)options);
+            AddBuff(BuffType.GameMaster, this, 0, null, false, (byte)options);
         }
 
         public void Opendoor(byte Doorindex)

@@ -160,7 +160,17 @@ namespace Server.MirObjects
         public virtual AttackMode AMode { get; set; }
 
         public virtual PetMode PMode { get; set; }
-        public bool InSafeZone;
+
+        private bool _inSafeZone;
+        public bool InSafeZone {
+            get { return _inSafeZone; }
+            set
+            {
+                if (_inSafeZone == value) return;
+                _inSafeZone = value;
+                OnSafeZoneChanged();
+            }
+        }
 
         public float ArmourRate, DamageRate; //recieved not given
 
@@ -218,6 +228,23 @@ namespace Server.MirObjects
                 if (Envir.Time < ActionList[i].Time) continue;
                 Process(ActionList[i]);
                 ActionList.RemoveAt(i);
+            }
+        }
+
+        public virtual void OnSafeZoneChanged()
+        {
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                if (!Buffs[i].Properties.HasFlag(BuffProperty.PauseInSafeZone)) continue;
+
+                if (InSafeZone)
+                {
+                    PauseBuff(Buffs[i]);
+                }
+                else
+                {
+                    UnpauseBuff(Buffs[i]);
+                }
             }
         }
 
@@ -534,8 +561,15 @@ namespace Server.MirObjects
                 {
                     Caster = owner,
                     ObjectID = ObjectID,
-                    ExpireTime = Envir.Time + duration
+                    ExpireTime = Envir.Time + duration,
+                    Stats = stats
                 };
+
+                if (buff.Properties.HasFlag(BuffProperty.PauseInSafeZone) && InSafeZone)
+                {
+                    buff.ExpireTime -= Envir.Time;
+                    buff.Paused = true;
+                }
 
                 Buffs.Add(buff);
             }
@@ -543,42 +577,39 @@ namespace Server.MirObjects
             {
                 switch (buff.StackType)
                 {
-                    case BuffStackType.Duration:
+                    case BuffStackType.ResetDuration:
                         {
-                            if (!buff.Stats.Equals(stats))
-                            {
-                                stats = buff.Stats;
-                            }
-
+                            buff.ExpireTime = Envir.Time + duration;
+                        }
+                        break;
+                    case BuffStackType.StackDuration:
+                        {
                             buff.ExpireTime += duration;
                         }
                         break;
-                    case BuffStackType.Stat:
+                    case BuffStackType.StackStat:
                         {
-                            buff.Stats.Add(stats);
+                            if (stats != null)
+                            {
+                                buff.Stats.Add(stats);
+                            }
                         }
                         break;
-                    case BuffStackType.StatAndDuration:
+                    case BuffStackType.StackStatAndDuration:
                         {
-                            buff.Stats.Add(stats);
+                            if (stats != null)
+                            {
+                                buff.Stats.Add(stats);
+                            }
 
                             buff.ExpireTime += duration;
-                        }
-                        break;
-                    case BuffStackType.Reset:
-                        {
-                            if (buff.ExpireTime < Envir.Time + duration)
-                            {
-                                buff.ExpireTime = Envir.Time + duration;
-                            }
                         }
                         break;
                 }
             }
 
-            buff.Stats = stats ?? new Stats();
+            buff.Stats ??= new Stats();
             buff.Values = values ?? new int[0];
-            buff.Paused = false;
 
             switch (buff.Type)
             {
@@ -639,6 +670,22 @@ namespace Server.MirObjects
         public bool HasAnyBuffs(BuffType exceptBuff, params BuffType[] types)
         {
             return Buffs.Select(x => x.Type).Except(new List<BuffType> { exceptBuff }).Intersect(types).Any();
+        }
+
+        public virtual void PauseBuff(Buff b)
+        {
+            if (b.Paused) return;
+
+            b.ExpireTime -= Envir.Time;
+            b.Paused = true;
+        }
+
+        public virtual void UnpauseBuff(Buff b)
+        {
+            if (!b.Paused) return;
+
+            b.ExpireTime += Envir.Time;
+            b.Paused = false;
         }
 
         protected void HideFromTargets()
@@ -1111,6 +1158,7 @@ namespace Server.MirObjects
                 ObjectID = ObjectID,
                 Visible = Info.Visible,
                 Infinite = StackType == BuffStackType.Infinite,
+                Paused = Paused,
                 ExpireTime = ExpireTime,
                 Stats = new Stats(Stats),
                 Values = Values

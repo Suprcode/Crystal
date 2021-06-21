@@ -1438,6 +1438,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.RemoveBuff:
                     RemoveBuff((S.RemoveBuff)p);
                     break;
+                case (short)ServerPacketIds.PauseBuff:
+                    PauseBuff((S.PauseBuff)p);
+                    break;
                 case (short)ServerPacketIds.ObjectHidden:
                     ObjectHidden((S.ObjectHidden)p);
                     break;
@@ -2479,8 +2482,7 @@ namespace Client.MirScenes
             {
                 if (MapControl.Objects[i].ObjectID != p.ObjectID) continue;
 
-                PlayerObject player = MapControl.Objects[i] as PlayerObject;
-                if (player != null)
+                if (MapControl.Objects[i] is PlayerObject player)
                 {
                     player.TransformType = p.TransformType;
                 }
@@ -4330,7 +4332,10 @@ namespace Client.MirScenes
         {
             ClientBuff buff = p.Buff;
 
-            buff.ExpireTime += CMain.Time;
+            if (!buff.Paused)
+            {
+                buff.ExpireTime += CMain.Time;
+            }
 
             if (buff.ObjectID == User.ObjectID)
             {
@@ -4403,6 +4408,30 @@ namespace Client.MirScenes
                 ob.RemoveBuffEffect(p.Type);
                 return;
             }
+        }
+
+        private void PauseBuff(S.PauseBuff p)
+        {
+            for (int i = 0; i < BuffsDialog.Buffs.Count; i++)
+            {
+                if (BuffsDialog.Buffs[i].Type != p.Type || User.ObjectID != p.ObjectID) continue;
+
+                if (BuffsDialog.Buffs[i].Paused == p.Paused) return;
+
+                BuffsDialog.Buffs[i].Paused = p.Paused;
+
+                if (p.Paused)
+                {
+                    BuffsDialog.Buffs[i].ExpireTime -= CMain.Time;
+                }
+                else
+                {
+                    BuffsDialog.Buffs[i].ExpireTime += CMain.Time;
+                }
+            }
+
+            if (User.ObjectID == p.ObjectID)
+                User.RefreshStats();
         }
 
         private void ObjectHidden(S.ObjectHidden p)

@@ -64,6 +64,7 @@ namespace Server.Database
             ItemLightRange.ValueType = typeof(byte);
             ItemDurability.ValueType = typeof(ushort);
             ItemPrice.ValueType = typeof(uint);
+            ItemToolTip.ValueType = typeof(string);
 
             //Basic
             this.ItemType.ValueType = typeof(ItemType);
@@ -103,6 +104,7 @@ namespace Server.Database
             enumTable.Columns.Add(new DataColumn("Value", Enum.GetUnderlyingType(typeof(T))));
             enumTable.Columns.Add(new DataColumn("Display", typeof(string)));
             DataRow EnumRow;
+
             foreach (T E in Enum.GetValues(typeof(T)))
             {
                 EnumRow = enumTable.NewRow();
@@ -209,6 +211,7 @@ namespace Server.Database
                 row["ItemLightIntensity"] = (byte)(item.Light / 15);
                 row["ItemDurability"] = item.Durability;
                 row["ItemPrice"] = item.Price;
+                row["ItemToolTip"] = item.ToolTip;
 
                 foreach (Stat stat in StatEnums)
                 {
@@ -305,6 +308,7 @@ namespace Server.Database
                 item.Light = (byte)Math.Min(byte.MaxValue, light);
                 item.Durability = (ushort)row.Cells["ItemDurability"].Value;
                 item.Price = (uint)row.Cells["ItemPrice"].Value;
+                item.ToolTip = (string)row.Cells["ItemToolTip"].Value;
 
                 item.Stats.Clear();
                 item.Bind = BindMode.None;
@@ -622,7 +626,14 @@ namespace Server.Database
                                     }
                                     else
                                     {
-                                        dataRow[column] = cells[j];
+                                        if (dataColumn.Name == "ItemToolTip")
+                                        {
+                                            dataRow[column] = cells[j].Trim('"').Replace("\\r\\n", "\r\n");
+                                        }
+                                        else
+                                        {
+                                            dataRow[column] = cells[j];
+                                        }
                                     }
                                 }
                             }
@@ -697,14 +708,25 @@ namespace Server.Database
                                 {
                                     var cell = itemInfoGridView.Rows[i - 1].Cells[j];
 
-                                    var valueType = itemInfoGridView.Columns[j].ValueType;
+                                    var col = itemInfoGridView.Columns[j];
+
+                                    var valueType = col.ValueType;
                                     if (valueType.IsEnum)
                                     {
                                         outputCsv[i] += ((Enum.ToObject(valueType, cell.Value ?? 0))?.ToString() ?? "") + ",";
                                     }
                                     else
                                     {
-                                        outputCsv[i] += (cell.Value?.ToString() ?? "") + ",";
+                                        var val = cell.Value?.ToString() ?? "";
+
+                                        if (col.Name == "ItemToolTip")
+                                        {
+                                            outputCsv[i] += $"\"{val.Replace("\r\n", "\\r\\n")}\",";
+                                        }
+                                        else
+                                        {
+                                            outputCsv[i] += $"{val},";
+                                        }
                                     }
                                 }
                             }
@@ -750,6 +772,7 @@ namespace Server.Database
             row.Cells["ItemLightIntensity"].Value = (byte)0;
             row.Cells["ItemDurability"].Value = (ushort)0;
             row.Cells["ItemPrice"].Value = (uint)0;
+            row.Cells["ItemToolTip"].Value = (string)"";
 
             foreach (Stat stat in StatEnums)
             {

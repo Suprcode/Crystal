@@ -160,7 +160,7 @@ namespace Client.MirScenes.Dialogs
                     image.Opacity = 0.6f;
                 }
 
-                if (buff.Infinite || !(Math.Round((buff.ExpireTime - CMain.Time) / 1000D) <= 5))
+                if (buff.Paused || buff.Infinite || !(Math.Round((buff.ExpireTime - CMain.Time) / 1000D) <= 5))
                     continue;
 
                 var time = (buff.ExpireTime - CMain.Time) / 100D;
@@ -335,60 +335,6 @@ namespace Client.MirScenes.Dialogs
                 case BuffType.Guild:
                     text += GameScene.Scene.GuildDialog.ActiveStats;
                     break;
-
-                //case BuffType.GreenPoison:
-                //    {
-                //        var tick = buff.Values[1] / 1000;
-                //        var tickName = tick > 1 ? "seconds" : "second";
-
-                //        text += $"Recieve {buff.Values[0]} damage every {tick} {tickName}.\n";
-                //    }
-                //    break;
-                //case BuffType.RedPoison:
-                //    {
-                //        var tick = buff.Values[1] / 1000;
-                //        var tickName = tick > 1 ? "seconds" : "second";
-
-                //        text += $"Reduces armour rate by 10% every {tick} {tickName}.\n";
-                //    }
-                //    break;
-                //case BuffType.SlowPoison:
-                //    text += "Reduces movement speed.\n";
-                //    break;
-                //case BuffType.FrozenPoison:
-                //    text += "Prevents casting, movin\nand attacking.\n";
-                //    break;
-                //case BuffType.StunPoison:
-                //    {
-                //        var tick = buff.Values[1] / 1000;
-                //        var tickName = tick > 1 ? "seconds" : "second";
-
-                //        text += $"Increases damage received by 20% every {tick} {tickName}.\n";
-                //    }
-                //    break;
-                //case BuffType.ParalysisPoison:
-                //    text += "Prevents moving and attacking.\n";
-                //    break;
-                //case BuffType.DelayedExplosionPoison:
-                //    text += "Ticking time bomb.\n";
-                //    break;
-                //case BuffType.BleedingPoison:
-                //    {
-                //        var tick = buff.Values[1] / 1000;
-                //        var tickName = tick > 1 ? "seconds" : "second";
-
-                //        text += $"Recieve {buff.Values[0]} damage every {tick} {tickName}.\n";
-                //    }
-                //    break;
-                //case BuffType.LRParalysisPoison:
-                //    text += "Prevents moving and attacking.\nCancels when attacked\n";
-                //    break;
-                //case BuffType.BlindnessPoison:
-                //    text += "Causes temporary blindness.\n";
-                //    break;
-                //case BuffType.DazedPoison:
-                //    text += "Prevents attacking.\n";
-                //    break;
             }
 
             if (!overridestats)
@@ -413,7 +359,18 @@ namespace Client.MirScenes.Dialogs
                 }
             }
 
-            text += buff.Infinite ? GameLanguage.ExpireNever : string.Format(GameLanguage.Expire, Functions.PrintTimeSpanFromSeconds(Math.Round((buff.ExpireTime - CMain.Time) / 1000D)));
+            if (buff.Paused)
+            {
+                text += GameLanguage.ExpirePaused;
+            }
+            else if (buff.Infinite)
+            {
+                text += GameLanguage.ExpireNever;
+            }
+            else
+            {
+                text += string.Format(GameLanguage.Expire, Functions.PrintTimeSpanFromSeconds(Math.Round((buff.ExpireTime - CMain.Time) / 1000D)));
+            }
 
             if (!string.IsNullOrEmpty(buff.Caster)) text += string.Format("\nCaster: {0}", buff.Caster);
 

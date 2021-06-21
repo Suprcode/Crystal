@@ -540,15 +540,15 @@ public enum Monster : ushort
     BoulderSpirit = 347,
     HornedCommander = 348, //BOSS
 
-    MoonStone = 349, //TODO
-    SunStone = 350, //TODO
-    LightningStone = 351, //TODO
-    Turtlegrass = 352, // Done (DG)
-    ManTree = 353, //Done (DG)
+    MoonStone = 349,
+    SunStone = 350,
+    LightningStone = 351,
+    Turtlegrass = 352,
+    ManTree = 353,
     Bear = 354,  //Effect 1, AI 112
-    Leopard = 355, // Basic mob (No AI or spell animations) (DG)
+    Leopard = 355,
     ChieftainArcher = 356,
-    ChieftainSword = 357, //TODO - BOSS AI
+    ChieftainSword = 357, //BOSS TODO
     StoningSpider = 358, //Archer Spell mob (not yet coded)
     VampireSpider = 359, //Archer Spell mob
     SpittingToad = 360, //Archer Spell mob
@@ -1339,16 +1339,18 @@ public enum BuffProperty : byte
     None = 0,
     RemoveOnDeath = 1,
     RemoveOnExit = 2,
-    Debuff = 4
+    Debuff = 4,
+    PauseInSafeZone = 8
 }
 
 public enum BuffStackType : byte
 {
     None,
-    Reset,
-    Duration,
-    Stat,
-    StatAndDuration,
+    ResetDuration,
+    UpdateDuration,
+    StackDuration,
+    StackStat,
+    StackStatAndDuration,
     Infinite
 }
 
@@ -1495,6 +1497,7 @@ public enum ServerPacketIds : short
     ObjectRangeAttack,
     AddBuff,
     RemoveBuff,
+    PauseBuff,
     ObjectHidden,
     RefreshItem,
     ObjectSpell,

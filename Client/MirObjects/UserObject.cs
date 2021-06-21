@@ -103,7 +103,7 @@ namespace Client.MirObjects
             Magics = info.Magics;
             for (int i = 0; i < Magics.Count; i++ )
             {
-                Magics[i].CastTime = CMain.Time + Magics[i].CastTime;
+                Magics[i].CastTime += CMain.Time;
             }
 
             IntelligentCreatures = info.IntelligentCreatures;//IntelligentCreature
@@ -616,6 +616,7 @@ namespace Client.MirObjects
                         Sprint = true;
                         break;
                     case BuffType.Transform:
+                        if (buff.Paused) continue;
                         TransformType = (short)buff.Values[0];
                         break;
                 }

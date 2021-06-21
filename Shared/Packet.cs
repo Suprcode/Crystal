@@ -611,6 +611,8 @@ public abstract class Packet
                 return new S.AddBuff();
             case (short)ServerPacketIds.RemoveBuff:
                 return new S.RemoveBuff();
+            case (short)ServerPacketIds.PauseBuff:
+                return new S.PauseBuff();
             case (short)ServerPacketIds.ObjectHidden:
                 return new S.ObjectHidden();
             case (short)ServerPacketIds.RefreshItem:
