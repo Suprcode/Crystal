@@ -50,7 +50,7 @@ namespace Server.MirObjects.Monsters
             {
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300);
+                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target);
                 ActionList.Add(action);
             }
         }

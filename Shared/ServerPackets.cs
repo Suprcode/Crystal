@@ -5872,4 +5872,29 @@ namespace ServerPackets
             Notice.Save(writer);
         }
     }
+
+    public sealed class Roll : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.Roll; } }
+
+        public int Type;
+        public string Page;
+        public int Result;
+        public bool AutoRoll;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Type = reader.ReadInt32();
+            Page = reader.ReadString();
+            Result = reader.ReadInt32();
+            AutoRoll = reader.ReadBoolean();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Type);
+            writer.Write(Page);
+            writer.Write(Result);
+            writer.Write(AutoRoll);
+        }
+    }
 }

@@ -843,6 +843,8 @@ public abstract class Packet
                 return new S.ExpireTimer();
             case (short)ServerPacketIds.UpdateNotice:
                 return new S.UpdateNotice();
+            case (short)ServerPacketIds.Roll:
+                return new S.Roll();
             default:
                 return null;
         }

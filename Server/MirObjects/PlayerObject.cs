@@ -220,9 +220,7 @@ namespace Server.MirObjects
         public Dictionary<NPCSegment, bool> NPCSuccess = new Dictionary<NPCSegment, bool>();
         public bool NPCDelayed;
         public List<string> NPCSpeech = new List<string>();
-        public Map NPCMoveMap;
-        public Point NPCMoveCoord;
-        public string NPCInputStr;
+        public Dictionary<string, object> NPCData = new Dictionary<string, object>();
 
         public bool UserMatch;
         public string MatchName;
@@ -377,29 +375,29 @@ namespace Server.MirObjects
                     continue;
                 }
 
+                if (pet.Info.Name == Settings.SkeletonName || pet.Info.Name == Settings.ShinsuName || pet.Info.Name == Settings.AngelName)
+                {
+                    Die();
+                    continue;
+                }
+
                 pet.Master = null;
 
                 if (!pet.Dead)
                 {
-                    try
+                    Info.Pets.Add(new PetInfo(pet)
                     {
-                        Info.Pets.Add(new PetInfo(pet) 
-                        { 
-                            TameTime = pet.TameTime - Envir.Time 
-                        });
+                        TameTime = pet.TameTime - Envir.Time
+                    });
 
-                        Envir.MonsterCount--;
-                        pet.CurrentMap.MonsterCount--;
+                    Envir.MonsterCount--;
+                    pet.CurrentMap.MonsterCount--;
 
-                        pet.CurrentMap.RemoveObject(pet);
-                        pet.Despawn();
-                    }
-                    catch
-                    {
-                        MessageQueue.EnqueueDebugging(Name + " Pet logout was null on logout : " + pet != null ? pet.Name : "" + " " + pet.CurrentMap != null ? pet.CurrentMap.Info.FileName : "");
-                    }
+                    pet.CurrentMap.RemoveObject(pet);
+                    pet.Despawn();
                 }
             }
+
             Pets.Clear();
             
             for (int i = 0; i < Info.Magics.Count; i++)
@@ -7176,7 +7174,6 @@ namespace Server.MirObjects
             MonsterInfo info = Envir.GetMonsterInfo(Settings.SkeletonName);
             if (info == null) return;
 
-
             LevelMagic(magic);
             ConsumeItem(item, 1);
 
@@ -7220,10 +7217,8 @@ namespace Server.MirObjects
             MonsterInfo info = Envir.GetMonsterInfo(Settings.ShinsuName);
             if (info == null) return;
 
-
             LevelMagic(magic);
             ConsumeItem(item, 5);
-
 
             monster = MonsterObject.GetMonster(info);
             monster.PetLevel = magic.Level;
@@ -7431,7 +7426,6 @@ namespace Server.MirObjects
 
             UserItem item = GetAmulet(2);
             if (item == null) return;
-
 
             MonsterInfo info = Envir.GetMonsterInfo(Settings.AngelName);
             if (info == null) return;
@@ -9724,8 +9718,8 @@ namespace Server.MirObjects
 
                 if (info.NeedMove) //use with ENTERMAP npc command
                 {
-                    NPCMoveMap = Envir.GetMap(info.MapIndex);
-                    NPCMoveCoord = info.Destination;
+                    NPCData["NPCMoveMap"] = Envir.GetMap(info.MapIndex);
+                    NPCData["NPCMoveCoord"] = info.Destination;
                     continue;
                 }
 
@@ -18146,6 +18140,7 @@ namespace Server.MirObjects
                 SummonedCreatureType = IntelligentCreatureType.None;
                 break;
             }
+
             //update client
             if (doUpdate) GetCreaturesInfo();
         }
@@ -18165,7 +18160,7 @@ namespace Server.MirObjects
                 break;
             }
 
-            //re-arange slots
+            //re-arrange slots
             for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
                 Info.IntelligentCreatures[i].SlotIndex = i;
 

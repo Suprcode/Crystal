@@ -1068,13 +1068,6 @@ namespace Server.MirObjects
             ProcessBuffs();
             ProcessRegen();
             ProcessPoison();
-
-
-            /*   if (!HealthChanged) return;
-
-               HealthChanged = false;
-
-               BroadcastHealthChange();*/
         }
 
         public override void SetOperateTime()

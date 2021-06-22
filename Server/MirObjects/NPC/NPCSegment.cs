@@ -1070,6 +1070,16 @@ namespace Server.MirObjects
 
                     acts.Add(new NPCActions(ActionType.UnequipItem, type));
                     break;
+                case "ROLLDIE":
+                    if (parts.Length < 3) return;
+
+                    acts.Add(new NPCActions(ActionType.RollDie, parts[1], parts[2]));
+                    break;
+                case "ROLLYUT":
+                    if (parts.Length < 3) return;
+
+                    acts.Add(new NPCActions(ActionType.RollYut, parts[1], parts[2]));
+                    break;
             }
         }
 
@@ -1393,6 +1403,17 @@ namespace Server.MirObjects
                     if (player.MyGuild == null) return "No Guild";
                     else
                         newValue = player.MyGuild.Name + " Guild";
+                    break;
+                case "ROLLRESULT":
+                    if (player.NPCData.TryGetValue("NPCRollResult", out object _rollResult))
+                    {
+                        newValue = _rollResult.ToString();
+                    }
+                    else
+                    {
+                        newValue = "Not Rolled";
+                    }
+
                     break;
 
                 default:
@@ -2674,7 +2695,10 @@ namespace Server.MirObjects
                         param[j] = param[j].Replace(part, ReplaceValue(player, part));
                     }
 
-                    param[j] = param[j].Replace("%INPUTSTR", player.NPCInputStr);
+                    if (player.NPCData.TryGetValue("NPCInputStr", out object _npcInputStr))
+                    {
+                        param[j] = param[j].Replace("%INPUTSTR", (string)_npcInputStr);
+                    }
                 }
 
                 switch (act.Type)
@@ -3526,10 +3550,12 @@ namespace Server.MirObjects
 
                     case ActionType.EnterMap:
                         {
-                            if (player.NPCMoveMap == null || player.NPCMoveCoord.IsEmpty) return;
-                            player.Teleport(player.NPCMoveMap, player.NPCMoveCoord, false);
-                            player.NPCMoveMap = null;
-                            player.NPCMoveCoord = Point.Empty;
+                            if (!player.NPCData.TryGetValue("NPCMoveMap", out object _npcMoveMap) || !player.NPCData.TryGetValue("NPCMoveCoord", out object _npcMoveCoord)) return;
+
+                            player.Teleport((Map)_npcMoveMap, (Point)_npcMoveCoord, false);
+
+                            player.NPCData.Remove("NPCMoveMap");
+                            player.NPCData.Remove("NPCMoveCoord");
                         }
                         break;
 
@@ -3817,6 +3843,30 @@ namespace Server.MirObjects
                             player.Enqueue(packet);
 
                             player.RefreshStats();
+                        }
+                        break;
+                    case ActionType.RollDie:
+                        {
+                            bool.TryParse(param[1], out bool autoRoll);
+
+                            var result = Envir.Random.Next(1, 7);
+
+                            S.Roll p = new S.Roll { Type = 0, Page = param[0], AutoRoll = autoRoll, Result = result };
+
+                            player.NPCData["NPCRollResult"] = result;
+                            player.Enqueue(p);
+                        }
+                        break;
+                    case ActionType.RollYut:
+                        {
+                            bool.TryParse(param[1], out bool autoRoll);
+
+                            var result = Envir.Random.Next(1, 7);
+
+                            S.Roll p = new S.Roll { Type = 1, Page = param[0], AutoRoll = autoRoll, Result = result };
+
+                            player.NPCData["NPCRollResult"] = result;
+                            player.Enqueue(p);
                         }
                         break;
                 }

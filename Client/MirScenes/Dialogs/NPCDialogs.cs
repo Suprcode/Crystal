@@ -12,7 +12,6 @@ using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirSounds;
 using Font = System.Drawing.Font;
-using S = ServerPackets;
 using C = ClientPackets;
 using Effect = Client.MirObjects.Effect;
 
@@ -409,6 +408,7 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.TrustMerchantDialog.Hide();
             GameScene.Scene.QuestListDialog.Hide();
             GameScene.Scene.InventoryDialog.Location = new Point(0, 0);
+            GameScene.Scene.RollControl.Hide();
         }
 
         public override void Show()

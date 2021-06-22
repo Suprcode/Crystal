@@ -1000,9 +1000,6 @@ namespace Server.MirObjects
 
         public int[] Values;
 
-        public bool RealTime;
-        public DateTime RealTimeExpire;
-
         public bool FlagForRemoval;
         public bool Paused;
 

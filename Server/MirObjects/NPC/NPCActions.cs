@@ -102,6 +102,8 @@ namespace Server.MirObjects
         PlaySound,
         SetTimer,
         ExpireTimer,
-        UnequipItem
+        UnequipItem,
+        RollDie,
+        RollYut
     }
 }

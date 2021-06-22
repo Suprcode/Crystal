@@ -591,6 +591,10 @@ namespace Server.MirObjects
                                 if (parts.Length > 2)
                                     gotoButtons.Add(string.Format("[{0}]", parts[2].ToUpper()));
                                 break;
+                            case "ROLLDIE":
+                            case "ROLLYUT":
+                                buttons.Add(string.Format("[{0}]", parts[1].ToUpper()));
+                                break;
                         }
                 }
 
@@ -607,7 +611,6 @@ namespace Server.MirObjects
 
             for (int i = 0; i < elseActs.Count; i++)
                 segment.ParseAct(segment.ElseActList, elseActs[i]);
-
 
             currentButtons = new List<string>();
             currentButtons.AddRange(buttons);
@@ -856,7 +859,7 @@ namespace Server.MirObjects
                 player.NPCDelayed = false;
             }
 
-            if (key.StartsWith("[@@") && player.NPCInputStr == string.Empty)
+            if (key.StartsWith("[@@") && !player.NPCData.TryGetValue("NPCInputStr", out object _npcInputStr))
             {
                 //send off packet to request input
                 player.Enqueue(new S.NPCRequestInput { NPCID = player.NPCObjectID, PageName = key });
@@ -885,8 +888,7 @@ namespace Server.MirObjects
                 Response(player, page);
             }
 
-
-            player.NPCInputStr = string.Empty;
+            player.NPCData.Remove("NPCInputStr");
         }
 
         private void Response(PlayerObject player, NPCPage page)

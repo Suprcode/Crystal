@@ -1707,7 +1707,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.NPCInputStr = p.Value;
+            Player.NPCData["NPCInputStr"] = p.Value;
 
             Player.CallNPC(Player.NPCObjectID, p.PageName);
         }

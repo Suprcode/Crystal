@@ -117,6 +117,7 @@ namespace Client.MirScenes
 
         public TimerDialog TimerControl;
         public CompassDialog CompassControl;
+        public RollDialog RollControl;
 
 
         public static List<ItemInfo> ItemInfoList = new List<ItemInfo>();
@@ -265,6 +266,7 @@ namespace Client.MirScenes
 
             TimerControl = new TimerDialog { Parent = this, Visible = false };
             CompassControl = new CompassDialog { Parent = this, Visible = false };
+            RollControl = new RollDialog { Parent = this, Visible = false };
 
             for (int i = 0; i < OutputLines.Length; i++)
                 OutputLines[i] = new MirLabel
@@ -758,6 +760,8 @@ namespace Client.MirScenes
 
         public void UseSpell(int key)
         {
+            RollControl.Setup(0, "Test", CMain.Random.Next(1, 7), false);
+
             if (User.RidingMount || User.Fishing) return;
 
             if (!User.HasClassWeapon && User.Weapon >= 0)
@@ -1778,6 +1782,9 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.UpdateNotice:
                     ShowNotice((S.UpdateNotice)p);
+                    break;
+                case (short)ServerPacketIds.Roll:
+                    Roll((S.Roll)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -8809,6 +8816,11 @@ namespace Client.MirScenes
         private void ExpireTimer(S.ExpireTimer p)
         {
             GameScene.Scene.TimerControl.ExpireTimer(p.Key);
+        }
+
+        private void Roll(S.Roll p)
+        {
+            GameScene.Scene.RollControl.Setup(p.Type, p.Page, p.Result, p.AutoRoll);
         }
 
         public void ShowNotice(S.UpdateNotice p)
