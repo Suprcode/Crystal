@@ -161,7 +161,9 @@ namespace Server
                              GeneralMeowMeowMob4 = "CatShaman",
                              KingHydraxMob = "Hydrax",
                              HornedCommanderMob = "HornedSorceror",
-                             HornedCommanderBombMob = "BoulderSpirit";
+                             HornedCommanderBombMob = "BoulderSpirit",
+                             SnowWolfKingMob = "SnowWolf";
+
 
         public static string HealRing = "Healing",
                              FireRing = "FireBall",
@@ -382,6 +384,7 @@ namespace Server
             KingHydraxMob = Reader.ReadString("Game", "KingHydraxMob", KingHydraxMob);
             HornedCommanderMob = Reader.ReadString("Game", "HornedCommanderMob", HornedCommanderMob);
             HornedCommanderBombMob = Reader.ReadString("Game", "HornedCommanderBombMob", HornedCommanderBombMob);
+            SnowWolfKingMob = Reader.ReadString("Game", "SnowWolfKingMob", SnowWolfKingMob);
             WhiteSnake = Reader.ReadString("Game", "WhiteSnake", WhiteSnake);
             AngelName = Reader.ReadString("Game", "AngelName", AngelName);
             BombSpiderName = Reader.ReadString("Game", "BombSpiderName", BombSpiderName);
@@ -681,6 +684,7 @@ namespace Server
             Reader.Write("Game", "KingHydraxMob", KingHydraxMob);
             Reader.Write("Game", "HornedCommanderMob", HornedCommanderMob);
             Reader.Write("Game", "HornedCommanderBombMob", HornedCommanderBombMob);
+            Reader.Write("Game", "SnowWolfKingMob", SnowWolfKingMob);
 
             //IntelligentCreature
             Reader.Write("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);

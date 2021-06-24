@@ -16,7 +16,6 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -42,20 +41,12 @@ namespace Server.MirObjects.Monsters
             else
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                if (damage == 0) return;
-
-                LineAttack(damage, 1);
-
-                damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+                int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                 if (damage == 0) return;
 
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 450, Target, damage, DefenceType.ACAgility, true);
                 ActionList.Add(action);
             }
-
-            if (Target.Dead)
-                FindTarget();
         }
 
         protected override void CompleteAttack(IList<object> data)
@@ -72,15 +63,14 @@ namespace Server.MirObjects.Monsters
 
             for (int i = 0; i < targets.Count; i++)
             {
-                var finalDamage = target.Attacked(this, damage, defence);
+                if (targets[i].Attacked(this, damage, defence) <= 0) continue;
 
-                if (finalDamage > 0 && magicAttack)
+                if (magicAttack)
                 {
-                    PoisonTarget(target, 4, 5, PoisonType.Slow, 2000);
-                    PoisonTarget(target, 8, 5, PoisonType.Frozen, 2000);
+                    PoisonTarget(targets[i], 4, 5, PoisonType.Slow, 2000);
+                    PoisonTarget(targets[i], 8, 5, PoisonType.Frozen, 2000);
                 }
             }
-
         }       
     }
 }

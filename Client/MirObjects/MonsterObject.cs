@@ -659,8 +659,8 @@ namespace Client.MirObjects
                         GameScene.Scene.Redraw();
                         break;
                     case MirAction.Attack1:
-                        CurrentActionLevel = (byte)action.Params[1];
                         PlayAttackSound();
+                        CurrentActionLevel = (byte)action.Params[1];
                         switch (BaseImage)
                         {
                             case Monster.FlamingWooma:
@@ -753,8 +753,8 @@ namespace Client.MirObjects
                         }
                         break;
                     case MirAction.Attack2:
-                        CurrentActionLevel = (byte)action.Params[1];
                         PlaySecondAttackSound();
+                        CurrentActionLevel = (byte)action.Params[1];
                         switch (BaseImage)
                         {
                             case Monster.CrystalSpider:
@@ -803,9 +803,6 @@ namespace Client.MirObjects
                             case Monster.DarkCaptain:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkCaptain], 1214, 10, 10 * Frame.Interval, this));
                                 break;
-                            case Monster.FrozenFighter:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenFighter], 384 + (int)Direction * 5, 5, 5 * Frame.Interval, this));
-                                break;
                             case Monster.DragonWarrior:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DragonWarrior], 576, 7, Frame.Count * Frame.Interval, this));
                                 break;
@@ -823,8 +820,8 @@ namespace Client.MirObjects
                         }
                         break;
                     case MirAction.Attack3:
-                        CurrentActionLevel = (byte)action.Params[1];
                         PlayThirdAttackSound();
+                        CurrentActionLevel = (byte)action.Params[1];
                         switch (BaseImage)
                         {
                             case Monster.Yimoogi:
@@ -855,8 +852,8 @@ namespace Client.MirObjects
                         }
                         break;
                     case MirAction.Attack4:
-                        CurrentActionLevel = (byte)action.Params[1];
                         PlayFourthAttackSound();
+                        CurrentActionLevel = (byte)action.Params[1];
                         switch (BaseImage)
                         {
                             case Monster.DarkOmaKing:
@@ -865,11 +862,13 @@ namespace Client.MirObjects
                         }
                         break;
                     case MirAction.Attack5:
-                        CurrentActionLevel = (byte)action.Params[1];
                         PlayFithAttackSound();
+                        CurrentActionLevel = (byte)action.Params[1];
                         break;
                     case MirAction.AttackRange1:
                         PlayRangeSound();
+                        TargetID = (uint)action.Params[0];
+                        CurrentActionLevel = (byte)action.Params[4];
                         switch (BaseImage)
                         {
                             case Monster.KingScorpion:
@@ -955,12 +954,11 @@ namespace Client.MirObjects
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BlackTortoise], 404 + (int)Direction * 5, 5, 5 * Frame.Interval, this));
                                 break;
                         }
-
-                        TargetID = (uint)action.Params[0];
                         break;
                     case MirAction.AttackRange2:
                         PlaySecondRangeSound();
                         TargetID = (uint)action.Params[0];
+                        CurrentActionLevel = (byte)action.Params[4];
                         switch (BaseImage)
                         {
                             case Monster.TurtleKing:
@@ -991,6 +989,7 @@ namespace Client.MirObjects
                     case MirAction.AttackRange3:
                         PlayThirdRangeSound();
                         TargetID = (uint)action.Params[0];
+                        CurrentActionLevel = (byte)action.Params[4];
                         switch (BaseImage)
                         {
                             case Monster.TurtleKing:
@@ -1126,9 +1125,6 @@ namespace Client.MirObjects
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenGolem], 456, 7, Frame.Count * Frame.Interval, this));
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenGolem], 463, 10, Frame.Count * Frame.Interval, this));
                                 break;
-                            case Monster.IcePhantom:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IcePhantom], 692 + (int)Direction * 10, 10, 10 * Frame.Interval, this));
-                                break;
                             case Monster.DragonWarrior:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DragonWarrior], 504 + (int)Direction * 6, 6, 6 * Frame.Interval, this));
                                 break;
@@ -1220,10 +1216,10 @@ namespace Client.MirObjects
                     {
                         switch (FrameIndex)
                         {
-                            case 0:
+                            case 1:
                                 PlayWalkSound(true);
                                 break;
-                            case 3:
+                            case 4:
                                 PlayWalkSound(false);
                                 break;
                         }
@@ -1569,6 +1565,9 @@ namespace Client.MirObjects
                                             case Monster.DarkCaptain:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkCaptain], 1168 + (int)Direction * 3, 3, 3 * Frame.Interval, this));
                                                 break;
+                                            case Monster.BlackTortoise:
+                                                MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BlackTortoise], 360, 6, 6 * Frame.Interval, front, CMain.Time));
+                                                break;
                                         }
                                         break;
                                     }
@@ -1641,6 +1640,9 @@ namespace Client.MirObjects
                                                 break;
                                             case Monster.HornedSorceror:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedSorceror], 536 + (int)Direction * 2, 2, 2 * Frame.Interval, this));
+                                                break;
+                                            case Monster.SnowWolfKing:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SnowWolfKing], 456 + (int)Direction * 3, 3, 3 * Frame.Interval, this));
                                                 break;
                                             case Monster.FrozenAxeman:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenAxeman], 528 + (int)Direction * 3, 3, 300, this));
@@ -1776,6 +1778,9 @@ namespace Client.MirObjects
                                             case Monster.HornedCommander:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedCommander], 1142 + (int)Direction * 2, 2, 2 * Frame.Interval, this));
                                                 break;
+                                            case Monster.SnowWolfKing:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SnowWolfKing], 480, 9, 9 * Frame.Interval, this));
+                                                break;
                                         }
                                     }
                                     break;
@@ -1809,12 +1814,16 @@ namespace Client.MirObjects
                                                 break;
                                             case Monster.BlackTortoise:                                                
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BlackTortoise], 366 + (int)Direction * 4, 4, 4 * Frame.Interval, this));
+                                                MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BlackTortoise], 398, 7, 7 * Frame.Interval, front, CMain.Time));
                                                 break;
                                             case Monster.TreeQueen:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 66, 16, 16 * Frame.Interval, this));
                                                 break;
                                             case Monster.RhinoWarrior:
                                                 MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RhinoWarrior], 376, 8, 800, front, CMain.Time));
+                                                break;
+                                            case Monster.FrozenFighter:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FrozenFighter], 384 + (int)Direction * 5, 5, 5 * Frame.Interval, this));
                                                 break;
                                         }
                                     }
@@ -2032,6 +2041,9 @@ namespace Client.MirObjects
 
                                             }
                                             break;
+                                        case Monster.SnowWolfKing:
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SnowWolfKing], 489 + (int)Direction * 9, 9, 9 * Frame.Interval, this));
+                                            break;
                                     }
                                     break;
                                 case 2:
@@ -2172,6 +2184,14 @@ namespace Client.MirObjects
 
                                                 LoopFrame(FrameIndex, 3, FrameInterval, totalDuration);
                                             }
+                                            break;
+                                    }
+                                    break;
+                                case 3:
+                                    switch (BaseImage)
+                                    {
+                                        case Monster.SnowWolfKing:
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SnowWolfKing], 581 + (int)Direction * 3, 3, 3 * Frame.Interval, this));
                                             break;
                                     }
                                     break;
@@ -2540,6 +2560,10 @@ namespace Client.MirObjects
                                                 if (MapControl.GetObject(TargetID) != null)
                                                     CreateProjectile(38, Libraries.Monsters[(ushort)Monster.ArcherGuard], false, 3, 30, 6);
                                                 break;
+                                            case Monster.ArcherGuard3:
+                                                if (MapControl.GetObject(TargetID) != null)
+                                                    CreateProjectile(104, Libraries.Monsters[(ushort)Monster.ArcherGuard3], false, 3, 30, 0);
+                                                break;
                                             case Monster.FinialTurtle:
                                                 missile = CreateProjectile(272, Libraries.Monsters[(ushort)Monster.FinialTurtle], true, 3, 30, 0);
 
@@ -2807,6 +2831,41 @@ namespace Client.MirObjects
                                                     MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkOmaKing], 1715, 13, 1300, ob.CurrentLocation));
                                                 }
                                                 break;
+                                            case Monster.ChieftainArcher:
+                                                if (MapControl.GetObject(TargetID) != null)
+                                                {
+                                                    if (CurrentActionLevel == 0)
+                                                    {
+                                                        missile = CreateProjectile(312, Libraries.Monsters[(ushort)Monster.ChieftainArcher], true, 5, 50, 0, direction16: true);
+
+                                                        if (missile.Target != null)
+                                                        {
+                                                            missile.Complete += (o, e) =>
+                                                            {
+                                                                if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                                missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ChieftainArcher], 392, 6, 600, missile.Target));
+                                                            };
+                                                        }
+                                                    }
+                                                    else if (CurrentActionLevel == 1)
+                                                    {
+                                                        missile = CreateProjectile(398, Libraries.Monsters[(ushort)Monster.ChieftainArcher], true, 5, 50, 0, direction16: true);
+
+                                                        if (missile.Target != null)
+                                                        {
+                                                            missile.Complete += (o, e) =>
+                                                            {
+                                                                if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                                missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ChieftainArcher], 478, 6, 600, missile.Target));
+                                                            };
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        missile = CreateProjectile(484, Libraries.Monsters[(ushort)Monster.ChieftainArcher], true, 5, 50, 0, direction16: true);
+                                                    }
+                                                }
+                                                break;
                                             case Monster.ManTree:
                                                 ob = MapControl.GetObject(TargetID);
                                                 if (ob != null)
@@ -2820,10 +2879,6 @@ namespace Client.MirObjects
                                                 {
                                                     ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ClawBeast], 568, 7, 700, ob));
                                                 }
-                                                break;
-                                            case Monster.FrozenArcher:
-                                                if (MapControl.GetObject(TargetID) != null)
-                                                    CreateProjectile(264, Libraries.Monsters[(ushort)Monster.FrozenArcher], true, 5, 80, 0);
                                                 break;
                                             case Monster.BlackTortoise:
                                                 Point source = Functions.PointMove(CurrentLocation, Direction, 2);
@@ -2974,6 +3029,10 @@ namespace Client.MirObjects
                                                 {
                                                     ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FloatingRock], 226, 10, 1000, ob) /*{ Blend = false }*/);
                                                 }
+                                                break;
+                                            case Monster.FrozenArcher:
+                                                if (MapControl.GetObject(TargetID) != null)
+                                                    CreateProjectile(264, Libraries.Monsters[(ushort)Monster.FrozenArcher], true, 5, 80, 0);
                                                 break;
                                             case Monster.FrozenMagician:
                                                 missile = CreateProjectile(560, Libraries.Monsters[(ushort)Monster.FrozenMagician], true, 6, 30, 0);
@@ -3379,6 +3438,17 @@ namespace Client.MirObjects
                                         case Monster.Bear:
                                             Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Bear], 353, 9, Frame.Count * Frame.Interval, this));
                                             break;
+                                        case Monster.SnowWolfKing:
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SnowWolfKing], 605, 10, 10 * Frame.Interval, this) { DrawBehind = true });
+                                            break;
+                                    }
+                                    break;
+                                case 9:
+                                    switch (BaseImage)
+                                    {
+                                        case Monster.IcePhantom:
+                                            MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IcePhantom], 692 + (int)Direction * 10, 10, 10 * Frame.Interval, CurrentLocation));
+                                            break;
                                     }
                                     break;
                             }
@@ -3501,6 +3571,7 @@ namespace Client.MirObjects
                 {
                     case Monster.WingedTigerLord:
                     case Monster.PoisonHugger:
+                    case Monster.SnowWolfKing:
                         SoundManager.PlaySound(BaseSound + 8);
                         return;
                 }
@@ -3514,6 +3585,7 @@ namespace Client.MirObjects
                         SoundManager.PlaySound(BaseSound + 8);
                         return;
                     case Monster.PoisonHugger:
+                    case Monster.SnowWolfKing:
                         SoundManager.PlaySound(BaseSound + 9);
                         return;
                 }
@@ -3579,6 +3651,7 @@ namespace Client.MirObjects
             {
                 case Monster.Armadillo:
                 case Monster.ArmadilloElder:
+                case Monster.ChieftainArcher:
                     SoundManager.PlaySound(BaseSound + 8);
                     break;
             }
@@ -3706,6 +3779,9 @@ namespace Client.MirObjects
             {
                 case Monster.HornedCommander:
                     return;
+                case Monster.SnowWolfKing:
+                    SoundManager.PlaySound(BaseSound + 5);
+                    return;
                 default:
                     SoundManager.PlaySound(BaseSound + 8);
                     return;
@@ -3828,6 +3904,10 @@ namespace Client.MirObjects
                 case Monster.DarkCaptain:
                 case Monster.DarkOmaKing:
                 case Monster.HornedMage:
+                case Monster.FrozenKnight:
+                case Monster.IcePhantom:
+                case Monster.WaterDragon:
+                case Monster.BlackTortoise:
                     SoundManager.PlaySound(BaseSound + 5);
                     return;
                 case Monster.AncientBringer:
@@ -5185,25 +5265,25 @@ namespace Client.MirObjects
                         switch (CurrentAction)
                         {
                             case MirAction.Show:
-                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(400 + FrameIndex + 8, DrawLocation, Color.White, true);
+                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(400 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
                                 break;
                             case MirAction.Standing:
-                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(464 + FrameIndex + 6, DrawLocation, Color.White, true);
+                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(464 + FrameIndex + (int)Direction * 6, DrawLocation, Color.White, true);
                                 break;
                             case MirAction.AttackRange1:
-                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(512 + FrameIndex + 8, DrawLocation, Color.White, true);
+                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(512 + FrameIndex + (int)Direction * 8, DrawLocation, Color.White, true);
                                 break;
                             case MirAction.Attack1:
-                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(576 + FrameIndex + 10, DrawLocation, Color.White, true);
+                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(576 + FrameIndex + (int)Direction * 10, DrawLocation, Color.White, true);
                                 break;
                             case MirAction.Struck:
-                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(656 + FrameIndex + 3, DrawLocation, Color.White, true);
+                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(656 + FrameIndex + (int)Direction * 3, DrawLocation, Color.White, true);
                                 break;
                             case MirAction.Die:
-                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(680 + FrameIndex + 15, DrawLocation, Color.White, true);
+                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(680 + FrameIndex + (int)Direction * 15, DrawLocation, Color.White, true);
                                 break;
                             case MirAction.Hide:
-                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(400 + FrameIndex + 8, DrawLocation, Color.White, true); //needs reversing
+                                Libraries.Monsters[(ushort)Monster.WaterDragon].DrawBlend(407 + (FrameIndex * -1) + (int)Direction * 8, DrawLocation, Color.White, true);
                                 break;
                         }
                         break;

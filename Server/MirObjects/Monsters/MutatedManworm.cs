@@ -51,7 +51,7 @@ namespace Server.MirObjects.Monsters
 
             for (int i = 0; i < targets.Count; i++)
             {
-                if (targets[i].Stats[Stat.MinDC] > Target.Stats[Stat.MinDC]) continue;
+                if (targets[i].Stats[Stat.MinDC] >= Target.Stats[Stat.MinDC]) continue;
 
                 CurrentLocation = targets[i].CurrentLocation;
                 Target = targets[i];

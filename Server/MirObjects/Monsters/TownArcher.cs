@@ -113,6 +113,7 @@ namespace Server.MirObjects.Monsters
                 }
             }
         }
+
         protected override bool InAttackRange()
         {
             return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);

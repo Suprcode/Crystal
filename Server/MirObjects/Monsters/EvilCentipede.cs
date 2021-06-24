@@ -53,7 +53,6 @@ namespace Server.MirObjects.Monsters
                     Broadcast(GetInfo());
                     Broadcast(new S.ObjectShow { ObjectID = ObjectID });
                     ActionTime = Envir.Time + 2000;
-
                 }
 
                 if (Visible && !visible)

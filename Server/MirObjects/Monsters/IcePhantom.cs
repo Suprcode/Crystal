@@ -3,13 +3,13 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
-    class IcePhantom : MonsterObject
+    public class IcePhantom : MonsterObject
     {
         protected virtual byte AttackRange
         {
             get
             {
-                return 8;
+                return 5;
             }
         }
 
@@ -42,7 +42,7 @@ namespace Server.MirObjects.Monsters
             if (!ranged)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                AttackTime = Envir.Time + AttackSpeed + 300;
+
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
 
@@ -52,16 +52,13 @@ namespace Server.MirObjects.Monsters
             else
             {
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-                AttackTime = Envir.Time + AttackSpeed + 500;
+
                 int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                 if (damage == 0) return;
                 
                 DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MAC);
                 ActionList.Add(action);
             }
-
-            if (Target.Dead)
-                FindTarget();
         }
 
         protected override void ProcessTarget()

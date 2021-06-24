@@ -27,6 +27,7 @@ namespace Server.MirObjects.Monsters
         {
             NameColour = Color.SkyBlue;
         }
+
         public override void Spawned()
         {
             if (Respawn != null && Respawn.Info.Direction < 8)

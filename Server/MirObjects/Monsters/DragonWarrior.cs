@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Server.MirObjects.Monsters
 {
-    class DragonWarrior : MonsterObject
+    public class DragonWarrior : MonsterObject
     {
         protected internal DragonWarrior(MonsterInfo info)
             : base(info)
@@ -58,9 +58,6 @@ namespace Server.MirObjects.Monsters
                 //TODO - Delay
                 PoisonTarget(Target, 3, 5, PoisonType.Dazed);
             }
-
-            if (Target.Dead)
-                FindTarget();
         }
     }
 }

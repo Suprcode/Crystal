@@ -2802,7 +2802,7 @@ namespace Client.MirScenes
                 if (ob.ObjectID != p.ObjectID) continue;
                 if (ob.Race == ObjectType.Player)
                 {
-                    action = new QueuedAction { Action = MirAction.Attack1, Direction = p.Direction, Location = p.Location, Params = new List<object>() }; //FAR Close up attack
+                    action = new QueuedAction { Action = MirAction.Attack1, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
                 }
                 else
                 {
@@ -3419,6 +3419,13 @@ namespace Client.MirScenes
                             playDefaultSound = false;
                             break;
                         }
+                    case 11: //SnowWolfKing
+                        {
+                            MapControl.Effects.Add(effect = new Effect(Libraries.Monsters[(ushort)Monster.SnowWolfKing], 561, 10, 1000, ob.CurrentLocation));
+                            SoundManager.PlaySound(8455);
+                            playDefaultSound = false;
+                            break;
+                        }
                     default:
                         {
                             effect = new Effect(Libraries.Magic, 250, 10, 500, ob.CurrentLocation);
@@ -3508,6 +3515,13 @@ namespace Client.MirScenes
                     case 10: //HornedCommander
                         {
                             ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedCommander], 928, 10, 1000, ob));
+                            SoundManager.PlaySound(8455);
+                            playDefaultSound = false;
+                            break;
+                        }
+                    case 11: //SnowWolfKing
+                        {
+                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SnowWolfKing], 571, 10, 1000, ob));
                             SoundManager.PlaySound(8455);
                             playDefaultSound = false;
                             break;
@@ -4329,6 +4343,7 @@ namespace Client.MirScenes
                 action.Params.Add(p.Target);
                 action.Params.Add(p.Spell);
                 action.Params.Add(new List<uint>());
+                action.Params.Add(p.Level);
 
                 ob.ActionFeed.Add(action);
                 return;
