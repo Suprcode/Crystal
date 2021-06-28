@@ -3396,6 +3396,8 @@ namespace Client.MirScenes
                     case 7: //Mandrill
                         {
                             effect = new Effect(Libraries.Monsters[(ushort)Monster.Mandrill], 280, 10, 1000, ob.CurrentLocation);
+                            SoundManager.PlaySound(((ushort)Monster.Mandrill) * 10 + 6);
+                            playDefaultSound = false;
                             break;
                         }
                     case 8: //DarkCaptain
@@ -3476,7 +3478,6 @@ namespace Client.MirScenes
                     case 4: //MutatedManWorm
                         {
                             ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MutatedManworm], 278, 7, 500, ob));
-
                             SoundManager.PlaySound(((ushort)Monster.MutatedManworm) * 10 + 7);
                             playDefaultSound = false;
                             break;
@@ -3496,6 +3497,8 @@ namespace Client.MirScenes
                     case 7: //Mandrill
                         {
                             ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Mandrill], 290, 10, 1000, ob));
+                            SoundManager.PlaySound(((ushort)Monster.Mandrill) * 10 + 6);
+                            playDefaultSound = false;
                             break;
                         }
                     case 8: //DarkCaptain

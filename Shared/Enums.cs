@@ -341,7 +341,7 @@ public enum Monster : ushort
     HalloweenScythe = 151,
     GhastlyLeecher = 152,
     CyanoGhast = 153,
-    MutatedManworm = 154, //EFFECT 4
+    MutatedManworm = 154,
     CrazyManworm = 155,
     MudPile = 156,
     TailedLion = 157,
@@ -510,7 +510,7 @@ public enum Monster : ushort
     PowerUpBead = 319, //Effect 2, AI 14
     DarkOmaKing = 320, //BOSS
     CaveStatue = 321,
-    Mandrill = 322, // EFFECT 7, AI 65
+    Mandrill = 322,
     PlagueCrab = 323,
     CreeperPlant = 324,
     FloatingWraith = 325, //AI 8

@@ -153,6 +153,7 @@ namespace Server.MirObjects
                 case 64:
                     return new IntelligentCreatureObject(info);
                 case 65:
+                    //Common AI: 2 Close attacks with WeakerTeleport
                     return new MutatedManworm(info);
                 case 66:
                     //Common AI: 2 Close Attacks
@@ -259,9 +260,9 @@ namespace Server.MirObjects
                     return new DarkBeast(info); //Effect 0/1
                 case 113:
                     return new ArcherGuard(info);
-
-                //114: Blank
-
+                case 114:
+                    //Common AI: 1 Close attack with WeakerTeleport
+                    return new Mandrill(info);
                 case 115:
                     return new SandSnail(info);
                 case 116:

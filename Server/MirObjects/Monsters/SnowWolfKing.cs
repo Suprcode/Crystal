@@ -25,7 +25,7 @@ namespace Server.MirObjects.Monsters
 
             if (attackerDamage > ownDamage && Envir.Random.Next(2) == 0)
             {
-                TeleportToWeakerTarget();
+                FindWeakerTarget();
             }
 
             return attackerDamage;
@@ -39,39 +39,45 @@ namespace Server.MirObjects.Monsters
 
             if (attackerDamage > ownDamage && Envir.Random.Next(10) == 0)
             {
-                TeleportToWeakerTarget();
+                FindWeakerTarget();
             }
 
             return attackerDamage;
         }
 
-
-        private void TeleportToWeakerTarget()
+        private void FindWeakerTarget()
         {
             List<MapObject> targets = FindAllTargets(Info.ViewRange, CurrentLocation);
 
             if (targets.Count < 2) return;
 
+            var newTarget = Target;
+
             for (int i = 0; i < targets.Count; i++)
             {
                 if (targets[i].Stats[Stat.MinDC] >= Target.Stats[Stat.MinDC]) continue;
 
-                CurrentLocation = targets[i].CurrentLocation;
-                Target = targets[i];
+                newTarget = targets[i];
+            }
 
-                TeleportRandom(5, 2, CurrentMap);
-                break;
+            if (newTarget != Target)
+            {
+                Target = newTarget;
+                TeleportToTarget(Target);
             }
         }
 
-        public override bool TeleportRandom(int attempts, int distance, Map temp = null)
+        private bool TeleportToTarget(MapObject target)
         {
-            for (int i = 0; i < attempts; i++)
-            {
-                Point location = new Point(CurrentLocation.X + Envir.Random.Next(-distance, distance + 1),
-                                         CurrentLocation.Y + Envir.Random.Next(-distance, distance + 1));
+            Direction = Functions.DirectionFromPoint(CurrentLocation, target.CurrentLocation);
 
-                if (Teleport(CurrentMap, location, true, 11)) return true;
+            var reverse = Functions.ReverseDirection(Direction);
+
+            var point = Functions.PointMove(target.CurrentLocation, reverse, 1);
+
+            if (point != CurrentLocation)
+            {
+                if (Teleport(CurrentMap, point, true, 11)) return true;
             }
 
             return false;
