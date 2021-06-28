@@ -399,10 +399,10 @@ namespace Server.MirEnvir
 
         private string CanStartEnvir()
         {
+            if (StartPoints.Count == 0) return "Cannot start server without atleast 1 Map and StartPoint.";
+
             if (Settings.EnforceDBChecks)
             {
-                if (StartPoints.Count == 0) return "Cannot start server without start points";
-
                 if (GetMonsterInfo(Settings.SkeletonName, true) == null) return "Cannot start server without mob: " + Settings.SkeletonName;
                 if (GetMonsterInfo(Settings.ShinsuName, true) == null) return "Cannot start server without mob: " + Settings.ShinsuName;
                 if (GetMonsterInfo(Settings.BugBatName, true) == null) return "Cannot start server without mob: " + Settings.BugBatName;

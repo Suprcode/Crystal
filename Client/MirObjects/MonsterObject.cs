@@ -711,9 +711,6 @@ namespace Client.MirObjects
                             case Monster.HellKeeper:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellKeeper], 32, 8, 8 * Frame.Interval, this));
                                 break;
-                            case Monster.PoisonHugger:
-                                User.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.PoisonHugger], 224, 5, 5 * Frame.Interval, User, 500, false));
-                                break;
                             case Monster.IcePillar:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IcePillar], 12, 6, 6 * 100, this));
                                 break;
@@ -1591,7 +1588,7 @@ namespace Client.MirObjects
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.OmaSlasher], 304 + (int)Direction * 4, 4, 4 * Frame.Interval, this));
                                                 break;
                                             case Monster.AvengerPlant:
-                                                User.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AvengerPlant], 248, 6, 600, User) { Blend = true });
+                                                MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.AvengerPlant], 248, 6, 600, front, CMain.Time));
                                                 break;
                                             case Monster.ManTree:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ManTree], 472 + (int)Direction * 2, 2, 2 * Frame.Interval, this));
