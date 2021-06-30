@@ -2802,7 +2802,7 @@ namespace Client.MirScenes
                 if (ob.ObjectID != p.ObjectID) continue;
                 if (ob.Race == ObjectType.Player)
                 {
-                    action = new QueuedAction { Action = MirAction.Attack1, Direction = p.Direction, Location = p.Location, Params = new List<object>() }; //FAR Close up attack
+                    action = new QueuedAction { Action = MirAction.Attack1, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
                 }
                 else
                 {
@@ -3396,6 +3396,8 @@ namespace Client.MirScenes
                     case 7: //Mandrill
                         {
                             effect = new Effect(Libraries.Monsters[(ushort)Monster.Mandrill], 280, 10, 1000, ob.CurrentLocation);
+                            SoundManager.PlaySound(((ushort)Monster.Mandrill) * 10 + 6);
+                            playDefaultSound = false;
                             break;
                         }
                     case 8: //DarkCaptain
@@ -3415,6 +3417,13 @@ namespace Client.MirScenes
                     case 10: //HornedCommander
                         {
                             MapControl.Effects.Add(effect = new Effect(Libraries.Monsters[(ushort)Monster.HornedCommander], 928, 10, 1000, ob.CurrentLocation));
+                            SoundManager.PlaySound(8455);
+                            playDefaultSound = false;
+                            break;
+                        }
+                    case 11: //SnowWolfKing
+                        {
+                            MapControl.Effects.Add(effect = new Effect(Libraries.Monsters[(ushort)Monster.SnowWolfKing], 561, 10, 1000, ob.CurrentLocation));
                             SoundManager.PlaySound(8455);
                             playDefaultSound = false;
                             break;
@@ -3469,7 +3478,6 @@ namespace Client.MirScenes
                     case 4: //MutatedManWorm
                         {
                             ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MutatedManworm], 278, 7, 500, ob));
-
                             SoundManager.PlaySound(((ushort)Monster.MutatedManworm) * 10 + 7);
                             playDefaultSound = false;
                             break;
@@ -3489,6 +3497,8 @@ namespace Client.MirScenes
                     case 7: //Mandrill
                         {
                             ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Mandrill], 290, 10, 1000, ob));
+                            SoundManager.PlaySound(((ushort)Monster.Mandrill) * 10 + 6);
+                            playDefaultSound = false;
                             break;
                         }
                     case 8: //DarkCaptain
@@ -3508,6 +3518,13 @@ namespace Client.MirScenes
                     case 10: //HornedCommander
                         {
                             ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedCommander], 928, 10, 1000, ob));
+                            SoundManager.PlaySound(8455);
+                            playDefaultSound = false;
+                            break;
+                        }
+                    case 11: //SnowWolfKing
+                        {
+                            ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.SnowWolfKing], 571, 10, 1000, ob));
                             SoundManager.PlaySound(8455);
                             playDefaultSound = false;
                             break;
@@ -4329,6 +4346,7 @@ namespace Client.MirScenes
                 action.Params.Add(p.Target);
                 action.Params.Add(p.Spell);
                 action.Params.Add(new List<uint>());
+                action.Params.Add(p.Level);
 
                 ob.ActionFeed.Add(action);
                 return;

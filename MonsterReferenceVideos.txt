@@ -18,13 +18,11 @@ Rhinos = https://www.youtube.com/watch?v=QWu-B70zR5M
 
 GeneralMeowMeow = https://www.youtube.com/watch?v=HuhdiLT5fRA
 KingHydrax = https://www.youtube.com/watch?v=C2H2cdD8HHI
-HornedCommander = https://www.youtube.com/watch?v=KNNmGI-wFnY
 TucsonGeneral = https://www.youtube.com/watch?v=2NXZ0xXchrs
 PeacockSpider = https://www.youtube.com/watch?v=nSZ2VCYkQJQ
 DarkCaptain = https://www.youtube.com/watch?v=gX0RXr6zG10
 
 ?? (Bosses) = https://www.youtube.com/watch?v=pQBoatqaKAQ
-				= https://youtu.be/81s67VBHXik?list=PLrocFAbts7oDVgfUgOnyPvrG_lpwultjT
 
 
 TucsonGeneral = https://www.youtube.com/watch?v=2NXZ0xXchrs
@@ -32,3 +30,6 @@ TucsonGeneral = https://www.youtube.com/watch?v=2NXZ0xXchrs
 HornedWarrior + Others = https://www.youtube.com/watch?v=M59ZDpiKJ5M&t=65s
 HornedWarrior + Others = https://www.youtube.com/watch?v=C71jvoBxB7Y
 HornedSorcerer = https://www.youtube.com/watch?v=UgHyLUMnzho
+HornedCommander = https://www.youtube.com/watch?v=KNNmGI-wFnY
+
+371-376 = https://www.youtube.com/watch?v=TSkeFjeLiq8

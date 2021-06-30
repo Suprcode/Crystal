@@ -153,6 +153,7 @@ namespace Server.MirObjects
                 case 64:
                     return new IntelligentCreatureObject(info);
                 case 65:
+                    //Common AI: 2 Close attacks with WeakerTeleport
                     return new MutatedManworm(info);
                 case 66:
                     //Common AI: 2 Close Attacks
@@ -257,10 +258,11 @@ namespace Server.MirObjects
                 case 112:
                     //Common AI: 2 Close attacks
                     return new DarkBeast(info); //Effect 0/1
-
-                //113: Blank
-                //114: Blank
-
+                case 113:
+                    return new ArcherGuard(info);
+                case 114:
+                    //Common AI: 1 Close attack with WeakerTeleport
+                    return new Mandrill(info);
                 case 115:
                     return new SandSnail(info);
                 case 116:
@@ -386,50 +388,51 @@ namespace Server.MirObjects
                     return new TurtleGrass(info);
                 case 174:
                     return new ManTree(info);
-
                 case 175:
-                    return new FrozenFighter(info);
-                case 176:
-                    return new FrozenKnight(info);
+                    return new ChieftainArcher(info);
+
+                //case 176: ChieftainSword
+
                 case 177:
-                    return new IcePhantom(info);
+                    return new FrozenKnight(info);
                 case 178:
+                    return new IcePhantom(info); //TODO
+                case 179:
                     return new SnowWolf(info);
-
-                //case 179: SnowWolfKing
-
                 case 180:
-                    return new WaterDragon(info);
+                    return new SnowWolfKing(info);
                 case 181:
+                    return new WaterDragon(info);
+                case 182:
                     return new BlackTortoise(info);
 
-                //case 182: Manticore
+                //case 183: Manticore
 
-                case 183:
+                case 184:
                     return new DragonWarrior(info);
 
-                //case 184: DragonArcher
+                //case 185: DragonArcher
 
-                case 185:
-                    return new Kirin(info);
                 case 186:
-                    return new FrozenMiner(info);
+                    return new Kirin(info);
                 case 187:
-                    return new FrozenAxeman(info);
+                    return new FrozenMiner(info);
                 case 188:
-                    return new FrozenMagician(info);
+                    return new FrozenAxeman(info);
                 case 189:
-                    return new SnowYeti(info);
+                    return new FrozenMagician(info);
                 case 190:
-                    return new IceCrystalSoldier(info);
+                    return new SnowYeti(info);
                 case 191:
+                    return new IceCrystalSoldier(info);
+                case 192:
                     return new DarkWraith(info);
 
-                //case 192: CrystalBeast
-                //case 193: RedOrb
-                //case 194: FatalLotus
+                //case 193: CrystalBeast
+                //case 194: RedOrb
+                //case 195: FatalLotus
 
-                case 195:
+                case 196:
                     return new AntCommander(info);
 
 
@@ -2129,7 +2132,7 @@ namespace Server.MirObjects
             if (Dead || attacker == this) return false;
             if (attacker.Race == ObjectType.Creature) return false;
 
-            if (attacker.Info.AI == 6) // Guard
+            if (attacker.Info.AI == 6 || attacker.Info.AI == 113) // Guard
             {
                 if (Info.AI != 1 && Info.AI != 2 && Info.AI != 3 && (Master == null || Master.PKPoints >= 200)) //Not Dear/Hen/Tree/Pets or Red Master 
                     return true;
@@ -2374,7 +2377,7 @@ namespace Server.MirObjects
                 OperateTime = 0;
             }
 
-            if (attacker.Info.AI == 6 || attacker.Info.AI == 58)
+            if (attacker.Info.AI == 6 || attacker.Info.AI == 58 || attacker.Info.AI == 113)
                 EXPOwner = null;
 
             else if (attacker.Master != null)

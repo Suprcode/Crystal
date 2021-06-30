@@ -90,9 +90,6 @@ namespace Server.MirObjects.Monsters
 
             slaves1 = false;
             slaves2 = false;
-
-            if (Target.Dead)
-                FindTarget();
         }
 
         private void RangedAttack()

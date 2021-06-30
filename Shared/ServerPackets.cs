@@ -3450,6 +3450,7 @@ namespace ServerPackets
         public Point Target;
         public byte Type;
         public Spell Spell;
+        public byte Level;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -3460,6 +3461,7 @@ namespace ServerPackets
             Target = new Point(reader.ReadInt32(), reader.ReadInt32());
             Type = reader.ReadByte();
             Spell = (Spell)reader.ReadByte();
+            Level = reader.ReadByte();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -3473,6 +3475,7 @@ namespace ServerPackets
             writer.Write(Target.Y);
             writer.Write(Type);
             writer.Write((byte)Spell);
+            writer.Write(Level);
         }
     }
     public sealed class AddBuff : Packet
