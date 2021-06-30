@@ -399,10 +399,10 @@ namespace Server.MirEnvir
 
         private string CanStartEnvir()
         {
+            if (StartPoints.Count == 0) return "Cannot start server without atleast 1 Map and StartPoint.";
+
             if (Settings.EnforceDBChecks)
             {
-                if (StartPoints.Count == 0) return "Cannot start server without start points";
-
                 if (GetMonsterInfo(Settings.SkeletonName, true) == null) return "Cannot start server without mob: " + Settings.SkeletonName;
                 if (GetMonsterInfo(Settings.ShinsuName, true) == null) return "Cannot start server without mob: " + Settings.ShinsuName;
                 if (GetMonsterInfo(Settings.BugBatName, true) == null) return "Cannot start server without mob: " + Settings.BugBatName;
@@ -448,6 +448,7 @@ namespace Server.MirEnvir
                 if (GetMonsterInfo(Settings.KingHydraxMob, true) == null) return "Cannot start server without mob: " + Settings.KingHydraxMob;
                 if (GetMonsterInfo(Settings.HornedCommanderMob, true) == null) return "Cannot start server without mob: " + Settings.HornedCommanderMob;
                 if (GetMonsterInfo(Settings.HornedCommanderBombMob, true) == null) return "Cannot start server without mob: " + Settings.HornedCommanderBombMob;
+                if (GetMonsterInfo(Settings.SnowWolfKingMob, true) == null) return "Cannot start server without mob: " + Settings.SnowWolfKingMob;
                 if (GetMonsterInfo(Settings.ScrollMob1, true) == null) return "Cannot start server without mob: " + Settings.ScrollMob1;
                 if (GetMonsterInfo(Settings.ScrollMob2, true) == null) return "Cannot start server without mob: " + Settings.ScrollMob2;
                 if (GetMonsterInfo(Settings.ScrollMob3, true) == null) return "Cannot start server without mob: " + Settings.ScrollMob3;

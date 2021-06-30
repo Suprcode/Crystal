@@ -81,9 +81,6 @@ namespace Server.MirObjects.Monsters
                     base.Attack();
                     break;
             }
-
-            if (Target.Dead)
-                FindTarget();
         }
 
         protected override void CompleteRangeAttack(IList<object> data)

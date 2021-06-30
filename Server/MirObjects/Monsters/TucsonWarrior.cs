@@ -62,7 +62,7 @@ namespace Server.MirObjects.Monsters
 
         private void SmashAttack(int radius)
         {
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC] * 2);
+            int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
             if (damage == 0) return;
 
             var targets = FindAllTargets(radius, Target.CurrentLocation, false);

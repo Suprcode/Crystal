@@ -1405,15 +1405,7 @@ namespace Server.MirObjects
                         newValue = player.MyGuild.Name + " Guild";
                     break;
                 case "ROLLRESULT":
-                    if (player.NPCData.TryGetValue("NPCRollResult", out object _rollResult))
-                    {
-                        newValue = _rollResult.ToString();
-                    }
-                    else
-                    {
-                        newValue = "Not Rolled";
-                    }
-
+                    newValue = player.NPCData.TryGetValue("NPCRollResult", out object _rollResult) ? _rollResult.ToString() : "Not Rolled";
                     break;
 
                 default:

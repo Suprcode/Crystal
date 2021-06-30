@@ -689,6 +689,7 @@ namespace Server
             Reader.Write("Game", "KingHydraxMob", KingHydraxMob);
             Reader.Write("Game", "HornedCommanderMob", HornedCommanderMob);
             Reader.Write("Game", "HornedCommanderBombMob", HornedCommanderBombMob);
+            Reader.Write("Game", "SnowWolfKingMob", SnowWolfKingMob);
 
             Reader.Write("Game", "ScrollMob1", ScrollMob1);
             Reader.Write("Game", "ScrollMob2", ScrollMob2);

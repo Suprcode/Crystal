@@ -1365,7 +1365,6 @@ namespace Client.MirObjects
 
                             if (magic != null) SpellLevel = magic.Level;
 
-
                             GameScene.AttackTime = CMain.Time + User.AttackSpeed;
                             MapControl.NextAction = CMain.Time + 2500;
                             break;
@@ -1380,7 +1379,7 @@ namespace Client.MirObjects
                         //    MapControl.NextAction = CMain.Time;
                         //    break;
 
-                        case MirAction.AttackRange1: //ArcherTest
+                        case MirAction.AttackRange1:
                             {
                                 GameScene.AttackTime = CMain.Time + User.AttackSpeed + 200;
 

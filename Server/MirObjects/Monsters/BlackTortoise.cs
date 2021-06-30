@@ -9,13 +9,13 @@ using System.Text;
 
 namespace Server.MirObjects.Monsters
 {
-    class BlackTortoise : MonsterObject
+    public class BlackTortoise : MonsterObject
     {
         protected virtual byte AttackRange
         {
             get
             {
-                return 7;
+                return 5;
             }
         }
 
@@ -31,7 +31,6 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -50,15 +49,15 @@ namespace Server.MirObjects.Monsters
                 if (Envir.Random.Next(5) > 0)
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                    if (damage == 0) return;
+
                     DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.ACAgility);
                     ActionList.Add(action);
                 }
                 else
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                     if (damage == 0) return;
 
@@ -67,19 +66,13 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
-                //TODO - ADD A SOURCE TO EFFECT FOR CLIENT SO ANIMATION CAN START AT CORRECT PLACE.
-
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
                 int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                 if (damage == 0) return;
 
-                if (Envir.Random.Next(Settings.MagicResistWeight) >= Target.Stats[Stat.MagicResist])
-                {
-                    int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
-                    DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
-                    ActionList.Add(action);
-                }
-
+                int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
+                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
+                ActionList.Add(action);
             }
         }
 
@@ -91,12 +84,9 @@ namespace Server.MirObjects.Monsters
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            var finalDamage = target.Attacked(this, damage, defence);
+            if (target.Attacked(this, damage, defence) <= 0) return;
 
-            if (finalDamage > 0)
-            {
-                PoisonTarget(Target, 7, 5, PoisonType.Green, 1000);
-            }
+            PoisonTarget(target, 7, 5, PoisonType.Green, 1000);
         }
 
         protected override void ProcessTarget()
@@ -116,9 +106,7 @@ namespace Server.MirObjects.Monsters
             }
 
             MoveTo(Target.CurrentLocation);
-
         }
     }
-
 }
 
