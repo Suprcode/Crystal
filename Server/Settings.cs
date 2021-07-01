@@ -162,8 +162,10 @@ namespace Server
                              KingHydraxMob = "Hydrax",
                              HornedCommanderMob = "HornedSorceror",
                              HornedCommanderBombMob = "BoulderSpirit",
-                             SnowWolfKingMob = "SnowWolf";
-
+                             ScrollMob1 = "WarriorScroll",
+                             ScrollMob2 = "TaoistScroll",
+                             ScrollMob3 = "WizardScroll",
+                             ScrollMob4 = "AssassinScroll";
 
         public static string HealRing = "Healing",
                              FireRing = "FireBall",
@@ -384,7 +386,10 @@ namespace Server
             KingHydraxMob = Reader.ReadString("Game", "KingHydraxMob", KingHydraxMob);
             HornedCommanderMob = Reader.ReadString("Game", "HornedCommanderMob", HornedCommanderMob);
             HornedCommanderBombMob = Reader.ReadString("Game", "HornedCommanderBombMob", HornedCommanderBombMob);
-            SnowWolfKingMob = Reader.ReadString("Game", "SnowWolfKingMob", SnowWolfKingMob);
+            ScrollMob1 = Reader.ReadString("Game", "ScrollMob1", ScrollMob1);
+            ScrollMob2 = Reader.ReadString("Game", "ScrollMob2", ScrollMob2);
+            ScrollMob3 = Reader.ReadString("Game", "ScrollMob3", ScrollMob3);
+            ScrollMob4 = Reader.ReadString("Game", "ScrollMob4", ScrollMob4);
             WhiteSnake = Reader.ReadString("Game", "WhiteSnake", WhiteSnake);
             AngelName = Reader.ReadString("Game", "AngelName", AngelName);
             BombSpiderName = Reader.ReadString("Game", "BombSpiderName", BombSpiderName);
@@ -685,6 +690,11 @@ namespace Server
             Reader.Write("Game", "HornedCommanderMob", HornedCommanderMob);
             Reader.Write("Game", "HornedCommanderBombMob", HornedCommanderBombMob);
             Reader.Write("Game", "SnowWolfKingMob", SnowWolfKingMob);
+
+            Reader.Write("Game", "ScrollMob1", ScrollMob1);
+            Reader.Write("Game", "ScrollMob2", ScrollMob2);
+            Reader.Write("Game", "ScrollMob3", ScrollMob3);
+            Reader.Write("Game", "ScrollMob4", ScrollMob4);
 
             //IntelligentCreature
             Reader.Write("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);
