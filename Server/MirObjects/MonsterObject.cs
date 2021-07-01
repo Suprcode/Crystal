@@ -435,6 +435,15 @@ namespace Server.MirObjects
                 case 196:
                     return new AntCommander(info);
 
+
+                case 210:
+                    return new HoodedSummonerScrolls(info);
+                case 211:
+                    return new HoodedSummoner(info);
+                case 212:
+                    return new PurpleFaeFlower(info);
+
+
                 default:
                     return new MonsterObject(info);
             }

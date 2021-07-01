@@ -604,10 +604,10 @@ public enum Monster : ushort
     GlacierBeast = 411,
     GlacierWarrior = 412,
     ShardGuardian = 413,
-    WarriorScroll = 414,
-    TaoistScroll = 415,
-    WizardScroll = 416,
-    AssassinScroll = 417,
+    WarriorScroll = 414, // Use AI "HoodedSummonerScrolls" - Info.Effect = 0
+    TaoistScroll = 415, // Use AI "HoodedSummonerScrolls" - Info.Effect = 1
+    WizardScroll = 416, // Use AI "HoodedSummonerScrolls" - Info.Effect = 2
+    AssassinScroll = 417, // Use AI "HoodedSummonerScrolls" - Info.Effect = 3
     HoodedSummoner = 418, //Summons Scrolls
     HoodedIceMage = 419,
     HoodedPriest = 420,
