@@ -409,7 +409,7 @@ namespace Server.MirObjects
                 //case 183: Manticore
 
                 case 184:
-                    return new DragonWarrior(info);
+                    return new DragonWarrior(info); //TODO
 
                 //case 185: DragonArcher
 
