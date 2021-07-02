@@ -70,7 +70,7 @@ namespace Server.MirObjects.Monsters
                         Value = value,
                         ExpireTime = Envir.Time + 2000 + start,
                         TickSpeed = 1000,
-                        Caster = null,
+                        Caster = this,
                         CurrentLocation = location,
                         CurrentMap = CurrentMap,
                         Direction = MirDirection.Up,

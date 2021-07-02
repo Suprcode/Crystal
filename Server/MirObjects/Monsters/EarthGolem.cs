@@ -109,7 +109,8 @@ namespace Server.MirObjects.Monsters
                             CurrentLocation = new Point(x, y),
                             CastLocation = location,
                             Show = location.X == x && location.Y == y,
-                            CurrentMap = CurrentMap
+                            CurrentMap = CurrentMap,
+                            Caster = this
                         };
 
                         DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + start, ob);
