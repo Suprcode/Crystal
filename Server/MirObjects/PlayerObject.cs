@@ -3048,6 +3048,8 @@ namespace Server.MirObjects
 
         private void RefreshSkills()
         {
+            int[] spiritSwordLvPlus = { 0, 3, 5, 8 };
+            int[] slayingLvPlus = {5, 6, 7, 8};
             for (int i = 0; i < Info.Magics.Count; i++)
             {
                 UserMagic magic = Info.Magics[i];
@@ -3055,14 +3057,17 @@ namespace Server.MirObjects
                 {
                     case Spell.Fencing:
                         Stats[Stat.Accuracy] += magic.Level * 3;
-                        Stats[Stat.MaxAC] += (magic.Level + 1) * 3;
+                        // Stats[Stat.MaxAC] += (magic.Level + 1) * 3;
                         break;
-                    case Spell.FatalSword:
+                    // case Spell.FatalSword:
+                    case Spell.Slaying:
                         Stats[Stat.Accuracy] += magic.Level;
+                        Stats[Stat.MaxDC] += slayingLvPlus[magic.Level];
                         break;
                     case Spell.SpiritSword:
-                        Stats[Stat.Accuracy] += magic.Level;
-                        Stats[Stat.MaxDC] += (int)(Stats[Stat.MaxSC] * (magic.Level + 1) * 0.1F);
+                        Stats[Stat.Accuracy] += spiritSwordLvPlus[magic.Level];
+                        // Stats[Stat.Accuracy] += magic.Level;
+                        // Stats[Stat.MaxDC] += (int)(Stats[Stat.MaxSC] * (magic.Level + 1) * 0.1F);
                         break;
                 }
             }
@@ -6316,7 +6321,12 @@ namespace Server.MirObjects
             {
                 cost += (cost * Stats[Stat.ManaPenaltyPercent]) / 100;
             }
-
+            
+            if (spell == Spell.Plague)
+            {
+                cost = Stats[Stat.MaxSC] + Stats[Stat.MinSC];
+            }
+            
             if (cost > MP)
             {
                 Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
@@ -7264,7 +7274,7 @@ namespace Server.MirObjects
 
             int delay = Functions.MaxDistance(CurrentLocation, location) * 50 + 500; //50 MS per Step
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]) * 2 + (magic.Level + 1) * 10, location);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]) * 4 + (magic.Level + 1) * 50, location);
             CurrentMap.ActionList.Add(action);
 
             ConsumeItem(item, 1);
@@ -7497,7 +7507,7 @@ namespace Server.MirObjects
             UserItem item = GetAmulet(1);
             if (item == null) return;
 
-            int expiretime = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]) * 2 + (magic.Level + 1) * 10;
+            int expiretime = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]) * 4 + (magic.Level + 1) * 50;
             int value = Stats[Stat.MaxSC] >= 5 ? Math.Min(8, Stats[Stat.MaxSC] / 5) : 1;
 
             switch (target.Race)
@@ -7661,9 +7671,10 @@ namespace Server.MirObjects
             if (HasBuff(BuffType.ProtectionField, out _)) return;
 
             int duration = 45 + (15 * magic.Level);
-            int value = (int)Math.Round(Stats[Stat.MaxAC] * (0.2 + (0.03 * magic.Level)));
+            int maxAC = (int)Math.Round(Stats[Stat.MaxAC] * (0.2 + (0.03 * magic.Level)));
+            int minAC = (int)Math.Round(Stats[Stat.MinAC] * (0.2 + (0.03 * magic.Level)));
 
-            AddBuff(BuffType.ProtectionField, this, Settings.Second * duration, new Stats { [Stat.MaxAC] = value });
+            AddBuff(BuffType.ProtectionField, this, Settings.Second * duration, new Stats { [Stat.MaxAC] = maxAC, [Stat.MinAC] = minAC });
             OperateTime = 0;
             LevelMagic(magic);
         }
@@ -7671,10 +7682,11 @@ namespace Server.MirObjects
         {
             if (HasBuff(BuffType.Rage, out _)) return;
 
-            int duration = 48 + (6 * magic.Level);
-            int value = (int)Math.Round(Stats[Stat.MaxDC] * (0.12 + (0.03 * magic.Level)));
+            int duration = 18 + (6 * magic.Level);
+            int maxDC = (int)Math.Round(Stats[Stat.MaxDC] * (0.12 + (0.03 * magic.Level)));
+            int minDC = (int)Math.Round(Stats[Stat.MinDC] * (0.12 + (0.03 * magic.Level)));
 
-            AddBuff(BuffType.Rage, this, Settings.Second * duration, new Stats { [Stat.MaxDC] = value });
+            AddBuff(BuffType.Rage, this, Settings.Second * duration, new Stats { [Stat.MaxDC] = maxDC, [Stat.MinDC] = minDC });
             OperateTime = 0;
             LevelMagic(magic);
         }
