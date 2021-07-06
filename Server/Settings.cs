@@ -162,6 +162,7 @@ namespace Server
                              KingHydraxMob = "Hydrax",
                              HornedCommanderMob = "HornedSorceror",
                              HornedCommanderBombMob = "BoulderSpirit",
+                             SnowWolfKingMob = "SnowWolf",
                              ScrollMob1 = "WarriorScroll",
                              ScrollMob2 = "TaoistScroll",
                              ScrollMob3 = "WizardScroll",
@@ -386,6 +387,7 @@ namespace Server
             KingHydraxMob = Reader.ReadString("Game", "KingHydraxMob", KingHydraxMob);
             HornedCommanderMob = Reader.ReadString("Game", "HornedCommanderMob", HornedCommanderMob);
             HornedCommanderBombMob = Reader.ReadString("Game", "HornedCommanderBombMob", HornedCommanderBombMob);
+            SnowWolfKingMob = Reader.ReadString("Game", "SnowWolfKingMob", SnowWolfKingMob);
             ScrollMob1 = Reader.ReadString("Game", "ScrollMob1", ScrollMob1);
             ScrollMob2 = Reader.ReadString("Game", "ScrollMob2", ScrollMob2);
             ScrollMob3 = Reader.ReadString("Game", "ScrollMob3", ScrollMob3);

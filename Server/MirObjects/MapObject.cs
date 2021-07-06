@@ -605,6 +605,9 @@ namespace Server.MirObjects
                             buff.ExpireTime += duration;
                         }
                         break;
+                    case BuffStackType.None:
+                    case BuffStackType.Infinite:
+                        break;
                 }
             }
 
