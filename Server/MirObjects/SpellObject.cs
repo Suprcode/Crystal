@@ -144,11 +144,11 @@ namespace Server.MirObjects
                         if (!ob.Dead)
                             ob.ApplyPoison(new Poison
                             {
-                                Duration = 15,
+                                Duration = 12,
                                 Owner = Caster,
                                 PType = PoisonType.Green,
-                                TickSpeed = 2000,
-                                Value = Value / 20
+                                TickSpeed = 1000,
+                                Value = (Caster.Stats[Stat.MaxSC] + Caster.Stats[Stat.MinSC]) / 2
                             }, Caster, false, false);
                     }
                     break;

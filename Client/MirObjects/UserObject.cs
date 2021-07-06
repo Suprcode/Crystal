@@ -580,6 +580,8 @@ namespace Client.MirObjects
 
         private void RefreshSkills()
         {
+            int[] spiritSwordLvPlus = { 0, 3, 5, 8 };
+            int[] slayingLvPlus = {5, 6, 7, 8};
             for (int i = 0; i < Magics.Count; i++)
             {
                 ClientMagic magic = Magics[i];
@@ -587,14 +589,17 @@ namespace Client.MirObjects
                 {
                     case Spell.Fencing:
                         Stats[Stat.Accuracy] += magic.Level * 3;
-                        Stats[Stat.MaxAC] += (magic.Level + 1) * 3;
+                        //Stats[Stat.MaxAC] += (magic.Level + 1) * 3;
                         break;
-                    case Spell.FatalSword:
+                    case Spell.Slaying:
+                    // case Spell.FatalSword:
                         Stats[Stat.Accuracy] += magic.Level;
+                        Stats[Stat.MaxDC] += slayingLvPlus[magic.Level];
                         break;
                     case Spell.SpiritSword:
-                        Stats[Stat.Accuracy] += magic.Level;
-                        Stats[Stat.MaxDC] += (int)(Stats[Stat.MaxSC] * (magic.Level + 1) * 0.1F);
+                        Stats[Stat.Accuracy] += spiritSwordLvPlus[magic.Level];
+                        // Stats[Stat.Accuracy] += magic.Level;
+                        // Stats[Stat.MaxDC] += (int)(Stats[Stat.MaxSC] * (magic.Level + 1) * 0.1F);
                         break;
                 }
             }

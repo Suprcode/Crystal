@@ -1832,72 +1832,63 @@ namespace Server.MirEnvir
                     value = (int)data[2];
                     location = (Point)data[3];
 
-                    for (int y = location.Y - 3; y <= location.Y + 3; y++)
+                    int posX = location.X;
+                    int posY = location.Y;
+                    
+                    cell = GetCell(posX, posY);
+
+                    if (!cell.Valid || cell.Objects == null) return;
+
+                    for (int i = 0; i < cell.Objects.Count; i++)
                     {
-                        if (y < 0) continue;
-                        if (y >= Height) break;
-
-                        for (int x = location.X - 3; x <= location.X + 3; x++)
+                        MapObject target = cell.Objects[i];
+                        switch (target.Race)
                         {
-                            if (x < 0) continue;
-                            if (x >= Width) break;
-
-                            cell = GetCell(x, y);
-
-                            if (!cell.Valid || cell.Objects == null) continue;
-
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
-                                MapObject target = cell.Objects[i];
-                                switch (target.Race)
+                            case ObjectType.Monster:
+                            case ObjectType.Player:
+                                //Only targets
+                                if (target.IsAttackTarget(player))
                                 {
-                                    case ObjectType.Monster:
-                                    case ObjectType.Player:
-                                        //Only targets
-                                        if (target.IsAttackTarget(player))
-                                        {
-                                            int chance = Envir.Random.Next(15);
-                                            PoisonType poison;
-                                            if (new int[] { 0, 1, 3 }.Contains(chance)) //3 in 15 chances it'll slow
-                                                poison = PoisonType.Slow;
-                                            else if (new int[] { 3, 4 }.Contains(value)) //2 in 15 chances it'll freeze
-                                                poison = PoisonType.Frozen;
-                                            else if (new int[] { 5, 6, 7, 8, 9 }.Contains(value)) //5 in 15 chances it'll red/green
-                                                poison = (PoisonType)data[4];
-                                            else //5 in 15 chances it'll do nothing
-                                                poison = PoisonType.None;
+                                    int chance = Envir.Random.Next(15);
+                                    PoisonType poison;
+                                    if (new int[] { 0, 1, 3 }.Contains(chance)) //3 in 15 chances it'll slow
+                                        poison = PoisonType.Slow;
+                                    else if (new int[] { 3, 4 }.Contains(value)) //2 in 15 chances it'll freeze
+                                        poison = PoisonType.Frozen;
+                                    else if (new int[] { 5, 6, 7, 8, 9 }.Contains(value)) //5 in 15 chances it'll red/green
+                                        poison = (PoisonType)data[4];
+                                    else //5 in 15 chances it'll do nothing
+                                        poison = PoisonType.None;
 
-                                            int tempValue = 0;
+                                    int tempValue = 0;
 
-                                            if (poison == PoisonType.Green)
-                                            {
-                                                tempValue = value / 15 + magic.Level + 1;
-                                            }
-                                            else
-                                            {
-                                                tempValue = value + (magic.Level + 1) * 2;
-                                            }
+                                    if (poison == PoisonType.Green)
+                                    {
+                                        tempValue = value / 15 + magic.Level + 1;
+                                    }
+                                    else
+                                    {
+                                        tempValue = value + (magic.Level + 1) * 2;
+                                    }
 
-                                            if (poison != PoisonType.None)
-                                            {
-                                                target.ApplyPoison(new Poison { PType = poison, Duration = (2 * (magic.Level + 1)) + (value / 10), TickSpeed = 1000, Value = tempValue, Owner = player }, player, false, false);
-                                            }
-                                            
-                                            if (target.Race == ObjectType.Player)
-                                            {
-                                                PlayerObject tempOb = (PlayerObject)target;
+                                    if (poison != PoisonType.None)
+                                    {
+                                        target.ApplyPoison(new Poison { PType = poison, Duration = (2 * (magic.Level + 1)) + (value / 10), TickSpeed = 1000, Value = tempValue, Owner = player }, player, false, false);
+                                    }
+                                    
+                                    if (target.Race == ObjectType.Player)
+                                    {
+                                        PlayerObject tempOb = (PlayerObject)target;
 
-                                                tempOb.ChangeMP(-tempValue);
-                                            }
+                                        tempOb.ChangeMP(-tempValue);
+                                    }
 
-                                            train = true;
-                                        }
-                                        break;
+                                    target.Attacked(player, player.Stats[Stat.MaxSC] + player.Stats[Stat.MinSC], DefenceType.MAC, true);
+
+                                    train = true;
                                 }
-                            }
-
+                                break;
                         }
-
                     }
 
                     break;
