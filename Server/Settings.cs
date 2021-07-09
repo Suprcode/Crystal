@@ -162,6 +162,7 @@ namespace Server
                              KingHydraxMob = "Hydrax",
                              HornedCommanderMob = "HornedSorceror",
                              HornedCommanderBombMob = "BoulderSpirit",
+                             SnowWolfKingMob = "SnowWolf",
                              ScrollMob1 = "WarriorScroll",
                              ScrollMob2 = "TaoistScroll",
                              ScrollMob3 = "WizardScroll",
