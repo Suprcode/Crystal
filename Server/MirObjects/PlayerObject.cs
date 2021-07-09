@@ -7666,10 +7666,9 @@ namespace Server.MirObjects
         private void ProtectionField(UserMagic magic)
         {
             int duration = 45 + (15 * magic.Level);
-            int maxAC = (int)Math.Round(Stats[Stat.MaxAC] * (0.2 + (0.03 * magic.Level)));
-            int minAC = (int)Math.Round(Stats[Stat.MinAC] * (0.2 + (0.03 * magic.Level)));
+            int addValue = (int)Math.Round(Stats[Stat.MaxAC] * (0.2 + (0.03 * magic.Level)));
 
-            AddBuff(BuffType.ProtectionField, this, Settings.Second * duration, new Stats { [Stat.MaxAC] = maxAC, [Stat.MinAC] = minAC });
+            AddBuff(BuffType.ProtectionField, this, Settings.Second * duration, new Stats { [Stat.MaxAC] = addValue, [Stat.MinAC] = addValue });
             OperateTime = 0;
             LevelMagic(magic);
         }
@@ -7677,10 +7676,9 @@ namespace Server.MirObjects
         {
 
             int duration = 18 + (6 * magic.Level);
-            int maxDC = (int)Math.Round(Stats[Stat.MaxDC] * (0.12 + (0.03 * magic.Level)));
-            int minDC = (int)Math.Round(Stats[Stat.MinDC] * (0.12 + (0.03 * magic.Level)));
+            int addValue = (int)Math.Round(Stats[Stat.MaxDC] * (0.12 + (0.03 * magic.Level)));
 
-            AddBuff(BuffType.Rage, this, Settings.Second * duration, new Stats { [Stat.MaxDC] = maxDC, [Stat.MinDC] = minDC });
+            AddBuff(BuffType.Rage, this, Settings.Second * duration, new Stats { [Stat.MaxDC] = addValue, [Stat.MinDC] = addValue });
             OperateTime = 0;
             LevelMagic(magic);
         }
