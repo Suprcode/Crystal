@@ -6228,7 +6228,7 @@ namespace Client.MirScenes
                 {
                     text = string.Format("Exp + {0}% ", minValue + addValue);
                 }
-                else if (realItem.Type == ItemType.Potion && realItem.Shape == 6)
+                else if (realItem.Type == ItemType.Potion && realItem.Shape == 5)
                 {
                     text = string.Format("Drop + {0}% ", minValue + addValue);
                 }

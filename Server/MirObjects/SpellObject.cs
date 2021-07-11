@@ -140,7 +140,7 @@ namespace Server.MirObjects
                         if (ob.Dead) return;
 
                         if (!ob.IsAttackTarget(Caster)) return;
-                        ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
+                        ob.Attacked(((PlayerObject)Caster), (Caster.Stats[Stat.MinSC] + Caster.Stats[Stat.MaxSC]) / 2, DefenceType.MAC, false);
                         if (!ob.Dead)
                             ob.ApplyPoison(new Poison
                             {
