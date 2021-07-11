@@ -1350,7 +1350,7 @@ namespace Server.MirEnvir
                             SpellObject ob = new SpellObject
                                 {
                                     Spell = Spell.PoisonCloud,
-                                    Value = value + bonusdmg,
+                                    Value = value,// + bonusdmg,
                                     ExpireTime = Envir.Time + 6000,
                                     TickSpeed = 1000,
                                     Caster = player,

@@ -147,8 +147,8 @@ namespace Server.MirObjects
                                 Duration = 12,
                                 Owner = Caster,
                                 PType = PoisonType.Green,
-                                TickSpeed = 1000,
-                                Value = (Caster.Stats[Stat.MaxSC] + Caster.Stats[Stat.MinSC]) / 2
+                                TickSpeed = TickSpeed,
+                                Value = Value
                             }, Caster, false, false);
                     }
                     break;
