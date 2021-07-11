@@ -6633,8 +6633,6 @@ namespace Server.MirObjects
         #region Elemental System
         private void Concentration(UserMagic magic)
         {
-            if (HasBuff(BuffType.Concentration, out _)) return;
-
             int duration = 45 + (15 * magic.Level);
 
             var buff = AddBuff(BuffType.Concentration, this, Settings.Second * duration, new Stats());
@@ -6643,10 +6641,9 @@ namespace Server.MirObjects
             buff.Set("Interrupted", false);
 
             LevelMagic(magic);
+            OperateTime = 0;
 
             UpdateConcentration(true, false);
-
-            OperateTime = 0;
         }
 
         public void UpdateConcentration(bool concentrating, bool interrupted)
@@ -7668,8 +7665,6 @@ namespace Server.MirObjects
         }
         private void ProtectionField(UserMagic magic)
         {
-            if (HasBuff(BuffType.ProtectionField, out _)) return;
-
             int duration = 45 + (15 * magic.Level);
             int addValue = (int)Math.Round(Stats[Stat.MaxAC] * (0.2 + (0.03 * magic.Level)));
 
@@ -7679,7 +7674,6 @@ namespace Server.MirObjects
         }
         private void Rage(UserMagic magic)
         {
-            if (HasBuff(BuffType.Rage, out _)) return;
 
             int duration = 18 + (6 * magic.Level);
             int addValue = (int)Math.Round(Stats[Stat.MaxDC] * (0.12 + (0.03 * magic.Level)));
@@ -7688,6 +7682,7 @@ namespace Server.MirObjects
             OperateTime = 0;
             LevelMagic(magic);
         }
+
         private void ShoulderDash(UserMagic magic)
         {
             if (InTrapRock) return;
@@ -7995,8 +7990,6 @@ namespace Server.MirObjects
         }
         private void MoonLight(UserMagic magic)
         {
-            if (HasBuff(BuffType.MoonLight, out _)) return;
-
             var time = GetAttackPower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
 
             AddBuff(BuffType.MoonLight, this, (time + (magic.Level + 1) * 5) * 500, new Stats());
@@ -8079,8 +8072,6 @@ namespace Server.MirObjects
             MonsterInfo info = Envir.GetMonsterInfo(Settings.AssassinCloneName);
             if (info == null) return;
 
-            LevelMagic(magic);
-
             monster = MonsterObject.GetMonster(info);
             monster.Master = this;
             monster.Direction = Direction;
@@ -8091,13 +8082,14 @@ namespace Server.MirObjects
 
             monster.Spawn(CurrentMap, CurrentLocation);
 
-            if (HasBuff(BuffType.DarkBody, out _)) return;
+            if (!HasBuff(BuffType.DarkBody, out _))
+            {
+                LevelMagic(magic);
+            }
 
             var duration = (GetAttackPower(Stats[Stat.MinAC], Stats[Stat.MaxAC]) + (magic.Level + 1) * 5) * 500;
 
             AddBuff(BuffType.DarkBody, this, duration, new Stats());
-
-            LevelMagic(magic);
         }
         private void CrescentSlash(UserMagic magic)
         {
@@ -8834,11 +8826,10 @@ namespace Server.MirObjects
 
                 case Spell.Hiding:
                     {
-                        if (HasBuff(BuffType.Hiding, out _)) return;
-
                         value = (int)data[1];
 
                         AddBuff(BuffType.Hiding, this, Settings.Second * value, new Stats());
+
                         LevelMagic(magic);
                     }
                     break;
@@ -8900,8 +8891,8 @@ namespace Server.MirObjects
                     {
                         if (HasBuff(BuffType.MagicShield, out _)) return;
 
-                        AddBuff(BuffType.MagicShield, this, Settings.Second * (int)data[1], new Stats { [Stat.DamageReductionPercent] = (magic.Level + 2) * 10 });
                         LevelMagic(magic);
+                        AddBuff(BuffType.MagicShield, this, Settings.Second * (int)data[1], new Stats { [Stat.DamageReductionPercent] = (magic.Level + 2) * 10 });
                     }
                     break;
 

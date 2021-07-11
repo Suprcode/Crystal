@@ -1345,7 +1345,6 @@ public enum BuffStackType : byte
 {
     None,
     ResetDuration,
-    UpdateDuration,
     StackDuration,
     StackStat,
     StackStatAndDuration,
