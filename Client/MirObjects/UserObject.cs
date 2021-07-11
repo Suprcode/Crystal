@@ -623,6 +623,7 @@ namespace Client.MirObjects
                     case BuffType.Transform:
                         if (buff.Paused) continue;
                         TransformType = (short)buff.Values[0];
+                        FastRun = true;
                         break;
                 }
             }

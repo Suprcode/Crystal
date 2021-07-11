@@ -6228,6 +6228,10 @@ namespace Client.MirScenes
                 {
                     text = string.Format("Exp + {0}% ", minValue + addValue);
                 }
+                else if (realItem.Type == ItemType.Potion && realItem.Shape == 6)
+                {
+                    text = string.Format("Drop + {0}% ", minValue + addValue);
+                }
                 else
                 {
                     text = string.Format(minValue + addValue > 0 ? GameLanguage.Luck: "Curse + {0}", Math.Abs(minValue + addValue));
@@ -9197,7 +9201,17 @@ namespace Client.MirScenes
             if (MapObject.MouseObject != null && !(MapObject.MouseObject is ItemObject))
                 MapObject.MouseObject.DrawName();
 
-            int offSet = 0;
+            int offSet = 0; 
+            
+            for (int i = 0; i < Objects.Count; i++)
+            {
+                MonsterObject ob = Objects[i] as MonsterObject;
+                if (ob == null) continue;
+
+                if (!ob.MouseOver(MouseLocation)) continue;
+                ob.DrawName();
+            }
+            
             for (int i = 0; i < Objects.Count; i++)
             {
                 ItemObject ob = Objects[i] as ItemObject;

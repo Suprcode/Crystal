@@ -3093,6 +3093,7 @@ namespace Server.MirObjects
                     {
                         case BuffType.Transform:
                             TransformType = (short)buff.Values[0];
+                            FastRun = true;
                             break;
                     }
                 }
@@ -11289,6 +11290,12 @@ namespace Server.MirObjects
                             {
                                 int time = item.Info.Durability;
                                 AddBuff(BuffType.Exp, this, Settings.Minute * time, new Stats { [Stat.ExpRatePercent] = item.GetTotal(Stat.Luck) });
+                            }
+                            break;
+                        case 6: //Drop
+                            {
+                                int time = item.Info.Durability;
+                                AddBuff(BuffType.Drop, this, Settings.Minute * time, new Stats { [Stat.ItemDropRatePercent] = item.GetTotal(Stat.Luck) });
                             }
                             break;
                     }
