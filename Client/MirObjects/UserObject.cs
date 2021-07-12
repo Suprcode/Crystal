@@ -505,7 +505,7 @@ namespace Client.MirObjects
             }
         }
 
-        private void RefreshMirSetStats()
+        private void RefreshMirSetStats()  //Test
         {
             if (MirSet.Count() == 10)
             {
