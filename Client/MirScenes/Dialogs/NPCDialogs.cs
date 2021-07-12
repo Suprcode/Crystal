@@ -2115,6 +2115,8 @@ namespace Client.MirScenes.Dialogs
 
         public override void Hide()
         {
+            if (!Visible) return;
+
             Visible = false;
             RefineCancel();
         }
