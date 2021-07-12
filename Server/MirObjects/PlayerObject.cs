@@ -895,7 +895,12 @@ namespace Server.MirObjects
                 }
             }
 
-            if (healthRegen > 0) ChangeHP(healthRegen);
+            if (healthRegen > 0)
+            {
+                ChangeHP(healthRegen);
+                BroadcastDamageIndicator(DamageType.Hit, healthRegen);
+            }
+
             if (HP == Stats[Stat.HP])
             {
                 PotHealthAmount = 0;
@@ -944,7 +949,8 @@ namespace Server.MirObjects
                         }
 
                         PoisonDamage(-poison.Value, poison.Owner);
-
+                        BroadcastDamageIndicator(DamageType.Hit, -poison.Value);
+                        
                         if (Dead) break;
                         RegenTime = Envir.Time + RegenDelay;
                     }
@@ -3093,6 +3099,7 @@ namespace Server.MirObjects
                     {
                         case BuffType.Transform:
                             TransformType = (short)buff.Values[0];
+                            FastRun = true;
                             break;
                     }
                 }
@@ -7305,7 +7312,7 @@ namespace Server.MirObjects
 
             int delay = Functions.MaxDistance(CurrentLocation, location) * 50 + 500; //50 MS per Step
             int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]));
-
+            
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, damage, location, (byte)Envir.Random.Next(Stats[Stat.PoisonAttack]));
 
             ConsumeItem(amulet, 5);
@@ -11289,6 +11296,12 @@ namespace Server.MirObjects
                             {
                                 int time = item.Info.Durability;
                                 AddBuff(BuffType.Exp, this, Settings.Minute * time, new Stats { [Stat.ExpRatePercent] = item.GetTotal(Stat.Luck) });
+                            }
+                            break;
+                        case 5: //Drop
+                            {
+                                int time = item.Info.Durability;
+                                AddBuff(BuffType.Drop, this, Settings.Minute * time, new Stats { [Stat.ItemDropRatePercent] = item.GetTotal(Stat.Luck) });
                             }
                             break;
                     }

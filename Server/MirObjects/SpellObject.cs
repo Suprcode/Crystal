@@ -30,7 +30,7 @@ namespace Server.MirObjects
 
         public long TickTime, StartTime;
         public MapObject Caster;
-        public int Value, TickSpeed;
+        public int Value, TickSpeed, BonusDmg;
         public Spell Spell;
         public Point CastLocation;
         public bool Show, Decoration;
@@ -147,8 +147,8 @@ namespace Server.MirObjects
                                 Duration = 12,
                                 Owner = Caster,
                                 PType = PoisonType.Green,
-                                TickSpeed = 1000,
-                                Value = (Caster.Stats[Stat.MaxSC] + Caster.Stats[Stat.MinSC]) / 2
+                                TickSpeed = TickSpeed,
+                                Value = (Caster.Stats[Stat.MinSC] + Caster.Stats[Stat.MaxSC]) / 2 + BonusDmg
                             }, Caster, false, false);
                     }
                     break;
