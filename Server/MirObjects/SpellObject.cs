@@ -30,7 +30,7 @@ namespace Server.MirObjects
 
         public long TickTime, StartTime;
         public MapObject Caster;
-        public int Value, TickSpeed;
+        public int Value, TickSpeed, BonusDmg;
         public Spell Spell;
         public Point CastLocation;
         public bool Show, Decoration;
@@ -140,7 +140,7 @@ namespace Server.MirObjects
                         if (ob.Dead) return;
 
                         if (!ob.IsAttackTarget(Caster)) return;
-                        ob.Attacked(((PlayerObject)Caster), (Caster.Stats[Stat.MinSC] + Caster.Stats[Stat.MaxSC]) / 2, DefenceType.MAC, false);
+                        ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
                         if (!ob.Dead)
                             ob.ApplyPoison(new Poison
                             {
@@ -148,7 +148,7 @@ namespace Server.MirObjects
                                 Owner = Caster,
                                 PType = PoisonType.Green,
                                 TickSpeed = TickSpeed,
-                                Value = Value
+                                Value = (Caster.Stats[Stat.MinSC] + Caster.Stats[Stat.MaxSC]) / 2 + BonusDmg
                             }, Caster, false, false);
                     }
                     break;
