@@ -3164,7 +3164,7 @@ namespace Server.MirObjects
 
                     case ActionType.Goto:
                         {
-                            DelayedAction action = new DelayedAction(DelayedType.NPC, -1, player.NPCObjectID, "[" + param[0] + "]");
+                            DelayedAction action = new DelayedAction(DelayedType.NPC, -1, player.NPCObjectID, player.NPCScriptID, "[" + param[0] + "]");
                             player.ActionList.Add(action);
                         }
                         break;
@@ -3173,7 +3173,7 @@ namespace Server.MirObjects
                         {
                             if (!int.TryParse(param[0], out int scriptID)) return;
 
-                            var action = new DelayedAction(DelayedType.NPC, -1, player.NPCObjectID, "[@MAIN]", scriptID);
+                            var action = new DelayedAction(DelayedType.NPC, -1, player.NPCObjectID, scriptID, "[@MAIN]");
                             player.ActionList.Add(action);
                         }
                         break;
@@ -3263,7 +3263,7 @@ namespace Server.MirObjects
                             Map tempMap = player.CurrentMap;
                             Point tempPoint = player.CurrentLocation;
 
-                            var action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCObjectID, tempString, tempMap, tempPoint);
+                            var action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCObjectID, player.NPCScriptID, tempString, tempMap, tempPoint);
                             player.ActionList.Add(action);
                         }
                         break;
@@ -3279,7 +3279,7 @@ namespace Server.MirObjects
                             {
                                 var groupMember = player.GroupMembers[j];
 
-                                var action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCObjectID, tempString, player.CurrentMap, player.CurrentLocation);
+                                var action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCObjectID, player.NPCScriptID, tempString, player.CurrentMap, player.CurrentLocation);
                                 groupMember.ActionList.Add(action);
                             }
                         }
@@ -3298,7 +3298,7 @@ namespace Server.MirObjects
                         {
                             if (!long.TryParse(param[0], out long tempLong)) return;
 
-                            var action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCObjectID, "[" + param[1] + "]");
+                            var action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCObjectID, player.NPCScriptID, "[" + param[1] + "]");
                             player.ActionList.Add(action);
                         }
                         break;
@@ -3534,7 +3534,7 @@ namespace Server.MirObjects
 
                             for (int j = 0; j < player.GroupMembers.Count(); j++)
                             {
-                                var action = new DelayedAction(DelayedType.NPC, Envir.Time, player.NPCObjectID, "[" + param[0] + "]");
+                                var action = new DelayedAction(DelayedType.NPC, Envir.Time, player.NPCObjectID, player.NPCScriptID, "[" + param[0] + "]");
                                 player.GroupMembers[j].ActionList.Add(action);
                             }
                         }

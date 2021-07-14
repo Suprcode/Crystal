@@ -9474,18 +9474,13 @@ namespace Server.MirObjects
         private void CompleteNPC(IList<object> data)
         {
             uint npcid = (uint)data[0];
-            string page = (string)data[1];
-            int scriptIndex = NPCScriptID;
+            int scriptid = (int)data[1];
+            string page = (string)data[2];
 
-            if (data.Count == 3)
+            if (data.Count == 5)
             {
-                scriptIndex = (int)data[2];
-            }
-
-            else if (data.Count == 4)
-            {
-                Map map = (Map)data[2];
-                Point coords = (Point)data[3];
+                Map map = (Map)data[3];
+                Point coords = (Point)data[4];
 
                 Teleport(map, coords);
             }
@@ -9494,7 +9489,7 @@ namespace Server.MirObjects
 
             if (page.Length > 0)
             {
-                var script = NPCScript.Get(scriptIndex);
+                var script = NPCScript.Get(scriptid);
                 script.Call(this, npcid, page.ToUpper());
             }
         }
@@ -14419,7 +14414,7 @@ namespace Server.MirObjects
 
             key = string.Format("[@_{0}]", key);
 
-            DelayedAction action = new DelayedAction(DelayedType.NPC, Envir.Time + 0, DefaultNPC.LoadedObjectID, key, DefaultNPC.ScriptID);
+            DelayedAction action = new DelayedAction(DelayedType.NPC, Envir.Time + 0, DefaultNPC.LoadedObjectID, DefaultNPC.ScriptID, key);
             ActionList.Add(action);
 
             Enqueue(new S.NPCUpdate { NPCID = DefaultNPC.LoadedObjectID });
