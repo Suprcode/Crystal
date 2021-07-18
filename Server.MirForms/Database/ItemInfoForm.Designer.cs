@@ -191,9 +191,6 @@
             this.PasteButton = new System.Windows.Forms.Button();
             this.CopyMButton = new System.Windows.Forms.Button();
             this.ITypeFilterComboBox = new System.Windows.Forms.ComboBox();
-            this.ExportAllButton = new System.Windows.Forms.Button();
-            this.ExportSelectedButton = new System.Windows.Forms.Button();
-            this.ImportButton = new System.Windows.Forms.Button();
             this.Gameshop_button = new System.Windows.Forms.Button();
             this.ItemInfoPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -1916,42 +1913,6 @@
             this.ITypeFilterComboBox.TabIndex = 25;
             this.ITypeFilterComboBox.SelectedIndexChanged += new System.EventHandler(this.ITypeFilterComboBox_SelectedIndexChanged);
             // 
-            // ExportAllButton
-            // 
-            this.ExportAllButton.Enabled = false;
-            this.ExportAllButton.Location = new System.Drawing.Point(710, 12);
-            this.ExportAllButton.Name = "ExportAllButton";
-            this.ExportAllButton.Size = new System.Drawing.Size(76, 23);
-            this.ExportAllButton.TabIndex = 26;
-            this.ExportAllButton.Text = "Export All";
-            this.ExportAllButton.UseVisualStyleBackColor = true;
-            this.ExportAllButton.Visible = false;
-            this.ExportAllButton.Click += new System.EventHandler(this.ExportAllButton_Click);
-            // 
-            // ExportSelectedButton
-            // 
-            this.ExportSelectedButton.Enabled = false;
-            this.ExportSelectedButton.Location = new System.Drawing.Point(612, 12);
-            this.ExportSelectedButton.Name = "ExportSelectedButton";
-            this.ExportSelectedButton.Size = new System.Drawing.Size(94, 23);
-            this.ExportSelectedButton.TabIndex = 27;
-            this.ExportSelectedButton.Text = "Export Selected";
-            this.ExportSelectedButton.UseVisualStyleBackColor = true;
-            this.ExportSelectedButton.Visible = false;
-            this.ExportSelectedButton.Click += new System.EventHandler(this.ExportSelectedButton_Click);
-            // 
-            // ImportButton
-            // 
-            this.ImportButton.Enabled = false;
-            this.ImportButton.Location = new System.Drawing.Point(531, 12);
-            this.ImportButton.Name = "ImportButton";
-            this.ImportButton.Size = new System.Drawing.Size(75, 23);
-            this.ImportButton.TabIndex = 28;
-            this.ImportButton.Text = "Import";
-            this.ImportButton.UseVisualStyleBackColor = true;
-            this.ImportButton.Visible = false;
-            this.ImportButton.Click += new System.EventHandler(this.ImportButton_Click);
-            // 
             // Gameshop_button
             // 
             this.Gameshop_button.Location = new System.Drawing.Point(422, 12);
@@ -1968,9 +1929,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(812, 479);
             this.Controls.Add(this.Gameshop_button);
-            this.Controls.Add(this.ImportButton);
-            this.Controls.Add(this.ExportSelectedButton);
-            this.Controls.Add(this.ExportAllButton);
             this.Controls.Add(this.ITypeFilterComboBox);
             this.Controls.Add(this.PasteButton);
             this.Controls.Add(this.CopyMButton);
@@ -2076,9 +2034,6 @@
         private System.Windows.Forms.TextBox EffectTextBox;
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.ComboBox ITypeFilterComboBox;
-        private System.Windows.Forms.Button ExportAllButton;
-        private System.Windows.Forms.Button ExportSelectedButton;
-        private System.Windows.Forms.Button ImportButton;
         private System.Windows.Forms.Label label35;
         private System.Windows.Forms.ComboBox ISetComboBox;
         private System.Windows.Forms.TextBox PoisonRecoverytextBox;
