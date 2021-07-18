@@ -760,8 +760,6 @@ namespace Client.MirScenes
 
         public void UseSpell(int key)
         {
-            RollControl.Setup(0, "Test", CMain.Random.Next(1, 7), false);
-
             if (User.RidingMount || User.Fishing) return;
 
             if (!User.HasClassWeapon && User.Weapon >= 0)

@@ -836,7 +836,6 @@ namespace Server.MirEnvir
 
                     if (cell.Objects == null) return;
 
-
                     for (int i = 0; i < cell.Objects.Count; i++)
                     {
                         MapObject target = cell.Objects[i];
@@ -849,7 +848,7 @@ namespace Server.MirEnvir
                                 {
                                     if (target.Attacked(player, value, DefenceType.MAC, false) > 0)
                                         train = true;
-                                    return;
+                                    break;
                                 }
                                 break;
                         }
