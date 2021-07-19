@@ -10623,7 +10623,7 @@ namespace Server.MirObjects
                         }
                         break;
                     case 3:
-                        if (Item.Info.Type != ItemType.Ring || Item.Info.Type != ItemType.Bracelet || Item.Info.Type != ItemType.Necklace)
+                        if (Item.Info.Type != ItemType.Ring && Item.Info.Type != ItemType.Bracelet && Item.Info.Type != ItemType.Necklace)
                         {
                             Enqueue(p);
                             return;

@@ -2108,7 +2108,7 @@ namespace Client.MirControls
                     }
                     break;
                 case ItemType.Socket:
-                    if (GameScene.SelectedItem == null ||GameScene.SelectedItem.Info.Type == ItemType.Mount || (GameScene.SelectedItem.Info.Type == ItemType.Weapon && GameScene.SelectedItem.Info.IsFishingRod))
+                    if (GameScene.SelectedItem == null || GameScene.SelectedItem.Info.Type == ItemType.Mount || (GameScene.SelectedItem.Info.Type == ItemType.Weapon && GameScene.SelectedItem.Info.IsFishingRod))
                     {
                         return false;
                     }
