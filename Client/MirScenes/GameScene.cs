@@ -8476,11 +8476,17 @@ namespace Client.MirScenes
 
         public void CreateItemLabel(UserItem item, bool inspect = false, bool hideDura = false, bool hideAdded = false)
         {
-            if (item == null)
+            CMain.DebugText = CMain.Random.Next(1, 100).ToString();
+
+            if (item == null || HoverItem != item)
             {
                 DisposeItemLabel();
-                HoverItem = null;
-                return;
+
+                if (item == null)
+                {
+                    HoverItem = null;
+                    return;
+                }
             }
 
             if (item == HoverItem && ItemLabel != null && !ItemLabel.IsDisposed) return;
@@ -9662,8 +9668,6 @@ namespace Client.MirScenes
             {
                 darkness = GetBlindLight(darkness);
             }
-
-            CMain.DebugText = $"{darkness.A},{darkness.R},{darkness.G},{darkness.B}";
 
             DXManager.Device.Clear(ClearFlags.Target, darkness, 0, 0);
 
