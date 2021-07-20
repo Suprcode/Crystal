@@ -228,6 +228,8 @@ namespace Client.MirObjects
 
                 if (temp.CurrentDura == 0 && RealItem.Durability > 0) continue;
 
+                if (temp.Info.IsFishingRod) continue;
+
                 Stats.Add(RealItem.Stats);
                 Stats.Add(temp.AddedStats);
 

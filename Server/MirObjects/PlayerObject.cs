@@ -2606,6 +2606,8 @@ namespace Server.MirObjects
 
                 if (temp.CurrentDura == 0 && temp.Info.Durability > 0) continue;
 
+                if (temp.Info.IsFishingRod) continue;
+
                 Stats.Add(RealItem.Stats);
                 Stats.Add(temp.AddedStats);
 
@@ -12687,8 +12689,9 @@ namespace Server.MirObjects
 
         public override bool CanGainGold(uint gold)
         {
-            return (UInt64)gold + Account.Gold <= uint.MaxValue;
+            return (ulong)gold + Account.Gold <= uint.MaxValue;
         }
+
         public override void WinGold(uint gold)
         {
             if (GroupMembers == null)
@@ -16268,7 +16271,7 @@ namespace Server.MirObjects
             CreateGuild(Name);
             CanCreateGuild = false;
         }
-        public void GuildStorageGoldChange(Byte Type, uint Amount)
+        public void GuildStorageGoldChange(byte type, uint amount)
         {
             if ((MyGuild == null) || (MyGuildRank == null))
             {
@@ -16282,51 +16285,55 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Type == 0)//donate
+            if (type == 0)//donate
             {
-                if (Account.Gold < Amount)
+                if (Account.Gold < amount)
                 {
                     ReceiveChat("Insufficient gold.", ChatType.System);
                     return;
                 }
-                if ((MyGuild.Gold + (UInt64)Amount) > uint.MaxValue)
+
+                if ((MyGuild.Gold + (ulong)amount) > uint.MaxValue)
                 {
                     ReceiveChat("Guild gold limit reached.", ChatType.System);
                     return;
                 }
-                Account.Gold -= Amount;
-                MyGuild.Gold += Amount;
-                Enqueue(new S.LoseGold { Gold = Amount });
-                MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 0, Name = Info.Name, Amount = Amount });
+
+                Account.Gold -= amount;
+                MyGuild.Gold += amount;
+                Enqueue(new S.LoseGold { Gold = amount });
+                MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 0, Name = Info.Name, Amount = amount });
                 MyGuild.NeedSave = true;
             }
             else
             {
-                if (MyGuild.Gold < Amount)
+                if (MyGuild.Gold < amount)
                 {
                     ReceiveChat("Insufficient gold.", ChatType.System);
                     return;
                 }
-                if (!CanGainGold(Amount))
+
+                if (!CanGainGold(amount))
                 {
                     ReceiveChat("Gold limit reached.", ChatType.System);
                     return;
                 }
+
                 if (MyGuildRank.Index != 0)
                 {
                     ReceiveChat("Insufficient rank.", ChatType.System);
                     return;
                 }
 
-                MyGuild.Gold -= Amount;
-                GainGold(Amount);
-                MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 1, Name = Info.Name, Amount = Amount });
+                MyGuild.Gold -= amount;
+                GainGold(amount);
+                MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 1, Name = Info.Name, Amount = amount });
                 MyGuild.NeedSave = true;
             }
         }
-        public void GuildStorageItemChange(Byte Type, int from, int to)
+        public void GuildStorageItemChange(byte type, int from, int to)
         {
-            S.GuildStorageItemChange p = new S.GuildStorageItemChange { Type = (byte)(3 + Type), From = from, To = to };
+            S.GuildStorageItemChange p = new S.GuildStorageItemChange { Type = (byte)(3 + type), From = from, To = to };
             if ((MyGuild == null) || (MyGuildRank == null))
             {
                 Enqueue(p);
@@ -16334,14 +16341,14 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (!InSafeZone && Type != 3)
+            if (!InSafeZone && type != 3)
             {
                 Enqueue(p);
                 ReceiveChat("You cannot use guild storage outside safezones.", ChatType.System);
                 return;
             }
 
-            switch (Type)
+            switch (type)
             {
                 case 0://store
                     if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanStoreItem))
@@ -16545,12 +16552,12 @@ namespace Server.MirObjects
             return true;
         }
 
-        public void GuildBuffUpdate(byte Type, int Id)
+        public void GuildBuffUpdate(byte type, int id)
         {
             if (MyGuild == null) return;
             if (MyGuildRank == null) return;
-            if (Id < 0) return;
-            switch (Type)
+            if (id < 0) return;
+            switch (type)
             {
                 case 0://request info list
                     if (RequestedGuildBuffInfo) return;
@@ -16562,19 +16569,19 @@ namespace Server.MirObjects
                         ReceiveChat("You do not have the correct guild rank.", ChatType.System);
                         return;
                     }
-                    GuildBuffInfo BuffInfo = Envir.FindGuildBuffInfo(Id);
+                    GuildBuffInfo BuffInfo = Envir.FindGuildBuffInfo(id);
                     if (BuffInfo == null)
                     {
                         ReceiveChat("Buff does not excist.", ChatType.System);
                         return;
                     }
-                    if (MyGuild.GetBuff(Id) != null)
+                    if (MyGuild.GetBuff(id) != null)
                     {
                         ReceiveChat("Buff already obtained.", ChatType.System);
                         return;
                     }
                     if ((MyGuild.Level < BuffInfo.LevelRequirement) || (MyGuild.SparePoints < BuffInfo.PointsRequirement)) return;//client checks this so it shouldnt be possible without a moded client :p
-                    MyGuild.NewBuff(Id);
+                    MyGuild.NewBuff(id);
                     break;
                 case 2://activate the buff
                     if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanActivateBuff))
@@ -16582,14 +16589,14 @@ namespace Server.MirObjects
                         ReceiveChat("You do not have the correct guild rank.", ChatType.System);
                         return;
                     }
-                    GuildBuff Buff = MyGuild.GetBuff(Id);
+                    GuildBuff Buff = MyGuild.GetBuff(id);
                     if (Buff == null)
                     {
                         ReceiveChat("Buff not obtained.", ChatType.System);
                         return;
                     }
                     if ((MyGuild.Gold < Buff.Info.ActivationCost) || (Buff.Active)) return;
-                    MyGuild.ActivateBuff(Id);
+                    MyGuild.ActivateBuff(id);
                     break;
             }
         }
