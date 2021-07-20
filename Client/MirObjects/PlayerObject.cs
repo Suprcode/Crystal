@@ -1045,6 +1045,7 @@ namespace Client.MirObjects
                                 {
                                     MapControl.NextAction = CMain.Time + 2500;
                                     GameScene.SpellTime = CMain.Time + 1500; //Spell Delay
+                                    MapControl.InputDelay = CMain.Time + 1000;
                                 }
                                 break;
                             case Spell.SlashingBurst:
