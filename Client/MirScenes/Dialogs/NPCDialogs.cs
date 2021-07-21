@@ -1825,7 +1825,7 @@ namespace Client.MirScenes.Dialogs
 
                     if (slot == null || tool.Info.Index != slot.Info.Index || slot.CurrentDura < 1000M) continue;
 
-                    var cell = GameScene.Scene.InventoryDialog.GetCell(slot.UniqueID);
+                    var cell = GameScene.Scene.InventoryDialog.GetCell(slot.UniqueID) ?? GameScene.Scene.BeltDialog.GetCell(slot.UniqueID);
 
                     if (cell.Locked) continue;
 
