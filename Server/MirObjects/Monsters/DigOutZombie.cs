@@ -61,25 +61,30 @@ namespace Server.MirObjects.Monsters
                 }
             }
 
+            SpawnDigOutEffect();         
+
+            base.ProcessAI();
+        }
+
+        protected virtual void SpawnDigOutEffect()
+        {
             if (Visible && Envir.Time > DigOutTime + 1000 && !DoneDigOut)
             {
                 SpellObject ob = new SpellObject
-                    {
-                        Spell = Spell.DigOutZombie,
-                        Value = 1,
-                        ExpireTime = Envir.Time + (5 * 60 * 1000),
-                        TickSpeed = 2000,
-                        Caster = null,
-                        CurrentLocation = DigOutLocation,
-                        CurrentMap = this.CurrentMap,
-                        Direction = DigOutDirection
-                    };
+                {
+                    Spell = Spell.DigOutZombie,
+                    Value = 1,
+                    ExpireTime = Envir.Time + (5 * 60 * 1000),
+                    TickSpeed = 2000,
+                    Caster = null,
+                    CurrentLocation = DigOutLocation,
+                    CurrentMap = this.CurrentMap,
+                    Direction = DigOutDirection
+                };
                 CurrentMap.AddObject(ob);
                 ob.Spawned();
-                DoneDigOut = true;                    
+                DoneDigOut = true;
             }
-
-            base.ProcessAI();
         }
 
         public override bool Walk(MirDirection dir)

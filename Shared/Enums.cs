@@ -1209,18 +1209,19 @@ public enum Spell : byte
     MapLava = 203,
     MapQuake1 = 204,
     MapQuake2 = 205,
-    GeneralMeowMeowThunder = 206,
-    StoneGolemQuake = 207,
-    EarthGolemPile = 208,
-    TreeQueenRoot = 209,
-    TreeQueenMassRoots = 210,
-    TreeQueenGroundRoots = 211,
-    TucsonGeneralRock = 212,
-    FlyingStatueIceTornado = 213,
-    DarkOmaKingNuke = 214,
-    HornedSorcererDustTornado = 215,
-    HornedCommanderRockFall = 216,
-    HornedCommanderRockSpike = 217
+    DigOutArmadillo = 206,
+    GeneralMeowMeowThunder = 207,
+    StoneGolemQuake = 208,
+    EarthGolemPile = 209,
+    TreeQueenRoot = 210,
+    TreeQueenMassRoots = 211,
+    TreeQueenGroundRoots = 212,
+    TucsonGeneralRock = 213,
+    FlyingStatueIceTornado = 214,
+    DarkOmaKingNuke = 215,
+    HornedSorcererDustTornado = 216,
+    HornedCommanderRockFall = 217,
+    HornedCommanderRockSpike = 218
 }
 
 public enum SpellEffect : byte

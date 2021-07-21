@@ -155,6 +155,12 @@ namespace Client.MirObjects
                     MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellLord], 39, 13, 1300, CurrentLocation) { Blend = false });
                     SoundManager.PlaySound(8304);
                     break;
+                case Spell.DigOutArmadillo:
+                    BodyLibrary = Libraries.Monsters[(ushort)Monster.Armadillo];
+                    DrawFrame = 472 + (byte)Direction;
+                    FrameCount = 0;
+                    Blend = false;
+                    break;
                 case Spell.GeneralMeowMeowThunder:                
                     MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GeneralMeowMeow], 522, 7, 700, CurrentLocation) { Blend = true });
                     SoundManager.PlaySound(8321);

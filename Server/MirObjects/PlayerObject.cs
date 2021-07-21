@@ -377,7 +377,7 @@ namespace Server.MirObjects
 
                 if (pet.Info.Name == Settings.SkeletonName || pet.Info.Name == Settings.ShinsuName || pet.Info.Name == Settings.AngelName)
                 {
-                    Die();
+                    pet.Die();
                     continue;
                 }
 
@@ -9711,7 +9711,7 @@ namespace Server.MirObjects
                     Cell cell = CurrentMap.GetCell(location);
 
                     if (cell.Objects == null ||
-                        cell.Objects.Where(ob => ob.Race == ObjectType.Spell).All(ob => ((SpellObject)ob).Spell != Spell.DigOutZombie))
+                        cell.Objects.Where(ob => ob.Race == ObjectType.Spell).All(ob => ((SpellObject)ob).Spell != Spell.DigOutZombie && ((SpellObject)ob).Spell != Spell.DigOutArmadillo))
                         continue;
                 }
 
