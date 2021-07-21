@@ -1852,7 +1852,7 @@ namespace Client.MirScenes.Dialogs
                     if (slot.Count < ingredient.Count) continue;
                     if (ingredient.CurrentDura < ingredient.MaxDura && slot.CurrentDura < ingredient.CurrentDura) continue;
 
-                    var cell = GameScene.Scene.InventoryDialog.GetCell(slot.UniqueID);
+                    var cell = GameScene.Scene.InventoryDialog.GetCell(slot.UniqueID) ?? GameScene.Scene.BeltDialog.GetCell(slot.UniqueID);
 
                     if (cell.Locked) continue;
 
