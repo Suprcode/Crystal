@@ -135,6 +135,7 @@ namespace Client.MirObjects
                 NameLabel = LabelList[i];
                 break;
             }
+
             if (NameLabel != null && !NameLabel.IsDisposed) return;
 
             NameLabel = new MirControls.MirLabel

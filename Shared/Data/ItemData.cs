@@ -312,7 +312,7 @@ public class UserItem
 
     public bool IsAdded
     {
-        get { return AddedStats.Count > 0; }
+        get { return AddedStats.Count > 0 || Slots.Length > Info.Slots; }
     }
 
     public int Weight
