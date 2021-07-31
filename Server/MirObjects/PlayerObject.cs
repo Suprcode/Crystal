@@ -11608,7 +11608,7 @@ namespace Server.MirObjects
                     break;
                 case ItemType.Transform: //Transforms
                     {
-                        AddBuff(BuffType.Transform, this, (Settings.Second * item.Info.Durability), new Stats(), false, item.Info.Shape);
+                        AddBuff(BuffType.Transform, this, (Settings.Second * item.Info.Durability), new Stats(), true, item.Info.Shape);
                     }
                     break;
                 case ItemType.Deco:
