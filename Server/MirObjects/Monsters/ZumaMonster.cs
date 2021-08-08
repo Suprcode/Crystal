@@ -50,7 +50,7 @@ namespace Server.MirObjects.Monsters
         {
             if (Stoned) return null;
 
-            return base.AddBuff(type, owner, duration, Stats, refreshStats, values);
+            return base.AddBuff(type, owner, duration, stats, refreshStats, values);
         }
 
         public override bool IsFriendlyTarget(PlayerObject ally)
