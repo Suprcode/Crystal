@@ -160,6 +160,9 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             MoveTime = Envir.Time + MoveSpeed;
 
+            if (MoveTime > AttackTime)
+                AttackTime = MoveTime;
+
             InSafeZone = CurrentMap.GetSafeZone(CurrentLocation) != null;
 
             Broadcast(new S.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
