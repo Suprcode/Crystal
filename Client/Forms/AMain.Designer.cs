@@ -133,7 +133,7 @@ namespace Launcher
             this.Name_label.Name = "Name_label";
             this.Name_label.Size = new System.Drawing.Size(186, 22);
             this.Name_label.TabIndex = 0;
-            this.Name_label.Text = "Crystal Mir 2";
+            this.Name_label.Text = "MyServer";
             this.Name_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.Name_label.Visible = false;
             // 
@@ -192,7 +192,7 @@ namespace Launcher
             this.Version_label.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // Main_browser
-            //
+            // 
             this.Main_browser.AllowWebBrowserDrop = false;
             this.Main_browser.IsWebBrowserContextMenuEnabled = false;
             this.Main_browser.Location = new System.Drawing.Point(8, 46);
@@ -258,9 +258,9 @@ namespace Launcher
             this.Credit_label.ForeColor = System.Drawing.Color.Gray;
             this.Credit_label.Location = new System.Drawing.Point(12, 530);
             this.Credit_label.Name = "Credit_label";
-            this.Credit_label.Size = new System.Drawing.Size(114, 13);
+            this.Credit_label.Size = new System.Drawing.Size(169, 13);
             this.Credit_label.TabIndex = 30;
-            this.Credit_label.Text = "Powered by Crystal M2";
+            this.Credit_label.Text = "My Server = Powered by Crystal M2";
             this.Credit_label.Click += new System.EventHandler(this.Credit_label_Click);
             // 
             // ProgTotalEnd_pb
