@@ -339,7 +339,11 @@ namespace Client.MirObjects
                 Damage info = Damages[i];
                 if (CMain.Time > info.ExpireTime)
                 {
-                    info.DamageLabel.Dispose();
+                    if (info.DamageLabel != null)
+                    {
+                        info.DamageLabel.Dispose();
+                    }
+
                     Damages.RemoveAt(i);
                 }
                 else
