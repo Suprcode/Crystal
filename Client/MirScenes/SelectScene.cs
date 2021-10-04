@@ -350,17 +350,29 @@ namespace Client.MirScenes
             MirMessageBox message = new MirMessageBox(string.Format("Are you sure you want to Delete the character {0}?", Characters[_selected].Name), MirMessageBoxButtons.YesNo);
             int index = Characters[_selected].Index;
 
-            message.YesButton.Click += (o, e) =>
+            message.YesButton.Click += (o1, e1) =>
             {
-                DeleteCharacterButton.Enabled = false;
-                Network.Enqueue(new C.DeleteCharacter { CharacterIndex = index });
-            };
+                MirInputBox inputBox = new MirInputBox("Please enter the characters name.");
+                inputBox.OKButton.Click += (o, e) =>
+                {
+                    string name = Characters[_selected].Name.ToString();
 
+                    if (inputBox.InputTextBox.Text == name)
+                    {
+                        DeleteCharacterButton.Enabled = false;
+                        Network.Enqueue(new C.DeleteCharacter { CharacterIndex = index });
+                    }
+                    else
+                    {
+                        MirMessageBox failedMessage = new MirMessageBox(string.Format("Incorrect Entry."), MirMessageBoxButtons.OK);
+                        failedMessage.Show();
+                    }
+                    inputBox.Dispose();
+                };
+                inputBox.Show();
+            };
             message.Show();
         }
-
-        private void DeleteCharacter(S.DeleteCharacter p)
-        {
             DeleteCharacterButton.Enabled = true;
             switch (p.Result)
             {
