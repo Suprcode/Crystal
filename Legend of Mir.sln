@@ -48,8 +48,28 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "PatcherWebSite", "PatcherWe
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "50790"
+	EndProjectSection
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_50790"
+		Debug.AspNetCompiler.PhysicalPath = "PatcherWebSite\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50790\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_50790"
+		Release.AspNetCompiler.PhysicalPath = "PatcherWebSite\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50790\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "50790"
 		SlnRelativePath = "PatcherWebSite\"
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WYMTool", "WymTool\WYMTool.csproj", "{540F8C58-B4DC-4CAB-BB82-B50CF4B96229}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -194,6 +214,22 @@ Global
 		{C1F2FAE3-485C-4BF4-8939-B44EAD5619D4}.Release|x64.Build.0 = Debug|Any CPU
 		{C1F2FAE3-485C-4BF4-8939-B44EAD5619D4}.Release|x86.ActiveCfg = Debug|Any CPU
 		{C1F2FAE3-485C-4BF4-8939-B44EAD5619D4}.Release|x86.Build.0 = Debug|Any CPU
+		{540F8C58-B4DC-4CAB-BB82-B50CF4B96229}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{540F8C58-B4DC-4CAB-BB82-B50CF4B96229}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{540F8C58-B4DC-4CAB-BB82-B50CF4B96229}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{540F8C58-B4DC-4CAB-BB82-B50CF4B96229}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{540F8C58-B4DC-4CAB-BB82-B50CF4B96229}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{540F8C58-B4DC-4CAB-BB82-B50CF4B96229}.Debug|x64.Build.0 = Debug|Any CPU
+		{540F8C58-B4DC-4CAB-BB82-B50CF4B96229}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{540F8C58-B4DC-4CAB-BB82-B50CF4B96229}.Debug|x86.Build.0 = Debug|Any CPU
+		{540F8C58-B4DC-4CAB-BB82-B50CF4B96229}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{540F8C58-B4DC-4CAB-BB82-B50CF4B96229}.Release|Any CPU.Build.0 = Release|Any CPU
+		{540F8C58-B4DC-4CAB-BB82-B50CF4B96229}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{540F8C58-B4DC-4CAB-BB82-B50CF4B96229}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{540F8C58-B4DC-4CAB-BB82-B50CF4B96229}.Release|x64.ActiveCfg = Release|Any CPU
+		{540F8C58-B4DC-4CAB-BB82-B50CF4B96229}.Release|x64.Build.0 = Release|Any CPU
+		{540F8C58-B4DC-4CAB-BB82-B50CF4B96229}.Release|x86.ActiveCfg = Release|Any CPU
+		{540F8C58-B4DC-4CAB-BB82-B50CF4B96229}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
