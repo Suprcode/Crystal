@@ -69,7 +69,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "PatcherWebSite", "PatcherWe
 		SlnRelativePath = "PatcherWebSite\"
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WYMTool", "WymTool\WYMTool.csproj", "{540F8C58-B4DC-4CAB-BB82-B50CF4B96229}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WymTool", "WymTool\WymTool.csproj", "{540F8C58-B4DC-4CAB-BB82-B50CF4B96229}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
