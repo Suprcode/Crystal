@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Net;
-using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
 
@@ -12,8 +11,9 @@ namespace WymTool
     {
         const string IP4_JK = "172.16.10.116";
         const string IP4_TOSHIBA = "192.168.8.10";
+        public bool IsDebug = true;
         public string PathConfig;
-        private Dictionary<string, Dictionary<string, string>> config;// Language配置用到的脚本比较多，调试阶段最好用绝对目录
+        private Dictionary<string, string> config = new Dictionary<string, string>();// Language配置用到的脚本比较多，调试阶段最好用绝对目录
         private static ConfigManager _instance = null;
         private static object _instanceLock = new object();
         public static ConfigManager Instance()
@@ -133,26 +133,31 @@ namespace WymTool
             switch (GetHostIP4())
             {
                 case IP4_JK:
-                    filePath = "F:/Mir2Suprcode/mir2/WYMTool/Config.json";
+                    filePath = "F:/Mir2Suprcode/mir2/WymTool/Config.txt";
                     break;
                 case IP4_TOSHIBA:
-                    filePath = "D:/Projects/mir2suprcode/mir2/WYMTool/Config.json";
+                    filePath = "D:/Projects/mir2suprcode/mir2/WymTool/Config.txt";
                     break;
                 default:
                     filePath = "";
                     LogManager.Instance().Log("找不到此IP对应的设备.");
                     break;
             }
-            string jsonStr = GetFileJson(filePath);
-            config = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(jsonStr);
+
+            string[] arr = File.ReadAllLines(filePath);
+            foreach (string e in arr)
+            {
+                string[] v = e.Split('\t');
+                config.Add(v[0], v[1]);
+            }
 
             switch (GetHostIP4())
             {
                 case IP4_JK:
-                    PathConfig = config["Language"]["wangyimin_jk"];
+                    PathConfig = config["wangyimin_jk"];
                     break;
                 case IP4_TOSHIBA:
-                    PathConfig = config["Language"]["wangyimin_toshiba"];
+                    PathConfig = config["wangyimin_toshiba"];
                     break;
                 default:
                     PathConfig = "";

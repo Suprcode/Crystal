@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WymTool
 {
-    class LogManager
+    public class LogManager
     {
         private static LogManager _instance = null;
         private static object _instanceLock = new object();
@@ -26,7 +26,7 @@ namespace WymTool
         public void Log(string msg, bool needTag = true)
         {
             // TODO 配置IsDebug
-            if (true)
+            if (ConfigManager.Instance().IsDebug)
             {
                 string path = ConfigManager.Instance().PathConfig + "Log.txt";
                 System.IO.File.AppendAllText(@path, (needTag ? "wym---" : "") + msg + "\r\n");

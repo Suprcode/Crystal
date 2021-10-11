@@ -11,11 +11,16 @@ namespace WymTool
         {
             SYSTEM = 1, MAP = 2, ITEM = 3, MONSTER = 4, DROP = 5
         }
+        //这里存储类型有dic和list两种，因有些原始数据有些key是重复的，并不适用dic
         private Dictionary<string, string> dicSys = new Dictionary<string, string>();
         private Dictionary<string, string> dicMap = new Dictionary<string, string>();
+        private List<string> listMap = new List<string>();
         private Dictionary<string, string> dicItem = new Dictionary<string, string>();
+        private List<string> listItem = new List<string>();
         private Dictionary<string, string> dicMonster = new Dictionary<string, string>();
+        private List<string> listMonster = new List<string>();
         private Dictionary<string, string> dicDrop = new Dictionary<string, string>();
+
 
         private static LanguageManager _instance = null;
         private static object _instanceLock = new object();
@@ -36,20 +41,24 @@ namespace WymTool
         }
         private bool isNeedIndex(TYPE type)
         {
-            return type == TYPE.MAP || type == TYPE.ITEM;
+            return false; //type == TYPE.MAP || type == TYPE.ITEM;
         }
         private void init()
         {
             // 配置语言包地址
-            dicSys = initDic(TYPE.SYSTEM); dicMap = initDic(TYPE.MAP); dicItem = initDic(TYPE.ITEM); dicMonster = initDic(TYPE.MONSTER); dicDrop = initDic(TYPE.DROP);
+            dicSys = initDic(TYPE.SYSTEM);
+            listMap = initList(TYPE.MAP);//dicMap = initDic(TYPE.MAP);
+            listItem = initList(TYPE.ITEM);//dicItem = initDic(TYPE.ITEM); 
+            listMonster = initList(TYPE.MONSTER);//dicMonster = initDic(TYPE.MONSTER);
+            dicDrop = initDic(TYPE.DROP);
         }
 
         // ------- toCN -------
         public string toCNSys(string strEN) { return toCN(TYPE.SYSTEM, strEN); }
-        public string toCNMap(string strEN, string index) { return toCN(TYPE.MAP, strEN, index); }
-        public string toCNItem(string strEN, string index) { return toCN(TYPE.ITEM, strEN, index); }
-        //public string toCNMonster(string strEN) { return toCN(TYPE.MONSTER, strEN); }
-        //public string toCNDrop(string strEN) { return toCN(TYPE.DROP, strEN); }
+        public string toCNMap(int index) { return toCN(TYPE.MAP, index); }
+        public string toCNItem(int index) { return toCN(TYPE.ITEM, index); }
+        public string toCNMonster(int index) { return toCN(TYPE.MONSTER, index); }
+        public string toCNDrop(string strEN) { return toCN(TYPE.DROP, strEN); }
         // ------- toEN -------
         //public string toENSys(string strCN) { return toEN(TYPE.SYSTEM, strCN); }
         //public string toENMap(string strCN) { return toEN(TYPE.MAP, strCN); }
@@ -64,7 +73,7 @@ namespace WymTool
         /// <param name="strEN"></param>
         /// <param name="strIndex">Map才需要</param>
         /// <returns></returns>
-        private string toCN(TYPE type, string strEN, string strIndex = null)
+        private string toCN(TYPE type, string strEN)
         {
             Dictionary<string, string> dic;
             switch (type)
@@ -75,10 +84,26 @@ namespace WymTool
                 case TYPE.MONSTER: dic = dicMonster; break;
                 case TYPE.DROP: dic = dicDrop; break;
             }
-            if (isNeedIndex(type)) { strIndex = "_" + strIndex; strEN += strIndex; }
+            //if (isNeedIndex(type)) { strIndex = "_" + strIndex; strEN += strIndex; }
             if (!dic.ContainsKey(strEN)) { LogManager.Instance().Log(strEN, false); }
             string result = dic.ContainsKey(strEN) ? dic[strEN] : strEN;
-            if (isNeedIndex(type)) { result = result.Replace(strIndex, string.Empty); }
+            //if (isNeedIndex(type)) { result = result.Replace(strIndex, string.Empty); }
+            return result;
+        }
+        private string toCN(TYPE type, int index)
+        {
+            List<string> list;
+            switch (type)
+            {
+                //case TYPE.SYSTEM: list = listSys; break;
+                default: case TYPE.MAP: list = listMap; break;
+                case TYPE.ITEM: list = listItem; break;
+                case TYPE.MONSTER: list = listMonster; break;
+                    //case TYPE.DROP: list = listDrop; break;
+            }
+            //if (isNeedIndex(type)) { strIndex = "_" + strIndex; strEN += strIndex; }
+            string result = list[index - 1];
+            //if (isNeedIndex(type)) { result = result.Replace(strIndex, string.Empty); }
             return result;
         }
         /// <summary>
@@ -122,6 +147,18 @@ namespace WymTool
                     LogManager.Instance().Log("重复项 = " + type + ", index = " + (d.Count + 1) + ", key = " + v[0], true);
                 }
                 d.Add(v[0], v[1]);
+            }
+            return d;
+        }
+        private List<string> initList(TYPE type)
+        {
+            string arrStr = ConfigManager.Instance().PathConfig + "Language" + (int)type + ".txt";
+            string[] arr = File.ReadAllLines(arrStr);
+            List<string> d = new List<string>();
+            foreach (string e in arr)
+            {
+                string[] v = e.Split('\t');
+                d.Add(v[1]);
             }
             return d;
         }
