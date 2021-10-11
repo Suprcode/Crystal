@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WYMTool
+namespace WymTool
 {
     class LogManager
     {

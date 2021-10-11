@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
 
-namespace WYMTool
+namespace WymTool
 {
     public class ConfigManager
     {
