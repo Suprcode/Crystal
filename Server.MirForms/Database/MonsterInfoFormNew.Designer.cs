@@ -59,6 +59,7 @@ namespace Server.Database
             this.MonsterAutoRev = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.MonsterUndead = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.MonsterCanTame = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.MonsterDropPath = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.monsterInfoGridView)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -88,7 +89,8 @@ namespace Server.Database
             this.MonsterCanPush,
             this.MonsterAutoRev,
             this.MonsterUndead,
-            this.MonsterCanTame});
+            this.MonsterCanTame,
+            this.MonsterDropPath});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -334,6 +336,14 @@ namespace Server.Database
             this.MonsterCanTame.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.MonsterCanTame.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
+            // MonsterDropPath
+            // 
+            this.MonsterDropPath.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.MonsterDropPath.DataPropertyName = "MonsterDropPath";
+            this.MonsterDropPath.HeaderText = "Drop Path";
+            this.MonsterDropPath.Name = "MonsterDropPath";
+            this.MonsterDropPath.Width = 80;
+            // 
             // MonsterInfoFormNew
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -385,5 +395,6 @@ namespace Server.Database
         private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterAutoRev;
         private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterUndead;
         private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterCanTame;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MonsterDropPath;
     }
 }

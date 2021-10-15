@@ -93,6 +93,8 @@
             this.PasteMButton = new System.Windows.Forms.Button();
             this.CopyMButton = new System.Windows.Forms.Button();
             this.DropBuilderButton = new System.Windows.Forms.Button();
+            this.DropPathTextBox = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.MonsterInfoPanel.SuspendLayout();
@@ -126,6 +128,8 @@
             this.MonsterInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.MonsterInfoPanel.Controls.Add(this.label13);
+            this.MonsterInfoPanel.Controls.Add(this.DropPathTextBox);
             this.MonsterInfoPanel.Controls.Add(this.fileNameLabel);
             this.MonsterInfoPanel.Controls.Add(this.label11);
             this.MonsterInfoPanel.Controls.Add(this.UndeadCheckBox);
@@ -761,6 +765,23 @@
             this.DropBuilderButton.UseVisualStyleBackColor = true;
             this.DropBuilderButton.Click += new System.EventHandler(this.DropBuilderButton_Click);
             // 
+            // DropPathTextBox
+            // 
+            this.DropPathTextBox.Location = new System.Drawing.Point(87, 213);
+            this.DropPathTextBox.Name = "DropPathTextBox";
+            this.DropPathTextBox.Size = new System.Drawing.Size(330, 20);
+            this.DropPathTextBox.TabIndex = 91;
+            this.DropPathTextBox.TextChanged += new System.EventHandler(this.DropPathTextBox_TextChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(23, 216);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(58, 13);
+            this.label13.TabIndex = 92;
+            this.label13.Text = "Drop Path:";
+            // 
             // MonsterInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -851,5 +872,7 @@
         private System.Windows.Forms.Button DropBuilderButton;
         private System.Windows.Forms.Label fileNameLabel;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox DropPathTextBox;
     }
 }

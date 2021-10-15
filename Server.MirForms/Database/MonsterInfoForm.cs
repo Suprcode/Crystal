@@ -103,6 +103,7 @@ namespace Server
 
             MonsterIndexTextBox.Text = info.Index.ToString();
             MonsterNameTextBox.Text = info.Name;
+            DropPathTextBox.Text = info.DropPath;
 
             ImageComboBox.SelectedItem = null;
             ImageComboBox.SelectedItem = info.Image;
@@ -145,6 +146,7 @@ namespace Server
 
                 if (MonsterIndexTextBox.Text != info.Index.ToString()) MonsterIndexTextBox.Text = string.Empty;
                 if (MonsterNameTextBox.Text != info.Name) MonsterNameTextBox.Text = string.Empty;
+                if (DropPathTextBox.Text != info.DropPath) DropPathTextBox.Text = string.Empty;
 
                 if (ImageComboBox.SelectedItem == null || (Monster)ImageComboBox.SelectedItem != info.Image) ImageComboBox.SelectedItem = null;
                 if (ImageComboBox.SelectedItem == null || (Monster)ImageComboBox.SelectedItem != info.Image) fileNameLabel.Text = "";
@@ -704,6 +706,21 @@ namespace Server
             MirForms.DropBuilder.DropGenForm GenForm = new MirForms.DropBuilder.DropGenForm();
 
             GenForm.ShowDialog();
+        }
+
+        private void DropPathTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            var text = ActiveControl.Text;
+
+            if (text.ToLower().EndsWith(".txt"))
+            {
+                text = text.Replace(".txt", "");
+            }
+
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+                _selectedMonsterInfos[i].DropPath = text;
         }
     }
 }

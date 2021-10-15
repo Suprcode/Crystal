@@ -36,6 +36,8 @@ namespace Server.MirDatabase
 
         public ushort AttackSpeed = 2500, MoveSpeed = 1800;
         public uint Experience;
+
+        public string DropPath = "";
         
         public List<DropInfo> Drops = new List<DropInfo>();
 
@@ -132,6 +134,10 @@ namespace Server.MirDatabase
             if (Envir.LoadVersion < 18) return;
             AutoRev = reader.ReadBoolean();
             Undead = reader.ReadBoolean();
+
+            if (Envir.LoadVersion < 89) return;
+
+            DropPath = reader.ReadString();
         }
 
         public string GameName
@@ -165,12 +171,30 @@ namespace Server.MirDatabase
             writer.Write(CanTame);
             writer.Write(AutoRev);
             writer.Write(Undead);
+
+            writer.Write(DropPath);
         }
 
         public void LoadDrops()
         {
             Drops.Clear();
-            string path = Path.Combine(Settings.DropPath, Name + ".txt");
+
+            string path;
+
+            if (!string.IsNullOrEmpty(DropPath))
+            {
+                path = Path.Combine(Settings.DropPath, DropPath + ".txt");
+
+                if (!File.Exists(path))
+                {
+                    path = Path.Combine(Settings.DropPath, Name + ".txt");
+                }
+            }
+            else
+            {
+                path = Path.Combine(Settings.DropPath, Name + ".txt");
+            }
+
             if (!File.Exists(path))
             {
                 string[] contents = new[]

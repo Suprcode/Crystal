@@ -54,6 +54,7 @@ namespace Server.Database
             MonsterAutoRev.ValueType = typeof(bool);
             MonsterUndead.ValueType = typeof(bool);
             MonsterCanTame.ValueType = typeof(bool);
+            MonsterDropPath.ValueType = typeof(string);
 
             //Basic
             this.MonsterImage.ValueType = typeof(Monster);
@@ -148,6 +149,7 @@ namespace Server.Database
                 row["MonsterCanTame"] = item.CanTame;
                 row["MonsterUndead"] = item.Undead;
                 row["MonsterAutoRev"] = item.AutoRev;
+                row["MonsterDropPath"] = item.DropPath;
 
                 foreach (Stat stat in StatEnums)
                 {
@@ -224,6 +226,7 @@ namespace Server.Database
                 monster.CanTame = (bool)row.Cells["MonsterCanTame"].Value;
                 monster.Undead = (bool)row.Cells["MonsterUndead"].Value;
                 monster.AutoRev = (bool)row.Cells["MonsterAutoRev"].Value;
+                monster.DropPath = (string)row.Cells["MonsterDropPath"].Value;
 
                 monster.Stats.Clear();
 
@@ -572,6 +575,7 @@ namespace Server.Database
             row.Cells["MonsterCanTame"].Value = (bool)true;
             row.Cells["MonsterUndead"].Value = (bool)false;
             row.Cells["MonsterAutoRev"].Value = (bool)true;
+            row.Cells["MonsterDropPath"].Value = "";
 
             foreach (Stat stat in StatEnums)
             {
