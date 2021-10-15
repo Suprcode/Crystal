@@ -179,7 +179,7 @@ namespace Server.MirDatabase
         {
             Drops.Clear();
 
-            string path;
+            string path = Path.Combine(Settings.DropPath, Name + ".txt");
 
             if (!string.IsNullOrEmpty(DropPath))
             {
@@ -189,10 +189,6 @@ namespace Server.MirDatabase
                 {
                     path = Path.Combine(Settings.DropPath, Name + ".txt");
                 }
-            }
-            else
-            {
-                path = Path.Combine(Settings.DropPath, Name + ".txt");
             }
 
             if (!File.Exists(path))
