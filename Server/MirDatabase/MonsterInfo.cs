@@ -213,9 +213,11 @@ namespace Server.MirDatabase
                 return;
             }
 
-            string[] lines = File.ReadAllLines(path);
+            var lines = File.ReadAllLines(path).ToList();
 
-            for (int i = 0; i < lines.Length; i++)
+            lines = ParseInsert(lines);
+
+            for (int i = 0; i < lines.Count; i++)
             {
                 if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
 
@@ -238,6 +240,39 @@ namespace Server.MirDatabase
 
                     return drop1.Item.Type.CompareTo(drop2.Item.Type);
                 });
+        }
+
+        private List<string> ParseInsert(List<string> lines)
+        {
+            Regex regex = new Regex($"#INSERT \\[(.*?)\\]", RegexOptions.IgnoreCase);
+
+            List<string> newLines = new List<string>();
+
+            for (int i = 0; i < lines.Count; i++)
+            {
+                var match = regex.Match(lines[i]);
+
+                if (!match.Success) continue;
+
+                var subPath = match.Groups[1].Value;
+
+                string path = Path.Combine(Settings.DropPath, subPath);
+
+                if (!File.Exists(path))
+                {
+                    MessageQueue.Enqueue(string.Format("Could not load Drop: {0}, INSERT {1}", Name, path));
+                }
+                else 
+                { 
+                    newLines = File.ReadAllLines(path).ToList();
+                }
+
+                lines.AddRange(newLines);
+            }
+
+            lines.RemoveAll(str => str.ToUpper().StartsWith("#INSERT"));
+
+            return lines;
         }
 
         public static void FromText(string text)
