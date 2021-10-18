@@ -4141,8 +4141,9 @@ namespace Server.MirObjects
 
                     case "RELOADDROPS":
                         if (!IsGM) return;
-                        foreach (var t in Envir.MonsterInfoList)
-                            t.LoadDrops();
+
+                        Envir.ReloadDrops();
+
                         ReceiveChat("Drops Reloaded.", ChatType.Hint);
                         break;
 
@@ -17264,25 +17265,26 @@ namespace Server.MirObjects
 
                         foreach (DropInfo drop in Envir.FishingDrops.Where(x => x.Type == fishingCell.FishingAttribute))
                         {
-                            int rate = (int)(drop.Chance / (Settings.DropRate));
+                            var reward = drop.AttemptDrop(EXPOwner?.Stats[Stat.ItemDropRatePercent] ?? 0, EXPOwner?.Stats[Stat.GoldDropRatePercent] ?? 0);
 
-                            if (EXPOwner != null && EXPOwner.Stats[Stat.ItemDropRatePercent] > 0)
+                            if (reward != null)
                             {
-                                rate -= (rate * EXPOwner.Stats[Stat.ItemDropRatePercent]) / 100;
+                                foreach (var dropitems in reward.Items)
+                                {
+                                    dropItem = Envir.CreateDropItem(drop.Item);
+                                    break;
+                                }
                             }
-
-                            if (rate < 1) rate = 1;
-
-                            if (Envir.Random.Next(rate) != 0) continue;
-
-                            dropItem = Envir.CreateDropItem(drop.Item);
-                            break;
                         }
 
                         if (dropItem == null)
+                        {
                             ReceiveChat("Your fish got away!", ChatType.System);
+                        }
                         else if (FreeSpace(Info.Inventory) < 1)
+                        {
                             ReceiveChat(GameLanguage.NoBagSpace, ChatType.System);
+                        }
                         else
                         {
                             GainItem(dropItem);
@@ -17303,7 +17305,9 @@ namespace Server.MirObjects
                         cancel = true;
                     }
                     else
+                    {
                         ReceiveChat("Your fish got away!", ChatType.System);
+                    }
                 }
 
                 FishFound = false;

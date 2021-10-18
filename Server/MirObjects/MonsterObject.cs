@@ -942,57 +942,39 @@ namespace Server.MirObjects
         {
             if (CurrentMap.Info.NoDropMonster)
                 return;
+
             for (int i = 0; i < Info.Drops.Count; i++)
             {
                 DropInfo drop = Info.Drops[i];
 
-                int rate = (int)(drop.Chance / (Settings.DropRate));
+                var reward = drop.AttemptDrop(EXPOwner?.Stats[Stat.ItemDropRatePercent] ?? 0, EXPOwner?.Stats[Stat.GoldDropRatePercent] ?? 0);
 
-                if (EXPOwner != null && EXPOwner.Stats[Stat.ItemDropRatePercent] > 0)
+                if (reward != null)
                 {
-                    rate -= (rate * EXPOwner.Stats[Stat.ItemDropRatePercent]) / 100;
-                }
-
-                if (rate < 1) rate = 1;
-
-                if (Envir.Random.Next(rate) != 0) continue;
-
-                if (drop.Gold > 0)
-                {
-                    int lowerGoldRange = (int)(drop.Gold / 2);
-                    int upperGoldRange = (int)(drop.Gold + drop.Gold / 2);
-
-                    if (EXPOwner != null && EXPOwner.Stats[Stat.GoldDropRatePercent] > 0)
+                    if (reward.Gold > 0)
                     {
-                        lowerGoldRange += (lowerGoldRange * EXPOwner.Stats[Stat.GoldDropRatePercent]) / 100;
+                        DropGold(reward.Gold);
                     }
 
-                    if (lowerGoldRange > upperGoldRange) lowerGoldRange = upperGoldRange;
-
-                    int gold = Envir.Random.Next(lowerGoldRange, upperGoldRange);
-
-                    if (gold <= 0) continue;
-
-                    if (!DropGold((uint)gold)) return;
-                }
-                else
-                {
-                    UserItem item = Envir.CreateDropItem(drop.Item);
-
-                    if (item == null) continue;
-
-                    if (EXPOwner != null && EXPOwner.Race == ObjectType.Player)
+                    foreach (var dropItem in reward.Items)
                     {
-                        PlayerObject ob = (PlayerObject)EXPOwner;
+                        UserItem item = Envir.CreateDropItem(dropItem);
 
-                        if (ob.CheckGroupQuestItem(item))
+                        if (item == null) continue;
+
+                        if (EXPOwner != null && EXPOwner.Race == ObjectType.Player)
                         {
-                            continue;
-                        }
-                    }
+                            PlayerObject ob = (PlayerObject)EXPOwner;
 
-                    if (drop.QuestRequired) continue;
-                    if (!DropItem(item)) return;
+                            if (ob.CheckGroupQuestItem(item))
+                            {
+                                continue;
+                            }
+                        }
+
+                        if (drop.QuestRequired) continue;
+                        if (!DropItem(item)) return;
+                    }
                 }
             }
         }

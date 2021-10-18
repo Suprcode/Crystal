@@ -175,106 +175,6 @@ namespace Server.MirDatabase
             writer.Write(DropPath);
         }
 
-        public void LoadDrops()
-        {
-            Drops.Clear();
-
-            string path = Path.Combine(Settings.DropPath, Name + ".txt");
-
-            if (!string.IsNullOrEmpty(DropPath))
-            {
-                path = Path.Combine(Settings.DropPath, DropPath + ".txt");
-
-                if (!File.Exists(path))
-                {
-                    path = Path.Combine(Settings.DropPath, Name + ".txt");
-                }
-            }
-
-            if (!File.Exists(path))
-            {
-                string[] contents = new[]
-                    {
-                        ";Pots + Other", string.Empty, string.Empty,
-                        ";Weapons", string.Empty, string.Empty,
-                        ";Armour", string.Empty, string.Empty,
-                        ";Helmets", string.Empty, string.Empty,
-                        ";Necklace", string.Empty, string.Empty,
-                        ";Bracelets", string.Empty, string.Empty,
-                        ";Rings", string.Empty, string.Empty,
-                        ";Shoes", string.Empty, string.Empty,
-                        ";Belts", string.Empty, string.Empty,
-                        ";Stone",
-                    };
-                
-                File.WriteAllLines(path, contents);
-
-
-                return;
-            }
-
-            var lines = File.ReadAllLines(path).ToList();
-
-            lines = ParseInsert(lines);
-
-            for (int i = 0; i < lines.Count; i++)
-            {
-                if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
-
-                DropInfo drop = DropInfo.FromLine(lines[i]);
-                if (drop == null)
-                {
-                    MessageQueue.Enqueue(string.Format("Could not load Drop: {0}, Line {1}", Name, lines[i]));
-                    continue;
-                }
-
-                Drops.Add(drop);
-            }
-
-            Drops.Sort((drop1, drop2) =>
-                {
-                    if (drop1.Gold > 0 && drop2.Gold == 0)
-                        return 1;
-                    if (drop1.Gold == 0 && drop2.Gold > 0)
-                        return -1;
-
-                    return drop1.Item.Type.CompareTo(drop2.Item.Type);
-                });
-        }
-
-        private List<string> ParseInsert(List<string> lines)
-        {
-            Regex regex = new Regex($"#INSERT \\[(.*?)\\]", RegexOptions.IgnoreCase);
-
-            List<string> newLines = new List<string>();
-
-            for (int i = 0; i < lines.Count; i++)
-            {
-                var match = regex.Match(lines[i]);
-
-                if (!match.Success) continue;
-
-                var subPath = match.Groups[1].Value;
-
-                string path = Path.Combine(Settings.DropPath, subPath);
-
-                if (!File.Exists(path))
-                {
-                    MessageQueue.Enqueue(string.Format("Could not load Drop: {0}, INSERT {1}", Name, path));
-                }
-                else 
-                { 
-                    newLines = File.ReadAllLines(path).ToList();
-                }
-
-                lines.AddRange(newLines);
-            }
-
-            lines.RemoveAll(str => str.ToUpper().StartsWith("#INSERT"));
-
-            return lines;
-        }
-
         public static void FromText(string text)
         {
             string[] data = text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
@@ -341,7 +241,12 @@ namespace Server.MirDatabase
             return string.Format("{0}: {1}", Index, Name);
             //return string.Format("{0}", Name);
         }
+    }
 
+    public class DropRewardInfo
+    {
+        public List<ItemInfo> Items;
+        public uint Gold;
     }
 
     public class DropInfo
@@ -351,9 +256,15 @@ namespace Server.MirDatabase
             get { return Envir.Main; }
         }
 
+        protected static MessageQueue MessageQueue
+        {
+            get { return MessageQueue.Instance; }
+        }
+
         public int Chance;
         public ItemInfo Item;
         public uint Gold;
+        public List<DropInfo> GroupedDrops;
 
         public byte Type;
         public bool QuestRequired;
@@ -377,17 +288,225 @@ namespace Server.MirDatabase
             }
             else
             {
-                info.Item = Envir.GetItemInfo(parts[1]);
-                if (info.Item == null) return null;
-
-                if (parts.Length > 2)
+                if (parts[1].ToUpper() == "GROUP")
                 {
-                    string dropRequirement = parts[2];
-                    if (dropRequirement.ToUpper() == "Q") info.QuestRequired = true;
+                    info.GroupedDrops = new List<DropInfo>();
+                }
+                else
+                {
+                    info.Item = Envir.GetItemInfo(parts[1]);
+                    if (info.Item == null) return null;
+
+                    if (parts.Length > 2)
+                    {
+                        string dropRequirement = parts[2];
+                        if (dropRequirement.ToUpper() == "Q") info.QuestRequired = true;
+                    }
                 }
             }
 
             return info;
+        }
+
+        public static void Load(List<DropInfo> list, string name, string path, byte type = 0, bool createIfNotExists = true)
+        {
+            if (!File.Exists(path))
+            {
+                if (createIfNotExists)
+                {
+                    string[] contents = new[]
+                        {
+                        ";Pots + Other", string.Empty, string.Empty,
+                        ";Weapons", string.Empty, string.Empty,
+                        ";Armour", string.Empty, string.Empty,
+                        ";Helmets", string.Empty, string.Empty,
+                        ";Necklace", string.Empty, string.Empty,
+                        ";Bracelets", string.Empty, string.Empty,
+                        ";Rings", string.Empty, string.Empty,
+                        ";Shoes", string.Empty, string.Empty,
+                        ";Belts", string.Empty, string.Empty,
+                        ";Stone",
+                    };
+
+                    File.WriteAllLines(path, contents);
+                }
+
+                return;
+            }
+
+            var lines = File.ReadAllLines(path).ToList();
+
+            lines = ParseInsert(lines);
+
+            for (int i = 0; i < lines.Count; i++)
+            {
+                if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
+
+                DropInfo drop = DropInfo.FromLine(lines[i]);
+
+                if (drop == null)
+                {
+                    MessageQueue.Enqueue(string.Format("Could not load Drop: {0}, Line {1}", name, lines[i]));
+                    continue;
+                }
+
+                if (drop.GroupedDrops != null)
+                {
+                    ParseGroup(drop, name, lines, i + 1);
+                }
+
+                drop.Type = type;
+
+                list.Add(drop);
+            }
+
+            list.Sort((drop1, drop2) =>
+            {
+                if (drop1.Gold > 0 && drop2.Gold == 0)
+                    return 1;
+                if (drop1.Gold == 0 && drop2.Gold > 0)
+                    return -1;
+
+                if (drop1.Item == null || drop2.Item == null) return 0;
+
+                return drop1.Item.Type.CompareTo(drop2.Item.Type);
+            });
+        }
+
+        private static void ParseGroup(DropInfo parentDrop, string name, List<string> lines, int startLine)
+        {
+            bool start = false, finish = false;
+
+            var groupDrops = new List<DropInfo>();
+
+            for (int j = startLine; j < lines.Count; j++)
+            {
+                var line = lines[j].Trim();
+                lines[j] = "";
+
+                if (line.Trim() == ("{"))
+                {
+                    start = true;
+                    continue;
+                }
+
+                if (line.Trim() == ("}"))
+                {
+                    finish = true;
+                    break;
+                }
+
+                if (line.StartsWith(";") || string.IsNullOrWhiteSpace(line)) continue;
+
+                var drop = DropInfo.FromLine(line);
+
+                if (drop == null)
+                {
+                    MessageQueue.Enqueue(string.Format("Could not load Drop: {0}, Line {1}", name, line));
+                    continue;
+                }
+
+                if (drop.GroupedDrops != null)
+                {
+                    ParseGroup(drop, name, lines, j + 1);
+                }
+
+                groupDrops.Add(drop);
+            }
+
+            if (start && finish)
+            {
+                parentDrop.GroupedDrops = groupDrops;
+                return;
+            }
+        }
+
+        private static List<string> ParseInsert(List<string> lines)
+        {
+            Regex regex = new Regex($"#INSERT \\[(.*?)\\]", RegexOptions.IgnoreCase);
+
+            List<string> newLines = new List<string>();
+
+            for (int i = 0; i < lines.Count; i++)
+            {
+                var match = regex.Match(lines[i]);
+
+                if (!match.Success) continue;
+
+                var subPath = match.Groups[1].Value;
+
+                string path = Path.Combine(Settings.DropPath, subPath);
+
+                newLines = File.ReadAllLines(path).ToList();
+
+                lines.AddRange(newLines);
+            }
+
+            lines.RemoveAll(str => str.ToUpper().StartsWith("#INSERT"));
+
+            return lines;
+        }
+
+        public DropRewardInfo AttemptDrop(int itemDropRatePercentOffset = 0, int goldDropRatePercentOffset = 0)
+        {
+            int rate = (int)(Chance / (Settings.DropRate));
+
+            if (itemDropRatePercentOffset > 0)
+            {
+                rate -= (rate * itemDropRatePercentOffset) / 100;
+            }
+
+            if (rate < 1) rate = 1;
+
+            if (Envir.Random.Next(rate) != 0)
+            {
+                return null;
+            }
+
+            uint gold = 0;
+
+            if (Gold > 0)
+            {
+                int lowerGoldRange = (int)(Gold / 2);
+                int upperGoldRange = (int)(Gold + Gold / 2);
+
+                if (goldDropRatePercentOffset > 0)
+                {
+                    lowerGoldRange += (lowerGoldRange * goldDropRatePercentOffset) / 100;
+                }
+
+                if (lowerGoldRange > upperGoldRange) lowerGoldRange = upperGoldRange;
+
+                gold = (uint)Envir.Random.Next(lowerGoldRange, upperGoldRange);
+            }
+
+            var items = new List<ItemInfo>();
+
+            if (Item != null)
+            {
+                items.Add(Item);
+            }
+
+            if (GroupedDrops != null)
+            {
+                foreach (var item in GroupedDrops)
+                {
+                    var reward = item.AttemptDrop(itemDropRatePercentOffset, goldDropRatePercentOffset);
+
+                    if (reward != null)
+                    {
+                        gold += reward.Gold;
+
+                        items.AddRange(reward.Items);
+                    }
+                }
+            }
+
+            return new DropRewardInfo
+            {
+                Gold = gold,
+                Items = items
+            };
         }
     }
 }

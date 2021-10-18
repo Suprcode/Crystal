@@ -1445,172 +1445,6 @@ namespace Server.MirEnvir
             }
         }
 
-        public void LoadFishingDrops()
-        {
-            FishingDrops.Clear();
-            
-            for (byte i = 0; i <= 19; i++)
-            {
-                var path = Path.Combine(Settings.DropPath, Settings.FishingDropFilename + ".txt");
-
-                path = path.Replace("00", i.ToString("D2"));
-
-                if (!File.Exists(path) && i < 2)
-                {
-                    var newfile = File.Create(path);
-                    newfile.Close();
-                }
-
-                if (!File.Exists(path)) continue;
-
-                var lines = File.ReadAllLines(path);
-
-                for (var j = 0; j < lines.Length; j++)
-                {
-                    if (lines[j].StartsWith(";") || string.IsNullOrWhiteSpace(lines[j])) continue;
-
-                    var drop = DropInfo.FromLine(lines[j]);
-                    if (drop == null)
-                    {
-                        MessageQueue.Enqueue($"Could not load fishing drop: {lines[j]}");
-                        continue;
-                    }
-
-                    drop.Type = i;
-
-                    FishingDrops.Add(drop);
-                }
-
-                FishingDrops.Sort((drop1, drop2) =>
-                {
-                    if (drop1.Chance > 0 && drop2.Chance == 0)
-                        return 1;
-                    if (drop1.Chance == 0 && drop2.Chance > 0)
-                        return -1;
-
-                    return drop1.Item.Type.CompareTo(drop2.Item.Type);
-                });
-            }  
-        }
-
-        public void LoadAwakeningMaterials()
-        {
-            AwakeningDrops.Clear();
-
-            var path = Path.Combine(Settings.DropPath, Settings.AwakeningDropFilename + ".txt");
-
-            if (!File.Exists(path))
-            {
-                var newfile = File.Create(path);
-                newfile.Close();
-
-            }
-
-            var lines = File.ReadAllLines(path);
-
-            for (var i = 0; i < lines.Length; i++)
-            {
-                if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
-
-                var drop = DropInfo.FromLine(lines[i]);
-                if (drop == null)
-                {
-                    MessageQueue.Enqueue($"Could not load Awakening drop: {lines[i]}");
-                    continue;
-                }
-
-                AwakeningDrops.Add(drop);
-            }
-
-            AwakeningDrops.Sort((drop1, drop2) =>
-            {
-                if (drop1.Chance > 0 && drop2.Chance == 0)
-                    return 1;
-                if (drop1.Chance == 0 && drop2.Chance > 0)
-                    return -1;
-
-                return drop1.Item.Type.CompareTo(drop2.Item.Type);
-            });
-        }
-
-        public void LoadStrongBoxDrops()
-        {
-            StrongboxDrops.Clear();
-
-            var path = Path.Combine(Settings.DropPath, Settings.StrongboxDropFilename + ".txt");
-
-            if (!File.Exists(path))
-            {
-                var newfile = File.Create(path);
-                newfile.Close();
-            }
-
-            var lines = File.ReadAllLines(path);
-
-            for (var i = 0; i < lines.Length; i++)
-            {
-                if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
-
-                var drop = DropInfo.FromLine(lines[i]);
-                if (drop == null)
-                {
-                    MessageQueue.Enqueue($"Could not load strongbox drop: {lines[i]}");
-                    continue;
-                }
-
-                StrongboxDrops.Add(drop);
-            }
-
-            StrongboxDrops.Sort((drop1, drop2) =>
-            {
-                if (drop1.Chance > 0 && drop2.Chance == 0)
-                    return 1;
-                if (drop1.Chance == 0 && drop2.Chance > 0)
-                    return -1;
-
-                return drop1.Item.Type.CompareTo(drop2.Item.Type);
-            });
-        }
-
-        public void LoadBlackStoneDrops()
-        {
-            BlackstoneDrops.Clear();
-
-            var path = Path.Combine(Settings.DropPath, Settings.BlackstoneDropFilename + ".txt");
-
-            if (!File.Exists(path))
-            {
-                var newfile = File.Create(path);
-                newfile.Close();
-
-            }
-
-            var lines = File.ReadAllLines(path);
-
-            for (var i = 0; i < lines.Length; i++)
-            {
-                if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
-
-                var drop = DropInfo.FromLine(lines[i]);
-                if (drop == null)
-                {
-                    MessageQueue.Enqueue($"Could not load blackstone drop: {lines[i]}");
-                    continue;
-                }
-
-                BlackstoneDrops.Add(drop);
-            }
-
-            BlackstoneDrops.Sort((drop1, drop2) =>
-            {
-                if (drop1.Chance > 0 && drop2.Chance == 0)
-                    return 1;
-                if (drop1.Chance == 0 && drop2.Chance > 0)
-                    return -1;
-
-                return drop1.Item.Type.CompareTo(drop2.Item.Type);
-            });
-        }
 
         public void LoadConquests()
         {
@@ -1926,14 +1760,7 @@ namespace Server.MirEnvir
                     StartItems.Add(ItemInfoList[i]);
             }
 
-            for (var i = 0; i < MonsterInfoList.Count; i++)
-                MonsterInfoList[i].LoadDrops();
-
-            LoadFishingDrops();
-            LoadAwakeningMaterials();
-            LoadStrongBoxDrops();
-            LoadBlackStoneDrops();
-            MessageQueue.Enqueue("Drops Loaded.");
+            ReloadDrops();
 
             LoadDisabledChars();
             LoadLineMessages();
@@ -3429,9 +3256,39 @@ namespace Server.MirEnvir
 
         public void ReloadDrops()
         {
-            foreach (var item in MonsterInfoList)
-                item.LoadDrops();
-            MessageQueue.Enqueue("Drops reloaded...");
+            for (var i = 0; i < MonsterInfoList.Count; i++)
+            {
+                string path = Path.Combine(Settings.DropPath, MonsterInfoList[i].Name + ".txt");
+
+                if (!string.IsNullOrEmpty(MonsterInfoList[i].DropPath))
+                {
+                    path = Path.Combine(Settings.DropPath, MonsterInfoList[i].DropPath + ".txt");
+                }
+
+                MonsterInfoList[i].Drops.Clear();
+
+                DropInfo.Load(MonsterInfoList[i].Drops, MonsterInfoList[i].Name, path, 0, true);
+            }
+
+            FishingDrops.Clear();
+            for (int i = 0; i < 19; i++)
+            {
+                var path = Path.Combine(Settings.DropPath, Settings.FishingDropFilename + ".txt");
+                path = path.Replace("00", i.ToString("D2"));
+
+                DropInfo.Load(FishingDrops, MonsterInfoList[i].Name, path, (byte)i, i < 2);
+            }
+
+            AwakeningDrops.Clear();
+            DropInfo.Load(AwakeningDrops, "Awakening", Path.Combine(Settings.DropPath, Settings.AwakeningDropFilename + ".txt"));
+
+            StrongboxDrops.Clear();
+            DropInfo.Load(StrongboxDrops, "StrongBox", Path.Combine(Settings.DropPath, Settings.StrongboxDropFilename + ".txt"));
+
+            BlackstoneDrops.Clear();
+            DropInfo.Load(BlackstoneDrops, "Blackstone", Path.Combine(Settings.DropPath, Settings.BlackstoneDropFilename + ".txt"));
+
+            MessageQueue.Enqueue("Drops Loaded.");
         }
     }
 }
