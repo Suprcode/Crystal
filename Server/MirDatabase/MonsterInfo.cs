@@ -287,30 +287,31 @@ namespace Server.MirDatabase
             DropInfo info = new DropInfo();
 
             if (!int.TryParse(parts[0].Substring(2), out info.Chance)) return null;
+
             if (string.Compare(parts[1], "Gold", StringComparison.OrdinalIgnoreCase) == 0)
             {
                 if (parts.Length < 3) return null;
                 if (!uint.TryParse(parts[2], out info.Gold) || info.Gold == 0) return null;
             }
+            else if (parts[1].ToUpper().StartsWith("GROUP"))
+            {
+                info.GroupedDrop = new GroupDropInfo
+                {
+                    Random = parts[1].EndsWith("*"),
+                    First = parts[1].EndsWith("^")
+                };
+            }
             else
             {
-                if (parts[1].ToUpper().StartsWith("GROUP"))
-                {
-                    info.GroupedDrop = new GroupDropInfo
-                    {
-                        Random = parts[1].EndsWith("*"),
-                        First = parts[1].EndsWith("^")
-                    };
-                }
-                else
-                {
-                    info.Item = Envir.GetItemInfo(parts[1]);
-                    if (info.Item == null) return null;
+                info.Item = Envir.GetItemInfo(parts[1]);
+                if (info.Item == null) return null;
 
-                    if (parts.Length > 2)
+                if (parts.Length > 2)
+                {
+                    string dropRequirement = parts[2];
+                    if (dropRequirement.ToUpper() == "Q")
                     {
-                        string dropRequirement = parts[2];
-                        if (dropRequirement.ToUpper() == "Q") info.QuestRequired = true;
+                        info.QuestRequired = true;
                     }
                 }
             }
@@ -427,7 +428,6 @@ namespace Server.MirDatabase
             if (start && finish)
             {
                 parentDrop.GroupedDrop.AddRange(drops);
-                return;
             }
         }
 
@@ -474,6 +474,7 @@ namespace Server.MirDatabase
             }
 
             uint gold = 0;
+            var items = new List<ItemInfo>();
 
             if (Gold > 0)
             {
@@ -489,15 +490,11 @@ namespace Server.MirDatabase
 
                 gold = (uint)Envir.Random.Next(lowerGoldRange, upperGoldRange);
             }
-
-            var items = new List<ItemInfo>();
-
-            if (Item != null)
+            else if (Item != null)
             {
                 items.Add(Item);
             }
-
-            if (GroupedDrop != null)
+            else if (GroupedDrop != null)
             {
                 var tempItems = new List<ItemInfo>();
 
