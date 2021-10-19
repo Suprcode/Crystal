@@ -249,6 +249,12 @@ namespace Server.MirDatabase
         public uint Gold;
     }
 
+    public class GroupDropInfo : List<DropInfo>
+    {
+        public bool Random;
+        public bool First;
+    }
+
     public class DropInfo
     {
         protected static Envir Envir
@@ -264,7 +270,7 @@ namespace Server.MirDatabase
         public int Chance;
         public ItemInfo Item;
         public uint Gold;
-        public List<DropInfo> GroupedDrops;
+        public GroupDropInfo GroupedDrop;
 
         public byte Type;
         public bool QuestRequired;
@@ -288,9 +294,13 @@ namespace Server.MirDatabase
             }
             else
             {
-                if (parts[1].ToUpper() == "GROUP")
+                if (parts[1].ToUpper().StartsWith("GROUP"))
                 {
-                    info.GroupedDrops = new List<DropInfo>();
+                    info.GroupedDrop = new GroupDropInfo
+                    {
+                        Random = parts[1].EndsWith("*"),
+                        First = parts[1].EndsWith("^")
+                    };
                 }
                 else
                 {
@@ -350,7 +360,7 @@ namespace Server.MirDatabase
                     continue;
                 }
 
-                if (drop.GroupedDrops != null)
+                if (drop.GroupedDrop != null)
                 {
                     ParseGroup(drop, name, lines, i + 1);
                 }
@@ -377,7 +387,7 @@ namespace Server.MirDatabase
         {
             bool start = false, finish = false;
 
-            var groupDrops = new List<DropInfo>();
+            var drops = new List<DropInfo>();
 
             for (int j = startLine; j < lines.Count; j++)
             {
@@ -406,17 +416,17 @@ namespace Server.MirDatabase
                     continue;
                 }
 
-                if (drop.GroupedDrops != null)
+                if (drop.GroupedDrop != null)
                 {
                     ParseGroup(drop, name, lines, j + 1);
                 }
 
-                groupDrops.Add(drop);
+                drops.Add(drop);
             }
 
             if (start && finish)
             {
-                parentDrop.GroupedDrops = groupDrops;
+                parentDrop.GroupedDrop.AddRange(drops);
                 return;
             }
         }
@@ -487,9 +497,11 @@ namespace Server.MirDatabase
                 items.Add(Item);
             }
 
-            if (GroupedDrops != null)
+            if (GroupedDrop != null)
             {
-                foreach (var item in GroupedDrops)
+                var tempItems = new List<ItemInfo>();
+
+                foreach (var item in GroupedDrop)
                 {
                     var reward = item.AttemptDrop(itemDropRatePercentOffset, goldDropRatePercentOffset);
 
@@ -497,8 +509,25 @@ namespace Server.MirDatabase
                     {
                         gold += reward.Gold;
 
-                        items.AddRange(reward.Items);
+                        tempItems.AddRange(reward.Items);
+
+                        if (GroupedDrop.First)
+                        {
+                            break;
+                        }
                     }
+                }
+
+                if (GroupedDrop.Random)
+                {
+                    if (tempItems.Count > 0)
+                    {
+                        items.Add(tempItems[Envir.Random.Next(tempItems.Count)]);
+                    }
+                }
+                else
+                {
+                    items.AddRange(tempItems);
                 }
             }
 
