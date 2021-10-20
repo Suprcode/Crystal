@@ -104,6 +104,7 @@ namespace Server.MirObjects
         ExpireTimer,
         UnequipItem,
         RollDie,
-        RollYut
+        RollYut,
+        Drop
     }
 }

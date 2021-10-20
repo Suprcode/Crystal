@@ -1080,6 +1080,21 @@ namespace Server.MirObjects
 
                     acts.Add(new NPCActions(ActionType.RollYut, parts[1], parts[2]));
                     break;
+
+                case "DROP":
+                    if (parts.Length < 2) return;
+
+                    quoteMatch = regexQuote.Match(line);
+
+                    listPath = parts[1];
+
+                    if (quoteMatch.Success)
+                        listPath = quoteMatch.Groups[1].Captures[0].Value;
+
+                    fileName = Path.Combine(Settings.DropPath, listPath);
+
+                    acts.Add(new NPCActions(ActionType.Drop, fileName));
+                    break;
             }
         }
 
@@ -3859,6 +3874,50 @@ namespace Server.MirObjects
 
                             player.NPCData["NPCRollResult"] = result;
                             player.Enqueue(p);
+                        }
+                        break;
+                    case ActionType.Drop:
+                        {
+                            var path = param[0];
+                            var drops = new List<DropInfo>();
+                            DropInfo.Load(drops, "NPC", path, 0, false);
+
+                            foreach (var drop in drops)
+                            {
+                                var reward = drop.AttemptDrop(player?.Stats[Stat.ItemDropRatePercent] ?? 0, player?.Stats[Stat.GoldDropRatePercent] ?? 0);
+
+                                if (reward != null)
+                                {
+                                    if (reward.Gold > 0)
+                                    {
+                                        player.GainGold(reward.Gold);
+                                    }
+
+                                    foreach (var dropItem in reward.Items)
+                                    {
+                                        UserItem item = Envir.CreateDropItem(dropItem);
+
+                                        if (item == null) continue;
+
+                                        if (player != null && player.Race == ObjectType.Player)
+                                        {
+                                            PlayerObject ob = (PlayerObject)player;
+
+                                            if (ob.CheckGroupQuestItem(item))
+                                            {
+                                                continue;
+                                            }
+                                        }
+
+                                        if (drop.QuestRequired) continue;
+
+                                        if (player.CanGainItem(item, false))
+                                        {
+                                            player.GainItem(item);
+                                        }
+                                    }
+                                }
+                            }
                         }
                         break;
                 }
