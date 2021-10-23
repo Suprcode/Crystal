@@ -2462,6 +2462,19 @@ namespace Server.MirObjects
                 ExplosionInflictedTime = Envir.Time + 4000;
                 Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion });
             }
+            else if (p.PType == PoisonType.Dazed)
+            {
+                Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Stunned, Time = (uint)(p.Duration * p.TickSpeed) });
+            }
+            else if (p.PType == PoisonType.Blindness)
+            {
+                var stats = new Stats
+                {
+                    [Stat.Accuracy] = p.Value * -1
+                };
+
+                AddBuff(BuffType.Blindness, Caster, (int)(p.Duration * p.TickSpeed), stats);
+            }
 
             PoisonList.Add(p);
         }
@@ -3169,11 +3182,6 @@ namespace Server.MirObjects
                 if (Envir.Random.Next(chanceToPoison) == 0)
                 {
                     target.ApplyPoison(new Poison { Owner = this, Duration = poisonDuration, PType = poison, Value = value, TickSpeed = poisonTickSpeed }, this, noResist, ignoreDefence);
-
-                    if (poison == PoisonType.Dazed)
-                    {
-                        Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.Stunned, Time = (uint)(poisonDuration * poisonTickSpeed) });
-                    }
                 }
             }
         }

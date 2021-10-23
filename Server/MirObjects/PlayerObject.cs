@@ -10441,8 +10441,26 @@ namespace Server.MirObjects
                 Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion });
                 ReceiveChat("You are a walking explosive.", ChatType.System);
             }
-            else
+            else if (p.PType == PoisonType.Dazed)
+            {
+                Enqueue(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Stunned, Time = (uint)(p.Duration * p.TickSpeed) });
+                Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Stunned, Time = (uint)(p.Duration * p.TickSpeed) });
                 ReceiveChat(GameLanguage.BeenPoisoned, ChatType.System2);
+            }
+            else if (p.PType == PoisonType.Blindness)
+            {
+                var stats = new Stats
+                {
+                    [Stat.Accuracy] = p.Value * -1
+                };
+
+                AddBuff(BuffType.Blindness, Caster, (int)(p.Duration * p.TickSpeed), stats);
+                ReceiveChat(GameLanguage.BeenPoisoned, ChatType.System2);
+            }
+            else
+            {
+                ReceiveChat(GameLanguage.BeenPoisoned, ChatType.System2);
+            }
 
             PoisonList.Add(p);
         }

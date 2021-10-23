@@ -150,8 +150,6 @@ public enum QuestState : byte
 
 public enum QuestAction : byte
 {
-    Taken,
-    Complete,
     TimeExpired
 }
 
@@ -1308,6 +1306,7 @@ public enum BuffType : byte
     PowerBeadBuff,
     HornedWarriorShield,
     HornedCommanderShield,
+    Blindness,
 
     //Special
     GameMaster = 100,
