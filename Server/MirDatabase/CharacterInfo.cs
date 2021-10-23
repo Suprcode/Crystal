@@ -250,7 +250,9 @@ namespace Server.MirDatabase
             {
                 QuestProgressInfo quest = new QuestProgressInfo(reader);
                 if (Envir.BindQuest(quest))
+                {
                     CurrentQuests.Add(quest);
+                }
             }
 
             count = reader.ReadInt32();
@@ -415,7 +417,9 @@ namespace Server.MirDatabase
 
             writer.Write(CurrentQuests.Count);
             for (int i = 0; i < CurrentQuests.Count; i++)
+            {
                 CurrentQuests[i].Save(writer);
+            }
 
             writer.Write(Buffs.Count);
             for (int i = 0; i < Buffs.Count; i++)

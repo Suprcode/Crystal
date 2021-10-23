@@ -66,6 +66,8 @@
             this.ExportButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
             this.ExportSelectedButton = new System.Windows.Forms.Button();
+            this.TimeLimitTextBox = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.QuestInfoPanel.SuspendLayout();
@@ -99,6 +101,8 @@
             this.QuestInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.QuestInfoPanel.Controls.Add(this.label5);
+            this.QuestInfoPanel.Controls.Add(this.TimeLimitTextBox);
             this.QuestInfoPanel.Controls.Add(this.label4);
             this.QuestInfoPanel.Controls.Add(this.RequiredMaxLevelTextBox);
             this.QuestInfoPanel.Controls.Add(this.label3);
@@ -455,6 +459,23 @@
             this.ExportSelectedButton.UseVisualStyleBackColor = true;
             this.ExportSelectedButton.Click += new System.EventHandler(this.ExportSelected_Click);
             // 
+            // TimeLimitTextBox
+            // 
+            this.TimeLimitTextBox.Location = new System.Drawing.Point(456, 136);
+            this.TimeLimitTextBox.Name = "TimeLimitTextBox";
+            this.TimeLimitTextBox.Size = new System.Drawing.Size(121, 20);
+            this.TimeLimitTextBox.TabIndex = 58;
+            this.TimeLimitTextBox.TextChanged += new System.EventHandler(this.TimeLimitTextBox_TextChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(346, 139);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(108, 13);
+            this.label5.TabIndex = 59;
+            this.label5.Text = "Time Limit (Seconds):";
+            // 
             // QuestInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -520,5 +541,7 @@
         private System.Windows.Forms.TextBox QFlagTextBox;
         private System.Windows.Forms.TextBox RequiredMaxLevelTextBox;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox TimeLimitTextBox;
     }
 }

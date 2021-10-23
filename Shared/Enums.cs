@@ -148,6 +148,13 @@ public enum QuestState : byte
     Remove
 }
 
+public enum QuestAction : byte
+{
+    Taken,
+    Complete,
+    TimeExpired
+}
+
 public enum DefaultNPCType : byte
 {
     Login,

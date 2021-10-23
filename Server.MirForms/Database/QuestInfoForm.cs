@@ -116,6 +116,8 @@ namespace Server
             RequiredQuestComboBox.SelectedItem = tempQuest;  //test
             RequiredClassComboBox.SelectedItem = info.RequiredClass;
 
+            TimeLimitTextBox.Text = info.TimeLimitInSeconds.ToString();
+
             for (int i = 1; i < _selectedQuestInfos.Count; i++)
             {
                 info = _selectedQuestInfos[i];
@@ -140,6 +142,8 @@ namespace Server
 
                 if (RequiredClassComboBox.SelectedItem != null)
                     if ((RequiredClass)RequiredClassComboBox.SelectedItem != info.RequiredClass) RequiredClassComboBox.SelectedItem = null;
+
+                if (TimeLimitTextBox.SelectedText != info.TimeLimitInSeconds.ToString()) TimeLimitTextBox.Text = "0";
             }
         }
 
@@ -395,7 +399,21 @@ namespace Server
             }
         }
 
+        private void TimeLimitTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
 
+            int temp;
 
+            if (!int.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            for (int i = 0; i < _selectedQuestInfos.Count; i++)
+                _selectedQuestInfos[i].TimeLimitInSeconds = temp;
+        }
     }
 }

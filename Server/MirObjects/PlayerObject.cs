@@ -1127,6 +1127,9 @@ namespace Server.MirObjects
                 case DelayedType.DamageIndicator:
                     CompleteDamageIndicator(action.Params);
                     break;
+                case DelayedType.Quest:
+                    CompleteQuest(action.Params);
+                    break;
             }
         }
 
@@ -2065,7 +2068,7 @@ namespace Server.MirObjects
 
             for (int i = 0; i < CurrentQuests.Count; i++)
             {
-                CurrentQuests[i].ResyncTasks();
+                CurrentQuests[i].Init(this);
                 SendUpdateQuest(CurrentQuests[i], QuestState.Add);
             }
 
@@ -4805,12 +4808,10 @@ namespace Server.MirObjects
                             return;
                         }
 
-                        foreach (var quest in player.CurrentQuests)
+                        for (int i = player.CurrentQuests.Count - 1; i >= 0; i--)
                         {
-                            SendUpdateQuest(quest, QuestState.Remove);
+                            SendUpdateQuest(player.CurrentQuests[i], QuestState.Remove);
                         }
-
-                        player.CurrentQuests.Clear();
 
                         player.CompletedQuests.Clear();
                         player.GetCompletedQuests();
@@ -4842,18 +4843,21 @@ namespace Server.MirObjects
                         if (activeQuest != null)
                         {
                             player.SendUpdateQuest(activeQuest, QuestState.Remove);
-                            player.CurrentQuests.Remove(activeQuest);
                         }
 
                         switch (questState)
                         {
                             case 0: //cancel
                                 if (player.CompletedQuests.Contains(questid))
+                                {
                                     player.CompletedQuests.Remove(questid);
+                                }
                                 break;
                             case 1: //complete
                                 if (!player.CompletedQuests.Contains(questid))
+                                {
                                     player.CompletedQuests.Add(questid);
+                                }
                                 break;
                         }
 
@@ -9474,6 +9478,29 @@ namespace Server.MirObjects
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
             target.BroadcastDamageIndicator(type);
+        }
+
+        private void CompleteQuest(IList<object> data)
+        {
+            QuestProgressInfo quest = (QuestProgressInfo)data[0];
+            QuestAction questAction = (QuestAction)data[1];
+            bool ignoreIfComplete = (bool)data[2];
+
+            if (quest == null) return;
+
+            switch (questAction)
+            {
+                case QuestAction.TimeExpired:
+                    {
+                        if (ignoreIfComplete && quest.Completed)
+                        {
+                            return;
+                        }
+
+                        AbandonQuest(quest.Info.Index);
+                    }
+                    break;
+            }
         }
 
         private void CompleteNPC(IList<object> data)
@@ -17400,7 +17427,7 @@ namespace Server.MirObjects
         {
             bool canAccept = true;
 
-            if (CurrentQuests.Exists(e => e.Info.Index == index)) return; //e.Info.NpcIndex == npcIndex && 
+            if (CurrentQuests.Exists(e => e.Index == index)) return; //e.Info.NpcIndex == npcIndex && 
 
             QuestInfo info = Envir.QuestInfoList.FirstOrDefault(d => d.Index == index);
 
@@ -17486,9 +17513,10 @@ namespace Server.MirObjects
                 }
             }
 
-            QuestProgressInfo quest = new QuestProgressInfo(index) { StartDateTime = DateTime.Now };
+            QuestProgressInfo quest = new QuestProgressInfo(index);
 
-            CurrentQuests.Add(quest);
+            quest.Init(this);
+           
             SendUpdateQuest(quest, QuestState.Add, true);
 
             CallDefaultNPC(DefaultNPCType.OnAcceptQuest, index);
@@ -17578,7 +17606,6 @@ namespace Server.MirObjects
                 GetCompletedQuests();
             }
 
-            CurrentQuests.Remove(quest);
             SendUpdateQuest(quest, QuestState.Remove);
 
             if (quest.Info.CarryItems.Count > 0)
@@ -17612,8 +17639,7 @@ namespace Server.MirObjects
             QuestProgressInfo quest = CurrentQuests.FirstOrDefault(e => e.Info.Index == questIndex);
 
             if (quest == null) return;
-
-            CurrentQuests.Remove(quest);
+ 
             SendUpdateQuest(quest, QuestState.Remove);
 
             RecalculateQuestBag();
@@ -17781,6 +17807,24 @@ namespace Server.MirObjects
         public void SendUpdateQuest(QuestProgressInfo quest, QuestState state, bool trackQuest = false)
         {
             quest.CheckCompleted();
+
+            switch (state)
+            {
+                case QuestState.Add:
+                    if (!CurrentQuests.Contains(quest))
+                    {
+                        CurrentQuests.Add(quest);
+                    }
+                    quest.SetTimer();
+                    break;
+                case QuestState.Remove:
+                    if (CurrentQuests.Contains(quest))
+                    {
+                        CurrentQuests.Remove(quest);
+                    }
+                    quest.RemoveTimer();
+                    break;
+            }
 
             Enqueue(new S.ChangeQuest
             {

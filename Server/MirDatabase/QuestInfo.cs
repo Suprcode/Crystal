@@ -66,6 +66,8 @@ namespace Server.MirDatabase
 
         public QuestType Type;
 
+        public int TimeLimitInSeconds = 0;
+
         public List<QuestItemTask> CarryItems = new List<QuestItemTask>(); 
 
         public List<QuestKillTask> KillTasks = new List<QuestKillTask>();
@@ -102,6 +104,11 @@ namespace Server.MirDatabase
             ItemMessage = reader.ReadString();
             FlagMessage = reader.ReadString();
 
+            if (Envir.LoadVersion > 90)
+            {
+                TimeLimitInSeconds = reader.ReadInt32();
+            }
+
             LoadInfo();
         }
 
@@ -120,6 +127,7 @@ namespace Server.MirDatabase
             writer.Write(KillMessage);
             writer.Write(ItemMessage);
             writer.Write(FlagMessage);
+            writer.Write(TimeLimitInSeconds);
         }
 
         public void LoadInfo(bool clear = false)
@@ -390,6 +398,7 @@ namespace Server.MirDatabase
                 ClassNeeded = RequiredClass,
                 QuestNeeded = RequiredQuest,
                 Type = Type,
+                TimeLimitInSeconds = TimeLimitInSeconds,
                 RewardGold = GoldReward,
                 RewardExp = ExpReward,
                 RewardCredit = CreditReward,
