@@ -20670,6 +20670,11 @@ namespace Server.MirObjects
         {
             Enqueue(new S.ExpireTimer { Key = key });
         }
+
+        public void SetCompass(Point location)
+        {
+            Enqueue(new S.SetCompass { Location = location });
+        }
     }
 }
 

@@ -10,6 +10,7 @@ namespace Client
         public const long CleanDelay = 600000;
         public static int ScreenWidth = 1024, ScreenHeight = 768;
         private static InIReader Reader = new InIReader(@".\Mir2Config.ini");
+        private static InIReader QuestTrackingReader = new InIReader(Path.Combine(UserDataPath, @".\QuestTracking.ini"));
 
         private static bool _useTestConfig;
         public static bool UseTestConfig
@@ -57,7 +58,8 @@ namespace Client
                             TransformMountsPath = @".\Data\TransformRide2\",
                             TransformEffectPath = @".\Data\TransformEffect\",
                             TransformWeaponEffectPath = @".\Data\TransformWeaponEffect\",
-                            MouseCursorPath = @".\Data\Cursors\";
+                            MouseCursorPath = @".\Data\Cursors\",
+                            UserDataPath = @".\Data\UserData\";
 
         //Logs
         public static bool LogErrors = true;
@@ -355,26 +357,23 @@ namespace Client
             Reader.Write("Launcher", "AutoStart", P_AutoStart);
         }
 
-        public static void LoadTrackedQuests(string Charname)
+        public static void LoadTrackedQuests(string charName)
         {
             //Quests
             for (int i = 0; i < TrackedQuests.Length; i++)
             {
-                TrackedQuests[i] = Reader.ReadInt32("Q-" + Charname, "Quest-" + i.ToString(), -1);
+                TrackedQuests[i] = QuestTrackingReader.ReadInt32(charName, "Quest-" + i.ToString(), -1);
             }
         }
 
-        public static void SaveTrackedQuests(string Charname)
+        public static void SaveTrackedQuests(string charName)
         {
             //Quests
             for (int i = 0; i < TrackedQuests.Length; i++)
             {
-                Reader.Write("Q-" + Charname, "Quest-" + i.ToString(), TrackedQuests[i]);
+                QuestTrackingReader.Write(charName, "Quest-" + i.ToString(), TrackedQuests[i]);
             }
         }
-
-
-      
     }
 
     

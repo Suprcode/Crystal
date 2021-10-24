@@ -5900,4 +5900,25 @@ namespace ServerPackets
             writer.Write(AutoRoll);
         }
     }
+
+
+    public sealed class SetCompass : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.SetCompass; } }
+
+        public Point Location;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            var x = reader.ReadInt32();
+            var y = reader.ReadInt32();
+
+            Location = new Point(x, y);
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Location.X);
+            writer.Write(Location.Y);
+        }
+    }
 }

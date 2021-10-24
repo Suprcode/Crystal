@@ -811,7 +811,6 @@ namespace Client.MirScenes.Dialogs
             Movable = true;
             Location = new Point(0, 100);
             Sort = false;
-            //Size = new Size(150, 50);
         }
 
         public void DisplayQuests()
@@ -876,6 +875,8 @@ namespace Client.MirScenes.Dialogs
 
                 y += 30;
             }
+
+            Size = new Size(150, 20 + y + 30);
 
             Show();
         }

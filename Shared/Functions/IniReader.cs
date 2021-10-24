@@ -15,6 +15,11 @@ public class InIReader
     {
         _fileName = fileName;
 
+        if (!Directory.Exists(Path.GetDirectoryName(fileName)))
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(fileName));
+        }
+
         _contents = new List<string>();
         try
         {

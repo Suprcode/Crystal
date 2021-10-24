@@ -1616,7 +1616,8 @@ public enum ServerPacketIds : short
     SetTimer,
     ExpireTimer,
     UpdateNotice,
-    Roll
+    Roll,
+    SetCompass
 }
 
 public enum ClientPacketIds : short

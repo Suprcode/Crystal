@@ -1784,6 +1784,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.Roll:
                     Roll((S.Roll)p);
                     break;
+                case (short)ServerPacketIds.SetCompass:
+                    SetCompass((S.SetCompass)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
@@ -8842,6 +8845,11 @@ namespace Client.MirScenes
         private void ExpireTimer(S.ExpireTimer p)
         {
             GameScene.Scene.TimerControl.ExpireTimer(p.Key);
+        }
+
+        private void SetCompass(S.SetCompass p)
+        {
+            GameScene.Scene.CompassControl.SetPoint(p.Location);
         }
 
         private void Roll(S.Roll p)

@@ -77,8 +77,6 @@ namespace Server.MirDatabase
                     Info = flag
                 });
             }
-
-            CheckCompleted();
         }
 
         public QuestProgressInfo(BinaryReader reader)
@@ -338,42 +336,6 @@ namespace Server.MirDatabase
 
         #region Process Quest Task
 
-        public void SetTimer()
-        {
-            if (Owner == null)
-            {
-                return;
-            }
-
-            if (Info.TimeLimitInSeconds > 0)
-            {
-                var secondsSinceStarted = (int)(DateTime.Now - StartDateTime).TotalSeconds;
-
-                var remainingSeconds = Info.TimeLimitInSeconds - secondsSinceStarted;
-
-                if (remainingSeconds > 0)
-                {
-                    Owner.SetTimer($"Quest-{Index}", remainingSeconds, 1);
-                }
-
-                DelayedAction action = new DelayedAction(DelayedType.Quest, Envir.Time + (remainingSeconds * 1000), this, QuestAction.TimeExpired, true);
-                Owner.ActionList.Add(action);
-            }
-        }
-
-        public void RemoveTimer()
-        {
-            if (Owner == null)
-            {
-                return;
-            }
-
-            if (Info.TimeLimitInSeconds > 0)
-            {
-                Owner.ExpireTimer($"Quest-{Index}");
-            }
-        }
-
         public void ProcessKill(MonsterInfo mInfo)
         {
             if (Info.KillTasks.Count < 1) return;
@@ -477,7 +439,7 @@ namespace Server.MirDatabase
             {
                 if (string.IsNullOrEmpty(Info.ItemTasks[i].Message))
                 {
-                    TaskList.Add(string.Format("Collect {0}: {1}/{2} {3}", Info.ItemTasks[i].Item.FriendlyName, ItemTaskCount[i],
+                    TaskList.Add(string.Format("Collect {0}: {1}/{2} {3}", Info.ItemTasks[i].Item.FriendlyName, ItemTaskCount[i].Count,
                         Info.ItemTasks[i].Count, ItemTaskCount[i].Complete ? "(Completed)" : ""));
                 }
                 else
@@ -521,6 +483,46 @@ namespace Server.MirDatabase
             if (Info.GotoMessage.Length <= 0 || !Completed) return;
 
             TaskList.Add(Info.GotoMessage);
+        }
+
+        #endregion
+
+        #region Optional Functions
+
+        public void SetTimer()
+        {
+            if (Owner == null)
+            {
+                return;
+            }
+
+            if (Info.TimeLimitInSeconds > 0)
+            {
+                var secondsSinceStarted = (int)(DateTime.Now - StartDateTime).TotalSeconds;
+
+                var remainingSeconds = Info.TimeLimitInSeconds - secondsSinceStarted;
+
+                if (remainingSeconds > 0)
+                {
+                    Owner.SetTimer($"Quest-{Index}", remainingSeconds, 1);
+                }
+
+                DelayedAction action = new DelayedAction(DelayedType.Quest, Envir.Time + (remainingSeconds * 1000), this, QuestAction.TimeExpired, true);
+                Owner.ActionList.Add(action);
+            }
+        }
+
+        public void RemoveTimer()
+        {
+            if (Owner == null)
+            {
+                return;
+            }
+
+            if (Info.TimeLimitInSeconds > 0)
+            {
+                Owner.ExpireTimer($"Quest-{Index}");
+            }
         }
 
         #endregion

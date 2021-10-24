@@ -845,6 +845,8 @@ public abstract class Packet
                 return new S.UpdateNotice();
             case (short)ServerPacketIds.Roll:
                 return new S.Roll();
+            case (short)ServerPacketIds.SetCompass:
+                return new S.SetCompass();
             default:
                 return null;
         }
