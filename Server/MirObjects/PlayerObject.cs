@@ -3914,107 +3914,20 @@ namespace Server.MirObjects
 
                     case "BACKUPPLAYER":
                         {
-                            if (!IsGM) return;
-
-                            if (parts.Length < 2) return;
-
-                            var info = Envir.GetCharacterInfo(parts[1]);
-
-                            if (info != null)
-                            {
-                                Envir.SaveArchivedCharacter(info);
-                            }
-                        }
-                        break;
-
-                    case "LOADPLAYER":
-                        {
-                            if (!IsGM) return;
-
-                            if (parts.Length < 2) return;
-
-                            var info = Envir.GetCharacterInfo(parts[1]);
-
-                            if (info != null)
-                            {
-                                var bak = Envir.GetArchivedCharacter(parts[1]);
-
-                                if (bak != null)
-                                {
-                                    if (info.Index != bak.Index)
-                                    {
-                                        ReceiveChat("Cannot load this player due to mismatching ID's", ChatType.System);
-                                        return;
-                                    }
-
-                                    info = bak;
-                                }
-                            }
-                        }
-                        break;
-
-                    case "RESTOREPLAYER":
-                        {
                             if (!IsGM || parts.Length < 2) return;
 
-                            AccountInfo account = null;
+                            var info = Envir.GetCharacterInfo(parts[1]);
 
-                            if (parts.Length > 2)
+                            if (info == null)
                             {
-                                if (!Envir.AccountExists(parts[2]))
-                                {
-                                    ReceiveChat(string.Format("Account {0} was not found", parts[2]), ChatType.System);
-                                    return;
-                                }
-
-                                account = Envir.GetAccount(parts[2]);
-
-                                if (account.Characters.Count >= Globals.MaxCharacterCount)
-                                {
-                                    ReceiveChat(string.Format("Account {0} already has {1} characters", parts[2], Globals.MaxCharacterCount), ChatType.System);
-                                    return;
-                                }
+                                ReceiveChat(string.Format("Player {0} was not found", parts[1]), ChatType.System);
+                                return;
                             }
 
-                            data = Envir.GetCharacterInfo(parts[1]);
+                            Envir.SaveArchivedCharacter(info);
 
-                            if (data == null)
-                            {
-                                if (account != null)
-                                {
-                                    data = Envir.GetArchivedCharacter(parts[1]);
-
-                                    if (data == null)
-                                    {
-                                        ReceiveChat(string.Format("Player {0} could not be restored. Try specifying the full archive filename.", parts[1]), ChatType.System);
-                                        return;
-                                    }
-
-                                    data.AccountInfo = account;
-
-                                    account.Characters.Add(data);
-                                    Envir.CharacterList.Add(data);
-
-                                    data.Deleted = false;
-                                    data.DeleteDate = DateTime.MinValue;
-
-                                    data.LastLoginDate = DateTime.Now;
-                                }
-                                else
-                                {
-                                    ReceiveChat(string.Format("Player {0} was not found", parts[1]), ChatType.System);
-                                    return;
-                                }
-                            }
-                            else
-                            {
-                                if (!data.Deleted) return;
-                                data.Deleted = false;
-                                data.DeleteDate = DateTime.MinValue;
-                            }
-
-                            ReceiveChat(string.Format("Player {0} has been restored by", data.Name), ChatType.System);
-                            MessageQueue.Enqueue(string.Format("Player {0} has been restored by {1}", data.Name, Name));
+                            ReceiveChat(string.Format("Player {0} has been backed up", info.Name), ChatType.System);
+                            MessageQueue.Enqueue(string.Format("Player {0} has been backed up by {1}", info.Name, Name));
                         }
                         break;
 
@@ -4054,6 +3967,105 @@ namespace Server.MirObjects
                         }
                         break;
 
+                    case "LOADPLAYER":
+                        {
+                            if (!IsGM) return;
+
+                            if (parts.Length < 2) return;
+
+                            var bak = Envir.GetArchivedCharacter(parts[1]);
+
+                            if (bak == null)
+                            {
+                                ReceiveChat(string.Format("Player {0} could not be loaded. Try specifying the full archive filename", parts[1]), ChatType.System);
+                                return;
+                            }
+
+                            var info = Envir.GetCharacterInfo(bak.Name);
+
+                            if (info == null)
+                            {
+                                ReceiveChat(string.Format("Player {0} was not found", parts[1]), ChatType.System);
+                                return;
+                            }
+
+                            if (info.Index != bak.Index)
+                            {
+                                ReceiveChat("Cannot load this player due to mismatching ID's", ChatType.System);
+                                return;
+                            }
+
+                            info = bak;
+
+                            ReceiveChat(string.Format("Player {0} has been loaded", info.Name), ChatType.System);
+                            MessageQueue.Enqueue(string.Format("Player {0} has been loaded by {1}", info.Name, Name));
+                        }
+                        break;
+
+                    case "RESTOREPLAYER":
+                        {
+                            if (!IsGM || parts.Length < 2) return;
+
+                            AccountInfo account = null;
+
+                            if (parts.Length > 2)
+                            {
+                                if (!Envir.AccountExists(parts[2]))
+                                {
+                                    ReceiveChat(string.Format("Account {0} was not found", parts[2]), ChatType.System);
+                                    return;
+                                }
+
+                                account = Envir.GetAccount(parts[2]);
+
+                                if (account.Characters.Count >= Globals.MaxCharacterCount)
+                                {
+                                    ReceiveChat(string.Format("Account {0} already has {1} characters", parts[2], Globals.MaxCharacterCount), ChatType.System);
+                                    return;
+                                }
+                            }
+
+                            data = Envir.GetCharacterInfo(parts[1]);
+
+                            if (data == null)
+                            {
+                                if (account != null)
+                                {
+                                    data = Envir.GetArchivedCharacter(parts[1]);
+
+                                    if (data == null)
+                                    {
+                                        ReceiveChat(string.Format("Player {0} could not be restored. Try specifying the full archive filename", parts[1]), ChatType.System);
+                                        return;
+                                    }
+
+                                    data.AccountInfo = account;
+
+                                    account.Characters.Add(data);
+                                    Envir.CharacterList.Add(data);
+
+                                    data.Deleted = false;
+                                    data.DeleteDate = DateTime.MinValue;
+
+                                    data.LastLoginDate = DateTime.Now;
+                                }
+                                else
+                                {
+                                    ReceiveChat(string.Format("Player {0} was not found", parts[1]), ChatType.System);
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                if (!data.Deleted) return;
+                                data.Deleted = false;
+                                data.DeleteDate = DateTime.MinValue;
+                            }
+
+                            ReceiveChat(string.Format("Player {0} has been restored by", data.Name), ChatType.System);
+                            MessageQueue.Enqueue(string.Format("Player {0} has been restored by {1}", data.Name, Name));
+                        }
+                        break;
                     case "MOVE":
                         if (!IsGM && !SpecialMode.HasFlag(SpecialItemMode.Teleport) && !Settings.TestServer) return;
                         if (!IsGM && CurrentMap.Info.NoPosition)
