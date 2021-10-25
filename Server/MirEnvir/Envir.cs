@@ -935,7 +935,7 @@ namespace Server.MirEnvir
 
         public CharacterInfo GetArchivedCharacter(string name)
         {
-            DirectoryInfo dir = new DirectoryInfo(Envir.ArchivePath);
+            DirectoryInfo dir = new DirectoryInfo(ArchivePath);
             FileInfo[] files = dir.GetFiles($"{name}*.MirCA");
 
             if (files.Length != 1)

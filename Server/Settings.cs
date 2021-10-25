@@ -450,8 +450,8 @@ namespace Server
             CreatureBlackStoneName = Reader.ReadString("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);
 
             //Archive
-            ArchiveInactiveCharacterAfterMonths = Reader.ReadInt32("Archive", "InactiveCharacter", ArchiveInactiveCharacterAfterMonths);
-            ArchiveDeletedCharacterAfterMonths = Reader.ReadInt32("Archive", "DeletedCharacter", ArchiveDeletedCharacterAfterMonths);
+            ArchiveInactiveCharacterAfterMonths = Reader.ReadInt32("Archive", "InactiveCharacterMonths", ArchiveInactiveCharacterAfterMonths);
+            ArchiveDeletedCharacterAfterMonths = Reader.ReadInt32("Archive", "DeletedCharacterMonths", ArchiveDeletedCharacterAfterMonths);
 
             if (!Directory.Exists(EnvirPath))
                 Directory.CreateDirectory(EnvirPath);
@@ -710,8 +710,8 @@ namespace Server
             Reader.Write("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);
 
             //Archive
-            Reader.Write("Archive", "InactiveCharacter", ArchiveInactiveCharacterAfterMonths);
-            Reader.Write("Archive", "DeletedCharacter", ArchiveDeletedCharacterAfterMonths);
+            Reader.Write("Archive", "InactiveCharacterMonths", ArchiveInactiveCharacterAfterMonths);
+            Reader.Write("Archive", "DeletedCharacterMonths", ArchiveDeletedCharacterAfterMonths);
 
             SaveAwakeAttribute();
         }
