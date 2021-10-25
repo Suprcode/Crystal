@@ -117,12 +117,12 @@ namespace Server.MirDatabase
             CreationDate = Envir.Now;
         }
 
-        public CharacterInfo(BinaryReader reader)
+        public CharacterInfo(BinaryReader reader, int version, int customVersion)
         {
             Index = reader.ReadInt32();
             Name = reader.ReadString();
 
-            if (Envir.LoadVersion < 62)
+            if (version < 62)
             {
                 Level = (ushort)reader.ReadByte();
             }
@@ -145,7 +145,7 @@ namespace Server.MirDatabase
             LastIP = reader.ReadString();
             LastLogoutDate = DateTime.FromBinary(reader.ReadInt64());
 
-            if (Envir.LoadVersion > 81)
+            if (version > 81)
             {
                 LastLoginDate = DateTime.FromBinary(reader.ReadInt64());
             }
@@ -159,7 +159,7 @@ namespace Server.MirDatabase
             BindMapIndex = reader.ReadInt32();
             BindLocation = new Point(reader.ReadInt32(), reader.ReadInt32());
 
-            if (Envir.LoadVersion <= 84)
+            if (version <= 84)
             {
                 HP = reader.ReadUInt16();
                 MP = reader.ReadUInt16();
@@ -175,7 +175,7 @@ namespace Server.MirDatabase
             AMode = (AttackMode) reader.ReadByte();
             PMode = (PetMode) reader.ReadByte();
 
-            if (Envir.LoadVersion > 34)
+            if (version > 34)
             {
                 PKPoints = reader.ReadInt32();
             }
@@ -187,7 +187,7 @@ namespace Server.MirDatabase
             for (int i = 0; i < count; i++)
             {
                 if (!reader.ReadBoolean()) continue;
-                UserItem item = new UserItem(reader, Envir.LoadVersion, Envir.LoadCustomVersion);
+                UserItem item = new UserItem(reader, version, customVersion);
                 if (Envir.BindItem(item) && i < Inventory.Length)
                     Inventory[i] = item;
             }
@@ -196,7 +196,7 @@ namespace Server.MirDatabase
             for (int i = 0; i < count; i++)
             {
                 if (!reader.ReadBoolean()) continue;
-                UserItem item = new UserItem(reader, Envir.LoadVersion, Envir.LoadCustomVersion);
+                UserItem item = new UserItem(reader, version, customVersion);
                 if (Envir.BindItem(item) && i < Equipment.Length)
                     Equipment[i] = item;
             }
@@ -205,7 +205,7 @@ namespace Server.MirDatabase
             for (int i = 0; i < count; i++)
             {
                 if (!reader.ReadBoolean()) continue;
-                UserItem item = new UserItem(reader, Envir.LoadVersion, Envir.LoadCustomVersion);
+                UserItem item = new UserItem(reader, version, customVersion);
                 if (Envir.BindItem(item) && i < QuestInventory.Length)
                     QuestInventory[i] = item;
             }
@@ -233,7 +233,7 @@ namespace Server.MirDatabase
 
             count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
-                Pets.Add(new PetInfo(reader));
+                Pets.Add(new PetInfo(reader, version, customVersion));
 
             AllowGroup = reader.ReadBoolean();
 
@@ -265,18 +265,18 @@ namespace Server.MirDatabase
 
             count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
-                Mail.Add(new MailInfo(reader, Envir.LoadVersion, Envir.LoadCustomVersion));
+                Mail.Add(new MailInfo(reader, version, customVersion));
 
             //IntelligentCreature
             count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
             {
-                UserIntelligentCreature creature = new UserIntelligentCreature(reader);
+                UserIntelligentCreature creature = new UserIntelligentCreature(reader, version, customVersion);
                 if (creature.Info == null) continue;
                 IntelligentCreatures.Add(creature);
             }
 
-            if (Envir.LoadVersion == 45)
+            if (version == 45)
             {
                 var old1 = (IntelligentCreatureType)reader.ReadByte();
                 var old2 = reader.ReadBoolean();
@@ -288,7 +288,7 @@ namespace Server.MirDatabase
             for (int i = 0; i < count; i++)
                 CompletedQuests.Add(reader.ReadInt32());
 
-            if (reader.ReadBoolean()) CurrentRefine = new UserItem(reader, Envir.LoadVersion, Envir.LoadCustomVersion);
+            if (reader.ReadBoolean()) CurrentRefine = new UserItem(reader, version, customVersion);
             if (CurrentRefine != null)
                 Envir.BindItem(CurrentRefine);
 
@@ -299,7 +299,7 @@ namespace Server.MirDatabase
             for (int i = 0; i < count; i++)
                 Friends.Add(new FriendInfo(reader));
 
-            if (Envir.LoadVersion > 75)
+            if (version > 75)
             {
                 count = reader.ReadInt32();
                 for (var i = 0; i < count; i++)
@@ -315,7 +315,7 @@ namespace Server.MirDatabase
             isMentor = reader.ReadBoolean();
             MentorExp = reader.ReadInt64();
 
-            if (Envir.LoadVersion >= 63)
+            if (version >= 63)
             {
                 int logCount = reader.ReadInt32();
 
@@ -532,12 +532,12 @@ namespace Server.MirDatabase
             MaxPetLevel = ob.MaxPetLevel;
         }
 
-        public PetInfo(BinaryReader reader)
+        public PetInfo(BinaryReader reader, int version, int customVersion)
         {
             MonsterIndex = reader.ReadInt32();
             if (MonsterIndex == 271) MonsterIndex = 275;
 
-            if (Envir.LoadVersion <= 84)
+            if (version <= 84)
             {
                 HP = (int)reader.ReadUInt32();
             }
@@ -753,7 +753,7 @@ namespace Server.MirDatabase
             Filter = new IntelligentCreatureItemFilter();
         }
 
-        public UserIntelligentCreature(BinaryReader reader)
+        public UserIntelligentCreature(BinaryReader reader, int version, int customVersion)
         {
             PetType = (IntelligentCreatureType)reader.ReadByte();
             Info = IntelligentCreatureInfo.GetCreatureInfo(PetType);
@@ -778,7 +778,7 @@ namespace Server.MirDatabase
             petMode = (IntelligentCreaturePickupMode)reader.ReadByte();
 
             Filter = new IntelligentCreatureItemFilter(reader);
-            if (Envir.LoadVersion > 48)
+            if (version > 48)
             {
                 Filter.PickupGrade = (ItemGrade)reader.ReadByte();
                 

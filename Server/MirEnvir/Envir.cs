@@ -59,6 +59,7 @@ namespace Server.MirEnvir
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
         public static readonly string BackUpPath = Path.Combine(".", "Back Up");
+        public static readonly string ArchivePath = Path.Combine(".", "Archive");
         public bool ResetGS = false;
 
         private static readonly Regex AccountIDReg, PasswordReg, EMailReg, CharacterReg;
@@ -121,7 +122,6 @@ namespace Server.MirEnvir
         public LinkedList<AuctionInfo> Auctions = new LinkedList<AuctionInfo>();
         public int GuildCount, NextGuildID;
         public List<GuildObject> GuildList = new List<GuildObject>();
-
 
         //Live Info
         public bool Saving = false;
@@ -669,7 +669,6 @@ namespace Server.MirEnvir
                 SaveAccounts();
                 SaveGuilds(true);
                 SaveConquests(true);
-
             }
             catch (Exception ex)
             {
@@ -932,6 +931,46 @@ namespace Server.MirEnvir
                 RespawnTick.Save(writer);
             }
         }
+
+
+        public CharacterInfo GetArchivedCharacter(string name)
+        {
+            DirectoryInfo dir = new DirectoryInfo(Envir.ArchivePath);
+            FileInfo[] files = dir.GetFiles($"{name}*.MirCA");
+
+            if (files.Length != 1)
+            {
+                return null;
+            }
+
+            var fileInfo = files[0];
+
+            CharacterInfo info = null;
+
+            using (var stream = fileInfo.OpenRead())
+            {
+                using var reader = new BinaryReader(stream);
+
+                var version = reader.ReadInt32();
+                var customVersion = reader.ReadInt32();
+
+                info = new CharacterInfo(reader, version, customVersion);
+            }
+
+            return info;
+        }
+
+        public void SaveArchivedCharacter(CharacterInfo info)
+        {
+            using var stream = File.Create(Path.Combine(ArchivePath, @$"{info.Name}{DateTime.Now:_MMddyyyy_HHmmss}.MirCA"));
+            using var writer = new BinaryWriter(stream);
+
+            writer.Write(Version);
+            writer.Write(CustomVersion);
+
+            info.Save(writer);
+        }
+
         public void SaveAccounts()
         {
             while (Saving)
@@ -1394,22 +1433,22 @@ namespace Server.MirEnvir
                         var saveCount = reader.ReadInt32();
                         for (var i = 0; i < saveCount; i++)
                         {
-                            var Saved = new RespawnSave(reader);
-                            foreach (var Respawn in SavedSpawns)
+                            var saved = new RespawnSave(reader);
+                            foreach (var respawn in SavedSpawns)
                             {
-                                if (Respawn.Info.RespawnIndex != Saved.RespawnIndex) continue;
+                                if (respawn.Info.RespawnIndex != saved.RespawnIndex) continue;
 
-                                Respawn.NextSpawnTick = Saved.NextSpawnTick;
+                                respawn.NextSpawnTick = saved.NextSpawnTick;
 
-                                if (!Saved.Spawned || Respawn.Info.Count * SpawnMultiplier <= Respawn.Count)
+                                if (!saved.Spawned || respawn.Info.Count * SpawnMultiplier <= respawn.Count)
                                 {
                                     continue;
                                 }
 
-                                var mobcount = Respawn.Info.Count * SpawnMultiplier - Respawn.Count;
+                                var mobcount = respawn.Info.Count * SpawnMultiplier - respawn.Count;
                                 for (var j = 0; j < mobcount; j++)
                                 {
-                                    Respawn.Spawn();
+                                    respawn.Spawn();
                                 }
                             }
                         }
@@ -1909,11 +1948,6 @@ namespace Server.MirEnvir
                             Lover.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
                     }
                     #endregion
-
-                    if (info.DeleteDate < DateTime.Now.AddDays(-7))
-                    {
-                        //delete char from db
-                    }
                 }
 
                 if(info.Mail.Count > Settings.MailCapacity)
@@ -2365,7 +2399,7 @@ namespace Server.MirEnvir
             return false;
         }
 
-        private AccountInfo GetAccount(string accountID)
+        public AccountInfo GetAccount(string accountID)
         {
                 for (var i = 0; i < AccountList.Count; i++)
                     if (string.Compare(AccountList[i].AccountID, accountID, StringComparison.OrdinalIgnoreCase) == 0)
@@ -2373,6 +2407,20 @@ namespace Server.MirEnvir
 
                 return null;
         }
+        public AccountInfo GetAccountByCharacter(string name)
+        {
+            for (var i = 0; i < AccountList.Count; i++)
+            {
+                for (int j = 0; j < AccountList[i].Characters.Count; j++)
+                {
+                    if (string.Compare(AccountList[i].Characters[j].Name, name, StringComparison.OrdinalIgnoreCase) == 0)
+                        return AccountList[i];
+                }
+            }
+
+            return null;
+        }
+
         public List<AccountInfo> MatchAccounts(string accountID, bool match = false)
         {
             if (string.IsNullOrEmpty(accountID)) return new List<AccountInfo>(AccountList);
@@ -2772,6 +2820,7 @@ namespace Server.MirEnvir
 
             return null;
         }
+
 
         public ItemInfo GetItemInfo(int index)
         {

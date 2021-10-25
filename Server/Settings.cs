@@ -274,6 +274,10 @@ namespace Server
         public static long GroupInviteDelay { get; internal set; } = 2000;
         public static long TradeDelay { get; internal set; } = 2000;
 
+        //Archive Settings
+        public static int ArchiveInactiveCharacterAfterMonths = 12;
+        public static int ArchiveDeletedCharacterAfterMonths = 1;
+
         public static void LoadVersion()
         {
             try
@@ -444,6 +448,10 @@ namespace Server
 
             //IntelligentCreature
             CreatureBlackStoneName = Reader.ReadString("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);
+
+            //Archive
+            ArchiveInactiveCharacterAfterMonths = Reader.ReadInt32("Archive", "InactiveCharacter", ArchiveInactiveCharacterAfterMonths);
+            ArchiveDeletedCharacterAfterMonths = Reader.ReadInt32("Archive", "DeletedCharacter", ArchiveDeletedCharacterAfterMonths);
 
             if (!Directory.Exists(EnvirPath))
                 Directory.CreateDirectory(EnvirPath);
@@ -700,6 +708,10 @@ namespace Server
 
             //IntelligentCreature
             Reader.Write("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);
+
+            //Archive
+            Reader.Write("Archive", "InactiveCharacter", ArchiveInactiveCharacterAfterMonths);
+            Reader.Write("Archive", "DeletedCharacter", ArchiveDeletedCharacterAfterMonths);
 
             SaveAwakeAttribute();
         }

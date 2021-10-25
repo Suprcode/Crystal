@@ -13,6 +13,7 @@ namespace Server.MirDatabase
         {
             get { return Envir.Main; }
         }
+        protected static MessageQueue MessageQueue => MessageQueue.Instance;
 
         public int Index;
 
@@ -93,7 +94,23 @@ namespace Server.MirDatabase
 
             for (int i = 0; i < count; i++)
             {
-                Characters.Add(new CharacterInfo(reader) { AccountInfo = this });
+                var info = new CharacterInfo(reader, Envir.LoadVersion, Envir.LoadCustomVersion) { AccountInfo = this };
+
+                if (info.Deleted && info.DeleteDate.AddMonths(Settings.ArchiveDeletedCharacterAfterMonths) < DateTime.Now)
+                {
+                    MessageQueue.Enqueue($"Player {info.Name} has been archived due to {Settings.ArchiveDeletedCharacterAfterMonths} month deletion.");
+                    Envir.SaveArchivedCharacter(info);
+                    continue;
+                }
+
+                if (info.LastLoginDate.AddMonths(Settings.ArchiveInactiveCharacterAfterMonths) < DateTime.Now)
+                {
+                    MessageQueue.Enqueue($"Player {info.Name} has been archived due to {Settings.ArchiveInactiveCharacterAfterMonths} months inactivity.");
+                    Envir.SaveArchivedCharacter(info);
+                    continue;
+                }
+
+                Characters.Add(info);
             }
 
             if (Envir.LoadVersion > 75)
@@ -158,7 +175,9 @@ namespace Server.MirDatabase
 
             writer.Write(Characters.Count);
             for (int i = 0; i < Characters.Count; i++)
+            {
                 Characters[i].Save(writer);
+            }
 
             writer.Write(HasExpandedStorage);
             writer.Write(ExpandedStorageExpiryDate.ToBinary());

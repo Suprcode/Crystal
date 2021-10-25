@@ -3533,25 +3533,6 @@ namespace Server.MirObjects
                         }
                         return;
 
-                    case "RESTORE":
-                        if (!IsGM || parts.Length < 2) return;
-
-                        data = Envir.GetCharacterInfo(parts[1]);
-
-                        if (data == null)
-                        {
-                            ReceiveChat(string.Format("Player {0} was not found", parts[1]), ChatType.System);
-                            return;
-                        }
-
-                        if (!data.Deleted) return;
-                        data.Deleted = false;
-
-                        ReceiveChat(string.Format("Player {0} has been restored by", data.Name), ChatType.System);
-                        MessageQueue.Enqueue(string.Format("Player {0} has been restored by {1}", data.Name, Name));
-
-                        break;
-
                     case "CHANGEGENDER":
                         if (!IsGM && !Settings.TestServer) return;
 
@@ -3931,73 +3912,147 @@ namespace Server.MirObjects
                         ReceiveChat((string.Format("You are currently in {0}. Map ID: {1}", mapTitle, mapName)), ChatType.System);
                         break;
 
-                    case "SAVEPLAYER":
-                        if (!IsGM) return;
-
-                        if (parts.Length < 2) return;
-
-                        CharacterInfo tempInfo = null;
-
-                        System.IO.Directory.CreateDirectory("Character Backups");
-
-                        for (int i = 0; i < Envir.AccountList.Count; i++)
+                    case "BACKUPPLAYER":
                         {
-                            for (int j = 0; j < Envir.AccountList[i].Characters.Count; j++)
-                            {
-                                if (String.Compare(Envir.AccountList[i].Characters[j].Name, parts[1], StringComparison.OrdinalIgnoreCase) != 0) continue;
+                            if (!IsGM) return;
 
-                                tempInfo = Envir.AccountList[i].Characters[j];
-                                break;
+                            if (parts.Length < 2) return;
+
+                            var info = Envir.GetCharacterInfo(parts[1]);
+
+                            if (info != null)
+                            {
+                                Envir.SaveArchivedCharacter(info);
                             }
                         }
-                        
-                        using (System.IO.FileStream stream = System.IO.File.Create(string.Format("Character Backups/{0}", tempInfo.Name)))
-                        {
-                            using (System.IO.BinaryWriter writer = new System.IO.BinaryWriter(stream))
-                            {
-                                tempInfo.Save(writer);
-                            }
-                        }
-
                         break;
 
                     case "LOADPLAYER":
-                        if (!IsGM) return;
-
-                        if (parts.Length < 2) return;
-
-                        tempInfo = null;
-
-                        System.IO.Directory.CreateDirectory("Character Backups");
-
-                        for (int i = 0; i < Envir.AccountList.Count; i++)
                         {
-                            for (int j = 0; j < Envir.AccountList[i].Characters.Count; j++)
+                            if (!IsGM) return;
+
+                            if (parts.Length < 2) return;
+
+                            var info = Envir.GetCharacterInfo(parts[1]);
+
+                            if (info != null)
                             {
-                                if (String.Compare(Envir.AccountList[i].Characters[j].Name, parts[1], StringComparison.OrdinalIgnoreCase) != 0) continue;
+                                var bak = Envir.GetArchivedCharacter(parts[1]);
 
-                                tempInfo = Envir.AccountList[i].Characters[j];
-
-                                using (System.IO.FileStream stream = System.IO.File.OpenRead(string.Format("Character Backups/{0}", tempInfo.Name)))
+                                if (bak != null)
                                 {
-                                    using (System.IO.BinaryReader reader = new System.IO.BinaryReader(stream))
+                                    if (info.Index != bak.Index)
                                     {
-                                        CharacterInfo tt = new CharacterInfo(reader);
-
-                                        if(Envir.AccountList[i].Characters[j].Index != tt.Index)
-                                        {
-                                            ReceiveChat("Player name was matched however IDs did not. Likely due to player being recreated. Player not restored", ChatType.System);
-                                            return;
-                                        }
-
-                                        Envir.AccountList[i].Characters[j] = tt;
+                                        ReceiveChat("Cannot load this player due to mismatching ID's", ChatType.System);
+                                        return;
                                     }
+
+                                    info = bak;
                                 }
                             }
                         }
-                        
-                        Envir.BeginSaveAccounts();
-                    break;
+                        break;
+
+                    case "RESTOREPLAYER":
+                        {
+                            if (!IsGM || parts.Length < 2) return;
+
+                            AccountInfo account = null;
+
+                            if (parts.Length > 2)
+                            {
+                                if (!Envir.AccountExists(parts[2]))
+                                {
+                                    ReceiveChat(string.Format("Account {0} was not found", parts[2]), ChatType.System);
+                                    return;
+                                }
+
+                                account = Envir.GetAccount(parts[2]);
+
+                                if (account.Characters.Count >= Globals.MaxCharacterCount)
+                                {
+                                    ReceiveChat(string.Format("Account {0} already has {1} characters", parts[2], Globals.MaxCharacterCount), ChatType.System);
+                                    return;
+                                }
+                            }
+
+                            data = Envir.GetCharacterInfo(parts[1]);
+
+                            if (data == null)
+                            {
+                                if (account != null)
+                                {
+                                    data = Envir.GetArchivedCharacter(parts[1]);
+
+                                    if (data == null)
+                                    {
+                                        ReceiveChat(string.Format("Player {0} could not be restored. Try specifying the full archive filename.", parts[1]), ChatType.System);
+                                        return;
+                                    }
+
+                                    data.AccountInfo = account;
+
+                                    account.Characters.Add(data);
+                                    Envir.CharacterList.Add(data);
+
+                                    data.Deleted = false;
+                                    data.DeleteDate = DateTime.MinValue;
+
+                                    data.LastLoginDate = DateTime.Now;
+                                }
+                                else
+                                {
+                                    ReceiveChat(string.Format("Player {0} was not found", parts[1]), ChatType.System);
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                if (!data.Deleted) return;
+                                data.Deleted = false;
+                                data.DeleteDate = DateTime.MinValue;
+                            }
+
+                            ReceiveChat(string.Format("Player {0} has been restored by", data.Name), ChatType.System);
+                            MessageQueue.Enqueue(string.Format("Player {0} has been restored by {1}", data.Name, Name));
+                        }
+                        break;
+
+                    case "ARCHIVEPLAYER":
+                        {
+                            if (!IsGM || parts.Length < 2) return;
+
+                            data = Envir.GetCharacterInfo(parts[1]);
+
+                            if (data == null)
+                            {
+                                ReceiveChat(string.Format("Player {0} was not found", parts[1]), ChatType.System);
+                                return;
+                            }
+
+                            if (data == Info)
+                            {
+                                ReceiveChat("Cannot archive the player you are on", ChatType.System);
+                                return;
+                            }
+
+                            var account = Envir.GetAccountByCharacter(parts[1]);
+
+                            if (account == null)
+                            {
+                                ReceiveChat(string.Format("Player {0} was not found in any account", parts[1]), ChatType.System);
+                                return;
+                            }
+
+                            Envir.SaveArchivedCharacter(data);
+
+                            Envir.CharacterList.Remove(data);
+                            account.Characters.Remove(data);
+
+                            ReceiveChat(string.Format("Player {0} has been archived", data.Name), ChatType.System);
+                            MessageQueue.Enqueue(string.Format("Player {0} has been archived by {1}", data.Name, Name));
+                        }
+                        break;
 
                     case "MOVE":
                         if (!IsGM && !SpecialMode.HasFlag(SpecialItemMode.Teleport) && !Settings.TestServer) return;
@@ -14465,7 +14520,7 @@ namespace Server.MirObjects
 
             key = string.Format("[@_{0}]", key);
 
-            DelayedAction action = new DelayedAction(DelayedType.NPC, Envir.Time + 0, DefaultNPC.LoadedObjectID, DefaultNPC.ScriptID, key);
+            DelayedAction action = new DelayedAction(DelayedType.NPC, Envir.Time, DefaultNPC.LoadedObjectID, DefaultNPC.ScriptID, key);
             ActionList.Add(action);
 
             Enqueue(new S.NPCUpdate { NPCID = DefaultNPC.LoadedObjectID });
