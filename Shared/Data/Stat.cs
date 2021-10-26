@@ -40,7 +40,7 @@ public sealed class Stats : IEquatable<Stats>
             this[pair.Key] += pair.Value;
     }
 
-    public Stats(BinaryReader reader)
+    public Stats(BinaryReader reader, int version = int.MaxValue, int customVersion = int.MaxValue)
     {
         int count = reader.ReadInt32();
 

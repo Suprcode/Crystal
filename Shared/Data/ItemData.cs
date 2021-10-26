@@ -191,7 +191,7 @@ public class ItemInfo
 
         if (version > 84)
         {
-            Stats = new Stats(reader);
+            Stats = new Stats(reader, version, customVersion);
         }
 
         bool isTooltip = reader.ReadBoolean();
@@ -411,7 +411,7 @@ public class UserItem
 
         if (version > 84)
         {
-            AddedStats = new Stats(reader);
+            AddedStats = new Stats(reader, version, customVersion);
         }
 
         Awake = new Awake(reader);
@@ -1039,7 +1039,7 @@ public class ItemRentalInformation
     public ItemRentalInformation()
     { }
 
-    public ItemRentalInformation(BinaryReader reader)
+    public ItemRentalInformation(BinaryReader reader, int version = int.MaxValue, int customVersion = int.MaxValue)
     {
         ItemId = reader.ReadUInt64();
         ItemName = reader.ReadString();

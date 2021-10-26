@@ -189,7 +189,9 @@ namespace Server.MirDatabase
                 if (!reader.ReadBoolean()) continue;
                 UserItem item = new UserItem(reader, version, customVersion);
                 if (Envir.BindItem(item) && i < Inventory.Length)
+                {
                     Inventory[i] = item;
+                }
             }
 
             count = reader.ReadInt32();
@@ -198,7 +200,9 @@ namespace Server.MirDatabase
                 if (!reader.ReadBoolean()) continue;
                 UserItem item = new UserItem(reader, version, customVersion);
                 if (Envir.BindItem(item) && i < Equipment.Length)
+                {
                     Equipment[i] = item;
+                }
             }
 
             count = reader.ReadInt32();
@@ -207,13 +211,15 @@ namespace Server.MirDatabase
                 if (!reader.ReadBoolean()) continue;
                 UserItem item = new UserItem(reader, version, customVersion);
                 if (Envir.BindItem(item) && i < QuestInventory.Length)
+                {
                     QuestInventory[i] = item;
+                }
             }
 
             count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
             {
-                UserMagic magic = new UserMagic(reader);
+                UserMagic magic = new UserMagic(reader, version, customVersion);
                 if (magic.Info == null) continue;
                 Magics.Add(magic);
             }
@@ -248,7 +254,7 @@ namespace Server.MirDatabase
 
             for (int i = 0; i < count; i++)
             {
-                QuestProgressInfo quest = new QuestProgressInfo(reader);
+                QuestProgressInfo quest = new QuestProgressInfo(reader, version, customVersion);
                 if (Envir.BindQuest(quest))
                 {
                     CurrentQuests.Add(quest);
@@ -258,14 +264,16 @@ namespace Server.MirDatabase
             count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
             {
-                Buff buff = new Buff(reader);
+                Buff buff = new Buff(reader, version, customVersion);
 
                 Buffs.Add(buff);
             }
 
             count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
+            {
                 Mail.Add(new MailInfo(reader, version, customVersion));
+            }
 
             //IntelligentCreature
             count = reader.ReadInt32();
@@ -286,24 +294,32 @@ namespace Server.MirDatabase
 
             count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
+            {
                 CompletedQuests.Add(reader.ReadInt32());
+            }
 
             if (reader.ReadBoolean()) CurrentRefine = new UserItem(reader, version, customVersion);
             if (CurrentRefine != null)
+            {
                 Envir.BindItem(CurrentRefine);
+            }
 
             CollectTime = reader.ReadInt64();
             CollectTime += Envir.Time;
 
             count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
-                Friends.Add(new FriendInfo(reader));
+            {
+                Friends.Add(new FriendInfo(reader, version, customVersion));
+            }
 
             if (version > 75)
             {
                 count = reader.ReadInt32();
                 for (var i = 0; i < count; i++)
-                    RentedItems.Add(new ItemRentalInformation(reader));
+                {
+                    RentedItems.Add(new ItemRentalInformation(reader, version, customVersion));
+                }
 
                 HasRentedItem = reader.ReadBoolean();
             }
@@ -641,7 +657,7 @@ namespace Server.MirDatabase
             Memo = "";
         }
 
-        public FriendInfo(BinaryReader reader)
+        public FriendInfo(BinaryReader reader, int version, int customVersion)
         {
             Index = reader.ReadInt32();
             Blocked = reader.ReadBoolean();

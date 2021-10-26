@@ -141,6 +141,12 @@ namespace Server.MirObjects
             set { Info.BindLocation = value; }
         }
 
+        //public override List<Buff> Buffs
+        //{
+        //    get { return Info.Buffs; }
+        //    set { Info.Buffs = value; }
+        //}
+
         public bool RidingMount;
         public MountInfo Mount
         {
@@ -4066,6 +4072,7 @@ namespace Server.MirObjects
                             MessageQueue.Enqueue(string.Format("Player {0} has been restored by {1}", data.Name, Name));
                         }
                         break;
+
                     case "MOVE":
                         if (!IsGM && !SpecialMode.HasFlag(SpecialItemMode.Teleport) && !Settings.TestServer) return;
                         if (!IsGM && CurrentMap.Info.NoPosition)

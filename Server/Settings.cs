@@ -450,8 +450,8 @@ namespace Server
             CreatureBlackStoneName = Reader.ReadString("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);
 
             //Archive
-            ArchiveInactiveCharacterAfterMonths = Reader.ReadInt32("Archive", "InactiveCharacterMonths", ArchiveInactiveCharacterAfterMonths);
-            ArchiveDeletedCharacterAfterMonths = Reader.ReadInt32("Archive", "DeletedCharacterMonths", ArchiveDeletedCharacterAfterMonths);
+            ArchiveInactiveCharacterAfterMonths = Math.Max(1, Reader.ReadInt32("Archive", "InactiveCharacterMonths", ArchiveInactiveCharacterAfterMonths));
+            ArchiveDeletedCharacterAfterMonths = Math.Max(1, Reader.ReadInt32("Archive", "DeletedCharacterMonths", ArchiveDeletedCharacterAfterMonths));
 
             if (!Directory.Exists(EnvirPath))
                 Directory.CreateDirectory(EnvirPath);

@@ -79,7 +79,7 @@ namespace Server.MirDatabase
             }
         }
 
-        public QuestProgressInfo(BinaryReader reader)
+        public QuestProgressInfo(BinaryReader reader, int version, int customVersion)
         {
             Index = reader.ReadInt32();
             Info = Envir.QuestInfoList.FirstOrDefault(e => e.Index == Index);
@@ -87,7 +87,7 @@ namespace Server.MirDatabase
             StartDateTime = DateTime.FromBinary(reader.ReadInt64());
             EndDateTime = DateTime.FromBinary(reader.ReadInt64());
 
-            if (Envir.LoadVersion < 90)
+            if (version < 90)
             {
                 int count = reader.ReadInt32();
                 for (int i = 0; i < count; i++)

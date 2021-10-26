@@ -3325,7 +3325,7 @@ namespace Server.MirEnvir
                 var path = Path.Combine(Settings.DropPath, Settings.FishingDropFilename + ".txt");
                 path = path.Replace("00", i.ToString("D2"));
 
-                DropInfo.Load(FishingDrops, MonsterInfoList[i].Name, path, (byte)i, i < 2);
+                DropInfo.Load(FishingDrops, $"Fishing {i}", path, (byte)i, i < 2);
             }
 
             AwakeningDrops.Clear();

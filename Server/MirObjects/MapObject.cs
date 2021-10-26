@@ -153,7 +153,7 @@ namespace Server.MirObjects
         public Stats Stats;
 
         public List<MonsterObject> Pets = new List<MonsterObject>();
-        public List<Buff> Buffs = new List<Buff>();
+        public virtual List<Buff> Buffs { get; set; } = new List<Buff>();
 
         public List<PlayerObject> GroupMembers;
 
@@ -998,6 +998,7 @@ namespace Server.MirObjects
         public MapObject Caster;
         public uint ObjectID;
         public long ExpireTime;
+        public long RealExpireTime;
 
         public Stats Stats;
 
@@ -1028,7 +1029,7 @@ namespace Server.MirObjects
             Data = new Dictionary<string, object>();
         }
 
-        public Buff(BinaryReader reader)
+        public Buff(BinaryReader reader, int version, int customVersion)
         {
             var type = (BuffType)reader.ReadByte();
 
@@ -1036,7 +1037,7 @@ namespace Server.MirObjects
 
             Caster = null;
 
-            if (Envir.LoadVersion < 88)
+            if (version < 88)
             {
                 var visible = reader.ReadBoolean();
             }
@@ -1044,7 +1045,7 @@ namespace Server.MirObjects
             ObjectID = reader.ReadUInt32();
             ExpireTime = reader.ReadInt64();
 
-            if (Envir.LoadVersion <= 84)
+            if (version <= 84)
             {
                 Values = new int[reader.ReadInt32()];
 
@@ -1053,7 +1054,7 @@ namespace Server.MirObjects
                     Values[i] = reader.ReadInt32();
                 }
 
-                if (Envir.LoadVersion < 88)
+                if (version < 88)
                 {
                     var infinite = reader.ReadBoolean();
                 }
@@ -1063,13 +1064,13 @@ namespace Server.MirObjects
             }
             else
             {
-                if (Envir.LoadVersion < 88)
+                if (version < 88)
                 {
                     var stackable = reader.ReadBoolean();
                 }
 
                 Values = new int[0];
-                Stats = new Stats(reader);
+                Stats = new Stats(reader, version, customVersion);
                 Data = new Dictionary<string, object>();
 
                 int count = reader.ReadInt32();
@@ -1089,7 +1090,7 @@ namespace Server.MirObjects
                     Data[key] = Functions.DeserializeFromBytes(array);
                 }
 
-                if (Envir.LoadVersion > 86)
+                if (version > 86)
                 {
                     count = reader.ReadInt32();
 

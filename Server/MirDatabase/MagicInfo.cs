@@ -122,7 +122,7 @@ namespace Server.MirDatabase
             
             Info = GetMagicInfo(Spell);
         }
-        public UserMagic(BinaryReader reader)
+        public UserMagic(BinaryReader reader, int version, int customVersion)
         {
             Spell = (Spell) reader.ReadByte();
             Info = GetMagicInfo(Spell);
@@ -131,10 +131,10 @@ namespace Server.MirDatabase
             Key = reader.ReadByte();
             Experience = reader.ReadUInt16();
 
-            if (Envir.LoadVersion < 15) return;
+            if (version < 15) return;
             IsTempSpell = reader.ReadBoolean();
 
-            if (Envir.LoadVersion < 65) return;
+            if (version < 65) return;
             CastTime = reader.ReadInt64();
         }
         public void Save(BinaryWriter writer)
