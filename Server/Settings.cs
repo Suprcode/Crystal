@@ -180,8 +180,6 @@ namespace Server
         public static uint MaxDropGold = 2000;
         public static bool DropGold = true;
 
-
-        //IntelligentCreature      
         public static string CreatureBlackStoneName = "BlackCreatureStone";
 
         //Fishing Settings
@@ -446,7 +444,6 @@ namespace Server
 
             RangeAccuracyBonus = Reader.ReadByte("Bonus", "RangeAccuracyBonus", RangeAccuracyBonus);
 
-            //IntelligentCreature
             CreatureBlackStoneName = Reader.ReadString("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);
 
             //Archive
@@ -706,7 +703,6 @@ namespace Server
             Reader.Write("Game", "ScrollMob3", ScrollMob3);
             Reader.Write("Game", "ScrollMob4", ScrollMob4);
 
-            //IntelligentCreature
             Reader.Write("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);
 
             //Archive

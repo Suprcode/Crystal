@@ -87,7 +87,6 @@ namespace Server.MirDatabase
         public List<MailInfo> Mail = new List<MailInfo>();
         public List<FriendInfo> Friends = new List<FriendInfo>();
 
-        //IntelligentCreature
         public List<UserIntelligentCreature> IntelligentCreatures = new List<UserIntelligentCreature>();
         public int PearlCount;
 
@@ -103,9 +102,7 @@ namespace Server.MirDatabase
         public Dictionary<int, int> GSpurchases = new Dictionary<int, int>();
         public int[] Rank = new int[2];//dont save this in db!(and dont send it to clients :p)
 
-        public CharacterInfo()
-        {
-        }
+        public CharacterInfo() { }
 
         public CharacterInfo(ClientPackets.NewCharacter p, MirConnection c)
         {
@@ -221,13 +218,9 @@ namespace Server.MirDatabase
             {
                 UserMagic magic = new UserMagic(reader, version, customVersion);
                 if (magic.Info == null) continue;
-                Magics.Add(magic);
-            }
 
-            //reset all magic cooldowns on char loading < stops ppl from having none working skills after a server crash
-            for (int i = 0; i < Magics.Count; i++)
-            {
-                Magics[i].CastTime = int.MinValue;
+                magic.CastTime = int.MinValue;
+                Magics.Add(magic);
             }
 
             Thrusting = reader.ReadBoolean();
@@ -239,12 +232,16 @@ namespace Server.MirDatabase
 
             count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
+            {
                 Pets.Add(new PetInfo(reader, version, customVersion));
+            }
 
             AllowGroup = reader.ReadBoolean();
 
             for (int i = 0; i < Globals.FlagIndexCount; i++)
+            {
                 Flags[i] = reader.ReadBoolean();
+            }
 
             GuildIndex = reader.ReadInt32();
 
@@ -275,7 +272,6 @@ namespace Server.MirDatabase
                 Mail.Add(new MailInfo(reader, version, customVersion));
             }
 
-            //IntelligentCreature
             count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
             {
@@ -298,7 +294,11 @@ namespace Server.MirDatabase
                 CompletedQuests.Add(reader.ReadInt32());
             }
 
-            if (reader.ReadBoolean()) CurrentRefine = new UserItem(reader, version, customVersion);
+            if (reader.ReadBoolean())
+            {
+                CurrentRefine = new UserItem(reader, version, customVersion);
+            }
+
             if (CurrentRefine != null)
             {
                 Envir.BindItem(CurrentRefine);
@@ -411,7 +411,9 @@ namespace Server.MirDatabase
 
             writer.Write(Magics.Count);
             for (int i = 0; i < Magics.Count; i++)
+            {
                 Magics[i].Save(writer);
+            }
 
             writer.Write(Thrusting);
             writer.Write(HalfMoon);
@@ -421,12 +423,17 @@ namespace Server.MirDatabase
 
             writer.Write(Pets.Count);
             for (int i = 0; i < Pets.Count; i++)
+            {
                 Pets[i].Save(writer);
+            }
 
             writer.Write(AllowGroup);
 
             for (int i = 0; i < Flags.Length; i++)
+            {
                 writer.Write(Flags[i]);
+            }
+
             writer.Write(GuildIndex);
 
             writer.Write(AllowTrade);
@@ -445,27 +452,39 @@ namespace Server.MirDatabase
 
             writer.Write(Mail.Count);
             for (int i = 0; i < Mail.Count; i++)
+            {
                 Mail[i].Save(writer);
+            }
 
-            //IntelligentCreature
             writer.Write(IntelligentCreatures.Count);
             for (int i = 0; i < IntelligentCreatures.Count; i++)
+            {
                 IntelligentCreatures[i].Save(writer);
+            }
+
             writer.Write(PearlCount);
 
             writer.Write(CompletedQuests.Count);
             for (int i = 0; i < CompletedQuests.Count; i++)
+            {
                 writer.Write(CompletedQuests[i]);
+            }
 
 
             writer.Write(CurrentRefine != null);
             if (CurrentRefine != null)
+            {
                 CurrentRefine.Save(writer);
+            }
 
             if ((CollectTime - Envir.Time) < 0)
+            {
                 CollectTime = 0;
+            }
             else
+            {
                 CollectTime -= Envir.Time;
+            }
 
             writer.Write(CollectTime);
 
@@ -478,7 +497,9 @@ namespace Server.MirDatabase
 
             writer.Write(RentedItems.Count);
             foreach (var rentedItemInformation in RentedItems)
+            {
                 rentedItemInformation.Save(writer);
+            }
 
             writer.Write(HasRentedItem);
 
@@ -514,7 +535,10 @@ namespace Server.MirDatabase
         public bool CheckHasIntelligentCreature(IntelligentCreatureType petType)
         {
             for (int i = 0; i < IntelligentCreatures.Count; i++)
+            {
                 if (IntelligentCreatures[i].PetType == petType) return true;
+            }
+
             return false;
         }
         public int ResizeInventory()
@@ -522,9 +546,13 @@ namespace Server.MirDatabase
             if (Inventory.Length >= 86) return Inventory.Length;
 
             if (Inventory.Length == 46)
+            {
                 Array.Resize(ref Inventory, Inventory.Length + 8);
+            }
             else
+            {
                 Array.Resize(ref Inventory, Inventory.Length + 4);
+            }
 
             return Inventory.Length;
         }
@@ -640,8 +668,10 @@ namespace Server.MirDatabase
         {
             get 
             {
-                if (_Info == null) 
+                if (_Info == null)
+                {
                     _Info = Envir.GetCharacterInfo(Index);
+                }
 
                 return _Info;
             }

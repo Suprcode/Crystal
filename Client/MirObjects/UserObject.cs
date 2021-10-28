@@ -46,9 +46,9 @@ namespace Client.MirObjects
         public List<ItemSets> ItemSets = new List<ItemSets>();
         public List<EquipmentSlot> MirSet = new List<EquipmentSlot>();
 
-        public List<ClientIntelligentCreature> IntelligentCreatures = new List<ClientIntelligentCreature>();//IntelligentCreature
-        public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;//IntelligentCreature
-        public bool CreatureSummoned;//IntelligentCreature
+        public List<ClientIntelligentCreature> IntelligentCreatures = new List<ClientIntelligentCreature>();
+        public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;
+        public bool CreatureSummoned;
         public int PearlCount = 0;
 
         public List<ClientQuestProgress> CurrentQuests = new List<ClientQuestProgress>();
@@ -106,9 +106,9 @@ namespace Client.MirObjects
                 Magics[i].CastTime += CMain.Time;
             }
 
-            IntelligentCreatures = info.IntelligentCreatures;//IntelligentCreature
-            SummonedCreatureType = info.SummonedCreatureType;//IntelligentCreature
-            CreatureSummoned = info.CreatureSummoned;//IntelligentCreature
+            IntelligentCreatures = info.IntelligentCreatures;
+            SummonedCreatureType = info.SummonedCreatureType;
+            CreatureSummoned = info.CreatureSummoned;
 
             BindAllItems();
 

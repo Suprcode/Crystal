@@ -558,13 +558,13 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.MailCost:
                     MailCost((C.MailCost)p);
                     break;
-                case (short)ClientPacketIds.RequestIntelligentCreatureUpdates://IntelligentCreature
+                case (short)ClientPacketIds.RequestIntelligentCreatureUpdates:
                     RequestIntelligentCreatureUpdates((C.RequestIntelligentCreatureUpdates)p);
                     break;
-                case (short)ClientPacketIds.UpdateIntelligentCreature://IntelligentCreature
+                case (short)ClientPacketIds.UpdateIntelligentCreature:
                     UpdateIntelligentCreature((C.UpdateIntelligentCreature)p);
                     break;
-                case (short)ClientPacketIds.IntelligentCreaturePickup://IntelligentCreature
+                case (short)ClientPacketIds.IntelligentCreaturePickup:
                     IntelligentCreaturePickup((C.IntelligentCreaturePickup)p);
                     break;
                 case (short)ClientPacketIds.AddFriend:
@@ -1620,7 +1620,7 @@ namespace Server.MirNetwork
             Player.SendIntelligentCreatureUpdates = p.Update;
         }
 
-        private void UpdateIntelligentCreature(C.UpdateIntelligentCreature p)//IntelligentCreature
+        private void UpdateIntelligentCreature(C.UpdateIntelligentCreature p)
         {
             if (Stage != GameStage.Game) return;
 
@@ -1666,7 +1666,7 @@ namespace Server.MirNetwork
             }
         }
 
-        private void IntelligentCreaturePickup(C.IntelligentCreaturePickup p)//IntelligentCreature
+        private void IntelligentCreaturePickup(C.IntelligentCreaturePickup p)
         {
             if (Stage != GameStage.Game) return;
 

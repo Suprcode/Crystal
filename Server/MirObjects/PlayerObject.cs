@@ -332,7 +332,9 @@ namespace Server.MirObjects
         public PlayerObject(CharacterInfo info, MirConnection connection)
         {
             if (info.Player != null)
+            {
                 throw new InvalidOperationException("Player.Info not Null.");
+            }
 
             info.Player = this;
             info.Mount = new MountInfo(this);
@@ -388,20 +390,24 @@ namespace Server.MirObjects
         {
             if (Node == null) return;
 
-            for (int i = 0; i < Pets.Count; i++)
+            for (int i = Pets.Count - 1; i >= 0; i--)
             {
                 MonsterObject pet = Pets[i];
 
-                if (pet.Info.AI == 64)//IntelligentCreature
+                if (pet.Race == ObjectType.Creature)
                 {
                     //dont save Creatures they will miss alot of AI-Info when they get spawned on login
                     UnSummonIntelligentCreature(((IntelligentCreatureObject)pet).PetType, false);
+
+                    Pets.RemoveAt(i);
                     continue;
                 }
 
                 if (pet.Info.Name == Settings.SkeletonName || pet.Info.Name == Settings.ShinsuName || pet.Info.Name == Settings.AngelName)
                 {
                     pet.Die();
+
+                    Pets.RemoveAt(i);
                     continue;
                 }
 
@@ -420,43 +426,20 @@ namespace Server.MirObjects
                     pet.CurrentMap.RemoveObject(pet);
                     pet.Despawn();
                 }
-            }
 
-            Pets.Clear();
+                Pets.RemoveAt(i);
+            }
             
             for (int i = 0; i < Info.Magics.Count; i++)
             {
                 if (Envir.Time < (Info.Magics[i].CastTime + Info.Magics[i].GetDelay()))
+                {
                     Info.Magics[i].CastTime -= Envir.Time;
+                }
                 else
+                {
                     Info.Magics[i].CastTime = int.MinValue;
-            }
-
-            if (MyGuild != null) MyGuild.PlayerLogged(this, false);
-            Envir.Players.Remove(this);
-            CurrentMap.RemoveObject(this);
-            Despawn();
-
-            if (GroupMembers != null)
-            {
-                GroupMembers.Remove(this);
-
-                if (GroupMembers.Count > 1)
-                {
-                    Packet p = new S.DeleteMember { Name = Name };
-
-                    for (int i = 0; i < GroupMembers.Count; i++)
-                    {
-                        GroupMembers[i].Enqueue(p);
-                    }
                 }
-                else
-                {
-                    GroupMembers[0].Enqueue(new S.DeleteGroup());
-                    GroupMembers[0].GroupMembers = null;
-                }
-
-                GroupMembers = null;
             }
 
             for (int i = Buffs.Count - 1; i >= 0; i--)
@@ -464,7 +447,8 @@ namespace Server.MirObjects
                 Buff buff = Buffs[i];
                 buff.Caster = null;
 
-                if (buff.Properties.HasFlag(BuffProperty.RemoveOnExit)) {
+                if (buff.Properties.HasFlag(BuffProperty.RemoveOnExit))
+                {
                     Buffs.RemoveAt(i);
                 }
             }
@@ -475,6 +459,16 @@ namespace Server.MirObjects
                 poison.Owner = null;
             }
 
+            if (MyGuild != null)
+            {
+                MyGuild.PlayerLogged(this, false);
+            }
+
+            Envir.Players.Remove(this);
+            CurrentMap.RemoveObject(this);
+
+            Despawn();
+            LeaveGroup();
             TradeCancel();
             CancelItemRental();
             RefineCancel();
@@ -1413,13 +1407,17 @@ namespace Server.MirObjects
                         }
 
                         if (!DropItem(item, Settings.DropRange, true))
+                        {
                             continue;
+                        }
 
                         if (item.Info.GlobalDropNotify)
+                        {
                             foreach (var player in Envir.Players)
                             {
                                 player.ReceiveChat($"{Name} has dropped {item.FriendlyName}.", ChatType.System2);
                             }
+                        }
 
                         Info.Equipment[i] = null;
                         Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
@@ -2416,9 +2414,11 @@ namespace Server.MirObjects
             Info.Equipment.CopyTo(packet.Equipment, 0);
             Info.QuestInventory.CopyTo(packet.QuestInventory, 0);
 
-            //IntelligentCreature
             for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
+            {
                 packet.IntelligentCreatures.Add(Info.IntelligentCreatures[i].CreateClientIntelligentCreature());
+            }
+
             packet.SummonedCreatureType = SummonedCreatureType;
             packet.CreatureSummoned = CreatureSummoned;
 
@@ -7021,7 +7021,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Pets.Count(t => !t.Dead && t.GetType() != typeof(IntelligentCreatureObject)) >= magic.Level + 2) return;
+            if (Pets.Count(t => !t.Dead && t.Race != ObjectType.Creature) >= magic.Level + 2) return;
 
             int rate = (int)(target.Stats[Stat.HP] / 100);
             if (rate <= 2) rate = 2;
@@ -11666,39 +11666,55 @@ namespace Server.MirObjects
                             case 22://Nuts
                                 {
                                     if (CreatureSummoned)
+                                    {
                                         for (int i = 0; i < Pets.Count; i++)
                                         {
-                                            if (Pets[i].Info.AI != 64) continue;
-                                            if (((IntelligentCreatureObject)Pets[i]).PetType != SummonedCreatureType) continue;
-                                            ((IntelligentCreatureObject)Pets[i]).MaintainfoodTime = item.Info.Effect * Settings.Hour / 1000;
+                                            if (Pets[i].Race != ObjectType.Creature) continue;
+
+                                            var pet = (IntelligentCreatureObject)Pets[i];
+                                            if (pet.PetType != SummonedCreatureType) continue;
+                                            pet.MaintainfoodTime = item.Info.Effect * Settings.Hour / 1000;
                                             break;
                                         }
+                                    }
                                 }
                                 break;
                             case 23://FairyMoss, FreshwaterClam, Mackerel, Cherry
                                 {
                                     if (CreatureSummoned)
+                                    {
                                         for (int i = 0; i < Pets.Count; i++)
                                         {
-                                            if (Pets[i].Info.AI != 64) continue;
-                                            if (((IntelligentCreatureObject)Pets[i]).PetType != SummonedCreatureType) continue;
-                                            if (((IntelligentCreatureObject)Pets[i]).Fullness < 10000)
-                                                ((IntelligentCreatureObject)Pets[i]).IncreaseFullness(item.Info.Effect * 100);
+                                            if (Pets[i].Race != ObjectType.Creature) continue;
+
+                                            var pet = (IntelligentCreatureObject)Pets[i];
+                                            if (pet.PetType != SummonedCreatureType) continue;
+                                            if (pet.Fullness < 10000)
+                                            {
+                                                pet.IncreaseFullness(item.Info.Effect * 100);
+                                            }
                                             break;
                                         }
+                                    }
                                 }
                                 break;
                             case 24://WonderPill
                                 {
                                     if (CreatureSummoned)
+                                    {
                                         for (int i = 0; i < Pets.Count; i++)
                                         {
-                                            if (Pets[i].Info.AI != 64) continue;
-                                            if (((IntelligentCreatureObject)Pets[i]).PetType != SummonedCreatureType) continue;
-                                            if (((IntelligentCreatureObject)Pets[i]).Fullness == 0)
-                                                ((IntelligentCreatureObject)Pets[i]).IncreaseFullness(100);
+                                            if (Pets[i].Race != ObjectType.Creature) continue;
+
+                                            var pet = (IntelligentCreatureObject)Pets[i];
+                                            if (pet.PetType != SummonedCreatureType) continue;
+                                            if (pet.Fullness == 0)
+                                            {
+                                                pet.IncreaseFullness(100);
+                                            }
                                             break;
                                         }
+                                    }
                                 }
                                 break;
                             case 25://Strongbox
@@ -13274,13 +13290,13 @@ namespace Server.MirObjects
                             {
                                 for (int i = 0; i < Pets.Count; i++)
                                 {
-                                    if (Pets[i].Info.AI != 64) continue;
-                                    if (((IntelligentCreatureObject)Pets[i]).PetType != SummonedCreatureType) continue;
+                                    if (Pets[i].Race != ObjectType.Creature) continue;
 
-
-                                    if (((IntelligentCreatureObject)Pets[i]).Fullness > 9900)
+                                    var pet = (IntelligentCreatureObject)Pets[i];
+                                    if (pet.PetType != SummonedCreatureType) continue;
+                                    if (pet.Fullness > 9900)
                                     {
-                                        ReceiveChat(((IntelligentCreatureObject)Pets[i]).Name + " is not hungry", ChatType.System);
+                                        ReceiveChat(pet.Name + " is not hungry", ChatType.System);
                                         return false;
                                     }
                                     return true;
@@ -13297,13 +13313,13 @@ namespace Server.MirObjects
                             {
                                 for (int i = 0; i < Pets.Count; i++)
                                 {
-                                    if (Pets[i].Info.AI != 64) continue;
-                                    if (((IntelligentCreatureObject)Pets[i]).PetType != SummonedCreatureType) continue;
+                                    if (Pets[i].Race != ObjectType.Creature) continue;
 
-
-                                    if (((IntelligentCreatureObject)Pets[i]).Fullness > 0)
+                                    var pet = (IntelligentCreatureObject)Pets[i];
+                                    if (pet.PetType != SummonedCreatureType) continue;
+                                    if (pet.Fullness > 0)
                                     {
-                                        ReceiveChat(((IntelligentCreatureObject)Pets[i]).Name + " does not need to be vitalized", ChatType.System);
+                                        ReceiveChat(pet.Name + " does not need to be vitalized", ChatType.System);
                                         return false;
                                     }
                                     return true;
@@ -15807,22 +15823,32 @@ namespace Server.MirObjects
 
             if (AllowGroup || GroupMembers == null) return;
 
-            GroupMembers.Remove(this);
-            Enqueue(new S.DeleteGroup());
+            LeaveGroup();
+        }
 
-            if (GroupMembers.Count > 1)
+        public void LeaveGroup()
+        {
+            if (GroupMembers != null)
             {
-                Packet p = new S.DeleteMember { Name = Name };
+                GroupMembers.Remove(this);
 
-                for (int i = 0; i < GroupMembers.Count; i++)
-                    GroupMembers[i].Enqueue(p);
+                if (GroupMembers.Count > 1)
+                {
+                    Packet p = new S.DeleteMember { Name = Name };
+
+                    for (int i = 0; i < GroupMembers.Count; i++)
+                    {
+                        GroupMembers[i].Enqueue(p);
+                    }
+                }
+                else
+                {
+                    GroupMembers[0].Enqueue(new S.DeleteGroup());
+                    GroupMembers[0].GroupMembers = null;
+                }
+
+                GroupMembers = null;
             }
-            else
-            {
-                GroupMembers[0].Enqueue(new S.DeleteGroup());
-                GroupMembers[0].GroupMembers = null;
-            }
-            GroupMembers = null;
         }
 
         public void AddMember(string name)
@@ -15899,31 +15925,16 @@ namespace Server.MirObjects
                 break;
             }
 
-
             if (player == null)
             {
                 ReceiveChat(name + " is not in your group.", ChatType.System);
                 return;
             }
 
-
-            GroupMembers.Remove(player);
             player.Enqueue(new S.DeleteGroup());
-
-            if (GroupMembers.Count > 1)
-            {
-                Packet p = new S.DeleteMember { Name = player.Name };
-
-                for (int i = 0; i < GroupMembers.Count; i++)
-                    GroupMembers[i].Enqueue(p);
-            }
-            else
-            {
-                GroupMembers[0].Enqueue(new S.DeleteGroup());
-                GroupMembers[0].GroupMembers = null;
-            }
-            player.GroupMembers = null;
+            player.LeaveGroup();
         }
+
         public void GroupInvite(bool accept)
         {
             if (GroupInvitation == null)
@@ -18215,8 +18226,10 @@ namespace Server.MirObjects
                 monster.Direction = Direction;
                 monster.ActionTime = Envir.Time + 1000;
 
-                ((IntelligentCreatureObject)monster).CreatureInfo = Info.IntelligentCreatures[i];
-                ((IntelligentCreatureObject)monster).CreatureRules = new IntelligentCreatureRules
+                var pet = (IntelligentCreatureObject)monster;
+
+                pet.CreatureInfo = Info.IntelligentCreatures[i];
+                pet.CreatureRules = new IntelligentCreatureRules
                 {
                     MinimalFullness = Info.IntelligentCreatures[i].Info.MinimalFullness,
                     MousePickupEnabled = Info.IntelligentCreatures[i].Info.MousePickupEnabled,
@@ -18249,12 +18262,13 @@ namespace Server.MirObjects
 
             for (int i = 0; i < Pets.Count; i++)
             {
-                if (Pets[i].Info.AI != 64) continue;
-                if (((IntelligentCreatureObject)Pets[i]).PetType != pType) continue;
+                if (Pets[i].Race != ObjectType.Creature) continue;
 
-                if (doUpdate) ReceiveChat((string.Format("Creature {0} has been dismissed.", ((IntelligentCreatureObject)Pets[i]).CustomName)), ChatType.System);
+                var pet = (IntelligentCreatureObject)Pets[i];
+                if (pet.PetType != pType) continue;
+                if (doUpdate) ReceiveChat(string.Format("Creature {0} has been dismissed.", pet.CustomName), ChatType.System);
 
-                Pets[i].Die();
+                pet.Die();
 
                 CreatureSummoned = false;
                 SummonedCreatureType = IntelligentCreatureType.None;
@@ -18304,12 +18318,14 @@ namespace Server.MirObjects
 
             for (int i = 0; i < Pets.Count; i++)
             {
-                if (Pets[i].Info.AI != 64) continue;
-                if (((IntelligentCreatureObject)Pets[i]).PetType != pType) continue;
+                if (Pets[i].Race != ObjectType.Creature) continue;
 
-                ((IntelligentCreatureObject)Pets[i]).CustomName = creatureInfo.CustomName;
-                ((IntelligentCreatureObject)Pets[i]).ItemFilter = creatureInfo.Filter;
-                ((IntelligentCreatureObject)Pets[i]).CurrentPickupMode = creatureInfo.petMode;
+                var pet = (IntelligentCreatureObject)Pets[i];
+                if (pet.PetType != pType) continue;
+
+                pet.CustomName = creatureInfo.CustomName;
+                pet.ItemFilter = creatureInfo.Filter;
+                pet.CurrentPickupMode = creatureInfo.petMode;
                 break;
             }
         }
@@ -18368,8 +18384,10 @@ namespace Server.MirObjects
             bool petFound = false;
             for (int i = 0; i < Pets.Count; i++)
             {
-                if (Pets[i].Info.AI != 64) continue;
-                if (((IntelligentCreatureObject)Pets[i]).PetType != SummonedCreatureType) continue;
+                if (Pets[i].Race != ObjectType.Creature) continue;
+
+                var pet = (IntelligentCreatureObject)Pets[i];
+                if (pet.PetType != SummonedCreatureType) continue;
                 petFound = true;
                 break;
             }
@@ -18388,11 +18406,12 @@ namespace Server.MirObjects
 
             for (int i = 0; i < Pets.Count; i++)
             {
-                if (Pets[i].Info.AI != 64) continue;
-                if (((IntelligentCreatureObject)Pets[i]).PetType != SummonedCreatureType) continue;
+                if (Pets[i].Race != ObjectType.Creature) continue;
 
-                //((IntelligentCreatureObject)Pets[i]).MouseLocation = atlocation;
-                ((IntelligentCreatureObject)Pets[i]).ManualPickup(mousemode, atlocation);
+                var pet = (IntelligentCreatureObject)Pets[i];
+                if (pet.PetType != SummonedCreatureType) continue;
+
+                pet.ManualPickup(mousemode, atlocation);
                 break;
             }
         }
@@ -18446,8 +18465,10 @@ namespace Server.MirObjects
 
             for (int i = 0; i < Pets.Count; i++)
             {
-                if (Pets[i].Info.AI != 64) continue;
-                if (((IntelligentCreatureObject)Pets[i]).PetType != pType) continue;
+                if (Pets[i].Race != ObjectType.Creature) continue;
+
+                var pet = (IntelligentCreatureObject)Pets[i];
+                if (pet.PetType != pType) continue;
 
                 Enqueue(new S.ObjectChat { ObjectID = Pets[i].ObjectID, Text = message, Type = ChatType.Normal });
                 return;
@@ -18560,42 +18581,21 @@ namespace Server.MirObjects
             return dropitem;
         }
 
-        private IntelligentCreatureObject GetCreatureByName(string creaturename)
+        private IntelligentCreatureObject GetCreatureByName(string creatureName)
         {
-            if (!CreatureSummoned || creaturename == "") return null;
+            if (!CreatureSummoned || creatureName == "") return null;
             if (SummonedCreatureType == IntelligentCreatureType.None) return null;
 
             for (int i = 0; i < Pets.Count; i++)
             {
-                if (Pets[i].Info.AI != 64) continue;
-                if (((IntelligentCreatureObject)Pets[i]).PetType != SummonedCreatureType) continue;
+                if (Pets[i].Race != ObjectType.Creature) continue;
 
-                return ((IntelligentCreatureObject)Pets[i]);
+                var pet = (IntelligentCreatureObject)Pets[i];
+                if (pet.PetType != SummonedCreatureType) continue;
+
+                return (pet);
             }
             return null;
-        }
-
-        private string CreateTimeString(double secs)
-        {
-            TimeSpan t = TimeSpan.FromSeconds(secs);
-            string answer;
-            if (t.TotalMinutes < 1.0)
-            {
-                answer = string.Format("{0}s", t.Seconds);
-            }
-            else if (t.TotalHours < 1.0)
-            {
-                answer = string.Format("{0}m", t.Minutes);
-            }
-            else if (t.TotalDays < 1.0)
-            {
-                answer = string.Format("{0}h {1:D2}m", (int)t.TotalHours, t.Minutes);
-            }
-            else // t.TotalDays >= 1.0
-            {
-                answer = string.Format("{0}d {1}h {2:D2}m", (int)t.TotalDays, (int)t.Hours, t.Minutes);
-            }
-            return answer;
         }
 
         private void GetCreaturesInfo()
@@ -18617,7 +18617,6 @@ namespace Server.MirObjects
         #endregion
 
         #region Friends
-
         public void AddFriend(string name, bool blocked = false)
         {
             CharacterInfo info = Envir.GetCharacterInfo(name);

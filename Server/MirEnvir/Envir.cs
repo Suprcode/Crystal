@@ -2954,7 +2954,9 @@ namespace Server.MirEnvir
             foreach (var characterInfo in CharacterList)
             {
                 if (characterInfo.RentedItems.Count <= 0)
+                {
                     continue;
+                }
 
                 foreach (var rentedItemInfo in characterInfo.RentedItems)
                 {
@@ -2966,22 +2968,30 @@ namespace Server.MirEnvir
                     for (var i = 0; i < rentingPlayer.Inventory.Length; i++)
                     {
                         if (rentedItemInfo.ItemId != rentingPlayer?.Inventory[i]?.UniqueID)
+                        {
                             continue;
+                        }
 
                         var item = rentingPlayer.Inventory[i];
 
                         if (item?.RentalInformation == null)
+                        {
                             continue;
+                        }
 
                         if (Now <= item.RentalInformation.ExpiryDate)
+                        {
                             continue;
+                        }
 
                         ReturnRentalItem(item, item.RentalInformation.OwnerName, rentingPlayer, false);
                         rentingPlayer.Inventory[i] = null;
                         rentingPlayer.HasRentedItem = false;
 
                         if (rentingPlayer.Player == null)
+                        {
                             continue;
+                        }
 
                         rentingPlayer.Player.ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
                         rentingPlayer.Player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
@@ -2993,17 +3003,23 @@ namespace Server.MirEnvir
                         var item = rentingPlayer.Equipment[i];
 
                         if (item?.RentalInformation == null)
+                        {
                             continue;
+                        }
 
                         if (Now <= item.RentalInformation.ExpiryDate)
+                        {
                             continue;
+                        }
 
                         ReturnRentalItem(item, item.RentalInformation.OwnerName, rentingPlayer, false);
                         rentingPlayer.Equipment[i] = null;
                         rentingPlayer.HasRentedItem = false;
-                        
+
                         if (rentingPlayer.Player == null)
+                        {
                             continue;
+                        }
 
                         rentingPlayer.Player.ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
                         rentingPlayer.Player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
@@ -3015,10 +3031,14 @@ namespace Server.MirEnvir
             foreach (var characterInfo in CharacterList)
             {
                 if (characterInfo.RentedItemsToRemove.Count <= 0)
+                {
                     continue;
+                }
 
                 foreach (var rentalInformationToRemove in characterInfo.RentedItemsToRemove)
+                {
                     characterInfo.RentedItems.Remove(rentalInformationToRemove);
+                }
 
                 characterInfo.RentedItemsToRemove.Clear();
             }
@@ -3027,14 +3047,20 @@ namespace Server.MirEnvir
         public bool ReturnRentalItem(UserItem rentedItem, string ownerName, CharacterInfo rentingCharacterInfo, bool removeNow = true)
         {
             if (rentedItem.RentalInformation == null)
+            {
                 return false;
+            }
 
             var owner = GetCharacterInfo(ownerName);
             var returnItems = new List<UserItem>();
 
             foreach (var rentalInformation in owner.RentedItems)
+            {
                 if (rentalInformation.ItemId == rentedItem.UniqueID)
+                {
                     owner.RentedItemsToRemove.Add(rentalInformation);
+                }
+            }
             
             rentedItem.RentalInformation.BindingFlags = BindMode.None;
             rentedItem.RentalInformation.RentalLocked = true;
@@ -3054,7 +3080,9 @@ namespace Server.MirEnvir
             if (removeNow)
             {
                 foreach (var rentalInformationToRemove in owner.RentedItemsToRemove)
+                {
                     owner.RentedItems.Remove(rentalInformationToRemove);
+                }
 
                 owner.RentedItemsToRemove.Clear();
             }
@@ -3082,8 +3110,13 @@ namespace Server.MirEnvir
         public GuildBuffInfo FindGuildBuffInfo(int Id)
         {
             for (var i = 0; i < Settings.Guild_BuffList.Count; i++)
+            {
                 if (Settings.Guild_BuffList[i].Id == Id)
+                {
                     return Settings.Guild_BuffList[i];
+                }
+            }
+
             return null;
         }
 
