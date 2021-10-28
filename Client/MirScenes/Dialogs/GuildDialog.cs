@@ -1089,7 +1089,7 @@ namespace Client.MirScenes.Dialogs
                     }
                     Buffs[i].Visible = true;
                     GuildBuff Buff = FindGuildBuff(BuffInfo.Id);
-                    Buffs[i].Name.Text = BuffInfo.name;
+                    Buffs[i].Name.Text = BuffInfo.Name;
                     Buffs[i].Icon.Index = BuffInfo.Icon;
 
                     if (Buff == null)
@@ -1203,7 +1203,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(4, 4),
                 OutLine = true,
                 Parent = GameScene.Scene.GuildBuffLabel,
-                Text = Buff.name
+                Text = Buff.Name
             };
 
             GameScene.Scene.GuildBuffLabel.Size = new Size(Math.Max(GameScene.Scene.GuildBuffLabel.Size.Width, HintName.DisplayRectangle.Right + 4),

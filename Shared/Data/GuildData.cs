@@ -84,7 +84,7 @@ public class GuildBuffInfo
 {
     public int Id;
     public int Icon = 0;
-    public string name = "";
+    public string Name = "";
     public byte LevelRequirement;
     public byte PointsRequirement = 1;
     public int TimeLimit;
@@ -101,7 +101,7 @@ public class GuildBuffInfo
     {
         Id = reader.ReadInt32();
         Icon = reader.ReadInt32();
-        name = reader.ReadString();
+        Name = reader.ReadString();
         LevelRequirement = reader.ReadByte();
         PointsRequirement = reader.ReadByte();
         TimeLimit = reader.ReadInt32();
@@ -114,7 +114,7 @@ public class GuildBuffInfo
     {
         Id = reader.ReadInt32("Buff-" + i.ToString(), "Id", 0);
         Icon = reader.ReadInt32("Buff-" + i.ToString(), "Icon", 0);
-        name = reader.ReadString("Buff-" + i.ToString(), "Name", "");
+        Name = reader.ReadString("Buff-" + i.ToString(), "Name", "");
         LevelRequirement = reader.ReadByte("Buff-" + i.ToString(), "LevelReq", 0);
         PointsRequirement = reader.ReadByte("Buff-" + i.ToString(), "PointsReq", 1);
         TimeLimit = reader.ReadInt32("Buff-" + i.ToString(), "TimeLimit", 0); ;
@@ -145,7 +145,7 @@ public class GuildBuffInfo
     {
         reader.Write("Buff-" + i.ToString(), "Id", Id);
         reader.Write("Buff-" + i.ToString(), "Icon", Icon);
-        reader.Write("Buff-" + i.ToString(), "Name", name);
+        reader.Write("Buff-" + i.ToString(), "Name", Name);
         reader.Write("Buff-" + i.ToString(), "LevelReq", LevelRequirement);
         reader.Write("Buff-" + i.ToString(), "PointsReq", PointsRequirement);
         reader.Write("Buff-" + i.ToString(), "TimeLimit", TimeLimit);
@@ -174,7 +174,7 @@ public class GuildBuffInfo
     {
         writer.Write(Id);
         writer.Write(Icon);
-        writer.Write(name);
+        writer.Write(Name);
         writer.Write(LevelRequirement);
         writer.Write(PointsRequirement);
         writer.Write(TimeLimit);
@@ -185,7 +185,7 @@ public class GuildBuffInfo
 
     public override string ToString()
     {
-        return string.Format("{0}: {1}", Id, name);
+        return string.Format("{0}: {1}", Id, Name);
     }
 
     public string ShowStats()

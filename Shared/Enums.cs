@@ -1316,7 +1316,7 @@ public enum BuffType : byte
     Gold,
     BagWeight,
     Transform,
-    RelationshipEXP,
+    Lover,
     Mentee,
     Mentor,
     Guild,

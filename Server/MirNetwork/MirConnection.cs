@@ -212,6 +212,7 @@ namespace Server.MirNetwork
             if (_sendList == null || _sendList.Count <= 0) return;
 
             List<byte> data = new List<byte>();
+
             while (!_sendList.IsEmpty)
             {
                 Packet p;

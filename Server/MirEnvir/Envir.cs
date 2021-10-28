@@ -1919,18 +1919,18 @@ namespace Server.MirEnvir
                     #region Mentor Cleanup
                     if (info.Mentor > 0)
                     {
-                        var Mentor = GetCharacterInfo(info.Mentor);
+                        var mentor = GetCharacterInfo(info.Mentor);
 
-                        if (Mentor != null)
+                        if (mentor != null)
                         {
-                            Mentor.Mentor = 0;
-                            Mentor.MentorExp = 0;
-                            Mentor.isMentor = false;
+                            mentor.Mentor = 0;
+                            mentor.MentorExp = 0;
+                            mentor.IsMentor = false;
                         }
 
                         info.Mentor = 0;
                         info.MentorExp = 0;
-                        info.isMentor = false;
+                        info.IsMentor = false;
                     }
                     #endregion
 

@@ -174,7 +174,7 @@ namespace Server.MirObjects
 
         public float ArmourRate, DamageRate; //recieved not given
 
-        public List<Poison> PoisonList = new List<Poison>();
+        public virtual List<Poison> PoisonList { get; set; } = new List<Poison>();
         public PoisonType CurrentPoison = PoisonType.None;
         public List<DelayedAction> ActionList = new List<DelayedAction>();
 
@@ -553,7 +553,7 @@ namespace Server.MirObjects
 
         public abstract void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true);
 
-        public virtual Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool refreshStats = true, params int[] values)
+        public virtual Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool refreshStats = true, bool updateOnly = false, params int[] values)
         {
             if (!HasBuff(type, out Buff buff))
             {
@@ -561,54 +561,57 @@ namespace Server.MirObjects
                 {
                     Caster = owner,
                     ObjectID = ObjectID,
-                    ExpireTime = Envir.Time + duration,
+                    ExpireTime = duration,
+                    LastTime = Envir.Time,
                     Stats = stats
                 };
-
-                if (buff.Properties.HasFlag(BuffProperty.PauseInSafeZone) && InSafeZone)
-                {
-                    buff.ExpireTime -= Envir.Time;
-                    buff.Paused = true;
-                }
 
                 Buffs.Add(buff);
             }
             else
             {
-                switch (buff.StackType)
+                if (!updateOnly)
                 {
-                    case BuffStackType.ResetDuration:
-                        {
-                            buff.ExpireTime = Envir.Time + duration;
-                        }
-                        break;
-                    case BuffStackType.StackDuration:
-                        {
-                            buff.ExpireTime += duration;
-                        }
-                        break;
-                    case BuffStackType.StackStat:
-                        {
-                            if (stats != null)
+                    switch (buff.StackType)
+                    {
+                        case BuffStackType.ResetDuration:
                             {
-                                buff.Stats.Add(stats);
+                                buff.ExpireTime = duration;
                             }
-                        }
-                        break;
-                    case BuffStackType.StackStatAndDuration:
-                        {
-                            if (stats != null)
+                            break;
+                        case BuffStackType.StackDuration:
                             {
-                                buff.Stats.Add(stats);
+                                buff.ExpireTime += duration;
                             }
+                            break;
+                        case BuffStackType.StackStat:
+                            {
+                                if (stats != null)
+                                {
+                                    buff.Stats.Add(stats);
+                                }
+                            }
+                            break;
+                        case BuffStackType.StackStatAndDuration:
+                            {
+                                if (stats != null)
+                                {
+                                    buff.Stats.Add(stats);
+                                }
 
-                            buff.ExpireTime += duration;
-                        }
-                        break;
-                    case BuffStackType.None:
-                    case BuffStackType.Infinite:
-                        break;
+                                buff.ExpireTime += duration;
+                            }
+                            break;
+                        case BuffStackType.Infinite:
+                        case BuffStackType.None:
+                            break;
+                    }
                 }
+            }
+
+            if (buff.Properties.HasFlag(BuffProperty.PauseInSafeZone) && InSafeZone)
+            {
+                buff.Paused = true;
             }
 
             buff.Stats ??= new Stats();
@@ -640,7 +643,7 @@ namespace Server.MirObjects
 
                 Buffs[i].FlagForRemoval = true;
                 Buffs[i].Paused = false;
-                Buffs[i].ExpireTime = Envir.Time;
+                Buffs[i].ExpireTime = 0;
 
                 switch(b)
                 {
@@ -679,7 +682,6 @@ namespace Server.MirObjects
         {
             if (b.Paused) return;
 
-            b.ExpireTime -= Envir.Time;
             b.Paused = true;
         }
 
@@ -687,7 +689,6 @@ namespace Server.MirObjects
         {
             if (!b.Paused) return;
 
-            b.ExpireTime += Envir.Time;
             b.Paused = false;
         }
 
@@ -998,7 +999,8 @@ namespace Server.MirObjects
         public MapObject Caster;
         public uint ObjectID;
         public long ExpireTime;
-        public long RealExpireTime;
+
+        public long LastTime, NextTime;
 
         public Stats Stats;
 

@@ -177,8 +177,8 @@ namespace Server.MirObjects
 
             for (int i = 0; i < Buffs.Count; i++)
             {
-                if (Buffs[i].ExpireTime >= time && Buffs[i].ExpireTime > Envir.Time) continue;
-                time = Buffs[i].ExpireTime;
+                if (Buffs[i].NextTime >= time && Buffs[i].NextTime > Envir.Time) continue;
+                time = Buffs[i].NextTime;
             }
 
 
@@ -414,7 +414,7 @@ namespace Server.MirObjects
             throw new NotSupportedException();
         }
 
-        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool refreshStats = true, params int[] values)
+        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool refreshStats = true, bool updateOnly = false, params int[] values)
         {
             throw new NotSupportedException();
         }

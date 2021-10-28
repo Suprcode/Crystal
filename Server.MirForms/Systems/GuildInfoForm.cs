@@ -104,7 +104,7 @@ namespace Server
                 SelectedBuff  = (GuildBuffInfo)BuffList.SelectedItem;
                 BuffPanel.Enabled = true;
                 BufflblIndex.Text = $"Index:  {SelectedBuff.Id}";
-                BufftxtName.Text = SelectedBuff.name;
+                BufftxtName.Text = SelectedBuff.Name;
                 BuffTxtLevelReq.Text = SelectedBuff.LevelRequirement.ToString();
                 BufftxtPointsReq.Text = SelectedBuff.PointsRequirement.ToString();
                 BufftxtTimeLimit.Text = SelectedBuff.TimeLimit.ToString();
@@ -374,7 +374,7 @@ namespace Server
             GuildBuffInfo NewBuff = new GuildBuffInfo
             {
                 Id = ++Index,
-                name = "Buff " + Index.ToString()
+                Name = "Buff " + Index.ToString()
             };
 
             Settings.Guild_BuffList.Add(NewBuff);
@@ -403,7 +403,7 @@ namespace Server
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-            SelectedBuff.name = ActiveControl.Text;
+            SelectedBuff.Name = ActiveControl.Text;
             GuildsChanged = true;
         }
 

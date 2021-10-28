@@ -492,10 +492,9 @@ namespace Client.MirScenes.Dialogs
                 case BuffType.Transform:
                     return 241;
                 case BuffType.Mentor:
-                    return 248;
                 case BuffType.Mentee:
                     return 248;
-                case BuffType.RelationshipEXP:
+                case BuffType.Lover:
                     return 201;
                 case BuffType.Guild:
                     return 203;

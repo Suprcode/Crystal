@@ -1136,8 +1136,8 @@ namespace Server.MirObjects
 
             for (int i = 0; i < Buffs.Count; i++)
             {
-                if (Buffs[i].ExpireTime >= time && Buffs[i].ExpireTime > Envir.Time) continue;
-                time = Buffs[i].ExpireTime;
+                if (Buffs[i].NextTime >= time && Buffs[i].NextTime > Envir.Time) continue;
+                time = Buffs[i].NextTime;
             }
 
             if (OperateTime <= Envir.Time || time < OperateTime)
@@ -1391,7 +1391,6 @@ namespace Server.MirObjects
             return false;
         }
 
-
         private void ProcessBuffs()
         {
             bool refresh = false;
@@ -1399,12 +1398,25 @@ namespace Server.MirObjects
             {
                 Buff buff = Buffs[i];
 
-                if (Envir.Time <= buff.ExpireTime || buff.StackType == BuffStackType.Infinite) continue;
+                if (buff.NextTime > Envir.Time) continue;
+
+                if (!buff.Paused && buff.StackType != BuffStackType.Infinite)
+                {
+                    var change = Envir.Time - buff.LastTime;
+                    buff.ExpireTime -= change;
+                }
+
+                buff.LastTime = Envir.Time;
+                buff.NextTime = Envir.Time + 1000;
+
+                if ((buff.ExpireTime > 0 || buff.StackType == BuffStackType.Infinite) && !buff.FlagForRemoval) continue;
 
                 Buffs.RemoveAt(i);
 
                 if (buff.Info.Visible)
+                {
                     Broadcast(new S.RemoveBuff { Type = buff.Type, ObjectID = ObjectID });
+                }
 
                 switch (buff.Type)
                 {
@@ -2300,12 +2312,12 @@ namespace Server.MirObjects
 
             attacker.GatherElement();
 
-            if (attacker.Info.Mentor != 0 && attacker.Info.isMentor)
+            if (attacker.Info.Mentor != 0 && attacker.Info.IsMentor)
             {
                 if (attacker.HasBuff(BuffType.Mentor, out _))
                 {
-                    CharacterInfo Mentee = Envir.GetCharacterInfo(attacker.Info.Mentor);
-                    PlayerObject player = Envir.GetPlayer(Mentee.Name);
+                    CharacterInfo mentee = Envir.GetCharacterInfo(attacker.Info.Mentor);
+                    PlayerObject player = Envir.GetPlayer(mentee.Name);
                     if (player.CurrentMap == attacker.CurrentMap && Functions.InRange(player.CurrentLocation, attacker.CurrentLocation, Globals.DataRange) && !player.Dead)
                     {
                         damage += (damage * Stats[Stat.MentorDamageRatePercent]) / 100;
@@ -2479,9 +2491,9 @@ namespace Server.MirObjects
             PoisonList.Add(p);
         }
 
-        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool refreshStats = true, params int[] values)
+        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool refreshStats = true, bool updateOnly = false, params int[] values)
         {
-            Buff b = base.AddBuff(type, owner, duration, stats, refreshStats, values);
+            Buff b = base.AddBuff(type, owner, duration, stats, refreshStats, updateOnly, values);
 
             if (HasBuff(type, out b) && b.StackType == BuffStackType.Infinite)
             {
@@ -2492,8 +2504,6 @@ namespace Server.MirObjects
             {
                 Buff = b.ToClientBuff(),
             };
-
-            packet.Buff.ExpireTime -= Envir.Time;
 
             if (b.Info.Visible) Broadcast(packet);
 

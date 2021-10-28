@@ -876,7 +876,7 @@ namespace Client.MirScenes.Dialogs
                 y += 30;
             }
 
-            Size = new Size(150, 20 + y + 30);
+            //Size = new Size(150, 20 + y + 30);
 
             Show();
         }
