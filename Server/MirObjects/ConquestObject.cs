@@ -649,16 +649,16 @@ namespace Server.MirObjects
                                 int tempInt;
 
                                 //Check Scores
-                                for (int i = 0; i < Envir.GuildList.Count; i++)
+                                for (int i = 0; i < Envir.Guilds.Count; i++)
                                 {
-                                    controlFlagPoints.TryGetValue(Envir.GuildList[i], out points);
+                                    controlFlagPoints.TryGetValue(Envir.Guilds[i], out points);
                                     if (tempWinning != null)
                                         controlFlagPoints.TryGetValue(tempWinning, out tempInt);
                                     else tempInt = 0;
 
                                     if (points > tempInt)
                                     {
-                                        tempWinning = Envir.GuildList[i];
+                                        tempWinning = Envir.Guilds[i];
                                     }
                                 }
 
@@ -722,16 +722,16 @@ namespace Server.MirObjects
                             int tempInt;
 
                             //Check Scores
-                            for (int i = 0; i < Envir.GuildList.Count; i++)
+                            for (int i = 0; i < Envir.Guilds.Count; i++)
                             {
-                                KingPoints.TryGetValue(Envir.GuildList[i], out points);
+                                KingPoints.TryGetValue(Envir.Guilds[i], out points);
                                 if (tempWinning != null)
                                     KingPoints.TryGetValue(tempWinning, out tempInt);
                                 else tempInt = 0;
 
                                 if (points > tempInt)
                                 {
-                                    tempWinning = Envir.GuildList[i];
+                                    tempWinning = Envir.Guilds[i];
                                 }
                             }
 
@@ -825,7 +825,7 @@ namespace Server.MirObjects
 
                         if (count > tempInt)
                         {
-                            tempWinning = Envir.GuildList[i];
+                            tempWinning = Envir.Guilds[i];
                         }
                     }
 
@@ -965,8 +965,8 @@ namespace Server.MirObjects
             if(Conquest.Guild != null)
             {
                 Guild = Conquest.Guild;
-                npcInfo.Image = Guild.FlagImage;
-                npcInfo.Colour = Guild.FlagColour;
+                npcInfo.Image = Guild.Info.FlagImage;
+                npcInfo.Colour = Guild.Info.FlagColour;
             }
 
             Flag = new NPCObject(npcInfo);
@@ -989,7 +989,7 @@ namespace Server.MirObjects
         {
             if(Guild != null)
             {
-                Flag.Info.Image = Guild.FlagImage;
+                Flag.Info.Image = Guild.Info.FlagImage;
 
                 Flag.Broadcast(Flag.GetUpdateInfo());
             }
@@ -999,7 +999,7 @@ namespace Server.MirObjects
         {
             if (Guild != null)
             {
-                Flag.Info.Colour = Guild.FlagColour;
+                Flag.Info.Colour = Guild.Info.FlagColour;
 
                 Flag.Broadcast(Flag.GetUpdateInfo());
             }

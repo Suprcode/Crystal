@@ -7,7 +7,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects
 {
-    public class IntelligentCreatureObject : MonsterObject
+    public sealed class IntelligentCreatureObject : MonsterObject
     {
         public bool Summoned;
         public string CustomName { get { return CreatureInfo.CustomName; } set { CreatureInfo.CustomName = value; } }

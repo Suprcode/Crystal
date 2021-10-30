@@ -219,34 +219,34 @@ namespace Client.MirObjects
                 UserItem temp = Equipment[i];
                 if (temp == null) continue;
 
-                ItemInfo RealItem = Functions.GetRealItem(temp.Info, Level, Class, GameScene.ItemInfoList);
+                ItemInfo realItem = Functions.GetRealItem(temp.Info, Level, Class, GameScene.ItemInfoList);
 
-                if (RealItem.Type == ItemType.Weapon || RealItem.Type == ItemType.Torch)
+                if (realItem.Type == ItemType.Weapon || realItem.Type == ItemType.Torch)
                     CurrentHandWeight = (int)Math.Min(int.MaxValue, CurrentHandWeight + temp.Weight);
                 else
                     CurrentWearWeight = (int)Math.Min(int.MaxValue, CurrentWearWeight + temp.Weight);
 
-                if (temp.CurrentDura == 0 && RealItem.Durability > 0) continue;
+                if (temp.CurrentDura == 0 && realItem.Durability > 0) continue;
 
-                if (RealItem.Type == ItemType.Armour)
+                if (realItem.Type == ItemType.Armour)
                 {
-                    Armour = RealItem.Shape;
-                    WingEffect = RealItem.Effect;
+                    Armour = realItem.Shape;
+                    WingEffect = realItem.Effect;
                 }
-                if (RealItem.Type == ItemType.Weapon)
+                if (realItem.Type == ItemType.Weapon)
                 {
-                    Weapon = RealItem.Shape;
-                    WeaponEffect = RealItem.Effect;
+                    Weapon = realItem.Shape;
+                    WeaponEffect = realItem.Effect;
                 }
 
-                if (RealItem.Type == ItemType.Mount)
+                if (realItem.Type == ItemType.Mount)
                 {
-                    MountType = RealItem.Shape;
+                    MountType = realItem.Shape;
                 }
 
                 if (temp.Info.IsFishingRod) continue;
 
-                Stats.Add(RealItem.Stats);
+                Stats.Add(realItem.Stats);
                 Stats.Add(temp.AddedStats);
 
                 Stats[Stat.MinAC] += temp.Awake.GetAC();
@@ -264,35 +264,35 @@ namespace Client.MirObjects
                 Stats[Stat.HP] += temp.Awake.GetHPMP();
                 Stats[Stat.MP] += temp.Awake.GetHPMP();
 
-                if (RealItem.Light > Light) Light = RealItem.Light;
-                if (RealItem.Unique != SpecialItemMode.None)
+                if (realItem.Light > Light) Light = realItem.Light;
+                if (realItem.Unique != SpecialItemMode.None)
                 {
-                    ItemMode |= RealItem.Unique;
+                    ItemMode |= realItem.Unique;
                 }
 
-                if (RealItem.CanFastRun)
+                if (realItem.CanFastRun)
                 {
                     FastRun = true;
                 }
 
                 RefreshSocketStats(temp);
 
-                if (RealItem.Set == ItemSet.None) continue;
+                if (realItem.Set == ItemSet.None) continue;
 
-                ItemSets itemSet = ItemSets.Where(set => set.Set == RealItem.Set && !set.Type.Contains(RealItem.Type) && !set.SetComplete).FirstOrDefault();
+                ItemSets itemSet = ItemSets.Where(set => set.Set == realItem.Set && !set.Type.Contains(realItem.Type) && !set.SetComplete).FirstOrDefault();
 
                 if (itemSet != null)
                 {
-                    itemSet.Type.Add(RealItem.Type);
+                    itemSet.Type.Add(realItem.Type);
                     itemSet.Count++;
                 }
                 else
                 {
-                    ItemSets.Add(new ItemSets { Count = 1, Set = RealItem.Set, Type = new List<ItemType> { RealItem.Type } });
+                    ItemSets.Add(new ItemSets { Count = 1, Set = realItem.Set, Type = new List<ItemType> { realItem.Type } });
                 }
 
                 //Mir Set
-                if (RealItem.Set == ItemSet.Mir)
+                if (realItem.Set == ItemSet.Mir)
                 {
                     if (!MirSet.Contains((EquipmentSlot)i))
                         MirSet.Add((EquipmentSlot)i);
@@ -327,22 +327,22 @@ namespace Client.MirObjects
                 UserItem temp = equipItem.Slots[i];
 
                 if (temp == null) continue;
-                ItemInfo RealItem = Functions.GetRealItem(temp.Info, Level, Class, GameScene.ItemInfoList);
+                ItemInfo realItem = Functions.GetRealItem(temp.Info, Level, Class, GameScene.ItemInfoList);
 
-                if (RealItem.Type == ItemType.Weapon || RealItem.Type == ItemType.Torch)
+                if (realItem.Type == ItemType.Weapon || realItem.Type == ItemType.Torch)
                     CurrentHandWeight = (int)Math.Min(int.MaxValue, CurrentHandWeight + temp.Weight);
                 else
                     CurrentWearWeight = (int)Math.Min(int.MaxValue, CurrentWearWeight + temp.Weight);
 
-                if (temp.CurrentDura == 0 && RealItem.Durability > 0) continue;
+                if (temp.CurrentDura == 0 && realItem.Durability > 0) continue;
 
-                Stats.Add(RealItem.Stats);
+                Stats.Add(realItem.Stats);
                 Stats.Add(temp.AddedStats);
         
-                if (RealItem.Light > Light) Light = RealItem.Light;
-                if (RealItem.Unique != SpecialItemMode.None)
+                if (realItem.Light > Light) Light = realItem.Light;
+                if (realItem.Unique != SpecialItemMode.None)
                 {
-                    ItemMode |= RealItem.Unique;
+                    ItemMode |= realItem.Unique;
                 }
             }
         }

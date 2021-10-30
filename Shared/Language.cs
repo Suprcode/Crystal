@@ -261,7 +261,7 @@ public class GameLanguage
 
                          NotFemale = "You are not Female.",
                          NotMale = "You are not Male.",
-                         NotInGuild = "You are not in a guild",
+                         NotInGuild = "You are not in a guild.",
                          NoMentorship = "You don't currently have a Mentorship to cancel.",
                          NoBagSpace = "You do not have enough space.";
 

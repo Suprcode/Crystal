@@ -121,7 +121,7 @@ namespace Server.MirEnvir
         public List<CharacterInfo> CharacterList = new List<CharacterInfo>(); 
         public LinkedList<AuctionInfo> Auctions = new LinkedList<AuctionInfo>();
         public int GuildCount, NextGuildID;
-        public List<GuildObject> GuildList = new List<GuildObject>();
+        public List<GuildInfo> GuildList = new List<GuildInfo>();
 
         //Live Info
         public bool Saving = false;
@@ -132,6 +132,7 @@ namespace Server.MirEnvir
         public List<PlayerObject> Players = new List<PlayerObject>();
         public List<SpellObject> Spells = new List<SpellObject>();
         public List<NPCObject> NPCs = new List<NPCObject>();
+        public List<GuildObject> Guilds = new List<GuildObject>();
 
         public LightSetting Lights;
         public LinkedList<MapObject> Objects = new LinkedList<MapObject>();
@@ -799,9 +800,9 @@ namespace Server.MirEnvir
             if (Time >= guildTime)
             {
                 guildTime = Time + Settings.Minute;
-                for (var i = 0; i < GuildList.Count; i++)
+                for (var i = 0; i < Guilds.Count; i++)
                 {
-                    GuildList[i].Process();
+                    Guilds[i].Process();
                 }
             }
 
@@ -1467,15 +1468,19 @@ namespace Server.MirEnvir
 
                 for (var i = 0; i < GuildCount; i++)
                 {
-                    GuildObject newGuild;
+                    GuildInfo guildInfo;
                     if (!File.Exists(Path.Combine(Settings.GuildPath, i + ".mgd"))) continue;
                     using (var stream = File.OpenRead(Path.Combine(Settings.GuildPath, i + ".mgd")))
-                    using (var reader = new BinaryReader(stream))
-                        newGuild = new GuildObject(reader);
-    
-                    //if (!newGuild.Ranks.Any(a => (byte)a.Options == 255)) continue;
-                    //if (GuildList.Any(e => e.Name == newGuild.Name)) continue;
-                    GuildList.Add(newGuild);
+                    {
+                        using (var reader = new BinaryReader(stream))
+                        {
+                            guildInfo = new GuildInfo(reader);
+                        }
+                    }
+
+                    GuildList.Add(guildInfo);
+
+                    Guilds.Add(new GuildObject(guildInfo));
 
                     count++;
                 }
@@ -1512,11 +1517,11 @@ namespace Server.MirEnvir
                         using (var reader = new BinaryReader(stream))
                             newConquest = new ConquestObject(reader) { Info = ConquestInfos[i], ConquestMap = tempMap };
 
-                        for (var k = 0; k < GuildList.Count; k++)
+                        for (var k = 0; k < Guilds.Count; k++)
                         {
-                            if (newConquest.Owner != GuildList[k].Guildindex) continue;
-                            newConquest.Guild = GuildList[k];
-                            GuildList[k].Conquest = newConquest;
+                            if (newConquest.Owner != Guilds[k].Guildindex) continue;
+                            newConquest.Guild = Guilds[k];
+                            Guilds[k].Conquest = newConquest;
                         }
 
                         Conquests.Add(newConquest);
@@ -2932,18 +2937,18 @@ namespace Server.MirEnvir
 
         public GuildObject GetGuild(string name)
         {
-            for (var i = 0; i < GuildList.Count; i++)
+            for (var i = 0; i < Guilds.Count; i++)
             {
-                if (string.Compare(GuildList[i].Name.Replace(" ", ""), name, StringComparison.OrdinalIgnoreCase) != 0) continue;
-                return GuildList[i];
+                if (string.Compare(Guilds[i].Name.Replace(" ", ""), name, StringComparison.OrdinalIgnoreCase) != 0) continue;
+                return Guilds[i];
             }
             return null;
         }
         public GuildObject GetGuild(int index)
         {
-            for (var i = 0; i < GuildList.Count; i++)
-                if (GuildList[i].Guildindex == index)
-                    return GuildList[i];
+            for (var i = 0; i < Guilds.Count; i++)
+                if (Guilds[i].Guildindex == index)
+                    return Guilds[i];
             return null;
         }
 

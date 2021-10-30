@@ -2638,36 +2638,36 @@ namespace Server.MirObjects
             {
                 UserItem temp = Info.Equipment[i];
                 if (temp == null) continue;
-                ItemInfo RealItem = Functions.GetRealItem(temp.Info, Info.Level, Info.Class, Envir.ItemInfoList);
+                ItemInfo realItem = Functions.GetRealItem(temp.Info, Info.Level, Info.Class, Envir.ItemInfoList);
 
-                if (RealItem.Type == ItemType.Weapon || RealItem.Type == ItemType.Torch)
+                if (realItem.Type == ItemType.Weapon || realItem.Type == ItemType.Torch)
                     CurrentHandWeight = (int)Math.Min(int.MaxValue, CurrentHandWeight + temp.Weight);
                 else
                     CurrentWearWeight = (int)Math.Min(int.MaxValue, CurrentWearWeight + temp.Weight);
 
                 if (temp.CurrentDura == 0 && temp.Info.Durability > 0) continue;
 
-                if (RealItem.Type == ItemType.Armour)
+                if (realItem.Type == ItemType.Armour)
                 {
-                    Looks_Armour = RealItem.Shape;
-                    Looks_Wings = RealItem.Effect;
+                    Looks_Armour = realItem.Shape;
+                    Looks_Wings = realItem.Effect;
                 }
 
-                if (RealItem.Type == ItemType.Weapon)
+                if (realItem.Type == ItemType.Weapon)
                 {
-                    Looks_Weapon = RealItem.Shape;
-                    Looks_WeaponEffect = RealItem.Effect;
+                    Looks_Weapon = realItem.Shape;
+                    Looks_WeaponEffect = realItem.Effect;
                 }
 
-                if (RealItem.Type == ItemType.Mount)
+                if (realItem.Type == ItemType.Mount)
                 {
-                    Mount.MountType = RealItem.Shape;
+                    Mount.MountType = realItem.Shape;
                     //RealItem.Effect;
                 }
 
                 if (temp.Info.IsFishingRod) continue;
 
-                Stats.Add(RealItem.Stats);
+                Stats.Add(realItem.Stats);
                 Stats.Add(temp.AddedStats);
 
                 Stats[Stat.MinAC] += temp.Awake.GetAC();
@@ -2685,39 +2685,39 @@ namespace Server.MirObjects
                 Stats[Stat.HP] += temp.Awake.GetHPMP();
                 Stats[Stat.MP] += temp.Awake.GetHPMP();
 
-                if (RealItem.Light > Light) Light = RealItem.Light;
-                if (RealItem.Unique != SpecialItemMode.None)
+                if (realItem.Light > Light) Light = realItem.Light;
+                if (realItem.Unique != SpecialItemMode.None)
                 {
-                    SpecialMode |= RealItem.Unique;
+                    SpecialMode |= realItem.Unique;
 
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Flame)) skillsToAdd.Add(Settings.FireRing);
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Healing)) skillsToAdd.Add(Settings.HealRing);
-                    if (RealItem.Unique.HasFlag(SpecialItemMode.Blink)) skillsToAdd.Add(Settings.BlinkSkill);
+                    if (realItem.Unique.HasFlag(SpecialItemMode.Flame)) skillsToAdd.Add(Settings.FireRing);
+                    if (realItem.Unique.HasFlag(SpecialItemMode.Healing)) skillsToAdd.Add(Settings.HealRing);
+                    if (realItem.Unique.HasFlag(SpecialItemMode.Blink)) skillsToAdd.Add(Settings.BlinkSkill);
                 }
 
-                if (RealItem.CanFastRun)
+                if (realItem.CanFastRun)
                 {
                     FastRun = true;
                 }
 
                 RefreshSocketStats(temp, skillsToAdd);
 
-                if (RealItem.Set == ItemSet.None) continue;
+                if (realItem.Set == ItemSet.None) continue;
 
-                ItemSets itemSet = ItemSets.Where(set => set.Set == RealItem.Set && !set.Type.Contains(RealItem.Type) && !set.SetComplete).FirstOrDefault();
+                ItemSets itemSet = ItemSets.Where(set => set.Set == realItem.Set && !set.Type.Contains(realItem.Type) && !set.SetComplete).FirstOrDefault();
 
                 if (itemSet != null)
                 {
-                    itemSet.Type.Add(RealItem.Type);
+                    itemSet.Type.Add(realItem.Type);
                     itemSet.Count++;
                 }
                 else
                 {
-                    ItemSets.Add(new ItemSets { Count = 1, Set = RealItem.Set, Type = new List<ItemType> { RealItem.Type } });
+                    ItemSets.Add(new ItemSets { Count = 1, Set = realItem.Set, Type = new List<ItemType> { realItem.Type } });
                 }
 
                 //Mir Set
-                if (RealItem.Set == ItemSet.Mir)
+                if (realItem.Set == ItemSet.Mir)
                 {
                     if (!MirSet.Contains((EquipmentSlot)i))
                     {
@@ -4448,6 +4448,7 @@ namespace Server.MirObjects
                             ReceiveChat(string.Format("Player {0} was not found.", parts[1]), ChatType.System);
                             return;
                         }
+
                         if (player.MyGuild != null)
                         {
                             ReceiveChat(string.Format("Player {0} is already in a guild.", player.Name), ChatType.System);
@@ -4460,17 +4461,24 @@ namespace Server.MirObjects
                             ReceiveChat("Guildname is restricted to 3-20 characters.", ChatType.System);
                             return;
                         }
+
                         GuildObject guild = Envir.GetGuild(gName);
                         if (guild != null)
                         {
                             ReceiveChat(string.Format("Guild {0} already exists.", gName), ChatType.System);
                             return;
                         }
+
                         player.CanCreateGuild = true;
                         if (player.CreateGuild(gName))
+                        {
                             ReceiveChat(string.Format("Successfully created guild {0}", gName), ChatType.System);
+                        }
                         else
+                        {
                             ReceiveChat("Failed to create guild", ChatType.System);
+                        }
+
                         player.CanCreateGuild = false;
                         break;
 
@@ -5076,16 +5084,26 @@ namespace Server.MirObjects
                             }
 
                             for (int i = 0; i < MyGuild.Conquest.GateList.Count; i++)
+                            {
                                 if (MyGuild.Conquest.GateList[i].Gate != null && !MyGuild.Conquest.GateList[i].Gate.Dead)
+                                {
                                     if (OpenClose)
+                                    {
                                         MyGuild.Conquest.GateList[i].Gate.CloseDoor();
+                                    }
                                     else
+                                    {
                                         MyGuild.Conquest.GateList[i].Gate.OpenDoor();
+                                    }
+                                }
+                            }
                         }
                         else
                         {
                             for (int i = 0; i < MyGuild.Conquest.GateList.Count; i++)
+                            {
                                 if (MyGuild.Conquest.GateList[i].Gate != null && !MyGuild.Conquest.GateList[i].Gate.Dead)
+                                {
                                     if (!MyGuild.Conquest.GateList[i].Gate.Closed)
                                     {
                                         MyGuild.Conquest.GateList[i].Gate.CloseDoor();
@@ -5096,12 +5114,18 @@ namespace Server.MirObjects
                                         MyGuild.Conquest.GateList[i].Gate.OpenDoor();
                                         OpenClose = false;
                                     }
+                                }
+                            }
                         }
 
                         if (OpenClose)
+                        {
                             ReceiveChat(string.Format("The gates at {0} have been closed.", MyGuild.Conquest.Info.Name), ChatType.System);
+                        }
                         else
+                        {
                             ReceiveChat(string.Format("The gates at {0} have been opened.", MyGuild.Conquest.Info.Name), ChatType.System);
+                        }
                         break;
 
                     case "CHANGEFLAG":
@@ -5122,7 +5146,7 @@ namespace Server.MirObjects
                             if (temp <= 11) flag = temp;
                         }
 
-                        MyGuild.FlagImage = (ushort)(1000 + flag);
+                        MyGuild.Info.FlagImage = (ushort)(1000 + flag);
 
                         for (int i = 0; i < MyGuild.Conquest.FlagList.Count; i++)
                         {
@@ -5149,7 +5173,7 @@ namespace Server.MirObjects
                                 byte.TryParse(parts[3], out b1);
                             }
 
-                            MyGuild.FlagColour = Color.FromArgb(255, r1, g1, b1);
+                            MyGuild.Info.FlagColour = Color.FromArgb(255, r1, g1, b1);
 
                             for (int i = 0; i < MyGuild.Conquest.FlagList.Count; i++)
                             {
@@ -16127,9 +16151,13 @@ namespace Server.MirObjects
             }
             RefreshStats();
             //make the guild
-            GuildObject guild = new GuildObject(this, guildName) { Guildindex = ++Envir.NextGuildID };
-            Envir.GuildList.Add(guild);
-            Info.GuildIndex = guild.Guildindex;
+
+            var guildInfo = new GuildInfo(this, guildName) { GuildIndex = ++Envir.NextGuildID };
+            Envir.GuildList.Add(guildInfo);
+
+            GuildObject guild = new GuildObject(guildInfo);
+            Info.GuildIndex = guildInfo.GuildIndex;
+
             MyGuild = guild;
             MyGuildRank = guild.FindRank(Name);
             GuildMembersChanged = true;
@@ -16314,7 +16342,7 @@ namespace Server.MirObjects
             {
                 case 0://notice
                     if (GuildNoticeChanged)
-                        Enqueue(new S.GuildNoticeChange() { notice = MyGuild.Notice });
+                        Enqueue(new S.GuildNoticeChange() { notice = MyGuild.Info.Notice });
                     GuildNoticeChanged = false;
                     break;
                 case 1://memberlist
@@ -16664,7 +16692,7 @@ namespace Server.MirObjects
                         ReceiveChat("Buff already obtained.", ChatType.System);
                         return;
                     }
-                    if ((MyGuild.Level < BuffInfo.LevelRequirement) || (MyGuild.SparePoints < BuffInfo.PointsRequirement)) return;//client checks this so it shouldnt be possible without a moded client :p
+                    if ((MyGuild.Info.Level < BuffInfo.LevelRequirement) || (MyGuild.Info.SparePoints < BuffInfo.PointsRequirement)) return;//client checks this so it shouldnt be possible without a moded client :p
                     MyGuild.NewBuff(id);
                     break;
                 case 2://activate the buff

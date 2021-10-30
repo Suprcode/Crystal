@@ -8,27 +8,40 @@ public class GuildRank
     public string Name = "";
     public int Index = 0;
     public GuildRankOptions Options = (GuildRankOptions)0;
+
     public GuildRank() { }
 
-    public GuildRank(BinaryReader reader, bool Offline = false)
+    public GuildRank(BinaryReader reader, bool offline = false)
     {
         Name = reader.ReadString();
         Options = (GuildRankOptions)reader.ReadByte();
-        if (!Offline)
+
+        if (!offline)
+        {
             Index = reader.ReadInt32();
+        }
+
         int Membercount = reader.ReadInt32();
         for (int j = 0; j < Membercount; j++)
-            Members.Add(new GuildMember(reader, Offline));
+        {
+            Members.Add(new GuildMember(reader, offline));
+        }
     }
-    public void Save(BinaryWriter writer, bool Save = false)
+    public void Save(BinaryWriter writer, bool save = false)
     {
         writer.Write(Name);
         writer.Write((byte)Options);
-        if (!Save)
+        if (!save)
+        {
             writer.Write(Index);
+        }
+
         writer.Write(Members.Count);
+
         for (int j = 0; j < Members.Count; j++)
+        {
             Members[j].Save(writer);
+        }
     }
 }
 
@@ -52,7 +65,7 @@ public class GuildStorageItem
 
 public class GuildMember
 {
-    public string name = "";
+    public string Name = "";
     public int Id;
     public object Player;
     public DateTime LastLogin;
@@ -63,7 +76,7 @@ public class GuildMember
 
     public GuildMember(BinaryReader reader, bool offline = false)
     {
-        name = reader.ReadString();
+        Name = reader.ReadString();
         Id = reader.ReadInt32();
         LastLogin = DateTime.FromBinary(reader.ReadInt64());
         hasvoted = reader.ReadBoolean();
@@ -72,7 +85,7 @@ public class GuildMember
     }
     public void Save(BinaryWriter writer)
     {
-        writer.Write(name);
+        writer.Write(Name);
         writer.Write(Id);
         writer.Write(LastLogin.ToBinary());
         writer.Write(hasvoted);

@@ -1289,10 +1289,14 @@ namespace Server.MirObjects
                         if (Conquest == null) return "Conquest Not Found";
                         if (Conquest.AttackerID == -1) return "No War Scheduled";
 
-                        if (Envir.GuildList.FirstOrDefault(x => x.Guildindex == Conquest.AttackerID) == null)
+                        if (Envir.Guilds.FirstOrDefault(x => x.Guildindex == Conquest.AttackerID) == null)
+                        {
                             newValue = "No War Scheduled";
+                        }
                         else
-                            newValue = (Envir.GuildList.FirstOrDefault(x => x.Guildindex == Conquest.AttackerID).Name);
+                        {
+                            newValue = (Envir.Guilds.FirstOrDefault(x => x.Guildindex == Conquest.AttackerID).Name);
+                        }
                     }
                     break;
                 case "OUTPUT()":
