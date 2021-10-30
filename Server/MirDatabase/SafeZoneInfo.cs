@@ -15,10 +15,7 @@ namespace Server.MirDatabase
 
         public MapInfo Info;
 
-        public SafeZoneInfo()
-        {
-
-        }
+        public SafeZoneInfo() { }
 
         public SafeZoneInfo(BinaryReader reader)
         {

@@ -196,7 +196,9 @@ public class ItemInfo
 
         bool isTooltip = reader.ReadBoolean();
         if (isTooltip)
+        {
             ToolTip = reader.ReadString();
+        }
 
         if (version < 70) //before db version 70 all specialitems had wedding rings disabled, after that it became a server option
         {
@@ -1036,8 +1038,7 @@ public class ItemRentalInformation
     public string RentingPlayerName;
     public DateTime ItemReturnDate;
 
-    public ItemRentalInformation()
-    { }
+    public ItemRentalInformation() { }
 
     public ItemRentalInformation(BinaryReader reader, int version = int.MaxValue, int customVersion = int.MaxValue)
     {

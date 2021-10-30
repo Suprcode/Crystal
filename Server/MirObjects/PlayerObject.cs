@@ -128,7 +128,9 @@ namespace Server.MirObjects
             get { return Info.Class; }
         }
         public MirGender Gender
-        { get { return Info.Gender; } }
+        { 
+            get { return Info.Gender; } 
+        }
 
         public int BindMapIndex
         {
@@ -158,11 +160,6 @@ namespace Server.MirObjects
         {
             get { return Info.Mount; }
         }
-        public short MountType
-        {
-            get { return Mount.MountType; }
-            set { Mount.MountType = value; }
-        }
 
         public int FishingChance, FishingChanceCounter, FishingProgressMax, FishingProgress, FishingAutoReelChance = 0, FishingNibbleChance = 0;
         public bool Fishing, FishingAutocast, FishFound, FishFirstFound;
@@ -174,6 +171,7 @@ namespace Server.MirObjects
                 return !Dead && Envir.Time >= ActionTime && !Fishing && !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Frozen); 
             }
         }
+
         public bool CanWalk
         {
             get 
@@ -181,6 +179,7 @@ namespace Server.MirObjects
                 return !Dead && Envir.Time >= ActionTime && !InTrapRock && !Fishing && !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Frozen); 
             }
         }
+
         public bool CanRun
         {
             get 
@@ -203,6 +202,7 @@ namespace Server.MirObjects
                 return Envir.Time >= RegenTime && _runCounter == 0; 
             }
         }
+
         private bool CanCast
         {
             get
@@ -214,6 +214,10 @@ namespace Server.MirObjects
 
         public const long TurnDelay = 350, MoveDelay = 600, HarvestDelay = 350, RegenDelay = 10000, PotDelay = 200, HealDelay = 600, DuraDelay = 10000, VampDelay = 500, LoyaltyDelay = 1000, FishingCastDelay = 750, FishingDelay = 200, ItemExpireDelay = 60000, MovementDelay = 2000;
         public long ActionTime, RunTime, RegenTime, PotTime, HealTime, AttackTime, StruckTime, TorchTime, DuraTime, DecreaseLoyaltyTime, IncreaseLoyaltyTime, ChatTime, ShoutTime, SpellTime, VampTime, SearchTime, FishingTime, LogTime, FishingFoundTime, CreatureTimeLeftTicker, StackingTime, ItemExpireTime, RestedTime, MovementTime;
+
+        public int CurrentHandWeight,
+                   CurrentWearWeight,
+                   CurrentBagWeight;
 
         public byte ChatTick;
 
@@ -229,14 +233,6 @@ namespace Server.MirObjects
         public LevelEffects LevelEffects = LevelEffects.None;
 
         private int _stepCounter, _runCounter, _fishCounter, _restedCounter;
-
-        public NPCScript DefaultNPC
-        {
-            get
-            {
-                return Envir.DefaultNPC;
-            }
-        }
 
         public uint NPCObjectID;
         public int NPCScriptID;
@@ -432,20 +428,23 @@ namespace Server.MirObjects
             
             for (int i = 0; i < Info.Magics.Count; i++)
             {
-                if (Envir.Time < (Info.Magics[i].CastTime + Info.Magics[i].GetDelay()))
+                var magic = Info.Magics[i];
+
+                if (Envir.Time < (magic.CastTime + magic.GetDelay()))
                 {
-                    Info.Magics[i].CastTime -= Envir.Time;
+                    magic.CastTime -= Envir.Time;
                 }
                 else
                 {
-                    Info.Magics[i].CastTime = int.MinValue;
+                    magic.CastTime = int.MinValue;
                 }
             }
 
             for (int i = Buffs.Count - 1; i >= 0; i--)
             {
-                Buff buff = Buffs[i];
+                var buff = Buffs[i];
                 buff.Caster = null;
+                buff.ObjectID = 0;
 
                 if (buff.Properties.HasFlag(BuffProperty.RemoveOnExit))
                 {
@@ -455,7 +454,7 @@ namespace Server.MirObjects
 
             for (int i = 0; i < PoisonList.Count; i++)
             {
-                Poison poison = PoisonList[i];
+                var poison = PoisonList[i];
                 poison.Owner = null;
             }
 
@@ -2042,11 +2041,12 @@ namespace Server.MirObjects
 
             for (int i = 0; i < Info.Magics.Count; i++)
             {
-                Info.Magics[i].CastTime += Envir.Time;
+                var magic = Info.Magics[i];
+                magic.CastTime += Envir.Time;
 
-                if (Info.Magics[i].CastTime + Info.Magics[i].GetDelay() < Envir.Time)
+                if (magic.CastTime + magic.GetDelay() < Envir.Time)
                 {
-                    Info.Magics[i].CastTime = int.MinValue;
+                    magic.CastTime = int.MinValue;
                 }
             }
 
@@ -2090,7 +2090,7 @@ namespace Server.MirObjects
             GetFriends();
             GetRelationship();
 
-            if ((Info.Mentor != 0) && (Info.MentorDate.AddDays(Settings.MentorLength) < DateTime.Now))
+            if (Info.Mentor != 0 && Info.MentorDate.AddDays(Settings.MentorLength) < DateTime.Now)
             {
                 MentorBreak();
             }
@@ -2105,8 +2105,9 @@ namespace Server.MirObjects
 
             for (int i = 0; i < CurrentQuests.Count; i++)
             {
-                CurrentQuests[i].Init(this);
-                SendUpdateQuest(CurrentQuests[i], QuestState.Add);
+                var quest = CurrentQuests[i];
+                quest.Init(this);
+                SendUpdateQuest(quest, QuestState.Add);
             }
 
             Enqueue(new S.BaseStatsInfo { Stats = Settings.ClassBaseStats[(byte)Class] });
@@ -2116,7 +2117,7 @@ namespace Server.MirObjects
             Enqueue(new S.ChangePMode { Mode = PMode });
             Enqueue(new S.SwitchGroup { AllowGroup = AllowGroup });
 
-            Enqueue(new S.DefaultNPC { ObjectID = DefaultNPC.LoadedObjectID });
+            Enqueue(new S.DefaultNPC { ObjectID = Envir.DefaultNPC.LoadedObjectID });
 
             Enqueue(new S.GuildBuffList() { GuildBuffs = Settings.Guild_BuffList });
             RequestedGuildBuffInfo = true;
@@ -2336,7 +2337,6 @@ namespace Server.MirObjects
             GetObjects();
             Enqueue(new S.Revived());
             Broadcast(new S.ObjectRevived { ObjectID = ObjectID, Effect = true });
-
 
             InSafeZone = true;
             Fishing = false;
@@ -2609,7 +2609,7 @@ namespace Server.MirObjects
             short OldLooks_Weapon = Looks_Weapon;
             short OldLooks_WeaponEffect = Looks_WeaponEffect;
             short OldLooks_Armour = Looks_Armour;
-            short Old_MountType = MountType;
+            short Old_MountType = Mount.MountType;
             byte OldLooks_Wings = Looks_Wings;
             byte OldLight = Light;
 
@@ -2620,7 +2620,7 @@ namespace Server.MirObjects
             Light = 0;
             CurrentWearWeight = 0;
             CurrentHandWeight = 0;
-            MountType = -1;
+            Mount.MountType = -1;
 
             SpecialMode = SpecialItemMode.None;
 
@@ -2646,6 +2646,24 @@ namespace Server.MirObjects
                     CurrentWearWeight = (int)Math.Min(int.MaxValue, CurrentWearWeight + temp.Weight);
 
                 if (temp.CurrentDura == 0 && temp.Info.Durability > 0) continue;
+
+                if (RealItem.Type == ItemType.Armour)
+                {
+                    Looks_Armour = RealItem.Shape;
+                    Looks_Wings = RealItem.Effect;
+                }
+
+                if (RealItem.Type == ItemType.Weapon)
+                {
+                    Looks_Weapon = RealItem.Shape;
+                    Looks_WeaponEffect = RealItem.Effect;
+                }
+
+                if (RealItem.Type == ItemType.Mount)
+                {
+                    Mount.MountType = RealItem.Shape;
+                    //RealItem.Effect;
+                }
 
                 if (temp.Info.IsFishingRod) continue;
 
@@ -2684,24 +2702,6 @@ namespace Server.MirObjects
 
                 RefreshSocketStats(temp, skillsToAdd);
 
-                if (RealItem.Type == ItemType.Armour)
-                {
-                    Looks_Armour = RealItem.Shape;
-                    Looks_Wings = RealItem.Effect;
-                }
-
-                if (RealItem.Type == ItemType.Weapon)
-                {
-                    Looks_Weapon = RealItem.Shape;
-                    Looks_WeaponEffect = RealItem.Effect;
-                }
-
-                if (RealItem.Type == ItemType.Mount)
-                {
-                    MountType = RealItem.Shape;
-                    //RealItem.Effect;
-                }
-
                 if (RealItem.Set == ItemSet.None) continue;
 
                 ItemSets itemSet = ItemSets.Where(set => set.Set == RealItem.Set && !set.Type.Contains(RealItem.Type) && !set.SetComplete).FirstOrDefault();
@@ -2720,7 +2720,9 @@ namespace Server.MirObjects
                 if (RealItem.Set == ItemSet.Mir)
                 {
                     if (!MirSet.Contains((EquipmentSlot)i))
+                    {
                         MirSet.Add((EquipmentSlot)i);
+                    }
                 }
             }
 
@@ -2744,7 +2746,7 @@ namespace Server.MirObjects
                 }
             }
 
-            if (Old_MountType != MountType)
+            if (Old_MountType != Mount.MountType)
             {
                 RefreshMount(false);
             }
@@ -4507,7 +4509,7 @@ namespace Server.MirObjects
                         break;
 
                     case "RIDE":
-                        if (MountType > -1)
+                        if (Mount.MountType > -1)
                         {
                             RidingMount = !RidingMount;
 
@@ -9747,7 +9749,7 @@ namespace Server.MirObjects
         {
             byte exp = (byte)(Envir.Random.Next(3) + 1);
 
-            if ((Settings.MentorSkillBoost) && (Info.Mentor != 0) && (Info.IsMentor))
+            if (Settings.MentorSkillBoost && Info.Mentor != 0 && Info.IsMentor)
             {
                 if (HasBuff(BuffType.Mentee, out _))
                 {
@@ -10036,7 +10038,7 @@ namespace Server.MirObjects
             {
                 ObjectID = ObjectID,
                 RidingMount = RidingMount,
-                MountType = MountType
+                MountType = Mount.MountType
             };
         }
         private Packet GetUpdateInfo()
@@ -10092,7 +10094,7 @@ namespace Server.MirObjects
                 Hidden = Hidden,
                 Effect = HasBuff(BuffType.MagicShield, out _) ? SpellEffect.MagicShieldUp : HasBuff(BuffType.ElementalBarrier, out _) ? SpellEffect.ElementalBarrierUp : SpellEffect.None,
                 WingEffect = Looks_Wings,
-                MountType = MountType,
+                MountType = Mount.MountType,
                 RidingMount = RidingMount,
                 Fishing = Fishing,
 
@@ -10628,15 +10630,15 @@ namespace Server.MirObjects
         {
             S.EquipSlotItem p = new S.EquipSlotItem { Grid = grid, UniqueID = id, To = to, GridTo = gridTo, Success = false };
 
-            UserItem Item = null;
+            UserItem item = null;
 
             switch (gridTo)
             {
                 case MirGridType.Mount:
-                    Item = Info.Equipment[(int)EquipmentSlot.Mount];
+                    item = Info.Equipment[(int)EquipmentSlot.Mount];
                     break;
                 case MirGridType.Fishing:
-                    Item = Info.Equipment[(int)EquipmentSlot.Weapon];
+                    item = Info.Equipment[(int)EquipmentSlot.Weapon];
                     break;
                 case MirGridType.Socket:
                     UserItem temp2;
@@ -10644,14 +10646,14 @@ namespace Server.MirObjects
                     {
                         temp2 = Info.Equipment[i];
                         if (temp2 == null || temp2.UniqueID != idTo) continue;
-                        Item = temp2;
+                        item = temp2;
                         break;
                     }
                     for (int i = 0; i < Info.Inventory.Length; i++)
                     {
                         temp2 = Info.Inventory[i];
                         if (temp2 == null || temp2.UniqueID != idTo) continue;
-                        Item = temp2;
+                        item = temp2;
                         break;
                     }
                     break;
@@ -10660,25 +10662,25 @@ namespace Server.MirObjects
                     return;
             }
 
-            if (Item == null || Item.Slots == null)
+            if (item == null || item.Slots == null)
             {
                 Enqueue(p);
                 return;
             }
 
-            if (gridTo == MirGridType.Fishing && !Item.Info.IsFishingRod)
+            if (gridTo == MirGridType.Fishing && !item.Info.IsFishingRod)
             {
                 Enqueue(p);
                 return;
             }
 
-            if (to < 0 || to >= Item.Slots.Length)
+            if (to < 0 || to >= item.Slots.Length)
             {
                 Enqueue(p);
                 return;
             }
 
-            if (Item.Slots[to] != null)
+            if (item.Slots[to] != null)
             {
                 Enqueue(p);
                 return;
@@ -10741,7 +10743,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if ((Item.Info.IsFishingRod || Item.Info.Type == ItemType.Mount) && temp.Info.Type == ItemType.Socket)
+            if ((item.Info.IsFishingRod || item.Info.Type == ItemType.Mount) && temp.Info.Type == ItemType.Socket)
             {
                 Enqueue(p);
                 return;
@@ -10764,21 +10766,21 @@ namespace Server.MirObjects
                 switch(temp.Info.Shape)
                 {
                     case 1:
-                        if (Item.Info.Type != ItemType.Weapon)
+                        if (item.Info.Type != ItemType.Weapon)
                         {
                             Enqueue(p);
                             return;
                         }
                         break;
                     case 2:
-                        if (Item.Info.Type != ItemType.Armour)
+                        if (item.Info.Type != ItemType.Armour)
                         {
                             Enqueue(p);
                             return;
                         }
                         break;
                     case 3:
-                        if (Item.Info.Type != ItemType.Ring && Item.Info.Type != ItemType.Bracelet && Item.Info.Type != ItemType.Necklace)
+                        if (item.Info.Type != ItemType.Ring && item.Info.Type != ItemType.Bracelet && item.Info.Type != ItemType.Necklace)
                         {
                             Enqueue(p);
                             return;
@@ -10794,7 +10796,7 @@ namespace Server.MirObjects
                 //if (UnlockCurse && Info.Equipment[to].Cursed)
                 //    UnlockCurse = false;
 
-                Item.Slots[to] = temp;
+                item.Slots[to] = temp;
                 array[index] = null;
 
                 p.Success = true;
@@ -13341,10 +13343,6 @@ namespace Server.MirObjects
                 return false;
             }
 
-            //if (item.Info.Type == ItemType.Book)
-            //    for (int i = 0; i < Info.Magics.Count; i++)
-            //        if (Info.Magics[i].Spell == (Spell)item.Info.Shape) return false;
-
             return true;
         }
         private bool CanEquipItem(UserItem item, int slot)
@@ -14586,15 +14584,15 @@ namespace Server.MirObjects
 
             key = string.Format("[@_{0}]", key);
 
-            DelayedAction action = new DelayedAction(DelayedType.NPC, Envir.Time, DefaultNPC.LoadedObjectID, DefaultNPC.ScriptID, key);
+            DelayedAction action = new DelayedAction(DelayedType.NPC, Envir.Time, Envir.DefaultNPC.LoadedObjectID, Envir.DefaultNPC.ScriptID, key);
             ActionList.Add(action);
 
-            Enqueue(new S.NPCUpdate { NPCID = DefaultNPC.LoadedObjectID });
+            Enqueue(new S.NPCUpdate { NPCID = Envir.DefaultNPC.LoadedObjectID });
         }
 
         public void CallDefaultNPC(string key)
         {
-            if (NPCObjectID != DefaultNPC.LoadedObjectID) return;
+            if (NPCObjectID != Envir.DefaultNPC.LoadedObjectID) return;
 
             var script = NPCScript.Get(NPCScriptID);
             script.Call(this, NPCObjectID, key.ToUpper());
@@ -16029,19 +16027,10 @@ namespace Server.MirObjects
 
         #region Guilds
 
-        public void CreateNewbieGuild(string GuildName)
-        {
-            if (Envir.GetGuild(GuildName) != null) return;
-            //make the guild
-            GuildObject guild = new GuildObject(this, GuildName) { Guildindex = ++Envir.NextGuildID };
-            guild.Ranks[0].Members.Clear();
-            guild.Membercount--;
-            Envir.GuildList.Add(guild);
-        }
-        public bool CreateGuild(string GuildName)
+        public bool CreateGuild(string guildName)
         {
             if ((MyGuild != null) || (Info.GuildIndex != -1)) return false;
-            if (Envir.GetGuild(GuildName) != null) return false;
+            if (Envir.GetGuild(guildName) != null) return false;
             if (Info.Level < Settings.Guild_RequiredLevel)
             {
                 ReceiveChat(String.Format("Your level is not high enough to create a guild, required: {0}", Settings.Guild_RequiredLevel), ChatType.System);
@@ -16138,7 +16127,7 @@ namespace Server.MirObjects
             }
             RefreshStats();
             //make the guild
-            GuildObject guild = new GuildObject(this, GuildName) { Guildindex = ++Envir.NextGuildID };
+            GuildObject guild = new GuildObject(this, guildName) { Guildindex = ++Envir.NextGuildID };
             Envir.GuildList.Add(guild);
             Info.GuildIndex = guild.Guildindex;
             MyGuild = guild;
@@ -17143,7 +17132,7 @@ namespace Server.MirObjects
         {
             if (RidingMount)
             {
-                if (MountType < 0)
+                if (Mount.MountType < 0)
                 {
                     RidingMount = false;
                 }
@@ -20682,4 +20671,3 @@ namespace Server.MirObjects
         }
     }
 }
-

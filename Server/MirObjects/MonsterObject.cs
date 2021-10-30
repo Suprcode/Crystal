@@ -2495,11 +2495,6 @@ namespace Server.MirObjects
         {
             Buff b = base.AddBuff(type, owner, duration, stats, refreshStats, updateOnly, values);
 
-            if (HasBuff(type, out b) && b.StackType == BuffStackType.Infinite)
-            {
-                return b;
-            }
-
             var packet = new S.AddBuff
             {
                 Buff = b.ToClientBuff(),

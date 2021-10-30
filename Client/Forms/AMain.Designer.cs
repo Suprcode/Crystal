@@ -49,7 +49,6 @@ namespace Launcher
             this.Config_pb = new System.Windows.Forms.PictureBox();
             this.Close_pb = new System.Windows.Forms.PictureBox();
             this.Version_label = new System.Windows.Forms.Label();
-            this.Main_browser = new System.Windows.Forms.WebBrowser();
             this.CurrentFile_label = new System.Windows.Forms.Label();
             this.CurrentPercent_label = new System.Windows.Forms.Label();
             this.TotalPercent_label = new System.Windows.Forms.Label();
@@ -59,6 +58,7 @@ namespace Launcher
             this.ProgressCurrent_pb = new System.Windows.Forms.PictureBox();
             this.TotalProg_pb = new System.Windows.Forms.PictureBox();
             this.Launch_pb = new System.Windows.Forms.PictureBox();
+            this.Main_browser = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.Movement_panel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Config_pb)).BeginInit();
@@ -68,6 +68,7 @@ namespace Launcher
             ((System.ComponentModel.ISupportInitialize)(this.ProgressCurrent_pb)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TotalProg_pb)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Launch_pb)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Main_browser)).BeginInit();
             this.SuspendLayout();
             // 
             // ActionLabel
@@ -190,22 +191,6 @@ namespace Launcher
             this.Version_label.TabIndex = 31;
             this.Version_label.Text = "Version 1.0.0.0";
             this.Version_label.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // Main_browser
-            //
-            this.Main_browser.AllowWebBrowserDrop = false;
-            this.Main_browser.IsWebBrowserContextMenuEnabled = false;
-            this.Main_browser.Location = new System.Drawing.Point(8, 46);
-            this.Main_browser.MinimumSize = new System.Drawing.Size(20, 20);
-            this.Main_browser.Name = "Main_browser";
-            this.Main_browser.ScriptErrorsSuppressed = true;
-            this.Main_browser.ScrollBarsEnabled = false;
-            this.Main_browser.Size = new System.Drawing.Size(784, 411);
-            this.Main_browser.TabIndex = 24;
-            this.Main_browser.Url = new System.Uri("", System.UriKind.Relative);
-            this.Main_browser.Visible = false;
-            this.Main_browser.WebBrowserShortcutsEnabled = false;
-            this.Main_browser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.Main_browser_DocumentCompleted);
             // 
             // CurrentFile_label
             // 
@@ -331,6 +316,17 @@ namespace Launcher
             this.Launch_pb.MouseLeave += new System.EventHandler(this.Launch_pb_MouseLeave);
             this.Launch_pb.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Launch_pb_MouseUp);
             // 
+            // Main_browser
+            // 
+            this.Main_browser.CausesValidation = false;
+            this.Main_browser.CreationProperties = null;
+            this.Main_browser.DefaultBackgroundColor = System.Drawing.Color.White;
+            this.Main_browser.Location = new System.Drawing.Point(7, 46);
+            this.Main_browser.Name = "Main_browser";
+            this.Main_browser.Size = new System.Drawing.Size(785, 410);
+            this.Main_browser.TabIndex = 32;
+            this.Main_browser.ZoomFactor = 1D;
+            // 
             // AMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -339,6 +335,7 @@ namespace Launcher
             this.BackgroundImage = global::Client.Properties.Resources.pfffft;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(800, 548);
+            this.Controls.Add(this.Main_browser);
             this.Controls.Add(this.SpeedLabel);
             this.Controls.Add(this.Credit_label);
             this.Controls.Add(this.Version_label);
@@ -347,7 +344,6 @@ namespace Launcher
             this.Controls.Add(this.CurrentFile_label);
             this.Controls.Add(this.ProgTotalEnd_pb);
             this.Controls.Add(this.ProgEnd_pb);
-            this.Controls.Add(this.Main_browser);
             this.Controls.Add(this.ProgressCurrent_pb);
             this.Controls.Add(this.TotalProg_pb);
             this.Controls.Add(this.Launch_pb);
@@ -375,6 +371,7 @@ namespace Launcher
             ((System.ComponentModel.ISupportInitialize)(this.ProgressCurrent_pb)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TotalProg_pb)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Launch_pb)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Main_browser)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -389,7 +386,6 @@ namespace Launcher
         private System.Windows.Forms.Panel Movement_panel;
         private System.Windows.Forms.PictureBox TotalProg_pb;
         private System.Windows.Forms.PictureBox ProgressCurrent_pb;
-        private System.Windows.Forms.WebBrowser Main_browser;
         private System.Windows.Forms.Label Name_label;
         private System.Windows.Forms.PictureBox ProgEnd_pb;
         private System.Windows.Forms.PictureBox ProgTotalEnd_pb;
@@ -400,6 +396,7 @@ namespace Launcher
         private System.Windows.Forms.Label Version_label;
         private System.Windows.Forms.PictureBox Config_pb;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private Microsoft.Web.WebView2.WinForms.WebView2 Main_browser;
     }
 }
 

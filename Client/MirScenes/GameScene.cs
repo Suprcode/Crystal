@@ -4442,6 +4442,8 @@ namespace Client.MirScenes
             {
                 if (BuffsDialog.Buffs[i].Type != p.Type || User.ObjectID != p.ObjectID) continue;
 
+                User.RefreshStats();
+
                 if (BuffsDialog.Buffs[i].Paused == p.Paused) return;
 
                 BuffsDialog.Buffs[i].Paused = p.Paused;
@@ -4455,9 +4457,6 @@ namespace Client.MirScenes
                     BuffsDialog.Buffs[i].ExpireTime += CMain.Time;
                 }
             }
-
-            if (User.ObjectID == p.ObjectID)
-                User.RefreshStats();
         }
 
         private void ObjectHidden(S.ObjectHidden p)

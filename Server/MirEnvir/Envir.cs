@@ -1739,7 +1739,9 @@ namespace Server.MirEnvir
             for (var i = 1; i < MobThreading.Length; i++)
             {
                 if (MobThreads[i] != null)
+                {
                     MobThreads[i].EndTime = Time + 9999;
+                }
                 if (MobThreading[i] != null &&
                     MobThreading[i].ThreadState != System.Threading.ThreadState.Stopped && MobThreading[i].ThreadState != System.Threading.ThreadState.Unstarted)
                 {
@@ -1777,7 +1779,9 @@ namespace Server.MirEnvir
 
             BuffInfoList.Clear();
             foreach (var buff in BuffInfo.Load())
+            {
                 BuffInfoList.Add(buff);
+            }
 
             MessageQueue.Enqueue($"{BuffInfoList.Count} Buffs Loaded.");
 
@@ -1785,18 +1789,24 @@ namespace Server.MirEnvir
             foreach (var recipe in Directory.GetFiles(Settings.RecipePath, "*.txt")
                 .Select(path => Path.GetFileNameWithoutExtension(path))
                 .ToArray())
+            {
                 RecipeInfoList.Add(new RecipeInfo(recipe));
+            }
 
             MessageQueue.Enqueue($"{RecipeInfoList.Count} Recipes Loaded.");
 
             for (var i = 0; i < MapInfoList.Count; i++)
+            {
                 MapInfoList[i].CreateMap();
+            }
             MessageQueue.Enqueue($"{MapInfoList.Count} Maps Loaded.");
 
             for (var i = 0; i < ItemInfoList.Count; i++)
             {
                 if (ItemInfoList[i].StartItem)
+                {
                     StartItems.Add(ItemInfoList[i]);
+                }
             }
 
             ReloadDrops();

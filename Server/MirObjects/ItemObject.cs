@@ -54,9 +54,9 @@ namespace Server.MirObjects
             get { throw new NotSupportedException(); }
         }
 
-        public ItemObject(MapObject dropper, UserItem item, bool DeathDrop = false)
+        public ItemObject(MapObject dropper, UserItem item, bool deathDrop = false)
         {
-            if (DeathDrop)//player dropped it when he died: allow for time to run back and pickup his drops
+            if (deathDrop)//player dropped it when he died: allow for time to run back and pickup his drops
                 ExpireTime = Envir.Time + Settings.PlayerDiedItemTimeOut * Settings.Minute;
             else
                 ExpireTime = Envir.Time + Settings.ItemTimeOut * Settings.Minute;
@@ -116,14 +116,14 @@ namespace Server.MirObjects
             CurrentMap = dropper.CurrentMap;
             CurrentLocation = dropper.CurrentLocation;
         }
-        public ItemObject(MapObject dropper, uint gold, Point manuallocation)
+        public ItemObject(MapObject dropper, uint gold, Point manualLocation)
         {
             ExpireTime = Envir.Time + Settings.ItemTimeOut * Settings.Minute;
 
             Gold = gold;
 
             CurrentMap = dropper.CurrentMap;
-            CurrentLocation = manuallocation;
+            CurrentLocation = manualLocation;
         }
          
         public override void Process()

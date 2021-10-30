@@ -65,14 +65,8 @@ namespace Server.MirObjects
         public List<NPCObject> ConquestNPCs = new List<NPCObject>();
 
 
-        public ConquestObject()
-        {
+        public ConquestObject() { }
 
-        }
-        public ConquestObject(PlayerObject owner, string name)
-        {
-
-        }
         public ConquestObject(BinaryReader reader)
         {
             Owner = reader.ReadInt32();
@@ -859,14 +853,8 @@ namespace Server.MirObjects
         public Gate Gate;
 
 
-        public ConquestSiegeObject()
-        {
+        public ConquestSiegeObject() { }
 
-        }
-        public ConquestSiegeObject(PlayerObject owner, string name)
-        {
-
-        }
         public ConquestSiegeObject(BinaryReader reader)
         {
             Index = reader.ReadInt32();
@@ -962,10 +950,7 @@ namespace Server.MirObjects
 
         public NPCObject Flag;
 
-        public ConquestFlagObject()
-        {
-
-        }
+        public ConquestFlagObject() { }
 
         public void Spawn()
         {
@@ -1038,14 +1023,7 @@ namespace Server.MirObjects
         public Wall Wall;
 
 
-        public ConquestWallObject()
-        {
-
-        }
-        public ConquestWallObject(PlayerObject owner, string name)
-        {
-
-        }
+        public ConquestWallObject() { }
         public ConquestWallObject(BinaryReader reader)
         {
             Index = reader.ReadInt32();
@@ -1144,14 +1122,8 @@ namespace Server.MirObjects
         public Gate Gate;
 
 
-        public ConquestGateObject()
-        {
+        public ConquestGateObject() { }
 
-        }
-        public ConquestGateObject(PlayerObject owner, string name)
-        {
-
-        }
         public ConquestGateObject(BinaryReader reader)
         {
             Index = reader.ReadInt32();
@@ -1251,14 +1223,8 @@ namespace Server.MirObjects
         public ConquestArcher ArcherMonster;
 
 
-        public ConquestArcherObject()
-        {
+        public ConquestArcherObject() { }
 
-        }
-        public ConquestArcherObject(PlayerObject owner, string name)
-        {
-
-        }
         public ConquestArcherObject(BinaryReader reader)
         {
             Index = reader.ReadInt32();
@@ -1271,7 +1237,6 @@ namespace Server.MirObjects
             writer.Write(Index);
             writer.Write(Alive);
         }
-
 
         public void Spawn(bool Revive = false)
         {

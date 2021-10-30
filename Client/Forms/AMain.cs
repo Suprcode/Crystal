@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using Client;
 using System.Linq;
+using Microsoft.Web.WebView2.Core;
 
 namespace Launcher
 {
@@ -39,6 +40,7 @@ namespace Launcher
         public AMain()
         {
             InitializeComponent();
+
             BackColor = Color.FromArgb(1, 0, 0);
             TransparencyKey = Color.FromArgb(1, 0, 0);
         }
@@ -332,7 +334,10 @@ namespace Launcher
 
         private void AMain_Load(object sender, EventArgs e)
         {
-            if (Settings.P_BrowserAddress != "") Main_browser.Navigate(new Uri(Settings.P_BrowserAddress));
+            var envir = CoreWebView2Environment.CreateAsync(null, Settings.ResourcePath).Result;
+            Main_browser.EnsureCoreWebView2Async(envir);
+
+            if (Settings.P_BrowserAddress != "") Main_browser.Source = new Uri(Settings.P_BrowserAddress);
 
             RepairOldFiles();
 
@@ -476,7 +481,7 @@ namespace Launcher
 
         private void Main_browser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            if (Main_browser.Url.AbsolutePath != "blank") Main_browser.Visible = true;
+            if (Main_browser.Source.AbsolutePath != "blank") Main_browser.Visible = true;
         }
 
         private void InterfaceTimer_Tick(object sender, EventArgs e)

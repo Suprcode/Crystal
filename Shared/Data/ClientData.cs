@@ -17,9 +17,7 @@ public class ClientMagic
     public bool IsTempSpell;
     public long CastTime, Delay;
 
-    public ClientMagic()
-    {
-    }
+    public ClientMagic() { }
 
     public ClientMagic(BinaryReader reader)
     {

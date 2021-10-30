@@ -8,7 +8,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects
 {
-    class DecoObject : MapObject
+    public sealed class DecoObject : MapObject
     {
         public override ObjectType Race
         {

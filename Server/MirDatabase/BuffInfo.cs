@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Server.MirEnvir;
+using Server.MirObjects;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Server.MirDatabase
@@ -84,6 +87,189 @@ namespace Server.MirDatabase
             };
 
             return info;
+        }
+    }
+
+    public class Buff
+    {
+        protected static Envir Envir
+        {
+            get { return Envir.Main; }
+        }
+
+        private Dictionary<string, object> Data { get; set; } = new Dictionary<string, object>();
+
+        public BuffInfo Info;
+        public MapObject Caster;
+        public uint ObjectID;
+        public long ExpireTime;
+
+        public long LastTime, NextTime;
+
+        public Stats Stats;
+
+        public int[] Values;
+
+        public bool FlagForRemoval;
+        public bool Paused;
+
+        public BuffType Type
+        {
+            get { return Info.Type; }
+        }
+
+        public BuffStackType StackType
+        {
+            get { return Info.StackType; }
+        }
+
+        public BuffProperty Properties
+        {
+            get { return Info.Properties; }
+        }
+
+        public Buff(BuffType type)
+        {
+            Info = Envir.GetBuffInfo(type);
+            Stats = new Stats();
+            Data = new Dictionary<string, object>();
+        }
+
+        public Buff(BinaryReader reader, int version, int customVersion)
+        {
+            var type = (BuffType)reader.ReadByte();
+
+            Info = Envir.GetBuffInfo(type);
+
+            Caster = null;
+
+            if (version < 88)
+            {
+                var visible = reader.ReadBoolean();
+            }
+
+            ObjectID = reader.ReadUInt32();
+            ExpireTime = reader.ReadInt64();
+
+            if (version <= 84)
+            {
+                Values = new int[reader.ReadInt32()];
+
+                for (int i = 0; i < Values.Length; i++)
+                {
+                    Values[i] = reader.ReadInt32();
+                }
+
+                if (version < 88)
+                {
+                    var infinite = reader.ReadBoolean();
+                }
+
+                Stats = new Stats();
+                Data = new Dictionary<string, object>();
+            }
+            else
+            {
+                if (version < 88)
+                {
+                    var stackable = reader.ReadBoolean();
+                }
+
+                Values = new int[0];
+                Stats = new Stats(reader, version, customVersion);
+                Data = new Dictionary<string, object>();
+
+                int count = reader.ReadInt32();
+
+                for (int i = 0; i < count; i++)
+                {
+                    var key = reader.ReadString();
+                    var length = reader.ReadInt32();
+
+                    var array = new byte[length];
+
+                    for (int j = 0; j < array.Length; j++)
+                    {
+                        array[j] = reader.ReadByte();
+                    }
+
+                    Data[key] = Functions.DeserializeFromBytes(array);
+                }
+
+                if (version > 86)
+                {
+                    count = reader.ReadInt32();
+
+                    Values = new int[count];
+
+                    for (int i = 0; i < count; i++)
+                    {
+                        Values[i] = reader.ReadInt32();
+                    }
+                }
+            }
+        }
+
+        public void Save(BinaryWriter writer)
+        {
+            writer.Write((byte)Type);
+            writer.Write(ObjectID);
+            writer.Write(ExpireTime);
+
+            Stats.Save(writer);
+
+            writer.Write(Data.Count);
+
+            foreach (KeyValuePair<string, object> pair in Data)
+            {
+                var bytes = Functions.SerializeToBytes(pair.Value);
+
+                writer.Write(pair.Key);
+                writer.Write(bytes.Length);
+
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    writer.Write(bytes[i]);
+                }
+            }
+
+            writer.Write(Values.Length);
+
+            for (int i = 0; i < Values.Length; i++)
+            {
+                writer.Write(Values[i]);
+            }
+        }
+
+        public T Get<T>(string key)
+        {
+            if (!Data.TryGetValue(key, out object result))
+            {
+                return default;
+            }
+
+            return (T)result;
+        }
+
+        public void Set(string key, object val)
+        {
+            Data[key] = val;
+        }
+
+        public ClientBuff ToClientBuff()
+        {
+            return new ClientBuff
+            {
+                Type = Type,
+                Caster = Caster?.Name ?? "",
+                ObjectID = ObjectID,
+                Visible = Info.Visible,
+                Infinite = StackType == BuffStackType.Infinite,
+                Paused = Paused,
+                ExpireTime = ExpireTime,
+                Stats = new Stats(Stats),
+                Values = Values
+            };
         }
     }
 }

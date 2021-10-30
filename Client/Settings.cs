@@ -59,6 +59,7 @@ namespace Client
                             TransformEffectPath = @".\Data\TransformEffect\",
                             TransformWeaponEffectPath = @".\Data\TransformWeaponEffect\",
                             MouseCursorPath = @".\Data\Cursors\",
+                            ResourcePath = @".\DirectX\",
                             UserDataPath = @".\Data\UserData\";
 
         //Logs

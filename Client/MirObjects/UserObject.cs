@@ -228,6 +228,22 @@ namespace Client.MirObjects
 
                 if (temp.CurrentDura == 0 && RealItem.Durability > 0) continue;
 
+                if (RealItem.Type == ItemType.Armour)
+                {
+                    Armour = RealItem.Shape;
+                    WingEffect = RealItem.Effect;
+                }
+                if (RealItem.Type == ItemType.Weapon)
+                {
+                    Weapon = RealItem.Shape;
+                    WeaponEffect = RealItem.Effect;
+                }
+
+                if (RealItem.Type == ItemType.Mount)
+                {
+                    MountType = RealItem.Shape;
+                }
+
                 if (temp.Info.IsFishingRod) continue;
 
                 Stats.Add(RealItem.Stats);
@@ -260,20 +276,6 @@ namespace Client.MirObjects
                 }
 
                 RefreshSocketStats(temp);
-
-                if (RealItem.Type == ItemType.Armour)
-                {
-                    Armour = RealItem.Shape;
-                    WingEffect = RealItem.Effect;
-                }
-                if (RealItem.Type == ItemType.Weapon)
-                {
-                    Weapon = RealItem.Shape;
-                    WeaponEffect = RealItem.Effect;
-                }
-
-                if (RealItem.Type == ItemType.Mount)
-                    MountType = RealItem.Shape;
 
                 if (RealItem.Set == ItemSet.None) continue;
 

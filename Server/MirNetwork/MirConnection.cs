@@ -1118,7 +1118,7 @@ namespace Server.MirNetwork
                 return;
             }
 
-            if (p.ObjectID == Player.DefaultNPC.LoadedObjectID && Player.NPCObjectID == Player.DefaultNPC.LoadedObjectID)
+            if (p.ObjectID == Envir.DefaultNPC.LoadedObjectID && Player.NPCObjectID == Envir.DefaultNPC.LoadedObjectID)
             {
                 Player.CallDefaultNPC(p.Key);
                 return;
