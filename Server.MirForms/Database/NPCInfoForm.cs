@@ -24,13 +24,13 @@ namespace Server
 
             for (int i = 0; i < Envir.MapInfoList.Count; i++) MapComboBox.Items.Add(Envir.MapInfoList[i]);
 
-            if (ConquestHidden_combo.Items.Count != Envir.ConquestInfos.Count)
+            if (ConquestHidden_combo.Items.Count != Envir.ConquestInfoList.Count)
             {
                 ConquestHidden_combo.Items.Clear();
 
-                for (int i = 0; i < Envir.ConquestInfos.Count; i++)
+                for (int i = 0; i < Envir.ConquestInfoList.Count; i++)
                 {
-                    ConquestHidden_combo.Items.Add(Envir.ConquestInfos[i]);
+                    ConquestHidden_combo.Items.Add(Envir.ConquestInfoList[i]);
                 }
             }
 
@@ -110,7 +110,7 @@ namespace Server
             MinLev_textbox.Text = info.MinLev.ToString();
             MaxLev_textbox.Text = info.MaxLev.ToString();
             Class_combo.Text = info.ClassRequired;
-            ConquestHidden_combo.SelectedItem = Envir.ConquestInfos.FirstOrDefault(x => x.Index == info.Conquest);
+            ConquestHidden_combo.SelectedItem = Envir.ConquestInfoList.FirstOrDefault(x => x.Index == info.Conquest);
             Day_combo.Text = info.DayofWeek;
             TimeVisible_checkbox.Checked = info.TimeVisible;
             StartHour_combo.Text = info.HourStart.ToString();

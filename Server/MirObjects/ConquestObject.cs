@@ -17,32 +17,55 @@ namespace Server.MirObjects
             get { return Envir.Main; }
         }
 
-        public ConquestInfo Info;
+        public ConquestGuildInfo GuildInfo;
 
-        public int Owner = 0;
+        public ConquestInfo Info
+        {
+            get { return GuildInfo.Info; }
+            set { GuildInfo.Info = value; }
+        }
+
+        public List<ConquestGuildArcherInfo> ArcherList
+        {
+            get { return GuildInfo.ArcherList; }
+            set { GuildInfo.ArcherList = value; }
+        }
+
+        public List<ConquestGuildGateInfo> GateList
+        {
+            get { return GuildInfo.GateList; }
+            set { GuildInfo.GateList = value; }
+        }
+
+        public List<ConquestGuildWallInfo> WallList
+        {
+            get { return GuildInfo.WallList; }
+            set { GuildInfo.WallList = value; }
+        }
+
+        public List<ConquestGuildSiegeInfo> SiegeList
+        {
+            get { return GuildInfo.SiegeList; }
+            set { GuildInfo.SiegeList = value; }
+        }
+
+        public List<ConquestGuildFlagInfo> FlagList
+        {
+            get { return GuildInfo.FlagList; }
+            set { GuildInfo.FlagList = value; }
+        }
+
+        public Dictionary<ConquestGuildFlagInfo, Dictionary<GuildObject, int>> ControlPoints
+        {
+            get { return GuildInfo.ControlPoints; }
+            set { GuildInfo.ControlPoints = value; }
+        }
+
         public GuildObject Guild;
-
-        public int AttackerID;
 
         public Map ConquestMap;
         public Map PalaceMap;
-        public List<Map> ExtraMaps = new List<Map>();
 
-        public List<ConquestArcherObject> ArcherList = new List<ConquestArcherObject>();
-        public List<ConquestGateObject> GateList = new List<ConquestGateObject>();
-        public List<ConquestWallObject> WallList = new List<ConquestWallObject>();
-        public List<ConquestSiegeObject> SiegeList = new List<ConquestSiegeObject>();
-        public List<ConquestFlagObject> FlagList = new List<ConquestFlagObject>();
-
-        public int ArcherCount;
-        public int GateCount;
-        public int WallCount;
-        public int SiegeCount;
-
-        public uint GoldStorage;
-        public byte npcRate = 0;
-
-        public bool NeedSave = false;
         private bool AtWar = false;
 
         public DateTime WarStartTime;
@@ -54,72 +77,140 @@ namespace Server.MirObjects
         public long ScheduleTimer;
         public long ScoreTimer;
 
-
         public const int MAX_KING_POINTS = 18; //3 minutes
         public const int MAX_CONTROL_POINTS = 6; //1 minute
 
         public Dictionary<GuildObject, int> KingPoints = new Dictionary<GuildObject, int>();
-        public Dictionary<ConquestFlagObject, Dictionary<GuildObject, int>> ControlPoints = new Dictionary<ConquestFlagObject, Dictionary<GuildObject, int>>();
 
         public List<SpellObject> WarEffects = new List<SpellObject>();
         public List<NPCObject> ConquestNPCs = new List<NPCObject>();
 
-
-        public ConquestObject() { }
-
-        public ConquestObject(BinaryReader reader)
+        public ConquestObject(ConquestGuildInfo guildInfo)
         {
-            Owner = reader.ReadInt32();
-            ArcherCount = reader.ReadInt32();
-            for (int i = 0; i < ArcherCount; i++)
-            {
-                ArcherList.Add(new ConquestArcherObject(reader));
-            }
-            GateCount = reader.ReadInt32();
-            for (int i = 0; i < GateCount; i++)
-            {
-                GateList.Add(new ConquestGateObject(reader));
-            }
-            WallCount = reader.ReadInt32();
-            for (int i = 0; i < WallCount; i++)
-            {
-                WallList.Add(new ConquestWallObject(reader));
-            }
-            SiegeCount = reader.ReadInt32();
-            for (int i = 0; i < SiegeCount; i++)
-            {
-                SiegeList.Add(new ConquestSiegeObject(reader));
-            }
-            GoldStorage = reader.ReadUInt32();
-            npcRate = reader.ReadByte();
-            AttackerID = reader.ReadInt32();
+            GuildInfo = guildInfo;
         }
-        public void Save(BinaryWriter writer)
+
+        public void Bind()
         {
-            writer.Write(Owner);
-            writer.Write(ArcherList.Count);
-            for (int i = 0; i < ArcherList.Count; i++)
+            //Bind Info to Saved Archer objects or create new objects
+            for (var j = 0; j < Info.ConquestGuards.Count; j++)
             {
-                ArcherList[i].Save(writer);
+                var tempArcher = GuildInfo.ArcherList.FirstOrDefault(x => x.Index == Info.ConquestGuards[j].Index);
+
+                if (tempArcher != null)
+                {
+                    tempArcher.Info = Info.ConquestGuards[j];
+                    tempArcher.Conquest = this;
+                }
+                else
+                {
+                    GuildInfo.ArcherList.Add(new ConquestGuildArcherInfo { Info = Info.ConquestGuards[j], Alive = true, Index = Info.ConquestGuards[j].Index, Conquest = this });
+                }
             }
-            writer.Write(GateList.Count);
-            for (int i = 0; i < GateList.Count; i++)
+
+            //Remove archers that have been removed from DB
+            for (var j = 0; j < GuildInfo.ArcherList.Count; j++)
             {
-                GateList[i].Save(writer);
+                if (GuildInfo.ArcherList[j].Info == null)
+                {
+                    GuildInfo.ArcherList.Remove(GuildInfo.ArcherList[j]);
+                }
             }
-            writer.Write(WallList.Count);
-            for (int i = 0; i < WallList.Count; i++)
+
+            //Bind Info to Saved Gate objects or create new objects
+            for (var j = 0; j < Info.ConquestGates.Count; j++)
             {
-                WallList[i].Save(writer);
+                var tempGate = GuildInfo.GateList.FirstOrDefault(x => x.Index == Info.ConquestGates[j].Index);
+
+                if (tempGate != null)
+                {
+                    tempGate.Info = Info.ConquestGates[j];
+                    tempGate.Conquest = this;
+                }
+                else
+                {
+                    GuildInfo.GateList.Add(new ConquestGuildGateInfo { Info = Info.ConquestGates[j], Health = int.MaxValue, Index = Info.ConquestGates[j].Index, Conquest = this });
+                }
             }
-            writer.Write(SiegeList.Count);
-            for (int i = 0; i < SiegeList.Count; i++)
+
+            //Bind Info to Saved Flag objects or create new objects
+            for (var j = 0; j < Info.ConquestFlags.Count; j++)
             {
-                SiegeList[i].Save(writer);
+                GuildInfo.FlagList.Add(new ConquestGuildFlagInfo { Info = Info.ConquestFlags[j], Index = Info.ConquestFlags[j].Index, Conquest = this });
             }
-            writer.Write(GoldStorage);
-            writer.Write(npcRate);
-            writer.Write(AttackerID);
+
+            //Remove Gates that have been removed from DB
+            for (var j = 0; j < GuildInfo.GateList.Count; j++)
+            {
+                if (GuildInfo.GateList[j].Info == null)
+                {
+                    GuildInfo.GateList.Remove(GuildInfo.GateList[j]);
+                }
+            }
+
+            //Bind Info to Saved Wall objects or create new objects
+            for (var j = 0; j < Info.ConquestWalls.Count; j++)
+            {
+                var tempWall = GuildInfo.WallList.FirstOrDefault(x => x.Index == Info.ConquestWalls[j].Index);
+
+                if (tempWall != null)
+                {
+                    tempWall.Info = Info.ConquestWalls[j];
+                    tempWall.Conquest = this;
+                }
+                else
+                {
+                    GuildInfo.WallList.Add(new ConquestGuildWallInfo { Info = Info.ConquestWalls[j], Index = Info.ConquestWalls[j].Index, Health = int.MaxValue, Conquest = this });
+                }
+            }
+
+            //Remove Walls that have been removed from DB
+            for (var j = 0; j < GuildInfo.WallList.Count; j++)
+            {
+                if (GuildInfo.WallList[j].Info == null)
+                    GuildInfo.WallList.Remove(GuildInfo.WallList[j]);
+            }
+
+
+            //Bind Info to Saved Siege objects or create new objects
+            for (var j = 0; j < Info.ConquestSieges.Count; j++)
+            {
+                var tempSiege = GuildInfo.SiegeList.FirstOrDefault(x => x.Index == Info.ConquestSieges[j].Index);
+
+                if (tempSiege != null)
+                {
+                    tempSiege.Info = Info.ConquestSieges[j];
+                    tempSiege.Conquest = this;
+                }
+                else
+                {
+                    GuildInfo.SiegeList.Add(new ConquestGuildSiegeInfo { Info = Info.ConquestSieges[j], Index = Info.ConquestSieges[j].Index, Health = int.MaxValue, Conquest = this });
+                }
+            }
+
+            //Remove Siege that have been removed from DB
+            for (var j = 0; j < GuildInfo.SiegeList.Count; j++)
+            {
+                if (GuildInfo.SiegeList[j].Info == null)
+                {
+                    GuildInfo.SiegeList.Remove(GuildInfo.SiegeList[j]);
+                }
+            }
+
+            //Bind Info to Saved Flag objects or create new objects
+            for (var j = 0; j < Info.ControlPoints.Count; j++)
+            {
+                ConquestGuildFlagInfo cp;
+                GuildInfo.ControlPoints.Add(cp = new ConquestGuildFlagInfo { Info = Info.ControlPoints[j], Index = Info.ControlPoints[j].Index, Conquest = this }, new Dictionary<GuildObject, int>());
+            }
+
+            LoadArchers();
+            LoadGates();
+            LoadWalls();
+            LoadSieges();
+            LoadFlags();
+            LoadNPCs();
+            LoadControlPoints();
         }
 
         public bool WarIsOn
@@ -178,24 +269,26 @@ namespace Server.MirObjects
         public void LoadNPCs()
         {
             for (int i = 0; i < ConquestMap.NPCs.Count; i++)
+            {
                 if (ConquestMap.NPCs[i].Info.Conquest == Info.Index)
                 {
                     ConquestMap.NPCs[i].Conq = this;
                     ConquestNPCs.Add(ConquestMap.NPCs[i]);
                 }
-                    
+            }
 
             PalaceMap = Envir.GetMap(Info.PalaceIndex);
 
             if (PalaceMap != null)
             {
                 for (int i = 0; i < PalaceMap.NPCs.Count; i++)
+                {
                     if (PalaceMap.NPCs[i].Info.Conquest == Info.Index)
                     {
                         PalaceMap.NPCs[i].Conq = this;
                         ConquestNPCs.Add(ConquestMap.NPCs[i]);
                     }
-                        
+                }                    
             }
 
             Map temp;
@@ -203,13 +296,24 @@ namespace Server.MirObjects
             {
                 temp = Envir.GetMap(Info.ExtraMaps[i]);
                 if (temp == null) continue;
+
                 for (int j = 0; j < temp.NPCs.Count; j++)
+                {
                     if (temp.NPCs[j].Info.Conquest == Info.Index)
                     {
                         temp.NPCs[j].Conq = this;
                         ConquestNPCs.Add(temp.NPCs[j]);
                     }
+                }
                         
+            }
+        }
+
+        public void LoadControlPoints()
+        {
+            foreach (var cp in ControlPoints.Keys)
+            {
+                cp.Spawn();
             }
         }
 
@@ -253,9 +357,8 @@ namespace Server.MirObjects
                 switch (StartType)
                 {
                     case ConquestType.Request:
-                        AttackerID = -1;
+                        GuildInfo.AttackerID = -1;
                         break;
-
                 }
 
                 switch (GameType)
@@ -273,37 +376,52 @@ namespace Server.MirObjects
             }
         }
 
-        private void NPCVisibility(bool Show = true)
+        private void NPCVisibility(bool show = true)
         {
             //Check if Players in Conquest Zone;
             for (int j = 0; j < ConquestMap.Players.Count; j++)
+            {
                 ConquestMap.Players[j].CheckConquest();
+            }
 
             PalaceMap = Envir.GetMap(Info.PalaceIndex);
             if (PalaceMap != null)
             {
-                if (Show)
+                if (show)
+                {
                     PalaceMap.tempConquest = this;
+                }
                 else
+                {
                     PalaceMap.tempConquest = null;
-            
+                }
+
                 for (int j = 0; j < PalaceMap.Players.Count; j++)
+                {
                     PalaceMap.Players[j].CheckConquest();
+                }
             }
 
             Map temp;
             for (int i = 0; i < Info.ExtraMaps.Count; i++)
             {
                 temp = Envir.GetMap(Info.ExtraMaps[i]);
+
                 if (temp == null) continue;
 
-                if (Show)
+                if (show)
+                {
                     temp.tempConquest = this;
+                }
                 else
+                {
                     temp.tempConquest = null;
+                }
 
                 for (int k = 0; k < temp.Players.Count; k++)
+                {
                     temp.Players[k].CheckConquest();
+                }
             }
 
 
@@ -371,7 +489,7 @@ namespace Server.MirObjects
                     {
                         if (Info.Type == ConquestType.Request)
                         {
-                            if (AttackerID != -1)
+                            if (GuildInfo.AttackerID != -1)
                             {
                                 GameType = Info.Game;
                                 StartType = Info.Type;
@@ -384,13 +502,12 @@ namespace Server.MirObjects
                             StartType = Info.Type;
                             StartWar(Info.Game);
                         }
-
                     }
                 }
             }
+
             ScheduleTimer = Envir.Time + Settings.Minute;
         }
-
 
         public void Process()
         {
@@ -400,10 +517,10 @@ namespace Server.MirObjects
 
         public void Reset()
         {
-            Owner = -1;
-            AttackerID = -1;
-            GoldStorage = 0;
-            npcRate = 0;
+            GuildInfo.Owner = -1;
+            GuildInfo.AttackerID = -1;
+            GuildInfo.GoldStorage = 0;
+            GuildInfo.NPCRate = 0;
 
             if (Guild != null)
             {
@@ -432,7 +549,7 @@ namespace Server.MirObjects
                 //SiegeList[i].Repair();
             }
 
-            NeedSave = true;
+            GuildInfo.NeedSave = true;
         }
 
         public void TakeConquest(PlayerObject player = null, GuildObject winningGuild = null)
@@ -448,16 +565,16 @@ namespace Server.MirObjects
                 case ConquestGame.CapturePalace:
                     if (player == null) return;
                     if (StartType == ConquestType.Request)
-                        if (player.MyGuild.Guildindex != AttackerID) break;
+                        if (player.MyGuild.Guildindex != GuildInfo.AttackerID) break;
 
                     if (Guild != null)
                     {
                         tmpPrevious = Guild;
                         Guild.Conquest = null;
-                        AttackerID = tmpPrevious.Guildindex;
+                        GuildInfo.AttackerID = tmpPrevious.Guildindex;
                     }
 
-                    Owner = player.MyGuild.Guildindex;
+                    GuildInfo.Owner = player.MyGuild.Guildindex;
                     Guild = player.MyGuild;
                     player.MyGuild.Conquest = this;
                     EndWar(GameType);
@@ -465,26 +582,26 @@ namespace Server.MirObjects
                 case ConquestGame.KingOfHill:
                 case ConquestGame.Classic:
                     if (StartType == ConquestType.Request)
-                        if (winningGuild.Guildindex != AttackerID) break;
+                        if (winningGuild.Guildindex != GuildInfo.AttackerID) break;
 
                     if (Guild != null)
                     {
                         tmpPrevious = Guild;
                         Guild.Conquest = null;
-                        AttackerID = tmpPrevious.Guildindex;
+                        GuildInfo.AttackerID = tmpPrevious.Guildindex;
                     }
 
-                    Owner = winningGuild.Guildindex;
+                    GuildInfo.Owner = winningGuild.Guildindex;
                     Guild = winningGuild;
                     Guild.Conquest = this;
                     break;
                 case ConquestGame.ControlPoints:
-                    Owner = winningGuild.Guildindex;
+                    GuildInfo.Owner = winningGuild.Guildindex;
                     Guild = winningGuild;
                     Guild.Conquest = this;
 
-                    List<ConquestFlagObject> keys = new List<ConquestFlagObject>(ControlPoints.Keys);
-                    foreach (ConquestFlagObject key in keys)
+                    List<ConquestGuildFlagInfo> keys = new List<ConquestGuildFlagInfo>(ControlPoints.Keys);
+                    foreach (ConquestGuildFlagInfo key in keys)
                     {
                         key.ChangeOwner(Guild);
                         ControlPoints[key] = new Dictionary<GuildObject, int>();
@@ -504,7 +621,7 @@ namespace Server.MirObjects
             {
                 UpdatePlayers(Guild);
                 if (tmpPrevious != null) UpdatePlayers(tmpPrevious);
-                NeedSave = true;
+                GuildInfo.NeedSave = true;
             }
         }
 
@@ -543,9 +660,9 @@ namespace Server.MirObjects
             }
         }
 
-        private void CreateZone(bool Create = true)
+        private void CreateZone(bool create = true)
         {
-            if (Create)
+            if (create)
             { 
                 WarEffects.Clear();
                 for (int y = Info.KingLocation.Y - Info.KingSize; y <= Info.KingLocation.Y + Info.KingSize; y++)
@@ -585,14 +702,14 @@ namespace Server.MirObjects
                     //}                
                         
                 }
+
                 WarEffects.Clear();
             }
-
         }
 
         public void ScorePoints()
         {
-            bool PointsChanged = false;
+            bool pointsChanged = false;
 
             switch (GameType)
             {
@@ -600,11 +717,11 @@ namespace Server.MirObjects
                     {
                         int points;
 
-                        foreach (KeyValuePair<ConquestFlagObject, Dictionary<GuildObject, int>> item in ControlPoints)
+                        foreach (KeyValuePair<ConquestGuildFlagInfo, Dictionary<GuildObject, int>> item in ControlPoints)
                         {
-                            PointsChanged = false;
+                            pointsChanged = false;
 
-                            ConquestFlagObject controlFlag = null;
+                            ConquestGuildFlagInfo controlFlag = null;
                             Dictionary<GuildObject, int> controlFlagPoints = null;
 
                             for (int i = 0; i < ConquestMap.Players.Count; i++)
@@ -640,10 +757,10 @@ namespace Server.MirObjects
                                     }
                                 }
 
-                                PointsChanged = true;
+                                pointsChanged = true;
                             }
 
-                            if (PointsChanged)
+                            if (pointsChanged)
                             {
                                 GuildObject tempWinning = Guild;
                                 int tempInt;
@@ -683,7 +800,7 @@ namespace Server.MirObjects
                         {
                             if (ConquestMap.Players[i].WarZone && ConquestMap.Players[i].MyGuild != null && !ConquestMap.Players[i].Dead && Functions.InRange(Info.KingLocation, ConquestMap.Players[i].CurrentLocation, Info.KingSize))
                             {
-                                if (StartType == ConquestType.Request && ConquestMap.Players[i].MyGuild.Guildindex != AttackerID) continue;
+                                if (StartType == ConquestType.Request && ConquestMap.Players[i].MyGuild.Guildindex != GuildInfo.AttackerID) continue;
 
                                 if (ConquestMap.Players[i].MyGuild.Conquest != null && ConquestMap.Players[i].MyGuild.Conquest != this) continue;
 
@@ -712,11 +829,11 @@ namespace Server.MirObjects
                                     }
                                 }
 
-                                PointsChanged = true;
+                                pointsChanged = true;
                             }
                         }
 
-                        if (PointsChanged)
+                        if (pointsChanged)
                         {
                             GuildObject tempWinning = Guild;
                             int tempInt;
@@ -748,41 +865,37 @@ namespace Server.MirObjects
                     }
                     break;
                 case ConquestGame.Classic:
-                    int GuildCounter = 0;
-                    GuildObject TakingGuild = null;
+                    int guildCounter = 0;
+                    GuildObject takingGuild = null;
                     for (int i = 0; i < PalaceMap.Players.Count; i++)
                     {
                         if (PalaceMap.Players[i].Dead) continue;
 
                         if (PalaceMap.Players[i].MyGuild != null)
                         {
-                            if (TakingGuild == null || TakingGuild != PalaceMap.Players[i].MyGuild)
-                                GuildCounter++;
+                            if (takingGuild == null || takingGuild != PalaceMap.Players[i].MyGuild)
+                                guildCounter++;
 
-                            TakingGuild = PalaceMap.Players[i].MyGuild;
+                            takingGuild = PalaceMap.Players[i].MyGuild;
                         }
                         else
                         {
-                            GuildCounter++;
+                            guildCounter++;
                         }
                     }
 
-                    if (GuildCounter == 1 && TakingGuild != Guild)
+                    if (guildCounter == 1 && takingGuild != Guild)
                     {
-                        if (StartType == ConquestType.Request && TakingGuild.Guildindex != AttackerID) return;
+                        if (StartType == ConquestType.Request && takingGuild.Guildindex != GuildInfo.AttackerID) return;
 
-                        TakeConquest(null, TakingGuild);
+                        TakeConquest(null, takingGuild);
                     }
 
                     break;
                 
-
                 default:
                     return;
             }
-
-            
-
         }
 
         public void StartWar(ConquestGame type)
@@ -800,7 +913,7 @@ namespace Server.MirObjects
                     Dictionary<GuildObject, int> controlledPoints = new Dictionary<GuildObject, int>();
                     int count = 0;
 
-                    foreach (KeyValuePair<ConquestFlagObject, Dictionary<GuildObject, int>> item in ControlPoints)
+                    foreach (KeyValuePair<ConquestGuildFlagInfo, Dictionary<GuildObject, int>> item in ControlPoints)
                     {
                         controlledPoints.TryGetValue(item.Key.Guild, out count);
 
@@ -819,9 +932,15 @@ namespace Server.MirObjects
                     for (int i = 0; i < guilds.Count; i++)
                     {
                         controlledPoints.TryGetValue(guilds[i], out count);
+
                         if (tempWinning != null)
+                        {
                             controlledPoints.TryGetValue(tempWinning, out tempInt);
-                        else tempInt = 0;
+                        }
+                        else
+                        {
+                            tempInt = 0;
+                        }
 
                         if (count > tempInt)
                         {
@@ -833,445 +952,6 @@ namespace Server.MirObjects
 
                     break;
             }
-        }
-    }
-
-    public class ConquestSiegeObject
-    {
-        protected static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
-
-        public int Index;
-        public int Health;
-
-        public ConquestSiegeInfo Info;
-
-        public ConquestObject Conquest;
-
-        public Gate Gate;
-
-
-        public ConquestSiegeObject() { }
-
-        public ConquestSiegeObject(BinaryReader reader)
-        {
-            Index = reader.ReadInt32();
-
-            if (Envir.LoadVersion <= 84)
-            {
-                Health = (int)reader.ReadUInt32();
-            }
-            else
-            {
-                Health = reader.ReadInt32();
-            }
-        }
-        public void Save(BinaryWriter writer)
-        {
-            //if (Gate != null) Health = Gate.HP; - needs adding
-            writer.Write(Index);
-            writer.Write(Health);
-        }
-
-
-        public void Spawn()
-        {
-            if (Gate != null) Gate.Despawn();
-
-            MonsterInfo monsterInfo = Envir.GetMonsterInfo(Info.MobIndex);
-
-            if (monsterInfo == null) return;
-            if (monsterInfo.AI != 72) return;
-
-            if (monsterInfo.AI == 72)
-                Gate = (Gate)MonsterObject.GetMonster(monsterInfo);
-            else if (monsterInfo.AI == 73)
-                //Gate = (GateWest)MonsterObject.GetMonster(monsterInfo);
-
-
-                if (Gate == null) return;
-
-            Gate.Conquest = Conquest;
-            Gate.GateIndex = Index;
-
-            Gate.Spawn(Conquest.ConquestMap, Info.Location);
-
-            if (Health == 0)
-                Gate.Die();
-            else
-                Gate.SetHP(Health);
-
-            Gate.CheckDirection();
-        }
-
-        public int GetRepairCost()
-        {
-            int cost = 0;
-
-            if (Gate == null) return 0;
-
-            if (Gate.Stats[Stat.HP] == Gate.HP) return cost;
-
-            if (Info.RepairCost != 0)
-                cost = Info.RepairCost / (Gate.Stats[Stat.HP] / (Gate.Stats[Stat.HP] - Gate.HP));
-
-            return cost;
-        }
-
-        public void Repair()
-        {
-            if (Gate == null)
-            {
-                Spawn();
-                return;
-            }
-
-            if (Gate.Dead)
-                Spawn();
-            else
-                Gate.HP = Gate.Stats[Stat.HP];
-
-            Gate.CheckDirection();
-
-
-        }
-    }
-
-    public class ConquestFlagObject
-    {
-        public int Index;
-
-        public ConquestFlagInfo Info;
-
-        public ConquestObject Conquest;
-        public GuildObject Guild;
-
-        public NPCObject Flag;
-
-        public ConquestFlagObject() { }
-
-        public void Spawn()
-        {
-            NPCInfo npcInfo = new NPCInfo
-            {
-                Name = Info.Name,
-                FileName = Info.FileName,
-                Location = Info.Location,
-                Image = 1000
-            };
-
-            if(Conquest.Guild != null)
-            {
-                Guild = Conquest.Guild;
-                npcInfo.Image = Guild.Info.FlagImage;
-                npcInfo.Colour = Guild.Info.FlagColour;
-            }
-
-            Flag = new NPCObject(npcInfo);
-            Flag.CurrentMap = Conquest.ConquestMap;
-
-            Flag.CurrentMap.AddObject(Flag);
-
-            Flag.Spawned();
-        }
-
-        public void ChangeOwner(GuildObject guild)
-        {
-            Guild = guild;
-
-            UpdateImage();
-            UpdateColour();
-        }
-
-        public void UpdateImage()
-        {
-            if(Guild != null)
-            {
-                Flag.Info.Image = Guild.Info.FlagImage;
-
-                Flag.Broadcast(Flag.GetUpdateInfo());
-            }
-        }
-
-        public void UpdateColour()
-        {
-            if (Guild != null)
-            {
-                Flag.Info.Colour = Guild.Info.FlagColour;
-
-                Flag.Broadcast(Flag.GetUpdateInfo());
-            }
-        }
-    }
-
-    public class ConquestWallObject
-    {
-        protected static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
-
-        public int Index;
-        public int Health;
-
-        public ConquestWallInfo Info;
-
-        public ConquestObject Conquest;
-
-        public Wall Wall;
-
-
-        public ConquestWallObject() { }
-        public ConquestWallObject(BinaryReader reader)
-        {
-            Index = reader.ReadInt32();
-
-            if (Envir.LoadVersion <= 84)
-            {
-                Health = (int)reader.ReadUInt32();
-            }
-            else
-            {
-                Health = reader.ReadInt32();
-            }
-        }
-        public void Save(BinaryWriter writer)
-        {
-            if (Wall != null) Health = Wall.HP;
-            writer.Write(Index);
-            writer.Write(Wall.Health);
-        }
-
-
-        public void Spawn(bool repair)
-        {
-            if (Wall != null) Wall.Despawn();
-
-            MonsterInfo monsterInfo = Envir.GetMonsterInfo(Info.MobIndex);
-
-            if (monsterInfo == null) return;
-
-            if (monsterInfo.AI != 82) return;
-
-            Wall = (Wall)MonsterObject.GetMonster(monsterInfo);
-
-            if (Wall == null) return;
-
-            Wall.Conquest = Conquest;
-            Wall.WallIndex = Index;
-
-            Wall.Spawn(Conquest.ConquestMap, Info.Location);
-
-            if (repair) Health = Wall.Stats[Stat.HP];
-
-            if (Health == 0)
-                Wall.Die();
-            else
-                Wall.SetHP(Health);
-
-            Wall.CheckDirection();
-        }
-
-        public int GetRepairCost()
-        {
-            int cost = 0;
-
-            if (Wall == null) return 0;
-
-            if (Wall.Stats[Stat.HP] == Wall.HP) return cost;
-
-            if (Info.RepairCost != 0)
-                cost = Info.RepairCost / (Wall.Stats[Stat.HP] / (Wall.Stats[Stat.HP] - Wall.HP));
-
-            return cost;
-        }
-
-        public void Repair()
-        {
-            if (Wall == null)
-            {
-                Spawn(true);
-                return;
-            }
-
-            if (Wall.Dead)
-                Spawn(true);
-            else
-                Wall.HP = Wall.Stats[Stat.HP];
-
-            Wall.CheckDirection();
-        }
-    }
-
-    public class ConquestGateObject
-    {
-        protected static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
-
-        public int Index;
-        public int Health;
-
-        public ConquestGateInfo Info;
-
-        public ConquestObject Conquest;
-
-        public Gate Gate;
-
-
-        public ConquestGateObject() { }
-
-        public ConquestGateObject(BinaryReader reader)
-        {
-            Index = reader.ReadInt32();
-
-            if (Envir.LoadVersion <= 84)
-            {
-                Health = (int)reader.ReadUInt32();
-            }
-            else
-            {
-                Health = reader.ReadInt32();
-            }
-        }
-        public void Save(BinaryWriter writer)
-        {
-            if (Gate != null) Health = Gate.HP;
-            writer.Write(Index);
-            writer.Write(Health);
-        }
-
-
-        public void Spawn(bool repair)
-        {
-            if (Gate != null) Gate.Despawn();
-
-            MonsterInfo monsterInfo = Envir.GetMonsterInfo(Info.MobIndex);
-
-            if (monsterInfo == null) return;
-            if (monsterInfo.AI != 81) return;
-
-            Gate = (Gate)MonsterObject.GetMonster(monsterInfo);
-
-            if (Gate == null) return;
-
-            Gate.Conquest = Conquest;
-            Gate.GateIndex = Index;
-
-            Gate.Spawn(Conquest.ConquestMap, Info.Location);
-
-            if (repair) Health = Gate.Stats[Stat.HP];
-
-            if (Health == 0)
-                Gate.Die();
-            else
-                Gate.SetHP(Health);
-
-            Gate.CheckDirection();
-        }
-
-        public int GetRepairCost()
-        {
-            int cost = 0;
-
-            if (Gate == null) return 0;
-
-            if (Gate.Stats[Stat.HP] == Gate.HP) return cost;
-
-            if (Info.RepairCost != 0)
-                cost = Info.RepairCost / (Gate.Stats[Stat.HP] / (Gate.Stats[Stat.HP] - Gate.HP));
-
-            return cost;
-        }
-
-        public void Repair()
-        {
-            if (Gate == null)
-            {
-                Spawn(true);
-                return;
-            }
-
-            if (Gate.Dead)
-                Spawn(true);
-            else
-                Gate.HP = Gate.Stats[Stat.HP];
-
-            Gate.CheckDirection();
-
-
-        }
-    }
-
-    public class ConquestArcherObject
-    {
-        protected static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
-
-        public int Index;
-        public bool Alive;
-
-        public ConquestArcherInfo Info;
-
-        public ConquestObject Conquest;
-
-        public ConquestArcher ArcherMonster;
-
-
-        public ConquestArcherObject() { }
-
-        public ConquestArcherObject(BinaryReader reader)
-        {
-            Index = reader.ReadInt32();
-            Alive = reader.ReadBoolean();
-        }
-        public void Save(BinaryWriter writer)
-        {
-            if (ArcherMonster == null || ArcherMonster.Dead) Alive = false;
-            else Alive = true;
-            writer.Write(Index);
-            writer.Write(Alive);
-        }
-
-        public void Spawn(bool Revive = false)
-        {
-            if (Revive) Alive = true;
-
-            MonsterInfo monsterInfo = Envir.GetMonsterInfo(Info.MobIndex);
-
-            if (monsterInfo == null) return;
-            if (monsterInfo.AI != 80) return;
-
-            ArcherMonster = (ConquestArcher)MonsterObject.GetMonster(monsterInfo);
-
-            if (ArcherMonster == null) return;
-
-            ArcherMonster.Conquest = Conquest;
-            ArcherMonster.ArcherIndex = Index;
-
-            if (Alive)
-                ArcherMonster.Spawn(Conquest.ConquestMap, Info.Location);
-            else
-            {
-                ArcherMonster.Spawn(Conquest.ConquestMap, Info.Location);
-                ArcherMonster.Die();
-                ArcherMonster.DeadTime = Envir.Time;
-            }
-        }
-
-        public uint GetRepairCost()
-        {
-            uint cost = 0;
-
-            if (ArcherMonster == null || ArcherMonster.Dead)
-                cost = Info.RepairCost;
-
-            return cost;
         }
     }
 }

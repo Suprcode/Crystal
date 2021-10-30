@@ -1121,10 +1121,10 @@ namespace Server.MirObjects
             var oneValRegex = new Regex(@"(.*?)\(((.*?))\)");
             var twoValRegex = new Regex(@"(.*?)\(((.*?),(.*?))\)");
             ConquestObject Conquest;
-            ConquestArcherObject Archer;
-            ConquestGateObject Gate;
-            ConquestWallObject Wall;
-            ConquestSiegeObject Siege;
+            ConquestGuildArcherInfo Archer;
+            ConquestGuildGateInfo Gate;
+            ConquestGuildWallInfo Wall;
+            ConquestGuildSiegeInfo Siege;
 
             var match = regex.Match(param);
 
@@ -1266,7 +1266,7 @@ namespace Server.MirObjects
                         Conquest = Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
                         if (Conquest == null) return string.Empty;
 
-                        newValue = Conquest.GoldStorage.ToString();
+                        newValue = Conquest.GuildInfo.GoldStorage.ToString();
                     }
                     break;
                 case "CONQUESTRATE()":
@@ -1277,7 +1277,7 @@ namespace Server.MirObjects
                         Conquest = Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
                         if (Conquest == null) return string.Empty;
 
-                        newValue = Conquest.npcRate.ToString() + "%";
+                        newValue = Conquest.GuildInfo.NPCRate.ToString() + "%";
                     }
                     break;
                 case "CONQUESTSCHEDULE()":
@@ -1287,15 +1287,15 @@ namespace Server.MirObjects
                     {
                         Conquest = Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
                         if (Conquest == null) return "Conquest Not Found";
-                        if (Conquest.AttackerID == -1) return "No War Scheduled";
+                        if (Conquest.GuildInfo.AttackerID == -1) return "No War Scheduled";
 
-                        if (Envir.Guilds.FirstOrDefault(x => x.Guildindex == Conquest.AttackerID) == null)
+                        if (Envir.Guilds.FirstOrDefault(x => x.Guildindex == Conquest.GuildInfo.AttackerID) == null)
                         {
                             newValue = "No War Scheduled";
                         }
                         else
                         {
-                            newValue = (Envir.Guilds.FirstOrDefault(x => x.Guildindex == Conquest.AttackerID).Name);
+                            newValue = (Envir.Guilds.FirstOrDefault(x => x.Guildindex == Conquest.GuildInfo.AttackerID).Name);
                         }
                     }
                     break;
@@ -2391,7 +2391,7 @@ namespace Server.MirObjects
                                 break;
                             }
 
-                            ConquestArcherObject Archer = Conquest.ArcherList.FirstOrDefault(g => g.Info.Index == tempInt2);
+                            ConquestGuildArcherInfo Archer = Conquest.ArcherList.FirstOrDefault(g => g.Info.Index == tempInt2);
                             if (Archer == null || Archer.GetRepairCost() == 0)
                             {
                                 failed = true;
@@ -2424,7 +2424,7 @@ namespace Server.MirObjects
                                 break;
                             }
 
-                            ConquestGateObject Gate = Conquest.GateList.FirstOrDefault(f => f.Info.Index == tempInt2);
+                            ConquestGuildGateInfo Gate = Conquest.GateList.FirstOrDefault(f => f.Info.Index == tempInt2);
                             if (Gate == null || Gate.GetRepairCost() == 0)
                             {
                                 failed = true;
@@ -2457,7 +2457,7 @@ namespace Server.MirObjects
                                 break;
                             }
 
-                            ConquestWallObject Wall = Conquest.WallList.FirstOrDefault(h => h.Info.Index == tempInt2);
+                            ConquestGuildWallInfo Wall = Conquest.WallList.FirstOrDefault(h => h.Info.Index == tempInt2);
                             if (Wall == null || Wall.GetRepairCost() == 0)
                             {
                                 failed = true;
@@ -2490,7 +2490,7 @@ namespace Server.MirObjects
                                 break;
                             }
 
-                            ConquestGateObject Gate = Conquest.GateList.FirstOrDefault(f => f.Info.Index == tempInt2);
+                            ConquestGuildGateInfo Gate = Conquest.GateList.FirstOrDefault(f => f.Info.Index == tempInt2);
                             if (Gate == null || Gate.GetRepairCost() == 0)
                             {
                                 failed = true;
@@ -2541,7 +2541,7 @@ namespace Server.MirObjects
                             }
 
                             if (player.MyGuild != null)
-                                failed = (Conquest.AttackerID != -1);
+                                failed = (Conquest.GuildInfo.AttackerID != -1);
                             else
                                 failed = true;
                         }
@@ -2567,7 +2567,7 @@ namespace Server.MirObjects
                                 break;
                             }
 
-                            if (player.MyGuild != null && player.MyGuild.Guildindex == Conquest.Owner)
+                            if (player.MyGuild != null && player.MyGuild.Guildindex == Conquest.GuildInfo.Owner)
                                 failed = false;
                             else
                                 failed = true;
@@ -3615,7 +3615,7 @@ namespace Server.MirObjects
                             if (conquest == null) return;
 
                             if (!int.TryParse(param[1], out tempInt)) return;
-                            ConquestArcherObject conquestArcher = conquest.ArcherList.FirstOrDefault(z => z.Index == tempInt);
+                            ConquestGuildArcherInfo conquestArcher = conquest.ArcherList.FirstOrDefault(z => z.Index == tempInt);
                             if (conquestArcher == null) return;
 
                             if (conquestArcher.ArcherMonster != null)
@@ -3636,7 +3636,7 @@ namespace Server.MirObjects
                             if (conquest == null) return;
 
                             if (!int.TryParse(param[1], out tempInt)) return;
-                            ConquestGateObject conquestGate = conquest.GateList.FirstOrDefault(z => z.Index == tempInt);
+                            ConquestGuildGateInfo conquestGate = conquest.GateList.FirstOrDefault(z => z.Index == tempInt);
                             if (conquestGate == null) return;
 
                             if (player.MyGuild == null || player.MyGuild.Gold < conquestGate.GetRepairCost()) return;
@@ -3654,7 +3654,7 @@ namespace Server.MirObjects
                             if (conquest == null) return;
 
                             if (!int.TryParse(param[1], out tempInt)) return;
-                            ConquestWallObject conquestWall = conquest.WallList.FirstOrDefault(z => z.Index == tempInt);
+                            ConquestGuildWallInfo conquestWall = conquest.WallList.FirstOrDefault(z => z.Index == tempInt);
 
                             if (conquestWall == null) return;
 
@@ -3675,7 +3675,7 @@ namespace Server.MirObjects
                             if (conquest == null) return;
 
                             if (!int.TryParse(param[1], out tempInt)) return;
-                            ConquestSiegeObject conquestSiege = conquest.SiegeList.FirstOrDefault(z => z.Index == tempInt);
+                            ConquestGuildSiegeInfo conquestSiege = conquest.SiegeList.FirstOrDefault(z => z.Index == tempInt);
                             if (conquestSiege == null) return;
 
                             if (conquestSiege.Gate != null)
@@ -3695,11 +3695,11 @@ namespace Server.MirObjects
                             var conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                             if (conquest == null) return;
 
-                            if (player.MyGuild != null && player.MyGuild.Guildindex == conquest.Owner)
+                            if (player.MyGuild != null && player.MyGuild.Guildindex == conquest.GuildInfo.Owner)
                             {
-                                player.MyGuild.Gold += conquest.GoldStorage;
-                                player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 3, Amount = conquest.GoldStorage });
-                                conquest.GoldStorage = 0;
+                                player.MyGuild.Gold += conquest.GuildInfo.GoldStorage;
+                                player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 3, Amount = conquest.GuildInfo.GoldStorage });
+                                conquest.GuildInfo.GoldStorage = 0;
                             }
                         }
                         break;
@@ -3710,9 +3710,9 @@ namespace Server.MirObjects
                             if (conquest == null) return;
 
                             if (!byte.TryParse(param[1], out byte tempByte)) return;
-                            if (player.MyGuild != null && player.MyGuild.Guildindex == conquest.Owner)
+                            if (player.MyGuild != null && player.MyGuild.Guildindex == conquest.GuildInfo.Owner)
                             {
-                                conquest.npcRate = tempByte;
+                                conquest.GuildInfo.NPCRate = tempByte;
                             }
                         }
                         break;
@@ -3739,9 +3739,9 @@ namespace Server.MirObjects
                             var conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                             if (conquest == null) return;
 
-                            if (player.MyGuild != null && player.MyGuild.Guildindex != conquest.Owner && !conquest.WarIsOn)
+                            if (player.MyGuild != null && player.MyGuild.Guildindex != conquest.GuildInfo.Owner && !conquest.WarIsOn)
                             {
-                                conquest.AttackerID = player.MyGuild.Guildindex;
+                                conquest.GuildInfo.AttackerID = player.MyGuild.Guildindex;
                             }
                         }
                         break;
@@ -3752,7 +3752,7 @@ namespace Server.MirObjects
                             if (Conquest == null) return;
 
                             if (!int.TryParse(param[1], out tempInt)) return;
-                            ConquestGateObject OpenGate = Conquest.GateList.FirstOrDefault(z => z.Index == tempInt);
+                            ConquestGuildGateInfo OpenGate = Conquest.GateList.FirstOrDefault(z => z.Index == tempInt);
                             if (OpenGate == null) return;
                             if (OpenGate.Gate == null) return;
                             OpenGate.Gate.OpenDoor();
@@ -3765,7 +3765,7 @@ namespace Server.MirObjects
                             if (conquest == null) return;
 
                             if (!int.TryParse(param[1], out tempInt)) return;
-                            ConquestGateObject CloseGate = conquest.GateList.FirstOrDefault(z => z.Index == tempInt);
+                            ConquestGuildGateInfo CloseGate = conquest.GateList.FirstOrDefault(z => z.Index == tempInt);
                             if (CloseGate == null) return;
                             if (CloseGate.Gate == null) return;
                             CloseGate.Gate.CloseDoor();

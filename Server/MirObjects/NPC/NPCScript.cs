@@ -124,13 +124,13 @@ namespace Server.MirObjects
                 return callingNPC.Info.Rate / 100F;
             }
 
-            if (player.MyGuild != null && player.MyGuild.Guildindex == callingNPC.Conq.Owner)
+            if (player.MyGuild != null && player.MyGuild.Guildindex == callingNPC.Conq.GuildInfo.Owner)
             {
                 return callingNPC.Info.Rate / 100F;
             }
             else
             {
-                return (((callingNPC.Info.Rate / 100F) * callingNPC.Conq.npcRate) + callingNPC.Info.Rate) / 100F;
+                return (((callingNPC.Info.Rate / 100F) * callingNPC.Conq.GuildInfo.NPCRate) + callingNPC.Info.Rate) / 100F;
             }
         }
 
@@ -1176,7 +1176,7 @@ namespace Server.MirObjects
 
                 if (callingNPC != null && callingNPC.Conq != null)
                 {
-                    callingNPC.Conq.GoldStorage += (cost - baseCost);
+                    callingNPC.Conq.GuildInfo.GoldStorage += (cost - baseCost);
                 }
             }
             player.GainItem(item);

@@ -309,6 +309,7 @@ namespace Launcher
                 }
             }
         }
+
         public static byte[] Compress(byte[] raw)
         {
             using (MemoryStream mStream = new MemoryStream())

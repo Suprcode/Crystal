@@ -40,16 +40,16 @@ namespace Server.MirDatabase
             get { return Envir.Main; }
         }
 
-        public GuildInfo() { }
-
         public GuildInfo(PlayerObject owner, string name)
         {
             Name = name;
-            GuildRank ownerRank = new GuildRank() { Name = "Leader", Options = (GuildRankOptions)255, Index = 0 };
 
-            GuildMember Leader = new GuildMember() { Name = owner.Info.Name, Player = owner, Id = owner.Info.Index, LastLogin = Envir.Now, Online = true };
-            ownerRank.Members.Add(Leader);
+            var ownerRank = new GuildRank { Name = "Leader", Options = (GuildRankOptions)255, Index = 0 };
+            var leader = new GuildMember { Name = owner.Info.Name, Player = owner, Id = owner.Info.Index, LastLogin = Envir.Now, Online = true };
+
+            ownerRank.Members.Add(leader);
             Ranks.Add(ownerRank);
+
             Membercount++;
             NeedSave = true;
 
@@ -57,6 +57,7 @@ namespace Server.MirDatabase
             {
                 MaxExperience = Settings.Guild_ExperienceList[Level];
             }
+
             if (Level < Settings.Guild_MembercapList.Count)
             {
                 MemberCap = Settings.Guild_MembercapList[Level];
@@ -64,7 +65,6 @@ namespace Server.MirDatabase
 
             FlagColour = Color.FromArgb(255, Envir.Random.Next(255), Envir.Random.Next(255), Envir.Random.Next(255));
         }
-
 
         public GuildInfo(BinaryReader reader)
         {
@@ -92,18 +92,19 @@ namespace Server.MirDatabase
             Votes = reader.ReadInt32();
             LastVoteAttempt = DateTime.FromBinary(reader.ReadInt64());
             Voting = reader.ReadBoolean();
-            int RankCount = reader.ReadInt32();
+
+            int rankCount = reader.ReadInt32();
             Membercount = 0;
 
-            for (int i = 0; i < RankCount; i++)
+            for (int i = 0; i < rankCount; i++)
             {
                 int index = i;
                 Ranks.Add(new GuildRank(reader, true) { Index = index });
                 Membercount += Ranks[i].Members.Count;
             }
 
-            int ItemCount = reader.ReadInt32();
-            for (int j = 0; j < ItemCount; j++)
+            int itemCount = reader.ReadInt32();
+            for (int j = 0; j < itemCount; j++)
             {
                 if (!reader.ReadBoolean()) continue;
 
@@ -117,15 +118,15 @@ namespace Server.MirDatabase
                     StoredItems[j] = Guilditem;
             }
 
-            int BuffCount = reader.ReadInt32();
+            int buffCount = reader.ReadInt32();
             if (version < 61)
             {
-                for (int j = 0; j < BuffCount; j++)
+                for (int j = 0; j < buffCount; j++)
                     new GuildBuffOld(reader);
             }
             else
             {
-                for (int j = 0; j < BuffCount; j++)
+                for (int j = 0; j < buffCount; j++)
                 {
                     //new GuildBuff(reader);
                     BuffList.Add(new GuildBuff(reader));
@@ -137,8 +138,8 @@ namespace Server.MirDatabase
                 BuffList[j].Info = Envir.FindGuildBuffInfo(BuffList[j].Id);
             }
 
-            int NoticeCount = reader.ReadInt32();
-            for (int j = 0; j < NoticeCount; j++)
+            int noticeCount = reader.ReadInt32();
+            for (int j = 0; j < noticeCount; j++)
             {
                 Notice.Add(reader.ReadString());
             }
@@ -167,12 +168,12 @@ namespace Server.MirDatabase
             writer.Write(Envir.Version);
             writer.Write(Envir.CustomVersion);
 
-            int RankCount = 0;
+            int rankCount = 0;
             for (int i = Ranks.Count - 1; i >= 0; i--)
             {
                 if (Ranks[i].Members.Count > 0)
                 {
-                    RankCount++;
+                    rankCount++;
                 }
             }
 
@@ -185,7 +186,8 @@ namespace Server.MirDatabase
             writer.Write(Votes);
             writer.Write(LastVoteAttempt.ToBinary());
             writer.Write(Voting);
-            writer.Write(RankCount);
+
+            writer.Write(rankCount);
             for (int i = 0; i < Ranks.Count; i++)
             {
                 if (Ranks[i].Members.Count > 0)
@@ -193,6 +195,7 @@ namespace Server.MirDatabase
                     Ranks[i].Save(writer, true);
                 }
             }
+
             writer.Write(StoredItems.Length);
             for (int i = 0; i < StoredItems.Length; i++)
             {
@@ -203,11 +206,13 @@ namespace Server.MirDatabase
                     writer.Write(StoredItems[i].UserId);
                 }
             }
+
             writer.Write(BuffList.Count);
             for (int i = 0; i < BuffList.Count; i++)
             {
                 BuffList[i].Save(writer);
             }
+
             writer.Write(Notice.Count);
             for (int i = 0; i < Notice.Count; i++)
             {

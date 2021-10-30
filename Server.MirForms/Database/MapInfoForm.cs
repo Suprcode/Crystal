@@ -35,7 +35,7 @@ namespace Server
             for (int i = 0; i < Envir.MonsterInfoList.Count; i++) MonsterInfoComboBox.Items.Add(Envir.MonsterInfoList[i]);
 
             ConquestComboBox.Items.Add(new ListItem("None", "0"));
-            for (int i = 0; i < Envir.ConquestInfos.Count; i++) ConquestComboBox.Items.Add(Envir.ConquestInfos[i]);
+            for (int i = 0; i < Envir.ConquestInfoList.Count; i++) ConquestComboBox.Items.Add(Envir.ConquestInfoList[i]);
 
             UpdateInterface();
         }
@@ -420,7 +420,7 @@ namespace Server
             DestXTextBox.Text = info.Destination.X.ToString();
             DestYTextBox.Text = info.Destination.Y.ToString();
 
-            ConquestComboBox.SelectedItem = Envir.ConquestInfos.FirstOrDefault(x => x.Index == info.ConquestIndex);
+            ConquestComboBox.SelectedItem = Envir.ConquestInfoList.FirstOrDefault(x => x.Index == info.ConquestIndex);
             if (ConquestComboBox.SelectedItem == null) ConquestComboBox.SelectedIndex = 0;
 
             for (int i = 1; i < _selectedMovementInfos.Count; i++)
@@ -432,7 +432,7 @@ namespace Server
                 DestMapComboBox.SelectedItem = Envir.MapInfoList.FirstOrDefault(x => x.Index == info.MapIndex);
                 DestXTextBox.Text = info.Destination.X.ToString();
                 DestYTextBox.Text = info.Destination.Y.ToString();
-                ConquestComboBox.SelectedItem = Envir.ConquestInfos.FirstOrDefault(x => x.Index == info.ConquestIndex);
+                ConquestComboBox.SelectedItem = Envir.ConquestInfoList.FirstOrDefault(x => x.Index == info.ConquestIndex);
 
                 if (SourceXTextBox.Text != info.Source.X.ToString()) SourceXTextBox.Text = string.Empty;
                 if (SourceYTextBox.Text != info.Source.Y.ToString()) SourceYTextBox.Text = string.Empty;
@@ -442,7 +442,7 @@ namespace Server
                 if (DestXTextBox.Text != info.Destination.X.ToString()) DestXTextBox.Text = string.Empty;
                 if (DestYTextBox.Text != info.Destination.Y.ToString()) DestYTextBox.Text = string.Empty;
 
-                if (ConquestComboBox.SelectedItem != Envir.ConquestInfos.FirstOrDefault(x => x.Index == info.ConquestIndex)) ConquestComboBox.SelectedItem = null;
+                if (ConquestComboBox.SelectedItem != Envir.ConquestInfoList.FirstOrDefault(x => x.Index == info.ConquestIndex)) ConquestComboBox.SelectedItem = null;
             }
 
         }

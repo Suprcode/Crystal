@@ -7,7 +7,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects
 {
-    public sealed class IntelligentCreatureObject : MonsterObject
+    public class IntelligentCreatureObject : MonsterObject
     {
         public bool Summoned;
         public string CustomName { get { return CreatureInfo.CustomName; } set { CreatureInfo.CustomName = value; } }
@@ -89,8 +89,7 @@ namespace Server.MirObjects
         }
 
 
-        protected internal IntelligentCreatureObject(MonsterInfo info)
-            : base(info)
+        public IntelligentCreatureObject(MonsterInfo info) : base(info)
         {
             ActionTime = Envir.Time + 1000;
             PetType = (IntelligentCreatureType)info.Effect;
@@ -555,7 +554,7 @@ namespace Server.MirObjects
             IncreasePearlProduction();
         }
 
-        protected bool DelayedAttack(long delay)
+        private bool DelayedAttack(long delay)
         {
             DelayedPickup(delay);
 
