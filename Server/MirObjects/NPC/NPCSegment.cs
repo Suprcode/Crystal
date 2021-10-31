@@ -1400,7 +1400,7 @@ namespace Server.MirObjects
                     break;
 
                 case "DATE":
-                    newValue = DateTime.Now.ToShortDateString();
+                    newValue = Envir.Now.ToShortDateString();
                     break;
                 case "USERCOUNT":
                     newValue = Envir.PlayerCount.ToString(CultureInfo.InvariantCulture);
@@ -1481,7 +1481,7 @@ namespace Server.MirObjects
                     newValue = Monster.Stats[Stat.HP].ToString(CultureInfo.InvariantCulture);
                     break;
                 case "DATE":
-                    newValue = DateTime.Now.ToShortDateString();
+                    newValue = Envir.Now.ToShortDateString();
                     break;
                 case "USERCOUNT":
                     newValue = Envir.PlayerCount.ToString(CultureInfo.InvariantCulture);
@@ -1518,7 +1518,7 @@ namespace Server.MirObjects
                 switch (check.Type)
                 {
                     case CheckType.CheckDay:
-                        var day = DateTime.Now.DayOfWeek.ToString().ToUpper();
+                        var day = Envir.Now.DayOfWeek.ToString().ToUpper();
                         var dayToCheck = param[0].ToUpper();
 
                         failed = day != dayToCheck;
@@ -1531,7 +1531,7 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        var hour = DateTime.Now.Hour;
+                        var hour = Envir.Now.Hour;
                         var hourToCheck = tempUint;
 
                         failed = hour != hourToCheck;
@@ -1544,7 +1544,7 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        var minute = DateTime.Now.Minute;
+                        var minute = Envir.Now.Minute;
                         var minuteToCheck = tempUint;
 
                         failed = minute != minuteToCheck;
@@ -1703,7 +1703,7 @@ namespace Server.MirObjects
                         }
                         break;
                     case CheckType.CheckDay:
-                        var day = DateTime.Now.DayOfWeek.ToString().ToUpper();
+                        var day = Envir.Now.DayOfWeek.ToString().ToUpper();
                         var dayToCheck = param[0].ToUpper();
 
                         failed = day != dayToCheck;
@@ -1716,7 +1716,7 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        var hour = DateTime.Now.Hour;
+                        var hour = Envir.Now.Hour;
                         var hourToCheck = tempUint;
 
                         failed = hour != hourToCheck;
@@ -1729,7 +1729,7 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        var minute = DateTime.Now.Minute;
+                        var minute = Envir.Now.Minute;
                         var minuteToCheck = tempUint;
 
                         failed = minute != minuteToCheck;
@@ -2015,7 +2015,7 @@ namespace Server.MirObjects
                         break;
 
                     case CheckType.CheckDay:
-                        var day = DateTime.Now.DayOfWeek.ToString().ToUpper();
+                        var day = Envir.Now.DayOfWeek.ToString().ToUpper();
                         var dayToCheck = param[0].ToUpper();
 
                         failed = day != dayToCheck;
@@ -2028,7 +2028,7 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        var hour = DateTime.Now.Hour;
+                        var hour = Envir.Now.Hour;
                         var hourToCheck = tempUint;
 
                         failed = hour != hourToCheck;
@@ -2041,7 +2041,7 @@ namespace Server.MirObjects
                             break;
                         }
 
-                        var minute = DateTime.Now.Minute;
+                        var minute = Envir.Now.Minute;
                         var minuteToCheck = tempUint;
 
                         failed = minute != minuteToCheck;

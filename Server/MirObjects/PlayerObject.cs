@@ -1087,18 +1087,18 @@ namespace Server.MirObjects
                     ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
                     Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                     Info.Inventory[i] = null;
-
                     continue;
                 }
 
-                if (item?.RentalInformation?.RentalLocked != true || !(item?.RentalInformation?.ExpiryDate <= Envir.Now))
-                {
-                    continue;
-                }
-                else
+                if (item?.RentalInformation?.RentalLocked == true && item?.RentalInformation?.ExpiryDate <= Envir.Now)
                 {
                     ReceiveChat($"The rental lock has been removed from {item.Info.FriendlyName}.", ChatType.Hint);
                     item.RentalInformation = null;
+                }
+
+                if (item?.SealedInfo?.ExpiryDate <= Envir.Now)
+                {
+                    item.SealedInfo = null;
                 }
             }
 
@@ -1111,18 +1111,18 @@ namespace Server.MirObjects
                     ReceiveChat($"{item.Info.FriendlyName} has just expired from your equipment.", ChatType.Hint);
                     Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                     Info.Equipment[i] = null;
-
                     continue;
                 }
 
-                if (item?.RentalInformation?.RentalLocked != true || !(item?.RentalInformation?.ExpiryDate <= Envir.Now))
-                {
-                    continue;
-                }
-                else
+                if (item?.RentalInformation?.RentalLocked == true && item?.RentalInformation?.ExpiryDate <= Envir.Now)
                 {
                     ReceiveChat($"The rental lock has been removed from {item.Info.FriendlyName}.", ChatType.Hint);
                     item.RentalInformation = null;
+                }
+
+                if (item?.SealedInfo?.ExpiryDate <= Envir.Now)
+                {
+                    item.SealedInfo = null;
                 }
             }
 
@@ -1134,8 +1134,12 @@ namespace Server.MirObjects
                     ReceiveChat($"{item.Info.FriendlyName} has just expired from your storage.", ChatType.Hint);
                     Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                     Info.AccountInfo.Storage[i] = null;
-
                     continue;
+                }
+
+                if (item?.SealedInfo?.ExpiryDate <= Envir.Now)
+                {
+                    item.SealedInfo = null;
                 }
             }
         }
@@ -1355,7 +1359,7 @@ namespace Server.MirObjects
                     if (item.WeddingRing != -1 && Info.Equipment[(int)EquipmentSlot.RingL].UniqueID == item.UniqueID)
                         continue;
 
-                    if (item.SealedInfo != null && item.SealedInfo.ExpiryDate > DateTime.Now)
+                    if (item.SealedInfo != null && item.SealedInfo.ExpiryDate > Envir.Now)
                         continue;
 
                     if (((killer == null) || ((killer != null) && (killer.Race != ObjectType.Player))))
@@ -1449,7 +1453,7 @@ namespace Server.MirObjects
                 if (item.WeddingRing != -1)
                     continue;
 
-                if (item.SealedInfo != null && item.SealedInfo.ExpiryDate > DateTime.Now)
+                if (item.SealedInfo != null && item.SealedInfo.ExpiryDate > Envir.Now)
                     continue;
 
                 if (item.Count > 1)
@@ -1527,7 +1531,7 @@ namespace Server.MirObjects
                     if ((item.WeddingRing != -1) && (Info.Equipment[(int)EquipmentSlot.RingL].UniqueID == item.UniqueID))
                         continue;
 
-                    if (item.SealedInfo != null && item.SealedInfo.ExpiryDate > DateTime.Now)
+                    if (item.SealedInfo != null && item.SealedInfo.ExpiryDate > Envir.Now)
                         continue;
 
                     if (item.Info.Bind.HasFlag(BindMode.BreakOnDeath))
@@ -1604,7 +1608,7 @@ namespace Server.MirObjects
                 if (item.WeddingRing != -1)
                     continue;
 
-                if (item.SealedInfo != null && item.SealedInfo.ExpiryDate > DateTime.Now)
+                if (item.SealedInfo != null && item.SealedInfo.ExpiryDate > Envir.Now)
                     continue;
 
                 if (Envir.ReturnRentalItem(item, item.RentalInformation?.OwnerName, Info))
@@ -2108,7 +2112,7 @@ namespace Server.MirObjects
             GetFriends();
             GetRelationship();
 
-            if (Info.Mentor != 0 && Info.MentorDate.AddDays(Settings.MentorLength) < DateTime.Now)
+            if (Info.Mentor != 0 && Info.MentorDate.AddDays(Settings.MentorLength) < Envir.Now)
             {
                 MentorBreak();
             }
@@ -3304,7 +3308,7 @@ namespace Server.MirObjects
 
             if (Info.ChatBanned)
             {
-                if (Info.ChatBanExpiryDate > DateTime.Now)
+                if (Info.ChatBanExpiryDate > Envir.Now)
                 {
                     ReceiveChat("You are currently banned from chatting.", ChatType.System);
                     return;
@@ -3319,7 +3323,7 @@ namespace Server.MirObjects
                     if (ChatTick >= 5 & !IsGM)
                     {
                         Info.ChatBanned = true;
-                        Info.ChatBanExpiryDate = DateTime.Now.AddMinutes(5);
+                        Info.ChatBanExpiryDate = Envir.Now.AddMinutes(5);
                         ReceiveChat("You have been banned from chatting for 5 minutes.", ChatType.System);
                         return;
                     }
@@ -3949,7 +3953,7 @@ namespace Server.MirObjects
                         }
                         break;
                     case "TIME":
-                        ReceiveChat(string.Format("The time is : {0}", DateTime.Now.ToString("hh:mm tt")), ChatType.System);
+                        ReceiveChat(string.Format("The time is : {0}", Envir.Now.ToString("hh:mm tt")), ChatType.System);
                         break;
 
                     case "ROLL":
@@ -4105,7 +4109,7 @@ namespace Server.MirObjects
                                     data.Deleted = false;
                                     data.DeleteDate = DateTime.MinValue;
 
-                                    data.LastLoginDate = DateTime.Now;
+                                    data.LastLoginDate = Envir.Now;
                                 }
                                 else
                                 {
@@ -12562,7 +12566,7 @@ namespace Server.MirObjects
             if (canSeal && Info.Inventory[indexTo] != null)
             {
                 var minutes = tempFrom.CurrentDura;
-                tempTo.SealedInfo = new SealedInfo { ExpiryDate = DateTime.Now.AddMinutes(minutes) };
+                tempTo.SealedInfo = new SealedInfo { ExpiryDate = Envir.Now.AddMinutes(minutes) };
 
                 ReceiveChat($"Item sealed for {Functions.PrintTimeSpanFromSeconds(minutes * 60)}.", ChatType.Hint);
 
@@ -18136,7 +18140,7 @@ namespace Server.MirObjects
 
             if (mail == null) return;
 
-            mail.DateOpened = DateTime.Now;
+            mail.DateOpened = Envir.Now;
 
             GetMail();
         }
@@ -18430,7 +18434,7 @@ namespace Server.MirObjects
                 {
                     if (Info.IntelligentCreatures[i].Expire == DateTime.MinValue) continue; //permanent
     
-                    if (Info.IntelligentCreatures[i].Expire < DateTime.Now)
+                    if (Info.IntelligentCreatures[i].Expire < Envir.Now)
                     {
                         //Info.IntelligentCreatures[i].ExpireTime = 0;
 
@@ -19282,7 +19286,7 @@ namespace Server.MirObjects
             PlayerObject player = Envir.GetPlayer(lover.Name);
 
             Info.Married = 0;
-            Info.MarriedDate = DateTime.Now;
+            Info.MarriedDate = Envir.Now;
 
             if (Info.Equipment[(int)EquipmentSlot.RingL] != null)
             {
@@ -19293,7 +19297,7 @@ namespace Server.MirObjects
             GetRelationship(false);
             
             lover.Married = 0;
-            lover.MarriedDate = DateTime.Now;
+            lover.MarriedDate = Envir.Now;
             if (lover.Equipment[(int)EquipmentSlot.RingL] != null)
                 lover.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
 
@@ -19432,7 +19436,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Info.MarriedDate.AddDays(Settings.MarriageCooldown) > DateTime.Now)
+            if (Info.MarriedDate.AddDays(Settings.MarriageCooldown) > Envir.Now)
             {
                 ReceiveChat(string.Format("You can't get married again yet, there is a {0} day cooldown after a divorce.", Settings.MarriageCooldown), ChatType.System);
                 return;
@@ -19476,7 +19480,7 @@ namespace Server.MirObjects
                     return;
                 }
 
-                if (player.Info.MarriedDate.AddDays(Settings.MarriageCooldown) > DateTime.Now)
+                if (player.Info.MarriedDate.AddDays(Settings.MarriageCooldown) > Envir.Now)
                 {
                     ReceiveChat(string.Format("{0} can't get married again yet, there is a {1} day cooldown after divorce", player.Name, Settings.MarriageCooldown), ChatType.System);
                     return;
@@ -19559,10 +19563,10 @@ namespace Server.MirObjects
 
 
             MarriageProposal.Info.Married = Info.Index;
-            MarriageProposal.Info.MarriedDate = DateTime.Now;
+            MarriageProposal.Info.MarriedDate = Envir.Now;
 
             Info.Married = MarriageProposal.Info.Index;
-            Info.MarriedDate = DateTime.Now;
+            Info.MarriedDate = Envir.Now;
 
             GetRelationship(false);
             MarriageProposal.GetRelationship(false);
@@ -19668,7 +19672,7 @@ namespace Server.MirObjects
             }
 
             DivorceProposal.Info.Married = 0;
-            DivorceProposal.Info.MarriedDate = DateTime.Now;
+            DivorceProposal.Info.MarriedDate = Envir.Now;
             if (DivorceProposal.Info.Equipment[(int)EquipmentSlot.RingL] != null)
             {
                 DivorceProposal.Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
@@ -19676,7 +19680,7 @@ namespace Server.MirObjects
             }
 
             Info.Married = 0;
-            Info.MarriedDate = DateTime.Now;
+            Info.MarriedDate = Envir.Now;
             if (Info.Equipment[(int)EquipmentSlot.RingL] != null)
             {
                 Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
@@ -19704,10 +19708,10 @@ namespace Server.MirObjects
                 PlayerObject player = Envir.GetPlayer(Lover.Name);
 
                 if (player == null)
-                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate, MapName = "", MarriedDays = (short)(DateTime.Now - Info.MarriedDate).TotalDays });
+                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate, MapName = "", MarriedDays = (short)(Envir.Now - Info.MarriedDate).TotalDays });
                 else
                 {
-                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate, MapName = player.CurrentMap.Info.Title, MarriedDays = (short)(DateTime.Now - Info.MarriedDate).TotalDays });
+                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate, MapName = player.CurrentMap.Info.Title, MarriedDays = (short)(Envir.Now - Info.MarriedDate).TotalDays });
                     if (CheckOnline)
                     {
                         player.GetRelationship(false);
@@ -19730,7 +19734,7 @@ namespace Server.MirObjects
             PlayerObject player = Envir.GetPlayer(lover.Name);
             if (player != null)
             {
-                player.Enqueue(new S.LoverUpdate { Name = Info.Name, Date = player.Info.MarriedDate, MapName = "", MarriedDays = (short)(DateTime.Now - Info.MarriedDate).TotalDays });
+                player.Enqueue(new S.LoverUpdate { Name = Info.Name, Date = player.Info.MarriedDate, MapName = "", MarriedDays = (short)(Envir.Now - Info.MarriedDate).TotalDays });
                 player.ReceiveChat(String.Format("{0} has gone offline.", Info.Name), ChatType.System);
             }
         }
@@ -19752,7 +19756,7 @@ namespace Server.MirObjects
 
             if (force)
             {
-                Info.MentorDate = DateTime.Now.AddDays(Settings.MentorLength);
+                Info.MentorDate = Envir.Now.AddDays(Settings.MentorLength);
                 ReceiveChat(String.Format("You now have a {0} day cooldown on starting a new Mentorship.", Settings.MentorLength), ChatType.System);
             }
             else
@@ -19827,7 +19831,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Info.MentorDate > DateTime.Now)
+            if (Info.MentorDate > Envir.Now)
             {
                 ReceiveChat("You can't start a new Mentorship yet.", ChatType.System);
                 return;
@@ -19849,7 +19853,7 @@ namespace Server.MirObjects
                     return;
                 }
 
-                if (mentor.Info.MentorDate > DateTime.Now)
+                if (mentor.Info.MentorDate > Envir.Now)
                 {
                     ReceiveChat(String.Format("{0} can't start another Mentorship yet.", mentor.Info.Name), ChatType.System);
                     return;
@@ -19930,8 +19934,8 @@ namespace Server.MirObjects
                 student.Info.IsMentor = false;
                 Info.Mentor = student.Info.Index;
                 Info.IsMentor = true;
-                student.Info.MentorDate = DateTime.Now;
-                Info.MentorDate = DateTime.Now;
+                student.Info.MentorDate = Envir.Now;
+                Info.MentorDate = Envir.Now;
 
                 ReceiveChat(String.Format("You're now the Mentor of {0}.", student.Info.Name), ChatType.System);
                 student.ReceiveChat(String.Format("You're now being Mentored by {0}.", Info.Name), ChatType.System);
@@ -20719,7 +20723,7 @@ namespace Server.MirObjects
             item.RentalInformation = new RentalInformation
             {
                 OwnerName = Name,
-                ExpiryDate = DateTime.Now.AddDays(ItemRentalPeriodLength),
+                ExpiryDate = Envir.Now.AddDays(ItemRentalPeriodLength),
                 BindingFlags = BindMode.DontDrop | BindMode.DontStore | BindMode.DontSell | BindMode.DontTrade | BindMode.UnableToRent | BindMode.DontUpgrade | BindMode.UnableToDisassemble
             };
 

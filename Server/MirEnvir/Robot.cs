@@ -9,6 +9,11 @@ namespace Server.MirEnvir
 {
     public class Robot
     {
+        protected static Envir Envir
+        {
+            get { return Envir.Main; }
+        }
+
         public int? Month;
         public int? Day;
         public int? Hour;
@@ -23,7 +28,7 @@ namespace Server.MirEnvir
 
         private static void SetNextCheck()
         {
-            var next = DateTime.Now;
+            var next = Envir.Now;
             next = next.AddSeconds(-next.Second);
             next = next.AddMinutes(1);
 
@@ -55,12 +60,12 @@ namespace Server.MirEnvir
 
         public static void Process(NPCScript script)
         {
-            if (NextCheck > DateTime.Now)
+            if (NextCheck > Envir.Now)
             {
                 return;
             }
 
-            var matches = Robots.Where(x => x.IsMatch(DateTime.Now));
+            var matches = Robots.Where(x => x.IsMatch(Envir.Now));
 
             foreach (var match in matches)
             {

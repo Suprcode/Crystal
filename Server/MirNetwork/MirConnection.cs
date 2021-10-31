@@ -839,7 +839,7 @@ namespace Server.MirNetwork
 
             if (info.Banned)
             {
-                if (info.ExpiryDate > DateTime.Now)
+                if (info.ExpiryDate > Envir.Now)
                 {
                     Enqueue(new S.StartGameBanned { Reason = info.BanReason, ExpiryDate = info.ExpiryDate });
                     return;

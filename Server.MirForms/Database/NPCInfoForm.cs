@@ -430,7 +430,7 @@ namespace Server
 
         private void CopyMButton_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(DateTime.Now.DayOfWeek.ToString());
+            MessageBox.Show(Envir.Now.DayOfWeek.ToString());
         }
 
         private void MaxLev_textbox_TextChanged(object sender, EventArgs e)
@@ -542,7 +542,7 @@ namespace Server
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
-            MessageBox.Show(DateTime.Now.TimeOfDay.ToString());
+            MessageBox.Show(Envir.Now.TimeOfDay.ToString());
         }
 
         private void NPCInfoForm_Load(object sender, EventArgs e)

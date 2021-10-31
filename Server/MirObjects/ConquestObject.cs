@@ -325,7 +325,7 @@ namespace Server.MirObjects
             {
                 if (StartType == ConquestType.Forced)
                 {
-                    WarStartTime = DateTime.Now;
+                    WarStartTime = Envir.Now;
                     WarEndTime = WarStartTime.AddMinutes(Info.WarLength);
                     GameType = Info.Game;
                 }
@@ -447,7 +447,7 @@ namespace Server.MirObjects
 
         public bool CheckDay()
         {
-            switch (DateTime.Now.DayOfWeek.ToString())
+            switch (Envir.Now.DayOfWeek.ToString())
             {
                 case "Monday":
                     return Info.Monday;
@@ -472,9 +472,9 @@ namespace Server.MirObjects
         {
             int start = ((Info.StartHour * 60));
             int finish = ((Info.StartHour * 60) + Info.WarLength);
-            int now = ((DateTime.Now.Hour * 60) + DateTime.Now.Minute);
+            int now = ((Envir.Now.Hour * 60) + Envir.Now.Minute);
 
-            if (WarIsOn && StartType == ConquestType.Forced && WarEndTime <= DateTime.Now)
+            if (WarIsOn && StartType == ConquestType.Forced && WarEndTime <= Envir.Now)
             {
                 EndWar(Info.Game);
             }

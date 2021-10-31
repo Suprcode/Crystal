@@ -145,7 +145,7 @@ namespace Server.MirEnvir
                 RecipientInfo.Player.NewMail = true; //notify player of new mail  --check in player process
             }
 
-            DateSent = DateTime.Now;
+            DateSent = Envir.Now;
         }
 
         public ClientMail CreateClientMail()

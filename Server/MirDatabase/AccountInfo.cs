@@ -96,14 +96,14 @@ namespace Server.MirDatabase
             {
                 var info = new CharacterInfo(reader, Envir.LoadVersion, Envir.LoadCustomVersion) { AccountInfo = this };
 
-                if (info.Deleted && info.DeleteDate.AddMonths(Settings.ArchiveDeletedCharacterAfterMonths) < DateTime.Now)
+                if (info.Deleted && info.DeleteDate.AddMonths(Settings.ArchiveDeletedCharacterAfterMonths) <= Envir.Now)
                 {
                     MessageQueue.Enqueue($"Player {info.Name} has been archived due to {Settings.ArchiveDeletedCharacterAfterMonths} month deletion.");
                     Envir.SaveArchivedCharacter(info);
                     continue;
                 }
 
-                if (info.LastLoginDate.AddMonths(Settings.ArchiveInactiveCharacterAfterMonths) < DateTime.Now)
+                if (info.LastLoginDate.AddMonths(Settings.ArchiveInactiveCharacterAfterMonths) <= Envir.Now)
                 {
                     MessageQueue.Enqueue($"Player {info.Name} has been archived due to {Settings.ArchiveInactiveCharacterAfterMonths} months inactivity.");
                     Envir.SaveArchivedCharacter(info);
@@ -141,7 +141,7 @@ namespace Server.MirDatabase
                 {
                     if (Characters[i] == null) continue;
                     if (Characters[i].Deleted) continue;
-                    if ((DateTime.Now - Characters[i].LastLogoutDate).TotalDays > 13) continue;
+                    if ((Envir.Now - Characters[i].LastLogoutDate).TotalDays > 13) continue;
                     if ((Characters[i].Level >= Envir.RankBottomLevel[0]) || (Characters[i].Level >= Envir.RankBottomLevel[(byte)Characters[i].Class + 1]))
                     {
                         Envir.CheckRankUpdate(Characters[i]);

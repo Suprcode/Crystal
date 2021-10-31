@@ -67,6 +67,11 @@ namespace Server.MirDatabase
 
     public class UserIntelligentCreature
     {
+        protected static Envir Envir
+        {
+            get { return Envir.Main; }
+        }
+
         public IntelligentCreatureType PetType;
         public IntelligentCreatureInfo Info;
         public IntelligentCreatureItemFilter Filter;
@@ -88,7 +93,7 @@ namespace Server.MirDatabase
             Fullness = 7500;//starts at 75% food
             SlotIndex = slot;
 
-            if (effect > 0) Expire = DateTime.Now.AddDays(effect);//effect holds the amount in days
+            if (effect > 0) Expire = Envir.Now.AddDays(effect);//effect holds the amount in days
             else Expire = DateTime.MinValue;//permanent
 
             BlackstoneTime = 0;
@@ -114,7 +119,7 @@ namespace Server.MirDatabase
             }
             else
             {
-                Expire = DateTime.Now.AddSeconds(expireTime);
+                Expire = Envir.Now.AddSeconds(expireTime);
             }
 
             BlackstoneTime = reader.ReadInt64();
@@ -144,7 +149,7 @@ namespace Server.MirDatabase
             }
             else
             {
-                writer.Write((long)(Expire - DateTime.Now).TotalSeconds);
+                writer.Write((long)(Expire - Envir.Now).TotalSeconds);
             }
 
             writer.Write(BlackstoneTime);

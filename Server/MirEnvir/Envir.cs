@@ -961,7 +961,7 @@ namespace Server.MirEnvir
 
         public void SaveArchivedCharacter(CharacterInfo info)
         {
-            using var stream = File.Create(Path.Combine(ArchivePath, @$"{info.Name}{DateTime.Now:_MMddyyyy_HHmmss}.MirCA"));
+            using var stream = File.Create(Path.Combine(ArchivePath, @$"{info.Name}{Now:_MMddyyyy_HHmmss}.MirCA"));
             using var writer = new BinaryWriter(stream);
 
             writer.Write(Version);
@@ -1852,10 +1852,10 @@ namespace Server.MirEnvir
                         var Lover = GetCharacterInfo(info.Married);
 
                         info.Married = 0;
-                        info.MarriedDate = DateTime.Now;
+                        info.MarriedDate = Now;
 
                         Lover.Married = 0;
-                        Lover.MarriedDate = DateTime.Now;
+                        Lover.MarriedDate = Now;
                         if (Lover.Equipment[(int)EquipmentSlot.RingL] != null)
                             Lover.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
                     }
@@ -1866,7 +1866,7 @@ namespace Server.MirEnvir
                 {
                     for (var j = info.Mail.Count - 1 - (int)Settings.MailCapacity; j >= 0; j--)
                     {
-                        if (info.Mail[j].DateOpened > DateTime.Now && info.Mail[j].Collected && info.Mail[j].Items.Count == 0 && info.Mail[j].Gold == 0)
+                        if (info.Mail[j].DateOpened > Now && info.Mail[j].Collected && info.Mail[j].Items.Count == 0 && info.Mail[j].Gold == 0)
                         {
                             info.Mail.Remove(info.Mail[j]);
                         }
@@ -2122,7 +2122,7 @@ namespace Server.MirEnvir
 
             if (account.Banned)
             {
-                if (account.ExpiryDate > DateTime.Now)
+                if (account.ExpiryDate > Now)
                 {
                     c.Enqueue(new ServerPackets.LoginBanned
                     {
@@ -2143,7 +2143,7 @@ namespace Server.MirEnvir
                 {
                     account.Banned = true;
                     account.BanReason = "Too many Wrong Login Attempts.";
-                    account.ExpiryDate = DateTime.Now.AddMinutes(2);
+                    account.ExpiryDate = Now.AddMinutes(2);
 
                     c.Enqueue(new ServerPackets.LoginBanned
                     {
@@ -2201,7 +2201,7 @@ namespace Server.MirEnvir
 
             if (account.Banned)
             {
-                if (account.ExpiryDate > DateTime.Now)
+                if (account.ExpiryDate > Now)
                 {
                     return 4;
                 }
@@ -2215,7 +2215,7 @@ namespace Server.MirEnvir
                 {
                     account.Banned = true;
                     account.BanReason = "Too many Wrong Login Attempts.";
-                    account.ExpiryDate = DateTime.Now.AddMinutes(2);
+                    account.ExpiryDate = Now.AddMinutes(2);
                     return 5;
                 }
                 return 6;
@@ -2409,7 +2409,7 @@ namespace Server.MirEnvir
 
         public void AddToGameShop(ItemInfo Info)
         {
-            GameShopList.Add(new GameShopItem { GIndex = ++GameshopIndex, GoldPrice = (uint)(1000 * Settings.CredxGold), CreditPrice = 1000, ItemIndex = Info.Index, Info = Info, Date = DateTime.Now, Class = "All", Category = Info.Type.ToString() });
+            GameShopList.Add(new GameShopItem { GIndex = ++GameshopIndex, GoldPrice = (uint)(1000 * Settings.CredxGold), CreditPrice = 1000, ItemIndex = Info.Index, Info = Info, Date = Now, Class = "All", Category = Info.Type.ToString() });
         }
 
         public void Remove(MapInfo info)
@@ -2522,19 +2522,19 @@ namespace Server.MirEnvir
                 switch (alpha)
                 {
                     case "m":
-                        expiryInfo.ExpiryDate = DateTime.Now.AddMinutes(num);
+                        expiryInfo.ExpiryDate = Now.AddMinutes(num);
                         break;
                     case "h":
-                        expiryInfo.ExpiryDate = DateTime.Now.AddHours(num);
+                        expiryInfo.ExpiryDate = Now.AddHours(num);
                         break;
                     case "d":
-                        expiryInfo.ExpiryDate = DateTime.Now.AddDays(num);
+                        expiryInfo.ExpiryDate = Now.AddDays(num);
                         break;
                     case "M":
-                        expiryInfo.ExpiryDate = DateTime.Now.AddMonths(num);
+                        expiryInfo.ExpiryDate = Now.AddMonths(num);
                         break;
                     case "y":
-                        expiryInfo.ExpiryDate = DateTime.Now.AddYears(num);
+                        expiryInfo.ExpiryDate = Now.AddYears(num);
                         break;
                     default:
                         expiryInfo.ExpiryDate = DateTime.MaxValue;

@@ -42,7 +42,7 @@ namespace Server.MirDatabase
 
         public bool New
         {
-            get { return StartDateTime > DateTime.Now.AddDays(-1); }
+            get { return StartDateTime > Envir.Now.AddDays(-1); }
         }
 
         public QuestProgressInfo(int index)
@@ -239,7 +239,7 @@ namespace Server.MirDatabase
 
             if (StartDateTime == DateTime.MinValue)
             {
-                StartDateTime = DateTime.Now;
+                StartDateTime = Envir.Now;
             }
         }
 
@@ -304,7 +304,7 @@ namespace Server.MirDatabase
 
             if (!Completed)
             {
-                EndDateTime = DateTime.Now;
+                EndDateTime = Envir.Now;
 
                 if (Info.TimeLimitInSeconds > 0)
                 {
@@ -498,7 +498,7 @@ namespace Server.MirDatabase
 
             if (Info.TimeLimitInSeconds > 0)
             {
-                var secondsSinceStarted = (int)(DateTime.Now - StartDateTime).TotalSeconds;
+                var secondsSinceStarted = (int)(Envir.Now - StartDateTime).TotalSeconds;
 
                 var remainingSeconds = Info.TimeLimitInSeconds - secondsSinceStarted;
 

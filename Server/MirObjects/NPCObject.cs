@@ -223,7 +223,7 @@ namespace Server.MirObjects
             {
                 VisTime = Envir.Time + (Settings.Minute);
 
-                if (Info.DayofWeek != "" && Info.DayofWeek != DateTime.Now.DayOfWeek.ToString())
+                if (Info.DayofWeek != "" && Info.DayofWeek != Envir.Now.DayOfWeek.ToString())
                 {
                     if (Visible) Hide();
                 }
@@ -231,7 +231,7 @@ namespace Server.MirObjects
                 {
                     int StartTime = ((Info.HourStart * 60) + Info.MinuteStart);
                     int FinishTime = ((Info.HourEnd * 60) + Info.MinuteEnd);
-                    int CurrentTime = ((DateTime.Now.Hour * 60) + DateTime.Now.Minute);
+                    int CurrentTime = ((Envir.Now.Hour * 60) + Envir.Now.Minute);
 
                     if (Info.TimeVisible)
                     {
