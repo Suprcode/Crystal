@@ -336,7 +336,6 @@ namespace LibraryEditor
                         break;
 
                     case 2:
-                    case 5:
                         bo16bit = true;
                         reader.ReadInt16();
                         reader.ReadInt16();
@@ -350,6 +349,13 @@ namespace LibraryEditor
                         ShadowX = reader.ReadInt16();
                         ShadowY = reader.ReadInt16();
                         nSize = reader.ReadInt32() * 2;
+                        break;
+
+                    case 5:
+                        reader.ReadInt16();
+                        reader.ReadInt16();
+                        nSize = reader.ReadInt32();
+                        Width = (nSize < 6) ? (short)0 : Width;
                         break;
                 }
                 Width = (nSize == 0) ? (short)0 : Width; //this makes sure blank images aren't being processed
@@ -426,7 +432,11 @@ namespace LibraryEditor
                         }
                         break;
                 }
+
                 int index = 0;
+
+                if (nType == 5 && bytes.Length == Width * Height * 2)
+                    bo16bit = true;
 
                 if (bytes.Length <= 1)
                 {
@@ -443,7 +453,7 @@ namespace LibraryEditor
                     {
                         for (int x = 0; x < Width; x++)
                         {
-                            if (nType == 5)
+                            if (nType == 5 && !bo16bit)
                             {
                                 scan0[y * Width + x] = BitConverter.ToInt32(bytes, index);
                                 index += 4;
