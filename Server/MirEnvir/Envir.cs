@@ -54,7 +54,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int MinVersion = 60;
-        public const int Version = 91;
+        public const int Version = 92;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
@@ -163,6 +163,7 @@ namespace Server.MirEnvir
         public List<RankCharacterInfo> RankTop = new List<RankCharacterInfo>();
         public List<RankCharacterInfo>[] RankClass = new List<RankCharacterInfo>[5];
         public int[] RankBottomLevel = new int[6];
+
         static HttpServer http;
 
         static Envir()
@@ -1343,10 +1344,15 @@ namespace Server.MirEnvir
             for (var i = 0; i < RankClass.Count(); i++)
             {
                 if (RankClass[i] != null)
+                {
                     RankClass[i].Clear();
+                }
                 else
+                {
                     RankClass[i] = new List<RankCharacterInfo>();
+                }
             }
+
             RankTop.Clear();
             for (var i = 0; i < RankBottomLevel.Count(); i++)
             {
@@ -1356,7 +1362,9 @@ namespace Server.MirEnvir
             lock (LoadLock)
             {
                 if (!File.Exists(AccountPath))
+                {
                     SaveAccounts();
+                }
 
                 using (var stream = File.OpenRead(AccountPath))
                 using (var reader = new BinaryReader(stream))
@@ -1371,8 +1379,10 @@ namespace Server.MirEnvir
                     NextGuildID = reader.ReadInt32();
 
                     var count = reader.ReadInt32();
+
                     AccountList.Clear();
                     CharacterList.Clear();
+
                     for (var i = 0; i < count; i++)
                     {
                         AccountList.Add(new AccountInfo(reader));
@@ -1469,12 +1479,11 @@ namespace Server.MirEnvir
                 {
                     GuildInfo guildInfo;
                     if (!File.Exists(Path.Combine(Settings.GuildPath, i + ".mgd"))) continue;
+
                     using (var stream = File.OpenRead(Path.Combine(Settings.GuildPath, i + ".mgd")))
                     {
-                        using (var reader = new BinaryReader(stream))
-                        {
-                            guildInfo = new GuildInfo(reader);
-                        }
+                        using var reader = new BinaryReader(stream);
+                        guildInfo = new GuildInfo(reader);
                     }
 
                     GuildList.Add(guildInfo);
@@ -1487,7 +1496,6 @@ namespace Server.MirEnvir
                 if (count != GuildCount) GuildCount = count;
             }
         }
-
 
         public void LoadConquests()
         {
@@ -1625,7 +1633,8 @@ namespace Server.MirEnvir
 
             lock (_locker)
             {
-                Monitor.PulseAll(_locker);         // changing a blocking condition. (this makes the threads wake up!)
+                // changing a blocking condition. (this makes the threads wake up!)
+                Monitor.PulseAll(_locker);
             }
 
             //simply intterupt all the mob threads if they are running (will give an invisible error on them but fastest way of getting rid of them on shutdowns)

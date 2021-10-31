@@ -18,11 +18,6 @@ namespace Server.MirDatabase
 
         public Dictionary<ConquestGuildFlagInfo, Dictionary<GuildObject, int>> ControlPoints = new Dictionary<ConquestGuildFlagInfo, Dictionary<GuildObject, int>>();
 
-        public int ArcherCount;
-        public int GateCount;
-        public int WallCount;
-        public int SiegeCount;
-
         public int Owner = 0;
         public uint GoldStorage;
         public int AttackerID;
@@ -37,26 +32,27 @@ namespace Server.MirDatabase
         public ConquestGuildInfo(BinaryReader reader)
         {
             Owner = reader.ReadInt32();
-            ArcherCount = reader.ReadInt32();
-            for (int i = 0; i < ArcherCount; i++)
+
+            var archerCount = reader.ReadInt32();
+            for (int i = 0; i < archerCount; i++)
             {
                 ArcherList.Add(new ConquestGuildArcherInfo(reader));
             }
 
-            GateCount = reader.ReadInt32();
-            for (int i = 0; i < GateCount; i++)
+            var gateCount = reader.ReadInt32();
+            for (int i = 0; i < gateCount; i++)
             {
                 GateList.Add(new ConquestGuildGateInfo(reader));
             }
 
-            WallCount = reader.ReadInt32();
-            for (int i = 0; i < WallCount; i++)
+            var wallCount = reader.ReadInt32();
+            for (int i = 0; i < wallCount; i++)
             {
                 WallList.Add(new ConquestGuildWallInfo(reader));
             }
 
-            SiegeCount = reader.ReadInt32();
-            for (int i = 0; i < SiegeCount; i++)
+            var siegeCount = reader.ReadInt32();
+            for (int i = 0; i < siegeCount; i++)
             {
                 SiegeList.Add(new ConquestGuildSiegeInfo(reader));
             }

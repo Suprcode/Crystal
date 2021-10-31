@@ -1362,6 +1362,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ItemSlotSizeChanged:
                     ItemSlotSizeChanged((S.ItemSlotSizeChanged)p);
                     break;
+                case (short)ServerPacketIds.ItemSealChanged:
+                    ItemSealChanged((S.ItemSealChanged)p);
+                    break;
                 case (short)ServerPacketIds.NewMagic:
                     NewMagic((S.NewMagic)p);
                     break;
@@ -3770,6 +3773,41 @@ namespace Client.MirScenes
             item.SetSlotSize(p.SlotSize);
         }
 
+        private void ItemSealChanged(S.ItemSealChanged p)
+        {
+            UserItem item = null;
+            for (int i = 0; i < User.Inventory.Length; i++)
+            {
+                if (User.Inventory[i] != null && User.Inventory[i].UniqueID == p.UniqueID)
+                {
+                    item = User.Inventory[i];
+                    break;
+                }
+            }
+
+            if (item == null)
+            {
+                for (int i = 0; i < User.Equipment.Length; i++)
+                {
+                    if (User.Equipment[i] != null && User.Equipment[i].UniqueID == p.UniqueID)
+                    {
+                        item = User.Equipment[i];
+                        break;
+                    }
+                }
+            }
+
+            if (item == null) return;
+
+            item.SealedInfo = new SealedInfo { ExpiryDate = p.ExpiryDate };
+
+            if (HoverItem == item)
+            {
+                DisposeItemLabel();
+                CreateItemLabel(item);
+            }
+        }
+
         private void ItemUpgraded(S.ItemUpgraded p)
         {
             UserItem item = null;
@@ -6105,8 +6143,17 @@ namespace Client.MirScenes
 
             if (minValue > 0 && realItem.Type == ItemType.Gem)
             {
+                switch (realItem.Shape)
+                {
+                    default:
+                        text = string.Format("Adds +{0} Durability", minValue / 1000);
+                        break;
+                    case 8:
+                        text = string.Format("Seals for {0}", Functions.PrintTimeSpanFromSeconds(minValue * 60));
+                        break;
+                }
+
                 count++;
-                text = string.Format("Adds +{0} Durability", minValue / 1000);
                 MirLabel DuraLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -8226,9 +8273,34 @@ namespace Client.MirScenes
 
             #endregion
 
+            #region SEALED
+
+            if (HoverItem.SealedInfo != null)
+            {
+                double remainingSeconds = (HoverItem.SealedInfo.ExpiryDate - DateTime.Now).TotalSeconds;
+
+                if (remainingSeconds > 0)
+                {
+                    count++;
+                    MirLabel SEALEDLabel = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.Red,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = remainingSeconds > 0 ? string.Format("Sealed for {0}", Functions.PrintTimeSpanFromSeconds(remainingSeconds)) : ""
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, SEALEDLabel.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, SEALEDLabel.DisplayRectangle.Bottom));
+                }
+            }
+
+            #endregion
+
             if (HoverItem.RentalInformation?.RentalLocked == false)
             {
-
                 count++;
                 MirLabel OWNERLabel = new MirLabel
                 {
@@ -8332,6 +8404,9 @@ namespace Client.MirScenes
                     case 3:
                     case 4:
                         text = "Hold CTRL and left click to combine with an item.";
+                        break;
+                    case 8:
+                        text = "Hold CTRL and left click to seal an item.";
                         break;
                 }
                 count++;

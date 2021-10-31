@@ -1474,6 +1474,7 @@ public enum ServerPacketIds : short
     RepairItem,
     ItemRepaired,
     ItemSlotSizeChanged,
+    ItemSealChanged,
     NewMagic,
     RemoveMagic,
     MagicLeveled,

@@ -305,6 +305,7 @@ public class UserItem
 
     public ExpireInfo ExpireInfo;
     public RentalInformation RentalInformation;
+    public SealedInfo SealedInfo;
 
     public bool IsShopItem;
 
@@ -431,7 +432,9 @@ public class UserItem
         if (version < 65) return;
 
         if (reader.ReadBoolean())
+        {
             ExpireInfo = new ExpireInfo(reader, version, customVersion);
+        }
 
         if (version < 76)
             return;
@@ -442,6 +445,13 @@ public class UserItem
         if (version < 83) return;
 
         IsShopItem = reader.ReadBoolean();
+
+        if (version < 92) return;
+
+        if (reader.ReadBoolean())
+        {
+            SealedInfo = new SealedInfo(reader, version, customVersion);
+        }
     }
 
     public void Save(BinaryWriter writer)
@@ -488,6 +498,9 @@ public class UserItem
         RentalInformation?.Save(writer);
 
         writer.Write(IsShopItem);
+
+        writer.Write(SealedInfo != null);
+        SealedInfo?.Save(writer);
     }
 
     public int GetTotal(Stat type)
@@ -679,6 +692,7 @@ public class UserItem
 
             ExpireInfo = ExpireInfo,
             RentalInformation = RentalInformation,
+            SealedInfo = SealedInfo,
 
             IsShopItem = IsShopItem
         };
@@ -695,6 +709,23 @@ public class ExpireInfo
     public ExpireInfo() { }
 
     public ExpireInfo(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
+    {
+        ExpiryDate = DateTime.FromBinary(reader.ReadInt64());
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(ExpiryDate.ToBinary());
+    }
+}
+
+public class SealedInfo
+{
+    public DateTime ExpiryDate;
+
+    public SealedInfo() { }
+
+    public SealedInfo(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
     {
         ExpiryDate = DateTime.FromBinary(reader.ReadInt64());
     }

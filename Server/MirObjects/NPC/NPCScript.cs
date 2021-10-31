@@ -1179,6 +1179,7 @@ namespace Server.MirObjects
                     callingNPC.Conq.GuildInfo.GoldStorage += (cost - baseCost);
                 }
             }
+
             player.GainItem(item);
 
             if (isUsed)

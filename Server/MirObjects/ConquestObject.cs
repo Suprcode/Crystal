@@ -168,7 +168,9 @@ namespace Server.MirObjects
             for (var j = 0; j < GuildInfo.WallList.Count; j++)
             {
                 if (GuildInfo.WallList[j].Info == null)
+                {
                     GuildInfo.WallList.Remove(GuildInfo.WallList[j]);
+                }
             }
 
 

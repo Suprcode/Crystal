@@ -2912,6 +2912,25 @@ namespace ServerPackets
         }
     }
 
+    public sealed class ItemSealChanged : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.ItemSealChanged; } }
+
+        public ulong UniqueID;
+        public DateTime ExpiryDate;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            UniqueID = reader.ReadUInt64();
+            ExpiryDate = DateTime.FromBinary(reader.ReadInt64());
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(UniqueID);
+            writer.Write(ExpiryDate.ToBinary());
+        }
+    }
+
 
     public sealed class NewMagic : Packet
     {

@@ -1091,12 +1091,15 @@ namespace Server.MirObjects
                     continue;
                 }
 
-                if (item?.RentalInformation?.RentalLocked != true ||
-                    !(item?.RentalInformation?.ExpiryDate <= Envir.Now))
+                if (item?.RentalInformation?.RentalLocked != true || !(item?.RentalInformation?.ExpiryDate <= Envir.Now))
+                {
                     continue;
-
-                ReceiveChat($"The rental lock has been removed from {item.Info.FriendlyName}.", ChatType.Hint);
-                item.RentalInformation = null;
+                }
+                else
+                {
+                    ReceiveChat($"The rental lock has been removed from {item.Info.FriendlyName}.", ChatType.Hint);
+                    item.RentalInformation = null;
+                }
             }
 
             for (var i = 0; i < Info.Equipment.Length; i++)
@@ -1112,12 +1115,15 @@ namespace Server.MirObjects
                     continue;
                 }
 
-                if (item?.RentalInformation?.RentalLocked != true ||
-                    !(item?.RentalInformation?.ExpiryDate <= Envir.Now))
+                if (item?.RentalInformation?.RentalLocked != true || !(item?.RentalInformation?.ExpiryDate <= Envir.Now))
+                {
                     continue;
-
-                ReceiveChat($"The rental lock has been removed from {item.Info.FriendlyName}.", ChatType.Hint);
-                item.RentalInformation = null;
+                }
+                else
+                {
+                    ReceiveChat($"The rental lock has been removed from {item.Info.FriendlyName}.", ChatType.Hint);
+                    item.RentalInformation = null;
+                }
             }
 
             for (int i = 0; i < Info.AccountInfo.Storage.Length; i++)
@@ -1349,6 +1355,9 @@ namespace Server.MirObjects
                     if (item.WeddingRing != -1 && Info.Equipment[(int)EquipmentSlot.RingL].UniqueID == item.UniqueID)
                         continue;
 
+                    if (item.SealedInfo != null && item.SealedInfo.ExpiryDate > DateTime.Now)
+                        continue;
+
                     if (((killer == null) || ((killer != null) && (killer.Race != ObjectType.Player))))
                     {
                         if (item.Info.Bind.HasFlag(BindMode.BreakOnDeath))
@@ -1440,6 +1449,9 @@ namespace Server.MirObjects
                 if (item.WeddingRing != -1)
                     continue;
 
+                if (item.SealedInfo != null && item.SealedInfo.ExpiryDate > DateTime.Now)
+                    continue;
+
                 if (item.Count > 1)
                 {
                     var percent = Envir.RandomomRange(10, 8);
@@ -1515,6 +1527,9 @@ namespace Server.MirObjects
                     if ((item.WeddingRing != -1) && (Info.Equipment[(int)EquipmentSlot.RingL].UniqueID == item.UniqueID))
                         continue;
 
+                    if (item.SealedInfo != null && item.SealedInfo.ExpiryDate > DateTime.Now)
+                        continue;
+
                     if (item.Info.Bind.HasFlag(BindMode.BreakOnDeath))
                     {
                         Info.Equipment[i] = null;
@@ -1587,6 +1602,9 @@ namespace Server.MirObjects
                     continue;
 
                 if (item.WeddingRing != -1)
+                    continue;
+
+                if (item.SealedInfo != null && item.SealedInfo.ExpiryDate > DateTime.Now)
                     continue;
 
                 if (Envir.ReturnRentalItem(item, item.RentalInformation?.OwnerName, Info))
@@ -4945,15 +4963,12 @@ namespace Server.MirObjects
                             return;
                         }
 
-                        int questid = 0;
-                        int questState = 0;
+                        int.TryParse(parts[1], out int questID);
+                        int.TryParse(parts[2], out int questState);
 
-                        int.TryParse(parts[1], out questid);
-                        int.TryParse(parts[2], out questState);
+                        if (questID < 1) return;
 
-                        if (questid < 1) return;
-
-                        var activeQuest = player.CurrentQuests.FirstOrDefault(e => e.Index == questid);
+                        var activeQuest = player.CurrentQuests.FirstOrDefault(e => e.Index == questID);
 
                         //remove from active list
                         if (activeQuest != null)
@@ -4964,15 +4979,15 @@ namespace Server.MirObjects
                         switch (questState)
                         {
                             case 0: //cancel
-                                if (player.CompletedQuests.Contains(questid))
+                                if (player.CompletedQuests.Contains(questID))
                                 {
-                                    player.CompletedQuests.Remove(questid);
+                                    player.CompletedQuests.Remove(questID);
                                 }
                                 break;
                             case 1: //complete
-                                if (!player.CompletedQuests.Contains(questid))
+                                if (!player.CompletedQuests.Contains(questID))
                                 {
-                                    player.CompletedQuests.Add(questid);
+                                    player.CompletedQuests.Add(questID);
                                 }
                                 break;
                         }
@@ -4999,84 +5014,90 @@ namespace Server.MirObjects
                         break;
 
                     case "STARTCONQUEST":
-                        //Needs some work, but does job for now.
-                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
-                        int ConquestID;
-
-                        if (parts.Length < 1)
                         {
-                            ReceiveChat(string.Format("The Syntax is /StartConquest [ConquestID]"), ChatType.System);
-                            return;
-                        }
+                            if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
+                            int conquestID;
 
-                        if (MyGuild == null)
-                        {
-                            ReceiveChat(string.Format("You need to be in a guild to start a War"), ChatType.System);
-                            return;
-                        }
-                
-                        else if (!int.TryParse(parts[1], out ConquestID)) return;
+                            if (parts.Length < 1)
+                            {
+                                ReceiveChat(string.Format("The Syntax is /StartConquest [ConquestID]"), ChatType.System);
+                                return;
+                            }
 
-                        ConquestObject tempConq = Envir.Conquests.FirstOrDefault(t => t.Info.Index == ConquestID);
+                            if (MyGuild == null)
+                            {
+                                ReceiveChat(string.Format("You need to be in a guild to start a War"), ChatType.System);
+                                return;
+                            }
 
-                        if (tempConq != null)
-                        {
-                            tempConq.StartType = ConquestType.Forced;
-                            tempConq.WarIsOn = !tempConq.WarIsOn;
-                            tempConq.GuildInfo.AttackerID = MyGuild.Guildindex;
+                            else if (!int.TryParse(parts[1], out conquestID)) return;
+
+                            ConquestObject tempConq = Envir.Conquests.FirstOrDefault(t => t.Info.Index == conquestID);
+
+                            if (tempConq != null)
+                            {
+                                tempConq.StartType = ConquestType.Forced;
+                                tempConq.WarIsOn = !tempConq.WarIsOn;
+                                tempConq.GuildInfo.AttackerID = MyGuild.Guildindex;
+                            }
+                            else return;
+                            ReceiveChat(string.Format("{0} War Started.", tempConq.Info.Name), ChatType.System);
+                            MessageQueue.Enqueue(string.Format("{0} War Started.", tempConq.Info.Name));
                         }
-                        else return;
-                        ReceiveChat(string.Format("{0} War Started.", tempConq.Info.Name), ChatType.System);
-                        MessageQueue.Enqueue(string.Format("{0} War Started.", tempConq.Info.Name));
                         break;
                     case "RESETCONQUEST":
-                        //Needs some work, but does job for now.
-                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
-                        int ConquestNum;
-
-                        if (parts.Length < 1)
                         {
-                            ReceiveChat(string.Format("The Syntax is /ResetConquest [ConquestID]"), ChatType.System);
-                            return;
-                        }
+                            if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
+                            int conquestID;
 
-                        if (MyGuild == null)
-                        {
-                            ReceiveChat(string.Format("You need to be in a guild to start a War"), ChatType.System);
-                            return;
-                        }
+                            if (parts.Length < 1)
+                            {
+                                ReceiveChat(string.Format("The Syntax is /ResetConquest [ConquestID]"), ChatType.System);
+                                return;
+                            }
 
-                        else if (!int.TryParse(parts[1], out ConquestNum)) return;
+                            if (MyGuild == null)
+                            {
+                                ReceiveChat(string.Format("You need to be in a guild to start a War"), ChatType.System);
+                                return;
+                            }
 
-                        ConquestObject ResetConq = Envir.Conquests.FirstOrDefault(t => t.Info.Index == ConquestNum);
+                            else if (!int.TryParse(parts[1], out conquestID)) return;
 
-                        if (ResetConq != null && !ResetConq.WarIsOn)
-                        {
-                            ResetConq.Reset();
+                            ConquestObject resetConq = Envir.Conquests.FirstOrDefault(t => t.Info.Index == conquestID);
+
+                            if (resetConq != null && !resetConq.WarIsOn)
+                            {
+                                resetConq.Reset();
+                                ReceiveChat(string.Format("{0} has been reset.", resetConq.Info.Name), ChatType.System);
+                            }
+                            else
+                            {
+                                ReceiveChat("Conquest not found or War is currently on.", ChatType.System);
+                            }
                         }
-                        else
-                        {
-                            ReceiveChat("Conquest not found or War is currently on.", ChatType.System);
-                            return;
-                        }
-                        ReceiveChat(string.Format("{0} has been reset.", ResetConq.Info.Name), ChatType.System);
                         break;
                     case "GATES":
-
                         if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(GuildRankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
                         {
                             ReceiveChat(string.Format("You don't have access to control any gates at the moment."), ChatType.System);
                             return;
                         }
 
-                        bool OpenClose = false;
+                        bool openClose = false;
 
                         if (parts.Length > 1)
                         {
                             string openclose = parts[1];
 
-                            if (openclose.ToUpper() == "CLOSE") OpenClose = true;
-                            else if (openclose.ToUpper() == "OPEN") OpenClose = false;
+                            if (openclose.ToUpper() == "CLOSE")
+                            {
+                                openClose = true;
+                            }
+                            else if (openclose.ToUpper() == "OPEN")
+                            {
+                                openClose = false;
+                            }
                             else
                             {
                                 ReceiveChat(string.Format("You must type /Gates Open or /Gates Close."), ChatType.System);
@@ -5087,7 +5108,7 @@ namespace Server.MirObjects
                             {
                                 if (MyGuild.Conquest.GateList[i].Gate != null && !MyGuild.Conquest.GateList[i].Gate.Dead)
                                 {
-                                    if (OpenClose)
+                                    if (openClose)
                                     {
                                         MyGuild.Conquest.GateList[i].Gate.CloseDoor();
                                     }
@@ -5107,18 +5128,18 @@ namespace Server.MirObjects
                                     if (!MyGuild.Conquest.GateList[i].Gate.Closed)
                                     {
                                         MyGuild.Conquest.GateList[i].Gate.CloseDoor();
-                                        OpenClose = true;
+                                        openClose = true;
                                     }
                                     else
                                     {
                                         MyGuild.Conquest.GateList[i].Gate.OpenDoor();
-                                        OpenClose = false;
+                                        openClose = false;
                                     }
                                 }
                             }
                         }
 
-                        if (OpenClose)
+                        if (openClose)
                         {
                             ReceiveChat(string.Format("The gates at {0} have been closed.", MyGuild.Conquest.Info.Name), ChatType.System);
                         }
@@ -5137,11 +5158,9 @@ namespace Server.MirObjects
 
                         ushort flag = (ushort)Envir.Random.Next(12);
 
-                        if(parts.Length > 1)
+                        if (parts.Length > 1)
                         {
-                            ushort temp;
-
-                            ushort.TryParse(parts[1], out temp);
+                            ushort.TryParse(parts[1], out ushort temp);
 
                             if (temp <= 11) flag = temp;
                         }
@@ -5195,6 +5214,7 @@ namespace Server.MirObjects
                         {
                             player = Envir.GetPlayer(parts[1]);
                             if (player == null) return;
+
                             player.Revive(MaxHealth, true);
                         }
                         break;
@@ -5218,7 +5238,9 @@ namespace Server.MirObjects
                             }
                         }
                         else
+                        {
                             player = this;
+                        }
 
                         if (player == null) return;
 
@@ -5239,7 +5261,10 @@ namespace Server.MirObjects
                             ReceiveChat(string.Format("You have deleted skill {0} from player {1}", skill1.ToString(), player.Name), ChatType.Hint);
                             player.ReceiveChat(string.Format("{0} has been removed from you.", skill1), ChatType.Hint);
                         }
-                        else ReceiveChat(string.Format("Unable to delete skill, skill not found"), ChatType.Hint);
+                        else
+                        {
+                            ReceiveChat(string.Format("Unable to delete skill, skill not found"), ChatType.Hint);
+                        }
 
                         break;
                     case "SETTIMER":
@@ -5270,6 +5295,7 @@ namespace Server.MirObjects
                 foreach (string command in Envir.CustomCommands)
                 {
                     if (string.Compare(parts[0], command, true) != 0) continue;
+
                     CallDefaultNPC(DefaultNPCType.CustomCommand, parts[0]);
                 }
             }
@@ -12146,7 +12172,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            bool canRepair = false, canUpgrade = false, canSlotUpgrade = false;
+            bool canRepair = false, canUpgrade = false, canSlotUpgrade = false, canSeal = false;
 
             if (tempFrom.Info.Type != ItemType.Gem)
             {
@@ -12232,6 +12258,21 @@ namespace Server.MirObjects
                     }
 
                     canSlotUpgrade = true;
+                    break;
+                case 8: //Seal
+                    if (tempTo.Info.Bind.HasFlag(BindMode.DontUpgrade) || tempTo.Info.Unique != SpecialItemMode.None)
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    if (tempTo.SealedInfo != null)
+                    {
+                        ReceiveChat("Item is already sealed.", ChatType.Hint);
+                        Enqueue(p);
+                        return;
+                    }
+
+                    canSeal = true;
                     break;
                 case 3: //gems
                 case 4: //orbs
@@ -12516,6 +12557,16 @@ namespace Server.MirObjects
                 tempTo.SetSlotSize(tempTo.Slots.Length + 1);
                 ReceiveChat("Item has increased its sockets.", ChatType.Hint);
                 Enqueue(new S.ItemSlotSizeChanged { UniqueID = tempTo.UniqueID, SlotSize = tempTo.Slots.Length });
+            }
+
+            if (canSeal && Info.Inventory[indexTo] != null)
+            {
+                var minutes = tempFrom.CurrentDura;
+                tempTo.SealedInfo = new SealedInfo { ExpiryDate = DateTime.Now.AddMinutes(minutes) };
+
+                ReceiveChat($"Item sealed for {Functions.PrintTimeSpanFromSeconds(minutes * 60)}.", ChatType.Hint);
+
+                Enqueue(new S.ItemSealChanged { UniqueID = tempTo.UniqueID, ExpiryDate = tempTo.SealedInfo.ExpiryDate });
             }
 
             if (tempFrom.Count > 1) tempFrom.Count--;
@@ -15665,6 +15716,7 @@ namespace Server.MirObjects
                             newItem.Slots = item.Slots;
                             newItem.Awake = item.Awake;
                             newItem.ExpireInfo = item.ExpireInfo;
+                            newItem.SealedInfo = item.SealedInfo;
 
                             Info.Inventory[i] = newItem;
 
@@ -18852,12 +18904,19 @@ namespace Server.MirObjects
                     {
                         RetrieveRefineItem(t, i);
                     }
-                    else //Drop item on floor if it can no longer be stored
+                    else //Send item via mail if it can no longer be stored
                     {
-                        if (DropItem(temp, Settings.DropRange))
+                        Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+
+                        MailInfo mail = new MailInfo(Info.Index)
                         {
-                            Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
-                        }
+                            MailID = ++Envir.NextMailID,
+                            Sender = "Refiner",
+                            Message = "Refining was cancelled with an item which couldn't be returned to your inventory.",
+                            Items = new List<UserItem> { temp },
+                        };
+
+                        mail.Send();
                     }
 
                     Info.Refine[t] = null;
