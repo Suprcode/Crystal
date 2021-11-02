@@ -15,7 +15,7 @@ namespace Client.MirScenes.Dialogs
     public sealed class ItemRentalDialog : MirImageControl
     {
         private readonly ItemRow[] _itemRows = new ItemRow[3];
-        private DateTime _lastRequestTime = DateTime.Now;
+        private DateTime _lastRequestTime = CMain.Now;
 
         public ItemRentalDialog()
         {

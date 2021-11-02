@@ -1597,7 +1597,7 @@ namespace Client.MirScenes.Dialogs
 
             int Offset = 0;
             int RowCount = 0;
-            DateTime now = DateTime.Now;
+            DateTime now = CMain.Now;
             for (int i = 0; i < Ranks.Count; i++)
                 for (int j = 0; j < Ranks[i].Members.Count; j++)
                 {

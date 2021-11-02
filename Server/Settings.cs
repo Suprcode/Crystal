@@ -253,6 +253,8 @@ namespace Server
                             ManaRegenWeight = 10,
                             MaxLuck = 10;
 
+        public static ushort ItemSealDelay = 60;
+
         public static bool PvpCanResistMagic = false,
                               PvpCanResistPoison = false,
                               PvpCanFreeze = false;
@@ -437,6 +439,7 @@ namespace Server
             HealthRegenWeight = Math.Max((byte)1, Reader.ReadByte("Items", "HealthRegenWeight", HealthRegenWeight));
             ManaRegenWeight = Math.Max((byte)1, Reader.ReadByte("Items", "ManaRegenWeight", ManaRegenWeight));
             MaxLuck = Reader.ReadByte("Items", "MaxLuck", MaxLuck);
+            ItemSealDelay = Reader.ReadUInt16("Items", "SealDelay", ItemSealDelay);
 
             PvpCanResistMagic = Reader.ReadBoolean("Items","PvpCanResistMagic",PvpCanResistMagic);
             PvpCanResistPoison = Reader.ReadBoolean("Items", "PvpCanResistPoison", PvpCanResistPoison);
@@ -681,6 +684,7 @@ namespace Server
             Reader.Write("Items", "HealthRegenWeight", HealthRegenWeight);
             Reader.Write("Items", "ManaRegenWeight", ManaRegenWeight);
             Reader.Write("Items", "MaxLuck", MaxLuck);
+            Reader.Write("Items", "SealDelay", ItemSealDelay);
 
             Reader.Write("Items", "PvpCanResistMagic", PvpCanResistMagic);
             Reader.Write("Items", "PvpCanResistPoison", PvpCanResistPoison);

@@ -1095,11 +1095,6 @@ namespace Server.MirObjects
                     ReceiveChat($"The rental lock has been removed from {item.Info.FriendlyName}.", ChatType.Hint);
                     item.RentalInformation = null;
                 }
-
-                if (item?.SealedInfo?.ExpiryDate <= Envir.Now)
-                {
-                    item.SealedInfo = null;
-                }
             }
 
             for (var i = 0; i < Info.Equipment.Length; i++)
@@ -1119,11 +1114,6 @@ namespace Server.MirObjects
                     ReceiveChat($"The rental lock has been removed from {item.Info.FriendlyName}.", ChatType.Hint);
                     item.RentalInformation = null;
                 }
-
-                if (item?.SealedInfo?.ExpiryDate <= Envir.Now)
-                {
-                    item.SealedInfo = null;
-                }
             }
 
             for (int i = 0; i < Info.AccountInfo.Storage.Length; i++)
@@ -1135,11 +1125,6 @@ namespace Server.MirObjects
                     Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                     Info.AccountInfo.Storage[i] = null;
                     continue;
-                }
-
-                if (item?.SealedInfo?.ExpiryDate <= Envir.Now)
-                {
-                    item.SealedInfo = null;
                 }
             }
         }
@@ -12275,6 +12260,14 @@ namespace Server.MirObjects
                         Enqueue(p);
                         return;
                     }
+                    if (tempTo.SealedInfo != null && tempTo.SealedInfo.NextSealDate > Envir.Now)
+                    {
+                        double remainingSeconds = (tempTo.SealedInfo.NextSealDate - Envir.Now).TotalSeconds;
+
+                        ReceiveChat($"Item cannot be resealed for another {Functions.PrintTimeSpanFromSeconds(remainingSeconds, false)}.", ChatType.Hint);
+                        Enqueue(p);
+                        return;
+                    }
 
                     canSeal = true;
                     break;
@@ -12566,7 +12559,11 @@ namespace Server.MirObjects
             if (canSeal && Info.Inventory[indexTo] != null)
             {
                 var minutes = tempFrom.CurrentDura;
-                tempTo.SealedInfo = new SealedInfo { ExpiryDate = Envir.Now.AddMinutes(minutes) };
+                tempTo.SealedInfo = new SealedInfo 
+                { 
+                    ExpiryDate = Envir.Now.AddMinutes(minutes), 
+                    NextSealDate = Envir.Now.AddMinutes(minutes).AddMinutes(Settings.ItemSealDelay) 
+                };
 
                 ReceiveChat($"Item sealed for {Functions.PrintTimeSpanFromSeconds(minutes * 60)}.", ChatType.Hint);
 

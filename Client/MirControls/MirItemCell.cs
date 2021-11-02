@@ -2138,7 +2138,7 @@ namespace Client.MirControls
 
                     Library.Draw(image, DisplayLocation.Add(offSet), ForeColour, UseOffSet, 1F);
 
-                    if (Item.SealedInfo != null && Item.SealedInfo.ExpiryDate > DateTime.Now)
+                    if (Item.SealedInfo != null && Item.SealedInfo.ExpiryDate > CMain.Now)
                     {
                         Libraries.StateItems.Draw(3590, DisplayLocation.Add(new Point(2, 2)), Color.White, UseOffSet, 1F);
                     }

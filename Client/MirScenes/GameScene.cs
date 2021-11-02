@@ -5722,7 +5722,7 @@ namespace Client.MirScenes
         {
             p.Item.Stock = p.StockLevel;
             GameShopInfoList.Add(p.Item);
-            if (p.Item.Date > DateTime.Now.AddDays(-7)) GameShopDialog.New.Visible = true;
+            if (p.Item.Date > CMain.Now.AddDays(-7)) GameShopDialog.New.Visible = true;
         }
 
         private void GameShopStock(S.GameShopStock p)
@@ -8254,7 +8254,7 @@ namespace Client.MirScenes
 
             if (HoverItem.ExpireInfo != null)
             {
-                double remainingSeconds = (HoverItem.ExpireInfo.ExpiryDate - DateTime.Now).TotalSeconds;
+                double remainingSeconds = (HoverItem.ExpireInfo.ExpiryDate - CMain.Now).TotalSeconds;
 
                 count++;
                 MirLabel EXPIRELabel = new MirLabel
@@ -8277,7 +8277,7 @@ namespace Client.MirScenes
 
             if (HoverItem.SealedInfo != null)
             {
-                double remainingSeconds = (HoverItem.SealedInfo.ExpiryDate - DateTime.Now).TotalSeconds;
+                double remainingSeconds = (HoverItem.SealedInfo.ExpiryDate - CMain.Now).TotalSeconds;
 
                 if (remainingSeconds > 0)
                 {
@@ -8315,7 +8315,7 @@ namespace Client.MirScenes
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, OWNERLabel.DisplayRectangle.Right + 4),
                     Math.Max(ItemLabel.Size.Height, OWNERLabel.DisplayRectangle.Bottom));
 
-                double remainingTime = (HoverItem.RentalInformation.ExpiryDate - DateTime.Now).TotalSeconds;
+                double remainingTime = (HoverItem.RentalInformation.ExpiryDate - CMain.Now).TotalSeconds;
 
                 count++;
                 MirLabel RENTALLabel = new MirLabel
@@ -8331,10 +8331,10 @@ namespace Client.MirScenes
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, RENTALLabel.DisplayRectangle.Right + 4),
                     Math.Max(ItemLabel.Size.Height, RENTALLabel.DisplayRectangle.Bottom));
             }
-            else if (HoverItem.RentalInformation?.RentalLocked == true && HoverItem.RentalInformation.ExpiryDate > DateTime.Now)
+            else if (HoverItem.RentalInformation?.RentalLocked == true && HoverItem.RentalInformation.ExpiryDate > CMain.Now)
             {
                 count++;
-                var remainingTime = (HoverItem.RentalInformation.ExpiryDate - DateTime.Now).TotalSeconds;
+                var remainingTime = (HoverItem.RentalInformation.ExpiryDate - CMain.Now).TotalSeconds;
                 var RentalLockLabel = new MirLabel
                 {
                     AutoSize = true,

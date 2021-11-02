@@ -31,7 +31,7 @@ namespace Client
         public static Point MPoint;
 
         public readonly static Stopwatch Timer = Stopwatch.StartNew();
-        public readonly static DateTime StartTime = DateTime.Now;
+        public readonly static DateTime StartTime = DateTime.UtcNow;
         public static long Time, OldTime;
         public static DateTime Now { get { return StartTime.AddMilliseconds(Time); } }
         public static readonly Random Random = new Random();
