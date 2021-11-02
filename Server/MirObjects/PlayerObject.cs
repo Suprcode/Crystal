@@ -12269,7 +12269,7 @@ namespace Server.MirObjects
                         Enqueue(p);
                         return;
                     }
-                    if (tempTo.SealedInfo != null)
+                    if (tempTo.SealedInfo != null && tempTo.SealedInfo.ExpiryDate > Envir.Now)
                     {
                         ReceiveChat("Item is already sealed.", ChatType.Hint);
                         Enqueue(p);
@@ -14777,6 +14777,7 @@ namespace Server.MirObjects
         public void SellItem(ulong uniqueID, ushort count)
         {
             S.SellItem p = new S.SellItem { UniqueID = uniqueID, Count = count };
+
             if (Dead || count == 0)
             {
                 Enqueue(p);
@@ -17015,7 +17016,7 @@ namespace Server.MirObjects
 
             if (TradePartner == null) return;
 
-            if (Account.Gold < amount)
+            if (amount < 1 || Account.Gold < amount)
             {
                 return;
             }
@@ -18752,7 +18753,7 @@ namespace Server.MirObjects
 
         public void AddMemo(int index, string memo)
         {
-            if (memo.Length > 200) return;
+            if (string.IsNullOrEmpty(memo) || memo.Length > 200) return;
 
             FriendInfo friend = Info.Friends.FirstOrDefault(e => e.Index == index);
 
@@ -20024,11 +20025,11 @@ namespace Server.MirObjects
 
             List<GameShopItem> shopList = Envir.GameShopList;
             GameShopItem Product = null;
-            
+
             int purchased;
             bool stockAvailable = false;
             bool canAfford = false;
-            uint CreditCost =0;
+            uint CreditCost = 0;
             uint GoldCost = 0;
 
             List<UserItem> mailItems = new List<UserItem>();
@@ -20079,7 +20080,7 @@ namespace Server.MirObjects
             {
                 stockAvailable = true;
             }
-            
+
             if (stockAvailable)
             {
                 MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Stock is available");
@@ -20185,18 +20186,18 @@ namespace Server.MirObjects
             }
 
             MailInfo mail = new MailInfo(Info.Index)
-                {
-                    MailID = ++Envir.NextMailID,
-                    Sender = "Gameshop",
-                    Message = "Thank you for your purchase from the Gameshop. Your item(s) are enclosed.",
-                    Items = mailItems,
-                };
-                mail.Send();
+            {
+                MailID = ++Envir.NextMailID,
+                Sender = "Gameshop",
+                Message = "Thank you for your purchase from the Gameshop. Your item(s) are enclosed.",
+                Items = mailItems,
+            };
+            mail.Send();
 
             MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Purchases Sent!");
             ReceiveChat("Your purchases have been sent to your Mailbox.", ChatType.Hint);
         }
-            
+
         public void GetGameShop()
         {
             int purchased;

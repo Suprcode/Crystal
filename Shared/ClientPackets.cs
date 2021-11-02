@@ -1404,11 +1404,10 @@ namespace ClientPackets
     }
     public sealed class RequestGuildInfo : Packet
     {
-        public override short Index
-        {
-            get { return (short)ClientPacketIds.RequestGuildInfo; } 
-        }
+        public override short Index { get { return (short)ClientPacketIds.RequestGuildInfo; } }
+
         public byte Type;
+
         protected override void ReadPacket(BinaryReader reader)
         {
             Type = reader.ReadByte();
@@ -1420,11 +1419,10 @@ namespace ClientPackets
     }
     public sealed class GuildNameReturn : Packet
     {
-        public override short Index
-        {
-            get { return (short)ClientPacketIds.GuildNameReturn; }
-        }
+        public override short Index { get { return (short)ClientPacketIds.GuildNameReturn; } }
+
         public string Name;
+
         protected override void ReadPacket(BinaryReader reader)
         {
             Name = reader.ReadString();
@@ -1436,11 +1434,10 @@ namespace ClientPackets
     }
     public sealed class GuildWarReturn : Packet
     {
-        public override short Index
-        {
-            get { return (short)ClientPacketIds.GuildWarReturn; }
-        }
+        public override short Index { get { return (short)ClientPacketIds.GuildWarReturn; } }
+
         public string Name;
+
         protected override void ReadPacket(BinaryReader reader)
         {
             Name = reader.ReadString();
@@ -1452,12 +1449,11 @@ namespace ClientPackets
     }
     public sealed class GuildStorageGoldChange: Packet
     {
-        public override short Index
-        {
-            get { return (short)ClientPacketIds.GuildStorageGoldChange; }
-        }
+        public override short Index { get { return (short)ClientPacketIds.GuildStorageGoldChange; } }
+
         public byte Type = 0;
-        public uint Amount = 0;        
+        public uint Amount = 0;      
+        
         protected override void ReadPacket(BinaryReader reader)
         {
             Type = reader.ReadByte();
@@ -1471,10 +1467,8 @@ namespace ClientPackets
     }
     public sealed class GuildStorageItemChange: Packet
     {
-        public override short Index
-        {
-            get { return (short)ClientPacketIds.GuildStorageItemChange; }
-        }
+        public override short Index { get { return (short)ClientPacketIds.GuildStorageItemChange; } }
+
         public byte Type = 0;
         public int From, To;
         protected override void ReadPacket(BinaryReader reader)
