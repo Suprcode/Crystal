@@ -32,7 +32,7 @@ namespace Client
 
         public readonly static Stopwatch Timer = Stopwatch.StartNew();
         public readonly static DateTime StartTime = DateTime.UtcNow;
-        public static long Time, OldTime;
+        public static long Time;
         public static DateTime Now { get { return StartTime.AddMilliseconds(Time); } }
         public static readonly Random Random = new Random();
 
@@ -377,6 +377,8 @@ namespace Client
             if (MirControl.MouseControl != null)
             {
                 text = string.Format("FPS: {0}", FPS);
+
+                text += string.Format(", Time: {0:HH:mm:ss UTC}", Now);
 
                 if (MirControl.MouseControl is MapControl)
                     text += string.Format(", Co Ords: {0}", MapControl.MapLocation);
