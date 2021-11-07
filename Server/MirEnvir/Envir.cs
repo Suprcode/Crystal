@@ -961,6 +961,8 @@ namespace Server.MirEnvir
 
         public void SaveArchivedCharacter(CharacterInfo info)
         {
+            if (!Directory.Exists(ArchivePath)) Directory.CreateDirectory(ArchivePath);
+
             using var stream = File.Create(Path.Combine(ArchivePath, @$"{info.Name}{Now:_MMddyyyy_HHmmss}.MirCA"));
             using var writer = new BinaryWriter(stream);
 

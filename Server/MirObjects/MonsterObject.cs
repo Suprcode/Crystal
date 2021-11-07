@@ -841,7 +841,7 @@ namespace Server.MirObjects
                 Envir.MonsterNPC.Call(this, string.Format("[@_DIE({0})]", Info.Index));
             }
 
-            if (EXPOwner != null && Master == null && EXPOwner.Race == ObjectType.Player)
+            if (EXPOwner != null && EXPOwner.Node != null && Master == null && EXPOwner.Race == ObjectType.Player)
             {
                 EXPOwner.WinExp(Experience, Level);
 
