@@ -1145,12 +1145,24 @@ namespace Server.MirObjects
                     continue;
                 }
 
+<<<<<<< HEAD
                 if (item?.RentalInformation?.RentalLocked != true ||
                     !(item?.RentalInformation?.ExpiryDate <= Envir.Now))
                     continue;
 
                 ReceiveChat($"The rental lock has been removed from {item.Info.FriendlyName}.", ChatType.Hint);
                 item.RentalInformation = null;
+=======
+                if (item?.RentalInformation?.RentalLocked != true || !(item?.RentalInformation?.ExpiryDate <= Envir.Now))
+                {
+                    continue;
+                }
+                else
+                {
+                    ReceiveChat($"The rental lock has been removed from {item.Info.FriendlyName}.", ChatType.Hint);
+                    item.RentalInformation = null;
+                }
+>>>>>>> parent of 3321d62 (Cleaned up ItemSeal after expiry)
             }
 
             for (var i = 0; i < Info.Equipment.Length; i++)
@@ -1166,12 +1178,24 @@ namespace Server.MirObjects
                     continue;
                 }
 
+<<<<<<< HEAD
                 if (item?.RentalInformation?.RentalLocked != true ||
                     !(item?.RentalInformation?.ExpiryDate <= Envir.Now))
                     continue;
 
                 ReceiveChat($"The rental lock has been removed from {item.Info.FriendlyName}.", ChatType.Hint);
                 item.RentalInformation = null;
+=======
+                if (item?.RentalInformation?.RentalLocked != true || !(item?.RentalInformation?.ExpiryDate <= Envir.Now))
+                {
+                    continue;
+                }
+                else
+                {
+                    ReceiveChat($"The rental lock has been removed from {item.Info.FriendlyName}.", ChatType.Hint);
+                    item.RentalInformation = null;
+                }
+>>>>>>> parent of 3321d62 (Cleaned up ItemSeal after expiry)
             }
 
             for (int i = 0; i < Info.AccountInfo.Storage.Length; i++)
@@ -1415,6 +1439,12 @@ namespace Server.MirObjects
                     if (item.WeddingRing != -1 && Info.Equipment[(int)EquipmentSlot.RingL].UniqueID == item.UniqueID)
                         continue;
 
+<<<<<<< HEAD
+=======
+                    if (item.SealedInfo != null && item.SealedInfo.ExpiryDate > DateTime.Now)
+                        continue;
+
+>>>>>>> parent of 3321d62 (Cleaned up ItemSeal after expiry)
                     if (((killer == null) || ((killer != null) && (killer.Race != ObjectType.Player))))
                     {
                         if (item.Info.Bind.HasFlag(BindMode.BreakOnDeath))
@@ -1509,6 +1539,12 @@ namespace Server.MirObjects
                 if (item.WeddingRing != -1)
                     continue;
 
+<<<<<<< HEAD
+=======
+                if (item.SealedInfo != null && item.SealedInfo.ExpiryDate > DateTime.Now)
+                    continue;
+
+>>>>>>> parent of 3321d62 (Cleaned up ItemSeal after expiry)
                 if (item.Count > 1)
                 {
                     var percent = Envir.RandomomRange(10, 8);
@@ -1587,6 +1623,12 @@ namespace Server.MirObjects
                     if ((item.WeddingRing != -1) && (Info.Equipment[(int)EquipmentSlot.RingL].UniqueID == item.UniqueID))
                         continue;
 
+<<<<<<< HEAD
+=======
+                    if (item.SealedInfo != null && item.SealedInfo.ExpiryDate > DateTime.Now)
+                        continue;
+
+>>>>>>> parent of 3321d62 (Cleaned up ItemSeal after expiry)
                     if (item.Info.Bind.HasFlag(BindMode.BreakOnDeath))
                     {
                         Info.Equipment[i] = null;
@@ -1668,6 +1710,12 @@ namespace Server.MirObjects
                 if (item.WeddingRing != -1)
                     continue;
 
+<<<<<<< HEAD
+=======
+                if (item.SealedInfo != null && item.SealedInfo.ExpiryDate > DateTime.Now)
+                    continue;
+
+>>>>>>> parent of 3321d62 (Cleaned up ItemSeal after expiry)
                 if (Envir.ReturnRentalItem(item, item.RentalInformation?.OwnerName, Info))
                 {
                     Info.Inventory[i] = null;
@@ -2236,8 +2284,14 @@ namespace Server.MirObjects
             GetMail();
             GetFriends();
             GetRelationship();
+<<<<<<< HEAD
             
             if ((Info.Mentor != 0) && (Info.MentorDate.AddDays(Settings.MentorLength) < DateTime.Now))
+=======
+
+            if (Info.Mentor != 0 && Info.MentorDate.AddDays(Settings.MentorLength) < DateTime.Now)
+            {
+>>>>>>> parent of 3321d62 (Cleaned up ItemSeal after expiry)
                 MentorBreak();
             else
                 GetMentor();
@@ -4484,7 +4538,24 @@ namespace Server.MirObjects
                             if (tempAttr + player.Info.CurrentAttributePoints >= int.MaxValue)
                                 tempAttr = int.MaxValue - player.Info.CurrentAttributePoints;
 
+<<<<<<< HEAD
                             player.GainAttributePoint(tempAttr);
+=======
+                                    data.LastLoginDate = DateTime.Now;
+                                }
+                                else
+                                {
+                                    ReceiveChat(string.Format("Player {0} was not found", parts[1]), ChatType.System);
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                if (!data.Deleted) return;
+                                data.Deleted = false;
+                                data.DeleteDate = DateTime.MinValue;
+                            }
+>>>>>>> parent of 3321d62 (Cleaned up ItemSeal after expiry)
 
                             MessageQueue.Enqueue(string.Format("Player {0} has been given {1} Attribute Points", player.Name, tempAttr));
                             break;
@@ -15677,7 +15748,16 @@ namespace Server.MirObjects
 
             if (RidingMount && item.Info.Type != ItemType.Scroll && item.Info.Type != ItemType.Potion)
             {
+<<<<<<< HEAD
                 return false;
+=======
+                var minutes = tempFrom.CurrentDura;
+                tempTo.SealedInfo = new SealedInfo { ExpiryDate = DateTime.Now.AddMinutes(minutes) };
+
+                ReceiveChat($"Item sealed for {Functions.PrintTimeSpanFromSeconds(minutes * 60)}.", ChatType.Hint);
+
+                Enqueue(new S.ItemSealChanged { UniqueID = tempTo.UniqueID, ExpiryDate = tempTo.SealedInfo.ExpiryDate });
+>>>>>>> parent of 3321d62 (Cleaned up ItemSeal after expiry)
             }
 
             //if (item.Info.Type == ItemType.Book)
@@ -36620,10 +36700,17 @@ namespace Server.MirObjects
 
             GetRelationship(false);
             
+<<<<<<< HEAD
             Lover.Married = 0;
             Lover.MarriedDate = DateTime.Now;
             if (Lover.Equipment[(int)EquipmentSlot.RingL] != null)
                 Lover.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
+=======
+            lover.Married = 0;
+            lover.MarriedDate = DateTime.Now;
+            if (lover.Equipment[(int)EquipmentSlot.RingL] != null)
+                lover.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
+>>>>>>> parent of 3321d62 (Cleaned up ItemSeal after expiry)
 
             if (Player != null)
             {
@@ -37191,7 +37278,11 @@ namespace Server.MirObjects
                     return;
                 }
 
+<<<<<<< HEAD
                 if (Mentor.Info.MentorDate > DateTime.Now)
+=======
+                if (mentor.Info.MentorDate > DateTime.Now)
+>>>>>>> parent of 3321d62 (Cleaned up ItemSeal after expiry)
                 {
                     ReceiveChat(String.Format("{0} can't start another Mentorship yet.", Mentor.Info.Name), ChatType.System);
                     return;
@@ -37268,11 +37359,19 @@ namespace Server.MirObjects
                     return;
                 }
 
+<<<<<<< HEAD
                 Student.Info.Mentor = Info.Index;
                 Student.Info.isMentor = false;
                 Info.Mentor = Student.Info.Index;
                 Info.isMentor = true;
                 Student.Info.MentorDate = DateTime.Now;
+=======
+                student.Info.Mentor = Info.Index;
+                student.Info.IsMentor = false;
+                Info.Mentor = student.Info.Index;
+                Info.IsMentor = true;
+                student.Info.MentorDate = DateTime.Now;
+>>>>>>> parent of 3321d62 (Cleaned up ItemSeal after expiry)
                 Info.MentorDate = DateTime.Now;
 
                 ReceiveChat(String.Format("You're now the Mentor of {0}.", Student.Info.Name), ChatType.System);

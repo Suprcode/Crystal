@@ -525,6 +525,49 @@ namespace Server.MirDatabase
 
         #endregion
 
+<<<<<<< HEAD
+=======
+        #region Optional Functions
+
+        public void SetTimer()
+        {
+            if (Owner == null)
+            {
+                return;
+            }
+
+            if (Info.TimeLimitInSeconds > 0)
+            {
+                var secondsSinceStarted = (int)(DateTime.Now - StartDateTime).TotalSeconds;
+
+                var remainingSeconds = Info.TimeLimitInSeconds - secondsSinceStarted;
+
+                if (remainingSeconds > 0)
+                {
+                    Owner.SetTimer($"Quest-{Index}", remainingSeconds, 1);
+                }
+
+                DelayedAction action = new DelayedAction(DelayedType.Quest, Envir.Time + (remainingSeconds * 1000), this, QuestAction.TimeExpired, true);
+                Owner.ActionList.Add(action);
+            }
+        }
+
+        public void RemoveTimer()
+        {
+            if (Owner == null)
+            {
+                return;
+            }
+
+            if (Info.TimeLimitInSeconds > 0)
+            {
+                Owner.ExpireTimer($"Quest-{Index}");
+            }
+        }
+
+        #endregion
+
+>>>>>>> parent of 3321d62 (Cleaned up ItemSeal after expiry)
         public ClientQuestProgress CreateClientQuestProgress()
         {
             return new ClientQuestProgress

@@ -1671,6 +1671,22 @@ namespace Server.MirEnvir
                     RespawnTick.Save(writer);
                 }
             }
+<<<<<<< HEAD
+=======
+
+            return info;
+        }
+
+        public void SaveArchivedCharacter(CharacterInfo info)
+        {
+            using var stream = File.Create(Path.Combine(ArchivePath, @$"{info.Name}{DateTime.Now:_MMddyyyy_HHmmss}.MirCA"));
+            using var writer = new BinaryWriter(stream);
+
+            writer.Write(Version);
+            writer.Write(CustomVersion);
+
+            info.Save(writer);
+>>>>>>> parent of 3321d62 (Cleaned up ItemSeal after expiry)
         }
         public void SaveAccounts()
         {
@@ -3418,7 +3434,11 @@ namespace Server.MirEnvir
 
         public void AddToGameShop(ItemInfo Info)
         {
+<<<<<<< HEAD
             GameShopList.Add(new GameShopItem { GIndex = ++GameshopIndex, GoldPrice = (uint)(1000 * Settings.CredxGold), CreditPrice = 1000, HuntPointsPrice = 1000, ItemIndex = Info.Index, Info = Info, Date = DateTime.Now, Class = "All", Category = Info.Type.ToString() });
+=======
+            GameShopList.Add(new GameShopItem { GIndex = ++GameshopIndex, GoldPrice = (uint)(1000 * Settings.CredxGold), CreditPrice = 1000, ItemIndex = Info.Index, Info = Info, Date = DateTime.Now, Class = "All", Category = Info.Type.ToString() });
+>>>>>>> parent of 3321d62 (Cleaned up ItemSeal after expiry)
         }
 
         public void Remove(MapInfo info)
