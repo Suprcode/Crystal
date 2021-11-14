@@ -207,6 +207,7 @@ namespace Client.MirControls
             Opacity = 0.5F;
             DrawControlTexture = true;
             Library = Libraries.Items;
+
         }
 
         public void SetEffect()

@@ -108,7 +108,12 @@ namespace Server.MirObjects
             writer.Write(ArcherList.Count);
             for (int i = 0; i < ArcherList.Count; i++)
             {
+<<<<<<< HEAD
                 ArcherList[i].Save(writer);
+=======
+                if (GuildInfo.WallList[j].Info == null)
+                    GuildInfo.WallList.Remove(GuildInfo.WallList[j]);
+>>>>>>> parent of 3b68b8d (Item Seals. Type = Gem, Shape = 8, Durability = Minutes)
             }
             writer.Write(GateList.Count);
             for (int i = 0; i < GateList.Count; i++)

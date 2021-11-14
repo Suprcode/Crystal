@@ -5383,12 +5383,21 @@ namespace Server.MirObjects
 
                         int questid = 0;
                         int questState = 0;
+<<<<<<< HEAD
 
                         int.TryParse(parts[1], out questid);
                         int.TryParse(parts[2], out questState);
 
                         if (questid < 1) return;
 
+=======
+
+                        int.TryParse(parts[1], out questid);
+                        int.TryParse(parts[2], out questState);
+
+                        if (questid < 1) return;
+
+>>>>>>> parent of 3b68b8d (Item Seals. Type = Gem, Shape = 8, Durability = Minutes)
                         var activeQuest = player.CurrentQuests.FirstOrDefault(e => e.Index == questid);
 
                         //remove from active list
@@ -5459,7 +5468,11 @@ namespace Server.MirObjects
                         {
                             tempConq.StartType = ConquestType.Forced;
                             tempConq.WarIsOn = !tempConq.WarIsOn;
+<<<<<<< HEAD
                             tempConq.AttackerID = MyGuild.Guildindex;
+=======
+                            tempConq.GuildInfo.AttackerID = MyGuild.Guildindex;
+>>>>>>> parent of 3b68b8d (Item Seals. Type = Gem, Shape = 8, Durability = Minutes)
                         }
                         else return;
                         ReceiveChat(string.Format("{0} War Started.", tempConq.Info.Name), ChatType.System);
@@ -5489,12 +5502,21 @@ namespace Server.MirObjects
                         if (ResetConq != null && !ResetConq.WarIsOn)
                         {
                             ResetConq.Reset();
+<<<<<<< HEAD
                         }
                         else
                         {
                             ReceiveChat("Conquest not found or War is currently on.", ChatType.System);
                             return;
                         }
+=======
+                        }
+                        else
+                        {
+                            ReceiveChat("Conquest not found or War is currently on.", ChatType.System);
+                            return;
+                        }
+>>>>>>> parent of 3b68b8d (Item Seals. Type = Gem, Shape = 8, Durability = Minutes)
                         ReceiveChat(string.Format("{0} has been reset.", ResetConq.Info.Name), ChatType.System);
                         break;
                     case "GATES":
@@ -5521,7 +5543,13 @@ namespace Server.MirObjects
 
                             for (int i = 0; i < MyGuild.Conquest.GateList.Count; i++)
                                 if (MyGuild.Conquest.GateList[i].Gate != null && !MyGuild.Conquest.GateList[i].Gate.Dead)
+<<<<<<< HEAD
                                     if (OpenClose)
+=======
+                                {
+                                    if (OpenClose)
+                                    {
+>>>>>>> parent of 3b68b8d (Item Seals. Type = Gem, Shape = 8, Durability = Minutes)
                                         MyGuild.Conquest.GateList[i].Gate.CloseDoor();
                                     else
                                         MyGuild.Conquest.GateList[i].Gate.OpenDoor();
@@ -5543,6 +5571,10 @@ namespace Server.MirObjects
                         }
 
                         if (OpenClose)
+<<<<<<< HEAD
+=======
+                        {
+>>>>>>> parent of 3b68b8d (Item Seals. Type = Gem, Shape = 8, Durability = Minutes)
                             ReceiveChat(string.Format("The gates at {0} have been closed.", MyGuild.Conquest.Info.Name), ChatType.System);
                         else
                             ReceiveChat(string.Format("The gates at {0} have been opened.", MyGuild.Conquest.Info.Name), ChatType.System);
@@ -14321,6 +14353,7 @@ namespace Server.MirObjects
                     canSlotUpgrade = true;
                     break;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                 case 8: //Seal
                     if (tempTo.Info.Bind.HasFlag(BindMode.DontUpgrade) || tempTo.Info.Unique != SpecialItemMode.None)
@@ -14338,6 +14371,8 @@ namespace Server.MirObjects
                     canSeal = true;
                     break;
 >>>>>>> parent of 42a638e (Allow instant reseal of items)
+=======
+>>>>>>> parent of 3b68b8d (Item Seals. Type = Gem, Shape = 8, Durability = Minutes)
                 case 3: //gems
                 case 4: //orbs
                     if (tempTo.Info.Bind.HasFlag(BindMode.DontUpgrade) || tempTo.Info.Unique != SpecialItemMode.None)
@@ -14663,6 +14698,7 @@ namespace Server.MirObjects
 
             if (canSlotUpgrade && Info.Inventory[indexTo] != null)
             {
+<<<<<<< HEAD
                 int successchance = tempFrom.Info.BaseRateDrop;
                 successchance = successchance >= tempFrom.Info.BaseRate ? 0 : (tempFrom.Info.BaseRate - successchance) + Stats[Stat.GemRatePercent];
 
@@ -14680,6 +14716,11 @@ namespace Server.MirObjects
                     ReceiveChat("Item has increased its sockets.", ChatType.Socket);
                     Enqueue(new S.ItemSlotSizeChanged { UniqueID = tempTo.UniqueID, SlotSize = tempTo.Slots.Length });
                 }
+=======
+                tempTo.SetSlotSize(tempTo.Slots.Length + 1);
+                ReceiveChat("Item has increased its sockets.", ChatType.Hint);
+                Enqueue(new S.ItemSlotSizeChanged { UniqueID = tempTo.UniqueID, SlotSize = tempTo.Slots.Length });
+>>>>>>> parent of 3b68b8d (Item Seals. Type = Gem, Shape = 8, Durability = Minutes)
             }
 
             if (tempFrom.Count > 1) tempFrom.Count--;

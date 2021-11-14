@@ -54,9 +54,15 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int MinVersion = 60;
+<<<<<<< HEAD
         public const int Version = 149;
         public const int CustomVersion = 18;
 
+=======
+        public const int Version = 91;
+        public const int CustomVersion = 0;
+        public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
+>>>>>>> parent of 3b68b8d (Item Seals. Type = Gem, Shape = 8, Durability = Minutes)
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
 
         public const string BackUpPath = @".\Back Up\";
@@ -2338,8 +2344,15 @@ namespace Server.MirEnvir
                     DropInfo drop = DropInfo.FromLine(lines[j]);
                     if (drop == null)
                     {
+<<<<<<< HEAD
                         MessageQueue.Enqueue(string.Format("Could not load conquest drop: {0}", lines[j]));
                         continue;
+=======
+                        using (var reader = new BinaryReader(stream))
+                        {
+                            guildInfo = new GuildInfo(reader);
+                        }
+>>>>>>> parent of 3b68b8d (Item Seals. Type = Gem, Shape = 8, Durability = Minutes)
                     }
 
                     drop.Type = (byte)ConquestInfos[i].Index;
@@ -2360,6 +2373,7 @@ namespace Server.MirEnvir
                 });
             }
         }
+
 
         public void LoadConquests()
         {

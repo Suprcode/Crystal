@@ -916,6 +916,7 @@ public class UserItem
         if (version < 83) return;
 
         IsShopItem = reader.ReadBoolean();
+<<<<<<< HEAD
 
         if (version > 12)
         {
@@ -925,6 +926,8 @@ public class UserItem
 
         if (version > 112)
             GTInvite = reader.ReadString();
+=======
+>>>>>>> parent of 3b68b8d (Item Seals. Type = Gem, Shape = 8, Durability = Minutes)
     }
 
     public void Save(BinaryWriter writer)
@@ -971,6 +974,7 @@ public class UserItem
         RentalInformation?.Save(writer);
 
         writer.Write(IsShopItem);
+<<<<<<< HEAD
 
         writer.Write(LvlSysExpGained);
         writer.Write(LvlSystem);
@@ -1096,6 +1100,8 @@ public class UserItem
         }
 
         return lvlUP;
+=======
+>>>>>>> parent of 3b68b8d (Item Seals. Type = Gem, Shape = 8, Durability = Minutes)
     }
 
     public int GetTotal(Stat type)
@@ -1295,9 +1301,12 @@ public class UserItem
 
             ExpireInfo = ExpireInfo,
             RentalInformation = RentalInformation,
+<<<<<<< HEAD
 
             LvlSystem = LvlSystem,
             LvlSysExpGained = LvlSysExpGained,
+=======
+>>>>>>> parent of 3b68b8d (Item Seals. Type = Gem, Shape = 8, Durability = Minutes)
 
             IsShopItem = IsShopItem
         };

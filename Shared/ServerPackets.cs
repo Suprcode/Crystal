@@ -3126,6 +3126,7 @@ namespace ServerPackets
 
 
     public sealed class NewMagic : Packet
+<<<<<<< HEAD
     {
         public override short Index
         {
@@ -3145,6 +3146,8 @@ namespace ServerPackets
     }
 
     public sealed class RefreshMagic : Packet
+=======
+>>>>>>> parent of 3b68b8d (Item Seals. Type = Gem, Shape = 8, Durability = Minutes)
     {
         public override short Index
         {
