@@ -14320,6 +14320,24 @@ namespace Server.MirObjects
 
                     canSlotUpgrade = true;
                     break;
+<<<<<<< HEAD
+=======
+                case 8: //Seal
+                    if (tempTo.Info.Bind.HasFlag(BindMode.DontUpgrade) || tempTo.Info.Unique != SpecialItemMode.None)
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    if (tempTo.SealedInfo != null)
+                    {
+                        ReceiveChat("Item is already sealed.", ChatType.Hint);
+                        Enqueue(p);
+                        return;
+                    }
+
+                    canSeal = true;
+                    break;
+>>>>>>> parent of 42a638e (Allow instant reseal of items)
                 case 3: //gems
                 case 4: //orbs
                     if (tempTo.Info.Bind.HasFlag(BindMode.DontUpgrade) || tempTo.Info.Unique != SpecialItemMode.None)
@@ -37307,11 +37325,11 @@ namespace Server.MirObjects
 
             List<GameShopItem> shopList = Envir.GameShopList;
             GameShopItem Product = null;
-
+            
             int purchased;
             bool stockAvailable = false;
             bool canAfford = false;
-            uint CreditCost = 0;
+            uint CreditCost =0;
             uint GoldCost = 0;
             uint HuntPointsCost = 0;
 
@@ -37363,7 +37381,7 @@ namespace Server.MirObjects
             {
                 stockAvailable = true;
             }
-
+            
             if (stockAvailable)
             {
                 switch (PayType)
@@ -37480,19 +37498,19 @@ namespace Server.MirObjects
             }
 
             MailInfo mail = new MailInfo(Info.Index)
-            {
-                MailID = ++Envir.NextMailID,
-                Sender = "Gameshop",
-                Message = "Thank you for your purchase from the Gameshop. Your item(s) are enclosed.",
-                Items = mailItems,
-            };
-            mail.Send();
+                {
+                    MailID = ++Envir.NextMailID,
+                    Sender = "Gameshop",
+                    Message = "Thank you for your purchase from the Gameshop. Your item(s) are enclosed.",
+                    Items = mailItems,
+                };
+                mail.Send();
 
             MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Purchases Sent!");
             ReceiveChat("Your purchases have been sent to your Mailbox.", ChatType.Hint);
             ReceiveChat("Click Collect Parcels At Storage Npc After Get The Mail .", ChatType.System2);
         }
-
+            
         public void GetGameShop()
         {
             int purchased;
