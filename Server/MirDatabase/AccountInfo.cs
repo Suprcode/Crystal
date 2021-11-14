@@ -13,7 +13,6 @@ namespace Server.MirDatabase
         {
             get { return Envir.Main; }
         }
-        protected static MessageQueue MessageQueue => MessageQueue.Instance;
 
         public int Index;
 
@@ -44,6 +43,7 @@ namespace Server.MirDatabase
         public DateTime ExpandedStorageExpiryDate;
         public uint Gold;
         public uint Credit;
+        public uint HuntPoints;
 
         public MirConnection Connection;
         
@@ -94,23 +94,7 @@ namespace Server.MirDatabase
 
             for (int i = 0; i < count; i++)
             {
-                var info = new CharacterInfo(reader, Envir.LoadVersion, Envir.LoadCustomVersion) { AccountInfo = this };
-
-                if (info.Deleted && info.DeleteDate.AddMonths(Settings.ArchiveDeletedCharacterAfterMonths) <= Envir.Now)
-                {
-                    MessageQueue.Enqueue($"Player {info.Name} has been archived due to {Settings.ArchiveDeletedCharacterAfterMonths} month deletion.");
-                    Envir.SaveArchivedCharacter(info);
-                    continue;
-                }
-
-                if (info.LastLoginDate.AddMonths(Settings.ArchiveInactiveCharacterAfterMonths) <= Envir.Now)
-                {
-                    MessageQueue.Enqueue($"Player {info.Name} has been archived due to {Settings.ArchiveInactiveCharacterAfterMonths} months inactivity.");
-                    Envir.SaveArchivedCharacter(info);
-                    continue;
-                }
-
-                Characters.Add(info);
+                Characters.Add(new CharacterInfo(reader) { AccountInfo = this });
             }
 
             if (Envir.LoadVersion > 75)
@@ -120,7 +104,9 @@ namespace Server.MirDatabase
             }
             
             Gold = reader.ReadUInt32();
-            if (Envir.LoadVersion >= 63) Credit = reader.ReadUInt32();
+            if (Envir.LoadVersion >= 63)
+                Credit = reader.ReadUInt32();
+                HuntPoints = reader.ReadUInt32();
 
             count = reader.ReadInt32();
 
@@ -141,7 +127,7 @@ namespace Server.MirDatabase
                 {
                     if (Characters[i] == null) continue;
                     if (Characters[i].Deleted) continue;
-                    if ((Envir.Now - Characters[i].LastLogoutDate).TotalDays > 13) continue;
+                    if ((DateTime.Now - Characters[i].LastLogoutDate).TotalDays > 13) continue;
                     if ((Characters[i].Level >= Envir.RankBottomLevel[0]) || (Characters[i].Level >= Envir.RankBottomLevel[(byte)Characters[i].Class + 1]))
                     {
                         Envir.CheckRankUpdate(Characters[i]);
@@ -175,14 +161,13 @@ namespace Server.MirDatabase
 
             writer.Write(Characters.Count);
             for (int i = 0; i < Characters.Count; i++)
-            {
                 Characters[i].Save(writer);
-            }
 
             writer.Write(HasExpandedStorage);
             writer.Write(ExpandedStorageExpiryDate.ToBinary());
             writer.Write(Gold);
             writer.Write(Credit);
+            writer.Write(HuntPoints);
             writer.Write(Storage.Length);
             for (int i = 0; i < Storage.Length; i++)
             {

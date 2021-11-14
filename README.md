@@ -15,7 +15,7 @@ The Legend of Mir 2 Crystal Source is a public repository hosted on GitHub that 
 3. Submit a pull request comparing to your forked source (https://github.com/Suprcode/mir2/compare).
 
 ## Guidance
-For further information about server and game files visit the Legend of Mir Wikipedia (http://mironline.co.uk).
+For further information about server and game files visit the Legend of Mir Wikipedia (http://wiki.mironline.co.uk).
 
 ## Community
 Legend of Mir Community Network (https://www.lomcn.org/forum/forumdisplay.php?633) is a forums website dedicated to everything related to The Legend of Mir. If you have a question related to running or developing a Legend of Mir server this is the best place to ask.

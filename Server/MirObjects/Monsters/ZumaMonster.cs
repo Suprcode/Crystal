@@ -46,11 +46,11 @@ namespace Server.MirObjects.Monsters
 
             base.ApplyPoison(p, Caster, NoResist, ignoreDefence);
         }
-        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool refreshStats = true, bool updateOnly = false, params int[] values)
+        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool refreshStats = true, params int[] values)
         {
             if (Stoned) return null;
 
-            return base.AddBuff(type, owner, duration, stats, refreshStats, updateOnly, values);
+            return base.AddBuff(type, owner, duration, stats, refreshStats, values);
         }
 
         public override bool IsFriendlyTarget(PlayerObject ally)
@@ -192,7 +192,7 @@ namespace Server.MirObjects.Monsters
                 Image = Info.Image,
                 Direction = Direction,
                 Effect = Info.Effect,
-                AI = Info.AI,
+                AI = (byte)Info.AI,
                 Light = Info.Light,
                 Dead = Dead,
                 Skeleton = Harvested,

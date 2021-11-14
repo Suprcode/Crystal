@@ -19,6 +19,10 @@ namespace Server.MirObjects
 
     public enum ActionType
     {
+        ReloadNpcs,
+        BuyGT,
+        TeleportGT,
+        ExtendGT,
         Move,
         InstanceMove,
         GiveGold,
@@ -27,6 +31,8 @@ namespace Server.MirObjects
         TakeGuildGold,
         GiveCredit,
         TakeCredit,
+        GiveHuntPoints,
+        TakeHuntPoints,
         GiveItem,
         TakeItem,
         GiveExp,
@@ -38,6 +44,9 @@ namespace Server.MirObjects
         GiveHP,
         GiveMP,
         ChangeLevel,
+        ChangeReborn,
+        ChangeInstanceStage,
+        ChangeChallengeStage,
         SetPkPoint,
         ReducePkPoint,
         IncreasePkPoint,
@@ -48,6 +57,7 @@ namespace Server.MirObjects
         Call,
         GiveSkill,
         RemoveSkill,
+        SetNameColor,
         Set,
         Param1,
         Param2,
@@ -72,6 +82,7 @@ namespace Server.MirObjects
         ComposeMail,
         AddMailItem,
         AddMailGold,
+        AddMailCredit,
         SendMail,
         GroupGoto,
         EnterMap,
@@ -80,6 +91,7 @@ namespace Server.MirObjects
         MakeWeddingRing,
         ForceDivorce,
         GlobalMessage,
+        MapMessage,
         LoadValue,
         SaveValue,
         RemovePet,
@@ -90,6 +102,7 @@ namespace Server.MirObjects
         TakeConquestGold,
         SetConquestRate,
         StartConquest,
+        TakeConquest,
         ScheduleConquest,
         OpenGate,
         CloseGate,
@@ -101,10 +114,15 @@ namespace Server.MirObjects
         GetRandomText,
         PlaySound,
         SetTimer,
+        SetTimer2,
         ExpireTimer,
+        ExpireTimer2,
         UnequipItem,
         RollDie,
         RollYut,
-        Drop
+        Drop,
+
+        //ATTRIBUTES SYSTEM
+        AddAttributePoint,
     }
 }

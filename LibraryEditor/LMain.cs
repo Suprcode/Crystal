@@ -1018,7 +1018,7 @@ namespace LibraryEditor
             e.Row.Cells["FrameStart"].Value = 0;
             e.Row.Cells["FrameCount"].Value = 0;
             e.Row.Cells["FrameSkip"].Value = 0;
-            e.Row.Cells["FrameInterval"].Value = 0;
+            e.Row.Cells["FrameInterval"].Value = 100;
             e.Row.Cells["FrameEffectStart"].Value = 0;
             e.Row.Cells["FrameEffectCount"].Value = 0;
             e.Row.Cells["FrameEffectSkip"].Value = 0;

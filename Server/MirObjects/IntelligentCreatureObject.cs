@@ -89,7 +89,8 @@ namespace Server.MirObjects
         }
 
 
-        public IntelligentCreatureObject(MonsterInfo info) : base(info)
+        protected internal IntelligentCreatureObject(MonsterInfo info)
+            : base(info)
         {
             ActionTime = Envir.Time + 1000;
             PetType = (IntelligentCreatureType)info.Effect;
@@ -554,7 +555,7 @@ namespace Server.MirObjects
             IncreasePearlProduction();
         }
 
-        private bool DelayedAttack(long delay)
+        protected bool DelayedAttack(long delay)
         {
             DelayedPickup(delay);
 
@@ -852,7 +853,7 @@ namespace Server.MirObjects
                 Image = Info.Image,
                 Direction = Direction,
                 Effect = Info.Effect,
-                AI = Info.AI,
+                AI = (byte)Info.AI,
                 Light = Info.Light,
                 Dead = Dead,
                 Skeleton = Harvested,

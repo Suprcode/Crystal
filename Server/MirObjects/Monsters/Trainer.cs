@@ -68,7 +68,7 @@ namespace Server.MirObjects.Monsters
                 ResetStats();
             }
 
-            damage += attacker.Stats[Stat.AttackBonus];
+            damage += attacker.Stats[Stat.PVPDamage];
 
             int armour = 0;
             //deal with trainers defense

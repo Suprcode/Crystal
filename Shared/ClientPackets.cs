@@ -604,6 +604,21 @@ namespace ClientPackets
             writer.Write(Amount);
         }
     }
+    public sealed class DropHuntPoints : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.DropHuntPoints; } }
+
+        public uint Amount;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Amount = reader.ReadUInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Amount);
+        }
+    }
     public sealed class PickUp : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.PickUp; } }
@@ -1314,6 +1329,20 @@ namespace ClientPackets
             writer.Write(AuctionID);
         }
     }
+    public sealed class GuildTerritoryPage : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.GuildTerritoryPage; } }
+        public int Page;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Page = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Page);
+        }
+    }
     public sealed class RequestUserName : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.RequestUserName; } }
@@ -1404,10 +1433,11 @@ namespace ClientPackets
     }
     public sealed class RequestGuildInfo : Packet
     {
-        public override short Index { get { return (short)ClientPacketIds.RequestGuildInfo; } }
-
+        public override short Index
+        {
+            get { return (short)ClientPacketIds.RequestGuildInfo; } 
+        }
         public byte Type;
-
         protected override void ReadPacket(BinaryReader reader)
         {
             Type = reader.ReadByte();
@@ -1419,10 +1449,11 @@ namespace ClientPackets
     }
     public sealed class GuildNameReturn : Packet
     {
-        public override short Index { get { return (short)ClientPacketIds.GuildNameReturn; } }
-
+        public override short Index
+        {
+            get { return (short)ClientPacketIds.GuildNameReturn; }
+        }
         public string Name;
-
         protected override void ReadPacket(BinaryReader reader)
         {
             Name = reader.ReadString();
@@ -1434,10 +1465,11 @@ namespace ClientPackets
     }
     public sealed class GuildWarReturn : Packet
     {
-        public override short Index { get { return (short)ClientPacketIds.GuildWarReturn; } }
-
+        public override short Index
+        {
+            get { return (short)ClientPacketIds.GuildWarReturn; }
+        }
         public string Name;
-
         protected override void ReadPacket(BinaryReader reader)
         {
             Name = reader.ReadString();
@@ -1449,11 +1481,12 @@ namespace ClientPackets
     }
     public sealed class GuildStorageGoldChange: Packet
     {
-        public override short Index { get { return (short)ClientPacketIds.GuildStorageGoldChange; } }
-
+        public override short Index
+        {
+            get { return (short)ClientPacketIds.GuildStorageGoldChange; }
+        }
         public byte Type = 0;
-        public uint Amount = 0;      
-        
+        public uint Amount = 0;        
         protected override void ReadPacket(BinaryReader reader)
         {
             Type = reader.ReadByte();
@@ -1467,8 +1500,10 @@ namespace ClientPackets
     }
     public sealed class GuildStorageItemChange: Packet
     {
-        public override short Index { get { return (short)ClientPacketIds.GuildStorageItemChange; } }
-
+        public override short Index
+        {
+            get { return (short)ClientPacketIds.GuildStorageItemChange; }
+        }
         public byte Type = 0;
         public int From, To;
         protected override void ReadPacket(BinaryReader reader)
@@ -2082,16 +2117,19 @@ namespace ClientPackets
 
         public int GIndex;
         public byte Quantity;
+        public int PType;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             GIndex = reader.ReadInt32();
             Quantity = reader.ReadByte();
+            PType = reader.ReadInt32();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(GIndex);
             writer.Write(Quantity);
+            writer.Write(PType);
         }
     }
 
@@ -2315,5 +2353,86 @@ namespace ClientPackets
 
         protected override void WritePacket(BinaryWriter writer)
         { }
+    }
+
+    //ATTRIBUTES SYSTEM
+    public sealed class AddAttribute : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.AddAttribute; } }
+
+        public string Attribute;
+        public int Value;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Attribute = reader.ReadString();
+            Value = reader.ReadInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Attribute);
+            writer.Write(Value);
+        }
+    }
+
+    public sealed class AdjustGuildTax : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.AdjustGuildTax; } }
+        public byte Rate;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Rate = reader.ReadByte();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Rate);
+        }
+    }
+
+    public sealed class RequestGuildHouseBoards : Packet
+    {
+        public override short Index
+        {
+            get
+            {
+                return 141;
+            }
+        }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+        }
+    }
+
+    public sealed class SendGuildHouseBoard : Packet
+    {
+        public int Mode;
+
+        public BoardInfo Info;
+
+        public override short Index
+        {
+            get
+            {
+                return 142;
+            }
+        }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Mode = reader.ReadInt32();
+            Info = new BoardInfo(reader);
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Mode);
+            Info.Save(writer);
+        }
     }
 }

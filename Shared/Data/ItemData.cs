@@ -16,15 +16,17 @@ public class ItemInfo
     public ItemSet Set;
 
     public short Shape;
-    public byte Weight, Light, RequiredAmount;
+    public byte Weight, Light;
 
-    public ushort Image, Durability;
+    public ushort Image, Durability, RequiredAmount;
 
     public uint Price; 
     public ushort StackSize = 1;
 
     public bool StartItem;
     public byte Effect;
+
+    public byte ItemGlow;
 
     public bool NeedIdentify, ShowGroupPickup, GlobalDropNotify;
     public bool ClassBased;
@@ -43,6 +45,49 @@ public class ItemInfo
     public byte Slots;
 
     public Stats Stats;
+
+    public bool AllowLvlSys = false;
+    public bool AllowRandomStats = false;
+    public int[] LvlSysExp = new int[10];
+    public int[] LvlSysMaxAC = new int[10];
+    public int[] LvlSysMaxMAC = new int[10];
+    public int[] LvlSysMaxSC = new int[10];
+    public int[] LvlSysMaxMC = new int[10];
+    public int[] LvlSysMaxDC = new int[10];
+    /*
+    public int[] LvlSysAccuracy = new int[10];
+    public int[] LvlSysAgility = new int[10];
+    public int[] LvlSysHP = new int[10];
+    public int[] LvlSysMP = new int[10];
+    public int[] LvlSysPoisonRecovery = new int[10];
+    public int[] LvlSysPoisonAttack = new int[10];
+    public int[] LvlSysPoisonResist = new int[10];
+    public int[] LvlSysMagicResist = new int[10];
+    public int[] LvlSysFreezing = new int[10];
+    public int[] LvlSysLuck = new int[10];
+    public int[] LvlSysHealthRecovery = new int[10];
+    public int[] LvlSysSpellRecovery = new int[10];
+    public int[] LvlSysReflect = new int[10];
+    public int[] LvlSysAttackSpeed = new int[10];
+    public int[] LvlSysAttackSpeedRatePercent = new int[10];
+    public int[] LvlSysHPRatePercent = new int[10];
+    public int[] LvlSysMPRatePercent = new int[10];
+    public int[] LvlSysMaxACRatePercent = new int[10];
+    public int[] LvlSysMaxMACRatePercent = new int[10];
+    public int[] LvlSysMaxDCRatePercent = new int[10];
+    public int[] LvlSysMaxMCRatePercent = new int[10];
+    public int[] LvlSysMaxSCRatePercent = new int[10];
+    public int[] LvlSysGoldDropRatePercent = new int[10];
+    public int[] LvlSysExpRatePercent = new int[10];
+    public int[] LvlSysItemDropRatePercent = new int[10];
+    public int[] LvlSysPVEDamage = new int[10];
+    public int[] LvlSysPVPDamage = new int[10];
+    public int[] LvlSysCriticalDamage = new int[10];
+    public int[] LvlSysCriticalRate = new int[10];
+    public int[] LvlSysDamageReductionPercent = new int[10];
+    public int[] LvlSysSkillGainMultiplier = new int[10];
+    */
+    public byte BaseRate, BaseRateDrop, MaxStats, MaxGemStat;
 
     public bool IsConsumable
     {
@@ -84,8 +129,8 @@ public class ItemInfo
         Shape = reader.ReadInt16();
         Weight = reader.ReadByte();
         Light = reader.ReadByte();
-        RequiredAmount = reader.ReadByte();
 
+        RequiredAmount = reader.ReadUInt16();
         Image = reader.ReadUInt16();
         Durability = reader.ReadUInt16();
 
@@ -191,20 +236,272 @@ public class ItemInfo
 
         if (version > 84)
         {
-            Stats = new Stats(reader, version, customVersion);
+            Stats = new Stats(reader);
         }
 
         bool isTooltip = reader.ReadBoolean();
         if (isTooltip)
-        {
             ToolTip = reader.ReadString();
-        }
 
         if (version < 70) //before db version 70 all specialitems had wedding rings disabled, after that it became a server option
         {
             if ((Type == ItemType.Ring) && (Unique != SpecialItemMode.None))
                 Bind |= BindMode.NoWeddingRing;
         }
+
+        if (version > 11)
+        {
+            AllowLvlSys = reader.ReadBoolean();
+            AllowRandomStats = reader.ReadBoolean();
+
+            for (int i = 0; i < LvlSysExp.Length; i++)
+                LvlSysExp[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMaxAC.Length; i++)
+                LvlSysMaxAC[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMaxMAC.Length; i++)
+                LvlSysMaxMAC[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMaxDC.Length; i++)
+                LvlSysMaxDC[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMaxMC.Length; i++)
+                LvlSysMaxMC[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMaxSC.Length; i++)
+                LvlSysMaxSC[i] = reader.ReadInt32();
+
+            #region Disable ItemLvl
+            /*
+            for (int i = 0; i < LvlSysAccuracy.Length; i++)
+                LvlSysAccuracy[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysAgility.Length; i++)
+                LvlSysAgility[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysHP.Length; i++)
+                LvlSysHP[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMP.Length; i++)
+                LvlSysMP[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysPoisonRecovery.Length; i++)
+                LvlSysPoisonRecovery[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysPoisonAttack.Length; i++)
+                LvlSysPoisonAttack[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysPoisonResist.Length; i++)
+                LvlSysPoisonResist[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMagicResist.Length; i++)
+                LvlSysMagicResist[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysFreezing.Length; i++)
+                LvlSysFreezing[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysLuck.Length; i++)
+                LvlSysLuck[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysHealthRecovery.Length; i++)
+                LvlSysHealthRecovery[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysSpellRecovery.Length; i++)
+                LvlSysSpellRecovery[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysReflect.Length; i++)
+                LvlSysReflect[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysAttackSpeed.Length; i++)
+                LvlSysAttackSpeed[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysAttackSpeedRatePercent.Length; i++)
+                LvlSysAttackSpeedRatePercent[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysHPRatePercent.Length; i++)
+                LvlSysHPRatePercent[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMPRatePercent.Length; i++)
+                LvlSysMPRatePercent[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMaxACRatePercent.Length; i++)
+                LvlSysMaxACRatePercent[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMaxMACRatePercent.Length; i++)
+                LvlSysMaxMACRatePercent[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMaxDCRatePercent.Length; i++)
+                LvlSysMaxDCRatePercent[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMaxMCRatePercent.Length; i++)
+                LvlSysMaxMCRatePercent[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysMaxSCRatePercent.Length; i++)
+                LvlSysMaxSCRatePercent[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysGoldDropRatePercent.Length; i++)
+                LvlSysGoldDropRatePercent[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysExpRatePercent.Length; i++)
+                LvlSysExpRatePercent[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysItemDropRatePercent.Length; i++)
+                LvlSysItemDropRatePercent[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysPVEDamage.Length; i++)
+                LvlSysPVEDamage[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysPVPDamage.Length; i++)
+                LvlSysPVPDamage[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysCriticalDamage.Length; i++)
+                LvlSysCriticalDamage[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysCriticalRate.Length; i++)
+                LvlSysCriticalRate[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysDamageReductionPercent.Length; i++)
+                LvlSysDamageReductionPercent[i] = reader.ReadInt32();
+
+            for (int i = 0; i < LvlSysSkillGainMultiplier.Length; i++)
+                LvlSysSkillGainMultiplier[i] = reader.ReadInt32();
+            */
+            #endregion
+        }
+
+        if (version > 130)
+        {
+            BaseRate = reader.ReadByte();
+            BaseRateDrop = reader.ReadByte();
+            MaxStats = reader.ReadByte();
+            MaxGemStat = reader.ReadByte();
+        }
+
+        ItemGlow = reader.ReadByte();
+    }
+
+    public static ItemInfo CloneItem(ItemInfo item)
+    {
+        ItemInfo Clone = new ItemInfo
+        {
+            Index = item.Index,
+            Name = item.Name,
+            Type = item.Type,
+            Grade = item.Grade,
+            RequiredType = item.RequiredType,
+            RequiredClass = item.RequiredClass,
+            RequiredGender = item.RequiredGender,
+            Set = item.Set,
+
+            Shape = item.Shape,
+            Weight = item.Weight,
+            Light = item.Light,
+
+            RequiredAmount = item.RequiredAmount,
+            Image = item.Image,
+            Durability = item.Durability,
+
+            StackSize = item.StackSize,
+            Price = item.Price,
+
+            StartItem = item.StartItem,
+            Effect = item.Effect,
+
+            NeedIdentify = item.NeedIdentify,
+            ShowGroupPickup = item.ShowGroupPickup,
+            ClassBased = item.ClassBased,
+            LevelBased = item.LevelBased,
+            CanMine = item.CanMine,
+
+            GlobalDropNotify = item.GlobalDropNotify,
+            Bind = item.Bind,
+            Unique = item.Unique,
+            RandomStatsId = item.RandomStatsId,
+            CanFastRun = item.CanFastRun,
+            CanAwakening = item.CanAwakening,
+            Slots = item.Slots,
+            Stats = item.Stats,
+            ToolTip = item.ToolTip,
+
+            RandomStats = item.RandomStats,
+            ItemGlow = item.ItemGlow,
+
+            AllowLvlSys = item.AllowLvlSys,
+            AllowRandomStats = item.AllowRandomStats,
+            LvlSysExp = item.LvlSysExp,
+            LvlSysMaxAC = item.LvlSysMaxAC,
+            LvlSysMaxMAC = item.LvlSysMaxMAC,
+            LvlSysMaxSC = item.LvlSysMaxSC,
+            LvlSysMaxDC = item.LvlSysMaxDC,
+            LvlSysMaxMC = item.LvlSysMaxMC,
+
+            BaseRate = item.BaseRate,
+            BaseRateDrop = item.BaseRateDrop,
+            MaxStats = item.MaxStats,
+            MaxGemStat = item.MaxGemStat,
+        };
+
+        return Clone;
+    }
+
+    public void UpdateItem(ItemInfo item)
+    {
+        Index = item.Index;
+        Name = item.Name;
+        Type = item.Type;
+        Grade = item.Grade;
+        RequiredType = item.RequiredType;
+        RequiredClass = item.RequiredClass;
+        RequiredGender = item.RequiredGender;
+        Set = item.Set;
+
+        Shape = item.Shape;
+        Weight = item.Weight;
+        Light = item.Light;
+
+        RequiredAmount = item.RequiredAmount;
+        Image = item.Image;
+        Durability = item.Durability;
+
+        StackSize = item.StackSize;
+        Price = item.Price;
+
+        StartItem = item.StartItem;
+        Effect = item.Effect;
+
+        NeedIdentify = item.NeedIdentify;
+        ShowGroupPickup = item.ShowGroupPickup;
+        ClassBased = item.ClassBased;
+        LevelBased = item.LevelBased;
+        CanMine = item.CanMine;
+
+        GlobalDropNotify = item.GlobalDropNotify;
+        Bind = item.Bind;
+        Unique = item.Unique;
+        RandomStatsId = item.RandomStatsId;
+        CanFastRun = item.CanFastRun;
+        CanAwakening = item.CanAwakening;
+        Slots = item.Slots;
+        Stats = item.Stats;
+        ToolTip = item.ToolTip;
+
+        RandomStats = item.RandomStats;
+        ItemGlow = item.ItemGlow;
+
+        AllowLvlSys = item.AllowLvlSys;
+        AllowRandomStats = item.AllowRandomStats;
+        LvlSysExp = item.LvlSysExp;
+        LvlSysMaxAC = item.LvlSysMaxAC;
+        LvlSysMaxMAC = item.LvlSysMaxMAC;
+        LvlSysMaxSC = item.LvlSysMaxSC;
+        LvlSysMaxDC = item.LvlSysMaxDC;
+        LvlSysMaxMC = item.LvlSysMaxMC;
+
+        BaseRate = item.BaseRate;
+        BaseRateDrop = item.BaseRateDrop;
+        MaxStats = item.MaxStats;
+        MaxGemStat = item.MaxGemStat;
     }
 
 
@@ -259,6 +556,167 @@ public class ItemInfo
         if (ToolTip != null)
             writer.Write(ToolTip);
 
+        writer.Write(AllowLvlSys);
+        writer.Write(AllowRandomStats);
+
+        for (int i = 0; i < LvlSysExp.Length; i++)
+        {
+            writer.Write(LvlSysExp[i]);
+        }
+        for (int i = 0; i < LvlSysMaxAC.Length; i++)
+        {
+            writer.Write(LvlSysMaxAC[i]);
+        }
+        for (int i = 0; i < LvlSysMaxMAC.Length; i++)
+        {
+            writer.Write(LvlSysMaxMAC[i]);
+        }
+        for (int i = 0; i < LvlSysMaxDC.Length; i++)
+        {
+            writer.Write(LvlSysMaxDC[i]);
+        }
+        for (int i = 0; i < LvlSysMaxMC.Length; i++)
+        {
+            writer.Write(LvlSysMaxMC[i]);
+        }
+        for (int i = 0; i < LvlSysMaxSC.Length; i++)
+        {
+            writer.Write(LvlSysMaxSC[i]);
+        }
+        #region Disable ItemLvl
+        /*
+        for (int i = 0; i < LvlSysAccuracy.Length; i++)
+        {
+            writer.Write(LvlSysAccuracy[i]);
+        }
+        for (int i = 0; i < LvlSysAgility.Length; i++)
+        {
+            writer.Write(LvlSysAgility[i]);
+        }
+        for (int i = 0; i < LvlSysHP.Length; i++)
+        {
+            writer.Write(LvlSysHP[i]);
+        }
+        for (int i = 0; i < LvlSysMP.Length; i++)
+        {
+            writer.Write(LvlSysMP[i]);
+        }
+        for (int i = 0; i < LvlSysPoisonRecovery.Length; i++)
+        {
+            writer.Write(LvlSysPoisonRecovery[i]);
+        }
+        for (int i = 0; i < LvlSysPoisonAttack.Length; i++)
+        {
+            writer.Write(LvlSysPoisonAttack[i]);
+        }
+        for (int i = 0; i < LvlSysPoisonResist.Length; i++)
+        {
+            writer.Write(LvlSysPoisonResist[i]);
+        }
+        for (int i = 0; i < LvlSysMagicResist.Length; i++)
+        {
+            writer.Write(LvlSysMagicResist[i]);
+        }
+        for (int i = 0; i < LvlSysFreezing.Length; i++)
+        {
+            writer.Write(LvlSysFreezing[i]);
+        }
+        for (int i = 0; i < LvlSysLuck.Length; i++)
+        {
+            writer.Write(LvlSysLuck[i]);
+        }
+        for (int i = 0; i < LvlSysHealthRecovery.Length; i++)
+        {
+            writer.Write(LvlSysHealthRecovery[i]);
+        }
+        for (int i = 0; i < LvlSysSpellRecovery.Length; i++)
+        {
+            writer.Write(LvlSysSpellRecovery[i]);
+        }
+        for (int i = 0; i < LvlSysReflect.Length; i++)
+        {
+            writer.Write(LvlSysReflect[i]);
+        }
+        for (int i = 0; i < LvlSysAttackSpeed.Length; i++)
+        {
+            writer.Write(LvlSysAttackSpeed[i]);
+        }
+        for (int i = 0; i < LvlSysAttackSpeedRatePercent.Length; i++)
+        {
+            writer.Write(LvlSysAttackSpeedRatePercent[i]);
+        }
+        for (int i = 0; i < LvlSysHPRatePercent.Length; i++)
+        {
+            writer.Write(LvlSysHPRatePercent[i]);
+        }
+        for (int i = 0; i < LvlSysMPRatePercent.Length; i++)
+        {
+            writer.Write(LvlSysMPRatePercent[i]);
+        }
+        for (int i = 0; i < LvlSysMaxACRatePercent.Length; i++)
+        {
+            writer.Write(LvlSysMaxACRatePercent[i]);
+        }
+        for (int i = 0; i < LvlSysMaxMACRatePercent.Length; i++)
+        {
+            writer.Write(LvlSysMaxMACRatePercent[i]);
+        }
+        for (int i = 0; i < LvlSysMaxDCRatePercent.Length; i++)
+        {
+            writer.Write(LvlSysMaxDCRatePercent[i]);
+        }
+        for (int i = 0; i < LvlSysMaxMCRatePercent.Length; i++)
+        {
+            writer.Write(LvlSysMaxMCRatePercent[i]);
+        }
+        for (int i = 0; i < LvlSysMaxSCRatePercent.Length; i++)
+        {
+            writer.Write(LvlSysMaxSCRatePercent[i]);
+        }
+        for (int i = 0; i < LvlSysGoldDropRatePercent.Length; i++)
+        {
+            writer.Write(LvlSysGoldDropRatePercent[i]);
+        }
+        for (int i = 0; i < LvlSysExpRatePercent.Length; i++)
+        {
+            writer.Write(LvlSysExpRatePercent[i]);
+        }
+        for (int i = 0; i < LvlSysItemDropRatePercent.Length; i++)
+        {
+            writer.Write(LvlSysItemDropRatePercent[i]);
+        }
+        for (int i = 0; i < LvlSysPVEDamage.Length; i++)
+        {
+            writer.Write(LvlSysPVEDamage[i]);
+        }
+        for (int i = 0; i < LvlSysPVPDamage.Length; i++)
+        {
+            writer.Write(LvlSysPVPDamage[i]);
+        }
+        for (int i = 0; i < LvlSysCriticalDamage.Length; i++)
+        {
+            writer.Write(LvlSysCriticalDamage[i]);
+        }
+        for (int i = 0; i < LvlSysCriticalRate.Length; i++)
+        {
+            writer.Write(LvlSysCriticalRate[i]);
+        }
+        for (int i = 0; i < LvlSysDamageReductionPercent.Length; i++)
+        {
+            writer.Write(LvlSysDamageReductionPercent[i]);
+        }
+        for (int i = 0; i < LvlSysSkillGainMultiplier.Length; i++)
+        {
+            writer.Write(LvlSysSkillGainMultiplier[i]);
+        }
+        */
+        #endregion
+
+        writer.Write(BaseRate);
+        writer.Write(BaseRateDrop);
+        writer.Write(MaxStats);
+        writer.Write(MaxGemStat);
+        writer.Write(ItemGlow);
     }
 
     public static ItemInfo FromText(string text)
@@ -275,7 +733,6 @@ public class ItemInfo
     {
         return string.Format("{0}: {1}", Index, Name);
     }
-
 }
 
 public class UserItem
@@ -305,13 +762,16 @@ public class UserItem
 
     public ExpireInfo ExpireInfo;
     public RentalInformation RentalInformation;
-    public SealedInfo SealedInfo;
 
     public bool IsShopItem;
 
     public Awake Awake = new Awake();
 
     public Stats AddedStats;
+
+    public int LvlSysExpGained;
+    public int LvlSystem;
+    public string GTInvite { get; set; } = string.Empty;
 
     public bool IsAdded
     {
@@ -320,7 +780,12 @@ public class UserItem
 
     public int Weight
     {
-        get { return Info.Type == ItemType.Amulet ? Info.Weight : Info.Weight * Count; }
+        get { return Info.Type == ItemType.Amulet ? Info.Weight : Info.Type == ItemType.TaoPoison ? Info.Weight : Info.Weight * Count; }
+    }
+
+    public string Name
+    {
+        get { return Count > 1 ? string.Format("{0} ({1})", Info.Name, Count) : Info.Name; }
     }
 
     public string FriendlyName
@@ -390,6 +855,14 @@ public class UserItem
             AddedStats[Stat.CriticalDamage] = reader.ReadByte();
             AddedStats[Stat.Freezing] = reader.ReadByte();
             AddedStats[Stat.PoisonAttack] = reader.ReadByte();
+            AddedStats[Stat.AttackSpeedRatePercent] = reader.ReadByte();
+            AddedStats[Stat.HPRatePercent] = reader.ReadByte();
+            AddedStats[Stat.MPRatePercent] = reader.ReadByte();
+            AddedStats[Stat.MaxACRatePercent] = reader.ReadByte();
+            AddedStats[Stat.MaxMACRatePercent] = reader.ReadByte();
+            AddedStats[Stat.MaxDCRatePercent] = reader.ReadByte();
+            AddedStats[Stat.MaxMCRatePercent] = reader.ReadByte();
+            AddedStats[Stat.MaxSCRatePercent] = reader.ReadByte();
         }
 
         int count = reader.ReadInt32();
@@ -414,7 +887,7 @@ public class UserItem
 
         if (version > 84)
         {
-            AddedStats = new Stats(reader, version, customVersion);
+            AddedStats = new Stats(reader);
         }
 
         Awake = new Awake(reader);
@@ -432,9 +905,7 @@ public class UserItem
         if (version < 65) return;
 
         if (reader.ReadBoolean())
-        {
             ExpireInfo = new ExpireInfo(reader, version, customVersion);
-        }
 
         if (version < 76)
             return;
@@ -446,12 +917,14 @@ public class UserItem
 
         IsShopItem = reader.ReadBoolean();
 
-        if (version < 92) return;
-
-        if (reader.ReadBoolean())
+        if (version > 12)
         {
-            SealedInfo = new SealedInfo(reader, version, customVersion);
+            LvlSysExpGained = reader.ReadInt32();
+            LvlSystem = reader.ReadInt32();
         }
+
+        if (version > 112)
+            GTInvite = reader.ReadString();
     }
 
     public void Save(BinaryWriter writer)
@@ -499,8 +972,130 @@ public class UserItem
 
         writer.Write(IsShopItem);
 
-        writer.Write(SealedInfo != null);
-        SealedInfo?.Save(writer);
+        writer.Write(LvlSysExpGained);
+        writer.Write(LvlSystem);
+
+        writer.Write(GTInvite);
+    }
+
+    public void ItemLevelUp(ushort level, MirClass job, List<ItemInfo> list)
+    {
+        ItemInfo realItem = Functions.GetRealItem(Info, level, job, list);
+        if (Info.AllowRandomStats)
+        {
+
+            Random rand = new Random(DateTime.Now.Millisecond);
+
+            AddedStats[Stat.MaxAC] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxAC] + rand.Next(0, realItem.LvlSysMaxAC[LvlSystem - 1]));
+            AddedStats[Stat.MaxMAC] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxMAC] + rand.Next(0, realItem.LvlSysMaxMAC[LvlSystem - 1]));
+            AddedStats[Stat.MaxDC] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxDC] + rand.Next(0, realItem.LvlSysMaxDC[LvlSystem - 1]));
+            AddedStats[Stat.MaxMC] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxMC] + rand.Next(0, realItem.LvlSysMaxMC[LvlSystem - 1]));
+            AddedStats[Stat.MaxSC] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxSC] + rand.Next(0, realItem.LvlSysMaxSC[LvlSystem - 1]));
+
+            #region Disable ItemLvl
+            /*
+            AddedStats[Stat.Accuracy] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.Accuracy] + rand.Next(0, realItem.LvlSysAccuracy[LvlSystem - 1]));
+            AddedStats[Stat.Agility] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.Agility] + rand.Next(0, realItem.LvlSysAgility[LvlSystem - 1]));
+            AddedStats[Stat.HP] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.HP] + rand.Next(0, realItem.LvlSysHP[LvlSystem - 1]));
+            AddedStats[Stat.MP] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MP] + rand.Next(0, realItem.LvlSysMP[LvlSystem - 1]));
+            AddedStats[Stat.PoisonRecovery] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.PoisonRecovery] + rand.Next(0, realItem.LvlSysPoisonRecovery[LvlSystem - 1]));
+            AddedStats[Stat.PoisonAttack] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.PoisonAttack] + rand.Next(0, realItem.LvlSysPoisonAttack[LvlSystem - 1]));
+            AddedStats[Stat.PoisonResist] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.PoisonResist] + rand.Next(0, realItem.LvlSysPoisonResist[LvlSystem - 1]));
+            AddedStats[Stat.MagicResist] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MagicResist] + rand.Next(0, realItem.LvlSysMagicResist[LvlSystem - 1]));
+            AddedStats[Stat.Freezing] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.Freezing] + rand.Next(0, realItem.LvlSysFreezing[LvlSystem - 1]));
+            AddedStats[Stat.Luck] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.Luck] + rand.Next(0, realItem.LvlSysLuck[LvlSystem - 1]));
+            AddedStats[Stat.HealthRecovery] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.HealthRecovery] + rand.Next(0, realItem.LvlSysHealthRecovery[LvlSystem - 1]));
+            AddedStats[Stat.SpellRecovery] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.SpellRecovery] + rand.Next(0, realItem.LvlSysSpellRecovery[LvlSystem - 1]));
+            AddedStats[Stat.Reflect] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.Reflect] + rand.Next(0, realItem.LvlSysReflect[LvlSystem - 1]));
+            AddedStats[Stat.AttackSpeed] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.AttackSpeed] + rand.Next(0, realItem.LvlSysAttackSpeed[LvlSystem - 1]));
+            AddedStats[Stat.AttackSpeedRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.AttackSpeedRatePercent] + rand.Next(0, realItem.LvlSysAttackSpeedRatePercent[LvlSystem - 1]));
+            AddedStats[Stat.HPRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.HPRatePercent] + rand.Next(0, realItem.LvlSysHPRatePercent[LvlSystem - 1]));
+            AddedStats[Stat.MPRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MPRatePercent] + rand.Next(0, realItem.LvlSysMPRatePercent[LvlSystem - 1]));
+            AddedStats[Stat.MaxACRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxACRatePercent] + rand.Next(0, realItem.LvlSysMaxACRatePercent[LvlSystem - 1]));
+            AddedStats[Stat.MaxMACRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxMACRatePercent] + rand.Next(0, realItem.LvlSysMaxMACRatePercent[LvlSystem - 1]));
+            AddedStats[Stat.MaxDCRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxDCRatePercent] + rand.Next(0, realItem.LvlSysMaxDCRatePercent[LvlSystem - 1]));
+            AddedStats[Stat.MaxMCRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxMCRatePercent] + rand.Next(0, realItem.LvlSysMaxMCRatePercent[LvlSystem - 1]));
+            AddedStats[Stat.MaxSCRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxSCRatePercent] + rand.Next(0, realItem.LvlSysMaxSCRatePercent[LvlSystem - 1]));
+            AddedStats[Stat.GoldDropRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.GoldDropRatePercent] + rand.Next(0, realItem.LvlSysGoldDropRatePercent[LvlSystem - 1]));
+            AddedStats[Stat.ExpRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.ExpRatePercent] + rand.Next(0, realItem.LvlSysExpRatePercent[LvlSystem - 1]));
+            AddedStats[Stat.ItemDropRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.ItemDropRatePercent] + rand.Next(0, realItem.LvlSysItemDropRatePercent[LvlSystem - 1]));
+            AddedStats[Stat.PVEDamage] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.PVEDamage] + rand.Next(0, realItem.LvlSysPVEDamage[LvlSystem - 1]));
+            AddedStats[Stat.PVPDamage] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.PVPDamage] + rand.Next(0, realItem.LvlSysPVPDamage[LvlSystem - 1]));
+            AddedStats[Stat.CriticalDamage] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.CriticalDamage] + rand.Next(0, realItem.LvlSysCriticalDamage[LvlSystem - 1]));
+            AddedStats[Stat.CriticalRate] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.CriticalRate] + rand.Next(0, realItem.LvlSysCriticalRate[LvlSystem - 1]));
+            AddedStats[Stat.DamageReductionPercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.DamageReductionPercent] + rand.Next(0, realItem.LvlSysDamageReductionPercent[LvlSystem - 1]));
+            AddedStats[Stat.SkillGainMultiplier] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.SkillGainMultiplier] + rand.Next(0, realItem.LvlSysSkillGainMultiplier[LvlSystem - 1]));
+            */
+            #endregion
+        }
+        else
+        {
+            AddedStats[Stat.MaxAC] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxAC] + realItem.LvlSysMaxAC[LvlSystem - 1]);
+            AddedStats[Stat.MaxMAC] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxMAC] + realItem.LvlSysMaxMAC[LvlSystem - 1]);
+            AddedStats[Stat.MaxDC] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxDC] + realItem.LvlSysMaxDC[LvlSystem - 1]);
+            AddedStats[Stat.MaxMC] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxMC] + realItem.LvlSysMaxMC[LvlSystem - 1]);
+            AddedStats[Stat.MaxSC] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxSC] + realItem.LvlSysMaxSC[LvlSystem - 1]);
+
+            #region Disable ItemLvl
+            /*
+            AddedStats[Stat.Accuracy] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.Accuracy] + realItem.LvlSysAccuracy[LvlSystem - 1]);
+            AddedStats[Stat.Agility] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.Agility] + realItem.LvlSysAgility[LvlSystem - 1]);
+            AddedStats[Stat.HP] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.HP] + realItem.LvlSysHP[LvlSystem - 1]);
+            AddedStats[Stat.MP] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MP] + realItem.LvlSysMP[LvlSystem - 1]);
+            AddedStats[Stat.PoisonRecovery] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.PoisonRecovery] + realItem.LvlSysPoisonRecovery[LvlSystem - 1]);
+            AddedStats[Stat.PoisonAttack] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.PoisonAttack] + realItem.LvlSysPoisonAttack[LvlSystem - 1]);
+            AddedStats[Stat.PoisonResist] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.PoisonResist] + realItem.LvlSysPoisonResist[LvlSystem - 1]);
+            AddedStats[Stat.MagicResist] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MagicResist] + realItem.LvlSysMagicResist[LvlSystem - 1]);
+            AddedStats[Stat.Freezing] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.Freezing] + realItem.LvlSysFreezing[LvlSystem - 1]);
+            AddedStats[Stat.Luck] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.Luck] + realItem.LvlSysLuck[LvlSystem - 1]);
+            AddedStats[Stat.HealthRecovery] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.HealthRecovery] + realItem.LvlSysHealthRecovery[LvlSystem - 1]);
+            AddedStats[Stat.SpellRecovery] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.SpellRecovery] + realItem.LvlSysSpellRecovery[LvlSystem - 1]);
+            AddedStats[Stat.Reflect] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.Reflect] + realItem.LvlSysReflect[LvlSystem - 1]);
+            AddedStats[Stat.AttackSpeed] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.AttackSpeed] + realItem.LvlSysAttackSpeed[LvlSystem - 1]);
+            AddedStats[Stat.AttackSpeedRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.AttackSpeedRatePercent] + realItem.LvlSysAttackSpeedRatePercent[LvlSystem - 1]);
+            AddedStats[Stat.HPRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.HPRatePercent] + realItem.LvlSysHPRatePercent[LvlSystem - 1]);
+            AddedStats[Stat.MPRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MPRatePercent] + realItem.LvlSysMPRatePercent[LvlSystem - 1]);
+            AddedStats[Stat.MaxACRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxACRatePercent] + realItem.LvlSysMaxACRatePercent[LvlSystem - 1]);
+            AddedStats[Stat.MaxMACRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxMACRatePercent] + realItem.LvlSysMaxMACRatePercent[LvlSystem - 1]);
+            AddedStats[Stat.MaxDCRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxDCRatePercent] + realItem.LvlSysMaxDCRatePercent[LvlSystem - 1]);
+            AddedStats[Stat.MaxMCRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxMCRatePercent] + realItem.LvlSysMaxMCRatePercent[LvlSystem - 1]);
+            AddedStats[Stat.MaxSCRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.MaxSCRatePercent] + realItem.LvlSysMaxSCRatePercent[LvlSystem - 1]);
+            AddedStats[Stat.GoldDropRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.GoldDropRatePercent] + realItem.LvlSysGoldDropRatePercent[LvlSystem - 1]);
+            AddedStats[Stat.ExpRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.ExpRatePercent] + realItem.LvlSysExpRatePercent[LvlSystem - 1]);
+            AddedStats[Stat.ItemDropRatePercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.ItemDropRatePercent] + realItem.LvlSysItemDropRatePercent[LvlSystem - 1]);
+            AddedStats[Stat.PVEDamage] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.PVEDamage] + realItem.LvlSysPVEDamage[LvlSystem - 1]);
+            AddedStats[Stat.PVPDamage] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.PVPDamage] + realItem.LvlSysPVPDamage[LvlSystem - 1]);
+            AddedStats[Stat.CriticalDamage] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.CriticalDamage] + realItem.LvlSysCriticalDamage[LvlSystem - 1]);
+            AddedStats[Stat.CriticalRate] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.CriticalRate] + realItem.LvlSysCriticalRate[LvlSystem - 1]);
+            AddedStats[Stat.DamageReductionPercent] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.DamageReductionPercent] + realItem.LvlSysDamageReductionPercent[LvlSystem - 1]);
+            AddedStats[Stat.SkillGainMultiplier] = (byte)Math.Min(byte.MaxValue, AddedStats[Stat.SkillGainMultiplier] + realItem.LvlSysSkillGainMultiplier[LvlSystem - 1]);
+            */
+            #endregion
+        }
+    }
+    public bool ItemGainExp(int exp)
+    {
+        if (!Info.AllowLvlSys) return false;
+        if (LvlSystem == Info.LvlSysExp.Length - 1) return false;
+        if (Info.LvlSysExp[LvlSystem] == 0) return false;
+
+        LvlSysExpGained += exp;
+
+        var loop = true;
+        var lvlUP = false;
+        while (loop)
+        {
+            if (LvlSystem < Info.LvlSysExp.Length - 1 && Info.LvlSysExp[LvlSystem] != 0 && LvlSysExpGained >= Info.LvlSysExp[LvlSystem])
+            {
+                LvlSysExpGained -= Info.LvlSysExp[LvlSystem];
+                LvlSystem++;
+                lvlUP = true;
+            }
+            else
+                loop = false;
+        }
+
+        return lvlUP;
     }
 
     public int GetTotal(Stat type)
@@ -639,7 +1234,7 @@ public class UserItem
         {
             switch (Info.Type)
             {
-                #region Amulet and Poison Stack Image changes
+                #region Amulet Stack Image changes
                 case ItemType.Amulet:
                     if (Info.StackSize > 0)
                     {
@@ -650,12 +1245,22 @@ public class UserItem
                                 if (Count >= 200) return 3661;
                                 if (Count >= 100) return 3660;
                                 return 3660;
-                            case 1: //Grey Poison
+                        }
+                    }
+                    break;
+                #endregion
+                #region Poison Stack Image changes
+                case ItemType.TaoPoison:
+                    if (Info.StackSize > 0)
+                    {
+                        switch (Info.Shape)
+                        {
+                            case 0: //Grey Poison
                                 if (Count >= 150) return 3675;
                                 if (Count >= 100) return 2960;
                                 if (Count >= 50) return 3674;
                                 return 3673;
-                            case 2: //Yellow Poison
+                            case 1: //Yellow Poison
                                 if (Count >= 150) return 3672;
                                 if (Count >= 100) return 2961;
                                 if (Count >= 50) return 3671;
@@ -663,10 +1268,8 @@ public class UserItem
                         }
                     }
                     break;
+                    #endregion
             }
-
-            #endregion
-
             return Info.Image;
         }
     }
@@ -692,7 +1295,9 @@ public class UserItem
 
             ExpireInfo = ExpireInfo,
             RentalInformation = RentalInformation,
-            SealedInfo = SealedInfo,
+
+            LvlSystem = LvlSystem,
+            LvlSysExpGained = LvlSysExpGained,
 
             IsShopItem = IsShopItem
         };
@@ -716,30 +1321,6 @@ public class ExpireInfo
     public void Save(BinaryWriter writer)
     {
         writer.Write(ExpiryDate.ToBinary());
-    }
-}
-
-public class SealedInfo
-{
-    public DateTime ExpiryDate;
-    public DateTime NextSealDate;
-
-    public SealedInfo() { }
-
-    public SealedInfo(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
-    {
-        ExpiryDate = DateTime.FromBinary(reader.ReadInt64());
-
-        if (version > 92)
-        {
-            NextSealDate = DateTime.FromBinary(reader.ReadInt64());
-        }
-    }
-
-    public void Save(BinaryWriter writer)
-    {
-        writer.Write(ExpiryDate.ToBinary());
-        writer.Write(NextSealDate.ToBinary());
     }
 }
 
@@ -774,8 +1355,6 @@ public class GameShopItem
     public int ItemIndex;
     public int GIndex;
     public ItemInfo Info;
-    public uint GoldPrice = 0;
-    public uint CreditPrice = 0;
     public ushort Count = 1;
     public string Class = "";
     public string Category = "";
@@ -784,6 +1363,13 @@ public class GameShopItem
     public bool Deal = false;
     public bool TopItem = false;
     public DateTime Date;
+
+    public uint GoldPrice = 0;
+    public uint CreditPrice = 0;
+    public uint HuntPointsPrice = 0;
+    public bool CanBuyGold = false;
+    public bool CanBuyCredit = false;
+    public bool CanBuyHuntPoints = false;
 
     public GameShopItem()
     {
@@ -795,6 +1381,7 @@ public class GameShopItem
         GIndex = reader.ReadInt32();
         GoldPrice = reader.ReadUInt32();
         CreditPrice = reader.ReadUInt32();
+        HuntPointsPrice = reader.ReadUInt32();
         if (version <= 84)
         {
             Count = (ushort)reader.ReadUInt32();
@@ -810,6 +1397,57 @@ public class GameShopItem
         Deal = reader.ReadBoolean();
         TopItem = reader.ReadBoolean();
         Date = DateTime.FromBinary(reader.ReadInt64());
+        if (version > 84)
+        {
+            CanBuyGold = reader.ReadBoolean();
+            CanBuyCredit = reader.ReadBoolean();
+            CanBuyHuntPoints = reader.ReadBoolean();
+        }
+    }
+    public void UpdateItem(GameShopItem g)
+    {
+        ItemIndex = g.ItemIndex;
+        GIndex = g.GIndex;
+        Info = g.Info;
+        GoldPrice = g.GoldPrice;
+        CreditPrice = g.CreditPrice;
+        HuntPointsPrice = g.HuntPointsPrice;
+        Count = g.Count;
+        Class = g.Class;
+        Category = g.Category;
+        Stock = g.Stock;
+        iStock = g.iStock;
+        Deal = g.Deal;
+        TopItem = g.TopItem;
+        Date = g.Date;
+        CanBuyGold = g.CanBuyGold;
+        CanBuyCredit = g.CanBuyCredit;
+        CanBuyHuntPoints = g.CanBuyHuntPoints;
+    }
+    public static GameShopItem CloneItem(GameShopItem g)
+    {
+        var n = new GameShopItem
+        {
+            ItemIndex = g.ItemIndex,
+            GIndex = g.GIndex,
+            Info = g.Info,
+            GoldPrice = g.GoldPrice,
+            CreditPrice = g.CreditPrice,
+            HuntPointsPrice = g.HuntPointsPrice,
+            Count = g.Count,
+            Class = g.Class,
+            Category = g.Category,
+            Stock = g.Stock,
+            iStock = g.iStock,
+            Deal = g.Deal,
+            TopItem = g.TopItem,
+            Date = g.Date,
+            CanBuyGold = g.CanBuyGold,
+            CanBuyCredit = g.CanBuyCredit,
+            CanBuyHuntPoints = g.CanBuyHuntPoints
+        };
+
+        return n;
     }
 
     public GameShopItem(BinaryReader reader, bool packet = false)
@@ -819,6 +1457,7 @@ public class GameShopItem
         Info = new ItemInfo(reader);
         GoldPrice = reader.ReadUInt32();
         CreditPrice = reader.ReadUInt32();
+        HuntPointsPrice = reader.ReadUInt32();
         Count = reader.ReadUInt16();
         Class = reader.ReadString();
         Category = reader.ReadString();
@@ -827,6 +1466,9 @@ public class GameShopItem
         Deal = reader.ReadBoolean();
         TopItem = reader.ReadBoolean();
         Date = DateTime.FromBinary(reader.ReadInt64());
+        CanBuyGold = reader.ReadBoolean();
+        CanBuyCredit = reader.ReadBoolean();
+        CanBuyHuntPoints = reader.ReadBoolean();
     }
 
     public void Save(BinaryWriter writer, bool packet = false)
@@ -836,6 +1478,7 @@ public class GameShopItem
         if (packet) Info.Save(writer);
         writer.Write(GoldPrice);
         writer.Write(CreditPrice);
+        writer.Write(HuntPointsPrice);
         writer.Write(Count);
         writer.Write(Class);
         writer.Write(Category);
@@ -844,6 +1487,9 @@ public class GameShopItem
         writer.Write(Deal);
         writer.Write(TopItem);
         writer.Write(Date.ToBinary());
+        writer.Write(CanBuyGold);
+        writer.Write(CanBuyCredit);
+        writer.Write(CanBuyHuntPoints);
     }
 
     public override string ToString()
@@ -1076,9 +1722,10 @@ public class ItemRentalInformation
     public string RentingPlayerName;
     public DateTime ItemReturnDate;
 
-    public ItemRentalInformation() { }
+    public ItemRentalInformation()
+    { }
 
-    public ItemRentalInformation(BinaryReader reader, int version = int.MaxValue, int customVersion = int.MaxValue)
+    public ItemRentalInformation(BinaryReader reader)
     {
         ItemId = reader.ReadUInt64();
         ItemName = reader.ReadString();
@@ -1153,6 +1800,81 @@ public class ItemSets
         get
         {
             return Count >= Amount;
+        }
+    }
+}
+
+//ATTRIBUTES SYSTEM
+public class Attributes
+{
+    public Dictionary<string, int> List = new Dictionary<string, int>();
+
+    public Attributes()
+    {
+        LoadAttributeList();
+    }
+
+    public Attributes(BinaryReader reader)
+    {
+        LoadAttributeList();
+
+        List<string> keys = new List<string>(List.Keys);
+
+        foreach (var key in keys)
+        {
+            List[key] = reader.ReadInt32();
+        }
+    }
+
+    private void LoadAttributeList()
+    {
+        List["HP"] = 0;
+        List["MP"] = 0;
+        List["MinAC"] = 0;
+        List["MaxAC"] = 0;
+        List["MinMAC"] = 0;
+        List["MaxMAC"] = 0;
+        List["MinDC"] = 0;
+        List["MaxDC"] = 0;
+        List["MinMC"] = 0;
+        List["MaxMC"] = 0;
+        List["MinSC"] = 0;
+        List["MaxSC"] = 0;
+        //List["Fire"] = 0;
+        //List["Earth"] = 0;
+        //List["Thunder"] = 0;
+        //List["Water"] = 0;
+        //List["Light"] = 0;
+        //List["Dark"] = 0;
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        foreach (var key in List.Keys)
+        {
+            writer.Write(List[key]);
+        }
+    }
+
+    public bool AttributeExists(string attribute)
+    {
+        return List.ContainsKey(attribute);
+    }
+
+    public void AddValue(string attribute, int add)
+    {
+        List[attribute] += add;
+    }
+
+    public int GetValue(string attribute)
+    {
+        try
+        {
+            return List[attribute];
+        }
+        catch
+        {
+            return 0;
         }
     }
 }
@@ -1399,6 +2121,42 @@ public class RandomItemStat
     {
         SetRing();
     }
+}
+
+public class GTMap
+{
+    public int index;
+    public string Name;
+    public string Owner;
+    public string Leader;
+    public int price;
+    public int days;
+
+    public GTMap()
+    {
+
+    }
+
+    public GTMap(BinaryReader reader)
+    {
+        index = reader.ReadInt32();
+        Name = reader.ReadString();
+        Owner = reader.ReadString();
+        Leader = reader.ReadString();
+        price = reader.ReadInt32();
+        days = reader.ReadInt32();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(index);
+        writer.Write(Name);
+        writer.Write(Owner);
+        writer.Write(Leader);
+        writer.Write(price);
+        writer.Write(days);
+    }
+
 }
 
 public class ChatItem

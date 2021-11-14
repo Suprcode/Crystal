@@ -553,7 +553,6 @@ namespace Server
             this.AccountInfoPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion

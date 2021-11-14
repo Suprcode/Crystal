@@ -65,6 +65,23 @@ namespace Server.MirForms
                     newMapInfo.NeedBridle = mapAttributes.Any(s => s.Contains("NEEDBRIDLE".ToUpper()));
                     newMapInfo.Fight = mapAttributes.Any(s => s.Contains("FIGHT".ToUpper()));
                     newMapInfo.NoTownTeleport = mapAttributes.Any(s => s.Contains("NOTOWNTELEPORT".ToUpper()));
+                    newMapInfo.NoPets = mapAttributes.Any(s => s.Contains("NOPETS".ToUpper()));
+                    newMapInfo.NoGroup = mapAttributes.Any(s => s.Contains("NOGROUP".ToUpper()));
+                    newMapInfo.GT = mapAttributes.Any(s => s.Contains("GT".ToUpper()));
+
+                    newMapInfo.FireWall = mapAttributes.Any(x => x.StartsWith("FIREWALL(".ToUpper()));
+                    if (newMapInfo.FireWall)
+                    {
+                        int index = mapAttributes.FindIndex(x => x.StartsWith("FIREWALL(".ToUpper()));
+                        newMapInfo.FireWallCount = Convert.ToInt16(mapAttributes[index].TrimStart("FIREWALL(".ToCharArray()).TrimEnd(')'));
+                    }
+
+                    newMapInfo.RandomTeleport = mapAttributes.Any(x => x.StartsWith("RANDOMTELEPORT(".ToUpper()));
+                    if (newMapInfo.RandomTeleport)
+                    {
+                        int index = mapAttributes.FindIndex(x => x.StartsWith("RANDOMTELEPORT(".ToUpper()));
+                        newMapInfo.RandomTeleportCount = Convert.ToInt16(mapAttributes[index].TrimStart("RANDOMTELEPORT(".ToCharArray()).TrimEnd(')'));
+                    }
 
                     newMapInfo.Fire = mapAttributes.Any(x => x.StartsWith("FIRE(".ToUpper()));
                     if (newMapInfo.Fire)

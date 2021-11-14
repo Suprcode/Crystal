@@ -811,6 +811,7 @@ namespace Client.MirScenes.Dialogs
             Movable = true;
             Location = new Point(0, 100);
             Sort = false;
+            //Size = new Size(150, 50);
         }
 
         public void DisplayQuests()
@@ -875,8 +876,6 @@ namespace Client.MirScenes.Dialogs
 
                 y += 30;
             }
-
-            //Size = new Size(150, 20 + y + 30);
 
             Show();
         }
@@ -1177,6 +1176,7 @@ namespace Client.MirScenes.Dialogs
             if (Quest.QuestInfo.TaskDescription.Count > 0)
             {
                 CurrentLines.Add(" ");
+
                 CurrentLines.Add(TaskTitle);
 
                 foreach (string task in Quest.QuestInfo.TaskDescription)
@@ -1324,7 +1324,7 @@ namespace Client.MirScenes.Dialogs
     }
     public sealed class QuestRewards : MirControl
     {
-        private readonly MirLabel _goldLabel,  _expLabel, _creditLabel;
+        private readonly MirLabel _goldLabel,  _expLabel, _creditLabel, _huntLabel;
 
         public ClientQuestProgress Quest;
 
@@ -1339,7 +1339,6 @@ namespace Client.MirScenes.Dialogs
             _expLabel = new MirLabel
             {
                 Size = new Size(75, 20),
-                Location = new Point(40, 0),
                 Parent = this
             };
 
@@ -1352,7 +1351,12 @@ namespace Client.MirScenes.Dialogs
             _creditLabel = new MirLabel
             {
                 Size = new Size(75, 20),
-                Location = new Point(60, 0),
+                Parent = this
+            };
+
+            _huntLabel = new MirLabel
+            {
+                Size = new Size(75, 20),
                 Parent = this
             };
 
@@ -1375,29 +1379,11 @@ namespace Client.MirScenes.Dialogs
 
             ClientQuestInfo quest = Quest.QuestInfo;
 
-            int goldXOffset = 0;
-            int creditXOffset = 0;
-
-            if (quest.RewardExp > 0)
-                Libraries.Prguse.Draw(966, DisplayLocation.X + 10, DisplayLocation.Y + 2);
-            else
-            {
-                goldXOffset = -90;
-                creditXOffset -= 90;
-            }
-                
-
-            if (quest.RewardGold > 0)
-                Libraries.Prguse.Draw(965, DisplayLocation.X + 100 + goldXOffset, DisplayLocation.Y + 2);
-            else
-            {
-                creditXOffset -= 90;
-            }
-
-            if (quest.RewardCredit > 0)
-                Libraries.Prguse.Draw(2447, DisplayLocation.X + 190 + creditXOffset, DisplayLocation.Y + 2);
-
-            Libraries.Title.Draw(17, DisplayLocation.X + 20, DisplayLocation.Y + 66);
+            Libraries.Prguse.Draw(2634, DisplayLocation.X + 10, DisplayLocation.Y + 2);
+            Libraries.Prguse.Draw(2633, DisplayLocation.X + 110, DisplayLocation.Y + 0);
+            Libraries.Prguse.Draw(2635, DisplayLocation.X + 220, DisplayLocation.Y + 0);
+            Libraries.Prguse.Draw(2632, DisplayLocation.X + 220, DisplayLocation.Y + 30);
+            Libraries.Title.Draw(17, DisplayLocation.X + 20, DisplayLocation.Y + 65);
         }
 
 
@@ -1424,43 +1410,24 @@ namespace Client.MirScenes.Dialogs
             _goldLabel.Visible = false;
             _expLabel.Visible = false;
             _creditLabel.Visible = false;
+            _huntLabel.Visible = false;
 
-            int goldXOffset = 0;
-            int creditXOffset = 0;
-
-            if (quest.RewardExp > 0)
-            {
-                _expLabel.Text = quest.RewardExp.ToString();
-                _expLabel.Visible = true;
-            }
-            else
-            {
-                goldXOffset = -90;
-                creditXOffset -= 90;
-            }
-
-            if (quest.RewardGold > 0)
-            {
-                _goldLabel.Text = quest.RewardGold.ToString();
-                _goldLabel.Location = new Point(120 + goldXOffset, 0);
-                _goldLabel.Visible = true;
-            }
-            else
-            {
-                creditXOffset -= 90;
-            }
-
-            if (quest.RewardCredit > 0)
-            {
-                _creditLabel.Text = quest.RewardCredit.ToString();
-                _creditLabel.Location = new Point(210 + creditXOffset, 0);
-                _creditLabel.Visible = true;
-            }
+            _expLabel.Text = quest.percentageExp ? quest.RewardExp.ToString() + "%" : quest.RewardExp.ToString("###,###,##0");
+            _expLabel.Location = new Point(35, 0);
+            _expLabel.Visible = true;
+            _goldLabel.Text = quest.RewardGold.ToString("###,###,##0");
+            _goldLabel.Location = new Point(130, 0);
+            _goldLabel.Visible = true;
+            _creditLabel.Text = quest.RewardCredit.ToString("###,###,##0");
+            _creditLabel.Location = new Point(240, 0);
+            _creditLabel.Visible = true;
+            _huntLabel.Text = quest.RewardHuntPoints.ToString("###,###,##0");
+            _huntLabel.Location = new Point(240, 30);
+            _huntLabel.Visible = true;
 
 
             if (quest.RewardsFixedItem.Count > 0)
             {
-                //var fixedRewards = FilterRewards(quest.RewardsFixedItem);
 
                 for (int i = 0; i < FixedItems.Length; i++)
                 {

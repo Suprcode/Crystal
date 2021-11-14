@@ -29,8 +29,8 @@ namespace Server.MirDatabase
         public string Name = string.Empty;
 
         public Monster Image;
-        public byte AI, Effect, ViewRange = 7, CoolEye;
-        public ushort Level;
+        public byte Effect, ViewRange = 7, CoolEye;
+        public ushort AI, Level, Reborn, InstanceStage, ChallengeStage;
 
         public byte Light;
 
@@ -38,13 +38,26 @@ namespace Server.MirDatabase
         public uint Experience;
 
         public string DropPath = "";
-        
+
         public List<DropInfo> Drops = new List<DropInfo>();
 
         public bool CanTame = true, CanPush = true, AutoRev = true, Undead = false;
 
         public bool HasSpawnScript;
         public bool HasDieScript;
+
+        public bool IsElite, IsSub, IsBoss;
+
+        public ushort Quest, RandomQuestChance;
+
+        public bool
+            AllowFreeze = true,
+            AllowSlow = true,
+            AllowGreen = true,
+            AllowRed = true,
+            AllowPara = true,
+            AllowBlindness = true,
+            AllowBleeding = true;
 
         public Stats Stats;
 
@@ -59,20 +72,37 @@ namespace Server.MirDatabase
             Name = reader.ReadString();
 
             Image = (Monster) reader.ReadUInt16();
-            AI = reader.ReadByte();
+            AI = reader.ReadUInt16();
             Effect = reader.ReadByte();
 
             if (Envir.LoadVersion < 62)
             {
                 Level = (ushort)reader.ReadByte();
+                Reborn = (ushort)reader.ReadByte();
+                InstanceStage = (ushort)reader.ReadByte();
+                ChallengeStage = (ushort)reader.ReadByte();
             }
             else
             {
                 Level = reader.ReadUInt16();
+                Reborn = reader.ReadUInt16();
+                InstanceStage = reader.ReadUInt16();
+                ChallengeStage = reader.ReadUInt16();
             }
 
             ViewRange = reader.ReadByte();
             CoolEye = reader.ReadByte();
+
+            Quest = reader.ReadUInt16();
+            RandomQuestChance = reader.ReadUInt16();
+
+            AllowBleeding = reader.ReadBoolean();
+            AllowBlindness = reader.ReadBoolean();
+            AllowFreeze = reader.ReadBoolean();
+            AllowGreen = reader.ReadBoolean();
+            AllowPara = reader.ReadBoolean();
+            AllowRed = reader.ReadBoolean();
+            AllowSlow = reader.ReadBoolean();
 
             if (Envir.LoadVersion > 84)
             {
@@ -135,6 +165,10 @@ namespace Server.MirDatabase
             AutoRev = reader.ReadBoolean();
             Undead = reader.ReadBoolean();
 
+            IsElite = reader.ReadBoolean();
+            IsSub = reader.ReadBoolean();
+            IsBoss = reader.ReadBoolean();
+
             if (Envir.LoadVersion < 89) return;
 
             DropPath = reader.ReadString();
@@ -151,28 +185,133 @@ namespace Server.MirDatabase
             writer.Write(Name);
 
             writer.Write((ushort) Image);
-            writer.Write(AI);
+            writer.Write((ushort) AI);
             writer.Write(Effect);
             writer.Write(Level);
+            writer.Write(Reborn);
+            writer.Write(InstanceStage);
+            writer.Write(ChallengeStage);
             writer.Write(ViewRange);
             writer.Write(CoolEye);
+
+            writer.Write(Quest);
+            writer.Write(RandomQuestChance);
+
+            writer.Write(AllowBleeding);
+            writer.Write(AllowBlindness);
+            writer.Write(AllowFreeze);
+            writer.Write(AllowGreen);
+            writer.Write(AllowPara);
+            writer.Write(AllowRed);
+            writer.Write(AllowSlow);
 
             Stats.Save(writer);
 
 
             writer.Write(Light);
-
             writer.Write(AttackSpeed);
             writer.Write(MoveSpeed);
-
             writer.Write(Experience);
-
             writer.Write(CanPush);
             writer.Write(CanTame);
             writer.Write(AutoRev);
             writer.Write(Undead);
 
+            writer.Write(IsElite);
+            writer.Write(IsSub);
+            writer.Write(IsBoss);
+
             writer.Write(DropPath);
+        }
+        public static MonsterInfo CloneMonster(MonsterInfo m)
+        {
+            MonsterInfo newmob = new MonsterInfo
+            {
+                Index = m.Index,
+                Name = m.Name,
+                Image = m.Image,
+                AI = m.AI,
+                Effect = m.Effect,
+                Level = m.Level,
+                Reborn = m.Reborn,
+                InstanceStage = m.InstanceStage,
+                ChallengeStage = m.ChallengeStage,
+                ViewRange = m.ViewRange,
+                CoolEye = m.CoolEye,
+
+                Quest = m.Quest,
+                RandomQuestChance = m.RandomQuestChance,
+
+                AllowBleeding = m.AllowBleeding,
+                AllowBlindness = m.AllowBlindness,
+                AllowFreeze = m.AllowFreeze,
+                AllowGreen = m.AllowGreen,
+                AllowPara = m.AllowPara,
+                AllowRed = m.AllowRed,
+                AllowSlow = m.AllowSlow,
+
+                Stats = m.Stats,
+
+                Light = m.Light,
+                AttackSpeed = m.AttackSpeed,
+                MoveSpeed = m.MoveSpeed,
+                Experience = m.Experience,
+                CanPush = m.CanPush,
+                CanTame = m.CanTame,
+                AutoRev = m.AutoRev,
+                Undead = m.Undead,
+
+                IsElite = m.IsElite,
+                IsSub = m.IsSub,
+                IsBoss = m.IsBoss,
+
+                Drops = m.Drops,
+            };
+            return newmob;
+
+        }
+
+        public void UpdateMonster(MonsterInfo m)
+        {
+            Index = m.Index;
+            Name = m.Name;
+            Image = m.Image;
+            AI = m.AI;
+            Effect = m.Effect;
+            Level = m.Level;
+            Reborn = m.Reborn;
+            InstanceStage = m.InstanceStage;
+            ChallengeStage = m.ChallengeStage;
+            ViewRange = m.ViewRange;
+            CoolEye = m.CoolEye;
+
+            Quest = m.Quest;
+            RandomQuestChance = m.RandomQuestChance;
+
+            AllowBleeding = m.AllowBleeding;
+            AllowBlindness = m.AllowBlindness;
+            AllowFreeze = m.AllowFreeze;
+            AllowGreen = m.AllowGreen;
+            AllowPara = m.AllowPara;
+            AllowRed = m.AllowRed;
+            AllowSlow = m.AllowSlow;
+
+            Stats = m.Stats;
+
+            Light = m.Light;
+            AttackSpeed = m.AttackSpeed;
+            MoveSpeed = m.MoveSpeed;
+            Experience = m.Experience;
+            CanPush = m.CanPush;
+            CanTame = m.CanTame;
+            AutoRev = m.AutoRev;
+            Undead = m.Undead;
+
+            IsElite = m.IsElite;
+            IsSub = m.IsSub;
+            IsBoss = m.IsBoss;
+
+            Drops = m.Drops;
         }
 
         public static void FromText(string text)
@@ -186,7 +325,7 @@ namespace Server.MirDatabase
             if (!ushort.TryParse(data[1], out image)) return;
             info.Image = (Monster) image;
 
-            if (!byte.TryParse(data[2], out info.AI)) return;
+            if (!ushort.TryParse(data[2], out info.AI)) return;
             if (!byte.TryParse(data[3], out info.Effect)) return;
             if (!ushort.TryParse(data[4], out info.Level)) return;
             if (!byte.TryParse(data[5], out info.ViewRange)) return;
@@ -211,13 +350,16 @@ namespace Server.MirDatabase
             if (!ushort.TryParse(data[21], out info.MoveSpeed)) return;
 
             if (!uint.TryParse(data[22], out info.Experience)) return;
-            
             if (!bool.TryParse(data[23], out info.CanTame)) return;
             if (!bool.TryParse(data[24], out info.CanPush)) return;
-
             if (!bool.TryParse(data[25], out info.AutoRev)) return;
             if (!bool.TryParse(data[26], out info.Undead)) return;
             if (!byte.TryParse(data[27], out info.CoolEye)) return;
+            if (!bool.TryParse(data[28], out info.IsElite)) return;
+            if (!bool.TryParse(data[29], out info.IsSub)) return;
+            if (!bool.TryParse(data[30], out info.IsBoss)) return;
+            if (!ushort.TryParse(data[31], out info.Quest)) return;
+            if (!ushort.TryParse(data[32], out info.RandomQuestChance)) return;
 
             //int count;
 
@@ -230,10 +372,10 @@ namespace Server.MirDatabase
         }
         public string ToText()
         {
-            return "";// string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27}", Name, (ushort)Image, AI, Effect, Level, ViewRange,
-              //  HP, 
-                //MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC, 
-               // Accuracy, Agility, Light, AttackSpeed, MoveSpeed, Experience, CanTame, CanPush, AutoRev, Undead, CoolEye);
+            return "";// string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32}", Name, (ushort)Image, AI, Effect, Level, ViewRange,
+                      //  HP, 
+                      //MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC, 
+                      // Accuracy, Agility, Light, AttackSpeed, MoveSpeed, Experience, CanTame, CanPush, AutoRev, Undead, CoolEye, IsElite, IsSub, IsBoss, Quest, RandomQuestChance);
         }
 
         public override string ToString()
@@ -241,12 +383,13 @@ namespace Server.MirDatabase
             return string.Format("{0}: {1}", Index, Name);
             //return string.Format("{0}", Name);
         }
-    }
 
+    }
     public class DropRewardInfo
     {
         public List<ItemInfo> Items;
         public uint Gold;
+        public uint HuntPoints;
     }
 
     public class GroupDropInfo : List<DropInfo>
@@ -261,7 +404,6 @@ namespace Server.MirDatabase
         {
             get { return Envir.Main; }
         }
-
         protected static MessageQueue MessageQueue
         {
             get { return MessageQueue.Instance; }
@@ -270,6 +412,7 @@ namespace Server.MirDatabase
         public int Chance;
         public ItemInfo Item;
         public uint Gold;
+        public int HuntPoints;
         public GroupDropInfo GroupedDrop;
 
         public byte Type;
@@ -277,7 +420,7 @@ namespace Server.MirDatabase
 
         public static DropInfo FromLine(string s)
         {
-            string[] parts = s.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = s.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (parts.Length < 2)
             {
@@ -287,31 +430,35 @@ namespace Server.MirDatabase
             DropInfo info = new DropInfo();
 
             if (!int.TryParse(parts[0].Substring(2), out info.Chance)) return null;
-
             if (string.Compare(parts[1], "Gold", StringComparison.OrdinalIgnoreCase) == 0)
             {
                 if (parts.Length < 3) return null;
                 if (!uint.TryParse(parts[2], out info.Gold) || info.Gold == 0) return null;
             }
-            else if (parts[1].ToUpper().StartsWith("GROUP"))
+            else if (string.Compare(parts[1], "HuntPoints", StringComparison.OrdinalIgnoreCase) == 0)
             {
-                info.GroupedDrop = new GroupDropInfo
-                {
-                    Random = parts[1].EndsWith("*"),
-                    First = parts[1].EndsWith("^")
-                };
+                if (parts.Length < 3) return null;
+                if (!int.TryParse(parts[2], out info.HuntPoints) || info.HuntPoints == 0) return null;
             }
             else
             {
-                info.Item = Envir.GetItemInfo(parts[1]);
-                if (info.Item == null) return null;
-
-                if (parts.Length > 2)
+                if (parts[1].ToUpper().StartsWith("GROUP"))
                 {
-                    string dropRequirement = parts[2];
-                    if (dropRequirement.ToUpper() == "Q")
+                    info.GroupedDrop = new GroupDropInfo
                     {
-                        info.QuestRequired = true;
+                        Random = parts[1].EndsWith("*"),
+                        First = parts[1].EndsWith("^")
+                    };
+                }
+                else
+                {
+                    info.Item = Envir.GetItemInfo(parts[1]);
+                    if (info.Item == null) return null;
+
+                    if (parts.Length > 2)
+                    {
+                        string dropRequirement = parts[2];
+                        if (dropRequirement.ToUpper() == "Q") info.QuestRequired = true;
                     }
                 }
             }
@@ -377,6 +524,10 @@ namespace Server.MirDatabase
                     return 1;
                 if (drop1.Gold == 0 && drop2.Gold > 0)
                     return -1;
+                if (drop1.HuntPoints > 0 && drop2.HuntPoints == 0)
+                    return 2;
+                if (drop1.HuntPoints == 0 && drop2.HuntPoints > 0)
+                    return -2;
 
                 if (drop1.Item == null || drop2.Item == null) return 0;
 
@@ -428,6 +579,7 @@ namespace Server.MirDatabase
             if (start && finish)
             {
                 parentDrop.GroupedDrop.AddRange(drops);
+                return;
             }
         }
 
@@ -457,7 +609,7 @@ namespace Server.MirDatabase
             return lines;
         }
 
-        public DropRewardInfo AttemptDrop(int itemDropRatePercentOffset = 0, int goldDropRatePercentOffset = 0)
+        public DropRewardInfo AttemptDrop(int itemDropRatePercentOffset = 0, int goldDropRatePercentOffset = 0, int huntpointsDropRatePercentOffset = 0)
         {
             int rate = (int)(Chance / (Settings.DropRate));
 
@@ -474,7 +626,7 @@ namespace Server.MirDatabase
             }
 
             uint gold = 0;
-            var items = new List<ItemInfo>();
+            uint huntpoints = 0;
 
             if (Gold > 0)
             {
@@ -490,21 +642,41 @@ namespace Server.MirDatabase
 
                 gold = (uint)Envir.Random.Next(lowerGoldRange, upperGoldRange);
             }
-            else if (Item != null)
+
+            if (HuntPoints > 0)
+            {
+                int lowerHuntPointsRange = (int)(HuntPoints / 2);
+                int upperHuntPointsRange = (int)(HuntPoints + HuntPoints / 2);
+
+                if (huntpointsDropRatePercentOffset > 0)
+                {
+                    lowerHuntPointsRange += (lowerHuntPointsRange * huntpointsDropRatePercentOffset) / 100;
+                }
+
+                if (lowerHuntPointsRange > upperHuntPointsRange) lowerHuntPointsRange = upperHuntPointsRange;
+
+                huntpoints = (uint)Envir.Random.Next(lowerHuntPointsRange, upperHuntPointsRange);
+            }
+
+            var items = new List<ItemInfo>();
+
+            if (Item != null)
             {
                 items.Add(Item);
             }
-            else if (GroupedDrop != null)
+
+            if (GroupedDrop != null)
             {
                 var tempItems = new List<ItemInfo>();
 
                 foreach (var item in GroupedDrop)
                 {
-                    var reward = item.AttemptDrop(itemDropRatePercentOffset, goldDropRatePercentOffset);
+                    var reward = item.AttemptDrop(itemDropRatePercentOffset, goldDropRatePercentOffset, huntpointsDropRatePercentOffset);
 
                     if (reward != null)
                     {
                         gold += reward.Gold;
+                        huntpoints += reward.HuntPoints;
 
                         tempItems.AddRange(reward.Items);
 
@@ -531,6 +703,7 @@ namespace Server.MirDatabase
             return new DropRewardInfo
             {
                 Gold = gold,
+                HuntPoints = huntpoints,
                 Items = items
             };
         }

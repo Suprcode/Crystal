@@ -64,11 +64,26 @@ namespace Server.Database
             this.ItemStackSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemSlots = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemWeight = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemBaseRate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemBaseRateDrop = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemMaxStats = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemMaxGemStat = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemItemGlow = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemAllowLvlSys = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemAllowRandomStats = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemLightRange = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemLightIntensity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemDurability = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemToolTip = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemStartItem = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemNeedIdentify = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemShowGroupPickup = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemGlobalDropNotify = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemClassBased = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemLevelBased = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemCanFastRun = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemCanAwakening = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.itemInfoGridView)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -99,11 +114,26 @@ namespace Server.Database
             this.ItemStackSize,
             this.ItemSlots,
             this.ItemWeight,
+            this.ItemBaseRate,
+            this.ItemBaseRateDrop,
+            this.ItemMaxStats,
+            this.ItemMaxGemStat,
+            this.ItemItemGlow,
+            this.ItemAllowLvlSys,
+            this.ItemAllowRandomStats,
             this.ItemLightRange,
             this.ItemLightIntensity,
             this.ItemDurability,
             this.ItemPrice,
-            this.ItemToolTip});
+            this.ItemToolTip,
+            this.ItemStartItem,
+            this.ItemNeedIdentify,
+            this.ItemShowGroupPickup,
+            this.ItemGlobalDropNotify,
+            this.ItemClassBased,
+            this.ItemLevelBased,
+            this.ItemCanFastRun,
+            this.ItemCanAwakening});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -401,6 +431,49 @@ namespace Server.Database
             this.ItemWeight.HeaderText = "Weight";
             this.ItemWeight.Name = "ItemWeight";
             // 
+            // ItemBaseRate
+            // 
+            this.ItemBaseRate.DataPropertyName = "ItemBaseRate";
+            this.ItemBaseRate.HeaderText = "BaseRate";
+            this.ItemBaseRate.Name = "ItemBaseRate";
+
+            // 
+            // ItemBaseRateDrop
+            // 
+            this.ItemBaseRateDrop.DataPropertyName = "ItemBaseRateDrop";
+            this.ItemBaseRateDrop.HeaderText = "BaseRateDrop";
+            this.ItemBaseRateDrop.Name = "ItemBaseRateDrop";
+            // 
+            // ItemMaxStats
+            // 
+            this.ItemMaxStats.DataPropertyName = "ItemMaxStats";
+            this.ItemMaxStats.HeaderText = "MaxStats";
+            this.ItemMaxStats.Name = "ItemMaxStats";
+            // 
+            // ItemMaxGemStat
+            // 
+            this.ItemMaxGemStat.DataPropertyName = "ItemMaxGemStat";
+            this.ItemMaxGemStat.HeaderText = "MaxGemStat";
+            this.ItemMaxGemStat.Name = "ItemMaxGemStat";
+            // 
+            // ItemItemGlow
+            // 
+            this.ItemItemGlow.DataPropertyName = "ItemItemGlow";
+            this.ItemItemGlow.HeaderText = "ItemGlow";
+            this.ItemItemGlow.Name = "ItemItemGlow";
+            // 
+            // ItemAllowLvlSys
+            // 
+            this.ItemAllowLvlSys.DataPropertyName = "ItemAllowLvlSys";
+            this.ItemAllowLvlSys.HeaderText = "AllowLvlSys";
+            this.ItemAllowLvlSys.Name = "ItemAllowLvlSys";
+            // 
+            // ItemAllowRandomStats
+            // 
+            this.ItemAllowRandomStats.DataPropertyName = "ItemAllowRandomStats";
+            this.ItemAllowRandomStats.HeaderText = "AllowRandomStats";
+            this.ItemAllowRandomStats.Name = "ItemAllowRandomStats";
+            // 
             // ItemLightRange
             // 
             this.ItemLightRange.DataPropertyName = "ItemLightRange";
@@ -424,6 +497,54 @@ namespace Server.Database
             this.ItemPrice.DataPropertyName = "ItemPrice";
             this.ItemPrice.HeaderText = "Price";
             this.ItemPrice.Name = "ItemPrice";
+            // 
+            // ItemStartItem
+            // 
+            this.ItemStartItem.DataPropertyName = "ItemStartItem";
+            this.ItemStartItem.HeaderText = "StartItem";
+            this.ItemStartItem.Name = "ItemStartItem";
+            // 
+            // ItemNeedIdentify
+            // 
+            this.ItemNeedIdentify.DataPropertyName = "ItemNeedIdentify";
+            this.ItemNeedIdentify.HeaderText = "NeedIdentify";
+            this.ItemNeedIdentify.Name = "ItemNeedIdentify";
+            // 
+            // ItemShowGroupPickup
+            // 
+            this.ItemShowGroupPickup.DataPropertyName = "ItemShowGroupPickup";
+            this.ItemShowGroupPickup.HeaderText = "ShowGroupPickup";
+            this.ItemShowGroupPickup.Name = "ItemShowGroupPickup";
+            // 
+            // ItemGlobalDropNotify
+            // 
+            this.ItemGlobalDropNotify.DataPropertyName = "ItemGlobalDropNotify";
+            this.ItemGlobalDropNotify.HeaderText = "GlobalDropNotify";
+            this.ItemGlobalDropNotify.Name = "ItemGlobalDropNotify";
+            // 
+            // ItemClassBased
+            // 
+            this.ItemClassBased.DataPropertyName = "ItemClassBased";
+            this.ItemClassBased.HeaderText = "ClassBased";
+            this.ItemClassBased.Name = "ItemClassBased";
+            // 
+            // ItemLevelBased
+            // 
+            this.ItemLevelBased.DataPropertyName = "ItemLevelBased";
+            this.ItemLevelBased.HeaderText = "LevelBased";
+            this.ItemLevelBased.Name = "ItemLevelBased";
+            // 
+            // ItemCanFastRun
+            // 
+            this.ItemCanFastRun.DataPropertyName = "ItemCanFastRun";
+            this.ItemCanFastRun.HeaderText = "CanFastRun";
+            this.ItemCanFastRun.Name = "ItemCanFastRun";
+            // 
+            // ItemCanAwakening
+            // 
+            this.ItemCanAwakening.DataPropertyName = "ItemCanAwakening";
+            this.ItemCanAwakening.HeaderText = "CanAwakening";
+            this.ItemCanAwakening.Name = "ItemCanAwakening";
             // 
             // ItemToolTip
             // 
@@ -488,10 +609,25 @@ namespace Server.Database
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemStackSize;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemSlots;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemWeight;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ItemBaseRate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ItemBaseRateDrop;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ItemMaxStats;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ItemMaxGemStat;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ItemItemGlow;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ItemAllowLvlSys;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ItemAllowRandomStats;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemLightRange;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemLightIntensity;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemDurability;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemPrice;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemToolTip;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ItemStartItem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ItemNeedIdentify;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ItemShowGroupPickup;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ItemGlobalDropNotify;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ItemClassBased;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ItemLevelBased;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ItemCanFastRun;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ItemCanAwakening;
     }
 }

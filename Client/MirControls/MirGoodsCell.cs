@@ -14,6 +14,7 @@ namespace Client.MirControls
         public UserItem Item;
 
         public MirLabel NameLabel, PriceLabel, CountLabel;
+        public bool UseHuntPoints = false;
         public bool UsePearls = false;
         public bool Recipe = false;
 
@@ -22,7 +23,7 @@ namespace Client.MirControls
 
         public MirGoodsCell()
         {
-            Size = new Size(205, 32);
+            Size = new Size(36, 31);
             BorderColour = Color.Lime;
 
             NameLabel = new MirLabel
@@ -77,18 +78,33 @@ namespace Client.MirControls
 
             if (UsePearls)
             {
-                PriceLabel.Text = string.Format("Price: {0} pearl{1}", (uint)(Item.Price() * GameScene.NPCRate), Item.Price() > 1 ? "s" : "");
+                PriceLabel.Text = string.Format("{0:#,##0} Pearl{1}", (uint)(Item.Price() * GameScene.NPCRate), Item.Price() > 1 ? "s" : "");
+            }
+            else
+            if (UseHuntPoints)
+            {
+                PriceLabel.Text = string.Format("{0:#,##0} HP{1}", (uint)(Item.Price() * GameScene.NPCRate), Item.Price() > 1 ? "s" : "");
             }
             else if (Recipe)
             {
                 ClientRecipeInfo recipe = GameScene.RecipeInfoList.SingleOrDefault(x => x.Item.ItemIndex == Item.ItemIndex);
 
-                PriceLabel.Text = string.Format("Price: {0} gold", (uint)(recipe.Gold * GameScene.NPCRate));
+                //PriceLabel.Text = string.Format("Price: {0} Gold", (uint)(recipe.Gold * GameScene.NPCRate));
             }
             else
             {
-                PriceLabel.Text = string.Format("Price: {0} gold", (uint)(Item.Price() * GameScene.NPCRate));
+                PriceLabel.Text = string.Format("{0:###,###,###} Gold", (uint)(Item.Price() * GameScene.NPCRate));
             }
+            if (Item.Price() > 10000000) //10Mil
+                PriceLabel.ForeColour = Color.Red;
+            else if (Item.Price() > 1000000) //1Million
+                PriceLabel.ForeColour = Color.Orange;
+            else if (Item.Price() > 100000) //100k
+                PriceLabel.ForeColour = Color.Green;
+            else if (Item.Price() > 10000) //10k
+                PriceLabel.ForeColour = Color.DeepSkyBlue;
+            else
+                PriceLabel.ForeColour = Color.White;
         }
 
         protected override Vector2[] BorderInfo
@@ -113,8 +129,8 @@ namespace Client.MirControls
                             new Vector2(DisplayRectangle.Right, DisplayRectangle.Top - 1),
                             new Vector2(DisplayRectangle.Right, DisplayRectangle.Bottom),
 
-                            new Vector2(DisplayRectangle.Left + 40, DisplayRectangle.Bottom),
-                            new Vector2(DisplayRectangle.Left + 40, DisplayRectangle.Top - 1)
+                            new Vector2(DisplayRectangle.Left + 36, DisplayRectangle.Bottom),
+                            new Vector2(DisplayRectangle.Left + 36, DisplayRectangle.Top - 1)
                         };
 
                     BorderRectangle = DisplayRectangle;

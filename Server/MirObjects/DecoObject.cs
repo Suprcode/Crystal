@@ -8,7 +8,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects
 {
-    public sealed class DecoObject : MapObject
+    class DecoObject : MapObject
     {
         public override ObjectType Race
         {
@@ -20,6 +20,9 @@ namespace Server.MirObjects
         public override Point CurrentLocation { get; set; }
         public override MirDirection Direction { get; set; }
         public override ushort Level { get; set; }
+        public override ushort Reborn { get; set; }
+        public override ushort InstanceStage { get; set; }
+        public override ushort ChallengeStage { get; set; }
         public override bool Blocking
         {
             get
@@ -86,8 +89,8 @@ namespace Server.MirObjects
 
             for (int i = 0; i < Buffs.Count; i++)
             {
-                if (Buffs[i].NextTime >= time && Buffs[i].NextTime > Envir.Time) continue;
-                time = Buffs[i].NextTime;
+                if (Buffs[i].ExpireTime >= time && Buffs[i].ExpireTime > Envir.Time) continue;
+                time = Buffs[i].ExpireTime;
             }
 
             if (OperateTime <= Envir.Time || time < OperateTime)

@@ -41,12 +41,14 @@ namespace Server.Database
             Modified.ValueType = typeof(bool);
             MonsterIndex.ValueType = typeof(int);
             MonsterName.ValueType = typeof(string);
-            MonsterAI.ValueType = typeof(byte);
+            MonsterAI.ValueType = typeof(ushort);
             MonsterEffect.ValueType = typeof(byte);
             MonsterLevel.ValueType = typeof(ushort);
             MonsterLight.ValueType = typeof(byte);
             MonsterAttackSpeed.ValueType = typeof(ushort);
             MonsterMoveSpeed.ValueType = typeof(ushort);
+            MonsterQuest.ValueType = typeof(ushort);
+            MonsterRandomQuestChance.ValueType = typeof(ushort);
             MonsterViewRange.ValueType = typeof(byte);
             MonsterCoolEye.ValueType = typeof(byte);
             MonsterExperience.ValueType = typeof(uint);
@@ -54,6 +56,16 @@ namespace Server.Database
             MonsterAutoRev.ValueType = typeof(bool);
             MonsterUndead.ValueType = typeof(bool);
             MonsterCanTame.ValueType = typeof(bool);
+            MonsterIsElite.ValueType = typeof(bool);
+            MonsterIsSub.ValueType = typeof(bool);
+            MonsterIsBoss.ValueType = typeof(bool);
+            MonsterAllowFreeze.ValueType = typeof(bool);
+            MonsterAllowSlow.ValueType = typeof(bool);
+            MonsterAllowGreen.ValueType = typeof(bool);
+            MonsterAllowRed.ValueType = typeof(bool);
+            MonsterAllowPara.ValueType = typeof(bool);
+            MonsterAllowBlindness.ValueType = typeof(bool);
+            MonsterAllowBleeding.ValueType = typeof(bool);
             MonsterDropPath.ValueType = typeof(string);
 
             //Basic
@@ -142,11 +154,23 @@ namespace Server.Database
                 row["MonsterLight"] = item.Light;
                 row["MonsterAttackSpeed"] = item.AttackSpeed;
                 row["MonsterMoveSpeed"] = item.MoveSpeed;
+                row["MonsterQuest"] = item.Quest;
+                row["MonsterRandomQuestChance"] = item.RandomQuestChance;
                 row["MonsterViewRange"] = item.ViewRange;
                 row["MonsterCoolEye"] = item.CoolEye;
                 row["MonsterExperience"] = item.Experience;
                 row["MonsterCanPush"] = item.CanPush;
                 row["MonsterCanTame"] = item.CanTame;
+                row["MonsterIsElite"] = item.IsElite;
+                row["MonsterIsSub"] = item.IsSub;
+                row["MonsterIsBoss"] = item.IsBoss;
+                row["MonsterAllowFreeze"] = item.AllowFreeze;
+                row["MonsterAllowSlow"] = item.AllowSlow;
+                row["MonsterAllowGreen"] = item.AllowGreen;
+                row["MonsterAllowRed"] = item.AllowRed;
+                row["MonsterAllowPara"] = item.AllowPara;
+                row["MonsterAllowBlindness"] = item.AllowBlindness;
+                row["MonsterAllowBleeding"] = item.AllowBleeding;
                 row["MonsterUndead"] = item.Undead;
                 row["MonsterAutoRev"] = item.AutoRev;
                 row["MonsterDropPath"] = item.DropPath;
@@ -213,17 +237,29 @@ namespace Server.Database
  
                 monster.Name = (string)row.Cells["MonsterName"].Value;
                 monster.Image = (Monster)row.Cells["MonsterImage"].Value;
-                monster.AI = (byte)row.Cells["MonsterAI"].Value;
+                monster.AI = (ushort)row.Cells["MonsterAI"].Value;
                 monster.Level = (ushort)row.Cells["MonsterLevel"].Value;
                 monster.Effect = (byte)row.Cells["MonsterEffect"].Value;
                 monster.Light = (byte)row.Cells["MonsterLight"].Value;
                 monster.AttackSpeed = (ushort)row.Cells["MonsterAttackSpeed"].Value;
                 monster.MoveSpeed = (ushort)row.Cells["MonsterMoveSpeed"].Value;
+                monster.Quest = (ushort)row.Cells["MonsterQuest"].Value;
+                monster.RandomQuestChance = (ushort)row.Cells["MonsterRandomQuestChance"].Value;
                 monster.ViewRange = (byte)row.Cells["MonsterViewRange"].Value;
                 monster.CoolEye = (byte)row.Cells["MonsterCoolEye"].Value;
                 monster.Experience = (uint)row.Cells["MonsterExperience"].Value;
                 monster.CanPush = (bool)row.Cells["MonsterCanPush"].Value;
                 monster.CanTame = (bool)row.Cells["MonsterCanTame"].Value;
+                monster.IsElite = (bool)row.Cells["MonsterIsElite"].Value;
+                monster.IsSub = (bool)row.Cells["MonsterIsSub"].Value;
+                monster.IsBoss = (bool)row.Cells["MonsterIsBoss"].Value;
+                monster.AllowFreeze = (bool)row.Cells["MonsterAllowFreeze"].Value;
+                monster.AllowSlow = (bool)row.Cells["MonsterAllowSlow"].Value;
+                monster.AllowGreen = (bool)row.Cells["MonsterAllowGreen"].Value;
+                monster.AllowRed = (bool)row.Cells["MonsterAllowRed"].Value;
+                monster.AllowPara = (bool)row.Cells["MonsterAllowPara"].Value;
+                monster.AllowBlindness = (bool)row.Cells["MonsterAllowBlindness"].Value;
+                monster.AllowBleeding = (bool)row.Cells["MonsterAllowBleeding"].Value;
                 monster.Undead = (bool)row.Cells["MonsterUndead"].Value;
                 monster.AutoRev = (bool)row.Cells["MonsterAutoRev"].Value;
                 monster.DropPath = (string)row.Cells["MonsterDropPath"].Value;
@@ -490,8 +526,10 @@ namespace Server.Database
             if (monsterInfoGridView.Rows.Count > 0)
             {
                 SaveFileDialog sfd = new SaveFileDialog();
-                sfd.Filter = "CSV (*.csv)|*.csv";
-                sfd.FileName = "MonsterInfo Output.csv";
+                sfd.InitialDirectory = Application.StartupPath + @"\Exports";
+                sfd.FileName = "MonstertInfo";
+                sfd.Filter = "Text File|*.csv";
+
                 bool fileError = false;
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
@@ -562,17 +600,29 @@ namespace Server.Database
 
             row.Cells["MonsterName"].Value = "";
             row.Cells["MonsterImage"].Value = (Monster)0;
-            row.Cells["MonsterAI"].Value = (byte)0;
+            row.Cells["MonsterAI"].Value = (ushort)0;
             row.Cells["MonsterLevel"].Value = (ushort)0;
             row.Cells["MonsterEffect"].Value = (byte)0;
             row.Cells["MonsterLight"].Value = (byte)0;
             row.Cells["MonsterAttackSpeed"].Value = (ushort)2500;
             row.Cells["MonsterMoveSpeed"].Value = (ushort)1800;
+            row.Cells["MonsterQuest"].Value = (ushort)0;
+            row.Cells["MonsterRandomQuestChance"].Value = (ushort)0;
             row.Cells["MonsterViewRange"].Value = (byte)7;
             row.Cells["MonsterCoolEye"].Value = (byte)0;
             row.Cells["MonsterExperience"].Value = (uint)0;
             row.Cells["MonsterCanPush"].Value = (bool)true;
             row.Cells["MonsterCanTame"].Value = (bool)true;
+            row.Cells["MonsterIsElite"].Value = (bool)true;
+            row.Cells["MonsterIsSub"].Value = (bool)true;
+            row.Cells["MonsterIsBoss"].Value = (bool)true;
+            row.Cells["MonsterAllowFreeze"].Value = (bool)true;
+            row.Cells["MonsterAllowSlow"].Value = (bool)true;
+            row.Cells["MonsterAllowGreen"].Value = (bool)true;
+            row.Cells["MonsterAllowRed"].Value = (bool)true;
+            row.Cells["MonsterAllowPara"].Value = (bool)true;
+            row.Cells["MonsterAllowBlindness"].Value = (bool)true;
+            row.Cells["MonsterAllowBleeding"].Value = (bool)true;
             row.Cells["MonsterUndead"].Value = (bool)false;
             row.Cells["MonsterAutoRev"].Value = (bool)true;
             row.Cells["MonsterDropPath"].Value = "";

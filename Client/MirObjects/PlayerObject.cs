@@ -29,7 +29,7 @@ namespace Client.MirObjects
         public MirGender Gender;
         public MirClass Class;
         public byte Hair;
-        public ushort Level;
+        public ushort Level, Reborn, InstanceStage, ChallengeStage;
 
         public MLibrary WeaponLibrary1, WeaponEffectLibrary1, WeaponLibrary2, HairLibrary, WingLibrary, MountLibrary;
         public int Armour, Weapon, WeaponEffect, ArmourOffSet, HairOffSet, WeaponOffSet, WingOffset, MountOffset;
@@ -74,7 +74,9 @@ namespace Client.MirObjects
         public Point TargetPoint;
 
         public bool MagicShield;
+
         public Effect ShieldEffect;
+        public SpellEffect CurrentEffect;
 
         public bool ElementalBarrier;
         public Effect ElementalBarrierEffect;
@@ -94,8 +96,6 @@ namespace Client.MirObjects
         public int ElementOrbMax;
         //Elemental system END
 
-        public SpellEffect CurrentEffect;
-
         public bool RidingMount, Sprint, FastRun, Fishing, FoundFish;
         public long StanceTime, MountTime, FishingTime;
         public long BlizzardStopTime, ReincarnationStopTime, SlashingBurstTime;
@@ -104,6 +104,7 @@ namespace Client.MirObjects
 
         public string GuildName;
         public string GuildRankName;
+        public int Conquest = -1;
 
         public Point FishingPoint;
 
@@ -124,6 +125,10 @@ namespace Client.MirObjects
             Class = info.Class;
             Gender = info.Gender;
             Level = info.Level;
+            Reborn = info.Reborn;
+
+            InstanceStage = info.InstanceStage;
+            ChallengeStage = info.ChallengeStage;
 
             CurrentLocation = info.Location;
             MapLocation = info.Location;
@@ -382,7 +387,7 @@ namespace Client.MirObjects
                         #region Weapons
                         if (HasClassWeapon)
                         {
-                            int Index = Weapon - 200;
+                            int Index = Weapon - 600;
 
                             if (altAnim)
                                 WeaponLibrary2 = Index < Libraries.ARWeaponsS.Length ? Libraries.ARWeaponsS[Index] : null;
@@ -413,7 +418,7 @@ namespace Client.MirObjects
                         #endregion
 
                         #region WingEffects
-                        if (WingEffect > 0 && WingEffect < 100)
+                        if (WingEffect > 0 && WingEffect < 300)
                         {
                             if (altAnim)
                                 WingLibrary = (WingEffect - 1) < Libraries.ARHumEffect.Length ? Libraries.ARHumEffect[WingEffect - 1] : null;
@@ -477,7 +482,7 @@ namespace Client.MirObjects
                         #region Weapons
                         if (HasClassWeapon)
                         {
-                            int Index = Weapon - 100;
+                            int Index = Weapon - 300;
 
                             WeaponLibrary1 = Index < Libraries.AWeaponsL.Length ? Libraries.AWeaponsR[Index] : null;
                             WeaponLibrary2 = Index < Libraries.AWeaponsR.Length ? Libraries.AWeaponsL[Index] : null;
@@ -504,7 +509,7 @@ namespace Client.MirObjects
                         #endregion
 
                         #region WingEffects
-                        if (WingEffect > 0 && WingEffect < 100)
+                        if (WingEffect > 0 && WingEffect < 300)
                         {
                             if (altAnim)
                                 WingLibrary = (WingEffect - 1) < Libraries.AHumEffect.Length ? Libraries.AHumEffect[WingEffect - 1] : null;
@@ -555,9 +560,9 @@ namespace Client.MirObjects
 						#endregion
 
 						#region WingEffects
-						if (WingEffect > 0 && WingEffect < 100)
+						if (WingEffect > 0 && WingEffect < 300)
                         {
-                            WingLibrary = (WingEffect - 1) < Libraries.CHumEffect.Length ? Libraries.CHumEffect[WingEffect - 1] : null;
+                            WingLibrary = WingEffect < Libraries.CHumEffect.Length ? Libraries.CHumEffect[WingEffect] : null;
                         }
                         #endregion
 
@@ -627,7 +632,7 @@ namespace Client.MirObjects
                 MagicShield = true;
                 Effects.Add(ShieldEffect = new Effect(Libraries.Magic, 3890, 3, 600, this) { Repeat = true });
             }
-
+            /*
             if (WingEffect >= 100)
             {
                 switch(WingEffect)
@@ -637,7 +642,7 @@ namespace Client.MirObjects
                         break;
                 }
             }
-
+            */
 			long delay = 5000;
 
             if (LevelEffects == LevelEffects.None) return;
@@ -1012,7 +1017,7 @@ namespace Client.MirObjects
                                 break;
                             default:
                                 if (CMain.Shift && TargetObject == null)
-                                    Frames.TryGetValue(CMain.Random.Next(100) >= 20 ? MirAction.Attack1 : MirAction.Attack3, out Frame);
+                                    Frames.TryGetValue(CMain.Random.Next(100) >= 20 ? MirAction.Attack1 : MirAction.Attack1, out Frame);
                                 else
                                     Frames.TryGetValue(CurrentAction, out Frame);
                                 break;
@@ -1020,7 +1025,7 @@ namespace Client.MirObjects
                         break;
                     case MirAction.Attack4:
                         Spell = (Spell)action.Params[0];
-                        Frames.TryGetValue(Spell == Spell.TwinDrakeBlade || Spell == Spell.FlamingSword ? MirAction.Attack1 : CurrentAction, out Frame);
+                        Frames.TryGetValue(Spell == Spell.TwinDrakeBlade || Spell == Spell.FlamingSword || Spell == Spell.IceSword ? MirAction.Attack1 : CurrentAction, out Frame);
                         break;
                     case MirAction.Spell:
                         Spell = (Spell)action.Params[0];
@@ -1199,6 +1204,54 @@ namespace Client.MirObjects
                                     GameScene.SpellTime = CMain.Time + 1000; //Spell Delay
                                 }
                                 break;
+                            case Spell.FlyingThrust:
+                                Frames.TryGetValue(MirAction.FlyingThrust, out Frame);
+                                CurrentAction = MirAction.DashL;
+                                Direction = olddirection;
+                                CurrentLocation = Functions.PointMove(CurrentLocation, Direction, 1);
+                                if (this == User)
+                                {
+                                    MapControl.NextAction = CMain.Time + 500;
+                                    GameScene.SpellTime = CMain.Time + 500; //Spell Delay
+
+                                    Network.Enqueue(new C.Magic { Spell = Spell, Direction = Direction, });
+                                }
+                                break;
+
+                            case Spell.PheonixExplosion:
+                                Frames.TryGetValue(MirAction.PheonixExplosion, out Frame);
+                                if (this == User)
+                                {
+                                    MapControl.NextAction = CMain.Time + 1000;
+                                    GameScene.SpellTime = CMain.Time + 1000; //Spell Delay
+                                }
+                                break;
+                            case Spell.AlmightyPush:
+                                Frames.TryGetValue(MirAction.AlmightyPush, out Frame);
+                                if (this == User)
+                                {
+                                    MapControl.NextAction = CMain.Time + 1000;
+                                    GameScene.SpellTime = CMain.Time + 1000; //Spell Delay
+                                }
+                                break;
+                            case Spell.FireExplode:
+                                Frames.TryGetValue(MirAction.FireExplode, out Frame);
+                                if (this == User)
+                                {
+                                    MapControl.NextAction = CMain.Time + 1000;
+                                    GameScene.SpellTime = CMain.Time + 1000; //Spell Delay
+                                }
+                                break;
+
+                            case Spell.YinYangBurst:
+                                Frames.TryGetValue(MirAction.YinYangBurst, out Frame);
+                                if (this == User)
+                                {
+                                    MapControl.NextAction = CMain.Time + 1000;
+                                    GameScene.SpellTime = CMain.Time + 1000; //Spell Delay
+                                }
+                                break;
+
                             default:
                                 Frames.TryGetValue(CurrentAction, out Frame);
                                 break;
@@ -1351,6 +1404,25 @@ namespace Client.MirObjects
                                             Spell = Spell.FlamingSword;
                                     }
                                 }
+
+                                if (GameScene.WhirlWind)
+                                {
+                                    if (TargetObject != null)
+                                    {
+                                        magic = User.GetMagic(Spell.WhirlWind);
+                                        if (magic != null)
+                                            Spell = Spell.WhirlWind;
+                                    }
+                                }
+                                if (GameScene.IceSword)
+                                {
+                                    if (TargetObject != null)
+                                    {
+                                        magic = User.GetMagic(Spell.IceSword);
+                                        if (magic != null)
+                                            Spell = Spell.IceSword;
+                                    }
+                                }
                             }
 
                             Network.Enqueue(new C.Attack { Direction = Direction, Spell = Spell });
@@ -1361,6 +1433,10 @@ namespace Client.MirObjects
                                 GameScene.TwinDrakeBlade = false;
                             if (Spell == Spell.FlamingSword)
                                 GameScene.FlamingSword = false;
+                            if (Spell == Spell.WhirlWind)
+                                GameScene.WhirlWind = false;
+                            if (Spell == Spell.IceSword)
+                                GameScene.IceSword = false;
 
                             magic = User.GetMagic(Spell);
 
@@ -1509,7 +1585,12 @@ namespace Client.MirObjects
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
                                 break;
 
-                            
+                            case Spell.IceSword:
+                            case Spell.WhirlWind:
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
+                                break;
+
+
                         }
                         break;
                     case MirAction.Attack4:
@@ -1575,6 +1656,73 @@ namespace Client.MirObjects
 
                         switch (Spell)
                         {
+                            #region FlyingThrust
+
+                            case Spell.FlyingThrust:
+                                Effects.Add(new Effect(Libraries.Magic2, 740 + (int)Direction * 20, 15, 15 * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+
+                            #region PheonixExplosion
+
+                            case Spell.PheonixExplosion:
+                                Effects.Add(new Effect(Libraries.Magic5, 0, 10, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+                            #region AlmightyPush
+
+                            case Spell.AlmightyPush:
+                                Effects.Add(new Effect(Libraries.Magic5, 600, 6, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+                            #region FireExplode
+
+                            case Spell.FireExplode:
+                                Effects.Add(new Effect(Libraries.Magic5, 379, 10, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+                            #region FireExplodeFW
+
+                            case Spell.FireExplodeFW:
+                                Effects.Add(new Effect(Libraries.Magic3, 5456, 4, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+
+                            #region YinYangBurst
+
+                            case Spell.YinYangBurst:
+                                Effects.Add(new Effect(Libraries.Magic6, 0, 5, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+                            #region SwordsOfLight
+
+                            case Spell.SwordsOfLight:
+                                Effects.Add(new Effect(Libraries.Magic6, 340, 9, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+                            #region HeavenAndHell
+
+                            case Spell.HeavenAndHell:
+                                Effects.Add(new Effect(Libraries.Magic6, 320, 4, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+
                             #region FireBall
 
                             case Spell.FireBall:
@@ -1583,7 +1731,6 @@ namespace Client.MirObjects
                                 break;
 
                             #endregion
-
                             #region Healing
 
                             case Spell.Healing:
@@ -1592,7 +1739,6 @@ namespace Client.MirObjects
                                 break;
 
                             #endregion
-
                             #region Repulsion
 
                             case Spell.Repulsion:
@@ -1601,7 +1747,6 @@ namespace Client.MirObjects
                                 break;
 
                             #endregion
-
                             #region ElectricShock
 
                             case Spell.ElectricShock:
@@ -1610,7 +1755,6 @@ namespace Client.MirObjects
                                 break;
 
                             #endregion
-
                             #region Poisoning
 
                             case Spell.Poisoning:
@@ -1619,7 +1763,6 @@ namespace Client.MirObjects
                                 break;
 
                             #endregion
-
                             #region GreatFireBall
 
                             case Spell.GreatFireBall:
@@ -1966,7 +2109,6 @@ namespace Client.MirObjects
 
                             #endregion
 
-
                             #region Vampirism
 
                             case Spell.Vampirism:
@@ -2212,7 +2354,6 @@ namespace Client.MirObjects
                         break;
                 }
             }
-
         }
 
         public virtual void ProcessFrames()
@@ -2820,6 +2961,105 @@ namespace Client.MirObjects
                                 Effect effect;
                                 switch (Spell)
                                 {
+                                    #region PheonixExplosion
+
+                                    case Spell.PheonixExplosion:
+                                        SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
+                                        missile = CreateProjectile(151, Libraries.Magic5, true, 3, 30, 7);
+
+                                        if (missile.Target != null)
+                                        {
+                                            missile.Complete += (o, e) =>
+                                            {
+                                                if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                missile.Target.Effects.Add(new Effect(Libraries.Magic5, 311, 8, 600, missile.Target));
+                                                SoundManager.PlaySound(20000 + (ushort)Spell.PheonixExplosion * 10 + 2);
+                                            };
+                                        }
+                                        break;
+
+                                    #endregion
+                                    #region AlmightyPush
+
+                                    case Spell.AlmightyPush:
+                                        SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
+                                        missile = CreateProjectile(606, Libraries.Magic5, true, 5, 30, 5);
+
+                                        if (missile.Target != null)
+                                        {
+                                            missile.Complete += (o, e) =>
+                                            {
+                                                if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                missile.Target.Effects.Add(new Effect(Libraries.Magic5, 766, 25, 600, missile.Target));
+                                                SoundManager.PlaySound(20000 + (ushort)Spell.AlmightyPush * 10 + 2);
+                                            };
+                                        }
+                                        break;
+
+                                    #endregion
+                                    #region FireExplode
+
+                                    case Spell.FireExplode:
+                                        missile = CreateProjectile(389, Libraries.Magic5, true, 6, 30, 4);
+                                        missile.Explode = true;
+
+                                        missile.Complete += (o, e) =>
+                                        {
+                                            SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                        };
+
+                                        break;
+
+                                    #endregion
+
+                                    #region YinYangBurst
+
+                                    case Spell.YinYangBurst:
+                                        SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
+                                        missile = CreateProjectile(5, Libraries.Magic6, true, 3, 30, 7);
+
+                                        if (missile.Target != null)
+                                        {
+                                            missile.Complete += (o, e) =>
+                                            {
+                                                if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                missile.Target.Effects.Add(new Effect(Libraries.Magic6, 166, 4, 600, missile.Target));
+                                                SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 2);
+                                            };
+                                        }
+                                        break;
+
+                                    #endregion
+                                    #region SwordsOfLight
+
+                                    case Spell.SwordsOfLight:
+                                        SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
+                                        missile = CreateProjectile(349, Libraries.Magic6, true, 5, 80, 5);
+                                        missile.Explode = true;
+
+                                        missile.Complete += (o, e) =>
+                                        {
+                                            MapControl.Effects.Add(new Effect(Libraries.Magic6, 509 + (int)Direction * 16, 8, 400, TargetPoint));
+                                            SoundManager.PlaySound(20000 + (ushort)Spell.SwordsOfLight * 10 + 2);
+                                        };
+                                        break;
+
+                                    #endregion
+                                    #region HeavenAndHell
+
+                                    case Spell.HeavenAndHell:
+                                        missile = CreateProjectile(324, Libraries.Magic6, true, 1, 30, -1);
+                                        missile.Explode = true;
+
+                                        missile.Complete += (o, e) =>
+                                        {
+                                            SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                        };
+
+                                        break;
+
+                                    #endregion
+
                                     #region FireBall
 
                                     case Spell.FireBall:
@@ -2838,7 +3078,6 @@ namespace Client.MirObjects
                                         break;
 
                                     #endregion
-
                                     #region GreatFireBall
 
                                     case Spell.GreatFireBall:
@@ -2857,7 +3096,6 @@ namespace Client.MirObjects
                                         break;
 
                                     #endregion
-
                                     #region Healing
 
                                     case Spell.Healing:
@@ -2869,7 +3107,6 @@ namespace Client.MirObjects
                                         break;
 
                                     #endregion
-
                                     #region ElectricShock
 
                                     case Spell.ElectricShock:
@@ -2880,7 +3117,6 @@ namespace Client.MirObjects
                                             ob.Effects.Add(new Effect(Libraries.Magic, 1570, 10, 1000, ob));
                                         break;
                                     #endregion
-
                                     #region Poisoning
 
                                     case Spell.Poisoning:
@@ -3083,7 +3319,7 @@ namespace Client.MirObjects
 
                                         Point location = Functions.PointMove(CurrentLocation, Direction, 1);
 
-                                        MapControl.Effects.Add(new Effect(Libraries.Magic2, 1790 + (int)Direction * 10, 10, 10 * FrameInterval, location));
+                                        MapControl.Effects.Add(new Effect(Libraries.Magic2, 1790 + (int)Direction * 10, 0, 10 * FrameInterval, location));
                                         SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                         break;
 
@@ -3318,7 +3554,6 @@ namespace Client.MirObjects
                                         break;
 
                                     #endregion
-
 
                                     #region FireBounce
 
@@ -4935,6 +5170,12 @@ namespace Client.MirObjects
                         case Spell.FlamingSword:
                             Libraries.Magic.DrawBlend(3480 + ((int)Direction * 10) + FrameIndex, DrawLocation, Color.White, true, 0.7F);
                             break;
+                        case Spell.IceSword:
+                            Libraries.Magic4.DrawBlend(84 + ((int)Direction * 10) + FrameIndex * 2, DrawLocation, Color.White, true, 0.7F);
+                            break;
+                        case Spell.WhirlWind:
+                            Libraries.Magic4.DrawBlend(0 + ((int)Direction * 10) + FrameIndex * 2, DrawLocation, Color.White, true, 0.7F);
+                            break;
                     }
                     break;
                 case MirAction.Attack4:
@@ -4949,6 +5190,9 @@ namespace Client.MirObjects
                             break;
                         case Spell.FlamingSword:
                             Libraries.Magic.DrawBlend(3480 + ((int)Direction * 10) + FrameIndex, DrawLocation, Color.White, true, 0.7F);
+                            break;
+                        case Spell.WhirlWind:
+                            Libraries.Magic4.DrawBlend(0 + ((int)Direction * 10) + FrameIndex * 2, DrawLocation, Color.White, true, 0.7F);
                             break;
                     }
                     break;
@@ -5030,7 +5274,7 @@ namespace Client.MirObjects
         }
         public void DrawWings()
         {
-            if (WingEffect <= 0 || WingEffect >= 100) return;
+            if (WingEffect <= 0 || WingEffect >= 300) return;
 
             if (WingLibrary != null)
                 WingLibrary.DrawBlend(DrawWingFrame + WingOffset, DrawLocation, DrawColour, true);
@@ -5152,6 +5396,32 @@ namespace Client.MirObjects
         {
             NameLabel = null;
             GuildLabel = null;
+            RebornLabel = null;
+            //InstanceStageLabel = null;
+            //ChallengeStageLabel = null;
+
+            /*
+            for (int i = 0; i < LabelList.Count; i++)
+            {
+                if (LabelList[i].Text != string.Format("Instance Stage {0}", InstanceStage)) continue;
+                InstanceStageLabel = LabelList[i];
+                break;
+            }
+
+            for (int i = 0; i < LabelList.Count; i++)
+            {
+                if (LabelList[i].Text != string.Format("Challenge Stage {0}", ChallengeStage)) continue;
+                ChallengeStageLabel = LabelList[i];
+                break;
+            }
+            */
+
+            for (int i = 0; i < LabelList.Count; i++)
+            {
+                if (LabelList[i].Text != string.Format("Reborn {0}", Reborn)) continue;
+                RebornLabel = LabelList[i];
+                break;
+            }
 
             for (int i = 0; i < LabelList.Count; i++)
             {
@@ -5167,7 +5437,11 @@ namespace Client.MirObjects
                 break;
             }
 
-            if (NameLabel != null && !NameLabel.IsDisposed && GuildLabel != null && !GuildLabel.IsDisposed) return;
+            if (NameLabel != null && !NameLabel.IsDisposed && 
+                GuildLabel != null && !GuildLabel.IsDisposed && 
+                RebornLabel != null && !RebornLabel.IsDisposed/* &&
+                InstanceStageLabel != null && !InstanceStageLabel.IsDisposed &&
+                ChallengeStageLabel != null && !ChallengeStageLabel.IsDisposed*/) return;
 
             NameLabel = new MirLabel
             {
@@ -5192,24 +5466,188 @@ namespace Client.MirObjects
             };
             GuildLabel.Disposing += (o, e) => LabelList.Remove(GuildLabel);
             LabelList.Add(GuildLabel);
+
+            /*
+            InstanceStageLabel = new MirLabel
+            {
+                AutoSize = true,
+                BackColour = Color.Transparent,
+                ForeColour = NameColour,
+                OutLine = true,
+                OutLineColour = Color.Black,
+                Text = InstanceStage,
+            };
+            InstanceStageLabel.Disposing += (o, e) => LabelList.Remove(InstanceStageLabel);
+            LabelList.Add(InstanceStageLabel);
+
+            ChallengeStageLabel = new MirLabel
+            {
+                AutoSize = true,
+                BackColour = Color.Transparent,
+                ForeColour = NameColour,
+                OutLine = true,
+                OutLineColour = Color.Black,
+                Text = ChallengeStage,
+            };
+            ChallengeStageLabel.Disposing += (o, e) => LabelList.Remove(ChallengeStageLabel);
+            LabelList.Add(ChallengeStageLabel);
+            */
+
+            Color RebornColor;
+            switch (Reborn)
+            {
+                case 1:
+                    RebornColor = Color.Aqua;
+                    break;
+                case 2:
+                    RebornColor = Color.Aquamarine;
+                    break;
+                case 3:
+                    RebornColor = Color.LightSeaGreen;
+                    break;
+                case 4:
+                    RebornColor = Color.SlateBlue;
+                    break;
+                case 5:
+                    RebornColor = Color.SteelBlue;
+                    break;
+                case 6:
+                    RebornColor = Color.Blue;
+                    break;
+                case 7:
+                    RebornColor = Color.Navy;
+                    break;
+                case 8:
+                    RebornColor = Color.Chocolate;
+                    break;
+                case 9:
+                    RebornColor = Color.Yellow;
+                    break;
+                case 10:
+                    RebornColor = Color.MediumOrchid;
+                    break;
+                case 11:
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                case 17:
+                case 18:
+                case 19:
+                case 20:
+                case 100:
+                    RebornColor = Color.Gold;
+                    break;
+
+                default:
+                    RebornColor = Color.White;
+                    break;
+            }
+            RebornLabel = new MirLabel
+            {
+                AutoSize = true,
+                BackColour = Color.Transparent,
+                ForeColour = RebornColor,
+                OutLine = true,
+                OutLineColour = Color.Black,
+                Text = string.Format("Reborn {0}", Reborn),
+            };
+            RebornLabel.Disposing += (o, e) => LabelList.Remove(RebornLabel);
+            LabelList.Add(RebornLabel);
         }
 
         public override void DrawName()
         {
             CreateLabel();
 
-            if (NameLabel == null || GuildLabel == null) return;
+            if (NameLabel == null || GuildLabel == null || RebornLabel == null/* || InstanceStageLabel == null || ChallengeStageLabel == null*/) return;
 
             if (GuildName != "")
             {
-                GuildLabel.Text = GuildName;
-                GuildLabel.Location = new Point(DisplayRectangle.X + (50 - GuildLabel.Size.Width) / 2, DisplayRectangle.Y - (42 - GuildLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
+                NameLabel.Text = Name;
+                NameLabel.Location = new Point(DisplayRectangle.X + (50 - NameLabel.Size.Width) / 2, DisplayRectangle.Y - (17 - NameLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
+                NameLabel.Draw();
+            }
+            else
+            {
+                NameLabel.Text = Name;
+                NameLabel.Location = new Point(DisplayRectangle.X + (50 - NameLabel.Size.Width) / 2, DisplayRectangle.Y - (27 - NameLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
+                NameLabel.Draw();
+            }
+
+            if (GuildName != "")
+            {
+                GuildLabel.Text = string.Format("{0}", GuildName);
+                GuildLabel.Location = new Point(DisplayRectangle.X + (50 - GuildLabel.Size.Width) / 2, DisplayRectangle.Y - (27 - GuildLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
                 GuildLabel.Draw();
             }
 
-            NameLabel.Text = Name;
-            NameLabel.Location = new Point(DisplayRectangle.X + (50 - NameLabel.Size.Width) / 2, DisplayRectangle.Y - (32 - NameLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
-            NameLabel.Draw();
+            /*
+            InstanceStageLabel.Text = string.Format("{0}", InstanceStage);
+            InstanceStageLabel.Location = new Point(DisplayRectangle.X + (50 - InstanceStageLabel.Size.Width) / 2, DisplayRectangle.Y - (27 - InstanceStageLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
+            InstanceStageLabel.Draw();
+
+            ChallengeStageLabel.Text = string.Format("{0}", ChallengeStage);
+            ChallengeStageLabel.Location = new Point(DisplayRectangle.X + (50 - ChallengeStageLabel.Size.Width) / 2, DisplayRectangle.Y - (27 - ChallengeStageLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
+            ChallengeStageLabel.Draw();
+            */
+
+            string text = "";
+            switch (Reborn)
+            {
+                case 1:
+                    text = "[Reborn~One]";
+                    break;
+                case 2:
+                    text = "[Reborn~Two]";
+                    break;
+                case 3:
+                    text = "[Reborn~Three]";
+                    break;
+                case 4:
+                    text = "[Reborn~Four]";
+                    break;
+                case 5:
+                    text = "[Reborn~Five]";
+                    break;
+                case 6:
+                    text = "[Reborn~Six]";
+                    break;
+                case 7:
+                    text = "[Reborn~Seven]";
+                    break;
+                case 8:
+                    text = "[Reborn~Eight]";
+                    break;
+                case 9:
+                    text = "[Reborn~Nine]";
+                    break;
+                case 10:
+                    text = "[Reborn~Ten]";
+                    break;
+                case 11:
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                case 17:
+                case 18:
+                case 19:
+                case 20:
+                case 100:
+                    text = "[Max~Reborn]";
+                    break;
+
+                default:
+                    text = "";
+                    break;
+            }
+            //Reborn System RebornLabel
+            RebornLabel.Text = text;
+            RebornLabel.Location = new Point(DisplayRectangle.X + (50 - RebornLabel.Size.Width) / 2, DisplayRectangle.Y - (37 - RebornLabel.Size.Height / 2) + (Dead ? 35 : 8));
+            RebornLabel.Draw();
         }
 
     }

@@ -13,7 +13,7 @@ namespace Client.MirControls
 {
     public sealed class GameShopCell : MirImageControl
     {
-        public MirLabel nameLabel, typeLabel, goldLabel, gpLabel, stockLabel, StockLabel, countLabel;
+        public MirLabel nameLabel, typeLabel, goldLabel, gpLabel, huntLabel, stockLabel, StockLabel, countLabel;
         public GameShopItem Item;
         public UserItem ShowItem;
         Rectangle ItemDisplayArea;
@@ -50,7 +50,17 @@ namespace Client.MirControls
             {
                 Size = new Size(95, 20),
                 DrawFormat = TextFormatFlags.RightToLeft | TextFormatFlags.Right,
-                Location = new Point(2, 102),
+                Location = new Point(7, 75),
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 8F)
+            };
+
+            huntLabel = new MirLabel
+            {
+                Size = new Size(95, 20),
+                DrawFormat = TextFormatFlags.RightToLeft | TextFormatFlags.Right,
+                Location = new Point(7, 95),
                 Parent = this,
                 NotControl = true,
                 Font = new Font(Settings.FontName, 8F)
@@ -60,7 +70,7 @@ namespace Client.MirControls
             {
                 Size = new Size(95, 20),
                 DrawFormat = TextFormatFlags.RightToLeft | TextFormatFlags.Right,
-                Location = new Point(2, 81),
+                Location = new Point(7, 115),
                 Parent = this,
                 NotControl = true,
                 Font = new Font(Settings.FontName, 8F)
@@ -103,7 +113,7 @@ namespace Client.MirControls
                 Index = 778,
                 HoverIndex = 779,
                 PressedIndex = 780,
-                Location = new Point(42, 122),
+                Location = new Point(42, 134),
                 Library = Libraries.Title,
                 Parent = this,
                 Sound = SoundList.ButtonA,
@@ -118,7 +128,7 @@ namespace Client.MirControls
                 Index = 781,
                 HoverIndex = 782,
                 PressedIndex = 783,
-                Location = new Point(8, 122),
+                Location = new Point(8, 132),
                 Library = Libraries.Title,
                 Parent = this,
                 Sound = SoundList.ButtonA,
@@ -195,39 +205,68 @@ namespace Client.MirControls
         {
             uint CreditCost;
             uint GoldCost;
+            uint HuntPointsCost;
             MirMessageBox messageBox;
-
-            if (Item.CreditPrice * Quantity <= GameScene.Credit)
+            int pType = -2;
+            if (GameScene.Scene.GameShopDialog.PaymentTypeCredit.Checked && Item.CanBuyCredit)
             {
-                CreditCost = Item.CreditPrice * Quantity;
-                messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x {0}({3}) for {2} Credits?", Item.Info.FriendlyName, Quantity, CreditCost, Item.Count), MirMessageBoxButtons.YesNo);
+                pType = 0;
             }
-            else
-            { //Needs to attempt to pay with gold and credits
-                if (GameScene.Gold >= (((Item.GoldPrice * Quantity) / (Item.CreditPrice * Quantity)) * ((Item.CreditPrice * Quantity) - GameScene.Credit)))
-                {
-                    GoldCost = ((Item.GoldPrice * Quantity) / (Item.CreditPrice * Quantity)) * ((Item.CreditPrice * Quantity) - GameScene.Credit);
-                    CreditCost = GameScene.Credit;
-                    if (CreditCost == 0)
+            else if (GameScene.Scene.GameShopDialog.PaymentTypeGold.Checked && Item.CanBuyGold)
+            {
+                pType = 1;
+            }
+            else if (GameScene.Scene.GameShopDialog.PaymentTypeHuntPoints.Checked && Item.CanBuyHuntPoints)
+            {
+                pType = 2;
+            }
+            if (pType == -2)
+            {
+                GameScene.Scene.ChatDialog.ReceiveChat("You MUST select a payment type!", ChatType.System);
+                return;
+            }
+            switch (pType)
+            {
+                case 0: //  Credit
+                    if (Item.CreditPrice * Quantity <= GameScene.Credit)
                     {
-                        messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x {0}({3}) for {2} Gold?", Item.Info.FriendlyName, Quantity, GoldCost, Item.Count), MirMessageBoxButtons.YesNo);
+                        CreditCost = Item.CreditPrice * Quantity;
+                        messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x {0}({3}) for {2} Credits?", Item.Info.FriendlyName, Quantity, CreditCost, Item.Count), MirMessageBoxButtons.YesNo);
+                        messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.GameshopBuy { GIndex = Item.GIndex, Quantity = Quantity, PType = pType });
+                        messageBox.NoButton.Click += (o, e) => { };
+                        messageBox.Show();
                     }
                     else
+                        GameScene.Scene.ChatDialog.ReceiveChat("You don`t have enough Credit to buy this item.", ChatType.System);
+                    break;
+                case 1: //  Gold
+                    if (Item.GoldPrice * Quantity <= GameScene.Gold)
                     {
-                        messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x {0}({4}) for {2} Credit and {3} Gold?", Item.Info.FriendlyName, Quantity, CreditCost, GoldCost, Item.Count), MirMessageBoxButtons.YesNo);
+                        GoldCost = Item.GoldPrice * Quantity;
+                        messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x {0}({3}) for {2} Gold?", Item.Info.FriendlyName, Quantity, GoldCost, Item.Count), MirMessageBoxButtons.YesNo);
+                        messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.GameshopBuy { GIndex = Item.GIndex, Quantity = Quantity, PType = pType });
+                        messageBox.NoButton.Click += (o, e) => { };
+                        messageBox.Show();
                     }
-                }
-                else
-                {
-                    GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowGold, ChatType.System);
+                    else
+                        GameScene.Scene.ChatDialog.ReceiveChat("You don`t have enough Gold to buy this item.", ChatType.System);
+                    break;
+                case 2: //  HuntPoints
+                    if (Item.HuntPointsPrice * Quantity <= GameScene.User.HuntPoints)
+                    {
+                        HuntPointsCost = Item.HuntPointsPrice * Quantity;
+                        messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x {0}({3}) for {2} CP?", Item.Info.FriendlyName, Quantity, HuntPointsCost, Item.Count), MirMessageBoxButtons.YesNo);
+                        messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.GameshopBuy { GIndex = Item.GIndex, Quantity = Quantity, PType = pType });
+                        messageBox.NoButton.Click += (o, e) => { };
+                        messageBox.Show();
+                    }
+                    else
+                        GameScene.Scene.ChatDialog.ReceiveChat("You don`t have enough Hunt to buy this item.", ChatType.System);
+                    break;
+                default:
+
                     return;
-                }
-
             }
-
-            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.GameshopBuy { GIndex = Item.GIndex, Quantity = Quantity });
-            messageBox.NoButton.Click += (o, e) => { };
-            messageBox.Show();
         }
 
         public override void OnMouseMove(MouseEventArgs e)
@@ -260,8 +299,44 @@ namespace Client.MirControls
             nameLabel.Text = nameLabel.Text.Length > 17 ? nameLabel.Text.Substring(0, 17) : nameLabel.Text;
             nameLabel.ForeColour = GameScene.Scene.GradeNameColor(Item.Info.Grade);
             quantity.Text = Quantity.ToString();
-            goldLabel.Text = (Item.GoldPrice * Quantity).ToString("###,###,##0");
-            gpLabel.Text = (Item.CreditPrice * Quantity).ToString("###,###,##0");
+
+            goldLabel.Text = Item.CanBuyGold ? (Item.GoldPrice * Quantity).ToString("###,###,##0") : "---";
+            huntLabel.Text = Item.CanBuyHuntPoints ? (Item.HuntPointsPrice * Quantity).ToString("###,###,##0") : "---";
+            gpLabel.Text = Item.CanBuyCredit ? (Item.CreditPrice * Quantity).ToString("###,###,##0") : "---";
+
+            if (Item.GoldPrice > 10000000) //10Mil
+                goldLabel.ForeColour = Color.Red;
+            else if (Item.GoldPrice > 1000000) //1Million
+                goldLabel.ForeColour = Color.Orange;
+            else if (Item.GoldPrice > 100000) //100k
+                goldLabel.ForeColour = Color.Green;
+            else if (Item.GoldPrice > 10000) //10k
+                goldLabel.ForeColour = Color.DeepSkyBlue;
+            else
+                goldLabel.ForeColour = Color.White;
+
+            if (Item.HuntPointsPrice > 50000) //50k
+                huntLabel.ForeColour = Color.Red;
+            else if (Item.HuntPointsPrice > 10000) //10k
+                huntLabel.ForeColour = Color.Orange;
+            else if (Item.HuntPointsPrice > 5000) //5k
+                huntLabel.ForeColour = Color.Green;
+            else if (Item.HuntPointsPrice > 1000) //1k
+                huntLabel.ForeColour = Color.DeepSkyBlue;
+            else
+                huntLabel.ForeColour = Color.White;
+
+            if (Item.CreditPrice > 5000) //5k
+                gpLabel.ForeColour = Color.Red;
+            else if (Item.CreditPrice > 1000) //1k
+                gpLabel.ForeColour = Color.Orange;
+            else if (Item.CreditPrice > 500) //500
+                gpLabel.ForeColour = Color.Green;
+            else if (Item.CreditPrice > 100) //100
+                gpLabel.ForeColour = Color.DeepSkyBlue;
+            else
+                gpLabel.ForeColour = Color.White;
+
             if (Item.Stock >= 99) stockLabel.Text = "99+";
             if (Item.Stock == 0) stockLabel.Text = "∞";
             else stockLabel.Text = Item.Stock.ToString();
@@ -270,7 +345,7 @@ namespace Client.MirControls
             if (Item.Info.Type == ItemType.Mount || Item.Info.Type == ItemType.Weapon || Item.Info.Type == ItemType.Armour || Item.Info.Type == ItemType.Transform)
             {
                 PreviewItem.Visible = true;
-                BuyItem.Location = new Point(75, 122);
+                BuyItem.Location = new Point(75, 132);
             }
         }
 

@@ -212,7 +212,6 @@ namespace Server.MirNetwork
             if (_sendList == null || _sendList.Count <= 0) return;
 
             List<byte> data = new List<byte>();
-
             while (!_sendList.IsEmpty)
             {
                 Packet p;
@@ -326,6 +325,9 @@ namespace Server.MirNetwork
                     break;
                 case (short)ClientPacketIds.DropGold:
                     DropGold((C.DropGold) p);
+                    break;
+                case (short)ClientPacketIds.DropHuntPoints:
+                    DropHuntPoints((C.DropHuntPoints)p);
                     break;
                 case (short)ClientPacketIds.PickUp:
                     PickUp();
@@ -558,13 +560,13 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.MailCost:
                     MailCost((C.MailCost)p);
                     break;
-                case (short)ClientPacketIds.RequestIntelligentCreatureUpdates:
+                case (short)ClientPacketIds.RequestIntelligentCreatureUpdates://IntelligentCreature
                     RequestIntelligentCreatureUpdates((C.RequestIntelligentCreatureUpdates)p);
                     break;
-                case (short)ClientPacketIds.UpdateIntelligentCreature:
+                case (short)ClientPacketIds.UpdateIntelligentCreature://IntelligentCreature
                     UpdateIntelligentCreature((C.UpdateIntelligentCreature)p);
                     break;
-                case (short)ClientPacketIds.IntelligentCreaturePickup:
+                case (short)ClientPacketIds.IntelligentCreaturePickup://IntelligentCreature
                     IntelligentCreaturePickup((C.IntelligentCreaturePickup)p);
                     break;
                 case (short)ClientPacketIds.AddFriend:
@@ -630,10 +632,24 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.ConfirmItemRental:
                     ConfirmItemRental();
                     break;
+                case (short)ClientPacketIds.AddAttribute:
+                    AddAttribute((C.AddAttribute)p);
+                    break;
+                case (short)ClientPacketIds.AdjustGuildTax:
+                    AdjustGuildTaxRate((C.AdjustGuildTax)p);
+                    break;
                 default:
                     MessageQueue.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
                     break;
             }
+        }
+        public void AdjustGuildTaxRate(C.AdjustGuildTax p)
+        {
+            if (Stage != GameStage.Game)
+                return;
+            if (Player.MyGuild == null)
+                return;
+            Player.MyGuild.AdjustTaxRate(Player, p.Rate);
         }
 
         public void SoftDisconnect(byte reason)
@@ -839,7 +855,7 @@ namespace Server.MirNetwork
 
             if (info.Banned)
             {
-                if (info.ExpiryDate > Envir.Now)
+                if (info.ExpiryDate > DateTime.Now)
                 {
                     Enqueue(new S.StartGameBanned { Reason = info.BanReason, ExpiryDate = info.ExpiryDate });
                     return;
@@ -1043,6 +1059,12 @@ namespace Server.MirNetwork
 
             Player.DropGold(p.Amount);
         }
+        private void DropHuntPoints(C.DropHuntPoints p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.DropHuntPoints(p.Amount);
+        }
         private void PickUp()
         {
             if (Stage != GameStage.Game) return;
@@ -1118,7 +1140,7 @@ namespace Server.MirNetwork
                 return;
             }
 
-            if (p.ObjectID == Envir.DefaultNPC.LoadedObjectID && Player.NPCObjectID == Envir.DefaultNPC.LoadedObjectID)
+            if (p.ObjectID == Player.DefaultNPC.LoadedObjectID && Player.NPCObjectID == Player.DefaultNPC.LoadedObjectID)
             {
                 Player.CallDefaultNPC(p.Key);
                 return;
@@ -1620,7 +1642,7 @@ namespace Server.MirNetwork
             Player.SendIntelligentCreatureUpdates = p.Update;
         }
 
-        private void UpdateIntelligentCreature(C.UpdateIntelligentCreature p)
+        private void UpdateIntelligentCreature(C.UpdateIntelligentCreature p)//IntelligentCreature
         {
             if (Stage != GameStage.Game) return;
 
@@ -1666,7 +1688,7 @@ namespace Server.MirNetwork
             }
         }
 
-        private void IntelligentCreaturePickup(C.IntelligentCreaturePickup p)
+        private void IntelligentCreaturePickup(C.IntelligentCreaturePickup p)//IntelligentCreature
         {
             if (Stage != GameStage.Game) return;
 
@@ -1701,7 +1723,7 @@ namespace Server.MirNetwork
         private void GameshopBuy(C.GameshopBuy p)
         {
             if (Stage != GameStage.Game) return;
-            Player.GameshopBuy(p.GIndex, p.Quantity);
+            Player.GameshopBuy(p.GIndex, p.Quantity, p.PType);
         }
 
         private void NPCConfirmInput(C.NPCConfirmInput p)
@@ -1820,6 +1842,14 @@ namespace Server.MirNetwork
                 return;
 
             Player.ConfirmItemRental();
+        }
+
+        private void AddAttribute(C.AddAttribute p)
+        {
+            if (Stage != GameStage.Game)
+                return;
+
+            Player.AddAttribute(p.Attribute, p.Value);
         }
     }
 }

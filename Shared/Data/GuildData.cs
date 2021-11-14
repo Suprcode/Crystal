@@ -8,40 +8,27 @@ public class GuildRank
     public string Name = "";
     public int Index = 0;
     public GuildRankOptions Options = (GuildRankOptions)0;
-
     public GuildRank() { }
 
-    public GuildRank(BinaryReader reader, bool offline = false)
+    public GuildRank(BinaryReader reader, bool Offline = false)
     {
         Name = reader.ReadString();
         Options = (GuildRankOptions)reader.ReadByte();
-
-        if (!offline)
-        {
+        if (!Offline)
             Index = reader.ReadInt32();
-        }
-
         int Membercount = reader.ReadInt32();
         for (int j = 0; j < Membercount; j++)
-        {
-            Members.Add(new GuildMember(reader, offline));
-        }
+            Members.Add(new GuildMember(reader, Offline));
     }
-    public void Save(BinaryWriter writer, bool save = false)
+    public void Save(BinaryWriter writer, bool Save = false)
     {
         writer.Write(Name);
         writer.Write((byte)Options);
-        if (!save)
-        {
+        if (!Save)
             writer.Write(Index);
-        }
-
         writer.Write(Members.Count);
-
         for (int j = 0; j < Members.Count; j++)
-        {
             Members[j].Save(writer);
-        }
     }
 }
 
@@ -65,7 +52,7 @@ public class GuildStorageItem
 
 public class GuildMember
 {
-    public string Name = "";
+    public string name = "";
     public int Id;
     public object Player;
     public DateTime LastLogin;
@@ -76,7 +63,7 @@ public class GuildMember
 
     public GuildMember(BinaryReader reader, bool offline = false)
     {
-        Name = reader.ReadString();
+        name = reader.ReadString();
         Id = reader.ReadInt32();
         LastLogin = DateTime.FromBinary(reader.ReadInt64());
         hasvoted = reader.ReadBoolean();
@@ -85,7 +72,7 @@ public class GuildMember
     }
     public void Save(BinaryWriter writer)
     {
-        writer.Write(Name);
+        writer.Write(name);
         writer.Write(Id);
         writer.Write(LastLogin.ToBinary());
         writer.Write(hasvoted);
@@ -97,7 +84,7 @@ public class GuildBuffInfo
 {
     public int Id;
     public int Icon = 0;
-    public string Name = "";
+    public string name = "";
     public byte LevelRequirement;
     public byte PointsRequirement = 1;
     public int TimeLimit;
@@ -114,7 +101,7 @@ public class GuildBuffInfo
     {
         Id = reader.ReadInt32();
         Icon = reader.ReadInt32();
-        Name = reader.ReadString();
+        name = reader.ReadString();
         LevelRequirement = reader.ReadByte();
         PointsRequirement = reader.ReadByte();
         TimeLimit = reader.ReadInt32();
@@ -127,7 +114,7 @@ public class GuildBuffInfo
     {
         Id = reader.ReadInt32("Buff-" + i.ToString(), "Id", 0);
         Icon = reader.ReadInt32("Buff-" + i.ToString(), "Icon", 0);
-        Name = reader.ReadString("Buff-" + i.ToString(), "Name", "");
+        name = reader.ReadString("Buff-" + i.ToString(), "Name", "");
         LevelRequirement = reader.ReadByte("Buff-" + i.ToString(), "LevelReq", 0);
         PointsRequirement = reader.ReadByte("Buff-" + i.ToString(), "PointsReq", 1);
         TimeLimit = reader.ReadInt32("Buff-" + i.ToString(), "TimeLimit", 0); ;
@@ -149,7 +136,8 @@ public class GuildBuffInfo
         Stats[Stat.SkillGainMultiplier] = reader.ReadByte("Buff-" + i.ToString(), "BuffSkillRate", 0);
         Stats[Stat.HealthRecovery] = reader.ReadByte("Buff-" + i.ToString(), "BuffHpRegen", 0);
         Stats[Stat.SpellRecovery] = reader.ReadByte("Buff-" + i.ToString(), "BuffMpRegen", 0);
-        Stats[Stat.AttackBonus] = reader.ReadByte("Buff-" + i.ToString(), "BuffAttack", 0);
+        Stats[Stat.PVPDamage] = reader.ReadByte("Buff-" + i.ToString(), "BuffPVPAttack", 0);
+        Stats[Stat.PVEDamage] = reader.ReadByte("Buff-" + i.ToString(), "BuffPVEAttack", 0);
         Stats[Stat.ItemDropRatePercent] = reader.ReadByte("Buff-" + i.ToString(), "BuffDropRate", 0);
         Stats[Stat.GoldDropRatePercent] = reader.ReadByte("Buff-" + i.ToString(), "BuffGoldRate", 0);
     }
@@ -158,7 +146,7 @@ public class GuildBuffInfo
     {
         reader.Write("Buff-" + i.ToString(), "Id", Id);
         reader.Write("Buff-" + i.ToString(), "Icon", Icon);
-        reader.Write("Buff-" + i.ToString(), "Name", Name);
+        reader.Write("Buff-" + i.ToString(), "Name", name);
         reader.Write("Buff-" + i.ToString(), "LevelReq", LevelRequirement);
         reader.Write("Buff-" + i.ToString(), "PointsReq", PointsRequirement);
         reader.Write("Buff-" + i.ToString(), "TimeLimit", TimeLimit);
@@ -178,7 +166,8 @@ public class GuildBuffInfo
         reader.Write("Buff-" + i.ToString(), "BuffSkillRate", Stats[Stat.SkillGainMultiplier]);
         reader.Write("Buff-" + i.ToString(), "BuffHpRegen", Stats[Stat.HealthRecovery]);
         reader.Write("Buff-" + i.ToString(), "BuffMpRegen", Stats[Stat.SpellRecovery]);
-        reader.Write("Buff-" + i.ToString(), "BuffAttack", Stats[Stat.AttackBonus]);
+        reader.Write("Buff-" + i.ToString(), "BuffPVPAttack", Stats[Stat.PVPDamage]);
+        reader.Write("Buff-" + i.ToString(), "BuffPVEAttack", Stats[Stat.PVEDamage]);
         reader.Write("Buff-" + i.ToString(), "BuffDropRate", Stats[Stat.ItemDropRatePercent]);
         reader.Write("Buff-" + i.ToString(), "BuffGoldRate", Stats[Stat.GoldDropRatePercent]);
     }
@@ -187,7 +176,7 @@ public class GuildBuffInfo
     {
         writer.Write(Id);
         writer.Write(Icon);
-        writer.Write(Name);
+        writer.Write(name);
         writer.Write(LevelRequirement);
         writer.Write(PointsRequirement);
         writer.Write(TimeLimit);
@@ -198,7 +187,7 @@ public class GuildBuffInfo
 
     public override string ToString()
     {
-        return string.Format("{0}: {1}", Id, Name);
+        return string.Format("{0}: {1}", Id, name);
     }
 
     public string ShowStats()

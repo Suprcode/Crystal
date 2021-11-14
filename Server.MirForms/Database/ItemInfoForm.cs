@@ -41,6 +41,11 @@ namespace Server
             ITypeFilterComboBox.Items.Add(new ComboBoxItem { Text = "All" });
             ITypeFilterComboBox.SelectedIndex = ITypeFilterComboBox.Items.Count - 1;
 
+            for (int i = 1; i <= 5; i++)
+            {
+                LvlSysComboBox.Items.Add(i);
+            }
+
             UpdateInterface();
         }
 
@@ -61,10 +66,10 @@ namespace Server
                 SkillcheckBox.Text = "Stone";
                 NoDuraLosscheckBox.Text = "Torch";
                 PickaxecheckBox.Text = "Unused";
-                label50.Text = "Base rate%";
-                label52.Text = "Success drop";
-                label51.Text = "Max stats (all)";
-                label49.Text = "Max gem stat";
+                //label50.Text = "Base rate%";
+                //label52.Text = "Success drop";
+                //label51.Text = "Max stats (all)";
+                //label49.Text = "Max gem stat";
                 BlinkcheckBox.Text = "Unsure?";
             }
             else
@@ -82,12 +87,17 @@ namespace Server
                 SkillcheckBox.Text = "Skill necklace";
                 NoDuraLosscheckBox.Text = "No dura loss";
                 PickaxecheckBox.Text = "Pickaxe";
-                label50.Text = "Critical rate:";
-                label52.Text = "Reflect:";
-                label51.Text = "Critical Dmg:";
-                label49.Text = "HP Drain:";
+                //label50.Text = "Critical rate:";
+                //label52.Text = "Reflect:";
+                //label51.Text = "Critical Dmg:";
+                //label49.Text = "HP Drain:";
                 BlinkcheckBox.Text = "Blink";
             }
+        }
+
+        private void txtItemSearch_TextChanged(object sender, EventArgs e)
+        {
+            UpdateInterface(true);
         }
 
         public void UpdateInterface(bool refreshList = false)
@@ -98,10 +108,13 @@ namespace Server
 
                 for (int i = 0; i < Envir.ItemInfoList.Count; i++)
                 {
-                    if (ITypeFilterComboBox.SelectedItem == null ||
-                        ITypeFilterComboBox.SelectedIndex == ITypeFilterComboBox.Items.Count - 1 ||
-                        Envir.ItemInfoList[i].Type == (ItemType)ITypeFilterComboBox.SelectedItem)
+                    if ((ITypeFilterComboBox.SelectedItem == null ||
+                        (ITypeFilterComboBox.SelectedIndex == ITypeFilterComboBox.Items.Count - 1 ||
+                        Envir.ItemInfoList[i].Type == (ItemType)ITypeFilterComboBox.SelectedItem))
+                        && (string.IsNullOrWhiteSpace(txtItemSearch.Text) || Envir.ItemInfoList[i].Name.IndexOf(txtItemSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0))
+                    {
                         ItemInfoListBox.Items.Add(Envir.ItemInfoList[i]);
+                    }
                 }
             }
 
@@ -129,6 +142,12 @@ namespace Server
                 RGenderComboBox.SelectedItem = null;            
                 LightTextBox.Text = string.Empty;
                 LightIntensitytextBox.Text = string.Empty;
+
+                LvlSysComboBox.SelectedItem = null;
+                baseratetextBox4.Text = string.Empty;
+                baseratedroptextBox2.Text = string.Empty;
+                maxstatstextBox3.Text = string.Empty;
+                maxgemstattextBox1.Text = string.Empty;
 
                 MinACTextBox.Text = string.Empty;
                 MaxACTextBox.Text = string.Empty;
@@ -212,6 +231,63 @@ namespace Server
 
             ItemInfoPanel.Enabled = true;
 
+            ItemGlowBox.Text = info.ItemGlow.ToString();
+            baseratetextBox4.Text = info.BaseRate.ToString();
+            baseratedroptextBox2.Text = info.BaseRateDrop.ToString();
+            maxstatstextBox3.Text = info.MaxStats.ToString();
+            maxgemstattextBox1.Text = info.MaxGemStat.ToString();
+
+            LvlSysComboBox.SelectedItem = LvlSysComboBox.Items[0];
+            EnableLvlSysBox.Checked = info.AllowLvlSys;
+            RandomStatsBox.Checked = info.AllowRandomStats;
+            ExpBox1.Text = info.LvlSysExp[0].ToString();
+            ExpBox2.Text = info.LvlSysExp[1].ToString();
+            ExpBox3.Text = info.LvlSysExp[2].ToString();
+            ExpBox4.Text = info.LvlSysExp[3].ToString();
+            ExpBox5.Text = info.LvlSysExp[4].ToString();
+            ExpBox6.Text = info.LvlSysExp[5].ToString();
+            ExpBox7.Text = info.LvlSysExp[6].ToString();
+            ExpBox8.Text = info.LvlSysExp[7].ToString();
+            ExpBox9.Text = info.LvlSysExp[8].ToString();
+            ExpBox10.Text = info.LvlSysExp[9].ToString();
+            lvlsysMaxAC.Text = info.LvlSysMaxAC[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMaxMAC.Text = info.LvlSysMaxMAC[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMaxSC.Text = info.LvlSysMaxSC[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMaxMC.Text = info.LvlSysMaxMC[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMaxDC.Text = info.LvlSysMaxDC[LvlSysComboBox.SelectedIndex].ToString();
+            /*
+            lvlsysAccuracy.Text = info.LvlSysAccuracy[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysAgility.Text = info.LvlSysAgility[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysHP.Text = info.LvlSysHP[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMP.Text = info.LvlSysMP[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysPoisonRecovery.Text = info.LvlSysPoisonRecovery[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysPoisonAttack.Text = info.LvlSysPoisonAttack[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysPoisonResist.Text = info.LvlSysPoisonResist[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMagicResist.Text = info.LvlSysMagicResist[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysFreezing.Text = info.LvlSysFreezing[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysLuck.Text = info.LvlSysLuck[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysHealthRecovery.Text = info.LvlSysHealthRecovery[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysSpellRecovery.Text = info.LvlSysSpellRecovery[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysReflect.Text = info.LvlSysReflect[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysAttackSpeed.Text = info.LvlSysAttackSpeed[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysAttackSpeedRatePercent.Text = info.LvlSysAttackSpeedRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysHPRatePercent.Text = info.LvlSysHPRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMPRatePercent.Text = info.LvlSysMPRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMaxACRatePercent.Text = info.LvlSysMaxACRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMaxMACRatePercent.Text = info.LvlSysMaxMACRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMaxDCRatePercent.Text = info.LvlSysMaxDCRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMaxMCRatePercent.Text = info.LvlSysMaxMCRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMaxSCRatePercent.Text = info.LvlSysMaxSCRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysGoldDropRatePercent.Text = info.LvlSysGoldDropRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysExpRatePercent.Text = info.LvlSysExpRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysItemDropRatePercent.Text = info.LvlSysItemDropRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysPVEDamage.Text = info.LvlSysPVEDamage[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysPVPDamage.Text = info.LvlSysPVPDamage[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysCriticalDamage.Text = info.LvlSysCriticalDamage[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysCriticalRate.Text = info.LvlSysCriticalRate[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysDamageReductionPercent.Text = info.LvlSysDamageReductionPercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysSkillGainMultiplier.Text = info.LvlSysSkillGainMultiplier[LvlSysComboBox.SelectedIndex].ToString();
+            */
             ItemIndexTextBox.Text = info.Index.ToString();
             ItemNameTextBox.Text = info.Name;
             WeightTextBox.Text = info.Weight.ToString();
@@ -319,6 +395,23 @@ namespace Server
             for (int i = 1; i < _selectedItemInfos.Count; i++)
             {
                 info = _selectedItemInfos[i];
+
+                if (ItemGlowBox.Text != info.ItemGlow.ToString()) ItemGlowBox.Text = string.Empty;
+                if (baseratetextBox4.Text != info.BaseRate.ToString()) baseratetextBox4.Text = string.Empty;
+                if (baseratedroptextBox2.Text != info.BaseRateDrop.ToString()) baseratedroptextBox2.Text = string.Empty;
+                if (maxstatstextBox3.Text != info.MaxStats.ToString()) maxstatstextBox3.Text = string.Empty;
+                if (maxgemstattextBox1.Text != info.MaxGemStat.ToString()) maxgemstattextBox1.Text = string.Empty;
+
+                if (ExpBox1.Text != info.LvlSysExp[0].ToString()) ExpBox1.Text = string.Empty;
+                if (ExpBox2.Text != info.LvlSysExp[1].ToString()) ExpBox2.Text = string.Empty;
+                if (ExpBox3.Text != info.LvlSysExp[2].ToString()) ExpBox3.Text = string.Empty;
+                if (ExpBox4.Text != info.LvlSysExp[3].ToString()) ExpBox4.Text = string.Empty;
+                if (ExpBox5.Text != info.LvlSysExp[4].ToString()) ExpBox5.Text = string.Empty;
+                if (ExpBox6.Text != info.LvlSysExp[5].ToString()) ExpBox6.Text = string.Empty;
+                if (ExpBox7.Text != info.LvlSysExp[6].ToString()) ExpBox7.Text = string.Empty;
+                if (ExpBox8.Text != info.LvlSysExp[7].ToString()) ExpBox8.Text = string.Empty;
+                if (ExpBox9.Text != info.LvlSysExp[8].ToString()) ExpBox9.Text = string.Empty;
+                if (ExpBox10.Text != info.LvlSysExp[9].ToString()) ExpBox10.Text = string.Empty;
 
                 if (ItemIndexTextBox.Text != info.Index.ToString()) ItemIndexTextBox.Text = string.Empty;
                 if (ItemNameTextBox.Text != info.Name) ItemNameTextBox.Text = string.Empty;
@@ -429,6 +522,858 @@ namespace Server
             RefreshUniqueTab();
         }
 
+        private void UpdateLvlSys()
+        {
+            if (_selectedItemInfos.Count == 0) return;
+
+            ItemInfo info = _selectedItemInfos[0];
+
+            lvlsysMaxAC.Text = info.LvlSysMaxAC[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMaxMAC.Text = info.LvlSysMaxMAC[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMaxSC.Text = info.LvlSysMaxSC[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMaxMC.Text = info.LvlSysMaxMC[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMaxDC.Text = info.LvlSysMaxDC[LvlSysComboBox.SelectedIndex].ToString();
+            /*
+            lvlsysAccuracy.Text = info.LvlSysAccuracy[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysAgility.Text = info.LvlSysAgility[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysHP.Text = info.LvlSysHP[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMP.Text = info.LvlSysMP[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysPoisonRecovery.Text = info.LvlSysPoisonRecovery[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysPoisonAttack.Text = info.LvlSysPoisonAttack[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysPoisonResist.Text = info.LvlSysPoisonResist[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMagicResist.Text = info.LvlSysMagicResist[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysFreezing.Text = info.LvlSysFreezing[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysLuck.Text = info.LvlSysLuck[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysHealthRecovery.Text = info.LvlSysHealthRecovery[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysSpellRecovery.Text = info.LvlSysSpellRecovery[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysReflect.Text = info.LvlSysReflect[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysAttackSpeed.Text = info.LvlSysAttackSpeed[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysAttackSpeedRatePercent.Text = info.LvlSysAttackSpeedRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysHPRatePercent.Text = info.LvlSysHPRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMPRatePercent.Text = info.LvlSysMPRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMaxACRatePercent.Text = info.LvlSysMaxACRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMaxMACRatePercent.Text = info.LvlSysMaxMACRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMaxDCRatePercent.Text = info.LvlSysMaxDCRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMaxMCRatePercent.Text = info.LvlSysMaxMCRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysMaxSCRatePercent.Text = info.LvlSysMaxSCRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysGoldDropRatePercent.Text = info.LvlSysGoldDropRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysExpRatePercent.Text = info.LvlSysExpRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysItemDropRatePercent.Text = info.LvlSysItemDropRatePercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysPVEDamage.Text = info.LvlSysPVEDamage[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysPVPDamage.Text = info.LvlSysPVPDamage[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysCriticalDamage.Text = info.LvlSysCriticalDamage[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysCriticalRate.Text = info.LvlSysCriticalRate[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysDamageReductionPercent.Text = info.LvlSysDamageReductionPercent[LvlSysComboBox.SelectedIndex].ToString();
+            lvlsysSkillGainMultiplier.Text = info.LvlSysSkillGainMultiplier[LvlSysComboBox.SelectedIndex].ToString();
+            */
+        }
+
+
+        private void ItemGlowBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!byte.TryParse(ActiveControl.Text, out byte temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].ItemGlow = temp;
+        }
+        private void RandomStatsBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].AllowRandomStats = RandomStatsBox.Checked;
+        }
+        private void EnableLvlSysBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].AllowLvlSys = EnableLvlSysBox.Checked;
+        }
+        private void LvlSysComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateLvlSys();
+        }
+
+        private void ExpBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysExp[0] = temp;
+        }
+
+        private void ExpBox2_TextChanged(object sender, EventArgs e)
+        {
+            {
+                if (ActiveControl != sender) return;
+
+
+                if (!int.TryParse(ActiveControl.Text, out int temp))
+                {
+                    ActiveControl.BackColor = Color.Red;
+                    return;
+                }
+                ActiveControl.BackColor = SystemColors.Window;
+
+
+                for (int i = 0; i < _selectedItemInfos.Count; i++)
+                    _selectedItemInfos[i].LvlSysExp[1] = temp;
+            }
+        }
+
+        private void ExpBox3_TextChanged(object sender, EventArgs e)
+        {
+            {
+                if (ActiveControl != sender) return;
+
+
+                if (!int.TryParse(ActiveControl.Text, out int temp))
+                {
+                    ActiveControl.BackColor = Color.Red;
+                    return;
+                }
+                ActiveControl.BackColor = SystemColors.Window;
+
+
+                for (int i = 0; i < _selectedItemInfos.Count; i++)
+                    _selectedItemInfos[i].LvlSysExp[2] = temp;
+            }
+        }
+
+        private void ExpBox4_TextChanged(object sender, EventArgs e)
+        {
+            {
+                if (ActiveControl != sender) return;
+
+
+                if (!int.TryParse(ActiveControl.Text, out int temp))
+                {
+                    ActiveControl.BackColor = Color.Red;
+                    return;
+                }
+                ActiveControl.BackColor = SystemColors.Window;
+
+
+                for (int i = 0; i < _selectedItemInfos.Count; i++)
+                    _selectedItemInfos[i].LvlSysExp[3] = temp;
+            }
+        }
+
+        private void ExpBox5_TextChanged(object sender, EventArgs e)
+        {
+            {
+                if (ActiveControl != sender) return;
+
+
+                if (!int.TryParse(ActiveControl.Text, out int temp))
+                {
+                    ActiveControl.BackColor = Color.Red;
+                    return;
+                }
+                ActiveControl.BackColor = SystemColors.Window;
+
+
+                for (int i = 0; i < _selectedItemInfos.Count; i++)
+                    _selectedItemInfos[i].LvlSysExp[4] = temp;
+            }
+        }
+
+        private void ExpBox6_TextChanged(object sender, EventArgs e)
+        {
+            {
+                if (ActiveControl != sender) return;
+
+
+                if (!int.TryParse(ActiveControl.Text, out int temp))
+                {
+                    ActiveControl.BackColor = Color.Red;
+                    return;
+                }
+                ActiveControl.BackColor = SystemColors.Window;
+
+
+                for (int i = 0; i < _selectedItemInfos.Count; i++)
+                    _selectedItemInfos[i].LvlSysExp[5] = temp;
+            }
+        }
+
+        private void ExpBox7_TextChanged(object sender, EventArgs e)
+        {
+            {
+                if (ActiveControl != sender) return;
+
+
+                if (!int.TryParse(ActiveControl.Text, out int temp))
+                {
+                    ActiveControl.BackColor = Color.Red;
+                    return;
+                }
+                ActiveControl.BackColor = SystemColors.Window;
+
+
+                for (int i = 0; i < _selectedItemInfos.Count; i++)
+                    _selectedItemInfos[i].LvlSysExp[6] = temp;
+            }
+        }
+
+        private void ExpBox8_TextChanged(object sender, EventArgs e)
+        {
+            {
+                if (ActiveControl != sender) return;
+
+
+                if (!int.TryParse(ActiveControl.Text, out int temp))
+                {
+                    ActiveControl.BackColor = Color.Red;
+                    return;
+                }
+                ActiveControl.BackColor = SystemColors.Window;
+
+
+                for (int i = 0; i < _selectedItemInfos.Count; i++)
+                    _selectedItemInfos[i].LvlSysExp[7] = temp;
+            }
+        }
+
+        private void ExpBox9_TextChanged(object sender, EventArgs e)
+        {
+            {
+                if (ActiveControl != sender) return;
+
+
+                if (!int.TryParse(ActiveControl.Text, out int temp))
+                {
+                    ActiveControl.BackColor = Color.Red;
+                    return;
+                }
+                ActiveControl.BackColor = SystemColors.Window;
+
+
+                for (int i = 0; i < _selectedItemInfos.Count; i++)
+                    _selectedItemInfos[i].LvlSysExp[8] = temp;
+            }
+        }
+
+        private void ExpBox10_TextChanged(object sender, EventArgs e)
+        {
+            {
+                if (ActiveControl != sender) return;
+
+
+                if (!int.TryParse(ActiveControl.Text, out int temp))
+                {
+                    ActiveControl.BackColor = Color.Red;
+                    return;
+                }
+                ActiveControl.BackColor = SystemColors.Window;
+
+
+                for (int i = 0; i < _selectedItemInfos.Count; i++)
+                    _selectedItemInfos[i].LvlSysExp[9] = temp;
+            }
+        }
+
+        private void lvlsysMaxAC_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysMaxAC[LvlSysComboBox.SelectedIndex] = temp;
+        }
+
+        private void lvlsysMaxMAC_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysMaxMAC[LvlSysComboBox.SelectedIndex] = temp;
+        }
+
+        private void lvlsysMaxDC_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysMaxDC[LvlSysComboBox.SelectedIndex] = temp;
+        }
+
+        private void lvlsysMaxMC_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysMaxMC[LvlSysComboBox.SelectedIndex] = temp;
+        }
+
+        private void lvlsysMaxSC_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysMaxSC[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        /*
+        private void lvlsysAccuracy_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysAccuracy[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysAgility_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysAgility[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysHP_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysHP[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysMP_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysMP[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysPoisonRecovery_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysPoisonRecovery[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysPoisonAttack_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysPoisonAttack[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysPoisonResist_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysPoisonResist[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysMagicResist_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysMagicResist[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysFreezing_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysFreezing[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysLuck_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysLuck[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysHealthRecovery_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysHealthRecovery[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysSpellRecovery_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysSpellRecovery[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysReflect_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysReflect[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysAttackSpeed_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysAttackSpeed[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysAttackSpeedRatePercent_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysAttackSpeedRatePercent[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysHPRatePercent_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysHPRatePercent[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysMPRatePercent_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysMPRatePercent[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysMaxACRatePercent_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysMaxACRatePercent[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysMaxMACRatePercent_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysMaxMACRatePercent[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysMaxDCRatePercent_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysMaxDCRatePercent[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysMaxMCRatePercent_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysMaxMCRatePercent[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysMaxSCRatePercent_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysMaxSCRatePercent[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysGoldDropRatePercent_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysGoldDropRatePercent[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysExpRatePercent_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysExpRatePercent[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysItemDropRatePercent_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysItemDropRatePercent[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysPVEDamage_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysPVEDamage[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysPVPDamage_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysPVPDamage[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysCriticalDamage_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysCriticalDamage[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysCriticalRate_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysCriticalRate[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysDamageReductionPercent_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysDamageReductionPercent[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        private void lvlsysSkillGainMultiplier_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].LvlSysSkillGainMultiplier[LvlSysComboBox.SelectedIndex] = temp;
+        }
+        */
         private void RefreshItemList()
         {
             ItemInfoListBox.SelectedIndexChanged -= ItemInfoListBox_SelectedIndexChanged;
@@ -604,7 +1549,7 @@ namespace Server
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp > 999)
+            if (!ushort.TryParse(ActiveControl.Text, out temp)/* || temp > 999*/)
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -636,9 +1581,9 @@ namespace Server
         {
             if (ActiveControl != sender) return;
 
-            byte temp;
+            ushort temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -674,9 +1619,9 @@ namespace Server
         {
             if (ActiveControl != sender) return;
 
-            byte temp;
+            ushort temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -691,9 +1636,9 @@ namespace Server
         {
             if (ActiveControl != sender) return;
 
-            byte temp;
+            ushort temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -708,9 +1653,9 @@ namespace Server
         {
             if (ActiveControl != sender) return;
 
-            byte temp;
+            ushort temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -726,9 +1671,9 @@ namespace Server
 
             if (ActiveControl != sender) return;
 
-            byte temp;
+            ushort temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -744,9 +1689,9 @@ namespace Server
 
             if (ActiveControl != sender) return;
 
-            byte temp;
+            ushort temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -762,9 +1707,9 @@ namespace Server
 
             if (ActiveControl != sender) return;
 
-            byte temp;
+            ushort temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -780,9 +1725,9 @@ namespace Server
 
             if (ActiveControl != sender) return;
 
-            byte temp;
+            ushort temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -798,9 +1743,9 @@ namespace Server
 
             if (ActiveControl != sender) return;
 
-            byte temp;
+            ushort temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -816,9 +1761,9 @@ namespace Server
 
             if (ActiveControl != sender) return;
 
-            byte temp;
+            ushort temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -834,9 +1779,9 @@ namespace Server
 
             if (ActiveControl != sender) return;
 
-            byte temp;
+            ushort temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -941,9 +1886,9 @@ namespace Server
 
             if (ActiveControl != sender) return;
 
-            sbyte temp;
+            ushort temp;
 
-            if (!sbyte.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -1065,56 +2010,56 @@ namespace Server
 
         private void ExportAllButton_Click(object sender, EventArgs e)
         {
-            //ExportItems(Envir.ItemInfoList);
+            ExportItems(Envir.ItemInfoList);
         }
 
         private void ExportSelectedButton_Click(object sender, EventArgs e)
         {
-            //var list = ItemInfoListBox.SelectedItems.Cast<ItemInfo>().ToList();
+            var list = ItemInfoListBox.SelectedItems.Cast<ItemInfo>().ToList();
 
-            //ExportItems(list);
+            ExportItems(list);
         }
 
         private void ExportItems(IEnumerable<ItemInfo> items)
         {
-            //var itemInfos = items as ItemInfo[] ?? items.ToArray();
-            //var list = itemInfos.Select(item => item.ToText()).ToList();
+            var itemInfos = items as ItemInfo[] ?? items.ToArray();
+            var list = itemInfos.Select(item => item.ToText()).ToList();
 
-            //File.WriteAllLines(ItemListPath, list);
+            File.WriteAllLines(ItemListPath, list);
 
-            //MessageBox.Show(itemInfos.Count() + " Items have been exported");
+            MessageBox.Show(itemInfos.Count() + " Items have been exported");
         }
 
         private void ImportButton_Click(object sender, EventArgs e)
         {
-            //string Path = string.Empty;
+            string Path = string.Empty;
 
-            //OpenFileDialog ofd = new OpenFileDialog();
-            //ofd.Filter = "Text File|*.txt";
-            //ofd.ShowDialog();
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Text File|*.txt";
+            ofd.ShowDialog();
 
-            //if (ofd.FileName == string.Empty) return;
+            if (ofd.FileName == string.Empty) return;
 
-            //Path = ofd.FileName;
+            Path = ofd.FileName;
 
-            //string data;
-            //using (var sr = new StreamReader(Path))
-            //{
-            //    data = sr.ReadToEnd();
-            //}
+            string data;
+            using (var sr = new StreamReader(Path))
+            {
+                data = sr.ReadToEnd();
+            }
 
-            //var items = data.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            var items = data.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
-            //var count = 0;
-            //foreach (var info in items.Select(ItemInfo.FromText).Where(info => info != null))
-            //{
-            //    count++;
-            //    info.Index = ++Envir.ItemIndex;
-            //    Envir.ItemInfoList.Add(info);
-            //}
+            var count = 0;
+            foreach (var info in items.Select(ItemInfo.FromText).Where(info => info != null))
+            {
+                count++;
+                info.Index = ++Envir.ItemIndex;
+                Envir.ItemInfoList.Add(info);
+            }
 
-            //MessageBox.Show(count + " Items have been imported");
-            //UpdateInterface(true);
+            MessageBox.Show(count + " Items have been imported");
+            UpdateInterface(true);
         }
 
         private void ISetComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -1813,6 +2758,86 @@ namespace Server
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
                 _selectedItemInfos[i].Slots = temp;
+        }
+
+        private void label51_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        #region Gem Stat Boxes
+        private void baseratetextBox4_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!byte.TryParse(ActiveControl.Text, out byte temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].BaseRate = temp;
+        }
+
+        private void baseratedroptextBox2_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!byte.TryParse(ActiveControl.Text, out byte temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].BaseRateDrop = temp;
+        }
+
+        private void maxstatstextBox3_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!byte.TryParse(ActiveControl.Text, out byte temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].MaxStats = temp;
+        }
+
+        private void maxgemstattextBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!byte.TryParse(ActiveControl.Text, out byte temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].MaxGemStat = temp;
+        }
+        #endregion
+
+        private void tabPage2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 public enum MouseCursor : byte
 {
@@ -126,7 +127,8 @@ public enum QuestType : byte
     General = 0,
     Daily = 1,
     Repeatable = 2,
-    Story = 3
+    Story = 3,
+    Weekly = 4
 }
 
 public enum QuestIcon : byte
@@ -147,9 +149,10 @@ public enum QuestState : byte
     Update,
     Remove
 }
-
 public enum QuestAction : byte
 {
+    Taken,
+    Complete,
     TimeExpired
 }
 
@@ -157,15 +160,19 @@ public enum DefaultNPCType : byte
 {
     Login,
     LevelUp,
+    RebornUp,
+    InstanceStageUp,
+    ChallengeStageUp,
     UseItem,
     MapCoord,
     MapEnter,
     Die,
-    Trigger,
+    WorldMap,
     CustomCommand,
     OnAcceptQuest,
     OnFinishQuest,
     Daily,
+    Weekly,
     Client
 }
 
@@ -271,8 +278,8 @@ public enum Monster : ushort
     KingHog = 76,
     DarkDevil = 77,
     BoneFamiliar = 78,
-    Shinsu = 79,
-    Shinsu1 = 80,
+    Shinsu10 = 79,
+    Shinsu11 = 80,
     SpiderFrog = 81,
     HoroBlaster = 82,
     BlueHoroBlaster = 83,
@@ -619,6 +626,7 @@ public enum Monster : ushort
     ShardMaiden = 421,
     KingKong = 422,
     WarBear = 423,
+
     ReaperPriest = 424,
     ReaperWizard = 425,
     ReaperAssassin = 426,
@@ -660,6 +668,159 @@ public enum Monster : ushort
     MutantWarg = 461,
     GrassElemental = 462,
     RockElemental = 463,
+
+    FighterPig = 464,
+    MutantRat = 465,
+    FlyingRat = 466,
+    ArmouredLizard = 467,
+    StonedDragon = 468,
+    DeadSpirits = 469,
+    BigYellowBox = 470,
+    FireLancerMachine = 471,
+    LancerGuardNew = 472,
+    ArcherGuardNew = 473,
+    FighterMan = 474,
+    AssassinWoman = 475,
+    ArmouredSkeleton = 476,
+    UnarmouredSkeleton = 477,
+    FighterPhantom = 478,
+    FighterWoman = 479,
+    Human1 = 480,
+    Human2 = 481,
+    Human3 = 482,
+    Human4 = 483,
+    Human5 = 484,
+    FloatingWizard = 485,
+    HumanQueen = 486,
+    HumanKing = 487,
+    MirLegend = 488,
+
+    //OrcMobs
+    OrcDagger = 489,
+    OrcMiner = 490,
+    OrcSpearthrower = 491,
+    OrcWarrior = 492,
+    OrcWithAnimal = 493,
+    OrcRider = 494,
+    OrcWizard = 495,
+    OrcCook = 496,
+    OrcMace = 497,
+    OrcCommander = 498, //SubBoss
+    OrcMutant = 499, //Boss
+    //OrcGeneral = 500, //Boss
+    
+    Emperor = 500, //SubBoss
+    Taganda = 501, //SubBoss
+    NumaMage = 502,
+    NumaAxemen = 503,
+    NumaFighter = 504,
+    NumaRider = 505,
+    NumaClubber = 506,
+    NumaBladesmen = 507,
+    NumaMacemen = 508,
+
+    WarriorRider = 509,
+    SwordMan = 510,
+    BladeFighter = 511,
+    DemonHook = 512,
+    TormentedDemon = 513,
+    RedSwordsMan = 514,
+    ClawedDemon = 515,
+    ClawLord = 516, //SubBoss
+    RiderKing = 517, //Boss
+
+    MutantDino = 518,
+    WalkingDemon = 519,
+    Demon = 520,
+    HungryDemon = 521,
+    MutantDemon = 522,
+    SpikeSlinger = 523,
+    DemonLord = 524, //SubBoss
+    DemonKing = 525, //Boss
+
+    AngelFighter = 526,
+    WhiteAngel = 527,
+    RedAngel = 528,
+    GreenAngel = 529,
+    MagicalLord = 530, //SubBoss
+    AngelQueen = 531, //Boss
+
+    YellowLizard = 532,
+    BlackLizard = 533,
+    GreenLizard = 534,
+    OrangeLizard = 535,
+    RedLizard = 536,
+    QueenGuard = 537, //SubBoss
+    LizardQueen = 538, //Boss
+
+    SunkenBigRat = 539,
+    SunkenArcher = 540,
+    SunkenFighter = 541,
+    SunkenWarrior = 542,
+    SunkenBlackBoar = 543,
+    SunkenRedBoar = 544,
+    SunkenLord = 545, //SubBoss
+    SunkenKing = 546, //Boss
+
+    KnightFighter22 = 547,
+    KnightFighter23 = 548,
+    KnightFighter24 = 549,
+    KnightFighter25 = 550,
+    KnightFighter26 = 551,
+    BlackKnight = 552,
+    RedKnight = 553,
+    KnightLord = 554, //SubBoss
+    KnightKing = 555, //Boss
+
+    BlackRider = 556, //Boss
+    WitchMaster = 557, //Boss
+    BearLord = 558, //Boss
+    LavaKing = 559, //Boss
+    RedDragon = 560, //Boss
+    RatLord = 561, //Boss
+    ScorpionKing = 562, //Boss
+    HellDemon = 563, //Boss
+    Pheonix = 564, //Boss
+    AcidMorph = 565, //Boss
+    BlueOctopus = 566, //Boss
+    OrangeDragon = 567, //Boss
+    BirdLord = 568, //Boss
+
+    Devil = 569, //Boss
+    HellDog = 570,
+    HellGateKeeper = 571, //Boss
+    HellGuardian66 = 572,
+    HellGuardian67 = 573,
+    HellGuardian68 = 574,
+    Onyxia = 575, //Boss
+    OnyxiaServant66 = 576,
+    OnyxiaServant67 = 577,
+    Paraoh = 578, //Boss
+    ParaohArcher = 579,
+    ParaohGuard66 = 580,
+    ParaohGuard67 = 581,
+    Rage = 582, //Boss
+    Servant66 = 583,
+    Servant67 = 584,
+    WhiseOldMan = 585, //Boss
+    MirKing = 586, //Boss
+
+    EnragedStalker = 587, //Boss
+    Gaia = 588, //Boss
+
+    BoneFamiliar0 = 800,
+    BoneFamiliar1 = 801,
+    BoneFamiliar2 = 802,
+    BoneFamiliar3 = 803,
+
+    Shinsu0 = 810,
+    Shinsu1 = 811,
+    Shinsu2 = 812,
+    Shinsu3 = 813,
+    Shinsu4 = 814,
+    Shinsu5 = 815,
+    Shinsu6 = 816,
+    Shinsu7 = 817,
 
     EvilMir = 900,
     EvilMirBody = 901,
@@ -703,6 +864,14 @@ public enum Monster : ushort
 
 public enum MirAction : byte
 {
+    FlyingThrust,
+
+    PheonixExplosion,
+    AlmightyPush,
+    FireExplode,
+
+    YinYangBurst,
+
     Standing,
     Walking,
     Running,
@@ -827,6 +996,11 @@ public enum ChatType : byte
     Shout2 = 14,
     Shout3 = 15,
     LineMessage = 16,
+    RebornUp = 17,
+    InstanceStageUp = 18,
+    ChallengeStageUp = 19,
+    Socket = 20,
+    Orb = 21,
 }
 
 public enum ItemType : byte
@@ -869,7 +1043,14 @@ public enum ItemType : byte
     Pets = 36,
     Transform = 37,
     Deco = 38,
-    Socket = 39
+    Socket = 39,
+    TaoPoison = 40,
+    Trophy = 41,
+    Trinket = 42,
+    Medal = 43,
+    Crystal = 44,
+    ShoulderPads = 45,
+    ItemParts = 46
 }
 
 public enum MirGridType : byte
@@ -912,7 +1093,13 @@ public enum EquipmentSlot : byte
     Belt = 10,
     Boots = 11,
     Stone = 12,
-    Mount = 13
+    Mount = 13,
+    TaoPoison = 14,
+    Trophy = 15,
+    Trinket = 16,
+    Medal = 17,
+    Crystal = 18,
+    ShoulderPads = 19
 }
 
 public enum MountSlot : byte
@@ -1042,6 +1229,10 @@ public enum RequiredType : byte
     MinDC = 9,
     MinMC = 10,
     MinSC = 11,
+    Reborn = 12,
+    Conquest = 13,
+    InstanceStage = 14,
+    ChallengeStage = 15,
 }
 
 public enum ItemSet : byte
@@ -1105,6 +1296,11 @@ public enum Spell : byte
     Fury = 16,
     ImmortalSkin = 17,
 
+    BladeStorm = 18,
+    IceSword = 19,
+    FlyingThrust = 20,
+    WhirlWind = 21,
+
     //Wizard
     FireBall = 31,
     Repulsion = 32,
@@ -1131,6 +1327,9 @@ public enum Spell : byte
     IceThrust = 53,
     FastMove = 54,
     StormEscape = 55,
+    PheonixExplosion = 56,
+    AlmightyPush = 57,
+    FireExplode = 58,
 
     //Taoist
     Healing = 61,
@@ -1158,6 +1357,9 @@ public enum Spell : byte
     EnergyShield = 84,
     PetEnhancer = 85,
     HealingCircle = 86,
+    YinYangBurst = 87,
+    SwordsOfLight = 88,
+    HeavenAndHell = 89,
 
     //Assassin
     FatalSword = 91,
@@ -1226,7 +1428,8 @@ public enum Spell : byte
     DarkOmaKingNuke = 215,
     HornedSorcererDustTornado = 216,
     HornedCommanderRockFall = 217,
-    HornedCommanderRockSpike = 218
+    HornedCommanderRockSpike = 218,
+    FireExplodeFW = 219
 }
 
 public enum SpellEffect : byte
@@ -1263,13 +1466,67 @@ public enum SpellEffect : byte
     KingGuard2,    
     DeathCrawlerBreath,
     FlamingMutantWeb,
-    Tester    
+    Tester,
+
+    MonsterThrusting,
+    MonsterHalfmoon,
+    MonsterCrossHalmoon,
+}
+
+public class HumansMonsterSettings
+{
+    public string HumansName = string.Empty;
+    public MirClass MobsClass;
+    public MirGender MobsGender;
+    public short Weapon, Armour;
+    public byte Wing, Hair, Light;
+
+    public HumansMonsterSettings() { }
+}
+public class BoardInfo
+{
+    public bool Notice;
+
+    public string Text, Name;
+
+    public DateTime Date;
+
+    public BoardInfo()
+    {
+        Notice = false;
+        Text = string.Empty;
+        Name = string.Empty;
+        Date = DateTime.Now;
+    }
+
+    public BoardInfo(BinaryReader reader)
+    {
+        Notice = reader.ReadBoolean();
+        Text = reader.ReadString();
+        Name = reader.ReadString();
+        Date = DateTime.FromBinary(reader.ReadInt64());
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Notice);
+        writer.Write(Text);
+        writer.Write(Name);
+        writer.Write(Date.ToBinary());
+    }
 }
 
 
-public enum BuffType : byte
+public enum BuffType : ushort
 {
     None = 0,
+
+    Blizzard,
+    MeteorStrike,
+    HeavenAndHell,
+    PoisonCloud,
+
+    CounterAttack,
 
     //Magics
     TemporalFlux,
@@ -1289,7 +1546,6 @@ public enum BuffType : byte
     Concentration,
     VampireShot,
     PoisonShot,
-    CounterAttack,
     MentalState,
     EnergyShield,
     MagicBooster,
@@ -1306,17 +1562,20 @@ public enum BuffType : byte
     PowerBeadBuff,
     HornedWarriorShield,
     HornedCommanderShield,
-    Blindness,
 
     //Special
     GameMaster = 100,
     General,
-    Exp,
+    ExpRatePercent,
+    ExpRate,
     Drop,
+
+    InfiniteBuff,
+
     Gold,
     BagWeight,
     Transform,
-    Lover,
+    RelationshipEXP,
     Mentee,
     Mentor,
     Guild,
@@ -1336,6 +1595,200 @@ public enum BuffType : byte
     MagicDefence,
     WonderDrug,
     Knapsack,
+
+    HPDrugSmall,
+    HPDrugMedium,
+    HPDrugLarge,
+    HPDrugXL,
+    HPSMegaDrug,
+    HPMMegaDrug,
+    HPLMegaDrug,
+    HPXLMegaDrug,
+    HPSUltraDrug,
+    HPMUltraDrug,
+    HPLUltraDrug,
+    HPXLUltraDrug,
+    HPXXLUltraDrug,
+    HPSSupremeDrug,
+    HPMSupremeDrug,
+    HPLSupremeDrug,
+    HPXLSupremeDrug,
+    HPXXLSupremeDrug,
+
+    MPDrugSmall,
+    MPDrugMedium,
+    MPDrugLarge,
+    MPDrugXL,
+    MPSMegaDrug,
+    MPMMegaDrug,
+    MPLMegaDrug,
+    MPXLMegaDrug,
+    MPSUltraDrug,
+    MPMUltraDrug,
+    MPLUltraDrug,
+    MPXLUltraDrug,
+    MPXXLUltraDrug,
+    MPSSupremeDrug,
+    MPMSupremeDrug,
+    MPLSupremeDrug,
+    MPXLSupremeDrug,
+    MPXXLSupremeDrug,
+
+    //Reborn Buff
+    Reborn1,
+    Reborn2,
+    Reborn3,
+    Reborn4,
+    Reborn5,
+    Reborn6,
+    Reborn7,
+    Reborn8,
+    Reborn9,
+    Reborn10,
+    Reborn11,
+    Reborn12,
+    Reborn13,
+    Reborn14,
+    Reborn15,
+    Reborn16,
+    Reborn17,
+    Reborn18,
+    Reborn19,
+    Reborn20,
+    Reborn21,
+    Reborn22,
+    Reborn23,
+    Reborn24,
+    Reborn25,
+    Reborn26,
+    Reborn27,
+    Reborn28,
+    Reborn29,
+    Reborn30,
+    Reborn31,
+    Reborn32,
+    Reborn33,
+    Reborn34,
+    Reborn35,
+    Reborn36,
+    Reborn37,
+    Reborn38,
+    Reborn39,
+    Reborn40,
+    Reborn41,
+    Reborn42,
+    Reborn43,
+    Reborn44,
+    Reborn45,
+    Reborn46,
+    Reborn47,
+    Reborn48,
+    Reborn49,
+    Reborn50,
+
+    //InstanceStage Buff
+    InstanceStage1,
+    InstanceStage2,
+    InstanceStage3,
+    InstanceStage4,
+    InstanceStage5,
+    InstanceStage6,
+    InstanceStage7,
+    InstanceStage8,
+    InstanceStage9,
+    InstanceStage10,
+    InstanceStage11,
+    InstanceStage12,
+    InstanceStage13,
+    InstanceStage14,
+    InstanceStage15,
+    InstanceStage16,
+    InstanceStage17,
+    InstanceStage18,
+    InstanceStage19,
+    InstanceStage20,
+    InstanceStage21,
+    InstanceStage22,
+    InstanceStage23,
+    InstanceStage24,
+    InstanceStage25,
+    InstanceStage26,
+    InstanceStage27,
+    InstanceStage28,
+    InstanceStage29,
+    InstanceStage30,
+    InstanceStage31,
+    InstanceStage32,
+    InstanceStage33,
+    InstanceStage34,
+    InstanceStage35,
+    InstanceStage36,
+    InstanceStage37,
+    InstanceStage38,
+    InstanceStage39,
+    InstanceStage40,
+    InstanceStage41,
+    InstanceStage42,
+    InstanceStage43,
+    InstanceStage44,
+    InstanceStage45,
+    InstanceStage46,
+    InstanceStage47,
+    InstanceStage48,
+    InstanceStage49,
+    InstanceStage50,
+
+    //ChallengeStage Buff
+    ChallengeStage1,
+    ChallengeStage2,
+    ChallengeStage3,
+    ChallengeStage4,
+    ChallengeStage5,
+    ChallengeStage6,
+    ChallengeStage7,
+    ChallengeStage8,
+    ChallengeStage9,
+    ChallengeStage10,
+    ChallengeStage11,
+    ChallengeStage12,
+    ChallengeStage13,
+    ChallengeStage14,
+    ChallengeStage15,
+    ChallengeStage16,
+    ChallengeStage17,
+    ChallengeStage18,
+    ChallengeStage19,
+    ChallengeStage20,
+    ChallengeStage21,
+    ChallengeStage22,
+    ChallengeStage23,
+    ChallengeStage24,
+    ChallengeStage25,
+    ChallengeStage26,
+    ChallengeStage27,
+    ChallengeStage28,
+    ChallengeStage29,
+    ChallengeStage30,
+    ChallengeStage31,
+    ChallengeStage32,
+    ChallengeStage33,
+    ChallengeStage34,
+    ChallengeStage35,
+    ChallengeStage36,
+    ChallengeStage37,
+    ChallengeStage38,
+    ChallengeStage39,
+    ChallengeStage40,
+    ChallengeStage41,
+    ChallengeStage42,
+    ChallengeStage43,
+    ChallengeStage44,
+    ChallengeStage45,
+    ChallengeStage46,
+    ChallengeStage47,
+    ChallengeStage48,
+    ChallengeStage49,
+    ChallengeStage50,
 }
 
 [Flags]
@@ -1355,6 +1808,7 @@ public enum BuffStackType : byte
     StackDuration,
     StackStat,
     StackStatAndDuration,
+    InfiniteGrowth,
     Infinite
 }
 
@@ -1371,6 +1825,7 @@ public enum DefenceType : byte
 
 public enum ServerPacketIds : short
 {
+    RefreshStats,
     Connected,
     ClientVersion,
     Disconnect,
@@ -1432,6 +1887,8 @@ public enum ServerPacketIds : short
     LoseGold,
     GainedCredit,
     LoseCredit,
+    GainedHuntPoints,
+    LoseHuntPoints,
     ObjectMonster,
     ObjectAttack,
     Struck,
@@ -1447,7 +1904,14 @@ public enum ServerPacketIds : short
     ObjectGuildNameChanged,
     GainExperience,
     LevelChanged,
+    RebornChanged,
+    InstanceStageChanged,
+    ChallengeStageChanged,
+    ConquestChanged,
     ObjectLeveled,
+    ObjectReborned,
+    ObjectInstanceStageed,
+    ObjectChallengeStageed,
     ObjectHarvest,
     ObjectHarvested,
     ObjectNpc,
@@ -1474,8 +1938,8 @@ public enum ServerPacketIds : short
     RepairItem,
     ItemRepaired,
     ItemSlotSizeChanged,
-    ItemSealChanged,
     NewMagic,
+    RefreshMagic,
     RemoveMagic,
     MagicLeveled,
     Magic,
@@ -1513,6 +1977,7 @@ public enum ServerPacketIds : short
     NPCConsign,
     NPCMarket,
     NPCMarketPage,
+    GuildTerritoryPage,
     ConsignItem,
     MarketFail,
     MarketSuccess,
@@ -1589,6 +2054,7 @@ public enum ServerPacketIds : short
     IntelligentCreatureEnableRename,
     IntelligentCreaturePickup,
     NPCPearlGoods,
+    NPCHuntGoods,
     TransformUpdate,
     FriendUpdate,
     LoverUpdate,
@@ -1615,10 +2081,17 @@ public enum ServerPacketIds : short
     OpenBrowser,
     PlaySound,
     SetTimer,
+    SetTimer2,
     ExpireTimer,
+    ExpireTimer2,
     UpdateNotice,
     Roll,
-    SetCompass
+    ItemGainLevel,
+
+    EEOpenGuildBoardDialog,
+
+    //ATTRIBUTES SYSTEM
+    UpdateAttributes
 }
 
 public enum ClientPacketIds : short
@@ -1656,6 +2129,7 @@ public enum ClientPacketIds : short
     DepositTradeItem,
     RetrieveTradeItem,
     DropGold,
+    DropHuntPoints,
     PickUp,
     Inspect,
     ChangeAMode,
@@ -1686,6 +2160,7 @@ public enum ClientPacketIds : short
     MarketBuy,
     MarketGetBack,
     MarketSellNow,
+    GuildTerritoryPage,
     RequestUserName,
     RequestChatItem,
     EditGuildMember,
@@ -1762,7 +2237,12 @@ public enum ClientPacketIds : short
     CancelItemRental,
     ItemRentalLockFee,
     ItemRentalLockItem,
-    ConfirmItemRental
+    ConfirmItemRental,
+
+    //ATTRIBUTES SYSTEM
+    AddAttribute,
+
+    AdjustGuildTax,
 }
 
 public enum ConquestType : byte

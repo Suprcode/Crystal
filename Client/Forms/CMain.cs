@@ -31,8 +31,8 @@ namespace Client
         public static Point MPoint;
 
         public readonly static Stopwatch Timer = Stopwatch.StartNew();
-        public readonly static DateTime StartTime = DateTime.UtcNow;
-        public static long Time;
+        public readonly static DateTime StartTime = DateTime.Now;
+        public static long Time, OldTime;
         public static DateTime Now { get { return StartTime.AddMilliseconds(Time); } }
         public static readonly Random Random = new Random();
 
@@ -257,10 +257,11 @@ namespace Client
                     Program.Form.ActiveControl = null;
             }
 
-            if (e.Button == MouseButtons.Right && (GameScene.SelectedCell != null || GameScene.PickedUpGold))
+            if (e.Button == MouseButtons.Right && (GameScene.SelectedCell != null || GameScene.PickedUpGold || GameScene.PickedUpHuntPoints))
             {
                 GameScene.SelectedCell = null;
                 GameScene.PickedUpGold = false;
+                GameScene.PickedUpHuntPoints = false;
                 return;
             }
 
@@ -377,8 +378,6 @@ namespace Client
             if (MirControl.MouseControl != null)
             {
                 text = string.Format("FPS: {0}", FPS);
-
-                text += string.Format(", Time: {0:HH:mm:ss UTC}", Now);
 
                 if (MirControl.MouseControl is MapControl)
                     text += string.Format(", Co Ords: {0}", MapControl.MapLocation);

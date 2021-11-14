@@ -60,14 +60,14 @@ namespace Server.MirObjects.Monsters
                     DigOutDirection = Direction;
                 }
             }
-
-            SpawnDigOutEffect();         
+            SpawnDigOutEffect();
 
             base.ProcessAI();
         }
 
         protected virtual void SpawnDigOutEffect()
         {
+
             if (Visible && Envir.Time > DigOutTime + 1000 && !DoneDigOut)
             {
                 SpellObject ob = new SpellObject

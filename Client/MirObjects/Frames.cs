@@ -31,6 +31,11 @@ namespace Client.MirObjects
                 { MirAction.Standing, new Frame(0, 4, 0, 500) },
                 { MirAction.Walking, new Frame(32, 6, 0, 100) },
                 { MirAction.Attack1, new Frame(80, 6, 0, 100) },
+                { MirAction.Attack2, new Frame(80, 6, 0, 100) },
+                { MirAction.Attack3, new Frame(80, 6, 0, 100) },
+                { MirAction.AttackRange1, new Frame(80, 6, 0, 100) },
+                { MirAction.AttackRange2, new Frame(80, 6, 0, 100) },
+                { MirAction.AttackRange3, new Frame(80, 6, 0, 100) },
                 { MirAction.Struck, new Frame(128, 2, 0, 200) },
                 { MirAction.Die, new Frame(144, 10, 0, 100) },
                 { MirAction.Dead, new Frame(153, 1, 9, 1000) },
@@ -177,6 +182,14 @@ namespace Client.MirObjects
             Player.Add(MirAction.Revive, new Frame(384, 4, 0, 100, 416, 4, 0, 100) { Reverse = true });
             Player.Add(MirAction.Mine, new Frame(184, 6, 0, 100, 216, 6, 0, 100));
             Player.Add(MirAction.Lunge, new Frame(139, 1, 5, 1000, 300, 1, 5, 1000));
+
+            Player.Add(MirAction.FlyingThrust, new Frame(2030, 8, 0, 50, 2070, 8, 0, 50));
+
+            Player.Add(MirAction.PheonixExplosion, new Frame(1820, 10, 0, 50, 1870, 10, 0, 50));
+            Player.Add(MirAction.AlmightyPush, new Frame(1700, 13, 0, 50, 1765, 13, 0, 50));
+            Player.Add(MirAction.FireExplode, new Frame(1700, 13, 0, 50, 1765, 13, 0, 50));
+
+            Player.Add(MirAction.YinYangBurst, new Frame(1920, 12, 0, 50, 1980, 12, 0, 50));
 
             //Assassin
             Player.Add(MirAction.Sneek, new Frame(464, 6, 0, 100, 496, 6, 0, 100));

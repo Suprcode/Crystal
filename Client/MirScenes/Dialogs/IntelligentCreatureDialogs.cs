@@ -736,7 +736,7 @@ namespace Client.MirScenes.Dialogs
             }
             else
             {
-                var seconds = (GameScene.User.IntelligentCreatures[selectedCreature].Expire - CMain.Now).TotalSeconds;
+                var seconds = (GameScene.User.IntelligentCreatures[selectedCreature].Expire - DateTime.Now).TotalSeconds;
 
                 CreatureDeadline.Text = string.Format(GameLanguage.Expire, Functions.PrintTimeSpanFromSeconds(seconds));
             }

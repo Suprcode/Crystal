@@ -35,9 +35,9 @@ namespace Server
             for (int i = 0; i < Envir.MonsterInfoList.Count; i++) MonsterInfoComboBox.Items.Add(Envir.MonsterInfoList[i]);
 
             ConquestComboBox.Items.Add(new ListItem("None", "0"));
-            for (int i = 0; i < Envir.ConquestInfoList.Count; i++) ConquestComboBox.Items.Add(Envir.ConquestInfoList[i]);
+            for (int i = 0; i < Envir.ConquestInfos.Count; i++) ConquestComboBox.Items.Add(Envir.ConquestInfos[i]);
 
-            UpdateInterface();
+            UpdateInterface(true);
         }
         private void MapInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -45,19 +45,26 @@ namespace Server
         }
 
 
-        private void UpdateInterface()
+        private void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+            UpdateInterface(true);
+        }
+        private void UpdateInterface(bool refreshList = false)
         {
             //Group<MapInfo> orderedMapInfoList = Envir.MapInfoList.OrderBy(m => m.Title).ToList();
 
-            if (MapInfoListBox.Items.Count != Envir.MapInfoList.Count)
+            if (refreshList)
             {
                 MapInfoListBox.Items.Clear();
                 DestMapComboBox.Items.Clear();
 
                 for (int i = 0; i < Envir.MapInfoList.Count; i++)
                 {
-                    MapInfoListBox.Items.Add(Envir.MapInfoList[i]);
-                    DestMapComboBox.Items.Add(Envir.MapInfoList[i]);
+                    if (string.IsNullOrWhiteSpace(txtSearch.Text) || Envir.MapInfoList[i].Title.IndexOf(txtSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        MapInfoListBox.Items.Add(Envir.MapInfoList[i]);
+                        DestMapComboBox.Items.Add(Envir.MapInfoList[i]);
+                    }
                 }
             }
 
@@ -97,6 +104,16 @@ namespace Server
                 LightningTextbox.Text = string.Empty;
                 MapDarkLighttextBox.Text = string.Empty;
                 //MineIndextextBox.Text = string.Empty;
+                NoPetsCheckbox.Checked = false;
+                noGroup.Checked = false;
+                GTBox.Checked = false;
+
+                FireWallCheckbox.Checked = false;
+                FireWallTextbox.Text = string.Empty;
+
+                RandomTeleportCheckbox.Checked = false;
+                RandomTeleportTextbox.Text = string.Empty;
+
                 return;
             }
 
@@ -134,12 +151,22 @@ namespace Server
             LightningCheckbox.Checked = mi.Lightning;
             LightningTextbox.Text = mi.LightningDamage.ToString();
             MapDarkLighttextBox.Text = mi.MapDarkLight.ToString();
+            GTBox.Checked = mi.GT;
 
             NoMountCheckbox.Checked = mi.NoMount;
             NeedBridleCheckbox.Checked = mi.NeedBridle;
             //MineIndextextBox.Text = mi.MineIndex.ToString();
             NoTownTeleportCheckbox.Checked = mi.NoTownTeleport;
             NoReincarnation.Checked = mi.NoReincarnation;
+            NoPetsCheckbox.Checked = mi.NoPets;
+            noGroup.Checked = mi.NoGroup;
+
+            FireWallCheckbox.Checked = mi.FireWall;
+            FireWallTextbox.Text = mi.FireWallCount.ToString();
+
+            RandomTeleportCheckbox.Checked = mi.RandomTeleport;
+            RandomTeleportTextbox.Text = mi.RandomTeleportCount.ToString();
+
             for (int i = 1; i < _selectedMapInfos.Count; i++)
             {
                 mi = _selectedMapInfos[i];
@@ -173,17 +200,98 @@ namespace Server
                 if (LightningCheckbox.Checked != mi.Lightning) LightningCheckbox.Checked = false;
                 if (LightningTextbox.Text != mi.LightningDamage.ToString()) LightningTextbox.Text = string.Empty;
                 if (MapDarkLighttextBox.Text != mi.MapDarkLight.ToString()) MapDarkLighttextBox.Text = string.Empty;
+                if (GTBox.Checked != mi.GT) GTBox.Checked = false;
 
                 if (NoMountCheckbox.Checked != mi.NoMount) NoMountCheckbox.Checked = false;
                 if (NeedBridleCheckbox.Checked != mi.NeedBridle) NeedBridleCheckbox.Checked = false;
                 if (NoTownTeleportCheckbox.Checked != mi.NoTownTeleport) NoTownTeleportCheckbox.Checked = false;
                 if (NoReincarnation.Checked != mi.NoReincarnation) NoReincarnation.Checked = false;
+                if (NoPetsCheckbox.Checked != mi.NoPets) NoPetsCheckbox.Checked = false;
+                if (noGroup.Checked != mi.NoGroup) noGroup.Checked = false;
+
+                if (FireWallCheckbox.Checked != mi.FireWall) FireWallCheckbox.Checked = false;
+                if (FireWallTextbox.Text != mi.FireWallCount.ToString()) FireWallTextbox.Text = string.Empty;
+
+                if (RandomTeleportCheckbox.Checked != mi.RandomTeleport) RandomTeleportCheckbox.Checked = false;
+                if (RandomTeleportTextbox.Text != mi.RandomTeleportCount.ToString()) RandomTeleportTextbox.Text = string.Empty;
             }
 
             UpdateSafeZoneInterface();
             UpdateRespawnInterface();
             UpdateMovementInterface();
             UpdateMineZoneInterface();
+        }
+
+        private void GTBox_CheckedChanged(object sender, EventArgs e)
+        {
+            {
+                if (ActiveControl != sender) return;
+
+                for (int i = 0; i < _selectedMapInfos.Count; i++)
+                    _selectedMapInfos[i].GT = GTBox.Checked;
+            }
+        }
+        private void FireWallCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+                _selectedMapInfos[i].FireWall = FireWallCheckbox.Checked;
+        }
+        private void FireWallTextbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+                _selectedMapInfos[i].FireWallCount = temp;
+        }
+        private void RandomTeleportCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+                _selectedMapInfos[i].RandomTeleport = RandomTeleportCheckbox.Checked;
+        }
+        private void RandomTeleportTextbox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+                _selectedMapInfos[i].RandomTeleportCount = temp;
+        }
+
+        private void noGroup_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+                _selectedMapInfos[i].NoGroup = noGroup.Checked;
+        }
+        private void NoPetsCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+                _selectedMapInfos[i].NoPets = NoPetsCheckbox.Checked;
         }
         private void UpdateSafeZoneInterface()
         {
@@ -420,7 +528,7 @@ namespace Server
             DestXTextBox.Text = info.Destination.X.ToString();
             DestYTextBox.Text = info.Destination.Y.ToString();
 
-            ConquestComboBox.SelectedItem = Envir.ConquestInfoList.FirstOrDefault(x => x.Index == info.ConquestIndex);
+            ConquestComboBox.SelectedItem = Envir.ConquestInfos.FirstOrDefault(x => x.Index == info.ConquestIndex);
             if (ConquestComboBox.SelectedItem == null) ConquestComboBox.SelectedIndex = 0;
 
             for (int i = 1; i < _selectedMovementInfos.Count; i++)
@@ -432,7 +540,7 @@ namespace Server
                 DestMapComboBox.SelectedItem = Envir.MapInfoList.FirstOrDefault(x => x.Index == info.MapIndex);
                 DestXTextBox.Text = info.Destination.X.ToString();
                 DestYTextBox.Text = info.Destination.Y.ToString();
-                ConquestComboBox.SelectedItem = Envir.ConquestInfoList.FirstOrDefault(x => x.Index == info.ConquestIndex);
+                ConquestComboBox.SelectedItem = Envir.ConquestInfos.FirstOrDefault(x => x.Index == info.ConquestIndex);
 
                 if (SourceXTextBox.Text != info.Source.X.ToString()) SourceXTextBox.Text = string.Empty;
                 if (SourceYTextBox.Text != info.Source.Y.ToString()) SourceYTextBox.Text = string.Empty;
@@ -442,7 +550,7 @@ namespace Server
                 if (DestXTextBox.Text != info.Destination.X.ToString()) DestXTextBox.Text = string.Empty;
                 if (DestYTextBox.Text != info.Destination.Y.ToString()) DestYTextBox.Text = string.Empty;
 
-                if (ConquestComboBox.SelectedItem != Envir.ConquestInfoList.FirstOrDefault(x => x.Index == info.ConquestIndex)) ConquestComboBox.SelectedItem = null;
+                if (ConquestComboBox.SelectedItem != Envir.ConquestInfos.FirstOrDefault(x => x.Index == info.ConquestIndex)) ConquestComboBox.SelectedItem = null;
             }
 
         }
@@ -574,7 +682,8 @@ namespace Server
         private void AddButton_Click(object sender, EventArgs e)
         {
             Envir.CreateMapInfo();
-            UpdateInterface();
+            txtSearch.Text = "";
+            UpdateInterface(true);
         }
         private void RemoveButton_Click(object sender, EventArgs e)
         {
@@ -588,7 +697,7 @@ namespace Server
 
             MapTabs.SelectTab(0);
 
-            UpdateInterface();
+            UpdateInterface(true);
         }
         private void MapInfoListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1077,7 +1186,7 @@ namespace Server
             for (int i = 1; i < monsters.Length; i++)
                 MapInfo.FromText(monsters[i]);
 
-            UpdateInterface();
+            UpdateInterface(true);
         }
 
         private void BigMapTextBox_TextChanged(object sender, EventArgs e)
@@ -1374,7 +1483,7 @@ namespace Server
             MirForms.ConvertMapInfo.Start(Envir);
 
             MirForms.ConvertMapInfo.End();
-            UpdateInterface();
+            UpdateInterface(true);
 
         }
         private void ExportMapInfoButton_Click(object sender, EventArgs e)
@@ -1383,7 +1492,7 @@ namespace Server
 
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.InitialDirectory = Path.Combine(Application.StartupPath, "Exports");
-            sfd.FileName = "MapInfoExport";
+            sfd.FileName = "MapInfo";
             sfd.Filter = "Text File|*.txt";
             sfd.ShowDialog();
 
@@ -1463,9 +1572,13 @@ namespace Server
             if (map.NeedBridle) textOut += " NEEDBRIDLE";
             if (map.NoFight) textOut += " NOFIGHT";
             if (map.Fight) textOut += " FIGHT";
+            if (map.NoPets) textOut += " NOPETS";
+            if (map.NoGroup) textOut += " NOGROUP";
+            if (map.GT) textOut += " GT";
             if (map.Fire) textOut += " FIRE(" + map.FireDamage + ")";
             if (map.Lightning) textOut += " LIGHTNING(" + map.LightningDamage + ")";
-            if (map.NoTownTeleport) textOut += " NOTownTeleport";
+            if (map.NoTownTeleport) textOut += " NOTOWNTELEPORT";
+            if (map.FireWall) textOut += " FIREWALL(" + map.FireWallCount + ")";
             return textOut;
         }
         private void ImportMonGenButton_Click(object sender, EventArgs e)
@@ -1509,7 +1622,7 @@ namespace Server
 
             if (!hasImported) return;
 
-            UpdateInterface();
+            UpdateInterface(true);
             MessageBox.Show("MonGen Import complete");
         }
         private void ExportMonGenButton_Click(object sender, EventArgs e)
@@ -1518,6 +1631,7 @@ namespace Server
 
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.InitialDirectory = Path.Combine(Application.StartupPath, "Exports");
+            sfd.FileName = "SpawnInfo";
             sfd.Filter = "Text File|*.txt";
             sfd.ShowDialog();
 

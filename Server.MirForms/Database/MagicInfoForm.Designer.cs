@@ -2,6 +2,7 @@
 {
     partial class MagicInfoForm
     {
+        private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.ListBox MagiclistBox;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
@@ -9,15 +10,43 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtSkillIcon;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.TextBox txtSkillLvl10Points;
+        private System.Windows.Forms.TextBox txtSkillLvl9Points;
+        private System.Windows.Forms.TextBox txtSkillLvl8Points;
+        private System.Windows.Forms.TextBox txtSkillLvl7Points;
+        private System.Windows.Forms.TextBox txtSkillLvl6Points;
+        private System.Windows.Forms.TextBox txtSkillLvl5Points;
+        private System.Windows.Forms.TextBox txtSkillLvl4Points;
         private System.Windows.Forms.TextBox txtSkillLvl3Points;
         private System.Windows.Forms.TextBox txtSkillLvl2Points;
         private System.Windows.Forms.TextBox txtSkillLvl1Points;
+        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.Label label32;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox txtSkillLvl10Req;
+        private System.Windows.Forms.TextBox txtSkillLvl9Req;
+        private System.Windows.Forms.TextBox txtSkillLvl8Req;
+        private System.Windows.Forms.TextBox txtSkillLvl7Req;
+        private System.Windows.Forms.TextBox txtSkillLvl6Req;
+        private System.Windows.Forms.TextBox txtSkillLvl5Req;
+        private System.Windows.Forms.TextBox txtSkillLvl4Req;
         private System.Windows.Forms.TextBox txtSkillLvl3Req;
         private System.Windows.Forms.TextBox txtSkillLvl2Req;
         private System.Windows.Forms.TextBox txtSkillLvl1Req;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
@@ -29,6 +58,7 @@
         private System.Windows.Forms.TextBox txtMPIncrease;
         private System.Windows.Forms.TextBox txtMPBase;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ToolTip toolTip2;
         private System.ComponentModel.IContainer components;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.TextBox txtDelayReduction;
@@ -39,6 +69,9 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label lblDamageExample;
+        private System.Windows.Forms.Label lblDamageExplained;
+        private System.Windows.Forms.Label PvPlblDamageExample;
+        private System.Windows.Forms.Label PvPlblDamageExplained;
         private System.Windows.Forms.TextBox txtDmgBonusMax;
         private System.Windows.Forms.TextBox txtDmgBonusMin;
         private System.Windows.Forms.Label label18;
@@ -50,7 +83,6 @@
         private System.Windows.Forms.Label lblSelected;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.TextBox txtRange;
-        private System.Windows.Forms.Label lblDamageExplained;
         private System.Windows.Forms.TextBox txtDmgMultBoost;
         private System.Windows.Forms.TextBox txtDmgMultBase;
         private System.Windows.Forms.Label label21;
@@ -58,5 +90,19 @@
         private System.Windows.Forms.TextBox textBoxName;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Label label15PvP;
+        private System.Windows.Forms.TextBox txtPvPDmgBonusMax;
+        private System.Windows.Forms.TextBox txtPvPDmgBonusMin;
+        private System.Windows.Forms.Label label18PvP;
+        private System.Windows.Forms.Label label19PvP;
+        private System.Windows.Forms.TextBox txtPvPDmgBaseMax;
+        private System.Windows.Forms.TextBox txtPvPDmgBaseMin;
+        private System.Windows.Forms.Label label17PvP;
+        private System.Windows.Forms.Label label16PvP;
+        private System.Windows.Forms.TextBox txtPvPDmgMultBoost;
+        private System.Windows.Forms.TextBox txtPvPDmgMultBase;
+        private System.Windows.Forms.Label label21PvP;
+        private System.Windows.Forms.Label label22PvP;
     }
 }

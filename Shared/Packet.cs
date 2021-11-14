@@ -146,6 +146,8 @@ public abstract class Packet
                 return new C.RetrieveTradeItem();
             case (short)ClientPacketIds.DropGold:
                 return new C.DropGold();
+            case (short)ClientPacketIds.DropHuntPoints:
+                return new C.DropHuntPoints();
             case (short)ClientPacketIds.PickUp:
                 return new C.PickUp();
             case (short)ClientPacketIds.Inspect:
@@ -200,6 +202,8 @@ public abstract class Packet
                 return new C.MarketRefresh();
             case (short)ClientPacketIds.MarketPage:
                 return new C.MarketPage();
+            case (short)ClientPacketIds.GuildTerritoryPage:
+                return new C.GuildTerritoryPage();
             case (short)ClientPacketIds.MarketBuy:
                 return new C.MarketBuy();
             case (short)ClientPacketIds.MarketGetBack:
@@ -346,6 +350,10 @@ public abstract class Packet
                 return new C.ItemRentalLockItem();
             case (short)ClientPacketIds.ConfirmItemRental:
                 return new C.ConfirmItemRental();
+            case (short)ClientPacketIds.AddAttribute:
+                return new C.AddAttribute();
+            case (short)ClientPacketIds.AdjustGuildTax:
+                return new C.AdjustGuildTax();
             default:
                 return null;
         }
@@ -475,6 +483,10 @@ public abstract class Packet
                 return new S.GainedCredit();
             case (short)ServerPacketIds.LoseCredit:
                 return new S.LoseCredit();
+            case (short)ServerPacketIds.GainedHuntPoints:
+                return new S.GainedHuntPoints();
+            case (short)ServerPacketIds.LoseHuntPoints:
+                return new S.LoseHuntPoints();
             case (short)ServerPacketIds.ObjectMonster:
                 return new S.ObjectMonster();
             case (short)ServerPacketIds.ObjectAttack:
@@ -501,12 +513,26 @@ public abstract class Packet
                 return new S.ObjectColourChanged();
             case (short)ServerPacketIds.ObjectGuildNameChanged:
                 return new S.ObjectGuildNameChanged();
+            case (short)ServerPacketIds.ConquestChanged:
+                return new S.ConquestChanged();
             case (short)ServerPacketIds.GainExperience:
                 return new S.GainExperience();
             case (short)ServerPacketIds.LevelChanged:
                 return new S.LevelChanged();
+            case (short)ServerPacketIds.RebornChanged:
+                return new S.RebornChanged();
+            case (short)ServerPacketIds.InstanceStageChanged:
+                return new S.InstanceStageChanged();
+            case (short)ServerPacketIds.ChallengeStageChanged:
+                return new S.ChallengeStageChanged();
             case (short)ServerPacketIds.ObjectLeveled:
                 return new S.ObjectLeveled();
+            case (short)ServerPacketIds.ObjectReborned:
+                return new S.ObjectReborned();
+            case (short)ServerPacketIds.ObjectInstanceStageed:
+                return new S.ObjectInstanceStageed();
+            case (short)ServerPacketIds.ObjectChallengeStageed:
+                return new S.ObjectChallengeStageed();
             case (short)ServerPacketIds.ObjectHarvest:
                 return new S.ObjectHarvest();
             case (short)ServerPacketIds.ObjectHarvested:
@@ -559,10 +585,10 @@ public abstract class Packet
                 return new S.ItemRepaired();
             case (short)ServerPacketIds.ItemSlotSizeChanged:
                 return new S.ItemSlotSizeChanged();
-            case (short)ServerPacketIds.ItemSealChanged:
-                return new S.ItemSealChanged();
             case (short)ServerPacketIds.NewMagic:
                 return new S.NewMagic();
+            case (short)ServerPacketIds.RefreshMagic:
+                return new S.RefreshMagic();
             case (short)ServerPacketIds.MagicLeveled:
                 return new S.MagicLeveled();
             case (short)ServerPacketIds.Magic:
@@ -635,6 +661,8 @@ public abstract class Packet
                 return new S.NPCMarket();
             case (short)ServerPacketIds.NPCMarketPage:
                 return new S.NPCMarketPage();
+            case (short)ServerPacketIds.GuildTerritoryPage:
+                return new S.GuildTerritoryPage();
             case (short)ServerPacketIds.ConsignItem:
                 return new S.ConsignItem();
             case (short)ServerPacketIds.MarketFail:
@@ -791,6 +819,8 @@ public abstract class Packet
                 return new S.IntelligentCreaturePickup();
             case (short)ServerPacketIds.NPCPearlGoods:
                 return new S.NPCPearlGoods();
+            case (short)ServerPacketIds.NPCHuntGoods:
+                return new S.NPCHuntGoods();
             case (short)ServerPacketIds.FriendUpdate:
                 return new S.FriendUpdate();
             case (short)ServerPacketIds.LoverUpdate:
@@ -841,14 +871,22 @@ public abstract class Packet
                 return new S.PlaySound();
             case (short)ServerPacketIds.SetTimer:
                 return new S.SetTimer();
+            case (short)ServerPacketIds.SetTimer2:
+                return new S.SetTimer2();
             case (short)ServerPacketIds.ExpireTimer:
                 return new S.ExpireTimer();
+            case (short)ServerPacketIds.ExpireTimer2:
+                return new S.ExpireTimer2();
             case (short)ServerPacketIds.UpdateNotice:
                 return new S.UpdateNotice();
             case (short)ServerPacketIds.Roll:
                 return new S.Roll();
-            case (short)ServerPacketIds.SetCompass:
-                return new S.SetCompass();
+            case (short)ServerPacketIds.UpdateAttributes:
+                return new S.UpdateAttributes();
+            case (short)ServerPacketIds.ItemGainLevel:
+                return new S.ItemGainLevel();
+            case (short)ServerPacketIds.EEOpenGuildBoardDialog:
+                return new S.OpenGuildBoardDialog();
             default:
                 return null;
         }

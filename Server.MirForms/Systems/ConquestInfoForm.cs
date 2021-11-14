@@ -198,13 +198,13 @@ namespace Server
         private void UpdateInterface()
         {
 
-            if (ConquestInfoListBox.Items.Count != Envir.ConquestInfoList.Count)
+            if (ConquestInfoListBox.Items.Count != Envir.ConquestInfos.Count)
             {
                 ConquestInfoListBox.Items.Clear();
 
-                for (int i = 0; i < Envir.ConquestInfoList.Count; i++)
+                for (int i = 0; i < Envir.ConquestInfos.Count; i++)
                 {
-                    ConquestInfoListBox.Items.Add(Envir.ConquestInfoList[i]);
+                    ConquestInfoListBox.Items.Add(Envir.ConquestInfos[i]);
                 }
             }
 
@@ -323,7 +323,7 @@ namespace Server
 
         private void AddConq_button_Click(object sender, EventArgs e)
         {
-            Envir.ConquestInfoList.Add(new ConquestInfo { Index = ++Envir.ConquestIndex, Location = new Point(0, 0), Size = 10, Name = "Conquest Wall", MapIndex = 1, PalaceIndex = 2});
+            Envir.ConquestInfos.Add(new ConquestInfo { Index = ++Envir.ConquestIndex, Location = new Point(0, 0), Size = 10, Name = "Conquest Wall", MapIndex = 1, PalaceIndex = 2});
             UpdateInterface();
         }
 
@@ -770,9 +770,9 @@ namespace Server
 
             if (MessageBox.Show("Are you sure you want to remove the selected Conquest?", "Remove Items?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
-            Envir.ConquestInfoList.Remove(selectedConquest);
+            Envir.ConquestInfos.Remove(selectedConquest);
 
-            if (Envir.ConquestInfoList.Count == 0) Envir.ConquestIndex = 0;
+            if (Envir.ConquestInfos.Count == 0) Envir.ConquestIndex = 0;
 
             UpdateInterface();
 

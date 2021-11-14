@@ -59,15 +59,20 @@ public class GameLanguage
 
                          Gold = "Gold",
                          Credit = "Credit",
+                         HuntPoints = "HuntPoints",
 
                          YouGained = "You gained {0}.",
 
                          YouGained2 = "You gained {0:###,###,###} {1}",
+                         YouGained3 = "You gained {0:###,###,###} {1}",
 
                          ExperienceGained = "Experience Gained {0}",
 
                          ItemDescription = "Item Description",
                          RequiredLevel = "Required Level : {0}",
+                         RequiredReborn = "Required Reborn : {0}",
+                         RequiredInstanceStage = "Required Instance Stage : {0}",
+                         RequiredChallengeStage = "Required Challenge Stage : {0}",
                          RequiredDC = "Required DC : {0}",
                          RequiredMC = "Required MC : {0}",
                          RequiredSC = "Required SC : {0}",
@@ -193,6 +198,7 @@ public class GameLanguage
                          ItemTypeGem = "Gem",
                          ItemTypeMount = "Mount",
                          ItemTypeBook = "Book",
+                         ItemTypeItemParts = "ItemParts",
                          ItemTypeScript = "Script",
                          ItemTypeReins = "Reins",
                          ItemTypeBells = "Bells",
@@ -231,7 +237,7 @@ public class GameLanguage
                          WhisperLover = "Whisper Lover";
 
     //Server
-    public static string Welcome = "Welcome to the {0} Server.",
+    public static string Welcome = "Welcome to the {0}  Test Server.",
                          OnlinePlayers = "Online Players: {0}",
                          WeaponLuck = "Luck dwells within your weapon.",
                          WeaponCurse = "Curse dwells within your weapon.",
@@ -251,8 +257,14 @@ public class GameLanguage
 
     //common
     public static string LowLevel = "You are not a high enough level.",
+                         LowReborn = "You are not a high enough Reborn.",
+                         LowInstanceStage = "You are not a high enough Instance Stage.",
+                         LowChallengeStage = "You are not a high enough Challenge Stage.",
                          LowGold = "Not enough gold.",
-                         LevelUp = "Congratulations! You have leveled up. Your HP and MP have been restored.",
+                         LevelUp = "Congratulations! You have Leveled up. Your HP and MP have been restored.",
+                         RebornUp = "Congratulations! You have Reborned up.",
+                         InstanceStageUp = "Congratulations! You have Instance Stageed up.",
+                         ChallengeStageUp = "Congratulations! You have Challenge Stageed up.",
                          LowDC = "You do not have enough DC.",
                          LowMC = "You do not have enough MC.",
                          LowSC = "You do not have enough SC.",
@@ -261,7 +273,7 @@ public class GameLanguage
 
                          NotFemale = "You are not Female.",
                          NotMale = "You are not Male.",
-                         NotInGuild = "You are not in a guild.",
+                         NotInGuild = "You are not in a guild",
                          NoMentorship = "You don't currently have a Mentorship to cancel.",
                          NoBagSpace = "You do not have enough space.";
 
@@ -330,6 +342,9 @@ public class GameLanguage
         GameLanguage.LastOnline = reader.ReadString("Language", "LastOnline", GameLanguage.LastOnline);
 
         GameLanguage.LowLevel = reader.ReadString("Language", "LowLevel", GameLanguage.LowLevel);
+        GameLanguage.LowReborn = reader.ReadString("Language", "LowReborn", GameLanguage.LowReborn);
+        GameLanguage.LowInstanceStage = reader.ReadString("Language", "LowInstanceStage", GameLanguage.LowInstanceStage);
+        GameLanguage.LowChallengeStage = reader.ReadString("Language", "LowChallengeStage", GameLanguage.LowChallengeStage);
         GameLanguage.LowGold = reader.ReadString("Language", "LowGold", GameLanguage.LowGold);
         GameLanguage.LowDC = reader.ReadString("Language", "LowDC", GameLanguage.LowDC);
         GameLanguage.LowMC = reader.ReadString("Language", "LowMC", GameLanguage.LowMC);
@@ -337,14 +352,22 @@ public class GameLanguage
 
         GameLanguage.Gold = reader.ReadString("Language", "Gold", GameLanguage.Gold);
         GameLanguage.Credit = reader.ReadString("Language", "Credit", GameLanguage.Credit);
+        GameLanguage.HuntPoints = reader.ReadString("Language", "HuntPoints", GameLanguage.HuntPoints);
 
         GameLanguage.YouGained = reader.ReadString("Language", "YouGained", GameLanguage.YouGained);
         GameLanguage.YouGained2 = reader.ReadString("Language", "YouGained2", GameLanguage.YouGained2);
+        GameLanguage.YouGained3 = reader.ReadString("Language", "YouGained3", GameLanguage.YouGained3);
         GameLanguage.ExperienceGained = reader.ReadString("Language", "ExperienceGained", GameLanguage.ExperienceGained);
         GameLanguage.LevelUp = reader.ReadString("Language", "LevelUp", GameLanguage.LevelUp);
+        GameLanguage.RebornUp = reader.ReadString("Language", "RebornUp", GameLanguage.RebornUp);
+        GameLanguage.InstanceStageUp = reader.ReadString("Language", "InstanceStageUp", GameLanguage.InstanceStageUp);
+        GameLanguage.ChallengeStageUp = reader.ReadString("Language", "ChallengeStageUp", GameLanguage.ChallengeStageUp);
 
         GameLanguage.ItemDescription = reader.ReadString("Language", "ItemDescription", GameLanguage.ItemDescription);
         GameLanguage.RequiredLevel = reader.ReadString("Language", "RequiredLevel", GameLanguage.RequiredLevel);
+        GameLanguage.RequiredReborn = reader.ReadString("Language", "RequiredReborn", GameLanguage.RequiredReborn);
+        GameLanguage.RequiredInstanceStage = reader.ReadString("Language", "RequiredInstanceStage", GameLanguage.RequiredInstanceStage);
+        GameLanguage.RequiredChallengeStage = reader.ReadString("Language", "RequiredChallengeStage", GameLanguage.RequiredChallengeStage);
         GameLanguage.RequiredDC = reader.ReadString("Language", "RequiredDC", GameLanguage.RequiredDC);
         GameLanguage.RequiredMC = reader.ReadString("Language", "RequiredMC", GameLanguage.RequiredMC);
         GameLanguage.RequiredSC = reader.ReadString("Language", "RequiredSC", GameLanguage.RequiredSC);
@@ -468,6 +491,7 @@ public class GameLanguage
         GameLanguage.ItemTypeGem = reader.ReadString("Language", "ItemTypeGem", GameLanguage.ItemTypeGem);
         GameLanguage.ItemTypeMount = reader.ReadString("Language", "ItemTypeMount", GameLanguage.ItemTypeMount);
         GameLanguage.ItemTypeBook = reader.ReadString("Language", "ItemTypeBook", GameLanguage.ItemTypeBook);
+        GameLanguage.ItemTypeItemParts = reader.ReadString("Language", "ItemTypeItemParts", GameLanguage.ItemTypeItemParts);
         GameLanguage.ItemTypeScript = reader.ReadString("Language", "ItemTypeScript", GameLanguage.ItemTypeScript);
         GameLanguage.ItemTypeReins = reader.ReadString("Language", "ItemTypeReins", GameLanguage.ItemTypeReins);
         GameLanguage.ItemTypeBells = reader.ReadString("Language", "ItemTypeBells", GameLanguage.ItemTypeBells);
@@ -567,6 +591,9 @@ public class GameLanguage
         reader.Write("Language", "LastOnline", GameLanguage.LastOnline);
 
         reader.Write("Language", "LowLevel", GameLanguage.LowLevel);
+        reader.Write("Language", "LowReborn", GameLanguage.LowReborn);
+        reader.Write("Language", "LowInstanceStage", GameLanguage.LowInstanceStage);
+        reader.Write("Language", "LowChallengeStage", GameLanguage.LowChallengeStage);
         reader.Write("Language", "LowGold", GameLanguage.LowGold);
         reader.Write("Language", "LowDC", GameLanguage.LowDC);
         reader.Write("Language", "LowMC", GameLanguage.LowMC);
@@ -574,14 +601,22 @@ public class GameLanguage
 
         reader.Write("Language", "Gold", GameLanguage.Gold);
         reader.Write("Language", "Credit", GameLanguage.Credit);
+        reader.Write("Language", "HuntPoints", GameLanguage.HuntPoints);
 
         reader.Write("Language", "YouGained", GameLanguage.YouGained);
         reader.Write("Language", "YouGained2", GameLanguage.YouGained2);
+        reader.Write("Language", "YouGained3", GameLanguage.YouGained3);
         reader.Write("Language", "ExperienceGained", GameLanguage.ExperienceGained);
         reader.Write("Language", "LevelUp", GameLanguage.LevelUp);
+        reader.Write("Language", "RebornUp", GameLanguage.RebornUp);
+        reader.Write("Language", "InstanceStageUp", GameLanguage.InstanceStageUp);
+        reader.Write("Language", "ChallengeStageUp", GameLanguage.ChallengeStageUp);
 
         reader.Write("Language", "ItemDescription", GameLanguage.ItemDescription);
         reader.Write("Language", "RequiredLevel", GameLanguage.RequiredLevel);
+        reader.Write("Language", "RequiredReborn", GameLanguage.RequiredReborn);
+        reader.Write("Language", "RequiredInstanceStage", GameLanguage.RequiredInstanceStage);
+        reader.Write("Language", "RequiredChallengeStage", GameLanguage.RequiredChallengeStage);
         reader.Write("Language", "RequiredDC", GameLanguage.RequiredDC);
         reader.Write("Language", "RequiredMC", GameLanguage.RequiredMC);
         reader.Write("Language", "RequiredSC", GameLanguage.RequiredSC);
@@ -697,6 +732,7 @@ public class GameLanguage
         reader.Write("Language", "ItemTypeGem", GameLanguage.ItemTypeGem);
         reader.Write("Language", "ItemTypeMount", GameLanguage.ItemTypeMount);
         reader.Write("Language", "ItemTypeBook", GameLanguage.ItemTypeBook);
+        reader.Write("Language", "ItemTypeItemParts", GameLanguage.ItemTypeItemParts);
         reader.Write("Language", "ItemTypeScript", GameLanguage.ItemTypeScript);
         reader.Write("Language", "ItemTypeReins", GameLanguage.ItemTypeReins);
         reader.Write("Language", "ItemTypeBells", GameLanguage.ItemTypeBells);
@@ -747,12 +783,18 @@ public class GameLanguage
         GameLanguage.Welcome = reader.ReadString("Language", "Welcome", GameLanguage.Welcome);
         GameLanguage.OnlinePlayers = reader.ReadString("Language", "OnlinePlayers", GameLanguage.OnlinePlayers);
         GameLanguage.LowLevel = reader.ReadString("Language", "LowLevel", GameLanguage.LowLevel);
+        GameLanguage.LowReborn = reader.ReadString("Language", "LowReborn", GameLanguage.LowReborn);
+        GameLanguage.LowInstanceStage = reader.ReadString("Language", "LowInstanceStage", GameLanguage.LowInstanceStage);
+        GameLanguage.LowChallengeStage = reader.ReadString("Language", "LowChallengeStage", GameLanguage.LowChallengeStage);
         GameLanguage.LowGold = reader.ReadString("Language", "LowGold", GameLanguage.LowGold);
         GameLanguage.LowDC = reader.ReadString("Language", "LowDC", GameLanguage.LowDC);
         GameLanguage.LowMC = reader.ReadString("Language", "LowMC", GameLanguage.LowMC);
         GameLanguage.LowSC = reader.ReadString("Language", "LowSC", GameLanguage.LowSC);
 
         GameLanguage.LevelUp = reader.ReadString("Language", "LevelUp", GameLanguage.LevelUp);
+        GameLanguage.RebornUp = reader.ReadString("Language", "RebornUp", GameLanguage.RebornUp);
+        GameLanguage.InstanceStageUp = reader.ReadString("Language", "InstanceStageUp", GameLanguage.InstanceStageUp);
+        GameLanguage.ChallengeStageUp = reader.ReadString("Language", "ChallengeStageUp", GameLanguage.ChallengeStageUp);
 
         GameLanguage.WeaponLuck = reader.ReadString("Language", "WeaponLuck", GameLanguage.WeaponLuck);
         GameLanguage.WeaponCurse = reader.ReadString("Language", "WeaponCurse", GameLanguage.WeaponCurse);
@@ -786,12 +828,18 @@ public class GameLanguage
         reader.Write("Language", "Welcome", GameLanguage.Welcome);
         reader.Write("Language", "OnlinePlayers", GameLanguage.OnlinePlayers);
         reader.Write("Language", "LowLevel", GameLanguage.LowLevel);
+        reader.Write("Language", "LowReborn", GameLanguage.LowReborn);
+        reader.Write("Language", "LowInstanceStage", GameLanguage.LowInstanceStage);
+        reader.Write("Language", "LowChallengeStage", GameLanguage.LowChallengeStage);
         reader.Write("Language", "LowGold", GameLanguage.LowGold);
         reader.Write("Language", "LowDC", GameLanguage.LowDC);
         reader.Write("Language", "LowMC", GameLanguage.LowMC);
         reader.Write("Language", "LowSC", GameLanguage.LowSC);
 
         reader.Write("Language", "LevelUp", GameLanguage.LevelUp);
+        reader.Write("Language", "RebornUp", GameLanguage.RebornUp);
+        reader.Write("Language", "InstanceStageUp", GameLanguage.InstanceStageUp);
+        reader.Write("Language", "ChallengeStageUp", GameLanguage.ChallengeStageUp);
 
         reader.Write("Language", "WeaponLuck", GameLanguage.WeaponLuck);
         reader.Write("Language", "WeaponCurse", GameLanguage.WeaponCurse);

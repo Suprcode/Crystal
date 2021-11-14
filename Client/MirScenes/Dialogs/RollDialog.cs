@@ -87,7 +87,7 @@ namespace Client.MirScenes.Dialogs
             _rolled = false;
 
             _currentLoop = 0;
-            Visible = true;
+            Visible = false;
 
             switch (type)
             {

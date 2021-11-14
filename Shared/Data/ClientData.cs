@@ -8,8 +8,8 @@ public class ClientMagic
     public string Name;
     public Spell Spell;
     public byte BaseCost, LevelCost, Icon;
-    public byte Level1, Level2, Level3;
-    public ushort Need1, Need2, Need3;
+    public ushort Level1, Level2, Level3, Level4, Level5, Level6, Level7, Level8, Level9, Level10;
+    public ushort Need1, Need2, Need3, Need4, Need5, Need6, Need7, Need8, Need9, Need10;
 
     public byte Level, Key, Range;
     public ushort Experience;
@@ -17,7 +17,17 @@ public class ClientMagic
     public bool IsTempSpell;
     public long CastTime, Delay;
 
-    public ClientMagic() { }
+    public ushort PowerBase, PowerBonus;
+    public ushort MPowerBase, MPowerBonus;
+    public float MultiplierBase = 1.0f, MultiplierBonus;
+
+    public ushort PvPPowerBase, PvPPowerBonus;
+    public ushort PvPMPowerBase, PvPMPowerBonus;
+    public float PvPMultiplierBase = 1.0f, PvPMultiplierBonus;
+
+    public ClientMagic()
+    {
+    }
 
     public ClientMagic(BinaryReader reader)
     {
@@ -27,12 +37,26 @@ public class ClientMagic
         BaseCost = reader.ReadByte();
         LevelCost = reader.ReadByte();
         Icon = reader.ReadByte();
-        Level1 = reader.ReadByte();
-        Level2 = reader.ReadByte();
-        Level3 = reader.ReadByte();
+        Level1 = reader.ReadUInt16();
+        Level2 = reader.ReadUInt16();
+        Level3 = reader.ReadUInt16();
+        Level4 = reader.ReadUInt16();
+        Level5 = reader.ReadUInt16();
+        Level6 = reader.ReadUInt16();
+        Level7 = reader.ReadUInt16();
+        Level8 = reader.ReadUInt16();
+        Level9 = reader.ReadUInt16();
+        Level10 = reader.ReadUInt16();
         Need1 = reader.ReadUInt16();
         Need2 = reader.ReadUInt16();
         Need3 = reader.ReadUInt16();
+        Need4 = reader.ReadUInt16();
+        Need5 = reader.ReadUInt16();
+        Need6 = reader.ReadUInt16();
+        Need7 = reader.ReadUInt16();
+        Need8 = reader.ReadUInt16();
+        Need9 = reader.ReadUInt16();
+        Need10 = reader.ReadUInt16();
 
         Level = reader.ReadByte();
         Key = reader.ReadByte();
@@ -42,6 +66,20 @@ public class ClientMagic
 
         Range = reader.ReadByte();
         CastTime = reader.ReadInt64();
+
+        PowerBase = reader.ReadUInt16();
+        PowerBonus = reader.ReadUInt16();
+        MPowerBase = reader.ReadUInt16();
+        MPowerBonus = reader.ReadUInt16();
+        MultiplierBase = reader.ReadSingle();
+        MultiplierBonus = reader.ReadSingle();
+
+        PvPPowerBase = reader.ReadUInt16();
+        PvPPowerBonus = reader.ReadUInt16();
+        PvPMPowerBase = reader.ReadUInt16();
+        PvPMPowerBonus = reader.ReadUInt16();
+        PvPMultiplierBase = reader.ReadSingle();
+        PvPMultiplierBonus = reader.ReadSingle();
     }
 
     public void Save(BinaryWriter writer)
@@ -55,9 +93,23 @@ public class ClientMagic
         writer.Write(Level1);
         writer.Write(Level2);
         writer.Write(Level3);
+        writer.Write(Level4);
+        writer.Write(Level5);
+        writer.Write(Level6);
+        writer.Write(Level7);
+        writer.Write(Level8);
+        writer.Write(Level9);
+        writer.Write(Level10);
         writer.Write(Need1);
         writer.Write(Need2);
         writer.Write(Need3);
+        writer.Write(Need4);
+        writer.Write(Need5);
+        writer.Write(Need6);
+        writer.Write(Need7);
+        writer.Write(Need8);
+        writer.Write(Need9);
+        writer.Write(Need10);
 
         writer.Write(Level);
         writer.Write(Key);
@@ -67,6 +119,20 @@ public class ClientMagic
 
         writer.Write(Range);
         writer.Write(CastTime);
+
+        writer.Write(PowerBase);
+        writer.Write(PowerBonus);
+        writer.Write(MPowerBase);
+        writer.Write(MPowerBonus);
+        writer.Write(MultiplierBase);
+        writer.Write(MultiplierBonus);
+
+        writer.Write(PvPPowerBase);
+        writer.Write(PvPPowerBonus);
+        writer.Write(PvPMPowerBase);
+        writer.Write(PvPMPowerBonus);
+        writer.Write(PvPMultiplierBase);
+        writer.Write(PvPMultiplierBonus);
     }
 
 }
@@ -164,6 +230,7 @@ public class ClientMail
     public DateTime DateSent;
 
     public uint Gold;
+    public uint Credit;
     public List<UserItem> Items = new List<UserItem>();
 
     public ClientMail() { }
@@ -180,6 +247,7 @@ public class ClientMail
 
         DateSent = DateTime.FromBinary(reader.ReadInt64());
 
+        Credit = reader.ReadUInt32();
         Gold = reader.ReadUInt32();
         int count = reader.ReadInt32();
 
@@ -199,6 +267,7 @@ public class ClientMail
 
         writer.Write(DateSent.ToBinary());
 
+        writer.Write(Credit);
         writer.Write(Gold);
         writer.Write(Items.Count);
 
@@ -257,9 +326,12 @@ public class ClientQuestInfo
 
     public int TimeLimitInSeconds = 0;
 
+    public bool percentageExp;
+    public bool autoComplete;
     public uint RewardGold;
     public uint RewardExp;
     public uint RewardCredit;
+    public uint RewardHuntPoints;
     public List<QuestItemReward> RewardsFixedItem = new List<QuestItemReward>();
     public List<QuestItemReward> RewardsSelectItem = new List<QuestItemReward>();
 
@@ -297,10 +369,12 @@ public class ClientQuestInfo
         ClassNeeded = (RequiredClass)reader.ReadByte();
         Type = (QuestType)reader.ReadByte();
         TimeLimitInSeconds = reader.ReadInt32();
+        percentageExp = reader.ReadBoolean();
+        autoComplete = reader.ReadBoolean();
         RewardGold = reader.ReadUInt32();
         RewardExp = reader.ReadUInt32();
         RewardCredit = reader.ReadUInt32();
-
+        RewardHuntPoints = reader.ReadUInt32();
 
         count = reader.ReadInt32();
 
@@ -339,9 +413,13 @@ public class ClientQuestInfo
         writer.Write((byte)ClassNeeded);
         writer.Write((byte)Type);
         writer.Write(TimeLimitInSeconds);
+
+        writer.Write(percentageExp);
+        writer.Write(autoComplete);
         writer.Write(RewardGold);
         writer.Write(RewardExp);
         writer.Write(RewardCredit);
+        writer.Write(RewardHuntPoints);
 
         writer.Write(RewardsFixedItem.Count);
 
@@ -372,6 +450,14 @@ public class ClientQuestInfo
                     icon = QuestIcon.ExclamationYellow;
                 break;
             case QuestType.Daily:
+                if (completed)
+                    icon = QuestIcon.QuestionBlue;
+                else if (taken)
+                    icon = QuestIcon.QuestionWhite;
+                else
+                    icon = QuestIcon.ExclamationBlue;
+                break;
+            case QuestType.Weekly:
                 if (completed)
                     icon = QuestIcon.QuestionBlue;
                 else if (taken)
@@ -466,7 +552,7 @@ public class ClientBuff
     {
         Caster = null;
 
-        Type = (BuffType)reader.ReadByte();
+        Type = (BuffType)reader.ReadUInt16();
         Visible = reader.ReadBoolean();
         ObjectID = reader.ReadUInt32();
         ExpireTime = reader.ReadInt64();
@@ -487,7 +573,7 @@ public class ClientBuff
 
     public void Save(BinaryWriter writer)
     {
-        writer.Write((byte)Type);
+        writer.Write((ushort)Type);
         writer.Write(Visible);
         writer.Write(ObjectID);
         writer.Write(ExpireTime);

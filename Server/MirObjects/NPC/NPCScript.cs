@@ -63,6 +63,8 @@ namespace Server.MirObjects
             ConsignKey = "[@CONSIGN]",
             MarketKey = "[@MARKET]",
             CraftKey = "[@CRAFT]",
+            GtBoardKey = "[@GTBOARDLIST]",
+            GuildTerritoryKey = "[@GUILDTERRITORY]",
 
             GuildCreateKey = "[@CREATEGUILD]",
             RequestWarKey = "[@REQUESTWAR]",
@@ -74,6 +76,7 @@ namespace Server.MirObjects
             ResetKey = "[@RESET]",
             PearlBuyKey = "[@PEARLBUY]",
             BuyUsedKey = "[@BUYUSED]",
+            HuntBuyKey = "[@HUNTBUY]",
 
             TradeKey = "[TRADE]",
             RecipeKey = "[RECIPE]",
@@ -124,13 +127,13 @@ namespace Server.MirObjects
                 return callingNPC.Info.Rate / 100F;
             }
 
-            if (player.MyGuild != null && player.MyGuild.Guildindex == callingNPC.Conq.GuildInfo.Owner)
+            if (player.MyGuild != null && player.MyGuild.Guildindex == callingNPC.Conq.Owner)
             {
                 return callingNPC.Info.Rate / 100F;
             }
             else
             {
-                return (((callingNPC.Info.Rate / 100F) * callingNPC.Conq.GuildInfo.NPCRate) + callingNPC.Info.Rate) / 100F;
+                return (((callingNPC.Info.Rate / 100F) * callingNPC.Conq.npcRate) + callingNPC.Info.Rate) / 100F;
             }
         }
 
@@ -177,6 +180,7 @@ namespace Server.MirObjects
             if (Type == NPCScriptType.AutoPlayer)
             {
                 Envir.CustomCommands.Clear();
+                Envir.WorldMap.Clear();
             }
         }
         public void LoadGoods()
@@ -253,6 +257,16 @@ namespace Server.MirObjects
                         if (!match.Success) continue;
 
                         Envir.CustomCommands.Add(match.Groups[1].Value);
+                    }
+
+                    if (lines[i].ToUpper().Contains("WORLDMAP"))
+                    {
+                        Regex regex = new Regex(@"\((.*?)\)");
+                        Match match = regex.Match(lines[i]);
+
+                        if (!match.Success) continue;
+
+                        Envir.WorldMap.Add(match.Groups[1].Value);
                     }
                 }
                 else if (Type == NPCScriptType.AutoMonster)
@@ -1031,6 +1045,9 @@ namespace Server.MirObjects
                     player.UserMatch = false;
                     player.GetMarket(string.Empty, ItemType.Nothing);
                     break;
+                case GuildTerritoryKey:
+                    player.GetGuildTerritories(0);
+                    break;
                 case GuildCreateKey:
                     if (player.Info.Level < Settings.Guild_RequiredLevel)
                     {
@@ -1043,6 +1060,9 @@ namespace Server.MirObjects
                     }
                     else
                         player.ReceiveChat("You are already part of a guild.", ChatType.System);
+                    break;
+                case GtBoardKey:
+                    player.Enqueue(new S.OpenGuildBoardDialog());
                     break;
                 case RequestWarKey:
                     if (player.MyGuild != null)
@@ -1097,6 +1117,12 @@ namespace Server.MirObjects
                         player.CheckItem(Goods[i]);
 
                     player.Enqueue(new S.NPCPearlGoods { List = Goods, Rate = PriceRate(player), Type = PanelType.Buy });
+                    break;
+                case HuntBuyKey:
+                    for (int i = 0; i < Goods.Count; i++)
+                        player.CheckItem(Goods[i]);
+
+                    player.Enqueue(new S.NPCHuntGoods { List = Goods, Rate = PriceRate(player), Type = PanelType.Buy });
                     break;
             }
         }
@@ -1158,10 +1184,46 @@ namespace Server.MirObjects
             {
                 if (cost > player.Info.PearlCount) return;
             }
-            else if (cost > player.Account.Gold) return;
+
+            if (player.NPCPage.Key.ToUpper() == HuntBuyKey)//hunt currency
+            {
+                if (cost > player.Account.HuntPoints) return;
+                player.Account.HuntPoints -= cost;
+                player.Enqueue(new S.LoseHuntPoints { HuntPoints = cost });
+            }
+
+            if (player.NPCPage.Key.ToUpper() == BuyKey)
+            {
+                if (cost > player.Account.Gold) return;
+                player.Account.Gold -= cost;
+                player.Enqueue(new S.LoseGold { Gold = cost });
+            }
+
+            if (player.NPCPage.Key.ToUpper() == BuyBackKey)
+            {
+                if (cost > player.Account.Gold) return;
+                player.Account.Gold -= cost;
+                player.Enqueue(new S.LoseGold { Gold = cost });
+            }
+
+            if (player.NPCPage.Key.ToUpper() == BuySellKey)
+            {
+                if (cost > player.Account.Gold) return;
+                player.Account.Gold -= cost;
+                player.Enqueue(new S.LoseGold { Gold = cost });
+            }
+
+            if (player.NPCPage.Key.ToUpper() == BuyUsedKey)
+            {
+                if (cost > player.Account.Gold) return;
+                player.Account.Gold -= cost;
+                player.Enqueue(new S.LoseGold { Gold = cost });
+            }
 
             UserItem item = (isBuyBack || isUsed) ? goods : Envir.CreateFreshItem(goods.Info);
             item.Count = goods.Count;
+
+            item.GTInvite = player.MyGuild != null ? (player.MyGuild.HasGT ? player.MyGuild.Name : string.Empty) : string.Empty;
 
             if (!player.CanGainItem(item)) return;
 
@@ -1171,15 +1233,14 @@ namespace Server.MirObjects
             }
             else
             {
-                player.Account.Gold -= cost;
-                player.Enqueue(new S.LoseGold { Gold = cost });
+                player.Info.PearlCount -= (int)cost;
+                player.IntelligentCreatureLosePearls((int)cost);
 
                 if (callingNPC != null && callingNPC.Conq != null)
                 {
-                    callingNPC.Conq.GuildInfo.GoldStorage += (cost - baseCost);
+                    callingNPC.Conq.GoldStorage += (cost - baseCost);
                 }
             }
-
             player.GainItem(item);
 
             if (isUsed)

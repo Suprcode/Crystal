@@ -371,6 +371,7 @@ namespace Client.MirScenes
                 };
                 inputBox.Show();
             };
+
             message.Show();
         }
 

@@ -24,24 +24,25 @@ namespace Server
 
             for (int i = 0; i < Envir.MapInfoList.Count; i++) MapComboBox.Items.Add(Envir.MapInfoList[i]);
 
-            if (ConquestHidden_combo.Items.Count != Envir.ConquestInfoList.Count)
+            if (ConquestHidden_combo.Items.Count != Envir.ConquestInfos.Count)
             {
                 ConquestHidden_combo.Items.Clear();
 
-                for (int i = 0; i < Envir.ConquestInfoList.Count; i++)
+                for (int i = 0; i < Envir.ConquestInfos.Count; i++)
                 {
-                    ConquestHidden_combo.Items.Add(Envir.ConquestInfoList[i]);
+                    ConquestHidden_combo.Items.Add(Envir.ConquestInfos[i]);
                 }
             }
 
 
-            UpdateInterface();
+            UpdateInterface(true);
         }
 
         private void AddButton_Click(object sender, EventArgs e)
         {
             Envir.CreateNPCInfo();
-            UpdateInterface();
+            txtSearch.Text = "";
+            UpdateInterface(true);
         }
         private void RemoveButton_Click(object sender, EventArgs e)
         {
@@ -53,17 +54,26 @@ namespace Server
 
             if (Envir.NPCInfoList.Count == 0) Envir.NPCIndex = 0;
 
-            UpdateInterface();
+            UpdateInterface(true);
+        }
+        private void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+            UpdateInterface(true);
         }
 
-        private void UpdateInterface()
+        private void UpdateInterface(bool refreshList = false)
         {
-            if (NPCInfoListBox.Items.Count != Envir.NPCInfoList.Count)
+            if (refreshList)
             {
                 NPCInfoListBox.Items.Clear();
 
                 for (int i = 0; i < Envir.NPCInfoList.Count; i++)
-                    NPCInfoListBox.Items.Add(Envir.NPCInfoList[i]);
+                {
+                    if (string.IsNullOrWhiteSpace(txtSearch.Text) || Envir.NPCInfoList[i].Name.IndexOf(txtSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        NPCInfoListBox.Items.Add(Envir.NPCInfoList[i]);
+                    }
+                }
             }
 
             _selectedNPCInfos = NPCInfoListBox.SelectedItems.Cast<NPCInfo>().ToList();
@@ -110,7 +120,7 @@ namespace Server
             MinLev_textbox.Text = info.MinLev.ToString();
             MaxLev_textbox.Text = info.MaxLev.ToString();
             Class_combo.Text = info.ClassRequired;
-            ConquestHidden_combo.SelectedItem = Envir.ConquestInfoList.FirstOrDefault(x => x.Index == info.Conquest);
+            ConquestHidden_combo.SelectedItem = Envir.ConquestInfos.FirstOrDefault(x => x.Index == info.Conquest);
             Day_combo.Text = info.DayofWeek;
             TimeVisible_checkbox.Checked = info.TimeVisible;
             StartHour_combo.Text = info.HourStart.ToString();
@@ -302,6 +312,7 @@ namespace Server
 
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.InitialDirectory = Path.Combine(Application.StartupPath, "Exports");
+            sfd.FileName = "NpcInfo";
             sfd.Filter = "Text File|*.txt";
             sfd.ShowDialog();
 
@@ -346,7 +357,8 @@ namespace Server
                 catch { }
             }
 
-            UpdateInterface();
+            UpdateInterface(true);
+            txtSearch.Text = "";
             MessageBox.Show("NPC Import complete");
         }
 
@@ -430,7 +442,7 @@ namespace Server
 
         private void CopyMButton_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(Envir.Now.DayOfWeek.ToString());
+            MessageBox.Show(DateTime.Now.DayOfWeek.ToString());
         }
 
         private void MaxLev_textbox_TextChanged(object sender, EventArgs e)
@@ -542,7 +554,7 @@ namespace Server
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
-            MessageBox.Show(Envir.Now.TimeOfDay.ToString());
+            MessageBox.Show(DateTime.Now.TimeOfDay.ToString());
         }
 
         private void NPCInfoForm_Load(object sender, EventArgs e)

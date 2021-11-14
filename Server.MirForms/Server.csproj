@@ -42,7 +42,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Build\Server\</OutputPath>
+    <OutputPath>..\..\Server\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -110,6 +110,12 @@
     </Compile>
     <Compile Include="Account\PlayerInfoForm.Designer.cs">
       <DependentUpon>PlayerInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Account\PlayerItemForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Account\PlayerItemForm.Designer.cs">
+      <DependentUpon>PlayerItemForm.cs</DependentUpon>
     </Compile>
     <Compile Include="BalanceConfigForm.cs">
       <SubType>Form</SubType>
@@ -189,6 +195,12 @@
     </Compile>
     <Compile Include="Systems\GuildInfoForm.Designer.cs">
       <DependentUpon>GuildInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Systems\GuildItemForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Systems\GuildItemForm.Designer.cs">
+      <DependentUpon>GuildItemForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Systems\MiningInfoForm.cs">
       <SubType>Form</SubType>
@@ -317,6 +329,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Systems\GuildInfoForm.resx">
       <DependentUpon>GuildInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Systems\GuildItemForm.resx">
+      <DependentUpon>GuildItemForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Systems\MiningInfoForm.resx">
       <DependentUpon>MiningInfoForm.cs</DependentUpon>

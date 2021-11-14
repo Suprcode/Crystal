@@ -13,6 +13,7 @@ namespace Client.MirControls
 {
     public sealed class MirItemCell : MirImageControl
     {
+        MirAnimatedControl SpecialEffect;
         public UserItem Item
         {
             get
@@ -178,6 +179,24 @@ namespace Client.MirControls
 
         public MirItemCell()
         {
+            SpecialEffect = new MirAnimatedControl
+            {
+                Animated = true,
+                Library = Libraries.ItemGlow,
+                GrayScale = false,
+                Parent = this,
+                Visible = true,
+                Loop = true,
+                Blending = true,
+                //BackColour = Color.Transparent,
+                //ForeColour = Color.Transparent,
+                BlendingRate = 1,
+                Location = new Point(-22, -22),
+                UseOffSet = false,
+                NotControl = true,
+
+            };
+
             Size = new Size(36, 32);
             GridType = MirGridType.None;
             DrawImage = false;
@@ -194,13 +213,257 @@ namespace Client.MirControls
         {
             //put effect stuff here??
         }
+        private void UpdateGradeImage()
+        {
+            SpecialEffect.Visible = false;
+
+            if (Item != null)
+                switch (Item.Info.ItemGlow)
+                {
+                    case 10:
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 28;
+                        SpecialEffect.AnimationCount = 9;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(-20, -22);
+                        break;
+                    case 11:
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 42;
+                        SpecialEffect.AnimationCount = 8;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(-20, -22);
+                        break;
+                    case 12:
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 56;
+                        SpecialEffect.AnimationCount = 8;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(-20, -22);
+                        break;
+                    case 13:
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 70;
+                        SpecialEffect.AnimationCount = 8;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(-20, -22);
+                        break;
+                    case 14:
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 84;
+                        SpecialEffect.AnimationCount = 8;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(-20, -22);
+                        break;
+                    case 15:
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 98;
+                        SpecialEffect.AnimationCount = 10;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(-2, -2);
+                        break;
+                    case 16:
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 112;
+                        SpecialEffect.AnimationCount = 10;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(-2, -2);
+                        break;
+                    case 17:
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 126;
+                        SpecialEffect.AnimationCount = 10;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(-2, -2);
+                        break;
+                    case 18:
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 140;
+                        SpecialEffect.AnimationCount = 10;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(-2, -2);
+                        break;
+                    case 19:
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 154;
+                        SpecialEffect.AnimationCount = 10;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(-2, -2);
+                        break;
+                    case 20: //Common White
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 182;
+                        SpecialEffect.AnimationCount = 10;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(0, -3);
+                        break;
+                    case 21: //Rare Blue
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 252;
+                        SpecialEffect.AnimationCount = 10;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(0, -3);
+                        break;
+                    case 22: //Legendary Orange
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 168;
+                        SpecialEffect.AnimationCount = 10;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(0, -3);
+                        break;
+                    case 23: //Mythical Purple
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 224;
+                        SpecialEffect.AnimationCount = 10;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(0, -3);
+                        break;
+                    case 24: //Godly Green
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 196;
+                        SpecialEffect.AnimationCount = 10;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(0, -3);
+                        break;
+                    case 25: //Unique Red
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 168;
+                        SpecialEffect.AnimationCount = 10;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(0, -3);
+                        break;
+                    case 26: //Rare
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 238;
+                        SpecialEffect.AnimationCount = 12;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(0, -1);
+                        break;
+                    case 27: //Legendary
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 252;
+                        SpecialEffect.AnimationCount = 12;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(0, -1);
+                        break;
+                    case 28: //Mythical
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 266;
+                        SpecialEffect.AnimationCount = 12;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(0, -1);
+                        break;
+                    case 101: //Item Parts Number
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 378;
+                        SpecialEffect.AnimationCount = 1;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(0, -1);
+                        break;
+                    case 102:
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 379;
+                        SpecialEffect.AnimationCount = 1;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(0, -1);
+                        break;
+                    case 103:
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 380;
+                        SpecialEffect.AnimationCount = 1;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(0, -1);
+                        break;
+                    case 104:
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 381;
+                        SpecialEffect.AnimationCount = 1;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(0, -1);
+                        break;
+                    case 105:
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 382;
+                        SpecialEffect.AnimationCount = 1;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(0, -1);
+                        break;
+                    case 106:
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 383;
+                        SpecialEffect.AnimationCount = 1;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(0, -1);
+                        break;
+                    case 107:
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 384;
+                        SpecialEffect.AnimationCount = 1;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(0, -1);
+                        break;
+                    case 108:
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 385;
+                        SpecialEffect.AnimationCount = 1;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(0, -1);
+                        break;
+                    case 109:
+                        SpecialEffect.Animated = true;
+                        SpecialEffect.Index = 386;
+                        SpecialEffect.AnimationCount = 1;
+                        SpecialEffect.AnimationDelay = 150;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(0, -1);
+                        break;
+
+                    default:
+                        if (Item.Info.ItemGlow == 0 || Item.Info.ItemGlow > 9) break;
+
+                        SpecialEffect.Index = 0 + ((Item.Info.ItemGlow - 1) * 2);
+                        SpecialEffect.AnimationCount = 2;
+                        SpecialEffect.AnimationDelay = 300;
+                        SpecialEffect.Visible = true;
+                        SpecialEffect.Location = new Point(-11, -12);
+
+                        break;
+                }
+        }
 
 
         public override void OnMouseClick(MouseEventArgs e)
         {
             if (Locked) return;
 
-            if (GameScene.PickedUpGold || GridType == MirGridType.Inspect || GridType == MirGridType.QuestInventory) return;
+            if (GameScene.PickedUpGold || GameScene.PickedUpHuntPoints || GridType == MirGridType.Inspect || GridType == MirGridType.QuestInventory) return;
 
             if (GameScene.SelectedCell == null && (GridType == MirGridType.Mail)) return;
 
@@ -291,7 +554,7 @@ namespace Client.MirControls
         {
             if (Locked) return;
 
-            if (GameScene.PickedUpGold || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant || GridType == MirGridType.Craft) return;
+            if (GameScene.PickedUpGold || GameScene.PickedUpHuntPoints || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant || GridType == MirGridType.Craft) return;
 
             base.OnMouseClick(e);
 
@@ -401,7 +664,7 @@ namespace Client.MirControls
                     }
                     break;
                 case ItemType.Bracelet:
-                    if ((dialog.Grid[(int)EquipmentSlot.BraceletR].Item == null || dialog.Grid[(int)EquipmentSlot.BraceletR].Item.Info.Type == ItemType.Amulet) && dialog.Grid[(int)EquipmentSlot.BraceletR].CanWearItem(Item))
+                    if (dialog.Grid[(int)EquipmentSlot.BraceletR].Item == null || dialog.Grid[(int)EquipmentSlot.BraceletR].CanWearItem(Item))
                     {
                         Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.BraceletR });
                         dialog.Grid[(int)EquipmentSlot.BraceletR].Locked = true;
@@ -429,8 +692,6 @@ namespace Client.MirControls
                     }
                     break;
                 case ItemType.Amulet:
-                    //if (Item.Info.Shape == 0) return;
-
                     if (dialog.Grid[(int)EquipmentSlot.Amulet].Item != null && Item.Info.Type == ItemType.Amulet)
                     {
                         if (dialog.Grid[(int)EquipmentSlot.Amulet].Item.Info == Item.Info && dialog.Grid[(int)EquipmentSlot.Amulet].Item.Count < dialog.Grid[(int)EquipmentSlot.Amulet].Item.Info.StackSize)
@@ -446,6 +707,25 @@ namespace Client.MirControls
                     {
                         Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.Amulet });
                         dialog.Grid[(int)EquipmentSlot.Amulet].Locked = true;
+                        Locked = true;
+                    }
+                    break;
+                case ItemType.TaoPoison:
+                    if (dialog.Grid[(int)EquipmentSlot.TaoPoison].Item != null && Item.Info.Type == ItemType.TaoPoison)
+                    {
+                        if (dialog.Grid[(int)EquipmentSlot.TaoPoison].Item.Info == Item.Info && dialog.Grid[(int)EquipmentSlot.TaoPoison].Item.Count < dialog.Grid[(int)EquipmentSlot.TaoPoison].Item.Info.StackSize)
+                        {
+                            Network.Enqueue(new C.MergeItem { GridFrom = GridType, GridTo = MirGridType.Equipment, IDFrom = Item.UniqueID, IDTo = dialog.Grid[(int)EquipmentSlot.TaoPoison].Item.UniqueID });
+
+                            Locked = true;
+                            return;
+                        }
+                    }
+
+                    if (dialog.Grid[(int)EquipmentSlot.TaoPoison].CanWearItem(Item))
+                    {
+                        Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.TaoPoison });
+                        dialog.Grid[(int)EquipmentSlot.TaoPoison].Locked = true;
                         Locked = true;
                     }
                     break;
@@ -481,9 +761,50 @@ namespace Client.MirControls
                         Locked = true;
                     }
                     break;
+                case ItemType.Trophy:
+                    if (dialog.Grid[(int)EquipmentSlot.Trophy].CanWearItem(Item))
+                    {
+                        Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.Trophy });
+                        dialog.Grid[(int)EquipmentSlot.Trophy].Locked = true;
+                        Locked = true;
+                    }
+                    break;
+                case ItemType.Trinket:
+                    if (dialog.Grid[(int)EquipmentSlot.Trinket].CanWearItem(Item))
+                    {
+                        Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.Trinket });
+                        dialog.Grid[(int)EquipmentSlot.Trinket].Locked = true;
+                        Locked = true;
+                    }
+                    break;
+                case ItemType.Medal: // New slot by Ice
+                    if (dialog.Grid[(int)EquipmentSlot.Medal].CanWearItem(Item))
+                    {
+                        Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.Medal });
+                        dialog.Grid[(int)EquipmentSlot.Medal].Locked = true;
+                        Locked = true;
+                    }
+                    break;
+                case ItemType.Crystal:
+                    if (dialog.Grid[(int)EquipmentSlot.Crystal].CanWearItem(Item))
+                    {
+                        Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.Crystal });
+                        dialog.Grid[(int)EquipmentSlot.Crystal].Locked = true;
+                        Locked = true;
+                    }
+                    break;
+                case ItemType.ShoulderPads:
+                    if (dialog.Grid[(int)EquipmentSlot.ShoulderPads].CanWearItem(Item))
+                    {
+                        Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.ShoulderPads });
+                        dialog.Grid[(int)EquipmentSlot.ShoulderPads].Locked = true;
+                        Locked = true;
+                    }
+                    break;
                 case ItemType.Potion:
                 case ItemType.Scroll:
                 case ItemType.Book:
+                case ItemType.ItemParts:
                 case ItemType.Food:
                 case ItemType.Script:
                 case ItemType.Pets:
@@ -548,14 +869,131 @@ namespace Client.MirControls
                     {
                         switch (Item.Info.Shape)
                         {
-                            case 1:
+                            case 1: //All items
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Weapon &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Armour &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Ring &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Bracelet &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Necklace &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Belt &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Boots &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Helmet) return;
+                                break;
+                            case 2: //Wep
                                 if (GameScene.SelectedItem.Info.Type != ItemType.Weapon) return;
                                 break;
-                            case 2:
+                            case 3: //Armour
                                 if (GameScene.SelectedItem.Info.Type != ItemType.Armour) return;
                                 break;
-                            case 3:
-                                if (GameScene.SelectedItem.Info.Type != ItemType.Ring && GameScene.SelectedItem.Info.Type != ItemType.Bracelet && GameScene.SelectedItem.Info.Type != ItemType.Necklace) return;
+                            case 4: //Ring Bracelet
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Ring &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Bracelet) return;
+                                break;
+                            case 5: //Ring Bracelet Necklace
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Ring && 
+                                    GameScene.SelectedItem.Info.Type != ItemType.Bracelet && 
+                                    GameScene.SelectedItem.Info.Type != ItemType.Necklace) return;
+                                break;
+                            case 6: //Belt Boots
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Belt &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Boots) return;
+                                break;
+                            case 7: //Belt Boots Helmet
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Belt &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Boots &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Helmet) return;
+                                break;
+                            case 8: //armour helm brace ring belt boots
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Armour &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Helmet &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Bracelet &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Ring &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Belt &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Boots) return;
+                                break;
+                            case 9: //wep neck brace ring
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Weapon &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Necklace &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Bracelet &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Ring) return;
+                                break;
+                            case 10: //wep neck ring 
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Weapon &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Necklace &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Ring) return;
+                                break;
+                            case 11: //arm helm belt
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Armour &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Helmet &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Belt) return;
+                                break;
+                            case 12: //arm helm neck
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Armour &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Necklace &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Helmet) return;
+                                break;
+                            case 13: //arm brace belt boots
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Armour &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Bracelet &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Belt &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Boots) return;
+                                break;
+                            case 14: //helm neck brace belt
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Bracelet &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Necklace &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Belt &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Helmet) return;
+                                break;
+                            case 15: //armour belt boots helm
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Armour &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Belt &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Boots &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Helmet) return;
+                                break;
+                            case 16: //wep brace ring
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Weapon &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Ring &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Bracelet) return;
+                                break;
+                            case 17: //armour neck
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Armour &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Necklace) return;
+                                break;
+                            case 18: //armour neck belt boots
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Armour &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Necklace &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Belt &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Boots) return;
+                                break;
+                            case 19: //Stone
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Stone) return;
+                                break;
+                            case 20: //Torch
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Torch) return;
+                                break;
+                            case 21: //Trophy
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Trophy) return;
+                                break;
+                            case 22: //Trinket
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Trinket) return;
+                                break;
+                            case 23: //Medal
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Medal) return;
+                                break;
+                            case 24: //Crystal
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Crystal) return;
+                                break;
+                            case 25: //Pads
+                                if (GameScene.SelectedItem.Info.Type != ItemType.ShoulderPads) return;
+                                break;
+                            case 26: //Stone Torch Trophy Trinket Medal Crystal Pads
+                                if (GameScene.SelectedItem.Info.Type != ItemType.Stone &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Torch &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Trophy &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Trinket &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Medal &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.Crystal &&
+                                    GameScene.SelectedItem.Info.Type != ItemType.ShoulderPads) return;
                                 break;
                         }
 
@@ -742,6 +1180,14 @@ namespace Client.MirControls
                 {
                     itemCell = i < (GameScene.User.Inventory.Length - GameScene.User.BeltIdx) ? GameScene.Scene.InventoryDialog.Grid[i] : GameScene.Scene.BeltDialog.Grid[i - GameScene.User.Inventory.Length];
                 }
+                if (Item.Info.Type == ItemType.TaoPoison)
+                {
+                    itemCell = i < GameScene.User.BeltIdx ? GameScene.Scene.BeltDialog.Grid[i] : GameScene.Scene.InventoryDialog.Grid[i - GameScene.User.BeltIdx];
+                }
+                else
+                {
+                    itemCell = i < (GameScene.User.Inventory.Length - GameScene.User.BeltIdx) ? GameScene.Scene.InventoryDialog.Grid[i] : GameScene.Scene.BeltDialog.Grid[i - GameScene.User.Inventory.Length];
+                }
 
                 if (itemCell.Item != null) continue;
 
@@ -842,7 +1288,7 @@ namespace Client.MirControls
                             #endregion
                             #region From Equipment
                             case MirGridType.Equipment: //From Equipment
-                                if (Item != null && GameScene.SelectedCell.Item.Info.Type == ItemType.Amulet)
+                                if (Item != null && GameScene.SelectedCell.Item.Info.Type == ItemType.Amulet && GameScene.SelectedCell.Item.Info.Type == ItemType.TaoPoison)
                                 {
                                     if (GameScene.SelectedCell.Item.Info == Item.Info && Item.Count < Item.Info.StackSize)
                                     {
@@ -886,7 +1332,7 @@ namespace Client.MirControls
                             #endregion
                             #region From Storage
                             case MirGridType.Storage: //From Storage
-                                if (Item != null && GameScene.SelectedCell.Item.Info.Type == ItemType.Amulet)
+                                if (Item != null && GameScene.SelectedCell.Item.Info.Type == ItemType.Amulet && GameScene.SelectedCell.Item.Info.Type == ItemType.TaoPoison)
                                 {
                                     if (GameScene.SelectedCell.Item.Info == Item.Info && Item.Count < Item.Info.StackSize)
                                     {
@@ -964,7 +1410,7 @@ namespace Client.MirControls
                             #endregion
                             #region From Trade
                             case MirGridType.Trade: //From Trade
-                                if (Item != null && GameScene.SelectedCell.Item.Info.Type == ItemType.Amulet)
+                                if (Item != null && GameScene.SelectedCell.Item.Info.Type == ItemType.Amulet && GameScene.SelectedCell.Item.Info.Type == ItemType.TaoPoison)
                                 {
                                     if (GameScene.SelectedCell.Item.Info == Item.Info && Item.Count < Item.Info.StackSize)
                                     {
@@ -1037,7 +1483,7 @@ namespace Client.MirControls
 
                             #region From Refine
                             case MirGridType.Refine: //From AwakenItem
-                                if (Item != null && GameScene.SelectedCell.Item.Info.Type == ItemType.Amulet)
+                                if (Item != null && GameScene.SelectedCell.Item.Info.Type == ItemType.Amulet && GameScene.SelectedCell.Item.Info.Type == ItemType.TaoPoison)
                                 {
                                     if (GameScene.SelectedCell.Item.Info == Item.Info && Item.Count < Item.Info.StackSize)
                                     {
@@ -1134,7 +1580,7 @@ namespace Client.MirControls
                         if (GameScene.SelectedCell.GridType != MirGridType.Inventory && GameScene.SelectedCell.GridType != MirGridType.Storage) return;
 
 
-                        if (Item != null && GameScene.SelectedCell.Item.Info.Type == ItemType.Amulet)
+                        if (Item != null && GameScene.SelectedCell.Item.Info.Type == ItemType.Amulet && GameScene.SelectedCell.Item.Info.Type == ItemType.TaoPoison)
                         {
                             if (GameScene.SelectedCell.Item.Info == Item.Info && Item.Count < Item.Info.StackSize)
                             {
@@ -1721,12 +2167,14 @@ namespace Client.MirControls
                 case EquipmentSlot.BraceletL:
                     return i.Info.Type == ItemType.Bracelet;
                 case EquipmentSlot.BraceletR:
-                    return i.Info.Type == ItemType.Bracelet || i.Info.Type == ItemType.Amulet;
+                    return i.Info.Type == ItemType.Bracelet;
                 case EquipmentSlot.RingL:
                 case EquipmentSlot.RingR:
                     return type == ItemType.Ring;
                 case EquipmentSlot.Amulet:
-                    return type == ItemType.Amulet;// && i.Info.Shape > 0;
+                    return type == ItemType.Amulet;
+                case EquipmentSlot.TaoPoison:
+                    return type == ItemType.TaoPoison;
                 case EquipmentSlot.Boots:
                     return type == ItemType.Boots;
                 case EquipmentSlot.Belt:
@@ -1735,6 +2183,16 @@ namespace Client.MirControls
                     return type == ItemType.Stone;
                 case EquipmentSlot.Mount:
                     return type == ItemType.Mount;
+                case EquipmentSlot.Trophy:
+                    return type == ItemType.Trophy;
+                case EquipmentSlot.Trinket:
+                    return type == ItemType.Trinket;
+                case EquipmentSlot.Medal:
+                    return type == ItemType.Medal;
+                case EquipmentSlot.Crystal:
+                    return type == ItemType.Crystal;
+                case EquipmentSlot.ShoulderPads:
+                    return type == ItemType.ShoulderPads;
                 default:
                     return false;
             }
@@ -1803,6 +2261,35 @@ namespace Client.MirControls
 
             switch (Item.Info.RequiredType)
             {
+                case RequiredType.Conquest:
+                    if (MapObject.User.Conquest < 0 || MapObject.User.Conquest != Item.Info.RequiredAmount)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("You are not owner of the correct conquest.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.Reborn:
+                    if (MapObject.User.Reborn < Item.Info.RequiredAmount)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowReborn, ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.InstanceStage:
+                    if (MapObject.User.InstanceStage < Item.Info.RequiredAmount)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowInstanceStage, ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.ChallengeStage:
+                    if (MapObject.User.ChallengeStage < Item.Info.RequiredAmount)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowChallengeStage, ChatType.System);
+                        return false;
+                    }
+                    break;
+
                 case RequiredType.Level:
                     if (MapObject.User.Level < Item.Info.RequiredAmount)
                     {
@@ -1982,6 +2469,34 @@ namespace Client.MirControls
 
             switch (i.Info.RequiredType)
             {
+                case RequiredType.Conquest:
+                    if (MapObject.User.Conquest < 0 || MapObject.User.Conquest != i.Info.RequiredAmount)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("You are not owner of the correct conquest.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.Reborn:
+                    if (MapObject.User.Reborn < i.Info.RequiredAmount)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowReborn, ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.InstanceStage:
+                    if (MapObject.User.InstanceStage < i.Info.RequiredAmount)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowInstanceStage, ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.ChallengeStage:
+                    if (MapObject.User.ChallengeStage < i.Info.RequiredAmount)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowChallengeStage, ChatType.System);
+                        return false;
+                    }
+                    break;
                 case RequiredType.Level:
                     if (MapObject.User.Level < i.Info.RequiredAmount)
                     {
@@ -2137,11 +2652,6 @@ namespace Client.MirControls
                     }
 
                     Library.Draw(image, DisplayLocation.Add(offSet), ForeColour, UseOffSet, 1F);
-
-                    if (Item.SealedInfo != null && Item.SealedInfo.ExpiryDate > CMain.Now)
-                    {
-                        Libraries.StateItems.Draw(3590, DisplayLocation.Add(new Point(2, 2)), Color.White, UseOffSet, 1F);
-                    }
                 }
             }
             else if (Item != null && (GameScene.SelectedCell == this || Locked))
@@ -2181,6 +2691,7 @@ namespace Client.MirControls
             }
             else
                 DisposeCountLabel();
+            UpdateGradeImage();
         }
 
         protected override void OnMouseEnter()

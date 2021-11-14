@@ -24,6 +24,7 @@ namespace Server.MirEnvir
 
         public string Message = string.Empty;
         public uint Gold = 0;
+        public uint Credit = 0;
         public List<UserItem> Items = new List<UserItem>();
 
         public DateTime DateSent, DateOpened;
@@ -44,7 +45,7 @@ namespace Server.MirEnvir
 
         public bool Parcel //parcel if item contains gold or items.
         {
-            get { return Gold > 0 || Items.Count > 0; }
+            get { return Gold > 0 || Items.Count > 0 || Credit > 0; }
         }
 
         public bool CanReply;
@@ -64,6 +65,7 @@ namespace Server.MirEnvir
             RecipientIndex = reader.ReadInt32();
             Message = reader.ReadString();
             Gold = reader.ReadUInt32();
+            Credit = reader.ReadUInt32();
 
             int count = reader.ReadInt32();
 
@@ -89,6 +91,7 @@ namespace Server.MirEnvir
             writer.Write(RecipientIndex);
             writer.Write(Message);
             writer.Write(Gold);
+            writer.Write(Credit);
 
             writer.Write(Items.Count);
             for (int i = 0; i < Items.Count; i++)
@@ -112,7 +115,7 @@ namespace Server.MirEnvir
             {
                 if(Items.Count > 0 && Gold > 0)
                 {
-                    if(!Settings.MailAutoSendGold || !Settings.MailAutoSendItems)
+                    if(!Settings.MailAutoSendGold || !Settings.MailAutoSendItems || !Settings.MailAutoSendCredit)
                     {
                         Collected = false;
                     }
@@ -127,6 +130,10 @@ namespace Server.MirEnvir
                 else
                 {
                     if (!Settings.MailAutoSendGold)
+                    {
+                        Collected = false;
+                    }
+                    if (!Settings.MailAutoSendCredit)
                     {
                         Collected = false;
                     }
@@ -145,7 +152,7 @@ namespace Server.MirEnvir
                 RecipientInfo.Player.NewMail = true; //notify player of new mail  --check in player process
             }
 
-            DateSent = Envir.Now;
+            DateSent = DateTime.Now;
         }
 
         public ClientMail CreateClientMail()
@@ -158,6 +165,7 @@ namespace Server.MirEnvir
                 Locked = Locked,
                 CanReply = CanReply,
                 Gold = Gold,
+                Credit = Credit,
                 Items = Items,
                 Opened = Opened,
                 Collected = Collected,

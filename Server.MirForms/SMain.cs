@@ -4,6 +4,14 @@ using Server.MirEnvir;
 using Server.MirDatabase;
 using Server.MirForms.Systems;
 using Server.Database;
+using System.Collections.Concurrent;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Linq;
+using S = ServerPackets;
+using Server.MirForms;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace Server
 {
@@ -313,6 +321,93 @@ namespace Server
             }
         }
 
+        private void MainTab_MouseClick(object sender, MouseEventArgs e)
+        {
+            ProcessGuildViewTab();
+        }
+
+        public void ProcessGuildViewTab()
+        {
+
+            GuildListView.Items.Clear();
+
+
+            for (int i = 0; i < Envir.GuildList.Count; i++)
+            {
+                Server.MirObjects.GuildObject Guild = Envir.GuildList[i];
+
+                ListViewItem tempItem = new ListViewItem(Guild.Guildindex.ToString()) { Tag = this };
+
+                tempItem.SubItems.Add(Guild.Name);
+
+                if (Guild.Ranks.Count > 0 && Guild.Ranks[0].Members.Count > 0)
+                    tempItem.SubItems.Add(Guild.Ranks[0].Members[0].name);
+                else
+                    tempItem.SubItems.Add("Not Existing");
+
+                tempItem.SubItems.Add(Guild.Membercount.ToString());
+                tempItem.SubItems.Add(Guild.Level.ToString());
+                tempItem.SubItems.Add(Guild.Gold.ToString());
+                tempItem.SubItems.Add(Guild.HasGT ? Guild.GTRent.ToString() : "None");
+
+                GuildListView.Items.Add(tempItem);
+            }
+        }
+
+
+        private void GuildListView_DoubleClick(object sender, EventArgs e)
+        {
+
+            CustomFormControl.ListViewNF list = (CustomFormControl.ListViewNF)sender;
+
+            if (list.SelectedItems.Count > 0)
+            {
+                ListViewItem item = list.SelectedItems[0];
+                int index = Int32.Parse(item.Text);
+
+                Server.MirObjects.GuildObject Guild = Envir.GetGuild(index);
+
+                MirForms.GuildItemForm form = new MirForms.GuildItemForm()
+                {
+                    GuildName = Guild.Name,
+                    main = this,
+                };
+
+                if (Guild == null) return;
+
+                foreach (var i in Guild.StoredItems)
+                {
+                    if (i == null) continue;
+                    ListViewItem tempItem = new ListViewItem(i.Item.UniqueID.ToString()) { Tag = this };
+
+                    Server.MirDatabase.CharacterInfo character = Envir.GetCharacterInfo((int)i.UserId);
+                    if (character != null)
+                        tempItem.SubItems.Add(character.Name);
+                    else if (i.UserId == -1)
+                        tempItem.SubItems.Add("Server");
+                    else
+                        tempItem.SubItems.Add("Unknown");
+
+                    tempItem.SubItems.Add(i.Item.Name);
+                    tempItem.SubItems.Add(i.Item.Count.ToString());
+                    tempItem.SubItems.Add(i.Item.CurrentDura.ToString() + "/" + i.Item.MaxDura.ToString());
+
+                    form.GuildItemListView.Items.Add(tempItem);
+                }
+
+                foreach (var r in Guild.Ranks)
+                    foreach (var m in r.Members)
+                    {
+                        ListViewItem tempItem = new ListViewItem(m.name) { Tag = this };
+                        tempItem.SubItems.Add(r.Name);
+                        form.MemberListView.Items.Add(tempItem);
+                    }
+
+
+                form.ShowDialog();
+            }
+        }
+
         private void PlayersOnlineListView_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
         {
             e.Cancel = true;
@@ -368,9 +463,24 @@ namespace Server
             {
                 Envir.Start();
             }
-
             AutoResize();
         }
+        public const string BackUpPath = @".\Back Up\";
+        public const string AccountDBPath = BackUpPath + @"Account\";
+
+        public const string GuildDBPath = BackUpPath + @"Guilds\";
+        public const string ConquestDBPath = BackUpPath + @"Conquest\";
+        public const string CraftingDBPath = BackUpPath + @"Crafting\";
+        public const string DragonDBPath = BackUpPath + @"Dragon\";
+        public const string GameShopDBPath = BackUpPath + @"GameShop\";
+        public const string ItemDBPath = BackUpPath + @"Item\";
+        public const string MagicDBPath = BackUpPath + @"Magic\";
+        public const string MapDBPath = BackUpPath + @"Map\";
+        public const string MobDBPath = BackUpPath + @"Mob\";
+        public const string NPCDBPath = BackUpPath + @"NPC\";
+        public const string QuestDBPath = BackUpPath + @"Quest\";
+        public const string RespawnTickDBPath = BackUpPath + @"Respawn\";
+        public const string VersionDBPath = BackUpPath + @"Version\";
 
         private void gemToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -410,6 +520,124 @@ namespace Server
             MonsterTunerForm form = new MonsterTunerForm();
 
             form.ShowDialog();
+        }
+
+        private void itemsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int u = 0;
+
+
+            foreach (var NewItem in EditEnvir.ItemInfoList)
+            {
+                ItemInfo OldItem = Envir.ItemInfoList.Find(x => x.Index == NewItem.Index);
+                if (OldItem != null)
+                {
+                    OldItem.UpdateItem(NewItem);
+                }
+                else
+                {
+                    ItemInfo CloneItem = ItemInfo.CloneItem(NewItem);
+                    Envir.ItemInfoList.Add(CloneItem);
+                    u++;
+                }
+            }
+
+            SMain.Enqueue("[Item DataBase] total items :" + Envir.ItemInfoList.Count.ToString());
+            SMain.Enqueue("[Item DataBase] " + (Envir.ItemInfoList.Count - u).ToString() + " has been updated");
+            SMain.Enqueue("[Item DataBase] " + u.ToString() + " has been added");
+
+            foreach (var p in Envir.Players) // refresh all existing players stats
+            {
+                if (p.Info == null) continue;
+
+                p.RefreshStats();
+                p.Enqueue(new S.RefreshStats());
+
+            }
+
+        }
+        private void REGameShopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int u = 0;
+
+
+            foreach (var NewItem in EditEnvir.GameShopList)
+            {
+                var OldItem = Envir.GameShopList.Find(x => x.GIndex == NewItem.GIndex);
+                if (OldItem != null)
+                {
+                    OldItem.UpdateItem(NewItem);
+                }
+                else
+                {
+                    var CloneItem = GameShopItem.CloneItem(NewItem);
+                    Envir.GameShopList.Add(CloneItem);
+                    u++;
+                }
+            }
+
+            SMain.Enqueue("[Gameshop DataBase] total items :" + Envir.GameShopList.Count.ToString());
+            SMain.Enqueue("[Gameshop DataBase] " + (Envir.GameShopList.Count - u).ToString() + " has been updated");
+            SMain.Enqueue("[Gameshop DataBase] " + u.ToString() + " has been added");
+
+            foreach (var p in Envir.Players)// update all info on players items
+            {
+                if (p.Info == null) continue;
+
+                p.GetGameShop();
+
+            }
+        }
+        private void monsterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            int u = 0;
+
+
+            foreach (var NewMob in EditEnvir.MonsterInfoList)
+            {
+                MonsterInfo OldMob = Envir.MonsterInfoList.Find(x => x.Index == NewMob.Index);
+                if (OldMob != null)
+                {
+                    OldMob.UpdateMonster(NewMob);
+                }
+                else
+                {
+                    MonsterInfo CloneMonster = MonsterInfo.CloneMonster(NewMob);
+                    Envir.MonsterInfoList.Add(CloneMonster);
+                    u++;
+                }
+            }
+
+            SMain.Enqueue("[Monster DataBase] total monsters :" + Envir.MonsterInfoList.Count.ToString());
+            SMain.Enqueue("[Monster DataBase] " + (Envir.MonsterInfoList.Count - u).ToString() + " has been updated");
+            SMain.Enqueue("[Monster DataBase] " + u.ToString() + " has been added");
+
+
+        }
+        private void magicToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            foreach (var NewMagic in EditEnvir.MagicInfoList)
+            {
+                MagicInfo OldMagic = Envir.MagicInfoList.Find(x => x.Spell == NewMagic.Spell);
+                if (OldMagic != null)
+                {
+                    OldMagic.Copy(NewMagic);
+                }
+            }
+
+            foreach (var p in Envir.Players)
+            {
+                foreach (var Magic in Envir.MagicInfoList)
+                {
+                    p.Enqueue(new S.RefreshMagic { Magic = (new UserMagic(Magic.Spell)).CreateClientMagic() });
+                }
+            }
+
+            SMain.Enqueue("[Magic DataBase] total magics :" + Envir.MagicInfoList.Count.ToString());
+            SMain.Enqueue("[Magic DataBase] " + (Envir.MagicInfoList.Count).ToString() + " has been updated");
+
         }
 
         private void reloadNPCsToolStripMenuItem_Click(object sender, EventArgs e)

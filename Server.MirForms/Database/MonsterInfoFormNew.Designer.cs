@@ -52,6 +52,8 @@ namespace Server.Database
             this.MonsterLight = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MonsterAttackSpeed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MonsterMoveSpeed = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MonsterQuest = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MonsterRandomQuestChance = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MonsterViewRange = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MonsterCoolEye = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MonsterExperience = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -60,6 +62,16 @@ namespace Server.Database
             this.MonsterUndead = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.MonsterCanTame = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.MonsterDropPath = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MonsterIsElite = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.MonsterIsSub = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.MonsterIsBoss = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.MonsterAllowFreeze = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.MonsterAllowSlow = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.MonsterAllowGreen = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.MonsterAllowRed = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.MonsterAllowPara = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.MonsterAllowBlindness = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.MonsterAllowBleeding = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.monsterInfoGridView)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -83,6 +95,8 @@ namespace Server.Database
             this.MonsterLight,
             this.MonsterAttackSpeed,
             this.MonsterMoveSpeed,
+            this.MonsterQuest,
+            this.MonsterRandomQuestChance,
             this.MonsterViewRange,
             this.MonsterCoolEye,
             this.MonsterExperience,
@@ -90,6 +104,16 @@ namespace Server.Database
             this.MonsterAutoRev,
             this.MonsterUndead,
             this.MonsterCanTame,
+            this.MonsterIsElite,
+            this.MonsterIsSub,
+            this.MonsterIsBoss,
+            this.MonsterAllowFreeze,
+            this.MonsterAllowSlow,
+            this.MonsterAllowGreen,
+            this.MonsterAllowRed,
+            this.MonsterAllowPara,
+            this.MonsterAllowBlindness,
+            this.MonsterAllowBleeding,
             this.MonsterDropPath});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
@@ -286,6 +310,18 @@ namespace Server.Database
             this.MonsterMoveSpeed.HeaderText = "Move Speed";
             this.MonsterMoveSpeed.Name = "MonsterMoveSpeed";
             // 
+            // MonsterQuest
+            // 
+            this.MonsterQuest.DataPropertyName = "MonsterQuest";
+            this.MonsterQuest.HeaderText = "Quest";
+            this.MonsterQuest.Name = "MonsterQuest";
+            // 
+            // MonsterRandomQuestChance
+            // 
+            this.MonsterRandomQuestChance.DataPropertyName = "MonsterRandomQuestChance";
+            this.MonsterRandomQuestChance.HeaderText = "Quest Chance";
+            this.MonsterRandomQuestChance.Name = "MonsterRandomQuestChance";
+            // 
             // MonsterViewRange
             // 
             this.MonsterViewRange.DataPropertyName = "MonsterViewRange";
@@ -344,6 +380,86 @@ namespace Server.Database
             this.MonsterDropPath.Name = "MonsterDropPath";
             this.MonsterDropPath.Width = 80;
             // 
+            // MonsterIsElite
+            // 
+            this.MonsterIsElite.DataPropertyName = "MonsterIsElite";
+            this.MonsterIsElite.HeaderText = "Is Elite";
+            this.MonsterIsElite.Name = "MonsterIsElite";
+            this.MonsterIsElite.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.MonsterIsElite.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // MonsterIsSub
+            // 
+            this.MonsterIsSub.DataPropertyName = "MonsterIsSub";
+            this.MonsterIsSub.HeaderText = "Is Sub";
+            this.MonsterIsSub.Name = "MonsterIsSub";
+            this.MonsterIsSub.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.MonsterIsSub.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // MonsterIsBoss
+            // 
+            this.MonsterIsBoss.DataPropertyName = "MonsterIsBoss";
+            this.MonsterIsBoss.HeaderText = "Is Boss";
+            this.MonsterIsBoss.Name = "MonsterIsBoss";
+            this.MonsterIsBoss.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.MonsterIsBoss.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // MonsterAllowFreeze
+            // 
+            this.MonsterAllowFreeze.DataPropertyName = "MonsterAllowFreeze";
+            this.MonsterAllowFreeze.HeaderText = "AllowFreeze";
+            this.MonsterAllowFreeze.Name = "MonsterAllowFreeze";
+            this.MonsterAllowFreeze.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.MonsterAllowFreeze.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // MonsterAllowSlow
+            // 
+            this.MonsterAllowSlow.DataPropertyName = "MonsterAllowSlow";
+            this.MonsterAllowSlow.HeaderText = "AllowSlow";
+            this.MonsterAllowSlow.Name = "MonsterAllowSlow";
+            this.MonsterAllowSlow.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.MonsterAllowSlow.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // MonsterAllowGreen
+            // 
+            this.MonsterAllowGreen.DataPropertyName = "MonsterAllowGreen";
+            this.MonsterAllowGreen.HeaderText = "AllowGreen";
+            this.MonsterAllowGreen.Name = "MonsterAllowGreen";
+            this.MonsterAllowGreen.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.MonsterAllowGreen.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // MonsterAllowRed
+            // 
+            this.MonsterAllowRed.DataPropertyName = "MonsterAllowRed";
+            this.MonsterAllowRed.HeaderText = "AllowRed";
+            this.MonsterAllowRed.Name = "MonsterAllowRed";
+            this.MonsterAllowRed.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.MonsterAllowRed.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // MonsterAllowPara
+            // 
+            this.MonsterAllowPara.DataPropertyName = "MonsterAllowPara";
+            this.MonsterAllowPara.HeaderText = "AllowPara";
+            this.MonsterAllowPara.Name = "MonsterAllowPara";
+            this.MonsterAllowPara.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.MonsterAllowPara.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // MonsterAllowBlindness
+            // 
+            this.MonsterAllowBlindness.DataPropertyName = "MonsterAllowBlindness";
+            this.MonsterAllowBlindness.HeaderText = "AllowBlindness";
+            this.MonsterAllowBlindness.Name = "MonsterAllowBlindness";
+            this.MonsterAllowBlindness.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.MonsterAllowBlindness.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // MonsterAllowBleeding
+            // 
+            this.MonsterAllowBleeding.DataPropertyName = "MonsterAllowBleeding";
+            this.MonsterAllowBleeding.HeaderText = "AllowBleeding";
+            this.MonsterAllowBleeding.Name = "MonsterAllowBleeding";
+            this.MonsterAllowBleeding.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.MonsterAllowBleeding.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
             // MonsterInfoFormNew
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -388,6 +504,8 @@ namespace Server.Database
         private System.Windows.Forms.DataGridViewTextBoxColumn MonsterLight;
         private System.Windows.Forms.DataGridViewTextBoxColumn MonsterAttackSpeed;
         private System.Windows.Forms.DataGridViewTextBoxColumn MonsterMoveSpeed;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MonsterQuest;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MonsterRandomQuestChance;
         private System.Windows.Forms.DataGridViewTextBoxColumn MonsterViewRange;
         private System.Windows.Forms.DataGridViewTextBoxColumn MonsterCoolEye;
         private System.Windows.Forms.DataGridViewTextBoxColumn MonsterExperience;
@@ -396,5 +514,15 @@ namespace Server.Database
         private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterUndead;
         private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterCanTame;
         private System.Windows.Forms.DataGridViewTextBoxColumn MonsterDropPath;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterIsElite;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterIsSub;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterIsBoss;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterAllowFreeze;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterAllowSlow;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterAllowGreen;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterAllowRed;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterAllowPara;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterAllowBlindness;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterAllowBleeding;
     }
 }

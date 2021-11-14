@@ -22,7 +22,7 @@
 
         MaxDragonLevel = 13,
 
-        ClassWeaponCount = 100,
+        ClassWeaponCount = 500,
 
         FlagIndexCount = 1999,
 

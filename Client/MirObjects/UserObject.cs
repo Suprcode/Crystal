@@ -32,23 +32,28 @@ namespace Client.MirObjects
         public bool RentalItemLocked;
         public uint RentalGoldAmount;
 
+        public ulong HuntPoints;
+
         public SpecialItemMode ItemMode;
 
         public BaseStats CoreStats = new BaseStats(0);
 
 
-        public UserItem[] Inventory = new UserItem[46], Equipment = new UserItem[14], Trade = new UserItem[10], QuestInventory = new UserItem[40];
+        public UserItem[] Inventory = new UserItem[46], Equipment = new UserItem[20], Trade = new UserItem[10], QuestInventory = new UserItem[40];
         public int BeltIdx = 6;
         public bool HasExpandedStorage = false;
         public DateTime ExpandedStorageExpiryTime;
+
+        public int CurrentAttributesAvailable;
+        public Attributes Attributes = new Attributes();
 
         public List<ClientMagic> Magics = new List<ClientMagic>();
         public List<ItemSets> ItemSets = new List<ItemSets>();
         public List<EquipmentSlot> MirSet = new List<EquipmentSlot>();
 
-        public List<ClientIntelligentCreature> IntelligentCreatures = new List<ClientIntelligentCreature>();
-        public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;
-        public bool CreatureSummoned;
+        public List<ClientIntelligentCreature> IntelligentCreatures = new List<ClientIntelligentCreature>();//IntelligentCreature
+        public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;//IntelligentCreature
+        public bool CreatureSummoned;//IntelligentCreature
         public int PearlCount = 0;
 
         public List<ClientQuestProgress> CurrentQuests = new List<ClientQuestProgress>();
@@ -77,6 +82,11 @@ namespace Client.MirObjects
             Class = info.Class;
             Gender = info.Gender;
             Level = info.Level;
+            Reborn = info.Reborn;
+            Conquest = info.Conquest;
+
+            InstanceStage = info.InstanceStage;
+            ChallengeStage = info.ChallengeStage;
 
             CurrentLocation = info.Location;
             MapLocation = info.Location;
@@ -90,6 +100,8 @@ namespace Client.MirObjects
 
             Experience = info.Experience;
             MaxExperience = info.MaxExperience;
+
+            HuntPoints = info.HuntPoints;
 
             LevelEffects = info.LevelEffects;
 
@@ -106,9 +118,9 @@ namespace Client.MirObjects
                 Magics[i].CastTime += CMain.Time;
             }
 
-            IntelligentCreatures = info.IntelligentCreatures;
-            SummonedCreatureType = info.SummonedCreatureType;
-            CreatureSummoned = info.CreatureSummoned;
+            IntelligentCreatures = info.IntelligentCreatures;//IntelligentCreature
+            SummonedCreatureType = info.SummonedCreatureType;//IntelligentCreature
+            CreatureSummoned = info.CreatureSummoned;//IntelligentCreature
 
             BindAllItems();
 
@@ -148,17 +160,23 @@ namespace Client.MirObjects
             RefreshSkills();
             RefreshBuffs();
             RefreshGuildBuffs();
+            RefreshAttributeStats();
 
             SetLibraries();
             SetEffects();
 
             Stats[Stat.HP] += (Stats[Stat.HP] * Stats[Stat.HPRatePercent]) / 100;
             Stats[Stat.MP] += (Stats[Stat.MP] * Stats[Stat.MPRatePercent]) / 100;
+            Stats[Stat.MinAC] += (Stats[Stat.MinAC] * Stats[Stat.MinACRatePercent]) / 100;
             Stats[Stat.MaxAC] += (Stats[Stat.MaxAC] * Stats[Stat.MaxACRatePercent]) / 100;
+            Stats[Stat.MinMAC] += (Stats[Stat.MinMAC] * Stats[Stat.MinMACRatePercent]) / 100;
             Stats[Stat.MaxMAC] += (Stats[Stat.MaxMAC] * Stats[Stat.MaxMACRatePercent]) / 100;
 
+            Stats[Stat.MinDC] += (Stats[Stat.MinDC] * Stats[Stat.MinDCRatePercent]) / 100;
             Stats[Stat.MaxDC] += (Stats[Stat.MaxDC] * Stats[Stat.MaxDCRatePercent]) / 100;
+            Stats[Stat.MinMC] += (Stats[Stat.MinMC] * Stats[Stat.MinMCRatePercent]) / 100;
             Stats[Stat.MaxMC] += (Stats[Stat.MaxMC] * Stats[Stat.MaxMCRatePercent]) / 100;
+            Stats[Stat.MinSC] += (Stats[Stat.MinSC] * Stats[Stat.MinSCRatePercent]) / 100;
             Stats[Stat.MaxSC] += (Stats[Stat.MaxSC] * Stats[Stat.MaxSCRatePercent]) / 100;
             Stats[Stat.AttackSpeed] += (Stats[Stat.AttackSpeed] * Stats[Stat.AttackSpeedRatePercent]) / 100;
 
@@ -171,6 +189,22 @@ namespace Client.MirObjects
             PercentHealth = (byte)(HP / (float)Stats[Stat.HP] * 100);
 
             GameScene.Scene.Redraw();
+        }
+
+        private void RefreshAttributeStats()
+        {
+            Stats[Stat.HP] = (int)Math.Min(int.MaxValue, Stats[Stat.HP] + Attributes.GetValue("HP"));
+            Stats[Stat.MP] = (int)Math.Min(int.MaxValue, Stats[Stat.MP] + Attributes.GetValue("MP"));
+            Stats[Stat.MinAC] = (ushort)Math.Min(ushort.MaxValue, Stats[Stat.MinAC] + Attributes.GetValue("MinAC"));
+            Stats[Stat.MaxAC] = (ushort)Math.Min(ushort.MaxValue, Stats[Stat.MaxAC] + Attributes.GetValue("MaxAC"));
+            Stats[Stat.MinMAC] = (ushort)Math.Min(ushort.MaxValue, Stats[Stat.MinMAC] + Attributes.GetValue("MinMAC"));
+            Stats[Stat.MaxMAC] = (ushort)Math.Min(ushort.MaxValue, Stats[Stat.MaxMAC] + Attributes.GetValue("MaxMAC"));
+            Stats[Stat.MinDC] = (ushort)Math.Min(ushort.MaxValue, Stats[Stat.MinDC] + Attributes.GetValue("MinDC"));
+            Stats[Stat.MaxDC] = (ushort)Math.Min(ushort.MaxValue, Stats[Stat.MaxDC] + Attributes.GetValue("MaxDC"));
+            Stats[Stat.MinMC] = (ushort)Math.Min(ushort.MaxValue, Stats[Stat.MinMC] + Attributes.GetValue("MinMC"));
+            Stats[Stat.MaxMC] = (ushort)Math.Min(ushort.MaxValue, Stats[Stat.MaxMC] + Attributes.GetValue("MaxMC"));
+            Stats[Stat.MinSC] = (ushort)Math.Min(ushort.MaxValue, Stats[Stat.MinSC] + Attributes.GetValue("MinSC"));
+            Stats[Stat.MaxSC] = (ushort)Math.Min(ushort.MaxValue, Stats[Stat.MaxSC] + Attributes.GetValue("MaxSC"));
         }
 
         private void RefreshLevelStats()
@@ -219,34 +253,19 @@ namespace Client.MirObjects
                 UserItem temp = Equipment[i];
                 if (temp == null) continue;
 
-                ItemInfo realItem = Functions.GetRealItem(temp.Info, Level, Class, GameScene.ItemInfoList);
+                ItemInfo RealItem = Functions.GetRealItem(temp.Info, Level, Class, GameScene.ItemInfoList);
 
-                if (realItem.Type == ItemType.Weapon || realItem.Type == ItemType.Torch)
+                if (RealItem.Type == ItemType.Weapon || RealItem.Type == ItemType.Torch)
                     CurrentHandWeight = (int)Math.Min(int.MaxValue, CurrentHandWeight + temp.Weight);
                 else
                     CurrentWearWeight = (int)Math.Min(int.MaxValue, CurrentWearWeight + temp.Weight);
 
-                if (temp.CurrentDura == 0 && realItem.Durability > 0) continue;
-
-                if (realItem.Type == ItemType.Armour)
-                {
-                    Armour = realItem.Shape;
-                    WingEffect = realItem.Effect;
-                }
-                if (realItem.Type == ItemType.Weapon)
-                {
-                    Weapon = realItem.Shape;
-                    WeaponEffect = realItem.Effect;
-                }
-
-                if (realItem.Type == ItemType.Mount)
-                {
-                    MountType = realItem.Shape;
-                }
+                if (temp.CurrentDura == 0 && RealItem.Durability > 0) continue;
 
                 if (temp.Info.IsFishingRod) continue;
 
-                Stats.Add(realItem.Stats);
+
+                Stats.Add(RealItem.Stats);
                 Stats.Add(temp.AddedStats);
 
                 Stats[Stat.MinAC] += temp.Awake.GetAC();
@@ -264,35 +283,49 @@ namespace Client.MirObjects
                 Stats[Stat.HP] += temp.Awake.GetHPMP();
                 Stats[Stat.MP] += temp.Awake.GetHPMP();
 
-                if (realItem.Light > Light) Light = realItem.Light;
-                if (realItem.Unique != SpecialItemMode.None)
+                if (RealItem.Light > Light) Light = RealItem.Light;
+                if (RealItem.Unique != SpecialItemMode.None)
                 {
-                    ItemMode |= realItem.Unique;
+                    ItemMode |= RealItem.Unique;
                 }
 
-                if (realItem.CanFastRun)
+                if (RealItem.CanFastRun)
                 {
                     FastRun = true;
                 }
 
                 RefreshSocketStats(temp);
 
-                if (realItem.Set == ItemSet.None) continue;
+                if (RealItem.Type == ItemType.Armour)
+                {
+                    Armour = RealItem.Shape;
+                    WingEffect = RealItem.Effect;
+                }
+                if (RealItem.Type == ItemType.Weapon)
+                {
+                    Weapon = RealItem.Shape;
+                    WeaponEffect = RealItem.Effect;
+                }
 
-                ItemSets itemSet = ItemSets.Where(set => set.Set == realItem.Set && !set.Type.Contains(realItem.Type) && !set.SetComplete).FirstOrDefault();
+                if (RealItem.Type == ItemType.Mount)
+                    MountType = RealItem.Shape;
+
+                if (RealItem.Set == ItemSet.None) continue;
+
+                ItemSets itemSet = ItemSets.Where(set => set.Set == RealItem.Set && !set.Type.Contains(RealItem.Type) && !set.SetComplete).FirstOrDefault();
 
                 if (itemSet != null)
                 {
-                    itemSet.Type.Add(realItem.Type);
+                    itemSet.Type.Add(RealItem.Type);
                     itemSet.Count++;
                 }
                 else
                 {
-                    ItemSets.Add(new ItemSets { Count = 1, Set = realItem.Set, Type = new List<ItemType> { realItem.Type } });
+                    ItemSets.Add(new ItemSets { Count = 1, Set = RealItem.Set, Type = new List<ItemType> { RealItem.Type } });
                 }
 
                 //Mir Set
-                if (realItem.Set == ItemSet.Mir)
+                if (RealItem.Set == ItemSet.Mir)
                 {
                     if (!MirSet.Contains((EquipmentSlot)i))
                         MirSet.Add((EquipmentSlot)i);
@@ -327,22 +360,22 @@ namespace Client.MirObjects
                 UserItem temp = equipItem.Slots[i];
 
                 if (temp == null) continue;
-                ItemInfo realItem = Functions.GetRealItem(temp.Info, Level, Class, GameScene.ItemInfoList);
+                ItemInfo RealItem = Functions.GetRealItem(temp.Info, Level, Class, GameScene.ItemInfoList);
 
-                if (realItem.Type == ItemType.Weapon || realItem.Type == ItemType.Torch)
+                if (RealItem.Type == ItemType.Weapon || RealItem.Type == ItemType.Torch)
                     CurrentHandWeight = (int)Math.Min(int.MaxValue, CurrentHandWeight + temp.Weight);
                 else
                     CurrentWearWeight = (int)Math.Min(int.MaxValue, CurrentWearWeight + temp.Weight);
 
-                if (temp.CurrentDura == 0 && realItem.Durability > 0) continue;
+                if (temp.CurrentDura == 0 && RealItem.Durability > 0) continue;
 
-                Stats.Add(realItem.Stats);
+                Stats.Add(RealItem.Stats);
                 Stats.Add(temp.AddedStats);
         
-                if (realItem.Light > Light) Light = realItem.Light;
-                if (realItem.Unique != SpecialItemMode.None)
+                if (RealItem.Light > Light) Light = RealItem.Light;
+                if (RealItem.Unique != SpecialItemMode.None)
                 {
-                    ItemMode |= realItem.Unique;
+                    ItemMode |= RealItem.Unique;
                 }
             }
         }
@@ -727,7 +760,7 @@ namespace Client.MirObjects
 
             }
 
-            if (item.Info.Type == ItemType.Amulet)
+            if (item.Info.Type == ItemType.Amulet && item.Info.Type == ItemType.TaoPoison)
             {
                 for (int i = 0; i < Inventory.Length; i++)
                 {

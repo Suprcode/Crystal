@@ -31,9 +31,15 @@ namespace Client.MirGraphics
             Magic = new MLibrary(Settings.DataPath + "Magic"),
             Magic2 = new MLibrary(Settings.DataPath + "Magic2"),
             Magic3 = new MLibrary(Settings.DataPath + "Magic3"),
+            Magic4 = new MLibrary(Settings.DataPath + "Magic4"),
+            Magic5 = new MLibrary(Settings.DataPath + "Magic5"),
+            Magic6 = new MLibrary(Settings.DataPath + "Magic6"),
             Effect = new MLibrary(Settings.DataPath + "Effect"),
             MagicC = new MLibrary(Settings.DataPath + "MagicC"),
-            GuildSkill = new MLibrary(Settings.DataPath + "GuildSkill");
+            GuildSkill = new MLibrary(Settings.DataPath + "GuildSkill"),
+            CustomApSystem = new MLibrary(Settings.DataPath + "ApSystem"),
+            MobImage = new MLibrary(Settings.DataPath + "Monavatars"),
+            WorldMap = new MLibrary(Settings.DataPath + "WorldMap");
 
         public static readonly MLibrary
             Background = new MLibrary(Settings.DataPath + "Background");
@@ -49,7 +55,11 @@ namespace Client.MirGraphics
         public static readonly MLibrary
             Items = new MLibrary(Settings.DataPath + "Items"),
             StateItems = new MLibrary(Settings.DataPath + "StateItem"),
-            FloorItems = new MLibrary(Settings.DataPath + "DNItems");
+            FloorItems = new MLibrary(Settings.DataPath + "DNItems"),
+            ItemGlow = new MLibrary(Settings.DataPath + "ItemGlow"),
+            StateEffect = new MLibrary(Settings.DataPath + "StateEffect"),
+            WepEffect = new MLibrary(Settings.DataPath + "WepEffect"),
+            ArmEffect = new MLibrary(Settings.DataPath + "ArmEffect");
 
         //Deco
         public static readonly MLibrary
@@ -221,6 +231,9 @@ namespace Client.MirGraphics
 
             Title.Initialize();
             Progress++;
+
+            MobImage.Initialize();
+            Progress++;
         }
 
         private static void LoadGameLibraries()
@@ -230,6 +243,9 @@ namespace Client.MirGraphics
                 ARArmours.Length + ARHair.Length + ARWeapons.Length + ARWeaponsS.Length +
                 CHumEffect.Length + AHumEffect.Length + ARHumEffect.Length + Mounts.Length + Fishing.Length + Pets.Length +
                 Transform.Length + TransformMounts.Length + TransformEffect.Length + TransformWeaponEffect.Length + 17;
+
+            ItemGlow.Initialize();
+            Progress++;
 
             Dragon.Initialize();
             Progress++;
@@ -245,6 +261,7 @@ namespace Client.MirGraphics
 
             MagIcon.Initialize();
             Progress++;
+
             MagIcon2.Initialize();
             Progress++;
 
@@ -254,6 +271,13 @@ namespace Client.MirGraphics
             Progress++;
             Magic3.Initialize();
             Progress++;
+            Magic4.Initialize();
+            Progress++;
+            Magic5.Initialize();
+            Progress++;
+            Magic6.Initialize();
+            Progress++;
+
             MagicC.Initialize();
             Progress++;
 
@@ -271,9 +295,14 @@ namespace Client.MirGraphics
 
             Items.Initialize();
             Progress++;
+
             StateItems.Initialize();
             Progress++;
+
             FloorItems.Initialize();
+            Progress++;
+
+            WorldMap.Initialize();
             Progress++;
 
             for (int i = 0; i < MapLibs.Length; i++)
@@ -519,7 +548,6 @@ namespace Client.MirGraphics
             catch (Exception)
             {
                 _initialized = false;
-                throw;
             }
         }
 

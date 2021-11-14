@@ -278,6 +278,18 @@ namespace Client.MirScenes.Dialogs
 
             switch (buff.Type)
             {
+                case BuffType.Blizzard:
+                    text = string.Format("Blizzard.\n\nCooldDown still active\n");
+                    break;
+                case BuffType.MeteorStrike:
+                    text = string.Format("MeteorStrike.\n\nCooldDown still active\n");
+                    break;
+                case BuffType.PoisonCloud:
+                    text = string.Format("PoisonCloud.\n\nCooldDown still active\n");
+                    break;
+                case BuffType.HeavenAndHell:
+                    text = string.Format("HeavenAndHell.\n\nCooldDown still active\n");
+                    break;
                 case BuffType.GameMaster:
                     GMOptions options = (GMOptions)buff.Values[0];
 
@@ -332,11 +344,16 @@ namespace Client.MirScenes.Dialogs
                 case BuffType.Mentee:
                     text += "Learn skill points twice as quick.\n";
                     break;
+                case BuffType.ExpRate:
+                    overridestats = true;
+                    text += string.Format("Increases ExpRate x{0}\n", buff.Stats[Stat.ExpRate]);
+                    break;
+                case BuffType.ExpRatePercent:
+                    overridestats = true;
+                    text += string.Format("Increases ExpRate by {0}%\n", buff.Stats[Stat.ExpRatePercent]);
+                    break;
                 case BuffType.Guild:
                     text += GameScene.Scene.GuildDialog.ActiveStats;
-                    break;
-                case BuffType.Blindness:
-                    text += "Reduces visibility\n";
                     break;
             }
 
@@ -418,6 +435,252 @@ namespace Client.MirScenes.Dialogs
         {
             switch (type)
             {
+                //Reborn System Buff
+                case BuffType.Reborn1:
+                    return 365;
+                case BuffType.Reborn2:
+                    return 366;
+                case BuffType.Reborn3:
+                    return 367;
+                case BuffType.Reborn4:
+                    return 368;
+                case BuffType.Reborn5:
+                    return 369;
+                case BuffType.Reborn6:
+                    return 370;
+                case BuffType.Reborn7:
+                    return 371;
+                case BuffType.Reborn8:
+                    return 372;
+                case BuffType.Reborn9:
+                    return 373;
+                case BuffType.Reborn10:
+                    return 374;
+                case BuffType.Reborn11:
+                    return 375;
+                case BuffType.Reborn12:
+                    return 376;
+                case BuffType.Reborn13:
+                    return 377;
+                case BuffType.Reborn14:
+                    return 378;
+                case BuffType.Reborn15:
+                    return 379;
+                case BuffType.Reborn16:
+                    return 380;
+                case BuffType.Reborn17:
+                    return 381;
+                case BuffType.Reborn18:
+                    return 382;
+                case BuffType.Reborn19:
+                    return 383;
+                case BuffType.Reborn20:
+                    return 384;
+
+                //InstanceStage System Buff
+                case BuffType.InstanceStage1:
+                    return 265;
+                case BuffType.InstanceStage2:
+                    return 265;
+                case BuffType.InstanceStage3:
+                    return 265;
+                case BuffType.InstanceStage4:
+                    return 265;
+                case BuffType.InstanceStage5:
+                    return 265;
+                case BuffType.InstanceStage6:
+                    return 265;
+                case BuffType.InstanceStage7:
+                    return 265;
+                case BuffType.InstanceStage8:
+                    return 265;
+                case BuffType.InstanceStage9:
+                    return 265;
+                case BuffType.InstanceStage10:
+                    return 265;
+                case BuffType.InstanceStage11:
+                    return 265;
+                case BuffType.InstanceStage12:
+                    return 265;
+                case BuffType.InstanceStage13:
+                    return 265;
+                case BuffType.InstanceStage14:
+                    return 265;
+                case BuffType.InstanceStage15:
+                    return 265;
+                case BuffType.InstanceStage16:
+                    return 265;
+                case BuffType.InstanceStage17:
+                    return 265;
+                case BuffType.InstanceStage18:
+                    return 265;
+                case BuffType.InstanceStage19:
+                    return 265;
+                case BuffType.InstanceStage20:
+                    return 265;
+                case BuffType.InstanceStage21:
+                    return 265;
+                case BuffType.InstanceStage22:
+                    return 265;
+                case BuffType.InstanceStage23:
+                    return 265;
+                case BuffType.InstanceStage24:
+                    return 265;
+                case BuffType.InstanceStage25:
+                    return 265;
+                case BuffType.InstanceStage26:
+                    return 265;
+                case BuffType.InstanceStage27:
+                    return 265;
+                case BuffType.InstanceStage28:
+                    return 265;
+                case BuffType.InstanceStage29:
+                    return 265;
+                case BuffType.InstanceStage30:
+                    return 265;
+                case BuffType.InstanceStage31:
+                    return 265;
+                case BuffType.InstanceStage32:
+                    return 265;
+                case BuffType.InstanceStage33:
+                    return 265;
+                case BuffType.InstanceStage34:
+                    return 265;
+                case BuffType.InstanceStage35:
+                    return 265;
+                case BuffType.InstanceStage36:
+                    return 265;
+                case BuffType.InstanceStage37:
+                    return 265;
+                case BuffType.InstanceStage38:
+                    return 265;
+                case BuffType.InstanceStage39:
+                    return 265;
+                case BuffType.InstanceStage40:
+                    return 265;
+                case BuffType.InstanceStage41:
+                    return 265;
+                case BuffType.InstanceStage42:
+                    return 265;
+                case BuffType.InstanceStage43:
+                    return 265;
+                case BuffType.InstanceStage44:
+                    return 265;
+                case BuffType.InstanceStage45:
+                    return 265;
+                case BuffType.InstanceStage46:
+                    return 265;
+                case BuffType.InstanceStage47:
+                    return 265;
+                case BuffType.InstanceStage48:
+                    return 265;
+                case BuffType.InstanceStage49:
+                    return 265;
+                case BuffType.InstanceStage50:
+                    return 265;
+
+                //ChallengeStage System Buff
+                case BuffType.ChallengeStage1:
+                    return 266;
+                case BuffType.ChallengeStage2:
+                    return 266;
+                case BuffType.ChallengeStage3:
+                    return 266;
+                case BuffType.ChallengeStage4:
+                    return 266;
+                case BuffType.ChallengeStage5:
+                    return 266;
+                case BuffType.ChallengeStage6:
+                    return 266;
+                case BuffType.ChallengeStage7:
+                    return 266;
+                case BuffType.ChallengeStage8:
+                    return 266;
+                case BuffType.ChallengeStage9:
+                    return 266;
+                case BuffType.ChallengeStage10:
+                    return 266;
+                case BuffType.ChallengeStage11:
+                    return 266;
+                case BuffType.ChallengeStage12:
+                    return 266;
+                case BuffType.ChallengeStage13:
+                    return 266;
+                case BuffType.ChallengeStage14:
+                    return 266;
+                case BuffType.ChallengeStage15:
+                    return 266;
+                case BuffType.ChallengeStage16:
+                    return 266;
+                case BuffType.ChallengeStage17:
+                    return 266;
+                case BuffType.ChallengeStage18:
+                    return 266;
+                case BuffType.ChallengeStage19:
+                    return 266;
+                case BuffType.ChallengeStage20:
+                    return 266;
+                case BuffType.ChallengeStage21:
+                    return 266;
+                case BuffType.ChallengeStage22:
+                    return 266;
+                case BuffType.ChallengeStage23:
+                    return 266;
+                case BuffType.ChallengeStage24:
+                    return 266;
+                case BuffType.ChallengeStage25:
+                    return 266;
+                case BuffType.ChallengeStage26:
+                    return 266;
+                case BuffType.ChallengeStage27:
+                    return 266;
+                case BuffType.ChallengeStage28:
+                    return 266;
+                case BuffType.ChallengeStage29:
+                    return 266;
+                case BuffType.ChallengeStage30:
+                    return 266;
+                case BuffType.ChallengeStage31:
+                    return 266;
+                case BuffType.ChallengeStage32:
+                    return 266;
+                case BuffType.ChallengeStage33:
+                    return 266;
+                case BuffType.ChallengeStage34:
+                    return 266;
+                case BuffType.ChallengeStage35:
+                    return 266;
+                case BuffType.ChallengeStage36:
+                    return 266;
+                case BuffType.ChallengeStage37:
+                    return 266;
+                case BuffType.ChallengeStage38:
+                    return 266;
+                case BuffType.ChallengeStage39:
+                    return 266;
+                case BuffType.ChallengeStage40:
+                    return 266;
+                case BuffType.ChallengeStage41:
+                    return 266;
+                case BuffType.ChallengeStage42:
+                    return 266;
+                case BuffType.ChallengeStage43:
+                    return 266;
+                case BuffType.ChallengeStage44:
+                    return 266;
+                case BuffType.ChallengeStage45:
+                    return 266;
+                case BuffType.ChallengeStage46:
+                    return 266;
+                case BuffType.ChallengeStage47:
+                    return 266;
+                case BuffType.ChallengeStage48:
+                    return 266;
+                case BuffType.ChallengeStage49:
+                    return 266;
+                case BuffType.ChallengeStage50:
+                    return 266;
+
                 //Skills
                 case BuffType.Fury:
                     return 76;
@@ -472,18 +735,22 @@ namespace Client.MirScenes.Dialogs
                 //Monster
                 case BuffType.RhinoPriestDebuff:
                     return 217;
-                case BuffType.Blindness:
-                    return 226;
+
+                case BuffType.InfiniteBuff:
+                    return 228;
 
                 //Special
                 case BuffType.GameMaster:
                     return 173;
                 case BuffType.General:
                     return 182;
-                case BuffType.Exp:
+                case BuffType.ExpRatePercent:
+                    return 260;
+                case BuffType.ExpRate:
                     return 260;
                 case BuffType.Drop:
                     return 162;
+
                 case BuffType.Gold:
                     return 168;
                 case BuffType.Knapsack:
@@ -492,9 +759,10 @@ namespace Client.MirScenes.Dialogs
                 case BuffType.Transform:
                     return 241;
                 case BuffType.Mentor:
+                    return 248;
                 case BuffType.Mentee:
                     return 248;
-                case BuffType.Lover:
+                case BuffType.RelationshipEXP:
                     return 201;
                 case BuffType.Guild:
                     return 203;
@@ -524,6 +792,80 @@ namespace Client.MirScenes.Dialogs
                     return 158;
                 case BuffType.WonderDrug:
                     return 252;
+
+                case BuffType.HPDrugSmall:
+                    return 273;
+                case BuffType.HPDrugMedium:
+                    return 274;
+                case BuffType.HPDrugLarge:
+                    return 275;
+                case BuffType.HPDrugXL:
+                    return 276;
+                case BuffType.HPSMegaDrug:
+                    return 277;
+                case BuffType.HPMMegaDrug:
+                    return 278;
+                case BuffType.HPLMegaDrug:
+                    return 279;
+                case BuffType.HPXLMegaDrug:
+                    return 280;
+                case BuffType.HPSUltraDrug:
+                    return 281;
+                case BuffType.HPMUltraDrug:
+                    return 282;
+                case BuffType.HPLUltraDrug:
+                    return 283;
+                case BuffType.HPXLUltraDrug:
+                    return 284;
+                case BuffType.HPXXLUltraDrug:
+                    return 285;
+                case BuffType.HPSSupremeDrug:
+                    return 286;
+                case BuffType.HPMSupremeDrug:
+                    return 287;
+                case BuffType.HPLSupremeDrug:
+                    return 288;
+                case BuffType.HPXLSupremeDrug:
+                    return 289;
+                case BuffType.HPXXLSupremeDrug:
+                    return 290;
+
+                case BuffType.MPDrugSmall:
+                    return 291;
+                case BuffType.MPDrugMedium:
+                    return 292;
+                case BuffType.MPDrugLarge:
+                    return 293;
+                case BuffType.MPDrugXL:
+                    return 294;
+                case BuffType.MPSMegaDrug:
+                    return 295;
+                case BuffType.MPMMegaDrug:
+                    return 296;
+                case BuffType.MPLMegaDrug:
+                    return 297;
+                case BuffType.MPXLMegaDrug:
+                    return 298;
+                case BuffType.MPSUltraDrug:
+                    return 299;
+                case BuffType.MPMUltraDrug:
+                    return 300;
+                case BuffType.MPLUltraDrug:
+                    return 301;
+                case BuffType.MPXLUltraDrug:
+                    return 302;
+                case BuffType.MPXXLUltraDrug:
+                    return 303;
+                case BuffType.MPSSupremeDrug:
+                    return 304;
+                case BuffType.MPMSupremeDrug:
+                    return 305;
+                case BuffType.MPLSupremeDrug:
+                    return 306;
+                case BuffType.MPXLSupremeDrug:
+                    return 307;
+                case BuffType.MPXXLSupremeDrug:
+                    return 308;
                 default:
                     return 0;
             }

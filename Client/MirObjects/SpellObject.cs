@@ -41,6 +41,41 @@ namespace Client.MirObjects
 
             switch (Spell)
             {
+                case Spell.PheonixExplosion:
+                    BodyLibrary = Libraries.Magic5;
+                    DrawFrame = 321;
+                    FrameInterval = 120;
+                    //FrameCount = 29;
+                    FrameCount = 8;
+                    Light = 3;
+                    Blend = true;
+                    break;
+                case Spell.FireExplode:
+                    BodyLibrary = Libraries.Magic5;
+                    DrawFrame = 549;
+                    FrameInterval = 120;
+                    FrameCount = 36;
+                    Light = 3;
+                    Blend = true;
+                    break;
+                case Spell.FireExplodeFW:
+                    BodyLibrary = Libraries.Magic5;
+                    DrawFrame = 549;
+                    FrameInterval = 165;
+                    FrameCount = 36;
+                    Light = 3;
+                    Blend = true;
+                    //Repeat = true;
+                    break;
+                case Spell.HeavenAndHell:
+                    BodyLibrary = Libraries.Magic6;
+                    DrawFrame = 330;
+                    FrameInterval = 120;
+                    FrameCount = 5;
+                    Light = 3;
+                    Blend = true;
+                    //Repeat = true;
+                    break;
                 case Spell.TrapHexagon:
                     BodyLibrary = Libraries.Magic;
                     DrawFrame = 1390;

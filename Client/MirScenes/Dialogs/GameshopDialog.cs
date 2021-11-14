@@ -16,12 +16,13 @@ namespace Client.MirScenes.Dialogs
     public sealed class GameShopDialog : MirImageControl
     {
         public GameShopViewer Viewer;
-        public MirLabel PageNumberLabel, totalGold, totalCredits;
+        public MirLabel PageNumberLabel, totalGold, totalCredits, totalHuntPoints;
         public MirButton ALL, War, Sin, Tao, Wiz, Arch;
         public MirButton allItems, topItems, Deals, New;
         public MirButton CloseButton, PreviousButton, NextButton;
         public MirButton UpButton, DownButton, PositionBar;
 
+        public MirCheckBox PaymentTypeGold, PaymentTypeCredit, PaymentTypeHuntPoints;
 
         public GameShopCell[] Grid;
         public MirLabel[] Filters = new MirLabel[22];
@@ -30,6 +31,8 @@ namespace Client.MirScenes.Dialogs
         List<GameShopItem> SearchResult = new List<GameShopItem>();
         public MirTextBox Search;
         public MirImageControl TitleLabel, FilterBackground;
+
+        public MirButton DonateButton;
 
         public string ClassFilter = "Show All";
         public string TypeFilter = "Show All";
@@ -84,25 +87,85 @@ namespace Client.MirScenes.Dialogs
             };
             CloseButton.Click += (o, e) => Hide();
 
+            DonateButton = new MirButton
+            {
+                Index = 654,
+                Location = new Point(52, 82),
+                Parent = this,
+                PressedIndex = 655,
+                Sound = SoundList.ButtonA,
+                Library = Libraries.Title,
+            };
+            DonateButton.Click += DonateButton_Click;
+
             totalGold = new MirLabel
             {
                 Size = new Size(100, 20),
                 DrawFormat = TextFormatFlags.RightToLeft | TextFormatFlags.Right,
 
-                Location = new Point(123, 449),
+                Location = new Point(5, 449),
                 Parent = this,
                 NotControl = true,
                 Font = new Font(Settings.FontName, 8F),
+            };
+            totalHuntPoints = new MirLabel
+            {
+                Size = new Size(100, 20),
+                DrawFormat = TextFormatFlags.RightToLeft | TextFormatFlags.Right,
+                Location = new Point(120, 449),
+                Parent = this,
+                NotControl = true,
+                Font = new Font(Settings.FontName, 8F)
             };
             totalCredits = new MirLabel
             {
                 Size = new Size(100, 20),
                 DrawFormat = TextFormatFlags.RightToLeft | TextFormatFlags.Right,
-                Location = new Point(5, 449),
+                Location = new Point(240, 449),
                 Parent = this,
                 NotControl = true,
                 Font = new Font(Settings.FontName, 8F)
             };
+
+            PaymentTypeGold = new MirCheckBox
+            {
+                LabelText = "Gold",
+                Location = new Point(400, 450),
+                Parent = this,
+                Hint = "Buy item(s) with Gold.",
+                Index = 2086,
+                UnTickedIndex = 2086,
+                TickedIndex = 2087,
+                Library = Libraries.Prguse,
+                Checked = true
+            };
+            PaymentTypeGold.Click += PType_Clicked;
+
+            PaymentTypeHuntPoints = new MirCheckBox
+            {
+                LabelText = "HuntPoints",
+                Location = new Point(460, 450),
+                Parent = this,
+                Hint = "Buy item(s) with HuntPoints.",
+                Index = 2086,
+                UnTickedIndex = 2086,
+                TickedIndex = 2087,
+                Library = Libraries.Prguse
+            };
+            PaymentTypeHuntPoints.Click += PType_Clicked;
+
+            PaymentTypeCredit = new MirCheckBox
+            {
+                LabelText = "Credits",
+                Location = new Point(520, 450),
+                Parent = this,
+                Hint = "Buy item(s) with Credits.",
+                Index = 2086,
+                UnTickedIndex = 2086,
+                TickedIndex = 2087,
+                Library = Libraries.Prguse
+            };
+            PaymentTypeCredit.Click += PType_Clicked;
 
             UpButton = new MirButton
             {
@@ -451,6 +514,42 @@ namespace Client.MirScenes.Dialogs
             Viewer = new GameShopViewer();
 
         }
+        private void DonateButton_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(Settings.C_DonateLink);
+        }
+
+        private void PType_Clicked(object sender, EventArgs e)
+        {
+            if (sender == PaymentTypeCredit)
+                RefreshPayType(0);
+            else if (sender == PaymentTypeGold)
+                RefreshPayType(1);
+            else if (sender == PaymentTypeHuntPoints)
+                RefreshPayType(2);
+        }
+
+        private void RefreshPayType(int idx)
+        {
+            switch (idx)
+            {
+                case 0: //  Credits
+                    PaymentTypeCredit.Checked = true;
+                    PaymentTypeGold.Checked = false;
+                    PaymentTypeHuntPoints.Checked = false;
+                    break;
+                case 1: //  Gold
+                    PaymentTypeGold.Checked = true;
+                    PaymentTypeCredit.Checked = false;
+                    PaymentTypeHuntPoints.Checked = false;
+                    break;
+                case 2: //  CP
+                    PaymentTypeGold.Checked = false;
+                    PaymentTypeCredit.Checked = false;
+                    PaymentTypeHuntPoints.Checked = true;
+                    break;
+            }
+        }
 
         public override void Hide()
         {
@@ -479,6 +578,7 @@ namespace Client.MirScenes.Dialogs
             PageNumberLabel = null;
             totalGold = null;
             totalCredits = null;
+            totalHuntPoints = null;
             ALL = null;
             War = null;
             Sin = null;
@@ -513,6 +613,7 @@ namespace Client.MirScenes.Dialogs
         {
             totalCredits.Text = GameScene.Credit.ToString("###,###,##0");
             totalGold.Text = GameScene.Gold.ToString("###,###,##0");
+            totalHuntPoints.Text = GameScene.User.HuntPoints.ToString("###,###,##0");
         }
 
 
@@ -624,7 +725,7 @@ namespace Client.MirScenes.Dialogs
                 {
                     if (shopList[i].Class == ClassFilter || shopList[i].Class == "All" || ClassFilter == "Show All")
                     {
-                        if (SectionFilter == "Show All" || SectionFilter == "TopItems" && shopList[i].TopItem || SectionFilter == "DealItems" && shopList[i].Deal || SectionFilter == "NewItems" && shopList[i].Date > CMain.Now.AddDays(-7))
+                        if (SectionFilter == "Show All" || SectionFilter == "TopItems" && shopList[i].TopItem || SectionFilter == "DealItems" && shopList[i].Deal || SectionFilter == "NewItems" && shopList[i].Date > DateTime.Now.AddDays(-7))
                             CategoryList.Add(shopList[i].Category);
                     }
 
@@ -677,7 +778,7 @@ namespace Client.MirScenes.Dialogs
                 if (ShopList[i].Class == ClassFilter || ShopList[i].Class == "All" || ClassFilter == "Show All")
                     if (ShopList[i].Category == TypeFilter || TypeFilter == "Show All")
                     {
-                        if (SectionFilter == "Show All" || SectionFilter == "TopItems" && ShopList[i].TopItem || SectionFilter == "DealItems" && ShopList[i].Deal || SectionFilter == "NewItems" && ShopList[i].Date > CMain.Now.AddDays(-7))
+                        if (SectionFilter == "Show All" || SectionFilter == "TopItems" && ShopList[i].TopItem || SectionFilter == "DealItems" && ShopList[i].Deal || SectionFilter == "NewItems" && ShopList[i].Date > DateTime.Now.AddDays(-7))
                             filteredShop.Add(ShopList[i]);
                     }
             }

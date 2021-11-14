@@ -25,13 +25,14 @@ namespace Server
             QTypeComboBox.Items.AddRange(Enum.GetValues(typeof(QuestType)).Cast<object>().ToArray());
             RequiredClassComboBox.Items.AddRange(Enum.GetValues(typeof(RequiredClass)).Cast<object>().ToArray());
 
-            UpdateInterface();
+            UpdateInterface(true);
         }
 
         private void AddButton_Click(object sender, EventArgs e)
         {
             Envir.CreateQuestInfo();
-            UpdateInterface();
+            txtSearch.Text = "";
+            UpdateInterface(true);
         }
         private void RemoveButton_Click(object sender, EventArgs e)
         {
@@ -43,12 +44,17 @@ namespace Server
 
             if (Envir.QuestInfoList.Count == 0) Envir.QuestIndex = 0;
 
-            UpdateInterface();
+            UpdateInterface(true);
         }
 
-        private void UpdateInterface()
+        private void txtSearch_TextChanged(object sender, EventArgs e)
         {
-            if (QuestInfoListBox.Items.Count != Envir.QuestInfoList.Count)
+            UpdateInterface(true);
+        }
+
+        private void UpdateInterface(bool refreshList = false)
+        {
+            if (refreshList)
             {
                 QuestInfoListBox.Items.Clear();
                 RequiredQuestComboBox.Items.Clear();
@@ -57,8 +63,11 @@ namespace Server
 
                 for (int i = 0; i < Envir.QuestInfoList.Count; i++)
                 {
-                    QuestInfoListBox.Items.Add(Envir.QuestInfoList[i]);
-                    RequiredQuestComboBox.Items.Add(Envir.QuestInfoList[i]);
+                    if (string.IsNullOrWhiteSpace(txtSearch.Text) || Envir.QuestInfoList[i].Name.IndexOf(txtSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        QuestInfoListBox.Items.Add(Envir.QuestInfoList[i]);
+                        RequiredQuestComboBox.Items.Add(Envir.QuestInfoList[i]);
+                    }
                 }
 
             }
@@ -104,6 +113,9 @@ namespace Server
             RequiredMinLevelTextBox.Text = info.RequiredMinLevel.ToString();
             RequiredMaxLevelTextBox.Text = info.RequiredMaxLevel.ToString();
 
+            percentageBox.Checked = info.percentageExp;
+            autoCompleteBox.Checked = info.autoComplete;
+
             if (Convert.ToInt32(RequiredMaxLevelTextBox.Text) <= 0) RequiredMaxLevelTextBox.Text = byte.MaxValue.ToString();
 
             QuestInfo tempQuest = Envir.QuestInfoList.FirstOrDefault(c => c.Index == info.RequiredQuest);
@@ -145,6 +157,23 @@ namespace Server
 
                 if (TimeLimitTextBox.SelectedText != info.TimeLimitInSeconds.ToString()) TimeLimitTextBox.Text = "0";
             }
+        }
+
+        private void TimeLimitTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            for (int i = 0; i < _selectedQuestInfos.Count; i++)
+                _selectedQuestInfos[i].TimeLimitInSeconds = temp;
         }
 
         private void RefreshQuestList()
@@ -211,6 +240,7 @@ namespace Server
 
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.InitialDirectory = Path.Combine(Application.StartupPath, "Exports");
+            sfd.FileName = "QuestInfo";
             sfd.Filter = "Text File|*.txt";
             sfd.ShowDialog();
 
@@ -250,7 +280,8 @@ namespace Server
             foreach (var m in quests)
                 QuestInfo.FromText(m);
 
-            UpdateInterface();
+            txtSearch.Text = "";
+            UpdateInterface(true);
             MessageBox.Show("Quest Import complete");
         }
 
@@ -399,21 +430,23 @@ namespace Server
             }
         }
 
-        private void TimeLimitTextBox_TextChanged(object sender, EventArgs e)
+
+        private void percentageBox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
-            int temp;
+            for (int i = 0; i < _selectedQuestInfos.Count; i++)
+                _selectedQuestInfos[i].percentageExp = ((CheckBox)sender).Checked;
+        }
 
-            if (!int.TryParse(ActiveControl.Text, out temp))
-            {
-                ActiveControl.BackColor = Color.Red;
-                return;
-            }
-            ActiveControl.BackColor = SystemColors.Window;
+        private void autoCompleteBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedQuestInfos.Count; i++)
-                _selectedQuestInfos[i].TimeLimitInSeconds = temp;
+                _selectedQuestInfos[i].autoComplete = ((CheckBox)sender).Checked;
         }
+
+
     }
 }

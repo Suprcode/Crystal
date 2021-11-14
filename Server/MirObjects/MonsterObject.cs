@@ -18,6 +18,7 @@ namespace Server.MirObjects
             switch (info.AI)
             {
                 case 1:
+                    return new Hen(info);
                 case 2:
                     return new Deer(info);
                 case 3:
@@ -53,8 +54,8 @@ namespace Server.MirObjects
                     return new RedThunderZuma(info);
                 case 17:
                     return new ZumaTaurus(info);
-                case 18:
-                    return new Shinsu(info);
+                //case 18:
+                    //return new Shinsu0(info);
                 case 19:
                     return new KingScorpion(info);
                 case 20:
@@ -63,8 +64,8 @@ namespace Server.MirObjects
                     return new IncarnatedGhoul(info);
                 case 22:
                     return new IncarnatedZT(info);
-                case 23:
-                    return new BoneFamiliar(info);
+                //case 23:
+                    //return new BoneFamiliar(info);
                 case 24:
                     return new DigOutZombie(info);
                 case 25:
@@ -133,7 +134,7 @@ namespace Server.MirObjects
                 case 54:
                     return new DragonStatue(info);
                 case 55:
-                    return new HumanWizard(info);
+                    return new WizardClone(info);
                 case 56:
                     return new Trainer(info);
                 case 57:
@@ -443,6 +444,30 @@ namespace Server.MirObjects
                 case 212:
                     return new PurpleFaeFlower(info);
 
+                case 220:
+                    return new HumanWarrior(info);
+                case 221:
+                    return new WizardClone(info);
+                case 222:
+                    return new HumanTaoist(info);
+
+
+                case 240:
+                    return new BoneFamiliar0(info);
+                case 241:
+                    return new BoneFamiliar1(info);
+                case 242:
+                    return new BoneFamiliar2(info);
+                case 243:
+                    return new BoneFamiliar3(info);
+                case 244:
+                    return new Shinsu0(info);
+                case 245:
+                    return new Shinsu2(info);
+                case 246:
+                    return new Shinsu4(info);
+                case 247:
+                    return new Shinsu6(info);
 
                 default:
                     return new MonsterObject(info);
@@ -469,6 +494,21 @@ namespace Server.MirObjects
         public override ushort Level
         {
             get { return Info.Level; }
+            set { throw new NotSupportedException(); }
+        }
+        public override ushort Reborn
+        {
+            get { return Info.Reborn; }
+            set { throw new NotSupportedException(); }
+        }
+        public override ushort InstanceStage
+        {
+            get { return Info.InstanceStage; }
+            set { throw new NotSupportedException(); }
+        }
+        public override ushort ChallengeStage
+        {
+            get { return Info.ChallengeStage; }
             set { throw new NotSupportedException(); }
         }
 
@@ -519,7 +559,8 @@ namespace Server.MirObjects
 
         public virtual uint Experience
         {
-            get { return Info.Experience; }
+            //get { return Info.Experience; }
+            get { return Math.Min(uint.MaxValue, PetLevel > 0 && Info.IsElite && Master == null ? (uint)(Info.Experience * Settings.EliteExpBoost[PetLevel - 1]) / 100 : Info.Experience); }
         }
         public int DeadDelay
         {
@@ -614,8 +655,81 @@ namespace Server.MirObjects
 
             CurrentMap.AddObject(this);
 
-            RefreshAll();
-            SetHP(Stats[Stat.HP]);
+
+            #region Elite Mobs
+            if (Info.IsElite)
+            {
+                MaxPetLevel = 7;
+                if (Envir.Random.Next(100) <= Settings.ChanceToBeElite)
+                {
+                    PetLevel = 1;
+                    if (Envir.Random.Next(100) <= Settings.EliteChances[0])
+                        PetLevel = 1;
+                    else if (Envir.Random.Next(100) <= Settings.EliteChances[1])
+                        PetLevel = 2;
+                    else if (Envir.Random.Next(100) <= Settings.EliteChances[2])
+                        PetLevel = 3;
+                    else if (Envir.Random.Next(100) <= Settings.EliteChances[3])
+                        PetLevel = 4;
+                    else if (Envir.Random.Next(100) <= Settings.EliteChances[4])
+                        PetLevel = 5;
+                    else if (Envir.Random.Next(100) <= Settings.EliteChances[5])
+                        PetLevel = 6;
+                    else if (Envir.Random.Next(100) <= Settings.EliteChances[6])
+                        PetLevel = 7;
+                    short tempBoost = 0;
+                    RefreshAll();
+                    switch (PetLevel)
+                    {
+                        case 1:
+                            tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel1Bonus / 100);
+                            Stats[Stat.HP] += (int)tempBoost;
+                            SetHP(Stats[Stat.HP]);
+                            break;
+                        case 2:
+                            tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel2Bonus / 100);
+                            Stats[Stat.HP] += (int)tempBoost;
+                            SetHP(Stats[Stat.HP]);
+                            break;
+                        case 3:
+                            tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel3Bonus / 100);
+                            Stats[Stat.HP] += (int)tempBoost;
+                            SetHP(Stats[Stat.HP]);
+                            break;
+                        case 4:
+                            tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel4Bonus / 100);
+                            Stats[Stat.HP] += (int)tempBoost;
+                            SetHP(Stats[Stat.HP]);
+                            break;
+                        case 5:
+                            tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel5Bonus / 100);
+                            Stats[Stat.HP] += (int)tempBoost;
+                            SetHP(Stats[Stat.HP]);
+                            break;
+                        case 6:
+                            tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel6Bonus / 100);
+                            Stats[Stat.HP] += (int)tempBoost;
+                            SetHP(Stats[Stat.HP]);
+                            break;
+                        case 7:
+                            tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel7Bonus / 100);
+                            Stats[Stat.HP] += (int)tempBoost;
+                            SetHP(Stats[Stat.HP]);
+                            break;
+                    }
+                }
+                else
+                {
+                    RefreshAll();
+                    SetHP(Stats[Stat.HP]);
+                }
+            }
+            #endregion
+            else
+            {
+                RefreshAll();
+                SetHP(Stats[Stat.HP]);
+            }
 
             Spawned();
             Envir.MonsterCount++;
@@ -642,9 +756,80 @@ namespace Server.MirObjects
                 if (Respawn.Route.Count > 0)
                     Route.AddRange(Respawn.Route);
 
-                RefreshAll();
-                SetHP(Stats[Stat.HP]);
-
+                #region Elite Mobs
+                if (Info.IsElite)
+                {
+                    MaxPetLevel = 7;
+                    if (Envir.Random.Next(100) <= Settings.ChanceToBeElite)
+                    {
+                        PetLevel = 1;
+                        if (Envir.Random.Next(100) <= Settings.EliteChances[0])
+                            PetLevel = 1;
+                        else if (Envir.Random.Next(100) <= Settings.EliteChances[1])
+                            PetLevel = 2;
+                        else if (Envir.Random.Next(100) <= Settings.EliteChances[2])
+                            PetLevel = 3;
+                        else if (Envir.Random.Next(100) <= Settings.EliteChances[3])
+                            PetLevel = 4;
+                        else if (Envir.Random.Next(100) <= Settings.EliteChances[4])
+                            PetLevel = 5;
+                        else if (Envir.Random.Next(100) <= Settings.EliteChances[5])
+                            PetLevel = 6;
+                        else if (Envir.Random.Next(100) <= Settings.EliteChances[6])
+                            PetLevel = 7;
+                        short tempBoost = 0;
+                        RefreshAll();
+                        switch (PetLevel)
+                        {
+                            case 1:
+                                tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel1Bonus / 100);
+                                Stats[Stat.HP] += (int)tempBoost;
+                                SetHP(Stats[Stat.HP]);
+                                break;
+                            case 2:
+                                tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel2Bonus / 100);
+                                Stats[Stat.HP] += (int)tempBoost;
+                                SetHP(Stats[Stat.HP]);
+                                break;
+                            case 3:
+                                tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel3Bonus / 100);
+                                Stats[Stat.HP] += (int)tempBoost;
+                                SetHP(Stats[Stat.HP]);
+                                break;
+                            case 4:
+                                tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel4Bonus / 100);
+                                Stats[Stat.HP] += (int)tempBoost;
+                                SetHP(Stats[Stat.HP]);
+                                break;
+                            case 5:
+                                tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel5Bonus / 100);
+                                Stats[Stat.HP] += (int)tempBoost;
+                                SetHP(Stats[Stat.HP]);
+                                break;
+                            case 6:
+                                tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel6Bonus / 100);
+                                Stats[Stat.HP] += (int)tempBoost;
+                                SetHP(Stats[Stat.HP]);
+                                break;
+                            case 7:
+                                tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel7Bonus / 100);
+                                Stats[Stat.HP] += (int)tempBoost;
+                                SetHP(Stats[Stat.HP]);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        RefreshAll();
+                        SetHP(Stats[Stat.HP]);
+                    }
+                }
+                #endregion
+                else
+                {
+                    RefreshAll();
+                    SetHP(Stats[Stat.HP]);
+                }
                 Spawned();
                 Respawn.Count++;
                 respawn.Map.MonsterCount++;
@@ -667,9 +852,10 @@ namespace Server.MirObjects
             base.Spawned();
         }
 
-        protected virtual void RefreshBase()
+        protected virtual void RefreshBase(bool refreshHP = false)
         {
-            Stats.Clear();
+            if (refreshHP)
+                Stats.Clear();
 
             Stats.Add(Info.Stats);
 
@@ -679,17 +865,212 @@ namespace Server.MirObjects
 
         public virtual void RefreshAll()
         {
-            RefreshBase();
+            bool refresh = true;
+            if (PetLevel > 0 && Info.IsElite)
+                refresh = false;
+            else
+                refresh = true;
+            RefreshBase(refresh);
 
-            Stats[Stat.HP] += PetLevel * 20;
-            Stats[Stat.MinAC] += PetLevel * 2;
-            Stats[Stat.MaxAC] += PetLevel * 2;
-            Stats[Stat.MinMAC] += PetLevel * 2;
-            Stats[Stat.MaxMAC] += PetLevel * 2;
-            Stats[Stat.MinDC] += PetLevel;
-            Stats[Stat.MaxDC] += PetLevel;
+            #region Elite Mobs
+            if (PetLevel > 0 && Info.IsElite)
+            {
+                Stats[Stat.HP] = Info.Stats[Stat.HP];
+                int tempsBoost = 0;
+                short tempBoost = 0;
+                switch (PetLevel)
+                {
+                    case 1:
+                        tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel1Bonus / 100);
+                        Stats[Stat.HP] += (int)tempBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinDC] * Settings.EliteLevel1Bonus / 100);
+                        Stats[Stat.MinDC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxDC] * Settings.EliteLevel1Bonus / 100);
+                        Stats[Stat.MaxDC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinMC] * Settings.EliteLevel1Bonus / 100);
+                        Stats[Stat.MinMC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxMC] * Settings.EliteLevel1Bonus / 100);
+                        Stats[Stat.MaxMC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinSC] * Settings.EliteLevel1Bonus / 100);
+                        Stats[Stat.MinSC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxSC] * Settings.EliteLevel1Bonus / 100);
+                        Stats[Stat.MaxSC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinAC] * Settings.EliteLevel1Bonus / 100);
+                        Stats[Stat.MinAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxAC] * Settings.EliteLevel1Bonus / 100);
+                        Stats[Stat.MaxAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinMAC] * Settings.EliteLevel1Bonus / 100);
+                        Stats[Stat.MinMAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxMAC] * Settings.EliteLevel1Bonus / 100);
+                        Stats[Stat.MaxMAC] += (ushort)tempsBoost;
+                        break;
+                    case 2:
+                        tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel2Bonus / 100);
+                        Stats[Stat.HP] += (int)tempBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinDC] * Settings.EliteLevel2Bonus / 100);
+                        Stats[Stat.MinDC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxDC] * Settings.EliteLevel2Bonus / 100);
+                        Stats[Stat.MaxDC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinMC] * Settings.EliteLevel2Bonus / 100);
+                        Stats[Stat.MinMC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxMC] * Settings.EliteLevel2Bonus / 100);
+                        Stats[Stat.MaxMC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinSC] * Settings.EliteLevel2Bonus / 100);
+                        Stats[Stat.MinSC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxSC] * Settings.EliteLevel2Bonus / 100);
+                        Stats[Stat.MaxSC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinAC] * Settings.EliteLevel2Bonus / 100);
+                        Stats[Stat.MinAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxAC] * Settings.EliteLevel2Bonus / 100);
+                        Stats[Stat.MaxAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinMAC] * Settings.EliteLevel2Bonus / 100);
+                        Stats[Stat.MinMAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxMAC] * Settings.EliteLevel2Bonus / 100);
+                        Stats[Stat.MaxMAC] += (ushort)tempsBoost;
+                        break;
+                    case 3:
+                        tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel3Bonus / 100);
+                        Stats[Stat.HP] += (int)tempBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinDC] * Settings.EliteLevel3Bonus / 100);
+                        Stats[Stat.MinDC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxDC] * Settings.EliteLevel3Bonus / 100);
+                        Stats[Stat.MaxDC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinMC] * Settings.EliteLevel3Bonus / 100);
+                        Stats[Stat.MinMC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxMC] * Settings.EliteLevel3Bonus / 100);
+                        Stats[Stat.MaxMC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinSC] * Settings.EliteLevel3Bonus / 100);
+                        Stats[Stat.MinSC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxSC] * Settings.EliteLevel3Bonus / 100);
+                        Stats[Stat.MaxSC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinAC] * Settings.EliteLevel3Bonus / 100);
+                        Stats[Stat.MinAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxAC] * Settings.EliteLevel3Bonus / 100);
+                        Stats[Stat.MaxAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinMAC] * Settings.EliteLevel3Bonus / 100);
+                        Stats[Stat.MinMAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxMAC] * Settings.EliteLevel3Bonus / 100);
+                        Stats[Stat.MaxMAC] += (ushort)tempsBoost;
+                        break;
+                    case 4:
+                        tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel4Bonus / 100);
+                        Stats[Stat.HP] += (int)tempBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinDC] * Settings.EliteLevel4Bonus / 100);
+                        Stats[Stat.MinDC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxDC] * Settings.EliteLevel4Bonus / 100);
+                        Stats[Stat.MaxDC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinMC] * Settings.EliteLevel4Bonus / 100);
+                        Stats[Stat.MinMC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxMC] * Settings.EliteLevel4Bonus / 100);
+                        Stats[Stat.MaxMC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinSC] * Settings.EliteLevel4Bonus / 100);
+                        Stats[Stat.MinSC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxSC] * Settings.EliteLevel4Bonus / 100);
+                        Stats[Stat.MaxSC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinAC] * Settings.EliteLevel4Bonus / 100);
+                        Stats[Stat.MinAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxAC] * Settings.EliteLevel4Bonus / 100);
+                        Stats[Stat.MaxAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinMAC] * Settings.EliteLevel4Bonus / 100);
+                        Stats[Stat.MinMAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxMAC] * Settings.EliteLevel4Bonus / 100);
+                        Stats[Stat.MaxMAC] += (ushort)tempsBoost;
+                        break;
+                    case 5:
+                        tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel5Bonus / 100);
+                        Stats[Stat.HP] += (int)tempBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinDC] * Settings.EliteLevel5Bonus / 100);
+                        Stats[Stat.MinDC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxDC] * Settings.EliteLevel5Bonus / 100);
+                        Stats[Stat.MaxDC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinMC] * Settings.EliteLevel5Bonus / 100);
+                        Stats[Stat.MinMC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxMC] * Settings.EliteLevel5Bonus / 100);
+                        Stats[Stat.MaxMC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinSC] * Settings.EliteLevel5Bonus / 100);
+                        Stats[Stat.MinSC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxSC] * Settings.EliteLevel5Bonus / 100);
+                        Stats[Stat.MaxSC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinAC] * Settings.EliteLevel5Bonus / 100);
+                        Stats[Stat.MinAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxAC] * Settings.EliteLevel5Bonus / 100);
+                        Stats[Stat.MaxAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinMAC] * Settings.EliteLevel5Bonus / 100);
+                        Stats[Stat.MinMAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxMAC] * Settings.EliteLevel5Bonus / 100);
+                        Stats[Stat.MaxMAC] += (ushort)tempsBoost;
+                        break;
+                    case 6:
+                        tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel6Bonus / 100);
+                        Stats[Stat.HP] += (int)tempBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinDC] * Settings.EliteLevel6Bonus / 100);
+                        Stats[Stat.MinDC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxDC] * Settings.EliteLevel6Bonus / 100);
+                        Stats[Stat.MaxDC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinMC] * Settings.EliteLevel6Bonus / 100);
+                        Stats[Stat.MinMC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxMC] * Settings.EliteLevel6Bonus / 100);
+                        Stats[Stat.MaxMC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinSC] * Settings.EliteLevel6Bonus / 100);
+                        Stats[Stat.MinSC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxSC] * Settings.EliteLevel6Bonus / 100);
+                        Stats[Stat.MaxSC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinAC] * Settings.EliteLevel6Bonus / 100);
+                        Stats[Stat.MinAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxAC] * Settings.EliteLevel6Bonus / 100);
+                        Stats[Stat.MaxAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinMAC] * Settings.EliteLevel6Bonus / 100);
+                        Stats[Stat.MinMAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxMAC] * Settings.EliteLevel6Bonus / 100);
+                        Stats[Stat.MaxMAC] += (ushort)tempsBoost;
+                        break;
+                    case 7:
+                        tempBoost = (short)Math.Min(short.MaxValue, Stats[Stat.HP] * Settings.EliteLevel7Bonus / 100);
+                        Stats[Stat.HP] += (int)tempBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinDC] * Settings.EliteLevel7Bonus / 100);
+                        Stats[Stat.MinDC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxDC] * Settings.EliteLevel7Bonus / 100);
+                        Stats[Stat.MaxDC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinMC] * Settings.EliteLevel7Bonus / 100);
+                        Stats[Stat.MinMC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxMC] * Settings.EliteLevel7Bonus / 100);
+                        Stats[Stat.MaxMC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinSC] * Settings.EliteLevel7Bonus / 100);
+                        Stats[Stat.MinSC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxSC] * Settings.EliteLevel7Bonus / 100);
+                        Stats[Stat.MaxSC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinAC] * Settings.EliteLevel7Bonus / 100);
+                        Stats[Stat.MinAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxAC] * Settings.EliteLevel7Bonus / 100);
+                        Stats[Stat.MaxAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MinMAC] * Settings.EliteLevel7Bonus / 100);
+                        Stats[Stat.MinMAC] += (ushort)tempsBoost;
+                        tempsBoost = (int)Math.Min(int.MaxValue, Stats[Stat.MaxMAC] * Settings.EliteLevel7Bonus / 100);
+                        Stats[Stat.MaxMAC] += (ushort)tempsBoost;
+                        break;
+                }
+            }
+            #endregion
+            else
+            {
+                Stats[Stat.HP] += PetLevel * 20;
+                Stats[Stat.MinAC] += PetLevel * 2;
+                Stats[Stat.MaxAC] += PetLevel * 2;
+                Stats[Stat.MinMAC] += PetLevel * 2;
+                Stats[Stat.MaxMAC] += PetLevel * 2;
+                Stats[Stat.MinDC] += PetLevel;
+                Stats[Stat.MaxDC] += PetLevel;
+            }
 
-            if (Info.Name == Settings.SkeletonName || Info.Name == Settings.ShinsuName || Info.Name == Settings.AngelName)
+            if (Info.Name == Settings.SkeletonName0 ||
+                Info.Name == Settings.SkeletonName1 ||
+                Info.Name == Settings.SkeletonName2 ||
+                Info.Name == Settings.SkeletonName3 || 
+                Info.Name == Settings.ShinsuName0 || 
+                Info.Name == Settings.ShinsuName2 || 
+                Info.Name == Settings.ShinsuName4 || 
+                Info.Name == Settings.ShinsuName6 || 
+                Info.Name == Settings.AngelName)
             {
                 MoveSpeed = (ushort)Math.Min(ushort.MaxValue, (Math.Max(ushort.MinValue, MoveSpeed - MaxPetLevel * 130)));
                 AttackSpeed = (ushort)Math.Min(ushort.MaxValue, (Math.Max(ushort.MinValue, AttackSpeed - MaxPetLevel * 70)));
@@ -841,12 +1222,22 @@ namespace Server.MirObjects
                 Envir.MonsterNPC.Call(this, string.Format("[@_DIE({0})]", Info.Index));
             }
 
-            if (EXPOwner != null && EXPOwner.Node != null && Master == null && EXPOwner.Race == ObjectType.Player)
+            if (EXPOwner != null && Master == null && EXPOwner.Race == ObjectType.Player)
             {
                 EXPOwner.WinExp(Experience, Level);
 
                 PlayerObject playerObj = (PlayerObject)EXPOwner;
                 playerObj.CheckGroupQuestKill(Info);
+
+                if (Info.Quest > 0)
+                {
+                    if (Info.RandomQuestChance > 0 && Envir.Random.Next(Info.RandomQuestChance) == 1)
+                    {
+                        var quest = Info.Quest;
+                        playerObj.AcceptQuest(quest);
+                        //playerObj.AcceptQuest(Info.Quest);
+                    }
+                }
             }
 
             if (Respawn != null)
@@ -956,6 +1347,11 @@ namespace Server.MirObjects
                         DropGold(reward.Gold);
                     }
 
+                    if (reward.HuntPoints > 0)
+                    {
+                        DropHuntPoints(reward.HuntPoints);
+                    }
+
                     foreach (var dropItem in reward.Items)
                     {
                         UserItem item = Envir.CreateDropItem(dropItem);
@@ -1013,6 +1409,28 @@ namespace Server.MirObjects
             for (int i = 0; i < count; i++)
             {
                 ItemObject ob = new ItemObject(this, i != count - 1 ? Settings.MaxDropGold : gold % Settings.MaxDropGold)
+                {
+                    Owner = EXPOwner,
+                    OwnerTime = Envir.Time + Settings.Minute,
+                };
+
+                ob.Drop(Settings.DropRange);
+            }
+
+            return true;
+        }
+        protected virtual bool DropHuntPoints(uint huntpoints)
+        {
+            if (EXPOwner != null && EXPOwner.CanGainHuntPoints(huntpoints) && !Settings.DropHuntPoints)
+            {
+                EXPOwner.WinHuntPoints(huntpoints);
+                return true;
+            }
+
+            uint count = huntpoints / Settings.MaxDropHuntPoints == 0 ? 1 : huntpoints / Settings.MaxDropHuntPoints + 1;
+            for (int i = 0; i < count; i++)
+            {
+                ItemObject ob = new ItemObject(this, i != count - 1 ? Settings.MaxDropHuntPoints : huntpoints % Settings.MaxDropHuntPoints)
                 {
                     Owner = EXPOwner,
                     OwnerTime = Envir.Time + Settings.Minute,
@@ -1136,8 +1554,8 @@ namespace Server.MirObjects
 
             for (int i = 0; i < Buffs.Count; i++)
             {
-                if (Buffs[i].NextTime >= time && Buffs[i].NextTime > Envir.Time) continue;
-                time = Buffs[i].NextTime;
+                if (Buffs[i].ExpireTime >= time && Buffs[i].ExpireTime > Envir.Time) continue;
+                time = Buffs[i].ExpireTime;
             }
 
             if (OperateTime <= Envir.Time || time < OperateTime)
@@ -1391,6 +1809,7 @@ namespace Server.MirObjects
             return false;
         }
 
+
         private void ProcessBuffs()
         {
             bool refresh = false;
@@ -1398,25 +1817,12 @@ namespace Server.MirObjects
             {
                 Buff buff = Buffs[i];
 
-                if (buff.NextTime > Envir.Time) continue;
-
-                if (!buff.Paused && buff.StackType != BuffStackType.Infinite)
-                {
-                    var change = Envir.Time - buff.LastTime;
-                    buff.ExpireTime -= change;
-                }
-
-                buff.LastTime = Envir.Time;
-                buff.NextTime = Envir.Time + 1000;
-
-                if ((buff.ExpireTime > 0 || buff.StackType == BuffStackType.Infinite) && !buff.FlagForRemoval) continue;
+                if (Envir.Time <= buff.ExpireTime || buff.StackType == BuffStackType.Infinite) continue;
 
                 Buffs.RemoveAt(i);
 
                 if (buff.Info.Visible)
-                {
                     Broadcast(new S.RemoveBuff { Type = buff.Type, ObjectID = ObjectID });
-                }
 
                 switch (buff.Type)
                 {
@@ -2246,7 +2652,8 @@ namespace Server.MirObjects
 
             if (damageWeapon)
                 attacker.DamageWeapon();
-            damage += attacker.Stats[Stat.AttackBonus];
+            //damage += attacker.Stats[Stat.PVEDamage];
+            damage += damage * attacker.Stats[Stat.PVEDamage] / 100;
 
             if (armour >= damage)
             {
@@ -2312,12 +2719,12 @@ namespace Server.MirObjects
 
             attacker.GatherElement();
 
-            if (attacker.Info.Mentor != 0 && attacker.Info.IsMentor)
+            if (attacker.Info.Mentor != 0 && attacker.Info.isMentor)
             {
                 if (attacker.HasBuff(BuffType.Mentor, out _))
                 {
-                    CharacterInfo mentee = Envir.GetCharacterInfo(attacker.Info.Mentor);
-                    PlayerObject player = Envir.GetPlayer(mentee.Name);
+                    CharacterInfo Mentee = Envir.GetCharacterInfo(attacker.Info.Mentor);
+                    PlayerObject player = Envir.GetPlayer(Mentee.Name);
                     if (player.CurrentMap == attacker.CurrentMap && Functions.InRange(player.CurrentLocation, attacker.CurrentLocation, Globals.DataRange) && !player.Dead)
                     {
                         damage += (damage * Stats[Stat.MentorDamageRatePercent]) / 100;
@@ -2465,6 +2872,21 @@ namespace Server.MirObjects
                 if ((PoisonList[i].PType != PoisonType.Green) && ((PoisonList[i].Duration - PoisonList[i].Time) > p.Duration)) return;//cant cast 1 second poison to make a 1minute poison go away!
                 if (p.PType == PoisonType.DelayedExplosion) return;
                 if ((PoisonList[i].PType == PoisonType.Frozen) || (PoisonList[i].PType == PoisonType.Slow) || (PoisonList[i].PType == PoisonType.Paralysis)|| (PoisonList[i].PType == PoisonType.LRParalysis)) return;//prevents mobs from being perma frozen/slowed
+                if (p.PType == PoisonType.Frozen &&
+                    !Info.AllowFreeze) continue;
+                if (p.PType == PoisonType.Slow &&
+                    !Info.AllowSlow) continue;
+                if (p.PType == PoisonType.Green &&
+                    !Info.AllowGreen) continue;
+                if (p.PType == PoisonType.Red &&
+                    !Info.AllowRed) continue;
+                if ((p.PType == PoisonType.Paralysis ||
+                    p.PType == PoisonType.LRParalysis) &&
+                    !Info.AllowPara) continue;
+                if (p.PType == PoisonType.Blindness &&
+                    !Info.AllowBlindness) continue;
+                if (p.PType == PoisonType.Bleeding &&
+                    !Info.AllowBleeding) continue;
                 PoisonList[i] = p;
                 return;
             }
@@ -2474,31 +2896,40 @@ namespace Server.MirObjects
                 ExplosionInflictedTime = Envir.Time + 4000;
                 Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion });
             }
-            else if (p.PType == PoisonType.Dazed)
-            {
-                Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Stunned, Time = (uint)(p.Duration * p.TickSpeed) });
-            }
-            else if (p.PType == PoisonType.Blindness)
-            {
-                var stats = new Stats
-                {
-                    [Stat.Accuracy] = p.Value * -1
-                };
 
-                AddBuff(BuffType.Blindness, Caster, (int)(p.Duration * p.TickSpeed), stats);
-            }
-
+            if (p.PType == PoisonType.Frozen &&
+                    !Info.AllowFreeze) return;
+            if (p.PType == PoisonType.Slow &&
+                !Info.AllowSlow) return;
+            if (p.PType == PoisonType.Green &&
+                !Info.AllowGreen) return;
+            if (p.PType == PoisonType.Red &&
+                !Info.AllowRed) return;
+            if ((p.PType == PoisonType.Paralysis ||
+                p.PType == PoisonType.LRParalysis) &&
+                !Info.AllowPara) return;
+            if (p.PType == PoisonType.Blindness &&
+                !Info.AllowBlindness) return;
+            if (p.PType == PoisonType.Bleeding &&
+                !Info.AllowBleeding) return;
             PoisonList.Add(p);
         }
 
-        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool refreshStats = true, bool updateOnly = false, params int[] values)
+        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool refreshStats = true, params int[] values)
         {
-            Buff b = base.AddBuff(type, owner, duration, stats, refreshStats, updateOnly, values);
+            Buff b = base.AddBuff(type, owner, duration, stats, refreshStats, values);
+
+            if (HasBuff(type, out b) && b.StackType == BuffStackType.Infinite)
+            {
+                return b;
+            }
 
             var packet = new S.AddBuff
             {
                 Buff = b.ToClientBuff(),
             };
+
+            packet.Buff.ExpireTime -= Envir.Time;
 
             if (b.Info.Visible) Broadcast(packet);
 
@@ -2521,7 +2952,7 @@ namespace Server.MirObjects
                 Image = Info.Image,
                 Direction = Direction,
                 Effect = Info.Effect,
-                AI = Info.AI,
+                AI = (byte)Info.AI,
                 Light = Info.Light,
                 Dead = Dead,
                 Skeleton = Harvested,
@@ -2529,7 +2960,11 @@ namespace Server.MirObjects
                 Hidden = Hidden,
                 ShockTime = (ShockTime > 0 ? ShockTime - Envir.Time : 0),
                 BindingShotCenter = BindingShotCenter,
-                Buffs = Buffs.Where(d => d.Info.Visible).Select(e => e.Type).ToList()
+                Buffs = Buffs.Where(d => d.Info.Visible).Select(e => e.Type).ToList(),
+                IsPet = Master == null ? false : true,
+                IsElite = Info.IsElite,
+                IsSub = Info.IsSub,
+                IsBoss = Info.IsBoss,
             };
         }
 
@@ -3157,7 +3592,15 @@ namespace Server.MirObjects
         {
             if (PetLevel >= MaxPetLevel) return;
 
-            if (Info.Name == Settings.SkeletonName || Info.Name == Settings.ShinsuName || Info.Name == Settings.AngelName)
+            if (Info.Name == Settings.SkeletonName0 ||
+                Info.Name == Settings.SkeletonName1 ||
+                Info.Name == Settings.SkeletonName2 ||
+                Info.Name == Settings.SkeletonName3 ||
+                Info.Name == Settings.ShinsuName0 ||
+                Info.Name == Settings.ShinsuName2 ||
+                Info.Name == Settings.ShinsuName4 ||
+                Info.Name == Settings.ShinsuName6 || 
+                Info.Name == Settings.AngelName)
                 amount *= 3;
 
             PetExperience += amount;
@@ -3187,6 +3630,11 @@ namespace Server.MirObjects
                 if (Envir.Random.Next(chanceToPoison) == 0)
                 {
                     target.ApplyPoison(new Poison { Owner = this, Duration = poisonDuration, PType = poison, Value = value, TickSpeed = poisonTickSpeed }, this, noResist, ignoreDefence);
+
+                    if (poison == PoisonType.Dazed)
+                    {
+                        Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.Stunned, Time = (uint)(poisonDuration * poisonTickSpeed) });
+                    }
                 }
             }
         }

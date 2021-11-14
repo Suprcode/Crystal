@@ -74,9 +74,12 @@ namespace Server.MirDatabase
         public List<QuestItemTask> ItemTasks = new List<QuestItemTask>();
         public List<QuestFlagTask> FlagTasks = new List<QuestFlagTask>();
 
+        public bool percentageExp;
+        public bool autoComplete;
         public uint GoldReward;
         public uint ExpReward;
         public uint CreditReward;
+        public uint HuntPointsReward;
         public List<QuestItemReward> FixedRewards = new List<QuestItemReward>();
         public List<QuestItemReward> SelectRewards = new List<QuestItemReward>();
 
@@ -104,6 +107,9 @@ namespace Server.MirDatabase
             ItemMessage = reader.ReadString();
             FlagMessage = reader.ReadString();
 
+            percentageExp = reader.ReadBoolean();
+            autoComplete = reader.ReadBoolean();
+
             if (Envir.LoadVersion > 90)
             {
                 TimeLimitInSeconds = reader.ReadInt32();
@@ -127,6 +133,8 @@ namespace Server.MirDatabase
             writer.Write(KillMessage);
             writer.Write(ItemMessage);
             writer.Write(FlagMessage);
+            writer.Write(percentageExp);
+            writer.Write(autoComplete);
             writer.Write(TimeLimitInSeconds);
         }
 
@@ -159,6 +167,7 @@ namespace Server.MirDatabase
             ExpReward = 0;
             GoldReward = 0;
             CreditReward = 0;
+            HuntPointsReward = 0;
         }
 
         public void ParseFile(List<string> lines)
@@ -175,13 +184,14 @@ namespace Server.MirDatabase
                 selectRewardsKey = "[@SELECTREWARDS]",
                 expRewardKey = "[@EXPREWARD]",
                 goldRewardKey = "[@GOLDREWARD]",
-                creditRewardKey = "[@CREDITREWARD]";
+                creditRewardKey = "[@CREDITREWARD]",
+                huntpointsRewardKey = "[@HUNTPOINTSREWARD]";
 
             List<string> headers = new List<string> 
             { 
                 descriptionCollectKey, descriptionTaskKey, descriptionCompletionKey,
                 carryItemsKey, killTasksKey, itemTasksKey, flagTasksKey,
-                fixedRewardsKey, selectRewardsKey, expRewardKey, goldRewardKey, creditRewardKey
+                fixedRewardsKey, selectRewardsKey, expRewardKey, goldRewardKey, creditRewardKey, huntpointsRewardKey
             };
 
             int currentHeader = 0;
@@ -246,6 +256,9 @@ namespace Server.MirDatabase
                                 break;
                             case creditRewardKey:
                                 uint.TryParse(innerLine, out CreditReward);
+                                break;
+                            case huntpointsRewardKey:
+                                uint.TryParse(innerLine, out HuntPointsReward);
                                 break;
                         }
                     }
@@ -398,12 +411,15 @@ namespace Server.MirDatabase
                 ClassNeeded = RequiredClass,
                 QuestNeeded = RequiredQuest,
                 Type = Type,
-                TimeLimitInSeconds = TimeLimitInSeconds,
                 RewardGold = GoldReward,
                 RewardExp = ExpReward,
                 RewardCredit = CreditReward,
+                RewardHuntPoints = HuntPointsReward,
                 RewardsFixedItem = FixedRewards,
-                RewardsSelectItem = SelectRewards
+                RewardsSelectItem = SelectRewards,
+                percentageExp = percentageExp,
+                autoComplete = autoComplete,
+                TimeLimitInSeconds = TimeLimitInSeconds,
             };
         }
 
@@ -436,6 +452,9 @@ namespace Server.MirDatabase
 
             byte.TryParse(data[11], out temp);
 
+            bool.TryParse(data[12], out info.percentageExp);
+            bool.TryParse(data[13], out info.autoComplete);
+
             info.RequiredClass = (RequiredClass)temp;
 
             info.Index = ++EditEnvir.QuestIndex;
@@ -444,8 +463,8 @@ namespace Server.MirDatabase
 
         public string ToText()
         {
-            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
-                Name, Group, (byte)Type, FileName, GotoMessage, KillMessage, ItemMessage, FlagMessage, RequiredMinLevel, RequiredMaxLevel, RequiredQuest, (byte)RequiredClass);
+            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}",
+                Name, Group, (byte)Type, FileName, GotoMessage, KillMessage, ItemMessage, FlagMessage, RequiredMinLevel, RequiredMaxLevel, RequiredQuest, (byte)RequiredClass, percentageExp, autoComplete);
         }
 
         public override string ToString()

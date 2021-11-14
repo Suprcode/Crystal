@@ -25,11 +25,11 @@ namespace Server.MirDatabase
         public byte MapDarkLight = 0, MineIndex = 0;
 
         public bool NoTeleport, NoReconnect, NoRandom, NoEscape, NoRecall, NoDrug, NoPosition, NoFight,
-            NoThrowItem, NoDropPlayer, NoDropMonster, NoNames, NoMount, NeedBridle, Fight, NeedHole, Fire, Lightning, 
-            NoTownTeleport, NoReincarnation;
+            NoThrowItem, NoDropPlayer, NoDropMonster, NoNames, NoMount, NeedBridle, Fight, NeedHole, Fire, Lightning, FireWall, RandomTeleport, GT,
+            NoTownTeleport, NoReincarnation, NoPets, NoGroup = false;
 
         public string NoReconnectMap = string.Empty;
-        public int FireDamage, LightningDamage;
+        public int FireDamage, LightningDamage, FireWallCount, RandomTeleportCount;
 
         public List<SafeZoneInfo> SafeZones = new List<SafeZoneInfo>();
         public List<MovementInfo> Movements = new List<MovementInfo>();
@@ -92,11 +92,20 @@ namespace Server.MirDatabase
             NeedBridle = reader.ReadBoolean();
             NoFight = reader.ReadBoolean();
             Music = reader.ReadUInt16();
+            NoPets = reader.ReadBoolean();
+            NoGroup = reader.ReadBoolean();
 
             if (Envir.LoadVersion < 78) return;
             NoTownTeleport = reader.ReadBoolean();
             if (Envir.LoadVersion < 79) return;
             NoReincarnation = reader.ReadBoolean();
+
+            FireWall = reader.ReadBoolean();
+            FireWallCount = reader.ReadInt32();
+
+            RandomTeleport = reader.ReadBoolean();
+            RandomTeleportCount = reader.ReadInt32();
+            GT = reader.ReadBoolean();
         }
 
         public void Save(BinaryWriter writer)
@@ -152,6 +161,15 @@ namespace Server.MirDatabase
             writer.Write(NoTownTeleport);
             writer.Write(NoReincarnation);
 
+            writer.Write(NoPets);
+            writer.Write(NoGroup);
+
+            writer.Write(FireWall);
+            writer.Write(FireWallCount);
+
+            writer.Write(RandomTeleport);
+            writer.Write(RandomTeleportCount);
+            writer.Write(GT);
         }
 
 

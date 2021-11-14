@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <OutputPath>..\Build\Server\</OutputPath>
+    <OutputPath>D:\GitHub\Cantea\Server\</OutputPath>
     <LangVersion>8.0</LangVersion>
     <RootNamespace>Server</RootNamespace>
     <AssemblyName>Server.Library</AssemblyName>

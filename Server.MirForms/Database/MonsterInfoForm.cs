@@ -22,13 +22,14 @@ namespace Server
             InitializeComponent();
 
             ImageComboBox.Items.AddRange(Enum.GetValues(typeof(Monster)).Cast<object>().ToArray());
-            UpdateInterface();
+            UpdateInterface(true);
         }
 
         private void AddButton_Click(object sender, EventArgs e)
         {
             Envir.CreateMonsterInfo();
-            UpdateInterface();
+            txtSearch.Text = "";
+            UpdateInterface(true);
         }
         private void RemoveButton_Click(object sender, EventArgs e)
         {
@@ -40,17 +41,26 @@ namespace Server
 
             if (Envir.MonsterInfoList.Count == 0) Envir.MonsterIndex = 0;
 
-            UpdateInterface();
+            UpdateInterface(true);
         }
 
-        private void UpdateInterface()
+        private void txtSearch_TextChanged(object sender, EventArgs e)
         {
-            if (MonsterInfoListBox.Items.Count != Envir.MonsterInfoList.Count)
+            UpdateInterface(true);
+        }
+        private void UpdateInterface(bool refreshList = false)
+        {
+            if (refreshList)
             {
                 MonsterInfoListBox.Items.Clear();
 
                 for (int i = 0; i < Envir.MonsterInfoList.Count; i++)
-                    MonsterInfoListBox.Items.Add(Envir.MonsterInfoList[i]);
+                {
+                    if (string.IsNullOrWhiteSpace(txtSearch.Text) || Envir.MonsterInfoList[i].Name.IndexOf(txtSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        MonsterInfoListBox.Items.Add(Envir.MonsterInfoList[i]);
+                    }
+                }
             }
 
             _selectedMonsterInfos = MonsterInfoListBox.SelectedItems.Cast<MonsterInfo>().ToList();
@@ -93,6 +103,18 @@ namespace Server
                 CanTameCheckBox.Checked = false;
                 AutoRevCheckBox.Checked = false;
                 UndeadCheckBox.Checked = false;
+
+                eliteBox.Checked = false;
+                subBox.Checked = false;
+                bossBox.Checked = false;
+
+                allowBleeding.Checked = true;
+                allowBlindness.Checked = true;
+                allowFreeze.Checked = true;
+                allowGreen.Checked = true;
+                allowPara.Checked = true;
+                allowRed.Checked = true;
+                allowSlow.Checked = true;
 
                 return;
             }
@@ -140,6 +162,21 @@ namespace Server
             AutoRevCheckBox.Checked = info.AutoRev;
             UndeadCheckBox.Checked = info.Undead;
 
+            eliteBox.Checked = info.IsElite;
+            subBox.Checked = info.IsSub;
+            bossBox.Checked = info.IsBoss;
+
+            QuestTextBox.Text = info.Quest.ToString();
+            RandomQuestChanceBox.Text = info.RandomQuestChance.ToString();
+
+            allowBleeding.Checked = info.AllowBleeding;
+            allowBlindness.Checked = info.AllowBlindness;
+            allowFreeze.Checked = info.AllowFreeze;
+            allowGreen.Checked = info.AllowGreen;
+            allowPara.Checked = info.AllowPara;
+            allowRed.Checked = info.AllowRed;
+            allowSlow.Checked = info.AllowSlow;
+
             for (int i = 1; i < _selectedMonsterInfos.Count; i++)
             {
                 info = _selectedMonsterInfos[i];
@@ -179,8 +216,128 @@ namespace Server
 
                 if (AutoRevCheckBox.Checked != info.AutoRev) AutoRevCheckBox.CheckState = CheckState.Indeterminate;
                 if (UndeadCheckBox.Checked != info.Undead) UndeadCheckBox.CheckState = CheckState.Indeterminate;
+
+                if (eliteBox.Checked != info.IsElite) eliteBox.CheckState = CheckState.Indeterminate;
+                if (subBox.Checked != info.IsSub) subBox.CheckState = CheckState.Indeterminate;
+                if (bossBox.Checked != info.IsBoss) bossBox.CheckState = CheckState.Indeterminate;
+
+                if (QuestTextBox.Text != info.Quest.ToString()) QuestTextBox.Text = string.Empty;
+                if (RandomQuestChanceBox.Text != info.RandomQuestChance.ToString()) RandomQuestChanceBox.Text = string.Empty;
+
+                if (allowBleeding.Checked != info.AllowBleeding) allowBleeding.CheckState = CheckState.Indeterminate;
+                if (allowBlindness.Checked != info.AllowBlindness) allowBlindness.CheckState = CheckState.Indeterminate;
+                if (allowFreeze.Checked != info.AllowFreeze) allowFreeze.CheckState = CheckState.Indeterminate;
+                if (allowGreen.Checked != info.AllowGreen) allowGreen.CheckState = CheckState.Indeterminate;
+                if (allowPara.Checked != info.AllowPara) allowPara.CheckState = CheckState.Indeterminate;
+                if (allowRed.Checked != info.AllowRed) allowRed.CheckState = CheckState.Indeterminate;
+                if (allowSlow.Checked != info.AllowSlow) allowSlow.CheckState = CheckState.Indeterminate;
             }
 
+        }
+        private void allowGreen_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+                _selectedMonsterInfos[i].AllowGreen = allowGreen.Checked;
+        }
+
+        private void allowBlindness_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+                _selectedMonsterInfos[i].AllowBlindness = allowBlindness.Checked;
+        }
+
+        private void allowRed_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+                _selectedMonsterInfos[i].AllowRed = allowRed.Checked;
+        }
+
+        private void allowFreeze_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+                _selectedMonsterInfos[i].AllowFreeze = allowFreeze.Checked;
+        }
+
+        private void allowSlow_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+                _selectedMonsterInfos[i].AllowSlow = allowSlow.Checked;
+        }
+
+        private void allowPara_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+                _selectedMonsterInfos[i].AllowPara = allowPara.Checked;
+        }
+
+        private void allowBleeding_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+                _selectedMonsterInfos[i].AllowBleeding = allowBleeding.Checked;
+        }
+
+        private void QuestTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!ushort.TryParse(ActiveControl.Text, out ushort temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+                _selectedMonsterInfos[i].Quest = temp;
+        }
+        private void RandomQuestChanceBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!ushort.TryParse(ActiveControl.Text, out ushort temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+                _selectedMonsterInfos[i].RandomQuestChance = temp;
+        }
+        private void eliteBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender)
+                return;
+
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+                _selectedMonsterInfos[i].IsElite = eliteBox.Checked;
+        }
+        private void subBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender)
+                return;
+
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+                _selectedMonsterInfos[i].IsSub = subBox.Checked;
+        }
+        private void bossBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender)
+                return;
+
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+                _selectedMonsterInfos[i].IsBoss = bossBox.Checked;
         }
         private void RefreshMonsterList()
         {
@@ -212,9 +369,9 @@ namespace Server
         {
             if (ActiveControl != sender) return;
 
-            byte temp;
+            ushort temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
@@ -698,7 +855,8 @@ namespace Server
             foreach (var m in monsters)
                 MonsterInfo.FromText(m);
 
-            UpdateInterface();
+            UpdateInterface(true);
+            txtSearch.Text = "";
         }
 
         private void DropBuilderButton_Click(object sender, EventArgs e)

@@ -187,7 +187,7 @@ namespace Server.MirObjects.Monsters
                 Image = Monster.SnakeTotem,
                 Direction = Direction,
                 Effect = Info.Effect,
-                AI = Info.AI,
+                AI = (byte)Info.AI,
                 Light = Info.Light,
                 Dead = Dead,
                 Skeleton = Harvested,

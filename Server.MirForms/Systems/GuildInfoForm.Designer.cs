@@ -78,7 +78,8 @@
             this.BufftxtHpRegen = new System.Windows.Forms.TextBox();
             this.BufftxtMaxMp = new System.Windows.Forms.TextBox();
             this.BufftxtMaxHp = new System.Windows.Forms.TextBox();
-            this.BufftxtAttack = new System.Windows.Forms.TextBox();
+            this.BufftxtPVPAttack = new System.Windows.Forms.TextBox();
+            this.BufftxtPVEAttack = new System.Windows.Forms.TextBox();
             this.BufftxtSc = new System.Windows.Forms.TextBox();
             this.BufftxtMc = new System.Windows.Forms.TextBox();
             this.BufftxtDc = new System.Windows.Forms.TextBox();
@@ -121,6 +122,13 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.label29 = new System.Windows.Forms.Label();
+            this.GTBuyBox = new System.Windows.Forms.TextBox();
+            this.label30 = new System.Windows.Forms.Label();
+            this.GTExtendBox = new System.Windows.Forms.TextBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.GTDays = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox10.SuspendLayout();
@@ -131,6 +139,7 @@
             this.groupBox2.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             this.SuspendLayout();
             // 
             // GuildExpratetextBox
@@ -190,6 +199,7 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Location = new System.Drawing.Point(11, 41);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -510,7 +520,8 @@
             this.groupBox2.Controls.Add(this.BufftxtHpRegen);
             this.groupBox2.Controls.Add(this.BufftxtMaxMp);
             this.groupBox2.Controls.Add(this.BufftxtMaxHp);
-            this.groupBox2.Controls.Add(this.BufftxtAttack);
+            this.groupBox2.Controls.Add(this.BufftxtPVPAttack);
+            this.groupBox2.Controls.Add(this.BufftxtPVEAttack);
             this.groupBox2.Controls.Add(this.BufftxtSc);
             this.groupBox2.Controls.Add(this.BufftxtMc);
             this.groupBox2.Controls.Add(this.BufftxtDc);
@@ -637,13 +648,21 @@
             this.BufftxtMaxHp.TabIndex = 23;
             this.BufftxtMaxHp.TextChanged += new System.EventHandler(this.BufftxtMaxHp_TextChanged);
             // 
-            // BufftxtAttack
+            // BufftxtPVPAttack
             // 
-            this.BufftxtAttack.Location = new System.Drawing.Point(94, 143);
-            this.BufftxtAttack.Name = "BufftxtAttack";
-            this.BufftxtAttack.Size = new System.Drawing.Size(42, 20);
-            this.BufftxtAttack.TabIndex = 22;
-            this.BufftxtAttack.TextChanged += new System.EventHandler(this.BufftxtAttack_TextChanged);
+            this.BufftxtPVPAttack.Location = new System.Drawing.Point(94, 143);
+            this.BufftxtPVPAttack.Name = "BufftxtPVPAttack";
+            this.BufftxtPVPAttack.Size = new System.Drawing.Size(42, 20);
+            this.BufftxtPVPAttack.TabIndex = 22;
+            this.BufftxtPVPAttack.TextChanged += new System.EventHandler(this.BufftxtPVPAttack_TextChanged);
+            // 
+            // BufftxtPVEAttack
+            // 
+            this.BufftxtPVEAttack.Location = new System.Drawing.Point(94, 143);
+            this.BufftxtPVEAttack.Name = "BufftxtPVEAttack";
+            this.BufftxtPVEAttack.Size = new System.Drawing.Size(42, 20);
+            this.BufftxtPVEAttack.TabIndex = 22;
+            this.BufftxtPVEAttack.TextChanged += new System.EventHandler(this.BufftxtPVEAttack_TextChanged);
             // 
             // BufftxtSc
             // 
@@ -1015,6 +1034,79 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Length : ";
             // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.label31);
+            this.tabPage5.Controls.Add(this.GTDays);
+            this.tabPage5.Controls.Add(this.label30);
+            this.tabPage5.Controls.Add(this.GTExtendBox);
+            this.tabPage5.Controls.Add(this.label29);
+            this.tabPage5.Controls.Add(this.GTBuyBox);
+            this.tabPage5.Location = new System.Drawing.Point(4, 25);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(971, 428);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "GuildTerritory";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(23, 23);
+            this.label29.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(60, 17);
+            this.label29.TabIndex = 26;
+            this.label29.Text = "GT Buy:";
+            // 
+            // GTBuyBox
+            // 
+            this.GTBuyBox.Location = new System.Drawing.Point(117, 19);
+            this.GTBuyBox.Margin = new System.Windows.Forms.Padding(4);
+            this.GTBuyBox.Name = "GTBuyBox";
+            this.GTBuyBox.Size = new System.Drawing.Size(44, 22);
+            this.GTBuyBox.TabIndex = 25;
+            this.GTBuyBox.TextChanged += new System.EventHandler(this.GTBuyBox_TextChanged);
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(23, 59);
+            this.label30.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(79, 17);
+            this.label30.TabIndex = 28;
+            this.label30.Text = "Extend GT:";
+            // 
+            // GTExtendBox
+            // 
+            this.GTExtendBox.Location = new System.Drawing.Point(117, 55);
+            this.GTExtendBox.Margin = new System.Windows.Forms.Padding(4);
+            this.GTExtendBox.Name = "GTExtendBox";
+            this.GTExtendBox.Size = new System.Drawing.Size(44, 22);
+            this.GTExtendBox.TabIndex = 27;
+            this.GTExtendBox.TextChanged += new System.EventHandler(this.GTExtendBox_TextChanged);
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(23, 95);
+            this.label31.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(48, 17);
+            this.label31.TabIndex = 30;
+            this.label31.Text = "Days :";
+            // 
+            // GTDays
+            // 
+            this.GTDays.Location = new System.Drawing.Point(117, 91);
+            this.GTDays.Margin = new System.Windows.Forms.Padding(4);
+            this.GTDays.Name = "GTDays";
+            this.GTDays.Size = new System.Drawing.Size(44, 22);
+            this.GTDays.TabIndex = 29;
+            this.GTDays.TextChanged += new System.EventHandler(this.GTDays_TextChanged);
+            // 
             // GuildInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1045,6 +1137,8 @@
             this.tabPage4.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.tabPage5.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1136,7 +1230,8 @@
         private System.Windows.Forms.TextBox BufftxtHpRegen;
         private System.Windows.Forms.TextBox BufftxtMaxMp;
         private System.Windows.Forms.TextBox BufftxtMaxHp;
-        private System.Windows.Forms.TextBox BufftxtAttack;
+        private System.Windows.Forms.TextBox BufftxtPVPAttack;
+        private System.Windows.Forms.TextBox BufftxtPVEAttack;
         private System.Windows.Forms.TextBox BufftxtSc;
         private System.Windows.Forms.TextBox BufftxtMc;
         private System.Windows.Forms.TextBox BufftxtDc;
@@ -1144,6 +1239,12 @@
         private System.Windows.Forms.TextBox BufftxtAc;
         private System.Windows.Forms.TextBox bufftxtIcon;
         private System.Windows.Forms.Label label28;
-
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.TextBox GTDays;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.TextBox GTExtendBox;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.TextBox GTBuyBox;
     }
 }

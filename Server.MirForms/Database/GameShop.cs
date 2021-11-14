@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Server.MirEnvir;
+using System.IO;
 
 namespace Server
 {
@@ -74,7 +75,7 @@ namespace Server
             for (int i = 0; i < SMain.EditEnvir.GameShopList.Count; i++)
             {
                 if (ClassFilter_lb.Text == "All Classes" || SMain.EditEnvir.GameShopList[i].Class == ClassFilter_lb.Text)
-                    if (SectionFilter_lb.Text == "All Items" || SMain.EditEnvir.GameShopList[i].TopItem && SectionFilter_lb.Text == "Top Items" || SMain.EditEnvir.GameShopList[i].Deal && SectionFilter_lb.Text == "Sale Items" || SMain.EditEnvir.GameShopList[i].Date > Envir.Now.AddDays(-7) && SectionFilter_lb.Text == "New Items")
+                    if (SectionFilter_lb.Text == "All Items" || SMain.EditEnvir.GameShopList[i].TopItem && SectionFilter_lb.Text == "Top Items" || SMain.EditEnvir.GameShopList[i].Deal && SectionFilter_lb.Text == "Sale Items" || SMain.EditEnvir.GameShopList[i].Date > DateTime.Now.AddDays(-7) && SectionFilter_lb.Text == "New Items")
                         if (CategoryFilter_lb.Text == "All Categories" || SMain.EditEnvir.GameShopList[i].Category == CategoryFilter_lb.Text)
                             GameShopListBox.Items.Add(SMain.EditEnvir.GameShopList[i]);
             }
@@ -94,6 +95,7 @@ namespace Server
             {
                 GoldPrice_textbox.Text = String.Empty;
                 GPPrice_textbox.Text = String.Empty;
+                HuntPointsPrice_textbox.Text = String.Empty;
                 Stock_textbox.Text = String.Empty;
                 Individual_checkbox.Checked = false;
                 Class_combo.Text = "All";
@@ -105,6 +107,9 @@ namespace Server
                 TotalSold_label.Text = "0";
                 LeftinStock_label.Text = "";
                 Count_textbox.Text = String.Empty;
+                checkBox1.Checked = false;
+                checkBox2.Checked = false;
+                checkBox3.Checked = false;
                 return;
             }
 
@@ -112,6 +117,7 @@ namespace Server
 
             GoldPrice_textbox.Text = SelectedItems[0].GoldPrice.ToString();
             GPPrice_textbox.Text = SelectedItems[0].CreditPrice.ToString();
+            HuntPointsPrice_textbox.Text = SelectedItems[0].HuntPointsPrice.ToString();
             Stock_textbox.Text = SelectedItems[0].Stock.ToString();
             Individual_checkbox.Checked = SelectedItems[0].iStock;
             Class_combo.Text = SelectedItems[0].Class;
@@ -119,9 +125,38 @@ namespace Server
             TopItem_checkbox.Checked = SelectedItems[0].TopItem;
             DealofDay_checkbox.Checked = SelectedItems[0].Deal;
             Count_textbox.Text = SelectedItems[0].Count.ToString();
+            checkBox1.Checked = SelectedItems[0].CanBuyCredit;
+            checkBox2.Checked = SelectedItems[0].CanBuyGold;
+            checkBox3.Checked = SelectedItems[0].CanBuyHuntPoints;
 
             GetStats();
 
+        }
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender)
+                return;
+
+            for (int i = 0; i < SelectedItems.Count; i++)
+                SelectedItems[i].CanBuyGold = checkBox2.Checked;
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender)
+                return;
+
+            for (int i = 0; i < SelectedItems.Count; i++)
+                SelectedItems[i].CanBuyCredit = checkBox1.Checked;
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender)
+                return;
+
+            for (int i = 0; i < SelectedItems.Count; i++)
+                SelectedItems[i].CanBuyHuntPoints = checkBox3.Checked;
         }
 
         private void GetStats()
@@ -183,6 +218,21 @@ namespace Server
                 SelectedItems[i].CreditPrice = temp;
 
             if (ActiveControl.Text != "") GoldPrice_textbox.Text = (temp * Settings.CredxGold).ToString();
+        }
+        private void HuntPointsPrice_textbox_TextChanged(object sender, EventArgs e)
+        {
+            uint temp;
+
+            if (!uint.TryParse(HuntPointsPrice_textbox.Text, out temp))
+            {
+                HuntPointsPrice_textbox.BackColor = Color.Red;
+                return;
+            }
+
+            HuntPointsPrice_textbox.BackColor = SystemColors.Window;
+
+            for (int i = 0; i < SelectedItems.Count; i++)
+                SelectedItems[i].HuntPointsPrice = temp;
         }
 
         private void Class_combo_SelectedIndexChanged(object sender, EventArgs e)
@@ -339,6 +389,67 @@ namespace Server
                 if (MessageBox.Show("Reseting purchase logs cannot be reverted and will set stock levels back to defaults, This will take effect when you start the server", "Remove Logs?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
                 SMain.Envir.ResetGS = true;
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog
+            {
+                InitialDirectory = Settings.ExportPath,
+                Filter = "Binary File|*.dat",
+                FileName = string.Format("GameShopInfo-{0:dd-MM-yyyy_hh-mm-ss-tt}.dat", DateTime.Now)
+            };
+            sfd.ShowDialog();
+
+            if (sfd.FileName == string.Empty) return;
+            using (var stream = File.Create(sfd.FileName))
+            {
+                using (var writer = new BinaryWriter(stream))
+                {
+                    writer.Write(Envir.GameShopList.Count);
+                    for (int i = 0; i < Envir.GameShopList.Count; i++)
+                        Envir.GameShopList[i].Save(writer);
+                }
+
+            }
+            MessageBox.Show("GameShop Export complete");
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            string Path = string.Empty;
+
+            OpenFileDialog ofd = new OpenFileDialog
+            {
+                Filter = "Binary File|*.dat"
+            };
+            ofd.ShowDialog();
+
+            if (ofd.FileName == string.Empty) return;
+
+            Path = ofd.FileName;
+            if (!File.Exists(Path))
+            {
+                MessageBox.Show("File not found!");
+                return;
+            }
+            List<GameShopItem> list = new List<GameShopItem>();
+            using (var stream = File.OpenRead(Path))
+            {
+                using (var reader = new BinaryReader(stream))
+                {
+                    int count = reader.ReadInt32();
+                    for (int i = 0; i < count; i++)
+                        list.Add(new GameShopItem(reader, Envir.LoadVersion, Envir.LoadCustomVersion));
+                }
+            }
+            for (int i = 0; i < list.Count; i++)
+            {
+                list[i].GIndex = ++Envir.GameshopIndex;
+                Envir.GameShopList.Add(list[i]);
+            }
+            UpdateInterface();
+            MessageBox.Show("GameShop Import complete");
         }
     }
 }

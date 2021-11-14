@@ -640,7 +640,7 @@ namespace AutoPatcherAdmin
         private void SourceLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             SourceLinkLabel.LinkVisited = true;
-            Process.Start("http://www.lomcn.org/forum/member.php?141-Jamie-Hello");
+            Process.Start("https://www.lomcn.org/forum/threads/legend-of-mir-titan-world-v2-high-rate.106467/#post-1168966");
         }
 
         private void AMain_Load(object sender, EventArgs e)

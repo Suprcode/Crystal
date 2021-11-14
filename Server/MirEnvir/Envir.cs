@@ -54,20 +54,38 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int MinVersion = 60;
-        public const int Version = 93;
-        public const int CustomVersion = 0;
-        public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
+        public const int Version = 149;
+        public const int CustomVersion = 18;
+
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
-        public static readonly string BackUpPath = Path.Combine(".", "Back Up");
-        public static readonly string ArchivePath = Path.Combine(".", "Archive");
+
+        public const string BackUpPath = @".\Back Up\";
+        public const string AccountDBPath = BackUpPath + @"Account\";
+        public const string GuildDBPath = BackUpPath + @"Guilds\";
+        public const string ConquestDBPath = BackUpPath + @"Conquest\";
+        public const string CraftingDBPath = BackUpPath + @"Crafting\";
+        public const string DragonDBPath = BackUpPath + @"Dragon\";
+        public const string GameShopDBPath = BackUpPath + @"GameShop\";
+        public const string ItemDBPath = BackUpPath + @"Item\";
+        public const string MagicDBPath = BackUpPath + @"Magic\";
+        public const string MapDBPath = BackUpPath + @"Map\";
+        public const string MobDBPath = BackUpPath + @"Mob\";
+        public const string NPCDBPath = BackUpPath + @"NPC\";
+        public const string QuestDBPath = BackUpPath + @"Quest\";
+        public const string RespawnTickDBPath = BackUpPath + @"Respawn\";
+        public const string VersionDBPath = BackUpPath + @"Version\";
+
         public bool ResetGS = false;
+
+        public int CurrentWeekOfTheYear = 0;
+        public int CurrentDayOfTheYear = 0;
 
         private static readonly Regex AccountIDReg, PasswordReg, EMailReg, CharacterReg;
 
         public static int LoadVersion;
         public static int LoadCustomVersion;
 
-        private readonly DateTime _startTime = DateTime.UtcNow;
+        private readonly DateTime _startTime = DateTime.Now;
         public readonly Stopwatch Stopwatch = Stopwatch.StartNew();
 
         public long Time { get; private set; }
@@ -90,6 +108,7 @@ namespace Server.MirEnvir
 
         public RandomProvider Random = new RandomProvider();
 
+
         private Thread _thread;
         private TcpListener _listener;
         private bool StatusPortEnabled = true;
@@ -98,6 +117,7 @@ namespace Server.MirEnvir
         private int _sessionID;
         public List<MirConnection> Connections = new List<MirConnection>();
         
+
         //Server DB
         public int MapIndex, ItemIndex, MonsterIndex, NPCIndex, QuestIndex, GameshopIndex, ConquestIndex, RespawnIndex, ScriptIndex;
         public List<MapInfo> MapInfoList = new List<MapInfo>();
@@ -110,19 +130,18 @@ namespace Server.MirEnvir
         public List<GameShopItem> GameShopList = new List<GameShopItem>();
         public List<RecipeInfo> RecipeInfoList = new List<RecipeInfo>();
         public List<BuffInfo> BuffInfoList = new List<BuffInfo>();
-        public List<ConquestInfo> ConquestInfoList = new List<ConquestInfo>();
+        public Dictionary<int, int> GameshopLog = new Dictionary<int, int>();
+        public List<GTMap> GTMapList = new List<GTMap>();
 
         //User DB
-        public int NextAccountID, NextCharacterID, NextGuildID;
+        public int NextAccountID, NextCharacterID;
         public ulong NextUserItemID, NextAuctionID, NextMailID, NextRecipeID;
         public List<AccountInfo> AccountList = new List<AccountInfo>();
-        public List<CharacterInfo> CharacterList = new List<CharacterInfo>();
-        public List<GuildInfo> GuildList = new List<GuildInfo>();
+        public List<CharacterInfo> CharacterList = new List<CharacterInfo>(); 
         public LinkedList<AuctionInfo> Auctions = new LinkedList<AuctionInfo>();
-        public List<ConquestGuildInfo> ConquestList = new List<ConquestGuildInfo>();
-        public Dictionary<int, int> GameshopLog = new Dictionary<int, int>();
+        public int GuildCount, NextGuildID;
+        public List<GuildObject> GuildList = new List<GuildObject>();
 
-        public int GuildCount; //This shouldn't be needed?? -> remove in the future
 
         //Live Info
         public bool Saving = false;
@@ -133,12 +152,16 @@ namespace Server.MirEnvir
         public List<PlayerObject> Players = new List<PlayerObject>();
         public List<SpellObject> Spells = new List<SpellObject>();
         public List<NPCObject> NPCs = new List<NPCObject>();
-        public List<GuildObject> Guilds = new List<GuildObject>();
-        public List<ConquestObject> Conquests = new List<ConquestObject>();
 
         public LightSetting Lights;
         public LinkedList<MapObject> Objects = new LinkedList<MapObject>();
         public Dictionary<int, NPCScript> Scripts = new Dictionary<int, NPCScript>();
+
+
+        public List<ConquestInfo> ConquestInfos = new List<ConquestInfo>();
+        public List<ConquestObject> Conquests = new List<ConquestObject>();
+        
+
 
         //multithread vars
         readonly object _locker = new object();
@@ -147,12 +170,14 @@ namespace Server.MirEnvir
         public int SpawnMultiplier = 1;//set this to 2 if you want double spawns (warning this can easily lag your server far beyond what you imagine)
 
         public List<string> CustomCommands = new List<string>();
+        public List<string> WorldMap = new List<string>();
 
         public Dragon DragonSystem;
         public NPCScript DefaultNPC, MonsterNPC, RobotNPC;
 
         public List<DropInfo> FishingDrops = new List<DropInfo>();
         public List<DropInfo> AwakeningDrops = new List<DropInfo>();
+        public List<DropInfo> ConquestDrops = new List<DropInfo>();
 
         public List<DropInfo> StrongboxDrops = new List<DropInfo>();
         public List<DropInfo> BlackstoneDrops = new List<DropInfo>();
@@ -163,9 +188,7 @@ namespace Server.MirEnvir
         public List<RankCharacterInfo> RankTop = new List<RankCharacterInfo>();
         public List<RankCharacterInfo>[] RankClass = new List<RankCharacterInfo>[5];
         public int[] RankBottomLevel = new int[6];
-
         static HttpServer http;
-
         static Envir()
         {
             AccountIDReg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinAccountIDLength + "," + Globals.MaxAccountIDLength + "}$");
@@ -179,7 +202,7 @@ namespace Server.MirEnvir
         public int MonsterCount;
 
         private long warTime, guildTime, conquestTime, rentalItemsTime, auctionTime, spawnTime, robotTime;
-        private int dailyTime = DateTime.UtcNow.Day;
+        private int dailyTime = DateTime.Now.Day;
 
         private bool MagicExists(Spell spell)
         {
@@ -192,81 +215,509 @@ namespace Server.MirEnvir
 
         private void UpdateMagicInfo()
         {
-            for (var i = 0; i < MagicInfoList.Count; i++)
+            for (int i = 0; i < MagicInfoList.Count; i++)
             {
-                switch(MagicInfoList[i].Spell)
+                switch (MagicInfoList[i].Spell)
                 {
-                        //warrior
+                    //warrior
+                    case Spell.Fencing:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.Slaying:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
                     case Spell.Thrusting:
                         MagicInfoList[i].MultiplierBase = 0.25f;
                         MagicInfoList[i].MultiplierBonus = 0.25f;
+                        MagicInfoList[i].PvPMultiplierBase = 0.35f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.35f;
                         break;
                     case Spell.HalfMoon:
-                        MagicInfoList[i].MultiplierBase = 0.3f;
+                        MagicInfoList[i].MultiplierBase = 1f;
                         MagicInfoList[i].MultiplierBonus = 0.1f;
+                        MagicInfoList[i].PvPMultiplierBase = 0.3f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.1f;
                         break;
                     case Spell.ShoulderDash:
-                        MagicInfoList[i].MPowerBase = 4;
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
                         break;
                     case Spell.TwinDrakeBlade:
-                        MagicInfoList[i].MultiplierBase = 0.8f;
-                        MagicInfoList[i].MultiplierBonus = 0.1f;
+                        MagicInfoList[i].MultiplierBase = 1.8f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.6f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.Entrapment:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
                         break;
                     case Spell.FlamingSword:
-                        MagicInfoList[i].MultiplierBase = 1.4f;
-                        MagicInfoList[i].MultiplierBonus = 0.4f;
+                        MagicInfoList[i].MultiplierBase = 2.2f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 2.5f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.LionRoar:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
                         break;
                     case Spell.CrossHalfMoon:
-                        MagicInfoList[i].MultiplierBase = 0.4f;
-                        MagicInfoList[i].MultiplierBonus = 0.1f;
+                        MagicInfoList[i].MultiplierBase = 1.1f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 0.4f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.1f;
                         break;
                     case Spell.BladeAvalanche:
+                        MagicInfoList[i].MultiplierBase = 1.5f;
+                        MagicInfoList[i].MultiplierBonus = 0.1f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.Fury:
                         MagicInfoList[i].MultiplierBase = 1f;
-                        MagicInfoList[i].MultiplierBonus = 0.4f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.ProtectionField:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.Rage:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.CounterAttack:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.IceSword:
+                        MagicInfoList[i].MultiplierBase = 2.5f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 3f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.ImmortalSkin:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
                         break;
                     case Spell.SlashingBurst:
                         MagicInfoList[i].MultiplierBase = 3.25f;
                         MagicInfoList[i].MultiplierBonus = 0.25f;
+                        MagicInfoList[i].PvPMultiplierBase = 3.25f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.25f;
                         break;
-                        //wiz
+                    case Spell.FlyingThrust:
+                        MagicInfoList[i].MultiplierBase = 1.6f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.8f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.WhirlWind:
+                        MagicInfoList[i].MultiplierBase = 1.7f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.9f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    /*
+                case Spell.BladeStorm:
+                    MagicInfoList[i].MultiplierBase = 1.4f;
+                    MagicInfoList[i].MultiplierBonus = 0.2f;
+                    MagicInfoList[i].PvPMultiplierBase = 0f;
+                    MagicInfoList[i].PvPMultiplierBonus = 0f;
+                    break;
+                case Spell.BladeDancer:
+                    MagicInfoList[i].MultiplierBase = 1f;
+                    MagicInfoList[i].MultiplierBonus = 0f;
+                    MagicInfoList[i].PvPMultiplierBase = 1f;
+                    MagicInfoList[i].PvPMultiplierBonus = 0f;
+                    break;
+                case Spell.FuryWaves:
+                    MagicInfoList[i].MultiplierBase = 1f;
+                    MagicInfoList[i].MultiplierBonus = 0f;
+                    MagicInfoList[i].PvPMultiplierBase = 1f;
+                    MagicInfoList[i].PvPMultiplierBonus = 0f;
+                    break;
+                case Spell.ShadowStep:
+                    MagicInfoList[i].MultiplierBase = 1f;
+                    MagicInfoList[i].MultiplierBonus = 0f;
+                    MagicInfoList[i].PvPMultiplierBase = 1f;
+                    MagicInfoList[i].PvPMultiplierBonus = 0f;
+                    break;
+                    */
+                    // Wizard
+                    case Spell.FireBall:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
                     case Spell.Repulsion:
-                        MagicInfoList[i].MPowerBase = 4;
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
                         break;
-                        //tao
-                    case Spell.Poisoning:
-                        MagicInfoList[i].MPowerBase = 0;
+                    case Spell.ElectricShock:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.GreatFireBall:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0.1f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.1f;
+                        break;
+                    case Spell.HellFire:
+                        MagicInfoList[i].MultiplierBase = 1.2f;
+                        MagicInfoList[i].MultiplierBonus = 0.1f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.1f;
+                        break;
+                    case Spell.ThunderBolt:
+                        MagicInfoList[i].MultiplierBase = 1.3f;
+                        MagicInfoList[i].MultiplierBonus = 0.1f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.2f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.1f;
+                        break;
+                    case Spell.Teleport:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.FireBang:
+                        MagicInfoList[i].MultiplierBase = 1.3f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.2f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.FireWall:
+                        MagicInfoList[i].MultiplierBase = 1.1f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 0.8f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.Lightning:
+                        MagicInfoList[i].MultiplierBase = 1.4f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.2f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.FrostCrunch:
+                        MagicInfoList[i].MultiplierBase = 1.5f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.ThunderStorm:
+                        MagicInfoList[i].MultiplierBase = 1.3f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.MagicShield:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.TurnUndead:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.Vampirism:
+                        MagicInfoList[i].MultiplierBase = 1.3f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.2f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.IceStorm:
+                        MagicInfoList[i].MultiplierBase = 1.4f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.3f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.FlameDisruptor:
+                        MagicInfoList[i].MultiplierBase = 1.7f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.6f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.Mirroring:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.FlameField:
+                        MagicInfoList[i].MultiplierBase = 2f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.5f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.Blizzard:
+                        MagicInfoList[i].MultiplierBase = 1.4f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 0.7f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.1f;
+                        break;
+                    case Spell.MagicBooster:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.MeteorStrike:
+                        MagicInfoList[i].MultiplierBase = 1.6f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 0.9f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.1f;
+                        break;
+                    case Spell.IceThrust:
+                        MagicInfoList[i].MultiplierBase = 2.2f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.7f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.Blink:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.FireExplode:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 0f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.AlmightyPush:
+                        MagicInfoList[i].MultiplierBase = 1.8f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.6f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.1f;
+                        break;
+                    case Spell.PheonixExplosion:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+
+                    // Taoist
+                    case Spell.Healing:
+                        MagicInfoList[i].MultiplierBase = 1.1f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.1f;
+                        break;
+                    case Spell.SpiritSword:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.SoulFireBall:
+                        MagicInfoList[i].MultiplierBase = 2f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.8f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.SummonSkeleton:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.Hiding:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0.1f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.1f;
+                        break;
+                    case Spell.MassHiding:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.SoulShield:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.Revelation:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.BlessedArmour:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.EnergyRepulsor:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.TrapHexagon:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.Purification:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.MassHealing:
+                        MagicInfoList[i].MultiplierBase = 1.2f;
+                        MagicInfoList[i].MultiplierBonus = 0.1f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.2f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.Hallucination:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.1f;
+                        break;
+                    case Spell.UltimateEnhancer:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.SummonShinsu:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.Reincarnation:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.SummonHolyDeva:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
                         break;
                     case Spell.Curse:
-                        MagicInfoList[i].MPowerBase = 20;
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.PoisonCloud:
+                        MagicInfoList[i].MultiplierBase = 1.7f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.EnergyShield:
+                        MagicInfoList[i].MultiplierBase = 1.1f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.3f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.PetEnhancer:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.YinYangBurst:
+                        MagicInfoList[i].MultiplierBase = 1.8f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 2f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.SwordsOfLight:
+                        MagicInfoList[i].MultiplierBase = 2f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 1.9f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0.2f;
+                        break;
+                    case Spell.HeavenAndHell:
+                        MagicInfoList[i].MultiplierBase = 1.9f;
+                        MagicInfoList[i].MultiplierBonus = 0.2f;
+                        MagicInfoList[i].PvPMultiplierBase = 0f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    /*
+                case Spell.SummonFireFox:
+                    MagicInfoList[i].MultiplierBase = 1f;
+                    MagicInfoList[i].MultiplierBonus = 0f;
+                    MagicInfoList[i].PvPMultiplierBase = 1f;
+                    MagicInfoList[i].PvPMultiplierBonus = 0f;
+                    break;
+                case Spell.SoulBooster:
+                    MagicInfoList[i].MultiplierBase = 1f;
+                    MagicInfoList[i].MultiplierBonus = 0f;
+                    MagicInfoList[i].PvPMultiplierBase = 1f;
+                    MagicInfoList[i].PvPMultiplierBonus = 0f;
+                    break;
+                case Spell.TaoAvalanche:
+                    MagicInfoList[i].MultiplierBase = 1f;
+                    MagicInfoList[i].MultiplierBonus = 0f;
+                    MagicInfoList[i].PvPMultiplierBase = 1f;
+                    MagicInfoList[i].PvPMultiplierBonus = 0f;
+                    break;
+                    */
+                    case Spell.HealingCircle:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
                         break;
                     case Spell.Plague:
-                        MagicInfoList[i].MPowerBase = 0;
-                        MagicInfoList[i].PowerBase = 0;
-                        break;
-                        //sin
-                    case Spell.FatalSword:
-                        MagicInfoList[i].MPowerBase = 20;
-                        break;
-                    case Spell.DoubleSlash:
-                        MagicInfoList[i].MultiplierBase = 0.8f;
-                        MagicInfoList[i].MultiplierBonus = 0.1f;
-                        break;
-                    case Spell.FireBurst:
-                        MagicInfoList[i].MPowerBase = 4;
-                        break;
-                    case Spell.MoonLight:
-                        MagicInfoList[i].MPowerBase = 20;
-                        break;
-                    case Spell.DarkBody:
-                        MagicInfoList[i].MPowerBase = 20;
-                        break;
-                    case Spell.Hemorrhage:
-                        MagicInfoList[i].MultiplierBase = 0.2f;
-                        MagicInfoList[i].MultiplierBonus = 0.05f;
-                        break;
-                    case Spell.CrescentSlash:
                         MagicInfoList[i].MultiplierBase = 1f;
-                        MagicInfoList[i].MultiplierBonus = 0.4f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
+                        break;
+                    case Spell.FireExplodeFW:
+                        MagicInfoList[i].MultiplierBase = 1f;
+                        MagicInfoList[i].MultiplierBonus = 0f;
+                        MagicInfoList[i].PvPMultiplierBase = 1f;
+                        MagicInfoList[i].PvPMultiplierBonus = 0f;
                         break;
                 }
             }
@@ -280,7 +731,7 @@ namespace Server.MirEnvir
             if (!MagicExists(Spell.Thrusting)) MagicInfoList.Add(new MagicInfo { Name = "Thrusting", Spell = Spell.Thrusting, Icon = 11, Level1 = 22, Level2 = 24, Level3 = 27, Need1 = 2000, Need2 = 3500, Need3 = 6000, Range = 0, MultiplierBase = 0.25f, MultiplierBonus = 0.25f });
             if (!MagicExists(Spell.HalfMoon)) MagicInfoList.Add(new MagicInfo { Name = "HalfMoon", Spell = Spell.HalfMoon, Icon = 24, Level1 = 26, Level2 = 28, Level3 = 31, Need1 = 5000, Need2 = 8000, Need3 = 14000, BaseCost = 3, Range = 0, MultiplierBase =0.3f, MultiplierBonus = 0.1f });
             if (!MagicExists(Spell.ShoulderDash)) MagicInfoList.Add(new MagicInfo { Name = "ShoulderDash", Spell = Spell.ShoulderDash, Icon = 26, Level1 = 30, Level2 = 32, Level3 = 34, Need1 = 3000, Need2 = 4000, Need3 = 6000, BaseCost = 4, LevelCost = 4, DelayBase = 2500, Range = 0 , MPowerBase = 4});
-            if (!MagicExists(Spell.TwinDrakeBlade)) MagicInfoList.Add(new MagicInfo { Name = "TwinDrakeBlade", Spell = Spell.TwinDrakeBlade, Icon = 37, Level1 = 32, Level2 = 34, Level3 = 37, Need1 = 4000, Need2 = 6000, Need3 = 10000, BaseCost = 10, Range = 0 , MultiplierBase = 0.8f, MultiplierBonus = 0.1f});
+            if (!MagicExists(Spell.TwinDrakeBlade)) MagicInfoList.Add(new MagicInfo { Name = "TwinDrakeBlade", Spell = Spell.TwinDrakeBlade, Icon = 37, Level1 = 32, Level2 = 34, Level3 = 37, Level4 = 37, Level5 = 37, Need1 = 4000, Need2 = 6000, Need3 = 10000, Need4 = 10000, Need5 = 10000, BaseCost = 10, Range = 0 , MultiplierBase = 0.8f, MultiplierBonus = 0.1f});
             if (!MagicExists(Spell.Entrapment)) MagicInfoList.Add(new MagicInfo { Name = "Entrapment", Spell = Spell.Entrapment, Icon = 46, Level1 = 32, Level2 = 35, Level3 = 37, Need1 = 2000, Need2 = 3500, Need3 = 5500, BaseCost = 15, LevelCost = 3, Range = 9 });
             if (!MagicExists(Spell.FlamingSword)) MagicInfoList.Add(new MagicInfo { Name = "FlamingSword", Spell = Spell.FlamingSword, Icon = 25, Level1 = 35, Level2 = 37, Level3 = 40, Need1 = 2000, Need2 = 4000, Need3 = 6000, BaseCost = 7, Range = 0, MultiplierBase = 1.4f, MultiplierBonus = 0.4f});
             if (!MagicExists(Spell.LionRoar)) MagicInfoList.Add(new MagicInfo { Name = "LionRoar", Spell = Spell.LionRoar, Icon = 42, Level1 = 36, Level2 = 39, Level3 = 41, Need1 = 5000, Need2 = 8000, Need3 = 12000, BaseCost = 14, LevelCost = 4, Range = 0 });
@@ -288,10 +739,73 @@ namespace Server.MirEnvir
             if (!MagicExists(Spell.BladeAvalanche)) MagicInfoList.Add(new MagicInfo { Name = "BladeAvalanche", Spell = Spell.BladeAvalanche, Icon = 43, Level1 = 38, Level2 = 41, Level3 = 43, Need1 = 5000, Need2 = 8000, Need3 = 12000, BaseCost = 14, LevelCost = 4, Range = 0, MultiplierBonus = 0.3f});
             if (!MagicExists(Spell.ProtectionField)) MagicInfoList.Add(new MagicInfo { Name = "ProtectionField", Spell = Spell.ProtectionField, Icon = 50, Level1 = 39, Level2 = 42, Level3 = 45, Need1 = 6000, Need2 = 12000, Need3 = 18000, BaseCost = 23, LevelCost = 6, Range = 0 });
             if (!MagicExists(Spell.Rage)) MagicInfoList.Add(new MagicInfo { Name = "Rage", Spell = Spell.Rage, Icon = 49, Level1 = 44, Level2 = 47, Level3 = 50, Need1 = 8000, Need2 = 14000, Need3 = 20000, BaseCost = 20, LevelCost = 5, Range = 0 });
-            if (!MagicExists(Spell.CounterAttack)) MagicInfoList.Add(new MagicInfo { Name = "CounterAttack", Spell = Spell.CounterAttack, Icon = 72, Level1 = 47, Level2 = 51, Level3 = 55, Need1 = 7000, Need2 = 11000, Need3 = 15000, BaseCost = 12, LevelCost = 4, DelayBase = 24000, Range = 0 , MultiplierBonus = 0.4f});
+            if (!MagicExists(Spell.CounterAttack)) MagicInfoList.Add(new MagicInfo
+            {
+                Name = "CounterAttack",
+                Spell = Spell.CounterAttack,
+                Icon = 72,
+                Level1 = 50,
+                Level2 = 53,
+                Level3 = 56,
+                Need1 = 800,
+                Need2 = 1200,
+                Need3 = 2000,
+                BaseCost = 12,
+                LevelCost = 2,
+                DelayBase = 24000,
+                Range = 0,
+            });
             if (!MagicExists(Spell.SlashingBurst)) MagicInfoList.Add(new MagicInfo { Name = "SlashingBurst", Spell = Spell.SlashingBurst, Icon = 55, Level1 = 50, Level2 = 53, Level3 = 56, Need1 = 10000, Need2 = 16000, Need3 = 24000, BaseCost = 25, LevelCost = 4, MPowerBase = 1, PowerBase = 3, DelayBase = 14000, DelayReduction = 4000, Range = 0 , MultiplierBase = 3.25f, MultiplierBonus = 0.25f});
             if (!MagicExists(Spell.Fury)) MagicInfoList.Add(new MagicInfo { Name = "Fury", Spell = Spell.Fury, Icon = 76, Level1 = 45, Level2 = 48, Level3 = 51, Need1 = 8000, Need2 = 14000, Need3 = 20000, BaseCost = 10, LevelCost = 4, DelayBase = 600000, DelayReduction = 120000, Range = 0 });
             if (!MagicExists(Spell.ImmortalSkin)) MagicInfoList.Add(new MagicInfo { Name = "ImmortalSkin", Spell = Spell.ImmortalSkin, Icon = 80, Level1 = 60, Level2 = 61, Level3 = 62, Need1 = 1560, Need2 = 2200, Need3 = 3000, BaseCost = 10, LevelCost = 4, DelayBase = 600000, DelayReduction = 120000, Range = 0 });
+
+            if (!MagicExists(Spell.FlyingThrust)) MagicInfoList.Add(new MagicInfo
+            {
+                Name = "FlyingThrust",
+                Spell = Spell.FlyingThrust,
+                Icon = 94,
+                Level1 = 62,
+                Level2 = 65,
+                Level3 = 68,
+                Need1 = 2500,
+                Need2 = 4000,
+                Need3 = 7000,
+                BaseCost = 20,
+                LevelCost = 4,
+                DelayBase = 5000,
+                Range = 0,
+            });
+            if (!MagicExists(Spell.IceSword)) MagicInfoList.Add(new MagicInfo
+            {
+                Name = "IceSword",
+                Spell = Spell.IceSword,
+                Icon = 110,
+                Level1 = 53,
+                Level2 = 56,
+                Level3 = 59,
+                Need1 = 1500,
+                Need2 = 2000,
+                Need3 = 2500,
+                BaseCost = 13,
+                LevelCost = 2,
+                Range = 0,
+                DelayBase = 5000,
+            });
+            if (!MagicExists(Spell.WhirlWind)) MagicInfoList.Add(new MagicInfo
+            {
+                Name = "WhirlWind",
+                Spell = Spell.WhirlWind,
+                Icon = 119,
+                Level1 = 65,
+                Level2 = 68,
+                Level3 = 71,
+                Need1 = 1500,
+                Need2 = 3000,
+                Need3 = 6600,
+                BaseCost = 25,
+                LevelCost = 5,
+                Range = 0,
+            });
 
             //Wizard
             if (!MagicExists(Spell.FireBall)) MagicInfoList.Add(new MagicInfo { Name = "FireBall", Spell = Spell.FireBall, Icon = 0, Level1 = 7, Level2 = 9, Level3 = 11, Need1 = 200, Need2 = 350, Need3 = 700, BaseCost = 3, LevelCost = 2, MPowerBase = 8, PowerBase = 2, Range = 9 });
@@ -320,8 +834,55 @@ namespace Server.MirEnvir
             if (!MagicExists(Spell.Blink)) MagicInfoList.Add(new MagicInfo { Name = "Blink", Spell = Spell.Blink, Icon = 20, Level1 = 19, Level2 = 22, Level3 = 25, Need1 = 350, Need2 = 1000, Need3 = 2000, BaseCost = 10, LevelCost = 3, Range = 9 });
             //if (!MagicExists(Spell.FastMove)) MagicInfoList.Add(new MagicInfo { Name = "FastMove", Spell = Spell.ImmortalSkin, Icon = ?, Level1 = ?, Level2 = ?, Level3 = ?, Need1 = ?, Need2 = ?, Need3 = ?, BaseCost = ?, LevelCost = ?, DelayBase = ?, DelayReduction = ? });
             if (!MagicExists(Spell.StormEscape)) MagicInfoList.Add(new MagicInfo { Name = "StormEscape", Spell = Spell.StormEscape, Icon = 23, Level1 = 60, Level2 = 61, Level3 = 62, Need1 = 2200, Need2 = 3300, Need3 = 4400, BaseCost = 65, LevelCost = 8, MPowerBase = 12, PowerBase = 4, Range = 9 });
-            
-            
+            if (!MagicExists(Spell.PheonixExplosion)) MagicInfoList.Add(new MagicInfo
+            {
+                Name = "PheonixExplosion",
+                Spell = Spell.PheonixExplosion,
+                Icon = 33,
+                Level1 = 80,
+                Level2 = 85,
+                Level3 = 90,
+                Need1 = 1500,
+                Need2 = 2000,
+                Need3 = 2500,
+                BaseCost = 5,
+                LevelCost = 1,
+                Range = 9,
+            });
+            if (!MagicExists(Spell.AlmightyPush)) MagicInfoList.Add(new MagicInfo
+            {
+                Name = "AlmightyPush",
+                Spell = Spell.AlmightyPush,
+                Icon = 33,
+                Level1 = 60,
+                Level2 = 65,
+                Level3 = 70,
+                Need1 = 1500,
+                Need2 = 2000,
+                Need3 = 2500,
+                BaseCost = 5,
+                LevelCost = 1,
+                Range = 9,
+            });
+            if (!MagicExists(Spell.FireExplode)) MagicInfoList.Add(new MagicInfo
+            {
+                Name = "FireExplode",
+                Spell = Spell.FireExplode,
+                Icon = 33,
+                Level1 = 59,
+                Level2 = 62,
+                Level3 = 65,
+                Need1 = 2600,
+                Need2 = 4000,
+                Need3 = 6000,
+                BaseCost = 5,
+                LevelCost = 1,
+                Range = 9,
+                DelayBase = 5000,
+                //DelayReduction = 0,
+            });
+            if (!MagicExists(Spell.FireExplodeFW)) MagicInfoList.Add(new MagicInfo { Name = "FireExplodeFW", Spell = Spell.FireExplodeFW, Icon = 21, Level1 = 64, Level2 = 68, Level3 = 72, Need1 = 1600, Need2 = 2000, Need3 = 3000, BaseCost = 30, LevelCost = 5, MPowerBase = 3, PowerBase = 3, Range = 9 });
+
             //Taoist
             if (!MagicExists(Spell.Healing)) MagicInfoList.Add(new MagicInfo { Name = "Healing", Spell = Spell.Healing, Icon = 1, Level1 = 7, Level2 = 11, Level3 = 14, Need1 = 150, Need2 = 350, Need3 = 700, BaseCost = 3, LevelCost = 2, MPowerBase = 14, Range = 9 });
             if (!MagicExists(Spell.SpiritSword)) MagicInfoList.Add(new MagicInfo { Name = "SpiritSword", Spell = Spell.SpiritSword, Icon = 3, Level1 = 9, Level2 = 12, Level3 = 15, Need1 = 350, Need2 = 1300, Need3 = 2700, Range = 0 });
@@ -348,6 +909,54 @@ namespace Server.MirEnvir
             if (!MagicExists(Spell.EnergyShield)) MagicInfoList.Add(new MagicInfo { Name = "EnergyShield", Spell = Spell.EnergyShield, Icon = 57, Level1 = 48, Level2 = 51, Level3 = 54, Need1 = 5000, Need2 = 9000, Need3 = 13000, BaseCost = 50, LevelCost = 20, Range = 9 });
             if (!MagicExists(Spell.PetEnhancer)) MagicInfoList.Add(new MagicInfo { Name = "PetEnhancer", Spell = Spell.PetEnhancer, Icon = 78, Level1 = 45, Level2 = 48, Level3 = 51, Need1 = 4000, Need2 = 8000, Need3 = 12000, BaseCost = 30, LevelCost = 40, Range = 0 });
             //if (!MagicExists(Spell.HealingCircle)) MagicInfoList.Add(new MagicInfo { Name = "HealingCircle", Spell = Spell.ImmortalSkin, Icon = ?, Level1 = ?, Level2 = ?, Level3 = ?, Need1 = ?, Need2 = ?, Need3 = ?, BaseCost = ?, LevelCost = ?, DelayBase = ?, DelayReduction = ? });
+            if (!MagicExists(Spell.YinYangBurst)) MagicInfoList.Add(new MagicInfo
+            {
+                Name = "YinYangBurst",
+                Spell = Spell.YinYangBurst,
+                Icon = 112,
+                Level1 = 70,
+                Level2 = 75,
+                Level3 = 80,
+                Need1 = 1200,
+                Need2 = 1500,
+                Need3 = 1900,
+                BaseCost = 26,
+                LevelCost = 13,
+                Range = 9,
+                DelayBase = 5000,
+            });
+            if (!MagicExists(Spell.SwordsOfLight)) MagicInfoList.Add(new MagicInfo
+            {
+                Name = "SwordsOfLight",
+                Spell = Spell.SwordsOfLight,
+                Icon = 120,
+                Level1 = 62,
+                Level2 = 65,
+                Level3 = 68,
+                Need1 = 2800,
+                Need2 = 4200,
+                Need3 = 5600,
+                BaseCost = 65,
+                LevelCost = 10,
+                Range = 9,
+            });
+            if (!MagicExists(Spell.HeavenAndHell)) MagicInfoList.Add(new MagicInfo
+            {
+                Name = "HeavenAndHell",
+                Spell = Spell.HeavenAndHell,
+                Icon = 113,
+                Level1 = 80,
+                Level2 = 85,
+                Level3 = 90,
+                Need1 = 1500,
+                Need2 = 2000,
+                Need3 = 2500,
+                BaseCost = 30,
+                LevelCost = 5,
+                Range = 9,
+                DelayBase = 5000,
+                //DelayReduction = 0,
+            });
 
             //Assassin
             if (!MagicExists(Spell.FatalSword)) MagicInfoList.Add(new MagicInfo { Name = "FatalSword", Spell = Spell.FatalSword, Icon = 58, Level1 = 7, Level2 = 9, Level3 = 12, Need1 = 500, Need2 = 1000, Need3 = 2300, Range = 0 });
@@ -402,58 +1011,64 @@ namespace Server.MirEnvir
 
             if (Settings.EnforceDBChecks)
             {
-                if (GetMonsterInfo(Settings.SkeletonName, true) == null) return "Cannot start server without mob: " + Settings.SkeletonName;
-                if (GetMonsterInfo(Settings.ShinsuName, true) == null) return "Cannot start server without mob: " + Settings.ShinsuName;
-                if (GetMonsterInfo(Settings.BugBatName, true) == null) return "Cannot start server without mob: " + Settings.BugBatName;
-                if (GetMonsterInfo(Settings.Zuma1, true) == null) return "Cannot start server without mob: " + Settings.Zuma1;
-                if (GetMonsterInfo(Settings.Zuma2, true) == null) return "Cannot start server without mob: " + Settings.Zuma2;
-                if (GetMonsterInfo(Settings.Zuma3, true) == null) return "Cannot start server without mob: " + Settings.Zuma3;
-                if (GetMonsterInfo(Settings.Zuma4, true) == null) return "Cannot start server without mob: " + Settings.Zuma4;
-                if (GetMonsterInfo(Settings.Zuma5, true) == null) return "Cannot start server without mob: " + Settings.Zuma5;
-                if (GetMonsterInfo(Settings.Zuma6, true) == null) return "Cannot start server without mob: " + Settings.Zuma6;
-                if (GetMonsterInfo(Settings.Zuma7, true) == null) return "Cannot start server without mob: " + Settings.Zuma7;
-                if (GetMonsterInfo(Settings.Turtle1, true) == null) return "Cannot start server without mob: " + Settings.Turtle1;
-                if (GetMonsterInfo(Settings.Turtle2, true) == null) return "Cannot start server without mob: " + Settings.Turtle2;
-                if (GetMonsterInfo(Settings.Turtle3, true) == null) return "Cannot start server without mob: " + Settings.Turtle3;
-                if (GetMonsterInfo(Settings.Turtle4, true) == null) return "Cannot start server without mob: " + Settings.Turtle4;
-                if (GetMonsterInfo(Settings.Turtle5, true) == null) return "Cannot start server without mob: " + Settings.Turtle5;
-                if (GetMonsterInfo(Settings.BoneMonster1, true) == null) return "Cannot start server without mob: " + Settings.BoneMonster1;
-                if (GetMonsterInfo(Settings.BoneMonster2, true) == null) return "Cannot start server without mob: " + Settings.BoneMonster2;
-                if (GetMonsterInfo(Settings.BoneMonster3, true) == null) return "Cannot start server without mob: " + Settings.BoneMonster3;
-                if (GetMonsterInfo(Settings.BoneMonster4, true) == null) return "Cannot start server without mob: " + Settings.BoneMonster4;
-                if (GetMonsterInfo(Settings.BehemothMonster1, true) == null) return "Cannot start server without mob: " + Settings.BehemothMonster1;
-                if (GetMonsterInfo(Settings.BehemothMonster2, true) == null) return "Cannot start server without mob: " + Settings.BehemothMonster2;
-                if (GetMonsterInfo(Settings.BehemothMonster3, true) == null) return "Cannot start server without mob: " + Settings.BehemothMonster3;
-                if (GetMonsterInfo(Settings.HellKnight1, true) == null) return "Cannot start server without mob: " + Settings.HellKnight1;
-                if (GetMonsterInfo(Settings.HellKnight2, true) == null) return "Cannot start server without mob: " + Settings.HellKnight2;
-                if (GetMonsterInfo(Settings.HellKnight3, true) == null) return "Cannot start server without mob: " + Settings.HellKnight3;
-                if (GetMonsterInfo(Settings.HellKnight4, true) == null) return "Cannot start server without mob: " + Settings.HellKnight4;
-                if (GetMonsterInfo(Settings.HellBomb1, true) == null) return "Cannot start server without mob: " + Settings.HellBomb1;
-                if (GetMonsterInfo(Settings.HellBomb2, true) == null) return "Cannot start server without mob: " + Settings.HellBomb2;
-                if (GetMonsterInfo(Settings.HellBomb3, true) == null) return "Cannot start server without mob: " + Settings.HellBomb3;
-                if (GetMonsterInfo(Settings.WhiteSnake, true) == null) return "Cannot start server without mob: " + Settings.WhiteSnake;
-                if (GetMonsterInfo(Settings.AngelName, true) == null) return "Cannot start server without mob: " + Settings.AngelName;
-                if (GetMonsterInfo(Settings.BombSpiderName, true) == null) return "Cannot start server without mob: " + Settings.BombSpiderName;
-                if (GetMonsterInfo(Settings.CloneName, true) == null) return "Cannot start server without mob: " + Settings.CloneName;
-                if (GetMonsterInfo(Settings.AssassinCloneName, true) == null) return "Cannot start server without mob: " + Settings.AssassinCloneName;
-                if (GetMonsterInfo(Settings.VampireName, true) == null) return "Cannot start server without mob: " + Settings.VampireName;
-                if (GetMonsterInfo(Settings.ToadName, true) == null) return "Cannot start server without mob: " + Settings.ToadName;
-                if (GetMonsterInfo(Settings.SnakeTotemName, true) == null) return "Cannot start server without mob: " + Settings.SnakeTotemName;
-                if (GetMonsterInfo(Settings.FishingMonster, true) == null) return "Cannot start server without mob: " + Settings.FishingMonster;
-                if (GetMonsterInfo(Settings.GeneralMeowMeowMob1, true) == null) return "Cannot start server without mob: " + Settings.GeneralMeowMeowMob1;
-                if (GetMonsterInfo(Settings.GeneralMeowMeowMob2, true) == null) return "Cannot start server without mob: " + Settings.GeneralMeowMeowMob2;
-                if (GetMonsterInfo(Settings.GeneralMeowMeowMob3, true) == null) return "Cannot start server without mob: " + Settings.GeneralMeowMeowMob3;
-                if (GetMonsterInfo(Settings.GeneralMeowMeowMob4, true) == null) return "Cannot start server without mob: " + Settings.GeneralMeowMeowMob4;
-                if (GetMonsterInfo(Settings.KingHydraxMob, true) == null) return "Cannot start server without mob: " + Settings.KingHydraxMob;
-                if (GetMonsterInfo(Settings.HornedCommanderMob, true) == null) return "Cannot start server without mob: " + Settings.HornedCommanderMob;
-                if (GetMonsterInfo(Settings.HornedCommanderBombMob, true) == null) return "Cannot start server without mob: " + Settings.HornedCommanderBombMob;
-                if (GetMonsterInfo(Settings.SnowWolfKingMob, true) == null) return "Cannot start server without mob: " + Settings.SnowWolfKingMob;
-                if (GetMonsterInfo(Settings.ScrollMob1, true) == null) return "Cannot start server without mob: " + Settings.ScrollMob1;
-                if (GetMonsterInfo(Settings.ScrollMob2, true) == null) return "Cannot start server without mob: " + Settings.ScrollMob2;
-                if (GetMonsterInfo(Settings.ScrollMob3, true) == null) return "Cannot start server without mob: " + Settings.ScrollMob3;
-                if (GetMonsterInfo(Settings.ScrollMob4, true) == null) return "Cannot start server without mob: " + Settings.ScrollMob4;
+                //if (GetMonsterInfo(Settings.SkeletonName0, true) == null) return "Cannot start server without mob: " + Settings.SkeletonName0;
+                //if (GetMonsterInfo(Settings.SkeletonName1, true) == null) return "Cannot start server without mob: " + Settings.SkeletonName1;
+                //if (GetMonsterInfo(Settings.SkeletonName2, true) == null) return "Cannot start server without mob: " + Settings.SkeletonName2;
+                //if (GetMonsterInfo(Settings.SkeletonName3, true) == null) return "Cannot start server without mob: " + Settings.SkeletonName3;
+                //if (GetMonsterInfo(Settings.ShinsuName0, true) == null) return "Cannot start server without mob: " + Settings.ShinsuName0;
+                //if (GetMonsterInfo(Settings.ShinsuName2, true) == null) return "Cannot start server without mob: " + Settings.ShinsuName2;
+                //if (GetMonsterInfo(Settings.ShinsuName4, true) == null) return "Cannot start server without mob: " + Settings.ShinsuName4;
+                //if (GetMonsterInfo(Settings.ShinsuName6, true) == null) return "Cannot start server without mob: " + Settings.ShinsuName6;
+                //if (GetMonsterInfo(Settings.BugBatName, true) == null) return "Cannot start server without mob: " + Settings.BugBatName;
+                //if (GetMonsterInfo(Settings.Zuma1, true) == null) return "Cannot start server without mob: " + Settings.Zuma1;
+                //if (GetMonsterInfo(Settings.Zuma2, true) == null) return "Cannot start server without mob: " + Settings.Zuma2;
+                //if (GetMonsterInfo(Settings.Zuma3, true) == null) return "Cannot start server without mob: " + Settings.Zuma3;
+                //if (GetMonsterInfo(Settings.Zuma4, true) == null) return "Cannot start server without mob: " + Settings.Zuma4;
+                //if (GetMonsterInfo(Settings.Zuma5, true) == null) return "Cannot start server without mob: " + Settings.Zuma5;
+                //if (GetMonsterInfo(Settings.Zuma6, true) == null) return "Cannot start server without mob: " + Settings.Zuma6;
+                //if (GetMonsterInfo(Settings.Zuma7, true) == null) return "Cannot start server without mob: " + Settings.Zuma7;
+                //if (GetMonsterInfo(Settings.Turtle1, true) == null) return "Cannot start server without mob: " + Settings.Turtle1;
+                //if (GetMonsterInfo(Settings.Turtle2, true) == null) return "Cannot start server without mob: " + Settings.Turtle2;
+                //if (GetMonsterInfo(Settings.Turtle3, true) == null) return "Cannot start server without mob: " + Settings.Turtle3;
+                //if (GetMonsterInfo(Settings.Turtle4, true) == null) return "Cannot start server without mob: " + Settings.Turtle4;
+                //if (GetMonsterInfo(Settings.Turtle5, true) == null) return "Cannot start server without mob: " + Settings.Turtle5;
+                //if (GetMonsterInfo(Settings.BoneMonster1, true) == null) return "Cannot start server without mob: " + Settings.BoneMonster1;
+                //if (GetMonsterInfo(Settings.BoneMonster2, true) == null) return "Cannot start server without mob: " + Settings.BoneMonster2;
+                //if (GetMonsterInfo(Settings.BoneMonster3, true) == null) return "Cannot start server without mob: " + Settings.BoneMonster3;
+                //if (GetMonsterInfo(Settings.BoneMonster4, true) == null) return "Cannot start server without mob: " + Settings.BoneMonster4;
+                //if (GetMonsterInfo(Settings.BehemothMonster1, true) == null) return "Cannot start server without mob: " + Settings.BehemothMonster1;
+                //if (GetMonsterInfo(Settings.BehemothMonster2, true) == null) return "Cannot start server without mob: " + Settings.BehemothMonster2;
+                //if (GetMonsterInfo(Settings.BehemothMonster3, true) == null) return "Cannot start server without mob: " + Settings.BehemothMonster3;
+                //if (GetMonsterInfo(Settings.HellKnight1, true) == null) return "Cannot start server without mob: " + Settings.HellKnight1;
+                //if (GetMonsterInfo(Settings.HellKnight2, true) == null) return "Cannot start server without mob: " + Settings.HellKnight2;
+                //if (GetMonsterInfo(Settings.HellKnight3, true) == null) return "Cannot start server without mob: " + Settings.HellKnight3;
+                //if (GetMonsterInfo(Settings.HellKnight4, true) == null) return "Cannot start server without mob: " + Settings.HellKnight4;
+                //if (GetMonsterInfo(Settings.HellBomb1, true) == null) return "Cannot start server without mob: " + Settings.HellBomb1;
+                //if (GetMonsterInfo(Settings.HellBomb2, true) == null) return "Cannot start server without mob: " + Settings.HellBomb2;
+                //if (GetMonsterInfo(Settings.HellBomb3, true) == null) return "Cannot start server without mob: " + Settings.HellBomb3;
+                //if (GetMonsterInfo(Settings.WhiteSnake, true) == null) return "Cannot start server without mob: " + Settings.WhiteSnake;
+                //if (GetMonsterInfo(Settings.AngelName, true) == null) return "Cannot start server without mob: " + Settings.AngelName;
+                //if (GetMonsterInfo(Settings.BombSpiderName, true) == null) return "Cannot start server without mob: " + Settings.BombSpiderName;
+                //if (GetMonsterInfo(Settings.CloneName, true) == null) return "Cannot start server without mob: " + Settings.CloneName;
+                //if (GetMonsterInfo(Settings.AssassinCloneName, true) == null) return "Cannot start server without mob: " + Settings.AssassinCloneName;
+                //if (GetMonsterInfo(Settings.VampireName, true) == null) return "Cannot start server without mob: " + Settings.VampireName;
+                //if (GetMonsterInfo(Settings.ToadName, true) == null) return "Cannot start server without mob: " + Settings.ToadName;
+                //if (GetMonsterInfo(Settings.SnakeTotemName, true) == null) return "Cannot start server without mob: " + Settings.SnakeTotemName;
+                //if (GetMonsterInfo(Settings.FishingMonster, true) == null) return "Cannot start server without mob: " + Settings.FishingMonster;
+                //if (GetMonsterInfo(Settings.GeneralMeowMeowMob1, true) == null) return "Cannot start server without mob: " + Settings.GeneralMeowMeowMob1;
+                //if (GetMonsterInfo(Settings.GeneralMeowMeowMob2, true) == null) return "Cannot start server without mob: " + Settings.GeneralMeowMeowMob2;
+                //if (GetMonsterInfo(Settings.GeneralMeowMeowMob3, true) == null) return "Cannot start server without mob: " + Settings.GeneralMeowMeowMob3;
+                //if (GetMonsterInfo(Settings.GeneralMeowMeowMob4, true) == null) return "Cannot start server without mob: " + Settings.GeneralMeowMeowMob4;
+                //if (GetMonsterInfo(Settings.KingHydraxMob, true) == null) return "Cannot start server without mob: " + Settings.KingHydraxMob;
+                //if (GetMonsterInfo(Settings.HornedCommanderMob, true) == null) return "Cannot start server without mob: " + Settings.HornedCommanderMob;
+                //if (GetMonsterInfo(Settings.HornedCommanderBombMob, true) == null) return "Cannot start server without mob: " + Settings.HornedCommanderBombMob;
+                //if (GetMonsterInfo(Settings.SnowWolfKingMob, true) == null) return "Cannot start server without mob: " + Settings.SnowWolfKingMob;
+                //if (GetMonsterInfo(Settings.ScrollMob1, true) == null) return "Cannot start server without mob: " + Settings.ScrollMob1;
+                //if (GetMonsterInfo(Settings.ScrollMob2, true) == null) return "Cannot start server without mob: " + Settings.ScrollMob2;
+                //if (GetMonsterInfo(Settings.ScrollMob3, true) == null) return "Cannot start server without mob: " + Settings.ScrollMob3;
+                //if (GetMonsterInfo(Settings.ScrollMob4, true) == null) return "Cannot start server without mob: " + Settings.ScrollMob4;
 
-                if (GetItemInfo(Settings.RefineOreName) == null) return "Cannot start server without item: " + Settings.RefineOreName;
+                //if (GetItemInfo(Settings.RefineOreName) == null) return "Cannot start server without item: " + Settings.RefineOreName;
             }
 
             //add intelligent creature checks?
@@ -473,6 +1088,12 @@ namespace Server.MirEnvir
                 var lineMessageTime = Time + Settings.Minute * Settings.LineMessageTimer;
                 var processTime = Time + 1000;
                 var startTime = Time;
+
+                long saveBackUPTime = Time;
+                long saveAccountsTime = Time;
+                long saveGuildsTime = Time;
+                long saveConquestsTime = Time;
+                long saveGoodsTime = Time;
 
                 var processCount = 0;
                 var processRealCount = 0;
@@ -616,9 +1237,11 @@ namespace Server.MirEnvir
                         {
                             saveTime = Time + Settings.SaveDelay * Settings.Minute;
                             BeginSaveAccounts();
+                            BeginBackUpDB();
+                            BeginSaveAccounts();
                             SaveGuilds();
-                            SaveGoods();
                             SaveConquests();
+                            SaveGoods();
                         }
 
                         if (Time >= userTime)
@@ -668,6 +1291,7 @@ namespace Server.MirEnvir
                 SaveAccounts();
                 SaveGuilds(true);
                 SaveConquests(true);
+
             }
             catch (Exception ex)
             {
@@ -782,7 +1406,23 @@ namespace Server.MirEnvir
                 ProcessNewDay();
             }
 
-            if(Time >= warTime)
+            var cal = System.Globalization.DateTimeFormatInfo.CurrentInfo.Calendar;
+
+            bool clearWeeklyValues = false;
+            //If there is a mismatch with current week and saved week in the database we will clear values
+            int weekYear = cal.GetWeekOfYear(DateTime.Now, System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+            if (weekYear != CurrentWeekOfTheYear)
+            {
+                clearWeeklyValues = true;
+                CurrentWeekOfTheYear = weekYear;
+            }
+
+            if (clearWeeklyValues)
+            {
+                ProcessNewWeek();
+            }
+
+            if (Time >= warTime)
             {
                 warTime = Time + Settings.Minute;
                 for (var i = GuildsAtWar.Count - 1; i >= 0; i--)
@@ -798,11 +1438,51 @@ namespace Server.MirEnvir
             if (Time >= guildTime)
             {
                 guildTime = Time + Settings.Minute;
-                for (var i = 0; i < Guilds.Count; i++)
+                foreach (var g in GuildList)
                 {
-                    Guilds[i].Process();
+                    if (g.VoteExpire != DateTime.MinValue && g.PendingGuild != null)
+                    {
+                        if (g.VoteExpire <= DateTime.Now)
+                        {
+                            g.SendMessage(string.Format("Voting has ended! ", ChatType.Guild));
+
+                            if (g.ProVote >= 5 && g.ProVote > g.ConVote)
+                            {
+
+                                if (g == g.PendingGuild)
+                                {
+                                    return;
+                                }
+
+                                if (g.WarringGuilds.Contains(g.PendingGuild))
+                                {
+                                    return;
+                                }
+
+                                if (g.GoToWar(g.PendingGuild))
+                                {
+                                    g.SendMessage(string.Format("War started with {0}.", g.PendingGuild.PendingGuild), ChatType.Guild);
+                                    g.PendingGuild.SendMessage(string.Format("{0} has started a war", g.Name), ChatType.Guild);
+                                }
+                            }
+
+                            g.PendingGuild = null;
+                            g.VoteExpire = DateTime.MinValue;
+                        }
+                    }
+                }
+
+            }
+            /*
+            if (Time >= guildTime)
+            {
+                guildTime = Time + Settings.Minute;
+                for (var i = 0; i < GuildList.Count; i++)
+                {
+                    GuildList[i].Process();
                 }
             }
+            */
 
             if (Time >= conquestTime)
             {
@@ -880,98 +1560,112 @@ namespace Server.MirEnvir
 
         public void SaveDB()
         {
-            using (var stream = File.Create(DatabasePath))
-            using (var writer = new BinaryWriter(stream))
+            if (!Directory.Exists(Settings.DBPath))
+                Directory.CreateDirectory(Settings.DBPath);
+            using (FileStream stream = File.Create(Settings.DBPath + "Version.db"))
             {
-                writer.Write(Version);
-                writer.Write(CustomVersion);
-                writer.Write(MapIndex);
-                writer.Write(ItemIndex);
-                writer.Write(MonsterIndex);
-                writer.Write(NPCIndex);
-                writer.Write(QuestIndex);
-                writer.Write(GameshopIndex);
-                writer.Write(ConquestIndex);
-                writer.Write(RespawnIndex);
+                using (BinaryWriter writer = new BinaryWriter(stream))
+                {
+                    writer.Write(Version);
+                    writer.Write(CustomVersion);
+                }
+            }
+            using (FileStream stream = File.Create(Settings.DBPath + "Map.db"))
+            {
+                using (BinaryWriter writer = new BinaryWriter(stream))
+                {
+                    writer.Write(MapIndex);
+                    writer.Write(RespawnIndex);
+                    writer.Write(MapInfoList.Count);
 
-                writer.Write(MapInfoList.Count);
-                for (var i = 0; i < MapInfoList.Count; i++)
-                    MapInfoList[i].Save(writer);
-
-                writer.Write(ItemInfoList.Count);
-                for (var i = 0; i < ItemInfoList.Count; i++)
-                    ItemInfoList[i].Save(writer);
-
-                writer.Write(MonsterInfoList.Count);
-                for (var i = 0; i < MonsterInfoList.Count; i++)
-                    MonsterInfoList[i].Save(writer);
-
-                writer.Write(NPCInfoList.Count);
-                for (var i = 0; i < NPCInfoList.Count; i++)
-                    NPCInfoList[i].Save(writer);
-
-                writer.Write(QuestInfoList.Count);
-                for (var i = 0; i < QuestInfoList.Count; i++)
-                    QuestInfoList[i].Save(writer);
-
-                DragonInfo.Save(writer);
-                writer.Write(MagicInfoList.Count);
-                for (var i = 0; i < MagicInfoList.Count; i++)
-                    MagicInfoList[i].Save(writer);
-
-                writer.Write(GameShopList.Count);
-                for (var i = 0; i < GameShopList.Count; i++)
-                    GameShopList[i].Save(writer);
-
-                writer.Write(ConquestInfoList.Count);
-                for (var i = 0; i < ConquestInfoList.Count; i++)
-                    ConquestInfoList[i].Save(writer);
-
-                RespawnTick.Save(writer);
+                    for (int i = 0; i < MapInfoList.Count; i++)
+                        MapInfoList[i].Save(writer);
+                }
+            }
+            using (FileStream stream = File.Create(Settings.DBPath + "Item.db"))
+            {
+                using (BinaryWriter writer = new BinaryWriter(stream))
+                {
+                    writer.Write(ItemIndex);
+                    writer.Write(ItemInfoList.Count);
+                    for (int i = 0; i < ItemInfoList.Count; i++)
+                        ItemInfoList[i].Save(writer);
+                }
+            }
+            using (FileStream stream = File.Create(Settings.DBPath + "Mob.db"))
+            {
+                using (BinaryWriter writer = new BinaryWriter(stream))
+                {
+                    writer.Write(MonsterIndex);
+                    writer.Write(MonsterInfoList.Count);
+                    for (int i = 0; i < MonsterInfoList.Count; i++)
+                        MonsterInfoList[i].Save(writer);
+                }
+            }
+            using (FileStream stream = File.Create(Settings.DBPath + "NPC.db"))
+            {
+                using (BinaryWriter writer = new BinaryWriter(stream))
+                {
+                    writer.Write(NPCIndex);
+                    writer.Write(NPCInfoList.Count);
+                    for (int i = 0; i < NPCInfoList.Count; i++)
+                        NPCInfoList[i].Save(writer);
+                }
+            }
+            using (FileStream stream = File.Create(Settings.DBPath + "Quest.db"))
+            {
+                using (BinaryWriter writer = new BinaryWriter(stream))
+                {
+                    writer.Write(QuestIndex);
+                    writer.Write(QuestInfoList.Count);
+                    for (int i = 0; i < QuestInfoList.Count; i++)
+                        QuestInfoList[i].Save(writer);
+                }
+            }
+            using (FileStream stream = File.Create(Settings.DBPath + "Dragon.db"))
+            {
+                using (BinaryWriter writer = new BinaryWriter(stream))
+                {
+                    DragonInfo.Save(writer);
+                }
+            }
+            using (FileStream stream = File.Create(Settings.DBPath + "Magic.db"))
+            {
+                using (BinaryWriter writer = new BinaryWriter(stream))
+                {
+                    writer.Write(MagicInfoList.Count);
+                    for (int i = 0; i < MagicInfoList.Count; i++)
+                        MagicInfoList[i].Save(writer);
+                }
+            }
+            using (FileStream stream = File.Create(Settings.DBPath + "GameShop.db"))
+            {
+                using (BinaryWriter writer = new BinaryWriter(stream))
+                {
+                    writer.Write(GameshopIndex);
+                    writer.Write(GameShopList.Count);
+                    for (int i = 0; i < GameShopList.Count; i++)
+                        GameShopList[i].Save(writer);
+                }
+            }
+            using (FileStream stream = File.Create(Settings.DBPath + "Conquest.db"))
+            {
+                using (BinaryWriter writer = new BinaryWriter(stream))
+                {
+                    writer.Write(ConquestIndex);
+                    writer.Write(ConquestInfos.Count);
+                    for (int i = 0; i < ConquestInfos.Count; i++)
+                        ConquestInfos[i].Save(writer);
+                }
+            }
+            using (FileStream stream = File.Create(Settings.DBPath + "RespawnTick.db"))
+            {
+                using (BinaryWriter writer = new BinaryWriter(stream))
+                {
+                    RespawnTick.Save(writer);
+                }
             }
         }
-
-
-        public CharacterInfo GetArchivedCharacter(string name)
-        {
-            DirectoryInfo dir = new DirectoryInfo(ArchivePath);
-            FileInfo[] files = dir.GetFiles($"{name}*.MirCA");
-
-            if (files.Length != 1)
-            {
-                return null;
-            }
-
-            var fileInfo = files[0];
-
-            CharacterInfo info = null;
-
-            using (var stream = fileInfo.OpenRead())
-            {
-                using var reader = new BinaryReader(stream);
-
-                var version = reader.ReadInt32();
-                var customVersion = reader.ReadInt32();
-
-                info = new CharacterInfo(reader, version, customVersion);
-            }
-
-            return info;
-        }
-
-        public void SaveArchivedCharacter(CharacterInfo info)
-        {
-            if (!Directory.Exists(ArchivePath)) Directory.CreateDirectory(ArchivePath);
-
-            using var stream = File.Create(Path.Combine(ArchivePath, @$"{info.Name}{Now:_MMddyyyy_HHmmss}.MirCA"));
-            using var writer = new BinaryWriter(stream);
-
-            writer.Write(Version);
-            writer.Write(CustomVersion);
-
-            info.Save(writer);
-        }
-
         public void SaveAccounts()
         {
             while (Saving)
@@ -979,7 +1673,7 @@ namespace Server.MirEnvir
 
             try
             {
-                using (var stream = File.Create(AccountPath + "n"))
+                using (FileStream stream = File.Create(AccountPath + "n"))
                     SaveAccounts(stream);
                 if (File.Exists(AccountPath))
                     File.Move(AccountPath, AccountPath + "o");
@@ -1135,14 +1829,14 @@ namespace Server.MirEnvir
         private void SaveConquests(bool forced = false)
         {
             if (!Directory.Exists(Settings.ConquestsPath)) Directory.CreateDirectory(Settings.ConquestsPath);
-            for (var i = 0; i < ConquestList.Count; i++)
+            for (var i = 0; i < Conquests.Count; i++)
             {
-                if (!ConquestList[i].NeedSave && !forced) continue;
-                ConquestList[i].NeedSave = false;
+                if (!Conquests[i].NeedSave && !forced) continue;
+                Conquests[i].NeedSave = false;
                 var mStream = new MemoryStream();
                 var writer = new BinaryWriter(mStream);
-                ConquestList[i].Save(writer);
-                var fStream = new FileStream(Path.Combine(Settings.ConquestsPath, ConquestList[i].Info.Index + ".mcdn"), FileMode.Create);
+                Conquests[i].Save(writer);
+                var fStream = new FileStream(Path.Combine(Settings.ConquestsPath, Conquests[i].Info.Index + ".mcdn"), FileMode.Create);
                 var data = mStream.ToArray();
                 fStream.BeginWrite(data, 0, data.Length, EndSaveConquestsAsync, fStream);
             }
@@ -1168,29 +1862,94 @@ namespace Server.MirEnvir
                 
             }
         }
+        public void BeginBackUpDB()
+        {
+            if (!Directory.Exists(ConquestDBPath))
+                Directory.CreateDirectory(ConquestDBPath);
+            if (!Directory.Exists(CraftingDBPath))
+                Directory.CreateDirectory(CraftingDBPath);
+            if (!Directory.Exists(DragonDBPath))
+                Directory.CreateDirectory(DragonDBPath);
+            if (!Directory.Exists(GameShopDBPath))
+                Directory.CreateDirectory(GameShopDBPath);
+            if (!Directory.Exists(ItemDBPath))
+                Directory.CreateDirectory(ItemDBPath);
+            if (!Directory.Exists(MapDBPath))
+                Directory.CreateDirectory(MapDBPath);
+            if (!Directory.Exists(MobDBPath))
+                Directory.CreateDirectory(MobDBPath);
+            if (!Directory.Exists(NPCDBPath))
+                Directory.CreateDirectory(NPCDBPath);
+            if (!Directory.Exists(QuestDBPath))
+                Directory.CreateDirectory(QuestDBPath);
+            if (!Directory.Exists(RespawnTickDBPath))
+                Directory.CreateDirectory(RespawnTickDBPath);
+            if (!Directory.Exists(MagicDBPath))
+                Directory.CreateDirectory(MagicDBPath);
+            if (!Directory.Exists(VersionDBPath))
+                Directory.CreateDirectory(VersionDBPath);
+
+            if (Directory.Exists(Settings.DBPath))
+            {
+                DirectoryInfo dir = new DirectoryInfo(Settings.DBPath);
+                if (dir != null)
+                {
+                    FileInfo[] files = dir.GetFiles();
+                    for (int i = 0; i < files.Length; i++)
+                        if (File.Exists(files[i].FullName))
+                        {
+                            string path = BackUpPath;
+                            if (files[i].Name == "Conquest.db")
+                                path = ConquestDBPath;
+                            if (files[i].Name == "Crafting.db")
+                                path = CraftingDBPath;
+                            if (files[i].Name == "Dragon.db")
+                                path = DragonDBPath;
+                            if (files[i].Name == "GameShop.db")
+                                path = GameShopDBPath;
+                            if (files[i].Name == "Item.db")
+                                path = ItemDBPath;
+                            if (files[i].Name == "Magic.db")
+                                path = MagicDBPath;
+                            if (files[i].Name == "Map.db")
+                                path = MapDBPath;
+                            if (files[i].Name == "Mob.db")
+                                path = MobDBPath;
+                            if (files[i].Name == "NPC.db")
+                                path = NPCDBPath;
+                            if (files[i].Name == "Quest.db")
+                                path = QuestDBPath;
+                            if (files[i].Name == "RespawnTick.db")
+                                path = RespawnTickDBPath;
+                            if (files[i].Name == "Version.db")
+                                path = VersionDBPath;
+                            File.Copy(files[i].FullName, path + string.Format("{0} {1:00}-{2:00}-{3:00}-{4:00}-{5:00}-{6:0000}.bak", files[i].Name, Now.Hour, Now.Minute, Now.Second, Now.Day, Now.Month, Now.Year));
+                        }
+                }
+            }
+        }
 
         public void BeginSaveAccounts()
         {
             if (Saving) return;
 
             Saving = true;
-            
 
-            using (var mStream = new MemoryStream())
+
+            using (MemoryStream mStream = new MemoryStream())
             {
                 if (File.Exists(AccountPath))
                 {
-                    if (!Directory.Exists(BackUpPath)) Directory.CreateDirectory(BackUpPath);
-                    var fileName =
-                        $"Accounts {Now.Year:0000}-{Now.Month:00}-{Now.Day:00} {Now.Hour:00}-{Now.Minute:00}-{Now.Second:00}.bak";
-                    if (File.Exists(Path.Combine(BackUpPath, fileName))) File.Delete(Path.Combine(BackUpPath, fileName));
-                    File.Move(AccountPath, Path.Combine(BackUpPath, fileName));
+                    if (!Directory.Exists(AccountDBPath)) Directory.CreateDirectory(AccountDBPath);
+                    string fileName = string.Format("Accounts {3:00}-{4:00}-{5:00} {2:00}-{1:00}-{0:0000}.bak", Now.Year, Now.Month, Now.Day, Now.Hour, Now.Minute, Now.Second);
+                    if (File.Exists(Path.Combine(AccountDBPath, fileName))) File.Delete(Path.Combine(AccountDBPath, fileName));
+                    File.Move(AccountPath, Path.Combine(AccountDBPath, fileName));
                 }
 
                 SaveAccounts(mStream);
-                var fStream = new FileStream(AccountPath + "n", FileMode.Create);
+                FileStream fStream = new FileStream(AccountPath + "n", FileMode.Create);
 
-                var data = mStream.ToArray();
+                byte[] data = mStream.ToArray();
                 fStream.BeginWrite(data, 0, data.Length, EndSaveAccounts, fStream);
             }
 
@@ -1224,114 +1983,186 @@ namespace Server.MirEnvir
         {
             lock (LoadLock)
             {
-                if (!File.Exists(DatabasePath))
+
+                if (!File.Exists(Settings.DBPath + "Version.db"))
                 {
                     SaveDB();
                 }
 
-                using (var stream = File.OpenRead(DatabasePath))
-                using (var reader = new BinaryReader(stream))
+                using (FileStream stream = File.OpenRead(Settings.DBPath + "Version.db"))
                 {
-                    LoadVersion = reader.ReadInt32();
-                    LoadCustomVersion = reader.ReadInt32();
-
-                    if (LoadVersion < MinVersion)
+                    using (BinaryReader reader = new BinaryReader(stream))
                     {
-                        MessageQueue.Enqueue($"Cannot load a database version {Envir.LoadVersion}. Mininum supported is {Envir.MinVersion}.");
-                        return false;
-                    }
 
-                    MapIndex = reader.ReadInt32();
-                    ItemIndex = reader.ReadInt32();
-                    MonsterIndex = reader.ReadInt32();
+                        LoadVersion = reader.ReadInt32();
+                        LoadCustomVersion = reader.ReadInt32();
 
-                    NPCIndex = reader.ReadInt32();
-                    QuestIndex = reader.ReadInt32();
-
-                    if (LoadVersion >= 63)
-                    {
-                        GameshopIndex = reader.ReadInt32();
-                    }
-
-                    if (LoadVersion >= 66)
-                    {
-                        ConquestIndex = reader.ReadInt32();
-                    }
-
-                    if (LoadVersion >= 68)
-                        RespawnIndex = reader.ReadInt32();
-
-
-                    var count = reader.ReadInt32();
-                    MapInfoList.Clear();
-                    for (var i = 0; i < count; i++)
-                        MapInfoList.Add(new MapInfo(reader));
-
-                    count = reader.ReadInt32();
-                    ItemInfoList.Clear();
-                    for (var i = 0; i < count; i++)
-                    {
-                        ItemInfoList.Add(new ItemInfo(reader, LoadVersion, LoadCustomVersion));
-                        if (ItemInfoList[i] != null && ItemInfoList[i].RandomStatsId < Settings.RandomItemStatsList.Count)
+                        if (LoadVersion < MinVersion)
                         {
-                            ItemInfoList[i].RandomStats = Settings.RandomItemStatsList[ItemInfoList[i].RandomStatsId];
+                            MessageQueue.Enqueue($"Cannot load a database version {Envir.LoadVersion}. Mininum supported is {Envir.MinVersion}.");
+                        }
+
+                        //Maps
+                        if (LoadVersion < 139)
+                            MapIndex = reader.ReadInt32();
+                        //Items
+                        if (LoadVersion < 139)
+                            ItemIndex = reader.ReadInt32();
+                        //Monsters
+                        if (LoadVersion < 139)
+                            MonsterIndex = reader.ReadInt32();
+                        //Npcs
+                        if (LoadVersion < 139)
+                            NPCIndex = reader.ReadInt32();
+                        //Quest
+                        if (LoadVersion < 139)
+                            QuestIndex = reader.ReadInt32();
+                        //GameShop
+                        if (LoadVersion < 139)
+                            GameshopIndex = reader.ReadInt32();
+                        //Conquest
+                        if (LoadVersion < 139)
+                            ConquestIndex = reader.ReadInt32();
+                        //Respawn
+                        if (LoadVersion < 139)
+                            RespawnIndex = reader.ReadInt32();
+                    }
+                }
+
+                using (FileStream stream = File.OpenRead(Settings.DBPath + "Map.db"))
+                {
+                    using (BinaryReader reader = new BinaryReader(stream))
+                    {
+                        if (LoadVersion > 138)
+                        {
+                            MapIndex = reader.ReadInt32();
+                            RespawnIndex = reader.ReadInt32();
+                        }
+                        int count = reader.ReadInt32();
+                        MapInfoList.Clear();
+                        for (int i = 0; i < count; i++)
+                        {
+                            MapInfoList.Add(new MapInfo(reader));
                         }
                     }
-                    count = reader.ReadInt32();
-                    MonsterInfoList.Clear();
-                    for (var i = 0; i < count; i++)
-                        MonsterInfoList.Add(new MonsterInfo(reader));
+                }
 
-                    count = reader.ReadInt32();
-                    NPCInfoList.Clear();
-                    for (var i = 0; i < count; i++)
-                        NPCInfoList.Add(new NPCInfo(reader));
-
-                    count = reader.ReadInt32();
-                    QuestInfoList.Clear();
-                    for (var i = 0; i < count; i++)
-                        QuestInfoList.Add(new QuestInfo(reader));
-
-                    DragonInfo = new DragonInfo(reader);
-                    count = reader.ReadInt32();
-                    for (var i = 0; i < count; i++)
+                using (FileStream stream = File.OpenRead(Settings.DBPath + "Item.db"))
+                {
+                    using (BinaryReader reader = new BinaryReader(stream))
                     {
-                        var m = new MagicInfo(reader, LoadVersion, LoadCustomVersion);
-                        if (!MagicExists(m.Spell))
-                            MagicInfoList.Add(m);
-                    }
-
-                    FillMagicInfoList();
-                    if (LoadVersion <= 70)
-                        UpdateMagicInfo();
-
-                    if (LoadVersion >= 63)
-                    {
-                        count = reader.ReadInt32();
-                        GameShopList.Clear();
-                        for (var i = 0; i < count; i++)
+                        if (LoadVersion > 138)
+                            ItemIndex = reader.ReadInt32();
+                        int count = reader.ReadInt32();
+                        ItemInfoList.Clear();
+                        for (int i = 0; i < count; i++)
                         {
-                            var item = new GameShopItem(reader, LoadVersion, LoadCustomVersion);
+                            ItemInfoList.Add(new ItemInfo(reader, LoadVersion, LoadCustomVersion));
+                            if ((ItemInfoList[i] != null) && (ItemInfoList[i].RandomStatsId < Settings.RandomItemStatsList.Count))
+                            {
+                                ItemInfoList[i].RandomStats = Settings.RandomItemStatsList[ItemInfoList[i].RandomStatsId];
+                            }
+                        }
+                    }
+                }
+
+                using (FileStream stream = File.OpenRead(Settings.DBPath + "Mob.db"))
+                {
+                    using (BinaryReader reader = new BinaryReader(stream))
+                    {
+                        if (LoadVersion > 138)
+                            MonsterIndex = reader.ReadInt32();
+                        int count = reader.ReadInt32();
+                        MonsterInfoList.Clear();
+                        for (int i = 0; i < count; i++)
+                            MonsterInfoList.Add(new MonsterInfo(reader));
+                    }
+                }
+                using (FileStream stream = File.OpenRead(Settings.DBPath + "NPC.db"))
+                {
+                    using (BinaryReader reader = new BinaryReader(stream))
+                    {
+                        if (LoadVersion > 138)
+                            NPCIndex = reader.ReadInt32();
+                        int count = reader.ReadInt32();
+                        NPCInfoList.Clear();
+                        for (int i = 0; i < count; i++)
+                        {
+                            NPCInfoList.Add(new NPCInfo(reader));
+                        }
+                    }
+                }
+                using (FileStream stream = File.OpenRead(Settings.DBPath + "Quest.db"))
+                {
+                    using (BinaryReader reader = new BinaryReader(stream))
+                    {
+                        if (LoadVersion > 138)
+                            QuestIndex = reader.ReadInt32();
+                        int count = reader.ReadInt32();
+                        QuestInfoList.Clear();
+                        for (int i = 0; i < count; i++)
+                            QuestInfoList.Add(new QuestInfo(reader));
+                    }
+                }
+                using (FileStream stream = File.OpenRead(Settings.DBPath + "Dragon.db"))
+                {
+                    using (BinaryReader reader = new BinaryReader(stream))
+                    {
+                        if (LoadVersion >= 11) DragonInfo = new DragonInfo(reader);
+                        else DragonInfo = new DragonInfo();
+                    }
+                }
+                using (FileStream stream = File.OpenRead(Settings.DBPath + "Magic.db"))
+                {
+                    using (BinaryReader reader = new BinaryReader(stream))
+                    {
+                        int count = reader.ReadInt32();
+                        for (int i = 0; i < count; i++)
+                            MagicInfoList.Add(new MagicInfo(reader, LoadVersion, LoadCustomVersion));
+                        //MagicInfoList.Clear(); //Db Clear                        
+                        FillMagicInfoList();
+                        UpdateMagicInfo();
+                    }
+                }
+                using (FileStream stream = File.OpenRead(Settings.DBPath + "GameShop.db"))
+                {
+                    using (BinaryReader reader = new BinaryReader(stream))
+                    {
+                        if (LoadVersion > 138)
+                            GameshopIndex = reader.ReadInt32();
+                        int count = reader.ReadInt32();
+                        GameShopList.Clear();
+                        for (int i = 0; i < count; i++)
+                        {
+                            GameShopItem item = new GameShopItem(reader, LoadVersion, LoadCustomVersion);
                             if (Main.BindGameShop(item))
                             {
                                 GameShopList.Add(item);
                             }
                         }
                     }
-
-                    if (LoadVersion >= 66)
+                }
+                using (FileStream stream = File.OpenRead(Settings.DBPath + "Conquest.db"))
+                {
+                    using (BinaryReader reader = new BinaryReader(stream))
                     {
-                        ConquestInfoList.Clear();
-                        count = reader.ReadInt32();
-                        for (var i = 0; i < count; i++)
+                        if (LoadVersion > 138)
+                            ConquestIndex = reader.ReadInt32();
+                        int count = reader.ReadInt32();
+                        ConquestInfos.Clear();
+                        for (int i = 0; i < count; i++)
                         {
-                            ConquestInfoList.Add(new ConquestInfo(reader));
+                            ConquestInfos.Add(new ConquestInfo(reader));
                         }
                     }
+                }
+                using (FileStream stream = File.OpenRead(Settings.DBPath + "RespawnTick.db"))
+                {
+                    using (BinaryReader reader = new BinaryReader(stream))
+                    {
 
-                    if (LoadVersion > 67)
                         RespawnTick = new RespawnTimer(reader);
-
+                    }
                 }
 
                 Settings.LinkGuildCreationItems(ItemInfoList);
@@ -1346,15 +2177,10 @@ namespace Server.MirEnvir
             for (var i = 0; i < RankClass.Count(); i++)
             {
                 if (RankClass[i] != null)
-                {
                     RankClass[i].Clear();
-                }
                 else
-                {
                     RankClass[i] = new List<RankCharacterInfo>();
-                }
             }
-
             RankTop.Clear();
             for (var i = 0; i < RankBottomLevel.Count(); i++)
             {
@@ -1364,9 +2190,7 @@ namespace Server.MirEnvir
             lock (LoadLock)
             {
                 if (!File.Exists(AccountPath))
-                {
                     SaveAccounts();
-                }
 
                 using (var stream = File.OpenRead(AccountPath))
                 using (var reader = new BinaryReader(stream))
@@ -1381,10 +2205,8 @@ namespace Server.MirEnvir
                     NextGuildID = reader.ReadInt32();
 
                     var count = reader.ReadInt32();
-
                     AccountList.Clear();
                     CharacterList.Clear();
-
                     for (var i = 0; i < count; i++)
                     {
                         AccountList.Add(new AccountInfo(reader));
@@ -1392,13 +2214,11 @@ namespace Server.MirEnvir
                     }
 
                     foreach (var auction in Auctions)
-                    {
                         auction.SellerInfo.AccountInfo.Auctions.Remove(auction);
-                    }
-
                     Auctions.Clear();
 
                     NextAuctionID = reader.ReadUInt64();
+
 
                     count = reader.ReadInt32();
                     for (var i = 0; i < count; i++)
@@ -1445,22 +2265,22 @@ namespace Server.MirEnvir
                         var saveCount = reader.ReadInt32();
                         for (var i = 0; i < saveCount; i++)
                         {
-                            var saved = new RespawnSave(reader);
-                            foreach (var respawn in SavedSpawns)
+                            var Saved = new RespawnSave(reader);
+                            foreach (var Respawn in SavedSpawns)
                             {
-                                if (respawn.Info.RespawnIndex != saved.RespawnIndex) continue;
+                                if (Respawn.Info.RespawnIndex != Saved.RespawnIndex) continue;
 
-                                respawn.NextSpawnTick = saved.NextSpawnTick;
+                                Respawn.NextSpawnTick = Saved.NextSpawnTick;
 
-                                if (!saved.Spawned || respawn.Info.Count * SpawnMultiplier <= respawn.Count)
+                                if (!Saved.Spawned || Respawn.Info.Count * SpawnMultiplier <= Respawn.Count)
                                 {
                                     continue;
                                 }
 
-                                var mobcount = respawn.Info.Count * SpawnMultiplier - respawn.Count;
+                                var mobcount = Respawn.Info.Count * SpawnMultiplier - Respawn.Count;
                                 for (var j = 0; j < mobcount; j++)
                                 {
-                                    respawn.Spawn();
+                                    Respawn.Spawn();
                                 }
                             }
                         }
@@ -1479,18 +2299,15 @@ namespace Server.MirEnvir
 
                 for (var i = 0; i < GuildCount; i++)
                 {
-                    GuildInfo guildInfo;
+                    GuildObject newGuild;
                     if (!File.Exists(Path.Combine(Settings.GuildPath, i + ".mgd"))) continue;
-
                     using (var stream = File.OpenRead(Path.Combine(Settings.GuildPath, i + ".mgd")))
-                    {
-                        using var reader = new BinaryReader(stream);
-                        guildInfo = new GuildInfo(reader);
-                    }
+                    using (var reader = new BinaryReader(stream))
+                        newGuild = new GuildObject(reader);
 
-                    GuildList.Add(guildInfo);
-
-                    Guilds.Add(new GuildObject(guildInfo));
+                    //if (!newGuild.Ranks.Any(a => (byte)a.Options == 255)) continue;
+                    //if (GuildList.Any(e => e.Name == newGuild.Name)) continue;
+                    GuildList.Add(newGuild);
 
                     count++;
                 }
@@ -1498,57 +2315,213 @@ namespace Server.MirEnvir
                 if (count != GuildCount) GuildCount = count;
             }
         }
+        public void LoadConquestDrops()
+        {
+            ConquestDrops.Clear();
+
+            for (byte i = 0; i < ConquestInfos.Count; i++)
+            {
+                string path = Path.Combine(Settings.DropPath, Settings.ConquestDropFilename + ".txt");
+
+                path = path.Replace("00", ConquestInfos[i].Index.ToString("D2"));
+
+                if (!File.Exists(path)) continue;
+
+                MessageQueue.Enqueue($"ConquestDrop - {path} loaded");
+
+                string[] lines = File.ReadAllLines(path);
+
+                for (int j = 0; j < lines.Length; j++)
+                {
+                    if (lines[j].StartsWith(";") || string.IsNullOrWhiteSpace(lines[j])) continue;
+
+                    DropInfo drop = DropInfo.FromLine(lines[j]);
+                    if (drop == null)
+                    {
+                        MessageQueue.Enqueue(string.Format("Could not load conquest drop: {0}", lines[j]));
+                        continue;
+                    }
+
+                    drop.Type = (byte)ConquestInfos[i].Index;
+
+                    ConquestDrops.Add(drop);
+                    MessageQueue.Enqueue($"ConquestDrop - drop loaded");
+
+                }
+
+                ConquestDrops.Sort((drop1, drop2) =>
+                {
+                    if (drop1.Gold > 0 && drop2.Gold == 0)
+                        return 1;
+                    if (drop1.Gold == 0 && drop2.Gold > 0)
+                        return -1;
+
+                    return drop1.Item.Type.CompareTo(drop2.Item.Type);
+                });
+            }
+        }
 
         public void LoadConquests()
         {
             lock (LoadLock)
             {
-                Conquests.Clear();
-                ConquestList.Clear();
+                var count = 0;
 
-                for (var i = 0; i < ConquestInfoList.Count; i++)
+                Conquests.Clear();
+
+                Map tempMap;
+                ConquestArcherObject tempArcher;
+                ConquestGateObject tempGate;
+                ConquestWallObject tempWall;
+                ConquestSiegeObject tempSiege;
+
+                for (var i = 0; i < ConquestInfos.Count; i++)
                 {
                     ConquestObject newConquest;
-                    ConquestGuildInfo conquestGuildInfo;
-                    var tempMap = GetMap(ConquestInfoList[i].MapIndex);
+                    tempMap = GetMap(ConquestInfos[i].MapIndex);
 
                     if (tempMap == null) continue;
 
-                    if (File.Exists(Path.Combine(Settings.ConquestsPath, ConquestInfoList[i].Index + ".mcd")))
+                    if (File.Exists(Path.Combine(Settings.ConquestsPath, ConquestInfos[i].Index + ".mcd")))
                     {
-                        using (var stream = File.OpenRead(Path.Combine(Settings.ConquestsPath, ConquestInfoList[i].Index + ".mcd")))
+                        using (var stream = File.OpenRead(Path.Combine(Settings.ConquestsPath, ConquestInfos[i].Index + ".mcd")))
+                        using (var reader = new BinaryReader(stream))
+                            newConquest = new ConquestObject(reader) { Info = ConquestInfos[i], ConquestMap = tempMap };
+
+                        for (var k = 0; k < GuildList.Count; k++)
                         {
-                            using var reader = new BinaryReader(stream);
-                            conquestGuildInfo = new ConquestGuildInfo(reader) { Info = ConquestInfoList[i] };
+                            if (newConquest.Owner != GuildList[k].Guildindex) continue;
+                            newConquest.Guild = GuildList[k];
+                            GuildList[k].Conquest = newConquest;
                         }
 
-                        newConquest = new ConquestObject(conquestGuildInfo)
-                        {
-                            ConquestMap = tempMap
-                        };
-
-                        for (var k = 0; k < Guilds.Count; k++)
-                        {
-                            if (conquestGuildInfo.Owner != Guilds[k].Guildindex) continue;
-                            newConquest.Guild = Guilds[k];
-                            Guilds[k].Conquest = newConquest;
-                        }
+                        Conquests.Add(newConquest);
+                        tempMap.Conquest.Add(newConquest);
+                        count++;
                     }
                     else
                     {
-                        conquestGuildInfo = new ConquestGuildInfo { Info = ConquestInfoList[i], NeedSave = true };               
-                        newConquest = new ConquestObject(conquestGuildInfo)
-                        {
-                            ConquestMap = tempMap
-                        };
+                        newConquest = new ConquestObject { Info = ConquestInfos[i], NeedSave = true, ConquestMap = tempMap };
 
+                        Conquests.Add(newConquest);
+                        tempMap.Conquest.Add(newConquest);
                     }
 
-                    ConquestList.Add(conquestGuildInfo);
-                    Conquests.Add(newConquest);
-                    tempMap.Conquest.Add(newConquest);
+                    //Bind Info to Saved Archer objects or create new objects
+                    for (var j = 0; j < ConquestInfos[i].ConquestGuards.Count; j++)
+                    {
+                        tempArcher = newConquest.ArcherList.FirstOrDefault(x => x.Index == ConquestInfos[i].ConquestGuards[j].Index);
 
-                    newConquest.Bind();
+                        if (tempArcher != null)
+                        {
+                            tempArcher.Info = ConquestInfos[i].ConquestGuards[j];
+                            tempArcher.Conquest = newConquest;
+                        }
+                        else
+                        {
+                            newConquest.ArcherList.Add(new ConquestArcherObject { Info = ConquestInfos[i].ConquestGuards[j], Alive = true, Index = ConquestInfos[i].ConquestGuards[j].Index, Conquest = newConquest });
+                        }
+                    }
+
+                    //Remove archers that have been removed from DB
+                    for (var j = 0; j < newConquest.ArcherList.Count; j++)
+                    {
+                        if (newConquest.ArcherList[j].Info == null)
+                            newConquest.ArcherList.Remove(newConquest.ArcherList[j]);
+                    }
+
+                    //Bind Info to Saved Gate objects or create new objects
+                    for (var j = 0; j < ConquestInfos[i].ConquestGates.Count; j++)
+                    {
+                        tempGate = newConquest.GateList.FirstOrDefault(x => x.Index == ConquestInfos[i].ConquestGates[j].Index);
+
+                        if (tempGate != null)
+                        {
+                            tempGate.Info = ConquestInfos[i].ConquestGates[j];
+                            tempGate.Conquest = newConquest;
+                        }
+                        else
+                        {
+                            newConquest.GateList.Add(new ConquestGateObject { Info = ConquestInfos[i].ConquestGates[j], Health = int.MaxValue, Index = ConquestInfos[i].ConquestGates[j].Index, Conquest = newConquest });
+                        }
+                    }
+
+                    //Bind Info to Saved Flag objects or create new objects
+                    for (var j = 0; j < ConquestInfos[i].ConquestFlags.Count; j++)
+                    {
+                        newConquest.FlagList.Add(new ConquestFlagObject { Info = ConquestInfos[i].ConquestFlags[j], Index = ConquestInfos[i].ConquestFlags[j].Index, Conquest = newConquest });
+                    }
+
+                    //Remove Gates that have been removed from DB
+                    for (var j = 0; j < newConquest.GateList.Count; j++)
+                    {
+                        if (newConquest.GateList[j].Info == null)
+                            newConquest.GateList.Remove(newConquest.GateList[j]);
+                    }
+
+                    //Bind Info to Saved Wall objects or create new objects
+                    for (var j = 0; j < ConquestInfos[i].ConquestWalls.Count; j++)
+                    {
+                        tempWall = newConquest.WallList.FirstOrDefault(x => x.Index == ConquestInfos[i].ConquestWalls[j].Index);
+
+                        if (tempWall != null)
+                        {
+                            tempWall.Info = ConquestInfos[i].ConquestWalls[j];
+                            tempWall.Conquest = newConquest;
+                        }
+                        else
+                        {
+                            newConquest.WallList.Add(new ConquestWallObject { Info = ConquestInfos[i].ConquestWalls[j], Index = ConquestInfos[i].ConquestWalls[j].Index, Health = int.MaxValue, Conquest = newConquest });
+                        }
+                    }
+
+                    //Remove Walls that have been removed from DB
+                    for (var j = 0; j < newConquest.WallList.Count; j++)
+                    {
+                        if (newConquest.WallList[j].Info == null)
+                            newConquest.WallList.Remove(newConquest.WallList[j]);
+                    }
+
+                    
+                    //Bind Info to Saved Siege objects or create new objects
+                    for (var j = 0; j < ConquestInfos[i].ConquestSieges.Count; j++)
+                    {
+                        tempSiege = newConquest.SiegeList.FirstOrDefault(x => x.Index == ConquestInfos[i].ConquestSieges[j].Index);
+
+                        if (tempSiege != null)
+                        {
+                            tempSiege.Info = ConquestInfos[i].ConquestSieges[j];
+                            tempSiege.Conquest = newConquest;
+                        }
+                        else
+                        {
+                            newConquest.SiegeList.Add(new ConquestSiegeObject { Info = ConquestInfos[i].ConquestSieges[j], Index = ConquestInfos[i].ConquestSieges[j].Index, Health = int.MaxValue, Conquest = newConquest });
+                        }
+                    }
+
+                    //Remove Siege that have been removed from DB
+                    for (var j = 0; j < newConquest.SiegeList.Count; j++)
+                    {
+                        if (newConquest.SiegeList[j].Info == null)
+                            newConquest.SiegeList.Remove(newConquest.SiegeList[j]);
+                    }
+
+                    //Bind Info to Saved Flag objects or create new objects
+                    for (var j = 0; j < ConquestInfos[i].ControlPoints.Count; j++)
+                    {
+                        ConquestFlagObject cp;
+                        newConquest.ControlPoints.Add(cp = new ConquestFlagObject { Info = ConquestInfos[i].ControlPoints[j], Index = ConquestInfos[i].ControlPoints[j].Index, Conquest = newConquest }, new Dictionary<GuildObject, int>());
+
+                        cp.Spawn();
+                    }
+
+
+                    newConquest.LoadArchers();
+                    newConquest.LoadGates();
+                    newConquest.LoadWalls();
+                    newConquest.LoadSieges();
+                    newConquest.LoadFlags();
+                    newConquest.LoadNPCs();
                 }
             }
         }
@@ -1635,17 +2608,14 @@ namespace Server.MirEnvir
 
             lock (_locker)
             {
-                // changing a blocking condition. (this makes the threads wake up!)
-                Monitor.PulseAll(_locker);
+                Monitor.PulseAll(_locker);         // changing a blocking condition. (this makes the threads wake up!)
             }
 
             //simply intterupt all the mob threads if they are running (will give an invisible error on them but fastest way of getting rid of them on shutdowns)
             for (var i = 1; i < MobThreading.Length; i++)
             {
                 if (MobThreads[i] != null)
-                {
                     MobThreads[i].EndTime = Time + 9999;
-                }
                 if (MobThreading[i] != null &&
                     MobThreading[i].ThreadState != System.Threading.ThreadState.Stopped && MobThreading[i].ThreadState != System.Threading.ThreadState.Unstarted)
                 {
@@ -1677,15 +2647,14 @@ namespace Server.MirEnvir
             MapList.Clear();
             GameshopLog.Clear();
             CustomCommands.Clear();
+            WorldMap.Clear();
             MonsterCount = 0;
 
             LoadDB();
 
             BuffInfoList.Clear();
             foreach (var buff in BuffInfo.Load())
-            {
                 BuffInfoList.Add(buff);
-            }
 
             MessageQueue.Enqueue($"{BuffInfoList.Count} Buffs Loaded.");
 
@@ -1693,24 +2662,37 @@ namespace Server.MirEnvir
             foreach (var recipe in Directory.GetFiles(Settings.RecipePath, "*.txt")
                 .Select(path => Path.GetFileNameWithoutExtension(path))
                 .ToArray())
-            {
                 RecipeInfoList.Add(new RecipeInfo(recipe));
-            }
 
             MessageQueue.Enqueue($"{RecipeInfoList.Count} Recipes Loaded.");
 
-            for (var i = 0; i < MapInfoList.Count; i++)
+            for (int i = 0; i < MapInfoList.Count; i++)
             {
                 MapInfoList[i].CreateMap();
+                if (MapInfoList[i].GT)
+                {
+
+                    var GT = new GTMap()
+                    {
+                        index = MapInfoList[i].Index,
+                        Name = MapInfoList[i].Title,
+                        price = Settings.BuyGTGold,
+                        days = 0,
+                        Leader = "None",
+                        Owner = "None",
+                    };
+
+                    GTMapList.Add(GT);
+                }
             }
-            MessageQueue.Enqueue($"{MapInfoList.Count} Maps Loaded.");
+            MessageQueue.Enqueue($"{MapInfoList.Count} Maps : {GTMapList.Count} Guild Territorys Loaded");
+
+            MessageQueue.Enqueue($"{QuestInfoList.Count} Quest Loaded.");
 
             for (var i = 0; i < ItemInfoList.Count; i++)
             {
                 if (ItemInfoList[i].StartItem)
-                {
                     StartItems.Add(ItemInfoList[i]);
-                }
             }
 
             ReloadDrops();
@@ -1745,6 +2727,9 @@ namespace Server.MirEnvir
 
             LoadConquests();
 
+            LoadGTInfo();
+            MessageQueue.Enqueue(string.Format("{0} Accounts : {1} Guilds : {2} Conquests  Loaded.", AccountList.Count, GuildList.Count, ConquestInfos.Count));
+
             _listener = new TcpListener(IPAddress.Parse(Settings.IPAddress), Settings.Port);
             _listener.Start();
             _listener.BeginAcceptTcpClient(Connection, null);
@@ -1757,6 +2742,23 @@ namespace Server.MirEnvir
             }
 
             MessageQueue.Enqueue("Network Started.");
+        }
+
+        private void LoadGTInfo()
+        {
+            foreach (var gt in GTMapList)
+            {
+                var guild = GuildList.FirstOrDefault(x => x.GTIndex == gt.index);
+
+                if (guild != null)
+                {
+                    gt.Owner = guild.Name;
+                    if (guild.Ranks.Count > 0 && guild.Ranks[0] != null && guild.Ranks[0].Members.Count > 0 && guild.Ranks[0].Members[0] != null)
+                        gt.Leader = guild.Ranks[0].Members[0].name;
+                    gt.price = 0;
+                    gt.days = (Now - guild.GTRent).Days;
+                }
+            }
         }
 
         private void StopEnvir()
@@ -1833,18 +2835,18 @@ namespace Server.MirEnvir
                     #region Mentor Cleanup
                     if (info.Mentor > 0)
                     {
-                        var mentor = GetCharacterInfo(info.Mentor);
+                        var Mentor = GetCharacterInfo(info.Mentor);
 
-                        if (mentor != null)
+                        if (Mentor != null)
                         {
-                            mentor.Mentor = 0;
-                            mentor.MentorExp = 0;
-                            mentor.IsMentor = false;
+                            Mentor.Mentor = 0;
+                            Mentor.MentorExp = 0;
+                            Mentor.isMentor = false;
                         }
 
                         info.Mentor = 0;
                         info.MentorExp = 0;
-                        info.IsMentor = false;
+                        info.isMentor = false;
                     }
                     #endregion
 
@@ -1854,21 +2856,26 @@ namespace Server.MirEnvir
                         var Lover = GetCharacterInfo(info.Married);
 
                         info.Married = 0;
-                        info.MarriedDate = Now;
+                        info.MarriedDate = DateTime.Now;
 
                         Lover.Married = 0;
-                        Lover.MarriedDate = Now;
+                        Lover.MarriedDate = DateTime.Now;
                         if (Lover.Equipment[(int)EquipmentSlot.RingL] != null)
                             Lover.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
                     }
                     #endregion
+
+                    if (info.DeleteDate < DateTime.Now.AddDays(-7))
+                    {
+                        //delete char from db
+                    }
                 }
 
                 if(info.Mail.Count > Settings.MailCapacity)
                 {
                     for (var j = info.Mail.Count - 1 - (int)Settings.MailCapacity; j >= 0; j--)
                     {
-                        if (info.Mail[j].DateOpened > Now && info.Mail[j].Collected && info.Mail[j].Items.Count == 0 && info.Mail[j].Gold == 0)
+                        if (info.Mail[j].DateOpened > DateTime.Now && info.Mail[j].Collected && info.Mail[j].Items.Count == 0 && info.Mail[j].Gold == 0)
                         {
                             info.Mail.Remove(info.Mail[j]);
                         }
@@ -2124,7 +3131,7 @@ namespace Server.MirEnvir
 
             if (account.Banned)
             {
-                if (account.ExpiryDate > Now)
+                if (account.ExpiryDate > DateTime.Now)
                 {
                     c.Enqueue(new ServerPackets.LoginBanned
                     {
@@ -2145,7 +3152,7 @@ namespace Server.MirEnvir
                 {
                     account.Banned = true;
                     account.BanReason = "Too many Wrong Login Attempts.";
-                    account.ExpiryDate = Now.AddMinutes(2);
+                    account.ExpiryDate = DateTime.Now.AddMinutes(2);
 
                     c.Enqueue(new ServerPackets.LoginBanned
                     {
@@ -2203,7 +3210,7 @@ namespace Server.MirEnvir
 
             if (account.Banned)
             {
-                if (account.ExpiryDate > Now)
+                if (account.ExpiryDate > DateTime.Now)
                 {
                     return 4;
                 }
@@ -2217,7 +3224,7 @@ namespace Server.MirEnvir
                 {
                     account.Banned = true;
                     account.BanReason = "Too many Wrong Login Attempts.";
-                    account.ExpiryDate = Now.AddMinutes(2);
+                    account.ExpiryDate = DateTime.Now.AddMinutes(2);
                     return 5;
                 }
                 return 6;
@@ -2313,7 +3320,7 @@ namespace Server.MirEnvir
             return false;
         }
 
-        public AccountInfo GetAccount(string accountID)
+        private AccountInfo GetAccount(string accountID)
         {
                 for (var i = 0; i < AccountList.Count; i++)
                     if (string.Compare(AccountList[i].AccountID, accountID, StringComparison.OrdinalIgnoreCase) == 0)
@@ -2321,20 +3328,6 @@ namespace Server.MirEnvir
 
                 return null;
         }
-        public AccountInfo GetAccountByCharacter(string name)
-        {
-            for (var i = 0; i < AccountList.Count; i++)
-            {
-                for (int j = 0; j < AccountList[i].Characters.Count; j++)
-                {
-                    if (string.Compare(AccountList[i].Characters[j].Name, name, StringComparison.OrdinalIgnoreCase) == 0)
-                        return AccountList[i];
-                }
-            }
-
-            return null;
-        }
-
         public List<AccountInfo> MatchAccounts(string accountID, bool match = false)
         {
             if (string.IsNullOrEmpty(accountID)) return new List<AccountInfo>(AccountList);
@@ -2411,7 +3404,7 @@ namespace Server.MirEnvir
 
         public void AddToGameShop(ItemInfo Info)
         {
-            GameShopList.Add(new GameShopItem { GIndex = ++GameshopIndex, GoldPrice = (uint)(1000 * Settings.CredxGold), CreditPrice = 1000, ItemIndex = Info.Index, Info = Info, Date = Now, Class = "All", Category = Info.Type.ToString() });
+            GameShopList.Add(new GameShopItem { GIndex = ++GameshopIndex, GoldPrice = (uint)(1000 * Settings.CredxGold), CreditPrice = 1000, HuntPointsPrice = 1000, ItemIndex = Info.Index, Info = Info, Date = DateTime.Now, Class = "All", Category = Info.Type.ToString() });
         }
 
         public void Remove(MapInfo info)
@@ -2524,19 +3517,19 @@ namespace Server.MirEnvir
                 switch (alpha)
                 {
                     case "m":
-                        expiryInfo.ExpiryDate = Now.AddMinutes(num);
+                        expiryInfo.ExpiryDate = DateTime.Now.AddMinutes(num);
                         break;
                     case "h":
-                        expiryInfo.ExpiryDate = Now.AddHours(num);
+                        expiryInfo.ExpiryDate = DateTime.Now.AddHours(num);
                         break;
                     case "d":
-                        expiryInfo.ExpiryDate = Now.AddDays(num);
+                        expiryInfo.ExpiryDate = DateTime.Now.AddDays(num);
                         break;
                     case "M":
-                        expiryInfo.ExpiryDate = Now.AddMonths(num);
+                        expiryInfo.ExpiryDate = DateTime.Now.AddMonths(num);
                         break;
                     case "y":
-                        expiryInfo.ExpiryDate = Now.AddYears(num);
+                        expiryInfo.ExpiryDate = DateTime.Now.AddYears(num);
                         break;
                     default:
                         expiryInfo.ExpiryDate = DateTime.MaxValue;
@@ -2662,6 +3655,16 @@ namespace Server.MirEnvir
             return instanceValue < instanceMapList.Count() ? instanceMapList[instanceValue] : null;
         }
 
+        public MapObject GetObject(uint objectID)
+        {
+            return Objects.FirstOrDefault(e => e.ObjectID == objectID);
+        }
+
+        public List<MapObject> GetObjects(int map, ObjectType race)
+        {
+            return Objects.Where(x => x.CurrentMapIndex == map && x.Race == race).ToList();
+        }
+
         public MonsterInfo GetMonsterInfo(int index)
         {
             for (var i = 0; i < MonsterInfoList.Count; i++)
@@ -2734,7 +3737,6 @@ namespace Server.MirEnvir
 
             return null;
         }
-
 
         public ItemInfo GetItemInfo(int index)
         {
@@ -2836,25 +3838,18 @@ namespace Server.MirEnvir
 
         public GuildObject GetGuild(string name)
         {
-            for (var i = 0; i < Guilds.Count; i++)
+            for (var i = 0; i < GuildList.Count; i++)
             {
-                if (string.Compare(Guilds[i].Name.Replace(" ", ""), name, StringComparison.OrdinalIgnoreCase) != 0) continue;
-
-                return Guilds[i];
+                if (string.Compare(GuildList[i].Name.Replace(" ", ""), name, StringComparison.OrdinalIgnoreCase) != 0) continue;
+                return GuildList[i];
             }
-
             return null;
         }
         public GuildObject GetGuild(int index)
         {
-            for (var i = 0; i < Guilds.Count; i++)
-            {
-                if (Guilds[i].Guildindex == index)
-                {
-                    return Guilds[i];
-                }
-            }
-
+            for (var i = 0; i < GuildList.Count; i++)
+                if (GuildList[i].Guildindex == index)
+                    return GuildList[i];
             return null;
         }
 
@@ -2870,14 +3865,24 @@ namespace Server.MirEnvir
             }
         }
 
+        public void ProcessNewWeek()
+        {
+            foreach (var c in CharacterList)
+            {
+                ClearWeeklyQuests(c);
+
+                c.NewWeek = true;
+
+                c.Player?.CallDefaultNPC(DefaultNPCType.Weekly);
+            }
+        }
+
         private void ProcessRentedItems()
         {
             foreach (var characterInfo in CharacterList)
             {
                 if (characterInfo.RentedItems.Count <= 0)
-                {
                     continue;
-                }
 
                 foreach (var rentedItemInfo in characterInfo.RentedItems)
                 {
@@ -2889,30 +3894,22 @@ namespace Server.MirEnvir
                     for (var i = 0; i < rentingPlayer.Inventory.Length; i++)
                     {
                         if (rentedItemInfo.ItemId != rentingPlayer?.Inventory[i]?.UniqueID)
-                        {
                             continue;
-                        }
 
                         var item = rentingPlayer.Inventory[i];
 
                         if (item?.RentalInformation == null)
-                        {
                             continue;
-                        }
 
                         if (Now <= item.RentalInformation.ExpiryDate)
-                        {
                             continue;
-                        }
 
                         ReturnRentalItem(item, item.RentalInformation.OwnerName, rentingPlayer, false);
                         rentingPlayer.Inventory[i] = null;
                         rentingPlayer.HasRentedItem = false;
 
                         if (rentingPlayer.Player == null)
-                        {
                             continue;
-                        }
 
                         rentingPlayer.Player.ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
                         rentingPlayer.Player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
@@ -2924,23 +3921,17 @@ namespace Server.MirEnvir
                         var item = rentingPlayer.Equipment[i];
 
                         if (item?.RentalInformation == null)
-                        {
                             continue;
-                        }
 
                         if (Now <= item.RentalInformation.ExpiryDate)
-                        {
                             continue;
-                        }
 
                         ReturnRentalItem(item, item.RentalInformation.OwnerName, rentingPlayer, false);
                         rentingPlayer.Equipment[i] = null;
                         rentingPlayer.HasRentedItem = false;
-
+                        
                         if (rentingPlayer.Player == null)
-                        {
                             continue;
-                        }
 
                         rentingPlayer.Player.ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
                         rentingPlayer.Player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
@@ -2952,14 +3943,10 @@ namespace Server.MirEnvir
             foreach (var characterInfo in CharacterList)
             {
                 if (characterInfo.RentedItemsToRemove.Count <= 0)
-                {
                     continue;
-                }
 
                 foreach (var rentalInformationToRemove in characterInfo.RentedItemsToRemove)
-                {
                     characterInfo.RentedItems.Remove(rentalInformationToRemove);
-                }
 
                 characterInfo.RentedItemsToRemove.Clear();
             }
@@ -2968,20 +3955,14 @@ namespace Server.MirEnvir
         public bool ReturnRentalItem(UserItem rentedItem, string ownerName, CharacterInfo rentingCharacterInfo, bool removeNow = true)
         {
             if (rentedItem.RentalInformation == null)
-            {
                 return false;
-            }
 
             var owner = GetCharacterInfo(ownerName);
             var returnItems = new List<UserItem>();
 
             foreach (var rentalInformation in owner.RentedItems)
-            {
                 if (rentalInformation.ItemId == rentedItem.UniqueID)
-                {
                     owner.RentedItemsToRemove.Add(rentalInformation);
-                }
-            }
             
             rentedItem.RentalInformation.BindingFlags = BindMode.None;
             rentedItem.RentalInformation.RentalLocked = true;
@@ -3001,9 +3982,7 @@ namespace Server.MirEnvir
             if (removeNow)
             {
                 foreach (var rentalInformationToRemove in owner.RentedItemsToRemove)
-                {
                     owner.RentedItems.Remove(rentalInformationToRemove);
-                }
 
                 owner.RentedItemsToRemove.Clear();
             }
@@ -3028,17 +4007,55 @@ namespace Server.MirEnvir
             info.Player?.GetCompletedQuests();
         }
 
-        public GuildBuffInfo FindGuildBuffInfo(int Id)
+        private void ClearWeeklyQuests(CharacterInfo info)
         {
-            for (var i = 0; i < Settings.Guild_BuffList.Count; i++)
+            foreach (var quest in QuestInfoList)
             {
-                if (Settings.Guild_BuffList[i].Id == Id)
+                if (quest.Type != QuestType.Weekly) continue;
+
+                for (var i = 0; i < info.CompletedQuests.Count; i++)
                 {
-                    return Settings.Guild_BuffList[i];
+                    if (info.CompletedQuests[i] != quest.Index) continue;
+
+                    info.CompletedQuests.RemoveAt(i);
                 }
             }
 
+            info.Player?.GetCompletedQuests();
+        }
+
+        public GuildBuffInfo FindGuildBuffInfo(int Id)
+        {
+            for (var i = 0; i < Settings.Guild_BuffList.Count; i++)
+                if (Settings.Guild_BuffList[i].Id == Id)
+                    return Settings.Guild_BuffList[i];
             return null;
+        }
+
+        public void UpdateTop(bool addOnly = false)
+        {
+            //Order then take top 3
+            var top = CharacterList.OrderByDescending(x => x.Level).Take(0);
+
+            //Find who to give buff to
+            var onlineWithoutBuff = Players.Where(x => x.Buffs.Select(y => y.Type).Contains(BuffType.Mentor) == false);
+            var topWithoutBuff = onlineWithoutBuff.Where(x => top.Contains(x.Info)); //Add these buffs
+
+            foreach (var c in topWithoutBuff)
+            {
+                c.AddBuff(BuffType.Mentor, c, 0, new Stats { [Stat.MinAC] = 7 });
+            }
+
+            if (addOnly) //Player has logged on, so no need to remove buff from anyone
+                return;
+
+            //Find who to remove buff from
+            var onlineWithBuff = Players.Where(x => x.Buffs.Select(y => y.Type).Contains(BuffType.Mentor));
+            var notTopWithBuff = onlineWithBuff.Where(x => top.Contains(x.Info) == false); //Remove these buffs
+            foreach (var c in notTopWithBuff)
+            {
+                c.RemoveBuff(BuffType.Mentor);
+            }
         }
 
         public void ClearGameshopLog()
@@ -3241,7 +4258,10 @@ namespace Server.MirEnvir
                     RankBottomLevel[(byte)info.Class + 1] = NewRank.level;
             }
         }
-
+        public string FilterMessage(string input)
+        {
+            return Regex.Replace(input, @"\b" + string.Join(@"\b|\b", Settings.BannedWordList) + @"\b", "****", RegexOptions.IgnoreCase);
+        }
 
         public void ReloadNPCs()
         {
@@ -3279,7 +4299,7 @@ namespace Server.MirEnvir
                 var path = Path.Combine(Settings.DropPath, Settings.FishingDropFilename + ".txt");
                 path = path.Replace("00", i.ToString("D2"));
 
-                DropInfo.Load(FishingDrops, $"Fishing {i}", path, (byte)i, i < 2);
+                DropInfo.Load(FishingDrops, MonsterInfoList[i].Name, path, (byte)i, i < 2);
             }
 
             AwakeningDrops.Clear();
@@ -3290,6 +4310,9 @@ namespace Server.MirEnvir
 
             BlackstoneDrops.Clear();
             DropInfo.Load(BlackstoneDrops, "Blackstone", Path.Combine(Settings.DropPath, Settings.BlackstoneDropFilename + ".txt"));
+
+            ConquestDrops.Clear();
+            DropInfo.Load(BlackstoneDrops, "Conquest", Path.Combine(Settings.DropPath, Settings.ConquestDropFilename + ".txt"));
 
             MessageQueue.Enqueue("Drops Loaded.");
         }

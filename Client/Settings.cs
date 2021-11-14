@@ -7,10 +7,12 @@ namespace Client
 {
     class Settings
     {
-        public const long CleanDelay = 600000;
+        public static string C_DonateLink = "www.google.ro";
+        public static string C_WebLink = "";
+
+        public const long CleanDelay = 30000;
         public static int ScreenWidth = 1024, ScreenHeight = 768;
         private static InIReader Reader = new InIReader(@".\Mir2Config.ini");
-        private static InIReader QuestTrackingReader = new InIReader(Path.Combine(UserDataPath, @".\QuestTracking.ini"));
 
         private static bool _useTestConfig;
         public static bool UseTestConfig
@@ -58,9 +60,7 @@ namespace Client
                             TransformMountsPath = @".\Data\TransformRide2\",
                             TransformEffectPath = @".\Data\TransformEffect\",
                             TransformWeaponEffectPath = @".\Data\TransformWeaponEffect\",
-                            MouseCursorPath = @".\Data\Cursors\",
-                            ResourcePath = @".\DirectX\",
-                            UserDataPath = @".\Data\UserData\";
+                            MouseCursorPath = @".\Data\Cursors\";
 
         //Logs
         public static bool LogErrors = true;
@@ -132,6 +132,8 @@ namespace Client
             LevelEffect = true,
             DropView = true,
             NameView = true,
+            NpcNameView = true,
+            MonsterNameView = true,
             HPView = true,
             TransparentChat = false,
             ModeView = false,
@@ -140,7 +142,8 @@ namespace Client
             TargetDead = false,
             HighlightTarget = true,
             ExpandedBuffWindow = true,
-            DisplayBodyName = false;
+            DisplayBodyName = false,
+            BossHPBar = true;
 
         public static int[,] SkillbarLocation = new int[2, 2] { { 0, 0 }, { 216, 0 }  };
 
@@ -226,6 +229,8 @@ namespace Client
             LevelEffect = Reader.ReadBoolean("Game", "LevelEffect", Effect);
             DropView = Reader.ReadBoolean("Game", "DropView", DropView);
             NameView = Reader.ReadBoolean("Game", "NameView", NameView);
+            NpcNameView = Reader.ReadBoolean("Game", "NpcNameView", NpcNameView);
+            MonsterNameView = Reader.ReadBoolean("Game", "MonsterNameView", MonsterNameView);
             HPView = Reader.ReadBoolean("Game", "HPMPView", HPView);
             ModeView = Reader.ReadBoolean("Game", "ModeView", ModeView);
             FontName = Reader.ReadString("Game", "FontName", FontName);
@@ -236,6 +241,8 @@ namespace Client
             ExpandedBuffWindow = Reader.ReadBoolean("Game", "ExpandedBuffWindow", ExpandedBuffWindow);
             DuraView = Reader.ReadBoolean("Game", "DuraWindow", DuraView);
             DisplayBodyName = Reader.ReadBoolean("Game", "DisplayBodyName", DisplayBodyName);
+            BossHPBar = Reader.ReadBoolean("Game", "BossHPBar", BossHPBar);
+
 
             for (int i = 0; i < SkillbarLocation.Length / 2; i++)
             {
@@ -277,6 +284,9 @@ namespace Client
             if (P_Host.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) P_Host = P_Host.Insert(0, "http://");
             if (P_BrowserAddress.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) P_BrowserAddress = P_BrowserAddress.Insert(0, "http://");
 
+            if (C_WebLink.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) C_WebLink = C_WebLink.Insert(0, "http://");
+            if (C_DonateLink.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) C_DonateLink = C_DonateLink.Insert(0, "http://");
+
             //Temp check to update everyones address
             if (P_Host.ToLower() == "http://mirfiles.co.uk/mir2/cmir/patch/")
             {
@@ -309,6 +319,8 @@ namespace Client
             Reader.Write("Game", "LevelEffect", LevelEffect);
             Reader.Write("Game", "DropView", DropView);
             Reader.Write("Game", "NameView", NameView);
+            Reader.Write("Game", "NpcNameView", NpcNameView);
+            Reader.Write("Game", "MonsterNameView", MonsterNameView);
             Reader.Write("Game", "HPMPView", HPView);
             Reader.Write("Game", "ModeView", ModeView);
             Reader.Write("Game", "FontName", FontName);
@@ -319,6 +331,7 @@ namespace Client
             Reader.Write("Game", "ExpandedBuffWindow", ExpandedBuffWindow);
             Reader.Write("Game", "DuraWindow", DuraView);
             Reader.Write("Game", "DisplayBodyName", DisplayBodyName);
+            Reader.Write("Game", "BossHPBar", BossHPBar);
 
             for (int i = 0; i < SkillbarLocation.Length / 2; i++)
             {
@@ -356,25 +369,31 @@ namespace Client
             Reader.Write("Launcher", "ServerName", P_ServerName);
             Reader.Write("Launcher", "Browser", P_BrowserAddress);
             Reader.Write("Launcher", "AutoStart", P_AutoStart);
+
+            Reader.Write("GameSettings", "Donation", C_DonateLink);
+            Reader.Write("GameSettings", "WebLink", C_WebLink);
         }
 
-        public static void LoadTrackedQuests(string charName)
+        public static void LoadTrackedQuests(string Charname)
         {
             //Quests
             for (int i = 0; i < TrackedQuests.Length; i++)
             {
-                TrackedQuests[i] = QuestTrackingReader.ReadInt32(charName, "Quest-" + i.ToString(), -1);
+                TrackedQuests[i] = Reader.ReadInt32("Q-" + Charname, "Quest-" + i.ToString(), -1);
             }
         }
 
-        public static void SaveTrackedQuests(string charName)
+        public static void SaveTrackedQuests(string Charname)
         {
             //Quests
             for (int i = 0; i < TrackedQuests.Length; i++)
             {
-                QuestTrackingReader.Write(charName, "Quest-" + i.ToString(), TrackedQuests[i]);
+                Reader.Write("Q-" + Charname, "Quest-" + i.ToString(), TrackedQuests[i]);
             }
         }
+
+
+      
     }
 
     

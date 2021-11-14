@@ -109,6 +109,21 @@ namespace Client.MirControls
 
         #endregion
 
+        #region Ready Only
+
+        public bool ReadOnly
+        {
+            get
+            {
+                return this.TextBox.ReadOnly;
+            }
+            set
+            {
+                this.TextBox.ReadOnly = value;
+            }
+        }
+        #endregion
+
         #region Font
 
         public System.Drawing.Font Font

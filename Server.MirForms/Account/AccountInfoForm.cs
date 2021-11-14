@@ -454,8 +454,8 @@ namespace Server
                 SMain.Envir.Auctions.Clear();
                 SMain.Envir.GuildList.Clear();
 
-                MessageBox.Show("All characters and associated data has been cleared", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-
+                MessageBox.Show("All characters and associated data has been cleared", "Notice",
+               MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
             }
         }
     }

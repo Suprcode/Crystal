@@ -407,6 +407,7 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.StorageDialog.Hide();
             GameScene.Scene.TrustMerchantDialog.Hide();
             GameScene.Scene.QuestListDialog.Hide();
+            GameScene.Scene.GuildTerritoryDialog.Hide();
             GameScene.Scene.InventoryDialog.Location = new Point(0, 0);
             GameScene.Scene.RollControl.Hide();
         }
@@ -423,6 +424,7 @@ namespace Client.MirScenes.Dialogs
     {
         public PanelType PType;
         public bool UsePearls;
+        public bool UseHuntPoints;
 
         public int StartIndex;
         public UserItem SelectedItem;
@@ -442,7 +444,7 @@ namespace Client.MirScenes.Dialogs
             Index = 1000;
             Library = Libraries.Prguse;
             Location = new Point(0, 224);
-            Cells = new MirGoodsCell[8];
+            Cells = new MirGoodsCell[24];
             Sort = true;
 
             for (int i = 0; i < Cells.Length; i++)
@@ -450,7 +452,7 @@ namespace Client.MirScenes.Dialogs
                 Cells[i] = new MirGoodsCell
                 {
                     Parent = this,
-                    Location = new Point(10, 34 + i * 33),
+                    Location = new Point((i % 3) * 139 + 9, 34 + ((i) / 3) * 11 + ((i) / 3) * 22),
                     Sound = SoundList.ButtonC
                 };
                 Cells[i].Click += (o, e) =>
@@ -482,7 +484,7 @@ namespace Client.MirScenes.Dialogs
             {
                 HoverIndex = 361,
                 Index = 360,
-                Location = new Point(217, 3),
+                Location = new Point(421, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
@@ -521,7 +523,7 @@ namespace Client.MirScenes.Dialogs
                 Index = 197,
                 HoverIndex = 198,
                 Library = Libraries.Prguse2,
-                Location = new Point(219, 35),
+                Location = new Point(423, 35),
                 Parent = this,
                 PressedIndex = 199,
                 Sound = SoundList.ButtonA
@@ -538,16 +540,16 @@ namespace Client.MirScenes.Dialogs
                 Index = 207,
                 HoverIndex = 208,
                 Library = Libraries.Prguse2,
-                Location = new Point(219, 284),
+                Location = new Point(423, 284),
                 Parent = this,
                 PressedIndex = 209,
                 Sound = SoundList.ButtonA
             };
             DownButton.Click += (o, e) =>
             {
-                if (DisplayGoods.Count <= 8) return;
+                if (DisplayGoods.Count <= 3) return;
 
-                if (StartIndex == DisplayGoods.Count - 8) return;
+                if (StartIndex == DisplayGoods.Count - 3) return;
                 StartIndex++;
                 Update();
             };
@@ -557,7 +559,7 @@ namespace Client.MirScenes.Dialogs
                 Index = 205,
                 HoverIndex = 206,
                 Library = Libraries.Prguse2,
-                Location = new Point(219, 49),
+                Location = new Point(423, 49),
                 Parent = this,
                 PressedIndex = 206,
                 Movable = true,
@@ -572,6 +574,17 @@ namespace Client.MirScenes.Dialogs
             if (SelectedItem == null) return false;
 
             if (PType == PanelType.Buy && !UsePearls)
+            {
+                var list = Goods.Where(x => x.Info.Index == SelectedItem.Info.Index).ToList();
+
+                if (list.Count > 1 || GameScene.Scene.NPCSubGoodsDialog.Visible)
+                {
+                    GameScene.Scene.NPCSubGoodsDialog.NewGoods(list);
+                    GameScene.Scene.NPCSubGoodsDialog.Show();
+                    return true;
+                }
+            }
+            if (PType == PanelType.Buy && !UseHuntPoints)
             {
                 var list = Goods.Where(x => x.Info.Index == SelectedItem.Info.Index).ToList();
 
@@ -614,6 +627,19 @@ namespace Client.MirScenes.Dialogs
                         }
                     }
                 }
+                else
+                if (UseHuntPoints)
+                {
+                    if (SelectedItem.Price() > GameScene.HuntPoints)
+                    {
+                        maxQuantity = Math.Min(ushort.MaxValue, (ushort)(GameScene.HuntPoints / (SelectedItem.Price() / SelectedItem.Count)));
+                        if (maxQuantity == 0)
+                        {
+                            GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough HuntPoints.", ChatType.System);
+                            return;
+                        }
+                    }
+                }
 
                 else if (SelectedItem.Price() > GameScene.Gold)
                 {
@@ -648,6 +674,16 @@ namespace Client.MirScenes.Dialogs
             }
             else
             {
+                if (UseHuntPoints)
+                {
+                    if (SelectedItem.Info.Price > GameScene.HuntPoints)
+                    {
+                        GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough HuntPoints.", ChatType.System);
+                        return;
+                    }
+
+                }
+                else
                 if (SelectedItem.Info.Price > GameScene.Gold)
                 {
                     GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowGold, ChatType.System);
@@ -679,28 +715,29 @@ namespace Client.MirScenes.Dialogs
             int count = e.Delta / SystemInformation.MouseWheelScrollDelta;
 
             if (StartIndex == 0 && count >= 0) return;
-            if (StartIndex == DisplayGoods.Count - 1 && count <= 0) return;
+            if (StartIndex == DisplayGoods.Count - 3 && count <= 0) return;
+            StartIndex -= count > 0 ? 2 : -2;
 
             StartIndex -= count;
             Update();
         }
         private void Update()
         {
-            if (StartIndex > DisplayGoods.Count - 8) StartIndex = DisplayGoods.Count - 8;
+            if (StartIndex > DisplayGoods.Count - 24) StartIndex = DisplayGoods.Count - 24;
             if (StartIndex <= 0) StartIndex = 0;
 
-            if (DisplayGoods.Count > 8)
+            if (DisplayGoods.Count > 24)
             {
                 PositionBar.Visible = true;
                 int h = 233 - PositionBar.Size.Height;
-                h = (int)((h / (float)(DisplayGoods.Count - 8)) * StartIndex);
-                PositionBar.Location = new Point(219, 49 + h);
+                h = (int)((h / (float)(DisplayGoods.Count - 24)) * StartIndex);
+                PositionBar.Location = new Point(423, 49 + h);
             }
             else
                 PositionBar.Visible = false;
 
 
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 24; i++)
             {
                 if (i + StartIndex >= DisplayGoods.Count)
                 {
@@ -715,18 +752,19 @@ namespace Client.MirScenes.Dialogs
                 Cells[i].MultipleAvailable = matchingGoods.Count() > 1 && matchingGoods.Any(x => x.IsShopItem == false);
                 Cells[i].Border = SelectedItem != null && Cells[i].Item == SelectedItem;
                 Cells[i].UsePearls = UsePearls;
+                Cells[i].UseHuntPoints = UseHuntPoints;
             }
         }
 
         private void PositionBar_OnMoving(object sender, MouseEventArgs e)
         {
-            const int x = 219;
+            const int x = 423;
             int y = PositionBar.Location.Y;
             if (y >= 282 - PositionBar.Size.Height) y = 282 - PositionBar.Size.Height;
             if (y < 49) y = 49;
 
             int h = 233 - PositionBar.Size.Height;
-            h = (int)Math.Round(((y - 49) / (h / (float)(DisplayGoods.Count - 8))));
+            h = (int)Math.Round(((y - 49) / (h / (float)(DisplayGoods.Count - 3))));
 
             PositionBar.Location = new Point(x, y);
 
@@ -752,6 +790,12 @@ namespace Client.MirScenes.Dialogs
             {
                 //Normal shops just want to show one of each item type
                 if (PType == PanelType.Buy && !UsePearls)
+                {
+                    Goods.Add(item);
+
+                    if (DisplayGoods.Any(x => x.Info.Index == item.Info.Index)) continue;
+                }
+                if (PType == PanelType.Buy && !UseHuntPoints)
                 {
                     Goods.Add(item);
 
@@ -2115,8 +2159,6 @@ namespace Client.MirScenes.Dialogs
 
         public override void Hide()
         {
-            if (!Visible) return;
-
             Visible = false;
             RefineCancel();
         }

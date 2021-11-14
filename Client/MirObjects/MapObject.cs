@@ -52,8 +52,8 @@ namespace Client.MirObjects
         public List<BuffType> Buffs = new List<BuffType>();
 
         public MLibrary BodyLibrary;
-        public Color DrawColour = Color.White, NameColour = Color.White, LightColour = Color.White;
-        public MirLabel NameLabel, ChatLabel, GuildLabel;
+        public Color DrawColour = Color.White, NameColour = Color.White, LightColour = Color.White, OutLine_Colour = Color.Black;
+        public MirLabel NameLabel, ChatLabel, GuildLabel, RebornLabel, InstanceStageLabel, ChallengeStageLabel, BossLabel, BossNameLabel, SubLabel, SubNameLabel;
         public long ChatTime;
         public int DrawFrame, DrawWingFrame;
         public Point DrawLocation, Movement, FinalDrawLocation, OffSetMove;
@@ -290,31 +290,135 @@ namespace Client.MirObjects
         public virtual void CreateLabel()
         {
             NameLabel = null;
+            MonsterObject tmp = null;
+            if (Race == ObjectType.Monster)
+            {
+                tmp = (MonsterObject)this;
+                if (!tmp.IsBoss)
+                    tmp = null;
 
+            }
+            bool created = false;
             for (int i = 0; i < LabelList.Count; i++)
             {
-                if (LabelList[i].Text != Name || LabelList[i].ForeColour != NameColour) continue;
-                NameLabel = LabelList[i];
-                break;
+                if (tmp != null)
+                {
+                    //  Elite Boss
+                    if (tmp.IsElite)
+                    {
+                        //  Not the same name
+                        if (LabelList[i].Text != Name ||
+                            //  Text color is not white
+                            LabelList[i].ForeColour != Color.White ||
+                            //  Outline color is not the same as Name color
+                            LabelList[i].OutLineColour != NameColour)
+                            //  Discontinue
+                            continue;
+                        //  It's the same (I.E Created)
+                        NameLabel = LabelList[i];
+                    }
+                    //  None Elite Boss
+                    else
+                    {
+                        //  Not the same name
+                        if (LabelList[i].Text != Name ||
+                            //  Text color is not white
+                            LabelList[i].ForeColour != Color.White ||
+                            //  Outline color is not Red
+                            LabelList[i].OutLineColour != Color.Red)
+                            //  Discontinue
+                            continue;
+                        //  It's the same (I.E Created)
+                        NameLabel = LabelList[i];
+                    }
+                }
+                //  It wont be a boss label
+                else
+                {
+                    if (LabelList[i].Text != Name ||
+                        LabelList[i].ForeColour != NameColour) continue;
+                    //  It's the same (I.E Created)
+                    NameLabel = LabelList[i];
+                }
+
+                if (LabelList[i].Text == Name)
+                    created = true;
             }
 
 
-            if (NameLabel != null && !NameLabel.IsDisposed) return;
+            if (created)
+                return;
+            //  Label isn't null
+            if (NameLabel != null &&
+                //  Label isn't disposed
+                !NameLabel.IsDisposed)
+                //  Already created, don't need to create any more!
+                return;
 
-            NameLabel = new MirLabel
+            //  The label is valid now check if it by object type and their values
+            if (tmp != null)
             {
-                AutoSize = true,
-                BackColour = Color.Transparent,
-                ForeColour = NameColour,
-                OutLine = true,
-                OutLineColour = Color.Black,
-                Text = Name,
-            };
+                //  It is a boss
+                if (tmp.IsBoss &&
+                    !tmp.IsSub &&
+                    !tmp.IsPet)
+                {
+                    //  Elite Boss
+                    if (tmp.IsElite)
+                    {
+                        NameLabel = new MirLabel
+                        {
+                            AutoSize = true,
+                            BackColour = Color.Transparent,
+                            ForeColour = Color.White,
+                            OutLine = true,
+                            OutLineColour = tmp.NameColour,
+                            Text = Name,
+                        };
+                    }
+                    //  Boss Non Elite
+                    else
+                    {
+                        NameLabel = new MirLabel
+                        {
+                            AutoSize = true,
+                            BackColour = Color.Transparent,
+                            ForeColour = Color.White,
+                            OutLine = true,
+                            OutLineColour = Color.Red,
+                            Text = Name,
+                        };
+                    }
+                }
+                //  Mob
+                else
+                {
+                    NameLabel = new MirLabel
+                    {
+                        AutoSize = true,
+                        BackColour = Color.Transparent,
+                        ForeColour = NameColour,
+                        OutLine = true,
+                        OutLineColour = Color.Black,
+                        Text = Name,
+                    };
+                }
+            }
+            //  Other
+            else
+            {
+                NameLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    BackColour = Color.Transparent,
+                    ForeColour = NameColour,
+                    OutLine = true,
+                    OutLineColour = OutLine_Colour,
+                    Text = Name,
+                };
+            }
             NameLabel.Disposing += (o, e) => LabelList.Remove(NameLabel);
             LabelList.Add(NameLabel);
-
-
-
         }
         public virtual void DrawName()
         {
@@ -350,6 +454,388 @@ namespace Client.MirObjects
                 {
                     info.Draw(DisplayRectangle.Location);
                 }
+            }
+        }
+
+        public void DrawBossName()
+        {
+            //  Create the Label
+            CreateBossLabel();
+            //  If the label wasn't created we won't draw it
+            if (BossLabel == null)
+                return;
+
+            //  Apply Text to the Label
+            BossLabel.Text = string.Format("{0} - Boss -{1}%", Name, PercentHealth);
+            //  Set the location of the Label
+            BossLabel.Location = new Point(Settings.ScreenWidth / 2 - BossLabel.Size.Width / 2, 82); //was 53 -
+                                                                                                     //  Draw the Label
+            BossLabel.Draw();
+        }
+
+        public void DrawSubName()
+        {
+            //  Create the Label
+            CreateSubLabel();
+            //  If the label wasn't created we won't draw it
+            if (SubLabel == null)
+                return;
+
+            //  Apply Text to the Label
+            SubLabel.Text = string.Format("{0} - Sub - {1}%", Name, PercentHealth);
+            //  Set the location of the Label
+            SubLabel.Location = new Point(Settings.ScreenWidth / 2 - SubLabel.Size.Width / 2, 82); //was 53 -
+                                                                                                   //  Draw the Label
+            SubLabel.Draw();
+        }
+
+        public void CreateBossLabel()
+        {
+            BossLabel = null;
+
+            for (int i = 0; i < LabelList.Count; i++)
+            {
+                //  Not the same name
+                if (LabelList[i].Text.Contains(string.Format("{0}", Name)) ||
+                    //  Not the same name color
+                    LabelList[i].ForeColour != NameColour)
+                    continue;
+                BossLabel = LabelList[i];
+                break;
+            }
+
+
+            if (BossLabel != null && !BossLabel.IsDisposed)
+                return;
+
+            BossLabel = new MirLabel
+            {
+                AutoSize = true,
+                BackColour = Color.Transparent,
+                ForeColour = NameColour,
+                OutLine = true,
+                OutLineColour = Color.Black,
+                Text = string.Format("{0} - {1}%", Name, PercentHealth),
+            };
+            BossLabel.Disposing += (o, e) => LabelList.Remove(BossLabel);
+            LabelList.Add(BossLabel);
+        }
+
+        public void CreateSubLabel()
+        {
+            SubLabel = null;
+
+            for (int i = 0; i < LabelList.Count; i++)
+            {
+                //  Not the same name
+                if (LabelList[i].Text.Contains(string.Format("{0}", Name)) ||
+                    //  Not the same name color
+                    LabelList[i].ForeColour != NameColour)
+                    continue;
+                SubLabel = LabelList[i];
+                break;
+            }
+
+
+            if (SubLabel != null && !SubLabel.IsDisposed)
+                return;
+
+            SubLabel = new MirLabel
+            {
+                AutoSize = true,
+                BackColour = Color.Transparent,
+                ForeColour = NameColour,
+                OutLine = true,
+                OutLineColour = Color.Black,
+                Text = string.Format("{0} - {1}%", Name, PercentHealth),
+            };
+            SubLabel.Disposing += (o, e) => LabelList.Remove(SubLabel);
+            LabelList.Add(SubLabel);
+        }
+
+        public void DrawBossHealthBar()
+        {
+
+            string name = Name;
+            if (Name.Contains("("))
+                name = Name.Substring(Name.IndexOf("(") + 1, Name.Length - Name.IndexOf("(") - 2);
+
+            //  Object is dead, don't draw
+            if (Dead)
+                return;
+            //  Object isn't a monster!
+            if (Race != ObjectType.Monster)
+                return;
+
+            //  Check the Rev time (may not even need this)
+            if (CMain.Time >= HealthTime)
+            {
+                if (Race == ObjectType.Monster)
+                {
+                    MonsterObject temp = (MonsterObject)this;
+                    if (!temp.IsBoss && !temp.IsSub)
+                        return;
+
+                }
+            }
+            //  Draw the base of the Image (I.E Empty health bar)
+            Libraries.Prguse.Draw(2552, new Rectangle(0, 0, 324, 97), new Point(Settings.ScreenWidth / 2 - 158, 33 + 10), Color.White, false);
+            //  Draw the Health ontop of the base and shirnk it based on the Health of the object
+            Libraries.Prguse.Draw(2553, new Rectangle(0, 0, (int)(231 * PercentHealth / 100F), 12), new Point(Settings.ScreenWidth / 2 - 83, 74 + 10), Color.White, false);
+            //  Draw the Player Heath ontop of the base and shirnk it based on the Health of the object
+            Libraries.Prguse.Draw(2554, new Rectangle(0, 0, (int)(231 * User.PercentHealth / 100F), 12), new Point(Settings.ScreenWidth / 2 - 83, 92 + 10), Color.White, false);
+            //  Now Draw the bosses name ontop of the Health Bar
+            DrawBossName();
+        }
+
+        public void DrawSubHealthBar()
+        {
+
+            string name = Name;
+            if (Name.Contains("("))
+                name = Name.Substring(Name.IndexOf("(") + 1, Name.Length - Name.IndexOf("(") - 2);
+
+            //  Object is dead, don't draw
+            if (Dead)
+                return;
+            //  Object isn't a monster!
+            if (Race != ObjectType.Monster)
+                return;
+
+            //  Check the Rev time (may not even need this)
+            if (CMain.Time >= HealthTime)
+            {
+                if (Race == ObjectType.Monster)
+                {
+                    MonsterObject temp = (MonsterObject)this;
+                    if (!temp.IsBoss && !temp.IsSub)
+                        return;
+                }
+            }
+
+            //  Draw the base of the Image (I.E Empty health bar)
+            Libraries.Prguse.Draw(2564, new Rectangle(0, 0, 324, 97), new Point(Settings.ScreenWidth / 2 - 158, 33 + 10), Color.White, false);
+            //  Draw the Health ontop of the base and shirnk it based on the Health of the object
+            Libraries.Prguse.Draw(2553, new Rectangle(0, 0, (int)(231 * PercentHealth / 100F), 12), new Point(Settings.ScreenWidth / 2 - 83, 74 + 10), Color.White, false);
+            //  Draw the Player Heath ontop of the base and shirnk it based on the Health of the object
+            Libraries.Prguse.Draw(2554, new Rectangle(0, 0, (int)(231 * User.PercentHealth / 100F), 12), new Point(Settings.ScreenWidth / 2 - 83, 92 + 10), Color.White, false);
+            //  Now Draw the bosses name ontop of the Health Bar
+            DrawSubName();
+        }
+
+        public void DrawBossPoison()
+        {
+            //  Object is dead, don't draw
+            if (Dead)
+                return;
+            //  Object isn't a monster!
+            if (Race != ObjectType.Monster)
+                return;
+
+            if (Poison != PoisonType.None)
+            {
+                if (Poison.HasFlag(PoisonType.Red))
+                {
+                    Libraries.Prguse.Draw(2555, new Rectangle(0, 0, 324, 97), new Point(Settings.ScreenWidth / 2 - 84, 102 + 10), Color.White, false);
+                }
+                if (Poison.HasFlag(PoisonType.Green))
+                {
+                    Libraries.Prguse.Draw(2556, new Rectangle(0, 0, 324, 97), new Point(Settings.ScreenWidth / 2 - 66, 102 + 10), Color.White, false);
+                }
+                if (Poison.HasFlag(PoisonType.Stun))
+                {
+                    Libraries.Prguse.Draw(2557, new Rectangle(0, 0, 324, 97), new Point(Settings.ScreenWidth / 2 - 48, 102 + 10), Color.White, false);
+                }
+                if (Poison.HasFlag(PoisonType.Slow))
+                {
+                    Libraries.Prguse.Draw(2558, new Rectangle(0, 0, 324, 97), new Point(Settings.ScreenWidth / 2 - 30, 102 + 10), Color.White, false);
+                }
+                if (Poison.HasFlag(PoisonType.Frozen))
+                {
+                    Libraries.Prguse.Draw(2559, new Rectangle(0, 0, 324, 97), new Point(Settings.ScreenWidth / 2 - 12, 102 + 10), Color.White, false);
+                }
+                if (Poison.HasFlag(PoisonType.DelayedExplosion))
+                {
+                    Libraries.Prguse.Draw(2560, new Rectangle(0, 0, 324, 97), new Point(Settings.ScreenWidth / 2 - -6, 102 + 10), Color.White, false);
+                }
+                if (Poison.HasFlag(PoisonType.Paralysis) || Poison.HasFlag(PoisonType.LRParalysis))
+                {
+                    Libraries.Prguse.Draw(2561, new Rectangle(0, 0, 324, 97), new Point(Settings.ScreenWidth / 2 - -24, 102 + 10), Color.White, false);
+                }
+                if (Poison.HasFlag(PoisonType.Bleeding))
+                {
+                    Libraries.Prguse.Draw(2562, new Rectangle(0, 0, 324, 97), new Point(Settings.ScreenWidth / 2 - -42, 102 + 10), Color.White, false);
+                }
+                if (Poison.HasFlag(PoisonType.Blindness))
+                {
+                    Libraries.Prguse.Draw(2560, new Rectangle(0, 0, 324, 97), new Point(Settings.ScreenWidth / 2 - -60, 102 + 10), Color.White, false);
+                }
+            }
+        }
+
+        public void DrawBossImage()
+        {
+            //  Object is dead, don't draw
+            if (Dead)
+                return;
+            //  Object isn't a monster!
+            if (Race != ObjectType.Monster)
+                return;
+
+            switch (AI) // if you use any of these mob ingame check isboss in db
+            {
+                case 11: //Wt
+                    Libraries.MobImage.Draw(187, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 13: //RME
+                    Libraries.MobImage.Draw(230, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 14: //EC
+                    Libraries.MobImage.Draw(202, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 16: //RTZ
+                    Libraries.MobImage.Draw(221, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 17: //Zt
+                case 22: //IncarnatedZT
+                    Libraries.MobImage.Draw(219, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 19: //KingScorpion
+                    Libraries.MobImage.Draw(290, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 20: //DarkDevil
+                    Libraries.MobImage.Draw(150, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 21: //IncarnatedGhoul
+                    Libraries.MobImage.Draw(192, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 27: //Khazard
+                    Libraries.MobImage.Draw(208, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 30: //BoneLord
+                    Libraries.MobImage.Draw(250, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 33: //MinotaurKing
+                    Libraries.MobImage.Draw(156, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(31, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 34: //FrostTiger - FlameTiger
+                    Libraries.MobImage.Draw(298, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 36: //Yimoogi
+                    Libraries.MobImage.Draw(284, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 37: //CrystalSpider
+                    Libraries.MobImage.Draw(238, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 43: //OmaKing - Oks
+                    Libraries.MobImage.Draw(282, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 50: //GreatFoxSpirit
+                    Libraries.MobImage.Draw(271, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 73: //TurtleKing
+                    Libraries.MobImage.Draw(318, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 79: //HellKeeper
+                    Libraries.MobImage.Draw(307, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 106: //OrcMutant
+                    Libraries.MobImage.Draw(344, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 107: //OrcGeneral
+                    Libraries.MobImage.Draw(345, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 102: //WOLFKING
+                    Libraries.MobImage.Draw(157, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 114: //AncDarkDevil
+                    Libraries.MobImage.Draw(150, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 115: //AncKingScorpion
+                    Libraries.MobImage.Draw(290, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 127: //Wg
+                    Libraries.MobImage.Draw(184, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 237: //IDarkDevil
+                    Libraries.MobImage.Draw(150, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 238: //IMinotaurKing
+                    Libraries.MobImage.Draw(156, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(31, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+
+            }
+        }
+
+        public void DrawSubImage()
+        {
+            //  Object is dead, don't draw
+            if (Dead)
+                return;
+            //  Object isn't a monster!
+            if (Race != ObjectType.Monster)
+                return;
+
+            switch (AI)
+            {
+                case 16: //RTZ
+                    Libraries.MobImage.Draw(221, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 22: //IncarnatedZT
+                    Libraries.MobImage.Draw(219, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 19: //KingScorpion
+                    Libraries.MobImage.Draw(290, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 21: //IncarnatedGhoul
+                    Libraries.MobImage.Draw(192, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 106: //OrcMutant
+                    Libraries.MobImage.Draw(344, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 115: //AncKingScorpion
+                    Libraries.MobImage.Draw(290, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 127: //Wg
+                    Libraries.MobImage.Draw(184, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
+                case 240: //Wb
+                    Libraries.MobImage.Draw(213, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    Libraries.Prguse.Draw(2551, new Rectangle(0, 0, 550, 78), new Point(Settings.ScreenWidth / 2 - 132, 68 + 10), Color.White, false);
+                    break;
             }
         }
         public void DrawHealth()

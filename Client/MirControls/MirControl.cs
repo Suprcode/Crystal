@@ -771,6 +771,10 @@ namespace Client.MirControls
             MouseControl.OnMouseLeave();
             MouseControl = null;
         }
+        public virtual void Destroy()
+        {
+            Dispose(true);
+        }
         protected virtual void Activate()
         {
             if (ActiveControl == this)

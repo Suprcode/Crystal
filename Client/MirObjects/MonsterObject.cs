@@ -68,6 +68,8 @@ namespace Client.MirObjects
 
         public Color OldNameColor;
 
+        public bool IsElite, IsSub, IsBoss, IsPet;
+
         public SpellEffect CurrentEffect;
 
         public MonsterObject(uint objectID) : base(objectID) { }
@@ -95,6 +97,10 @@ namespace Client.MirObjects
             Hidden = info.Hidden;
             ShockTime = CMain.Time + info.ShockTime;
             BindingShotCenter = info.BindingShotCenter;
+            IsPet = info.IsPet;
+            IsElite = info.IsElite;
+            IsSub = info.IsSub;
+            IsBoss = info.IsBoss;
 
             Buffs = info.Buffs;
 
@@ -204,8 +210,14 @@ namespace Client.MirObjects
             //Special Actions
             switch (BaseImage)
             {
-                case Monster.BoneFamiliar:
-                case Monster.Shinsu:
+                case Monster.BoneFamiliar0:
+                case Monster.BoneFamiliar1:
+                case Monster.BoneFamiliar2:
+                case Monster.BoneFamiliar3:
+                case Monster.Shinsu0:
+                case Monster.Shinsu2:
+                case Monster.Shinsu4:
+                case Monster.Shinsu6:
                 case Monster.HolyDeva:
                 case Monster.HellKnight1:
                 case Monster.HellKnight2:
@@ -576,8 +588,29 @@ namespace Client.MirObjects
                         switch (BaseImage)
                         {
                             case Monster.Shinsu1:
-                                BodyLibrary = Libraries.Monsters[(ushort)Monster.Shinsu];
-                                BaseImage = Monster.Shinsu;
+                                BodyLibrary = Libraries.Monsters[(ushort)Monster.Shinsu0];
+                                BaseImage = Monster.Shinsu0;
+                                BaseSound = (ushort)BaseImage * 10;
+                                Frames = BodyLibrary.Frames ?? FrameSet.DefaultMonster;
+                                Frames.TryGetValue(CurrentAction, out Frame);
+                                break;
+                            case Monster.Shinsu3:
+                                BodyLibrary = Libraries.Monsters[(ushort)Monster.Shinsu2];
+                                BaseImage = Monster.Shinsu2;
+                                BaseSound = (ushort)BaseImage * 10;
+                                Frames = BodyLibrary.Frames ?? FrameSet.DefaultMonster;
+                                Frames.TryGetValue(CurrentAction, out Frame);
+                                break;
+                            case Monster.Shinsu5:
+                                BodyLibrary = Libraries.Monsters[(ushort)Monster.Shinsu4];
+                                BaseImage = Monster.Shinsu4;
+                                BaseSound = (ushort)BaseImage * 10;
+                                Frames = BodyLibrary.Frames ?? FrameSet.DefaultMonster;
+                                Frames.TryGetValue(CurrentAction, out Frame);
+                                break;
+                            case Monster.Shinsu7:
+                                BodyLibrary = Libraries.Monsters[(ushort)Monster.Shinsu6];
+                                BaseImage = Monster.Shinsu6;
                                 BaseSound = (ushort)BaseImage * 10;
                                 Frames = BodyLibrary.Frames ?? FrameSet.DefaultMonster;
                                 Frames.TryGetValue(CurrentAction, out Frame);
@@ -590,8 +623,14 @@ namespace Client.MirObjects
                     case MirAction.Dead:
                         switch (BaseImage)
                         {
-                            case Monster.Shinsu:
+                            case Monster.Shinsu0:
                             case Monster.Shinsu1:
+                            case Monster.Shinsu2:
+                            case Monster.Shinsu3:
+                            case Monster.Shinsu4:
+                            case Monster.Shinsu5:
+                            case Monster.Shinsu6:
+                            case Monster.Shinsu7:
                             case Monster.HolyDeva:
                             case Monster.GuardianRock:
                             case Monster.CharmedSnake://SummonSnakes
@@ -1352,9 +1391,27 @@ namespace Client.MirObjects
                                 case Monster.PurpleFaeFlower:
                                     Stoned = false;
                                     break;
-                                case Monster.Shinsu:
+                                case Monster.Shinsu0:
                                     BodyLibrary = Libraries.Monsters[(ushort)Monster.Shinsu1];
                                     BaseImage = Monster.Shinsu1;
+                                    BaseSound = (ushort)BaseImage * 10;
+                                    Frames = BodyLibrary.Frames ?? FrameSet.DefaultMonster;
+                                    break;
+                                case Monster.Shinsu2:
+                                    BodyLibrary = Libraries.Monsters[(ushort)Monster.Shinsu3];
+                                    BaseImage = Monster.Shinsu3;
+                                    BaseSound = (ushort)BaseImage * 10;
+                                    Frames = BodyLibrary.Frames ?? FrameSet.DefaultMonster;
+                                    break;
+                                case Monster.Shinsu4:
+                                    BodyLibrary = Libraries.Monsters[(ushort)Monster.Shinsu5];
+                                    BaseImage = Monster.Shinsu5;
+                                    BaseSound = (ushort)BaseImage * 10;
+                                    Frames = BodyLibrary.Frames ?? FrameSet.DefaultMonster;
+                                    break;
+                                case Monster.Shinsu6:
+                                    BodyLibrary = Libraries.Monsters[(ushort)Monster.Shinsu7];
+                                    BaseImage = Monster.Shinsu7;
                                     BaseSound = (ushort)BaseImage * 10;
                                     Frames = BodyLibrary.Frames ?? FrameSet.DefaultMonster;
                                     break;
@@ -1554,6 +1611,15 @@ namespace Client.MirObjects
                                                 break;
                                             case Monster.Shinsu1:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Shinsu1], 224 + (int)Direction * 6, 6, 6 * Frame.Interval, this));
+                                                break;
+                                            case Monster.Shinsu3:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Shinsu3], 224 + (int)Direction * 6, 6, 6 * Frame.Interval, this));
+                                                break;
+                                            case Monster.Shinsu5:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Shinsu5], 224 + (int)Direction * 6, 6, 6 * Frame.Interval, this));
+                                                break;
+                                            case Monster.Shinsu7:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Shinsu7], 224 + (int)Direction * 6, 6, 6 * Frame.Interval, this));
                                                 break;
                                             case Monster.DeathCrawler:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DeathCrawler], 248 + (int)Direction * 3, 3, 3 * Frame.Interval, this));
@@ -3644,8 +3710,14 @@ namespace Client.MirObjects
                 case Monster.PowerUpBead:
                     SoundManager.PlaySound(BaseSound + 0);
                     return;
-                case Monster.BoneFamiliar:
-                case Monster.Shinsu:
+                case Monster.BoneFamiliar0:
+                case Monster.BoneFamiliar1:
+                case Monster.BoneFamiliar2:
+                case Monster.BoneFamiliar3:
+                case Monster.Shinsu0:
+                case Monster.Shinsu2:
+                case Monster.Shinsu4:
+                case Monster.Shinsu6:
                 case Monster.HolyDeva:
                     SoundManager.PlaySound(BaseSound + 5);
                     return;
@@ -3721,7 +3793,10 @@ namespace Client.MirObjects
                 case Monster.ArmadilloElder:
                     SoundManager.PlaySound(BaseSound + 5);
                     return;
-                case Monster.Shinsu:
+                case Monster.Shinsu0:
+                case Monster.Shinsu2:
+                case Monster.Shinsu4:
+                case Monster.Shinsu6:
                     SoundManager.PlaySound(BaseSound + 6);
                     return;
             }
@@ -3949,6 +4024,8 @@ namespace Client.MirObjects
                 case Monster.BoneSpearman:
                 case Monster.MinotaurKing:
                 case Monster.WingedTigerLord:
+                case Monster.EnragedStalker:
+                case Monster.Gaia:
                 case Monster.ManectricClaw:
                 case Monster.ManectricKing:
                 case Monster.HellBolt:
@@ -4892,6 +4969,7 @@ namespace Client.MirObjects
                             break;
                     }
                     break;
+                    /*
                 case Monster.CatShaman:
                     switch (CurrentAction)
                     {
@@ -4919,6 +4997,7 @@ namespace Client.MirObjects
                             break;
                     }
                     break;
+                    */
                 case Monster.TucsonGeneral:
                     switch (CurrentAction)
                     {

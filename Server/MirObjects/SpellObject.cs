@@ -20,6 +20,9 @@ namespace Server.MirObjects
         public override Point CurrentLocation { get; set; }
         public override MirDirection Direction { get; set; }
         public override ushort Level { get; set; }
+        public override ushort Reborn { get; set; }
+        public override ushort InstanceStage { get; set; }
+        public override ushort ChallengeStage { get; set; }
         public override bool Blocking
         {
             get
@@ -30,7 +33,7 @@ namespace Server.MirObjects
 
         public long TickTime, StartTime;
         public MapObject Caster;
-        public int Value, TickSpeed, BonusDmg;
+        public int Value, TickSpeed, BonusDmg, PvPValue;
         public Spell Spell;
         public Point CastLocation;
         public bool Show, Decoration;
@@ -99,6 +102,11 @@ namespace Server.MirObjects
                 Despawn();
                 return;
             }
+            if (Caster != null && Spell == Spell.FireWall && FindObject(Caster.ObjectID, 20) == null)
+            {
+                CurrentMap.RemoveObject(this); Despawn();
+                return;
+            }
 
             if (Envir.Time < TickTime) return;
             TickTime = Envir.Time + TickSpeed;
@@ -116,6 +124,58 @@ namespace Server.MirObjects
             if (Envir.Time < StartTime) return;
             switch (Spell)
             {
+                case Spell.PheonixExplosion:
+                    {
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                        if (ob.Dead) return;
+
+                        if (!ob.IsAttackTarget(Caster)) return;
+
+                        if (ob.Race == ObjectType.Player)
+                            ob.Attacked(((PlayerObject)Caster), PvPValue, DefenceType.MAC, false);
+                        else
+                            ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
+                    }
+                    break;
+                case Spell.FireExplode:
+                    {
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                        if (ob.Dead) return;
+
+                        if (!ob.IsAttackTarget(Caster)) return;
+
+                        if (ob.Race == ObjectType.Player)
+                            ob.Attacked(((PlayerObject)Caster), PvPValue, DefenceType.MAC, false);
+                        else
+                            ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
+                    }
+                    break;
+                case Spell.FireExplodeFW:
+                    {
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                        if (ob.Dead) return;
+
+                        //if (Caster != null && Caster.ActiveHAH == false) return;
+                        if (!ob.IsAttackTarget(Caster)) return;
+                        if (ob.Race == ObjectType.Player)
+                            ob.Attacked(((PlayerObject)Caster), PvPValue, DefenceType.MAC, false);
+                        else
+                            ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
+                    }
+                    break;
+                case Spell.HeavenAndHell:
+                    {
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                        if (ob.Dead) return;
+
+                        //if (Caster != null && Caster.ActiveHAH == false) return;
+                        if (!ob.IsAttackTarget(Caster)) return;
+                        if (ob.Race == ObjectType.Player)
+                            ob.Attacked(((PlayerObject)Caster), PvPValue, DefenceType.MAC, false);
+                        else
+                            ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
+                    }
+                    break;
                 case Spell.FireWall:
                     {
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
@@ -139,17 +199,33 @@ namespace Server.MirObjects
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
 
+                        //if (Caster != null && Caster.ActivePSNC) return;
                         if (!ob.IsAttackTarget(Caster)) return;
-                        ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
+                        if (ob.Race == ObjectType.Player)
+                            ob.Attacked(((PlayerObject)Caster), PvPValue, DefenceType.MAC, false);
+                        else
+                            ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
                         if (!ob.Dead)
-                            ob.ApplyPoison(new Poison
-                            {
-                                Duration = 12,
-                                Owner = Caster,
-                                PType = PoisonType.Green,
-                                TickSpeed = TickSpeed,
-                                Value = (Caster.Stats[Stat.MinSC] + Caster.Stats[Stat.MaxSC]) / 2 + BonusDmg
-                            }, Caster, false, false);
+                        {
+                            if (ob.Race == ObjectType.Player)
+                                ob.ApplyPoison(new Poison
+                                {
+                                    Duration = 15,
+                                    Owner = Caster,
+                                    PType = PoisonType.Green,
+                                    TickSpeed = 2000,
+                                    Value = PvPValue / 20,
+                                }, Caster);
+                            else
+                                ob.ApplyPoison(new Poison
+                                {
+                                    Duration = 15,
+                                    Owner = Caster,
+                                    PType = PoisonType.Green,
+                                    TickSpeed = 2000,
+                                    Value = Value / 20,
+                                }, Caster);
+                        }
                     }
                     break;
                 case Spell.Blizzard:
@@ -412,9 +488,10 @@ namespace Server.MirObjects
 
             for (int i = 0; i < Buffs.Count; i++)
             {
-                if (Buffs[i].NextTime >= time && Buffs[i].NextTime > Envir.Time) continue;
-                time = Buffs[i].NextTime;
+                if (Buffs[i].ExpireTime >= time && Buffs[i].ExpireTime > Envir.Time) continue;
+                time = Buffs[i].ExpireTime;
             }
+
 
             if (OperateTime <= Envir.Time || time < OperateTime)
                 OperateTime = time;
@@ -476,6 +553,8 @@ namespace Server.MirObjects
                 case Spell.HornedSorcererDustTornado:
                 case Spell.HornedCommanderRockFall:
                 case Spell.HornedCommanderRockSpike:
+                case Spell.FireExplodeFW:
+                case Spell.HeavenAndHell:
                     if (!Show)
                         return null;
 

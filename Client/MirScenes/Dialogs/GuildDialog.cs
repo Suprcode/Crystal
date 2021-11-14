@@ -38,8 +38,8 @@ namespace Client.MirScenes.Dialogs
         #endregion
 
         #region GuildRight
-        public MirButton BuffButton, StatusButton;
-        public MirImageControl BuffPage, StatusPage, StatusPageBase;
+        public MirButton WarsButton, BuffButton, StatusButton;
+        public MirImageControl WarsPage, WarsPageBase, BuffPage, StatusPage, StatusPageBase;
 
         public GuildBuffButton[] Buffs;
         private bool RequestedList = false;
@@ -99,11 +99,11 @@ namespace Client.MirScenes.Dialogs
         #region StatusPagePub
         public MirLabel StatusLevelLabel;
         public MirLabel StatusHeaders;
-        public MirLabel StatusGuildName, StatusLevel, StatusMembers;
+        public MirLabel StatusGuildName, StatusLevel, StatusMembers, TaxRate;
         public MirImageControl StatusExpBar;
         public MirLabel StatusExpLabel, RecruitMemberLabel;
-        public MirTextBox MembersRecruitName;
-        public MirButton RecruitMemberButton;
+        public MirTextBox MembersRecruitName, TaxRateBox;
+        public MirButton RecruitMemberButton, AdjustTaxButton;
         #endregion
 
         #region StoragePagePub
@@ -123,6 +123,12 @@ namespace Client.MirScenes.Dialogs
         public MirLabel[] RanksOptionsTexts;
         public MirDropDownBox RanksSelectBox;
         public MirButton RanksSaveName, UpButton, DownButton, PositionBar;
+        #endregion
+
+        #region WarsPagePub
+        public MirLabel WarsHeaders;
+        public MirLabel WarsGuildName, WarsRank, WarsWins, WarsLoses;
+        public MirButton RankprevButton, RanknextButton;
         #endregion
 
         #region BuffPagePub
@@ -191,15 +197,15 @@ namespace Client.MirScenes.Dialogs
             };
             RankButton.Click += (o, e) => LeftDialog(3);
 
-            StatusButton = new MirButton
+            WarsButton = new MirButton
             {
                 Library = Libraries.Title,
                 Parent = this,
-                Index = 103,
-                Location = new Point(501, 38),
+                Index = 97,
+                Location = new Point(359, 38),
                 Sound = SoundList.ButtonA,
             };
-            StatusButton.Click += (o, e) => RightDialog(0);
+            WarsButton.Click += (o, e) => RightDialog(0);
 
             BuffButton = new MirButton
             {
@@ -211,6 +217,16 @@ namespace Client.MirScenes.Dialogs
                 Visible = false,
             };
             BuffButton.Click += (o, e) => RightDialog(1);
+
+            StatusButton = new MirButton
+            {
+                Library = Libraries.Title,
+                Parent = this,
+                Index = 103,
+                Location = new Point(501, 38),
+                Sound = SoundList.ButtonA,
+            };
+            StatusButton.Click += (o, e) => RightDialog(2);
 
             CloseButton = new MirButton
             {
@@ -499,6 +515,104 @@ namespace Client.MirScenes.Dialogs
 
             #endregion
 
+            #region WarsDialogUI 
+            WarsPage = new MirImageControl()
+            {
+                Parent = this,
+                Size = new Size(230, 372),
+                Location = new Point(355, 60),
+                Visible = true
+            };
+
+            WarsPageBase = new MirImageControl()
+            {
+                Parent = WarsPage,
+                Library = Libraries.Prguse,
+                Index = 1849,
+                Visible = true,
+                Location = new Point(10, 2)
+            };
+
+            WarsHeaders = new MirLabel()
+            {
+                Location = new Point(7, 47),
+                DrawFormat = TextFormatFlags.Right,
+                Size = new Size(75, 300),
+                NotControl = true,
+                Text = "War Points:\n\nWins:\n\nLoses:\n\nEnemy Guilds:",
+                Visible = true,
+                Parent = WarsPage,
+                ForeColour = Color.Gray,
+            };
+
+            WarsRank = new MirLabel()
+            {
+                Location = new Point(82, 47),
+                Size = new Size(120, 200),
+                NotControl = true,
+                Text = "",
+                Visible = true,
+                Parent = WarsPage,
+            };
+
+            WarsWins = new MirLabel()
+            {
+                Location = new Point(82, 73),
+                Size = new Size(120, 200),
+                NotControl = true,
+                Text = "",
+                Visible = true,
+                Parent = WarsPage,
+            };
+
+            WarsLoses = new MirLabel()
+            {
+                Location = new Point(82, 99),
+                Size = new Size(120, 200),
+                NotControl = true,
+                Text = "",
+                Visible = true,
+                Parent = WarsPage,
+            };
+
+            WarsGuildName = new MirLabel()
+            {
+                Location = new Point(82, 125),
+                Size = new Size(120, 200),
+                NotControl = true,
+                Text = "",
+                Visible = true,
+                Parent = WarsPage,
+            };
+
+            RankprevButton = new MirButton()
+            {
+                Visible = true,
+                Location = new Point(90, 314),
+                Library = Libraries.Prguse2,
+                Index = 240,
+                HoverIndex = 241,
+                PressedIndex = 242,
+                Sound = SoundList.ButtonA,
+                Parent = WarsPage,
+                Hint = "Page Back"
+            };
+
+            RanknextButton = new MirButton()
+            {
+                Visible = true,
+                Location = new Point(120, 314),
+                Library = Libraries.Prguse2,
+                Index = 243,
+                HoverIndex = 244,
+                PressedIndex = 245,
+                Sound = SoundList.ButtonA,
+                Parent = WarsPage,
+                Hint = "Page Forward"
+            };
+
+            #endregion
+
             #region StatusDialogUI 
             StatusPage = new MirImageControl()
             {
@@ -624,6 +738,42 @@ namespace Client.MirScenes.Dialogs
                 Text = "Recruit Member",
                 Size = new Size(150, 15)
             };
+
+            TaxRate = new MirLabel()
+            {
+                Visible = true,
+                Location = new Point(36, 242),
+                NotControl = true,
+                Parent = StatusPage,
+                Text = "Current Gold Tax",
+                AutoSize = true
+            };
+            TaxRateBox = new MirTextBox()
+            {
+                Location = new Point(36, 257),
+                Size = new Size(130, 21),
+                MaxLength = 20,
+                Parent = StatusPage,
+                Visible = true,
+                Text = "",
+                BackColour = Color.FromArgb(255, 25, 25, 25),
+                Border = true,
+                BorderColour = Color.FromArgb(255, 35, 35, 35),
+                CanLoseFocus = true,
+            };
+
+            AdjustTaxButton = new MirButton()
+            {
+                Parent = StatusPage,
+                Enabled = true,
+                Visible = true,
+                Location = new Point(170, 257),
+                Library = Libraries.Title,
+                Index = 356,
+                HoverIndex = 357,
+                PressedIndex = 358
+            };
+            AdjustTaxButton.Click += (o, e) => AdjustTax();
 
             #endregion
 
@@ -1089,7 +1239,7 @@ namespace Client.MirScenes.Dialogs
                     }
                     Buffs[i].Visible = true;
                     GuildBuff Buff = FindGuildBuff(BuffInfo.Id);
-                    Buffs[i].Name.Text = BuffInfo.Name;
+                    Buffs[i].Name.Text = BuffInfo.name;
                     Buffs[i].Icon.Index = BuffInfo.Icon;
 
                     if (Buff == null)
@@ -1203,7 +1353,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(4, 4),
                 OutLine = true,
                 Parent = GameScene.Scene.GuildBuffLabel,
-                Text = Buff.Name
+                Text = Buff.name
             };
 
             GameScene.Scene.GuildBuffLabel.Size = new Size(Math.Max(GameScene.Scene.GuildBuffLabel.Size.Width, HintName.DisplayRectangle.Right + 4),
@@ -1501,7 +1651,7 @@ namespace Client.MirScenes.Dialogs
         {
             for (int i = 0; i < Ranks.Count; i++)
                 for (int j = 0; j < Ranks[i].Members.Count; j++)
-                    if (Ranks[i].Members[j].Name == name)
+                    if (Ranks[i].Members[j].name == name)
                         Ranks[i].Members[j].Online = online;
             UpdateMembers();
         }
@@ -1527,6 +1677,25 @@ namespace Client.MirScenes.Dialogs
             Network.Enqueue(new C.EditGuildMember { ChangeType = 0, Name = MembersRecruitName.Text });
             LastGuildMsg = CMain.Time + 5000;
             MembersRecruitName.Text = "";
+        }
+
+        public void AdjustTax()
+        {
+            if (MyRankId != 0) return;
+            if (LastGuildMsg > CMain.Time) return;
+            if (!byte.TryParse(TaxRateBox.Text, out byte tempB))
+            {
+                MirMessageBox msgBox = new MirMessageBox(string.Format("In valid input"), MirMessageBoxButtons.OK, true);
+                msgBox.Show();
+                LastGuildMsg = CMain.Time + 5000;
+                return;
+            }
+            if (tempB > 25)
+                tempB = 25;
+            if (tempB < 5)
+                tempB = 5;
+            Network.Enqueue(new C.AdjustGuildTax { Rate = tempB });
+            LastGuildMsg = CMain.Time + 5000;
         }
 
         public void DeleteMember(int Index)
@@ -1594,10 +1763,20 @@ namespace Client.MirScenes.Dialogs
                 MembersRecruitName.Visible = false;
                 RecruitMemberLabel.Visible = false;
             }
+            if (MyRankId == 0)
+            {
+                TaxRateBox.ReadOnly = false;
+                AdjustTaxButton.Visible = true;
+            }
+            else
+            {
+                TaxRateBox.ReadOnly = true;
+                AdjustTaxButton.Visible = false;
+            }
 
             int Offset = 0;
             int RowCount = 0;
-            DateTime now = CMain.Now;
+            DateTime now = DateTime.Now;
             for (int i = 0; i < Ranks.Count; i++)
                 for (int j = 0; j < Ranks[i].Members.Count; j++)
                 {
@@ -1614,12 +1793,12 @@ namespace Client.MirScenes.Dialogs
                             MembersRanks[RowCount].Enabled = true;
                         else
                             MembersRanks[RowCount].Enabled = false;
-                        if ((MyOptions.HasFlag(GuildRankOptions.CanKick)) && (Ranks[i].Index >= MyRankId) && (Ranks[i].Members[j].Name != MapControl.User.Name)/* && (Ranks[i].Index != 0)*/)
+                        if ((MyOptions.HasFlag(GuildRankOptions.CanKick)) && (Ranks[i].Index >= MyRankId) && (Ranks[i].Members[j].name != MapControl.User.Name)/* && (Ranks[i].Index != 0)*/)
                             MembersDelete[RowCount].Visible = true;
                         else
                             MembersDelete[RowCount].Visible = false;
                         MembersRanks[RowCount].SelectedIndex = Ranks[i].Index;
-                        MembersName[RowCount].Text = Ranks[i].Members[j].Name;
+                        MembersName[RowCount].Text = Ranks[i].Members[j].name;
                         if (Ranks[i].Members[j].Online)
                             MembersStatus[RowCount].ForeColour = Color.LimeGreen;
                         else
@@ -1794,7 +1973,7 @@ namespace Client.MirScenes.Dialogs
             MyRankId = New.Index;
             if (OldRank >= Ranks.Count) return;
             for (int i = 0; i < Ranks[OldRank].Members.Count; i++)
-                if (Ranks[OldRank].Members[i].Name == MapObject.User.Name)
+                if (Ranks[OldRank].Members[i].name == MapObject.User.Name)
                 {
                     Member = Ranks[OldRank].Members[i];
                     Ranks[OldRank].Members.Remove(Member);
@@ -1821,7 +2000,7 @@ namespace Client.MirScenes.Dialogs
                 {
                     if (Ranks[i].Name == MapObject.User.GuildRankName)
                         for (int j = 0; j < Ranks[i].Members.Count; j++)
-                            if (Ranks[i].Members[j].Name == MapObject.User.Name)
+                            if (Ranks[i].Members[j].name == MapObject.User.Name)
                             {
                                 MapObject.User.GuildRankName = New.Name;
                                 MyOptions = New.Options;
@@ -2072,21 +2251,27 @@ namespace Client.MirScenes.Dialogs
         #region NoticeDialogPages
         public void RightDialog(byte Rpageid)
         {
+            WarsPage.Visible = false;
             StatusPage.Visible = false;
             BuffPage.Visible = false;
 
+            WarsButton.Index = 97;
             StatusButton.Index = 103;
             BuffButton.Index = 95;
 
             switch (Rpageid)
             {
                 case 0:
-                    StatusPage.Visible = true;
-                    StatusButton.Index = 104;
+                    WarsPage.Visible = true;
+                    WarsButton.Index = 98;
                     break;
                 case 1:
                     BuffPage.Visible = true;
                     BuffButton.Index = 96;
+                    break;
+                case 2:
+                    StatusPage.Visible = true;
+                    StatusButton.Index = 104;
                     break;
             }
         }
@@ -2178,7 +2363,17 @@ namespace Client.MirScenes.Dialogs
             }
             if (StatusPage.Visible)
                 StatusButton.Index = 104;
-
+            RightDialog(0);
+            if (MyRankId == 0)
+            {
+                TaxRateBox.ReadOnly = false;
+                AdjustTaxButton.Visible = true;
+            }
+            else
+            {
+                TaxRateBox.ReadOnly = true;
+                AdjustTaxButton.Visible = false;
+            }
 
         }
         #endregion

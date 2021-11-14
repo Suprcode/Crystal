@@ -165,11 +165,15 @@ namespace LibraryViewer
                 case "CHair":
                 case "CHumEffect":
                 case "CWeapon":
+                case "CWeapon1":
+                case "CWeapon2":
+                case "CWeapon3":
+                case "CWeapon4":
                 case "Fishing":
                     switch (e.ItemIndex)
                     {
                         default:
-                            if (showFrontSide) getImageIndex = 16;
+                            if (showFrontSide) getImageIndex = 8;
                             else getImageIndex = 0;
                             break;
                     }

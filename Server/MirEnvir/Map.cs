@@ -807,7 +807,7 @@ namespace Server.MirEnvir
 
             if (player == null || player.Info == null) return;
 
-            int value, value2;
+            int value, value2, pvpDamage;
             Point location;
             Cell cell;
             MirDirection dir;
@@ -815,6 +815,309 @@ namespace Server.MirEnvir
             Point front;
             switch (magic.Spell)
             {
+                #region PheonixExplosion
+
+                case Spell.PheonixExplosion:
+                    value = (int)data[2];
+                    location = (Point)data[3];
+                    pvpDamage = (int)data[4];
+
+                    player.LevelMagic(magic);
+
+                    dir = MirDirection.Up;
+                    for (int i = 0; i < 4; i++)
+                    {
+                        location = Functions.PointMove((Point)data[3], dir, 1);
+                        dir += 2;
+
+                        if (!ValidPoint(location)) continue;
+
+                        cell = GetCell(location);
+                        bool cast = false;
+
+                        if (cell.Objects != null)
+                            for (int o = 0; o < cell.Objects.Count; o++)
+                            {
+                                MapObject target = cell.Objects[o];
+                                switch (target.Race)
+                                {
+                                    case ObjectType.Monster:
+                                    case ObjectType.Player:
+                                        //Only targets
+                                        if (target.IsAttackTarget(player))
+                                        {
+                                            if (target.Attacked(player, value, DefenceType.MAC, false) > 0)
+                                                train = true;
+                                            cast = true;
+                                        }
+                                        break;
+                                }
+                                if (target.Race != ObjectType.Spell || ((SpellObject)target).Spell != Spell.PheonixExplosion) continue;
+
+                                cast = true;
+                                break;
+                            }
+
+                        if (!cast) continue;
+
+                        SpellObject ob = new SpellObject
+                        {
+                            Spell = Spell.PheonixExplosion,
+                            Value = value,
+                            ExpireTime = Envir.Time + 10000,
+                            TickSpeed = 2000,
+                            Caster = player,
+                            CurrentLocation = location,
+                            CurrentMap = this,
+                            PvPValue = pvpDamage
+                        };
+                        AddObject(ob);
+                        ob.Spawned();
+                    }
+
+                    break;
+
+                #endregion
+                #region FireExplode
+
+                case Spell.FireExplode:
+                    value = (int)data[2];
+                    location = (Point)data[3];
+                    pvpDamage = (int)data[4];
+
+                    train = true;
+                    {
+                        bool show2 = true;
+
+                        for (int y = location.Y - 2; y <= location.Y + 2; y++)
+                        {
+                            if (y < 0) continue;
+                            if (y >= Height) break;
+
+                            for (int x = location.X - 2; x <= location.X + 2; x++)
+                            {
+                                if (x < 0) continue;
+                                if (x >= Width) break;
+
+                                cell = GetCell(x, y);
+
+                                if (!cell.Valid) continue;
+
+                                bool cast = true;
+                                if (cell.Objects != null)
+                                    for (int o = 0; o < cell.Objects.Count; o++)
+                                    {
+                                        MapObject target = cell.Objects[o];
+                                        if (target.Race != ObjectType.Spell || ((SpellObject)target).Spell != Spell.FireExplodeFW) continue;
+
+                                        cast = false;
+                                        break;
+                                    }
+
+                                if (!cast) continue;
+
+                                SpellObject ob = new SpellObject
+                                {
+                                    Spell = Spell.FireExplodeFW,
+                                    Value = value,
+                                    ExpireTime = Envir.Time + 5000,
+                                    TickSpeed = 1000,
+                                    Caster = player,
+                                    CurrentLocation = new Point(x, y),
+                                    CastLocation = location,
+                                    Show = show2,
+                                    CurrentMap = this,
+                                    PvPValue = pvpDamage
+                                };
+
+                                show2 = false;
+
+                                AddObject(ob);
+                                ob.Spawned();
+                            }
+                        }
+                    }
+
+                    break;
+
+                #endregion
+                #region FireExplodeFW
+
+                case Spell.FireExplodeFW:
+                    value = (int)data[2];
+                    location = (Point)data[3];
+                    pvpDamage = (int)data[4];
+
+                    train = true;
+                    {
+                        bool show3 = true;
+
+                        for (int y = location.Y - 2; y <= location.Y + 2; y++)
+                        {
+                            if (y < 0) continue;
+                            if (y >= Height) break;
+
+                            for (int x = location.X - 2; x <= location.X + 2; x++)
+                            {
+                                if (x < 0) continue;
+                                if (x >= Width) break;
+
+                                cell = GetCell(x, y);
+
+                                if (!cell.Valid) continue;
+
+                                bool cast = true;
+                                if (cell.Objects != null)
+                                    for (int o = 0; o < cell.Objects.Count; o++)
+                                    {
+                                        MapObject target = cell.Objects[o];
+                                        if (target.Race != ObjectType.Spell || ((SpellObject)target).Spell != Spell.FireExplodeFW) continue;
+
+                                        cast = false;
+                                        break;
+                                    }
+
+                                if (!cast) continue;
+
+                                SpellObject ob = new SpellObject
+                                {
+                                    Spell = Spell.FireExplodeFW,
+                                    Value = value,
+                                    ExpireTime = Envir.Time + 5000,
+                                    TickSpeed = 1000,
+                                    Caster = player,
+                                    CurrentLocation = new Point(x, y),
+                                    CastLocation = location,
+                                    Show = show3,
+                                    CurrentMap = this,
+                                    PvPValue = pvpDamage
+                                };
+
+                                show3 = false;
+
+                                AddObject(ob);
+                                ob.Spawned();
+                            }
+                        }
+                    }
+
+                    break;
+
+                #endregion
+
+                #region SwordsOfLight
+
+                case Spell.SwordsOfLight:
+                    value = (int)data[2];
+                    location = (Point)data[3];
+                    pvpDamage = (int)data[4];
+
+                    for (int y = location.Y - 1; y <= location.Y + 1; y++)
+                    {
+                        if (y < 0) continue;
+                        if (y >= Height) break;
+
+                        for (int x = location.X - 1; x <= location.X + 1; x++)
+                        {
+                            if (x < 0) continue;
+                            if (x >= Width) break;
+
+                            cell = GetCell(x, y);
+
+                            if (!cell.Valid || cell.Objects == null) continue;
+
+                            for (int i = 0; i < cell.Objects.Count; i++)
+                            {
+                                MapObject target = cell.Objects[i];
+                                switch (target.Race)
+                                {
+                                    case ObjectType.Monster:
+                                    case ObjectType.Player:
+                                        if (target.IsAttackTarget(player))
+                                        {
+                                            if (target.Race == ObjectType.Player &&
+                                                target.Attacked(player, pvpDamage, DefenceType.MAC, false) > 0)
+                                                train = true;
+                                            else if (target.Race != ObjectType.Player &&
+                                            target.Attacked(player, value, DefenceType.MAC, false) > 0)
+                                                train = true;
+                                        }
+                                        break;
+                                }
+                            }
+
+                        }
+
+                    }
+
+                    break;
+
+                #endregion
+                #region HeavenAndHell
+
+                case Spell.HeavenAndHell:
+                    value = (int)data[2];
+                    location = (Point)data[3];
+                    pvpDamage = (int)data[4];
+
+                    bool show = true;
+
+                    train = true;
+                    {
+
+                        for (int y = location.Y - 3; y <= location.Y + 3; y++)
+                        {
+                            if (y < 0) continue;
+                            if (y >= Height) break;
+
+                            for (int x = location.X - 3; x <= location.X + 3; x++)
+                            {
+                                if (x < 0) continue;
+                                if (x >= Width) break;
+
+                                cell = GetCell(x, y);
+
+                                if (!cell.Valid) continue;
+
+                                bool cast = true;
+                                if (cell.Objects != null)
+                                    for (int o = 0; o < cell.Objects.Count; o++)
+                                    {
+                                        MapObject target = cell.Objects[o];
+
+                                        if (target.Race != ObjectType.Spell || ((SpellObject)target).Spell != Spell.HeavenAndHell) continue;
+
+                                        cast = false;
+                                        break;
+                                    }
+
+                                if (!cast) continue;
+
+                                SpellObject ob = new SpellObject
+                                {
+                                    Spell = Spell.HeavenAndHell,
+                                    Value = value,
+                                    ExpireTime = Envir.Time + 5000,
+                                    TickSpeed = 3000,
+                                    Caster = player,
+                                    CurrentLocation = new Point(x, y),
+                                    CastLocation = location,
+                                    Show = show,
+                                    CurrentMap = this,
+                                    PvPValue = pvpDamage
+                                };
+
+                                show = false;
+
+                                AddObject(ob);
+                                ob.Spawned();
+                            }
+                        }
+                    }
+
+                    break;
+
+                #endregion
 
                 #region HellFire
 
@@ -972,13 +1275,12 @@ namespace Server.MirEnvir
 
                 #endregion
 
-                #region SoulShield, BlessedArmour
+                #region SoulShield
 
                 case Spell.SoulShield:
-                case Spell.BlessedArmour:
                     value = (int)data[2];
                     location = (Point)data[3];
-                    BuffType type = magic.Spell == Spell.SoulShield ? BuffType.SoulShield : BuffType.BlessedArmour;
+                    value2 = (int)data[4];
 
                     for (int y = location.Y - 3; y <= location.Y + 3; y++)
                     {
@@ -1004,12 +1306,58 @@ namespace Server.MirEnvir
                                         //Only targets
                                         if (target.IsFriendlyTarget(player))
                                         {
-                                            var stats = new Stats
-                                            {
-                                                [type == BuffType.SoulShield ? Stat.MaxAC : Stat.MaxMAC] = target.Level / 7 + 4
-                                            };
+                                            int SSRate = magic.Level == 0 ? Settings.SoulShieldRateLv0 : magic.Level == 1 ? Settings.SoulShieldRateLv1 : magic.Level == 2 ? Settings.SoulShieldRateLv2 : Settings.SoulShieldRateLv3;
+                                            value2 = (int)(player.Stats[Stat.MaxSC] * SSRate / 100);
+                                            target.AddBuff(BuffType.SoulShield, player, (Settings.Second * value), new Stats { [Stat.MaxAC] = value2, [Stat.MinAC] = value2 });
+                                            target.OperateTime = 0;
+                                            train = true;
+                                        }
+                                        break;
+                                }
+                            }
 
-                                            target.AddBuff(type, player, Settings.Second * value, stats);
+                        }
+
+                    }
+
+                    break;
+
+                #endregion
+
+                #region BlessedArmour
+
+                case Spell.BlessedArmour:
+                    value = (int)data[2];
+                    location = (Point)data[3];
+                    value2 = (int)data[4];
+
+                    for (int y = location.Y - 3; y <= location.Y + 3; y++)
+                    {
+                        if (y < 0) continue;
+                        if (y >= Height) break;
+
+                        for (int x = location.X - 3; x <= location.X + 3; x++)
+                        {
+                            if (x < 0) continue;
+                            if (x >= Width) break;
+
+                            cell = GetCell(x, y);
+
+                            if (!cell.Valid || cell.Objects == null) continue;
+
+                            for (int i = 0; i < cell.Objects.Count; i++)
+                            {
+                                MapObject target = cell.Objects[i];
+                                switch (target.Race)
+                                {
+                                    case ObjectType.Monster:
+                                    case ObjectType.Player:
+                                        //Only targets
+                                        if (target.IsFriendlyTarget(player))
+                                        {
+                                            int BARate = magic.Level == 0 ? Settings.BlessedArmourRateLv0 : magic.Level == 1 ? Settings.BlessedArmourRateLv1 : magic.Level == 2 ? Settings.BlessedArmourRateLv2 : Settings.BlessedArmourRateLv3;
+                                            value2 = (int)(player.Stats[Stat.MaxSC] * BARate / 100);
+                                            target.AddBuff(BuffType.BlessedArmour, player, (Settings.Second * value), new Stats { [Stat.MaxMAC] = value2, [Stat.MinMAC] = value2 });
                                             target.OperateTime = 0;
                                             train = true;
                                         }
@@ -1030,6 +1378,7 @@ namespace Server.MirEnvir
                 case Spell.FireWall:
                     value = (int)data[2];
                     location = (Point)data[3];
+                    pvpDamage = (int)data[4];
 
                     player.LevelMagic(magic);
 
@@ -1051,15 +1400,16 @@ namespace Server.MirEnvir
                         if (cast)
                         {
                             SpellObject ob = new SpellObject
-                                {
-                                    Spell = Spell.FireWall,
-                                    Value = value,
-                                    ExpireTime = Envir.Time + (10 + value / 2) * 1000,
-                                    TickSpeed = 2000,
-                                    Caster = player,
-                                    CurrentLocation = location,
-                                    CurrentMap = this,
-                                };
+                            {
+                                Spell = Spell.FireWall,
+                                Value = value,
+                                ExpireTime = Envir.Time + (10 + value / 2) * 10000,
+                                TickSpeed = 2000,
+                                Caster = player,
+                                CurrentLocation = location,
+                                CurrentMap = this,
+                                PvPValue = pvpDamage
+                            };
                             AddObject(ob);
                             ob.Spawned();
                         }
@@ -1092,11 +1442,12 @@ namespace Server.MirEnvir
                         {
                             Spell = Spell.FireWall,
                             Value = value,
-                            ExpireTime = Envir.Time + (10 + value / 2) * 1000,
+                            ExpireTime = Envir.Time + (10 + value / 2) * 10000,
                             TickSpeed = 2000,
                             Caster = player,
                             CurrentLocation = location,
                             CurrentMap = this,
+                            PvPValue = pvpDamage
                         };
                         AddObject(ob);
                         ob.Spawned();
@@ -1227,6 +1578,7 @@ namespace Server.MirEnvir
                 case Spell.StormEscape:
                     value = (int)data[2];
                     location = (Point)data[3];
+                    pvpDamage = (int)data[4];
                     for (int y = location.Y - 2; y <= location.Y + 2; y++)
                     {
                         if (y < 0) continue;
@@ -1250,8 +1602,10 @@ namespace Server.MirEnvir
                                     case ObjectType.Player:
                                         //Only targets
                                         if (!target.IsAttackTarget(player)) break;
-
-                                        if (target.Attacked(player, magic.Spell == Spell.ThunderStorm && !target.Undead ? value / 10 : value, DefenceType.MAC, false) <= 0)
+                                        if (target.Race == ObjectType.Player)
+                                            target.Attacked(player, magic.Spell == Spell.ThunderStorm ? pvpDamage / 10 : pvpDamage, DefenceType.MAC, false);
+                                        else if (target.Race != ObjectType.Player &&
+                                            target.Attacked(player, magic.Spell == Spell.ThunderStorm && !target.Undead ? value / 10 : value, DefenceType.MAC, false) <= 0)
                                         {
                                             if (target.Undead)
                                             {
@@ -1316,41 +1670,49 @@ namespace Server.MirEnvir
                     value = (int)data[2];
                     location = (Point)data[3];
                     byte bonusdmg = (byte)data[4];
+                    pvpDamage = (int)data[5];
                     train = true;
-                    bool show = true;
-
-                    for (int y = location.Y - 1; y <= location.Y + 1; y++)
                     {
-                        if (y < 0) continue;
-                        if (y >= Height) break;
+                        show = true;
 
-                        for (int x = location.X - 1; x <= location.X + 1; x++)
+                        for (int y = location.Y - 1; y <= location.Y + 1; y++)
                         {
-                            if (x < 0) continue;
-                            if (x >= Width) break;
+                            if (y < 0)
+                                continue;
+                            if (y >= Height)
+                                break;
 
-                            cell = GetCell(x, y);
-
-                            if (!cell.Valid) continue;
-
-                            bool cast = true;
-                            if (cell.Objects != null)
-                                for (int o = 0; o < cell.Objects.Count; o++)
-                                {
-                                    MapObject target = cell.Objects[o];
-                                    if (target.Race != ObjectType.Spell || ((SpellObject)target).Spell != Spell.PoisonCloud) continue;
-
-                                    cast = false;
+                            for (int x = location.X - 1; x <= location.X + 1; x++)
+                            {
+                                if (x < 0)
+                                    continue;
+                                if (x >= Width)
                                     break;
-                                }
 
-                            if (!cast) continue;
+                                cell = GetCell(x, y);
 
-                            SpellObject ob = new SpellObject
+                                if (!cell.Valid)
+                                    continue;
+
+                                bool cast = true;
+                                if (cell.Objects != null)
+                                    for (int o = 0; o < cell.Objects.Count; o++)
+                                    {
+                                        MapObject target = cell.Objects[o];
+                                        if (target.Race != ObjectType.Spell || ((SpellObject)target).Spell != Spell.PoisonCloud)
+                                            continue;
+
+                                        cast = false;
+                                        break;
+                                    }
+
+                                if (!cast)
+                                    continue;
+
+                                SpellObject ob = new SpellObject
                                 {
                                     Spell = Spell.PoisonCloud,
                                     Value = value,
-                                    BonusDmg = bonusdmg,
                                     ExpireTime = Envir.Time + 6000,
                                     TickSpeed = 1000,
                                     Caster = player,
@@ -1358,16 +1720,19 @@ namespace Server.MirEnvir
                                     CastLocation = location,
                                     Show = show,
                                     CurrentMap = this,
+                                    PvPValue = pvpDamage
                                 };
 
-                            show = false;
+                                show = false;
 
-                            AddObject(ob);
-                            ob.Spawned();
+                                AddObject(ob);
+                                ob.Spawned();
+                            }
                         }
-                    } 
+                    }
 
                     break;
+
 
                 #endregion
 
@@ -2148,7 +2513,7 @@ namespace Server.MirEnvir
                     }
                     break;
 
-                    #endregion
+                #endregion
             }
 
             if (train)

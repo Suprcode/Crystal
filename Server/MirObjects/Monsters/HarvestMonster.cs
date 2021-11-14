@@ -5,7 +5,7 @@ using Server.MirDatabase;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
-{    
+{
     public class HarvestMonster : MonsterObject
     {
         protected short Quality;
@@ -29,7 +29,7 @@ namespace Server.MirObjects.Monsters
                 {
                     if (player.CheckGroupQuestItem(_drops[i]))
                     {
-                        _drops.RemoveAt(i); 
+                        _drops.RemoveAt(i);
                     }
                     else
                     {
@@ -100,7 +100,6 @@ namespace Server.MirObjects.Monsters
         public override bool MagAttacked(MonsterObject A, int Damage)
         {
             bool B = base.MagAttacked(A, Damage);
-
             if (B)
                 Quality = (short)Math.Max(short.MinValue, Quality - 2000);
             return true;

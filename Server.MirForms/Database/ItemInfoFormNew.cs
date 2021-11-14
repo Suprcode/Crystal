@@ -52,19 +52,35 @@ namespace Server.Database
             ItemIndex.ValueType = typeof(int);
             ItemName.ValueType = typeof(string);
             ItemRandomStatsId.ValueType = typeof(byte);
-            ItemRequiredAmount.ValueType = typeof(byte);
+            ItemRequiredAmount.ValueType = typeof(ushort);
             ItemImage.ValueType = typeof(ushort);
             ItemShape.ValueType = typeof(short);
             ItemEffect.ValueType = typeof(byte);
             ItemStackSize.ValueType = typeof(ushort);
             ItemSlots.ValueType = typeof(byte);
             ItemWeight.ValueType = typeof(byte);
+            ItemBaseRate.ValueType = typeof(byte);
+            ItemBaseRateDrop.ValueType = typeof(byte);
+            ItemMaxStats.ValueType = typeof(byte);
+            ItemMaxGemStat.ValueType = typeof(byte);
+            ItemItemGlow.ValueType = typeof(byte);
+
+            ItemAllowLvlSys.ValueType = typeof(bool);
+            ItemAllowRandomStats.ValueType = typeof(bool);
 
             ItemLightIntensity.ValueType = typeof(byte);
             ItemLightRange.ValueType = typeof(byte);
             ItemDurability.ValueType = typeof(ushort);
             ItemPrice.ValueType = typeof(uint);
             ItemToolTip.ValueType = typeof(string);
+            ItemStartItem.ValueType = typeof(bool);
+            ItemNeedIdentify.ValueType = typeof(bool);
+            ItemShowGroupPickup.ValueType = typeof(bool);
+            ItemGlobalDropNotify.ValueType = typeof(bool);
+            ItemClassBased.ValueType = typeof(bool);
+            ItemLevelBased.ValueType = typeof(bool);
+            ItemCanFastRun.ValueType = typeof(bool);
+            ItemCanAwakening.ValueType = typeof(bool);
 
             //Basic
             this.ItemType.ValueType = typeof(ItemType);
@@ -207,11 +223,26 @@ namespace Server.Database
                 row["ItemStackSize"] = item.StackSize;
                 row["ItemSlots"] = item.Slots;
                 row["ItemWeight"] = item.Weight;
+                row["ItemBaseRate"] = item.BaseRate;
+                row["ItemBaseRateDrop"] = item.BaseRateDrop;
+                row["ItemMaxStats"] = item.MaxStats;
+                row["ItemMaxGemStat"] = item.MaxGemStat;
+                row["ItemItemGlow"] = item.ItemGlow;
+                row["ItemAllowRandomStats"] = item.AllowRandomStats;
+                row["ItemAllowLvlSys"] = item.AllowLvlSys;
                 row["ItemLightRange"] = (byte)(item.Light % 15);
                 row["ItemLightIntensity"] = (byte)(item.Light / 15);
                 row["ItemDurability"] = item.Durability;
                 row["ItemPrice"] = item.Price;
                 row["ItemToolTip"] = item.ToolTip;
+                row["ItemStartItem"] = item.StartItem;
+                row["ItemNeedIdentify"] = item.NeedIdentify;
+                row["ItemShowGroupPickup"] = item.ShowGroupPickup;
+                row["ItemGlobalDropNotify"] = item.GlobalDropNotify;
+                row["ItemClassBased"] = item.ClassBased;
+                row["ItemLevelBased"] = item.LevelBased;
+                row["ItemCanFastRun"] = item.CanFastRun;
+                row["ItemCanAwakening"] = item.CanAwakening;
 
                 foreach (Stat stat in StatEnums)
                 {
@@ -296,19 +327,35 @@ namespace Server.Database
                 item.RequiredClass = (RequiredClass)row.Cells["ItemRequiredClass"].Value;
                 item.Set = (ItemSet)row.Cells["ItemSet"].Value;
                 item.RandomStatsId = (byte)row.Cells["ItemRandomStatsId"].Value;
-                item.RequiredAmount = (byte)row.Cells["ItemRequiredAmount"].Value;
+                item.RequiredAmount = (ushort)row.Cells["ItemRequiredAmount"].Value;
                 item.Image = (ushort)row.Cells["ItemImage"].Value;
                 item.Shape = (short)row.Cells["ItemShape"].Value;
                 item.Effect = (byte)row.Cells["ItemEffect"].Value;
                 item.StackSize = (ushort)row.Cells["ItemStackSize"].Value;
                 item.Slots = (byte)row.Cells["ItemSlots"].Value;
                 item.Weight = (byte)row.Cells["ItemWeight"].Value;
+                item.BaseRate = (byte)row.Cells["ItemBaseRate"].Value;
+                item.BaseRateDrop = (byte)row.Cells["ItemBaseRateDrop"].Value;
+                item.MaxStats = (byte)row.Cells["ItemMaxStats"].Value;
+                item.MaxGemStat = (byte)row.Cells["ItemMaxGemStat"].Value;
+                item.ItemGlow = (byte)row.Cells["ItemItemGlow"].Value;
+                item.AllowLvlSys = (bool)row.Cells["ItemAllowLvlSys"].Value;
+                item.AllowRandomStats = (bool)row.Cells["ItemAllowRandomStats"].Value;
 
                 var light = ((byte)row.Cells["ItemLightRange"].Value % 15) + ((byte)row.Cells["ItemLightIntensity"].Value * 15);
                 item.Light = (byte)Math.Min(byte.MaxValue, light);
                 item.Durability = (ushort)row.Cells["ItemDurability"].Value;
                 item.Price = (uint)row.Cells["ItemPrice"].Value;
                 item.ToolTip = (string)row.Cells["ItemToolTip"].Value;
+
+                item.StartItem = (bool)row.Cells["ItemStartItem"].Value;
+                item.NeedIdentify = (bool)row.Cells["ItemNeedIdentify"].Value;
+                item.ShowGroupPickup = (bool)row.Cells["ItemShowGroupPickup"].Value;
+                item.GlobalDropNotify = (bool)row.Cells["ItemGlobalDropNotify"].Value;
+                item.ClassBased = (bool)row.Cells["ItemClassBased"].Value;
+                item.LevelBased = (bool)row.Cells["ItemLevelBased"].Value;
+                item.CanFastRun = (bool)row.Cells["ItemCanFastRun"].Value;
+                item.CanAwakening = (bool)row.Cells["ItemCanAwakening"].Value;
 
                 item.Stats.Clear();
                 item.Bind = BindMode.None;
@@ -672,8 +719,12 @@ namespace Server.Database
             if (itemInfoGridView.Rows.Count > 0)
             {
                 SaveFileDialog sfd = new SaveFileDialog();
-                sfd.Filter = "CSV (*.csv)|*.csv";
-                sfd.FileName = "ItemInfo Output.csv";
+                sfd.InitialDirectory = Application.StartupPath + @"\Exports";
+                sfd.FileName = "ItemInfo";
+                sfd.Filter = "Text File|*.csv";
+
+                //sfd.Filter = "CSV (*.csv)|*.csv";
+                //sfd.FileName = "ItemInfo.csv";
                 bool fileError = false;
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
@@ -761,18 +812,33 @@ namespace Server.Database
             row.Cells["ItemRequiredClass"].Value = RequiredClass.None;
             row.Cells["ItemSet"].Value = (ItemSet)0;
             row.Cells["ItemRandomStatsId"].Value = (byte)0;
-            row.Cells["ItemRequiredAmount"].Value = (byte)0;
+            row.Cells["ItemRequiredAmount"].Value = (ushort)0;
             row.Cells["ItemImage"].Value = (ushort)0;
             row.Cells["ItemShape"].Value = (short)0;
             row.Cells["ItemEffect"].Value = (byte)0;
             row.Cells["ItemStackSize"].Value = (ushort)1;
             row.Cells["ItemSlots"].Value = (byte)0;
             row.Cells["ItemWeight"].Value = (byte)0;
+            row.Cells["ItemBaseRate"].Value = (byte)0;
+            row.Cells["ItemBaseRateDrop"].Value = (byte)0;
+            row.Cells["ItemMaxStats"].Value = (byte)0;
+            row.Cells["ItemMaxGemStat"].Value = (byte)0;
+            row.Cells["ItemItemGlow"].Value = (byte)0;
+            row.Cells["ItemAllowRandomStats"].Value = (bool)false;
+            row.Cells["ItemAllowLvlSys"].Value = (bool)false;
             row.Cells["ItemLightRange"].Value = (byte)0;
             row.Cells["ItemLightIntensity"].Value = (byte)0;
             row.Cells["ItemDurability"].Value = (ushort)0;
             row.Cells["ItemPrice"].Value = (uint)0;
             row.Cells["ItemToolTip"].Value = (string)"";
+            row.Cells["ItemStartItem"].Value = (bool)false;
+            row.Cells["ItemNeedIdentify"].Value = (bool)false;
+            row.Cells["ItemShowGroupPickup"].Value = (bool)false;
+            row.Cells["ItemGlobalDropNotify"].Value = (bool)false;
+            row.Cells["ItemClassBased"].Value = (bool)false;
+            row.Cells["ItemLevelBased"].Value = (bool)false;
+            row.Cells["ItemCanFastRun"].Value = (bool)false;
+            row.Cells["ItemCanAwakening"].Value = (bool)false;
 
             foreach (Stat stat in StatEnums)
             {

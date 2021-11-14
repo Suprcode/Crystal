@@ -80,9 +80,9 @@ namespace Server.MirObjects
             LogMessage(message, source);
         }
 
-        public void ItemGSBought(GameShopItem item, uint amount, uint CreditCost, uint GoldCost, [CallerMemberName] string source = "")
+        public void ItemGSBought(GameShopItem item, uint amount, uint CreditCost, uint GoldCost, uint HuntPointsCost, [CallerMemberName] string source = "")
         {
-            string message = $"Purchased {item.Info.FriendlyName} x{amount} for {CreditCost} Credits and {GoldCost} Gold.";
+            string message = $"Purchased {item.Info.FriendlyName} x{amount} for {CreditCost} Credits and {GoldCost} Gold and {HuntPointsCost} Gold.";
 
             LogMessage(message, source);
         }
@@ -121,6 +121,13 @@ namespace Server.MirObjects
         public void CreditChanged(uint amount, bool lost = true, string info = "", [CallerMemberName] string source = "")
         {
             string message = $"Credit{(lost ? "Lost" : "Gained")} - x{amount} {info}";
+
+            LogMessage(message, source);
+        }
+
+        public void HuntPointsChanged(uint amount, bool lost = true, string info = "", [CallerMemberName] string source = "")
+        {
+            string message = $"HuntPoints{(lost ? "Lost" : "Gained")} - x{amount} {info}";
 
             LogMessage(message, source);
         }

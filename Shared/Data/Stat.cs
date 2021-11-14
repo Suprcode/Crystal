@@ -40,7 +40,7 @@ public sealed class Stats : IEquatable<Stats>
             this[pair.Key] += pair.Value;
     }
 
-    public Stats(BinaryReader reader, int version = int.MaxValue, int customVersion = int.MaxValue)
+    public Stats(BinaryReader reader)
     {
         int count = reader.ReadInt32();
 
@@ -135,6 +135,12 @@ public enum Stat : byte
     MPRatePercent = 47,
     HPDrainRatePercent = 48,
 
+    MinACRatePercent = 49,
+    MinMACRatePercent = 50,
+    MinDCRatePercent = 51,
+    MinMCRatePercent = 52,
+    MinSCRatePercent = 53,
+
     ExpRatePercent = 100,
     ItemDropRatePercent = 101,
     GoldDropRatePercent = 102,
@@ -143,7 +149,8 @@ public enum Stat : byte
     FishRatePercent = 105,
     CraftRatePercent = 106,
     SkillGainMultiplier = 107,
-    AttackBonus = 108,
+    PVPDamage = 108,
+    PVEDamage = 109,
 
     LoverExpRatePercent = 120,
     MentorDamageRatePercent = 121,
@@ -153,6 +160,8 @@ public enum Stat : byte
     EnergyShieldHPGain = 126,
     ManaPenaltyPercent = 127,
     TeleportManaPenaltyPercent = 128,
+
+    ExpRate = 129,
 
     Unknown = 255
 }
