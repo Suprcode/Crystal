@@ -325,6 +325,7 @@ namespace Launcher
             this.Main_browser.Name = "Main_browser";
             this.Main_browser.Size = new System.Drawing.Size(785, 410);
             this.Main_browser.TabIndex = 32;
+            this.Main_browser.Visible = false;
             this.Main_browser.ZoomFactor = 1D;
             // 
             // AMain

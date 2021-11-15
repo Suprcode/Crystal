@@ -338,7 +338,11 @@ namespace Launcher
             var envir = CoreWebView2Environment.CreateAsync(null, Settings.ResourcePath).Result;
             Main_browser.EnsureCoreWebView2Async(envir);
 
-            if (Settings.P_BrowserAddress != "") Main_browser.Source = new Uri(Settings.P_BrowserAddress);
+            if (Settings.P_BrowserAddress != "")
+            {
+                Main_browser.NavigationCompleted += Main_browser_NavigationCompleted;
+                Main_browser.Source = new Uri(Settings.P_BrowserAddress);
+            }
 
             RepairOldFiles();
 
@@ -355,6 +359,11 @@ namespace Launcher
 
             _workThread = new Thread(Start) { IsBackground = true };
             _workThread.Start();
+        }
+
+        private void Main_browser_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
+        {
+            if (Main_browser.Source.AbsolutePath != "blank") Main_browser.Visible = true;
         }
 
         private void Launch_pb_Click(object sender, EventArgs e)
@@ -478,11 +487,6 @@ namespace Launcher
             ProgTotalEnd_pb.Location = new Point((TotalProg_pb.Location.X + TotalProg_pb.Width), 508);
             if (TotalProg_pb.Width == 0) ProgTotalEnd_pb.Visible = false;
             else ProgTotalEnd_pb.Visible = true;
-        }
-
-        private void Main_browser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
-        {
-            if (Main_browser.Source.AbsolutePath != "blank") Main_browser.Visible = true;
         }
 
         private void InterfaceTimer_Tick(object sender, EventArgs e)

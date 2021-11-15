@@ -73,6 +73,8 @@ namespace Server.MirDatabase
         public List<QuestKillTask> KillTasks = new List<QuestKillTask>();
         public List<QuestItemTask> ItemTasks = new List<QuestItemTask>();
         public List<QuestFlagTask> FlagTasks = new List<QuestFlagTask>();
+        //TODO: ZoneTasks
+        //TODO: EscortTasks
 
         public uint GoldReward;
         public uint ExpReward;

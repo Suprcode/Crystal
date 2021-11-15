@@ -45,13 +45,12 @@
             this.label7 = new System.Windows.Forms.Label();
             this.FileLabel = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.SizeLabel = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
             this.ListButton = new System.Windows.Forms.Button();
-            this.SourceLinkLabel = new System.Windows.Forms.LinkLabel();
             this.AllowCleanCheckBox = new System.Windows.Forms.CheckBox();
             this.DownloadExistingButton = new System.Windows.Forms.Button();
             this.btnFixGZ = new System.Windows.Forms.Button();
+            this.ProtocolDropDown = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // ClientTextBox
@@ -155,7 +154,7 @@
             // 
             // progressBar2
             // 
-            this.progressBar2.Location = new System.Drawing.Point(12, 251);
+            this.progressBar2.Location = new System.Drawing.Point(12, 238);
             this.progressBar2.Name = "progressBar2";
             this.progressBar2.Size = new System.Drawing.Size(372, 10);
             this.progressBar2.TabIndex = 13;
@@ -163,7 +162,7 @@
             // SpeedLabel
             // 
             this.SpeedLabel.AutoSize = true;
-            this.SpeedLabel.Location = new System.Drawing.Point(59, 235);
+            this.SpeedLabel.Location = new System.Drawing.Point(59, 222);
             this.SpeedLabel.Name = "SpeedLabel";
             this.SpeedLabel.Size = new System.Drawing.Size(24, 13);
             this.SpeedLabel.TabIndex = 15;
@@ -172,7 +171,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 235);
+            this.label7.Location = new System.Drawing.Point(12, 222);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(41, 13);
             this.label7.TabIndex = 14;
@@ -196,24 +195,6 @@
             this.label8.TabIndex = 16;
             this.label8.Text = "File:";
             // 
-            // SizeLabel
-            // 
-            this.SizeLabel.AutoSize = true;
-            this.SizeLabel.Location = new System.Drawing.Point(59, 222);
-            this.SizeLabel.Name = "SizeLabel";
-            this.SizeLabel.Size = new System.Drawing.Size(24, 13);
-            this.SizeLabel.TabIndex = 19;
-            this.SizeLabel.Text = "Idle";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(23, 222);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(30, 13);
-            this.label10.TabIndex = 18;
-            this.label10.Text = "Size:";
-            // 
             // ListButton
             // 
             this.ListButton.Location = new System.Drawing.Point(309, 139);
@@ -223,17 +204,6 @@
             this.ListButton.Text = "Create List";
             this.ListButton.UseVisualStyleBackColor = true;
             this.ListButton.Click += new System.EventHandler(this.ListButton_Click);
-            // 
-            // SourceLinkLabel
-            // 
-            this.SourceLinkLabel.AutoSize = true;
-            this.SourceLinkLabel.Location = new System.Drawing.Point(267, 266);
-            this.SourceLinkLabel.Name = "SourceLinkLabel";
-            this.SourceLinkLabel.Size = new System.Drawing.Size(117, 13);
-            this.SourceLinkLabel.TabIndex = 21;
-            this.SourceLinkLabel.TabStop = true;
-            this.SourceLinkLabel.Text = "Created by Jamie/Hello";
-            this.SourceLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.SourceLinkLabel_LinkClicked);
             // 
             // AllowCleanCheckBox
             // 
@@ -265,18 +235,38 @@
             this.btnFixGZ.UseVisualStyleBackColor = true;
             this.btnFixGZ.Click += new System.EventHandler(this.btnFixGZ_Click);
             // 
+            // ProtocolDropDown
+            // 
+            this.ProtocolDropDown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ProtocolDropDown.FormattingEnabled = true;
+            this.ProtocolDropDown.Items.AddRange(new object[] {
+            "Ftp",
+            "SFtp"});
+            this.ProtocolDropDown.Location = new System.Drawing.Point(262, 114);
+            this.ProtocolDropDown.Name = "ProtocolDropDown";
+            this.ProtocolDropDown.Size = new System.Drawing.Size(91, 21);
+            this.ProtocolDropDown.TabIndex = 25;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(207, 117);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(49, 13);
+            this.label6.TabIndex = 26;
+            this.label6.Text = "Protocol:";
+            // 
             // AMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(392, 292);
+            this.ClientSize = new System.Drawing.Size(392, 257);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.ProtocolDropDown);
             this.Controls.Add(this.btnFixGZ);
             this.Controls.Add(this.DownloadExistingButton);
             this.Controls.Add(this.AllowCleanCheckBox);
-            this.Controls.Add(this.SourceLinkLabel);
             this.Controls.Add(this.ListButton);
-            this.Controls.Add(this.SizeLabel);
-            this.Controls.Add(this.label10);
             this.Controls.Add(this.FileLabel);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.SpeedLabel);
@@ -321,13 +311,12 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label FileLabel;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label SizeLabel;
-        private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Button ListButton;
-        private System.Windows.Forms.LinkLabel SourceLinkLabel;
         private System.Windows.Forms.CheckBox AllowCleanCheckBox;
         private System.Windows.Forms.Button DownloadExistingButton;
         private System.Windows.Forms.Button btnFixGZ;
+        private System.Windows.Forms.ComboBox ProtocolDropDown;
+        private System.Windows.Forms.Label label6;
     }
 }
 
