@@ -45,11 +45,11 @@ namespace Server
                 if (Envir.MonsterInfoList[i].AI == 82)
                     WallIndex_combo.Items.Add(Envir.MonsterInfoList[i]);
 
-                if (Envir.MonsterInfoList[i].AI == 74)
+                if (Envir.MonsterInfoList[i].AI == 213)
                     SiegeIndex_combo.Items.Add(Envir.MonsterInfoList[i]);
             }
 
-                UpdateInterface();
+            UpdateInterface();
         }
 
 
@@ -114,7 +114,6 @@ namespace Server
                 GateYLoc_textbox.Text = selectedGate.Location.Y.ToString();
                 GateName_textbox.Text = selectedGate.Name;
                 GateCost_textbox.Text = selectedGate.RepairCost.ToString();
-
             }
             else
             {
@@ -125,7 +124,6 @@ namespace Server
                 GateName_textbox.Text = string.Empty;
                 GateCost_textbox.Text = string.Empty;
             }
-
         }
 
         private void UpdateWalls()
@@ -138,7 +136,6 @@ namespace Server
                 WallYLoc_textbox.Text = selectedWall.Location.Y.ToString();
                 WallName_textbox.Text = selectedWall.Name;
                 WallCost_textbox.Text = selectedWall.RepairCost.ToString();
-
             }
             else
             {
@@ -149,7 +146,6 @@ namespace Server
                 WallName_textbox.Text = string.Empty;
                 WallCost_textbox.Text = string.Empty;
             }
-
         }
 
         private void UpdateSiege()
@@ -162,7 +158,6 @@ namespace Server
                 SiegeYLoc_textbox.Text = selectedSiege.Location.Y.ToString();
                 SiegeName_textbox.Text = selectedSiege.Name;
                 SiegeCost_textbox.Text = selectedSiege.RepairCost.ToString();
-
             }
             else
             {
@@ -197,7 +192,6 @@ namespace Server
 
         private void UpdateInterface()
         {
-
             if (ConquestInfoListBox.Items.Count != Envir.ConquestInfoList.Count)
             {
                 ConquestInfoListBox.Items.Clear();
@@ -236,6 +230,15 @@ namespace Server
                 Fri_checkbox.Checked = selectedConquest.Friday;
                 Sat_checkbox.Checked = selectedConquest.Saturday;
                 Sun_checkbox.Checked = selectedConquest.Sunday;
+
+                Guards_listbox.Items.Clear();
+                Maps_listbox.Items.Clear();
+                Gates_listbox.Items.Clear();
+                Walls_listbox.Items.Clear();
+                Siege_listbox.Items.Clear();
+                Flags_listbox.Items.Clear();
+                Controls_listbox.Items.Clear();
+
                 for (int i = 0; i < selectedConquest.ConquestGuards.Count; i++)
                 {
                     Guards_listbox.Items.Add(selectedConquest.ConquestGuards[i]);
@@ -312,7 +315,6 @@ namespace Server
                 Sat_checkbox.Checked = false;
                 Sun_checkbox.Checked = false;
             }
-
         }
 
         private void ConquestInfoListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -328,15 +330,12 @@ namespace Server
         }
 
         private void AddGuard_button_Click(object sender, EventArgs e)
-        {
-            
+        {       
             if (selectedConquest != null)
             {
                  selectedConquest.ConquestGuards.Add(new ConquestArcherInfo { Location = new Point(0, 0), Name = "Guard", Index = ++selectedConquest.GuardIndex, MobIndex = 1, RepairCost = 1000 });
                  UpdateInterface();
-            }
-            
-                
+            }    
         }
 
         private void Guards_listbox_SelectedIndexChanged(object sender, EventArgs e)
@@ -348,8 +347,7 @@ namespace Server
                 UpdateArchers();
             }
             else
-                selectedArcher = null;
-            
+                selectedArcher = null; 
         }
 
         private void AddExtraMap_button_Click(object sender, EventArgs e)
@@ -360,7 +358,6 @@ namespace Server
                 selectedConquest.ExtraMaps.Add(temp.Index);
                 UpdateInterface();
             }
-
         }
 
         private void ConquestInfoForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -465,7 +462,6 @@ namespace Server
 
             MapInfo temp = (MapInfo)ConquestMap_combo.SelectedItem;
             selectedConquest.MapIndex = temp.Index;
-
         }
 
         private void PalaceMap_combo_SelectedIndexChanged(object sender, EventArgs e)
@@ -475,7 +471,6 @@ namespace Server
 
             MapInfo temp = (MapInfo)PalaceMap_combo.SelectedItem;
             selectedConquest.PalaceIndex = temp.Index;
-
         }
 
         private void ArcherIndex_combo_SelectedIndexChanged(object sender, EventArgs e)
@@ -775,7 +770,6 @@ namespace Server
             if (Envir.ConquestInfoList.Count == 0) Envir.ConquestIndex = 0;
 
             UpdateInterface();
-
         }
 
         private void RemoveMap_button_Click(object sender, EventArgs e)

@@ -211,6 +211,7 @@ public class GameLanguage
                          ItemTypePets = "Pets",
                          ItemTypeTransform = "Transform",
                          ItemTypeDeco = "Deco",
+                         ItemTypeMonsterSpawn = "SpawnEgg",
 
                          ItemGradeCommon = "Common",
                          ItemGradeRare = "Rare",

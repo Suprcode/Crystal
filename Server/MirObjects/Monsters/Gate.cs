@@ -120,7 +120,6 @@ namespace Server.MirObjects.Monsters
 
         public override void CloseDoor()
         {
-
             if (Closed) return;
 
             Direction = (MirDirection)(3 - GetDamageLevel());

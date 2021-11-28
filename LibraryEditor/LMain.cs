@@ -20,7 +20,10 @@ namespace LibraryEditor
         private Image _originalImage;
 
         protected bool ImageTabActive = true;
+        protected bool MaskTabActive = false;
         protected bool FrameTabActive = false;
+
+        protected string ViewMode = "Image";
 
         [DllImport("user32.dll")]
         private static extern int SendMessage(IntPtr hWnd, int msg, int wParam, int lParam);
@@ -159,7 +162,14 @@ namespace LibraryEditor
             OffSetXTextBox.Text = _selectedImage.X.ToString();
             OffSetYTextBox.Text = _selectedImage.Y.ToString();
 
-            ImageBox.Image = _selectedImage.Image;
+            if (ViewMode == "Image")
+            {
+                ImageBox.Image = _selectedImage.Image;
+            }
+            else
+            {
+                ImageBox.Image = _selectedImage.MaskImage;
+            }
 
             // Keep track of what image/s are selected.
             if (PreviewListView.SelectedIndices.Count > 1)
@@ -776,7 +786,15 @@ namespace LibraryEditor
             try
             {
                 PreviewListView.RedrawItems(0, PreviewListView.Items.Count - 1, true);
-                ImageBox.Image = _library.Images[PreviewListView.SelectedIndices[0]].Image;
+
+                if (ViewMode == "Image")
+                {
+                    ImageBox.Image = _library.Images[PreviewListView.SelectedIndices[0]].Image;
+                }
+                else
+                {
+                    ImageBox.Image = _library.Images[PreviewListView.SelectedIndices[0]].MaskImage;
+                }
             }
             catch (Exception)
             {
@@ -957,12 +975,21 @@ namespace LibraryEditor
             {
                 case 0: //Images
                     ImageTabActive = true;
+                    MaskTabActive = false;
                     FrameTabActive = false;
                     ImageBox.Location = new Point(0, 0);
                     FrameAnimTimer.Stop();
                     break;
-                case 1: //Frames
+                case 1: //Masks
                     ImageTabActive = false;
+                    MaskTabActive = true;
+                    FrameTabActive = false;
+                    ImageBox.Location = new Point(0, 0);
+                    FrameAnimTimer.Stop();
+                    break;
+                case 2: //Frames
+                    ImageTabActive = false;
+                    MaskTabActive = false;
                     FrameTabActive = true;
                     break;
             }
@@ -1114,6 +1141,7 @@ namespace LibraryEditor
                 Blend = cells["FrameBlend"].Value.ValueOrDefault<bool>()
             };
 
+            if (frame.Interval == 0) return;
 
             _drawFrame = frame;
 
@@ -1143,12 +1171,49 @@ namespace LibraryEditor
 
                 _selectedImage = _library.GetMImage(drawFrame);
 
-                ImageBox.Location = new Point(250 + _selectedImage.X, 250 + _selectedImage.Y);
-                ImageBox.Image = _selectedImage.Image;
+                if (ViewMode == "Image")
+                {
+                    ImageBox.Location = new Point(250 + _selectedImage.X, 250 + _selectedImage.Y);
+                    ImageBox.Image = _selectedImage.Image;
+                }
+                else
+                {
+                    ImageBox.Location = new Point(250 + _selectedImage.X, 250 + _selectedImage.Y);
+                    ImageBox.Image = _selectedImage.MaskImage;
+                }
 
                 _currentFrame++;
             }
             catch { }
+        }
+
+        private void PreviewListViewMask_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RButtonViewMode_CheckedChanged(object sender, EventArgs e)
+        {
+            if (RButtonImage.Checked)
+            {
+                ViewMode = "Image";
+            }
+            else if (RButtonOverlay.Checked)
+            {
+                ViewMode = "Overlay";
+            }
+
+            if (_selectedImage != null)
+            {
+                if (ViewMode == "Image")
+                {
+                    ImageBox.Image = _selectedImage.Image;
+                }
+                else
+                {
+                    ImageBox.Image = _selectedImage.MaskImage;
+                }
+            }
         }
 
         /// <summary>

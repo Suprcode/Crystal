@@ -139,6 +139,7 @@ namespace Server.MirEnvir
         public LightSetting Lights;
         public LinkedList<MapObject> Objects = new LinkedList<MapObject>();
         public Dictionary<int, NPCScript> Scripts = new Dictionary<int, NPCScript>();
+        public Dictionary<string, Timer> Timers = new Dictionary<string, Timer>();
 
         //multithread vars
         readonly object _locker = new object();
@@ -178,7 +179,7 @@ namespace Server.MirEnvir
         public static long LastRunTime = 0;
         public int MonsterCount;
 
-        private long warTime, guildTime, conquestTime, rentalItemsTime, auctionTime, spawnTime, robotTime;
+        private long warTime, guildTime, conquestTime, rentalItemsTime, auctionTime, spawnTime, robotTime, timerTime;
         private int dailyTime = DateTime.UtcNow.Day;
 
         private bool MagicExists(Spell spell)
@@ -782,7 +783,7 @@ namespace Server.MirEnvir
                 ProcessNewDay();
             }
 
-            if(Time >= warTime)
+            if (Time >= warTime)
             {
                 warTime = Time + Settings.Minute;
                 for (var i = GuildsAtWar.Count - 1; i >= 0; i--)
@@ -835,6 +836,21 @@ namespace Server.MirEnvir
             {
                 robotTime = Time + Settings.Minute;
                 Robot.Process(RobotNPC);
+            }
+
+            if (Time >= timerTime)
+            {
+                timerTime = Time + Settings.Second;
+
+                string[] keys = Timers.Keys.ToArray();
+
+                foreach (var key in keys)
+                {
+                    if (Timers[key].RelativeTime <= Time)
+                    {
+                        Timers.Remove(key);
+                    }
+                }
             }
         }
 
@@ -1237,8 +1253,14 @@ namespace Server.MirEnvir
 
                     if (LoadVersion < MinVersion)
                     {
-                        MessageQueue.Enqueue($"Cannot load a database version {Envir.LoadVersion}. Mininum supported is {Envir.MinVersion}.");
+                        MessageQueue.Enqueue($"Cannot load a database version {LoadVersion}. Mininum supported is {MinVersion}.");
                         return false;
+                    }
+                    else if (LoadVersion > Version)
+                    {
+                        MessageQueue.Enqueue($"Cannot load a database version {LoadVersion}. Maximum supported is {Version}.");
+                        return false;
+
                     }
 
                     MapIndex = reader.ReadInt32();
@@ -1541,7 +1563,6 @@ namespace Server.MirEnvir
                         {
                             ConquestMap = tempMap
                         };
-
                     }
 
                     ConquestList.Add(conquestGuildInfo);

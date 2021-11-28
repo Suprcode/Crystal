@@ -8,6 +8,7 @@ using Server.MirObjects;
 using C = ClientPackets;
 using S = ServerPackets;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Server.MirNetwork
 {
@@ -1647,10 +1648,15 @@ namespace Server.MirNetwork
                 //Update the creature info
                 for (int i = 0; i < Player.Info.IntelligentCreatures.Count; i++)
                 {
-                    if (Player.SummonedCreatureType == petUpdate.PetType && Player.Info.IntelligentCreatures[i].PetType == petUpdate.PetType)
+                    if (Player.Info.IntelligentCreatures[i].PetType == petUpdate.PetType)
                     {
-                        if (petUpdate.CustomName.Length <= 12)
+                        var reg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinCharacterNameLength + "," + Globals.MaxCharacterNameLength + "}$");
+
+                        if (reg.IsMatch(petUpdate.CustomName))
+                        {
                             Player.Info.IntelligentCreatures[i].CustomName = petUpdate.CustomName;
+                        }
+
                         Player.Info.IntelligentCreatures[i].SlotIndex = petUpdate.SlotIndex;
                         Player.Info.IntelligentCreatures[i].Filter = petUpdate.Filter;
                         Player.Info.IntelligentCreatures[i].petMode = petUpdate.petMode;

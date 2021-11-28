@@ -74,7 +74,7 @@ namespace Client.MirObjects
             Light = 10;
             BaseIndex = 0;
 
-            SetAction();
+            SetAction(true);
         }
 
         public void LoadLibrary()
@@ -231,7 +231,7 @@ namespace Client.MirObjects
             return ++EffectFrameIndex;
         }
 
-        public virtual void SetAction()
+        public virtual void SetAction(bool randomStartFrame = false)
         {
             if (ActionFeed.Count == 0)
             {
@@ -241,8 +241,19 @@ namespace Client.MirObjects
                     CurrentAction = MirAction.Standing;
 
                 Frames.TryGetValue(CurrentAction, out Frame);
-                FrameIndex = 0;
-                EffectFrameIndex = 0;
+
+                if (randomStartFrame)
+                {
+                    var frameIndex = new Random().Next(Frame.Count);
+
+                    FrameIndex = frameIndex;
+                    EffectFrameIndex = frameIndex;
+                }
+                else
+                {
+                    FrameIndex = 0;
+                    EffectFrameIndex = 0;
+                }
 
                 if (MapLocation != CurrentLocation)
                 {

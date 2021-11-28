@@ -15,7 +15,7 @@ namespace Server.MirObjects.Monsters
         public bool Closed;
         private long CloseTime;
 
-        private bool AutoOpen = true;
+        private bool AutoOpen = false;
 
         protected List<BlockingObject> BlockingObjects = new List<BlockingObject>();
 
@@ -89,7 +89,7 @@ namespace Server.MirObjects.Monsters
 
             SearchTime = Envir.Time + SearchDelay;
 
-            if(Closed && AutoOpen)
+            if (Closed && AutoOpen)
             {
                 var nearby = FindAllNearby(4, CurrentLocation);
 

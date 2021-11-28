@@ -489,6 +489,7 @@ namespace Client.MirControls
                 case ItemType.Pets:
                 case ItemType.Transform:
                 case ItemType.Deco:
+                case ItemType.MonsterSpawn:
                     if (CanUseItem() && GridType == MirGridType.Inventory)
                     {
                         if (CMain.Time < GameScene.UseItemTime) return;

@@ -64,18 +64,11 @@ namespace Launcher
         {
             try
             {
-                OldList = new List<FileInformation>();
                 DownloadList = new Queue<FileInformation>();
 
-                byte[] data = Download(Settings.P_PatchFileName);
+                GetOldFileList();
 
-                if (data != null)
-                {
-                    using (MemoryStream stream = new MemoryStream(data))
-                    using (BinaryReader reader = new BinaryReader(stream))
-                        ParseOld(reader);
-                }
-                else
+                if (OldList.Count == 0)
                 {
                     MessageBox.Show(GameLanguage.PatchErr);
                     Completed = true;
@@ -159,6 +152,27 @@ namespace Launcher
             }
 
             return false;
+        }
+
+        private void GetOldFileList()
+        {
+            OldList = new List<FileInformation>();
+
+            //byte[] data = DownloadFile(PatchFileName);
+            byte[] data = Download(Settings.P_PatchFileName);
+
+            if (data != null)
+            {
+                using MemoryStream stream = new MemoryStream(data);
+                using BinaryReader reader = new BinaryReader(stream);
+
+                int count = reader.ReadInt32();
+
+                for (int i = 0; i < count; i++)
+                {
+                    OldList.Add(new FileInformation(reader));
+                }
+            }
         }
 
 
@@ -273,15 +287,22 @@ namespace Launcher
 
             try
             {
-                using (WebClient client = new WebClient())
-                {
-                    if (Settings.P_NeedLogin)
-                        client.Credentials = new NetworkCredential(Settings.P_Login, Settings.P_Password);
-                    else
-                        client.Credentials = new NetworkCredential("", "");
+                using WebClient client = new WebClient();
 
-                    return client.DownloadData(Settings.P_Host + Path.ChangeExtension(fileName, ".gz"));
+                client.CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.NoCacheNoStore);
+
+                if (Settings.P_NeedLogin)
+                {
+                    client.Credentials = new NetworkCredential(Settings.P_Login, Settings.P_Password);
                 }
+                else
+                {
+                    client.Credentials = new NetworkCredential("", "");
+                }
+
+                var rand = new Random(1000).Next();
+
+                return client.DownloadData(Settings.P_Host + Path.ChangeExtension(fileName, ".gz") + $"?rand={rand}");
             }
             catch
             {

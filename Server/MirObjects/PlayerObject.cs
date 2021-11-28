@@ -2511,7 +2511,6 @@ namespace Server.MirObjects
                         MapObject ob = cell.Objects[i];
                         if (ob == this) continue;
 
-                        //if (ob.Race == ObjectType.Player && ob.Observer) continue;
                         if (ob.Race == ObjectType.Player)
                         {
                             PlayerObject Player = (PlayerObject)ob;
@@ -2538,7 +2537,9 @@ namespace Server.MirObjects
                         }
 
                         if (ob.Race == ObjectType.Player || ob.Race == ObjectType.Monster)
+                        {
                             ob.SendHealth(this);
+                        }
                     }
                 }
             }
@@ -4239,7 +4240,7 @@ namespace Server.MirObjects
                         if (parts.Length > 3)
                             if (!byte.TryParse(parts[3], out petlevel) || petlevel > 7) petlevel = 0;
 
-                        if (!IsGM && Pets.Count > 4) return;
+                        if (!IsGM && (Pets.Count(t => !t.Dead && t.Race != ObjectType.Creature) >= Globals.MaxPets)) return;
 
                         for (int i = 0; i < count; i++)
                         {
@@ -4906,7 +4907,7 @@ namespace Server.MirObjects
                                     MonsterObject monOb = (MonsterObject)ob;
                                     ReceiveChat("--Monster Info--", ChatType.System2);
                                     ReceiveChat(string.Format("ID : {0}, Name : {1}", monOb.Info.Index, monOb.Name), ChatType.System2);
-                                    ReceiveChat(string.Format("Level : {0}, X : {1}, Y : {2}", monOb.Level, monOb.CurrentLocation.X, monOb.CurrentLocation.Y), ChatType.System2);
+                                    ReceiveChat(string.Format("Level : {0}, X : {1}, Y : {2}, Dir: {3}", monOb.Level, monOb.CurrentLocation.X, monOb.CurrentLocation.Y, monOb.Direction), ChatType.System2);
                                     ReceiveChat(string.Format("HP : {0}, MinDC : {1}, MaxDC : {2}", monOb.Info.Stats[Stat.HP], monOb.Stats[Stat.MinDC], monOb.Stats[Stat.MaxDC]), ChatType.System2);
                                     break;
                                 case ObjectType.Merchant:
@@ -7062,7 +7063,9 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Pets.Count(t => !t.Dead && t.Race != ObjectType.Creature) >= magic.Level + 2) return;
+            var petBonus = Globals.MaxPets - 3;
+
+            if (Pets.Count(t => !t.Dead && t.Race != ObjectType.Creature) >= magic.Level + petBonus) return;
 
             int rate = (int)(target.Stats[Stat.HP] / 100);
             if (rate <= 2) rate = 2;
@@ -7218,7 +7221,6 @@ namespace Server.MirObjects
             MonsterInfo info = Envir.GetMonsterInfo(Settings.CloneName);
             if (info == null) return;
 
-
             LevelMagic(magic);
 
             monster = MonsterObject.GetMonster(info);
@@ -7336,7 +7338,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Pets.Where(x => x.Race == ObjectType.Monster).Count() > 1) return;
+            if (Pets.Count(x => x.Race == ObjectType.Monster) >= 2) return;
 
             UserItem item = GetAmulet(1);
             if (item == null) return;
@@ -7379,7 +7381,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Pets.Where(x => x.Race == ObjectType.Monster).Count() > 1) return;
+            if (Pets.Count(x => x.Race == ObjectType.Monster) >= 2) return;
 
             UserItem item = GetAmulet(5);
             if (item == null) return;
@@ -7592,7 +7594,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Pets.Where(x => x.Race == ObjectType.Monster).Count() > 1) return;
+            if (Pets.Count(x => x.Race == ObjectType.Monster) >= 2) return;
 
             UserItem item = GetAmulet(2);
             if (item == null) return;
@@ -9518,7 +9520,7 @@ namespace Server.MirObjects
                         return;
                     }
 
-                    if (Pets.Where(x => x.Race == ObjectType.Monster).Count() > 1) return;
+                    if (Pets.Count(x => x.Race == ObjectType.Monster) >= 2) return;
 
                     //left it in for future summon amulets
                     //UserItem item = GetAmulet(5);
@@ -11835,6 +11837,54 @@ namespace Server.MirObjects
 
                     Enqueue(decoOb.GetInfo());
 
+                    break;
+                case ItemType.MonsterSpawn:
+
+                    var monsterID = item.Info.Stats[Stat.HP];
+                    var spawnAsPet = item.Info.Shape == 1;
+                    var conquestOnly = item.Info.Shape == 2;
+
+                    var monsterInfo = Envir.GetMonsterInfo(monsterID);
+                    if (monsterInfo == null) break;
+
+                    MonsterObject monster = MonsterObject.GetMonster(monsterInfo);
+                    if (monster == null) break;
+
+                    if (spawnAsPet)
+                    {
+                        if (Pets.Count(t => !t.Dead && t.Race != ObjectType.Creature) >= Globals.MaxPets)
+                        {
+                            ReceiveChat("Maximum number of pets already reached.", ChatType.Hint);
+                            Enqueue(p);
+                            return;
+                        }
+
+                        monster.Master = this;
+                        monster.PetLevel = 0;
+                        monster.MaxPetLevel = 7;
+
+                        Pets.Add(monster);
+                    }
+
+                    if (conquestOnly)
+                    {
+                        var con = CurrentMap.GetConquest(CurrentLocation);
+                        if (con == null)
+                        {
+                            ReceiveChat(string.Format("{0} can only be spawned during a conquest.", monsterInfo.GameName), ChatType.Hint);
+                            Enqueue(p);
+                            return;
+                        }
+                    }
+
+                    monster.Direction = Direction;
+                    monster.ActionTime = Envir.Time + 5000;
+
+                    if (!monster.Spawn(CurrentMap, Front))
+                        monster.Spawn(CurrentMap, CurrentLocation);
+                    break;
+                case ItemType.SiegeAmmo:
+                    //TODO;
                     break;
                 default:
                     return;
@@ -20756,19 +20806,41 @@ namespace Server.MirObjects
 
         #endregion
 
+        public Timer GetTimer(string key)
+        {
+            var timerKey = Name + "-" + key;
+
+            if (Envir.Timers.ContainsKey(timerKey))
+            {
+                return Envir.Timers[timerKey];
+            }
+
+            return null;
+        }
         
         public void SetTimer(string key, int seconds, byte type = 0)
         {
             if (seconds < 0) seconds = 0;
 
-            Timer t = new Timer(key, seconds, type);
+            var timerKey = Name + "-" + key;
+
+            Timer t = new Timer(timerKey, seconds, type);
+
+            Envir.Timers[timerKey] = t;
 
             Enqueue(new S.SetTimer { Key = t.Key, Seconds = t.Seconds, Type = t.Type });
         }
 
         public void ExpireTimer(string key)
         {
-            Enqueue(new S.ExpireTimer { Key = key });
+            var timerKey = Name + "-" + key;
+
+            if (Envir.Timers.ContainsKey(timerKey))
+            {
+                Envir.Timers.Remove(timerKey);
+            }
+
+            Enqueue(new S.ExpireTimer { Key = timerKey });
         }
 
         public void SetCompass(Point location)

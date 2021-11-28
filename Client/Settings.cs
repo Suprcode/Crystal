@@ -37,6 +37,7 @@ namespace Client
                             MonsterPath = @".\Data\Monster\",
                             GatePath = @".\Data\Gate\",
                             FlagPath = @".\Data\Flag\",
+                            SiegePath = @".\Data\Siege\",
                             NPCPath = @".\Data\NPC\",
                             CArmourPath = @".\Data\CArmour\",
                             CWeaponPath = @".\Data\CWeapon\",

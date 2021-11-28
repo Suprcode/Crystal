@@ -73,6 +73,7 @@ namespace Client.MirGraphics
                                           Monsters,
                                           Gates,
                                           Flags,
+                                          Siege,
                                           Mounts,
                                           NPCs,
                                           Fishing,
@@ -108,6 +109,8 @@ namespace Client.MirGraphics
             //Other
             InitLibrary(ref Monsters, Settings.MonsterPath, "000");
             InitLibrary(ref Gates, Settings.GatePath, "00");
+            InitLibrary(ref Flags, Settings.FlagPath, "00");
+            InitLibrary(ref Siege, Settings.SiegePath, "00");
             InitLibrary(ref NPCs, Settings.NPCPath, "00");
             InitLibrary(ref Mounts, Settings.MountPath, "00");
             InitLibrary(ref Fishing, Settings.FishingPath, "00");
@@ -225,7 +228,7 @@ namespace Client.MirGraphics
 
         private static void LoadGameLibraries()
         {
-            Count = MapLibs.Length + Monsters.Length + Gates.Length + NPCs.Length + CArmours.Length +
+            Count = MapLibs.Length + Monsters.Length + Gates.Length + Flags.Length + Siege.Length + NPCs.Length + CArmours.Length +
                 CHair.Length + CWeapons.Length + CWeaponEffect.Length + AArmours.Length + AHair.Length + AWeaponsL.Length + AWeaponsR.Length +
                 ARArmours.Length + ARHair.Length + ARWeapons.Length + ARWeaponsS.Length +
                 CHumEffect.Length + AHumEffect.Length + ARHumEffect.Length + Mounts.Length + Fishing.Length + Pets.Length +
@@ -294,6 +297,18 @@ namespace Client.MirGraphics
             for (int i = 0; i < Gates.Length; i++)
             {
                 Gates[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < Flags.Length; i++)
+            {
+                Flags[i].Initialize();
+                Progress++;
+            }
+
+            for (int i = 0; i < Siege.Length; i++)
+            {
+                Siege[i].Initialize();
                 Progress++;
             }
 

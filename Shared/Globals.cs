@@ -18,6 +18,8 @@
 
         MaxGroup = 15,
 
+        MaxPets = 5,
+
         MaxAttackRange = 9,
 
         MaxDragonLevel = 13,

@@ -379,6 +379,11 @@ namespace Server.MirObjects
 
                     CheckList.Add(new NPCChecks(CheckType.ConquestOwner, parts[1]));
                     break;
+                case "CHECKTIMER":
+                    if (parts.Length < 4) return;
+
+                    CheckList.Add(new NPCChecks(CheckType.CheckTimer, parts[1], parts[2], parts[3]));
+                    break;
             }
 
         }
@@ -1050,14 +1055,20 @@ namespace Server.MirObjects
                     acts.Add(new NPCActions(ActionType.PlaySound, parts[1]));
                     break;
                 case "SETTIMER":
-                    if (parts.Length < 4) return;
+                    {
+                        if (parts.Length < 4) return;
 
-                    acts.Add(new NPCActions(ActionType.SetTimer, parts[1], parts[2], parts[3]));
+                        string global = parts.Length < 5 ? "" : parts[4];
+
+                        acts.Add(new NPCActions(ActionType.SetTimer, parts[1], parts[2], parts[3], global));
+                    }
                     break;
                 case "EXPIRETIMER":
-                    if (parts.Length < 2) return;
+                    {
+                        if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.ExpireTimer, parts[1]));
+                        acts.Add(new NPCActions(ActionType.ExpireTimer, parts[1]));
+                    }
                     break;
 
                 case "UNEQUIPITEM":
@@ -2578,6 +2589,47 @@ namespace Server.MirObjects
                             return true;
                         }
                         break;
+                    case CheckType.CheckTimer:
+                        {
+                            if (!long.TryParse(param[1], out long time))
+                            {
+                                failed = true;
+                                break;
+                            }
+
+                            try
+                            {
+                                var globalTimerKey = "_-" + param[0];
+
+                                Timer timer;
+
+                                if (Envir.Timers.ContainsKey(globalTimerKey))
+                                {
+                                    timer = Envir.Timers[globalTimerKey];
+                                }
+                                else
+                                {
+                                    timer = player.GetTimer(param[0]);
+                                }
+
+                                long remainingTime = 0;
+
+                                if (timer != null)
+                                {
+                                    remainingTime = (timer.RelativeTime - Envir.Time) / 1000;
+                                    break;
+                                }
+
+                                failed = !Compare(param[0], remainingTime, time);
+                            }
+                            catch (ArgumentException)
+                            {
+                                MessageQueue.Enqueue(string.Format("Incorrect operator: {0}, Page: {1}", param[0], Key));
+                                return true;
+                            }
+                        }
+                        break;
+
                 }
 
                 if (!failed) continue;
@@ -3679,7 +3731,9 @@ namespace Server.MirObjects
                             if (conquestSiege == null) return;
 
                             if (conquestSiege.Gate != null)
+                            {
                                 if (!conquestSiege.Gate.Dead) return;
+                            }
 
                             if (player.MyGuild == null || player.MyGuild.Gold < conquestSiege.GetRepairCost()) return;
 
@@ -3803,11 +3857,31 @@ namespace Server.MirObjects
                         {
                             if (!int.TryParse(param[1], out int seconds) || !byte.TryParse(param[2], out byte type)) return;
 
-                            player.SetTimer(param[0], seconds, type);
+                            bool.TryParse(param[3], out bool global);
+
+                            if (seconds < 0) seconds = 0;
+
+                            if (global)
+                            {
+                                var timerKey = "_-" + param[0];
+
+                                Envir.Timers[timerKey] = new Timer(timerKey, seconds, type);
+                            }
+                            else
+                            {
+                                player.SetTimer(param[0], seconds, type);
+                            }
                         }
                         break;
                     case ActionType.ExpireTimer:
                         {
+                            var globalTimerKey = "_-" + param[0];
+
+                            if (Envir.Timers.ContainsKey(globalTimerKey))
+                            {
+                                Envir.Timers.Remove(globalTimerKey);
+                            }
+
                             player.ExpireTimer(param[0]);
                         }
                         break;

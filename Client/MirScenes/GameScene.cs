@@ -6065,6 +6065,9 @@ namespace Client.MirScenes
                 case ItemType.Deco:
                     baseText = GameLanguage.ItemTypeDeco;
                     break;
+                case ItemType.MonsterSpawn:
+                    baseText = GameLanguage.ItemTypeMonsterSpawn;
+                    break;
             }
 
             if (HoverItem.WeddingRing != -1)
@@ -6799,26 +6802,29 @@ namespace Client.MirScenes
 
             #region MAXHP
 
-            minValue = realItem.Stats[Stat.HP];
-            maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.HP] : 0;
-
-            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            if (HoverItem.Info.Type != ItemType.MonsterSpawn)
             {
-                count++;
-                MirLabel MAXHPLabel = new MirLabel
-                {
-                    AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
-                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
-                    OutLine = true,
-                    Parent = ItemLabel,
-                    //Text = string.Format(realItem.Type == ItemType.Potion ? "HP + {0} Recovery" : "MAXHP + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Max HP + {0} (+{1})" : "Max HP + {0}", minValue + addValue, addValue)
-                };
+                minValue = realItem.Stats[Stat.HP];
+                maxValue = 0;
+                addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.HP] : 0;
 
-                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXHPLabel.DisplayRectangle.Right + 4),
-                    Math.Max(ItemLabel.Size.Height, MAXHPLabel.DisplayRectangle.Bottom));
+                if (minValue > 0 || maxValue > 0 || addValue > 0)
+                {
+                    count++;
+                    MirLabel MAXHPLabel = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        //Text = string.Format(realItem.Type == ItemType.Potion ? "HP + {0} Recovery" : "MAXHP + {0}", minValue + addValue)
+                        Text = string.Format(addValue > 0 ? "Max HP + {0} (+{1})" : "Max HP + {0}", minValue + addValue, addValue)
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXHPLabel.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, MAXHPLabel.DisplayRectangle.Bottom));
+                }
             }
 
             #endregion

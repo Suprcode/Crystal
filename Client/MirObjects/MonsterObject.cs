@@ -147,6 +147,13 @@ namespace Client.MirObjects
                     break;
                 case Monster.EvilMirBody:
                     break;
+                case Monster.Catapult:
+                case Monster.ChariotBallista:
+                case Monster.Ballista:
+                case Monster.Trebuchet:
+                case Monster.CanonTrebuchet:
+                    BodyLibrary = Libraries.Siege[((ushort)BaseImage) - 940];
+                    break;
                 case Monster.SabukGate:
                 case Monster.PalaceWallLeft:
                 case Monster.PalaceWall1:
@@ -3030,6 +3037,20 @@ namespace Client.MirObjects
                                                     };
                                                 }
                                                 break;
+                                            case Monster.Catapult:
+                                                missile = CreateProjectile(256, Libraries.Siege[(ushort)Monster.Catapult - 940], false, 4, 40, 0);
+                                                if (missile.Target != null)
+                                                {
+                                                    missile.Complete += (o, e) =>
+                                                    {
+                                                        if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                        missile.Target.Effects.Add(new Effect(Libraries.Siege[(ushort)Monster.Catapult - 940], 288, 10, 1000, missile.Target) { Blend = true });
+                                                    };
+                                                }
+                                                break;
+                                            case Monster.ChariotBallista:
+                                                missile = CreateProjectile(38, Libraries.Siege[(ushort)Monster.ChariotBallista - 940], false, 3, 30, 6);
+                                                break;
                                         }
                                         break;
                                     }//end of case 4
@@ -3660,6 +3681,8 @@ namespace Client.MirObjects
                     case Monster.WingedTigerLord:
                     case Monster.PoisonHugger:
                     case Monster.SnowWolfKing:
+                    case Monster.Catapult:
+                    case Monster.ChariotBallista:
                         SoundManager.PlaySound(BaseSound + 8);
                         return;
                 }

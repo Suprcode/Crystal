@@ -55,6 +55,7 @@ namespace LibraryEditor
             this.skinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.checkboxRemoveBlackOnImport = new System.Windows.Forms.CheckBox();
             this.nudJump = new System.Windows.Forms.NumericUpDown();
             this.checkBoxPreventAntiAliasing = new System.Windows.Forms.CheckBox();
             this.checkBoxQuality = new System.Windows.Forms.CheckBox();
@@ -104,7 +105,9 @@ namespace LibraryEditor
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.FolderLibraryDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.FrameAnimTimer = new System.Windows.Forms.Timer(this.components);
-            this.checkboxRemoveBlackOnImport = new System.Windows.Forms.CheckBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.RButtonImage = new System.Windows.Forms.RadioButton();
+            this.RButtonOverlay = new System.Windows.Forms.RadioButton();
             this.MainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -124,6 +127,7 @@ namespace LibraryEditor
             this.tabFrames.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.frameGridView)).BeginInit();
             this.statusStrip.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainMenu
@@ -339,7 +343,7 @@ namespace LibraryEditor
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl);
             this.splitContainer1.Size = new System.Drawing.Size(1036, 684);
-            this.splitContainer1.SplitterDistance = 325;
+            this.splitContainer1.SplitterDistance = 390;
             this.splitContainer1.TabIndex = 1;
             // 
             // splitContainer2
@@ -353,6 +357,7 @@ namespace LibraryEditor
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.groupBox1);
             this.splitContainer2.Panel1.Controls.Add(this.checkboxRemoveBlackOnImport);
             this.splitContainer2.Panel1.Controls.Add(this.nudJump);
             this.splitContainer2.Panel1.Controls.Add(this.checkBoxPreventAntiAliasing);
@@ -380,9 +385,21 @@ namespace LibraryEditor
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.panel);
-            this.splitContainer2.Size = new System.Drawing.Size(1036, 325);
+            this.splitContainer2.Size = new System.Drawing.Size(1036, 390);
             this.splitContainer2.SplitterDistance = 240;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // checkboxRemoveBlackOnImport
+            // 
+            this.checkboxRemoveBlackOnImport.AutoSize = true;
+            this.checkboxRemoveBlackOnImport.Checked = true;
+            this.checkboxRemoveBlackOnImport.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkboxRemoveBlackOnImport.Location = new System.Drawing.Point(11, 334);
+            this.checkboxRemoveBlackOnImport.Name = "checkboxRemoveBlackOnImport";
+            this.checkboxRemoveBlackOnImport.Size = new System.Drawing.Size(145, 17);
+            this.checkboxRemoveBlackOnImport.TabIndex = 22;
+            this.checkboxRemoveBlackOnImport.Text = "Remove Black On Import";
+            this.checkboxRemoveBlackOnImport.UseVisualStyleBackColor = true;
             // 
             // nudJump
             // 
@@ -401,7 +418,7 @@ namespace LibraryEditor
             // checkBoxPreventAntiAliasing
             // 
             this.checkBoxPreventAntiAliasing.AutoSize = true;
-            this.checkBoxPreventAntiAliasing.Location = new System.Drawing.Point(95, 299);
+            this.checkBoxPreventAntiAliasing.Location = new System.Drawing.Point(95, 357);
             this.checkBoxPreventAntiAliasing.Name = "checkBoxPreventAntiAliasing";
             this.checkBoxPreventAntiAliasing.Size = new System.Drawing.Size(99, 17);
             this.checkBoxPreventAntiAliasing.TabIndex = 20;
@@ -412,7 +429,7 @@ namespace LibraryEditor
             // checkBoxQuality
             // 
             this.checkBoxQuality.AutoSize = true;
-            this.checkBoxQuality.Location = new System.Drawing.Point(11, 299);
+            this.checkBoxQuality.Location = new System.Drawing.Point(11, 357);
             this.checkBoxQuality.Name = "checkBoxQuality";
             this.checkBoxQuality.Size = new System.Drawing.Size(78, 17);
             this.checkBoxQuality.TabIndex = 19;
@@ -630,7 +647,7 @@ namespace LibraryEditor
             this.panel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel.Location = new System.Drawing.Point(0, 0);
             this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(790, 323);
+            this.panel.Size = new System.Drawing.Size(790, 388);
             this.panel.TabIndex = 1;
             // 
             // ImageBox
@@ -651,7 +668,7 @@ namespace LibraryEditor
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(1034, 353);
+            this.tabControl.Size = new System.Drawing.Size(1034, 288);
             this.tabControl.TabIndex = 0;
             this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
             // 
@@ -661,7 +678,7 @@ namespace LibraryEditor
             this.tabImages.Location = new System.Drawing.Point(4, 22);
             this.tabImages.Name = "tabImages";
             this.tabImages.Padding = new System.Windows.Forms.Padding(3);
-            this.tabImages.Size = new System.Drawing.Size(1026, 327);
+            this.tabImages.Size = new System.Drawing.Size(1026, 262);
             this.tabImages.TabIndex = 0;
             this.tabImages.Text = "Images";
             this.tabImages.UseVisualStyleBackColor = true;
@@ -676,7 +693,7 @@ namespace LibraryEditor
             this.PreviewListView.LargeImageList = this.ImageList;
             this.PreviewListView.Location = new System.Drawing.Point(3, 3);
             this.PreviewListView.Name = "PreviewListView";
-            this.PreviewListView.Size = new System.Drawing.Size(1020, 321);
+            this.PreviewListView.Size = new System.Drawing.Size(1020, 256);
             this.PreviewListView.TabIndex = 0;
             this.PreviewListView.UseCompatibleStateImageBehavior = false;
             this.PreviewListView.VirtualMode = true;
@@ -834,17 +851,40 @@ namespace LibraryEditor
             // 
             this.FrameAnimTimer.Tick += new System.EventHandler(this.FrameAnimTimer_Tick);
             // 
-            // checkboxRemoveBlackOnImport
+            // groupBox1
             // 
-            this.checkboxRemoveBlackOnImport.AutoSize = true;
-            this.checkboxRemoveBlackOnImport.Checked = true;
-            this.checkboxRemoveBlackOnImport.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkboxRemoveBlackOnImport.Location = new System.Drawing.Point(11, 276);
-            this.checkboxRemoveBlackOnImport.Name = "checkboxRemoveBlackOnImport";
-            this.checkboxRemoveBlackOnImport.Size = new System.Drawing.Size(145, 17);
-            this.checkboxRemoveBlackOnImport.TabIndex = 22;
-            this.checkboxRemoveBlackOnImport.Text = "Remove Black On Import";
-            this.checkboxRemoveBlackOnImport.UseVisualStyleBackColor = true;
+            this.groupBox1.Controls.Add(this.RButtonOverlay);
+            this.groupBox1.Controls.Add(this.RButtonImage);
+            this.groupBox1.Location = new System.Drawing.Point(11, 287);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(215, 38);
+            this.groupBox1.TabIndex = 23;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "View Mode";
+            // 
+            // RButtonImage
+            // 
+            this.RButtonImage.AutoSize = true;
+            this.RButtonImage.Checked = true;
+            this.RButtonImage.Location = new System.Drawing.Point(7, 15);
+            this.RButtonImage.Name = "RButtonImage";
+            this.RButtonImage.Size = new System.Drawing.Size(54, 17);
+            this.RButtonImage.TabIndex = 0;
+            this.RButtonImage.TabStop = true;
+            this.RButtonImage.Text = "Image";
+            this.RButtonImage.UseVisualStyleBackColor = true;
+            this.RButtonImage.CheckedChanged += new System.EventHandler(this.RButtonViewMode_CheckedChanged);
+            // 
+            // RButtonOverlay
+            // 
+            this.RButtonOverlay.AutoSize = true;
+            this.RButtonOverlay.Location = new System.Drawing.Point(68, 15);
+            this.RButtonOverlay.Name = "RButtonOverlay";
+            this.RButtonOverlay.Size = new System.Drawing.Size(61, 17);
+            this.RButtonOverlay.TabIndex = 1;
+            this.RButtonOverlay.Text = "Overlay";
+            this.RButtonOverlay.UseVisualStyleBackColor = true;
+            this.RButtonOverlay.CheckedChanged += new System.EventHandler(this.RButtonViewMode_CheckedChanged);
             // 
             // LMain
             // 
@@ -885,6 +925,8 @@ namespace LibraryEditor
             ((System.ComponentModel.ISupportInitialize)(this.frameGridView)).EndInit();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -966,6 +1008,9 @@ namespace LibraryEditor
         private System.Windows.Forms.ToolStripMenuItem defaultNPCFramesToolStripMenuItem;
         private System.Windows.Forms.Timer FrameAnimTimer;
         private System.Windows.Forms.CheckBox checkboxRemoveBlackOnImport;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton RButtonOverlay;
+        private System.Windows.Forms.RadioButton RButtonImage;
     }
 }
 

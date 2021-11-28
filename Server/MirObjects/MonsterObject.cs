@@ -443,6 +443,9 @@ namespace Server.MirObjects
                 case 212:
                     return new PurpleFaeFlower(info);
 
+                case 213:
+                    return new Siege(info); //TODO
+
 
                 default:
                     return new MonsterObject(info);

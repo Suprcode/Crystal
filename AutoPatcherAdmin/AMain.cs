@@ -7,6 +7,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinSCP;
+using System.Linq;
 
 namespace AutoPatcherAdmin
 {
@@ -101,7 +102,7 @@ namespace AutoPatcherAdmin
             }
         }
 
-        public bool NeedFile(string fileName)
+        private bool NeedFile(string fileName)
         {
             for (int i = 0; i < NewList.Count; i++)
             {
@@ -112,7 +113,7 @@ namespace AutoPatcherAdmin
             return false;
         }
 
-        public void GetOldFileList()
+        private void GetOldFileList()
         {
             OldList = new List<FileInformation>();
 
@@ -132,7 +133,7 @@ namespace AutoPatcherAdmin
             }
         }
 
-        public byte[] CreateNewList()
+        private byte[] CreateNewList()
         {
             using MemoryStream stream = new MemoryStream();
             using BinaryWriter writer = new BinaryWriter(stream);
@@ -146,7 +147,7 @@ namespace AutoPatcherAdmin
             return stream.ToArray();
         }
 
-        public void GetNewFileList()
+        private void GetNewFileList()
         {
             NewList = new List<FileInformation>();
 
@@ -158,7 +159,7 @@ namespace AutoPatcherAdmin
             }
         }
 
-        public bool InExcludeList(string fileName)
+        private bool InExcludeList(string fileName)
         {
             foreach (var item in ExcludeList)
             {
@@ -168,7 +169,7 @@ namespace AutoPatcherAdmin
             return false;
         }
 
-        public void FixFilenameExtensions()
+        private void FixFilenameExtensions()
         {
             var rootPath = (new Uri(Settings.Host)).AbsolutePath;
 
@@ -211,7 +212,7 @@ namespace AutoPatcherAdmin
             }
         }
 
-        public bool NeedUpdate(FileInformation info)
+        private bool NeedUpdate(FileInformation info)
         {
             for (int i = 0; i < OldList.Count; i++)
             {
@@ -226,7 +227,7 @@ namespace AutoPatcherAdmin
             return true;
         }
 
-        public FileInformation GetFileInformation(string fileName)
+        private FileInformation GetFileInformation(string fileName)
         {
             if (!File.Exists(fileName))
             {
@@ -329,7 +330,7 @@ namespace AutoPatcherAdmin
             File.SetLastWriteTime(tempFilePath, info.Creation);
         }
 
-        public void UploadFiles(int uploadCount = 0)
+        private void UploadFiles(int uploadCount = 0)
         {
             var rootPath = (new Uri(Settings.Host)).AbsolutePath;
 
@@ -382,7 +383,7 @@ namespace AutoPatcherAdmin
 
 
 
-        public byte[] DownloadFile(string fileName)
+        private byte[] DownloadFile(string fileName)
         {
             using Session session = new Session();
             OpenSession(session);
@@ -409,7 +410,7 @@ namespace AutoPatcherAdmin
             }
         }
 
-        public void DownloadFiles()
+        private void DownloadFiles()
         {
             var rootPath = (new Uri(Settings.Host)).AbsolutePath;
 
