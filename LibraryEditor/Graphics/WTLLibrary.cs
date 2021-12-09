@@ -236,6 +236,9 @@ namespace LibraryEditor
             while (tWidth < Width)
                 tWidth *= 2;
 
+            outputHeight = (short)(Height + (4 - Height % 4) % 4);
+            outputWidth = (short)(Width + (4 - Width % 4) % 4);
+
             _fBytes = bReader.ReadBytes(imageLength);
 
             Bitmap output = new Bitmap(outputWidth, outputHeight);

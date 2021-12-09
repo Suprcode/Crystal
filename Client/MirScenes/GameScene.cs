@@ -9265,7 +9265,10 @@ namespace Client.MirScenes
             DrawBackground();
 
             if (FloorValid)
+            {
                 DXManager.Sprite.Draw(DXManager.FloorTexture, new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight), Vector3.Zero, Vector3.Zero, Color.White);
+                CMain.DPSCounter++;
+            }
 
             DrawObjects();
 
@@ -9342,6 +9345,7 @@ namespace Client.MirScenes
 
             DXManager.SetOpacity(Opacity);
             DXManager.Sprite.Draw(ControlTexture, new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight), Vector3.Zero, Vector3.Zero, Color.White);
+            CMain.DPSCounter++;
             DXManager.SetOpacity(oldOpacity);
 
             if (MapObject.User.Dead) DXManager.SetGrayscale(false);
@@ -9817,6 +9821,7 @@ namespace Client.MirScenes
                     {
                         p.Offset(-(DXManager.LightSizes[lightRange].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[lightRange].Y / 2) - (CellHeight / 2) -5);
                         DXManager.Sprite.Draw(DXManager.Lights[lightRange], null, Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), lightColour);
+                        CMain.DPSCounter++;
                     }
                 }
 
@@ -9842,6 +9847,7 @@ namespace Client.MirScenes
                     {
                         p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
                         DXManager.Sprite.Draw(DXManager.Lights[light], null, Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), lightColour);
+                        CMain.DPSCounter++;
                     }
 
                 }
@@ -9873,6 +9879,7 @@ namespace Client.MirScenes
                     {
                         p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
                         DXManager.Sprite.Draw(DXManager.Lights[light], null, Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), lightColour);
+                        CMain.DPSCounter++;
                     }
                 }
             }
@@ -9936,6 +9943,7 @@ namespace Client.MirScenes
                     {
                         p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2) + 10, -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
                         DXManager.Sprite.Draw(DXManager.Lights[light], null, Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), lightIntensity);
+                        CMain.DPSCounter++;
                     }
                 }
             }
@@ -9948,6 +9956,8 @@ namespace Client.MirScenes
             DXManager.Device.SetRenderState(SlimDX.Direct3D9.RenderState.DestinationBlend, Blend.BothInverseSourceAlpha);
 
             DXManager.Sprite.Draw(DXManager.LightTexture, new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight), Vector3.Zero, Vector3.Zero, Color.White);
+            CMain.DPSCounter++;
+
             DXManager.Sprite.End();
             DXManager.Sprite.Begin(SpriteFlags.AlphaBlend);
         }

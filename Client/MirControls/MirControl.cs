@@ -731,6 +731,7 @@ namespace Client.MirControls
 
             DXManager.SetOpacity(Opacity);
             DXManager.Sprite.Draw(ControlTexture, new Rectangle(0, 0, Size.Width, Size.Height), Vector3.Zero, new Vector3?(new Vector3((float)(DisplayLocation.X), (float)(DisplayLocation.Y), 0.0f)), Color.White);
+            CMain.DPSCounter++;
             DXManager.SetOpacity(oldOpacity);
 
             CleanTime = CMain.Time + Settings.CleanDelay;

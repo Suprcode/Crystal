@@ -630,32 +630,27 @@ namespace Server.MirObjects
             Respawn = respawn;
 
             if (Respawn.Map == null) return false;
+            if (Respawn.WalkableCells == null || Respawn.WalkableCells.Count == 0) return false;
 
-            for (int i = 0; i < 10; i++)
-            {
-                CurrentLocation = new Point(Respawn.Info.Location.X + Envir.Random.Next(-Respawn.Info.Spread, Respawn.Info.Spread + 1),
-                                            Respawn.Info.Location.Y + Envir.Random.Next(-Respawn.Info.Spread, Respawn.Info.Spread + 1));
+            var spawnPoint = Respawn.WalkableCells[Envir.Random.Next(Respawn.WalkableCells.Count)];
 
-                if (!respawn.Map.ValidPoint(CurrentLocation)) continue;
+            CurrentLocation = spawnPoint;
 
-                respawn.Map.AddObject(this);
+            respawn.Map.AddObject(this);
 
-                CurrentMap = respawn.Map;
+            CurrentMap = respawn.Map;
 
-                if (Respawn.Route.Count > 0)
-                    Route.AddRange(Respawn.Route);
+            if (Respawn.Route.Count > 0)
+                Route.AddRange(Respawn.Route);
 
-                RefreshAll();
-                SetHP(Stats[Stat.HP]);
+            RefreshAll();
+            SetHP(Stats[Stat.HP]);
 
-                Spawned();
-                Respawn.Count++;
-                respawn.Map.MonsterCount++;
-                Envir.MonsterCount++;
-                return true;
-            }
-
-            return false;
+            Spawned();
+            Respawn.Count++;
+            respawn.Map.MonsterCount++;
+            Envir.MonsterCount++;
+            return true;
         }
 
         public override void Spawned()
@@ -2321,7 +2316,7 @@ namespace Server.MirObjects
                 {
                     CharacterInfo mentee = Envir.GetCharacterInfo(attacker.Info.Mentor);
                     PlayerObject player = Envir.GetPlayer(mentee.Name);
-                    if (player.CurrentMap == attacker.CurrentMap && Functions.InRange(player.CurrentLocation, attacker.CurrentLocation, Globals.DataRange) && !player.Dead)
+                    if (player != null && player.CurrentMap == attacker.CurrentMap && Functions.InRange(player.CurrentLocation, attacker.CurrentLocation, Globals.DataRange) && !player.Dead)
                     {
                         damage += (damage * Stats[Stat.MentorDamageRatePercent]) / 100;
                     }
