@@ -436,6 +436,13 @@ namespace Server.MirObjects
                     return new AntCommander(info);
 
 
+                // Sanjian
+
+                case 197: // GlacierSnail
+                    return new GlacierSnail(info);
+
+
+
                 case 210:
                     return new HoodedSummonerScrolls(info);
                 case 211:
