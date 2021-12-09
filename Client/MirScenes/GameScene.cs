@@ -3968,6 +3968,12 @@ namespace Client.MirScenes
 
                 switch (p.Effect)
                 {
+                    // Sanjian
+                    case SpellEffect.FurbolgWarriorCritical:
+                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FurbolgWarrior], 400, 6, 600, ob));
+                        SoundManager.PlaySound(20000 + (ushort)Spell.FatalSword * 10);
+                        break;
+
                     case SpellEffect.FatalSword:
                         ob.Effects.Add(new Effect(Libraries.Magic2, 1940, 4, 400, ob));
                         SoundManager.PlaySound(20000 + (ushort)Spell.FatalSword * 10);

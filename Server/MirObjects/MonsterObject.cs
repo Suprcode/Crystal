@@ -438,8 +438,10 @@ namespace Server.MirObjects
 
                 // Sanjian
 
-                case 197: // GlacierSnail
+                case 197:
                     return new GlacierSnail(info);
+                case 198:
+                    return new FurbolgWarrior(info);
 
 
 
@@ -1170,6 +1172,10 @@ namespace Server.MirObjects
                 case DelayedType.Recall:
                     PetRecall();
                     break;
+                case DelayedType.SpellEffect:
+                    CompleteSpellEffect(action.Params);
+                    break;
+
             }
         }
 
@@ -1204,6 +1210,17 @@ namespace Server.MirObjects
         protected virtual void CompleteDeath(IList<object> data)
         {
             throw new NotImplementedException();
+        }
+
+        protected virtual void CompleteSpellEffect(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            SpellEffect effect = (SpellEffect)data[1];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            S.ObjectEffect p = new S.ObjectEffect { ObjectID = target.ObjectID, Effect = effect };
+            CurrentMap.Broadcast(p, target.CurrentLocation);
         }
 
         protected virtual void ProcessRegen()
@@ -3402,6 +3419,38 @@ namespace Server.MirObjects
                 }
             }
         }
+
+        // Sanjian
+        protected virtual void ThreeQuarterMoonAttack(int damage, int delay = 500, DefenceType defenceType = DefenceType.ACAgility)
+        {
+            MirDirection dir = Functions.PreviousDir(Direction);
+
+            for (int i = 0; i < 6; i++)
+            {
+                Point target = Functions.PointMove(CurrentLocation, dir, 1);
+                dir = Functions.NextDir(dir);
+
+                if (!CurrentMap.ValidPoint(target)) continue;
+
+                Cell cell = CurrentMap.GetCell(target);
+                if (cell.Objects == null) continue;
+
+                for (int o = 0; o < cell.Objects.Count; o++)
+                {
+                    MapObject ob = cell.Objects[o];
+                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
+                    if (!ob.IsAttackTarget(this)) continue;
+
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
+                    ActionList.Add(action);
+                    break;
+                }
+            }
+        }
+
+
+
+
 
         protected virtual void FullmoonAttack(int damage, int delay = 500, DefenceType defenceType = DefenceType.ACAgility, int pushDistance = -1, int distance = 1)
         {

@@ -1277,6 +1277,7 @@ public enum SpellEffect : byte
     KingGuard2,    
     DeathCrawlerBreath,
     FlamingMutantWeb,
+    FurbolgWarriorCritical,
     Tester    
 }
 

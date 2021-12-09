@@ -1160,6 +1160,9 @@ namespace Server.MirObjects
                 case DelayedType.Quest:
                     CompleteQuest(action.Params);
                     break;
+                case DelayedType.SpellEffect:
+                    CompleteSpellEffect(action.Params);
+                    break;
             }
         }
 
@@ -9627,6 +9630,17 @@ namespace Server.MirObjects
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
             target.BroadcastDamageIndicator(type);
+        }
+
+        private void CompleteSpellEffect(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            SpellEffect effect = (SpellEffect)data[1];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            S.ObjectEffect p = new S.ObjectEffect { ObjectID = target.ObjectID, Effect = effect };
+            CurrentMap.Broadcast(p, target.CurrentLocation);
         }
 
         private void CompleteQuest(IList<object> data)

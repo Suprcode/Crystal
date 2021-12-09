@@ -1555,7 +1555,9 @@ namespace Client.MirObjects
                                             case Monster.Furball:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Furball], 256 + (int)Direction * 4, 4, 4 * Frame.Interval, this));
                                                 break;
-
+                                            case Monster.FurbolgWarrior:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FurbolgWarrior], 320 + (int)Direction * 5, 5, 5 * Frame.Interval, this));
+                                                break;
 
 
 
@@ -1626,6 +1628,11 @@ namespace Client.MirObjects
                                     {
                                         switch (BaseImage)
                                         {
+
+
+
+
+
                                             case Monster.GeneralMeowMeow:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GeneralMeowMeow], 416 + (int)Direction * 5, 5, 5 * Frame.Interval, this));
                                                 break;
@@ -1824,6 +1831,12 @@ namespace Client.MirObjects
                                     {
                                         switch (BaseImage)
                                         {
+                                            // Sanjian
+                                            case Monster.FurbolgWarrior:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FurbolgWarrior], 360 + (int)Direction * 5, 5, 5 * Frame.Interval, this));
+                                                break;
+
+
                                             case Monster.BlackHammerCat:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BlackHammerCat], 648 + (int)Direction * 11, 11, 11 * Frame.Interval, this));
                                                 break;
