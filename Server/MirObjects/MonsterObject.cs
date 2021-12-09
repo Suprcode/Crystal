@@ -442,6 +442,8 @@ namespace Server.MirObjects
                     return new GlacierSnail(info);
                 case 198:
                     return new FurbolgWarrior(info);
+                case 199:
+                    return new FurbolgArcher(info);
 
 
 
@@ -3447,10 +3449,31 @@ namespace Server.MirObjects
                 }
             }
         }
+        protected virtual void JumpBack(int distance)
+        {
+            MirDirection jumpDir = Functions.ReverseDirection(Direction);
 
+            Point location;
 
+            for (int i = 0; i < distance; i++)
+            {
+                location = Functions.PointMove(CurrentLocation, jumpDir, 1);
+                if (!CurrentMap.ValidPoint(location)) return;
+            }
 
+            for (int i = 0; i < distance; i++)
+            {
+                location = Functions.PointMove(CurrentLocation, jumpDir, 1);
 
+                CurrentMap.GetCell(CurrentLocation).Remove(this);
+                RemoveObjects(jumpDir, 1);
+                CurrentLocation = location;
+                CurrentMap.GetCell(CurrentLocation).Add(this);
+                AddObjects(jumpDir, 1);
+            }
+
+            Broadcast(new S.ObjectBackStep { ObjectID = ObjectID, Direction = Direction, Location = location, Distance = distance });
+        }
 
         protected virtual void FullmoonAttack(int damage, int delay = 500, DefenceType defenceType = DefenceType.ACAgility, int pushDistance = -1, int distance = 1)
         {

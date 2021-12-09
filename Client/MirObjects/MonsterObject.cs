@@ -2338,6 +2338,9 @@ namespace Client.MirObjects
                                         SoundManager.PlaySound(BaseSound + 6);
                                     }
                                     break;
+
+
+
                             }
                             FrameIndex = Frame.Count - 1;
                             SetAction();
@@ -2516,6 +2519,21 @@ namespace Client.MirObjects
                                                     CreateProjectile(410, Libraries.Magic2, true, 4, 30, 6);
                                                 }
                                                 break;
+
+                                            // Sanjian
+                                            case Monster.FurbolgArcher:
+                                                if (MapControl.GetObject(TargetID) != null)
+                                                {
+                                                    CreateProjectile(344, Libraries.Monsters[(ushort)Monster.FurbolgArcher], false, 5, 30, 0);
+                                                    SoundManager.PlaySound(BaseSound + 6);
+                                                }
+                                                break;
+
+
+
+
+
+
                                             case Monster.Yimoogi:
                                             case Monster.RedYimoogi:
                                             case Monster.Snake10:
@@ -3295,6 +3313,26 @@ namespace Client.MirObjects
                                     {
                                         switch (BaseImage)
                                         {
+                                            case Monster.FurbolgArcher:
+                                                if (MapControl.GetObject(TargetID) != null)
+                                                {
+                                                    missile = CreateProjectile(429, Libraries.Monsters[(ushort)Monster.FurbolgArcher], false, 5, 30, 0);
+
+                                                    if (missile.Target != null)
+                                                    {
+                                                        missile.Complete += (o, e) =>
+                                                        {
+                                                            if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                            missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FurbolgArcher], 424, 5, 500, missile.Target));
+                                                            SoundManager.PlaySound(BaseSound + 7);
+                                                        };
+                                                    }
+                                                }
+                                                break;
+
+
+
+
                                             case Monster.RedFoxman:
                                                 ob = MapControl.GetObject(TargetID);
                                                 if (ob != null)
