@@ -685,7 +685,6 @@ namespace Client.MirObjects
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MinotaurKing], 272 + (int)Direction * 6, 6, Frame.Count * Frame.Interval, this));
                                 break;
                             case Monster.FlamingMutant:
-                                //Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlamingMutant], 304, 10, 10 * Frame.Interval, this));
                                 MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlamingMutant], 314, 6, 600, front));
                                 break;
                             case Monster.DemonWolf:
@@ -1476,8 +1475,7 @@ namespace Client.MirObjects
                         }
                     }
                     break;
-                case MirAction.Attack1:                    
-
+                case MirAction.Attack1:
                     if (CMain.Time >= NextMotion)
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
@@ -1553,6 +1551,17 @@ namespace Client.MirObjects
                                         PlaySwingSound();
                                         switch (BaseImage)
                                         {
+                                            // Sanjian
+                                            case Monster.Furball:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Furball], 256 + (int)Direction * 4, 4, 4 * Frame.Interval, this));
+                                                break;
+
+
+
+
+
+
+
                                             case Monster.RightGuard:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RightGuard], 272 + (int)Direction * 3, 3, 3 * Frame.Interval, this));
                                                 break;
@@ -1875,6 +1884,15 @@ namespace Client.MirObjects
                                     {
                                         switch (BaseImage)
                                         {
+                                            // Sanjian
+                                            case Monster.GlacierSnail:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GlacierSnail], 344 + (int)Direction * 5, 5, 5 * Frame.Interval, this));
+                                                break;
+
+
+
+
+
                                             case Monster.DemonWolf:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DemonWolf], 312 + (int)Direction * 3, 3, 300, this));
                                                 break;
@@ -1908,6 +1926,7 @@ namespace Client.MirObjects
                                         }
                                         break;
                                     }
+                                    break;
                                 case 5:
                                     {   
                                         switch (BaseImage)
@@ -1940,6 +1959,7 @@ namespace Client.MirObjects
                                         break;
 
                                     }
+                                    break;
                                 case 6:
                                     {
                                         switch (BaseImage)
@@ -3504,6 +3524,9 @@ namespace Client.MirObjects
                                 case 1:
                                     switch (BaseImage)
                                     {
+                                        case Monster.Furball:
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Furball], 288, 8, Frame.Count * Frame.Interval, this));
+                                            break;
                                         case Monster.PoisonHugger:
                                             Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.PoisonHugger], 224, 5, Frame.Count * FrameInterval, this));
                                             break;
