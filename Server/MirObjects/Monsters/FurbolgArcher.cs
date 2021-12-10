@@ -87,6 +87,35 @@ namespace Server.MirObjects.Monsters
 
             if (dist >= AttackRange)
                 MoveTo(Target.CurrentLocation);
+            else
+            {
+                MirDirection dir = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
+
+                if (Walk(dir)) return;
+
+                switch (Envir.Random.Next(2)) //No favour
+                {
+                    case 0:
+                        for (int i = 0; i < 7; i++)
+                        {
+                            dir = Functions.NextDir(dir);
+
+                            if (Walk(dir))
+                                return;
+                        }
+                        break;
+                    default:
+                        for (int i = 0; i < 7; i++)
+                        {
+                            dir = Functions.PreviousDir(dir);
+
+                            if (Walk(dir))
+                                return;
+                        }
+                        break;
+                }
+
+            }
         }
     }
 }

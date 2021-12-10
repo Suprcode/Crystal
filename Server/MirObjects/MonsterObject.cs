@@ -444,6 +444,14 @@ namespace Server.MirObjects
                     return new FurbolgWarrior(info);
                 case 199:
                     return new FurbolgArcher(info);
+                case 200:
+                    return new FurbolgCommander(info);
+                case 201:
+                    return new FurbolgGuard(info);
+
+
+
+
 
 
 
