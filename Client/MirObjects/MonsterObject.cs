@@ -1047,6 +1047,18 @@ namespace Client.MirObjects
                         }
                         PlayFlinchSound();
                         PlayStruckSound();
+
+
+                        // Sanjian
+                        switch (BaseImage)
+                        {
+                            case Monster.GlacierBeast:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GlacierBeast], 304, 6, 400, this));
+                                break;
+                        }
+
+
+
                         break;
                     case MirAction.Die:
                         switch (BaseImage)
@@ -1546,8 +1558,6 @@ namespace Client.MirObjects
 
 
 
-
-
                                             case Monster.StainHammerCat:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.StainHammerCat], 240 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
                                                 break;
@@ -1701,9 +1711,7 @@ namespace Client.MirObjects
                                             case Monster.FurbolgGuard:
                                                 MapObject ob = MapControl.GetObject(TargetID);
                                                 if (ob != null)
-                                                {
                                                     ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FurbolgGuard], 384, 7, 600, ob));
-                                                }
                                                 break;
 
 
@@ -1888,6 +1896,13 @@ namespace Client.MirObjects
                                     {
                                         switch (BaseImage)
                                         {
+                                            // Sanjian
+                                            case Monster.GlacierBeast:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GlacierBeast], 310 + (int)Direction * 4, 4, 4 * Frame.Interval, this));
+                                                break;
+
+
+
                                             case Monster.KingGuard:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KingGuard], 773, 10, 1000, this) { Blend = true });
                                                 break;
@@ -3656,7 +3671,9 @@ namespace Client.MirObjects
                                         case Monster.Furball:
                                             Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Furball], 288, 8, Frame.Count * Frame.Interval, this));
                                             break;
-
+                                        case Monster.GlacierBeast:
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GlacierBeast], 342, 12, 1200, this) { Blend = true });
+                                            break;
 
 
 
@@ -3692,6 +3709,13 @@ namespace Client.MirObjects
                                         case Monster.BoulderSpirit:
                                             Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BoulderSpirit], 64, 8, 8 * Frame.Interval, this) { Blend = true });
                                             break;
+                                    }
+                                    break;
+                                    // Sanjian
+                                case 4:
+                                    PlayDeadSound();
+                                    switch (BaseImage)
+                                    {
                                     }
                                     break;
                                 case 5:

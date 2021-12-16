@@ -448,8 +448,11 @@ namespace Server.MirObjects
                     return new FurbolgCommander(info);
                 case 201:
                     return new FurbolgGuard(info);
-
-
+                case 202:
+                    return new GlacierBeast(info);
+                case 203:
+                    return new GlacierWarrior(info);
+                    
 
 
 
@@ -1185,7 +1188,6 @@ namespace Server.MirObjects
                 case DelayedType.SpellEffect:
                     CompleteSpellEffect(action.Params);
                     break;
-
             }
         }
 

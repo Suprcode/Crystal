@@ -399,7 +399,8 @@ namespace Server.MirObjects
                     continue;
                 }
 
-                if (pet.Info.Name == Settings.SkeletonName || pet.Info.Name == Settings.ShinsuName || pet.Info.Name == Settings.AngelName)
+                if (pet.Info.Name == Settings.SkeletonName || pet.Info.Name == Settings.ShinsuName || pet.Info.Name == Settings.AngelName
+                    || pet.Info.Name == Settings.CloneName || pet.Info.Name == Settings.AssassinCloneName)
                 {
                     pet.Die();
 

@@ -25,7 +25,7 @@ namespace Server.MirObjects
         Quest,
 
         // Sanjian
-        SpellEffect
+        SpellEffect,
     }
 
     public class DelayedAction
