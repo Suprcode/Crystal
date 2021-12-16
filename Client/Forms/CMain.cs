@@ -102,14 +102,6 @@ namespace Client
             }
         }
 
-        public static void GameLoop()
-        {
-            UpdateTime();
-                    UpdateEnviroment();
-                    RenderEnvironment();
-        }
-
-
         private static void Application_Idle(object sender, EventArgs e)
         {
             try
