@@ -655,6 +655,14 @@ namespace Client.MirObjects
                         PlayJumpSound();
                         switch (BaseImage)
                         {
+                            // Sanjian
+                            case Monster.FurbolgGuard:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FurbolgGuard], 414 + (int)Direction * 6, 6, Frame.Count * Frame.Interval, this));
+                                break;
+
+
+
+
                             case Monster.Armadillo:
                                 MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)BaseImage], 592, 12, 800, CurrentLocation, CMain.Time + 500));
                                 break;
@@ -1039,6 +1047,18 @@ namespace Client.MirObjects
                         }
                         PlayFlinchSound();
                         PlayStruckSound();
+
+
+                        // Sanjian
+                        switch (BaseImage)
+                        {
+                            case Monster.GlacierBeast:
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GlacierBeast], 304, 6, 400, this));
+                                break;
+                        }
+
+
+
                         break;
                     case MirAction.Die:
                         switch (BaseImage)
@@ -1531,6 +1551,13 @@ namespace Client.MirObjects
                                     {
                                         switch (BaseImage)
                                         {
+                                            // Sanjian
+                                            case Monster.FurbolgCommander:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FurbolgCommander], 325 + (int)Direction * 4, 4, 4 * Frame.Interval, this));
+                                                break;
+
+
+
                                             case Monster.StainHammerCat:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.StainHammerCat], 240 + (int)Direction * 4, 4, Frame.Count * Frame.Interval, this));
                                                 break;
@@ -1556,7 +1583,9 @@ namespace Client.MirObjects
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Furball], 256 + (int)Direction * 4, 4, 4 * Frame.Interval, this));
                                                 break;
 
-
+                                            case Monster.FurbolgWarrior:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FurbolgWarrior], 320 + (int)Direction * 5, 5, 5 * Frame.Interval, this));
+                                                break;
 
 
 
@@ -1679,6 +1708,15 @@ namespace Client.MirObjects
                                     {
                                         switch (BaseImage)
                                         {
+                                            // Sanjian
+                                            case Monster.FurbolgGuard:
+                                                MapObject ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FurbolgGuard], 384, 7, 600, ob));
+                                                break;
+
+
+
                                             case Monster.FlyingStatue:
                                                 MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlyingStatue], 344, 8, 800, front, CMain.Time));
                                                 break;
@@ -1741,6 +1779,19 @@ namespace Client.MirObjects
                                                 break;
                                             case Monster.HornedCommander:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HornedCommander], 784 + (int)Direction * 3, 3, 300, this) { Blend = true });
+                                                break;
+                                        }
+                                        break;
+                                    }
+                                case 8:
+                                    {
+                                        MapObject ob = MapControl.GetObject(TargetID);
+
+                                        switch (BaseImage)
+                                        {
+                                            case Monster.FurbolgCommander:
+                                                if (ob != null)
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FurbolgCommander], 320, 5, 500, ob));
                                                 break;
                                         }
                                         break;
@@ -1824,6 +1875,12 @@ namespace Client.MirObjects
                                     {
                                         switch (BaseImage)
                                         {
+                                            // Sanjian
+                                            case Monster.FurbolgWarrior:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FurbolgWarrior], 360 + (int)Direction * 5, 5, 5 * Frame.Interval, this));
+                                                break;
+
+
                                             case Monster.BlackHammerCat:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BlackHammerCat], 648 + (int)Direction * 11, 11, 11 * Frame.Interval, this));
                                                 break;
@@ -1840,6 +1897,13 @@ namespace Client.MirObjects
                                     {
                                         switch (BaseImage)
                                         {
+                                            // Sanjian
+                                            case Monster.GlacierBeast:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GlacierBeast], 310 + (int)Direction * 4, 4, 4 * Frame.Interval, this));
+                                                break;
+
+
+
                                             case Monster.KingGuard:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KingGuard], 773, 10, 1000, this) { Blend = true });
                                                 break;
@@ -2325,6 +2389,9 @@ namespace Client.MirObjects
                                         SoundManager.PlaySound(BaseSound + 6);
                                     }
                                     break;
+
+
+
                             }
                             FrameIndex = Frame.Count - 1;
                             SetAction();
@@ -2448,6 +2515,38 @@ namespace Client.MirObjects
                                     {
                                         switch (BaseImage)
                                         {
+                                            // Sanjian
+                                            case Monster.FurbolgArcher:
+                                                if (MapControl.GetObject(TargetID) != null)
+                                                {
+                                                    CreateProjectile(344, Libraries.Monsters[(ushort)Monster.FurbolgArcher], false, 5, 30, 0);
+                                                    SoundManager.PlaySound(BaseSound + 6);
+                                                }
+                                                break;
+                                            case Monster.FurbolgGuard:
+                                                missile = CreateProjectile(391, Libraries.Monsters[(ushort)Monster.FurbolgGuard], false, 1, 30, 0);
+                                                if (missile.Target != null)
+                                                {
+                                                    missile.Complete += (o, e) =>
+                                                    {
+                                                        if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FurbolgGuard], 407, 7, 600, missile.Target));
+                                                        SoundManager.PlaySound(BaseSound + 6);
+                                                    };
+                                                }
+                                                break;
+
+
+
+
+
+
+
+
+
+
+
+
                                             case Monster.AxeSkeleton:
                                                 if (MapControl.GetObject(TargetID) != null)
                                                     CreateProjectile(224, Libraries.Monsters[(ushort)Monster.AxeSkeleton], false, 3, 30, 0);
@@ -2503,6 +2602,11 @@ namespace Client.MirObjects
                                                     CreateProjectile(410, Libraries.Magic2, true, 4, 30, 6);
                                                 }
                                                 break;
+
+
+
+
+
                                             case Monster.Yimoogi:
                                             case Monster.RedYimoogi:
                                             case Monster.Snake10:
@@ -3138,6 +3242,16 @@ namespace Client.MirObjects
                                     {
                                         switch (BaseImage)
                                         {
+                                            // Sanjian
+                                            case Monster.FurbolgCommander:
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FurbolgCommander], 357, 6, 600, ob) { DrawBehind = true });
+                                                }
+                                                break;
+
+
                                             case Monster.HornedMage:
                                                 ob = MapControl.GetObject(TargetID);
                                                 if (ob != null)
@@ -3215,6 +3329,13 @@ namespace Client.MirObjects
                                         }
                                         break;
                                     }
+                                case 8:
+                                    {
+                                        switch (BaseImage)
+                                        {
+                                        }
+                                        break;
+                                    }
                                 case 9:
                                     {
                                         switch (BaseImage)
@@ -3282,6 +3403,26 @@ namespace Client.MirObjects
                                     {
                                         switch (BaseImage)
                                         {
+                                            case Monster.FurbolgArcher:
+                                                if (MapControl.GetObject(TargetID) != null)
+                                                {
+                                                    missile = CreateProjectile(429, Libraries.Monsters[(ushort)Monster.FurbolgArcher], false, 5, 30, 0);
+
+                                                    if (missile.Target != null)
+                                                    {
+                                                        missile.Complete += (o, e) =>
+                                                        {
+                                                            if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                            missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FurbolgArcher], 424, 5, 500, missile.Target));
+                                                            SoundManager.PlaySound(BaseSound + 7);
+                                                        };
+                                                    }
+                                                }
+                                                break;
+
+
+
+
                                             case Monster.RedFoxman:
                                                 ob = MapControl.GetObject(TargetID);
                                                 if (ob != null)
@@ -3524,9 +3665,19 @@ namespace Client.MirObjects
                                 case 1:
                                     switch (BaseImage)
                                     {
+
+                                        // Sanjian
+                                        case Monster.FurbolgCommander:
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FurbolgCommander], 320, 5, 5 * Frame.Interval, this));
+                                            break;
                                         case Monster.Furball:
                                             Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Furball], 288, 8, Frame.Count * Frame.Interval, this));
                                             break;
+                                        case Monster.GlacierBeast:
+                                            Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GlacierBeast], 342, 12, 1200, this) { Blend = true });
+                                            break;
+
+
                                         case Monster.PoisonHugger:
                                             Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.PoisonHugger], 224, 5, Frame.Count * FrameInterval, this));
                                             break;
@@ -3559,6 +3710,13 @@ namespace Client.MirObjects
                                         case Monster.BoulderSpirit:
                                             Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.BoulderSpirit], 64, 8, 8 * Frame.Interval, this) { Blend = true });
                                             break;
+                                    }
+                                    break;
+                                    // Sanjian
+                                case 4:
+                                    PlayDeadSound();
+                                    switch (BaseImage)
+                                    {
                                     }
                                     break;
                                 case 5:

@@ -438,8 +438,20 @@ namespace Server.MirObjects
 
                 // Sanjian
 
-                case 197: // GlacierSnail
+                case 197:
                     return new GlacierSnail(info);
+                case 198:
+                    return new FurbolgWarrior(info);
+                case 199:
+                    return new FurbolgArcher(info);
+                case 200:
+                    return new FurbolgCommander(info);
+                case 201:
+                    return new FurbolgGuard(info);
+                case 202:
+                    return new GlacierBeast(info);
+                case 203:
+                    return new GlacierWarrior(info);
 
 
 
@@ -1165,6 +1177,9 @@ namespace Server.MirObjects
                 case DelayedType.Recall:
                     PetRecall();
                     break;
+                case DelayedType.SpellEffect:
+                    CompleteSpellEffect(action.Params);
+                    break;
             }
         }
 
@@ -1199,6 +1214,17 @@ namespace Server.MirObjects
         protected virtual void CompleteDeath(IList<object> data)
         {
             throw new NotImplementedException();
+        }
+
+        protected virtual void CompleteSpellEffect(IList<object> data)
+        {
+            MapObject target = (MapObject)data[0];
+            SpellEffect effect = (SpellEffect)data[1];
+
+            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+            S.ObjectEffect p = new S.ObjectEffect { ObjectID = target.ObjectID, Effect = effect };
+            CurrentMap.Broadcast(p, target.CurrentLocation);
         }
 
         protected virtual void ProcessRegen()
@@ -3396,6 +3422,59 @@ namespace Server.MirObjects
                     break;
                 }
             }
+        }
+
+        // Sanjian
+        protected virtual void ThreeQuarterMoonAttack(int damage, int delay = 500, DefenceType defenceType = DefenceType.ACAgility)
+        {
+            MirDirection dir = Functions.PreviousDir(Direction);
+
+            for (int i = 0; i < 6; i++)
+            {
+                Point target = Functions.PointMove(CurrentLocation, dir, 1);
+                dir = Functions.NextDir(dir);
+
+                if (!CurrentMap.ValidPoint(target)) continue;
+
+                Cell cell = CurrentMap.GetCell(target);
+                if (cell.Objects == null) continue;
+
+                for (int o = 0; o < cell.Objects.Count; o++)
+                {
+                    MapObject ob = cell.Objects[o];
+                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
+                    if (!ob.IsAttackTarget(this)) continue;
+
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
+                    ActionList.Add(action);
+                    break;
+                }
+            }
+        }
+        protected virtual void JumpBack(int distance)
+        {
+            MirDirection jumpDir = Functions.ReverseDirection(Direction);
+
+            Point location;
+
+            for (int i = 0; i < distance; i++)
+            {
+                location = Functions.PointMove(CurrentLocation, jumpDir, 1);
+                if (!CurrentMap.ValidPoint(location)) return;
+            }
+
+            for (int i = 0; i < distance; i++)
+            {
+                location = Functions.PointMove(CurrentLocation, jumpDir, 1);
+
+                CurrentMap.GetCell(CurrentLocation).Remove(this);
+                RemoveObjects(jumpDir, 1);
+                CurrentLocation = location;
+                CurrentMap.GetCell(CurrentLocation).Add(this);
+                AddObjects(jumpDir, 1);
+            }
+
+            Broadcast(new S.ObjectBackStep { ObjectID = ObjectID, Direction = Direction, Location = location, Distance = distance });
         }
 
         protected virtual void FullmoonAttack(int damage, int delay = 500, DefenceType defenceType = DefenceType.ACAgility, int pushDistance = -1, int distance = 1)
