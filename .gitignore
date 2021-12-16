@@ -64,3 +64,5 @@ obj
 *.user
 /Components/CustomFormControl.dll
 /Components/CustoMFormControl.pdb
+Components/CustomFormControl.dll
+Components/CustomFormControl.pdb
