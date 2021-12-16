@@ -1582,6 +1582,7 @@ namespace Client.MirObjects
                                             case Monster.Furball:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Furball], 256 + (int)Direction * 4, 4, 4 * Frame.Interval, this));
                                                 break;
+
                                             case Monster.FurbolgWarrior:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FurbolgWarrior], 320 + (int)Direction * 5, 5, 5 * Frame.Interval, this));
                                                 break;
@@ -3664,6 +3665,7 @@ namespace Client.MirObjects
                                 case 1:
                                     switch (BaseImage)
                                     {
+
                                         // Sanjian
                                         case Monster.FurbolgCommander:
                                             Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FurbolgCommander], 320, 5, 5 * Frame.Interval, this));
@@ -3674,7 +3676,6 @@ namespace Client.MirObjects
                                         case Monster.GlacierBeast:
                                             Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GlacierBeast], 342, 12, 1200, this) { Blend = true });
                                             break;
-
 
 
                                         case Monster.PoisonHugger:
