@@ -1930,7 +1930,7 @@ namespace Server.MirEnvir
 
                                         if (poison != PoisonType.None)
                                         {
-                                            target.ApplyPoison(new Poison { PType = poison, Duration = (2 * (magic.Level + 1)) + (value / 10), TickSpeed = 1000, Value = tempValue, Owner = player }, player, false, false);
+                                            target.ApplyPoison(new Poison { PType = poison, Duration = (2 * (magic.Level + 1)) + (value / 10), TickSpeed = 1000, Value = tempValue, Owner = player }, player, false, true);
                                         }
 
                                         if (target.Race == ObjectType.Player)
