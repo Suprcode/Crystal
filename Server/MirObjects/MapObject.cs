@@ -756,19 +756,7 @@ namespace Server.MirObjects
         {
             if (map == null) map = CurrentMap;
             if (map.Cells == null) return false;
-            if (map.WalkableCells != null && map.WalkableCells.Count == 0) return false;
-
-            if (map.WalkableCells == null)
-            {
-                map.WalkableCells = new List<Point>();
-
-                for (int x = 0; x < map.Width; x++)
-                    for (int y = 0; y < map.Height; y++)
-                        if (map.Cells[x, y].Attribute == CellAttribute.Walk)
-                            map.WalkableCells.Add(new Point(x, y));
-
-                if (map.WalkableCells.Count == 0) return false;
-            }
+            if (map.WalkableCells.Count == 0) return false;
 
             int cellIndex = Envir.Random.Next(map.WalkableCells.Count);
 

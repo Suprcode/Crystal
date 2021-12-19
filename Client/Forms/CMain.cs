@@ -41,6 +41,8 @@ namespace Client
         private static long _fpsTime;
         private static int _fps;
         public static int FPS;
+        public static int DPS;
+        public static int DPSCounter;
 
         public static long PingTime;
         public static long NextPing = 10000;
@@ -99,7 +101,6 @@ namespace Client
                 SaveError(ex.ToString());
             }
         }
-
 
         private static void Application_Idle(object sender, EventArgs e)
         {
@@ -311,6 +312,10 @@ namespace Client
                 _fpsTime = Time + 1000;
                 FPS = _fps;
                 _fps = 0;
+
+                DPS = DPSCounter;
+                DPSCounter = 0;
+
                 DXManager.Clean(); // Clean once a second.
             }
             else
@@ -377,6 +382,8 @@ namespace Client
             if (MirControl.MouseControl != null)
             {
                 text = string.Format("FPS: {0}", FPS);
+
+                text += string.Format(", DPS: {0}", DPS);
 
                 text += string.Format(", Time: {0:HH:mm:ss UTC}", Now);
 

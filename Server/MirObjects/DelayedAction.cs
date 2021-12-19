@@ -22,7 +22,10 @@ namespace Server.MirObjects
         NPC,
         Poison,
         DamageIndicator,
-        Quest
+        Quest,
+
+        // Sanjian
+        SpellEffect,
     }
 
     public class DelayedAction

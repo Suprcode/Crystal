@@ -469,12 +469,20 @@ namespace Server.MirEnvir
                             LoadMapCellsV100(fileBytes);
                             break;
                     }
+
+                    GetWalkableCells();
                     
                     for (int i = 0; i < Info.Respawns.Count; i++)
                     {
                         MapRespawn info = new MapRespawn(Info.Respawns[i]);
                         if (info.Monster == null) continue;
                         info.Map = this;
+                        info.WalkableCells = WalkableCells.Where(x =>
+                        x.X <= info.Info.Location.X + info.Info.Spread &&
+                        x.X >= info.Info.Location.X - info.Info.Spread &&
+                        x.Y <= info.Info.Location.Y + info.Info.Spread &&
+                        x.Y >= info.Info.Location.Y - info.Info.Spread).ToList();
+
                         Respawns.Add(info);
 
                         if ((info.Info.SaveRespawnTime) && (info.Info.RespawnTicks != 0))
@@ -504,6 +512,19 @@ namespace Server.MirEnvir
 
             MessageQueue.Enqueue("Failed to Load Map: " + Info.FileName);
             return false;
+        }
+
+        public void GetWalkableCells()
+        {
+            if (WalkableCells == null)
+            {
+                WalkableCells = new List<Point>();
+
+                for (int x = 0; x < Width; x++)
+                    for (int y = 0; y < Height; y++)
+                        if (Cells[x, y].Attribute == CellAttribute.Walk)
+                            WalkableCells.Add(new Point(x, y));
+            }
         }
 
         private void CreateSafeZone(SafeZoneInfo info)
@@ -2346,6 +2367,7 @@ namespace Server.MirEnvir
         public byte ErrorCount = 0;
 
         public List<RouteInfo> Route;
+        public List<Point> WalkableCells;
 
         public MapRespawn(RespawnInfo info)
         {
