@@ -1887,7 +1887,7 @@ namespace Server.MirEnvir
                     location = (Point)data[3];
 
                     // the skill effect a 3x3 square
-                    var posLists = GetEffectiveSquare(location, Width, Height, 5);
+                    var posLists = GetEffectiveSquare(location, Width, Height, 3);
                     foreach ((var posX, var posY) in posLists)
                     {
                         cell = GetCell(posX, posY);
