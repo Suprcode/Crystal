@@ -821,17 +821,21 @@ namespace Server.MirEnvir
         }
 
          /**
-         * return the coordinates of effect coordinates within an n x n square
+         * return the coordinates of effect coordinates within an n x n square (n should be odd number. i.e. 3x3, 5x5, 7x7)
          * then use GetCell() in Map.cs to retrive real objects
          * default 3x3
          */
-        public static List<(int X, int Y)> GetEffectiveSquare(Point location, int mapWidth, int mapHeight, int squareEdgeLength = 3)
+        public static List<Point> GetPointsInEffectiveSquare(Point location, int mapWidth, int mapHeight, int squareEdgeLength = 3)
         {
-            var coor = new List<(int, int)>();
-            int spread = 1;
+            var pointsWithinTheMap = new List<Point>();
+            int fallBackSpread = 1;
+            int spread;
             if (squareEdgeLength > 1)
             {
                 spread = (int)((squareEdgeLength - 1) / 2);
+            } else
+            {
+                spread = fallBackSpread; // 3x3
             }
 
             for (int y = location.Y - spread; y <= location.Y + spread; y++)
@@ -843,10 +847,10 @@ namespace Server.MirEnvir
                 {
                     if (x < 0) continue;
                     if (x >= mapWidth) break;
-                    coor.Add((x, y));
+                    pointsWithinTheMap.Add(new Point(x, y));
                 }
             }
-            return coor;
+            return pointsWithinTheMap;
         }
 
         private void CompleteMagic(IList<object> data)
@@ -1887,10 +1891,10 @@ namespace Server.MirEnvir
                     location = (Point)data[3];
 
                     // the skill affect a 3x3 square
-                    var posLists = GetEffectiveSquare(location, Width, Height, 3);
-                    foreach ((var posX, var posY) in posLists)
+                    var points= GetPointsInEffectiveSquare(location, Width, Height, 3);
+                    foreach (var point in points)
                     {
-                        cell = GetCell(posX, posY);
+                        cell = GetCell(point.X, point.Y);
 
                         if (!cell.Valid || cell.Objects == null) continue;
 
