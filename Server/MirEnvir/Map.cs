@@ -820,6 +820,39 @@ namespace Server.MirEnvir
             }
         }
 
+         /**
+         * return the coordinates of effect coordinates within an n x n square (n should be odd number. i.e. 3x3, 5x5, 7x7)
+         * then use GetCell() in Map.cs to retrive real objects
+         * default 3x3
+         */
+        public static List<Point> GetPointsInEffectiveSquare(Point location, int mapWidth, int mapHeight, int squareEdgeLength = 3)
+        {
+            var pointsWithinTheMap = new List<Point>();
+            int fallBackSpread = 1;
+            int spread;
+            if (squareEdgeLength > 1)
+            {
+                spread = (int)((squareEdgeLength - 1) / 2);
+            } else
+            {
+                spread = fallBackSpread; // 3x3
+            }
+
+            for (int y = location.Y - spread; y <= location.Y + spread; y++)
+            {
+                if (y < 0) continue;
+                if (y >= mapHeight) break;
+
+                for (int x = location.X - spread; x <= location.X + spread; x++)
+                {
+                    if (x < 0) continue;
+                    if (x >= mapWidth) break;
+                    pointsWithinTheMap.Add(new Point(x, y));
+                }
+            }
+            return pointsWithinTheMap;
+        }
+
         private void CompleteMagic(IList<object> data)
         {
             bool train = false;
@@ -1850,68 +1883,75 @@ namespace Server.MirEnvir
                 #region Plague
 
                 case Spell.Plague:
+                    // DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, magic.GetDamage(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC])), location, pType);
+                    // (int)data[2] === magic.GetDamage(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]))
+                    // (Point)data[3] === location
+                    // (PoisonType)data[4] === pType
                     value = (int)data[2];
                     location = (Point)data[3];
 
-                    int posX = location.X;
-                    int posY = location.Y;
-                    
-                    cell = GetCell(posX, posY);
-
-                    if (!cell.Valid || cell.Objects == null) return;
-
-                    for (int i = 0; i < cell.Objects.Count; i++)
+                    // the skill affect a 3x3 square
+                    var points= GetPointsInEffectiveSquare(location, Width, Height, 3);
+                    foreach (var point in points)
                     {
-                        MapObject target = cell.Objects[i];
-                        switch (target.Race)
+                        cell = GetCell(point.X, point.Y);
+
+                        if (!cell.Valid || cell.Objects == null) continue;
+
+                        for (int i = 0; i < cell.Objects.Count; i++)
                         {
-                            case ObjectType.Monster:
-                            case ObjectType.Player:
-                                //Only targets
-                                if (target.IsAttackTarget(player))
-                                {
-                                    int chance = Envir.Random.Next(15);
-                                    PoisonType poison;
-                                    if (new int[] { 0, 1, 3 }.Contains(chance)) //3 in 15 chances it'll slow
-                                        poison = PoisonType.Slow;
-                                    else if (new int[] { 3, 4 }.Contains(value)) //2 in 15 chances it'll freeze
-                                        poison = PoisonType.Frozen;
-                                    else if (new int[] { 5, 6, 7, 8, 9 }.Contains(value)) //5 in 15 chances it'll red/green
-                                        poison = (PoisonType)data[4];
-                                    else //5 in 15 chances it'll do nothing
-                                        poison = PoisonType.None;
-
-                                    int tempValue = 0;
-
-                                    if (poison == PoisonType.Green)
+                            MapObject target = cell.Objects[i];
+                            switch (target.Race)
+                            {
+                                case ObjectType.Monster:
+                                case ObjectType.Player:
+                                    //Only targets
+                                    if (target.IsAttackTarget(player))
                                     {
-                                        tempValue = value / 15 + magic.Level + 1;
-                                    }
-                                    else
-                                    {
-                                        tempValue = value + (magic.Level + 1) * 2;
-                                    }
 
-                                    if (poison != PoisonType.None)
-                                    {
-                                        target.ApplyPoison(new Poison { PType = poison, Duration = (2 * (magic.Level + 1)) + (value / 10), TickSpeed = 1000, Value = tempValue, Owner = player }, player, false, false);
+                                        int chance = Envir.Random.Next(15);
+                                        PoisonType poison;
+                                        if (new int[] { 0, 1, 2 }.Contains(chance)) //3 in 15 chances it'll slow
+                                            poison = PoisonType.Slow;
+                                        else if (new int[] { 3, 4 }.Contains(chance)) //2 in 15 chances it'll freeze
+                                            poison = PoisonType.Frozen;
+                                        else if (new int[] { 5, 6, 7, 8, 9 }.Contains(chance)) //5 in 15 chances it'll red/green
+                                            // (whatever type of poison player is holding)
+                                            poison = (PoisonType)data[4];
+                                        else //5 in 15 chances it'll do nothing
+                                            poison = PoisonType.None;
+
+                                        int tempValue = 0;
+
+                                        if (poison == PoisonType.Red)
+                                        {
+                                            tempValue = value / 15 + magic.Level + 1;
+                                        }
+                                        else
+                                        {
+                                            tempValue = value + (magic.Level + 1) * 2;
+                                        }
+
+                                        if (poison != PoisonType.None)
+                                        {
+                                            target.ApplyPoison(new Poison { PType = poison, Duration = (2 * (magic.Level + 1)) + (value / 10), TickSpeed = 1000, Value = tempValue, Owner = player }, player, false, true);
+                                        }
+
+                                        if (target.Race == ObjectType.Player)
+                                        {
+                                            PlayerObject tempOb = (PlayerObject)target;
+
+                                            tempOb.ChangeMP(-tempValue);
+                                        }
+
+                                        target.Attacked(player, player.Stats[Stat.MaxSC] * 2, DefenceType.MAC, true);
+
+                                        train = true;
                                     }
-                                    
-                                    if (target.Race == ObjectType.Player)
-                                    {
-                                        PlayerObject tempOb = (PlayerObject)target;
-
-                                        tempOb.ChangeMP(-tempValue);
-                                    }
-
-                                    target.Attacked(player, player.Stats[Stat.MaxSC] * 2, DefenceType.MAC, true);
-
-                                    train = true;
-                                }
-                                break;
+                                    break;
+                            }
                         }
                     }
-
                     break;
 
                 #endregion
