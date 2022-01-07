@@ -69,7 +69,7 @@ namespace Client
         public static int RemainingErrorLogs = 100;
 
         //Graphics
-        public static bool FullScreen = true, Borderless = true, TopMost = true;
+        public static bool FullScreen = true, Borderless = true, TopMost = true, MouseClip = false;
         public static string FontName = "Tahoma"; //"MS Sans Serif"
         public static float FontSize = 8F;
         public static bool UseMouseCursors = true;
@@ -193,6 +193,7 @@ namespace Client
             //Graphics
             FullScreen = Reader.ReadBoolean("Graphics", "FullScreen", FullScreen);
             Borderless = Reader.ReadBoolean("Graphics", "Borderless", Borderless);
+            MouseClip = Reader.ReadBoolean("Graphics", "MouseClip", MouseClip);
             TopMost = Reader.ReadBoolean("Graphics", "AlwaysOnTop", TopMost);
             FPSCap = Reader.ReadBoolean("Graphics", "FPSCap", FPSCap);
             Resolution = Reader.ReadInt32("Graphics", "Resolution", Resolution);
@@ -290,6 +291,7 @@ namespace Client
             //Graphics
             Reader.Write("Graphics", "FullScreen", FullScreen);
             Reader.Write("Graphics", "Borderless", Borderless);
+            Reader.Write("Graphics", "MouseClip", MouseClip);
             Reader.Write("Graphics", "AlwaysOnTop", TopMost);
             Reader.Write("Graphics", "FPSCap", FPSCap);
             Reader.Write("Graphics", "Resolution", Resolution);

@@ -71,7 +71,7 @@ namespace Client
 
 
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.Selectable, true);
-            FormBorderStyle = Settings.FullScreen ? FormBorderStyle.None : FormBorderStyle.FixedDialog;
+            FormBorderStyle = Settings.FullScreen || Settings.Borderless ? FormBorderStyle.None : FormBorderStyle.FixedDialog;
 
             Graphics = CreateGraphics();
             Graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -157,8 +157,8 @@ namespace Client
         }
         public static void CMain_MouseMove(object sender, MouseEventArgs e)
         {
-            if (Settings.FullScreen)
-                Cursor.Clip = new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight);
+            if (Settings.FullScreen || Settings.MouseClip)
+                Cursor.Clip = Program.Form.RectangleToScreen(Program.Form.ClientRectangle);
 
             MPoint = Program.Form.PointToClient(Cursor.Position);
 
@@ -528,7 +528,7 @@ namespace Client
         {
             Settings.FullScreen = !Settings.FullScreen;
 
-            Program.Form.FormBorderStyle = Settings.FullScreen ? FormBorderStyle.None : FormBorderStyle.FixedDialog;
+            Program.Form.FormBorderStyle = Settings.FullScreen || Settings.Borderless ? FormBorderStyle.None : FormBorderStyle.FixedDialog;
 
             DXManager.Parameters.Windowed = !Settings.FullScreen;
 
