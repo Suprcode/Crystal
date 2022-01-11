@@ -9774,7 +9774,8 @@ namespace Client.MirScenes
             int light;
             Point p;
             DXManager.SetBlend(true);
-            DXManager.Device.SetRenderState(SlimDX.Direct3D9.RenderState.SourceBlend, Blend.SourceAlpha);
+            DXManager.Device.SetRenderState(RenderState.SourceBlend, Blend.SourceAlpha);
+            DXManager.Device.SetRenderState(RenderState.DestinationBlend, Blend.One);
 
             #region Object Lights (Player/Mob/NPC)
             for (int i = 0; i < Objects.Count; i++)
@@ -9958,8 +9959,8 @@ namespace Client.MirScenes
             DXManager.SetBlend(false);
             DXManager.SetSurface(oldSurface);
 
-            DXManager.Device.SetRenderState(SlimDX.Direct3D9.RenderState.SourceBlend, Blend.DestinationColor);
-            DXManager.Device.SetRenderState(SlimDX.Direct3D9.RenderState.DestinationBlend, Blend.BothInverseSourceAlpha);
+            DXManager.Device.SetRenderState(RenderState.SourceBlend, Blend.Zero);
+            DXManager.Device.SetRenderState(RenderState.DestinationBlend, Blend.SourceColor);
 
             DXManager.Sprite.Draw(DXManager.LightTexture, new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight), Vector3.Zero, Vector3.Zero, Color.White);
             CMain.DPSCounter++;
