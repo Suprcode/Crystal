@@ -217,6 +217,7 @@ public class GameLanguage
                          ItemGradeRare = "Rare",
                          ItemGradeLegendary = "Legendary",
                          ItemGradeMythical = "Mythical",
+                         ItemGradeHeroic = "Heroic", //Jev
                          NoAccountID = "The AccountID does not exist.",
                          IncorrectPasswordAccountID = "Incorrect Password and AccountID combination.",
                          GroupSwitch = "Allow/Disallow Group Requests",
