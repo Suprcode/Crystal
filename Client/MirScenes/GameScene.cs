@@ -5843,6 +5843,8 @@ namespace Client.MirScenes
                     return Color.DarkOrange;
                 case ItemGrade.Mythical:
                     return Color.Plum;
+                case ItemGrade.Heroic:
+                    return Color.Red;
                 default:
                     return Color.Yellow;
             }
@@ -5896,7 +5898,10 @@ namespace Client.MirScenes
                     break;
                 case ItemGrade.Mythical:
                     GradeString = GameLanguage.ItemGradeMythical;
-                    break;              
+                    break;
+                case ItemGrade.Heroic:
+                    GradeString = GameLanguage.ItemGradeHeroic;
+                    break;
             }
             MirLabel nameLabel = new MirLabel
             {

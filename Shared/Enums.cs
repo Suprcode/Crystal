@@ -109,7 +109,7 @@ public enum ItemGrade : byte
     Rare = 2,
     Legendary = 3,
     Mythical = 4,
-    Heroic = 5 //Jev
+    Heroic = 5,
 }
 
 
