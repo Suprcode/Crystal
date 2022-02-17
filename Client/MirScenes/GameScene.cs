@@ -3064,6 +3064,23 @@ namespace Client.MirScenes
             {
                 UserItem item = User.Inventory[i];
 
+                if (item != null && item.Slots.Length > 0)
+                    if (item != null && item.Slots.Length > 0)
+                {
+                    for (int j = 0; j < item.Slots.Length; j++)
+                    {
+                        UserItem slotItem = item.Slots[j];
+
+                        if (slotItem == null || slotItem.UniqueID != p.UniqueID) continue;
+
+                        if (slotItem.Count == p.Count)
+                            item.Slots[j] = null;
+                        else
+                            slotItem.Count -= p.Count;
+                        break;
+                    }
+                }
+
                 if (item == null || item.UniqueID != p.UniqueID) continue;
 
                 if (item.Count == p.Count)
