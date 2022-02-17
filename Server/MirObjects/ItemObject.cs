@@ -77,7 +77,9 @@ namespace Server.MirObjects
 					NameColour = Color.DarkOrange;
 				if (item.Info.Grade == ItemGrade.Mythical)
 					NameColour = Color.Plum;
-			}
+                if (item.Info.Grade == ItemGrade.Heroic)
+                    NameColour = Color.Red;
+            }
 
 			CurrentMap = dropper.CurrentMap;
             CurrentLocation = dropper.CurrentLocation;
@@ -102,7 +104,9 @@ namespace Server.MirObjects
 					NameColour = Color.DarkOrange;
 				if (item.Info.Grade == ItemGrade.Mythical)
 					NameColour = Color.Plum;
-			}
+                if (item.Info.Grade == ItemGrade.Heroic)
+                    NameColour = Color.Red;
+            }
 
             CurrentMap = dropper.CurrentMap;
             CurrentLocation = manualpoint;

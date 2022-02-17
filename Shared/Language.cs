@@ -217,6 +217,7 @@ public class GameLanguage
                          ItemGradeRare = "Rare",
                          ItemGradeLegendary = "Legendary",
                          ItemGradeMythical = "Mythical",
+                         ItemGradeHeroic = "Heroic",
                          NoAccountID = "The AccountID does not exist.",
                          IncorrectPasswordAccountID = "Incorrect Password and AccountID combination.",
                          GroupSwitch = "Allow/Disallow Group Requests",
@@ -491,6 +492,7 @@ public class GameLanguage
         GameLanguage.ItemGradeRare = reader.ReadString("Language", "ItemGradeRare", GameLanguage.ItemGradeRare);
         GameLanguage.ItemGradeLegendary = reader.ReadString("Language", "ItemGradeLegendary", GameLanguage.ItemGradeLegendary);
         GameLanguage.ItemGradeMythical = reader.ReadString("Language", "ItemGradeMythical", GameLanguage.ItemGradeMythical);
+        GameLanguage.ItemGradeHeroic = reader.ReadString("Language", "ItemGradeHeroic", GameLanguage.ItemGradeHeroic);
 
         GameLanguage.NoAccountID = reader.ReadString("Language", "NoAccountID", GameLanguage.NoAccountID);
         GameLanguage.IncorrectPasswordAccountID = reader.ReadString("Language", "IncorrectPasswordAccountID", GameLanguage.IncorrectPasswordAccountID);
@@ -720,6 +722,7 @@ public class GameLanguage
         reader.Write("Language", "ItemGradeRare", GameLanguage.ItemGradeRare);
         reader.Write("Language", "ItemGradeLegendary", GameLanguage.ItemGradeLegendary);
         reader.Write("Language", "ItemGradeMythical", GameLanguage.ItemGradeMythical);
+        reader.Write("Language", "ItemGradeHeroic", GameLanguage.ItemGradeHeroic);
 
         reader.Write("Language", "NoAccountID", GameLanguage.NoAccountID);
         reader.Write("Language", "IncorrectPasswordAccountID", GameLanguage.IncorrectPasswordAccountID);
