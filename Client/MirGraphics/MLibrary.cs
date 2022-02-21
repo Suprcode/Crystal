@@ -194,6 +194,11 @@ namespace Client.MirGraphics
 
         static void InitLibrary(ref MLibrary[] library, string path, string toStringValue, string suffix = "")
         {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
             var allFiles = Directory.GetFiles(path, "*" + suffix + MLibrary.Extention, SearchOption.TopDirectoryOnly).OrderBy(x => int.Parse(Regex.Match(x, @"\d+").Value));
 
             var lastFile = allFiles.Count() > 0 ? Path.GetFileName(allFiles.Last()) : "0";
