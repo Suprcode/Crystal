@@ -390,7 +390,10 @@ namespace AutoPatcherAdmin
 
             try
             {
-                var rootPath = (new Uri(Settings.Host)).AbsolutePath;
+                if (!Directory.Exists(TempDownloadDirectory))
+                {
+                    Directory.CreateDirectory(TempDownloadDirectory);
+                }
 
                 TransferOptions transferOptions = new TransferOptions
                 {
@@ -398,9 +401,16 @@ namespace AutoPatcherAdmin
                     OverwriteMode = OverwriteMode.Overwrite
                 };
 
-                using var stream = session.GetFile(Path.Combine(rootPath, fileName), transferOptions);
-                using var ms = new MemoryStream();
-                stream.CopyTo(ms);
+                var rootPath = (new Uri(Settings.Host)).AbsolutePath;
+
+                var result = session.GetFiles(Path.Combine(rootPath, fileName), Path.Combine(TempDownloadDirectory, fileName), options: transferOptions);
+                result.Check();
+
+                MemoryStream ms = new MemoryStream();
+                using (FileStream fs = new FileStream(Path.Combine(TempDownloadDirectory, fileName), FileMode.Open, FileAccess.Read))
+                    fs.CopyTo(ms);
+
+                DeleteDirectory(TempDownloadDirectory);
 
                 return ms.ToArray();
             }
