@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using Server.MirNetwork;
 using Server.MirEnvir;
+using Server.Utils;
 using C = ClientPackets;
 
 namespace Server.MirDatabase
 {
     public class AccountInfo
-    {
+    {       
         protected static Envir Envir
         {
             get { return Envir.Main; }
@@ -18,7 +19,20 @@ namespace Server.MirDatabase
         public int Index;
 
         public string AccountID = string.Empty;
-        public string Password = string.Empty;
+
+        private string password = string.Empty;
+        public string Password
+        {
+            get { return password; }
+            set
+            {                
+                Salt = Crypto.GenerateSalt();
+                password = Crypto.HashPassword(value, Salt);
+                
+            }
+        }
+
+        public byte[] Salt = new byte[24];
 
         public string UserName = string.Empty;
         public DateTime BirthDate;
@@ -58,6 +72,7 @@ namespace Server.MirDatabase
         public AccountInfo(C.NewAccount p)
         {
             AccountID = p.AccountID;
+
             Password = p.Password;
             UserName = p.UserName;
             SecretQuestion = p.SecretQuestion;
@@ -72,7 +87,13 @@ namespace Server.MirDatabase
             Index = reader.ReadInt32();
 
             AccountID = reader.ReadString();
-            Password = reader.ReadString();
+            if (Envir.LoadVersion < 94)
+                Password = reader.ReadString();
+            else
+                password = reader.ReadString();
+
+            if (Envir.LoadVersion > 93)
+                Salt = reader.ReadBytes(reader.ReadInt32());
 
             UserName = reader.ReadString();
             BirthDate = DateTime.FromBinary(reader.ReadInt64());
@@ -150,12 +171,13 @@ namespace Server.MirDatabase
             }
         }
 
-
         public void Save(BinaryWriter writer)
         {
             writer.Write(Index);
             writer.Write(AccountID);
             writer.Write(Password);
+            writer.Write(Salt.Length);
+            writer.Write(Salt);
 
             writer.Write(UserName);
             writer.Write(BirthDate.ToBinary());

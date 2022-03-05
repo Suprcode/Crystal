@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
 using S = ServerPackets;
@@ -54,7 +55,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int MinVersion = 60;
-        public const int Version = 93;
+        public const int Version = 94;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
@@ -2107,11 +2108,13 @@ namespace Server.MirEnvir
             account.BanReason = string.Empty;
             account.ExpiryDate = DateTime.MinValue;
 
+            p.CurrentPassword = Utils.Crypto.HashPassword(p.CurrentPassword, account.Salt);
             if (string.CompareOrdinal(account.Password, p.CurrentPassword) != 0)
             {
                 c.Enqueue(new ServerPackets.ChangePassword {Result = 5});
                 return;
             }
+
 
             account.Password = p.NewPassword;
             c.Enqueue(new ServerPackets.ChangePassword {Result = 6});
@@ -2159,6 +2162,7 @@ namespace Server.MirEnvir
                 account.BanReason = string.Empty;
                 account.ExpiryDate = DateTime.MinValue;
 
+            p.Password = Utils.Crypto.HashPassword(p.Password, account.Salt);
 
             if (string.CompareOrdinal(account.Password, p.Password) != 0)
             {
