@@ -10215,7 +10215,7 @@ namespace Client.MirScenes
                             return;
                         }
                     }
-                    if ((CanWalk(direction)) && (CheckDoorOpen(Functions.PointMove(User.CurrentLocation, direction, 1))))
+                    if ((CanWalk(direction, out direction)) && (CheckDoorOpen(Functions.PointMove(User.CurrentLocation, direction, 1))))
                     {
                         User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
                         return;
@@ -10323,7 +10323,7 @@ namespace Client.MirScenes
                                 return;
                             }
                         }
-                        if ((CanWalk(direction)) && (CheckDoorOpen(Functions.PointMove(User.CurrentLocation, direction, 1))))
+                        if ((CanWalk(direction, out direction)) && (CheckDoorOpen(Functions.PointMove(User.CurrentLocation, direction, 1))))
                         {
 
                             User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
@@ -10372,7 +10372,7 @@ namespace Client.MirScenes
                                 return;
                             }
                         }
-                        if ((CanWalk(direction)) && (CheckDoorOpen(Functions.PointMove(User.CurrentLocation, direction, 1))))
+                        if ((CanWalk(direction, out direction)) && (CheckDoorOpen(Functions.PointMove(User.CurrentLocation, direction, 1))))
                         {
                             User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
                             return;
@@ -10393,7 +10393,7 @@ namespace Client.MirScenes
             if (User.Class == MirClass.Archer && User.HasClassWeapon && (MapObject.TargetObject is MonsterObject || MapObject.TargetObject is PlayerObject)) return; //ArcherTest - stop walking
             direction = Functions.DirectionFromPoint(User.CurrentLocation, MapObject.TargetObject.CurrentLocation);
 
-            if (!CanWalk(direction)) return;
+            if (!CanWalk(direction, out direction)) return;
 
             User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
         }
@@ -10688,6 +10688,31 @@ namespace Client.MirScenes
         private bool CanWalk(MirDirection dir)
         {
             return EmptyCell(Functions.PointMove(User.CurrentLocation, dir, 1)) && !User.InTrapRock;
+        }
+
+        private bool CanWalk(MirDirection dir, out MirDirection outDir)
+        {
+            outDir = dir;
+            if (User.InTrapRock) return false;            
+            
+            if (EmptyCell(Functions.PointMove(User.CurrentLocation, dir, 1)))
+                return true;
+
+            dir = Functions.NextDir(outDir);
+            if (EmptyCell(Functions.PointMove(User.CurrentLocation, dir, 1)))
+            {
+                outDir = dir;
+                return true;
+            }
+
+            dir = Functions.PreviousDir(outDir);
+            if (EmptyCell(Functions.PointMove(User.CurrentLocation, dir, 1)))
+            {
+                outDir = dir;
+                return true;
+            }
+
+            return false;
         }
 
         private bool CheckDoorOpen(Point p)
