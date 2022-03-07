@@ -762,8 +762,6 @@ namespace Server
                 reader.Write("Setup", "Enabled", false);
                 reader.Write("Layout", "Button0ImageIndex", "");
                 reader.Write("Layout", "Button0Title", "");
-                reader.Write("Layout", "Button0X", "");
-                reader.Write("Layout", "Button0Y", "");
                 reader.Write("Layout", "Button0MapIndex", "");
             }
 
@@ -783,7 +781,6 @@ namespace Server
                 {
                     ImageIndex = imageIndex,
                     Title = reader.ReadString("Layout", $"Button{c}Title", ""),
-                    Location = new Point(reader.ReadInt32("Layout", $"Button{c}X", 0), reader.ReadInt32("Layout", $"Button{c}Y", 0)),
                     MapIndex = reader.ReadInt32("Layout", $"Button{c}MapIndex", 0)
                 };
                 WorldMapSetup.Icons.Add(icon);

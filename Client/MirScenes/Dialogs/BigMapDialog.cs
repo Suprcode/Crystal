@@ -413,7 +413,7 @@ namespace Client.MirScenes.Dialogs
                 MirButton button = new MirButton()
                 {
                     Index = icon.ImageIndex,
-                    Location = icon.Location,
+                    UseOffSet = true,
                     Library = Libraries.MapLinkIcon,
                     Parent = this,
                     Sound = SoundList.ButtonA,

@@ -122,7 +122,6 @@ public class WorldMapIcon
 {
     public int ImageIndex;
     public string Title;
-    public Point Location;
     public int MapIndex;
     public WorldMapIcon() { }
 
@@ -130,7 +129,6 @@ public class WorldMapIcon
     {
         ImageIndex = reader.ReadInt32();
         Title = reader.ReadString();
-        Location = new Point(reader.ReadInt32(), reader.ReadInt32());
         MapIndex = reader.ReadInt32();
     }
 
@@ -138,8 +136,6 @@ public class WorldMapIcon
     {
         writer.Write(ImageIndex);
         writer.Write(Title);
-        writer.Write(Location.X);
-        writer.Write(Location.Y);
         writer.Write(MapIndex);
     }
 }
