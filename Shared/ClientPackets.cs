@@ -876,6 +876,38 @@ namespace ClientPackets
             writer.Write(UniqueID);
         }
     }
+
+    public sealed class RequestMapInfo : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RequestMapInfo; } }
+
+        public int MapIndex;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            MapIndex = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(MapIndex);
+        }
+    }
+
+    public sealed class TeleportToNPC : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.TeleportToNPC; } }
+
+        public uint ObjectID;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ObjectID = reader.ReadUInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ObjectID);
+        }
+    }
     public sealed class MagicKey : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.MagicKey; } }

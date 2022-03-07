@@ -408,6 +408,7 @@ namespace ServerPackets
             get { return (short)ServerPacketIds.MapInformation; }
         }
 
+        public int MapIndex;
         public string FileName = string.Empty;
         public string Title = string.Empty;
         public ushort MiniMap, BigMap, Music;
@@ -417,6 +418,7 @@ namespace ServerPackets
 
         protected override void ReadPacket(BinaryReader reader)
         {
+            MapIndex = reader.ReadInt32();
             FileName = reader.ReadString();
             Title = reader.ReadString();
             MiniMap = reader.ReadUInt16();
@@ -431,6 +433,7 @@ namespace ServerPackets
 
         protected override void WritePacket(BinaryWriter writer)
         {
+            writer.Write(MapIndex);
             writer.Write(FileName);
             writer.Write(Title);
             writer.Write(MiniMap);
@@ -442,6 +445,52 @@ namespace ServerPackets
             writer.Write(bools);
             writer.Write(MapDarkLight);
             writer.Write(Music);
+        }
+    }
+
+    public sealed class NewMapInfo : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.NewMapInfo; }
+        }
+
+        public int MapIndex;
+        public ClientMapInfo Info;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            MapIndex = reader.ReadInt32();
+            Info = new ClientMapInfo(reader);
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(MapIndex);
+            Info.Save(writer);
+        }
+    }
+
+    public sealed class WorldMapSetupInfo : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.WorldMapSetup; }
+        }
+
+        public WorldMapSetup Setup;
+        public int TeleportToNPCCost;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Setup = new WorldMapSetup(reader);
+            TeleportToNPCCost = reader.ReadInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            Setup.Save(writer);
+            writer.Write(TeleportToNPCCost);
         }
     }
     public sealed class UserInformation : Packet
@@ -2604,6 +2653,7 @@ namespace ServerPackets
             get { return (short)ServerPacketIds.MapChanged; }
         }
 
+        public int MapIndex;
         public string FileName = string.Empty;
         public string Title = string.Empty;
         public ushort MiniMap, BigMap, Music;
@@ -2615,6 +2665,7 @@ namespace ServerPackets
 
         protected override void ReadPacket(BinaryReader reader)
         {
+            MapIndex = reader.ReadInt32();
             FileName = reader.ReadString();
             Title = reader.ReadString();
             MiniMap = reader.ReadUInt16();
@@ -2627,6 +2678,7 @@ namespace ServerPackets
         }
         protected override void WritePacket(BinaryWriter writer)
         {
+            writer.Write(MapIndex);
             writer.Write(FileName);
             writer.Write(Title);
             writer.Write(MiniMap);

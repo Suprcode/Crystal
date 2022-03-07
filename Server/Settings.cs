@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;
 using Server.MirDatabase;
@@ -101,6 +102,7 @@ namespace Server
         public static List<long> OrbsDmgList = new List<long>();
 
         public static float DropRate = 1F, ExpRate = 1F;
+        public static int TeleportToNPCCost = 3000;
 
         public static int ItemTimeOut = 30,
                           PlayerDiedItemTimeOut = 120,
@@ -241,6 +243,7 @@ namespace Server
 
         public static List<RandomItemStat> RandomItemStatsList = new List<RandomItemStat>();
         public static List<MineSet> MineSetList = new List<MineSet>();
+        public static WorldMapSetup WorldMapSetup = new WorldMapSetup();
 
         //item related settings
         public static byte MagicResistWeight = 10,
@@ -410,6 +413,7 @@ namespace Server
             TucsonGeneralEgg = Reader.ReadString("Game", "TucsonGeneralEgg", TucsonGeneralEgg);
             GroupInviteDelay = Reader.ReadInt64("Game", "GroupInviteDelay", GroupInviteDelay);
             TradeDelay = Reader.ReadInt64("Game", "TradeDelay", TradeDelay);
+            TeleportToNPCCost = Reader.ReadInt32("Game", "TeleportToNPCCost", TeleportToNPCCost);
 
             //Rested
             RestedPeriod = Reader.ReadInt32("Rested", "Period", RestedPeriod);
@@ -516,6 +520,7 @@ namespace Server
             LoadGoods();
             LoadGem();
             LoadNotice();
+            LoadWorldMap();
 
             GameLanguage.LoadServerLanguage(Path.Combine(ConfigPath, "Language.ini"));
         }
@@ -713,6 +718,8 @@ namespace Server
             Reader.Write("Archive", "InactiveCharacterMonths", ArchiveInactiveCharacterAfterMonths);
             Reader.Write("Archive", "DeletedCharacterMonths", ArchiveDeletedCharacterAfterMonths);
 
+            Reader.Write("Game", "TeleportToNPCCost", TeleportToNPCCost);
+
             SaveAwakeAttribute();
         }
 
@@ -740,6 +747,47 @@ namespace Server
                 exp = i * 4;//default power value
                 exp = reader.ReadInt64("Att", "Orb" + i, exp);
                 OrbsDmgList.Add(exp);
+            }
+        }
+
+        public static void LoadWorldMap()
+        {
+            InIReader reader = null;
+            string path = Path.Combine(ConfigPath, "WorldMap.ini");
+            if (!File.Exists(path))
+            {
+                FileStream newFile = File.Create(path);
+                newFile.Close();
+                reader = new InIReader(path);
+                reader.Write("Setup", "Enabled", false);
+                reader.Write("Layout", "Button0ImageIndex", "");
+                reader.Write("Layout", "Button0Title", "");
+                reader.Write("Layout", "Button0X", "");
+                reader.Write("Layout", "Button0Y", "");
+                reader.Write("Layout", "Button0MapIndex", "");
+            }
+
+            if (reader == null)
+                reader = new InIReader(path);
+            
+            WorldMapSetup.Enabled = reader.ReadBoolean("Setup", "Enabled", false);
+
+            int c = 0;
+            while (true)
+            {
+                int imageIndex = reader.ReadInt32("Layout", $"Button{c}ImageIndex", -1, false);
+                if (imageIndex == -1)
+                    break;
+
+                WorldMapIcon icon = new WorldMapIcon()
+                {
+                    ImageIndex = imageIndex,
+                    Title = reader.ReadString("Layout", $"Button{c}Title", ""),
+                    Location = new Point(reader.ReadInt32("Layout", $"Button{c}X", 0), reader.ReadInt32("Layout", $"Button{c}Y", 0)),
+                    MapIndex = reader.ReadInt32("Layout", $"Button{c}MapIndex", 0)
+                };
+                WorldMapSetup.Icons.Add(icon);
+                c++;
             }
         }
 

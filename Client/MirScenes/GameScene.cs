@@ -126,6 +126,8 @@ namespace Client.MirScenes
         public static List<ClientQuestInfo> QuestInfoList = new List<ClientQuestInfo>();
         public static List<GameShopItem> GameShopInfoList = new List<GameShopItem>();
         public static List<ClientRecipeInfo> RecipeInfoList = new List<ClientRecipeInfo>();
+        public static Dictionary<int, BigMapRecord> MapInfoList = new Dictionary<int, BigMapRecord>();
+        public static int TeleportToNPCCost;
 
         public static UserItem[] Storage = new UserItem[80];
         public static UserItem[] GuildStorage = new UserItem[112];
@@ -1110,6 +1112,12 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.MapInformation: //MapInfo
                     MapInformation((S.MapInformation)p);
                     break;
+                case (short)ServerPacketIds.NewMapInfo:
+                    NewMapInfo((S.NewMapInfo)p);
+                    break;
+                case (short)ServerPacketIds.WorldMapSetup:
+                    WorldMapSetup((S.WorldMapSetupInfo)p);
+                    break;
                 case (short)ServerPacketIds.UserInformation:
                     UserInformation((S.UserInformation)p);
                     break;
@@ -1805,9 +1813,53 @@ namespace Client.MirScenes
         {
             if (MapControl != null && !MapControl.IsDisposed)
                 MapControl.Dispose();
-            MapControl = new MapControl { FileName = Path.Combine(Settings.MapPath, p.FileName + ".map"), Title = p.Title, MiniMap = p.MiniMap, BigMap = p.BigMap, Lights = p.Lights, Lightning = p.Lightning, Fire = p.Fire, MapDarkLight = p.MapDarkLight, Music = p.Music };
+            MapControl = new MapControl { Index = p.MapIndex, FileName = Path.Combine(Settings.MapPath, p.FileName + ".map"), Title = p.Title, MiniMap = p.MiniMap, BigMap = p.BigMap, Lights = p.Lights, Lightning = p.Lightning, Fire = p.Fire, MapDarkLight = p.MapDarkLight, Music = p.Music };
             MapControl.LoadMap();
             InsertControl(0, MapControl);
+        }
+
+        private void WorldMapSetup(S.WorldMapSetupInfo info)
+        {
+            BigMapDialog.WorldMapSetup(info.Setup);
+            TeleportToNPCCost = info.TeleportToNPCCost;
+        }
+
+        private void NewMapInfo(S.NewMapInfo info)
+        {
+            BigMapRecord newRecord = new BigMapRecord() { MapInfo = info.Info };
+
+            foreach (ClientMovementInfo mInfo in info.Info.Movements)
+            {
+                MirButton button = new MirButton()
+                {
+                    Library = Libraries.MapLinkIcon,
+                    Index = mInfo.Icon,
+                    PressedIndex = mInfo.Icon,
+                    Sound = SoundList.ButtonA,
+                    Parent = BigMapDialog.ViewPort,
+                    Location = new Point(20, 38),
+                    Hint = mInfo.Title,
+                    Visible = false
+                };
+                button.MouseEnter += (o, e) =>
+                {
+                    BigMapDialog.MouseLocation = mInfo.Location;
+                };
+
+                button.Click += (o, e) =>
+                {
+                    BigMapDialog.SetTargetMap(mInfo.Destination);
+                };
+                newRecord.MovementButtons.Add(mInfo, button);
+            }
+
+            foreach (ClientNPCInfo npcInfo in info.Info.NPCs)
+            {
+                BigMapNPCRow row = new BigMapNPCRow(npcInfo) {  Parent = BigMapDialog };
+                newRecord.NPCButtons.Add(row);
+            }
+
+            MapInfoList.Add(info.MapIndex, newRecord);
         }
         private void UserInformation(S.UserInformation p)
         {
@@ -3346,6 +3398,7 @@ namespace Client.MirScenes
         }
         private void MapChanged(S.MapChanged p)
         {
+            MapControl.Index = p.MapIndex;
             MapControl.FileName = Path.Combine(Settings.MapPath, p.FileName + ".map");
             MapControl.Title = p.Title;
             MapControl.MiniMap = p.MiniMap;
@@ -9078,6 +9131,7 @@ namespace Client.MirScenes
         public List<Door> Doors = new List<Door>();
         public int Width, Height;
 
+        public int Index;
         public string FileName = String.Empty;
         public string Title = String.Empty;
         public ushort MiniMap, BigMap, Music, SetMusic;
@@ -10848,6 +10902,7 @@ namespace Client.MirScenes
                 Width = 0;
                 Height = 0;
 
+                Index = 0;
                 FileName = String.Empty;
                 Title = String.Empty;
                 MiniMap = 0;

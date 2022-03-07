@@ -55,7 +55,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int MinVersion = 60;
-        public const int Version = 94;
+        public const int Version = 97;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
@@ -2676,6 +2676,11 @@ namespace Server.MirEnvir
         public Map GetMap(int index)
         {
             return MapList.FirstOrDefault(t => t.Info.Index == index);
+        }
+
+        public MapInfo GetMapInfo(int index)
+        {
+            return MapInfoList.FirstOrDefault(t => t.Index == index);
         }
 
         public Map GetMapByNameAndInstance(string name, int instanceValue = 0)

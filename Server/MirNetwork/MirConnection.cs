@@ -60,7 +60,8 @@ namespace Server.MirNetwork
         public List<QuestInfo> SentQuestInfo = new List<QuestInfo>();
         public List<RecipeInfo> SentRecipeInfo = new List<RecipeInfo>();
         public List<UserItem> SentChatItem = new List<UserItem>(); //TODO - Add Expiry time
-
+        public List<MapInfo> SentMapInfo = new List<MapInfo>();
+        public bool WorldMapSetupSent;
         public bool StorageSent;
 
 
@@ -330,6 +331,12 @@ namespace Server.MirNetwork
                     break;
                 case (short)ClientPacketIds.PickUp:
                     PickUp();
+                    break;
+                case (short)ClientPacketIds.RequestMapInfo:
+                    RequestMapInfo((C.RequestMapInfo)p);
+                    break;
+                case (short)ClientPacketIds.TeleportToNPC:
+                    TeleportToNPC((C.TeleportToNPC)p);
                     break;
                 case (short)ClientPacketIds.Inspect:
                     Inspect((C.Inspect)p);
@@ -1049,6 +1056,20 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.PickUp();
+        }
+
+        private void RequestMapInfo(C.RequestMapInfo p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.RequestMapInfo(p.MapIndex);
+        }
+
+        private void TeleportToNPC(C.TeleportToNPC p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.TeleportToNPC(p.ObjectID);
         }
         private void Inspect(C.Inspect p)
         {

@@ -238,6 +238,100 @@ public class ClientAuction
     }
 }
 
+public class ClientMovementInfo
+{
+    public int Destination;
+    public string Title;
+    public Point Location;
+    public int Icon;
+
+    public ClientMovementInfo() { }
+
+    public ClientMovementInfo(BinaryReader reader)
+    {
+        Destination = reader.ReadInt32();
+        Title = reader.ReadString();
+        Location = new Point(reader.ReadInt32(), reader.ReadInt32());
+        Icon = reader.ReadInt32();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Destination);
+        writer.Write(Title);
+        writer.Write(Location.X);
+        writer.Write(Location.Y);
+        writer.Write(Icon);
+    }
+}
+
+public class ClientNPCInfo
+{
+    public uint ObjectID;
+    public string Name;
+    public Point Location;
+    public int Icon;
+    public bool CanTeleportTo;
+
+    public ClientNPCInfo() { }
+
+    public ClientNPCInfo(BinaryReader reader)
+    {
+        ObjectID = reader.ReadUInt32();
+        Name = reader.ReadString();
+        Location = new Point(reader.ReadInt32(), reader.ReadInt32());
+        Icon = reader.ReadInt32();
+        CanTeleportTo = reader.ReadBoolean();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(ObjectID);
+        writer.Write(Name);
+        writer.Write(Location.X);
+        writer.Write(Location.Y);
+        writer.Write(Icon);
+        writer.Write(CanTeleportTo);
+    }
+}
+
+public class ClientMapInfo
+{
+    public int Width;
+    public int Height;
+    public int BigMap;
+    public List<ClientMovementInfo> Movements = new List<ClientMovementInfo>();
+    public List<ClientNPCInfo> NPCs = new List<ClientNPCInfo>();
+
+    public ClientMapInfo() { }
+
+    public ClientMapInfo(BinaryReader reader)
+    {
+        Width = reader.ReadInt32();
+        Height = reader.ReadInt32();
+        BigMap = reader.ReadInt32();
+        var count = reader.ReadInt32();
+        for (int i = 0; i < count; i++)
+            Movements.Add(new ClientMovementInfo(reader));
+        count = reader.ReadInt32();
+        for (int i = 0; i < count; i++)
+            NPCs.Add(new ClientNPCInfo(reader));
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Width);
+        writer.Write(Height);
+        writer.Write(BigMap);
+        writer.Write(Movements.Count);
+        for (int i = 0; i < Movements.Count; i++)
+            Movements[i].Save(writer);
+        writer.Write(NPCs.Count);
+        for (int i = 0; i < NPCs.Count; i++)
+            NPCs[i].Save(writer);
+    }
+}
+
 public class ClientQuestInfo
 {
     public int Index;

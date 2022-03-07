@@ -51,7 +51,7 @@ namespace Client.MirControls
             get
             {
                 if (!Enabled)
-                    return base.Index;
+                    return _disabledIndex >= 0 ? _disabledIndex : base.Index;
 
                 if (_pressedIndex >= 0 && ActiveControl == this && MouseControl == this)
                     return _pressedIndex;
@@ -113,6 +113,28 @@ namespace Client.MirControls
         }
         #endregion
 
+        #region Disabled Index
+        private int _disabledIndex;
+        public int DisabledIndex
+        {
+            set
+            {
+                if (_disabledIndex == value)
+                    return;
+                _disabledIndex = value;
+                OnDisabledIndexChanged();
+            }
+            get { return _disabledIndex; }
+        }
+
+        public event EventHandler DisabledIndexChanged;
+        private void OnDisabledIndexChanged()
+        {
+            if (DisabledIndexChanged != null)
+                DisabledIndexChanged.Invoke(this, EventArgs.Empty);
+        }
+        #endregion
+
         #region Size
         protected override void OnSizeChanged()
         {
@@ -136,6 +158,8 @@ namespace Client.MirControls
         }
         #endregion
 
+        public bool OnlyDrawWhenActive;
+
         public MirButton()
         {
             HoverIndex = -1;
@@ -150,6 +174,14 @@ namespace Client.MirControls
                     //OutLine = true,
                     //OutLineColour = Color.FromArgb(255, 70, 50, 30),
                 };
+        }
+
+        protected internal override void DrawControl()
+        {
+            if (OnlyDrawWhenActive && ActiveControl != this && MouseControl != this)
+                return;
+
+            base.DrawControl();
         }
 
         protected override void Highlight()

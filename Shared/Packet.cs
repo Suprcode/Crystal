@@ -148,6 +148,10 @@ public abstract class Packet
                 return new C.DropGold();
             case (short)ClientPacketIds.PickUp:
                 return new C.PickUp();
+            case (short)ClientPacketIds.RequestMapInfo:
+                return new C.RequestMapInfo();
+            case (short)ClientPacketIds.TeleportToNPC:
+                return new C.TeleportToNPC();
             case (short)ClientPacketIds.Inspect:
                 return new C.Inspect();
             case (short)ClientPacketIds.ChangeAMode:
@@ -391,6 +395,10 @@ public abstract class Packet
                 return new S.StartGameDelay();
             case (short)ServerPacketIds.MapInformation:
                 return new S.MapInformation();
+            case (short)ServerPacketIds.NewMapInfo:
+                return new S.NewMapInfo();
+            case (short)ServerPacketIds.WorldMapSetup:
+                return new S.WorldMapSetupInfo();
             case (short)ServerPacketIds.UserInformation:
                 return new S.UserInformation();
             case (short)ServerPacketIds.UserSlotsRefresh:
