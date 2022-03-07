@@ -299,18 +299,21 @@ namespace Client.MirScenes.Dialogs
             foreach (var row in currentRecord.NPCButtons)
                 row.Visible = false;
 
-            if (!visible || currentRecord.NPCButtons.Count <= MaximumRows) return;
+            if (!visible) return;
 
-            ScrollBar.Visible = true;
-            var scrollHeight = ScrollDownButton.Location.Y - ScrollUpButton.Location.Y - 32;
-            var extraRows = currentRecord.NPCButtons.Count - MaximumRows;
-            GapPerRow = scrollHeight / (float)extraRows;
             for (int i = ScrollOffset; i < ScrollOffset + MaximumRows; i++)
             {
                 if (i >= currentRecord.NPCButtons.Count) return;
                 currentRecord.NPCButtons[i].Location = new Point(590, 50 + (i - ScrollOffset) * 21);
                 currentRecord.NPCButtons[i].Visible = true;
             }
+
+            if (currentRecord.NPCButtons.Count <= MaximumRows) return;
+
+            ScrollBar.Visible = true;
+            var scrollHeight = ScrollDownButton.Location.Y - ScrollUpButton.Location.Y - 32;
+            var extraRows = currentRecord.NPCButtons.Count - MaximumRows;
+            GapPerRow = scrollHeight / (float)extraRows;            
         }
 
         public void BigMap_MouseWheel(object sender, MouseEventArgs e)
