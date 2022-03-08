@@ -34,6 +34,7 @@ namespace Server
             this.FilterTextBox = new System.Windows.Forms.TextBox();
             this.RefreshButton = new System.Windows.Forms.Button();
             this.AccountInfoPanel = new System.Windows.Forms.Panel();
+            this.setPasswordButton = new System.Windows.Forms.Button();
             this.AdminCheckBox = new System.Windows.Forms.CheckBox();
             this.PermBanButton = new System.Windows.Forms.Button();
             this.WeekBanButton = new System.Windows.Forms.Button();
@@ -76,7 +77,7 @@ namespace Server
             this.expiryDateHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.MatchFilterCheckBox = new System.Windows.Forms.CheckBox();
             this.WipeCharButton = new System.Windows.Forms.Button();
-            this.setPasswordButton = new System.Windows.Forms.Button();
+            this.PasswordChangeCheckBox = new System.Windows.Forms.CheckBox();
             this.AccountInfoPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -120,6 +121,7 @@ namespace Server
             // 
             this.AccountInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.AccountInfoPanel.Controls.Add(this.PasswordChangeCheckBox);
             this.AccountInfoPanel.Controls.Add(this.setPasswordButton);
             this.AccountInfoPanel.Controls.Add(this.AdminCheckBox);
             this.AccountInfoPanel.Controls.Add(this.PermBanButton);
@@ -155,6 +157,16 @@ namespace Server
             this.AccountInfoPanel.Name = "AccountInfoPanel";
             this.AccountInfoPanel.Size = new System.Drawing.Size(616, 209);
             this.AccountInfoPanel.TabIndex = 14;
+            // 
+            // setPasswordButton
+            // 
+            this.setPasswordButton.Location = new System.Drawing.Point(95, 41);
+            this.setPasswordButton.Name = "setPasswordButton";
+            this.setPasswordButton.Size = new System.Drawing.Size(84, 23);
+            this.setPasswordButton.TabIndex = 33;
+            this.setPasswordButton.Text = "Set Password";
+            this.setPasswordButton.UseVisualStyleBackColor = true;
+            this.setPasswordButton.Click += new System.EventHandler(this.button1_Click);
             // 
             // AdminCheckBox
             // 
@@ -517,15 +529,16 @@ namespace Server
             this.WipeCharButton.UseVisualStyleBackColor = true;
             this.WipeCharButton.Click += new System.EventHandler(this.WipeCharButton_Click);
             // 
-            // setPasswordButton
+            // PasswordChangeCheckBox
             // 
-            this.setPasswordButton.Location = new System.Drawing.Point(95, 41);
-            this.setPasswordButton.Name = "setPasswordButton";
-            this.setPasswordButton.Size = new System.Drawing.Size(84, 23);
-            this.setPasswordButton.TabIndex = 33;
-            this.setPasswordButton.Text = "Set Password";
-            this.setPasswordButton.UseVisualStyleBackColor = true;
-            this.setPasswordButton.Click += new System.EventHandler(this.button1_Click);
+            this.PasswordChangeCheckBox.AutoSize = true;
+            this.PasswordChangeCheckBox.Location = new System.Drawing.Point(185, 43);
+            this.PasswordChangeCheckBox.Name = "PasswordChangeCheckBox";
+            this.PasswordChangeCheckBox.Size = new System.Drawing.Size(103, 17);
+            this.PasswordChangeCheckBox.TabIndex = 34;
+            this.PasswordChangeCheckBox.Text = "Require Change";
+            this.PasswordChangeCheckBox.UseVisualStyleBackColor = true;
+            this.PasswordChangeCheckBox.CheckedChanged += new System.EventHandler(this.PasswordChangeCheckBox_CheckedChanged);
             // 
             // AccountInfoForm
             // 
@@ -602,5 +615,6 @@ namespace Server
         private System.Windows.Forms.CheckBox MatchFilterCheckBox;
         private System.Windows.Forms.Button WipeCharButton;
         private System.Windows.Forms.Button setPasswordButton;
+        private System.Windows.Forms.CheckBox PasswordChangeCheckBox;
     }
 }

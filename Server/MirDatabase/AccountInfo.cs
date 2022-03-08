@@ -44,6 +44,7 @@ namespace Server.MirDatabase
         public DateTime CreationDate;
 
         public bool Banned;
+        public bool RequirePasswordChange;
         public string BanReason = string.Empty;
         public DateTime ExpiryDate;
         public int WrongPasswordCount;
@@ -94,6 +95,9 @@ namespace Server.MirDatabase
 
             if (Envir.LoadVersion > 93)
                 Salt = reader.ReadBytes(reader.ReadInt32());
+
+            if (Envir.LoadVersion > 97)
+                RequirePasswordChange = reader.ReadBoolean();
 
             UserName = reader.ReadString();
             BirthDate = DateTime.FromBinary(reader.ReadInt64());
@@ -178,6 +182,7 @@ namespace Server.MirDatabase
             writer.Write(Password);
             writer.Write(Salt.Length);
             writer.Write(Salt);
+            writer.Write(RequirePasswordChange);
 
             writer.Write(UserName);
             writer.Write(BirthDate.ToBinary());

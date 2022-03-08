@@ -154,6 +154,7 @@ namespace Server
             BannedCheckBox.CheckState = info.Banned ? CheckState.Checked : CheckState.Unchecked;
             ExpiryDateTextBox.Text = info.ExpiryDate.ToString();
             AdminCheckBox.CheckState = info.AdminAccount ? CheckState.Checked : CheckState.Unchecked;
+            PasswordChangeCheckBox.CheckState = info.RequirePasswordChange ? CheckState.Checked : CheckState.Unchecked;
 
             for (int i = 0; i < _selectedAccountInfos.Count; i++)
             {
@@ -178,6 +179,7 @@ namespace Server
                 if (BannedCheckBox.Checked != info.Banned) BannedCheckBox.CheckState = CheckState.Indeterminate;
                 if (ExpiryDateTextBox.Text != info.ExpiryDate.ToString()) ExpiryDateTextBox.Text = string.Empty;
                 if (AdminCheckBox.Checked != info.AdminAccount) AdminCheckBox.CheckState = CheckState.Indeterminate;
+                if (PasswordChangeCheckBox.Checked != info.RequirePasswordChange) PasswordChangeCheckBox.CheckState = CheckState.Indeterminate;
             }
         }
 
@@ -447,6 +449,8 @@ namespace Server
                 for (int i = 0; i < _selectedAccountInfos.Count; i++)
                 {
                     _selectedAccountInfos[i].Password = PasswordDialog.PasswordTextBox.Text;
+                    _selectedAccountInfos[i].RequirePasswordChange = true;
+                    PasswordChangeCheckBox.CheckState = CheckState.Checked;
                     Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
                     MessageBox.Show("Password Changed");
                 }
@@ -454,6 +458,20 @@ namespace Server
                 AutoResize();
                 AccountInfoListView.EndUpdate();
             }
+        }
+
+        private void PasswordChangeCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            AccountInfoListView.BeginUpdate();
+            for (int i = 0; i < _selectedAccountInfos.Count; i++)
+            {
+                _selectedAccountInfos[i].RequirePasswordChange = PasswordChangeCheckBox.CheckState == CheckState.Checked;
+                Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
+            }
+            AutoResize();
+            AccountInfoListView.EndUpdate();
         }
     }
 }

@@ -55,7 +55,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int MinVersion = 60;
-        public const int Version = 97;
+        public const int Version = 98;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
@@ -2115,8 +2115,8 @@ namespace Server.MirEnvir
                 return;
             }
 
-
             account.Password = p.NewPassword;
+            account.RequirePasswordChange = false;
             c.Enqueue(new ServerPackets.ChangePassword {Result = 6});
         }
         public void Login(ClientPackets.Login p, MirConnection c)
@@ -2159,8 +2159,8 @@ namespace Server.MirEnvir
                 }
                 account.Banned = false;
             }
-                account.BanReason = string.Empty;
-                account.ExpiryDate = DateTime.MinValue;
+            account.BanReason = string.Empty;
+            account.ExpiryDate = DateTime.MinValue;
 
             p.Password = Utils.Crypto.HashPassword(p.Password, account.Salt);
 
@@ -2184,6 +2184,12 @@ namespace Server.MirEnvir
                 return;
             }
             account.WrongPasswordCount = 0;
+
+            if (account.RequirePasswordChange)
+            {
+                c.Enqueue(new ServerPackets.Login { Result = 5 });
+                return;
+            }
 
             lock (AccountLock)
             {
