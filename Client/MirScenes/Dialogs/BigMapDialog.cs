@@ -163,7 +163,7 @@ namespace Client.MirScenes.Dialogs
                     y = 398;
 
                 var row = (y - ScrollUpButton.Location.Y + 13) / GapPerRow;
-                ScrollOffset = (int)row - 1;
+                ScrollOffset = (int)row;
                 SetNPCButtonVisibility(true);
             };
 

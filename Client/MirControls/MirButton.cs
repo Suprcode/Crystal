@@ -164,6 +164,7 @@ namespace Client.MirControls
         {
             HoverIndex = -1;
             PressedIndex = -1;
+            DisabledIndex = -1;
             Sound = SoundList.ButtonB;
 
             _label = new MirLabel
@@ -222,6 +223,9 @@ namespace Client.MirControls
 
             PressedIndexChanged = null;
             _pressedIndex = 0;
+
+            DisabledIndexChanged = null;
+            _disabledIndex = 0;
         }
         #endregion
     }

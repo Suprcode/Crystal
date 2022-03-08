@@ -81,6 +81,7 @@ namespace Client.MirControls
             Index = -1;
             HoverIndex = -1;
             PressedIndex = -1;
+            DisabledIndex = -1;
             Sound = SoundList.ButtonB;
             Click += MirCheckBox_Click;
 
