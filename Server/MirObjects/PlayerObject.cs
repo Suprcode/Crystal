@@ -13088,6 +13088,35 @@ namespace Server.MirObjects
             }
         }
 
+        public void SearchMap(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text) || text.Length < 3) return;
+
+            S.SearchMapResult p = new S.SearchMapResult();
+
+            Map map = Envir.GetWorldMap(text);
+            if (map != null)
+            {
+                CheckMapInfo(map.Info);
+                p.MapIndex = map.Info.Index;
+                Enqueue(p);
+                return;
+            }
+
+            NPCObject npc = Envir.GetWorldMapNPC(text);
+            if (npc != null)
+            {
+                CheckMapInfo(npc.CurrentMap.Info);
+                p.MapIndex = npc.CurrentMap.Info.Index;
+                p.NPCIndex = npc.ObjectID;
+                Enqueue(p);
+                return;
+            }
+
+            Enqueue(p);
+            return;
+        }
+
         private bool IsGroupMember(MapObject player)
         {
             if (player.Race != ObjectType.Player) return false;

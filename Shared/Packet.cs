@@ -152,6 +152,8 @@ public abstract class Packet
                 return new C.RequestMapInfo();
             case (short)ClientPacketIds.TeleportToNPC:
                 return new C.TeleportToNPC();
+            case (short)ClientPacketIds.SearchMap:
+                return new C.SearchMap();
             case (short)ClientPacketIds.Inspect:
                 return new C.Inspect();
             case (short)ClientPacketIds.ChangeAMode:
@@ -399,6 +401,8 @@ public abstract class Packet
                 return new S.NewMapInfo();
             case (short)ServerPacketIds.WorldMapSetup:
                 return new S.WorldMapSetupInfo();
+            case (short)ServerPacketIds.SearchMapResult:
+                return new S.SearchMapResult();
             case (short)ServerPacketIds.UserInformation:
                 return new S.UserInformation();
             case (short)ServerPacketIds.UserSlotsRefresh:

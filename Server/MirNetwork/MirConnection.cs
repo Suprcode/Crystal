@@ -338,6 +338,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.TeleportToNPC:
                     TeleportToNPC((C.TeleportToNPC)p);
                     break;
+                case (short)ClientPacketIds.SearchMap:
+                    SearchMap((C.SearchMap)p);
+                    break;
                 case (short)ClientPacketIds.Inspect:
                     Inspect((C.Inspect)p);
                     break;
@@ -1070,6 +1073,13 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.TeleportToNPC(p.ObjectID);
+        }
+
+        private void SearchMap(C.SearchMap p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.SearchMap(p.Text);
         }
         private void Inspect(C.Inspect p)
         {

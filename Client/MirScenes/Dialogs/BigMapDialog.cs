@@ -26,11 +26,13 @@ namespace Client.MirScenes.Dialogs
     public sealed class BigMapDialog : MirImageControl
     {        
         MirLabel CoordinateLabel;
-        public MirButton CloseButton, ScrollUpButton, ScrollDownButton, ScrollBar, WorldButton, MyLocationButton, TeleportToButton;
+        public MirButton CloseButton, ScrollUpButton, ScrollDownButton, ScrollBar, WorldButton, MyLocationButton, TeleportToButton, SearchButton;
+        public MirTextBox SearchTextBox;
 
         private float GapPerRow;
         const int MaximumRows = 18;
         public int TargetMapIndex;
+        private DateTime NextSearchTime;
 
         public BigMapViewPort ViewPort;
         public WorldMapImage WorldMap;
@@ -205,6 +207,30 @@ namespace Client.MirScenes.Dialogs
             };
             TeleportToButton.Click += (o, e) => TeleportToNPC();
 
+            SearchButton = new MirButton
+            {
+                Index = 1340,
+                HoverIndex = 1341,
+                PressedIndex = 1342,
+                Enabled = false,
+                Location = new Point(23, Size.Height - 36),
+                Library = Libraries.Prguse2,
+                Parent = this,
+                Sound = SoundList.ButtonA,
+            };
+            SearchButton.Click += (o, e) => Search();
+
+            SearchTextBox = new MirTextBox
+            {
+                Location = new Point(59, Size.Height - 27),
+                Parent = this,
+                Font = new Font(Settings.FontName, 8F),
+                Size = new Size(130, 10),
+                MaxLength = Globals.MaxChatLength
+            };
+            SearchTextBox.TextBox.TextChanged += SearchTextBox_TextChanged;
+            SearchTextBox.TextBox.KeyPress += SearchTextBox_KeyPress;
+
             ViewPort = new BigMapViewPort()
             {
                 Parent = this
@@ -276,10 +302,24 @@ namespace Client.MirScenes.Dialogs
             WorldMap.Visible = false;
             SelectedNPC = null;
             if (!GameScene.MapInfoList.ContainsKey(MapIndex))
-            {
                 Network.Enqueue(new C.RequestMapInfo() { MapIndex = MapIndex });
-            }
+            else
+                CurrentRecord = GameScene.MapInfoList[MapIndex];
             Redraw();
+        }
+
+        public void SetTargetNPC(uint NPCIndex)
+        {
+            if (CurrentRecord?.NPCButtons == null)
+                return;
+
+            foreach (BigMapNPCRow row in CurrentRecord.NPCButtons)
+            {
+                if (row.Info.ObjectID != NPCIndex) continue;
+
+                SelectedNPC = row;
+                return;
+            }
         }
 
         private void SetButtonsVisibility(bool visible)
@@ -365,6 +405,51 @@ namespace Client.MirScenes.Dialogs
 
             messageBox.Show();
         }
+
+        private void Search()
+        {
+            if (CMain.Now < NextSearchTime) return;
+
+            NextSearchTime = CMain.Now.AddSeconds(1);
+            Network.Enqueue(new C.SearchMap { Text = SearchTextBox.Text });
+        }
+
+        private void SearchTextBox_TextChanged(object sender, EventArgs e)
+        {
+            SearchButton.Enabled = !string.IsNullOrWhiteSpace(SearchTextBox.Text) && SearchTextBox.Text.Length > 2;
+        }
+
+        public void SearchTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (sender == null || e.KeyChar != (char)Keys.Enter) return;
+
+            e.Handled = true;
+
+            if (SearchButton.Enabled)
+                SearchButton.InvokeMouseClick(null);
+        }
+
+        #region Disposable
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                CoordinateLabel = null;
+                CloseButton = null;
+                ScrollUpButton = null;
+                ScrollDownButton = null;
+                ScrollBar = null;
+                WorldButton = null;
+                MyLocationButton = null;
+                TeleportToButton = null;
+                SearchButton = null;
+                SearchTextBox = null;
+            }
+
+            base.Dispose(disposing);
+        }
+
+        #endregion
     }
 
     public class WorldMapImage : MirImageControl

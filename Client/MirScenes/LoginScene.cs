@@ -487,7 +487,6 @@ namespace Client.MirScenes
                     AccountIDTextBox.Border = true;
                     AccountIDTextBox.BorderColour = Color.Green;
                 }
-
             }
             private void PasswordTextBox_TextChanged(object sender, EventArgs e)
             {

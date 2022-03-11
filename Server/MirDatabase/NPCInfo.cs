@@ -174,5 +174,19 @@ namespace Server.MirDatabase
         {
             return string.Format("{0}:   {1}", FileName, Functions.PointToString(Location));
         }
+
+        public string GameName
+        {
+            get
+            {
+                string s = Name;
+                if (s.Contains("_"))
+                {
+                    string[] splitName = s.Split('_');
+                    s = splitName[splitName.Length - 1];
+                }
+                return s;
+            }
+        }
     }
 }

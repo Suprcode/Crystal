@@ -2684,6 +2684,16 @@ namespace Server.MirEnvir
             return MapList.FirstOrDefault(t => t.Info.Index == index);
         }
 
+        public Map GetMap(string name, bool strict = true)
+        {
+            return MapList.FirstOrDefault(t => strict ? string.Equals(t.Info.Title, name, StringComparison.CurrentCultureIgnoreCase) : t.Info.Title.StartsWith(name, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        public Map GetWorldMap(string name)
+        {
+            return MapList.FirstOrDefault(t => t.Info.Title.StartsWith(name, StringComparison.CurrentCultureIgnoreCase) && t.Info.BigMap > 0);
+        }
+
         public MapInfo GetMapInfo(int index)
         {
             return MapInfoList.FirstOrDefault(t => t.Index == index);
@@ -2717,6 +2727,11 @@ namespace Server.MirEnvir
         public NPCObject GetNPC(string name)
         {
             return MapList.SelectMany(t1 => t1.NPCs.Where(t => t.Info.Name == name)).FirstOrDefault();
+        }
+
+        public NPCObject GetWorldMapNPC(string name)
+        {
+            return MapList.SelectMany(t1 => t1.NPCs.Where(t => t.Info.GameName.StartsWith(name, StringComparison.CurrentCultureIgnoreCase) && t.Info.ShowOnBigMap)).FirstOrDefault();
         }
 
         public MonsterInfo GetMonsterInfo(string name, bool Strict = false)

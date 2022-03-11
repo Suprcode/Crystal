@@ -493,6 +493,29 @@ namespace ServerPackets
             writer.Write(TeleportToNPCCost);
         }
     }
+
+    public sealed class SearchMapResult : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.SearchMapResult; }
+        }
+
+        public int MapIndex = -1;
+        public uint NPCIndex;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            MapIndex = reader.ReadInt32();
+            NPCIndex = reader.ReadUInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(MapIndex);
+            writer.Write(NPCIndex);
+        }
+    }
     public sealed class UserInformation : Packet
     {
         public override short Index

@@ -1118,6 +1118,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.WorldMapSetup:
                     WorldMapSetup((S.WorldMapSetupInfo)p);
                     break;
+                case (short)ServerPacketIds.SearchMapResult:
+                    SearchMapResult((S.SearchMapResult)p);
+                    break;
                 case (short)ServerPacketIds.UserInformation:
                     UserInformation((S.UserInformation)p);
                     break;
@@ -1822,7 +1825,7 @@ namespace Client.MirScenes
         {
             BigMapDialog.WorldMapSetup(info.Setup);
             TeleportToNPCCost = info.TeleportToNPCCost;
-        }
+        }        
 
         private void NewMapInfo(S.NewMapInfo info)
         {
@@ -1860,6 +1863,23 @@ namespace Client.MirScenes
             }
 
             MapInfoList.Add(info.MapIndex, newRecord);
+        }
+
+        private void SearchMapResult(S.SearchMapResult info)
+        {
+            if (info.MapIndex == -1 && info.NPCIndex == 0)
+            {
+                MirMessageBox messageBox = new MirMessageBox("Nothing Found.", MirMessageBoxButtons.OK);
+                messageBox.OKButton.Click += (o, a) =>
+                {
+                    BigMapDialog.SearchTextBox.SetFocus();
+                };
+                messageBox.Show();
+                return;
+            }
+
+            BigMapDialog.SetTargetMap(info.MapIndex);
+            BigMapDialog.SetTargetNPC(info.NPCIndex);
         }
         private void UserInformation(S.UserInformation p)
         {

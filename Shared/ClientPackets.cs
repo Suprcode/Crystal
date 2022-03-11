@@ -908,6 +908,22 @@ namespace ClientPackets
             writer.Write(ObjectID);
         }
     }
+
+    public sealed class SearchMap : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.SearchMap; } }
+
+        public string Text;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Text = reader.ReadString();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Text);
+        }
+    }
     public sealed class MagicKey : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.MagicKey; } }
