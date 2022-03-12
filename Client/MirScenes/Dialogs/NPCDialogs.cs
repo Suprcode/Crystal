@@ -854,6 +854,7 @@ namespace Client.MirScenes.Dialogs
                 Cells[i].Recipe = PType == PanelType.Craft;
             }
 
+            Location = new Point(Location.X, GameScene.Scene.NPCDialog.Size.Height);
             Visible = true;
 
             GameScene.Scene.InventoryDialog.Show();
@@ -1171,7 +1172,7 @@ namespace Client.MirScenes.Dialogs
 
             Index = 351;
             Library = Libraries.Prguse2;
-            Location = new Point(264, 224);
+            Location = new Point(264, GameScene.Scene.NPCDialog.Size.Height);
 
             ConfirmButton.HoverIndex = 291;
             ConfirmButton.Index = 290;
