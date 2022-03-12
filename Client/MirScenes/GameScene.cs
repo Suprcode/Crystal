@@ -3325,9 +3325,11 @@ namespace Client.MirScenes
         private void NPCResponse(S.NPCResponse p)
         {
             NPCTime = 0;
+            NPCDialog.BigButtons.Clear();
+            NPCDialog.BigButtonDialog.Hide();
             NPCDialog.NewText(p.Page);
 
-            if (p.Page.Count > 0)
+            if (p.Page.Count > 0 || NPCDialog.BigButtons.Count > 0)
                 NPCDialog.Show();
             else
                 NPCDialog.Hide();

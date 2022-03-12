@@ -8,7 +8,7 @@ namespace Client.MirControls
     public class MirButton : MirImageControl
     {
         #region Font Colour
-        public Color FontColour
+        public virtual Color FontColour
         {
             get
             {
@@ -66,12 +66,12 @@ namespace Client.MirControls
         #endregion
 
         #region Label
-        private MirLabel _label;
+        protected MirLabel _label;
         #endregion
 
         #region CenterText
-        private bool _center;
-        public bool CenterText
+        protected bool _center;
+        public virtual bool CenterText
         {
             get
             {
@@ -146,7 +146,7 @@ namespace Client.MirControls
         #endregion
 
         #region Text
-        public string Text
+        public virtual string Text
         {
             set
             {
