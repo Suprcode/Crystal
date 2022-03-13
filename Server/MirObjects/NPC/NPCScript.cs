@@ -570,6 +570,7 @@ namespace Server.MirObjects
                     while (match.Success)
                     {
                         string argu = match.Groups[1].Captures[0].Value;
+                        argu = argu.Split('/')[0];
 
                         currentButtons.Add(string.Format("[{0}]", argu));
                         match = match.NextMatch();

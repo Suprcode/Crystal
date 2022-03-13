@@ -1060,7 +1060,7 @@ namespace Server.MirEnvir
                                         {
                                             var stats = new Stats
                                             {
-                                                [type == BuffType.SoulShield ? Stat.MaxAC : Stat.MaxMAC] = target.Level / 7 + 4
+                                                [type == BuffType.SoulShield ? Stat.MaxMAC : Stat.MaxAC] = target.Level / 7 + 4
                                             };
 
                                             target.AddBuff(type, player, Settings.Second * value, stats);

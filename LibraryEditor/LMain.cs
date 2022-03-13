@@ -63,7 +63,7 @@ namespace LibraryEditor
                 {
                     try
                     {
-                        ParallelOptions options = new ParallelOptions {MaxDegreeOfParallelism = 8};
+                        ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = 8 };
                         Parallel.For(0, files.Length, options, i =>
                         {
                             if (Path.GetExtension(files[i]) == ".wtl")
@@ -93,7 +93,7 @@ namespace LibraryEditor
                     {
                         toolStripProgressBar.Value = 0;
                     }));
-                    
+
                     MessageBox.Show(
                         string.Format("Successfully converted {0} {1}",
                             (files.Length).ToString(),
@@ -357,24 +357,24 @@ namespace LibraryEditor
             {
                 ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = 8 };
                 Parallel.For(0, OpenWeMadeDialog.FileNames.Length, options, i =>
-                            {
-                                if (Path.GetExtension(OpenWeMadeDialog.FileNames[i]) == ".wtl")
-                                {
-                                    WTLLibrary WTLlib = new WTLLibrary(OpenWeMadeDialog.FileNames[i]);
-                                    WTLlib.ToMLibrary();
-                                }
-                                else if (Path.GetExtension(OpenWeMadeDialog.FileNames[i]) == ".Lib")
-                                {
-                                    MLibraryV1 v1Lib = new MLibraryV1(OpenWeMadeDialog.FileNames[i]);
-                                    v1Lib.ToMLibrary();
-                                }
-                                else
-                                {
-                                    WeMadeLibrary WILlib = new WeMadeLibrary(OpenWeMadeDialog.FileNames[i]);
-                                    WILlib.ToMLibrary();
-                                }
-                                toolStripProgressBar.Value++;
-                            });
+                {
+                    if (Path.GetExtension(OpenWeMadeDialog.FileNames[i]) == ".wtl")
+                    {
+                        WTLLibrary WTLlib = new WTLLibrary(OpenWeMadeDialog.FileNames[i]);
+                        WTLlib.ToMLibrary();
+                    }
+                    else if (Path.GetExtension(OpenWeMadeDialog.FileNames[i]) == ".Lib")
+                    {
+                        MLibraryV1 v1Lib = new MLibraryV1(OpenWeMadeDialog.FileNames[i]);
+                        v1Lib.ToMLibrary();
+                    }
+                    else
+                    {
+                        WeMadeLibrary WILlib = new WeMadeLibrary(OpenWeMadeDialog.FileNames[i]);
+                        WILlib.ToMLibrary();
+                    }
+                    toolStripProgressBar.Value++;
+                });
             }
             catch (Exception ex)
             {
@@ -563,13 +563,7 @@ namespace LibraryEditor
 
         private void safeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to remove the blank images?",
-                "Remove Blanks", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
-            _library.RemoveBlanks(true);
-            ImageList.Images.Clear();
-            _indexList.Clear();
-            PreviewListView.VirtualListSize = _library.Count;
         }
 
         private const int HowDeepToScan = 6;
@@ -898,6 +892,7 @@ namespace LibraryEditor
             }
 
             return base.ProcessCmdKey(ref msg, keyData);
+
         }
 
         private void buttonSkipNext_Click(object sender, EventArgs e)
@@ -1214,6 +1209,38 @@ namespace LibraryEditor
                     ImageBox.Image = _selectedImage.MaskImage;
                 }
             }
+        }
+
+        private void removeBlanksToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            _library.RemoveBlanks();
+            ImageList.Images.Clear();
+            _indexList.Clear();
+            PreviewListView.VirtualListSize = _library.Count;
+        }
+
+        private void populateMonFramesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _library.Frames.Clear();
+            _library.Frames = new FrameSet(FrameSet.DefaultMonsterFrameSet);
+
+            UpdateFrameGridView();
+        }
+
+        private void removeBlanksSafeToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to remove the Blank Images?",
+                "Remove Blanks", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+
+            _library.RemoveBlanks(true);
+            ImageList.Images.Clear();
+            _indexList.Clear();
+            PreviewListView.VirtualListSize = _library.Count;
+        }
+
+        private void frameGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
 
         /// <summary>

@@ -262,16 +262,28 @@ namespace Client.MirScenes.Dialogs
                         Capture capture = match.Groups[1].Captures[0];
                         string txt = match.Groups[2].Captures[0].Value;
                         string action = match.Groups[3].Captures[0].Value;
+                        string colourString = "RoyalBlue";
+
+                        string[] actionSplit = action.Split('/');
+
+                        action = actionSplit[0];
+                        if (actionSplit.Length > 1)
+                            colourString = actionSplit[1];
+
+                        Color color = Color.FromName(colourString);
 
                         BigButton button = new BigButton
                         {
-                            Index = 834,
-                            HoverIndex = 835,
-                            PressedIndex = 836,
+                            Index = 841,
+                            HoverIndex = 842,
+                            PressedIndex = 843,
                             Library = Libraries.Title,
                             Sound = SoundList.ButtonA,
-                            Text = txt
+                            Text = txt,
+                            FontColour = Color.White,
+                            ForeColour = color
                         };
+
                         button.Click += (o, e) =>
                         {
                             ButtonClicked(action);
@@ -2609,8 +2621,6 @@ namespace Client.MirScenes.Dialogs
             {
                 if (_label != null && !_label.IsDisposed)
                     _label.ForeColour = value;
-                if (_shadowLabel != null && !_shadowLabel.IsDisposed)
-                    _shadowLabel.ForeColour = value;
             }
         }
         #endregion
@@ -2670,10 +2680,31 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(0, 5),
                 AutoSize = false,
                 Size = new Size(237, 20),
-                DrawFormat = TextFormatFlags.HorizontalCenter,
-                ForeColour = Color.Bisque,
+                DrawFormat = TextFormatFlags.HorizontalCenter,                
                 Font = ScaleFont(new Font(Settings.FontName, 12F, FontStyle.Bold))
             };
+        }
+
+        protected internal override void DrawControl()
+        {
+            base.DrawControl();
+
+            if (DrawImage && Library != null)
+            {
+                bool oldGray = DXManager.GrayScale;
+
+                if (GrayScale)
+                {
+                    DXManager.SetGrayscale(true);
+                }
+
+                if (Blending)
+                    Library.DrawBlend(Index + 3, DisplayLocation, Color.White, false, BlendingRate);
+                else
+                    Library.Draw(Index + 3, DisplayLocation, Color.White, false, Opacity);
+
+                if (GrayScale) DXManager.SetGrayscale(oldGray);
+            }
         }
 
         #region Disposable
