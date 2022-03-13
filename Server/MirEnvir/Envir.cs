@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
 using S = ServerPackets;
@@ -54,7 +55,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int MinVersion = 60;
-        public const int Version = 93;
+        public const int Version = 98;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
@@ -2107,6 +2108,7 @@ namespace Server.MirEnvir
             account.BanReason = string.Empty;
             account.ExpiryDate = DateTime.MinValue;
 
+            p.CurrentPassword = Utils.Crypto.HashPassword(p.CurrentPassword, account.Salt);
             if (string.CompareOrdinal(account.Password, p.CurrentPassword) != 0)
             {
                 c.Enqueue(new ServerPackets.ChangePassword {Result = 5});
@@ -2114,6 +2116,7 @@ namespace Server.MirEnvir
             }
 
             account.Password = p.NewPassword;
+            account.RequirePasswordChange = false;
             c.Enqueue(new ServerPackets.ChangePassword {Result = 6});
         }
         public void Login(ClientPackets.Login p, MirConnection c)
@@ -2156,9 +2159,10 @@ namespace Server.MirEnvir
                 }
                 account.Banned = false;
             }
-                account.BanReason = string.Empty;
-                account.ExpiryDate = DateTime.MinValue;
+            account.BanReason = string.Empty;
+            account.ExpiryDate = DateTime.MinValue;
 
+            p.Password = Utils.Crypto.HashPassword(p.Password, account.Salt);
 
             if (string.CompareOrdinal(account.Password, p.Password) != 0)
             {
@@ -2180,6 +2184,12 @@ namespace Server.MirEnvir
                 return;
             }
             account.WrongPasswordCount = 0;
+
+            if (account.RequirePasswordChange)
+            {
+                c.Enqueue(new ServerPackets.Login { Result = 5 });
+                return;
+            }
 
             lock (AccountLock)
             {
@@ -2674,6 +2684,21 @@ namespace Server.MirEnvir
             return MapList.FirstOrDefault(t => t.Info.Index == index);
         }
 
+        public Map GetMap(string name, bool strict = true)
+        {
+            return MapList.FirstOrDefault(t => strict ? string.Equals(t.Info.Title, name, StringComparison.CurrentCultureIgnoreCase) : t.Info.Title.StartsWith(name, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        public Map GetWorldMap(string name)
+        {
+            return MapList.FirstOrDefault(t => t.Info.Title.StartsWith(name, StringComparison.CurrentCultureIgnoreCase) && t.Info.BigMap > 0);
+        }
+
+        public MapInfo GetMapInfo(int index)
+        {
+            return MapInfoList.FirstOrDefault(t => t.Index == index);
+        }
+
         public Map GetMapByNameAndInstance(string name, int instanceValue = 0)
         {
             if (instanceValue < 0) instanceValue = 0;
@@ -2702,6 +2727,11 @@ namespace Server.MirEnvir
         public NPCObject GetNPC(string name)
         {
             return MapList.SelectMany(t1 => t1.NPCs.Where(t => t.Info.Name == name)).FirstOrDefault();
+        }
+
+        public NPCObject GetWorldMapNPC(string name)
+        {
+            return MapList.SelectMany(t1 => t1.NPCs.Where(t => t.Info.GameName.StartsWith(name, StringComparison.CurrentCultureIgnoreCase) && t.Info.ShowOnBigMap)).FirstOrDefault();
         }
 
         public MonsterInfo GetMonsterInfo(string name, bool Strict = false)

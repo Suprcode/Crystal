@@ -8,7 +8,7 @@ namespace Client.MirControls
     public class MirButton : MirImageControl
     {
         #region Font Colour
-        public Color FontColour
+        public virtual Color FontColour
         {
             get
             {
@@ -51,7 +51,7 @@ namespace Client.MirControls
             get
             {
                 if (!Enabled)
-                    return base.Index;
+                    return _disabledIndex >= 0 ? _disabledIndex : base.Index;
 
                 if (_pressedIndex >= 0 && ActiveControl == this && MouseControl == this)
                     return _pressedIndex;
@@ -66,12 +66,12 @@ namespace Client.MirControls
         #endregion
 
         #region Label
-        private MirLabel _label;
+        protected MirLabel _label;
         #endregion
 
         #region CenterText
-        private bool _center;
-        public bool CenterText
+        protected bool _center;
+        public virtual bool CenterText
         {
             get
             {
@@ -113,6 +113,28 @@ namespace Client.MirControls
         }
         #endregion
 
+        #region Disabled Index
+        private int _disabledIndex;
+        public int DisabledIndex
+        {
+            set
+            {
+                if (_disabledIndex == value)
+                    return;
+                _disabledIndex = value;
+                OnDisabledIndexChanged();
+            }
+            get { return _disabledIndex; }
+        }
+
+        public event EventHandler DisabledIndexChanged;
+        private void OnDisabledIndexChanged()
+        {
+            if (DisabledIndexChanged != null)
+                DisabledIndexChanged.Invoke(this, EventArgs.Empty);
+        }
+        #endregion
+
         #region Size
         protected override void OnSizeChanged()
         {
@@ -124,7 +146,7 @@ namespace Client.MirControls
         #endregion
 
         #region Text
-        public string Text
+        public virtual string Text
         {
             set
             {
@@ -136,10 +158,13 @@ namespace Client.MirControls
         }
         #endregion
 
+        public bool OnlyDrawWhenActive;
+
         public MirButton()
         {
             HoverIndex = -1;
             PressedIndex = -1;
+            DisabledIndex = -1;
             Sound = SoundList.ButtonB;
 
             _label = new MirLabel
@@ -150,6 +175,14 @@ namespace Client.MirControls
                     //OutLine = true,
                     //OutLineColour = Color.FromArgb(255, 70, 50, 30),
                 };
+        }
+
+        protected internal override void DrawControl()
+        {
+            if (OnlyDrawWhenActive && ActiveControl != this && MouseControl != this)
+                return;
+
+            base.DrawControl();
         }
 
         protected override void Highlight()
@@ -190,6 +223,9 @@ namespace Client.MirControls
 
             PressedIndexChanged = null;
             _pressedIndex = 0;
+
+            DisabledIndexChanged = null;
+            _disabledIndex = 0;
         }
         #endregion
     }

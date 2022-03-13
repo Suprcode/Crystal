@@ -280,6 +280,29 @@ namespace Launcher
 
         public byte[] Download(string fileName)
         {
+            string authInfo = Settings.P_Login + ":" + Settings.P_Password;
+            authInfo = Convert.ToBase64String(System.Text.Encoding.Default.GetBytes(authInfo));
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Settings.P_Host + Path.ChangeExtension(fileName, ".gz"));
+            request.Method = "GET";
+            request.Accept = "application/json; charset=utf-8";
+
+            if (Settings.P_NeedLogin)
+                request.Headers["Authorization"] = "Basic " + authInfo;
+
+            var response = (HttpWebResponse)request.GetResponse();
+
+            MemoryStream ms = new MemoryStream();
+            response.GetResponseStream().CopyTo(ms);
+
+            byte[] data = ms.ToArray();
+
+            return data;
+        }
+
+        //Seems to want to cache the PList when using WebClient, so causes issues. No longer used.
+        public byte[] DownloadOld(string fileName)
+        {
             fileName = fileName.Replace(@"\", "/");
 
             if (fileName != "PList.gz")
@@ -309,6 +332,7 @@ namespace Launcher
                 return null;
             }
         }
+
         public static byte[] Decompress(byte[] raw)
         {
             using (GZipStream gStream = new GZipStream(new MemoryStream(raw), CompressionMode.Decompress))

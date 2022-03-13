@@ -485,6 +485,7 @@ namespace Server.MirObjects
             Info.LastLogoutDate = Envir.Now;
 
             Report.Disconnected(logReason);
+            Connection.WorldMapSetupSent = false;
 
             CleanUp();
         }
@@ -1983,6 +1984,57 @@ namespace Server.MirObjects
             Connection.SentRecipeInfo.Add(info);
         }
 
+        public void CheckMapInfo(MapInfo mapInfo)
+        {
+            if (!Connection.WorldMapSetupSent)
+            {
+                Enqueue(new S.WorldMapSetupInfo { Setup = Settings.WorldMapSetup, TeleportToNPCCost = Settings.TeleportToNPCCost });
+                Connection.WorldMapSetupSent = true;
+            }
+
+            if (Connection.SentMapInfo.Contains(mapInfo)) return;
+
+            var map = Envir.GetMap(mapInfo.Index);
+            if (map == null) return;
+
+            var info = new ClientMapInfo()
+            {
+                Width = map.Width,
+                Height = map.Height,
+                BigMap = mapInfo.BigMap,
+                Title = mapInfo.Title
+            };
+
+            foreach (MovementInfo mInfo in mapInfo.Movements.Where(x => x.ShowOnBigMap))
+            {
+                var cmInfo = new ClientMovementInfo()
+                {
+                    Destination = mInfo.MapIndex,
+                    Location = mInfo.Source,
+                    Icon = mInfo.Icon
+                };
+                Map destMap = Envir.GetMap(mInfo.MapIndex);
+                cmInfo.Title = destMap.Info.Title;
+
+                info.Movements.Add(cmInfo);
+            }
+
+            foreach (NPCObject npc in Envir.NPCs.Where(x => x.CurrentMap == map && x.Info.ShowOnBigMap))
+            {
+                info.NPCs.Add(new ClientNPCInfo()
+                {
+                    ObjectID = npc.ObjectID,
+                    Name = npc.Info.Name,
+                    Location = npc.Info.Location,
+                    Icon = npc.Info.BigMapIcon,
+                    CanTeleportTo = npc.Info.CanTeleportTo
+                });
+            }
+
+            Enqueue(new S.NewMapInfo { MapIndex = mapInfo.Index, Info = info });
+            Connection.SentMapInfo.Add(mapInfo);
+        }
+
         private void SetBind()
         {
             SafeZoneInfo szi = Envir.StartPoints[Envir.Random.Next(Envir.StartPoints.Count)];
@@ -2279,6 +2331,7 @@ namespace Server.MirObjects
 
             Enqueue(new S.MapChanged
             {
+                MapIndex = CurrentMap.Info.Index,
                 FileName = CurrentMap.Info.FileName,
                 Title = CurrentMap.Info.Title,
                 MiniMap = CurrentMap.Info.MiniMap,
@@ -2334,6 +2387,7 @@ namespace Server.MirObjects
 
             Enqueue(new S.MapChanged
             {
+                MapIndex = CurrentMap.Info.Index,
                 FileName = CurrentMap.Info.FileName,
                 Title = CurrentMap.Info.Title,
                 MiniMap = CurrentMap.Info.MiniMap,
@@ -2439,6 +2493,7 @@ namespace Server.MirObjects
         {
             Enqueue(new S.MapInformation
             {
+                MapIndex = CurrentMap.Info.Index,
                 FileName = CurrentMap.Info.FileName,
                 Title = CurrentMap.Info.Title,
                 MiniMap = CurrentMap.Info.MiniMap,
@@ -9956,6 +10011,7 @@ namespace Server.MirObjects
 
             Enqueue(new S.MapChanged
             {
+                MapIndex = CurrentMap.Info.Index,
                 FileName = CurrentMap.Info.FileName,
                 Title = CurrentMap.Info.Title,
                 MiniMap = CurrentMap.Info.MiniMap,
@@ -10009,6 +10065,7 @@ namespace Server.MirObjects
 
             Enqueue(new S.MapChanged
             {
+                MapIndex = CurrentMap.Info.Index,
                 FileName = CurrentMap.Info.FileName,
                 Title = CurrentMap.Info.Title,
                 MiniMap = CurrentMap.Info.MiniMap,
@@ -12991,6 +13048,74 @@ namespace Server.MirObjects
             if (sendFail)
                 ReceiveChat("Can not pick up, You do not own this item.", ChatType.System);
 
+        }
+
+        public void RequestMapInfo(int mapIndex)
+        {
+            var info = Envir.GetMapInfo(mapIndex);
+            CheckMapInfo(info);
+        }
+
+        public void TeleportToNPC(uint objectID)
+        {
+            for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+            {
+                NPCObject ob = CurrentMap.NPCs[i];
+                if (ob.ObjectID != objectID) continue;
+
+                if (!ob.Info.CanTeleportTo) return;
+
+                uint cost = (uint)Settings.TeleportToNPCCost;
+                if (Account.Gold < cost) return;
+
+                Point p = ob.Front;
+                if (!CurrentMap.ValidPoint(p))
+                {
+                    for (int j = 0; j < 7; j++)
+                    {
+                        p = Functions.PointMove(CurrentLocation, Functions.ShiftDirection(ob.Direction, j), 1);
+                        if (CurrentMap.ValidPoint(p)) break;
+                    }
+                }
+
+                if (CurrentMap.ValidPoint(p))
+                {
+                    Account.Gold -= cost;
+                    Enqueue(new S.LoseGold { Gold = cost });
+                    Teleport(CurrentMap, p);
+                }
+
+                break;
+            }
+        }
+
+        public void SearchMap(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text) || text.Length < 3) return;
+
+            S.SearchMapResult p = new S.SearchMapResult();
+
+            Map map = Envir.GetWorldMap(text);
+            if (map != null)
+            {
+                CheckMapInfo(map.Info);
+                p.MapIndex = map.Info.Index;
+                Enqueue(p);
+                return;
+            }
+
+            NPCObject npc = Envir.GetWorldMapNPC(text);
+            if (npc != null)
+            {
+                CheckMapInfo(npc.CurrentMap.Info);
+                p.MapIndex = npc.CurrentMap.Info.Index;
+                p.NPCIndex = npc.ObjectID;
+                Enqueue(p);
+                return;
+            }
+
+            Enqueue(p);
+            return;
         }
 
         private bool IsGroupMember(MapObject player)

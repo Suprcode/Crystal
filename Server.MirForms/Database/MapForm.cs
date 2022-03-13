@@ -177,6 +177,19 @@ namespace Server.MirForms
                                 newMovement.ConquestIndex = conqIndex;
                                 lines[k] = lines[k].Remove(conqLocation);
                             }
+                            if (lines[k].Contains("SHOWONBIGMAP"))
+                            {
+                                newMovement.ShowOnBigMap = true;
+                                lines[k] = lines[k].Replace("SHOWONBIGMAP", "");
+                            }
+                            if (lines[k].Contains("ICON"))
+                            {
+                                int iconLocation = lines[k].IndexOf(" ICON");
+                                string icon = lines[k].Substring(iconLocation);
+                                int iconIndex = int.Parse(icon.Replace("ICON(", "").Replace(")", "")); //get value
+                                newMovement.Icon = iconIndex;
+                                lines[k] = lines[k].Remove(iconLocation);
+                            }
 
                             lines[k] = lines[k].Replace('.', ','); // Replace point with comma
                             lines[k] = lines[k].Replace(":", ","); // Replace colon with comma

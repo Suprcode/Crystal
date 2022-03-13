@@ -91,6 +91,8 @@ namespace Server
                 StartMin_num.Value = 0;
                 EndMin_num.Value = 1;
                 Flag_textbox.Text = string.Empty;
+                ShowBigMapCheckBox.Checked = false;
+                BigMapIconTextBox.Text = string.Empty;
                 return;
             }
 
@@ -118,6 +120,9 @@ namespace Server
             StartMin_num.Value = info.MinuteStart;
             EndMin_num.Value = info.MinuteEnd;
             Flag_textbox.Text = info.FlagNeeded.ToString();
+            ShowBigMapCheckBox.Checked = info.ShowOnBigMap;
+            BigMapIconTextBox.Text = info.BigMapIcon.ToString();
+            TeleportToCheckBox.Checked = info.CanTeleportTo;
 
 
             for (int i = 1; i < _selectedNPCInfos.Count; i++)
@@ -131,6 +136,7 @@ namespace Server
                 if (NYTextBox.Text != info.Location.Y.ToString()) NYTextBox.Text = string.Empty;
                 if (NImageTextBox.Text != info.Image.ToString()) NImageTextBox.Text = string.Empty;
                 if (NRateTextBox.Text != info.Rate.ToString()) NRateTextBox.Text = string.Empty;
+                if (BigMapIconTextBox.Text != info.BigMapIcon.ToString()) BigMapIconTextBox.Text = string.Empty;
             }
         }
 
@@ -557,6 +563,40 @@ namespace Server
 
             for (int i = 0; i < _selectedNPCInfos.Count; i++)
                 _selectedNPCInfos[i].Conquest = temp.Index;
+        }
+
+        private void ShowBigMapCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedNPCInfos.Count; i++)
+                _selectedNPCInfos[i].ShowOnBigMap = ShowBigMapCheckBox.Checked;
+        }
+
+        private void BigMapIconTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedNPCInfos.Count; i++)
+                _selectedNPCInfos[i].BigMapIcon = temp;
+        }
+
+        private void TeleportToCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedNPCInfos.Count; i++)
+                _selectedNPCInfos[i].CanTeleportTo = TeleportToCheckBox.Checked;
         }
     }
 }

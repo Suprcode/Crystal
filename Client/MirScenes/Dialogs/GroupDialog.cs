@@ -52,8 +52,6 @@ namespace Client.MirScenes.Dialogs
                 };
             }
 
-
-
             TitleLabel = new MirImageControl
             {
                 Index = 5,

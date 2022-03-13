@@ -25,6 +25,7 @@ namespace Client.MirGraphics
             BuffIcon = new MLibrary(Settings.DataPath + "BuffIcon"),
             Help = new MLibrary(Settings.DataPath + "Help"),
             MiniMap = new MLibrary(Settings.DataPath + "MMap"),
+            MapLinkIcon = new MLibrary(Settings.DataPath + "MapLinkIcon"),
             Title = new MLibrary(Settings.DataPath + "Title"),
             MagIcon = new MLibrary(Settings.DataPath + "MagIcon"),
             MagIcon2 = new MLibrary(Settings.DataPath + "MagIcon2"),
@@ -194,6 +195,11 @@ namespace Client.MirGraphics
 
         static void InitLibrary(ref MLibrary[] library, string path, string toStringValue, string suffix = "")
         {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
             var allFiles = Directory.GetFiles(path, "*" + suffix + MLibrary.Extention, SearchOption.TopDirectoryOnly).OrderBy(x => int.Parse(Regex.Match(x, @"\d+").Value));
 
             var lastFile = allFiles.Count() > 0 ? Path.GetFileName(allFiles.Last()) : "0";
@@ -232,7 +238,7 @@ namespace Client.MirGraphics
                 CHair.Length + CWeapons.Length + CWeaponEffect.Length + AArmours.Length + AHair.Length + AWeaponsL.Length + AWeaponsR.Length +
                 ARArmours.Length + ARHair.Length + ARWeapons.Length + ARWeaponsS.Length +
                 CHumEffect.Length + AHumEffect.Length + ARHumEffect.Length + Mounts.Length + Fishing.Length + Pets.Length +
-                Transform.Length + TransformMounts.Length + TransformEffect.Length + TransformWeaponEffect.Length + 17;
+                Transform.Length + TransformMounts.Length + TransformEffect.Length + TransformWeaponEffect.Length + 18;
 
             Dragon.Initialize();
             Progress++;
@@ -244,6 +250,8 @@ namespace Client.MirGraphics
             Progress++;
 
             MiniMap.Initialize();
+            Progress++;
+            MapLinkIcon.Initialize();
             Progress++;
 
             MagIcon.Initialize();

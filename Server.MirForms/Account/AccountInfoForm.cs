@@ -33,8 +33,7 @@ namespace Server
             RefreshInterface();
             AutoResize();
 
-            AccountIDTextBox.MaxLength = Globals.MaxAccountIDLength;
-            PasswordTextBox.MaxLength = Globals.MaxPasswordLength;
+            AccountIDTextBox.MaxLength = Globals.MaxAccountIDLength;            
 
             UserNameTextBox.MaxLength = 20;
             BirthDateTextBox.MaxLength = 10;
@@ -47,7 +46,6 @@ namespace Server
         {
             indexHeader.Width = -2;
             accountIDHeader.Width = -2;
-            passwordHeader.Width = -2;
             userNameHeader.Width = -2;
             bannedHeader.Width = -2;
             banReasonHeader.Width = -2;
@@ -58,12 +56,11 @@ namespace Server
         {
             ListItem.SubItems[0].Text = account.Index.ToString();
             ListItem.SubItems[1].Text = account.AccountID;
-            ListItem.SubItems[2].Text = account.Password;
-            ListItem.SubItems[3].Text = account.UserName;
-            ListItem.SubItems[4].Text = account.AdminAccount.ToString();
-            ListItem.SubItems[5].Text = account.Banned.ToString();
-            ListItem.SubItems[6].Text = account.BanReason;
-            ListItem.SubItems[7].Text = account.ExpiryDate.ToString();
+            ListItem.SubItems[2].Text = account.UserName;
+            ListItem.SubItems[3].Text = account.AdminAccount.ToString();
+            ListItem.SubItems[4].Text = account.Banned.ToString();
+            ListItem.SubItems[5].Text = account.BanReason;
+            ListItem.SubItems[6].Text = account.ExpiryDate.ToString();
         }
 
         private ListViewItem CreateListView(AccountInfo account)
@@ -71,7 +68,6 @@ namespace Server
             ListViewItem ListItem = new ListViewItem(account.Index.ToString()) {Tag = account};
 
             ListItem.SubItems.Add(account.AccountID);
-            ListItem.SubItems.Add(account.Password);
             ListItem.SubItems.Add(account.UserName);
             ListItem.SubItems.Add(account.AdminAccount.ToString());
             ListItem.SubItems.Add(account.Banned.ToString());
@@ -125,7 +121,6 @@ namespace Server
                 AccountInfoPanel.Enabled = false;
 
                 AccountIDTextBox.Text = string.Empty;
-                PasswordTextBox.Text = string.Empty;
 
                 UserNameTextBox.Text = string.Empty;
                 BirthDateTextBox.Text = string.Empty;
@@ -142,7 +137,6 @@ namespace Server
 
             AccountIDTextBox.Enabled = _selectedAccountInfos.Count == 1;
             AccountIDTextBox.Text = info.AccountID;
-            PasswordTextBox.Text = info.Password;
 
             UserNameTextBox.Text = info.UserName;
             BirthDateTextBox.Text = info.BirthDate.ToShortDateString();
@@ -160,13 +154,13 @@ namespace Server
             BannedCheckBox.CheckState = info.Banned ? CheckState.Checked : CheckState.Unchecked;
             ExpiryDateTextBox.Text = info.ExpiryDate.ToString();
             AdminCheckBox.CheckState = info.AdminAccount ? CheckState.Checked : CheckState.Unchecked;
+            PasswordChangeCheckBox.CheckState = info.RequirePasswordChange ? CheckState.Checked : CheckState.Unchecked;
 
             for (int i = 0; i < _selectedAccountInfos.Count; i++)
             {
                 info = _selectedAccountInfos[i];
 
                 if (AccountIDTextBox.Text != info.AccountID) AccountIDTextBox.Text = string.Empty;
-                if (PasswordTextBox.Text != info.Password) PasswordTextBox.Text = string.Empty;
                 if (UserNameTextBox.Text != info.UserName) UserNameTextBox.Text = string.Empty;
                 if (BirthDateTextBox.Text != info.BirthDate.ToShortDateString()) BirthDateTextBox.Text = string.Empty;
                 if (QuestionTextBox.Text != info.SecretQuestion) QuestionTextBox.Text = string.Empty;
@@ -185,6 +179,7 @@ namespace Server
                 if (BannedCheckBox.Checked != info.Banned) BannedCheckBox.CheckState = CheckState.Indeterminate;
                 if (ExpiryDateTextBox.Text != info.ExpiryDate.ToString()) ExpiryDateTextBox.Text = string.Empty;
                 if (AdminCheckBox.Checked != info.AdminAccount) AdminCheckBox.CheckState = CheckState.Indeterminate;
+                if (PasswordChangeCheckBox.Checked != info.RequirePasswordChange) PasswordChangeCheckBox.CheckState = CheckState.Indeterminate;
             }
         }
 
@@ -223,21 +218,6 @@ namespace Server
                 AutoResize();
                 AccountInfoListView.EndUpdate();
             }
-        }
-
-        private void PasswordTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-
-            AccountInfoListView.BeginUpdate();
-            for (int i = 0; i < _selectedAccountInfos.Count; i++)
-            {
-                _selectedAccountInfos[i].Password = ActiveControl.Text;
-                Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
-            }
-
-            AutoResize();
-            AccountInfoListView.EndUpdate();
         }
 
         private void UserNameTextBox_TextChanged(object sender, EventArgs e)
@@ -457,6 +437,41 @@ namespace Server
                 MessageBox.Show("All characters and associated data has been cleared", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
 
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ChangePasswordDialog PasswordDialog = new ChangePasswordDialog();
+
+            if (PasswordDialog.ShowDialog(this) == DialogResult.OK && PasswordDialog.PasswordTextBox.Text.Length > 0)
+            {
+                AccountInfoListView.BeginUpdate();
+                for (int i = 0; i < _selectedAccountInfos.Count; i++)
+                {
+                    _selectedAccountInfos[i].Password = PasswordDialog.PasswordTextBox.Text;
+                    _selectedAccountInfos[i].RequirePasswordChange = true;
+                    PasswordChangeCheckBox.CheckState = CheckState.Checked;
+                    Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
+                    MessageBox.Show("Password Changed");
+                }
+
+                AutoResize();
+                AccountInfoListView.EndUpdate();
+            }
+        }
+
+        private void PasswordChangeCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            AccountInfoListView.BeginUpdate();
+            for (int i = 0; i < _selectedAccountInfos.Count; i++)
+            {
+                _selectedAccountInfos[i].RequirePasswordChange = PasswordChangeCheckBox.CheckState == CheckState.Checked;
+                Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
+            }
+            AutoResize();
+            AccountInfoListView.EndUpdate();
         }
     }
 }

@@ -183,8 +183,8 @@ namespace Server.MirObjects
         public Point Front
         {
             get { return Functions.PointMove(CurrentLocation, Direction, 1); }
-
         }
+ 
         public Point Back
         {
             get { return Functions.PointMove(CurrentLocation, Direction, -1); }

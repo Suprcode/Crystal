@@ -191,7 +191,7 @@ namespace Client.MirControls
                     break;
                 case (short)ServerPacketIds.NewRecipeInfo:
                     NewRecipeInfo((S.NewRecipeInfo)p);
-                    break;
+                    break;                
             }
         }
 

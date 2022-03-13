@@ -160,11 +160,6 @@ namespace Client.MirControls
                 if (T != null && T.Tag != null && T.Tag != null)
                     ((MirTextBox)T.Tag).DialogChanged();
             }
-
-            if (MirScene.ActiveScene is GameScene)
-            {
-                ((GameScene)Parent).BigMapDialog.Hide();
-            }
         }
 
 

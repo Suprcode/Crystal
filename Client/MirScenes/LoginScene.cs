@@ -57,10 +57,7 @@ namespace Client.MirScenes
                 };
             _login.PassButton.Click += (o, e) =>
                 {
-                    _login.Hide();
-                    if (_ViewKey != null && !_ViewKey.IsDisposed) _ViewKey.Dispose();
-                    _password = new ChangePasswordDialog { Parent = _background };
-                    _password.Disposing += (o1, e1) => _login.Show();
+                    OpenPasswordChangeDialog(string.Empty, string.Empty);                    
                 };
 
             _login.ViewKeyButton.Click += (o, e) =>     //ADD
@@ -198,6 +195,16 @@ namespace Client.MirScenes
                     break;
             }
         }
+
+        private void OpenPasswordChangeDialog(string autoFillID, string autoFillPassword)
+        {
+            _login.Hide();
+            if (_ViewKey != null && !_ViewKey.IsDisposed) _ViewKey.Dispose();
+            _password = new ChangePasswordDialog { Parent = _background };
+            _password.AccountIDTextBox.Text = autoFillID;
+            _password.CurrentPasswordTextBox.Text = autoFillPassword;
+            _password.Disposing += (o1, e1) => _login.Show();
+        }
         private void NewAccount(S.NewAccount p)
         {
             _account.OKButton.Enabled = true;
@@ -312,6 +319,11 @@ namespace Client.MirScenes
                     MirMessageBox.Show(GameLanguage.IncorrectPasswordAccountID);
                     _login.PasswordTextBox.Text = string.Empty;
                     _login.PasswordTextBox.SetFocus();
+                    break;
+                case 5:
+                    MirMessageBox.Show("The account's password must be changed before logging in.");                    
+                    OpenPasswordChangeDialog(_login.AccountIDTextBox.Text, _login.PasswordTextBox.Text);
+                    _login.PasswordTextBox.Text = string.Empty;
                     break;
             }
         }
@@ -475,7 +487,6 @@ namespace Client.MirScenes
                     AccountIDTextBox.Border = true;
                     AccountIDTextBox.BorderColour = Color.Green;
                 }
-
             }
             private void PasswordTextBox_TextChanged(object sender, EventArgs e)
             {

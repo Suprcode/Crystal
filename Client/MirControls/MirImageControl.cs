@@ -9,6 +9,28 @@ namespace Client.MirControls
         public override Point DisplayLocation { get { return UseOffSet ? base.DisplayLocation.Add(Library.GetOffSet(Index)) : base.DisplayLocation; } }
         public Point DisplayLocationWithoutOffSet { get { return base.DisplayLocation; } }
 
+        #region Auto Size
+        private bool _autoSize;
+        public bool AutoSize
+        {
+            get { return _autoSize; }
+            set
+            {
+                if (_autoSize == value)
+                    return;
+                _autoSize = value;
+                OnAutoSizeChanged(EventArgs.Empty);
+            }
+        }
+        public event EventHandler AutoSizeChanged;
+        private void OnAutoSizeChanged(EventArgs e)
+        {
+            TextureValid = false;
+            if (AutoSizeChanged != null)
+                AutoSizeChanged.Invoke(this, e);
+        }
+        #endregion
+
         #region DrawImage
         private bool _drawImage;
         public bool DrawImage
@@ -124,7 +146,7 @@ namespace Client.MirControls
             set { base.Size = value; }
             get
             {
-                if (Library != null && Index >= 0)
+                if (AutoSize && Library != null && Index >= 0)
                     return Library.GetTrueSize(Index);
                 return base.Size;
             }
@@ -147,6 +169,7 @@ namespace Client.MirControls
             _drawImage = true;
             _index = -1;
             ForeColour = Color.White;
+            _autoSize = true;
         }
 
         protected internal override void DrawControl()
