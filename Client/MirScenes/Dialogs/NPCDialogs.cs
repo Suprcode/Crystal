@@ -26,6 +26,7 @@ namespace Client.MirScenes.Dialogs
         public static Regex C = new Regex(@"{((.*?)\/(.*?))}");
         public static Regex L = new Regex(@"\(((.*?)\/(.*?))\)");
         public static Regex B = new Regex(@"<<((.*?)\/(\@.*?))>>");
+        public static Regex B2 = new Regex(@"{<((.*?)\/(\@.*?))>}");
 
         public MirButton CloseButton, UpButton, DownButton, PositionBar, QuestButton, HelpButton;
         public MirLabel[] TextLabel;
@@ -254,6 +255,7 @@ namespace Client.MirScenes.Dialogs
                     string currentLine = lines[i];
 
                     List<Match> matchList = B.Matches(currentLine).Cast<Match>().ToList();
+                    matchList.AddRange(B2.Matches(currentLine).Cast<Match>());
                     List<Match> sortedList = matchList.OrderBy(o => o.Index).ToList();
 
                     for (int j = 0; j < sortedList.Count; j++)
@@ -263,15 +265,34 @@ namespace Client.MirScenes.Dialogs
                         string txt = match.Groups[2].Captures[0].Value;
                         string action = match.Groups[3].Captures[0].Value;
 
-                        BigButton button = new BigButton
+                        BigButton button = null;
+                        if (B.Match(match.Value).Success)
                         {
-                            Index = 834,
-                            HoverIndex = 835,
-                            PressedIndex = 836,
-                            Library = Libraries.Title,
-                            Sound = SoundList.ButtonA,
-                            Text = txt
-                        };
+                            button = new BigButton
+                            {
+                                Index = 833,
+                                HoverIndex = 834,
+                                PressedIndex = 835,
+                                Library = Libraries.Title,
+                                Sound = SoundList.ButtonA,
+                                Text = txt,
+                                FontColour = Color.Bisque,
+                            };
+                        }
+                        else
+                        {
+                            button = new BigButton
+                            {
+                                Index = 830,
+                                HoverIndex = 831,
+                                PressedIndex = 832,
+                                Library = Libraries.Title,
+                                Sound = SoundList.ButtonA,
+                                Text = txt,
+                                FontColour = Color.White,
+                            };
+                        }                   
+                        
                         button.Click += (o, e) =>
                         {
                             ButtonClicked(action);
@@ -280,6 +301,7 @@ namespace Client.MirScenes.Dialogs
                     }
 
                     currentLine = Regex.Replace(currentLine, B.ToString(), "");
+                    currentLine = Regex.Replace(currentLine, B2.ToString(), "");
 
                     if (string.IsNullOrWhiteSpace(currentLine))
                         lines.RemoveAt(i);                                                    
@@ -2609,8 +2631,6 @@ namespace Client.MirScenes.Dialogs
             {
                 if (_label != null && !_label.IsDisposed)
                     _label.ForeColour = value;
-                if (_shadowLabel != null && !_shadowLabel.IsDisposed)
-                    _shadowLabel.ForeColour = value;
             }
         }
         #endregion
@@ -2670,8 +2690,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(0, 5),
                 AutoSize = false,
                 Size = new Size(237, 20),
-                DrawFormat = TextFormatFlags.HorizontalCenter,
-                ForeColour = Color.Bisque,
+                DrawFormat = TextFormatFlags.HorizontalCenter,                
                 Font = ScaleFont(new Font(Settings.FontName, 12F, FontStyle.Bold))
             };
         }
