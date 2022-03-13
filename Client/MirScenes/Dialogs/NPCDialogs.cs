@@ -26,7 +26,6 @@ namespace Client.MirScenes.Dialogs
         public static Regex C = new Regex(@"{((.*?)\/(.*?))}");
         public static Regex L = new Regex(@"\(((.*?)\/(.*?))\)");
         public static Regex B = new Regex(@"<<((.*?)\/(\@.*?))>>");
-        public static Regex B2 = new Regex(@"{<((.*?)\/(\@.*?))>}");
 
         public MirButton CloseButton, UpButton, DownButton, PositionBar, QuestButton, HelpButton;
         public MirLabel[] TextLabel;
@@ -255,7 +254,6 @@ namespace Client.MirScenes.Dialogs
                     string currentLine = lines[i];
 
                     List<Match> matchList = B.Matches(currentLine).Cast<Match>().ToList();
-                    matchList.AddRange(B2.Matches(currentLine).Cast<Match>());
                     List<Match> sortedList = matchList.OrderBy(o => o.Index).ToList();
 
                     for (int j = 0; j < sortedList.Count; j++)
@@ -264,35 +262,28 @@ namespace Client.MirScenes.Dialogs
                         Capture capture = match.Groups[1].Captures[0];
                         string txt = match.Groups[2].Captures[0].Value;
                         string action = match.Groups[3].Captures[0].Value;
+                        string colourString = "RoyalBlue";
 
-                        BigButton button = null;
-                        if (B.Match(match.Value).Success)
+                        string[] actionSplit = action.Split('/');
+
+                        action = actionSplit[0];
+                        if (actionSplit.Length > 1)
+                            colourString = actionSplit[1];
+
+                        Color color = Color.FromName(colourString);
+
+                        BigButton button = new BigButton
                         {
-                            button = new BigButton
-                            {
-                                Index = 833,
-                                HoverIndex = 834,
-                                PressedIndex = 835,
-                                Library = Libraries.Title,
-                                Sound = SoundList.ButtonA,
-                                Text = txt,
-                                FontColour = Color.Bisque,
-                            };
-                        }
-                        else
-                        {
-                            button = new BigButton
-                            {
-                                Index = 830,
-                                HoverIndex = 831,
-                                PressedIndex = 832,
-                                Library = Libraries.Title,
-                                Sound = SoundList.ButtonA,
-                                Text = txt,
-                                FontColour = Color.White,
-                            };
-                        }                   
-                        
+                            Index = 841,
+                            HoverIndex = 842,
+                            PressedIndex = 843,
+                            Library = Libraries.Title,
+                            Sound = SoundList.ButtonA,
+                            Text = txt,
+                            FontColour = Color.White,
+                            ForeColour = color
+                        };
+
                         button.Click += (o, e) =>
                         {
                             ButtonClicked(action);
@@ -301,7 +292,6 @@ namespace Client.MirScenes.Dialogs
                     }
 
                     currentLine = Regex.Replace(currentLine, B.ToString(), "");
-                    currentLine = Regex.Replace(currentLine, B2.ToString(), "");
 
                     if (string.IsNullOrWhiteSpace(currentLine))
                         lines.RemoveAt(i);                                                    
@@ -2693,6 +2683,28 @@ namespace Client.MirScenes.Dialogs
                 DrawFormat = TextFormatFlags.HorizontalCenter,                
                 Font = ScaleFont(new Font(Settings.FontName, 12F, FontStyle.Bold))
             };
+        }
+
+        protected internal override void DrawControl()
+        {
+            base.DrawControl();
+
+            if (DrawImage && Library != null)
+            {
+                bool oldGray = DXManager.GrayScale;
+
+                if (GrayScale)
+                {
+                    DXManager.SetGrayscale(true);
+                }
+
+                if (Blending)
+                    Library.DrawBlend(Index + 3, DisplayLocation, Color.White, false, BlendingRate);
+                else
+                    Library.Draw(Index + 3, DisplayLocation, Color.White, false, Opacity);
+
+                if (GrayScale) DXManager.SetGrayscale(oldGray);
+            }
         }
 
         #region Disposable
