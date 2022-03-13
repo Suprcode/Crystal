@@ -2001,7 +2001,8 @@ namespace Server.MirObjects
             {
                 Width = map.Width,
                 Height = map.Height,
-                BigMap = mapInfo.BigMap
+                BigMap = mapInfo.BigMap,
+                Title = mapInfo.Title
             };
 
             foreach (MovementInfo mInfo in mapInfo.Movements.Where(x => x.ShowOnBigMap))

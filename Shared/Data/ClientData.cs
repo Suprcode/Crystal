@@ -300,6 +300,7 @@ public class ClientMapInfo
     public int Width;
     public int Height;
     public int BigMap;
+    public string Title;
     public List<ClientMovementInfo> Movements = new List<ClientMovementInfo>();
     public List<ClientNPCInfo> NPCs = new List<ClientNPCInfo>();
 
@@ -307,6 +308,7 @@ public class ClientMapInfo
 
     public ClientMapInfo(BinaryReader reader)
     {
+        Title = reader.ReadString();
         Width = reader.ReadInt32();
         Height = reader.ReadInt32();
         BigMap = reader.ReadInt32();
@@ -320,6 +322,7 @@ public class ClientMapInfo
 
     public void Save(BinaryWriter writer)
     {
+        writer.Write(Title);
         writer.Write(Width);
         writer.Write(Height);
         writer.Write(BigMap);

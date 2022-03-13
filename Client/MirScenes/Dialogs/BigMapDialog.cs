@@ -25,7 +25,7 @@ namespace Client.MirScenes.Dialogs
 {
     public sealed class BigMapDialog : MirImageControl
     {        
-        MirLabel CoordinateLabel;
+        MirLabel CoordinateLabel, TitleLabel;
         public MirButton CloseButton, ScrollUpButton, ScrollDownButton, ScrollBar, WorldButton, MyLocationButton, TeleportToButton, SearchButton;
         public MirTextBox SearchTextBox;
 
@@ -98,6 +98,8 @@ namespace Client.MirScenes.Dialogs
                 if (currentRecord == value) return;
                 SetButtonsVisibility(false);
                 currentRecord = value;
+                TitleLabel.Text = currentRecord != null ? currentRecord.MapInfo.Title : string.Empty;
+                ViewPort.UserRadarDot.Visible = currentRecord != null;
                 SetButtonsVisibility(true);
             }
         }
@@ -107,19 +109,7 @@ namespace Client.MirScenes.Dialogs
             Library = Libraries.Title;
             Sort = true;
             Location = Center;
-            NotControl = false;
-
-            CloseButton = new MirButton
-            {
-                HoverIndex = 361,
-                Index = 360,
-                Location = new Point(Size.Width - 25, 3),
-                Library = Libraries.Prguse2,
-                Parent = this,
-                PressedIndex = 362,
-                Sound = SoundList.ButtonA,
-            };
-            CloseButton.Click += (o, e) => Hide();
+            NotControl = false;            
 
             ScrollUpButton = new MirButton
             {
@@ -244,11 +234,34 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
             };
 
+            TitleLabel = new MirLabel
+            {
+                ForeColour = Color.White,
+                Parent = this,
+                AutoSize = false,
+                Size = new Size(699, 20),
+                Location = new Point(19, 6),
+                Font = new Font(Settings.FontName, 9F, FontStyle.Bold),
+                DrawFormat = TextFormatFlags.HorizontalCenter
+            };
+
             WorldMap = new WorldMapImage()
             {                
                 Parent = this,
                 Location = new Point(10, 0)
             };
+
+            CloseButton = new MirButton
+            {
+                HoverIndex = 361,
+                Index = 360,
+                Location = new Point(Size.Width - 25, 3),
+                Library = Libraries.Prguse2,
+                Parent = this,
+                PressedIndex = 362,
+                Sound = SoundList.ButtonA,
+            };
+            CloseButton.Click += (o, e) => Hide();            
         }
 
         private void MakeCoordinateLabel()
@@ -300,6 +313,7 @@ namespace Client.MirScenes.Dialogs
             ScrollOffset = 0;
             ScrollBar.Visible = false;
             WorldMap.Visible = false;
+            SearchTextBox.Visible = true;
             SelectedNPC = null;
             if (!GameScene.MapInfoList.ContainsKey(MapIndex))
                 Network.Enqueue(new C.RequestMapInfo() { MapIndex = MapIndex });
@@ -383,8 +397,8 @@ namespace Client.MirScenes.Dialogs
         private void OpenWorldMap()
         {
             WorldMap.Visible = true;
-            WorldMap.BringToFront();
-            CloseButton.BringToFront();
+            SearchTextBox.Visible = false;
+            SetButtonsVisibility(false);
         }
 
         private void TeleportToNPC()
@@ -444,6 +458,7 @@ namespace Client.MirScenes.Dialogs
                 TeleportToButton = null;
                 SearchButton = null;
                 SearchTextBox = null;
+                TitleLabel = null;
             }
 
             base.Dispose(disposing);
@@ -532,7 +547,7 @@ namespace Client.MirScenes.Dialogs
         BigMapDialog ParentDialog;
         float ScaleX;
         float ScaleY;
-        public MirImageControl SelectedNPCIcon;
+        public MirImageControl SelectedNPCIcon, UserRadarDot;
 
         int BigMap_MouseCoordsProcessing_OffsetX, BigMap_MouseCoordsProcessing_OffsetY;
 
@@ -549,6 +564,15 @@ namespace Client.MirScenes.Dialogs
                 Visible = false
             };
             SelectedNPCIcon.MouseEnter += (o, e) => ParentDialog.MouseLocation = ParentDialog.SelectedNPC.Info.Location;
+
+            UserRadarDot = new MirImageControl
+            {
+                Library = Libraries.Prguse2,
+                Index = 1350,
+                Parent = this,
+                Visible = false,
+                NotControl = true
+            };
 
             BeforeDraw += (o, e) => OnBeforeDraw();
             MouseMove += UpdateBigMapCoordinates;
@@ -621,18 +645,19 @@ namespace Client.MirScenes.Dialogs
             var map = GameScene.Scene.MapControl;
             if (ParentDialog.TargetMapIndex == map.Index)
             {
+                float x;
+                float y;
                 for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
                 {
                     MapObject ob = MapControl.Objects[i];
 
-
-                    if (ob.Race == ObjectType.Item || ob.Dead || ob.Race == ObjectType.Spell) continue; // || (ob.ObjectID != MapObject.User.ObjectID)
-                    float x = ((ob.CurrentLocation.X - startPointX) * ScaleX) + DisplayLocation.X;
-                    float y = ((ob.CurrentLocation.Y - startPointY) * ScaleY) + DisplayLocation.Y;
+                    if (ob.Race == ObjectType.Item || ob.Dead || ob.Race == ObjectType.Spell || ob.ObjectID == MapObject.User.ObjectID) continue;
+                    x = ((ob.CurrentLocation.X - startPointX) * ScaleX) + DisplayLocation.X;
+                    y = ((ob.CurrentLocation.Y - startPointY) * ScaleY) + DisplayLocation.Y;
 
                     Color colour;
 
-                    if ((GroupDialog.GroupList.Contains(ob.Name) && MapObject.User != ob) || ob.Name.EndsWith(string.Format("({0})", MapObject.User.Name)))
+                    if (GroupDialog.GroupList.Contains(ob.Name) || ob.Name.EndsWith(string.Format("({0})", MapObject.User.Name)))
                         colour = Color.FromArgb(0, 0, 255);
                     else
                         if (ob is PlayerObject)
@@ -645,6 +670,11 @@ namespace Client.MirScenes.Dialogs
                     DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(x - 0.5), (float)(y - 0.5), 0.0F), colour);
                     CMain.DPSCounter++;
                 }
+
+                x = MapObject.User.CurrentLocation.X * ScaleX;
+                y = MapObject.User.CurrentLocation.Y * ScaleY;
+                var s = UserRadarDot.Size;                
+                UserRadarDot.Location = new Point((int)x - s.Width / 2, (int)y - s.Height / 2);
             }
 
             foreach (var record in ParentDialog.CurrentRecord.MovementButtons)
