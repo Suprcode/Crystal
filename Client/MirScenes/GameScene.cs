@@ -1829,7 +1829,7 @@ namespace Client.MirScenes
 
         private void NewMapInfo(S.NewMapInfo info)
         {
-            BigMapRecord newRecord = new BigMapRecord() { MapInfo = info.Info };
+            BigMapRecord newRecord = new BigMapRecord() { Index = info.MapIndex, MapInfo = info.Info };
 
             foreach (ClientMovementInfo mInfo in info.Info.Movements)
             {

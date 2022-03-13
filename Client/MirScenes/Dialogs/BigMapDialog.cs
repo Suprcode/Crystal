@@ -99,7 +99,7 @@ namespace Client.MirScenes.Dialogs
                 SetButtonsVisibility(false);
                 currentRecord = value;
                 TitleLabel.Text = currentRecord != null ? currentRecord.MapInfo.Title : string.Empty;
-                ViewPort.UserRadarDot.Visible = currentRecord != null;
+                ViewPort.UserRadarDot.Visible = currentRecord != null && currentRecord.Index == GameScene.Scene.MapControl.Index;
                 SetButtonsVisibility(true);
             }
         }
@@ -770,6 +770,7 @@ namespace Client.MirScenes.Dialogs
 
     public class BigMapRecord
     {
+        public int Index;
         public ClientMapInfo MapInfo;
         public Dictionary<ClientMovementInfo, MirButton> MovementButtons = new Dictionary<ClientMovementInfo, MirButton>();
         public List<BigMapNPCRow> NPCButtons = new List<BigMapNPCRow>();
