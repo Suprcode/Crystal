@@ -120,6 +120,9 @@ namespace Server
             this.RemoveMButton = new System.Windows.Forms.Button();
             this.AddMButton = new System.Windows.Forms.Button();
             this.MovementInfoPanel = new System.Windows.Forms.Panel();
+            this.label26 = new System.Windows.Forms.Label();
+            this.BigMapIconTextBox = new System.Windows.Forms.TextBox();
+            this.ShowBigMapCheckBox = new System.Windows.Forms.CheckBox();
             this.label25 = new System.Windows.Forms.Label();
             this.ConquestComboBox = new System.Windows.Forms.ComboBox();
             this.NeedMoveMCheckBox = new System.Windows.Forms.CheckBox();
@@ -159,9 +162,6 @@ namespace Server
             this.ExportMongenButton = new System.Windows.Forms.Button();
             this.VisualizerButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.ShowBigMapCheckBox = new System.Windows.Forms.CheckBox();
-            this.label26 = new System.Windows.Forms.Label();
-            this.BigMapIconTextBox = new System.Windows.Forms.TextBox();
             this.MapTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -894,7 +894,7 @@ namespace Server
             // 
             // Randomtextbox
             // 
-            this.Randomtextbox.Location = new System.Drawing.Point(158, 130);
+            this.Randomtextbox.Location = new System.Drawing.Point(214, 130);
             this.Randomtextbox.MaxLength = 10;
             this.Randomtextbox.Multiline = true;
             this.Randomtextbox.Name = "Randomtextbox";
@@ -908,9 +908,10 @@ namespace Server
             this.label23.AutoSize = true;
             this.label23.Location = new System.Drawing.Point(135, 133);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(18, 13);
+            this.label23.Size = new System.Drawing.Size(80, 13);
             this.label23.TabIndex = 22;
-            this.label23.Text = "R:";
+            this.label23.Text = "Random Delay:";
+            this.label23.Click += new System.EventHandler(this.label23_Click);
             // 
             // label34
             // 
@@ -1119,6 +1120,36 @@ namespace Server
             this.MovementInfoPanel.Name = "MovementInfoPanel";
             this.MovementInfoPanel.Size = new System.Drawing.Size(256, 205);
             this.MovementInfoPanel.TabIndex = 14;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Cursor = System.Windows.Forms.Cursors.Default;
+            this.label26.Location = new System.Drawing.Point(154, 182);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(31, 13);
+            this.label26.TabIndex = 23;
+            this.label26.Text = "Icon:";
+            // 
+            // BigMapIconTextBox
+            // 
+            this.BigMapIconTextBox.Location = new System.Drawing.Point(193, 179);
+            this.BigMapIconTextBox.MaxLength = 5;
+            this.BigMapIconTextBox.Name = "BigMapIconTextBox";
+            this.BigMapIconTextBox.Size = new System.Drawing.Size(37, 20);
+            this.BigMapIconTextBox.TabIndex = 22;
+            this.BigMapIconTextBox.TextChanged += new System.EventHandler(this.BigMapIconTextBox_TextChanged);
+            // 
+            // ShowBigMapCheckBox
+            // 
+            this.ShowBigMapCheckBox.AutoSize = true;
+            this.ShowBigMapCheckBox.Location = new System.Drawing.Point(14, 182);
+            this.ShowBigMapCheckBox.Name = "ShowBigMapCheckBox";
+            this.ShowBigMapCheckBox.Size = new System.Drawing.Size(107, 17);
+            this.ShowBigMapCheckBox.TabIndex = 21;
+            this.ShowBigMapCheckBox.Text = "Show on BigMap";
+            this.ShowBigMapCheckBox.UseVisualStyleBackColor = true;
+            this.ShowBigMapCheckBox.CheckedChanged += new System.EventHandler(this.ShowBigMapCheckBox_CheckedChanged);
             // 
             // label25
             // 
@@ -1503,36 +1534,6 @@ namespace Server
             this.VisualizerButton.Text = "Visualizer";
             this.VisualizerButton.UseVisualStyleBackColor = true;
             this.VisualizerButton.Click += new System.EventHandler(this.VisualizerButton_Click);
-            // 
-            // ShowBigMapCheckBox
-            // 
-            this.ShowBigMapCheckBox.AutoSize = true;
-            this.ShowBigMapCheckBox.Location = new System.Drawing.Point(14, 182);
-            this.ShowBigMapCheckBox.Name = "ShowBigMapCheckBox";
-            this.ShowBigMapCheckBox.Size = new System.Drawing.Size(107, 17);
-            this.ShowBigMapCheckBox.TabIndex = 21;
-            this.ShowBigMapCheckBox.Text = "Show on BigMap";
-            this.ShowBigMapCheckBox.UseVisualStyleBackColor = true;
-            this.ShowBigMapCheckBox.CheckedChanged += new System.EventHandler(this.ShowBigMapCheckBox_CheckedChanged);
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label26.Location = new System.Drawing.Point(154, 182);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(31, 13);
-            this.label26.TabIndex = 23;
-            this.label26.Text = "Icon:";
-            // 
-            // BigMapIconTextBox
-            // 
-            this.BigMapIconTextBox.Location = new System.Drawing.Point(193, 179);
-            this.BigMapIconTextBox.MaxLength = 5;
-            this.BigMapIconTextBox.Name = "BigMapIconTextBox";
-            this.BigMapIconTextBox.Size = new System.Drawing.Size(37, 20);
-            this.BigMapIconTextBox.TabIndex = 22;
-            this.BigMapIconTextBox.TextChanged += new System.EventHandler(this.BigMapIconTextBox_TextChanged);
             // 
             // MapInfoForm
             // 

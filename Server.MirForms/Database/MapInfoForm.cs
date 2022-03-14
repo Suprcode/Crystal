@@ -1742,5 +1742,10 @@ namespace Server
 
             RefreshMovementList();
         }
+
+        private void label23_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
