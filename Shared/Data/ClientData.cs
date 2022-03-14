@@ -600,3 +600,16 @@ public class ClientBuff
         }
     }
 }
+
+public class ClientHeroInfo
+{
+    public string Name;
+    public int Level;
+    public long Experience;
+    public long MaxExperience;
+    public MirClass Class;
+    public MirGender Gender;
+    public byte PercentHealth;
+    public byte PercentMana;
+    public ClientHeroInfo() { }
+}

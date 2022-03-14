@@ -790,7 +790,7 @@ namespace Server.MirObjects
             return new Point(0, 0);
         }
 
-        public void BroadcastHealthChange()
+        public virtual void BroadcastHealthChange()
         {
             if (Race != ObjectType.Player && Race != ObjectType.Monster) return;
 
@@ -863,7 +863,6 @@ namespace Server.MirObjects
                     }
                 }
             }
-
         }
 
         public void BroadcastDamageIndicator(DamageType type, int damage = 0)

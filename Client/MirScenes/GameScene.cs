@@ -37,6 +37,22 @@ namespace Client.MirScenes
         public static long MoveTime, AttackTime, NextRunTime, LogTime, LastRunTime;
         public static bool CanMove, CanRun;
 
+        private bool hasHero;
+        public bool HasHero
+        {
+            get { return hasHero; }
+            set
+            {
+                if (hasHero == value) return;
+
+                hasHero = value;
+                MainDialog.HeroMenuButton.Visible = value;
+                MainDialog.HeroSummonButton.Visible = value;
+            }
+        }
+        public HeroSpawnState heroSpawnState;
+        public static ClientHeroInfo HeroInfo = new ClientHeroInfo();
+
         public MapControl MapControl;
         public MainDialog MainDialog;
         public ChatDialog ChatDialog;
@@ -62,8 +78,12 @@ namespace Client.MirScenes
         public FishingStatusDialog FishingStatusDialog;
         public RefineDialog RefineDialog;
 
+        public HeroDialog HeroDialog;
+
         public GroupDialog GroupDialog;
         public GuildDialog GuildDialog;
+
+        public NewCharacterDialog NewHeroDialog;
 
         public BigMapDialog BigMapDialog;
         public TrustMerchantDialog TrustMerchantDialog;
@@ -72,7 +92,7 @@ namespace Client.MirScenes
         public TradeDialog TradeDialog;
         public GuestTradeDialog GuestTradeDialog;
 
-        public CustomPanel1 CustomPanel1;
+        public HeroMenuPanel HeroMenuPanel;
         public SocketDialog SocketDialog;
 
         public List<SkillBarDialog> SkillBarDialogs = new List<SkillBarDialog>();
@@ -203,6 +223,8 @@ namespace Client.MirScenes
             NPCDropDialog = new NPCDropDialog { Parent = this, Visible = false };
             NPCAwakeDialog = new NPCAwakeDialog { Parent = this, Visible = false };
 
+            HeroDialog = new HeroDialog { Parent = this, Visible = false };
+
             HelpDialog = new HelpDialog { Parent = this, Visible = false };
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
             NoticeDialog = new NoticeDialog { Parent = this, Visible = false };
@@ -214,14 +236,28 @@ namespace Client.MirScenes
             GroupDialog = new GroupDialog { Parent = this, Visible = false };
             GuildDialog = new GuildDialog { Parent = this, Visible = false };
 
+            NewHeroDialog = new NewCharacterDialog { Parent = this, Visible = false };
+            NewHeroDialog.TitleLabel.Index = 847;
+            NewHeroDialog.TitleLabel.Location = new Point(246, 11);
+            NewHeroDialog.OnCreateCharacter += (o, e) =>
+            {
+                Network.Enqueue(new C.NewHero
+                {
+                    Name = NewHeroDialog.NameTextBox.Text,
+                    Class = NewHeroDialog.Class,
+                    Gender = NewHeroDialog.Gender
+                });
+            };
+
+            HeroMenuPanel = new HeroMenuPanel(this) { Visible = false };
+
             BigMapDialog = new BigMapDialog { Parent = this, Visible = false };
             TrustMerchantDialog = new TrustMerchantDialog { Parent = this, Visible = false };
             CharacterDuraPanel = new CharacterDuraPanel { Parent = this, Visible = false };
             DuraStatusPanel = new DuraStatusDialog { Parent = this, Visible = true };
             TradeDialog = new TradeDialog { Parent = this, Visible = false };
-            GuestTradeDialog = new GuestTradeDialog { Parent = this, Visible = false };
+            GuestTradeDialog = new GuestTradeDialog { Parent = this, Visible = false };            
 
-            CustomPanel1 = new CustomPanel1(this) { Visible = false };
             SocketDialog = new SocketDialog { Parent = this, Visible = false };
 
             SkillBarDialog Bar1 = new SkillBarDialog { Parent = this, Visible = false, BarIndex = 0 };
@@ -1060,7 +1096,6 @@ namespace Client.MirScenes
             MapControl.Process();
             MainDialog.Process();
             InventoryDialog.Process();
-            CustomPanel1.Process();
             GameShopDialog.Process();
             MiniMapDialog.Process();
 
@@ -1132,6 +1167,9 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.ObjectPlayer:
                     ObjectPlayer((S.ObjectPlayer)p);
+                    break;
+                case (short)ServerPacketIds.ObjectHero:
+                    ObjectHero((S.ObjectHero)p);
                     break;
                 case (short)ServerPacketIds.ObjectRemove:
                     ObjectRemove((S.ObjectRemove)p);
@@ -1442,6 +1480,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ObjectHealth:
                     ObjectHealth((S.ObjectHealth)p);
                     break;
+                case (short)ServerPacketIds.ObjectMana:
+                    ObjectMana((S.ObjectMana)p);
+                    break;
                 case (short)ServerPacketIds.MapEffect:
                     MapEffect((S.MapEffect)p);
                     break;
@@ -1544,6 +1585,18 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.GuildRequestWar:
                     GuildRequestWar((S.GuildRequestWar)p);
+                    break;
+                case (short)ServerPacketIds.HeroCreateRequest:
+                    HeroCreateRequest((S.HeroCreateRequest)p);
+                    break;
+                case (short)ServerPacketIds.NewHero:
+                    NewHero((S.NewHero)p);
+                    break;
+                case (short)ServerPacketIds.HeroInformation:
+                    HeroInformation((S.HeroInformation)p);
+                    break;
+                case (short)ServerPacketIds.UpdateHeroSpawnState:
+                    UpdateHeroSpawnState((S.UpdateHeroSpawnState)p);
                     break;
                 case (short)ServerPacketIds.DefaultNPC:
                     DefaultNPC((S.DefaultNPC)p);
@@ -1938,6 +1991,13 @@ namespace Client.MirScenes
             PlayerObject player = new PlayerObject(p.ObjectID);
             player.Load(p);
         }
+
+        private void ObjectHero(S.ObjectHero p)
+        {
+            HeroObject hero = new HeroObject(p.ObjectID);
+            hero.Load(p);
+        }
+
         private void ObjectRemove(S.ObjectRemove p)
         {
             if (p.ObjectID == User.ObjectID) return;
@@ -4422,6 +4482,17 @@ namespace Client.MirScenes
             }
         }
 
+        private void ObjectMana(S.ObjectMana p)
+        {
+            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            {
+                MapObject ob = MapControl.Objects[i];
+                if (ob.ObjectID != p.ObjectID) continue;
+                ob.PercentMana = p.Percent;
+                return;
+            }
+        }
+
         private void MapEffect(S.MapEffect p)
         {
             switch (p.Effect)
@@ -5331,6 +5402,72 @@ namespace Client.MirScenes
                 GuildDialog.StorageGrid[i].Item = p.Items[i].Item;
                 Bind(GuildDialog.StorageGrid[i].Item);
             }
+        }
+
+        private void HeroCreateRequest(S.HeroCreateRequest p)
+        {            
+            NewHeroDialog.WarriorButton.Visible = p.CanCreateClass[(int)MirClass.Warrior];
+            NewHeroDialog.WizardButton.Visible = p.CanCreateClass[(int)MirClass.Wizard];
+            NewHeroDialog.TaoistButton.Visible = p.CanCreateClass[(int)MirClass.Taoist];
+            NewHeroDialog.AssassinButton.Visible = p.CanCreateClass[(int)MirClass.Assassin];
+            NewHeroDialog.ArcherButton.Visible = p.CanCreateClass[(int)MirClass.Archer];
+
+            NewHeroDialog.Show();            
+        }
+
+        private void NewHero(S.NewHero p)
+        {
+            NewHeroDialog.OKButton.Enabled = true;
+
+            switch (p.Result)
+            {
+                case 0:
+                    MirMessageBox.Show("Creating new heroes is currently disabled.");
+                    NewHeroDialog.Hide();
+                    break;
+                case 1:
+                    MirMessageBox.Show("Your Hero Name is not acceptable.");
+                    NewHeroDialog.NameTextBox.SetFocus();
+                    break;
+                case 2:
+                    MirMessageBox.Show("The gender you selected does not exist.\n Contact a GM for assistance.");
+                    break;
+                case 3:
+                    MirMessageBox.Show("The class you selected does not exist.\n Contact a GM for assistance.");
+                    break;
+                case 4:
+                    MirMessageBox.Show("You cannot make anymore then " + Globals.MaxCharacterCount + " Heroes.");
+                    NewHeroDialog.Hide();
+                    break;
+                case 5:
+                    MirMessageBox.Show("A Character with this name already exists.");
+                    NewHeroDialog.NameTextBox.SetFocus();
+                    break;
+                case 10:
+                    MirMessageBox.Show("Hero created successfully.");
+                    NewHeroDialog.Hide();
+                    break;
+            }
+        }
+
+        private void HeroInformation(S.HeroInformation p)
+        {
+            HasHero = true;
+            HeroInfo.Name = p.Name;
+            HeroInfo.Level = p.Level;
+            HeroInfo.Class = p.Class;
+            HeroInfo.Gender = p.Gender;
+            HeroInfo.Experience = p.Experience;
+            HeroInfo.MaxExperience = p.MaxExperience;
+
+            MainDialog.HeroInfoPanel.Update(p);
+        }
+
+        private void UpdateHeroSpawnState(S.UpdateHeroSpawnState p)
+        {
+            heroSpawnState = p.State;
+
+            MainDialog.HeroInfoPanel.Visible = p.State > HeroSpawnState.None;
         }
 
         private void MarriageRequest(S.MarriageRequest p)

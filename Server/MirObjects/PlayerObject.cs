@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using ClientPackets;
+using C = ClientPackets;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirNetwork;
@@ -32,6 +32,18 @@ namespace Server.MirObjects
 
         public bool WarZone = false;
 
+        private HeroInfo currentHero;
+        public HeroInfo CurrentHero
+        {
+            get { return currentHero; }
+            set
+            {
+                currentHero = value;
+                Info.CurrentHeroIndex = currentHero.Index;
+            }
+        }
+        public MonsterObject Hero;
+
         public override ObjectType Race
         {
             get { return ObjectType.Player; }
@@ -41,6 +53,7 @@ namespace Server.MirObjects
         public AccountInfo Account;
         public MirConnection Connection;
         public Reporting Report;
+        public PlayerFunctions SharedFunctions;
 
         public override string Name
         {
@@ -274,6 +287,8 @@ namespace Server.MirObjects
         public bool GuildMembersChanged = true;//same as above but for members
         public bool GuildCanRequestItems = true;
         public bool RequestedGuildBuffInfo = false;
+
+        public bool CanCreateHero = false;
         public override bool Blocking
         {
             get
@@ -342,6 +357,7 @@ namespace Server.MirObjects
             Stats = new Stats();
 
             Report = new Reporting(this);
+            CreateSharedFunctions();
 
             if (Account.AdminAccount)
             {
@@ -355,6 +371,9 @@ namespace Server.MirObjects
             {
                 MyGuild = Envir.GetGuild(Info.GuildIndex);
             }
+
+            if (info.CurrentHeroIndex > 0)
+                CurrentHero = info.Heroes.FirstOrDefault(x => x.Index == info.CurrentHeroIndex);
 
             RefreshStats();
 
@@ -380,6 +399,52 @@ namespace Server.MirObjects
             }
 
             Info.LastLoginDate = Envir.Now;
+        }
+
+        private void CreateSharedFunctions()
+        {
+            SharedFunctions = new PlayerFunctions()
+            {
+                //Getters
+                getStats = () => { return Stats; },
+                getLevel = () => { return Level; },
+                getClass = () => { return Class; },
+                getCurrentBagWeight = () => { return CurrentBagWeight; },
+                getInventory = () => { return Info.Inventory; },
+                getDead = () => { return Dead; },
+                getCanRegen = () => { return CanRegen; },
+                getRegenTime = () => { return RegenTime; },
+                getRegenDelay = () => { return RegenDelay; },
+                getHP = () => { return HP; },
+                getMP = () => { return MP; },
+                getPotTime = () => { return PotTime; },
+                getPotDelay = () => { return PotDelay; },
+                getPotHealthAmount = () => { return PotHealthAmount; },
+                getPotManaAmount = () => { return PotManaAmount; },
+                getHealTime = () => { return HealTime; },
+                getHealDelay = () => { return HealDelay; },
+                getHealAmount = () => { return HealAmount; },
+                getVampTime = () => { return VampTime; },
+                getVampDelay = () => { return VampDelay; },
+                getVampAmount = () => { return VampAmount; },
+
+                //Setters
+                setMaxExperience = (value) => { MaxExperience = value; },
+                setCurrentBagWeight = (value) => { CurrentBagWeight = value; },
+                setRegenTime = (value) => { RegenTime = value; },
+                setPotTime = (value) => { PotTime = value; },
+                setPotHealthAmount = (value) => { PotHealthAmount = value; },
+                setPotManaAmount = (value) => { PotManaAmount = value; },
+                setHealTime = (value) => { HealTime = value; },
+                setHealAmount = (value) => { HealAmount = value; },
+                setVampTime = (value) => { VampTime = value; },
+                setVampAmount = (value) => { VampAmount = value; },
+
+                //Functions
+                ChangeHP = ChangeHP,
+                ChangeMP = ChangeMP,
+                BroadcastDamageIndicator = BroadcastDamageIndicator
+            };
         }
 
         public void StopGame(byte reason)
@@ -426,6 +491,9 @@ namespace Server.MirObjects
 
                 Pets.RemoveAt(i);
             }
+
+            if (HeroSpawned)
+                DespawnHero();
             
             for (int i = 0; i < Info.Magics.Count; i++)
             {
@@ -853,103 +921,7 @@ namespace Server.MirObjects
 
         private void ProcessRegen()
         {
-            if (Dead) return;
-
-            int healthRegen = 0, manaRegen = 0;
-
-            if (CanRegen)
-            {
-                RegenTime = Envir.Time + RegenDelay;
-
-                if (HP < Stats[Stat.HP])
-                {
-                    healthRegen += (int)(Stats[Stat.HP] * 0.03F) + 1;
-                    healthRegen += (int)(healthRegen * ((double)Stats[Stat.HealthRecovery] / Settings.HealthRegenWeight));
-                }
-
-                if (MP < Stats[Stat.MP])
-                {
-                    manaRegen += (int)(Stats[Stat.MP] * 0.03F) + 1;
-                    manaRegen += (int)(manaRegen * ((double)Stats[Stat.SpellRecovery] / Settings.ManaRegenWeight));
-                }
-            }
-
-            if (Envir.Time > PotTime)
-            {
-                //PotTime = Envir.Time + Math.Max(50,Math.Min(PotDelay, 600 - (Level * 10)));
-                PotTime = Envir.Time + PotDelay;
-                int PerTickRegen = 5 + (Level / 10);
-
-                if (PotHealthAmount > PerTickRegen)
-                {
-                    healthRegen += PerTickRegen;
-                    PotHealthAmount -= (ushort)PerTickRegen;
-                }
-                else
-                {
-                    healthRegen += PotHealthAmount;
-                    PotHealthAmount = 0;
-                }
-
-                if (PotManaAmount > PerTickRegen)
-                {
-                    manaRegen += PerTickRegen;
-                    PotManaAmount -= (ushort)PerTickRegen;
-                }
-                else
-                {
-                    manaRegen += PotManaAmount;
-                    PotManaAmount = 0;
-                }
-            }
-
-            if (Envir.Time > HealTime)
-            {
-                HealTime = Envir.Time + HealDelay;
-
-                int incHeal = (Level / 10) + (HealAmount / 10);
-                if (HealAmount > (5 + incHeal))
-                {
-                    healthRegen += (5 + incHeal);
-                    HealAmount -= (ushort)Math.Min(HealAmount, 5 + incHeal);
-                }
-                else
-                {
-                    healthRegen += HealAmount;
-                    HealAmount = 0;
-                }
-            }
-
-            if (Envir.Time > VampTime)
-            {
-                VampTime = Envir.Time + VampDelay;
-
-                if (VampAmount > 10)
-                {
-                    healthRegen += 10;
-                    VampAmount -= 10;
-                }
-                else
-                {
-                    healthRegen += VampAmount;
-                    VampAmount = 0;
-                }
-            }
-
-            if (healthRegen > 0)
-            {
-                ChangeHP(healthRegen);
-                BroadcastDamageIndicator(DamageType.Hit, healthRegen);
-            }
-
-            if (HP == Stats[Stat.HP])
-            {
-                PotHealthAmount = 0;
-                HealAmount = 0;
-            }
-
-            if (manaRegen > 0) ChangeMP(manaRegen);
-            if (MP == Stats[Stat.MP]) PotManaAmount = 0;
+            SharedFunctions.ProcessRegen();
         }
         private void ProcessPoison()
         {
@@ -2146,6 +2118,7 @@ namespace Server.MirObjects
             GetUserInfo();
             GetQuestInfo();
             GetRecipeInfo();
+            GetHeroInfo();
 
             GetCompletedQuests();
 
@@ -2247,6 +2220,9 @@ namespace Server.MirObjects
                     Enqueue(new S.GuildBuffList() { ActiveBuffs = MyGuild.BuffList });
                 }
             }
+
+            if (HasHero && Info.HeroSpawned)
+                SpawnHero();
 
             if (InSafeZone && Info.LastLogoutDate > DateTime.MinValue)
             {
@@ -2489,6 +2465,36 @@ namespace Server.MirObjects
 
             Enqueue(packet);
         }
+
+        private void GetHeroInfo()
+        {
+            if (!HasHero) return;
+
+            CurrentHero.RefreshMaxExperience();
+
+            S.HeroInformation packet = new S.HeroInformation
+            {
+                Name = CurrentHero.Name,
+                Class = CurrentHero.Class,
+                Gender = CurrentHero.Gender,
+                Level = CurrentHero.Level,
+                Hair = CurrentHero.Hair,
+
+                Experience = CurrentHero.Experience,
+                MaxExperience = CurrentHero.MaxExperience,
+
+                Inventory = new UserItem[CurrentHero.Inventory.Length],
+                Equipment = new UserItem[CurrentHero.Equipment.Length],                
+            };
+
+            for (int i = 0; i < CurrentHero.Magics.Count; i++)
+                packet.Magics.Add(CurrentHero.Magics[i].CreateClientMagic());
+
+            CurrentHero.Inventory.CopyTo(packet.Inventory, 0);
+            CurrentHero.Equipment.CopyTo(packet.Equipment, 0);            
+
+            Enqueue(packet);
+        }
         private void GetMapInfo()
         {
             Enqueue(new S.MapInformation
@@ -2649,26 +2655,12 @@ namespace Server.MirObjects
 
         private void RefreshLevelStats()
         {
-            MaxExperience = Level < Settings.ExperienceList.Count ? Settings.ExperienceList[Level - 1] : 0;
-
-            foreach (var stat in Settings.ClassBaseStats[(byte)Class].Stats)
-            {
-                Stats[stat.Type] = stat.Calculate(Class, Level);
-            }
+            SharedFunctions.RefreshLevelStats();
         }
 
         private void RefreshBagWeight()
         {
-            CurrentBagWeight = 0;
-
-            for (int i = 0; i < Info.Inventory.Length; i++)
-            {
-                UserItem item = Info.Inventory[i];
-                if (item != null)
-                {
-                    CurrentBagWeight += item.Weight;
-                }
-            }
+            SharedFunctions.RefreshBagWeight();
         }
 
         private void RefreshEquipmentStats()
@@ -4930,6 +4922,20 @@ namespace Server.MirObjects
                                 ReceiveChat(GameLanguage.LowGold, ChatType.System);
                             }
                             ChatTime = 0;
+                        }
+                        break;
+
+                    case "SUMMONHERO":
+                        {
+                            if (!HasHero) return;
+
+                            if (!HeroSpawned)
+                                SpawnHero();
+                            else
+                            {
+                                DespawnHero();
+                                Info.HeroSpawned = false;
+                            }
                         }
                         break;
 
@@ -16302,6 +16308,31 @@ namespace Server.MirObjects
 
         #endregion
 
+        #region Heroes
+        public void NewHero(C.NewHero p)
+        {
+            if (!Envir.CanCreateHero(p, Connection, IsGM))
+                return;
+
+            if (Info.Heroes.Count >= Info.MaximumHeroCount)
+            {
+                Enqueue(new S.NewHero { Result = 4 });
+                return;
+            }
+
+            var info = new HeroInfo(p) { Index = ++Envir.NextHeroID };
+            Info.Heroes.Add(info);
+            Envir.HeroList.Add(info);
+
+            if (!HasHero)
+                CurrentHero = info;
+
+            Enqueue(new S.NewHero { Result = 10 });
+            GetHeroInfo();
+            SpawnHero();
+        }
+        #endregion
+
         #region Guilds
 
         public bool CreateGuild(string guildName)
@@ -20986,6 +21017,46 @@ namespace Server.MirObjects
         public void SetCompass(Point location)
         {
             Enqueue(new S.SetCompass { Location = location });
+        }
+
+        public bool HasHero
+        {
+            get { return CurrentHero != null; }
+        }
+
+        public bool HeroSpawned
+        {
+            get { return Hero != null; }
+        }
+
+        public void SpawnHero()
+        {
+            MonsterInfo info = Envir.GetMonsterInfo(Settings.HeroName);
+            if (info == null) return;
+
+            HeroObject hero = (HeroObject)MonsterObject.GetMonster(info);
+            hero.HInfo = CurrentHero;
+            hero.Master = this;
+            hero.ActionTime = Envir.Time + 1000;
+            hero.RefreshNameColour(false);
+
+            if (CurrentMap.ValidPoint(Front))
+                hero.Spawn(CurrentMap, Front);
+            else
+                hero.Spawn(CurrentMap, CurrentLocation);
+
+            Hero = hero;
+            Info.HeroSpawned = true;
+            Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.Summoned });
+        }
+
+        public void DespawnHero()
+        {
+            CurrentMap.RemoveObject(Hero);
+            Hero.Master = null;
+            Hero.Despawn();            
+            Hero = null;
+            Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.None });
         }
     }
 }

@@ -818,7 +818,8 @@ public enum ObjectType : byte
     Spell = 4,
     Monster = 5,
     Deco = 6,
-    Creature = 7
+    Creature = 7,
+    Hero = 8
 }
 
 public enum ChatType : byte
@@ -1412,6 +1413,7 @@ public enum ServerPacketIds : short
     UserSlotsRefresh,
     UserLocation,
     ObjectPlayer,
+    ObjectHero,
     ObjectRemove,
     ObjectTurn,
     ObjectWalk,
@@ -1517,6 +1519,7 @@ public enum ServerPacketIds : short
     ObjectRevived,
     SpellToggle,
     ObjectHealth,
+    ObjectMana,
     MapEffect,
     ObjectRangeAttack,
     AddBuff,
@@ -1550,6 +1553,10 @@ public enum ServerPacketIds : short
     GuildStorageItemChange,
     GuildStorageList,
     GuildRequestWar,
+    HeroCreateRequest,
+    NewHero,
+    HeroInformation,
+    UpdateHeroSpawnState,
     DefaultNPC,
     NPCUpdate,
     NPCImageUpdate,
@@ -1699,6 +1706,7 @@ public enum ClientPacketIds : short
     AddMember,
     DellMember,
     GroupInvite,
+    NewHero,
     TownRevive,
     SpellToggle,
     ConsignItem,
@@ -1828,4 +1836,11 @@ public enum IntelligentCreaturePickupMode : byte
 {
     Automatic = 0,
     SemiAutomatic = 1,
+}
+
+public enum HeroSpawnState : byte
+{
+    None = 0,
+    Summoned = 1,
+    Dead = 2
 }

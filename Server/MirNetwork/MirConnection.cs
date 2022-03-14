@@ -401,6 +401,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.GroupInvite:
                     GroupInvite((C.GroupInvite)p);
                     return;
+                case (short)ClientPacketIds.NewHero:
+                    NewHero((C.NewHero)p);
+                    break;
                 case (short)ClientPacketIds.TownRevive:
                     TownRevive();
                     return;
@@ -1251,6 +1254,13 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.GroupInvite(p.AcceptInvite);
+        }
+
+        private void NewHero(C.NewHero p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.NewHero(p);
         }
 
         private void TownRevive()

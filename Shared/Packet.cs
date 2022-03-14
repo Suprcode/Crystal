@@ -194,6 +194,8 @@ public abstract class Packet
                 return new C.DelMember();
             case (short)ClientPacketIds.GroupInvite:
                 return new C.GroupInvite();
+            case (short)ClientPacketIds.NewHero:
+                return new C.NewHero();            
             case (short)ClientPacketIds.TownRevive:
                 return new C.TownRevive();
             case (short)ClientPacketIds.SpellToggle:
@@ -411,6 +413,8 @@ public abstract class Packet
                 return new S.UserLocation();
             case (short)ServerPacketIds.ObjectPlayer:
                 return new S.ObjectPlayer();
+            case (short)ServerPacketIds.ObjectHero:
+                return new S.ObjectHero();
             case (short)ServerPacketIds.ObjectRemove:
                 return new S.ObjectRemove();
             case (short)ServerPacketIds.ObjectTurn:
@@ -617,6 +621,8 @@ public abstract class Packet
                 return new S.SpellToggle();
             case (short)ServerPacketIds.ObjectHealth:
                 return new S.ObjectHealth();
+            case (short)ServerPacketIds.ObjectMana:
+                return new S.ObjectMana();
             case (short)ServerPacketIds.MapEffect:
                 return new S.MapEffect();
             case (short)ServerPacketIds.ObjectRangeAttack:
@@ -685,6 +691,14 @@ public abstract class Packet
                 return new S.GuildStorageList();
             case (short)ServerPacketIds.GuildRequestWar:
                 return new S.GuildRequestWar();
+            case (short)ServerPacketIds.HeroCreateRequest:
+                return new S.HeroCreateRequest();
+            case (short)ServerPacketIds.NewHero:
+                return new S.NewHero();
+            case (short)ServerPacketIds.HeroInformation:
+                return new S.HeroInformation();
+            case (short)ServerPacketIds.UpdateHeroSpawnState:
+                return new S.UpdateHeroSpawnState();
             case (short)ServerPacketIds.DefaultNPC:
                 return new S.DefaultNPC();
             case (short)ServerPacketIds.NPCUpdate:

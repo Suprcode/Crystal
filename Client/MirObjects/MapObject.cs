@@ -39,8 +39,30 @@ namespace Client.MirObjects
         public long BlindTime;
         public byte BlindCount;
 
-        public byte PercentHealth;
+        private byte percentHealth;
+        public virtual byte PercentHealth
+        {
+            get { return percentHealth; }
+            set
+            {
+                if (percentHealth == value) return;
+
+                percentHealth = value;
+            }
+        }
         public long HealthTime;
+
+        private byte percentMana;
+        public virtual byte PercentMana
+        {
+            get { return percentMana; }
+            set
+            {
+                if (percentMana == value) return;
+
+                percentMana = value;
+            }
+        }
 
         public List<QueuedAction> ActionFeed = new List<QueuedAction>();
         public QueuedAction NextAction
@@ -352,22 +374,22 @@ namespace Client.MirObjects
                 }
             }
         }
+        public virtual bool ShouldDrawHealth()
+        {
+            return false;
+        }
         public void DrawHealth()
         {
             string name = Name;
-
             if (Name.Contains("(")) name = Name.Substring(Name.IndexOf("(") + 1, Name.Length - Name.IndexOf("(") - 2);
 
             if (Dead) return;
-            if (Race != ObjectType.Player && Race != ObjectType.Monster) return;
+            if (Race != ObjectType.Player && Race != ObjectType.Monster && Race != ObjectType.Hero) return;
 
             if (CMain.Time >= HealthTime)
             {
-                if (Race == ObjectType.Monster && !Name.EndsWith(string.Format("({0})", User.Name)) && !GroupDialog.GroupList.Contains(name)) return;
-                if (Race == ObjectType.Player && this != User && !GroupDialog.GroupList.Contains(Name)) return;
-                if (this == User && GroupDialog.GroupList.Count == 0) return;
+                if (!ShouldDrawHealth()) return;
             }
-
 
             Libraries.Prguse2.Draw(0, DisplayRectangle.X + 8, DisplayRectangle.Y - 64);
             int index = 1;
@@ -379,6 +401,9 @@ namespace Client.MirObjects
                     break;
                 case ObjectType.Monster:
                     if (GroupDialog.GroupList.Contains(name) || name == User.Name) index = 11;
+                    break;
+                case ObjectType.Hero:
+                    if (GroupDialog.GroupList.Contains(name) || name == GameScene.HeroInfo.Name) index = 11;
                     break;
             }
 

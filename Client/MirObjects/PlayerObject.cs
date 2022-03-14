@@ -109,8 +109,7 @@ namespace Client.MirObjects
 
         public LevelEffects LevelEffects;
 
-        public PlayerObject(uint objectID)
-            : base(objectID)
+        public PlayerObject(uint objectID) : base(objectID)
         {
             Frames = FrameSet.Player;
         }
@@ -181,6 +180,11 @@ namespace Client.MirObjects
 
             SetLibraries();
             SetEffects();
+        }
+
+        public override bool ShouldDrawHealth()
+        {
+            return this == User && (GroupDialog.GroupList.Contains(Name) || GroupDialog.GroupList.Count == 0);
         }
 
         public void ProcessBuffs()

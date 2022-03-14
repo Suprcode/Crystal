@@ -461,9 +461,11 @@ namespace Server.MirObjects
                     return new HoodedSummoner(info);
                 case 212:
                     return new PurpleFaeFlower(info);
-
                 case 213:
                     return new Siege(info); //TODO
+                case 214:
+                    return new HeroObject(info);
+
 
 
                 default:
@@ -734,7 +736,7 @@ namespace Server.MirObjects
                 }
             }
         }
-        public void RefreshNameColour(bool send = true)
+        public virtual void RefreshNameColour(bool send = true)
         {
             if (ShockTime < Envir.Time) BindingShotCenter = false;
 
@@ -1666,6 +1668,7 @@ namespace Server.MirObjects
                             switch (ob.Race)
                             {
                                 case ObjectType.Monster:
+                                case ObjectType.Hero:
                                     if (!ob.IsAttackTarget(this)) continue;
                                     if (ob.Hidden && (!CoolEye || Level < ob.Level)) continue;
                                     if (this is TrapRock && ob.InTrapRock) continue;
@@ -1938,6 +1941,7 @@ namespace Server.MirObjects
                             {
                                 case ObjectType.Monster:
                                 case ObjectType.Player:
+                                case ObjectType.Hero:
                                     if (!ob.IsAttackTarget(this)) continue;
                                     if (ob.Hidden && (!CoolEye || Level < ob.Level)) continue;
                                     if (ob.Race == ObjectType.Player)
@@ -1980,6 +1984,7 @@ namespace Server.MirObjects
                             {
                                 case ObjectType.Monster:
                                 case ObjectType.Player:
+                                case ObjectType.Hero:
                                     if (ob == this || ob.Dead) continue;
                                     if (ob.IsAttackTarget(this)) continue;
                                     if (ob.Race == ObjectType.Player)
@@ -2027,6 +2032,7 @@ namespace Server.MirObjects
                             {
                                 case ObjectType.Monster:
                                 case ObjectType.Player:
+                                case ObjectType.Hero:
                                     if (ob.Dead) continue;
                                     if (!ownAI && ob.Race == ObjectType.Monster && ((MonsterObject)ob).Info.AI == Info.AI) continue;
                                     if (!ob.IsFriendlyTarget(this)) continue;
@@ -2069,6 +2075,7 @@ namespace Server.MirObjects
                             {
                                 case ObjectType.Monster:
                                 case ObjectType.Player:
+                                case ObjectType.Hero:
                                     targets.Add(ob);
                                     continue;
                                 default:
@@ -2106,6 +2113,7 @@ namespace Server.MirObjects
                             {
                                 case ObjectType.Monster:
                                 case ObjectType.Player:
+                                case ObjectType.Hero:
                                     if (!ob.IsAttackTarget(this)) continue;
                                     if (ob.Hidden && (!CoolEye || Level < ob.Level) && needSight) continue;
                                     if (ob.Race == ObjectType.Player)
@@ -3269,7 +3277,7 @@ namespace Server.MirObjects
                 for (int o = 0; o < cell.Objects.Count; o++)
                 {
                     MapObject ob = cell.Objects[o];
-                    if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
+                    if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player || ob.Race == ObjectType.Hero)
                     {
                         if (!ob.IsAttackTarget(this)) continue;
 
@@ -3307,7 +3315,7 @@ namespace Server.MirObjects
                 for (int o = 0; o < cell.Objects.Count; o++)
                 {
                     MapObject ob = cell.Objects[o];
-                    if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
+                    if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player || ob.Race == ObjectType.Hero)
                     {
                         if (!ob.IsAttackTarget(this)) continue;
 
@@ -3376,7 +3384,7 @@ namespace Server.MirObjects
                     for (int o = 0; o < cell.Objects.Count; o++)
                     {
                         MapObject ob = cell.Objects[o];
-                        if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
+                        if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player || ob.Race == ObjectType.Hero)
                         {
                             if (!ob.IsAttackTarget(this)) continue;
 
@@ -3414,7 +3422,7 @@ namespace Server.MirObjects
                 for (int o = 0; o < cell.Objects.Count; o++)
                 {
                     MapObject ob = cell.Objects[o];
-                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
+                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster && ob.Race != ObjectType.Hero) continue;
                     if (!ob.IsAttackTarget(this)) continue;
 
                     DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
@@ -3442,7 +3450,7 @@ namespace Server.MirObjects
                 for (int o = 0; o < cell.Objects.Count; o++)
                 {
                     MapObject ob = cell.Objects[o];
-                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
+                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster && ob.Race != ObjectType.Hero) continue;
                     if (!ob.IsAttackTarget(this)) continue;
 
                     DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
@@ -3499,7 +3507,7 @@ namespace Server.MirObjects
                     for (int o = 0; o < cell.Objects.Count; o++)
                     {
                         MapObject ob = cell.Objects[o];
-                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster && ob.Race != ObjectType.Hero) continue;
                         if (!ob.IsAttackTarget(this)) continue;
 
                         if (pushDistance > 0 && !pushed)

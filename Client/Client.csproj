@@ -166,6 +166,7 @@
     <Compile Include="MirControls\MirTextBox.cs" />
     <Compile Include="MirGraphics\DXManager.cs" />
     <Compile Include="MirGraphics\MLibrary.cs" />
+    <Compile Include="MirObjects\HeroObject.cs" />
     <Compile Include="MirObjects\Damage.cs" />
     <Compile Include="MirObjects\DecoObject.cs" />
     <Compile Include="MirObjects\Effect.cs" />
@@ -182,6 +183,8 @@
     <Compile Include="MirScenes\Dialogs\ChatNoticeDialog.cs" />
     <Compile Include="MirScenes\Dialogs\ChatOptionDialog.cs" />
     <Compile Include="MirScenes\Dialogs\BigMapDialog.cs" />
+    <Compile Include="MirScenes\Dialogs\NewCharacterDialog.cs" />
+    <Compile Include="MirScenes\Dialogs\HeroDialogs.cs" />
     <Compile Include="MirScenes\Dialogs\CompassDialog.cs" />
     <Compile Include="MirScenes\Dialogs\FishingDialog.cs" />
     <Compile Include="MirScenes\Dialogs\FriendDialog.cs" />

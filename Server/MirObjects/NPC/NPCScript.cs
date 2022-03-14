@@ -74,6 +74,7 @@ namespace Server.MirObjects
             ResetKey = "[@RESET]",
             PearlBuyKey = "[@PEARLBUY]",
             BuyUsedKey = "[@BUYUSED]",
+            HeroCreateKey = "[@CREATEHERO]",
 
             TradeKey = "[TRADE]",
             RecipeKey = "[RECIPE]",
@@ -1098,6 +1099,17 @@ namespace Server.MirObjects
                         player.CheckItem(Goods[i]);
 
                     player.Enqueue(new S.NPCPearlGoods { List = Goods, Rate = PriceRate(player), Type = PanelType.Buy });
+                    break;
+                case HeroCreateKey:
+                    if (player.Info.Level < Settings.Hero_RequiredLevel)
+                    {
+                        player.ReceiveChat(String.Format("You have to be at least level {0} to create a hero.", Settings.Hero_RequiredLevel), ChatType.System);
+                    }
+                    player.CanCreateHero = true;
+                    player.Enqueue(new S.HeroCreateRequest()
+                    {
+                        CanCreateClass = Settings.Hero_CanCreateClass
+                    });
                     break;
             }
         }

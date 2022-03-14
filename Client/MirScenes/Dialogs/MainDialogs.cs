@@ -10,6 +10,7 @@ using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
+using Client.MirScenes;
 using Client.MirSounds;
 using SlimDX;
 using SlimDX.Direct3D9;
@@ -35,8 +36,9 @@ namespace Client.MirScenes.Dialogs
         public MirButton GameShopButton, MenuButton, InventoryButton, CharacterButton, SkillButton, QuestButton, OptionButton;
         public MirControl HealthOrb;
         public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, CharacterName, ExperienceLabel, GoldLabel, WeightLabel, SpaceLabel, AModeLabel, PModeLabel, SModeLabel;
+        public HeroInfoPanel HeroInfoPanel;
 
-        public MirButton CustomButton1, CustomButton2;
+        public MirButton HeroMenuButton, HeroSummonButton;
 
         public bool HPOnly
         {
@@ -296,8 +298,6 @@ namespace Client.MirScenes.Dialogs
                     GameScene.PickedUpGold = !GameScene.PickedUpGold && GameScene.Gold > 0;
             };
 
-
-
             WeightBar = new MirImageControl
             {
                 Index = 76,
@@ -323,24 +323,24 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(26, 14),
             };
 
-            CustomButton1 = new MirButton
+            HeroMenuButton = new MirButton
             {
                 Index = 2164,
                 HoverIndex = 2165,
                 PressedIndex = 2166,
                 Library = Libraries.Prguse,
                 Parent = this,
-                Location = new Point(this.Size.Width - 160, 65),
+                Location = new Point(Size.Width - 160, 65),
                 Size = new Size(20, 20),
                 Sound = SoundList.ButtonA,
-                Visible = !Settings.ModeView
+                Visible = false
             };
-            CustomButton1.Click += (o, e) =>
+            HeroMenuButton.Click += (o, e) =>
             {
-                GameScene.Scene.CustomPanel1.Toggle();
+                GameScene.Scene.HeroMenuPanel.Toggle();
             };
 
-            CustomButton2 = new MirButton
+            HeroSummonButton = new MirButton
             {
                 Index = 2167,
                 HoverIndex = 2168,
@@ -349,12 +349,18 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(this.Size.Width - 160, 90),
                 Size = new Size(20, 20),
-                Sound = SoundList.ButtonA
+                Sound = SoundList.ButtonA,
+                Visible = false
             };
-            CustomButton2.Click += (o, e) =>
+            HeroSummonButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.CallNPC { ObjectID = uint.MaxValue });
+                Network.Enqueue(new C.Chat
+                {
+                    Message = "@SUMMONHERO",
+                });
             };
+
+            HeroInfoPanel = new HeroInfoPanel { Parent = this, Visible = false };
 
             AModeLabel = new MirLabel
             {
@@ -5054,13 +5060,11 @@ namespace Client.MirScenes.Dialogs
         }
     }
 
-    public sealed class CustomPanel1 : MirImageControl
+    public sealed class HeroMenuPanel : MirImageControl
     {
         public MirButton Button1, Button2, Button3;
 
-        public string AMode, PMode, SMode;
-
-        public CustomPanel1(MirControl parent)
+        public HeroMenuPanel(MirControl parent)
         {
             Index = 2179;
             Library = Libraries.Prguse;
@@ -5118,68 +5122,167 @@ namespace Client.MirScenes.Dialogs
             };
         }
 
-        public void Process()
-        {
-            switch (GameScene.Scene.AMode)
-            {
-                case AttackMode.Peace:
-                    AMode = "[Mode: Peaceful]";
-                    break;
-                case AttackMode.Group:
-                    AMode = "[Mode: Group]";
-                    break;
-                case AttackMode.Guild:
-                    AMode = "[Mode: Guild]";
-                    break;
-                case AttackMode.EnemyGuild:
-                    AMode = "[Mode: Enemy Guild]";
-                    break;
-                case AttackMode.RedBrown:
-                    AMode = "[Mode: Red/Brown]";
-                    break;
-                case AttackMode.All:
-                    AMode = "[Mode: Attack All]";
-                    break;
-            }
-
-            switch (GameScene.Scene.PMode)
-            {
-                case PetMode.Both:
-                    PMode = "[Mode: Attack and Move]";
-                    break;
-                case PetMode.MoveOnly:
-                    PMode = "[Mode: Do Not Attack]";
-                    break;
-                case PetMode.AttackOnly:
-                    PMode = "[Mode: Do Not Move]";
-                    break;
-                case PetMode.None:
-                    PMode = "[Mode: Do Not Attack or Move]";
-                    break;
-            }
-
-            switch (Settings.SkillMode)
-            {
-                case true:
-                    SMode = "[Mode: ~]";
-                    break;
-                case false:
-                    SMode = "[Mode: Ctrl]";
-                    break;
-            }
-
-            //GameScene.Scene.MiniMapDialog.AModeLabel.Text = AMode;
-            //GameScene.Scene.MiniMapDialog.PModeLabel.Text = PMode;
-            //GameScene.Scene.MiniMapDialog.SModeLabel.Text = SMode;
-
-            Button1.Hint = string.Format("Skill Mode\r\n{0}", SMode);
-            Button2.Hint = string.Format("Pet Mode ({1})\r\n{0}", PMode, CMain.InputKeys.GetKey(KeybindOptions.ChangePetmode));
-            Button3.Hint = string.Format("Attack Mode ({1})\r\n{0}", AMode, CMain.InputKeys.GetKey(KeybindOptions.ChangeAttackmode));
-        }
-
         public void Toggle()
         {
             Visible = !Visible;
+        }
+    }
+
+    public sealed class HeroInfoPanel : MirImageControl
+    {
+        private MirImageControl Avatar, NameContainer, HealthContainer, HealthBar, ManaBar, ExperienceBar;
+        private MirLabel NameLabel, LevelLabel; 
+        
+        private string Name => GameScene.HeroInfo.Name;
+        private int Level => GameScene.HeroInfo.Level;
+        private MirClass Class => GameScene.HeroInfo.Class;
+        private MirGender Gender => GameScene.HeroInfo.Gender;
+        private long Experience => GameScene.HeroInfo.Experience;
+        private long MaxExperience => GameScene.HeroInfo.MaxExperience;
+        private byte PercentHealth => GameScene.HeroInfo.PercentHealth;
+        private byte PercentMana => GameScene.HeroInfo.PercentMana;
+
+        public HeroInfoPanel()
+        {
+            Index = 14;
+            Library = Libraries.Prguse;
+            Location = new Point(95, 48);
+
+            Avatar = new MirImageControl
+            {
+                Index = 1400,
+                Library = Libraries.Prguse,
+                Location = new Point(14, 19),
+                Parent = this,
+                Visible = true
+            };
+
+            NameContainer = new MirImageControl
+            {
+                Index = 10,
+                Library = Libraries.Prguse,
+                Location = new Point(26, 60),
+                Parent = this,
+                Visible = true
+            };
+
+            LevelLabel = new MirLabel
+            {
+                AutoSize = false,
+                Size = new Size(17, 14),
+                Location = new Point(3, -1),
+                DrawFormat = TextFormatFlags.HorizontalCenter,
+                Parent = NameContainer,
+            };
+
+            NameLabel = new MirLabel
+            {
+                AutoSize = false,
+                Size = new Size(97, 14),
+                Location = new Point(2, 14),
+                DrawFormat = TextFormatFlags.HorizontalCenter,
+                Parent = NameContainer,
+            };
+
+            HealthContainer = new MirImageControl
+            {
+                Index = 11,
+                Library = Libraries.Prguse,
+                Location = new Point(57, 26),
+                Parent = this,
+                Visible = true
+            };
+
+            HealthBar = new MirImageControl
+            {
+                Index = 1951,
+                Library = Libraries.Prguse,
+                Location = new Point(18, 6),
+                Parent = HealthContainer,
+                Visible = true,
+                DrawImage = false,
+                NotControl = true
+            };
+            HealthBar.BeforeDraw += HealthBar_BeforeDraw;
+
+            ManaBar = new MirImageControl
+            {
+                Index = 1952,
+                Library = Libraries.Prguse,
+                Location = new Point(18, 19),
+                Parent = HealthContainer,
+                Visible = true,
+                DrawImage = false,
+                NotControl = true
+            };
+            ManaBar.BeforeDraw += ManaBar_BeforeDraw;
+
+            ExperienceBar = new MirImageControl
+            {
+                Index = 1953,
+                Library = Libraries.Prguse,
+                Location = new Point(18, 32),
+                Parent = HealthContainer,
+                Visible = true,
+                DrawImage = false,
+                NotControl = true
+            };
+            ExperienceBar.BeforeDraw += ExperienceBar_BeforeDraw;
+        }
+
+        public void Update(S.HeroInformation p)
+        {
+            Avatar.Index = 1400 + (byte)Class + 10 * (byte)Gender;
+            NameLabel.Text = Name;
+            LevelLabel.Text = Level.ToString();
+        }
+
+        private void ExperienceBar_BeforeDraw(object sender, EventArgs e)
+        {
+            if (ExperienceBar.Library == null) return;
+
+            double percent = Experience / (double)MaxExperience;
+            if (percent > 1) percent = 1;
+            if (percent <= 0) return;
+
+            Rectangle section = new Rectangle
+            {
+                Size = new Size((int)(ExperienceBar.Size.Width * percent), ExperienceBar.Size.Height)
+            };
+
+            ExperienceBar.Library.Draw(ExperienceBar.Index, section, ExperienceBar.DisplayLocation, Color.White, false);
+        }
+
+        private void HealthBar_BeforeDraw(object sender, EventArgs e)
+        {
+            if (HealthBar.Library == null) return;
+
+            double percent = PercentHealth / 100F;
+            if (percent > 1) percent = 1;
+            if (percent <= 0) return;
+
+            Rectangle section = new Rectangle
+            {
+                Size = new Size((int)(HealthBar.Size.Width * percent), HealthBar.Size.Height)
+            };
+
+            HealthBar.Library.Draw(HealthBar.Index, section, HealthBar.DisplayLocation, Color.White, false);
+        }
+
+        private void ManaBar_BeforeDraw(object sender, EventArgs e)
+        {
+            if (ManaBar.Library == null) return;
+
+            double percent = PercentMana / 100F;
+            if (percent > 1) percent = 1;
+            if (percent <= 0) return;
+
+            Rectangle section = new Rectangle
+            {
+                Size = new Size((int)(ManaBar.Size.Width * percent), ManaBar.Size.Height)
+            };
+
+            ManaBar.Library.Draw(ManaBar.Index, section, ManaBar.DisplayLocation, Color.White, false);
         }
     }
 }

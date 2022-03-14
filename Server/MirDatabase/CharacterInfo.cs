@@ -102,6 +102,11 @@ namespace Server.MirDatabase
         public Dictionary<int, int> GSpurchases = new Dictionary<int, int>();
         public int[] Rank = new int[2];//dont save this in db!(and dont send it to clients :p)
 
+        public List<HeroInfo> Heroes = new List<HeroInfo>();
+        public int MaximumHeroCount = 1;
+        public int CurrentHeroIndex;
+        public bool HeroSpawned;
+
         public CharacterInfo(ClientPackets.NewCharacter p, MirConnection c)
         {
             Name = p.Name;
@@ -338,6 +343,17 @@ namespace Server.MirDatabase
                     GSpurchases.Add(reader.ReadInt32(), reader.ReadInt32());
                 }
             }
+
+            if (version > 98)
+            {
+                count = reader.ReadInt32();
+                for (int i = 0; i < count; i++)
+                    Heroes.Add(new HeroInfo(reader, version, customVersion));
+
+                MaximumHeroCount = reader.ReadInt32();
+                CurrentHeroIndex = reader.ReadInt32();
+                HeroSpawned = reader.ReadBoolean();
+            }
         }
 
         public void Save(BinaryWriter writer)
@@ -515,6 +531,13 @@ namespace Server.MirDatabase
                 writer.Write(item.Key);
                 writer.Write(item.Value);
             }
+
+            writer.Write(Heroes.Count);
+            for (int i = 0; i < Heroes.Count; i++)
+                Heroes[i].Save(writer);
+            writer.Write(MaximumHeroCount);
+            writer.Write(CurrentHeroIndex);
+            writer.Write(HeroSpawned);
         }
 
         public SelectInfo ToSelectInfo()
