@@ -563,7 +563,13 @@ namespace LibraryEditor
 
         private void safeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (MessageBox.Show("Are you sure you want to remove the blank images?",
+                "Remove Blanks", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
+            _library.RemoveBlanks(true);
+            ImageList.Images.Clear();
+            _indexList.Clear();
+            PreviewListView.VirtualListSize = _library.Count;
         }
 
         private const int HowDeepToScan = 6;
@@ -892,7 +898,6 @@ namespace LibraryEditor
             }
 
             return base.ProcessCmdKey(ref msg, keyData);
-
         }
 
         private void buttonSkipNext_Click(object sender, EventArgs e)
@@ -1211,36 +1216,16 @@ namespace LibraryEditor
             }
         }
 
-        private void removeBlanksToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            _library.RemoveBlanks();
-            ImageList.Images.Clear();
-            _indexList.Clear();
-            PreviewListView.VirtualListSize = _library.Count;
-        }
-
-        private void populateMonFramesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _library.Frames.Clear();
-            _library.Frames = new FrameSet(FrameSet.DefaultMonsterFrameSet);
-
-            UpdateFrameGridView();
-        }
-
-        private void removeBlanksSafeToolStripMenuItem_Click_1(object sender, EventArgs e)
+        private void safeToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
             if (MessageBox.Show("Are you sure you want to remove the Blank Images?",
-                "Remove Blanks", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+                "Remove Blanks",
+                MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
             _library.RemoveBlanks(true);
             ImageList.Images.Clear();
             _indexList.Clear();
             PreviewListView.VirtualListSize = _library.Count;
-        }
-
-        private void frameGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
 
         /// <summary>
