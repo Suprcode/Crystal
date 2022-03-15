@@ -34,6 +34,12 @@ namespace Client.MirScenes
             set { MapObject.User = value; }
         }
 
+        public static UserHeroObject Hero
+        {
+            get { return MapObject.Hero; }
+            set { MapObject.Hero = value; }
+        }
+
         public static long MoveTime, AttackTime, NextRunTime, LogTime, LastRunTime;
         public static bool CanMove, CanRun;
 
@@ -45,13 +51,11 @@ namespace Client.MirScenes
             {
                 if (hasHero == value) return;
 
-                hasHero = value;
-                MainDialog.HeroMenuButton.Visible = value;
+                hasHero = value;               
                 MainDialog.HeroSummonButton.Visible = value;
             }
         }
         public HeroSpawnState heroSpawnState;
-        public static ClientHeroInfo HeroInfo = new ClientHeroInfo();
 
         public MapControl MapControl;
         public MainDialog MainDialog;
@@ -59,6 +63,8 @@ namespace Client.MirScenes
         public ChatControlBar ChatControl;
         public InventoryDialog InventoryDialog;
         public CharacterDialog CharacterDialog;
+        public CharacterDialog HeroDialog;
+        public HeroInventoryDialog HeroInventoryDialog;
         public CraftDialog CraftDialog;
         public StorageDialog StorageDialog;
         public BeltDialog BeltDialog;
@@ -78,12 +84,11 @@ namespace Client.MirScenes
         public FishingStatusDialog FishingStatusDialog;
         public RefineDialog RefineDialog;
 
-        public HeroDialog HeroDialog;
-
         public GroupDialog GroupDialog;
         public GuildDialog GuildDialog;
 
         public NewCharacterDialog NewHeroDialog;
+        public HeroBeltDialog HeroBeltDialog;
 
         public BigMapDialog BigMapDialog;
         public TrustMerchantDialog TrustMerchantDialog;
@@ -207,8 +212,7 @@ namespace Client.MirScenes
             MainDialog = new MainDialog { Parent = this };
             ChatDialog = new ChatDialog { Parent = this };
             ChatControl = new ChatControlBar { Parent = this };
-            InventoryDialog = new InventoryDialog { Parent = this };
-            CharacterDialog = new CharacterDialog { Parent = this, Visible = false };
+            InventoryDialog = new InventoryDialog { Parent = this };            
             BeltDialog = new BeltDialog { Parent = this };
             StorageDialog = new StorageDialog { Parent = this, Visible = false };
             CraftDialog = new CraftDialog { Parent = this, Visible = false };
@@ -222,8 +226,6 @@ namespace Client.MirScenes
             NPCCraftGoodsDialog = new NPCGoodsDialog(PanelType.Craft) { Parent = this, Visible = false };
             NPCDropDialog = new NPCDropDialog { Parent = this, Visible = false };
             NPCAwakeDialog = new NPCAwakeDialog { Parent = this, Visible = false };
-
-            HeroDialog = new HeroDialog { Parent = this, Visible = false };
 
             HelpDialog = new HelpDialog { Parent = this, Visible = false };
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
@@ -1240,6 +1242,12 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.DropItem:
                     DropItem((S.DropItem)p);
                     break;
+                case (short)ServerPacketIds.TakeBackHeroItem:
+                    TakeBackHeroItem((S.TakeBackHeroItem)p);
+                    break;
+                case (short)ServerPacketIds.TransferHeroItem:
+                    TransferHeroItem((S.TransferHeroItem)p);
+                    break;
                 case (short)ServerPacketIds.PlayerUpdate:
                     PlayerUpdate((S.PlayerUpdate)p);
                     break;
@@ -1939,9 +1947,11 @@ namespace Client.MirScenes
             User = new UserObject(p.ObjectID);
             User.Load(p);
             MainDialog.PModeLabel.Visible = User.Class == MirClass.Wizard || User.Class == MirClass.Taoist;
+            HasHero = p.HasHero;
             Gold = p.Gold;
             Credit = p.Credit;
 
+            CharacterDialog = new CharacterDialog(MirGridType.Equipment, User) { Parent = this, Visible = false };
             InventoryDialog.RefreshInventory();
             foreach (SkillBarDialog Bar in SkillBarDialogs)
                 Bar.Update();
@@ -2076,6 +2086,9 @@ namespace Client.MirScenes
                 case MirGridType.Refine:
                     fromCell = RefineDialog.Grid[p.From];
                     break;
+                case MirGridType.HeroInventory:
+                    fromCell = p.From < User.HeroBeltIdx ? HeroBeltDialog.Grid[p.From] : HeroInventoryDialog.Grid[p.From - User.HeroBeltIdx];
+                    break;
                 default:
                     return;
             }
@@ -2093,6 +2106,9 @@ namespace Client.MirScenes
                     break;
                 case MirGridType.Refine:
                     toCell = RefineDialog.Grid[p.To];
+                    break;
+                case MirGridType.HeroInventory:
+                    toCell = p.To < User.HeroBeltIdx ? HeroBeltDialog.Grid[p.To] : HeroInventoryDialog.Grid[p.To - User.HeroBeltIdx];
                     break;
                 default:
                     return;
@@ -2117,9 +2133,17 @@ namespace Client.MirScenes
         }
         private void EquipItem(S.EquipItem p)
         {
-            MirItemCell fromCell;
+            MirItemCell fromCell, toCell;
 
-            MirItemCell toCell = CharacterDialog.Grid[p.To];
+            switch (p.Grid)
+            {
+                case MirGridType.HeroInventory:
+                    toCell = HeroDialog.Grid[p.To];
+                    break;
+                default:
+                    toCell = CharacterDialog.Grid[p.To];
+                    break;
+            }
 
             switch (p.Grid)
             {
@@ -2128,6 +2152,9 @@ namespace Client.MirScenes
                     break;
                 case MirGridType.Storage:
                     fromCell = StorageDialog.GetCell(p.UniqueID) ?? BeltDialog.GetCell(p.UniqueID);
+                    break;
+                case MirGridType.HeroInventory:
+                    fromCell = HeroInventoryDialog.GetCell(p.UniqueID) ?? HeroBeltDialog.GetCell(p.UniqueID);
                     break;
                 default:
                     return;
@@ -2144,7 +2171,10 @@ namespace Client.MirScenes
             fromCell.Item = toCell.Item;
             toCell.Item = i;
             CharacterDuraPanel.UpdateCharacterDura(i);
-            User.RefreshStats();
+            if (p.Grid == MirGridType.HeroInventory)
+                Hero.RefreshStats();
+            else
+                User.RefreshStats();
         }
         private void EquipSlotItem(S.EquipSlotItem p)
         {
@@ -2193,8 +2223,19 @@ namespace Client.MirScenes
 
         private void CombineItem(S.CombineItem p)
         {
-            MirItemCell fromCell = InventoryDialog.GetCell(p.IDFrom) ?? BeltDialog.GetCell(p.IDFrom);
-            MirItemCell toCell = InventoryDialog.GetCell(p.IDTo) ?? BeltDialog.GetCell(p.IDTo);
+            MirItemCell fromCell = null;
+            MirItemCell toCell = null;
+            switch (p.Grid)
+            {
+                case MirGridType.Inventory:
+                    fromCell = InventoryDialog.GetCell(p.IDFrom) ?? BeltDialog.GetCell(p.IDFrom);
+                    toCell = InventoryDialog.GetCell(p.IDTo) ?? BeltDialog.GetCell(p.IDTo);
+                    break;
+                case MirGridType.HeroInventory:
+                    fromCell = HeroInventoryDialog.GetCell(p.IDFrom) ?? HeroBeltDialog.GetCell(p.IDFrom);
+                    toCell = HeroInventoryDialog.GetCell(p.IDTo) ?? HeroBeltDialog.GetCell(p.IDTo);
+                    break;
+            }            
 
             if (toCell == null || fromCell == null) return;
 
@@ -2207,7 +2248,15 @@ namespace Client.MirScenes
 
             fromCell.Item = null;
 
-            User.RefreshStats();
+            switch (p.Grid)
+            {
+                case MirGridType.Inventory:
+                    User.RefreshStats();
+                    break;
+                case MirGridType.HeroInventory:
+                    Hero.RefreshStats();
+                    break;
+            }
         }
 
         private void MergeItem(S.MergeItem p)
@@ -2231,6 +2280,12 @@ namespace Client.MirScenes
                 case MirGridType.Fishing:
                     fromCell = FishingDialog.GetCell(p.IDFrom);
                     break;
+                case MirGridType.HeroEquipment:
+                    fromCell = HeroDialog.GetCell(p.IDFrom);
+                    break;
+                case MirGridType.HeroInventory:
+                    fromCell = HeroInventoryDialog.GetCell(p.IDFrom) ?? HeroBeltDialog.GetCell(p.IDFrom);
+                    break;
                 default:
                     return;
             }
@@ -2251,6 +2306,12 @@ namespace Client.MirScenes
                     break;
                 case MirGridType.Fishing:
                     toCell = FishingDialog.GetCell(p.IDTo);
+                    break;
+                case MirGridType.HeroEquipment:
+                    toCell = HeroDialog.GetCell(p.IDTo);
+                    break;
+                case MirGridType.HeroInventory:
+                    toCell = HeroInventoryDialog.GetCell(p.IDTo) ?? HeroBeltDialog.GetCell(p.IDTo);
                     break;
                 default:
                     return;
@@ -2283,16 +2344,25 @@ namespace Client.MirScenes
             MirItemCell toCell;
 
             int index = -1;
-
+            MirItemCell fromCell = null;
             for (int i = 0; i < MapObject.User.Equipment.Length; i++)
             {
                 if (MapObject.User.Equipment[i] == null || MapObject.User.Equipment[i].UniqueID != p.UniqueID) continue;
                 index = i;
+                fromCell = CharacterDialog.Grid[index];
                 break;
             }
 
-            MirItemCell fromCell = CharacterDialog.Grid[index];
-
+            if (index == -1 && Hero != null)
+            {
+                for (int i = 0; i < MapObject.Hero.Equipment.Length; i++)
+                {
+                    if (MapObject.Hero.Equipment[i] == null || MapObject.Hero.Equipment[i].UniqueID != p.UniqueID) continue;
+                    index = i;
+                    fromCell = HeroDialog.Grid[index];
+                    break;
+                }
+            }          
 
             switch (p.Grid)
             {
@@ -2301,6 +2371,9 @@ namespace Client.MirScenes
                     break;
                 case MirGridType.Storage:
                     toCell = StorageDialog.Grid[p.To];
+                    break;
+                case MirGridType.HeroInventory:
+                    toCell = p.To < User.HeroBeltIdx ? HeroBeltDialog.Grid[p.To] : HeroInventoryDialog.Grid[p.To - User.HeroBeltIdx];
                     break;
                 default:
                     return;
@@ -2315,7 +2388,11 @@ namespace Client.MirScenes
             toCell.Item = fromCell.Item;
             fromCell.Item = null;
             CharacterDuraPanel.GetCharacterDura();
-            User.RefreshStats();
+            if (p.Grid == MirGridType.HeroInventory)
+                Hero.RefreshStats();
+            else
+                User.RefreshStats();
+
         }
         private void RemoveSlotItem(S.RemoveSlotItem p)
         {
@@ -2446,8 +2523,6 @@ namespace Client.MirScenes
             }
             NPCDialog.Hide();
         }
-
-
         private void DepositTradeItem(S.DepositTradeItem p)
         {
             MirItemCell fromCell = p.From < User.BeltIdx ? BeltDialog.Grid[p.From] : InventoryDialog.Grid[p.From - User.BeltIdx];
@@ -2594,6 +2669,43 @@ namespace Client.MirScenes
             User.RefreshStats();
         }
 
+        private void TakeBackHeroItem(S.TakeBackHeroItem p)
+        {
+            MirItemCell fromCell = p.From < User.HeroBeltIdx ? HeroBeltDialog.Grid[p.From] : HeroInventoryDialog.Grid[p.From - User.HeroBeltIdx];
+
+            MirItemCell toCell = p.To < User.BeltIdx ? BeltDialog.Grid[p.To] : InventoryDialog.Grid[p.To - User.BeltIdx];
+
+            if (toCell == null || fromCell == null) return;
+
+            toCell.Locked = false;
+            fromCell.Locked = false;
+
+            if (!p.Success) return;
+            toCell.Item = fromCell.Item;
+            fromCell.Item = null;
+            User.RefreshStats();
+            Hero.RefreshStats();
+            CharacterDuraPanel.GetCharacterDura();
+        }
+
+        private void TransferHeroItem(S.TransferHeroItem p)
+        {
+            MirItemCell fromCell = p.From < User.BeltIdx ? BeltDialog.Grid[p.From] : InventoryDialog.Grid[p.From - User.BeltIdx];
+
+            MirItemCell toCell = p.To < User.HeroBeltIdx ? HeroBeltDialog.Grid[p.To] : HeroInventoryDialog.Grid[p.To - User.HeroBeltIdx];
+
+            if (toCell == null || fromCell == null) return;
+
+            toCell.Locked = false;
+            fromCell.Locked = false;
+
+            if (!p.Success) return;
+            toCell.Item = fromCell.Item;
+            fromCell.Item = null;
+            User.RefreshStats();
+            Hero.RefreshStats();
+            CharacterDuraPanel.GetCharacterDura();
+        }
 
         private void MountUpdate(S.MountUpdate p)
         {
@@ -3884,6 +3996,33 @@ namespace Client.MirScenes
                 }
             }
 
+            if (Hero != null)
+            {
+                if (item == null)
+                {
+                    for (int i = 0; i < Hero.Inventory.Length; i++)
+                    {
+                        if (Hero.Inventory[i] != null && Hero.Inventory[i].UniqueID == p.UniqueID)
+                        {
+                            item = Hero.Inventory[i];
+                            break;
+                        }
+                    }
+                }
+
+                if (item == null)
+                {
+                    for (int i = 0; i < Hero.Equipment.Length; i++)
+                    {
+                        if (Hero.Equipment[i] != null && Hero.Equipment[i].UniqueID == p.UniqueID)
+                        {
+                            item = Hero.Equipment[i];
+                            break;
+                        }
+                    }
+                }
+            }
+
             if (item == null) return;
 
             item.MaxDura = p.MaxDura;
@@ -3920,6 +4059,33 @@ namespace Client.MirScenes
                 }
             }
 
+            if (Hero != null)
+            {
+                if (item == null)
+                {
+                    for (int i = 0; i < Hero.Inventory.Length; i++)
+                    {
+                        if (Hero.Inventory[i] != null && Hero.Inventory[i].UniqueID == p.UniqueID)
+                        {
+                            item = Hero.Inventory[i];
+                            break;
+                        }
+                    }
+                }
+
+                if (item == null)
+                {
+                    for (int i = 0; i < Hero.Equipment.Length; i++)
+                    {
+                        if (Hero.Equipment[i] != null && Hero.Equipment[i].UniqueID == p.UniqueID)
+                        {
+                            item = Hero.Equipment[i];
+                            break;
+                        }
+                    }
+                }
+            }
+
             if (item == null) return;
 
             item.SetSlotSize(p.SlotSize);
@@ -3949,6 +4115,33 @@ namespace Client.MirScenes
                 }
             }
 
+            if (Hero != null)
+            {
+                if (item == null)
+                {
+                    for (int i = 0; i < Hero.Inventory.Length; i++)
+                    {
+                        if (Hero.Inventory[i] != null && Hero.Inventory[i].UniqueID == p.UniqueID)
+                        {
+                            item = Hero.Inventory[i];
+                            break;
+                        }
+                    }
+                }
+
+                if (item == null)
+                {
+                    for (int i = 0; i < Hero.Equipment.Length; i++)
+                    {
+                        if (Hero.Equipment[i] != null && Hero.Equipment[i].UniqueID == p.UniqueID)
+                        {
+                            item = Hero.Equipment[i];
+                            break;
+                        }
+                    }
+                }
+            }
+
             if (item == null) return;
 
             item.SealedInfo = new SealedInfo { ExpiryDate = p.ExpiryDate };
@@ -3963,12 +4156,26 @@ namespace Client.MirScenes
         private void ItemUpgraded(S.ItemUpgraded p)
         {
             UserItem item = null;
+            MirGridType grid = MirGridType.Inventory;
             for (int i = 0; i < User.Inventory.Length; i++)
             {
                 if (User.Inventory[i] != null && User.Inventory[i].UniqueID == p.Item.UniqueID)
                 {
                     item = User.Inventory[i];
                     break;
+                }
+            }
+
+            if (item == null && Hero != null)
+            {
+                for (int i = 0; i < Hero.Inventory.Length; i++)
+                {
+                    if (Hero.Inventory[i] != null && Hero.Inventory[i].UniqueID == p.Item.UniqueID)
+                    {
+                        item = Hero.Inventory[i];
+                        grid = MirGridType.HeroInventory;
+                        break;
+                    }
                 }
             }
 
@@ -3980,7 +4187,16 @@ namespace Client.MirScenes
             item.MaxDura = p.Item.MaxDura;
             item.RefineAdded = p.Item.RefineAdded;
             
-            GameScene.Scene.InventoryDialog.DisplayItemGridEffect(item.UniqueID, 0);
+            switch (grid)
+            {
+                case MirGridType.Inventory:
+                    InventoryDialog.DisplayItemGridEffect(item.UniqueID, 0);
+                    break;
+                case MirGridType.HeroInventory:
+                    HeroInventoryDialog.DisplayItemGridEffect(item.UniqueID, 0);
+                    break;
+            }
+           
 
             if (HoverItem == item)
             {
@@ -4472,6 +4688,9 @@ namespace Client.MirScenes
 
         private void ObjectHealth(S.ObjectHealth p)
         {
+            if (p.ObjectID == Hero.ObjectID)
+                Hero.PercentHealth = p.Percent;
+
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
                 MapObject ob = MapControl.Objects[i];
@@ -4484,6 +4703,9 @@ namespace Client.MirScenes
 
         private void ObjectMana(S.ObjectMana p)
         {
+            if (p.ObjectID == Hero.ObjectID)
+                Hero.PercentMana = p.Percent;
+
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
                 MapObject ob = MapControl.Objects[i];
@@ -4734,6 +4956,29 @@ namespace Client.MirScenes
                     User.Equipment[i] = p.Item;
                     User.RefreshStats();
                     return;
+                }
+            }
+
+            if (Hero != null)
+            {
+                for (int i = 0; i < Hero.Inventory.Length; i++)
+                {
+                    if (Hero.Inventory[i] != null && Hero.Inventory[i].UniqueID == p.Item.UniqueID)
+                    {
+                        Hero.Inventory[i] = p.Item;
+                        Hero.RefreshStats();
+                        return;
+                    }
+                }
+
+                for (int i = 0; i < Hero.Equipment.Length; i++)
+                {
+                    if (Hero.Equipment[i] != null && Hero.Equipment[i].UniqueID == p.Item.UniqueID)
+                    {
+                        Hero.Equipment[i] = p.Item;
+                        Hero.RefreshStats();
+                        return;
+                    }
                 }
             }
         }
@@ -5446,20 +5691,19 @@ namespace Client.MirScenes
                 case 10:
                     MirMessageBox.Show("Hero created successfully.");
                     NewHeroDialog.Hide();
+                    HasHero = true;
                     break;
             }
         }
 
         private void HeroInformation(S.HeroInformation p)
         {
-            HasHero = true;
-            HeroInfo.Name = p.Name;
-            HeroInfo.Level = p.Level;
-            HeroInfo.Class = p.Class;
-            HeroInfo.Gender = p.Gender;
-            HeroInfo.Experience = p.Experience;
-            HeroInfo.MaxExperience = p.MaxExperience;
+            Hero = new UserHeroObject(p.ObjectID);
+            Hero.Load(p);
 
+            HeroDialog = new CharacterDialog(MirGridType.HeroEquipment, Hero) { Parent = this, Visible = false };
+            HeroInventoryDialog = new HeroInventoryDialog { Parent = this };
+            HeroBeltDialog = new HeroBeltDialog { Parent = this };
             MainDialog.HeroInfoPanel.Update(p);
         }
 
@@ -5468,6 +5712,15 @@ namespace Client.MirScenes
             heroSpawnState = p.State;
 
             MainDialog.HeroInfoPanel.Visible = p.State > HeroSpawnState.None;
+            MainDialog.HeroMenuButton.Visible = p.State == HeroSpawnState.Summoned;
+            HeroMenuPanel.Visible = HeroMenuPanel.Visible && MainDialog.HeroMenuButton.Visible;
+
+            if (p.State < HeroSpawnState.Summoned)
+            {
+                HeroInventoryDialog.Dispose();
+                HeroDialog.Dispose();
+                HeroBeltDialog.Dispose();
+            }
         }
 
         private void MarriageRequest(S.MarriageRequest p)
@@ -9217,6 +9470,11 @@ namespace Client.MirScenes
                 QuestTrackingDialog = null;
                 GameShopDialog = null;
                 MentorDialog = null;
+
+                NewHeroDialog = null;
+                HeroInventoryDialog = null;
+                HeroDialog = null;
+                HeroBeltDialog = null;
 
                 RelationshipDialog = null;
                 CharacterDuraPanel = null;

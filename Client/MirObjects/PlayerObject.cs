@@ -109,6 +109,7 @@ namespace Client.MirObjects
 
         public LevelEffects LevelEffects;
 
+        public PlayerObject() { }
         public PlayerObject(uint objectID) : base(objectID)
         {
             Frames = FrameSet.Player;

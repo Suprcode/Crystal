@@ -1,54 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using Server.MirEnvir;
-using Server.MirNetwork;
-using Server.MirObjects;
 
 namespace Server.MirDatabase
 {
-    public class HeroInfo
+    public class HeroInfo : CharacterInfo
     {
-        protected static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
-
-        public int Index;
-        public string Name;
-
-        public ushort Level;
-        public MirClass Class;
-        public MirGender Gender;
-        public byte Hair;
-
-        public DateTime CreationDate;
-
-        public bool Deleted;
-        public DateTime DeleteDate;
-
-        public int HP, MP;
-        public long Experience;
         public long MaxExperience;
-
-        public UserItem[] Inventory = new UserItem[8], Equipment = new UserItem[14];       
-        public List<UserMagic> Magics = new List<UserMagic>();            
-
-        public PlayerObject Player;
-
         public HeroInfo(ClientPackets.NewHero p)
         {
             Name = p.Name;
             Class = p.Class;
             Gender = p.Gender;
-            CreationDate = Envir.Now;
 
-            Level = 1;
-            RefreshMaxExperience();
+            Inventory = new UserItem[10];
+
+            CreationDate = Envir.Now;
         }
 
-        public HeroInfo(BinaryReader reader, int version, int customVersion)
+        public HeroInfo(BinaryReader reader, int version, int customVersion) : base(reader, version, customVersion) { }
+
+        public override void Load(BinaryReader reader, int version, int customVersion)
         {
             Index = reader.ReadInt32();
             Name = reader.ReadString();
@@ -103,7 +75,7 @@ namespace Server.MirDatabase
             }           
         }
 
-        public void Save(BinaryWriter writer)
+        public override void Save(BinaryWriter writer)
         {
             writer.Write(Index);
             writer.Write(Name);
@@ -146,16 +118,11 @@ namespace Server.MirDatabase
             }
         }
 
-        public int ResizeInventory()
+        public override int ResizeInventory()
         {
-            if (Inventory.Length >= 40) return Inventory.Length;
+            if (Inventory.Length >= 42) return Inventory.Length;
             Array.Resize(ref Inventory, Inventory.Length + 8);
             return Inventory.Length;
-        }
-
-        public void RefreshMaxExperience()
-        {
-            MaxExperience = Level < Settings.ExperienceList.Count ? Settings.ExperienceList[Level - 1] : 0;
         }
     }
 }

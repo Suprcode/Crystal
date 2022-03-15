@@ -463,8 +463,6 @@ namespace Server.MirObjects
                     return new PurpleFaeFlower(info);
                 case 213:
                     return new Siege(info); //TODO
-                case 214:
-                    return new HeroObject(info);
 
 
 

@@ -24,29 +24,9 @@ namespace Client.MirObjects
         public string OwnerName;
         public MirLabel OwnerLabel;
 
-        public override byte PercentHealth
-        {
-            get { return GameScene.HeroInfo.PercentHealth; }
-            set
-            {
-                if (GameScene.HeroInfo.PercentHealth == value) return;
-                GameScene.HeroInfo.PercentHealth = value;
-            }
-        }
-
-        public override byte PercentMana
-        {
-            get { return GameScene.HeroInfo.PercentMana; }
-            set
-            {
-                if (GameScene.HeroInfo.PercentMana == value) return;
-                GameScene.HeroInfo.PercentMana = value;
-            }
-        }
-
         public override bool ShouldDrawHealth()
         {
-            return OwnerName == GameScene.HeroInfo.Name;
+            return false; //OwnerName == GameScene.HeroInfo.Name;
         }
 
         public HeroObject(uint objectID) : base(objectID)

@@ -140,7 +140,14 @@ namespace Server.MirObjects
 
         }
 
-        public MapObject Master, LastHitter, EXPOwner, Owner;
+        protected MapObject master;
+        public virtual MapObject Master
+        {
+            get { return master; } 
+            set { master = value; }
+        }
+
+        public MapObject LastHitter, EXPOwner, Owner;
         public long ExpireTime, OwnerTime, OperateTime;
         public int OperateDelay = 100;
 

@@ -36,9 +36,8 @@ namespace Client.MirObjects
 
         public BaseStats CoreStats = new BaseStats(0);
 
-
         public UserItem[] Inventory = new UserItem[46], Equipment = new UserItem[14], Trade = new UserItem[10], QuestInventory = new UserItem[40];
-        public int BeltIdx = 6;
+        public int BeltIdx = 6, HeroBeltIdx = 2;
         public bool HasExpandedStorage = false;
         public DateTime ExpandedStorageExpiryTime;
 
@@ -61,12 +60,13 @@ namespace Client.MirObjects
         public MirDirection NextMagicDirection;
         public QueuedAction QueuedAction;
 
+        public UserObject() { }
         public UserObject(uint objectID) : base(objectID)
         {
             Stats = new Stats();
         }
 
-        public void Load(S.UserInformation info)
+        public virtual void Load(S.UserInformation info)
         {
             Id = info.RealId;
             Name = info.Name;

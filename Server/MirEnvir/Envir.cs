@@ -88,6 +88,7 @@ namespace Server.MirEnvir
 
         public static int _playerCount;
         public int PlayerCount => Players.Count;
+        public int HeroCount => Heroes.Count;
 
         public RandomProvider Random = new RandomProvider();
 
@@ -137,6 +138,7 @@ namespace Server.MirEnvir
         public List<NPCObject> NPCs = new List<NPCObject>();
         public List<GuildObject> Guilds = new List<GuildObject>();
         public List<ConquestObject> Conquests = new List<ConquestObject>();
+        public List<HeroObject> Heroes = new List<HeroObject>();
 
         public LightSetting Lights;
         public LinkedList<MapObject> Objects = new LinkedList<MapObject>();
@@ -1705,6 +1707,7 @@ namespace Server.MirEnvir
             MapList.Clear();
             GameshopLog.Clear();
             CustomCommands.Clear();
+            Heroes.Clear();
             MonsterCount = 0;
 
             LoadDB();
@@ -1796,6 +1799,7 @@ namespace Server.MirEnvir
             StartItems.Clear();
             Objects.Clear();
             Players.Clear();
+            Heroes.Clear();
 
             CleanUp();
 

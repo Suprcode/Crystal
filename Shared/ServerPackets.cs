@@ -518,7 +518,7 @@ namespace ServerPackets
             writer.Write(NPCIndex);
         }
     }
-    public sealed class UserInformation : Packet
+    public class UserInformation : Packet
     {
         public override short Index
         {
@@ -542,6 +542,7 @@ namespace ServerPackets
 
         public LevelEffects LevelEffects;
 
+        public bool HasHero;
         public UserItem[] Inventory, Equipment, QuestInventory;
         public uint Gold, Credit;
 
@@ -577,6 +578,7 @@ namespace ServerPackets
             MaxExperience = reader.ReadInt64();
 
             LevelEffects = (LevelEffects)reader.ReadByte();
+            HasHero = reader.ReadBoolean();
 
             if (reader.ReadBoolean())
             {
@@ -652,6 +654,7 @@ namespace ServerPackets
             writer.Write(MaxExperience);
 
             writer.Write((byte)LevelEffects);
+            writer.Write(HasHero);
 
             writer.Write(Inventory != null);
             if (Inventory != null)
@@ -1562,6 +1565,56 @@ namespace ServerPackets
         {
             writer.Write(UniqueID);
             writer.Write(Count);
+            writer.Write(Success);
+        }
+    }
+
+    public sealed class TakeBackHeroItem : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.TakeBackHeroItem; }
+        }
+
+        public int From, To;
+        public bool Success;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            From = reader.ReadInt32();
+            To = reader.ReadInt32();
+            Success = reader.ReadBoolean();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(From);
+            writer.Write(To);
+            writer.Write(Success);
+        }
+    }
+
+    public sealed class TransferHeroItem : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.TransferHeroItem; }
+        }
+
+        public int From, To;
+        public bool Success;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            From = reader.ReadInt32();
+            To = reader.ReadInt32();
+            Success = reader.ReadBoolean();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(From);
+            writer.Write(To);
             writer.Write(Success);
         }
     }
@@ -4368,25 +4421,16 @@ namespace ServerPackets
         }
     }
 
-    public sealed class HeroInformation : Packet
+    public sealed class HeroInformation : UserInformation
     {
         public override short Index
         {
             get { return (short)ServerPacketIds.HeroInformation; }
         }
 
-        public string Name = string.Empty;
-        public MirClass Class;
-        public MirGender Gender;
-        public ushort Level;
-        public byte Hair;
-        public long Experience, MaxExperience;
-
-        public UserItem[] Inventory, Equipment;
-        public List<ClientMagic> Magics = new List<ClientMagic>();
-
         protected override void ReadPacket(BinaryReader reader)
         {
+            ObjectID = reader.ReadUInt32();
             Name = reader.ReadString();
             Class = (MirClass)reader.ReadByte();
             Gender = (MirGender)reader.ReadByte();
@@ -4426,6 +4470,7 @@ namespace ServerPackets
 
         protected override void WritePacket(BinaryWriter writer)
         {
+            writer.Write(ObjectID);
             writer.Write(Name);
             writer.Write((byte)Class);
             writer.Write((byte)Gender);
@@ -5032,12 +5077,14 @@ namespace ServerPackets
             get { return (short)ServerPacketIds.CombineItem; }
         }
 
+        public MirGridType Grid;
         public ulong IDFrom, IDTo;
         public bool Success;
         public bool Destroy;
 
         protected override void ReadPacket(BinaryReader reader)
         {
+            Grid = (MirGridType)reader.ReadByte();
             IDFrom = reader.ReadUInt64();
             IDTo = reader.ReadUInt64();
             Success = reader.ReadBoolean();
@@ -5046,6 +5093,7 @@ namespace ServerPackets
 
         protected override void WritePacket(BinaryWriter writer)
         {
+            writer.Write((byte)Grid);
             writer.Write(IDFrom);
             writer.Write(IDTo);
             writer.Write(Success);

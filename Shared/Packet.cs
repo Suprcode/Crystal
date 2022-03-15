@@ -144,6 +144,10 @@ public abstract class Packet
                 return new C.DepositTradeItem();
             case (short)ClientPacketIds.RetrieveTradeItem:
                 return new C.RetrieveTradeItem();
+            case (short)ClientPacketIds.TakeBackHeroItem:
+                return new C.TakeBackHeroItem();
+            case (short)ClientPacketIds.TransferHeroItem:
+                return new C.TransferHeroItem();
             case (short)ClientPacketIds.DropGold:
                 return new C.DropGold();
             case (short)ClientPacketIds.PickUp:
@@ -443,6 +447,10 @@ public abstract class Packet
                 return new S.RemoveSlotItem();
             case (short)ServerPacketIds.TakeBackItem:
                 return new S.TakeBackItem();
+            case (short)ServerPacketIds.TakeBackHeroItem:
+                return new S.TakeBackHeroItem();
+            case (short)ServerPacketIds.TransferHeroItem:
+                return new S.TransferHeroItem();
             case (short)ServerPacketIds.StoreItem:
                 return new S.StoreItem();
             case (short)ServerPacketIds.DepositRefineItem:

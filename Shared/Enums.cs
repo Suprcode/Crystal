@@ -910,7 +910,9 @@ public enum MirGridType : byte
     Renting = 17,
     GuestRenting = 18,
     Craft = 19,
-    Socket = 20
+    Socket = 20,
+    HeroEquipment = 21,
+    HeroInventory = 22
 }
 
 public enum EquipmentSlot : byte
@@ -1439,6 +1441,8 @@ public enum ServerPacketIds : short
     RetrieveTradeItem,
     UseItem,
     DropItem,
+    TakeBackHeroItem,
+    TransferHeroItem,
     PlayerUpdate,
     PlayerInspect,
     LogOutSuccess,
@@ -1681,6 +1685,8 @@ public enum ClientPacketIds : short
     ReplaceWedRing,
     DepositTradeItem,
     RetrieveTradeItem,
+    TakeBackHeroItem,
+    TransferHeroItem,
     DropGold,
     PickUp,
     RequestMapInfo,

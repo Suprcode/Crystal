@@ -19,6 +19,7 @@ namespace Client.MirObjects
         public static List<MirLabel> LabelList = new List<MirLabel>();
 
         public static UserObject User;
+        public static UserHeroObject Hero;
         public static MapObject MouseObject, TargetObject, MagicObject;
         public abstract ObjectType Race { get; }
         public abstract bool Blocking { get; }
@@ -99,6 +100,8 @@ namespace Client.MirObjects
         {
             get { return new Point(0, 0); }
         }
+
+        protected MapObject() { }
 
         protected MapObject(uint objectID)
         {
@@ -403,7 +406,7 @@ namespace Client.MirObjects
                     if (GroupDialog.GroupList.Contains(name) || name == User.Name) index = 11;
                     break;
                 case ObjectType.Hero:
-                    if (GroupDialog.GroupList.Contains(name) || name == GameScene.HeroInfo.Name) index = 11;
+                    if (GroupDialog.GroupList.Contains(name) || name == GameScene.Hero.Name) index = 11;
                     break;
             }
 

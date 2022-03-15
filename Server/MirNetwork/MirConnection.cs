@@ -326,6 +326,12 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.DropItem:
                     DropItem((C.DropItem) p);
                     break;
+                case (short)ClientPacketIds.TakeBackHeroItem:
+                    TakeBackHeroItem((C.TakeBackHeroItem)p);
+                    break;
+                case (short)ClientPacketIds.TransferHeroItem:
+                    TransferHeroItem((C.TransferHeroItem)p);
+                    break;
                 case (short)ClientPacketIds.DropGold:
                     DropGold((C.DropGold) p);
                     break;
@@ -1051,6 +1057,20 @@ namespace Server.MirNetwork
 
             Player.DropItem(p.UniqueID, p.Count);
         }
+
+        private void TakeBackHeroItem(C.TakeBackHeroItem p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.TakeBackHeroItem(p.From, p.To);
+        }
+
+        private void TransferHeroItem(C.TransferHeroItem p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.TransferHeroItem(p.From, p.To);
+        }
         private void DropGold(C.DropGold p)
         {
             if (Stage != GameStage.Game) return;
@@ -1566,7 +1586,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.CombineItem(p.IDFrom, p.IDTo);
+            Player.CombineItem(p.Grid, p.IDFrom, p.IDTo);
         }
 
         private void Awakening(C.Awakening p)

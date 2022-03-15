@@ -589,6 +589,40 @@ namespace ClientPackets
             writer.Write(Count);
         }
     }
+
+    public sealed class TakeBackHeroItem : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.TakeBackHeroItem; } }
+
+        public int From, To;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            From = reader.ReadInt32();
+            To = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(From);
+            writer.Write(To);
+        }
+    }
+
+    public sealed class TransferHeroItem : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.TransferHeroItem; } }
+
+        public int From, To;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            From = reader.ReadInt32();
+            To = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(From);
+            writer.Write(To);
+        }
+    }
     public sealed class DropGold : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.DropGold; } }
@@ -1712,14 +1746,17 @@ namespace ClientPackets
     {
         public override short Index { get { return (short)ClientPacketIds.CombineItem; } }
 
+        public MirGridType Grid;
         public ulong IDFrom, IDTo;
         protected override void ReadPacket(BinaryReader reader)
         {
+            Grid = (MirGridType)reader.ReadByte();
             IDFrom = reader.ReadUInt64();
             IDTo = reader.ReadUInt64();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
+            writer.Write((byte)Grid);
             writer.Write(IDFrom);
             writer.Write(IDTo);
         }

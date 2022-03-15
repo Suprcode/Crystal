@@ -39,6 +39,7 @@ namespace Server.MirEnvir
         public List<PlayerObject> Players = new List<PlayerObject>();
         public List<MapRespawn> Respawns = new List<MapRespawn>();
         public List<DelayedAction> ActionList = new List<DelayedAction>();
+        public List<HeroObject> Heroes = new List<HeroObject>();
 
         public List<ConquestObject> Conquest = new List<ConquestObject>();
         public ConquestObject tempConquest;
@@ -2226,6 +2227,7 @@ namespace Server.MirEnvir
 
             if (ob.Race == ObjectType.Merchant) NPCs.Add((NPCObject)ob);
             if (ob.Race == ObjectType.Spell) Spells.Add((SpellObject)ob);
+            if (ob.Race == ObjectType.Hero) Heroes.Add((HeroObject)ob);
 
             GetCell(ob.CurrentLocation).Add(ob);
         }
@@ -2235,6 +2237,7 @@ namespace Server.MirEnvir
             if (ob.Race == ObjectType.Player) Players.Remove((PlayerObject)ob);
             if (ob.Race == ObjectType.Merchant) NPCs.Remove((NPCObject)ob);
             if (ob.Race == ObjectType.Spell) Spells.Remove((SpellObject)ob);
+            if (ob.Race == ObjectType.Hero) Heroes.Remove((HeroObject)ob);
 
             GetCell(ob.CurrentLocation).Remove(ob);
         }

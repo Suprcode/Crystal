@@ -1,170 +1,161 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
+using C = ClientPackets;
 using Server.MirDatabase;
 using Server.MirEnvir;
+using Server.MirNetwork;
 using S = ServerPackets;
+using System.Text.RegularExpressions;
+using Server.MirObjects.Monsters;
 
 namespace Server.MirObjects
 {
-    public class HeroObject : MonsterObject
+    public class HeroObject : PlayerObject
     {
-        public HeroInfo HInfo;
-        private PlayerFunctions SharedFunctions;
-        public override bool Blocking
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        protected override bool CanMove
-        {
-            get
-            {
-                return Envir.Time > MoveTime && Envir.Time > ActionTime;
-            }
-        }
-
-        public override string Name
-        {
-            get { return Master == null ? Info.Name : HInfo.Name; }
-            set { throw new NotSupportedException(); }
-        }
-
-        public MirClass Class
-        {
-            get { return HInfo.Class; }
-            set { throw new NotSupportedException(); }
-        }
-
-        public long MaxExperience
-        {
-            get { return HInfo.MaxExperience; }
-            set { HInfo.MaxExperience = value; }
-        }
-
-        public override ushort Level
-        {
-            get { return HInfo.Level; }
-            set { HInfo.Level = value; }
-        }
-
-        public int MP
-        {
-            get { return HInfo.MP; }
-            set { HInfo.MP = value; }
-        }
-
-        public int CurrentHandWeight,
-                   CurrentWearWeight,
-                   CurrentBagWeight;
-
-        public long PotTime, VampTime;
-        public const long PotDelay = 200, VampDelay = 500;
-
-        protected override bool CanAttack
-        {
-            get
-            {
-                return !Dead && Envir.Time > AttackTime && Envir.Time > ActionTime;
-            }
-        }
-
         public override ObjectType Race
         {
             get { return ObjectType.Hero; }
         }
 
-
-        public HeroObject(MonsterInfo info) : base(info)
+        public override AccountInfo Account
         {
-            ActionTime = Envir.Time + 1000;
-            CreateSharedFunctions();
+            get { return account; }
+            set { throw new NotSupportedException(); }
+        }
+        public override MirConnection Connection
+        {
+            get { return connection; }
+            set { throw new NotSupportedException(); }
         }
 
-        private void CreateSharedFunctions()
+        new PlayerObject Owner;
+        public override int PotionBeltMinimum => 0;
+        public override int PotionBeltMaximum => 2;
+        public override int AmuletBeltMinimum => 1;
+        public override int AmuletBeltMaximum => 2;
+        public override int BeltSize => 2;
+
+        public const int SearchDelay = 3000, ViewRange = 8, RoamDelay = 1000;
+        public long RoamTime;
+
+        public override MapObject Master
         {
-            SharedFunctions = new PlayerFunctions()
+            get { return Owner; }
+            set { Owner = (PlayerObject)value; }
+        }
+
+        public HeroObject(CharacterInfo info, PlayerObject owner)
+        {
+            Owner = owner;            
+            Load(info, null);           
+        }
+
+        protected override void Load(CharacterInfo info, MirConnection connection)
+        {
+            if (info.Player != null)
             {
-                //Getters
-                getStats = () => { return Stats; },
-                getLevel = () => { return Level; },
-                getClass = () => { return Class; },
-                getCurrentBagWeight = () => { return CurrentBagWeight; },
-                getInventory = () => { return HInfo.Inventory; },
-                getDead = () => { return Dead; },
-                getCanRegen = () => { return CanRegen; },
-                getRegenTime = () => { return RegenTime; },
-                getRegenDelay = () => { return RegenDelay; },
-                getHP = () => { return HP; },
-                getMP = () => { return MP; },
-                getPotTime = () => { return PotTime; },
-                getPotDelay = () => { return PotDelay; },
-                getPotHealthAmount = () => { return PotHealthAmount; },
-                getPotManaAmount = () => { return PotManaAmount; },
-                getHealTime = () => { return HealTime; },
-                getHealDelay = () => { return HealDelay; },
-                getHealAmount = () => { return HealAmount; },
-                getVampTime = () => { return VampTime; },
-                getVampDelay = () => { return VampDelay; },
-                getVampAmount = () => { return VampAmount; },
+                throw new InvalidOperationException("Hero Player.Info not Null.");
+            }
 
-                //Setters
-                setMaxExperience = (value) => { MaxExperience = value; },
-                setCurrentBagWeight = (value) => { CurrentBagWeight = value; },
-                setRegenTime = (value) => { RegenTime = value; },
-                setPotTime = (value) => { PotTime = value; },
-                setPotHealthAmount = (value) => { PotHealthAmount = value; },
-                setPotManaAmount = (value) => { PotManaAmount = value; },
-                setHealTime = (value) => { HealTime = value; },
-                setHealAmount = (value) => { HealAmount = value; },
-                setVampTime = (value) => { VampTime = value; },
-                setVampAmount = (value) => { VampAmount = value; },
+            info.Player = this;
+            info.Mount = new MountInfo(this);
 
-                //Functions
-                ChangeHP = ChangeHP,
-                ChangeMP = ChangeMP,
-                BroadcastDamageIndicator = BroadcastDamageIndicator
-            };
+            Info = info;
+
+            Stats = new Stats();            
+
+            if (Level == 0) NewCharacter();
+
+            RefreshStats();
+            SendInfo();
+            if (HP == 0)
+            {
+                SetHP(Stats[Stat.HP]);
+                SetMP(Stats[Stat.MP]);
+            }
+        }
+
+        public override void Enqueue(Packet p) { }
+
+        public override void RefreshNameColour()
+        {
+            Color colour = Color.MediumOrchid;
+
+            if (colour == NameColour) return;
+
+            NameColour = colour;
+            if ((MyGuild == null) || (!MyGuild.IsAtWar()))
+                Enqueue(new S.ColourChanged { NameColour = NameColour });
+
+            BroadcastColourChange();
+        }
+
+        public void Spawn(Map map, Point p)
+        {
+            CurrentLocation = p;
+            map.AddObject(this);
+            CurrentMap = map;            
+            Envir.Heroes.Add(this);
+            Spawned();
+        }
+
+        public override void Despawn()
+        {
+            Envir.Heroes.Remove(this);
+            CurrentMap.RemoveObject(this);
+            Master = null;
+
+            base.Despawn();
+
+            Info.Player = null;
+            Info = null;                              
         }
 
         public override void Spawned()
         {
             base.Spawned();
 
+            BroadcastHealthChange();
             BroadcastManaChange();
         }
 
-        public override void RefreshAll()
+        protected override void NewCharacter()
         {
-            Stats.Clear();
+            Level = 1;
+            Hair = (byte)Envir.Random.Next(0, 9);
 
-            RefreshLevelStats();
+
+            for (int i = 0; i < Envir.StartItems.Count; i++)
+            {
+                ItemInfo info = Envir.StartItems[i];
+                if (!CorrectStartItem(info)) continue;
+
+                AddItem(Envir.CreateFreshItem(info));
+            }
         }
 
-        private void RefreshLevelStats()
+        protected override void GetItemInfo()
         {
-            SharedFunctions.RefreshLevelStats();
-        }
+            UserItem item;
+            for (int i = 0; i < Info.Inventory.Length; i++)
+            {
+                item = Info.Inventory[i];
+                if (item == null) continue;
 
-        public override void RefreshNameColour(bool send = true)
-        {
-            if (ShockTime < Envir.Time) BindingShotCenter = false;
+                Owner.CheckItem(item);
+            }
 
-            Color colour = Color.MediumOrchid;
+            for (int i = 0; i < Info.Equipment.Length; i++)
+            {
+                item = Info.Equipment[i];
 
-            if (colour == NameColour || !send) return;
+                if (item == null) continue;
 
-            NameColour = colour;
-
-            Broadcast(new S.ObjectColourChanged { ObjectID = ObjectID, NameColour = NameColour });
-        }
-
-        protected override void ProcessRegen()
-        {
-            SharedFunctions.ProcessRegen();
+                Owner.CheckItem(item);
+            }
         }
 
         public override void BroadcastHealthChange()
@@ -178,34 +169,20 @@ namespace Server.MirObjects
                 return;
             }
 
-            PlayerObject player = (PlayerObject)Master;
-            player.Enqueue(p);
+            Owner.Enqueue(p);
 
-            if (player.GroupMembers != null)
+            if (Owner.GroupMembers != null)
             {
-                for (int i = 0; i < player.GroupMembers.Count; i++)
+                for (int i = 0; i < Owner.GroupMembers.Count; i++)
                 {
-                    PlayerObject member = player.GroupMembers[i];
+                    PlayerObject member = Owner.GroupMembers[i];
 
-                    if (player == member) continue;
+                    if (Master == member) continue;
 
                     if (member.CurrentMap != CurrentMap || !Functions.InRange(member.CurrentLocation, CurrentLocation, Globals.DataRange)) continue;
                     member.Enqueue(p);
                 }
             }
-        }
-
-        public void ChangeMP(int amount)
-        {
-            if (MP + amount > Stats[Stat.MP])
-                amount = Stats[Stat.MP] - MP;
-
-            if (amount == 0) return;
-
-            MP += amount;
-            if (MP < 0) MP = 0;
-
-            BroadcastManaChange();
         }
 
         public byte PercentMana
@@ -216,9 +193,293 @@ namespace Server.MirObjects
         public void BroadcastManaChange()
         {
             Packet p = new S.ObjectMana { ObjectID = ObjectID, Percent = PercentMana };
+            Owner.Enqueue(p);
+        }
 
-            PlayerObject player = (PlayerObject)Master;
-            player.Enqueue(p);
+        public override void Process()
+        {
+            base.Process();
+
+            if (Target != null && (Target.CurrentMap != CurrentMap || !Target.IsAttackTarget(this) || !Functions.InRange(CurrentLocation, Target.CurrentLocation, Globals.DataRange)))
+                Target = null;
+
+            ProcessAI();
+        }
+
+        protected void ProcessAI()
+        {           
+            if (Dead) return;
+
+            if (Master != null)
+            {
+                if ((Master.PMode == PetMode.Both || Master.PMode == PetMode.MoveOnly))
+                {
+                    if (!Functions.InRange(CurrentLocation, Master.CurrentLocation, Globals.DataRange) || CurrentMap != Master.CurrentMap)
+                        OwnerRecall();
+                }
+
+                if (Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.None)
+                    Target = null;
+            }
+
+            ProcessStacking();
+            ProcessSearch();
+            ProcessRoam();
+            ProcessTarget();
+        }
+
+        protected virtual void ProcessStacking()
+        {
+            Stacking = CheckStacked();
+
+            if (CanMove && ((Owner != null && Owner.Front == CurrentLocation) || Stacking))
+            {
+                if (!Walk(Direction))
+                {
+                    MirDirection dir = Direction;
+
+                    switch (Envir.Random.Next(3)) 
+                    {
+                        case 0:
+                            for (int i = 0; i < 7; i++)
+                            {
+                                dir = Functions.NextDir(dir);
+
+                                if (Walk(dir))
+                                    break;
+                            }
+                            break;
+                        default:
+                            for (int i = 0; i < 7; i++)
+                            {
+                                dir = Functions.PreviousDir(dir);
+
+                                if (Walk(dir))
+                                    break;
+                            }
+                            break;
+                    }
+                }
+
+                return;
+            }
+        }
+
+        protected virtual void ProcessSearch()
+        {
+            if (Envir.Time < SearchTime) return;
+            if (Owner != null && (Owner.PMode == PetMode.MoveOnly || Owner.PMode == PetMode.None)) return;
+
+            SearchTime = Envir.Time + SearchDelay;
+
+            if (Target == null || Envir.Random.Next(3) == 0)
+                FindTarget();
+        }
+
+        protected virtual void ProcessRoam()
+        {
+            if (Target != null || Envir.Time < RoamTime) return;
+
+            if (Owner != null)
+            {
+                MoveTo(Owner.Back);
+                return;
+            }
+
+            RoamTime = Envir.Time + RoamDelay;
+        }
+
+        protected virtual void ProcessTarget()
+        {
+            if (Target == null || !CanAttack) return;
+
+            if (InAttackRange())
+            {
+                Attack();
+
+                if (Target != null && Target.Dead)
+                {
+                    FindTarget();
+                }
+
+                return;
+            }
+
+            MoveTo(Target.CurrentLocation);
+        }
+
+        protected virtual void Attack()
+        {
+            if (!Target.IsAttackTarget(Owner))
+            {
+                Target = null;
+                return;
+            }
+
+            Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
+            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+
+            ActionTime = Envir.Time + 300;
+            AttackTime = Envir.Time + AttackSpeed;
+
+            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+            if (damage == 0) return;
+
+            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility, true);
+            ActionList.Add(action);
+        }
+
+        protected virtual bool InAttackRange()
+        {
+            if (Target.CurrentMap != CurrentMap) return false;
+
+            return Target.CurrentLocation != CurrentLocation && Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
+        }
+
+        protected virtual void MoveTo(Point location)
+        {
+            if (CurrentLocation == location) return;
+
+            bool inRange = Functions.InRange(location, CurrentLocation, 1);
+
+            if (inRange)
+            {
+                if (!CurrentMap.ValidPoint(location)) return;
+                Cell cell = CurrentMap.GetCell(location);
+                if (cell.Objects != null)
+                    for (int i = 0; i < cell.Objects.Count; i++)
+                    {
+                        MapObject ob = cell.Objects[i];
+                        if (!ob.Blocking) continue;
+                        return;
+                    }
+            }
+
+            MirDirection dir = Functions.DirectionFromPoint(CurrentLocation, location);
+
+            if (!inRange && _stepCounter > 0 && Run(dir))
+                return;
+
+            if (Walk(dir)) return;
+
+            switch (Envir.Random.Next(2))
+            {
+                case 0:
+                    for (int i = 0; i < 7; i++)
+                    {
+                        dir = Functions.NextDir(dir);
+
+                        if (Walk(dir))
+                            return;
+                    }
+                    break;
+                default:
+                    for (int i = 0; i < 7; i++)
+                    {
+                        dir = Functions.PreviousDir(dir);
+
+                        if (Walk(dir))
+                            return;
+                    }
+                    break;
+            }
+        }
+
+        public void OwnerRecall()
+        {
+            if (Owner == null) return;
+            if (!Teleport(Owner.CurrentMap, Owner.Back))
+                Teleport(Owner.CurrentMap, Owner.CurrentLocation);
+        }
+
+        public override bool CheckMovement(Point location)
+        {
+            return false;
+        }
+
+        protected virtual void FindTarget()
+        {
+            Map Current = CurrentMap;
+
+            for (int d = 0; d <= ViewRange; d++)
+            {
+                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++)
+                {
+                    if (y < 0) continue;
+                    if (y >= Current.Height) break;
+
+                    for (int x = CurrentLocation.X - d; x <= CurrentLocation.X + d; x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2)
+                    {
+                        if (x < 0) continue;
+                        if (x >= Current.Width) break;
+                        Cell cell = Current.Cells[x, y];
+                        if (cell.Objects == null || !cell.Valid) continue;
+                        for (int i = 0; i < cell.Objects.Count; i++)
+                        {
+                            MapObject ob = cell.Objects[i];
+                            switch (ob.Race)
+                            {
+                                case ObjectType.Monster:
+                                case ObjectType.Hero:
+                                    if (ob is TownArcher) continue;
+                                    if (!ob.IsAttackTarget(Owner)) continue;
+                                    if (ob.Hidden && (!CoolEye || Level < ob.Level)) continue;
+                                    Target = ob;
+                                    return;
+                                case ObjectType.Player:
+                                    PlayerObject playerob = (PlayerObject)ob;
+                                    if (!ob.IsAttackTarget(Owner)) continue;
+                                    if (playerob.GMGameMaster || ob.Hidden && (!CoolEye || Level < ob.Level)) continue;
+
+                                    Target = ob;
+
+                                    if (Owner != null)
+                                    {
+                                        for (int j = 0; j < playerob.Pets.Count; j++)
+                                        {
+                                            MonsterObject pet = playerob.Pets[j];
+
+                                            if (!pet.IsAttackTarget(this)) continue;
+                                            Target = pet;
+                                            break;
+                                        }
+                                    }
+                                    return;
+                                default:
+                                    continue;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void SendInfo()
+        {
+            GetItemInfo();
+            S.HeroInformation packet = new S.HeroInformation
+            {
+                ObjectID = ObjectID,
+                Name = Name,
+                Class = Class,
+                Gender = Gender,
+                Level = Level,
+                Hair = Hair,
+
+                Experience = Experience,
+                MaxExperience = MaxExperience,
+
+                Inventory = new UserItem[Info.Inventory.Length],
+                Equipment = new UserItem[Info.Equipment.Length],
+            };
+
+            for (int i = 0; i < Info.Magics.Count; i++)
+                packet.Magics.Add(Info.Magics[i].CreateClientMagic());
+
+            Info.Inventory.CopyTo(packet.Inventory, 0);
+            Info.Equipment.CopyTo(packet.Equipment, 0);
+
+            Owner.Enqueue(packet);
         }
 
         public override Packet GetInfo()
@@ -226,23 +487,37 @@ namespace Server.MirObjects
             return new S.ObjectHero
             {
                 ObjectID = ObjectID,
-                Name = Name,
-                OwnerName = Master.Name,
+                Name = CurrentMap.Info.NoNames ? "?????" : Name,
                 NameColour = NameColour,
-                Class = HInfo.Class,
-                Gender = HInfo.Gender,
+                Class = Class,
+                Gender = Gender,
+                Level = Level,
                 Location = CurrentLocation,
                 Direction = Direction,
-                Hair = HInfo.Hair,
-                Weapon = -1,
-                Armour = 0,
+                Hair = Hair,
+                Weapon = Looks_Weapon,
+                WeaponEffect = Looks_WeaponEffect,
+                Armour = Looks_Armour,
                 Light = Light,
                 Poison = CurrentPoison,
                 Dead = Dead,
                 Hidden = Hidden,
-                Effect = SpellEffect.None,
-                WingEffect = 0,
-                TransformType = -1
+                Effect = HasBuff(BuffType.MagicShield, out _) ? SpellEffect.MagicShieldUp : HasBuff(BuffType.ElementalBarrier, out _) ? SpellEffect.ElementalBarrierUp : SpellEffect.None,
+                WingEffect = Looks_Wings,
+                MountType = Mount.MountType,
+                RidingMount = RidingMount,
+                Fishing = Fishing,
+
+                TransformType = TransformType,
+
+                ElementOrbEffect = (uint)GetElementalOrbCount(),
+                ElementOrbLvl = (uint)ElementsLevel,
+                ElementOrbMax = (uint)Settings.OrbsExpList[Settings.OrbsExpList.Count - 1],
+
+                Buffs = Buffs.Where(d => d.Info.Visible).Select(e => e.Type).ToList(),
+
+                LevelEffects = LevelEffects,
+                OwnerName = Owner.Name
             };
         }
     }
