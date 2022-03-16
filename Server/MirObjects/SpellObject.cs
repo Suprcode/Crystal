@@ -424,7 +424,7 @@ namespace Server.MirObjects
         {
             throw new NotSupportedException();
         }
-        public override bool IsAttackTarget(PlayerObject attacker)
+        public override bool IsAttackTarget(HumanObject attacker)
         {
             throw new NotSupportedException();
         }
@@ -432,7 +432,7 @@ namespace Server.MirObjects
         {
             throw new NotSupportedException();
         }
-        public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
+        public override int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
             throw new NotSupportedException();
         }
@@ -445,7 +445,7 @@ namespace Server.MirObjects
         {
             throw new NotSupportedException();
         }
-        public override bool IsFriendlyTarget(PlayerObject ally)
+        public override bool IsFriendlyTarget(HumanObject ally)
         {
             throw new NotSupportedException();
         }
@@ -519,7 +519,7 @@ namespace Server.MirObjects
         {
             throw new NotSupportedException();
         }
-        public override void SendHealth(PlayerObject player)
+        public override void SendHealth(HumanObject player)
         {
             throw new NotSupportedException();
         }

@@ -635,7 +635,7 @@ namespace Server.MirDatabase
 
     public class MountInfo
     {
-        public PlayerObject Player;
+        public HumanObject Player;
         public short MountType = -1;
 
         public bool CanRide
@@ -676,7 +676,7 @@ namespace Server.MirDatabase
         }
 
 
-        public MountInfo(PlayerObject ob)
+        public MountInfo(HumanObject ob)
         {
             Player = ob;
         }

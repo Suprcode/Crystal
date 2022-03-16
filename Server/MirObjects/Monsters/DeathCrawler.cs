@@ -22,7 +22,7 @@ namespace Server.MirObjects.Monsters
             ActionList.Add(new DelayedAction(DelayedType.Die, Envir.Time + 500));
         }
 
-        public override void ApplyNegativeEffects(PlayerObject attacker, DefenceType type, ushort levelOffset)
+        public override void ApplyNegativeEffects(HumanObject attacker, DefenceType type, ushort levelOffset)
         {
             base.ApplyNegativeEffects(attacker, type, levelOffset);
 

@@ -13,18 +13,13 @@ using Server.MirObjects.Monsters;
 
 namespace Server.MirObjects
 {
-    public class HeroObject : PlayerObject
+    public class HeroObject : HumanObject
     {
         public override ObjectType Race
         {
             get { return ObjectType.Hero; }
         }
 
-        public override AccountInfo Account
-        {
-            get { return account; }
-            set { throw new NotSupportedException(); }
-        }
         public override MirConnection Connection
         {
             get { return connection; }
@@ -40,6 +35,11 @@ namespace Server.MirObjects
 
         public const int SearchDelay = 3000, ViewRange = 8, RoamDelay = 1000;
         public long RoamTime;
+        public override GuildObject MyGuild
+        {
+            get { return Owner.MyGuild; }
+            set { throw new NotSupportedException(); }
+        }
 
         public override MapObject Master
         {
@@ -55,12 +55,6 @@ namespace Server.MirObjects
 
         protected override void Load(CharacterInfo info, MirConnection connection)
         {
-            if (info.Player != null)
-            {
-                throw new InvalidOperationException("Hero Player.Info not Null.");
-            }
-
-            info.Player = this;
             info.Mount = new MountInfo(this);
 
             Info = info;
@@ -87,7 +81,7 @@ namespace Server.MirObjects
             if (colour == NameColour) return;
 
             NameColour = colour;
-            if ((MyGuild == null) || (!MyGuild.IsAtWar()))
+            if ((Owner.MyGuild == null) || (!Owner.MyGuild.IsAtWar()))
                 Enqueue(new S.ColourChanged { NameColour = NameColour });
 
             BroadcastColourChange();
@@ -122,22 +116,7 @@ namespace Server.MirObjects
             BroadcastManaChange();
         }
 
-        protected override void NewCharacter()
-        {
-            Level = 1;
-            Hair = (byte)Envir.Random.Next(0, 9);
-
-
-            for (int i = 0; i < Envir.StartItems.Count; i++)
-            {
-                ItemInfo info = Envir.StartItems[i];
-                if (!CorrectStartItem(info)) continue;
-
-                AddItem(Envir.CreateFreshItem(info));
-            }
-        }
-
-        protected override void GetItemInfo()
+        protected virtual void GetItemInfo()
         {
             UserItem item;
             for (int i = 0; i < Info.Inventory.Length; i++)
@@ -156,6 +135,59 @@ namespace Server.MirObjects
 
                 Owner.CheckItem(item);
             }
+        }
+        public override void Die()
+        {
+            if (SpecialMode.HasFlag(SpecialItemMode.Revival) && Envir.Time > LastRevivalTime)
+            {
+                LastRevivalTime = Envir.Time + 300000;
+
+                for (var i = (int)EquipmentSlot.RingL; i <= (int)EquipmentSlot.RingR; i++)
+                {
+                    var item = Info.Equipment[i];
+
+                    if (item == null) continue;
+                    if (!(item.Info.Unique.HasFlag(SpecialItemMode.Revival)) || item.CurrentDura < 1000) continue;
+                    SetHP(Stats[Stat.HP]);
+                    item.CurrentDura = (ushort)(item.CurrentDura - 1000);
+                    Enqueue(new S.DuraChanged { UniqueID = item.UniqueID, CurrentDura = item.CurrentDura });
+                    RefreshStats();
+                    ReceiveChat("You have been given a second chance at life", ChatType.System);
+                    return;
+                }
+            }
+
+            for (int i = Pets.Count - 1; i >= 0; i--)
+            {
+                if (Pets[i].Dead) continue;
+                Pets[i].Die();
+            }
+
+            RemoveBuff(BuffType.MagicShield);
+            RemoveBuff(BuffType.ElementalBarrier);
+
+            if (!InSafeZone)
+                DeathDrop(LastHitter);
+
+            HP = 0;
+            Dead = true;
+
+            LogTime = Envir.Time;
+            BrownTime = Envir.Time;
+
+            Broadcast(new S.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                Buff buff = Buffs[i];
+
+                if (!buff.Properties.HasFlag(BuffProperty.RemoveOnDeath)) continue;
+
+                RemoveBuff(buff.Type);
+            }
+
+            PoisonList.Clear();
+            InTrapRock = false;
         }
 
         public override void BroadcastHealthChange()
@@ -194,6 +226,34 @@ namespace Server.MirObjects
         {
             Packet p = new S.ObjectMana { ObjectID = ObjectID, Percent = PercentMana };
             Owner.Enqueue(p);
+        }
+
+        public override void Process(DelayedAction action)
+        {
+            if (action.FlaggedToRemove)
+                return;
+
+            switch (action.Type)
+            {
+                case DelayedType.Magic:
+                    CompleteMagic(action.Params);
+                    break;
+                case DelayedType.Damage:
+                    CompleteAttack(action.Params);
+                    break;
+                case DelayedType.Mine:
+                    CompleteMine(action.Params);
+                    break;
+                case DelayedType.Poison:
+                    CompletePoison(action.Params);
+                    break;
+                case DelayedType.DamageIndicator:
+                    CompleteDamageIndicator(action.Params);
+                    break;
+                case DelayedType.SpellEffect:
+                    CompleteSpellEffect(action.Params);
+                    break;
+            }
         }
 
         public override void Process()
@@ -390,12 +450,7 @@ namespace Server.MirObjects
             if (Owner == null) return;
             if (!Teleport(Owner.CurrentMap, Owner.Back))
                 Teleport(Owner.CurrentMap, Owner.CurrentLocation);
-        }
-
-        public override bool CheckMovement(Point location)
-        {
-            return false;
-        }
+        }        
 
         protected virtual void FindTarget()
         {
@@ -453,6 +508,22 @@ namespace Server.MirObjects
                 }
             }
         }
+        public override bool IsAttackTarget(HumanObject attacker)
+        {
+            return Owner.IsAttackTarget(attacker);
+        }
+        public override bool IsAttackTarget(MonsterObject attacker)
+        {            
+            return Owner.IsAttackTarget(attacker);
+        }
+        public override bool IsFriendlyTarget(HumanObject ally)
+        {
+            return Owner.IsFriendlyTarget(ally);
+        }
+        public override bool IsFriendlyTarget(MonsterObject ally)
+        {
+            return Owner.IsFriendlyTarget(ally);
+        }
 
         private void SendInfo()
         {
@@ -506,7 +577,6 @@ namespace Server.MirObjects
                 WingEffect = Looks_Wings,
                 MountType = Mount.MountType,
                 RidingMount = RidingMount,
-                Fishing = Fishing,
 
                 TransformType = TransformType,
 

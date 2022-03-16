@@ -2131,7 +2131,7 @@ namespace Server.MirObjects
             return targets;
         }
 
-        public override bool IsAttackTarget(PlayerObject attacker)
+        public override bool IsAttackTarget(HumanObject attacker)
         {
             if (attacker == null || attacker.Node == null) return false;
             if (Dead) return false;
@@ -2238,7 +2238,7 @@ namespace Server.MirObjects
 
             return Envir.Time < attacker.RageTime;
         }
-        public override bool IsFriendlyTarget(PlayerObject ally)
+        public override bool IsFriendlyTarget(HumanObject ally)
         {
             if (Master == null) return false;
             if (Master == ally) return true;
@@ -2266,7 +2266,7 @@ namespace Server.MirObjects
             return true;
         }
 
-        public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
+        public override int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
             if (Target == null && attacker.IsAttackTarget(this))
             {
@@ -3177,13 +3177,13 @@ namespace Server.MirObjects
             }
         }
 
-        public override void Add(PlayerObject player)
+        public override void Add(HumanObject player)
         {
             player.Enqueue(GetInfo());
             SendHealth(player);
         }
 
-        public override void SendHealth(PlayerObject player)
+        public override void SendHealth(HumanObject player)
         {
             if (!player.IsMember(Master) && !(player.IsMember(EXPOwner) && AutoRev) && Envir.Time > RevTime) return;
             byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));

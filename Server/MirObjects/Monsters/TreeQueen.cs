@@ -45,7 +45,7 @@ namespace Server.MirObjects.Monsters
             return base.Attacked(attacker, damage, type);
         }
 
-        public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
+        public override int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
             return base.Attacked(attacker, damage, type, damageWeapon);
         }

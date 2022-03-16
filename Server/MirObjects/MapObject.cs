@@ -290,16 +290,16 @@ namespace Server.MirObjects
             return Envir.Random.Next(min, max + 1);
         }
 
-        public virtual void Remove(PlayerObject player)
+        public virtual void Remove(HumanObject player)
         {
             player.Enqueue(new S.ObjectRemove {ObjectID = ObjectID});
         }
-        public virtual void Add(PlayerObject player)
+        public virtual void Add(HumanObject player)
         {
-            if (Race == ObjectType.Merchant)
+            if (Race == ObjectType.Merchant && player.Race == ObjectType.Player)
             {
                 NPCObject npc = (NPCObject)this;
-                npc.CheckVisible(player, true);
+                npc.CheckVisible((PlayerObject)player, true);
                 return;
             }
 
@@ -441,9 +441,9 @@ namespace Server.MirObjects
             }
         }
 
-        public abstract bool IsAttackTarget(PlayerObject attacker);
+        public abstract bool IsAttackTarget(HumanObject attacker);
         public abstract bool IsAttackTarget(MonsterObject attacker);
-        public abstract int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true);
+        public abstract int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true);
         public abstract int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility);
 
         public virtual int GetArmour(DefenceType type, MapObject attacker, out bool hit)
@@ -495,7 +495,7 @@ namespace Server.MirObjects
             return armour;
         }
 
-        public virtual void ApplyNegativeEffects(PlayerObject attacker, DefenceType type, ushort levelOffset)
+        public virtual void ApplyNegativeEffects(HumanObject attacker, DefenceType type, ushort levelOffset)
         {
             if (attacker.SpecialMode.HasFlag(SpecialItemMode.Paralize) && type != DefenceType.MAC && type != DefenceType.MACAgility && 1 == Envir.Random.Next(1, 15))
             {
@@ -528,7 +528,7 @@ namespace Server.MirObjects
             }
         }
 
-        public abstract bool IsFriendlyTarget(PlayerObject ally);
+        public abstract bool IsFriendlyTarget(HumanObject ally);
         public abstract bool IsFriendlyTarget(MonsterObject ally);
 
         public abstract void ReceiveChat(string text, ChatType type);
@@ -899,7 +899,7 @@ namespace Server.MirObjects
             return false;
         }
 
-        public abstract void SendHealth(PlayerObject player);
+        public abstract void SendHealth(HumanObject player);
 
         public bool InTrapRock
         {
