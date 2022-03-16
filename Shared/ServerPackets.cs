@@ -1530,17 +1530,20 @@ namespace ServerPackets
 
         public ulong UniqueID;
         public bool Success;
+        public MirGridType Grid;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             UniqueID = reader.ReadUInt64();
             Success = reader.ReadBoolean();
+            Grid = (MirGridType)reader.ReadByte();
         }
 
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(UniqueID);
             writer.Write(Success);
+            writer.Write((byte)Grid);
         }
     }
     public sealed class DropItem : Packet
@@ -2360,6 +2363,28 @@ namespace ServerPackets
             writer.Write(MP);
         }
     }
+
+    public sealed class HeroHealthChanged : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.HeroHealthChanged; }
+        }
+
+        public int HP, MP;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            HP = reader.ReadInt32();
+            MP = reader.ReadInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(HP);
+            writer.Write(MP);
+        }
+    }
     public sealed class DeleteItem : Packet
     {
         public override short Index
@@ -2521,6 +2546,31 @@ namespace ServerPackets
         public override short Index
         {
             get { return (short)ServerPacketIds.LevelChanged; }
+        }
+
+        public ushort Level;
+        public long Experience, MaxExperience;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Level = reader.ReadUInt16();
+            Experience = reader.ReadInt64();
+            MaxExperience = reader.ReadInt64();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Level);
+            writer.Write(Experience);
+            writer.Write(MaxExperience);
+        }
+    }
+
+    public sealed class HeroLevelChanged : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.HeroLevelChanged; }
         }
 
         public ushort Level;
@@ -3093,14 +3143,17 @@ namespace ServerPackets
         }
 
         public ClientMagic Magic;
+        public bool Hero;
         protected override void ReadPacket(BinaryReader reader)
         {
             Magic = new ClientMagic(reader);
+            Hero = reader.ReadBoolean();
         }
 
         protected override void WritePacket(BinaryWriter writer)
         {
             Magic.Save(writer);
+            writer.Write(Hero);
         }
     }
     public sealed class RemoveMagic : Packet
@@ -4437,6 +4490,9 @@ namespace ServerPackets
             Level = reader.ReadUInt16();
             Hair = reader.ReadByte();
 
+            HP = reader.ReadInt32();
+            MP = reader.ReadInt32();
+
             Experience = reader.ReadInt64();
             MaxExperience = reader.ReadInt64();
 
@@ -4476,6 +4532,9 @@ namespace ServerPackets
             writer.Write((byte)Gender);
             writer.Write(Level);
             writer.Write(Hair);
+
+            writer.Write(HP);
+            writer.Write(MP);
 
             writer.Write(Experience);
             writer.Write(MaxExperience);

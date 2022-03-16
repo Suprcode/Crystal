@@ -197,6 +197,10 @@ namespace Server.MirObjects
             get { return myGuild; }
             set { myGuild = value; }
         }
+        public GuildRank MyGuildRank = null;
+
+        public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;
+        public bool CreatureSummoned;
 
         public SpecialItemMode SpecialMode;
 
@@ -806,6 +810,14 @@ namespace Server.MirObjects
 
             AddBuff(BuffType.GameMaster, this, 0, null, false, values: (byte)options);
         }
+        public virtual void LevelUp()
+        {
+            RefreshStats();
+            SetHP(Stats[Stat.HP]);
+            SetMP(Stats[Stat.MP]);
+            
+            Broadcast(new S.ObjectLeveled { ObjectID = ObjectID });          
+        }
         public virtual Color GetNameColour(HumanObject human)
         {
             return NameColour;
@@ -821,6 +833,10 @@ namespace Server.MirObjects
             if (!Dead && HP == 0) Die();
 
             //HealthChanged = true;
+            SendHealthChanged();
+        }
+        protected virtual void SendHealthChanged()
+        {
             Enqueue(new S.HealthChanged { HP = HP, MP = MP });
             BroadcastHealthChange();
         }
@@ -832,8 +848,7 @@ namespace Server.MirObjects
             MP = GMNeverDie ? Stats[Stat.MP] : MP;
 
             // HealthChanged = true;
-            Enqueue(new S.HealthChanged { HP = HP, MP = MP });
-            BroadcastHealthChange();
+            SendHealthChanged();
         }
         public void ChangeHP(int amount)
         {
@@ -856,8 +871,7 @@ namespace Server.MirObjects
             if (!Dead && HP == 0) Die();
 
             // HealthChanged = true;
-            Enqueue(new S.HealthChanged { HP = HP, MP = MP });
-            BroadcastHealthChange();
+            SendHealthChanged();
         }
         public void PoisonDamage(int amount, MapObject Attacker)
         {
@@ -876,8 +890,7 @@ namespace Server.MirObjects
             if (MP < 0) MP = 0;
 
             // HealthChanged = true;
-            Enqueue(new S.HealthChanged { HP = HP, MP = MP });
-            BroadcastHealthChange();
+            SendHealthChanged();
         }
         public void GetMinePayout(MineSet Mine)
         {
@@ -914,6 +927,359 @@ namespace Server.MirObjects
         {
             return false;
         }
+        protected bool TryLuckWeapon()
+        {
+            var item = Info.Equipment[(int)EquipmentSlot.Weapon];
+
+            if (item == null || item.AddedStats[Stat.Luck] >= 7)
+                return false;
+
+            if (item.Info.Bind.HasFlag(BindMode.DontUpgrade))
+                return false;
+
+            if (item.RentalInformation != null && item.RentalInformation.BindingFlags.HasFlag(BindMode.DontUpgrade))
+                return false;
+
+            if (item.AddedStats[Stat.Luck] > (Settings.MaxLuck * -1) && Envir.Random.Next(20) == 0)
+            {
+                Stats[Stat.Luck]--;
+                item.AddedStats[Stat.Luck]--;
+                Enqueue(new S.RefreshItem { Item = item });
+                ReceiveChat(GameLanguage.WeaponCurse, ChatType.System);
+            }
+            else if (item.AddedStats[Stat.Luck] <= 0 || Envir.Random.Next(10 * item.GetTotal(Stat.Luck)) == 0)
+            {
+                Stats[Stat.Luck]++;
+                item.AddedStats[Stat.Luck]++;
+                Enqueue(new S.RefreshItem { Item = item });
+                ReceiveChat(GameLanguage.WeaponLuck, ChatType.Hint);
+            }
+            else
+            {
+                ReceiveChat(GameLanguage.WeaponNoEffect, ChatType.Hint);
+            }
+
+            return true;
+        }
+        protected bool CanUseItem(UserItem item)
+        {
+            if (item == null) return false;
+
+            switch (Gender)
+            {
+                case MirGender.Male:
+                    if (!item.Info.RequiredGender.HasFlag(RequiredGender.Male))
+                    {
+                        ReceiveChat(GameLanguage.NotFemale, ChatType.System);
+                        return false;
+                    }
+                    break;
+                case MirGender.Female:
+                    if (!item.Info.RequiredGender.HasFlag(RequiredGender.Female))
+                    {
+                        ReceiveChat(GameLanguage.NotMale, ChatType.System);
+                        return false;
+                    }
+                    break;
+            }
+
+            switch (Class)
+            {
+                case MirClass.Warrior:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Warrior))
+                    {
+                        ReceiveChat("Warriors cannot use this item.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case MirClass.Wizard:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Wizard))
+                    {
+                        ReceiveChat("Wizards cannot use this item.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case MirClass.Taoist:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Taoist))
+                    {
+                        ReceiveChat("Taoists cannot use this item.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case MirClass.Assassin:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Assassin))
+                    {
+                        ReceiveChat("Assassins cannot use this item.", ChatType.System);
+                        return false;
+                    }
+                    break;
+            }
+
+            switch (item.Info.RequiredType)
+            {
+                case RequiredType.Level:
+                    if (Level < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat(GameLanguage.LowLevel, ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MaxAC:
+                    if (Stats[Stat.MaxAC] < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You do not have enough AC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MaxMAC:
+                    if (Stats[Stat.MaxMAC] < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You do not have enough MAC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MaxDC:
+                    if (Stats[Stat.MaxDC] < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat(GameLanguage.LowDC, ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MaxMC:
+                    if (Stats[Stat.MaxMC] < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat(GameLanguage.LowMC, ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MaxSC:
+                    if (Stats[Stat.MaxSC] < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat(GameLanguage.LowSC, ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MaxLevel:
+                    if (Level > item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You have exceeded the maximum level.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinAC:
+                    if (Stats[Stat.MinAC] < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You do not have enough Base AC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinMAC:
+                    if (Stats[Stat.MinMAC] < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You do not have enough Base MAC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinDC:
+                    if (Stats[Stat.MinDC] < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You do not have enough Base DC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinMC:
+                    if (Stats[Stat.MinMC] < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You do not have enough Base MC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case RequiredType.MinSC:
+                    if (Stats[Stat.MinSC] < item.Info.RequiredAmount)
+                    {
+                        ReceiveChat("You do not have enough Base SC.", ChatType.System);
+                        return false;
+                    }
+                    break;
+            }
+
+            switch (item.Info.Type)
+            {
+                case ItemType.Scroll:
+                    switch (item.Info.Shape)
+                    {
+                        case 0:
+                            if (CurrentMap.Info.NoEscape)
+                            {
+                                ReceiveChat(GameLanguage.CanNotDungeon, ChatType.System);
+                                return false;
+                            }
+                            break;
+                        case 1:
+                            if (CurrentMap.Info.NoTownTeleport)
+                            {
+                                ReceiveChat(GameLanguage.NoTownTeleport, ChatType.System);
+                                return false;
+                            }
+                            break;
+                        case 2:
+                            if (CurrentMap.Info.NoRandom)
+                            {
+                                ReceiveChat(GameLanguage.CanNotRandom, ChatType.System);
+                                return false;
+                            }
+                            break;
+                        case 6:
+                            if (!Dead)
+                            {
+                                ReceiveChat(GameLanguage.CannotResurrection, ChatType.Hint);
+                                return false;
+                            }
+                            break;
+                        case 10:
+                            {
+                                int skillId = item.Info.Effect;
+
+                                if (MyGuild == null)
+                                {
+                                    ReceiveChat("You must be in a guild to use this skill", ChatType.Hint);
+                                    return false;
+                                }
+                                if (MyGuildRank != MyGuild.Ranks[0])
+                                {
+                                    ReceiveChat("You must be the guild leader to use this skill", ChatType.Hint);
+                                    return false;
+                                }
+                                GuildBuffInfo buffInfo = Envir.FindGuildBuffInfo(skillId);
+
+                                if (buffInfo == null) return false;
+
+                                if (MyGuild.BuffList.Any(e => e.Info.Id == skillId))
+                                {
+                                    ReceiveChat("Your guild already has this skill", ChatType.Hint);
+                                    return false;
+                                }
+                            }
+                            break;
+                    }
+                    break;
+                case ItemType.Potion:
+                    if (CurrentMap.Info.NoDrug)
+                    {
+                        ReceiveChat("You cannot use Potions here", ChatType.System);
+                        return false;
+                    }
+                    break;
+
+                case ItemType.Book:
+                    if (Info.Magics.Any(t => t.Spell == (Spell)item.Info.Shape))
+                    {
+                        return false;
+                    }
+                    break;
+                case ItemType.Saddle:
+                case ItemType.Ribbon:
+                case ItemType.Bells:
+                case ItemType.Mask:
+                case ItemType.Reins:
+                    if (Info.Equipment[(int)EquipmentSlot.Mount] == null)
+                    {
+                        ReceiveChat("Can only be used with a mount", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case ItemType.Hook:
+                case ItemType.Float:
+                case ItemType.Bait:
+                case ItemType.Finder:
+                case ItemType.Reel:
+                    if (Info.Equipment[(int)EquipmentSlot.Weapon] == null || !Info.Equipment[(int)EquipmentSlot.Weapon].Info.IsFishingRod)
+                    {
+                        ReceiveChat("Can only be used with a fishing rod", ChatType.System);
+                        return false;
+                    }
+                    break;
+                case ItemType.Socket:
+                    break;
+                case ItemType.Pets:
+                    switch (item.Info.Shape)
+                    {
+                        case 20://mirror rename creature
+                            if (Info.IntelligentCreatures.Count == 0) return false;
+                            break;
+                        case 21://creature stone
+                            break;
+                        case 22://nuts maintain food levels
+                            if (!CreatureSummoned)
+                            {
+                                ReceiveChat("Can only be used with a creature summoned", ChatType.System);
+                                return false;
+                            }
+                            break;
+                        case 23://basic creature food
+                            if (!CreatureSummoned)
+                            {
+                                ReceiveChat("Can only be used with a creature summoned", ChatType.System);
+                                return false;
+                            }
+                            else
+                            {
+                                for (int i = 0; i < Pets.Count; i++)
+                                {
+                                    if (Pets[i].Race != ObjectType.Creature) continue;
+
+                                    var pet = (IntelligentCreatureObject)Pets[i];
+                                    if (pet.PetType != SummonedCreatureType) continue;
+                                    if (pet.Fullness > 9900)
+                                    {
+                                        ReceiveChat(pet.Name + " is not hungry", ChatType.System);
+                                        return false;
+                                    }
+                                    return true;
+                                }
+                                return false;
+                            }
+                        case 24://wonderpill vitalize creature
+                            if (!CreatureSummoned)
+                            {
+                                ReceiveChat("Can only be used with a creature summoned", ChatType.System);
+                                return false;
+                            }
+                            else
+                            {
+                                for (int i = 0; i < Pets.Count; i++)
+                                {
+                                    if (Pets[i].Race != ObjectType.Creature) continue;
+
+                                    var pet = (IntelligentCreatureObject)Pets[i];
+                                    if (pet.PetType != SummonedCreatureType) continue;
+                                    if (pet.Fullness > 0)
+                                    {
+                                        ReceiveChat(pet.Name + " does not need to be vitalized", ChatType.System);
+                                        return false;
+                                    }
+                                    return true;
+                                }
+                                return false;
+                            }
+                        case 25://Strongbox
+                            break;
+                        case 26://Wonderdrugs
+                            break;
+                        case 27://Fortunecookies
+                            break;
+                    }
+                    break;
+            }
+
+            if (RidingMount && item.Info.Type != ItemType.Scroll && item.Info.Type != ItemType.Potion)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        public virtual void UseItem(ulong id, MirGridType grid) { }
         protected void ConsumeItem(UserItem item, byte cost)
         {
             item.Count -= cost;
@@ -1831,8 +2197,12 @@ namespace Server.MirObjects
 
                 var magic = new UserMagic(spelltype) { IsTempSpell = true };
                 Info.Magics.Add(magic);
-                Enqueue(magic.GetInfo());
+                SendMagicInfo(magic);                
             }
+        }
+        public virtual void SendMagicInfo(UserMagic magic)
+        {
+            Enqueue(magic.GetInfo(false));
         }
         private void RemoveTempSkills(IEnumerable<string> skillsToRemove)
         {
@@ -7650,6 +8020,17 @@ namespace Server.MirObjects
                     }
                 }
             }
+        }
+
+        public void ToggleRide()
+        {
+            if (Mount.MountType > -1)
+            {
+                RidingMount = !RidingMount;
+                RefreshMount();
+            }
+            else
+                ReceiveChat("You haven't a mount...", ChatType.System);
         }
 
         #endregion

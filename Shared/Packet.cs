@@ -513,6 +513,8 @@ public abstract class Packet
                 return new S.DuraChanged();
             case (short)ServerPacketIds.HealthChanged:
                 return new S.HealthChanged();
+            case (short)ServerPacketIds.HeroHealthChanged:
+                return new S.HeroHealthChanged();
             case (short)ServerPacketIds.DeleteItem:
                 return new S.DeleteItem();
             case (short)ServerPacketIds.Death:
@@ -529,6 +531,8 @@ public abstract class Packet
                 return new S.GainExperience();
             case (short)ServerPacketIds.LevelChanged:
                 return new S.LevelChanged();
+            case (short)ServerPacketIds.HeroLevelChanged:
+                return new S.HeroLevelChanged();
             case (short)ServerPacketIds.ObjectLeveled:
                 return new S.ObjectLeveled();
             case (short)ServerPacketIds.ObjectHarvest:

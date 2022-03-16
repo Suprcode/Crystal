@@ -4050,7 +4050,7 @@ namespace Client.MirScenes.Dialogs
             ExperienceBar.BeforeDraw += ExperienceBar_BeforeDraw;
         }
 
-        public void Update(S.HeroInformation p)
+        public void Update()
         {
             Avatar.Index = 1400 + (byte)Class + 10 * (byte)Gender;
             NameLabel.Text = Name;

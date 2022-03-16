@@ -1049,7 +1049,15 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.UseItem(p.UniqueID);
+            switch (p.Grid)
+            {
+                case MirGridType.Inventory:
+                    Player.UseItem(p.UniqueID, p.Grid);
+                    break;
+                case MirGridType.HeroInventory:
+                    Player.HeroUseItem(p.UniqueID, p.Grid);
+                    break;
+            }            
         }
         private void DropItem(C.DropItem p)
         {

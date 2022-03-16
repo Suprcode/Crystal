@@ -1311,6 +1311,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.HealthChanged:
                     HealthChanged((S.HealthChanged)p);
                     break;
+                case (short)ServerPacketIds.HeroHealthChanged:
+                    HeroHealthChanged((S.HeroHealthChanged)p);
+                    break;
                 case (short)ServerPacketIds.DeleteItem:
                     DeleteItem((S.DeleteItem)p);
                     break;
@@ -1334,6 +1337,9 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.LevelChanged:
                     LevelChanged((S.LevelChanged)p);
+                    break;
+                case (short)ServerPacketIds.HeroLevelChanged:
+                    HeroLevelChanged((S.HeroLevelChanged)p);
                     break;
                 case (short)ServerPacketIds.ObjectLeveled:
                     ObjectLeveled((S.ObjectLeveled)p);
@@ -2640,7 +2646,19 @@ namespace Client.MirScenes
         }
         private void UseItem(S.UseItem p)
         {
-            MirItemCell cell = InventoryDialog.GetCell(p.UniqueID) ?? BeltDialog.GetCell(p.UniqueID);
+            MirItemCell cell = null;
+            bool hero = false;
+            
+            switch (p.Grid)
+            {
+                case MirGridType.Inventory:
+                    cell = InventoryDialog.GetCell(p.UniqueID) ?? BeltDialog.GetCell(p.UniqueID);
+                    break;
+                case MirGridType.HeroInventory:
+                    cell = HeroInventoryDialog.GetCell(p.UniqueID) ?? HeroBeltDialog.GetCell(p.UniqueID);
+                    hero = true;
+                    break;
+            }            
 
             if (cell == null) return;
 
@@ -2649,7 +2667,10 @@ namespace Client.MirScenes
             if (!p.Success) return;
             if (cell.Item.Count > 1) cell.Item.Count--;
             else cell.Item = null;
-            User.RefreshStats();
+            if (hero)
+                Hero.RefreshStats();
+            else
+                User.RefreshStats();
         }
         private void DropItem(S.DropItem p)
         {
@@ -3285,6 +3306,13 @@ namespace Client.MirScenes
 
             User.PercentHealth = (byte)(User.HP / (float)User.Stats[Stat.HP] * 100);
         }
+        private void HeroHealthChanged(S.HeroHealthChanged p)
+        {
+            Hero.HP = p.HP;
+            Hero.MP = p.MP;
+
+            Hero.PercentHealth = (byte)(Hero.HP / (float)Hero.Stats[Stat.HP] * 100);
+        }
 
         private void DeleteQuestItem(S.DeleteQuestItem p)
         {
@@ -3457,6 +3485,18 @@ namespace Client.MirScenes
             User.Effects.Add(new Effect(Libraries.Magic2, 1200, 20, 2000, User));
             SoundManager.PlaySound(SoundList.LevelUp);
             ChatDialog.ReceiveChat(GameLanguage.LevelUp, ChatType.LevelUp); 
+        }
+        private void HeroLevelChanged(S.HeroLevelChanged p)
+        {
+            Hero.Level = p.Level;
+            Hero.Experience = p.Experience;
+            Hero.MaxExperience = p.MaxExperience;
+            Hero.RefreshStats();
+            //OutputMessage(GameLanguage.LevelUp);
+            Hero.Effects.Add(new Effect(Libraries.Magic2, 1200, 20, 2000, User));
+            SoundManager.PlaySound(SoundList.LevelUp);
+            //ChatDialog.ReceiveChat(GameLanguage.LevelUp, ChatType.LevelUp);
+            MainDialog.HeroInfoPanel.Update();
         }
         private void ObjectLeveled(S.ObjectLeveled p)
         {
@@ -4209,8 +4249,12 @@ namespace Client.MirScenes
         {
             ClientMagic magic = p.Magic;
 
-            User.Magics.Add(magic);
-            User.RefreshStats();
+            UserObject actor = User;
+            if (p.Hero)
+                actor = Hero;
+
+            actor.Magics.Add(magic);
+            actor.RefreshStats();
             foreach (SkillBarDialog Bar in SkillBarDialogs)
             {
                 Bar.Update();
@@ -5704,7 +5748,7 @@ namespace Client.MirScenes
             HeroDialog = new CharacterDialog(MirGridType.HeroEquipment, Hero) { Parent = this, Visible = false };
             HeroInventoryDialog = new HeroInventoryDialog { Parent = this };
             HeroBeltDialog = new HeroBeltDialog { Parent = this };
-            MainDialog.HeroInfoPanel.Update(p);
+            MainDialog.HeroInfoPanel.Update();
         }
 
         private void UpdateHeroSpawnState(S.UpdateHeroSpawnState p)

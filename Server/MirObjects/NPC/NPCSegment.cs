@@ -3213,7 +3213,7 @@ namespace Server.MirObjects
                             if (magic.Info == null) return;
 
                             player.Info.Magics.Add(magic);
-                            player.Enqueue(magic.GetInfo());
+                            player.SendMagicInfo(magic);
                         }
                         break;
 

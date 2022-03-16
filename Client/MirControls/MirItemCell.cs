@@ -512,21 +512,37 @@ namespace Client.MirControls
                 case ItemType.Transform:
                 case ItemType.Deco:
                 case ItemType.MonsterSpawn:
-                    if (CanUseItem() && GridType == MirGridType.Inventory)
+                    if (CanUseItem() && (GridType == MirGridType.Inventory || GridType == MirGridType.HeroInventory))
                     {
                         if (CMain.Time < GameScene.UseItemTime) return;
-                        Network.Enqueue(new C.UseItem { UniqueID = Item.UniqueID });
+                        Network.Enqueue(new C.UseItem { UniqueID = Item.UniqueID, Grid = GridType });
 
-                        if (Item.Count == 1 && ItemSlot < 6)
+                        if (HeroGridType)
                         {
-                            for (int i = GameScene.User.BeltIdx; i < GameScene.User.Inventory.Length; i++)
-                                if (ItemArray[i] != null && ItemArray[i].Info == Item.Info)
-                                {
-                                    Network.Enqueue(new C.MoveItem { Grid = MirGridType.Inventory, From = i, To = ItemSlot });
-                                    GameScene.Scene.InventoryDialog.Grid[i - GameScene.User.BeltIdx].Locked = true;
-                                    break;
-                                }
+                            if (Item.Count == 1 && ItemSlot < GameScene.User.HeroBeltIdx)
+                            {
+                                for (int i = GameScene.User.HeroBeltIdx; i < GameScene.Hero.Inventory.Length; i++)
+                                    if (ItemArray[i] != null && ItemArray[i].Info == Item.Info)
+                                    {
+                                        Network.Enqueue(new C.MoveItem { Grid = MirGridType.HeroInventory, From = i, To = ItemSlot });
+                                        GameScene.Scene.HeroInventoryDialog.Grid[i - GameScene.User.HeroBeltIdx].Locked = true;
+                                        break;
+                                    }
+                            }
                         }
+                        else
+                        {
+                            if (Item.Count == 1 && ItemSlot < GameScene.User.BeltIdx)
+                            {
+                                for (int i = GameScene.User.BeltIdx; i < GameScene.User.Inventory.Length; i++)
+                                    if (ItemArray[i] != null && ItemArray[i].Info == Item.Info)
+                                    {
+                                        Network.Enqueue(new C.MoveItem { Grid = MirGridType.Inventory, From = i, To = ItemSlot });
+                                        GameScene.Scene.InventoryDialog.Grid[i - GameScene.User.BeltIdx].Locked = true;
+                                        break;
+                                    }
+                            }
+                        }                        
 
                         Locked = true;
                     }
@@ -2076,7 +2092,11 @@ namespace Client.MirControls
         {
             if (Item == null) return false;
 
-            switch (MapObject.User.Gender)
+            UserObject actor = GameScene.User;
+            if (HeroGridType)
+                actor = GameScene.Hero;
+
+            switch (actor.Gender)
             {
                 case MirGender.Male:
                     if (!Item.Info.RequiredGender.HasFlag(RequiredGender.Male))
@@ -2094,7 +2114,7 @@ namespace Client.MirControls
                     break;
             }
 
-            switch (MapObject.User.Class)
+            switch (actor.Class)
             {
                 case MirClass.Warrior:
                     if (!Item.Info.RequiredClass.HasFlag(RequiredClass.Warrior))
@@ -2136,84 +2156,84 @@ namespace Client.MirControls
             switch (Item.Info.RequiredType)
             {
                 case RequiredType.Level:
-                    if (MapObject.User.Level < Item.Info.RequiredAmount)
+                    if (actor.Level < Item.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowLevel, ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MaxAC:
-                    if (MapObject.User.Stats[Stat.MaxAC] < Item.Info.RequiredAmount)
+                    if (actor.Stats[Stat.MaxAC] < Item.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough AC.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MaxMAC:
-                    if (MapObject.User.Stats[Stat.MaxMAC] < Item.Info.RequiredAmount)
+                    if (actor.Stats[Stat.MaxMAC] < Item.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough MAC.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MaxDC:
-                    if (MapObject.User.Stats[Stat.MaxDC] < Item.Info.RequiredAmount)
+                    if (actor.Stats[Stat.MaxDC] < Item.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowDC, ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MaxMC:
-                    if (MapObject.User.Stats[Stat.MaxMC] < Item.Info.RequiredAmount)
+                    if (actor.Stats[Stat.MaxMC] < Item.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowMC, ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MaxSC:
-                    if (MapObject.User.Stats[Stat.MaxSC] < Item.Info.RequiredAmount)
+                    if (actor.Stats[Stat.MaxSC] < Item.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowSC, ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MaxLevel:
-                    if (MapObject.User.Level > Item.Info.RequiredAmount)
+                    if (actor.Level > Item.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You have exceeded the maximum level.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MinAC:
-                    if (MapObject.User.Stats[Stat.MinAC] < Item.Info.RequiredAmount)
+                    if (actor.Stats[Stat.MinAC] < Item.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Base AC.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MinMAC:
-                    if (MapObject.User.Stats[Stat.MinMAC] < Item.Info.RequiredAmount)
+                    if (actor.Stats[Stat.MinMAC] < Item.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Base MAC.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MinDC:
-                    if (MapObject.User.Stats[Stat.MinDC] < Item.Info.RequiredAmount)
+                    if (actor.Stats[Stat.MinDC] < Item.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Base DC.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MinMC:
-                    if (MapObject.User.Stats[Stat.MinMC] < Item.Info.RequiredAmount)
+                    if (actor.Stats[Stat.MinMC] < Item.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Base MC.", ChatType.System);
                         return false;
                     }
                     break;
                 case RequiredType.MinSC:
-                    if (MapObject.User.Stats[Stat.MinSC] < Item.Info.RequiredAmount)
+                    if (actor.Stats[Stat.MinSC] < Item.Info.RequiredAmount)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough Base SC.", ChatType.System);
                         return false;
@@ -2228,7 +2248,7 @@ namespace Client.MirControls
                 case ItemType.Bells:
                 case ItemType.Mask:
                 case ItemType.Reins:
-                    if (MapObject.User.Equipment[(int)EquipmentSlot.Mount] == null)
+                    if (actor.Equipment[(int)EquipmentSlot.Mount] == null)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do not have a mount equipped.", ChatType.System);
                         return false;
@@ -2239,7 +2259,7 @@ namespace Client.MirControls
                 case ItemType.Bait:
                 case ItemType.Finder:
                 case ItemType.Reel:
-                    if (MapObject.User.Equipment[(int)EquipmentSlot.Weapon] == null || !MapObject.User.Equipment[(int)EquipmentSlot.Weapon].Info.IsFishingRod)
+                    if (actor.Equipment[(int)EquipmentSlot.Weapon] == null || !actor.Equipment[(int)EquipmentSlot.Weapon].Info.IsFishingRod)
                     {
                         GameScene.Scene.ChatDialog.ReceiveChat("You do not have a fishing rod equipped.", ChatType.System);
                         return false;

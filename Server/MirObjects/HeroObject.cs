@@ -136,6 +136,289 @@ namespace Server.MirObjects
                 Owner.CheckItem(item);
             }
         }
+        public override void SendMagicInfo(UserMagic magic)
+        {
+            Owner.Enqueue(magic.GetInfo(true));
+        }
+        public override void UseItem(ulong id, MirGridType grid)
+        {
+            S.UseItem p = new S.UseItem { UniqueID = id, Grid = grid, Success = false };
+
+            UserItem item = null;
+            int index = -1;
+
+            for (int i = 0; i < Info.Inventory.Length; i++)
+            {
+                item = Info.Inventory[i];
+                if (item == null || item.UniqueID != id) continue;
+                index = i;
+                break;
+            }
+
+            if (item == null || index == -1 || !CanUseItem(item))
+            {
+                Owner.Enqueue(p);
+                return;
+            }
+
+            if (Dead && !(item.Info.Type == ItemType.Scroll && item.Info.Shape == 6))
+            {
+                Owner.Enqueue(p);
+                return;
+            }
+
+            switch (item.Info.Type)
+            {
+                case ItemType.Potion:
+                    switch (item.Info.Shape)
+                    {
+                        case 0: //NormalPotion
+                            PotHealthAmount = (ushort)Math.Min(ushort.MaxValue, PotHealthAmount + item.Info.Stats[Stat.HP]);
+                            PotManaAmount = (ushort)Math.Min(ushort.MaxValue, PotManaAmount + item.Info.Stats[Stat.MP]);
+                            break;
+                        case 1: //SunPotion
+                            ChangeHP(item.Info.Stats[Stat.HP]);
+                            ChangeMP(item.Info.Stats[Stat.MP]);
+                            break;
+                        case 2: //MysteryWater
+                            if (UnlockCurse)
+                            {
+                                ReceiveChat("You can already unequip a cursed item.", ChatType.Hint);
+                                Owner.Enqueue(p);
+                                return;
+                            }
+                            ReceiveChat("You can now unequip a cursed item.", ChatType.Hint);
+                            UnlockCurse = true;
+                            break;
+                        case 3: //Buff
+                            {
+                                int time = item.Info.Durability;
+
+                                if (item.GetTotal(Stat.MaxDC) > 0)
+                                    AddBuff(BuffType.Impact, this, time * Settings.Minute, new Stats { [Stat.MaxDC] = item.GetTotal(Stat.MaxDC) });
+
+                                if (item.GetTotal(Stat.MaxMC) > 0)
+                                    AddBuff(BuffType.Magic, this, time * Settings.Minute, new Stats { [Stat.MaxMC] = item.GetTotal(Stat.MaxMC) });
+
+                                if (item.GetTotal(Stat.MaxSC) > 0)
+                                    AddBuff(BuffType.Taoist, this, time * Settings.Minute, new Stats { [Stat.MaxSC] = item.GetTotal(Stat.MaxSC) });
+
+                                if (item.GetTotal(Stat.AttackSpeed) > 0)
+                                    AddBuff(BuffType.Storm, this, time * Settings.Minute, new Stats { [Stat.AttackSpeed] = item.GetTotal(Stat.AttackSpeed) });
+
+                                if (item.GetTotal(Stat.HP) > 0)
+                                    AddBuff(BuffType.HealthAid, this, time * Settings.Minute, new Stats { [Stat.HP] = item.GetTotal(Stat.HP) });
+
+                                if (item.GetTotal(Stat.MP) > 0)
+                                    AddBuff(BuffType.ManaAid, this, time * Settings.Minute, new Stats { [Stat.MP] = item.GetTotal(Stat.MP) });
+
+                                if (item.GetTotal(Stat.MaxAC) > 0)
+                                    AddBuff(BuffType.Defence, this, time * Settings.Minute, new Stats { [Stat.MaxAC] = item.GetTotal(Stat.MaxAC) });
+
+                                if (item.GetTotal(Stat.MaxMAC) > 0)
+                                    AddBuff(BuffType.MagicDefence, this, time * Settings.Minute, new Stats { [Stat.MaxMAC] = item.GetTotal(Stat.MaxMAC) });
+
+                                if (item.GetTotal(Stat.BagWeight) > 0)
+                                    AddBuff(BuffType.BagWeight, this, time * Settings.Minute, new Stats { [Stat.BagWeight] = item.GetTotal(Stat.BagWeight) });
+                            }
+                            break;
+                        case 4: //Exp
+                            {
+                                int time = item.Info.Durability;
+                                AddBuff(BuffType.Exp, this, Settings.Minute * time, new Stats { [Stat.ExpRatePercent] = item.GetTotal(Stat.Luck) });
+                            }
+                            break;
+                        case 5: //Drop
+                            {
+                                int time = item.Info.Durability;
+                                AddBuff(BuffType.Drop, this, Settings.Minute * time, new Stats { [Stat.ItemDropRatePercent] = item.GetTotal(Stat.Luck) });
+                            }
+                            break;
+                    }
+                    break;
+                case ItemType.Scroll:
+                    UserItem temp;
+                    switch (item.Info.Shape)
+                    {
+                        case 3: //BenedictionOil
+                            if (!TryLuckWeapon())
+                            {
+                                Owner.Enqueue(p);
+                                return;
+                            }
+                            break;
+                        case 4: //RepairOil
+                            temp = Info.Equipment[(int)EquipmentSlot.Weapon];
+                            if (temp == null || temp.MaxDura == temp.CurrentDura)
+                            {
+                                Owner.Enqueue(p);
+                                return;
+                            }
+                            if (temp.Info.Bind.HasFlag(BindMode.DontRepair))
+                            {
+                                Owner.Enqueue(p);
+                                return;
+                            }
+                            temp.MaxDura = (ushort)Math.Max(0, temp.MaxDura - Math.Min(5000, temp.MaxDura - temp.CurrentDura) / 30);
+
+                            temp.CurrentDura = (ushort)Math.Min(temp.MaxDura, temp.CurrentDura + 5000);
+                            temp.DuraChanged = false;
+
+                            ReceiveChat("Your weapon has been partially repaired", ChatType.Hint);
+                            Owner.Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
+                            break;
+                        case 5: //WarGodOil
+                            temp = Info.Equipment[(int)EquipmentSlot.Weapon];
+                            if (temp == null || temp.MaxDura == temp.CurrentDura)
+                            {
+                                Owner.Enqueue(p);
+                                return;
+                            }
+                            if (temp.Info.Bind.HasFlag(BindMode.DontRepair) || (temp.Info.Bind.HasFlag(BindMode.NoSRepair)))
+                            {
+                                Owner.Enqueue(p);
+                                return;
+                            }
+                            temp.CurrentDura = temp.MaxDura;
+                            temp.DuraChanged = false;
+
+                            ReceiveChat("Your weapon has been completely repaired", ChatType.Hint);
+                            Owner.Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
+                            break;
+                        case 6: //ResurrectionScroll
+                            if (CurrentMap.Info.NoReincarnation)
+                            {
+                                ReceiveChat(string.Format("Cannot use on this map"), ChatType.System);
+                                Owner.Enqueue(p);
+                                return;
+                            }
+                            if (Dead)
+                            {
+                                MP = Stats[Stat.MP];
+                                Revive(MaxHealth, true);
+                            }
+                            break;
+                    }
+                    break;
+                case ItemType.Book:
+                    UserMagic magic = new UserMagic((Spell)item.Info.Shape);
+
+                    if (magic.Info == null)
+                    {
+                        Owner.Enqueue(p);
+                        return;
+                    }
+
+                    Info.Magics.Add(magic);
+                    SendMagicInfo(magic);
+                    RefreshStats();
+                    break;
+                case ItemType.Food:
+                    temp = Info.Equipment[(int)EquipmentSlot.Mount];
+                    if (temp == null || temp.MaxDura == temp.CurrentDura)
+                    {
+                        Owner.Enqueue(p);
+                        return;
+                    }
+
+                    switch (item.Info.Shape)
+                    {
+                        case 0:
+                            temp.MaxDura = (ushort)Math.Max(0, temp.MaxDura - Math.Min(1000, temp.MaxDura - (temp.CurrentDura / 30)));
+                            break;
+                        case 1:
+                            break;
+                    }
+
+                    temp.CurrentDura = (ushort)Math.Min(temp.MaxDura, temp.CurrentDura + item.CurrentDura);
+                    temp.DuraChanged = false;
+
+                    ReceiveChat("Your mount has been fed.", ChatType.Hint);
+                    Owner.Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
+
+                    RefreshStats();
+                    break;                
+                case ItemType.Transform: //Transforms
+                    {
+                        AddBuff(BuffType.Transform, this, (Settings.Second * item.Info.Durability), new Stats(), values: item.Info.Shape);
+                    }
+                    break;
+                case ItemType.Deco:
+
+                    DecoObject decoOb = new DecoObject
+                    {
+                        Image = item.Info.Shape,
+                        CurrentMap = CurrentMap,
+                        CurrentLocation = CurrentLocation,
+                    };
+
+                    CurrentMap.AddObject(decoOb);
+                    decoOb.Spawned();
+
+                    Owner.Enqueue(decoOb.GetInfo());
+
+                    break;
+                case ItemType.MonsterSpawn:
+
+                    var monsterID = item.Info.Stats[Stat.HP];
+                    var spawnAsPet = item.Info.Shape == 1;
+                    var conquestOnly = item.Info.Shape == 2;
+
+                    var monsterInfo = Envir.GetMonsterInfo(monsterID);
+                    if (monsterInfo == null) break;
+
+                    MonsterObject monster = MonsterObject.GetMonster(monsterInfo);
+                    if (monster == null) break;
+
+                    if (spawnAsPet)
+                    {
+                        if (Pets.Count(t => !t.Dead && t.Race != ObjectType.Creature) >= Globals.MaxPets)
+                        {
+                            ReceiveChat("Maximum number of pets already reached.", ChatType.Hint);
+                            Owner.Enqueue(p);
+                            return;
+                        }
+
+                        monster.Master = this;
+                        monster.PetLevel = 0;
+                        monster.MaxPetLevel = 7;
+
+                        Pets.Add(monster);
+                    }
+
+                    if (conquestOnly)
+                    {
+                        var con = CurrentMap.GetConquest(CurrentLocation);
+                        if (con == null)
+                        {
+                            ReceiveChat(string.Format("{0} can only be spawned during a conquest.", monsterInfo.GameName), ChatType.Hint);
+                            Owner.Enqueue(p);
+                            return;
+                        }
+                    }
+
+                    monster.Direction = Direction;
+                    monster.ActionTime = Envir.Time + 5000;
+
+                    if (!monster.Spawn(CurrentMap, Front))
+                        monster.Spawn(CurrentMap, CurrentLocation);
+                    break;
+                case ItemType.SiegeAmmo:
+                    //TODO;
+                    break;
+                default:
+                    return;
+            }
+
+            if (item.Count > 1) item.Count--;
+            else Info.Inventory[index] = null;
+            RefreshBagWeight();
+
+            Report?.ItemChanged(item, 1, 1);
+
+            p.Success = true;
+            Owner.Enqueue(p);
+        }
         public override void Die()
         {
             if (SpecialMode.HasFlag(SpecialItemMode.Revival) && Envir.Time > LastRevivalTime)
@@ -188,6 +471,18 @@ namespace Server.MirObjects
 
             PoisonList.Clear();
             InTrapRock = false;
+        }
+
+        public override void LevelUp()
+        {
+            base.LevelUp();
+
+            Owner.Enqueue(new S.HeroLevelChanged { Level = Level, Experience = Experience, MaxExperience = MaxExperience });
+        }
+        protected override void SendHealthChanged()
+        {
+            Owner.Enqueue(new S.HeroHealthChanged { HP = HP, MP = MP });
+            base.SendHealthChanged();
         }
 
         public override void BroadcastHealthChange()
@@ -328,7 +623,7 @@ namespace Server.MirObjects
         protected virtual void ProcessSearch()
         {
             if (Envir.Time < SearchTime) return;
-            if (Owner != null && (Owner.PMode == PetMode.MoveOnly || Owner.PMode == PetMode.None)) return;
+            if (Owner != null && (Owner.PMode == PetMode.MoveOnly || Owner.PMode == PetMode.None) || !Mount.CanAttack) return;
 
             SearchTime = Envir.Time + SearchDelay;
 
@@ -401,6 +696,7 @@ namespace Server.MirObjects
             if (CurrentLocation == location) return;
 
             bool inRange = Functions.InRange(location, CurrentLocation, 1);
+            bool inRunRange = RidingMount ? Functions.InRange(location, CurrentLocation, 2) : inRange;
 
             if (inRange)
             {
@@ -417,7 +713,7 @@ namespace Server.MirObjects
 
             MirDirection dir = Functions.DirectionFromPoint(CurrentLocation, location);
 
-            if (!inRange && _stepCounter > 0 && Run(dir))
+            if (!inRunRange && _stepCounter > 0 && Run(dir))
                 return;
 
             if (Walk(dir)) return;
@@ -536,6 +832,9 @@ namespace Server.MirObjects
                 Gender = Gender,
                 Level = Level,
                 Hair = Hair,
+
+                HP = HP,
+                MP = MP,
 
                 Experience = Experience,
                 MaxExperience = MaxExperience,

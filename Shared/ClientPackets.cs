@@ -562,13 +562,16 @@ namespace ClientPackets
         public override short Index { get { return (short)ClientPacketIds.UseItem; } }
 
         public ulong UniqueID;
+        public MirGridType Grid;
         protected override void ReadPacket(BinaryReader reader)
         {
             UniqueID = reader.ReadUInt64();
+            Grid = (MirGridType)reader.ReadByte();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(UniqueID);
+            writer.Write((byte)Grid);
         }
     }
     public sealed class DropItem : Packet
