@@ -72,7 +72,17 @@ namespace Server.MirObjects
             }
         }
 
-        public override void Enqueue(Packet p) { }
+        public override void Enqueue(Packet p) 
+        {
+            switch ((ServerPacketIds)p.Index)
+            {
+                case ServerPacketIds.AddBuff:
+                case ServerPacketIds.RemoveBuff:
+                case ServerPacketIds.PauseBuff:
+                    Owner.Enqueue(p);
+                    break;
+            }
+        }
 
         public override void RefreshNameColour()
         {
@@ -101,6 +111,18 @@ namespace Server.MirObjects
             Envir.Heroes.Remove(this);
             CurrentMap.RemoveObject(this);
             Master = null;
+
+            for (int i = Buffs.Count - 1; i >= 0; i--)
+            {
+                var buff = Buffs[i];
+                buff.Caster = null;
+                buff.ObjectID = 0;
+
+                if (buff.Properties.HasFlag(BuffProperty.RemoveOnExit))
+                {
+                    Buffs.RemoveAt(i);
+                }
+            }
 
             base.Despawn();
 
@@ -898,6 +920,15 @@ namespace Server.MirObjects
             Info.Equipment.CopyTo(packet.Equipment, 0);
 
             Owner.Enqueue(packet);
+
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                var buff = Buffs[i];
+                buff.LastTime = Envir.Time;
+                buff.ObjectID = ObjectID;
+
+                AddBuff(buff.Type, null, (int)buff.ExpireTime, buff.Stats, true, true, buff.Values);
+            }
         }
 
         public override Packet GetInfo()

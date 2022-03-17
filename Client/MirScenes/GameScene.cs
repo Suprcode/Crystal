@@ -136,6 +136,7 @@ namespace Client.MirScenes
         public ItemRentalDialog ItemRentalDialog;
 
         public BuffDialog BuffsDialog;
+        public BuffDialog HeroBuffsDialog;
 
         public KeyboardLayoutDialog KeyboardLayoutDialog;
         public NoticeDialog NoticeDialog;
@@ -300,7 +301,12 @@ namespace Client.MirScenes
             GuestItemRentDialog = new GuestItemRentDialog { Parent = this, Visible = false };
             ItemRentalDialog = new ItemRentalDialog { Parent = this, Visible = false };
 
-            BuffsDialog = new BuffDialog { Parent = this, Visible = true };
+            BuffsDialog = new BuffDialog { 
+                Parent = this, 
+                Visible = true,
+                GetExpandedParameter = () => { return Settings.ExpandedBuffWindow; },
+                SetExpandedParameter = (value) => { Settings.ExpandedBuffWindow = value; }
+            };            
 
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
 
@@ -1094,6 +1100,7 @@ namespace Client.MirScenes
             }
 
             BuffsDialog.Process();
+            HeroBuffsDialog?.Process();
 
             MapControl.Process();
             MainDialog.Process();
@@ -4862,6 +4869,23 @@ namespace Client.MirScenes
                 User.RefreshStats();     
             }
 
+            if (Hero != null && buff.ObjectID == Hero.ObjectID)
+            {
+                for (int i = 0; i < HeroBuffsDialog.Buffs.Count; i++)
+                {
+                    if (HeroBuffsDialog.Buffs[i].Type != buff.Type) continue;
+
+                    HeroBuffsDialog.Buffs[i] = buff;
+                    Hero.RefreshStats();
+                    return;
+                }
+
+                HeroBuffsDialog.Buffs.Add(buff);
+                HeroBuffsDialog.CreateBuff(buff);
+
+                Hero.RefreshStats();
+            }
+
             if (!buff.Visible || buff.ObjectID <= 0) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
@@ -4883,26 +4907,49 @@ namespace Client.MirScenes
 
         private void RemoveBuff(S.RemoveBuff p)
         {
-            for (int i = 0; i < BuffsDialog.Buffs.Count; i++)
+            if (User.ObjectID == p.ObjectID)
             {
-                if (BuffsDialog.Buffs[i].Type != p.Type || User.ObjectID != p.ObjectID) continue;
-
-                switch (BuffsDialog.Buffs[i].Type)
+                for (int i = 0; i < BuffsDialog.Buffs.Count; i++)
                 {
-                    case BuffType.SwiftFeet:
-                        User.Sprint = false;
-                        break;
-                    case BuffType.Transform:
-                        User.TransformType = -1;
-                        break;
-                }
+                    if (BuffsDialog.Buffs[i].Type != p.Type) continue;
 
-                BuffsDialog.RemoveBuff(i);
-                BuffsDialog.Buffs.RemoveAt(i);
+                    switch (BuffsDialog.Buffs[i].Type)
+                    {
+                        case BuffType.SwiftFeet:
+                            User.Sprint = false;
+                            break;
+                        case BuffType.Transform:
+                            User.TransformType = -1;
+                            break;
+                    }
+
+                    BuffsDialog.RemoveBuff(i);
+                    BuffsDialog.Buffs.RemoveAt(i);
+                }
+                User.RefreshStats();
             }
 
-            if (User.ObjectID == p.ObjectID)
-                User.RefreshStats();
+            if (Hero != null && Hero.ObjectID == p.ObjectID)
+            {
+                for (int i = 0; i < HeroBuffsDialog.Buffs.Count; i++)
+                {
+                    if (HeroBuffsDialog.Buffs[i].Type != p.Type) continue;
+
+                    switch (HeroBuffsDialog.Buffs[i].Type)
+                    {
+                        case BuffType.SwiftFeet:
+                            Hero.Sprint = false;
+                            break;
+                        case BuffType.Transform:
+                            Hero.TransformType = -1;
+                            break;
+                    }
+
+                    HeroBuffsDialog.RemoveBuff(i);
+                    HeroBuffsDialog.Buffs.RemoveAt(i);
+                }
+                Hero.RefreshStats();
+            }
 
             if (p.ObjectID <= 0) return;
 
@@ -4920,23 +4967,49 @@ namespace Client.MirScenes
 
         private void PauseBuff(S.PauseBuff p)
         {
-            for (int i = 0; i < BuffsDialog.Buffs.Count; i++)
+            if (User.ObjectID == p.ObjectID)
             {
-                if (BuffsDialog.Buffs[i].Type != p.Type || User.ObjectID != p.ObjectID) continue;
-
-                User.RefreshStats();
-
-                if (BuffsDialog.Buffs[i].Paused == p.Paused) return;
-
-                BuffsDialog.Buffs[i].Paused = p.Paused;
-
-                if (p.Paused)
+                for (int i = 0; i < BuffsDialog.Buffs.Count; i++)
                 {
-                    BuffsDialog.Buffs[i].ExpireTime -= CMain.Time;
+                    if (BuffsDialog.Buffs[i].Type != p.Type) continue;
+
+                    User.RefreshStats();
+
+                    if (BuffsDialog.Buffs[i].Paused == p.Paused) return;
+
+                    BuffsDialog.Buffs[i].Paused = p.Paused;
+
+                    if (p.Paused)
+                    {
+                        BuffsDialog.Buffs[i].ExpireTime -= CMain.Time;
+                    }
+                    else
+                    {
+                        BuffsDialog.Buffs[i].ExpireTime += CMain.Time;
+                    }
                 }
-                else
+            }
+
+            if (Hero != null && Hero.ObjectID == p.ObjectID)
+            {
+                for (int i = 0; i < HeroBuffsDialog.Buffs.Count; i++)
                 {
-                    BuffsDialog.Buffs[i].ExpireTime += CMain.Time;
+                    if (HeroBuffsDialog.Buffs[i].Type != p.Type) continue;
+
+                    Hero.RefreshStats();
+
+                    if (HeroBuffsDialog.Buffs[i].Paused == p.Paused) return;
+
+                    HeroBuffsDialog.Buffs[i].Paused = p.Paused;
+
+                    if (p.Paused)
+                    {
+                        HeroBuffsDialog.Buffs[i].ExpireTime -= CMain.Time;
+                    }
+                    else
+                    {
+                        HeroBuffsDialog.Buffs[i].ExpireTime += CMain.Time;
+                    }
                 }
             }
         }
@@ -5753,10 +5826,7 @@ namespace Client.MirScenes
         {
             Hero = new UserHeroObject(p.ObjectID);
             Hero.Load(p);
-
-            HeroDialog = new CharacterDialog(MirGridType.HeroEquipment, Hero) { Parent = this, Visible = false };
-            HeroInventoryDialog = new HeroInventoryDialog { Parent = this };
-            HeroBeltDialog = new HeroBeltDialog { Parent = this };
+            
             MainDialog.HeroInfoPanel.Update();
         }
 
@@ -5773,6 +5843,7 @@ namespace Client.MirScenes
                 HeroInventoryDialog.Dispose();
                 HeroDialog.Dispose();
                 HeroBeltDialog.Dispose();
+                HeroBuffsDialog.Dispose();
             }
         }
 
