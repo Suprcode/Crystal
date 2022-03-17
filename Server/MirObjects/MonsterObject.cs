@@ -858,12 +858,18 @@ namespace Server.MirObjects
                 Envir.MonsterNPC.Call(this, string.Format("[@_DIE({0})]", Info.Index));
             }
 
-            if (EXPOwner != null && EXPOwner.Node != null && Master == null && EXPOwner.Race == ObjectType.Player)
+            if (EXPOwner != null && EXPOwner.Node != null && Master == null && (EXPOwner.Race == ObjectType.Player || EXPOwner.Race == ObjectType.Hero))
             {
                 EXPOwner.WinExp(Experience, Level);
 
-                PlayerObject playerObj = (PlayerObject)EXPOwner;
-                playerObj.CheckGroupQuestKill(Info);
+                PlayerObject playerObj = EXPOwner switch
+                {
+                    PlayerObject player => player,
+                    HeroObject hero => hero.Owner,
+                    _ => null
+                };
+
+                playerObj?.CheckGroupQuestKill(Info);
             }
 
             if (Respawn != null)

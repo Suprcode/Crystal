@@ -1335,6 +1335,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.GainExperience:
                     GainExperience((S.GainExperience)p);
                     break;
+                case (short)ServerPacketIds.GainHeroExperience:
+                    GainHeroExperience((S.GainHeroExperience)p);
+                    break;
                 case (short)ServerPacketIds.LevelChanged:
                     LevelChanged((S.LevelChanged)p);
                     break;
@@ -3474,6 +3477,12 @@ namespace Client.MirScenes
         {
             OutputMessage(string.Format(GameLanguage.ExperienceGained, p.Amount));
             MapObject.User.Experience += p.Amount;
+        }
+
+        private void GainHeroExperience(S.GainHeroExperience p)
+        {
+            OutputMessage(string.Format(GameLanguage.ExperienceGained, p.Amount));
+            MapObject.Hero.Experience += p.Amount;
         }
         private void LevelChanged(S.LevelChanged p)
         {

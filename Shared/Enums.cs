@@ -1472,6 +1472,7 @@ public enum ServerPacketIds : short
     ObjectColourChanged,
     ObjectGuildNameChanged,
     GainExperience,
+    GainHeroExperience,
     LevelChanged,
     HeroLevelChanged,
     ObjectLeveled,

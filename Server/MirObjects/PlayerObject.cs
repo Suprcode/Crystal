@@ -688,23 +688,14 @@ namespace Server.MirObjects
             }
 
             RefreshStats();
-        }
+        }        
         public override void WinExp(uint amount, uint targetLevel = 0)
         {
             int expPoint;
+            uint originalAmount = amount;
 
-            if (Level < targetLevel + 10 || !Settings.ExpMobLevelDifference)
-            {
-                expPoint = (int)amount;
-            }
-            else
-            {
-                expPoint = (int)amount - (int)Math.Round(Math.Max(amount / 15, 1) * ((double)Level - (targetLevel + 10)));
-            }
-
-            if (expPoint <= 0) expPoint = 1;
-
-            expPoint = (int)(expPoint * Settings.ExpRate);
+            expPoint = ReduceExp(amount, targetLevel);
+            expPoint = (int)(expPoint * Settings.ExpRate);            
 
             //party
             float[] partyExpRate = { 1.0F, 1.3F, 1.4F, 1.5F, 1.6F, 1.7F, 1.8F, 1.9F, 2F, 2.1F, 2.2F };
@@ -738,8 +729,15 @@ namespace Server.MirObjects
             }
             else
                 GainExp((uint)expPoint);
+
+            if (HeroSpawned)
+            {
+                expPoint = Hero.ReduceExp(amount, targetLevel);
+                expPoint = (int)(expPoint * Settings.ExpRate);
+                Hero.GainExp((uint)expPoint);
+            }
         }
-        public void GainExp(uint amount)
+        public override void GainExp(uint amount)
         {
             if (!CanGainExp) return;
 
@@ -779,7 +777,7 @@ namespace Server.MirObjects
             if (Info.Mentor != 0 && !Info.IsMentor)
             {
                 MenteeEXP += (amount * Settings.MenteeExpBank) / 100;
-            }
+            }    
 
             Experience += amount;
 

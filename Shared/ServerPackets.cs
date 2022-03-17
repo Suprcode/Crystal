@@ -2541,6 +2541,26 @@ namespace ServerPackets
             writer.Write(Amount);
         }
     }
+
+    public sealed class GainHeroExperience : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.GainHeroExperience; }
+        }
+
+        public uint Amount;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Amount = reader.ReadUInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Amount);
+        }
+    }
     public sealed class LevelChanged : Packet
     {
         public override short Index

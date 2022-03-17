@@ -26,7 +26,7 @@ namespace Server.MirObjects
             set { throw new NotSupportedException(); }
         }
 
-        new PlayerObject Owner;
+        public new PlayerObject Owner;
         public override int PotionBeltMinimum => 0;
         public override int PotionBeltMaximum => 2;
         public override int AmuletBeltMinimum => 1;
@@ -819,6 +819,54 @@ namespace Server.MirObjects
         public override bool IsFriendlyTarget(MonsterObject ally)
         {
             return Owner.IsFriendlyTarget(ally);
+        }
+
+        public override void WinExp(uint amount, uint targetLevel = 0)
+        {
+            Owner.WinExp(amount, targetLevel);
+        }
+
+        public override void GainExp(uint amount)
+        {
+            if (!CanGainExp) return;
+
+            if (amount == 0) return;
+
+            if (Stats[Stat.ExpRatePercent] > 0)
+            {
+                amount += (uint)Math.Max(0, (amount * Stats[Stat.ExpRatePercent]) / 100);
+            }
+
+            Experience += amount;
+
+            Owner.Enqueue(new S.GainHeroExperience { Amount = amount });
+
+            for (int i = 0; i < Pets.Count; i++)
+            {
+                MonsterObject monster = Pets[i];
+                if (monster.CurrentMap == CurrentMap && Functions.InRange(monster.CurrentLocation, CurrentLocation, Globals.DataRange) && !monster.Dead)
+                    monster.PetExp(amount);
+            }
+
+            if (Experience < MaxExperience) return;
+            if (Level >= ushort.MaxValue) return;
+
+            //Calculate increased levels
+            var experience = Experience;
+
+            while (experience >= MaxExperience)
+            {
+                Level++;
+                experience -= MaxExperience;
+
+                RefreshLevelStats();
+
+                if (Level >= ushort.MaxValue) break;
+            }
+
+            Experience = experience;
+
+            LevelUp();
         }
 
         private void SendInfo()

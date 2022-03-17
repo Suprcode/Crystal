@@ -529,6 +529,8 @@ public abstract class Packet
                 return new S.ObjectGuildNameChanged();
             case (short)ServerPacketIds.GainExperience:
                 return new S.GainExperience();
+            case (short)ServerPacketIds.GainHeroExperience:
+                return new S.GainHeroExperience();
             case (short)ServerPacketIds.LevelChanged:
                 return new S.LevelChanged();
             case (short)ServerPacketIds.HeroLevelChanged:

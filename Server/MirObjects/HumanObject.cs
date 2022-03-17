@@ -2289,6 +2289,24 @@ namespace Server.MirObjects
                     player.Enqueue(new S.ObjectColourChanged { ObjectID = ObjectID, NameColour = GetNameColour(this) });
             }
         }
+        public virtual void GainExp(uint amount) { }
+        public int ReduceExp(uint amount, uint targetLevel)
+        {
+            int expPoint;
+
+            if (Level < targetLevel + 10 || !Settings.ExpMobLevelDifference)
+            {
+                expPoint = (int)amount;
+            }
+            else
+            {
+                expPoint = (int)amount - (int)Math.Round(Math.Max(amount / 15, 1) * ((double)Level - (targetLevel + 10)));
+            }
+
+            if (expPoint <= 0) expPoint = 1;
+
+            return expPoint;
+        }
         public override void BroadcastInfo()
         {
             Packet p;
