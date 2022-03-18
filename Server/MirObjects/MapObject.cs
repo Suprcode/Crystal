@@ -956,7 +956,19 @@ namespace Server.MirObjects
 
     public class Poison
     {
-        public MapObject Owner;
+        private MapObject owner;
+        public MapObject Owner
+        {
+            get 
+            { 
+                return owner switch
+                {
+                    HeroObject hero => hero.Owner,
+                    _ => owner
+                };
+            }
+            set { owner = value; }
+        }
         public PoisonType PType;
         public int Value;
         public long Duration, Time, TickTime, TickSpeed;

@@ -987,9 +987,11 @@ namespace ClientPackets
         public MirDirection Direction;
         public uint TargetID;
         public Point Location;
+        public uint ObjectID;
 
         protected override void ReadPacket(BinaryReader reader)
         {
+            ObjectID = reader.ReadUInt32();
             Spell = (Spell) reader.ReadByte();
             Direction = (MirDirection)reader.ReadByte();
             TargetID = reader.ReadUInt32();
@@ -997,6 +999,7 @@ namespace ClientPackets
         }
         protected override void WritePacket(BinaryWriter writer)
         {
+            writer.Write(ObjectID);
             writer.Write((byte) Spell);
             writer.Write((byte)Direction);
             writer.Write(TargetID);

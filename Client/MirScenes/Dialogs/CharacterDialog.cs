@@ -553,7 +553,13 @@ namespace Client.MirScenes.Dialogs
             Magics = new MagicButton[7];
 
             for (int i = 0; i < Magics.Length; i++)
-                Magics[i] = new MagicButton { Parent = SkillPage, Visible = false, Location = new Point(8, 8 + i * 33) };
+                Magics[i] = new MagicButton 
+                { 
+                    Parent = SkillPage, 
+                    Visible = false, 
+                    Location = new Point(8, 8 + i * 33),
+                    HeroMagic = gridType == MirGridType.HeroEquipment
+                };
 
             NextButton = new MirButton
             {

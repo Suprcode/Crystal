@@ -66,7 +66,11 @@ namespace Server.MirObjects.Monsters
             else if (attacker.Master != null)
             {
                 if (EXPOwner == null || EXPOwner.Dead)
-                    EXPOwner = attacker.Master;
+                    EXPOwner = attacker.Master switch
+                    {
+                        HeroObject hero => hero.Owner,
+                        _ => attacker.Master
+                    };
 
                 if (EXPOwner == attacker.Master)
                     EXPOwnerTime = Envir.Time + EXPOwnerDelay;
@@ -122,7 +126,7 @@ namespace Server.MirObjects.Monsters
                     attacker.BrownTime = Envir.Time + Settings.Minute;
 
             if (EXPOwner == null || EXPOwner.Dead)
-                EXPOwner = attacker;
+                EXPOwner = GetAttacker(attacker);
 
             if (EXPOwner == attacker)
                 EXPOwnerTime = Envir.Time + EXPOwnerDelay;

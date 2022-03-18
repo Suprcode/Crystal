@@ -862,14 +862,8 @@ namespace Server.MirObjects
             {
                 EXPOwner.WinExp(Experience, Level);
 
-                PlayerObject playerObj = EXPOwner switch
-                {
-                    PlayerObject player => player,
-                    HeroObject hero => hero.Owner,
-                    _ => null
-                };
-
-                playerObj?.CheckGroupQuestKill(Info);
+                PlayerObject playerObj = (PlayerObject)EXPOwner;
+                playerObj.CheckGroupQuestKill(Info);
             }
 
             if (Respawn != null)
@@ -883,6 +877,15 @@ namespace Server.MirObjects
             PoisonList.Clear();
             Envir.MonsterCount--;
             CurrentMap.MonsterCount--;
+        }
+
+        public MapObject GetAttacker(MapObject attacker)
+        {
+            return attacker switch
+            {
+                HeroObject hero => hero.Owner,
+                _ => attacker
+            };
         }
 
         public void Revive(int hp, bool effect)
@@ -2331,7 +2334,9 @@ namespace Server.MirObjects
                     attacker.BrownTime = Envir.Time + Settings.Minute;
 
             if (EXPOwner == null || EXPOwner.Dead)
-                EXPOwner = attacker;
+            {
+                EXPOwner = GetAttacker(attacker);
+            }
 
             if (EXPOwner == attacker)
                 EXPOwnerTime = Envir.Time + EXPOwnerDelay;
@@ -2430,7 +2435,11 @@ namespace Server.MirObjects
                 {
 
                     if (EXPOwner == null || EXPOwner.Dead)
-                        EXPOwner = attacker.Master;
+                        EXPOwner = attacker.Master switch
+                        {
+                            HeroObject hero => hero.Owner,
+                            _ => attacker.Master
+                        };
 
                     if (EXPOwner == attacker.Master)
                         EXPOwnerTime = Envir.Time + EXPOwnerDelay;

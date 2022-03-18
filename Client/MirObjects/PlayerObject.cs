@@ -1041,7 +1041,7 @@ namespace Client.MirObjects
                                     MapControl.NextAction = CMain.Time + 2500;
                                     GameScene.SpellTime = CMain.Time + 2500; //Spell Delay
 
-                                    Network.Enqueue(new C.Magic { Spell = Spell, Direction = Direction, });
+                                    Network.Enqueue(new C.Magic { ObjectID = GameScene.User.ObjectID, Spell = Spell, Direction = Direction, });
                                 }
                                 break;
                             case Spell.BladeAvalanche:
@@ -1145,7 +1145,7 @@ namespace Client.MirObjects
                                 {
                                     uint targetID = (uint)action.Params[1];
                                     Point location = (Point)action.Params[2];
-                                    Network.Enqueue(new C.Magic { Spell = Spell, Direction = Direction, TargetID = targetID, Location = location });
+                                    Network.Enqueue(new C.Magic { ObjectID = GameScene.User.ObjectID, Spell = Spell, Direction = Direction, TargetID = targetID, Location = location });
                                     MapControl.NextAction = CMain.Time + 1000;
                                     GameScene.SpellTime = CMain.Time + 1500; //Spell Delay
                                 }
@@ -1170,7 +1170,7 @@ namespace Client.MirObjects
                                     {
                                         MapControl.NextAction = CMain.Time + 800;
                                         GameScene.SpellTime = CMain.Time + 2500; //Spell Delay
-                                        Network.Enqueue(new C.Magic { Spell = Spell, Direction = Direction });
+                                        Network.Enqueue(new C.Magic { ObjectID = GameScene.User.ObjectID, Spell = Spell, Direction = Direction });
                                     }
                                     break;
                                 }
@@ -1402,7 +1402,7 @@ namespace Client.MirObjects
                                 uint targetID = (uint)action.Params[1];
                                 Point location = (Point)action.Params[2];
 
-                                Network.Enqueue(new C.Magic { Spell = Spell, Direction = Direction, TargetID = targetID, Location = location });
+                                Network.Enqueue(new C.Magic { ObjectID = GameScene.User.ObjectID, Spell = Spell, Direction = Direction, TargetID = targetID, Location = location });
 
                                 if (Spell == Spell.FlashDash)
                                 {

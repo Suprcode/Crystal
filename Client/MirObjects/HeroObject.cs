@@ -37,6 +37,9 @@ namespace Client.MirObjects
         {
             Load((S.ObjectPlayer)info);
             OwnerName = info.OwnerName;
+
+            if (info.ObjectID == Hero.ObjectID)
+                Hero.CurrentLocation = info.Location;
         }
 
         public override void CreateLabel()

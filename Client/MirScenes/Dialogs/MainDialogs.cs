@@ -3160,6 +3160,9 @@ namespace Client.MirScenes.Dialogs
         public MirLabel LevelLabel, NameLabel, ExpLabel, KeyLabel;
         public ClientMagic Magic;
         public MirImageControl CoolDown;
+        public bool HeroMagic;
+
+        string[] Prefixes = new string[] { "", "CTRL", "Shift" };
 
         public MagicButton()
         {
@@ -3174,7 +3177,47 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(36, 0),
                 Sound = SoundList.ButtonA,
             };
-            SkillButton.Click += (o, e) => new AssignKeyPanel(Magic);
+            SkillButton.Click += (o, e) =>
+            {
+                if (HeroMagic)
+                {
+                    new AssignKeyPanel(Magic, 17, new string[]
+                        {
+                            "Shift" + Environment.NewLine + "F1",
+                            "Shift" + Environment.NewLine + "F2",
+                            "Shift" + Environment.NewLine + "F3",
+                            "Shift" + Environment.NewLine + "F4",
+                            "Shift" + Environment.NewLine + "F5",
+                            "Shift" + Environment.NewLine + "F6",
+                            "Shift" + Environment.NewLine + "F7",
+                            "Shift" + Environment.NewLine + "F8"
+                        })
+                    { Actor = GameScene.Hero };
+                }
+                else
+                {
+                    new AssignKeyPanel(Magic, 1, new string[]
+                        {
+                            "F1",
+                            "F2",
+                            "F3",
+                            "F4",
+                            "F5",
+                            "F6",
+                            "F7",
+                            "F8",
+                            "Ctrl" + Environment.NewLine + "F1",
+                            "Ctrl" + Environment.NewLine + "F2",
+                            "Ctrl" + Environment.NewLine + "F3",
+                            "Ctrl" + Environment.NewLine + "F4",
+                            "Ctrl" + Environment.NewLine + "F5",
+                            "Ctrl" + Environment.NewLine + "F6",
+                            "Ctrl" + Environment.NewLine + "F7",
+                            "Ctrl" + Environment.NewLine + "F8"
+                        })
+                    { Actor = GameScene.User };
+                }
+            };
 
             LevelImage = new MirImageControl
             {
@@ -3260,17 +3303,11 @@ namespace Client.MirScenes.Dialogs
                     break;
             }
 
-            if (Magic.Key > 8)
-            {
-                int key = Magic.Key % 8;
-
-                KeyLabel.Text = string.Format("CTRL" + Environment.NewLine + "F{0}", key != 0 ? key : 8);
-            }
-            else if (Magic.Key > 0)
-                KeyLabel.Text = string.Format("F{0}", Magic.Key);
-            else
-                KeyLabel.Text = string.Empty;
-
+            KeyLabel.Text = Magic.Key == 0 ? string.Empty : string.Format("{0}{1}F{2}",
+                Prefixes[(Magic.Key - 1) / 8],
+                Magic.Key > 8 ? Environment.NewLine : string.Empty,
+                (Magic.Key - 1) % 8 + 1
+            );
 
             SkillButton.Index = Magic.Icon * 2;
             SkillButton.PressedIndex = Magic.Icon * 2 + 1;
@@ -3305,18 +3342,20 @@ namespace Client.MirScenes.Dialogs
     public sealed class AssignKeyPanel : MirImageControl
     {
         public MirButton SaveButton, NoneButton;
-
+        public UserObject Actor;
         public MirLabel TitleLabel;
         public MirImageControl MagicImage;
         public MirButton[] FKeys;
 
         public ClientMagic Magic;
         public byte Key;
+        public byte KeyOffset;
 
-        public AssignKeyPanel(ClientMagic magic)
+        public AssignKeyPanel(ClientMagic magic, byte keyOffset, string[] keyStrings)
         {
             Magic = magic;
             Key = magic.Key;
+            KeyOffset = keyOffset;
 
             Modal = true;
             Index = 710;
@@ -3364,10 +3403,10 @@ namespace Client.MirScenes.Dialogs
             };
             SaveButton.Click += (o, e) =>
             {
-                for (int i = 0; i < MapObject.User.Magics.Count; i++)
+                for (int i = 0; i < Actor.Magics.Count; i++)
                 {
-                    if (MapObject.User.Magics[i].Key == Key)
-                        MapObject.User.Magics[i].Key = 0;
+                    if (Actor.Magics[i].Key == Key)
+                        Actor.Magics[i].Key = 0;
                 }
 
                 Network.Enqueue(new C.MagicKey { Spell = Magic.Spell, Key = Key });
@@ -3378,201 +3417,26 @@ namespace Client.MirScenes.Dialogs
                 Dispose();
             };
 
+            FKeys = new MirButton[keyStrings.Length];
 
-            FKeys = new MirButton[16];
-
-            FKeys[0] = new MirButton
+            for (byte i = 0; i < FKeys.Length; i++)
             {
-                Index = 0,
-                PressedIndex = 1,
-                Library = Libraries.Prguse,
-                Parent = this,
-                Location = new Point(17, 58),
-                Sound = SoundList.ButtonA,
-                Text = "F1"
-            };
-            FKeys[0].Click += (o, e) => Key = 1;
-
-            FKeys[1] = new MirButton
-            {
-                Index = 0,
-                PressedIndex = 1,
-                Library = Libraries.Prguse,
-                Parent = this,
-                Location = new Point(49, 58),
-                Sound = SoundList.ButtonA,
-                Text = "F2"
-            };
-            FKeys[1].Click += (o, e) => Key = 2;
-
-            FKeys[2] = new MirButton
-            {
-                Index = 0,
-                PressedIndex = 1,
-                Library = Libraries.Prguse,
-                Parent = this,
-                Location = new Point(81, 58),
-                Sound = SoundList.ButtonA,
-                Text = "F3"
-            };
-            FKeys[2].Click += (o, e) => Key = 3;
-
-            FKeys[3] = new MirButton
-            {
-                Index = 0,
-                PressedIndex = 1,
-                Library = Libraries.Prguse,
-                Parent = this,
-                Location = new Point(113, 58),
-                Sound = SoundList.ButtonA,
-                Text = "F4"
-            };
-            FKeys[3].Click += (o, e) => Key = 4;
-
-            FKeys[4] = new MirButton
-            {
-                Index = 0,
-                PressedIndex = 1,
-                Library = Libraries.Prguse,
-                Parent = this,
-                Location = new Point(150, 58),
-                Sound = SoundList.ButtonA,
-                Text = "F5"
-            };
-            FKeys[4].Click += (o, e) => Key = 5;
-
-            FKeys[5] = new MirButton
-            {
-                Index = 0,
-                PressedIndex = 1,
-                Library = Libraries.Prguse,
-                Parent = this,
-                Location = new Point(182, 58),
-                Sound = SoundList.ButtonA,
-                Text = "F6",
-            };
-            FKeys[5].Click += (o, e) => Key = 6;
-
-            FKeys[6] = new MirButton
-            {
-                Index = 0,
-                PressedIndex = 1,
-                Library = Libraries.Prguse,
-                Parent = this,
-                Location = new Point(214, 58),
-                Sound = SoundList.ButtonA,
-                Text = "F7"
-            };
-            FKeys[6].Click += (o, e) => Key = 7;
-
-            FKeys[7] = new MirButton
-            {
-                Index = 0,
-                PressedIndex = 1,
-                Library = Libraries.Prguse,
-                Parent = this,
-                Location = new Point(246, 58),
-                Sound = SoundList.ButtonA,
-                Text = "F8"
-            };
-            FKeys[7].Click += (o, e) => Key = 8;
-
-
-            FKeys[8] = new MirButton
-            {
-                Index = 0,
-                PressedIndex = 1,
-                Library = Libraries.Prguse,
-                Parent = this,
-                Location = new Point(17, 95),
-                Sound = SoundList.ButtonA,
-                Text = "Ctrl" + Environment.NewLine + "F1"
-            };
-            FKeys[8].Click += (o, e) => Key = 9;
-
-            FKeys[9] = new MirButton
-            {
-                Index = 0,
-                PressedIndex = 1,
-                Library = Libraries.Prguse,
-                Parent = this,
-                Location = new Point(49, 95),
-                Sound = SoundList.ButtonA,
-                Text = "Ctrl" + Environment.NewLine + "F2"
-            };
-            FKeys[9].Click += (o, e) => Key = 10;
-
-            FKeys[10] = new MirButton
-            {
-                Index = 0,
-                PressedIndex = 1,
-                Library = Libraries.Prguse,
-                Parent = this,
-                Location = new Point(81, 95),
-                Sound = SoundList.ButtonA,
-                Text = "Ctrl" + Environment.NewLine + "F3"
-            };
-            FKeys[10].Click += (o, e) => Key = 11;
-
-            FKeys[11] = new MirButton
-            {
-                Index = 0,
-                PressedIndex = 1,
-                Library = Libraries.Prguse,
-                Parent = this,
-                Location = new Point(113, 95),
-                Sound = SoundList.ButtonA,
-                Text = "Ctrl" + Environment.NewLine + "F4"
-            };
-            FKeys[11].Click += (o, e) => Key = 12;
-
-            FKeys[12] = new MirButton
-            {
-                Index = 0,
-                PressedIndex = 1,
-                Library = Libraries.Prguse,
-                Parent = this,
-                Location = new Point(150, 95),
-                Sound = SoundList.ButtonA,
-                Text = "Ctrl" + Environment.NewLine + "F5"
-            };
-            FKeys[12].Click += (o, e) => Key = 13;
-
-            FKeys[13] = new MirButton
-            {
-                Index = 0,
-                PressedIndex = 1,
-                Library = Libraries.Prguse,
-                Parent = this,
-                Location = new Point(182, 95),
-                Sound = SoundList.ButtonA,
-                Text = "Ctrl" + Environment.NewLine + "F6"
-            };
-            FKeys[13].Click += (o, e) => Key = 14;
-
-            FKeys[14] = new MirButton
-            {
-                Index = 0,
-                PressedIndex = 1,
-                Library = Libraries.Prguse,
-                Parent = this,
-                Location = new Point(214, 95),
-                Sound = SoundList.ButtonA,
-                Text = "Ctrl" + Environment.NewLine + "F7"
-            };
-            FKeys[14].Click += (o, e) => Key = 15;
-
-            FKeys[15] = new MirButton
-            {
-                Index = 0,
-                PressedIndex = 1,
-                Library = Libraries.Prguse,
-                Parent = this,
-                Location = new Point(246, 95),
-                Sound = SoundList.ButtonA,
-                Text = "Ctrl" + Environment.NewLine + "F8"
-            };
-            FKeys[15].Click += (o, e) => Key = 16;
+                FKeys[i] = new MirButton
+                {
+                    Index = 0,
+                    PressedIndex = 1,
+                    Library = Libraries.Prguse,
+                    Parent = this,
+                    Location = new Point(17 + 32 * (i % 8) + 5 * (i % 8 / 4), 58 + 37 * (i / 8)),
+                    Sound = SoundList.ButtonA,
+                    Text = keyStrings[i]
+                };
+                int num = i + keyOffset;
+                FKeys[i].Click += (o, e) =>
+                {
+                    Key = (byte)num;
+                };
+            }
 
             BeforeDraw += AssignKeyPanel_BeforeDraw;
         }
@@ -3587,11 +3451,12 @@ namespace Client.MirScenes.Dialogs
                 FKeys[i].Visible = true;
             }
 
-            if (Key == 0 || Key > FKeys.Length) return;
+            int key = Key - KeyOffset;
+            if (key < 0 || key > FKeys.Length) return;
 
-            FKeys[Key - 1].Index = 1658;
-            FKeys[Key - 1].HoverIndex = 1658;
-            FKeys[Key - 1].PressedIndex = 1658;
+            FKeys[key].Index = 1658;
+            FKeys[key].HoverIndex = 1658;
+            FKeys[key].PressedIndex = 1658;
         }
     }
     public sealed class DuraStatusDialog : MirImageControl

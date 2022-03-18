@@ -458,6 +458,14 @@ namespace Client.MirScenes
                     case KeybindOptions.Bar2Skill6: UseSpell(14); break;
                     case KeybindOptions.Bar2Skill7: UseSpell(15); break;
                     case KeybindOptions.Bar2Skill8: UseSpell(16); break;
+                    case KeybindOptions.HeroSkill1: UseHeroSpell(17); break;
+                    case KeybindOptions.HeroSkill2: UseHeroSpell(18); break;
+                    case KeybindOptions.HeroSkill3: UseHeroSpell(19); break;
+                    case KeybindOptions.HeroSkill4: UseHeroSpell(20); break;
+                    case KeybindOptions.HeroSkill5: UseHeroSpell(21); break;
+                    case KeybindOptions.HeroSkill6: UseHeroSpell(22); break;
+                    case KeybindOptions.HeroSkill7: UseHeroSpell(23); break;
+                    case KeybindOptions.HeroSkill8: UseHeroSpell(24); break;
                     case KeybindOptions.Inventory:
                     case KeybindOptions.Inventory2:
                         if (!InventoryDialog.Visible) InventoryDialog.Show();
@@ -933,7 +941,80 @@ namespace Client.MirScenes
                     User.NextMagicDirection = MapControl.MouseDirection();
                     break;
             }
+        }
 
+        public void UseHeroSpell(int key)
+        {
+            if (Hero == null) return;
+            if (Hero.RidingMount) return;
+
+            if (!Hero.HasClassWeapon && Hero.Weapon >= 0)
+            {
+                ChatDialog.ReceiveChat("Hero must be wearing a suitable weapon to perform this skill", ChatType.System);
+                return;
+            }
+
+            ClientMagic magic = null;
+
+            for (int i = 0; i < Hero.Magics.Count; i++)
+            {
+                if (Hero.Magics[i].Key != key) continue;
+                magic = Hero.Magics[i];
+                break;
+            }
+
+            if (magic == null) return;
+
+            switch (magic.Spell)
+            {
+                case Spell.CounterAttack:
+                    if ((CMain.Time < magic.CastTime + magic.Delay))
+                    {
+                        if (CMain.Time >= OutputDelay)
+                        {
+                            OutputDelay = CMain.Time + 1000;
+                            GameScene.Scene.OutputMessage(string.Format("You cannot cast {0} for another {1} seconds.", magic.Spell.ToString(), ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
+                        }
+
+                        return;
+                    }
+                    magic.CastTime = CMain.Time;
+                    break;
+            }
+
+            int cost;
+            switch (magic.Spell)
+            {
+                case Spell.Fencing:
+                case Spell.FatalSword:
+                case Spell.MPEater:
+                case Spell.Hemorrhage:
+                case Spell.SpiritSword:
+                case Spell.Slaying:
+                case Spell.Focus:
+                case Spell.Meditation:
+                    return;
+                case Spell.Thrusting:
+                case Spell.HalfMoon:
+                case Spell.CrossHalfMoon:
+                case Spell.DoubleSlash:
+                case Spell.TwinDrakeBlade:
+                case Spell.FlamingSword:
+                case Spell.CounterAttack:
+                case Spell.MentalState:
+                    if (CMain.Time < ToggleTime) return;
+                    ToggleTime = CMain.Time + 500;
+                    Network.Enqueue(new C.SpellToggle { Spell = magic.Spell });
+                    break;
+                default:
+                    Hero.NextMagic = magic;
+                    Hero.NextMagicLocation = MapControl.MapLocation;
+                    Hero.NextMagicObject = MapObject.MouseObject;
+                    Hero.NextMagicDirection = MapControl.MouseDirection();
+
+                    MapControl.UseMagic(Hero.NextMagic, Hero);
+                    break;
+            }
         }
 
         public void QuitGame()
@@ -2051,6 +2132,9 @@ namespace Client.MirScenes
         {
             if (p.ObjectID == User.ObjectID) return;
 
+            if (p.ObjectID == Hero?.ObjectID)
+                Hero.CurrentLocation = p.Location;
+
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
                 MapObject ob = MapControl.Objects[i];
@@ -2062,6 +2146,9 @@ namespace Client.MirScenes
         private void ObjectRun(S.ObjectRun p)
         {
             if (p.ObjectID == User.ObjectID) return;
+
+            if (p.ObjectID == Hero?.ObjectID)
+                Hero.CurrentLocation = p.Location;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3322,6 +3409,7 @@ namespace Client.MirScenes
             Hero.MP = p.MP;
 
             Hero.PercentHealth = (byte)(Hero.HP / (float)Hero.Stats[Stat.HP] * 100);
+            Hero.PercentMana = (byte)(Hero.MP / (float)Hero.Stats[Stat.MP] * 100);
         }
 
         private void DeleteQuestItem(S.DeleteQuestItem p)
@@ -4337,6 +4425,12 @@ namespace Client.MirScenes
         {
             if (p.SelfBroadcast == false && p.ObjectID == User.ObjectID) return;
 
+            if (p.ObjectID == Hero?.ObjectID && p.Cast)
+            {
+                ClientMagic magic = Hero.GetMagic(p.Spell);
+                magic.CastTime = CMain.Time;
+            }
+
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
                 MapObject ob = MapControl.Objects[i];
@@ -4748,7 +4842,7 @@ namespace Client.MirScenes
 
         private void ObjectHealth(S.ObjectHealth p)
         {
-            if (p.ObjectID == Hero.ObjectID)
+            if (p.ObjectID == Hero?.ObjectID)
                 Hero.PercentHealth = p.Percent;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
@@ -4763,7 +4857,7 @@ namespace Client.MirScenes
 
         private void ObjectMana(S.ObjectMana p)
         {
-            if (p.ObjectID == Hero.ObjectID)
+            if (p.ObjectID == Hero?.ObjectID)
                 Hero.PercentMana = p.Percent;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
@@ -10732,7 +10826,7 @@ namespace Client.MirScenes
             
             if (User.NextMagic != null && !User.RidingMount)
             {
-                UseMagic(User.NextMagic);
+                UseMagic(User.NextMagic, User);
                 return;
             }
 
@@ -10993,11 +11087,11 @@ namespace Client.MirScenes
             User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
         }
 
-        private void UseMagic(ClientMagic magic)
+        public void UseMagic(ClientMagic magic, UserObject actor)
         {
-            if (CMain.Time < GameScene.SpellTime || User.Poison.HasFlag(PoisonType.Stun))
+            if (CMain.Time < GameScene.SpellTime || actor.Poison.HasFlag(PoisonType.Stun))
             {
-                User.ClearMagic();
+                actor.ClearMagic();
                 return;
             }
 
@@ -11009,7 +11103,7 @@ namespace Client.MirScenes
                     GameScene.Scene.OutputMessage(string.Format("You cannot cast {0} for another {1} seconds.", magic.Spell.ToString(), ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
                 }
 
-                User.ClearMagic();
+                actor.ClearMagic();
                 return;
             }
 
@@ -11017,25 +11111,25 @@ namespace Client.MirScenes
 
             if (magic.Spell == Spell.Teleport || magic.Spell == Spell.Blink || magic.Spell == Spell.StormEscape)
             {
-                if (GameScene.User.Stats[Stat.TeleportManaPenaltyPercent] > 0)
+                if (actor.Stats[Stat.TeleportManaPenaltyPercent] > 0)
                 {
-                    cost += (cost * GameScene.User.Stats[Stat.TeleportManaPenaltyPercent]) / 100;
+                    cost += (cost * actor.Stats[Stat.TeleportManaPenaltyPercent]) / 100;
                 }
             }
 
-            if (GameScene.User.Stats[Stat.ManaPenaltyPercent] > 0)
+            if (actor.Stats[Stat.ManaPenaltyPercent] > 0)
             {
-                cost += (cost * GameScene.User.Stats[Stat.ManaPenaltyPercent]) / 100;
+                cost += (cost * actor.Stats[Stat.ManaPenaltyPercent]) / 100;
             }
 
-            if (cost > MapObject.User.MP)
+            if (cost > actor.MP)
             {
                 if (CMain.Time >= OutputDelay)
                 {
                     OutputDelay = CMain.Time + 1000;
                     GameScene.Scene.OutputMessage(GameLanguage.LowMana);
                 }
-                User.ClearMagic();
+                actor.ClearMagic();
                 return;
             }
 
@@ -11062,10 +11156,10 @@ namespace Client.MirScenes
                 case Spell.DarkBody:
                 case Spell.FireBounce:
                 case Spell.MeteorShower:
-                    if (User.NextMagicObject != null)
+                    if (actor.NextMagicObject != null)
                     {
-                        if (!User.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && User.NextMagicObject.Race != ObjectType.Merchant)
-                            target = User.NextMagicObject;
+                        if (!actor.NextMagicObject.Dead && actor.NextMagicObject.Race != ObjectType.Item && actor.NextMagicObject.Race != ObjectType.Merchant)
+                            target = actor.NextMagicObject;
                     }
 
                     if (target == null) target = MapObject.MagicObject;
@@ -11084,16 +11178,16 @@ namespace Client.MirScenes
                 case Spell.SummonVampire:
                 case Spell.SummonToad:
                 case Spell.SummonSnakes:
-                    if (!User.HasClassWeapon)
+                    if (!actor.HasClassWeapon)
                     {
                         GameScene.Scene.OutputMessage("You must be wearing a bow to perform this skill.");
-                        User.ClearMagic();
+                        actor.ClearMagic();
                         return;
                     }
-                    if (User.NextMagicObject != null)
+                    if (actor.NextMagicObject != null)
                     {
-                        if (!User.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && User.NextMagicObject.Race != ObjectType.Merchant)
-                            target = User.NextMagicObject;
+                        if (!actor.NextMagicObject.Dead && actor.NextMagicObject.Race != ObjectType.Item && actor.NextMagicObject.Race != ObjectType.Merchant)
+                            target = actor.NextMagicObject;
                     }
 
                     if (target == null) target = MapObject.MagicObject;
@@ -11120,57 +11214,57 @@ namespace Client.MirScenes
                 case Spell.UltimateEnhancer:
                 case Spell.EnergyShield:
                 case Spell.PetEnhancer:
-                    if (User.NextMagicObject != null)
+                    if (actor.NextMagicObject != null)
                     {
-                        if (!User.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && User.NextMagicObject.Race != ObjectType.Merchant)
-                            target = User.NextMagicObject;
+                        if (!actor.NextMagicObject.Dead && actor.NextMagicObject.Race != ObjectType.Item && actor.NextMagicObject.Race != ObjectType.Merchant)
+                            target = actor.NextMagicObject;
                     }
 
-                    if (target == null) target = User;
+                    if (target == null) target = actor;
                     break;
                 case Spell.FireBang:
                 case Spell.MassHiding:
                 case Spell.FireWall:
                 case Spell.TrapHexagon:
-                    if (User.NextMagicObject != null)
+                    if (actor.NextMagicObject != null)
                     {
-                        if (!User.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && User.NextMagicObject.Race != ObjectType.Merchant)
-                            target = User.NextMagicObject;
+                        if (!actor.NextMagicObject.Dead && actor.NextMagicObject.Race != ObjectType.Item && actor.NextMagicObject.Race != ObjectType.Merchant)
+                            target = actor.NextMagicObject;
                     }
                     break;
                 case Spell.PoisonCloud:
-                    if (User.NextMagicObject != null)
+                    if (actor.NextMagicObject != null)
                     {
-                        if (!User.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && User.NextMagicObject.Race != ObjectType.Merchant)
-                            target = User.NextMagicObject;
+                        if (!actor.NextMagicObject.Dead && actor.NextMagicObject.Race != ObjectType.Item && actor.NextMagicObject.Race != ObjectType.Merchant)
+                            target = actor.NextMagicObject;
                     }
                     break;
                 case Spell.Blizzard:
                 case Spell.MeteorStrike:
-                    if (User.NextMagicObject != null)
+                    if (actor.NextMagicObject != null)
                     {
-                        if (!User.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && User.NextMagicObject.Race != ObjectType.Merchant)
-                            target = User.NextMagicObject;
+                        if (!actor.NextMagicObject.Dead && actor.NextMagicObject.Race != ObjectType.Item && actor.NextMagicObject.Race != ObjectType.Merchant)
+                            target = actor.NextMagicObject;
                     }
                     break;
                 case Spell.Reincarnation:
-                    if (User.NextMagicObject != null)
+                    if (actor.NextMagicObject != null)
                     {
-                        if (User.NextMagicObject.Dead && User.NextMagicObject.Race == ObjectType.Player)
-                            target = User.NextMagicObject;
+                        if (actor.NextMagicObject.Dead && actor.NextMagicObject.Race == ObjectType.Player)
+                            target = actor.NextMagicObject;
                     }
                     break;
                 case Spell.Trap:
-                    if (User.NextMagicObject != null)
+                    if (actor.NextMagicObject != null)
                     {
-                        if (!User.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && User.NextMagicObject.Race != ObjectType.Merchant)
-                            target = User.NextMagicObject;
+                        if (!actor.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && actor.NextMagicObject.Race != ObjectType.Merchant)
+                            target = actor.NextMagicObject;
                     }
                     break;
                 case Spell.FlashDash:
-                    if (User.GetMagic(Spell.FlashDash).Level <= 1 && User.IsDashAttack() == false)
+                    if (actor.GetMagic(Spell.FlashDash).Level <= 1 && actor.IsDashAttack() == false)
                     {
-                        User.ClearMagic();
+                        actor.ClearMagic();
                         return;
                     }
                     //isTargetSpell = false;
@@ -11180,31 +11274,40 @@ namespace Client.MirScenes
                         break;
             }
 
-            MirDirection dir = (target == null || target == User) ? User.NextMagicDirection : Functions.DirectionFromPoint(User.CurrentLocation, target.CurrentLocation);
+            MirDirection dir = (target == null || target == User) ? actor.NextMagicDirection : Functions.DirectionFromPoint(actor.CurrentLocation, target.CurrentLocation);
 
-            Point location = target != null ? target.CurrentLocation : User.NextMagicLocation;
+            Point location = target != null ? target.CurrentLocation : actor.NextMagicLocation;
+
+            uint targetID = target != null ? target.ObjectID : 0;
 
             if (magic.Spell == Spell.FlashDash)
-                dir = User.Direction;
+                dir = actor.Direction;
 
-            if ((magic.Range != 0) && (!Functions.InRange(User.CurrentLocation, location, magic.Range)))
+            if ((magic.Range != 0) && (!Functions.InRange(actor.CurrentLocation, location, magic.Range)))
             {
                 if (CMain.Time >= OutputDelay)
                 {
                     OutputDelay = CMain.Time + 1000;
                     GameScene.Scene.OutputMessage("Target is too far.");
                 }
-                User.ClearMagic();
+                actor.ClearMagic();
                 return;
             }
 
             GameScene.LogTime = CMain.Time + Globals.LogDelay;
 
-            User.QueuedAction = new QueuedAction { Action = MirAction.Spell, Direction = dir, Location = User.CurrentLocation, Params = new List<object>() };
-            User.QueuedAction.Params.Add(magic.Spell);
-            User.QueuedAction.Params.Add(target != null ? target.ObjectID : 0);
-            User.QueuedAction.Params.Add(location);
-            User.QueuedAction.Params.Add(magic.Level);
+            if (actor == User)
+            {
+                User.QueuedAction = new QueuedAction { Action = MirAction.Spell, Direction = dir, Location = User.CurrentLocation, Params = new List<object>() };
+                User.QueuedAction.Params.Add(magic.Spell);
+                User.QueuedAction.Params.Add(target != null ? target.ObjectID : 0);
+                User.QueuedAction.Params.Add(location);
+                User.QueuedAction.Params.Add(magic.Level);
+            }
+            else
+            {
+                Network.Enqueue(new C.Magic { ObjectID = actor.ObjectID, Spell = magic.Spell, Direction = dir, TargetID = targetID, Location = location });
+            }
         }
 
         public static MirDirection MouseDirection(float ratio = 45F) //22.5 = 16

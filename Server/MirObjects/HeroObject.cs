@@ -35,6 +35,11 @@ namespace Server.MirObjects
 
         public const int SearchDelay = 3000, ViewRange = 8, RoamDelay = 1000;
         public long RoamTime;
+
+        Spell NextMagicSpell;
+        MirDirection NextMagicDirection;
+        uint NextMagicTargetID;
+        Point NextMagicLocation;
         public override GuildObject MyGuild
         {
             get { return Owner.MyGuild; }
@@ -161,6 +166,17 @@ namespace Server.MirObjects
         public override void SendMagicInfo(UserMagic magic)
         {
             Owner.Enqueue(magic.GetInfo(true));
+        }
+        public override bool TryMagic()
+        {
+            return true;
+        }
+        public override void BeginMagic(Spell spell, MirDirection dir, uint targetID, Point location)
+        {
+            NextMagicSpell = spell;
+            NextMagicDirection = dir;
+            NextMagicTargetID = targetID;
+            NextMagicLocation = location;
         }
         public override void UseItem(ulong id, MirGridType grid)
         {
@@ -668,6 +684,12 @@ namespace Server.MirObjects
 
         protected virtual void ProcessTarget()
         {
+            if (CanCast && NextMagicSpell != Spell.None)
+            {
+                Magic(NextMagicSpell, NextMagicDirection, NextMagicTargetID, NextMagicLocation);
+                NextMagicSpell = Spell.None;
+            }
+
             if (Target == null || !CanAttack) return;
 
             if (InAttackRange())

@@ -3217,6 +3217,14 @@ namespace Server.MirObjects
                 }
             }
         }
+        public virtual bool TryMagic()
+        {
+            return !Dead && Envir.Time >= ActionTime || Envir.Time >= SpellTime;
+        }
+        public virtual void BeginMagic(Spell spell, MirDirection dir, uint targetID, Point location)
+        {
+            Magic(spell, dir, targetID, location);
+        }
         public void Magic(Spell spell, MirDirection dir, uint targetID, Point location)
         {
             if (!CanCast)
@@ -7215,6 +7223,169 @@ namespace Server.MirObjects
 
             return true;
         }
+        public bool CanEquipItem(UserItem item, int slot)
+        {
+            switch ((EquipmentSlot)slot)
+            {
+                case EquipmentSlot.Weapon:
+                    if (item.Info.Type != ItemType.Weapon)
+                        return false;
+                    break;
+                case EquipmentSlot.Armour:
+                    if (item.Info.Type != ItemType.Armour)
+                        return false;
+                    break;
+                case EquipmentSlot.Helmet:
+                    if (item.Info.Type != ItemType.Helmet)
+                        return false;
+                    break;
+                case EquipmentSlot.Torch:
+                    if (item.Info.Type != ItemType.Torch)
+                        return false;
+                    break;
+                case EquipmentSlot.Necklace:
+                    if (item.Info.Type != ItemType.Necklace)
+                        return false;
+                    break;
+                case EquipmentSlot.BraceletL:
+                    if (item.Info.Type != ItemType.Bracelet)
+                        return false;
+                    break;
+                case EquipmentSlot.BraceletR:
+                    if (item.Info.Type != ItemType.Bracelet && item.Info.Type != ItemType.Amulet)
+                        return false;
+                    break;
+                case EquipmentSlot.RingL:
+                case EquipmentSlot.RingR:
+                    if (item.Info.Type != ItemType.Ring)
+                        return false;
+                    break;
+                case EquipmentSlot.Amulet:
+                    if (item.Info.Type != ItemType.Amulet)// || item.Info.Shape == 0
+                        return false;
+                    break;
+                case EquipmentSlot.Boots:
+                    if (item.Info.Type != ItemType.Boots)
+                        return false;
+                    break;
+                case EquipmentSlot.Belt:
+                    if (item.Info.Type != ItemType.Belt)
+                        return false;
+                    break;
+                case EquipmentSlot.Stone:
+                    if (item.Info.Type != ItemType.Stone)
+                        return false;
+                    break;
+                case EquipmentSlot.Mount:
+                    if (item.Info.Type != ItemType.Mount)
+                        return false;
+                    break;
+                default:
+                    return false;
+            }
+
+
+            switch (Gender)
+            {
+                case MirGender.Male:
+                    if (!item.Info.RequiredGender.HasFlag(RequiredGender.Male))
+                        return false;
+                    break;
+                case MirGender.Female:
+                    if (!item.Info.RequiredGender.HasFlag(RequiredGender.Female))
+                        return false;
+                    break;
+            }
+
+
+            switch (Class)
+            {
+                case MirClass.Warrior:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Warrior))
+                        return false;
+                    break;
+                case MirClass.Wizard:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Wizard))
+                        return false;
+                    break;
+                case MirClass.Taoist:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Taoist))
+                        return false;
+                    break;
+                case MirClass.Assassin:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Assassin))
+                        return false;
+                    break;
+            }
+
+            switch (item.Info.RequiredType)
+            {
+                case RequiredType.Level:
+                    if (Level < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MaxAC:
+                    if (Stats[Stat.MaxAC] < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MaxMAC:
+                    if (Stats[Stat.MaxMAC] < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MaxDC:
+                    if (Stats[Stat.MaxDC] < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MaxMC:
+                    if (Stats[Stat.MaxMC] < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MaxSC:
+                    if (Stats[Stat.MaxSC] < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MaxLevel:
+                    if (Level > item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MinAC:
+                    if (Stats[Stat.MinAC] < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MinMAC:
+                    if (Stats[Stat.MinMAC] < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MinDC:
+                    if (Stats[Stat.MinDC] < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MinMC:
+                    if (Stats[Stat.MinMC] < item.Info.RequiredAmount)
+                        return false;
+                    break;
+                case RequiredType.MinSC:
+                    if (Stats[Stat.MinSC] < item.Info.RequiredAmount)
+                        return false;
+                    break;
+            }
+
+            if (item.Info.Type == ItemType.Weapon || item.Info.Type == ItemType.Torch)
+            {
+                if (item.Weight - (Info.Equipment[slot] != null ? Info.Equipment[slot].Weight : 0) + CurrentHandWeight > Stats[Stat.HandWeight])
+                    return false;
+            }
+            else
+                if (item.Weight - (Info.Equipment[slot] != null ? Info.Equipment[slot].Weight : 0) + CurrentWearWeight > Stats[Stat.WearWeight])
+                return false;
+
+            if (RidingMount && item.Info.Type != ItemType.Torch)
+            {
+                return false;
+            }
+
+            return true;
+        }
         public void GainItem(UserItem item)
         {
             //CheckItemInfo(item.Info);
@@ -7226,7 +7397,6 @@ namespace Server.MirObjects
 
             AddItem(item);
             RefreshBagWeight();
-
         }
 
         private void DamageDura()

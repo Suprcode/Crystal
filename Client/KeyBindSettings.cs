@@ -90,7 +90,15 @@ namespace Client
         DropView,
         TargetDead,
         Ranking,
-        AddGroupMember
+        AddGroupMember,
+        HeroSkill1,
+        HeroSkill2,
+        HeroSkill3,
+        HeroSkill4,
+        HeroSkill5,
+        HeroSkill6,
+        HeroSkill7,
+        HeroSkill8,
     }
 
     public class KeyBind
@@ -223,38 +231,55 @@ namespace Client
             InputKey = new KeyBind { Group = "Dialogs", Description = "Close All Windows", function = KeybindOptions.Closeall, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.Escape };
             list.Add(InputKey);
 
-            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Slot 1", function = KeybindOptions.Bar1Skill1, RequireAlt = 2, RequireShift = 2, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F1 };
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Slot 1", function = KeybindOptions.Bar1Skill1, RequireAlt = 2, RequireShift = 0, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F1 };
             list.Add(InputKey);
-            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Slot 2", function = KeybindOptions.Bar1Skill2, RequireAlt = 2, RequireShift = 2, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F2 };
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Slot 2", function = KeybindOptions.Bar1Skill2, RequireAlt = 2, RequireShift = 0, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F2 };
             list.Add(InputKey);
-            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Slot 3", function = KeybindOptions.Bar1Skill3, RequireAlt = 2, RequireShift = 2, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F3 };
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Slot 3", function = KeybindOptions.Bar1Skill3, RequireAlt = 2, RequireShift = 0, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F3 };
             list.Add(InputKey);
-            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Slot 4", function = KeybindOptions.Bar1Skill4, RequireAlt = 2, RequireShift = 2, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F4 };
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Slot 4", function = KeybindOptions.Bar1Skill4, RequireAlt = 2, RequireShift = 0, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F4 };
             list.Add(InputKey);
-            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Slot 5", function = KeybindOptions.Bar1Skill5, RequireAlt = 2, RequireShift = 2, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F5 };
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Slot 5", function = KeybindOptions.Bar1Skill5, RequireAlt = 2, RequireShift = 0, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F5 };
             list.Add(InputKey);
-            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Slot 6", function = KeybindOptions.Bar1Skill6, RequireAlt = 2, RequireShift = 2, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F6 };
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Slot 6", function = KeybindOptions.Bar1Skill6, RequireAlt = 2, RequireShift = 0, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F6 };
             list.Add(InputKey);
-            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Slot 7", function = KeybindOptions.Bar1Skill7, RequireAlt = 2, RequireShift = 2, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F7 };
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Slot 7", function = KeybindOptions.Bar1Skill7, RequireAlt = 2, RequireShift = 0, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F7 };
             list.Add(InputKey);
-            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Slot 8", function = KeybindOptions.Bar1Skill8, RequireAlt = 2, RequireShift = 2, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F8 };
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Slot 8", function = KeybindOptions.Bar1Skill8, RequireAlt = 2, RequireShift = 0, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F8 };
             list.Add(InputKey);
 
-            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Alt Slot 1", function = KeybindOptions.Bar2Skill1, RequireAlt = 2, RequireShift = 2, RequireTilde = 0, RequireCtrl = 1, Key = Keys.F1 };
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Alt Slot 1", function = KeybindOptions.Bar2Skill1, RequireAlt = 2, RequireShift = 0, RequireTilde = 0, RequireCtrl = 1, Key = Keys.F1 };
             list.Add(InputKey);
-            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Alt Slot 2", function = KeybindOptions.Bar2Skill2, RequireAlt = 2, RequireShift = 2, RequireTilde = 0, RequireCtrl = 1, Key = Keys.F2 };
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Alt Slot 2", function = KeybindOptions.Bar2Skill2, RequireAlt = 2, RequireShift = 0, RequireTilde = 0, RequireCtrl = 1, Key = Keys.F2 };
             list.Add(InputKey);
-            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Alt Slot 3", function = KeybindOptions.Bar2Skill3, RequireAlt = 2, RequireShift = 2, RequireTilde = 0, RequireCtrl = 1, Key = Keys.F3 };
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Alt Slot 3", function = KeybindOptions.Bar2Skill3, RequireAlt = 2, RequireShift = 0, RequireTilde = 0, RequireCtrl = 1, Key = Keys.F3 };
             list.Add(InputKey);
-            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Alt Slot 4", function = KeybindOptions.Bar2Skill4, RequireAlt = 2, RequireShift = 2, RequireTilde = 0, RequireCtrl = 1, Key = Keys.F4 };
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Alt Slot 4", function = KeybindOptions.Bar2Skill4, RequireAlt = 2, RequireShift = 0, RequireTilde = 0, RequireCtrl = 1, Key = Keys.F4 };
             list.Add(InputKey);
-            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Alt Slot 5", function = KeybindOptions.Bar2Skill5, RequireAlt = 2, RequireShift = 2, RequireTilde = 0, RequireCtrl = 1, Key = Keys.F5 };
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Alt Slot 5", function = KeybindOptions.Bar2Skill5, RequireAlt = 2, RequireShift = 0, RequireTilde = 0, RequireCtrl = 1, Key = Keys.F5 };
             list.Add(InputKey);
-            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Alt Slot 6", function = KeybindOptions.Bar2Skill6, RequireAlt = 2, RequireShift = 2, RequireTilde = 0, RequireCtrl = 1, Key = Keys.F6 };
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Alt Slot 6", function = KeybindOptions.Bar2Skill6, RequireAlt = 2, RequireShift = 0, RequireTilde = 0, RequireCtrl = 1, Key = Keys.F6 };
             list.Add(InputKey);
-            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Alt Slot 7", function = KeybindOptions.Bar2Skill7, RequireAlt = 2, RequireShift = 2, RequireTilde = 0, RequireCtrl = 1, Key = Keys.F7 };
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Alt Slot 7", function = KeybindOptions.Bar2Skill7, RequireAlt = 2, RequireShift = 0, RequireTilde = 0, RequireCtrl = 1, Key = Keys.F7 };
             list.Add(InputKey);
-            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Alt Slot 8", function = KeybindOptions.Bar2Skill8, RequireAlt = 2, RequireShift = 2, RequireTilde = 0, RequireCtrl = 1, Key = Keys.F8 };
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Skillbar Alt Slot 8", function = KeybindOptions.Bar2Skill8, RequireAlt = 2, RequireShift = 0, RequireTilde = 0, RequireCtrl = 1, Key = Keys.F8 };
+            list.Add(InputKey);
+
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Hero Skillbar Slot 1", function = KeybindOptions.HeroSkill1, RequireAlt = 2, RequireShift = 1, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F1 };
+            list.Add(InputKey);
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Hero Skillbar Slot 2", function = KeybindOptions.HeroSkill2, RequireAlt = 2, RequireShift = 1, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F2 };
+            list.Add(InputKey);
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Hero Skillbar Slot 3", function = KeybindOptions.HeroSkill3, RequireAlt = 2, RequireShift = 1, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F3 };
+            list.Add(InputKey);
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Hero Skillbar Slot 4", function = KeybindOptions.HeroSkill4, RequireAlt = 2, RequireShift = 1, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F4 };
+            list.Add(InputKey);
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Hero Skillbar Slot 5", function = KeybindOptions.HeroSkill5, RequireAlt = 2, RequireShift = 1, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F5 };
+            list.Add(InputKey);
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Hero Skillbar Slot 6", function = KeybindOptions.HeroSkill6, RequireAlt = 2, RequireShift = 1, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F6 };
+            list.Add(InputKey);
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Hero Skillbar Slot 7", function = KeybindOptions.HeroSkill7, RequireAlt = 2, RequireShift = 1, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F7 };
+            list.Add(InputKey);
+            InputKey = new KeyBind { Group = "Skillbar", Description = "Hero Skillbar Slot 8", function = KeybindOptions.HeroSkill8, RequireAlt = 2, RequireShift = 1, RequireTilde = 0, RequireCtrl = 0, Key = Keys.F8 };
             list.Add(InputKey);
 
             InputKey = new KeyBind { Group = "Belt", Description = "Rotate Belt", function = KeybindOptions.BeltFlip, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 1, Key = Keys.Z };

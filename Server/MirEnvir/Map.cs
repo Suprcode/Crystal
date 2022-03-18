@@ -857,7 +857,7 @@ namespace Server.MirEnvir
         private void CompleteMagic(IList<object> data)
         {
             bool train = false;
-            PlayerObject player = (PlayerObject)data[0];
+            HumanObject player = (HumanObject)data[0];
             UserMagic magic = (UserMagic)data[1];
 
             if (player == null || player.Info == null) return;

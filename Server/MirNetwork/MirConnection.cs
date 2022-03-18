@@ -1236,9 +1236,16 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            for (int i = 0; i < Player.Info.Magics.Count; i++)
+            HumanObject actor = Player;
+            if (p.Key > 16)
             {
-                UserMagic magic = Player.Info.Magics[i];
+                if (!Player.HeroSpawned) return;
+                actor = Player.Hero;
+            }
+
+            for (int i = 0; i < actor.Info.Magics.Count; i++)
+            {
+                UserMagic magic = actor.Info.Magics[i];
                 if (magic.Spell != p.Spell)
                 {
                     if (magic.Key == p.Key)
@@ -1253,10 +1260,14 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            if (!Player.Dead && (Player.ActionTime > Envir.Time || Player.SpellTime > Envir.Time))
+            HumanObject actor = Player;
+            if (Player.HeroSpawned && p.ObjectID == Player.Hero.ObjectID)
+                actor = Player.Hero;
+
+            if (!actor.Dead && (actor.ActionTime > Envir.Time || actor.SpellTime > Envir.Time))
                 _retryList.Enqueue(p);
             else
-                Player.Magic(p.Spell, p.Direction, p.TargetID, p.Location);
+                actor.BeginMagic(p.Spell, p.Direction, p.TargetID, p.Location);
         }
 
         private void SwitchGroup(C.SwitchGroup p)
