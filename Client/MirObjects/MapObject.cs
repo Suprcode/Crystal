@@ -20,6 +20,7 @@ namespace Client.MirObjects
 
         public static UserObject User;
         public static UserHeroObject Hero;
+        public static HeroObject HeroObject;
         public static MapObject MouseObject, TargetObject, MagicObject;
         public abstract ObjectType Race { get; }
         public abstract bool Blocking { get; }
@@ -127,6 +128,9 @@ namespace Client.MirObjects
 
             MapControl.Objects.Remove(this);
             GameScene.Scene.MapControl.RemoveObject(this);
+
+            if (ObjectID == Hero.ObjectID)
+                HeroObject = null;
 
             if (ObjectID != GameScene.NPCID) return;
 

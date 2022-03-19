@@ -39,6 +39,11 @@ namespace Client.MirScenes
             get { return MapObject.Hero; }
             set { MapObject.Hero = value; }
         }
+        public static HeroObject HeroObject
+        {
+            get { return MapObject.HeroObject; }
+            set { MapObject.HeroObject = value; }
+        }
 
         public static long MoveTime, AttackTime, NextRunTime, LogTime, LastRunTime;
         public static bool CanMove, CanRun;
@@ -918,21 +923,24 @@ namespace Client.MirScenes
                     ToggleTime = CMain.Time + 500;
 
                     cost = magic.Level * magic.LevelCost + magic.BaseCost;
-                    if (cost > MapObject.User.MP)
+                    if (cost > actor.MP)
                     {
                         Scene.OutputMessage(GameLanguage.LowMana);
                         return;
                     }
                     actor.TwinDrakeBlade = true;
                     SendSpellToggle(actor, magic.Spell, true);
-                    actor.Effects.Add(new Effect(Libraries.Magic2, 210, 6, 500, User));
+                    if (actor == Hero)
+                        HeroObject?.Effects.Add(new Effect(Libraries.Magic2, 210, 6, 500, HeroObject));
+                    else
+                        actor.Effects.Add(new Effect(Libraries.Magic2, 210, 6, 500, actor));
                     break;
                 case Spell.FlamingSword:
                     if (CMain.Time < ToggleTime) return;
                     ToggleTime = CMain.Time + 500;
 
                     cost = magic.Level * magic.LevelCost + magic.BaseCost;
-                    if (cost > MapObject.User.MP)
+                    if (cost > actor.MP)
                     {
                         Scene.OutputMessage(GameLanguage.LowMana);
                         return;
@@ -941,7 +949,7 @@ namespace Client.MirScenes
                     break;
                 case Spell.CounterAttack:
                     cost = magic.Level * magic.LevelCost + magic.BaseCost;
-                    if (cost > MapObject.User.MP)
+                    if (cost > actor.MP)
                     {
                         Scene.OutputMessage(GameLanguage.LowMana);
                         return;
@@ -2059,6 +2067,9 @@ namespace Client.MirScenes
         {
             HeroObject hero = new HeroObject(p.ObjectID);
             hero.Load(p);
+
+            if (p.ObjectID == Hero.ObjectID)
+                HeroObject = hero;
         }
 
         private void ObjectRemove(S.ObjectRemove p)
