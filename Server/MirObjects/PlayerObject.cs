@@ -4196,6 +4196,7 @@ namespace Server.MirObjects
         public override bool IsFriendlyTarget(HumanObject ally)
         {
             if (ally == this) return true;
+            if (ally == Hero) return true;
 
             switch (ally.AMode)
             {

@@ -54,6 +54,8 @@ namespace Server.MirObjects
 
         public HeroObject(CharacterInfo info, PlayerObject owner)
         {
+            CheckCellTime = false;
+
             Owner = owner;            
             Load(info, null);           
         }
@@ -178,6 +180,7 @@ namespace Server.MirObjects
             NextMagicTargetID = targetID;
             NextMagicLocation = location;
         }
+        public override MapObject DefaultMagicTarget => Owner;
         public override void UseItem(ulong id, MirGridType grid)
         {
             S.UseItem p = new S.UseItem { UniqueID = id, Grid = grid, Success = false };

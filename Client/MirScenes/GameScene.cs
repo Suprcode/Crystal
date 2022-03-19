@@ -11267,7 +11267,7 @@ namespace Client.MirScenes
                             target = actor.NextMagicObject;
                     }
 
-                    if (target == null) target = actor;
+                    if (target == null) target = User;
                     break;
                 case Spell.FireBang:
                 case Spell.MassHiding:
@@ -11347,7 +11347,7 @@ namespace Client.MirScenes
             {
                 User.QueuedAction = new QueuedAction { Action = MirAction.Spell, Direction = dir, Location = User.CurrentLocation, Params = new List<object>() };
                 User.QueuedAction.Params.Add(magic.Spell);
-                User.QueuedAction.Params.Add(target != null ? target.ObjectID : 0);
+                User.QueuedAction.Params.Add(targetID);
                 User.QueuedAction.Params.Add(location);
                 User.QueuedAction.Params.Add(magic.Level);
             }

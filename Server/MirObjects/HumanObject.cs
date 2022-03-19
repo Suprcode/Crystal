@@ -163,6 +163,8 @@ namespace Server.MirObjects
             }
         }
 
+        protected bool CheckCellTime = true;
+
         public short TransformType;
         public short Looks_Armour = 0, Looks_Weapon = -1, Looks_WeaponEffect = 0;
         public byte Looks_Wings = 0;
@@ -2365,7 +2367,7 @@ namespace Server.MirObjects
                         if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
                     }
                     else
-                        if (!ob.Blocking || ob.CellTime >= Envir.Time) continue;
+                        if (!ob.Blocking || (CheckCellTime && ob.CellTime >= Envir.Time)) continue;
 
                     Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
                     return false;
@@ -2492,7 +2494,7 @@ namespace Server.MirObjects
                             if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
                         }
                         else
-                            if (!ob.Blocking || ob.CellTime >= Envir.Time) continue;
+                            if (!ob.Blocking || (CheckCellTime && ob.CellTime >= Envir.Time)) continue;
 
                         Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
                         return false;
@@ -3225,6 +3227,7 @@ namespace Server.MirObjects
         {
             Magic(spell, dir, targetID, location);
         }
+        public virtual MapObject DefaultMagicTarget => this;
         public void Magic(Spell spell, MirDirection dir, uint targetID, Point location)
         {
             if (!CanCast)
@@ -3328,7 +3331,7 @@ namespace Server.MirObjects
                 case Spell.Healing:
                     if (target == null)
                     {
-                        target = this;
+                        target = DefaultMagicTarget;
                         targetID = ObjectID;
                     }
                     Healing(target, magic);
@@ -3430,7 +3433,7 @@ namespace Server.MirObjects
                 case Spell.Purification:
                     if (target == null)
                     {
-                        target = this;
+                        target = DefaultMagicTarget;
                         targetID = ObjectID;
                     }
                     Purification(target, magic);
