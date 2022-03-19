@@ -489,6 +489,32 @@ namespace Client.MirScenes
                         }
                         else CharacterDialog.Hide();
                         break;
+                    case KeybindOptions.HeroInventory:
+                        if (Hero == null)
+                            break;
+                        if (!HeroInventoryDialog.Visible) HeroInventoryDialog.Show();
+                        else HeroInventoryDialog.Hide();
+                        break;
+                    case KeybindOptions.HeroEquipment:
+                        if (Hero == null)
+                            break;
+                        if (!HeroDialog.Visible || !HeroDialog.CharacterPage.Visible)
+                        {
+                            HeroDialog.Show();
+                            HeroDialog.ShowCharacterPage();
+                        }
+                        else HeroDialog.Hide();
+                        break;
+                    case KeybindOptions.HeroSkills:
+                        if (Hero == null)
+                            break;
+                        if (!HeroDialog.Visible || !HeroDialog.SkillPage.Visible)
+                        {
+                            HeroDialog.Show();
+                            HeroDialog.ShowSkillPage();
+                        }
+                        else HeroDialog.Hide();
+                        break;
                     case KeybindOptions.Creature:
                         if (!IntelligentCreatureDialog.Visible) IntelligentCreatureDialog.Show();
                         else IntelligentCreatureDialog.Hide();

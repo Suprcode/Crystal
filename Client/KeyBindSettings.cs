@@ -99,6 +99,9 @@ namespace Client
         HeroSkill6,
         HeroSkill7,
         HeroSkill8,
+        HeroInventory,
+        HeroEquipment,
+        HeroSkills
     }
 
     public class KeyBind
@@ -180,15 +183,21 @@ namespace Client
             KeyBind InputKey;
             InputKey = new KeyBind { Group = "Dialogs", Description = "Inventory Open/Close", function = KeybindOptions.Inventory, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.F9 };
             list.Add(InputKey);
-            InputKey = new KeyBind { Group = "Dialogs", Description = "Inventory Open/Close Alt", function = KeybindOptions.Inventory2, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.I };
+            InputKey = new KeyBind { Group = "Dialogs", Description = "Inventory Open/Close Alt", function = KeybindOptions.Inventory2, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 0, Key = Keys.I };
             list.Add(InputKey);
             InputKey = new KeyBind { Group = "Dialogs", Description = "Equipment Open/Close", function = KeybindOptions.Equipment, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.F10 };
             list.Add(InputKey);
-            InputKey = new KeyBind { Group = "Dialogs", Description = "Equipment Open/Close Alt", function = KeybindOptions.Equipment2, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.C };
+            InputKey = new KeyBind { Group = "Dialogs", Description = "Equipment Open/Close Alt", function = KeybindOptions.Equipment2, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 0, Key = Keys.C };
             list.Add(InputKey);
             InputKey = new KeyBind { Group = "Dialogs", Description = "Skills Open/Close", function = KeybindOptions.Skills, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.F11 };
             list.Add(InputKey);
-            InputKey = new KeyBind { Group = "Dialogs", Description = "Skills Open/Close Alt", function = KeybindOptions.Skills2, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.S };
+            InputKey = new KeyBind { Group = "Dialogs", Description = "Skills Open/Close Alt", function = KeybindOptions.Skills2, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 0, Key = Keys.S };
+            list.Add(InputKey);
+            InputKey = new KeyBind { Group = "Dialogs", Description = "Hero Inventory Open/Close", function = KeybindOptions.HeroInventory, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 1, Key = Keys.I };
+            list.Add(InputKey);
+            InputKey = new KeyBind { Group = "Dialogs", Description = "Hero Equipment Open/Close", function = KeybindOptions.HeroEquipment, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 1, Key = Keys.C };
+            list.Add(InputKey);
+            InputKey = new KeyBind { Group = "Dialogs", Description = "Hero Skills Open/Close", function = KeybindOptions.HeroSkills, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 1, Key = Keys.S };
             list.Add(InputKey);
             InputKey = new KeyBind { Group = "Dialogs", Description = "Creatures Open/Close", function = KeybindOptions.Creature, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.E };
             list.Add(InputKey);

@@ -694,7 +694,7 @@ namespace Server.MirObjects
 
             if (InAttackRange())
             {
-                Attack(Direction, Spell.None);
+                Attack();
 
                 if (Target != null && Target.Dead)
                 {

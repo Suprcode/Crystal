@@ -3761,11 +3761,17 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Size = new Size(16, 16),
                 Location = new Point(3, 3),
-                Hint = "Hero Magics"
+                Hint = string.Format(GameLanguage.HeroSkills, CMain.InputKeys.GetKey(KeybindOptions.HeroSkills))
             };
             HeroMagicsButton.Click += (o, e) =>
             {
-                GameScene.Scene.ChangeSkillMode(null);
+                if (GameScene.Scene.HeroDialog.Visible && GameScene.Scene.HeroDialog.SkillPage.Visible)
+                    GameScene.Scene.HeroDialog.Hide();
+                else
+                {
+                    GameScene.Scene.HeroDialog.Show();
+                    GameScene.Scene.HeroDialog.ShowSkillPage();
+                }
             };
 
             HeroInventoryButton = new MirButton
@@ -3777,7 +3783,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Size = new Size(16, 16),
                 Location = new Point(3, 20),
-                Hint = "Hero Inventory"
+                Hint = string.Format(GameLanguage.HeroInventory, CMain.InputKeys.GetKey(KeybindOptions.HeroInventory))
             };
             HeroInventoryButton.Click += (o, e) =>
             {
@@ -3793,7 +3799,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Size = new Size(16, 16),
                 Location = new Point(3, 37),
-                Hint = "Hero Equipment"
+                Hint = string.Format(GameLanguage.HeroCharacter, CMain.InputKeys.GetKey(KeybindOptions.HeroEquipment))
             };
             HeroEquipmentButton.Click += (o, e) =>
             {
