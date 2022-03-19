@@ -129,7 +129,7 @@ namespace Client.MirObjects
             MapControl.Objects.Remove(this);
             GameScene.Scene.MapControl.RemoveObject(this);
 
-            if (ObjectID == Hero.ObjectID)
+            if (ObjectID == Hero?.ObjectID)
                 HeroObject = null;
 
             if (ObjectID != GameScene.NPCID) return;

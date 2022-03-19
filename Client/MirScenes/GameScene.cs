@@ -837,7 +837,12 @@ namespace Client.MirScenes
 
         public void UseSpell(int key)
         {
-            UserObject actor = key < 17 ? User : Hero;
+            UserObject actor = User;
+            if (key > 16)
+            {
+                if (HeroObject == null) return;
+                actor = Hero;
+            }
 
             if (actor.RidingMount || actor.Fishing) return;
 
