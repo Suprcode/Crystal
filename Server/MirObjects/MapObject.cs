@@ -659,7 +659,15 @@ namespace Server.MirObjects
                 }
             }
         }
-
+        public bool HasBuff(BuffType type)
+        {
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                if (Buffs[i].Type != type) continue;
+                return true;
+            }
+            return false;
+        }
         public bool HasBuff(BuffType type, out Buff buff)
         {
             for (int i = 0; i < Buffs.Count; i++)

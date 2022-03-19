@@ -268,7 +268,7 @@ namespace Server.MirObjects
             if (FlamingSword && Envir.Time >= FlamingSwordTime)
             {
                 FlamingSword = false;
-                Enqueue(new S.SpellToggle { Spell = Spell.FlamingSword, CanUse = false });
+                Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.FlamingSword, CanUse = false });
             }
 
             if (CounterAttack && Envir.Time >= CounterAttackTime)
@@ -2839,7 +2839,7 @@ namespace Server.MirObjects
                 if (magic != null && Envir.Random.Next(12) <= magic.Level)
                 {
                     Slaying = true;
-                    Enqueue(new S.SpellToggle { Spell = Spell.Slaying, CanUse = Slaying });
+                    Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.Slaying, CanUse = Slaying });
                 }
             }
 
@@ -3298,6 +3298,9 @@ namespace Server.MirObjects
 
             RegenTime = Envir.Time + RegenDelay;
             ChangeMP(-cost);
+
+            if (spell == Spell.ShoulderDash && Race == ObjectType.Hero)
+                dir = Direction;
 
             Direction = dir;
             if (spell != Spell.ShoulderDash && spell != Spell.BackStep && spell != Spell.FlashDash)
@@ -6548,10 +6551,10 @@ namespace Server.MirObjects
             if (oldLevel != magic.Level)
             {
                 long delay = magic.GetDelay();
-                Enqueue(new S.MagicDelay { Spell = magic.Spell, Delay = delay });
+                Enqueue(new S.MagicDelay { ObjectID = ObjectID, Spell = magic.Spell, Delay = delay });
             }
 
-            Enqueue(new S.MagicLeveled { Spell = magic.Spell, Level = magic.Level, Experience = magic.Experience });
+            Enqueue(new S.MagicLeveled { ObjectID = ObjectID, Spell = magic.Spell, Level = magic.Level, Experience = magic.Experience });
 
         }
         public virtual bool MagicTeleport(UserMagic magic)
@@ -8099,7 +8102,7 @@ namespace Server.MirObjects
 
                     FlamingSword = true;
                     FlamingSwordTime = Envir.Time + 10000;
-                    Enqueue(new S.SpellToggle { Spell = Spell.FlamingSword, CanUse = true });
+                    Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.FlamingSword, CanUse = true });
                     ChangeMP(-cost);
                     break;
                 case Spell.CounterAttack:

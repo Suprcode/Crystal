@@ -183,8 +183,7 @@ namespace Client.MirScenes
         public static uint DefaultNPCID;
         public static bool HideAddedStoreStats;
 
-        public long ToggleTime;
-        public static bool Slaying, Thrusting, HalfMoon, CrossHalfMoon, DoubleSlash, TwinDrakeBlade, FlamingSword;
+        public long ToggleTime;        
         public static long SpellTime;
 
         public MirLabel[] OutputLines = new MirLabel[10];
@@ -196,13 +195,6 @@ namespace Client.MirScenes
         {
             MapControl.AutoRun = false;
             MapControl.AutoHit = false;
-            Slaying = false;
-            Thrusting = false;
-            HalfMoon = false;
-            CrossHalfMoon = false;
-            DoubleSlash = false;
-            TwinDrakeBlade = false;
-            FlamingSword = false;
 
             Scene = this;
             BackColour = Color.Transparent;
@@ -458,14 +450,14 @@ namespace Client.MirScenes
                     case KeybindOptions.Bar2Skill6: UseSpell(14); break;
                     case KeybindOptions.Bar2Skill7: UseSpell(15); break;
                     case KeybindOptions.Bar2Skill8: UseSpell(16); break;
-                    case KeybindOptions.HeroSkill1: UseHeroSpell(17); break;
-                    case KeybindOptions.HeroSkill2: UseHeroSpell(18); break;
-                    case KeybindOptions.HeroSkill3: UseHeroSpell(19); break;
-                    case KeybindOptions.HeroSkill4: UseHeroSpell(20); break;
-                    case KeybindOptions.HeroSkill5: UseHeroSpell(21); break;
-                    case KeybindOptions.HeroSkill6: UseHeroSpell(22); break;
-                    case KeybindOptions.HeroSkill7: UseHeroSpell(23); break;
-                    case KeybindOptions.HeroSkill8: UseHeroSpell(24); break;
+                    case KeybindOptions.HeroSkill1: UseSpell(17); break;
+                    case KeybindOptions.HeroSkill2: UseSpell(18); break;
+                    case KeybindOptions.HeroSkill3: UseSpell(19); break;
+                    case KeybindOptions.HeroSkill4: UseSpell(20); break;
+                    case KeybindOptions.HeroSkill5: UseSpell(21); break;
+                    case KeybindOptions.HeroSkill6: UseSpell(22); break;
+                    case KeybindOptions.HeroSkill7: UseSpell(23); break;
+                    case KeybindOptions.HeroSkill8: UseSpell(24); break;
                     case KeybindOptions.Inventory:
                     case KeybindOptions.Inventory2:
                         if (!InventoryDialog.Visible) InventoryDialog.Show();
@@ -840,22 +832,24 @@ namespace Client.MirScenes
 
         public void UseSpell(int key)
         {
-            if (User.RidingMount || User.Fishing) return;
+            UserObject actor = key < 17 ? User : Hero;
 
-            if (!User.HasClassWeapon && User.Weapon >= 0)
+            if (actor.RidingMount || actor.Fishing) return;
+
+            if (!actor.HasClassWeapon && actor.Weapon >= 0)
             {
                 ChatDialog.ReceiveChat("You must be wearing a suitable weapon to perform this skill", ChatType.System);
                 return;
             }
 
-            if (CMain.Time < User.BlizzardStopTime || CMain.Time < User.ReincarnationStopTime) return;
+            if (CMain.Time < actor.BlizzardStopTime || CMain.Time < actor.ReincarnationStopTime) return;
 
             ClientMagic magic = null;
 
-            for (int i = 0; i < User.Magics.Count; i++)
+            for (int i = 0; i < actor.Magics.Count; i++)
             {
-                if (User.Magics[i].Key != key) continue;
-                magic = User.Magics[i];
+                if (actor.Magics[i].Key != key) continue;
+                magic = actor.Magics[i];
                 break;
             }
 
@@ -879,6 +873,7 @@ namespace Client.MirScenes
             }
 
             int cost;
+            string prefix = actor == Hero ? "(Hero) " : string.Empty;
             switch (magic.Spell)
             {
                 case Spell.Fencing:
@@ -892,31 +887,31 @@ namespace Client.MirScenes
                     return;
                 case Spell.Thrusting:
                     if (CMain.Time < ToggleTime) return;
-                    Thrusting = !Thrusting;
-                    ChatDialog.ReceiveChat(Thrusting ? "Use Thrusting." : "Do not use Thrusting.", ChatType.Hint);
+                    actor.Thrusting = !actor.Thrusting;
+                    ChatDialog.ReceiveChat(prefix + (actor.Thrusting ? "Use Thrusting." : "Do not use Thrusting."), ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
-                    Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = Thrusting });
+                    SendSpellToggle(actor, magic.Spell, actor.Thrusting);                    
                     break;
                 case Spell.HalfMoon:
                     if (CMain.Time < ToggleTime) return;
-                    HalfMoon = !HalfMoon;
-                    ChatDialog.ReceiveChat(HalfMoon ? "Use Half Moon." : "Do not use Half Moon.", ChatType.Hint);
+                    actor.HalfMoon = !actor.HalfMoon;
+                    ChatDialog.ReceiveChat(prefix + (actor.HalfMoon ? "Use Half Moon." : "Do not use Half Moon."), ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
-                    Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = HalfMoon });
+                    SendSpellToggle(actor, magic.Spell, actor.HalfMoon);
                     break;
                 case Spell.CrossHalfMoon:
                     if (CMain.Time < ToggleTime) return;
-                    CrossHalfMoon = !CrossHalfMoon;
-                    ChatDialog.ReceiveChat(CrossHalfMoon ? "Use Cross Half Moon." : "Do not use Cross Half Moon.", ChatType.Hint);
+                    actor.CrossHalfMoon = !actor.CrossHalfMoon;
+                    ChatDialog.ReceiveChat(prefix + (actor.CrossHalfMoon ? "Use Cross Half Moon." : "Do not use Cross Half Moon."), ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
-                    Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = CrossHalfMoon });
+                    SendSpellToggle(actor, magic.Spell, actor.CrossHalfMoon);
                     break;
                 case Spell.DoubleSlash:
                     if (CMain.Time < ToggleTime) return;
-                    DoubleSlash = !DoubleSlash;
-                    ChatDialog.ReceiveChat(DoubleSlash ? "Use Double Slash." : "Do not use Double Slash.", ChatType.Hint);
+                    actor.DoubleSlash = !actor.DoubleSlash;
+                    ChatDialog.ReceiveChat(prefix + (actor.DoubleSlash ? "Use Double Slash." : "Do not use Double Slash."), ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
-                    Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = DoubleSlash });
+                    SendSpellToggle(actor, magic.Spell, actor.DoubleSlash);
                     break;
                 case Spell.TwinDrakeBlade:
                     if (CMain.Time < ToggleTime) return;
@@ -928,9 +923,9 @@ namespace Client.MirScenes
                         Scene.OutputMessage(GameLanguage.LowMana);
                         return;
                     }
-                    TwinDrakeBlade = true;
-                    Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = true });
-                    User.Effects.Add(new Effect(Libraries.Magic2, 210, 6, 500, User));
+                    actor.TwinDrakeBlade = true;
+                    SendSpellToggle(actor, magic.Spell, true);
+                    actor.Effects.Add(new Effect(Libraries.Magic2, 210, 6, 500, User));
                     break;
                 case Spell.FlamingSword:
                     if (CMain.Time < ToggleTime) return;
@@ -942,7 +937,7 @@ namespace Client.MirScenes
                         Scene.OutputMessage(GameLanguage.LowMana);
                         return;
                     }
-                    Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = true });
+                    SendSpellToggle(actor, magic.Spell, true);
                     break;
                 case Spell.CounterAttack:
                     cost = magic.Level * magic.LevelCost + magic.BaseCost;
@@ -953,96 +948,31 @@ namespace Client.MirScenes
                     }
 
                     SoundManager.PlaySound(20000 + (ushort)Spell.CounterAttack * 10);
-                    Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = true });
+                    SendSpellToggle(actor, magic.Spell, true);
                     break;
                 case Spell.MentalState:
                     if (CMain.Time < ToggleTime) return;
                     ToggleTime = CMain.Time + 500;
-                    Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = true });
+                    SendSpellToggle(actor, magic.Spell, true);
                     break;
                 default:
-                    User.NextMagic = magic;
-                    User.NextMagicLocation = MapControl.MapLocation;
-                    User.NextMagicObject = MapObject.MouseObject;
-                    User.NextMagicDirection = MapControl.MouseDirection();
+                    actor.NextMagic = magic;
+                    actor.NextMagicLocation = MapControl.MapLocation;
+                    actor.NextMagicObject = MapObject.MouseObject;
+                    actor.NextMagicDirection = MapControl.MouseDirection();
+
+                    if (actor == Hero)
+                        MapControl.UseMagic(Hero.NextMagic, Hero);
                     break;
             }
         }
-
-        public void UseHeroSpell(int key)
+        private void SendSpellToggle(UserObject Actor, Spell Spell, bool CanUse)
         {
-            if (Hero == null) return;
-            if (Hero.RidingMount) return;
-
-            if (!Hero.HasClassWeapon && Hero.Weapon >= 0)
-            {
-                ChatDialog.ReceiveChat("Hero must be wearing a suitable weapon to perform this skill", ChatType.System);
-                return;
-            }
-
-            ClientMagic magic = null;
-
-            for (int i = 0; i < Hero.Magics.Count; i++)
-            {
-                if (Hero.Magics[i].Key != key) continue;
-                magic = Hero.Magics[i];
-                break;
-            }
-
-            if (magic == null) return;
-
-            switch (magic.Spell)
-            {
-                case Spell.CounterAttack:
-                    if ((CMain.Time < magic.CastTime + magic.Delay))
-                    {
-                        if (CMain.Time >= OutputDelay)
-                        {
-                            OutputDelay = CMain.Time + 1000;
-                            GameScene.Scene.OutputMessage(string.Format("You cannot cast {0} for another {1} seconds.", magic.Spell.ToString(), ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
-                        }
-
-                        return;
-                    }
-                    magic.CastTime = CMain.Time;
-                    break;
-            }
-
-            int cost;
-            switch (magic.Spell)
-            {
-                case Spell.Fencing:
-                case Spell.FatalSword:
-                case Spell.MPEater:
-                case Spell.Hemorrhage:
-                case Spell.SpiritSword:
-                case Spell.Slaying:
-                case Spell.Focus:
-                case Spell.Meditation:
-                    return;
-                case Spell.Thrusting:
-                case Spell.HalfMoon:
-                case Spell.CrossHalfMoon:
-                case Spell.DoubleSlash:
-                case Spell.TwinDrakeBlade:
-                case Spell.FlamingSword:
-                case Spell.CounterAttack:
-                case Spell.MentalState:
-                    if (CMain.Time < ToggleTime) return;
-                    ToggleTime = CMain.Time + 500;
-                    Network.Enqueue(new C.SpellToggle { Spell = magic.Spell });
-                    break;
-                default:
-                    Hero.NextMagic = magic;
-                    Hero.NextMagicLocation = MapControl.MapLocation;
-                    Hero.NextMagicObject = MapObject.MouseObject;
-                    Hero.NextMagicDirection = MapControl.MouseDirection();
-
-                    MapControl.UseMagic(Hero.NextMagic, Hero);
-                    break;
-            }
+            if (Actor == User)
+                Network.Enqueue(new C.SpellToggle { Spell = Spell, CanUse = CanUse });
+            else
+                Network.Enqueue(new C.SpellToggle { Spell = Spell });
         }
-
         public void QuitGame()
         {
             if (CMain.Time >= LogTime)
@@ -4403,22 +4333,22 @@ namespace Client.MirScenes
 
         private void MagicLeveled(S.MagicLeveled p)
         {
-            for (int i = 0; i < User.Magics.Count; i++)
+            UserObject actor = p.ObjectID == Hero?.ObjectID ? Hero : User;
+
+            for (int i = 0; i < actor.Magics.Count; i++)
             {
-                ClientMagic magic = User.Magics[i];
+                ClientMagic magic = actor.Magics[i];
                 if (magic.Spell != p.Spell) continue;
 
                 if (magic.Level != p.Level)
                 {
                     magic.Level = p.Level;
-                    User.RefreshStats();
+                    actor.RefreshStats();
                 }
 
                 magic.Experience = p.Experience;
                 break;
             }
-
-
         }
         private void Magic(S.Magic p)
         {
@@ -4437,7 +4367,11 @@ namespace Client.MirScenes
 
         private void MagicDelay(S.MagicDelay p)
         {
-            ClientMagic magic = User.GetMagic(p.Spell);
+            ClientMagic magic;
+            if (p.ObjectID == Hero?.ObjectID)
+                magic = Hero.GetMagic(p.Spell);
+            else
+                magic = User.GetMagic(p.Spell);
             magic.Delay = p.Delay;
         }
 
@@ -4834,34 +4768,43 @@ namespace Client.MirScenes
         }
         private void SpellToggle(S.SpellToggle p)
         {
+            UserObject actor = User;
+            string prefix = string.Empty;
+
+            if (p.ObjectID == Hero?.ObjectID)
+            {
+                actor = Hero;
+                prefix = "(Hero) ";
+            }
+
             switch (p.Spell)
             {
                 //Warrior
                 case Spell.Slaying:
-                    Slaying = p.CanUse;
+                    actor.Slaying = p.CanUse;
                     break;
                 case Spell.Thrusting:
-                    Thrusting = p.CanUse;
-                    ChatDialog.ReceiveChat(Thrusting ? "Use Thrusting." : "Do not use Thrusting.", ChatType.Hint);
+                    actor.Thrusting = p.CanUse;
+                    ChatDialog.ReceiveChat(prefix + (actor.Thrusting ? "Use Thrusting." : "Do not use Thrusting."), ChatType.Hint);
                     break;
                 case Spell.HalfMoon:
-                    HalfMoon = p.CanUse;
-                    ChatDialog.ReceiveChat(HalfMoon ? "Use HalfMoon." : "Do not use HalfMoon.", ChatType.Hint);
+                    actor.HalfMoon = p.CanUse;
+                    ChatDialog.ReceiveChat(prefix + (actor.HalfMoon ? "Use HalfMoon." : "Do not use HalfMoon."), ChatType.Hint);
                     break;
                 case Spell.CrossHalfMoon:
-                    CrossHalfMoon = p.CanUse;
-                    ChatDialog.ReceiveChat(CrossHalfMoon ? "Use CrossHalfMoon." : "Do not use CrossHalfMoon.", ChatType.Hint);
+                    actor.CrossHalfMoon = p.CanUse;
+                    ChatDialog.ReceiveChat(prefix + (actor.CrossHalfMoon ? "Use CrossHalfMoon." : "Do not use CrossHalfMoon."), ChatType.Hint);
                     break;
                 case Spell.DoubleSlash:
-                    DoubleSlash = p.CanUse;
-                    ChatDialog.ReceiveChat(DoubleSlash ? "Use DoubleSlash." : "Do not use DoubleSlash.", ChatType.Hint);
+                    actor.DoubleSlash = p.CanUse;
+                    ChatDialog.ReceiveChat(prefix + (actor.DoubleSlash ? "Use DoubleSlash." : "Do not use DoubleSlash."), ChatType.Hint);
                     break;
                 case Spell.FlamingSword:
-                    FlamingSword = p.CanUse;
-                    if (FlamingSword)
-                        ChatDialog.ReceiveChat(GameLanguage.WeaponSpiritFire, ChatType.Hint);
+                    actor.FlamingSword = p.CanUse;
+                    if (actor.FlamingSword)
+                        ChatDialog.ReceiveChat(prefix + GameLanguage.WeaponSpiritFire, ChatType.Hint);
                     else
-                        ChatDialog.ReceiveChat(GameLanguage.SpiritsFireDisappeared, ChatType.System);
+                        ChatDialog.ReceiveChat(prefix + GameLanguage.SpiritsFireDisappeared, ChatType.System);
                     break;
             }
         }
@@ -11005,7 +10948,7 @@ namespace Client.MirScenes
                                 }
                                 
                                 //stops double slash from being used without empty hand or assassin weapon (otherwise bugs on second swing)
-                                if (GameScene.DoubleSlash && (!User.HasClassWeapon && User.Weapon > -1)) return;
+                                if (GameScene.User.DoubleSlash && (!User.HasClassWeapon && User.Weapon > -1)) return;
                                 if (User.Poison.HasFlag(PoisonType.Dazed)) return;
 
                                 User.QueuedAction = new QueuedAction { Action = MirAction.Attack1, Direction = direction, Location = User.CurrentLocation };

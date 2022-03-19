@@ -20,8 +20,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="MirObjects\Hero\" />
-  </ItemGroup>
 </Project>

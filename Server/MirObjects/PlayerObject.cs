@@ -1110,10 +1110,10 @@ namespace Server.MirObjects
             Enqueue(new S.GuildBuffList() { GuildBuffs = Settings.Guild_BuffList });
             RequestedGuildBuffInfo = true;
 
-            if (Info.Thrusting) Enqueue(new S.SpellToggle { Spell = Spell.Thrusting, CanUse = true });
-            if (Info.HalfMoon) Enqueue(new S.SpellToggle { Spell = Spell.HalfMoon, CanUse = true });
-            if (Info.CrossHalfMoon) Enqueue(new S.SpellToggle { Spell = Spell.CrossHalfMoon, CanUse = true });
-            if (Info.DoubleSlash) Enqueue(new S.SpellToggle { Spell = Spell.DoubleSlash, CanUse = true });
+            if (Info.Thrusting) Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.Thrusting, CanUse = true });
+            if (Info.HalfMoon) Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.HalfMoon, CanUse = true });
+            if (Info.CrossHalfMoon) Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.CrossHalfMoon, CanUse = true });
+            if (Info.DoubleSlash) Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.DoubleSlash, CanUse = true });
 
             for (int i = 0; i < Info.Pets.Count; i++)
             {
@@ -13246,7 +13246,11 @@ namespace Server.MirObjects
         }
         public void SpawnHero()
         {
-            HeroObject hero = new HeroObject(CurrentHero, this);
+            HeroObject hero = CurrentHero.Class switch
+            {
+                MirClass.Warrior => new WarriorHero(CurrentHero, this),
+                _ => new HeroObject(CurrentHero, this)
+            };            
 
             hero.ActionTime = Envir.Time + 1000;
             hero.RefreshNameColour();

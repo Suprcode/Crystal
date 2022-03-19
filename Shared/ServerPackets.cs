@@ -3202,12 +3202,14 @@ namespace ServerPackets
             get { return (short)ServerPacketIds.MagicLeveled; }
         }
 
+        public uint ObjectID;
         public Spell Spell;
         public byte Level;
         public ushort Experience;
 
         protected override void ReadPacket(BinaryReader reader)
         {
+            ObjectID = reader.ReadUInt32();
             Spell = (Spell)reader.ReadByte();
             Level = reader.ReadByte();
             Experience = reader.ReadUInt16();
@@ -3215,6 +3217,7 @@ namespace ServerPackets
 
         protected override void WritePacket(BinaryWriter writer)
         {
+            writer.Write(ObjectID);
             writer.Write((byte)Spell);
             writer.Write(Level);
             writer.Write(Experience);
@@ -3269,16 +3272,19 @@ namespace ServerPackets
     {
         public override short Index { get { return (short)ServerPacketIds.MagicDelay; } }
 
+        public uint ObjectID;
         public Spell Spell;
         public long Delay;
 
         protected override void ReadPacket(BinaryReader reader)
         {
+            ObjectID = reader.ReadUInt32();
             Spell = (Spell)reader.ReadByte();
             Delay = reader.ReadInt64();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
+            writer.Write(ObjectID);
             writer.Write((byte)Spell);
             writer.Write(Delay);
         }
@@ -3633,16 +3639,19 @@ namespace ServerPackets
     public sealed class SpellToggle : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.SpellToggle; } }
+        public uint ObjectID;
         public Spell Spell;
         public bool CanUse;
 
         protected override void ReadPacket(BinaryReader reader)
         {
+            ObjectID = reader.ReadUInt32();
             Spell = (Spell)reader.ReadByte();
             CanUse = reader.ReadBoolean();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
+            writer.Write(ObjectID);
             writer.Write((byte)Spell);
             writer.Write(CanUse);
         }

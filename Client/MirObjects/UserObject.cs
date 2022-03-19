@@ -57,6 +57,7 @@ namespace Client.MirObjects
         public List<int> CompletedQuests = new List<int>();
         public List<ClientMail> Mail = new List<ClientMail>();
 
+        public bool Slaying, Thrusting, HalfMoon, CrossHalfMoon, DoubleSlash, TwinDrakeBlade, FlamingSword;
         public ClientMagic NextMagic;
         public Point NextMagicLocation;
         public MapObject NextMagicObject;

@@ -36,10 +36,12 @@ namespace Server.MirObjects
         public const int SearchDelay = 3000, ViewRange = 8, RoamDelay = 1000;
         public long RoamTime;
 
-        Spell NextMagicSpell;
-        MirDirection NextMagicDirection;
-        uint NextMagicTargetID;
-        Point NextMagicLocation;
+        protected Spell NextMagicSpell;
+        protected MirDirection NextMagicDirection;
+        protected uint NextMagicTargetID;
+        protected Point NextMagicLocation;
+
+        protected int TargetDistance;
         public override GuildObject MyGuild
         {
             get { return Owner.MyGuild; }
@@ -86,6 +88,8 @@ namespace Server.MirObjects
                 case ServerPacketIds.AddBuff:
                 case ServerPacketIds.RemoveBuff:
                 case ServerPacketIds.PauseBuff:
+                case ServerPacketIds.MagicDelay:
+                case ServerPacketIds.MagicLeveled:
                     Owner.Enqueue(p);
                     break;
             }
@@ -169,6 +173,12 @@ namespace Server.MirObjects
         {
             Owner.Enqueue(magic.GetInfo(true));
         }
+        protected bool CanUseMagic(UserMagic magic)
+        {
+            if (magic == null) return false;
+            return true;
+        }
+        protected bool HasMagic(Spell spell) => Info.Magics.Any(x => x.Spell == spell);
         public override bool TryMagic()
         {
             return true;
@@ -599,11 +609,6 @@ namespace Server.MirObjects
             if (Target != null && (Target.CurrentMap != CurrentMap || !Target.IsAttackTarget(this) || !Functions.InRange(CurrentLocation, Target.CurrentLocation, Globals.DataRange)))
                 Target = null;
 
-            ProcessAI();
-        }
-
-        protected void ProcessAI()
-        {           
             if (Dead) return;
 
             if (!Functions.InRange(CurrentLocation, Owner.CurrentLocation, Globals.DataRange) || CurrentMap != Owner.CurrentMap)
@@ -611,11 +616,21 @@ namespace Server.MirObjects
 
             if (Owner.PMode == PetMode.MoveOnly || Owner.PMode == PetMode.None)
                 Target = null;
-
+            
             ProcessStacking();
             ProcessSearch();
-            ProcessRoam();
+            ProcessAI();            
+            ProcessFriend();
             ProcessTarget();
+            ProcessRoam();
+        }
+
+        protected void ProcessAI() 
+        {
+            if (NextMagicSpell != Spell.None) return;
+            ProcessFriend();
+            if (NextMagicSpell != Spell.None) return;
+            ProcessAttack();
         }
 
         protected virtual void ProcessStacking()
@@ -678,7 +693,8 @@ namespace Server.MirObjects
 
             RoamTime = Envir.Time + RoamDelay;
         }
-
+        protected virtual void ProcessFriend() { }
+        protected virtual void ProcessAttack() { }
         protected virtual void ProcessTarget()
         {
             if (CanCast && NextMagicSpell != Spell.None)
@@ -688,6 +704,8 @@ namespace Server.MirObjects
             }
 
             if (Target == null || !CanAttack) return;
+
+            TargetDistance = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
 
             if (InAttackRange())
             {

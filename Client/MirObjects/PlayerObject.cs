@@ -1008,7 +1008,7 @@ namespace Client.MirObjects
                                 Frames.TryGetValue(CurrentAction, out Frame);
                                 break;
                             case MirClass.Assassin:
-                                if(GameScene.DoubleSlash)
+                                if(GameScene.User.DoubleSlash)
                                     Frames.TryGetValue(MirAction.Attack1, out Frame);
                                 else if (CMain.Shift)
                                     Frames.TryGetValue(CMain.Random.Next(100) >= 20 ? (CMain.Random.Next(100) > 40 ? MirAction.Attack1 : MirAction.Attack4) : (CMain.Random.Next(100) > 10 ? MirAction.Attack2 : MirAction.Attack3), out Frame);
@@ -1306,13 +1306,13 @@ namespace Client.MirObjects
 
                             if (!RidingMount)
                             {
-                                if (GameScene.Slaying && TargetObject != null)
+                                if (GameScene.User.Slaying && TargetObject != null)
                                     Spell = Spell.Slaying;
 
-                                if (GameScene.Thrusting && GameScene.Scene.MapControl.HasTarget(Functions.PointMove(CurrentLocation, Direction, 2)))
+                                if (GameScene.User.Thrusting && GameScene.Scene.MapControl.HasTarget(Functions.PointMove(CurrentLocation, Direction, 2)))
                                     Spell = Spell.Thrusting;
 
-                                if (GameScene.HalfMoon)
+                                if (GameScene.User.HalfMoon)
                                 {
                                     if (TargetObject != null || GameScene.Scene.MapControl.CanHalfMoon(CurrentLocation, Direction))
                                     {
@@ -1322,7 +1322,7 @@ namespace Client.MirObjects
                                     }
                                 }
 
-                                if (GameScene.CrossHalfMoon)
+                                if (GameScene.User.CrossHalfMoon)
                                 {
                                     if (TargetObject != null || GameScene.Scene.MapControl.CanCrossHalfMoon(CurrentLocation))
                                     {
@@ -1332,7 +1332,7 @@ namespace Client.MirObjects
                                     }
                                 }
 
-                                if (GameScene.DoubleSlash)
+                                if (GameScene.User.DoubleSlash)
                                 {
                                     magic = User.GetMagic(Spell.DoubleSlash);
                                     if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
@@ -1340,14 +1340,14 @@ namespace Client.MirObjects
                                 }
 
 
-                                if (GameScene.TwinDrakeBlade && TargetObject != null)
+                                if (GameScene.User.TwinDrakeBlade && TargetObject != null)
                                 {
                                     magic = User.GetMagic(Spell.TwinDrakeBlade);
                                     if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
                                         Spell = Spell.TwinDrakeBlade;
                                 }
 
-                                if (GameScene.FlamingSword)
+                                if (GameScene.User.FlamingSword)
                                 {
                                     if (TargetObject != null)
                                     {
@@ -1361,11 +1361,11 @@ namespace Client.MirObjects
                             Network.Enqueue(new C.Attack { Direction = Direction, Spell = Spell });
 
                             if (Spell == Spell.Slaying)
-                                GameScene.Slaying = false;
+                                GameScene.User.Slaying = false;
                             if (Spell == Spell.TwinDrakeBlade)
-                                GameScene.TwinDrakeBlade = false;
+                                GameScene.User.TwinDrakeBlade = false;
                             if (Spell == Spell.FlamingSword)
-                                GameScene.FlamingSword = false;
+                                GameScene.User.FlamingSword = false;
 
                             magic = User.GetMagic(Spell);
 
