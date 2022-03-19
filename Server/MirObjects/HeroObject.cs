@@ -603,17 +603,11 @@ namespace Server.MirObjects
         {           
             if (Dead) return;
 
-            if (Master != null)
-            {
-                if ((Master.PMode == PetMode.Both || Master.PMode == PetMode.MoveOnly))
-                {
-                    if (!Functions.InRange(CurrentLocation, Master.CurrentLocation, Globals.DataRange) || CurrentMap != Master.CurrentMap)
-                        OwnerRecall();
-                }
+            if (!Functions.InRange(CurrentLocation, Owner.CurrentLocation, Globals.DataRange) || CurrentMap != Owner.CurrentMap)
+                OwnerRecall();
 
-                if (Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.None)
-                    Target = null;
-            }
+            if (Owner.PMode == PetMode.MoveOnly || Owner.PMode == PetMode.None)
+                Target = null;
 
             ProcessStacking();
             ProcessSearch();

@@ -5169,6 +5169,12 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (temp.Info.Bind.HasFlag(BindMode.NoHero))
+            {
+                Enqueue(p);
+                return;
+            }
+
             if (temp.Weight + Hero.CurrentBagWeight > Hero.Stats[Stat.BagWeight])
             {
                 ReceiveChat("Too heavy to transfer.", ChatType.System);

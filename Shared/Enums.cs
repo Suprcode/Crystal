@@ -1005,7 +1005,8 @@ public enum BindMode : short
     NoWeddingRing = 2048,//0x0800
     UnableToRent = 4096,
     UnableToDisassemble = 8192,
-    NoMail = 16384
+    NoMail = 16384,
+    NoHero = -32768
 }
 
 [Flags]
