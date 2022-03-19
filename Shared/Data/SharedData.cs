@@ -117,7 +117,6 @@ public class WorldMapSetup
             Icons[i].Save(writer);
     }
 }
-
 public class WorldMapIcon
 {
     public int ImageIndex;

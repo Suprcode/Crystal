@@ -1287,17 +1287,25 @@ namespace ClientPackets
     {
         public override short Index { get { return (short)ClientPacketIds.SpellToggle; } }
         public Spell Spell;
-        public bool CanUse;
+        public SpellToggleState canUse = SpellToggleState.None;
+        public bool CanUse
+        {
+            get { return Convert.ToBoolean(canUse); }
+            set
+            {
+                canUse = (SpellToggleState)Convert.ToSByte(value);
+            }
+        }
 
         protected override void ReadPacket(BinaryReader reader)
         {
             Spell = (Spell)reader.ReadByte();
-            CanUse = reader.ReadBoolean();
+            canUse = (SpellToggleState)reader.ReadSByte();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write((byte)Spell);
-            writer.Write(CanUse);
+            writer.Write((sbyte)canUse);
         }
     }
     public sealed class ConsignItem : Packet

@@ -3576,7 +3576,7 @@ namespace Client.MirScenes
 
         private void GainHeroExperience(S.GainHeroExperience p)
         {
-            OutputMessage(string.Format(GameLanguage.ExperienceGained, p.Amount));
+            OutputMessage(string.Format(GameLanguage.HeroExperienceGained, p.Amount));
             MapObject.Hero.Experience += p.Amount;
         }
         private void LevelChanged(S.LevelChanged p)

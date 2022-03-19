@@ -1313,7 +1313,13 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.SpellToggle(p.Spell, p.CanUse);
+            if (p.canUse > SpellToggleState.None)
+            {
+                Player.SpellToggle(p.Spell, p.canUse);
+                return;
+            }
+            if (Player.HeroSpawned)
+                Player.Hero.SpellToggle(p.Spell, p.canUse);            
         }
         private void ConsignItem(C.ConsignItem p)
         {

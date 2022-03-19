@@ -65,6 +65,7 @@ public class GameLanguage
                          YouGained2 = "You gained {0:###,###,###} {1}",
 
                          ExperienceGained = "Experience Gained {0}",
+                         HeroExperienceGained = "Hero Experience Gained {0}",
 
                          ItemDescription = "Item Description",
                          RequiredLevel = "Required Level : {0}",
@@ -343,6 +344,7 @@ public class GameLanguage
         GameLanguage.YouGained = reader.ReadString("Language", "YouGained", GameLanguage.YouGained);
         GameLanguage.YouGained2 = reader.ReadString("Language", "YouGained2", GameLanguage.YouGained2);
         GameLanguage.ExperienceGained = reader.ReadString("Language", "ExperienceGained", GameLanguage.ExperienceGained);
+        GameLanguage.HeroExperienceGained = reader.ReadString("Language", "HeroExperienceGained", GameLanguage.HeroExperienceGained);
         GameLanguage.LevelUp = reader.ReadString("Language", "LevelUp", GameLanguage.LevelUp);
 
         GameLanguage.ItemDescription = reader.ReadString("Language", "ItemDescription", GameLanguage.ItemDescription);
@@ -581,6 +583,7 @@ public class GameLanguage
         reader.Write("Language", "YouGained", GameLanguage.YouGained);
         reader.Write("Language", "YouGained2", GameLanguage.YouGained2);
         reader.Write("Language", "ExperienceGained", GameLanguage.ExperienceGained);
+        reader.Write("Language", "HeroExperienceGained", GameLanguage.HeroExperienceGained);
         reader.Write("Language", "LevelUp", GameLanguage.LevelUp);
 
         reader.Write("Language", "ItemDescription", GameLanguage.ItemDescription);

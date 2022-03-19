@@ -8052,9 +8052,10 @@ namespace Server.MirObjects
             //MessageQueue.EnqueueDebugging(((ServerPacketIds)p.Index).ToString());
         }
 
-        public void SpellToggle(Spell spell, bool use)
+        public void SpellToggle(Spell spell, SpellToggleState state)
         {
             UserMagic magic;
+            bool use = Convert.ToBoolean(state);
 
             magic = GetMagic(spell);
             if (magic == null) return;
@@ -8063,16 +8064,16 @@ namespace Server.MirObjects
             switch (spell)
             {
                 case Spell.Thrusting:
-                    Info.Thrusting = use;
+                    Info.Thrusting = state == SpellToggleState.None ? !Info.Thrusting : use;
                     break;
                 case Spell.HalfMoon:
-                    Info.HalfMoon = use;
+                    Info.HalfMoon = state == SpellToggleState.None ? !Info.HalfMoon : use;
                     break;
                 case Spell.CrossHalfMoon:
-                    Info.CrossHalfMoon = use;
+                    Info.CrossHalfMoon = state == SpellToggleState.None ? !Info.CrossHalfMoon : use;
                     break;
                 case Spell.DoubleSlash:
-                    Info.DoubleSlash = use;
+                    Info.DoubleSlash = state == SpellToggleState.None ? !Info.DoubleSlash : use;
                     break;
                 case Spell.TwinDrakeBlade:
                     if (TwinDrakeBlade) return;
