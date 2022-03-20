@@ -2081,7 +2081,7 @@ namespace Client.MirScenes
             HeroObject hero = new HeroObject(p.ObjectID);
             hero.Load(p);
 
-            if (p.ObjectID == Hero.ObjectID)
+            if (p.ObjectID == Hero?.ObjectID)
                 HeroObject = hero;
         }
 

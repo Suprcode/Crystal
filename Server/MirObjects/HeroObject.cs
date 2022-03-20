@@ -924,7 +924,7 @@ namespace Server.MirObjects
                                     PlayerObject playerob = (PlayerObject)ob;
                                     if (!ob.IsAttackTarget(Owner)) continue;
                                     if (playerob.GMGameMaster || ob.Hidden && (!CoolEye || Level < ob.Level)) continue;
-                                    if (Target != ob) continue;
+                                    if (Target != ob && Owner.LastHitter != ob) continue;
 
                                     Target = ob;
 
