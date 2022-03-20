@@ -72,6 +72,12 @@ namespace Server.MirObjects
         public const int SearchDelay = 3000, ViewRange = 8, RoamDelay = 1000;
         public long RoamTime;
 
+        public override long BrownTime
+        {
+            get { return Owner.BrownTime; }
+            set { brownTime = value; }
+        }
+
         protected Spell NextMagicSpell;
         protected MirDirection NextMagicDirection;
         protected uint NextMagicTargetID;
@@ -911,12 +917,14 @@ namespace Server.MirObjects
                                     if (ob is TownArcher) continue;
                                     if (!ob.IsAttackTarget(Owner)) continue;
                                     if (ob.Hidden && (!CoolEye || Level < ob.Level)) continue;
+                                    if (ob.Master != null && Target != ob) continue;
                                     Target = ob;
                                     return;
                                 case ObjectType.Player:
                                     PlayerObject playerob = (PlayerObject)ob;
                                     if (!ob.IsAttackTarget(Owner)) continue;
                                     if (playerob.GMGameMaster || ob.Hidden && (!CoolEye || Level < ob.Level)) continue;
+                                    if (Target != ob) continue;
 
                                     Target = ob;
 

@@ -2661,7 +2661,7 @@ namespace Server.MirObjects
 
             if (target != null && target.Dead) return;
 
-            if (target != null && target.Race != ObjectType.Monster && target.Race != ObjectType.Player) return;
+            if (target != null && target.Race != ObjectType.Monster && target.Race != ObjectType.Player && target.Race != ObjectType.Hero) return;
 
             Direction = dir;
 
@@ -2908,7 +2908,7 @@ namespace Server.MirObjects
             for (int i = 0; i < cell.Objects.Count; i++)
             {
                 MapObject ob = cell.Objects[i];
-                if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
+                if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster && ob.Race != ObjectType.Hero) continue;
                 if (!ob.IsAttackTarget(this)) continue;
 
                 //Only undead targets
@@ -6677,6 +6677,13 @@ namespace Server.MirObjects
         public override Packet GetInfo() { return null; }
         public override int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
+            if (attacker.Race == ObjectType.Hero)
+            {
+                HeroObject heroAttacker = (HeroObject)attacker;
+                attacker = heroAttacker.Owner;
+                heroAttacker.Target = this;
+            }
+
             var armour = GetArmour(type, attacker, out bool hit);
 
             if (!hit)

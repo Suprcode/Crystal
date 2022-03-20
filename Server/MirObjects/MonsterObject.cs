@@ -2145,6 +2145,10 @@ namespace Server.MirObjects
             if (attacker == null || attacker.Node == null) return false;
             if (Dead) return false;
             if (Master == null) return true;
+
+            if (attacker.Race == ObjectType.Hero)
+                attacker = ((HeroObject)attacker).Owner;
+
             if (attacker.AMode == AttackMode.Peace) return false;
             if (Master == attacker) return attacker.AMode == AttackMode.All;
             if (Master.Race == ObjectType.Player && (attacker.InSafeZone || InSafeZone)) return false;
@@ -2329,7 +2333,7 @@ namespace Server.MirObjects
                 OperateTime = 0;
             }
 
-            if (Master != null && Master != attacker)
+            if (Master != null && Master != attacker && (Master.Race != ObjectType.Hero || Master.Race == ObjectType.Hero && attacker != ((HeroObject)Master).Owner))
                 if (Envir.Time > Master.BrownTime && Master.PKPoints < 200)
                     attacker.BrownTime = Envir.Time + Settings.Minute;
 

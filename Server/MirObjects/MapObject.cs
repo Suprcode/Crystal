@@ -60,7 +60,14 @@ namespace Server.MirObjects
         public byte Light;
         public int AttackSpeed;
 
-        public long CellTime, BrownTime, PKPointTime, LastHitTime, EXPOwnerTime;
+        protected long brownTime;
+        public virtual long BrownTime
+        {
+            get { return brownTime; }
+            set { brownTime = value; }
+        }
+
+        public long CellTime, PKPointTime, LastHitTime, EXPOwnerTime;
         public Color NameColour = Color.White;
         
         public bool Dead, Undead, Harvested, AutoRev;

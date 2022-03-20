@@ -4128,8 +4128,9 @@ namespace Server.MirObjects
         }
 
         public override bool IsAttackTarget(HumanObject attacker)
-        {
+        {            
             if (attacker == null || attacker.Node == null) return false;
+            if (attacker.Race == ObjectType.Hero) attacker = ((HeroObject)attacker).Owner;
             if (Dead || InSafeZone || attacker.InSafeZone || attacker == this || GMGameMaster) return false;
             if (CurrentMap.Info.NoFight) return false;
 
