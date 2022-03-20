@@ -2361,7 +2361,7 @@ namespace Server.MirObjects
                 {
                     MapObject ob = cell.Objects[i];
 
-                    if (ob.Race == ObjectType.Merchant)
+                    if (ob.Race == ObjectType.Merchant && Race == ObjectType.Player)
                     {
                         NPCObject NPC = (NPCObject)ob;
                         if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
@@ -2488,7 +2488,7 @@ namespace Server.MirObjects
                     {
                         MapObject ob = cell.Objects[i];
 
-                        if (ob.Race == ObjectType.Merchant)
+                        if (ob.Race == ObjectType.Merchant && Race == ObjectType.Player)
                         {
                             NPCObject NPC = (NPCObject)ob;
                             if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
