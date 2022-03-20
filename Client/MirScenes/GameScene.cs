@@ -9745,6 +9745,12 @@ namespace Client.MirScenes
             set { MapObject.User = value; }
         }
 
+        public static UserHeroObject Hero
+        {
+            get { return MapObject.Hero; }
+            set { MapObject.Hero = value; }
+        }
+
         public static List<MapObject> Objects = new List<MapObject>();
 
         public const int CellWidth = 48;
@@ -11254,6 +11260,8 @@ namespace Client.MirScenes
                     }
                     break;
                 case Spell.Reincarnation:
+                    if (actor == Hero && actor.NextMagicObject == null)
+                        actor.NextMagicObject = User;
                     if (actor.NextMagicObject != null)
                     {
                         if (actor.NextMagicObject.Dead && actor.NextMagicObject.Race == ObjectType.Player)

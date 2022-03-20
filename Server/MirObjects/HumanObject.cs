@@ -3324,7 +3324,7 @@ namespace Server.MirObjects
                 target = FindObject(targetID, 10);
             }
 
-            if (target != null && target.Race != ObjectType.Monster && target.Race != ObjectType.Player)
+            if (target != null && target.Race != ObjectType.Monster && target.Race != ObjectType.Player && target.Race != ObjectType.Hero)
             {
                 target = null;
             }
@@ -4480,20 +4480,21 @@ namespace Server.MirObjects
             {
                 case ObjectType.Monster:
                 case ObjectType.Player:
+                case ObjectType.Hero:
                     //Only targets
                     if (target.IsFriendlyTarget(this))
                     {
                         var stats = new Stats();
 
-                        if (target.Race == ObjectType.Monster || ((PlayerObject)target).Class == MirClass.Warrior || ((PlayerObject)target).Class == MirClass.Assassin)
+                        if (target.Race == ObjectType.Monster || ((HumanObject)target).Class == MirClass.Warrior || ((HumanObject)target).Class == MirClass.Assassin)
                         {
                             stats[Stat.MaxDC] = value;
                         }
-                        else if (((PlayerObject)target).Class == MirClass.Wizard || ((PlayerObject)target).Class == MirClass.Archer)
+                        else if (((HumanObject)target).Class == MirClass.Wizard || ((HumanObject)target).Class == MirClass.Archer)
                         {
                             stats[Stat.MaxMC] = value;
                         }
-                        else if (((PlayerObject)target).Class == MirClass.Taoist)
+                        else if (((HumanObject)target).Class == MirClass.Taoist)
                         {
                             stats[Stat.MaxSC] = value;
                         }
@@ -6443,7 +6444,7 @@ namespace Server.MirObjects
             target.ApplyPoison(new Poison { PType = pt, Duration = duration, TickSpeed = tickSpeed }, this);
             target.Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = sp });
         }
-        private UserItem GetAmulet(int count, int shape = 0)
+        protected UserItem GetAmulet(int count, int shape = 0)
         {
             for (int i = 0; i < Info.Equipment.Length; i++)
             {
@@ -6454,7 +6455,7 @@ namespace Server.MirObjects
 
             return null;
         }
-        private UserItem GetPoison(int count, byte shape = 0)
+        protected UserItem GetPoison(int count, byte shape = 0)
         {
             for (int i = 0; i < Info.Equipment.Length; i++)
             {

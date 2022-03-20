@@ -1056,6 +1056,7 @@ namespace Server.MirEnvir
                                 {
                                     case ObjectType.Monster:
                                     case ObjectType.Player:
+                                    case ObjectType.Hero:
                                         //Only targets
                                         if (target.IsFriendlyTarget(player))
                                         {

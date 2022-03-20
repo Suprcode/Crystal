@@ -37,35 +37,35 @@ namespace Server.MirObjects
         {
             get
             {
-                return base.CanMove && !ActiveBlizzard;
+                return base.CanMove && !ActiveBlizzard && !ActiveReincarnation;
             }
         }
         public override bool CanWalk
         {
             get
             {
-                return base.CanWalk && !ActiveBlizzard;
+                return base.CanWalk && !ActiveBlizzard && !ActiveReincarnation;
             }
         }
         public override bool CanRun
         {
             get
             {
-                return base.CanRun && !ActiveBlizzard;
+                return base.CanRun && !ActiveBlizzard && !ActiveReincarnation;
             }
         }
         public override bool CanAttack
         {
             get
             {
-                return base.CanAttack && !ActiveBlizzard;
+                return base.CanAttack && !ActiveBlizzard && !ActiveReincarnation;
             }
         }
         protected override bool CanCast
         {
             get
             {
-                return base.CanCast && !ActiveBlizzard;
+                return base.CanCast && !ActiveBlizzard && !ActiveReincarnation;
             }
         }
 
