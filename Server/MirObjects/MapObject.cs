@@ -296,7 +296,9 @@ namespace Server.MirObjects
         }
         public virtual void Add(HumanObject player)
         {
-            if (Race == ObjectType.Merchant && player.Race == ObjectType.Player)
+            if (player.Race != ObjectType.Player) return;
+
+            if (Race == ObjectType.Merchant)
             {
                 NPCObject npc = (NPCObject)this;
                 npc.CheckVisible((PlayerObject)player, true);
