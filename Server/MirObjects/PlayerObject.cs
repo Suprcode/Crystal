@@ -13249,6 +13249,7 @@ namespace Server.MirObjects
             HeroObject hero = CurrentHero.Class switch
             {
                 MirClass.Warrior => new WarriorHero(CurrentHero, this),
+                MirClass.Wizard => new WizardHero(CurrentHero, this),
                 _ => new HeroObject(CurrentHero, this)
             };            
 
@@ -13259,6 +13260,15 @@ namespace Server.MirObjects
                 hero.Spawn(CurrentMap, Front);
             else
                 hero.Spawn(CurrentMap, CurrentLocation);
+
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                var buff = Buffs[i];
+                buff.LastTime = Envir.Time;
+                buff.ObjectID = ObjectID;
+
+                AddBuff(buff.Type, null, (int)buff.ExpireTime, buff.Stats, true, true, buff.Values);
+            }
 
             Hero = hero;
             Info.HeroSpawned = true;

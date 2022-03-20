@@ -4517,7 +4517,7 @@ namespace Client.MirScenes
                         ob.Effects.Add(new Effect(Libraries.Magic3, 46, 8, 800, ob));
                         break;
                     case SpellEffect.MagicShieldUp:
-                        if (ob.Race != ObjectType.Player) return;
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Hero) return;
                         player = (PlayerObject)ob;
                         if (player.ShieldEffect != null)
                         {
@@ -4528,7 +4528,7 @@ namespace Client.MirScenes
                         player.Effects.Add(player.ShieldEffect = new Effect(Libraries.Magic, 3890, 3, 600, ob) { Repeat = true });
                         break;
                     case SpellEffect.MagicShieldDown:
-                        if (ob.Race != ObjectType.Player) return;
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Hero) return;
                         player = (PlayerObject)ob;
                         if (player.ShieldEffect != null)
                         {

@@ -133,7 +133,7 @@ namespace Server.MirObjects
                 return !Dead && Envir.Time >= ActionTime && !InTrapRock && !CurrentPoison.HasFlag(PoisonType.Paralysis) && !CurrentPoison.HasFlag(PoisonType.LRParalysis) && !CurrentPoison.HasFlag(PoisonType.Frozen);
             }
         }
-        public bool CanRun
+        public virtual bool CanRun
         {
             get
             {
@@ -1498,7 +1498,7 @@ namespace Server.MirObjects
                     Info.Inventory[i] = null;
                     Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
-                    Report.ItemChanged(item, item.Count, 1);
+                    Report?.ItemChanged(item, item.Count, 1);
                 }
             }
 
@@ -3227,6 +3227,31 @@ namespace Server.MirObjects
         {
             Magic(spell, dir, targetID, location);
         }
+
+        public int MagicCost(UserMagic magic)
+        {
+            int cost = magic.Info.BaseCost + magic.Info.LevelCost * magic.Level;
+            Spell spell = magic.Spell;
+            if (spell == Spell.Teleport || spell == Spell.Blink || spell == Spell.StormEscape)
+            {
+                if (Stats[Stat.TeleportManaPenaltyPercent] > 0)
+                {
+                    cost += (cost * Stats[Stat.TeleportManaPenaltyPercent]) / 100;
+                }
+            }
+
+            if (Stats[Stat.ManaPenaltyPercent] > 0)
+            {
+                cost += (cost * Stats[Stat.ManaPenaltyPercent]) / 100;
+            }
+
+            if (spell == Spell.Plague)
+            {
+                cost = Stats[Stat.MaxSC] + Stats[Stat.MinSC];
+            }
+
+            return cost;
+        }
         public virtual MapObject DefaultMagicTarget => this;
         public void Magic(Spell spell, MirDirection dir, uint targetID, Point location)
         {
@@ -3270,25 +3295,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            int cost = magic.Info.BaseCost + magic.Info.LevelCost * magic.Level;
-
-            if (spell == Spell.Teleport || spell == Spell.Blink || spell == Spell.StormEscape)
-            {
-                if (Stats[Stat.TeleportManaPenaltyPercent] > 0)
-                {
-                    cost += (cost * Stats[Stat.TeleportManaPenaltyPercent]) / 100;
-                }
-            }
-
-            if (Stats[Stat.ManaPenaltyPercent] > 0)
-            {
-                cost += (cost * Stats[Stat.ManaPenaltyPercent]) / 100;
-            }
-
-            if (spell == Spell.Plague)
-            {
-                cost = Stats[Stat.MaxSC] + Stats[Stat.MinSC];
-            }
+            int cost = MagicCost(magic);
 
             if (cost > MP)
             {

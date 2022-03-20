@@ -6,6 +6,7 @@ using System.Text;
 using Server.MirEnvir;
 using S = ServerPackets;
 
+
 namespace Server.MirObjects
 {
     public class SpellObject : MapObject
@@ -67,8 +68,13 @@ namespace Server.MirObjects
 
                 if (Spell == Spell.Reincarnation && Caster != null)
                 {
-                    ((PlayerObject)Caster).ReincarnationReady = true;
-                    ((PlayerObject)Caster).ReincarnationExpireTime = Envir.Time + 6000;
+                    ((HumanObject)Caster).ReincarnationReady = true;
+                    ((HumanObject)Caster).ReincarnationExpireTime = Envir.Time + 6000;
+                }
+
+                if (Spell == Spell.Blizzard || Spell == Spell.MeteorStrike)
+                {
+                    ((HumanObject)Caster).ActiveBlizzard = false;
                 }
 
                 CurrentMap.RemoveObject(this);
@@ -86,7 +92,7 @@ namespace Server.MirObjects
                 }
             }
 
-            if (Spell == Spell.Reincarnation && !((PlayerObject)Caster).ActiveReincarnation)
+            if (Spell == Spell.Reincarnation && !((HumanObject)Caster).ActiveReincarnation)
             {
                 CurrentMap.RemoveObject(this);
                 Despawn();
@@ -122,7 +128,7 @@ namespace Server.MirObjects
                         if (ob.Dead) return;
 
                         if (!ob.IsAttackTarget(Caster)) return;
-                        ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
+                        ob.Attacked(((HumanObject)Caster), Value, DefenceType.MAC, false);
                     }
                     break;
                 case Spell.Healing: //SafeZone
@@ -140,7 +146,7 @@ namespace Server.MirObjects
                         if (ob.Dead) return;
 
                         if (!ob.IsAttackTarget(Caster)) return;
-                        ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
+                        ob.Attacked(((HumanObject)Caster), Value, DefenceType.MAC, false);
                         if (!ob.Dead)
                             ob.ApplyPoison(new Poison
                             {
@@ -156,9 +162,9 @@ namespace Server.MirObjects
                     {
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
-                        if (Caster != null && ((PlayerObject)Caster).ActiveBlizzard == false) return;
+                        if (Caster != null && ((HumanObject)Caster).ActiveBlizzard == false) return;
                         if (!ob.IsAttackTarget(Caster)) return;
-                        ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
+                        ob.Attacked(((HumanObject)Caster), Value, DefenceType.MAC, false);
                         if (!ob.Dead && Envir.Random.Next(8) == 0)
                             ob.ApplyPoison(new Poison
                             {
@@ -173,9 +179,9 @@ namespace Server.MirObjects
                     {
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                         if (ob.Dead) return;
-                        if (Caster != null && ((PlayerObject)Caster).ActiveBlizzard == false) return;
+                        if (Caster != null && ((HumanObject)Caster).ActiveBlizzard == false) return;
                         if (!ob.IsAttackTarget(Caster)) return;
-                        ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
+                        ob.Attacked(((HumanObject)Caster), Value, DefenceType.MAC, false);
                     }
                     break;
                 case Spell.ExplosiveTrap:
@@ -185,7 +191,7 @@ namespace Server.MirObjects
                         if (!ob.IsAttackTarget(Caster)) return;
                         if (DetonatedTrap) return;
                         DetonateTrapNow();
-                        ob.Attacked(((PlayerObject)Caster), Value, DefenceType.MAC, false);
+                        ob.Attacked(((HumanObject)Caster), Value, DefenceType.MAC, false);
                     }
                     break;
                 case Spell.MapLava:
@@ -291,7 +297,7 @@ namespace Server.MirObjects
                 case Spell.Portal:
                     {
                         if (ob.Race != ObjectType.Player) return;
-                        if (Caster != ob && (Caster == null || (Caster.GroupMembers == null) || (!Caster.GroupMembers.Contains((PlayerObject)ob)))) return;
+                        if (Caster != ob && (Caster == null || (Caster.GroupMembers == null) || (!Caster.GroupMembers.Contains((HumanObject)ob)))) return;
 
                         var portal = Envir.Spells.SingleOrDefault(ob => ob != this && ob.Node != null
                             && ob.Spell == Spell.Portal
@@ -539,8 +545,8 @@ namespace Server.MirObjects
 
             if (Spell == Spell.Reincarnation && Caster != null && Caster.Node != null)
             {
-                ((PlayerObject)Caster).ActiveReincarnation = false;
-                ((PlayerObject)Caster).Enqueue(new S.CancelReincarnation { });
+                ((HumanObject)Caster).ActiveReincarnation = false;
+                ((HumanObject)Caster).Enqueue(new S.CancelReincarnation { });
             }
 
             if (Spell == Spell.ExplosiveTrap && Caster != null)

@@ -33,6 +33,42 @@ namespace Server.MirObjects
         public override int AmuletBeltMaximum => 2;
         public override int BeltSize => 2;
 
+        public override bool CanMove
+        {
+            get
+            {
+                return base.CanMove && !ActiveBlizzard;
+            }
+        }
+        public override bool CanWalk
+        {
+            get
+            {
+                return base.CanWalk && !ActiveBlizzard;
+            }
+        }
+        public override bool CanRun
+        {
+            get
+            {
+                return base.CanRun && !ActiveBlizzard;
+            }
+        }
+        public override bool CanAttack
+        {
+            get
+            {
+                return base.CanAttack && !ActiveBlizzard;
+            }
+        }
+        protected override bool CanCast
+        {
+            get
+            {
+                return base.CanCast && !ActiveBlizzard;
+            }
+        }
+
         public const int SearchDelay = 3000, ViewRange = 8, RoamDelay = 1000;
         public long RoamTime;
 
@@ -121,7 +157,7 @@ namespace Server.MirObjects
         {
             Envir.Heroes.Remove(this);
             CurrentMap.RemoveObject(this);
-            Master = null;
+            Owner = null;
 
             for (int i = Buffs.Count - 1; i >= 0; i--)
             {
@@ -176,6 +212,9 @@ namespace Server.MirObjects
         protected bool CanUseMagic(UserMagic magic)
         {
             if (magic == null) return false;
+            if (MagicCost(magic) > MP) return false;
+            if (magic.Key <= 0) return false;
+
             return true;
         }
         protected bool HasMagic(Spell spell) => Info.Magics.Any(x => x.Spell == spell);
@@ -620,15 +659,15 @@ namespace Server.MirObjects
             ProcessStacking();
             ProcessSearch();
             ProcessAI();            
-            ProcessFriend();
             ProcessTarget();
             ProcessRoam();
         }
 
         protected void ProcessAI() 
-        {
-            if (NextMagicSpell != Spell.None) return;
+        {           
+            if (NextMagicSpell != Spell.None) return;            
             ProcessFriend();
+
             if (NextMagicSpell != Spell.None) return;
             ProcessAttack();
         }
@@ -731,16 +770,7 @@ namespace Server.MirObjects
             }
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-
-            ActionTime = Envir.Time + 300;
-            AttackTime = Envir.Time + AttackSpeed;
-
-            int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
-
-            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility, true);
-            ActionList.Add(action);
+            Attack(Direction, Spell.None);
         }
 
         protected virtual bool InAttackRange()
@@ -748,6 +778,51 @@ namespace Server.MirObjects
             if (Target.CurrentMap != CurrentMap) return false;
 
             return Target.CurrentLocation != CurrentLocation && Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
+        }
+
+        protected List<MapObject> FindAllTargets(int dist, Point location, bool needSight = true)
+        {
+            List<MapObject> targets = new List<MapObject>();
+            for (int d = 0; d <= dist; d++)
+            {
+                for (int y = location.Y - d; y <= location.Y + d; y++)
+                {
+                    if (y < 0) continue;
+                    if (y >= CurrentMap.Height) break;
+
+                    for (int x = location.X - d; x <= location.X + d; x += Math.Abs(y - location.Y) == d ? 1 : d * 2)
+                    {
+                        if (x < 0) continue;
+                        if (x >= CurrentMap.Width) break;
+
+                        Cell cell = CurrentMap.GetCell(x, y);
+                        if (!cell.Valid || cell.Objects == null) continue;
+
+                        for (int i = 0; i < cell.Objects.Count; i++)
+                        {
+                            MapObject ob = cell.Objects[i];
+                            switch (ob.Race)
+                            {
+                                case ObjectType.Monster:
+                                case ObjectType.Player:
+                                case ObjectType.Hero:
+                                    if (!ob.IsAttackTarget(this)) continue;
+                                    if (ob.Hidden && (!CoolEye || Level < ob.Level) && needSight) continue;
+                                    if (ob.Race == ObjectType.Player)
+                                    {
+                                        PlayerObject player = ((PlayerObject)ob);
+                                        if (player.GMGameMaster) continue;
+                                    }
+                                    targets.Add(ob);
+                                    continue;
+                                default:
+                                    continue;
+                            }
+                        }
+                    }
+                }
+            }
+            return targets;
         }
 
         protected virtual void MoveTo(Point location)
@@ -865,18 +940,22 @@ namespace Server.MirObjects
         }
         public override bool IsAttackTarget(HumanObject attacker)
         {
+            if (Owner == null) return false;
             return Owner.IsAttackTarget(attacker);
         }
         public override bool IsAttackTarget(MonsterObject attacker)
-        {            
+        {
+            if (Owner == null) return false;
             return Owner.IsAttackTarget(attacker);
         }
         public override bool IsFriendlyTarget(HumanObject ally)
         {
+            if (Owner == null) return false;
             return Owner.IsFriendlyTarget(ally);
         }
         public override bool IsFriendlyTarget(MonsterObject ally)
         {
+            if (Owner == null) return false;
             return Owner.IsFriendlyTarget(ally);
         }
 
@@ -957,15 +1036,6 @@ namespace Server.MirObjects
             Info.Equipment.CopyTo(packet.Equipment, 0);
 
             Owner.Enqueue(packet);
-
-            for (int i = 0; i < Buffs.Count; i++)
-            {
-                var buff = Buffs[i];
-                buff.LastTime = Envir.Time;
-                buff.ObjectID = ObjectID;
-
-                AddBuff(buff.Type, null, (int)buff.ExpireTime, buff.Stats, true, true, buff.Values);
-            }
         }
 
         public override Packet GetInfo()
