@@ -1425,7 +1425,7 @@ namespace Server.MirObjects
                         Info.Equipment[i] = null;
                         Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
-                        Report.ItemChanged(item, item.Count, 1);
+                        Report?.ItemChanged(item, item.Count, 1);
                     }
                 }
 
