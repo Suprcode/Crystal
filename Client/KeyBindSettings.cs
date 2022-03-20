@@ -62,6 +62,10 @@ namespace Client
         Belt5Alt,
         Belt6,
         Belt6Alt,
+        Belt7,
+        Belt7Alt,
+        Belt8,
+        Belt8Alt,
         Logout,
         Exit,
         CreaturePickup,
@@ -316,6 +320,14 @@ namespace Client
             InputKey = new KeyBind { Group = "Belt", Description = "Belt Slot 6", function = KeybindOptions.Belt6, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.D6 };
             list.Add(InputKey);
             InputKey = new KeyBind { Group = "Belt", Description = "Belt Slot 6 Alt", function = KeybindOptions.Belt6Alt, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.NumPad6 };
+            list.Add(InputKey);
+            InputKey = new KeyBind { Group = "Belt", Description = "Belt Slot 7", function = KeybindOptions.Belt7, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.D7 };
+            list.Add(InputKey);
+            InputKey = new KeyBind { Group = "Belt", Description = "Belt Slot 7 Alt", function = KeybindOptions.Belt7Alt, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.NumPad7 };
+            list.Add(InputKey);
+            InputKey = new KeyBind { Group = "Belt", Description = "Belt Slot 8", function = KeybindOptions.Belt8, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.D8 };
+            list.Add(InputKey);
+            InputKey = new KeyBind { Group = "Belt", Description = "Belt Slot 8 Alt", function = KeybindOptions.Belt8Alt, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.NumPad8 };
             list.Add(InputKey);
 
             InputKey = new KeyBind { Group = "General", Description = "Logout", function = KeybindOptions.Logout, RequireAlt = 1, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.X };
