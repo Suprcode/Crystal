@@ -119,6 +119,8 @@ namespace Server.MirObjects
 
         public override void Enqueue(Packet p) 
         {
+            if (p == null) return;
+
             switch ((ServerPacketIds)p.Index)
             {
                 case ServerPacketIds.AddBuff:
