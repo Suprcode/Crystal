@@ -3409,7 +3409,7 @@ namespace Client.MirScenes.Dialogs
                         Actor.Magics[i].Key = 0;
                 }
 
-                Network.Enqueue(new C.MagicKey { Spell = Magic.Spell, Key = Key });
+                Network.Enqueue(new C.MagicKey { Spell = Magic.Spell, Key = Key, OldKey = Magic.Key });
                 Magic.Key = Key;
                 foreach (SkillBarDialog Bar in GameScene.Scene.SkillBarDialogs)
                     Bar.Update();

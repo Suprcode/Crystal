@@ -1237,7 +1237,7 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             HumanObject actor = Player;
-            if (p.Key > 16)
+            if (p.Key > 16 || p.OldKey > 16)
             {
                 if (!Player.HeroSpawned) return;
                 actor = Player.Hero;
