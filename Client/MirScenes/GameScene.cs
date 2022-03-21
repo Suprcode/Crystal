@@ -3410,12 +3410,13 @@ namespace Client.MirScenes
 
         private void DeleteItem(S.DeleteItem p)
         {
+            UserObject actor = null;
             for (int i = 0; i < User.Inventory.Length; i++)
             {
+                if (actor != null) break;
                 UserItem item = User.Inventory[i];
 
                 if (item != null && item.Slots.Length > 0)
-                    if (item != null && item.Slots.Length > 0)
                 {
                     for (int j = 0; j < item.Slots.Length; j++)
                     {
@@ -3427,6 +3428,7 @@ namespace Client.MirScenes
                             item.Slots[j] = null;
                         else
                             slotItem.Count -= p.Count;
+                        actor = User;
                         break;
                     }
                 }
@@ -3437,49 +3439,126 @@ namespace Client.MirScenes
                     User.Inventory[i] = null;
                 else
                     item.Count -= p.Count;
-                break;
+                actor = User;
             }
 
-            for (int i = 0; i < User.Equipment.Length; i++)
+            if (actor == null)
             {
-                UserItem item = User.Equipment[i];
-
-                if (item != null && item.Slots.Length > 0)
+                for (int i = 0; i < User.Equipment.Length; i++)
                 {
-                    for (int j = 0; j < item.Slots.Length; j++)
+                    if (actor != null) break;
+                    UserItem item = User.Equipment[i];
+
+                    if (item != null && item.Slots.Length > 0)
                     {
-                        UserItem slotItem = item.Slots[j];
+                        for (int j = 0; j < item.Slots.Length; j++)
+                        {
+                            UserItem slotItem = item.Slots[j];
 
-                        if (slotItem == null || slotItem.UniqueID != p.UniqueID) continue;
+                            if (slotItem == null || slotItem.UniqueID != p.UniqueID) continue;
 
-                        if (slotItem.Count == p.Count)
-                            item.Slots[j] = null;
-                        else
-                            slotItem.Count -= p.Count;
-                        break;
+                            if (slotItem.Count == p.Count)
+                                item.Slots[j] = null;
+                            else
+                                slotItem.Count -= p.Count;
+                            actor = User;
+                            break;
+                        }
                     }
+
+                    if (item == null || item.UniqueID != p.UniqueID) continue;
+
+                    if (item.Count == p.Count)
+                        User.Equipment[i] = null;
+                    else
+                        item.Count -= p.Count;
+                    actor = User;
+                }
+            }
+
+            if (Hero != null && actor == null)
+            {                
+                for (int i = 0; i < Hero.Inventory.Length; i++)
+                {
+                    if (actor != null) break;
+                    UserItem item = Hero.Inventory[i];
+
+                    if (item != null && item.Slots.Length > 0)
+                    {
+                        for (int j = 0; j < item.Slots.Length; j++)
+                        {
+                            UserItem slotItem = item.Slots[j];
+
+                            if (slotItem == null || slotItem.UniqueID != p.UniqueID) continue;
+
+                            if (slotItem.Count == p.Count)
+                                item.Slots[j] = null;
+                            else
+                                slotItem.Count -= p.Count;
+                            actor = Hero;
+                            break;
+                        }
+                    }
+
+                    if (item == null || item.UniqueID != p.UniqueID) continue;
+
+                    if (item.Count == p.Count)
+                        User.Inventory[i] = null;
+                    else
+                        item.Count -= p.Count;
+                    actor = Hero;
                 }
 
-                if (item == null || item.UniqueID != p.UniqueID) continue;
+                if (actor == null)
+                {
+                    for (int i = 0; i < Hero.Equipment.Length; i++)
+                    {
+                        if (actor != null) break;
+                        UserItem item = Hero.Equipment[i];
 
-                if (item.Count == p.Count)
-                    User.Equipment[i] = null;
-                else
-                    item.Count -= p.Count;
-                break;
+                        if (item != null && item.Slots.Length > 0)
+                        {
+                            for (int j = 0; j < item.Slots.Length; j++)
+                            {
+                                UserItem slotItem = item.Slots[j];
+
+                                if (slotItem == null || slotItem.UniqueID != p.UniqueID) continue;
+
+                                if (slotItem.Count == p.Count)
+                                    item.Slots[j] = null;
+                                else
+                                    slotItem.Count -= p.Count;
+                                actor = Hero;
+                                break;
+                            }
+                        }
+
+                        if (item == null || item.UniqueID != p.UniqueID) continue;
+
+                        if (item.Count == p.Count)
+                            User.Equipment[i] = null;
+                        else
+                            item.Count -= p.Count;
+                        actor = Hero;
+                    }
+                }
             }
-            for (int i = 0; i < Storage.Length; i++)
+
+            if (actor == null)
             {
-                var item = Storage[i];
-                if (item == null || item.UniqueID != p.UniqueID) continue;
+                for (int i = 0; i < Storage.Length; i++)
+                {
+                    var item = Storage[i];
+                    if (item == null || item.UniqueID != p.UniqueID) continue;
 
-                if (item.Count == p.Count)
-                    Storage[i] = null;
-                else
-                    item.Count -= p.Count;
-                break;
+                    if (item.Count == p.Count)
+                        Storage[i] = null;
+                    else
+                        item.Count -= p.Count;
+                    break;
+                }
             }
-            User.RefreshStats();
+            actor?.RefreshStats();
         }
         private void Death(S.Death p)
         {

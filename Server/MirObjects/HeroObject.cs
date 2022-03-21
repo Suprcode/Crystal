@@ -134,6 +134,7 @@ namespace Server.MirObjects
                 case ServerPacketIds.PauseBuff:
                 case ServerPacketIds.MagicDelay:
                 case ServerPacketIds.MagicLeveled:
+                case ServerPacketIds.DeleteItem:
                     Owner.Enqueue(p);
                     break;
             }
