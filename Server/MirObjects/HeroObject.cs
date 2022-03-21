@@ -69,7 +69,7 @@ namespace Server.MirObjects
             }
         }
 
-        public const int SearchDelay = 3000, ViewRange = 8, RoamDelay = 1000;
+        public const int SearchDelay = 3000, ViewRange = 8, RoamDelay = 1000, RevivalDelay = 2000;
         public long RoamTime;
 
         public override long BrownTime
@@ -116,10 +116,16 @@ namespace Server.MirObjects
 
             RefreshStats();
             SendInfo();
-            if (HP == 0)
+
+            switch (HP)
             {
-                SetHP(Stats[Stat.HP]);
-                SetMP(Stats[Stat.MP]);
+                case 0:
+                    Dead = true;
+                    break;
+                case -1:
+                    SetHP(Stats[Stat.HP]);
+                    SetMP(Stats[Stat.MP]);
+                    break;
             }
         }
 
@@ -162,28 +168,41 @@ namespace Server.MirObjects
             Spawned();
         }
 
+        public void Despawn(bool cleanup)
+        {
+            Despawn();
+
+            if (cleanup)
+                CleanUp();
+        }
+
         public override void Despawn()
         {
-            Envir.Heroes.Remove(this);
-            CurrentMap.RemoveObject(this);
-            Owner = null;
-
-            for (int i = Buffs.Count - 1; i >= 0; i--)
+            if (Node != null)
             {
-                var buff = Buffs[i];
-                buff.Caster = null;
-                buff.ObjectID = 0;
+                Envir.Heroes.Remove(this);
+                CurrentMap.RemoveObject(this);
 
-                if (buff.Properties.HasFlag(BuffProperty.RemoveOnExit))
+                for (int i = Buffs.Count - 1; i >= 0; i--)
                 {
-                    Buffs.RemoveAt(i);
+                    var buff = Buffs[i];
+                    buff.Caster = null;
+                    buff.ObjectID = 0;
+
+                    if (buff.Properties.HasFlag(BuffProperty.RemoveOnExit))
+                    {
+                        Buffs.RemoveAt(i);
+                    }
                 }
-            }
 
-            base.Despawn();
+                base.Despawn();
+            }            
+        }
 
-            Info.Player = null;
-            Info = null;                              
+        protected override void CleanUp()
+        {
+            Owner = null;
+            Info = null;
         }
 
         public override void Spawned()
@@ -558,6 +577,7 @@ namespace Server.MirObjects
             BrownTime = Envir.Time;
 
             Broadcast(new S.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Owner.Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.Dead });
 
             for (int i = 0; i < Buffs.Count; i++)
             {
@@ -570,6 +590,24 @@ namespace Server.MirObjects
 
             PoisonList.Clear();
             InTrapRock = false;
+        }
+
+        public override void Revive(int hp, bool effect)
+        {
+            if (!Dead) return;
+
+            SetHP(hp);
+            SetMP(Stats[Stat.MP]);
+
+            CurrentMap.RemoveObject(this);
+            Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
+
+            Dead = false;
+            ActionTime = Envir.Time + RevivalDelay;
+
+            CurrentMap.AddObject(this);
+            BroadcastInfo();
+            Broadcast(new S.ObjectRevived { ObjectID = ObjectID, Effect = effect });
         }
 
         public override void LevelUp()
@@ -657,10 +695,10 @@ namespace Server.MirObjects
             if (Target != null && (Target.CurrentMap != CurrentMap || !Target.IsAttackTarget(this) || !Functions.InRange(CurrentLocation, Target.CurrentLocation, Globals.DataRange)))
                 Target = null;
 
-            if (Dead) return;
-
             if (!Functions.InRange(CurrentLocation, Owner.CurrentLocation, Globals.DataRange) || CurrentMap != Owner.CurrentMap)
                 OwnerRecall();
+
+            if (Dead) return;            
 
             if (Owner.PMode == PetMode.MoveOnly || Owner.PMode == PetMode.None)
                 Target = null;
@@ -887,6 +925,13 @@ namespace Server.MirObjects
         public void OwnerRecall()
         {
             if (Owner == null) return;
+
+            if (Dead)
+            {
+                Despawn(false);
+                return;
+            }
+
             if (!Teleport(Owner.CurrentMap, Owner.Back))
                 Teleport(Owner.CurrentMap, Owner.CurrentLocation);
         }        
@@ -952,11 +997,15 @@ namespace Server.MirObjects
         public override bool IsAttackTarget(HumanObject attacker)
         {
             if (Owner == null) return false;
+            if (Dead) return false;
+
             return Owner.IsAttackTarget(attacker);
         }
         public override bool IsAttackTarget(MonsterObject attacker)
         {
             if (Owner == null) return false;
+            if (Dead) return false;
+
             return Owner.IsAttackTarget(attacker);
         }
         public override bool IsFriendlyTarget(HumanObject ally)

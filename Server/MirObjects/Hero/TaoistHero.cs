@@ -98,9 +98,10 @@ namespace Server.MirObjects
         }
 
         protected override void ProcessAttack()
-        {
-            if (!CanCast || Target == null || Target.Dead) return;
+        {           
+            if (Target == null || Target.Dead) return;
             TargetDistance = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
+            if (!CanCast) return;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             UserMagic magic;
@@ -116,6 +117,8 @@ namespace Server.MirObjects
                     return;
                 }
             }
+
+            if (amuletItem == null) return;
 
             magic = GetMagic(Spell.Curse);
             if (CanUseMagic(magic) && !Target.HasBuff(BuffType.Curse))

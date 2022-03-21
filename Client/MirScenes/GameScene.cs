@@ -60,7 +60,7 @@ namespace Client.MirScenes
                 MainDialog.HeroSummonButton.Visible = value;
             }
         }
-        public HeroSpawnState heroSpawnState;
+        public HeroSpawnState HeroSpawnState;
 
         public MapControl MapControl;
         public MainDialog MainDialog;
@@ -848,7 +848,7 @@ namespace Client.MirScenes
             UserObject actor = User;
             if (key > 16)
             {
-                if (HeroObject == null) return;
+                if (HeroObject == null || Hero.Dead) return;
                 actor = Hero;
             }
 
@@ -5998,10 +5998,10 @@ namespace Client.MirScenes
 
         private void UpdateHeroSpawnState(S.UpdateHeroSpawnState p)
         {
-            heroSpawnState = p.State;
+            HeroSpawnState = p.State;
 
             MainDialog.HeroInfoPanel.Visible = p.State > HeroSpawnState.None;
-            MainDialog.HeroMenuButton.Visible = p.State == HeroSpawnState.Summoned;
+            MainDialog.HeroMenuButton.Visible = p.State > HeroSpawnState.None;
             HeroMenuPanel.Visible = HeroMenuPanel.Visible && MainDialog.HeroMenuButton.Visible;
 
             if (p.State < HeroSpawnState.Summoned)

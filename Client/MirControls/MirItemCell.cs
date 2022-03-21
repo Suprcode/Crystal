@@ -824,7 +824,7 @@ namespace Client.MirControls
         public void RemoveHeroItem()
         {
             int count = 0;
-            if (GameScene.Hero == null) return;
+            if (GameScene.Hero == null || GameScene.Hero.Dead) return;
 
             for (int i = 0; i < GameScene.Hero.Inventory.Length; i++)
             {
@@ -1226,6 +1226,8 @@ namespace Client.MirControls
                             #endregion
                             #region From Hero Inventory
                             case MirGridType.HeroInventory:
+                                if (GameScene.Hero == null || GameScene.Hero.Dead)
+                                    return;
                                 if (Item != null && GameScene.SelectedCell.Item.Info.Type == ItemType.Amulet)
                                 {
                                     if (GameScene.SelectedCell.Item.Info == Item.Info && Item.Count < Item.Info.StackSize)
@@ -1792,7 +1794,9 @@ namespace Client.MirControls
                         break;
                     #endregion
                     #region To Hero Inventory
-                    case MirGridType.HeroInventory: 
+                    case MirGridType.HeroInventory:
+                        if (GameScene.Hero == null || GameScene.Hero.Dead)
+                            return;
                         switch (GameScene.SelectedCell.GridType)
                         {
                             #region From Hero Inventory
@@ -1945,6 +1949,8 @@ namespace Client.MirControls
                     case MirGridType.HeroEquipment:
 
                         if (GameScene.SelectedCell.GridType != MirGridType.HeroInventory) return;
+                        if (GameScene.Hero == null || GameScene.Hero.Dead)
+                            return;
 
                         if (Item != null && GameScene.SelectedCell.Item.Info.Type == ItemType.Amulet)
                         {
@@ -2272,6 +2278,9 @@ namespace Client.MirControls
         private bool CanWearItem(UserObject actor, UserItem i)
         {
             if (i == null) return false;
+
+            if (actor == GameScene.Hero && actor.Dead)
+                return false;
 
             //If Can remove;
 

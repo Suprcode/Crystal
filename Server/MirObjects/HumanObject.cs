@@ -1648,8 +1648,8 @@ namespace Server.MirObjects
             CurrentMap.RemoveObject(this);
             Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
 
-            CurrentMap = this.CurrentMap;
-            CurrentLocation = this.CurrentLocation;
+            CurrentMap = CurrentMap;
+            CurrentLocation = CurrentLocation;
 
             CurrentMap.AddObject(this);
 

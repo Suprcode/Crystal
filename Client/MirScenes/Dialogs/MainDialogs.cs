@@ -3181,6 +3181,8 @@ namespace Client.MirScenes.Dialogs
             {
                 if (HeroMagic)
                 {
+                    if (GameScene.Hero == null || GameScene.Hero.Dead)
+                        return;
                     new AssignKeyPanel(Magic, 17, new string[]
                         {
                             "Shift" + Environment.NewLine + "F1",
@@ -3821,8 +3823,9 @@ namespace Client.MirScenes.Dialogs
 
     public sealed class HeroInfoPanel : MirImageControl
     {
-        private MirImageControl Avatar, NameContainer, HealthContainer, HealthBar, ManaBar, ExperienceBar;
-        private MirLabel NameLabel, LevelLabel; 
+        private MirImageControl Avatar, NameContainer, HealthContainer, HealthBar, ManaBar, ExperienceBar, DangerAvatar, DeadAvatar;
+        private MirLabel NameLabel, LevelLabel;
+        private DateTime NextAvatarChange;
         
         private string Name => GameScene.Hero.Name;
         private int Level => GameScene.Hero.Level;
@@ -3832,6 +3835,7 @@ namespace Client.MirScenes.Dialogs
         private long MaxExperience => GameScene.Hero.MaxExperience;
         private byte PercentHealth => GameScene.Hero.PercentHealth;
         private byte PercentMana => GameScene.Hero.PercentMana;
+        private bool Dead => GameScene.Scene.HeroSpawnState == HeroSpawnState.Dead;
 
         public HeroInfoPanel()
         {
@@ -3846,6 +3850,25 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(14, 19),
                 Parent = this,
                 Visible = true
+            };
+            Avatar.BeforeDraw += Avatar_BeforeDraw;
+
+            DangerAvatar = new MirImageControl
+            {
+                Index = 1750,
+                Library = Libraries.Prguse,
+                Location = new Point(14, 19),
+                Parent = this,
+                Visible = false
+            };
+
+            DeadAvatar = new MirImageControl
+            {
+                Index = 1379,
+                Library = Libraries.Prguse,
+                Location = new Point(14, 19),
+                Parent = this,
+                Visible = false
             };
 
             NameContainer = new MirImageControl
@@ -3924,8 +3947,19 @@ namespace Client.MirScenes.Dialogs
         public void Update()
         {
             Avatar.Index = 1400 + (byte)Class + 10 * (byte)Gender;
+            DangerAvatar.Index = 1750 + (byte)Class + 10 * (byte)Gender;
             NameLabel.Text = Name;
             LevelLabel.Text = Level.ToString();
+        }
+
+        private void Avatar_BeforeDraw(object sender, EventArgs e)
+        {
+            DeadAvatar.Visible = Dead;
+            if (PercentHealth > 20) return;
+            if (CMain.Now < NextAvatarChange) return;
+
+            NextAvatarChange = CMain.Now.AddMilliseconds(400);
+            DangerAvatar.Visible = !DangerAvatar.Visible;
         }
 
         private void ExperienceBar_BeforeDraw(object sender, EventArgs e)

@@ -730,7 +730,7 @@ namespace Server.MirObjects
             else
                 GainExp((uint)expPoint);
 
-            if (HeroSpawned)
+            if (HeroSpawned && !Hero.Dead)
             {
                 expPoint = Hero.ReduceExp(amount, targetLevel);
                 expPoint = (int)(expPoint * Settings.ExpRate);
@@ -1174,7 +1174,7 @@ namespace Server.MirObjects
             }
 
             if (HasHero && Info.HeroSpawned)
-                SpawnHero();
+                SummonHero();
 
             if (InSafeZone && Info.LastLogoutDate > DateTime.MinValue)
             {
@@ -3260,7 +3260,7 @@ namespace Server.MirObjects
                             if (!HasHero) return;
 
                             if (!HeroSpawned)
-                                SpawnHero();
+                                SummonHero();
                             else
                             {
                                 DespawnHero();
@@ -4956,7 +4956,7 @@ namespace Server.MirObjects
                     toArray = Info.Equipment;
                     break;
                 case MirGridType.HeroInventory:
-                    if (HasHero && HeroSpawned)
+                    if (HasHero && HeroSpawned && !Hero.Dead)
                     {
                         toArray = CurrentHero.Equipment;
                         toGrid = MirGridType.HeroEquipment;
@@ -5092,7 +5092,7 @@ namespace Server.MirObjects
         {
             S.TakeBackHeroItem p = new S.TakeBackHeroItem { From = from, To = to, Success = false };
 
-            if (!HasHero || !HeroSpawned)
+            if (!HasHero || !HeroSpawned || Hero.Dead)
             {
                 Enqueue(p);
                 return;
@@ -5145,7 +5145,7 @@ namespace Server.MirObjects
         {
             S.TransferHeroItem p = new S.TransferHeroItem { From = from, To = to, Success = false };
 
-            if (!HasHero || !HeroSpawned)
+            if (!HasHero || !HeroSpawned || Hero.Dead)
             {
                 Enqueue(p);
                 return;
@@ -8602,7 +8602,7 @@ namespace Server.MirObjects
                 CurrentHero = info;
 
             Enqueue(new S.NewHero { Result = 10 });
-            SpawnHero();
+            SummonHero();
         }
 
         public HeroObject GetHero()
@@ -13245,7 +13245,7 @@ namespace Server.MirObjects
         {
             get { return Hero != null; }
         }
-        public void SpawnHero()
+        public void SummonHero()
         {
             HeroObject hero = CurrentHero.Class switch
             {
@@ -13258,6 +13258,15 @@ namespace Server.MirObjects
             hero.ActionTime = Envir.Time + 1000;
             hero.RefreshNameColour();
 
+            if (!hero.Dead)
+                SpawnHero(hero);
+
+            Hero = hero;
+            Info.HeroSpawned = true;
+            Enqueue(new S.UpdateHeroSpawnState { State = hero.Dead ? HeroSpawnState.Dead : HeroSpawnState.Summoned });
+        }
+        private void SpawnHero(HeroObject hero)
+        {
             if (CurrentMap.ValidPoint(Front))
                 hero.Spawn(CurrentMap, Front);
             else
@@ -13271,16 +13280,31 @@ namespace Server.MirObjects
 
                 AddBuff(buff.Type, null, (int)buff.ExpireTime, buff.Stats, true, true, buff.Values);
             }
-
-            Hero = hero;
-            Info.HeroSpawned = true;
-            Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.Summoned });
         }
         public void DespawnHero()
         {         
-            Hero.Despawn();
+            Hero.Despawn(true);
             Hero = null;
             Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.None });
+        }
+        public void ReviveHero()
+        {
+            if (CurrentHero == null) return;
+            if (CurrentHero.HP != 0) return;
+
+            if (Hero != null)
+            {
+                if (Hero.Node != null)
+                    Hero.Revive(Hero.Stats[Stat.HP], true);
+                else
+                {
+                    CurrentHero.HP = Hero.Stats[Stat.HP];
+                    Hero.Dead = false;
+                    SpawnHero(Hero);
+                }
+                Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.Summoned });
+            }
+            else CurrentHero.HP = -1;
         }
     }
 }

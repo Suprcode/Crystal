@@ -1239,7 +1239,7 @@ namespace Server.MirNetwork
             HumanObject actor = Player;
             if (p.Key > 16 || p.OldKey > 16)
             {
-                if (!Player.HeroSpawned) return;
+                if (!Player.HeroSpawned || Player.Hero.Dead) return;
                 actor = Player.Hero;
             }
 
@@ -1262,7 +1262,11 @@ namespace Server.MirNetwork
 
             HumanObject actor = Player;
             if (Player.HeroSpawned && p.ObjectID == Player.Hero.ObjectID)
+            {
+                if (Player.Hero.Dead)
+                    return;
                 actor = Player.Hero;
+            }
 
             if (!actor.Dead && (actor.ActionTime > Envir.Time || actor.SpellTime > Envir.Time))
                 _retryList.Enqueue(p);
