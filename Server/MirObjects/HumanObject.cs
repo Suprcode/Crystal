@@ -1394,7 +1394,7 @@ namespace Server.MirObjects
                         Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = count });
                         item.Count -= count;
 
-                        Report.ItemChanged(item, count, 1);
+                        Report?.ItemChanged(item, count, 1);
                     }
                     else if (Envir.Random.Next(30) == 0)
                     {
@@ -1404,7 +1404,7 @@ namespace Server.MirObjects
                             Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
                             ReceiveChat($"You died and {item.Info.FriendlyName} has been returned to it's owner.", ChatType.Hint);
-                            Report.ItemMailed(item, 1, 1);
+                            Report?.ItemMailed(item, 1, 1);
 
                             continue;
                         }
@@ -1471,7 +1471,7 @@ namespace Server.MirObjects
                     Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = count });
                     item.Count -= count;
 
-                    Report.ItemChanged(item, count, 1);
+                    Report?.ItemChanged(item, count, 1);
                 }
                 else if (Envir.Random.Next(10) == 0)
                 {
@@ -1481,7 +1481,7 @@ namespace Server.MirObjects
                         Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
                         ReceiveChat($"You died and {item.Info.FriendlyName} has been returned to has been returned to it's owner.", ChatType.Hint);
-                        Report.ItemMailed(item, 1, 1);
+                        Report?.ItemMailed(item, 1, 1);
 
                         continue;
                     }
