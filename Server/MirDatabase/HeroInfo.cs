@@ -13,6 +13,8 @@ namespace Server.MirDatabase
             Class = p.Class;
             Gender = p.Gender;
 
+            HP = -1;
+
             Inventory = new UserItem[10];
 
             CreationDate = Envir.Now;
