@@ -1104,6 +1104,7 @@ namespace Server.MirObjects
                     if (player.Info.Level < Settings.Hero_RequiredLevel)
                     {
                         player.ReceiveChat(String.Format("You have to be at least level {0} to create a hero.", Settings.Hero_RequiredLevel), ChatType.System);
+                        break;
                     }
                     player.CanCreateHero = true;
                     player.Enqueue(new S.HeroCreateRequest()
