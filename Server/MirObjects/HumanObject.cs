@@ -1670,12 +1670,17 @@ namespace Server.MirObjects
             Broadcast(new S.ObjectRevived { ObjectID = ObjectID, Effect = effect });
         }
 
+        protected virtual void SendBaseStats()
+        {
+            Enqueue(new S.BaseStatsInfo { Stats = Settings.ClassBaseStats[(byte)Class] });
+        }
+
         #region Refresh Stats
         public void RefreshStats()
         {
             if (HasUpdatedBaseStats == false)
             {
-                Enqueue(new S.BaseStatsInfo { Stats = Settings.ClassBaseStats[(byte)Class] });
+                SendBaseStats();                
                 HasUpdatedBaseStats = true;
             }
 

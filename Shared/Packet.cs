@@ -685,6 +685,8 @@ public abstract class Packet
                 return new S.RemoveMagic();
             case (short)ServerPacketIds.BaseStatsInfo:
                 return new S.BaseStatsInfo();
+            case (short)ServerPacketIds.HeroBaseStatsInfo:
+                return new S.HeroBaseStatsInfo();
             case (short)ServerPacketIds.UserName:
                 return new S.UserName();
             case (short)ServerPacketIds.ChatItemStats:

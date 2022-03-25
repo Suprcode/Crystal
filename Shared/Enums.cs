@@ -1551,6 +1551,7 @@ public enum ServerPacketIds : short
     ObjectSitDown,
     InTrapRock,
     BaseStatsInfo,
+    HeroBaseStatsInfo,
     UserName,
     ChatItemStats,
     GuildNoticeChange,

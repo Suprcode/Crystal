@@ -4171,6 +4171,26 @@ namespace ServerPackets
         }
     }
 
+    public sealed class HeroBaseStatsInfo : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.HeroBaseStatsInfo; }
+        }
+
+        public BaseStats Stats;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Stats = new BaseStats(reader);
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            Stats.Save(writer);
+        }
+    }
+
     public sealed class UserName : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.UserName; } }

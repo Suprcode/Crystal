@@ -1176,6 +1176,13 @@ namespace Server.MirObjects
             Info.Equipment.CopyTo(packet.Equipment, 0);
 
             Owner.Enqueue(packet);
+
+            SendBaseStats();
+        }
+
+        protected override void SendBaseStats()
+        {
+            Owner.Enqueue(new S.HeroBaseStatsInfo { Stats = Settings.ClassBaseStats[(byte)Class] });
         }
 
         public override Packet GetInfo()

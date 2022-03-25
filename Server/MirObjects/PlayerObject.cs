@@ -1098,7 +1098,7 @@ namespace Server.MirObjects
                 SendUpdateQuest(quest, QuestState.Add);
             }
 
-            Enqueue(new S.BaseStatsInfo { Stats = Settings.ClassBaseStats[(byte)Class] });
+            SendBaseStats();
             GetObjectsPassive();
             Enqueue(new S.TimeOfDay { Lights = Envir.Lights });
             Enqueue(new S.ChangeAMode { Mode = AMode });

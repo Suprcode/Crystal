@@ -1632,6 +1632,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.BaseStatsInfo:
                     BaseStatsInfo((S.BaseStatsInfo)p);
                     break;
+                case (short)ServerPacketIds.HeroBaseStatsInfo:
+                    HeroBaseStatsInfo((S.HeroBaseStatsInfo)p);
+                    break;
                 case (short)ServerPacketIds.UserName:
                     UserName((S.UserName)p);
                     break;
@@ -3399,6 +3402,7 @@ namespace Client.MirScenes
 
             Hero.PercentHealth = (byte)(Hero.HP / (float)Hero.Stats[Stat.HP] * 100);
             Hero.PercentMana = (byte)(Hero.MP / (float)Hero.Stats[Stat.MP] * 100);
+            int g = 0;
         }
 
         private void DeleteQuestItem(S.DeleteQuestItem p)
@@ -5657,6 +5661,14 @@ namespace Client.MirScenes
         {
             User.CoreStats = p.Stats;
             User.RefreshStats();
+        }
+
+        private void HeroBaseStatsInfo(S.HeroBaseStatsInfo p)
+        {
+            if (Hero == null) return;
+
+            Hero.CoreStats = p.Stats;
+            Hero.RefreshStats();
         }
 
         private void UserName(S.UserName p)
