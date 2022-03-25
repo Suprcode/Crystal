@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using System.Linq;
+using System.Windows.Forms;
 using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
-using Client.MirObjects;
 using Client.MirSounds;
 using C = ClientPackets;
 
@@ -15,6 +14,13 @@ namespace Client.MirScenes.Dialogs
         public MirImageControl[] LockBar = new MirImageControl[4];
         public MirImageControl HPLockBar, MPLockBar;
         public MirItemCell[] Grid;
+        public MirButton HPButton, MPButton;
+        public MirLabel AutoHPPercentLabel, AutoMPPercentLabel;
+        public MirItemCell HPItem, MPItem;
+
+        private bool AutoPot => GameScene.Hero.AutoPot;
+        private uint AutoHPPercent => GameScene.Hero.AutoHPPercent;
+        private uint AutoMPPercent => GameScene.Hero.AutoMPPercent;
 
         public MirButton CloseButton;
 
@@ -24,7 +30,7 @@ namespace Client.MirScenes.Dialogs
             Library = Libraries.Prguse;
             Movable = true;
             Sort = true;
-            Visible = false;         
+            Visible = false;
 
             CloseButton = new MirButton
             {
@@ -51,7 +57,7 @@ namespace Client.MirScenes.Dialogs
                         GridType = MirGridType.HeroInventory,
                         Library = Libraries.Items,
                         Parent = this,
-                        Location = new Point(x * 36 + 14 + x, y % 5 * 32 + 23 + y % 5),                        
+                        Location = new Point(x * 36 + 14 + x, y % 5 * 32 + 23 + y % 5),
                     };
 
                     if (idx >= 40)
@@ -95,10 +101,88 @@ namespace Client.MirScenes.Dialogs
                 Visible = false,
             };
 
+            HPButton = new MirButton
+            {
+                Index = 560,
+                HoverIndex = 561,
+                PressedIndex = 562,
+                Library = Libraries.Title,
+                Location = new Point(58, Size.Height - 60),
+                Parent = this,
+                Size = new Size(60, 25),
+                Sound = SoundList.ButtonA,
+                Visible = false,
+            };
+            HPButton.Click += (o1, e) =>
+            {
+                MirAmountBox amountBox = new MirAmountBox("Enter a value", 116, 99);
+                amountBox.OKButton.Click += (o, a) => Network.Enqueue(new C.SetAutoPotValue { Stat = Stat.HP, Value = amountBox.Amount });
+                amountBox.Show();
+            };
+
+            MPButton = new MirButton
+            {
+                Index = 563,
+                HoverIndex = 564,
+                PressedIndex = 565,
+                Library = Libraries.Title,
+                Location = new Point(206, Size.Height - 60),
+                Parent = this,
+                Size = new Size(60, 25),
+                Sound = SoundList.ButtonA,
+                Visible = false,
+            };
+            MPButton.Click += (o1, e) =>
+            {
+                MirAmountBox amountBox = new MirAmountBox("Enter a value", 116, 99);
+                amountBox.OKButton.Click += (o, a) => Network.Enqueue(new C.SetAutoPotValue { Stat = Stat.MP, Value = amountBox.Amount });
+                amountBox.Show();
+            };
+
+            AutoHPPercentLabel = new MirLabel
+            {
+                Parent = this,
+                Location = new Point(HPButton.Location.X, HPButton.Location.Y + 27),
+                AutoSize = false,
+                Size = new Size(60, 25),
+                DrawFormat = TextFormatFlags.HorizontalCenter,
+                Visible = false
+            };
+
+            AutoMPPercentLabel = new MirLabel
+            {
+                Parent = this,
+                Location = new Point(MPButton.Location.X, MPButton.Location.Y + 27),
+                AutoSize = false,
+                Size = new Size(60, 25),
+                DrawFormat = TextFormatFlags.HorizontalCenter,
+                Visible = false
+            };
+
+            HPItem = new MirItemCell
+            {
+                ItemSlot = 0,
+                GridType = MirGridType.HeroHPItem,
+                Library = Libraries.Items,
+                Parent = this,
+                Location = new Point(HPButton.Location.X + 64, HPButton.Location.Y + 5),
+                Visible = false
+            };
+
+            MPItem = new MirItemCell
+            {
+                ItemSlot = 0,
+                GridType = MirGridType.HeroMPItem,
+                Library = Libraries.Items,
+                Parent = this,
+                Location = new Point(MPButton.Location.X - 40, MPButton.Location.Y + 5),
+                Visible = false
+            };
+
             RefreshInterface();
         }
 
-        void RefreshInterface()
+        public void RefreshInterface()
         {
             foreach (MirItemCell grid in Grid)
             {
@@ -110,8 +194,16 @@ namespace Client.MirScenes.Dialogs
                 LockBar[i].Visible = GameScene.Hero.Inventory.Length < 11 + 8 * i;
             }
 
-            HPLockBar.Visible = true;
-            MPLockBar.Visible = true;
+            HPLockBar.Visible = !AutoPot;
+            MPLockBar.Visible = !AutoPot;
+            HPButton.Visible = AutoPot;
+            MPButton.Visible = AutoPot;
+            AutoHPPercentLabel.Visible = AutoPot;
+            AutoMPPercentLabel.Visible = AutoPot;
+            HPItem.Visible = AutoPot;
+            MPItem.Visible = AutoPot;
+            AutoHPPercentLabel.Text = AutoHPPercent.ToString() + '%';
+            AutoMPPercentLabel.Text = AutoMPPercent.ToString() + '%';
         }
 
         public MirItemCell GetCell(ulong id)
@@ -156,7 +248,6 @@ namespace Client.MirScenes.Dialogs
             }
         }
     }
-
     public sealed class HeroBeltDialog : MirImageControl
     {
         public MirLabel[] Key = new MirLabel[2];
@@ -294,4 +385,341 @@ namespace Client.MirScenes.Dialogs
             return null;
         }
     }
+    public sealed class HeroMenuPanel : MirImageControl
+    {
+        public MirButton HeroMagicsButton, HeroInventoryButton, HeroEquipmentButton;
+
+        public HeroMenuPanel(MirControl parent)
+        {
+            Index = 2179;
+            Library = Libraries.Prguse;
+            Size = new Size(24, 61);
+            Parent = parent;
+
+            Location = new Point(((Settings.ScreenWidth / 2) - (Size.Width / 2)) + 362, Settings.ScreenHeight - Size.Height - 77);
+
+            HeroMagicsButton = new MirButton
+            {
+                Index = 2173,
+                HoverIndex = 2174,
+                PressedIndex = 2175,
+                Library = Libraries.Prguse,
+                Parent = this,
+                Size = new Size(16, 16),
+                Location = new Point(3, 3),
+                Hint = string.Format(GameLanguage.HeroSkills, CMain.InputKeys.GetKey(KeybindOptions.HeroSkills))
+            };
+            HeroMagicsButton.Click += (o, e) =>
+            {
+                if (GameScene.Scene.HeroDialog.Visible && GameScene.Scene.HeroDialog.SkillPage.Visible)
+                    GameScene.Scene.HeroDialog.Hide();
+                else
+                {
+                    GameScene.Scene.HeroDialog.Show();
+                    GameScene.Scene.HeroDialog.ShowSkillPage();
+                }
+            };
+
+            HeroInventoryButton = new MirButton
+            {
+                Index = 2170,
+                HoverIndex = 2171,
+                PressedIndex = 2172,
+                Library = Libraries.Prguse,
+                Parent = this,
+                Size = new Size(16, 16),
+                Location = new Point(3, 20),
+                Hint = string.Format(GameLanguage.HeroInventory, CMain.InputKeys.GetKey(KeybindOptions.HeroInventory))
+            };
+            HeroInventoryButton.Click += (o, e) =>
+            {
+                GameScene.Scene.HeroInventoryDialog.Visible = !GameScene.Scene.HeroInventoryDialog.Visible;
+            };
+
+            HeroEquipmentButton = new MirButton
+            {
+                Index = 2176,
+                HoverIndex = 2177,
+                PressedIndex = 2178,
+                Library = Libraries.Prguse,
+                Parent = this,
+                Size = new Size(16, 16),
+                Location = new Point(3, 37),
+                Hint = string.Format(GameLanguage.HeroCharacter, CMain.InputKeys.GetKey(KeybindOptions.HeroEquipment))
+            };
+            HeroEquipmentButton.Click += (o, e) =>
+            {
+                if (GameScene.Scene.HeroDialog.Visible && GameScene.Scene.HeroDialog.CharacterPage.Visible)
+                    GameScene.Scene.HeroDialog.Hide();
+                else
+                {
+                    GameScene.Scene.HeroDialog.Show();
+                    GameScene.Scene.HeroDialog.ShowCharacterPage();
+                }
+            };
+        }
+
+        public void Toggle()
+        {
+            Visible = !Visible;
+        }
+    }
+    public sealed class HeroInfoPanel : MirImageControl
+    {
+        private MirImageControl Avatar, NameContainer, HealthContainer, HealthBar, ManaBar, ExperienceBar, DangerAvatar, DeadAvatar;
+        private MirLabel NameLabel, LevelLabel;
+        private DateTime NextAvatarChange;
+        private HeroAutoPotPreview HPItem, MPItem;
+
+        private string Name => GameScene.Hero.Name;
+        private int Level => GameScene.Hero.Level;
+        private MirClass Class => GameScene.Hero.Class;
+        private MirGender Gender => GameScene.Hero.Gender;
+        private long Experience => GameScene.Hero.Experience;
+        private long MaxExperience => GameScene.Hero.MaxExperience;
+        private byte PercentHealth => GameScene.Hero.PercentHealth;
+        private byte PercentMana => GameScene.Hero.PercentMana;
+        private bool Dead => GameScene.Scene.HeroSpawnState == HeroSpawnState.Dead;
+
+        public HeroInfoPanel()
+        {
+            Index = 14;
+            Library = Libraries.Prguse;
+            Location = new Point(95, 48);
+
+            Avatar = new MirImageControl
+            {
+                Index = 1400,
+                Library = Libraries.Prguse,
+                Location = new Point(14, 19),
+                Parent = this,
+                Visible = true
+            };
+            Avatar.BeforeDraw += Avatar_BeforeDraw;
+
+            DangerAvatar = new MirImageControl
+            {
+                Index = 1750,
+                Library = Libraries.Prguse,
+                Location = new Point(14, 19),
+                Parent = this,
+                Visible = false
+            };
+
+            DeadAvatar = new MirImageControl
+            {
+                Index = 1379,
+                Library = Libraries.Prguse,
+                Location = new Point(14, 19),
+                Parent = this,
+                Visible = false
+            };
+
+            NameContainer = new MirImageControl
+            {
+                Index = 10,
+                Library = Libraries.Prguse,
+                Location = new Point(26, 60),
+                Parent = this,
+                Visible = true
+            };
+
+            LevelLabel = new MirLabel
+            {
+                AutoSize = false,
+                Size = new Size(17, 14),
+                Location = new Point(3, -1),
+                DrawFormat = TextFormatFlags.HorizontalCenter,
+                Parent = NameContainer,
+            };
+
+            NameLabel = new MirLabel
+            {
+                AutoSize = false,
+                Size = new Size(97, 14),
+                Location = new Point(2, 14),
+                DrawFormat = TextFormatFlags.HorizontalCenter,
+                Parent = NameContainer,
+            };
+
+            HealthContainer = new MirImageControl
+            {
+                Index = 11,
+                Library = Libraries.Prguse,
+                Location = new Point(57, 26),
+                Parent = this,
+                Visible = true
+            };
+
+            HealthBar = new MirImageControl
+            {
+                Index = 1951,
+                Library = Libraries.Prguse,
+                Location = new Point(18, 6),
+                Parent = HealthContainer,
+                Visible = true,
+                DrawImage = false,
+                NotControl = true
+            };
+            HealthBar.BeforeDraw += HealthBar_BeforeDraw;
+
+            ManaBar = new MirImageControl
+            {
+                Index = 1952,
+                Library = Libraries.Prguse,
+                Location = new Point(18, 19),
+                Parent = HealthContainer,
+                Visible = true,
+                DrawImage = false,
+                NotControl = true
+            };
+            ManaBar.BeforeDraw += ManaBar_BeforeDraw;
+
+            ExperienceBar = new MirImageControl
+            {
+                Index = 1953,
+                Library = Libraries.Prguse,
+                Location = new Point(18, 32),
+                Parent = HealthContainer,
+                Visible = true,
+                DrawImage = false,
+                NotControl = true
+            };
+            ExperienceBar.BeforeDraw += ExperienceBar_BeforeDraw;
+
+            HPItem = new HeroAutoPotPreview()
+            {
+                Parent = this,
+                Location = new Point(86, 5),
+                GetInfo = () => { return GameScene.Hero?.HPItem[0]?.Info; }
+            };
+
+            MPItem = new HeroAutoPotPreview()
+            {
+                Parent = this,
+                Location = new Point(106, 5),
+                GetInfo = () => { return GameScene.Hero?.MPItem[0]?.Info; }
+            };
+        }
+
+        public void Update()
+        {
+            Avatar.Index = 1400 + (byte)Class + 10 * (byte)Gender;
+            DangerAvatar.Index = 1750 + (byte)Class + 10 * (byte)Gender;
+            NameLabel.Text = Name;
+            LevelLabel.Text = Level.ToString();
+        }
+
+        private void Avatar_BeforeDraw(object sender, EventArgs e)
+        {
+            DeadAvatar.Visible = Dead;
+            if (PercentHealth > 20) return;
+            if (CMain.Now < NextAvatarChange) return;
+
+            NextAvatarChange = CMain.Now.AddMilliseconds(400);
+            DangerAvatar.Visible = !DangerAvatar.Visible;
+        }
+
+        private void ExperienceBar_BeforeDraw(object sender, EventArgs e)
+        {
+            if (ExperienceBar.Library == null) return;
+
+            double percent = Experience / (double)MaxExperience;
+            if (percent > 1) percent = 1;
+            if (percent <= 0) return;
+
+            Rectangle section = new Rectangle
+            {
+                Size = new Size((int)(ExperienceBar.Size.Width * percent), ExperienceBar.Size.Height)
+            };
+
+            ExperienceBar.Library.Draw(ExperienceBar.Index, section, ExperienceBar.DisplayLocation, Color.White, false);
+        }
+
+        private void HealthBar_BeforeDraw(object sender, EventArgs e)
+        {
+            if (HealthBar.Library == null) return;
+
+            double percent = PercentHealth / 100F;
+            if (percent > 1) percent = 1;
+            if (percent <= 0) return;
+
+            Rectangle section = new Rectangle
+            {
+                Size = new Size((int)(HealthBar.Size.Width * percent), HealthBar.Size.Height)
+            };
+
+            HealthBar.Library.Draw(HealthBar.Index, section, HealthBar.DisplayLocation, Color.White, false);
+        }
+
+        private void ManaBar_BeforeDraw(object sender, EventArgs e)
+        {
+            if (ManaBar.Library == null) return;
+
+            double percent = PercentMana / 100F;
+            if (percent > 1) percent = 1;
+            if (percent <= 0) return;
+
+            Rectangle section = new Rectangle
+            {
+                Size = new Size((int)(ManaBar.Size.Width * percent), ManaBar.Size.Height)
+            };
+
+            ManaBar.Library.Draw(ManaBar.Index, section, ManaBar.DisplayLocation, Color.White, false);
+        }
+    }
+    public sealed class HeroAutoPotPreview : MirImageControl
+    {
+        public Func<ItemInfo> GetInfo;
+        private ItemInfo Info => GetInfo();
+        public MirLabel AmountLabel;
+
+        public HeroAutoPotPreview()
+        {
+            Index = 1392;
+            Library = Libraries.Prguse;
+            NotControl = true;
+            AutoSize = false;
+            Size = new Size(19, 15);
+
+            AmountLabel = new MirLabel
+            {
+                Parent = this,
+                Location = new Point(0, 6),
+                AutoSize = false,
+                Size = new Size(22, 17),
+                DrawFormat = TextFormatFlags.Right,
+                ForeColour = Color.Yellow,
+                Visible = false
+            };
+
+            AfterDraw += AutoPotPreview_AfterDraw;
+        }
+
+        void AutoPotPreview_AfterDraw(object sender, EventArgs e)
+        {
+            AmountLabel.Visible = Info != null;
+            if (Info == null) return;
+            AmountLabel.Text = CountItem(Info).ToString();
+            Libraries.Items.Draw(Info.Image, DisplayLocation.Add(2, 3), Size, Color.White);
+            AmountLabel.Draw();
+        }
+
+        int CountItem(ItemInfo info)
+        {
+            var count = 0;
+            if (GameScene.Hero == null) return count;
+
+            for (int i = 0; i < GameScene.Hero.Inventory.Length; i++)
+            {
+                UserItem item = GameScene.Hero.Inventory[i];
+                if (item == null) continue;
+                if (item.Info.Index != info.Index) continue;
+
+                count += item.Count;
+            }
+            return count;
+        }
+    }
 }
+

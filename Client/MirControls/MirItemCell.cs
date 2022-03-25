@@ -102,6 +102,10 @@ namespace Client.MirControls
                         return MapObject.Hero.Equipment;
                     case MirGridType.HeroInventory:
                         return MapObject.Hero.Inventory;
+                    case MirGridType.HeroHPItem:
+                        return MapObject.Hero.HPItem;
+                    case MirGridType.HeroMPItem:
+                        return MapObject.Hero.MPItem;
 
                     default:
                         throw new NotImplementedException();
@@ -286,7 +290,10 @@ namespace Client.MirControls
                         GameScene.Scene.NPCDropDialog.ConfirmButton.OnMouseClick(e); //emulate OK to confirm trade
                     }
                     //Add support for ALT + click to sell quickly
-                    
+
+                    else if ((GridType == MirGridType.HeroHPItem || GridType == MirGridType.HeroMPItem) && GameScene.SelectedCell == null && Item != null)
+                        Network.Enqueue(new C.SetAutoPotItem { Grid = GridType, ItemIndex = 0 });
+
                     else MoveItem();
                     break;
             }
@@ -1134,7 +1141,7 @@ namespace Client.MirControls
                                     GameScene.Scene.NPCAwakeDialog.ItemCell_Click();
                                 GameScene.SelectedCell = null;
                                 break;
-                             #endregion
+                            #endregion
                             #region From Refine
                             case MirGridType.Refine: //From AwakenItem
                                 if (Item != null && GameScene.SelectedCell.Item.Info.Type == ItemType.Amulet)
@@ -1428,8 +1435,8 @@ namespace Client.MirControls
                                 GameScene.SelectedCell.Locked = true;
                                 GameScene.SelectedCell = null;
                                 return;
-                            #endregion
-                            
+                                #endregion
+
                         }
                         break;
 
@@ -1440,20 +1447,20 @@ namespace Client.MirControls
                         {
                             case MirGridType.GuildStorage: //From Guild Storage
                                 if (GameScene.SelectedCell.GridType == MirGridType.GuildStorage)
-                                {                                    
+                                {
                                     if (!GuildDialog.MyOptions.HasFlag(GuildRankOptions.CanStoreItem))
                                     {
                                         GameScene.Scene.ChatDialog.ReceiveChat("Insufficient rights to store items.", ChatType.System);
                                         return;
                                     }
-                                       
+
                                     //if (ItemArray[ItemSlot] == null)
                                     //{
-                                        Network.Enqueue(new C.GuildStorageItemChange { Type = 2, From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
-                                        Locked = true;
-                                        GameScene.SelectedCell.Locked = true;
-                                        GameScene.SelectedCell = null;
-                                        return;
+                                    Network.Enqueue(new C.GuildStorageItemChange { Type = 2, From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
+                                    Locked = true;
+                                    GameScene.SelectedCell.Locked = true;
+                                    GameScene.SelectedCell = null;
+                                    return;
                                     //}
                                 }
                                 return;
@@ -1553,13 +1560,13 @@ namespace Client.MirControls
                                         return;
                                     }
                                 break;
-                            #endregion
+                                #endregion
                         }
                         break;
 
                     #endregion
                     #region To Refine 
-                  
+
                     case MirGridType.Refine:
 
                         switch (GameScene.SelectedCell.GridType)
@@ -1607,7 +1614,7 @@ namespace Client.MirControls
                                 GameScene.SelectedCell.Locked = true;
                                 GameScene.SelectedCell = null;
                                 return;
-                            #endregion
+                                #endregion
                         }
                         break;
 
@@ -1618,7 +1625,7 @@ namespace Client.MirControls
                         switch (GameScene.SelectedCell.GridType)
                         {
                             case MirGridType.Inventory:
-             
+
                                 if (Item == null)
                                 {
                                     Network.Enqueue(new C.DepositRentalItem { From = GameScene.SelectedCell.ItemSlot, To = ItemSlot });
@@ -1643,7 +1650,7 @@ namespace Client.MirControls
 
                             switch (_itemSlot)
                             {
-                                    //baseitem
+                                //baseitem
                                 case 0:
                                     {
                                         if ((GameScene.SelectedCell.Item.Info.Type == ItemType.Weapon ||
@@ -1675,11 +1682,11 @@ namespace Client.MirControls
                                         }
                                     }
                                     break;
-                                    //view materials
+                                //view materials
                                 case 1:
                                 case 2:
                                     break;
-                                    //materials
+                                //materials
                                 case 3:
                                 case 4:
                                     {
@@ -1724,11 +1731,11 @@ namespace Client.MirControls
                                                 }
                                                 break;
                                         }
-                                        
+
                                     }
                                     break;
-                                    //SuccessRateUpItem or RandomValueUpItem or CancelDestroyedItem etc.
-                                    //AllCashItem Korea Server Not Implementation.
+                                //SuccessRateUpItem or RandomValueUpItem or CancelDestroyedItem etc.
+                                //AllCashItem Korea Server Not Implementation.
                                 case 5:
                                 case 6:
                                     if (GameScene.SelectedCell.Item.Info.Type == ItemType.Awakening &&
@@ -1749,7 +1756,7 @@ namespace Client.MirControls
 
                             GameScene.SelectedCell = null;
                             MirMessageBox messageBox;
-                           
+
                             switch (errorCode)
                             {
                                 //case -1:
@@ -1976,6 +1983,20 @@ namespace Client.MirControls
                             GameScene.SelectedCell = null;
                         }
                         return;
+                    #endregion
+                    #region To Hero AutoPot
+                    case MirGridType.HeroHPItem:
+                    case MirGridType.HeroMPItem:
+                        if (GameScene.SelectedCell.GridType != MirGridType.HeroInventory) return;
+                        if (GameScene.Hero == null || GameScene.Hero.Dead)
+                            return;
+                        if (GameScene.SelectedCell.Item.Info.Type != ItemType.Potion || GameScene.SelectedCell.Item.Info.Shape > 1)
+                            return;
+
+                        Network.Enqueue(new C.SetAutoPotItem { Grid = GridType, ItemIndex = GameScene.SelectedCell.Item.Info.Index });
+                        GameScene.SelectedCell = null;
+
+                        return;
                         #endregion
                 }
 
@@ -2057,7 +2078,7 @@ namespace Client.MirControls
                 case MirGridType.HeroEquipment:
                     if (grid != MirGridType.HeroInventory)
                         return false;
-                    break;
+                    break;                
             }
 
             switch ((EquipmentSlot)ItemSlot)

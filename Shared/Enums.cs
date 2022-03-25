@@ -912,7 +912,9 @@ public enum MirGridType : byte
     Craft = 19,
     Socket = 20,
     HeroEquipment = 21,
-    HeroInventory = 22
+    HeroInventory = 22,
+    HeroHPItem = 23,
+    HeroMPItem = 24
 }
 
 public enum EquipmentSlot : byte
@@ -1565,6 +1567,9 @@ public enum ServerPacketIds : short
     NewHero,
     HeroInformation,
     UpdateHeroSpawnState,
+    UnlockHeroAutoPot,
+    SetAutoPotValue,
+    SetAutoPotItem,
     DefaultNPC,
     NPCUpdate,
     NPCImageUpdate,
@@ -1717,6 +1722,8 @@ public enum ClientPacketIds : short
     DellMember,
     GroupInvite,
     NewHero,
+    SetAutoPotValue,
+    SetAutoPotItem,
     TownRevive,
     SpellToggle,
     ConsignItem,

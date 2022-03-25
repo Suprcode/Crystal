@@ -11,6 +11,12 @@ namespace Client.MirObjects
 {
     public class UserHeroObject : UserObject
     {
+        public bool AutoPot;
+        public uint AutoHPPercent;
+        public uint AutoMPPercent;
+
+        public UserItem[] HPItem = new UserItem[1];
+        public UserItem[] MPItem = new UserItem[1];
         public override BuffDialog GetBuffDialog => GameScene.Scene.HeroBuffsDialog;
         public UserHeroObject(uint objectID)
         {
@@ -43,22 +49,7 @@ namespace Client.MirObjects
                 Magics[i].CastTime += CMain.Time;
             }
 
-            BindAllItems();
-
-            GameScene scene = GameScene.Scene;
-            scene.HeroDialog = new CharacterDialog(MirGridType.HeroEquipment, Hero) { Parent = scene, Visible = false };
-            scene.HeroInventoryDialog = new HeroInventoryDialog { Parent = scene };
-            scene.HeroBeltDialog = new HeroBeltDialog { Parent = scene };
-            scene.HeroBuffsDialog = new BuffDialog 
-            { 
-                Parent = scene, 
-                Visible = true, 
-                Location = new Point(Settings.ScreenWidth - 170, 80),
-                GetExpandedParameter = () => { return Settings.ExpandedHeroBuffWindow; },
-                SetExpandedParameter = (value) => { Settings.ExpandedHeroBuffWindow = value; }
-            };        
-
-            RefreshStats();
+            BindAllItems();                        
         }      
     }
 }

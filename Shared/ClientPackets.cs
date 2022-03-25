@@ -1088,6 +1088,44 @@ namespace ClientPackets
         }
     }
 
+    public sealed class SetAutoPotValue : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.SetAutoPotValue; } }
+
+        public Stat Stat;
+        public uint Value;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Stat = (Stat)reader.ReadByte();
+            Value = reader.ReadUInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write((byte)Stat);
+            writer.Write(Value);
+        }
+    }
+
+    public sealed class SetAutoPotItem : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.SetAutoPotItem; } }
+
+        public MirGridType Grid;
+        public int ItemIndex;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Grid = (MirGridType)reader.ReadByte();
+            ItemIndex = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write((byte)Grid);
+            writer.Write(ItemIndex);
+        }
+    }
+
     public sealed class MarriageRequest : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.MarriageRequest; } }

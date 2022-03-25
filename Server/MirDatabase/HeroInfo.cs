@@ -6,7 +6,12 @@ namespace Server.MirDatabase
 {
     public class HeroInfo : CharacterInfo
     {
-        public long MaxExperience;
+        public bool AutoPot;
+        public byte Grade;
+        public int HPItemIndex;
+        public int MPItemIndex;
+        public byte AutoHPPercent;
+        public byte AutoMPPercent;
         public HeroInfo(ClientPackets.NewHero p)
         {
             Name = p.Name;
@@ -74,7 +79,18 @@ namespace Server.MirDatabase
 
                 magic.CastTime = int.MinValue;
                 Magics.Add(magic);
-            }           
+            }  
+            
+            if (version > 99)
+            {
+                AutoPot = reader.ReadBoolean();
+                Grade = reader.ReadByte();
+                HPItemIndex = reader.ReadInt32();
+                MPItemIndex = reader.ReadInt32();
+                AutoHPPercent = reader.ReadByte();
+                AutoMPPercent = reader.ReadByte();
+            }
+
         }
 
         public override void Save(BinaryWriter writer)
@@ -118,6 +134,13 @@ namespace Server.MirDatabase
             {
                 Magics[i].Save(writer);
             }
+
+            writer.Write(AutoPot);
+            writer.Write(Grade);
+            writer.Write(HPItemIndex);
+            writer.Write(MPItemIndex);
+            writer.Write(AutoHPPercent);
+            writer.Write(AutoMPPercent);
         }
 
         public override int ResizeInventory()

@@ -116,7 +116,7 @@ namespace Server.MirObjects
         public MountInfo Mount
         {
             get { return Info.Mount; }
-        }
+        }        
 
         public Reporting Report;
         public virtual bool CanMove
@@ -239,7 +239,6 @@ namespace Server.MirObjects
         {
             Level = 1;
             Hair = (byte)Envir.Random.Next(0, 9);
-
 
             for (int i = 0; i < Envir.StartItems.Count; i++)
             {
@@ -1281,7 +1280,7 @@ namespace Server.MirObjects
 
             return true;
         }
-        public virtual void UseItem(ulong id, MirGridType grid) { }
+        public virtual void UseItem(ulong id) { }
         protected void ConsumeItem(UserItem item, byte cost)
         {
             item.Count -= cost;

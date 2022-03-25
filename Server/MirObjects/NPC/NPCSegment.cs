@@ -4003,9 +4003,7 @@ namespace Server.MirObjects
                         }
                         break;
                     case ActionType.ReviveHero:
-                        {
-                            player.ReviveHero();
-                        }
+                        player.ReviveHero();
                         break;
                 }
             }

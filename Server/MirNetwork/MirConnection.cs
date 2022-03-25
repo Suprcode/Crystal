@@ -410,6 +410,12 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.NewHero:
                     NewHero((C.NewHero)p);
                     break;
+                case (short)ClientPacketIds.SetAutoPotValue:
+                    SetAutoPotValue((C.SetAutoPotValue)p);
+                    break;
+                case (short)ClientPacketIds.SetAutoPotItem:
+                    SetAutoPotItem((C.SetAutoPotItem)p);
+                    break;
                 case (short)ClientPacketIds.TownRevive:
                     TownRevive();
                     return;
@@ -1052,10 +1058,10 @@ namespace Server.MirNetwork
             switch (p.Grid)
             {
                 case MirGridType.Inventory:
-                    Player.UseItem(p.UniqueID, p.Grid);
+                    Player.UseItem(p.UniqueID);
                     break;
                 case MirGridType.HeroInventory:
-                    Player.HeroUseItem(p.UniqueID, p.Grid);
+                    Player.HeroUseItem(p.UniqueID);
                     break;
             }            
         }
@@ -1304,6 +1310,20 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.NewHero(p);
+        }
+
+        private void SetAutoPotValue(C.SetAutoPotValue p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.SetAutoPotValue(p.Stat, p.Value);
+        }
+
+        private void SetAutoPotItem(C.SetAutoPotItem p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.SetAutoPotItem(p.Grid, p.ItemIndex);
         }
 
         private void TownRevive()

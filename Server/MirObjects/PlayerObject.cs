@@ -5200,9 +5200,9 @@ namespace Server.MirObjects
             }
             Enqueue(p);
         }
-        public override void UseItem(ulong id, MirGridType grid)
+        public override void UseItem(ulong id)
         {
-            S.UseItem p = new S.UseItem { UniqueID = id, Grid = grid, Success = false };
+            S.UseItem p = new S.UseItem { UniqueID = id, Grid = MirGridType.Inventory, Success = false };
 
             UserItem item = null;
             int index = -1;
@@ -5439,6 +5439,16 @@ namespace Server.MirObjects
                             {
                                 ReceiveChat("You haven't won anything.", ChatType.Hint);
                             }
+                            break;
+                        case 13://Hero unlock autopot
+                            if (!HeroSpawned || Hero.AutoPot)
+                            {
+                                Enqueue(p);
+                                return;
+                            }
+                            Hero.AutoPot = true;
+                            Enqueue(new S.UnlockHeroAutoPot());
+                            ReceiveChat("Hero AutoPot has been unlocked.", ChatType.Hint);
                             break;
                     }
                     break;
@@ -5696,11 +5706,11 @@ namespace Server.MirObjects
             p.Success = true;
             Enqueue(p);
         }
-        public void HeroUseItem(ulong id, MirGridType grid)
+        public void HeroUseItem(ulong id)
         {
             if (!HasHero || !HeroSpawned)
                 return;
-            Hero.UseItem(id, grid);
+            Hero.UseItem(id);
         }
         public void SplitItem(MirGridType grid, ulong id, ushort count)
         {
@@ -8611,6 +8621,32 @@ namespace Server.MirObjects
                 return Hero;
 
             return null;
+        }
+
+        public void SetAutoPotValue(Stat stat, uint value)
+        {
+            if (!HeroSpawned || !Hero.AutoPot) return;
+
+            if (stat == Stat.HP)
+                Hero.AutoHPPercent = (byte)Math.Min(99, value);
+            else
+                Hero.AutoMPPercent = (byte)Math.Min(99, value);
+
+            Enqueue(new S.SetAutoPotValue() { Stat = stat, Value = value });
+        }
+
+        public void SetAutoPotItem(MirGridType Grid, int ItemIndex)
+        {
+            if (!HeroSpawned || !Hero.AutoPot) return;
+
+            if (Envir.GetItemInfo(ItemIndex) == null)
+                ItemIndex = 0;
+
+            if (Grid == MirGridType.HeroHPItem)
+                Hero.HPItemIndex = ItemIndex;
+            else
+                Hero.MPItemIndex = ItemIndex;
+            Enqueue(new S.SetAutoPotItem() { Grid = Grid, ItemIndex = ItemIndex });
         }
         #endregion
 

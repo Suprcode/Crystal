@@ -26,6 +26,7 @@ namespace Server.MirObjects
             set { throw new NotSupportedException(); }
         }
 
+        public HeroInfo HInfo;
         public new PlayerObject Owner;
         public override int PotionBeltMinimum => 0;
         public override int PotionBeltMaximum => 2;
@@ -69,13 +70,47 @@ namespace Server.MirObjects
             }
         }
 
-        public const int SearchDelay = 3000, ViewRange = 8, RoamDelay = 1000, RevivalDelay = 2000;
-        public long RoamTime;
+        public const int SearchDelay = 3000, ViewRange = 8, RoamDelay = 1000, RevivalDelay = 2000, AutoPotDelay = 1000;
+        public long RoamTime, AutoPotTime;
 
         public override long BrownTime
         {
             get { return Owner.BrownTime; }
             set { brownTime = value; }
+        }
+        public byte Grade
+        {
+            get { return HInfo.Grade; }
+            set { HInfo.Grade = value; }
+        }
+        public bool AutoPot
+        {
+            get { return HInfo.AutoPot; }
+            set { HInfo.AutoPot = value; }
+        }
+
+        public byte AutoHPPercent
+        {
+            get { return HInfo.AutoHPPercent; }
+            set { HInfo.AutoHPPercent = value; }
+        }
+
+        public byte AutoMPPercent
+        {
+            get { return HInfo.AutoMPPercent; }
+            set { HInfo.AutoMPPercent = value; }
+        }
+
+        public int HPItemIndex
+        {
+            get { return HInfo.HPItemIndex; }
+            set { HInfo.HPItemIndex = value; }
+        }
+
+        public int MPItemIndex
+        {
+            get { return HInfo.MPItemIndex; }
+            set { HInfo.MPItemIndex = value; }
         }
 
         protected Spell NextMagicSpell;
@@ -109,6 +144,7 @@ namespace Server.MirObjects
             info.Mount = new MountInfo(this);
 
             Info = info;
+            HInfo = (HeroInfo)info;
 
             Stats = new Stats();            
 
@@ -128,6 +164,11 @@ namespace Server.MirObjects
                     break;
             }
         }
+        protected override void NewCharacter()
+        {
+            base.NewCharacter();
+            Grade = (byte)Envir.Random.Next(4);
+        }
 
         public override void Enqueue(Packet p) 
         {
@@ -141,6 +182,7 @@ namespace Server.MirObjects
                 case ServerPacketIds.MagicDelay:
                 case ServerPacketIds.MagicLeveled:
                 case ServerPacketIds.DeleteItem:
+                case ServerPacketIds.UseItem:
                     Owner.Enqueue(p);
                     break;
             }
@@ -232,6 +274,11 @@ namespace Server.MirObjects
 
                 Owner.CheckItem(item);
             }
+
+            if (HPItemIndex > 0)
+                Owner.CheckItemInfo(Envir.GetItemInfo(HPItemIndex));
+            if (MPItemIndex > 0)
+                Owner.CheckItemInfo(Envir.GetItemInfo(MPItemIndex));
         }
         public override void SendMagicInfo(UserMagic magic)
         {
@@ -258,9 +305,9 @@ namespace Server.MirObjects
             NextMagicLocation = location;
         }
         public override MapObject DefaultMagicTarget => Owner;
-        public override void UseItem(ulong id, MirGridType grid)
+        public override void UseItem(ulong id)
         {
-            S.UseItem p = new S.UseItem { UniqueID = id, Grid = grid, Success = false };
+            S.UseItem p = new S.UseItem { UniqueID = id, Grid = MirGridType.HeroInventory, Success = false };
 
             UserItem item = null;
             int index = -1;
@@ -702,12 +749,39 @@ namespace Server.MirObjects
 
             if (Owner.PMode == PetMode.MoveOnly || Owner.PMode == PetMode.None)
                 Target = null;
-            
+
+            ProcessAutoPot();
             ProcessStacking();
             ProcessSearch();
             ProcessAI();            
             ProcessTarget();
             ProcessRoam();
+        }
+
+        protected void ProcessAutoPot()
+        {
+            if (Envir.Time < AutoPotTime) return;
+
+            AutoPotTime = Envir.Time + AutoPotDelay;
+
+            if (PercentHealth < AutoHPPercent && HPItemIndex > 0 && PotHealthAmount <= 0)
+                TryAutoPot(HPItemIndex);
+
+            if (PercentMana < AutoMPPercent && MPItemIndex > 0 && PotManaAmount <= 0)
+                TryAutoPot(MPItemIndex);
+        }
+
+        protected void TryAutoPot(int ItemIndex)
+        {
+            for (int i = 0; i < Info.Inventory.Length; i++)
+            {
+                UserItem item = Info.Inventory[i];
+                if (item == null) continue;
+                if (item.Info.Index != ItemIndex) continue;
+
+                UseItem(item.UniqueID);
+                return;
+            }
         }
 
         protected void ProcessAI() 
@@ -1087,6 +1161,12 @@ namespace Server.MirObjects
 
                 Inventory = new UserItem[Info.Inventory.Length],
                 Equipment = new UserItem[Info.Equipment.Length],
+
+                AutoPot = AutoPot,
+                AutoHPPercent = AutoHPPercent,
+                AutoMPPercent = AutoMPPercent,
+                HPItemIndex = HPItemIndex,
+                MPItemIndex = MPItemIndex
             };
 
             for (int i = 0; i < Info.Magics.Count; i++)

@@ -4505,6 +4505,11 @@ namespace ServerPackets
 
     public sealed class HeroInformation : UserInformation
     {
+        public bool AutoPot;
+        public byte AutoHPPercent;
+        public byte AutoMPPercent;
+        public int HPItemIndex;
+        public int MPItemIndex;
         public override short Index
         {
             get { return (short)ServerPacketIds.HeroInformation; }
@@ -4551,6 +4556,12 @@ namespace ServerPackets
             {
                 Magics.Add(new ClientMagic(reader));
             }
+
+            AutoPot = reader.ReadBoolean();
+            AutoHPPercent = reader.ReadByte();
+            AutoMPPercent = reader.ReadByte();
+            HPItemIndex = reader.ReadInt32();
+            MPItemIndex = reader.ReadInt32();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -4600,6 +4611,12 @@ namespace ServerPackets
             {
                 Magics[i].Save(writer);
             }
+
+            writer.Write(AutoPot);
+            writer.Write(AutoHPPercent);
+            writer.Write(AutoMPPercent);
+            writer.Write(HPItemIndex);
+            writer.Write(MPItemIndex);
         }
     }
 
@@ -4620,6 +4637,48 @@ namespace ServerPackets
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write((byte)State);
+        }
+    }
+    public sealed class UnlockHeroAutoPot : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.UnlockHeroAutoPot; } }
+        protected override void ReadPacket(BinaryReader reader) { }
+        protected override void WritePacket(BinaryWriter writer) { }
+    }
+
+    public sealed class SetAutoPotValue : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.SetAutoPotValue; } }
+
+        public Stat Stat;
+        public uint Value;
+        protected override void ReadPacket(BinaryReader reader) 
+        {
+            Stat = (Stat)reader.ReadByte();
+            Value = reader.ReadUInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer) 
+        {
+            writer.Write((byte)Stat);
+            writer.Write(Value);
+        }
+    }
+
+    public sealed class SetAutoPotItem : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.SetAutoPotItem; } }
+
+        public MirGridType Grid;
+        public int ItemIndex;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Grid = (MirGridType)reader.ReadByte();
+            ItemIndex = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write((byte)Grid);
+            writer.Write(ItemIndex);
         }
     }
 

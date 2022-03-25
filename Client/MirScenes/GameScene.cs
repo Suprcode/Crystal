@@ -1680,6 +1680,15 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.UpdateHeroSpawnState:
                     UpdateHeroSpawnState((S.UpdateHeroSpawnState)p);
                     break;
+                case (short)ServerPacketIds.UnlockHeroAutoPot:
+                    UnlockHeroAutoPot(true);
+                    break;
+                case (short)ServerPacketIds.SetAutoPotValue:
+                    SetAutoPotValue((S.SetAutoPotValue)p);
+                    break;
+                case (short)ServerPacketIds.SetAutoPotItem:
+                    SetAutoPotItem((S.SetAutoPotItem)p);
+                    break;
                 case (short)ServerPacketIds.DefaultNPC:
                     DefaultNPC((S.DefaultNPC)p);
                     break;
@@ -5952,6 +5961,36 @@ namespace Client.MirScenes
             NewHeroDialog.Show();            
         }
 
+        private void UnlockHeroAutoPot(bool value)
+        {
+            if (Hero == null) return;
+
+            Hero.AutoPot = value;
+            HeroInventoryDialog.RefreshInterface();
+        }
+
+        private void SetAutoPotValue(S.SetAutoPotValue p)
+        {
+            if (Hero == null) return;
+
+            if (p.Stat == Stat.HP)
+                Hero.AutoHPPercent = p.Value;
+            else
+                Hero.AutoMPPercent = p.Value;
+
+            HeroInventoryDialog.RefreshInterface();
+        }
+
+        private void SetAutoPotItem(S.SetAutoPotItem p)
+        {
+            if (Hero == null) return;
+
+            if (p.Grid == MirGridType.HeroHPItem)
+                Hero.HPItem[0] = p.ItemIndex > 0 ? new UserItem(GetItemInfo(p.ItemIndex)) : null;
+            else
+                Hero.MPItem[0] = p.ItemIndex > 0 ? new UserItem(GetItemInfo(p.ItemIndex)) : null;
+        }
+
         private void NewHero(S.NewHero p)
         {
             NewHeroDialog.OKButton.Enabled = true;
@@ -5992,8 +6031,30 @@ namespace Client.MirScenes
         {
             Hero = new UserHeroObject(p.ObjectID);
             Hero.Load(p);
-            
+
+            Hero.AutoPot = p.AutoPot;
+            Hero.AutoHPPercent = p.AutoHPPercent;
+            Hero.AutoMPPercent = p.AutoMPPercent;
+
+            if (p.HPItemIndex > 0)
+                Hero.HPItem[0] = new UserItem(GetItemInfo(p.HPItemIndex));
+            if (p.MPItemIndex > 0)
+                Hero.MPItem[0] = new UserItem(GetItemInfo(p.MPItemIndex));
+
+            HeroDialog = new CharacterDialog(MirGridType.HeroEquipment, Hero) { Parent = this, Visible = false };
+            HeroInventoryDialog = new HeroInventoryDialog { Parent = this };
+            HeroBeltDialog = new HeroBeltDialog { Parent = this };
+            HeroBuffsDialog = new BuffDialog
+            {
+                Parent = this,
+                Visible = true,
+                Location = new Point(Settings.ScreenWidth - 170, 80),
+                GetExpandedParameter = () => { return Settings.ExpandedHeroBuffWindow; },
+                SetExpandedParameter = (value) => { Settings.ExpandedHeroBuffWindow = value; }
+            };
             MainDialog.HeroInfoPanel.Update();
+
+            Hero.RefreshStats();
         }
 
         private void UpdateHeroSpawnState(S.UpdateHeroSpawnState p)
@@ -6589,6 +6650,17 @@ namespace Client.MirScenes
 
                 return;
             }
+        }
+
+        public ItemInfo GetItemInfo(int index)
+        {
+            for (var i = 0; i < ItemInfoList.Count; i++)
+            {
+                var info = ItemInfoList[i];
+                if (info.Index != index) continue;
+                return info;
+            }
+            return null;
         }
 
         public static void BindQuest(ClientQuestProgress quest)

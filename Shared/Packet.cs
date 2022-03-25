@@ -199,7 +199,11 @@ public abstract class Packet
             case (short)ClientPacketIds.GroupInvite:
                 return new C.GroupInvite();
             case (short)ClientPacketIds.NewHero:
-                return new C.NewHero();            
+                return new C.NewHero();
+            case (short)ClientPacketIds.SetAutoPotValue:
+                return new C.SetAutoPotValue();
+            case (short)ClientPacketIds.SetAutoPotItem:
+                return new C.SetAutoPotItem();
             case (short)ClientPacketIds.TownRevive:
                 return new C.TownRevive();
             case (short)ClientPacketIds.SpellToggle:
@@ -713,6 +717,12 @@ public abstract class Packet
                 return new S.HeroInformation();
             case (short)ServerPacketIds.UpdateHeroSpawnState:
                 return new S.UpdateHeroSpawnState();
+            case (short)ServerPacketIds.UnlockHeroAutoPot:
+                return new S.UnlockHeroAutoPot();
+            case (short)ServerPacketIds.SetAutoPotValue:
+                return new S.SetAutoPotValue();
+            case (short)ServerPacketIds.SetAutoPotItem:
+                return new S.SetAutoPotItem();
             case (short)ServerPacketIds.DefaultNPC:
                 return new S.DefaultNPC();
             case (short)ServerPacketIds.NPCUpdate:
