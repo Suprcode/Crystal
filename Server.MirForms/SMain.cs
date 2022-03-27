@@ -441,5 +441,12 @@ namespace Server
 
             form.ShowDialog();
         }
+
+        private void dropBuilderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MirForms.DropBuilder.DropGenForm GenForm = new MirForms.DropBuilder.DropGenForm();
+
+            GenForm.ShowDialog();
+        }
     }
 }
