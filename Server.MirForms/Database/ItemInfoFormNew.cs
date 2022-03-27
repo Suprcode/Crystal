@@ -265,7 +265,9 @@ namespace Server.Database
 
             foreach (DataGridViewRow row in itemInfoGridView.Rows)
             {
-                if (row.Cells["ItemName"].Value.GetType() == typeof(System.DBNull) || string.IsNullOrEmpty((string)row.Cells["ItemName"].Value))
+                var name = row.Cells["ItemName"].Value;
+
+                if (name == null || name.GetType() == typeof(System.DBNull) || string.IsNullOrWhiteSpace((string)name))
                 {
                     continue;
                 }
