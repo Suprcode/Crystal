@@ -257,19 +257,24 @@ namespace Client.MirScenes
         {
             if (!Libraries.Loaded)
             {
-                MirMessageBox message = new MirMessageBox(string.Format("Please wait, The game is still loading... {0:##0}%", Libraries.Progress / (double)Libraries.Count * 100), MirMessageBoxButtons.Cancel);
-
-                message.BeforeDraw += (o, e) => message.Label.Text = string.Format("Please wait, The game is still loading... {0:##0}%", Libraries.Progress / (double)Libraries.Count * 100);
-
-                message.AfterDraw += (o, e) =>
+                MirAnimatedControl loadProgress = new MirAnimatedControl
+                {
+                    Library = Libraries.Prguse,
+                    Index = 940,
+                    Visible = true,
+                    Parent = this,
+                    Location = new Point(470, 680),
+                    Animated = true,
+                    AnimationCount = 9,
+                    AnimationDelay = 100,
+                    Loop = true,
+                };
+                loadProgress.AfterDraw += (o, e) =>
                 {
                     if (!Libraries.Loaded) return;
-                    message.Dispose();
+                    loadProgress.Dispose();
                     StartGame();
                 };
-
-                message.Show();
-
                 return;
             }
             StartGameButton.Enabled = false;
