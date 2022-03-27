@@ -777,7 +777,7 @@ namespace Server.MirObjects
             if (type == ChatType.WhisperIn) CreatureSay("What?");
         }
 
-        public override bool IsAttackTarget(PlayerObject attacker)
+        public override bool IsAttackTarget(HumanObject attacker)
         {
             return false;
         }
@@ -785,7 +785,7 @@ namespace Server.MirObjects
         {
             return false;
         }
-        public override bool IsFriendlyTarget(PlayerObject ally)
+        public override bool IsFriendlyTarget(HumanObject ally)
         {
             return true;
         }
@@ -793,7 +793,7 @@ namespace Server.MirObjects
         {
             return true;
         }
-        public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
+        public override int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
             return 0;
         }

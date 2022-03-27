@@ -326,6 +326,12 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.DropItem:
                     DropItem((C.DropItem) p);
                     break;
+                case (short)ClientPacketIds.TakeBackHeroItem:
+                    TakeBackHeroItem((C.TakeBackHeroItem)p);
+                    break;
+                case (short)ClientPacketIds.TransferHeroItem:
+                    TransferHeroItem((C.TransferHeroItem)p);
+                    break;
                 case (short)ClientPacketIds.DropGold:
                     DropGold((C.DropGold) p);
                     break;
@@ -401,6 +407,15 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.GroupInvite:
                     GroupInvite((C.GroupInvite)p);
                     return;
+                case (short)ClientPacketIds.NewHero:
+                    NewHero((C.NewHero)p);
+                    break;
+                case (short)ClientPacketIds.SetAutoPotValue:
+                    SetAutoPotValue((C.SetAutoPotValue)p);
+                    break;
+                case (short)ClientPacketIds.SetAutoPotItem:
+                    SetAutoPotItem((C.SetAutoPotItem)p);
+                    break;
                 case (short)ClientPacketIds.TownRevive:
                     TownRevive();
                     return;
@@ -1040,13 +1055,35 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.UseItem(p.UniqueID);
+            switch (p.Grid)
+            {
+                case MirGridType.Inventory:
+                    Player.UseItem(p.UniqueID);
+                    break;
+                case MirGridType.HeroInventory:
+                    Player.HeroUseItem(p.UniqueID);
+                    break;
+            }            
         }
         private void DropItem(C.DropItem p)
         {
             if (Stage != GameStage.Game) return;
 
             Player.DropItem(p.UniqueID, p.Count);
+        }
+
+        private void TakeBackHeroItem(C.TakeBackHeroItem p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.TakeBackHeroItem(p.From, p.To);
+        }
+
+        private void TransferHeroItem(C.TransferHeroItem p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.TransferHeroItem(p.From, p.To);
         }
         private void DropGold(C.DropGold p)
         {
@@ -1205,9 +1242,16 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            for (int i = 0; i < Player.Info.Magics.Count; i++)
+            HumanObject actor = Player;
+            if (p.Key > 16 || p.OldKey > 16)
             {
-                UserMagic magic = Player.Info.Magics[i];
+                if (!Player.HeroSpawned || Player.Hero.Dead) return;
+                actor = Player.Hero;
+            }
+
+            for (int i = 0; i < actor.Info.Magics.Count; i++)
+            {
+                UserMagic magic = actor.Info.Magics[i];
                 if (magic.Spell != p.Spell)
                 {
                     if (magic.Key == p.Key)
@@ -1222,10 +1266,18 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            if (!Player.Dead && (Player.ActionTime > Envir.Time || Player.SpellTime > Envir.Time))
+            HumanObject actor = Player;
+            if (Player.HeroSpawned && p.ObjectID == Player.Hero.ObjectID)
+            {
+                if (Player.Hero.Dead)
+                    return;
+                actor = Player.Hero;
+            }
+
+            if (!actor.Dead && (actor.ActionTime > Envir.Time || actor.SpellTime > Envir.Time))
                 _retryList.Enqueue(p);
             else
-                Player.Magic(p.Spell, p.Direction, p.TargetID, p.Location);
+                actor.BeginMagic(p.Spell, p.Direction, p.TargetID, p.Location);
         }
 
         private void SwitchGroup(C.SwitchGroup p)
@@ -1253,6 +1305,27 @@ namespace Server.MirNetwork
             Player.GroupInvite(p.AcceptInvite);
         }
 
+        private void NewHero(C.NewHero p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.NewHero(p);
+        }
+
+        private void SetAutoPotValue(C.SetAutoPotValue p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.SetAutoPotValue(p.Stat, p.Value);
+        }
+
+        private void SetAutoPotItem(C.SetAutoPotItem p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.SetAutoPotItem(p.Grid, p.ItemIndex);
+        }
+
         private void TownRevive()
         {
             if (Stage != GameStage.Game) return;
@@ -1264,7 +1337,13 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.SpellToggle(p.Spell, p.CanUse);
+            if (p.canUse > SpellToggleState.None)
+            {
+                Player.SpellToggle(p.Spell, p.canUse);
+                return;
+            }
+            if (Player.HeroSpawned)
+                Player.Hero.SpellToggle(p.Spell, p.canUse);            
         }
         private void ConsignItem(C.ConsignItem p)
         {
@@ -1556,7 +1635,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.CombineItem(p.IDFrom, p.IDTo);
+            Player.CombineItem(p.Grid, p.IDFrom, p.IDTo);
         }
 
         private void Awakening(C.Awakening p)

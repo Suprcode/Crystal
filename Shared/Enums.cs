@@ -818,7 +818,8 @@ public enum ObjectType : byte
     Spell = 4,
     Monster = 5,
     Deco = 6,
-    Creature = 7
+    Creature = 7,
+    Hero = 8
 }
 
 public enum ChatType : byte
@@ -909,7 +910,11 @@ public enum MirGridType : byte
     Renting = 17,
     GuestRenting = 18,
     Craft = 19,
-    Socket = 20
+    Socket = 20,
+    HeroEquipment = 21,
+    HeroInventory = 22,
+    HeroHPItem = 23,
+    HeroMPItem = 24
 }
 
 public enum EquipmentSlot : byte
@@ -1002,7 +1007,8 @@ public enum BindMode : short
     NoWeddingRing = 2048,//0x0800
     UnableToRent = 4096,
     UnableToDisassemble = 8192,
-    NoMail = 16384
+    NoMail = 16384,
+    NoHero = -32768
 }
 
 [Flags]
@@ -1412,6 +1418,7 @@ public enum ServerPacketIds : short
     UserSlotsRefresh,
     UserLocation,
     ObjectPlayer,
+    ObjectHero,
     ObjectRemove,
     ObjectTurn,
     ObjectWalk,
@@ -1437,6 +1444,8 @@ public enum ServerPacketIds : short
     RetrieveTradeItem,
     UseItem,
     DropItem,
+    TakeBackHeroItem,
+    TransferHeroItem,
     PlayerUpdate,
     PlayerInspect,
     LogOutSuccess,
@@ -1458,6 +1467,7 @@ public enum ServerPacketIds : short
     DamageIndicator,
     DuraChanged,
     HealthChanged,
+    HeroHealthChanged,
     DeleteItem,
     Death,
     ObjectDied,
@@ -1465,7 +1475,9 @@ public enum ServerPacketIds : short
     ObjectColourChanged,
     ObjectGuildNameChanged,
     GainExperience,
+    GainHeroExperience,
     LevelChanged,
+    HeroLevelChanged,
     ObjectLeveled,
     ObjectHarvest,
     ObjectHarvested,
@@ -1517,6 +1529,7 @@ public enum ServerPacketIds : short
     ObjectRevived,
     SpellToggle,
     ObjectHealth,
+    ObjectMana,
     MapEffect,
     ObjectRangeAttack,
     AddBuff,
@@ -1538,6 +1551,7 @@ public enum ServerPacketIds : short
     ObjectSitDown,
     InTrapRock,
     BaseStatsInfo,
+    HeroBaseStatsInfo,
     UserName,
     ChatItemStats,
     GuildNoticeChange,
@@ -1550,6 +1564,13 @@ public enum ServerPacketIds : short
     GuildStorageItemChange,
     GuildStorageList,
     GuildRequestWar,
+    HeroCreateRequest,
+    NewHero,
+    HeroInformation,
+    UpdateHeroSpawnState,
+    UnlockHeroAutoPot,
+    SetAutoPotValue,
+    SetAutoPotItem,
     DefaultNPC,
     NPCUpdate,
     NPCImageUpdate,
@@ -1674,6 +1695,8 @@ public enum ClientPacketIds : short
     ReplaceWedRing,
     DepositTradeItem,
     RetrieveTradeItem,
+    TakeBackHeroItem,
+    TransferHeroItem,
     DropGold,
     PickUp,
     RequestMapInfo,
@@ -1699,6 +1722,9 @@ public enum ClientPacketIds : short
     AddMember,
     DellMember,
     GroupInvite,
+    NewHero,
+    SetAutoPotValue,
+    SetAutoPotItem,
     TownRevive,
     SpellToggle,
     ConsignItem,
@@ -1828,4 +1854,18 @@ public enum IntelligentCreaturePickupMode : byte
 {
     Automatic = 0,
     SemiAutomatic = 1,
+}
+
+public enum HeroSpawnState : byte
+{
+    None = 0,
+    Summoned = 1,
+    Dead = 2
+}
+
+public enum SpellToggleState: sbyte
+{
+    None = -1,
+    False = 0,
+    True = 1
 }

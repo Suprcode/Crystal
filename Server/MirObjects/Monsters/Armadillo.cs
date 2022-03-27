@@ -37,7 +37,7 @@ namespace Server.MirObjects.Monsters
             }
         }
 
-        public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
+        public override int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
             if (_runAway && Envir.Random.Next(4) == 0)
             {

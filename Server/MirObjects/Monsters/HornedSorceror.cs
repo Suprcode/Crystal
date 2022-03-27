@@ -36,7 +36,7 @@ namespace Server.MirObjects.Monsters
             return !_Immune && base.IsAttackTarget(attacker);
         }
 
-        public override bool IsAttackTarget(PlayerObject attacker)
+        public override bool IsAttackTarget(HumanObject attacker)
         {
             return !_Immune && base.IsAttackTarget(attacker);
         }

@@ -30,7 +30,7 @@ namespace Server.MirObjects.Monsters
         {
             return Parent.IsAttackTarget(attacker);
         }
-        public override bool IsAttackTarget(PlayerObject attacker)
+        public override bool IsAttackTarget(HumanObject attacker)
         {
             return Parent.IsAttackTarget(attacker);
         }
@@ -39,7 +39,7 @@ namespace Server.MirObjects.Monsters
 
         protected override void ProcessSearch() { }
 
-        public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
+        public override int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
             return Parent.Attacked(attacker, damage, type, damageWeapon);
         }

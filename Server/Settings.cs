@@ -168,7 +168,8 @@ namespace Server
                              ScrollMob1 = "WarriorScroll",
                              ScrollMob2 = "TaoistScroll",
                              ScrollMob3 = "WizardScroll",
-                             ScrollMob4 = "AssassinScroll";
+                             ScrollMob4 = "AssassinScroll",
+                             HeroName = "Hero";
 
         public static string HealRing = "Healing",
                              FireRing = "FireBall",
@@ -263,6 +264,10 @@ namespace Server
                               PvpCanFreeze = false;
 
         public static byte RangeAccuracyBonus = 0;
+
+        public static bool AllowNewHero;
+        public static byte Hero_RequiredLevel = 22;
+        public static bool[] Hero_CanCreateClass = new bool[0];
 
         //Guild related settings
         public static byte Guild_RequiredLevel = 22, Guild_PointPerLevel = 0;
@@ -414,6 +419,7 @@ namespace Server
             GroupInviteDelay = Reader.ReadInt64("Game", "GroupInviteDelay", GroupInviteDelay);
             TradeDelay = Reader.ReadInt64("Game", "TradeDelay", TradeDelay);
             TeleportToNPCCost = Reader.ReadInt32("Game", "TeleportToNPCCost", TeleportToNPCCost);
+            HeroName = Reader.ReadString("Game", "HeroName", HeroName);
 
             //Rested
             RestedPeriod = Reader.ReadInt32("Rested", "Period", RestedPeriod);
@@ -521,6 +527,7 @@ namespace Server
             LoadGem();
             LoadNotice();
             LoadWorldMap();
+            LoadHeroSettings();
 
             GameLanguage.LoadServerLanguage(Path.Combine(ConfigPath, "Language.ini"));
         }
@@ -719,6 +726,8 @@ namespace Server
             Reader.Write("Archive", "DeletedCharacterMonths", ArchiveDeletedCharacterAfterMonths);
 
             Reader.Write("Game", "TeleportToNPCCost", TeleportToNPCCost);
+
+            Reader.Write("Game", "HeroName", HeroName);
 
             SaveAwakeAttribute();
         }
@@ -1103,6 +1112,34 @@ namespace Server
             }
         }
 
+        public static void LoadHeroSettings()
+        {
+            Array.Resize(ref Hero_CanCreateClass, Enum.GetNames(typeof(MirClass)).Length);
+            if (!File.Exists(Path.Combine(ConfigPath, "HeroSettings.ini")))
+            {                
+                for (int i = 0; i < Hero_CanCreateClass.Length; i++)
+                    Hero_CanCreateClass[i] = true;
+                SaveHeroSettings();
+                return;
+            }
+
+            InIReader reader = new InIReader(Path.Combine(ConfigPath, "HeroSettings.ini"));
+            AllowNewHero = reader.ReadBoolean("Hero", "AllowNewHero", AllowNewHero);
+            Hero_RequiredLevel = reader.ReadByte("Hero", "MinimumLevel", Hero_RequiredLevel);
+            for (int i = 0; i < Hero_CanCreateClass.Length; i++)
+                Hero_CanCreateClass[i] = reader.ReadBoolean("Hero", $"CanCreate{Enum.GetName(typeof(MirClass), i)}", true);
+        }
+        public static void SaveHeroSettings()
+        {
+            File.Delete(Path.Combine(ConfigPath, "HeroSettings.ini"));
+            InIReader reader = new InIReader(Path.Combine(ConfigPath, "HeroSettings.ini"));
+
+            reader.Write("Hero", "AllowNewHero", AllowNewHero);
+            reader.Write("Hero", "MinimumLevel", Hero_RequiredLevel);
+            for (int i = 0; i < Hero_CanCreateClass.Length; i++)
+                reader.Write("Hero", $"CanCreate{Enum.GetName(typeof(MirClass), i)}", Hero_CanCreateClass[i]);
+        }
+
         public static void LoadGuildSettings()
         {
             if (!File.Exists(Path.Combine(ConfigPath, "GuildSettings.ini")))
@@ -1146,9 +1183,6 @@ namespace Server
             {
                 Guild_BuffList.Add(new GuildBuffInfo(reader, i));
             }
-
-
-
         }
         public static void SaveGuildSettings()
         {

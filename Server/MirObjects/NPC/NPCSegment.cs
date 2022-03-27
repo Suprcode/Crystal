@@ -1106,6 +1106,10 @@ namespace Server.MirObjects
 
                     acts.Add(new NPCActions(ActionType.Drop, fileName));
                     break;
+
+                case "REVIVEHERO":
+                    acts.Add(new NPCActions(ActionType.ReviveHero));
+                    break;
             }
         }
 
@@ -3213,7 +3217,7 @@ namespace Server.MirObjects
                             if (magic.Info == null) return;
 
                             player.Info.Magics.Add(magic);
-                            player.Enqueue(magic.GetInfo());
+                            player.SendMagicInfo(magic);
                         }
                         break;
 
@@ -3997,6 +4001,9 @@ namespace Server.MirObjects
                                 }
                             }
                         }
+                        break;
+                    case ActionType.ReviveHero:
+                        player.ReviveHero();
                         break;
                 }
             }

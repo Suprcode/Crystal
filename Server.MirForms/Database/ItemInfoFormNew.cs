@@ -67,35 +67,35 @@ namespace Server.Database
             ItemToolTip.ValueType = typeof(string);
 
             //Basic
-            this.ItemType.ValueType = typeof(ItemType);
-            this.ItemType.DataSource = Enum2DataTable<ItemType>();
-            this.ItemType.ValueMember = "Value";
-            this.ItemType.DisplayMember = "Display";
+            ItemType.ValueType = typeof(ItemType);
+            ItemType.DataSource = Enum2DataTable<ItemType>();
+            ItemType.ValueMember = "Value";
+            ItemType.DisplayMember = "Display";
 
-            this.ItemGrade.ValueType = typeof(ItemGrade);
-            this.ItemGrade.DataSource = Enum2DataTable<ItemGrade>();
-            this.ItemGrade.ValueMember = "Value";
-            this.ItemGrade.DisplayMember = "Display";
+            ItemGrade.ValueType = typeof(ItemGrade);
+            ItemGrade.DataSource = Enum2DataTable<ItemGrade>();
+            ItemGrade.ValueMember = "Value";
+            ItemGrade.DisplayMember = "Display";
 
-            this.ItemRequiredType.ValueType = typeof(RequiredType);
-            this.ItemRequiredType.DataSource = Enum2DataTable<RequiredType>();
-            this.ItemRequiredType.ValueMember = "Value";
-            this.ItemRequiredType.DisplayMember = "Display";
+            ItemRequiredType.ValueType = typeof(RequiredType);
+            ItemRequiredType.DataSource = Enum2DataTable<RequiredType>();
+            ItemRequiredType.ValueMember = "Value";
+            ItemRequiredType.DisplayMember = "Display";
 
-            this.ItemRequiredGender.ValueType = typeof(RequiredGender);
-            this.ItemRequiredGender.DataSource = Enum2DataTable<RequiredGender>();
-            this.ItemRequiredGender.ValueMember = "Value";
-            this.ItemRequiredGender.DisplayMember = "Display";
+            ItemRequiredGender.ValueType = typeof(RequiredGender);
+            ItemRequiredGender.DataSource = Enum2DataTable<RequiredGender>();
+            ItemRequiredGender.ValueMember = "Value";
+            ItemRequiredGender.DisplayMember = "Display";
 
-            this.ItemRequiredClass.ValueType = typeof(RequiredClass);
-            this.ItemRequiredClass.DataSource = Enum2DataTable<RequiredClass>();
-            this.ItemRequiredClass.ValueMember = "Value";
-            this.ItemRequiredClass.DisplayMember = "Display";
+            ItemRequiredClass.ValueType = typeof(RequiredClass);
+            ItemRequiredClass.DataSource = Enum2DataTable<RequiredClass>();
+            ItemRequiredClass.ValueMember = "Value";
+            ItemRequiredClass.DisplayMember = "Display";
 
-            this.ItemSet.ValueType = typeof(ItemSet);
-            this.ItemSet.DataSource = Enum2DataTable<ItemSet>();
-            this.ItemSet.ValueMember = "Value";
-            this.ItemSet.DisplayMember = "Display";
+            ItemSet.ValueType = typeof(ItemSet);
+            ItemSet.DataSource = Enum2DataTable<ItemSet>();
+            ItemSet.ValueMember = "Value";
+            ItemSet.DisplayMember = "Display";
         }
 
         public static DataTable Enum2DataTable<T>()
@@ -172,7 +172,6 @@ namespace Server.Database
 
                 itemInfoGridView.Columns.Add(col);
             }
-
         }
 
         private void PopulateTable()

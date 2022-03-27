@@ -53,7 +53,7 @@ namespace Server.MirObjects.Monsters
             return base.AddBuff(type, owner, duration, stats, refreshStats, updateOnly, values);
         }
 
-        public override bool IsFriendlyTarget(PlayerObject ally)
+        public override bool IsFriendlyTarget(HumanObject ally)
         {
             if (Stoned) return false;
 
@@ -116,7 +116,7 @@ namespace Server.MirObjects.Monsters
         {
             return !Stoned && base.IsAttackTarget(attacker);
         }
-        public override bool IsAttackTarget(PlayerObject attacker)
+        public override bool IsAttackTarget(HumanObject attacker)
         {
             return !Stoned && base.IsAttackTarget(attacker);
         }
