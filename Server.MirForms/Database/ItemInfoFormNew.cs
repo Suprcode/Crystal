@@ -258,14 +258,14 @@ namespace Server.Database
         private void SaveForm()
         {
             int lastIndex = 0;
-            if (Envir.MonsterInfoList.Count > 0)
+            if (Envir.ItemInfoList.Count > 0)
             {
                 lastIndex = Envir.ItemInfoList.Max(x => x.Index);
             }
 
             foreach (DataGridViewRow row in itemInfoGridView.Rows)
             {
-                if (string.IsNullOrEmpty((string)row.Cells["ItemName"].Value))
+                if (row.Cells["ItemName"].Value.GetType() == typeof(System.DBNull) || string.IsNullOrEmpty((string)row.Cells["ItemName"].Value))
                 {
                     continue;
                 }
