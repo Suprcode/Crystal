@@ -189,7 +189,7 @@ namespace Server.Database
 
             foreach (DataGridViewRow row in monsterInfoGridView.Rows)
             {
-                if (string.IsNullOrEmpty((string)row.Cells["MonsterName"].Value))
+                if (row.Cells["MonsterName"].Value.GetType() == typeof(System.DBNull) || string.IsNullOrEmpty((string)row.Cells["MonsterName"].Value))
                 {
                     continue;
                 }
