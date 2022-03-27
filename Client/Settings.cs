@@ -142,7 +142,8 @@ namespace Client
             HighlightTarget = true,
             ExpandedBuffWindow = true,
             ExpandedHeroBuffWindow = true,
-            DisplayBodyName = false;
+            DisplayBodyName = false,
+            CatchupEffects = false;
 
         public static int[,] SkillbarLocation = new int[2, 2] { { 0, 0 }, { 216, 0 }  };
 
@@ -240,6 +241,7 @@ namespace Client
             ExpandedHeroBuffWindow = Reader.ReadBoolean("Game", "ExpandedHeroBuffWindow", ExpandedHeroBuffWindow);
             DuraView = Reader.ReadBoolean("Game", "DuraWindow", DuraView);
             DisplayBodyName = Reader.ReadBoolean("Game", "DisplayBodyName", DisplayBodyName);
+            CatchupEffects = Reader.ReadBoolean("Game", "CatchupEffects", CatchupEffects);
 
             for (int i = 0; i < SkillbarLocation.Length / 2; i++)
             {
@@ -325,6 +327,7 @@ namespace Client
             Reader.Write("Game", "ExpandedHeroBuffWindow", ExpandedBuffWindow);
             Reader.Write("Game", "DuraWindow", DuraView);
             Reader.Write("Game", "DisplayBodyName", DisplayBodyName);
+            Reader.Write("Game", "CatchupEffects", CatchupEffects);
 
             for (int i = 0; i < SkillbarLocation.Length / 2; i++)
             {

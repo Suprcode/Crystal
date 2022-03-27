@@ -846,6 +846,8 @@ namespace Server.MirObjects
             }
             Report.Levelled(Level);
 
+            CheckCatchupBonus();
+
             if (IsGM) return;
             if ((Level >= Envir.RankBottomLevel[0]) || (Level >= Envir.RankBottomLevel[(byte)Class + 1]))
             {
@@ -1204,6 +1206,7 @@ namespace Server.MirObjects
                     Envir.CheckRankUpdate(Info);
                 }
             }
+            CheckCatchupBonus();
         }
         private void StartGameFailed()
         {
@@ -1230,6 +1233,22 @@ namespace Server.MirObjects
 
                 _restedCounter = 0;
             }
+        }
+        public void CheckCatchupBonus()
+        {
+            if (Info.AccountInfo.AdminAccount)
+                return;
+
+            RemoveBuff(BuffType.CatchupExperience);
+
+            if (Envir.RankTop.Count == 0)
+                return;
+
+            if (Info.Level >= Envir.RankTop[0].level)
+                return;
+
+            int leveldiff = Math.Min(Envir.RankTop[0].level - Info.Level, Settings.CatchupMaxBonus);
+            AddBuff(BuffType.CatchupExperience, this, 0, new Stats { [Stat.ExpRatePercent] = leveldiff * Settings.CatchupExpBonus });
         }
         public override void Revive(int hp, bool effect)
         {

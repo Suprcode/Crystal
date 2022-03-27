@@ -3256,6 +3256,16 @@ namespace Server.MirEnvir
                     SetNewRank(Ranking[i], i + 1, type);
                 }
             }
+            else //Catchup
+            {
+                for (var i = NewRank + 1; i < Ranking.Count; i++)
+                {
+                    CharacterInfo cinfo = (CharacterInfo)Ranking[i].info;
+                    if (cinfo == null || cinfo.Player == null) continue;
+
+                    cinfo.Player.CheckCatchupBonus();
+                }
+            }
             info.Rank[type] = NewRank+1;
             
             return true;
@@ -3265,6 +3275,11 @@ namespace Server.MirEnvir
         {
             if (!(Rank.info is CharacterInfo Player)) return;
             Player.Rank[type] = Index;
+
+            if (Player.Player != null) //Catchup
+            {
+                Player.Player.CheckCatchupBonus();
+            }
         }
 
         public void RemoveRank(CharacterInfo info)

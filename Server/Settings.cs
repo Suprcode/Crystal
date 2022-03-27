@@ -117,6 +117,9 @@ namespace Server
                           RestedExpBonus = 5,
                           RestedMaxBonus = 24;
 
+        public static int CatchupExpBonus = 1,
+                          CatchupMaxBonus = 50;
+
         public static string SkeletonName = "BoneFamiliar",
                              ShinsuName = "Shinsu",
                              BugBatName = "BugBat",
@@ -427,6 +430,10 @@ namespace Server
             RestedExpBonus = Reader.ReadInt32("Rested", "ExpBonus", RestedExpBonus);
             RestedMaxBonus = Reader.ReadInt32("Rested", "MaxBonus", RestedMaxBonus);
 
+            //Catchup
+            CatchupExpBonus = Reader.ReadInt32("Catchup", "ExpBonus", CatchupExpBonus);
+            CatchupMaxBonus = Reader.ReadInt32("Catchup", "MaxBonus", CatchupMaxBonus);
+
             //Items
             HealRing = Reader.ReadString("Items", "HealRing", HealRing);
             FireRing = Reader.ReadString("Items", "FireRing", FireRing);
@@ -675,6 +682,9 @@ namespace Server
             Reader.Write("Rested", "BuffLength", RestedBuffLength);
             Reader.Write("Rested", "ExpBonus", RestedExpBonus);
             Reader.Write("Rested", "MaxBonus", RestedMaxBonus);
+
+            Reader.Write("Catchup", "ExpBonus", CatchupExpBonus);
+            Reader.Write("Catchup", "MaxBonus", CatchupMaxBonus);
 
             Reader.Write("Items", "HealRing", HealRing);
             Reader.Write("Items", "FireRing", FireRing);

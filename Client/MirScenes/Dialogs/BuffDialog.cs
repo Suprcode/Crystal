@@ -342,6 +342,11 @@ namespace Client.MirScenes.Dialogs
                 case BuffType.Blindness:
                     text += "Reduces visibility\n";
                     break;
+                case BuffType.CatchupExperience:
+                    text = "Catchup Experience\n";
+                    text += string.Format("Increased by {0}%\n", buff.Stats[Stat.ExpRatePercent]);
+                    text += string.Format("Currently in the top 3.\n");
+                    break;
             }
 
             if (!overridestats)
@@ -508,6 +513,8 @@ namespace Client.MirScenes.Dialogs
                     return 261;
                 case BuffType.Skill:
                     return 200;
+                case BuffType.CatchupExperience:
+                    return 190;
 
                 //Stats
                 case BuffType.Impact:

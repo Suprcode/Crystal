@@ -159,6 +159,11 @@ namespace Client.MirObjects
 
             switch (type)
             {
+                case BuffType.CatchupExperience: //Catchup
+                    if (Settings.CatchupEffects)
+                    Effects.Add(new BuffEffect(Libraries.Effect, 296, 12, 3600, this, true, type) { Repeat = true });
+                    Effects.Add(new BuffEffect(Libraries.Effect, 312, 12, 3600, this, true, type) { Repeat = true });
+                    break;
                 case BuffType.Fury:
                     Effects.Add(new BuffEffect(Libraries.Magic3, 190, 7, 1400, this, true, type) { Repeat = true });
                     break;
