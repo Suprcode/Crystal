@@ -351,7 +351,7 @@ namespace Client.MirScenes.Dialogs
                     Visible = true,
                     Parent = this,
                     Size = new Size(420, 20),
-                    Location = new Point(20, 34 + (i - _index) * 20),
+                    Location = new Point(8, 34 + (i - _index) * 18),
                     NotControl = true
                 };
 

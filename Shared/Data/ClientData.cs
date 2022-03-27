@@ -344,6 +344,7 @@ public class ClientQuestInfo
     public string Name, Group;
     public List<string> Description = new List<string>();
     public List<string> TaskDescription = new List<string>();
+    public List<string> ReturnDescription = new List<string>();
     public List<string> CompletionDescription = new List<string>();
 
     public int MinLevelNeeded, MaxLevelNeeded;
@@ -386,6 +387,10 @@ public class ClientQuestInfo
 
         count = reader.ReadInt32();
         for (int i = 0; i < count; i++)
+            ReturnDescription.Add(reader.ReadString());
+
+        count = reader.ReadInt32();
+        for (int i = 0; i < count; i++)
             CompletionDescription.Add(reader.ReadString());
 
         MinLevelNeeded = reader.ReadInt32();
@@ -425,6 +430,10 @@ public class ClientQuestInfo
         writer.Write(TaskDescription.Count);
         for (int i = 0; i < TaskDescription.Count; i++)
             writer.Write(TaskDescription[i]);
+
+        writer.Write(ReturnDescription.Count);
+        for (int i = 0; i < ReturnDescription.Count; i++)
+            writer.Write(ReturnDescription[i]);
 
         writer.Write(CompletionDescription.Count);
         for (int i = 0; i < CompletionDescription.Count; i++)

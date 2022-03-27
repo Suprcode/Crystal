@@ -1025,7 +1025,7 @@ namespace Client.MirScenes.Dialogs
         public Font Font = new Font(Settings.FontName, 8F);
         public List<string> CurrentLines = new List<string>();
 
-        private const string TaskTitle = "Tasks", ProgressTitle = "Progress", TimeLimitTitle = "Time Limit";
+        private const string TaskTitle = "Tasks", ProgressTitle = "Progress", ReturnTitle = "Quest Return", TimeLimitTitle = "Time Limit";
 
         public QuestMessage(MirButton scrollUpButton, MirButton scrollDownButton, MirButton positionBar, int lineCount, bool displayProgress = false)
         {
@@ -1075,7 +1075,7 @@ namespace Client.MirScenes.Dialogs
 
             for (int i = TopLine; i < BottomLine; i++)
             {
-                if (i != 0 && CurrentLines[i] != TaskTitle && CurrentLines[i] != ProgressTitle && CurrentLines[i] != TimeLimitTitle) continue;
+                if (i != 0 && CurrentLines[i] != TaskTitle && CurrentLines[i] != ProgressTitle && CurrentLines[i] != ReturnTitle && CurrentLines[i]  != TimeLimitTitle) continue;
 
                 Libraries.Prguse.Draw(919, new Point(DisplayLocation.X + 5, DisplayLocation.Y + 5 + (i - TopLine) * 15 + adjust), Color.White);
 
@@ -1185,6 +1185,18 @@ namespace Client.MirScenes.Dialogs
                 }
             }
 
+            if (Quest.QuestInfo.ReturnDescription.Count > 0)
+            {
+                CurrentLines.Add(" ");
+
+                CurrentLines.Add(ReturnTitle);
+
+                foreach (string questgiver in Quest.QuestInfo.ReturnDescription)
+                {
+                    CurrentLines.Add(questgiver);
+                }
+            }
+
             if (Quest.QuestInfo.TimeLimitInSeconds > 0)
             {
                 CurrentLines.Add(" ");
@@ -1232,7 +1244,7 @@ namespace Client.MirScenes.Dialogs
                 Color fontColor = Color.White;
                 bool title = false;
 
-                if (i == 0 || lines[i] == TaskTitle || lines[i] == ProgressTitle || lines[i] == TimeLimitTitle)
+                if (i == 0 || lines[i] == TaskTitle || lines[i] == ProgressTitle || lines[i] == ReturnTitle || lines[i] == TimeLimitTitle)
                 {
                     font = new Font(Settings.FontName, 10F, FontStyle.Bold);
                     title = true;

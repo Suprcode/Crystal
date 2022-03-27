@@ -58,7 +58,8 @@ namespace Server.MirDatabase
             FlagMessage = string.Empty;
 
         public List<string> Description = new List<string>();
-        public List<string> TaskDescription = new List<string>(); 
+        public List<string> TaskDescription = new List<string>();
+        public List<string> ReturnDescription = new List<string>();
         public List<string> CompletionDescription = new List<string>(); 
 
         public int RequiredMinLevel, RequiredMaxLevel, RequiredQuest;
@@ -168,6 +169,7 @@ namespace Server.MirDatabase
             const string
                 descriptionCollectKey = "[@DESCRIPTION]",
                 descriptionTaskKey = "[@TASKDESCRIPTION]",
+                descriptionReturnKey = "[@RETURNDESCRIPTION]",
                 descriptionCompletionKey = "[@COMPLETION]",
                 carryItemsKey = "[@CARRYITEMS]",
                 killTasksKey = "[@KILLTASKS]",
@@ -183,7 +185,7 @@ namespace Server.MirDatabase
             { 
                 descriptionCollectKey, descriptionTaskKey, descriptionCompletionKey,
                 carryItemsKey, killTasksKey, itemTasksKey, flagTasksKey,
-                fixedRewardsKey, selectRewardsKey, expRewardKey, goldRewardKey, creditRewardKey
+                fixedRewardsKey, selectRewardsKey, expRewardKey, goldRewardKey, creditRewardKey, descriptionReturnKey
             };
 
             int currentHeader = 0;
@@ -210,6 +212,9 @@ namespace Server.MirDatabase
                                 break;
                             case descriptionTaskKey:
                                 TaskDescription.Add(innerLine);
+                                break;
+                            case descriptionReturnKey:
+                                ReturnDescription.Add(innerLine);
                                 break;
                             case descriptionCompletionKey:
                                 CompletionDescription.Add(innerLine);
@@ -394,6 +399,7 @@ namespace Server.MirDatabase
                 Group = Group,
                 Description = Description,
                 TaskDescription = TaskDescription,
+                ReturnDescription = ReturnDescription,
                 CompletionDescription = CompletionDescription,
                 MinLevelNeeded = RequiredMinLevel,
                 MaxLevelNeeded = RequiredMaxLevel,
