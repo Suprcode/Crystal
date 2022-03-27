@@ -27,6 +27,8 @@ namespace Server.Database
         {
             InitializeComponent();
 
+            SetDoubleBuffered(monsterInfoGridView);
+
             InitializeItemInfoGridView();
 
             CreateDynamicColumns();
@@ -34,6 +36,17 @@ namespace Server.Database
             PopulateTable();
 
             rbtnViewBasic.Checked = true;
+        }
+
+        public static void SetDoubleBuffered(System.Windows.Forms.Control c)
+        {
+            System.Reflection.PropertyInfo aProp =
+                  typeof(System.Windows.Forms.Control).GetProperty(
+                        "DoubleBuffered",
+                        System.Reflection.BindingFlags.NonPublic |
+                        System.Reflection.BindingFlags.Instance);
+
+            aProp.SetValue(c, true, null);
         }
 
         private void InitializeItemInfoGridView()
