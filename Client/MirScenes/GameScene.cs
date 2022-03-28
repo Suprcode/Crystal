@@ -103,6 +103,7 @@ namespace Client.MirScenes
         public GuestTradeDialog GuestTradeDialog;
 
         public HeroMenuPanel HeroMenuPanel;
+        public HeroBehaviourPanel HeroBehaviourPanel;
         public SocketDialog SocketDialog;
 
         public List<SkillBarDialog> SkillBarDialogs = new List<SkillBarDialog>();
@@ -250,6 +251,7 @@ namespace Client.MirScenes
             };
 
             HeroMenuPanel = new HeroMenuPanel(this) { Visible = false };
+            HeroBehaviourPanel = new HeroBehaviourPanel { Parent = this, Visible = false };
 
             BigMapDialog = new BigMapDialog { Parent = this, Visible = false };
             TrustMerchantDialog = new TrustMerchantDialog { Parent = this, Visible = false };
@@ -1689,6 +1691,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.SetAutoPotValue:
                     SetAutoPotValue((S.SetAutoPotValue)p);
                     break;
+                case (short)ServerPacketIds.SetHeroBehaviour:
+                    SetHeroBehaviour((S.SetHeroBehaviour)p);
+                    break;
                 case (short)ServerPacketIds.SetAutoPotItem:
                     SetAutoPotItem((S.SetAutoPotItem)p);
                     break;
@@ -2034,6 +2039,7 @@ namespace Client.MirScenes
             User.Load(p);
             MainDialog.PModeLabel.Visible = User.Class == MirClass.Wizard || User.Class == MirClass.Taoist;
             HasHero = p.HasHero;
+            HeroBehaviourPanel.UpdateBehaviour(p.HeroBehaviour);
             Gold = p.Gold;
             Credit = p.Credit;
 
@@ -6003,6 +6009,12 @@ namespace Client.MirScenes
                 Hero.MPItem[0] = p.ItemIndex > 0 ? new UserItem(GetItemInfo(p.ItemIndex)) : null;
         }
 
+        private void SetHeroBehaviour(S.SetHeroBehaviour p)
+        {
+            if (Hero == null) return;
+            HeroBehaviourPanel.UpdateBehaviour(p.Behaviour);
+        }
+
         private void NewHero(S.NewHero p)
         {
             NewHeroDialog.OKButton.Enabled = true;
@@ -6075,6 +6087,7 @@ namespace Client.MirScenes
 
             MainDialog.HeroInfoPanel.Visible = p.State > HeroSpawnState.None;
             MainDialog.HeroMenuButton.Visible = p.State > HeroSpawnState.None;
+            HeroBehaviourPanel.Visible = p.State > HeroSpawnState.None;
             HeroMenuPanel.Visible = HeroMenuPanel.Visible && MainDialog.HeroMenuButton.Visible;
 
             if (p.State < HeroSpawnState.Summoned)

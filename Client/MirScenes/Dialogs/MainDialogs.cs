@@ -37,6 +37,7 @@ namespace Client.MirScenes.Dialogs
         public MirControl HealthOrb;
         public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, CharacterName, ExperienceLabel, GoldLabel, WeightLabel, SpaceLabel, AModeLabel, PModeLabel, SModeLabel;
         public HeroInfoPanel HeroInfoPanel;
+        public HeroBehaviourPanel HeroBehaviourPanel;
 
         public MirButton HeroMenuButton, HeroSummonButton;
 
@@ -360,7 +361,7 @@ namespace Client.MirScenes.Dialogs
                 });
             };
 
-            HeroInfoPanel = new HeroInfoPanel { Parent = this, Visible = false };
+            HeroInfoPanel = new HeroInfoPanel { Parent = this, Visible = false };            
 
             AModeLabel = new MirLabel
             {

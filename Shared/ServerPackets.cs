@@ -543,6 +543,7 @@ namespace ServerPackets
         public LevelEffects LevelEffects;
 
         public bool HasHero;
+        public HeroBehaviour HeroBehaviour;
         public UserItem[] Inventory, Equipment, QuestInventory;
         public uint Gold, Credit;
 
@@ -579,6 +580,7 @@ namespace ServerPackets
 
             LevelEffects = (LevelEffects)reader.ReadByte();
             HasHero = reader.ReadBoolean();
+            HeroBehaviour = (HeroBehaviour)reader.ReadByte();
 
             if (reader.ReadBoolean())
             {
@@ -655,6 +657,7 @@ namespace ServerPackets
 
             writer.Write((byte)LevelEffects);
             writer.Write(HasHero);
+            writer.Write((byte)HeroBehaviour);
 
             writer.Write(Inventory != null);
             if (Inventory != null)
@@ -4699,6 +4702,21 @@ namespace ServerPackets
         {
             writer.Write((byte)Grid);
             writer.Write(ItemIndex);
+        }
+    }
+
+    public sealed class SetHeroBehaviour : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.SetHeroBehaviour; } }
+
+        public HeroBehaviour Behaviour;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Behaviour = (HeroBehaviour)reader.ReadByte();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write((byte)Behaviour);
         }
     }
 

@@ -721,5 +721,49 @@ namespace Client.MirScenes.Dialogs
             return count;
         }
     }
+
+    public sealed class HeroBehaviourPanel : MirImageControl
+    {
+        private MirButton[] BehaviourButtons;
+        public HeroBehaviourPanel()
+        {
+            AutoSize = false;
+            Size = new Size(64, 17);
+            DrawImage = false;
+            Location = new Point(GameScene.Scene.MainDialog.Location.X + 165, GameScene.Scene.MainDialog.Location.Y + 37);
+
+            BehaviourButtons = new MirButton[4];
+
+            for (int i = 0; i < BehaviourButtons.Length; i++)
+            {
+                HeroBehaviour hb = (HeroBehaviour)i;
+                BehaviourButtons[i] = new MirButton
+                {
+                    Index = 1840 + i,
+                    DisabledIndex = 1844 + i,
+                    Location = new Point(16 * i, 0),
+                    Library = Libraries.Prguse,
+                    Parent = this,
+                    Sound = SoundList.ButtonA,
+                    Hint = $"Hero Behaviour: {Enum.GetName(typeof(HeroBehaviour), i)}",
+                    AllowDisabledMouseOver = true
+                };
+                BehaviourButtons[i].Click += (o, e) =>
+                {                    
+                    SetBehaviour(hb);
+                };
+            }
+        }
+
+        private void SetBehaviour(HeroBehaviour behaviour)
+        {
+            Network.Enqueue(new C.SetHeroBehaviour { Behaviour = behaviour });
+        }
+        public void UpdateBehaviour(HeroBehaviour behaviour)
+        {
+            for (int i = 0; i < BehaviourButtons.Length; i++)
+                BehaviourButtons[i].Enabled = (byte)behaviour != i;
+        }
+    }
 }
 

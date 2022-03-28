@@ -236,6 +236,7 @@ namespace Client.MirControls
                 foreach (MirControl control in Controls)
                     control.OnEnabledChanged();
         }
+        public bool AllowDisabledMouseOver;
         #endregion
 
         #region Events
@@ -805,7 +806,7 @@ namespace Client.MirControls
         }
         protected virtual void OnMouseEnter()
         {
-            if (!_enabled)
+            if (!_enabled && !AllowDisabledMouseOver)
                 return;
 
             Redraw();
@@ -815,7 +816,7 @@ namespace Client.MirControls
         }
         protected virtual void OnMouseLeave()
         {
-            if (!_enabled)
+            if (!_enabled && !AllowDisabledMouseOver)
                 return;
 
             Redraw();
@@ -859,7 +860,7 @@ namespace Client.MirControls
         }
         public virtual void OnMouseMove(MouseEventArgs e)
         {
-            if (!_enabled)
+            if (!_enabled && !AllowDisabledMouseOver)
                 return;
 
 
