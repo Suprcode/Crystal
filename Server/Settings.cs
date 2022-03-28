@@ -117,6 +117,8 @@ namespace Server
                           RestedExpBonus = 5,
                           RestedMaxBonus = 24;
 
+        public static bool CatchupExpEnabled;
+
         public static int CatchupExpBonus = 1,
                           CatchupMaxBonus = 50;
 
@@ -431,6 +433,7 @@ namespace Server
             RestedMaxBonus = Reader.ReadInt32("Rested", "MaxBonus", RestedMaxBonus);
 
             //Catchup
+            CatchupExpEnabled = Reader.ReadBoolean("Catchup", "CatchupExpEnabled", CatchupExpEnabled);
             CatchupExpBonus = Reader.ReadInt32("Catchup", "ExpBonus", CatchupExpBonus);
             CatchupMaxBonus = Reader.ReadInt32("Catchup", "MaxBonus", CatchupMaxBonus);
 
@@ -683,6 +686,7 @@ namespace Server
             Reader.Write("Rested", "ExpBonus", RestedExpBonus);
             Reader.Write("Rested", "MaxBonus", RestedMaxBonus);
 
+            Reader.Write("Catchup", "CatchupExpEnabled", CatchupExpEnabled);
             Reader.Write("Catchup", "ExpBonus", CatchupExpBonus);
             Reader.Write("Catchup", "MaxBonus", CatchupMaxBonus);
 

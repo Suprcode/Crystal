@@ -26,6 +26,8 @@ namespace Server.MirObjects
 
         public bool WarZone = false;
 
+        public bool CatchupExpEnabled;
+
         private HeroInfo currentHero;
         public HeroInfo CurrentHero
         {
@@ -1237,6 +1239,9 @@ namespace Server.MirObjects
         public void CheckCatchupBonus()
         {
             if (Info.AccountInfo.AdminAccount)
+                return;
+
+            if (!CatchupExpEnabled)
                 return;
 
             RemoveBuff(BuffType.CatchupExperience);

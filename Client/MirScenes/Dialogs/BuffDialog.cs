@@ -344,7 +344,6 @@ namespace Client.MirScenes.Dialogs
                     break;
                 case BuffType.CatchupExperience:
                     text = "Catchup Experience\n";
-                    text += string.Format("Increased by {0}%\n", buff.Stats[Stat.ExpRatePercent]);
                     text += string.Format("Currently in the top 3.\n");
                     break;
             }

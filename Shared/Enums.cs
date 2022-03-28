@@ -17,7 +17,6 @@ public enum PanelType : byte
     Buy,
     BuySub,
     Craft,
-
     Sell,
     Repair,
     SpecialRepair,
