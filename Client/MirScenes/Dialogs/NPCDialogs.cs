@@ -253,12 +253,11 @@ namespace Client.MirScenes.Dialogs
                 {
                     string currentLine = lines[i];
 
-                    List<Match> matchList = B.Matches(currentLine).Cast<Match>().ToList();
-                    List<Match> sortedList = matchList.OrderBy(o => o.Index).ToList();
+                    List<Match> bigButtonSortedList = B.Matches(currentLine).Cast<Match>().OrderBy(o => o.Index).ToList();
 
-                    for (int j = 0; j < sortedList.Count; j++)
+                    for (int j = 0; j < bigButtonSortedList.Count; j++)
                     {
-                        Match match = sortedList[j];
+                        Match match = bigButtonSortedList[j];
                         Capture capture = match.Groups[1].Captures[0];
                         string txt = match.Groups[2].Captures[0].Value;
                         string action = match.Groups[3].Captures[0].Value;
@@ -291,10 +290,12 @@ namespace Client.MirScenes.Dialogs
                         BigButtons.Insert(0, button);
                     }
 
-                    currentLine = Regex.Replace(currentLine, B.ToString(), "");
+                    var bigButtonString = B.ToString();
 
-                    //if (string.IsNullOrWhiteSpace(currentLine))
-                    //    lines.RemoveAt(i);                                                    
+                    currentLine = Regex.Replace(currentLine, bigButtonString, "");
+
+                    if (string.IsNullOrWhiteSpace(currentLine) && !string.IsNullOrEmpty(bigButtonString))
+                        lines.RemoveAt(i);
                 }
 
                 if (BigButtons.Count > 0)
