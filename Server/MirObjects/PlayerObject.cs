@@ -1392,6 +1392,7 @@ namespace Server.MirObjects
                 LevelEffects = LevelEffects,
 
                 HasHero = HasHero,
+                HeroBehaviour = Info.HeroBehaviour,
 
                 Inventory = new UserItem[Info.Inventory.Length],
                 Equipment = new UserItem[Info.Equipment.Length],
@@ -8647,6 +8648,18 @@ namespace Server.MirObjects
             else
                 Hero.MPItemIndex = ItemIndex;
             Enqueue(new S.SetAutoPotItem() { Grid = Grid, ItemIndex = ItemIndex });
+        }
+
+        public void SetHeroBehaviour(HeroBehaviour behaviour)
+        {
+            if (!HeroSpawned) return;
+            if (Info.HeroBehaviour == behaviour) return;
+
+            Info.HeroBehaviour = behaviour;
+            Enqueue(new S.SetHeroBehaviour() { Behaviour = behaviour });
+
+            Hero.Target = null;
+            Hero.SearchTime = 0;
         }
         #endregion
 

@@ -833,7 +833,7 @@ namespace Server.MirObjects
         protected virtual void ProcessSearch()
         {
             if (Envir.Time < SearchTime) return;
-            if (Owner != null && (Owner.PMode == PetMode.MoveOnly || Owner.PMode == PetMode.None) || !Mount.CanAttack) return;
+            if (Owner.Info.HeroBehaviour == HeroBehaviour.Follow || !Mount.CanAttack) return;
 
             SearchTime = Envir.Time + SearchDelay;
 
@@ -1038,6 +1038,8 @@ namespace Server.MirObjects
                                     if (!ob.IsAttackTarget(Owner)) continue;
                                     if (ob.Hidden && (!CoolEye || Level < ob.Level)) continue;
                                     if (ob.Master != null && Target != ob) continue;
+                                    if (Owner.Info.HeroBehaviour == HeroBehaviour.CounterAttack && ob.Target != this && ob.Target != Owner) continue;
+
                                     Target = ob;
                                     return;
                                 case ObjectType.Player:

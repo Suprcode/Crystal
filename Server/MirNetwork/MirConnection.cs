@@ -416,6 +416,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.SetAutoPotItem:
                     SetAutoPotItem((C.SetAutoPotItem)p);
                     break;
+                case (short)ClientPacketIds.SetHeroBehaviour:
+                    SetHeroBehaviour((C.SetHeroBehaviour)p);
+                    break;
                 case (short)ClientPacketIds.TownRevive:
                     TownRevive();
                     return;
@@ -1324,6 +1327,13 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.SetAutoPotItem(p.Grid, p.ItemIndex);
+        }
+
+        private void SetHeroBehaviour(C.SetHeroBehaviour p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.SetHeroBehaviour(p.Behaviour);
         }
 
         private void TownRevive()

@@ -106,6 +106,7 @@ namespace Server.MirDatabase
         public int MaximumHeroCount = 1;
         public int CurrentHeroIndex;
         public bool HeroSpawned;
+        public HeroBehaviour HeroBehaviour;
 
         public CharacterInfo() { }
 
@@ -361,6 +362,9 @@ namespace Server.MirDatabase
                 CurrentHeroIndex = reader.ReadInt32();
                 HeroSpawned = reader.ReadBoolean();
             }
+
+            if (version > 100)
+                HeroBehaviour = (HeroBehaviour)reader.ReadByte();
         }
 
         public virtual void Save(BinaryWriter writer)
@@ -545,6 +549,7 @@ namespace Server.MirDatabase
             writer.Write(MaximumHeroCount);
             writer.Write(CurrentHeroIndex);
             writer.Write(HeroSpawned);
+            writer.Write((byte)HeroBehaviour);
         }
 
         public SelectInfo ToSelectInfo()

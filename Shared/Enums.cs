@@ -1571,6 +1571,7 @@ public enum ServerPacketIds : short
     UnlockHeroAutoPot,
     SetAutoPotValue,
     SetAutoPotItem,
+    SetHeroBehaviour,
     DefaultNPC,
     NPCUpdate,
     NPCImageUpdate,
@@ -1725,6 +1726,7 @@ public enum ClientPacketIds : short
     NewHero,
     SetAutoPotValue,
     SetAutoPotItem,
+    SetHeroBehaviour,
     TownRevive,
     SpellToggle,
     ConsignItem,
@@ -1861,6 +1863,14 @@ public enum HeroSpawnState : byte
     None = 0,
     Summoned = 1,
     Dead = 2
+}
+
+public enum HeroBehaviour : byte
+{
+    Attack = 0,
+    CounterAttack = 1,
+    Follow = 2,
+    Custom = 3
 }
 
 public enum SpellToggleState: sbyte
