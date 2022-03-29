@@ -293,8 +293,8 @@ namespace Client.MirScenes.Dialogs
 
                     currentLine = Regex.Replace(currentLine, B.ToString(), "");
 
-                    if (string.IsNullOrWhiteSpace(currentLine))
-                        lines.RemoveAt(i);                                                    
+                    //if (string.IsNullOrWhiteSpace(currentLine))
+                    //    lines.RemoveAt(i);                                                    
                 }
 
                 if (BigButtons.Count > 0)
