@@ -32,21 +32,6 @@ namespace Server.Database
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.itemInfoGridView = new System.Windows.Forms.DataGridView();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.btnExport = new System.Windows.Forms.Button();
-            this.btnImport = new System.Windows.Forms.Button();
-            this.lblFilterType = new System.Windows.Forms.Label();
-            this.groupView = new System.Windows.Forms.GroupBox();
-            this.rBtnViewSpecial = new System.Windows.Forms.RadioButton();
-            this.rbtnViewAll = new System.Windows.Forms.RadioButton();
-            this.rbtnViewBinding = new System.Windows.Forms.RadioButton();
-            this.rbtnViewBasic = new System.Windows.Forms.RadioButton();
-            this.rbtnViewStats = new System.Windows.Forms.RadioButton();
-            this.drpFilterType = new System.Windows.Forms.ComboBox();
-            this.lblSearch = new System.Windows.Forms.Label();
-            this.txtSearch = new System.Windows.Forms.TextBox();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.Modified = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.ItemIndex = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -69,6 +54,21 @@ namespace Server.Database
             this.ItemDurability = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemToolTip = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.btnExport = new System.Windows.Forms.Button();
+            this.btnImport = new System.Windows.Forms.Button();
+            this.lblFilterType = new System.Windows.Forms.Label();
+            this.groupView = new System.Windows.Forms.GroupBox();
+            this.rBtnViewSpecial = new System.Windows.Forms.RadioButton();
+            this.rbtnViewAll = new System.Windows.Forms.RadioButton();
+            this.rbtnViewBinding = new System.Windows.Forms.RadioButton();
+            this.rbtnViewBasic = new System.Windows.Forms.RadioButton();
+            this.rbtnViewStats = new System.Windows.Forms.RadioButton();
+            this.drpFilterType = new System.Windows.Forms.ComboBox();
+            this.lblSearch = new System.Windows.Forms.Label();
+            this.txtSearch = new System.Windows.Forms.TextBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.itemInfoGridView)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -122,6 +122,151 @@ namespace Server.Database
             this.itemInfoGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.itemInfoGridView_DataError);
             this.itemInfoGridView.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.itemInfoGridView_DefaultValuesNeeded);
             this.itemInfoGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.itemInfoGridView_UserDeletingRow);
+            // 
+            // Modified
+            // 
+            this.Modified.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Modified.DataPropertyName = "Modified";
+            this.Modified.Frozen = true;
+            this.Modified.HeaderText = "Modified";
+            this.Modified.Name = "Modified";
+            this.Modified.ReadOnly = true;
+            this.Modified.Width = 53;
+            // 
+            // ItemIndex
+            // 
+            this.ItemIndex.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ItemIndex.DataPropertyName = "ItemIndex";
+            this.ItemIndex.Frozen = true;
+            this.ItemIndex.HeaderText = "Index";
+            this.ItemIndex.Name = "ItemIndex";
+            this.ItemIndex.ReadOnly = true;
+            this.ItemIndex.Width = 58;
+            // 
+            // ItemName
+            // 
+            this.ItemName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.ItemName.DataPropertyName = "ItemName";
+            this.ItemName.Frozen = true;
+            this.ItemName.HeaderText = "Name";
+            this.ItemName.Name = "ItemName";
+            this.ItemName.Width = 60;
+            // 
+            // ItemType
+            // 
+            this.ItemType.DataPropertyName = "ItemType";
+            this.ItemType.HeaderText = "Type";
+            this.ItemType.Name = "ItemType";
+            this.ItemType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // ItemGrade
+            // 
+            this.ItemGrade.DataPropertyName = "ItemGrade";
+            this.ItemGrade.HeaderText = "Grade";
+            this.ItemGrade.Name = "ItemGrade";
+            // 
+            // ItemRequiredType
+            // 
+            this.ItemRequiredType.DataPropertyName = "ItemRequiredType";
+            this.ItemRequiredType.HeaderText = "Required Type";
+            this.ItemRequiredType.Name = "ItemRequiredType";
+            // 
+            // ItemRequiredGender
+            // 
+            this.ItemRequiredGender.DataPropertyName = "ItemRequiredGender";
+            this.ItemRequiredGender.HeaderText = "Required Gender";
+            this.ItemRequiredGender.Name = "ItemRequiredGender";
+            // 
+            // ItemRequiredClass
+            // 
+            this.ItemRequiredClass.DataPropertyName = "ItemRequiredClass";
+            this.ItemRequiredClass.HeaderText = "Required Class";
+            this.ItemRequiredClass.Name = "ItemRequiredClass";
+            // 
+            // ItemSet
+            // 
+            this.ItemSet.DataPropertyName = "ItemSet";
+            this.ItemSet.HeaderText = "Set";
+            this.ItemSet.Name = "ItemSet";
+            // 
+            // ItemRandomStatsId
+            // 
+            this.ItemRandomStatsId.DataPropertyName = "ItemRandomStatsId";
+            this.ItemRandomStatsId.HeaderText = "Random Stats";
+            this.ItemRandomStatsId.Name = "ItemRandomStatsId";
+            // 
+            // ItemRequiredAmount
+            // 
+            this.ItemRequiredAmount.DataPropertyName = "ItemRequiredAmount";
+            this.ItemRequiredAmount.HeaderText = "Required Amount";
+            this.ItemRequiredAmount.Name = "ItemRequiredAmount";
+            // 
+            // ItemImage
+            // 
+            this.ItemImage.DataPropertyName = "ItemImage";
+            this.ItemImage.HeaderText = "Image";
+            this.ItemImage.Name = "ItemImage";
+            // 
+            // ItemShape
+            // 
+            this.ItemShape.DataPropertyName = "ItemShape";
+            this.ItemShape.HeaderText = "Shape";
+            this.ItemShape.Name = "ItemShape";
+            // 
+            // ItemEffect
+            // 
+            this.ItemEffect.DataPropertyName = "ItemEffect";
+            this.ItemEffect.HeaderText = "Effect";
+            this.ItemEffect.Name = "ItemEffect";
+            // 
+            // ItemStackSize
+            // 
+            this.ItemStackSize.DataPropertyName = "ItemStackSize";
+            this.ItemStackSize.HeaderText = "Stack Size";
+            this.ItemStackSize.Name = "ItemStackSize";
+            // 
+            // ItemSlots
+            // 
+            this.ItemSlots.DataPropertyName = "ItemSlots";
+            this.ItemSlots.HeaderText = "Slots";
+            this.ItemSlots.Name = "ItemSlots";
+            // 
+            // ItemWeight
+            // 
+            this.ItemWeight.DataPropertyName = "ItemWeight";
+            this.ItemWeight.HeaderText = "Weight";
+            this.ItemWeight.Name = "ItemWeight";
+            // 
+            // ItemLightRange
+            // 
+            this.ItemLightRange.DataPropertyName = "ItemLightRange";
+            this.ItemLightRange.HeaderText = "Light Range";
+            this.ItemLightRange.Name = "ItemLightRange";
+            // 
+            // ItemLightIntensity
+            // 
+            this.ItemLightIntensity.DataPropertyName = "ItemLightIntensity";
+            this.ItemLightIntensity.HeaderText = "Intensity";
+            this.ItemLightIntensity.Name = "ItemLightIntensity";
+            // 
+            // ItemDurability
+            // 
+            this.ItemDurability.DataPropertyName = "ItemDurability";
+            this.ItemDurability.HeaderText = "Durability";
+            this.ItemDurability.Name = "ItemDurability";
+            // 
+            // ItemPrice
+            // 
+            this.ItemPrice.DataPropertyName = "ItemPrice";
+            this.ItemPrice.HeaderText = "Price";
+            this.ItemPrice.Name = "ItemPrice";
+            // 
+            // ItemToolTip
+            // 
+            this.ItemToolTip.DataPropertyName = "ItemToolTip";
+            this.ItemToolTip.HeaderText = "ToolTip";
+            this.ItemToolTip.Name = "ItemToolTip";
+            this.ItemToolTip.Width = 68;
             // 
             // panel1
             // 
@@ -286,151 +431,6 @@ namespace Server.Database
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(956, 433);
             this.panel2.TabIndex = 2;
-            // 
-            // Modified
-            // 
-            this.Modified.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Modified.DataPropertyName = "Modified";
-            this.Modified.Frozen = true;
-            this.Modified.HeaderText = "Modified";
-            this.Modified.Name = "Modified";
-            this.Modified.ReadOnly = true;
-            this.Modified.Width = 53;
-            // 
-            // ItemIndex
-            // 
-            this.ItemIndex.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.ItemIndex.DataPropertyName = "ItemIndex";
-            this.ItemIndex.Frozen = true;
-            this.ItemIndex.HeaderText = "Index";
-            this.ItemIndex.Name = "ItemIndex";
-            this.ItemIndex.ReadOnly = true;
-            this.ItemIndex.Width = 58;
-            // 
-            // ItemName
-            // 
-            this.ItemName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.ItemName.DataPropertyName = "ItemName";
-            this.ItemName.Frozen = true;
-            this.ItemName.HeaderText = "Name";
-            this.ItemName.Name = "ItemName";
-            this.ItemName.Width = 60;
-            // 
-            // ItemType
-            // 
-            this.ItemType.DataPropertyName = "ItemType";
-            this.ItemType.HeaderText = "Type";
-            this.ItemType.Name = "ItemType";
-            this.ItemType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // ItemGrade
-            // 
-            this.ItemGrade.DataPropertyName = "ItemGrade";
-            this.ItemGrade.HeaderText = "Grade";
-            this.ItemGrade.Name = "ItemGrade";
-            // 
-            // ItemRequiredType
-            // 
-            this.ItemRequiredType.DataPropertyName = "ItemRequiredType";
-            this.ItemRequiredType.HeaderText = "Required Type";
-            this.ItemRequiredType.Name = "ItemRequiredType";
-            // 
-            // ItemRequiredGender
-            // 
-            this.ItemRequiredGender.DataPropertyName = "ItemRequiredGender";
-            this.ItemRequiredGender.HeaderText = "Required Gender";
-            this.ItemRequiredGender.Name = "ItemRequiredGender";
-            // 
-            // ItemRequiredClass
-            // 
-            this.ItemRequiredClass.DataPropertyName = "ItemRequiredClass";
-            this.ItemRequiredClass.HeaderText = "Required Class";
-            this.ItemRequiredClass.Name = "ItemRequiredClass";
-            // 
-            // ItemSet
-            // 
-            this.ItemSet.DataPropertyName = "ItemSet";
-            this.ItemSet.HeaderText = "Set";
-            this.ItemSet.Name = "ItemSet";
-            // 
-            // ItemRandomStatsId
-            // 
-            this.ItemRandomStatsId.DataPropertyName = "ItemRandomStatsId";
-            this.ItemRandomStatsId.HeaderText = "Random Stats";
-            this.ItemRandomStatsId.Name = "ItemRandomStatsId";
-            // 
-            // ItemRequiredAmount
-            // 
-            this.ItemRequiredAmount.DataPropertyName = "ItemRequiredAmount";
-            this.ItemRequiredAmount.HeaderText = "Required Amount";
-            this.ItemRequiredAmount.Name = "ItemRequiredAmount";
-            // 
-            // ItemImage
-            // 
-            this.ItemImage.DataPropertyName = "ItemImage";
-            this.ItemImage.HeaderText = "Image";
-            this.ItemImage.Name = "ItemImage";
-            // 
-            // ItemShape
-            // 
-            this.ItemShape.DataPropertyName = "ItemShape";
-            this.ItemShape.HeaderText = "Shape";
-            this.ItemShape.Name = "ItemShape";
-            // 
-            // ItemEffect
-            // 
-            this.ItemEffect.DataPropertyName = "ItemEffect";
-            this.ItemEffect.HeaderText = "Effect";
-            this.ItemEffect.Name = "ItemEffect";
-            // 
-            // ItemStackSize
-            // 
-            this.ItemStackSize.DataPropertyName = "ItemStackSize";
-            this.ItemStackSize.HeaderText = "Stack Size";
-            this.ItemStackSize.Name = "ItemStackSize";
-            // 
-            // ItemSlots
-            // 
-            this.ItemSlots.DataPropertyName = "ItemSlots";
-            this.ItemSlots.HeaderText = "Slots";
-            this.ItemSlots.Name = "ItemSlots";
-            // 
-            // ItemWeight
-            // 
-            this.ItemWeight.DataPropertyName = "ItemWeight";
-            this.ItemWeight.HeaderText = "Weight";
-            this.ItemWeight.Name = "ItemWeight";
-            // 
-            // ItemLightRange
-            // 
-            this.ItemLightRange.DataPropertyName = "ItemLightRange";
-            this.ItemLightRange.HeaderText = "Light Range";
-            this.ItemLightRange.Name = "ItemLightRange";
-            // 
-            // ItemLightIntensity
-            // 
-            this.ItemLightIntensity.DataPropertyName = "ItemLightIntensity";
-            this.ItemLightIntensity.HeaderText = "Intensity";
-            this.ItemLightIntensity.Name = "ItemLightIntensity";
-            // 
-            // ItemDurability
-            // 
-            this.ItemDurability.DataPropertyName = "ItemDurability";
-            this.ItemDurability.HeaderText = "Durability";
-            this.ItemDurability.Name = "ItemDurability";
-            // 
-            // ItemPrice
-            // 
-            this.ItemPrice.DataPropertyName = "ItemPrice";
-            this.ItemPrice.HeaderText = "Price";
-            this.ItemPrice.Name = "ItemPrice";
-            // 
-            // ItemToolTip
-            // 
-            this.ItemToolTip.DataPropertyName = "ItemToolTip";
-            this.ItemToolTip.HeaderText = "ToolTip";
-            this.ItemToolTip.Name = "ItemToolTip";
-            this.ItemToolTip.Width = 68;
             // 
             // ItemInfoFormNew
             // 

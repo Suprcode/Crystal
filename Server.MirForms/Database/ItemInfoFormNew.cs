@@ -585,6 +585,8 @@ namespace Server.Database
 
                         int rowsEdited = 0;
 
+                        this.itemInfoGridView.CurrentCell = this.itemInfoGridView[1, 0];
+
                         for (int i = 1; i < rows.Length; i++)
                         {
                             var row = rows[i];
@@ -605,17 +607,17 @@ namespace Server.Database
 
                             var dataRow = FindRowByItemName(cells[0]);
 
-                            itemInfoGridView.BeginEdit(true);
-
-                            if (dataRow == null)
-                            {
-                                dataRow = Table.NewRow();
-
-                                Table.Rows.Add(dataRow);
-                            }
-
                             try
                             {
+                                itemInfoGridView.BeginEdit(true);
+
+                                if (dataRow == null)
+                                {
+                                    dataRow = Table.NewRow();
+
+                                    Table.Rows.Add(dataRow);
+                                }
+
                                 for (int j = 0; j < columns.Length; j++)
                                 {
                                     var column = columns[j];
@@ -650,15 +652,19 @@ namespace Server.Database
                                         }
                                     }
                                 }
+
+                                dataRow["Modified"] = true;
+
+                                itemInfoGridView.EndEdit();
                             }
                             catch(Exception ex)
                             {
                                 fileError = true;
+                                itemInfoGridView.EndEdit();
+
                                 MessageBox.Show($"Error when importing item {cells[0]}. {ex.Message}");
                                 continue;
                             }
-
-                            itemInfoGridView.EndEdit();
 
                             rowsEdited++;
 
@@ -670,6 +676,8 @@ namespace Server.Database
 
                         if (!fileError)
                         {
+                            itemInfoGridView.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
+
                             MessageBox.Show($"{rowsEdited} items have been imported.");
                         }
                     }

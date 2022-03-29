@@ -431,17 +431,17 @@ namespace Server.Database
 
                             var dataRow = FindRowByMonsterName(cells[0]);
 
-                            if (dataRow == null)
-                            {
-                                dataRow = Table.NewRow();
-
-                                Table.Rows.Add(dataRow);
-                            }
-
-                            monsterInfoGridView.BeginEdit(true);
-
                             try
                             {
+                                monsterInfoGridView.BeginEdit(true);
+
+                                if (dataRow == null)
+                                {
+                                    dataRow = Table.NewRow();
+
+                                    Table.Rows.Add(dataRow);
+                                }
+
                                 for (int j = 0; j < columns.Length; j++)
                                 {
                                     var column = columns[j];
@@ -469,15 +469,19 @@ namespace Server.Database
                                         dataRow[column] = cells[j];
                                     }
                                 }
+
+                                dataRow["Modified"] = true;
+
+                                monsterInfoGridView.EndEdit();
                             }
                             catch (Exception ex)
                             {
                                 fileError = true;
+                                monsterInfoGridView.EndEdit();
+
                                 MessageBox.Show($"Error when importing item {cells[0]}. {ex.Message}");
                                 continue;
                             }
-
-                            //monsterInfoGridView.EndEdit();
 
                             rowsEdited++;
 
@@ -489,6 +493,7 @@ namespace Server.Database
 
                         if (!fileError)
                         {
+                            monsterInfoGridView.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
                             MessageBox.Show($"{rowsEdited} monsters have been imported.");
                         }
                     }
