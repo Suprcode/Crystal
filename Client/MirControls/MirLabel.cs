@@ -256,7 +256,11 @@ namespace Client.MirControls
             _drawFormat = 0;
 
             FontChanged = null;
-            _font = null;
+            if (_font != null)
+            {
+                _font.Dipose();
+                _font = null;
+            }
 
             OutLineChanged = null;
             _outLine = false;
