@@ -519,6 +519,7 @@ namespace Client.MirControls
                 case ItemType.Transform:
                 case ItemType.Deco:
                 case ItemType.MonsterSpawn:
+                case ItemType.SealedHero:
                     if (CanUseItem() && (GridType == MirGridType.Inventory || GridType == MirGridType.HeroInventory))
                     {
                         if (CMain.Time < GameScene.UseItemTime) return;

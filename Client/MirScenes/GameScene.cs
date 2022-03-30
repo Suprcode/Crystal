@@ -159,6 +159,7 @@ namespace Client.MirScenes
         public static List<GameShopItem> GameShopInfoList = new List<GameShopItem>();
         public static List<ClientRecipeInfo> RecipeInfoList = new List<ClientRecipeInfo>();
         public static Dictionary<int, BigMapRecord> MapInfoList = new Dictionary<int, BigMapRecord>();
+        public static List<ClientHeroInformation> HeroInfoList = new List<ClientHeroInformation>();
         public static int TeleportToNPCCost;
 
         public static UserItem[] Storage = new UserItem[80];
@@ -6036,17 +6037,20 @@ namespace Client.MirScenes
                     MirMessageBox.Show("The class you selected does not exist.\n Contact a GM for assistance.");
                     break;
                 case 4:
-                    MirMessageBox.Show("You cannot make anymore then " + Globals.MaxCharacterCount + " Heroes.");
+                    MirMessageBox.Show("You cannot make anymore Heroes.");
                     NewHeroDialog.Hide();
                     break;
                 case 5:
                     MirMessageBox.Show("A Character with this name already exists.");
                     NewHeroDialog.NameTextBox.SetFocus();
                     break;
+                case 6:
+                    MirMessageBox.Show("No bag space.");
+                    NewHeroDialog.Hide();
+                    break;
                 case 10:
                     MirMessageBox.Show("Hero created successfully.");
                     NewHeroDialog.Hide();
-                    HasHero = true;
                     break;
             }
         }
@@ -6085,9 +6089,10 @@ namespace Client.MirScenes
         {
             HeroSpawnState = p.State;
 
-            MainDialog.HeroInfoPanel.Visible = p.State > HeroSpawnState.None;
-            MainDialog.HeroMenuButton.Visible = p.State > HeroSpawnState.None;
-            HeroBehaviourPanel.Visible = p.State > HeroSpawnState.None;
+            HasHero = p.State > HeroSpawnState.None;
+            MainDialog.HeroInfoPanel.Visible = p.State > HeroSpawnState.Unsummoned;
+            MainDialog.HeroMenuButton.Visible = p.State > HeroSpawnState.Unsummoned;
+            HeroBehaviourPanel.Visible = p.State > HeroSpawnState.Unsummoned;            
             HeroMenuPanel.Visible = HeroMenuPanel.Visible && MainDialog.HeroMenuButton.Visible;
 
             if (p.State < HeroSpawnState.Summoned)
@@ -6810,10 +6815,9 @@ namespace Client.MirScenes
                         text += string.Format(" Nutrition {0}", HoverItem.CurrentDura);
                         break;
                     case ItemType.Gem:
-                        break;
                     case ItemType.Potion:
-                        break;
                     case ItemType.Transform:
+                    case ItemType.SealedHero:
                         break;
                     case ItemType.Pets:
                         if (HoverItem.Info.Shape == 26 || HoverItem.Info.Shape == 28)//WonderDrug, Knapsack
@@ -6947,6 +6951,9 @@ namespace Client.MirScenes
                     break;
                 case ItemType.MonsterSpawn:
                     baseText = GameLanguage.ItemTypeMonsterSpawn;
+                    break;
+                case ItemType.SealedHero:
+                    baseText = GameLanguage.ItemTypeSealedHero;
                     break;
             }
 
@@ -7534,6 +7541,34 @@ namespace Client.MirScenes
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, goldRateLabel.DisplayRectangle.Right + 4),
                     Math.Max(ItemLabel.Size.Height, goldRateLabel.DisplayRectangle.Bottom));
+            }
+
+            #endregion
+
+            #region Hero
+
+            if (HoverItem.AddedStats[Stat.Hero] > 0)
+            {
+                ClientHeroInformation heroInfo = HeroInfoList.FirstOrDefault(x => x.Index == HoverItem.AddedStats[Stat.Hero]);
+                if (heroInfo != null)
+                {
+                    count++;
+                    text = heroInfo.Name;
+                    text += Environment.NewLine + $"Level {heroInfo.Level} {Enum.GetName(typeof(MirGender), heroInfo.Gender).ToLower()} {Enum.GetName(typeof(MirClass), heroInfo.Class).ToLower()}";
+
+                    MirLabel heroLabel = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.White,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = text
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, heroLabel.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, heroLabel.DisplayRectangle.Bottom));
+                }
             }
 
             #endregion

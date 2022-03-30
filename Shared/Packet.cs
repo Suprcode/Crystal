@@ -439,6 +439,8 @@ public abstract class Packet
                 return new S.ObjectChat();
             case (short)ServerPacketIds.NewItemInfo:
                 return new S.NewItemInfo();
+            case (short)ServerPacketIds.NewHeroInfo:
+                return new S.NewHeroInfo();
             case (short)ServerPacketIds.NewChatItem:
                 return new S.NewChatItem();
             case (short)ServerPacketIds.MoveItem:

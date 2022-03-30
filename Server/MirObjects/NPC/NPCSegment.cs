@@ -1110,6 +1110,9 @@ namespace Server.MirObjects
                 case "REVIVEHERO":
                     acts.Add(new NPCActions(ActionType.ReviveHero));
                     break;
+                case "SEALHERO":
+                    acts.Add(new NPCActions(ActionType.SealHero));
+                    break;
             }
         }
 
@@ -4004,6 +4007,9 @@ namespace Server.MirObjects
                         break;
                     case ActionType.ReviveHero:
                         player.ReviveHero();
+                        break;
+                    case ActionType.SealHero:
+                        player.SealHero();
                         break;
                 }
             }

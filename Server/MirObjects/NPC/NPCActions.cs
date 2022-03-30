@@ -106,6 +106,7 @@ namespace Server.MirObjects
         RollDie,
         RollYut,
         Drop,
-        ReviveHero
+        ReviveHero,
+        SealHero
     }
 }

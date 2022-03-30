@@ -191,13 +191,21 @@ namespace Client.MirControls
                     break;
                 case (short)ServerPacketIds.NewRecipeInfo:
                     NewRecipeInfo((S.NewRecipeInfo)p);
-                    break;                
+                    break;
+                case (short)ServerPacketIds.NewHeroInfo:
+                    NewHeroInfo((S.NewHeroInfo)p);
+                    break;
             }
         }
 
         private void NewItemInfo(S.NewItemInfo info)
         {
             GameScene.ItemInfoList.Add(info.Info);
+        }
+
+        private void NewHeroInfo(S.NewHeroInfo info)
+        {
+            GameScene.HeroInfoList.Add(info.Info);
         }
 
         private void NewChatItem(S.NewChatItem p)

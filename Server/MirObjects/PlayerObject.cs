@@ -33,7 +33,7 @@ namespace Server.MirObjects
             set
             {
                 currentHero = value;
-                Info.CurrentHeroIndex = currentHero.Index;
+                Info.CurrentHeroIndex = currentHero != null ? currentHero.Index : 0;
             }
         }
         public HeroObject Hero;        
@@ -208,7 +208,7 @@ namespace Server.MirObjects
             }
 
             if (info.CurrentHeroIndex > 0)
-                CurrentHero = info.Heroes.FirstOrDefault(x => x.Index == info.CurrentHeroIndex);
+                CurrentHero = Envir.GetHeroInfo(info.CurrentHeroIndex);
 
             RefreshStats();
 
@@ -5694,6 +5694,14 @@ namespace Server.MirObjects
                 case ItemType.SiegeAmmo:
                     //TODO;
                     break;
+                case ItemType.SealedHero:
+                    HeroInfo heroInfo = Envir.GetHeroInfo(item.AddedStats[Stat.Hero]);
+                    if (heroInfo == null || !AddHero(heroInfo))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    break;
                 default:
                     return;
             }
@@ -8605,15 +8613,30 @@ namespace Server.MirObjects
                 return;
             }
 
-            var info = new HeroInfo(p) { Index = ++Envir.NextHeroID };
-            Info.Heroes.Add(info);
+            bool passedItemCheck = true;
+            ItemInfo itemInfo = Envir.GetItemInfo(Settings.HeroSealItemName);
+            if (itemInfo != null && FreeSpace(Info.Inventory) == 0)
+                passedItemCheck = false;
+
+            if (!passedItemCheck)
+            {
+                Enqueue(new S.NewHero { Result = 6 });
+                return;
+            }
+
+            var info = new HeroInfo(p) { Index = ++Envir.NextHeroID };            
             Envir.HeroList.Add(info);
 
-            if (!HasHero)
-                CurrentHero = info;
+            if (itemInfo != null)
+            {
+                UserItem item = Envir.CreateFreshItem(itemInfo);
+                item.AddedStats[Stat.Hero] = info.Index;
+                GainItem(item);
+            }
+            else
+                AddHero(info);
 
-            Enqueue(new S.NewHero { Result = 10 });
-            SummonHero();
+            Enqueue(new S.NewHero { Result = 10 });            
         }
 
         public HeroObject GetHero()
@@ -13335,7 +13358,7 @@ namespace Server.MirObjects
         {         
             Hero.Despawn(true);
             Hero = null;
-            Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.None });
+            Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.Unsummoned });
         }
         public void ReviveHero()
         {
@@ -13355,6 +13378,58 @@ namespace Server.MirObjects
                 Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.Summoned });
             }
             else CurrentHero.HP = -1;
+        }
+
+        public void SealHero()
+        {
+            if (CurrentHero == null) return;
+            if (FreeSpace(Info.Inventory) == 0) return;
+            if (Settings.HeroSealItemName == string.Empty) return;
+
+            if (Settings.HeroMaximumSealCount > 0 && CurrentHero.SealCount >= Settings.HeroMaximumSealCount)
+            {
+                ReceiveChat(string.Format("Hero can no longer be sealed."), ChatType.Hint);
+                return;
+            }
+
+            ItemInfo itemInfo = Envir.GetItemInfo(Settings.HeroSealItemName);
+            if (itemInfo == null) return;
+
+            if (Hero != null)
+            {
+                DespawnHero();
+                Info.HeroSpawned = false;
+                Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.None });
+            }
+
+            UserItem item = Envir.CreateFreshItem(itemInfo);            
+            item.AddedStats[Stat.Hero] = CurrentHero.Index;
+            if (CanGainItem(item, false))
+                GainItem(item);
+
+            CurrentHero.SealCount++;
+            Info.Heroes.Remove(CurrentHero);
+            CurrentHero = null;
+        }
+
+        private bool AddHero(HeroInfo hero)
+        {
+            if (Info.Heroes.Count >= Info.MaximumHeroCount)
+            {
+                ReceiveChat(string.Format("You can not summon any more heroes."), ChatType.Hint);
+                return false;
+            }
+
+            Info.Heroes.Add(hero);
+            if (!HasHero)
+            {
+                CurrentHero = hero;
+                SummonHero();
+            }
+            else
+                ReceiveChat(string.Format("Hero has been added to your hero storage."), ChatType.Hint);
+
+            return true;
         }
     }
 }

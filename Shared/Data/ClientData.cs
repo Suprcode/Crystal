@@ -609,3 +609,32 @@ public class ClientBuff
         }
     }
 }
+
+public class ClientHeroInformation
+{
+    public int Index;
+    public string Name;
+    public ushort Level;
+    public MirClass Class;
+    public MirGender Gender;
+
+    public ClientHeroInformation() { }
+
+    public ClientHeroInformation(BinaryReader reader)
+    {
+        Index = reader.ReadInt32();
+        Name = reader.ReadString();
+        Level = reader.ReadUInt16();
+        Class = (MirClass)reader.ReadByte();
+        Gender = (MirGender)reader.ReadByte();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Index);
+        writer.Write(Name);
+        writer.Write(Level);
+        writer.Write((byte)Class);
+        writer.Write((byte)Gender);
+    }
+}

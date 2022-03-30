@@ -217,6 +217,7 @@ public class GameLanguage
                          ItemTypeTransform = "Transform",
                          ItemTypeDeco = "Deco",
                          ItemTypeMonsterSpawn = "SpawnEgg",
+                         ItemTypeSealedHero = "SealedHero",
 
                          ItemGradeCommon = "Common",
                          ItemGradeRare = "Rare",
@@ -497,6 +498,7 @@ public class GameLanguage
         GameLanguage.ItemTypeAwakening = reader.ReadString("Language", "ItemTypeAwakening", GameLanguage.ItemTypeAwakening);
         GameLanguage.ItemTypePets = reader.ReadString("Language", "ItemTypePets", GameLanguage.ItemTypePets);
         GameLanguage.ItemTypeTransform = reader.ReadString("Language", "ItemTypeTransform", GameLanguage.ItemTypeTransform);
+        GameLanguage.ItemTypeSealedHero = reader.ReadString("Language", "ItemTypeSealedHero", GameLanguage.ItemTypeSealedHero);
 
         GameLanguage.ItemGradeCommon = reader.ReadString("Language", "ItemGradeCommon", GameLanguage.ItemGradeCommon);
         GameLanguage.ItemGradeRare = reader.ReadString("Language", "ItemGradeRare", GameLanguage.ItemGradeRare);
@@ -732,6 +734,7 @@ public class GameLanguage
         reader.Write("Language", "ItemTypeAwakening", GameLanguage.ItemTypeAwakening);
         reader.Write("Language", "ItemTypePets", GameLanguage.ItemTypePets);
         reader.Write("Language", "ItemTypeTransform", GameLanguage.ItemTypeTransform);
+        reader.Write("Language", "ItemTypeSealedHero", GameLanguage.ItemTypeSealedHero);
 
         reader.Write("Language", "ItemGradeCommon", GameLanguage.ItemGradeCommon);
         reader.Write("Language", "ItemGradeRare", GameLanguage.ItemGradeRare);

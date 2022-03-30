@@ -55,7 +55,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int MinVersion = 60;
-        public const int Version = 101;
+        public const int Version = 103;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
@@ -1026,6 +1026,9 @@ namespace Server.MirEnvir
 
                 writer.Write(GuildList.Count);
                 writer.Write(NextGuildID);
+                writer.Write(HeroList.Count);
+                for (var i = 0; i < HeroList.Count; i++)
+                    HeroList[i].Save(writer);
                 writer.Write(AccountList.Count);
                 for (var i = 0; i < AccountList.Count; i++)
                     AccountList[i].Save(writer);
@@ -1410,7 +1413,18 @@ namespace Server.MirEnvir
                     GuildCount = reader.ReadInt32();
                     NextGuildID = reader.ReadInt32();
 
-                    var count = reader.ReadInt32();
+                    int count;
+                    if (LoadVersion > 102)
+                    {
+                        count = reader.ReadInt32();
+
+                        HeroList.Clear();
+
+                        for (var i = 0; i < count; i++)
+                            HeroList.Add(new HeroInfo(reader, LoadVersion, LoadCustomVersion));
+                    }
+
+                    count = reader.ReadInt32();
 
                     AccountList.Clear();
                     CharacterList.Clear();
@@ -1419,7 +1433,8 @@ namespace Server.MirEnvir
                     {
                         AccountList.Add(new AccountInfo(reader));
                         CharacterList.AddRange(AccountList[i].Characters);
-                        AccountList[i].Characters.ForEach(character => HeroList.AddRange(character.Heroes));
+                        if (LoadVersion < 103)
+                            AccountList[i].Characters.ForEach(character => HeroList.AddRange(character.Heroes));
                     }
 
                     foreach (var auction in Auctions)
@@ -2844,6 +2859,10 @@ namespace Server.MirEnvir
                     return CharacterList[i];
 
             return null;
+        }
+        public HeroInfo GetHeroInfo(int index)
+        {
+            return HeroList.FirstOrDefault(x => x.Index == index);
         }
 
         public ItemInfo GetItemInfo(int index)

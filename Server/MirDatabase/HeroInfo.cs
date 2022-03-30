@@ -12,6 +12,7 @@ namespace Server.MirDatabase
         public int MPItemIndex;
         public byte AutoHPPercent;
         public byte AutoMPPercent;
+        public ushort SealCount;
         public HeroInfo(ClientPackets.NewHero p)
         {
             Name = p.Name;
@@ -91,6 +92,9 @@ namespace Server.MirDatabase
                 AutoMPPercent = reader.ReadByte();
             }
 
+            if (version > 101)
+                SealCount = reader.ReadUInt16();
+
         }
 
         public override void Save(BinaryWriter writer)
@@ -141,6 +145,7 @@ namespace Server.MirDatabase
             writer.Write(MPItemIndex);
             writer.Write(AutoHPPercent);
             writer.Write(AutoMPPercent);
+            writer.Write(SealCount);
         }
 
         public override int ResizeInventory()
@@ -148,6 +153,21 @@ namespace Server.MirDatabase
             if (Inventory.Length >= 42) return Inventory.Length;
             Array.Resize(ref Inventory, Inventory.Length + 8);
             return Inventory.Length;
+        }
+
+        public ClientHeroInformation ClientInformation
+        {
+            get
+            {
+                return new ClientHeroInformation()
+                {
+                    Index = Index,
+                    Name = Name,
+                    Level = Math.Max((ushort)1, Level),
+                    Class = Class,
+                    Gender = Gender
+                };
+            }
         }
     }
 }

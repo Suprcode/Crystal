@@ -1628,6 +1628,21 @@ namespace Server.MirObjects
 
                 CheckItemInfo(item.Slots[i].Info);
             }
+
+            CheckHeroInfo(item);           
+        }
+
+        private void CheckHeroInfo(UserItem item)
+        {
+            if (item.AddedStats[Stat.Hero] == 0) return;
+            if (Connection.SentHeroInfo.Contains(item.UniqueID)) return;
+
+            HeroInfo heroInfo = Envir.GetHeroInfo(item.AddedStats[Stat.Hero]);
+            if (heroInfo == null) return;
+
+            Enqueue(new S.NewHeroInfo { Info = heroInfo.ClientInformation });
+            Connection.SentHeroInfo.Add(item.UniqueID);
+
         }
         public void SetLevelEffects()
         {

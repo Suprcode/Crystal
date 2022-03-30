@@ -1123,6 +1123,25 @@ namespace ServerPackets
             Info.Save(writer);
         }
     }
+    public sealed class NewHeroInfo : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.NewHeroInfo; }
+        }
+
+        public ClientHeroInformation Info;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Info = new ClientHeroInformation(reader);
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            Info.Save(writer);
+        }
+    }
     public sealed class NewChatItem : Packet
     {
         public override short Index

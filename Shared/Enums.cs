@@ -885,7 +885,8 @@ public enum ItemType : byte
     Deco = 38,
     Socket = 39,
     MonsterSpawn = 40,
-    SiegeAmmo = 41 //TODO
+    SiegeAmmo = 41, //TODO
+    SealedHero = 42
 }
 
 public enum MirGridType : byte
@@ -1426,6 +1427,7 @@ public enum ServerPacketIds : short
     Chat,
     ObjectChat,
     NewItemInfo,
+    NewHeroInfo,
     NewChatItem,
     MoveItem,
     EquipItem,
@@ -1861,8 +1863,9 @@ public enum IntelligentCreaturePickupMode : byte
 public enum HeroSpawnState : byte
 {
     None = 0,
-    Summoned = 1,
-    Dead = 2
+    Unsummoned = 1,
+    Summoned = 2,
+    Dead = 3
 }
 
 public enum HeroBehaviour : byte

@@ -355,8 +355,16 @@ namespace Server.MirDatabase
             if (version > 98)
             {
                 count = reader.ReadInt32();
-                for (int i = 0; i < count; i++)
-                    Heroes.Add(new HeroInfo(reader, version, customVersion));
+                if (version > 102)
+                {
+                    for (int i = 0; i < count; i++)
+                        Heroes.Add(Envir.GetHeroInfo(reader.ReadInt32()));
+                }
+                else
+                {
+                    for (int i = 0; i < count; i++)
+                        Heroes.Add(new HeroInfo(reader, version, customVersion));
+                }
 
                 MaximumHeroCount = reader.ReadInt32();
                 CurrentHeroIndex = reader.ReadInt32();
@@ -545,7 +553,7 @@ namespace Server.MirDatabase
 
             writer.Write(Heroes.Count);
             for (int i = 0; i < Heroes.Count; i++)
-                Heroes[i].Save(writer);
+                writer.Write(Heroes[i].Index);
             writer.Write(MaximumHeroCount);
             writer.Write(CurrentHeroIndex);
             writer.Write(HeroSpawned);

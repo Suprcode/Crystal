@@ -61,6 +61,7 @@ namespace Server.MirNetwork
         public List<RecipeInfo> SentRecipeInfo = new List<RecipeInfo>();
         public List<UserItem> SentChatItem = new List<UserItem>(); //TODO - Add Expiry time
         public List<MapInfo> SentMapInfo = new List<MapInfo>();
+        public List<ulong> SentHeroInfo = new List<ulong>();
         public bool WorldMapSetupSent;
         public bool StorageSent;
 
