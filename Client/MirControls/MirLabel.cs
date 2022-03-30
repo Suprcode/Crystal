@@ -258,7 +258,7 @@ namespace Client.MirControls
             FontChanged = null;
             if (_font != null)
             {
-                _font.Dipose();
+                _font.Dispose();
                 _font = null;
             }
 
