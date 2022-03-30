@@ -1008,7 +1008,10 @@ namespace Client.MirControls
         #region Font
         public virtual System.Drawing.Font ScaleFont(System.Drawing.Font font)
         {
-            return new System.Drawing.Font(font.Name, font.Size * 96f / CMain.Graphics.DpiX, font.Style);
+            var theFont = new System.Drawing.Font(font.Name, font.Size * 96f / CMain.Graphics.DpiX, font.Style);
+            font.Dispose();
+            
+            return theFont;
         }
         #endregion
 
