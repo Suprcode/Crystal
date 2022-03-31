@@ -47,6 +47,16 @@ public abstract class Packet
         return p;
     }
 
+    public bool WritePacketEx(BinaryWriter writer)
+    {
+        if (Index < 0) return false;
+
+        writer.Write((short)0); // Temp length
+        writer.Write(Index);
+        WritePacket(writer);
+        return true;
+    }
+
     public IEnumerable<byte> GetPacketBytes()
     {
         if (Index < 0) return new byte[0];
@@ -63,10 +73,7 @@ public abstract class Packet
                 WritePacket(writer);
                 stream.Seek(0, SeekOrigin.Begin);
                 writer.Write((short)stream.Length);
-                stream.Seek(0, SeekOrigin.Begin);
 
-                data = new byte[stream.Length];
-                stream.Read(data, 0, data.Length);
             }
         }
 
