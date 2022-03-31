@@ -206,11 +206,36 @@ namespace Client.MirNetwork
 
             TimeOutTime = CMain.Time + Settings.TimeOut;
 
-            List<byte> data = new List<byte>();
-            while (!_sendList.IsEmpty)
+            SendPackets();
+        }
+
+        private static void SendPackets()
+        {
+            var data = new List<byte>();
+
+            using (var ms = new MemoryStream())
             {
-                if (!_sendList.TryDequeue(out Packet p)) continue;
-                data.AddRange(p.GetPacketBytes());
+                using (var writer = new BinaryWriter(ms))
+                {
+                    while (true)
+                    {
+                        if (!_sendList.TryDequeue(out Packet p))
+                            break;
+
+                        var start = ms.Position;
+
+                        if (!p.WritePacketEx(writer))
+                            continue;
+
+                        var dataSize = ms.Length - start;
+                        ms.Seek(start, SeekOrigin.Begin);
+                        writer.Write((short)dataSize);
+                    }
+
+                    var memory = ms.ToArray();
+                    if (memory != null)
+                        data.AddRange(memory);
+                }
             }
 
             CMain.BytesSent += data.Count;
