@@ -130,9 +130,7 @@ namespace Client.MirSounds
                 else if (index < 10000)
                 {
                     filename = string.Format("{0:000}-{1:0}", index/10, index%10);
-
-                    var sound = GetSound(index, filename, loop);
-
+                    
                     Sounds.Add(GetSound(index, filename, loop));
                 }
             }
