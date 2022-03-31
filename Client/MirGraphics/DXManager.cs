@@ -245,6 +245,21 @@ namespace Client.MirGraphics
             }
         }
 
+        public static void DrawOpaque(Texture texture, Rectangle? sourceRect, Vector3? position, Color4 color, float opacity)
+        {
+            var oldOpacity = DXManager.Opacity;
+
+            SetOpacity(opacity);
+            Draw(texture, sourceRect, position, color);
+            SetOpacity(oldOpacity);
+        }
+
+        public static void Draw(Texture texture, Rectangle? sourceRect, Vector3? position, Color4 color)
+        {
+            Sprite.Draw(texture, sourceRect, Vector3.Zero, position, color);
+            CMain.DPSCounter++;
+        }
+
         public static void AttemptReset()
         {
             try
