@@ -109,15 +109,15 @@ namespace Client.MirNetwork
             Buffer.BlockCopy(rawBytes, 0, _rawData, temp.Length, dataRead);
 
             Packet p;
-            List<byte> data = new List<byte>();
+            var dataCount = 0;
 
             while ((p = Packet.ReceivePacket(_rawData, out _rawData)) != null)
             {
                 _receiveList.Enqueue(p);
-                data.AddRange(p.GetPacketBytes());
+                dataCount += (dataRead - _rawData.Length);
             }
 
-            CMain.BytesReceived += data.Count;
+            CMain.BytesReceived += dataCount;
 
             BeginReceive();
         }
