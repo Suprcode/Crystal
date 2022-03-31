@@ -18,7 +18,7 @@ namespace Client.MirGraphics
 
 
         public static Device Device;
-        public static Sprite Sprite, TextSprite;
+        public static Sprite Sprite;
         public static Line Line;
 
         public static Surface CurrentSurface;
@@ -125,7 +125,6 @@ namespace Client.MirGraphics
         private static unsafe void LoadTextures()
         {
             Sprite = new Sprite(Device);
-            TextSprite = new Sprite(Device);
             Line = new Line(Device) { Width = 1F };
 
             MainSurface = Device.GetBackBuffer(0, 0);
