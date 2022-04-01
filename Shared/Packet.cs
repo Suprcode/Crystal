@@ -74,6 +74,8 @@ public abstract class Packet
                 stream.Seek(0, SeekOrigin.Begin);
                 writer.Write((short)stream.Length);
 
+                data = new byte[stream.Length];
+                stream.Read(data, 0, data.Length);
             }
         }
 
