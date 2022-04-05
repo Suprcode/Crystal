@@ -8,6 +8,8 @@ namespace Client
     class Settings
     {
         public const long CleanDelay = 600000;
+        public const long AudioCleanDelay = 10 * 6 * 1000;
+
         public static int ScreenWidth = 1024, ScreenHeight = 768;
         private static InIReader Reader = new InIReader(@".\Mir2Config.ini");
         private static InIReader QuestTrackingReader = new InIReader(Path.Combine(UserDataPath, @".\QuestTracking.ini"));
