@@ -139,6 +139,7 @@ namespace Client.MirGraphics
                 using (Bitmap image = new Bitmap(2, 2, 8, PixelFormat.Format32bppArgb, stream.Data.DataPointer))
                 using (Graphics graphics = Graphics.FromImage(image))
                     graphics.Clear(Color.White);
+                RadarTexture.UnlockRectangle(0);
             }
             if (PoisonDotBackground == null || PoisonDotBackground.Disposed)
             {
@@ -148,6 +149,7 @@ namespace Client.MirGraphics
                 using (Bitmap image = new Bitmap(5, 5, 20, PixelFormat.Format32bppArgb, stream.Data.DataPointer))
                 using (Graphics graphics = Graphics.FromImage(image))
                     graphics.Clear(Color.White);
+                PoisonDotBackground.UnlockRectangle(0);
             }
             CreateLights();
         }
@@ -212,6 +214,8 @@ namespace Client.MirGraphics
                         }
                     }
                 }
+
+                light.UnlockRectangle(0);
                 //light.Disposing += (o, e) => Lights.Remove(light);
                 Lights.Add(light);
             }
