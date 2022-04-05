@@ -461,6 +461,11 @@ namespace Server.MirEnvir
                 if (GetItemInfo(Settings.RefineOreName) == null) return "Cannot start server without item: " + Settings.RefineOreName;
             }
 
+            WorldMapIcon wmi = ValidateWorldMap();
+            if (wmi != null)
+                return $"Invalid worldmap index: {wmi.MapIndex} ({wmi.Title})";
+
+
             //add intelligent creature checks?
 
             return "true";
@@ -3421,6 +3426,18 @@ namespace Server.MirEnvir
             DropInfo.Load(BlackstoneDrops, "Blackstone", Path.Combine(Settings.DropPath, Settings.BlackstoneDropFilename + ".txt"));
 
             MessageQueue.Enqueue("Drops Loaded.");
+        }
+
+        private WorldMapIcon ValidateWorldMap()
+        {
+            foreach (WorldMapIcon wmi in Settings.WorldMapSetup.Icons)
+            {
+                MapInfo info = GetMapInfo(wmi.MapIndex);
+
+                if (info == null)
+                    return wmi;
+            }
+            return null;
         }
     }
 }
