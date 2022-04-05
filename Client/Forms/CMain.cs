@@ -40,6 +40,8 @@ namespace Client
 
         private static long _fpsTime;
         private static int _fps;
+        private static long _cleanTime;
+        private static long _drawTime;
         public static int FPS;
         public static int DPS;
         public static int DPSCounter;
@@ -109,8 +111,11 @@ namespace Client
                 while (AppStillIdle)
                 {
                     UpdateTime();
+                    UpdateFrameTime();
                     UpdateEnviroment();
-                    RenderEnvironment();
+
+                    if (IsDrawTime())
+                        RenderEnvironment();
                 }
 
             }
@@ -304,9 +309,9 @@ namespace Client
         {
             Time = Timer.ElapsedMilliseconds;
         }
-        private static void UpdateEnviroment()
-        {  
 
+        private static void UpdateFrameTime()
+        {
             if (Time >= _fpsTime)
             {
                 _fpsTime = Time + 1000;
@@ -315,11 +320,31 @@ namespace Client
 
                 DPS = DPSCounter;
                 DPSCounter = 0;
-
-                DXManager.Clean(); // Clean once a second.
             }
             else
                 _fps++;
+        }
+
+        private static bool IsDrawTime()
+        {
+            const int TargetUpdates = 1000 / 60; // 60 frames per second
+
+            if (Time >= _drawTime)
+            {
+                _drawTime = Time + TargetUpdates;
+                return true;
+            }
+            return false;
+        }
+
+        private static void UpdateEnviroment()
+        {
+            if (Time >= _cleanTime)
+            {
+                _cleanTime = Time + 1000;
+
+                DXManager.Clean(); // Clean once a second.
+            }
 
             Network.Process();
 
