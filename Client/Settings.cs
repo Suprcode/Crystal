@@ -8,7 +8,6 @@ namespace Client
     class Settings
     {
         public const long CleanDelay = 600000;
-        public const long AudioCleanDelay = 10 * 6 * 1000;
 
         public static int ScreenWidth = 1024, ScreenHeight = 768;
         private static InIReader Reader = new InIReader(@".\Mir2Config.ini");
@@ -90,6 +89,8 @@ namespace Client
         //Sound
         public static int SoundOverLap = 3;
         private static byte _volume = 100;
+        public static int SoundCleanMinutes = 5;
+
         public static byte Volume
         {
             get { return _volume; }
@@ -219,6 +220,10 @@ namespace Client
             Volume = Reader.ReadByte("Sound", "Volume", Volume);
             SoundOverLap = Reader.ReadInt32("Sound", "SoundOverLap", SoundOverLap);
             MusicVolume = Reader.ReadByte("Sound", "Music", MusicVolume);
+            var n = Reader.ReadInt32("Sound", "CleanMinutes", SoundCleanMinutes);
+            if (n < 1 || n > 60 * 3) n = SoundCleanMinutes;
+            SoundCleanMinutes = n;
+
 
             //Game
             AccountID = Reader.ReadString("Game", "AccountID", AccountID);
@@ -304,7 +309,9 @@ namespace Client
 
             //Sound
             Reader.Write("Sound", "Volume", Volume);
+            Reader.Write("Sound", "SoundOverLap", SoundOverLap);
             Reader.Write("Sound", "Music", MusicVolume);
+            Reader.Write("Sound", "CleanMinutes", SoundCleanMinutes);
 
             //Game
             Reader.Write("Game", "AccountID", AccountID);

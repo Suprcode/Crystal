@@ -71,7 +71,7 @@ namespace Client.MirSounds
         {
             if (_stream == null) return;
 
-            ExpireTime = CMain.Time + Settings.AudioCleanDelay;
+            ExpireTime = CMain.Time + Settings.SoundCleanMinutes * 60 * 1000;
 
             if (_loop)
             {
