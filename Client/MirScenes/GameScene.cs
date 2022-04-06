@@ -3815,15 +3815,21 @@ namespace Client.MirScenes
         }
         private void MapChanged(S.MapChanged p)
         {
-            MapControl.Index = p.MapIndex;
-            MapControl.FileName = Path.Combine(Settings.MapPath, p.FileName + ".map");
-            MapControl.Title = p.Title;
-            MapControl.MiniMap = p.MiniMap;
-            MapControl.BigMap = p.BigMap;
-            MapControl.Lights = p.Lights;
-            MapControl.MapDarkLight = p.MapDarkLight;
-            MapControl.Music = p.Music;
-            MapControl.LoadMap();
+            var isCurrentMap = (MapControl.Index == p.MapIndex);
+
+            if (!isCurrentMap)
+            {
+                MapControl.Index = p.MapIndex;
+                MapControl.FileName = Path.Combine(Settings.MapPath, p.FileName + ".map");
+                MapControl.Title = p.Title;
+                MapControl.MiniMap = p.MiniMap;
+                MapControl.BigMap = p.BigMap;
+                MapControl.Lights = p.Lights;
+                MapControl.MapDarkLight = p.MapDarkLight;
+                MapControl.Music = p.Music;
+                MapControl.LoadMap();
+            }
+           
             MapControl.NextAction = 0;
 
             User.CurrentLocation = p.Location;
