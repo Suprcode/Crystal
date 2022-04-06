@@ -12596,22 +12596,25 @@ namespace Server.MirObjects
             if (stockAvailable)
             {
                 MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Stock is available");
-                if (Product.CreditPrice * Quantity < Account.Credit)
+                
+                var cost = Product.CreditPrice * Quantity;
+                if (cost < Account.Credit || cost == 0)
                 {
                     canAfford = true;
-                    CreditCost = (Product.CreditPrice * Quantity);
+                    CreditCost = cost;
                 }
                 else
-                { //Needs to attempt to pay with gold and credits
-                    if (Account.Gold >= (((Product.GoldPrice * Quantity) / (Product.CreditPrice * Quantity)) * ((Product.CreditPrice * Quantity) - Account.Credit)))
+                {
+                    //Needs to attempt to pay with gold and credits
+                    var totalCost = ((Product.GoldPrice * Quantity) / cost) * (cost - Account.Credit);
+                    if (Account.Gold >= totalCost)
                     {
-                        GoldCost = ((Product.GoldPrice * Quantity) / (Product.CreditPrice * Quantity)) * ((Product.CreditPrice * Quantity) - Account.Credit);
+                        GoldCost = totalCost;
                         CreditCost = Account.Credit;
                         canAfford = true;
                     }
                     else
                     {
-
                         ReceiveChat("You don't have enough currency for your purchase.", ChatType.System);
                         MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - not enough currency.");
                         return;
