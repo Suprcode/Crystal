@@ -195,8 +195,8 @@ namespace Client.MirControls
             if (Size.Width == 0 || Size.Height == 0)
                 return;
 
-            if (ControlTexture != null && !ControlTexture.Disposed && TextureSize != Size)
-                ControlTexture.Dispose();
+            if (TextureSize != Size)
+                DisposeTexture();
 
             if (ControlTexture == null || ControlTexture.Disposed)
             {

@@ -1041,10 +1041,7 @@ namespace Client.MirControls
                 _borderColour = Color.Empty;
 
                 DrawControlTexture = false;
-                if (ControlTexture != null && !ControlTexture.Disposed)
-                    ControlTexture.Dispose();
-                ControlTexture = null;
-                TextureValid = false;
+                DisposeTexture();
 
                 ControlAdded = null;
                 ControlRemoved = null;

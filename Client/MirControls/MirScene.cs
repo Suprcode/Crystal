@@ -51,8 +51,8 @@ namespace Client.MirControls
 
         protected override void CreateTexture()
         {
-            if (ControlTexture != null && !ControlTexture.Disposed && Size != TextureSize)
-                ControlTexture.Dispose();
+            if (Size != TextureSize)
+                DisposeTexture();
 
             if (ControlTexture == null || ControlTexture.Disposed)
             {
