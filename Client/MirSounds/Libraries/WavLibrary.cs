@@ -9,6 +9,7 @@ namespace Client.MirSounds
     public class WavLibrary : ISoundLibrary, IDisposable
     {
         public int Index { get; set; }
+        public long ExpireTime { get; set; }
 
         private List<SecondarySoundBuffer> _bufferList;
         private WaveStream _stream;
@@ -53,9 +54,24 @@ namespace Client.MirSounds
             Play();
         }
 
+        public bool IsPlaying()
+        {
+            if (_bufferList == null || _bufferList.Count == 0) return false;
+
+            for (int i = 0; i < _bufferList.Count; i++)
+            {
+                if (_bufferList[i] != null && !_bufferList[i].Disposed)
+                    return _bufferList[i].Status == BufferStatus.Playing;
+            }
+
+            return false;
+        }
+
         public void Play()
         {
             if (_stream == null) return;
+
+            ExpireTime = CMain.Time + Settings.SoundCleanMinutes * 60 * 1000;
 
             if (_loop)
             {
