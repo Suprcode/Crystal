@@ -326,7 +326,7 @@ namespace Client.MirScenes
                 };
 
             if (MapInfoList.Count > 0)
-                RebuildBigMapButtons();
+                RecreateBigMapButtons();
         }
 
         private void UpdateMouseCursor()
@@ -1986,11 +1986,11 @@ namespace Client.MirScenes
         private void NewMapInfo(S.NewMapInfo info)
         {
             BigMapRecord newRecord = new BigMapRecord() { Index = info.MapIndex, MapInfo = info.Info };
-            BuildBigMapButtons(newRecord);           
+            CreateBigMapButtons(newRecord);           
             MapInfoList.Add(info.MapIndex, newRecord);
         }
 
-        private void BuildBigMapButtons(BigMapRecord record)
+        private void CreateBigMapButtons(BigMapRecord record)
         {
             record.MovementButtons.Clear();
             record.NPCButtons.Clear();
@@ -2027,10 +2027,10 @@ namespace Client.MirScenes
             }
         }
 
-        private void RebuildBigMapButtons()
+        private void RecreateBigMapButtons()
         {
             foreach (var record in MapInfoList.Values)
-                BuildBigMapButtons(record);
+                CreateBigMapButtons(record);
         }
 
         private void SearchMapResult(S.SearchMapResult info)
