@@ -79,6 +79,15 @@ namespace Server.Database
             ItemPrice.ValueType = typeof(uint);
             ItemToolTip.ValueType = typeof(string);
 
+            NeedIdentify.ValueType = typeof(bool);
+            ShowGroupPickup.ValueType = typeof(bool);
+            GlobalDropNotify.ValueType = typeof(bool);
+            ClassBased.ValueType = typeof(bool);
+            LevelBased.ValueType = typeof(bool);
+            CanMine.ValueType = typeof(bool);
+            CanFastRun.ValueType = typeof(bool);
+            CanAwakening.ValueType = typeof(bool);
+
             //Basic
             ItemType.ValueType = typeof(ItemType);
             ItemType.DataSource = Enum2DataTable<ItemType>();
@@ -225,6 +234,15 @@ namespace Server.Database
                 row["ItemPrice"] = item.Price;
                 row["ItemToolTip"] = item.ToolTip;
 
+                row["NeedIdentify"] = item.NeedIdentify;
+                row["ShowGroupPickup"] = item.ShowGroupPickup;
+                row["GlobalDropNotify"] = item.GlobalDropNotify;
+                row["ClassBased"] = item.ClassBased;
+                row["LevelBased"] = item.LevelBased;
+                row["CanMine"] = item.CanMine;
+                row["CanFastRun"] = item.CanFastRun;
+                row["CanAwakening"] = item.CanAwakening;
+
                 foreach (Stat stat in StatEnums)
                 {
                     if (stat == Stat.Unknown) continue;
@@ -317,6 +335,15 @@ namespace Server.Database
                 item.StackSize = (ushort)row.Cells["ItemStackSize"].Value;
                 item.Slots = (byte)row.Cells["ItemSlots"].Value;
                 item.Weight = (byte)row.Cells["ItemWeight"].Value;
+
+                item.NeedIdentify = (bool)row.Cells["NeedIdentify"].Value;
+                item.ShowGroupPickup = (bool)row.Cells["ShowGroupPickup"].Value;
+                item.GlobalDropNotify = (bool)row.Cells["GlobalDropNotify"].Value;
+                item.ClassBased = (bool)row.Cells["ClassBased"].Value;
+                item.LevelBased = (bool)row.Cells["LevelBased"].Value;
+                item.CanMine = (bool)row.Cells["CanMine"].Value;
+                item.CanFastRun = (bool)row.Cells["CanFastRun"].Value;
+                item.CanAwakening = (bool)row.Cells["CanAwakening"].Value;
 
                 var light = ((byte)row.Cells["ItemLightRange"].Value % 15) + ((byte)row.Cells["ItemLightIntensity"].Value * 15);
                 item.Light = (byte)Math.Min(byte.MaxValue, light);
@@ -512,6 +539,11 @@ namespace Server.Database
 
         private void rBtnViewSpecial_CheckedChanged(object sender, EventArgs e)
         {
+            var specialCols = new string[]
+            {
+                "NeedIdentify", "ShowGroupPickup","GlobalDropNotify","ClassBased","LevelBased","CanMine","CanFastRun","CanAwakening"
+            };
+
             if (rBtnViewSpecial.Checked)
             {
                 foreach (DataGridViewColumn col in itemInfoGridView.Columns)
@@ -522,6 +554,12 @@ namespace Server.Database
                     }
 
                     if (col.Name.StartsWith("Special"))
+                    {
+                        col.Visible = true;
+                        continue;
+                    }
+
+                    if (specialCols.Contains(col.Name))
                     {
                         col.Visible = true;
                         continue;
@@ -796,6 +834,15 @@ namespace Server.Database
             row.Cells["ItemPrice"].Value = (uint)0;
             row.Cells["ItemToolTip"].Value = (string)"";
 
+            row.Cells["NeedIdentify"].Value = false;
+            row.Cells["ShowGroupPickup"].Value = false;
+            row.Cells["GlobalDropNotify"].Value = false;
+            row.Cells["ClassBased"].Value = false;
+            row.Cells["LevelBased"].Value = false;
+            row.Cells["CanMine"].Value = false;
+            row.Cells["CanFastRun"].Value = false;
+            row.Cells["CanAwakening"].Value = false;
+
             foreach (Stat stat in StatEnums)
             {
                 if (stat == Stat.Unknown) continue;
@@ -839,6 +886,11 @@ namespace Server.Database
         }
 
         private void itemInfoGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+
+        }
+
+        private void itemInfoGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }
