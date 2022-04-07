@@ -324,6 +324,9 @@ namespace Client.MirScenes
                     Location = new Point(20, 25 + i * 13),
                     OutLine = true,
                 };
+
+            if (MapInfoList.Count > 0)
+                RebuildBigMapButtons();
         }
 
         private void UpdateMouseCursor()
@@ -1983,8 +1986,16 @@ namespace Client.MirScenes
         private void NewMapInfo(S.NewMapInfo info)
         {
             BigMapRecord newRecord = new BigMapRecord() { Index = info.MapIndex, MapInfo = info.Info };
+            BuildBigMapButtons(newRecord);           
+            MapInfoList.Add(info.MapIndex, newRecord);
+        }
 
-            foreach (ClientMovementInfo mInfo in info.Info.Movements)
+        private void BuildBigMapButtons(BigMapRecord record)
+        {
+            record.MovementButtons.Clear();
+            record.NPCButtons.Clear();
+
+            foreach (ClientMovementInfo mInfo in record.MapInfo.Movements)
             {
                 MirButton button = new MirButton()
                 {
@@ -2006,16 +2017,20 @@ namespace Client.MirScenes
                 {
                     BigMapDialog.SetTargetMap(mInfo.Destination);
                 };
-                newRecord.MovementButtons.Add(mInfo, button);
+                record.MovementButtons.Add(mInfo, button);
             }
 
-            foreach (ClientNPCInfo npcInfo in info.Info.NPCs)
+            foreach (ClientNPCInfo npcInfo in record.MapInfo.NPCs)
             {
-                BigMapNPCRow row = new BigMapNPCRow(npcInfo) {  Parent = BigMapDialog };
-                newRecord.NPCButtons.Add(row);
+                BigMapNPCRow row = new BigMapNPCRow(npcInfo) { Parent = BigMapDialog };
+                record.NPCButtons.Add(row);
             }
+        }
 
-            MapInfoList.Add(info.MapIndex, newRecord);
+        private void RebuildBigMapButtons()
+        {
+            foreach (var record in MapInfoList.Values)
+                BuildBigMapButtons(record);
         }
 
         private void SearchMapResult(S.SearchMapResult info)
