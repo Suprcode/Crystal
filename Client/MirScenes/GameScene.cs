@@ -3842,7 +3842,9 @@ namespace Client.MirScenes
         {
             var isCurrentMap = (MapControl.Index == p.MapIndex);
 
-            if (!isCurrentMap)
+            if (isCurrentMap)
+                MapControl.ResetMap();
+            else
             {
                 MapControl.Index = p.MapIndex;
                 MapControl.FileName = Path.Combine(Settings.MapPath, p.FileName + ".map");
@@ -10112,7 +10114,7 @@ namespace Client.MirScenes
             Click += OnMouseClick;
         }
 
-        public void LoadMap()
+        public void ResetMap()
         {
             GameScene.Scene.NPCDialog.Hide();
             Objects.Clear();
@@ -10121,12 +10123,16 @@ namespace Client.MirScenes
 
             if (User != null)
                 Objects.Add(User);
+        }
 
-
+        public void LoadMap()
+        {
+            ResetMap();
 
             MapObject.MouseObject = null;
             MapObject.TargetObject = null;
             MapObject.MagicObject = null;
+
             MapReader Map = new MapReader(FileName);
             M2CellInfo = Map.MapCells;
             Width = Map.Width;
