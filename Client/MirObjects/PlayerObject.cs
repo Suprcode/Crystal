@@ -5153,11 +5153,8 @@ namespace Client.MirObjects
             return MapControl.MapLocation == CurrentLocation || BodyLibrary != null && BodyLibrary.VisiblePixel(DrawFrame + ArmourOffSet, p.Subtract(FinalDrawLocation), false);
         }
 
-        public override void CreateLabel()
+        private void CreateNameLabel()
         {
-            NameLabel = null;
-            GuildLabel = null;
-
             for (int i = 0; i < LabelList.Count; i++)
             {
                 if (LabelList[i].Text != Name || LabelList[i].ForeColour != NameColour) continue;
@@ -5165,14 +5162,7 @@ namespace Client.MirObjects
                 break;
             }
 
-            for (int i = 0; i < LabelList.Count; i++)
-            {
-                if (LabelList[i].Text != GuildName || LabelList[i].ForeColour != NameColour) continue;
-                GuildLabel = LabelList[i];
-                break;
-            }
-
-            if (NameLabel != null && !NameLabel.IsDisposed && GuildLabel != null && !GuildLabel.IsDisposed) return;
+            if (NameLabel != null && !NameLabel.IsDisposed) return;
 
             NameLabel = new MirLabel
             {
@@ -5185,7 +5175,22 @@ namespace Client.MirObjects
             };
             NameLabel.Disposing += (o, e) => LabelList.Remove(NameLabel);
             LabelList.Add(NameLabel);
-            
+        }
+
+        private void CreateGuildLabel()
+        {
+            if (string.IsNullOrEmpty(GuildName))
+                return;
+
+            for (int i = 0; i < LabelList.Count; i++)
+            {
+                if (LabelList[i].Text != GuildName || LabelList[i].ForeColour != NameColour) continue;
+                GuildLabel = LabelList[i];
+                break;
+            }
+
+            if (GuildLabel != null && !GuildLabel.IsDisposed) return;
+
             GuildLabel = new MirLabel
             {
                 AutoSize = true,
@@ -5199,22 +5204,32 @@ namespace Client.MirObjects
             LabelList.Add(GuildLabel);
         }
 
+        public override void CreateLabel()
+        {
+            NameLabel = null;
+            GuildLabel = null;
+
+            CreateNameLabel();
+            CreateGuildLabel();
+        }
+
         public override void DrawName()
         {
             CreateLabel();
 
-            if (NameLabel == null || GuildLabel == null) return;
-
-            if (GuildName != "")
+            if (GuildLabel != null && !string.IsNullOrEmpty(GuildName))
             {
                 GuildLabel.Text = GuildName;
                 GuildLabel.Location = new Point(DisplayRectangle.X + (50 - GuildLabel.Size.Width) / 2, DisplayRectangle.Y - (42 - GuildLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
                 GuildLabel.Draw();
             }
 
-            NameLabel.Text = Name;
-            NameLabel.Location = new Point(DisplayRectangle.X + (50 - NameLabel.Size.Width) / 2, DisplayRectangle.Y - (32 - NameLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
-            NameLabel.Draw();
+            if (NameLabel != null)
+            {
+                NameLabel.Text = Name;
+                NameLabel.Location = new Point(DisplayRectangle.X + (50 - NameLabel.Size.Width) / 2, DisplayRectangle.Y - (32 - NameLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
+                NameLabel.Draw();
+            }
         }
 
     }
