@@ -74,6 +74,8 @@ namespace Server.MirObjects
             ResetKey = "[@RESET]",
             PearlBuyKey = "[@PEARLBUY]",
             BuyUsedKey = "[@BUYUSED]",
+            BuyNewKey = "[@BUYNEW]",
+            BuySellNewKey = "[@BUYSELLNEW]",
             HeroCreateKey = "[@CREATEHERO]",
 
             TradeKey = "[TRADE]",
@@ -948,6 +950,20 @@ namespace Server.MirObjects
                     player.Enqueue(new S.NPCGoods { List = sentGoods, Rate = PriceRate(player), Type = PanelType.Buy, HideAddedStats = Settings.GoodsHideAddedStats });
 
                     if (key == BuySellKey)
+                    {
+                        player.Enqueue(new S.NPCSell());
+                    }
+                    break;
+                case BuyNewKey:
+                case BuySellNewKey:
+                    sentGoods = new List<UserItem>(Goods);
+
+                    for (int i = 0; i < Goods.Count; i++)
+                        player.CheckItem(Goods[i]);
+
+                    player.Enqueue(new S.NPCGoods { List = sentGoods, Rate = PriceRate(player), Type = PanelType.Buy, HideAddedStats = Settings.GoodsHideAddedStats });
+
+                    if (key == BuySellNewKey)
                     {
                         player.Enqueue(new S.NPCSell());
                     }
