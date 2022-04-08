@@ -755,25 +755,36 @@ namespace Server.Database
                         {
                             int columnCount = itemInfoGridView.Columns.Count;
                             string columnNames = "";
-                            string[] outputCsv = new string[itemInfoGridView.Rows.Count + 1];
+                            var outputCsv = new List<string>(itemInfoGridView.Rows.Count + 1);
                             for (int i = 2; i < columnCount; i++)
                             {
                                 columnNames += itemInfoGridView.Columns[i].Name.ToString() + ",";
                             }
-                            outputCsv[0] += columnNames;
+                            outputCsv.Add(columnNames);
 
+                            var line = new StringBuilder();
                             for (int i = 1; (i - 1) < itemInfoGridView.Rows.Count; i++)
                             {
+                                line.Clear();
+
+                                var row = itemInfoGridView.Rows[i - 1];
+
+                                var name = row.Cells["ItemName"].Value;
+                                if (name == null || name.GetType() == typeof(System.DBNull) || string.IsNullOrWhiteSpace((string)name))
+                                {
+                                    continue;
+                                }
+
                                 for (int j = 2; j < columnCount; j++)
                                 {
-                                    var cell = itemInfoGridView.Rows[i - 1].Cells[j];
+                                    var cell = row.Cells[j];
 
                                     var col = itemInfoGridView.Columns[j];
 
                                     var valueType = col.ValueType;
                                     if (valueType.IsEnum)
                                     {
-                                        outputCsv[i] += ((Enum.ToObject(valueType, cell.Value ?? 0))?.ToString() ?? "") + ",";
+                                        line.Append(((Enum.ToObject(valueType, cell.Value ?? 0))?.ToString() ?? "") + ",");
                                     }
                                     else
                                     {
@@ -781,14 +792,17 @@ namespace Server.Database
 
                                         if (col.Name == "ItemToolTip")
                                         {
-                                            outputCsv[i] += $"\"{val.Replace("\r\n", "\\r\\n")}\",";
+                                            line.Append($"\"{val.Replace("\r\n", "\\r\\n")}\",");
                                         }
                                         else
                                         {
-                                            outputCsv[i] += $"{val},";
+                                            line.Append($"{val},");
                                         }
                                     }
                                 }
+
+                                if (line.Length > 0)
+                                    outputCsv.Add(line.ToString());
                             }
 
                             File.WriteAllLines(sfd.FileName, outputCsv, Encoding.UTF8);
