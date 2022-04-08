@@ -75,6 +75,7 @@ namespace Server.MirObjects
             PearlBuyKey = "[@PEARLBUY]",
             BuyUsedKey = "[@BUYUSED]",
             HeroCreateKey = "[@CREATEHERO]",
+            HeroManageKey = "[@MANAGEHERO]",
 
             TradeKey = "[TRADE]",
             RecipeKey = "[RECIPE]",
@@ -1111,6 +1112,9 @@ namespace Server.MirObjects
                     {
                         CanCreateClass = Settings.Hero_CanCreateClass
                     });
+                    break;
+                case HeroManageKey:
+                    player.ManageHeroes();
                     break;
             }
         }

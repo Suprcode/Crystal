@@ -270,6 +270,7 @@ namespace Server
         public static bool[] Hero_CanCreateClass = new bool[0];
         public static string HeroSealItemName;
         public static ushort HeroMaximumSealCount;
+        public static byte MaximumHeroCount = 1;
 
         //Guild related settings
         public static byte Guild_RequiredLevel = 22, Guild_PointPerLevel = 0;
@@ -1128,6 +1129,7 @@ namespace Server
             InIReader reader = new InIReader(Path.Combine(ConfigPath, "HeroSettings.ini"));
             AllowNewHero = reader.ReadBoolean("Hero", "AllowNewHero", AllowNewHero);
             Hero_RequiredLevel = reader.ReadByte("Hero", "MinimumLevel", Hero_RequiredLevel);
+            MaximumHeroCount = reader.ReadByte("Hero", "MaximumCount", MaximumHeroCount);
             for (int i = 0; i < Hero_CanCreateClass.Length; i++)
                 Hero_CanCreateClass[i] = reader.ReadBoolean("Hero", $"CanCreate{Enum.GetName(typeof(MirClass), i)}", true);
             HeroSealItemName = reader.ReadString("Hero", "SealItemName", HeroSealItemName);
@@ -1140,6 +1142,7 @@ namespace Server
 
             reader.Write("Hero", "AllowNewHero", AllowNewHero);
             reader.Write("Hero", "MinimumLevel", Hero_RequiredLevel);
+            reader.Write("Hero", "MaximumCount", MaximumHeroCount);
             for (int i = 0; i < Hero_CanCreateClass.Length; i++)
                 reader.Write("Hero", $"CanCreate{Enum.GetName(typeof(MirClass), i)}", Hero_CanCreateClass[i]);
             reader.Write("Hero", "SealItemName", HeroSealItemName);

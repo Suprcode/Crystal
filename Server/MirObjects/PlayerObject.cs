@@ -26,6 +26,7 @@ namespace Server.MirObjects
 
         public bool WarZone = false;
 
+        public int CurrentHeroIndex;
         private HeroInfo currentHero;
         public HeroInfo CurrentHero
         {
@@ -33,7 +34,23 @@ namespace Server.MirObjects
             set
             {
                 currentHero = value;
-                Info.CurrentHeroIndex = currentHero != null ? currentHero.Index : 0;
+
+                if (currentHero != null)
+                {
+                    Info.CurrentHeroIndex = currentHero.Index;
+                    for (int i = 0; i < Info.Heroes.Length; i++)
+                    {
+                        if (Info.Heroes[i].Index != currentHero.Index) continue;
+                        CurrentHeroIndex = i;
+                        break;
+                    }
+                }
+                else
+                {
+                    Info.CurrentHeroIndex = 0;
+                    CurrentHeroIndex = -1;
+                }
+                
             }
         }
         public HeroObject Hero;        
@@ -5451,6 +5468,16 @@ namespace Server.MirObjects
                             Enqueue(new S.UnlockHeroAutoPot());
                             ReceiveChat("Hero AutoPot has been unlocked.", ChatType.Hint);
                             break;
+                        case 14: //Increase maximum hero count
+                            if (Info.MaximumHeroCount >= Settings.MaximumHeroCount)
+                            {
+                                ReceiveChat("Maximum hero count reached.", ChatType.Hint);
+                                Enqueue(p);
+                                return;
+                            }
+                            Info.MaximumHeroCount++;
+                            Array.Resize(ref Info.Heroes, Info.MaximumHeroCount);
+                            break;
                     }
                     break;
                 case ItemType.Book:
@@ -8607,7 +8634,8 @@ namespace Server.MirObjects
             if (!Envir.CanCreateHero(p, Connection, IsGM))
                 return;
 
-            if (Info.Heroes.Count >= Info.MaximumHeroCount)
+            int heroCount = Info.Heroes.Count(x => x != null);
+            if (heroCount >= Info.MaximumHeroCount)
             {
                 Enqueue(new S.NewHero { Result = 4 });
                 return;
@@ -8683,6 +8711,34 @@ namespace Server.MirObjects
 
             Hero.Target = null;
             Hero.SearchTime = 0;
+        }
+
+        public void ChangeHero(int index)
+        {
+            if (Info.Heroes.Length <= index) return;
+            bool respawn = Info.HeroSpawned;
+
+            if (Hero != null)
+            {
+                DespawnHero();
+                Info.HeroSpawned = false;
+                Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.None });
+            }
+
+            HeroInfo temp = Info.Heroes[index];
+            Info.Heroes[index] = Info.Heroes[0];
+            Info.Heroes[0] = temp;
+            CurrentHero = Info.Heroes[0];
+
+            Enqueue(new S.ChangeHero() { FromIndex = index - 1 });
+
+            if (Info.Heroes[0] == null || !respawn)
+            {
+                Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.Unsummoned });
+                return;
+            }
+
+            SummonHero();
         }
         #endregion
 
@@ -13411,28 +13467,55 @@ namespace Server.MirObjects
                 GainItem(item);
 
             CurrentHero.SealCount++;
-            Info.Heroes.Remove(CurrentHero);
+            Info.Heroes[CurrentHeroIndex] = null;
             CurrentHero = null;
         }
 
         private bool AddHero(HeroInfo hero)
         {
-            if (Info.Heroes.Count >= Info.MaximumHeroCount)
+            int heroCount = Info.Heroes.Count(x => x != null);
+
+            if (heroCount >= Info.MaximumHeroCount)
             {
                 ReceiveChat(string.Format("You can not summon any more heroes."), ChatType.Hint);
                 return false;
             }
 
-            Info.Heroes.Add(hero);
-            if (!HasHero)
+            for (int i = 0; i < Info.Heroes.Length; i++)
             {
-                CurrentHero = hero;
-                SummonHero();
-            }
-            else
-                ReceiveChat(string.Format("Hero has been added to your hero storage."), ChatType.Hint);
+                if (Info.Heroes[i] != null) continue;
 
-            return true;
+                Info.Heroes[i] = hero;
+                if (!HasHero)
+                {
+                    CurrentHero = hero;
+                    SummonHero();
+                }
+                else
+                {
+                    ReceiveChat(string.Format("Hero has been added to your hero storage."), ChatType.Hint);
+                    Enqueue(new S.NewHeroInfo { Info = hero.ClientInformation, StorageIndex = i - 1 });
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public void ManageHeroes()
+        {
+            S.ManageHeroes p = new S.ManageHeroes() { MaximumCount = Info.MaximumHeroCount, CurrentHero = CurrentHero?.ClientInformation };
+
+            if (!Connection.HeroStorageSent)
+            {
+                p.Heroes = new ClientHeroInformation[Info.Heroes.Length - 1];
+                for (int i = 1; i < Info.Heroes.Length; i++)
+                    p.Heroes[i - 1] = Info.Heroes[i]?.ClientInformation;
+                Connection.HeroStorageSent = true;
+            }
+
+            Enqueue(p);
         }
     }
 }

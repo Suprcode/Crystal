@@ -70,6 +70,7 @@ namespace Client.MirScenes
         public CharacterDialog CharacterDialog;
         public CharacterDialog HeroDialog;
         public HeroInventoryDialog HeroInventoryDialog;
+        public HeroManageDialog HeroManageDialog;
         public CraftDialog CraftDialog;
         public StorageDialog StorageDialog;
         public BeltDialog BeltDialog;
@@ -160,7 +161,9 @@ namespace Client.MirScenes
         public static List<ClientRecipeInfo> RecipeInfoList = new List<ClientRecipeInfo>();
         public static Dictionary<int, BigMapRecord> MapInfoList = new Dictionary<int, BigMapRecord>();
         public static List<ClientHeroInformation> HeroInfoList = new List<ClientHeroInformation>();
+        public static ClientHeroInformation[] HeroStorage = new ClientHeroInformation[8];
         public static int TeleportToNPCCost;
+        public static int MaximumHeroCount;
 
         public static UserItem[] Storage = new UserItem[80];
         public static UserItem[] GuildStorage = new UserItem[112];
@@ -253,6 +256,7 @@ namespace Client.MirScenes
 
             HeroMenuPanel = new HeroMenuPanel(this) { Visible = false };
             HeroBehaviourPanel = new HeroBehaviourPanel { Parent = this, Visible = false };
+            HeroManageDialog = new HeroManageDialog { Parent = this, Visible = false };
 
             BigMapDialog = new BigMapDialog { Parent = this, Visible = false };
             TrustMerchantDialog = new TrustMerchantDialog { Parent = this, Visible = false };
@@ -1700,6 +1704,12 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.SetAutoPotItem:
                     SetAutoPotItem((S.SetAutoPotItem)p);
+                    break;
+                case (short)ServerPacketIds.ManageHeroes:
+                    ManageHeroes((S.ManageHeroes)p);
+                    break;
+                case (short)ServerPacketIds.ChangeHero:
+                    ChangeHero((S.ChangeHero)p);
                     break;
                 case (short)ServerPacketIds.DefaultNPC:
                     DefaultNPC((S.DefaultNPC)p);
@@ -6001,6 +6011,29 @@ namespace Client.MirScenes
             NewHeroDialog.Show();            
         }
 
+        private void ManageHeroes(S.ManageHeroes p)
+        {
+            if (p.Heroes != null)
+            {
+                for (int i = 0; i < p.Heroes.Length; i++)
+                    AddHeroInformation(p.Heroes[i], i);
+            }
+
+            MaximumHeroCount = p.MaximumCount;
+            HeroManageDialog.SetCurrentHero(p.CurrentHero);
+            HeroManageDialog.Show();
+        }
+
+        private void ChangeHero(S.ChangeHero p)
+        {
+            ClientHeroInformation temp = HeroStorage[p.FromIndex];
+            HeroStorage[p.FromIndex] = HeroManageDialog.CurrentAvatar.Info;
+            HeroManageDialog.SetCurrentHero(temp);
+            HeroManageDialog.RefreshInterface();
+        }
+
+        public int HeroAvatar(MirClass job, MirGender gender) => 1400 + (byte)job + 10 * (byte)gender;
+
         private void UnlockHeroAutoPot(bool value)
         {
             if (Hero == null) return;
@@ -7574,8 +7607,7 @@ namespace Client.MirScenes
                 if (heroInfo != null)
                 {
                     count++;
-                    text = heroInfo.Name;
-                    text += Environment.NewLine + $"Level {heroInfo.Level} {Enum.GetName(typeof(MirGender), heroInfo.Gender).ToLower()} {Enum.GetName(typeof(MirClass), heroInfo.Class).ToLower()}";
+                    text = heroInfo.ToString();
 
                     MirLabel heroLabel = new MirLabel
                     {
