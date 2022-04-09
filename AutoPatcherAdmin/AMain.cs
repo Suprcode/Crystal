@@ -280,7 +280,6 @@ namespace AutoPatcherAdmin
             session.Open(sessionOptions);
         }
 
-
         private void BeginUpload()
         {
             if (UploadList == null) return;
@@ -299,8 +298,11 @@ namespace AutoPatcherAdmin
 
             CleanUp();
 
-            CreateTempUploadFiles(new FileInformation { FileName = PatchFileName }, CreateNewList());
-            UploadFiles(++uploadCount);
+            if (uploadCount > 0)
+            {
+                CreateTempUploadFiles(new FileInformation { FileName = PatchFileName }, CreateNewList());
+                UploadFiles(++uploadCount);
+            }
 
             UploadList = null;
         }
@@ -308,13 +310,9 @@ namespace AutoPatcherAdmin
         {
             string fileName = info.FileName.Replace(@"\", "/");
 
-            byte[] data = (!Settings.CompressFiles || fileName == "PList.gz") ? raw : Compress(raw);
-            info.Compressed = data.Length;
-
-            if (fileName != "PList.gz" && Settings.CompressFiles)
-            {
+            var compressed = fileName != "PList.gz" && Settings.CompressFiles;
+            if (compressed)
                 fileName += ".gz";
-            }
 
             var sourceDir = Path.GetDirectoryName(fileName);
             var tempSourceDir = Path.Combine(TempUploadDirectory, sourceDir);
@@ -326,7 +324,18 @@ namespace AutoPatcherAdmin
                 Directory.CreateDirectory(tempSourceDir);
             }
 
-            File.WriteAllBytes(tempFilePath, data);
+            using (var stream = new FileStream(tempFilePath,
+                FileMode.Create, FileAccess.Write, FileShare.None,
+                bufferSize: 4096, useAsync: true))
+            {
+                if (compressed)
+                    CompressTo(raw, stream);
+                else
+                    stream.WriteAsync(raw, 0, raw.Length);
+
+                info.Compressed = stream.Length;
+            };
+
             File.SetLastWriteTime(tempFilePath, info.Creation);
         }
 
@@ -725,12 +734,18 @@ namespace AutoPatcherAdmin
                 return mStream.ToArray();
             }
         }
+
+        private void CompressTo(byte[] raw, Stream stream)
+        {
+            using (GZipStream gStream = new GZipStream(stream, CompressionMode.Compress, true))
+                gStream.WriteAsync(raw, 0, raw.Length);
+        }
     }
 
     public class FileInformation
     {
         public string FileName; //Relative.
-        public int Length, Compressed;
+        public long Length, Compressed;
         public DateTime Creation;
 
         public FileInformation()
@@ -740,8 +755,8 @@ namespace AutoPatcherAdmin
         public FileInformation(BinaryReader reader)
         {
             FileName = reader.ReadString();
-            Length = reader.ReadInt32();
-            Compressed = reader.ReadInt32();
+            Length = reader.ReadInt64();
+            Compressed = reader.ReadInt64();
             Creation = DateTime.FromBinary(reader.ReadInt64());
         }
         public void Save(BinaryWriter writer)
