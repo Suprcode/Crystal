@@ -1197,9 +1197,9 @@ namespace Client.MirObjects
                     case MirAction.Dead:
                         GameScene.Scene.Redraw();
                         GameScene.Scene.MapControl.SortObject(this);
-                        if (MouseObject == this) MouseObject = null;
-                        if (TargetObject == this) TargetObject = null;
-                        if (MagicObject == this) MagicObject = null;
+                        if (MouseObject == this) MouseObjectID = 0;
+                        if (TargetObject == this) TargetObjectID = 0;
+                        if (MagicObject == this) MagicObjectID = 0;
 
                         for (int i = 0; i < Effects.Count; i++)
                             Effects[i].Remove();

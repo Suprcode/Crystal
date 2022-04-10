@@ -22,6 +22,43 @@ namespace Client.MirObjects
         public static UserHeroObject Hero;
         public static HeroObject HeroObject;
         public static MapObject MouseObject, TargetObject, MagicObject;
+
+        private static uint mouseObjectID;
+        public static uint MouseObjectID
+        {
+            get { return mouseObjectID; }
+            set
+            {
+                if (mouseObjectID == value) return;
+                mouseObjectID = value;
+                MouseObject = MapControl.Objects.Find(x => x.ObjectID == value);
+            }
+        }
+
+        private static uint targetObjectID;
+        public static uint TargetObjectID
+        {
+            get { return targetObjectID; }
+            set
+            {
+                if (targetObjectID == value) return;
+                targetObjectID = value;
+                TargetObject = MapControl.Objects.Find(x => x.ObjectID == value);
+            }
+        }
+
+        private static uint magicObjectID;
+        public static uint MagicObjectID
+        {
+            get { return magicObjectID; }
+            set
+            {
+                if (magicObjectID == value) return;
+                magicObjectID = value;
+                MagicObject = MapControl.Objects.Find(x => x.ObjectID == value);
+            }
+        }
+
         public abstract ObjectType Race { get; }
         public abstract bool Blocking { get; }
 
@@ -119,9 +156,9 @@ namespace Client.MirObjects
         }
         public void Remove()
         {
-            if (MouseObject == this) MouseObject = null;
-            if (TargetObject == this) TargetObject = null;
-            if (MagicObject == this) MagicObject = null;
+            if (MouseObject == this) MouseObjectID = 0;
+            if (TargetObject == this) TargetObjectID = 0;
+            if (MagicObject == this) MagicObjectID = 0;
 
             if (this == User.NextMagicObject)
                 User.ClearMagic();
@@ -141,6 +178,18 @@ namespace Client.MirObjects
         public abstract void Process();
         public abstract void Draw();
         public abstract bool MouseOver(Point p);
+
+        public static void RestoreTargetStates(MapObject obj)
+        {
+            if (MouseObjectID == obj.ObjectID)
+                MouseObject = obj;
+
+            if (TargetObjectID == obj.ObjectID)
+                TargetObject = obj;
+
+            if (MagicObjectID == obj.ObjectID)
+                MagicObject = obj;
+        }
 
         public void AddBuffEffect(BuffType type)
         {
