@@ -35,13 +35,14 @@ namespace Client.MirObjects
             }
         }
 
-        private static uint targetObjectID;
+        private static uint lastTargetObjectId, targetObjectID;
         public static uint TargetObjectID
         {
             get { return targetObjectID; }
             set
             {
                 if (targetObjectID == value) return;
+                lastTargetObjectId = targetObjectID;
                 targetObjectID = value;
                 TargetObject = MapControl.Objects.Find(x => x.ObjectID == value);
             }
@@ -153,6 +154,8 @@ namespace Client.MirObjects
             }
 
             MapControl.Objects.Add(this);
+
+            RestoreTargetStates();
         }
         public void Remove()
         {
@@ -179,16 +182,22 @@ namespace Client.MirObjects
         public abstract void Draw();
         public abstract bool MouseOver(Point p);
 
-        public static void RestoreTargetStates(MapObject obj)
+        private void RestoreTargetStates()
         {
-            if (MouseObjectID == obj.ObjectID)
-                MouseObject = obj;
+            if (MouseObjectID == ObjectID)
+                MouseObject = this;
 
-            if (TargetObjectID == obj.ObjectID)
-                TargetObject = obj;
+            if (TargetObjectID == ObjectID)
+                TargetObject = this;
 
-            if (MagicObjectID == obj.ObjectID)
-                MagicObject = obj;
+            if (MagicObjectID == ObjectID)
+                MagicObject = this;
+
+            if (TargetObject == null)
+            {
+                if (lastTargetObjectId == ObjectID)
+                    TargetObject = this;
+            }
         }
 
         public void AddBuffEffect(BuffType type)
