@@ -2118,8 +2118,6 @@ namespace Client.MirScenes
         {
             PlayerObject player = new PlayerObject(p.ObjectID);
             player.Load(p);
-
-            MapObject.RestoreTargetStates(player);
         }
 
         private void ObjectHero(S.ObjectHero p)
@@ -2129,8 +2127,6 @@ namespace Client.MirScenes
 
             if (p.ObjectID == Hero?.ObjectID)
                 HeroObject = hero;
-
-            MapObject.RestoreTargetStates(hero);
         }
 
         private void ObjectRemove(S.ObjectRemove p)
@@ -3178,8 +3174,6 @@ namespace Client.MirScenes
             if (!found)
                 mob = new MonsterObject(p.ObjectID);
             mob.Load(p, found);
-
-            MapObject.RestoreTargetStates(mob);
         }
         private void ObjectAttack(S.ObjectAttack p)
         {
