@@ -16,14 +16,14 @@ namespace Launcher
 {
     public partial class AMain : Form
     {
-        long _totalBytes, _completedBytes, _currentBytes;
+        long _totalBytes, _completedBytes;
         private int _fileCount, _currentCount;
 
-        private FileInformation _currentFile;
         public bool Completed, Checked, CleanFiles, LabelSwitch, ErrorFound;
         
         public List<FileInformation> OldList;
-        public Queue<FileInformation> DownloadList;
+        public Queue<FileInformation> DownloadList = new Queue<FileInformation>();
+        public List<Download> ActiveDownloads = new List<Download>();
 
         private Stopwatch _stopwatch = Stopwatch.StartNew();
 
@@ -64,8 +64,6 @@ namespace Launcher
         {
             try
             {
-                DownloadList = new Queue<FileInformation>();
-
                 GetOldFileList();
 
                 if (OldList.Count == 0)
@@ -85,7 +83,12 @@ namespace Launcher
 
 
                 _fileCount = DownloadList.Count;
-                BeginDownload();
+
+                ServicePointManager.DefaultConnectionLimit = Settings.P_Concurrency;
+
+                _stopwatch = Stopwatch.StartNew();
+                for (var i = 0; i < Settings.P_Concurrency; i++)
+                    BeginDownload();
             }
             catch (EndOfStreamException ex)
             {
@@ -105,21 +108,18 @@ namespace Launcher
 
         private void BeginDownload()
         {           
-            if (DownloadList == null) return;
-
             if (DownloadList.Count == 0)
             {
-                DownloadList = null;
-                _currentFile = null;
                 Completed = true;
 
                 CleanUp();
                 return;
             }
 
-            _currentFile = DownloadList.Dequeue();
+            var download = new Download();
+            download.Info = DownloadList.Dequeue();
 
-            Download(_currentFile);
+            Download(download);
         }
         private void CleanUp()
         {
@@ -215,8 +215,9 @@ namespace Launcher
             }
         }
 
-        public void Download(FileInformation info)
+        public void Download(Download dl)
         {
+            var info = dl.Info;
             string fileName = info.FileName.Replace(@"\", "/");
 
             if (fileName != "PList.gz" && (info.Compressed != info.Length || info.Compressed == 0))
@@ -230,7 +231,7 @@ namespace Launcher
                 {
                     client.DownloadProgressChanged += (o, e) =>
                         {
-                            _currentBytes = e.BytesReceived;
+                            dl.CurrentBytes = e.BytesReceived;
                         };
                     client.DownloadDataCompleted += (o, e) =>
                         {
@@ -239,13 +240,17 @@ namespace Launcher
                                 File.AppendAllText(@".\Error.txt",
                                        string.Format("[{0}] {1}{2}", DateTime.Now, info.FileName + " could not be downloaded. (" + e.Error.Message + ")", Environment.NewLine));
                                 ErrorFound = true;
+
+                                BeginDownload();
                             }
                             else
                             {
                                 _currentCount++;
-                                _completedBytes += _currentBytes;
-                                _currentBytes = 0;
-                                _stopwatch.Stop();
+                                _completedBytes += dl.CurrentBytes;
+                                dl.CurrentBytes = 0;
+                                dl.Completed = true;
+
+                                BeginDownload(); // Start next download, file IO can wait.
 
                                 byte[] raw = e.Result;
 
@@ -254,21 +259,20 @@ namespace Launcher
                                     raw = Decompress(e.Result);
                                 }
 
-                                if (!Directory.Exists(Settings.P_Client + Path.GetDirectoryName(info.FileName)))
-                                {
-                                    Directory.CreateDirectory(Settings.P_Client + Path.GetDirectoryName(info.FileName));
-                                }
+                                var fileName = Settings.P_Client + info.FileName;
+                                var dirName = Path.GetDirectoryName(fileName);
+                                if (!Directory.Exists(dirName))
+                                    Directory.CreateDirectory(dirName);
 
-                                File.WriteAllBytes(Settings.P_Client + info.FileName, raw);
-                                File.SetLastWriteTime(Settings.P_Client + info.FileName, info.Creation);
+                                File.WriteAllBytes(fileName, raw);
+                                File.SetLastWriteTime(fileName, info.Creation);
                             }
-                            BeginDownload();
                         };
 
                     if (Settings.P_NeedLogin) client.Credentials = new NetworkCredential(Settings.P_Login, Settings.P_Password);
 
 
-                    _stopwatch = Stopwatch.StartNew();
+                    ActiveDownloads.Add(dl);
                     client.DownloadDataAsync(new Uri(Settings.P_Host + fileName));
                 }
             }
@@ -578,6 +582,35 @@ namespace Launcher
                     return;
                 }
 
+                var currentBytes = 0l;
+                FileInformation currentFile = null;
+
+                // Remove completed downloads..
+                for (var i = ActiveDownloads.Count - 1; i >= 0; i--)
+                {
+                    var dl = ActiveDownloads[i];
+
+                    if (dl.Completed)
+                    {
+                        ActiveDownloads.RemoveAt(i);
+                        continue;
+                    }
+                }
+
+                for (var i = ActiveDownloads.Count - 1; i >= 0; i--)
+                {
+                    var dl = ActiveDownloads[i];
+                    if (!dl.Completed)
+                        currentBytes += dl.CurrentBytes;
+                }
+
+                if (Settings.P_Concurrency == 1)
+                {
+                    // Note: Just mimic old behaviour for now until a better UI is done.
+                    if  (ActiveDownloads.Count > 0)
+                        currentFile = ActiveDownloads[0].Info;
+                }
+
                 ActionLabel.Visible = true;
                 SpeedLabel.Visible = true;
                 CurrentFile_label.Visible = true;
@@ -585,20 +618,28 @@ namespace Launcher
                 TotalPercent_label.Visible = true;
 
                 if (LabelSwitch) ActionLabel.Text = string.Format("{0} Files Remaining", _fileCount - _currentCount);
-                else ActionLabel.Text = string.Format("{0:#,##0}MB Remaining",  ((_totalBytes) - (_completedBytes + _currentBytes)) / 1024 / 1024);
+                else ActionLabel.Text = string.Format("{0:#,##0}MB Remaining",  ((_totalBytes) - (_completedBytes + currentBytes)) / 1024 / 1024);
 
                 //ActionLabel.Text = string.Format("{0:#,##0}MB / {1:#,##0}MB", (_completedBytes + _currentBytes) / 1024 / 1024, _totalBytes / 1024 / 1024);
 
-                if (_currentFile != null)
+                if (Settings.P_Concurrency > 1)
                 {
-                    //FileLabel.Text = string.Format("{0}, ({1:#,##0} MB) / ({2:#,##0} MB)", _currentFile.FileName, _currentBytes / 1024 / 1024, _currentFile.Compressed / 1024 / 1024);
-                    CurrentFile_label.Text = string.Format("{0}", _currentFile.FileName);
-                    SpeedLabel.Text = (_currentBytes / 1024F / _stopwatch.Elapsed.TotalSeconds).ToString("#,##0.##") + "KB/s";
-                    CurrentPercent_label.Text = ((int)(100 * _currentBytes / _currentFile.Length)).ToString() + "%";
-                    ProgressCurrent_pb.Width = (int)( 5.5 * (100 * _currentBytes / _currentFile.Length));
+                    CurrentFile_label.Text = string.Format("<Concurrent> {0}", ActiveDownloads.Count);
+                    SpeedLabel.Text = ToSize(currentBytes / _stopwatch.Elapsed.TotalSeconds);
                 }
-                TotalPercent_label.Text = ((int)(100 * (_completedBytes + _currentBytes) / _totalBytes)).ToString() + "%";
-                TotalProg_pb.Width = (int)(5.5 * (100 * (_completedBytes + _currentBytes) / _totalBytes));
+                else
+                {
+                    if (currentFile != null)
+                    {
+                        //FileLabel.Text = string.Format("{0}, ({1:#,##0} MB) / ({2:#,##0} MB)", currentFile.FileName, _currentBytes / 1024 / 1024, currentFile.Compressed / 1024 / 1024);
+                        CurrentFile_label.Text = string.Format("{0}", currentFile.FileName);
+                        SpeedLabel.Text = ToSize(currentBytes / _stopwatch.Elapsed.TotalSeconds);
+                        CurrentPercent_label.Text = ((int)(100 * currentBytes / currentFile.Length)).ToString() + "%";
+                        ProgressCurrent_pb.Width = (int)(5.5 * (100 * currentBytes / currentFile.Length));
+                    }
+                }
+                TotalPercent_label.Text = ((int)(100 * (_completedBytes + currentBytes) / _totalBytes)).ToString() + "%";
+                TotalProg_pb.Width = (int)(5.5 * (100 * (_completedBytes + currentBytes) / _totalBytes));
             }
             catch (Exception ex)
             {
@@ -626,6 +667,24 @@ namespace Launcher
         private void AMain_FormClosed(object sender, FormClosedEventArgs e)
         {
             MoveOldFilesToCurrent();
+        }
+
+        private static string[] suffixes = new[] { " B", " KB", " MB", " GB", " TB", " PB" };
+
+        private string ToSize(double number, int precision = 2)
+        {
+            // unit's number of bytes
+            const double unit = 1024;
+            // suffix counter
+            int i = 0;
+            // as long as we're bigger than a unit, keep going
+            while (number > unit)
+            {
+                number /= unit;
+                i++;
+            }
+            // apply precision and current suffix
+            return Math.Round(number, precision) + suffixes[i];
         }
 
         private void RepairOldFiles()
@@ -657,6 +716,13 @@ namespace Launcher
                     File.Move(oldFilename, originalFilename);
             }
         }
+    }
+
+    public class Download
+    {
+        public FileInformation Info;
+        public long CurrentBytes;
+        public bool Completed;
     }
 
     public class FileInformation
