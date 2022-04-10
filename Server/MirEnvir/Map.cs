@@ -1306,16 +1306,7 @@ namespace Server.MirEnvir
                                     case ObjectType.Player:
                                         //Only targets
                                         if (!target.IsAttackTarget(player)) break;
-
-                                        if (target.Attacked(player, magic.Spell == Spell.ThunderStorm && !target.Undead ? value / 10 : value, DefenceType.MAC, false) <= 0)
-                                        {
-                                            if (target.Undead)
-                                            {
-                                                target.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = magic.Level + 2, TickSpeed = 1000 }, player);
-                                            }
-                                            break;
-                                        }
-
+                                        target.Attacked(player, magic.Spell == Spell.ThunderStorm && !target.Undead ? value / 10 : value, DefenceType.MAC, false);
                                         train = true;
                                         break;
                                 }
