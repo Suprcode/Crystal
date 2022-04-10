@@ -2118,6 +2118,8 @@ namespace Client.MirScenes
         {
             PlayerObject player = new PlayerObject(p.ObjectID);
             player.Load(p);
+
+            MapObject.RestoreTargetStates(player);
         }
 
         private void ObjectHero(S.ObjectHero p)
@@ -2137,6 +2139,10 @@ namespace Client.MirScenes
             {
                 MapObject ob = MapControl.Objects[i];
                 if (ob.ObjectID != p.ObjectID) continue;
+
+                if (ob == MapObject.MouseObject || ob == MapObject.TargetObject || ob == MapObject.MagicObject)
+                    MapObject.SaveTargetStates();
+
                 ob.Remove();
             }
         }
@@ -3166,19 +3172,15 @@ namespace Client.MirScenes
         }
         private void ObjectMonster(S.ObjectMonster p)
         {
-            MonsterObject mob;
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID == p.ObjectID)
-                {
-                    mob = (MonsterObject)ob;
-                    mob.Load(p, true);
-                    return;
-                }
-            }
-            mob = new MonsterObject(p.ObjectID);
-            mob.Load(p);
+            var found = false;
+            var mob = (MonsterObject)MapControl.Objects.Find(ob => ob.ObjectID == p.ObjectID);
+            if (mob != null)
+                found = true;
+            if (!found)
+                mob = new MonsterObject(p.ObjectID);
+            mob.Load(p, found);
+
+            MapObject.RestoreTargetStates(mob);
         }
         private void ObjectAttack(S.ObjectAttack p)
         {
@@ -3856,13 +3858,13 @@ namespace Client.MirScenes
                 MapControl.Music = p.Music;
                 MapControl.LoadMap();
             }
-           
+
             MapControl.NextAction = 0;
 
             User.CurrentLocation = p.Location;
             User.MapLocation = p.Location;
             MapControl.AddObject(User);
-            
+
             User.Direction = p.Direction;
 
             User.QueuedAction = null;
@@ -10116,22 +10118,36 @@ namespace Client.MirScenes
 
         public void ResetMap()
         {
+            MapObject.SaveTargetStates();
+
             GameScene.Scene.NPCDialog.Hide();
+
+            if (M2CellInfo != null)
+            {
+                for (var i = Objects.Count - 1; i >= 0; i--)
+                {
+                    var obj = Objects[i];
+                    if (obj == null) continue;
+
+                    obj.Remove();
+                }
+            }
+
             Objects.Clear();
             Effects.Clear();
             Doors.Clear();
 
             if (User != null)
                 Objects.Add(User);
+
+            MapObject.MouseObject = null;
+            MapObject.TargetObject = null;
+            MapObject.MagicObject = null;
         }
 
         public void LoadMap()
         {
             ResetMap();
-
-            MapObject.MouseObject = null;
-            MapObject.TargetObject = null;
-            MapObject.MagicObject = null;
 
             MapReader Map = new MapReader(FileName);
             M2CellInfo = Map.MapCells;

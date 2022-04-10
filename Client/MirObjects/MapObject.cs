@@ -22,6 +22,9 @@ namespace Client.MirObjects
         public static UserHeroObject Hero;
         public static HeroObject HeroObject;
         public static MapObject MouseObject, TargetObject, MagicObject;
+        private static uint LastMouseObjectId, LastTargetObjectId, LastMagicObjectId;
+        private static long LastObjectIdTime;
+
         public abstract ObjectType Race { get; }
         public abstract bool Blocking { get; }
 
@@ -141,6 +144,46 @@ namespace Client.MirObjects
         public abstract void Process();
         public abstract void Draw();
         public abstract bool MouseOver(Point p);
+
+        public static void SaveTargetStates()
+        {
+            LastObjectIdTime = CMain.Time + 3000;
+
+            LastMouseObjectId = 0;
+            LastTargetObjectId = 0;
+            LastMagicObjectId = 0;
+
+            if (MouseObject != null)
+                LastMouseObjectId = MouseObject.ObjectID;
+            if (TargetObject != null)
+                LastTargetObjectId = TargetObject.ObjectID;
+            if (MagicObject != null)
+                LastMagicObjectId = MagicObject.ObjectID;
+        }
+
+        public static void RestoreTargetStates(MapObject obj)
+        {
+            if (CMain.Time >= LastObjectIdTime)
+                return;
+
+            if (LastMouseObjectId == obj.ObjectID)
+            {
+                MouseObject = obj;
+                LastMouseObjectId = 0;
+            }
+
+            if (LastTargetObjectId == obj.ObjectID)
+            {
+                TargetObject = obj;
+                LastTargetObjectId = 0;
+            }
+
+            if (LastMagicObjectId == obj.ObjectID)
+            {
+                MagicObject = obj;
+                LastMagicObjectId = 0;
+            }
+        }
 
         public void AddBuffEffect(BuffType type)
         {
