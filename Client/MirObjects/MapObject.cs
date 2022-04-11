@@ -193,11 +193,11 @@ namespace Client.MirObjects
             if (MagicObjectID == ObjectID)
                 MagicObject = this;
 
-            if (TargetObject == null)
+            /*if (TargetObject == null)
             {
                 if (lastTargetObjectId == ObjectID)
                     TargetObject = this;
-            }
+            }*/
         }
 
         public void AddBuffEffect(BuffType type)
