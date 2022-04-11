@@ -1276,11 +1276,9 @@ namespace Server.MirNetwork
 
             HumanObject actor = Player;
             if (Player.HeroSpawned && p.ObjectID == Player.Hero.ObjectID)
-            {
-                if (Player.Hero.Dead)
-                    return;
                 actor = Player.Hero;
-            }
+
+            if (actor.Dead) return;
 
             if (!actor.Dead && (actor.ActionTime > Envir.Time || actor.SpellTime > Envir.Time))
                 _retryList.Enqueue(p);

@@ -858,11 +858,11 @@ namespace Client.MirScenes
             UserObject actor = User;
             if (key > 16)
             {
-                if (HeroObject == null || Hero.Dead) return;
+                if (HeroObject == null) return;
                 actor = Hero;
             }
 
-            if (actor.RidingMount || actor.Fishing) return;
+            if (actor.Dead || actor.RidingMount || actor.Fishing) return;
 
             if (!actor.HasClassWeapon && actor.Weapon >= 0)
             {
@@ -891,7 +891,7 @@ namespace Client.MirScenes
                         if (CMain.Time >= OutputDelay)
                         {
                             OutputDelay = CMain.Time + 1000;
-                            GameScene.Scene.OutputMessage(string.Format("You cannot cast {0} for another {1} seconds.", magic.Spell.ToString(), ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
+                            Scene.OutputMessage(string.Format("You cannot cast {0} for another {1} seconds.", magic.Spell.ToString(), ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
                         }
 
                         return;
