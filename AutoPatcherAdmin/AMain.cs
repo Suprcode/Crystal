@@ -238,7 +238,7 @@ namespace AutoPatcherAdmin
 
             FileInformation file =  new FileInformation
             {
-                FileName = fileName.Remove(0, Settings.Client.Length),
+                FileName = fileName.Remove(0, Settings.Client.Length).TrimStart('\\'),
                 Length = (int)info.Length,
                 Creation = info.LastWriteTime
             };
