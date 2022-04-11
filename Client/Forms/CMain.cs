@@ -240,7 +240,7 @@ namespace Client
         public static void CMain_MouseUp(object sender, MouseEventArgs e)
         {
             MapControl.MapButtons &= ~e.Button;
-            if (!MapControl.MapButtons.HasFlag(MouseButtons.Right))
+            if (e.Button != MouseButtons.Right || !Settings.NewMove)
                 GameScene.CanRun = false;
 
             try

@@ -3853,7 +3853,7 @@ namespace Client.MirScenes
             }
 
             MapControl.NextAction = 0;
-
+            Scene.MapControl.AutoPath = false;
             User.CurrentLocation = p.Location;
             User.MapLocation = p.Location;
             MapControl.AddObject(User);
@@ -10031,7 +10031,25 @@ namespace Client.MirScenes
         public static int ViewRangeX;
         public static int ViewRangeY;
 
+        private bool _autoPath;
+        public bool AutoPath
+        {
+            get
+            {
+                return _autoPath;
+            }
+            set
+            {
+                if (_autoPath == value) return;
+                _autoPath = value;
 
+                if (!_autoPath)
+                    CurrentPath = null;
+            }
+        }
+
+        public PathFinder PathFinder;
+        public List<Node> CurrentPath = null;
 
         public static Point MapLocation
         {
@@ -10148,6 +10166,8 @@ namespace Client.MirScenes
             M2CellInfo = Map.MapCells;
             Width = Map.Width;
             Height = Map.Height;
+
+            PathFinder = new PathFinder(this);
 
             try
             {
@@ -10982,6 +11002,7 @@ namespace Client.MirScenes
                 case MouseButtons.Left:
                     {
                         AutoRun = false;
+                        GameScene.Scene.MapControl.AutoPath = false;
                         if (MapObject.MouseObject == null) return;
                         NPCObject npc = MapObject.MouseObject as NPCObject;
                         if (npc != null)
@@ -11003,7 +11024,21 @@ namespace Client.MirScenes
                 case MouseButtons.Right:
                     {
                         AutoRun = false;
-                        if (MapObject.MouseObject == null) return;
+                        if (MapObject.MouseObject == null)
+                        {
+                            if (Settings.NewMove && MapLocation != MapObject.User.CurrentLocation && GameScene.Scene.MapControl.EmptyCell(MapLocation))
+                            {
+                                var path = GameScene.Scene.MapControl.PathFinder.FindPath(MapObject.User.CurrentLocation, MapLocation, 20);
+
+                                if (path != null && path.Count > 0)
+                                {
+                                    GameScene.Scene.MapControl.CurrentPath = path;
+                                    GameScene.Scene.MapControl.AutoPath = true;
+                                    Effects.Add(new Effect(Libraries.Magic3, 500, 10, 600, MapLocation));
+                                }
+                            }
+                            return;
+                        }
                         PlayerObject player = MapObject.MouseObject as PlayerObject;
                         if (player == null || player == User || !CMain.Ctrl) return;
                         if (CMain.Time <= GameScene.InspectTime && player.ObjectID == InspectDialog.InspectID) return;
@@ -11022,7 +11057,8 @@ namespace Client.MirScenes
         private static void OnMouseDown(object sender, MouseEventArgs e)
         {
             MapButtons |= e.Button;
-            GameScene.CanRun = false;
+            if (e.Button != MouseButtons.Right || !Settings.NewMove)
+                GameScene.CanRun = false;
 
             if (AwakeningAction == true) return;
 
@@ -11367,6 +11403,55 @@ namespace Client.MirScenes
                 }
             }
 
+            if (AutoPath)
+            {
+                if (CurrentPath == null || CurrentPath.Count == 0)
+                {
+                    AutoPath = false;
+                    return;
+                }
+
+                var path = GameScene.Scene.MapControl.PathFinder.FindPath(MapObject.User.CurrentLocation, CurrentPath.Last().Location, 20);
+
+                if (path != null && path.Count > 0)
+                    GameScene.Scene.MapControl.CurrentPath = path;
+                else
+                {
+                    AutoPath = false;
+                    return;
+                }
+
+                Node currentNode = CurrentPath.SingleOrDefault(x => User.CurrentLocation == x.Location);
+                if (currentNode != null)
+                {
+                    while (true)
+                    {
+                        Node first = CurrentPath.First();
+                        CurrentPath.Remove(first);
+
+                        if (first == currentNode)
+                            break;
+                    }
+                }
+
+                if (CurrentPath.Count > 0)
+                {
+                    MirDirection dir = Functions.DirectionFromPoint(User.CurrentLocation, CurrentPath.First().Location);
+
+                    if (GameScene.CanRun && CanRun(dir) && CMain.Time > GameScene.NextRunTime && User.HP >= 10 && CurrentPath.Count > (User.RidingMount ? 2 : 1))
+                    {
+                        User.QueuedAction = new QueuedAction { Action = MirAction.Running, Direction = dir, Location = Functions.PointMove(User.CurrentLocation, dir, User.RidingMount ? 3 : 2) };
+                        return;
+                    }
+                    if (CanWalk(dir))
+                    {
+                        User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = dir, Location = Functions.PointMove(User.CurrentLocation, dir, 1) };
+
+                        return;
+                    }
+                }
+            }
+
             if (MapObject.TargetObject == null || MapObject.TargetObject.Dead) return;
             if (((!MapObject.TargetObject.Name.EndsWith(")") && !(MapObject.TargetObject is PlayerObject)) || !CMain.Shift) &&
                 (MapObject.TargetObject.Name.EndsWith(")") || !(MapObject.TargetObject is MonsterObject))) return;
@@ -11661,7 +11746,7 @@ namespace Client.MirScenes
             return Math.Sqrt(x * x + y * y);
         }
 
-        private bool EmptyCell(Point p)
+        public bool EmptyCell(Point p)
         {
             if ((M2CellInfo[p.X, p.Y].BackImage & 0x20000000) != 0 || (M2CellInfo[p.X, p.Y].FrontImage & 0x8000) != 0) // + (M2CellInfo[P.X, P.Y].FrontImage & 0x7FFF) != 0)
                 return false;

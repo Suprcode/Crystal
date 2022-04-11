@@ -2491,6 +2491,7 @@ namespace Client.MirScenes.Dialogs
         public MirButton DropViewOn, DropViewOff;
         public MirButton NameViewOn, NameViewOff;
         public MirButton HPViewOn, HPViewOff;
+        public MirButton NewMoveOn, NewMoveOff;
         public MirImageControl SoundBar, MusicSoundBar;
         public MirImageControl VolumeBar, MusicVolumeBar;
 
@@ -2711,6 +2712,36 @@ namespace Client.MirScenes.Dialogs
                 NotControl = true,
             };
 
+            NewMoveOn = new MirButton
+            {
+                Library = Libraries.Title,
+                Location = new Point(159, 296),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+                Size = new Size(36, 17),
+                PressedIndex = 853,
+            };
+            NewMoveOn.Click += (o, e) =>
+            {
+                Settings.NewMove = true;
+                GameScene.Scene.ChatDialog.ReceiveChat("[New Movement Style]", ChatType.Hint);
+            };
+
+            NewMoveOff = new MirButton
+            {
+                Library = Libraries.Title,
+                Location = new Point(201, 296),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+                Size = new Size(36, 17),
+                PressedIndex = 850
+            };
+            NewMoveOff.Click += (o, e) =>
+            {
+                Settings.NewMove = false;
+                GameScene.Scene.ChatDialog.ReceiveChat("[Old Movement Style]", ChatType.Hint);
+            };
+
         }
 
 
@@ -2886,7 +2917,16 @@ namespace Client.MirScenes.Dialogs
                 HPViewOff.Index = 467;
             }
 
-
+            if (Settings.NewMove)
+            {
+                NewMoveOn.Index = 853;
+                NewMoveOff.Index = 848;
+            }
+            else
+            {
+                NewMoveOn.Index = 851;
+                NewMoveOff.Index = 850;
+            }
         }
 
     }

@@ -166,6 +166,7 @@
     <Compile Include="MirControls\MirTextBox.cs" />
     <Compile Include="MirGraphics\DXManager.cs" />
     <Compile Include="MirGraphics\MLibrary.cs" />
+    <Compile Include="MirObjects\PathFinder.cs" />
     <Compile Include="MirObjects\UserHeroObject.cs" />
     <Compile Include="MirObjects\HeroObject.cs" />
     <Compile Include="MirObjects\Damage.cs" />
