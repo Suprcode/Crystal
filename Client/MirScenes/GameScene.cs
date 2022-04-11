@@ -70,6 +70,7 @@ namespace Client.MirScenes
         public CharacterDialog CharacterDialog;
         public CharacterDialog HeroDialog;
         public HeroInventoryDialog HeroInventoryDialog;
+        public HeroManageDialog HeroManageDialog;
         public CraftDialog CraftDialog;
         public StorageDialog StorageDialog;
         public BeltDialog BeltDialog;
@@ -160,7 +161,9 @@ namespace Client.MirScenes
         public static List<ClientRecipeInfo> RecipeInfoList = new List<ClientRecipeInfo>();
         public static Dictionary<int, BigMapRecord> MapInfoList = new Dictionary<int, BigMapRecord>();
         public static List<ClientHeroInformation> HeroInfoList = new List<ClientHeroInformation>();
+        public static ClientHeroInformation[] HeroStorage = new ClientHeroInformation[8];
         public static int TeleportToNPCCost;
+        public static int MaximumHeroCount;
 
         public static UserItem[] Storage = new UserItem[80];
         public static UserItem[] GuildStorage = new UserItem[112];
@@ -253,6 +256,7 @@ namespace Client.MirScenes
 
             HeroMenuPanel = new HeroMenuPanel(this) { Visible = false };
             HeroBehaviourPanel = new HeroBehaviourPanel { Parent = this, Visible = false };
+            HeroManageDialog = new HeroManageDialog { Parent = this, Visible = false };
 
             BigMapDialog = new BigMapDialog { Parent = this, Visible = false };
             TrustMerchantDialog = new TrustMerchantDialog { Parent = this, Visible = false };
@@ -854,11 +858,11 @@ namespace Client.MirScenes
             UserObject actor = User;
             if (key > 16)
             {
-                if (HeroObject == null || Hero.Dead) return;
+                if (HeroObject == null) return;
                 actor = Hero;
             }
 
-            if (actor.RidingMount || actor.Fishing) return;
+            if (actor.Dead || actor.RidingMount || actor.Fishing) return;
 
             if (!actor.HasClassWeapon && actor.Weapon >= 0)
             {
@@ -887,7 +891,7 @@ namespace Client.MirScenes
                         if (CMain.Time >= OutputDelay)
                         {
                             OutputDelay = CMain.Time + 1000;
-                            GameScene.Scene.OutputMessage(string.Format("You cannot cast {0} for another {1} seconds.", magic.Spell.ToString(), ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
+                            Scene.OutputMessage(string.Format("You cannot cast {0} for another {1} seconds.", magic.Spell.ToString(), ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
                         }
 
                         return;
@@ -1701,6 +1705,12 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.SetAutoPotItem:
                     SetAutoPotItem((S.SetAutoPotItem)p);
                     break;
+                case (short)ServerPacketIds.ManageHeroes:
+                    ManageHeroes((S.ManageHeroes)p);
+                    break;
+                case (short)ServerPacketIds.ChangeHero:
+                    ChangeHero((S.ChangeHero)p);
+                    break;
                 case (short)ServerPacketIds.DefaultNPC:
                     DefaultNPC((S.DefaultNPC)p);
                     break;
@@ -2127,6 +2137,7 @@ namespace Client.MirScenes
             {
                 MapObject ob = MapControl.Objects[i];
                 if (ob.ObjectID != p.ObjectID) continue;
+
                 ob.Remove();
             }
         }
@@ -3156,19 +3167,13 @@ namespace Client.MirScenes
         }
         private void ObjectMonster(S.ObjectMonster p)
         {
-            MonsterObject mob;
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID == p.ObjectID)
-                {
-                    mob = (MonsterObject)ob;
-                    mob.Load(p, true);
-                    return;
-                }
-            }
-            mob = new MonsterObject(p.ObjectID);
-            mob.Load(p);
+            var found = false;
+            var mob = (MonsterObject)MapControl.Objects.Find(ob => ob.ObjectID == p.ObjectID);
+            if (mob != null)
+                found = true;
+            if (!found)
+                mob = new MonsterObject(p.ObjectID);
+            mob.Load(p, found);
         }
         private void ObjectAttack(S.ObjectAttack p)
         {
@@ -3846,13 +3851,13 @@ namespace Client.MirScenes
                 MapControl.Music = p.Music;
                 MapControl.LoadMap();
             }
-           
+
             MapControl.NextAction = 0;
 
             User.CurrentLocation = p.Location;
             User.MapLocation = p.Location;
             MapControl.AddObject(User);
-            
+
             User.Direction = p.Direction;
 
             User.QueuedAction = null;
@@ -6003,6 +6008,29 @@ namespace Client.MirScenes
             NewHeroDialog.Show();            
         }
 
+        private void ManageHeroes(S.ManageHeroes p)
+        {
+            if (p.Heroes != null)
+            {
+                for (int i = 0; i < p.Heroes.Length; i++)
+                    AddHeroInformation(p.Heroes[i], i);
+            }
+
+            MaximumHeroCount = p.MaximumCount;
+            HeroManageDialog.SetCurrentHero(p.CurrentHero);
+            HeroManageDialog.Show();
+        }
+
+        private void ChangeHero(S.ChangeHero p)
+        {
+            ClientHeroInformation temp = HeroStorage[p.FromIndex];
+            HeroStorage[p.FromIndex] = HeroManageDialog.CurrentAvatar.Info;
+            HeroManageDialog.SetCurrentHero(temp);
+            HeroManageDialog.RefreshInterface();
+        }
+
+        public int HeroAvatar(MirClass job, MirGender gender) => 1400 + (byte)job + 10 * (byte)gender;
+
         private void UnlockHeroAutoPot(bool value)
         {
             if (Hero == null) return;
@@ -7576,8 +7604,7 @@ namespace Client.MirScenes
                 if (heroInfo != null)
                 {
                     count++;
-                    text = heroInfo.Name;
-                    text += Environment.NewLine + $"Level {heroInfo.Level} {Enum.GetName(typeof(MirGender), heroInfo.Gender).ToLower()} {Enum.GetName(typeof(MirClass), heroInfo.Class).ToLower()}";
+                    text = heroInfo.ToString();
 
                     MirLabel heroLabel = new MirLabel
                     {
@@ -10085,6 +10112,22 @@ namespace Client.MirScenes
         public void ResetMap()
         {
             GameScene.Scene.NPCDialog.Hide();
+
+            MapObject.MouseObject = null;
+            MapObject.TargetObject = null;
+            MapObject.MagicObject = null;
+
+            if (M2CellInfo != null)
+            {
+                for (var i = Objects.Count - 1; i >= 0; i--)
+                {
+                    var obj = Objects[i];
+                    if (obj == null) continue;
+
+                    obj.Remove();
+                }
+            }
+
             Objects.Clear();
             Effects.Clear();
             Doors.Clear();
@@ -10097,9 +10140,9 @@ namespace Client.MirScenes
         {
             ResetMap();
 
-            MapObject.MouseObject = null;
-            MapObject.TargetObject = null;
-            MapObject.MagicObject = null;
+            MapObject.MouseObjectID = 0;
+            MapObject.TargetObjectID = 0;
+            MapObject.MagicObjectID = 0;
 
             MapReader Map = new MapReader(FileName);
             M2CellInfo = Map.MapCells;
@@ -10144,9 +10187,9 @@ namespace Client.MirScenes
                 Effects[i].Process();
 
             if (MapObject.TargetObject != null && MapObject.TargetObject is MonsterObject && MapObject.TargetObject.AI == 64)
-                MapObject.TargetObject = null;
+                MapObject.TargetObjectID = 0;
             if (MapObject.MagicObject != null && MapObject.MagicObject is MonsterObject && MapObject.MagicObject.AI == 64)
-                MapObject.MagicObject = null;
+                MapObject.MagicObjectID = 0;
 
             CheckInput();
 
@@ -10177,12 +10220,12 @@ namespace Client.MirScenes
                                 bestmouseobject = ob;
                                 //continue;
                             }
-                            MapObject.MouseObject = ob;
+                            MapObject.MouseObjectID = ob.ObjectID;
                             Redraw();
                         }
                         if (bestmouseobject != null && MapObject.MouseObject == null)
                         {
-                            MapObject.MouseObject = bestmouseobject;
+                            MapObject.MouseObjectID = bestmouseobject.ObjectID;
                             Redraw();
                         }
                         return;
@@ -10193,7 +10236,7 @@ namespace Client.MirScenes
 
             if (MapObject.MouseObject != null)
             {
-                MapObject.MouseObject = null;
+                MapObject.MouseObjectID = 0;
                 Redraw();
             }
         }
@@ -11056,12 +11099,12 @@ namespace Client.MirScenes
                 !(MapObject.MouseObject is NPCObject) && !(MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 64)
                  && !(MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 70))
             {
-                MapObject.TargetObject = MapObject.MouseObject;
+                MapObject.TargetObjectID = MapObject.MouseObject.ObjectID;
                 if (MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI != 6)
-                    MapObject.MagicObject = MapObject.TargetObject;
+                    MapObject.MagicObjectID = MapObject.TargetObject.ObjectID;
             }
             else
-                MapObject.TargetObject = null;
+                MapObject.TargetObjectID = 0;
         }
 
         private void CheckInput()
@@ -11413,7 +11456,7 @@ namespace Client.MirScenes
 
                     if (target == null) target = MapObject.MagicObject;
 
-                    if (target != null && target.Race == ObjectType.Monster) MapObject.MagicObject = target;
+                    if (target != null && target.Race == ObjectType.Monster) MapObject.MagicObjectID = target.ObjectID;
                     break;
                 case Spell.StraightShot:
                 case Spell.DoubleShot:
@@ -11441,7 +11484,7 @@ namespace Client.MirScenes
 
                     if (target == null) target = MapObject.MagicObject;
 
-                    if (target != null && target.Race == ObjectType.Monster) MapObject.MagicObject = target;
+                    if (target != null && target.Race == ObjectType.Monster) MapObject.MagicObjectID = target.ObjectID;
 
                     //if(magic.Spell == Spell.ElementalShot)
                     //{

@@ -8094,6 +8094,8 @@ namespace Server.MirObjects
 
         public void SpellToggle(Spell spell, SpellToggleState state)
         {
+            if (Dead) return;
+
             UserMagic magic;
             bool use = Convert.ToBoolean(state);
 

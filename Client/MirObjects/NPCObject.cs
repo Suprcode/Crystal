@@ -247,7 +247,7 @@ namespace Client.MirObjects
                     var frameIndex = new Random().Next(Frame.Count);
 
                     FrameIndex = frameIndex;
-                    EffectFrameIndex = frameIndex;
+                    EffectFrameIndex = Math.Min(Frame.EffectCount, frameIndex);
                 }
                 else
                 {

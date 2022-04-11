@@ -64,6 +64,7 @@ namespace Server.MirNetwork
         public List<ulong> SentHeroInfo = new List<ulong>();
         public bool WorldMapSetupSent;
         public bool StorageSent;
+        public bool HeroStorageSent;
 
 
         public MirConnection(int sessionID, TcpClient client)
@@ -419,6 +420,9 @@ namespace Server.MirNetwork
                     break;
                 case (short)ClientPacketIds.SetHeroBehaviour:
                     SetHeroBehaviour((C.SetHeroBehaviour)p);
+                    break;
+                case (short)ClientPacketIds.ChangeHero:
+                    ChangeHero((C.ChangeHero)p);
                     break;
                 case (short)ClientPacketIds.TownRevive:
                     TownRevive();
@@ -1272,11 +1276,9 @@ namespace Server.MirNetwork
 
             HumanObject actor = Player;
             if (Player.HeroSpawned && p.ObjectID == Player.Hero.ObjectID)
-            {
-                if (Player.Hero.Dead)
-                    return;
                 actor = Player.Hero;
-            }
+
+            if (actor.Dead) return;
 
             if (!actor.Dead && (actor.ActionTime > Envir.Time || actor.SpellTime > Envir.Time))
                 _retryList.Enqueue(p);
@@ -1335,6 +1337,13 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.SetHeroBehaviour(p.Behaviour);
+        }
+
+        private void ChangeHero(C.ChangeHero p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.ChangeHero(p.ListIndex);
         }
 
         private void TownRevive()

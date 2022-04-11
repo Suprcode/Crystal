@@ -1142,6 +1142,22 @@ namespace ClientPackets
         }
     }
 
+    public sealed class ChangeHero : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.ChangeHero; } }
+
+        public int ListIndex;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ListIndex = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ListIndex);
+        }
+    }
+
     public sealed class MarriageRequest : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.MarriageRequest; } }

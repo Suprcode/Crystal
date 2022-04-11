@@ -101,9 +101,9 @@ namespace Server.MirDatabase
 
         public Dictionary<int, int> GSpurchases = new Dictionary<int, int>();
         public int[] Rank = new int[2];//dont save this in db!(and dont send it to clients :p)
-
-        public List<HeroInfo> Heroes = new List<HeroInfo>();
+        
         public int MaximumHeroCount = 1;
+        public HeroInfo[] Heroes;
         public int CurrentHeroIndex;
         public bool HeroSpawned;
         public HeroBehaviour HeroBehaviour;
@@ -115,6 +115,7 @@ namespace Server.MirDatabase
             Name = p.Name;
             Class = p.Class;
             Gender = p.Gender;
+            Heroes = new HeroInfo[MaximumHeroCount];
 
             CreationIP = c.IPAddress;
             CreationDate = Envir.Now;
@@ -354,19 +355,24 @@ namespace Server.MirDatabase
 
             if (version > 98)
             {
-                count = reader.ReadInt32();
+                MaximumHeroCount = reader.ReadInt32();
+                Heroes = new HeroInfo[MaximumHeroCount];
                 if (version > 102)
                 {
-                    for (int i = 0; i < count; i++)
-                        Heroes.Add(Envir.GetHeroInfo(reader.ReadInt32()));
+                    for (int i = 0; i < MaximumHeroCount; i++)
+                    {
+                        int heroIndex = reader.ReadInt32();
+                        if (heroIndex > 0)
+                            Heroes[i] = Envir.GetHeroInfo(heroIndex);
+                    }
                 }
                 else
                 {
-                    for (int i = 0; i < count; i++)
-                        Heroes.Add(new HeroInfo(reader, version, customVersion));
+                    for (int i = 0; i < MaximumHeroCount; i++)
+                        Heroes[i] = new HeroInfo(reader, version, customVersion);
                 }
 
-                MaximumHeroCount = reader.ReadInt32();
+                if (version < 104) reader.ReadInt32();
                 CurrentHeroIndex = reader.ReadInt32();
                 HeroSpawned = reader.ReadBoolean();
             }
@@ -551,10 +557,9 @@ namespace Server.MirDatabase
                 writer.Write(item.Value);
             }
 
-            writer.Write(Heroes.Count);
-            for (int i = 0; i < Heroes.Count; i++)
-                writer.Write(Heroes[i].Index);
             writer.Write(MaximumHeroCount);
+            for (int i = 0; i < Heroes.Length; i++)
+                writer.Write(Heroes[i] != null ? Heroes[i].Index : 0);            
             writer.Write(CurrentHeroIndex);
             writer.Write(HeroSpawned);
             writer.Write((byte)HeroBehaviour);

@@ -205,7 +205,17 @@ namespace Client.MirControls
 
         private void NewHeroInfo(S.NewHeroInfo info)
         {
-            GameScene.HeroInfoList.Add(info.Info);
+            AddHeroInformation(info.Info, info.StorageIndex);
+        }
+
+        public void AddHeroInformation(ClientHeroInformation info, int storageIndex = -1)
+        {
+            if (info == null) return;
+            GameScene.HeroInfoList.RemoveAll(x => x.Index == info.Index);
+            GameScene.HeroInfoList.Add(info);
+
+            if (storageIndex < 0) return;
+            GameScene.HeroStorage[storageIndex] = info;
         }
 
         private void NewChatItem(S.NewChatItem p)

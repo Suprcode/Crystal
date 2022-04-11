@@ -637,4 +637,11 @@ public class ClientHeroInformation
         writer.Write((byte)Class);
         writer.Write((byte)Gender);
     }
+
+    public override string ToString()
+    {
+        string text = Name;
+        text += Environment.NewLine + $"Level {Level} {Enum.GetName(typeof(MirGender), Gender).ToLower()} {Enum.GetName(typeof(MirClass), Class).ToLower()}";
+        return text;
+    }
 }

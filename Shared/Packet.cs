@@ -206,6 +206,8 @@ public abstract class Packet
                 return new C.SetAutoPotItem();
             case (short)ClientPacketIds.SetHeroBehaviour:
                 return new C.SetHeroBehaviour();
+            case (short)ClientPacketIds.ChangeHero:
+                return new C.ChangeHero();
             case (short)ClientPacketIds.TownRevive:
                 return new C.TownRevive();
             case (short)ClientPacketIds.SpellToggle:
@@ -731,6 +733,10 @@ public abstract class Packet
                 return new S.SetAutoPotItem();
             case (short)ServerPacketIds.SetHeroBehaviour:
                 return new S.SetHeroBehaviour();
+            case (short)ServerPacketIds.ManageHeroes:
+                return new S.ManageHeroes();
+            case (short)ServerPacketIds.ChangeHero:
+                return new S.ChangeHero();
             case (short)ServerPacketIds.DefaultNPC:
                 return new S.DefaultNPC();
             case (short)ServerPacketIds.NPCUpdate:

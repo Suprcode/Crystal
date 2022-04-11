@@ -1131,15 +1131,18 @@ namespace ServerPackets
         }
 
         public ClientHeroInformation Info;
+        public int StorageIndex = -1;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             Info = new ClientHeroInformation(reader);
+            StorageIndex = reader.ReadInt32();
         }
 
         protected override void WritePacket(BinaryWriter writer)
         {
             Info.Save(writer);
+            writer.Write(StorageIndex);
         }
     }
     public sealed class NewChatItem : Packet
@@ -4736,6 +4739,67 @@ namespace ServerPackets
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write((byte)Behaviour);
+        }
+    }
+
+    public sealed class ManageHeroes : Packet
+    {
+        public int MaximumCount;
+        public ClientHeroInformation CurrentHero;
+        public ClientHeroInformation[] Heroes;
+        public override short Index { get { return (short)ServerPacketIds.ManageHeroes; } }
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            MaximumCount = reader.ReadInt32();
+
+            if (reader.ReadBoolean())
+                CurrentHero = new ClientHeroInformation(reader);
+
+            if (reader.ReadBoolean())
+            {
+                int count = reader.ReadInt32();
+                Heroes = new ClientHeroInformation[count];
+                for (int i = 0; i < count; i++)
+                {
+                    if (reader.ReadBoolean())
+                        Heroes[i] = new ClientHeroInformation(reader);
+                }
+            }
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(MaximumCount);
+
+            writer.Write(CurrentHero != null);
+            if (CurrentHero != null)
+                CurrentHero.Save(writer);
+
+            writer.Write(Heroes != null);
+            if (Heroes != null)
+            {
+                writer.Write(Heroes.Length);
+                for (int i = 0; i < Heroes.Length; i++)
+                {
+                    writer.Write(Heroes[i] != null);
+                    if (Heroes[i] != null)
+                        Heroes[i].Save(writer);
+                }
+            }
+        }
+    }
+
+    public sealed class ChangeHero : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.ChangeHero; } }
+
+        public int FromIndex;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            FromIndex = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(FromIndex);
         }
     }
 

@@ -185,6 +185,7 @@ namespace Client
         public static string P_BrowserAddress = "https://launcher.mironline.co.uk/web/";
         public static string P_Client = Application.StartupPath + "\\";
         public static bool P_AutoStart = false;
+        public static int P_Concurrency = 1;
 
         public static void Load()
         {
@@ -283,6 +284,8 @@ namespace Client
             P_AutoStart = Reader.ReadBoolean("Launcher", "AutoStart", P_AutoStart);
             P_ServerName = Reader.ReadString("Launcher", "ServerName", P_ServerName);
             P_BrowserAddress = Reader.ReadString("Launcher", "Browser", P_BrowserAddress);
+            P_Concurrency = Reader.ReadInt32("Launcher", "ConcurrentDownloads", P_Concurrency);
+            
 
             if (!P_Host.EndsWith("/")) P_Host += "/";
             if (P_Host.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) P_Host = P_Host.Insert(0, "http://");
@@ -293,6 +296,9 @@ namespace Client
             {
                 P_Host = "http://mirfiles.com/mir2/cmir/patch/";
             }
+
+            if (P_Concurrency < 1) P_Concurrency = 1;
+            if (P_Concurrency > 100) P_Concurrency = 100;
         }
 
         public static void Save()
@@ -371,6 +377,7 @@ namespace Client
             Reader.Write("Launcher", "ServerName", P_ServerName);
             Reader.Write("Launcher", "Browser", P_BrowserAddress);
             Reader.Write("Launcher", "AutoStart", P_AutoStart);
+            Reader.Write("Launcher", "ConcurrentDownloads", P_Concurrency);
         }
 
         public static void LoadTrackedQuests(string charName)

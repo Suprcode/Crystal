@@ -604,8 +604,8 @@ namespace Client.MirScenes.Dialogs
 
         public void Update()
         {
-            Avatar.Index = 1400 + (byte)Class + 10 * (byte)Gender;
-            DangerAvatar.Index = 1750 + (byte)Class + 10 * (byte)Gender;
+            Avatar.Index = GameScene.Scene.HeroAvatar(Class, Gender);
+            DangerAvatar.Index = Avatar.Index + 350;
             NameLabel.Text = Name;
             LevelLabel.Text = Level.ToString();
         }
@@ -613,7 +613,11 @@ namespace Client.MirScenes.Dialogs
         private void Avatar_BeforeDraw(object sender, EventArgs e)
         {
             DeadAvatar.Visible = Dead;
-            if (PercentHealth > 20) return;
+            if (PercentHealth > 20)
+            {
+                DangerAvatar.Visible = false;
+                return;
+            }
             if (CMain.Now < NextAvatarChange) return;
 
             NextAvatarChange = CMain.Now.AddMilliseconds(400);
@@ -721,7 +725,6 @@ namespace Client.MirScenes.Dialogs
             return count;
         }
     }
-
     public sealed class HeroBehaviourPanel : MirImageControl
     {
         private MirButton[] BehaviourButtons;
@@ -763,6 +766,107 @@ namespace Client.MirScenes.Dialogs
         {
             for (int i = 0; i < BehaviourButtons.Length; i++)
                 BehaviourButtons[i].Enabled = (byte)behaviour != i;
+        }
+    }
+    public sealed class HeroManageDialog : MirImageControl
+    {
+        public HeroManageAvatar CurrentAvatar;
+        public HeroManageAvatar[] Avatars = new HeroManageAvatar[8];
+        public MirButton CloseButton;
+
+        public HeroManageDialog()
+        {
+            Index = 1688;
+            Library = Libraries.Prguse;
+            Movable = true;
+            Sort = true;
+            Location = new Point(350, 350);
+
+            CloseButton = new MirButton
+            {
+                HoverIndex = 361,
+                Index = 360,
+                Location = new Point(Size.Width - 24, 4),
+                Library = Libraries.Prguse2,
+                Parent = this,
+                PressedIndex = 362,
+                Sound = SoundList.ButtonA,
+            };
+            CloseButton.Click += (o, e) => Hide();
+
+            CurrentAvatar = new HeroManageAvatar() { Parent = this };
+
+            for (int i = 0; i < Avatars.Length; i++)
+            {
+                int index = i;
+                Avatars[i] = new HeroManageAvatar() { Parent = this };
+                Avatars[i].Click += (o, e) =>
+                {
+                    MirMessageBox messageBox = new MirMessageBox($"Would you like to make {Avatars[index].Info.Name} your active Hero?", MirMessageBoxButtons.YesNo);
+                    messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.ChangeHero { ListIndex = index + 1 });
+                    messageBox.Show();
+                };
+            }
+        }
+
+        public void RefreshInterface()
+        {
+            for (int i = 0; i < Avatars.Length; i++)
+            {
+                Avatars[i].Location = new Point(98 + 60 * (i % 4), 61 + 40 * (int)(i / 4));
+                if (i > GameScene.MaximumHeroCount - 2)
+                {
+                    Avatars[i].Info = null;
+                    Avatars[i].Visible = i > GameScene.MaximumHeroCount - 2;
+                    Avatars[i].NotControl = true;
+                    continue;
+                }
+
+                Avatars[i].Info = GameScene.HeroStorage[i];
+                Avatars[i].Visible = GameScene.HeroStorage[i] != null;
+                Avatars[i].NotControl = false;
+            }
+        }
+
+        public void SetCurrentHero(ClientHeroInformation hero)
+        {
+            CurrentAvatar.Location = new Point(15, 61);
+            CurrentAvatar.Info = hero;
+        }
+
+        public override void Show()
+        {
+            RefreshInterface();
+            base.Show();
+        }
+    }
+    public sealed class HeroManageAvatar : MirImageControl
+    {
+        const int DefaultIndex = 1689;
+        private ClientHeroInformation info;
+        public ClientHeroInformation Info
+        {
+            get { return info; }
+            set
+            {
+                info = value;
+                if (info == null)
+                {
+                    Visible = false;
+                }
+                else
+                {
+                    Location = new Point(Location.X + 5, Location.Y + 5);
+                    Index = GameScene.Scene.HeroAvatar(info.Class, info.Gender) + 370;
+                    Hint = info.ToString();
+                    Visible = true;
+                }
+            }
+        }
+        public HeroManageAvatar()
+        {
+            Index = DefaultIndex;
+            Library = Libraries.Prguse;            
         }
     }
 }
