@@ -421,7 +421,7 @@ namespace Server.MirForms
                     if (MonGen[j].Contains(';'))
                         MonGen[j] = MonGen[j].Substring(0, MonGen[j].IndexOf(";", System.StringComparison.Ordinal));
 
-                    var Line = System.Text.RegularExpressions.Regex.Replace(MonGen[j], @"\s+", " ").Split(' ');
+                    var Line = System.Text.RegularExpressions.Regex.Replace(MonGen[j], @"\s+", " ").Split(',');
 
                     if (Line.Length < 7) continue;
 
@@ -436,7 +436,8 @@ namespace Server.MirForms
                             Range = Convert.ToInt16(Line[4]),
                             Count = Convert.ToInt16(Line[5]),
                             Delay = Convert.ToInt16(Line[6]),
-                            Direction = (Line.Length == 8) ? Convert.ToInt16(Line[7]) : 0                    
+                            Direction = (Line.Length >= 8) ? Convert.ToInt16(Line[7]) : 0,
+                            RoutePath = (Line.Length >= 9) ? Line[8] : string.Empty
                         };
 
                         monGenList.Add(MonGenItem);
@@ -456,7 +457,8 @@ namespace Server.MirForms
     {
         public string
             Map = string.Empty,
-            Name = string.Empty;
+            Name = string.Empty,
+            RoutePath = string.Empty;
 
         public int
             X = 0,

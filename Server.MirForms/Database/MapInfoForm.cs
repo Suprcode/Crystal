@@ -1486,7 +1486,7 @@ namespace Server
             {
                 try
                 {
-                    int monsterIndex = Envir.MonsterInfoList.Find(a => a.Name.Replace(" ", "") == MirForms.ConvertMonGenInfo.monGenList[i].Name.Replace('*', ' ')).Index;
+                    int monsterIndex = Envir.MonsterInfoList.Find(a => a.Name == MirForms.ConvertMonGenInfo.monGenList[i].Name).Index;
                     if (monsterIndex == -1) continue;
 
                     RespawnInfo respawnInfo = new RespawnInfo
@@ -1497,6 +1497,7 @@ namespace Server
                         Spread = (ushort)MirForms.ConvertMonGenInfo.monGenList[i].Range,
                         Delay = (ushort)MirForms.ConvertMonGenInfo.monGenList[i].Delay,
                         Direction = (byte)MirForms.ConvertMonGenInfo.monGenList[i].Direction,
+                        RoutePath = MirForms.ConvertMonGenInfo.monGenList[i].RoutePath,
                         RespawnIndex = ++Envir.RespawnIndex
                     };
 
@@ -1539,8 +1540,15 @@ namespace Server
 
                         if (mob == null) continue;
 
-                        string Output =
-                            $"{_selectedMapInfos[i].FileName} {_selectedMapInfos[i].Respawns[j].Location.X} {_selectedMapInfos[i].Respawns[j].Location.Y} {mob.Name.Replace(' ', '*')} {_selectedMapInfos[i].Respawns[j].Spread} {_selectedMapInfos[i].Respawns[j].Count} {_selectedMapInfos[i].Respawns[j].Delay} {_selectedMapInfos[i].Respawns[j].Direction}";
+                        string Output = $"{_selectedMapInfos[i].FileName}" +
+                            $",{_selectedMapInfos[i].Respawns[j].Location.X}" +
+                            $",{_selectedMapInfos[i].Respawns[j].Location.Y}" +
+                            $",{mob.Name}" +
+                            $",{_selectedMapInfos[i].Respawns[j].Spread}" +
+                            $",{_selectedMapInfos[i].Respawns[j].Count}" +
+                            $",{_selectedMapInfos[i].Respawns[j].Delay}" +
+                            $",{_selectedMapInfos[i].Respawns[j].Direction}" +
+                            $",{_selectedMapInfos[i].Respawns[j].RoutePath}";
 
                         sw.WriteLine(Output);
                     }
