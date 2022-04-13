@@ -161,13 +161,17 @@ namespace Server.MirDatabase
             if (!ushort.TryParse(data[5], out info.Image)) return;
             if (!ushort.TryParse(data[6], out info.Rate)) return;
 
+            if (!bool.TryParse(data[7], out info.ShowOnBigMap)) return;
+            if (!int.TryParse(data[8], out info.BigMapIcon)) return;
+            if (!bool.TryParse(data[9], out info.CanTeleportTo)) return;
+
             info.Index = ++EditEnvir.NPCIndex;
             EditEnvir.NPCInfoList.Add(info);
         }
         public string ToText()
         {
-            return string.Format("{0},{1},{2},{3},{4},{5},{6}",
-                FileName, EditEnvir.MapInfoList.Where(d => d.Index == MapIndex).FirstOrDefault().FileName, Location.X, Location.Y, Name, Image, Rate);
+            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}",
+                FileName, EditEnvir.MapInfoList.Where(d => d.Index == MapIndex).FirstOrDefault().FileName, Location.X, Location.Y, Name, Image, Rate, ShowOnBigMap, BigMapIcon, CanTeleportTo);
         }
 
         public override string ToString()
