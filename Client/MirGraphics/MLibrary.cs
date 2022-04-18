@@ -903,9 +903,7 @@ namespace Client.MirGraphics
             DataRectangle stream = Image.LockRectangle(0, LockFlags.Discard);
             Data = (byte*)stream.Data.DataPointer;
 
-            byte[] decomp = DecompressImage(reader.ReadBytes(Length));
-
-            stream.Data.Write(decomp, 0, decomp.Length);
+            DecompressImage(reader.ReadBytes(Length), stream.Data);
 
             stream.Data.Dispose();
             Image.UnlockRectangle(0);
@@ -919,9 +917,7 @@ namespace Client.MirGraphics
                 MaskImage = new Texture(DXManager.Device, w, h, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
                 stream = MaskImage.LockRectangle(0, LockFlags.Discard);
 
-                decomp = DecompressImage(reader.ReadBytes(Length));
-
-                stream.Data.Write(decomp, 0, decomp.Length);
+                DecompressImage(reader.ReadBytes(Length), stream.Data);
 
                 stream.Data.Dispose();
                 MaskImage.UnlockRectangle(0);
@@ -1075,6 +1071,14 @@ namespace Client.MirGraphics
                     while (count > 0);
                     return memory.ToArray();
                 }
+            }
+        }
+
+        private static void DecompressImage(byte[] data, Stream destination)
+        {
+            using (var stream = new GZipStream(new MemoryStream(data), CompressionMode.Decompress))
+            {
+                stream.CopyTo(destination);
             }
         }
     }
