@@ -10056,6 +10056,11 @@ namespace Client.MirScenes
             get { return GameScene.User == null ? Point.Empty : new Point(MouseLocation.X / CellWidth - OffSetX, MouseLocation.Y / CellHeight - OffSetY).Add(GameScene.User.CurrentLocation); }
         }
 
+        public static Point ToMouseLocation(Point p)
+        {
+            return new Point((p.X - MapObject.User.Movement.X + OffSetX) * CellWidth, (p.Y - MapObject.User.Movement.Y + OffSetY) * CellHeight).Add(MapObject.User.OffSetMove);
+        }
+
         public static MouseButtons MapButtons;
         public static Point MouseLocation;
         public static long InputDelay;
@@ -11034,7 +11039,8 @@ namespace Client.MirScenes
                                 {
                                     GameScene.Scene.MapControl.CurrentPath = path;
                                     GameScene.Scene.MapControl.AutoPath = true;
-                                    Effects.Add(new Effect(Libraries.Magic3, 500, 10, 600, MapLocation));
+                                    var offset = MouseLocation.Subtract(ToMouseLocation(MapLocation));
+                                    Effects.Add(new Effect(Libraries.Magic3, 500, 10, 600, MapLocation) { DrawOffset = offset.Subtract(8, 15) });
                                 }
                             }
                             return;
