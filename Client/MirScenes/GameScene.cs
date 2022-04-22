@@ -11368,6 +11368,7 @@ namespace Client.MirScenes
                         break;
                     case MouseButtons.Right:
                         if (MapObject.MouseObject is PlayerObject && MapObject.MouseObject != User && CMain.Ctrl) break;
+                        if (Settings.NewMove) break;
 
                         if (Functions.InRange(MapLocation, User.CurrentLocation, 2))
                         {
