@@ -5004,8 +5004,13 @@ namespace Client.MirObjects
         }
         public void DrawBody()
         {
+            bool oldGrayScale = DXManager.GrayScale;
+            Color drawColour = ApplyDrawColour();                     
+
             if (BodyLibrary != null)
-                BodyLibrary.Draw(DrawFrame + ArmourOffSet, DrawLocation, DrawColour, true);
+                BodyLibrary.Draw(DrawFrame + ArmourOffSet, DrawLocation, drawColour, true);
+
+            DXManager.SetGrayscale(oldGrayScale);
 
             //BodyLibrary.DrawTinted(DrawFrame + ArmourOffSet, DrawLocation, DrawColour, Color.DarkSeaGreen);
         }

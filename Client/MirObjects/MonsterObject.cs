@@ -4306,11 +4306,15 @@ namespace Client.MirObjects
 
             if (BodyLibrary == null || Frame == null) return;
 
+            bool oldGrayScale = DXManager.GrayScale;
+            Color drawColour = ApplyDrawColour();
+            
             if (!DXManager.Blending && Frame.Blend)
-                BodyLibrary.DrawBlend(DrawFrame, DrawLocation, DrawColour, true);
+                BodyLibrary.DrawBlend(DrawFrame, DrawLocation, drawColour, true);
             else
-                BodyLibrary.Draw(DrawFrame, DrawLocation, DrawColour, true);
+                BodyLibrary.Draw(DrawFrame, DrawLocation, drawColour, true);
 
+            DXManager.SetGrayscale(oldGrayScale);
             DXManager.SetOpacity(oldOpacity);
         }
 

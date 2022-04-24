@@ -317,6 +317,17 @@ namespace Client.MirObjects
             }
         }
 
+        public Color ApplyDrawColour()
+        {
+            Color drawColour = DrawColour;
+            if (drawColour == Color.Gray)
+            {
+                drawColour = Color.White;
+                DXManager.SetGrayscale(true);
+            }
+            return drawColour;
+        }
+
         public virtual Missile CreateProjectile(int baseIndex, MLibrary library, bool blend, int count, int interval, int skip, int lightDistance = 6, bool direction16 = true, Color? lightColour = null, uint targetID = 0)
         {
             return null;
