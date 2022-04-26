@@ -27,6 +27,7 @@ namespace Client.MirScenes
     public sealed class GameScene : MirScene
     {
         public static GameScene Scene;
+        public static bool Observing;
 
         public static UserObject User
         {
@@ -2073,6 +2074,8 @@ namespace Client.MirScenes
             InventoryDialog.RefreshInventory();
             foreach (SkillBarDialog Bar in SkillBarDialogs)
                 Bar.Update();
+
+            Observing = p.Observer;
         }
         private void UserSlotsRefresh(S.UserSlotsRefresh p)
         {
@@ -2143,7 +2146,7 @@ namespace Client.MirScenes
         }
         private void ObjectTurn(S.ObjectTurn p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID && !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -2155,7 +2158,7 @@ namespace Client.MirScenes
         }
         private void ObjectWalk(S.ObjectWalk p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID && !Observing) return;
 
             if (p.ObjectID == Hero?.ObjectID)
                 Hero.CurrentLocation = p.Location;
@@ -2170,7 +2173,7 @@ namespace Client.MirScenes
         }
         private void ObjectRun(S.ObjectRun p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID && !Observing) return;
 
             if (p.ObjectID == Hero?.ObjectID)
                 Hero.CurrentLocation = p.Location;
@@ -3177,7 +3180,7 @@ namespace Client.MirScenes
         }
         private void ObjectAttack(S.ObjectAttack p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID && !Observing) return;
 
             QueuedAction action = null;
 
@@ -10064,7 +10067,17 @@ namespace Client.MirScenes
         public static MouseButtons MapButtons;
         public static Point MouseLocation;
         public static long InputDelay;
-        public static long NextAction;
+
+        private static long nextAction;
+        public static long NextAction
+        {
+            get { return nextAction; }
+            set
+            {
+                if (GameScene.Observing) return;
+                nextAction = value;
+            }
+        }
 
         public CellInfo[,] M2CellInfo;
         public List<Door> Doors = new List<Door>();

@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 
 namespace Server.MirNetwork
 {
-    public enum GameStage { None, Login, Select, Game, Disconnected }
+    public enum GameStage { None, Login, Select, Game, Observer, Disconnected }
 
     public class MirConnection
     {
@@ -56,6 +56,7 @@ namespace Server.MirNetwork
 
         public AccountInfo Account;
         public PlayerObject Player;
+        public List<MirConnection> Observers = new List<MirConnection>();
         public List<ItemInfo> SentItemInfo = new List<ItemInfo>();
         public List<QuestInfo> SentQuestInfo = new List<QuestInfo>();
         public List<RecipeInfo> SentRecipeInfo = new List<RecipeInfo>();
@@ -104,6 +105,12 @@ namespace Server.MirNetwork
 
             Connected = true;
             BeginReceive();
+        }
+
+        public void AddObserver(MirConnection c)
+        {
+            Observers.Add(c);
+            c.Stage = GameStage.Observer;
         }
 
         private void BeginReceive()
@@ -183,6 +190,10 @@ namespace Server.MirNetwork
         {
             if (_sendList != null && p != null)
                 _sendList.Enqueue(p);
+
+            if (!p.Observable) return;
+            foreach (MirConnection c in Observers)
+                c.Enqueue(p);
         }
         
         public void Process()

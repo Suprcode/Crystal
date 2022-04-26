@@ -53,7 +53,7 @@ namespace Server.MirObjects
                 
             }
         }
-        public HeroObject Hero;        
+        public HeroObject Hero;
 
         protected AccountInfo account;
         public virtual AccountInfo Account
@@ -1083,9 +1083,9 @@ namespace Server.MirObjects
 
             SetLevelEffects();
 
-            GetItemInfo();
-            GetMapInfo();
-            GetUserInfo();
+            GetItemInfo(this);
+            GetMapInfo(this);
+            GetUserInfo(this);
             GetQuestInfo();
             GetRecipeInfo();
 
@@ -1354,104 +1354,136 @@ namespace Server.MirObjects
 
             return true;
         }
-        protected virtual void GetItemInfo()
+
+        static ServerPacketIds[] BroadcastObservePackets = new ServerPacketIds[]
+        {
+            ServerPacketIds.ObjectTurn,
+            ServerPacketIds.ObjectWalk,
+            ServerPacketIds.ObjectRun,
+            ServerPacketIds.ObjectAttack
+        };
+
+        public override void Broadcast(Packet p)
+        {
+            if (p == null || CurrentMap == null) return;
+
+            base.Broadcast(p);
+
+            if (Array.Exists(BroadcastObservePackets, x => x == (ServerPacketIds)p.Index))
+            {
+                foreach (MirConnection c in Connection.Observers)
+                    c.Enqueue(p);
+            }
+        }
+
+        public void AddObserver(PlayerObject observer)
+        {
+            Connection.AddObserver(observer.Connection);
+            observer.GetItemInfo(this);
+            observer.GetMapInfo(this);
+            observer.GetUserInfo(this);
+            observer.StopGame(23);
+        }
+        protected virtual void GetItemInfo(PlayerObject player)
         {
             UserItem item;
-            for (int i = 0; i < Info.Inventory.Length; i++)
+            for (int i = 0; i < player.Info.Inventory.Length; i++)
             {
-                item = Info.Inventory[i];
+                item = player.Info.Inventory[i];
                 if (item == null) continue;
 
                 CheckItem(item);
             }
 
-            for (int i = 0; i < Info.Equipment.Length; i++)
+            for (int i = 0; i < player.Info.Equipment.Length; i++)
             {
-                item = Info.Equipment[i];
+                item = player.Info.Equipment[i];
 
                 if (item == null) continue;
 
                 CheckItem(item);
             }
 
-            for (int i = 0; i < Info.QuestInventory.Length; i++)
+            for (int i = 0; i < player.Info.QuestInventory.Length; i++)
             {
-                item = Info.QuestInventory[i];
+                item = player.Info.QuestInventory[i];
 
                 if (item == null) continue;
                 CheckItem(item);
             }
         }
-        private void GetUserInfo()
+        private void GetUserInfo(PlayerObject player)
         {
-            string guildname = MyGuild != null ? MyGuild.Name : "";
-            string guildrank = MyGuild != null ? MyGuildRank.Name : "";
+            string guildname = player.MyGuild != null ? player.MyGuild.Name : "";
+            string guildrank = player.MyGuild != null ? player.MyGuildRank.Name : "";
             S.UserInformation packet = new S.UserInformation
             {
-                ObjectID = ObjectID,
-                RealId = (uint)Info.Index,
-                Name = Name,
+                ObjectID = player.ObjectID,
+                RealId = (uint)player.Info.Index,
+                Name = player.Name,
                 GuildName = guildname,
                 GuildRank = guildrank,
-                NameColour = GetNameColour(this),
-                Class = Class,
-                Gender = Gender,
-                Level = Level,
-                Location = CurrentLocation,
-                Direction = Direction,
-                Hair = Hair,
-                HP = HP,
-                MP = MP,
+                NameColour = GetNameColour(player),
+                Class = player.Class,
+                Gender = player.Gender,
+                Level = player.Level,
+                Location = player.CurrentLocation,
+                Direction = player.Direction,
+                Hair = player.Hair,
+                HP = player.HP,
+                MP = player.MP,
 
-                Experience = Experience,
-                MaxExperience = MaxExperience,
+                Experience = player.Experience,
+                MaxExperience = player.MaxExperience,
 
-                LevelEffects = LevelEffects,
+                LevelEffects = player.LevelEffects,
 
-                HasHero = HasHero,
-                HeroBehaviour = Info.HeroBehaviour,
+                HasHero = player.HasHero,
+                HeroBehaviour = player.Info.HeroBehaviour,
 
-                Inventory = new UserItem[Info.Inventory.Length],
-                Equipment = new UserItem[Info.Equipment.Length],
-                QuestInventory = new UserItem[Info.QuestInventory.Length],
-                Gold = Account.Gold,
-                Credit = Account.Credit,
-                HasExpandedStorage = Account.ExpandedStorageExpiryDate > Envir.Now ? true : false,
-                ExpandedStorageExpiryTime = Account.ExpandedStorageExpiryDate
+                Inventory = new UserItem[player.Info.Inventory.Length],
+                Equipment = new UserItem[player.Info.Equipment.Length],
+                QuestInventory = new UserItem[player.Info.QuestInventory.Length],
+                Gold = player.Account.Gold,
+                Credit = player.Account.Credit,
+                HasExpandedStorage = player.Account.ExpandedStorageExpiryDate > Envir.Now ? true : false,
+                ExpandedStorageExpiryTime = player.Account.ExpandedStorageExpiryDate,
+
+                Observer = player != this
             };
 
             //Copy this method to prevent modification before sending packet information.
-            for (int i = 0; i < Info.Magics.Count; i++)
-                packet.Magics.Add(Info.Magics[i].CreateClientMagic());
+            for (int i = 0; i < player.Info.Magics.Count; i++)
+                packet.Magics.Add(player.Info.Magics[i].CreateClientMagic());
 
-            Info.Inventory.CopyTo(packet.Inventory, 0);
-            Info.Equipment.CopyTo(packet.Equipment, 0);
-            Info.QuestInventory.CopyTo(packet.QuestInventory, 0);
+            player.Info.Inventory.CopyTo(packet.Inventory, 0);
+            player.Info.Equipment.CopyTo(packet.Equipment, 0);
+            player.Info.QuestInventory.CopyTo(packet.QuestInventory, 0);
 
-            for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
+            for (int i = 0; i < player.Info.IntelligentCreatures.Count; i++)
             {
-                packet.IntelligentCreatures.Add(Info.IntelligentCreatures[i].CreateClientIntelligentCreature());
+                packet.IntelligentCreatures.Add(player.Info.IntelligentCreatures[i].CreateClientIntelligentCreature());
             }
 
-            packet.SummonedCreatureType = SummonedCreatureType;
-            packet.CreatureSummoned = CreatureSummoned;
+            packet.SummonedCreatureType = player.SummonedCreatureType;
+            packet.CreatureSummoned = player.CreatureSummoned;
 
             Enqueue(packet);
         }        
-        private void GetMapInfo()
+        private void GetMapInfo(PlayerObject player)
         {
             Enqueue(new S.MapInformation
             {
-                MapIndex = CurrentMap.Info.Index,
-                FileName = CurrentMap.Info.FileName,
-                Title = CurrentMap.Info.Title,
-                MiniMap = CurrentMap.Info.MiniMap,
-                Lights = CurrentMap.Info.Light,
-                BigMap = CurrentMap.Info.BigMap,
-                Lightning = CurrentMap.Info.Lightning,
-                Fire = CurrentMap.Info.Fire,
-                MapDarkLight = CurrentMap.Info.MapDarkLight,
-                Music = CurrentMap.Info.Music,
+                MapIndex = player.CurrentMap.Info.Index,
+                FileName = player.CurrentMap.Info.FileName,
+                Title = player.CurrentMap.Info.Title,
+                MiniMap = player.CurrentMap.Info.MiniMap,
+                Lights = player.CurrentMap.Info.Light,
+                BigMap = player.CurrentMap.Info.BigMap,
+                Lightning = player.CurrentMap.Info.Lightning,
+                Fire = player.CurrentMap.Info.Fire,
+                MapDarkLight = player.CurrentMap.Info.MapDarkLight,
+                Music = player.CurrentMap.Info.Music,
             });
         }
         private void GetQuestInfo()
@@ -2160,6 +2192,17 @@ namespace Server.MirObjects
                         if (player == null) return;
 
                         player.Teleport(CurrentMap, Front);
+                        break;
+                    case "OBSERVE":
+                        if (!IsGM) return;
+
+                        if (parts.Length < 2) return;
+                        player = Envir.GetPlayer(parts[1]);
+
+                        if (player == null) return;
+
+                        
+                        player.AddObserver(this);
                         break;
                     case "ENABLEGROUPRECALL":
                         EnableGroupRecall = !EnableGroupRecall;

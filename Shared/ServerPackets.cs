@@ -555,6 +555,7 @@ namespace ServerPackets
         public List<ClientIntelligentCreature> IntelligentCreatures = new List<ClientIntelligentCreature>();
         public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;
         public bool CreatureSummoned;
+        public bool Observer;
 
 
 
@@ -632,6 +633,7 @@ namespace ServerPackets
             }
             SummonedCreatureType = (IntelligentCreatureType)reader.ReadByte();
             CreatureSummoned = reader.ReadBoolean();
+            Observer = reader.ReadBoolean();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -719,6 +721,7 @@ namespace ServerPackets
 
             writer.Write((byte)SummonedCreatureType);
             writer.Write(CreatureSummoned);
+            writer.Write(Observer);
         }
     }
 
@@ -791,6 +794,11 @@ namespace ServerPackets
         public override short Index
         {
             get { return (short)ServerPacketIds.UserLocation; }
+        }
+
+        public override bool Observable
+        {
+            get { return false; }
         }
 
         public Point Location;
@@ -1906,6 +1914,8 @@ namespace ServerPackets
             get { return (short)ServerPacketIds.LogOutSuccess; }
         }
 
+        public override bool Observable => false;
+
         public List<SelectInfo> Characters = new List<SelectInfo>();
 
         protected override void ReadPacket(BinaryReader reader)
@@ -1930,6 +1940,8 @@ namespace ServerPackets
         {
             get { return (short)ServerPacketIds.LogOutFailed; }
         }
+
+        public override bool Observable => false;
 
         protected override void ReadPacket(BinaryReader reader)
         {

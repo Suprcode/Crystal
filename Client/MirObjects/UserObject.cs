@@ -824,7 +824,7 @@ namespace Client.MirObjects
 
         public override void SetAction()
         {
-            if (QueuedAction != null )
+            if (QueuedAction != null && !GameScene.Observing)
             {
                 if ((ActionFeed.Count == 0) || (ActionFeed.Count == 1 && NextAction.Action == MirAction.Stance))
                 {

@@ -7,7 +7,7 @@ using S = ServerPackets;
 public abstract class Packet
 {
     public static bool IsServer;
-
+    public virtual bool Observable => true;
     public abstract short Index { get; }
 
     public static Packet ReceivePacket(byte[] rawBytes, out byte[] extra)

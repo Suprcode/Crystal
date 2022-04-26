@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using Server.MirDatabase;
 using Server.MirEnvir;
+using Server.MirNetwork;
 using Server.MirObjects.Monsters;
 using S = ServerPackets;
 using System.IO;
@@ -54,7 +55,7 @@ namespace Server.MirObjects
         public abstract int MaxHealth { get; }
         public byte PercentHealth
         {
-            get { return (byte) (Health/(float) MaxHealth*100); }
+            get { return (byte)(Health / (float)MaxHealth * 100); }
         }
 
         public byte Light;
@@ -69,7 +70,7 @@ namespace Server.MirObjects
 
         public long CellTime, PKPointTime, LastHitTime, EXPOwnerTime;
         public Color NameColour = Color.White;
-        
+
         public bool Dead, Undead, Harvested, AutoRev;
 
         public List<KeyValuePair<string, string>> NPCVar = new List<KeyValuePair<string, string>>();
@@ -80,7 +81,7 @@ namespace Server.MirObjects
 
         public bool CoolEye;
         private bool _hidden;
-        
+
         public bool Hidden
         {
             get
@@ -91,7 +92,7 @@ namespace Server.MirObjects
             {
                 if (_hidden == value) return;
                 _hidden = value;
-                CurrentMap.Broadcast(new S.ObjectHidden {ObjectID = ObjectID, Hidden = value}, CurrentLocation);
+                CurrentMap.Broadcast(new S.ObjectHidden { ObjectID = ObjectID, Hidden = value }, CurrentLocation);
             }
         }
 
@@ -150,7 +151,7 @@ namespace Server.MirObjects
         protected MapObject master;
         public virtual MapObject Master
         {
-            get { return master; } 
+            get { return master; }
             set { master = value; }
         }
 
@@ -198,14 +199,14 @@ namespace Server.MirObjects
         {
             get { return Functions.PointMove(CurrentLocation, Direction, 1); }
         }
- 
+
         public Point Back
         {
             get { return Functions.PointMove(CurrentLocation, Direction, -1); }
 
         }
-        
-        
+
+
         public virtual void Process()
         {
             if (Master != null && Master.Node == null) Master = null;
@@ -299,7 +300,7 @@ namespace Server.MirObjects
 
         public virtual void Remove(HumanObject player)
         {
-            player.Enqueue(new S.ObjectRemove {ObjectID = ObjectID});
+            player.Enqueue(new S.ObjectRemove { ObjectID = ObjectID });
         }
         public virtual void Add(HumanObject player)
         {
@@ -371,12 +372,12 @@ namespace Server.MirObjects
         }
         public virtual void Despawn()
         {
-            Broadcast(new S.ObjectRemove {ObjectID = ObjectID});
+            Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
             Envir.Objects.Remove(Node);
             if (Settings.Multithreaded && (Race == ObjectType.Monster))
             {
                 Envir.MobThreads[SpawnThread].ObjectsList.Remove(NodeThreaded);
-            }            
+            }
 
             ActionList.Clear();
 
@@ -415,7 +416,6 @@ namespace Server.MirObjects
             }
             return null;
         }
-
 
         public virtual void Broadcast(Packet p)
         {
