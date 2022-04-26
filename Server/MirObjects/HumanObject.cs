@@ -8091,6 +8091,16 @@ namespace Server.MirObjects
 
             //MessageQueue.EnqueueDebugging(((ServerPacketIds)p.Index).ToString());
         }
+        public virtual void Enqueue(Packet p, MirConnection c)
+        {
+            if (c == null)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            c.Enqueue(p);
+        }
 
         public void SpellToggle(Spell spell, SpellToggleState state)
         {

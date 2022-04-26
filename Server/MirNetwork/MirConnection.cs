@@ -56,7 +56,10 @@ namespace Server.MirNetwork
 
         public AccountInfo Account;
         public PlayerObject Player;
+
         public List<MirConnection> Observers = new List<MirConnection>();
+        private MirConnection Observing;
+
         public List<ItemInfo> SentItemInfo = new List<ItemInfo>();
         public List<QuestInfo> SentQuestInfo = new List<QuestInfo>();
         public List<RecipeInfo> SentRecipeInfo = new List<RecipeInfo>();
@@ -110,6 +113,7 @@ namespace Server.MirNetwork
         public void AddObserver(MirConnection c)
         {
             Observers.Add(c);
+            c.Observing = this;
             c.Stage = GameStage.Observer;
         }
 
@@ -715,8 +719,10 @@ namespace Server.MirNetwork
 
                 if (Account != null && Account.Connection == this)
                     Account.Connection = null;
-
             }
+
+            if (Observing != null)
+                Observing.Observers.Remove(this);
 
             Account = null;
 

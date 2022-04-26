@@ -4537,7 +4537,7 @@ namespace Client.MirScenes
 
         private void ObjectMagic(S.ObjectMagic p)
         {
-            if (p.SelfBroadcast == false && p.ObjectID == User.ObjectID) return;
+            if (p.SelfBroadcast == false && p.ObjectID == User.ObjectID && !Observing) return;
 
             if (p.ObjectID == Hero?.ObjectID && p.Cast)
             {

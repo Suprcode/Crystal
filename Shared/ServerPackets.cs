@@ -1072,6 +1072,11 @@ namespace ServerPackets
             get { return (short)ServerPacketIds.Chat; }
         }
 
+        public override bool Observable
+        {
+            get { return Type != ChatType.WhisperIn && Type != ChatType.WhisperOut; }
+        }
+
         public string Message = string.Empty;
         public ChatType Type;
 

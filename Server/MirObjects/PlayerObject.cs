@@ -1355,12 +1355,14 @@ namespace Server.MirObjects
             return true;
         }
 
-        static ServerPacketIds[] BroadcastObservePackets = new ServerPacketIds[]
+        static readonly ServerPacketIds[] BroadcastObservePackets = new ServerPacketIds[]
         {
             ServerPacketIds.ObjectTurn,
             ServerPacketIds.ObjectWalk,
             ServerPacketIds.ObjectRun,
-            ServerPacketIds.ObjectAttack
+            ServerPacketIds.ObjectAttack,
+            ServerPacketIds.ObjectMagic,
+            ServerPacketIds.ObjectHarvest
         };
 
         public override void Broadcast(Packet p)
@@ -1382,7 +1384,8 @@ namespace Server.MirObjects
             observer.GetItemInfo(this);
             observer.GetMapInfo(this);
             observer.GetUserInfo(this);
-            observer.StopGame(23);
+            GetObjectsPassive(observer.Connection);
+            observer.StopGame(23);            
         }
         protected virtual void GetItemInfo(PlayerObject player)
         {
@@ -1528,7 +1531,7 @@ namespace Server.MirObjects
                 }
             }
         }
-        private void GetObjectsPassive()
+        private void GetObjectsPassive(MirConnection c = null)
         {
             for (int y = CurrentLocation.Y - Globals.DataRange; y <= CurrentLocation.Y + Globals.DataRange; y++)
             {
@@ -1553,14 +1556,14 @@ namespace Server.MirObjects
                         if (ob.Race == ObjectType.Player)
                         {
                             PlayerObject Player = (PlayerObject)ob;
-                            Enqueue(Player.GetInfoEx(this));
+                            Enqueue(Player.GetInfoEx(this), c);
                         }
                         else if (ob.Race == ObjectType.Spell)
                         {
                             SpellObject obSpell = (SpellObject)ob;
 
                             if ((obSpell.Spell != Spell.ExplosiveTrap) || (obSpell.Caster != null && IsFriendlyTarget(obSpell.Caster)))
-                                Enqueue(ob.GetInfo());
+                                Enqueue(ob.GetInfo(), c);
                         }
                         else if (ob.Race == ObjectType.Merchant)
                         {
@@ -1568,11 +1571,11 @@ namespace Server.MirObjects
 
                             NPC.CheckVisible(this);
 
-                            if (NPC.VisibleLog[Info.Index] && NPC.Visible) Enqueue(ob.GetInfo());
+                            if (NPC.VisibleLog[Info.Index] && NPC.Visible) Enqueue(ob.GetInfo(), c);
                         }
                         else
                         {
-                            Enqueue(ob.GetInfo());
+                            Enqueue(ob.GetInfo(), c);
                         }
 
                         if (ob.Race == ObjectType.Player || ob.Race == ObjectType.Monster)
