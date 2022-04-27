@@ -722,7 +722,7 @@ namespace Server.MirNetwork
             }
 
             if (Observing != null)
-                Observing.Observers.Remove(this);
+                Observing.Observers.Remove(this);            
 
             Account = null;
 
@@ -751,6 +751,11 @@ namespace Server.MirNetwork
 
             BeginSend(data);
             SoftDisconnect(reason);
+        }
+        public void CleanObservers()
+        {
+            foreach (MirConnection c in Observers)
+                c.Enqueue(new S.ReturnToLogin());
         }
 
         private void ClientVersion(C.ClientVersion p)

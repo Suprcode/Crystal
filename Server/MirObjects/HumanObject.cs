@@ -8081,6 +8081,7 @@ namespace Server.MirObjects
             Connection.Player = null;
             Info.Player = null;
             Info.Mount = null;
+            Connection.CleanObservers();
             Connection = null;
             Info = null;
         }

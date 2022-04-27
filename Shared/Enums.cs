@@ -1452,6 +1452,7 @@ public enum ServerPacketIds : short
     PlayerInspect,
     LogOutSuccess,
     LogOutFailed,
+    ReturnToLogin,
     TimeOfDay,
     ChangeAMode,
     ChangePMode,

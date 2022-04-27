@@ -1957,6 +1957,24 @@ namespace ServerPackets
         }
     }
 
+    public sealed class ReturnToLogin : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.ReturnToLogin; }
+        }
+
+        public override bool Observable => false;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+        }
+    }
+
     public sealed class TimeOfDay : Packet
     {
         public override short Index

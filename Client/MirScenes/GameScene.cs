@@ -1336,6 +1336,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.LogOutFailed:
                     LogOutFailed((S.LogOutFailed)p);
                     break;
+                case (short)ServerPacketIds.ReturnToLogin:
+                    ReturnToLogin((S.ReturnToLogin)p);
+                    break;
                 case (short)ServerPacketIds.TimeOfDay:
                     TimeOfDay((S.TimeOfDay)p);
                     break;
@@ -3043,6 +3046,17 @@ namespace Client.MirScenes
         private void LogOutFailed(S.LogOutFailed p)
         {
             Enabled = true;
+        }
+
+        private void ReturnToLogin(S.ReturnToLogin p)
+        {
+            User = null;
+            if (Settings.Resolution != 1024)
+                CMain.SetResolution(1024, 768);
+
+            ActiveScene = new LoginScene();
+            Dispose();
+            MirMessageBox.Show("The person you was observing has logged off.");
         }
 
         private void TimeOfDay(S.TimeOfDay p)

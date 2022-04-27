@@ -390,6 +390,8 @@ namespace Server.MirObjects
                     return string.Format("{0} Has logged out. Reason: User closed game", Name);
                 case 23:
                     return string.Format("{0} Has logged out. Reason: User returned to select char", Name);
+                case 24:
+                    return string.Format("{0} Has logged out. Reason: Began observing", Name);
                 default:
                     return string.Format("{0} Has logged out. Reason: Unknown", Name);
             }
@@ -1385,7 +1387,7 @@ namespace Server.MirObjects
             observer.GetMapInfo(this);
             observer.GetUserInfo(this);
             GetObjectsPassive(observer.Connection);
-            observer.StopGame(23);            
+            observer.StopGame(24);            
         }
         protected virtual void GetItemInfo(PlayerObject player)
         {

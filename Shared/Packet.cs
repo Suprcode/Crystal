@@ -489,6 +489,8 @@ public abstract class Packet
                 return new S.LogOutSuccess();
             case (short)ServerPacketIds.LogOutFailed:
                 return new S.LogOutFailed();
+            case (short)ServerPacketIds.ReturnToLogin:
+                return new S.ReturnToLogin();
             case (short)ServerPacketIds.TimeOfDay:
                 return new S.TimeOfDay();
             case (short)ServerPacketIds.ChangeAMode:
