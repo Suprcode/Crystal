@@ -4868,6 +4868,9 @@ namespace Client.MirScenes
         private void SwitchGroup(S.SwitchGroup p)
         {
             GroupDialog.AllowGroup = p.AllowGroup;
+
+            if (!p.AllowGroup && GroupDialog.GroupList.Count > 0)
+                DeleteGroup();
         }
 
         private void DeleteGroup()
