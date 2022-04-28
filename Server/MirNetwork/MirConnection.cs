@@ -755,7 +755,10 @@ namespace Server.MirNetwork
         public void CleanObservers()
         {
             foreach (MirConnection c in Observers)
+            {
+                c.Stage = GameStage.Login;
                 c.Enqueue(new S.ReturnToLogin());
+            }
         }
 
         private void ClientVersion(C.ClientVersion p)
