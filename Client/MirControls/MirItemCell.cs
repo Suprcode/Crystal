@@ -206,7 +206,7 @@ namespace Client.MirControls
 
         public override void OnMouseClick(MouseEventArgs e)
         {
-            if (Locked) return;
+            if (Locked || GameScene.Observing) return;
 
             if (GameScene.PickedUpGold || GridType == MirGridType.Inspect || GridType == MirGridType.QuestInventory) return;
 
