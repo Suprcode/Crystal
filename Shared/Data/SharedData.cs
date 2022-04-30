@@ -52,6 +52,7 @@ public class RankCharacterInfo
 
     public long Experience;//clients shouldnt care about this only server
     public object info;//again only keep this on server!
+    public DateTime LastUpdated;
 
     public RankCharacterInfo()
     {

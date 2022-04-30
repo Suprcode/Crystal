@@ -88,6 +88,8 @@ namespace Server.MirEnvir
 
         public static int _playerCount;
         public int PlayerCount => Players.Count;
+
+        public int[] OnlineRankingCount = new int[6];
         public int HeroCount => Heroes.Count;
 
         public RandomProvider Random = new RandomProvider();
@@ -167,7 +169,6 @@ namespace Server.MirEnvir
 
         public List<RankCharacterInfo> RankTop = new List<RankCharacterInfo>();
         public List<RankCharacterInfo>[] RankClass = new List<RankCharacterInfo>[5];
-        public int[] RankBottomLevel = new int[6];
 
         static HttpServer http;
 
@@ -1392,10 +1393,6 @@ namespace Server.MirEnvir
             }
 
             RankTop.Clear();
-            for (var i = 0; i < RankBottomLevel.Count(); i++)
-            {
-                RankBottomLevel[i] = 0;
-            }
 
             lock (LoadLock)
             {
@@ -3191,8 +3188,6 @@ namespace Server.MirEnvir
             MessageQueue.Enqueue("Gameshop Purchase Logs Cleared.");
         }
 
-        private readonly int RankCount = 100;
-
         public int InsertRank(List<RankCharacterInfo> Ranking, RankCharacterInfo NewRank)
         {
             if (Ranking.Count == 0)
@@ -3218,18 +3213,13 @@ namespace Server.MirEnvir
                 }
             }
 
-            if (Ranking.Count < RankCount)
-            {
-                Ranking.Add(NewRank);
-                return Ranking.Count;
-            }
-
-            return 0;
+            Ranking.Add(NewRank);
+            return Ranking.Count;
         }
 
         public bool TryAddRank(List<RankCharacterInfo> Ranking, CharacterInfo info, byte type)
         {
-            var NewRank = new RankCharacterInfo() { Name = info.Name, Class = info.Class, Experience = info.Experience, level = info.Level, PlayerId = info.Index, info = info };
+            var NewRank = new RankCharacterInfo() { Name = info.Name, Class = info.Class, Experience = info.Experience, level = info.Level, PlayerId = info.Index, info = info, LastUpdated = Now };
             var NewRankIndex = InsertRank(Ranking, NewRank);
             if (NewRankIndex == 0) return false;
             for (var i = NewRankIndex; i < Ranking.Count; i++ )
@@ -3270,6 +3260,7 @@ namespace Server.MirEnvir
 
             Ranking[CurrentRank].level = info.Level;
             Ranking[CurrentRank].Experience = info.Experience;
+            Ranking[CurrentRank].LastUpdated = Now;
 
             if (NewRank < CurrentRank)
             {//if we gained any ranks
@@ -3287,6 +3278,7 @@ namespace Server.MirEnvir
 
         public void SetNewRank(RankCharacterInfo Rank, int Index, byte type)
         {
+            Rank.LastUpdated = Now;
             if (!(Rank.info is CharacterInfo Player)) return;
             Player.Rank[type] = Index;
         }
@@ -3296,83 +3288,50 @@ namespace Server.MirEnvir
             List<RankCharacterInfo> Ranking;
             var Rankindex = -1;
             //first check overall top           
-            if (info.Level >= RankBottomLevel[0])
+            Ranking = RankTop;
+            Rankindex = FindRank(Ranking, info, 0);
+            if (Rankindex >= 0)
             {
-                Ranking = RankTop;
-                Rankindex = FindRank(Ranking, info, 0);
-                if (Rankindex >= 0)
+                Ranking.RemoveAt(Rankindex);
+                for (var i = Rankindex; i < Ranking.Count(); i++)
                 {
-                    Ranking.RemoveAt(Rankindex);
-                    for (var i = Rankindex; i < Ranking.Count(); i++)
-                    {
-                        SetNewRank(Ranking[i], i, 0);
-                    }
+                    SetNewRank(Ranking[i], i, 0);
                 }
             }
+
             //next class based top
-            if (info.Level < RankBottomLevel[(byte) info.Class + 1]) return;
+            Ranking = RankTop;
+            Rankindex = FindRank(Ranking, info, 1);
+            if (Rankindex >= 0)
             {
-                Ranking = RankTop;
-                Rankindex = FindRank(Ranking, info, 1);
-                if (Rankindex >= 0)
+                Ranking.RemoveAt(Rankindex);
+                for (var i = Rankindex; i < Ranking.Count(); i++)
                 {
-                    Ranking.RemoveAt(Rankindex);
-                    for (var i = Rankindex; i < Ranking.Count(); i++)
-                    {
-                        SetNewRank(Ranking[i], i, 1);
-                    }
+                    SetNewRank(Ranking[i], i, 1);
                 }
             }
+
         }
 
         public void CheckRankUpdate(CharacterInfo info)
         {
             List<RankCharacterInfo> Ranking;
             RankCharacterInfo NewRank;
-            
+
             //first check overall top           
-            if (info.Level >= RankBottomLevel[0])
-            {
-                Ranking = RankTop;
-                if (!UpdateRank(Ranking, info,0))
-                {
-                    if (TryAddRank(Ranking, info, 0))
-                    {
-                        if (Ranking.Count > RankCount)
-                        {
-                            SetNewRank(Ranking[RankCount], 0, 0);
-                            Ranking.RemoveAt(RankCount);
 
-                        }
-                    }
-                }
-                if (Ranking.Count >= RankCount)
-                { 
-                    NewRank = Ranking[Ranking.Count -1];
-                    if (NewRank != null)
-                        RankBottomLevel[0] = NewRank.level;
-                }
+            Ranking = RankTop;
+            if (!UpdateRank(Ranking, info, 0))
+            {
+                TryAddRank(Ranking, info, 0);
             }
-            //now check class top
-            if (info.Level >= RankBottomLevel[(byte)info.Class + 1])
-            {
-                Ranking = RankClass[(byte)info.Class];
-                if (!UpdateRank(Ranking, info,1))
-                {
-                    if (TryAddRank(Ranking, info, 1))
-                    {
-                        if (Ranking.Count > RankCount)
-                        {
-                            SetNewRank(Ranking[RankCount], 0, 1);
-                            Ranking.RemoveAt(RankCount);
-                        }
-                    }
-                }
 
-                if (Ranking.Count < RankCount) return;
-                NewRank = Ranking[Ranking.Count -1];
-                if (NewRank != null)
-                    RankBottomLevel[(byte)info.Class + 1] = NewRank.level;
+            //now check class top
+
+            Ranking = RankClass[(byte)info.Class];
+            if (!UpdateRank(Ranking, info, 1))
+            {
+                TryAddRank(Ranking, info, 1);
             }
         }
 

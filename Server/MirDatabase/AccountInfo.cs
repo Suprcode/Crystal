@@ -167,10 +167,7 @@ namespace Server.MirDatabase
                     if (Characters[i] == null) continue;
                     if (Characters[i].Deleted) continue;
                     if ((Envir.Now - Characters[i].LastLogoutDate).TotalDays > 13) continue;
-                    if ((Characters[i].Level >= Envir.RankBottomLevel[0]) || (Characters[i].Level >= Envir.RankBottomLevel[(byte)Characters[i].Class + 1]))
-                    {
-                        Envir.CheckRankUpdate(Characters[i]);
-                    }
+                    Envir.CheckRankUpdate(Characters[i]);
                 }
             }
         }

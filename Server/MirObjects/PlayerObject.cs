@@ -361,6 +361,12 @@ namespace Server.MirObjects
             Report.Disconnected(logReason);
             Connection.WorldMapSetupSent = false;
 
+            if (!IsGM)
+            {
+                Envir.OnlineRankingCount[0]--;
+                Envir.OnlineRankingCount[(int)Class + 1]--;
+            }
+
             CleanUp();
         }
         private string LogOutReason(byte reason)
@@ -837,10 +843,7 @@ namespace Server.MirObjects
             if ((LastRankUpdate + 3600 * 1000) > Envir.Time)
             {
                 LastRankUpdate = Envir.Time;
-                if ((Level >= Envir.RankBottomLevel[0]) || (Level >= Envir.RankBottomLevel[(byte)Class + 1]))
-                {
-                    Envir.CheckRankUpdate(Info);
-                }
+                Envir.CheckRankUpdate(Info);
             }
         }
         public override void LevelUp()
@@ -866,11 +869,7 @@ namespace Server.MirObjects
             Report.Levelled(Level);
 
             if (IsGM) return;
-            if ((Level >= Envir.RankBottomLevel[0]) || (Level >= Envir.RankBottomLevel[(byte)Class + 1]))
-            {
-
-                Envir.CheckRankUpdate(Info);
-            }
+            Envir.CheckRankUpdate(Info);
         }        
         private void AddQuestItem(UserItem item)
         {
@@ -1218,10 +1217,9 @@ namespace Server.MirObjects
             else
             {
                 LastRankUpdate = Envir.Time;
-                if ((Level >= Envir.RankBottomLevel[0]) || (Level >= Envir.RankBottomLevel[(byte)Class + 1]))
-                {
-                    Envir.CheckRankUpdate(Info);
-                }
+                Envir.CheckRankUpdate(Info);
+                Envir.OnlineRankingCount[0]++;
+                Envir.OnlineRankingCount[(int)Class + 1]++;
             }
         }
         private void StartGameFailed()
@@ -12891,19 +12889,57 @@ namespace Server.MirObjects
         #region Ranking
 
         private long[] LastRankRequest = new long[6];
-        public void GetRanking(byte RankType)
+        public void GetRanking(byte RankType, int RankIndex, bool OnlineOnly)
         {
             if (RankType > 6) return;
-            if ((LastRankRequest[RankType] != 0) && ((LastRankRequest[RankType] + 300 * 1000) > Envir.Time)) return;
             LastRankRequest[RankType] = Envir.Time;
+            List<RankCharacterInfo> listings = RankType == 0 ? Envir.RankTop : Envir.RankClass[RankType - 1];
+
+            if (RankIndex >= listings.Count || RankIndex < 0) return;
+
+            S.Rankings p = new S.Rankings
+            {
+                RankType = RankType,
+                Count = OnlineOnly ? Envir.OnlineRankingCount[RankType] : listings.Count
+            };
+
             if (RankType == 0)
-            {
-                Enqueue(new S.Rankings { Listings = Envir.RankTop, RankType = RankType, MyRank = Info.Rank[0]});
-            }
+                p.MyRank = Info.Rank[0];
             else
+                p.MyRank = (byte)Class == (RankType - 1) ? Info.Rank[1] : 0;
+
+            int c = 0;
+            for (int i = RankIndex; i < listings.Count; i++)
             {
-                Enqueue(new S.Rankings { Listings = Envir.RankClass[RankType - 1], RankType = RankType, MyRank = (byte)Class == (RankType -1)?Info.Rank[1]: 0});
+                if (OnlineOnly && Envir.GetPlayer(listings[i].Name) == null) continue;
+
+                if (!CheckListing(listings[i]))
+                    p.ListingDetails.Add(listings[i]);
+                p.Listings.Add(listings[i].PlayerId);
+                c++;
+
+                if (c > 19 || c >= p.Count) break;
             }
+
+            Enqueue(p);
+        }
+
+        private bool CheckListing(RankCharacterInfo listing)
+        {
+            if (!Connection.SentRankings.ContainsKey(listing.PlayerId))
+            {
+                Connection.SentRankings.Add(listing.PlayerId, listing.LastUpdated);
+                return false;
+            }
+
+            DateTime lastUpdated = Connection.SentRankings[listing.PlayerId];
+            if (lastUpdated != listing.LastUpdated)
+            {
+                Connection.SentRankings[listing.PlayerId] = lastUpdated;
+                return false;
+            }
+
+            return true;
         }
 
         #endregion

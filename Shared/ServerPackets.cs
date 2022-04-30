@@ -6112,10 +6112,16 @@ namespace ServerPackets
     public sealed class Rankings : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.Rankings; } }
+        public override bool Observable
+        {
+            get { return false; }
+        }
 
         public byte RankType = 0;
         public int MyRank = 0;
-        public List<RankCharacterInfo> Listings = new List<RankCharacterInfo>();
+        public List<RankCharacterInfo> ListingDetails = new List<RankCharacterInfo>();
+        public List<long> Listings = new List<long>();
+        public int Count;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -6124,16 +6130,26 @@ namespace ServerPackets
             int count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
             {
-                Listings.Add(new RankCharacterInfo(reader));
+                ListingDetails.Add(new RankCharacterInfo(reader));
             }
+            count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+            {
+                Listings.Add(reader.ReadInt64());
+            }
+            Count = reader.ReadInt32();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(RankType);
             writer.Write(MyRank);
+            writer.Write(ListingDetails.Count);
+            for (int i = 0; i < ListingDetails.Count; i++)
+                ListingDetails[i].Save(writer);
             writer.Write(Listings.Count);
             for (int i = 0; i < Listings.Count; i++)
-                Listings[i].Save(writer);
+                writer.Write(Listings[i]);
+            writer.Write(Count);
         }
     }
 

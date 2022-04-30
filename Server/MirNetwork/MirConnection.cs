@@ -69,6 +69,7 @@ namespace Server.MirNetwork
         public bool WorldMapSetupSent;
         public bool StorageSent;
         public bool HeroStorageSent;
+        public Dictionary<long, DateTime> SentRankings = new Dictionary<long, DateTime>();
 
 
         public MirConnection(int sessionID, TcpClient client)
@@ -1894,7 +1895,7 @@ namespace Server.MirNetwork
         private void GetRanking(C.GetRanking p)
         {
             if (Stage != GameStage.Game) return;
-            Player.GetRanking(p.RankIndex);
+            Player.GetRanking(p.RankType, p.RankIndex, p.OnlineOnly);
         }
 
         private void Opendoor(C.Opendoor p)
