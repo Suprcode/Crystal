@@ -3021,7 +3021,7 @@ namespace Server.MirObjects
                         {
                             for (int c = player.Pets.Count - 1; c >= 0; c--)
                             {
-                                player.Pets[c].Die();
+                                player.Pets[c].DieNextTurn = true;
                             }
                         }
                         break;
