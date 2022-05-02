@@ -1710,6 +1710,7 @@ public enum ClientPacketIds : short
     TeleportToNPC,
     SearchMap,
     Inspect,
+    Observe,
     ChangeAMode,
     ChangePMode,
     ChangeTrade,

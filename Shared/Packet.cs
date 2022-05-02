@@ -160,6 +160,8 @@ public abstract class Packet
                 return new C.SearchMap();
             case (short)ClientPacketIds.Inspect:
                 return new C.Inspect();
+            case (short)ClientPacketIds.Observe:
+                return new C.Observe();
             case (short)ClientPacketIds.ChangeAMode:
                 return new C.ChangeAMode();
             case (short)ClientPacketIds.ChangePMode:

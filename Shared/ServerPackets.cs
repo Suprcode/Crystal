@@ -1703,6 +1703,11 @@ namespace ServerPackets
             get { return (short)ServerPacketIds.PlayerInspect; }
         }
 
+        public override bool Observable
+        {
+            get { return false; }
+        }
+
         public string Name = string.Empty;
         public string GuildName = string.Empty;
         public string GuildRank = string.Empty;
@@ -1712,6 +1717,7 @@ namespace ServerPackets
         public byte Hair;
         public ushort Level;
         public string LoverName;
+        public bool AllowObserve;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -1730,6 +1736,7 @@ namespace ServerPackets
             Hair = reader.ReadByte();
             Level = reader.ReadUInt16();
             LoverName = reader.ReadString();
+            AllowObserve = reader.ReadBoolean();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -1750,7 +1757,7 @@ namespace ServerPackets
             writer.Write(Hair);
             writer.Write(Level);
             writer.Write(LoverName);
-
+            writer.Write(AllowObserve);
         }
     }
 

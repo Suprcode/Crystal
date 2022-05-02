@@ -1605,44 +1605,11 @@ namespace Server.MirObjects
         }
         public void CheckItemInfo(ItemInfo info, bool dontLoop = false)
         {
-            if ((dontLoop == false) && (info.ClassBased | info.LevelBased)) //send all potential data so client can display it
-            {
-                for (int i = 0; i < Envir.ItemInfoList.Count; i++)
-                {
-                    if ((Envir.ItemInfoList[i] != info) && (Envir.ItemInfoList[i].Name.StartsWith(info.Name)))
-                        CheckItemInfo(Envir.ItemInfoList[i], true);
-                }
-            }
-
-            if (Connection.SentItemInfo.Contains(info)) return;
-            Enqueue(new S.NewItemInfo { Info = info });
-            Connection.SentItemInfo.Add(info);
+            Connection.CheckItemInfo(info, dontLoop);
         }
         public void CheckItem(UserItem item)
         {
-            CheckItemInfo(item.Info);
-
-            for (int i = 0; i < item.Slots.Length; i++)
-            {
-                if (item.Slots[i] == null) continue;
-
-                CheckItemInfo(item.Slots[i].Info);
-            }
-
-            CheckHeroInfo(item);           
-        }
-
-        private void CheckHeroInfo(UserItem item)
-        {
-            if (item.AddedStats[Stat.Hero] == 0) return;
-            if (Connection.SentHeroInfo.Contains(item.UniqueID)) return;
-
-            HeroInfo heroInfo = Envir.GetHeroInfo(item.AddedStats[Stat.Hero]);
-            if (heroInfo == null) return;
-
-            Enqueue(new S.NewHeroInfo { Info = heroInfo.ClientInformation });
-            Connection.SentHeroInfo.Add(item.UniqueID);
-
+            Connection.CheckItem(item);         
         }
         public void SetLevelEffects()
         {

@@ -58,7 +58,7 @@ namespace Server.MirNetwork
         public PlayerObject Player;
 
         public List<MirConnection> Observers = new List<MirConnection>();
-        private MirConnection Observing;
+        public MirConnection Observing;
 
         public List<ItemInfo> SentItemInfo = new List<ItemInfo>();
         public List<QuestInfo> SentQuestInfo = new List<QuestInfo>();
@@ -114,7 +114,11 @@ namespace Server.MirNetwork
         public void AddObserver(MirConnection c)
         {
             Observers.Add(c);
+
+            if (c.Observing != null)
+                c.Observing.Observers.Remove(c);
             c.Observing = this;
+
             c.Stage = GameStage.Observer;
         }
 
@@ -368,6 +372,9 @@ namespace Server.MirNetwork
                     break;
                 case (short)ClientPacketIds.Inspect:
                     Inspect((C.Inspect)p);
+                    break;
+                case (short)ClientPacketIds.Observe:
+                    Observe((C.Observe)p);
                     break;
                 case (short)ClientPacketIds.ChangeAMode:
                     ChangeAMode((C.ChangeAMode)p);
@@ -1155,12 +1162,18 @@ namespace Server.MirNetwork
         }
         private void Inspect(C.Inspect p)
         {
-            if (Stage != GameStage.Game) return;
+            if (Stage != GameStage.Game && Stage != GameStage.Observer) return;
 
             if (p.Ranking)
-                Player.Inspect((int)p.ObjectID);
+                Envir.Inspect(this, (int)p.ObjectID);
             else
-                Player.Inspect(p.ObjectID);
+                Envir.Inspect(this, p.ObjectID);
+        }
+        private void Observe(C.Observe p)
+        {
+            if (Stage != GameStage.Game && Stage != GameStage.Observer) return;
+
+            Envir.Observe(this, p.Name);
         }
         private void ChangeAMode(C.ChangeAMode p)
         {
@@ -1983,6 +1996,46 @@ namespace Server.MirNetwork
                 return;
 
             Player.ConfirmItemRental();
+        }
+
+        public void CheckItemInfo(ItemInfo info, bool dontLoop = false)
+        {
+            if ((dontLoop == false) && (info.ClassBased | info.LevelBased)) //send all potential data so client can display it
+            {
+                for (int i = 0; i < Envir.ItemInfoList.Count; i++)
+                {
+                    if ((Envir.ItemInfoList[i] != info) && (Envir.ItemInfoList[i].Name.StartsWith(info.Name)))
+                        CheckItemInfo(Envir.ItemInfoList[i], true);
+                }
+            }
+
+            if (SentItemInfo.Contains(info)) return;
+            Enqueue(new S.NewItemInfo { Info = info });
+            SentItemInfo.Add(info);
+        }
+        public void CheckItem(UserItem item)
+        {
+            CheckItemInfo(item.Info);
+
+            for (int i = 0; i < item.Slots.Length; i++)
+            {
+                if (item.Slots[i] == null) continue;
+
+                CheckItemInfo(item.Slots[i].Info);
+            }
+
+            CheckHeroInfo(item);
+        }
+        private void CheckHeroInfo(UserItem item)
+        {
+            if (item.AddedStats[Stat.Hero] == 0) return;
+            if (SentHeroInfo.Contains(item.UniqueID)) return;
+
+            HeroInfo heroInfo = Envir.GetHeroInfo(item.AddedStats[Stat.Hero]);
+            if (heroInfo == null) return;
+
+            Enqueue(new S.NewHeroInfo { Info = heroInfo.ClientInformation });
+            SentHeroInfo.Add(item.UniqueID);
         }
     }
 }

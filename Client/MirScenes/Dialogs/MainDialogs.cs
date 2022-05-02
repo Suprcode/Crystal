@@ -2116,8 +2116,9 @@ namespace Client.MirScenes.Dialogs
         public byte Hair;
         public ushort Level;
         public string LoverName;
+        public bool AllowObserve;
 
-        public MirButton CloseButton, GroupButton, FriendButton, MailButton, TradeButton, LoverButton;
+        public MirButton CloseButton, GroupButton, FriendButton, MailButton, TradeButton, LoverButton, ObserveButton;
         public MirImageControl CharacterPage, ClassImage;
         public MirLabel NameLabel;
         public MirLabel GuildLabel, LoverLabel;
@@ -2282,6 +2283,23 @@ namespace Client.MirScenes.Dialogs
                 Hint = "Trade",
             };
             TradeButton.Click += (o, e) => Network.Enqueue(new C.TradeRequest());
+
+            ObserveButton = new MirButton
+            {
+                Index = 1340,
+                HoverIndex = 1341,
+                PressedIndex = 1342,
+                Location = new Point(5, 357),
+                Library = Libraries.Prguse2,
+                Parent = this,
+                Sound = SoundList.ButtonA,
+                Visible = false,
+                Hint = "Observe",
+            };
+            ObserveButton.Click += (o, e) =>
+            {
+                Network.Enqueue(new C.Observe { Name = Name });
+            };
 
             NameLabel = new MirLabel
             {
@@ -2479,6 +2497,8 @@ namespace Client.MirScenes.Dialogs
                 if (Items[i] == null) continue;
                 GameScene.Bind(Items[i]);
             }
+
+            ObserveButton.Visible = AllowObserve;
         }
 
 

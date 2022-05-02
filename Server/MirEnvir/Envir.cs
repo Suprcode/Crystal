@@ -2,6 +2,7 @@
 using Server.MirDatabase;
 using Server.MirNetwork;
 using Server.MirObjects;
+using Server.MirObjects.Monsters;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -3186,6 +3187,88 @@ namespace Server.MirEnvir
 
             ResetGS = false;
             MessageQueue.Enqueue("Gameshop Purchase Logs Cleared.");
+        }
+
+        public void Inspect(MirConnection con, uint id)
+        {
+            if (ObjectID == id) return;
+
+            PlayerObject player = Players.SingleOrDefault(x => x.ObjectID == id || x.Pets.Count(y => y.ObjectID == id && y is HumanWizard) > 0);
+
+            if (player == null) return;
+            Inspect(con, player.Info.Index);
+        }
+
+        public void Inspect(MirConnection con, int id)
+        {
+            if (ObjectID == id) return;
+
+            CharacterInfo player = GetCharacterInfo(id);
+            if (player == null) return;
+
+            CharacterInfo Lover = null;
+            string loverName = "";
+
+            if (player.Married != 0) Lover = GetCharacterInfo(player.Married);
+
+            if (Lover != null)
+            {
+                loverName = Lover.Name;
+            }
+
+            for (int i = 0; i < player.Equipment.Length; i++)
+            {
+                UserItem u = player.Equipment[i];
+                if (u == null) continue;
+
+                con.CheckItem(u);
+            }
+
+            string guildname = "";
+            string guildrank = "";
+            GuildObject guild = null;
+            GuildRank guildRank = null;
+            if (player.GuildIndex != -1)
+            {
+                guild = GetGuild(player.GuildIndex);
+                if (guild != null)
+                {
+                    guildRank = guild.FindRank(player.Name);
+                    if (guildRank == null)
+                    {
+                        guild = null;
+                    }
+                    else
+                    {
+                        guildname = guild.Name;
+                        guildrank = guildRank.Name;
+                    }
+                }
+            }
+
+            con.Enqueue(new S.PlayerInspect
+            {
+                Name = player.Name,
+                Equipment = player.Equipment,
+                GuildName = guildname,
+                GuildRank = guildrank,
+                Hair = player.Hair,
+                Gender = player.Gender,
+                Class = player.Class,
+                Level = player.Level,
+                LoverName = loverName,
+                AllowObserve = player.AllowObserve && Settings.AllowObserve
+            });
+        }
+
+        public void Observe(MirConnection con, string Name)
+        {
+            var player = GetPlayer(Name);
+
+            if (player == null) return;
+            if (!player.AllowObserve || !Settings.AllowObserve) return;
+
+            player.AddObserver(con);
         }
 
         public void GetRanking(MirConnection con, byte RankType, int RankIndex, bool OnlineOnly)

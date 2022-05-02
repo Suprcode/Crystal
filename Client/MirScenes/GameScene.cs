@@ -3030,6 +3030,7 @@ namespace Client.MirScenes
             InspectDialog.Hair = p.Hair;
             InspectDialog.Level = p.Level;
             InspectDialog.LoverName = p.LoverName;
+            InspectDialog.AllowObserve = p.AllowObserve;
 
             InspectDialog.RefreshInferface();
             InspectDialog.Show();
