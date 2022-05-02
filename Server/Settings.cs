@@ -272,6 +272,8 @@ namespace Server
         public static ushort HeroMaximumSealCount;
         public static byte MaximumHeroCount = 1;
 
+        public static bool AllowObserve;
+
         //Guild related settings
         public static byte Guild_RequiredLevel = 22, Guild_PointPerLevel = 0;
         public static float Guild_ExpRate = 0.01f;
@@ -461,6 +463,8 @@ namespace Server
             RangeAccuracyBonus = Reader.ReadByte("Bonus", "RangeAccuracyBonus", RangeAccuracyBonus);
 
             CreatureBlackStoneName = Reader.ReadString("IntelligentCreatures", "CreatureBlackStoneName", CreatureBlackStoneName);
+
+            AllowObserve = Reader.ReadBoolean("Observe", "AllowObserve", AllowObserve);
 
             //Archive
             ArchiveInactiveCharacterAfterMonths = Math.Max(1, Reader.ReadInt32("Archive", "InactiveCharacterMonths", ArchiveInactiveCharacterAfterMonths));
@@ -706,6 +710,8 @@ namespace Server
             Reader.Write("Items", "PvpCanFreeze", PvpCanFreeze);
 
             Reader.Write("Bonus", "RangeAccuracyBonus", RangeAccuracyBonus);
+
+            Reader.Write("Observe", "AllowObserve", AllowObserve);
 
             Reader.Write("Game", "GeneralMeowMeowMob1", GeneralMeowMeowMob1);
             Reader.Write("Game", "GeneralMeowMeowMob2", GeneralMeowMeowMob2);

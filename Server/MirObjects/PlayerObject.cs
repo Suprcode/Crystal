@@ -2207,7 +2207,7 @@ namespace Server.MirObjects
                         player = Envir.GetPlayer(parts[1]);
 
                         if (player == null) return;
-                        if (!player.AllowObserve && !IsGM) return;
+                        if ((!player.AllowObserve || !Settings.AllowObserve) && !IsGM) return;
                         
                         player.AddObserver(this);
                         break;
