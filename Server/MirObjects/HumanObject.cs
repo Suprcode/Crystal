@@ -8094,6 +8094,7 @@ namespace Server.MirObjects
         }
         public virtual void Enqueue(Packet p, MirConnection c)
         {
+            if (p == null) return;
             if (c == null)
             {
                 Enqueue(p);
