@@ -193,6 +193,7 @@ namespace Server.MirNetwork
         
         public void Enqueue(Packet p)
         {
+            if (p == null) return;
             if (_sendList != null && p != null)
                 _sendList.Enqueue(p);
 

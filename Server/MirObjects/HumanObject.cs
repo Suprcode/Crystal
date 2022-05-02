@@ -8093,8 +8093,7 @@ namespace Server.MirObjects
             //MessageQueue.EnqueueDebugging(((ServerPacketIds)p.Index).ToString());
         }
         public virtual void Enqueue(Packet p, MirConnection c)
-        {
-            if (p == null) return;
+        {            
             if (c == null)
             {
                 Enqueue(p);
