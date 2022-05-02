@@ -1534,6 +1534,7 @@ public enum ServerPacketIds : short
     ObjectHealth,
     ObjectMana,
     MapEffect,
+    AllowObserve,
     ObjectRangeAttack,
     AddBuff,
     RemoveBuff,

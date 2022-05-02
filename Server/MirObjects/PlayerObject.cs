@@ -158,7 +158,13 @@ namespace Server.MirObjects
         {
             get { return Info.AllowTrade; }
             set { Info.AllowTrade = value; }
-        }       
+        }
+
+        public bool AllowObserve
+        {
+            get { return Info.AllowObserve; }
+            set { Info.AllowObserve = value; }
+        }
 
         public PlayerObject MarriageProposal;
         public PlayerObject DivorceProposal;
@@ -1451,7 +1457,7 @@ namespace Server.MirObjects
                 Credit = player.Account.Credit,
                 HasExpandedStorage = player.Account.ExpandedStorageExpiryDate > Envir.Now ? true : false,
                 ExpandedStorageExpiryTime = player.Account.ExpandedStorageExpiryDate,
-
+                AllowObserve = player.AllowObserve,
                 Observer = player != this
             };
 
@@ -2197,13 +2203,11 @@ namespace Server.MirObjects
                         player.Teleport(CurrentMap, Front);
                         break;
                     case "OBSERVE":
-                        if (!IsGM) return;
-
                         if (parts.Length < 2) return;
                         player = Envir.GetPlayer(parts[1]);
 
                         if (player == null) return;
-
+                        if (!player.AllowObserve && !IsGM) return;
                         
                         player.AddObserver(this);
                         break;
@@ -3331,6 +3335,11 @@ namespace Server.MirObjects
                                 Info.HeroSpawned = false;
                             }
                         }
+                        break;
+
+                    case "ALLOWOBSERVE":
+                        AllowObserve = !AllowObserve;
+                        Enqueue(new S.AllowObserve { Allow = AllowObserve });
                         break;
 
                     case "INFO":

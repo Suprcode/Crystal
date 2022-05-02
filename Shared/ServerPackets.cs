@@ -555,6 +555,7 @@ namespace ServerPackets
         public List<ClientIntelligentCreature> IntelligentCreatures = new List<ClientIntelligentCreature>();
         public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;
         public bool CreatureSummoned;
+        public bool AllowObserve;
         public bool Observer;
 
 
@@ -633,6 +634,7 @@ namespace ServerPackets
             }
             SummonedCreatureType = (IntelligentCreatureType)reader.ReadByte();
             CreatureSummoned = reader.ReadBoolean();
+            AllowObserve = reader.ReadBoolean();
             Observer = reader.ReadBoolean();
         }
 
@@ -721,6 +723,7 @@ namespace ServerPackets
 
             writer.Write((byte)SummonedCreatureType);
             writer.Write(CreatureSummoned);
+            writer.Write(AllowObserve);
             writer.Write(Observer);
         }
     }
@@ -3773,6 +3776,25 @@ namespace ServerPackets
             writer.Write(Location.Y);
             writer.Write((byte)Effect);
             writer.Write(Value);
+        }
+    }
+    public sealed class AllowObserve : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.AllowObserve; }
+        }
+
+        public bool Allow;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Allow = reader.ReadBoolean();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Allow);
         }
     }
     public sealed class ObjectRangeAttack : Packet

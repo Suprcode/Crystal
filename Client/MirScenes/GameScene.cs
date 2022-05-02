@@ -28,6 +28,7 @@ namespace Client.MirScenes
     {
         public static GameScene Scene;
         public static bool Observing;
+        public static bool AllowObserve;
 
         public static UserObject User
         {
@@ -1584,6 +1585,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.MapEffect:
                     MapEffect((S.MapEffect)p);
                     break;
+                case (short)ServerPacketIds.AllowObserve:
+                    AllowObserve = ((S.AllowObserve)p).Allow;
+                    break;
                 case (short)ServerPacketIds.ObjectRangeAttack:
                     ObjectRangeAttack((S.ObjectRangeAttack)p);
                     break;
@@ -2079,7 +2083,7 @@ namespace Client.MirScenes
             InventoryDialog.RefreshInventory();
             foreach (SkillBarDialog Bar in SkillBarDialogs)
                 Bar.Update();
-
+            AllowObserve = p.AllowObserve;
             Observing = p.Observer;
         }
         private void UserSlotsRefresh(S.UserSlotsRefresh p)

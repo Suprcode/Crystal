@@ -651,6 +651,8 @@ public abstract class Packet
                 return new S.ObjectMana();
             case (short)ServerPacketIds.MapEffect:
                 return new S.MapEffect();
+            case (short)ServerPacketIds.AllowObserve:
+                return new S.AllowObserve();
             case (short)ServerPacketIds.ObjectRangeAttack:
                 return new S.ObjectRangeAttack();
             case (short)ServerPacketIds.AddBuff:
