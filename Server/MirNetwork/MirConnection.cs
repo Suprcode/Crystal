@@ -1894,8 +1894,8 @@ namespace Server.MirNetwork
         }
         private void GetRanking(C.GetRanking p)
         {
-            if (Stage != GameStage.Game) return;
-            Player.GetRanking(p.RankType, p.RankIndex, p.OnlineOnly);
+            if (Stage != GameStage.Game && Stage != GameStage.Observer) return;
+            Envir.GetRanking(this, p.RankType, p.RankIndex, p.OnlineOnly);
         }
 
         private void Opendoor(C.Opendoor p)

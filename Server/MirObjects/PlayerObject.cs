@@ -12886,64 +12886,6 @@ namespace Server.MirObjects
         }
         #endregion
 
-        #region Ranking
-
-        private long[] LastRankRequest = new long[6];
-        public void GetRanking(byte RankType, int RankIndex, bool OnlineOnly)
-        {
-            if (RankType > 6) return;
-            LastRankRequest[RankType] = Envir.Time;
-            List<RankCharacterInfo> listings = RankType == 0 ? Envir.RankTop : Envir.RankClass[RankType - 1];
-
-            if (RankIndex >= listings.Count || RankIndex < 0) return;
-
-            S.Rankings p = new S.Rankings
-            {
-                RankType = RankType,
-                Count = OnlineOnly ? Envir.OnlineRankingCount[RankType] : listings.Count
-            };
-
-            if (RankType == 0)
-                p.MyRank = Info.Rank[0];
-            else
-                p.MyRank = (byte)Class == (RankType - 1) ? Info.Rank[1] : 0;
-
-            int c = 0;
-            for (int i = RankIndex; i < listings.Count; i++)
-            {
-                if (OnlineOnly && Envir.GetPlayer(listings[i].Name) == null) continue;
-
-                if (!CheckListing(listings[i]))
-                    p.ListingDetails.Add(listings[i]);
-                p.Listings.Add(listings[i].PlayerId);
-                c++;
-
-                if (c > 19 || c >= p.Count) break;
-            }
-
-            Enqueue(p);
-        }
-
-        private bool CheckListing(RankCharacterInfo listing)
-        {
-            if (!Connection.SentRankings.ContainsKey(listing.PlayerId))
-            {
-                Connection.SentRankings.Add(listing.PlayerId, listing.LastUpdated);
-                return false;
-            }
-
-            DateTime lastUpdated = Connection.SentRankings[listing.PlayerId];
-            if (lastUpdated != listing.LastUpdated)
-            {
-                Connection.SentRankings[listing.PlayerId] = lastUpdated;
-                return false;
-            }
-
-            return true;
-        }
-
-        #endregion
-
         #region Rental
 
         public void GetRentedItems()

@@ -3188,6 +3188,61 @@ namespace Server.MirEnvir
             MessageQueue.Enqueue("Gameshop Purchase Logs Cleared.");
         }
 
+        public void GetRanking(MirConnection con, byte RankType, int RankIndex, bool OnlineOnly)
+        {
+            if (RankType > 6) return;
+            List<RankCharacterInfo> listings = RankType == 0 ? RankTop : RankClass[RankType - 1];
+
+            if (RankIndex >= listings.Count || RankIndex < 0) return;
+
+            S.Rankings p = new S.Rankings
+            {
+                RankType = RankType,
+                Count = OnlineOnly ? OnlineRankingCount[RankType] : listings.Count
+            };
+
+            if (con.Player != null)
+            {
+                if (RankType == 0)
+                    p.MyRank = con.Player.Info.Rank[0];
+                else
+                    p.MyRank = (byte)con.Player.Class == (RankType - 1) ? con.Player.Info.Rank[1] : 0;
+            }
+
+            int c = 0;
+            for (int i = RankIndex; i < listings.Count; i++)
+            {
+                if (OnlineOnly && GetPlayer(listings[i].Name) == null) continue;
+
+                if (!CheckListing(con, listings[i]))
+                    p.ListingDetails.Add(listings[i]);
+                p.Listings.Add(listings[i].PlayerId);
+                c++;
+
+                if (c > 19 || c >= p.Count) break;
+            }
+
+            con.Enqueue(p);
+        }
+
+        private bool CheckListing(MirConnection con, RankCharacterInfo listing)
+        {
+            if (!con.SentRankings.ContainsKey(listing.PlayerId))
+            {
+                con.SentRankings.Add(listing.PlayerId, listing.LastUpdated);
+                return false;
+            }
+
+            DateTime lastUpdated = con.SentRankings[listing.PlayerId];
+            if (lastUpdated != listing.LastUpdated)
+            {
+                con.SentRankings[listing.PlayerId] = lastUpdated;
+                return false;
+            }
+
+            return true;
+        }
+
         public int InsertRank(List<RankCharacterInfo> Ranking, RankCharacterInfo NewRank)
         {
             if (Ranking.Count == 0)
@@ -3316,7 +3371,6 @@ namespace Server.MirEnvir
         public void CheckRankUpdate(CharacterInfo info)
         {
             List<RankCharacterInfo> Ranking;
-            RankCharacterInfo NewRank;
 
             //first check overall top           
 
