@@ -2286,11 +2286,11 @@ namespace Client.MirScenes.Dialogs
 
             ObserveButton = new MirButton
             {
-                Index = 1340,
-                HoverIndex = 1341,
-                PressedIndex = 1342,
-                Location = new Point(5, 357),
-                Library = Libraries.Prguse2,
+                Index = 854,
+                HoverIndex = 855,
+                PressedIndex = 856,
+                Location = new Point(16, 357),
+                Library = Libraries.Title,
                 Parent = this,
                 Sound = SoundList.ButtonA,
                 Visible = false,
