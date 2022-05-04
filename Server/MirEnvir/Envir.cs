@@ -1436,7 +1436,7 @@ namespace Server.MirEnvir
                     {
                         AccountList.Add(new AccountInfo(reader));
                         CharacterList.AddRange(AccountList[i].Characters);
-                        if (LoadVersion < 103)
+                        if (LoadVersion > 98 && LoadVersion < 103)
                             AccountList[i].Characters.ForEach(character => HeroList.AddRange(character.Heroes));
                     }
 

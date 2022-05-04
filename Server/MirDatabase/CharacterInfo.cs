@@ -379,6 +379,7 @@ namespace Server.MirDatabase
                 CurrentHeroIndex = reader.ReadInt32();
                 HeroSpawned = reader.ReadBoolean();
             }
+            else Heroes = new HeroInfo[MaximumHeroCount];
 
             if (version > 100)
                 HeroBehaviour = (HeroBehaviour)reader.ReadByte();
