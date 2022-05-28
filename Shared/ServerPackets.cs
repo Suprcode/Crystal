@@ -555,6 +555,7 @@ namespace ServerPackets
         public List<ClientIntelligentCreature> IntelligentCreatures = new List<ClientIntelligentCreature>();
         public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;
         public bool CreatureSummoned;
+        public bool AllowObserve;
         public bool Observer;
 
 
@@ -633,6 +634,7 @@ namespace ServerPackets
             }
             SummonedCreatureType = (IntelligentCreatureType)reader.ReadByte();
             CreatureSummoned = reader.ReadBoolean();
+            AllowObserve = reader.ReadBoolean();
             Observer = reader.ReadBoolean();
         }
 
@@ -721,6 +723,7 @@ namespace ServerPackets
 
             writer.Write((byte)SummonedCreatureType);
             writer.Write(CreatureSummoned);
+            writer.Write(AllowObserve);
             writer.Write(Observer);
         }
     }
@@ -1700,6 +1703,11 @@ namespace ServerPackets
             get { return (short)ServerPacketIds.PlayerInspect; }
         }
 
+        public override bool Observable
+        {
+            get { return false; }
+        }
+
         public string Name = string.Empty;
         public string GuildName = string.Empty;
         public string GuildRank = string.Empty;
@@ -1709,6 +1717,7 @@ namespace ServerPackets
         public byte Hair;
         public ushort Level;
         public string LoverName;
+        public bool AllowObserve;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -1727,6 +1736,7 @@ namespace ServerPackets
             Hair = reader.ReadByte();
             Level = reader.ReadUInt16();
             LoverName = reader.ReadString();
+            AllowObserve = reader.ReadBoolean();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -1747,7 +1757,7 @@ namespace ServerPackets
             writer.Write(Hair);
             writer.Write(Level);
             writer.Write(LoverName);
-
+            writer.Write(AllowObserve);
         }
     }
 
@@ -3773,6 +3783,25 @@ namespace ServerPackets
             writer.Write(Location.Y);
             writer.Write((byte)Effect);
             writer.Write(Value);
+        }
+    }
+    public sealed class AllowObserve : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.AllowObserve; }
+        }
+
+        public bool Allow;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Allow = reader.ReadBoolean();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Allow);
         }
     }
     public sealed class ObjectRangeAttack : Packet
@@ -6112,10 +6141,16 @@ namespace ServerPackets
     public sealed class Rankings : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.Rankings; } }
+        public override bool Observable
+        {
+            get { return false; }
+        }
 
         public byte RankType = 0;
         public int MyRank = 0;
-        public List<RankCharacterInfo> Listings = new List<RankCharacterInfo>();
+        public List<RankCharacterInfo> ListingDetails = new List<RankCharacterInfo>();
+        public List<long> Listings = new List<long>();
+        public int Count;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -6124,16 +6159,26 @@ namespace ServerPackets
             int count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
             {
-                Listings.Add(new RankCharacterInfo(reader));
+                ListingDetails.Add(new RankCharacterInfo(reader));
             }
+            count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+            {
+                Listings.Add(reader.ReadInt64());
+            }
+            Count = reader.ReadInt32();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(RankType);
             writer.Write(MyRank);
+            writer.Write(ListingDetails.Count);
+            for (int i = 0; i < ListingDetails.Count; i++)
+                ListingDetails[i].Save(writer);
             writer.Write(Listings.Count);
             for (int i = 0; i < Listings.Count; i++)
-                Listings[i].Save(writer);
+                writer.Write(Listings[i]);
+            writer.Write(Count);
         }
     }
 

@@ -28,6 +28,7 @@ namespace Client.MirScenes
     {
         public static GameScene Scene;
         public static bool Observing;
+        public static bool AllowObserve;
 
         public static UserObject User
         {
@@ -163,6 +164,7 @@ namespace Client.MirScenes
         public static Dictionary<int, BigMapRecord> MapInfoList = new Dictionary<int, BigMapRecord>();
         public static List<ClientHeroInformation> HeroInfoList = new List<ClientHeroInformation>();
         public static ClientHeroInformation[] HeroStorage = new ClientHeroInformation[8];
+        public static Dictionary<long, RankCharacterInfo> RankingList = new Dictionary<long, RankCharacterInfo>();
         public static int TeleportToNPCCost;
         public static int MaximumHeroCount;
 
@@ -1086,6 +1088,7 @@ namespace Client.MirScenes
 
             TimerControl.Process();
             CompassControl.Process();
+            RankingDialog.Process();
 
             MirItemCell cell = MouseControl as MirItemCell;
 
@@ -1582,6 +1585,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.MapEffect:
                     MapEffect((S.MapEffect)p);
                     break;
+                case (short)ServerPacketIds.AllowObserve:
+                    AllowObserve = ((S.AllowObserve)p).Allow;
+                    break;
                 case (short)ServerPacketIds.ObjectRangeAttack:
                     ObjectRangeAttack((S.ObjectRangeAttack)p);
                     break;
@@ -2077,7 +2083,7 @@ namespace Client.MirScenes
             InventoryDialog.RefreshInventory();
             foreach (SkillBarDialog Bar in SkillBarDialogs)
                 Bar.Update();
-
+            AllowObserve = p.AllowObserve;
             Observing = p.Observer;
         }
         private void UserSlotsRefresh(S.UserSlotsRefresh p)
@@ -3024,6 +3030,7 @@ namespace Client.MirScenes
             InspectDialog.Hair = p.Hair;
             InspectDialog.Level = p.Level;
             InspectDialog.LoverName = p.LoverName;
+            InspectDialog.AllowObserve = p.AllowObserve;
 
             InspectDialog.RefreshInferface();
             InspectDialog.Show();
@@ -9778,7 +9785,18 @@ namespace Client.MirScenes
 
         public void Rankings(S.Rankings p)
         {
-            RankingDialog.RecieveRanks(p.Listings, p.RankType, p.MyRank);
+            foreach (RankCharacterInfo info in p.ListingDetails)
+            {
+                if (RankingList.ContainsKey(info.PlayerId))
+                    RankingList[info.PlayerId] = info;
+                else
+                    RankingList.Add(info.PlayerId, info);
+            }
+            List<RankCharacterInfo> listings = new List<RankCharacterInfo>();
+            foreach (long id in p.Listings)
+                listings.Add(RankingList[id]);
+
+            RankingDialog.RecieveRanks(listings, p.RankType, p.MyRank, p.Count);
         }
 
         public void Opendoor(S.Opendoor p)

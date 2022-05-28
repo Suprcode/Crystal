@@ -572,6 +572,7 @@ namespace Server.MirObjects
         public uint PetExperience;
         public byte MaxPetLevel;
         public long TameTime;
+        public bool DieNextTurn;
 
         public int RoutePoint;
         public bool Waiting;
@@ -1494,6 +1495,12 @@ namespace Server.MirObjects
         protected virtual void ProcessAI()
         {
             if (Dead) return;
+
+            if (DieNextTurn)
+            {
+                Die();
+                return;
+            }
 
             if (Master != null)
             {

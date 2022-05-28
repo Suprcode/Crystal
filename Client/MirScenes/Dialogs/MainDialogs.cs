@@ -2116,8 +2116,9 @@ namespace Client.MirScenes.Dialogs
         public byte Hair;
         public ushort Level;
         public string LoverName;
+        public bool AllowObserve;
 
-        public MirButton CloseButton, GroupButton, FriendButton, MailButton, TradeButton, LoverButton;
+        public MirButton CloseButton, GroupButton, FriendButton, MailButton, TradeButton, LoverButton, ObserveButton;
         public MirImageControl CharacterPage, ClassImage;
         public MirLabel NameLabel;
         public MirLabel GuildLabel, LoverLabel;
@@ -2282,6 +2283,23 @@ namespace Client.MirScenes.Dialogs
                 Hint = "Trade",
             };
             TradeButton.Click += (o, e) => Network.Enqueue(new C.TradeRequest());
+
+            ObserveButton = new MirButton
+            {
+                Index = 854,
+                HoverIndex = 855,
+                PressedIndex = 856,
+                Location = new Point(16, 357),
+                Library = Libraries.Title,
+                Parent = this,
+                Sound = SoundList.ButtonA,
+                Visible = false,
+                Hint = "Observe",
+            };
+            ObserveButton.Click += (o, e) =>
+            {
+                Network.Enqueue(new C.Observe { Name = Name });
+            };
 
             NameLabel = new MirLabel
             {
@@ -2479,6 +2497,8 @@ namespace Client.MirScenes.Dialogs
                 if (Items[i] == null) continue;
                 GameScene.Bind(Items[i]);
             }
+
+            ObserveButton.Visible = AllowObserve;
         }
 
 
@@ -2492,6 +2512,7 @@ namespace Client.MirScenes.Dialogs
         public MirButton NameViewOn, NameViewOff;
         public MirButton HPViewOn, HPViewOff;
         public MirButton NewMoveOn, NewMoveOff;
+        public MirButton ObserveOn, ObserveOff;
         public MirImageControl SoundBar, MusicSoundBar;
         public MirImageControl VolumeBar, MusicVolumeBar;
 
@@ -2742,8 +2763,38 @@ namespace Client.MirScenes.Dialogs
                 GameScene.Scene.ChatDialog.ReceiveChat("[Old Movement Style]", ChatType.Hint);
             };
 
+            ObserveOn = new MirButton
+            {
+                Library = Libraries.Prguse2,
+                Location = new Point(159, 271),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+                Size = new Size(36, 17),
+                PressedIndex = 457,
+            };
+            ObserveOn.Click += (o, e) => ToggleObserve(true);
+
+            ObserveOff = new MirButton
+            {
+                Library = Libraries.Prguse2,
+                Location = new Point(201, 271),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+                Size = new Size(36, 17),
+                PressedIndex = 460
+            };
+            ObserveOff.Click += (o, e) => ToggleObserve(false);
         }
 
+        private void ToggleObserve(bool allow)
+        {
+            if (GameScene.AllowObserve == allow) return;
+
+            Network.Enqueue(new C.Chat
+            {
+                Message = "@ALLOWOBSERVE",
+            });
+        }
 
         public void ToggleSkillButtons(bool Ctrl)
         {
@@ -2926,6 +2977,17 @@ namespace Client.MirScenes.Dialogs
             {
                 NewMoveOn.Index = 851;
                 NewMoveOff.Index = 850;
+            }
+
+            if (GameScene.AllowObserve)
+            {
+                ObserveOn.Index = 458;
+                ObserveOff.Index = 459;
+            }
+            else
+            {        
+                ObserveOn.Index = 456;
+                ObserveOff.Index = 461;
             }
         }
 

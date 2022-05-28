@@ -674,6 +674,25 @@ namespace ClientPackets
             writer.Write(Ranking);
         }
     }
+    public sealed class Observe : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ClientPacketIds.Observe; }
+        }
+
+        public string Name;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Name = reader.ReadString();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Name);
+        }
+    }
     public sealed class ChangeAMode : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.ChangeAMode; } }
@@ -2336,16 +2355,22 @@ namespace ClientPackets
     public sealed class GetRanking : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.GetRanking; } }
-        public byte RankIndex;
+        public byte RankType;
+        public int RankIndex;
+        public bool OnlineOnly;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            RankIndex = reader.ReadByte();
+            RankType = reader.ReadByte();
+            RankIndex = reader.ReadInt32();
+            OnlineOnly = reader.ReadBoolean();
         }
 
         protected override void WritePacket(BinaryWriter writer)
         {
+            writer.Write(RankType);
             writer.Write(RankIndex);
+            writer.Write(OnlineOnly);
         }
     }
 

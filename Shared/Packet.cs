@@ -160,6 +160,8 @@ public abstract class Packet
                 return new C.SearchMap();
             case (short)ClientPacketIds.Inspect:
                 return new C.Inspect();
+            case (short)ClientPacketIds.Observe:
+                return new C.Observe();
             case (short)ClientPacketIds.ChangeAMode:
                 return new C.ChangeAMode();
             case (short)ClientPacketIds.ChangePMode:
@@ -651,6 +653,8 @@ public abstract class Packet
                 return new S.ObjectMana();
             case (short)ServerPacketIds.MapEffect:
                 return new S.MapEffect();
+            case (short)ServerPacketIds.AllowObserve:
+                return new S.AllowObserve();
             case (short)ServerPacketIds.ObjectRangeAttack:
                 return new S.ObjectRangeAttack();
             case (short)ServerPacketIds.AddBuff:

@@ -64,6 +64,7 @@ namespace Server.MirDatabase
         public PetMode PMode;
         public bool AllowGroup;
         public bool AllowTrade;
+        public bool AllowObserve;
 
         public int PKPoints;
 
@@ -258,6 +259,8 @@ namespace Server.MirDatabase
             GuildIndex = reader.ReadInt32();
 
             AllowTrade = reader.ReadBoolean();
+            if (version > 104)
+                AllowObserve = reader.ReadBoolean();
 
             count = reader.ReadInt32();
 
@@ -376,6 +379,7 @@ namespace Server.MirDatabase
                 CurrentHeroIndex = reader.ReadInt32();
                 HeroSpawned = reader.ReadBoolean();
             }
+            else Heroes = new HeroInfo[MaximumHeroCount];
 
             if (version > 100)
                 HeroBehaviour = (HeroBehaviour)reader.ReadByte();
@@ -476,6 +480,7 @@ namespace Server.MirDatabase
             writer.Write(GuildIndex);
 
             writer.Write(AllowTrade);
+            writer.Write(AllowObserve);
 
             writer.Write(CurrentQuests.Count);
             for (int i = 0; i < CurrentQuests.Count; i++)

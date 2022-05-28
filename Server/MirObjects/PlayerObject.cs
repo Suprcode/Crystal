@@ -9,7 +9,6 @@ using Server.MirEnvir;
 using Server.MirNetwork;
 using S = ServerPackets;
 using System.Text.RegularExpressions;
-using Server.MirObjects.Monsters;
 
 namespace Server.MirObjects
 {
@@ -158,7 +157,13 @@ namespace Server.MirObjects
         {
             get { return Info.AllowTrade; }
             set { Info.AllowTrade = value; }
-        }       
+        }
+
+        public bool AllowObserve
+        {
+            get { return Info.AllowObserve; }
+            set { Info.AllowObserve = value; }
+        }
 
         public PlayerObject MarriageProposal;
         public PlayerObject DivorceProposal;
@@ -360,6 +365,12 @@ namespace Server.MirObjects
 
             Report.Disconnected(logReason);
             Connection.WorldMapSetupSent = false;
+
+            if (!IsGM)
+            {
+                Envir.OnlineRankingCount[0]--;
+                Envir.OnlineRankingCount[(int)Class + 1]--;
+            }
 
             CleanUp();
         }
@@ -837,10 +848,7 @@ namespace Server.MirObjects
             if ((LastRankUpdate + 3600 * 1000) > Envir.Time)
             {
                 LastRankUpdate = Envir.Time;
-                if ((Level >= Envir.RankBottomLevel[0]) || (Level >= Envir.RankBottomLevel[(byte)Class + 1]))
-                {
-                    Envir.CheckRankUpdate(Info);
-                }
+                Envir.CheckRankUpdate(Info);
             }
         }
         public override void LevelUp()
@@ -866,11 +874,7 @@ namespace Server.MirObjects
             Report.Levelled(Level);
 
             if (IsGM) return;
-            if ((Level >= Envir.RankBottomLevel[0]) || (Level >= Envir.RankBottomLevel[(byte)Class + 1]))
-            {
-
-                Envir.CheckRankUpdate(Info);
-            }
+            Envir.CheckRankUpdate(Info);
         }        
         private void AddQuestItem(UserItem item)
         {
@@ -1085,9 +1089,9 @@ namespace Server.MirObjects
 
             SetLevelEffects();
 
-            GetItemInfo(this);
-            GetMapInfo(this);
-            GetUserInfo(this);
+            GetItemInfo(Connection);
+            GetMapInfo(Connection);
+            GetUserInfo(Connection);
             GetQuestInfo();
             GetRecipeInfo();
 
@@ -1218,10 +1222,9 @@ namespace Server.MirObjects
             else
             {
                 LastRankUpdate = Envir.Time;
-                if ((Level >= Envir.RankBottomLevel[0]) || (Level >= Envir.RankBottomLevel[(byte)Class + 1]))
-                {
-                    Envir.CheckRankUpdate(Info);
-                }
+                Envir.CheckRankUpdate(Info);
+                Envir.OnlineRankingCount[0]++;
+                Envir.OnlineRankingCount[(int)Class + 1]++;
             }
         }
         private void StartGameFailed()
@@ -1380,116 +1383,119 @@ namespace Server.MirObjects
             }
         }
 
-        public void AddObserver(PlayerObject observer)
+        public void AddObserver(MirConnection observer)
         {
-            Connection.AddObserver(observer.Connection);
-            observer.GetItemInfo(this);
-            observer.GetMapInfo(this);
-            observer.GetUserInfo(this);
-            GetObjectsPassive(observer.Connection);
-            observer.StopGame(24);            
+            if (observer == Connection) return;
+
+            Connection.AddObserver(observer);
+            GetItemInfo(observer);
+            GetMapInfo(observer);
+            GetUserInfo(observer);
+            GetObjectsPassive(observer);
+            if (observer.Player != null)
+                observer.Player.StopGame(24);            
         }
-        protected virtual void GetItemInfo(PlayerObject player)
+        protected virtual void GetItemInfo(MirConnection c)
         {
             UserItem item;
-            for (int i = 0; i < player.Info.Inventory.Length; i++)
+            for (int i = 0; i < Info.Inventory.Length; i++)
             {
-                item = player.Info.Inventory[i];
+                item = Info.Inventory[i];
                 if (item == null) continue;
 
-                CheckItem(item);
+                c.CheckItem(item);
             }
 
-            for (int i = 0; i < player.Info.Equipment.Length; i++)
+            for (int i = 0; i < Info.Equipment.Length; i++)
             {
-                item = player.Info.Equipment[i];
+                item = Info.Equipment[i];
 
                 if (item == null) continue;
 
-                CheckItem(item);
+                c.CheckItem(item);
             }
 
-            for (int i = 0; i < player.Info.QuestInventory.Length; i++)
+            for (int i = 0; i < Info.QuestInventory.Length; i++)
             {
-                item = player.Info.QuestInventory[i];
+                item = Info.QuestInventory[i];
 
                 if (item == null) continue;
-                CheckItem(item);
+                c.CheckItem(item);
             }
         }
-        private void GetUserInfo(PlayerObject player)
+        private void GetUserInfo(MirConnection c)
         {
-            string guildname = player.MyGuild != null ? player.MyGuild.Name : "";
-            string guildrank = player.MyGuild != null ? player.MyGuildRank.Name : "";
+            string guildname = MyGuild != null ? MyGuild.Name : "";
+            string guildrank = MyGuild != null ? MyGuildRank.Name : "";
             S.UserInformation packet = new S.UserInformation
             {
-                ObjectID = player.ObjectID,
-                RealId = (uint)player.Info.Index,
-                Name = player.Name,
+                ObjectID = ObjectID,
+                RealId = (uint)Info.Index,
+                Name = Name,
                 GuildName = guildname,
                 GuildRank = guildrank,
-                NameColour = GetNameColour(player),
-                Class = player.Class,
-                Gender = player.Gender,
-                Level = player.Level,
-                Location = player.CurrentLocation,
-                Direction = player.Direction,
-                Hair = player.Hair,
-                HP = player.HP,
-                MP = player.MP,
+                NameColour = GetNameColour(this),
+                Class = Class,
+                Gender = Gender,
+                Level = Level,
+                Location = CurrentLocation,
+                Direction = Direction,
+                Hair = Hair,
+                HP = HP,
+                MP = MP,
 
-                Experience = player.Experience,
-                MaxExperience = player.MaxExperience,
+                Experience = Experience,
+                MaxExperience = MaxExperience,
 
-                LevelEffects = player.LevelEffects,
+                LevelEffects = LevelEffects,
 
-                HasHero = player.HasHero,
-                HeroBehaviour = player.Info.HeroBehaviour,
+                HasHero = HasHero,
+                HeroBehaviour = Info.HeroBehaviour,
 
-                Inventory = new UserItem[player.Info.Inventory.Length],
-                Equipment = new UserItem[player.Info.Equipment.Length],
-                QuestInventory = new UserItem[player.Info.QuestInventory.Length],
-                Gold = player.Account.Gold,
-                Credit = player.Account.Credit,
-                HasExpandedStorage = player.Account.ExpandedStorageExpiryDate > Envir.Now ? true : false,
-                ExpandedStorageExpiryTime = player.Account.ExpandedStorageExpiryDate,
-
-                Observer = player != this
+                Inventory = new UserItem[Info.Inventory.Length],
+                Equipment = new UserItem[Info.Equipment.Length],
+                QuestInventory = new UserItem[Info.QuestInventory.Length],
+                Gold = Account.Gold,
+                Credit = Account.Credit,
+                HasExpandedStorage = Account.ExpandedStorageExpiryDate > Envir.Now ? true : false,
+                ExpandedStorageExpiryTime = Account.ExpandedStorageExpiryDate,
+                AllowObserve = AllowObserve,
+                Observer = c != Connection
             };
 
             //Copy this method to prevent modification before sending packet information.
-            for (int i = 0; i < player.Info.Magics.Count; i++)
-                packet.Magics.Add(player.Info.Magics[i].CreateClientMagic());
+            for (int i = 0; i < Info.Magics.Count; i++)
+                packet.Magics.Add(Info.Magics[i].CreateClientMagic());
 
-            player.Info.Inventory.CopyTo(packet.Inventory, 0);
-            player.Info.Equipment.CopyTo(packet.Equipment, 0);
-            player.Info.QuestInventory.CopyTo(packet.QuestInventory, 0);
+            Info.Inventory.CopyTo(packet.Inventory, 0);
+            Info.Equipment.CopyTo(packet.Equipment, 0);
+            Info.QuestInventory.CopyTo(packet.QuestInventory, 0);
 
-            for (int i = 0; i < player.Info.IntelligentCreatures.Count; i++)
+            for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
             {
-                packet.IntelligentCreatures.Add(player.Info.IntelligentCreatures[i].CreateClientIntelligentCreature());
+                packet.IntelligentCreatures.Add(Info.IntelligentCreatures[i].CreateClientIntelligentCreature());
             }
 
-            packet.SummonedCreatureType = player.SummonedCreatureType;
-            packet.CreatureSummoned = player.CreatureSummoned;
+            packet.SummonedCreatureType = SummonedCreatureType;
+            packet.CreatureSummoned = CreatureSummoned;
 
-            Enqueue(packet);
+            Enqueue(packet, c);
         }        
-        private void GetMapInfo(PlayerObject player)
+        private void GetMapInfo(MirConnection c)
         {
             Enqueue(new S.MapInformation
             {
-                MapIndex = player.CurrentMap.Info.Index,
-                FileName = player.CurrentMap.Info.FileName,
-                Title = player.CurrentMap.Info.Title,
-                MiniMap = player.CurrentMap.Info.MiniMap,
-                Lights = player.CurrentMap.Info.Light,
-                BigMap = player.CurrentMap.Info.BigMap,
-                Lightning = player.CurrentMap.Info.Lightning,
-                Fire = player.CurrentMap.Info.Fire,
-                MapDarkLight = player.CurrentMap.Info.MapDarkLight,
-                Music = player.CurrentMap.Info.Music,
-            });
+                MapIndex = CurrentMap.Info.Index,
+                FileName = CurrentMap.Info.FileName,
+                Title = CurrentMap.Info.Title,
+                MiniMap = CurrentMap.Info.MiniMap,
+                Lights = CurrentMap.Info.Light,
+                BigMap = CurrentMap.Info.BigMap,
+                Lightning = CurrentMap.Info.Lightning,
+                Fire = CurrentMap.Info.Fire,
+                MapDarkLight = CurrentMap.Info.MapDarkLight,
+                Music = CurrentMap.Info.Music,
+            }, c);
         }
         private void GetQuestInfo()
         {
@@ -2199,15 +2205,13 @@ namespace Server.MirObjects
                         player.Teleport(CurrentMap, Front);
                         break;
                     case "OBSERVE":
-                        if (!IsGM) return;
-
                         if (parts.Length < 2) return;
                         player = Envir.GetPlayer(parts[1]);
 
                         if (player == null) return;
-
+                        if ((!player.AllowObserve || !Settings.AllowObserve) && !IsGM) return;
                         
-                        player.AddObserver(this);
+                        player.AddObserver(Connection);
                         break;
                     case "ENABLEGROUPRECALL":
                         EnableGroupRecall = !EnableGroupRecall;
@@ -3333,6 +3337,11 @@ namespace Server.MirObjects
                                 Info.HeroSpawned = false;
                             }
                         }
+                        break;
+
+                    case "ALLOWOBSERVE":
+                        AllowObserve = !AllowObserve;
+                        Enqueue(new S.AllowObserve { Allow = AllowObserve });
                         break;
 
                     case "INFO":
@@ -7090,75 +7099,7 @@ namespace Server.MirObjects
         {
             //Enqueue(new S.ChatItemStats { ChatItemId = id, Stats = whatever });
         }
-        public void Inspect(uint id)
-        {
-            if (ObjectID == id) return;
-
-            PlayerObject player = CurrentMap.Players.SingleOrDefault(x => x.ObjectID == id || x.Pets.Count(y => y.ObjectID == id && y is Monsters.HumanWizard) > 0);
-
-            if (player == null) return;
-            Inspect(player.Info.Index);
-        }
-        public void Inspect(int id)
-        {
-            if (ObjectID == id) return;
-
-            CharacterInfo player = Envir.GetCharacterInfo(id);
-            if (player == null) return;
-
-            CharacterInfo Lover = null;
-            string loverName = "";
-
-            if (player.Married != 0) Lover = Envir.GetCharacterInfo(player.Married);
-
-            if (Lover != null)
-            {
-                loverName = Lover.Name;
-            }
-
-            for (int i = 0; i < player.Equipment.Length; i++)
-            {
-                UserItem u = player.Equipment[i];
-                if (u == null) continue;
-
-                CheckItem(u);
-            }
-
-            string guildname = "";
-            string guildrank = "";
-            GuildObject guild = null;
-            GuildRank guildRank = null;
-            if (player.GuildIndex != -1)
-            {
-                guild = Envir.GetGuild(player.GuildIndex);
-                if (guild != null)
-                {
-                    guildRank = guild.FindRank(player.Name);
-                    if (guildRank == null)
-                    {
-                        guild = null;
-                    }
-                    else
-                    {
-                        guildname = guild.Name;
-                        guildrank = guildRank.Name;
-                    }
-                }
-            }
-
-            Enqueue(new S.PlayerInspect
-            {
-                Name = player.Name,
-                Equipment = player.Equipment,
-                GuildName = guildname,
-                GuildRank = guildrank,
-                Hair = player.Hair,
-                Gender = player.Gender,
-                Class = player.Class,
-                Level = player.Level,
-                LoverName = loverName
-            });
-        }
+        
         public override void ReceiveChat(string text, ChatType type)
         {
             Enqueue(new S.Chat { Message = text, Type = type });
@@ -12886,26 +12827,6 @@ namespace Server.MirObjects
             WarZone = false;
             RefreshNameColour();
         }
-        #endregion
-
-        #region Ranking
-
-        private long[] LastRankRequest = new long[6];
-        public void GetRanking(byte RankType)
-        {
-            if (RankType > 6) return;
-            if ((LastRankRequest[RankType] != 0) && ((LastRankRequest[RankType] + 300 * 1000) > Envir.Time)) return;
-            LastRankRequest[RankType] = Envir.Time;
-            if (RankType == 0)
-            {
-                Enqueue(new S.Rankings { Listings = Envir.RankTop, RankType = RankType, MyRank = Info.Rank[0]});
-            }
-            else
-            {
-                Enqueue(new S.Rankings { Listings = Envir.RankClass[RankType - 1], RankType = RankType, MyRank = (byte)Class == (RankType -1)?Info.Rank[1]: 0});
-            }
-        }
-
         #endregion
 
         #region Rental

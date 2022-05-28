@@ -2,6 +2,7 @@
 using Server.MirDatabase;
 using Server.MirNetwork;
 using Server.MirObjects;
+using Server.MirObjects.Monsters;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -55,7 +56,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int MinVersion = 60;
-        public const int Version = 104;
+        public const int Version = 105;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
@@ -88,6 +89,8 @@ namespace Server.MirEnvir
 
         public static int _playerCount;
         public int PlayerCount => Players.Count;
+
+        public int[] OnlineRankingCount = new int[6];
         public int HeroCount => Heroes.Count;
 
         public RandomProvider Random = new RandomProvider();
@@ -167,7 +170,6 @@ namespace Server.MirEnvir
 
         public List<RankCharacterInfo> RankTop = new List<RankCharacterInfo>();
         public List<RankCharacterInfo>[] RankClass = new List<RankCharacterInfo>[5];
-        public int[] RankBottomLevel = new int[6];
 
         static HttpServer http;
 
@@ -1392,10 +1394,6 @@ namespace Server.MirEnvir
             }
 
             RankTop.Clear();
-            for (var i = 0; i < RankBottomLevel.Count(); i++)
-            {
-                RankBottomLevel[i] = 0;
-            }
 
             lock (LoadLock)
             {
@@ -1438,7 +1436,7 @@ namespace Server.MirEnvir
                     {
                         AccountList.Add(new AccountInfo(reader));
                         CharacterList.AddRange(AccountList[i].Characters);
-                        if (LoadVersion < 103)
+                        if (LoadVersion > 98 && LoadVersion < 103)
                             AccountList[i].Characters.ForEach(character => HeroList.AddRange(character.Heroes));
                     }
 
@@ -3191,7 +3189,142 @@ namespace Server.MirEnvir
             MessageQueue.Enqueue("Gameshop Purchase Logs Cleared.");
         }
 
-        private readonly int RankCount = 100;
+        public void Inspect(MirConnection con, uint id)
+        {
+            if (ObjectID == id) return;
+
+            PlayerObject player = Players.SingleOrDefault(x => x.ObjectID == id || x.Pets.Count(y => y.ObjectID == id && y is HumanWizard) > 0);
+
+            if (player == null) return;
+            Inspect(con, player.Info.Index);
+        }
+
+        public void Inspect(MirConnection con, int id)
+        {
+            if (ObjectID == id) return;
+
+            CharacterInfo player = GetCharacterInfo(id);
+            if (player == null) return;
+
+            CharacterInfo Lover = null;
+            string loverName = "";
+
+            if (player.Married != 0) Lover = GetCharacterInfo(player.Married);
+
+            if (Lover != null)
+            {
+                loverName = Lover.Name;
+            }
+
+            for (int i = 0; i < player.Equipment.Length; i++)
+            {
+                UserItem u = player.Equipment[i];
+                if (u == null) continue;
+
+                con.CheckItem(u);
+            }
+
+            string guildname = "";
+            string guildrank = "";
+            GuildObject guild = null;
+            GuildRank guildRank = null;
+            if (player.GuildIndex != -1)
+            {
+                guild = GetGuild(player.GuildIndex);
+                if (guild != null)
+                {
+                    guildRank = guild.FindRank(player.Name);
+                    if (guildRank == null)
+                    {
+                        guild = null;
+                    }
+                    else
+                    {
+                        guildname = guild.Name;
+                        guildrank = guildRank.Name;
+                    }
+                }
+            }
+
+            con.Enqueue(new S.PlayerInspect
+            {
+                Name = player.Name,
+                Equipment = player.Equipment,
+                GuildName = guildname,
+                GuildRank = guildrank,
+                Hair = player.Hair,
+                Gender = player.Gender,
+                Class = player.Class,
+                Level = player.Level,
+                LoverName = loverName,
+                AllowObserve = player.AllowObserve && Settings.AllowObserve
+            });
+        }
+
+        public void Observe(MirConnection con, string Name)
+        {
+            var player = GetPlayer(Name);
+
+            if (player == null) return;
+            if (!player.AllowObserve || !Settings.AllowObserve) return;
+
+            player.AddObserver(con);
+        }
+
+        public void GetRanking(MirConnection con, byte RankType, int RankIndex, bool OnlineOnly)
+        {
+            if (RankType > 6) return;
+            List<RankCharacterInfo> listings = RankType == 0 ? RankTop : RankClass[RankType - 1];
+
+            if (RankIndex >= listings.Count || RankIndex < 0) return;
+
+            S.Rankings p = new S.Rankings
+            {
+                RankType = RankType,
+                Count = OnlineOnly ? OnlineRankingCount[RankType] : listings.Count
+            };
+
+            if (con.Player != null)
+            {
+                if (RankType == 0)
+                    p.MyRank = con.Player.Info.Rank[0];
+                else
+                    p.MyRank = (byte)con.Player.Class == (RankType - 1) ? con.Player.Info.Rank[1] : 0;
+            }
+
+            int c = 0;
+            for (int i = RankIndex; i < listings.Count; i++)
+            {
+                if (OnlineOnly && GetPlayer(listings[i].Name) == null) continue;
+
+                if (!CheckListing(con, listings[i]))
+                    p.ListingDetails.Add(listings[i]);
+                p.Listings.Add(listings[i].PlayerId);
+                c++;
+
+                if (c > 19 || c >= p.Count) break;
+            }
+
+            con.Enqueue(p);
+        }
+
+        private bool CheckListing(MirConnection con, RankCharacterInfo listing)
+        {
+            if (!con.SentRankings.ContainsKey(listing.PlayerId))
+            {
+                con.SentRankings.Add(listing.PlayerId, listing.LastUpdated);
+                return false;
+            }
+
+            DateTime lastUpdated = con.SentRankings[listing.PlayerId];
+            if (lastUpdated != listing.LastUpdated)
+            {
+                con.SentRankings[listing.PlayerId] = lastUpdated;
+                return false;
+            }
+
+            return true;
+        }
 
         public int InsertRank(List<RankCharacterInfo> Ranking, RankCharacterInfo NewRank)
         {
@@ -3218,18 +3351,13 @@ namespace Server.MirEnvir
                 }
             }
 
-            if (Ranking.Count < RankCount)
-            {
-                Ranking.Add(NewRank);
-                return Ranking.Count;
-            }
-
-            return 0;
+            Ranking.Add(NewRank);
+            return Ranking.Count;
         }
 
         public bool TryAddRank(List<RankCharacterInfo> Ranking, CharacterInfo info, byte type)
         {
-            var NewRank = new RankCharacterInfo() { Name = info.Name, Class = info.Class, Experience = info.Experience, level = info.Level, PlayerId = info.Index, info = info };
+            var NewRank = new RankCharacterInfo() { Name = info.Name, Class = info.Class, Experience = info.Experience, level = info.Level, PlayerId = info.Index, info = info, LastUpdated = Now };
             var NewRankIndex = InsertRank(Ranking, NewRank);
             if (NewRankIndex == 0) return false;
             for (var i = NewRankIndex; i < Ranking.Count; i++ )
@@ -3270,6 +3398,7 @@ namespace Server.MirEnvir
 
             Ranking[CurrentRank].level = info.Level;
             Ranking[CurrentRank].Experience = info.Experience;
+            Ranking[CurrentRank].LastUpdated = Now;
 
             if (NewRank < CurrentRank)
             {//if we gained any ranks
@@ -3287,6 +3416,7 @@ namespace Server.MirEnvir
 
         public void SetNewRank(RankCharacterInfo Rank, int Index, byte type)
         {
+            Rank.LastUpdated = Now;
             if (!(Rank.info is CharacterInfo Player)) return;
             Player.Rank[type] = Index;
         }
@@ -3296,83 +3426,49 @@ namespace Server.MirEnvir
             List<RankCharacterInfo> Ranking;
             var Rankindex = -1;
             //first check overall top           
-            if (info.Level >= RankBottomLevel[0])
+            Ranking = RankTop;
+            Rankindex = FindRank(Ranking, info, 0);
+            if (Rankindex >= 0)
             {
-                Ranking = RankTop;
-                Rankindex = FindRank(Ranking, info, 0);
-                if (Rankindex >= 0)
+                Ranking.RemoveAt(Rankindex);
+                for (var i = Rankindex; i < Ranking.Count(); i++)
                 {
-                    Ranking.RemoveAt(Rankindex);
-                    for (var i = Rankindex; i < Ranking.Count(); i++)
-                    {
-                        SetNewRank(Ranking[i], i, 0);
-                    }
+                    SetNewRank(Ranking[i], i, 0);
                 }
             }
+
             //next class based top
-            if (info.Level < RankBottomLevel[(byte) info.Class + 1]) return;
+            Ranking = RankTop;
+            Rankindex = FindRank(Ranking, info, 1);
+            if (Rankindex >= 0)
             {
-                Ranking = RankTop;
-                Rankindex = FindRank(Ranking, info, 1);
-                if (Rankindex >= 0)
+                Ranking.RemoveAt(Rankindex);
+                for (var i = Rankindex; i < Ranking.Count(); i++)
                 {
-                    Ranking.RemoveAt(Rankindex);
-                    for (var i = Rankindex; i < Ranking.Count(); i++)
-                    {
-                        SetNewRank(Ranking[i], i, 1);
-                    }
+                    SetNewRank(Ranking[i], i, 1);
                 }
             }
+
         }
 
         public void CheckRankUpdate(CharacterInfo info)
         {
             List<RankCharacterInfo> Ranking;
-            RankCharacterInfo NewRank;
-            
+
             //first check overall top           
-            if (info.Level >= RankBottomLevel[0])
-            {
-                Ranking = RankTop;
-                if (!UpdateRank(Ranking, info,0))
-                {
-                    if (TryAddRank(Ranking, info, 0))
-                    {
-                        if (Ranking.Count > RankCount)
-                        {
-                            SetNewRank(Ranking[RankCount], 0, 0);
-                            Ranking.RemoveAt(RankCount);
 
-                        }
-                    }
-                }
-                if (Ranking.Count >= RankCount)
-                { 
-                    NewRank = Ranking[Ranking.Count -1];
-                    if (NewRank != null)
-                        RankBottomLevel[0] = NewRank.level;
-                }
+            Ranking = RankTop;
+            if (!UpdateRank(Ranking, info, 0))
+            {
+                TryAddRank(Ranking, info, 0);
             }
-            //now check class top
-            if (info.Level >= RankBottomLevel[(byte)info.Class + 1])
-            {
-                Ranking = RankClass[(byte)info.Class];
-                if (!UpdateRank(Ranking, info,1))
-                {
-                    if (TryAddRank(Ranking, info, 1))
-                    {
-                        if (Ranking.Count > RankCount)
-                        {
-                            SetNewRank(Ranking[RankCount], 0, 1);
-                            Ranking.RemoveAt(RankCount);
-                        }
-                    }
-                }
 
-                if (Ranking.Count < RankCount) return;
-                NewRank = Ranking[Ranking.Count -1];
-                if (NewRank != null)
-                    RankBottomLevel[(byte)info.Class + 1] = NewRank.level;
+            //now check class top
+
+            Ranking = RankClass[(byte)info.Class];
+            if (!UpdateRank(Ranking, info, 1))
+            {
+                TryAddRank(Ranking, info, 1);
             }
         }
 
