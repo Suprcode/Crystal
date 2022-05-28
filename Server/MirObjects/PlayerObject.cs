@@ -12927,6 +12927,9 @@ namespace Server.MirObjects
             if (ItemRentalFeeLocked)
                 return;
 
+            if ((ulong)amount + ItemRentalFeeAmount >= uint.MaxValue)
+                return;
+
             if (Account.Gold < amount)
                 return;
 
