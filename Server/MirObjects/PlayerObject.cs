@@ -13021,6 +13021,9 @@ namespace Server.MirObjects
 
         public void SetItemRentalPeriodLength(uint days)
         {
+            if (days < 1 || days > 30)
+                return;
+
             if (ItemRentalItemLocked)
                 return;
 
