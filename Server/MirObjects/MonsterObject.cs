@@ -390,9 +390,8 @@ namespace Server.MirObjects
                     return new ManTree(info);
                 case 175:
                     return new ChieftainArcher(info);
-
-                //case 176: ChieftainSword
-
+                case 176:
+                    return new ChieftainSword(info);
                 case 177:
                     return new FrozenKnight(info);
                 case 178:
