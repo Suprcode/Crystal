@@ -1330,6 +1330,7 @@ public enum BuffType : byte
     HornedWarriorShield,
     HornedCommanderShield,
     Blindness,
+    ChieftainSwordBuff,
 
     //Special
     GameMaster = 100,
