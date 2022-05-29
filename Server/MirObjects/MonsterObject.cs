@@ -427,8 +427,8 @@ namespace Server.MirObjects
                     return new IceCrystalSoldier(info);
                 case 192:
                     return new DarkWraith(info);
-
-                //case 193: CrystalBeast
+                case 193:
+                    return new CrystalBeast(info);
                 //case 194: RedOrb
                 //case 195: FatalLotus
 
