@@ -860,7 +860,7 @@ namespace Server.MirEnvir
             HumanObject player = (HumanObject)data[0];
             UserMagic magic = (UserMagic)data[1];
 
-            if (player == null || player.Info == null) return;
+            if (player == null || player.Info == null || player.Node == null) return;
 
             int value, value2;
             Point location;
@@ -1004,6 +1004,9 @@ namespace Server.MirEnvir
                             for (int i = 0; i < cell.Objects.Count; i++)
                             {
                                 MapObject target = cell.Objects[i];
+
+                                if (target.Node == null) continue;
+
                                 switch (target.Race)
                                 {
                                     case ObjectType.Monster:
@@ -1052,6 +1055,9 @@ namespace Server.MirEnvir
                             for (int i = 0; i < cell.Objects.Count; i++)
                             {
                                 MapObject target = cell.Objects[i];
+
+                                if (target.Node == null) continue;
+
                                 switch (target.Race)
                                 {
                                     case ObjectType.Monster:
@@ -1782,6 +1788,9 @@ namespace Server.MirEnvir
                             for (int i = 0; i < cell.Objects.Count; i++)
                             {
                                 MapObject target = cell.Objects[i];
+
+                                if (target.Node == null) continue;
+
                                 switch (target.Race)
                                 {
                                     case ObjectType.Monster:

@@ -4422,7 +4422,7 @@ namespace Server.MirObjects
         {
             cast = false;
 
-            if (target == null || !target.IsFriendlyTarget(this)) target = this; //offical is only party target
+            if (target == null || target.Node == null || !target.IsFriendlyTarget(this)) target = this; //offical is only party target
 
             int duration = 30 + 50 * magic.Level;
             int power = magic.GetPower(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]));
@@ -4455,7 +4455,7 @@ namespace Server.MirObjects
         {
             cast = false;
 
-            if (target == null || !target.IsFriendlyTarget(this)) return;
+            if (target == null || target.Node == null || !target.IsFriendlyTarget(this)) return;
             UserItem item = GetAmulet(1);
             if (item == null) return;
 
@@ -6001,6 +6001,8 @@ namespace Server.MirObjects
                     {
                         value = (int)data[1];
                         target = (MonsterObject)data[2];
+
+                        if (target.Node == null) return;
 
                         int dcInc = 2 + target.Level * 2;
                         int acInc = 4 + target.Level;
