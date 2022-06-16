@@ -147,6 +147,8 @@ namespace Server.MirObjects.Monsters
             if (Master == null)
                 Drop();
 
+            Master = null;
+
             PoisonList.Clear();
             Envir.MonsterCount--;
             CurrentMap.MonsterCount--;
