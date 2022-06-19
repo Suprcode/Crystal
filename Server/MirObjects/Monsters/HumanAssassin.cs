@@ -285,6 +285,8 @@ namespace Server.MirObjects.Monsters
             if (Respawn != null)
                 Respawn.Count--;
 
+            Master = null;
+
             PoisonList.Clear();
             Envir.MonsterCount--;
             CurrentMap.MonsterCount--;
