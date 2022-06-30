@@ -232,7 +232,7 @@ namespace Server.Database
                 row["ItemLightIntensity"] = (byte)(item.Light / 15);
                 row["ItemDurability"] = item.Durability;
                 row["ItemPrice"] = item.Price;
-                row["ItemToolTip"] = item.ToolTip;
+                row["ItemToolTip"] = item.ToolTip ?? "";
 
                 row["NeedIdentify"] = item.NeedIdentify;
                 row["ShowGroupPickup"] = item.ShowGroupPickup;
@@ -349,7 +349,7 @@ namespace Server.Database
                 item.Light = (byte)Math.Min(byte.MaxValue, light);
                 item.Durability = (ushort)row.Cells["ItemDurability"].Value;
                 item.Price = (uint)row.Cells["ItemPrice"].Value;
-                item.ToolTip = (string)row.Cells["ItemToolTip"].Value;
+                item.ToolTip = row.Cells["ItemToolTip"].Value.ToString();
 
                 item.Stats.Clear();
                 item.Bind = BindMode.None;
