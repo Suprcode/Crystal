@@ -232,7 +232,7 @@ namespace Server.Database
                 row["ItemLightIntensity"] = (byte)(item.Light / 15);
                 row["ItemDurability"] = item.Durability;
                 row["ItemPrice"] = item.Price;
-                row["ItemToolTip"] = item.ToolTip ?? "";
+                row["ItemToolTip"] = item.ToolTip;
 
                 row["NeedIdentify"] = item.NeedIdentify;
                 row["ShowGroupPickup"] = item.ShowGroupPickup;
