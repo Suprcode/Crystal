@@ -908,5 +908,20 @@ namespace Server.Database
         {
 
         }
+
+        private void Gameshop_button_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in itemInfoGridView.Rows)
+            {
+                if (row.Selected)
+                {
+                    var item = Envir.ItemInfoList.FirstOrDefault(x => x.Index == row.Index);
+
+                    Envir.AddToGameShop(item);
+                }
+            }
+
+            Envir.SaveDB();
+        }
     }
 }
