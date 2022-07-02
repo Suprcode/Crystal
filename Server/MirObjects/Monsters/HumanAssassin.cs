@@ -25,13 +25,16 @@ namespace Server.MirObjects.Monsters
 
         protected override void RefreshBase()
         {
-            Stats.Clear();
-            Stats.Add(Master.Stats);
+            if (Master != null)
+            {
+                Stats.Clear();
+                Stats.Add(Master.Stats);
 
-            Stats[Stat.HP] = 1500;
+                Stats[Stat.HP] = 1500;
 
-            MoveSpeed = 100;
-            AttackSpeed = Master.AttackSpeed;
+                MoveSpeed = 100;
+                AttackSpeed = Master.AttackSpeed;
+            }
         }
 
         public override void RefreshAll()
@@ -333,13 +336,16 @@ namespace Server.MirObjects.Monsters
             short weapon = -1;
             short armour = 0;
             byte wing = 0;
-            if (Master != null && Master is PlayerObject) master = (PlayerObject)Master;
+            if (Master != null && Master is PlayerObject) 
+                master = (PlayerObject)Master;
+
             if (master != null)
             {
                 weapon = master.Looks_Weapon;
                 armour = master.Looks_Armour;
                 wing = master.Looks_Wings;
             }
+
             return new S.ObjectPlayer
             {
                 ObjectID = ObjectID,
