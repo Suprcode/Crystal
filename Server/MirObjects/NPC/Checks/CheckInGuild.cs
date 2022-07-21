@@ -7,8 +7,7 @@
 		
 		public CheckInGuild(string line, string[] parts) : base(line, parts)
 		{
-			GuildName = parts[1];
-			InitializationSuccess = !string.IsNullOrEmpty(GuildName);
+			GuildName = parts.Length >= 2 ?  parts[1] : "";
 		}
 		public override bool Check(MapObject ob)
 		{
@@ -16,7 +15,9 @@
 			switch (ob)
 			{
 				case PlayerObject player:
-					return !(player.MyGuild is null) && player.MyGuild.Name == GuildName;
+					if (!string.IsNullOrEmpty(GuildName))
+						return !(player.MyGuild is null) && player.MyGuild.Name == GuildName;
+					return player.MyGuild != null; 
 			}
 			return false;
 		}
