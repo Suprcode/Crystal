@@ -10403,7 +10403,7 @@ namespace Server.MirObjects
             if (GroupMembers != null)
             {
                 foreach (PlayerObject player in GroupMembers.
-                    Where(player => player.CurrentMap == CurrentMap &&
+                    Where(player => player != null && player.Node != null && player.CurrentMap == CurrentMap &&
                         Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) &&
                         !player.Dead))
                 {
