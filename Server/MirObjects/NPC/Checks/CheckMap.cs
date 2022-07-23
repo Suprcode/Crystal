@@ -17,10 +17,7 @@ namespace Server.MirObjects.Checks
 			if (!InitializationSuccess) return false;
 			Map ??= Envir.GetMapByNameAndInstance(MapName);
 			if (Map is null)
-			{
-				InitializationSuccess = false;
 				return false;
-			}
 			return  ob.CurrentMap == Map;
 		}
 	}

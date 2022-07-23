@@ -13,9 +13,9 @@ namespace Server.MirObjects.Actions
 			switch (ob)
 			{
 				case PlayerObject player:
-					if (!player.NPCData.TryGetValue("NPCMoveMap", out object _NPCMoveMap) ||
-						!player.NPCData.TryGetValue("NPCMoveCoord", out object _npcMoveCoord)) return;
-					player.Teleport((Map)_NPCMoveMap, (Point)_npcMoveCoord);
+					if (!player.NPCData.TryGetValue("NPCMoveMap", out var npcMoveMap) ||
+						!player.NPCData.TryGetValue("NPCMoveCoord", out var npcMoveCoord)) return;
+					player.Teleport((Map)npcMoveMap, (Point)npcMoveCoord);
 					player.NPCData.Remove("NPCMoveMap");
 					player.NPCData.Remove("NPCMoveCoord");
 					break;

@@ -27,10 +27,7 @@ namespace Server.MirObjects.Checks
 			if (!InitializationSuccess) return false;
 			RequestedMap ??= Envir.GetMapByNameAndInstance(MapName, RequestedInstance);
 			if (RequestedMap == null)
-			{
-				InitializationSuccess = false;
 				return false;
-			}
 			return Compare(Operator, RequestedMap.MonsterCount, RequiredAmount);
 		}
 	}

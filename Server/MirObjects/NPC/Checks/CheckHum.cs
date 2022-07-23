@@ -11,21 +11,24 @@ namespace Server.MirObjects.Checks
 		protected readonly string Operator;
 		public CheckHum(string line, string[] parts) : base(line, parts)
 		{
-			if (!int.TryParse(parts[1], out RequiredAmount))
-				return;
+			Operator = parts[1];
 			MapName = parts[2];
-			if (parts.Length > 3)
-				InitializationSuccess = true;
+			
+			if (!int.TryParse(parts[3], out RequestedInstance))
+				return;
+		
+			if (parts.Length < 5)
+				RequiredAmount = 1;
+			else if (!int.TryParse(parts[4], out RequiredAmount))
+				return;
+			InitializationSuccess = true;
 		}
 		public override bool Check(MapObject ob)
 		{
 			if (!InitializationSuccess) return false;
 			RequestedMap ??= Envir.GetMapByNameAndInstance(MapName, RequestedInstance);
 			if (RequestedMap is null)
-			{
-				InitializationSuccess = false;
 				return false;
-			}
 			return Compare(Operator, RequestedMap.Players.Count, RequiredAmount);
 		}
 	}

@@ -25,7 +25,7 @@ namespace Server.MirObjects.Checks
 					return;
 			}
 			else
-				RequestedInstance = 1;
+				RequestedInstance = 0;
 			MapName = parts[4];
 			Operator = parts[2];
 			InitializationSuccess = true;
@@ -37,7 +37,6 @@ namespace Server.MirObjects.Checks
 			RequestedMap ??= Envir.GetMapByNameAndInstance(MapName, RequestedInstance);
 			if (RequestedMap is null)
 			{
-				InitializationSuccess = false;
 				return false;
 			}
 			var count = 0;

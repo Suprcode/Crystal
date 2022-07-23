@@ -26,10 +26,7 @@ namespace Server.MirObjects.Actions
 			if (!InitializationSuccess) return;
 			Map ??= Envir.GetMapByNameAndInstance(MapName, InstanceId);
 			if (Map is null)
-			{
-				InitializationSuccess = false;
 				return;
-			}
 			foreach (var mapCell in Map.Cells)
 			{
 				if (mapCell?.Objects is null) continue;
