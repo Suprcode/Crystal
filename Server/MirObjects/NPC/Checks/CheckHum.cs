@@ -12,15 +12,19 @@ namespace Server.MirObjects.Checks
 		public CheckHum(string line, string[] parts) : base(line, parts)
 		{
 			Operator = parts[1];
-			MapName = parts[2];
+			if (!int.TryParse(parts[2], out RequiredAmount))
+				return;
 			
-			if (!int.TryParse(parts[3], out RequestedInstance))
-				return;
-		
-			if (parts.Length < 5)
-				RequiredAmount = 1;
-			else if (!int.TryParse(parts[4], out RequiredAmount))
-				return;
+			MapName = parts[3];
+			if (parts.Length > 4)
+			{
+				if (!int.TryParse(parts[4], out RequestedInstance))
+					return;
+			}
+			else
+				RequestedInstance = 0;
+				
+			
 			InitializationSuccess = true;
 		}
 		public override bool Check(MapObject ob)
