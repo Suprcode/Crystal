@@ -612,10 +612,10 @@ namespace Server.MirObjects
                 segment.ParseCheck(checks[i]);
 
             for (int i = 0; i < acts.Count; i++)
-                segment.ParseAct(segment.ActList, acts[i]);
+                segment.ParseAct(segment.Actions, acts[i]);
 
             for (int i = 0; i < elseActs.Count; i++)
-                segment.ParseAct(segment.ElseActList, elseActs[i]);
+                segment.ParseAct(segment.ElseActions, elseActs[i]);
 
             currentButtons = new List<string>();
             currentButtons.AddRange(buttons);
