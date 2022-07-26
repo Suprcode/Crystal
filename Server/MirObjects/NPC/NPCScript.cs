@@ -45,7 +45,7 @@ namespace Server.MirObjects
         public readonly int ScriptID;
         public readonly uint LoadedObjectID;
         public readonly NPCScriptType Type;
-        protected readonly string FileName;
+        public readonly string FileName;
 
         public const string
             MainKey = "[@MAIN]",
@@ -424,7 +424,7 @@ namespace Server.MirObjects
 
             List<string> lines = scriptLines.Where(x => !string.IsNullOrEmpty(x)).ToList();
 
-            NPCPage Page = new NPCPage(sectionName);
+            NPCPage Page = new NPCPage(sectionName, this);
 
             //Cleans arguments out of search page name
             string tempSectionName = Page.ArgumentParse(sectionName);
