@@ -92,7 +92,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 282
             };
-            CancelButton.Click += (o, e) => Dispose();
+            CancelButton.Click += (o, e) => Hide();
 
             OKButton = new MirButton
             {
