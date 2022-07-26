@@ -951,13 +951,16 @@ namespace Server.MirObjects
 
             foreach (MovementInfo mInfo in mapInfo.Movements.Where(x => x.ShowOnBigMap))
             {
+                Map destMap = Envir.GetMap(mInfo.MapIndex);
+                if (destMap is null)
+                    continue;
                 var cmInfo = new ClientMovementInfo()
                 {
                     Destination = mInfo.MapIndex,
                     Location = mInfo.Source,
                     Icon = mInfo.Icon
                 };
-                Map destMap = Envir.GetMap(mInfo.MapIndex);
+                
                 cmInfo.Title = destMap.Info.Title;
 
                 info.Movements.Add(cmInfo);

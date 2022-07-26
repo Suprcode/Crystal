@@ -40,6 +40,7 @@ namespace Server.MirObjects
         protected Dictionary<string, Type> CheckTypeCommands, ActionTypeCommands;
         public NPCSegment(NPCPage page, List<string> say, List<string> buttons, List<string> elseSay, List<string> elseButtons, List<string> gotoButtons)
         {
+            Key = page.Key;
             Page = page;
 
             Say = say;
@@ -138,18 +139,28 @@ namespace Server.MirObjects
         /// <exception cref="NullReferenceException">If the constructor for the type cannot be found, this exception will be thrown.</exception>
         protected virtual NPCCheck CreateCheck(Type type, string line, string[] parts)
         {
-            if (_CheckCreators.TryGetValue(type, out var constructor))
-                return constructor?.Invoke(line, parts);
-            var typeConstructor = type.GetConstructor(new[] { typeof(string), typeof(string[]) });
-            if (typeConstructor is null)
-                throw new NullReferenceException(nameof(typeConstructor));
-            var parameter1 = Expression.Parameter(typeof(string), "line");
-            var parameter2 = Expression.Parameter(typeof(string[]), "parts");
-            var constructorExpression = Expression.New(typeConstructor, parameter1, parameter2);
-            var lambda = Expression.Lambda<Func<string, string[], NPCCheck>>(constructorExpression, parameter1, parameter2);
-            var result = lambda.Compile();
-            _CheckCreators.Add(type, result);
-            return result.Invoke(line, parts);
+            if (!_CheckCreators.TryGetValue(type, out var result))
+            {
+                var typeConstructor = type.GetConstructor(new[] { typeof(string), typeof(string[]) });
+                if (typeConstructor is null)
+                    throw new NullReferenceException($"Could not find a constructor for NPCCheck type {type.Name} with Parameters (string, string[])");
+                var parameter1 = Expression.Parameter(typeof(string), "line");
+                var parameter2 = Expression.Parameter(typeof(string[]), "parts");
+                var constructorExpression = Expression.New(typeConstructor, parameter1, parameter2);
+                var lambda = Expression.Lambda<Func<string, string[], NPCCheck>>(constructorExpression, parameter1, parameter2);
+                result = lambda.Compile();
+                _CheckCreators.Add(type, result);
+            }
+            try
+            {
+                return result.Invoke(line, parts);
+            }
+            catch (IndexOutOfRangeException)
+            {
+                MessageQueue.Instance.Enqueue($"Invalid Syntax for {type.Name}.");
+                MessageQueue.Instance.Enqueue($"File: {Page.Script.FileName} Page: {Key}.\nLine: {line}");
+                return default;
+            }
         }
 
         protected virtual NPCAction CreateAction(Type type, string line, string[] parts)
@@ -179,7 +190,9 @@ namespace Server.MirObjects
 
             if (!CheckTypeCommands.TryGetValue(parts[0].ToUpper(), out var type))
                 return;
-            Checks.Add(CreateCheck(type, line, parts));
+            var npcCheck = CreateCheck(type, line, parts);
+            if (npcCheck is null) return;
+            Checks.Add(npcCheck);
         }
         public void ParseAct(List<NPCAction> acts, string line)
         {
