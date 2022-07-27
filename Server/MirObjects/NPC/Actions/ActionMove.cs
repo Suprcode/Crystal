@@ -12,7 +12,7 @@ namespace Server.MirObjects.Actions
 		{
 			if (parts.Length > 3 &&
 				(!int.TryParse(parts[2], out X) ||
-					int.TryParse(parts[3], out Y)))
+				 !int.TryParse(parts[3], out Y)))
 			{
 				X = 0;
 				Y = 0;
