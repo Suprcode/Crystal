@@ -239,17 +239,22 @@ namespace Client.MirScenes
 
         private void OpenNewCharacterDialog()
         {
-            _character = new NewCharacterDialog { Parent = this };
-
-            _character.OnCreateCharacter += (o, e) =>
+            if (_character == null || _character.IsDisposed)
             {
-                Network.Enqueue(new C.NewCharacter
+                _character = new NewCharacterDialog { Parent = this };
+
+                _character.OnCreateCharacter += (o, e) =>
                 {
-                    Name = _character.NameTextBox.Text,
-                    Class = _character.Class,
-                    Gender = _character.Gender
-                });
-            };
+                    Network.Enqueue(new C.NewCharacter
+                    {
+                        Name = _character.NameTextBox.Text,
+                        Class = _character.Class,
+                        Gender = _character.Gender
+                    });
+                };
+            }
+
+            _character.Show();
         }
 
 
