@@ -241,20 +241,7 @@ namespace Server.MirObjects
 
         public virtual void OnSafeZoneChanged()
         {
-            for (int i = 0; i < Buffs.Count; i++)
-            {
-                if (Buffs[i].ObjectID == 0) continue;
-                if (!Buffs[i].Properties.HasFlag(BuffProperty.PauseInSafeZone)) continue;
 
-                if (InSafeZone)
-                {
-                    PauseBuff(Buffs[i]);
-                }
-                else
-                {
-                    UnpauseBuff(Buffs[i]);
-                }
-            }
         }
 
         public abstract void SetOperateTime();

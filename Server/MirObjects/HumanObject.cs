@@ -363,6 +363,36 @@ namespace Server.MirObjects
 
             RefreshNameColour();
         }
+
+        public override void OnSafeZoneChanged()
+        {
+            base.OnSafeZoneChanged();
+
+            bool needsUpdate = false;
+
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                if (Buffs[i].ObjectID == 0) continue;
+                if (!Buffs[i].Properties.HasFlag(BuffProperty.PauseInSafeZone)) continue;
+
+                needsUpdate = true;
+
+                if (InSafeZone)
+                {
+                    PauseBuff(Buffs[i]);
+                }
+                else
+                {
+                    UnpauseBuff(Buffs[i]);
+                }
+            }
+
+            if (needsUpdate)
+            {
+                RefreshStats();
+            }
+        }
+
         public override void SetOperateTime()
         {
             OperateTime = Envir.Time;
