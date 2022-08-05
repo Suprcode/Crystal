@@ -35,9 +35,9 @@ namespace Server.MirObjects.Checks
 
 			switch (op)
 			{
-				case "=":
+				case "==":
 					return left.Equals(right);
-				case "!":
+				case "!=":
 					return !left.Equals(right);
 				case "<":
 					return left.CompareTo(right) < 0;
