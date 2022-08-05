@@ -7792,7 +7792,7 @@ namespace Server.MirObjects
                             return;
                         }
 
-                        if (auction.Price > Account.Gold)
+                        if (auction.Price > Account.Gold || bidPrice > Account.Gold)
                         {
                             Enqueue(new S.MarketFail { Reason = 4 });
                             return;
