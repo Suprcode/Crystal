@@ -10489,7 +10489,7 @@ namespace Client.MirScenes
                     index = M2CellInfo[x, y].MiddleImage - 1;
 
                     if ((index < 0) || (M2CellInfo[x, y].MiddleIndex == -1)) continue;
-                    if (M2CellInfo[x, y].MiddleIndex > 199)
+                    if (M2CellInfo[x, y].MiddleIndex >= 0)    //M2P '> 199' changed to '>= 0' to include mir2 libraries. Fixes middle layer tile strips draw. Also changed in 'Draw mir3 middle layer' bellow.
                     {//mir3 mid layer is same level as front layer not real middle + it cant draw index -1 so 2 birds in one stone :p
                         Size s = Libraries.MapLibs[M2CellInfo[x, y].MiddleIndex].GetSize(index);
 
@@ -10617,7 +10617,7 @@ namespace Client.MirScenes
                     #endregion
 
                     #region Draw mir3 middle layer
-                    if ((M2CellInfo[x, y].MiddleIndex > 199) && (M2CellInfo[x, y].MiddleIndex != -1))
+                    if ((M2CellInfo[x, y].MiddleIndex >= 0) && (M2CellInfo[x, y].MiddleIndex != -1))   //M2P '> 199' changed to '>= 0' to include mir2 libraries. Fixes middle layer tile strips draw. Also changed in 'DrawFloor' above.
                     {
                         index = M2CellInfo[x, y].MiddleImage - 1;
                         if (index > 0)
