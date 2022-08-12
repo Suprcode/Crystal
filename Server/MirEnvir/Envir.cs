@@ -1539,7 +1539,7 @@ namespace Server.MirEnvir
 
                     GuildList.Add(guildInfo);
 
-                    Guilds.Add(new GuildObject(guildInfo));
+                    new GuildObject(guildInfo);
 
                     count++;
                 }
