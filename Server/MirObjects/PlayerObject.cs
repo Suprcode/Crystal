@@ -7549,8 +7549,8 @@ namespace Server.MirObjects
                     return;
                 }
 
-                MarketItemType type = MarketPanelType == MarketPanelType.Consign ? MarketItemType.Consign : MarketItemType.Auction;
-                uint cost = MarketPanelType == MarketPanelType.Consign ? Globals.ConsignmentCost : Globals.AuctionCost;
+                MarketItemType type = panelType == MarketPanelType.Consign ? MarketItemType.Consign : MarketItemType.Auction;
+                uint cost = panelType == MarketPanelType.Consign ? Globals.ConsignmentCost : Globals.AuctionCost;
 
                 //TODO Check Max Consignment.
 
