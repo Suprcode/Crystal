@@ -7341,7 +7341,7 @@ namespace Client.MirScenes
                 {
                     string negative = "+";
                     if (addValue < 0) negative = "";
-                    text = string.Format(addValue != 0 ? "A.Speed: " + plus + "{0} ({2}{1})" : "A.Speed: " + plus + "{0}", minValue + addValue, addValue, negative);
+                    text = string.Format(addValue != 0 ? "A.Speed: " + plus + "{0} " : "A.Speed: " + plus + "{0}", minValue + addValue, addValue, negative);
                     //text = string.Format(addValue > 0 ? "A.Speed: + {0} (+{1})" : "A.Speed: + {0}", minValue + addValue, addValue);
                 }
                 else
@@ -7373,7 +7373,7 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? "Freezing: + {0} (+{1})" : "Freezing: + {0}", minValue + addValue, addValue);
+                    text = string.Format(addValue > 0 ? "Freezing: + {0} " : "Freezing: + {0}", minValue + addValue, addValue);
                 else
                     text = string.Format("Adds +{0} Freezing", minValue + maxValue + addValue);
                 MirLabel FREEZINGLabel = new MirLabel
@@ -7403,7 +7403,7 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? "Poison: + {0} (+{1})" : "Poison: + {0}", minValue + addValue, addValue);
+                    text = string.Format(addValue > 0 ? "Poison: + {0} " : "Poison: + {0}", minValue + addValue, addValue);
                 else
                     text = string.Format("Adds +{0} Poison", minValue + maxValue + addValue);
                 MirLabel POISONLabel = new MirLabel
@@ -7440,12 +7440,12 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Critical Chance + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Critical Chance: + {0} (+{1})" : "Critical Chance: + {0}", minValue + addValue, addValue)
+                    Text = string.Format(addValue > 0 ? "Critical Chance: + {0} " : "Critical Chance: + {0}", minValue + addValue, addValue)
                 };
 
                 if(fishingItem)
                 {
-                    CRITICALRATELabel.Text = string.Format(addValue > 0 ? "Flexibility: + {0} (+{1})" : "Flexibility: + {0}", minValue + addValue, addValue);
+                    CRITICALRATELabel.Text = string.Format(addValue > 0 ? "Flexibility: + {0} " : "Flexibility: + {0}", minValue + addValue, addValue);
                 }
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CRITICALRATELabel.DisplayRectangle.Right + 4),
@@ -7471,7 +7471,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Critical Damage + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Critical Damage: + {0} (+{1})" : "Critical Damage: + {0}", minValue + addValue, addValue)
+                    Text = string.Format(addValue > 0 ? "Critical Damage: + {0} " : "Critical Damage: + {0}", minValue + addValue, addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CRITICALDAMAGELabel.DisplayRectangle.Right + 4),
@@ -7739,15 +7739,15 @@ namespace Client.MirScenes
                 {
                     if (HoverItem.Info.Type == ItemType.Float)
                     {
-                        ACLabel.Text = string.Format("Nibble Chance + " + (addValue > 0 ? "{0}~{1}% (+{2})" : "{0}~{1}%"), minValue, maxValue + addValue);
+                        ACLabel.Text = string.Format("Nibble Chance + " + (addValue > 0 ? "{0}~{1}% " : "{0}~{1}%"), minValue, maxValue + addValue);
                     }
                     else if (HoverItem.Info.Type == ItemType.Finder)
                     {
-                        ACLabel.Text = string.Format("Finder Increase + " + (addValue > 0 ? "{0}~{1}% (+{2})" : "{0}~{1}%"), minValue, maxValue + addValue);
+                        ACLabel.Text = string.Format("Finder Increase + " + (addValue > 0 ? "{0}~{1}% " : "{0}~{1}%"), minValue, maxValue + addValue);
                     }
                     else
                     {
-                        ACLabel.Text = string.Format("Success Chance + " + (addValue > 0 ? "{0}% (+{1})" : "{0}%"), maxValue, maxValue + addValue);
+                        ACLabel.Text = string.Format("Success Chance + " + (addValue > 0 ? "{0}% " : "{0}%"), maxValue, maxValue + addValue);
                     }
                 }
 
@@ -7838,7 +7838,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format(realItem.Type == ItemType.Potion ? "MP + {0} Recovery" : "MAXMP + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Max MP + {0} (+{1})" : "Max MP + {0}", minValue + addValue, addValue)
+                    Text = string.Format(addValue > 0 ? "Max MP + {0} " : "Max MP + {0}", minValue + addValue, addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXMPLabel.DisplayRectangle.Right + 4),
@@ -7963,7 +7963,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format(addValue > 0 ? "Health Recovery + {0} (+{1})" : "Health Recovery + {0}", minValue + addValue, addValue)
+                    Text = string.Format(addValue > 0 ? "Health Recovery + {0} " : "Health Recovery + {0}", minValue + addValue, addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, HEALTH_RECOVERYLabel.DisplayRectangle.Right + 4),
@@ -7989,7 +7989,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("ManaRecovery + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Mana Recovery + {0} (+{1})" : "Mana Recovery + {0}", minValue + addValue, addValue)
+                    Text = string.Format(addValue > 0 ? "Mana Recovery + {0} " : "Mana Recovery + {0}", minValue + addValue, addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MANA_RECOVERYLabel.DisplayRectangle.Right + 4),
@@ -8015,7 +8015,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Poison Recovery + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Poison Recovery + {0} (+{1})" : "Poison Recovery + {0}", minValue + addValue, addValue)
+                    Text = string.Format(addValue > 0 ? "Poison Recovery + {0} " : "Poison Recovery + {0}", minValue + addValue, addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, POISON_RECOVERYabel.DisplayRectangle.Right + 4),
@@ -8071,7 +8071,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Strong + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Strong + {0} (+{1})" : "Strong + {0}", minValue + addValue, addValue)
+                    Text = string.Format(addValue > 0 ? "Strong + {0} " : "Strong + {0}", minValue + addValue, addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, STRONGLabel.DisplayRectangle.Right + 4),
@@ -8090,7 +8090,7 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? "Poison Resist + {0} (+{1})" : "Poison Resist + {0}", minValue + addValue, addValue);
+                    text = string.Format(addValue > 0 ? "Poison Resist + {0} " : "Poison Resist + {0}", minValue + addValue, addValue);
                 else
                     text = string.Format("Adds +{0} Poison Resist", minValue + maxValue + addValue);
                 MirLabel POISON_RESISTLabel = new MirLabel
@@ -8119,7 +8119,7 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? "Magic Resist + {0} (+{1})" : "Magic Resist + {0}", minValue + addValue, addValue);
+                    text = string.Format(addValue > 0 ? "Magic Resist + {0} " : "Magic Resist + {0}", minValue + addValue, addValue);
                 else
                     text = string.Format("Adds +{0} Magic Resist", minValue + maxValue + addValue);
                 MirLabel MAGIC_RESISTLabel = new MirLabel
@@ -8196,7 +8196,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Hand Weight + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Hand Weight + {0} (+{1})" : "Hand Weight + {0}", minValue + addValue, addValue)
+                    Text = string.Format(addValue > 0 ? "Hand Weight + {0} " : "Hand Weight + {0}", minValue + addValue, addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, HANDWEIGHTLabel.DisplayRectangle.Right + 4),
@@ -8222,7 +8222,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Wear Weight + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Wear Weight + {0} (+{1})" : "Wear Weight + {0}", minValue + addValue, addValue)
+                    Text = string.Format(addValue > 0 ? "Wear Weight + {0} " : "Wear Weight + {0}", minValue + addValue, addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, WEARWEIGHTLabel.DisplayRectangle.Right + 4),
@@ -8248,7 +8248,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Bag Weight + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Bag Weight + {0} (+{1})" : "Bag Weight + {0}", minValue + addValue, addValue)
+                    Text = string.Format(addValue > 0 ? "Bag Weight + {0} " : "Bag Weight + {0}", minValue + addValue, addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, BAGWEIGHTLabel.DisplayRectangle.Right + 4),
@@ -9593,13 +9593,13 @@ namespace Client.MirScenes
 
             ItemLabel = new MirControl
             {
-                BackColour = Color.FromArgb(255, 50, 50, 50),
+                BackColour = Color.FromArgb(255, 0, 0, 0),
                 Border = true,
-                BorderColour = Color.Gray,
+                BorderColour = ((HoverItem.CurrentDura == 0 && HoverItem.MaxDura != 0) ? Color.Red : Color.FromArgb(255, 148, 146, 148)),
                 DrawControlTexture = true,
                 NotControl = true,
                 Parent = this,
-                Opacity = 0.7F
+                Opacity = 0.8F
             };
 
             //Name Info Label
