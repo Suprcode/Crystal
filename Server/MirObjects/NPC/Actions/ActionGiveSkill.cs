@@ -30,7 +30,7 @@ namespace Server.MirObjects.Actions
 			{
 				case PlayerObject player:
 					int index = player.Info.Magics.FindIndex(spell => spell.Spell == Spell); // Get index of spell
-					if (index > 0) // If the player already has the spell we need to check its level
+					if (index >= 0) // If the player already has the spell we need to check its level
 					{
 						if (player.Info.Magics[index].Level >= Level) return; // Return if user has higher spell level
 
