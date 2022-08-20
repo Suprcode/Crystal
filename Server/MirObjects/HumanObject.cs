@@ -2436,7 +2436,7 @@ namespace Server.MirObjects
             
             Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
             Broadcast(new S.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-
+            GetPlayerLocation();
 
             cell = CurrentMap.GetCell(CurrentLocation);
 
@@ -2559,7 +2559,7 @@ namespace Server.MirObjects
 
             Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
             Broadcast(new S.ObjectRun { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-
+            GetPlayerLocation();
 
             for (int j = 1; j <= steps; j++)
             {
@@ -2616,7 +2616,7 @@ namespace Server.MirObjects
 
                 Enqueue(new S.Pushed { Direction = Direction, Location = CurrentLocation });
                 Broadcast(new S.ObjectPushed { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-
+                GetPlayerLocation();
                 result++;
             }
 
@@ -2658,6 +2658,22 @@ namespace Server.MirObjects
             ActionTime = Envir.Time + 500;
             return result;
         }
+
+        public void GetPlayerLocation()
+        {
+            if (GroupMembers == null) return;
+
+            for (int i = 0; i < GroupMembers.Count; i++)
+            {
+                PlayerObject member = GroupMembers[i];
+                member.Enqueue(new S.SendMemberLocation { MemberName = Name, MemberLocation = CurrentLocation });
+                Enqueue(new S.SendMemberLocation { MemberName = member.Name, MemberLocation = member.CurrentLocation });
+            }
+            Enqueue(new S.SendMemberLocation { MemberName = Name, MemberLocation = CurrentLocation });
+        }
+
+
+
         public void RangeAttack(MirDirection dir, Point location, uint targetID)
         {
             LogTime = Envir.Time + Globals.LogDelay;
