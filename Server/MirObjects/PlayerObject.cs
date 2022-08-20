@@ -1266,6 +1266,8 @@ namespace Server.MirObjects
 
             Fishing = false;
             Enqueue(GetFishInfo());
+            GroupMemberMapNameChanged();
+            GetPlayerLocation();
         }
         public void TownRevive()
         {
@@ -1322,6 +1324,8 @@ namespace Server.MirObjects
             InSafeZone = true;
             Fishing = false;
             Enqueue(GetFishInfo());
+            GroupMemberMapNameChanged();
+            GetPlayerLocation();
         }
         public override bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0)
         {
@@ -1356,7 +1360,9 @@ namespace Server.MirObjects
 
                     if (player != null) player.GetRelationship(false);
                 }
+                GroupMemberMapNameChanged();
             }
+            GetPlayerLocation();
 
             Report?.MapChange(oldMap.Info, CurrentMap.Info);
 
@@ -4162,7 +4168,9 @@ namespace Server.MirObjects
             if (mapChanged)
             {
                 CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
+                GroupMemberMapNameChanged();
             }
+            GetPlayerLocation();
 
             if (Info.Married != 0)
             {
@@ -4173,7 +4181,7 @@ namespace Server.MirObjects
             }
 
             CheckConquest(true);
-        }        
+        }
         public bool TeleportEscape(int attempts)
         {
             Map temp = Envir.GetMap(BindMapIndex);
@@ -8582,6 +8590,8 @@ namespace Server.MirObjects
             {
                 GroupInvitation.GroupMembers = new List<PlayerObject> { GroupInvitation };
                 GroupInvitation.Enqueue(new S.AddMember { Name = GroupInvitation.Name });
+                GroupInvitation.Enqueue(new S.GroupMembersMap { PlayerName = GroupInvitation.Name, PlayerMap = GroupInvitation.CurrentMap.Info.Title });
+                GroupInvitation.Enqueue(new S.SendMemberLocation { MemberName = GroupInvitation.Name, MemberLocation = GroupInvitation.CurrentLocation });
             }
 
             Packet p = new S.AddMember { Name = Name };
@@ -8618,7 +8628,39 @@ namespace Server.MirObjects
             }
 
             Enqueue(p);
+            GroupMemberMapNameChanged();
+            GetPlayerLocation();
         }
+        public void GroupMemberMapNameChanged()
+        {
+            if (GroupMembers == null) return;
+
+            for (int i = 0; i < GroupMembers.Count; i++)
+            {
+                PlayerObject member = GroupMembers[i];
+                member.Enqueue(new S.GroupMembersMap { PlayerName = Name, PlayerMap = CurrentMap.Info.Title });
+                Enqueue(new S.GroupMembersMap { PlayerName = member.Name, PlayerMap = member.CurrentMap.Info.Title });
+            }
+            Enqueue(new S.GroupMembersMap { PlayerName = Name, PlayerMap = CurrentMap.Info.Title });
+        }
+        public void GetPlayerLocation()
+        {
+            if (GroupMembers == null) return;
+
+            for (int i = 0; i < GroupMembers.Count; i++)
+            {
+                PlayerObject member = GroupMembers[i];
+                member.Enqueue(new S.SendMemberLocation { MemberName = Name, MemberLocation = CurrentLocation });
+                Enqueue(new S.SendMemberLocation { MemberName = member.Name, MemberLocation = member.CurrentLocation });
+            }
+            Enqueue(new S.SendMemberLocation { MemberName = Name, MemberLocation = CurrentLocation });
+        }
+
+
+
+
+
+
 
         #endregion
 

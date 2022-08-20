@@ -103,6 +103,7 @@ namespace Client.MirScenes.Dialogs
                 SetButtonsVisibility(true);
             }
         }
+
         public BigMapDialog()
         {
             Index = 820;
@@ -182,6 +183,7 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
             };
             MyLocationButton.Click += (o, e) => TargetMyLocation();
+
 
             TeleportToButton = new MirButton
             {
@@ -551,6 +553,9 @@ namespace Client.MirScenes.Dialogs
 
         int BigMap_MouseCoordsProcessing_OffsetX, BigMap_MouseCoordsProcessing_OffsetY;
 
+        public MirImageControl[] Players;
+        public static Dictionary<string, Point> PlayerLocations = new Dictionary<string, Point>();
+
         public BigMapViewPort()
         {
             NotControl = false;
@@ -573,6 +578,19 @@ namespace Client.MirScenes.Dialogs
                 Visible = false,
                 NotControl = true
             };
+
+            Players = new MirImageControl[Globals.MaxGroup];
+            for (int i = 0; i < Players.Length; i++)
+            {
+                Players[i] = new MirImageControl
+                {
+                    Index = 1350,
+                    Library = Libraries.Prguse2,
+                    Parent = this,
+                    NotControl = false,
+                    Visible = false,
+                };
+            }
 
             BeforeDraw += (o, e) => OnBeforeDraw();
             MouseMove += UpdateBigMapCoordinates;
@@ -674,6 +692,43 @@ namespace Client.MirScenes.Dialogs
                 y = MapObject.User.CurrentLocation.Y * ScaleY;
                 var s = UserRadarDot.Size;                
                 UserRadarDot.Location = new Point((int)x - s.Width / 2, (int)y - s.Height / 2);
+
+                if (GroupDialog.GroupList.Count > 0)
+                {
+                    for (int i = 0; i < GameScene.Scene.GroupDialog.GroupMembers.Length; i++)
+                    {
+                        string groupMembersName = GameScene.Scene.GroupDialog.GroupMembers[i].Text;
+                        Players[i].Visible = false;
+
+                        foreach (var groupMembersMap in GroupDialog.GroupMembersMap.Where(x => x.Key == groupMembersName && x.Value == map.Title))
+                        {
+                            foreach (var groupMemberLocation in PlayerLocations.Where(x => x.Key == groupMembersMap.Key))
+                            {
+
+                                float alteredX = ((groupMemberLocation.Value.X - startPointX) * ScaleX);
+                                float alteredY = ((groupMemberLocation.Value.Y - startPointY) * ScaleY);
+
+                                if (groupMembersName != MapObject.User.Name)
+                                    Players[i].Visible = true;
+
+                                Players[i].Hint = groupMemberLocation.Key;
+                                Players[i].Location = new Point((int)(alteredX - 0.5F) - 3, (int)(alteredY - 0.5F) - 3);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < Players.Length; i++)
+                    {
+                        Players[i].Visible = false;
+                    }
+                }
+
+
+
+
+
             }
 
             foreach (var record in ParentDialog.CurrentRecord.MovementButtons)
