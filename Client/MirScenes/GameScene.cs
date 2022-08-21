@@ -9624,15 +9624,15 @@ namespace Client.MirScenes
             HoverItem = item;
             ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
 
-            ItemLabel = new MirControl
+             ItemLabel = new MirControl
             {
-                BackColour = Color.FromArgb(255, 50, 50, 50),
+                BackColour = Color.FromArgb(255, 0, 0, 0),
                 Border = true,
-                BorderColour = Color.Gray,
+                BorderColour = ((HoverItem.CurrentDura == 0 && HoverItem.MaxDura != 0) ? Color.Red : Color.FromArgb(255, 148, 146, 148)),
                 DrawControlTexture = true,
                 NotControl = true,
                 Parent = this,
-                Opacity = 0.7F
+                Opacity = 0.8F
             };
 
             //Name Info Label
