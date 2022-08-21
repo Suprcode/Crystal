@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Server.MirDatabase;
+
 namespace Server.MirObjects.Actions
 { 
 	[ActionCommand("GIVESKILL")]
@@ -35,7 +36,7 @@ namespace Server.MirObjects.Actions
 						if (player.Info.Magics[index].Level >= Level) return; // Return if user has higher spell level
 
 						player.Info.Magics[index].Level = Level; // Set spell level to new level
-						player.Enqueue(new S.MagicLeveled { ObjectID = player.ObjectID, Spell = Spell, Level = Level, Experience = 0 });
+						player.Enqueue(new ServerPackets.MagicLeveled { ObjectID = player.ObjectID, Spell = Spell, Level = Level, Experience = 0 });
 					}
 					else // If the player doesn't have the spell, award it to them
 					{
