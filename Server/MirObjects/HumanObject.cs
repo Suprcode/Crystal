@@ -2666,6 +2666,9 @@ namespace Server.MirObjects
             for (int i = 0; i < GroupMembers.Count; i++)
             {
                 PlayerObject member = GroupMembers[i];
+                
+                if (member.CurrentMap.Info.BigMap <= 0) continue;
+                  
                 member.Enqueue(new S.SendMemberLocation { MemberName = Name, MemberLocation = CurrentLocation });
                 Enqueue(new S.SendMemberLocation { MemberName = member.Name, MemberLocation = member.CurrentLocation });
             }

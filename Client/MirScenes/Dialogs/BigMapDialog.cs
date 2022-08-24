@@ -297,6 +297,9 @@ namespace Client.MirScenes.Dialogs
 
         public override void Show()
         {
+            var map = GameScene.Scene.MapControl;
+            if (map.BigMap <= 0) return;
+
             base.Show();
             TargetMyLocation();            
         }
@@ -690,7 +693,7 @@ namespace Client.MirScenes.Dialogs
 
                 x = MapObject.User.CurrentLocation.X * ScaleX;
                 y = MapObject.User.CurrentLocation.Y * ScaleY;
-                var s = UserRadarDot.Size;                
+                var s = UserRadarDot.Size;
                 UserRadarDot.Location = new Point((int)x - s.Width / 2, (int)y - s.Height / 2);
 
                 if (GroupDialog.GroupList.Count > 0)
@@ -729,6 +732,13 @@ namespace Client.MirScenes.Dialogs
 
 
 
+            }
+            else
+            {
+                for (int i = 0; i < Players.Length; i++)
+                {
+                    Players[i].Visible = false;
+                }
             }
 
             foreach (var record in ParentDialog.CurrentRecord.MovementButtons)
