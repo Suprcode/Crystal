@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Server.MirDatabase;
+
 namespace Server.MirObjects.Actions
 { 
 	[ActionCommand("GIVESKILL")]
@@ -29,12 +30,21 @@ namespace Server.MirObjects.Actions
 			switch (ob)
 			{
 				case PlayerObject player:
-					if (player.Info.Magics.Any(spell => spell.Spell == Spell))
-						return;
-					var magic = new UserMagic(Spell) { Level = Level };
-					if (magic.Info is null) return;
-					player.Info.Magics.Add(magic);
-					player.SendMagicInfo(magic);
+					int index = player.Info.Magics.FindIndex(spell => spell.Spell == Spell); // Get index of spell
+					if (index >= 0) // If the player already has the spell we need to check its level
+					{
+						if (player.Info.Magics[index].Level >= Level) return; // Return if user has higher spell level
+
+						player.Info.Magics[index].Level = Level; // Set spell level to new level
+						player.Enqueue(new ServerPackets.MagicLeveled { ObjectID = player.ObjectID, Spell = Spell, Level = Level, Experience = 0 });
+					}
+					else // If the player doesn't have the spell, award it to them
+					{
+						var magic = new UserMagic(Spell) { Level = Level };
+						if (magic.Info is null) return;
+						player.Info.Magics.Add(magic);
+						player.SendMagicInfo(magic);
+					}
 					break;
 			}
 		}
