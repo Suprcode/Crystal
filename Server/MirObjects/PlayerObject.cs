@@ -8643,24 +8643,6 @@ namespace Server.MirObjects
             }
             Enqueue(new S.GroupMembersMap { PlayerName = Name, PlayerMap = CurrentMap.Info.Title });
         }
-        public void GetPlayerLocation()
-        {
-            if (GroupMembers == null) return;
-
-            for (int i = 0; i < GroupMembers.Count; i++)
-            {
-                PlayerObject member = GroupMembers[i];
-                member.Enqueue(new S.SendMemberLocation { MemberName = Name, MemberLocation = CurrentLocation });
-                Enqueue(new S.SendMemberLocation { MemberName = member.Name, MemberLocation = member.CurrentLocation });
-            }
-            Enqueue(new S.SendMemberLocation { MemberName = Name, MemberLocation = CurrentLocation });
-        }
-
-
-
-
-
-
 
         #endregion
 
