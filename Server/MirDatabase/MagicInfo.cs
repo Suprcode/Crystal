@@ -148,11 +148,12 @@ namespace Server.MirDatabase
             writer.Write(CastTime);
         }
 
-        public Packet GetInfo()
+        public Packet GetInfo(bool hero)
         {
             return new S.NewMagic
                 {
-                    Magic = CreateClientMagic()
+                    Magic = CreateClientMagic(),
+                    Hero = hero
                 };
         }
 

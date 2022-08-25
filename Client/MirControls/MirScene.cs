@@ -51,8 +51,8 @@ namespace Client.MirControls
 
         protected override void CreateTexture()
         {
-            if (ControlTexture != null && !ControlTexture.Disposed && Size != TextureSize)
-                ControlTexture.Dispose();
+            if (Size != TextureSize)
+                DisposeTexture();
 
             if (ControlTexture == null || ControlTexture.Disposed)
             {
@@ -192,12 +192,30 @@ namespace Client.MirControls
                 case (short)ServerPacketIds.NewRecipeInfo:
                     NewRecipeInfo((S.NewRecipeInfo)p);
                     break;
+                case (short)ServerPacketIds.NewHeroInfo:
+                    NewHeroInfo((S.NewHeroInfo)p);
+                    break;
             }
         }
 
         private void NewItemInfo(S.NewItemInfo info)
         {
             GameScene.ItemInfoList.Add(info.Info);
+        }
+
+        private void NewHeroInfo(S.NewHeroInfo info)
+        {
+            AddHeroInformation(info.Info, info.StorageIndex);
+        }
+
+        public void AddHeroInformation(ClientHeroInformation info, int storageIndex = -1)
+        {
+            if (info == null) return;
+            GameScene.HeroInfoList.RemoveAll(x => x.Index == info.Index);
+            GameScene.HeroInfoList.Add(info);
+
+            if (storageIndex < 0) return;
+            GameScene.HeroStorage[storageIndex] = info;
         }
 
         private void NewChatItem(S.NewChatItem p)

@@ -45,7 +45,7 @@ namespace Server.MirObjects
         public readonly int ScriptID;
         public readonly uint LoadedObjectID;
         public readonly NPCScriptType Type;
-        protected readonly string FileName;
+        public readonly string FileName;
 
         public const string
             MainKey = "[@MAIN]",
@@ -74,6 +74,10 @@ namespace Server.MirObjects
             ResetKey = "[@RESET]",
             PearlBuyKey = "[@PEARLBUY]",
             BuyUsedKey = "[@BUYUSED]",
+            BuyNewKey = "[@BUYNEW]",
+            BuySellNewKey = "[@BUYSELLNEW]",
+            HeroCreateKey = "[@CREATEHERO]",
+            HeroManageKey = "[@MANAGEHERO]",
 
             TradeKey = "[TRADE]",
             RecipeKey = "[RECIPE]",
@@ -420,7 +424,7 @@ namespace Server.MirObjects
 
             List<string> lines = scriptLines.Where(x => !string.IsNullOrEmpty(x)).ToList();
 
-            NPCPage Page = new NPCPage(sectionName);
+            NPCPage Page = new NPCPage(sectionName, this);
 
             //Cleans arguments out of search page name
             string tempSectionName = Page.ArgumentParse(sectionName);
@@ -570,6 +574,7 @@ namespace Server.MirObjects
                     while (match.Success)
                     {
                         string argu = match.Groups[1].Captures[0].Value;
+                        argu = argu.Split('/')[0];
 
                         currentButtons.Add(string.Format("[{0}]", argu));
                         match = match.NextMatch();
@@ -607,10 +612,10 @@ namespace Server.MirObjects
                 segment.ParseCheck(checks[i]);
 
             for (int i = 0; i < acts.Count; i++)
-                segment.ParseAct(segment.ActList, acts[i]);
+                segment.ParseAct(segment.Actions, acts[i]);
 
             for (int i = 0; i < elseActs.Count; i++)
-                segment.ParseAct(segment.ElseActList, elseActs[i]);
+                segment.ParseAct(segment.ElseActions, elseActs[i]);
 
             currentButtons = new List<string>();
             currentButtons.AddRange(buttons);
@@ -950,6 +955,20 @@ namespace Server.MirObjects
                         player.Enqueue(new S.NPCSell());
                     }
                     break;
+                case BuyNewKey:
+                case BuySellNewKey:
+                    sentGoods = new List<UserItem>(Goods);
+
+                    for (int i = 0; i < Goods.Count; i++)
+                        player.CheckItem(Goods[i]);
+
+                    player.Enqueue(new S.NPCGoods { List = sentGoods, Rate = PriceRate(player), Type = PanelType.Buy, HideAddedStats = Settings.GoodsHideAddedStats });
+
+                    if (key == BuySellNewKey)
+                    {
+                        player.Enqueue(new S.NPCSell());
+                    }
+                    break;
                 case SellKey:
                     player.Enqueue(new S.NPCSell());
                     break;
@@ -1097,6 +1116,21 @@ namespace Server.MirObjects
                         player.CheckItem(Goods[i]);
 
                     player.Enqueue(new S.NPCPearlGoods { List = Goods, Rate = PriceRate(player), Type = PanelType.Buy });
+                    break;
+                case HeroCreateKey:
+                    if (player.Info.Level < Settings.Hero_RequiredLevel)
+                    {
+                        player.ReceiveChat(String.Format("You have to be at least level {0} to create a hero.", Settings.Hero_RequiredLevel), ChatType.System);
+                        break;
+                    }
+                    player.CanCreateHero = true;
+                    player.Enqueue(new S.HeroCreateRequest()
+                    {
+                        CanCreateClass = Settings.Hero_CanCreateClass
+                    });
+                    break;
+                case HeroManageKey:
+                    player.ManageHeroes();
                     break;
             }
         }

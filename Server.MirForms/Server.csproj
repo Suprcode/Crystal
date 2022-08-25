@@ -105,6 +105,12 @@
       <Name>Server.Library</Name>
       <Private>True</Private>
     </ProjectReference>
+    <Compile Include="Account\ChangePasswordDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Account\ChangePasswordDialog.Designer.cs">
+      <DependentUpon>ChangePasswordDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Account\PlayerInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -277,6 +283,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Account\AccountInfoForm.resx">
       <DependentUpon>AccountInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Account\ChangePasswordDialog.resx">
+      <DependentUpon>ChangePasswordDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Account\PlayerInfoForm.resx">
       <DependentUpon>PlayerInfoForm.cs</DependentUpon>

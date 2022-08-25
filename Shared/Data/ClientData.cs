@@ -238,6 +238,103 @@ public class ClientAuction
     }
 }
 
+public class ClientMovementInfo
+{
+    public int Destination;
+    public string Title;
+    public Point Location;
+    public int Icon;
+
+    public ClientMovementInfo() { }
+
+    public ClientMovementInfo(BinaryReader reader)
+    {
+        Destination = reader.ReadInt32();
+        Title = reader.ReadString();
+        Location = new Point(reader.ReadInt32(), reader.ReadInt32());
+        Icon = reader.ReadInt32();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Destination);
+        writer.Write(Title);
+        writer.Write(Location.X);
+        writer.Write(Location.Y);
+        writer.Write(Icon);
+    }
+}
+
+public class ClientNPCInfo
+{
+    public uint ObjectID;
+    public string Name;
+    public Point Location;
+    public int Icon;
+    public bool CanTeleportTo;
+
+    public ClientNPCInfo() { }
+
+    public ClientNPCInfo(BinaryReader reader)
+    {
+        ObjectID = reader.ReadUInt32();
+        Name = reader.ReadString();
+        Location = new Point(reader.ReadInt32(), reader.ReadInt32());
+        Icon = reader.ReadInt32();
+        CanTeleportTo = reader.ReadBoolean();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(ObjectID);
+        writer.Write(Name);
+        writer.Write(Location.X);
+        writer.Write(Location.Y);
+        writer.Write(Icon);
+        writer.Write(CanTeleportTo);
+    }
+}
+
+public class ClientMapInfo
+{
+    public int Width;
+    public int Height;
+    public int BigMap;
+    public string Title;
+    public List<ClientMovementInfo> Movements = new List<ClientMovementInfo>();
+    public List<ClientNPCInfo> NPCs = new List<ClientNPCInfo>();
+
+    public ClientMapInfo() { }
+
+    public ClientMapInfo(BinaryReader reader)
+    {
+        Title = reader.ReadString();
+        Width = reader.ReadInt32();
+        Height = reader.ReadInt32();
+        BigMap = reader.ReadInt32();
+        var count = reader.ReadInt32();
+        for (int i = 0; i < count; i++)
+            Movements.Add(new ClientMovementInfo(reader));
+        count = reader.ReadInt32();
+        for (int i = 0; i < count; i++)
+            NPCs.Add(new ClientNPCInfo(reader));
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Title);
+        writer.Write(Width);
+        writer.Write(Height);
+        writer.Write(BigMap);
+        writer.Write(Movements.Count);
+        for (int i = 0; i < Movements.Count; i++)
+            Movements[i].Save(writer);
+        writer.Write(NPCs.Count);
+        for (int i = 0; i < NPCs.Count; i++)
+            NPCs[i].Save(writer);
+    }
+}
+
 public class ClientQuestInfo
 {
     public int Index;
@@ -247,6 +344,7 @@ public class ClientQuestInfo
     public string Name, Group;
     public List<string> Description = new List<string>();
     public List<string> TaskDescription = new List<string>();
+    public List<string> ReturnDescription = new List<string>();
     public List<string> CompletionDescription = new List<string>();
 
     public int MinLevelNeeded, MaxLevelNeeded;
@@ -289,6 +387,10 @@ public class ClientQuestInfo
 
         count = reader.ReadInt32();
         for (int i = 0; i < count; i++)
+            ReturnDescription.Add(reader.ReadString());
+
+        count = reader.ReadInt32();
+        for (int i = 0; i < count; i++)
             CompletionDescription.Add(reader.ReadString());
 
         MinLevelNeeded = reader.ReadInt32();
@@ -328,6 +430,10 @@ public class ClientQuestInfo
         writer.Write(TaskDescription.Count);
         for (int i = 0; i < TaskDescription.Count; i++)
             writer.Write(TaskDescription[i]);
+
+        writer.Write(ReturnDescription.Count);
+        for (int i = 0; i < ReturnDescription.Count; i++)
+            writer.Write(ReturnDescription[i]);
 
         writer.Write(CompletionDescription.Count);
         for (int i = 0; i < CompletionDescription.Count; i++)
@@ -501,5 +607,41 @@ public class ClientBuff
         {
             writer.Write(Values[i]);
         }
+    }
+}
+
+public class ClientHeroInformation
+{
+    public int Index;
+    public string Name;
+    public ushort Level;
+    public MirClass Class;
+    public MirGender Gender;
+
+    public ClientHeroInformation() { }
+
+    public ClientHeroInformation(BinaryReader reader)
+    {
+        Index = reader.ReadInt32();
+        Name = reader.ReadString();
+        Level = reader.ReadUInt16();
+        Class = (MirClass)reader.ReadByte();
+        Gender = (MirGender)reader.ReadByte();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Index);
+        writer.Write(Name);
+        writer.Write(Level);
+        writer.Write((byte)Class);
+        writer.Write((byte)Gender);
+    }
+
+    public override string ToString()
+    {
+        string text = Name;
+        text += Environment.NewLine + $"Level {Level} {Enum.GetName(typeof(MirGender), Gender).ToLower()} {Enum.GetName(typeof(MirClass), Class).ToLower()}";
+        return text;
     }
 }

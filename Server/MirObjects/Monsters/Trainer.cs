@@ -7,7 +7,7 @@ namespace Server.MirObjects.Monsters
 {
     public class Trainer : MonsterObject
     {
-        private PlayerObject _currentAttacker = null;
+        private HumanObject _currentAttacker = null;
         private int _hitCount = 0, _totalDamage = 0;
         private long _lastAttackTime = 0, _StartTime = 0;
         private bool Poisoned = false;
@@ -23,7 +23,7 @@ namespace Server.MirObjects.Monsters
         protected override void ProcessRoam() { }
 
         public override bool Blocking { get { return true; } }
-        public override bool IsAttackTarget(PlayerObject attacker) { return true; }
+        public override bool IsAttackTarget(HumanObject attacker) { return true; }
         public override bool IsAttackTarget(MonsterObject attacker) 
         {
             if (attacker.Master == null) return false;
@@ -58,7 +58,7 @@ namespace Server.MirObjects.Monsters
         }
 
         // Player attacking trainer.
-        public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = false)
+        public override int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = false)
         {
             if (attacker == null) return 0;
 

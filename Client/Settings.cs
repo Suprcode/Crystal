@@ -8,6 +8,7 @@ namespace Client
     class Settings
     {
         public const long CleanDelay = 600000;
+
         public static int ScreenWidth = 1024, ScreenHeight = 768;
         private static InIReader Reader = new InIReader(@".\Mir2Config.ini");
         private static InIReader QuestTrackingReader = new InIReader(Path.Combine(UserDataPath, @".\QuestTracking.ini"));
@@ -69,7 +70,7 @@ namespace Client
         public static int RemainingErrorLogs = 100;
 
         //Graphics
-        public static bool FullScreen = true, Borderless = true, TopMost = true;
+        public static bool FullScreen = true, Borderless = true, TopMost = true, MouseClip = false;
         public static string FontName = "Tahoma"; //"MS Sans Serif"
         public static float FontSize = 8F;
         public static bool UseMouseCursors = true;
@@ -88,6 +89,8 @@ namespace Client
         //Sound
         public static int SoundOverLap = 3;
         private static byte _volume = 100;
+        public static int SoundCleanMinutes = 5;
+
         public static byte Volume
         {
             get { return _volume; }
@@ -141,7 +144,9 @@ namespace Client
             TargetDead = false,
             HighlightTarget = true,
             ExpandedBuffWindow = true,
-            DisplayBodyName = false;
+            ExpandedHeroBuffWindow = true,
+            DisplayBodyName = false,
+            NewMove = false;
 
         public static int[,] SkillbarLocation = new int[2, 2] { { 0, 0 }, { 216, 0 }  };
 
@@ -181,6 +186,7 @@ namespace Client
         public static string P_BrowserAddress = "https://launcher.mironline.co.uk/web/";
         public static string P_Client = Application.StartupPath + "\\";
         public static bool P_AutoStart = false;
+        public static int P_Concurrency = 1;
 
         public static void Load()
         {
@@ -193,6 +199,7 @@ namespace Client
             //Graphics
             FullScreen = Reader.ReadBoolean("Graphics", "FullScreen", FullScreen);
             Borderless = Reader.ReadBoolean("Graphics", "Borderless", Borderless);
+            MouseClip = Reader.ReadBoolean("Graphics", "MouseClip", MouseClip);
             TopMost = Reader.ReadBoolean("Graphics", "AlwaysOnTop", TopMost);
             FPSCap = Reader.ReadBoolean("Graphics", "FPSCap", FPSCap);
             Resolution = Reader.ReadInt32("Graphics", "Resolution", Resolution);
@@ -215,6 +222,10 @@ namespace Client
             Volume = Reader.ReadByte("Sound", "Volume", Volume);
             SoundOverLap = Reader.ReadInt32("Sound", "SoundOverLap", SoundOverLap);
             MusicVolume = Reader.ReadByte("Sound", "Music", MusicVolume);
+            var n = Reader.ReadInt32("Sound", "CleanMinutes", SoundCleanMinutes);
+            if (n < 1 || n > 60 * 3) n = SoundCleanMinutes;
+            SoundCleanMinutes = n;
+
 
             //Game
             AccountID = Reader.ReadString("Game", "AccountID", AccountID);
@@ -235,8 +246,10 @@ namespace Client
             TargetDead = Reader.ReadBoolean("Game", "TargetDead", TargetDead);
             HighlightTarget = Reader.ReadBoolean("Game", "HighlightTarget", HighlightTarget);
             ExpandedBuffWindow = Reader.ReadBoolean("Game", "ExpandedBuffWindow", ExpandedBuffWindow);
+            ExpandedHeroBuffWindow = Reader.ReadBoolean("Game", "ExpandedHeroBuffWindow", ExpandedHeroBuffWindow);
             DuraView = Reader.ReadBoolean("Game", "DuraWindow", DuraView);
             DisplayBodyName = Reader.ReadBoolean("Game", "DisplayBodyName", DisplayBodyName);
+            NewMove = Reader.ReadBoolean("Game", "NewMove", NewMove);
 
             for (int i = 0; i < SkillbarLocation.Length / 2; i++)
             {
@@ -273,6 +286,8 @@ namespace Client
             P_AutoStart = Reader.ReadBoolean("Launcher", "AutoStart", P_AutoStart);
             P_ServerName = Reader.ReadString("Launcher", "ServerName", P_ServerName);
             P_BrowserAddress = Reader.ReadString("Launcher", "Browser", P_BrowserAddress);
+            P_Concurrency = Reader.ReadInt32("Launcher", "ConcurrentDownloads", P_Concurrency);
+            
 
             if (!P_Host.EndsWith("/")) P_Host += "/";
             if (P_Host.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) P_Host = P_Host.Insert(0, "http://");
@@ -283,6 +298,9 @@ namespace Client
             {
                 P_Host = "http://mirfiles.com/mir2/cmir/patch/";
             }
+
+            if (P_Concurrency < 1) P_Concurrency = 1;
+            if (P_Concurrency > 100) P_Concurrency = 100;
         }
 
         public static void Save()
@@ -290,6 +308,7 @@ namespace Client
             //Graphics
             Reader.Write("Graphics", "FullScreen", FullScreen);
             Reader.Write("Graphics", "Borderless", Borderless);
+            Reader.Write("Graphics", "MouseClip", MouseClip);
             Reader.Write("Graphics", "AlwaysOnTop", TopMost);
             Reader.Write("Graphics", "FPSCap", FPSCap);
             Reader.Write("Graphics", "Resolution", Resolution);
@@ -298,7 +317,9 @@ namespace Client
 
             //Sound
             Reader.Write("Sound", "Volume", Volume);
+            Reader.Write("Sound", "SoundOverLap", SoundOverLap);
             Reader.Write("Sound", "Music", MusicVolume);
+            Reader.Write("Sound", "CleanMinutes", SoundCleanMinutes);
 
             //Game
             Reader.Write("Game", "AccountID", AccountID);
@@ -318,8 +339,10 @@ namespace Client
             Reader.Write("Game", "TargetDead", TargetDead);
             Reader.Write("Game", "HighlightTarget", HighlightTarget);
             Reader.Write("Game", "ExpandedBuffWindow", ExpandedBuffWindow);
+            Reader.Write("Game", "ExpandedHeroBuffWindow", ExpandedBuffWindow);
             Reader.Write("Game", "DuraWindow", DuraView);
             Reader.Write("Game", "DisplayBodyName", DisplayBodyName);
+            Reader.Write("Game", "NewMove", NewMove);
 
             for (int i = 0; i < SkillbarLocation.Length / 2; i++)
             {
@@ -357,6 +380,7 @@ namespace Client
             Reader.Write("Launcher", "ServerName", P_ServerName);
             Reader.Write("Launcher", "Browser", P_BrowserAddress);
             Reader.Write("Launcher", "AutoStart", P_AutoStart);
+            Reader.Write("Launcher", "ConcurrentDownloads", P_Concurrency);
         }
 
         public static void LoadTrackedQuests(string charName)

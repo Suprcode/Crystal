@@ -46,7 +46,7 @@ public class ItemInfo
 
     public bool IsConsumable
     {
-        get { return Type == ItemType.Potion || Type == ItemType.Scroll || Type == ItemType.Food || Type == ItemType.Transform || Type == ItemType.Script; }
+        get { return Type == ItemType.Potion || Type == ItemType.Scroll || Type == ItemType.Food || Type == ItemType.Transform || Type == ItemType.Script || Type == ItemType.SealedHero; }
     }
     public bool IsFishingRod
     {

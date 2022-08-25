@@ -324,6 +324,14 @@ namespace Client.MirObjects
             }
         }
 
+        public virtual bool ShouldDrawHealth()
+        {
+            string name = string.Empty;
+            if (Name.Contains("(")) name = Name.Substring(Name.IndexOf("(") + 1, Name.Length - Name.IndexOf("(") - 2);
+
+            return Name.EndsWith(string.Format("({0})", User.Name)) || MirScenes.Dialogs.GroupDialog.GroupList.Contains(name);
+        }
+
         public override void Process()
         {
             bool update = CMain.Time >= NextMotion || GameScene.CanMove;
@@ -1189,9 +1197,9 @@ namespace Client.MirObjects
                     case MirAction.Dead:
                         GameScene.Scene.Redraw();
                         GameScene.Scene.MapControl.SortObject(this);
-                        if (MouseObject == this) MouseObject = null;
-                        if (TargetObject == this) TargetObject = null;
-                        if (MagicObject == this) MagicObject = null;
+                        if (MouseObject == this) MouseObjectID = 0;
+                        if (TargetObject == this) TargetObjectID = 0;
+                        if (MagicObject == this) MagicObjectID = 0;
 
                         for (int i = 0; i < Effects.Count; i++)
                             Effects[i].Remove();
@@ -4298,11 +4306,15 @@ namespace Client.MirObjects
 
             if (BodyLibrary == null || Frame == null) return;
 
+            bool oldGrayScale = DXManager.GrayScale;
+            Color drawColour = ApplyDrawColour();
+            
             if (!DXManager.Blending && Frame.Blend)
-                BodyLibrary.DrawBlend(DrawFrame, DrawLocation, DrawColour, true);
+                BodyLibrary.DrawBlend(DrawFrame, DrawLocation, drawColour, true);
             else
-                BodyLibrary.Draw(DrawFrame, DrawLocation, DrawColour, true);
+                BodyLibrary.Draw(DrawFrame, DrawLocation, drawColour, true);
 
+            DXManager.SetGrayscale(oldGrayScale);
             DXManager.SetOpacity(oldOpacity);
         }
 

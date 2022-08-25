@@ -46,4 +46,19 @@
                       MaxStartingBid = 50000;
 
     public static int[] FishingRodShapes = new int[] { 49, 50 };
+
+    public static Spell[] RangedSpells = new Spell[]
+    {
+        Spell.FireBall,
+        Spell.ThunderBolt,
+        Spell.FireBang,
+        Spell.FireWall,
+        Spell.FrostCrunch,
+        Spell.Vampirism,
+        Spell.FlameDisruptor,
+        Spell.IceStorm,
+        Spell.MeteorStrike,
+        Spell.Blizzard,
+        Spell.SoulFireBall
+    };
 }

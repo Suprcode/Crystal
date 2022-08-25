@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 
@@ -51,6 +52,7 @@ public class RankCharacterInfo
 
     public long Experience;//clients shouldnt care about this only server
     public object info;//again only keep this on server!
+    public DateTime LastUpdated;
 
     public RankCharacterInfo()
     {
@@ -90,5 +92,50 @@ public class QuestItemReward
     {
         Item.Save(writer);
         writer.Write(Count);
+    }
+}
+
+public class WorldMapSetup
+{
+    public bool Enabled;
+    public List<WorldMapIcon> Icons = new List<WorldMapIcon>();
+
+    public WorldMapSetup() { }
+
+    public WorldMapSetup(BinaryReader reader)
+    {
+        Enabled = reader.ReadBoolean();
+        int count = reader.ReadInt32();
+        for (int i = 0; i < count; i++)
+            Icons.Add(new WorldMapIcon(reader));
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Enabled);
+        writer.Write(Icons.Count);
+        for (int i = 0; i < Icons.Count; i++)
+            Icons[i].Save(writer);
+    }
+}
+public class WorldMapIcon
+{
+    public int ImageIndex;
+    public string Title;
+    public int MapIndex;
+    public WorldMapIcon() { }
+
+    public WorldMapIcon(BinaryReader reader)
+    {
+        ImageIndex = reader.ReadInt32();
+        Title = reader.ReadString();
+        MapIndex = reader.ReadInt32();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(ImageIndex);
+        writer.Write(Title);
+        writer.Write(MapIndex);
     }
 }

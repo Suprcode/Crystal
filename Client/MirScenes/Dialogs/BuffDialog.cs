@@ -18,8 +18,15 @@ namespace Client.MirScenes.Dialogs
         protected bool _fadedOut, _fadedIn;
         protected int _buffCount;
         protected long _nextFadeTime;
+        public Func<bool> GetExpandedParameter;
+        public Action<bool> SetExpandedParameter;
+        private bool ExpandedBuffWindow
+        {
+            get { return GetExpandedParameter(); }
+            set { SetExpandedParameter(value); }
+        }
 
-        protected const long FadeDelay = 55;
+    protected const long FadeDelay = 55;
         protected const float FadeRate = 0.2f;
 
         public BuffDialog()
@@ -49,11 +56,11 @@ namespace Client.MirScenes.Dialogs
             {
                 if (_buffCount == 1)
                 {
-                    Settings.ExpandedBuffWindow = true;
+                    ExpandedBuffWindow = true;
                 }
                 else
                 {
-                    Settings.ExpandedBuffWindow = !Settings.ExpandedBuffWindow;
+                    ExpandedBuffWindow = !ExpandedBuffWindow;
                 }
 
                 UpdateWindow();
@@ -145,11 +152,11 @@ namespace Client.MirScenes.Dialogs
                 var location = new Point(Size.Width - 10 - 23 - (i * 23) + ((10 * 23) * (i / 10)), 6 + ((i / 10) * 24));
 
                 image.Location = new Point(location.X, location.Y);
-                image.Hint = Settings.ExpandedBuffWindow ? BuffString(buff) : CombinedBuffText();
+                image.Hint = ExpandedBuffWindow ? BuffString(buff) : CombinedBuffText();
                 image.Index = buffImage;
                 image.Library = buffLibrary;
 
-                if (Settings.ExpandedBuffWindow || !Settings.ExpandedBuffWindow && i == 0)
+                if (ExpandedBuffWindow || !ExpandedBuffWindow && i == 0)
                 {
                     image.Visible = true;
                     image.Opacity = 1f;
@@ -212,7 +219,7 @@ namespace Client.MirScenes.Dialogs
             _buffCount = _buffList.Count;
 
             var baseImage = 20;
-            var heightOffset = 0;
+            var heightOffset = Location.Y;
 
             //foreach (var dialog in GameScene.Scene.BuffDialogs)
             //{
@@ -224,7 +231,7 @@ namespace Client.MirScenes.Dialogs
             //    }
             //}
 
-            if (_buffCount > 0 && Settings.ExpandedBuffWindow)
+            if (_buffCount > 0 && ExpandedBuffWindow)
             {
                 var oldWidth = Size.Width;
 
@@ -248,7 +255,7 @@ namespace Client.MirScenes.Dialogs
                 _expandCollapseButton.Location = new Point(Size.Width - 15, 0);
                 Size = new Size((_buffCount > 10 ? 10 : _buffCount) * 23, 24 + (_buffCount / 10) * 24);
             }
-            else if (_buffCount > 0 && !Settings.ExpandedBuffWindow)
+            else if (_buffCount > 0 && !ExpandedBuffWindow)
             {
                 var oldWidth = Size.Width;
 
@@ -267,9 +274,6 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(44, 34);
             }
         }
-
-
-
 
         public string BuffString(ClientBuff buff)
         {

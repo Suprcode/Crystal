@@ -25,10 +25,13 @@ namespace Client.MirScenes.Dialogs
         public static Regex R = new Regex(@"<((.*?)\/(\@.*?))>");
         public static Regex C = new Regex(@"{((.*?)\/(.*?))}");
         public static Regex L = new Regex(@"\(((.*?)\/(.*?))\)");
+        public static Regex B = new Regex(@"<<((.*?)\/(\@.*?))>>");
 
-        public MirButton CloseButton, UpButton, DownButton, PositionBar, QuestButton;
+        public MirButton CloseButton, UpButton, DownButton, PositionBar, QuestButton, HelpButton;
         public MirLabel[] TextLabel;
         public List<MirLabel> TextButtons;
+        public List<BigButton> BigButtons;
+        public BigButtonDialog BigButtonDialog;
 
         public MirLabel NameLabel;
 
@@ -45,6 +48,9 @@ namespace Client.MirScenes.Dialogs
 
             TextLabel = new MirLabel[30];
             TextButtons = new List<MirLabel>();
+            BigButtons = new List<BigButton>();
+            Size = Size;
+            AutoSize = false;
 
             MouseWheel += NPCDialog_MouseWheel;
 
@@ -116,27 +122,7 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.None,
                 Visible = false
             };
-            PositionBar.OnMoving += PositionBar_OnMoving;
-
-            QuestButton = new MirAnimatedButton()
-            {
-                Animated = true,
-                AnimationCount = 10,
-                Loop = true,
-                AnimationDelay = 130,
-
-                Index = 530,
-                HoverIndex = 284,
-                PressedIndex = 286,
-                Library = Libraries.Title,
-                Parent = this,
-                Size = new Size(96, 25),
-                Location = new Point((440 - 96) / 2, 224 - 30),
-                Sound = SoundList.ButtonA,
-                Visible = false
-            };
-
-            QuestButton.Click += (o, e) => GameScene.Scene.QuestListDialog.Toggle();
+            PositionBar.OnMoving += PositionBar_OnMoving;            
 
             CloseButton = new MirButton
             {
@@ -150,7 +136,7 @@ namespace Client.MirScenes.Dialogs
             };
             CloseButton.Click += (o, e) => Hide();
 
-            MirButton helpButton = new MirButton
+            HelpButton = new MirButton
             {
                 Index = 257,
                 HoverIndex = 258,
@@ -160,7 +146,30 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(390, 3),
                 Sound = SoundList.ButtonA,
             };
-            helpButton.Click += (o, e) => GameScene.Scene.HelpDialog.DisplayPage("Purchasing");
+            HelpButton.Click += (o, e) => GameScene.Scene.HelpDialog.DisplayPage("Purchasing");
+
+            BigButtonDialog = new BigButtonDialog()
+            {
+                Parent = this,               
+            };
+
+            QuestButton = new MirAnimatedButton()
+            {
+                Animated = true,
+                AnimationCount = 10,
+                Loop = true,
+                AnimationDelay = 130,
+                Index = 530,
+                HoverIndex = 284,
+                PressedIndex = 286,
+                Library = Libraries.Title,
+                Parent = this,
+                Size = new Size(96, 25),
+                Sound = SoundList.ButtonA,
+                Visible = false
+            };
+
+            QuestButton.Click += (o, e) => GameScene.Scene.QuestListDialog.Toggle();
         }
 
         void NPCDialog_MouseWheel(object sender, MouseEventArgs e)
@@ -216,16 +225,97 @@ namespace Client.MirScenes.Dialogs
             PositionBar.Location = new Point(x, y);
         }
 
+        private void ButtonClicked(string action)
+        {
+            if (action == "@Exit")
+            {
+                Hide();
+                return;
+            }
+
+            if (CMain.Time <= GameScene.NPCTime) return;
+
+            GameScene.NPCTime = CMain.Time + 5000;
+            Network.Enqueue(new C.CallNPC { ObjectID = GameScene.NPCID, Key = $"[{action}]" });
+        }
+
 
         public void NewText(List<string> lines, bool resetIndex = true)
         {
+            Size = TrueSize;
+
             if (resetIndex)
             {
                 _index = 0;
                 CurrentLines = lines;
                 UpdatePositionBar();
-            }
+                for (int i = lines.Count - 1; i >= 0; i--)
+                {
+                    string currentLine = lines[i];
 
+                    List<Match> bigButtonSortedList = B.Matches(currentLine).Cast<Match>().OrderBy(o => o.Index).ToList();
+
+                    for (int j = 0; j < bigButtonSortedList.Count; j++)
+                    {
+                        Match match = bigButtonSortedList[j];
+                        Capture capture = match.Groups[1].Captures[0];
+                        string txt = match.Groups[2].Captures[0].Value;
+                        string action = match.Groups[3].Captures[0].Value;
+                        string colourString = "RoyalBlue";
+
+                        string[] actionSplit = action.Split('/');
+
+                        action = actionSplit[0];
+                        if (actionSplit.Length > 1)
+                            colourString = actionSplit[1];
+
+                        Color color = Color.FromName(colourString);
+
+                        BigButton button = new BigButton
+                        {
+                            Index = 841,
+                            HoverIndex = 842,
+                            PressedIndex = 843,
+                            Library = Libraries.Title,
+                            Sound = SoundList.ButtonA,
+                            Text = txt,
+                            FontColour = Color.White,
+                            ForeColour = color
+                        };
+
+                        button.Click += (o, e) =>
+                        {
+                            ButtonClicked(action);
+                        };
+                        BigButtons.Insert(0, button);
+                    }
+
+                    var bigButtonString = B.ToString();
+
+                    var oldCurrentLine = currentLine;
+
+                    currentLine = Regex.Replace(currentLine, bigButtonString, "");
+
+                    if (string.IsNullOrWhiteSpace(currentLine) && oldCurrentLine != currentLine)
+                        lines.RemoveAt(i);
+                }
+
+                if (BigButtons.Count > 0)
+                {
+                    int minimumButtons = 0;
+                    if (string.IsNullOrWhiteSpace(string.Concat(lines)))
+                    {
+                        BigButtonDialog.Location = new Point(1, 27);
+                        minimumButtons = 4;
+                    }
+                    else
+                        BigButtonDialog.Location = new Point(1, Size.Height - 33);
+
+                    BigButtonDialog.Show(BigButtons, minimumButtons);
+                    Size = new Size(Size.Width, BigButtonDialog.Location.Y + BigButtonDialog.Size.Height);
+                }
+            }                
+            
             if (lines.Count > MaximumLines)
             {
                 Index = 385;
@@ -238,8 +328,10 @@ namespace Client.MirScenes.Dialogs
                 Index = 384;
                 UpButton.Visible = false;
                 DownButton.Visible = false;
-                PositionBar.Visible = false;
-            }
+                PositionBar.Visible = false;                
+            }         
+
+            QuestButton.Location = new Point(172, Size.Height - 30);
 
             for (int i = 0; i < TextButtons.Count; i++)
                 TextButtons[i].Dispose();
@@ -262,7 +354,7 @@ namespace Client.MirScenes.Dialogs
                     Visible = true,
                     Parent = this,
                     Size = new Size(420, 20),
-                    Location = new Point(20, 34 + (i - _index) * 20),
+                    Location = new Point(8, 34 + (i - _index) * 18),
                     NotControl = true
                 };
 
@@ -304,7 +396,6 @@ namespace Client.MirScenes.Dialogs
 
                 TextLabel[i].Text = currentLine;
                 TextLabel[i].MouseWheel += NPCDialog_MouseWheel;
-
             }
         }
 
@@ -341,16 +432,7 @@ namespace Client.MirScenes.Dialogs
             {
                 temp.Click += (o, e) =>
                 {
-                    if (key == "[@Exit]")
-                    {
-                        Hide();
-                        return;
-                    }
-
-                    if (CMain.Time <= GameScene.NPCTime) return;
-
-                    GameScene.NPCTime = CMain.Time + 5000;
-                    Network.Enqueue(new C.CallNPC { ObjectID = GameScene.NPCID, Key = $"[{key}]" });
+                    ButtonClicked(key);
                 };
             }
 
@@ -409,6 +491,7 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.QuestListDialog.Hide();
             GameScene.Scene.InventoryDialog.Location = new Point(0, 0);
             GameScene.Scene.RollControl.Hide();
+            BigButtonDialog.Hide();
         }
 
         public override void Show()
@@ -475,7 +558,7 @@ namespace Client.MirScenes.Dialogs
                     if (PType == PanelType.Craft) return;
 
                     BuyItem();
-                };       
+                };
             }
 
             CloseButton = new MirButton
@@ -786,12 +869,12 @@ namespace Client.MirScenes.Dialogs
                 Cells[i].Recipe = PType == PanelType.Craft;
             }
 
+            Location = new Point(Location.X, GameScene.Scene.NPCDialog.Size.Height);
             Visible = true;
 
             GameScene.Scene.InventoryDialog.Show();
         }
     }
-
     public sealed class NPCDropDialog : MirImageControl
     {
 
@@ -1104,7 +1187,7 @@ namespace Client.MirScenes.Dialogs
 
             Index = 351;
             Library = Libraries.Prguse2;
-            Location = new Point(264, 224);
+            Location = new Point(264, GameScene.Scene.NPCDialog.Size.Height);
 
             ConfirmButton.HoverIndex = 291;
             ConfirmButton.Index = 290;
@@ -1605,8 +1688,6 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.InventoryDialog.Show();
         }
     }
-
-
     public sealed class CraftDialog : MirImageControl
     {
         public UserItem RecipeItem;
@@ -1929,10 +2010,10 @@ namespace Client.MirScenes.Dialogs
                             return;
                         }
 
-                        Network.Enqueue(new C.CraftItem 
-                        { 
-                            UniqueID = RecipeItem.UniqueID, 
-                            Count = (ushort)amountBox.Amount, 
+                        Network.Enqueue(new C.CraftItem
+                        {
+                            UniqueID = RecipeItem.UniqueID,
+                            Count = (ushort)amountBox.Amount,
                             Slots = Selected.Select(x => x.Key.ItemSlot).ToArray()
                         });
                     }
@@ -1942,10 +2023,10 @@ namespace Client.MirScenes.Dialogs
             }
             else
             {
-                Network.Enqueue(new C.CraftItem 
-                { 
-                    UniqueID = RecipeItem.UniqueID, 
-                    Count = 1, 
+                Network.Enqueue(new C.CraftItem
+                {
+                    UniqueID = RecipeItem.UniqueID,
+                    Count = 1,
                     Slots = Selected.Select(x => x.Key.ItemSlot).ToArray()
                 });
             }
@@ -2364,5 +2445,282 @@ namespace Client.MirScenes.Dialogs
             }
             return null;
         }
+    }
+    public sealed class BigButtonDialog : MirImageControl
+    {
+        const int MaximumRows = 8;
+        private List<BigButton> CurrentButtons;
+        private int ScrollOffset = 0;
+        public BigButtonDialog()
+        {
+            Visible = false;
+        }
+
+        public void Show(List<BigButton> buttons, int minimumButtons)
+        {
+            if (Visible) return;
+            CurrentButtons = buttons;
+
+            for (int i = 0; i < Controls.Count; i++)
+                Controls[i].Dispose();
+            Controls.Clear();
+            Size = Size.Empty;
+            ScrollOffset = 0;
+
+            CurrentButtons.ToList().ForEach(b => b.MouseWheel += (o, e) => BigButtonDialog_MouseWheel(o, e));
+            int count = Math.Max(minimumButtons, buttons.Count);
+            for (int i = 0; i < Math.Min(count, MaximumRows); i++)
+            {
+                MirImageControl background = new MirImageControl()
+                {
+                    Parent = this,
+                    Library = Libraries.Title,
+                    Location = new Point(buttons.Count == 1 ? -1 : 0, Size.Height),
+                    Index = count == 1 ? 836 : (i == 0 ? 838 : (i == count - 1 ? 840 : 839)),
+                    NotControl = false,
+                    Visible = true,
+                };
+                background.MouseWheel += (o, e) => BigButtonDialog_MouseWheel(o, e);
+                Size = new Size(background.Size.Width, Size.Height + background.Size.Height);
+            }
+
+            RefreshButtons();
+
+            MirImageControl footer = new MirImageControl()
+            {
+                Parent = this,
+                Library = Libraries.Title,
+                Location = new Point(-1, Size.Height),
+                Index = 837,
+                NotControl = false,
+                Visible = true,
+            };
+            Size = new Size(Size.Width, Size.Height + footer.Size.Height);
+
+            if (buttons.Count > MaximumRows)
+            {
+                MirButton upButton = new MirButton
+                {
+                    Index = 197,
+                    HoverIndex = 198,
+                    PressedIndex = 199,
+                    Library = Libraries.Prguse2,
+                    Parent = this,
+                    Size = new Size(16, 14),
+                    Sound = SoundList.ButtonA,
+                    Location = new Point(Size.Width - 26, 17)
+                };
+                upButton.Click += (o, e) =>
+                {
+                    ScrollUp();
+                };
+
+                MirButton downButton = new MirButton
+                {
+                    Index = 207,
+                    HoverIndex = 208,
+                    Library = Libraries.Prguse2,
+                    PressedIndex = 209,
+                    Parent = this,
+                    Size = new Size(16, 14),
+                    Sound = SoundList.ButtonA,
+                    Location = new Point(Size.Width - 26, Size.Height - 57)
+                };
+                downButton.Click += (o, e) =>
+                {
+                    ScrollDown();
+                };
+            }
+
+            Visible = true;
+        }
+
+        public override void Hide()
+        {
+            Size = Size.Empty;
+            Visible = false;
+        }
+
+        private void RefreshButtons()
+        {
+            CurrentButtons.ToList().ForEach(b => b.Visible = false);
+
+            for (int i = 0; i < Math.Min(CurrentButtons.Count, MaximumRows); i++)
+            {
+                CurrentButtons[i + ScrollOffset].Parent = this;
+                CurrentButtons[i + ScrollOffset].Visible = true;
+                CurrentButtons[i + ScrollOffset].Location = new Point(97, 7 + i * 40);
+            }            
+        }
+
+        private void BigButtonDialog_MouseWheel(object sender, MouseEventArgs e)
+        {
+            int count = e.Delta / SystemInformation.MouseWheelScrollDelta;
+
+            if (count > 0)
+                ScrollUp();
+            else if (count < 0)
+                ScrollDown();
+        }
+
+        private void ScrollUp()
+        {
+            if (ScrollOffset <= 0) return;
+
+            ScrollOffset--;
+            RefreshButtons();
+        }
+
+        private void ScrollDown()
+        {
+            if (ScrollOffset + MaximumRows >= CurrentButtons.Count) return;
+
+            ScrollOffset++;
+            RefreshButtons();
+        }
+    }
+    public sealed class BigButton : MirButton
+    {
+        #region Label
+        private MirLabel _shadowLabel;
+        #endregion
+
+        #region CenterText
+        public override bool CenterText
+        {
+            get
+            {
+                return _center;
+            }
+            set
+            {
+                _center = value;
+                if (_center)
+                {
+                    _label.Size = Size;
+                    _label.DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter;
+                    _shadowLabel.Size = Size;
+                    _shadowLabel.DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter;
+                }
+                else
+                {
+                    _label.AutoSize = true;
+                    _shadowLabel.AutoSize = true;
+                }
+            }
+        }
+        #endregion
+
+        #region Font Colour
+        public override Color FontColour
+        {
+            get
+            {
+                if (_label != null && !_label.IsDisposed)
+                    return _label.ForeColour;
+                return Color.Empty;
+            }
+            set
+            {
+                if (_label != null && !_label.IsDisposed)
+                    _label.ForeColour = value;
+            }
+        }
+        #endregion
+
+        #region Size
+        protected override void OnSizeChanged()
+        {
+            base.OnSizeChanged();
+
+            if (_shadowLabel != null && !_shadowLabel.IsDisposed)
+                _shadowLabel.Size = Size;
+        }
+        #endregion
+
+        #region Text
+        public override string Text
+        {
+            set
+            {
+                if (_label != null && !_label.IsDisposed)
+                {
+                    _label.Text = value;
+                    _label.Visible = !string.IsNullOrEmpty(value);
+                }
+
+                if (_shadowLabel != null && !_shadowLabel.IsDisposed)
+                {
+                    _shadowLabel.Text = value;
+                    _shadowLabel.Visible = !string.IsNullOrEmpty(value);
+                }
+            }
+        }
+        #endregion
+        public BigButton()
+        {
+            HoverIndex = -1;
+            PressedIndex = -1;
+            DisabledIndex = -1;
+            Sound = SoundList.ButtonB;
+
+            _shadowLabel = new MirLabel
+            {
+                NotControl = true,
+                Parent = this,
+                Location = new Point(2, 7),
+                AutoSize = false,
+                Size = new Size(237, 20),
+                DrawFormat = TextFormatFlags.HorizontalCenter,
+                ForeColour = Color.Black,
+                Font = ScaleFont(new Font(Settings.FontName, 12F, FontStyle.Bold))
+            };
+
+            _label = new MirLabel
+            {
+                NotControl = true,
+                Parent = this,
+                Location = new Point(0, 5),
+                AutoSize = false,
+                Size = new Size(237, 20),
+                DrawFormat = TextFormatFlags.HorizontalCenter,                
+                Font = ScaleFont(new Font(Settings.FontName, 12F, FontStyle.Bold))
+            };
+        }
+
+        protected internal override void DrawControl()
+        {
+            base.DrawControl();
+
+            if (DrawImage && Library != null)
+            {
+                bool oldGray = DXManager.GrayScale;
+
+                if (GrayScale)
+                {
+                    DXManager.SetGrayscale(true);
+                }
+
+                if (Blending)
+                    Library.DrawBlend(Index + 3, DisplayLocation, Color.White, false, BlendingRate);
+                else
+                    Library.Draw(Index + 3, DisplayLocation, Color.White, false, Opacity);
+
+                if (GrayScale) DXManager.SetGrayscale(oldGray);
+            }
+        }
+
+        #region Disposable
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (!disposing) return;
+
+            if (_shadowLabel != null && !_shadowLabel.IsDisposed)
+                _shadowLabel.Dispose();
+            _shadowLabel = null;
+        }
+        #endregion
     }
 }

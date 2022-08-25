@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using Server.MirDatabase;
 using Server.MirEnvir;
+using Server.MirNetwork;
 using Server.MirObjects.Monsters;
 using S = ServerPackets;
 using System.IO;
@@ -54,15 +55,22 @@ namespace Server.MirObjects
         public abstract int MaxHealth { get; }
         public byte PercentHealth
         {
-            get { return (byte) (Health/(float) MaxHealth*100); }
+            get { return (byte)(Health / (float)MaxHealth * 100); }
         }
 
         public byte Light;
         public int AttackSpeed;
 
-        public long CellTime, BrownTime, PKPointTime, LastHitTime, EXPOwnerTime;
+        protected long brownTime;
+        public virtual long BrownTime
+        {
+            get { return brownTime; }
+            set { brownTime = value; }
+        }
+
+        public long CellTime, PKPointTime, LastHitTime, EXPOwnerTime;
         public Color NameColour = Color.White;
-        
+
         public bool Dead, Undead, Harvested, AutoRev;
 
         public List<KeyValuePair<string, string>> NPCVar = new List<KeyValuePair<string, string>>();
@@ -73,7 +81,7 @@ namespace Server.MirObjects
 
         public bool CoolEye;
         private bool _hidden;
-        
+
         public bool Hidden
         {
             get
@@ -84,7 +92,7 @@ namespace Server.MirObjects
             {
                 if (_hidden == value) return;
                 _hidden = value;
-                CurrentMap.Broadcast(new S.ObjectHidden {ObjectID = ObjectID, Hidden = value}, CurrentLocation);
+                CurrentMap.Broadcast(new S.ObjectHidden { ObjectID = ObjectID, Hidden = value }, CurrentLocation);
             }
         }
 
@@ -140,7 +148,14 @@ namespace Server.MirObjects
 
         }
 
-        public MapObject Master, LastHitter, EXPOwner, Owner;
+        protected MapObject master;
+        public virtual MapObject Master
+        {
+            get { return master; }
+            set { master = value; }
+        }
+
+        public MapObject LastHitter, EXPOwner, Owner;
         public long ExpireTime, OwnerTime, OperateTime;
         public int OperateDelay = 100;
 
@@ -183,15 +198,15 @@ namespace Server.MirObjects
         public Point Front
         {
             get { return Functions.PointMove(CurrentLocation, Direction, 1); }
-
         }
+
         public Point Back
         {
             get { return Functions.PointMove(CurrentLocation, Direction, -1); }
 
         }
-        
-        
+
+
         public virtual void Process()
         {
             if (Master != null && Master.Node == null) Master = null;
@@ -226,20 +241,7 @@ namespace Server.MirObjects
 
         public virtual void OnSafeZoneChanged()
         {
-            for (int i = 0; i < Buffs.Count; i++)
-            {
-                if (Buffs[i].ObjectID == 0) continue;
-                if (!Buffs[i].Properties.HasFlag(BuffProperty.PauseInSafeZone)) continue;
 
-                if (InSafeZone)
-                {
-                    PauseBuff(Buffs[i]);
-                }
-                else
-                {
-                    UnpauseBuff(Buffs[i]);
-                }
-            }
         }
 
         public abstract void SetOperateTime();
@@ -283,16 +285,18 @@ namespace Server.MirObjects
             return Envir.Random.Next(min, max + 1);
         }
 
-        public virtual void Remove(PlayerObject player)
+        public virtual void Remove(HumanObject player)
         {
-            player.Enqueue(new S.ObjectRemove {ObjectID = ObjectID});
+            player.Enqueue(new S.ObjectRemove { ObjectID = ObjectID });
         }
-        public virtual void Add(PlayerObject player)
+        public virtual void Add(HumanObject player)
         {
+            if (player.Race != ObjectType.Player) return;
+
             if (Race == ObjectType.Merchant)
             {
                 NPCObject npc = (NPCObject)this;
-                npc.CheckVisible(player, true);
+                npc.CheckVisible((PlayerObject)player, true);
                 return;
             }
 
@@ -355,12 +359,12 @@ namespace Server.MirObjects
         }
         public virtual void Despawn()
         {
-            Broadcast(new S.ObjectRemove {ObjectID = ObjectID});
+            Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
             Envir.Objects.Remove(Node);
             if (Settings.Multithreaded && (Race == ObjectType.Monster))
             {
                 Envir.MobThreads[SpawnThread].ObjectsList.Remove(NodeThreaded);
-            }            
+            }
 
             ActionList.Clear();
 
@@ -400,7 +404,6 @@ namespace Server.MirObjects
             return null;
         }
 
-
         public virtual void Broadcast(Packet p)
         {
             if (p == null || CurrentMap == null) return;
@@ -427,6 +430,8 @@ namespace Server.MirObjects
             {
                 case ObjectType.Player:
                     return IsAttackTarget((PlayerObject)attacker);
+                case ObjectType.Hero:
+                    return IsAttackTarget((HeroObject)attacker);
                 case ObjectType.Monster:
                     return IsAttackTarget((MonsterObject)attacker);
                 default:
@@ -434,9 +439,9 @@ namespace Server.MirObjects
             }
         }
 
-        public abstract bool IsAttackTarget(PlayerObject attacker);
+        public abstract bool IsAttackTarget(HumanObject attacker);
         public abstract bool IsAttackTarget(MonsterObject attacker);
-        public abstract int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true);
+        public abstract int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true);
         public abstract int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility);
 
         public virtual int GetArmour(DefenceType type, MapObject attacker, out bool hit)
@@ -488,7 +493,7 @@ namespace Server.MirObjects
             return armour;
         }
 
-        public virtual void ApplyNegativeEffects(PlayerObject attacker, DefenceType type, ushort levelOffset)
+        public virtual void ApplyNegativeEffects(HumanObject attacker, DefenceType type, ushort levelOffset)
         {
             if (attacker.SpecialMode.HasFlag(SpecialItemMode.Paralize) && type != DefenceType.MAC && type != DefenceType.MACAgility && 1 == Envir.Random.Next(1, 15))
             {
@@ -514,6 +519,8 @@ namespace Server.MirObjects
             {
                 case ObjectType.Player:
                     return IsFriendlyTarget((PlayerObject)ally);
+                case ObjectType.Hero:
+                    return IsFriendlyTarget((HeroObject)ally);
                 case ObjectType.Monster:
                     return IsFriendlyTarget((MonsterObject)ally);
                 default:
@@ -521,7 +528,7 @@ namespace Server.MirObjects
             }
         }
 
-        public abstract bool IsFriendlyTarget(PlayerObject ally);
+        public abstract bool IsFriendlyTarget(HumanObject ally);
         public abstract bool IsFriendlyTarget(MonsterObject ally);
 
         public abstract void ReceiveChat(string text, ChatType type);
@@ -652,7 +659,15 @@ namespace Server.MirObjects
                 }
             }
         }
-
+        public bool HasBuff(BuffType type)
+        {
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                if (Buffs[i].Type != type) continue;
+                return true;
+            }
+            return false;
+        }
         public bool HasBuff(BuffType type, out Buff buff)
         {
             for (int i = 0; i < Buffs.Count; i++)
@@ -790,7 +805,7 @@ namespace Server.MirObjects
             return new Point(0, 0);
         }
 
-        public void BroadcastHealthChange()
+        public virtual void BroadcastHealthChange()
         {
             if (Race != ObjectType.Player && Race != ObjectType.Monster) return;
 
@@ -863,7 +878,6 @@ namespace Server.MirObjects
                     }
                 }
             }
-
         }
 
         public void BroadcastDamageIndicator(DamageType type, int damage = 0)
@@ -893,7 +907,7 @@ namespace Server.MirObjects
             return false;
         }
 
-        public abstract void SendHealth(PlayerObject player);
+        public abstract void SendHealth(HumanObject player);
 
         public bool InTrapRock
         {
@@ -950,7 +964,19 @@ namespace Server.MirObjects
 
     public class Poison
     {
-        public MapObject Owner;
+        private MapObject owner;
+        public MapObject Owner
+        {
+            get 
+            { 
+                return owner switch
+                {
+                    HeroObject hero => hero.Owner,
+                    _ => owner
+                };
+            }
+            set { owner = value; }
+        }
         public PoisonType PType;
         public int Value;
         public long Duration, Time, TickTime, TickSpeed;

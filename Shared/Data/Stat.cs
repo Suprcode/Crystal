@@ -153,6 +153,7 @@ public enum Stat : byte
     EnergyShieldHPGain = 126,
     ManaPenaltyPercent = 127,
     TeleportManaPenaltyPercent = 128,
+    Hero = 129,
 
     Unknown = 255
 }

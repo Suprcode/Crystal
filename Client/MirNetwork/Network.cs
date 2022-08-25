@@ -113,8 +113,8 @@ namespace Client.MirNetwork
 
             while ((p = Packet.ReceivePacket(_rawData, out _rawData)) != null)
             {
-                _receiveList.Enqueue(p);
                 data.AddRange(p.GetPacketBytes());
+                _receiveList.Enqueue(p);
             }
 
             CMain.BytesReceived += data.Count;

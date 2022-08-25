@@ -109,8 +109,8 @@ namespace Client.MirObjects
 
         public LevelEffects LevelEffects;
 
-        public PlayerObject(uint objectID)
-            : base(objectID)
+        public PlayerObject() { }
+        public PlayerObject(uint objectID) : base(objectID)
         {
             Frames = FrameSet.Player;
         }
@@ -181,6 +181,11 @@ namespace Client.MirObjects
 
             SetLibraries();
             SetEffects();
+        }
+
+        public override bool ShouldDrawHealth()
+        {
+            return this == User && (GroupDialog.GroupList.Contains(Name) || GroupDialog.GroupList.Count == 0);
         }
 
         public void ProcessBuffs()
@@ -1003,7 +1008,7 @@ namespace Client.MirObjects
                                 Frames.TryGetValue(CurrentAction, out Frame);
                                 break;
                             case MirClass.Assassin:
-                                if(GameScene.DoubleSlash)
+                                if(GameScene.User.DoubleSlash)
                                     Frames.TryGetValue(MirAction.Attack1, out Frame);
                                 else if (CMain.Shift)
                                     Frames.TryGetValue(CMain.Random.Next(100) >= 20 ? (CMain.Random.Next(100) > 40 ? MirAction.Attack1 : MirAction.Attack4) : (CMain.Random.Next(100) > 10 ? MirAction.Attack2 : MirAction.Attack3), out Frame);
@@ -1036,7 +1041,7 @@ namespace Client.MirObjects
                                     MapControl.NextAction = CMain.Time + 2500;
                                     GameScene.SpellTime = CMain.Time + 2500; //Spell Delay
 
-                                    Network.Enqueue(new C.Magic { Spell = Spell, Direction = Direction, });
+                                    Network.Enqueue(new C.Magic { ObjectID = GameScene.User.ObjectID, Spell = Spell, Direction = Direction, });
                                 }
                                 break;
                             case Spell.BladeAvalanche:
@@ -1140,7 +1145,7 @@ namespace Client.MirObjects
                                 {
                                     uint targetID = (uint)action.Params[1];
                                     Point location = (Point)action.Params[2];
-                                    Network.Enqueue(new C.Magic { Spell = Spell, Direction = Direction, TargetID = targetID, Location = location });
+                                    Network.Enqueue(new C.Magic { ObjectID = GameScene.User.ObjectID, Spell = Spell, Direction = Direction, TargetID = targetID, Location = location });
                                     MapControl.NextAction = CMain.Time + 1000;
                                     GameScene.SpellTime = CMain.Time + 1500; //Spell Delay
                                 }
@@ -1165,7 +1170,7 @@ namespace Client.MirObjects
                                     {
                                         MapControl.NextAction = CMain.Time + 800;
                                         GameScene.SpellTime = CMain.Time + 2500; //Spell Delay
-                                        Network.Enqueue(new C.Magic { Spell = Spell, Direction = Direction });
+                                        Network.Enqueue(new C.Magic { ObjectID = GameScene.User.ObjectID, Spell = Spell, Direction = Direction });
                                     }
                                     break;
                                 }
@@ -1301,13 +1306,13 @@ namespace Client.MirObjects
 
                             if (!RidingMount)
                             {
-                                if (GameScene.Slaying && TargetObject != null)
+                                if (GameScene.User.Slaying && TargetObject != null)
                                     Spell = Spell.Slaying;
 
-                                if (GameScene.Thrusting && GameScene.Scene.MapControl.HasTarget(Functions.PointMove(CurrentLocation, Direction, 2)))
+                                if (GameScene.User.Thrusting && GameScene.Scene.MapControl.HasTarget(Functions.PointMove(CurrentLocation, Direction, 2)))
                                     Spell = Spell.Thrusting;
 
-                                if (GameScene.HalfMoon)
+                                if (GameScene.User.HalfMoon)
                                 {
                                     if (TargetObject != null || GameScene.Scene.MapControl.CanHalfMoon(CurrentLocation, Direction))
                                     {
@@ -1317,7 +1322,7 @@ namespace Client.MirObjects
                                     }
                                 }
 
-                                if (GameScene.CrossHalfMoon)
+                                if (GameScene.User.CrossHalfMoon)
                                 {
                                     if (TargetObject != null || GameScene.Scene.MapControl.CanCrossHalfMoon(CurrentLocation))
                                     {
@@ -1327,7 +1332,7 @@ namespace Client.MirObjects
                                     }
                                 }
 
-                                if (GameScene.DoubleSlash)
+                                if (GameScene.User.DoubleSlash)
                                 {
                                     magic = User.GetMagic(Spell.DoubleSlash);
                                     if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
@@ -1335,14 +1340,14 @@ namespace Client.MirObjects
                                 }
 
 
-                                if (GameScene.TwinDrakeBlade && TargetObject != null)
+                                if (GameScene.User.TwinDrakeBlade && TargetObject != null)
                                 {
                                     magic = User.GetMagic(Spell.TwinDrakeBlade);
                                     if (magic != null && magic.BaseCost + magic.LevelCost * magic.Level <= User.MP)
                                         Spell = Spell.TwinDrakeBlade;
                                 }
 
-                                if (GameScene.FlamingSword)
+                                if (GameScene.User.FlamingSword)
                                 {
                                     if (TargetObject != null)
                                     {
@@ -1356,11 +1361,11 @@ namespace Client.MirObjects
                             Network.Enqueue(new C.Attack { Direction = Direction, Spell = Spell });
 
                             if (Spell == Spell.Slaying)
-                                GameScene.Slaying = false;
+                                GameScene.User.Slaying = false;
                             if (Spell == Spell.TwinDrakeBlade)
-                                GameScene.TwinDrakeBlade = false;
+                                GameScene.User.TwinDrakeBlade = false;
                             if (Spell == Spell.FlamingSword)
-                                GameScene.FlamingSword = false;
+                                GameScene.User.FlamingSword = false;
 
                             magic = User.GetMagic(Spell);
 
@@ -1397,7 +1402,7 @@ namespace Client.MirObjects
                                 uint targetID = (uint)action.Params[1];
                                 Point location = (Point)action.Params[2];
 
-                                Network.Enqueue(new C.Magic { Spell = Spell, Direction = Direction, TargetID = targetID, Location = location });
+                                Network.Enqueue(new C.Magic { ObjectID = GameScene.User.ObjectID, Spell = Spell, Direction = Direction, TargetID = targetID, Location = location });
 
                                 if (Spell == Spell.FlashDash)
                                 {
@@ -2154,9 +2159,9 @@ namespace Client.MirObjects
                     case MirAction.Dead:
                         GameScene.Scene.Redraw();
                         GameScene.Scene.MapControl.SortObject(this);
-                        if (MouseObject == this) MouseObject = null;
-                        if (TargetObject == this) TargetObject = null;
-                        if (MagicObject == this) MagicObject = null;
+                        if (MouseObject == this) MouseObjectID = 0;
+                        if (TargetObject == this) TargetObjectID = 0;
+                        if (MagicObject == this) MagicObjectID = 0;
                         DeadTime = CMain.Time;
                         break;
 
@@ -4999,8 +5004,13 @@ namespace Client.MirObjects
         }
         public void DrawBody()
         {
+            bool oldGrayScale = DXManager.GrayScale;
+            Color drawColour = ApplyDrawColour();                     
+
             if (BodyLibrary != null)
-                BodyLibrary.Draw(DrawFrame + ArmourOffSet, DrawLocation, DrawColour, true);
+                BodyLibrary.Draw(DrawFrame + ArmourOffSet, DrawLocation, drawColour, true);
+
+            DXManager.SetGrayscale(oldGrayScale);
 
             //BodyLibrary.DrawTinted(DrawFrame + ArmourOffSet, DrawLocation, DrawColour, Color.DarkSeaGreen);
         }
@@ -5148,11 +5158,8 @@ namespace Client.MirObjects
             return MapControl.MapLocation == CurrentLocation || BodyLibrary != null && BodyLibrary.VisiblePixel(DrawFrame + ArmourOffSet, p.Subtract(FinalDrawLocation), false);
         }
 
-        public override void CreateLabel()
+        private void CreateNameLabel()
         {
-            NameLabel = null;
-            GuildLabel = null;
-
             for (int i = 0; i < LabelList.Count; i++)
             {
                 if (LabelList[i].Text != Name || LabelList[i].ForeColour != NameColour) continue;
@@ -5160,14 +5167,7 @@ namespace Client.MirObjects
                 break;
             }
 
-            for (int i = 0; i < LabelList.Count; i++)
-            {
-                if (LabelList[i].Text != GuildName || LabelList[i].ForeColour != NameColour) continue;
-                GuildLabel = LabelList[i];
-                break;
-            }
-
-            if (NameLabel != null && !NameLabel.IsDisposed && GuildLabel != null && !GuildLabel.IsDisposed) return;
+            if (NameLabel != null && !NameLabel.IsDisposed) return;
 
             NameLabel = new MirLabel
             {
@@ -5180,7 +5180,22 @@ namespace Client.MirObjects
             };
             NameLabel.Disposing += (o, e) => LabelList.Remove(NameLabel);
             LabelList.Add(NameLabel);
-            
+        }
+
+        private void CreateGuildLabel()
+        {
+            if (string.IsNullOrEmpty(GuildName))
+                return;
+
+            for (int i = 0; i < LabelList.Count; i++)
+            {
+                if (LabelList[i].Text != GuildName || LabelList[i].ForeColour != NameColour) continue;
+                GuildLabel = LabelList[i];
+                break;
+            }
+
+            if (GuildLabel != null && !GuildLabel.IsDisposed) return;
+
             GuildLabel = new MirLabel
             {
                 AutoSize = true,
@@ -5194,22 +5209,32 @@ namespace Client.MirObjects
             LabelList.Add(GuildLabel);
         }
 
+        public override void CreateLabel()
+        {
+            NameLabel = null;
+            GuildLabel = null;
+
+            CreateNameLabel();
+            CreateGuildLabel();
+        }
+
         public override void DrawName()
         {
             CreateLabel();
 
-            if (NameLabel == null || GuildLabel == null) return;
-
-            if (GuildName != "")
+            if (GuildLabel != null && !string.IsNullOrEmpty(GuildName))
             {
                 GuildLabel.Text = GuildName;
-                GuildLabel.Location = new Point(DisplayRectangle.X + (50 - GuildLabel.Size.Width) / 2, DisplayRectangle.Y - (42 - GuildLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
+                GuildLabel.Location = new Point(DisplayRectangle.X + (50 - GuildLabel.Size.Width) / 2, DisplayRectangle.Y - (19 - GuildLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
                 GuildLabel.Draw();
             }
 
-            NameLabel.Text = Name;
-            NameLabel.Location = new Point(DisplayRectangle.X + (50 - NameLabel.Size.Width) / 2, DisplayRectangle.Y - (32 - NameLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
-            NameLabel.Draw();
+            if (NameLabel != null)
+            {
+                NameLabel.Text = Name;
+                NameLabel.Location = new Point(DisplayRectangle.X + (50 - NameLabel.Size.Width) / 2, DisplayRectangle.Y - (31 - NameLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
+                NameLabel.Draw();
+            }
         }
 
     }

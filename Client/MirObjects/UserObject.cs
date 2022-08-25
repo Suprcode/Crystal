@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using Client.MirScenes;
+using Client.MirScenes.Dialogs;
 using S = ServerPackets;
 
 namespace Client.MirObjects
@@ -36,9 +37,10 @@ namespace Client.MirObjects
 
         public BaseStats CoreStats = new BaseStats(0);
 
+        public virtual BuffDialog GetBuffDialog => GameScene.Scene.BuffsDialog;
 
         public UserItem[] Inventory = new UserItem[46], Equipment = new UserItem[14], Trade = new UserItem[10], QuestInventory = new UserItem[40];
-        public int BeltIdx = 6;
+        public int BeltIdx = 6, HeroBeltIdx = 2;
         public bool HasExpandedStorage = false;
         public DateTime ExpandedStorageExpiryTime;
 
@@ -55,18 +57,20 @@ namespace Client.MirObjects
         public List<int> CompletedQuests = new List<int>();
         public List<ClientMail> Mail = new List<ClientMail>();
 
+        public bool Slaying, Thrusting, HalfMoon, CrossHalfMoon, DoubleSlash, TwinDrakeBlade, FlamingSword;
         public ClientMagic NextMagic;
         public Point NextMagicLocation;
         public MapObject NextMagicObject;
         public MirDirection NextMagicDirection;
         public QueuedAction QueuedAction;
 
+        public UserObject() { }
         public UserObject(uint objectID) : base(objectID)
         {
             Stats = new Stats();
         }
 
-        public void Load(S.UserInformation info)
+        public virtual void Load(S.UserInformation info)
         {
             Id = info.RealId;
             Name = info.Name;
@@ -612,10 +616,11 @@ namespace Client.MirObjects
         private void RefreshBuffs()
         {
             TransformType = -1;
+            BuffDialog dialog = GetBuffDialog;
 
-            for (int i = 0; i < GameScene.Scene.BuffsDialog.Buffs.Count; i++)
+            for (int i = 0; i < dialog.Buffs.Count; i++)
             {
-                ClientBuff buff = GameScene.Scene.BuffsDialog.Buffs[i];
+                ClientBuff buff = dialog.Buffs[i];
 
                 Stats.Add(buff.Stats);
 
@@ -819,7 +824,7 @@ namespace Client.MirObjects
 
         public override void SetAction()
         {
-            if (QueuedAction != null )
+            if (QueuedAction != null && !GameScene.Observing)
             {
                 if ((ActionFeed.Count == 0) || (ActionFeed.Count == 1 && NextAction.Action == MirAction.Stance))
                 {

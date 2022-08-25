@@ -6,6 +6,17 @@ using System.IO;
 
 namespace Server.MirForms.DropBuilder
 {
+    public class MonsterDropInfo
+    {
+        public string Name { get; set; }
+        public string Path { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
+    }
+
     public partial class DropGenForm : Form
     {
         string Gold = "0", GoldOdds;
@@ -142,7 +153,9 @@ namespace Server.MirForms.DropBuilder
 
             // Add monsters to list
             for (int i = 0; i < Envir.MonsterInfoList.Count; i++)
-                listBoxMonsters.Items.Add(Envir.MonsterInfoList[i].Name);
+            {
+                listBoxMonsters.Items.Add(new MonsterDropInfo { Name = Envir.MonsterInfoList[i].Name, Path = Envir.MonsterInfoList[i].DropPath });
+            }
 
             tabControlSeperateItems_SelectedIndexChanged(tabControlSeperateItems, null);
             listBoxMonsters.SelectedIndex = 0;
@@ -666,14 +679,34 @@ namespace Server.MirForms.DropBuilder
             checkBoxCap.Checked = false;
 
             labelMobLevel.Text =
-                $"Currently Editing: {listBoxMonsters.SelectedItem} - Level: {Envir.MonsterInfoList[listBoxMonsters.SelectedIndices[0]].Level}";
+                $"Currently Editing: {((MonsterDropInfo)listBoxMonsters.SelectedItem).Name} - Level: {Envir.MonsterInfoList[listBoxMonsters.SelectedIndices[0]].Level}";
+        }
+
+        public string GetPathOfSelectedItem()
+        {
+            var selectedItem = (MonsterDropInfo)listBoxMonsters.SelectedItem;
+
+            if (selectedItem == null) return null;
+
+            var path = "";
+
+            if (string.IsNullOrEmpty(selectedItem.Path))
+            {
+                path = Path.Combine(Settings.DropPath, $"{selectedItem.Name}.txt");
+            }
+            else
+            {
+                path = Path.Combine(Settings.DropPath, selectedItem.Path + ".txt");
+            }
+
+            return path;
+
         }
 
         // Load the monster.txt drop file.
         private void LoadDropFile(bool edit)
         {
-            var lines = (edit == false) ? File.ReadAllLines(Path.Combine(Settings.DropPath,
-                $"{listBoxMonsters.SelectedItem}.txt")) : textBoxDropList.Lines;
+            var lines = (edit == false) ? File.ReadAllLines(GetPathOfSelectedItem()) : textBoxDropList.Lines;
 
             for (int i = 0; i < lines.Length; i++)
             {
@@ -881,7 +914,10 @@ namespace Server.MirForms.DropBuilder
         // Save the monster.txt drop file
         private void SaveDropFile()
         {
-            string dropFile = Path.Combine(Settings.DropPath, $"{listBoxMonsters.SelectedItem}.txt");
+            var dropFile = GetPathOfSelectedItem();
+
+            if (dropFile == null) return;
+
             using (FileStream fs = new FileStream(dropFile, FileMode.Create))
             {
                 using (StreamWriter sw = new StreamWriter(fs))

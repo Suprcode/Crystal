@@ -82,7 +82,7 @@ namespace LibraryEditor
 
                 if (buffer[40] == 1 || buffer[40] == 6)
                     _nType = 2;
-                else if (buffer[2] == 73)
+                else if (buffer[2] == 73 || buffer[2] == 72)
                     _nType = 3;
                 else if (buffer[48] == 32)
                 {

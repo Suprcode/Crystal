@@ -236,6 +236,7 @@ namespace Client.MirControls
                 foreach (MirControl control in Controls)
                     control.OnEnabledChanged();
         }
+        public bool AllowDisabledMouseOver;
         #endregion
 
         #region Events
@@ -727,12 +728,7 @@ namespace Client.MirControls
             if (ControlTexture == null || ControlTexture.Disposed)
                 return;
 
-            float oldOpacity = DXManager.Opacity;
-
-            DXManager.SetOpacity(Opacity);
-            DXManager.Sprite.Draw(ControlTexture, new Rectangle(0, 0, Size.Width, Size.Height), Vector3.Zero, new Vector3?(new Vector3((float)(DisplayLocation.X), (float)(DisplayLocation.Y), 0.0f)), Color.White);
-            CMain.DPSCounter++;
-            DXManager.SetOpacity(oldOpacity);
+            DXManager.DrawOpaque(ControlTexture, new Rectangle(0, 0, Size.Width, Size.Height), new Vector3?(new Vector3((float)(DisplayLocation.X), (float)(DisplayLocation.Y), 0.0f)), Color.White, Opacity);
 
             CleanTime = CMain.Time + Settings.CleanDelay;
         }
@@ -805,7 +801,7 @@ namespace Client.MirControls
         }
         protected virtual void OnMouseEnter()
         {
-            if (!_enabled)
+            if (!_enabled && !AllowDisabledMouseOver)
                 return;
 
             Redraw();
@@ -815,7 +811,7 @@ namespace Client.MirControls
         }
         protected virtual void OnMouseLeave()
         {
-            if (!_enabled)
+            if (!_enabled && !AllowDisabledMouseOver)
                 return;
 
             Redraw();
@@ -859,7 +855,7 @@ namespace Client.MirControls
         }
         public virtual void OnMouseMove(MouseEventArgs e)
         {
-            if (!_enabled)
+            if (!_enabled && !AllowDisabledMouseOver)
                 return;
 
 
@@ -1007,7 +1003,10 @@ namespace Client.MirControls
         #region Font
         public virtual System.Drawing.Font ScaleFont(System.Drawing.Font font)
         {
-            return new System.Drawing.Font(font.Name, font.Size * 96f / CMain.Graphics.DpiX, font.Style);
+            var theFont = new System.Drawing.Font(font.Name, font.Size * 96f / CMain.Graphics.DpiX, font.Style);
+            font.Dispose();
+            
+            return theFont;
         }
         #endregion
 
@@ -1042,10 +1041,7 @@ namespace Client.MirControls
                 _borderColour = Color.Empty;
 
                 DrawControlTexture = false;
-                if (ControlTexture != null && !ControlTexture.Disposed)
-                    ControlTexture.Dispose();
-                ControlTexture = null;
-                TextureValid = false;
+                DisposeTexture();
 
                 ControlAdded = null;
                 ControlRemoved = null;

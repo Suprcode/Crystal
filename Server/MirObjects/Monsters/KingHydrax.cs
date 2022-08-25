@@ -83,11 +83,11 @@ namespace Server.MirObjects.Monsters
 
             if (poison)
             {
-                PoisonTarget(Target, 2, 10, PoisonType.Green, 1000);
+                PoisonTarget(target, 2, 10, PoisonType.Green, 1000);
             }
             else
             {
-                PoisonTarget(Target, 3, 10, PoisonType.Paralysis, 1000);
+                PoisonTarget(target, 3, 10, PoisonType.Paralysis, 1000);
             }
         }
 

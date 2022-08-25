@@ -177,6 +177,19 @@ namespace Server.MirForms
                                 newMovement.ConquestIndex = conqIndex;
                                 lines[k] = lines[k].Remove(conqLocation);
                             }
+                            if (lines[k].Contains("SHOWONBIGMAP"))
+                            {
+                                newMovement.ShowOnBigMap = true;
+                                lines[k] = lines[k].Replace("SHOWONBIGMAP", "");
+                            }
+                            if (lines[k].Contains("ICON"))
+                            {
+                                int iconLocation = lines[k].IndexOf(" ICON");
+                                string icon = lines[k].Substring(iconLocation);
+                                int iconIndex = int.Parse(icon.Replace("ICON(", "").Replace(")", "")); //get value
+                                newMovement.Icon = iconIndex;
+                                lines[k] = lines[k].Remove(iconLocation);
+                            }
 
                             lines[k] = lines[k].Replace('.', ','); // Replace point with comma
                             lines[k] = lines[k].Replace(":", ","); // Replace colon with comma
@@ -408,7 +421,7 @@ namespace Server.MirForms
                     if (MonGen[j].Contains(';'))
                         MonGen[j] = MonGen[j].Substring(0, MonGen[j].IndexOf(";", System.StringComparison.Ordinal));
 
-                    var Line = System.Text.RegularExpressions.Regex.Replace(MonGen[j], @"\s+", " ").Split(' ');
+                    var Line = System.Text.RegularExpressions.Regex.Replace(MonGen[j], @"\s+", " ").Split(',');
 
                     if (Line.Length < 7) continue;
 
@@ -423,7 +436,8 @@ namespace Server.MirForms
                             Range = Convert.ToInt16(Line[4]),
                             Count = Convert.ToInt16(Line[5]),
                             Delay = Convert.ToInt16(Line[6]),
-                            Direction = (Line.Length == 8) ? Convert.ToInt16(Line[7]) : 0                    
+                            Direction = (Line.Length >= 8) ? Convert.ToInt16(Line[7]) : 0,
+                            RoutePath = (Line.Length >= 9) ? Line[8] : string.Empty
                         };
 
                         monGenList.Add(MonGenItem);
@@ -443,7 +457,8 @@ namespace Server.MirForms
     {
         public string
             Map = string.Empty,
-            Name = string.Empty;
+            Name = string.Empty,
+            RoutePath = string.Empty;
 
         public int
             X = 0,

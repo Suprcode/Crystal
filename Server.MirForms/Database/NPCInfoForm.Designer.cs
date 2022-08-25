@@ -30,6 +30,10 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.TeleportToCheckBox = new System.Windows.Forms.CheckBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.BigMapIconTextBox = new System.Windows.Forms.TextBox();
+            this.ShowBigMapCheckBox = new System.Windows.Forms.CheckBox();
             this.label14 = new System.Windows.Forms.Label();
             this.ConquestHidden_combo = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -100,6 +104,10 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.TeleportToCheckBox);
+            this.tabPage1.Controls.Add(this.label15);
+            this.tabPage1.Controls.Add(this.BigMapIconTextBox);
+            this.tabPage1.Controls.Add(this.ShowBigMapCheckBox);
             this.tabPage1.Controls.Add(this.label14);
             this.tabPage1.Controls.Add(this.ConquestHidden_combo);
             this.tabPage1.Controls.Add(this.label2);
@@ -127,6 +135,47 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Info";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // TeleportToCheckBox
+            // 
+            this.TeleportToCheckBox.AutoSize = true;
+            this.TeleportToCheckBox.Location = new System.Drawing.Point(251, 232);
+            this.TeleportToCheckBox.Name = "TeleportToCheckBox";
+            this.TeleportToCheckBox.Size = new System.Drawing.Size(103, 17);
+            this.TeleportToCheckBox.TabIndex = 63;
+            this.TeleportToCheckBox.Text = "Can Teleport To";
+            this.TeleportToCheckBox.UseVisualStyleBackColor = true;
+            this.TeleportToCheckBox.CheckedChanged += new System.EventHandler(this.TeleportToCheckBox_CheckedChanged);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Cursor = System.Windows.Forms.Cursors.Default;
+            this.label15.Location = new System.Drawing.Point(152, 234);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(31, 13);
+            this.label15.TabIndex = 62;
+            this.label15.Text = "Icon:";
+            // 
+            // BigMapIconTextBox
+            // 
+            this.BigMapIconTextBox.Location = new System.Drawing.Point(188, 230);
+            this.BigMapIconTextBox.MaxLength = 5;
+            this.BigMapIconTextBox.Name = "BigMapIconTextBox";
+            this.BigMapIconTextBox.Size = new System.Drawing.Size(37, 20);
+            this.BigMapIconTextBox.TabIndex = 61;
+            this.BigMapIconTextBox.TextChanged += new System.EventHandler(this.BigMapIconTextBox_TextChanged);
+            // 
+            // ShowBigMapCheckBox
+            // 
+            this.ShowBigMapCheckBox.AutoSize = true;
+            this.ShowBigMapCheckBox.Location = new System.Drawing.Point(27, 233);
+            this.ShowBigMapCheckBox.Name = "ShowBigMapCheckBox";
+            this.ShowBigMapCheckBox.Size = new System.Drawing.Size(107, 17);
+            this.ShowBigMapCheckBox.TabIndex = 60;
+            this.ShowBigMapCheckBox.Text = "Show on BigMap";
+            this.ShowBigMapCheckBox.UseVisualStyleBackColor = true;
+            this.ShowBigMapCheckBox.CheckedChanged += new System.EventHandler(this.ShowBigMapCheckBox_CheckedChanged);
             // 
             // label14
             // 
@@ -342,7 +391,7 @@
             this.tabPage2.Controls.Add(this.MinLev_textbox);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(592, 268);
+            this.tabPage2.Size = new System.Drawing.Size(511, 268);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Visibility";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -781,5 +830,9 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.ComboBox ConquestHidden_combo;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox BigMapIconTextBox;
+        private System.Windows.Forms.CheckBox ShowBigMapCheckBox;
+        private System.Windows.Forms.CheckBox TeleportToCheckBox;
     }
 }

@@ -34,6 +34,7 @@ namespace Server
             this.FilterTextBox = new System.Windows.Forms.TextBox();
             this.RefreshButton = new System.Windows.Forms.Button();
             this.AccountInfoPanel = new System.Windows.Forms.Panel();
+            this.setPasswordButton = new System.Windows.Forms.Button();
             this.AdminCheckBox = new System.Windows.Forms.CheckBox();
             this.PermBanButton = new System.Windows.Forms.Button();
             this.WeekBanButton = new System.Windows.Forms.Button();
@@ -61,7 +62,6 @@ namespace Server
             this.label5 = new System.Windows.Forms.Label();
             this.UserNameTextBox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.PasswordTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.AccountIDTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -70,7 +70,6 @@ namespace Server
             this.AccountInfoListView = new CustomFormControl.ListViewNF();
             this.indexHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.accountIDHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.passwordHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.userNameHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.adminHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.bannedHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -78,6 +77,7 @@ namespace Server
             this.expiryDateHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.MatchFilterCheckBox = new System.Windows.Forms.CheckBox();
             this.WipeCharButton = new System.Windows.Forms.Button();
+            this.PasswordChangeCheckBox = new System.Windows.Forms.CheckBox();
             this.AccountInfoPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -121,6 +121,8 @@ namespace Server
             // 
             this.AccountInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.AccountInfoPanel.Controls.Add(this.PasswordChangeCheckBox);
+            this.AccountInfoPanel.Controls.Add(this.setPasswordButton);
             this.AccountInfoPanel.Controls.Add(this.AdminCheckBox);
             this.AccountInfoPanel.Controls.Add(this.PermBanButton);
             this.AccountInfoPanel.Controls.Add(this.WeekBanButton);
@@ -148,7 +150,6 @@ namespace Server
             this.AccountInfoPanel.Controls.Add(this.label5);
             this.AccountInfoPanel.Controls.Add(this.UserNameTextBox);
             this.AccountInfoPanel.Controls.Add(this.label4);
-            this.AccountInfoPanel.Controls.Add(this.PasswordTextBox);
             this.AccountInfoPanel.Controls.Add(this.label3);
             this.AccountInfoPanel.Controls.Add(this.AccountIDTextBox);
             this.AccountInfoPanel.Controls.Add(this.label2);
@@ -156,6 +157,16 @@ namespace Server
             this.AccountInfoPanel.Name = "AccountInfoPanel";
             this.AccountInfoPanel.Size = new System.Drawing.Size(616, 209);
             this.AccountInfoPanel.TabIndex = 14;
+            // 
+            // setPasswordButton
+            // 
+            this.setPasswordButton.Location = new System.Drawing.Point(95, 41);
+            this.setPasswordButton.Name = "setPasswordButton";
+            this.setPasswordButton.Size = new System.Drawing.Size(84, 23);
+            this.setPasswordButton.TabIndex = 33;
+            this.setPasswordButton.Text = "Set Password";
+            this.setPasswordButton.UseVisualStyleBackColor = true;
+            this.setPasswordButton.Click += new System.EventHandler(this.button1_Click);
             // 
             // AdminCheckBox
             // 
@@ -396,14 +407,6 @@ namespace Server
             this.label4.TabIndex = 6;
             this.label4.Text = "User Name:";
             // 
-            // PasswordTextBox
-            // 
-            this.PasswordTextBox.Location = new System.Drawing.Point(95, 40);
-            this.PasswordTextBox.Name = "PasswordTextBox";
-            this.PasswordTextBox.Size = new System.Drawing.Size(100, 20);
-            this.PasswordTextBox.TabIndex = 5;
-            this.PasswordTextBox.TextChanged += new System.EventHandler(this.PasswordTextBox_TextChanged);
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -455,7 +458,6 @@ namespace Server
             this.AccountInfoListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.indexHeader,
             this.accountIDHeader,
-            this.passwordHeader,
             this.userNameHeader,
             this.adminHeader,
             this.bannedHeader,
@@ -481,10 +483,6 @@ namespace Server
             // 
             this.accountIDHeader.Text = "Account ID";
             this.accountIDHeader.Width = 92;
-            // 
-            // passwordHeader
-            // 
-            this.passwordHeader.Text = "Password";
             // 
             // userNameHeader
             // 
@@ -531,6 +529,17 @@ namespace Server
             this.WipeCharButton.UseVisualStyleBackColor = true;
             this.WipeCharButton.Click += new System.EventHandler(this.WipeCharButton_Click);
             // 
+            // PasswordChangeCheckBox
+            // 
+            this.PasswordChangeCheckBox.AutoSize = true;
+            this.PasswordChangeCheckBox.Location = new System.Drawing.Point(185, 43);
+            this.PasswordChangeCheckBox.Name = "PasswordChangeCheckBox";
+            this.PasswordChangeCheckBox.Size = new System.Drawing.Size(103, 17);
+            this.PasswordChangeCheckBox.TabIndex = 34;
+            this.PasswordChangeCheckBox.Text = "Require Change";
+            this.PasswordChangeCheckBox.UseVisualStyleBackColor = true;
+            this.PasswordChangeCheckBox.CheckedChanged += new System.EventHandler(this.PasswordChangeCheckBox_CheckedChanged);
+            // 
             // AccountInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -564,7 +573,6 @@ namespace Server
         private System.Windows.Forms.ColumnHeader accountIDHeader;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox FilterTextBox;
-        private System.Windows.Forms.ColumnHeader passwordHeader;
         private System.Windows.Forms.ColumnHeader userNameHeader;
         private System.Windows.Forms.ColumnHeader bannedHeader;
         private System.Windows.Forms.ColumnHeader banReasonHeader;
@@ -579,7 +587,6 @@ namespace Server
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox UserNameTextBox;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox PasswordTextBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox AccountIDTextBox;
         private System.Windows.Forms.Label label2;
@@ -607,5 +614,7 @@ namespace Server
         private System.Windows.Forms.TextBox FilterPlayerTextBox;
         private System.Windows.Forms.CheckBox MatchFilterCheckBox;
         private System.Windows.Forms.Button WipeCharButton;
+        private System.Windows.Forms.Button setPasswordButton;
+        private System.Windows.Forms.CheckBox PasswordChangeCheckBox;
     }
 }

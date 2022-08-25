@@ -40,6 +40,8 @@ namespace Client
 
         private static long _fpsTime;
         private static int _fps;
+        private static long _cleanTime;
+        private static long _drawTime;
         public static int FPS;
         public static int DPS;
         public static int DPSCounter;
@@ -71,7 +73,7 @@ namespace Client
 
 
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.Selectable, true);
-            FormBorderStyle = Settings.FullScreen ? FormBorderStyle.None : FormBorderStyle.FixedDialog;
+            FormBorderStyle = Settings.FullScreen || Settings.Borderless ? FormBorderStyle.None : FormBorderStyle.FixedDialog;
 
             Graphics = CreateGraphics();
             Graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -102,14 +104,6 @@ namespace Client
             }
         }
 
-        public static void GameLoop()
-        {
-            UpdateTime();
-                    UpdateEnviroment();
-                    RenderEnvironment();
-        }
-
-
         private static void Application_Idle(object sender, EventArgs e)
         {
             try
@@ -117,8 +111,11 @@ namespace Client
                 while (AppStillIdle)
                 {
                     UpdateTime();
+                    UpdateFrameTime();
                     UpdateEnviroment();
-                    RenderEnvironment();
+
+                    if (IsDrawTime())
+                        RenderEnvironment();
                 }
 
             }
@@ -165,8 +162,8 @@ namespace Client
         }
         public static void CMain_MouseMove(object sender, MouseEventArgs e)
         {
-            if (Settings.FullScreen)
-                Cursor.Clip = new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight);
+            if (Settings.FullScreen || Settings.MouseClip)
+                Cursor.Clip = Program.Form.RectangleToScreen(Program.Form.ClientRectangle);
 
             MPoint = Program.Form.PointToClient(Cursor.Position);
 
@@ -243,7 +240,7 @@ namespace Client
         public static void CMain_MouseUp(object sender, MouseEventArgs e)
         {
             MapControl.MapButtons &= ~e.Button;
-            if (!MapControl.MapButtons.HasFlag(MouseButtons.Right))
+            if (e.Button != MouseButtons.Right || !Settings.NewMove)
                 GameScene.CanRun = false;
 
             try
@@ -312,9 +309,9 @@ namespace Client
         {
             Time = Timer.ElapsedMilliseconds;
         }
-        private static void UpdateEnviroment()
-        {  
 
+        private static void UpdateFrameTime()
+        {
             if (Time >= _fpsTime)
             {
                 _fpsTime = Time + 1000;
@@ -323,11 +320,31 @@ namespace Client
 
                 DPS = DPSCounter;
                 DPSCounter = 0;
-
-                DXManager.Clean(); // Clean once a second.
             }
             else
                 _fps++;
+        }
+
+        private static bool IsDrawTime()
+        {
+            const int TargetUpdates = 1000 / 60; // 60 frames per second
+
+            if (Time >= _drawTime)
+            {
+                _drawTime = Time + TargetUpdates;
+                return true;
+            }
+            return false;
+        }
+
+        private static void UpdateEnviroment()
+        {
+            if (Time >= _cleanTime)
+            {
+                _cleanTime = Time + 1000;
+
+                DXManager.Clean(); // Clean once a second.
+            }
 
             Network.Process();
 
@@ -536,7 +553,7 @@ namespace Client
         {
             Settings.FullScreen = !Settings.FullScreen;
 
-            Program.Form.FormBorderStyle = Settings.FullScreen ? FormBorderStyle.None : FormBorderStyle.FixedDialog;
+            Program.Form.FormBorderStyle = Settings.FullScreen || Settings.Borderless ? FormBorderStyle.None : FormBorderStyle.FixedDialog;
 
             DXManager.Parameters.Windowed = !Settings.FullScreen;
 
@@ -661,7 +678,7 @@ namespace Client
 
         private void CMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (CMain.Time < GameScene.LogTime && !Settings.UseTestConfig)
+            if (CMain.Time < GameScene.LogTime && !Settings.UseTestConfig && !GameScene.Observing)
             {
                 GameScene.Scene.ChatDialog.ReceiveChat(string.Format(GameLanguage.CannotLeaveGame, (GameScene.LogTime - CMain.Time) / 1000), ChatType.System);
                 e.Cancel = true;

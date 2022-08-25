@@ -89,6 +89,8 @@ namespace Server.MirObjects.Monsters
 
                 for (int i = 0; i < friends.Count; i++)
                 {
+                    if (friends[i].Node == null) continue;
+
                     if (Info.Effect == 0)
                     {
                         var stats = new Stats { [Stat.MinDC] = min, [Stat.MaxDC] = max, [Stat.MinMC] = min, [Stat.MaxMC] = max };

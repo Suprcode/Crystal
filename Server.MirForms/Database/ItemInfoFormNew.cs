@@ -28,12 +28,25 @@ namespace Server.Database
         {
             InitializeComponent();
 
+            SetDoubleBuffered(itemInfoGridView);
+
             InitializeItemInfoFilters();
             InitializeItemInfoGridView();
 
             CreateDynamicColumns();
 
             PopulateTable();
+        }
+
+        public static void SetDoubleBuffered(System.Windows.Forms.Control c)
+        {
+            System.Reflection.PropertyInfo aProp =
+                  typeof(System.Windows.Forms.Control).GetProperty(
+                        "DoubleBuffered",
+                        System.Reflection.BindingFlags.NonPublic |
+                        System.Reflection.BindingFlags.Instance);
+
+            aProp.SetValue(c, true, null);
         }
 
         private void InitializeItemInfoFilters()
@@ -66,36 +79,45 @@ namespace Server.Database
             ItemPrice.ValueType = typeof(uint);
             ItemToolTip.ValueType = typeof(string);
 
+            NeedIdentify.ValueType = typeof(bool);
+            ShowGroupPickup.ValueType = typeof(bool);
+            GlobalDropNotify.ValueType = typeof(bool);
+            ClassBased.ValueType = typeof(bool);
+            LevelBased.ValueType = typeof(bool);
+            CanMine.ValueType = typeof(bool);
+            CanFastRun.ValueType = typeof(bool);
+            CanAwakening.ValueType = typeof(bool);
+
             //Basic
-            this.ItemType.ValueType = typeof(ItemType);
-            this.ItemType.DataSource = Enum2DataTable<ItemType>();
-            this.ItemType.ValueMember = "Value";
-            this.ItemType.DisplayMember = "Display";
+            ItemType.ValueType = typeof(ItemType);
+            ItemType.DataSource = Enum2DataTable<ItemType>();
+            ItemType.ValueMember = "Value";
+            ItemType.DisplayMember = "Display";
 
-            this.ItemGrade.ValueType = typeof(ItemGrade);
-            this.ItemGrade.DataSource = Enum2DataTable<ItemGrade>();
-            this.ItemGrade.ValueMember = "Value";
-            this.ItemGrade.DisplayMember = "Display";
+            ItemGrade.ValueType = typeof(ItemGrade);
+            ItemGrade.DataSource = Enum2DataTable<ItemGrade>();
+            ItemGrade.ValueMember = "Value";
+            ItemGrade.DisplayMember = "Display";
 
-            this.ItemRequiredType.ValueType = typeof(RequiredType);
-            this.ItemRequiredType.DataSource = Enum2DataTable<RequiredType>();
-            this.ItemRequiredType.ValueMember = "Value";
-            this.ItemRequiredType.DisplayMember = "Display";
+            ItemRequiredType.ValueType = typeof(RequiredType);
+            ItemRequiredType.DataSource = Enum2DataTable<RequiredType>();
+            ItemRequiredType.ValueMember = "Value";
+            ItemRequiredType.DisplayMember = "Display";
 
-            this.ItemRequiredGender.ValueType = typeof(RequiredGender);
-            this.ItemRequiredGender.DataSource = Enum2DataTable<RequiredGender>();
-            this.ItemRequiredGender.ValueMember = "Value";
-            this.ItemRequiredGender.DisplayMember = "Display";
+            ItemRequiredGender.ValueType = typeof(RequiredGender);
+            ItemRequiredGender.DataSource = Enum2DataTable<RequiredGender>();
+            ItemRequiredGender.ValueMember = "Value";
+            ItemRequiredGender.DisplayMember = "Display";
 
-            this.ItemRequiredClass.ValueType = typeof(RequiredClass);
-            this.ItemRequiredClass.DataSource = Enum2DataTable<RequiredClass>();
-            this.ItemRequiredClass.ValueMember = "Value";
-            this.ItemRequiredClass.DisplayMember = "Display";
+            ItemRequiredClass.ValueType = typeof(RequiredClass);
+            ItemRequiredClass.DataSource = Enum2DataTable<RequiredClass>();
+            ItemRequiredClass.ValueMember = "Value";
+            ItemRequiredClass.DisplayMember = "Display";
 
-            this.ItemSet.ValueType = typeof(ItemSet);
-            this.ItemSet.DataSource = Enum2DataTable<ItemSet>();
-            this.ItemSet.ValueMember = "Value";
-            this.ItemSet.DisplayMember = "Display";
+            ItemSet.ValueType = typeof(ItemSet);
+            ItemSet.DataSource = Enum2DataTable<ItemSet>();
+            ItemSet.ValueMember = "Value";
+            ItemSet.DisplayMember = "Display";
         }
 
         public static DataTable Enum2DataTable<T>()
@@ -172,7 +194,6 @@ namespace Server.Database
 
                 itemInfoGridView.Columns.Add(col);
             }
-
         }
 
         private void PopulateTable()
@@ -212,6 +233,15 @@ namespace Server.Database
                 row["ItemDurability"] = item.Durability;
                 row["ItemPrice"] = item.Price;
                 row["ItemToolTip"] = item.ToolTip;
+
+                row["NeedIdentify"] = item.NeedIdentify;
+                row["ShowGroupPickup"] = item.ShowGroupPickup;
+                row["GlobalDropNotify"] = item.GlobalDropNotify;
+                row["ClassBased"] = item.ClassBased;
+                row["LevelBased"] = item.LevelBased;
+                row["CanMine"] = item.CanMine;
+                row["CanFastRun"] = item.CanFastRun;
+                row["CanAwakening"] = item.CanAwakening;
 
                 foreach (Stat stat in StatEnums)
                 {
@@ -259,14 +289,16 @@ namespace Server.Database
         private void SaveForm()
         {
             int lastIndex = 0;
-            if (Envir.MonsterInfoList.Count > 0)
+            if (Envir.ItemInfoList.Count > 0)
             {
                 lastIndex = Envir.ItemInfoList.Max(x => x.Index);
             }
 
             foreach (DataGridViewRow row in itemInfoGridView.Rows)
             {
-                if (string.IsNullOrEmpty((string)row.Cells["ItemName"].Value))
+                var name = row.Cells["ItemName"].Value;
+
+                if (name == null || name.GetType() == typeof(System.DBNull) || string.IsNullOrWhiteSpace((string)name))
                 {
                     continue;
                 }
@@ -304,11 +336,20 @@ namespace Server.Database
                 item.Slots = (byte)row.Cells["ItemSlots"].Value;
                 item.Weight = (byte)row.Cells["ItemWeight"].Value;
 
+                item.NeedIdentify = (bool)row.Cells["NeedIdentify"].Value;
+                item.ShowGroupPickup = (bool)row.Cells["ShowGroupPickup"].Value;
+                item.GlobalDropNotify = (bool)row.Cells["GlobalDropNotify"].Value;
+                item.ClassBased = (bool)row.Cells["ClassBased"].Value;
+                item.LevelBased = (bool)row.Cells["LevelBased"].Value;
+                item.CanMine = (bool)row.Cells["CanMine"].Value;
+                item.CanFastRun = (bool)row.Cells["CanFastRun"].Value;
+                item.CanAwakening = (bool)row.Cells["CanAwakening"].Value;
+
                 var light = ((byte)row.Cells["ItemLightRange"].Value % 15) + ((byte)row.Cells["ItemLightIntensity"].Value * 15);
                 item.Light = (byte)Math.Min(byte.MaxValue, light);
                 item.Durability = (ushort)row.Cells["ItemDurability"].Value;
                 item.Price = (uint)row.Cells["ItemPrice"].Value;
-                item.ToolTip = (string)row.Cells["ItemToolTip"].Value;
+                item.ToolTip = row.Cells["ItemToolTip"].Value.ToString();
 
                 item.Stats.Clear();
                 item.Bind = BindMode.None;
@@ -498,6 +539,11 @@ namespace Server.Database
 
         private void rBtnViewSpecial_CheckedChanged(object sender, EventArgs e)
         {
+            var specialCols = new string[]
+            {
+                "NeedIdentify", "ShowGroupPickup","GlobalDropNotify","ClassBased","LevelBased","CanMine","CanFastRun","CanAwakening"
+            };
+
             if (rBtnViewSpecial.Checked)
             {
                 foreach (DataGridViewColumn col in itemInfoGridView.Columns)
@@ -508,6 +554,12 @@ namespace Server.Database
                     }
 
                     if (col.Name.StartsWith("Special"))
+                    {
+                        col.Visible = true;
+                        continue;
+                    }
+
+                    if (specialCols.Contains(col.Name))
                     {
                         col.Visible = true;
                         continue;
@@ -571,6 +623,8 @@ namespace Server.Database
 
                         int rowsEdited = 0;
 
+                        this.itemInfoGridView.CurrentCell = this.itemInfoGridView[1, 0];
+
                         for (int i = 1; i < rows.Length; i++)
                         {
                             var row = rows[i];
@@ -591,17 +645,17 @@ namespace Server.Database
 
                             var dataRow = FindRowByItemName(cells[0]);
 
-                            itemInfoGridView.BeginEdit(true);
-
-                            if (dataRow == null)
-                            {
-                                dataRow = Table.NewRow();
-
-                                Table.Rows.Add(dataRow);
-                            }
-
                             try
                             {
+                                itemInfoGridView.BeginEdit(true);
+
+                                if (dataRow == null)
+                                {
+                                    dataRow = Table.NewRow();
+
+                                    Table.Rows.Add(dataRow);
+                                }
+
                                 for (int j = 0; j < columns.Length; j++)
                                 {
                                     var column = columns[j];
@@ -636,15 +690,19 @@ namespace Server.Database
                                         }
                                     }
                                 }
+
+                                dataRow["Modified"] = true;
+
+                                itemInfoGridView.EndEdit();
                             }
                             catch(Exception ex)
                             {
                                 fileError = true;
+                                itemInfoGridView.EndEdit();
+
                                 MessageBox.Show($"Error when importing item {cells[0]}. {ex.Message}");
                                 continue;
                             }
-
-                            itemInfoGridView.EndEdit();
 
                             rowsEdited++;
 
@@ -656,6 +714,8 @@ namespace Server.Database
 
                         if (!fileError)
                         {
+                            itemInfoGridView.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
+
                             MessageBox.Show($"{rowsEdited} items have been imported.");
                         }
                     }
@@ -695,25 +755,36 @@ namespace Server.Database
                         {
                             int columnCount = itemInfoGridView.Columns.Count;
                             string columnNames = "";
-                            string[] outputCsv = new string[itemInfoGridView.Rows.Count + 1];
+                            var outputCsv = new List<string>(itemInfoGridView.Rows.Count + 1);
                             for (int i = 2; i < columnCount; i++)
                             {
                                 columnNames += itemInfoGridView.Columns[i].Name.ToString() + ",";
                             }
-                            outputCsv[0] += columnNames;
+                            outputCsv.Add(columnNames);
 
+                            var line = new StringBuilder();
                             for (int i = 1; (i - 1) < itemInfoGridView.Rows.Count; i++)
                             {
+                                line.Clear();
+
+                                var row = itemInfoGridView.Rows[i - 1];
+
+                                var name = row.Cells["ItemName"].Value;
+                                if (name == null || name.GetType() == typeof(System.DBNull) || string.IsNullOrWhiteSpace((string)name))
+                                {
+                                    continue;
+                                }
+
                                 for (int j = 2; j < columnCount; j++)
                                 {
-                                    var cell = itemInfoGridView.Rows[i - 1].Cells[j];
+                                    var cell = row.Cells[j];
 
                                     var col = itemInfoGridView.Columns[j];
 
                                     var valueType = col.ValueType;
                                     if (valueType.IsEnum)
                                     {
-                                        outputCsv[i] += ((Enum.ToObject(valueType, cell.Value ?? 0))?.ToString() ?? "") + ",";
+                                        line.Append(((Enum.ToObject(valueType, cell.Value ?? 0))?.ToString() ?? "") + ",");
                                     }
                                     else
                                     {
@@ -721,14 +792,17 @@ namespace Server.Database
 
                                         if (col.Name == "ItemToolTip")
                                         {
-                                            outputCsv[i] += $"\"{val.Replace("\r\n", "\\r\\n")}\",";
+                                            line.Append($"\"{val.Replace("\r\n", "\\r\\n")}\",");
                                         }
                                         else
                                         {
-                                            outputCsv[i] += $"{val},";
+                                            line.Append($"{val},");
                                         }
                                     }
                                 }
+
+                                if (line.Length > 0)
+                                    outputCsv.Add(line.ToString());
                             }
 
                             File.WriteAllLines(sfd.FileName, outputCsv, Encoding.UTF8);
@@ -773,6 +847,15 @@ namespace Server.Database
             row.Cells["ItemDurability"].Value = (ushort)0;
             row.Cells["ItemPrice"].Value = (uint)0;
             row.Cells["ItemToolTip"].Value = (string)"";
+
+            row.Cells["NeedIdentify"].Value = false;
+            row.Cells["ShowGroupPickup"].Value = false;
+            row.Cells["GlobalDropNotify"].Value = false;
+            row.Cells["ClassBased"].Value = false;
+            row.Cells["LevelBased"].Value = false;
+            row.Cells["CanMine"].Value = false;
+            row.Cells["CanFastRun"].Value = false;
+            row.Cells["CanAwakening"].Value = false;
 
             foreach (Stat stat in StatEnums)
             {
@@ -819,6 +902,26 @@ namespace Server.Database
         private void itemInfoGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
 
+        }
+
+        private void itemInfoGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void Gameshop_button_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in itemInfoGridView.Rows)
+            {
+                if (row.Selected)
+                {
+                    var item = Envir.ItemInfoList.FirstOrDefault(x => x.Index == row.Index);
+
+                    Envir.AddToGameShop(item);
+                }
+            }
+
+            Envir.SaveDB();
         }
     }
 }

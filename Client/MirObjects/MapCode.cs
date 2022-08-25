@@ -43,6 +43,8 @@ namespace Client.MirObjects
         }
         public void RemoveObject(MapObject ob)
         {
+            if (CellObjects == null) return;
+
             CellObjects.Remove(ob);
 
             if (CellObjects.Count == 0) CellObjects = null;

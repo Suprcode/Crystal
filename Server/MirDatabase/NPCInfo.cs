@@ -37,6 +37,9 @@ namespace Server.MirDatabase
         public bool Sabuk = false;
         public int FlagNeeded = 0;
         public int Conquest;
+        public bool ShowOnBigMap;
+        public int BigMapIcon;
+        public bool CanTeleportTo;
 
         public List<int> CollectQuestIndexes = new List<int>();
         public List<int> FinishQuestIndexes = new List<int>();
@@ -88,6 +91,14 @@ namespace Server.MirDatabase
                     Sabuk = reader.ReadBoolean();
                 FlagNeeded = reader.ReadInt32();
             }
+
+            if (Envir.LoadVersion > 95)
+            {
+                ShowOnBigMap = reader.ReadBoolean();
+                BigMapIcon = reader.ReadInt32();
+            }
+            if (Envir.LoadVersion > 96)
+                CanTeleportTo = reader.ReadBoolean();
         }
         public void Save(BinaryWriter writer)
         {
@@ -121,6 +132,10 @@ namespace Server.MirDatabase
             writer.Write(ClassRequired);
             writer.Write(Conquest);
             writer.Write(FlagNeeded);
+
+            writer.Write(ShowOnBigMap);
+            writer.Write(BigMapIcon);
+            writer.Write(CanTeleportTo);
         }
 
         public static void FromText(string text)
@@ -146,18 +161,36 @@ namespace Server.MirDatabase
             if (!ushort.TryParse(data[5], out info.Image)) return;
             if (!ushort.TryParse(data[6], out info.Rate)) return;
 
+            if (!bool.TryParse(data[7], out info.ShowOnBigMap)) return;
+            if (!int.TryParse(data[8], out info.BigMapIcon)) return;
+            if (!bool.TryParse(data[9], out info.CanTeleportTo)) return;
+
             info.Index = ++EditEnvir.NPCIndex;
             EditEnvir.NPCInfoList.Add(info);
         }
         public string ToText()
         {
-            return string.Format("{0},{1},{2},{3},{4},{5},{6}",
-                FileName, EditEnvir.MapInfoList.Where(d => d.Index == MapIndex).FirstOrDefault().FileName, Location.X, Location.Y, Name, Image, Rate);
+            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}",
+                FileName, EditEnvir.MapInfoList.Where(d => d.Index == MapIndex).FirstOrDefault().FileName, Location.X, Location.Y, Name, Image, Rate, ShowOnBigMap, BigMapIcon, CanTeleportTo);
         }
 
         public override string ToString()
         {
             return string.Format("{0}:   {1}", FileName, Functions.PointToString(Location));
+        }
+
+        public string GameName
+        {
+            get
+            {
+                string s = Name;
+                if (s.Contains("_"))
+                {
+                    string[] splitName = s.Split('_');
+                    s = splitName[splitName.Length - 1];
+                }
+                return s;
+            }
         }
     }
 }
