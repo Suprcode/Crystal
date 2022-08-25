@@ -499,10 +499,10 @@ namespace Client
             {
                 HintBaseLabel = new MirControl
                 {
-                    BackColour = Color.FromArgb(128, 128, 50),
+                    BackColour = Color.FromArgb(255, 0, 0, 0),
                     Border = true,
                     DrawControlTexture = true,
-                    BorderColour = Color.Yellow,
+                    BorderColour = Color.FromArgb(255, 144, 144, 0),
                     ForeColour = Color.Yellow,
                     Parent = MirScene.ActiveScene,
                     NotControl = true,
@@ -517,7 +517,7 @@ namespace Client
                 {
                     AutoSize = true,
                     BackColour = Color.Transparent,
-                    ForeColour = Color.White,
+                    ForeColour = Color.Yellow,
                     Parent = HintBaseLabel,
                 };
 
