@@ -2304,7 +2304,7 @@ namespace Server.MirObjects
                 if (player == this) continue;
 
                 if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
-                    player.Enqueue(new S.ObjectColourChanged { ObjectID = ObjectID, NameColour = GetNameColour(this) });
+                    player.Broadcast(new S.ObjectColourChanged { ObjectID = ObjectID, NameColour = GetNameColour(this) });
             }
         }
         public virtual void GainExp(uint amount) { }
@@ -7022,6 +7022,7 @@ namespace Server.MirObjects
 
             if (p.Owner != null && p.Owner.Race == ObjectType.Player && Envir.Time > BrownTime && PKPoints < 200)
             {
+                Console.WriteLine($"{Name}|{NameColour}|{MyGuild == null}|{MyGuild.IsAtWar()}");
                 p.Owner.BrownTime = Envir.Time + Settings.Minute;
             }
 
