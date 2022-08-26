@@ -1640,6 +1640,9 @@ namespace Server.MirObjects
             if (PKPoints >= 200)
                 colour = Color.Red;
 
+            if (MyGuild != null && MyGuild.Conquest != null)
+                colour = Color.SkyBlue;
+
             if (colour == NameColour) return;
             NameColour = colour;
             Enqueue(new S.ColourChanged { NameColour = NameColour });
@@ -1670,6 +1673,15 @@ namespace Server.MirObjects
                             return Color.Blue;
                         else if (MyGuild.IsEnemy(player.MyGuild))
                             return Color.Orange;
+                    }
+
+                    if (player.MyGuild != null)
+                    {
+                        if (player.MyGuild.Conquest != null &&
+                            player.MyGuild == MyGuild)
+                            return Color.SkyBlue;
+                        if (MyGuild.IsEnemy(player.MyGuild))
+                            return Color.White;
                     }
                 }
             }
