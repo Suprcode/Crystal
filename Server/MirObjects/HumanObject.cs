@@ -258,7 +258,7 @@ namespace Server.MirObjects
         }
         public override void Process()
         {
-            if ((Race == ObjectType.Player && Connection == null) || Node == null || Info == null) return;            
+            if ((Race == ObjectType.Player && Connection == null) || Node == null || Info == null) return;
 
             if (CellTime + 700 < Envir.Time) _stepCounter = 0;
 
@@ -293,7 +293,7 @@ namespace Server.MirObjects
             {
                 RunTime = Envir.Time + 1500;
                 _runCounter--;
-            }            
+            }
 
             if (Stacking && Envir.Time > StackingTime)
             {
@@ -303,13 +303,13 @@ namespace Server.MirObjects
                 {
                     if (Pushed(this, (MirDirection)i, 1) == 1) break;
                 }
-            }            
+            }
 
             if (Mount.HasMount && Envir.Time > IncreaseLoyaltyTime)
             {
                 IncreaseLoyaltyTime = Envir.Time + (LoyaltyDelay * 60);
                 IncreaseMountLoyalty(1);
-            }            
+            }
 
             if (Envir.Time > ItemExpireTime)
             {
@@ -326,7 +326,7 @@ namespace Server.MirObjects
 
             ProcessBuffs();
             ProcessRegen();
-            ProcessPoison();            
+            ProcessPoison();
 
             UserItem item;
             if (Envir.Time > TorchTime)
@@ -7020,9 +7020,14 @@ namespace Server.MirObjects
                     p.Value -= armour;
             }
 
-            if (p.Owner != null && p.Owner.Race == ObjectType.Player && Envir.Time > BrownTime && PKPoints < 200)
+            if (p.Owner != null && p.Owner is PlayerObject player && Envir.Time > BrownTime && PKPoints < 200)
             {
-                p.Owner.BrownTime = Envir.Time + Settings.Minute;
+                bool ownerBrowns = true;
+                if (player.MyGuild != null && MyGuild != null && MyGuild.IsAtWar() && MyGuild.IsEnemy(player.MyGuild))
+                    ownerBrowns = false;
+
+                if (ownerBrowns && !player.WarZone)
+                        p.Owner.BrownTime = Envir.Time + Settings.Minute;
             }
 
             if ((p.PType == PoisonType.Green) || (p.PType == PoisonType.Red)) p.Duration = Math.Max(0, p.Duration - Stats[Stat.PoisonRecovery]);

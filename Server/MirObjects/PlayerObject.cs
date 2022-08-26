@@ -1619,33 +1619,35 @@ namespace Server.MirObjects
         public override void RefreshNameColour()
         {
             Color colour = Color.White;
-            
-            if (PKPoints >= 200)
-                colour = Color.Red;
-            else if (WarZone)
+        
+            if (PKPoints >= 100)
+                colour = Color.Yellow;
+       
+            if (WarZone)
             {
                 if (MyGuild == null)
                     colour = Color.Green;
                 else
                     colour = Color.Blue;
             }
-            else if (Envir.Time < BrownTime)
+       
+            if (MyGuild != null && MyGuild.IsAtWar())
+                colour = Color.Blue;
+       
+            if (Envir.Time < BrownTime)
                 colour = Color.SaddleBrown;
-            else if (PKPoints >= 100)
-                colour = Color.Yellow;
+
+            if (PKPoints >= 200)
+                colour = Color.Red;
 
             if (colour == NameColour) return;
-
             NameColour = colour;
-            if ((MyGuild == null) || (!MyGuild.IsAtWar()))
-                Enqueue(new S.ColourChanged { NameColour = NameColour });
-
+            Enqueue(new S.ColourChanged { NameColour = NameColour });
             BroadcastColourChange();
         }
         public override Color GetNameColour(HumanObject human)
         {
             if (human == null) return NameColour;
-
             if (human is PlayerObject player)
             {
                 if (WarZone)
@@ -1654,22 +1656,22 @@ namespace Server.MirObjects
                         return Color.Green;
                     else
                     {
-                        if (player.MyGuild == null)
-                            return Color.Orange;
                         if (player.MyGuild == MyGuild)
                             return Color.Blue;
                         else
                             return Color.Orange;
                     }
                 }
-
                 if (MyGuild != null)
+                {
                     if (MyGuild.IsAtWar())
+                    {
                         if (player.MyGuild == MyGuild)
                             return Color.Blue;
-                        else
-                            if (MyGuild.IsEnemy(player.MyGuild))
+                        else if (MyGuild.IsEnemy(player.MyGuild))
                             return Color.Orange;
+                    }
+                }
             }
             return NameColour;
         }
