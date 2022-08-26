@@ -5392,6 +5392,10 @@ namespace Server.MirObjects
                                 Enqueue(p);
                                 return;
                             }
+                            foreach (DelayedAction ac in ActionList.Where(u => u.Type == DelayedType.NPC))
+                            {
+                                ac.FlaggedToRemove = true;
+                            }
                             break;
                         case 1: //TT
                             if (!Teleport(Envir.GetMap(BindMapIndex), BindLocation))
@@ -5399,12 +5403,20 @@ namespace Server.MirObjects
                                 Enqueue(p);
                                 return;
                             }
+                            foreach (DelayedAction ac in ActionList.Where(u => u.Type == DelayedType.NPC))
+                            {
+                                ac.FlaggedToRemove = true;
+                            }
                             break;
                         case 2: //RT
                             if (!TeleportRandom(200, item.Info.Durability))
                             {
                                 Enqueue(p);
                                 return;
+                            }
+                            foreach (DelayedAction ac in ActionList.Where(u => u.Type == DelayedType.NPC))
+                            {
+                                ac.FlaggedToRemove = true;
                             }
                             break;
                         case 3: //BenedictionOil
