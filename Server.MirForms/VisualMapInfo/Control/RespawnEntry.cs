@@ -6,6 +6,7 @@ using Server.MirForms.VisualMapInfo.Class;
 using Server.MirEnvir;
 using Server.MirDatabase;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Server.MirForms.VisualMapInfo.Control
 {
@@ -196,10 +197,9 @@ namespace Server.MirForms.VisualMapInfo.Control
 
         private void RespawnEntry_Load(object sender, EventArgs e)
         {
-
             for (int i = 0; i < Envir.MonsterInfoList.Count; i++) MonsterComboBox.Items.Add(Envir.MonsterInfoList[i]);
 
-            MonsterComboBox.SelectedIndex = MonsterIndex-1; //-1
+            MonsterComboBox.SelectedItem = Envir.MonsterInfoList.FirstOrDefault(x => x.Index == MonsterIndex);
 
             Details.Text =
                 $"C               D            X: {X.ToString()} | Y: {Y.ToString()} | Range: {Range.ToString()}";

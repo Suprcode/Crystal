@@ -45,7 +45,7 @@ namespace Server.MirObjects
         public readonly int ScriptID;
         public readonly uint LoadedObjectID;
         public readonly NPCScriptType Type;
-        protected readonly string FileName;
+        public readonly string FileName;
 
         public const string
             MainKey = "[@MAIN]",
@@ -424,7 +424,7 @@ namespace Server.MirObjects
 
             List<string> lines = scriptLines.Where(x => !string.IsNullOrEmpty(x)).ToList();
 
-            NPCPage Page = new NPCPage(sectionName);
+            NPCPage Page = new NPCPage(sectionName, this);
 
             //Cleans arguments out of search page name
             string tempSectionName = Page.ArgumentParse(sectionName);
@@ -612,10 +612,10 @@ namespace Server.MirObjects
                 segment.ParseCheck(checks[i]);
 
             for (int i = 0; i < acts.Count; i++)
-                segment.ParseAct(segment.ActList, acts[i]);
+                segment.ParseAct(segment.Actions, acts[i]);
 
             for (int i = 0; i < elseActs.Count; i++)
-                segment.ParseAct(segment.ElseActList, elseActs[i]);
+                segment.ParseAct(segment.ElseActions, elseActs[i]);
 
             currentButtons = new List<string>();
             currentButtons.AddRange(buttons);

@@ -499,10 +499,10 @@ namespace Client
             {
                 HintBaseLabel = new MirControl
                 {
-                    BackColour = Color.FromArgb(128, 128, 50),
+                    BackColour = Color.FromArgb(255, 0, 0, 0),
                     Border = true,
                     DrawControlTexture = true,
-                    BorderColour = Color.Yellow,
+                    BorderColour = Color.FromArgb(255, 144, 144, 0),
                     ForeColour = Color.Yellow,
                     Parent = MirScene.ActiveScene,
                     NotControl = true,
@@ -517,7 +517,7 @@ namespace Client
                 {
                     AutoSize = true,
                     BackColour = Color.Transparent,
-                    ForeColour = Color.White,
+                    ForeColour = Color.Yellow,
                     Parent = HintBaseLabel,
                 };
 
@@ -678,7 +678,7 @@ namespace Client
 
         private void CMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (CMain.Time < GameScene.LogTime && !Settings.UseTestConfig)
+            if (CMain.Time < GameScene.LogTime && !Settings.UseTestConfig && !GameScene.Observing)
             {
                 GameScene.Scene.ChatDialog.ReceiveChat(string.Format(GameLanguage.CannotLeaveGame, (GameScene.LogTime - CMain.Time) / 1000), ChatType.System);
                 e.Cancel = true;

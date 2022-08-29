@@ -542,10 +542,16 @@ namespace Server
 
             List<bool> selected = new List<bool>();
 
-            for (int i = 0; i < RespawnInfoListBox.Items.Count; i++) selected.Add(RespawnInfoListBox.GetSelected(i));
+            for (int i = 0; i < RespawnInfoListBox.Items.Count; i++) 
+                selected.Add(RespawnInfoListBox.GetSelected(i));
+
             RespawnInfoListBox.Items.Clear();
-            for (int i = 0; i < _info.Respawns.Count; i++) RespawnInfoListBox.Items.Add(_info.Respawns[i]);
-            for (int i = 0; i < selected.Count; i++) RespawnInfoListBox.SetSelected(i, selected[i]);
+
+            for (int i = 0; i < _info.Respawns.Count; i++) 
+                RespawnInfoListBox.Items.Add(_info.Respawns[i]);
+
+            for (int i = 0; i < selected.Count; i++) 
+                RespawnInfoListBox.SetSelected(i, selected[i]);
 
             RespawnInfoListBox.SelectedIndexChanged += RespawnInfoListBox_SelectedIndexChanged;
         }

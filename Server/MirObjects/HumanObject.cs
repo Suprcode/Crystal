@@ -258,7 +258,7 @@ namespace Server.MirObjects
         }
         public override void Process()
         {
-            if ((Race == ObjectType.Player && Connection == null) || Node == null || Info == null) return;            
+            if ((Race == ObjectType.Player && Connection == null) || Node == null || Info == null) return;
 
             if (CellTime + 700 < Envir.Time) _stepCounter = 0;
 
@@ -293,7 +293,7 @@ namespace Server.MirObjects
             {
                 RunTime = Envir.Time + 1500;
                 _runCounter--;
-            }            
+            }
 
             if (Stacking && Envir.Time > StackingTime)
             {
@@ -303,13 +303,13 @@ namespace Server.MirObjects
                 {
                     if (Pushed(this, (MirDirection)i, 1) == 1) break;
                 }
-            }            
+            }
 
             if (Mount.HasMount && Envir.Time > IncreaseLoyaltyTime)
             {
                 IncreaseLoyaltyTime = Envir.Time + (LoyaltyDelay * 60);
                 IncreaseMountLoyalty(1);
-            }            
+            }
 
             if (Envir.Time > ItemExpireTime)
             {
@@ -326,7 +326,7 @@ namespace Server.MirObjects
 
             ProcessBuffs();
             ProcessRegen();
-            ProcessPoison();            
+            ProcessPoison();
 
             UserItem item;
             if (Envir.Time > TorchTime)
@@ -363,6 +363,36 @@ namespace Server.MirObjects
 
             RefreshNameColour();
         }
+
+        public override void OnSafeZoneChanged()
+        {
+            base.OnSafeZoneChanged();
+
+            bool needsUpdate = false;
+
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                if (Buffs[i].ObjectID == 0) continue;
+                if (!Buffs[i].Properties.HasFlag(BuffProperty.PauseInSafeZone)) continue;
+
+                needsUpdate = true;
+
+                if (InSafeZone)
+                {
+                    PauseBuff(Buffs[i]);
+                }
+                else
+                {
+                    UnpauseBuff(Buffs[i]);
+                }
+            }
+
+            if (needsUpdate)
+            {
+                RefreshStats();
+            }
+        }
+
         public override void SetOperateTime()
         {
             OperateTime = Envir.Time;
@@ -2406,7 +2436,7 @@ namespace Server.MirObjects
             
             Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
             Broadcast(new S.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-
+            GetPlayerLocation();
 
             cell = CurrentMap.GetCell(CurrentLocation);
 
@@ -2529,7 +2559,7 @@ namespace Server.MirObjects
 
             Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
             Broadcast(new S.ObjectRun { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-
+            GetPlayerLocation();
 
             for (int j = 1; j <= steps; j++)
             {
@@ -2586,7 +2616,7 @@ namespace Server.MirObjects
 
                 Enqueue(new S.Pushed { Direction = Direction, Location = CurrentLocation });
                 Broadcast(new S.ObjectPushed { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-
+                GetPlayerLocation();
                 result++;
             }
 
@@ -2628,6 +2658,25 @@ namespace Server.MirObjects
             ActionTime = Envir.Time + 500;
             return result;
         }
+
+        public void GetPlayerLocation()
+        {
+            if (GroupMembers == null) return;
+
+            for (int i = 0; i < GroupMembers.Count; i++)
+            {
+                PlayerObject member = GroupMembers[i];
+                
+                if (member.CurrentMap.Info.BigMap <= 0) continue;
+                  
+                member.Enqueue(new S.SendMemberLocation { MemberName = Name, MemberLocation = CurrentLocation });
+                Enqueue(new S.SendMemberLocation { MemberName = member.Name, MemberLocation = member.CurrentLocation });
+            }
+            Enqueue(new S.SendMemberLocation { MemberName = Name, MemberLocation = CurrentLocation });
+        }
+
+
+
         public void RangeAttack(MirDirection dir, Point location, uint targetID)
         {
             LogTime = Envir.Time + Globals.LogDelay;
@@ -4422,7 +4471,7 @@ namespace Server.MirObjects
         {
             cast = false;
 
-            if (target == null || !target.IsFriendlyTarget(this)) target = this; //offical is only party target
+            if (target == null || target.Node == null || !target.IsFriendlyTarget(this)) target = this; //offical is only party target
 
             int duration = 30 + 50 * magic.Level;
             int power = magic.GetPower(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]));
@@ -4455,7 +4504,7 @@ namespace Server.MirObjects
         {
             cast = false;
 
-            if (target == null || !target.IsFriendlyTarget(this)) return;
+            if (target == null || target.Node == null || !target.IsFriendlyTarget(this)) return;
             UserItem item = GetAmulet(1);
             if (item == null) return;
 
@@ -6002,6 +6051,8 @@ namespace Server.MirObjects
                         value = (int)data[1];
                         target = (MonsterObject)data[2];
 
+                        if (target.Node == null) return;
+
                         int dcInc = 2 + target.Level * 2;
                         int acInc = 4 + target.Level;
 
@@ -6969,9 +7020,14 @@ namespace Server.MirObjects
                     p.Value -= armour;
             }
 
-            if (p.Owner != null && p.Owner.Race == ObjectType.Player && Envir.Time > BrownTime && PKPoints < 200)
+            if (p.Owner != null && p.Owner is PlayerObject player && Envir.Time > BrownTime && PKPoints < 200)
             {
-                p.Owner.BrownTime = Envir.Time + Settings.Minute;
+                bool ownerBrowns = true;
+                if (player.MyGuild != null && MyGuild != null && MyGuild.IsAtWar() && MyGuild.IsEnemy(player.MyGuild))
+                    ownerBrowns = false;
+
+                if (ownerBrowns && !player.WarZone)
+                        p.Owner.BrownTime = Envir.Time + Settings.Minute;
             }
 
             if ((p.PType == PoisonType.Green) || (p.PType == PoisonType.Red)) p.Duration = Math.Max(0, p.Duration - Stats[Stat.PoisonRecovery]);

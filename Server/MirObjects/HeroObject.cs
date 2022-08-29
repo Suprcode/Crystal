@@ -739,6 +739,8 @@ namespace Server.MirObjects
         {
             base.Process();
 
+            if (Node == null || Info == null) return;
+
             if (Target != null && (Target.CurrentMap != CurrentMap || !Target.IsAttackTarget(this) || !Functions.InRange(CurrentLocation, Target.CurrentLocation, Globals.DataRange)))
                 Target = null;
 

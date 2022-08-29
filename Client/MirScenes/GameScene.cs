@@ -1567,6 +1567,12 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.AddMember:
                     AddMember((S.AddMember)p);
                     break;
+                case (short)ServerPacketIds.GroupMembersMap:
+                    GroupMembersMap((S.GroupMembersMap)p);
+                    break;
+                case (short)ServerPacketIds.SendMemberLocation:
+                    SendMemberLocation((S.SendMemberLocation)p);
+                    break;
                 case (short)ServerPacketIds.Revived:
                     Revived();
                     break;
@@ -4897,12 +4903,16 @@ namespace Client.MirScenes
         private void DeleteGroup()
         {
             GroupDialog.GroupList.Clear();
+            GroupDialog.GroupMembersMap.Clear();
+            BigMapViewPort.PlayerLocations.Clear();
             ChatDialog.ReceiveChat("You have left the group.", ChatType.Group);
         }
 
         private void DeleteMember(S.DeleteMember p)
         {
             GroupDialog.GroupList.Remove(p.Name);
+            GroupDialog.GroupMembersMap.Remove(p.Name);
+            BigMapViewPort.PlayerLocations.Remove(p.Name);
             ChatDialog.ReceiveChat(string.Format("-{0} has left the group.", p.Name), ChatType.Group);
         }
 
@@ -4910,15 +4920,38 @@ namespace Client.MirScenes
         {
             MirMessageBox messageBox = new MirMessageBox(string.Format("Do you want to group with {0}?", p.Name), MirMessageBoxButtons.YesNo);
 
-            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.GroupInvite { AcceptInvite = true });
+            messageBox.YesButton.Click += (o, e) =>
+            {
+                Network.Enqueue(new C.GroupInvite { AcceptInvite = true });
+                GroupDialog.Show();
+            }; 
             messageBox.NoButton.Click += (o, e) => Network.Enqueue(new C.GroupInvite { AcceptInvite = false });
-
             messageBox.Show();
         }
         private void AddMember(S.AddMember p)
         {
             GroupDialog.GroupList.Add(p.Name);
             ChatDialog.ReceiveChat(string.Format("-{0} has joined the group.", p.Name), ChatType.Group);
+        }
+        private void GroupMembersMap(S.GroupMembersMap p)
+        {
+            if (!GroupDialog.GroupMembersMap.ContainsKey(p.PlayerName))
+                GroupDialog.GroupMembersMap.Add(p.PlayerName, p.PlayerMap);
+            else
+            {
+                GroupDialog.GroupMembersMap.Remove(p.PlayerName);
+                GroupDialog.GroupMembersMap.Add(p.PlayerName, p.PlayerMap);
+            }
+        }
+        private void SendMemberLocation(S.SendMemberLocation p)
+        {
+            if (!BigMapViewPort.PlayerLocations.ContainsKey(p.MemberName))
+                BigMapViewPort.PlayerLocations.Add(p.MemberName, p.MemberLocation);
+            else
+            {
+                BigMapViewPort.PlayerLocations.Remove(p.MemberName);
+                BigMapViewPort.PlayerLocations.Add(p.MemberName, p.MemberLocation);
+            }
         }
         private void Revived()
         {
@@ -9591,15 +9624,15 @@ namespace Client.MirScenes
             HoverItem = item;
             ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
 
-            ItemLabel = new MirControl
+             ItemLabel = new MirControl
             {
-                BackColour = Color.FromArgb(255, 50, 50, 50),
+                BackColour = Color.FromArgb(255, 0, 0, 0),
                 Border = true,
-                BorderColour = Color.Gray,
+                BorderColour = ((HoverItem.CurrentDura == 0 && HoverItem.MaxDura != 0) ? Color.Red : Color.FromArgb(255, 148, 146, 148)),
                 DrawControlTexture = true,
                 NotControl = true,
                 Parent = this,
-                Opacity = 0.7F
+                Opacity = 0.8F
             };
 
             //Name Info Label
@@ -10489,7 +10522,7 @@ namespace Client.MirScenes
                     index = M2CellInfo[x, y].MiddleImage - 1;
 
                     if ((index < 0) || (M2CellInfo[x, y].MiddleIndex == -1)) continue;
-                    if (M2CellInfo[x, y].MiddleIndex > 199)
+                    if (M2CellInfo[x, y].MiddleIndex >= 0)    //M2P '> 199' changed to '>= 0' to include mir2 libraries. Fixes middle layer tile strips draw. Also changed in 'Draw mir3 middle layer' bellow.
                     {//mir3 mid layer is same level as front layer not real middle + it cant draw index -1 so 2 birds in one stone :p
                         Size s = Libraries.MapLibs[M2CellInfo[x, y].MiddleIndex].GetSize(index);
 
@@ -10617,7 +10650,7 @@ namespace Client.MirScenes
                     #endregion
 
                     #region Draw mir3 middle layer
-                    if ((M2CellInfo[x, y].MiddleIndex > 199) && (M2CellInfo[x, y].MiddleIndex != -1))
+                    if ((M2CellInfo[x, y].MiddleIndex >= 0) && (M2CellInfo[x, y].MiddleIndex != -1))   //M2P '> 199' changed to '>= 0' to include mir2 libraries. Fixes middle layer tile strips draw. Also changed in 'DrawFloor' above.
                     {
                         index = M2CellInfo[x, y].MiddleImage - 1;
                         if (index > 0)

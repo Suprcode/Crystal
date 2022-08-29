@@ -5225,14 +5225,14 @@ namespace Client.MirObjects
             if (GuildLabel != null && !string.IsNullOrEmpty(GuildName))
             {
                 GuildLabel.Text = GuildName;
-                GuildLabel.Location = new Point(DisplayRectangle.X + (50 - GuildLabel.Size.Width) / 2, DisplayRectangle.Y - (42 - GuildLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
+                GuildLabel.Location = new Point(DisplayRectangle.X + (50 - GuildLabel.Size.Width) / 2, DisplayRectangle.Y - (19 - GuildLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
                 GuildLabel.Draw();
             }
 
             if (NameLabel != null)
             {
                 NameLabel.Text = Name;
-                NameLabel.Location = new Point(DisplayRectangle.X + (50 - NameLabel.Size.Width) / 2, DisplayRectangle.Y - (32 - NameLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
+                NameLabel.Location = new Point(DisplayRectangle.X + (50 - NameLabel.Size.Width) / 2, DisplayRectangle.Y - (31 - NameLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
                 NameLabel.Draw();
             }
         }

@@ -3678,6 +3678,43 @@ namespace ServerPackets
             writer.Write(Name);
         }
     }
+    public sealed class GroupMembersMap : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.GroupMembersMap; } }
+
+        public string PlayerName = string.Empty;
+        public string PlayerMap = string.Empty;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            PlayerName = reader.ReadString();
+            PlayerMap = reader.ReadString();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(PlayerName);
+            writer.Write(PlayerMap);
+        }
+    }
+    public sealed class SendMemberLocation : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.SendMemberLocation; } }
+
+        public string MemberName;
+        public Point MemberLocation;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            MemberName = reader.ReadString();
+            MemberLocation = new Point(reader.ReadInt32(), reader.ReadInt32());
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(MemberName);
+            writer.Write(MemberLocation.X);
+            writer.Write(MemberLocation.Y);
+        }
+    }
     public sealed class Revived : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.Revived; } }

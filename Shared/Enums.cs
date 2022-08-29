@@ -1665,7 +1665,9 @@ public enum ServerPacketIds : short
     ExpireTimer,
     UpdateNotice,
     Roll,
-    SetCompass
+    SetCompass,
+    GroupMembersMap,
+    SendMemberLocation,
 }
 
 public enum ClientPacketIds : short

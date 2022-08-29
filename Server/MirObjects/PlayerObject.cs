@@ -951,13 +951,16 @@ namespace Server.MirObjects
 
             foreach (MovementInfo mInfo in mapInfo.Movements.Where(x => x.ShowOnBigMap))
             {
+                Map destMap = Envir.GetMap(mInfo.MapIndex);
+                if (destMap is null)
+                    continue;
                 var cmInfo = new ClientMovementInfo()
                 {
                     Destination = mInfo.MapIndex,
                     Location = mInfo.Source,
                     Icon = mInfo.Icon
                 };
-                Map destMap = Envir.GetMap(mInfo.MapIndex);
+                
                 cmInfo.Title = destMap.Info.Title;
 
                 info.Movements.Add(cmInfo);
@@ -1263,6 +1266,8 @@ namespace Server.MirObjects
 
             Fishing = false;
             Enqueue(GetFishInfo());
+            GroupMemberMapNameChanged();
+            GetPlayerLocation();
         }
         public void TownRevive()
         {
@@ -1319,6 +1324,8 @@ namespace Server.MirObjects
             InSafeZone = true;
             Fishing = false;
             Enqueue(GetFishInfo());
+            GroupMemberMapNameChanged();
+            GetPlayerLocation();
         }
         public override bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0)
         {
@@ -1353,7 +1360,9 @@ namespace Server.MirObjects
 
                     if (player != null) player.GetRelationship(false);
                 }
+                GroupMemberMapNameChanged();
             }
+            GetPlayerLocation();
 
             Report?.MapChange(oldMap.Info, CurrentMap.Info);
 
@@ -1610,33 +1619,38 @@ namespace Server.MirObjects
         public override void RefreshNameColour()
         {
             Color colour = Color.White;
-            
-            if (PKPoints >= 200)
-                colour = Color.Red;
-            else if (WarZone)
+        
+            if (PKPoints >= 100)
+                colour = Color.Yellow;
+       
+            if (WarZone)
             {
                 if (MyGuild == null)
                     colour = Color.Green;
                 else
                     colour = Color.Blue;
             }
-            else if (Envir.Time < BrownTime)
+       
+            if (MyGuild != null && MyGuild.IsAtWar())
+                colour = Color.Blue;
+       
+            if (Envir.Time < BrownTime)
                 colour = Color.SaddleBrown;
-            else if (PKPoints >= 100)
-                colour = Color.Yellow;
+
+            if (PKPoints >= 200)
+                colour = Color.Red;
+
+            if (MyGuild != null && MyGuild.Conquest != null)
+                colour = Color.SkyBlue;
 
             if (colour == NameColour) return;
-
             NameColour = colour;
-            if ((MyGuild == null) || (!MyGuild.IsAtWar()))
-                Enqueue(new S.ColourChanged { NameColour = NameColour });
-
+            Enqueue(new S.ColourChanged { NameColour = NameColour });
             BroadcastColourChange();
         }
         public override Color GetNameColour(HumanObject human)
         {
             if (human == null) return NameColour;
-
             if (human is PlayerObject player)
             {
                 if (WarZone)
@@ -1645,22 +1659,31 @@ namespace Server.MirObjects
                         return Color.Green;
                     else
                     {
-                        if (player.MyGuild == null)
-                            return Color.Orange;
                         if (player.MyGuild == MyGuild)
                             return Color.Blue;
                         else
                             return Color.Orange;
                     }
                 }
-
                 if (MyGuild != null)
+                {
                     if (MyGuild.IsAtWar())
+                    {
                         if (player.MyGuild == MyGuild)
                             return Color.Blue;
-                        else
-                            if (MyGuild.IsEnemy(player.MyGuild))
+                        else if (MyGuild.IsEnemy(player.MyGuild))
                             return Color.Orange;
+                    }
+
+                    if (player.MyGuild != null)
+                    {
+                        if (player.MyGuild.Conquest != null &&
+                            player.MyGuild == MyGuild)
+                            return Color.SkyBlue;
+                        if (MyGuild.IsEnemy(player.MyGuild))
+                            return Color.Orange;
+                    }
+                }
             }
             return NameColour;
         }
@@ -4159,7 +4182,9 @@ namespace Server.MirObjects
             if (mapChanged)
             {
                 CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
+                GroupMemberMapNameChanged();
             }
+            GetPlayerLocation();
 
             if (Info.Married != 0)
             {
@@ -4170,7 +4195,7 @@ namespace Server.MirObjects
             }
 
             CheckConquest(true);
-        }        
+        }
         public bool TeleportEscape(int attempts)
         {
             Map temp = Envir.GetMap(BindMapIndex);
@@ -5381,6 +5406,10 @@ namespace Server.MirObjects
                                 Enqueue(p);
                                 return;
                             }
+                            foreach (DelayedAction ac in ActionList.Where(u => u.Type == DelayedType.NPC))
+                            {
+                                ac.FlaggedToRemove = true;
+                            }
                             break;
                         case 1: //TT
                             if (!Teleport(Envir.GetMap(BindMapIndex), BindLocation))
@@ -5388,12 +5417,20 @@ namespace Server.MirObjects
                                 Enqueue(p);
                                 return;
                             }
+                            foreach (DelayedAction ac in ActionList.Where(u => u.Type == DelayedType.NPC))
+                            {
+                                ac.FlaggedToRemove = true;
+                            }
                             break;
                         case 2: //RT
                             if (!TeleportRandom(200, item.Info.Durability))
                             {
                                 Enqueue(p);
                                 return;
+                            }
+                            foreach (DelayedAction ac in ActionList.Where(u => u.Type == DelayedType.NPC))
+                            {
+                                ac.FlaggedToRemove = true;
                             }
                             break;
                         case 3: //BenedictionOil
@@ -7546,8 +7583,8 @@ namespace Server.MirObjects
                     return;
                 }
 
-                MarketItemType type = MarketPanelType == MarketPanelType.Consign ? MarketItemType.Consign : MarketItemType.Auction;
-                uint cost = MarketPanelType == MarketPanelType.Consign ? Globals.ConsignmentCost : Globals.AuctionCost;
+                MarketItemType type = panelType == MarketPanelType.Consign ? MarketItemType.Consign : MarketItemType.Auction;
+                uint cost = panelType == MarketPanelType.Consign ? Globals.ConsignmentCost : Globals.AuctionCost;
 
                 //TODO Check Max Consignment.
 
@@ -7789,7 +7826,7 @@ namespace Server.MirObjects
                             return;
                         }
 
-                        if (auction.Price > Account.Gold)
+                        if (auction.Price > Account.Gold || bidPrice > Account.Gold)
                         {
                             Enqueue(new S.MarketFail { Reason = 4 });
                             return;
@@ -8579,6 +8616,8 @@ namespace Server.MirObjects
             {
                 GroupInvitation.GroupMembers = new List<PlayerObject> { GroupInvitation };
                 GroupInvitation.Enqueue(new S.AddMember { Name = GroupInvitation.Name });
+                GroupInvitation.Enqueue(new S.GroupMembersMap { PlayerName = GroupInvitation.Name, PlayerMap = GroupInvitation.CurrentMap.Info.Title });
+                GroupInvitation.Enqueue(new S.SendMemberLocation { MemberName = GroupInvitation.Name, MemberLocation = GroupInvitation.CurrentLocation });
             }
 
             Packet p = new S.AddMember { Name = Name };
@@ -8615,6 +8654,20 @@ namespace Server.MirObjects
             }
 
             Enqueue(p);
+            GroupMemberMapNameChanged();
+            GetPlayerLocation();
+        }
+        public void GroupMemberMapNameChanged()
+        {
+            if (GroupMembers == null) return;
+
+            for (int i = 0; i < GroupMembers.Count; i++)
+            {
+                PlayerObject member = GroupMembers[i];
+                member.Enqueue(new S.GroupMembersMap { PlayerName = Name, PlayerMap = CurrentMap.Info.Title });
+                Enqueue(new S.GroupMembersMap { PlayerName = member.Name, PlayerMap = member.CurrentMap.Info.Title });
+            }
+            Enqueue(new S.GroupMembersMap { PlayerName = Name, PlayerMap = CurrentMap.Info.Title });
         }
 
         #endregion
@@ -10403,7 +10456,7 @@ namespace Server.MirObjects
             if (GroupMembers != null)
             {
                 foreach (PlayerObject player in GroupMembers.
-                    Where(player => player.CurrentMap == CurrentMap &&
+                    Where(player => player != null && player.Node != null && player.CurrentMap == CurrentMap &&
                         Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) &&
                         !player.Dead))
                 {
@@ -12927,6 +12980,9 @@ namespace Server.MirObjects
             if (ItemRentalFeeLocked)
                 return;
 
+            if ((ulong)amount + ItemRentalFeeAmount >= uint.MaxValue)
+                return;
+
             if (Account.Gold < amount)
                 return;
 
@@ -12942,6 +12998,9 @@ namespace Server.MirObjects
 
         public void SetItemRentalPeriodLength(uint days)
         {
+            if (days < 1 || days > 30)
+                return;
+
             if (ItemRentalItemLocked)
                 return;
 

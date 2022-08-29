@@ -349,7 +349,7 @@ namespace Server.Database
                 item.Light = (byte)Math.Min(byte.MaxValue, light);
                 item.Durability = (ushort)row.Cells["ItemDurability"].Value;
                 item.Price = (uint)row.Cells["ItemPrice"].Value;
-                item.ToolTip = (string)row.Cells["ItemToolTip"].Value;
+                item.ToolTip = row.Cells["ItemToolTip"].Value.ToString();
 
                 item.Stats.Clear();
                 item.Bind = BindMode.None;
@@ -907,6 +907,21 @@ namespace Server.Database
         private void itemInfoGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+
+        private void Gameshop_button_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in itemInfoGridView.Rows)
+            {
+                if (row.Selected)
+                {
+                    var item = Envir.ItemInfoList.FirstOrDefault(x => x.Index == row.Index);
+
+                    Envir.AddToGameShop(item);
+                }
+            }
+
+            Envir.SaveDB();
         }
     }
 }
