@@ -1682,6 +1682,7 @@ namespace Server.MirObjects
                             return Color.SkyBlue;
                         if (MyGuild.IsEnemy(player.MyGuild))
                             return Color.White;
+
                     }
                 }
             }
