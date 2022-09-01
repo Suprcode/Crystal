@@ -618,6 +618,9 @@ namespace Server.MirObjects
             buff.Stats ??= new Stats();
             buff.Values = values ?? new int[0];
 
+            if (buff.Caster?.Node == null)
+                buff.Caster = owner;
+
             switch (buff.Type)
             {
                 case BuffType.MoonLight:
