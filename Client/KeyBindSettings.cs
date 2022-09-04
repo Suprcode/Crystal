@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System;
 using Client.MirSounds;
 using System.Windows.Forms;
@@ -105,7 +105,8 @@ namespace Client
         HeroSkill8,
         HeroInventory,
         HeroEquipment,
-        HeroSkills
+        HeroSkills,
+        SkillTilde
     }
 
     public class KeyBind
