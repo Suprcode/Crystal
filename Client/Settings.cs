@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System;
 using Client.MirSounds;
 using System.Windows.Forms;
@@ -131,7 +131,7 @@ namespace Client
         public static bool
             SkillMode = false,
             SkillBar = true,
-            //SkillSet = true,
+            SkillSet = true,
             Effect = true,
             LevelEffect = true,
             DropView = true,
