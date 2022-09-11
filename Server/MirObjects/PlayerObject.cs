@@ -3282,9 +3282,7 @@ namespace Server.MirObjects
                             ReceiveChat(string.Format("You started a war with {0}.", parts[1]), ChatType.System);
                             enemyGuild.SendMessage(string.Format("{0} has started a war", MyGuild.Name), ChatType.System);
                         }
-
                         break;
-
                     case "ADDINVENTORY":
                         {
                             int openLevel = (int)((Info.Inventory.Length - 46) / 4);
@@ -3514,6 +3512,9 @@ namespace Server.MirObjects
                             else return;
                             ReceiveChat(string.Format("{0} War Started.", tempConq.Info.Name), ChatType.System);
                             MessageQueue.Enqueue(string.Format("{0} War Started.", tempConq.Info.Name));
+
+                            foreach (var pl in Envir.Players)
+                                pl.BroadcastInfo();
                         }
                         break;
                     case "RESETCONQUEST":
