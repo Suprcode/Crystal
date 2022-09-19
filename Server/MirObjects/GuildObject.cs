@@ -542,7 +542,7 @@ namespace Server.MirObjects
         public void GainExp(uint amount)
         {
             bool Leveled = false;
-            if (Info.MaxExperience == 0) return;
+            if (Info.MaxExperience <= 0) return;
 
             uint expAmount = (uint)(amount * Settings.Guild_ExpRate);
             if (expAmount == 0) return;
