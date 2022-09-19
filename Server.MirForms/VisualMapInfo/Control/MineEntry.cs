@@ -24,14 +24,14 @@ namespace Server.MirForms.VisualMapInfo.Control
             get => (ushort)(tempRange);
             set
             {
+                tempRange = 0;
+
                 if (value > 0)
                     tempRange = (ushort)(value);
-                else
-                    tempRange = 1;
 
                 RegionHighlight.Size = new Size(
-                    (tempRange * 2) * VisualizerGlobal.ZoomLevel,
-                    (tempRange * 2) * VisualizerGlobal.ZoomLevel);
+                    tempRange * 2 * VisualizerGlobal.ZoomLevel,
+                    tempRange * 2 * VisualizerGlobal.ZoomLevel);
 
                 RegionHighlight.Left = (X - value) * VisualizerGlobal.ZoomLevel;
                 RegionHighlight.Top = (Y - value) * VisualizerGlobal.ZoomLevel;
