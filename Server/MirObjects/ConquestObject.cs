@@ -903,6 +903,9 @@ namespace Server.MirObjects
         public void StartWar(ConquestGame type)
         {
             WarIsOn = true;
+
+            foreach (var pl in Envir.Players)
+                pl.BroadcastInfo();
         }
 
         public void EndWar(ConquestGame type)
@@ -954,6 +957,9 @@ namespace Server.MirObjects
 
                     break;
             }
+
+            foreach (var pl in Envir.Players)
+                pl.BroadcastInfo();
         }
     }
 }
