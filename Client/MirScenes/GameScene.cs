@@ -10201,8 +10201,8 @@ namespace Client.MirScenes
             OffSetX = Settings.ScreenWidth / 2 / CellWidth;
             OffSetY = Settings.ScreenHeight / 2 / CellHeight - 1;
 
-            ViewRangeX = OffSetX + 4;
-            ViewRangeY = OffSetY + 4;
+            ViewRangeX = OffSetX + 6;
+            ViewRangeY = OffSetY + 6;
 
             Size = new Size(Settings.ScreenWidth, Settings.ScreenHeight);
             DrawControlTexture = true;
