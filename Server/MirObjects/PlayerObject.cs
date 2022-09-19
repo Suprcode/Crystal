@@ -1640,9 +1640,6 @@ namespace Server.MirObjects
             if (PKPoints >= 200)
                 colour = Color.Red;
 
-            if (MyGuild != null && MyGuild.Conquest != null)
-                colour = Color.SkyBlue;
-
             if (colour == NameColour) return;
             NameColour = colour;
             Enqueue(new S.ColourChanged { NameColour = NameColour });
@@ -1672,15 +1669,6 @@ namespace Server.MirObjects
                         if (player.MyGuild == MyGuild)
                             return Color.Blue;
                         else if (MyGuild.IsEnemy(player.MyGuild))
-                            return Color.Orange;
-                    }
-
-                    if (player.MyGuild != null)
-                    {
-                        if (player.MyGuild.Conquest != null &&
-                            player.MyGuild == MyGuild)
-                            return Color.SkyBlue;
-                        if (MyGuild.IsEnemy(player.MyGuild))
                             return Color.Orange;
                     }
                 }
@@ -3294,9 +3282,7 @@ namespace Server.MirObjects
                             ReceiveChat(string.Format("You started a war with {0}.", parts[1]), ChatType.System);
                             enemyGuild.SendMessage(string.Format("{0} has started a war", MyGuild.Name), ChatType.System);
                         }
-
                         break;
-
                     case "ADDINVENTORY":
                         {
                             int openLevel = (int)((Info.Inventory.Length - 46) / 4);
@@ -3526,6 +3512,9 @@ namespace Server.MirObjects
                             else return;
                             ReceiveChat(string.Format("{0} War Started.", tempConq.Info.Name), ChatType.System);
                             MessageQueue.Enqueue(string.Format("{0} War Started.", tempConq.Info.Name));
+
+                            foreach (var pl in Envir.Players)
+                                pl.BroadcastInfo();
                         }
                         break;
                     case "RESETCONQUEST":
