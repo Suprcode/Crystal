@@ -6539,7 +6539,8 @@ namespace Server.MirObjects
                     {
                         if (Stats[Stat.SkillGainMultiplier] == 1)
                         {
-                            exp *= 2;
+                            if (GroupMembers != null && GroupMembers.Contains(player))
+                                exp *= 2;
                         }
                     }
                 }

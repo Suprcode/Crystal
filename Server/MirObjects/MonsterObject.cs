@@ -2380,7 +2380,8 @@ namespace Server.MirObjects
                     PlayerObject player = Envir.GetPlayer(mentee.Name);
                     if (player != null && player.CurrentMap == attacker.CurrentMap && Functions.InRange(player.CurrentLocation, attacker.CurrentLocation, Globals.DataRange) && !player.Dead)
                     {
-                        damage += (damage * Stats[Stat.MentorDamageRatePercent]) / 100;
+                        if (GroupMembers != null && GroupMembers.Contains(player))
+                            damage += (int)Math.Round((double)(damage * attacker.Stats[Stat.MentorDamageRatePercent]) / 100);
                     }
                 }
             }
