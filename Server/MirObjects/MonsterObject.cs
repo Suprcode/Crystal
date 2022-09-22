@@ -2376,11 +2376,12 @@ namespace Server.MirObjects
             {
                 if (attacker.HasBuff(BuffType.Mentor, out _))
                 {
-                    CharacterInfo mentee = Envir.GetCharacterInfo(attacker.Info.Mentor);
-                    PlayerObject player = Envir.GetPlayer(mentee.Name);
+                    CharacterInfo mentor = Envir.GetCharacterInfo(attacker.Info.Mentor);
+                    PlayerObject player = Envir.GetPlayer(mentor.Name);
                     if (player != null && player.CurrentMap == attacker.CurrentMap && Functions.InRange(player.CurrentLocation, attacker.CurrentLocation, Globals.DataRange) && !player.Dead)
                     {
-                        damage += (damage * Stats[Stat.MentorDamageRatePercent]) / 100;
+                        int bonusDamage = (int)Math.Round((double)(damage * attacker.Stats[Stat.MentorDamageRatePercent]) / 100);
+                        damage += bonusDamage;
                     }
                 }
             }
