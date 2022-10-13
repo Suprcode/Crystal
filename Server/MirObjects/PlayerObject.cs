@@ -1631,10 +1631,7 @@ namespace Server.MirObjects
                 else
                     colour = Color.Blue;
             }
-       
-            if (MyGuild != null && MyGuild.IsAtWar())
-                colour = Color.Blue;
-       
+
             if (Envir.Time < BrownTime)
                 colour = Color.SaddleBrown;
 
