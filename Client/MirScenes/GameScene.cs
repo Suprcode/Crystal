@@ -10217,9 +10217,9 @@ namespace Client.MirScenes
         {
             GameScene.Scene.NPCDialog.Hide();
 
-            MapObject.MouseObject = null;
-            MapObject.TargetObject = null;
-            MapObject.MagicObject = null;
+            MapObject.MouseObject = 0;
+            MapObject.TargetObject = 0;
+            MapObject.MagicObject = 0;
 
             if (M2CellInfo != null)
             {
