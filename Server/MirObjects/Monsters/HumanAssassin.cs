@@ -292,6 +292,7 @@ namespace Server.MirObjects.Monsters
 
             PoisonList.Clear();
             Envir.MonsterCount--;
+            if (CurrentMap != null)
             CurrentMap.MonsterCount--;
         }
 

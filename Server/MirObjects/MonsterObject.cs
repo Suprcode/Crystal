@@ -878,6 +878,7 @@ namespace Server.MirObjects
 
             PoisonList.Clear();
             Envir.MonsterCount--;
+            if (CurrentMap != null)
             CurrentMap.MonsterCount--;
         }
 
