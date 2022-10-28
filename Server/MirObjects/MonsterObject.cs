@@ -1338,6 +1338,8 @@ namespace Server.MirObjects
                         BroadcastDamageIndicator(DamageType.Hit, -poison.Value);
                         if (PoisonStopRegen)
                             RegenTime = Envir.Time + RegenDelay;
+                        if (poison.Owner != null && Target == null)
+                            Target = poison.Owner;
                     }
 
                     if (poison.PType == PoisonType.DelayedExplosion)
@@ -2503,7 +2505,7 @@ namespace Server.MirObjects
 
         public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true)
         {
-            if (p.Owner != null && p.Owner.IsAttackTarget(this))
+            if (p.Owner != null && p.Owner.IsAttackTarget(this) && Target == null)
                 Target = p.Owner;
 
             if (Master != null && p.Owner != null && p.Owner.Race == ObjectType.Player && p.Owner != Master)
