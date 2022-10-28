@@ -1990,7 +1990,7 @@ namespace Client.MirScenes.Dialogs
                 return;
             }
 
-            if (max < 1)
+            if (max == 1)
             {
                 if (Recipe.Gold > GameScene.Gold)
                 {
