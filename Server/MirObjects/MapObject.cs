@@ -359,6 +359,8 @@ namespace Server.MirObjects
         }
         public virtual void Despawn()
         {
+            if (Node == null) return;
+            
             Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
             Envir.Objects.Remove(Node);
             if (Settings.Multithreaded && (Race == ObjectType.Monster))
