@@ -2678,12 +2678,20 @@ namespace Server.MirObjects
                         uint count = 1;
                         if (parts.Length >= 3 && IsGM)
                             if (!uint.TryParse(parts[2], out count)) count = 1;
+                        int spread = 0;
+                        if (parts.Length >= 4)
+                            int.TryParse(parts[3], out spread);
 
                         for (int i = 0; i < count; i++)
                         {
                             MonsterObject monster = MonsterObject.GetMonster(mInfo);
                             if (monster == null) return;
-                            monster.Spawn(CurrentMap, Front);
+                            if (spread == 0)
+                                monster.Spawn(CurrentMap, Front);
+                            else
+                                for (int _ = 0; _ < 20; _++)
+                                    if (monster.Spawn(CurrentMap, CurrentLocation.Add(Envir.Random.Next(-spread, spread + 1), Envir.Random.Next(-spread, spread + 1))))
+                                        break;
                         }
 
                         ReceiveChat((string.Format("Monster {0} x{1} has been spawned.", mInfo.Name, count)), ChatType.System);
