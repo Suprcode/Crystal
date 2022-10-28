@@ -2360,7 +2360,7 @@ namespace Server.MirObjects
 
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
 
-            if (attacker.Stats[Stat.HPDrainRatePercent] > 0)
+            if (attacker.Stats[Stat.HPDrainRatePercent] > 0 && damageWeapon)
             {
                 attacker.HpDrain += Math.Max(0, ((float)(damage - armour) / 100) * attacker.Stats[Stat.HPDrainRatePercent]);
                 if (attacker.HpDrain > 2)

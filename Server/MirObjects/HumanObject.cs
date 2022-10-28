@@ -6796,7 +6796,7 @@ namespace Server.MirObjects
                 AddBuff(BuffType.ElementalBarrier, this, duration, null);
             }
 
-            if (attacker.Stats[Stat.HPDrainRatePercent] > 0)
+            if (attacker.Stats[Stat.HPDrainRatePercent] > 0 && damageWeapon)
             {
                 attacker.HpDrain += Math.Max(0, ((float)(damage - armour) / 100) * attacker.Stats[Stat.HPDrainRatePercent]);
                 if (attacker.HpDrain > 2)
