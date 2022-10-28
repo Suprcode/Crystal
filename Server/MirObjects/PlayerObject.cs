@@ -1617,61 +1617,60 @@ namespace Server.MirObjects
                 Stats.Add(buff.Info.Stats);
             }
         }
+
         public override void RefreshNameColour()
         {
-            Color colour = Color.White;
-        
-            if (PKPoints >= 100)
-                colour = Color.Yellow;
-       
-            if (WarZone)
-            {
-                if (MyGuild == null)
-                    colour = Color.Green;
-                else
-                    colour = Color.Blue;
-            }
-
-            if (Envir.Time < BrownTime)
-                colour = Color.SaddleBrown;
-
-            if (PKPoints >= 200)
-                colour = Color.Red;
-
-            if (colour == NameColour) return;
-            NameColour = colour;
+            var prevColor = NameColour;
+            NameColour = GetNameColour(this);
+            
+            if (prevColor == NameColour) return;
+            
             Enqueue(new S.ColourChanged { NameColour = NameColour });
             BroadcastColourChange();
         }
+
         public override Color GetNameColour(HumanObject human)
         {
             if (human == null) return NameColour;
+
             if (human is PlayerObject player)
             {
-                if (WarZone)
+                if (player.PKPoints >= 200)
+                    return Color.Red;
+
+                if (Envir.Time < player.BrownTime)
+                    return Color.SaddleBrown;
+
+                if (player.WarZone)
                 {
-                    if (MyGuild == null)
+                    if (player.MyGuild == null)
+                        return Color.Green;
+
+                    if (player.MyGuild == MyGuild)
                         return Color.Green;
                     else
-                    {
-                        if (player.MyGuild == MyGuild)
-                            return Color.Blue;
-                        else
-                            return Color.Orange;
-                    }
+                        return Color.Orange;
                 }
+
                 if (MyGuild != null)
                 {
                     if (MyGuild.IsAtWar())
                     {
-                        if (player.MyGuild == MyGuild)
-                            return Color.Blue;
-                        else if (MyGuild.IsEnemy(player.MyGuild))
-                            return Color.Orange;
+                        if (player.MyGuild != null)
+                        {
+                            if (player.MyGuild == MyGuild)
+                                return Color.Blue;
+                            if (MyGuild.IsEnemy(player.MyGuild))
+                                return Color.Orange;
+                        }
                     }
                 }
+
+                if (player.PKPoints >= 100)
+                    return Color.Yellow;
             }
-            return NameColour;
+
+            return Color.White;
         }
         public void Chat(string message, List<ChatItem> linkedItems = null)
         {
