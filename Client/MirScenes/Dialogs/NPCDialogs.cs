@@ -1990,10 +1990,14 @@ namespace Client.MirScenes.Dialogs
                 return;
             }
 
-            if (Recipe.Gold > GameScene.Gold)
+            if (max == 1)
             {
-                GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough gold.", ChatType.System);
-                return;
+                if (Recipe.Gold > GameScene.Gold)
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough gold.", ChatType.System);
+                    return;
+                }
+
             }
 
             if (max > 1)
@@ -2007,6 +2011,12 @@ namespace Client.MirScenes.Dialogs
                         if (!HasCraftItems((ushort)amountBox.Amount))
                         {
                             GameScene.Scene.ChatDialog.ReceiveChat("You do not have the required tools or ingredients.", ChatType.System);
+                            return;
+                        }
+                        
+                        if ((Recipe.Gold * amountBox.Amount) > GameScene.Gold)
+                        {
+                            GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough gold.", ChatType.System);
                             return;
                         }
 

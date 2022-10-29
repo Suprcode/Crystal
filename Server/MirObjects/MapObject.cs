@@ -359,6 +359,8 @@ namespace Server.MirObjects
         }
         public virtual void Despawn()
         {
+            if (Node == null) return;
+            
             Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
             Envir.Objects.Remove(Node);
             if (Settings.Multithreaded && (Race == ObjectType.Monster))
@@ -602,6 +604,23 @@ namespace Server.MirObjects
 
                                 buff.ExpireTime += duration;
                             }
+                            break;
+                        case BuffStackType.ResetStat:
+                        {
+                            if (stats != null)
+                            {
+                                buff.Stats = stats;
+                            }
+                        }
+                            break;
+                        case BuffStackType.ResetStatAndDuration:
+                        {
+                            buff.ExpireTime = duration;
+                            if (stats != null)
+                            {
+                                buff.Stats = stats;
+                            }
+                        }
                             break;
                         case BuffStackType.Infinite:
                         case BuffStackType.None:

@@ -2304,7 +2304,7 @@ namespace Server.MirObjects
                 if (player == this) continue;
 
                 if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
-                    player.Enqueue(new S.ObjectColourChanged { ObjectID = ObjectID, NameColour = GetNameColour(this) });
+                    player.Enqueue(new S.ObjectColourChanged { ObjectID = ObjectID, NameColour = player.GetNameColour(this) });
             }
         }
         public virtual void GainExp(uint amount) { }
@@ -6689,7 +6689,7 @@ namespace Server.MirObjects
 
             if (p != null)
             {
-                p.NameColour = GetNameColour(player);
+                p.NameColour = player.GetNameColour(this);
             }
 
             return p;
@@ -6796,7 +6796,7 @@ namespace Server.MirObjects
                 AddBuff(BuffType.ElementalBarrier, this, duration, null);
             }
 
-            if (attacker.Stats[Stat.HPDrainRatePercent] > 0)
+            if (attacker.Stats[Stat.HPDrainRatePercent] > 0 && damageWeapon)
             {
                 attacker.HpDrain += Math.Max(0, ((float)(damage - armour) / 100) * attacker.Stats[Stat.HPDrainRatePercent]);
                 if (attacker.HpDrain > 2)

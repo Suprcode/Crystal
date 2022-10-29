@@ -1266,7 +1266,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (player.Account.Gold < recipe.Gold)
+            if (player.Account.Gold < (recipe.Gold * count))
             {
                 player.Enqueue(p);
                 return;
@@ -1437,8 +1437,8 @@ namespace Server.MirObjects
             }
 
             //Take Gold
-            player.Account.Gold -= recipe.Gold;
-            player.Enqueue(new S.LoseGold { Gold = recipe.Gold });
+            player.Account.Gold -= (recipe.Gold * count);
+            player.Enqueue(new S.LoseGold { Gold = (recipe.Gold * count) });
 
             if (Envir.Random.Next(100) >= recipe.Chance + player.Stats[Stat.CraftRatePercent])
             {

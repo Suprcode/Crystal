@@ -878,6 +878,7 @@ namespace Server.MirObjects
 
             PoisonList.Clear();
             Envir.MonsterCount--;
+            if (CurrentMap != null)
             CurrentMap.MonsterCount--;
         }
 
@@ -1337,6 +1338,8 @@ namespace Server.MirObjects
                         BroadcastDamageIndicator(DamageType.Hit, -poison.Value);
                         if (PoisonStopRegen)
                             RegenTime = Envir.Time + RegenDelay;
+                        if (poison.Owner != null && Target == null)
+                            Target = poison.Owner;
                     }
 
                     if (poison.PType == PoisonType.DelayedExplosion)
@@ -2359,7 +2362,7 @@ namespace Server.MirObjects
 
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
 
-            if (attacker.Stats[Stat.HPDrainRatePercent] > 0)
+            if (attacker.Stats[Stat.HPDrainRatePercent] > 0 && damageWeapon)
             {
                 attacker.HpDrain += Math.Max(0, ((float)(damage - armour) / 100) * attacker.Stats[Stat.HPDrainRatePercent]);
                 if (attacker.HpDrain > 2)
@@ -2502,7 +2505,7 @@ namespace Server.MirObjects
 
         public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true)
         {
-            if (p.Owner != null && p.Owner.IsAttackTarget(this))
+            if (p.Owner != null && p.Owner.IsAttackTarget(this) && Target == null)
                 Target = p.Owner;
 
             if (Master != null && p.Owner != null && p.Owner.Race == ObjectType.Player && p.Owner != Master)
