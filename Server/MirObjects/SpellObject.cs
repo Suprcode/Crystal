@@ -111,9 +111,10 @@ namespace Server.MirObjects
 
             Cell cell = CurrentMap.GetCell(CurrentLocation);
             for (int i = 0; i < cell.Objects.Count; i++)
-            {
-                ProcessSpell(cell.Objects[i]);
-            }
+                if (cell != null)
+                {
+                    ProcessSpell(cell.Objects[i]);
+                }
 
             if ((Spell == Spell.MapLava) || (Spell == Spell.MapLightning)) Value = 0;
         }
