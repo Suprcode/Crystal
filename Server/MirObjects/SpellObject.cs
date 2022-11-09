@@ -72,7 +72,7 @@ namespace Server.MirObjects
                     ((HumanObject)Caster).ReincarnationExpireTime = Envir.Time + 6000;
                 }
 
-                if (Spell == Spell.Blizzard || Spell == Spell.MeteorStrike)
+                if ((Spell == Spell.Blizzard || Spell == Spell.MeteorStrike) &&  Caster != null)
                 {
                     ((HumanObject)Caster).ActiveBlizzard = false;
                 }
