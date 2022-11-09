@@ -72,7 +72,7 @@ namespace Server.MirObjects
                     ((HumanObject)Caster).ReincarnationExpireTime = Envir.Time + 6000;
                 }
 
-                if (Spell == Spell.Blizzard || Spell == Spell.MeteorStrike)
+                if ((Spell == Spell.Blizzard || Spell == Spell.MeteorStrike) &&  Caster != null)
                 {
                     ((HumanObject)Caster).ActiveBlizzard = false;
                 }
@@ -111,9 +111,10 @@ namespace Server.MirObjects
 
             Cell cell = CurrentMap.GetCell(CurrentLocation);
             for (int i = 0; i < cell.Objects.Count; i++)
-            {
-                ProcessSpell(cell.Objects[i]);
-            }
+                if (cell != null)
+                {
+                    ProcessSpell(cell.Objects[i]);
+                }
 
             if ((Spell == Spell.MapLava) || (Spell == Spell.MapLightning)) Value = 0;
         }
