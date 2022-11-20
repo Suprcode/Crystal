@@ -29,10 +29,26 @@ namespace Server.Database
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.itemInfoGridView = new System.Windows.Forms.DataGridView();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.Gameshop_button = new System.Windows.Forms.Button();
+            this.btnExport = new System.Windows.Forms.Button();
+            this.btnImport = new System.Windows.Forms.Button();
+            this.lblFilterType = new System.Windows.Forms.Label();
+            this.groupView = new System.Windows.Forms.GroupBox();
+            this.rBtnViewSpecial = new System.Windows.Forms.RadioButton();
+            this.rbtnViewAll = new System.Windows.Forms.RadioButton();
+            this.rbtnViewBinding = new System.Windows.Forms.RadioButton();
+            this.rbtnViewBasic = new System.Windows.Forms.RadioButton();
+            this.rbtnViewStats = new System.Windows.Forms.RadioButton();
+            this.drpFilterType = new System.Windows.Forms.ComboBox();
+            this.lblSearch = new System.Windows.Forms.Label();
+            this.txtSearch = new System.Windows.Forms.TextBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.Modified = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.ItemIndex = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -55,6 +71,7 @@ namespace Server.Database
             this.ItemDurability = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemToolTip = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.StartItem = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.NeedIdentify = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.ShowGroupPickup = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.GlobalDropNotify = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -63,22 +80,6 @@ namespace Server.Database
             this.CanMine = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.CanFastRun = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.CanAwakening = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.btnExport = new System.Windows.Forms.Button();
-            this.btnImport = new System.Windows.Forms.Button();
-            this.lblFilterType = new System.Windows.Forms.Label();
-            this.groupView = new System.Windows.Forms.GroupBox();
-            this.rBtnViewSpecial = new System.Windows.Forms.RadioButton();
-            this.rbtnViewAll = new System.Windows.Forms.RadioButton();
-            this.rbtnViewBinding = new System.Windows.Forms.RadioButton();
-            this.rbtnViewBasic = new System.Windows.Forms.RadioButton();
-            this.rbtnViewStats = new System.Windows.Forms.RadioButton();
-            this.drpFilterType = new System.Windows.Forms.ComboBox();
-            this.lblSearch = new System.Windows.Forms.Label();
-            this.txtSearch = new System.Windows.Forms.TextBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.Gameshop_button = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.itemInfoGridView)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -88,8 +89,8 @@ namespace Server.Database
             // 
             // itemInfoGridView
             // 
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.itemInfoGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.itemInfoGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.itemInfoGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.itemInfoGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Modified,
@@ -114,6 +115,7 @@ namespace Server.Database
             this.ItemDurability,
             this.ItemPrice,
             this.ItemToolTip,
+            this.StartItem,
             this.NeedIdentify,
             this.ShowGroupPickup,
             this.GlobalDropNotify,
@@ -122,14 +124,14 @@ namespace Server.Database
             this.CanMine,
             this.CanFastRun,
             this.CanAwakening});
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.itemInfoGridView.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.itemInfoGridView.DefaultCellStyle = dataGridViewCellStyle3;
             this.itemInfoGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.itemInfoGridView.Location = new System.Drawing.Point(0, 0);
             this.itemInfoGridView.Name = "itemInfoGridView";
@@ -140,201 +142,6 @@ namespace Server.Database
             this.itemInfoGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.itemInfoGridView_DataError);
             this.itemInfoGridView.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.itemInfoGridView_DefaultValuesNeeded);
             this.itemInfoGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.itemInfoGridView_UserDeletingRow);
-            // 
-            // Modified
-            // 
-            this.Modified.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Modified.DataPropertyName = "Modified";
-            this.Modified.Frozen = true;
-            this.Modified.HeaderText = "Modified";
-            this.Modified.Name = "Modified";
-            this.Modified.ReadOnly = true;
-            this.Modified.Width = 53;
-            // 
-            // ItemIndex
-            // 
-            this.ItemIndex.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.ItemIndex.DataPropertyName = "ItemIndex";
-            this.ItemIndex.Frozen = true;
-            this.ItemIndex.HeaderText = "Index";
-            this.ItemIndex.Name = "ItemIndex";
-            this.ItemIndex.ReadOnly = true;
-            this.ItemIndex.Width = 58;
-            // 
-            // ItemName
-            // 
-            this.ItemName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.ItemName.DataPropertyName = "ItemName";
-            this.ItemName.Frozen = true;
-            this.ItemName.HeaderText = "Name";
-            this.ItemName.Name = "ItemName";
-            this.ItemName.Width = 60;
-            // 
-            // ItemType
-            // 
-            this.ItemType.DataPropertyName = "ItemType";
-            this.ItemType.HeaderText = "Type";
-            this.ItemType.Name = "ItemType";
-            this.ItemType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // ItemGrade
-            // 
-            this.ItemGrade.DataPropertyName = "ItemGrade";
-            this.ItemGrade.HeaderText = "Grade";
-            this.ItemGrade.Name = "ItemGrade";
-            // 
-            // ItemRequiredType
-            // 
-            this.ItemRequiredType.DataPropertyName = "ItemRequiredType";
-            this.ItemRequiredType.HeaderText = "Required Type";
-            this.ItemRequiredType.Name = "ItemRequiredType";
-            // 
-            // ItemRequiredGender
-            // 
-            this.ItemRequiredGender.DataPropertyName = "ItemRequiredGender";
-            this.ItemRequiredGender.HeaderText = "Required Gender";
-            this.ItemRequiredGender.Name = "ItemRequiredGender";
-            // 
-            // ItemRequiredClass
-            // 
-            this.ItemRequiredClass.DataPropertyName = "ItemRequiredClass";
-            this.ItemRequiredClass.HeaderText = "Required Class";
-            this.ItemRequiredClass.Name = "ItemRequiredClass";
-            // 
-            // ItemSet
-            // 
-            this.ItemSet.DataPropertyName = "ItemSet";
-            this.ItemSet.HeaderText = "Set";
-            this.ItemSet.Name = "ItemSet";
-            // 
-            // ItemRandomStatsId
-            // 
-            this.ItemRandomStatsId.DataPropertyName = "ItemRandomStatsId";
-            this.ItemRandomStatsId.HeaderText = "Random Stats";
-            this.ItemRandomStatsId.Name = "ItemRandomStatsId";
-            // 
-            // ItemRequiredAmount
-            // 
-            this.ItemRequiredAmount.DataPropertyName = "ItemRequiredAmount";
-            this.ItemRequiredAmount.HeaderText = "Required Amount";
-            this.ItemRequiredAmount.Name = "ItemRequiredAmount";
-            // 
-            // ItemImage
-            // 
-            this.ItemImage.DataPropertyName = "ItemImage";
-            this.ItemImage.HeaderText = "Image";
-            this.ItemImage.Name = "ItemImage";
-            // 
-            // ItemShape
-            // 
-            this.ItemShape.DataPropertyName = "ItemShape";
-            this.ItemShape.HeaderText = "Shape";
-            this.ItemShape.Name = "ItemShape";
-            // 
-            // ItemEffect
-            // 
-            this.ItemEffect.DataPropertyName = "ItemEffect";
-            this.ItemEffect.HeaderText = "Effect";
-            this.ItemEffect.Name = "ItemEffect";
-            // 
-            // ItemStackSize
-            // 
-            this.ItemStackSize.DataPropertyName = "ItemStackSize";
-            this.ItemStackSize.HeaderText = "Stack Size";
-            this.ItemStackSize.Name = "ItemStackSize";
-            // 
-            // ItemSlots
-            // 
-            this.ItemSlots.DataPropertyName = "ItemSlots";
-            this.ItemSlots.HeaderText = "Slots";
-            this.ItemSlots.Name = "ItemSlots";
-            // 
-            // ItemWeight
-            // 
-            this.ItemWeight.DataPropertyName = "ItemWeight";
-            this.ItemWeight.HeaderText = "Weight";
-            this.ItemWeight.Name = "ItemWeight";
-            // 
-            // ItemLightRange
-            // 
-            this.ItemLightRange.DataPropertyName = "ItemLightRange";
-            this.ItemLightRange.HeaderText = "Light Range";
-            this.ItemLightRange.Name = "ItemLightRange";
-            // 
-            // ItemLightIntensity
-            // 
-            this.ItemLightIntensity.DataPropertyName = "ItemLightIntensity";
-            this.ItemLightIntensity.HeaderText = "Intensity";
-            this.ItemLightIntensity.Name = "ItemLightIntensity";
-            // 
-            // ItemDurability
-            // 
-            this.ItemDurability.DataPropertyName = "ItemDurability";
-            this.ItemDurability.HeaderText = "Durability";
-            this.ItemDurability.Name = "ItemDurability";
-            // 
-            // ItemPrice
-            // 
-            this.ItemPrice.DataPropertyName = "ItemPrice";
-            this.ItemPrice.HeaderText = "Price";
-            this.ItemPrice.Name = "ItemPrice";
-            // 
-            // ItemToolTip
-            // 
-            this.ItemToolTip.DataPropertyName = "ItemToolTip";
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ItemToolTip.DefaultCellStyle = dataGridViewCellStyle5;
-            this.ItemToolTip.HeaderText = "ToolTip";
-            this.ItemToolTip.Name = "ItemToolTip";
-            this.ItemToolTip.Width = 68;
-            // 
-            // NeedIdentify
-            // 
-            this.NeedIdentify.DataPropertyName = "NeedIdentify";
-            this.NeedIdentify.HeaderText = "Need Identify";
-            this.NeedIdentify.Name = "NeedIdentify";
-            // 
-            // ShowGroupPickup
-            // 
-            this.ShowGroupPickup.DataPropertyName = "ShowGroupPickup";
-            this.ShowGroupPickup.HeaderText = "Show Group Pickup";
-            this.ShowGroupPickup.Name = "ShowGroupPickup";
-            // 
-            // GlobalDropNotify
-            // 
-            this.GlobalDropNotify.DataPropertyName = "GlobalDropNotify";
-            this.GlobalDropNotify.HeaderText = "Global Drop Notify";
-            this.GlobalDropNotify.Name = "GlobalDropNotify";
-            // 
-            // ClassBased
-            // 
-            this.ClassBased.DataPropertyName = "ClassBased";
-            this.ClassBased.HeaderText = "Class Based";
-            this.ClassBased.Name = "ClassBased";
-            // 
-            // LevelBased
-            // 
-            this.LevelBased.DataPropertyName = "LevelBased";
-            this.LevelBased.HeaderText = "Level Based";
-            this.LevelBased.Name = "LevelBased";
-            // 
-            // CanMine
-            // 
-            this.CanMine.DataPropertyName = "CanMine";
-            this.CanMine.HeaderText = "Can Mine";
-            this.CanMine.Name = "CanMine";
-            // 
-            // CanFastRun
-            // 
-            this.CanFastRun.DataPropertyName = "CanFastRun";
-            this.CanFastRun.HeaderText = "Can FastRun";
-            this.CanFastRun.Name = "CanFastRun";
-            // 
-            // CanAwakening
-            // 
-            this.CanAwakening.DataPropertyName = "CanAwakening";
-            this.CanAwakening.HeaderText = "Can Awakening";
-            this.CanAwakening.Name = "CanAwakening";
             // 
             // panel1
             // 
@@ -360,6 +167,16 @@ namespace Server.Database
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(956, 47);
             this.panel3.TabIndex = 5;
+            // 
+            // Gameshop_button
+            // 
+            this.Gameshop_button.Location = new System.Drawing.Point(774, 22);
+            this.Gameshop_button.Name = "Gameshop_button";
+            this.Gameshop_button.Size = new System.Drawing.Size(83, 23);
+            this.Gameshop_button.TabIndex = 30;
+            this.Gameshop_button.Text = "+ Gameshop";
+            this.Gameshop_button.UseVisualStyleBackColor = true;
+            this.Gameshop_button.Click += new System.EventHandler(this.Gameshop_button_Click);
             // 
             // btnExport
             // 
@@ -501,15 +318,229 @@ namespace Server.Database
             this.panel2.Size = new System.Drawing.Size(956, 433);
             this.panel2.TabIndex = 2;
             // 
-            // Gameshop_button
+            // Modified
             // 
-            this.Gameshop_button.Location = new System.Drawing.Point(774, 22);
-            this.Gameshop_button.Name = "Gameshop_button";
-            this.Gameshop_button.Size = new System.Drawing.Size(83, 23);
-            this.Gameshop_button.TabIndex = 30;
-            this.Gameshop_button.Text = "+ Gameshop";
-            this.Gameshop_button.UseVisualStyleBackColor = true;
-            this.Gameshop_button.Click += new System.EventHandler(this.Gameshop_button_Click);
+            this.Modified.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Modified.DataPropertyName = "Modified";
+            this.Modified.Frozen = true;
+            this.Modified.HeaderText = "Modified";
+            this.Modified.Name = "Modified";
+            this.Modified.ReadOnly = true;
+            this.Modified.Width = 53;
+            // 
+            // ItemIndex
+            // 
+            this.ItemIndex.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ItemIndex.DataPropertyName = "ItemIndex";
+            this.ItemIndex.Frozen = true;
+            this.ItemIndex.HeaderText = "Index";
+            this.ItemIndex.Name = "ItemIndex";
+            this.ItemIndex.ReadOnly = true;
+            this.ItemIndex.Width = 58;
+            // 
+            // ItemName
+            // 
+            this.ItemName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.ItemName.DataPropertyName = "ItemName";
+            this.ItemName.Frozen = true;
+            this.ItemName.HeaderText = "Name";
+            this.ItemName.Name = "ItemName";
+            this.ItemName.Width = 60;
+            // 
+            // ItemType
+            // 
+            this.ItemType.DataPropertyName = "ItemType";
+            this.ItemType.Frozen = true;
+            this.ItemType.HeaderText = "Type";
+            this.ItemType.Name = "ItemType";
+            this.ItemType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // ItemGrade
+            // 
+            this.ItemGrade.DataPropertyName = "ItemGrade";
+            this.ItemGrade.Frozen = true;
+            this.ItemGrade.HeaderText = "Grade";
+            this.ItemGrade.Name = "ItemGrade";
+            // 
+            // ItemRequiredType
+            // 
+            this.ItemRequiredType.DataPropertyName = "ItemRequiredType";
+            this.ItemRequiredType.Frozen = true;
+            this.ItemRequiredType.HeaderText = "Required Type";
+            this.ItemRequiredType.Name = "ItemRequiredType";
+            // 
+            // ItemRequiredGender
+            // 
+            this.ItemRequiredGender.DataPropertyName = "ItemRequiredGender";
+            this.ItemRequiredGender.Frozen = true;
+            this.ItemRequiredGender.HeaderText = "Required Gender";
+            this.ItemRequiredGender.Name = "ItemRequiredGender";
+            // 
+            // ItemRequiredClass
+            // 
+            this.ItemRequiredClass.DataPropertyName = "ItemRequiredClass";
+            this.ItemRequiredClass.Frozen = true;
+            this.ItemRequiredClass.HeaderText = "Required Class";
+            this.ItemRequiredClass.Name = "ItemRequiredClass";
+            // 
+            // ItemSet
+            // 
+            this.ItemSet.DataPropertyName = "ItemSet";
+            this.ItemSet.Frozen = true;
+            this.ItemSet.HeaderText = "Set";
+            this.ItemSet.Name = "ItemSet";
+            // 
+            // ItemRandomStatsId
+            // 
+            this.ItemRandomStatsId.DataPropertyName = "ItemRandomStatsId";
+            this.ItemRandomStatsId.Frozen = true;
+            this.ItemRandomStatsId.HeaderText = "Random Stats";
+            this.ItemRandomStatsId.Name = "ItemRandomStatsId";
+            // 
+            // ItemRequiredAmount
+            // 
+            this.ItemRequiredAmount.DataPropertyName = "ItemRequiredAmount";
+            this.ItemRequiredAmount.Frozen = true;
+            this.ItemRequiredAmount.HeaderText = "Required Amount";
+            this.ItemRequiredAmount.Name = "ItemRequiredAmount";
+            // 
+            // ItemImage
+            // 
+            this.ItemImage.DataPropertyName = "ItemImage";
+            this.ItemImage.Frozen = true;
+            this.ItemImage.HeaderText = "Image";
+            this.ItemImage.Name = "ItemImage";
+            // 
+            // ItemShape
+            // 
+            this.ItemShape.DataPropertyName = "ItemShape";
+            this.ItemShape.Frozen = true;
+            this.ItemShape.HeaderText = "Shape";
+            this.ItemShape.Name = "ItemShape";
+            // 
+            // ItemEffect
+            // 
+            this.ItemEffect.DataPropertyName = "ItemEffect";
+            this.ItemEffect.Frozen = true;
+            this.ItemEffect.HeaderText = "Effect";
+            this.ItemEffect.Name = "ItemEffect";
+            // 
+            // ItemStackSize
+            // 
+            this.ItemStackSize.DataPropertyName = "ItemStackSize";
+            this.ItemStackSize.Frozen = true;
+            this.ItemStackSize.HeaderText = "Stack Size";
+            this.ItemStackSize.Name = "ItemStackSize";
+            // 
+            // ItemSlots
+            // 
+            this.ItemSlots.DataPropertyName = "ItemSlots";
+            this.ItemSlots.Frozen = true;
+            this.ItemSlots.HeaderText = "Slots";
+            this.ItemSlots.Name = "ItemSlots";
+            // 
+            // ItemWeight
+            // 
+            this.ItemWeight.DataPropertyName = "ItemWeight";
+            this.ItemWeight.Frozen = true;
+            this.ItemWeight.HeaderText = "Weight";
+            this.ItemWeight.Name = "ItemWeight";
+            // 
+            // ItemLightRange
+            // 
+            this.ItemLightRange.DataPropertyName = "ItemLightRange";
+            this.ItemLightRange.Frozen = true;
+            this.ItemLightRange.HeaderText = "Light Range";
+            this.ItemLightRange.Name = "ItemLightRange";
+            // 
+            // ItemLightIntensity
+            // 
+            this.ItemLightIntensity.DataPropertyName = "ItemLightIntensity";
+            this.ItemLightIntensity.Frozen = true;
+            this.ItemLightIntensity.HeaderText = "Intensity";
+            this.ItemLightIntensity.Name = "ItemLightIntensity";
+            // 
+            // ItemDurability
+            // 
+            this.ItemDurability.DataPropertyName = "ItemDurability";
+            this.ItemDurability.Frozen = true;
+            this.ItemDurability.HeaderText = "Durability";
+            this.ItemDurability.Name = "ItemDurability";
+            // 
+            // ItemPrice
+            // 
+            this.ItemPrice.DataPropertyName = "ItemPrice";
+            this.ItemPrice.Frozen = true;
+            this.ItemPrice.HeaderText = "Price";
+            this.ItemPrice.Name = "ItemPrice";
+            // 
+            // ItemToolTip
+            // 
+            this.ItemToolTip.DataPropertyName = "ItemToolTip";
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.ItemToolTip.DefaultCellStyle = dataGridViewCellStyle2;
+            this.ItemToolTip.Frozen = true;
+            this.ItemToolTip.HeaderText = "ToolTip";
+            this.ItemToolTip.Name = "ItemToolTip";
+            this.ItemToolTip.Width = 68;
+            // 
+            // StartItem
+            // 
+            this.StartItem.DataPropertyName = "StartItem";
+            this.StartItem.Frozen = true;
+            this.StartItem.HeaderText = "Start Item";
+            this.StartItem.Name = "StartItem";
+            this.StartItem.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
+            // NeedIdentify
+            // 
+            this.NeedIdentify.DataPropertyName = "NeedIdentify";
+            this.NeedIdentify.Frozen = true;
+            this.NeedIdentify.HeaderText = "Need Identify";
+            this.NeedIdentify.Name = "NeedIdentify";
+            // 
+            // ShowGroupPickup
+            // 
+            this.ShowGroupPickup.DataPropertyName = "ShowGroupPickup";
+            this.ShowGroupPickup.Frozen = true;
+            this.ShowGroupPickup.HeaderText = "Show Group Pickup";
+            this.ShowGroupPickup.Name = "ShowGroupPickup";
+            // 
+            // GlobalDropNotify
+            // 
+            this.GlobalDropNotify.DataPropertyName = "GlobalDropNotify";
+            this.GlobalDropNotify.HeaderText = "Global Drop Notify";
+            this.GlobalDropNotify.Name = "GlobalDropNotify";
+            // 
+            // ClassBased
+            // 
+            this.ClassBased.DataPropertyName = "ClassBased";
+            this.ClassBased.HeaderText = "Class Based";
+            this.ClassBased.Name = "ClassBased";
+            // 
+            // LevelBased
+            // 
+            this.LevelBased.DataPropertyName = "LevelBased";
+            this.LevelBased.HeaderText = "Level Based";
+            this.LevelBased.Name = "LevelBased";
+            // 
+            // CanMine
+            // 
+            this.CanMine.DataPropertyName = "CanMine";
+            this.CanMine.HeaderText = "Can Mine";
+            this.CanMine.Name = "CanMine";
+            // 
+            // CanFastRun
+            // 
+            this.CanFastRun.DataPropertyName = "CanFastRun";
+            this.CanFastRun.HeaderText = "Can FastRun";
+            this.CanFastRun.Name = "CanFastRun";
+            // 
+            // CanAwakening
+            // 
+            this.CanAwakening.DataPropertyName = "CanAwakening";
+            this.CanAwakening.HeaderText = "Can Awakening";
+            this.CanAwakening.Name = "CanAwakening";
             // 
             // ItemInfoFormNew
             // 
@@ -550,6 +581,7 @@ namespace Server.Database
         private System.Windows.Forms.ComboBox drpFilterType;
         private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.Button btnImport;
+        private System.Windows.Forms.Button Gameshop_button;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Modified;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemIndex;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemName;
@@ -572,6 +604,7 @@ namespace Server.Database
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemDurability;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemPrice;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemToolTip;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn StartItem;
         private System.Windows.Forms.DataGridViewCheckBoxColumn NeedIdentify;
         private System.Windows.Forms.DataGridViewCheckBoxColumn ShowGroupPickup;
         private System.Windows.Forms.DataGridViewCheckBoxColumn GlobalDropNotify;
@@ -580,6 +613,5 @@ namespace Server.Database
         private System.Windows.Forms.DataGridViewCheckBoxColumn CanMine;
         private System.Windows.Forms.DataGridViewCheckBoxColumn CanFastRun;
         private System.Windows.Forms.DataGridViewCheckBoxColumn CanAwakening;
-        private System.Windows.Forms.Button Gameshop_button;
     }
 }
