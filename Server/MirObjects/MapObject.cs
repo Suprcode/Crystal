@@ -428,6 +428,10 @@ namespace Server.MirObjects
 
         public bool IsAttackTarget(MapObject attacker)
         {
+            if (attacker == null || attacker.Node == null) return false;
+            if (Dead || InSafeZone || attacker.InSafeZone || attacker == this) return false;
+            if (CurrentMap.Info.NoFight) return false;
+            
             switch (attacker.Race)
             {
                 case ObjectType.Player:
