@@ -350,7 +350,6 @@ namespace Server.Database
             // ItemType
             // 
             this.ItemType.DataPropertyName = "ItemType";
-            this.ItemType.Frozen = true;
             this.ItemType.HeaderText = "Type";
             this.ItemType.Name = "ItemType";
             this.ItemType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
@@ -358,119 +357,102 @@ namespace Server.Database
             // ItemGrade
             // 
             this.ItemGrade.DataPropertyName = "ItemGrade";
-            this.ItemGrade.Frozen = true;
             this.ItemGrade.HeaderText = "Grade";
             this.ItemGrade.Name = "ItemGrade";
             // 
             // ItemRequiredType
             // 
             this.ItemRequiredType.DataPropertyName = "ItemRequiredType";
-            this.ItemRequiredType.Frozen = true;
             this.ItemRequiredType.HeaderText = "Required Type";
             this.ItemRequiredType.Name = "ItemRequiredType";
             // 
             // ItemRequiredGender
             // 
             this.ItemRequiredGender.DataPropertyName = "ItemRequiredGender";
-            this.ItemRequiredGender.Frozen = true;
             this.ItemRequiredGender.HeaderText = "Required Gender";
             this.ItemRequiredGender.Name = "ItemRequiredGender";
             // 
             // ItemRequiredClass
             // 
             this.ItemRequiredClass.DataPropertyName = "ItemRequiredClass";
-            this.ItemRequiredClass.Frozen = true;
             this.ItemRequiredClass.HeaderText = "Required Class";
             this.ItemRequiredClass.Name = "ItemRequiredClass";
             // 
             // ItemSet
             // 
             this.ItemSet.DataPropertyName = "ItemSet";
-            this.ItemSet.Frozen = true;
             this.ItemSet.HeaderText = "Set";
             this.ItemSet.Name = "ItemSet";
             // 
             // ItemRandomStatsId
             // 
             this.ItemRandomStatsId.DataPropertyName = "ItemRandomStatsId";
-            this.ItemRandomStatsId.Frozen = true;
             this.ItemRandomStatsId.HeaderText = "Random Stats";
             this.ItemRandomStatsId.Name = "ItemRandomStatsId";
             // 
             // ItemRequiredAmount
             // 
             this.ItemRequiredAmount.DataPropertyName = "ItemRequiredAmount";
-            this.ItemRequiredAmount.Frozen = true;
             this.ItemRequiredAmount.HeaderText = "Required Amount";
             this.ItemRequiredAmount.Name = "ItemRequiredAmount";
             // 
             // ItemImage
             // 
             this.ItemImage.DataPropertyName = "ItemImage";
-            this.ItemImage.Frozen = true;
             this.ItemImage.HeaderText = "Image";
             this.ItemImage.Name = "ItemImage";
             // 
             // ItemShape
             // 
             this.ItemShape.DataPropertyName = "ItemShape";
-            this.ItemShape.Frozen = true;
             this.ItemShape.HeaderText = "Shape";
             this.ItemShape.Name = "ItemShape";
             // 
             // ItemEffect
             // 
             this.ItemEffect.DataPropertyName = "ItemEffect";
-            this.ItemEffect.Frozen = true;
             this.ItemEffect.HeaderText = "Effect";
             this.ItemEffect.Name = "ItemEffect";
             // 
             // ItemStackSize
             // 
             this.ItemStackSize.DataPropertyName = "ItemStackSize";
-            this.ItemStackSize.Frozen = true;
             this.ItemStackSize.HeaderText = "Stack Size";
             this.ItemStackSize.Name = "ItemStackSize";
             // 
             // ItemSlots
             // 
             this.ItemSlots.DataPropertyName = "ItemSlots";
-            this.ItemSlots.Frozen = true;
             this.ItemSlots.HeaderText = "Slots";
             this.ItemSlots.Name = "ItemSlots";
             // 
             // ItemWeight
             // 
             this.ItemWeight.DataPropertyName = "ItemWeight";
-            this.ItemWeight.Frozen = true;
             this.ItemWeight.HeaderText = "Weight";
             this.ItemWeight.Name = "ItemWeight";
             // 
             // ItemLightRange
             // 
             this.ItemLightRange.DataPropertyName = "ItemLightRange";
-            this.ItemLightRange.Frozen = true;
             this.ItemLightRange.HeaderText = "Light Range";
             this.ItemLightRange.Name = "ItemLightRange";
             // 
             // ItemLightIntensity
             // 
             this.ItemLightIntensity.DataPropertyName = "ItemLightIntensity";
-            this.ItemLightIntensity.Frozen = true;
             this.ItemLightIntensity.HeaderText = "Intensity";
             this.ItemLightIntensity.Name = "ItemLightIntensity";
             // 
             // ItemDurability
             // 
             this.ItemDurability.DataPropertyName = "ItemDurability";
-            this.ItemDurability.Frozen = true;
             this.ItemDurability.HeaderText = "Durability";
             this.ItemDurability.Name = "ItemDurability";
             // 
             // ItemPrice
             // 
             this.ItemPrice.DataPropertyName = "ItemPrice";
-            this.ItemPrice.Frozen = true;
             this.ItemPrice.HeaderText = "Price";
             this.ItemPrice.Name = "ItemPrice";
             // 
@@ -479,7 +461,6 @@ namespace Server.Database
             this.ItemToolTip.DataPropertyName = "ItemToolTip";
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.ItemToolTip.DefaultCellStyle = dataGridViewCellStyle2;
-            this.ItemToolTip.Frozen = true;
             this.ItemToolTip.HeaderText = "ToolTip";
             this.ItemToolTip.Name = "ItemToolTip";
             this.ItemToolTip.Width = 68;
@@ -487,7 +468,6 @@ namespace Server.Database
             // StartItem
             // 
             this.StartItem.DataPropertyName = "StartItem";
-            this.StartItem.Frozen = true;
             this.StartItem.HeaderText = "Start Item";
             this.StartItem.Name = "StartItem";
             this.StartItem.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -495,14 +475,12 @@ namespace Server.Database
             // NeedIdentify
             // 
             this.NeedIdentify.DataPropertyName = "NeedIdentify";
-            this.NeedIdentify.Frozen = true;
             this.NeedIdentify.HeaderText = "Need Identify";
             this.NeedIdentify.Name = "NeedIdentify";
             // 
             // ShowGroupPickup
             // 
             this.ShowGroupPickup.DataPropertyName = "ShowGroupPickup";
-            this.ShowGroupPickup.Frozen = true;
             this.ShowGroupPickup.HeaderText = "Show Group Pickup";
             this.ShowGroupPickup.Name = "ShowGroupPickup";
             // 
