@@ -851,7 +851,7 @@ namespace Server.Database
             row.Cells["ItemPrice"].Value = (uint)0;
             row.Cells["ItemToolTip"].Value = (string)"";
 
-            row.Cells["StartIte,"].Value = false;
+            row.Cells["StartItem"].Value = false;
             row.Cells["NeedIdentify"].Value = false;
             row.Cells["ShowGroupPickup"].Value = false;
             row.Cells["GlobalDropNotify"].Value = false;
