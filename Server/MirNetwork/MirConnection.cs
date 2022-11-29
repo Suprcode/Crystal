@@ -70,6 +70,7 @@ namespace Server.MirNetwork
         public bool StorageSent;
         public bool HeroStorageSent;
         public Dictionary<long, DateTime> SentRankings = new Dictionary<long, DateTime>();
+        public static Dictionary<string, long> NextConnectionAttempts = new Dictionary<string, long>();
 
 
         public MirConnection(int sessionID, TcpClient client)
@@ -89,11 +90,17 @@ namespace Server.MirNetwork
                     {
                         MessageQueue.EnqueueDebugging(IPAddress + ", Maximum connections reached.");
                         conn.SendDisconnect(5);
+                        return;
                     }
                 }
             }
 
             MessageQueue.Enqueue(IPAddress + ", Connected.");
+            
+            if (NextConnectionAttempts.ContainsKey(IPAddress))
+                NextConnectionAttempts[IPAddress] = Envir.Time + 1000;
+            else
+                NextConnectionAttempts.Add(IPAddress, Envir.Time + 1000);
 
             _client = client;
             _client.NoDelay = true;

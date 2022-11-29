@@ -1941,8 +1941,20 @@ namespace Server.MirEnvir
             try
             {
                 var tempTcpClient = _listener.EndAcceptTcpClient(result);
-                lock (Connections)
-                    Connections.Add(new MirConnection(++_sessionID, tempTcpClient));
+                bool connected = false;
+                var ipAddress = tempTcpClient.Client.RemoteEndPoint.ToString().Split(':')[0];
+                if (!MirConnection.NextConnectionAttempts.ContainsKey(ipAddress) || Time >= MirConnection.NextConnectionAttempts[ipAddress])
+                {
+                    var tempConnection = new MirConnection(++_sessionID, tempTcpClient);
+                    if (tempConnection.Connected)
+                    {
+                        connected = true;
+                        lock (Connections)
+                            Connections.Add(tempConnection);
+                    }
+                }
+                if (!connected)
+                    tempTcpClient.Close();
             }
             catch (Exception ex)
             {
