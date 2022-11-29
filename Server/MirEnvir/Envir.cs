@@ -3477,6 +3477,8 @@ namespace Server.MirEnvir
         {
             SaveGoods(true);
 
+            Robot.Clear();
+
             var keys = Scripts.Keys;
 
             foreach (var key in keys)

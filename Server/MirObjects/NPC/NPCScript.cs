@@ -424,7 +424,7 @@ namespace Server.MirObjects
 
             List<string> lines = scriptLines.Where(x => !string.IsNullOrEmpty(x)).ToList();
 
-            NPCPage Page = new NPCPage(sectionName, this);
+            NPCPage Page = new NPCPage(sectionName);
 
             //Cleans arguments out of search page name
             string tempSectionName = Page.ArgumentParse(sectionName);
@@ -612,10 +612,10 @@ namespace Server.MirObjects
                 segment.ParseCheck(checks[i]);
 
             for (int i = 0; i < acts.Count; i++)
-                segment.ParseAct(segment.Actions, acts[i]);
+                segment.ParseAct(segment.ActList, acts[i]);
 
             for (int i = 0; i < elseActs.Count; i++)
-                segment.ParseAct(segment.ElseActions, elseActs[i]);
+                segment.ParseAct(segment.ElseActList, elseActs[i]);
 
             currentButtons = new List<string>();
             currentButtons.AddRange(buttons);
@@ -1226,12 +1226,12 @@ namespace Server.MirObjects
 
                 callingNPC.NeedSave = true;
 
-                player.Enqueue(new S.NPCGoods 
-                { 
-                    List = newGoodsList, 
-                    Rate = PriceRate(player), 
-                    HideAddedStats = Settings.GoodsHideAddedStats, 
-                    Type = player.NPCPage.Key.ToUpper() == BuyUsedKey ? PanelType.BuySub : PanelType.Buy 
+                player.Enqueue(new S.NPCGoods
+                {
+                    List = newGoodsList,
+                    Rate = PriceRate(player),
+                    HideAddedStats = Settings.GoodsHideAddedStats,
+                    Type = player.NPCPage.Key.ToUpper() == BuyUsedKey ? PanelType.BuySub : PanelType.Buy
                 });
             }
 

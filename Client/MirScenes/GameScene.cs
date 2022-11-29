@@ -10219,6 +10219,7 @@ namespace Client.MirScenes
 
             MapObject.MouseObjectID = 0;
             MapObject.TargetObjectID = 0;
+            MapObject.TargetObjectID = 0;
             MapObject.MagicObjectID = 0;
 
             if (M2CellInfo != null)

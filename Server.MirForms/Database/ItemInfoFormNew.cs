@@ -79,6 +79,7 @@ namespace Server.Database
             ItemPrice.ValueType = typeof(uint);
             ItemToolTip.ValueType = typeof(string);
 
+            StartItem.ValueType = typeof(bool);
             NeedIdentify.ValueType = typeof(bool);
             ShowGroupPickup.ValueType = typeof(bool);
             GlobalDropNotify.ValueType = typeof(bool);
@@ -234,6 +235,7 @@ namespace Server.Database
                 row["ItemPrice"] = item.Price;
                 row["ItemToolTip"] = item.ToolTip;
 
+                row["StartItem"] = item.StartItem;
                 row["NeedIdentify"] = item.NeedIdentify;
                 row["ShowGroupPickup"] = item.ShowGroupPickup;
                 row["GlobalDropNotify"] = item.GlobalDropNotify;
@@ -336,6 +338,7 @@ namespace Server.Database
                 item.Slots = (byte)row.Cells["ItemSlots"].Value;
                 item.Weight = (byte)row.Cells["ItemWeight"].Value;
 
+                item.StartItem = (bool)row.Cells["StartItem"].Value;
                 item.NeedIdentify = (bool)row.Cells["NeedIdentify"].Value;
                 item.ShowGroupPickup = (bool)row.Cells["ShowGroupPickup"].Value;
                 item.GlobalDropNotify = (bool)row.Cells["GlobalDropNotify"].Value;
@@ -541,7 +544,7 @@ namespace Server.Database
         {
             var specialCols = new string[]
             {
-                "NeedIdentify", "ShowGroupPickup","GlobalDropNotify","ClassBased","LevelBased","CanMine","CanFastRun","CanAwakening"
+                "StartItem", "NeedIdentify", "ShowGroupPickup", "GlobalDropNotify", "ClassBased", "LevelBased", "CanMine", "CanFastRun", "CanAwakening"
             };
 
             if (rBtnViewSpecial.Checked)
@@ -848,6 +851,7 @@ namespace Server.Database
             row.Cells["ItemPrice"].Value = (uint)0;
             row.Cells["ItemToolTip"].Value = (string)"";
 
+            row.Cells["StartItem"].Value = false;
             row.Cells["NeedIdentify"].Value = false;
             row.Cells["ShowGroupPickup"].Value = false;
             row.Cells["GlobalDropNotify"].Value = false;
