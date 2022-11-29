@@ -16,12 +16,10 @@ namespace Server.MirObjects
         public List<int> ScriptCalls = new List<int>();
 
         public bool BreakFromSegments = false;
-        public readonly NPCScript Script;
 
-        public NPCPage(string key, NPCScript script)
+        public NPCPage(string key)
         {
             Key = key;
-            Script = script;
         }
 
         public string ArgumentParse(string key)

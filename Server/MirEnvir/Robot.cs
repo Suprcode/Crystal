@@ -47,6 +47,11 @@ namespace Server.MirEnvir
             NextCheck = next;
         }
 
+        public static void Clear()
+        {
+            Robots.Clear();
+        }
+
         private bool IsMatch(DateTime date)
         {
             if (Month != null && date.Month != Month) return false;
