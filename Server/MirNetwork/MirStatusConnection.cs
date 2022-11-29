@@ -51,6 +51,8 @@ namespace Server.MirNetwork
                 _client = client;
                 _client.NoDelay = true;
 
+                Envir.UpdateIPBlock(IPAddress);
+
                 TimeConnected = Envir.Time;
                 TimeOutTime = TimeConnected + Settings.TimeOut;
                 Connected = true;

@@ -9,6 +9,7 @@ using C = ClientPackets;
 using S = ServerPackets;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace Server.MirNetwork
 {
@@ -71,27 +72,15 @@ namespace Server.MirNetwork
         public bool HeroStorageSent;
         public Dictionary<long, DateTime> SentRankings = new Dictionary<long, DateTime>();
 
+        private DateTime _dataCounterReset;
+        private int _dataCounter = 0;
 
         public MirConnection(int sessionID, TcpClient client)
         {
             SessionID = sessionID;
             IPAddress = client.Client.RemoteEndPoint.ToString().Split(':')[0];
 
-            int connCount = 0;
-            for (int i = 0; i < Envir.Connections.Count; i++)
-            {
-                MirConnection conn = Envir.Connections[i];
-                if (conn.IPAddress == IPAddress && conn.Connected)
-                {
-                    connCount++;
-
-                    if (connCount >= Settings.MaxIP)
-                    {
-                        MessageQueue.EnqueueDebugging(IPAddress + ", Maximum connections reached.");
-                        conn.SendDisconnect(5);
-                    }
-                }
-            }
+            Envir.UpdateIPBlock(IPAddress);
 
             MessageQueue.Enqueue(IPAddress + ", Connected.");
 
@@ -100,7 +89,6 @@ namespace Server.MirNetwork
 
             TimeConnected = Envir.Time;
             TimeOutTime = TimeConnected + Settings.TimeOut;
-
 
             _receiveList = new ConcurrentQueue<Packet>();
             _sendList = new ConcurrentQueue<Packet>();
@@ -135,6 +123,7 @@ namespace Server.MirNetwork
                 Disconnecting = true;
             }
         }
+
         private void ReceiveData(IAsyncResult result)
         {
             if (!Connected) return;
@@ -157,16 +146,48 @@ namespace Server.MirNetwork
                 return;
             }
 
-            byte[] rawBytes = result.AsyncState as byte[];
+            if (_dataCounterReset < Envir.Now)
+            {
+                _dataCounterReset = Envir.Now.AddSeconds(5);
+                _dataCounter = 0;
+            }
 
-            byte[] temp = _rawData;
-            _rawData = new byte[dataRead + temp.Length];
-            Buffer.BlockCopy(temp, 0, _rawData, 0, temp.Length);
-            Buffer.BlockCopy(rawBytes, 0, _rawData, temp.Length, dataRead);
+            _dataCounter++;
 
-            Packet p;
-            while ((p = Packet.ReceivePacket(_rawData, out _rawData)) != null)
-                _receiveList.Enqueue(p);
+            if (_dataCounter > Settings.MaxPacket)
+            {
+                Disconnecting = true;
+
+                Envir.UpdateIPBlock(IPAddress);
+
+                MessageQueue.Enqueue($"{IPAddress} Disconnected, Large amount of Packets.");
+
+                return;
+            }
+
+            try
+            {
+                byte[] rawBytes = result.AsyncState as byte[];
+
+                byte[] temp = _rawData;
+                _rawData = new byte[dataRead + temp.Length];
+                Buffer.BlockCopy(temp, 0, _rawData, 0, temp.Length);
+                Buffer.BlockCopy(rawBytes, 0, _rawData, temp.Length, dataRead);
+
+                Packet p;
+
+                while ((p = Packet.ReceivePacket(_rawData, out _rawData)) != null)
+                    _receiveList.Enqueue(p);
+            }
+            catch
+            {
+                Disconnecting = true;
+
+                Envir.UpdateIPBlock(IPAddress);
+
+                MessageQueue.Enqueue($"{IPAddress} Disconnected, Invalid packet.");
+                return;
+            }
 
             BeginReceive();
         }

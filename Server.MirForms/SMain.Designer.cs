@@ -94,8 +94,9 @@ namespace Server
             this.conquestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.respawnsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.monsterTunerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.InterfaceTimer = new System.Windows.Forms.Timer(this.components);
             this.dropBuilderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.InterfaceTimer = new System.Windows.Forms.Timer(this.components);
+            this.BlockedIPsLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.MainTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -280,6 +281,7 @@ namespace Server
             this.PlayersLabel,
             this.MonsterLabel,
             this.ConnectionsLabel,
+            this.BlockedIPsLabel,
             this.CycleDelayLabel});
             this.StatusBar.Location = new System.Drawing.Point(0, 370);
             this.StatusBar.Name = "StatusBar";
@@ -507,14 +509,14 @@ namespace Server
             // serverToolStripMenuItem
             // 
             this.serverToolStripMenuItem.Name = "serverToolStripMenuItem";
-            this.serverToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.serverToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.serverToolStripMenuItem.Text = "Server";
             this.serverToolStripMenuItem.Click += new System.EventHandler(this.serverToolStripMenuItem_Click);
             // 
             // balanceToolStripMenuItem
             // 
             this.balanceToolStripMenuItem.Name = "balanceToolStripMenuItem";
-            this.balanceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.balanceToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.balanceToolStripMenuItem.Text = "Balance";
             this.balanceToolStripMenuItem.Click += new System.EventHandler(this.balanceToolStripMenuItem_Click);
             // 
@@ -534,7 +536,7 @@ namespace Server
             this.conquestToolStripMenuItem,
             this.respawnsToolStripMenuItem});
             this.systemToolStripMenuItem.Name = "systemToolStripMenuItem";
-            this.systemToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.systemToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.systemToolStripMenuItem.Text = "System";
             // 
             // dragonSystemToolStripMenuItem
@@ -624,21 +626,30 @@ namespace Server
             // monsterTunerToolStripMenuItem
             // 
             this.monsterTunerToolStripMenuItem.Name = "monsterTunerToolStripMenuItem";
-            this.monsterTunerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.monsterTunerToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.monsterTunerToolStripMenuItem.Text = "Monster Tuner";
             this.monsterTunerToolStripMenuItem.Click += new System.EventHandler(this.monsterTunerToolStripMenuItem_Click);
+            // 
+            // dropBuilderToolStripMenuItem
+            // 
+            this.dropBuilderToolStripMenuItem.Name = "dropBuilderToolStripMenuItem";
+            this.dropBuilderToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.dropBuilderToolStripMenuItem.Text = "Drop Builder";
+            this.dropBuilderToolStripMenuItem.Click += new System.EventHandler(this.dropBuilderToolStripMenuItem_Click);
             // 
             // InterfaceTimer
             // 
             this.InterfaceTimer.Enabled = true;
             this.InterfaceTimer.Tick += new System.EventHandler(this.InterfaceTimer_Tick);
             // 
-            // dropBuilderToolStripMenuItem
+            // BlockedIPsLabel
             // 
-            this.dropBuilderToolStripMenuItem.Name = "dropBuilderToolStripMenuItem";
-            this.dropBuilderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.dropBuilderToolStripMenuItem.Text = "Drop Builder";
-            this.dropBuilderToolStripMenuItem.Click += new System.EventHandler(this.dropBuilderToolStripMenuItem_Click);
+            this.BlockedIPsLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.BlockedIPsLabel.Name = "BlockedIPsLabel";
+            this.BlockedIPsLabel.Size = new System.Drawing.Size(83, 19);
+            this.BlockedIPsLabel.Text = "Blocked IPs: 0";
             // 
             // SMain
             // 
@@ -738,6 +749,7 @@ namespace Server
         private ToolStripMenuItem itemNEWToolStripMenuItem;
         private ToolStripMenuItem monsterExperimentalToolStripMenuItem;
         private ToolStripMenuItem dropBuilderToolStripMenuItem;
+        private ToolStripStatusLabel BlockedIPsLabel;
     }
 }
 

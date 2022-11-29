@@ -3,6 +3,7 @@ using Server.MirDatabase;
 using Server.MirNetwork;
 using Server.MirObjects;
 using Server.MirObjects.Monsters;
+using ServerPackets;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -77,6 +78,8 @@ namespace Server.MirEnvir
 
         private static List<string> DisabledCharNames = new List<string>();
         private static List<string> LineMessages = new List<string>();
+
+        public static Dictionary<string, DateTime> IPBlocks = new Dictionary<string, DateTime>();
 
         public DateTime Now =>
             _startTime.AddMilliseconds(Time);
@@ -1717,6 +1720,11 @@ namespace Server.MirEnvir
             }).Start();
         }
 
+        public void UpdateIPBlock(string ipAddress)
+        {
+            IPBlocks[ipAddress] = Now.Add(TimeSpan.FromSeconds(Settings.IPBlockSeconds));
+        }
+
         private void StartEnvir()
         {
             Players.Clear();
@@ -1941,8 +1949,32 @@ namespace Server.MirEnvir
             try
             {
                 var tempTcpClient = _listener.EndAcceptTcpClient(result);
-                lock (Connections)
-                    Connections.Add(new MirConnection(++_sessionID, tempTcpClient));
+
+                bool connected = false;
+                var ipAddress = tempTcpClient.Client.RemoteEndPoint.ToString().Split(':')[0];
+
+                if (!IPBlocks.TryGetValue(ipAddress, out DateTime banDate) || banDate < Now)
+                {
+                    if (Connections.Count(x => x.IPAddress == ipAddress && x.Connected) >= Settings.MaxIP)
+                    {
+                        UpdateIPBlock(ipAddress);
+
+                        MessageQueue.Enqueue(ipAddress + " Disconnected, Too many connections.");
+                    }
+                    else
+                    {
+                        var tempConnection = new MirConnection(++_sessionID, tempTcpClient);
+                        if (tempConnection.Connected)
+                        {
+                            connected = true;
+                            lock (Connections)
+                                Connections.Add(tempConnection);
+                        }
+                    }
+                }
+
+                if (!connected)
+                    tempTcpClient.Close();
             }
             catch (Exception ex)
             {
@@ -1964,9 +1996,33 @@ namespace Server.MirEnvir
 
             try
             {
-                var tempTcpClient = _StatusPort.EndAcceptTcpClient(result);
-                lock (StatusConnections)
-                    StatusConnections.Add(new MirStatusConnection(tempTcpClient));
+                var tempTcpClient = _listener.EndAcceptTcpClient(result);
+
+                bool connected = false;
+                var ipAddress = tempTcpClient.Client.RemoteEndPoint.ToString().Split(':')[0];
+
+                if (!IPBlocks.TryGetValue(ipAddress, out DateTime banDate) || banDate < Now)
+                {
+                    if (Connections.Count(x => x.IPAddress == ipAddress && x.Connected) >= Settings.MaxIP)
+                    {
+                        UpdateIPBlock(ipAddress);
+
+                        MessageQueue.Enqueue(ipAddress + " Disconnected, Too many status connections.");
+                    }
+                    else
+                    {
+                        var tempConnection = new MirStatusConnection(tempTcpClient);
+                        if (tempConnection.Connected)
+                        {
+                            connected = true;
+                            lock (StatusConnections)
+                                StatusConnections.Add(tempConnection);
+                        }
+                    }
+                }
+
+                if (!connected)
+                    tempTcpClient.Close();
             }
             catch (Exception ex)
             {

@@ -64,7 +64,10 @@ namespace Server
                              TimeOut = 10000,
                              MaxUser = 50,
                              RelogDelay = 50,
-                             MaxIP = 5;
+                             MaxIP = 5,
+                             MaxPacket = 50;
+
+        public static int IPBlockSeconds = 5;
 
         //HTTP
         public static bool StartHTTPService = false;
@@ -332,6 +335,7 @@ namespace Server
             TimeOut = Reader.ReadUInt16("Network", "TimeOut", TimeOut);
             MaxUser = Reader.ReadUInt16("Network", "MaxUser", MaxUser);
             MaxIP = Reader.ReadUInt16("Network", "MaxIP", MaxIP);
+            MaxPacket = Reader.ReadUInt16("Network", "MaxPacket", MaxPacket);
 
             //HTTP
             StartHTTPService = Reader.ReadBoolean("Network", "StartHTTPService", StartHTTPService);
