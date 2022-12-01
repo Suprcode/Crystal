@@ -1956,7 +1956,19 @@ namespace Server.MirEnvir
 
                 if (!IPBlocks.TryGetValue(ipAddress, out DateTime banDate) || banDate < Now)
                 {
-                    if (Connections.Count(x => x.IPAddress == ipAddress && x.Connected) >= Settings.MaxIP)
+                    int count = 0;
+
+                    for (int i = 0; i < Connections.Count; i++)
+                    {
+                        var connection = Connections[i];
+
+                        if (!connection.Connected || connection.IPAddress != ipAddress)
+                            continue;
+
+                        count++;
+                    }
+
+                    if (count >= Settings.MaxIP)
                     {
                         UpdateIPBlock(ipAddress, TimeSpan.FromSeconds(Settings.IPBlockSeconds));
 
@@ -2004,7 +2016,19 @@ namespace Server.MirEnvir
 
                 if (!IPBlocks.TryGetValue(ipAddress, out DateTime banDate) || banDate < Now)
                 {
-                    if (Connections.Count(x => x.IPAddress == ipAddress && x.Connected) >= Settings.MaxIP)
+                    int count = 0;
+
+                    for (int i = 0; i < StatusConnections.Count; i++)
+                    {
+                        var connection = StatusConnections[i];
+
+                        if (!connection.Connected || connection.IPAddress != ipAddress)
+                            continue;
+
+                        count++;
+                    }
+
+                    if (count >= Settings.MaxIP)
                     {
                         UpdateIPBlock(ipAddress, TimeSpan.FromSeconds(Settings.IPBlockSeconds));
 
