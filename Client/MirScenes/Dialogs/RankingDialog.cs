@@ -183,7 +183,7 @@ namespace Client.MirScenes.Dialogs
 
                 var row = Math.Max(0, Math.Min(RankCount - 20, (y - PrevButton.Location.Y - 13) / GapPerRow));
                 RowOffset = (int)row;
-                NextRequestTime = CMain.Now + TimeSpan.FromSeconds(0.1);
+                NextRequestTime = CMain.Now + TimeSpan.FromSeconds(0.5);
             };
 
             OnlineOnlyButton = new MirCheckBox { Index = 2086, UnTickedIndex = 2086, TickedIndex = 2087, Parent = this, Location = new Point(190, Size.Height - 20), Library = Libraries.Prguse };
@@ -276,7 +276,7 @@ namespace Client.MirScenes.Dialogs
             {//go up
                 RowOffset = RowOffset > 0 ? --RowOffset : RowOffset;
             }
-            NextRequestTime = CMain.Now;
+            NextRequestTime = CMain.Now + TimeSpan.FromSeconds(0.5);
         }
 
         public void RequestRanks(byte RankType)
