@@ -80,7 +80,7 @@ namespace Server.MirNetwork
             SessionID = sessionID;
             IPAddress = client.Client.RemoteEndPoint.ToString().Split(':')[0];
 
-            Envir.UpdateIPBlock(IPAddress);
+            Envir.UpdateIPBlock(IPAddress, TimeSpan.FromSeconds(Settings.IPBlockSeconds));
 
             MessageQueue.Enqueue(IPAddress + ", Connected.");
 
@@ -158,7 +158,7 @@ namespace Server.MirNetwork
             {
                 Disconnecting = true;
 
-                Envir.UpdateIPBlock(IPAddress);
+                Envir.UpdateIPBlock(IPAddress, TimeSpan.FromHours(24));
 
                 MessageQueue.Enqueue($"{IPAddress} Disconnected, Large amount of Packets.");
 
@@ -183,7 +183,7 @@ namespace Server.MirNetwork
             {
                 Disconnecting = true;
 
-                Envir.UpdateIPBlock(IPAddress);
+                Envir.UpdateIPBlock(IPAddress, TimeSpan.FromHours(24));
 
                 MessageQueue.Enqueue($"{IPAddress} Disconnected, Invalid packet.");
                 return;

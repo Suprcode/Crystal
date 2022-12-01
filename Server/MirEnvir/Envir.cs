@@ -5,6 +5,7 @@ using Server.MirObjects;
 using Server.MirObjects.Monsters;
 using ServerPackets;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -79,7 +80,7 @@ namespace Server.MirEnvir
         private static List<string> DisabledCharNames = new List<string>();
         private static List<string> LineMessages = new List<string>();
 
-        public static Dictionary<string, DateTime> IPBlocks = new Dictionary<string, DateTime>();
+        public static ConcurrentDictionary<string, DateTime> IPBlocks = new ConcurrentDictionary<string, DateTime>();
 
         public DateTime Now =>
             _startTime.AddMilliseconds(Time);
@@ -1720,9 +1721,9 @@ namespace Server.MirEnvir
             }).Start();
         }
 
-        public void UpdateIPBlock(string ipAddress)
+        public void UpdateIPBlock(string ipAddress, TimeSpan value)
         {
-            IPBlocks[ipAddress] = Now.Add(TimeSpan.FromSeconds(Settings.IPBlockSeconds));
+            IPBlocks[ipAddress] = Now.Add(value);
         }
 
         private void StartEnvir()
@@ -1957,7 +1958,7 @@ namespace Server.MirEnvir
                 {
                     if (Connections.Count(x => x.IPAddress == ipAddress && x.Connected) >= Settings.MaxIP)
                     {
-                        UpdateIPBlock(ipAddress);
+                        UpdateIPBlock(ipAddress, TimeSpan.FromSeconds(Settings.IPBlockSeconds));
 
                         MessageQueue.Enqueue(ipAddress + " Disconnected, Too many connections.");
                     }
@@ -2005,7 +2006,7 @@ namespace Server.MirEnvir
                 {
                     if (Connections.Count(x => x.IPAddress == ipAddress && x.Connected) >= Settings.MaxIP)
                     {
-                        UpdateIPBlock(ipAddress);
+                        UpdateIPBlock(ipAddress, TimeSpan.FromSeconds(Settings.IPBlockSeconds));
 
                         MessageQueue.Enqueue(ipAddress + " Disconnected, Too many status connections.");
                     }
