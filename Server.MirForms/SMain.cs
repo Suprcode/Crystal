@@ -450,5 +450,10 @@ namespace Server
 
             GenForm.ShowDialog();
         }
+
+        private void clearBlockedIPsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Envir.IPBlocks.Clear();
+        }
     }
 }
