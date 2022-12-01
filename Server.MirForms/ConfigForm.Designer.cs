@@ -43,12 +43,6 @@
             this.VPathTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.StartHTTPCheckBox = new System.Windows.Forms.CheckBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.HTTPTrustedIPAddressTextBox = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.HTTPIPAddressTextBox = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
             this.MaxUserTextBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.TimeOutTextBox = new System.Windows.Forms.TextBox();
@@ -70,17 +64,13 @@
             this.PasswordCheckBox = new System.Windows.Forms.CheckBox();
             this.AccountCheckBox = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.label12 = new System.Windows.Forms.Label();
             this.SaveDelayTextBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.gameMasterEffect_CheckBox = new System.Windows.Forms.CheckBox();
             this.SafeZoneHealingCheckBox = new System.Windows.Forms.CheckBox();
             this.SafeZoneBorderCheckBox = new System.Windows.Forms.CheckBox();
             this.VPathDialog = new System.Windows.Forms.OpenFileDialog();
-            this.label16 = new System.Windows.Forms.Label();
-            this.lineMessageTimeTextBox = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
+            this.UseSQLServerCheckbox = new System.Windows.Forms.CheckBox();
             this.configTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -93,7 +83,7 @@
             // SaveButton
             // 
             this.SaveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SaveButton.Location = new System.Drawing.Point(528, 531);
+            this.SaveButton.Location = new System.Drawing.Point(528, 529);
             this.SaveButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(112, 35);
@@ -131,7 +121,7 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabPage1.Size = new System.Drawing.Size(614, 469);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Version";
+            this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // groupBox1
@@ -172,7 +162,7 @@
             // ServerVersionLabel
             // 
             this.ServerVersionLabel.AutoSize = true;
-            this.ServerVersionLabel.Location = new System.Drawing.Point(114, 31);
+            this.ServerVersionLabel.Location = new System.Drawing.Point(114, 29);
             this.ServerVersionLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.ServerVersionLabel.Name = "ServerVersionLabel";
             this.ServerVersionLabel.Size = new System.Drawing.Size(63, 20);
@@ -182,7 +172,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(9, 31);
+            this.label10.Location = new System.Drawing.Point(9, 29);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(55, 20);
@@ -215,9 +205,9 @@
             this.VersionCheckBox.Location = new System.Drawing.Point(134, 65);
             this.VersionCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.VersionCheckBox.Name = "VersionCheckBox";
-            this.VersionCheckBox.Size = new System.Drawing.Size(198, 24);
+            this.VersionCheckBox.Size = new System.Drawing.Size(138, 24);
             this.VersionCheckBox.TabIndex = 3;
-            this.VersionCheckBox.Text = "Check for client version";
+            this.VersionCheckBox.Text = "Check Version";
             this.VersionCheckBox.UseVisualStyleBackColor = true;
             // 
             // VPathBrowseButton
@@ -243,7 +233,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 31);
+            this.label1.Location = new System.Drawing.Point(20, 29);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(104, 20);
@@ -252,12 +242,6 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.StartHTTPCheckBox);
-            this.tabPage2.Controls.Add(this.label15);
-            this.tabPage2.Controls.Add(this.HTTPTrustedIPAddressTextBox);
-            this.tabPage2.Controls.Add(this.label14);
-            this.tabPage2.Controls.Add(this.HTTPIPAddressTextBox);
-            this.tabPage2.Controls.Add(this.label13);
             this.tabPage2.Controls.Add(this.MaxUserTextBox);
             this.tabPage2.Controls.Add(this.label5);
             this.tabPage2.Controls.Add(this.TimeOutTextBox);
@@ -275,68 +259,6 @@
             this.tabPage2.Text = "Network";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // StartHTTPCheckBox
-            // 
-            this.StartHTTPCheckBox.AutoSize = true;
-            this.StartHTTPCheckBox.Location = new System.Drawing.Point(36, 240);
-            this.StartHTTPCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.StartHTTPCheckBox.Name = "StartHTTPCheckBox";
-            this.StartHTTPCheckBox.Size = new System.Drawing.Size(170, 24);
-            this.StartHTTPCheckBox.TabIndex = 23;
-            this.StartHTTPCheckBox.Text = "Start HTTP Service";
-            this.StartHTTPCheckBox.UseVisualStyleBackColor = true;
-            this.StartHTTPCheckBox.CheckedChanged += new System.EventHandler(this.StartHTTPCheckBox_CheckedChanged);
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(33, 380);
-            this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(292, 20);
-            this.label15.TabIndex = 22;
-            this.label15.Text = "(http service only allow trusted IP to visit)";
-            // 
-            // HTTPTrustedIPAddressTextBox
-            // 
-            this.HTTPTrustedIPAddressTextBox.Location = new System.Drawing.Point(266, 331);
-            this.HTTPTrustedIPAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.HTTPTrustedIPAddressTextBox.MaxLength = 30;
-            this.HTTPTrustedIPAddressTextBox.Name = "HTTPTrustedIPAddressTextBox";
-            this.HTTPTrustedIPAddressTextBox.Size = new System.Drawing.Size(253, 26);
-            this.HTTPTrustedIPAddressTextBox.TabIndex = 21;
-            this.HTTPTrustedIPAddressTextBox.TextChanged += new System.EventHandler(this.HTTPTrustedIPAddressTextBox_TextChanged);
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(33, 335);
-            this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(193, 20);
-            this.label14.TabIndex = 20;
-            this.label14.Text = "HTTP Trusted IP Address:";
-            // 
-            // HTTPIPAddressTextBox
-            // 
-            this.HTTPIPAddressTextBox.Location = new System.Drawing.Point(194, 282);
-            this.HTTPIPAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.HTTPIPAddressTextBox.MaxLength = 30;
-            this.HTTPIPAddressTextBox.Name = "HTTPIPAddressTextBox";
-            this.HTTPIPAddressTextBox.Size = new System.Drawing.Size(253, 26);
-            this.HTTPIPAddressTextBox.TabIndex = 19;
-            this.HTTPIPAddressTextBox.TextChanged += new System.EventHandler(this.HTTPIPAddressTextBox_TextChanged);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(33, 286);
-            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(135, 20);
-            this.label13.TabIndex = 18;
-            this.label13.Text = "HTTP IP Address:";
-            // 
             // MaxUserTextBox
             // 
             this.MaxUserTextBox.Location = new System.Drawing.Point(134, 145);
@@ -350,7 +272,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(42, 151);
+            this.label5.Location = new System.Drawing.Point(42, 149);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(80, 20);
@@ -370,7 +292,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(50, 111);
+            this.label4.Location = new System.Drawing.Point(50, 109);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(73, 20);
@@ -390,7 +312,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(81, 71);
+            this.label3.Location = new System.Drawing.Point(81, 69);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(42, 20);
@@ -410,7 +332,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(33, 31);
+            this.label2.Location = new System.Drawing.Point(33, 29);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(91, 20);
@@ -475,9 +397,9 @@
             this.AllowArcherCheckBox.Location = new System.Drawing.Point(36, 303);
             this.AllowArcherCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.AllowArcherCheckBox.Name = "AllowArcherCheckBox";
-            this.AllowArcherCheckBox.Size = new System.Drawing.Size(275, 24);
+            this.AllowArcherCheckBox.Size = new System.Drawing.Size(175, 24);
             this.AllowArcherCheckBox.TabIndex = 13;
-            this.AllowArcherCheckBox.Text = "Allow Creation of the Archer Class";
+            this.AllowArcherCheckBox.Text = "Allow Create Archer";
             this.AllowArcherCheckBox.UseVisualStyleBackColor = true;
             // 
             // AllowAssassinCheckBox
@@ -486,9 +408,9 @@
             this.AllowAssassinCheckBox.Location = new System.Drawing.Point(36, 266);
             this.AllowAssassinCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.AllowAssassinCheckBox.Name = "AllowAssassinCheckBox";
-            this.AllowAssassinCheckBox.Size = new System.Drawing.Size(292, 24);
+            this.AllowAssassinCheckBox.Size = new System.Drawing.Size(192, 24);
             this.AllowAssassinCheckBox.TabIndex = 12;
-            this.AllowAssassinCheckBox.Text = "Allow Creation of the Assassin Class";
+            this.AllowAssassinCheckBox.Text = "Allow Create Assassin";
             this.AllowAssassinCheckBox.UseVisualStyleBackColor = true;
             // 
             // StartGameCheckBox
@@ -497,9 +419,9 @@
             this.StartGameCheckBox.Location = new System.Drawing.Point(36, 208);
             this.StartGameCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.StartGameCheckBox.Name = "StartGameCheckBox";
-            this.StartGameCheckBox.Size = new System.Drawing.Size(326, 24);
+            this.StartGameCheckBox.Size = new System.Drawing.Size(159, 24);
             this.StartGameCheckBox.TabIndex = 11;
-            this.StartGameCheckBox.Text = "Allow Characters to Login to Game World";
+            this.StartGameCheckBox.Text = "Allow Start Game";
             this.StartGameCheckBox.UseVisualStyleBackColor = true;
             // 
             // DCharacterCheckBox
@@ -508,9 +430,9 @@
             this.DCharacterCheckBox.Location = new System.Drawing.Point(36, 172);
             this.DCharacterCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.DCharacterCheckBox.Name = "DCharacterCheckBox";
-            this.DCharacterCheckBox.Size = new System.Drawing.Size(209, 24);
+            this.DCharacterCheckBox.Size = new System.Drawing.Size(197, 24);
             this.DCharacterCheckBox.TabIndex = 10;
-            this.DCharacterCheckBox.Text = "Allow Character Deletion";
+            this.DCharacterCheckBox.Text = "Allow Delete Character";
             this.DCharacterCheckBox.UseVisualStyleBackColor = true;
             // 
             // NCharacterCheckBox
@@ -519,9 +441,9 @@
             this.NCharacterCheckBox.Location = new System.Drawing.Point(36, 137);
             this.NCharacterCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.NCharacterCheckBox.Name = "NCharacterCheckBox";
-            this.NCharacterCheckBox.Size = new System.Drawing.Size(245, 24);
+            this.NCharacterCheckBox.Size = new System.Drawing.Size(181, 24);
             this.NCharacterCheckBox.TabIndex = 9;
-            this.NCharacterCheckBox.Text = "Allow New Character Creation";
+            this.NCharacterCheckBox.Text = "Allow New Character";
             this.NCharacterCheckBox.UseVisualStyleBackColor = true;
             // 
             // LoginCheckBox
@@ -530,9 +452,9 @@
             this.LoginCheckBox.Location = new System.Drawing.Point(36, 102);
             this.LoginCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.LoginCheckBox.Name = "LoginCheckBox";
-            this.LoginCheckBox.Size = new System.Drawing.Size(208, 24);
+            this.LoginCheckBox.Size = new System.Drawing.Size(115, 24);
             this.LoginCheckBox.TabIndex = 8;
-            this.LoginCheckBox.Text = "Allow Accounts To Login";
+            this.LoginCheckBox.Text = "Allow Login";
             this.LoginCheckBox.UseVisualStyleBackColor = true;
             // 
             // PasswordCheckBox
@@ -541,9 +463,9 @@
             this.PasswordCheckBox.Location = new System.Drawing.Point(36, 66);
             this.PasswordCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.PasswordCheckBox.Name = "PasswordCheckBox";
-            this.PasswordCheckBox.Size = new System.Drawing.Size(312, 24);
+            this.PasswordCheckBox.Size = new System.Drawing.Size(205, 24);
             this.PasswordCheckBox.TabIndex = 7;
-            this.PasswordCheckBox.Text = "Allow Users To Change Their Password";
+            this.PasswordCheckBox.Text = "Allow Change Password";
             this.PasswordCheckBox.UseVisualStyleBackColor = true;
             // 
             // AccountCheckBox
@@ -552,14 +474,14 @@
             this.AccountCheckBox.Location = new System.Drawing.Point(36, 31);
             this.AccountCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.AccountCheckBox.Name = "AccountCheckBox";
-            this.AccountCheckBox.Size = new System.Drawing.Size(234, 24);
+            this.AccountCheckBox.Size = new System.Drawing.Size(170, 24);
             this.AccountCheckBox.TabIndex = 6;
-            this.AccountCheckBox.Text = "Allow New Account Creation";
+            this.AccountCheckBox.Text = "Allow New Account";
             this.AccountCheckBox.UseVisualStyleBackColor = true;
             // 
             // tabPage4
             // 
-            this.tabPage4.Controls.Add(this.label12);
+            this.tabPage4.Controls.Add(this.UseSQLServerCheckbox);
             this.tabPage4.Controls.Add(this.SaveDelayTextBox);
             this.tabPage4.Controls.Add(this.label6);
             this.tabPage4.Location = new System.Drawing.Point(4, 29);
@@ -570,16 +492,6 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Database";
             this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(282, 31);
-            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(65, 20);
-            this.label12.TabIndex = 26;
-            this.label12.Text = "minutes";
             // 
             // SaveDelayTextBox
             // 
@@ -594,7 +506,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(27, 31);
+            this.label6.Location = new System.Drawing.Point(27, 29);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(93, 20);
@@ -603,10 +515,6 @@
             // 
             // tabPage5
             // 
-            this.tabPage5.Controls.Add(this.label16);
-            this.tabPage5.Controls.Add(this.lineMessageTimeTextBox);
-            this.tabPage5.Controls.Add(this.label17);
-            this.tabPage5.Controls.Add(this.gameMasterEffect_CheckBox);
             this.tabPage5.Controls.Add(this.SafeZoneHealingCheckBox);
             this.tabPage5.Controls.Add(this.SafeZoneBorderCheckBox);
             this.tabPage5.Location = new System.Drawing.Point(4, 29);
@@ -618,26 +526,15 @@
             this.tabPage5.Text = "Optional";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
-            // gameMasterEffect_CheckBox
-            // 
-            this.gameMasterEffect_CheckBox.AutoSize = true;
-            this.gameMasterEffect_CheckBox.Location = new System.Drawing.Point(36, 102);
-            this.gameMasterEffect_CheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.gameMasterEffect_CheckBox.Name = "gameMasterEffect_CheckBox";
-            this.gameMasterEffect_CheckBox.Size = new System.Drawing.Size(179, 24);
-            this.gameMasterEffect_CheckBox.TabIndex = 2;
-            this.gameMasterEffect_CheckBox.Text = "Game Master Effect";
-            this.gameMasterEffect_CheckBox.UseVisualStyleBackColor = true;
-            // 
             // SafeZoneHealingCheckBox
             // 
             this.SafeZoneHealingCheckBox.AutoSize = true;
             this.SafeZoneHealingCheckBox.Location = new System.Drawing.Point(36, 66);
             this.SafeZoneHealingCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.SafeZoneHealingCheckBox.Name = "SafeZoneHealingCheckBox";
-            this.SafeZoneHealingCheckBox.Size = new System.Drawing.Size(268, 24);
+            this.SafeZoneHealingCheckBox.Size = new System.Drawing.Size(164, 24);
             this.SafeZoneHealingCheckBox.TabIndex = 1;
-            this.SafeZoneHealingCheckBox.Text = "Enable auto-healing in SafeZone";
+            this.SafeZoneHealingCheckBox.Text = "SafeZone Healing";
             this.SafeZoneHealingCheckBox.UseVisualStyleBackColor = true;
             this.SafeZoneHealingCheckBox.CheckedChanged += new System.EventHandler(this.SafeZoneHealingCheckBox_CheckedChanged);
             // 
@@ -647,9 +544,9 @@
             this.SafeZoneBorderCheckBox.Location = new System.Drawing.Point(36, 31);
             this.SafeZoneBorderCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.SafeZoneBorderCheckBox.Name = "SafeZoneBorderCheckBox";
-            this.SafeZoneBorderCheckBox.Size = new System.Drawing.Size(210, 24);
+            this.SafeZoneBorderCheckBox.Size = new System.Drawing.Size(158, 24);
             this.SafeZoneBorderCheckBox.TabIndex = 0;
-            this.SafeZoneBorderCheckBox.Text = "Show SafeZone Borders";
+            this.SafeZoneBorderCheckBox.Text = "SafeZone Border";
             this.SafeZoneBorderCheckBox.UseVisualStyleBackColor = true;
             this.SafeZoneBorderCheckBox.CheckedChanged += new System.EventHandler(this.SafeZoneBorderCheckBox_CheckedChanged);
             // 
@@ -657,37 +554,16 @@
             // 
             this.VPathDialog.FileName = "Mir2.Exe";
             this.VPathDialog.Filter = "Executable Files (*.exe)|*.exe";
-            this.VPathDialog.Multiselect = true;
             // 
-            // label16
+            // UseSQLServerCheckbox
             // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(295, 140);
-            this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(65, 20);
-            this.label16.TabIndex = 29;
-            this.label16.Text = "minutes";
-            // 
-            // lineMessageTimeTextBox
-            // 
-            this.lineMessageTimeTextBox.Location = new System.Drawing.Point(235, 137);
-            this.lineMessageTimeTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.lineMessageTimeTextBox.MaxLength = 5;
-            this.lineMessageTimeTextBox.Name = "lineMessageTimeTextBox";
-            this.lineMessageTimeTextBox.Size = new System.Drawing.Size(52, 26);
-            this.lineMessageTimeTextBox.TabIndex = 28;
-            this.lineMessageTimeTextBox.Text = "10";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(32, 140);
-            this.label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(195, 20);
-            this.label17.TabIndex = 27;
-            this.label17.Text = "Line Message Frequency :";
+            this.UseSQLServerCheckbox.AutoSize = true;
+            this.UseSQLServerCheckbox.Location = new System.Drawing.Point(31, 59);
+            this.UseSQLServerCheckbox.Name = "UseSQLServerCheckbox";
+            this.UseSQLServerCheckbox.Size = new System.Drawing.Size(142, 24);
+            this.UseSQLServerCheckbox.TabIndex = 26;
+            this.UseSQLServerCheckbox.Text = "UseSQLServer";
+            this.UseSQLServerCheckbox.UseVisualStyleBackColor = true;
             // 
             // ConfigForm
             // 
@@ -698,7 +574,7 @@
             this.Controls.Add(this.configTabs);
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "ConfigForm";
-            this.Text = "Server Config Form";
+            this.Text = "ConfigForm";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ConfigForm_FormClosed);
             this.configTabs.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -761,16 +637,6 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.CheckBox gameMasterEffect_CheckBox;
-        private System.Windows.Forms.TextBox HTTPIPAddressTextBox;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TextBox HTTPTrustedIPAddressTextBox;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.CheckBox StartHTTPCheckBox;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.TextBox lineMessageTimeTextBox;
-        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.CheckBox UseSQLServerCheckbox;
     }
 }
