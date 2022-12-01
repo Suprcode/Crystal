@@ -1,4 +1,7 @@
-﻿using Server.Library.Utils;
+﻿/*
+ 重新再理解一遍代码,不再随便拆分类,只拆分容易理解的类.
+ */
+using Server.Library.Utils;
 using Server.MirDatabase;
 using Server.MirNetwork;
 using Server.MirObjects;
