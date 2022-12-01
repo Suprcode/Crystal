@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30104.148
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server.MirForms\Server.csproj", "{263074D6-AB8D-4F3C-9CE6-A05405432BCE}"
 EndProject
@@ -31,6 +31,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{86F48C1E
 	EndProjectSection
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "PatcherWebSite", "PatcherWebSite\", "{C1F2FAE3-485C-4BF4-8939-B44EAD5619D4}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_50790"
+		Debug.AspNetCompiler.PhysicalPath = "PatcherWebSite\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50790\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_50790"
+		Release.AspNetCompiler.PhysicalPath = "PatcherWebSite\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50790\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "50790"
+	EndProjectSection
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_50790"
@@ -160,6 +178,7 @@ Global
 		{3B6D8439-1B92-4383-BBE7-E29A26E8F938}.Release|x86.ActiveCfg = Release|Any CPU
 		{A779B96A-AE74-47E7-B0CA-A02B26C1F61E}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{A779B96A-AE74-47E7-B0CA-A02B26C1F61E}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{A779B96A-AE74-47E7-B0CA-A02B26C1F61E}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{A779B96A-AE74-47E7-B0CA-A02B26C1F61E}.Debug|x64.ActiveCfg = Debug|x64
 		{A779B96A-AE74-47E7-B0CA-A02B26C1F61E}.Debug|x64.Build.0 = Debug|x64
 		{A779B96A-AE74-47E7-B0CA-A02B26C1F61E}.Debug|x86.ActiveCfg = Debug|x86
@@ -174,6 +193,7 @@ Global
 		{B495D846-0344-468C-8D2D-6D850E0A9700}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B495D846-0344-468C-8D2D-6D850E0A9700}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B495D846-0344-468C-8D2D-6D850E0A9700}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B495D846-0344-468C-8D2D-6D850E0A9700}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{B495D846-0344-468C-8D2D-6D850E0A9700}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{B495D846-0344-468C-8D2D-6D850E0A9700}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{B495D846-0344-468C-8D2D-6D850E0A9700}.Debug|x86.Build.0 = Debug|Any CPU
