@@ -73,7 +73,8 @@ namespace Server.MirNetwork
         public Dictionary<long, DateTime> SentRankings = new Dictionary<long, DateTime>();
 
         private DateTime _dataCounterReset;
-        private int _dataCounter = 0;
+        private int _dataCounter;
+        private Packet _lastPacket;
 
         public MirConnection(int sessionID, TcpClient client)
         {
@@ -156,12 +157,13 @@ namespace Server.MirNetwork
 
             if (_dataCounter > Settings.MaxPacket)
             {
-                Disconnecting = true;
-
                 Envir.UpdateIPBlock(IPAddress, TimeSpan.FromHours(24));
 
-                MessageQueue.Enqueue($"{IPAddress} Disconnected, Large amount of Packets.");
+                Enum.TryParse<ClientPacketIds>((_lastPacket?.Index ?? 0).ToString(), out ClientPacketIds cPacket);
 
+                MessageQueue.Enqueue($"{IPAddress} Disconnected, Large amount of Packets. LastPacket: {cPacket}.");
+
+                Disconnecting = true;
                 return;
             }
 
@@ -181,11 +183,11 @@ namespace Server.MirNetwork
             }
             catch
             {
-                Disconnecting = true;
-
                 Envir.UpdateIPBlock(IPAddress, TimeSpan.FromHours(24));
 
                 MessageQueue.Enqueue($"{IPAddress} Disconnected, Invalid packet.");
+
+                Disconnecting = true;
                 return;
             }
 
@@ -226,7 +228,7 @@ namespace Server.MirNetwork
             foreach (MirConnection c in Observers)
                 c.Enqueue(p);
         }
-        
+
         public void Process()
         {
             if (_client == null || !_client.Connected)
@@ -239,6 +241,9 @@ namespace Server.MirNetwork
             {
                 Packet p;
                 if (!_receiveList.TryDequeue(out p)) continue;
+
+                _lastPacket = p;
+
                 TimeOutTime = Envir.Time + Settings.TimeOut;
                 ProcessPacket(p);
 
