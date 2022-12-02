@@ -2009,45 +2009,9 @@ namespace Server.MirEnvir
 
             try
             {
-                var tempTcpClient = _listener.EndAcceptTcpClient(result);
-
-                bool connected = false;
-                var ipAddress = tempTcpClient.Client.RemoteEndPoint.ToString().Split(':')[0];
-
-                if (!IPBlocks.TryGetValue(ipAddress, out DateTime banDate) || banDate < Now)
-                {
-                    int count = 0;
-
-                    for (int i = 0; i < StatusConnections.Count; i++)
-                    {
-                        var connection = StatusConnections[i];
-
-                        if (!connection.Connected || connection.IPAddress != ipAddress)
-                            continue;
-
-                        count++;
-                    }
-
-                    if (count >= Settings.MaxIP)
-                    {
-                        UpdateIPBlock(ipAddress, TimeSpan.FromSeconds(Settings.IPBlockSeconds));
-
-                        MessageQueue.Enqueue(ipAddress + " Disconnected, Too many status connections.");
-                    }
-                    else
-                    {
-                        var tempConnection = new MirStatusConnection(tempTcpClient);
-                        if (tempConnection.Connected)
-                        {
-                            connected = true;
-                            lock (StatusConnections)
-                                StatusConnections.Add(tempConnection);
-                        }
-                    }
-                }
-
-                if (!connected)
-                    tempTcpClient.Close();
+                var tempTcpClient = _StatusPort.EndAcceptTcpClient(result);
+                lock (StatusConnections)
+                    StatusConnections.Add(new MirStatusConnection(tempTcpClient));
             }
             catch (Exception ex)
             {
