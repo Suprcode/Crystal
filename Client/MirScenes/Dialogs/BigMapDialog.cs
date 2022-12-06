@@ -110,7 +110,7 @@ namespace Client.MirScenes.Dialogs
             Library = Libraries.Title;
             Sort = true;
             Location = Center;
-            NotControl = false;            
+            NotControl = false;
 
             ScrollUpButton = new MirButton
             {
@@ -598,6 +598,7 @@ namespace Client.MirScenes.Dialogs
             BeforeDraw += (o, e) => OnBeforeDraw();
             MouseMove += UpdateBigMapCoordinates;
             ParentChanged += (o, e) => SetParent();
+            MouseDown += OnMouseClick;
         }
 
         private void SetParent()
@@ -612,6 +613,26 @@ namespace Client.MirScenes.Dialogs
 
             ParentDialog.MouseLocation = new Point(MouseCoordsOnBigMap_MapValue_X, MouseCoordsOnBigMap_MapValue_Y);
         }
+
+
+        private void OnMouseClick(object sender, MouseEventArgs e)
+        {
+            int X = (int)((e.Location.X - BigMap_MouseCoordsProcessing_OffsetX) / ScaleX);
+            int Y = (int)((e.Location.Y - BigMap_MouseCoordsProcessing_OffsetY) / ScaleY);
+
+            var path = GameScene.Scene.MapControl.PathFinder.FindPath(MapObject.User.CurrentLocation, new Point(X, Y));
+
+            if (path == null || path.Count == 0)
+            {
+                GameScene.Scene.ChatDialog.ReceiveChat("Could not find suitable path.", ChatType.System);
+            }
+            else
+            {
+                GameScene.Scene.MapControl.CurrentPath = path;
+                GameScene.Scene.MapControl.AutoPath = true;
+            }
+        }
+
 
         private void OnBeforeDraw()
         {

@@ -11500,7 +11500,7 @@ namespace Client.MirScenes
                     return;
                 }
 
-                var path = GameScene.Scene.MapControl.PathFinder.FindPath(MapObject.User.CurrentLocation, CurrentPath.Last().Location, 20);
+                var path = GameScene.Scene.MapControl.PathFinder.FindPath(MapObject.User.CurrentLocation, CurrentPath.Last().Location);
 
                 if (path != null && path.Count > 0)
                     GameScene.Scene.MapControl.CurrentPath = path;
