@@ -65,6 +65,7 @@ namespace Server.MirEnvir
         public static readonly string BackUpPath = Path.Combine(".", "Back Up");
         public static readonly string ArchivePath = Path.Combine(".", "Archive");
         public bool ResetGS = false;
+        public bool GuildRefreshNeeded;
 
         private static readonly Regex AccountIDReg, PasswordReg, EMailReg, CharacterReg;
 
@@ -1070,6 +1071,16 @@ namespace Server.MirEnvir
         private void SaveGuilds(bool forced = false)
         {
             if (!Directory.Exists(Settings.GuildPath)) Directory.CreateDirectory(Settings.GuildPath);
+
+            if (GuildRefreshNeeded == true) //Knotty1985 - deletes guild files and resaves with new indexing if a guild is deleted.
+            {
+                foreach (var guildfile in Directory.GetFiles(Settings.GuildPath, "*.mgd"))
+                {
+                    File.Delete(guildfile);
+                }
+                GuildRefreshNeeded = false;
+            }
+
             for (var i = 0; i < GuildList.Count; i++)
             {
                 if (GuildList[i].NeedSave || forced)
@@ -3581,6 +3592,20 @@ namespace Server.MirEnvir
                     return wmi;
             }
             return null;
+        }
+
+        internal void DeleteGuild(GuildInfo Info) //Knotty1985 - Marks guilds for re-saving after deletion and calls to save.
+        {                                         
+            if (Directory.Exists(Settings.GuildPath))
+            {
+                foreach (var guild in Guilds)
+                {
+                    guild.Info.NeedSave = true;
+                }
+                GuildRefreshNeeded = true;
+                SaveGuilds(true);
+                MessageQueue.Enqueue(Info.Name + " guild has been deleted from the server.");
+            }
         }
     }
 }
