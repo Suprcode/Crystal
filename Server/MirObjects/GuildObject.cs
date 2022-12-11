@@ -405,13 +405,13 @@ namespace Server.MirObjects
 
             if (MemberRank.Index == 0)
             {
-                if (MemberRank.Members.Count < 2 && Info.Membercount < 2) //Knotty1985 - Checks if last remaining member (and leader)
+                if (MemberRank.Members.Count < 2 && Info.Membercount < 2) //Checks if last remaining member (and leader)
                 {
                     goto LeaderOk;
                 }
                 else
                 {
-                    if (MemberRank.Members.Count > 1) //Knotty1985 - Allows other leaders to leave without another leader online.
+                    if (MemberRank.Members.Count > 1) //Allows other leaders to leave without another leader online.
                         goto AllOk;
                 }
                 Kicker.ReceiveChat("You need to be the last leading member of the guild to disband the guild.", ChatType.System);
@@ -430,10 +430,11 @@ namespace Server.MirObjects
             MemberRank.Members.Remove(Member);
 
             NeedSave = true;
+            Info.Membercount--;
 
             return true;
 
-        LeaderOk: //Knotty1985 - Removes the final leader and deletes the guild from the server / database.
+        LeaderOk:
             MemberDeleted(membername, (PlayerObject)Member.Player, Member.Name == Kicker.Info.Name);
 
             if (Member.Player != null)
@@ -444,9 +445,7 @@ namespace Server.MirObjects
 
             MemberRank.Members.Remove(Member);
 
-            Envir.Guilds.Remove(this);
-            Envir.DeleteGuild(this.Info);
-            Envir.GuildList.Remove(this.Info);
+            Envir.DeleteGuild(this);
             Kicker.ReceiveChat("You have disbanded the guild", ChatType.System);
 
             return true;
