@@ -1080,6 +1080,7 @@ namespace Server.MirEnvir
                 }
 
                 GuildRefreshNeeded = false;
+                forced = true; //triggers a full resave of all guilds
             }
 
             for (var i = 0; i < GuildList.Count; i++)
