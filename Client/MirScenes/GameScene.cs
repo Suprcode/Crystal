@@ -11890,7 +11890,7 @@ namespace Client.MirScenes
             {
                 if (CMain.Time > _doorTime)
                 {
-                    _doorTime = CMain.Time + 4000;
+                   _doorTime = CMain.Time + 4000;
                     Network.Enqueue(new C.Opendoor() { DoorIndex = DoorInfo.index });
                 }
 

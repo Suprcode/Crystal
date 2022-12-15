@@ -10,6 +10,8 @@ using S = ServerPackets;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.IO;
+using Server.Utils;
+using System.Collections;
 
 namespace Server.MirNetwork
 {
@@ -74,7 +76,7 @@ namespace Server.MirNetwork
 
         private DateTime _dataCounterReset;
         private int _dataCounter;
-        private Packet _lastPacket;
+        private FixedSizedQueue<Packet> _lastPackets;
 
         public MirConnection(int sessionID, TcpClient client)
         {
@@ -90,6 +92,8 @@ namespace Server.MirNetwork
 
             TimeConnected = Envir.Time;
             TimeOutTime = TimeConnected + Settings.TimeOut;
+
+            _lastPackets = new FixedSizedQueue<Packet>(10);
 
             _receiveList = new ConcurrentQueue<Packet>();
             _sendList = new ConcurrentQueue<Packet>();
@@ -155,18 +159,6 @@ namespace Server.MirNetwork
 
             _dataCounter++;
 
-            if (_dataCounter > Settings.MaxPacket)
-            {
-                Envir.UpdateIPBlock(IPAddress, TimeSpan.FromHours(24));
-
-                Enum.TryParse<ClientPacketIds>((_lastPacket?.Index ?? 0).ToString(), out ClientPacketIds cPacket);
-
-                MessageQueue.Enqueue($"{IPAddress} Disconnected, Large amount of Packets. LastPacket: {cPacket}.");
-
-                Disconnecting = true;
-                return;
-            }
-
             try
             {
                 byte[] rawBytes = result.AsyncState as byte[];
@@ -186,6 +178,27 @@ namespace Server.MirNetwork
                 Envir.UpdateIPBlock(IPAddress, TimeSpan.FromHours(24));
 
                 MessageQueue.Enqueue($"{IPAddress} Disconnected, Invalid packet.");
+
+                Disconnecting = true;
+                return;
+            }
+
+            if (_dataCounter > Settings.MaxPacket)
+            {
+                Envir.UpdateIPBlock(IPAddress, TimeSpan.FromHours(24));
+
+                List<string> packetList = new List<string>();
+
+                while (_lastPackets.Count > 0)
+                {
+                    _lastPackets.TryDequeue(out Packet pkt);
+
+                    Enum.TryParse<ClientPacketIds>((pkt?.Index ?? 0).ToString(), out ClientPacketIds cPacket);
+
+                    packetList.Add(cPacket.ToString());
+                }
+
+                MessageQueue.Enqueue($"{IPAddress} Disconnected, Large amount of Packets. LastPackets: {String.Join(",", packetList.Distinct())}.");
 
                 Disconnecting = true;
                 return;
@@ -242,7 +255,7 @@ namespace Server.MirNetwork
                 Packet p;
                 if (!_receiveList.TryDequeue(out p)) continue;
 
-                _lastPacket = p;
+                _lastPackets.Enqueue(p);
 
                 TimeOutTime = Envir.Time + Settings.TimeOut;
                 ProcessPacket(p);
