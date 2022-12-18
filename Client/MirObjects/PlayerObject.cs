@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -1246,10 +1246,18 @@ namespace Client.MirObjects
 
                 ClientMagic magic;
 
-                if (Frame == null) return;
-
-                FrameInterval = Frame.Interval;
-                EffectFrameInterval = Frame.EffectInterval;
+                if (Frame == null) return; //Normal Attack  新增普通攻击动画加速帧 1249-1260
+                if ((GameScene.User == this || GameScene.Hero == this) && CurrentAction == MirAction.Attack1)
+                {
+                    int NormalAttack = ((GameScene.User == this) ? MapObject.User.AttackSpeed : MapObject.Hero.AttackSpeed);
+                    FrameInterval = (int)((float)Frame.Interval * Math.Max(0.5f, (float)NormalAttack / 1400f));
+                    EffectFrameInterval = (int)((float)Frame.Interval * Math.Max(0.5f, (float)NormalAttack / 1400f));
+                }
+                else
+                {
+                    FrameInterval = Frame.Interval;
+                    EffectFrameInterval = Frame.EffectInterval;
+                }
 
                 if (this == User)
                 {
@@ -1406,7 +1414,7 @@ namespace Client.MirObjects
 
                                 if (Spell == Spell.FlashDash)
                                 {
-                                    GameScene.SpellTime = CMain.Time + 250;
+                                    GameScene.SpellTime = CMain.Time + 500;
                                     MapControl.NextAction = CMain.Time;
                                 }
                                 else
@@ -1483,8 +1491,8 @@ namespace Client.MirObjects
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10 + (Gender == MirGender.Male ? 0 : 1));
                                 break;
                             case Spell.DoubleSlash:
-                                FrameInterval = (FrameInterval * 7 / 10); //50% Faster Animation
-                                EffectFrameInterval = (EffectFrameInterval * 7 / 10);
+                                FrameInterval = (FrameInterval * 5 / 10); //50% Faster Animation
+                                EffectFrameInterval = (EffectFrameInterval * 5 / 10);
                                 action = new QueuedAction { Action = MirAction.Attack4, Direction = Direction, Location = CurrentLocation, Params = new List<object>() };
                                 action.Params.Add(Spell);
                                 ActionFeed.Insert(0, action);
@@ -1522,9 +1530,9 @@ namespace Client.MirObjects
                         switch (Spell)
                         {
                             case Spell.DoubleSlash:
-                                FrameInterval = FrameInterval * 7 / 10; //50% Animation Speed
-                                EffectFrameInterval = EffectFrameInterval * 7 / 10;
-                                SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
+                                FrameInterval = FrameInterval * 5 / 10; //50% Animation Speed
+                                EffectFrameInterval = EffectFrameInterval * 5 / 10;
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 6);
                                 break;
                             case Spell.TwinDrakeBlade:
                                 FrameInterval = FrameInterval * 9 / 10; //80% Animation Speed
@@ -1956,7 +1964,7 @@ namespace Client.MirObjects
                             #region ProtectionField
 
                             case Spell.ProtectionField:
-                                Effects.Add(new Effect(Libraries.Magic2, 1520, 10, Frame.Count * FrameInterval, this));
+                                Effects.Add(new Effect(Libraries.Magic2, 1520, 10, Frame.Count * FrameInterval+350, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                 break;
 
@@ -1965,7 +1973,7 @@ namespace Client.MirObjects
                             #region Rage
 
                             case Spell.Rage:
-                                Effects.Add(new Effect(Libraries.Magic2, 1510, 10, Frame.Count * FrameInterval, this));
+                                Effects.Add(new Effect(Libraries.Magic2, 1510, 10, Frame.Count * FrameInterval + 350, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                 break;
 
@@ -2023,7 +2031,7 @@ namespace Client.MirObjects
                             case Spell.SlashingBurst:
                                 //MapControl.Effects.Add(new Effect(Libraries.Magic2, 1700 + (int)Direction * 10, 9, 9 * FrameInterval, CurrentLocation));
                                 Effects.Add(new Effect(Libraries.Magic2, 1700 + (int)Direction * 10, 9, 9 * FrameInterval, this));
-                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10+2);
                                 SlashingBurstTime = CMain.Time + 2000;
                                 break;
 
