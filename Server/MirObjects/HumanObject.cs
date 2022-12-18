@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -1724,9 +1724,9 @@ namespace Server.MirObjects
             if (HP > Stats[Stat.HP]) SetHP(Stats[Stat.HP]);
             if (MP > Stats[Stat.MP]) SetMP(Stats[Stat.MP]);
 
-            AttackSpeed = 1400 - ((Stats[Stat.AttackSpeed] * 60) + Math.Min(370, (Level * 14)));
+            AttackSpeed = 1400 - ((Stats[Stat.AttackSpeed] * 30) + Math.Min(400, (Level * 8)));
 
-            if (AttackSpeed < 550) AttackSpeed = 550;
+            if (AttackSpeed < 300) AttackSpeed = 300;
         }
         public virtual void RefreshGuildBuffs() { }
         protected void RefreshLevelStats()
@@ -2756,7 +2756,7 @@ namespace Server.MirObjects
             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = targetID, Target = location, Spell = spell });
 
             AttackTime = Envir.Time + AttackSpeed;
-            ActionTime = Envir.Time + 550;
+            ActionTime = Envir.Time + 300;
             RegenTime = Envir.Time + RegenDelay;
         }
         public void Attack(MirDirection dir, Spell spell)
