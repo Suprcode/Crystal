@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -169,8 +169,8 @@ namespace Client.MirObjects
             RefreshStatCaps();
 
             if (this == User && Light < 3) Light = 3;
-            AttackSpeed = 1400 - ((Stats[Stat.AttackSpeed] * 60) + Math.Min(370, (Level * 14)));
-            if (AttackSpeed < 550) AttackSpeed = 550;
+            AttackSpeed = 1400 - ((Stats[Stat.AttackSpeed] * 30) + Math.Min(400, (Level * 8)));
+            if (AttackSpeed < 300) AttackSpeed = 300;
 
             PercentHealth = (byte)(HP / (float)Stats[Stat.HP] * 100);
 
