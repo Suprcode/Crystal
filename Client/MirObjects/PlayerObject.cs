@@ -1483,8 +1483,8 @@ namespace Client.MirObjects
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10 + (Gender == MirGender.Male ? 0 : 1));
                                 break;
                             case Spell.DoubleSlash:
-                                FrameInterval = (FrameInterval * 7 / 10); //50% Faster Animation
-                                EffectFrameInterval = (EffectFrameInterval * 7 / 10);
+                                FrameInterval = (int)(FrameInterval * 0.46f); //46% Animation Speed
+                                EffectFrameInterval = (int)(EffectFrameInterval * 0.46f);
                                 action = new QueuedAction { Action = MirAction.Attack4, Direction = Direction, Location = CurrentLocation, Params = new List<object>() };
                                 action.Params.Add(Spell);
                                 ActionFeed.Insert(0, action);
@@ -1522,8 +1522,8 @@ namespace Client.MirObjects
                         switch (Spell)
                         {
                             case Spell.DoubleSlash:
-                                FrameInterval = FrameInterval * 7 / 10; //50% Animation Speed
-                                EffectFrameInterval = EffectFrameInterval * 7 / 10;
+                                FrameInterval = (int)(FrameInterval * 0.46f); //46% Animation Speed
+                                EffectFrameInterval = (int)(EffectFrameInterval * 0.46f);
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
                                 break;
                             case Spell.TwinDrakeBlade:
