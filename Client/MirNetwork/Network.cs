@@ -14,7 +14,7 @@ namespace Client.MirNetwork
         private static TcpClient _client;
         public static int ConnectAttempt = 0;
         public static bool Connected;
-        public static long TimeOutTime, TimeConnected, RetryTime = CMain.Time + 5000;
+        public static long TimeOutTime, TimeConnected;
 
         private static ConcurrentQueue<Packet> _receiveList;
         private static ConcurrentQueue<Packet> _sendList;
@@ -179,11 +179,6 @@ namespace Client.MirNetwork
                     MirMessageBox.Show("Lost connection with the server.", true);
                     Disconnect();
                     return;
-                }
-                else if (CMain.Time >= RetryTime)
-                {
-                    RetryTime = CMain.Time + 5000;
-                    Connect();
                 }
                 return;
             }
