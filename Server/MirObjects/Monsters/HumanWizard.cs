@@ -151,8 +151,9 @@ namespace Server.MirObjects.Monsters
 
             PoisonList.Clear();
             Envir.MonsterCount--;
+
             if (CurrentMap != null)
-            CurrentMap.MonsterCount--;
+                CurrentMap.MonsterCount--;
         }
 
         public override Packet GetInfo()

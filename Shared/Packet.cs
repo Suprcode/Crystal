@@ -36,8 +36,7 @@ public abstract class Packet
             }
             catch
             {
-                return null;
-                //return new C.Disconnect();
+                throw new InvalidDataException();
             }
         }
 

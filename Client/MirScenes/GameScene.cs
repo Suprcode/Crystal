@@ -11500,7 +11500,7 @@ namespace Client.MirScenes
                     return;
                 }
 
-                var path = GameScene.Scene.MapControl.PathFinder.FindPath(MapObject.User.CurrentLocation, CurrentPath.Last().Location, 20);
+                var path = GameScene.Scene.MapControl.PathFinder.FindPath(MapObject.User.CurrentLocation, CurrentPath.Last().Location);
 
                 if (path != null && path.Count > 0)
                     GameScene.Scene.MapControl.CurrentPath = path;
@@ -11886,17 +11886,28 @@ namespace Client.MirScenes
             if (M2CellInfo[p.X, p.Y].DoorIndex == 0) return true;
             Door DoorInfo = GetDoor(M2CellInfo[p.X, p.Y].DoorIndex);
             if (DoorInfo == null) return false;//if the door doesnt exist then it isnt even being shown on screen (and cant be open lol)
-            if ((DoorInfo.DoorState == 0) || (DoorInfo.DoorState == DoorState.Closing))
+            if ((DoorInfo.DoorState == DoorState.Closed) || (DoorInfo.DoorState == DoorState.Closing))
             {
-                Network.Enqueue(new C.Opendoor() { DoorIndex = DoorInfo.index });
+                if (CMain.Time > _doorTime)
+                {
+                   _doorTime = CMain.Time + 4000;
+                    Network.Enqueue(new C.Opendoor() { DoorIndex = DoorInfo.index });
+                }
+
                 return false;
             }
             if ((DoorInfo.DoorState == DoorState.Open) && (DoorInfo.LastTick + 4000 > CMain.Time))
             {
-                Network.Enqueue(new C.Opendoor() { DoorIndex = DoorInfo.index });
+                if (CMain.Time > _doorTime)
+                {
+                    _doorTime = CMain.Time + 4000;
+                    Network.Enqueue(new C.Opendoor() { DoorIndex = DoorInfo.index });
+                }
             }
             return true;
         }
+
+        private long _doorTime = 0;
 
 
         private bool CanRun(MirDirection dir)

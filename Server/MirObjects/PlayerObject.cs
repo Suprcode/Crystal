@@ -2745,6 +2745,12 @@ namespace Server.MirObjects
                         ReceiveChat("NPC Scripts Reloaded.", ChatType.Hint);
                         break;
 
+                    case "CLEARIPBLOCKS":
+                        if (!IsGM) return;
+
+                        Envir.IPBlocks.Clear();
+                        break;
+
                     case "GIVEGOLD":
                         if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 

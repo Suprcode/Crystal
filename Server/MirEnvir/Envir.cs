@@ -3,7 +3,9 @@ using Server.MirDatabase;
 using Server.MirNetwork;
 using Server.MirObjects;
 using Server.MirObjects.Monsters;
+using ServerPackets;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -63,6 +65,7 @@ namespace Server.MirEnvir
         public static readonly string BackUpPath = Path.Combine(".", "Back Up");
         public static readonly string ArchivePath = Path.Combine(".", "Archive");
         public bool ResetGS = false;
+        public bool GuildRefreshNeeded;
 
         private static readonly Regex AccountIDReg, PasswordReg, EMailReg, CharacterReg;
 
@@ -77,6 +80,8 @@ namespace Server.MirEnvir
 
         private static List<string> DisabledCharNames = new List<string>();
         private static List<string> LineMessages = new List<string>();
+
+        public static ConcurrentDictionary<string, DateTime> IPBlocks = new ConcurrentDictionary<string, DateTime>();
 
         public DateTime Now =>
             _startTime.AddMilliseconds(Time);
@@ -1066,6 +1071,18 @@ namespace Server.MirEnvir
         private void SaveGuilds(bool forced = false)
         {
             if (!Directory.Exists(Settings.GuildPath)) Directory.CreateDirectory(Settings.GuildPath);
+
+            if (GuildRefreshNeeded == true) //deletes guild files and resaves with new indexing if a guild is deleted.
+            {
+                foreach (var guildfile in Directory.GetFiles(Settings.GuildPath, "*.mgd"))
+                {
+                    File.Delete(guildfile);
+                }
+
+                GuildRefreshNeeded = false;
+                forced = true; //triggers a full resave of all guilds
+            }
+
             for (var i = 0; i < GuildList.Count; i++)
             {
                 if (GuildList[i].NeedSave || forced)
@@ -1717,6 +1734,11 @@ namespace Server.MirEnvir
             }).Start();
         }
 
+        public void UpdateIPBlock(string ipAddress, TimeSpan value)
+        {
+            IPBlocks[ipAddress] = Now.Add(value);
+        }
+
         private void StartEnvir()
         {
             Players.Clear();
@@ -1941,8 +1963,44 @@ namespace Server.MirEnvir
             try
             {
                 var tempTcpClient = _listener.EndAcceptTcpClient(result);
-                lock (Connections)
-                    Connections.Add(new MirConnection(++_sessionID, tempTcpClient));
+
+                bool connected = false;
+                var ipAddress = tempTcpClient.Client.RemoteEndPoint.ToString().Split(':')[0];
+
+                if (!IPBlocks.TryGetValue(ipAddress, out DateTime banDate) || banDate < Now)
+                {
+                    int count = 0;
+
+                    for (int i = 0; i < Connections.Count; i++)
+                    {
+                        var connection = Connections[i];
+
+                        if (!connection.Connected || connection.IPAddress != ipAddress)
+                            continue;
+
+                        count++;
+                    }
+
+                    if (count >= Settings.MaxIP)
+                    {
+                        UpdateIPBlock(ipAddress, TimeSpan.FromSeconds(Settings.IPBlockSeconds));
+
+                        MessageQueue.Enqueue(ipAddress + " Disconnected, Too many connections.");
+                    }
+                    else
+                    {
+                        var tempConnection = new MirConnection(++_sessionID, tempTcpClient);
+                        if (tempConnection.Connected)
+                        {
+                            connected = true;
+                            lock (Connections)
+                                Connections.Add(tempConnection);
+                        }
+                    }
+                }
+
+                if (!connected)
+                    tempTcpClient.Close();
             }
             catch (Exception ex)
             {
@@ -3536,6 +3594,15 @@ namespace Server.MirEnvir
                     return wmi;
             }
             return null;
+        }
+
+        public void DeleteGuild(GuildObject guild)
+        {
+            Guilds.Remove(guild);
+            GuildList.Remove(guild.Info);
+
+            GuildRefreshNeeded = true;
+            MessageQueue.Enqueue(guild.Info.Name + " guild will be deleted from the server.");
         }
     }
 }
