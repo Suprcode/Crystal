@@ -967,7 +967,7 @@ namespace Server.MirObjects
                 info.Movements.Add(cmInfo);
             }
 
-            foreach (NPCObject npc in Envir.NPCs.Where(x => x.CurrentMap == map && x.Info.ShowOnBigMap))
+            foreach (NPCObject npc in Envir.NPCs.Where(x => x.CurrentMap == map && x.Info.ShowOnBigMap).OrderBy(x => x.Info.BigMapIcon))
             {
                 info.NPCs.Add(new ClientNPCInfo()
                 {
