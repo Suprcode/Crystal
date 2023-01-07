@@ -8,8 +8,6 @@ namespace Server.MirObjects.Monsters
 {
     public class ThunderElement : MonsterObject
     {
-        private MapObject OriginalTarget;
-
         protected internal ThunderElement(MonsterInfo info)
             : base(info)
         {
@@ -17,21 +15,25 @@ namespace Server.MirObjects.Monsters
 
         protected override void CompleteAttack(IList<object> data)
         {
-            List<MapObject> targets = FindAllTargets(2, CurrentLocation);
-            if (targets.Count == 0) return;
+            int damage = (int)data[1];
+            DefenceType defence = (DefenceType)data[2];
 
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            OriginalTarget = Target;
+            List<MapObject> targets = FindAllTargets(2, CurrentLocation);
+            if (targets.Count == 0) return;
+
             for (int i = 0; i < targets.Count; i++)
             {
-                Target = targets[i];
-                Attack();
+                MapObject target = targets[i];
+
+                if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+
+                target.Attacked(this, damage, defence);
             }
 
-            Target = OriginalTarget;
+            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
         }
 
         protected override void ProcessTarget()
