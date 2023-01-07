@@ -277,6 +277,17 @@ namespace Client.MirObjects
                     case 7:
                     case 8:                
                     case 26:
+                    case 28:
+                    case 29:
+                    case 30:
+                    case 31:
+                    case 32:
+                    case 33:
+                    case 34:
+                    case 35:
+                    case 36:
+                    case 37:
+                    case 38:
                         showFishing = false;
                         break;
                     case 6:
