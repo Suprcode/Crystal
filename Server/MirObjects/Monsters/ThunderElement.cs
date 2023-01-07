@@ -42,7 +42,7 @@ namespace Server.MirObjects.Monsters
 
             if (InAttackRange() && CanAttack)
             {
-                ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + 500));
+                Attack();
                 return;
             }
 
