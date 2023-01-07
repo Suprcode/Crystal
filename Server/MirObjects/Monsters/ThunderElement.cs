@@ -18,9 +18,6 @@ namespace Server.MirObjects.Monsters
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
 
-            ActionTime = Envir.Time + 300;
-            AttackTime = Envir.Time + AttackSpeed;
-
             List<MapObject> targets = FindAllTargets(2, CurrentLocation);
             if (targets.Count == 0) return;
 
@@ -62,6 +59,9 @@ namespace Server.MirObjects.Monsters
                 Target = null;
                 return;
             }
+
+            ActionTime = Envir.Time + 300;
+            AttackTime = Envir.Time + AttackSpeed;
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
