@@ -116,7 +116,7 @@ namespace Server.MirObjects
         public MountInfo Mount
         {
             get { return Info.Mount; }
-        }        
+        }
 
         public Reporting Report;
         public virtual bool CanMove
@@ -846,8 +846,8 @@ namespace Server.MirObjects
             RefreshStats();
             SetHP(Stats[Stat.HP]);
             SetMP(Stats[Stat.MP]);
-            
-            Broadcast(new S.ObjectLeveled { ObjectID = ObjectID });          
+
+            Broadcast(new S.ObjectLeveled { ObjectID = ObjectID });
         }
         public virtual Color GetNameColour(HumanObject human)
         {
@@ -1639,7 +1639,7 @@ namespace Server.MirObjects
         }
         public void CheckItem(UserItem item)
         {
-            Connection.CheckItem(item);         
+            Connection.CheckItem(item);
         }
         public void SetLevelEffects()
         {
@@ -1692,7 +1692,7 @@ namespace Server.MirObjects
         {
             if (HasUpdatedBaseStats == false)
             {
-                SendBaseStats();                
+                SendBaseStats();
                 HasUpdatedBaseStats = true;
             }
 
@@ -1724,9 +1724,9 @@ namespace Server.MirObjects
             if (HP > Stats[Stat.HP]) SetHP(Stats[Stat.HP]);
             if (MP > Stats[Stat.MP]) SetMP(Stats[Stat.MP]);
 
-            AttackSpeed = 1400 - ((Stats[Stat.AttackSpeed] * 60) + Math.Min(370, (Level * 14)));
+            AttackSpeed = 1400 - ((Stats[Stat.AttackSpeed] * 30) + Math.Min(400, (Level * 14)));
 
-            if (AttackSpeed < 550) AttackSpeed = 550;
+            if (AttackSpeed < 300) AttackSpeed = 300;
         }
         public virtual void RefreshGuildBuffs() { }
         protected void RefreshLevelStats()
@@ -1885,7 +1885,7 @@ namespace Server.MirObjects
 
             if ((OldLooks_Armour != Looks_Armour) || (OldLooks_Weapon != Looks_Weapon) || (OldLooks_WeaponEffect != Looks_WeaponEffect) || (OldLooks_Wings != Looks_Wings) || (OldLight != Light))
             {
-                UpdateLooks(OldLooks_Weapon);                
+                UpdateLooks(OldLooks_Weapon);
             }
 
             if (Old_MountType != Mount.MountType)
@@ -2215,7 +2215,7 @@ namespace Server.MirObjects
 
                 var magic = new UserMagic(spelltype) { IsTempSpell = true };
                 Info.Magics.Add(magic);
-                SendMagicInfo(magic);                
+                SendMagicInfo(magic);
             }
         }
         public virtual void SendMagicInfo(UserMagic magic)
@@ -2432,8 +2432,8 @@ namespace Server.MirObjects
             Moved();
 
             CellTime = Envir.Time + 500;
-            ActionTime = Envir.Time + GetDelayTime(MoveDelay);          
-            
+            ActionTime = Envir.Time + GetDelayTime(MoveDelay);
+
             Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
             Broadcast(new S.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             GetPlayerLocation();
@@ -2470,7 +2470,7 @@ namespace Server.MirObjects
                     concentration.Set("Interrupted", true);
                     UpdateConcentration(true, true);
                 }
-            }            
+            }
 
             if (Hidden && !Sneaking)
             {
@@ -2543,7 +2543,7 @@ namespace Server.MirObjects
                 InSafeZone = true;
             }
             else
-                InSafeZone = false;            
+                InSafeZone = false;
 
             CellTime = Envir.Time + 500;
             ActionTime = Envir.Time + GetDelayTime(MoveDelay);
@@ -2666,9 +2666,9 @@ namespace Server.MirObjects
             for (int i = 0; i < GroupMembers.Count; i++)
             {
                 PlayerObject member = GroupMembers[i];
-                
+
                 if (member.CurrentMap.Info.BigMap <= 0) continue;
-                  
+
                 member.Enqueue(new S.SendMemberLocation { MemberName = Name, MemberLocation = CurrentLocation });
                 Enqueue(new S.SendMemberLocation { MemberName = member.Name, MemberLocation = member.CurrentLocation });
             }
@@ -2756,7 +2756,7 @@ namespace Server.MirObjects
             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = targetID, Target = location, Spell = spell });
 
             AttackTime = Envir.Time + AttackSpeed;
-            ActionTime = Envir.Time + 550;
+            ActionTime = Envir.Time + 300;
             RegenTime = Envir.Time + RegenDelay;
         }
         public void Attack(MirDirection dir, Spell spell)
@@ -2886,7 +2886,7 @@ namespace Server.MirObjects
             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = spell, Level = level });
 
             AttackTime = Envir.Time + AttackSpeed;
-            ActionTime = Envir.Time + 550;
+            ActionTime = Envir.Time + 300;
             RegenTime = Envir.Time + RegenDelay;
 
             Point target = Functions.PointMove(CurrentLocation, dir, 1);
@@ -5150,6 +5150,8 @@ namespace Server.MirObjects
             int travel = 0;
             bool blocked = false;
             int jumpDistance = (magic.Level <= 1) ? 0 : 1;//3 max
+            int tempS = AttackSpeed;
+            ReceiveChat(tempS.ToString(), ChatType.System);
             Point location = CurrentLocation;
             for (int i = 0; i < jumpDistance; i++)
             {
@@ -5779,7 +5781,7 @@ namespace Server.MirObjects
                 #endregion
 
                 #region Teleport
-                case Spell.Teleport:                                 
+                case Spell.Teleport:
                     if (CurrentMap.Info.NoTeleport)
                     {
                         ReceiveChat(("You cannot teleport on this map"), ChatType.System);
@@ -5787,7 +5789,7 @@ namespace Server.MirObjects
                     }
 
                     if (!MagicTeleport(magic))
-                        return;                    
+                        return;
 
                     AddBuff(BuffType.TemporalFlux, this, Settings.Second * 30, new Stats { [Stat.TeleportManaPenaltyPercent] = 30 });
                     LevelMagic(magic);
@@ -6649,7 +6651,7 @@ namespace Server.MirObjects
                 InSafeZone = true;
             }
             else
-                InSafeZone = false;            
+                InSafeZone = false;
 
             return true;
         }
@@ -6699,7 +6701,7 @@ namespace Server.MirObjects
             return true;
         }
         public override bool IsAttackTarget(MonsterObject attacker)
-        {            
+        {
             return true;
         }
 
@@ -6708,7 +6710,7 @@ namespace Server.MirObjects
             return true;
         }
         public override bool IsFriendlyTarget(MonsterObject ally)
-        {            
+        {
             return true;
         }
         public override void ReceiveChat(string text, ChatType type) { }
@@ -7028,7 +7030,7 @@ namespace Server.MirObjects
                     ownerBrowns = false;
 
                 if (ownerBrowns && !player.WarZone)
-                        p.Owner.BrownTime = Envir.Time + Settings.Minute;
+                    p.Owner.BrownTime = Envir.Time + Settings.Minute;
             }
 
             if ((p.PType == PoisonType.Green) || (p.PType == PoisonType.Red)) p.Duration = Math.Max(0, p.Duration - Stats[Stat.PoisonRecovery]);
@@ -8117,7 +8119,7 @@ namespace Server.MirObjects
             //MessageQueue.EnqueueDebugging(((ServerPacketIds)p.Index).ToString());
         }
         public virtual void Enqueue(Packet p, MirConnection c)
-        {            
+        {
             if (c == null)
             {
                 Enqueue(p);

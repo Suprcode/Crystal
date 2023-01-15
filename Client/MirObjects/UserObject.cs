@@ -105,7 +105,7 @@ namespace Client.MirObjects
             ExpandedStorageExpiryTime = info.ExpandedStorageExpiryTime;
 
             Magics = info.Magics;
-            for (int i = 0; i < Magics.Count; i++ )
+            for (int i = 0; i < Magics.Count; i++)
             {
                 Magics[i].CastTime += CMain.Time;
             }
@@ -169,8 +169,8 @@ namespace Client.MirObjects
             RefreshStatCaps();
 
             if (this == User && Light < 3) Light = 3;
-            AttackSpeed = 1400 - ((Stats[Stat.AttackSpeed] * 60) + Math.Min(370, (Level * 14)));
-            if (AttackSpeed < 550) AttackSpeed = 550;
+            AttackSpeed = 1400 - ((Stats[Stat.AttackSpeed] * 30) + Math.Min(400, (Level * 8)));
+            if (AttackSpeed < 300) AttackSpeed = 300;
 
             PercentHealth = (byte)(HP / (float)Stats[Stat.HP] * 100);
 
@@ -342,7 +342,7 @@ namespace Client.MirObjects
 
                 Stats.Add(realItem.Stats);
                 Stats.Add(temp.AddedStats);
-        
+
                 if (realItem.Light > Light) Light = realItem.Light;
                 if (realItem.Unique != SpecialItemMode.None)
                 {
@@ -589,7 +589,7 @@ namespace Client.MirObjects
         private void RefreshSkills()
         {
             int[] spiritSwordLvPlus = { 0, 3, 5, 8 };
-            int[] slayingLvPlus = {5, 6, 7, 8};
+            int[] slayingLvPlus = { 5, 6, 7, 8 };
             for (int i = 0; i < Magics.Count; i++)
             {
                 ClientMagic magic = Magics[i];
@@ -600,7 +600,7 @@ namespace Client.MirObjects
                         //Stats[Stat.MaxAC] += (magic.Level + 1) * 3;
                         break;
                     case Spell.Slaying:
-                    // case Spell.FatalSword:
+                        // case Spell.FatalSword:
                         Stats[Stat.Accuracy] += magic.Level;
                         Stats[Stat.MaxDC] += slayingLvPlus[magic.Level];
                         break;
@@ -853,7 +853,7 @@ namespace Client.MirObjects
             NextMagicDirection = 0;
             NextMagicLocation = Point.Empty;
             NextMagicObject = null;
-        } 
+        }
     }
 }
 
