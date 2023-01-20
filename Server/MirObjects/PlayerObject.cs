@@ -3844,6 +3844,8 @@ namespace Server.MirObjects
                             PlayerObject player = CurrentMap.Players[i];
                             if (player == this) continue;
 
+                            if (player == null || player.Info == null || player.Node == null) continue;
+
                             if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
                             {
                                 player.CheckItem(item);
