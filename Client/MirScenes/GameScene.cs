@@ -8704,6 +8704,32 @@ namespace Client.MirScenes
 
             #endregion
 
+            #region BUYING - SELLING PRICE
+            if (item.Price() > 0)
+            {
+                count++;
+                string text;
+                var colour = Color.White;
+
+                text = $"Selling Price : {((long)(item.Price() / 2)).ToString("###,###,##0")} Gold";
+
+                var costLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = colour,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = text
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, costLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, costLabel.DisplayRectangle.Bottom));
+            }
+
+
+            #endregion
+
             if (count > 0)
             {
                 ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
@@ -11890,7 +11916,7 @@ namespace Client.MirScenes
             {
                 if (CMain.Time > _doorTime)
                 {
-                   _doorTime = CMain.Time + 4000;
+                    _doorTime = CMain.Time + 4000;
                     Network.Enqueue(new C.Opendoor() { DoorIndex = DoorInfo.index });
                 }
 
