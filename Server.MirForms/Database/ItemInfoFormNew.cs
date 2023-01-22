@@ -917,9 +917,11 @@ namespace Server.Database
         {
             foreach (DataGridViewRow row in itemInfoGridView.Rows)
             {
-                if (row.Selected)
+                if (row.Selected && row.Cells["ItemIndex"].Value != null)
                 {
-                    var item = Envir.ItemInfoList.FirstOrDefault(x => x.Index == row.Index);
+                    int index = (int)row.Cells["ItemIndex"].Value;
+
+                    var item = Envir.ItemInfoList.FirstOrDefault(x => x.Index == index);
 
                     Envir.AddToGameShop(item);
                 }

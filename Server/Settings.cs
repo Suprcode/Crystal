@@ -120,7 +120,8 @@ namespace Server
                           RestedExpBonus = 5,
                           RestedMaxBonus = 24;
 
-        public static string SkeletonName = "BoneFamiliar",
+        public static string NewbieGuild = "NewbieGuild",
+                             SkeletonName = "BoneFamiliar",
                              ShinsuName = "Shinsu",
                              BugBatName = "BugBat",
                              Zuma1 = "ZumaStatue",
@@ -372,6 +373,7 @@ namespace Server
             PlayerDiedItemTimeOut = Reader.ReadInt32("Game", "PlayerDiedItemTimeOut", PlayerDiedItemTimeOut);
             PetSave = Reader.ReadBoolean("Game", "PetSave", PetSave);
             PKDelay = Reader.ReadInt32("Game", "PKDelay", PKDelay);
+            NewbieGuild = Reader.ReadString("Game", "NewbieGuild", NewbieGuild);
             SkeletonName = Reader.ReadString("Game", "SkeletonName", SkeletonName);
             BugBatName = Reader.ReadString("Game", "BugBatName", BugBatName);
             ShinsuName = Reader.ReadString("Game", "ShinsuName", ShinsuName);
@@ -632,6 +634,7 @@ namespace Server
             Reader.Write("Game", "PlayerDiedItemTimeOut", PlayerDiedItemTimeOut);
             Reader.Write("Game", "PetSave", PetSave);
             Reader.Write("Game", "PKDelay", PKDelay);
+            Reader.Write("Game", "NewbieGuild", NewbieGuild);
             Reader.Write("Game", "SkeletonName", SkeletonName);
             Reader.Write("Game", "BugBatName", BugBatName);
             Reader.Write("Game", "ShinsuName", ShinsuName);
