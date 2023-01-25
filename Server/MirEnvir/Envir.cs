@@ -183,7 +183,7 @@ namespace Server.MirEnvir
             AccountIDReg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinAccountIDLength + "," + Globals.MaxAccountIDLength + "}$");
             PasswordReg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinPasswordLength + "," + Globals.MaxPasswordLength + "}$");
             EMailReg = new Regex(@"\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*");
-            CharacterReg = new Regex(@"^[\u4e00-\u9fa5_A-Za-z0-9]{" + Globals.MinCharacterNameLength + "," + Globals.MaxCharacterNameLength + "}$");
+            CharacterReg = new Regex(@"^([a-z]|[A-Z]|[\u4e00-\u9fa5])([a-z]|[A-Z]|[0-9]|[\u4e00-\u9fa5])+$");
         }
 
         public static int LastCount = 0, LastRealCount = 0;
