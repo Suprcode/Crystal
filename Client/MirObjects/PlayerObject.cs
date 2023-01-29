@@ -651,6 +651,31 @@ namespace Client.MirObjects
                     case 100: //Oma King Robe effect
                         Effects.Add(new SpecialEffect(Libraries.Effect, 352, 33, 3600, this, true, false, 0) { Repeat = true });
                         break;
+
+                    case 101: //Rebirth level 10 special effects
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 1277, 20, 3600, this, true, true, 0) { Repeat = true });
+    
+                        break;
+                    case 102: //Rebirth level 20 special effects
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 1305, 29, 3600, this, true, false, 0) { Repeat = true });
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 1335, 25, 3600, this, true, false, 0) { Repeat = true });
+                        break;
+                    case 103: //Rebirth level 30 special effects
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 1388, 28, 3600, this, true, false, 0) { Repeat = true });
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 1361, 26, 3600, this, true, false, 0) { Repeat = true });
+                        break;
+                    case 104: //Denon Special Effects
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 1417, 39, 3600, this, true, false, 0) { Repeat = true });
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 1457, 27, 3600, this, true, false, 0) { Repeat = true });
+                        break;
+                    case 105: //Phantom level 100 bonus effects
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 1488, 39, 4600, this, true, false, 0) { Repeat = true });
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 1528, 29, 4600, this, true, false, 0) { Repeat = true });
+                        break;
+                    case 106: //Dragon Effects 2
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 1562, 35, 4600, this, true, false, 0) { Repeat = true });
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 1598, 30, 4600, this, true, false, 0) { Repeat = true });
+                        break;
                 }
             }
 
