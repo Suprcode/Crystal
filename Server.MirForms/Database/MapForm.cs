@@ -13,7 +13,6 @@ namespace Server.MirForms
     {
         public static Envir EditEnvir = null;
 
-        private static int _endIndex = 0;
         public static string Path = string.Empty;
 
         private static List<String> errors = new List<String>();
@@ -26,7 +25,6 @@ namespace Server.MirForms
             if (EditEnvir == null) return;
 
             var lines = File.ReadAllLines(Path);
-            _endIndex = EditEnvir.MapIndex; // Last map index number
             for (int i = 0; i < lines.Length; i++)
             {
 
@@ -39,7 +37,7 @@ namespace Server.MirForms
                     if (lines[i].Contains(';'))
                         lines[i] = lines[i].Substring(0, lines[i].IndexOf(";", System.StringComparison.Ordinal));
 
-                    MirDatabase.MapInfo newMapInfo = new MirDatabase.MapInfo { Index = ++_endIndex };
+                    MirDatabase.MapInfo newMapInfo = new MirDatabase.MapInfo { Index = ++EditEnvir.MapIndex };
 
                     var a = lines[i].Split(']'); // Split map info into [0] = MapFile MapName 0 || [1] = Attributes
                     string[] b = a[0].Split(' ');

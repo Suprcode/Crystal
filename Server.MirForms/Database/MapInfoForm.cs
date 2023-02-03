@@ -1083,11 +1083,11 @@ namespace Server
             }
 
 
-            string[] monsters = data.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] maps = data.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
 
-            for (int i = 1; i < monsters.Length; i++)
-                MapInfo.FromText(monsters[i]);
+            for (int i = 1; i < maps.Length; i++)
+                MapInfo.FromText(maps[i]);
 
             UpdateInterface();
         }
