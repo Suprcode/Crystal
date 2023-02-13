@@ -3865,6 +3865,8 @@ namespace Server.MirObjects
                             PlayerObject player = recipients[i];
                             if (player == this) continue;
 
+                            if (player == null || player.Info == null || player.Node == null) continue;
+
                             player.CheckItem(item);
 
                             if (!player.Connection.SentChatItem.Contains(item))
