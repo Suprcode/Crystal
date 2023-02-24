@@ -170,6 +170,13 @@ namespace Server
                 CriticalDamagetextBox.Text = string.Empty;
                 CriticalRatetextBox.Text = string.Empty;
                 ReflecttextBox.Text = string.Empty;
+                MaxDCRatetextBox.Text = string.Empty;
+                MaxSCRatetextBox.Text = string.Empty;
+                MaxMCRatetextBox.Text = string.Empty;
+                DamageReductiontextBox.Text = string.Empty;
+                ExpRatetextBox.Text = string.Empty;
+                DropRatetextBox.Text = string.Empty;
+                GoldRatetextBox.Text = string.Empty;
 
                 LevelBasedcheckbox.Checked = false;
                 ClassBasedcheckbox.Checked = false;
@@ -272,6 +279,15 @@ namespace Server
             CriticalRatetextBox.Text = info.Stats[Stat.CriticalRate].ToString();
             CriticalDamagetextBox.Text = info.Stats[Stat.CriticalDamage].ToString();
             ReflecttextBox.Text = info.Stats[Stat.Reflect].ToString();
+            MaxDCRatetextBox.Text = info.Stats[Stat.MaxDCRatePercent].ToString();
+            MaxSCRatetextBox.Text = info.Stats[Stat.MaxSCRatePercent].ToString();
+            MaxMCRatetextBox.Text = info.Stats[Stat.MaxMCRatePercent].ToString();
+            DamageReductiontextBox.Text = info.Stats[Stat.DamageReductionPercent].ToString();
+            ExpRatetextBox.Text = info.Stats[Stat.ExpRatePercent].ToString();
+            DropRatetextBox.Text = info.Stats[Stat.ItemDropRatePercent].ToString();
+            GoldRatetextBox.Text = info.Stats[Stat.GoldDropRatePercent].ToString();
+
+
 
             LevelBasedcheckbox.Checked = info.LevelBased;
             ClassBasedcheckbox.Checked = info.ClassBased;
@@ -381,6 +397,13 @@ namespace Server
                 if (CriticalRatetextBox.Text != info.Stats[Stat.CriticalRate].ToString()) CriticalRatetextBox.Text = string.Empty;
                 if (CriticalDamagetextBox.Text != info.Stats[Stat.CriticalDamage].ToString()) CriticalDamagetextBox.Text = string.Empty;
                 if (ReflecttextBox.Text != info.Stats[Stat.Reflect].ToString()) ReflecttextBox.Text = string.Empty;
+                if (MaxDCRatetextBox.Text != info.Stats[Stat.MaxDCRatePercent].ToString()) MaxDCRatetextBox.Text = string.Empty;
+                if (MaxSCRatetextBox.Text != info.Stats[Stat.MaxSCRatePercent].ToString()) MaxSCRatetextBox.Text = string.Empty;
+                if (MaxMCRatetextBox.Text != info.Stats[Stat.MaxMCRatePercent].ToString()) MaxMCRatetextBox.Text = string.Empty;
+                if (DamageReductiontextBox.Text != info.Stats[Stat.DamageReductionPercent].ToString()) DamageReductiontextBox.Text = string.Empty;
+                if (ExpRatetextBox.Text != info.Stats[Stat.ExpRatePercent].ToString()) ExpRatetextBox.Text = string.Empty;
+                if (DropRatetextBox.Text != info.Stats[Stat.ItemDropRatePercent].ToString()) DropRatetextBox.Text = string.Empty;
+                if (GoldRatetextBox.Text != info.Stats[Stat.GoldDropRatePercent].ToString()) GoldRatetextBox.Text = string.Empty;
                 if (LevelBasedcheckbox.Checked != info.LevelBased) LevelBasedcheckbox.CheckState = CheckState.Indeterminate;
                 if (ClassBasedcheckbox.Checked != info.ClassBased) ClassBasedcheckbox.CheckState = CheckState.Indeterminate;
                 if (Bind_dontstorecheckbox.Checked != info.Bind.HasFlag(BindMode.DontStore)) Bind_dontstorecheckbox.CheckState = CheckState.Indeterminate;
@@ -1622,6 +1645,132 @@ namespace Server
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
                 _selectedItemInfos[i].Stats[Stat.Reflect] = temp;
+        }
+
+        private void MaxDCRatetextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].Stats[Stat.MaxDCRatePercent] = temp;
+        }
+
+        private void MaxSCRatetextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].Stats[Stat.MaxSCRatePercent] = temp;
+        }
+
+        private void MaxMCRatetextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].Stats[Stat.MaxMCRatePercent] = temp;
+        }
+
+        private void DamageReductiontextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].Stats[Stat.DamageReductionPercent] = temp;
+        }
+
+        private void ExpRatetextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].Stats[Stat.ExpRatePercent] = temp;
+        }
+
+        private void GoldRatetextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].Stats[Stat.GoldDropRatePercent] = temp;
+        }
+
+        private void DropRatetextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].Stats[Stat.ItemDropRatePercent] = temp;
         }
 
         private void Bind_DontSpecialRepaircheckBox_CheckedChanged(object sender, EventArgs e)

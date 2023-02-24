@@ -8172,6 +8172,101 @@ namespace Client.MirScenes
 
             #endregion
 
+            #region MAX_DC_RATE
+
+            minValue = realItem.Stats[Stat.MaxDCRatePercent];
+            maxValue = 0;
+            addValue = 0;
+
+            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            {
+                count++;
+                MirLabel MAXDCRATE = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = string.Format("Max DC + {0}%", minValue + addValue)
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXDCRATE.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, MAXDCRATE.DisplayRectangle.Bottom));
+            }
+            #endregion
+
+            #region MAX_MC_RATE
+
+            minValue = realItem.Stats[Stat.MaxMCRatePercent];
+            maxValue = 0;
+            addValue = 0;
+
+            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            {
+                count++;
+                MirLabel MAXMCRATE = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = string.Format("Max MC + {0}%", minValue + addValue)
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXMCRATE.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, MAXMCRATE.DisplayRectangle.Bottom));
+            }
+            #endregion
+
+            #region MAX_SC_RATE
+
+            minValue = realItem.Stats[Stat.MaxSCRatePercent];
+            maxValue = 0;
+            addValue = 0;
+
+            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            {
+                count++;
+                MirLabel MAXSCRATE = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = string.Format("Max SC + {0}%", minValue + addValue)
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXSCRATE.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, MAXSCRATE.DisplayRectangle.Bottom));
+            }
+            #endregion
+
+            #region DAMAGE_REDUCTION
+
+            minValue = realItem.Stats[Stat.DamageReductionPercent];
+            maxValue = 0;
+            addValue = 0;
+
+            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            {
+                count++;
+                MirLabel DAMAGEREDUC = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = string.Format("All Damage Reduction + {0}%", minValue + addValue)
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DAMAGEREDUC.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, DAMAGEREDUC.DisplayRectangle.Bottom));
+            }
+            #endregion
             if (count > 0)
             {
                 ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
