@@ -28,6 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.DamageReductiontextBox = new System.Windows.Forms.TextBox();
+            this.label64 = new System.Windows.Forms.Label();
+            this.GoldRatetextBox = new System.Windows.Forms.TextBox();
+            this.label63 = new System.Windows.Forms.Label();
+            this.DropRatetextBox = new System.Windows.Forms.TextBox();
+            this.label62 = new System.Windows.Forms.Label();
+            this.ExpRatetextBox = new System.Windows.Forms.TextBox();
+            this.label61 = new System.Windows.Forms.Label();
+            this.MaxSCRatetextBox = new System.Windows.Forms.TextBox();
+            this.label60 = new System.Windows.Forms.Label();
+            this.MaxMCRatetextBox = new System.Windows.Forms.TextBox();
+            this.label59 = new System.Windows.Forms.Label();
+            this.MaxDCRatetextBox = new System.Windows.Forms.TextBox();
+            this.label58 = new System.Windows.Forms.Label();
             this.ItemInfoPanel = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -200,6 +214,132 @@
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // DamageReductiontextBox
+            // 
+            this.DamageReductiontextBox.Location = new System.Drawing.Point(533, 258);
+            this.DamageReductiontextBox.MaxLength = 3;
+            this.DamageReductiontextBox.Name = "DamageReductiontextBox";
+            this.DamageReductiontextBox.Size = new System.Drawing.Size(30, 20);
+            this.DamageReductiontextBox.TabIndex = 139;
+            this.DamageReductiontextBox.TextChanged += new System.EventHandler(this.DamageReductiontextBox_TextChanged);
+            // 
+            // label64
+            // 
+            this.label64.AutoSize = true;
+            this.label64.Location = new System.Drawing.Point(387, 261);
+            this.label64.Name = "label64";
+            this.label64.Size = new System.Drawing.Size(124, 13);
+            this.label64.TabIndex = 137;
+            this.label64.Text = "All Damage Reduction %";
+            // 
+            // GoldRatetextBox
+            // 
+            this.GoldRatetextBox.Location = new System.Drawing.Point(517, 71);
+            this.GoldRatetextBox.MaxLength = 3;
+            this.GoldRatetextBox.Name = "GoldRatetextBox";
+            this.GoldRatetextBox.Size = new System.Drawing.Size(30, 20);
+            this.GoldRatetextBox.TabIndex = 136;
+            this.GoldRatetextBox.TextChanged += new System.EventHandler(this.GoldRatetextBox_TextChanged);
+            // 
+            // label63
+            // 
+            this.label63.AutoSize = true;
+            this.label63.Location = new System.Drawing.Point(430, 74);
+            this.label63.Name = "label63";
+            this.label63.Size = new System.Drawing.Size(66, 13);
+            this.label63.TabIndex = 135;
+            this.label63.Text = "Gold Rate %:";
+            // 
+            // DropRatetextBox
+            // 
+            this.DropRatetextBox.Location = new System.Drawing.Point(517, 40);
+            this.DropRatetextBox.MaxLength = 3;
+            this.DropRatetextBox.Name = "DropRatetextBox";
+            this.DropRatetextBox.Size = new System.Drawing.Size(30, 20);
+            this.DropRatetextBox.TabIndex = 134;
+            this.DropRatetextBox.TextChanged += new System.EventHandler(this.DropRatetextBox_TextChanged);
+            // 
+            // label62
+            // 
+            this.label62.AutoSize = true;
+            this.label62.Location = new System.Drawing.Point(429, 43);
+            this.label62.Name = "label62";
+            this.label62.Size = new System.Drawing.Size(67, 13);
+            this.label62.TabIndex = 133;
+            this.label62.Text = "Drop Rate %:";
+            // 
+            // ExpRatetextBox
+            // 
+            this.ExpRatetextBox.Location = new System.Drawing.Point(517, 10);
+            this.ExpRatetextBox.MaxLength = 3;
+            this.ExpRatetextBox.Name = "ExpRatetextBox";
+            this.ExpRatetextBox.Size = new System.Drawing.Size(30, 20);
+            this.ExpRatetextBox.TabIndex = 132;
+            this.ExpRatetextBox.TextChanged += new System.EventHandler(this.ExpRatetextBox_TextChanged);
+            // 
+            // label61
+            // 
+            this.label61.AutoSize = true;
+            this.label61.Location = new System.Drawing.Point(433, 13);
+            this.label61.Name = "label61";
+            this.label61.Size = new System.Drawing.Size(62, 13);
+            this.label61.TabIndex = 130;
+            this.label61.Text = "Exp Rate %:";
+            // 
+            // MaxSCRatetextBox
+            // 
+            this.MaxSCRatetextBox.Location = new System.Drawing.Point(382, 68);
+            this.MaxSCRatetextBox.MaxLength = 3;
+            this.MaxSCRatetextBox.Name = "MaxSCRatetextBox";
+            this.MaxSCRatetextBox.Size = new System.Drawing.Size(30, 20);
+            this.MaxSCRatetextBox.TabIndex = 131;
+            this.MaxSCRatetextBox.TextChanged += new System.EventHandler(this.MaxSCRatetextBox_TextChanged);
+            // 
+            // label60
+            // 
+            this.label60.AutoSize = true;
+            this.label60.Location = new System.Drawing.Point(313, 74);
+            this.label60.Name = "label60";
+            this.label60.Size = new System.Drawing.Size(58, 13);
+            this.label60.TabIndex = 130;
+            this.label60.Text = "Max SC %:";
+            // 
+            // MaxMCRatetextBox
+            // 
+            this.MaxMCRatetextBox.Location = new System.Drawing.Point(382, 39);
+            this.MaxMCRatetextBox.MaxLength = 3;
+            this.MaxMCRatetextBox.Name = "MaxMCRatetextBox";
+            this.MaxMCRatetextBox.Size = new System.Drawing.Size(30, 20);
+            this.MaxMCRatetextBox.TabIndex = 127;
+            this.MaxMCRatetextBox.TextChanged += new System.EventHandler(this.MaxMCRatetextBox_TextChanged);
+            // 
+            // label59
+            // 
+            this.label59.AutoSize = true;
+            this.label59.Location = new System.Drawing.Point(311, 43);
+            this.label59.Name = "label59";
+            this.label59.Size = new System.Drawing.Size(60, 13);
+            this.label59.TabIndex = 129;
+            this.label59.Text = "Max MC %:";
+            // 
+            // MaxDCRatetextBox
+            // 
+            this.MaxDCRatetextBox.Location = new System.Drawing.Point(382, 10);
+            this.MaxDCRatetextBox.MaxLength = 3;
+            this.MaxDCRatetextBox.Name = "MaxDCRatetextBox";
+            this.MaxDCRatetextBox.Size = new System.Drawing.Size(30, 20);
+            this.MaxDCRatetextBox.TabIndex = 127;
+            this.MaxDCRatetextBox.TextChanged += new System.EventHandler(this.MaxDCRatetextBox_TextChanged);
+            // 
+            // label58
+            // 
+            this.label58.AutoSize = true;
+            this.label58.Location = new System.Drawing.Point(312, 13);
+            this.label58.Name = "label58";
+            this.label58.Size = new System.Drawing.Size(59, 13);
+            this.label58.TabIndex = 128;
+            this.label58.Text = "Max DC %:";
             // 
             // ItemInfoPanel
             // 
@@ -755,6 +895,8 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.label64);
+            this.tabPage2.Controls.Add(this.DamageReductiontextBox);
             this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Controls.Add(this.label37);
             this.tabPage2.Controls.Add(this.label14);
@@ -830,6 +972,18 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.DropRatetextBox);
+            this.groupBox1.Controls.Add(this.label63);
+            this.groupBox1.Controls.Add(this.GoldRatetextBox);
+            this.groupBox1.Controls.Add(this.label62);
+            this.groupBox1.Controls.Add(this.ExpRatetextBox);
+            this.groupBox1.Controls.Add(this.label61);
+            this.groupBox1.Controls.Add(this.MaxSCRatetextBox);
+            this.groupBox1.Controls.Add(this.label60);
+            this.groupBox1.Controls.Add(this.MaxMCRatetextBox);
+            this.groupBox1.Controls.Add(this.label59);
+            this.groupBox1.Controls.Add(this.MaxDCRatetextBox);
+            this.groupBox1.Controls.Add(this.label58);
             this.groupBox1.Controls.Add(this.label50);
             this.groupBox1.Controls.Add(this.label52);
             this.groupBox1.Controls.Add(this.label49);
@@ -838,9 +992,9 @@
             this.groupBox1.Controls.Add(this.CriticalDamagetextBox);
             this.groupBox1.Controls.Add(this.CriticalRatetextBox);
             this.groupBox1.Controls.Add(this.label51);
-            this.groupBox1.Location = new System.Drawing.Point(16, 277);
+            this.groupBox1.Location = new System.Drawing.Point(16, 286);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(304, 94);
+            this.groupBox1.Size = new System.Drawing.Size(579, 98);
             this.groupBox1.TabIndex = 123;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "New Stats";
@@ -848,7 +1002,7 @@
             // label50
             // 
             this.label50.AutoSize = true;
-            this.label50.Location = new System.Drawing.Point(8, 39);
+            this.label50.Location = new System.Drawing.Point(6, 23);
             this.label50.Name = "label50";
             this.label50.Size = new System.Drawing.Size(62, 13);
             this.label50.TabIndex = 119;
@@ -857,7 +1011,7 @@
             // label52
             // 
             this.label52.AutoSize = true;
-            this.label52.Location = new System.Drawing.Point(8, 65);
+            this.label52.Location = new System.Drawing.Point(6, 62);
             this.label52.Name = "label52";
             this.label52.Size = new System.Drawing.Size(44, 13);
             this.label52.TabIndex = 122;
@@ -866,7 +1020,7 @@
             // label49
             // 
             this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(173, 65);
+            this.label49.Location = new System.Drawing.Point(173, 61);
             this.label49.Name = "label49";
             this.label49.Size = new System.Drawing.Size(53, 13);
             this.label49.TabIndex = 115;
@@ -874,7 +1028,7 @@
             // 
             // ReflecttextBox
             // 
-            this.ReflecttextBox.Location = new System.Drawing.Point(76, 62);
+            this.ReflecttextBox.Location = new System.Drawing.Point(76, 58);
             this.ReflecttextBox.MaxLength = 3;
             this.ReflecttextBox.Name = "ReflecttextBox";
             this.ReflecttextBox.Size = new System.Drawing.Size(30, 20);
@@ -883,7 +1037,7 @@
             // 
             // HpDrainRatetextBox
             // 
-            this.HpDrainRatetextBox.Location = new System.Drawing.Point(260, 62);
+            this.HpDrainRatetextBox.Location = new System.Drawing.Point(260, 55);
             this.HpDrainRatetextBox.MaxLength = 3;
             this.HpDrainRatetextBox.Name = "HpDrainRatetextBox";
             this.HpDrainRatetextBox.Size = new System.Drawing.Size(30, 20);
@@ -892,7 +1046,7 @@
             // 
             // CriticalDamagetextBox
             // 
-            this.CriticalDamagetextBox.Location = new System.Drawing.Point(260, 36);
+            this.CriticalDamagetextBox.Location = new System.Drawing.Point(260, 23);
             this.CriticalDamagetextBox.MaxLength = 3;
             this.CriticalDamagetextBox.Name = "CriticalDamagetextBox";
             this.CriticalDamagetextBox.Size = new System.Drawing.Size(30, 20);
@@ -901,7 +1055,7 @@
             // 
             // CriticalRatetextBox
             // 
-            this.CriticalRatetextBox.Location = new System.Drawing.Point(76, 36);
+            this.CriticalRatetextBox.Location = new System.Drawing.Point(76, 20);
             this.CriticalRatetextBox.MaxLength = 3;
             this.CriticalRatetextBox.Name = "CriticalRatetextBox";
             this.CriticalRatetextBox.Size = new System.Drawing.Size(30, 20);
@@ -911,7 +1065,7 @@
             // label51
             // 
             this.label51.AutoSize = true;
-            this.label51.Location = new System.Drawing.Point(173, 39);
+            this.label51.Location = new System.Drawing.Point(173, 23);
             this.label51.Name = "label51";
             this.label51.Size = new System.Drawing.Size(66, 13);
             this.label51.TabIndex = 120;
@@ -2122,5 +2276,19 @@
         private System.Windows.Forms.CheckBox noMailBox;
         private System.Windows.Forms.TextBox SlotsTextBox;
         private System.Windows.Forms.Label label57;
+        private System.Windows.Forms.Label label58;
+        private System.Windows.Forms.Label label59;
+        private System.Windows.Forms.Label label60;
+        private System.Windows.Forms.Label label61;
+        private System.Windows.Forms.Label label62;
+        private System.Windows.Forms.Label label63;
+        private System.Windows.Forms.Label label64;
+        private System.Windows.Forms.TextBox MaxDCRatetextBox;
+        private System.Windows.Forms.TextBox MaxMCRatetextBox;
+        private System.Windows.Forms.TextBox MaxSCRatetextBox;
+        private System.Windows.Forms.TextBox ExpRatetextBox;
+        private System.Windows.Forms.TextBox GoldRatetextBox;
+        private System.Windows.Forms.TextBox DropRatetextBox;
+        private System.Windows.Forms.TextBox DamageReductiontextBox;
     }
 }
