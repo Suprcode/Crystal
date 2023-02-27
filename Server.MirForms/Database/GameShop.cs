@@ -105,6 +105,8 @@ namespace Server
                 TotalSold_label.Text = "0";
                 LeftinStock_label.Text = "";
                 Count_textbox.Text = String.Empty;
+                CreditOnlyBox.Checked = false;
+                GoldOnlyBox.Checked = false;
                 return;
             }
 
@@ -119,7 +121,8 @@ namespace Server
             TopItem_checkbox.Checked = SelectedItems[0].TopItem;
             DealofDay_checkbox.Checked = SelectedItems[0].Deal;
             Count_textbox.Text = SelectedItems[0].Count.ToString();
-
+            CreditOnlyBox.Checked = SelectedItems[0].CanBuyCredit;
+            GoldOnlyBox.Checked = SelectedItems[0].CanBuyGold;
             GetStats();
 
         }
@@ -340,5 +343,24 @@ namespace Server
                 SMain.Envir.ResetGS = true;
             }
         }
+        private void GoldOnlyBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender)
+                return;
+
+            for (int i = 0; i < SelectedItems.Count; i++)
+                SelectedItems[i].CanBuyGold = GoldOnlyBox.Checked;
+        }
+
+        private void CreditOnly_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender)
+                return;
+
+            for (int i = 0; i < SelectedItems.Count; i++)
+                SelectedItems[i].CanBuyCredit = CreditOnlyBox.Checked;
+        }
+
+
     }
 }

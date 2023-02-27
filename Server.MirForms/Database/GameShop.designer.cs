@@ -35,6 +35,8 @@
             this.GPPrice_textbox = new System.Windows.Forms.TextBox();
             this.label29 = new System.Windows.Forms.Label();
             this.ItemDetails_gb = new System.Windows.Forms.GroupBox();
+            this.GoldOnlyBox = new System.Windows.Forms.CheckBox();
+            this.CreditOnlyBox = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.Count_textbox = new System.Windows.Forms.TextBox();
             this.LeftinStock_label = new System.Windows.Forms.Label();
@@ -121,6 +123,8 @@
             // ItemDetails_gb
             // 
             this.ItemDetails_gb.BackColor = System.Drawing.Color.White;
+            this.ItemDetails_gb.Controls.Add(this.GoldOnlyBox);
+            this.ItemDetails_gb.Controls.Add(this.CreditOnlyBox);
             this.ItemDetails_gb.Controls.Add(this.label6);
             this.ItemDetails_gb.Controls.Add(this.Count_textbox);
             this.ItemDetails_gb.Controls.Add(this.LeftinStock_label);
@@ -146,6 +150,28 @@
             this.ItemDetails_gb.TabIndex = 98;
             this.ItemDetails_gb.TabStop = false;
             this.ItemDetails_gb.Text = "Item Details";
+            //// 
+            //// GoldOnlyBox
+            //// 
+            this.GoldOnlyBox.AutoSize = true;
+            this.GoldOnlyBox.Location = new System.Drawing.Point(205, 104);
+            this.GoldOnlyBox.Name = "GoldOnlyBox";
+            this.GoldOnlyBox.Size = new System.Drawing.Size(48, 17);
+            this.GoldOnlyBox.TabIndex = 119;
+            this.GoldOnlyBox.Text = "Gold";
+            this.GoldOnlyBox.UseVisualStyleBackColor = true;
+            this.GoldOnlyBox.CheckedChanged += new System.EventHandler(this.GoldOnlyBox_CheckedChanged);
+            // 
+            // CreditOnlyBox
+            // 
+            this.CreditOnlyBox.AutoSize = true;
+            this.CreditOnlyBox.Location = new System.Drawing.Point(205, 76);
+            this.CreditOnlyBox.Name = "CreditOnlyBox";
+            this.CreditOnlyBox.Size = new System.Drawing.Size(58, 17);
+            this.CreditOnlyBox.TabIndex = 118;
+            this.CreditOnlyBox.Text = "Credits";
+            this.CreditOnlyBox.UseVisualStyleBackColor = true;
+            this.CreditOnlyBox.CheckedChanged += new System.EventHandler(this.CreditOnly_CheckedChanged);
             // 
             // label6
             // 
@@ -444,5 +470,7 @@
         private System.Windows.Forms.ComboBox CategoryFilter_lb;
         private System.Windows.Forms.Button ResetFilter_button;
         private System.Windows.Forms.Button ServerLog_button;
+        private System.Windows.Forms.CheckBox GoldOnlyBox;
+        private System.Windows.Forms.CheckBox CreditOnlyBox;
     }
 }
