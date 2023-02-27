@@ -196,38 +196,50 @@ namespace Client.MirControls
             uint CreditCost;
             uint GoldCost;
             MirMessageBox messageBox;
-
-            if (Item.CreditPrice * Quantity <= GameScene.Credit)
+            int pType = -1;
+            if (GameScene.Scene.GameShopDialog.PaymentTypeCredit.Checked && Item.CanBuyCredit)
             {
-                CreditCost = Item.CreditPrice * Quantity;
-                messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x {0}({3}) for {2} Credits?", Item.Info.FriendlyName, Quantity, CreditCost, Item.Count), MirMessageBoxButtons.YesNo);
+                pType = 0;
             }
-            else
-            { //Needs to attempt to pay with gold and credits
-                if (GameScene.Gold >= (((Item.GoldPrice * Quantity) / (Item.CreditPrice * Quantity)) * ((Item.CreditPrice * Quantity) - GameScene.Credit)))
-                {
-                    GoldCost = ((Item.GoldPrice * Quantity) / (Item.CreditPrice * Quantity)) * ((Item.CreditPrice * Quantity) - GameScene.Credit);
-                    CreditCost = GameScene.Credit;
-                    if (CreditCost == 0)
+            else if (GameScene.Scene.GameShopDialog.PaymentTypeGold.Checked && Item.CanBuyGold)
+            {
+                pType = 1;
+            }
+            if (pType == -1)
+            {
+                GameScene.Scene.ChatDialog.ReceiveChat("You MUST select a payment type!", ChatType.System);
+                return;
+            }
+            switch (pType)
+            {
+                case 0: //  Credit
+                    if (Item.CreditPrice * Quantity <= GameScene.Credit)
                     {
-                        messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x {0}({3}) for {2} Gold?", Item.Info.FriendlyName, Quantity, GoldCost, Item.Count), MirMessageBoxButtons.YesNo);
+                        CreditCost = Item.CreditPrice * Quantity;
+                        messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x \n{0}({3}) for {2} Credits?", Item.Info.FriendlyName, Quantity, CreditCost, Item.Count), MirMessageBoxButtons.YesNo);
+                        messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.GameshopBuy { GIndex = Item.GIndex, Quantity = Quantity, PType = pType });
+                        messageBox.NoButton.Click += (o, e) => { };
+                        messageBox.Show();
                     }
                     else
+                        GameScene.Scene.ChatDialog.ReceiveChat("You can't afford the selected item.", ChatType.System);
+                    break;
+                case 1: //  Gold
+                    if (Item.GoldPrice * Quantity <= GameScene.Gold)
                     {
-                        messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x {0}({4}) for {2} Credit and {3} Gold?", Item.Info.FriendlyName, Quantity, CreditCost, GoldCost, Item.Count), MirMessageBoxButtons.YesNo);
+                        GoldCost = Item.GoldPrice * Quantity;
+                        messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy{1} x \n{0}({3}) for {2} Gold?", Item.Info.FriendlyName, Quantity, GoldCost, Item.Count), MirMessageBoxButtons.YesNo);
+                        messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.GameshopBuy { GIndex = Item.GIndex, Quantity = Quantity, PType = pType });
+                        messageBox.NoButton.Click += (o, e) => { };
+                        messageBox.Show();
                     }
-                }
-                else
-                {
-                    GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.LowGold, ChatType.System);
+                    else
+                        GameScene.Scene.ChatDialog.ReceiveChat("You can't afford the selected item.", ChatType.System);
+                    break;
+                default:
+
                     return;
-                }
-
             }
-
-            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.GameshopBuy { GIndex = Item.GIndex, Quantity = Quantity });
-            messageBox.NoButton.Click += (o, e) => { };
-            messageBox.Show();
         }
 
         public override void OnMouseMove(MouseEventArgs e)
@@ -259,9 +271,10 @@ namespace Client.MirControls
             nameLabel.Text = Item.Info.FriendlyName;
             nameLabel.Text = nameLabel.Text.Length > 17 ? nameLabel.Text.Substring(0, 17) : nameLabel.Text;
             nameLabel.ForeColour = GameScene.Scene.GradeNameColor(Item.Info.Grade);
-            quantity.Text = Quantity.ToString();
-            goldLabel.Text = (Item.GoldPrice * Quantity).ToString("###,###,##0");
-            gpLabel.Text = (Item.CreditPrice * Quantity).ToString("###,###,##0");
+            if (Item.CanBuyGold)
+                goldLabel.Text = (Item.GoldPrice * Quantity).ToString("###,###,##0");
+            if (Item.CanBuyCredit)
+                gpLabel.Text = (Item.CreditPrice * Quantity).ToString("###,###,##0");
             if (Item.Stock >= 99) stockLabel.Text = "99+";
             if (Item.Stock == 0) stockLabel.Text = "∞";
             else stockLabel.Text = Item.Stock.ToString();

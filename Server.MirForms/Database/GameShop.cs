@@ -105,6 +105,8 @@ namespace Server
                 TotalSold_label.Text = "0";
                 LeftinStock_label.Text = "";
                 Count_textbox.Text = String.Empty;
+                checkBox1.Checked = false;
+                checkBox2.Checked = false;
                 return;
             }
 
@@ -119,7 +121,8 @@ namespace Server
             TopItem_checkbox.Checked = SelectedItems[0].TopItem;
             DealofDay_checkbox.Checked = SelectedItems[0].Deal;
             Count_textbox.Text = SelectedItems[0].Count.ToString();
-
+            checkBox1.Checked = SelectedItems[0].CanBuyCredit;
+            checkBox2.Checked = SelectedItems[0].CanBuyGold;
             GetStats();
 
         }
@@ -340,5 +343,24 @@ namespace Server
                 SMain.Envir.ResetGS = true;
             }
         }
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender)
+                return;
+
+            for (int i = 0; i < SelectedItems.Count; i++)
+                SelectedItems[i].CanBuyGold = checkBox2.Checked;
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender)
+                return;
+
+            for (int i = 0; i < SelectedItems.Count; i++)
+                SelectedItems[i].CanBuyCredit = checkBox1.Checked;
+        }
+
+
     }
 }

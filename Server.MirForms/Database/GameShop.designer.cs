@@ -35,6 +35,8 @@
             this.GPPrice_textbox = new System.Windows.Forms.TextBox();
             this.label29 = new System.Windows.Forms.Label();
             this.ItemDetails_gb = new System.Windows.Forms.GroupBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.Count_textbox = new System.Windows.Forms.TextBox();
             this.LeftinStock_label = new System.Windows.Forms.Label();
@@ -121,6 +123,8 @@
             // ItemDetails_gb
             // 
             this.ItemDetails_gb.BackColor = System.Drawing.Color.White;
+            this.ItemDetails_gb.Controls.Add(this.checkBox2);
+            this.ItemDetails_gb.Controls.Add(this.checkBox1);
             this.ItemDetails_gb.Controls.Add(this.label6);
             this.ItemDetails_gb.Controls.Add(this.Count_textbox);
             this.ItemDetails_gb.Controls.Add(this.LeftinStock_label);
@@ -146,6 +150,28 @@
             this.ItemDetails_gb.TabIndex = 98;
             this.ItemDetails_gb.TabStop = false;
             this.ItemDetails_gb.Text = "Item Details";
+            //// 
+            //// checkBox2
+            //// 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(205, 104);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(48, 17);
+            this.checkBox2.TabIndex = 119;
+            this.checkBox2.Text = "Gold";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(205, 76);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(58, 17);
+            this.checkBox1.TabIndex = 118;
+            this.checkBox1.Text = "Credits";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // label6
             // 
@@ -444,5 +470,7 @@
         private System.Windows.Forms.ComboBox CategoryFilter_lb;
         private System.Windows.Forms.Button ResetFilter_button;
         private System.Windows.Forms.Button ServerLog_button;
+        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
