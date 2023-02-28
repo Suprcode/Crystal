@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using Server.MirDatabase;
 using Server.MirEnvir;
+using Server.MirNetwork;
 using Server.MirObjects.Monsters;
 using S = ServerPackets;
 
@@ -465,6 +466,27 @@ namespace Server.MirObjects
                     return new Siege(info); //TODO
 
 
+                case 214:
+                    return new SepWarrior(info);
+                case 215:
+                    return new SepWizard(info);
+                case 216:
+                    return new SepTaoist(info);
+                case 217:
+                    return new SepAssassin(info);
+                case 218:
+                    return new SepArcher(info);
+
+                case 219:
+                    return new SepHighWarrior(info);
+                case 220:
+                    return new SepHighWizard(info);
+                case 221:
+                    return new SepHighTaoist(info);
+                case 222:
+                    return new SepHighAssassin(info);
+                case 223:
+                    return new SepHighArcher(info);
 
                 default:
                     return new MonsterObject(info);
@@ -580,6 +602,13 @@ namespace Server.MirObjects
         public List<MonsterObject> SlaveList = new List<MonsterObject>();
         public List<RouteInfo> Route = new List<RouteInfo>();
 
+
+        public MirConnection Connection;
+        public void Enqueue(Packet p)
+        {
+            if (Connection == null) return;
+            Connection.Enqueue(p);
+        }
         public override bool Blocking
         {
             get
