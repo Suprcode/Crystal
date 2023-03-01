@@ -3614,6 +3614,10 @@ namespace Server.MirObjects
                     OneWithNature(target, magic);
                     break;
 
+                case Spell.HealingCircle:
+                    HealingCircle(magic, target == null ? location : target.CurrentLocation);
+                    break;
+
                 //Custom Spells
                 case Spell.Portal:
                     Portal(magic, location, out cast);
@@ -5468,6 +5472,13 @@ namespace Server.MirObjects
             int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, CurrentLocation);
+            CurrentMap.ActionList.Add(action);
+        }
+        public void HealingCircle(UserMagic magic, Point location)
+        {
+            var damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]));
+
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500 + 1200, this, magic, damage, CurrentLocation);
             CurrentMap.ActionList.Add(action);
         }
         #endregion

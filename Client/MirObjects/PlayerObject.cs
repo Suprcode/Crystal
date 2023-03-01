@@ -1757,6 +1757,15 @@ namespace Client.MirObjects
 
                             #endregion
 
+                            #region HealingCircle
+
+                            case Spell.HealingCircle:
+                                Effects.Add(new Effect(Libraries.Magic3, 620, 10, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+
                             #region TrapHexagon
 
                             case Spell.TrapHexagon:
@@ -3058,6 +3067,16 @@ namespace Client.MirObjects
 
                                     case Spell.FireWall:
                                         SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
+                                        break;
+
+                                    #endregion
+
+
+                                    #region HealingCircle
+
+                                    case Spell.HealingCircle:
+                                        SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
+                                        MapControl.Effects.Add(new Effect(Libraries.Magic3, 620, 10, 1200, TargetPoint));
                                         break;
 
                                     #endregion
