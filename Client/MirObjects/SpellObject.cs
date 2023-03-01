@@ -231,6 +231,14 @@ namespace Client.MirObjects
                     FrameCount = 8;
                     Blend = true;
                     break;
+                case Spell.HealingCircle:
+                    BodyLibrary = Libraries.Magic3;
+                    DrawFrame = 630;
+                    FrameInterval = 80;
+                    FrameCount = 11;
+                    Light = 3;
+                    Blend = true;
+                    break;
                 case Spell.FlyingStatueIceTornado:
                     BodyLibrary = Libraries.Monsters[(ushort)Monster.FlyingStatue];
                     DrawFrame = 314;
