@@ -5477,8 +5477,7 @@ namespace Server.MirObjects
         public void HealingCircle(UserMagic magic, Point location)
         {
             var damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]));
-
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500 + 1200, this, magic, damage, CurrentLocation);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500 + 1200, this, magic, damage, location);
             CurrentMap.ActionList.Add(action);
         }
         #endregion
