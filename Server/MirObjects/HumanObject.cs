@@ -186,6 +186,9 @@ namespace Server.MirObjects
         public virtual int AmuletBeltMaximum => 6;
         public virtual int BeltSize => 6;
 
+        public long ImmortalTime = 0;
+        public bool Immortal { get { return Envir.Time < ImmortalTime; } }
+
         public LevelEffects LevelEffects = LevelEffects.None;
 
         public const long LoyaltyDelay = 1000, ItemExpireDelay = 60000, DuraDelay = 10000, RegenDelay = 10000, PotDelay = 200, HealDelay = 600, VampDelay = 500, MoveDelay = 600;
@@ -2787,6 +2790,7 @@ namespace Server.MirObjects
                     switch (Buffs[i].Type)
                     {
                         case BuffType.MoonLight:
+                        case BuffType.MoonMist:
                             MoonLightAttack = true;
                             break;
                         case BuffType.DarkBody:
@@ -3410,6 +3414,10 @@ namespace Server.MirObjects
                     break;
                 case Spell.Hiding:
                     Hiding(magic);
+                    break;
+                case Spell.MoonMist:
+                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MoonMist }, CurrentLocation);
+                    MoonMist(magic);
                     break;
                 case Spell.Haste:
                 case Spell.LightBody:
@@ -4368,6 +4376,7 @@ namespace Server.MirObjects
             ConsumeItem(item, 1);
             cast = true;
         }
+
         private void Reincarnation(UserMagic magic, PlayerObject target, out bool cast)
         {
             cast = true;
@@ -5003,6 +5012,28 @@ namespace Server.MirObjects
             AddBuff(BuffType.MoonLight, this, (time + (magic.Level + 1) * 5) * 500, new Stats());
 
             LevelMagic(magic);
+        }
+
+        private void MoonMist(UserMagic magic)
+        {
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]));
+
+            for (int i = 0; i < Buffs.Count; i++)
+                if (Buffs[i].Type == BuffType.MoonLight) return;
+
+            int addValue = (int)(Stats[Stat.HealthRecovery] + (((double)Stats[Stat.HP] / 100)));
+            //HealthRecovery = (byte)Math.Min(byte.MaxValue, HealthRecovery + (((double)MaxHP / 100) * 5));
+            AddBuff(BuffType.MoonLight, this, Settings.Second * 5, new Stats { [Stat.HealthRecovery] = addValue }, true);
+
+            if (!Immortal)
+            {
+                ImmortalTime = Envir.Time + Settings.Second * 5;
+            }
+            Broadcast(new S.ObjectEffect { ObjectID = ObjectID, TargetID = ObjectID, Effect = SpellEffect.FalconShield, Time = (uint)(ImmortalTime - Envir.Time) });
+
+            LevelMagic(magic);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, CurrentLocation);
+            CurrentMap.ActionList.Add(action);
         }
         private void Trap(UserMagic magic, MapObject target, out bool cast)
         {

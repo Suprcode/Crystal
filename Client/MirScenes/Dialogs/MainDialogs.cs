@@ -3407,7 +3407,27 @@ namespace Client.MirScenes.Dialogs
                     break;
             }
 
-            KeyLabel.Text = Magic.Key == 0 ? string.Empty : string.Format("{0}{1}F{2}",
+            switch (magic.Spell)
+            {
+                case Spell.MoonMist:
+                    SkillButton.Hint = string.Format("Moon Mist" +
+                        "\nActive" +
+                        "\nAbility to hide your self from Monster and players" +
+                        "\nInvulnerable for 5 seconds but can`t move." +
+                        "\nRegenerate HP every seconds." +
+                        "\nSkill Level 0 = Regenerate 2% HP" +
+                        "\nSkill Level 1 = Regenerate 3% HP" +
+                        "\nSkill Level 2 = Regenerate 4% HP" +
+                        "\nSkill Level 3 = Regenerate 5% HP" +
+                        "\n \nCurrent Skill Level {0}, Next Level {1}", Magic.Level, Magic.Level == 0 ? Magic.Level1 : Magic.Level == 1 ? Magic.Level2 : Magic.Level == 2 ? Magic.Level3 : 0);
+            break;
+
+            default:
+
+                    break;
+        }
+
+        KeyLabel.Text = Magic.Key == 0 ? string.Empty : string.Format("{0}{1}F{2}",
                 Prefixes[(Magic.Key - 1) / 8],
                 Magic.Key > 8 ? Environment.NewLine : string.Empty,
                 (Magic.Key - 1) % 8 + 1

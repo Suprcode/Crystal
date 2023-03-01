@@ -3447,6 +3447,7 @@ namespace ServerPackets
         public uint EffectType;
         public uint DelayTime = 0;
         public uint Time = 0;
+        public uint TargetID;
 
         protected override void ReadPacket(BinaryReader reader)
         {

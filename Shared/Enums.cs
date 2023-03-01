@@ -1255,6 +1255,7 @@ public enum SpellEffect : byte
 {
     None,
     FatalSword,
+    MoonMist,
     Teleport,
     Healing,
     RedMoonEvil,
@@ -1279,6 +1280,7 @@ public enum SpellEffect : byte
     StormEscape,
     TurtleKing,
     Behemoth,
+    FalconShield,
     Stunned,
     IcePillar,
     KingGuard,
@@ -1293,6 +1295,8 @@ public enum SpellEffect : byte
 public enum BuffType : byte
 {
     None = 0,
+
+    MoonMist,
 
     //Magics
     TemporalFlux,

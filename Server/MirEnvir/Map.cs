@@ -1087,6 +1087,93 @@ namespace Server.MirEnvir
 
                 #endregion
 
+                #region MoonMist
+
+                case Spell.MoonMist:
+                    {
+                        value = (int)data[2];
+                        location = (Point)data[3];
+                        if (ValidPoint(location))
+                        {
+                            cell = GetCell(location);
+                            if (cell is null) return;
+                            if (!cell.Valid || cell.Objects == null) return;
+
+                            bool cast = true;
+                            for (int i = 0; i < cell.Objects.Count; i++)
+                            {
+                                if (cell.Objects[i].Race != ObjectType.Spell || ((SpellObject)cell.Objects[i]).Spell != Spell.MoonMist) continue;
+                                cast = false;
+                                break;
+                            }
+                            if (cast)
+                            {
+                                SpellObject ob = new SpellObject
+                                {
+                                    Spell = Spell.MoonMist,
+                                    Value = value,
+                                    ExpireTime = Envir.Time + 5000,
+                                    TickSpeed = 1000,
+                                    Caster = player,
+                                    CurrentLocation = location,
+                                    CurrentMap = this,
+                                    Show = true
+                                };
+                                AddObject(ob);
+                                ob.Spawned();
+                            }
+                            else
+                                return;
+
+                            for (int y = location.Y - 2; y <= location.Y + 2; y++)
+                            {
+                                if (y < 0) continue;
+                                if (y >= Height) break;
+
+                                for (int x = location.X - 2; x <= location.X + 2; x++)
+                                {
+                                    if (location.X == x &&
+                                        location.Y == y)
+                                        continue;
+                                    if (x < 0) continue;
+                                    if (x >= Width) break;
+
+                                    cell = GetCell(x, y);
+                                    if (cell is null) continue;
+                                    if (!cell.Valid || cell.Objects == null) continue;
+
+                                    cast = true;
+                                    for (int i = 0; i < cell.Objects.Count; i++)
+                                    {
+                                        if (cell.Objects[i].Race != ObjectType.Spell || ((SpellObject)cell.Objects[i]).Spell != Spell.MoonMist) continue;
+                                        cast = false;
+                                        break;
+                                    }
+                                    if (cast)
+                                    {
+                                        SpellObject ob = new SpellObject
+                                        {
+                                            Spell = Spell.MoonMist,
+                                            Value = value,
+                                            ExpireTime = Envir.Time + 5000,
+                                            TickSpeed = 1000,
+                                            Caster = player,
+                                            CurrentLocation = new Point(x, y),
+                                            CurrentMap = this,
+                                            Show = false
+                                        };
+                                        AddObject(ob);
+                                        ob.Spawned();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+
+                #endregion
+
                 #region FireWall
 
                 case Spell.FireWall:

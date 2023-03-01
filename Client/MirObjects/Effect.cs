@@ -36,6 +36,7 @@ namespace Client.MirObjects
 
         public long CurrentDelay;
         public long Delay;
+        public Spell spell = Spell.None;
 
         public event EventHandler Complete;
         public event EventHandler Played;

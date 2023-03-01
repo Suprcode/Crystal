@@ -1711,6 +1711,14 @@ namespace Client.MirObjects
 
                             #endregion
 
+                            #region MoonMist
+                            case Spell.MoonMist:
+                                Effects.Add(new Effect(Libraries.Magic3, 680, 15, Frame.Count * FrameInterval, this) { Repeat = true, RepeatUntil = CMain.Time + 5000, spell = Spell.MoonMist });
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                BlizzardStopTime = CMain.Time + 5000;
+                                break;
+                            #endregion
+
                             #region Haste
 
                             case Spell.Haste:

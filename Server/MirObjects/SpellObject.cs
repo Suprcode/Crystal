@@ -57,7 +57,7 @@ namespace Server.MirObjects
 
             if (Caster != null && Caster.Node == null) Caster = null;
 
-            if (Envir.Time > ExpireTime || ((Spell == Spell.FireWall || Spell == Spell.Portal || Spell == Spell.ExplosiveTrap || Spell == Spell.Reincarnation || Spell == Spell.HealingCircle) && Caster == null) || (Spell == Spell.TrapHexagon && Target != null) || (Spell == Spell.Trap && Target != null))
+            if (Envir.Time > ExpireTime || ((Spell == Spell.FireWall || Spell == Spell.MoonMist || Spell == Spell.Portal || Spell == Spell.ExplosiveTrap || Spell == Spell.Reincarnation || Spell == Spell.HealingCircle) && Caster == null) || (Spell == Spell.TrapHexagon && Target != null) || (Spell == Spell.Trap && Target != null))
             {
                 if (Spell == Spell.TrapHexagon && Target != null || Spell == Spell.Trap && Target != null)
                 {
@@ -135,6 +135,16 @@ namespace Server.MirObjects
 
                         if (!ob.IsAttackTarget(Caster)) return;
                         ob.Attacked(((HumanObject)Caster), Value, DefenceType.MAC, false);
+                    }
+                    break;
+                case Spell.MoonMist:
+                    {
+                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                        if (ob.Dead) return;
+                        if (!ob.IsAttackTarget(Caster)) return;
+
+                        if (ob.Race == ObjectType.Player)
+                            ob.Attacked(((PlayerObject)Caster), Value, DefenceType.ACAgility, false);
                     }
                     break;
                 case Spell.Healing: //SafeZone

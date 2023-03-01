@@ -330,6 +330,12 @@ namespace Client.MirScenes.Dialogs
                     overridestats = true;
                     text += string.Format("Increases MC by: {0}-{1}.\nIncreases consumption by {2}%.\n", buff.Stats[Stat.MinMC], buff.Stats[Stat.MaxMC], buff.Stats[Stat.ManaPenaltyPercent]);
                     break;
+                case BuffType.MoonMist:
+                    text = "MoonMist\n" +
+                        "Invisible to Monsters and Players.\n" +
+                        "Invulnerable for 5 seconds but can`t move\n" +
+                        "Regenerate HP every seconds.";
+                    break;
                 case BuffType.Transform:
                     text += "Disguises your appearance.\n";
                     break;
@@ -454,6 +460,9 @@ namespace Client.MirScenes.Dialogs
                     return 45;
                 case BuffType.EnergyShield:
                     return 57;
+                case BuffType.MoonMist:
+                    return 58;
+
 
                 case BuffType.SwiftFeet:
                     return 67;
