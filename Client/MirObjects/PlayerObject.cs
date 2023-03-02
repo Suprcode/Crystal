@@ -1766,6 +1766,15 @@ namespace Client.MirObjects
 
                             #endregion
 
+                            #region MoonMist
+
+                            case Spell.MoonMist:
+                                MapControl.Effects.Add(new Effect(Libraries.Magic3, 680, 25, 1800, CurrentLocation));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+
                             #region TrapHexagon
 
                             case Spell.TrapHexagon:
@@ -3145,6 +3154,24 @@ namespace Client.MirObjects
                                             MapControl.Effects.Add(new Effect(Libraries.Magic2, 140, 10, 600, TargetPoint));
                                         else
                                             ob.Effects.Add(new Effect(Libraries.Magic2, 140, 10, 600, ob));
+                                        break;
+
+                                    #endregion
+
+                                    #region CatTongue
+                                    case Spell.CatTongue:
+                                        SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                        missile = CreateProjectile(260, Libraries.Magic3, true, 6, 30, 4);
+
+                                        if (missile.Target != null)
+                                        {
+                                            missile.Complete += (o, e) =>
+                                            {
+                                                if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                missile.Target.Effects.Add(new Effect(Libraries.Magic3, 420, 8, 800, missile.Target));
+                                                SoundManager.PlaySound(20000 + (ushort)Spell.CatTongue * 10 + 1);
+                                            };
+                                        }
                                         break;
 
                                     #endregion
