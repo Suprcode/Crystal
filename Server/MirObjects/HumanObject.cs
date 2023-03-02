@@ -3616,7 +3616,9 @@ namespace Server.MirObjects
                 case Spell.OneWithNature:
                     OneWithNature(target, magic);
                     break;
-
+                case Spell.MoonMist:
+                    MoonMist(magic);
+                    break;
                 case Spell.HealingCircle:
                     HealingCircle(magic, target == null ? location : target.CurrentLocation);
                     break;
@@ -4325,7 +4327,22 @@ namespace Server.MirObjects
             CurrentMap.ActionList.Add(action);
             cast = true;
         }
+        private void MoonMist(UserMagic magic)
+        {
+            for (int i = 0; i < Buffs.Count; i++)
+                if (Buffs[i].Type == BuffType.MoonLight) return;
 
+            var time = GetAttackPower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
+
+            AddBuff(BuffType.MoonLight, this, (time + (magic.Level + 1) * 5) * 500, new Stats());
+
+            CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MoonMist }, CurrentLocation);
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]));
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, CurrentLocation, Direction);
+            CurrentMap.ActionList.Add(action);
+            LevelMagic(magic);
+
+        }
         private bool CatTongue(MapObject target, UserMagic magic)
         {
             if (target == null || !target.IsAttackTarget(this) || !CanFly(target.CurrentLocation)) return false;

@@ -1766,6 +1766,15 @@ namespace Client.MirObjects
 
                             #endregion
 
+                            #region MoonMist
+
+                            case Spell.MoonMist:
+                                MapControl.Effects.Add(new Effect(Libraries.Magic3, 680, 25, 1800, CurrentLocation));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+
                             #region TrapHexagon
 
                             case Spell.TrapHexagon:
