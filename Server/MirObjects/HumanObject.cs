@@ -3558,6 +3558,9 @@ namespace Server.MirObjects
                 case Spell.Trap:
                     Trap(magic, target, out cast);
                     break;
+                case Spell.CatTongue:
+                    CatTongue(target, magic);
+                    break;
                 case Spell.PoisonSword:
                     PoisonSword(magic);
                     break;
@@ -4321,6 +4324,21 @@ namespace Server.MirObjects
 
             CurrentMap.ActionList.Add(action);
             cast = true;
+        }
+
+        private bool CatTongue(MapObject target, UserMagic magic)
+        {
+            if (target == null || !target.IsAttackTarget(this) || !CanFly(target.CurrentLocation)) return false;
+
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]));
+
+            int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500;
+
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target);
+
+            ActionList.Add(action);
+
+            return true;
         }
         private void TrapHexagon(UserMagic magic, Point location, out bool cast)
         {
@@ -6081,6 +6099,33 @@ namespace Server.MirObjects
 
                 #endregion
 
+                #region CatTongue 
+                case Spell.CatTongue:
+                    value = (int)data[1];
+                    target = (MapObject)data[2];
+
+                    if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+                    if (target.Attacked(this, value, DefenceType.AC, false) > 0)
+                    {
+                        int rnd = Envir.Random.Next(10);
+                        if (rnd >= 8)
+                        {
+                            if (target.Race == ObjectType.Player && Settings.PvpCanFreeze)
+                                target.ApplyPoison(new Poison { PType = PoisonType.Frozen, Duration = (magic.Level + 1) * 3, TickSpeed = 1000 }, this);
+                            else
+                                rnd -= 4;
+                        }
+
+                        if (rnd <= 4)
+                            target.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = (magic.Level + 1) * 3, TickSpeed = 1000 }, this);
+                        else if (rnd <= 7)
+                            target.ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = (magic.Level + 1) * 3, TickSpeed = 1000 }, this);
+
+                        LevelMagic(magic);
+                    }
+                    break;
+                #endregion
+
                 #region ElementalBarrier, ElementalShot
 
                 case Spell.ElementalBarrier:
@@ -6394,6 +6439,8 @@ namespace Server.MirObjects
                     CurrentMap.ActionList.Add(action);
                     break;
                     #endregion
+
+
 
             }
         }

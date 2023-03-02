@@ -3149,6 +3149,24 @@ namespace Client.MirObjects
 
                                     #endregion
 
+                                    #region CatTongue
+                                    case Spell.CatTongue:
+                                        SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                        missile = CreateProjectile(260, Libraries.Magic3, true, 6, 30, 4);
+
+                                        if (missile.Target != null)
+                                        {
+                                            missile.Complete += (o, e) =>
+                                            {
+                                                if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                missile.Target.Effects.Add(new Effect(Libraries.Magic3, 420, 8, 800, missile.Target));
+                                                SoundManager.PlaySound(20000 + (ushort)Spell.CatTongue * 10 + 1);
+                                            };
+                                        }
+                                        break;
+
+                                    #endregion
+
                                     #region FrostCrunch
 
                                     case Spell.FrostCrunch:
