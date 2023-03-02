@@ -1296,8 +1296,6 @@ public enum BuffType : byte
 {
     None = 0,
 
-    MoonMist,
-
     //Magics
     TemporalFlux,
     Hiding,
@@ -1324,6 +1322,7 @@ public enum BuffType : byte
     ImmortalSkin,
     MagicShield,
     ElementalBarrier,
+    MoonMist,
 
     //Monster
     HornedArcherBuff = 50,
