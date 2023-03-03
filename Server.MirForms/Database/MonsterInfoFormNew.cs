@@ -433,7 +433,8 @@ namespace Server.Database
 
                             try
                             {
-                                monsterInfoGridView.BeginEdit(true);
+                                if (dataRow != null)
+                                    monsterInfoGridView.BeginEdit(true);
 
                                 if (dataRow == null)
                                 {
