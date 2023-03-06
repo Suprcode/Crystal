@@ -932,7 +932,19 @@ namespace Server.MirEnvir
 
                     monster.Master.Pets.Add(monster);
                     break;
+                case Spell.Stonetrap:
+                    monster = (MonsterObject)data[2];
+                    front = (Point)data[3];
 
+                    if (monster.Master.Dead) return;
+
+                    if (ValidPoint(front))
+                        monster.Spawn(this, front);
+                    else
+                        monster.Spawn(player.CurrentMap, player.CurrentLocation);
+
+                    monster.Master.Pets.Add(monster);
+                    break;
                 #endregion
 
                 #region FireBang, IceStorm

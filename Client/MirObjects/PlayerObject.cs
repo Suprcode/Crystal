@@ -1207,6 +1207,7 @@ namespace Client.MirObjects
                             case Spell.SummonVampire:
                             case Spell.SummonToad:
                             case Spell.SummonSnakes:
+                            case Spell.Stonetrap:
                                 Frames.TryGetValue(MirAction.AttackRange2, out Frame);
                                 CurrentAction = MirAction.AttackRange2;
                                 if (this == User)
@@ -2689,6 +2690,23 @@ namespace Client.MirObjects
                                                     SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 7);//sound M130-7
                                                 };
                                             }
+                                            break;
+                                    }
+                                    break;
+                                case Spell.Stonetrap:
+                                    switch (FrameIndex)
+                                    {
+                                        case 7:
+                                            SoundManager.PlaySound(20000 + 121 * 10);
+                                            missile = CreateProjectile(2750, Libraries.Magic3, true, 5, 20, 5);
+                                            StanceTime = CMain.Time + StanceDelay;
+                                            missile.Explode = true;
+
+                                            missile.Complete += (o, e) =>
+                                            {
+                                                SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 7);//sound M130-7
+                                            };
+
                                             break;
                                     }
                                     break;
