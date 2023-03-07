@@ -173,6 +173,7 @@ namespace Server
                              ScrollMob2 = "TaoistScroll",
                              ScrollMob3 = "WizardScroll",
                              ScrollMob4 = "AssassinScroll",
+                             StoneName = "StoneTrap",
                              HeroName = "Hero";
 
         public static string HealRing = "Healing",
@@ -425,6 +426,7 @@ namespace Server
             ToadName = Reader.ReadString("Game", "ToadName", ToadName);
             SnakeTotemName = Reader.ReadString("Game", "SnakeTotemName", SnakeTotemName);
             SnakesName = Reader.ReadString("Game", "SnakesName", SnakesName);
+            StoneName = Reader.ReadString("Game", "StoneName", StoneName);
             AncientBatName = Reader.ReadString("Game", "AncientBatName", AncientBatName);
             TucsonGeneralEgg = Reader.ReadString("Game", "TucsonGeneralEgg", TucsonGeneralEgg);
             GroupInviteDelay = Reader.ReadInt64("Game", "GroupInviteDelay", GroupInviteDelay);
@@ -680,6 +682,7 @@ namespace Server
             Reader.Write("Game", "ToadName", ToadName);
             Reader.Write("Game", "SnakeTotemName", SnakeTotemName);
             Reader.Write("Game", "SnakesName", SnakesName);
+            Reader.Write("Game", "StoneName", StoneName);
             Reader.Write("Game", "AncientBatName", AncientBatName);
             Reader.Write("Game", "TucsonGeneralEgg", TucsonGeneralEgg);
             Reader.Write("Game", "GroupInviteDelay", GroupInviteDelay);

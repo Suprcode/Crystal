@@ -486,7 +486,8 @@ namespace Server.MirObjects
                 case 223:
                     return new SepHighArcher(info); //TODO
 
-
+                case 255://Skill 
+                    return new StoneTrap(info);
                 default:
                     return new MonsterObject(info);
             }
