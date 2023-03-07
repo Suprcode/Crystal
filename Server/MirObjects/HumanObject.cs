@@ -3605,6 +3605,9 @@ namespace Server.MirObjects
                 case Spell.SummonSnakes:
                     ArcherSummon(magic, target, location);
                     break;
+                case Spell.Stonetrap:
+                    ArcherSummonStone(magic, target == null ? location : target.CurrentLocation, out cast);
+                    break;
                 case Spell.VampireShot:
                 case Spell.PoisonShot:
                 case Spell.CrippleShot:
@@ -5501,6 +5504,20 @@ namespace Server.MirObjects
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, value, location, target);
             ActionList.Add(action);
         }
+        public void ArcherSummonStone(UserMagic magic, Point location, out bool cast)
+        {
+            cast = false;
+            if (!CurrentMap.ValidPoint(location)) return;
+            if (!CanFly(location)) return;
+            //if ((Info.MentalState != 1) && !CanFly(location)) return;//
+            uint duration = (uint)((magic.Level * 5 + 10) * 1000);
+            int value = (int)duration;
+            int delay = Functions.MaxDistance(CurrentLocation, location) * 50 + 500; //50 MS per Step          
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, value, location);
+            ActionList.Add(action);
+            cast = true;
+        
+        }
 
         public void OneWithNature(MapObject target, UserMagic magic)
         {
@@ -6455,6 +6472,30 @@ namespace Server.MirObjects
                     DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, monster, location);
                     CurrentMap.ActionList.Add(action);
                     break;
+                case Spell.Stonetrap:
+                    {
+                        value = (int)data[1];
+                        location = (Point)data[2];
+
+
+                        if (Pets.Where(x => x.Race == ObjectType.Monster).Count() >= magic.Level + 1) return;
+
+                        MonsterInfo mInfo = Envir.GetMonsterInfo(Settings.StoneName);
+                        if (mInfo == null) return;
+
+                        LevelMagic(magic);
+
+                        monster = MonsterObject.GetMonster(mInfo);
+
+                        monster.Master = this;
+                        monster.MaxPetLevel = (byte)(1 + magic.Level * 2);
+                        monster.Direction = Direction;
+                        monster.ActionTime = Envir.Time + 1000;
+
+                        DelayedAction act = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, monster, location);
+                        CurrentMap.ActionList.Add(act);
+                        break;
+                    }
                     #endregion
 
 

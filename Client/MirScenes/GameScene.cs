@@ -11783,7 +11783,19 @@ namespace Client.MirScenes
                     if (target == null) target = MapObject.MagicObject;
 
                     if (target != null && target.Race == ObjectType.Monster) MapObject.MagicObjectID = target.ObjectID;
-
+                    break;
+                case Spell.Stonetrap:
+                    if (!User.HasClassWeapon)
+                    {
+                        GameScene.Scene.OutputMessage("You must be wearing a bow to perform this skill.");
+                        User.ClearMagic();
+                        return;
+                    }
+                    if (User.NextMagicObject != null)
+                    {
+                        if (!User.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && User.NextMagicObject.Race != ObjectType.Merchant)
+                            target = User.NextMagicObject;
+                    }
                     //if(magic.Spell == Spell.ElementalShot)
                     //{
                     //    isTargetSpell = User.HasElements;
