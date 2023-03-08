@@ -1,9 +1,6 @@
 ﻿using Client.MirGraphics;
 using Client.MirScenes;
 using Client.MirSounds;
-using System;
-using System.Drawing;
-using System.Linq;
 using S = ServerPackets;
 
 namespace Client.MirObjects

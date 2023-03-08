@@ -1,8 +1,6 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirObjects;
-using System;
-using System.Windows.Forms;
 
 namespace Server.MirForms.Systems
 {

@@ -1,14 +1,9 @@
-﻿using System;
-using System.Drawing;
-using System.IO;
-using System.Threading;
-using SlimDX;
+﻿using SlimDX;
 using SlimDX.Direct3D9;
 using System.IO.Compression;
 using Frame = Client.MirObjects.Frame;
 using Client.MirObjects;
 using System.Text.RegularExpressions;
-using System.Linq;
 
 namespace Client.MirGraphics
 {

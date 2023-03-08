@@ -2,13 +2,6 @@
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using C = ClientPackets;
 
 namespace Client.MirScenes.Dialogs
@@ -224,7 +217,7 @@ namespace Client.MirScenes.Dialogs
             else
                 LoverOnlineLabel.Text = "Location:  Offline";
 
-            if ((LoverName == "") && (Date != null))
+            if ((LoverName == "") && (Date != default))
             {
                 if (Date < new DateTime(2000))
                 {

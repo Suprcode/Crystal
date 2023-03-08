@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using Server.MirEnvir;
-using System.IO;
+﻿using Server.MirEnvir;
 
 namespace Server.MirForms.DropBuilder
 {

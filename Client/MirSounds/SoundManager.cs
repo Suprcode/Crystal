@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using SlimDX.DirectSound;
+﻿using SlimDX.DirectSound;
 
 namespace Client.MirSounds
 {

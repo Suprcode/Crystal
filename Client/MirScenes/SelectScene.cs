@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using Client.MirControls;
+﻿using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirScenes.Dialogs;
 using Client.MirSounds;
 using C = ClientPackets;
 using S = ServerPackets;
-using System.Threading;
 namespace Client.MirScenes
 {
     public class SelectScene : MirScene

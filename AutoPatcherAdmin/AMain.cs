@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Compression;
-using System.Net;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.IO.Compression;
 using WinSCP;
-using System.Linq;
 
 namespace AutoPatcherAdmin
 {
@@ -75,7 +67,7 @@ namespace AutoPatcherAdmin
 
             var rootPath = (new Uri(Settings.Host)).AbsolutePath;
 
-            using Session session = new Session();
+            using Session session = new();
             OpenSession(session);
 
             for (int i = 0; i < OldList.Count; i++)
@@ -227,16 +219,16 @@ namespace AutoPatcherAdmin
             return true;
         }
 
-        private FileInformation GetFileInformation(string fileName)
+        private FileInformation? GetFileInformation(string fileName)
         {
             if (!File.Exists(fileName))
             {
                 return null;
             }
 
-            FileInfo info = new FileInfo(fileName);
+            FileInfo info = new(fileName);
 
-            FileInformation file =  new FileInformation
+            FileInformation file =  new()
             {
                 FileName = fileName.Remove(0, Settings.Client.Length).TrimStart('\\'),
                 Length = (int)info.Length,

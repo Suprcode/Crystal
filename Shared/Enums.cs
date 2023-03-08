@@ -1,6 +1,4 @@
-﻿using System;
-
-public enum MouseCursor : byte
+﻿public enum MouseCursor : byte
 {
     None,
     Default,

@@ -1,6 +1,4 @@
-﻿using System;
-using Server.MirDatabase;
-using Server.MirEnvir;
+﻿using Server.MirDatabase;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters

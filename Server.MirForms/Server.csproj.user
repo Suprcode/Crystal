@@ -1,14 +1,91 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <PublishUrlHistory>publish\</PublishUrlHistory>
-    <InstallUrlHistory />
-    <SupportUrlHistory />
-    <UpdateUrlHistory />
-    <BootstrapperUrlHistory />
-    <ErrorReportUrlHistory />
-    <FallbackCulture>en-US</FallbackCulture>
-    <VerifyUploadedFiles>false</VerifyUploadedFiles>
-    <ProjectView>ProjectFiles</ProjectView>
-  </PropertyGroup>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Compile Update="Account\AccountInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Account\ChangePasswordDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Account\PlayerInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="BalanceConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="ConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Database\GameShop.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Database\ItemInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Database\ItemInfoFormNew.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Database\MagicInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Database\MapInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Database\MonsterInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Database\MonsterInfoFormNew.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Database\NPCInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Database\QuestInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="SMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Systems\ConquestInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Systems\DragonInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Systems\GuildInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Systems\MiningInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Systems\MonsterTunerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Systems\SystemInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="VisualMapInfo\Control\Forms\MiningDetailForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="VisualMapInfo\Control\Forms\RespawnsDetailForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="VisualMapInfo\Control\MapContainer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="VisualMapInfo\Control\MineEntry.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="VisualMapInfo\Control\RespawnEntry.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="VisualMapInfo\VForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Account\AccountInfoForm.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

@@ -1,5 +1,4 @@
-﻿using System;
-using log4net;
+﻿using log4net;
 using System.Runtime.CompilerServices;
 using Server.MirDatabase;
 

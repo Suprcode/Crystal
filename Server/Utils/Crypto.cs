@@ -10,15 +10,16 @@ namespace Server.Utils
         public const int Iterations = 50;
         public static byte[] GenerateSalt()
         {
-            RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
+            var rng = RandomNumberGenerator.Create();
             byte[] salt = new byte[SaltSize];
-            provider.GetBytes(salt);
+            rng.GetBytes(salt);
+
             return salt;
         }
 
         public static string HashPassword(string password, byte[] salt)
         {
-            Rfc2898DeriveBytes pbkdf2 = new Rfc2898DeriveBytes(password, salt, Iterations);
+            Rfc2898DeriveBytes pbkdf2 = new Rfc2898DeriveBytes(password, salt, Iterations, HashAlgorithmName.SHA1);
             return Encoding.UTF8.GetString(pbkdf2.GetBytes(HashSize));
         }
     }

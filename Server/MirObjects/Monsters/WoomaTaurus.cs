@@ -1,9 +1,8 @@
-﻿using System.Drawing;
-using Server.MirDatabase;
+﻿using Server.MirDatabase;
 using Server.MirEnvir;
 
 namespace Server.MirObjects.Monsters
-{    
+{
     public class WoomaTaurus : FlamingWooma
     {
         private long _teleTime, _madTime;
