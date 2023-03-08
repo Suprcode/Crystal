@@ -1207,6 +1207,7 @@ namespace Client.MirObjects
                             case Spell.SummonVampire:
                             case Spell.SummonToad:
                             case Spell.SummonSnakes:
+                            case Spell.Stonetrap:
                                 Frames.TryGetValue(MirAction.AttackRange2, out Frame);
                                 CurrentAction = MirAction.AttackRange2;
                                 if (this == User)
@@ -1761,6 +1762,15 @@ namespace Client.MirObjects
 
                             case Spell.HealingCircle:
                                 Effects.Add(new Effect(Libraries.Magic3, 620, 10, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+
+                            #region MoonMist
+
+                            case Spell.MoonMist:
+                                MapControl.Effects.Add(new Effect(Libraries.Magic3, 680, 25, 1800, CurrentLocation));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                 break;
 
@@ -2683,6 +2693,23 @@ namespace Client.MirObjects
                                             break;
                                     }
                                     break;
+                                case Spell.Stonetrap:
+                                    switch (FrameIndex)
+                                    {
+                                        case 7:
+                                            SoundManager.PlaySound(20000 + 121 * 10);
+                                            missile = CreateProjectile(2750, Libraries.Magic3, true, 5, 20, 5);
+                                            StanceTime = CMain.Time + StanceDelay;
+                                            missile.Explode = true;
+
+                                            missile.Complete += (o, e) =>
+                                            {
+                                                SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 7);//sound M130-7
+                                            };
+
+                                            break;
+                                    }
+                                    break;
                                 case Spell.DelayedExplosion:
                                     switch (FrameIndex)
                                     {
@@ -3145,6 +3172,24 @@ namespace Client.MirObjects
                                             MapControl.Effects.Add(new Effect(Libraries.Magic2, 140, 10, 600, TargetPoint));
                                         else
                                             ob.Effects.Add(new Effect(Libraries.Magic2, 140, 10, 600, ob));
+                                        break;
+
+                                    #endregion
+
+                                    #region CatTongue
+                                    case Spell.CatTongue:
+                                        SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                        missile = CreateProjectile(260, Libraries.Magic3, true, 6, 30, 4);
+
+                                        if (missile.Target != null)
+                                        {
+                                            missile.Complete += (o, e) =>
+                                            {
+                                                if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                missile.Target.Effects.Add(new Effect(Libraries.Magic3, 420, 8, 800, missile.Target));
+                                                SoundManager.PlaySound(20000 + (ushort)Spell.CatTongue * 10 + 1);
+                                            };
+                                        }
                                         break;
 
                                     #endregion

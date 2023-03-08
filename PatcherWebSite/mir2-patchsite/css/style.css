@@ -1,0 +1,134 @@
+﻿html {
+    width: 786px;
+    height: 411px;
+    overflow: hidden;
+    /* background-color: #151D26;*/
+    background-color: black;
+    color: white;
+    /*   border: 2px solid white;*/
+}
+
+body {
+    background: url(../img/bg_launcher_3.png);
+    width: 100%;
+    height: 100%;
+}
+
+.main {
+    height: 411px;
+    width: 584px;
+    background-color: #282828;
+    float:left;
+}
+
+#banner {
+    position: absolute;
+    left: 220px;
+    top: 15px;
+    width: 550px;
+    height: 160px;
+    border: 1px solid black;
+    background-color: white;
+    box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+#updates {
+    position: absolute;
+    left: 220px;
+    top: 200px;
+    width: 320px;
+    height: 180px;
+    color: black;
+}
+
+#updates h2 {
+    color: black;
+    font-family: Tahoma;
+    font-weight: bold;
+    font-size: 18px;
+    border-bottom: 2px solid black;
+    width: 100%;
+    padding: 5px 5px 10px 5px;
+}
+
+    #updates ul {
+        list-style-type: none;
+        color: black;
+        font-family: Tahoma;
+        font-size: 14px;
+        width: 330px;
+    }
+
+        #updates ul li {
+            padding: 3px 0;
+            white-space: nowrap;
+        }
+
+            #updates ul li a {
+                text-decoration: none;
+                color: black;
+                width: 250px;
+                display: inline-block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+                #updates ul li a:hover {
+                    text-decoration: underline;
+                }
+
+                #updates ul li span {
+                    float: right;
+                }
+
+#buttons {
+    position: absolute;
+    left: 612px;
+    top: 230px;
+    width: 157px;
+    height: 140px;
+    color: black;
+    background-color: white;
+    border: 1px solid black;
+}
+
+#buttons ul {
+    height: 100%;
+}
+
+#buttons ul li {
+    height: 37px;
+    width: 147px;
+    border-bottom: 1px solid black;
+    padding: 5px;
+}
+
+    #buttons ul li:first-child + li + li {
+        border-bottom: none;
+    }
+
+
+/*
+.col {
+    width: 200px;
+    height: 411px;
+    border-left: 1px solid #000000;
+    border-right: 1px solid #000000;
+    float: left;
+}
+
+    .col ul {
+        background-color: #1e1e1e
+    }
+
+    .col ul li {
+        width: 100%;
+        height: 67.5px;
+        border-top: 1px solid #262626;
+        border-bottom: 1px solid black;
+    }
+
+        .col ul li:hover {
+            background-color: #151515;
+            cursor: pointer;
+        }*/

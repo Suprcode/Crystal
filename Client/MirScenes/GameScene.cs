@@ -4833,6 +4833,9 @@ namespace Client.MirScenes
                     case SpellEffect.DeathCrawlerBreath:
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DeathCrawler], 272 + ((int)ob.Direction * 4), 4, 400, ob) { Blend = true });
                         break;
+                    case SpellEffect.MoonMist:
+                        ob.Effects.Add(new Effect(Libraries.Magic3, 705, 10, 800, ob));
+                        break;
                 }
 
                 return;
@@ -11780,7 +11783,19 @@ namespace Client.MirScenes
                     if (target == null) target = MapObject.MagicObject;
 
                     if (target != null && target.Race == ObjectType.Monster) MapObject.MagicObjectID = target.ObjectID;
-
+                    break;
+                case Spell.Stonetrap:
+                    if (!User.HasClassWeapon)
+                    {
+                        GameScene.Scene.OutputMessage("You must be wearing a bow to perform this skill.");
+                        User.ClearMagic();
+                        return;
+                    }
+                    if (User.NextMagicObject != null)
+                    {
+                        if (!User.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && User.NextMagicObject.Race != ObjectType.Merchant)
+                            target = User.NextMagicObject;
+                    }
                     //if(magic.Spell == Spell.ElementalShot)
                     //{
                     //    isTargetSpell = User.HasElements;
@@ -11814,6 +11829,7 @@ namespace Client.MirScenes
                 case Spell.FireWall:
                 case Spell.TrapHexagon:
                 case Spell.HealingCircle:
+                case Spell.CatTongue:
                     if (actor.NextMagicObject != null)
                     {
                         if (!actor.NextMagicObject.Dead && actor.NextMagicObject.Race != ObjectType.Item && actor.NextMagicObject.Race != ObjectType.Merchant)

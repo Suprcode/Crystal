@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta charset="utf-8" />
+    <title>Crystal Mir2 Patcher</title>
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script type="text/javascript" src="js/moment.js"></script>
+</head>
+
+<body>
+    <div id="banner">
+        <div class="inner"></div>
+    </div>
+    <div id="updates">
+        <h2>Recent Commits</h2>
+        <ul>
+        </ul>
+    </div>
+
+    <div id="buttons">
+        <ul>
+            <li>LOMCN</li>
+            <li>WIKI</li>
+            <li>...</li>
+        </ul>
+    </div>
+
+    <script type="text/javascript">
+
+        var content = document.getElementById('updates');
+
+        var ul = content.getElementsByTagName('ul')[0];
+
+        function parseDateCustom(date) {
+            return moment(date, 'YYYY-MM-DD hh:mm a');
+        }
+
+        function showFeed(data) {
+            var itemsContainer = document.createElement('DIV');
+
+            if (data.status == 'ok') {
+
+                var max = 6;
+
+                for (var i = 0, t = data.items.length; i < t; ++i) {
+
+                    if (i >= max) break;
+
+                    var item = data.items[i];
+
+                    var itemListElement = document.createElement('li');
+                    var itemLinkElement = document.createElement('a');
+                    var itemSpanElement = document.createElement('span');
+
+                    itemLinkElement.setAttribute('href', item.link);
+                    itemLinkElement.innerText = item.title;
+                    itemLinkElement.target = '_blank';
+
+                    var mo = moment(item.pubDate).format('MMM');
+                    var da = moment(item.pubDate).format('Do');
+
+                    itemSpanElement.textContent = da + '/' + mo;
+
+                    itemListElement.appendChild(itemLinkElement);
+                    itemListElement.appendChild(itemSpanElement);
+
+                    ul.appendChild(itemListElement);
+                }
+
+            }
+
+        }
+    </script>
+
+    <!--<script type="text/javascript">
+
+        var content = document.getElementById('updates');
+
+        var ul = content.getElementsByTagName('ul')[0];
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var data = JSON.parse(xhr.responseText);
+                var itemsContainer = document.createElement('DIV');
+
+                if (data.status == 'ok') {
+
+                    var max = 6;
+
+                    for (var i = 0, t = data.items.length; i < t; ++i) {
+
+                        if (i >= max) break;
+
+                        var item = data.items[i];
+
+                        var itemListElement = document.createElement('li');
+                        var itemLinkElement = document.createElement('a');
+                        var itemSpanElement = document.createElement('span');
+
+                        itemLinkElement.setAttribute('href', item.link);
+                        itemLinkElement.innerText = item.title;
+                        itemLinkElement.target = '_blank';
+
+                        var date = new Date(item.pubDate);
+
+                        let mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(date);
+                        let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(date);
+
+                        itemSpanElement.textContent = da + '/' + mo;
+
+                        itemListElement.appendChild(itemLinkElement);
+                        itemListElement.appendChild(itemSpanElement);
+
+                        ul.appendChild(itemListElement);
+                    }
+                }
+            }
+        };
+        xhr.open(
+            'GET',
+            'https://api.rss2json.com/v1/api.json?callback=showFeed&rss_url=https://github.com/suprcode/mir2/commits/master.atom',
+            true
+        );
+        xhr.send();
+
+    </script>-->
+
+    <script type="text/javascript"
+            src="https://api.rss2json.com/v1/api.json?callback=showFeed&rss_url=https://github.com/suprcode/mir2/commits/master.atom"></script>
+</body>
+</html>
