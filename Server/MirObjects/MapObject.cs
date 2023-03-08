@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using Server.MirDatabase;
+﻿using Server.MirDatabase;
 using Server.MirEnvir;
-using Server.MirNetwork;
 using Server.MirObjects.Monsters;
 using S = ServerPackets;
-using System.IO;
-using System.Linq;
 
 namespace Server.MirObjects
 {

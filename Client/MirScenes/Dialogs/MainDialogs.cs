@@ -1,26 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
+﻿using System.Text.RegularExpressions;
 using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
-using Client.MirScenes;
 using Client.MirSounds;
 using SlimDX;
-using SlimDX.Direct3D9;
 using Font = System.Drawing.Font;
-using S = ServerPackets;
 using C = ClientPackets;
-using Effect = Client.MirObjects.Effect;
-
-using Client.MirScenes.Dialogs;
-using System.Drawing.Imaging;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -849,7 +835,6 @@ namespace Client.MirScenes.Dialogs
 
             int chatWidth = Settings.Resolution != 800 ? 614 : 390;
             int index = 0;
-            int matchCount = 0;
 
             for (int i = 1; i < text.Length; i++)
             {
@@ -3411,6 +3396,7 @@ namespace Client.MirScenes.Dialogs
                 Prefixes[(Magic.Key - 1) / 8],
                 Magic.Key > 8 ? Environment.NewLine : string.Empty,
                 (Magic.Key - 1) % 8 + 1);
+
             switch (magic.Spell)
             {  //Warrior
                 case Spell.Fencing:
@@ -3674,6 +3660,7 @@ namespace Client.MirScenes.Dialogs
 
                     break;
             }
+            
 
             SkillButton.Index = Magic.Icon * 2;
             SkillButton.PressedIndex = Magic.Icon * 2 + 1;

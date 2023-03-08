@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using Server.MirEnvir;
+﻿using Server.MirEnvir;
 
 namespace Server.MirDatabase
 {

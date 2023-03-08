@@ -1,24 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using Client.MirControls;
+﻿using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirSounds;
-using SlimDX.Direct3D9;
 using Font = System.Drawing.Font;
-using S = ServerPackets;
 using C = ClientPackets;
-using Effect = Client.MirObjects.Effect;
-
-using Client.MirScenes.Dialogs;
-using System.Drawing.Imaging;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -1369,7 +1355,7 @@ namespace Client.MirScenes.Dialogs
 
         void NoticePositionBar_OnMoving(object sender, MouseEventArgs e)
         {
-            int x = 337;
+            //int x = 337;
             int y = NoticePositionBar.Location.Y;
             int TempIndex = 0;
             bool forward;

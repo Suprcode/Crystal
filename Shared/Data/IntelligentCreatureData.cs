@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-public class IntelligentCreatureRules
+﻿public class IntelligentCreatureRules
 {
     public int MinimalFullness = 1;
 

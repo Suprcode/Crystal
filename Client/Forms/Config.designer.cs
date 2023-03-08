@@ -126,7 +126,7 @@
             // 
             // Res3_pb
             // 
-            this.Res3_pb.Image = global::Client.Properties.Resources.Radio_Unactive;
+            //this.Res3_pb.Image = Client.Resources.Images.Radio_Unactive;
             this.Res3_pb.Location = new System.Drawing.Point(142, 87);
             this.Res3_pb.Name = "Res3_pb";
             this.Res3_pb.Size = new System.Drawing.Size(12, 12);
@@ -136,7 +136,7 @@
             // 
             // Res2_pb
             // 
-            this.Res2_pb.Image = global::Client.Properties.Resources.Radio_Unactive;
+            //this.Res2_pb.Image = Client.Resources.Images.Radio_Unactive;
             this.Res2_pb.Location = new System.Drawing.Point(142, 51);
             this.Res2_pb.Name = "Res2_pb";
             this.Res2_pb.Size = new System.Drawing.Size(12, 12);
@@ -184,7 +184,7 @@
             // AutoStart_pb
             // 
             this.AutoStart_pb.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.AutoStart_pb.Image = global::Client.Properties.Resources.Config_Check_Off1;
+            //this.AutoStart_pb.Image = Client.Resources.Images.Config_Check_Off1;
             this.AutoStart_pb.Location = new System.Drawing.Point(15, 148);
             this.AutoStart_pb.Name = "AutoStart_pb";
             this.AutoStart_pb.Size = new System.Drawing.Size(12, 12);
@@ -221,7 +221,7 @@
             // Fullscreen_pb
             // 
             this.Fullscreen_pb.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.Fullscreen_pb.Image = global::Client.Properties.Resources.Config_Check_Off1;
+            //this.Fullscreen_pb.Image = Client.Resources.Images.Config_Check_Off1;
             this.Fullscreen_pb.Location = new System.Drawing.Point(15, 51);
             this.Fullscreen_pb.Name = "Fullscreen_pb";
             this.Fullscreen_pb.Size = new System.Drawing.Size(12, 12);
@@ -245,7 +245,7 @@
             // OnTop_pb
             // 
             this.OnTop_pb.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.OnTop_pb.Image = global::Client.Properties.Resources.Config_Check_Off1;
+            this.OnTop_pb.Image = Client.Resources.Images.Config_Check_Off1;
             this.OnTop_pb.Location = new System.Drawing.Point(15, 98);
             this.OnTop_pb.Name = "OnTop_pb";
             this.OnTop_pb.Size = new System.Drawing.Size(12, 12);
@@ -269,7 +269,7 @@
             // FPScap_pb
             // 
             this.FPScap_pb.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.FPScap_pb.Image = global::Client.Properties.Resources.Config_Check_Off1;
+            this.FPScap_pb.Image = Client.Resources.Images.Config_Check_Off1;
             this.FPScap_pb.Location = new System.Drawing.Point(15, 74);
             this.FPScap_pb.Name = "FPScap_pb";
             this.FPScap_pb.Size = new System.Drawing.Size(12, 12);
@@ -280,7 +280,7 @@
             // CleanFiles_pb
             // 
             this.CleanFiles_pb.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.CleanFiles_pb.Image = global::Client.Properties.Resources.CheckF_Base2;
+            this.CleanFiles_pb.Image = Client.Resources.Images.CheckF_Base2;
             this.CleanFiles_pb.Location = new System.Drawing.Point(9, 278);
             this.CleanFiles_pb.Name = "CleanFiles_pb";
             this.CleanFiles_pb.Size = new System.Drawing.Size(67, 23);
@@ -295,7 +295,7 @@
             // pictureBox6
             // 
             this.pictureBox6.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox6.Image = global::Client.Properties.Resources.textboxes;
+            this.pictureBox6.Image = Client.Resources.Images.textboxes;
             this.pictureBox6.Location = new System.Drawing.Point(15, 183);
             this.pictureBox6.Name = "pictureBox6";
             this.pictureBox6.Size = new System.Drawing.Size(139, 57);
@@ -364,7 +364,7 @@
             // 
             // Res4_pb
             // 
-            this.Res4_pb.Image = global::Client.Properties.Resources.Radio_Unactive;
+            this.Res4_pb.Image = Client.Resources.Images.Radio_Unactive;
             this.Res4_pb.Location = new System.Drawing.Point(142, 69);
             this.Res4_pb.Name = "Res4_pb";
             this.Res4_pb.Size = new System.Drawing.Size(12, 12);
@@ -386,7 +386,7 @@
             // 
             // Res5_pb
             // 
-            this.Res5_pb.Image = global::Client.Properties.Resources.Radio_Unactive;
+            this.Res5_pb.Image = Client.Resources.Images.Radio_Unactive;
             this.Res5_pb.Location = new System.Drawing.Point(142, 105);
             this.Res5_pb.Name = "Res5_pb";
             this.Res5_pb.Size = new System.Drawing.Size(12, 12);
@@ -399,7 +399,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.BackgroundImage = global::Client.Properties.Resources.Config_Base1;
+            this.BackgroundImage = Client.Resources.Images.Config_Base1;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(230, 311);
             this.Controls.Add(this.Res5_pb);

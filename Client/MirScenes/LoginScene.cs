@@ -1,18 +1,11 @@
-﻿using System;
-using System.Drawing;
-using System.IO;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Windows.Forms;
 using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
 using S = ServerPackets;
 using C = ClientPackets;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Client.MirScenes
 {

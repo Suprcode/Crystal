@@ -1,11 +1,6 @@
-﻿using System;
-using System.Drawing;
-using Client.MirGraphics;
+﻿using Client.MirGraphics;
 using Client.MirScenes;
 using SlimDX;
-using System.Text.RegularExpressions;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace Client.MirControls
 {

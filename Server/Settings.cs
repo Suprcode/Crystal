@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using Server.MirDatabase;
 using Server.MirObjects;
 
@@ -304,13 +300,22 @@ namespace Server
 
                 var paths = VersionPath.Split(',');
 
+                //foreach (var path in paths)
+                //{
+                //    if (File.Exists(path))
+                //        using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+                //        using (MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider())
+                //            VersionHashes.Add(md5.ComputeHash(stream));
+                //}
+
                 foreach (var path in paths)
                 {
                     if (File.Exists(path))
                         using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
-                        using (MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider())
+                        using (MD5 md5 = MD5.Create())
                             VersionHashes.Add(md5.ComputeHash(stream));
                 }
+
             }
             catch (Exception ex)
             {

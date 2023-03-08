@@ -1,16 +1,6 @@
 ﻿using Server.MirEnvir;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Web.UI.WebControls;
-using System.Windows.Forms;
 
 namespace Server.Database
 {
@@ -38,10 +28,10 @@ namespace Server.Database
             PopulateTable();
         }
 
-        public static void SetDoubleBuffered(System.Windows.Forms.Control c)
+        public static void SetDoubleBuffered(Control c)
         {
             System.Reflection.PropertyInfo aProp =
-                  typeof(System.Windows.Forms.Control).GetProperty(
+                  typeof(Control).GetProperty(
                         "DoubleBuffered",
                         System.Reflection.BindingFlags.NonPublic |
                         System.Reflection.BindingFlags.Instance);
@@ -51,12 +41,20 @@ namespace Server.Database
 
         private void InitializeItemInfoFilters()
         {
+            Dictionary<String, String> filterItems = new()
+            {
+                { "-1", "" }
+            };
+
             var types = Enum.GetValues(typeof(ItemType));
-            drpFilterType.Items.Add(new System.Web.UI.WebControls.ListItem("", "-1"));
             foreach (ItemType type in types)
             {
-                drpFilterType.Items.Add(new System.Web.UI.WebControls.ListItem(type.ToString(), ((byte)type).ToString()));
+                filterItems.Add(((byte)type).ToString(), type.ToString());
             }
+
+            drpFilterType.DataSource = new BindingSource(filterItems, null);
+            drpFilterType.DisplayMember = "Value";
+            drpFilterType.ValueMember = "Key";
         }
 
         private void InitializeItemInfoGridView()
@@ -275,11 +273,11 @@ namespace Server.Database
         private void UpdateFilter()
         {
             var filterText = txtSearch.Text;
-            var filterType = ((ListItem)drpFilterType.SelectedItem)?.Value ?? "-1";
+            var filterType = ((KeyValuePair<string, string>)drpFilterType.SelectedItem).Key;
 
             if (string.IsNullOrEmpty(filterText) && filterType == "-1")
             {
-                (itemInfoGridView.DataSource as DataTable).DefaultView.RowFilter = "";
+                (itemInfoGridView.DataSource as DataTable).DefaultView.RowFilter = string.Empty;
                 return;
             }
 
@@ -576,15 +574,6 @@ namespace Server.Database
         private void drpFilterType_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateFilter();
-
-            if (drpFilterType.Text == "Gem")
-            {
-                //TODO - Change columns for gems when gem option is chosen.
-            }
-            else
-            {
-
-            }
         }
 
         private void txtSearch_KeyDown(object sender, KeyEventArgs e)

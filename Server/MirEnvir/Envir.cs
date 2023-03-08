@@ -3,18 +3,11 @@ using Server.MirDatabase;
 using Server.MirNetwork;
 using Server.MirObjects;
 using Server.MirObjects.Monsters;
-using ServerPackets;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using System.Threading;
 using S = ServerPackets;
 
 namespace Server.MirEnvir

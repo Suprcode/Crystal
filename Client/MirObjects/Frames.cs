@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-
-namespace Client.MirObjects
+﻿namespace Client.MirObjects
 {
     public class FrameSet : Dictionary<MirAction, Frame>
     {

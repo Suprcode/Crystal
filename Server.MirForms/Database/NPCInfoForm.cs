@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
-using Server.MirDatabase;
+﻿using Server.MirDatabase;
 using Server.MirEnvir;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Server
 {
@@ -363,12 +358,15 @@ namespace Server
             var scriptPath = Path.Combine(Settings.NPCPath, NFileNameTextBox.Text + ".txt");
 
             if (File.Exists(scriptPath))
-                Process.Start(scriptPath);
+            {
+                Shared.Helpers.FileIO.OpenScript(scriptPath, true);
+            }
+                
             else
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(scriptPath));
                 File.Create(scriptPath).Close();
-                Process.Start(scriptPath);
+                Shared.Helpers.FileIO.OpenScript(scriptPath, true);
             }
         }
 

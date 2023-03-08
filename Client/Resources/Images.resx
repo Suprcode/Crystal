@@ -118,79 +118,79 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="pfffft" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\pfffft.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="textboxes" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\textboxes.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Blue_Progress" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Blue Progress.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Config_Base" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Config_Base.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Config_Pressed" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Config_Pressed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Green_Progress" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Green Progress.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="NEW_Progress_End_(Green)" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NEW Progress End (Green).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Cross_Base" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Cross_Base.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Radio_Unactive" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Radio_Unactive.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Config_Check_Off1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Config_Check_Off1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Cross_Hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Cross_Hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Cross_Pressed" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Cross_Pressed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Launch_Base1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Launch_Base1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Launch_Base" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Launch_Base.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>Blue Progress.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="CheckF_Base2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CheckF_Base2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Config_Check_On" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Config_Check_On.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="CheckF_Pressed" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CheckF_Pressed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Launch_Hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Launch_Hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Launch_Pressed" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Launch_Pressed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Config_Base1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Config_Base1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="NEW_Progress_End_(Blue)" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NEW Progress End (Blue).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Config_Radio_On" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Config_Radio_On.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Config_Hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Config_Hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="server_base" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\server_base.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>CheckF_Base2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="CheckF_Hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CheckF_Hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>CheckF_Hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CheckF_Pressed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>CheckF_Pressed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Config_Base" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Config_Base.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Config_Base1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Config_Base1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Config_Check_Off1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Config_Check_Off1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Config_Check_On" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Config_Check_On.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Config_Hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Config_Hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Config_Pressed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Config_Pressed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Config_Radio_On" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Config_Radio_On.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cross_Base" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Cross_Base.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cross_Hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Cross_Hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cross_Pressed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Cross_Pressed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Green_Progress" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Green Progress.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Launch_Base" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Launch_Base.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Launch_Base1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Launch_Base1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Launch_Hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Launch_Hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Launch_Pressed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Launch_Pressed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NEW_Progress_End__Blue_" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>NEW Progress End (Blue).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NEW_Progress_End__Green_" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>NEW Progress End (Green).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pfffft" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>pfffft.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Radio_Unactive" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Radio_Unactive.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="server_base" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>server_base.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="textboxes" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>textboxes.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Web.UI.WebControls;
-using System.Windows.Forms;
-using Server.MirDatabase;
+﻿using Server.MirDatabase;
 using Server.MirEnvir;
 
 namespace Server
@@ -25,17 +18,21 @@ namespace Server
         {
             InitializeComponent();
 
-            MineComboBox.Items.Add(new ListItem { Text = "Disabled", Value = "0" });
-            for (int i = 0; i < Settings.MineSetList.Count; i++) MineComboBox.Items.Add(new ListItem(Settings.MineSetList[i].Name, (i + 1).ToString()));
+            List<string> mineItems = new(){ { "Disabled" } };
+            Settings.MineSetList.ForEach(x => mineItems.Add(x.Name));
+            MineComboBox.DataSource = mineItems;
 
-            MineZoneComboBox.Items.Add(new ListItem("Disabled", "0"));
-            for (int i = 0; i < Settings.MineSetList.Count; i++) MineZoneComboBox.Items.Add(new ListItem(Settings.MineSetList[i].Name, (i + 1).ToString()));
+            MineZoneComboBox.DataSource = mineItems;
 
             LightsComboBox.Items.AddRange(Enum.GetValues(typeof(LightSetting)).Cast<object>().ToArray());
-            for (int i = 0; i < Envir.MonsterInfoList.Count; i++) MonsterInfoComboBox.Items.Add(Envir.MonsterInfoList[i]);
 
-            ConquestComboBox.Items.Add(new ListItem("None", "0"));
-            for (int i = 0; i < Envir.ConquestInfoList.Count; i++) ConquestComboBox.Items.Add(Envir.ConquestInfoList[i]);
+            List<MonsterInfo> monsterInfoItems = new();
+            Envir.MonsterInfoList.ForEach(x => monsterInfoItems.Add(x));
+            MonsterInfoComboBox.DataSource = monsterInfoItems;
+
+            List<String> conquestItems = new() { { "None" } };
+            Envir.ConquestInfoList.ForEach(x => conquestItems.Add(x.Name));
+            ConquestComboBox.DataSource = conquestItems;
 
             UpdateInterface();
         }
