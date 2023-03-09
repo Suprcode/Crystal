@@ -11,6 +11,7 @@ using System.Drawing.Drawing2D;
 using Client;
 using System.Linq;
 using Microsoft.Web.WebView2.Core;
+using Client.Utils;
 
 namespace Launcher
 {
@@ -638,8 +639,11 @@ namespace Launcher
                         ProgressCurrent_pb.Width = (int)(5.5 * (100 * currentBytes / currentFile.Length));
                     }
                 }
-                TotalPercent_label.Text = ((int)(100 * (_completedBytes + currentBytes) / _totalBytes)).ToString() + "%";
-                TotalProg_pb.Width = (int)(5.5 * (100 * (_completedBytes + currentBytes) / _totalBytes));
+                if (!(_completedBytes is 0 && currentBytes is 0 && _totalBytes is 0))
+                {
+                    TotalProg_pb.Width = (int)(5.5 * (100 * (_completedBytes + currentBytes) / _totalBytes));
+                    TotalPercent_label.Text = ((int)(100 * (_completedBytes + currentBytes) / _totalBytes)).ToString() + "%";
+                }
             }
             catch (Exception ex)
             {
@@ -715,40 +719,6 @@ namespace Launcher
                 if (!File.Exists(originalFilename) && File.Exists(oldFilename))
                     File.Move(oldFilename, originalFilename);
             }
-        }
-    }
-
-    public class Download
-    {
-        public FileInformation Info;
-        public long CurrentBytes;
-        public bool Completed;
-    }
-
-    public class FileInformation
-    {
-        public string FileName; //Relative.
-        public int Length, Compressed;
-        public DateTime Creation;
-
-        public FileInformation()
-        {
-
-        }
-        public FileInformation(BinaryReader reader)
-        {
-            FileName = reader.ReadString();
-            Length = reader.ReadInt32();
-            Compressed = reader.ReadInt32();
-
-            Creation = DateTime.FromBinary(reader.ReadInt64());
-        }
-        public void Save(BinaryWriter writer)
-        {
-            writer.Write(FileName);
-            writer.Write(Length);
-            writer.Write(Compressed);
-            writer.Write(Creation.ToBinary());
         }
     }
 }
