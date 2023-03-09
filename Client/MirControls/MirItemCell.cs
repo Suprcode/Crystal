@@ -520,6 +520,32 @@ namespace Client.MirControls
                     if (CanUseItem() && (GridType == MirGridType.Inventory || GridType == MirGridType.HeroInventory))
                     {
                         if (CMain.Time < GameScene.UseItemTime) return;
+                        if (Item.Info.Type == ItemType.Potion && Item.Info.Shape == 4)
+                        {
+                            MirMessageBox messageBox = new MirMessageBox("Are you use you want to use this Potion?", MirMessageBoxButtons.YesNo);
+                            messageBox.YesButton.Click += (o, e) =>
+                            {
+                                Network.Enqueue(new C.UseItem { UniqueID = Item.UniqueID, Grid = GridType });
+
+                                if (Item.Count == 1 && ItemSlot < GameScene.User.BeltIdx)
+                                {
+                                    for (int i = GameScene.User.BeltIdx; i < GameScene.User.Inventory.Length; i++)
+                                        if (ItemArray[i] != null && ItemArray[i].Info == Item.Info)
+                                        {
+                                            Network.Enqueue(new C.MoveItem { Grid = MirGridType.Inventory, From = i, To = ItemSlot });
+                                            GameScene.Scene.InventoryDialog.Grid[i - GameScene.User.BeltIdx].Locked = true;
+                                            break;
+                                        }
+                                }
+
+                                GameScene.UseItemTime = CMain.Time + 100;
+                                PlayItemSound();
+                            };
+
+                            messageBox.Show();
+                            return;
+                        }
+
                         Network.Enqueue(new C.UseItem { UniqueID = Item.UniqueID, Grid = GridType });
 
                         if (HeroGridType)
