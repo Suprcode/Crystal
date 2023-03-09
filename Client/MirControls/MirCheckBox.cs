@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using Client.MirSounds;
+﻿using Client.MirSounds;
 
 namespace Client.MirControls
 {
@@ -36,11 +33,11 @@ namespace Client.MirControls
         #endregion
 
         #region Label
-        private MirLabel _label;
+        private new MirLabel _label;
         #endregion
 
         #region CenterText
-        private bool _center;
+        private new bool _center;
         public bool CenterLabelText
         {
             get

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Web.UI.WebControls;
-using System.Windows.Forms;
-using Server.MirDatabase;
+﻿using Server.MirDatabase;
 using Server.MirEnvir;
 
 namespace Server
@@ -10,19 +6,20 @@ namespace Server
     public partial class MiningInfoForm : Form
     {
         public Envir Envir => SMain.EditEnvir;
-
         public bool MinesChanged = false;
+        public List<string> mineIndexItems = new();
 
         public MiningInfoForm()
         {
             InitializeComponent();
 
-            for (int i = 0; i < Settings.MineSetList.Count; i++)
-                MineIndexcomboBox.Items.Add(new ListItem(Settings.MineSetList[i].Name, (i + 1).ToString()));
-            //MineIndexcomboBox.Items.Add(i+1);
+            int i = 0;
+
+            Settings.MineSetList.ForEach(x => { mineIndexItems.Add(x.Name); i++; });
+            MineIndexcomboBox.Items.Add(i);
+            MineIndexcomboBox.DataSource = mineIndexItems;
 
             UpdateMines();
-
         }
 
         private void MiningInfoForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -109,7 +106,12 @@ namespace Server
             if (ActiveControl != sender) return;
             MinesChanged = true;
             Settings.MineSetList.Add(new MineSet());
-            MineIndexcomboBox.Items.Add(new ListItem(String.Empty, Settings.MineSetList.Count.ToString()));
+            mineIndexItems.Add("");
+
+            MineIndexcomboBox.SelectedIndex = -1;
+            MineIndexcomboBox.DataSource = null;
+            MineIndexcomboBox.DataSource = mineIndexItems;
+
             MineIndexcomboBox.SelectedIndex = Settings.MineSetList.Count - 1;
             MineDropsIndexcomboBox.Items.Clear();
             UpdateMines();
@@ -120,8 +122,15 @@ namespace Server
             if (ActiveControl != sender) return;
             if (MessageBox.Show("Are you sure you want to delete the last index?", "Delete?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
             MinesChanged = true;
-            MineIndexcomboBox.Items.RemoveAt(Settings.MineSetList.Count - 1);
+
+            mineIndexItems.RemoveAt(Settings.MineSetList.Count - 1);
             Settings.MineSetList.RemoveAt(Settings.MineSetList.Count - 1);
+
+            MineIndexcomboBox.SelectedIndex = -1;
+            MineIndexcomboBox.DataSource = null;
+            MineIndexcomboBox.DataSource = mineIndexItems;
+            MineIndexcomboBox.Refresh();
+
             UpdateMines();
         }
 

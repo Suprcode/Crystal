@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using System.Net;
 using System.Text;
 
@@ -15,8 +13,10 @@ namespace Server.Library.Utils
         {
         }
 
-        public void Listen()
+        public void Listen(object obj)
         {
+            CancellationToken token = (CancellationToken)obj;
+
             if (!HttpListener.IsSupported)
             {
                 throw new InvalidOperationException(
@@ -40,8 +40,7 @@ namespace Server.Library.Utils
                 return;
             }
 
-
-            while (_isActive)
+            while (_isActive && !token.IsCancellationRequested)
             {
                 try
                 {

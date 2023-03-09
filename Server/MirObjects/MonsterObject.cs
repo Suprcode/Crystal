@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using Server.MirDatabase;
+﻿using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirObjects.Monsters;
 using S = ServerPackets;
@@ -464,7 +460,6 @@ namespace Server.MirObjects
                 case 213:
                     return new Siege(info); //TODO
 
-
                 case 214:
                     return new SepWarrior(info); //TODO
                 case 215:
@@ -486,6 +481,8 @@ namespace Server.MirObjects
                 case 223:
                     return new SepHighArcher(info); //TODO
 
+                case 255://Skill 
+                    return new StoneTrap(info);
 
                 default:
                     return new MonsterObject(info);
@@ -3513,7 +3510,7 @@ namespace Server.MirObjects
         {
             MirDirection jumpDir = Functions.ReverseDirection(Direction);
 
-            Point location;
+            Point location = new Point();
 
             for (int i = 0; i < distance; i++)
             {

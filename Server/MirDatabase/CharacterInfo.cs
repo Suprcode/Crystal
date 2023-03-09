@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using Server.MirEnvir;
+﻿using Server.MirEnvir;
 using Server.MirNetwork;
 using Server.MirObjects;
 

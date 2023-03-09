@@ -1,11 +1,4 @@
-﻿using System.IO;
-using System;
-using Client.MirSounds;
-using System.Windows.Forms;
-using System.Collections.Generic;
-
-
-namespace Client
+﻿namespace Client
 {
 
     public enum KeybindOptions : int

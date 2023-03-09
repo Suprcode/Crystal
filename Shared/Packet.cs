@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using C = ClientPackets;
+﻿using C = ClientPackets;
 using S = ServerPackets;
 
 public abstract class Packet

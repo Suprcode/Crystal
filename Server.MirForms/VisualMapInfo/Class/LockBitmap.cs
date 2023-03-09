@@ -1,6 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
+﻿using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
 namespace Server.MirForms.VisualMapInfo.Class
@@ -48,9 +46,9 @@ namespace Server.MirForms.VisualMapInfo.Class
 
                 Marshal.Copy(Iptr, Pixels, 0, Pixels.Length);
             }
-            catch (Exception ex)
+            catch
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -62,9 +60,9 @@ namespace Server.MirForms.VisualMapInfo.Class
 
                 source.UnlockBits(bitmapData);
             }
-            catch (Exception ex)
+            catch
             {
-                throw ex;
+                throw;
             }
         }
 

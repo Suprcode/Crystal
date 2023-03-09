@@ -1,336 +1,74 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{35050645-A39D-483B-BB24-3EFCC5F7E720}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Client</RootNamespace>
-    <AssemblyName>Client</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <AssemblyVersion>2017.6.25.1919</AssemblyVersion>
-    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
-    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
-    <UpdateAssemblyInfoVersion>True</UpdateAssemblyInfoVersion>
-    <AssemblyVersionSettings>YearStamp.MonthStamp.DayStamp.TimeStamp</AssemblyVersionSettings>
-    <AssemblyFileVersionSettings>YearStamp.MonthStamp.DayStamp.TimeStamp</AssemblyFileVersionSettings>
-    <AssemblyInfoVersionSettings>YearStamp.MonthStamp.DayStamp.TimeStamp</AssemblyInfoVersionSettings>
-    <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <PublishWizardCompleted>true</PublishWizardCompleted>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\Build\Client\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>1</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>
-    </DocumentationFile>
-    <Prefer32Bit>false</Prefer32Bit>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>SecurityRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
-    <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\Build\Client\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>1</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <DebugSymbols>false</DebugSymbols>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <LangVersion>8.0</LangVersion>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>disable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>MIR2.ICO</ApplicationIcon>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <PlatformTarget>x64</PlatformTarget>
+    <BaseOutputPath>..\Build\Client\</BaseOutputPath>
   </PropertyGroup>
+
   <PropertyGroup>
-    <ManifestCertificateThumbprint>9E5B013900C639479A5BE07D94C6D9183B921CCA</ManifestCertificateThumbprint>
+	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
-  <PropertyGroup>
-    <ManifestKeyFile>Client_TemporaryKey.pfx</ManifestKeyFile>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
+    <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
-  <PropertyGroup>
-    <GenerateManifests>false</GenerateManifests>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
+    <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
-  <PropertyGroup>
-    <TargetZone>LocalIntranet</TargetZone>
-  </PropertyGroup>
-  <PropertyGroup />
-  <PropertyGroup>
-    <SignManifests>false</SignManifests>
-  </PropertyGroup>
-  <PropertyGroup />
-  <PropertyGroup />
-  <PropertyGroup>
-    <NoWin32Manifest>true</NoWin32Manifest>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.Web.WebView2.Core, Version=1.0.1020.30, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.WebView2.1.0.1020.30\lib\net45\Microsoft.Web.WebView2.Core.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Web.WebView2.WinForms, Version=1.0.1020.30, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.WebView2.1.0.1020.30\lib\net45\Microsoft.Web.WebView2.WinForms.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Web.WebView2.Wpf, Version=1.0.1020.30, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.WebView2.1.0.1020.30\lib\net45\Microsoft.Web.WebView2.Wpf.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SlimDX, Version=4.0.13.43, Culture=neutral, PublicKeyToken=b1b0c32fd1ffe4f9, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Components\SlimDX.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Forms\AMain.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\AMain.Designer.cs">
-      <DependentUpon>AMain.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CMain.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\CMain.Designer.cs">
-      <DependentUpon>CMain.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Config.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Config.designer.cs">
-      <DependentUpon>Config.cs</DependentUpon>
-    </Compile>
-    <Compile Include="KeyBindSettings.cs" />
-    <Compile Include="MirControls\MirGameShopCell.cs" />
-    <Compile Include="MirControls\MirAmountBox.cs" />
-    <Compile Include="MirControls\MirAnimatedButton.cs" />
-    <Compile Include="MirControls\MirAnimatedControl.cs" />
-    <Compile Include="MirControls\MirButton.cs" />
-    <Compile Include="MirControls\MirCheckBox.cs" />
-    <Compile Include="MirControls\MirControl.cs" />
-    <Compile Include="MirControls\MirDropDownBox.cs" />
-    <Compile Include="MirControls\MirGoodsCell.cs" />
-    <Compile Include="MirControls\MirImageControl.cs" />
-    <Compile Include="MirControls\MirInputBox.cs" />
-    <Compile Include="MirControls\MirItemCell.cs" />
-    <Compile Include="MirControls\MirLabel.cs" />
-    <Compile Include="MirControls\MirMessageBox.cs" />
-    <Compile Include="MirControls\MirScene.cs" />
-    <Compile Include="MirControls\MirScrollingLabel.cs" />
-    <Compile Include="MirControls\MirTextBox.cs" />
-    <Compile Include="MirGraphics\DXManager.cs" />
-    <Compile Include="MirGraphics\MLibrary.cs" />
-    <Compile Include="MirObjects\PathFinder.cs" />
-    <Compile Include="MirObjects\UserHeroObject.cs" />
-    <Compile Include="MirObjects\HeroObject.cs" />
-    <Compile Include="MirObjects\Damage.cs" />
-    <Compile Include="MirObjects\DecoObject.cs" />
-    <Compile Include="MirObjects\Effect.cs" />
-    <Compile Include="MirObjects\Frames.cs" />
-    <Compile Include="MirObjects\ItemObject.cs" />
-    <Compile Include="MirObjects\MapCode.cs" />
-    <Compile Include="MirObjects\MapObject.cs" />
-    <Compile Include="MirObjects\MonsterObject.cs" />
-    <Compile Include="MirObjects\NPCObject.cs" />
-    <Compile Include="MirObjects\PlayerObject.cs" />
-    <Compile Include="MirObjects\SpellObject.cs" />
-    <Compile Include="MirObjects\UserObject.cs" />
-    <Compile Include="MirScenes\Dialogs\BuffDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\ChatNoticeDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\ChatOptionDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\BigMapDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\CharacterDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\HeroDialogs.cs" />
-    <Compile Include="MirScenes\Dialogs\InventoryDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\NewCharacterDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\CompassDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\FishingDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\FriendDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\GameshopDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\GroupDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\GuildDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\HelpDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\IntelligentCreatureDialogs.cs" />
-    <Compile Include="MirScenes\Dialogs\KeyboardLayoutDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\ItemRentingDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\MailDialogs.cs" />
-    <Compile Include="MirScenes\Dialogs\MainDialogs.cs" />
-    <Compile Include="MirScenes\Dialogs\MentorDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\MountDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\NoticeDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\RollDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\SocketDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\TimerDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\TrustMerchantDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\NPCDialogs.cs" />
-    <Compile Include="MirScenes\Dialogs\RankingDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\RelationshipDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\ItemRentalDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\ItemRentDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\ReportDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\TradeDialogs.cs" />
-    <Compile Include="MirScenes\GameScene.cs" />
-    <Compile Include="MirScenes\LoginScene.cs" />
-    <Compile Include="MirNetwork\Network.cs" />
-    <Compile Include="MirScenes\Dialogs\QuestDialogs.cs" />
-    <Compile Include="MirScenes\SelectScene.cs" />
-    <Compile Include="MirSounds\Libraries\ISoundLibrary.cs" />
-    <Compile Include="MirSounds\Libraries\NullLibrary.cs" />
-    <Compile Include="MirSounds\Libraries\WavLibrary.cs" />
-    <Compile Include="MirSounds\SoundManager.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Settings.cs" />
-    <Compile Include="Utils\BrowserHelper.cs" />
-    <EmbeddedResource Include="Forms\AMain.resx">
-      <DependentUpon>AMain.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CMain.resx">
-      <DependentUpon>CMain.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Config.resx">
-      <DependentUpon>Config.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\CheckF_Pressed.png" />
-    <None Include="Resources\CheckF_Hover.png" />
-    <None Include="Resources\server_base.png" />
-    <None Include="Resources\pfffft.png" />
-    <None Include="Resources\textboxes.png" />
-    <None Include="Resources\Config_Base1.png" />
-    <None Include="Resources\CheckF_Base2.png" />
-    <None Include="Resources\Config_Check_On.png" />
-    <None Include="Resources\Config_Check_Off1.png" />
-    <None Include="Resources\Config_Radio_On.png" />
-    <None Include="Resources\Launch_Base1.png" />
-    <None Include="Resources\Launch_Pressed.png" />
-    <None Include="Resources\Launch_Hover.png" />
-    <None Include="Resources\Radio_Unactive.png" />
-    <None Include="Resources\Config_Pressed.png" />
-    <None Include="Resources\Config_Hover.png" />
-    <None Include="Resources\Cross_Pressed.png" />
-    <None Include="Resources\Cross_Hover.png" />
-    <None Include="Resources\Config_Base.png" />
-    <None Include="Resources\Cross_Base.png" />
-    <None Include="Resources\NEW Progress End %28Blue%29.png" />
-    <None Include="Resources\Blue Progress.png" />
-    <None Include="Resources\NEW Progress End %28Green%29.png" />
-    <None Include="Resources\Green Progress.png" />
-    <None Include="Resources\Launch_Base.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 4.5</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
+
   <ItemGroup>
     <Content Include="MIR2.ICO" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\Shared\Shared.csproj">
-      <Project>{19625ca5-42f9-4bf5-aa1c-c8dfd4eb7833}</Project>
-      <Name>Shared</Name>
-    </ProjectReference>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Microsoft.Web.WebView2.1.0.1020.30\build\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.1020.30\build\Microsoft.Web.WebView2.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Web.WebView2.1.0.1020.30\build\Microsoft.Web.WebView2.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Web.WebView2.1.0.1020.30\build\Microsoft.Web.WebView2.targets'))" />
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1587.40" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="SlimDX">
+      <HintPath>..\Components\SlimDX.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Images.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Images.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Images.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Images.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="MIR2.ICO">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

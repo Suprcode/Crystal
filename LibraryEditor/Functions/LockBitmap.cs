@@ -52,9 +52,9 @@ namespace ShadowMerger
 
                 Marshal.Copy(Iptr, Pixels, 0, Pixels.Length);
             }
-            catch (Exception ex)
+            catch
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -66,9 +66,9 @@ namespace ShadowMerger
 
                 source.UnlockBits(bitmapData);
             }
-            catch (Exception ex)
+            catch
             {
-                throw ex;
+                throw;
             }
         }
 

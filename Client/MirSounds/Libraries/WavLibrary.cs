@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using SlimDX.DirectSound;
+﻿using SlimDX.DirectSound;
 using SlimDX.Multimedia;
 
 namespace Client.MirSounds

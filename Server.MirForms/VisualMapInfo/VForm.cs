@@ -1,10 +1,6 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using Server.MirForms.VisualMapInfo.Class;
+﻿using Server.MirForms.VisualMapInfo.Class;
 using Server.MirForms.VisualMapInfo.Control;
 using Microsoft.VisualBasic.PowerPacks;
-using System.Web.UI.WebControls;
 using Server.MirEnvir;
 using Server.MirDatabase;
 
@@ -93,12 +89,11 @@ namespace Server.MirForms.VisualMapInfo
 
         private void InitializeMineInfo()
         {
-            MiningFilter.Items.Add(new ListItem { Text = "Disabled", Value = "0" });
+            List<string> miningFilterItems = new() { { "Disabled" } };
+            Settings.MineSetList.ForEach(x => miningFilterItems.Add(x.Name));
+            miningFilterItems.Add("No Filter");
 
-            for (int i = 0; i < Settings.MineSetList.Count; i++)
-                MiningFilter.Items.Add(new ListItem(Settings.MineSetList[i].Name, (i + 1).ToString()));
-
-            MiningFilter.Items.Add(new ListItem { Text = "No Filter" });
+            MiningFilter.DataSource = miningFilterItems;
             MiningFilter.Text = "No Filter";
 
             for (int i = 0; i < VisualizerGlobal.MapInfo.MineZones.Count; i++)
@@ -123,7 +118,7 @@ namespace Server.MirForms.VisualMapInfo
             for (int i = 0; i < Envir.MonsterInfoList.Count; i++)
                 RespawnsFilter.Items.Add(Envir.MonsterInfoList[i]);
 
-            RespawnsFilter.Items.Add(new ListItem { Text = "No Filter" });
+            RespawnsFilter.Items.Add("No Filter");
             RespawnsFilter.Text = "No Filter";
 
             for (int i = 0; i < VisualizerGlobal.MapInfo.Respawns.Count; i++)
@@ -327,14 +322,6 @@ namespace Server.MirForms.VisualMapInfo
                     catch (Exception) { continue; }
                 
                 MiningFilter_SelectedIndexChanged(MiningFilter, null);
-
-                //for (int i = MiningPanel.Controls.Count; i > -1; --i)
-                //    try
-                //    {
-                //        MineEntry MineControl = (MineEntry)MiningPanel.Controls[i];
-                //        MineControl.ShowControl();
-                //    }
-                //    catch (Exception) { continue; }
             }
             else if (RegionTabs.SelectedTab.Text == "Respawns")
             {
@@ -347,14 +334,6 @@ namespace Server.MirForms.VisualMapInfo
                     catch (Exception) { continue; }
 
                 RespawnsFilter_SelectedIndexChanged(RespawnsFilter, null);
-
-                //for (int i = RespawnPanel.Controls.Count; i > -1; --i)
-                //    try
-                //    {
-                //        RespawnEntry RespawnControl = (RespawnEntry)RespawnPanel.Controls[i];
-                //        RespawnControl.ShowControl();
-                //    }
-                //    catch (Exception) { continue; }
             }
         }
 

@@ -1,17 +1,7 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Web.UI.WebControls;
-using System.Windows.Forms;
 
 namespace Server.Database
 {
@@ -434,7 +424,9 @@ namespace Server.Database
                             try
                             {
                                 if (dataRow != null)
+                                {
                                     monsterInfoGridView.BeginEdit(true);
+                                }
 
                                 if (dataRow == null)
                                 {

@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using C = ClientPackets;
-using Server.MirDatabase;
+﻿using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirNetwork;
 using S = ServerPackets;
-using System.Text.RegularExpressions;
-using Server.MirObjects.Monsters;
 
 namespace Server.MirObjects
 {
@@ -3605,6 +3597,9 @@ namespace Server.MirObjects
                 case Spell.SummonSnakes:
                     ArcherSummon(magic, target, location);
                     break;
+                case Spell.Stonetrap:
+                    ArcherSummonStone(magic, target == null ? location : target.CurrentLocation, out cast);
+                    break;
                 case Spell.VampireShot:
                 case Spell.PoisonShot:
                 case Spell.CrippleShot:
@@ -4327,6 +4322,7 @@ namespace Server.MirObjects
             CurrentMap.ActionList.Add(action);
             cast = true;
         }
+
         private void MoonMist(UserMagic magic)
         {
             for (int i = 0; i < Buffs.Count; i++)
@@ -4357,6 +4353,7 @@ namespace Server.MirObjects
 
             return true;
         }
+
         private void TrapHexagon(UserMagic magic, Point location, out bool cast)
         {
             cast = false;
@@ -5502,6 +5499,20 @@ namespace Server.MirObjects
             ActionList.Add(action);
         }
 
+        public void ArcherSummonStone(UserMagic magic, Point location, out bool cast)
+        {
+            cast = false;
+            if (!CurrentMap.ValidPoint(location)) return;
+            if (!CanFly(location)) return;
+            //if ((Info.MentalState != 1) && !CanFly(location)) return;//
+            uint duration = (uint)((magic.Level * 5 + 10) * 1000);
+            int value = (int)duration;
+            int delay = Functions.MaxDistance(CurrentLocation, location) * 50 + 500; //50 MS per Step          
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, value, location);
+            ActionList.Add(action);
+            cast = true;
+        }
+
         public void OneWithNature(MapObject target, UserMagic magic)
         {
             int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
@@ -6455,9 +6466,30 @@ namespace Server.MirObjects
                     DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, monster, location);
                     CurrentMap.ActionList.Add(action);
                     break;
+                case Spell.Stonetrap:
+                    {
+                        value = (int)data[1];
+                        location = (Point)data[2];
+
+                        if (Pets.Where(x => x.Race == ObjectType.Monster).Count() >= magic.Level + 1) return;
+
+                        MonsterInfo mInfo = Envir.GetMonsterInfo(Settings.StoneName);
+                        if (mInfo == null) return;
+
+                        LevelMagic(magic);
+
+                        monster = MonsterObject.GetMonster(mInfo);
+
+                        monster.Master = this;
+                        monster.MaxPetLevel = (byte)(1 + magic.Level * 2);
+                        monster.Direction = Direction;
+                        monster.ActionTime = Envir.Time + 1000;
+
+                        DelayedAction act = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, monster, location);
+                        CurrentMap.ActionList.Add(act);
+                        break;
+                    }
                     #endregion
-
-
 
             }
         }

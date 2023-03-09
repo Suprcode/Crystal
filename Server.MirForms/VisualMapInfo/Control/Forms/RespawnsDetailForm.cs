@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-
-namespace Server.MirForms.VisualMapInfo.Control.Forms
+﻿namespace Server.MirForms.VisualMapInfo.Control.Forms
 {
     public partial class RespawnsDetailForm : Form
     {

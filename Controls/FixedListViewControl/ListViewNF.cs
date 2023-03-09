@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Windows.Forms;
+﻿using System.Collections;
+using Timer = System.Windows.Forms.Timer;
 
 namespace CustomFormControl
 {
@@ -63,11 +62,11 @@ namespace CustomFormControl
             }
 
         }
-        private readonly Timer _itemSelectionChangedTimer = new Timer();
-        private readonly Timer _selectedIndexChangedTimer = new Timer();
+        private readonly Timer _itemSelectionChangedTimer = new();
+        private readonly Timer _selectedIndexChangedTimer = new();
 
-        private ListViewItemSelectionChangedEventArgs _itemSelectionChangedEventArgs;
-        private EventArgs _selectedIndexChangedEventArgs;
+        private ListViewItemSelectionChangedEventArgs? _itemSelectionChangedEventArgs;
+        private EventArgs? _selectedIndexChangedEventArgs;
         private readonly ListViewColumnSorter _sorter;
 
         public ListViewNF()
@@ -75,14 +74,14 @@ namespace CustomFormControl
             _itemSelectionChangedTimer.Interval = 1;
             _selectedIndexChangedTimer.Interval = 1;
 
-            _itemSelectionChangedTimer.Tick += (sender, e) =>
+            _itemSelectionChangedTimer.Tick += (_, e) =>
             {
-                OnItemSelectionChanged(_itemSelectionChangedEventArgs);
+                OnItemSelectionChanged(e: _itemSelectionChangedEventArgs);
                 _itemSelectionChangedEventArgs = null;
             };
-            _selectedIndexChangedTimer.Tick += (sender, e) =>
+            _selectedIndexChangedTimer.Tick += (_, e) =>
             {
-                OnSelectedIndexChanged(_selectedIndexChangedEventArgs);
+                OnSelectedIndexChanged(e: _selectedIndexChangedEventArgs);
                 _selectedIndexChangedEventArgs = null;
             };
 

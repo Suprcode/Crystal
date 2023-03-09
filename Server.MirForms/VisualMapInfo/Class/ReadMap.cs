@@ -1,8 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.IO;
-
-namespace Server.MirForms.VisualMapInfo.Class
+﻿namespace Server.MirForms.VisualMapInfo.Class
 {
     public class ReadMap
     {

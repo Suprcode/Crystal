@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using Server.MirDatabase;
 using Server.MirObjects;
 
@@ -173,6 +169,7 @@ namespace Server
                              ScrollMob2 = "TaoistScroll",
                              ScrollMob3 = "WizardScroll",
                              ScrollMob4 = "AssassinScroll",
+                             StoneName = "StoneTrap",
                              HeroName = "Hero";
 
         public static string HealRing = "Healing",
@@ -303,13 +300,22 @@ namespace Server
 
                 var paths = VersionPath.Split(',');
 
+                //foreach (var path in paths)
+                //{
+                //    if (File.Exists(path))
+                //        using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+                //        using (MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider())
+                //            VersionHashes.Add(md5.ComputeHash(stream));
+                //}
+
                 foreach (var path in paths)
                 {
                     if (File.Exists(path))
                         using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
-                        using (MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider())
+                        using (MD5 md5 = MD5.Create())
                             VersionHashes.Add(md5.ComputeHash(stream));
                 }
+
             }
             catch (Exception ex)
             {
@@ -425,6 +431,7 @@ namespace Server
             ToadName = Reader.ReadString("Game", "ToadName", ToadName);
             SnakeTotemName = Reader.ReadString("Game", "SnakeTotemName", SnakeTotemName);
             SnakesName = Reader.ReadString("Game", "SnakesName", SnakesName);
+            StoneName = Reader.ReadString("Game", "StoneName", StoneName);
             AncientBatName = Reader.ReadString("Game", "AncientBatName", AncientBatName);
             TucsonGeneralEgg = Reader.ReadString("Game", "TucsonGeneralEgg", TucsonGeneralEgg);
             GroupInviteDelay = Reader.ReadInt64("Game", "GroupInviteDelay", GroupInviteDelay);
@@ -680,6 +687,7 @@ namespace Server
             Reader.Write("Game", "ToadName", ToadName);
             Reader.Write("Game", "SnakeTotemName", SnakeTotemName);
             Reader.Write("Game", "SnakesName", SnakesName);
+            Reader.Write("Game", "StoneName", StoneName);
             Reader.Write("Game", "AncientBatName", AncientBatName);
             Reader.Write("Game", "TucsonGeneralEgg", TucsonGeneralEgg);
             Reader.Write("Game", "GroupInviteDelay", GroupInviteDelay);
