@@ -20,7 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{F75359D0
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "PatcherWebSite", "PatcherWebSite\", "{C1F2FAE3-485C-4BF4-8939-B44EAD5619D4}"
 	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8.1"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_50790"
 		Debug.AspNetCompiler.PhysicalPath = "PatcherWebSite\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50790\"
@@ -98,6 +98,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{C1F2FAE3-485C-4BF4-8939-B44EAD5619D4} = {02FF090B-782B-49FD-BFEC-E4B50DCFF698}
 		{6312929E-6CD5-48FE-A147-C10C09983A00} = {02FF090B-782B-49FD-BFEC-E4B50DCFF698}
 		{8E10D0C3-2E10-468B-BD77-C717ED6C7754} = {02FF090B-782B-49FD-BFEC-E4B50DCFF698}
 		{297E115E-AC0A-48CC-8FD7-059FED59BA73} = {8E10D0C3-2E10-468B-BD77-C717ED6C7754}
