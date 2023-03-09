@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
-using Server.MirDatabase;
+﻿using Server.MirDatabase;
 using Server.MirEnvir;
 using System.Diagnostics;
 
@@ -385,7 +379,9 @@ namespace Server
             var scriptPath = Path.Combine(Settings.QuestPath, QFileNameTextBox.Text + ".txt");
 
             if (File.Exists(scriptPath))
-                Process.Start(scriptPath);
+            {
+                Shared.Helpers.FileIO.OpenScript(scriptPath, true);
+            } 
             else
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(scriptPath));
@@ -395,7 +391,7 @@ namespace Server
                 File.WriteAllText(scriptPath,
                     $"{"[@Description]"}\r\n\r\n{"[@TaskDescription]"}\r\n\r\n{"[@Completion]"}\r\n\r\n{"[@KillTasks]"}\r\n\r\n{"[@ItemTasks]"}\r\n\r\n{"[@FlagTasks]"}\r\n\r\n{"[@CarryItems]"}\r\n\r\n{"[@FixedRewards]"}\r\n\r\n{"[@SelectRewards]"}\r\n\r\n{"[@ExpReward]"}\r\n\r\n{"[@GoldReward]"}");
 
-                Process.Start(scriptPath);
+                Shared.Helpers.FileIO.OpenScript(scriptPath, true);
             }
         }
 

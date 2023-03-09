@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading;
+﻿using System.Net;
 using Server.MirEnvir;
 using S = ServerPackets;
 
@@ -11,6 +7,7 @@ namespace Server.Library.Utils
     class HttpServer : HttpService
     {
         Thread _thread;
+        CancellationTokenSource tokenSource = new();
 
         public HttpServer()
         {
@@ -20,13 +17,17 @@ namespace Server.Library.Utils
         public void Start()
         {
             _thread = new Thread(Listen);
-            _thread.Start();
+            _thread.Start(tokenSource.Token);
         }
 
         public new void Stop()
         {
             base.Stop();
-            _thread?.Abort();
+            
+            tokenSource.Cancel();
+            Thread.Sleep(1000);
+            tokenSource.Dispose();
+
         }
 
 

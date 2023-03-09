@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-
-public class BaseStats
+﻿public class BaseStats
 {
     public MirClass Job;
     public List<BaseStat> Stats = new List<BaseStat>();

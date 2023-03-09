@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using Client.MirGraphics;
+﻿using Client.MirGraphics;
 using Client.MirScenes;
 using Client.MirSounds;
 using S = ServerPackets;
@@ -54,7 +49,7 @@ namespace Client.MirObjects
 
         public FrameSet Frames = new FrameSet();
         public Frame Frame;
-        public int FrameIndex, FrameInterval, EffectFrameIndex, EffectFrameInterval;
+        public int FrameIndex, FrameInterval, EffectFrameIndex;
 
         public uint TargetID;
         public Point TargetPoint;
@@ -324,7 +319,7 @@ namespace Client.MirObjects
             }
         }
 
-        public virtual bool ShouldDrawHealth()
+        public override bool ShouldDrawHealth()
         {
             string name = string.Empty;
             if (Name.Contains("(")) name = Name.Substring(Name.IndexOf("(") + 1, Name.Length - Name.IndexOf("(") - 2);
@@ -1844,8 +1839,6 @@ namespace Client.MirObjects
 
                         if (SkipFrames) UpdateFrame();
 
-                        MapObject ob = null;
-
                         Point front = Functions.PointMove(CurrentLocation, Direction, 1);
 
                         if (UpdateFrame() >= Frame.Count)
@@ -1998,7 +1991,6 @@ namespace Client.MirObjects
                                         }
                                         break;
                                     }
-                                    break;
                                 case 5:
                                     {   
                                         switch (BaseImage)
@@ -2031,7 +2023,6 @@ namespace Client.MirObjects
                                         break;
 
                                     }
-                                    break;
                                 case 6:
                                     {
                                         switch (BaseImage)
@@ -2371,7 +2362,6 @@ namespace Client.MirObjects
                                         }
                                         break;
                                     }
-                                    break;
                             }
 
                             NextMotion += FrameInterval;
@@ -3339,9 +3329,6 @@ namespace Client.MirObjects
                                     }
                                 case 8:
                                     {
-                                        switch (BaseImage)
-                                        {
-                                        }
                                         break;
                                     }
                                 case 9:
@@ -3611,7 +3598,6 @@ namespace Client.MirObjects
                         else
                         {
                             MapObject ob = null;
-                            Missile missile;
                             switch (FrameIndex)
                             {
                                 case 4:
@@ -3723,9 +3709,6 @@ namespace Client.MirObjects
                                     // Sanjian
                                 case 4:
                                     PlayDeadSound();
-                                    switch (BaseImage)
-                                    {
-                                    }
                                     break;
                                 case 5:
                                     switch (BaseImage)

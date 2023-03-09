@@ -1,13 +1,7 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Compression;
-using System.Windows.Forms;
+﻿using System.Diagnostics;
 using Launcher;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
-using System.ComponentModel;
-using System.Reflection;
 
 namespace Client
 {
@@ -118,21 +112,22 @@ namespace Client
 
             static RuntimePolicyHelper()
             {
-                ICLRRuntimeInfo clrRuntimeInfo =
-                    (ICLRRuntimeInfo)RuntimeEnvironment.GetRuntimeInterfaceAsObject(
-                        Guid.Empty,
-                        typeof(ICLRRuntimeInfo).GUID);
-                try
-                {
-                    clrRuntimeInfo.BindAsLegacyV2Runtime();
-                    LegacyV2RuntimeEnabledSuccessfully = true;
-                }
-                catch (COMException)
-                {
-                    // This occurs with an HRESULT meaning 
-                    // "A different runtime was already bound to the legacy CLR version 2 activation policy."
-                    LegacyV2RuntimeEnabledSuccessfully = false;
-                }
+                //ICLRRuntimeInfo clrRuntimeInfo =
+                //    (ICLRRuntimeInfo)RuntimeEnvironment.GetRuntimeInterfaceAsObject(
+                //        Guid.Empty,
+                //        typeof(ICLRRuntimeInfo).GUID);
+
+                //try
+                //{
+                //    clrRuntimeInfo.BindAsLegacyV2Runtime();
+                //    LegacyV2RuntimeEnabledSuccessfully = true;
+                //}
+                //catch (COMException)
+                //{
+                //    // This occurs with an HRESULT meaning 
+                //    // "A different runtime was already bound to the legacy CLR version 2 activation policy."
+                //    LegacyV2RuntimeEnabledSuccessfully = false;
+                //}
             }
 
             [ComImport]

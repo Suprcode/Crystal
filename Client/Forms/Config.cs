@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Threading;
-using Client;
+﻿using Client;
+using System.Resources;
+using System.Reflection;
 
 namespace Launcher
 {
@@ -26,7 +19,7 @@ namespace Launcher
             this.ID_l.Text = GameLanguage.Usrname;
             this.Password_l.Text = GameLanguage.Password;
         }
-
+                                   
         private void Res1_pb_Click(object sender, EventArgs e)
         {
             resolutionChoice(1024);
@@ -34,15 +27,27 @@ namespace Launcher
 
         public void resolutionChoice(int res)
         {
-            Res2_pb.Image = Client.Properties.Resources.Radio_Unactive;
-            Res3_pb.Image = Client.Properties.Resources.Radio_Unactive;
-            Res4_pb.Image = Client.Properties.Resources.Radio_Unactive;
-            Res5_pb.Image = Client.Properties.Resources.Radio_Unactive;
+            Res2_pb.Image = Client.Resources.Images.Radio_Unactive;
+            Res3_pb.Image = Client.Resources.Images.Radio_Unactive;
+            Res4_pb.Image = Client.Resources.Images.Radio_Unactive;
+            Res5_pb.Image = Client.Resources.Images.Radio_Unactive;
 
-            if (res == 1024) Res2_pb.Image = Client.Properties.Resources.Config_Radio_On;
-            else if (res == 1366) Res3_pb.Image = Client.Properties.Resources.Config_Radio_On;
-            else if (res == 1280) Res4_pb.Image = Client.Properties.Resources.Config_Radio_On;
-            else if (res == 1920) Res5_pb.Image = Client.Properties.Resources.Config_Radio_On;
+            switch (res)
+            {
+                case 1024:
+                    Res2_pb.Image = Client.Resources.Images.Config_Radio_On;
+                    break;
+                case 1366:
+                    Res3_pb.Image = Client.Resources.Images.Config_Radio_On;
+                    break;
+                case 1280:
+                    Res4_pb.Image = Client.Resources.Images.Config_Radio_On;
+                    break;
+                case 1920:
+                    Res5_pb.Image = Client.Resources.Images.Config_Radio_On;
+                    break;
+
+            }
 
             Settings.Resolution = res;
         }
@@ -65,17 +70,21 @@ namespace Launcher
                 AccountPass_txt.Text = Settings.Password;
                 resolutionChoice(Settings.Resolution);
 
-                if (Settings.FullScreen) Fullscreen_pb.Image = Client.Properties.Resources.Config_Check_On;
-                else Fullscreen_pb.Image = Client.Properties.Resources.Config_Check_Off1;
+                Fullscreen_pb.Image = Settings.FullScreen
+                    ? Client.Resources.Images.Config_Check_On
+                    : Client.Resources.Images.Config_Check_Off1;
 
-                if (Settings.FPSCap) FPScap_pb.Image = Client.Properties.Resources.Config_Check_On;
-                else FPScap_pb.Image = Client.Properties.Resources.Config_Check_Off1;
+                FPScap_pb.Image = Settings.FPSCap
+                    ? Client.Resources.Images.Config_Check_On
+                    : Client.Resources.Images.Config_Check_Off1;
 
-                if (Settings.TopMost) OnTop_pb.Image = Client.Properties.Resources.Config_Check_On;
-                else OnTop_pb.Image = Client.Properties.Resources.Config_Check_Off1;
+                OnTop_pb.Image = Settings.TopMost
+                    ? Client.Resources.Images.Config_Check_On
+                    : Client.Resources.Images.Config_Check_Off1;
 
-                if (Settings.P_AutoStart) AutoStart_pb.Image = Client.Properties.Resources.Config_Check_On;
-                else AutoStart_pb.Image = Client.Properties.Resources.Config_Check_Off1;
+                AutoStart_pb.Image = Settings.P_AutoStart
+                    ? Client.Resources.Images.Config_Check_On
+                    : Client.Resources.Images.Config_Check_Off1;
 
                 this.ActiveControl = label4;
             }
@@ -120,52 +129,56 @@ namespace Launcher
         {
             Settings.FullScreen = !Settings.FullScreen;
 
-            if (Settings.FullScreen) Fullscreen_pb.Image = Client.Properties.Resources.Config_Check_On;
-            else Fullscreen_pb.Image = Client.Properties.Resources.Config_Check_Off1;
+            Fullscreen_pb.Image = Settings.FullScreen
+                    ? Client.Resources.Images.Config_Check_On
+                    : Client.Resources.Images.Config_Check_Off1;
         }
 
         private void FPScap_pb_Click(object sender, EventArgs e)
         {
             Settings.FPSCap = !Settings.FPSCap;
 
-            if (Settings.FPSCap) FPScap_pb.Image = Client.Properties.Resources.Config_Check_On;
-            else FPScap_pb.Image = Client.Properties.Resources.Config_Check_Off1;
+            FPScap_pb.Image = Settings.FPSCap
+                    ? Client.Resources.Images.Config_Check_On
+                    : Client.Resources.Images.Config_Check_Off1;
         }
 
         private void OnTop_pb_Click(object sender, EventArgs e)
         {
             Settings.TopMost = !Settings.TopMost;
 
-            if (Settings.TopMost) OnTop_pb.Image = Client.Properties.Resources.Config_Check_On;
-            else OnTop_pb.Image = Client.Properties.Resources.Config_Check_Off1;
+            OnTop_pb.Image = Settings.TopMost
+                    ? Client.Resources.Images.Config_Check_On
+                    : Client.Resources.Images.Config_Check_Off1;
         }
 
         private void AutoStart_pb_Click(object sender, EventArgs e)
         {
             Settings.P_AutoStart = !Settings.P_AutoStart;
 
-            if (Settings.P_AutoStart) AutoStart_pb.Image = Client.Properties.Resources.Config_Check_On;
-            else AutoStart_pb.Image = Client.Properties.Resources.Config_Check_Off1;
+            AutoStart_pb.Image = Settings.P_AutoStart
+                    ? Client.Resources.Images.Config_Check_On
+                    : Client.Resources.Images.Config_Check_Off1;
         }
 
         private void CleanFiles_pb_MouseDown(object sender, MouseEventArgs e)
         {
-            CleanFiles_pb.Image = Client.Properties.Resources.CheckF_Pressed;
+            CleanFiles_pb.Image = Client.Resources.Images.CheckF_Pressed;
         }
 
         private void CleanFiles_pb_MouseUp(object sender, MouseEventArgs e)
         {
-            CleanFiles_pb.Image = Client.Properties.Resources.CheckF_Base2;
+            CleanFiles_pb.Image = Client.Resources.Images.CheckF_Base2;
         }
 
         private void CleanFiles_pb_MouseEnter(object sender, EventArgs e)
         {
-            CleanFiles_pb.Image = Client.Properties.Resources.CheckF_Hover;
+            CleanFiles_pb.Image = Client.Resources.Images.CheckF_Hover;
         }
 
         private void CleanFiles_pb_MouseLeave(object sender, EventArgs e)
         {
-            CleanFiles_pb.Image = Client.Properties.Resources.CheckF_Base2;
+            CleanFiles_pb.Image = Client.Resources.Images.CheckF_Base2;
         }
 
         private void CleanFiles_pb_Click(object sender, EventArgs e)

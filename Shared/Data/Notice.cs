@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-public class Notice
+﻿public class Notice
 {
     public string Title = string.Empty;
     public string Message = string.Empty;

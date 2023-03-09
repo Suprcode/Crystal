@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-public class GameLanguage
+﻿public class GameLanguage
 {
     //Client
     public static string PetMode_Both = "[Pet: Attack and Move]",

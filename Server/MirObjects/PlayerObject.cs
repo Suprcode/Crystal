@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using C = ClientPackets;
+﻿using C = ClientPackets;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirNetwork;
 using S = ServerPackets;
 using System.Text.RegularExpressions;
+using Timer = Server.MirEnvir.Timer;
 
 namespace Server.MirObjects
 {
@@ -13364,7 +13360,7 @@ namespace Server.MirObjects
 
         #endregion
 
-        public Timer GetTimer(string key)
+        public Server.MirEnvir.Timer GetTimer(string key)
         {
             var timerKey = Name + "-" + key;
 

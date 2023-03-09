@@ -1,12 +1,7 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using Microsoft.VisualBasic.PowerPacks;
+﻿using Microsoft.VisualBasic.PowerPacks;
 using Server.MirForms.VisualMapInfo.Class;
 using Server.MirEnvir;
 using Server.MirDatabase;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.MirForms.VisualMapInfo.Control
 {

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using Client.MirGraphics;
+﻿using Client.MirGraphics;
 using Client.MirNetwork;
-using Client.MirObjects;
 using Client.MirScenes;
 using Client.MirSounds;
-using Client.MirScenes.Dialogs;
 using C = ClientPackets;
 
 namespace Client.MirControls
@@ -253,12 +248,12 @@ namespace Client.MirControls
                 ShowItem = null;
             }
 
-            if (ShowItem == null && ItemDisplayArea != null && ItemDisplayArea.Contains(CMain.MPoint))
+            if (ShowItem == null && ItemDisplayArea.Contains(CMain.MPoint))
             {
                 ShowItem = new UserItem(Item.Info) { MaxDura = Item.Info.Durability, CurrentDura = Item.Info.Durability, Count = Item.Count };
                 GameScene.Scene.CreateItemLabel(ShowItem);
             }
-            else if (ShowItem != null && ItemDisplayArea != null && !ItemDisplayArea.Contains(CMain.MPoint))
+            else if (ShowItem != null && !ItemDisplayArea.Contains(CMain.MPoint))
             {
                 GameScene.Scene.DisposeItemLabel();
                 GameScene.HoverItem = null;

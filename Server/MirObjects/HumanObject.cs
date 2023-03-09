@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using C = ClientPackets;
-using Server.MirDatabase;
+﻿using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirNetwork;
 using S = ServerPackets;
-using System.Text.RegularExpressions;
-using Server.MirObjects.Monsters;
 
 namespace Server.MirObjects
 {
@@ -4330,6 +4322,7 @@ namespace Server.MirObjects
             CurrentMap.ActionList.Add(action);
             cast = true;
         }
+
         private void MoonMist(UserMagic magic)
         {
             for (int i = 0; i < Buffs.Count; i++)
@@ -4360,6 +4353,7 @@ namespace Server.MirObjects
 
             return true;
         }
+
         private void TrapHexagon(UserMagic magic, Point location, out bool cast)
         {
             cast = false;
@@ -5504,6 +5498,7 @@ namespace Server.MirObjects
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, value, location, target);
             ActionList.Add(action);
         }
+
         public void ArcherSummonStone(UserMagic magic, Point location, out bool cast)
         {
             cast = false;
@@ -5516,7 +5511,6 @@ namespace Server.MirObjects
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, value, location);
             ActionList.Add(action);
             cast = true;
-        
         }
 
         public void OneWithNature(MapObject target, UserMagic magic)
@@ -6477,7 +6471,6 @@ namespace Server.MirObjects
                         value = (int)data[1];
                         location = (Point)data[2];
 
-
                         if (Pets.Where(x => x.Race == ObjectType.Monster).Count() >= magic.Level + 1) return;
 
                         MonsterInfo mInfo = Envir.GetMonsterInfo(Settings.StoneName);
@@ -6497,8 +6490,6 @@ namespace Server.MirObjects
                         break;
                     }
                     #endregion
-
-
 
             }
         }

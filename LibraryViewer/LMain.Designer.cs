@@ -48,7 +48,7 @@
             this.LblLibCount = new System.Windows.Forms.Label();
             this.LblWidth = new System.Windows.Forms.Label();
             this.ImageBox = new System.Windows.Forms.PictureBox();
-            this.PreviewListView = new LibraryViewer.FixedListView();
+            this.PreviewListView = new CustomFormControl.FixedListView();
             this.ExportImagesButton = new System.Windows.Forms.Button();
             this.MainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -336,7 +336,7 @@
         private System.Windows.Forms.Label LblLibCount;
         private System.Windows.Forms.Label LblWidth;
         private System.Windows.Forms.PictureBox ImageBox;
-        private FixedListView PreviewListView;
+        private CustomFormControl.FixedListView PreviewListView;
         private System.Windows.Forms.Label LibNameLabel;
         private System.Windows.Forms.Label LblLibName;
         private System.Windows.Forms.TextBox DebugBox;

@@ -129,7 +129,7 @@ namespace Launcher
             this.Name_label.BackColor = System.Drawing.Color.Transparent;
             this.Name_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name_label.ForeColor = System.Drawing.Color.White;
-            this.Name_label.Image = global::Client.Properties.Resources.server_base;
+            this.Name_label.Image = Client.Resources.Images.server_base;
             this.Name_label.Location = new System.Drawing.Point(307, 8);
             this.Name_label.Name = "Name_label";
             this.Name_label.Size = new System.Drawing.Size(186, 22);
@@ -140,7 +140,7 @@ namespace Launcher
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::Client.Properties.Resources.server_base;
+            this.pictureBox1.Image = Client.Resources.Images.server_base;
             this.pictureBox1.Location = new System.Drawing.Point(307, -40);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(186, 20);
@@ -151,7 +151,7 @@ namespace Launcher
             // 
             this.Config_pb.BackColor = System.Drawing.Color.Transparent;
             this.Config_pb.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.Config_pb.Image = global::Client.Properties.Resources.Config_Base;
+            this.Config_pb.Image = Client.Resources.Images.Config_Base;
             this.Config_pb.Location = new System.Drawing.Point(739, 7);
             this.Config_pb.Name = "Config_pb";
             this.Config_pb.Size = new System.Drawing.Size(19, 20);
@@ -167,7 +167,7 @@ namespace Launcher
             // 
             this.Close_pb.BackColor = System.Drawing.Color.Transparent;
             this.Close_pb.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.Close_pb.Image = global::Client.Properties.Resources.Cross_Base;
+            this.Close_pb.Image = Client.Resources.Images.Cross_Base;
             this.Close_pb.Location = new System.Drawing.Point(763, 7);
             this.Close_pb.Name = "Close_pb";
             this.Close_pb.Size = new System.Drawing.Size(19, 20);
@@ -253,7 +253,7 @@ namespace Launcher
             this.ProgTotalEnd_pb.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.ProgTotalEnd_pb.BackColor = System.Drawing.Color.Transparent;
             this.ProgTotalEnd_pb.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ProgTotalEnd_pb.Image = global::Client.Properties.Resources.NEW_Progress_End__Blue_;
+            this.ProgTotalEnd_pb.Image = Client.Resources.Images.NEW_Progress_End__Blue_;
             this.ProgTotalEnd_pb.Location = new System.Drawing.Point(608, 508);
             this.ProgTotalEnd_pb.Name = "ProgTotalEnd_pb";
             this.ProgTotalEnd_pb.Size = new System.Drawing.Size(4, 15);
@@ -265,7 +265,7 @@ namespace Launcher
             this.ProgEnd_pb.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.ProgEnd_pb.BackColor = System.Drawing.Color.Transparent;
             this.ProgEnd_pb.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ProgEnd_pb.Image = global::Client.Properties.Resources.NEW_Progress_End__Green_;
+            this.ProgEnd_pb.Image = Client.Resources.Images.NEW_Progress_End__Green_;
             this.ProgEnd_pb.Location = new System.Drawing.Point(608, 490);
             this.ProgEnd_pb.Name = "ProgEnd_pb";
             this.ProgEnd_pb.Size = new System.Drawing.Size(4, 15);
@@ -277,7 +277,7 @@ namespace Launcher
             this.ProgressCurrent_pb.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.ProgressCurrent_pb.BackColor = System.Drawing.Color.Transparent;
             this.ProgressCurrent_pb.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ProgressCurrent_pb.Image = global::Client.Properties.Resources.Green_Progress;
+            this.ProgressCurrent_pb.Image = Client.Resources.Images.Green_Progress;
             this.ProgressCurrent_pb.Location = new System.Drawing.Point(58, 490);
             this.ProgressCurrent_pb.Name = "ProgressCurrent_pb";
             this.ProgressCurrent_pb.Size = new System.Drawing.Size(550, 15);
@@ -290,7 +290,7 @@ namespace Launcher
             this.TotalProg_pb.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.TotalProg_pb.BackColor = System.Drawing.Color.Transparent;
             this.TotalProg_pb.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.TotalProg_pb.Image = global::Client.Properties.Resources.Blue_Progress;
+            this.TotalProg_pb.Image = Client.Resources.Images.Blue_Progress;
             this.TotalProg_pb.Location = new System.Drawing.Point(58, 508);
             this.TotalProg_pb.Name = "TotalProg_pb";
             this.TotalProg_pb.Size = new System.Drawing.Size(550, 14);
@@ -304,7 +304,7 @@ namespace Launcher
             this.Launch_pb.BackColor = System.Drawing.Color.Transparent;
             this.Launch_pb.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.Launch_pb.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Launch_pb.Image = global::Client.Properties.Resources.Launch_Base1;
+            this.Launch_pb.Image = Client.Resources.Images.Launch_Base1;
             this.Launch_pb.Location = new System.Drawing.Point(658, 472);
             this.Launch_pb.Name = "Launch_pb";
             this.Launch_pb.Size = new System.Drawing.Size(116, 54);
@@ -333,7 +333,7 @@ namespace Launcher
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.BackgroundImage = global::Client.Properties.Resources.pfffft;
+            this.BackgroundImage = Client.Resources.Images.pfffft;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(800, 548);
             this.Controls.Add(this.Main_browser);

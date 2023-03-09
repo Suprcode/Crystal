@@ -15,4 +15,3 @@ RangeAttack(int minAttackStat, int maxAttackStat, byte rangeAttackTypeNumber = 0
 ArrowAttack(int minAttackStat, int maxAttackStat, DefenceType type = DefenceType.MACAgility, int additionalDelay = 500)
 
 SinglePushAttack(int minAttackStat, int MaxAttackStat, DefenceType type = DefenceType.AC, int delay = 500)
-

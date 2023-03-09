@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using Client.MirGraphics;
+﻿using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirScenes;
 using Client.MirSounds;
@@ -11,6 +6,7 @@ using Client.MirControls;
 using S = ServerPackets;
 using C = ClientPackets;
 using Client.MirScenes.Dialogs;
+using System.Reflection;
 
 namespace Client.MirObjects
 {

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Client.MirControls;
+﻿using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirSounds;
-using System.Drawing;
 using System.Globalization;
-using System.Windows.Forms;
 using Client.MirNetwork;
 
 using C = ClientPackets;

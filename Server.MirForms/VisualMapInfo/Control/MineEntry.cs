@@ -1,9 +1,5 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using Microsoft.VisualBasic.PowerPacks;
+﻿using Microsoft.VisualBasic.PowerPacks;
 using Server.MirForms.VisualMapInfo.Class;
-using System.Web.UI.WebControls;
 
 namespace Server.MirForms.VisualMapInfo.Control
 {
@@ -197,8 +193,9 @@ namespace Server.MirForms.VisualMapInfo.Control
 
         private void MineEntry_Load(object sender, EventArgs e)
         {
-            MineComboBox.Items.Add(new ListItem { Text = "Disabled", Value = "0" });
-            for (int i = 0; i < Settings.MineSetList.Count; i++) MineComboBox.Items.Add(new ListItem(Settings.MineSetList[i].Name, (i + 1).ToString()));
+            List<string> mineSetItems = new() { { "Disabled" } };
+            Settings.MineSetList.ForEach(x => mineSetItems.Add(x.Name));
+            MineComboBox.DataSource = mineSetItems;
 
             MineComboBox.SelectedIndex = MineIndex;
 

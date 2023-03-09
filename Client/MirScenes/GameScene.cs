@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using Client.MirControls;
+﻿using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
@@ -19,7 +11,6 @@ using C = ClientPackets;
 using Effect = Client.MirObjects.Effect;
 
 using Client.MirScenes.Dialogs;
-using System.Drawing.Imaging;
 using Client.Utils;
 
 namespace Client.MirScenes
@@ -2545,8 +2536,6 @@ namespace Client.MirScenes
             MirItemCell fromCell;
             MirItemCell toCell;
 
-            int index = -1;
-
             switch (p.Grid)
             {
                 case MirGridType.Socket:
@@ -3459,7 +3448,6 @@ namespace Client.MirScenes
 
             Hero.PercentHealth = (byte)(Hero.HP / (float)Hero.Stats[Stat.HP] * 100);
             Hero.PercentMana = (byte)(Hero.MP / (float)Hero.Stats[Stat.MP] * 100);
-            int g = 0;
         }
 
         private void DeleteQuestItem(S.DeleteQuestItem p)
@@ -4627,7 +4615,6 @@ namespace Client.MirScenes
                 MapObject ob = MapControl.Objects[i];
                 if (ob.ObjectID != p.ObjectID) continue;
                 PlayerObject player;
-                MonsterObject monster;
 
                 switch (p.Effect)
                 {
@@ -11796,6 +11783,7 @@ namespace Client.MirScenes
                         if (!User.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && User.NextMagicObject.Race != ObjectType.Merchant)
                             target = User.NextMagicObject;
                     }
+
                     //if(magic.Spell == Spell.ElementalShot)
                     //{
                     //    isTargetSpell = User.HasElements;

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using Client.MirGraphics;
+﻿using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirScenes;
@@ -1756,7 +1753,6 @@ namespace Client.MirControls
                             }
 
                             GameScene.SelectedCell = null;
-                            MirMessageBox messageBox;
 
                             switch (errorCode)
                             {

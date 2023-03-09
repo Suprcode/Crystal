@@ -1,418 +1,49 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{263074D6-AB8D-4F3C-9CE6-A05405432BCE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Server</RootNamespace>
-    <AssemblyName>Server</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyVersion>2017.6.25.1919</AssemblyVersion>
-    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
-    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
-    <UpdateAssemblyInfoVersion>True</UpdateAssemblyInfoVersion>
-    <AssemblyInfoVersionSettings>YearStamp.MonthStamp.DayStamp.TimeStamp</AssemblyInfoVersionSettings>
-    <AssemblyVersionSettings>YearStamp.MonthStamp.DayStamp.TimeStamp</AssemblyVersionSettings>
-    <AssemblyFileVersionSettings>YearStamp.MonthStamp.DayStamp.TimeStamp</AssemblyFileVersionSettings>
-    <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
-    <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>disable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <BaseOutputPath>..\Build\Server\</BaseOutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\Build\Server\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <Prefer32Bit>true</Prefer32Bit>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\Build\Server\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup />
+
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
-  <PropertyGroup>
-    <NoWin32Manifest>true</NoWin32Manifest>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="log4net, Version=2.0.9.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.10\lib\net45\log4net.dll</HintPath>
+    <Compile Remove="bin\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <None Remove="bin\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.15" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Server\Server.Library.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="CustomFormControl">
+      <HintPath>..\Components\CustomFormControl.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualBasic.PowerPacks.Vs, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Components\PowerPacks\Microsoft.VisualBasic.PowerPacks.Vs.dll</HintPath>
-      <Private>True</Private>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+    <Reference Include="Microsoft.VisualBasic.PowerPacks.Vs">
+      <HintPath>..\Components\Microsoft.VisualBasic.PowerPacks.Vs.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Controls\FixedListViewControl\CustomFormControl.csproj">
-      <Project>{22d64468-4312-4558-b25d-99bff85caa96}</Project>
-      <Name>CustomFormControl</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Server\Server.Library.csproj">
-      <Project>{AF5F4517-CE06-4D20-9BFF-1860C6604021}</Project>
-      <Name>Server.Library</Name>
-      <Private>True</Private>
-    </ProjectReference>
-    <Compile Include="Account\ChangePasswordDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Account\ChangePasswordDialog.Designer.cs">
-      <DependentUpon>ChangePasswordDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Account\PlayerInfoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Account\PlayerInfoForm.Designer.cs">
-      <DependentUpon>PlayerInfoForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="BalanceConfigForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="BalanceConfigForm.Designer.cs">
-      <DependentUpon>BalanceConfigForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Database\GameShop.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Database\GameShop.designer.cs">
-      <DependentUpon>GameShop.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Database\ItemInfoFormNew.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Database\ItemInfoFormNew.Designer.cs">
-      <DependentUpon>ItemInfoFormNew.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Database\MagicInfoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Database\MagicInfoForm.Designer.cs">
-      <DependentUpon>MagicInfoForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Database\MonsterInfoFormNew.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Database\MonsterInfoFormNew.Designer.cs">
-      <DependentUpon>MonsterInfoFormNew.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Systems\ConquestInfoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Systems\ConquestInfoForm.Designer.cs">
-      <DependentUpon>ConquestInfoForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Systems\DragonInfoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Systems\DragonInfoForm.Designer.cs">
-      <DependentUpon>DragonInfoForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Database\ItemInfoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Database\ItemInfoForm.Designer.cs">
-      <DependentUpon>ItemInfoForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Account\AccountInfoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Account\AccountInfoForm.Designer.cs">
-      <DependentUpon>AccountInfoForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ConfigForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ConfigForm.Designer.cs">
-      <DependentUpon>ConfigForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Database\MapInfoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Database\MapInfoForm.Designer.cs">
-      <DependentUpon>MapInfoForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DropBuilder\DropBuilderForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DropBuilder\DropBuilderForm.designer.cs">
-      <DependentUpon>DropBuilderForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Database\MapForm.cs" />
-    <Compile Include="Systems\GuildInfoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Systems\GuildInfoForm.Designer.cs">
-      <DependentUpon>GuildInfoForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Systems\MiningInfoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Systems\MiningInfoForm.Designer.cs">
-      <DependentUpon>MiningInfoForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Systems\MonsterTunerForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Systems\MonsterTunerForm.Designer.cs">
-      <DependentUpon>MonsterTunerForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Systems\SystemInfoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Systems\SystemInfoForm.Designer.cs">
-      <DependentUpon>SystemInfoForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="VisualMapInfo\Class\LockBitmap.cs" />
-    <Compile Include="VisualMapInfo\Class\ReadMap.cs" />
-    <Compile Include="VisualMapInfo\Class\VisualizerGlobal.cs" />
-    <Compile Include="VisualMapInfo\Control\Forms\MiningDetailForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="VisualMapInfo\Control\Forms\MiningDetailForm.Designer.cs">
-      <DependentUpon>MiningDetailForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="VisualMapInfo\Control\Forms\RespawnsDetailForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="VisualMapInfo\Control\Forms\RespawnsDetailForm.Designer.cs">
-      <DependentUpon>RespawnsDetailForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="VisualMapInfo\Control\MapContainer.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="VisualMapInfo\Control\MineEntry.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="VisualMapInfo\Control\MineEntry.Designer.cs">
-      <DependentUpon>MineEntry.cs</DependentUpon>
-    </Compile>
-    <Compile Include="VisualMapInfo\Control\RespawnEntry.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="VisualMapInfo\Control\RespawnEntry.Designer.cs">
-      <DependentUpon>RespawnEntry.cs</DependentUpon>
-    </Compile>
-    <Compile Include="VisualMapInfo\VForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="VisualMapInfo\VForm.Designer.cs">
-      <DependentUpon>VForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Database\QuestInfoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Database\QuestInfoForm.Designer.cs">
-      <DependentUpon>QuestInfoForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Database\NPCInfoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Database\NPCInfoForm.Designer.cs">
-      <DependentUpon>NPCInfoForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Database\MonsterInfoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Database\MonsterInfoForm.Designer.cs">
-      <DependentUpon>MonsterInfoForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="SMain.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SMain.Designer.cs">
-      <DependentUpon>SMain.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Account\AccountInfoForm.resx">
-      <DependentUpon>AccountInfoForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Account\ChangePasswordDialog.resx">
-      <DependentUpon>ChangePasswordDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Account\PlayerInfoForm.resx">
-      <DependentUpon>PlayerInfoForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="BalanceConfigForm.resx">
-      <DependentUpon>BalanceConfigForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ConfigForm.resx">
-      <DependentUpon>ConfigForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Database\GameShop.resx">
-      <DependentUpon>GameShop.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Database\ItemInfoFormNew.resx">
-      <DependentUpon>ItemInfoFormNew.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Database\MagicInfoForm.resx">
-      <DependentUpon>MagicInfoForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Database\MonsterInfoFormNew.resx">
-      <DependentUpon>MonsterInfoFormNew.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Systems\ConquestInfoForm.resx">
-      <DependentUpon>ConquestInfoForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Systems\DragonInfoForm.resx">
-      <DependentUpon>DragonInfoForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Database\ItemInfoForm.resx">
-      <DependentUpon>ItemInfoForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Database\MapInfoForm.resx">
-      <DependentUpon>MapInfoForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DropBuilder\DropBuilderForm.resx">
-      <DependentUpon>DropBuilderForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Systems\GuildInfoForm.resx">
-      <DependentUpon>GuildInfoForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Systems\MiningInfoForm.resx">
-      <DependentUpon>MiningInfoForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Systems\MonsterTunerForm.resx">
-      <DependentUpon>MonsterTunerForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Systems\SystemInfoForm.resx">
-      <DependentUpon>SystemInfoForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="VisualMapInfo\Control\Forms\MiningDetailForm.resx">
-      <DependentUpon>MiningDetailForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="VisualMapInfo\Control\Forms\RespawnsDetailForm.resx">
-      <DependentUpon>RespawnsDetailForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="VisualMapInfo\Control\MineEntry.resx">
-      <DependentUpon>MineEntry.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="VisualMapInfo\Control\RespawnEntry.resx">
-      <DependentUpon>RespawnEntry.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="VisualMapInfo\VForm.resx">
-      <DependentUpon>VForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Database\QuestInfoForm.resx">
-      <DependentUpon>QuestInfoForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Database\NPCInfoForm.resx">
-      <DependentUpon>NPCInfoForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Database\MonsterInfoForm.resx">
-      <DependentUpon>MonsterInfoForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SMain.resx">
-      <DependentUpon>SMain.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <ProjectReference Include="..\Shared\Shared.csproj">
-      <Project>{19625ca5-42f9-4bf5-aa1c-c8dfd4eb7833}</Project>
-      <Name>Shared</Name>
-      <Private>True</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 4.5</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
