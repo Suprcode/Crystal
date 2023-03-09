@@ -1,0 +1,17 @@
+The following current pre-made attack methods for monsters are available.
+
+* Methods can be found at the bottom of Server.Library/MonsterObject.cs.
+* All methods are virtual so can be overriden.
+
+
+PoisonTarget(int chanceToPoison, long poisonDuration, PoisonType poison, long poisonTickSpeed = 1000)
+
+LineAttack(int distance, int additionalDelay = 500)
+
+HalfmoonAttack(int delay = 500)
+
+RangeAttack(int minAttackStat, int maxAttackStat, byte rangeAttackTypeNumber = 0, DefenceType type = DefenceType.MACAgility, int additionalDelay = 500)
+
+ArrowAttack(int minAttackStat, int maxAttackStat, DefenceType type = DefenceType.MACAgility, int additionalDelay = 500)
+
+SinglePushAttack(int minAttackStat, int MaxAttackStat, DefenceType type = DefenceType.AC, int delay = 500)
