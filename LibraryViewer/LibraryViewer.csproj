@@ -12,6 +12,11 @@
     <RootNamespace>CMirLibraryViewer</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup>
+	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Controls\FixedListViewControl\CustomFormControl.csproj" />
   </ItemGroup>

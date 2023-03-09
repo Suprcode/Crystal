@@ -8,4 +8,9 @@
     <BaseOutputPath>..\..\Components\</BaseOutputPath>
   </PropertyGroup>
 
+  <PropertyGroup>
+	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
 </Project>

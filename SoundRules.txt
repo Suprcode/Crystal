@@ -1,0 +1,25 @@
+Wemade Mir2
+----------
+Mon File * 10 + 1.
+
+1 = Appear
+2 = Attack
+4 = Flinch
+5 = Die
+6 = Attack2
+
+Crystal
+----------
+0 = Appear
+1 = Attack
+2 = Flinch
+3 = Die
+4 = Swing
+5 = Dead (coded)
+6 = Attack2
+7 = Attack3
+8 = Attack4
+8/9 = Walk (coded)
+Range = Attack (coded if not)
+Range2 = Attack2 (coded if not)
+Range3 = Attack3 (coded if not)
