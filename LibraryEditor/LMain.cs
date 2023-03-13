@@ -15,13 +15,15 @@ namespace LibraryEditor
     public partial class LMain : Form
     {
         private readonly Dictionary<int, int> _indexList = new Dictionary<int, int>();
-        private MLibraryV2 _library;
+        private MLibraryV2 _library, _referenceLibrary;
         private MLibraryV2.MImage _selectedImage, _exportImage;
         private Image _originalImage;
 
         protected bool ImageTabActive = true;
         protected bool MaskTabActive = false;
         protected bool FrameTabActive = false;
+
+        public bool ApplyOffsets => checkBox1.Checked;
 
         protected string ViewMode = "Image";
 
@@ -63,7 +65,7 @@ namespace LibraryEditor
                 {
                     try
                     {
-                        ParallelOptions options = new ParallelOptions {MaxDegreeOfParallelism = 8};
+                        ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = 8 };
                         Parallel.For(0, files.Length, options, i =>
                         {
                             if (Path.GetExtension(files[i]) == ".wtl")
@@ -93,7 +95,7 @@ namespace LibraryEditor
                     {
                         toolStripProgressBar.Value = 0;
                     }));
-                    
+
                     MessageBox.Show(
                         string.Format("Successfully converted {0} {1}",
                             (files.Length).ToString(),
@@ -140,6 +142,26 @@ namespace LibraryEditor
             OffSetYTextBox.BackColor = SystemColors.Window;
         }
 
+        public static Bitmap AddPaddingToBitmap(Bitmap originalBitmap, int padding)
+        {
+            int newWidth = originalBitmap.Width + 2 * padding;
+            int newHeight = originalBitmap.Height + 2 * padding;
+
+            Bitmap paddedBitmap = new Bitmap(newWidth, newHeight);
+
+            using (Graphics g = Graphics.FromImage(paddedBitmap))
+            {
+                g.Clear(Color.Transparent);
+
+                int x = (paddedBitmap.Width - originalBitmap.Width) / 2;
+                int y = (paddedBitmap.Height - originalBitmap.Height) / 2;
+
+                g.DrawImage(originalBitmap, x, y);
+            }
+
+            return paddedBitmap;
+        }
+
         private void PreviewListView_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (PreviewListView.SelectedIndices.Count == 0)
@@ -162,14 +184,60 @@ namespace LibraryEditor
             OffSetXTextBox.Text = _selectedImage.X.ToString();
             OffSetYTextBox.Text = _selectedImage.Y.ToString();
 
-            if (ViewMode == "Image")
+            Bitmap referenceImage = null;
+            MLibraryV2.MImage referenceMImage = null;
+            if (_referenceLibrary != null)
             {
-                ImageBox.Image = _selectedImage.Image;
+                referenceMImage = _referenceLibrary.GetMImage(PreviewListView.SelectedIndices[0]);
+                if (referenceMImage != null)
+                {
+                    referenceImage = referenceMImage.Image;
+                }
+            }
+
+            Bitmap image = null;
+            if (ViewMode == "Image")
+                image = new Bitmap(_selectedImage.Image);
+            else
+                image = new Bitmap(_selectedImage.MaskImage);
+
+            Bitmap newImage = null;
+            if (!ApplyOffsets)
+            {
+                newImage = new Bitmap(Math.Max(image.Width, referenceImage?.Width ?? 0), Math.Max(image.Height, referenceImage?.Height ?? 0));
+                using (var g = Graphics.FromImage(newImage))
+                {
+                    if (referenceImage != null)
+                        g.DrawImage(referenceImage, Point.Empty);
+                    g.DrawImage(image, Point.Empty);
+                }
             }
             else
             {
-                ImageBox.Image = _selectedImage.MaskImage;
+                var maxWidth = Math.Max(image.Width, referenceImage?.Width ?? 0);
+                var maxHeight = Math.Max(image.Height, referenceImage?.Height ?? 0);
+
+                int offsetX = 0;
+                int offsetY = 0;
+                if (referenceImage != null)
+                {
+                    offsetX = -_selectedImage.X + referenceMImage.X;
+                    offsetY = -_selectedImage.Y + referenceMImage.Y;
+                }
+                maxWidth += Math.Abs(offsetX);
+                maxHeight += Math.Abs(offsetY);
+
+                newImage = new Bitmap(maxWidth, maxHeight);
+                using (var g = Graphics.FromImage(newImage))
+                {
+                    if (referenceImage != null)
+                        g.DrawImage(referenceImage, new Point(offsetX > 0 ? offsetX : 0, offsetY > 0 ? offsetY : 0));
+                    g.DrawImage(image, new Point(offsetX < 0 ? Math.Abs(offsetX) : 0, offsetY < 0 ? Math.Abs(offsetY) : 0));
+                }
             }
+
+            ImageBox.Image = newImage;
+            ImageBox.Location = ApplyOffsets ? new Point(100 + _selectedImage.X, 200 + _selectedImage.Y) : Point.Empty;
 
             // Keep track of what image/s are selected.
             if (PreviewListView.SelectedIndices.Count > 1)
@@ -294,6 +362,12 @@ namespace LibraryEditor
                 PreviewListView.Items[0].Selected = true;
 
             UpdateFrameGridView();
+        }
+
+        private void OpenReferenceLibrary(string filename)
+        {
+            if (_referenceLibrary != null) _referenceLibrary.Close();
+            _referenceLibrary = new MLibraryV2(filename);
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1249,5 +1323,17 @@ namespace LibraryEditor
             //return matchingFrame;
         }
         #endregion
+
+        private void openReferenceFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (OpenLibraryDialog.ShowDialog() != DialogResult.OK) return;
+
+            OpenReferenceLibrary(OpenLibraryDialog.FileName);
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            PreviewListView.Invoke(new EventHandler(PreviewListView_SelectedIndexChanged), EventArgs.Empty);
+        }
     }
 }
