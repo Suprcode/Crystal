@@ -54,6 +54,7 @@ namespace LibraryEditor
             defaultNPCFramesToolStripMenuItem = new ToolStripMenuItem();
             defaultPlayerFramesToolStripMenuItem = new ToolStripMenuItem();
             autofillFromCodeToolStripMenuItem = new ToolStripMenuItem();
+            importShadowsToolStripMenuItem = new ToolStripMenuItem();
             skinToolStripMenuItem = new ToolStripMenuItem();
             splitContainer1 = new SplitContainer();
             splitContainer2 = new SplitContainer();
@@ -111,7 +112,7 @@ namespace LibraryEditor
             toolStripProgressBar = new ToolStripProgressBar();
             FolderLibraryDialog = new FolderBrowserDialog();
             FrameAnimTimer = new System.Windows.Forms.Timer(components);
-            importShadowsToolStripMenuItem = new ToolStripMenuItem();
+            openReferenceImageToolStripMenuItem = new ToolStripMenuItem();
             MainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -147,7 +148,7 @@ namespace LibraryEditor
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newToolStripMenuItem, openToolStripMenuItem, toolStripMenuItem1, openReferenceFileToolStripMenuItem, toolStripSeparator1, saveToolStripMenuItem, saveAsToolStripMenuItem, toolStripMenuItem2, closeToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newToolStripMenuItem, openToolStripMenuItem, toolStripMenuItem1, openReferenceFileToolStripMenuItem, openReferenceImageToolStripMenuItem, toolStripSeparator1, saveToolStripMenuItem, saveAsToolStripMenuItem, toolStripMenuItem2, closeToolStripMenuItem });
             fileToolStripMenuItem.Image = (Image)resources.GetObject("fileToolStripMenuItem.Image");
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(53, 20);
@@ -157,7 +158,7 @@ namespace LibraryEditor
             // 
             newToolStripMenuItem.Image = (Image)resources.GetObject("newToolStripMenuItem.Image");
             newToolStripMenuItem.Name = "newToolStripMenuItem";
-            newToolStripMenuItem.Size = new Size(179, 22);
+            newToolStripMenuItem.Size = new Size(194, 22);
             newToolStripMenuItem.Text = "New";
             newToolStripMenuItem.ToolTipText = "New .Lib";
             newToolStripMenuItem.Click += newToolStripMenuItem_Click;
@@ -166,7 +167,7 @@ namespace LibraryEditor
             // 
             openToolStripMenuItem.Image = (Image)resources.GetObject("openToolStripMenuItem.Image");
             openToolStripMenuItem.Name = "openToolStripMenuItem";
-            openToolStripMenuItem.Size = new Size(179, 22);
+            openToolStripMenuItem.Size = new Size(194, 22);
             openToolStripMenuItem.Text = "Open";
             openToolStripMenuItem.ToolTipText = "Open Shanda or Wemade files.";
             openToolStripMenuItem.Click += openToolStripMenuItem_Click;
@@ -174,25 +175,25 @@ namespace LibraryEditor
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(176, 6);
+            toolStripMenuItem1.Size = new Size(191, 6);
             // 
             // openReferenceFileToolStripMenuItem
             // 
             openReferenceFileToolStripMenuItem.Name = "openReferenceFileToolStripMenuItem";
-            openReferenceFileToolStripMenuItem.Size = new Size(179, 22);
+            openReferenceFileToolStripMenuItem.Size = new Size(194, 22);
             openReferenceFileToolStripMenuItem.Text = "Open Reference File";
             openReferenceFileToolStripMenuItem.Click += openReferenceFileToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(176, 6);
+            toolStripSeparator1.Size = new Size(191, 6);
             // 
             // saveToolStripMenuItem
             // 
             saveToolStripMenuItem.Image = (Image)resources.GetObject("saveToolStripMenuItem.Image");
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new Size(179, 22);
+            saveToolStripMenuItem.Size = new Size(194, 22);
             saveToolStripMenuItem.Text = "Save";
             saveToolStripMenuItem.ToolTipText = "Saves currently open .Lib";
             saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
@@ -201,7 +202,7 @@ namespace LibraryEditor
             // 
             saveAsToolStripMenuItem.Image = (Image)resources.GetObject("saveAsToolStripMenuItem.Image");
             saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            saveAsToolStripMenuItem.Size = new Size(179, 22);
+            saveAsToolStripMenuItem.Size = new Size(194, 22);
             saveAsToolStripMenuItem.Text = "Save As";
             saveAsToolStripMenuItem.ToolTipText = ".Lib Only.";
             saveAsToolStripMenuItem.Click += saveAsToolStripMenuItem_Click;
@@ -209,13 +210,13 @@ namespace LibraryEditor
             // toolStripMenuItem2
             // 
             toolStripMenuItem2.Name = "toolStripMenuItem2";
-            toolStripMenuItem2.Size = new Size(176, 6);
+            toolStripMenuItem2.Size = new Size(191, 6);
             // 
             // closeToolStripMenuItem
             // 
             closeToolStripMenuItem.Image = (Image)resources.GetObject("closeToolStripMenuItem.Image");
             closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            closeToolStripMenuItem.Size = new Size(179, 22);
+            closeToolStripMenuItem.Size = new Size(194, 22);
             closeToolStripMenuItem.Text = "Close";
             closeToolStripMenuItem.ToolTipText = "Exit Application.";
             closeToolStripMenuItem.Click += closeToolStripMenuItem_Click;
@@ -313,6 +314,13 @@ namespace LibraryEditor
             autofillFromCodeToolStripMenuItem.Size = new Size(200, 22);
             autofillFromCodeToolStripMenuItem.Text = "AutoFill From Code";
             autofillFromCodeToolStripMenuItem.Click += autofillNpcFramesToolStripMenuItem_Click;
+            // 
+            // importShadowsToolStripMenuItem
+            // 
+            importShadowsToolStripMenuItem.Name = "importShadowsToolStripMenuItem";
+            importShadowsToolStripMenuItem.Size = new Size(180, 22);
+            importShadowsToolStripMenuItem.Text = "Import Shadows";
+            importShadowsToolStripMenuItem.Click += importShadowsToolStripMenuItem_Click;
             // 
             // skinToolStripMenuItem
             // 
@@ -914,12 +922,12 @@ namespace LibraryEditor
             // 
             FrameAnimTimer.Tick += FrameAnimTimer_Tick;
             // 
-            // importShadowsToolStripMenuItem
+            // openReferenceImageToolStripMenuItem
             // 
-            importShadowsToolStripMenuItem.Name = "importShadowsToolStripMenuItem";
-            importShadowsToolStripMenuItem.Size = new Size(180, 22);
-            importShadowsToolStripMenuItem.Text = "Import Shadows";
-            importShadowsToolStripMenuItem.Click += importShadowsToolStripMenuItem_Click;
+            openReferenceImageToolStripMenuItem.Name = "openReferenceImageToolStripMenuItem";
+            openReferenceImageToolStripMenuItem.Size = new Size(194, 22);
+            openReferenceImageToolStripMenuItem.Text = "Open Reference Image";
+            openReferenceImageToolStripMenuItem.Click += openReferenceImageToolStripMenuItem_Click;
             // 
             // LMain
             // 
@@ -1050,6 +1058,7 @@ namespace LibraryEditor
         private ToolStripSeparator toolStripSeparator1;
         private CheckBox checkBox1;
         private ToolStripMenuItem importShadowsToolStripMenuItem;
+        private ToolStripMenuItem openReferenceImageToolStripMenuItem;
     }
 }
 

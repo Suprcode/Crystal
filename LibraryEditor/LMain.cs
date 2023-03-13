@@ -18,6 +18,7 @@ namespace LibraryEditor
         private MLibraryV2 _library, _referenceLibrary, _shadowLibrary;
         private MLibraryV2.MImage _selectedImage, _exportImage;
         private Image _originalImage;
+        public Bitmap _referenceImage;
 
         protected bool ImageTabActive = true;
         protected bool MaskTabActive = false;
@@ -197,16 +198,24 @@ namespace LibraryEditor
 
             Bitmap image = null;
             if (ViewMode == "Image")
-                image = new Bitmap(_selectedImage.Image);
+                image = _selectedImage.Image;
             else
-                image = new Bitmap(_selectedImage.MaskImage);
+                image = _selectedImage.MaskImage;
+
+            if (image == null)
+            {
+                ImageBox.Image = null;
+                return;
+            }
 
             Bitmap newImage = null;
             if (!ApplyOffsets)
             {
-                newImage = new Bitmap(Math.Max(image.Width, referenceImage?.Width ?? 0), Math.Max(image.Height, referenceImage?.Height ?? 0));
+                newImage = new Bitmap(Math.Max(_referenceImage?.Width ?? 0, Math.Max(image.Width, referenceImage?.Width ?? 0)), Math.Max(_referenceImage?.Height ?? 0, Math.Max(image.Height, referenceImage?.Height ?? 0)));
                 using (var g = Graphics.FromImage(newImage))
                 {
+                    if (_referenceImage != null)
+                        g.DrawImage(_referenceImage, Point.Empty);
                     if (referenceImage != null)
                         g.DrawImage(referenceImage, Point.Empty);
                     g.DrawImage(image, Point.Empty);
@@ -234,10 +243,24 @@ namespace LibraryEditor
                         g.DrawImage(referenceImage, new Point(offsetX > 0 ? offsetX : 0, offsetY > 0 ? offsetY : 0));
                     g.DrawImage(image, new Point(offsetX < 0 ? Math.Abs(offsetX) : 0, offsetY < 0 ? Math.Abs(offsetY) : 0));
                 }
+
+                if (_referenceImage != null)
+                {
+                    var newMaxWidth = Math.Max(_referenceImage.Width, newImage.Width + Math.Abs(_selectedImage.X));
+                    var newMaxHeight = Math.Max(_referenceImage.Height, newImage.Height + Math.Abs(_selectedImage.Y));
+
+                    var anotherNewBitmap = new Bitmap(newMaxWidth, newMaxHeight);
+                    using (var g = Graphics.FromImage(anotherNewBitmap))
+                    {
+                        g.DrawImage(_referenceImage, new Point(_selectedImage.X < 0 ? Math.Abs(_selectedImage.X) : 0, _selectedImage.Y < 0 ? Math.Abs(_selectedImage.Y) : 0));
+                        g.DrawImage(image, new Point(_selectedImage.X > 0 ? _selectedImage.X : 0, _selectedImage.Y > 0 ? _selectedImage.Y : 0));
+                    }
+                    newImage = anotherNewBitmap;
+                }
             }
 
             ImageBox.Image = newImage;
-            ImageBox.Location = ApplyOffsets ? new Point(100 + _selectedImage.X, 200 + _selectedImage.Y) : Point.Empty;
+            ImageBox.Location = ApplyOffsets ? new Point(100 + _selectedImage.X, 100 + _selectedImage.Y) : Point.Empty;
 
             // Keep track of what image/s are selected.
             if (PreviewListView.SelectedIndices.Count > 1)
@@ -1396,6 +1419,17 @@ namespace LibraryEditor
         {
             if (OpenLibraryDialog.ShowDialog() != DialogResult.OK) return;
             OpenShadowLibraryAndImport(OpenLibraryDialog.FileName);
+        }
+
+        private void openReferenceImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_library == null) return;
+            if (_library.FileName == null) return;
+
+            if (ImportImageDialog.ShowDialog() != DialogResult.OK) return;
+
+            string fileName = ImportImageDialog.FileNames[0];
+            _referenceImage = new Bitmap(fileName);
         }
     }
 }
