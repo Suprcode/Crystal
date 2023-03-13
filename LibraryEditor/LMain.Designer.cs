@@ -111,6 +111,7 @@ namespace LibraryEditor
             toolStripProgressBar = new ToolStripProgressBar();
             FolderLibraryDialog = new FolderBrowserDialog();
             FrameAnimTimer = new System.Windows.Forms.Timer(components);
+            importShadowsToolStripMenuItem = new ToolStripMenuItem();
             MainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -221,7 +222,7 @@ namespace LibraryEditor
             // 
             // functionsToolStripMenuItem
             // 
-            functionsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { copyToToolStripMenuItem, countBlanksToolStripMenuItem, removeBlanksToolStripMenuItem, convertToolStripMenuItem, populateFramesToolStripMenuItem });
+            functionsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { copyToToolStripMenuItem, countBlanksToolStripMenuItem, removeBlanksToolStripMenuItem, convertToolStripMenuItem, populateFramesToolStripMenuItem, importShadowsToolStripMenuItem });
             functionsToolStripMenuItem.Image = (Image)resources.GetObject("functionsToolStripMenuItem.Image");
             functionsToolStripMenuItem.Name = "functionsToolStripMenuItem";
             functionsToolStripMenuItem.Size = new Size(87, 20);
@@ -231,7 +232,7 @@ namespace LibraryEditor
             // 
             copyToToolStripMenuItem.Image = (Image)resources.GetObject("copyToToolStripMenuItem.Image");
             copyToToolStripMenuItem.Name = "copyToToolStripMenuItem";
-            copyToToolStripMenuItem.Size = new Size(162, 22);
+            copyToToolStripMenuItem.Size = new Size(180, 22);
             copyToToolStripMenuItem.Text = "Copy To..";
             copyToToolStripMenuItem.ToolTipText = "Copy to a new .Lib or to the end of an exsisting one.";
             copyToToolStripMenuItem.Click += copyToToolStripMenuItem_Click;
@@ -240,7 +241,7 @@ namespace LibraryEditor
             // 
             countBlanksToolStripMenuItem.Image = (Image)resources.GetObject("countBlanksToolStripMenuItem.Image");
             countBlanksToolStripMenuItem.Name = "countBlanksToolStripMenuItem";
-            countBlanksToolStripMenuItem.Size = new Size(162, 22);
+            countBlanksToolStripMenuItem.Size = new Size(180, 22);
             countBlanksToolStripMenuItem.Text = "Count Blanks";
             countBlanksToolStripMenuItem.ToolTipText = "Counts the blank images in the .Lib";
             countBlanksToolStripMenuItem.Click += countBlanksToolStripMenuItem_Click;
@@ -250,7 +251,7 @@ namespace LibraryEditor
             removeBlanksToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { safeToolStripMenuItem });
             removeBlanksToolStripMenuItem.Image = (Image)resources.GetObject("removeBlanksToolStripMenuItem.Image");
             removeBlanksToolStripMenuItem.Name = "removeBlanksToolStripMenuItem";
-            removeBlanksToolStripMenuItem.Size = new Size(162, 22);
+            removeBlanksToolStripMenuItem.Size = new Size(180, 22);
             removeBlanksToolStripMenuItem.Text = "Remove Blanks";
             removeBlanksToolStripMenuItem.ToolTipText = "Quick removal of blanks.";
             removeBlanksToolStripMenuItem.Click += removeBlanksToolStripMenuItem_Click;
@@ -268,7 +269,7 @@ namespace LibraryEditor
             // 
             convertToolStripMenuItem.Image = (Image)resources.GetObject("convertToolStripMenuItem.Image");
             convertToolStripMenuItem.Name = "convertToolStripMenuItem";
-            convertToolStripMenuItem.Size = new Size(162, 22);
+            convertToolStripMenuItem.Size = new Size(180, 22);
             convertToolStripMenuItem.Text = "Converter";
             convertToolStripMenuItem.ToolTipText = "Convert Wil/Wzl/Miz to .Lib";
             convertToolStripMenuItem.Click += convertToolStripMenuItem_Click;
@@ -278,7 +279,7 @@ namespace LibraryEditor
             populateFramesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { defaultMonsterFramesToolStripMenuItem, defaultNPCFramesToolStripMenuItem, defaultPlayerFramesToolStripMenuItem, autofillFromCodeToolStripMenuItem });
             populateFramesToolStripMenuItem.Image = (Image)resources.GetObject("populateFramesToolStripMenuItem.Image");
             populateFramesToolStripMenuItem.Name = "populateFramesToolStripMenuItem";
-            populateFramesToolStripMenuItem.Size = new Size(162, 22);
+            populateFramesToolStripMenuItem.Size = new Size(180, 22);
             populateFramesToolStripMenuItem.Text = "Populate Frames";
             // 
             // defaultMonsterFramesToolStripMenuItem
@@ -913,6 +914,13 @@ namespace LibraryEditor
             // 
             FrameAnimTimer.Tick += FrameAnimTimer_Tick;
             // 
+            // importShadowsToolStripMenuItem
+            // 
+            importShadowsToolStripMenuItem.Name = "importShadowsToolStripMenuItem";
+            importShadowsToolStripMenuItem.Size = new Size(180, 22);
+            importShadowsToolStripMenuItem.Text = "Import Shadows";
+            importShadowsToolStripMenuItem.Click += importShadowsToolStripMenuItem_Click;
+            // 
             // LMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1041,6 +1049,7 @@ namespace LibraryEditor
         private ToolStripMenuItem openReferenceFileToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
         private CheckBox checkBox1;
+        private ToolStripMenuItem importShadowsToolStripMenuItem;
     }
 }
 

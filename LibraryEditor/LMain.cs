@@ -15,7 +15,7 @@ namespace LibraryEditor
     public partial class LMain : Form
     {
         private readonly Dictionary<int, int> _indexList = new Dictionary<int, int>();
-        private MLibraryV2 _library, _referenceLibrary;
+        private MLibraryV2 _library, _referenceLibrary, _shadowLibrary;
         private MLibraryV2.MImage _selectedImage, _exportImage;
         private Image _originalImage;
 
@@ -368,6 +368,61 @@ namespace LibraryEditor
         {
             if (_referenceLibrary != null) _referenceLibrary.Close();
             _referenceLibrary = new MLibraryV2(filename);
+        }
+
+        private void OpenShadowLibraryAndImport(string filename)
+        {
+            if (_library == null) return;
+
+            if (_shadowLibrary != null) _shadowLibrary.Close();
+            _shadowLibrary = new MLibraryV2(filename);
+
+            ImageList.Images.Clear();
+            _indexList.Clear();
+
+            for (int i = 0; i < _library.Images.Count; i++)
+            {
+                var mImage = _library.GetMImage(i);
+                if (mImage == null || mImage.Image == null) continue;
+
+                var shadowImage = _shadowLibrary.GetMImage(i);
+                if (shadowImage == null || shadowImage.Image == null) continue;
+
+                var offSetX = -mImage.X + shadowImage.X;
+                var offSetY = -mImage.Y + shadowImage.Y;
+
+                var maxWidth = Math.Max(mImage.Width, shadowImage.Width + Math.Abs(offSetX));
+                var maxHeight = Math.Max(mImage.Height, shadowImage.Height + Math.Abs(offSetY));
+
+                var newBitmap = new Bitmap(maxWidth, maxHeight);
+                using (var g = Graphics.FromImage(newBitmap))
+                {
+                    g.DrawImage(mImage.Image, new Point(offSetX < 0 ? Math.Abs(offSetX) : 0, offSetY < 0 ? Math.Abs(offSetY) : 0));
+                    g.DrawImage(shadowImage.Image, new Point(offSetX > 0 ? offSetX : 0, offSetY > 0 ? offSetY : 0));
+                }
+
+                _library.ReplaceImage(i, newBitmap, mImage.X, mImage.Y);
+            }
+
+            PreviewListView.VirtualListSize = _library.Images.Count;
+
+            try
+            {
+                PreviewListView.RedrawItems(0, PreviewListView.Items.Count - 1, true);
+
+                if (ViewMode == "Image")
+                {
+                    ImageBox.Image = _library.Images[PreviewListView.SelectedIndices[0]].Image;
+                }
+                else
+                {
+                    ImageBox.Image = _library.Images[PreviewListView.SelectedIndices[0]].MaskImage;
+                }
+            }
+            catch (Exception)
+            {
+                return;
+            }
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1329,11 +1384,18 @@ namespace LibraryEditor
             if (OpenLibraryDialog.ShowDialog() != DialogResult.OK) return;
 
             OpenReferenceLibrary(OpenLibraryDialog.FileName);
+            PreviewListView.Invoke(new EventHandler(PreviewListView_SelectedIndexChanged), EventArgs.Empty);
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             PreviewListView.Invoke(new EventHandler(PreviewListView_SelectedIndexChanged), EventArgs.Empty);
+        }
+
+        private void importShadowsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (OpenLibraryDialog.ShowDialog() != DialogResult.OK) return;
+            OpenShadowLibraryAndImport(OpenLibraryDialog.FileName);
         }
     }
 }
