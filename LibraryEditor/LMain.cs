@@ -1431,5 +1431,26 @@ namespace LibraryEditor
             string fileName = ImportImageDialog.FileNames[0];
             _referenceImage = new Bitmap(fileName);
         }
+
+        private void BulkButton_Click(object sender, EventArgs e)
+        {
+            // Create an instance of the InputDialog class
+            InputDialog dlg = new InputDialog();
+
+            // Show the dialog as a modal dialog
+            DialogResult result = dlg.ShowDialog();
+
+            // If the user clicked the Ok button, retrieve the values entered by the user
+            if (result == DialogResult.OK)
+            {
+                for (int i = 0; i < PreviewListView.SelectedIndices.Count; i++)
+                {
+                    MLibraryV2.MImage image = _library.GetMImage(PreviewListView.SelectedIndices[i]);
+                    if (image == null || image.Image == null) continue;
+                    image.X += (short)dlg.Value1;
+                    image.Y += (short)dlg.Value2;
+                }
+            }
+        }
     }
 }

@@ -38,6 +38,7 @@ namespace LibraryEditor
             openToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem1 = new ToolStripSeparator();
             openReferenceFileToolStripMenuItem = new ToolStripMenuItem();
+            openReferenceImageToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             saveToolStripMenuItem = new ToolStripMenuItem();
             saveAsToolStripMenuItem = new ToolStripMenuItem();
@@ -58,6 +59,7 @@ namespace LibraryEditor
             skinToolStripMenuItem = new ToolStripMenuItem();
             splitContainer1 = new SplitContainer();
             splitContainer2 = new SplitContainer();
+            BulkButton = new Button();
             checkBox1 = new CheckBox();
             groupBox1 = new GroupBox();
             RButtonOverlay = new RadioButton();
@@ -112,7 +114,6 @@ namespace LibraryEditor
             toolStripProgressBar = new ToolStripProgressBar();
             FolderLibraryDialog = new FolderBrowserDialog();
             FrameAnimTimer = new System.Windows.Forms.Timer(components);
-            openReferenceImageToolStripMenuItem = new ToolStripMenuItem();
             MainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -184,6 +185,13 @@ namespace LibraryEditor
             openReferenceFileToolStripMenuItem.Text = "Open Reference File";
             openReferenceFileToolStripMenuItem.Click += openReferenceFileToolStripMenuItem_Click;
             // 
+            // openReferenceImageToolStripMenuItem
+            // 
+            openReferenceImageToolStripMenuItem.Name = "openReferenceImageToolStripMenuItem";
+            openReferenceImageToolStripMenuItem.Size = new Size(194, 22);
+            openReferenceImageToolStripMenuItem.Text = "Open Reference Image";
+            openReferenceImageToolStripMenuItem.Click += openReferenceImageToolStripMenuItem_Click;
+            // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
@@ -233,7 +241,7 @@ namespace LibraryEditor
             // 
             copyToToolStripMenuItem.Image = (Image)resources.GetObject("copyToToolStripMenuItem.Image");
             copyToToolStripMenuItem.Name = "copyToToolStripMenuItem";
-            copyToToolStripMenuItem.Size = new Size(180, 22);
+            copyToToolStripMenuItem.Size = new Size(162, 22);
             copyToToolStripMenuItem.Text = "Copy To..";
             copyToToolStripMenuItem.ToolTipText = "Copy to a new .Lib or to the end of an exsisting one.";
             copyToToolStripMenuItem.Click += copyToToolStripMenuItem_Click;
@@ -242,7 +250,7 @@ namespace LibraryEditor
             // 
             countBlanksToolStripMenuItem.Image = (Image)resources.GetObject("countBlanksToolStripMenuItem.Image");
             countBlanksToolStripMenuItem.Name = "countBlanksToolStripMenuItem";
-            countBlanksToolStripMenuItem.Size = new Size(180, 22);
+            countBlanksToolStripMenuItem.Size = new Size(162, 22);
             countBlanksToolStripMenuItem.Text = "Count Blanks";
             countBlanksToolStripMenuItem.ToolTipText = "Counts the blank images in the .Lib";
             countBlanksToolStripMenuItem.Click += countBlanksToolStripMenuItem_Click;
@@ -252,7 +260,7 @@ namespace LibraryEditor
             removeBlanksToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { safeToolStripMenuItem });
             removeBlanksToolStripMenuItem.Image = (Image)resources.GetObject("removeBlanksToolStripMenuItem.Image");
             removeBlanksToolStripMenuItem.Name = "removeBlanksToolStripMenuItem";
-            removeBlanksToolStripMenuItem.Size = new Size(180, 22);
+            removeBlanksToolStripMenuItem.Size = new Size(162, 22);
             removeBlanksToolStripMenuItem.Text = "Remove Blanks";
             removeBlanksToolStripMenuItem.ToolTipText = "Quick removal of blanks.";
             removeBlanksToolStripMenuItem.Click += removeBlanksToolStripMenuItem_Click;
@@ -270,7 +278,7 @@ namespace LibraryEditor
             // 
             convertToolStripMenuItem.Image = (Image)resources.GetObject("convertToolStripMenuItem.Image");
             convertToolStripMenuItem.Name = "convertToolStripMenuItem";
-            convertToolStripMenuItem.Size = new Size(180, 22);
+            convertToolStripMenuItem.Size = new Size(162, 22);
             convertToolStripMenuItem.Text = "Converter";
             convertToolStripMenuItem.ToolTipText = "Convert Wil/Wzl/Miz to .Lib";
             convertToolStripMenuItem.Click += convertToolStripMenuItem_Click;
@@ -280,7 +288,7 @@ namespace LibraryEditor
             populateFramesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { defaultMonsterFramesToolStripMenuItem, defaultNPCFramesToolStripMenuItem, defaultPlayerFramesToolStripMenuItem, autofillFromCodeToolStripMenuItem });
             populateFramesToolStripMenuItem.Image = (Image)resources.GetObject("populateFramesToolStripMenuItem.Image");
             populateFramesToolStripMenuItem.Name = "populateFramesToolStripMenuItem";
-            populateFramesToolStripMenuItem.Size = new Size(180, 22);
+            populateFramesToolStripMenuItem.Size = new Size(162, 22);
             populateFramesToolStripMenuItem.Text = "Populate Frames";
             // 
             // defaultMonsterFramesToolStripMenuItem
@@ -318,7 +326,7 @@ namespace LibraryEditor
             // importShadowsToolStripMenuItem
             // 
             importShadowsToolStripMenuItem.Name = "importShadowsToolStripMenuItem";
-            importShadowsToolStripMenuItem.Size = new Size(180, 22);
+            importShadowsToolStripMenuItem.Size = new Size(162, 22);
             importShadowsToolStripMenuItem.Text = "Import Shadows";
             importShadowsToolStripMenuItem.Click += importShadowsToolStripMenuItem_Click;
             // 
@@ -365,6 +373,7 @@ namespace LibraryEditor
             // 
             // splitContainer2.Panel1
             // 
+            splitContainer2.Panel1.Controls.Add(BulkButton);
             splitContainer2.Panel1.Controls.Add(checkBox1);
             splitContainer2.Panel1.Controls.Add(groupBox1);
             splitContainer2.Panel1.Controls.Add(checkboxRemoveBlackOnImport);
@@ -398,6 +407,16 @@ namespace LibraryEditor
             splitContainer2.SplitterDistance = 240;
             splitContainer2.SplitterWidth = 5;
             splitContainer2.TabIndex = 0;
+            // 
+            // BulkButton
+            // 
+            BulkButton.Location = new Point(6, 66);
+            BulkButton.Name = "BulkButton";
+            BulkButton.Size = new Size(77, 23);
+            BulkButton.TabIndex = 25;
+            BulkButton.Text = "Bulk Offset";
+            BulkButton.UseVisualStyleBackColor = true;
+            BulkButton.Click += BulkButton_Click;
             // 
             // checkBox1
             // 
@@ -653,7 +672,7 @@ namespace LibraryEditor
             // 
             label10.AutoSize = true;
             label10.ForeColor = SystemColors.ControlText;
-            label10.Location = new Point(78, 85);
+            label10.Location = new Point(85, 85);
             label10.Margin = new Padding(4, 0, 4, 0);
             label10.Name = "label10";
             label10.Size = new Size(53, 15);
@@ -664,7 +683,7 @@ namespace LibraryEditor
             // 
             label8.AutoSize = true;
             label8.ForeColor = SystemColors.ControlText;
-            label8.Location = new Point(78, 61);
+            label8.Location = new Point(85, 61);
             label8.Margin = new Padding(4, 0, 4, 0);
             label8.Name = "label8";
             label8.Size = new Size(53, 15);
@@ -922,13 +941,6 @@ namespace LibraryEditor
             // 
             FrameAnimTimer.Tick += FrameAnimTimer_Tick;
             // 
-            // openReferenceImageToolStripMenuItem
-            // 
-            openReferenceImageToolStripMenuItem.Name = "openReferenceImageToolStripMenuItem";
-            openReferenceImageToolStripMenuItem.Size = new Size(194, 22);
-            openReferenceImageToolStripMenuItem.Text = "Open Reference Image";
-            openReferenceImageToolStripMenuItem.Click += openReferenceImageToolStripMenuItem_Click;
-            // 
             // LMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1059,6 +1071,7 @@ namespace LibraryEditor
         private CheckBox checkBox1;
         private ToolStripMenuItem importShadowsToolStripMenuItem;
         private ToolStripMenuItem openReferenceImageToolStripMenuItem;
+        private Button BulkButton;
     }
 }
 
