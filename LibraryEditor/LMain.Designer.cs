@@ -59,6 +59,8 @@ namespace LibraryEditor
             skinToolStripMenuItem = new ToolStripMenuItem();
             splitContainer1 = new SplitContainer();
             splitContainer2 = new SplitContainer();
+            numericUpDownY = new NumericUpDown();
+            numericUpDownX = new NumericUpDown();
             BulkButton = new Button();
             checkBox1 = new CheckBox();
             groupBox1 = new GroupBox();
@@ -75,8 +77,6 @@ namespace LibraryEditor
             ZoomTrackBar = new TrackBar();
             ExportButton = new Button();
             InsertImageButton = new Button();
-            OffSetYTextBox = new TextBox();
-            OffSetXTextBox = new TextBox();
             DeleteButton = new Button();
             AddButton = new Button();
             label10 = new Label();
@@ -123,6 +123,8 @@ namespace LibraryEditor
             splitContainer2.Panel1.SuspendLayout();
             splitContainer2.Panel2.SuspendLayout();
             splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownY).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownX).BeginInit();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)nudJump).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
@@ -373,6 +375,8 @@ namespace LibraryEditor
             // 
             // splitContainer2.Panel1
             // 
+            splitContainer2.Panel1.Controls.Add(numericUpDownY);
+            splitContainer2.Panel1.Controls.Add(numericUpDownX);
             splitContainer2.Panel1.Controls.Add(BulkButton);
             splitContainer2.Panel1.Controls.Add(checkBox1);
             splitContainer2.Panel1.Controls.Add(groupBox1);
@@ -387,8 +391,6 @@ namespace LibraryEditor
             splitContainer2.Panel1.Controls.Add(ZoomTrackBar);
             splitContainer2.Panel1.Controls.Add(ExportButton);
             splitContainer2.Panel1.Controls.Add(InsertImageButton);
-            splitContainer2.Panel1.Controls.Add(OffSetYTextBox);
-            splitContainer2.Panel1.Controls.Add(OffSetXTextBox);
             splitContainer2.Panel1.Controls.Add(DeleteButton);
             splitContainer2.Panel1.Controls.Add(AddButton);
             splitContainer2.Panel1.Controls.Add(label10);
@@ -407,6 +409,24 @@ namespace LibraryEditor
             splitContainer2.SplitterDistance = 240;
             splitContainer2.SplitterWidth = 5;
             splitContainer2.TabIndex = 0;
+            // 
+            // numericUpDownY
+            // 
+            numericUpDownY.Location = new Point(145, 83);
+            numericUpDownY.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            numericUpDownY.Name = "numericUpDownY";
+            numericUpDownY.Size = new Size(82, 23);
+            numericUpDownY.TabIndex = 27;
+            numericUpDownY.ValueChanged += numericUpDownY_ValueChanged;
+            // 
+            // numericUpDownX
+            // 
+            numericUpDownX.Location = new Point(145, 59);
+            numericUpDownX.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            numericUpDownX.Name = "numericUpDownX";
+            numericUpDownX.Size = new Size(82, 23);
+            numericUpDownX.TabIndex = 26;
+            numericUpDownX.ValueChanged += numericUpDownX_ValueChanged;
             // 
             // BulkButton
             // 
@@ -617,24 +637,6 @@ namespace LibraryEditor
             InsertImageButton.TextImageRelation = TextImageRelation.TextBeforeImage;
             InsertImageButton.UseVisualStyleBackColor = true;
             InsertImageButton.Click += InsertImageButton_Click;
-            // 
-            // OffSetYTextBox
-            // 
-            OffSetYTextBox.Location = new Point(144, 82);
-            OffSetYTextBox.Margin = new Padding(4, 3, 4, 3);
-            OffSetYTextBox.Name = "OffSetYTextBox";
-            OffSetYTextBox.Size = new Size(75, 23);
-            OffSetYTextBox.TabIndex = 6;
-            OffSetYTextBox.TextChanged += OffSetYTextBox_TextChanged;
-            // 
-            // OffSetXTextBox
-            // 
-            OffSetXTextBox.Location = new Point(144, 58);
-            OffSetXTextBox.Margin = new Padding(4, 3, 4, 3);
-            OffSetXTextBox.Name = "OffSetXTextBox";
-            OffSetXTextBox.Size = new Size(75, 23);
-            OffSetXTextBox.TabIndex = 5;
-            OffSetXTextBox.TextChanged += OffSetXTextBox_TextChanged;
             // 
             // DeleteButton
             // 
@@ -969,6 +971,8 @@ namespace LibraryEditor
             splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer2).EndInit();
             splitContainer2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)numericUpDownY).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownX).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)nudJump).EndInit();
@@ -1017,8 +1021,6 @@ namespace LibraryEditor
         private System.Windows.Forms.ToolStripMenuItem copyToToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeBlanksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem countBlanksToolStripMenuItem;
-        private System.Windows.Forms.TextBox OffSetYTextBox;
-        private System.Windows.Forms.TextBox OffSetXTextBox;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button InsertImageButton;
@@ -1072,6 +1074,8 @@ namespace LibraryEditor
         private ToolStripMenuItem importShadowsToolStripMenuItem;
         private ToolStripMenuItem openReferenceImageToolStripMenuItem;
         private Button BulkButton;
+        private NumericUpDown numericUpDownY;
+        private NumericUpDown numericUpDownX;
     }
 }
 

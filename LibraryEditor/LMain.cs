@@ -137,10 +137,8 @@ namespace LibraryEditor
 
             WidthLabel.Text = "<No Image>";
             HeightLabel.Text = "<No Image>";
-            OffSetXTextBox.Text = string.Empty;
-            OffSetYTextBox.Text = string.Empty;
-            OffSetXTextBox.BackColor = SystemColors.Window;
-            OffSetYTextBox.BackColor = SystemColors.Window;
+            numericUpDownX.Value = 0;
+            numericUpDownY.Value = 0;
         }
 
         public static Bitmap AddPaddingToBitmap(Bitmap originalBitmap, int padding)
@@ -182,8 +180,8 @@ namespace LibraryEditor
             WidthLabel.Text = _selectedImage.Width.ToString();
             HeightLabel.Text = _selectedImage.Height.ToString();
 
-            OffSetXTextBox.Text = _selectedImage.X.ToString();
-            OffSetYTextBox.Text = _selectedImage.Y.ToString();
+            numericUpDownX.Value = _selectedImage.X;
+            numericUpDownY.Value = _selectedImage.Y;
 
             Bitmap referenceImage = null;
             MLibraryV2.MImage referenceMImage = null;
@@ -260,7 +258,10 @@ namespace LibraryEditor
             }
 
             ImageBox.Image = newImage;
-            ImageBox.Location = ApplyOffsets ? new Point(100 + _selectedImage.X, 100 + _selectedImage.Y) : Point.Empty;
+            int globalOffsetX = _referenceImage != null ? 0 : referenceMImage?.X ?? _selectedImage.X;
+            int globalOffsetY = _referenceImage != null ? 0 : referenceMImage?.Y ?? _selectedImage.Y;
+
+            ImageBox.Location = ApplyOffsets ? new Point(100 + globalOffsetX, 100 + globalOffsetY) : Point.Empty;
 
             // Keep track of what image/s are selected.
             if (PreviewListView.SelectedIndices.Count > 1)
@@ -362,6 +363,8 @@ namespace LibraryEditor
         {
             if (OpenLibraryDialog.ShowDialog() != DialogResult.OK) return;
 
+            _referenceLibrary = null;
+            _referenceImage = null;
             OpenLibrary(OpenLibraryDialog.FileName);
         }
 
@@ -606,52 +609,6 @@ namespace LibraryEditor
 
             MLibraryV2.Load = true;
             MessageBox.Show(count.ToString());
-        }
-
-        private void OffSetXTextBox_TextChanged(object sender, EventArgs e)
-        {
-            TextBox control = sender as TextBox;
-
-            if (control == null || !control.Focused) return;
-
-            short temp;
-
-            if (!short.TryParse(control.Text, out temp))
-            {
-                control.BackColor = Color.Red;
-                return;
-            }
-
-            control.BackColor = SystemColors.Window;
-
-            for (int i = 0; i < PreviewListView.SelectedIndices.Count; i++)
-            {
-                MLibraryV2.MImage image = _library.GetMImage(PreviewListView.SelectedIndices[i]);
-                image.X = temp;
-            }
-        }
-
-        private void OffSetYTextBox_TextChanged(object sender, EventArgs e)
-        {
-            TextBox control = sender as TextBox;
-
-            if (control == null || !control.Focused) return;
-
-            short temp;
-
-            if (!short.TryParse(control.Text, out temp))
-            {
-                control.BackColor = Color.Red;
-                return;
-            }
-
-            control.BackColor = SystemColors.Window;
-
-            for (int i = 0; i < PreviewListView.SelectedIndices.Count; i++)
-            {
-                MLibraryV2.MImage image = _library.GetMImage(PreviewListView.SelectedIndices[i]);
-                image.Y = temp;
-            }
         }
 
         private void InsertImageButton_Click(object sender, EventArgs e)
@@ -1451,6 +1408,26 @@ namespace LibraryEditor
                     image.Y += (short)dlg.Value2;
                 }
             }
+        }
+
+        private void numericUpDownX_ValueChanged(object sender, EventArgs e)
+        {
+            for (int i = 0; i < PreviewListView.SelectedIndices.Count; i++)
+            {
+                MLibraryV2.MImage image = _library.GetMImage(PreviewListView.SelectedIndices[i]);
+                image.X = (short)numericUpDownX.Value;
+            }
+            PreviewListView.Invoke(new EventHandler(PreviewListView_SelectedIndexChanged), EventArgs.Empty);
+        }
+
+        private void numericUpDownY_ValueChanged(object sender, EventArgs e)
+        {
+            for (int i = 0; i < PreviewListView.SelectedIndices.Count; i++)
+            {
+                MLibraryV2.MImage image = _library.GetMImage(PreviewListView.SelectedIndices[i]);
+                image.Y = (short)numericUpDownY.Value;
+            }
+            PreviewListView.Invoke(new EventHandler(PreviewListView_SelectedIndexChanged), EventArgs.Empty);
         }
     }
 }
