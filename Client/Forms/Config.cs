@@ -1,6 +1,7 @@
 ﻿using Client;
 using System.Resources;
 using System.Reflection;
+using Client.Resolution;
 
 namespace Launcher
 {
@@ -18,14 +19,17 @@ namespace Launcher
             this.AutoStart_label.Text = GameLanguage.Autostart;
             this.ID_l.Text = GameLanguage.Usrname;
             this.Password_l.Text = GameLanguage.Password;
+
+            DrawSupportedResolutions();
         }
                                    
         private void Res1_pb_Click(object sender, EventArgs e)
         {
-            resolutionChoice(1024);
+            resolutionChoice(eSupportedResolution.w1024h768);
+
         }
 
-        public void resolutionChoice(int res)
+        public void resolutionChoice(eSupportedResolution res)
         {
             Res2_pb.Image = Client.Resources.Images.Radio_Unactive;
             Res3_pb.Image = Client.Resources.Images.Radio_Unactive;
@@ -34,32 +38,32 @@ namespace Launcher
 
             switch (res)
             {
-                case 1024:
+                case eSupportedResolution.w1024h768:
                     Res2_pb.Image = Client.Resources.Images.Config_Radio_On;
                     break;
-                case 1366:
+                case eSupportedResolution.w1366h768:
                     Res3_pb.Image = Client.Resources.Images.Config_Radio_On;
                     break;
-                case 1280:
+                case eSupportedResolution.w1280h720:
                     Res4_pb.Image = Client.Resources.Images.Config_Radio_On;
                     break;
-                case 1920:
+                case eSupportedResolution.w1920h1080:
                     Res5_pb.Image = Client.Resources.Images.Config_Radio_On;
                     break;
 
             }
 
-            Settings.Resolution = res;
+            Settings.Resolution = (int)res;
         }
 
         private void Res2_pb_Click(object sender, EventArgs e)
         {
-            resolutionChoice(1024);
+            resolutionChoice(eSupportedResolution.w1024h768);
         }
 
         private void Res3_pb_Click(object sender, EventArgs e)
         {
-            resolutionChoice(1366);
+            resolutionChoice(eSupportedResolution.w1366h768);
         }
 
         private void Config_VisibleChanged(object sender, EventArgs e)
@@ -68,7 +72,7 @@ namespace Launcher
             {
                 AccountLogin_txt.Text = Settings.AccountID;
                 AccountPass_txt.Text = Settings.Password;
-                resolutionChoice(Settings.Resolution);
+                resolutionChoice((eSupportedResolution)Settings.Resolution);
 
                 Fullscreen_pb.Image = Settings.FullScreen
                     ? Client.Resources.Images.Config_Check_On
@@ -194,12 +198,47 @@ namespace Launcher
 
         private void Res4_pb_Click(object sender, EventArgs e)
         {
-            resolutionChoice(1280);
+            resolutionChoice(eSupportedResolution.w1280h720);
         }
 
         private void Res5_pb_Click(object sender, EventArgs e)
         {
-            resolutionChoice(1920);
+            resolutionChoice(eSupportedResolution.w1920h1080);
+        }
+
+        private void DrawSupportedResolutions()
+        {
+            Res2_pb.Enabled = false;
+            label2.ForeColor = Color.Red;
+            Res4_pb.Enabled = false;
+            label5.ForeColor = Color.Red;
+            Res3_pb.Enabled = false;
+            label3.ForeColor = Color.Red;
+            Res5_pb.Enabled = false;
+            label1.ForeColor = Color.Red;
+
+            foreach (eSupportedResolution supportedResolution in DisplayResolutions.DisplaySupportedResolutions)
+            {
+                switch (supportedResolution)
+                {
+                    case (eSupportedResolution.w1024h768):
+                        Res2_pb.Enabled = true;
+                        label2.ForeColor = Color.Gray;
+                        break;
+                    case (eSupportedResolution.w1280h720):
+                        Res4_pb.Enabled = true;
+                        label5.ForeColor = Color.Gray;
+                        break;
+                    case (eSupportedResolution.w1366h768):
+                        Res3_pb.Enabled = true;
+                        label3.ForeColor = Color.Gray;
+                        break;
+                    case (eSupportedResolution.w1920h1080):
+                        Res5_pb.Enabled = true;
+                        label1.ForeColor = Color.Gray;
+                        break;
+                }
+            }
         }
     }
 }
