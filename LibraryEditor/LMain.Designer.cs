@@ -414,6 +414,7 @@ namespace LibraryEditor
             // 
             numericUpDownY.Location = new Point(145, 83);
             numericUpDownY.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            numericUpDownY.Minimum = new decimal(new int[] { 1000, 0, 0, int.MinValue });
             numericUpDownY.Name = "numericUpDownY";
             numericUpDownY.Size = new Size(82, 23);
             numericUpDownY.TabIndex = 27;
@@ -423,6 +424,7 @@ namespace LibraryEditor
             // 
             numericUpDownX.Location = new Point(145, 59);
             numericUpDownX.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            numericUpDownX.Minimum = new decimal(new int[] { 1000, 0, 0, int.MinValue });
             numericUpDownX.Name = "numericUpDownX";
             numericUpDownX.Size = new Size(82, 23);
             numericUpDownX.TabIndex = 26;
