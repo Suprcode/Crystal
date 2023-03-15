@@ -2,6 +2,7 @@
 using Launcher;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using Client.Resolution;
 
 namespace Client
 {
@@ -38,6 +39,8 @@ namespace Client
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
+
+                CheckResolutionSetting();
 
                 if (Settings.P_Patcher) Application.Run(PForm = new Launcher.AMain());
                 else Application.Run(Form = new CMain());
@@ -148,6 +151,27 @@ namespace Client
 
                 [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
                 void BindAsLegacyV2Runtime();
+            }
+        }
+
+        public static void CheckResolutionSetting()
+        {
+            var parsedOK = DisplayResolutions.GetDisplayResolutions();
+            if (!parsedOK)
+            {
+                MessageBox.Show("Could not get display resolutions", "Get Display Resolution Issue", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Environment.Exit(0);
+            }
+
+            if (!DisplayResolutions.IsSupported(Settings.Resolution))
+            {
+                MessageBox.Show($"Client does not support {Settings.Resolution}. Setting Resolution to 1024x768.",
+                                "Invalid Client Resolution",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+
+                Settings.Resolution = (int)eSupportedResolution.w1024h768;
+                Settings.Save();
             }
         }
 
