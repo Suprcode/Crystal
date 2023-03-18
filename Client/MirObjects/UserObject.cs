@@ -388,7 +388,6 @@ namespace Client.MirObjects
                         break;
                     case ItemSet.RedOrchid:
                         Stats[Stat.Accuracy] += 2;
-                        Stats[Stat.HPDrainRatePercent] += 10;
                         break;
                     case ItemSet.RedFlower:
                         Stats[Stat.HP] += 50;
