@@ -55,10 +55,9 @@ namespace Server.MirDatabase
 
             if (Name == Settings.NewbieGuild)
             {
-                MemberCap = 1000;
+                MemberCap = Settings.NewbieGuildMaxSize;
                 Level = 1;
             }
-
             else if(Level < Settings.Guild_MembercapList.Count)
             {
                 MemberCap = Settings.Guild_MembercapList[Level];
@@ -150,7 +149,11 @@ namespace Server.MirDatabase
                 MaxExperience = Settings.Guild_ExperienceList[Level];
             }
 
-            if (Level < Settings.Guild_MembercapList.Count)
+            if (Name == Settings.NewbieGuild)
+            {
+                MemberCap = Settings.NewbieGuildMaxSize;
+            }
+            else if (Level < Settings.Guild_MembercapList.Count)
             {
                 MemberCap = Settings.Guild_MembercapList[Level];
             }
