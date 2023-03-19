@@ -145,6 +145,12 @@ namespace Client.MirSounds
             Music.Play();
         }
 
+        public static void StopMusic()
+        {
+            Music?.Stop();
+            Music?.Dispose();
+        }
+
         static void AdjustAllVolumes()
         {
             for (int i = 0; i < Sounds.Count; i++)

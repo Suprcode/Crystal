@@ -22,8 +22,8 @@ namespace Client.MirScenes
 
         public SelectScene(List<SelectInfo> characters)
         {
-            SoundManager.PlaySound(SoundList.SelectMusic, true);
-            Disposing += (o, e) => SoundManager.StopSound(SoundList.SelectMusic);
+            SoundManager.PlayMusic(SoundList.SelectMusic, true);
+            Disposing += (o, e) => SoundManager.StopMusic();
 
             Characters = characters;
             SortList();

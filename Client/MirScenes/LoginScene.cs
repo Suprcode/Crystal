@@ -26,8 +26,8 @@ namespace Client.MirScenes
 
         public LoginScene()
         {
-            SoundManager.PlaySound(SoundList.IntroMusic, true);
-            Disposing += (o, e) => SoundManager.StopSound(SoundList.IntroMusic);
+            SoundManager.PlayMusic(SoundList.IntroMusic, true);
+            Disposing += (o, e) => SoundManager.StopMusic();
 
             _background = new MirAnimatedControl
                 {
