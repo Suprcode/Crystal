@@ -271,24 +271,18 @@ namespace Server.MirObjects
                     continue;
                 }
 
-                if (pet.Info.Name == Settings.SkeletonName || pet.Info.Name == Settings.ShinsuName || pet.Info.Name == Settings.AngelName
-                    || pet.Info.Name == Settings.CloneName || pet.Info.Name == Settings.AssassinCloneName)
-                {
-                    pet.Die();
-
-                    Pets.RemoveAt(i);
-                    continue;
-                }
-
                 pet.Master = null;
 
-                if (!pet.Dead)
+                if (Settings.PetSave && !pet.Dead)
                 {
                     Info.Pets.Add(new PetInfo(pet)
                     {
-                        TameTime = pet.TameTime - Envir.Time
+                        TameTime = pet.TameTime
                     });
+                }
 
+                if (!pet.Dead)
+                {
                     Envir.MonsterCount--;
                     pet.CurrentMap.MonsterCount--;
 
