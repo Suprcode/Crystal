@@ -181,7 +181,14 @@ namespace Client.MirObjects
 
         public override bool ShouldDrawHealth()
         {
-            return this == User && (GroupDialog.GroupList.Contains(Name) || GroupDialog.GroupList.Count == 0);
+            if (GroupDialog.GroupList.Contains(Name) || this == User)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public void ProcessBuffs()

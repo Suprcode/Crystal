@@ -1097,9 +1097,16 @@ namespace Server.MirObjects
 
         public override void GainExp(uint amount)
         {
-            if (!CanGainExp) return;
-
             if (amount == 0) return;
+
+            for (int i = 0; i < Pets.Count; i++)
+            {
+                MonsterObject monster = Pets[i];
+                if (monster.CurrentMap == CurrentMap && Functions.InRange(monster.CurrentLocation, CurrentLocation, Globals.DataRange) && !monster.Dead)
+                    monster.PetExp(amount);
+            }
+
+            if (!CanGainExp) return;
 
             if (Stats[Stat.ExpRatePercent] > 0)
             {
@@ -1109,13 +1116,6 @@ namespace Server.MirObjects
             Experience += amount;
 
             Owner.Enqueue(new S.GainHeroExperience { Amount = amount });
-
-            for (int i = 0; i < Pets.Count; i++)
-            {
-                MonsterObject monster = Pets[i];
-                if (monster.CurrentMap == CurrentMap && Functions.InRange(monster.CurrentLocation, CurrentLocation, Globals.DataRange) && !monster.Dead)
-                    monster.PetExp(amount);
-            }
 
             if (Experience < MaxExperience) return;
             if (Level >= ushort.MaxValue) return;
