@@ -810,7 +810,6 @@ namespace Server.MirObjects
 
             Enqueue(new S.GainExperience { Amount = amount });
 
-
             for (int i = 0; i < Pets.Count; i++)
             {
                 MonsterObject monster = Pets[i];
@@ -818,7 +817,7 @@ namespace Server.MirObjects
                     monster.PetExp(amount);
             }
 
-            if (MyGuild != null)
+            if (MyGuild != null && MyGuild.Name != Settings.NewbieGuild)
                 MyGuild.GainExp(amount);
 
             if (Experience < MaxExperience) return;
@@ -8799,99 +8798,108 @@ namespace Server.MirObjects
                 return false;
             }
 
-            //check if we have the required items
-            for (int i = 0; i < Settings.Guild_CreationCostList.Count; i++)
+            if(!Info.AccountInfo.AdminAccount && String.Equals(guildName, Settings.NewbieGuild, StringComparison.OrdinalIgnoreCase))
             {
-                GuildItemVolume Required = Settings.Guild_CreationCostList[i];
-                if (Required.Item == null)
-                {
-                    if (Info.AccountInfo.Gold < Required.Amount)
-                    {
-                        ReceiveChat(String.Format("Insufficient gold. Creating a guild requires {0} gold.", Required.Amount), ChatType.System);
-                        return false;
-                    }
-                }
-                else
-                {
-                    ushort count = (ushort)Math.Min(Required.Amount, ushort.MaxValue);
+                ReceiveChat($"You cannot make the newbie guild. Nice try mortal.", ChatType.System);
+                return false;
+            }
 
-                    foreach (var item in Info.Inventory.Where(item => item != null && item.Info == Required.Item))
+            if (!Info.AccountInfo.AdminAccount)
+            {
+                //check if we have the required items
+                for (int i = 0; i < Settings.Guild_CreationCostList.Count; i++)
+                {
+                    GuildItemVolume Required = Settings.Guild_CreationCostList[i];
+                    if (Required.Item == null)
                     {
-                        if ((Required.Item.Type == ItemType.Ore) && (item.CurrentDura / 1000 > Required.Amount))
+                        if (Info.AccountInfo.Gold < Required.Amount)
                         {
-                            count = 0;
-                            break;
+                            ReceiveChat(String.Format("Insufficient gold. Creating a guild requires {0} gold.", Required.Amount), ChatType.System);
+                            return false;
                         }
-                        if (item.Count > count)
-                            count = 0;
-                        else
-                            count = (ushort)(count - item.Count);
-                        if (count == 0) break;
                     }
-                    if (count != 0)
+                    else
                     {
-                        if (Required.Amount == 1)
-                            ReceiveChat(String.Format("{0} is required to create a guild.", Required.Item.FriendlyName), ChatType.System);
-                        else
+                        ushort count = (ushort)Math.Min(Required.Amount, ushort.MaxValue);
+
+                        foreach (var item in Info.Inventory.Where(item => item != null && item.Info == Required.Item))
                         {
-                            if (Required.Item.Type == ItemType.Ore)
-                                ReceiveChat(string.Format("{0} with purity {1} is recuired to create a guild.", Required.Item.FriendlyName, Required.Amount / 1000), ChatType.System);
+                            if ((Required.Item.Type == ItemType.Ore) && (item.CurrentDura / 1000 > Required.Amount))
+                            {
+                                count = 0;
+                                break;
+                            }
+                            if (item.Count > count)
+                                count = 0;
                             else
-                                ReceiveChat(string.Format("Insufficient {0}, you need {1} to create a guild.", Required.Item.FriendlyName, Required.Amount), ChatType.System);
+                                count = (ushort)(count - item.Count);
+                            if (count == 0) break;
                         }
-                        return false;
-                    }
-                }
-            }
-
-            //take the required items
-            for (int i = 0; i < Settings.Guild_CreationCostList.Count; i++)
-            {
-                GuildItemVolume Required = Settings.Guild_CreationCostList[i];
-                if (Required.Item == null)
-                {
-                    if (Info.AccountInfo.Gold >= Required.Amount)
-                    {
-                        Info.AccountInfo.Gold -= Required.Amount;
-                        Enqueue(new S.LoseGold { Gold = Required.Amount });
-                    }
-                }
-                else
-                {
-                    ushort count = (ushort)Math.Min(Required.Amount, ushort.MaxValue);
-
-                    for (int o = 0; o < Info.Inventory.Length; o++)
-                    {
-                        UserItem item = Info.Inventory[o];
-                        if (item == null) continue;
-                        if (item.Info != Required.Item) continue;
-
-                        if ((Required.Item.Type == ItemType.Ore) && (item.CurrentDura / 1000 > Required.Amount))
+                        if (count != 0)
                         {
-                            Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
-                            Info.Inventory[o] = null;
+                            if (Required.Amount == 1)
+                                ReceiveChat(String.Format("{0} is required to create a guild.", Required.Item.FriendlyName), ChatType.System);
+                            else
+                            {
+                                if (Required.Item.Type == ItemType.Ore)
+                                    ReceiveChat(string.Format("{0} with purity {1} is recuired to create a guild.", Required.Item.FriendlyName, Required.Amount / 1000), ChatType.System);
+                                else
+                                    ReceiveChat(string.Format("Insufficient {0}, you need {1} to create a guild.", Required.Item.FriendlyName, Required.Amount), ChatType.System);
+                            }
+                            return false;
+                        }
+                    }
+                }
+
+                //take the required items
+                for (int i = 0; i < Settings.Guild_CreationCostList.Count; i++)
+                {
+                    GuildItemVolume Required = Settings.Guild_CreationCostList[i];
+                    if (Required.Item == null)
+                    {
+                        if (Info.AccountInfo.Gold >= Required.Amount)
+                        {
+                            Info.AccountInfo.Gold -= Required.Amount;
+                            Enqueue(new S.LoseGold { Gold = Required.Amount });
+                        }
+                    }
+                    else
+                    {
+                        ushort count = (ushort)Math.Min(Required.Amount, ushort.MaxValue);
+
+                        for (int o = 0; o < Info.Inventory.Length; o++)
+                        {
+                            UserItem item = Info.Inventory[o];
+                            if (item == null) continue;
+                            if (item.Info != Required.Item) continue;
+
+                            if ((Required.Item.Type == ItemType.Ore) && (item.CurrentDura / 1000 > Required.Amount))
+                            {
+                                Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                                Info.Inventory[o] = null;
+                                break;
+                            }
+                            if (count > item.Count)
+                            {
+                                Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                                Info.Inventory[o] = null;
+                                count -= item.Count;
+                                continue;
+                            }
+
+                            Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = (ushort)count });
+                            if (count == item.Count)
+                                Info.Inventory[o] = null;
+                            else
+                                item.Count -= (ushort)count;
                             break;
                         }
-                        if (count > item.Count)
-                        {
-                            Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
-                            Info.Inventory[o] = null;
-                            count -= item.Count;
-                            continue;
-                        }
-
-                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = (ushort)count });
-                        if (count == item.Count)
-                            Info.Inventory[o] = null;
-                        else
-                            item.Count -= (ushort)count;
-                        break;
                     }
                 }
+                RefreshStats();
             }
-            RefreshStats();
+            
             //make the guild
-
             var guildInfo = new GuildInfo(this, guildName) { GuildIndex = ++Envir.NextGuildID };
             Envir.GuildList.Add(guildInfo);
 
