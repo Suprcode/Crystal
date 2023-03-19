@@ -2952,11 +2952,11 @@ namespace Server.MirObjects
 
                 if (magic != null)
                 {
-                    if (FatalSword)
-                        damageBase = magic.GetDamage(damageBase);
-
                     if (!FatalSword && Envir.Random.Next(10) == 0)
                         FatalSword = true;
+
+                    if (FatalSword)
+                        damageBase = magic.GetDamage(damageBase);
                 }
                 #endregion
 
