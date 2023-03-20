@@ -658,17 +658,20 @@ namespace ClientPackets
 
         public uint ObjectID;
         public bool Ranking = false;
+        public bool Hero = false;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             ObjectID = reader.ReadUInt32();
             Ranking = reader.ReadBoolean();
+            Hero = reader.ReadBoolean();
         }
 
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(ObjectID);
             writer.Write(Ranking);
+            writer.Write(Hero);
         }
     }
     public sealed class Observe : Packet

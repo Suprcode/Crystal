@@ -11238,13 +11238,33 @@ namespace Client.MirScenes
                             }
                             return;
                         }
-                        PlayerObject player = MapObject.MouseObject as PlayerObject;
-                        if (player == null || player == User || !CMain.Ctrl) return;
-                        if (CMain.Time <= GameScene.InspectTime && player.ObjectID == InspectDialog.InspectID) return;
 
-                        GameScene.InspectTime = CMain.Time + 500;
-                        InspectDialog.InspectID = player.ObjectID;
-                        Network.Enqueue(new C.Inspect { ObjectID = player.ObjectID });
+                        if (CMain.Ctrl)
+                        {
+                            HeroObject hero = MapObject.MouseObject as HeroObject;
+
+                            if (hero != null &&
+                                hero.ObjectID != (Hero is null ? 0 : Hero.ObjectID) &&
+                                CMain.Time >= GameScene.InspectTime)
+                            {
+                                GameScene.InspectTime = CMain.Time + 500;
+                                InspectDialog.InspectID = hero.ObjectID;
+                                Network.Enqueue(new C.Inspect { ObjectID = hero.ObjectID, Hero = true });
+                                return;
+                            }
+
+                            PlayerObject player = MapObject.MouseObject as PlayerObject;
+
+                            if (player != null &&
+                                player != User &&
+                                CMain.Time >= GameScene.InspectTime)
+                            {
+                                GameScene.InspectTime = CMain.Time + 500;
+                                InspectDialog.InspectID = player.ObjectID;
+                                Network.Enqueue(new C.Inspect { ObjectID = player.ObjectID });
+                                return;
+                            }
+                        }
                     }
                     break;
                 case MouseButtons.Middle:
