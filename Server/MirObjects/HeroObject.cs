@@ -305,6 +305,8 @@ namespace Server.MirObjects
             UserItem item = null;
             int index = -1;
 
+            if (Owner.Hero != null && Owner.Hero.Dead) return;
+
             for (int i = 0; i < Info.Inventory.Length; i++)
             {
                 item = Info.Inventory[i];
