@@ -6750,9 +6750,9 @@ namespace Server.MirObjects
             return Stat.Unknown;
         }
         //Gems granting multiple stat types are not compatible with this method.        
-        public void DropItem(ulong id, ushort count)
+        public void DropItem(ulong id, ushort count, bool isHeroItem)
         {
-            S.DropItem p = new S.DropItem { UniqueID = id, Count = count, Success = false };
+            S.DropItem p = new S.DropItem { UniqueID = id, Count = count, HeroItem = isHeroItem, Success = false };
             if (Dead)
             {
                 Enqueue(p);
@@ -6768,13 +6768,37 @@ namespace Server.MirObjects
 
             UserItem temp = null;
             int index = -1;
+            HeroObject currentHero = null;
 
-            for (int i = 0; i < Info.Inventory.Length; i++)
+            if (!isHeroItem)
             {
-                temp = Info.Inventory[i];
-                if (temp == null || temp.UniqueID != id) continue;
-                index = i;
-                break;
+                for (int i = 0; i < Info.Inventory.Length; i++)
+                {
+                    temp = Info.Inventory[i];
+                    if (temp == null || temp.UniqueID != id) continue;
+                    index = i;
+                    break;
+                }
+            }
+            else
+            {
+                currentHero = Envir.Heroes.FirstOrDefault(h => h.Info.Index == Info.CurrentHeroIndex);
+
+                if (currentHero != null)
+                {
+                    for (int i = 0; i < currentHero.Info.Inventory.Length; i++)
+                    {
+                        temp = currentHero.Info.Inventory[i];
+                        if (temp == null || temp.UniqueID != id) continue;
+                        index = i;
+                        break;
+                    }
+                }
+                else
+                {
+                    Enqueue(p);
+                    return;
+                }
             }
 
             if (temp == null || index == -1 || count > temp.Count || count < 1)
@@ -6803,7 +6827,16 @@ namespace Server.MirObjects
                         Enqueue(p);
                         return;
                     }
-                Info.Inventory[index] = null;
+
+                if (p.HeroItem)
+                {
+                        currentHero.Info.Inventory[index] = null;
+                }
+                else
+                {
+                    Info.Inventory[index] = null;
+                }
+                
             }
             else
             {
@@ -6819,9 +6852,17 @@ namespace Server.MirObjects
             }
             p.Success = true;
             Enqueue(p);
-            RefreshBagWeight();
 
-            Report.ItemChanged(temp, count, 1);
+            if (p.HeroItem)
+            {
+                currentHero.RefreshBagWeight();
+                currentHero.Report.ItemChangedHero(temp, count, 1);
+            }
+            else
+            {
+                RefreshBagWeight();
+                Report.ItemChanged(temp, count, 1);
+            }  
         }
         public void DropGold(uint gold)
         {

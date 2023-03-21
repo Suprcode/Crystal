@@ -2441,7 +2441,7 @@ namespace Client.MirScenes.Dialogs
             };
         }
 
-        public void RefreshInferface()
+        public void RefreshInferface(bool IsHero)
         {
             int offSet = Gender == MirGender.Male ? 0 : 1;
 
@@ -2484,6 +2484,12 @@ namespace Client.MirScenes.Dialogs
             }
 
             ObserveButton.Visible = AllowObserve;
+
+            TradeButton.Visible = !IsHero;
+            MailButton.Visible = !IsHero;
+            FriendButton.Visible = !IsHero;
+            GroupButton.Visible = !IsHero;
+
         }
 
 
