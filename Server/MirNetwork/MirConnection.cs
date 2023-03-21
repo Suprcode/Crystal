@@ -1199,9 +1199,17 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game && Stage != GameStage.Observer) return;
 
             if (p.Ranking)
+            {
                 Envir.Inspect(this, (int)p.ObjectID);
+            }
+            else if (p.Hero)
+            {
+                Envir.InspectHero(this, (int)p.ObjectID);
+            }
             else
+            {
                 Envir.Inspect(this, p.ObjectID);
+            } 
         }
         private void Observe(C.Observe p)
         {
