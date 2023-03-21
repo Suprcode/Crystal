@@ -128,7 +128,10 @@ namespace Server.MirObjects
         {
             CheckCellTime = false;
 
-            Owner = owner;            
+            Owner = owner;
+
+            base.Report = owner.Report;
+
             Load(info, null);           
         }
 

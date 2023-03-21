@@ -615,8 +615,9 @@ namespace Client.MirScenes
                         MailReadParcelDialog.Hide();
                         ItemRentalDialog.Hide();
                         NoticeDialog.Hide();
-
-
+                        HeroInventoryDialog?.Hide();
+                        HeroManageDialog?.Hide();
+                        HeroDialog?.Hide();
 
                         GameScene.Scene.DisposeItemLabel();
                         break;
@@ -2803,7 +2804,16 @@ namespace Client.MirScenes
         }
         private void DropItem(S.DropItem p)
         {
-            MirItemCell cell = InventoryDialog.GetCell(p.UniqueID) ?? BeltDialog.GetCell(p.UniqueID);
+            MirItemCell cell;
+            if (p.HeroItem)
+            {
+                cell = HeroInventoryDialog.GetCell(p.UniqueID) ?? HeroBeltDialog.GetCell(p.UniqueID);
+            }
+            else
+            {
+                cell = InventoryDialog.GetCell(p.UniqueID) ?? BeltDialog.GetCell(p.UniqueID);
+            }
+            
 
             if (cell == null) return;
 
@@ -2816,7 +2826,15 @@ namespace Client.MirScenes
             else
                 cell.Item.Count -= p.Count;
 
-            User.RefreshStats();
+            if (p.HeroItem)
+            {
+                Hero.RefreshStats();
+            }
+            else
+            {
+                User.RefreshStats();
+            }
+            
         }
 
         private void TakeBackHeroItem(S.TakeBackHeroItem p)
@@ -3027,7 +3045,7 @@ namespace Client.MirScenes
             InspectDialog.LoverName = p.LoverName;
             InspectDialog.AllowObserve = p.AllowObserve;
 
-            InspectDialog.RefreshInferface();
+            InspectDialog.RefreshInferface(p.IsHero);
             InspectDialog.Show();
         }
         private void LogOutSuccess(S.LogOutSuccess p)
@@ -11238,13 +11256,33 @@ namespace Client.MirScenes
                             }
                             return;
                         }
-                        PlayerObject player = MapObject.MouseObject as PlayerObject;
-                        if (player == null || player == User || !CMain.Ctrl) return;
-                        if (CMain.Time <= GameScene.InspectTime && player.ObjectID == InspectDialog.InspectID) return;
 
-                        GameScene.InspectTime = CMain.Time + 500;
-                        InspectDialog.InspectID = player.ObjectID;
-                        Network.Enqueue(new C.Inspect { ObjectID = player.ObjectID });
+                        if (CMain.Ctrl)
+                        {
+                            HeroObject hero = MapObject.MouseObject as HeroObject;
+
+                            if (hero != null &&
+                                hero.ObjectID != (Hero is null ? 0 : Hero.ObjectID) &&
+                                CMain.Time >= GameScene.InspectTime)
+                            {
+                                GameScene.InspectTime = CMain.Time + 500;
+                                InspectDialog.InspectID = hero.ObjectID;
+                                Network.Enqueue(new C.Inspect { ObjectID = hero.ObjectID, Hero = true });
+                                return;
+                            }
+
+                            PlayerObject player = MapObject.MouseObject as PlayerObject;
+
+                            if (player != null &&
+                                player != User &&
+                                CMain.Time >= GameScene.InspectTime)
+                            {
+                                GameScene.InspectTime = CMain.Time + 500;
+                                InspectDialog.InspectID = player.ObjectID;
+                                Network.Enqueue(new C.Inspect { ObjectID = player.ObjectID });
+                                return;
+                            }
+                        }
                     }
                     break;
                 case MouseButtons.Middle:
@@ -11265,11 +11303,11 @@ namespace Client.MirScenes
 
             if (GameScene.SelectedCell != null)
             {
-                if (GameScene.SelectedCell.GridType != MirGridType.Inventory)
-                {
-                    GameScene.SelectedCell = null;
-                    return;
-                }
+                //if (GameScene.SelectedCell.GridType != MirGridType.Inventory)
+                //{
+                //    GameScene.SelectedCell = null;
+                //    return;
+                //}
 
                 MirItemCell cell = GameScene.SelectedCell;
                 if (cell.Item.Info.Bind.HasFlag(BindMode.DontDrop))
@@ -11285,8 +11323,12 @@ namespace Client.MirScenes
 
                     messageBox.YesButton.Click += (o, a) =>
                     {
-                        Network.Enqueue(new C.DropItem { UniqueID = cell.Item.UniqueID, Count = 1 });
-
+                        Network.Enqueue(new C.DropItem 
+                        {   UniqueID = cell.Item.UniqueID, 
+                            Count = 1,
+                            HeroInventory = cell.GridType == MirGridType.HeroInventory
+                        });
+                        
                         cell.Locked = true;
                     };
                     messageBox.Show();
@@ -11301,7 +11343,8 @@ namespace Client.MirScenes
                         Network.Enqueue(new C.DropItem
                         {
                             UniqueID = cell.Item.UniqueID,
-                            Count = (ushort)amountBox.Amount
+                            Count = (ushort)amountBox.Amount,
+                            HeroInventory = cell.GridType == MirGridType.HeroInventory
                         });
 
                         cell.Locked = true;

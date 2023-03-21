@@ -7,6 +7,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
+using System.Numerics;
 using System.Text.RegularExpressions;
 using S = ServerPackets;
 
@@ -3311,6 +3312,58 @@ namespace Server.MirEnvir
                 LoverName = loverName,
                 AllowObserve = player.AllowObserve && Settings.AllowObserve
             });
+        }
+
+        public void InspectHero(MirConnection con, int id)
+        {
+            if (ObjectID == id)
+            {
+                return;
+            }
+
+            HeroObject heroObject = Heroes.SingleOrDefault(h => h.ObjectID == id);
+
+            if (heroObject == null)
+            {
+                return;
+            }
+
+            HeroInfo heroInfo = GetHeroInfo(heroObject.Info.Index);
+
+            if (heroInfo == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < heroInfo.Equipment.Length; i++)
+            {
+                UserItem u = heroInfo.Equipment[i];
+
+                if (u == null)
+                {
+                    continue;
+                }
+
+                con.CheckItem(u);
+            }
+
+            var ownerName = heroObject.Owner.Name;
+
+            con.Enqueue(new S.PlayerInspect
+            {
+                Name = $"{ownerName}'s Hero",
+                Equipment = heroInfo.Equipment,
+                GuildName = String.Empty,
+                GuildRank = String.Empty,
+                Hair = heroInfo.Hair,
+                Gender = heroInfo.Gender,
+                Class = heroInfo.Class,
+                Level = heroInfo.Level,
+                LoverName = String.Empty,
+                AllowObserve = false,
+                IsHero = true
+            });
+
         }
 
         public void Observe(MirConnection con, string Name)
