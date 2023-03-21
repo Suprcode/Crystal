@@ -3045,7 +3045,7 @@ namespace Client.MirScenes
             InspectDialog.LoverName = p.LoverName;
             InspectDialog.AllowObserve = p.AllowObserve;
 
-            InspectDialog.RefreshInferface();
+            InspectDialog.RefreshInferface(p.IsHero);
             InspectDialog.Show();
         }
         private void LogOutSuccess(S.LogOutSuccess p)
