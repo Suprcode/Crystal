@@ -281,6 +281,33 @@ namespace Server.MirObjects
                     });
                 }
 
+                if (!Settings.PetSave &&
+                    !pet.Dead &&
+                    Class == MirClass.Wizard)
+                {
+                    if (String.Equals(pet.Name,Settings.CloneName))
+                    {
+                        Info.Pets.Add(new PetInfo(pet));
+                    }
+                    else
+                    {
+                        Info.Pets.Add(new PetInfo(pet)
+                        {
+                            TameTime = pet.TameTime - Envir.Time
+                        });
+                    }
+                }
+
+                if (!Settings.PetSave &&
+                    !pet.Dead &&
+                    Class == MirClass.Assassin)
+                {
+                    if (String.Equals(pet.Name, Settings.AssassinCloneName))
+                    {
+                        Info.Pets.Add(new PetInfo(pet));
+                    }
+                }
+
                 if (!pet.Dead)
                 {
                     Envir.MonsterCount--;
@@ -1157,9 +1184,11 @@ namespace Server.MirObjects
 
                 monster.SetHP(info.HP);
 
-                if (!Settings.PetSave)
+                if (!Settings.PetSave &&
+                    Class == MirClass.Wizard)
                 {
                     monster.TameTime = Envir.Time + info.TameTime;
+                    
                 }
             }
 
