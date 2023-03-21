@@ -1593,12 +1593,14 @@ namespace ServerPackets
 
         public ulong UniqueID;
         public ushort Count;
+        public bool HeroItem = false;
         public bool Success;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             UniqueID = reader.ReadUInt64();
             Count = reader.ReadUInt16();
+            HeroItem = reader.ReadBoolean();
             Success = reader.ReadBoolean();
         }
 
@@ -1606,6 +1608,7 @@ namespace ServerPackets
         {
             writer.Write(UniqueID);
             writer.Write(Count);
+            writer.Write(HeroItem);
             writer.Write(Success);
         }
     }

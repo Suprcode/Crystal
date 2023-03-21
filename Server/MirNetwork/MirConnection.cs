@@ -1145,7 +1145,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.DropItem(p.UniqueID, p.Count);
+            Player.DropItem(p.UniqueID, p.Count, p.HeroInventory);
         }
 
         private void TakeBackHeroItem(C.TakeBackHeroItem p)
