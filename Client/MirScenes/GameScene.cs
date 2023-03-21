@@ -2804,7 +2804,16 @@ namespace Client.MirScenes
         }
         private void DropItem(S.DropItem p)
         {
-            MirItemCell cell = InventoryDialog.GetCell(p.UniqueID) ?? BeltDialog.GetCell(p.UniqueID);
+            MirItemCell cell;
+            if (p.HeroItem)
+            {
+                cell = HeroInventoryDialog.GetCell(p.UniqueID) ?? HeroBeltDialog.GetCell(p.UniqueID);
+            }
+            else
+            {
+                cell = InventoryDialog.GetCell(p.UniqueID) ?? BeltDialog.GetCell(p.UniqueID);
+            }
+            
 
             if (cell == null) return;
 
@@ -2817,7 +2826,15 @@ namespace Client.MirScenes
             else
                 cell.Item.Count -= p.Count;
 
-            User.RefreshStats();
+            if (p.HeroItem)
+            {
+                Hero.RefreshStats();
+            }
+            else
+            {
+                User.RefreshStats();
+            }
+            
         }
 
         private void TakeBackHeroItem(S.TakeBackHeroItem p)
@@ -11286,11 +11303,11 @@ namespace Client.MirScenes
 
             if (GameScene.SelectedCell != null)
             {
-                if (GameScene.SelectedCell.GridType != MirGridType.Inventory)
-                {
-                    GameScene.SelectedCell = null;
-                    return;
-                }
+                //if (GameScene.SelectedCell.GridType != MirGridType.Inventory)
+                //{
+                //    GameScene.SelectedCell = null;
+                //    return;
+                //}
 
                 MirItemCell cell = GameScene.SelectedCell;
                 if (cell.Item.Info.Bind.HasFlag(BindMode.DontDrop))
@@ -11306,8 +11323,12 @@ namespace Client.MirScenes
 
                     messageBox.YesButton.Click += (o, a) =>
                     {
-                        Network.Enqueue(new C.DropItem { UniqueID = cell.Item.UniqueID, Count = 1 });
-
+                        Network.Enqueue(new C.DropItem 
+                        {   UniqueID = cell.Item.UniqueID, 
+                            Count = 1,
+                            HeroInventory = cell.GridType == MirGridType.HeroInventory
+                        });
+                        
                         cell.Locked = true;
                     };
                     messageBox.Show();
@@ -11322,7 +11343,8 @@ namespace Client.MirScenes
                         Network.Enqueue(new C.DropItem
                         {
                             UniqueID = cell.Item.UniqueID,
-                            Count = (ushort)amountBox.Amount
+                            Count = (ushort)amountBox.Amount,
+                            HeroInventory = cell.GridType == MirGridType.HeroInventory
                         });
 
                         cell.Locked = true;
