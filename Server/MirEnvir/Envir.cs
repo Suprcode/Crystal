@@ -3360,7 +3360,8 @@ namespace Server.MirEnvir
                 Class = heroInfo.Class,
                 Level = heroInfo.Level,
                 LoverName = String.Empty,
-                AllowObserve = false
+                AllowObserve = false,
+                IsHero = true
             });
 
         }
