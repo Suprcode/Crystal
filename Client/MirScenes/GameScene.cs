@@ -615,8 +615,9 @@ namespace Client.MirScenes
                         MailReadParcelDialog.Hide();
                         ItemRentalDialog.Hide();
                         NoticeDialog.Hide();
-
-
+                        HeroInventoryDialog?.Hide();
+                        HeroManageDialog?.Hide();
+                        HeroDialog?.Hide();
 
                         GameScene.Scene.DisposeItemLabel();
                         break;
