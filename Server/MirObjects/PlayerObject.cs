@@ -5,7 +5,6 @@ using Server.MirNetwork;
 using S = ServerPackets;
 using System.Text.RegularExpressions;
 using Timer = Server.MirEnvir.Timer;
-using System.Threading;
 
 namespace Server.MirObjects
 {
