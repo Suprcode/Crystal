@@ -283,7 +283,7 @@ namespace Server.MirObjects
                             {
                                 case (MirClass.Assassin):
 
-                                    if (Info.Name != Settings.CloneName)
+                                    if (Info.Name != Settings.AssassinCloneName)
                                     {
                                         Info.Pets.Add(new PetInfo(pet));
                                     }
