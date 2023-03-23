@@ -5,6 +5,7 @@ using Server.MirNetwork;
 using S = ServerPackets;
 using System.Text.RegularExpressions;
 using Timer = Server.MirEnvir.Timer;
+using System.Threading;
 
 namespace Server.MirObjects
 {
@@ -273,51 +274,62 @@ namespace Server.MirObjects
 
                 pet.Master = null;
 
-                if (Settings.PetSave && !pet.Dead)
-                {
-                    Info.Pets.Add(new PetInfo(pet)
-                    {
-                        TameTime = pet.TameTime
-                    });
-                }
-
-                if (!Settings.PetSave &&
-                    !pet.Dead &&
-                    Class == MirClass.Wizard)
-                {
-                    if (String.Equals(pet.Name,Settings.CloneName))
-                    {
-                        Info.Pets.Add(new PetInfo(pet));
-                    }
-                    else
-                    {
-                        Info.Pets.Add(new PetInfo(pet)
-                        {
-                            TameTime = pet.TameTime - Envir.Time
-                        });
-                    }
-                }
-
-                if (!Settings.PetSave &&
-                    !pet.Dead &&
-                    Class == MirClass.Assassin)
-                {
-                    if (String.Equals(pet.Name, Settings.AssassinCloneName))
-                    {
-                        Info.Pets.Add(new PetInfo(pet));
-                    }
-                }
-
                 if (!pet.Dead)
                 {
+                    switch (Settings.PetSave)
+                    {
+                        case true when Settings.PetSave is true:
+
+                            switch (Class)
+                            {
+                                case (MirClass.Assassin):
+
+                                    if (Info.Name != Settings.CloneName)
+                                    {
+                                        Info.Pets.Add(new PetInfo(pet));
+                                    }
+
+                                    break;
+                                default:
+
+                                    Info.Pets.Add(new PetInfo(pet));
+
+                                    break;
+                            }
+
+                            break;
+                        case false when Settings.PetSave is false:
+
+                            switch (Class)
+                            {
+                                case (MirClass.Wizard):
+
+                                    if (pet.Name == Settings.CloneName)
+                                    {
+                                        Info.Pets.Add(new PetInfo(pet));
+                                    }
+                                    else
+                                    {
+                                        Info.Pets.Add(new PetInfo(pet)
+                                        {
+                                            TameTime = pet.TameTime - Envir.Time
+                                        });
+                                    }
+
+                                    break;
+                            }
+
+                            break;
+                    }
+
                     Envir.MonsterCount--;
                     pet.CurrentMap.MonsterCount--;
 
                     pet.CurrentMap.RemoveObject(pet);
                     pet.Despawn();
-                }
 
-                Pets.RemoveAt(i);
+                    Pets.RemoveAt(i);
+                }
             }
 
             if (HeroSpawned)
@@ -1160,22 +1172,58 @@ namespace Server.MirObjects
 
             for (int i = 0; i < Info.Pets.Count; i++)
             {
+                MonsterObject monster;
+
                 PetInfo info = Info.Pets[i];
 
                 var monsterInfo = Envir.GetMonsterInfo(info.MonsterIndex);
                 if (monsterInfo == null) continue;
 
-                MonsterObject monster = MonsterObject.GetMonster(monsterInfo);
+                monster = MonsterObject.GetMonster(monsterInfo);
                 if (monster == null) continue;
 
                 monster.PetLevel = info.Level;
                 monster.MaxPetLevel = info.MaxPetLevel;
                 monster.PetExperience = info.Experience;
-
                 monster.Master = this;
-                Pets.Add(monster);
 
-                monster.RefreshAll();
+                switch (Settings.PetSave)
+                {
+                    case true when Settings.PetSave is true:
+
+                        if (monster.Info.Name == Settings.CloneName)
+                        {
+                            monster.ActionTime = Envir.Time + 1000;
+                            monster.RefreshNameColour(false);
+                        }
+
+                        break;
+                    case false when Settings.PetSave is false:
+
+                        switch (Class)
+                        {
+                            case (MirClass.Wizard):
+
+                                if (monster.Info.Name == Settings.CloneName)
+                                {
+                                    monster.ActionTime = Envir.Time + 1000;
+                                    monster.RefreshNameColour(false);
+                                }
+                                else
+                                {
+                                    monster.TameTime = Envir.Time + info.TameTime;
+                                }
+
+                                break;
+                        }
+
+                        break;
+                }
+
+                // [grimchamp] leave refresh here incase future code sets levels or stats in above switch
+                monster.RefreshAll(); 
+
+                Pets.Add(monster);
 
                 if (!monster.Spawn(CurrentMap, Back))
                 {
@@ -1183,13 +1231,6 @@ namespace Server.MirObjects
                 }
 
                 monster.SetHP(info.HP);
-
-                if (!Settings.PetSave &&
-                    Class == MirClass.Wizard)
-                {
-                    monster.TameTime = Envir.Time + info.TameTime;
-                    
-                }
             }
 
             Info.Pets.Clear();
