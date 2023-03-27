@@ -98,7 +98,8 @@
         HeroSkill8,
         HeroInventory,
         HeroEquipment,
-        HeroSkills
+        HeroSkills,
+        TargetSpellLockOn
     }
 
     public class KeyBind
@@ -130,7 +131,7 @@
 
             if (!File.Exists(@".\KeyBinds.ini"))
             {
-                Save();
+                Save(DefaultKeylist);
                 return;
             }
 
@@ -151,7 +152,7 @@
             }
         }
 
-        public void Save()
+        public void Save(List<KeyBind> keyList)
         {
             Reader.Write("Guide", "01", "RequireAlt,RequireShift,RequireTilde,RequireCtrl");
             Reader.Write("Guide", "02", "have 3 options: 0/1/2");
@@ -165,7 +166,7 @@
             Reader.Write("Guide", "10", "To get the value for RequireKey look at:");
             Reader.Write("Guide", "11", "https://msdn.microsoft.com/en-us/library/system.windows.forms.keys(v=vs.110).aspx");
         
-            foreach (KeyBind Inputkey in Keylist)
+            foreach (KeyBind Inputkey in keyList)
             {
                 Reader.Write(Inputkey.function.ToString(), "RequireAlt", Inputkey.RequireAlt);
                 Reader.Write(Inputkey.function.ToString(), "RequireShift", Inputkey.RequireShift);
@@ -371,6 +372,8 @@
             InputKey = new KeyBind { Group = "Toggle", Description = "Take Screenshot", function = KeybindOptions.Screenshot, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.PrintScreen };
             list.Add(InputKey);
             InputKey = new KeyBind { Group = "Toggle", Description = "Toggle Dropview", function = KeybindOptions.DropView, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.Tab };
+            list.Add(InputKey);
+            InputKey = new KeyBind { Group = "Combat", Description = "Hold to enable target spell lock-on", function = KeybindOptions.TargetSpellLockOn, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.None };
             list.Add(InputKey);
         }
 
