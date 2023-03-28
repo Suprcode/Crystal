@@ -2689,6 +2689,11 @@ namespace Server.MirObjects
 
             if (target != null && target.Race != ObjectType.Monster && target.Race != ObjectType.Player && target.Race != ObjectType.Hero) return;
 
+            if (target != null && !target.Dead && target.IsAttackTarget(this) && !target.IsFriendlyTarget(this))
+            {
+                Target = target;
+            }
+
             Direction = dir;
 
             Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
@@ -2936,6 +2941,11 @@ namespace Server.MirObjects
                 MapObject ob = cell.Objects[i];
                 if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster && ob.Race != ObjectType.Hero) continue;
                 if (!ob.IsAttackTarget(this)) continue;
+
+                if (ob != null && !ob.Dead && ob.IsAttackTarget(this) && !ob.IsFriendlyTarget(this))
+                {
+                    Target = ob;
+                }
 
                 //Only undead targets
                 if (ob.Undead)
@@ -3353,6 +3363,11 @@ namespace Server.MirObjects
             if (target != null && target.Race != ObjectType.Monster && target.Race != ObjectType.Player && target.Race != ObjectType.Hero)
             {
                 target = null;
+            }
+
+            if (target != null && !target.Dead && target.IsAttackTarget(this) && !target.IsFriendlyTarget(this))
+            {
+                Target = target;
             }
 
             bool cast = true;
