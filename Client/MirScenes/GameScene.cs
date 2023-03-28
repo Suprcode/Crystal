@@ -4091,6 +4091,11 @@ namespace Client.MirScenes
                         }
                 }
 
+                if (p.ObjectID == User.ObjectID)
+                {
+                    User.TargetID = User.LastTargetObjectId;
+                }
+
                 if (playDefaultSound)
                 {
                     SoundManager.PlaySound(SoundList.Teleport);
