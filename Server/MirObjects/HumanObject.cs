@@ -4015,10 +4015,8 @@ namespace Server.MirObjects
                target.IsAttackTarget(this))
             {
                 // undead pet logic
-                if (target.Master is PlayerObject)
+                if (target.Master is PlayerObject master)
                 {
-                    var master = target.Master as PlayerObject;
- 
                     if (master.PKPoints < 200 &&
                         (master.BrownTime == 0 &&
                         !master.AtWar(this)))
