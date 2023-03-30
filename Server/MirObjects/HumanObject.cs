@@ -1,6 +1,7 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirNetwork;
+using System.Numerics;
 using S = ServerPackets;
 
 namespace Server.MirObjects
@@ -4008,24 +4009,41 @@ namespace Server.MirObjects
         }
         private void TurnUndead(MapObject target, UserMagic magic)
         {
-            if (target == null || target.Race != ObjectType.Monster || !target.Undead || !target.IsAttackTarget(this)) return;
-
-            if (Envir.Random.Next(2) + Level - 1 <= target.Level)
+            if(target != null &&
+               target.Race == ObjectType.Monster &&
+               target.Undead &&
+               target.IsAttackTarget(this))
             {
-                target.Target = this;
-                return;
+                // undead pet logic
+                if (target.Master is PlayerObject)
+                {
+                    var master = target.Master as PlayerObject;
+ 
+                    if (master.PKPoints < 200 &&
+                        (master.BrownTime == 0 &&
+                        !master.AtWar(this)))
+                    {
+                            BrownTime = Envir.Time + Settings.Minute;
+                    }   
+                }
+
+                if (Envir.Random.Next(2) + Level - 1 <= target.Level)
+                {
+                    target.Target = this;
+                    return;
+                }
+
+                int dif = Level - target.Level + 15;
+
+                if (Envir.Random.Next(100) >= (magic.Level + 1 << 3) + dif)
+                {
+                    target.Target = this;
+                    return;
+                }
+
+                DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, target);
+                ActionList.Add(action);
             }
-
-            int dif = Level - target.Level + 15;
-
-            if (Envir.Random.Next(100) >= (magic.Level + 1 << 3) + dif)
-            {
-                target.Target = this;
-                return;
-            }
-
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, target);
-            ActionList.Add(action);
         }
         private void FlameDisruptor(MapObject target, UserMagic magic)
         {
