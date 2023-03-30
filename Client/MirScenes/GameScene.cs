@@ -705,6 +705,9 @@ namespace Client.MirScenes
                     case KeybindOptions.PetmodeNone:
                         Network.Enqueue(new C.ChangePMode { Mode = PetMode.None });
                         return;
+                    case KeybindOptions.PetmodeFocusMasterTarget:
+                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.FocusMasterTarget });
+                        return;
                     case KeybindOptions.CreatureAutoPickup://semiauto!
                         Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = false, Location = MapControl.MapLocation });
                         break;
@@ -817,6 +820,9 @@ namespace Client.MirScenes
                     Network.Enqueue(new C.ChangePMode { Mode = PetMode.None });
                     return;
                 case PetMode.None:
+                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.FocusMasterTarget });
+                    return;
+                case PetMode.FocusMasterTarget:
                     Network.Enqueue(new C.ChangePMode { Mode = PetMode.Both });
                     return;
             }
@@ -3141,6 +3147,9 @@ namespace Client.MirScenes
                 case PetMode.None:
                     ChatDialog.ReceiveChat(GameLanguage.PetMode_None, ChatType.Hint);
                     break;
+                case PetMode.FocusMasterTarget:
+                    ChatDialog.ReceiveChat(GameLanguage.PetMode_FocusMasterTarget, ChatType.Hint);
+                    break;
             }
         }
 
@@ -4088,6 +4097,11 @@ namespace Client.MirScenes
                             ob.Effects.Add(new Effect(Libraries.Magic, 260, 10, 500, ob));
                             break;
                         }
+                }
+
+                if (p.ObjectID == User.ObjectID)
+                {
+                    User.TargetID = User.LastTargetObjectId;
                 }
 
                 if (playDefaultSound)

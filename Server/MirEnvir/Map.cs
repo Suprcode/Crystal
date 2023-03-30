@@ -1859,7 +1859,7 @@ namespace Server.MirEnvir
                                         //Only targets
                                         if (target.IsAttackTarget(player))
                                         {
-                                            target.ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = value, TickSpeed = 1000, Value = value2 }, player);
+                                            target.ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = value, TickSpeed = 1000, Value = value2, Owner = player }, player);
 
                                             var stats = new Stats
                                             {

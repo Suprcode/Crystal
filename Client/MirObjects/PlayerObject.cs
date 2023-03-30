@@ -1368,7 +1368,10 @@ namespace Client.MirObjects
                                     {
                                         magic = User.GetMagic(Spell.FlamingSword);
                                         if (magic != null)
+                                        {
                                             Spell = Spell.FlamingSword;
+                                            magic.CastTime = CMain.Time;
+                                        }
                                     }
                                 }
                             }

@@ -99,7 +99,8 @@
         HeroInventory,
         HeroEquipment,
         HeroSkills,
-        TargetSpellLockOn
+        TargetSpellLockOn,
+        PetmodeFocusMasterTarget
     }
 
     public class KeyBind
@@ -364,6 +365,8 @@
             InputKey = new KeyBind { Group = "Toggle", Description = "Set Pet Mode : Attack Only", function = KeybindOptions.PetmodeAttackonly, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.None };
             list.Add(InputKey);
             InputKey = new KeyBind { Group = "Toggle", Description = "Set Pet Mode : None", function = KeybindOptions.PetmodeNone, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.None };
+            list.Add(InputKey);
+            InputKey = new KeyBind { Group = "Toggle", Description = "Set Pet Mode : Focus Master Target", function = KeybindOptions.PetmodeFocusMasterTarget, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.None };
             list.Add(InputKey);
             InputKey = new KeyBind { Group = "Toggle", Description = "Toggle Autorun", function = KeybindOptions.Autorun, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.D };
             list.Add(InputKey);
