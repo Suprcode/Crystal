@@ -128,7 +128,10 @@ namespace Server.MirObjects
         {
             CheckCellTime = false;
 
-            Owner = owner;            
+            Owner = owner;
+
+            base.Report = owner.Report;
+
             Load(info, null);           
         }
 
@@ -304,6 +307,8 @@ namespace Server.MirObjects
 
             UserItem item = null;
             int index = -1;
+
+            if (Owner.Hero != null && Owner.Hero.Dead) return;
 
             for (int i = 0; i < Info.Inventory.Length; i++)
             {
@@ -1097,9 +1102,16 @@ namespace Server.MirObjects
 
         public override void GainExp(uint amount)
         {
-            if (!CanGainExp) return;
-
             if (amount == 0) return;
+
+            for (int i = 0; i < Pets.Count; i++)
+            {
+                MonsterObject monster = Pets[i];
+                if (monster.CurrentMap == CurrentMap && Functions.InRange(monster.CurrentLocation, CurrentLocation, Globals.DataRange) && !monster.Dead)
+                    monster.PetExp(amount);
+            }
+
+            if (!CanGainExp) return;
 
             if (Stats[Stat.ExpRatePercent] > 0)
             {
@@ -1109,13 +1121,6 @@ namespace Server.MirObjects
             Experience += amount;
 
             Owner.Enqueue(new S.GainHeroExperience { Amount = amount });
-
-            for (int i = 0; i < Pets.Count; i++)
-            {
-                MonsterObject monster = Pets[i];
-                if (monster.CurrentMap == CurrentMap && Functions.InRange(monster.CurrentLocation, CurrentLocation, Globals.DataRange) && !monster.Dead)
-                    monster.PetExp(amount);
-            }
 
             if (Experience < MaxExperience) return;
             if (Level >= ushort.MaxValue) return;

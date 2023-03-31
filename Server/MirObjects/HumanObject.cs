@@ -1973,7 +1973,6 @@ namespace Server.MirObjects
                         break;
                     case ItemSet.RedOrchid:
                         Stats[Stat.Accuracy] += 2;
-                        Stats[Stat.HPDrainRatePercent] += 10;
                         break;
                     case ItemSet.RedFlower:
                         Stats[Stat.HP] += 50;
@@ -2952,11 +2951,11 @@ namespace Server.MirObjects
 
                 if (magic != null)
                 {
-                    if (FatalSword)
-                        damageBase = magic.GetDamage(damageBase);
-
                     if (!FatalSword && Envir.Random.Next(10) == 0)
                         FatalSword = true;
+
+                    if (FatalSword)
+                        damageBase = magic.GetDamage(damageBase);
                 }
                 #endregion
 

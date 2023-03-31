@@ -1593,12 +1593,14 @@ namespace ServerPackets
 
         public ulong UniqueID;
         public ushort Count;
+        public bool HeroItem = false;
         public bool Success;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             UniqueID = reader.ReadUInt64();
             Count = reader.ReadUInt16();
+            HeroItem = reader.ReadBoolean();
             Success = reader.ReadBoolean();
         }
 
@@ -1606,6 +1608,7 @@ namespace ServerPackets
         {
             writer.Write(UniqueID);
             writer.Write(Count);
+            writer.Write(HeroItem);
             writer.Write(Success);
         }
     }
@@ -1715,6 +1718,7 @@ namespace ServerPackets
         public ushort Level;
         public string LoverName;
         public bool AllowObserve;
+        public bool IsHero = false;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -1734,6 +1738,7 @@ namespace ServerPackets
             Level = reader.ReadUInt16();
             LoverName = reader.ReadString();
             AllowObserve = reader.ReadBoolean();
+            IsHero = reader.ReadBoolean();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -1755,6 +1760,7 @@ namespace ServerPackets
             writer.Write(Level);
             writer.Write(LoverName);
             writer.Write(AllowObserve);
+            writer.Write(IsHero);
         }
     }
 

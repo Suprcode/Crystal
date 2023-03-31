@@ -271,32 +271,64 @@ namespace Server.MirObjects
                     continue;
                 }
 
-                if (pet.Info.Name == Settings.SkeletonName || pet.Info.Name == Settings.ShinsuName || pet.Info.Name == Settings.AngelName
-                    || pet.Info.Name == Settings.CloneName || pet.Info.Name == Settings.AssassinCloneName)
-                {
-                    pet.Die();
-
-                    Pets.RemoveAt(i);
-                    continue;
-                }
-
                 pet.Master = null;
 
                 if (!pet.Dead)
                 {
-                    Info.Pets.Add(new PetInfo(pet)
+                    switch (Settings.PetSave)
                     {
-                        TameTime = pet.TameTime - Envir.Time
-                    });
+                        case true when Settings.PetSave is true:
+
+                            switch (Class)
+                            {
+                                case (MirClass.Assassin):
+
+                                    if (Info.Name != Settings.AssassinCloneName)
+                                    {
+                                        Info.Pets.Add(new PetInfo(pet));
+                                    }
+
+                                    break;
+                                default:
+
+                                    Info.Pets.Add(new PetInfo(pet));
+
+                                    break;
+                            }
+
+                            break;
+                        case false when Settings.PetSave is false:
+
+                            switch (Class)
+                            {
+                                case (MirClass.Wizard):
+
+                                    if (pet.Name == Settings.CloneName)
+                                    {
+                                        Info.Pets.Add(new PetInfo(pet));
+                                    }
+                                    else
+                                    {
+                                        Info.Pets.Add(new PetInfo(pet)
+                                        {
+                                            TameTime = pet.TameTime - Envir.Time
+                                        });
+                                    }
+
+                                    break;
+                            }
+
+                            break;
+                    }
 
                     Envir.MonsterCount--;
                     pet.CurrentMap.MonsterCount--;
 
                     pet.CurrentMap.RemoveObject(pet);
                     pet.Despawn();
-                }
 
-                Pets.RemoveAt(i);
+                    Pets.RemoveAt(i);
+                }
             }
 
             if (HeroSpawned)
@@ -810,7 +842,6 @@ namespace Server.MirObjects
 
             Enqueue(new S.GainExperience { Amount = amount });
 
-
             for (int i = 0; i < Pets.Count; i++)
             {
                 MonsterObject monster = Pets[i];
@@ -818,7 +849,7 @@ namespace Server.MirObjects
                     monster.PetExp(amount);
             }
 
-            if (MyGuild != null)
+            if (MyGuild != null && MyGuild.Name != Settings.NewbieGuild)
                 MyGuild.GainExp(amount);
 
             if (Experience < MaxExperience) return;
@@ -1140,22 +1171,58 @@ namespace Server.MirObjects
 
             for (int i = 0; i < Info.Pets.Count; i++)
             {
+                MonsterObject monster;
+
                 PetInfo info = Info.Pets[i];
 
                 var monsterInfo = Envir.GetMonsterInfo(info.MonsterIndex);
                 if (monsterInfo == null) continue;
 
-                MonsterObject monster = MonsterObject.GetMonster(monsterInfo);
+                monster = MonsterObject.GetMonster(monsterInfo);
                 if (monster == null) continue;
 
                 monster.PetLevel = info.Level;
                 monster.MaxPetLevel = info.MaxPetLevel;
                 monster.PetExperience = info.Experience;
-
                 monster.Master = this;
-                Pets.Add(monster);
 
-                monster.RefreshAll();
+                switch (Settings.PetSave)
+                {
+                    case true when Settings.PetSave is true:
+
+                        if (monster.Info.Name == Settings.CloneName)
+                        {
+                            monster.ActionTime = Envir.Time + 1000;
+                            monster.RefreshNameColour(false);
+                        }
+
+                        break;
+                    case false when Settings.PetSave is false:
+
+                        switch (Class)
+                        {
+                            case (MirClass.Wizard):
+
+                                if (monster.Info.Name == Settings.CloneName)
+                                {
+                                    monster.ActionTime = Envir.Time + 1000;
+                                    monster.RefreshNameColour(false);
+                                }
+                                else
+                                {
+                                    monster.TameTime = Envir.Time + info.TameTime;
+                                }
+
+                                break;
+                        }
+
+                        break;
+                }
+
+                // [grimchamp] leave refresh here incase future code sets levels or stats in above switch
+                monster.RefreshAll(); 
+
+                Pets.Add(monster);
 
                 if (!monster.Spawn(CurrentMap, Back))
                 {
@@ -1163,11 +1230,6 @@ namespace Server.MirObjects
                 }
 
                 monster.SetHP(info.HP);
-
-                if (!Settings.PetSave)
-                {
-                    monster.TameTime = Envir.Time + info.TameTime;
-                }
             }
 
             Info.Pets.Clear();
@@ -6757,9 +6819,9 @@ namespace Server.MirObjects
             return Stat.Unknown;
         }
         //Gems granting multiple stat types are not compatible with this method.        
-        public void DropItem(ulong id, ushort count)
+        public void DropItem(ulong id, ushort count, bool isHeroItem)
         {
-            S.DropItem p = new S.DropItem { UniqueID = id, Count = count, Success = false };
+            S.DropItem p = new S.DropItem { UniqueID = id, Count = count, HeroItem = isHeroItem, Success = false };
             if (Dead)
             {
                 Enqueue(p);
@@ -6775,13 +6837,37 @@ namespace Server.MirObjects
 
             UserItem temp = null;
             int index = -1;
+            HeroObject currentHero = null;
 
-            for (int i = 0; i < Info.Inventory.Length; i++)
+            if (!isHeroItem)
             {
-                temp = Info.Inventory[i];
-                if (temp == null || temp.UniqueID != id) continue;
-                index = i;
-                break;
+                for (int i = 0; i < Info.Inventory.Length; i++)
+                {
+                    temp = Info.Inventory[i];
+                    if (temp == null || temp.UniqueID != id) continue;
+                    index = i;
+                    break;
+                }
+            }
+            else
+            {
+                currentHero = Envir.Heroes.FirstOrDefault(h => h.Info.Index == Info.CurrentHeroIndex);
+
+                if (currentHero != null)
+                {
+                    for (int i = 0; i < currentHero.Info.Inventory.Length; i++)
+                    {
+                        temp = currentHero.Info.Inventory[i];
+                        if (temp == null || temp.UniqueID != id) continue;
+                        index = i;
+                        break;
+                    }
+                }
+                else
+                {
+                    Enqueue(p);
+                    return;
+                }
             }
 
             if (temp == null || index == -1 || count > temp.Count || count < 1)
@@ -6810,7 +6896,16 @@ namespace Server.MirObjects
                         Enqueue(p);
                         return;
                     }
-                Info.Inventory[index] = null;
+
+                if (p.HeroItem)
+                {
+                        currentHero.Info.Inventory[index] = null;
+                }
+                else
+                {
+                    Info.Inventory[index] = null;
+                }
+                
             }
             else
             {
@@ -6826,9 +6921,17 @@ namespace Server.MirObjects
             }
             p.Success = true;
             Enqueue(p);
-            RefreshBagWeight();
 
-            Report.ItemChanged(temp, count, 1);
+            if (p.HeroItem)
+            {
+                currentHero.RefreshBagWeight();
+                currentHero.Report.ItemChangedHero(temp, count, 1);
+            }
+            else
+            {
+                RefreshBagWeight();
+                Report.ItemChanged(temp, count, 1);
+            }  
         }
         public void DropGold(uint gold)
         {
@@ -8799,99 +8902,108 @@ namespace Server.MirObjects
                 return false;
             }
 
-            //check if we have the required items
-            for (int i = 0; i < Settings.Guild_CreationCostList.Count; i++)
+            if(!Info.AccountInfo.AdminAccount && String.Equals(guildName, Settings.NewbieGuild, StringComparison.OrdinalIgnoreCase))
             {
-                GuildItemVolume Required = Settings.Guild_CreationCostList[i];
-                if (Required.Item == null)
-                {
-                    if (Info.AccountInfo.Gold < Required.Amount)
-                    {
-                        ReceiveChat(String.Format("Insufficient gold. Creating a guild requires {0} gold.", Required.Amount), ChatType.System);
-                        return false;
-                    }
-                }
-                else
-                {
-                    ushort count = (ushort)Math.Min(Required.Amount, ushort.MaxValue);
+                ReceiveChat($"You cannot make the newbie guild. Nice try mortal.", ChatType.System);
+                return false;
+            }
 
-                    foreach (var item in Info.Inventory.Where(item => item != null && item.Info == Required.Item))
+            if (!Info.AccountInfo.AdminAccount)
+            {
+                //check if we have the required items
+                for (int i = 0; i < Settings.Guild_CreationCostList.Count; i++)
+                {
+                    GuildItemVolume Required = Settings.Guild_CreationCostList[i];
+                    if (Required.Item == null)
                     {
-                        if ((Required.Item.Type == ItemType.Ore) && (item.CurrentDura / 1000 > Required.Amount))
+                        if (Info.AccountInfo.Gold < Required.Amount)
                         {
-                            count = 0;
-                            break;
+                            ReceiveChat(String.Format("Insufficient gold. Creating a guild requires {0} gold.", Required.Amount), ChatType.System);
+                            return false;
                         }
-                        if (item.Count > count)
-                            count = 0;
-                        else
-                            count = (ushort)(count - item.Count);
-                        if (count == 0) break;
                     }
-                    if (count != 0)
+                    else
                     {
-                        if (Required.Amount == 1)
-                            ReceiveChat(String.Format("{0} is required to create a guild.", Required.Item.FriendlyName), ChatType.System);
-                        else
+                        ushort count = (ushort)Math.Min(Required.Amount, ushort.MaxValue);
+
+                        foreach (var item in Info.Inventory.Where(item => item != null && item.Info == Required.Item))
                         {
-                            if (Required.Item.Type == ItemType.Ore)
-                                ReceiveChat(string.Format("{0} with purity {1} is recuired to create a guild.", Required.Item.FriendlyName, Required.Amount / 1000), ChatType.System);
+                            if ((Required.Item.Type == ItemType.Ore) && (item.CurrentDura / 1000 > Required.Amount))
+                            {
+                                count = 0;
+                                break;
+                            }
+                            if (item.Count > count)
+                                count = 0;
                             else
-                                ReceiveChat(string.Format("Insufficient {0}, you need {1} to create a guild.", Required.Item.FriendlyName, Required.Amount), ChatType.System);
+                                count = (ushort)(count - item.Count);
+                            if (count == 0) break;
                         }
-                        return false;
-                    }
-                }
-            }
-
-            //take the required items
-            for (int i = 0; i < Settings.Guild_CreationCostList.Count; i++)
-            {
-                GuildItemVolume Required = Settings.Guild_CreationCostList[i];
-                if (Required.Item == null)
-                {
-                    if (Info.AccountInfo.Gold >= Required.Amount)
-                    {
-                        Info.AccountInfo.Gold -= Required.Amount;
-                        Enqueue(new S.LoseGold { Gold = Required.Amount });
-                    }
-                }
-                else
-                {
-                    ushort count = (ushort)Math.Min(Required.Amount, ushort.MaxValue);
-
-                    for (int o = 0; o < Info.Inventory.Length; o++)
-                    {
-                        UserItem item = Info.Inventory[o];
-                        if (item == null) continue;
-                        if (item.Info != Required.Item) continue;
-
-                        if ((Required.Item.Type == ItemType.Ore) && (item.CurrentDura / 1000 > Required.Amount))
+                        if (count != 0)
                         {
-                            Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
-                            Info.Inventory[o] = null;
+                            if (Required.Amount == 1)
+                                ReceiveChat(String.Format("{0} is required to create a guild.", Required.Item.FriendlyName), ChatType.System);
+                            else
+                            {
+                                if (Required.Item.Type == ItemType.Ore)
+                                    ReceiveChat(string.Format("{0} with purity {1} is recuired to create a guild.", Required.Item.FriendlyName, Required.Amount / 1000), ChatType.System);
+                                else
+                                    ReceiveChat(string.Format("Insufficient {0}, you need {1} to create a guild.", Required.Item.FriendlyName, Required.Amount), ChatType.System);
+                            }
+                            return false;
+                        }
+                    }
+                }
+
+                //take the required items
+                for (int i = 0; i < Settings.Guild_CreationCostList.Count; i++)
+                {
+                    GuildItemVolume Required = Settings.Guild_CreationCostList[i];
+                    if (Required.Item == null)
+                    {
+                        if (Info.AccountInfo.Gold >= Required.Amount)
+                        {
+                            Info.AccountInfo.Gold -= Required.Amount;
+                            Enqueue(new S.LoseGold { Gold = Required.Amount });
+                        }
+                    }
+                    else
+                    {
+                        ushort count = (ushort)Math.Min(Required.Amount, ushort.MaxValue);
+
+                        for (int o = 0; o < Info.Inventory.Length; o++)
+                        {
+                            UserItem item = Info.Inventory[o];
+                            if (item == null) continue;
+                            if (item.Info != Required.Item) continue;
+
+                            if ((Required.Item.Type == ItemType.Ore) && (item.CurrentDura / 1000 > Required.Amount))
+                            {
+                                Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                                Info.Inventory[o] = null;
+                                break;
+                            }
+                            if (count > item.Count)
+                            {
+                                Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                                Info.Inventory[o] = null;
+                                count -= item.Count;
+                                continue;
+                            }
+
+                            Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = (ushort)count });
+                            if (count == item.Count)
+                                Info.Inventory[o] = null;
+                            else
+                                item.Count -= (ushort)count;
                             break;
                         }
-                        if (count > item.Count)
-                        {
-                            Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
-                            Info.Inventory[o] = null;
-                            count -= item.Count;
-                            continue;
-                        }
-
-                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = (ushort)count });
-                        if (count == item.Count)
-                            Info.Inventory[o] = null;
-                        else
-                            item.Count -= (ushort)count;
-                        break;
                     }
                 }
+                RefreshStats();
             }
-            RefreshStats();
+            
             //make the guild
-
             var guildInfo = new GuildInfo(this, guildName) { GuildIndex = ++Envir.NextGuildID };
             Envir.GuildList.Add(guildInfo);
 
