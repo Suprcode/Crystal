@@ -3,6 +3,7 @@ using Client.MirGraphics;
 using Client.MirSounds;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -338,7 +339,11 @@ namespace Client.MirScenes.Dialogs
             {
                 if (link.StartsWith("http://", true, CultureInfo.InvariantCulture))
                 {
-                    System.Diagnostics.Process.Start(link);
+                    System.Diagnostics.Process.Start(new ProcessStartInfo
+                    {
+                        FileName = link,
+                        UseShellExecute = true
+                    });
                 }
             };
             temp.MouseWheel += LoginNoticeDialog_MouseWheel;
