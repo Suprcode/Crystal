@@ -750,11 +750,6 @@ namespace Server.MirObjects
             if (Owner.PMode == PetMode.MoveOnly || Owner.PMode == PetMode.None)
                 Target = null;
 
-            if (Owner.PMode == PetMode.FocusMasterTarget)
-            {
-                Target = Owner.Target;
-            }
-
             ProcessAutoPot();
             ProcessStacking();
             ProcessSearch();
