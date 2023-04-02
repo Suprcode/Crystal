@@ -144,7 +144,7 @@ namespace Server.MirObjects
         {
             get
             {
-                return Envir.Time >= RegenTime && _runCounter == 0;
+                return Envir.Time >= RegenTime;
             }
         }
         protected virtual bool CanCast
