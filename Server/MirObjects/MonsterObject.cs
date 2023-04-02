@@ -1544,11 +1544,6 @@ namespace Server.MirObjects
 
                 if (Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.None)
                     Target = null;
-
-                if (Master.PMode == PetMode.FocusMasterTarget)
-                {
-                    Target = Master.Target;
-                }
             }
 
             CheckAlone();
