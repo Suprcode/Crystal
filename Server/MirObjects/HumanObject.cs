@@ -2690,6 +2690,27 @@ namespace Server.MirObjects
 
             if (target != null && target.Race != ObjectType.Monster && target.Race != ObjectType.Player && target.Race != ObjectType.Hero) return;
 
+            if (target != null && !target.Dead && target.IsAttackTarget(this) && !target.IsFriendlyTarget(this))
+            {
+                if (this is PlayerObject player &&
+                   player.PMode == PetMode.FocusMasterTarget)
+                {
+                    foreach (MonsterObject pet in player.Pets)
+                    {
+                        if (pet.Race != ObjectType.Creature)
+                        {
+                            pet.Target = target;
+                        }
+                    }
+
+                    if (player.HeroSpawned &&
+                        !player.Hero.Dead)
+                    {
+                        player.Hero.Target = target;
+                    }
+                }
+            }
+
             Direction = dir;
 
             Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
@@ -2937,6 +2958,27 @@ namespace Server.MirObjects
                 MapObject ob = cell.Objects[i];
                 if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster && ob.Race != ObjectType.Hero) continue;
                 if (!ob.IsAttackTarget(this)) continue;
+
+                if (ob != null && !ob.Dead && ob.IsAttackTarget(this) && !ob.IsFriendlyTarget(this))
+                {
+                    if (this is PlayerObject player &&
+                   player.PMode == PetMode.FocusMasterTarget)
+                    {
+                        foreach (MonsterObject pet in player.Pets)
+                        {
+                            if (pet.Race != ObjectType.Creature)
+                            {
+                                pet.Target = ob;
+                            }
+                        }
+
+                        if (player.HeroSpawned &&
+                            !player.Hero.Dead)
+                        {
+                            player.Hero.Target = ob;
+                        }
+                    }
+                }
 
                 //Only undead targets
                 if (ob.Undead)
@@ -3354,6 +3396,27 @@ namespace Server.MirObjects
             if (target != null && target.Race != ObjectType.Monster && target.Race != ObjectType.Player && target.Race != ObjectType.Hero)
             {
                 target = null;
+            }
+
+            if (target != null && !target.Dead && target.IsAttackTarget(this) && !target.IsFriendlyTarget(this))
+            {
+                if (this is PlayerObject player &&
+                   player.PMode == PetMode.FocusMasterTarget)
+                {
+                    foreach (MonsterObject pet in player.Pets)
+                    {
+                        if (pet.Race != ObjectType.Creature)
+                        {
+                            pet.Target = target;
+                        }
+                    }
+
+                    if (player.HeroSpawned &&
+                        !player.Hero.Dead)
+                    {
+                        player.Hero.Target = target;
+                    }
+                }
             }
 
             bool cast = true;
