@@ -18,6 +18,7 @@ namespace Client.MirObjects
         }
 
         public Spell Spell;
+        public Point AnimationOffset = new(0, 0);
         public int FrameCount, FrameInterval, FrameIndex;
         public bool Repeat, Ended;
         
@@ -68,7 +69,7 @@ namespace Client.MirObjects
                     Blend = false;
                     break;
                 case Spell.Blizzard:
-                    CurrentLocation.Y = Math.Max(0, CurrentLocation.Y - 20);
+                    AnimationOffset = new Point(0, -20);
                     BodyLibrary = Libraries.Magic2;
                     DrawFrame = 1550;
                     FrameInterval = 100;
@@ -78,8 +79,8 @@ namespace Client.MirObjects
                     Repeat = false;
                     break;
                 case Spell.MeteorStrike:
+                    AnimationOffset = new Point(0, -20);
                     MapControl.Effects.Add(new Effect(Libraries.Magic2, 1600, 10, 800, CurrentLocation) { Repeat = true, RepeatUntil = CMain.Time + 3000 });
-                    CurrentLocation.Y = Math.Max(0, CurrentLocation.Y - 20);
                     BodyLibrary = Libraries.Magic2;
                     DrawFrame = 1610;
                     FrameInterval = 100;
@@ -330,9 +331,20 @@ namespace Client.MirObjects
             if (BodyLibrary == null) return;
 
             if (Blend)
-                BodyLibrary.DrawBlend(DrawFrame + FrameIndex, DrawLocation, DrawColour, true, 0.8F);
+            {
+                BodyLibrary.DrawBlend(
+                    DrawFrame + FrameIndex,
+                    AnimationOffset == default ? DrawLocation : GetDrawWithOffset(),
+                    DrawColour, true,
+                    0.8F);
+            }
             else
-                BodyLibrary.Draw(DrawFrame + FrameIndex, DrawLocation, DrawColour, true);
+            {
+                BodyLibrary.Draw(DrawFrame + FrameIndex,
+                    AnimationOffset == default ? DrawLocation : GetDrawWithOffset(),
+                    DrawColour,
+                    true);
+            }
         }
 
         public override bool MouseOver(Point p)
@@ -346,6 +358,18 @@ namespace Client.MirObjects
 
         public override void DrawEffects(bool effectsEnabled)
         { 
+        }
+
+        private Point GetDrawWithOffset()
+        {
+            Point newDrawLocation = new (
+                (CurrentLocation.X + AnimationOffset.X - User.Movement.X + MapControl.OffSetX) * MapControl.CellWidth,
+                (CurrentLocation.Y + AnimationOffset.Y - User.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
+
+            newDrawLocation.Offset(GlobalDisplayLocationOffset);
+            newDrawLocation.Offset(User.OffSetMove);
+
+            return newDrawLocation;
         }
     }
 }
