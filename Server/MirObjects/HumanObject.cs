@@ -2692,7 +2692,23 @@ namespace Server.MirObjects
 
             if (target != null && !target.Dead && target.IsAttackTarget(this) && !target.IsFriendlyTarget(this))
             {
-                Target = target;
+                if (this is PlayerObject player &&
+                   player.PMode == PetMode.FocusMasterTarget)
+                {
+                    foreach (MonsterObject pet in player.Pets)
+                    {
+                        if (pet.Race != ObjectType.Creature)
+                        {
+                            pet.Target = target;
+                        }
+                    }
+
+                    if (player.HeroSpawned &&
+                        !player.Hero.Dead)
+                    {
+                        player.Hero.Target = target;
+                    }
+                }
             }
 
             Direction = dir;
@@ -2945,7 +2961,23 @@ namespace Server.MirObjects
 
                 if (ob != null && !ob.Dead && ob.IsAttackTarget(this) && !ob.IsFriendlyTarget(this))
                 {
-                    Target = ob;
+                    if (this is PlayerObject player &&
+                   player.PMode == PetMode.FocusMasterTarget)
+                    {
+                        foreach (MonsterObject pet in player.Pets)
+                        {
+                            if (pet.Race != ObjectType.Creature)
+                            {
+                                pet.Target = ob;
+                            }
+                        }
+
+                        if (player.HeroSpawned &&
+                            !player.Hero.Dead)
+                        {
+                            player.Hero.Target = ob;
+                        }
+                    }
                 }
 
                 //Only undead targets
@@ -3368,7 +3400,23 @@ namespace Server.MirObjects
 
             if (target != null && !target.Dead && target.IsAttackTarget(this) && !target.IsFriendlyTarget(this))
             {
-                Target = target;
+                if (this is PlayerObject player &&
+                   player.PMode == PetMode.FocusMasterTarget)
+                {
+                    foreach (MonsterObject pet in player.Pets)
+                    {
+                        if (pet.Race != ObjectType.Creature)
+                        {
+                            pet.Target = target;
+                        }
+                    }
+
+                    if (player.HeroSpawned &&
+                        !player.Hero.Dead)
+                    {
+                        player.Hero.Target = target;
+                    }
+                }
             }
 
             bool cast = true;
