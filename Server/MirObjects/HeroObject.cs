@@ -293,7 +293,7 @@ namespace Server.MirObjects
         {
             return true;
         }
-        public override void BeginMagic(Spell spell, MirDirection dir, uint targetID, Point location)
+        public override void BeginMagic(Spell spell, MirDirection dir, uint targetID, Point location, bool spellTargetLock = false)
         {
             NextMagicSpell = spell;
             NextMagicDirection = dir;
@@ -749,6 +749,11 @@ namespace Server.MirObjects
 
             if (Owner.PMode == PetMode.MoveOnly || Owner.PMode == PetMode.None)
                 Target = null;
+
+            if (Owner.PMode == PetMode.FocusMasterTarget)
+            {
+                Target = Owner.Target;
+            }
 
             ProcessAutoPot();
             ProcessStacking();

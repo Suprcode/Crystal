@@ -3292,9 +3292,9 @@ namespace Server.MirObjects
         {
             return !Dead && Envir.Time >= ActionTime || Envir.Time >= SpellTime;
         }
-        public virtual void BeginMagic(Spell spell, MirDirection dir, uint targetID, Point location)
+        public virtual void BeginMagic(Spell spell, MirDirection dir, uint targetID, Point location, Boolean spellTargetLock = false)
         {
-            Magic(spell, dir, targetID, location);
+            Magic(spell, dir, targetID, location, spellTargetLock);
         }
 
         public int MagicCost(UserMagic magic)
@@ -3322,7 +3322,7 @@ namespace Server.MirObjects
             return cost;
         }
         public virtual MapObject DefaultMagicTarget => this;
-        public void Magic(Spell spell, MirDirection dir, uint targetID, Point location)
+        public void Magic(Spell spell, MirDirection dir, uint targetID, Point location, bool spellTargetLock = false)
         {
             if (!CanCast)
             {
@@ -3478,17 +3478,17 @@ namespace Server.MirObjects
                     break;
                 case Spell.FireBang:
                 case Spell.IceStorm:
-                    FireBang(magic, target == null ? location : target.CurrentLocation);
+                    FireBang(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location);
                     break;
                 case Spell.MassHiding:
-                    MassHiding(magic, target == null ? location : target.CurrentLocation, out cast);
+                    MassHiding(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location, out cast);
                     break;
                 case Spell.SoulShield:
                 case Spell.BlessedArmour:
-                    SoulShield(magic, target == null ? location : target.CurrentLocation, out cast);
+                    SoulShield(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location, out cast);
                     break;
                 case Spell.FireWall:
-                    FireWall(magic, target == null ? location : target.CurrentLocation);
+                    FireWall(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location);
                     break;
                 case Spell.Lightning:
                     Lightning(magic);
@@ -3497,7 +3497,7 @@ namespace Server.MirObjects
                     HeavenlySword(magic);
                     break;
                 case Spell.MassHealing:
-                    MassHealing(magic, target == null ? location : target.CurrentLocation);
+                    MassHealing(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location);
                     break;
                 case Spell.ShoulderDash:
                     ShoulderDash(magic);
@@ -3564,15 +3564,14 @@ namespace Server.MirObjects
                     Mirroring(magic);
                     break;
                 case Spell.Blizzard:
-                    Blizzard(magic, target == null ? location : target.CurrentLocation, out cast);
+                    Blizzard(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location, out cast);
                     break;
                 case Spell.MeteorStrike:
-                    MeteorStrike(magic, target == null ? location : target.CurrentLocation, out cast);
+                    MeteorStrike(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location, out cast);
                     break;
                 case Spell.IceThrust:
                     IceThrust(magic);
                     break;
-
                 case Spell.ProtectionField:
                     ProtectionField(magic);
                     break;
@@ -3580,14 +3579,14 @@ namespace Server.MirObjects
                     PetEnhancer(target, magic, out cast);
                     break;
                 case Spell.TrapHexagon:
-                    TrapHexagon(magic, target == null ? location : target.CurrentLocation, out cast);
+                    TrapHexagon(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location, out cast);
                     break;
                 case Spell.Reincarnation:
                     if (!CurrentMap.Info.NoReincarnation)
                         Reincarnation(magic, target == null ? null : target as PlayerObject, out cast);
                     break;
                 case Spell.Curse:
-                    Curse(magic, target == null ? location : target.CurrentLocation, out cast);
+                    Curse(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location, out cast);
                     break;
                 case Spell.SummonHolyDeva:
                     SummonHolyDeva(magic);
@@ -3602,7 +3601,7 @@ namespace Server.MirObjects
                     UltimateEnhancer(target, magic, out cast);
                     break;
                 case Spell.Plague:
-                    Plague(magic, target == null ? location : target.CurrentLocation, out cast);
+                    Plague(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location, out cast);
                     break;
                 case Spell.SwiftFeet:
                     SwiftFeet(magic, out cast);
@@ -3661,7 +3660,7 @@ namespace Server.MirObjects
                     ArcherSummon(magic, target, location);
                     break;
                 case Spell.Stonetrap:
-                    ArcherSummonStone(magic, target == null ? location : target.CurrentLocation, out cast);
+                    ArcherSummonStone(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location, out cast);
                     break;
                 case Spell.VampireShot:
                 case Spell.PoisonShot:
@@ -3678,7 +3677,7 @@ namespace Server.MirObjects
                     MoonMist(magic);
                     break;
                 case Spell.HealingCircle:
-                    HealingCircle(magic, target == null ? location : target.CurrentLocation);
+                    HealingCircle(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location);
                     break;
 
                 //Custom Spells

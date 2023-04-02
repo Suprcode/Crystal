@@ -9,7 +9,6 @@ using Font = System.Drawing.Font;
 using S = ServerPackets;
 using C = ClientPackets;
 using Effect = Client.MirObjects.Effect;
-
 using Client.MirScenes.Dialogs;
 using Client.Utils;
 
@@ -4098,6 +4097,11 @@ namespace Client.MirScenes
                             ob.Effects.Add(new Effect(Libraries.Magic, 260, 10, 500, ob));
                             break;
                         }
+                }
+
+                if (p.ObjectID == User.ObjectID)
+                {
+                    User.TargetID = User.LastTargetObjectId;
                 }
 
                 if (playDefaultSound)
@@ -11952,7 +11956,7 @@ namespace Client.MirScenes
             }
             else
             {
-                Network.Enqueue(new C.Magic { ObjectID = actor.ObjectID, Spell = magic.Spell, Direction = dir, TargetID = targetID, Location = location });
+                Network.Enqueue(new C.Magic { ObjectID = actor.ObjectID, Spell = magic.Spell, Direction = dir, TargetID = targetID, Location = location, SpellTargetLock = CMain.SpellTargetLock });
             }
         }
 

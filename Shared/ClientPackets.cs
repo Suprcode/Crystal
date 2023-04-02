@@ -1012,6 +1012,7 @@ namespace ClientPackets
         public uint TargetID;
         public Point Location;
         public uint ObjectID;
+        public bool SpellTargetLock;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -1020,6 +1021,7 @@ namespace ClientPackets
             Direction = (MirDirection)reader.ReadByte();
             TargetID = reader.ReadUInt32();
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
+            SpellTargetLock = reader.ReadBoolean();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
@@ -1029,6 +1031,7 @@ namespace ClientPackets
             writer.Write(TargetID);
             writer.Write(Location.X);
             writer.Write(Location.Y);
+            writer.Write(SpellTargetLock);
         }
     }
 
