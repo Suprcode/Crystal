@@ -26,6 +26,10 @@ namespace Server.Database
             CreateDynamicColumns();
 
             PopulateTable();
+
+            // register after initializing data to prevent erroneous throws
+            itemInfoGridView.CellValueChanged += CellValueChanged;
+            itemInfoGridView.CellValidating += itemInfoGridView_CellValidating;
         }
 
         public static void SetDoubleBuffered(Control c)
@@ -268,14 +272,22 @@ namespace Server.Database
             }
 
             itemInfoGridView.DataSource = Table;
+
+            itemInfoGridView.Columns["Modified"].ReadOnly = true;
         }
 
         private void UpdateFilter()
         {
+            if (itemInfoGridView.DataSource == null)
+            {
+                return;
+            }
+
             var filterText = txtSearch.Text;
             var filterType = ((KeyValuePair<string, string>)drpFilterType.SelectedItem).Key;
 
-            if (string.IsNullOrEmpty(filterText) && filterType == "-1")
+            if (string.IsNullOrEmpty(filterText) &&
+                filterType == "-1")
             {
                 (itemInfoGridView.DataSource as DataTable).DefaultView.RowFilter = string.Empty;
                 return;
@@ -411,14 +423,12 @@ namespace Server.Database
         {
             var col = itemInfoGridView.Columns[e.ColumnIndex];
 
-            var cell = itemInfoGridView.Rows[e.RowIndex].Cells[col.Name];
-
-            if (cell.FormattedValue != null && e.FormattedValue != null && cell.FormattedValue.ToString() == e.FormattedValue.ToString())
+            if (col.Name.Equals("Modified", comparisonType: StringComparison.CurrentCultureIgnoreCase))
             {
                 return;
             }
 
-            itemInfoGridView.Rows[e.RowIndex].Cells["Modified"].Value = true;
+            var cell = itemInfoGridView.Rows[e.RowIndex].Cells[col.Name];
 
             var val = e.FormattedValue.ToString();
 
@@ -455,6 +465,11 @@ namespace Server.Database
             {
                 e.Cancel = true;
                 itemInfoGridView.Rows[e.RowIndex].ErrorText = "the value must be a long";
+            }
+
+            if (!e.Cancel)
+            {
+                itemInfoGridView.Rows[e.RowIndex].Cells["Modified"].Value = true;
             }
         }
 
@@ -687,7 +702,7 @@ namespace Server.Database
 
                                 itemInfoGridView.EndEdit();
                             }
-                            catch(Exception ex)
+                            catch (Exception ex)
                             {
                                 fileError = true;
                                 itemInfoGridView.EndEdit();
@@ -886,12 +901,6 @@ namespace Server.Database
             }
         }
 
-        private void ItemInfoFormNew_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            SaveForm();
-            Envir.SaveDB();
-        }
-
         private void itemInfoGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
 
@@ -916,6 +925,56 @@ namespace Server.Database
                 }
             }
 
+            Envir.SaveDB();
+        }
+
+        private void CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (itemInfoGridView.CurrentCell is DataGridViewComboBoxCell ||
+                itemInfoGridView.CurrentCell is DataGridViewCheckBoxCell)
+            {
+                itemInfoGridView.Rows[e.RowIndex].Cells["Modified"].Value = true;
+            }
+        }
+
+        private void CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (itemInfoGridView.IsCurrentCellDirty)
+            {
+                itemInfoGridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+
+        private void ItemInfoFormNew_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            List<String> inError = new();
+            int indexColumn = itemInfoGridView.Columns["ItemIndex"].Index;
+            int nameColumn = itemInfoGridView.Columns["ItemName"].Index;
+
+            for (int i = 0; i < itemInfoGridView.RowCount; i++)
+            {
+                if (!String.IsNullOrEmpty(itemInfoGridView.Rows[i].ErrorText))
+                {
+                    inError.Add($"Index: [{itemInfoGridView.Rows[i].Cells[indexColumn].Value}] Item: [{itemInfoGridView.Rows[i].Cells[nameColumn].Value}]");
+                }
+            }
+
+            if (inError.Count > 0)
+            {
+                String msg = string.Join(Environment.NewLine, inError);
+                if (MessageBox.Show($"The following items are invalid: {msg}", "Discard Invalid Items?", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                {
+                    SaveForm();
+                    Envir.SaveDB();
+                }
+                else
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            }
+
+            SaveForm();
             Envir.SaveDB();
         }
     }
