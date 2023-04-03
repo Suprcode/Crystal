@@ -29,7 +29,8 @@ namespace Client.MirObjects
             }
         }
 
-        private static uint lastTargetObjectId, targetObjectID;
+        private static uint lastTargetObjectId;
+        private static uint targetObjectID;
         public static uint TargetObjectID
         {
             get { return targetObjectID; }
@@ -97,6 +98,8 @@ namespace Client.MirObjects
                 percentMana = value;
             }
         }
+
+        public uint LastTargetObjectId => lastTargetObjectId;
 
         public List<QueuedAction> ActionFeed = new List<QueuedAction>();
         public QueuedAction NextAction

@@ -968,6 +968,7 @@ public enum PetMode : byte
     MoveOnly = 1,
     AttackOnly = 2,
     None = 3,
+    FocusMasterTarget = 4
 }
 
 [Flags]
