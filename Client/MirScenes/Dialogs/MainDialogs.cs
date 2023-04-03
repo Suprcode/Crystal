@@ -418,6 +418,9 @@ namespace Client.MirScenes.Dialogs
                 case PetMode.None:
                     PModeLabel.Text = GameLanguage.PetMode_None;
                     break;
+                case PetMode.FocusMasterTarget:
+                    PModeLabel.Text = GameLanguage.PetMode_FocusMasterTarget;
+                    break;
             }
 
             switch (Settings.SkillMode)
