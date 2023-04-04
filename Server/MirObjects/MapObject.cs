@@ -424,7 +424,6 @@ namespace Server.MirObjects
         {
             if (attacker == null || attacker.Node == null) return false;
             if (Dead || InSafeZone || attacker.InSafeZone || attacker == this) return false;
-            if (CurrentMap.Info.NoFight) return false;
             
             switch (attacker.Race)
             {
