@@ -549,7 +549,7 @@ namespace Server.MirObjects
 
         public void TakeConquest(PlayerObject player = null, GuildObject winningGuild = null)
         {
-            if (winningGuild == null && (player == null || player.MyGuild == null || player.MyGuild.Conquest != null)) return;
+            if (winningGuild == null && (player == null || player.MyGuild == null || player.MyGuild.Conquest != null || player.Dead)) return;
             if (winningGuild != null && winningGuild.Conquest != null) return;
             if (player != null && player.MyGuild != null && player.MyGuild.Conquest != null) return;
 
@@ -558,7 +558,6 @@ namespace Server.MirObjects
             switch (GameType)
             {
                 case ConquestGame.CapturePalace:
-                    if (player == null) return;
                     if (StartType == ConquestType.Request)
                         if (player.MyGuild.Guildindex != GuildInfo.AttackerID) break;
 
