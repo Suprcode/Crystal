@@ -1638,9 +1638,15 @@ namespace Server.MirObjects
         {
             LevelEffects = LevelEffects.None;
 
-            if (Info.Flags[990]) LevelEffects |= LevelEffects.Mist;
+          if (Info.Flags[990]) LevelEffects |= LevelEffects.Mist;
             if (Info.Flags[991]) LevelEffects |= LevelEffects.RedDragon;
             if (Info.Flags[992]) LevelEffects |= LevelEffects.BlueDragon;
+            if (Info.Flags[993]) LevelEffects |= LevelEffects.Rebirth1;
+            if (Info.Flags[994]) LevelEffects |= LevelEffects.Rebirth2;
+            if (Info.Flags[995]) LevelEffects |= LevelEffects.Rebirth3;
+            if (Info.Flags[996]) LevelEffects |= LevelEffects.NewBlue;
+            if (Info.Flags[997]) LevelEffects |= LevelEffects.YellowDragon;
+            if (Info.Flags[998]) LevelEffects |= LevelEffects.Phoenix;
         }
         public virtual void Revive(int hp, bool effect)
         {
