@@ -106,6 +106,7 @@ namespace Server.Database
             itemInfoGridView.Margin = new Padding(4, 3, 4, 3);
             itemInfoGridView.Name = "itemInfoGridView";
             itemInfoGridView.RowTemplate.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            itemInfoGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             itemInfoGridView.Size = new Size(1115, 500);
             itemInfoGridView.TabIndex = 0;
             itemInfoGridView.CurrentCellDirtyStateChanged += CurrentCellDirtyStateChanged;
