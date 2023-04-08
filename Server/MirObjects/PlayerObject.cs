@@ -2725,7 +2725,18 @@ namespace Server.MirObjects
                             return;
                         }
 
-                        MonsterInfo mInfo = Envir.GetMonsterInfo(parts[1]);
+                        MonsterInfo mInfo = null;
+                        int monsterIndex = 0;
+
+                        if (Int32.TryParse(parts[1], out monsterIndex))
+                        {
+                            mInfo = Envir.GetMonsterInfo(monsterIndex, false);
+                        }
+                        else
+                        {
+                            mInfo = Envir.GetMonsterInfo(parts[1]);
+                        }
+
                         if (mInfo == null)
                         {
                             ReceiveChat((string.Format("Monster {0} does not exist", parts[1])), ChatType.System);
@@ -2757,7 +2768,18 @@ namespace Server.MirObjects
                     case "RECALLMOB":
                         if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 
-                        MonsterInfo mInfo2 = Envir.GetMonsterInfo(parts[1]);
+                        MonsterInfo mInfo2 = null;
+                        int monsterIndex2 = 0;
+
+                        if (Int32.TryParse(parts[1], out monsterIndex2))
+                        {
+                            mInfo2 = Envir.GetMonsterInfo(monsterIndex2, false);
+                        }
+                        else
+                        {
+                            mInfo2 = Envir.GetMonsterInfo(parts[1]);
+                        }
+
                         if (mInfo2 == null) return;
 
                         count = 1;

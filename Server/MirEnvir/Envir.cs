@@ -2865,6 +2865,20 @@ namespace Server.MirEnvir
             return MapList.SelectMany(t1 => t1.NPCs.Where(t => t.Info.GameName.StartsWith(name, StringComparison.CurrentCultureIgnoreCase) && t.Info.ShowOnBigMap)).FirstOrDefault();
         }
 
+        public MonsterInfo GetMonsterInfo(int id, bool strict = false)
+        {
+            String monsterName = MonsterInfoList.FirstOrDefault(x => x.Index == id)?.Name;
+
+            if (monsterName == null)
+            {
+                return null;
+            }
+            else
+            {
+                return (GetMonsterInfo(monsterName, strict));
+            }
+        }
+
         public MonsterInfo GetMonsterInfo(string name, bool Strict = false)
         {
             for (var i = 0; i < MonsterInfoList.Count; i++)
