@@ -85,12 +85,19 @@ public enum AwakeType : byte
 }
 
 [Flags]
-public enum LevelEffects : byte
+public enum LevelEffects : ushort
 {
     None = 0,
-    Mist = 0x0001,
-    RedDragon = 0x0002,
-    BlueDragon = 0x0004
+    Mist = 1,
+    RedDragon = 2,
+    BlueDragon = 4,
+    Rebirth1 =8,
+    Rebirth2 = 16,
+    Rebirth3 = 32,
+    NewBlue = 64,
+    YellowDragon = 128,
+    Phoenix= 256,
+
 }
 
 public enum OutputMessageType : byte
