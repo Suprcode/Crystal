@@ -2742,7 +2742,17 @@ namespace Server.MirObjects
                         for (int i = 0; i < count; i++)
                         {
                             MonsterObject monster = MonsterObject.GetMonster(mInfo);
-                            if (monster == null) return;
+                            if (monster == null)
+                            {
+                                return;
+                            }
+
+                            if (monster is IntelligentCreatureObject)
+                            {
+                                ReceiveChat("Cannot spawn an IntelligentCreatureObject.", ChatType.System);
+                                return;
+                            }
+
                             if (spread == 0)
                                 monster.Spawn(CurrentMap, Front);
                             else
@@ -2758,6 +2768,7 @@ namespace Server.MirObjects
                         if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 
                         MonsterInfo mInfo2 = Envir.GetMonsterInfo(parts[1]);
+
                         if (mInfo2 == null) return;
 
                         count = 1;
@@ -2774,7 +2785,15 @@ namespace Server.MirObjects
                         for (int i = 0; i < count; i++)
                         {
                             MonsterObject monster = MonsterObject.GetMonster(mInfo2);
+
                             if (monster == null) return;
+
+                            if (monster is IntelligentCreatureObject)
+                            {
+                                ReceiveChat("Cannot spawn an IntelligentCreatureObject.", ChatType.System);
+                                return;
+                            }
+
                             monster.PetLevel = petlevel;
                             monster.Master = this;
                             monster.MaxPetLevel = 7;
