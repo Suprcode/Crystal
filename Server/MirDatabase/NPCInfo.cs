@@ -34,6 +34,7 @@ namespace Server.MirDatabase
         public bool ShowOnBigMap;
         public int BigMapIcon;
         public bool CanTeleportTo;
+        public bool ConquestVisible = true;
 
         public List<int> CollectQuestIndexes = new List<int>();
         public List<int> FinishQuestIndexes = new List<int>();
@@ -93,6 +94,11 @@ namespace Server.MirDatabase
             }
             if (Envir.LoadVersion > 96)
                 CanTeleportTo = reader.ReadBoolean();
+
+            if (Envir.LoadVersion >= 107)
+            {
+                ConquestVisible = reader.ReadBoolean();
+            }
         }
         public void Save(BinaryWriter writer)
         {
@@ -130,6 +136,7 @@ namespace Server.MirDatabase
             writer.Write(ShowOnBigMap);
             writer.Write(BigMapIcon);
             writer.Write(CanTeleportTo);
+            writer.Write(ConquestVisible);
         }
 
         public static void FromText(string text)
@@ -158,6 +165,7 @@ namespace Server.MirDatabase
             if (!bool.TryParse(data[7], out info.ShowOnBigMap)) return;
             if (!int.TryParse(data[8], out info.BigMapIcon)) return;
             if (!bool.TryParse(data[9], out info.CanTeleportTo)) return;
+            if (!bool.TryParse(data[10], out info.ConquestVisible)) return;
 
             info.Index = ++EditEnvir.NPCIndex;
             EditEnvir.NPCInfoList.Add(info);
