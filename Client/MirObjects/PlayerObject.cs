@@ -665,8 +665,8 @@ namespace Client.MirObjects
             if (LevelEffects.HasFlag(LevelEffects.BlueDragon))
             {
                 Effects.Add(new SpecialEffect(Libraries.Effect, 1210, 20, 3200, this, true, true, 1) { Repeat = true });
-                SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1240, 32, 4200, this, true, false, 1) { Repeat = true, Delay = delay };
-                effect.SetStart(CMain.Time + delay);
+                SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1240, 32, 4200, this, true, false, 1) { Repeat = true, };
+                effect.SetStart(CMain.Time);
                 Effects.Add(effect);
             }
             if (LevelEffects.HasFlag(LevelEffects.RedDragon))
@@ -679,6 +679,49 @@ namespace Client.MirObjects
             if (LevelEffects.HasFlag(LevelEffects.Mist))
             {
                 Effects.Add(new SpecialEffect(Libraries.Effect, 296, 32, 3600, this, true, false, 1) { Repeat = true });
+
+            }
+            if (LevelEffects.HasFlag(LevelEffects.Rebirth1))
+            {
+                Effects.Add(new SpecialEffect(Libraries.Effect, 1271, 36, 3600, this, true, false, 1) { Repeat = true });
+
+
+            }
+
+            if (LevelEffects.HasFlag(LevelEffects.Rebirth2))
+            {
+                Effects.Add(new SpecialEffect(Libraries.Effect, 1308, 38, 3600, this, true, false, 1) { Repeat = true });
+                SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1347, 39, 3600, this, true, true, 1) { Repeat = true, Delay = delay };
+                effect.SetStart(CMain.Time + delay);
+                Effects.Add(effect);
+            }
+            if (LevelEffects.HasFlag(LevelEffects.Rebirth3))
+            {
+                Effects.Add(new SpecialEffect(Libraries.Effect, 1409, 19, 3600, this, true, false, 1) { Repeat = true, Delay = delay });
+                SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1444, 25, 4600, this, true, true, 1) { Repeat = true };
+
+                Effects.Add(effect);
+            }
+            if (LevelEffects.HasFlag(LevelEffects.NewBlue))
+            {
+                Effects.Add(new SpecialEffect(Libraries.Effect, 1574, 31, 3600, this, true, false, 1) { Repeat = true, Delay = delay });
+                SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1621, 24, 3600, this, true, true, 1) { Repeat = true };
+
+                Effects.Add(effect);
+            }
+            if (LevelEffects.HasFlag(LevelEffects.YellowDragon))
+            {
+                Effects.Add(new SpecialEffect(Libraries.Effect, 1486, 32, 4600, this, true, false, 1) { Repeat = true, Delay = delay });
+                SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1534, 24, 4600, this, true, true, 1) { Repeat = true };
+
+                Effects.Add(effect);
+            }
+            if (LevelEffects.HasFlag(LevelEffects.Phoenix))
+            {
+                Effects.Add(new SpecialEffect(Libraries.Effect, 1663, 26, 3600, this, true, false, 1) { Repeat = true, Delay = delay });
+                SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1705, 21, 3600, this, true, true, 1) { Repeat = true };
+
+                Effects.Add(effect);
             }
         }
 
