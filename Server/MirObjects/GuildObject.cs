@@ -153,19 +153,10 @@ namespace Server.MirObjects
         public void SendGuildStatus(PlayerObject member)
         {
             string gName = Name;
-            string conquest = "[" + Conquest.Info.Name + "]";
 
             if (Conquest != null)
             {
-                gName += conquest;
-            }
-            else
-            {
-                // remove conquest name if it exists
-                if (gName.EndsWith(conquest))
-                {
-                    gName = gName.Replace(conquest, String.Empty);
-                }
+                gName += "[" + Conquest.Info.Name + "]";
             }
 
             member.Enqueue(new ServerPackets.GuildStatus()
