@@ -1428,7 +1428,6 @@ namespace Server.MirObjects
                 case "GUILDWARFEE":
                     newValue = Settings.Guild_WarCost.ToString();
                     break;
-
                 case "PARCELAMOUNT":
                     newValue = player.GetMailAwaitingCollectionAmount().ToString();
                     break;
@@ -1440,7 +1439,16 @@ namespace Server.MirObjects
                 case "ROLLRESULT":
                     newValue = player.NPCData.TryGetValue("NPCRollResult", out object _rollResult) ? _rollResult.ToString() : "Not Rolled";
                     break;
-
+                case "MOUNTLOYALTY":
+                    if (!player.Mount.HasMount)
+                    {
+                        newValue = "No Mount";
+                    }
+                    else
+                    {
+                        newValue = $"{player.Info.Equipment[(int)EquipmentSlot.Mount].CurrentDura}/{player.Info.Equipment[(int)EquipmentSlot.Mount].MaxDura}";
+                    }
+                    break;
                 default:
                     newValue = string.Empty;
                     break;
