@@ -3583,7 +3583,18 @@ namespace Server.MirObjects
                             MessageQueue.Enqueue(string.Format("{0} War Started.", tempConq.Info.Name));
 
                             foreach (var pl in Envir.Players)
+                            {
+                                if (tempConq.WarIsOn)
+                                {
+                                    pl.ReceiveChat($"{tempConq.Info.Name} War Started.", ChatType.System);
+                                }
+                                else
+                                {
+                                    pl.ReceiveChat($"{tempConq.Info.Name} War Stopped.", ChatType.System);
+                                }
+
                                 pl.BroadcastInfo();
+                            }
                         }
                         break;
                     case "RESETCONQUEST":

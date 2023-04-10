@@ -1021,8 +1021,8 @@ namespace Server.MirObjects
                     acts.Add(new NPCActions(ActionType.SetConquestRate, parts[1], parts[2]));
                     break;
                 case "STARTCONQUEST":
-                    if (parts.Length < 3) return;
-                    acts.Add(new NPCActions(ActionType.StartConquest, parts[1], parts[2]));
+                    if (parts.Length < 2) return;
+                    acts.Add(new NPCActions(ActionType.StartConquest, parts[1]));
                     break;
                 case "SCHEDULECONQUEST":
                     if (parts.Length < 2) return;
@@ -3804,16 +3804,36 @@ namespace Server.MirObjects
                             if (!int.TryParse(param[0], out int tempInt)) return;
                             var conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                             if (conquest == null) return;
-                            ConquestGame tempGame;
-
-                            if (!ConquestGame.TryParse(param[1], out tempGame)) return;
 
                             if (!conquest.WarIsOn)
                             {
                                 conquest.StartType = ConquestType.Forced;
-                                conquest.GameType = tempGame;
-                                conquest.StartWar(tempGame);
+                                conquest.StartWar(conquest.GameType);
+
+                                MessageQueue.Enqueue(string.Format("{0} War Started.", conquest.Info.Name));
+
                             }
+                            else
+                            {
+                                conquest.WarIsOn = false;
+
+                                MessageQueue.Enqueue(string.Format("{0} War Stopped.", conquest.Info.Name));
+                            }
+
+                            foreach (var pl in Envir.Players)
+                            {
+                                if (conquest.WarIsOn)
+                                {
+                                    pl.ReceiveChat($"{conquest.Info.Name} War Started.", ChatType.System);
+                                }
+                                else
+                                {
+                                    pl.ReceiveChat($"{conquest.Info.Name} War Stopped.", ChatType.System);
+                                }
+
+                                pl.BroadcastInfo();
+                            }
+                                
                         }
                         break;
                     case ActionType.ScheduleConquest:
