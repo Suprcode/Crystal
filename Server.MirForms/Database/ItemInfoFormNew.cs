@@ -1,6 +1,7 @@
 ﻿using Server.MirEnvir;
 using System.Data;
 using System.Text;
+using Microsoft.VisualBasic;
 
 namespace Server.Database
 {
@@ -36,6 +37,7 @@ namespace Server.Database
             // register after initializing data to prevent erroneous throws
             itemInfoGridView.CellValueChanged += CellValueChanged;
             itemInfoGridView.CellValidating += itemInfoGridView_CellValidating;
+            itemInfoGridView.MouseClick += ItemInfoGridView_MouseClick;
             itemInfoGridView.SelectionChanged += ItemInfoGridView_SelectionChanged;
         }
 
@@ -909,6 +911,57 @@ namespace Server.Database
                 if (special == SpecialItemMode.None) continue;
 
                 row.Cells["Special" + special.ToString()].Value = false;
+            }
+        }
+
+        private void ItemInfoGridView_MouseClick(object sender, MouseEventArgs e)
+        {
+            
+            if (e.Button == MouseButtons.Right &&
+                itemInfoGridView.SelectedRows.Count > 1)
+            {
+                var mouseOverRow = itemInfoGridView.HitTest(e.X, e.Y).RowIndex;
+                var mouseOverCol = itemInfoGridView.HitTest(e.X, e.Y).ColumnIndex;
+
+                if (mouseOverRow >= 0 &&
+                    mouseOverCol >= 0)
+                {
+                    var colName = itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol].OwningColumn.HeaderText;
+
+                    if (colName == "Modified" ||
+                        colName == "Index" ||
+                        colName == "Name" ||
+                        itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol] is DataGridViewComboBoxCell
+                        )
+                    {
+                        return;
+                    }
+
+                    String promptText = $"Enter new value for column [{colName}]:";
+                    if (itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol] is DataGridViewCheckBoxCell)
+                    {
+                        promptText += $"{Environment.NewLine}[[Enter 1 for tick or 0 for untick]]";
+                    }
+
+                    var updateValue = Interaction.InputBox(promptText,
+                                                        "Bulk Update",
+                                                        String.Empty);
+
+                    if (!String.IsNullOrEmpty(updateValue))
+                    {
+                        foreach (DataGridViewRow selectedRow in itemInfoGridView.SelectedRows)
+                        {
+                            selectedRow.Cells[mouseOverCol].Value = updateValue;
+                        }
+
+                        // for some reason datagridview doesn't reflect selected cell value updating like this
+                        // so re-assigning value fixes it. 
+                        if(itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol] is DataGridViewCheckBoxCell)
+                        {
+                            itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol].Value = updateValue;
+                        }
+                    }
+                }
             }
         }
 
