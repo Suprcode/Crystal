@@ -2168,7 +2168,18 @@ namespace Server.MirObjects
                         {
                             if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 
-                            ItemInfo iInfo = Envir.GetItemInfo(parts[1]);
+                            ItemInfo iInfo;
+                            int itemIndex = 0;
+
+                            if (Int32.TryParse(parts[1], out itemIndex))
+                            {
+                                iInfo = Envir.GetItemInfo(itemIndex);
+                            }
+                            else
+                            {
+                                iInfo = Envir.GetItemInfo(parts[1]);
+                            }
+
                             if (iInfo == null) return;
 
                             ushort itemCount = 1;
