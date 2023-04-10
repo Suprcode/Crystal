@@ -103,6 +103,7 @@
         RollYut,
         Drop,
         ReviveHero,
-        SealHero
+        SealHero,
+        ConquestRepairAll
     }
 }
