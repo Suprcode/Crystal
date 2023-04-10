@@ -4016,6 +4016,13 @@ namespace Server.MirObjects
                         break;
                     case ActionType.ConquestRepairAll:
                         {
+                            if(!player.IsGM)
+                            {
+                                player.ReceiveChat($"You are not a GM and this command is not enabled for you.", ChatType.System);
+                                MessageQueue.Enqueue($"GM Command @CONQUESTREPAIRALL invoked by non-GM player: {player.Name}");
+                                return;
+                            }
+
                             if (!int.TryParse(param[0], out int tempInt)) return;
                             var conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
                             if (conquest == null) return;
