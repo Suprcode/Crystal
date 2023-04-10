@@ -410,7 +410,9 @@ namespace Server.MirObjects
         {
             VisibleLog.TryGetValue(Player.Info.Index, out bool canSee);
 
-            if (Conq != null && Conq.WarIsOn)
+            if (Conq != null &&
+                Conq.WarIsOn &&
+                !Info.ConquestVisible)
             {
                 if (canSee) CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
                 VisibleLog[Player.Info.Index] = false;
