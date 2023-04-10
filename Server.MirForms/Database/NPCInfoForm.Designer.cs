@@ -55,6 +55,7 @@
             label30 = new Label();
             NYTextBox = new TextBox();
             tabPage2 = new TabPage();
+            ConquestVisible_checkbox = new CheckBox();
             Flag_textbox = new TextBox();
             label12 = new Label();
             label10 = new Label();
@@ -82,7 +83,6 @@
             ExportButton = new Button();
             ImportButton = new Button();
             ExportSelectedButton = new Button();
-            ConquestVisibile_checkbox = new CheckBox();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -385,7 +385,7 @@
             // 
             // tabPage2
             // 
-            tabPage2.Controls.Add(ConquestVisibile_checkbox);
+            tabPage2.Controls.Add(ConquestVisible_checkbox);
             tabPage2.Controls.Add(Flag_textbox);
             tabPage2.Controls.Add(label12);
             tabPage2.Controls.Add(label10);
@@ -412,6 +412,19 @@
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Visibility";
             tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // ConquestVisible_checkbox
+            // 
+            ConquestVisible_checkbox.AutoSize = true;
+            ConquestVisible_checkbox.CheckAlign = ContentAlignment.MiddleRight;
+            ConquestVisible_checkbox.Location = new Point(200, 135);
+            ConquestVisible_checkbox.Margin = new Padding(4, 3, 4, 3);
+            ConquestVisible_checkbox.Name = "ConquestVisible_checkbox";
+            ConquestVisible_checkbox.Size = new Size(152, 19);
+            ConquestVisible_checkbox.TabIndex = 56;
+            ConquestVisible_checkbox.Text = "Visible during Conquest";
+            ConquestVisible_checkbox.UseVisualStyleBackColor = true;
+            ConquestVisible_checkbox.CheckedChanged += ConquestVisible_checkbox_CheckedChanged;
             // 
             // Flag_textbox
             // 
@@ -706,19 +719,6 @@
             ExportSelectedButton.UseVisualStyleBackColor = true;
             ExportSelectedButton.Click += ExportSelected_Click;
             // 
-            // ConquestVisibile_checkbox
-            // 
-            ConquestVisibile_checkbox.AutoSize = true;
-            ConquestVisibile_checkbox.CheckAlign = ContentAlignment.MiddleRight;
-            ConquestVisibile_checkbox.Location = new Point(200, 135);
-            ConquestVisibile_checkbox.Margin = new Padding(4, 3, 4, 3);
-            ConquestVisibile_checkbox.Name = "ConquestVisibile_checkbox";
-            ConquestVisibile_checkbox.Size = new Size(152, 19);
-            ConquestVisibile_checkbox.TabIndex = 56;
-            ConquestVisibile_checkbox.Text = "Visible during Conquest";
-            ConquestVisibile_checkbox.UseVisualStyleBackColor = true;
-            ConquestVisibile_checkbox.CheckedChanged += ConquestVisibile_checkbox_CheckedChanged;
-            // 
             // NPCInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -804,6 +804,6 @@
         private System.Windows.Forms.TextBox BigMapIconTextBox;
         private System.Windows.Forms.CheckBox ShowBigMapCheckBox;
         private System.Windows.Forms.CheckBox TeleportToCheckBox;
-        private CheckBox ConquestVisibile_checkbox;
+        private CheckBox ConquestVisible_checkbox;
     }
 }

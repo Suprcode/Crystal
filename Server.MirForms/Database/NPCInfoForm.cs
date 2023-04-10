@@ -88,7 +88,7 @@ namespace Server
                 Flag_textbox.Text = string.Empty;
                 ShowBigMapCheckBox.Checked = false;
                 BigMapIconTextBox.Text = string.Empty;
-                ConquestVisibile_checkbox.Checked = true;
+                ConquestVisible_checkbox.Checked = true;
                 return;
             }
 
@@ -119,7 +119,7 @@ namespace Server
             ShowBigMapCheckBox.Checked = info.ShowOnBigMap;
             BigMapIconTextBox.Text = info.BigMapIcon.ToString();
             TeleportToCheckBox.Checked = info.CanTeleportTo;
-            ConquestVisibile_checkbox.Checked = info.ConquestVisible;
+            ConquestVisible_checkbox.Checked = info.ConquestVisible;
 
 
             for (int i = 1; i < _selectedNPCInfos.Count; i++)
@@ -611,12 +611,12 @@ namespace Server
                 _selectedNPCInfos[i].CanTeleportTo = TeleportToCheckBox.Checked;
         }
 
-        private void ConquestVisibile_checkbox_CheckedChanged(object sender, EventArgs e)
+        private void ConquestVisible_checkbox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].ConquestVisible = ConquestVisibile_checkbox.Checked;
+                _selectedNPCInfos[i].ConquestVisible = ConquestVisible_checkbox.Checked;
         }
     }
 }
