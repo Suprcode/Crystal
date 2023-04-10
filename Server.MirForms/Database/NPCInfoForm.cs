@@ -23,12 +23,12 @@ namespace Server
             {
                 ConquestHidden_combo.Items.Clear();
 
+                ConquestHidden_combo.Items.Add("");
                 for (int i = 0; i < Envir.ConquestInfoList.Count; i++)
                 {
                     ConquestHidden_combo.Items.Add(Envir.ConquestInfoList[i]);
                 }
             }
-
 
             UpdateInterface();
         }
@@ -557,10 +557,22 @@ namespace Server
         private void ConquestHidden_combo_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
-            ConquestInfo temp = (ConquestInfo)ConquestHidden_combo.SelectedItem;
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].Conquest = temp.Index;
+            int conquestIndex = 0;
+
+            try
+            {
+                conquestIndex = ((ConquestInfo)ConquestHidden_combo.SelectedItem).Index;
+            }
+            catch
+            {
+                // should we log error?
+            }
+            finally
+            {
+                for (int i = 0; i < _selectedNPCInfos.Count; i++)
+                    _selectedNPCInfos[i].Conquest = conquestIndex;
+            }
         }
 
         private void ShowBigMapCheckBox_CheckedChanged(object sender, EventArgs e)
