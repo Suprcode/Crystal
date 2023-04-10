@@ -3676,12 +3676,19 @@ namespace Server.MirObjects
                             if (conquestArcher.ArcherMonster != null)
                                 if (!conquestArcher.ArcherMonster.Dead) return;
 
-                            if (player.MyGuild == null || player.MyGuild.Gold < conquestArcher.GetRepairCost()) return;
+                            if (player.IsGM)
+                            {
+                                conquestArcher.Spawn(true);
+                            }
+                            else
+                            {
+                                if (player.MyGuild == null || player.MyGuild.Gold < conquestArcher.GetRepairCost()) return;
 
-                            player.MyGuild.Gold -= conquestArcher.GetRepairCost();
-                            player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = conquestArcher.GetRepairCost() });
+                                player.MyGuild.Gold -= conquestArcher.GetRepairCost();
+                                player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = conquestArcher.GetRepairCost() });
 
-                            conquestArcher.Spawn(true);
+                                conquestArcher.Spawn(true);
+                            }
                         }
                         break;
                     case ActionType.ConquestGate:
@@ -3694,12 +3701,19 @@ namespace Server.MirObjects
                             ConquestGuildGateInfo conquestGate = conquest.GateList.FirstOrDefault(z => z.Index == tempInt);
                             if (conquestGate == null) return;
 
-                            if (player.MyGuild == null || player.MyGuild.Gold < conquestGate.GetRepairCost()) return;
+                            if (player.IsGM)
+                            {
+                                conquestGate.Repair();
+                            }
+                            else
+                            {
+                                if (player.MyGuild == null || player.MyGuild.Gold < conquestGate.GetRepairCost()) return;
 
-                            player.MyGuild.Gold -= (uint)conquestGate.GetRepairCost();
-                            player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = (uint)conquestGate.GetRepairCost() });
+                                player.MyGuild.Gold -= (uint)conquestGate.GetRepairCost();
+                                player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = (uint)conquestGate.GetRepairCost() });
 
-                            conquestGate.Repair();
+                                conquestGate.Repair();
+                            }
                         }
                         break;
                     case ActionType.ConquestWall:
@@ -3713,14 +3727,19 @@ namespace Server.MirObjects
 
                             if (conquestWall == null) return;
 
-                            uint repairCost = (uint)conquestWall.GetRepairCost();
+                            if (player.IsGM)
+                            {
+                                conquestWall.Repair();
+                            }
+                            else
+                            {
+                                if (player.MyGuild == null || player.MyGuild.Gold < conquestWall.GetRepairCost()) return;
 
-                            if (player.MyGuild == null || player.MyGuild.Gold < repairCost) return;
+                                player.MyGuild.Gold -= (uint)conquestWall.GetRepairCost();
+                                player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = (uint)conquestWall.GetRepairCost() });
 
-                            player.MyGuild.Gold -= repairCost;
-                            player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = repairCost });
-
-                            conquestWall.Repair();
+                                conquestWall.Repair();
+                            }
                         }
                         break;
                     case ActionType.ConquestSiege:
@@ -3738,12 +3757,19 @@ namespace Server.MirObjects
                                 if (!conquestSiege.Gate.Dead) return;
                             }
 
-                            if (player.MyGuild == null || player.MyGuild.Gold < conquestSiege.GetRepairCost()) return;
+                            if (player.IsGM)
+                            {
+                                conquestSiege.Repair();
+                            }
+                            else
+                            {
+                                if (player.MyGuild == null || player.MyGuild.Gold < conquestSiege.GetRepairCost()) return;
 
-                            player.MyGuild.Gold -= (uint)conquestSiege.GetRepairCost();
-                            player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = (uint)conquestSiege.GetRepairCost() });
+                                player.MyGuild.Gold -= (uint)conquestSiege.GetRepairCost();
+                                player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = (uint)conquestSiege.GetRepairCost() });
 
-                            conquestSiege.Repair();
+                                conquestSiege.Repair();
+                            } 
                         }
                         break;
                     case ActionType.TakeConquestGold:
