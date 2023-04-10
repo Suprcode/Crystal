@@ -590,6 +590,12 @@ namespace Server.MirObjects
                     Guild.Conquest = this;
                     break;
                 case ConquestGame.ControlPoints:
+
+                    if (Guild != null)
+                    {
+                        tmpPrevious = Guild;
+                    }
+
                     GuildInfo.Owner = winningGuild.Guildindex;
                     Guild = winningGuild;
                     Guild.Conquest = this;
@@ -611,10 +617,15 @@ namespace Server.MirObjects
                 FlagList[i].UpdateColour();
             }
 
-            if (Guild != null)
+            if (Guild != null &&
+                (tmpPrevious == null || Guild != tmpPrevious))
             {
                 UpdatePlayers(Guild);
-                if (tmpPrevious != null) UpdatePlayers(tmpPrevious);
+                if (tmpPrevious != null)
+                {
+                    tmpPrevious.Conquest = null;
+                    UpdatePlayers(tmpPrevious);
+                }
                 GuildInfo.NeedSave = true;
             }
         }
