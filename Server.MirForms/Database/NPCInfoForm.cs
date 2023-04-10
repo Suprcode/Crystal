@@ -562,19 +562,15 @@ namespace Server
 
             int conquestIndex = 0;
 
-            try
+            if (ConquestHidden_combo.SelectedItem != null &&
+                (ConquestInfo)ConquestHidden_combo.SelectedItem != null)
             {
                 conquestIndex = ((ConquestInfo)ConquestHidden_combo.SelectedItem).Index;
             }
-            catch
-            {
-                // should we log error?
-            }
-            finally
-            {
-                for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                    _selectedNPCInfos[i].Conquest = conquestIndex;
-            }
+
+
+            for (int i = 0; i < _selectedNPCInfos.Count; i++)
+                _selectedNPCInfos[i].Conquest = conquestIndex;
         }
 
         private void ShowBigMapCheckBox_CheckedChanged(object sender, EventArgs e)
