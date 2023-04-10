@@ -563,8 +563,8 @@ namespace Client.MirScenes.Dialogs
             {
                 AutoSize = false,
                 Size = new Size(55, 18),
-                Location = new Point(75, 28),
-                DrawFormat = TextFormatFlags.HorizontalCenter,
+                Location = new Point(71, 28),
+                DrawFormat = TextFormatFlags.Default,
                 Parent = this,
 
             };
@@ -583,8 +583,8 @@ namespace Client.MirScenes.Dialogs
             {
                 AutoSize = false,
                 Size = new Size(55, 18),
-                Location = new Point(75, 41),
-                DrawFormat = TextFormatFlags.HorizontalCenter,
+                Location = new Point(71, 41),
+                DrawFormat = TextFormatFlags.Default,
                 Parent = this,
             }; 
             ExperienceBar = new MirImageControl
@@ -601,9 +601,9 @@ namespace Client.MirScenes.Dialogs
             ExLabel = new MirLabel
             {
                 AutoSize = false,
-                Size = new Size(55, 18),
-                Location = new Point(72, 54),
-                DrawFormat = TextFormatFlags.HorizontalCenter,
+                Size = new Size(65, 18),
+                Location = new Point(71, 54),
+                DrawFormat = TextFormatFlags.Default,
                 Parent = this,
             };
             HPItem = new HeroAutoPotPreview()

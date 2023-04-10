@@ -156,8 +156,7 @@ namespace Server.MirObjects
 
             if (Conquest != null)
             {
-                string conquest = "[" + Conquest.Info.Name + "]";
-                gName += conquest;
+                gName += "[" + Conquest.Info.Name + "]";
             }
 
             member.Enqueue(new ServerPackets.GuildStatus()

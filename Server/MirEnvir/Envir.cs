@@ -52,7 +52,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int MinVersion = 60;
-        public const int Version = 106;
+        public const int Version = 107;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
@@ -2863,6 +2863,20 @@ namespace Server.MirEnvir
         public NPCObject GetWorldMapNPC(string name)
         {
             return MapList.SelectMany(t1 => t1.NPCs.Where(t => t.Info.GameName.StartsWith(name, StringComparison.CurrentCultureIgnoreCase) && t.Info.ShowOnBigMap)).FirstOrDefault();
+        }
+
+        public MonsterInfo GetMonsterInfo(int id, bool strict = false)
+        {
+            String monsterName = MonsterInfoList.FirstOrDefault(x => x.Index == id)?.Name;
+
+            if (monsterName == null)
+            {
+                return null;
+            }
+            else
+            {
+                return (GetMonsterInfo(monsterName, strict));
+            }
         }
 
         public MonsterInfo GetMonsterInfo(string name, bool Strict = false)
