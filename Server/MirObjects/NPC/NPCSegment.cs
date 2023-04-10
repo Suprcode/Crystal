@@ -1106,8 +1106,15 @@ namespace Server.MirObjects
                 case "REVIVEHERO":
                     acts.Add(new NPCActions(ActionType.ReviveHero));
                     break;
+
                 case "SEALHERO":
                     acts.Add(new NPCActions(ActionType.SealHero));
+                    break;
+
+                case "CONQUESTREPAIRALL":
+                    if (parts.Length < 2) return;
+
+                    acts.Add(new NPCActions(ActionType.ConquestRepairAll, parts[1]));
                     break;
             }
         }
@@ -4007,6 +4014,75 @@ namespace Server.MirObjects
                     case ActionType.SealHero:
                         player.SealHero();
                         break;
+                    case ActionType.ConquestRepairAll:
+                        {
+                            if (!int.TryParse(param[0], out int tempInt)) return;
+                            var conquest = Envir.Conquests.FirstOrDefault(z => z.Info.Index == tempInt);
+                            if (conquest == null) return;
+
+                            MessageQueue.Enqueue($"@CONQUESTREPAIRALL invoked by GM: {player.Name} on account index: {player.Info.AccountInfo.Index}");
+                            MessageQueue.Enqueue($"Conquest: {conquest.Info.Name}");
+
+                            if (conquest.Guild != null)
+                            {
+                                MessageQueue.Enqueue($"Owner: {conquest.Guild.Name}");
+                            }
+                            else
+                            {
+                                MessageQueue.Enqueue($"No current owner.");
+                            }
+
+                            int _fixed = 0;
+                            foreach (ConquestGuildArcherInfo archer in conquest.ArcherList)
+                            {
+                                if (archer.ArcherMonster != null &&
+                                    archer.ArcherMonster.Dead)
+                                {
+                                    archer.Spawn(true);
+                                    _fixed++;
+                                }
+                            }
+                            player.ReceiveChat($"Archers repaired: {_fixed}/{conquest.ArcherList.Count}", ChatType.System);
+                            MessageQueue.Enqueue($"Archers repaired: {_fixed}/{conquest.ArcherList.Count}");
+
+                            _fixed = 0;
+                            foreach (ConquestGuildGateInfo conquestGate in conquest.GateList)
+                            {
+                                if (conquestGate != null)
+                                {
+                                    conquestGate.Repair();
+                                    _fixed++;
+                                }
+                            }
+                            player.ReceiveChat($"Gates repaired: {_fixed}/{conquest.GateList.Count}", ChatType.System);
+                            MessageQueue.Enqueue($"Gates repaired: {_fixed}/{conquest.GateList.Count}");
+
+                            _fixed = 0;
+                            foreach (ConquestGuildWallInfo conquestWall in conquest.WallList)
+                            {
+                                if (conquestWall != null)
+                                {
+                                    conquestWall.Repair();
+                                    _fixed++;
+                                }
+                            }
+                            player.ReceiveChat($"Walls repaired: {_fixed}/{conquest.WallList.Count}", ChatType.System);
+                            MessageQueue.Enqueue($"Walls repaired: {_fixed}/{conquest.WallList.Count}");
+
+                            _fixed = 0;
+                            foreach (ConquestGuildSiegeInfo conquestSiege in conquest.SiegeList)
+                            {
+                                if (conquestSiege != null)
+                                {
+                                    conquestSiege.Repair();
+                                    _fixed++;
+                                }
+                            }
+                            player.ReceiveChat($"Sieges repaired: {_fixed}/{conquest.SiegeList.Count}", ChatType.System);
+                            MessageQueue.Enqueue($"Sieges repaired: {_fixed}/{conquest.SiegeList.Count}");
+
+                            break;
+                        }
                 }
             }
         }
