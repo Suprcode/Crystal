@@ -614,7 +614,8 @@ namespace Server.MirObjects
             get
             {
                 return 
-                    !Dead && Envir.Time > MoveTime && 
+                    !Dead && 
+                    Envir.Time > MoveTime && 
                     Envir.Time > ActionTime && 
                     Envir.Time > ShockTime &&
                     (Master == null || Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.Both || Master.PMode == PetMode.FocusMasterTarget) && 
@@ -629,9 +630,10 @@ namespace Server.MirObjects
             get
             {
                 return 
-                    !Dead && Envir.Time > AttackTime &&
+                    !Dead &&
+                    Envir.Time > AttackTime &&
                     Envir.Time > ActionTime &&
-                    (Master == null || Master.PMode == PetMode.AttackOnly || Master.PMode == PetMode.Both || Master.PMode == PetMode.FocusMasterTarget || !CurrentMap.Info.NoFight) &&
+                    (Master == null || Master.PMode == PetMode.AttackOnly || Master.PMode == PetMode.Both || Master.PMode == PetMode.FocusMasterTarget) &&
                     !CurrentPoison.HasFlag(PoisonType.Paralysis) &&
                     !CurrentPoison.HasFlag(PoisonType.LRParalysis) &&
                     !CurrentPoison.HasFlag(PoisonType.Dazed) &&
