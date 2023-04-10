@@ -897,7 +897,7 @@ namespace Client.MirObjects
                         switch (BaseImage)
                         {
                             case Monster.KingScorpion:
-                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KingScorpion], 272 + (int)Direction * 8, 8, Frame.Count * Frame.Interval, this));
+                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KingScorpion], 544 + (int)Direction * 8, 8, Frame.Count * Frame.Interval, this));
                                 break;
                             case Monster.DarkDevil:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.DarkDevil], 272 + (int)Direction * 8, 8, Frame.Count * Frame.Interval, this));
