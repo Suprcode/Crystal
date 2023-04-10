@@ -423,7 +423,8 @@ namespace Server.Database
         {
             var col = itemInfoGridView.Columns[e.ColumnIndex];
 
-            if (col.Name.Equals("Modified", comparisonType: StringComparison.CurrentCultureIgnoreCase))
+            if (col.Name.Equals("Modified", comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                col.Name.Equals("ItemIndex", comparisonType: StringComparison.CurrentCultureIgnoreCase))
             {
                 return;
             }
@@ -933,7 +934,10 @@ namespace Server.Database
             if (itemInfoGridView.CurrentCell is DataGridViewComboBoxCell ||
                 itemInfoGridView.CurrentCell is DataGridViewCheckBoxCell)
             {
-                itemInfoGridView.Rows[e.RowIndex].Cells["Modified"].Value = true;
+                if (itemInfoGridView.Rows[e.RowIndex].DataBoundItem != null)
+                {
+                    itemInfoGridView.Rows[e.RowIndex].Cells["Modified"].Value = true;
+                }
             }
         }
 
