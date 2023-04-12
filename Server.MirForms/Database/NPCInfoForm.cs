@@ -562,12 +562,10 @@ namespace Server
 
             int conquestIndex = 0;
 
-            if (ConquestHidden_combo.SelectedItem != null &&
-                (ConquestInfo)ConquestHidden_combo.SelectedItem != null)
+            if (ConquestHidden_combo.SelectedItem is ConquestInfo conquestInfo)
             {
-                conquestIndex = ((ConquestInfo)ConquestHidden_combo.SelectedItem).Index;
+                conquestIndex = conquestInfo.Index;
             }
-
 
             for (int i = 0; i < _selectedNPCInfos.Count; i++)
                 _selectedNPCInfos[i].Conquest = conquestIndex;
