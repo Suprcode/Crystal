@@ -69,17 +69,17 @@ namespace Server.MirDatabase
                 new BuffInfo { Type = BuffType.Exp, Properties = BuffProperty.PauseInSafeZone, StackType = BuffStackType.StackDuration },
                 new BuffInfo { Type = BuffType.Drop, Properties = BuffProperty.PauseInSafeZone, StackType = BuffStackType.StackDuration },
                 new BuffInfo { Type = BuffType.Gold, Properties = BuffProperty.PauseInSafeZone, StackType = BuffStackType.StackDuration },
-                new BuffInfo { Type = BuffType.BagWeight, Properties = BuffProperty.PauseInSafeZone, StackType = BuffStackType.StackDuration },
-                new BuffInfo { Type = BuffType.Impact, Properties = BuffProperty.PauseInSafeZone, StackType = BuffStackType.StackDuration },
-                new BuffInfo { Type = BuffType.Magic, Properties = BuffProperty.PauseInSafeZone, StackType = BuffStackType.StackDuration },
-                new BuffInfo { Type = BuffType.Taoist, Properties = BuffProperty.PauseInSafeZone, StackType = BuffStackType.StackDuration },
-                new BuffInfo { Type = BuffType.Storm, Properties = BuffProperty.PauseInSafeZone, StackType = BuffStackType.StackDuration },
-                new BuffInfo { Type = BuffType.HealthAid, Properties = BuffProperty.PauseInSafeZone, StackType = BuffStackType.StackDuration },
-                new BuffInfo { Type = BuffType.ManaAid, Properties = BuffProperty.PauseInSafeZone, StackType = BuffStackType.StackDuration },
-                new BuffInfo { Type = BuffType.Defence, Properties = BuffProperty.PauseInSafeZone, StackType = BuffStackType.StackDuration },
-                new BuffInfo { Type = BuffType.MagicDefence, Properties = BuffProperty.PauseInSafeZone, StackType = BuffStackType.StackDuration },
-                new BuffInfo { Type = BuffType.WonderDrug, Properties = BuffProperty.PauseInSafeZone, StackType = BuffStackType.StackDuration },
-                new BuffInfo { Type = BuffType.Knapsack, Properties = BuffProperty.PauseInSafeZone, StackType = BuffStackType.StackDuration }
+                new BuffInfo { Type = BuffType.BagWeight, Properties = BuffProperty.None, StackType = BuffStackType.StackDuration },
+                new BuffInfo { Type = BuffType.Impact, Properties = BuffProperty.None, StackType = BuffStackType.StackDuration },
+                new BuffInfo { Type = BuffType.Magic, Properties = BuffProperty.None, StackType = BuffStackType.StackDuration },
+                new BuffInfo { Type = BuffType.Taoist, Properties = BuffProperty.None, StackType = BuffStackType.StackDuration },
+                new BuffInfo { Type = BuffType.Storm, Properties = BuffProperty.None, StackType = BuffStackType.StackDuration },
+                new BuffInfo { Type = BuffType.HealthAid, Properties = BuffProperty.None, StackType = BuffStackType.StackDuration },
+                new BuffInfo { Type = BuffType.ManaAid, Properties = BuffProperty.None, StackType = BuffStackType.StackDuration },
+                new BuffInfo { Type = BuffType.Defence, Properties = BuffProperty.None, StackType = BuffStackType.StackDuration },
+                new BuffInfo { Type = BuffType.MagicDefence, Properties = BuffProperty.None, StackType = BuffStackType.StackDuration },
+                new BuffInfo { Type = BuffType.WonderDrug, Properties = BuffProperty.None, StackType = BuffStackType.StackDuration },
+                new BuffInfo { Type = BuffType.Knapsack, Properties = BuffProperty.None, StackType = BuffStackType.StackDuration }
             };
 
             return info;
