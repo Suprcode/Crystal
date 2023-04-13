@@ -2131,7 +2131,7 @@ namespace Server.MirObjects
                                 if (hero == null) return;
                                 old = hero.Level;
                                 hero.Level = level;
-                                player.LevelUp();
+                                hero.LevelUp();
 
                                 ReceiveChat(string.Format("Player {0}'s hero has been Leveled {1} -> {2}.", player.Name, old, hero.Level), ChatType.System);
                                 MessageQueue.Enqueue(string.Format("Player {0}'s hero has been Leveled {1} -> {2} by {3}", player.Name, old, hero.Level, Name));
