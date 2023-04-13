@@ -1016,7 +1016,8 @@ namespace Server.Database
 
         private void ItemInfoGridView_SelectionChanged(object sender, EventArgs e)
         {
-            if (itemInfoGridView.CurrentRow.Index != -1)
+            if (itemInfoGridView.CurrentRow != null &&
+                itemInfoGridView.CurrentRow.Index != -1)
             {
                 var itemType = itemInfoGridView.CurrentRow.Cells["ItemType"];
                 bool isGemSelected = (global::ItemType)itemType.Value == global::ItemType.Gem;
