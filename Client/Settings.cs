@@ -101,13 +101,16 @@ namespace Client
             {
                 if (_volume == value) return;
 
-                switch (_volume)
+                switch (value)
                 {
                     case > 100:
                         _volume = (byte)100;
                         break;
                     case <= 0:
                         _volume = (byte)0;
+                        break;
+                    default:
+                        _volume = value;
                         break;
                 }
 
@@ -132,13 +135,16 @@ namespace Client
             {
                 if (_musicVolume == value) return;
 
-                switch(_musicVolume)
+                switch(value)
                 {
                     case > 100:
                         _musicVolume = (byte)100;
                         break;
                     case <= 0:
                         _musicVolume = (byte)0;
+                        break;
+                    default:
+                        _musicVolume = value;
                         break;
                 }
 

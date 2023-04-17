@@ -2812,8 +2812,10 @@ namespace Client.MirScenes.Dialogs
             byte volume = (byte)(p.X / (double)SoundBar.Size.Width * 100);
             Settings.Volume = volume;
 
-
             double percent = Settings.Volume / 100D;
+
+            SoundBar.Hint = $"{Settings.Volume}%";
+
             if (percent > 1) percent = 1;
 
             VolumeBar.Location = percent > 0 ? new Point(159 + (int)((SoundBar.Size.Width - 2) * percent), 218) : new Point(159, 218);
@@ -2824,6 +2826,9 @@ namespace Client.MirScenes.Dialogs
             if (SoundBar.Library == null) return;
 
             double percent = Settings.Volume / 100D;
+
+            SoundBar.Hint = $"{Settings.Volume}%";
+
             if (percent > 1) percent = 1;
             if (percent > 0)
             {
@@ -2844,6 +2849,9 @@ namespace Client.MirScenes.Dialogs
             if (MusicSoundBar.Library == null) return;
 
             double percent = Settings.MusicVolume / 100D;
+
+            MusicSoundBar.Hint = $"{Settings.MusicVolume}%";
+
             if (percent > 1) percent = 1;
             if (percent > 0)
             {
@@ -2869,6 +2877,9 @@ namespace Client.MirScenes.Dialogs
             Settings.MusicVolume = volume;
 
             double percent = Settings.MusicVolume / 100D;
+
+            MusicSoundBar.Hint = $"{Settings.MusicVolume}%";
+
             if (percent > 1) percent = 1;
 
             MusicVolumeBar.Location = percent > 0 ? new Point(159 + (int)((MusicSoundBar.Size.Width - 2) * percent), 244) : new Point(159, 244);
