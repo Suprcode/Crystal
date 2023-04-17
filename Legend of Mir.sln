@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{F75359D0
 	ProjectSection(SolutionItems) = preProject
 		..\crystal-mir2\MonsterAttackMethods.txt = ..\crystal-mir2\MonsterAttackMethods.txt
 		..\crystal-mir2\MonsterReferenceVideos.txt = ..\crystal-mir2\MonsterReferenceVideos.txt
-		..\crystal-mir2\SoundRules.txt = ..\crystal-mir2\SoundRules.txt
+		SoundRules.txt = SoundRules.txt
 	EndProjectSection
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "PatcherWebSite", "PatcherWebSite\", "{C1F2FAE3-485C-4BF4-8939-B44EAD5619D4}"
