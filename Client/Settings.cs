@@ -10,6 +10,12 @@ namespace Client
         private static InIReader Reader = new InIReader(@".\Mir2Config.ini");
         private static InIReader QuestTrackingReader = new InIReader(Path.Combine(UserDataPath, @".\QuestTracking.ini"));
 
+        private const int MIN_VOL_SCALE = -3000;
+        private const int MAX_VOL_SCALE = 0;
+        private const int MIN_MUSIC_SCALE = -7000;
+        private const int MAX_MUSIC_SCALE = 0;
+        private const int MUSIC_OFF = -10000;
+
         private static bool _useTestConfig;
         public static bool UseTestConfig
         {
@@ -95,12 +101,26 @@ namespace Client
             {
                 if (_volume == value) return;
 
-                _volume = (byte) (value > 100 ? 100 : value);
+                switch (_volume)
+                {
+                    case > 100:
+                        _volume = (byte)100;
+                        break;
+                    case <= 0:
+                        _volume = (byte)0;
+                        break;
+                }
 
                 if (_volume == 0)
-                    SoundManager.Vol = -10000;
-                else 
-                    SoundManager.Vol = (int)(-3000 + (3000 * (_volume / 100M)));
+                {
+                    SoundManager.Vol = MUSIC_OFF;
+                }
+                else
+                {
+                    double scaled = MIN_VOL_SCALE + (double)(_volume - 0) / (100 - 0) * (MAX_VOL_SCALE - MIN_VOL_SCALE);
+                    SoundManager.Vol = Convert.ToInt32(scaled);
+                }
+
             }
         }
 
@@ -112,12 +132,26 @@ namespace Client
             {
                 if (_musicVolume == value) return;
 
-                _musicVolume = (byte)(value > 100 ? 100 : value);
+                switch(_musicVolume)
+                {
+                    case > 100:
+                        _musicVolume = (byte)100;
+                        break;
+                    case <= 0:
+                        _musicVolume = (byte)0;
+                        break;
+                }
 
                 if (_musicVolume == 0)
-                    SoundManager.MusicVol = -10000;
+                {
+                    SoundManager.MusicVol = MUSIC_OFF;
+                }   
                 else
-                    SoundManager.MusicVol = (int)(-3000 + (3000 * (_musicVolume / 100M)));
+                {
+                    double scaled = MIN_MUSIC_SCALE + (double)(_musicVolume - 0) / (100 - 0) * (MAX_MUSIC_SCALE - MIN_MUSIC_SCALE);
+                    SoundManager.MusicVol = Convert.ToInt32(scaled);
+                }
+
             }
         }
 
