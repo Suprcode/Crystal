@@ -647,11 +647,12 @@ namespace Client.MirScenes.Dialogs
         {
             if (ExperienceBar.Library == null) return;
 
-            double percent = Experience / (double)MaxExperience;
-            if (percent > 1) percent = 1;
-            if (percent <= 0) return;
+            //cast MaxExperience to double to force division to 2 decimal place
+            double percent = Experience / (double)MaxExperience * 100;
 
-            Rectangle section = new Rectangle
+            var test = (int)ExperienceBar.Size.Width * percent;
+
+            Rectangle section = new()
             {
                 Size = new Size((int)(ExperienceBar.Size.Width * percent), ExperienceBar.Size.Height)
             };
