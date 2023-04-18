@@ -3902,6 +3902,12 @@ namespace Client.MirObjects
                 case Monster.PurpleFaeFlower:
                     if (Stoned) return;
                     break;
+                case Monster.EvilMir:
+                    SoundManager.PlaySound(BaseSound + 1);
+                    return;
+                case Monster.DragonStatue:
+                    SoundManager.PlaySound(BaseSound + 6);
+                    return;
             }
 
             SoundManager.PlaySound(BaseSound);
@@ -3966,6 +3972,13 @@ namespace Client.MirObjects
         }
         public void PlayStruckSound()
         {
+            switch(BaseImage)
+            {
+                case Monster.EvilMir:
+                    SoundManager.PlaySound(BaseSound + 4);
+                    return;
+            }
+
             switch (StruckWeapon)
             {
                 case 0:
@@ -4030,6 +4043,9 @@ namespace Client.MirObjects
         {
             switch (BaseImage)
             {
+                case Monster.EvilMir:
+                    SoundManager.PlaySound(BaseSound + 2);
+                    break;
                 default:
                     SoundManager.PlaySound(BaseSound + 1);
                     break;
@@ -4096,11 +4112,15 @@ namespace Client.MirObjects
         {
             switch (BaseImage)
             {
+                case Monster.EvilMir:
+                    SoundManager.PlaySound(BaseSound + 6);
+                    return;
                 default:
                     SoundManager.PlaySound(BaseSound + 3);
                     return;
             }
         }
+
         public void PlayDeadSound()
         {
             switch (BaseImage)
@@ -4206,6 +4226,12 @@ namespace Client.MirObjects
                     SoundManager.PlaySound(BaseSound + 8);
                     return;
                 case Monster.TucsonGeneral:
+                    return;
+                case Monster.EvilMir:
+                    SoundManager.PlaySound(BaseSound + 3);
+                    return;
+                case Monster.DragonStatue:
+                    SoundManager.PlaySound(BaseSound + 2);
                     return;
                 default:
                     PlayAttackSound();
