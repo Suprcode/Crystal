@@ -4102,6 +4102,8 @@ namespace Client.MirObjects
             switch (BaseImage)
             {
                 case Monster.DarkCaptain:
+                case Monster.EvilMir:
+                case Monster.DragonStatue:
                     return;
                 default:
                     SoundManager.PlaySound(BaseSound + 4);
