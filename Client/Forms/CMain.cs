@@ -697,6 +697,10 @@ namespace Client
                 GameScene.Scene.ChatDialog.ReceiveChat(string.Format(GameLanguage.CannotLeaveGame, (GameScene.LogTime - CMain.Time) / 1000), ChatType.System);
                 e.Cancel = true;
             }
+            else
+            {
+                Settings.Save();
+            }
         }
 
         protected override void WndProc(ref Message m)
