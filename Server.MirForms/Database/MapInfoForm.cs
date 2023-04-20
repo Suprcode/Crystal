@@ -421,7 +421,7 @@ namespace Server
             DestYTextBox.Text = info.Destination.Y.ToString();
             BigMapIconTextBox.Text = info.Icon.ToString();
 
-            ConquestComboBox.SelectedItem = Envir.ConquestInfoList.FirstOrDefault(x => x.Index == info.ConquestIndex);
+            ConquestComboBox.SelectedItem = Envir.ConquestInfoList.FirstOrDefault(x => x.Index == info.ConquestIndex)?.Name;
             if (ConquestComboBox.SelectedItem == null) ConquestComboBox.SelectedIndex = 0;
 
             for (int i = 1; i < _selectedMovementInfos.Count; i++)
@@ -433,7 +433,7 @@ namespace Server
                 DestMapComboBox.SelectedItem = Envir.MapInfoList.FirstOrDefault(x => x.Index == info.MapIndex);
                 DestXTextBox.Text = info.Destination.X.ToString();
                 DestYTextBox.Text = info.Destination.Y.ToString();
-                ConquestComboBox.SelectedItem = Envir.ConquestInfoList.FirstOrDefault(x => x.Index == info.ConquestIndex);
+                ConquestComboBox.SelectedItem = Envir.ConquestInfoList.FirstOrDefault(x => x.Index == info.ConquestIndex)?.Name;
                 BigMapIconTextBox.Text = info.Icon.ToString();
 
                 if (SourceXTextBox.Text != info.Source.X.ToString()) SourceXTextBox.Text = string.Empty;
@@ -1702,13 +1702,32 @@ namespace Server
         {
             if (ActiveControl != sender) return;
 
-            ConquestInfo info = ConquestComboBox.SelectedItem as ConquestInfo;
-
-            if (info == null) return;
+            ComboBox cmb = sender as ComboBox;
 
             for (int i = 0; i < _selectedMovementInfos.Count; i++)
-                _selectedMovementInfos[i].ConquestIndex = info.Index;
+            {
+                var conquestIndex = 0;
 
+                if (cmb.SelectedIndex >= 0)
+                {
+                    ConquestInfo info = Envir.ConquestInfoList.FirstOrDefault(x => x.Name == ConquestComboBox.SelectedItem.ToString());
+
+                    if (info != null)
+                    {
+                        conquestIndex = info.Index;
+                    }
+
+                    MovementInfo thisMovement = _info.Movements.FirstOrDefault(x => x.MapIndex == _selectedMovementInfos[i].MapIndex &&
+                                        x.Source == _selectedMovementInfos[i].Source &&
+                                        x.Destination == _selectedMovementInfos[i].Destination);
+
+                    if (thisMovement != null)
+                    {
+                        thisMovement.ConquestIndex = conquestIndex;
+                    }
+                }
+            }
+                
             RefreshMovementList();
         }
 

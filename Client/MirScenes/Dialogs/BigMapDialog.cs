@@ -10,7 +10,7 @@ using C = ClientPackets;
 namespace Client.MirScenes.Dialogs
 {
     public sealed class BigMapDialog : MirImageControl
-    {        
+    {
         MirLabel CoordinateLabel, TitleLabel;
         public MirButton CloseButton, ScrollUpButton, ScrollDownButton, ScrollBar, WorldButton, MyLocationButton, TeleportToButton, SearchButton;
         public MirTextBox SearchTextBox;
@@ -73,7 +73,7 @@ namespace Client.MirScenes.Dialogs
                     TeleportToButton.Enabled = false;
                 }
             }
-        }         
+        }
 
         private BigMapRecord currentRecord;
         public BigMapRecord CurrentRecord
@@ -101,11 +101,11 @@ namespace Client.MirScenes.Dialogs
             ScrollUpButton = new MirButton
             {
                 Index = 197,
-                HoverIndex = 198,                
+                HoverIndex = 198,
                 PressedIndex = 199,
                 Location = new Point(Size.Width - 21, 48),
                 Library = Libraries.Prguse2,
-                Parent = this,                
+                Parent = this,
                 Sound = SoundList.ButtonA,
             };
             ScrollUpButton.Click += (o, e) => ScrollUp();
@@ -175,7 +175,7 @@ namespace Client.MirScenes.Dialogs
             {
                 Index = 821,
                 HoverIndex = 822,
-                PressedIndex = 823, 
+                PressedIndex = 823,
                 DisabledIndex = 823,
                 Enabled = false,
                 Location = new Point(Size.Width - 122, 432),
@@ -190,11 +190,12 @@ namespace Client.MirScenes.Dialogs
                 Index = 1340,
                 HoverIndex = 1341,
                 PressedIndex = 1342,
-                Enabled = false,
+                Enabled = true,
                 Location = new Point(23, Size.Height - 36),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 Sound = SoundList.ButtonA,
+                Hint = "Search for NPCs"
             };
             SearchButton.Click += (o, e) => Search();
 
@@ -206,7 +207,6 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(130, 10),
                 MaxLength = Globals.MaxChatLength
             };
-            SearchTextBox.TextBox.TextChanged += SearchTextBox_TextChanged;
             SearchTextBox.TextBox.KeyPress += SearchTextBox_KeyPress;
 
             ViewPort = new BigMapViewPort()
@@ -234,7 +234,7 @@ namespace Client.MirScenes.Dialogs
             };
 
             WorldMap = new WorldMapImage()
-            {                
+            {
                 Parent = this,
                 Location = new Point(10, 0)
             };
@@ -249,7 +249,9 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 362,
                 Sound = SoundList.ButtonA,
             };
-            CloseButton.Click += (o, e) => Hide();            
+            CloseButton.Click += (o, e) => Hide();
+
+            SearchTextBox.Enabled = false;
         }
 
         private void MakeCoordinateLabel()
@@ -286,8 +288,10 @@ namespace Client.MirScenes.Dialogs
             var map = GameScene.Scene.MapControl;
             if (map.BigMap <= 0) return;
 
+            SearchTextBox.Enabled = false;
+
             base.Show();
-            TargetMyLocation();            
+            TargetMyLocation();
         }
 
         private void TargetMyLocation()
@@ -337,7 +341,7 @@ namespace Client.MirScenes.Dialogs
         private void SetMovementButtonsVisibility(bool visible)
         {
             foreach (var button in currentRecord.MovementButtons.Values)
-                button.Visible = visible;            
+                button.Visible = visible;
         }
         private void SetNPCButtonVisibility(bool visible)
         {
@@ -358,7 +362,7 @@ namespace Client.MirScenes.Dialogs
             ScrollBar.Visible = true;
             var scrollHeight = ScrollDownButton.Location.Y - ScrollUpButton.Location.Y - 32;
             var extraRows = currentRecord.NPCButtons.Count - MaximumRows;
-            GapPerRow = scrollHeight / (float)extraRows;            
+            GapPerRow = scrollHeight / (float)extraRows;
         }
 
         public void BigMap_MouseWheel(object sender, MouseEventArgs e)
@@ -413,15 +417,18 @@ namespace Client.MirScenes.Dialogs
 
         private void Search()
         {
+            if (!SearchTextBox.Enabled)
+            {
+                SearchTextBox.Enabled = true;
+                SearchTextBox.SetFocus();
+            }
+
+            if (!string.IsNullOrWhiteSpace(SearchTextBox.Text) && SearchTextBox.Text.Length > 2) return;
+
             if (CMain.Now < NextSearchTime) return;
 
             NextSearchTime = CMain.Now.AddSeconds(1);
             Network.Enqueue(new C.SearchMap { Text = SearchTextBox.Text });
-        }
-
-        private void SearchTextBox_TextChanged(object sender, EventArgs e)
-        {
-            SearchButton.Enabled = !string.IsNullOrWhiteSpace(SearchTextBox.Text) && SearchTextBox.Text.Length > 2;
         }
 
         public void SearchTextBox_KeyPress(object sender, KeyPressEventArgs e)
@@ -479,7 +486,7 @@ namespace Client.MirScenes.Dialogs
                 NotControl = true,
                 Visible = true,
                 Blending = true
-                
+
             };
 
             Border = new MirImageControl()
@@ -625,13 +632,13 @@ namespace Client.MirScenes.Dialogs
         {
             if (!Parent.Visible) return;
 
-            MouseMove -= UpdateBigMapCoordinates;            
+            MouseMove -= UpdateBigMapCoordinates;
 
             BigMapRecord currentRecord;
             if (!GameScene.MapInfoList.TryGetValue(ParentDialog.TargetMapIndex, out currentRecord))
                 return;
 
-            ParentDialog.CurrentRecord = currentRecord;              
+            ParentDialog.CurrentRecord = currentRecord;
             int index = currentRecord.MapInfo.BigMap;
 
             if (index <= 0)
@@ -643,7 +650,7 @@ namespace Client.MirScenes.Dialogs
             Rectangle viewRect = new Rectangle(0, 0, Math.Min(568, Size.Width), Math.Min(380, Size.Height));
 
             viewRect.X = 14 + (568 - viewRect.Width) / 2;
-            viewRect.Y = 52 + (380 - viewRect.Height) / 2;            
+            viewRect.Y = 52 + (380 - viewRect.Height) / 2;
 
             Location = viewRect.Location;
             Size = viewRect.Size;
@@ -848,6 +855,6 @@ namespace Client.MirScenes.Dialogs
         public List<BigMapNPCRow> NPCButtons = new List<BigMapNPCRow>();
 
         public BigMapRecord() { }
-    }  
-   
+    }
+
 }

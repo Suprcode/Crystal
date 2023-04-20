@@ -1,6 +1,7 @@
 ﻿using Server.MirEnvir;
 using System.Data;
 using System.Text;
+using Microsoft.VisualBasic;
 
 namespace Server.Database
 {
@@ -11,6 +12,10 @@ namespace Server.Database
         private readonly Array StatEnums = Enum.GetValues(typeof(Stat));
         private readonly Array BindEnums = Enum.GetValues(typeof(BindMode));
         private readonly Array SpecialEnums = Enum.GetValues(typeof(SpecialItemMode));
+
+        private bool _isInGemContext = false;
+        private Dictionary<int, string> _defaultItemHeaderMappings = new();
+        private Dictionary<int, string> _gemItemHeaderMappings = new();
 
         private DataTable Table;
 
@@ -27,9 +32,13 @@ namespace Server.Database
 
             PopulateTable();
 
+            MapHeaderText();
+
             // register after initializing data to prevent erroneous throws
             itemInfoGridView.CellValueChanged += CellValueChanged;
             itemInfoGridView.CellValidating += itemInfoGridView_CellValidating;
+            itemInfoGridView.MouseClick += ItemInfoGridView_MouseClick;
+            itemInfoGridView.SelectionChanged += ItemInfoGridView_SelectionChanged;
         }
 
         public static void SetDoubleBuffered(Control c)
@@ -423,7 +432,8 @@ namespace Server.Database
         {
             var col = itemInfoGridView.Columns[e.ColumnIndex];
 
-            if (col.Name.Equals("Modified", comparisonType: StringComparison.CurrentCultureIgnoreCase))
+            if (col.Name.Equals("Modified", comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                col.Name.Equals("ItemIndex", comparisonType: StringComparison.CurrentCultureIgnoreCase))
             {
                 return;
             }
@@ -588,7 +598,24 @@ namespace Server.Database
 
         private void drpFilterType_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (itemInfoGridView.DataSource == null)
+            {
+                return;
+            }
+
             UpdateFilter();
+
+            var filterType = ((KeyValuePair<string, string>)drpFilterType.SelectedItem).Value;
+
+            if (filterType == global::ItemType.Gem.ToString())
+            {
+                SwapGemContext(true);
+            }
+            else
+            {
+                SwapGemContext(false);
+            }
+
         }
 
         private void txtSearch_KeyDown(object sender, KeyEventArgs e)
@@ -887,6 +914,57 @@ namespace Server.Database
             }
         }
 
+        private void ItemInfoGridView_MouseClick(object sender, MouseEventArgs e)
+        {
+            
+            if (e.Button == MouseButtons.Right &&
+                itemInfoGridView.SelectedRows.Count > 1)
+            {
+                var mouseOverRow = itemInfoGridView.HitTest(e.X, e.Y).RowIndex;
+                var mouseOverCol = itemInfoGridView.HitTest(e.X, e.Y).ColumnIndex;
+
+                if (mouseOverRow >= 0 &&
+                    mouseOverCol >= 0)
+                {
+                    var colName = itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol].OwningColumn.HeaderText;
+
+                    if (colName == "Modified" ||
+                        colName == "Index" ||
+                        colName == "Name" ||
+                        itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol] is DataGridViewComboBoxCell
+                        )
+                    {
+                        return;
+                    }
+
+                    String promptText = $"Enter new value for column [{colName}]:";
+                    if (itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol] is DataGridViewCheckBoxCell)
+                    {
+                        promptText += $"{Environment.NewLine}[[Enter 1 for tick or 0 for untick]]";
+                    }
+
+                    var updateValue = Interaction.InputBox(promptText,
+                                                        "Bulk Update",
+                                                        String.Empty);
+
+                    if (!String.IsNullOrEmpty(updateValue))
+                    {
+                        foreach (DataGridViewRow selectedRow in itemInfoGridView.SelectedRows)
+                        {
+                            selectedRow.Cells[mouseOverCol].Value = updateValue;
+                        }
+
+                        // for some reason datagridview doesn't reflect selected cell value updating like this
+                        // so re-assigning value fixes it. 
+                        if(itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol] is DataGridViewCheckBoxCell)
+                        {
+                            itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol].Value = updateValue;
+                        }
+                    }
+                }
+            }
+        }
+
         private void itemInfoGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
             var row = e.Row;
@@ -905,12 +983,6 @@ namespace Server.Database
         {
 
         }
-
-        private void itemInfoGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
         private void Gameshop_button_Click(object sender, EventArgs e)
         {
             foreach (DataGridViewRow row in itemInfoGridView.Rows)
@@ -930,11 +1002,27 @@ namespace Server.Database
 
         private void CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
+
             if (itemInfoGridView.CurrentCell is DataGridViewComboBoxCell ||
-                itemInfoGridView.CurrentCell is DataGridViewCheckBoxCell)
+                itemInfoGridView.CurrentCell is DataGridViewCheckBoxCell &&
+                e.RowIndex != -1)
             {
-                itemInfoGridView.Rows[e.RowIndex].Cells["Modified"].Value = true;
+                if (itemInfoGridView.Rows[e.RowIndex].DataBoundItem != null)
+                {
+                    itemInfoGridView.Rows[e.RowIndex].Cells["Modified"].Value = true;
+                }
             }
+        }
+
+        private void ItemInfoGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            if (itemInfoGridView.CurrentRow != null &&
+                itemInfoGridView.CurrentRow.Index != -1)
+            {
+                var itemType = itemInfoGridView.CurrentRow.Cells["ItemType"];
+                bool isGemSelected = (global::ItemType)itemType.Value == global::ItemType.Gem;
+                SwapGemContext(isGemSelected);
+            }   
         }
 
         private void CurrentCellDirtyStateChanged(object sender, EventArgs e)
@@ -971,6 +1059,93 @@ namespace Server.Database
 
             SaveForm();
             Envir.SaveDB();
+        }
+
+        private void MapHeaderText()
+        {
+            for (int i = 0; i < itemInfoGridView.ColumnCount; i++)
+            {
+                var col = itemInfoGridView.Columns[i];
+
+                _defaultItemHeaderMappings.Add(i, col.HeaderText);
+            }
+
+            foreach (var entry in _defaultItemHeaderMappings)
+            {
+                switch (entry.Value.Trim())
+                {
+                    case nameof(SpecialItemMode.Paralize):
+                        _gemItemHeaderMappings.Add(entry.Key, "Weapon");
+                        break;
+                    case nameof(SpecialItemMode.Teleport):
+                        _gemItemHeaderMappings.Add(entry.Key, "Armour");
+                        break;
+                    case nameof(SpecialItemMode.ClearRing):
+                        _gemItemHeaderMappings.Add(entry.Key, "Helmet");
+                        break;
+                    case nameof(SpecialItemMode.Protection):
+                        _gemItemHeaderMappings.Add(entry.Key, "Necklace");
+                        break;
+                    case nameof(SpecialItemMode.Revival):
+                        _gemItemHeaderMappings.Add(entry.Key, "Bracelet");
+                        break;
+                    case nameof(SpecialItemMode.Muscle):
+                        _gemItemHeaderMappings.Add(entry.Key, "Ring");
+                        break;
+                    case nameof(SpecialItemMode.Flame):
+                        _gemItemHeaderMappings.Add(entry.Key, "Amulet");
+                        break;
+                    case nameof(SpecialItemMode.Healing):
+                        _gemItemHeaderMappings.Add(entry.Key, "Belt");
+                        break;
+                    case nameof(SpecialItemMode.Probe):
+                        _gemItemHeaderMappings.Add(entry.Key, "Boots");
+                        break;
+                    case nameof(SpecialItemMode.Skill):
+                        _gemItemHeaderMappings.Add(entry.Key, "Stone");
+                        break;
+                    case nameof(SpecialItemMode.NoDuraLoss):
+                        _gemItemHeaderMappings.Add(entry.Key, "Torch");
+                        break;
+                    case "Critical Damage":
+                        _gemItemHeaderMappings.Add(entry.Key, "Max Stats (All)");
+                        break;
+                    case "Critical":
+                        _gemItemHeaderMappings.Add(entry.Key, "Base Rate %");
+                        break;
+                    case "Reflect":
+                        _gemItemHeaderMappings.Add(entry.Key, "Success Drop");
+                        break;
+                    case "HP Drain %":
+                        _gemItemHeaderMappings.Add(entry.Key, "Max Gem Stat");
+                        break;
+                }
+            }
+        }
+
+        private void SwapGemContext(bool showGemInfo)
+        {
+            // are we already showing correct field names?
+            if ((showGemInfo && _isInGemContext) ||
+                (!showGemInfo && !_isInGemContext))
+            {
+                return;
+            }
+
+            foreach (var entry in _gemItemHeaderMappings)
+            {
+                var col = itemInfoGridView.Columns[entry.Key];
+
+                col.HeaderText = showGemInfo ?
+                                   _gemItemHeaderMappings[entry.Key] :
+                                   _defaultItemHeaderMappings[entry.Key];
+
+                col.DefaultCellStyle.BackColor = showGemInfo ?
+                                                    Color.Yellow :
+                                                    Color.Empty;
+            }
+
+            _isInGemContext = showGemInfo;
         }
     }
 }

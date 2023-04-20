@@ -23,12 +23,12 @@ namespace Server
             {
                 ConquestHidden_combo.Items.Clear();
 
+                ConquestHidden_combo.Items.Add("");
                 for (int i = 0; i < Envir.ConquestInfoList.Count; i++)
                 {
                     ConquestHidden_combo.Items.Add(Envir.ConquestInfoList[i]);
                 }
             }
-
 
             UpdateInterface();
         }
@@ -88,6 +88,7 @@ namespace Server
                 Flag_textbox.Text = string.Empty;
                 ShowBigMapCheckBox.Checked = false;
                 BigMapIconTextBox.Text = string.Empty;
+                ConquestVisible_checkbox.Checked = true;
                 return;
             }
 
@@ -118,6 +119,7 @@ namespace Server
             ShowBigMapCheckBox.Checked = info.ShowOnBigMap;
             BigMapIconTextBox.Text = info.BigMapIcon.ToString();
             TeleportToCheckBox.Checked = info.CanTeleportTo;
+            ConquestVisible_checkbox.Checked = info.ConquestVisible;
 
 
             for (int i = 1; i < _selectedNPCInfos.Count; i++)
@@ -276,7 +278,7 @@ namespace Server
             }
 
 
-            string[] npcs = data.Split(new[] {'\t'}, StringSplitOptions.RemoveEmptyEntries);
+            string[] npcs = data.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
 
             //for (int i = 1; i < npcs.Length; i++)
@@ -361,7 +363,7 @@ namespace Server
             {
                 Shared.Helpers.FileIO.OpenScript(scriptPath, true);
             }
-                
+
             else
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(scriptPath));
@@ -557,10 +559,16 @@ namespace Server
         private void ConquestHidden_combo_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
-            ConquestInfo temp = (ConquestInfo)ConquestHidden_combo.SelectedItem;
+
+            int conquestIndex = 0;
+
+            if (ConquestHidden_combo.SelectedItem is ConquestInfo conquestInfo)
+            {
+                conquestIndex = conquestInfo.Index;
+            }
 
             for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].Conquest = temp.Index;
+                _selectedNPCInfos[i].Conquest = conquestIndex;
         }
 
         private void ShowBigMapCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -595,6 +603,14 @@ namespace Server
 
             for (int i = 0; i < _selectedNPCInfos.Count; i++)
                 _selectedNPCInfos[i].CanTeleportTo = TeleportToCheckBox.Checked;
+        }
+
+        private void ConquestVisible_checkbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedNPCInfos.Count; i++)
+                _selectedNPCInfos[i].ConquestVisible = ConquestVisible_checkbox.Checked;
         }
     }
 }

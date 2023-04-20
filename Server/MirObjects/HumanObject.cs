@@ -964,23 +964,47 @@ namespace Server.MirObjects
             if (item.RentalInformation != null && item.RentalInformation.BindingFlags.HasFlag(BindMode.DontUpgrade))
                 return false;
 
+            string message = String.Empty;
+            ChatType chatType;
+
             if (item.AddedStats[Stat.Luck] > (Settings.MaxLuck * -1) && Envir.Random.Next(20) == 0)
             {
                 Stats[Stat.Luck]--;
                 item.AddedStats[Stat.Luck]--;
                 Enqueue(new S.RefreshItem { Item = item });
-                ReceiveChat(GameLanguage.WeaponCurse, ChatType.System);
+
+                message = GameLanguage.WeaponCurse;
+                chatType = ChatType.System;
+                
             }
             else if (item.AddedStats[Stat.Luck] <= 0 || Envir.Random.Next(10 * item.GetTotal(Stat.Luck)) == 0)
             {
                 Stats[Stat.Luck]++;
                 item.AddedStats[Stat.Luck]++;
                 Enqueue(new S.RefreshItem { Item = item });
-                ReceiveChat(GameLanguage.WeaponLuck, ChatType.Hint);
+
+                message = GameLanguage.WeaponLuck;
+                chatType = ChatType.Hint;
             }
             else
             {
-                ReceiveChat(GameLanguage.WeaponNoEffect, ChatType.Hint);
+                message = GameLanguage.WeaponNoEffect;
+                chatType = ChatType.Hint;
+            }
+
+            if (this is HeroObject hero)
+            {
+                if (message == GameLanguage.WeaponCurse ||
+                    message == GameLanguage.WeaponLuck)
+                {
+                    hero.Owner.Enqueue(new S.RefreshItem { Item = item });
+                }
+
+                hero.Owner.ReceiveChat($"[Hero: {hero.Name}] {message}", chatType);
+            }
+            else
+            {
+                ReceiveChat(message, chatType);
             }
 
             return true;
@@ -1641,6 +1665,12 @@ namespace Server.MirObjects
             if (Info.Flags[990]) LevelEffects |= LevelEffects.Mist;
             if (Info.Flags[991]) LevelEffects |= LevelEffects.RedDragon;
             if (Info.Flags[992]) LevelEffects |= LevelEffects.BlueDragon;
+            if (Info.Flags[993]) LevelEffects |= LevelEffects.Rebirth1;
+            if (Info.Flags[994]) LevelEffects |= LevelEffects.Rebirth2;
+            if (Info.Flags[995]) LevelEffects |= LevelEffects.Rebirth3;
+            if (Info.Flags[996]) LevelEffects |= LevelEffects.NewBlue;
+            if (Info.Flags[997]) LevelEffects |= LevelEffects.YellowDragon;
+            if (Info.Flags[998]) LevelEffects |= LevelEffects.Phoenix;
         }
         public virtual void Revive(int hp, bool effect)
         {
@@ -5948,7 +5978,7 @@ namespace Server.MirObjects
 
                 case Spell.Haste:
                     {
-                        AddBuff(BuffType.Haste, this, (Settings.Second * 30) + (magic.Level + 1), new Stats { [Stat.AttackSpeed] = (magic.Level + 1) * 2 });
+                        AddBuff(BuffType.Haste, this, (Settings.Second * 25) + (Settings.Second * magic.Level * 15), new Stats { [Stat.AttackSpeed] = (magic.Level * 2) + 2 });
                         LevelMagic(magic);
                     }
                     break;

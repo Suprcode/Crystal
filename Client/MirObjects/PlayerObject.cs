@@ -665,10 +665,11 @@ namespace Client.MirObjects
             if (LevelEffects.HasFlag(LevelEffects.BlueDragon))
             {
                 Effects.Add(new SpecialEffect(Libraries.Effect, 1210, 20, 3200, this, true, true, 1) { Repeat = true });
-                SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1240, 32, 4200, this, true, false, 1) { Repeat = true, Delay = delay };
-                effect.SetStart(CMain.Time + delay);
+                SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1240, 32, 4200, this, true, false, 1) { Repeat = true };
+                effect.SetStart(CMain.Time);
                 Effects.Add(effect);
             }
+
             if (LevelEffects.HasFlag(LevelEffects.RedDragon))
             {
                 Effects.Add(new SpecialEffect(Libraries.Effect, 990, 20, 3200, this, true, true, 1) { Repeat = true });
@@ -676,9 +677,57 @@ namespace Client.MirObjects
                 effect.SetStart(CMain.Time + delay);
                 Effects.Add(effect);
             }
+
             if (LevelEffects.HasFlag(LevelEffects.Mist))
             {
                 Effects.Add(new SpecialEffect(Libraries.Effect, 296, 32, 3600, this, true, false, 1) { Repeat = true });
+            }
+
+            if (LevelEffects.HasFlag(LevelEffects.Rebirth1))
+            {
+                Effects.Add(new SpecialEffect(Libraries.Effect, 1271, 36, 3600, this, true, false, 1) { Repeat = true });
+
+
+            }
+
+            if (LevelEffects.HasFlag(LevelEffects.Rebirth2))
+            {
+                Effects.Add(new SpecialEffect(Libraries.Effect, 1308, 38, 3600, this, true, false, 1) { Repeat = true });
+                SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1347, 39, 3600, this, true, true, 1) { Repeat = true, Delay = delay };
+                effect.SetStart(CMain.Time + delay);
+                Effects.Add(effect);
+            }
+
+            if (LevelEffects.HasFlag(LevelEffects.Rebirth3))
+            {
+                Effects.Add(new SpecialEffect(Libraries.Effect, 1409, 19, 3600, this, true, false, 1) { Repeat = true, Delay = delay });
+                SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1444, 25, 4600, this, true, true, 1) { Repeat = true };
+
+                Effects.Add(effect);
+            }
+
+            if (LevelEffects.HasFlag(LevelEffects.NewBlue))
+            {
+                Effects.Add(new SpecialEffect(Libraries.Effect, 1574, 31, 3600, this, true, false, 1) { Repeat = true, Delay = delay });
+                SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1621, 24, 3600, this, true, true, 1) { Repeat = true };
+
+                Effects.Add(effect);
+            }
+
+            if (LevelEffects.HasFlag(LevelEffects.YellowDragon))
+            {
+                Effects.Add(new SpecialEffect(Libraries.Effect, 1486, 32, 4600, this, true, false, 1) { Repeat = true, Delay = delay });
+                SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1534, 24, 4600, this, true, true, 1) { Repeat = true };
+
+                Effects.Add(effect);
+            }
+
+            if (LevelEffects.HasFlag(LevelEffects.Phoenix))
+            {
+                Effects.Add(new SpecialEffect(Libraries.Effect, 1663, 26, 3600, this, true, false, 1) { Repeat = true, Delay = delay });
+                SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1705, 21, 3600, this, true, true, 1) { Repeat = true };
+
+                Effects.Add(effect);
             }
         }
 
@@ -1501,11 +1550,13 @@ namespace Client.MirObjects
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10 + (Gender == MirGender.Male ? 0 : 1));
                                 break;
                             case Spell.DoubleSlash:
-                                FrameInterval = (FrameInterval * 7 / 10); //50% Faster Animation
-                                EffectFrameInterval = (EffectFrameInterval * 7 / 10);
+                                FrameInterval = (int)(FrameInterval * 0.46f); //46% Animation Speed
+                                EffectFrameInterval = (int)(EffectFrameInterval * 0.46f);
+
                                 action = new QueuedAction { Action = MirAction.Attack4, Direction = Direction, Location = CurrentLocation, Params = new List<object>() };
                                 action.Params.Add(Spell);
                                 ActionFeed.Insert(0, action);
+
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                 break;
                             case Spell.Thrusting:
@@ -1540,8 +1591,9 @@ namespace Client.MirObjects
                         switch (Spell)
                         {
                             case Spell.DoubleSlash:
-                                FrameInterval = FrameInterval * 7 / 10; //50% Animation Speed
-                                EffectFrameInterval = EffectFrameInterval * 7 / 10;
+                                FrameInterval = (int)(FrameInterval * 0.46f); //46% Animation Speed
+                                EffectFrameInterval = (int)(EffectFrameInterval * 0.46f);
+
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
                                 break;
                             case Spell.TwinDrakeBlade:
