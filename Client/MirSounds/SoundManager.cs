@@ -33,6 +33,7 @@ namespace Client.MirSounds
             {
                 if (_musicVol == value) return;
                 _musicVol = value;
+                AdjustMusicVolume();
             }
         }
 
@@ -111,12 +112,12 @@ namespace Client.MirSounds
             for (int i = 0; i < Sounds.Count; i++)
             {
                 if (Sounds[i].Index != index) continue;
-                Sounds[i].Play();
+                Sounds[i].Play(Vol);
                 return;
             }
 
             if (IndexList.ContainsKey(index))
-                Sounds.Add(GetSound(index, IndexList[index], loop));
+                Sounds.Add(GetSound(index, IndexList[index], Vol, loop));
             else
             {
                 string filename;
@@ -125,13 +126,13 @@ namespace Client.MirSounds
                     index -= 20000;
                     filename = string.Format("M{0:0}-{1:0}", index/10, index%10);
 
-                    Sounds.Add(GetSound(index + 20000, filename, loop));
+                    Sounds.Add(GetSound(index + 20000, filename, Vol, loop));
                 }
                 else if (index < 10000)
                 {
                     filename = string.Format("{0:000}-{1:0}", index/10, index%10);
                     
-                    Sounds.Add(GetSound(index, filename, loop));
+                    Sounds.Add(GetSound(index, filename, Vol, loop));
                 }
             }
         }
@@ -140,9 +141,10 @@ namespace Client.MirSounds
         {
             if (Device == null) return;
 
-            Music = GetSound(index, index.ToString(), true);
-            Music.SetVolume(MusicVol);
-            Music.Play();
+            if (IndexList.TryGetValue(index, out string value))
+            {
+                Music = GetSound(index, value, MusicVol, loop);
+            }
         }
 
         public static void StopMusic()
@@ -151,11 +153,17 @@ namespace Client.MirSounds
             Music?.Dispose();
         }
 
+        static void AdjustMusicVolume()
+        {
+            Music?.SetVolume(MusicVol);
+        }
+
         static void AdjustAllVolumes()
         {
             for (int i = 0; i < Sounds.Count; i++)
-                Sounds[i].Dispose();
-            Sounds.Clear();
+            {
+                Sounds[i].SetVolume(Vol);
+            }        
         }
 
         static void CheckSoundTimeOut()
@@ -181,9 +189,9 @@ namespace Client.MirSounds
             }
         }
 
-        static ISoundLibrary GetSound(int index, string fileName, bool loop)
+        static ISoundLibrary GetSound(int index, string fileName, int volume, bool loop)
         {
-            var sound = WavLibrary.TryCreate(index, fileName, loop);
+            var sound = WavLibrary.TryCreate(index, fileName, volume, loop);
 
             if (sound != null)
             {

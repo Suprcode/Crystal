@@ -6,7 +6,7 @@
         long ExpireTime { get; set; }
 
         bool IsPlaying();
-        void Play();
+        void Play(int volume);
         void Stop();
         void SetVolume(int vol);
 
