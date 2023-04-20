@@ -5088,7 +5088,8 @@ namespace Client.MirScenes
 
         private void ObjectRangeAttack(S.ObjectRangeAttack p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID &&
+                !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {

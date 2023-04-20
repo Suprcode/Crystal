@@ -1436,6 +1436,7 @@ namespace Server.MirObjects
             ServerPacketIds.ObjectWalk,
             ServerPacketIds.ObjectRun,
             ServerPacketIds.ObjectAttack,
+            ServerPacketIds.ObjectRangeAttack,
             ServerPacketIds.ObjectMagic,
             ServerPacketIds.ObjectHarvest
         };
@@ -2781,7 +2782,17 @@ namespace Server.MirObjects
                         for (int i = 0; i < count; i++)
                         {
                             MonsterObject monster = MonsterObject.GetMonster(mInfo);
-                            if (monster == null) return;
+                            if (monster == null)
+                            {
+                                return;
+                            }
+
+                            if (monster is IntelligentCreatureObject)
+                            {
+                                ReceiveChat("Cannot spawn an IntelligentCreatureObject.", ChatType.System);
+                                return;
+                            }
+
                             if (spread == 0)
                                 monster.Spawn(CurrentMap, Front);
                             else
@@ -2824,11 +2835,17 @@ namespace Server.MirObjects
                         for (int i = 0; i < count; i++)
                         {
                             MonsterObject monster = MonsterObject.GetMonster(mInfo2);
+
                             if (monster == null) return;
 
                             if (conquestAIs.Contains(monster.Info.AI))
                             {
                                 ReceiveChat($"Cannot spawn conquest item: {monster.Name}", ChatType.System);
+                                return;
+                            }
+                            else if (monster is IntelligentCreatureObject)
+                            {
+                                ReceiveChat($"Cannot spawn IntelligentCreatureObject: : {monster.Name}", ChatType.System);
                                 return;
                             }
 
