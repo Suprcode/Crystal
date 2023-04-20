@@ -292,6 +292,8 @@ namespace Client.MirSounds
             StruckArmourLongStick = 10082,
             StruckArmourFist = 10083,
 
+            StruckEvilMir = 10090,
+
             MaleFlinch = 10138,
             FemaleFlinch = 10139,
             MaleDie = 10144,

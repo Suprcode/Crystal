@@ -3902,9 +3902,6 @@ namespace Client.MirObjects
                 case Monster.PurpleFaeFlower:
                     if (Stoned) return;
                     break;
-                case Monster.EvilMir:
-                    SoundManager.PlaySound(BaseSound + 1);
-                    return;
                 case Monster.DragonStatue:
                     SoundManager.PlaySound(BaseSound + 6);
                     return;
@@ -3975,7 +3972,7 @@ namespace Client.MirObjects
             switch(BaseImage)
             {
                 case Monster.EvilMir:
-                    SoundManager.PlaySound(BaseSound + 4);
+                    SoundManager.PlaySound(SoundList.StruckEvilMir);
                     return;
             }
 
@@ -4043,9 +4040,6 @@ namespace Client.MirObjects
         {
             switch (BaseImage)
             {
-                case Monster.EvilMir:
-                    SoundManager.PlaySound(BaseSound + 2);
-                    break;
                 default:
                     SoundManager.PlaySound(BaseSound + 1);
                     break;
@@ -4114,9 +4108,6 @@ namespace Client.MirObjects
         {
             switch (BaseImage)
             {
-                case Monster.EvilMir:
-                    SoundManager.PlaySound(BaseSound + 6);
-                    return;
                 default:
                     SoundManager.PlaySound(BaseSound + 3);
                     return;
@@ -4218,6 +4209,8 @@ namespace Client.MirObjects
                 case Monster.IcePhantom:
                 case Monster.WaterDragon:
                 case Monster.BlackTortoise:
+                case Monster.EvilMir:
+                case Monster.DragonStatue:
                     SoundManager.PlaySound(BaseSound + 5);
                     return;
                 case Monster.AncientBringer:
@@ -4228,12 +4221,6 @@ namespace Client.MirObjects
                     SoundManager.PlaySound(BaseSound + 8);
                     return;
                 case Monster.TucsonGeneral:
-                    return;
-                case Monster.EvilMir:
-                    SoundManager.PlaySound(BaseSound + 3);
-                    return;
-                case Monster.DragonStatue:
-                    SoundManager.PlaySound(BaseSound + 2);
                     return;
                 default:
                     PlayAttackSound();
