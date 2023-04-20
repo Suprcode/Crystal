@@ -1434,6 +1434,7 @@ namespace Server.MirObjects
             ServerPacketIds.ObjectWalk,
             ServerPacketIds.ObjectRun,
             ServerPacketIds.ObjectAttack,
+            ServerPacketIds.ObjectRangeAttack,
             ServerPacketIds.ObjectMagic,
             ServerPacketIds.ObjectHarvest
         };
