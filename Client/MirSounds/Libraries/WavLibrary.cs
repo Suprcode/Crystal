@@ -16,19 +16,19 @@ namespace Client.MirSounds
         private SoundBufferDescription _desc;
         private readonly byte[] _data;
 
-        public static WavLibrary TryCreate(int index, string fileName, bool loop)
+        public static WavLibrary TryCreate(int index, string fileName, int volume, bool loop)
         {
             fileName = Path.Combine(Settings.SoundPath, Path.GetFileNameWithoutExtension(fileName) + ".wav");
 
             if (File.Exists(fileName))
             {
-                return new WavLibrary(index, fileName, loop);
+                return new WavLibrary(index, fileName, volume, loop);
             }
 
             return null;
         }
 
-        public WavLibrary(int index, string fileName, bool loop)
+        public WavLibrary(int index, string fileName, int volume, bool loop)
         {
             Index = index;
 
@@ -48,7 +48,7 @@ namespace Client.MirSounds
 
             _bufferList = new List<SecondarySoundBuffer>();
 
-            Play();
+            Play(volume);
         }
 
         public bool IsPlaying()
@@ -64,7 +64,7 @@ namespace Client.MirSounds
             return false;
         }
 
-        public void Play()
+        public void Play(int volume)
         {
             if (_stream == null) return;
 
@@ -74,13 +74,13 @@ namespace Client.MirSounds
             {
                 if (_bufferList.Count == 0)
                 {
-                    SecondarySoundBuffer buffer = new SecondarySoundBuffer(SoundManager.Device, _desc) { Volume = SoundManager.Vol };
+                    SecondarySoundBuffer buffer = new SecondarySoundBuffer(SoundManager.Device, _desc) { Volume = volume };
                     buffer.Write(_data, 0, LockFlags.None);
                     _bufferList.Add(buffer);
                 }
                 else if (_bufferList[0] == null || _bufferList[0].Disposed)
                 {
-                    SecondarySoundBuffer buffer = new SecondarySoundBuffer(SoundManager.Device, _desc) { Volume = SoundManager.Vol };
+                    SecondarySoundBuffer buffer = new SecondarySoundBuffer(SoundManager.Device, _desc) { Volume = volume };
                     buffer.Write(_data, 0, LockFlags.None);
                     _bufferList[0] = buffer;
                 }
@@ -100,7 +100,7 @@ namespace Client.MirSounds
 
                     if (_bufferList[i].Status != BufferStatus.Playing)
                     {
-                        _bufferList[i].Volume = SoundManager.Vol;
+                        _bufferList[i].Volume = volume;
                         _bufferList[i].Play(0, 0);
                         return;
                     }
@@ -108,7 +108,7 @@ namespace Client.MirSounds
 
                 if (_bufferList.Count >= Settings.SoundOverLap) return;
 
-                SecondarySoundBuffer buffer = new SecondarySoundBuffer(SoundManager.Device, _desc) { Volume = SoundManager.Vol, Pan = 0 };
+                SecondarySoundBuffer buffer = new SecondarySoundBuffer(SoundManager.Device, _desc) { Volume = volume, Pan = 0 };
                 buffer.Write(_data, 0, LockFlags.None);
                 buffer.Play(0, 0);
                 _bufferList.Add(buffer);

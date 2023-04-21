@@ -3902,6 +3902,9 @@ namespace Client.MirObjects
                 case Monster.PurpleFaeFlower:
                     if (Stoned) return;
                     break;
+                case Monster.DragonStatue:
+                    SoundManager.PlaySound(BaseSound + 6);
+                    return;
             }
 
             SoundManager.PlaySound(BaseSound);
@@ -3966,6 +3969,13 @@ namespace Client.MirObjects
         }
         public void PlayStruckSound()
         {
+            switch(BaseImage)
+            {
+                case Monster.EvilMir:
+                    SoundManager.PlaySound(SoundList.StruckEvilMir);
+                    return;
+            }
+
             switch (StruckWeapon)
             {
                 case 0:
@@ -4086,6 +4096,8 @@ namespace Client.MirObjects
             switch (BaseImage)
             {
                 case Monster.DarkCaptain:
+                case Monster.EvilMir:
+                case Monster.DragonStatue:
                     return;
                 default:
                     SoundManager.PlaySound(BaseSound + 4);
@@ -4101,6 +4113,7 @@ namespace Client.MirObjects
                     return;
             }
         }
+
         public void PlayDeadSound()
         {
             switch (BaseImage)
@@ -4196,6 +4209,8 @@ namespace Client.MirObjects
                 case Monster.IcePhantom:
                 case Monster.WaterDragon:
                 case Monster.BlackTortoise:
+                case Monster.EvilMir:
+                case Monster.DragonStatue:
                     SoundManager.PlaySound(BaseSound + 5);
                     return;
                 case Monster.AncientBringer:

@@ -19,7 +19,7 @@
             return false;
         }
 
-        public void Play()
+        public void Play(int volume)
         {
             
         }

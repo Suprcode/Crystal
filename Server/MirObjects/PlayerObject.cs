@@ -5,6 +5,8 @@ using Server.MirNetwork;
 using S = ServerPackets;
 using System.Text.RegularExpressions;
 using Timer = Server.MirEnvir.Timer;
+using Server.MirObjects.Monsters;
+using System.Threading;
 
 namespace Server.MirObjects
 {
@@ -1434,6 +1436,7 @@ namespace Server.MirObjects
             ServerPacketIds.ObjectWalk,
             ServerPacketIds.ObjectRun,
             ServerPacketIds.ObjectAttack,
+            ServerPacketIds.ObjectRangeAttack,
             ServerPacketIds.ObjectMagic,
             ServerPacketIds.ObjectHarvest
         };
@@ -1995,6 +1998,15 @@ namespace Server.MirObjects
                 String hintstring;
                 UserItem item;
 
+                List<int> conquestAIs = new()
+                {
+                    72, // siege gate
+                    73, // gate west
+                    80, // archer
+                    81, // gate 
+                    82  // wall
+                };
+
                 switch (parts[0].ToUpper())
                 {
                     case "LOGIN":
@@ -2131,7 +2143,7 @@ namespace Server.MirObjects
                                 if (hero == null) return;
                                 old = hero.Level;
                                 hero.Level = level;
-                                player.LevelUp();
+                                hero.LevelUp();
 
                                 ReceiveChat(string.Format("Player {0}'s hero has been Leveled {1} -> {2}.", player.Name, old, hero.Level), ChatType.System);
                                 MessageQueue.Enqueue(string.Format("Player {0}'s hero has been Leveled {1} -> {2} by {3}", player.Name, old, hero.Level, Name));
@@ -2754,6 +2766,12 @@ namespace Server.MirObjects
                             return;
                         }
 
+                        if (conquestAIs.Contains(mInfo.AI))
+                        {
+                            ReceiveChat($"Cannot spawn conquest item: {mInfo.Name}", ChatType.System);
+                            return;
+                        }
+
                         uint count = 1;
                         if (parts.Length >= 3 && IsGM)
                             if (!uint.TryParse(parts[2], out count)) count = 1;
@@ -2764,7 +2782,17 @@ namespace Server.MirObjects
                         for (int i = 0; i < count; i++)
                         {
                             MonsterObject monster = MonsterObject.GetMonster(mInfo);
-                            if (monster == null) return;
+                            if (monster == null)
+                            {
+                                return;
+                            }
+
+                            if (monster is IntelligentCreatureObject)
+                            {
+                                ReceiveChat("Cannot spawn an IntelligentCreatureObject.", ChatType.System);
+                                return;
+                            }
+
                             if (spread == 0)
                                 monster.Spawn(CurrentMap, Front);
                             else
@@ -2807,7 +2835,20 @@ namespace Server.MirObjects
                         for (int i = 0; i < count; i++)
                         {
                             MonsterObject monster = MonsterObject.GetMonster(mInfo2);
+
                             if (monster == null) return;
+
+                            if (conquestAIs.Contains(monster.Info.AI))
+                            {
+                                ReceiveChat($"Cannot spawn conquest item: {monster.Name}", ChatType.System);
+                                return;
+                            }
+                            else if (monster is IntelligentCreatureObject)
+                            {
+                                ReceiveChat($"Cannot spawn IntelligentCreatureObject: : {monster.Name}", ChatType.System);
+                                return;
+                            }
+
                             monster.PetLevel = petlevel;
                             monster.Master = this;
                             monster.MaxPetLevel = 7;

@@ -1454,7 +1454,7 @@ namespace Server.MirObjects
                     }
                     else
                     {
-                        newValue = $"{player.Info.Equipment[(int)EquipmentSlot.Mount].CurrentDura}/{player.Info.Equipment[(int)EquipmentSlot.Mount].MaxDura}";
+                        newValue = $"{player.Info.Equipment[(int)EquipmentSlot.Mount].CurrentDura} ({player.Info.Equipment[(int)EquipmentSlot.Mount].MaxDura})";
                     }
                     break;
                 case "MOUNT":
