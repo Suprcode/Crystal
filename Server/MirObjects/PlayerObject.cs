@@ -2845,7 +2845,7 @@ namespace Server.MirObjects
                             }
                             else if (monster is IntelligentCreatureObject)
                             {
-                                ReceiveChat($"Cannot spawn IntelligentCreatureObject: : {monster.Name}", ChatType.System);
+                                ReceiveChat($"Cannot spawn an IntelligentCreatureObject.", ChatType.System);
                                 return;
                             }
 
