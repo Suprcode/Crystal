@@ -576,5 +576,16 @@ namespace Client.MirGraphics
             ControlList.Clear();
         }
 
+        public static void Dispose()
+        {
+            CleanUp();
+
+            Device.Direct3D?.Dispose();
+            Device.Dispose();
+
+            NormalPixelShader?.Dispose();
+            GrayScalePixelShader?.Dispose();
+            MagicPixelShader?.Dispose();
+        }
     }
 }
