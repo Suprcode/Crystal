@@ -87,6 +87,8 @@ namespace Client
                 LoadMouseCursors();
                 SetMouseCursor(MouseCursor.Default);
 
+                SlimDX.Configuration.EnableObjectTracking = true;
+
                 DXManager.Create();
                 SoundManager.Create();
                 CenterToScreen();
@@ -700,6 +702,9 @@ namespace Client
             else
             {
                 Settings.Save();
+
+                DXManager.Dispose();
+                SoundManager.Dispose();
             }
         }
 
