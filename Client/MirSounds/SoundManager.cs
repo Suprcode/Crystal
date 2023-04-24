@@ -200,6 +200,20 @@ namespace Client.MirSounds
 
             return new NullLibrary(index, fileName, loop);
         }
+
+        public static void Dispose()
+        {
+            DelayList.Clear();
+
+            for (int i = Sounds.Count - 1; i >= 0; i--)
+            {
+                Sounds[i]?.Dispose();
+            }
+
+            Music?.Dispose();
+
+            Device?.Dispose();
+        }
     }
 
     public static class SoundList
