@@ -10,12 +10,6 @@ namespace Client
         private static InIReader Reader = new InIReader(@".\Mir2Config.ini");
         private static InIReader QuestTrackingReader = new InIReader(Path.Combine(UserDataPath, @".\QuestTracking.ini"));
 
-        private const int MIN_VOL_SCALE = -3000;
-        private const int MAX_VOL_SCALE = 0;
-        private const int MIN_MUSIC_SCALE = -7000;
-        private const int MAX_MUSIC_SCALE = 0;
-        private const int MUSIC_OFF = -10000;
-
         private static bool _useTestConfig;
         public static bool UseTestConfig
         {
@@ -99,8 +93,6 @@ namespace Client
             get { return _volume; }
             set
             {
-                if (_volume == value) return;
-
                 switch (value)
                 {
                     case > 100:
@@ -114,16 +106,7 @@ namespace Client
                         break;
                 }
 
-                if (_volume == 0)
-                {
-                    SoundManager.Vol = MUSIC_OFF;
-                }
-                else
-                {
-                    double scaled = MIN_VOL_SCALE + (double)(_volume - 0) / (100 - 0) * (MAX_VOL_SCALE - MIN_VOL_SCALE);
-                    SoundManager.Vol = Convert.ToInt32(scaled);
-                }
-
+                SoundManager.Vol = Convert.ToInt32(_volume);
             }
         }
 
@@ -133,8 +116,6 @@ namespace Client
             get { return _musicVolume; }
             set
             {
-                if (_musicVolume == value) return;
-
                 switch(value)
                 {
                     case > 100:
@@ -148,16 +129,7 @@ namespace Client
                         break;
                 }
 
-                if (_musicVolume == 0)
-                {
-                    SoundManager.MusicVol = MUSIC_OFF;
-                }   
-                else
-                {
-                    double scaled = MIN_MUSIC_SCALE + (double)(_musicVolume - 0) / (100 - 0) * (MAX_MUSIC_SCALE - MIN_MUSIC_SCALE);
-                    SoundManager.MusicVol = Convert.ToInt32(scaled);
-                }
-
+                SoundManager.MusicVol = Convert.ToInt32(_musicVolume);
             }
         }
 

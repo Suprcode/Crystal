@@ -1,14 +1,18 @@
-﻿using SlimDX.DirectSound;
+﻿using Client.MirSounds.Libraries;
+using SlimDX.Direct3D9;
+using SlimDX.DirectSound;
+using System;
 
 namespace Client.MirSounds
 {
     static class SoundManager
     {
-        public static DirectSound Device;
         private static readonly List<ISoundLibrary> Sounds = new List<ISoundLibrary>();
         private static readonly Dictionary<int, string> IndexList = new Dictionary<int, string>();
 
         private static readonly List<KeyValuePair<long, int>> DelayList = new List<KeyValuePair<long, int>>();
+
+        public static readonly List<string> SupportedFileTypes;
 
         public static ISoundLibrary Music;
         private static long _checkSoundTime;
@@ -37,6 +41,15 @@ namespace Client.MirSounds
             }
         }
 
+        static SoundManager()
+        {
+            SupportedFileTypes = new List<string>
+            {
+                ".wav",
+                ".mp3"
+            };
+        }
+
         public static void ProcessDelayedSounds()
         {
             if (DelayList.Count == 0) return;
@@ -51,14 +64,9 @@ namespace Client.MirSounds
             }
         }
 
-
         public static void Create()
         {
             if (Program.Form == null || Program.Form.IsDisposed) return;
-
-            Device = new DirectSound();
-            Device.SetCooperativeLevel(Program.Form.Handle, CooperativeLevel.Normal);
-            Device.IsDefaultPool = false;
 
             LoadSoundList();
         }
@@ -80,9 +88,7 @@ namespace Client.MirSounds
                 if (!IndexList.ContainsKey(index))
                     IndexList.Add(index, split[split.Length - 1]);
             }
-
         }
-
 
         public static void StopSound(int index)
         {
@@ -102,11 +108,7 @@ namespace Client.MirSounds
                 DelayList.Add(new KeyValuePair<long, int>(CMain.Time + delay, index));
                 return;
             }
-
-            if (Device == null) return;
-            
-            if (_vol <= -3000) return;
-
+      
             CheckSoundTimeOut();
 
             for (int i = 0; i < Sounds.Count; i++)
@@ -139,8 +141,6 @@ namespace Client.MirSounds
 
         public static void PlayMusic(int index, bool loop = false)
         {
-            if (Device == null) return;
-
             if (IndexList.TryGetValue(index, out string value))
             {
                 Music = GetSound(index, value, MusicVol, loop);
@@ -191,14 +191,9 @@ namespace Client.MirSounds
 
         static ISoundLibrary GetSound(int index, string fileName, int volume, bool loop)
         {
-            var sound = WavLibrary.TryCreate(index, fileName, volume, loop);
+            var sound = NAudioLibrary.TryCreate(index, fileName, volume, loop);
 
-            if (sound != null)
-            {
-                return sound;
-            }
-
-            return new NullLibrary(index, fileName, loop);
+            return sound == null ? new NullLibrary(index, fileName, loop) : sound;
         }
 
         public static void Dispose()
@@ -211,8 +206,6 @@ namespace Client.MirSounds
             }
 
             Music?.Dispose();
-
-            Device?.Dispose();
         }
     }
 
