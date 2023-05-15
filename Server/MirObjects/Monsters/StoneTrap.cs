@@ -14,7 +14,6 @@ namespace Server.MirObjects.Monsters
         public bool Summoned;
         public long DieTime;
 
-
         protected internal StoneTrap(MonsterInfo info) : base(info)
         {
             Direction = MirDirection.Up;
@@ -30,7 +29,7 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack() { }
 
-        protected override void FindTarget()
+        protected override void ProcessAI()
         {
             for (int d = 0; d <= Info.ViewRange; d++)
             {
@@ -64,7 +63,7 @@ namespace Server.MirObjects.Monsters
                                     MonsterInfo mInfo = Envir.GetMonsterInfo(ob.Name);
                                     if (mInfo == null)
                                     {
-                                        return;
+                                        continue;
                                     }
 
                                     MonsterObject monster = MonsterObject.GetMonster(mInfo);
@@ -72,13 +71,17 @@ namespace Server.MirObjects.Monsters
                                     {
                                         if (monster.Master == null ||
                                             (monster.Master != null &&
-                                            monster.IsAttackTarget(this)))
-                                        { 
-                                            if (monster.Taunter != this)
+                                            monster.IsAttackTarget(this.Master)))
+                                        {
+                                            if (Target != null &&
+                                                Target is StoneTrap &&
+                                                Target != this)
                                             {
-                                                monster.Taunter = this;
+                                                continue;
                                             }
-                                        }
+
+                                            monster.Target = this;
+                                        }     
                                     }
 
                                     break;
