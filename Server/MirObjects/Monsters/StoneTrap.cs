@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
@@ -11,7 +12,6 @@ namespace Server.MirObjects.Monsters
     public class StoneTrap : MonsterObject
     {
         public bool Summoned;
-        public long AliveTime;
         public long DieTime;
 
 
@@ -19,14 +19,75 @@ namespace Server.MirObjects.Monsters
         {
             Direction = MirDirection.Up;
         }
+
         public override string Name
         {
             get { return Master == null ? Info.GameName : (Dead ? Info.GameName : string.Format("{0}({1})", Info.GameName, Master.Name)); }
             set { throw new NotSupportedException(); }
         }
+
         protected override void ProcessRegen() { }
+
         protected override void Attack() { }
-        protected override void FindTarget() { }
+
+        protected override void FindTarget()
+        {
+            for (int d = 0; d <= Info.ViewRange; d++)
+            {
+                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++)
+                {
+                    if (y < 0) continue;
+                    if (y >= CurrentMap.Height) break;
+
+                    for (int x = CurrentLocation.X - d; x <= CurrentLocation.X + d; x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2)
+                    {
+                        if (x < 0) continue;
+                        if (x >= CurrentMap.Width) break;
+
+                        Cell cell = CurrentMap.GetCell(x, y);
+                        if (!cell.Valid || cell.Objects == null) continue;
+
+                        for (int i = 0; i < cell.Objects.Count; i++)
+                        {
+                            MapObject ob = cell.Objects[i];
+
+                            if (ob == this)
+                            {
+                                continue;
+                            }
+
+                            switch (ob.Race)
+                            {
+                                case ObjectType.Monster:
+                                case ObjectType.Hero:
+
+                                    MonsterInfo mInfo = Envir.GetMonsterInfo(ob.Name);
+                                    if (mInfo == null)
+                                    {
+                                        return;
+                                    }
+
+                                    MonsterObject monster = MonsterObject.GetMonster(mInfo);
+                                    if (!monster.Dead)
+                                    {
+                                        if (monster.Master == null ||
+                                            (monster.Master != null &&
+                                            monster.IsAttackTarget(this)))
+                                        { 
+                                            if (monster.Taunter != this)
+                                            {
+                                                monster.Taunter = this;
+                                            }
+                                        }
+                                    }
+
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         public override void Turn(MirDirection dir)
         {
@@ -38,77 +99,26 @@ namespace Server.MirObjects.Monsters
         public override void Spawned()
         {
             base.Spawned();
-            AliveTime = Envir.Time + 15000;
             Summoned = true;
         }
         public override void Process()
         {
-            if (!Dead && Summoned)
+            if (!Dead &&
+                Master != null)
             {
-                bool selfDestruct = false;
-                if (Master != null)
+                if (Master.CurrentMap != CurrentMap ||
+                    Envir.Time > DieTime ||
+                    !Functions.InRange(Master.CurrentLocation, CurrentLocation, 15))
                 {
-                    if (Master.CurrentMap != CurrentMap) selfDestruct = true;
-                    if (!Functions.InRange(Master.CurrentLocation, CurrentLocation, 15)) selfDestruct = true;
-                    if (Summoned && Envir.Time > AliveTime) selfDestruct = true;
-                    if (selfDestruct)
-                    {
-                        Die();
-                        //DieTime = Envir.Time + 3000;
-                    }
-                    base.Process();
+                    Die();
+                } 
+                else
+                {
+                    FindTarget();
                 }
             }
+
             base.Process();
-            //else if (Envir.Time >= DieTime) Despawn();
-        }
-
-        public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
-        {
-            int armour = 0;
-
-            switch (type)
-            {
-                case DefenceType.ACAgility:
-                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) return 0;
-                    armour = GetDefencePower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
-                    break;
-                case DefenceType.AC:
-                    armour = GetDefencePower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
-                    break;
-                case DefenceType.MACAgility:
-                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) return 0;
-                    armour = GetDefencePower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
-                    break;
-                case DefenceType.MAC:
-                    armour = GetDefencePower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
-                    break;
-                case DefenceType.Agility:
-                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) return 0;
-                    break;
-            }
-
-            if (armour >= damage) return 0;
-
-            ShockTime = 0;
-
-            if (attacker.Info.AI == 6)
-                EXPOwner = null;
-            else if (attacker.Master != null)
-            {
-                if (EXPOwner == null || EXPOwner.Dead)
-                    EXPOwner = attacker.Master;
-
-                if (EXPOwner == attacker.Master)
-                    EXPOwnerTime = Envir.Time + EXPOwnerDelay;
-
-            }
-
-            Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
-
-            ChangeHP(-1);
-            return 1;
-
         }
 
         public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
@@ -116,56 +126,6 @@ namespace Server.MirObjects.Monsters
             return 0;
         }
 
-        public override int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
-        {
-            int armour = 0;
-
-            switch (type)
-            {
-                case DefenceType.ACAgility:
-                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) return 0;
-                    armour = GetDefencePower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
-                    break;
-                case DefenceType.AC:
-                    armour = GetDefencePower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
-                    break;
-                case DefenceType.MACAgility:
-                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) return 0;
-                    armour = GetDefencePower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
-                    break;
-                case DefenceType.MAC:
-                    armour = GetDefencePower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
-                    break;
-                case DefenceType.Agility:
-                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) return 0;
-                    break;
-            }
-
-            if (armour >= damage) return 0;
-
-            if (damageWeapon)
-                attacker.DamageWeapon();
-
-            ShockTime = 0;
-
-            if (Master != null && Master != attacker)
-                if (Envir.Time > Master.BrownTime && Master.PKPoints < 200)
-                    attacker.BrownTime = Envir.Time + Settings.Minute;
-
-            if (EXPOwner == null || EXPOwner.Dead)
-                EXPOwner = attacker;
-
-            if (EXPOwner == attacker)
-                EXPOwnerTime = Envir.Time + EXPOwnerDelay;
-
-            Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
-            attacker.GatherElement();
-            ChangeHP(-1);
-
-            return 1;
-        }
-
-        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true) { }
         public override Packet GetInfo()
         {
             return new S.ObjectMonster

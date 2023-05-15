@@ -1,6 +1,7 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirNetwork;
+using Server.MirObjects.Monsters;
 using System.Numerics;
 using S = ServerPackets;
 
@@ -5590,14 +5591,29 @@ namespace Server.MirObjects
         public void ArcherSummonStone(UserMagic magic, Point location, out bool cast)
         {
             cast = false;
-            if (!CurrentMap.ValidPoint(location)) return;
-            if (!CanFly(location)) return;
-            //if ((Info.MentalState != 1) && !CanFly(location)) return;//
-            uint duration = (uint)((magic.Level * 5 + 10) * 1000);
-            int value = (int)duration;
-            int delay = Functions.MaxDistance(CurrentLocation, location) * 50 + 500; //50 MS per Step          
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, value, location);
+
+            if (!CurrentMap.ValidPoint(location) ||
+                !CanFly(location))
+            {
+                return;
+            }
+
+            if (Pets.Exists(x => x.Info.GameName == Settings.StoneName))
+            {
+                MonsterObject st = Pets.First(x => x.Info.GameName == Settings.StoneName);
+                if (!st.Dead)
+                {
+                    ReceiveChat($"You can only have 1 active {Settings.StoneName} alive.", ChatType.Hint);
+                    return;
+                }
+            }
+
+            int duration = (((magic.Level * 5) + 10) * 1000);
+            int delay = Functions.MaxDistance(CurrentLocation, location) * 50 + 500; //50 MS per Step
+                                                                                     //
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, duration, location);
             ActionList.Add(action);
+
             cast = true;
         }
 
@@ -6556,7 +6572,7 @@ namespace Server.MirObjects
                     break;
                 case Spell.Stonetrap:
                     {
-                        value = (int)data[1];
+                        duration = (int)data[1];
                         location = (Point)data[2];
 
                         if (Pets.Where(x => x.Race == ObjectType.Monster).Count() >= magic.Level + 1) return;
@@ -6572,6 +6588,9 @@ namespace Server.MirObjects
                         monster.MaxPetLevel = (byte)(1 + magic.Level * 2);
                         monster.Direction = Direction;
                         monster.ActionTime = Envir.Time + 1000;
+
+                        StoneTrap st = monster as StoneTrap;
+                        st.DieTime = Envir.Time + duration;
 
                         DelayedAction act = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, monster, location);
                         CurrentMap.ActionList.Add(act);

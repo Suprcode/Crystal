@@ -184,6 +184,8 @@ namespace Server.MirObjects
         public LinkedListNode<MapObject> NodeThreaded;
         public long RevTime;
 
+        public MapObject Taunter;
+
         public virtual bool Blocking
         {
             get { return true; }
@@ -199,7 +201,6 @@ namespace Server.MirObjects
             get { return Functions.PointMove(CurrentLocation, Direction, -1); }
 
         }
-
 
         public virtual void Process()
         {
@@ -230,6 +231,20 @@ namespace Server.MirObjects
                 if (Envir.Time < ActionList[i].Time) continue;
                 Process(ActionList[i]);
                 ActionList.RemoveAt(i);
+            }
+
+            if (Taunter != null)
+            {
+                if (Taunter.Dead ||
+                    Taunter.CurrentMap != CurrentMap ||
+                    !Functions.InRange(CurrentLocation, Taunter.CurrentLocation, Globals.DataRange))
+                {
+                    Target = null;
+                }
+                else
+                {
+                    Target = Taunter;
+                }
             }
         }
 
