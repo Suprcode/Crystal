@@ -2207,7 +2207,7 @@ namespace Server.MirObjects
                                     item = Envir.CreateDropItem(iInfo);
                                     item.Count = itemCount;
 
-                                    if (CanGainItem(item, false)) GainItem(item);
+                                    if (CanGainItem(item)) GainItem(item);
 
                                     return;
                                 }
@@ -2215,7 +2215,7 @@ namespace Server.MirObjects
                                 item.Count = iInfo.StackSize;
                                 itemCount -= iInfo.StackSize;
 
-                                if (!CanGainItem(item, false)) return;
+                                if (!CanGainItem(item)) return;
                                 GainItem(item);
                             }
 
@@ -5161,13 +5161,6 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (temp.Weight + CurrentBagWeight > Stats[Stat.BagWeight])
-            {
-                ReceiveChat("Too heavy to get back.", ChatType.System);
-                Enqueue(p);
-                return;
-            }
-
             if (Info.Inventory[to] == null)
             {
                 Info.Inventory[to] = temp;
@@ -5361,13 +5354,6 @@ namespace Server.MirObjects
 
             if (temp == null)
             {
-                Enqueue(p);
-                return;
-            }
-
-            if (temp.Weight + CurrentBagWeight > Stats[Stat.BagWeight])
-            {
-                ReceiveChat("Too heavy to transfer.", ChatType.System);
                 Enqueue(p);
                 return;
             }
@@ -9477,12 +9463,6 @@ namespace Server.MirObjects
                         Enqueue(p);
                         return;
                     }
-                    if (Stats[Stat.BagWeight] < CurrentBagWeight + MyGuild.StoredItems[from].Item.Weight)
-                    {
-                        ReceiveChat("Too overweight to retrieve item.", ChatType.System);
-                        Enqueue(p);
-                        return;
-                    }
                     if (MyGuild.StoredItems[from].Item.Info.Bind.HasFlag(BindMode.DontStore))
                     {
                         Enqueue(p);
@@ -9739,13 +9719,6 @@ namespace Server.MirObjects
 
             if (temp == null)
             {
-                Enqueue(p);
-                return;
-            }
-
-            if (temp.Weight + CurrentBagWeight > Stats[Stat.BagWeight])
-            {
-                ReceiveChat("Too heavy to get back.", ChatType.System);
                 Enqueue(p);
                 return;
             }
@@ -11340,7 +11313,7 @@ namespace Server.MirObjects
             UserItem item = Envir.CreateDropItem(iInfo);
             item.Count = 1;
 
-            if (!CanGainItem(item, false))
+            if (!CanGainItem(item))
             {
                 MailInfo mail = new MailInfo(Info.Index)
                 {
@@ -11679,13 +11652,6 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (temp.Weight + CurrentBagWeight > Stats[Stat.BagWeight])
-            {
-                ReceiveChat("Too heavy to get back.", ChatType.System);
-                Enqueue(p);
-                return;
-            }
-
             if (Info.Inventory[to] == null)
             {
                 Info.Inventory[to] = temp;
@@ -11970,14 +11936,6 @@ namespace Server.MirObjects
             if (Info.CollectTime > Envir.Time)
             {
                 ReceiveChat(string.Format("Your {0} will be ready to collect in {1} minute(s).", Info.CurrentRefine.FriendlyName, ((Info.CollectTime - Envir.Time) / Settings.Minute)), ChatType.System);
-                Enqueue(p);
-                return;
-            }
-
-
-            if (Info.CurrentRefine.Info.Weight + CurrentBagWeight > Stats[Stat.BagWeight])
-            {
-                ReceiveChat(string.Format("Your {0} is too heavy to get back, try again after reducing your bag weight.", Info.CurrentRefine.FriendlyName), ChatType.System);
                 Enqueue(p);
                 return;
             }
@@ -13299,13 +13257,6 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (item.Weight + CurrentBagWeight > Stats[Stat.BagWeight])
-            {
-                ReceiveChat("Item is too heavy to retrieve.", ChatType.System);
-                Enqueue(packet);
-                return;
-            }
-
             if (Info.Inventory[to] == null)
             {
                 Info.Inventory[to] = item;
@@ -13690,7 +13641,7 @@ namespace Server.MirObjects
 
             UserItem item = Envir.CreateFreshItem(itemInfo);            
             item.AddedStats[Stat.Hero] = CurrentHero.Index;
-            if (CanGainItem(item, false))
+            if (CanGainItem(item))
                 GainItem(item);
 
             CurrentHero.SealCount++;

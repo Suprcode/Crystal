@@ -716,15 +716,8 @@ namespace Client.MirObjects
 
         public void GetMaxGain(UserItem item)
         {
-            if (CurrentBagWeight + item.Weight <= Stats[Stat.BagWeight] && FreeSpace(Inventory) > 0) return;
-
             ushort min = 0;
             ushort max = item.Count;
-
-            if (CurrentBagWeight >= Stats[Stat.BagWeight])
-            {
-
-            }
 
             if (item.Info.Type == ItemType.Amulet)
             {
@@ -748,9 +741,9 @@ namespace Client.MirObjects
                     }
                 }
 
-                if (min == 0)
+                if (min == 0 && FreeSpace(Inventory) == 0)
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat(FreeSpace(Inventory) == 0 ? GameLanguage.NoBagSpace : "You do not have enough weight.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.NoBagSpace, ChatType.System);
 
                     item.Count = 0;
                     return;
@@ -760,15 +753,11 @@ namespace Client.MirObjects
                 return;
             }
 
-            if (CurrentBagWeight + item.Weight > Stats[Stat.BagWeight])
+            if (FreeSpace(Inventory) == 0)
             {
-                item.Count = (ushort)(Math.Max((Stats[Stat.BagWeight] - CurrentBagWeight), ushort.MinValue) / item.Info.Weight);
-                max = item.Count;
-                if (item.Count == 0)
-                {
-                    GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough weight.", ChatType.System);
-                    return;
-                }
+                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.NoBagSpace, ChatType.System);
+                item.Count = 0;
+                return;
             }
 
             if (item.Info.StackSize > 1)

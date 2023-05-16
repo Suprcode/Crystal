@@ -938,7 +938,7 @@ namespace Server.MirObjects
 
                     if (CheckGroupQuestItem(item)) continue;
 
-                    if (CanGainItem(item, false))
+                    if (CanGainItem(item))
                     {
                         GainItem(item);
                         Report.ItemChanged(item, item.Count, 2);
@@ -2475,6 +2475,11 @@ namespace Server.MirObjects
         }
         public bool Run(MirDirection dir)
         {
+            if (CurrentBagWeight > Stats[Stat.BagWeight])
+            {
+                Walk(dir);
+            }
+
             var steps = RidingMount || ActiveSwiftFeet && !Sneaking ? 3 : 2;
 
             if (!CanMove || !CanWalk || !CanRun)
@@ -7401,12 +7406,15 @@ namespace Server.MirObjects
             */
             return 0;
         }
-        public bool CanGainItem(UserItem item, bool useWeight = true)
+        public bool CanGainItem(UserItem item)
         {
+            if (FreeSpace(Info.Inventory) > 0)
+            {
+                return true;
+            }
+
             if (item.Info.Type == ItemType.Amulet)
             {
-                if (FreeSpace(Info.Inventory) > 0 && (CurrentBagWeight + item.Weight <= Stats[Stat.BagWeight] || !useWeight)) return true;
-
                 ushort count = item.Count;
 
                 for (int i = 0; i < Info.Inventory.Length; i++)
@@ -7422,10 +7430,6 @@ namespace Server.MirObjects
 
                 return false;
             }
-
-            if (useWeight && CurrentBagWeight + (item.Weight) > Stats[Stat.BagWeight]) return false;
-
-            if (FreeSpace(Info.Inventory) > 0) return true;
 
             if (item.Info.StackSize > 1)
             {
@@ -7448,7 +7452,6 @@ namespace Server.MirObjects
         public bool CanGainItems(UserItem[] items)
         {
             int itemCount = items.Count(e => e != null);
-            int itemWeight = 0;
             ushort stackOffset = 0;
 
             if (itemCount < 1) return true;
@@ -7456,8 +7459,6 @@ namespace Server.MirObjects
             for (int i = 0; i < items.Length; i++)
             {
                 if (items[i] == null) continue;
-
-                itemWeight += items[i].Weight;
 
                 if (items[i].Info.StackSize > 1)
                 {
@@ -7476,7 +7477,6 @@ namespace Server.MirObjects
                 }
             }
 
-            if (CurrentBagWeight + (itemWeight) > Stats[Stat.BagWeight]) return false;
             if (FreeSpace(Info.Inventory) < itemCount + stackOffset) return false;
 
             return true;
