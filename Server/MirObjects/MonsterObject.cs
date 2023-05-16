@@ -1,6 +1,7 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirObjects.Monsters;
+using System.Diagnostics.Eventing.Reader;
 using S = ServerPackets;
 
 namespace Server.MirObjects
@@ -1717,12 +1718,36 @@ namespace Server.MirObjects
                             {
                                 case ObjectType.Monster:
                                 case ObjectType.Hero:
+
                                     if (!ob.IsAttackTarget(this)) continue;
                                     if (ob.Hidden && (!CoolEye || Level < ob.Level)) continue;
                                     if (this is TrapRock && ob.InTrapRock) continue;
-                                    Target = ob;
-                                    return;
+
+                                    if (ob.Race == ObjectType.Monster && 
+                                        ob is StoneTrap)
+                                    {
+                                        if (Target is null || 
+                                            (Target is not null &&
+                                            Target is not StoneTrap))
+                                        {
+                                            Target = ob;
+                                        }
+                                        
+                                        return;
+                                    }
+                                    else
+                                    {
+                                        Target ??= ob;
+                                    }
+                                    continue;
+                                    
                                 case ObjectType.Player:
+
+                                    if (Target != null)
+                                    {
+                                        continue;
+                                    }
+
                                     PlayerObject playerob = (PlayerObject)ob;
                                     if (!ob.IsAttackTarget(this)) continue;
                                     if (playerob.GMGameMaster || ob.Hidden && (!CoolEye || Level < ob.Level) || Envir.Time < HallucinationTime) continue;
@@ -1740,7 +1765,7 @@ namespace Server.MirObjects
                                             break;
                                         }
                                     }
-                                    return;
+                                    continue;
                                 default:
                                     continue;
                             }
