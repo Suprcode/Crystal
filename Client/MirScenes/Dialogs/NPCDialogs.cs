@@ -732,12 +732,6 @@ namespace Client.MirScenes.Dialogs
                     return;
                 }
 
-                if (SelectedItem.Weight > (MapObject.User.Stats[Stat.BagWeight] - MapObject.User.CurrentBagWeight))
-                {
-                    GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough weight.", ChatType.System);
-                    return;
-                }
-
                 for (int i = 0; i < MapObject.User.Inventory.Length; i++)
                 {
                     if (MapObject.User.Inventory[i] == null) break;
@@ -1978,12 +1972,6 @@ namespace Client.MirScenes.Dialogs
 
             //TODO - Check Max slots spare against slots to be used (stacksize/quantity)
             //TODO - GetMaxItemGain
-
-            if (RecipeItem.Weight > (MapObject.User.Stats[Stat.BagWeight] - MapObject.User.CurrentBagWeight))
-            {
-                GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough weight.", ChatType.System);
-                return;
-            }
 
             if (max == 1)
             {

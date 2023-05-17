@@ -4212,7 +4212,7 @@ namespace ServerPackets
          * 2: Already Sold.
          * 3: Expired.
          * 4: Not enough Gold.
-         * 5: Too heavy or not enough bag space.
+         * 5: Not enough bag space.
          * 6: You cannot buy your own items.
          * 7: Trust Merchant is too far.
          * 8: Too much Gold.
