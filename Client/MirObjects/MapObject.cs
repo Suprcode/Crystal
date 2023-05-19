@@ -190,11 +190,19 @@ namespace Client.MirObjects
             if (MagicObjectID == ObjectID)
                 MagicObject = this;
 
-            /*if (TargetObject == null)
+            if (!this.Dead &&
+                TargetObject == null &&
+                LastTargetObjectId == ObjectID)
             {
-                if (lastTargetObjectId == ObjectID)
-                    TargetObject = this;
-            }*/
+                switch (Race)
+                {
+                    case ObjectType.Player:
+                    case ObjectType.Monster:
+                    case ObjectType.Hero:
+                        TargetObject = this;
+                        break;
+                }
+            }
         }
 
         public void AddBuffEffect(BuffType type)

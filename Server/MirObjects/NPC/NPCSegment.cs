@@ -2940,7 +2940,7 @@ namespace Server.MirObjects
                                     item.Count = item.Info.StackSize;
                                 }
 
-                                if (player.CanGainItem(item, false))
+                                if (player.CanGainItem(item))
                                     player.GainItem(item);
                             }
                         }
@@ -4064,7 +4064,7 @@ namespace Server.MirObjects
 
                                         if (drop.QuestRequired) continue;
 
-                                        if (player.CanGainItem(item, false))
+                                        if (player.CanGainItem(item))
                                         {
                                             player.GainItem(item);
                                         }

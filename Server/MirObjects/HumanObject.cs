@@ -1,6 +1,7 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirNetwork;
+using Server.MirObjects.Monsters;
 using System.Numerics;
 using S = ServerPackets;
 
@@ -938,7 +939,7 @@ namespace Server.MirObjects
 
                     if (CheckGroupQuestItem(item)) continue;
 
-                    if (CanGainItem(item, false))
+                    if (CanGainItem(item))
                     {
                         GainItem(item);
                         Report.ItemChanged(item, item.Count, 2);
@@ -2475,6 +2476,11 @@ namespace Server.MirObjects
         }
         public bool Run(MirDirection dir)
         {
+            if (CurrentBagWeight > Stats[Stat.BagWeight])
+            {
+                Walk(dir);
+            }
+
             var steps = RidingMount || ActiveSwiftFeet && !Sneaking ? 3 : 2;
 
             if (!CanMove || !CanWalk || !CanRun)
@@ -5590,14 +5596,29 @@ namespace Server.MirObjects
         public void ArcherSummonStone(UserMagic magic, Point location, out bool cast)
         {
             cast = false;
-            if (!CurrentMap.ValidPoint(location)) return;
-            if (!CanFly(location)) return;
-            //if ((Info.MentalState != 1) && !CanFly(location)) return;//
-            uint duration = (uint)((magic.Level * 5 + 10) * 1000);
-            int value = (int)duration;
-            int delay = Functions.MaxDistance(CurrentLocation, location) * 50 + 500; //50 MS per Step          
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, value, location);
+
+            if (!CurrentMap.ValidPoint(location) ||
+                !CanFly(location))
+            {
+                return;
+            }
+
+            if (Pets.Exists(x => x.Info.GameName == Settings.StoneName))
+            {
+                MonsterObject st = Pets.First(x => x.Info.GameName == Settings.StoneName);
+                if (!st.Dead)
+                {
+                    ReceiveChat($"You can only have 1 active {Settings.StoneName} alive.", ChatType.Hint);
+                    return;
+                }
+            }
+
+            int duration = (((magic.Level * 5) + 10) * 1000);
+            int delay = Functions.MaxDistance(CurrentLocation, location) * 50 + 500; //50 MS per Step
+                                                                                     //
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, duration, location);
             ActionList.Add(action);
+
             cast = true;
         }
 
@@ -6556,7 +6577,7 @@ namespace Server.MirObjects
                     break;
                 case Spell.Stonetrap:
                     {
-                        value = (int)data[1];
+                        duration = (int)data[1];
                         location = (Point)data[2];
 
                         if (Pets.Where(x => x.Race == ObjectType.Monster).Count() >= magic.Level + 1) return;
@@ -6572,6 +6593,9 @@ namespace Server.MirObjects
                         monster.MaxPetLevel = (byte)(1 + magic.Level * 2);
                         monster.Direction = Direction;
                         monster.ActionTime = Envir.Time + 1000;
+
+                        StoneTrap st = monster as StoneTrap;
+                        st.DieTime = Envir.Time + duration;
 
                         DelayedAction act = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, monster, location);
                         CurrentMap.ActionList.Add(act);
@@ -7401,12 +7425,15 @@ namespace Server.MirObjects
             */
             return 0;
         }
-        public bool CanGainItem(UserItem item, bool useWeight = true)
+        public bool CanGainItem(UserItem item)
         {
+            if (FreeSpace(Info.Inventory) > 0)
+            {
+                return true;
+            }
+
             if (item.Info.Type == ItemType.Amulet)
             {
-                if (FreeSpace(Info.Inventory) > 0 && (CurrentBagWeight + item.Weight <= Stats[Stat.BagWeight] || !useWeight)) return true;
-
                 ushort count = item.Count;
 
                 for (int i = 0; i < Info.Inventory.Length; i++)
@@ -7422,10 +7449,6 @@ namespace Server.MirObjects
 
                 return false;
             }
-
-            if (useWeight && CurrentBagWeight + (item.Weight) > Stats[Stat.BagWeight]) return false;
-
-            if (FreeSpace(Info.Inventory) > 0) return true;
 
             if (item.Info.StackSize > 1)
             {
@@ -7448,7 +7471,6 @@ namespace Server.MirObjects
         public bool CanGainItems(UserItem[] items)
         {
             int itemCount = items.Count(e => e != null);
-            int itemWeight = 0;
             ushort stackOffset = 0;
 
             if (itemCount < 1) return true;
@@ -7456,8 +7478,6 @@ namespace Server.MirObjects
             for (int i = 0; i < items.Length; i++)
             {
                 if (items[i] == null) continue;
-
-                itemWeight += items[i].Weight;
 
                 if (items[i].Info.StackSize > 1)
                 {
@@ -7476,7 +7496,6 @@ namespace Server.MirObjects
                 }
             }
 
-            if (CurrentBagWeight + (itemWeight) > Stats[Stat.BagWeight]) return false;
             if (FreeSpace(Info.Inventory) < itemCount + stackOffset) return false;
 
             return true;

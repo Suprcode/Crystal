@@ -200,7 +200,6 @@ namespace Server.MirObjects
 
         }
 
-
         public virtual void Process()
         {
             if (Master != null && Master.Node == null) Master = null;

@@ -15,6 +15,7 @@ namespace Client.MirSounds.Libraries
         private WaveOutEvent outputDevice;
         private AudioFileReader audioFile;
 
+        private int _unscaledVolume;
         private string _fileName;
         private bool _loop;
         private bool _isDisposing;
@@ -110,7 +111,7 @@ namespace Client.MirSounds.Libraries
             if (_loop &&
                 !_isDisposing)
             {
-                outputDevice.Play();
+                    Play(_unscaledVolume);
             }
         }
 
@@ -124,6 +125,8 @@ namespace Client.MirSounds.Libraries
 
         private float ScaleVolume(int volume)
         {
+            _unscaledVolume = volume;
+
             float scaled = 0.0f + (float)(volume - 0) / (100 - 0) * (1.0f - 0.0f);
             return scaled;
         }
