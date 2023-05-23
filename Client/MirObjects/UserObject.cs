@@ -716,93 +716,58 @@ namespace Client.MirObjects
 
         public void GetMaxGain(UserItem item)
         {
-            ushort min = 0;
-            ushort max = item.Count;
+            int freeSpace = FreeSpace(Inventory);
 
-            if (item.Info.Type == ItemType.Amulet)
+            if (freeSpace > 0)
             {
-                for (int i = 0; i < Inventory.Length; i++)
+                return;
+            }
+
+            ushort canGain = 0;
+
+            foreach (UserItem inventoryItem in Inventory)
+            {
+                if (inventoryItem.Info != item.Info)
                 {
-                    UserItem bagItem = Inventory[i];
-
-                    if (bagItem == null || bagItem.Info != item.Info) continue;
-
-                    if (bagItem.Count + item.Count <= bagItem.Info.StackSize)
-                    {
-                        item.Count = max;
-                        return;
-                    }
-                    item.Count = (ushort)(bagItem.Info.StackSize - bagItem.Count);
-                    min += item.Count;
-                    if (min >= max)
-                    {
-                        item.Count = max;
-                        return;
-                    }
+                    continue;
                 }
 
-                if (min == 0 && FreeSpace(Inventory) == 0)
-                {
-                    GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.NoBagSpace, ChatType.System);
+                int availableStack = inventoryItem.Info.StackSize - inventoryItem.Count;
 
-                    item.Count = 0;
+                if (availableStack == 0)
+                {
+                    continue;
+                }
+
+                canGain += (ushort)availableStack;
+
+                if (canGain >= item.Count)
+                {
                     return;
                 }
-
-                item.Count = min;
-                return;
             }
 
-            if (FreeSpace(Inventory) == 0)
+            if (canGain == 0)
             {
-                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.NoBagSpace, ChatType.System);
                 item.Count = 0;
                 return;
             }
 
-            if (item.Info.StackSize > 1)
-            {
-                for (int i = 0; i < Inventory.Length; i++)
-                {
-                    UserItem bagItem = Inventory[i];
-
-                    if (bagItem == null) return;
-                    if (bagItem.Info != item.Info) continue;
-
-                    if (bagItem.Count + item.Count <= bagItem.Info.StackSize)
-                    {
-                        item.Count = max;
-                        return;
-                    }
-
-                    item.Count = (ushort)(bagItem.Info.StackSize - bagItem.Count);
-                    min += item.Count;
-                    if (min >= max)
-                    {
-                        item.Count = max;
-                        return;
-                    }
-                }
-
-                if (min == 0)
-                {
-                    GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.NoBagSpace, ChatType.System);
-                    item.Count = 0;
-                }
-            }
-            else
-            {
-                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.NoBagSpace, ChatType.System);
-                item.Count = 0;
-            }
-
+            item.Count = canGain;
         }
         private int FreeSpace(UserItem[] array)
         {
-            int count = 0;
-            for (int i = 0; i < array.Length; i++)
-                count++;
-            return count;
+            int freeSlots = 0;
+
+            foreach (UserItem slot in array)
+            {
+                if (slot == null)
+                {
+                    freeSlots++;
+                }
+            }
+
+            return freeSlots;
         }
 
         public override void SetAction()
