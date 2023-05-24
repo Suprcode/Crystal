@@ -705,14 +705,24 @@ namespace Client.MirScenes.Dialogs
 
                 MapObject.User.GetMaxGain(SelectedItem);
 
+                if (SelectedItem.Count == 0)
+                {
+                    SelectedItem.Count = tempCount;
+                    GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.NoBagSpace, ChatType.System);
+                    return;
+                }
+
+                if (SelectedItem.Count < maxQuantity)
+                {
+                    maxQuantity = SelectedItem.Count;
+                }
+
                 if (SelectedItem.Count > tempCount)
                 {
                     SelectedItem.Count = tempCount;
                 }
 
-                if (SelectedItem.Count == 0) return;
-
-                MirAmountBox amountBox = new MirAmountBox("Purchase Amount:", SelectedItem.Image, maxQuantity, 0, SelectedItem.Count);
+                MirAmountBox amountBox = new("Purchase Amount:", SelectedItem.Image, maxQuantity, 0, SelectedItem.Count);
 
                 amountBox.OKButton.Click += (o, e) =>
                 {
@@ -737,7 +747,7 @@ namespace Client.MirScenes.Dialogs
                     if (MapObject.User.Inventory[i] == null) break;
                     if (i == MapObject.User.Inventory.Length - 1)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("You cannot purchase any more items.", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.NoBagSpace, ChatType.System);
                         return;
                     }
                 }
