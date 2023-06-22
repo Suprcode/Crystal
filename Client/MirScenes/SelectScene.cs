@@ -472,6 +472,9 @@ namespace Client.MirScenes
                     switch (Settings.Resolution)
                     {
                         default:
+                        case 800:
+                            CMain.SetResolution(800, 600);
+                            break;
                         case 1024:
                             Settings.Resolution = 1024;
                             CMain.SetResolution(1024, 768);

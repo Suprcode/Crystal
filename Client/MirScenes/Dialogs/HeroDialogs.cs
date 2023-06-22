@@ -392,9 +392,14 @@ namespace Client.MirScenes.Dialogs
             Library = Libraries.Prguse;
             Size = new Size(24, 61);
             Parent = parent;
-
-            Location = new Point(((Settings.ScreenWidth / 2) - (Size.Width / 2)) + 362, Settings.ScreenHeight - Size.Height - 77);
-
+            if (GameScene.Scene.Size.Width < 1024)
+            {
+                Location = new Point(639, 464);
+            }
+            else
+            {
+                Location = new Point(((Settings.ScreenWidth / 2) - (Size.Width / 2)) + 362, Settings.ScreenHeight - Size.Height - 77);
+            }
             HeroMagicsButton = new MirButton
             {
                 Index = 2173,
