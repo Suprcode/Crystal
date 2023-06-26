@@ -5,6 +5,8 @@ using Server.MirNetwork;
 using S = ServerPackets;
 using System.Text.RegularExpressions;
 using Timer = Server.MirEnvir.Timer;
+using Server.MirObjects.Monsters;
+using System.Threading;
 
 namespace Server.MirObjects
 {
@@ -1434,6 +1436,7 @@ namespace Server.MirObjects
             ServerPacketIds.ObjectWalk,
             ServerPacketIds.ObjectRun,
             ServerPacketIds.ObjectAttack,
+            ServerPacketIds.ObjectRangeAttack,
             ServerPacketIds.ObjectMagic,
             ServerPacketIds.ObjectHarvest
         };
@@ -1995,6 +1998,15 @@ namespace Server.MirObjects
                 String hintstring;
                 UserItem item;
 
+                List<int> conquestAIs = new()
+                {
+                    72, // siege gate
+                    73, // gate west
+                    80, // archer
+                    81, // gate 
+                    82  // wall
+                };
+
                 switch (parts[0].ToUpper())
                 {
                     case "LOGIN":
@@ -2131,7 +2143,7 @@ namespace Server.MirObjects
                                 if (hero == null) return;
                                 old = hero.Level;
                                 hero.Level = level;
-                                player.LevelUp();
+                                hero.LevelUp();
 
                                 ReceiveChat(string.Format("Player {0}'s hero has been Leveled {1} -> {2}.", player.Name, old, hero.Level), ChatType.System);
                                 MessageQueue.Enqueue(string.Format("Player {0}'s hero has been Leveled {1} -> {2} by {3}", player.Name, old, hero.Level, Name));
@@ -2168,7 +2180,18 @@ namespace Server.MirObjects
                         {
                             if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 
-                            ItemInfo iInfo = Envir.GetItemInfo(parts[1]);
+                            ItemInfo iInfo;
+                            int itemIndex = 0;
+
+                            if (Int32.TryParse(parts[1], out itemIndex))
+                            {
+                                iInfo = Envir.GetItemInfo(itemIndex);
+                            }
+                            else
+                            {
+                                iInfo = Envir.GetItemInfo(parts[1]);
+                            }
+
                             if (iInfo == null) return;
 
                             ushort itemCount = 1;
@@ -2184,7 +2207,7 @@ namespace Server.MirObjects
                                     item = Envir.CreateDropItem(iInfo);
                                     item.Count = itemCount;
 
-                                    if (CanGainItem(item, false)) GainItem(item);
+                                    if (CanGainItem(item)) GainItem(item);
 
                                     return;
                                 }
@@ -2192,7 +2215,7 @@ namespace Server.MirObjects
                                 item.Count = iInfo.StackSize;
                                 itemCount -= iInfo.StackSize;
 
-                                if (!CanGainItem(item, false)) return;
+                                if (!CanGainItem(item)) return;
                                 GainItem(item);
                             }
 
@@ -2725,10 +2748,27 @@ namespace Server.MirObjects
                             return;
                         }
 
-                        MonsterInfo mInfo = Envir.GetMonsterInfo(parts[1]);
+                        MonsterInfo mInfo = null;
+                        int monsterIndex = 0;
+
+                        if (Int32.TryParse(parts[1], out monsterIndex))
+                        {
+                            mInfo = Envir.GetMonsterInfo(monsterIndex, false);
+                        }
+                        else
+                        {
+                            mInfo = Envir.GetMonsterInfo(parts[1]);
+                        }
+
                         if (mInfo == null)
                         {
                             ReceiveChat((string.Format("Monster {0} does not exist", parts[1])), ChatType.System);
+                            return;
+                        }
+
+                        if (conquestAIs.Contains(mInfo.AI))
+                        {
+                            ReceiveChat($"Cannot spawn conquest item: {mInfo.Name}", ChatType.System);
                             return;
                         }
 
@@ -2742,7 +2782,17 @@ namespace Server.MirObjects
                         for (int i = 0; i < count; i++)
                         {
                             MonsterObject monster = MonsterObject.GetMonster(mInfo);
-                            if (monster == null) return;
+                            if (monster == null)
+                            {
+                                return;
+                            }
+
+                            if (monster is IntelligentCreatureObject)
+                            {
+                                ReceiveChat("Cannot spawn an IntelligentCreatureObject.", ChatType.System);
+                                return;
+                            }
+
                             if (spread == 0)
                                 monster.Spawn(CurrentMap, Front);
                             else
@@ -2757,7 +2807,18 @@ namespace Server.MirObjects
                     case "RECALLMOB":
                         if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
 
-                        MonsterInfo mInfo2 = Envir.GetMonsterInfo(parts[1]);
+                        MonsterInfo mInfo2 = null;
+                        int monsterIndex2 = 0;
+
+                        if (Int32.TryParse(parts[1], out monsterIndex2))
+                        {
+                            mInfo2 = Envir.GetMonsterInfo(monsterIndex2, false);
+                        }
+                        else
+                        {
+                            mInfo2 = Envir.GetMonsterInfo(parts[1]);
+                        }
+
                         if (mInfo2 == null) return;
 
                         count = 1;
@@ -2774,7 +2835,20 @@ namespace Server.MirObjects
                         for (int i = 0; i < count; i++)
                         {
                             MonsterObject monster = MonsterObject.GetMonster(mInfo2);
+
                             if (monster == null) return;
+
+                            if (conquestAIs.Contains(monster.Info.AI))
+                            {
+                                ReceiveChat($"Cannot spawn conquest item: {monster.Name}", ChatType.System);
+                                return;
+                            }
+                            else if (monster is IntelligentCreatureObject)
+                            {
+                                ReceiveChat($"Cannot spawn an IntelligentCreatureObject.", ChatType.System);
+                                return;
+                            }
+
                             monster.PetLevel = petlevel;
                             monster.Master = this;
                             monster.MaxPetLevel = 7;
@@ -3583,7 +3657,18 @@ namespace Server.MirObjects
                             MessageQueue.Enqueue(string.Format("{0} War Started.", tempConq.Info.Name));
 
                             foreach (var pl in Envir.Players)
+                            {
+                                if (tempConq.WarIsOn)
+                                {
+                                    pl.ReceiveChat($"{tempConq.Info.Name} War Started.", ChatType.System);
+                                }
+                                else
+                                {
+                                    pl.ReceiveChat($"{tempConq.Info.Name} War Stopped.", ChatType.System);
+                                }
+
                                 pl.BroadcastInfo();
+                            }
                         }
                         break;
                     case "RESETCONQUEST":
@@ -5076,13 +5161,6 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (temp.Weight + CurrentBagWeight > Stats[Stat.BagWeight])
-            {
-                ReceiveChat("Too heavy to get back.", ChatType.System);
-                Enqueue(p);
-                return;
-            }
-
             if (Info.Inventory[to] == null)
             {
                 Info.Inventory[to] = temp;
@@ -5276,13 +5354,6 @@ namespace Server.MirObjects
 
             if (temp == null)
             {
-                Enqueue(p);
-                return;
-            }
-
-            if (temp.Weight + CurrentBagWeight > Stats[Stat.BagWeight])
-            {
-                ReceiveChat("Too heavy to transfer.", ChatType.System);
                 Enqueue(p);
                 return;
             }
@@ -9392,12 +9463,6 @@ namespace Server.MirObjects
                         Enqueue(p);
                         return;
                     }
-                    if (Stats[Stat.BagWeight] < CurrentBagWeight + MyGuild.StoredItems[from].Item.Weight)
-                    {
-                        ReceiveChat("Too overweight to retrieve item.", ChatType.System);
-                        Enqueue(p);
-                        return;
-                    }
                     if (MyGuild.StoredItems[from].Item.Info.Bind.HasFlag(BindMode.DontStore))
                     {
                         Enqueue(p);
@@ -9654,13 +9719,6 @@ namespace Server.MirObjects
 
             if (temp == null)
             {
-                Enqueue(p);
-                return;
-            }
-
-            if (temp.Weight + CurrentBagWeight > Stats[Stat.BagWeight])
-            {
-                ReceiveChat("Too heavy to get back.", ChatType.System);
                 Enqueue(p);
                 return;
             }
@@ -11255,7 +11313,7 @@ namespace Server.MirObjects
             UserItem item = Envir.CreateDropItem(iInfo);
             item.Count = 1;
 
-            if (!CanGainItem(item, false))
+            if (!CanGainItem(item))
             {
                 MailInfo mail = new MailInfo(Info.Index)
                 {
@@ -11594,13 +11652,6 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (temp.Weight + CurrentBagWeight > Stats[Stat.BagWeight])
-            {
-                ReceiveChat("Too heavy to get back.", ChatType.System);
-                Enqueue(p);
-                return;
-            }
-
             if (Info.Inventory[to] == null)
             {
                 Info.Inventory[to] = temp;
@@ -11885,14 +11936,6 @@ namespace Server.MirObjects
             if (Info.CollectTime > Envir.Time)
             {
                 ReceiveChat(string.Format("Your {0} will be ready to collect in {1} minute(s).", Info.CurrentRefine.FriendlyName, ((Info.CollectTime - Envir.Time) / Settings.Minute)), ChatType.System);
-                Enqueue(p);
-                return;
-            }
-
-
-            if (Info.CurrentRefine.Info.Weight + CurrentBagWeight > Stats[Stat.BagWeight])
-            {
-                ReceiveChat(string.Format("Your {0} is too heavy to get back, try again after reducing your bag weight.", Info.CurrentRefine.FriendlyName), ChatType.System);
                 Enqueue(p);
                 return;
             }
@@ -13214,13 +13257,6 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (item.Weight + CurrentBagWeight > Stats[Stat.BagWeight])
-            {
-                ReceiveChat("Item is too heavy to retrieve.", ChatType.System);
-                Enqueue(packet);
-                return;
-            }
-
             if (Info.Inventory[to] == null)
             {
                 Info.Inventory[to] = item;
@@ -13605,7 +13641,7 @@ namespace Server.MirObjects
 
             UserItem item = Envir.CreateFreshItem(itemInfo);            
             item.AddedStats[Stat.Hero] = CurrentHero.Index;
-            if (CanGainItem(item, false))
+            if (CanGainItem(item))
                 GainItem(item);
 
             CurrentHero.SealCount++;

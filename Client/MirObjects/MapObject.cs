@@ -29,7 +29,8 @@ namespace Client.MirObjects
             }
         }
 
-        private static uint lastTargetObjectId, targetObjectID;
+        private static uint lastTargetObjectId;
+        private static uint targetObjectID;
         public static uint TargetObjectID
         {
             get { return targetObjectID; }
@@ -97,6 +98,8 @@ namespace Client.MirObjects
                 percentMana = value;
             }
         }
+
+        public uint LastTargetObjectId => lastTargetObjectId;
 
         public List<QueuedAction> ActionFeed = new List<QueuedAction>();
         public QueuedAction NextAction
@@ -187,11 +190,19 @@ namespace Client.MirObjects
             if (MagicObjectID == ObjectID)
                 MagicObject = this;
 
-            /*if (TargetObject == null)
+            if (!this.Dead &&
+                TargetObject == null &&
+                LastTargetObjectId == ObjectID)
             {
-                if (lastTargetObjectId == ObjectID)
-                    TargetObject = this;
-            }*/
+                switch (Race)
+                {
+                    case ObjectType.Player:
+                    case ObjectType.Monster:
+                    case ObjectType.Hero:
+                        TargetObject = this;
+                        break;
+                }
+            }
         }
 
         public void AddBuffEffect(BuffType type)

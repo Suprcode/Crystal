@@ -577,7 +577,7 @@ namespace ServerPackets
             Experience = reader.ReadInt64();
             MaxExperience = reader.ReadInt64();
 
-            LevelEffects = (LevelEffects)reader.ReadByte();
+            LevelEffects = (LevelEffects)reader.ReadUInt16();
             HasHero = reader.ReadBoolean();
             HeroBehaviour = (HeroBehaviour)reader.ReadByte();
 
@@ -656,7 +656,7 @@ namespace ServerPackets
             writer.Write(Experience);
             writer.Write(MaxExperience);
 
-            writer.Write((byte)LevelEffects);
+            writer.Write((ushort)LevelEffects);
             writer.Write(HasHero);
             writer.Write((byte)HeroBehaviour);
 
@@ -897,7 +897,7 @@ namespace ServerPackets
                 Buffs.Add((BuffType)reader.ReadByte());
             }
 
-            LevelEffects = (LevelEffects)reader.ReadByte();
+            LevelEffects = (LevelEffects)reader.ReadUInt16();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -940,7 +940,7 @@ namespace ServerPackets
                 writer.Write((byte)Buffs[i]);
             }
 
-            writer.Write((byte)LevelEffects);
+            writer.Write((ushort)LevelEffects);
         }
     }
 
@@ -4212,7 +4212,7 @@ namespace ServerPackets
          * 2: Already Sold.
          * 3: Expired.
          * 4: Not enough Gold.
-         * 5: Too heavy or not enough bag space.
+         * 5: Not enough bag space.
          * 6: You cannot buy your own items.
          * 7: Trust Merchant is too far.
          * 8: Too much Gold.
@@ -5600,12 +5600,12 @@ namespace ServerPackets
         protected override void ReadPacket(BinaryReader reader)
         {
             ObjectID = reader.ReadUInt32();
-            LevelEffects = (LevelEffects)reader.ReadByte();
+            LevelEffects = (LevelEffects)reader.ReadUInt16();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(ObjectID);
-            writer.Write((byte)LevelEffects);
+            writer.Write((ushort)LevelEffects);
         }
     }
 

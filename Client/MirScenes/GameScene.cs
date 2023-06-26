@@ -9,7 +9,6 @@ using Font = System.Drawing.Font;
 using S = ServerPackets;
 using C = ClientPackets;
 using Effect = Client.MirObjects.Effect;
-
 using Client.MirScenes.Dialogs;
 using Client.Utils;
 
@@ -706,6 +705,9 @@ namespace Client.MirScenes
                     case KeybindOptions.PetmodeNone:
                         Network.Enqueue(new C.ChangePMode { Mode = PetMode.None });
                         return;
+                    case KeybindOptions.PetmodeFocusMasterTarget:
+                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.FocusMasterTarget });
+                        return;
                     case KeybindOptions.CreatureAutoPickup://semiauto!
                         Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = false, Location = MapControl.MapLocation });
                         break;
@@ -818,6 +820,9 @@ namespace Client.MirScenes
                     Network.Enqueue(new C.ChangePMode { Mode = PetMode.None });
                     return;
                 case PetMode.None:
+                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.FocusMasterTarget });
+                    return;
+                case PetMode.FocusMasterTarget:
                     Network.Enqueue(new C.ChangePMode { Mode = PetMode.Both });
                     return;
             }
@@ -3142,6 +3147,9 @@ namespace Client.MirScenes
                 case PetMode.None:
                     ChatDialog.ReceiveChat(GameLanguage.PetMode_None, ChatType.Hint);
                     break;
+                case PetMode.FocusMasterTarget:
+                    ChatDialog.ReceiveChat(GameLanguage.PetMode_FocusMasterTarget, ChatType.Hint);
+                    break;
             }
         }
 
@@ -4089,6 +4097,11 @@ namespace Client.MirScenes
                             ob.Effects.Add(new Effect(Libraries.Magic, 260, 10, 500, ob));
                             break;
                         }
+                }
+
+                if (p.ObjectID == User.ObjectID)
+                {
+                    User.TargetID = User.LastTargetObjectId;
                 }
 
                 if (playDefaultSound)
@@ -5075,7 +5088,8 @@ namespace Client.MirScenes
 
         private void ObjectRangeAttack(S.ObjectRangeAttack p)
         {
-            if (p.ObjectID == User.ObjectID) return;
+            if (p.ObjectID == User.ObjectID &&
+                !Observing) return;
 
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -10389,11 +10403,7 @@ namespace Client.MirScenes
             {
                 if (SetMusic != Music)
                 {
-                    if (SoundManager.Music != null)
-                    {
-                        SoundManager.Music.Dispose();
-                    }
-
+                    SoundManager.Music?.Dispose();
                     SoundManager.PlayMusic(Music, true);
                 }
             }
@@ -11943,7 +11953,7 @@ namespace Client.MirScenes
             }
             else
             {
-                Network.Enqueue(new C.Magic { ObjectID = actor.ObjectID, Spell = magic.Spell, Direction = dir, TargetID = targetID, Location = location });
+                Network.Enqueue(new C.Magic { ObjectID = actor.ObjectID, Spell = magic.Spell, Direction = dir, TargetID = targetID, Location = location, SpellTargetLock = CMain.SpellTargetLock });
             }
         }
 

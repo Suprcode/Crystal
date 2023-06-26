@@ -418,6 +418,9 @@ namespace Client.MirScenes.Dialogs
                 case PetMode.None:
                     PModeLabel.Text = GameLanguage.PetMode_None;
                     break;
+                case PetMode.FocusMasterTarget:
+                    PModeLabel.Text = GameLanguage.PetMode_FocusMasterTarget;
+                    break;
             }
 
             switch (Settings.SkillMode)
@@ -2712,7 +2715,6 @@ namespace Client.MirScenes.Dialogs
             };
             MusicSoundBar.MouseDown += MusicSoundBar_MouseMove;
             MusicSoundBar.MouseMove += MusicSoundBar_MouseMove;
-            MusicSoundBar.MouseUp += MusicSoundBar_MouseUp;
             MusicSoundBar.BeforeDraw += MusicSoundBar_BeforeDraw;
 
             MusicVolumeBar = new MirImageControl
@@ -2810,8 +2812,10 @@ namespace Client.MirScenes.Dialogs
             byte volume = (byte)(p.X / (double)SoundBar.Size.Width * 100);
             Settings.Volume = volume;
 
-
             double percent = Settings.Volume / 100D;
+
+            SoundBar.Hint = $"{Settings.Volume}%";
+
             if (percent > 1) percent = 1;
 
             VolumeBar.Location = percent > 0 ? new Point(159 + (int)((SoundBar.Size.Width - 2) * percent), 218) : new Point(159, 218);
@@ -2822,6 +2826,9 @@ namespace Client.MirScenes.Dialogs
             if (SoundBar.Library == null) return;
 
             double percent = Settings.Volume / 100D;
+
+            SoundBar.Hint = $"{Settings.Volume}%";
+
             if (percent > 1) percent = 1;
             if (percent > 0)
             {
@@ -2842,6 +2849,9 @@ namespace Client.MirScenes.Dialogs
             if (MusicSoundBar.Library == null) return;
 
             double percent = Settings.MusicVolume / 100D;
+
+            MusicSoundBar.Hint = $"{Settings.MusicVolume}%";
+
             if (percent > 1) percent = 1;
             if (percent > 0)
             {
@@ -2857,24 +2867,6 @@ namespace Client.MirScenes.Dialogs
                 MusicVolumeBar.Location = new Point(159, 244);
         }
 
-        public void MusicSoundBar_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (SoundManager.MusicVol <= -2900)
-                SoundManager.MusicVol = -3000;
-            if (SoundManager.MusicVol >= -100)
-                SoundManager.MusicVol = 0;
-
-
-            //SoundManager.Device.Dispose();
-            //SoundManager.Create();
-            //SoundManager.PlayMusic(SoundList.Music, true);
-
-            if (SoundManager.Music == null) return;
-
-            SoundManager.Music.SetVolume(SoundManager.MusicVol);
-
-        }
-
         private void MusicSoundBar_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left || MusicSoundBar != ActiveControl) return;
@@ -2884,8 +2876,10 @@ namespace Client.MirScenes.Dialogs
             byte volume = (byte)(p.X / (double)MusicSoundBar.Size.Width * 100);
             Settings.MusicVolume = volume;
 
-
             double percent = Settings.MusicVolume / 100D;
+
+            MusicSoundBar.Hint = $"{Settings.MusicVolume}%";
+
             if (percent > 1) percent = 1;
 
             MusicVolumeBar.Location = percent > 0 ? new Point(159 + (int)((MusicSoundBar.Size.Width - 2) * percent), 244) : new Point(159, 244);

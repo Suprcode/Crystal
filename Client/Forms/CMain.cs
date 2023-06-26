@@ -42,7 +42,7 @@ namespace Client
         public static long PingTime;
         public static long NextPing = 10000;
 
-        public static bool Shift, Alt, Ctrl, Tilde;
+        public static bool Shift, Alt, Ctrl, Tilde, SpellTargetLock;
         public static double BytesSent, BytesReceived;
 
         public static KeyBindSettings InputKeys = new KeyBindSettings();
@@ -87,6 +87,8 @@ namespace Client
                 LoadMouseCursors();
                 SetMouseCursor(MouseCursor.Default);
 
+                SlimDX.Configuration.EnableObjectTracking = true;
+
                 DXManager.Create();
                 SoundManager.Create();
                 CenterToScreen();
@@ -125,6 +127,7 @@ namespace Client
             Alt = false;
             Ctrl = false;
             Tilde = false;
+            SpellTargetLock = false;
         }
 
         public static void CMain_KeyDown(object sender, KeyEventArgs e)
@@ -132,6 +135,16 @@ namespace Client
             Shift = e.Shift;
             Alt = e.Alt;
             Ctrl = e.Control;
+
+            if (!String.IsNullOrEmpty(InputKeys.GetKey(KeybindOptions.TargetSpellLockOn)))
+            {
+                SpellTargetLock = e.KeyCode == (Keys)Enum.Parse(typeof(Keys), InputKeys.GetKey(KeybindOptions.TargetSpellLockOn), true);
+            }
+            else
+            {
+                SpellTargetLock = false;
+            }
+
 
             if (e.KeyCode == Keys.Oem8)
                 CMain.Tilde = true;
@@ -175,6 +188,15 @@ namespace Client
             Shift = e.Shift;
             Alt = e.Alt;
             Ctrl = e.Control;
+
+            if (!String.IsNullOrEmpty(InputKeys.GetKey(KeybindOptions.TargetSpellLockOn)))
+            {
+                SpellTargetLock = e.KeyCode == (Keys)Enum.Parse(typeof(Keys), InputKeys.GetKey(KeybindOptions.TargetSpellLockOn), true);
+            }
+            else
+            {
+                SpellTargetLock = false;
+            }
 
             if (e.KeyCode == Keys.Oem8)
                 CMain.Tilde = false;
@@ -676,6 +698,13 @@ namespace Client
             {
                 GameScene.Scene.ChatDialog.ReceiveChat(string.Format(GameLanguage.CannotLeaveGame, (GameScene.LogTime - CMain.Time) / 1000), ChatType.System);
                 e.Cancel = true;
+            }
+            else
+            {
+                Settings.Save();
+
+                DXManager.Dispose();
+                SoundManager.Dispose();
             }
         }
 

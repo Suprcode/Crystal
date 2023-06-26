@@ -28,754 +28,724 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.TeleportToCheckBox = new System.Windows.Forms.CheckBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.BigMapIconTextBox = new System.Windows.Forms.TextBox();
-            this.ShowBigMapCheckBox = new System.Windows.Forms.CheckBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.ConquestHidden_combo = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.MapComboBox = new System.Windows.Forms.ComboBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.OpenNButton = new System.Windows.Forms.Button();
-            this.NFileNameTextBox = new System.Windows.Forms.TextBox();
-            this.label29 = new System.Windows.Forms.Label();
-            this.NRateTextBox = new System.Windows.Forms.TextBox();
-            this.ClearHButton = new System.Windows.Forms.Button();
-            this.NNameTextBox = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.NPCIndexTextBox = new System.Windows.Forms.TextBox();
-            this.label24 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.NImageTextBox = new System.Windows.Forms.TextBox();
-            this.NXTextBox = new System.Windows.Forms.TextBox();
-            this.label28 = new System.Windows.Forms.Label();
-            this.label30 = new System.Windows.Forms.Label();
-            this.NYTextBox = new System.Windows.Forms.TextBox();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.Flag_textbox = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.Day_combo = new System.Windows.Forms.ComboBox();
-            this.Class_combo = new System.Windows.Forms.ComboBox();
-            this.EndMin_num = new System.Windows.Forms.NumericUpDown();
-            this.EndHour_combo = new System.Windows.Forms.ComboBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.StartMin_num = new System.Windows.Forms.NumericUpDown();
-            this.StartHour_combo = new System.Windows.Forms.ComboBox();
-            this.TimeVisible_checkbox = new System.Windows.Forms.CheckBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.MaxLev_textbox = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.MinLev_textbox = new System.Windows.Forms.TextBox();
-            this.RemoveButton = new System.Windows.Forms.Button();
-            this.AddButton = new System.Windows.Forms.Button();
-            this.NPCInfoListBox = new System.Windows.Forms.ListBox();
-            this.PasteMButton = new System.Windows.Forms.Button();
-            this.CopyMButton = new System.Windows.Forms.Button();
-            this.ExportButton = new System.Windows.Forms.Button();
-            this.ImportButton = new System.Windows.Forms.Button();
-            this.ExportSelectedButton = new System.Windows.Forms.Button();
-            this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.EndMin_num)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.StartMin_num)).BeginInit();
-            this.SuspendLayout();
+            tabControl1 = new TabControl();
+            tabPage1 = new TabPage();
+            TeleportToCheckBox = new CheckBox();
+            label15 = new Label();
+            BigMapIconTextBox = new TextBox();
+            ShowBigMapCheckBox = new CheckBox();
+            label14 = new Label();
+            ConquestHidden_combo = new ComboBox();
+            label2 = new Label();
+            MapComboBox = new ComboBox();
+            label11 = new Label();
+            OpenNButton = new Button();
+            NFileNameTextBox = new TextBox();
+            label29 = new Label();
+            NRateTextBox = new TextBox();
+            ClearHButton = new Button();
+            NNameTextBox = new TextBox();
+            label13 = new Label();
+            NPCIndexTextBox = new TextBox();
+            label24 = new Label();
+            label1 = new Label();
+            NImageTextBox = new TextBox();
+            NXTextBox = new TextBox();
+            label28 = new Label();
+            label30 = new Label();
+            NYTextBox = new TextBox();
+            tabPage2 = new TabPage();
+            ConquestVisible_checkbox = new CheckBox();
+            Flag_textbox = new TextBox();
+            label12 = new Label();
+            label10 = new Label();
+            Day_combo = new ComboBox();
+            Class_combo = new ComboBox();
+            EndMin_num = new NumericUpDown();
+            EndHour_combo = new ComboBox();
+            label8 = new Label();
+            label9 = new Label();
+            StartMin_num = new NumericUpDown();
+            StartHour_combo = new ComboBox();
+            TimeVisible_checkbox = new CheckBox();
+            label7 = new Label();
+            MaxLev_textbox = new TextBox();
+            label6 = new Label();
+            label5 = new Label();
+            label4 = new Label();
+            label3 = new Label();
+            MinLev_textbox = new TextBox();
+            RemoveButton = new Button();
+            AddButton = new Button();
+            NPCInfoListBox = new ListBox();
+            PasteMButton = new Button();
+            CopyMButton = new Button();
+            ExportButton = new Button();
+            ImportButton = new Button();
+            ExportSelectedButton = new Button();
+            tabControl1.SuspendLayout();
+            tabPage1.SuspendLayout();
+            tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)EndMin_num).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)StartMin_num).BeginInit();
+            SuspendLayout();
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(255, 41);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(519, 294);
-            this.tabControl1.TabIndex = 16;
+            tabControl1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tabControl1.Controls.Add(tabPage1);
+            tabControl1.Controls.Add(tabPage2);
+            tabControl1.Location = new Point(298, 47);
+            tabControl1.Margin = new Padding(4, 3, 4, 3);
+            tabControl1.Name = "tabControl1";
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new Size(606, 339);
+            tabControl1.TabIndex = 16;
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.TeleportToCheckBox);
-            this.tabPage1.Controls.Add(this.label15);
-            this.tabPage1.Controls.Add(this.BigMapIconTextBox);
-            this.tabPage1.Controls.Add(this.ShowBigMapCheckBox);
-            this.tabPage1.Controls.Add(this.label14);
-            this.tabPage1.Controls.Add(this.ConquestHidden_combo);
-            this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.MapComboBox);
-            this.tabPage1.Controls.Add(this.label11);
-            this.tabPage1.Controls.Add(this.OpenNButton);
-            this.tabPage1.Controls.Add(this.NFileNameTextBox);
-            this.tabPage1.Controls.Add(this.label29);
-            this.tabPage1.Controls.Add(this.NRateTextBox);
-            this.tabPage1.Controls.Add(this.ClearHButton);
-            this.tabPage1.Controls.Add(this.NNameTextBox);
-            this.tabPage1.Controls.Add(this.label13);
-            this.tabPage1.Controls.Add(this.NPCIndexTextBox);
-            this.tabPage1.Controls.Add(this.label24);
-            this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.NImageTextBox);
-            this.tabPage1.Controls.Add(this.NXTextBox);
-            this.tabPage1.Controls.Add(this.label28);
-            this.tabPage1.Controls.Add(this.label30);
-            this.tabPage1.Controls.Add(this.NYTextBox);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(511, 268);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Info";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            tabPage1.Controls.Add(TeleportToCheckBox);
+            tabPage1.Controls.Add(label15);
+            tabPage1.Controls.Add(BigMapIconTextBox);
+            tabPage1.Controls.Add(ShowBigMapCheckBox);
+            tabPage1.Controls.Add(label14);
+            tabPage1.Controls.Add(ConquestHidden_combo);
+            tabPage1.Controls.Add(label2);
+            tabPage1.Controls.Add(MapComboBox);
+            tabPage1.Controls.Add(label11);
+            tabPage1.Controls.Add(OpenNButton);
+            tabPage1.Controls.Add(NFileNameTextBox);
+            tabPage1.Controls.Add(label29);
+            tabPage1.Controls.Add(NRateTextBox);
+            tabPage1.Controls.Add(ClearHButton);
+            tabPage1.Controls.Add(NNameTextBox);
+            tabPage1.Controls.Add(label13);
+            tabPage1.Controls.Add(NPCIndexTextBox);
+            tabPage1.Controls.Add(label24);
+            tabPage1.Controls.Add(label1);
+            tabPage1.Controls.Add(NImageTextBox);
+            tabPage1.Controls.Add(NXTextBox);
+            tabPage1.Controls.Add(label28);
+            tabPage1.Controls.Add(label30);
+            tabPage1.Controls.Add(NYTextBox);
+            tabPage1.Location = new Point(4, 24);
+            tabPage1.Margin = new Padding(4, 3, 4, 3);
+            tabPage1.Name = "tabPage1";
+            tabPage1.Padding = new Padding(4, 3, 4, 3);
+            tabPage1.Size = new Size(598, 311);
+            tabPage1.TabIndex = 0;
+            tabPage1.Text = "Info";
+            tabPage1.UseVisualStyleBackColor = true;
             // 
             // TeleportToCheckBox
             // 
-            this.TeleportToCheckBox.AutoSize = true;
-            this.TeleportToCheckBox.Location = new System.Drawing.Point(251, 232);
-            this.TeleportToCheckBox.Name = "TeleportToCheckBox";
-            this.TeleportToCheckBox.Size = new System.Drawing.Size(103, 17);
-            this.TeleportToCheckBox.TabIndex = 63;
-            this.TeleportToCheckBox.Text = "Can Teleport To";
-            this.TeleportToCheckBox.UseVisualStyleBackColor = true;
-            this.TeleportToCheckBox.CheckedChanged += new System.EventHandler(this.TeleportToCheckBox_CheckedChanged);
+            TeleportToCheckBox.AutoSize = true;
+            TeleportToCheckBox.Location = new Point(293, 268);
+            TeleportToCheckBox.Margin = new Padding(4, 3, 4, 3);
+            TeleportToCheckBox.Name = "TeleportToCheckBox";
+            TeleportToCheckBox.Size = new Size(107, 19);
+            TeleportToCheckBox.TabIndex = 63;
+            TeleportToCheckBox.Text = "Can Teleport To";
+            TeleportToCheckBox.UseVisualStyleBackColor = true;
+            TeleportToCheckBox.CheckedChanged += TeleportToCheckBox_CheckedChanged;
             // 
             // label15
             // 
-            this.label15.AutoSize = true;
-            this.label15.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label15.Location = new System.Drawing.Point(152, 234);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(31, 13);
-            this.label15.TabIndex = 62;
-            this.label15.Text = "Icon:";
+            label15.AutoSize = true;
+            label15.Location = new Point(177, 270);
+            label15.Margin = new Padding(4, 0, 4, 0);
+            label15.Name = "label15";
+            label15.Size = new Size(33, 15);
+            label15.TabIndex = 62;
+            label15.Text = "Icon:";
             // 
             // BigMapIconTextBox
             // 
-            this.BigMapIconTextBox.Location = new System.Drawing.Point(188, 230);
-            this.BigMapIconTextBox.MaxLength = 5;
-            this.BigMapIconTextBox.Name = "BigMapIconTextBox";
-            this.BigMapIconTextBox.Size = new System.Drawing.Size(37, 20);
-            this.BigMapIconTextBox.TabIndex = 61;
-            this.BigMapIconTextBox.TextChanged += new System.EventHandler(this.BigMapIconTextBox_TextChanged);
+            BigMapIconTextBox.Location = new Point(219, 265);
+            BigMapIconTextBox.Margin = new Padding(4, 3, 4, 3);
+            BigMapIconTextBox.MaxLength = 5;
+            BigMapIconTextBox.Name = "BigMapIconTextBox";
+            BigMapIconTextBox.Size = new Size(42, 23);
+            BigMapIconTextBox.TabIndex = 61;
+            BigMapIconTextBox.TextChanged += BigMapIconTextBox_TextChanged;
             // 
             // ShowBigMapCheckBox
             // 
-            this.ShowBigMapCheckBox.AutoSize = true;
-            this.ShowBigMapCheckBox.Location = new System.Drawing.Point(27, 233);
-            this.ShowBigMapCheckBox.Name = "ShowBigMapCheckBox";
-            this.ShowBigMapCheckBox.Size = new System.Drawing.Size(107, 17);
-            this.ShowBigMapCheckBox.TabIndex = 60;
-            this.ShowBigMapCheckBox.Text = "Show on BigMap";
-            this.ShowBigMapCheckBox.UseVisualStyleBackColor = true;
-            this.ShowBigMapCheckBox.CheckedChanged += new System.EventHandler(this.ShowBigMapCheckBox_CheckedChanged);
+            ShowBigMapCheckBox.AutoSize = true;
+            ShowBigMapCheckBox.Location = new Point(31, 269);
+            ShowBigMapCheckBox.Margin = new Padding(4, 3, 4, 3);
+            ShowBigMapCheckBox.Name = "ShowBigMapCheckBox";
+            ShowBigMapCheckBox.Size = new Size(116, 19);
+            ShowBigMapCheckBox.TabIndex = 60;
+            ShowBigMapCheckBox.Text = "Show on BigMap";
+            ShowBigMapCheckBox.UseVisualStyleBackColor = true;
+            ShowBigMapCheckBox.CheckedChanged += ShowBigMapCheckBox_CheckedChanged;
             // 
             // label14
             // 
-            this.label14.AutoSize = true;
-            this.label14.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label14.Location = new System.Drawing.Point(26, 195);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(55, 13);
-            this.label14.TabIndex = 59;
-            this.label14.Text = "Conquest:";
+            label14.AutoSize = true;
+            label14.Location = new Point(30, 225);
+            label14.Margin = new Padding(4, 0, 4, 0);
+            label14.Name = "label14";
+            label14.Size = new Size(61, 15);
+            label14.TabIndex = 59;
+            label14.Text = "Conquest:";
             // 
             // ConquestHidden_combo
             // 
-            this.ConquestHidden_combo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ConquestHidden_combo.FormattingEnabled = true;
-            this.ConquestHidden_combo.Items.AddRange(new object[] {
-            "",
-            "Warrior",
-            "Wizard",
-            "Taoist",
-            "Assassin",
-            "Archer"});
-            this.ConquestHidden_combo.Location = new System.Drawing.Point(87, 191);
-            this.ConquestHidden_combo.Name = "ConquestHidden_combo";
-            this.ConquestHidden_combo.Size = new System.Drawing.Size(132, 21);
-            this.ConquestHidden_combo.TabIndex = 58;
-            this.ConquestHidden_combo.SelectedIndexChanged += new System.EventHandler(this.ConquestHidden_combo_SelectedIndexChanged);
+            ConquestHidden_combo.DropDownStyle = ComboBoxStyle.DropDownList;
+            ConquestHidden_combo.FormattingEnabled = true;
+            ConquestHidden_combo.Items.AddRange(new object[] { "", "Warrior", "Wizard", "Taoist", "Assassin", "Archer" });
+            ConquestHidden_combo.Location = new Point(102, 220);
+            ConquestHidden_combo.Margin = new Padding(4, 3, 4, 3);
+            ConquestHidden_combo.Name = "ConquestHidden_combo";
+            ConquestHidden_combo.Size = new Size(153, 23);
+            ConquestHidden_combo.TabIndex = 58;
+            ConquestHidden_combo.SelectedIndexChanged += ConquestHidden_combo_SelectedIndexChanged;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(50, 87);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(31, 13);
-            this.label2.TabIndex = 32;
-            this.label2.Text = "Map:";
+            label2.AutoSize = true;
+            label2.Location = new Point(58, 100);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(34, 15);
+            label2.TabIndex = 32;
+            label2.Text = "Map:";
             // 
             // MapComboBox
             // 
-            this.MapComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.MapComboBox.FormattingEnabled = true;
-            this.MapComboBox.Location = new System.Drawing.Point(87, 84);
-            this.MapComboBox.Name = "MapComboBox";
-            this.MapComboBox.Size = new System.Drawing.Size(132, 21);
-            this.MapComboBox.TabIndex = 31;
-            this.MapComboBox.SelectedIndexChanged += new System.EventHandler(this.MapComboBox_SelectedIndexChanged);
+            MapComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            MapComboBox.FormattingEnabled = true;
+            MapComboBox.Location = new Point(102, 97);
+            MapComboBox.Margin = new Padding(4, 3, 4, 3);
+            MapComboBox.Name = "MapComboBox";
+            MapComboBox.Size = new Size(153, 23);
+            MapComboBox.TabIndex = 31;
+            MapComboBox.SelectedIndexChanged += MapComboBox_SelectedIndexChanged;
             // 
             // label11
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(24, 35);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(57, 13);
-            this.label11.TabIndex = 23;
-            this.label11.Text = "File Name:";
+            label11.AutoSize = true;
+            label11.Location = new Point(28, 40);
+            label11.Margin = new Padding(4, 0, 4, 0);
+            label11.Name = "label11";
+            label11.Size = new Size(63, 15);
+            label11.TabIndex = 23;
+            label11.Text = "File Name:";
             // 
             // OpenNButton
             // 
-            this.OpenNButton.Location = new System.Drawing.Point(140, 2);
-            this.OpenNButton.Name = "OpenNButton";
-            this.OpenNButton.Size = new System.Drawing.Size(75, 23);
-            this.OpenNButton.TabIndex = 30;
-            this.OpenNButton.Text = "Open Script";
-            this.OpenNButton.UseVisualStyleBackColor = true;
-            this.OpenNButton.Click += new System.EventHandler(this.OpenNButton_Click);
+            OpenNButton.Location = new Point(163, 2);
+            OpenNButton.Margin = new Padding(4, 3, 4, 3);
+            OpenNButton.Name = "OpenNButton";
+            OpenNButton.Size = new Size(88, 27);
+            OpenNButton.TabIndex = 30;
+            OpenNButton.Text = "Open Script";
+            OpenNButton.UseVisualStyleBackColor = true;
+            OpenNButton.Click += OpenNButton_Click;
             // 
             // NFileNameTextBox
             // 
-            this.NFileNameTextBox.Location = new System.Drawing.Point(87, 32);
-            this.NFileNameTextBox.MaxLength = 50;
-            this.NFileNameTextBox.Name = "NFileNameTextBox";
-            this.NFileNameTextBox.Size = new System.Drawing.Size(180, 20);
-            this.NFileNameTextBox.TabIndex = 22;
-            this.NFileNameTextBox.TextChanged += new System.EventHandler(this.NFileNameTextBox_TextChanged);
+            NFileNameTextBox.Location = new Point(102, 37);
+            NFileNameTextBox.Margin = new Padding(4, 3, 4, 3);
+            NFileNameTextBox.MaxLength = 50;
+            NFileNameTextBox.Name = "NFileNameTextBox";
+            NFileNameTextBox.Size = new Size(209, 23);
+            NFileNameTextBox.TabIndex = 22;
+            NFileNameTextBox.TextChanged += NFileNameTextBox_TextChanged;
             // 
             // label29
             // 
-            this.label29.AutoSize = true;
-            this.label29.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label29.Location = new System.Drawing.Point(143, 141);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(33, 13);
-            this.label29.TabIndex = 21;
-            this.label29.Text = "Rate:";
+            label29.AutoSize = true;
+            label29.Location = new Point(167, 163);
+            label29.Margin = new Padding(4, 0, 4, 0);
+            label29.Name = "label29";
+            label29.Size = new Size(33, 15);
+            label29.TabIndex = 21;
+            label29.Text = "Rate:";
             // 
             // NRateTextBox
             // 
-            this.NRateTextBox.Location = new System.Drawing.Point(182, 136);
-            this.NRateTextBox.MaxLength = 3;
-            this.NRateTextBox.Name = "NRateTextBox";
-            this.NRateTextBox.Size = new System.Drawing.Size(37, 20);
-            this.NRateTextBox.TabIndex = 20;
-            this.NRateTextBox.TextChanged += new System.EventHandler(this.NRateTextBox_TextChanged);
+            NRateTextBox.Location = new Point(212, 157);
+            NRateTextBox.Margin = new Padding(4, 3, 4, 3);
+            NRateTextBox.MaxLength = 3;
+            NRateTextBox.Name = "NRateTextBox";
+            NRateTextBox.Size = new Size(42, 23);
+            NRateTextBox.TabIndex = 20;
+            NRateTextBox.TextChanged += NRateTextBox_TextChanged;
             // 
             // ClearHButton
             // 
-            this.ClearHButton.Location = new System.Drawing.Point(155, 162);
-            this.ClearHButton.Name = "ClearHButton";
-            this.ClearHButton.Size = new System.Drawing.Size(75, 23);
-            this.ClearHButton.TabIndex = 19;
-            this.ClearHButton.Text = "Clear History";
-            this.ClearHButton.UseVisualStyleBackColor = true;
+            ClearHButton.Location = new Point(181, 187);
+            ClearHButton.Margin = new Padding(4, 3, 4, 3);
+            ClearHButton.Name = "ClearHButton";
+            ClearHButton.Size = new Size(88, 27);
+            ClearHButton.TabIndex = 19;
+            ClearHButton.Text = "Clear History";
+            ClearHButton.UseVisualStyleBackColor = true;
             // 
             // NNameTextBox
             // 
-            this.NNameTextBox.Location = new System.Drawing.Point(87, 58);
-            this.NNameTextBox.Name = "NNameTextBox";
-            this.NNameTextBox.Size = new System.Drawing.Size(180, 20);
-            this.NNameTextBox.TabIndex = 14;
-            this.NNameTextBox.TextChanged += new System.EventHandler(this.NNameTextBox_TextChanged);
+            NNameTextBox.Location = new Point(102, 67);
+            NNameTextBox.Margin = new Padding(4, 3, 4, 3);
+            NNameTextBox.Name = "NNameTextBox";
+            NNameTextBox.Size = new Size(209, 23);
+            NNameTextBox.TabIndex = 14;
+            NNameTextBox.TextChanged += NNameTextBox_TextChanged;
             // 
             // label13
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(43, 61);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(38, 13);
-            this.label13.TabIndex = 15;
-            this.label13.Text = "Name:";
+            label13.AutoSize = true;
+            label13.Location = new Point(50, 70);
+            label13.Margin = new Padding(4, 0, 4, 0);
+            label13.Name = "label13";
+            label13.Size = new Size(42, 15);
+            label13.TabIndex = 15;
+            label13.Text = "Name:";
             // 
             // NPCIndexTextBox
             // 
-            this.NPCIndexTextBox.Location = new System.Drawing.Point(87, 4);
-            this.NPCIndexTextBox.Name = "NPCIndexTextBox";
-            this.NPCIndexTextBox.ReadOnly = true;
-            this.NPCIndexTextBox.Size = new System.Drawing.Size(47, 20);
-            this.NPCIndexTextBox.TabIndex = 0;
+            NPCIndexTextBox.Location = new Point(102, 5);
+            NPCIndexTextBox.Margin = new Padding(4, 3, 4, 3);
+            NPCIndexTextBox.Name = "NPCIndexTextBox";
+            NPCIndexTextBox.ReadOnly = true;
+            NPCIndexTextBox.Size = new Size(54, 23);
+            NPCIndexTextBox.TabIndex = 0;
             // 
             // label24
             // 
-            this.label24.AutoSize = true;
-            this.label24.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label24.Location = new System.Drawing.Point(42, 141);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(39, 13);
-            this.label24.TabIndex = 13;
-            this.label24.Text = "Image:";
+            label24.AutoSize = true;
+            label24.Location = new Point(49, 163);
+            label24.Margin = new Padding(4, 0, 4, 0);
+            label24.Name = "label24";
+            label24.Size = new Size(43, 15);
+            label24.TabIndex = 13;
+            label24.Text = "Image:";
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 7);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(61, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "NPC Index:";
+            label1.AutoSize = true;
+            label1.Location = new Point(23, 8);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(66, 15);
+            label1.TabIndex = 4;
+            label1.Text = "NPC Index:";
             // 
             // NImageTextBox
             // 
-            this.NImageTextBox.Location = new System.Drawing.Point(87, 137);
-            this.NImageTextBox.MaxLength = 5;
-            this.NImageTextBox.Name = "NImageTextBox";
-            this.NImageTextBox.Size = new System.Drawing.Size(37, 20);
-            this.NImageTextBox.TabIndex = 11;
-            this.NImageTextBox.TextChanged += new System.EventHandler(this.NImageTextBox_TextChanged);
+            NImageTextBox.Location = new Point(102, 158);
+            NImageTextBox.Margin = new Padding(4, 3, 4, 3);
+            NImageTextBox.MaxLength = 5;
+            NImageTextBox.Name = "NImageTextBox";
+            NImageTextBox.Size = new Size(42, 23);
+            NImageTextBox.TabIndex = 11;
+            NImageTextBox.TextChanged += NImageTextBox_TextChanged;
             // 
             // NXTextBox
             // 
-            this.NXTextBox.Location = new System.Drawing.Point(87, 111);
-            this.NXTextBox.MaxLength = 5;
-            this.NXTextBox.Name = "NXTextBox";
-            this.NXTextBox.Size = new System.Drawing.Size(37, 20);
-            this.NXTextBox.TabIndex = 2;
-            this.NXTextBox.TextChanged += new System.EventHandler(this.NXTextBox_TextChanged);
+            NXTextBox.Location = new Point(102, 128);
+            NXTextBox.Margin = new Padding(4, 3, 4, 3);
+            NXTextBox.MaxLength = 5;
+            NXTextBox.Name = "NXTextBox";
+            NXTextBox.Size = new Size(42, 23);
+            NXTextBox.TabIndex = 2;
+            NXTextBox.TextChanged += NXTextBox_TextChanged;
             // 
             // label28
             // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(133, 114);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(43, 13);
-            this.label28.TabIndex = 10;
-            this.label28.Text = "From Y:";
+            label28.AutoSize = true;
+            label28.Location = new Point(155, 132);
+            label28.Margin = new Padding(4, 0, 4, 0);
+            label28.Name = "label28";
+            label28.Size = new Size(48, 15);
+            label28.TabIndex = 10;
+            label28.Text = "From Y:";
             // 
             // label30
             // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(38, 114);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(43, 13);
-            this.label30.TabIndex = 3;
-            this.label30.Text = "From X:";
+            label30.AutoSize = true;
+            label30.Location = new Point(44, 132);
+            label30.Margin = new Padding(4, 0, 4, 0);
+            label30.Name = "label30";
+            label30.Size = new Size(48, 15);
+            label30.TabIndex = 3;
+            label30.Text = "From X:";
             // 
             // NYTextBox
             // 
-            this.NYTextBox.Location = new System.Drawing.Point(182, 111);
-            this.NYTextBox.MaxLength = 5;
-            this.NYTextBox.Name = "NYTextBox";
-            this.NYTextBox.Size = new System.Drawing.Size(37, 20);
-            this.NYTextBox.TabIndex = 3;
-            this.NYTextBox.TextChanged += new System.EventHandler(this.NYTextBox_TextChanged);
+            NYTextBox.Location = new Point(212, 128);
+            NYTextBox.Margin = new Padding(4, 3, 4, 3);
+            NYTextBox.MaxLength = 5;
+            NYTextBox.Name = "NYTextBox";
+            NYTextBox.Size = new Size(42, 23);
+            NYTextBox.TabIndex = 3;
+            NYTextBox.TextChanged += NYTextBox_TextChanged;
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.Flag_textbox);
-            this.tabPage2.Controls.Add(this.label12);
-            this.tabPage2.Controls.Add(this.label10);
-            this.tabPage2.Controls.Add(this.Day_combo);
-            this.tabPage2.Controls.Add(this.Class_combo);
-            this.tabPage2.Controls.Add(this.EndMin_num);
-            this.tabPage2.Controls.Add(this.EndHour_combo);
-            this.tabPage2.Controls.Add(this.label8);
-            this.tabPage2.Controls.Add(this.label9);
-            this.tabPage2.Controls.Add(this.StartMin_num);
-            this.tabPage2.Controls.Add(this.StartHour_combo);
-            this.tabPage2.Controls.Add(this.TimeVisible_checkbox);
-            this.tabPage2.Controls.Add(this.label7);
-            this.tabPage2.Controls.Add(this.MaxLev_textbox);
-            this.tabPage2.Controls.Add(this.label6);
-            this.tabPage2.Controls.Add(this.label5);
-            this.tabPage2.Controls.Add(this.label4);
-            this.tabPage2.Controls.Add(this.label3);
-            this.tabPage2.Controls.Add(this.MinLev_textbox);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(511, 268);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Visibility";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            tabPage2.Controls.Add(ConquestVisible_checkbox);
+            tabPage2.Controls.Add(Flag_textbox);
+            tabPage2.Controls.Add(label12);
+            tabPage2.Controls.Add(label10);
+            tabPage2.Controls.Add(Day_combo);
+            tabPage2.Controls.Add(Class_combo);
+            tabPage2.Controls.Add(EndMin_num);
+            tabPage2.Controls.Add(EndHour_combo);
+            tabPage2.Controls.Add(label8);
+            tabPage2.Controls.Add(label9);
+            tabPage2.Controls.Add(StartMin_num);
+            tabPage2.Controls.Add(StartHour_combo);
+            tabPage2.Controls.Add(TimeVisible_checkbox);
+            tabPage2.Controls.Add(label7);
+            tabPage2.Controls.Add(MaxLev_textbox);
+            tabPage2.Controls.Add(label6);
+            tabPage2.Controls.Add(label5);
+            tabPage2.Controls.Add(label4);
+            tabPage2.Controls.Add(label3);
+            tabPage2.Controls.Add(MinLev_textbox);
+            tabPage2.Location = new Point(4, 24);
+            tabPage2.Margin = new Padding(4, 3, 4, 3);
+            tabPage2.Name = "tabPage2";
+            tabPage2.Size = new Size(598, 311);
+            tabPage2.TabIndex = 1;
+            tabPage2.Text = "Visibility";
+            tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // ConquestVisible_checkbox
+            // 
+            ConquestVisible_checkbox.AutoSize = true;
+            ConquestVisible_checkbox.CheckAlign = ContentAlignment.MiddleRight;
+            ConquestVisible_checkbox.Location = new Point(200, 135);
+            ConquestVisible_checkbox.Margin = new Padding(4, 3, 4, 3);
+            ConquestVisible_checkbox.Name = "ConquestVisible_checkbox";
+            ConquestVisible_checkbox.Size = new Size(152, 19);
+            ConquestVisible_checkbox.TabIndex = 56;
+            ConquestVisible_checkbox.Text = "Visible during Conquest";
+            ConquestVisible_checkbox.UseVisualStyleBackColor = true;
+            ConquestVisible_checkbox.CheckedChanged += ConquestVisible_checkbox_CheckedChanged;
             // 
             // Flag_textbox
             // 
-            this.Flag_textbox.Location = new System.Drawing.Point(112, 87);
-            this.Flag_textbox.MaxLength = 3;
-            this.Flag_textbox.Name = "Flag_textbox";
-            this.Flag_textbox.Size = new System.Drawing.Size(49, 20);
-            this.Flag_textbox.TabIndex = 55;
-            this.Flag_textbox.TextChanged += new System.EventHandler(this.Flag_textbox_TextChanged);
+            Flag_textbox.Location = new Point(131, 100);
+            Flag_textbox.Margin = new Padding(4, 3, 4, 3);
+            Flag_textbox.MaxLength = 3;
+            Flag_textbox.Name = "Flag_textbox";
+            Flag_textbox.Size = new Size(56, 23);
+            Flag_textbox.TabIndex = 55;
+            Flag_textbox.TextChanged += Flag_textbox_TextChanged;
             // 
             // label12
             // 
-            this.label12.AutoSize = true;
-            this.label12.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label12.Location = new System.Drawing.Point(41, 90);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(71, 13);
-            this.label12.TabIndex = 54;
-            this.label12.Text = "Needed Flag:";
+            label12.AutoSize = true;
+            label12.Location = new Point(48, 104);
+            label12.Margin = new Padding(4, 0, 4, 0);
+            label12.Name = "label12";
+            label12.Size = new Size(76, 15);
+            label12.TabIndex = 54;
+            label12.Text = "Needed Flag:";
             // 
             // label10
             // 
-            this.label10.AutoSize = true;
-            this.label10.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label10.Location = new System.Drawing.Point(41, 63);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(71, 13);
-            this.label10.TabIndex = 53;
-            this.label10.Text = "Day to Show:";
+            label10.AutoSize = true;
+            label10.Location = new Point(48, 73);
+            label10.Margin = new Padding(4, 0, 4, 0);
+            label10.Name = "label10";
+            label10.Size = new Size(76, 15);
+            label10.TabIndex = 53;
+            label10.Text = "Day to Show:";
             // 
             // Day_combo
             // 
-            this.Day_combo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Day_combo.FormattingEnabled = true;
-            this.Day_combo.Items.AddRange(new object[] {
-            "",
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday"});
-            this.Day_combo.Location = new System.Drawing.Point(112, 59);
-            this.Day_combo.Name = "Day_combo";
-            this.Day_combo.Size = new System.Drawing.Size(163, 21);
-            this.Day_combo.TabIndex = 52;
-            this.Day_combo.SelectedIndexChanged += new System.EventHandler(this.Day_combo_SelectedIndexChanged);
+            Day_combo.DropDownStyle = ComboBoxStyle.DropDownList;
+            Day_combo.FormattingEnabled = true;
+            Day_combo.Items.AddRange(new object[] { "", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" });
+            Day_combo.Location = new Point(131, 68);
+            Day_combo.Margin = new Padding(4, 3, 4, 3);
+            Day_combo.Name = "Day_combo";
+            Day_combo.Size = new Size(190, 23);
+            Day_combo.TabIndex = 52;
+            Day_combo.SelectedIndexChanged += Day_combo_SelectedIndexChanged;
             // 
             // Class_combo
             // 
-            this.Class_combo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Class_combo.FormattingEnabled = true;
-            this.Class_combo.Items.AddRange(new object[] {
-            "",
-            "Warrior",
-            "Wizard",
-            "Taoist",
-            "Assassin",
-            "Archer"});
-            this.Class_combo.Location = new System.Drawing.Point(112, 29);
-            this.Class_combo.Name = "Class_combo";
-            this.Class_combo.Size = new System.Drawing.Size(87, 21);
-            this.Class_combo.TabIndex = 51;
-            this.Class_combo.SelectedIndexChanged += new System.EventHandler(this.Class_combo_SelectedIndexChanged);
+            Class_combo.DropDownStyle = ComboBoxStyle.DropDownList;
+            Class_combo.FormattingEnabled = true;
+            Class_combo.Items.AddRange(new object[] { "", "Warrior", "Wizard", "Taoist", "Assassin", "Archer" });
+            Class_combo.Location = new Point(131, 33);
+            Class_combo.Margin = new Padding(4, 3, 4, 3);
+            Class_combo.Name = "Class_combo";
+            Class_combo.Size = new Size(101, 23);
+            Class_combo.TabIndex = 51;
+            Class_combo.SelectedIndexChanged += Class_combo_SelectedIndexChanged;
             // 
             // EndMin_num
             // 
-            this.EndMin_num.Location = new System.Drawing.Point(238, 170);
-            this.EndMin_num.Maximum = new decimal(new int[] {
-            59,
-            0,
-            0,
-            0});
-            this.EndMin_num.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.EndMin_num.Name = "EndMin_num";
-            this.EndMin_num.Size = new System.Drawing.Size(47, 20);
-            this.EndMin_num.TabIndex = 50;
-            this.EndMin_num.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.EndMin_num.ValueChanged += new System.EventHandler(this.EndMin_num_ValueChanged);
+            EndMin_num.Location = new Point(278, 196);
+            EndMin_num.Margin = new Padding(4, 3, 4, 3);
+            EndMin_num.Maximum = new decimal(new int[] { 59, 0, 0, 0 });
+            EndMin_num.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            EndMin_num.Name = "EndMin_num";
+            EndMin_num.Size = new Size(55, 23);
+            EndMin_num.TabIndex = 50;
+            EndMin_num.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            EndMin_num.ValueChanged += EndMin_num_ValueChanged;
             // 
             // EndHour_combo
             // 
-            this.EndHour_combo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.EndHour_combo.FormattingEnabled = true;
-            this.EndHour_combo.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23"});
-            this.EndHour_combo.Location = new System.Drawing.Point(112, 169);
-            this.EndHour_combo.Name = "EndHour_combo";
-            this.EndHour_combo.Size = new System.Drawing.Size(49, 21);
-            this.EndHour_combo.TabIndex = 49;
-            this.EndHour_combo.SelectedIndexChanged += new System.EventHandler(this.EndHour_combo_SelectedIndexChanged);
+            EndHour_combo.DropDownStyle = ComboBoxStyle.DropDownList;
+            EndHour_combo.FormattingEnabled = true;
+            EndHour_combo.Items.AddRange(new object[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" });
+            EndHour_combo.Location = new Point(131, 195);
+            EndHour_combo.Margin = new Padding(4, 3, 4, 3);
+            EndHour_combo.Name = "EndHour_combo";
+            EndHour_combo.Size = new Size(56, 23);
+            EndHour_combo.TabIndex = 49;
+            EndHour_combo.SelectedIndexChanged += EndHour_combo_SelectedIndexChanged;
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label8.Location = new System.Drawing.Point(171, 172);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(64, 13);
-            this.label8.TabIndex = 48;
-            this.label8.Text = "End Minute:";
+            label8.AutoSize = true;
+            label8.Location = new Point(200, 198);
+            label8.Margin = new Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(71, 15);
+            label8.TabIndex = 48;
+            label8.Text = "End Minute:";
             // 
             // label9
             // 
-            this.label9.AutoSize = true;
-            this.label9.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label9.Location = new System.Drawing.Point(54, 172);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(55, 13);
-            this.label9.TabIndex = 47;
-            this.label9.Text = "End Hour:";
+            label9.AutoSize = true;
+            label9.Location = new Point(63, 198);
+            label9.Margin = new Padding(4, 0, 4, 0);
+            label9.Name = "label9";
+            label9.Size = new Size(60, 15);
+            label9.TabIndex = 47;
+            label9.Text = "End Hour:";
             // 
             // StartMin_num
             // 
-            this.StartMin_num.Location = new System.Drawing.Point(238, 144);
-            this.StartMin_num.Maximum = new decimal(new int[] {
-            58,
-            0,
-            0,
-            0});
-            this.StartMin_num.Name = "StartMin_num";
-            this.StartMin_num.Size = new System.Drawing.Size(47, 20);
-            this.StartMin_num.TabIndex = 46;
-            this.StartMin_num.ValueChanged += new System.EventHandler(this.StartMin_num_ValueChanged);
+            StartMin_num.Location = new Point(278, 166);
+            StartMin_num.Margin = new Padding(4, 3, 4, 3);
+            StartMin_num.Maximum = new decimal(new int[] { 58, 0, 0, 0 });
+            StartMin_num.Name = "StartMin_num";
+            StartMin_num.Size = new Size(55, 23);
+            StartMin_num.TabIndex = 46;
+            StartMin_num.ValueChanged += StartMin_num_ValueChanged;
             // 
             // StartHour_combo
             // 
-            this.StartHour_combo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.StartHour_combo.FormattingEnabled = true;
-            this.StartHour_combo.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23"});
-            this.StartHour_combo.Location = new System.Drawing.Point(112, 143);
-            this.StartHour_combo.Name = "StartHour_combo";
-            this.StartHour_combo.Size = new System.Drawing.Size(49, 21);
-            this.StartHour_combo.TabIndex = 45;
-            this.StartHour_combo.SelectedIndexChanged += new System.EventHandler(this.StartHour_combo_SelectedIndexChanged);
+            StartHour_combo.DropDownStyle = ComboBoxStyle.DropDownList;
+            StartHour_combo.FormattingEnabled = true;
+            StartHour_combo.Items.AddRange(new object[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" });
+            StartHour_combo.Location = new Point(131, 165);
+            StartHour_combo.Margin = new Padding(4, 3, 4, 3);
+            StartHour_combo.Name = "StartHour_combo";
+            StartHour_combo.Size = new Size(56, 23);
+            StartHour_combo.TabIndex = 45;
+            StartHour_combo.SelectedIndexChanged += StartHour_combo_SelectedIndexChanged;
             // 
             // TimeVisible_checkbox
             // 
-            this.TimeVisible_checkbox.AutoSize = true;
-            this.TimeVisible_checkbox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.TimeVisible_checkbox.Location = new System.Drawing.Point(59, 117);
-            this.TimeVisible_checkbox.Name = "TimeVisible_checkbox";
-            this.TimeVisible_checkbox.Size = new System.Drawing.Size(140, 17);
-            this.TimeVisible_checkbox.TabIndex = 44;
-            this.TimeVisible_checkbox.Text = "Only Visible at set Times";
-            this.TimeVisible_checkbox.UseVisualStyleBackColor = true;
-            this.TimeVisible_checkbox.CheckedChanged += new System.EventHandler(this.TimeVisible_checkbox_CheckedChanged);
+            TimeVisible_checkbox.AutoSize = true;
+            TimeVisible_checkbox.CheckAlign = ContentAlignment.MiddleRight;
+            TimeVisible_checkbox.Location = new Point(35, 135);
+            TimeVisible_checkbox.Margin = new Padding(4, 3, 4, 3);
+            TimeVisible_checkbox.Name = "TimeVisible_checkbox";
+            TimeVisible_checkbox.Size = new Size(153, 19);
+            TimeVisible_checkbox.TabIndex = 44;
+            TimeVisible_checkbox.Text = "Only Visible at set Times";
+            TimeVisible_checkbox.UseVisualStyleBackColor = true;
+            TimeVisible_checkbox.CheckedChanged += TimeVisible_checkbox_CheckedChanged;
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label7.Location = new System.Drawing.Point(167, 6);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(59, 13);
-            this.label7.TabIndex = 43;
-            this.label7.Text = "Max Level:";
+            label7.AutoSize = true;
+            label7.Location = new Point(195, 7);
+            label7.Margin = new Padding(4, 0, 4, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(63, 15);
+            label7.TabIndex = 43;
+            label7.Text = "Max Level:";
             // 
             // MaxLev_textbox
             // 
-            this.MaxLev_textbox.Location = new System.Drawing.Point(226, 3);
-            this.MaxLev_textbox.MaxLength = 3;
-            this.MaxLev_textbox.Name = "MaxLev_textbox";
-            this.MaxLev_textbox.Size = new System.Drawing.Size(49, 20);
-            this.MaxLev_textbox.TabIndex = 42;
-            this.MaxLev_textbox.TextChanged += new System.EventHandler(this.MaxLev_textbox_TextChanged);
+            MaxLev_textbox.Location = new Point(264, 3);
+            MaxLev_textbox.Margin = new Padding(4, 3, 4, 3);
+            MaxLev_textbox.MaxLength = 3;
+            MaxLev_textbox.Name = "MaxLev_textbox";
+            MaxLev_textbox.Size = new Size(56, 23);
+            MaxLev_textbox.TabIndex = 42;
+            MaxLev_textbox.TextChanged += MaxLev_textbox_TextChanged;
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label6.Location = new System.Drawing.Point(31, 32);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(81, 13);
-            this.label6.TabIndex = 40;
-            this.label6.Text = "Class Required:";
+            label6.AutoSize = true;
+            label6.Location = new Point(36, 37);
+            label6.Margin = new Padding(4, 0, 4, 0);
+            label6.Name = "label6";
+            label6.Size = new Size(87, 15);
+            label6.TabIndex = 40;
+            label6.Text = "Class Required:";
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label5.Location = new System.Drawing.Point(171, 146);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(67, 13);
-            this.label5.TabIndex = 37;
-            this.label5.Text = "Start Minute:";
+            label5.AutoSize = true;
+            label5.Location = new Point(200, 168);
+            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(75, 15);
+            label5.TabIndex = 37;
+            label5.Text = "Start Minute:";
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label4.Location = new System.Drawing.Point(54, 146);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(58, 13);
-            this.label4.TabIndex = 36;
-            this.label4.Text = "Start Hour:";
+            label4.AutoSize = true;
+            label4.Location = new Point(63, 168);
+            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(64, 15);
+            label4.TabIndex = 36;
+            label4.Text = "Start Hour:";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label3.Location = new System.Drawing.Point(56, 6);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(56, 13);
-            this.label3.TabIndex = 34;
-            this.label3.Text = "Min Level:";
+            label3.AutoSize = true;
+            label3.Location = new Point(65, 7);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(61, 15);
+            label3.TabIndex = 34;
+            label3.Text = "Min Level:";
             // 
             // MinLev_textbox
             // 
-            this.MinLev_textbox.Location = new System.Drawing.Point(112, 3);
-            this.MinLev_textbox.MaxLength = 3;
-            this.MinLev_textbox.Name = "MinLev_textbox";
-            this.MinLev_textbox.Size = new System.Drawing.Size(49, 20);
-            this.MinLev_textbox.TabIndex = 33;
-            this.MinLev_textbox.TextChanged += new System.EventHandler(this.MinLev_textbox_TextChanged);
+            MinLev_textbox.Location = new Point(131, 3);
+            MinLev_textbox.Margin = new Padding(4, 3, 4, 3);
+            MinLev_textbox.MaxLength = 3;
+            MinLev_textbox.Name = "MinLev_textbox";
+            MinLev_textbox.Size = new Size(56, 23);
+            MinLev_textbox.TabIndex = 33;
+            MinLev_textbox.TextChanged += MinLev_textbox_TextChanged;
             // 
             // RemoveButton
             // 
-            this.RemoveButton.Location = new System.Drawing.Point(93, 12);
-            this.RemoveButton.Name = "RemoveButton";
-            this.RemoveButton.Size = new System.Drawing.Size(75, 23);
-            this.RemoveButton.TabIndex = 14;
-            this.RemoveButton.Text = "Remove";
-            this.RemoveButton.UseVisualStyleBackColor = true;
-            this.RemoveButton.Click += new System.EventHandler(this.RemoveButton_Click);
+            RemoveButton.Location = new Point(108, 14);
+            RemoveButton.Margin = new Padding(4, 3, 4, 3);
+            RemoveButton.Name = "RemoveButton";
+            RemoveButton.Size = new Size(88, 27);
+            RemoveButton.TabIndex = 14;
+            RemoveButton.Text = "Remove";
+            RemoveButton.UseVisualStyleBackColor = true;
+            RemoveButton.Click += RemoveButton_Click;
             // 
             // AddButton
             // 
-            this.AddButton.Location = new System.Drawing.Point(12, 12);
-            this.AddButton.Name = "AddButton";
-            this.AddButton.Size = new System.Drawing.Size(75, 23);
-            this.AddButton.TabIndex = 13;
-            this.AddButton.Text = "Add";
-            this.AddButton.UseVisualStyleBackColor = true;
-            this.AddButton.Click += new System.EventHandler(this.AddButton_Click);
+            AddButton.Location = new Point(14, 14);
+            AddButton.Margin = new Padding(4, 3, 4, 3);
+            AddButton.Name = "AddButton";
+            AddButton.Size = new Size(88, 27);
+            AddButton.TabIndex = 13;
+            AddButton.Text = "Add";
+            AddButton.UseVisualStyleBackColor = true;
+            AddButton.Click += AddButton_Click;
             // 
             // NPCInfoListBox
             // 
-            this.NPCInfoListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.NPCInfoListBox.FormattingEnabled = true;
-            this.NPCInfoListBox.Location = new System.Drawing.Point(12, 41);
-            this.NPCInfoListBox.Name = "NPCInfoListBox";
-            this.NPCInfoListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.NPCInfoListBox.Size = new System.Drawing.Size(237, 290);
-            this.NPCInfoListBox.TabIndex = 15;
-            this.NPCInfoListBox.SelectedIndexChanged += new System.EventHandler(this.NPCInfoListBox_SelectedIndexChanged);
+            NPCInfoListBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            NPCInfoListBox.FormattingEnabled = true;
+            NPCInfoListBox.ItemHeight = 15;
+            NPCInfoListBox.Location = new Point(14, 47);
+            NPCInfoListBox.Margin = new Padding(4, 3, 4, 3);
+            NPCInfoListBox.Name = "NPCInfoListBox";
+            NPCInfoListBox.SelectionMode = SelectionMode.MultiExtended;
+            NPCInfoListBox.Size = new Size(276, 334);
+            NPCInfoListBox.TabIndex = 15;
+            NPCInfoListBox.SelectedIndexChanged += NPCInfoListBox_SelectedIndexChanged;
             // 
             // PasteMButton
             // 
-            this.PasteMButton.Location = new System.Drawing.Point(255, 12);
-            this.PasteMButton.Name = "PasteMButton";
-            this.PasteMButton.Size = new System.Drawing.Size(75, 23);
-            this.PasteMButton.TabIndex = 22;
-            this.PasteMButton.Text = "Paste";
-            this.PasteMButton.UseVisualStyleBackColor = true;
-            this.PasteMButton.Click += new System.EventHandler(this.PasteMButton_Click);
+            PasteMButton.Location = new Point(298, 14);
+            PasteMButton.Margin = new Padding(4, 3, 4, 3);
+            PasteMButton.Name = "PasteMButton";
+            PasteMButton.Size = new Size(88, 27);
+            PasteMButton.TabIndex = 22;
+            PasteMButton.Text = "Paste";
+            PasteMButton.UseVisualStyleBackColor = true;
+            PasteMButton.Click += PasteMButton_Click;
             // 
             // CopyMButton
             // 
-            this.CopyMButton.Location = new System.Drawing.Point(174, 12);
-            this.CopyMButton.Name = "CopyMButton";
-            this.CopyMButton.Size = new System.Drawing.Size(75, 23);
-            this.CopyMButton.TabIndex = 21;
-            this.CopyMButton.Text = "Copy";
-            this.CopyMButton.UseVisualStyleBackColor = true;
-            this.CopyMButton.Click += new System.EventHandler(this.CopyMButton_Click);
+            CopyMButton.Location = new Point(203, 14);
+            CopyMButton.Margin = new Padding(4, 3, 4, 3);
+            CopyMButton.Name = "CopyMButton";
+            CopyMButton.Size = new Size(88, 27);
+            CopyMButton.TabIndex = 21;
+            CopyMButton.Text = "Copy";
+            CopyMButton.UseVisualStyleBackColor = true;
+            CopyMButton.Click += CopyMButton_Click;
             // 
             // ExportButton
             // 
-            this.ExportButton.Location = new System.Drawing.Point(701, 12);
-            this.ExportButton.Name = "ExportButton";
-            this.ExportButton.Size = new System.Drawing.Size(75, 23);
-            this.ExportButton.TabIndex = 23;
-            this.ExportButton.Text = "Export All";
-            this.ExportButton.UseVisualStyleBackColor = true;
-            this.ExportButton.Click += new System.EventHandler(this.ExportAllButton_Click);
+            ExportButton.Location = new Point(818, 14);
+            ExportButton.Margin = new Padding(4, 3, 4, 3);
+            ExportButton.Name = "ExportButton";
+            ExportButton.Size = new Size(88, 27);
+            ExportButton.TabIndex = 23;
+            ExportButton.Text = "Export All";
+            ExportButton.UseVisualStyleBackColor = true;
+            ExportButton.Click += ExportAllButton_Click;
             // 
             // ImportButton
             // 
-            this.ImportButton.Location = new System.Drawing.Point(498, 12);
-            this.ImportButton.Name = "ImportButton";
-            this.ImportButton.Size = new System.Drawing.Size(75, 23);
-            this.ImportButton.TabIndex = 24;
-            this.ImportButton.Text = "Import";
-            this.ImportButton.UseVisualStyleBackColor = true;
-            this.ImportButton.Click += new System.EventHandler(this.ImportButton_Click);
+            ImportButton.Location = new Point(581, 14);
+            ImportButton.Margin = new Padding(4, 3, 4, 3);
+            ImportButton.Name = "ImportButton";
+            ImportButton.Size = new Size(88, 27);
+            ImportButton.TabIndex = 24;
+            ImportButton.Text = "Import";
+            ImportButton.UseVisualStyleBackColor = true;
+            ImportButton.Click += ImportButton_Click;
             // 
             // ExportSelectedButton
             // 
-            this.ExportSelectedButton.Location = new System.Drawing.Point(578, 12);
-            this.ExportSelectedButton.Name = "ExportSelectedButton";
-            this.ExportSelectedButton.Size = new System.Drawing.Size(117, 23);
-            this.ExportSelectedButton.TabIndex = 25;
-            this.ExportSelectedButton.Text = "Export Selected";
-            this.ExportSelectedButton.UseVisualStyleBackColor = true;
-            this.ExportSelectedButton.Click += new System.EventHandler(this.ExportSelected_Click);
+            ExportSelectedButton.Location = new Point(674, 14);
+            ExportSelectedButton.Margin = new Padding(4, 3, 4, 3);
+            ExportSelectedButton.Name = "ExportSelectedButton";
+            ExportSelectedButton.Size = new Size(136, 27);
+            ExportSelectedButton.TabIndex = 25;
+            ExportSelectedButton.Text = "Export Selected";
+            ExportSelectedButton.UseVisualStyleBackColor = true;
+            ExportSelectedButton.Click += ExportSelected_Click;
             // 
             // NPCInfoForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(786, 347);
-            this.Controls.Add(this.ExportSelectedButton);
-            this.Controls.Add(this.ImportButton);
-            this.Controls.Add(this.ExportButton);
-            this.Controls.Add(this.PasteMButton);
-            this.Controls.Add(this.CopyMButton);
-            this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.RemoveButton);
-            this.Controls.Add(this.AddButton);
-            this.Controls.Add(this.NPCInfoListBox);
-            this.Name = "NPCInfoForm";
-            this.Text = "NPCInfoForm";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.NPCInfoForm_FormClosed);
-            this.Load += new System.EventHandler(this.NPCInfoForm_Load);
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.EndMin_num)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.StartMin_num)).EndInit();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(917, 400);
+            Controls.Add(ExportSelectedButton);
+            Controls.Add(ImportButton);
+            Controls.Add(ExportButton);
+            Controls.Add(PasteMButton);
+            Controls.Add(CopyMButton);
+            Controls.Add(tabControl1);
+            Controls.Add(RemoveButton);
+            Controls.Add(AddButton);
+            Controls.Add(NPCInfoListBox);
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "NPCInfoForm";
+            Text = "NPCInfoForm";
+            FormClosed += NPCInfoForm_FormClosed;
+            Load += NPCInfoForm_Load;
+            tabControl1.ResumeLayout(false);
+            tabPage1.ResumeLayout(false);
+            tabPage1.PerformLayout();
+            tabPage2.ResumeLayout(false);
+            tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)EndMin_num).EndInit();
+            ((System.ComponentModel.ISupportInitialize)StartMin_num).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion
@@ -834,5 +804,6 @@
         private System.Windows.Forms.TextBox BigMapIconTextBox;
         private System.Windows.Forms.CheckBox ShowBigMapCheckBox;
         private System.Windows.Forms.CheckBox TeleportToCheckBox;
+        private CheckBox ConquestVisible_checkbox;
     }
 }

@@ -1,14 +1,18 @@
-﻿using SlimDX.DirectSound;
+﻿using Client.MirSounds.Libraries;
+using SlimDX.Direct3D9;
+using SlimDX.DirectSound;
+using System;
 
 namespace Client.MirSounds
 {
     static class SoundManager
     {
-        public static DirectSound Device;
         private static readonly List<ISoundLibrary> Sounds = new List<ISoundLibrary>();
         private static readonly Dictionary<int, string> IndexList = new Dictionary<int, string>();
 
         private static readonly List<KeyValuePair<long, int>> DelayList = new List<KeyValuePair<long, int>>();
+
+        public static readonly List<string> SupportedFileTypes;
 
         public static ISoundLibrary Music;
         private static long _checkSoundTime;
@@ -33,7 +37,17 @@ namespace Client.MirSounds
             {
                 if (_musicVol == value) return;
                 _musicVol = value;
+                AdjustMusicVolume();
             }
+        }
+
+        static SoundManager()
+        {
+            SupportedFileTypes = new List<string>
+            {
+                ".wav",
+                ".mp3"
+            };
         }
 
         public static void ProcessDelayedSounds()
@@ -50,14 +64,9 @@ namespace Client.MirSounds
             }
         }
 
-
         public static void Create()
         {
             if (Program.Form == null || Program.Form.IsDisposed) return;
-
-            Device = new DirectSound();
-            Device.SetCooperativeLevel(Program.Form.Handle, CooperativeLevel.Normal);
-            Device.IsDefaultPool = false;
 
             LoadSoundList();
         }
@@ -79,9 +88,7 @@ namespace Client.MirSounds
                 if (!IndexList.ContainsKey(index))
                     IndexList.Add(index, split[split.Length - 1]);
             }
-
         }
-
 
         public static void StopSound(int index)
         {
@@ -101,22 +108,18 @@ namespace Client.MirSounds
                 DelayList.Add(new KeyValuePair<long, int>(CMain.Time + delay, index));
                 return;
             }
-
-            if (Device == null) return;
-            
-            if (_vol <= -3000) return;
-
+      
             CheckSoundTimeOut();
 
             for (int i = 0; i < Sounds.Count; i++)
             {
                 if (Sounds[i].Index != index) continue;
-                Sounds[i].Play();
+                Sounds[i].Play(Vol);
                 return;
             }
 
             if (IndexList.ContainsKey(index))
-                Sounds.Add(GetSound(index, IndexList[index], loop));
+                Sounds.Add(GetSound(index, IndexList[index], Vol, loop));
             else
             {
                 string filename;
@@ -125,24 +128,23 @@ namespace Client.MirSounds
                     index -= 20000;
                     filename = string.Format("M{0:0}-{1:0}", index/10, index%10);
 
-                    Sounds.Add(GetSound(index + 20000, filename, loop));
+                    Sounds.Add(GetSound(index + 20000, filename, Vol, loop));
                 }
                 else if (index < 10000)
                 {
                     filename = string.Format("{0:000}-{1:0}", index/10, index%10);
                     
-                    Sounds.Add(GetSound(index, filename, loop));
+                    Sounds.Add(GetSound(index, filename, Vol, loop));
                 }
             }
         }
 
         public static void PlayMusic(int index, bool loop = false)
         {
-            if (Device == null) return;
-
-            Music = GetSound(index, index.ToString(), true);
-            Music.SetVolume(MusicVol);
-            Music.Play();
+            if (IndexList.TryGetValue(index, out string value))
+            {
+                Music = GetSound(index, value, MusicVol, loop);
+            }
         }
 
         public static void StopMusic()
@@ -151,11 +153,17 @@ namespace Client.MirSounds
             Music?.Dispose();
         }
 
+        static void AdjustMusicVolume()
+        {
+            Music?.SetVolume(MusicVol);
+        }
+
         static void AdjustAllVolumes()
         {
             for (int i = 0; i < Sounds.Count; i++)
-                Sounds[i].Dispose();
-            Sounds.Clear();
+            {
+                Sounds[i].SetVolume(Vol);
+            }        
         }
 
         static void CheckSoundTimeOut()
@@ -181,16 +189,23 @@ namespace Client.MirSounds
             }
         }
 
-        static ISoundLibrary GetSound(int index, string fileName, bool loop)
+        static ISoundLibrary GetSound(int index, string fileName, int volume, bool loop)
         {
-            var sound = WavLibrary.TryCreate(index, fileName, loop);
+            var sound = NAudioLibrary.TryCreate(index, fileName, volume, loop);
 
-            if (sound != null)
+            return sound == null ? new NullLibrary(index, fileName, loop) : sound;
+        }
+
+        public static void Dispose()
+        {
+            DelayList.Clear();
+
+            for (int i = Sounds.Count - 1; i >= 0; i--)
             {
-                return sound;
+                Sounds[i]?.Dispose();
             }
 
-            return new NullLibrary(index, fileName, loop);
+            Music?.Dispose();
         }
     }
 
@@ -291,6 +306,8 @@ namespace Client.MirSounds
             StruckArmourAxe = 10081,
             StruckArmourLongStick = 10082,
             StruckArmourFist = 10083,
+
+            StruckEvilMir = 10090,
 
             MaleFlinch = 10138,
             FemaleFlinch = 10139,

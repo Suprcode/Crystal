@@ -200,7 +200,6 @@ namespace Server.MirObjects
 
         }
 
-
         public virtual void Process()
         {
             if (Master != null && Master.Node == null) Master = null;
@@ -424,7 +423,6 @@ namespace Server.MirObjects
         {
             if (attacker == null || attacker.Node == null) return false;
             if (Dead || InSafeZone || attacker.InSafeZone || attacker == this) return false;
-            if (CurrentMap.Info.NoFight) return false;
             
             switch (attacker.Race)
             {

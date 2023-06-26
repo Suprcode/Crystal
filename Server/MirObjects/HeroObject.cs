@@ -293,7 +293,7 @@ namespace Server.MirObjects
         {
             return true;
         }
-        public override void BeginMagic(Spell spell, MirDirection dir, uint targetID, Point location)
+        public override void BeginMagic(Spell spell, MirDirection dir, uint targetID, Point location, bool spellTargetLock = false)
         {
             NextMagicSpell = spell;
             NextMagicDirection = dir;

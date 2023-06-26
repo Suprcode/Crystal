@@ -1,6 +1,8 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirNetwork;
+using Server.MirObjects.Monsters;
+using System.Numerics;
 using S = ServerPackets;
 
 namespace Server.MirObjects
@@ -143,7 +145,7 @@ namespace Server.MirObjects
         {
             get
             {
-                return Envir.Time >= RegenTime && _runCounter == 0;
+                return Envir.Time >= RegenTime;
             }
         }
         protected virtual bool CanCast
@@ -937,7 +939,7 @@ namespace Server.MirObjects
 
                     if (CheckGroupQuestItem(item)) continue;
 
-                    if (CanGainItem(item, false))
+                    if (CanGainItem(item))
                     {
                         GainItem(item);
                         Report.ItemChanged(item, item.Count, 2);
@@ -963,23 +965,47 @@ namespace Server.MirObjects
             if (item.RentalInformation != null && item.RentalInformation.BindingFlags.HasFlag(BindMode.DontUpgrade))
                 return false;
 
+            string message = String.Empty;
+            ChatType chatType;
+
             if (item.AddedStats[Stat.Luck] > (Settings.MaxLuck * -1) && Envir.Random.Next(20) == 0)
             {
                 Stats[Stat.Luck]--;
                 item.AddedStats[Stat.Luck]--;
                 Enqueue(new S.RefreshItem { Item = item });
-                ReceiveChat(GameLanguage.WeaponCurse, ChatType.System);
+
+                message = GameLanguage.WeaponCurse;
+                chatType = ChatType.System;
+                
             }
             else if (item.AddedStats[Stat.Luck] <= 0 || Envir.Random.Next(10 * item.GetTotal(Stat.Luck)) == 0)
             {
                 Stats[Stat.Luck]++;
                 item.AddedStats[Stat.Luck]++;
                 Enqueue(new S.RefreshItem { Item = item });
-                ReceiveChat(GameLanguage.WeaponLuck, ChatType.Hint);
+
+                message = GameLanguage.WeaponLuck;
+                chatType = ChatType.Hint;
             }
             else
             {
-                ReceiveChat(GameLanguage.WeaponNoEffect, ChatType.Hint);
+                message = GameLanguage.WeaponNoEffect;
+                chatType = ChatType.Hint;
+            }
+
+            if (this is HeroObject hero)
+            {
+                if (message == GameLanguage.WeaponCurse ||
+                    message == GameLanguage.WeaponLuck)
+                {
+                    hero.Owner.Enqueue(new S.RefreshItem { Item = item });
+                }
+
+                hero.Owner.ReceiveChat($"[Hero: {hero.Name}] {message}", chatType);
+            }
+            else
+            {
+                ReceiveChat(message, chatType);
             }
 
             return true;
@@ -1640,6 +1666,12 @@ namespace Server.MirObjects
             if (Info.Flags[990]) LevelEffects |= LevelEffects.Mist;
             if (Info.Flags[991]) LevelEffects |= LevelEffects.RedDragon;
             if (Info.Flags[992]) LevelEffects |= LevelEffects.BlueDragon;
+            if (Info.Flags[993]) LevelEffects |= LevelEffects.Rebirth1;
+            if (Info.Flags[994]) LevelEffects |= LevelEffects.Rebirth2;
+            if (Info.Flags[995]) LevelEffects |= LevelEffects.Rebirth3;
+            if (Info.Flags[996]) LevelEffects |= LevelEffects.NewBlue;
+            if (Info.Flags[997]) LevelEffects |= LevelEffects.YellowDragon;
+            if (Info.Flags[998]) LevelEffects |= LevelEffects.Phoenix;
         }
         public virtual void Revive(int hp, bool effect)
         {
@@ -2444,6 +2476,11 @@ namespace Server.MirObjects
         }
         public bool Run(MirDirection dir)
         {
+            if (CurrentBagWeight > Stats[Stat.BagWeight])
+            {
+                Walk(dir);
+            }
+
             var steps = RidingMount || ActiveSwiftFeet && !Sneaking ? 3 : 2;
 
             if (!CanMove || !CanWalk || !CanRun)
@@ -2688,6 +2725,27 @@ namespace Server.MirObjects
             if (target != null && target.Dead) return;
 
             if (target != null && target.Race != ObjectType.Monster && target.Race != ObjectType.Player && target.Race != ObjectType.Hero) return;
+
+            if (target != null && !target.Dead && target.IsAttackTarget(this) && !target.IsFriendlyTarget(this))
+            {
+                if (this is PlayerObject player &&
+                   player.PMode == PetMode.FocusMasterTarget)
+                {
+                    foreach (MonsterObject pet in player.Pets)
+                    {
+                        if (pet.Race != ObjectType.Creature)
+                        {
+                            pet.Target = target;
+                        }
+                    }
+
+                    if (player.HeroSpawned &&
+                        !player.Hero.Dead)
+                    {
+                        player.Hero.Target = target;
+                    }
+                }
+            }
 
             Direction = dir;
 
@@ -2936,6 +2994,27 @@ namespace Server.MirObjects
                 MapObject ob = cell.Objects[i];
                 if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster && ob.Race != ObjectType.Hero) continue;
                 if (!ob.IsAttackTarget(this)) continue;
+
+                if (ob != null && !ob.Dead && ob.IsAttackTarget(this) && !ob.IsFriendlyTarget(this))
+                {
+                    if (this is PlayerObject player &&
+                   player.PMode == PetMode.FocusMasterTarget)
+                    {
+                        foreach (MonsterObject pet in player.Pets)
+                        {
+                            if (pet.Race != ObjectType.Creature)
+                            {
+                                pet.Target = ob;
+                            }
+                        }
+
+                        if (player.HeroSpawned &&
+                            !player.Hero.Dead)
+                        {
+                            player.Hero.Target = ob;
+                        }
+                    }
+                }
 
                 //Only undead targets
                 if (ob.Undead)
@@ -3249,9 +3328,9 @@ namespace Server.MirObjects
         {
             return !Dead && Envir.Time >= ActionTime || Envir.Time >= SpellTime;
         }
-        public virtual void BeginMagic(Spell spell, MirDirection dir, uint targetID, Point location)
+        public virtual void BeginMagic(Spell spell, MirDirection dir, uint targetID, Point location, Boolean spellTargetLock = false)
         {
-            Magic(spell, dir, targetID, location);
+            Magic(spell, dir, targetID, location, spellTargetLock);
         }
 
         public int MagicCost(UserMagic magic)
@@ -3279,7 +3358,7 @@ namespace Server.MirObjects
             return cost;
         }
         public virtual MapObject DefaultMagicTarget => this;
-        public void Magic(Spell spell, MirDirection dir, uint targetID, Point location)
+        public void Magic(Spell spell, MirDirection dir, uint targetID, Point location, bool spellTargetLock = false)
         {
             if (!CanCast)
             {
@@ -3355,6 +3434,27 @@ namespace Server.MirObjects
                 target = null;
             }
 
+            if (target != null && !target.Dead && target.IsAttackTarget(this) && !target.IsFriendlyTarget(this))
+            {
+                if (this is PlayerObject player &&
+                   player.PMode == PetMode.FocusMasterTarget)
+                {
+                    foreach (MonsterObject pet in player.Pets)
+                    {
+                        if (pet.Race != ObjectType.Creature)
+                        {
+                            pet.Target = target;
+                        }
+                    }
+
+                    if (player.HeroSpawned &&
+                        !player.Hero.Dead)
+                    {
+                        player.Hero.Target = target;
+                    }
+                }
+            }
+
             bool cast = true;
             byte level = magic.Level;
             switch (spell)
@@ -3414,17 +3514,17 @@ namespace Server.MirObjects
                     break;
                 case Spell.FireBang:
                 case Spell.IceStorm:
-                    FireBang(magic, target == null ? location : target.CurrentLocation);
+                    FireBang(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location);
                     break;
                 case Spell.MassHiding:
-                    MassHiding(magic, target == null ? location : target.CurrentLocation, out cast);
+                    MassHiding(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location, out cast);
                     break;
                 case Spell.SoulShield:
                 case Spell.BlessedArmour:
-                    SoulShield(magic, target == null ? location : target.CurrentLocation, out cast);
+                    SoulShield(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location, out cast);
                     break;
                 case Spell.FireWall:
-                    FireWall(magic, target == null ? location : target.CurrentLocation);
+                    FireWall(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location);
                     break;
                 case Spell.Lightning:
                     Lightning(magic);
@@ -3433,7 +3533,7 @@ namespace Server.MirObjects
                     HeavenlySword(magic);
                     break;
                 case Spell.MassHealing:
-                    MassHealing(magic, target == null ? location : target.CurrentLocation);
+                    MassHealing(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location);
                     break;
                 case Spell.ShoulderDash:
                     ShoulderDash(magic);
@@ -3500,15 +3600,14 @@ namespace Server.MirObjects
                     Mirroring(magic);
                     break;
                 case Spell.Blizzard:
-                    Blizzard(magic, target == null ? location : target.CurrentLocation, out cast);
+                    Blizzard(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location, out cast);
                     break;
                 case Spell.MeteorStrike:
-                    MeteorStrike(magic, target == null ? location : target.CurrentLocation, out cast);
+                    MeteorStrike(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location, out cast);
                     break;
                 case Spell.IceThrust:
                     IceThrust(magic);
                     break;
-
                 case Spell.ProtectionField:
                     ProtectionField(magic);
                     break;
@@ -3516,14 +3615,14 @@ namespace Server.MirObjects
                     PetEnhancer(target, magic, out cast);
                     break;
                 case Spell.TrapHexagon:
-                    TrapHexagon(magic, target == null ? location : target.CurrentLocation, out cast);
+                    TrapHexagon(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location, out cast);
                     break;
                 case Spell.Reincarnation:
                     if (!CurrentMap.Info.NoReincarnation)
                         Reincarnation(magic, target == null ? null : target as PlayerObject, out cast);
                     break;
                 case Spell.Curse:
-                    Curse(magic, target == null ? location : target.CurrentLocation, out cast);
+                    Curse(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location, out cast);
                     break;
                 case Spell.SummonHolyDeva:
                     SummonHolyDeva(magic);
@@ -3538,7 +3637,7 @@ namespace Server.MirObjects
                     UltimateEnhancer(target, magic, out cast);
                     break;
                 case Spell.Plague:
-                    Plague(magic, target == null ? location : target.CurrentLocation, out cast);
+                    Plague(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location, out cast);
                     break;
                 case Spell.SwiftFeet:
                     SwiftFeet(magic, out cast);
@@ -3597,7 +3696,7 @@ namespace Server.MirObjects
                     ArcherSummon(magic, target, location);
                     break;
                 case Spell.Stonetrap:
-                    ArcherSummonStone(magic, target == null ? location : target.CurrentLocation, out cast);
+                    ArcherSummonStone(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location, out cast);
                     break;
                 case Spell.VampireShot:
                 case Spell.PoisonShot:
@@ -3614,7 +3713,7 @@ namespace Server.MirObjects
                     MoonMist(magic);
                     break;
                 case Spell.HealingCircle:
-                    HealingCircle(magic, target == null ? location : target.CurrentLocation);
+                    HealingCircle(magic, spellTargetLock ? (target != null ? target.CurrentLocation : location) : location);
                     break;
 
                 //Custom Spells
@@ -4008,24 +4107,39 @@ namespace Server.MirObjects
         }
         private void TurnUndead(MapObject target, UserMagic magic)
         {
-            if (target == null || target.Race != ObjectType.Monster || !target.Undead || !target.IsAttackTarget(this)) return;
-
-            if (Envir.Random.Next(2) + Level - 1 <= target.Level)
+            if(target != null &&
+               target.Race == ObjectType.Monster &&
+               target.Undead &&
+               target.IsAttackTarget(this))
             {
-                target.Target = this;
-                return;
+                // undead pet logic
+                if (target.Master is PlayerObject master)
+                {
+                    if (master.PKPoints < 200 &&
+                        (master.BrownTime == 0 &&
+                        !master.AtWar(this)))
+                    {
+                            BrownTime = Envir.Time + Settings.Minute;
+                    }   
+                }
+
+                if (Envir.Random.Next(2) + Level - 1 <= target.Level)
+                {
+                    target.Target = this;
+                    return;
+                }
+
+                int dif = Level - target.Level + 15;
+
+                if (Envir.Random.Next(100) >= (magic.Level + 1 << 3) + dif)
+                {
+                    target.Target = this;
+                    return;
+                }
+
+                DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, target);
+                ActionList.Add(action);
             }
-
-            int dif = Level - target.Level + 15;
-
-            if (Envir.Random.Next(100) >= (magic.Level + 1 << 3) + dif)
-            {
-                target.Target = this;
-                return;
-            }
-
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, target);
-            ActionList.Add(action);
         }
         private void FlameDisruptor(MapObject target, UserMagic magic)
         {
@@ -4725,204 +4839,185 @@ namespace Server.MirObjects
 
         private void ShoulderDash(UserMagic magic)
         {
-            if (InTrapRock) return;
-            if (!CanWalk) return;
+            if (InTrapRock || !CanWalk)
+            {
+                return;
+            }
+
+            Point _nextLocation;
+            MapObject _target = null;
+
+            bool _blocking = false;
+            bool _canDash = false;
+
+            int _cellsTravelled = 0;
+            int dist = Envir.Random.Next(2) + magic.Level + 2;
+
             ActionTime = Envir.Time + MoveDelay;
 
-            int dist = Envir.Random.Next(2) + magic.Level + 2;
-            int travel = 0;
-            bool wall = true;
-            Point location = CurrentLocation;
-            MapObject target = null;
             for (int i = 0; i < dist; i++)
             {
-                location = Functions.PointMove(location, Direction, 1);
-
-                if (!CurrentMap.ValidPoint(location)) break;
-
-                Cell cell = CurrentMap.GetCell(location);
-
-                bool blocking = false;
-
-                if (InSafeZone) blocking = true;
-
-                SafeZoneInfo szi = CurrentMap.GetSafeZone(location);
-
-                if (szi != null)
+                if (_blocking)
                 {
-                    blocking = true;
+                    break;
                 }
 
-                if (cell.Objects != null)
+                _nextLocation = Functions.PointMove(CurrentLocation, Direction, 1);
+
+                if (!CurrentMap.ValidPoint(_nextLocation) || CurrentMap.GetSafeZone(_nextLocation) != null)
                 {
-                    for (int c = cell.Objects.Count - 1; c >= 0; c--)
+                    break;
+                }
+
+                // acquire target
+                if (i == 0)
+                {
+                    Cell targetCell = CurrentMap.GetCell(_nextLocation);
+
+                    if (targetCell.Objects != null)
                     {
-                        MapObject ob = cell.Objects[c];
-                        if (!ob.Blocking) continue;
-                        wall = false;
-                        if (ob.Race != ObjectType.Monster && ob.Race != ObjectType.Player)
+                        int cellCnt = targetCell.Objects.Count;
+
+                        for (int j = 0; j < cellCnt; j++)
                         {
-                            blocking = true;
-                            break;
+                            MapObject ob = targetCell.Objects[j];
+
+                            if ((ob.Race == ObjectType.Player ||
+                                ob.Race == ObjectType.Monster ||
+                                ob.Race == ObjectType.Hero) &&
+                                ob.IsAttackTarget(this) &&
+                                ob.Level < Level)
+                            {
+                                _target = ob;
+                                break;
+                            }
+
+                            if(ob.Blocking)
+                            {
+                                _blocking = true;
+                                break;
+                            }
                         }
-
-                        if (target == null && ob.Race == ObjectType.Player)
-                            target = ob;
-
-                        if (Envir.Random.Next(20) >= 6 + magic.Level * 3 + Level - ob.Level || !ob.IsAttackTarget(this) || ob.Level >= Level || ob.Pushed(this, Direction, 1) == 0)
-                        {
-                            if (target == ob)
-                                target = null;
-                            blocking = true;
-                            break;
-                        }
-
-                        if (cell.Objects == null) break;
-
                     }
-                }
-
-                if (blocking)
-                {
-                    if (magic.Level != 3) break;
-
-                    Point location2 = Functions.PointMove(location, Direction, 1);
-
-                    if (!CurrentMap.ValidPoint(location2)) break;
-
-                    szi = CurrentMap.GetSafeZone(location2);
-
-                    if (szi != null)
+                    
+                    if (_blocking)
                     {
                         break;
                     }
+                }
 
-                    cell = CurrentMap.GetCell(location2);
+                // try to dash
+                Cell dashCell = CurrentMap.GetCell(_nextLocation);
+                _canDash = false;
 
-                    blocking = false;
-
-
-                    if (cell.Objects != null)
+                if (_target == null)
+                {
+                    if (dashCell.Objects != null)
                     {
-                        for (int c = cell.Objects.Count - 1; c >= 0; c--)
+                        int cellCnt = dashCell.Objects.Count;
+
+                        for (int k = 0; k < cellCnt; k++)
                         {
-                            MapObject ob = cell.Objects[c];
-                            if (!ob.Blocking) continue;
-                            if (ob.Race != ObjectType.Monster && ob.Race != ObjectType.Player)
+                            MapObject ob = dashCell.Objects[k];
+
+                            if (ob.Blocking)
                             {
-                                blocking = true;
+                                _blocking = true;
                                 break;
                             }
+                        }
 
-                            if (!ob.IsAttackTarget(this) || ob.Level >= Level || ob.Pushed(this, Direction, 1) == 0)
+                        if(!_blocking)
+                        {
+                            _canDash = true;
+                        }
+                    }
+                    else
+                    {
+                        _canDash = true;
+                    }
+                }
+                else
+                {
+                    // try to push
+                    if (_target.Pushed(this, Direction, 1) == 0)
+                    {
+                        _blocking = true;
+                    }
+                    else
+                    {
+                        _canDash = true;
+                    }
+                }
+
+                if (_canDash)
+                {
+                    CurrentMap.GetCell(CurrentLocation).Remove(this);
+                    RemoveObjects(Direction, 1);
+
+                    Enqueue(new S.UserDash { Direction = Direction, Location = _nextLocation });
+                    Broadcast(new S.ObjectDash { ObjectID = ObjectID, Direction = Direction, Location = _nextLocation });
+
+                    CurrentMap.GetCell(_nextLocation).Add(this);
+                    AddObjects(Direction, 1);
+
+                    // dash interrupt
+                    Cell cell = CurrentMap.GetCell(_nextLocation);
+                    for (int l = 0; l < cell.Objects.Count; l++)
+                    {
+                        if (cell.Objects[l].Race == ObjectType.Spell)
+                        {
+                            SpellObject ob = (SpellObject)cell.Objects[l];
+
+                            if (IsAttackTarget(ob.Caster))
                             {
-                                blocking = true;
-                                break;
+                                switch(ob.Spell)
+                                {
+                                    case Spell.FireWall:
+                                        Attacked((PlayerObject)ob.Caster, ob.Value, DefenceType.MAC, false);
+                                        _blocking = true;
+                                        break;
+                                }
                             }
-
-                            if (cell.Objects == null) break;
                         }
                     }
 
-                    if (blocking) break;
-
-                    cell = CurrentMap.GetCell(location);
-
-                    if (cell.Objects != null)
-                    {
-                        for (int c = cell.Objects.Count - 1; c >= 0; c--)
-                        {
-                            MapObject ob = cell.Objects[c];
-                            if (!ob.Blocking) continue;
-                            if (ob.Race != ObjectType.Monster && ob.Race != ObjectType.Player)
-                            {
-                                blocking = true;
-                                break;
-                            }
-
-                            if (Envir.Random.Next(20) >= 6 + magic.Level * 3 + Level - ob.Level || !ob.IsAttackTarget(this) || ob.Level >= Level || ob.Pushed(this, Direction, 1) == 0)
-                            {
-                                blocking = true;
-                                break;
-                            }
-
-                            if (cell.Objects == null) break;
-                        }
-                    }
-
-                    if (blocking) break;
-                }
-
-                travel++;
-                CurrentMap.GetCell(CurrentLocation).Remove(this);
-                RemoveObjects(Direction, 1);
-
-                CurrentLocation = location;
-
-                Enqueue(new S.UserDash { Direction = Direction, Location = location });
-                Broadcast(new S.ObjectDash { ObjectID = ObjectID, Direction = Direction, Location = location });
-
-                CurrentMap.GetCell(CurrentLocation).Add(this);
-                AddObjects(Direction, 1);
-            }
-
-            if (travel > 0 && !wall)
-            {
-                if (target != null) target.Attacked(this, magic.GetDamage(0), DefenceType.None, false);
-                LevelMagic(magic);
-            }
-
-            if (travel > 0)
-            {
-                SafeZoneInfo szi = CurrentMap.GetSafeZone(CurrentLocation);
-
-                if (szi != null)
-                {
-                    SetBindSafeZone(szi);
-                    InSafeZone = true;
-                }
-                else
-                    InSafeZone = false;
-
-                ActionTime = Envir.Time + (travel * MoveDelay / 2);
-
-                Cell cell = CurrentMap.GetCell(CurrentLocation);
-                for (int i = 0; i < cell.Objects.Count; i++)
-                {
-                    if (cell.Objects[i].Race != ObjectType.Spell) continue;
-                    SpellObject ob = (SpellObject)cell.Objects[i];
-
-                    if (ob.Spell != Spell.FireWall || !IsAttackTarget(ob.Caster)) continue;
-
-                    Attacked((PlayerObject)ob.Caster, ob.Value, DefenceType.MAC, false);
-                    break;
+                    CurrentLocation = _nextLocation;
+                    _cellsTravelled++;
                 }
             }
 
-            if (travel == 0 || wall && dist != travel)
+            if (_cellsTravelled == 0)
             {
-                if (travel > 0)
-                {
-                    Enqueue(new S.UserDash { Direction = Direction, Location = Front });
-                    Broadcast(new S.ObjectDash { ObjectID = ObjectID, Direction = Direction, Location = Front });
-                }
-                else
-                    Broadcast(new S.ObjectDash { ObjectID = ObjectID, Direction = Direction, Location = Front });
-
                 Enqueue(new S.UserDashFail { Direction = Direction, Location = CurrentLocation });
                 Broadcast(new S.ObjectDashFail { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                ReceiveChat("Not enough pushing Power.", ChatType.System);
+
+                if (InSafeZone)
+                {
+                    ReceiveChat("No pushing in the safezone. tut tut.", ChatType.System);
+                }
+                else
+                {
+                    ReceiveChat("Not enough pushing Power.", ChatType.System);
+                }
+            }
+            else
+            {
+                _target?.Attacked(this, magic.GetDamage(0), DefenceType.None, false);
+                LevelMagic(magic);
+
+                Broadcast(new S.ObjectDash { ObjectID = ObjectID, Direction = Direction, Location = Front });
             }
 
+            long now = Envir.Time;
 
-            magic.CastTime = Envir.Time;
-            _stepCounter = 0;
-            //ActionTime = Envir.Time + GetDelayTime(MoveDelay);
-
+            magic.CastTime = now;
             Enqueue(new S.MagicCast { Spell = magic.Spell });
 
-            CellTime = Envir.Time + 500;
+            CellTime = now + 500;
+            _stepCounter = 0;
         }
+
         private void SlashingBurst(UserMagic magic, out bool cast)
         {
             cast = true;
@@ -5501,14 +5596,29 @@ namespace Server.MirObjects
         public void ArcherSummonStone(UserMagic magic, Point location, out bool cast)
         {
             cast = false;
-            if (!CurrentMap.ValidPoint(location)) return;
-            if (!CanFly(location)) return;
-            //if ((Info.MentalState != 1) && !CanFly(location)) return;//
-            uint duration = (uint)((magic.Level * 5 + 10) * 1000);
-            int value = (int)duration;
-            int delay = Functions.MaxDistance(CurrentLocation, location) * 50 + 500; //50 MS per Step          
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, value, location);
+
+            if (!CurrentMap.ValidPoint(location) ||
+                !CanFly(location))
+            {
+                return;
+            }
+
+            if (Pets.Exists(x => x.Info.GameName == Settings.StoneName))
+            {
+                MonsterObject st = Pets.First(x => x.Info.GameName == Settings.StoneName);
+                if (!st.Dead)
+                {
+                    ReceiveChat($"You can only have 1 active {Settings.StoneName} alive.", ChatType.Hint);
+                    return;
+                }
+            }
+
+            int duration = (((magic.Level * 5) + 10) * 1000);
+            int delay = Functions.MaxDistance(CurrentLocation, location) * 50 + 500; //50 MS per Step
+                                                                                     //
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, duration, location);
             ActionList.Add(action);
+
             cast = true;
         }
 
@@ -5889,7 +5999,7 @@ namespace Server.MirObjects
 
                 case Spell.Haste:
                     {
-                        AddBuff(BuffType.Haste, this, (Settings.Second * 30) + (magic.Level + 1), new Stats { [Stat.AttackSpeed] = (magic.Level + 1) * 2 });
+                        AddBuff(BuffType.Haste, this, (Settings.Second * 25) + (Settings.Second * magic.Level * 15), new Stats { [Stat.AttackSpeed] = (magic.Level * 2) + 2 });
                         LevelMagic(magic);
                     }
                     break;
@@ -6467,7 +6577,7 @@ namespace Server.MirObjects
                     break;
                 case Spell.Stonetrap:
                     {
-                        value = (int)data[1];
+                        duration = (int)data[1];
                         location = (Point)data[2];
 
                         if (Pets.Where(x => x.Race == ObjectType.Monster).Count() >= magic.Level + 1) return;
@@ -6483,6 +6593,9 @@ namespace Server.MirObjects
                         monster.MaxPetLevel = (byte)(1 + magic.Level * 2);
                         monster.Direction = Direction;
                         monster.ActionTime = Envir.Time + 1000;
+
+                        StoneTrap st = monster as StoneTrap;
+                        st.DieTime = Envir.Time + duration;
 
                         DelayedAction act = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, monster, location);
                         CurrentMap.ActionList.Add(act);
@@ -7312,12 +7425,15 @@ namespace Server.MirObjects
             */
             return 0;
         }
-        public bool CanGainItem(UserItem item, bool useWeight = true)
+        public bool CanGainItem(UserItem item)
         {
+            if (FreeSpace(Info.Inventory) > 0)
+            {
+                return true;
+            }
+
             if (item.Info.Type == ItemType.Amulet)
             {
-                if (FreeSpace(Info.Inventory) > 0 && (CurrentBagWeight + item.Weight <= Stats[Stat.BagWeight] || !useWeight)) return true;
-
                 ushort count = item.Count;
 
                 for (int i = 0; i < Info.Inventory.Length; i++)
@@ -7333,10 +7449,6 @@ namespace Server.MirObjects
 
                 return false;
             }
-
-            if (useWeight && CurrentBagWeight + (item.Weight) > Stats[Stat.BagWeight]) return false;
-
-            if (FreeSpace(Info.Inventory) > 0) return true;
 
             if (item.Info.StackSize > 1)
             {
@@ -7359,7 +7471,6 @@ namespace Server.MirObjects
         public bool CanGainItems(UserItem[] items)
         {
             int itemCount = items.Count(e => e != null);
-            int itemWeight = 0;
             ushort stackOffset = 0;
 
             if (itemCount < 1) return true;
@@ -7367,8 +7478,6 @@ namespace Server.MirObjects
             for (int i = 0; i < items.Length; i++)
             {
                 if (items[i] == null) continue;
-
-                itemWeight += items[i].Weight;
 
                 if (items[i].Info.StackSize > 1)
                 {
@@ -7387,7 +7496,6 @@ namespace Server.MirObjects
                 }
             }
 
-            if (CurrentBagWeight + (itemWeight) > Stats[Stat.BagWeight]) return false;
             if (FreeSpace(Info.Inventory) < itemCount + stackOffset) return false;
 
             return true;

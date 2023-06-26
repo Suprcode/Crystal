@@ -716,104 +716,58 @@ namespace Client.MirObjects
 
         public void GetMaxGain(UserItem item)
         {
-            if (CurrentBagWeight + item.Weight <= Stats[Stat.BagWeight] && FreeSpace(Inventory) > 0) return;
+            int freeSpace = FreeSpace(Inventory);
 
-            ushort min = 0;
-            ushort max = item.Count;
-
-            if (CurrentBagWeight >= Stats[Stat.BagWeight])
+            if (freeSpace > 0)
             {
-
-            }
-
-            if (item.Info.Type == ItemType.Amulet)
-            {
-                for (int i = 0; i < Inventory.Length; i++)
-                {
-                    UserItem bagItem = Inventory[i];
-
-                    if (bagItem == null || bagItem.Info != item.Info) continue;
-
-                    if (bagItem.Count + item.Count <= bagItem.Info.StackSize)
-                    {
-                        item.Count = max;
-                        return;
-                    }
-                    item.Count = (ushort)(bagItem.Info.StackSize - bagItem.Count);
-                    min += item.Count;
-                    if (min >= max)
-                    {
-                        item.Count = max;
-                        return;
-                    }
-                }
-
-                if (min == 0)
-                {
-                    GameScene.Scene.ChatDialog.ReceiveChat(FreeSpace(Inventory) == 0 ? GameLanguage.NoBagSpace : "You do not have enough weight.", ChatType.System);
-
-                    item.Count = 0;
-                    return;
-                }
-
-                item.Count = min;
                 return;
             }
 
-            if (CurrentBagWeight + item.Weight > Stats[Stat.BagWeight])
+            ushort canGain = 0;
+
+            foreach (UserItem inventoryItem in Inventory)
             {
-                item.Count = (ushort)(Math.Max((Stats[Stat.BagWeight] - CurrentBagWeight), ushort.MinValue) / item.Info.Weight);
-                max = item.Count;
-                if (item.Count == 0)
+                if (inventoryItem.Info != item.Info)
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("You do not have enough weight.", ChatType.System);
+                    continue;
+                }
+
+                int availableStack = inventoryItem.Info.StackSize - inventoryItem.Count;
+
+                if (availableStack == 0)
+                {
+                    continue;
+                }
+
+                canGain += (ushort)availableStack;
+
+                if (canGain >= item.Count)
+                {
                     return;
                 }
             }
 
-            if (item.Info.StackSize > 1)
+            if (canGain == 0)
             {
-                for (int i = 0; i < Inventory.Length; i++)
-                {
-                    UserItem bagItem = Inventory[i];
-
-                    if (bagItem == null) return;
-                    if (bagItem.Info != item.Info) continue;
-
-                    if (bagItem.Count + item.Count <= bagItem.Info.StackSize)
-                    {
-                        item.Count = max;
-                        return;
-                    }
-
-                    item.Count = (ushort)(bagItem.Info.StackSize - bagItem.Count);
-                    min += item.Count;
-                    if (min >= max)
-                    {
-                        item.Count = max;
-                        return;
-                    }
-                }
-
-                if (min == 0)
-                {
-                    GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.NoBagSpace, ChatType.System);
-                    item.Count = 0;
-                }
-            }
-            else
-            {
-                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.NoBagSpace, ChatType.System);
                 item.Count = 0;
+                return;
             }
 
+            item.Count = canGain;
         }
         private int FreeSpace(UserItem[] array)
         {
-            int count = 0;
-            for (int i = 0; i < array.Length; i++)
-                count++;
-            return count;
+            int freeSlots = 0;
+
+            foreach (UserItem slot in array)
+            {
+                if (slot == null)
+                {
+                    freeSlots++;
+                }
+            }
+
+            return freeSlots;
         }
 
         public override void SetAction()
