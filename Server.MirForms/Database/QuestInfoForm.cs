@@ -6,7 +6,7 @@ namespace Server
 {
     public partial class QuestInfoForm : Form
     {
-        public string QuestListPath = Path.Combine(Settings.ExportPath, "QuestList.txt");
+        public string QuestListPath = Path.Combine(Settings.ExportPath, "QuestList.csv");
 
         public Envir Envir => SMain.EditEnvir;
 
@@ -205,7 +205,7 @@ namespace Server
 
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.InitialDirectory = Path.Combine(Application.StartupPath, "Exports");
-            sfd.Filter = "Text File|*.txt";
+            sfd.Filter = "CSV File|*.csv";
             sfd.ShowDialog();
 
             if (sfd.FileName == string.Empty) return;
@@ -226,7 +226,7 @@ namespace Server
             string Path = string.Empty;
 
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Text File|*.txt";
+            ofd.Filter = "CSV File" +"*.csv";
             ofd.ShowDialog();
 
             if (ofd.FileName == string.Empty) return;
@@ -376,7 +376,7 @@ namespace Server
         {
             if (QFileNameTextBox.Text == string.Empty) return;
 
-            var scriptPath = Path.Combine(Settings.QuestPath, QFileNameTextBox.Text + ".txt");
+            var scriptPath = Path.Combine(Settings.QuestPath, QFileNameTextBox.Text + ".csv");
 
             if (File.Exists(scriptPath))
             {
