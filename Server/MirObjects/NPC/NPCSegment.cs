@@ -778,6 +778,13 @@ namespace Server.MirObjects
 
                     count = parts.Length < 3 ? "1" : parts[2];
                     acts.Add(new NPCActions(ActionType.Mongen, parts[1], count));
+                    if (parts.Length == 4)
+                    {
+                        string tmp = parts[3];
+                        acts.Add(new NPCActions(ActionType.Mongen, parts[1], count, tmp));
+                    }
+                    else
+                        acts.Add(new NPCActions(ActionType.Mongen, parts[1], count));
                     break;
 
                 case "TIMERECALL":
@@ -2733,14 +2740,22 @@ namespace Server.MirObjects
 
                         monInfo = Envir.GetMonsterInfo(param[0]);
                         if (monInfo == null) return;
-
-                        for (int j = 0; j < tempByte; j++)
+                        Point tmpPoint = new Point(0, 0);
+                        if (param.Count >= 3)
                         {
-                            MonsterObject monster = MonsterObject.GetMonster(monInfo);
-                            if (monster == null) return;
-                            monster.Direction = 0;
-                            monster.ActionTime = Envir.Time + 1000;
-                            monster.Spawn(map, new Point(Param2, Param3));
+                            int tmpInt = Convert.ToInt32(param[2]);
+                            for (int j = 0; j < tempByte; j++)
+                            {
+                                MonsterObject monster = MonsterObject.GetMonster(monInfo);
+                                if (monster == null)
+                                    return;
+                                monster.Direction = 0;
+                                monster.ActionTime = Envir.Time + 1000;
+                                if (map.ValidPoint(tmpPoint))
+                                    monster.Spawn(map, tmpPoint);
+                                else
+                                    monster.Spawn(map, new Point(Param2, Param3));
+                            }
                         }
                         break;
 
