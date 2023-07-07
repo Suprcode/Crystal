@@ -30,8 +30,6 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
-            DelayedAction action;
-
             ShockTime = 0;
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
