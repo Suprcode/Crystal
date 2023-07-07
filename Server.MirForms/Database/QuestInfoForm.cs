@@ -226,7 +226,7 @@ namespace Server
             string Path = string.Empty;
 
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "CSV File" +"*.csv";
+            ofd.Filter = "CSV File|*.csv";
             ofd.ShowDialog();
 
             if (ofd.FileName == string.Empty) return;
