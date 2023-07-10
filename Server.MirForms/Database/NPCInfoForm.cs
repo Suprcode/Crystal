@@ -357,7 +357,7 @@ namespace Server
         {
             if (NFileNameTextBox.Text == string.Empty) return;
 
-            var scriptPath = Path.Combine(Settings.NPCPath, NFileNameTextBox.Text + ".csv");
+            var scriptPath = Path.Combine(Settings.NPCPath, NFileNameTextBox.Text + ".txt");
 
             if (File.Exists(scriptPath))
             {
