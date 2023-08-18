@@ -37,9 +37,9 @@ namespace Client.MirObjects
             set
             {
                 if (targetObjectID == value) return;
-                lastTargetObjectId = targetObjectID;
+                lastTargetObjectId = value;
                 targetObjectID = value;
-                TargetObject = MapControl.Objects.Find(x => x.ObjectID == value);
+                TargetObject = value == 0 ? null : MapControl.Objects.Find(x => x.ObjectID == value);
             }
         }
 
@@ -157,7 +157,11 @@ namespace Client.MirObjects
         public void Remove()
         {
             if (MouseObject == this) MouseObjectID = 0;
-            if (TargetObject == this) TargetObjectID = 0;
+            if (TargetObject == this)
+            {
+                TargetObjectID = 0;
+                lastTargetObjectId = ObjectID;
+            }
             if (MagicObject == this) MagicObjectID = 0;
 
             if (this == User.NextMagicObject)
@@ -199,6 +203,7 @@ namespace Client.MirObjects
                     case ObjectType.Player:
                     case ObjectType.Monster:
                     case ObjectType.Hero:
+                        targetObjectID = ObjectID;
                         TargetObject = this;
                         break;
                 }
