@@ -109,11 +109,11 @@ namespace Server
                           DropStackSize = 5,
                           PKDelay = 12;
 
-        public static bool PetSave = false;
+        public static bool PetSave = true;
 
         public static int RestedPeriod = 60,
                           RestedBuffLength = 10,
-                          RestedExpBonus = 5,
+                          RestedExpBonus = 10,
                           RestedMaxBonus = 24,
                           NewbieGuildMaxSize = 1000;
 
@@ -199,7 +199,7 @@ namespace Server
         public static bool MailAutoSendGold = false;
         public static bool MailAutoSendItems = false;
         public static bool MailFreeWithStamp = true;
-        public static uint MailCostPer1KGold = 100;
+        public static uint MailCostPer1KGold = 10;
         public static uint MailItemInsurancePercentage = 5;
         public static uint MailCapacity = 100;
 

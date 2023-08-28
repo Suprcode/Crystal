@@ -9,7 +9,7 @@
     <ApplicationIcon>MIR2.ICO</ApplicationIcon>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <PlatformTarget>x64</PlatformTarget>
-    <BaseOutputPath>..\Build\Client\</BaseOutputPath>
+    <BaseOutputPath>D:\MyMir2\Client</BaseOutputPath>
   </PropertyGroup>
 
   <PropertyGroup>

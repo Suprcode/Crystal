@@ -6,7 +6,7 @@
     <Nullable>disable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <BaseOutputPath>..\Build\Server\</BaseOutputPath>
+    <BaseOutputPath>D:\MyMir2\Server</BaseOutputPath>
   </PropertyGroup>
 
   <PropertyGroup>
