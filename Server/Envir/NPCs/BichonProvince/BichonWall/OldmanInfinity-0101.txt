@@ -1,0 +1,66 @@
+[@Main]
+#SAY
+Hey <$USERNAME>!!
+Can you call yourself a true Mirian fighter?
+Then will you test your power in the Infinite
+Bout for unlimited challenges? <Next/@next>
+
+
+[@next]
+#SAY
+The fee is only '3000 {Gold/Gold}'. What? Too expensive?
+You can get 3000 {Gold/Gold} just by collecting and
+selling 10 Brown Chestnuts!
+
+<What is the/@info1> Infinite Bout?
+<I Will Challenge/@challenge1>
+<Maybe next time/@Exit>
+
+[@info1]
+#SAY
+Ah! What is the Infinite Bout?
+In the Infinite Bout, you have to slay all the
+monsters that will keep appearing all by themself.
+It is a chance to prove your true power and
+potential to the very limit.
+
+<What/@info2> should I bear in mind?
+
+[@info2]
+#SAY
+My advice is simple.
+You must rely on your own power only.
+And the time limit is two hours
+So don't lose your valuable items by being reckless.
+Have thorough preparation, OK?
+
+<I will/@info3>
+
+[@info3]
+#SAY
+I told you everything I can.
+Do you want to listen to it again?
+Or give it a go?
+
+I want to <hear it again./@info1>
+<Challenge!/@challenge2>
+<Maybe next time/@Exit>
+
+[@challenge1]
+#SAY
+Oh, if you fall down during the fight,
+You may lose the items you are equipped with.
+Are you still willing to go ahead?
+
+<Sure, Bring it on!/@challenge2>
+
+[@challenge2]
+#SAY
+Good! you are a true Mirian fighter!
+
+
+<Okay/@MOVE10101>
+
+[@MOVE10101]
+#ACT
+MOVE EM000

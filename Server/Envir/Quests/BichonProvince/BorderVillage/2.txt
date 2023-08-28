@@ -1,0 +1,32 @@
+[@Description]
+Could you do a favour for me as well? I want to
+give a present to {Jane/LimeGreen} to show my gratitude.
+But i cannot leave here at the moment. 
+
+[@TaskDescription]
+Find {GingerTea/LightSteelBlue} from {Scarecrows/Crimson} and Deliver
+to {Assistant Jane/LimeGreen} in {BorderVillage/Yellow}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+GingerTea 1 
+
+[@CarryItems]
+
+[@FixedRewards]
+GoldenPendant
+CopperRing
+
+[@SelectRewards]
+
+[@ExpReward]
+30
+
+[@GoldReward]
+200
+
+// Pickup - CraftsLady_Jude 0 294 619
+// Hand In - Assistant_Jane 0 284 606

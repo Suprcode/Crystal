@@ -1,0 +1,32 @@
+[@Description]
+Young traveller my name is {Smith/LimeGreen}.
+There are so my monsters outside the village
+I don't know how I'll make it to {BichonWall/Yellow}
+Can you help me?
+
+[@TaskDescription]
+Eliminate 10 {Deer/Crimson} and {Scarecrow's/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+Deer 10
+Scarecrow 10
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+WornIronBracelet
+
+[@SelectRewards]
+
+[@ExpReward]
+120
+
+[@GoldReward]
+30
+
+// Pickup - Blacksmith_Smith 0 296 613
+// Hand In - Blacksmith_Smith 0 296 613

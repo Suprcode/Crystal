@@ -1,0 +1,32 @@
+;Gold
+1/1 Gold 2000
+
+;Weapons
+1/4 WoodenSword 
+1/4 HoaSword 
+1/4 WoodenBow 
+1/4 Dagger 
+1/4 EbonySword 
+1/4 EbonyBow 
+
+;Armours
+1/4 BaseDress(M) 
+1/4 BaseDress(F) 
+
+;Necklaces
+1/4 GoldNecklace 
+1/4 PrecisionNecklace 
+
+;Bracelets
+1/4 IronBracelet 
+
+;Rings
+1/4 CopperRing 
+
+;Potions
+1/4 (HP)DrugSmall
+1/4 (MP)DrugSmall
+1/4 (HP)DrugSmall
+1/4 (MP)DrugSmall
+1/4 (HP)DrugSmall
+1/4 (MP)DrugSmall 

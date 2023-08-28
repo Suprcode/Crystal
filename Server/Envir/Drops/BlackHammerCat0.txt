@@ -1,0 +1,53 @@
+;Gold
+1/10 Gold 1600
+
+;Pots + Other
+1/15 (HP)DrugXL
+1/15 (MP)DrugXL
+1/30 SunPotion
+1/30 SunPotion
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+1/13000 BloodDragonHelmet
+
+;Necklace
+1/13000 BloodDragonNecklace
+
+;Bracelets
+1/13000 BloodDragonBrace
+
+;Rings
+1/13000 BloodDragonRing
+
+;Shoes
+1/13000 BloodDragonBoots
+
+;Belts
+1/13000 BloodDragonBelt
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+

@@ -1,0 +1,54 @@
+;Gold
+1/25 Gold 1500
+
+;Pots + Other
+1/25 (HP)Booster
+1/25 (HP)Booster
+1/25 (MP)Booster
+1/25 (MP)Booster
+
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+

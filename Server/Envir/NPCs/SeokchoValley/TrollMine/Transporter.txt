@@ -1,0 +1,24 @@
+[@main]
+#SAY
+Have you heard the rumours of the beast
+that lurks in the 4th floor?
+
+<Yes/@yes>  <No/@no>
+
+[@no]
+#SAY
+I'm afraid if you haven't heard of the beast
+then it's best I don't help you get to his lair.
+
+<I have heard the tails/@yes> <Exit/@exit>
+
+[@yes]
+#SAY
+You must prepare yourself for he is unforgiving
+Please let me know when you're ready and i'll take you.
+
+<I'm ready/@transport> <I'm still not ready/@exit>
+
+[@transport]
+#ACT
+MOVE SG004 235 32

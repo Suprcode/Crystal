@@ -1,0 +1,33 @@
+[@Description]
+Thankyou traveler. For returning my son's {Robe/LightSteelBlue} I have a task
+if your to the challenge. My Son was looking for some treasure in 
+{SerpentDeadMine/Yellow} There was a letter in his Robes saying he found
+the Gold. Please return and retrieve the {StolenGold/LightSteelBlue}
+
+[@TaskDescription]
+Kill {RotNdZombie/Crimson} located on {SerpentDeadMine 2F/Yellow}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+StolenGold 1
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+BlackCrystalRing
+EyeofGoldenSnake
+BlackPearlRing 
+
+[@ExpReward]
+4800
+
+[@GoldReward]
+4800
+
+// Pickup - InnKeeper_Robin 0146 5 10
+// Hand In - InnKeeper_Robin 0146 5 10

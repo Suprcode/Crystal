@@ -1,0 +1,279 @@
+1/2 Gold 20000
+
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 SunPotion
+1/2 BenedictionOil
+1/5 GoldBar
+
+1/140 BlackTigerArmour(M)
+1/140 BlackTigerArmour(F)
+1/140 LotusArmour(M)
+1/140 LotusArmour(F)
+1/140 CraneArmour(M)
+1/140 CraneArmour(F)
+1/140 StealthArmour(M)
+1/140 StealthArmour(F)
+1/170 RedDarkArmour(M)
+1/170 RedDarkArmour(F)
+1/170 BlueDarkArmour(M)
+1/170 BlueDarkArmour(F)
+1/170 ScaledArmour(M)
+1/170 ScaledArmour(F)
+1/170 GreenDarkArmour(M)
+1/170 GreenDarkArmour(F)
+1/170 GoldDarkArmour(M)
+1/170 GoldDarkArmour(F)
+1/400 WatcherSuit(M)
+1/400 WatcherSuit(F)
+1/1700 HeavenRedArmour(M)
+1/1700 HeavenRedArmour(F)
+1/1700 HeavenGrnArmour(M)
+1/1700 HeavenGrnArmour(F)
+1/1700 HeavenArmour(M)
+1/1700 HeavenArmour(F)
+1/1700 HeavenGoldArmour(M)
+1/1700 HeavenGoldArmour(F)
+
+1/100 BladesOfMagi
+1/300 BowOfForce
+1/300 SwordOfWarGod
+1/300 BladeOfSorcery
+1/300 HeavenSword
+1/50 FrozenSabre
+1/50 GrimBow
+1/50 ZincBlades
+1/50 ConquerorSpear
+1/50 BastardSword
+1/450 BlackTigerHammer
+1/450 LethalBow
+1/450 ButcheringBlades
+1/450 StaffOfLotus
+1/450 FanOfCrane
+1/700 BarbarianSword
+1/700 ApusBow
+1/700 RawSword
+1/700 MadDragonBlades
+1/700 BoneCarvedFan
+
+1/40 GreatHelmet
+1/40 WisdomCoronet
+1/40 TaoCoronet
+1/40 RoyalHelmet
+1/100 SparklingHelmet
+1/150 PuiYuHelmet
+1/150 WatcherHelmet
+
+
+1/50 PledgeRing
+1/50 FiveElementRing
+1/50 CrimsonRubyRing
+1/105 DemonRubyRing
+1/105 EvilExpelRing
+1/155 GoldDragonRing
+
+1/50 DualTitanAmulet
+1/50 SacredAngelAmulet
+1/50 EvilWhispAmulet
+1/105 WildTitanAmulet
+1/105 EnchantedAmulet
+1/105 FiveElementAmulet
+1/155 WatcherGloves
+
+1/50 CuspidNecklace
+1/50 SorceryAnchor
+1/50 PurifiedMirror
+1/100 EvilTriangle
+1/100 CrossPurified
+1/100 AdamantNecklace
+
+1/10 BraveryOrb
+1/10 MagicOrb
+1/10 SoulOrb
+1/20 ProtectionOrb
+1/20 EvilSlayerOrb
+1/40 StormOrb
+1/40 AgilityOrb
+1/40 AccuracyOrb
+1/40 PoisonOrb
+1/40 FreezingOrb
+1/40 DisillusionOrb
+1/40 EnduranceOrb
+1/45 DurabilityOrb
+
+1/30 HolyHealthStone
+1/30 HolyMagicStone
+1/30 HolyPowerStone
+1/40 HolyAcStone
+1/40 HolyAmcStone
+1/40 HolyDefenseStone
+1/30 HolyDCStone
+1/30 HolyMCStone
+1/30 HolySCStone
+
+
+;Boots
+1/300 WatcherBoots
+
+
+;Shield
+1/650 OrcsShield
+
+1/300 DefenderRing
+1/300 DefenderGlove
+1/300 DefenderNecklace
+1/100 (H)DemonMask
+1/100 (H)VioletOrb
+1/100 (H)KunroonTear
+1/100 (H)WheelOfLunar
+1/100 (H)RedDemonRing
+1/100 (H)CloudRing
+1/100 (H)PoisonRing
+1/80 ArmouredMedal
+1/50 HollowMedal
+1/200 AscendedRing
+1/200 AscendedWheel
+1/200 AscendedNecklace
+1/200 AscendedHelmet
+1/200 AscendedBoots
+1/200 AscendedBelt
+
+;other
+1/550 InfernoRing
+1/550 InfernoNecklace
+1/550 InfernoWheel
+1/550 InfernoBoots
+1/550 InfernoBelt
+1/550 InfernoShield
+1/550 InfernoHelmet
+1/1200 HeatsBanes
+1/1200 WidowsWail
+1/1200 ThorsBattleAxe
+1/1200 OathKeeper
+1/450 TrollCap
+1/450 TrollRing
+1/450 TrollBand
+1/450 TrollChains
+1/450 StrapofTrolls
+1/450 TrollLeathers
+1/200 TerrapinNecklace
+1/200 TerrapinBracelet
+1/200 TerrapinRing
+1/300 TerrapinShield
+1/500 TrollsRobe(M)
+1/500 TrollsRobe(F)
+
+1/100 DefensiveMedal
+1/100 OffensiveMedal
+
+1/100 SmasherGlove
+1/100 BlizzardGlove
+1/100 MistyGlove
+1/100 SlicerGlove
+1/100 SmasherNecklace
+1/100 BlizzardNecklace
+1/100 MistyNecklace
+1/100 SlicerNecklace
+1/100 SmasherRing
+1/100 BlizzardRing
+1/100 MistyRing
+1/100 SlicerRing
+
+1/900 HavokBraveArmour(M)
+1/900 HavokBraveArmour(F)
+1/900 HavokMagicArmour(M)
+1/900 HavokMagicArmour(F)
+1/900 HavokSoulArmour(M)
+1/900 HavokSoulArmour(F)
+1/900 HavokSinArmour(M)
+1/900 HavokSinArmour(F)
+
+1/400 NecklaceOfAgony
+1/400 BraceletOfAgony
+1/400 RingOfAgony
+
+1/1200 FrozenBelt
+1/1200 FrozenNecklace
+1/1200 FrozenRing
+1/1200 FrozenBoots
+1/900 FrozenWheel
+1/1200 FrozenSlayer
+1/1200 FrozenStaff
+1/1200 FrozenWand
+1/1200 FrozenDaggers
+1/1200 FrozenBow
+
+;Books
+;Warrior
+1/25 FlamingSword
+1/30 CrossHalfMoon
+1/50 TwinDrakeBlade
+1/60 LionRoar
+1/70 Entrapment
+1/120 SliceNDice
+1/140 BladeStorm
+1/150 BladeAvalanche
+1/700 ProtectionField
+1/800 Rage
+1/900 Fury
+1/1000 CounterAttack
+1/1500 ImmortalSkin
+
+;Wizard
+1/10 FrostCrunch
+1/25 IceStorm
+1/30 FlameDisruptor
+1/50 Vampirism
+1/100 DragNet
+1/150 Mirroring
+1/190 FlameField
+1/700 Blizzard
+1/800 MagicBooster
+1/900 MeteorStrike
+1/1000 FastMove
+1/1100 IceThrust
+1/1200 FrozenRains
+1/1300 LavaKing
+1/1600 StormEscape
+
+;Taoist
+1/50 Hallucination
+1/50 Purification
+1/30 UltimateEnhancer
+1/30 EnergyRepulsor
+1/25 SummonShinsu
+1/100 HealingCircle
+1/200 SummonHolyDeva
+1/500 Curse
+1/800 Reincarnation
+1/900 PoisonCloud
+1/1100 EnergyShield
+1/1000 PetEnhancer
+1/1300 HolyShield
+1/1600 HeadShot
+
+;Assassin
+1/50 FireBurst
+1/75 Trap
+1/60 SwiftFeet
+1/100 CrescentSlash
+1/600 DarkBody
+
+

@@ -1,0 +1,143 @@
+;Gold
+1/1 Gold 30000
+
+;Pots + Other
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 BenedictionOil
+1/2 BenedictionOil
+
+1/10 AwakeningSoul0
+
+
+;Weapons
+1/900 FrozenSabre
+1/900 GrimBow
+1/900 ConquerorSpear
+1/900 BastardSword
+1/1100 BlackTigerHammer
+1/1100 LethalBow
+1/1100 StaffOfLotus
+1/1100 FanOfCrane
+1/1300 HellYamaBlade
+
+;Armour
+1/1650 BloodDragonArmour(M)
+1/1650 BloodDragonArmour(F)
+
+;Helmets
+1/390 ApesCrown
+1/500 SparklingHelmet
+1/520 HelmetOfDarkness
+1/460 PuiYuHelmet
+1/1450 BloodDragonHelmet
+
+;Necklace
+1/155 EvilTriangle
+1/155 CrossPurified
+1/155 AdamantNecklace
+1/630 DemonMask
+1/630 VioletOrb
+1/630 KunroonTear
+1/800 (H)DemonMask
+1/800 (H)VioletOrb
+1/800 (H)KunroonTear
+1/1550 BloodDragonNecklace
+
+;Bracelets
+1/155 WildTitanAmulet
+1/155 EnchantedAmulet
+1/155 FiveElementAmulet
+1/600 WheelOfLunar
+1/800 (H)WheelOfLunar
+1/1550 BloodDragonBrace
+
+;Rings
+1/155 DemonRubyRing
+1/155 EvilExpelRing
+1/155 GoldDragonRing
+1/620 RedDemonRing
+1/620 CloudRing
+1/620 PoisonRing
+1/800 (H)RedDemonRing
+1/800 (H)CloudRing
+1/800 (H)PoisonRing
+1/1450 BloodDragonRing
+
+;Belt
+1/1500 BloodDragonBelt
+
+;Boot
+1/1500 BloodDragonBoots
+
+
+;Shields
+1/225 TrophyShield
+1/440 LunarPlate
+
+;Medals
+1/230 ArmouredMedal
+1/250 HollowMedal
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+;;Warrior
+1/800 ProtectionField
+1/800 Rage
+1/800 CounterAttack
+1/800 SlashingBurst
+1/800 Fury
+1/900 ImmortalSkin
+
+;;Wizard
+1/800 IceThrust
+1/800 MeteorStrike
+1/800 MagicBooster
+1/900 StormEscape
+1/900 FastMove
+1/1500 LavaKing
+1/1550 FrozenRains
+
+;;Taoist
+1/800 PoisonCloud
+1/800 Reincarnation
+1/900 PetEnhancer
+1/900 Plague
+1/900 EnergyShield
+1/1650 HeadShot
+1/1800 HolyShield
+
+;;Assassion
+1/800 SwiftFeet
+1/800 DarkBody
+1/900 Hemorrhage
+1/900 MoonMist
+1/1650 FuryWaves
+1/1650 ShadowStep
+
+;Archer
+1/800 PoisonShot
+1/800 CrippleShot
+1/900 SummonSnakes
+1/90 NapalmShot
+1/1650 OneWithNature
+
+;CraftingMaterials
+
+
+;Quests

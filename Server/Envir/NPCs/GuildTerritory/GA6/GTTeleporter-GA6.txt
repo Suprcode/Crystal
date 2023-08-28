@@ -1,0 +1,64 @@
+[@main]
+#SAY
+           	             {Players Online/Red} <$USERCOUNT> - {You Have/Red} <$PKPOINT> {Pk Points/Red}
+			                        {Next Sabuk Wall - <$CONQUESTSCHEDULE(1)> /LightBlue}
+
+Teleport to:<Bichon Wall/@move0>
+Teleport to:<Woomyon Woods/@move1>
+Teleport to:<CastleGi-Ryoong/@move2>
+Teleport to:<Serpent Valley/@move3>
+Teleport to:<Tao School/@move4>
+Teleport to:<Mongchon Province/@move5>
+Teleport to:<Prajna Island/@move9>
+Teleport to:<Past Bichon/@move10>
+Teleport to:<Waste Lands/@move6>
+Teleport to:<Seokcho Valley/@move7>
+
+
+[@move0]
+#ACT
+MOVE 0 328 264
+
+[@move1]
+#ACT
+MOVE 1 317 79
+
+[@move2]
+#ACT
+MOVE 4 264 257
+
+[@move3]
+#ACT
+MOVE 2 500 485
+
+[@move4]
+#ACT
+MOVE 11 164 337
+
+[@move5]
+#ACT
+MOVE 3 329 332
+
+[@move6]
+#ACT
+MOVE Hell00 41 224
+
+[@move7]
+#ACT
+MOVE UMM 125 178
+
+[@move8]
+#ACT
+MOVE 7 397 302
+
+[@move81]
+#ACT
+MOVE peunmok_village 47 47
+
+[@move9]
+#ACT
+MOVE 5 138 331
+
+[@move10]
+#ACT
+MOVE 6 123 155

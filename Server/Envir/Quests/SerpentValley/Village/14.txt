@@ -1,0 +1,27 @@
+[@Description]
+Please return to {Robin/LimeGreen} Warehouse Keeper in 
+{MongchonProvince/Yellow} 
+
+[@TaskDescription]
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+OldRobe 1
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+3794
+
+[@GoldReward]
+4200
+
+// Pickup - OldSkull D422 97 320
+// Hand In - InnKeeper_Robin 0146 5 10

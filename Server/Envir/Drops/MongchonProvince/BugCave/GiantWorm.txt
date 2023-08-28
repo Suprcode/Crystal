@@ -1,0 +1,82 @@
+;Gold
+1/10 Gold 350
+
+;Weapons
+1/160 PrinceDagger 
+1/160 MartialSword 
+1/160 HookedSpear 
+1/160 KrissSword 
+1/160 IronBlades 
+1/160 LongBow 
+1/500 PowerAxe 
+1/600 PurifierSword 
+1/10000 GreatAxe 
+1/10000 MageStaff 
+1/10000 SerpentSword 
+1/10000 DoubleBlades 
+1/10000 SilverBow 
+
+;Armours
+1/800 HeavyArmour(M) 
+1/800 HeavyArmour(F) 
+1/800 MagicRobe(M) 
+1/800 MagicRobe(F) 
+1/800 SoulArmour(M) 
+1/800 SoulArmour(F) 
+1/800 RelicArmour(M) 
+1/800 RelicArmour(F) 
+1/800 LightLeatherArmour(M) 
+1/800 LightLeatherArmour(F) 
+
+;Necklaces
+1/160 LanternNecklace 
+1/160 TigerNecklace 
+1/100 PlatinumNecklace 
+1/500 BlueJadeNecklace 
+1/500 BambooPipe 
+1/500 ConvexLens 
+
+;Bracelets
+1/100 StrainBracelet 
+1/100 MagicBracelet 
+1/160 HardGlove 
+1/300 EbonyBracelet 
+1/300 MonkBracelet 
+1/900 DeathGauntlet 
+1/160 GoldBracelet 
+1/1000 BronzeGlove 
+
+;Rings
+1/100 BlackRing 
+1/100 SerpentEyeRing 
+1/100 PearlRing 
+1/200 GoldRing 
+1/300 SkeletonRing 
+1/300 IronRing 
+1/400 CharmRing 
+1/400 MoralRing 
+1/6000 ExpelRing 
+1/6000 CoralRing 
+1/20000 GaleRing 
+
+;Stones
+1/1500 HealthStone(M) 
+1/1500 MagicStone(M) 
+1/1500 PowerStone(M)
+1/1500 DCStone(M) 
+1/1500 MCStone(M) 
+1/1500 SCStone(M) 
+
+;Potions
+1/4 (HP)DrugMedium 
+1/4 (MP)DrugMedium 
+1/40 SunPotion 
+1/60 SunPotion(M) 
+1/20 OldGinseng 
+
+;Crafting Materials
+1/15 Mandible 
+
+;Quest
+1/10 OldNecklace Q
+

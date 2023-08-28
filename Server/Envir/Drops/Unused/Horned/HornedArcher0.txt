@@ -1,0 +1,53 @@
+;Gold
+1/10 Gold 1150
+
+;Pots + Other
+1/15 (HP)DrugXL
+1/15 (MP)DrugXL
+1/40 SunPotion
+1/40 SunPotion
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+1/1900 HornedCommandersBoots
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+

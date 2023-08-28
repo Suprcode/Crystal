@@ -1,0 +1,24 @@
+[@Description]
+
+[@TaskDescription]
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@FlagTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+
+[@GoldReward]
+
+// Pickup - Traveller_Soho D2042 114 155
+// Hand In - Merchant_Helen 1 292 84

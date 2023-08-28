@@ -1,0 +1,52 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Hello I'm the inspector dispatched from Bichon.
+I sincerely ask you to cooperate with the authorities
+if and when something happens around here.
+ <Ask/@ask1> what he is investigating
+ <Ask/@ask2> about the Bottomless Pit
+ <Close/@exit>
+
+[@ask1]
+Lately, a number of unidentified monsters have been seen
+lurking around here,so I've been sent to find the cause.
+according to some rumors, there is a place called the
+"Bottomless Pit" on this island. I'm investigating
+whether that place has something to do with monsters.
+ <Next/@next1>
+
+[@next1]
+We haven't been able to locate the exact position of this
+Bottomless Pit... If you discover it's whereabouts,
+please make sure you inform me as soon as you can.
+ <Close/@exit>
+
+[@ask2]
+I dont actually know in great detail, but from what I heard,
+the place is haunted by mysterious forces, and because of that
+many villagers have disappeared without trace. People here are
+now calling it the "Bottomless Pit", an they have taken to
+avoid being out in the wilderness alone.
+ <Next/@next2>
+
+[@next2]
+I'm afraid that's all the information I have. If you want to
+know more about it, go and speak to the village chief
+ <Close/@exit>
+
+[Quests]
+121
+-121
+131
+-131

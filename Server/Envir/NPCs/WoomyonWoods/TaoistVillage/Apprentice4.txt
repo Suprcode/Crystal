@@ -1,0 +1,8 @@
+[@main]
+The worst monster amongst the spider monsters in the woods is a {Rootspider/Crimson}
+The {rootspider/Crimson} does not move for itself but it spews larvas continually
+The minute a larva sees a human it rushs at them
+in order to do a self-destruct
+if this {Rootspider/Crimson} is killed, the larves dont appear anymore
+But it is a terribly hard battle to kill a {Rootspider/Crimson}.
+<Ok/@exit>

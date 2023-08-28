@@ -1,0 +1,25 @@
+[@Description]
+Thankyou for your assistance brave traveller. 
+Please can you return to {Helen/LimeGreen} and tell her the 
+news.
+
+[@TaskDescription]
+Speak to {Heleny/LimeGreen} in {WoomyonWood's/Yellow}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+5114
+
+[@GoldReward]
+5700

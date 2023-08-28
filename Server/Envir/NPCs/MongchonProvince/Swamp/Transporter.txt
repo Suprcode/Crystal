@@ -1,0 +1,9 @@
+[@main]
+#SAY
+Have you had enough and want to go back?
+
+<Yes/@yes>  <No/@exit>
+
+[@yes]
+#ACT
+MOVE EBEE03 204 255

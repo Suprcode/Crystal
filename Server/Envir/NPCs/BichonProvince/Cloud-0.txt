@@ -1,0 +1,13 @@
+[@Main]
+#SAY
+I am the Assassin-Level Warrior, it's good to see you.
+The first thing you need to learn is sword technique,
+you can start to practise this properly at level 7.
+First level up and then come and see me.
+<Ok/@exit>
+
+[Quests]
+-16
+17
+-17
+18

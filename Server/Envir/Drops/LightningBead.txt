@@ -1,0 +1,62 @@
+;Gold
+
+
+;Pots + Other
+
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gem/Orb
+1/1300 FreezingGem
+1/1300 DurabilityGem
+1/1300 BraveryGem
+1/1300 MagicGem
+1/1300 SoulGem
+1/1300 ProtectionGem
+1/1300 EvilSlayerGem
+1/1300 PoisonGem
+1/1300 AccuracyGem
+1/1300 AgilityGem
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+

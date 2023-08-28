@@ -1,0 +1,14 @@
+-Red Cavern all movements are in with Bigmap icons too.
+-Red Valley now has Bigmap Icons.
+-Snow Cavern door to KR fixed.
+-Lunar door added to treepath.
+-Ice Hell doors fixed.
+-Rebirth 1-3 now fully implemented. (Check BW Board)
+-Dangerous Cavern now has a minimap/bigmap.
+-Pranja Temple Door icon fixed for F 7>KR + Bigmap added to KR.
+-Hell Fire KR now has a minimap/bigmap.
+-Stone Trap AI now correct. (130 > 255)
+-Rebirth Panel added to GM_Manager in r001.
+-GM_Teleporter has had a huge rework.
+-GM Stable now displays currently equipped Mount and Mount Loyalalty.
+-@GM command added to teleport admin accounts to r001 @ 100:100.

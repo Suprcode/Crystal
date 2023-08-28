@@ -1,0 +1,65 @@
+;Gold
+1/2 Gold 3750
+
+;Pots + Other
+1/4 (HP)DrugXL
+1/4 (MP)DrugXL
+1/10 (HP)DrugXL
+1/10 (MP)DrugXL
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+;Warrior
+1/16000 CounterAttack
+
+;Taoist
+1/16000 Plague
+1/16000 PetEnhancer
+
+;Wizard
+1/16000 MagicBooster
+1/16000 IceThrust
+
+;Assassin
+1/16000 Hemorrhage
+
+;CraftingMaterials
+1/100 FocusMarble
+
+;Quests
+1/1 CannibalStomach Q

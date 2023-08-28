@@ -1,0 +1,120 @@
+;Gold
+1/5 Gold 185
+
+;Pots + Other
+1/7 (HP)DrugSmall
+1/7 (MP)DrugSmall
+1/30 (HP)DrugMedium
+1/30 (MP)DrugMedium
+
+;Weapons
+1/110 BronzeSword 
+1/110 ShortSword 
+1/110 ShortBow
+1/110 IronSword 
+1/110 BronzeAxe 
+1/210 HookedSword 
+1/210 Trident 
+1/210 Scimitar 
+1/280 SteelAxe 
+1/250 SteelSword 
+1/250 MartialSword 
+1/250 HookedSpear 
+1/250 KrissSword 
+1/200 BladesOfVelocity
+1/250 IronBlades
+1/110 CompoundBow
+1/250 LongBow
+
+;Armour
+1/200 LightArmour(M) 
+1/200 LightArmour(F) 
+
+;Helmets
+1/100 BronzeHelmet 
+1/125 MagicHelmet 
+
+;Necklace
+1/400 LanternNecklace 
+1/400 TigerNecklace 
+1/400 PlatinumNecklace 
+1/400 NagaNecklace 
+1/400 AmberNecklace 
+1/400 PhoenixBead 
+
+;Bracelets
+1/400 MagicBracelet 
+1/550 HardGlove 
+
+;Rings
+1/300 BlueRing 
+1/400 BlackRing 
+1/400 SerpentEyeRing 
+1/400 PearlRing 
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+;Warrior
+1/105 Fencing
+1/110 Slaying 
+1/115 Thrusting
+1/200 HalfMoon 
+
+;Wizard
+1/105 FireBall 
+1/110 Repulsion
+1/115 ElectricShock
+1/120 GreatFireball
+1/125 Hellfire
+1/130 Thunderbolt
+1/200 Teleport 
+1/300 FireBang
+
+;Taoist
+1/105 Healing 
+1/110 SpiritSword
+1/115 Poisoning 
+1/120 SoulFireBall 
+1/125 SummonSkeleton
+1/130 Hiding
+1/200 MassHiding
+1/300 SoulShield
+
+;Assassin
+1/105 FatalSword
+1/110 DoubleSlash
+1/115 Haste
+1/200 FlashDash
+1/300 HeavenlySword
+
+;Archer
+1/105 Focus
+1/110 StraightShot
+1/115 MentalState
+1/200 DoubleShot
+1/300 Meditation
+
+
+;CraftingMaterials
+
+
+;Quests
+1/2 ZombiEeye Q
+1/2 Entrails Q

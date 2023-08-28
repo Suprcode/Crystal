@@ -1,0 +1,30 @@
+;Gold
+1/15    Gold 2000
+
+;Potions
+1/10     (HP)DrugLarge
+1/10     (MP)DrugLarge
+1/10     (HP)DrugLarge
+1/10     (MP)DrugLarge
+1/20    SunPotion(M)
+1/20    SunPotion(M)
+1/20    SunPotion(M)
+1/20    SunPotion(M)
+1/100 MagicDrug(S)
+
+;Nothing
+1/50    AdmissionOrb
+
+;Belts
+1/420 NephriteBelt
+1/420 RedJadeBelt
+1/420 SteelBelt
+
+;Shoes
+1/440 NephriteShoes
+1/440 RedJadeShoes
+1/440 RedScaleBoots
+
+;Books
+1/200 flamedisruptor
+1/200 FrostCrunch

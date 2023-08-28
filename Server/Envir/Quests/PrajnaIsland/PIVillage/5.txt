@@ -1,0 +1,29 @@
+[@Description]
+Please can you take this {Algea/LightSteelBlue} to 
+{MongchonProvince/Yellow}.
+
+[@TaskDescription]
+Deliver the {Algea/LightSteelBlue} to {CraftsLady/LimeGreen} in 
+{MongchonProvince/Yellow}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+Algae 2
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+8407
+
+[@GoldReward]
+12000
+
+// Pickup - 
+// Hand In - CraftsLady_Louise 3 299 371

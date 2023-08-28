@@ -1,0 +1,32 @@
+;Necklace
+;;Warrior
+1/300 ClawNecklace
+1/400 GreenBead
+1/500 HeroNecklace
+1/600 PurpleFoxCollar
+1/700 GreatPurpleFoxCollar
+1/800 CuspidNecklace
+1/900 AdamantNecklace
+
+;;Wizard
+1/300 LifeNecklace
+1/400 DemonicBells
+1/500 AdamantineNecklace
+1/600 RedFoxCollar
+1/700 GreatRedFoxCollar
+1/800 SorceryAnchor
+1/900 EvilTriangle
+
+;;Taoist
+1/300 PearlNecklace
+1/400 SoulNecklace
+1/500 RequiemNecklace
+1/600 BlueFoxCollar
+1/700 GreatBlueFoxCollar
+1/800 PurifiedMirror
+1/900 CrossPurified
+
+;Set
+1/450 SmashPendulum
+1/450 HwanDevilNecklace
+1/450 PurityNecklace

@@ -1,0 +1,12 @@
+[@MAIN]
+#IF
+CHECKQUEST 105 0
+#SAY
+Someones remains.
+#ELSESAY
+The Remains of LostSoul.
+#ELSEACT
+SET [524] 1
+LOCALMESSAGE "Return to the LostSoul" Hint
+BREAK
+CLOSE

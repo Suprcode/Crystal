@@ -1,0 +1,23 @@
+[@Description]
+Listen to {Perry's/LimeGreen} Story..
+
+[@TaskDescription]
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@FlagTasks]
+529 "Listen to Perry's Story"
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+
+[@GoldReward]

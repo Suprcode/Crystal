@@ -1,0 +1,30 @@
+[@Description]
+Hello traveller. I was returning to {SerpentValley/Yellow}
+from {MongchonProvince/Yellow}. But I was attacked by 
+{Currish/Crimson} and dropped my bag. My priceless 
+{JadeRing/LightSteelBlue} was in the bag.
+
+[@TaskDescription]
+Find the {JadeRing/LightSteelBlue} from {Currish/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+JadeRing 1
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+800
+
+[@GoldReward]
+800
+
+// Pickup - Merchant_Bradley 0120 7 8
+// Hand In - Merchant_Bradley 0120 7 8

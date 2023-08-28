@@ -1,0 +1,142 @@
+[@main]
+#IF
+CHECK [530] 1
+#ACT
+GOTO @Next1
+#ELSESAY
+Welcome <$USERNAME>, What can i do for you?
+
+<Close/@exit>
+#ELSEACT
+SET [530] 1
+
+[@Next1]
+#IF
+CHECKQUEST 146 1
+#ACT
+GOTO @CHECK2
+#ELSESAY
+Welcome <$USERNAME>, What can i do for you?
+
+<Close/@exit>
+
+[@CHECK2]
+#IF
+CHECK [531] 1
+#ACT
+GOTO @Next3
+#ELSEACT
+GOTO @Next2
+
+[@Next2]
+#SAY
+Come here, pal!
+I have been waiting for you a long time..
+ 
+It's your destiny you never escape from it even after you die....
+Ah friend, Will you take my orders and get through the hard way?
+ 
+<I'll follow your orders with pleasure/@Quest1>
+
+[@Quest1]
+#SAY
+Well. This is my duty. This is why i have waited for you instead of
+leaving here You came here with a JadeCrystal.. My name is Abel,
+and my nickname was Thunderman before i died. Originally I had
+striven for martial art training since I was 5 years old When I was
+30 years old I was never scared of anyone in the world Then I was 
+arrogant for I took a pride in my martial art, consequently it made 
+me a lot of enemies. But I was no longer interested in community life
+<Next/@Quest2>
+
+[@Quest2]
+#SAY
+So I disappeared from the sight of people to look for stronger monsters
+I finally reached the highest floor of the RedMoon Valley, no one had
+been until then And I found something in a ugly, wet, shady and 
+bad-smelling room... It's the Crystal of huge demon. Filled with hatred...
+anger... uncontrollably the rough heartbeasts of mad and murderous
+monster beat within it... Its power was so strong that I was frightened
+and scared of it and I thought I should try to kill it anyhow
+<That's why you need the HolySword./@Quest3>
+
+[@Quest3]
+#SAY
+Your right. I tried hiring a HolySword, the best sword of all, from
+the taoist school located below the mountain. But they didn't trust me
+for I had a bad reputation at that time. So they expelled me from there
+It made me angry and I extorted the sword by force of arms.
+I came here with the sword but... It seems to have been the first
+wrong step. My mind was still filled with arrogance at that time.
+<Next/@Quest4>
+
+[@Quest4]
+#SAY
+The enemy heard I had extorted a treasure and they rushed me, to 
+kill with anger The people who got into the RedMoon Valley on that 
+day were affected by the RedMoonEvil, the origin of the demon, 
+Consequently,madness of murder dominated their spirit. People 
+murdered each others, enemies and friends alike the heaps of corpses 
+blocked the way and the flow of blood became a river of red I 
+managed to escape from it because I held a HolySword, a priceless 
+sword, But I had murdered several people already by that time.
+<Next/@Quest5>
+
+[@Quest5]
+#SAY
+I tried to use anger against the RedMoonEvil, the terrible monster.
+But anger and loathing can not beat demonic power. The minuet
+I stabbed the RedMoonEvil I was showered with its blood and
+promptly demon energy made me a demon of a man Because the 
+HolySword could not protect me any more due to demon energy growning 
+in my mind The HolySword also became a demon sword, a 
+RedMoonSword. Ugh everything was my fault.
+<Then how can I killed the RedMoonEvil/@Quest6>
+
+[@Quest6]
+#SAY
+Although RedMoonEvil defeated me and the HolySword at the time,
+The HolySword filled with taoist power injured RedMoonEvil fatally.
+In spite of the passage of time, RedMoonEvil has not fully
+recovered from the wound Therefore you who are not affected
+with evil energy are able to kill the monster RedMoonEvil is a
+demonic creature giving serious problems to the human community
+We should get rid of it absolutely. Now keep in mind what I say
+<Give me an order, Please./@Quest7>
+
+[@Quest7]
+#SAY
+Since I became a demon of a man due to the blood of RedMoonEvil...
+The RedMoonSword led me to wander over RedMoon Valley and 
+Murder. Fighting and slaying for over 100 years when i faught against
+a certain RedEvilApe the RedMoonSword was finally broken I recovered
+my spirit from grasp of the huge demonic power and I aquired a
+skill to let my soul remain even after my body Died. Now I would
+like to ask you, get back the RedMoonChip and bring it to me
+If left alone, other person will become a victim like me....
+<Close/@Quest8>
+
+[@Quest8]
+#ACT
+SET [531] 1
+BREAK
+CLOSE
+
+[@Next3]
+#SAY
+Welcome <$USERNAME>, What can i do for you?
+
+<Close/@exit>
+
+[Quests]
+-146
+147
+-147
+148
+-148
+149
+-149
+150
+-150
+151
+-151

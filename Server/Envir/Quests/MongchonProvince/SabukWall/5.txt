@@ -1,0 +1,29 @@
+[@Description]
+So for once the rumours are true.
+Please return to the {Hidden Entrance/Yellow}. 
+ 
+[@TaskDescription]
+Eliminate some {CrawlerZombies/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+CrawlerZombie 50 "Eliminate some CrawlerZombies"
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+ExorcistRing 
+
+[@SelectRewards]
+
+[@ExpReward]
+11000
+
+[@GoldReward]
+2750
+
+// Pickup - Merchant_Mr.Wang 3 663 304
+// Hand In - Merchant_Mr.Wang 3 663 304

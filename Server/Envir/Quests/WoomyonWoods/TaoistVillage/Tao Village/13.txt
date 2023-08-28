@@ -1,0 +1,27 @@
+[@Description]
+I miss my Parent's so much. Please can you help?
+
+[@TaskDescription]
+Delivery {SkysLetter/LightSteelBlue} to {Sir.Mogu/LimeGreen} in {BichonWall/Yellow}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+SkysLetter 2
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+1930
+
+[@GoldReward]
+4100
+
+// Pickup - Apprentice 11 191 325
+// Hand In - Sir_Mogu 0101 8 12

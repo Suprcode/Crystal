@@ -1,0 +1,16 @@
+;;Bichon Palace
+;;[@_MAPCOORD(0,347,188)]
+#INCLUDE [SystemScripts\00Default\MapCoords\BichonPalace.txt] @Main
+
+;;[@_MAPCOORD(0,347,189)]
+#INCLUDE [SystemScripts\00Default\MapCoords\BichonPalace.txt] @Main
+
+;;[@_MAPCOORD(0,346,188)]
+#INCLUDE [SystemScripts\00Default\MapCoords\BichonPalace.txt] @Main
+
+;;Penal Cavern
+[@_MAPCOORD(3,861,686)]
+#INCLUDE [SystemScripts\00Default\MapCoords\PenalCavern.txt] @Main
+
+[@_MAPCOORD(3,862,687)]
+#INCLUDE [SystemScripts\00Default\MapCoords\PenalCavern.txt] @Main

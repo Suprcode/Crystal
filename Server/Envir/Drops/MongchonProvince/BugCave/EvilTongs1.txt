@@ -1,0 +1,11 @@
+;Helmets
+1/100 MysteryHelmet
+
+;Bracelets
+1/100 MysteryWheel 
+
+;Rings
+1/100 MysteryCircle 
+
+;Potions
+1/100 MysteryWater

@@ -1,0 +1,33 @@
+[@Description]
+A long time ago, a certain villain stole our
+HolySword, the best sword of our school, This 
+sword was so Holy that there is a legend, that 
+when it smashes once storm blows and dragons 
+appear well... who knows it is true or not? But 
+if the sword exist Its power will be so huge that 
+we can not estimate its range.
+
+[@TaskDescription]
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@FlagTasks]
+527 "Speak with the TrainerTaoist"
+528 "Speak with the School's Owner"
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+
+[@GoldReward]
+
+// Pickup - Apprentice 11 179 309
+// Hand In - Master_Perry 1002 14 13

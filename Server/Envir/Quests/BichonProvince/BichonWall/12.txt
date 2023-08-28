@@ -1,0 +1,28 @@
+[@Description]
+Do you know of {CanniTea?/LightSteelBlue} Its the best Tea 
+ever. I want to have some, but it's not easy 
+to get. Could you ask {CraftLady/LimeGreen} to 
+make some {CanniTea/LightSteelBlue} for me? 
+ 
+[@TaskDescription]
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+439
+
+[@GoldReward]
+580
+
+// Pickup - 
+// Hand In - CraftsLady_Alice 0 321 265

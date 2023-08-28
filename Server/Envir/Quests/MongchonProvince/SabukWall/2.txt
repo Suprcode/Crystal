@@ -1,0 +1,26 @@
+[@Description]
+Hello Mirian, I'm still missing {Volume 1/LightSteelBlue} and {2/LightSteelBlue}, 
+
+[@TaskDescription]
+Please return to the {Hidden Entrance/Yellow} 
+And retrieve {Volume 1/LightSteelBlue} and {2/LightSteelBlue}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+BichonTales(1) 1
+BichonTales(2) 1
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+10000
+
+[@GoldReward]
+10000

@@ -1,0 +1,20 @@
+[@MAIN]
+{
+#SAY
+Here's the list of wines i have available. 
+ 
+<Close/@exit>
+
+[Types]
+13
+
+[Trade]
+WhiteWine
+RedWine
+Wine
+SnakeWine
+CannibalWine
+SpiderWine
+MongchonWine
+BloodWine
+}

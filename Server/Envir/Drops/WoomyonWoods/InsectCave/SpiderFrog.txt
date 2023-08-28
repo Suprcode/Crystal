@@ -1,0 +1,46 @@
+;Gold
+1/10 Gold 2000
+
+;Necklaces
+1/100 NagaNecklace
+1/100 AmberNecklace
+1/100 PhoenixBead
+1/300 BlueCrystalNecklace
+1/1200 BlueThunderNecklace
+1/1200 SpiritPowerNecklace
+1/1200 AmethystNecklace
+
+;Bracelets
+1/110 StrainBracelet
+1/100 EbonyBracelet
+1/100 MonkBracelet
+
+;Rings
+1/60 BlackRing
+1/60 SerpentEyeRing
+1/60 PearlRing
+1/55 GoldRing
+1/100 CharmRing
+1/100 MoralRing
+
+;Potions
+1/10 (HP)DrugMedium
+1/10 (MP)DrugMedium
+1/20 (HP)DrugMedium
+1/20 (MP)DrugMedium
+1/25 (HP)DrugLarge
+1/25 (MP)DrugLarge
+1/55 SunPotion
+1/100 SunPotion
+1/100 ImpactDrug(S)
+1/100 MagicDrug(S)
+1/100 TaoistDrug(S)
+
+;Crafting Materials
+1/25 BugLeg
+1/30 BugEye
+1/45 Mandible
+
+;Quest
+1/5 BluJadePendant Q
+

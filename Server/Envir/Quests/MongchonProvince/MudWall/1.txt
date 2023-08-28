@@ -1,0 +1,32 @@
+[@Description]
+Please report to my Commanding Officer in 
+{BichonProvince/Yellow}.
+
+[@TaskDescription]
+Report to {SubjugationManager/LimeGreen} 
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+SolidGreatAxe
+SolidBronzeStaff
+SolidSerpentSword
+SolidTwinBlades
+SolidSilverBow
+
+[@ExpReward]
+6688
+
+[@GoldReward]
+13000
+
+// Pickup - MongchonDelegate_Michael 3 330 332
+// Hand In - SubjagationManager_James 0 343 182

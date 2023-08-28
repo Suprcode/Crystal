@@ -1,0 +1,38 @@
+;Gold
+1/10 Gold 5500
+
+;Weapons
+1/3500 WarSpiritBlade
+1/3500 MagicScythe
+1/3500 StoneBambooFan
+1/3500 FreezingBlades
+1/3500 LitheBow
+1/8000 DragonSlayer
+1/8000 DragonStaff
+1/8000 SoulSabre
+1/8000 Dragon'sRoyalBlades
+1/8000 MaleficBow
+
+;Helmets
+1/3000 BlackIronHelmet
+1/400 SteelHelmet
+
+;Potions
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/25 (HP)DrugLarge
+1/25 (MP)DrugLarge
+1/25 (HP)DrugLarge
+1/25 (MP)DrugLarge
+1/20 SunPotion
+1/50 SunPotion(M)
+1/100 OldGinseng
+
+;Gems
+1/1000 BraveryGem
+1/1000 MagicGem
+1/1000 SoulGem
+1/10000 StormGem
+1/2000 DurabilityOrb

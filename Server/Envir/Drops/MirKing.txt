@@ -1,0 +1,2672 @@
+;Level 1
+;Gold
+1/1 Gold 15000 LV1
+
+;Pots + Other
+1/1 (HP)DrugLarge LV1
+1/1 (HP)DrugLarge LV1
+1/2 (HP)DrugLarge LV1
+1/2 (HP)DrugLarge LV1
+1/1 (MP)DrugLarge LV1
+1/1 (MP)DrugLarge LV1
+1/2 (MP)DrugLarge LV1
+1/2 (MP)DrugLarge LV1
+1/1 (HP)DrugXL LV1
+1/1 (HP)DrugXL LV1
+1/2 (HP)DrugXL LV1
+1/2 (HP)DrugXL LV1
+1/1 (MP)DrugXL LV1
+1/1 (MP)DrugXL LV1
+1/2 (MP)DrugXL LV1
+1/2 (MP)DrugXL LV1
+1/1 SunPotion LV1
+1/2 SunPotion LV1
+1/1 SunPotion(M) LV1
+1/2 SunPotion(M) LV1
+
+1/10 ImpactDrug(L) LV1
+1/10 MagicDrug(L) LV1
+1/10 TaoistDrug(L) LV1
+1/10 StormDrug(L) LV1
+
+1/1 BenedictionOil LV1
+1/3 GoldenBenedictionOil LV1
+
+1/100 MirKingRune LV1
+
+
+
+1/20 AwakeningSoul0 LV1
+1/20 AwakeningSoul0 LV1
+
+;Weapons
+;Warrior
+1/75 JudgementMace LV1
+1/75 FiendBow LV1
+1/100 WarSpiritBlade LV1
+1/100 LitheBow LV
+1/125 DragonSlayer LV1
+1/125 MaleficBow LV1
+1/150 SwordOfWarGod LV1
+1/150 BowOfForce LV1
+
+;Wizard
+1/75 WarMageStaff LV1
+1/100 MagicScythe LV1
+1/125 DragonStaff LV1
+1/150 BladeOfSorcery LV1
+
+;Taoist
+1/75 SoulSpringWand LV1
+1/100 StoneBambooFan LV1
+1/125 SoulSabre LV1
+1/150 HeavenSword LV1
+
+;Assassin
+1/75 BladesOfDarkness LV1
+1/100 FreezingBlades LV1
+1/125 RoyalBlades LV1
+1/150 BladesOfMagi LV1
+
+;Weapons Rare
+1/300 FrozenSabre LV1
+1/300 GrimBow LV1
+1/300 ConquerorSpear LV1
+1/300 BastardSword LV1
+1/300 ZincBlades LV1
+1/400 BlackTigerHammer LV1
+1/400 LethalBow LV1
+1/400 StaffOfLotus LV1
+1/400 FanOfCrane LV1
+1/400 ButcheringBlades LV1
+1/500 BarbarianSword LV1
+1/500 ApusBow LV1
+1/500 RawSword LV1
+1/500 BoneCarvedFan LV1
+1/500 MadDragonBlades LV1
+1/1700 MirSword LV1
+
+
+;Armour
+1/15 StuddedArmour(M) LV1
+1/15 StuddedArmour(F) LV1
+1/15 SteelArmour(M) LV1
+1/15 SteelArmour(F) LV1
+1/15 DragonRobe(M) LV1
+1/15 DragonRobe(F) LV1
+1/15 TitanArmour(M) LV1
+1/15 TitanArmour(F) LV1
+1/15 RoyalArmour(M) LV1
+1/15 RoyalArmour(F) LV1
+
+
+;Armour Rare
+1/1200 HeavenArmour(M) LV1
+1/1200 HeavenArmour(F) LV1
+1/1200 HeavenArcheyRobe(M) LV1
+1/1200 HeavenArcheyRobe(F) LV1
+1/1500 HeavenArmour(M) LV1
+1/1500 HeavenArmour(F) LV1
+1/1500 HeavenRedArmour(M) LV1
+1/1500 HeavenRedArmour(F) LV1
+1/1500 HeavenGrnArmour(M) LV1
+1/1500 HeavenGrnArmour(F) LV1
+1/1500 HeavenGoldArmour(M) LV1
+1/1500 HeavenGoldArmour(F) LV1
+1/1700 MirArmour(M) LV1
+1/1700 MirArmour(F) LV1
+
+
+;Helmets
+1/30 BlackIronHelmet LV1
+1/10 HelmetOfHero LV1
+1/35 GreatHelmet LV1
+1/40 WisdomCoronet LV1
+1/40 TaoCoronet LV1
+
+
+;Helmets Rare
+1/200 MajesticHelmet LV1
+1/400 ExternalHelmet LV1
+1/500 SparklingHelmet LV1
+1/600 PuiYuHelmet LV1
+1/2000 MirHelmet LV1
+
+
+;Necklace
+1/50 GreenBead LV1
+1/50 DemonicBells LV1
+1/50 SoulNecklace LV1
+1/90 HeroNecklace LV1
+1/90 AdamantineNecklace LV1
+1/90 RequiemNecklace LV1
+
+1/100 MeteoriteOfArchey LV1
+1/100 MeteoriteOfArchey LV2
+1/100 MeteoriteOfArchey LV3
+1/100 MeteoriteOfArchey LV4
+1/100 MeteoriteOfArchey LV5
+1/100 MeteoriteOfArchey LV6
+1/100 MeteoriteOfArchey LV7
+
+;Necklace Rare
+1/255 MajesticNecklace LV1
+1/400 ExternalNecklace LV1
+1/500 CuspidNecklace LV1
+1/500 SorceryAnchor LV1
+1/500 PurifiedMirror LV1
+1/750 EvilTriangle LV1
+1/750 CrossPurified LV1
+1/750 AdamantNecklace LV1
+1/2000 MirNecklace LV1
+
+
+;Bracelets
+1/170 8TrigramWheel LV1
+1/170 HangMaWheel LV1
+1/170 BokMaWheel LV1
+1/190 BaekTaGlove LV1
+1/190 SpiritReformer LV1
+1/190 HolyTaoWheel LV1
+
+;Bracelets Rare
+1/205 MajesticWheel LV1
+1/400 ExternalWheel LV1
+1/500 DualTitanAmulet LV1
+1/500 SacredAngelAmulet LV1
+1/500 EvilWhispAmulet LV1
+1/750 WildTitanAmulet LV1
+1/750 EnchantedAmulet LV1
+1/750 FiveElementAmulet LV1
+1/2000 MirWheel LV1
+
+
+;Rings
+1/50 OmaSpiritRing LV1
+1/60 NobleRing LV1
+1/60 SoulRing LV1
+1/70 BoundlessRing LV1
+1/70 ThunderRing LV1
+1/70 TaeGukRing LV1
+
+1/150 DestinyRing LV1
+1/150 DestinyRing LV2
+1/150 DestinyRing LV3
+1/150 DestinyRing LV4
+1/150 DestinyRing LV5
+1/150 DestinyRing LV6
+1/150 DestinyRing LV7
+
+;Rings Rare
+1/200 MajesticRing LV1
+1/400 ExternalRing LV1
+1/500 PledgeRing LV1
+1/500 FiveElementRing LV1
+1/500 CrimsonRubyRing LV1
+1/750 DemonRubyRing LV1
+1/750 EvilExpelRing LV1
+1/750 GoldDragonRing LV1
+1/2000 MirRing LV1
+
+
+;Shoes
+1/30 DragonBoots LV1
+1/60 RedScaleBoots LV1
+
+;Shoes Rare
+1/490 MajesticBoots LV1
+1/400 ExternalBoots LV1
+1/2000 MirBoots LV1
+
+
+;Belts
+1/50 GoldBelt LV1
+1/70 AdamantineBelt LV1
+
+;Belts Rare
+1/490 MajesticBelt LV1
+1/400 ExternalBelt LV1
+1/2000 MirBelt LV1
+
+;Medals
+1/2000 MirMedal LV1
+
+;Shields
+1/2000 MirShield LV1
+
+
+;Pads
+1/2000 MirGuards LV1
+
+;Stone
+1/80 HolyDCStone LV1
+1/80 HolyMCStone LV1
+1/80 HolySCStone LV1
+1/80 HolyACStone LV1
+1/80 HolyAMCStone LV1
+1/80 HolyDefenseStone LV1
+1/1100 MirRock LV1
+
+
+;Gems/Orbs
+1/100 BraveryGem LV1
+1/100 SoulGem LV1
+1/100 StormGem LV1
+1/100 MagicGem LV1
+1/130 DurabilityGem LV1
+1/140 AccuracyGem LV1
+1/140 AgilityGem LV1
+1/300 PoisonGem LV1
+1/300 FreezingGem LV1
+1/200 EnduranceGem LV1
+1/200 DisillusionGem LV1
+
+1/100 BraveryOrb LV1
+1/100 SoulOrb LV1
+1/100 StormOrb LV1
+1/100 MagicOrb LV1
+1/130 DurabilityOrb LV1
+1/140 AccuracyOrb LV1
+1/140 AgilityOrb LV1
+1/300 PoisonOrb LV1
+1/300 FreezingOrb LV1
+1/200 EnduranceOrb LV1
+1/200 DisillusionOrb LV1
+
+
+;Books
+;Warrior
+1/25 FlamingSword LV1
+1/30 CrossHalfMoon LV1
+1/50 TwinDrakeBlade LV1
+1/50 LionRoar LV1
+1/50 Entrapment LV1
+1/60 BladeStorm LV1
+1/150 BladeAvalanche LV1
+1/1200 ProtectionField LV1
+1/1400 Rage LV1
+1/1600 Fury LV1
+1/2000 CounterAttack LV1
+1/2600 ImmortalSkin LV1
+
+;Wizard
+1/10 FrostCrunch LV1
+1/25 IceStorm LV1
+1/30 FlameDisruptor LV1
+1/400 FlameField LV1
+1/50 Vampirism LV1
+1/150 Mirroring LV1
+1/1200 Blizzard LV1
+1/1400 MagicBooster LV1
+1/1600 MeteorStrike LV1
+1/2000 FastMove LV1
+1/2200 IceThrust LV1
+1/2400 FrozenRains LV1
+1/2600 LavaKing LV1
+1/3000 StormEscape LV1
+
+
+;Taosit
+1/25 SummonShinsu LV1
+1/30 UltimateEnhancer LV1
+1/30 EnergyRepulsor LV1
+1/50 Purification LV1
+1/50 Hallucination LV1
+1/100 HealingCircle LV1
+1/200 SummonHolyDeva LV1
+1/1200 Curse LV1
+1/1400 PoisonCloud LV1
+1/1800 PetEnhancer LV1
+1/2000 EnergyShield LV1
+1/2300 HolyShield LV1
+1/2600 HeadShot LV1
+
+;Assassin
+1/25 CrescentSlash LV1
+1/30 Trap LV1
+1/30 PoisonSword LV1
+1/50 MoonLight LV1
+1/50 MPEater LV1
+1/100 SwiftFeet LV1
+1/200 DarkBody LV1
+1/1200 Hemorrhage LV1
+1/1400 FuryWaves LV1
+
+1/25 BindingShot LV1
+1/30 SummonToad LV1
+1/30 PoisonShot LV1
+1/50 CrippleShot LV1
+1/50 SummonSnakes LV1
+1/90 NapalmShot LV1
+1/1400 OneWithNature LV1
+
+;CraftingMaterials
+
+
+;Quests
+
+
+;Level 2
+;Gold
+1/1 Gold 15000 LV2
+
+;Pots + Other
+1/1 (HP)DrugLarge LV2
+1/1 (HP)DrugLarge LV2
+1/2 (HP)DrugLarge LV2
+1/2 (HP)DrugLarge LV2
+1/1 (MP)DrugLarge LV2
+1/1 (MP)DrugLarge LV2
+1/2 (MP)DrugLarge LV2
+1/2 (MP)DrugLarge LV2
+1/1 (HP)DrugXL LV2
+1/1 (HP)DrugXL LV2
+1/2 (HP)DrugXL LV2
+1/2 (HP)DrugXL LV2
+1/1 (MP)DrugXL LV2
+1/1 (MP)DrugXL LV2
+1/2 (MP)DrugXL LV2
+1/2 (MP)DrugXL LV2
+1/1 SunPotion LV2
+1/2 SunPotion LV2
+1/1 SunPotion(M) LV2
+1/2 SunPotion(M) LV2
+
+1/10 ImpactDrug(L) LV2
+1/10 MagicDrug(L) LV2
+1/10 TaoistDrug(L) LV2
+1/10 StormDrug(L) LV2
+
+1/1 BenedictionOil LV2
+1/3 GoldenBenedictionOil LV2
+
+1/100 MirKingRune LV2
+
+
+
+1/20 AwakeningSoul0 LV2
+1/20 AwakeningSoul0 LV2
+
+;Weapons
+;Warrior
+1/75 JudgementMace LV2
+1/75 FiendBow LV2
+1/100 WarSpiritBlade LV2
+1/100 LitheBow LV2
+1/125 DragonSlayer LV2
+1/125 MaleficBow LV2
+1/150 SwordOfWarGod LV2
+1/150 BowOfForce LV2
+
+;Wizard
+1/75 WarMageStaff LV2
+1/100 MagicScythe LV2
+1/125 DragonStaff LV2
+1/150 BladeOfSorcery LV2
+
+;Taoist
+1/75 SoulSpringWand LV2
+1/100 StoneBambooFan LV2
+1/125 SoulSabre LV2
+1/150 HeavenSword LV2
+
+;Assassin
+1/75 BladesOfDarkness LV2
+1/100 FreezingBlades LV2
+1/125 RoyalBlades LV2
+1/150 BladesOfMagi LV2
+
+;Weapons Rare
+1/300 FrozenSabre LV2
+1/300 ConquerorSpear LV2
+1/300 GrimBow LV2
+1/300 BastardSword LV2
+1/300 ZincBlades LV2
+1/400 BlackTigerHammer LV2
+1/400 LethalBow LV2
+1/400 StaffOfLotus LV2
+1/400 FanOfCrane LV2
+1/400 ButcheringBlades LV2
+1/500 BarbarianSword LV2
+1/500 RawSword LV2
+1/500 ApusBow LV2
+1/500 BoneCarvedFan LV2
+1/500 MadDragonBlades LV2
+1/1700 MirSword LV2
+
+
+;Armour
+1/15 StuddedArmour(M) LV2
+1/15 StuddedArmour(F) LV2
+1/15 SteelArmour(M) LV2
+1/15 SteelArmour(F) LV2
+1/15 DragonRobe(M) LV2
+1/15 DragonRobe(F) LV2
+1/15 TitanArmour(M) LV2
+1/15 TitanArmour(F) LV2
+1/15 RoyalArmour(M) LV2
+1/15 RoyalArmour(F) LV2
+
+
+;Armour Rare
+1/1200 HeavenArmour(M) LV2
+1/1200 HeavenArmour(F) LV2
+1/1200 HeavenArcheyRobe(M) LV2
+1/1200 HeavenArcheyRobe(F) LV2
+1/1500 HeavenArmour(M) LV2
+1/1500 HeavenArmour(F) LV2
+1/1500 HeavenRedArmour(M) LV2
+1/1500 HeavenRedArmour(F) LV2
+1/1500 HeavenGrnArmour(M) LV2
+1/1500 HeavenGrnArmour(F) LV2
+1/1500 HeavenGoldArmour(M) LV2
+1/1500 HeavenGoldArmour(F) LV2
+1/1700 MirArmour(M) LV2
+1/1700 MirArmour(F) LV2
+
+
+;Helmets
+1/30 BlackIronHelmet LV2
+1/10 HelmetOfHero LV2
+1/35 GreatHelmet LV2
+1/40 WisdomCoronet LV2
+1/40 TaoCoronet LV2
+
+
+;Helmets Rare
+1/200 MajesticHelmet LV2
+1/400 ExternalHelmet LV2
+1/500 SparklingHelmet LV2
+1/600 PuiYuHelmet LV2
+1/2000 MirHelmet LV2
+
+
+;Necklace
+1/50 GreenBead LV2
+1/50 DemonicBells LV2
+1/50 SoulNecklace LV2
+1/90 HeroNecklace LV2
+1/90 AdamantineNecklace LV2
+1/90 RequiemNecklace LV2
+
+;Necklace Rare
+1/255 MajesticNecklace LV2
+1/400 ExternalNecklace LV2
+1/500 CuspidNecklace LV2
+1/500 SorceryAnchor LV2
+1/500 PurifiedMirror LV2
+1/750 EvilTriangle LV2
+1/750 CrossPurified LV2
+1/750 AdamantNecklace LV2
+1/2000 MirNecklace LV2
+
+
+;Bracelets
+1/170 8TrigramWheel LV2
+1/170 HangMaWheel LV2
+1/170 BokMaWheel LV2
+1/190 BaekTaGlove LV2
+1/190 SpiritReformer LV2
+1/190 HolyTaoWheel LV2
+
+;Bracelets Rare
+1/205 MajesticWheel LV2
+1/400 ExternalWheel LV2
+1/500 DualTitanAmulet LV2
+1/500 SacredAngelAmulet LV2
+1/500 EvilWhispAmulet LV2
+1/750 WildTitanAmulet LV2
+1/750 EnchantedAmulet LV2
+1/750 FiveElementAmulet LV2
+1/2000 MirWheel LV2
+
+
+;Rings
+1/50 OmaSpiritRing LV2
+1/60 NobleRing LV2
+1/60 SoulRing LV2
+1/70 BoundlessRing LV2
+1/70 ThunderRing LV2
+1/70 TaeGukRing LV2
+
+;Rings Rare
+1/200 MajesticRing LV2
+1/400 ExternalRing LV2
+1/500 PledgeRing LV2
+1/500 FiveElementRing LV2
+1/500 CrimsonRubyRing LV2
+1/750 DemonRubyRing LV2
+1/750 EvilExpelRing LV2
+1/750 GoldDragonRing LV2
+1/2000 MirRing LV2
+
+
+;Shoes
+1/30 DragonBoots LV2
+1/60 RedScaleBoots LV2
+
+;Shoes Rare
+1/490 MajesticBoots LV2
+1/400 ExternalBoots LV2
+1/2000 MirBoots LV2
+
+
+;Belts
+1/50 GoldBelt LV2
+1/70 AdamantineBelt LV2
+
+;Belts Rare
+1/490 MajesticBelt LV2
+1/400 ExternalBelt LV2
+1/2000 MirBelt LV2
+
+;Medals
+1/2000 MirMedal LV2
+
+;Shields
+1/2000 MirShield LV2
+
+
+;Pads
+1/2000 MirGuards LV2
+
+;Stone
+1/80 HolyDCStone LV2
+1/80 HolyMCStone LV2
+1/80 HolySCStone LV2
+1/80 HolyACStone LV2
+1/80 HolyAMCStone LV2
+1/80 HolyDefenseStone LV2
+1/1100 MirRock LV2
+
+
+;Gems/Orbs
+1/100 BraveryGem LV2
+1/100 SoulGem LV2
+1/100 StormGem LV2
+1/100 MagicGem LV2
+1/130 DurabilityGem LV2
+1/140 AccuracyGem LV2
+1/140 AgilityGem LV2
+1/300 PoisonGem LV2
+1/300 FreezingGem LV2
+1/200 EnduranceGem LV2
+1/200 DisillusionGem LV2
+
+1/100 BraveryOrb LV2
+1/100 SoulOrb LV2
+1/100 StormOrb LV2
+1/100 MagicOrb LV2
+1/130 DurabilityOrb LV2
+1/140 AccuracyOrb LV2
+1/140 AgilityOrb LV2
+1/300 PoisonOrb LV2
+1/300 FreezingOrb LV2
+1/200 EnduranceOrb LV2
+1/200 DisillusionOrb LV2
+
+
+;Books
+;Warrior
+1/25 FlamingSword LV2
+1/30 CrossHalfMoon LV2
+1/50 TwinDrakeBlade LV2
+1/50 LionRoar LV2
+1/50 Entrapment LV2
+1/60 BladeStorm LV2
+1/150 BladeAvalanche LV2
+1/1200 ProtectionField LV2
+1/1400 Rage LV2
+1/1600 Fury LV2
+1/2000 CounterAttack LV2
+1/2600 ImmortalSkin LV2
+
+;Wizard
+1/10 FrostCrunch LV2
+1/25 IceStorm LV2
+1/30 FlameDisruptor LV2
+1/400 FlameField LV2
+1/50 Vampirism LV2
+1/150 Mirroring LV2
+1/1200 Blizzard LV2
+1/1400 MagicBooster LV2
+1/1600 MeteorStrike LV2
+1/2000 FastMove LV2
+1/2200 IceThrust LV2
+1/2400 FrozenRains LV2
+1/2600 LavaKing LV2
+1/3000 StormEscape LV2
+
+
+;Taosit
+1/25 SummonShinsu LV2
+1/30 UltimateEnhancer LV2
+1/30 EnergyRepulsor LV2
+1/50 Purification LV2
+1/50 Hallucination LV2
+1/100 HealingCircle LV2
+1/200 SummonHolyDeva LV2
+1/1200 Curse LV2
+1/1400 PoisonCloud LV2
+1/1800 PetEnhancer LV2
+1/2000 EnergyShield LV2
+1/2300 HolyShield LV2
+1/2600 HeadShot LV2
+
+;Assassin
+1/25 CrescentSlash LV2
+1/30 Trap LV2
+1/30 PoisonSword LV2
+1/50 MoonLight LV2
+1/50 MPEater LV2
+1/100 SwiftFeet LV2
+1/200 DarkBody LV2
+1/1200 Hemorrhage LV2
+1/1400 FuryWaves LV2
+
+1/25 BindingShot LV2
+1/30 SummonToad LV2
+1/30 PoisonShot LV2
+1/50 CrippleShot LV2
+1/50 SummonSnakes LV2
+1/90 NapalmShot LV2
+1/1400 OneWithNature LV2
+
+
+;CraftingMaterials
+
+
+;Quests
+
+;Level 3
+;Gold
+1/1 Gold 15000 LV3
+
+;Pots + Other
+1/1 (HP)DrugLarge LV3
+1/1 (HP)DrugLarge LV3
+1/2 (HP)DrugLarge LV3
+1/2 (HP)DrugLarge LV3
+1/1 (MP)DrugLarge LV3
+1/1 (MP)DrugLarge LV3
+1/2 (MP)DrugLarge LV3
+1/2 (MP)DrugLarge LV3
+1/1 (HP)DrugXL LV3
+1/1 (HP)DrugXL LV3
+1/2 (HP)DrugXL LV3
+1/2 (HP)DrugXL LV3
+1/1 (MP)DrugXL LV3
+1/1 (MP)DrugXL LV3
+1/2 (MP)DrugXL LV3
+1/2 (MP)DrugXL LV3
+1/1 SunPotion LV3
+1/2 SunPotion LV3
+1/1 SunPotion(M) LV3
+1/2 SunPotion(M) LV3
+
+1/10 ImpactDrug(L) LV3
+1/10 MagicDrug(L) LV3
+1/10 TaoistDrug(L) LV3
+1/10 StormDrug(L) LV3
+
+1/1 BenedictionOil LV3
+1/3 GoldenBenedictionOil LV3
+
+1/100 MirKingRune LV3
+
+
+1/20 AwakeningSoul0 LV3
+1/20 AwakeningSoul0 LV3
+
+;Weapons
+;Warrior
+1/75 JudgementMace LV3
+1/75 FiendBow LV3
+1/100 WarSpiritBlade LV3
+1/100 LitheBow LV3
+1/125 DragonSlayer LV3
+1/125 MaleficBow LV3
+1/150 SwordOfWarGod LV3
+1/150 BowOfForce LV3
+
+;Wizard
+1/75 WarMageStaff LV3
+1/100 MagicScythe LV3
+1/125 DragonStaff LV3
+1/150 BladeOfSorcery LV3
+
+;Taoist
+1/75 SoulSpringWand LV3
+1/100 StoneBambooFan LV3
+1/125 SoulSabre LV3
+1/150 HeavenSword LV3
+
+;Assassin
+1/75 BladesOfDarkness LV3
+1/100 FreezingBlades LV3
+1/125 RoyalBlades LV3
+1/150 BladesOfMagi LV3
+
+;Weapons Rare
+1/300 FrozenSabre LV3
+1/300 GrimBow LV3
+1/300 ConquerorSpear LV3
+1/300 BastardSword LV3
+1/300 ZincBlades LV3
+1/400 BlackTigerHammer LV3
+1/400 StaffOfLotus LV3
+1/400 LethalBow LV3
+1/400 FanOfCrane LV3
+1/400 ButcheringBlades LV3
+1/500 BarbarianSword LV3
+1/500 RawSword LV3
+1/500 ApusBow LV3
+1/500 BoneCarvedFan LV3
+1/500 MadDragonBlades LV3
+1/1700 MirSword LV3
+
+
+;Armour
+1/15 StuddedArmour(M) LV3
+1/15 StuddedArmour(F) LV3
+1/15 SteelArmour(M) LV3
+1/15 SteelArmour(F) LV3
+1/15 DragonRobe(M) LV3
+1/15 DragonRobe(F) LV3
+1/15 TitanArmour(M) LV3
+1/15 TitanArmour(F) LV3
+1/15 RoyalArmour(M) LV3
+1/15 RoyalArmour(F) LV3
+
+
+;Armour Rare
+1/1200 HeavenArmour(M) LV3
+1/1200 HeavenArmour(F) LV3
+1/1200 HeavenArcheyRobe(M) LV3
+1/1200 HeavenArcheyRobe(F) LV3
+1/1500 HeavenArmour(M) LV3
+1/1500 HeavenArmour(F) LV3
+1/1500 HeavenRedArmour(M) LV3
+1/1500 HeavenRedArmour(F) LV3
+1/1500 HeavenGrnArmour(M) LV3
+1/1500 HeavenGrnArmour(F) LV3
+1/1500 HeavenGoldArmour(M) LV3
+1/1500 HeavenGoldArmour(F) LV3
+1/1700 MirArmour(M) LV3
+1/1700 MirArmour(F) LV3
+
+
+;Helmets
+1/30 BlackIronHelmet LV3
+1/10 HelmetOfHero LV3
+1/35 GreatHelmet LV3
+1/40 WisdomCoronet LV3
+1/40 TaoCoronet LV3
+
+
+;Helmets Rare
+1/200 MajesticHelmet LV3
+1/400 ExternalHelmet LV3
+1/500 SparklingHelmet LV3
+1/600 PuiYuHelmet LV3
+1/2000 MirHelmet LV3
+
+
+;Necklace
+1/50 GreenBead LV3
+1/50 DemonicBells LV3
+1/50 SoulNecklace LV3
+1/90 HeroNecklace LV3
+1/90 AdamantineNecklace LV3
+1/90 RequiemNecklace LV3
+
+;Necklace Rare
+1/255 MajesticNecklace LV3
+1/400 ExternalNecklace LV3
+1/500 CuspidNecklace LV3
+1/500 SorceryAnchor LV3
+1/500 PurifiedMirror LV3
+1/750 EvilTriangle LV3
+1/750 CrossPurified LV3
+1/750 AdamantNecklace LV3
+1/2000 MirNecklace LV3
+
+
+;Bracelets
+1/170 8TrigramWheel LV3
+1/170 HangMaWheel LV3
+1/170 BokMaWheel LV3
+1/190 BaekTaGlove LV3
+1/190 SpiritReformer LV3
+1/190 HolyTaoWheel LV3
+
+;Bracelets Rare
+1/205 MajesticWheel LV3
+1/400 ExternalWheel LV3
+1/500 DualTitanAmulet LV3
+1/500 SacredAngelAmulet LV3
+1/500 EvilWhispAmulet LV3
+1/750 WildTitanAmulet LV3
+1/750 EnchantedAmulet LV3
+1/750 FiveElementAmulet LV3
+1/2000 MirWheel LV3
+
+
+;Rings
+1/50 OmaSpiritRing LV3
+1/60 NobleRing LV3
+1/60 SoulRing LV3
+1/70 BoundlessRing LV3
+1/70 ThunderRing LV3
+1/70 TaeGukRing LV3
+
+;Rings Rare
+1/200 MajesticRing LV3
+1/400 ExternalRing LV3
+1/500 PledgeRing LV3
+1/500 FiveElementRing LV3
+1/500 CrimsonRubyRing LV3
+1/750 DemonRubyRing LV3
+1/750 EvilExpelRing LV3
+1/750 GoldDragonRing LV3
+1/2000 MirRing LV3
+
+
+;Shoes
+1/30 DragonBoots LV3
+1/60 RedScaleBoots LV3
+
+;Shoes Rare
+1/490 MajesticBoots LV3
+1/400 ExternalBoots LV3
+1/2000 MirBoots LV3
+
+
+;Belts
+1/50 GoldBelt LV3
+1/70 AdamantineBelt LV3
+
+;Belts Rare
+1/490 MajesticBelt LV3
+1/400 ExternalBelt LV3
+1/2000 MirBelt LV3
+
+;Medals
+1/2000 MirMedal LV3
+
+;Shields
+1/2000 MirShield LV3
+
+
+;Pads
+1/2000 MirGuards LV3
+
+;Stone
+1/80 HolyDCStone LV3
+1/80 HolyMCStone LV3
+1/80 HolySCStone LV3
+1/80 HolyACStone LV3
+1/80 HolyAMCStone LV3
+1/80 HolyDefenseStone LV3
+1/1100 MirRock LV3
+
+
+;Gems/Orbs
+1/100 BraveryGem LV3
+1/100 SoulGem LV3
+1/100 StormGem LV3
+1/100 MagicGem LV3
+1/130 DurabilityGem LV3
+1/140 AccuracyGem LV3
+1/140 AgilityGem LV3
+1/300 PoisonGem LV3
+1/300 FreezingGem LV3
+1/200 EnduranceGem LV3
+1/200 DisillusionGem LV3
+
+1/100 BraveryOrb LV3
+1/100 SoulOrb LV3
+1/100 StormOrb LV3
+1/100 MagicOrb LV3
+1/130 DurabilityOrb LV3
+1/140 AccuracyOrb LV3
+1/140 AgilityOrb LV3
+1/300 PoisonOrb LV3
+1/300 FreezingOrb LV3
+1/200 EnduranceOrb LV3
+1/200 DisillusionOrb LV3
+
+
+;Books
+;Warrior
+1/25 FlamingSword LV3
+1/30 CrossHalfMoon LV3
+1/50 TwinDrakeBlade LV3
+1/50 LionRoar LV3
+1/50 Entrapment LV3
+1/60 BladeStorm LV3
+1/150 BladeAvalanche LV3
+1/1200 ProtectionField LV3
+1/1400 Rage LV3
+1/1600 Fury LV3
+1/2000 CounterAttack LV3
+1/2600 ImmortalSkin LV3
+
+;Wizard
+1/10 FrostCrunch LV3
+1/25 IceStorm LV3
+1/30 FlameDisruptor LV3
+1/400 FlameField LV3
+1/50 Vampirism LV3
+1/150 Mirroring LV3
+1/1200 Blizzard LV3
+1/1400 MagicBooster LV3
+1/1600 MeteorStrike LV3
+1/2000 FastMove LV3
+1/2200 IceThrust LV3
+1/2400 FrozenRains LV3
+1/2600 LavaKing LV3
+1/3000 StormEscape LV3
+
+
+;Taosit
+1/25 SummonShinsu LV3
+1/30 UltimateEnhancer LV3
+1/30 EnergyRepulsor LV3
+1/50 Purification LV3
+1/50 Hallucination LV3
+1/100 HealingCircle LV3
+1/200 SummonHolyDeva LV3
+1/1200 Curse LV3
+1/1400 PoisonCloud LV3
+1/1800 PetEnhancer LV3
+1/2000 EnergyShield LV3
+1/2300 HolyShield LV3
+1/2600 HeadShot LV3
+
+;Assassin
+1/25 CrescentSlash LV3
+1/30 Trap LV3
+1/30 PoisonSword LV3
+1/50 MoonLight LV3
+1/50 MPEater LV3
+1/100 SwiftFeet LV3
+1/200 DarkBody LV3
+1/1200 Hemorrhage LV3
+1/1400 FuryWaves LV3
+
+1/25 BindingShot LV3
+1/30 SummonToad LV3
+1/30 PoisonShot LV3
+1/50 CrippleShot LV3
+1/50 SummonSnakes LV3
+1/90 NapalmShot LV3
+1/1400 OneWithNature LV3
+
+
+;CraftingMaterials
+
+
+;Quests
+
+;Level 4
+;Gold
+1/1 Gold 15000 LV4
+
+;Pots + Other
+1/1 (HP)DrugLarge LV4
+1/1 (HP)DrugLarge LV4
+1/2 (HP)DrugLarge LV4
+1/2 (HP)DrugLarge LV4
+1/1 (MP)DrugLarge LV4
+1/1 (MP)DrugLarge LV4
+1/2 (MP)DrugLarge LV4
+1/2 (MP)DrugLarge LV4
+1/1 (HP)DrugXL LV4
+1/1 (HP)DrugXL LV4
+1/2 (HP)DrugXL LV4
+1/2 (HP)DrugXL LV4
+1/1 (MP)DrugXL LV4
+1/1 (MP)DrugXL LV4
+1/2 (MP)DrugXL LV4
+1/2 (MP)DrugXL LV4
+1/1 SunPotion LV4
+1/2 SunPotion LV4
+1/1 SunPotion(M) LV4
+1/2 SunPotion(M) LV4
+
+1/10 ImpactDrug(L) LV4
+1/10 MagicDrug(L) LV4
+1/10 TaoistDrug(L) LV4
+1/10 StormDrug(L) LV4
+
+1/1 BenedictionOil LV4
+1/3 GoldenBenedictionOil LV4
+
+1/100 MirKingRune LV4
+
+
+
+1/20 AwakeningSoul0 LV4
+1/20 AwakeningSoul0 LV4
+
+;Weapons
+;Warrior
+1/75 JudgementMace LV4
+1/75 FiendBow LV4
+1/100 LitheBow LV4
+1/100 WarSpiritBlade LV4
+1/125 MaleficBow LV4
+1/125 DragonSlayer LV4
+1/150 SwordOfWarGod LV4
+1/150 BowOfForce LV4
+
+;Wizard
+1/75 WarMageStaff LV4
+1/100 MagicScythe LV4
+1/125 DragonStaff LV4
+1/150 BladeOfSorcery LV4
+
+;Taoist
+1/75 SoulSpringWand LV4
+1/100 StoneBambooFan LV4
+1/125 SoulSabre LV4
+1/150 HeavenSword LV4
+
+;Assassin
+1/75 BladesOfDarkness LV4
+1/100 FreezingBlades LV4
+1/125 RoyalBlades LV4
+1/150 BladesOfMagi LV4
+
+;Weapons Rare
+1/300 FrozenSabre LV4
+1/300 GrimBow LV4
+1/300 ConquerorSpear LV4
+1/300 BastardSword LV4
+1/300 ZincBlades LV4
+1/400 BlackTigerHammer LV4
+1/400 StaffOfLotus LV4
+1/400 LethalBow LV4
+1/400 FanOfCrane LV4
+1/400 ButcheringBlades LV4
+1/500 BarbarianSword LV4
+1/500 RawSword LV4
+1/500 ApusBow LV4
+1/500 BoneCarvedFan LV4
+1/500 MadDragonBlades LV4
+1/1700 MirSword LV4
+
+
+;Armour
+1/15 StuddedArmour(M) LV4
+1/15 StuddedArmour(F) LV4
+1/15 SteelArmour(M) LV4
+1/15 SteelArmour(F) LV4
+1/15 DragonRobe(M) LV4
+1/15 DragonRobe(F) LV4
+1/15 TitanArmour(M) LV4
+1/15 TitanArmour(F) LV4
+1/15 RoyalArmour(M) LV4
+1/15 RoyalArmour(F) LV4
+
+
+;Armour Rare
+1/1200 HeavenArmour(M) LV4
+1/1200 HeavenArmour(F) LV4
+1/1200 HeavenArcheyRobe(M) LV4
+1/1200 HeavenArcheyRobe(F) LV4
+1/1500 HeavenArmour(M) LV4
+1/1500 HeavenArmour(F) LV4
+1/1500 HeavenRedArmour(M) LV4
+1/1500 HeavenRedArmour(F) LV4
+1/1500 HeavenGrnArmour(M) LV4
+1/1500 HeavenGrnArmour(F) LV4
+1/1500 HeavenGoldArmour(M) LV4
+1/1500 HeavenGoldArmour(F) LV4
+1/1700 MirArmour(M) LV4
+1/1700 MirArmour(F) LV4
+
+
+;Helmets
+1/30 BlackIronHelmet LV4
+1/10 HelmetOfHero LV4
+1/35 GreatHelmet LV4
+1/40 WisdomCoronet LV4
+1/40 TaoCoronet LV4
+
+
+;Helmets Rare
+1/200 MajesticHelmet LV4
+1/400 ExternalHelmet LV4
+1/500 SparklingHelmet LV4
+1/600 PuiYuHelmet LV4
+1/2000 MirHelmet LV4
+
+
+;Necklace
+1/50 GreenBead LV4
+1/50 DemonicBells LV4
+1/50 SoulNecklace LV4
+1/90 HeroNecklace LV4
+1/90 AdamantineNecklace LV4
+1/90 RequiemNecklace LV4
+
+;Necklace Rare
+1/255 MajesticNecklace LV4
+1/400 ExternalNecklace LV4
+1/500 CuspidNecklace LV4
+1/500 SorceryAnchor LV4
+1/500 PurifiedMirror LV4
+1/750 EvilTriangle LV4
+1/750 CrossPurified LV4
+1/750 AdamantNecklace LV4
+1/2000 MirNecklace LV4
+
+
+;Bracelets
+1/170 8TrigramWheel LV4
+1/170 HangMaWheel LV4
+1/170 BokMaWheel LV4
+1/190 BaekTaGlove LV4
+1/190 SpiritReformer LV4
+1/190 HolyTaoWheel LV4
+
+;Bracelets Rare
+1/205 MajesticWheel LV4
+1/400 ExternalWheel LV4
+1/500 DualTitanAmulet LV4
+1/500 SacredAngelAmulet LV4
+1/500 EvilWhispAmulet LV4
+1/750 WildTitanAmulet LV4
+1/750 EnchantedAmulet LV4
+1/750 FiveElementAmulet LV4
+1/2000 MirWheel LV4
+
+
+;Rings
+1/50 OmaSpiritRing LV4
+1/60 NobleRing LV4
+1/60 SoulRing LV4
+1/70 BoundlessRing LV4
+1/70 ThunderRing LV4
+1/70 TaeGukRing LV4
+
+;Rings Rare
+1/200 MajesticRing LV4
+1/400 ExternalRing LV4
+1/500 PledgeRing LV4
+1/500 FiveElementRing LV4
+1/500 CrimsonRubyRing LV4
+1/750 DemonRubyRing LV4
+1/750 EvilExpelRing LV4
+1/750 GoldDragonRing LV4
+1/2000 MirRing LV4
+
+
+;Shoes
+1/30 DragonBoots LV4
+1/60 RedScaleBoots LV4
+
+;Shoes Rare
+1/490 MajesticBoots LV4
+1/400 ExternalBoots LV4
+1/2000 MirBoots LV4
+
+
+;Belts
+1/50 GoldBelt LV4
+1/70 AdamantineBelt LV4
+
+;Belts Rare
+1/490 MajesticBelt LV4
+1/400 ExternalBelt LV4
+1/2000 MirBelt LV4
+
+;Medals
+1/2000 MirMedal LV4
+
+;Shields
+1/2000 MirShield LV4
+
+
+;Pads
+1/2000 MirGuards LV4
+
+;Stone
+1/80 HolyDCStone LV4
+1/80 HolyMCStone LV4
+1/80 HolySCStone LV4
+1/80 HolyACStone LV4
+1/80 HolyAMCStone LV4
+1/80 HolyDefenseStone LV4
+1/1100 MirRock LV4
+
+
+;Gems/Orbs
+1/100 BraveryGem LV4
+1/100 SoulGem LV4
+1/100 StormGem LV4
+1/100 MagicGem LV4
+1/130 DurabilityGem LV4
+1/140 AccuracyGem LV4
+1/140 AgilityGem LV4
+1/300 PoisonGem LV4
+1/300 FreezingGem LV4
+1/200 EnduranceGem LV4
+1/200 DisillusionGem LV4
+
+1/100 BraveryOrb LV4
+1/100 SoulOrb LV4
+1/100 StormOrb LV4
+1/100 MagicOrb LV4
+1/130 DurabilityOrb LV4
+1/140 AccuracyOrb LV4
+1/140 AgilityOrb LV4
+1/300 PoisonOrb LV4
+1/300 FreezingOrb LV4
+1/200 EnduranceOrb LV4
+1/200 DisillusionOrb LV4
+
+
+;Books
+;Warrior
+1/25 FlamingSword LV4
+1/30 CrossHalfMoon LV4
+1/50 TwinDrakeBlade LV4
+1/50 LionRoar LV4
+1/50 Entrapment LV4
+1/60 BladeStorm LV4
+1/150 BladeAvalanche LV4
+1/1200 ProtectionField LV4
+1/1400 Rage LV4
+1/1600 Fury LV4
+1/2000 CounterAttack LV4
+1/2600 ImmortalSkin LV4
+
+;Wizard
+1/10 FrostCrunch LV4
+1/25 IceStorm LV4
+1/30 FlameDisruptor LV4
+1/400 FlameField LV4
+1/50 Vampirism LV4
+1/150 Mirroring LV4
+1/1200 Blizzard LV4
+1/1400 MagicBooster LV4
+1/1600 MeteorStrike LV4
+1/2000 FastMove LV4
+1/2200 IceThrust LV4
+1/2400 FrozenRains LV4
+1/2600 LavaKing LV4
+1/3000 StormEscape LV4
+
+
+;Taosit
+1/25 SummonShinsu LV4
+1/30 UltimateEnhancer LV4
+1/30 EnergyRepulsor LV4
+1/50 Purification LV4
+1/50 Hallucination LV4
+1/100 HealingCircle LV4
+1/200 SummonHolyDeva LV4
+1/1200 Curse LV4
+1/1400 PoisonCloud LV4
+1/1800 PetEnhancer LV4
+1/2000 EnergyShield LV4
+1/2300 HolyShield LV4
+1/2600 HeadShot LV4
+
+;Assassin
+1/25 CrescentSlash LV4
+1/30 Trap LV4
+1/30 PoisonSword LV4
+1/50 MoonLight LV4
+1/50 MPEater LV4
+1/100 SwiftFeet LV4
+1/200 DarkBody LV4
+1/1200 Hemorrhage LV4
+1/1400 FuryWaves LV4
+
+1/25 BindingShot LV4
+1/30 SummonToad LV4
+1/30 PoisonShot LV4
+1/50 CrippleShot LV4
+1/50 SummonSnakes LV4
+1/90 NapalmShot LV4
+1/1400 OneWithNature LV4
+
+
+;CraftingMaterials
+
+
+;Quests
+
+;Level 5
+;Gold
+1/1 Gold 15000 LV5
+
+;Pots + Other
+1/1 (HP)DrugLarge LV5
+1/1 (HP)DrugLarge LV5
+1/2 (HP)DrugLarge LV5
+1/2 (HP)DrugLarge LV5
+1/1 (MP)DrugLarge LV5
+1/1 (MP)DrugLarge LV5
+1/2 (MP)DrugLarge LV5
+1/2 (MP)DrugLarge LV5
+1/1 (HP)DrugXL LV5
+1/1 (HP)DrugXL LV5
+1/2 (HP)DrugXL LV5
+1/2 (HP)DrugXL LV5
+1/1 (MP)DrugXL LV5
+1/1 (MP)DrugXL LV5
+1/2 (MP)DrugXL LV5
+1/2 (MP)DrugXL LV5
+1/1 SunPotion LV5
+1/2 SunPotion LV5
+1/1 SunPotion(M) LV5
+1/2 SunPotion(M) LV5
+
+1/10 ImpactDrug(L) LV5
+1/10 MagicDrug(L) LV5
+1/10 TaoistDrug(L) LV5
+1/10 StormDrug(L) LV5
+
+1/1 BenedictionOil LV5
+1/3 GoldenBenedictionOil LV5
+
+1/100 MirKingRune LV5
+
+
+
+1/20 AwakeningSoul0 LV5
+1/20 AwakeningSoul0 LV5
+
+;Weapons
+;Warrior
+1/75 JudgementMace LV5
+1/75 FiendBow LV5
+1/100 WarSpiritBlade LV5
+1/100 LitheBow LV5
+1/125 MaleficBow LV5
+1/125 DragonSlayer LV5
+1/150 SwordOfWarGod LV5
+1/150 BowOfForce LV5
+
+;Wizard
+1/75 WarMageStaff LV5
+1/100 MagicScythe LV5
+1/125 DragonStaff LV5
+1/150 BladeOfSorcery LV5
+
+;Taoist
+1/75 SoulSpringWand LV5
+1/100 StoneBambooFan LV5
+1/125 SoulSabre LV5
+1/150 HeavenSword LV5
+
+;Assassin
+1/75 BladesOfDarkness LV5
+1/100 FreezingBlades LV5
+1/125 RoyalBlades LV5
+1/150 BladesOfMagi LV5
+
+;Weapons Rare
+1/300 FrozenSabre LV5
+1/300 GrimBow LV5
+1/300 ConquerorSpear LV5
+1/300 BastardSword LV5
+1/300 ZincBlades LV5
+1/400 BlackTigerHammer LV5
+1/400 LethalBow LV5
+1/400 StaffOfLotus LV5
+1/400 FanOfCrane LV5
+1/400 ButcheringBlades LV5
+1/500 BarbarianSword LV5
+1/500 ApusBow LV5
+1/500 RawSword LV5
+1/500 BoneCarvedFan LV5
+1/500 MadDragonBlades LV5
+1/1700 MirSword LV5
+
+
+;Armour
+1/15 StuddedArmour(M) LV5
+1/15 StuddedArmour(F) LV5
+1/15 SteelArmour(M) LV5
+1/15 SteelArmour(F) LV5
+1/15 DragonRobe(M) LV5
+1/15 DragonRobe(F) LV5
+1/15 TitanArmour(M) LV5
+1/15 TitanArmour(F) LV5
+1/15 RoyalArmour(M) LV5
+1/15 RoyalArmour(F) LV5
+
+
+;Armour Rare
+1/1200 HeavenArmour(M) LV5
+1/1200 HeavenArmour(F) LV5
+1/1200 HeavenArcheyRobe(M) LV5
+1/1200 HeavenArcheyRobe(F) LV5
+1/1500 HeavenArmour(M) LV5
+1/1500 HeavenArmour(F) LV5
+1/1500 HeavenRedArmour(M) LV5
+1/1500 HeavenRedArmour(F) LV5
+1/1500 HeavenGrnArmour(M) LV5
+1/1500 HeavenGrnArmour(F) LV5
+1/1500 HeavenGoldArmour(M) LV5
+1/1500 HeavenGoldArmour(F) LV5
+1/1700 MirArmour(M) LV5
+1/1700 MirArmour(F) LV5
+
+
+;Helmets
+1/30 BlackIronHelmet LV5
+1/10 HelmetOfHero LV5
+1/35 GreatHelmet LV5
+1/40 WisdomCoronet LV5
+1/40 TaoCoronet LV5
+
+
+;Helmets Rare
+1/200 MajesticHelmet LV5
+1/400 ExternalHelmet LV5
+1/500 SparklingHelmet LV5
+1/600 PuiYuHelmet LV5
+1/2000 MirHelmet LV5
+
+
+;Necklace
+1/50 GreenBead LV5
+1/50 DemonicBells LV5
+1/50 SoulNecklace LV5
+1/90 HeroNecklace LV5
+1/90 AdamantineNecklace LV5
+1/90 RequiemNecklace LV5
+
+;Necklace Rare
+1/255 MajesticNecklace LV5
+1/400 ExternalNecklace LV5
+1/500 CuspidNecklace LV5
+1/500 SorceryAnchor LV5
+1/500 PurifiedMirror LV5
+1/750 EvilTriangle LV5
+1/750 CrossPurified LV5
+1/750 AdamantNecklace LV5
+1/2000 MirNecklace LV5
+
+
+;Bracelets
+1/170 8TrigramWheel LV5
+1/170 HangMaWheel LV5
+1/170 BokMaWheel LV5
+1/190 BaekTaGlove LV5
+1/190 SpiritReformer LV5
+1/190 HolyTaoWheel LV5
+
+;Bracelets Rare
+1/205 MajesticWheel LV5
+1/400 ExternalWheel LV5
+1/500 DualTitanAmulet LV5
+1/500 SacredAngelAmulet LV5
+1/500 EvilWhispAmulet LV5
+1/750 WildTitanAmulet LV5
+1/750 EnchantedAmulet LV5
+1/750 FiveElementAmulet LV5
+1/2000 MirWheel LV5
+
+
+;Rings
+1/50 OmaSpiritRing LV5
+1/60 NobleRing LV5
+1/60 SoulRing LV5
+1/70 BoundlessRing LV5
+1/70 ThunderRing LV5
+1/70 TaeGukRing LV5
+
+;Rings Rare
+1/200 MajesticRing LV5
+1/400 ExternalRing LV5
+1/500 PledgeRing LV5
+1/500 FiveElementRing LV5
+1/500 CrimsonRubyRing LV5
+1/750 DemonRubyRing LV5
+1/750 EvilExpelRing LV5
+1/750 GoldDragonRing LV5
+1/2000 MirRing LV5
+
+
+;Shoes
+1/30 DragonBoots LV5
+1/60 RedScaleBoots LV5
+
+;Shoes Rare
+1/490 MajesticBoots LV5
+1/400 ExternalBoots LV5
+1/2000 MirBoots LV5
+
+
+;Belts
+1/50 GoldBelt LV5
+1/70 AdamantineBelt LV5
+
+;Belts Rare
+1/490 MajesticBelt LV5
+1/400 ExternalBelt LV5
+1/2000 MirBelt LV5
+
+;Medals
+1/2000 MirMedal LV5
+
+;Shields
+1/2000 MirShield LV5
+
+
+;Pads
+1/2000 MirGuards LV5
+
+;Stone
+1/80 HolyDCStone LV5
+1/80 HolyMCStone LV5
+1/80 HolySCStone LV5
+1/80 HolyACStone LV5
+1/80 HolyAMCStone LV5
+1/80 HolyDefenseStone LV5
+1/1100 MirRock LV5
+
+
+;Gems/Orbs
+1/100 BraveryGem LV5
+1/100 SoulGem LV5
+1/100 StormGem LV5
+1/100 MagicGem LV5
+1/130 DurabilityGem LV5
+1/140 AccuracyGem LV5
+1/140 AgilityGem LV5
+1/300 PoisonGem LV5
+1/300 FreezingGem LV5
+1/200 EnduranceGem LV5
+1/200 DisillusionGem LV5
+
+1/100 BraveryOrb LV5
+1/100 SoulOrb LV5
+1/100 StormOrb LV5
+1/100 MagicOrb LV5
+1/130 DurabilityOrb LV5
+1/140 AccuracyOrb LV5
+1/140 AgilityOrb LV5
+1/300 PoisonOrb LV5
+1/300 FreezingOrb LV5
+1/200 EnduranceOrb LV5
+1/200 DisillusionOrb LV5
+
+
+;Books
+;Warrior
+1/25 FlamingSword LV5
+1/30 CrossHalfMoon LV5
+1/50 TwinDrakeBlade LV5
+1/50 LionRoar LV5
+1/50 Entrapment LV5
+1/60 BladeStorm LV5
+1/150 BladeAvalanche LV5
+1/1200 ProtectionField LV5
+1/1400 Rage LV5
+1/1600 Fury LV5
+1/2000 CounterAttack LV5
+1/2600 ImmortalSkin LV5
+
+;Wizard
+1/10 FrostCrunch LV5
+1/25 IceStorm LV5
+1/30 FlameDisruptor LV5
+1/400 FlameField LV5
+1/50 Vampirism LV5
+1/150 Mirroring LV5
+1/1200 Blizzard LV5
+1/1400 MagicBooster LV5
+1/1600 MeteorStrike LV5
+1/2000 FastMove LV5
+1/2200 IceThrust LV5
+1/2400 FrozenRains LV5
+1/2600 LavaKing LV5
+1/3000 StormEscape LV5
+
+
+;Taosit
+1/25 SummonShinsu LV5
+1/30 UltimateEnhancer LV5
+1/30 EnergyRepulsor LV5
+1/50 Purification LV5
+1/50 Hallucination LV5
+1/100 HealingCircle LV5
+1/200 SummonHolyDeva LV5
+1/1200 Curse LV5
+1/1400 PoisonCloud LV5
+1/1800 PetEnhancer LV5
+1/2000 EnergyShield LV5
+1/2300 HolyShield LV5
+1/2600 HeadShot LV5
+
+;Assassin
+1/25 CrescentSlash LV5
+1/30 Trap LV5
+1/30 PoisonSword LV5
+1/50 MoonLight LV5
+1/50 MPEater LV5
+1/100 SwiftFeet LV5
+1/200 DarkBody LV5
+1/1200 Hemorrhage LV5
+1/1400 FuryWaves LV5
+
+1/25 BindingShot LV5
+1/30 SummonToad LV5
+1/30 PoisonShot LV5
+1/50 CrippleShot LV5
+1/50 SummonSnakes LV5
+1/90 NapalmShot LV5
+1/1400 OneWithNature LV5
+
+
+;CraftingMaterials
+
+
+;Quests
+
+;Level 6
+;Gold
+1/1 Gold 15000 LV6
+
+;Pots + Other
+1/1 (HP)DrugLarge LV6
+1/1 (HP)DrugLarge LV6
+1/2 (HP)DrugLarge LV6
+1/2 (HP)DrugLarge LV6
+1/1 (MP)DrugLarge LV6
+1/1 (MP)DrugLarge LV6
+1/2 (MP)DrugLarge LV6
+1/2 (MP)DrugLarge LV6
+1/1 (HP)DrugXL LV6
+1/1 (HP)DrugXL LV6
+1/2 (HP)DrugXL LV6
+1/2 (HP)DrugXL LV6
+1/1 (MP)DrugXL LV6
+1/1 (MP)DrugXL LV6
+1/2 (MP)DrugXL LV6
+1/2 (MP)DrugXL LV6
+1/1 SunPotion LV6
+1/2 SunPotion LV6
+1/1 SunPotion(M) LV6
+1/2 SunPotion(M) LV6
+
+1/10 ImpactDrug(L) LV6
+1/10 MagicDrug(L) LV6
+1/10 TaoistDrug(L) LV6
+1/10 StormDrug(L) LV6
+
+1/1 BenedictionOil LV6
+1/3 GoldenBenedictionOil LV6
+
+1/100 MirKingRune LV6
+
+
+
+1/20 AwakeningSoul0 LV6
+1/20 AwakeningSoul0 LV6
+
+;Weapons
+;Warrior
+1/75 JudgementMace LV6
+1/75 FiendBow LV6
+1/100 LitheBow LV6
+1/100 WarSpiritBlade LV6
+1/125 DragonSlayer LV6
+1/150 SwordOfWarGod LV6
+1/125 MaleficBow LV6
+1/150 BowOfForce LV6
+
+;Wizard
+1/75 WarMageStaff LV6
+1/100 MagicScythe LV6
+1/125 DragonStaff LV6
+1/150 BladeOfSorcery LV6
+
+;Taoist
+1/75 SoulSpringWand LV6
+1/100 StoneBambooFan LV6
+1/125 SoulSabre LV6
+1/150 HeavenSword LV6
+
+;Assassin
+1/75 BladesOfDarkness LV6
+1/100 FreezingBlades LV6
+1/125 RoyalBlades LV6
+1/150 BladesOfMagi LV6
+
+;Weapons Rare
+1/300 FrozenSabre LV6
+1/300 GrimBow LV6
+1/300 ConquerorSpear LV6
+1/300 BastardSword LV6
+1/300 ZincBlades LV6
+1/400 BlackTigerHammer LV6
+1/400 LethalBow LV6
+1/400 StaffOfLotus LV6
+1/400 FanOfCrane LV6
+1/400 ButcheringBlades LV6
+1/500 BarbarianSword LV6
+1/500 RawSword LV6
+1/500 ApusBow LV6
+1/500 BoneCarvedFan LV6
+1/500 MadDragonBlades LV6
+1/1700 MirSword LV6
+
+
+;Armour
+1/15 StuddedArmour(M) LV6
+1/15 StuddedArmour(F) LV6
+1/15 SteelArmour(M) LV6
+1/15 SteelArmour(F) LV6
+1/15 DragonRobe(M) LV6
+1/15 DragonRobe(F) LV6
+1/15 TitanArmour(M) LV6
+1/15 TitanArmour(F) LV6
+1/15 RoyalArmour(M) LV6
+1/15 RoyalArmour(F) LV6
+
+
+;Armour Rare
+1/1200 HeavenArmour(M) LV6
+1/1200 HeavenArmour(F) LV6
+1/1200 HeavenArcheyRobe(M) LV6
+1/1200 HeavenArcheyRobe(F) LV6
+1/1500 HeavenArmour(M) LV6
+1/1500 HeavenArmour(F) LV6
+1/1500 HeavenRedArmour(M) LV6
+1/1500 HeavenRedArmour(F) LV6
+1/1500 HeavenGrnArmour(M) LV6
+1/1500 HeavenGrnArmour(F) LV6
+1/1500 HeavenGoldArmour(M) LV6
+1/1500 HeavenGoldArmour(F) LV6
+1/1700 MirArmour(M) LV6
+1/1700 MirArmour(F) LV6
+
+
+;Helmets
+1/30 BlackIronHelmet LV6
+1/10 HelmetOfHero LV6
+1/35 GreatHelmet LV6
+1/40 WisdomCoronet LV6
+1/40 TaoCoronet LV6
+
+
+;Helmets Rare
+1/200 MajesticHelmet LV6
+1/400 ExternalHelmet LV6
+1/500 SparklingHelmet LV6
+1/600 PuiYuHelmet LV6
+1/2000 MirHelmet LV6
+
+
+;Necklace
+1/50 GreenBead LV6
+1/50 DemonicBells LV6
+1/50 SoulNecklace LV6
+1/90 HeroNecklace LV6
+1/90 AdamantineNecklace LV6
+1/90 RequiemNecklace LV6
+
+;Necklace Rare
+1/255 MajesticNecklace LV6
+1/400 ExternalNecklace LV6
+1/500 CuspidNecklace LV6
+1/500 SorceryAnchor LV6
+1/500 PurifiedMirror LV6
+1/750 EvilTriangle LV6
+1/750 CrossPurified LV6
+1/750 AdamantNecklace LV6
+1/2000 MirNecklace LV6
+
+
+;Bracelets
+1/170 8TrigramWheel LV6
+1/170 HangMaWheel LV6
+1/170 BokMaWheel LV6
+1/190 BaekTaGlove LV6
+1/190 SpiritReformer LV6
+1/190 HolyTaoWheel LV6
+
+;Bracelets Rare
+1/205 MajesticWheel LV6
+1/400 ExternalWheel LV6
+1/500 DualTitanAmulet LV6
+1/500 SacredAngelAmulet LV6
+1/500 EvilWhispAmulet LV6
+1/750 WildTitanAmulet LV6
+1/750 EnchantedAmulet LV6
+1/750 FiveElementAmulet LV6
+1/2000 MirWheel LV6
+
+
+;Rings
+1/50 OmaSpiritRing LV6
+1/60 NobleRing LV6
+1/60 SoulRing LV6
+1/70 BoundlessRing LV6
+1/70 ThunderRing LV6
+1/70 TaeGukRing LV6
+
+;Rings Rare
+1/200 MajesticRing LV6
+1/400 ExternalRing LV6
+1/500 PledgeRing LV6
+1/500 FiveElementRing LV6
+1/500 CrimsonRubyRing LV6
+1/750 DemonRubyRing LV6
+1/750 EvilExpelRing LV6
+1/750 GoldDragonRing LV6
+1/2000 MirRing LV6
+
+
+;Shoes
+1/30 DragonBoots LV6
+1/60 RedScaleBoots LV6
+
+;Shoes Rare
+1/490 MajesticBoots LV6
+1/400 ExternalBoots LV6
+1/2000 MirBoots LV6
+
+
+;Belts
+1/50 GoldBelt LV6
+1/70 AdamantineBelt LV6
+
+;Belts Rare
+1/490 MajesticBelt LV6
+1/400 ExternalBelt LV6
+1/2000 MirBelt LV6
+
+;Medals
+1/2000 MirMedal LV6
+
+;Shields
+1/2000 MirShield LV6
+
+
+;Pads
+1/2000 MirGuards LV6
+
+;Stone
+1/80 HolyDCStone LV6
+1/80 HolyMCStone LV6
+1/80 HolySCStone LV6
+1/80 HolyACStone LV6
+1/80 HolyAMCStone LV6
+1/80 HolyDefenseStone LV6
+1/1100 MirRock LV6
+
+
+;Gems/Orbs
+1/100 BraveryGem LV6
+1/100 SoulGem LV6
+1/100 StormGem LV6
+1/100 MagicGem LV6
+1/130 DurabilityGem LV6
+1/140 AccuracyGem LV6
+1/140 AgilityGem LV6
+1/300 PoisonGem LV6
+1/300 FreezingGem LV6
+1/200 EnduranceGem LV6
+1/200 DisillusionGem LV6
+
+1/100 BraveryOrb LV6
+1/100 SoulOrb LV6
+1/100 StormOrb LV6
+1/100 MagicOrb LV6
+1/130 DurabilityOrb LV6
+1/140 AccuracyOrb LV6
+1/140 AgilityOrb LV6
+1/300 PoisonOrb LV6
+1/300 FreezingOrb LV6
+1/200 EnduranceOrb LV6
+1/200 DisillusionOrb LV6
+
+
+;Books
+;Warrior
+1/25 FlamingSword LV6
+1/30 CrossHalfMoon LV6
+1/50 TwinDrakeBlade LV6
+1/50 LionRoar LV6
+1/50 Entrapment LV6
+1/60 BladeStorm LV6
+1/150 BladeAvalanche LV6
+1/1200 ProtectionField LV6
+1/1400 Rage LV6
+1/1600 Fury LV6
+1/2000 CounterAttack LV6
+1/2600 ImmortalSkin LV6
+
+;Wizard
+1/10 FrostCrunch LV6
+1/25 IceStorm LV6
+1/30 FlameDisruptor LV6
+1/400 FlameField LV6
+1/50 Vampirism LV6
+1/150 Mirroring LV6
+1/1200 Blizzard LV6
+1/1400 MagicBooster LV6
+1/1600 MeteorStrike LV6
+1/2000 FastMove LV6
+1/2200 IceThrust LV6
+1/2400 FrozenRains LV6
+1/2600 LavaKing LV6
+1/3000 StormEscape LV6
+
+
+;Taosit
+1/25 SummonShinsu LV6
+1/30 UltimateEnhancer LV6
+1/30 EnergyRepulsor LV6
+1/50 Purification LV6
+1/50 Hallucination LV6
+1/100 HealingCircle LV6
+1/200 SummonHolyDeva LV6
+1/1200 Curse LV6
+1/1400 PoisonCloud LV6
+1/1800 PetEnhancer LV6
+1/2000 EnergyShield LV6
+1/2300 HolyShield LV6
+1/2600 HeadShot LV6
+
+;Assassin
+1/25 CrescentSlash LV6
+1/30 Trap LV6
+1/30 PoisonSword LV6
+1/50 MoonLight LV6
+1/50 MPEater LV6
+1/100 SwiftFeet LV6
+1/200 DarkBody LV6
+1/1200 Hemorrhage LV6
+1/1400 FuryWaves LV6
+
+1/25 BindingShot LV6
+1/30 SummonToad LV6
+1/30 PoisonShot LV6
+1/50 CrippleShot LV6
+1/50 SummonSnakes LV6
+1/90 NapalmShot LV6
+1/1400 OneWithNature LV6
+
+
+;CraftingMaterials
+
+
+;Quests
+
+;Level 7
+;Gold
+1/1 Gold 15000 LV7
+
+;Pots + Other
+1/1 (HP)DrugLarge LV7
+1/1 (HP)DrugLarge LV7
+1/2 (HP)DrugLarge LV7
+1/2 (HP)DrugLarge LV7
+1/1 (MP)DrugLarge LV7
+1/1 (MP)DrugLarge LV7
+1/2 (MP)DrugLarge LV7
+1/2 (MP)DrugLarge LV7
+1/1 (HP)DrugXL LV7
+1/1 (HP)DrugXL LV7
+1/2 (HP)DrugXL LV7
+1/2 (HP)DrugXL LV7
+1/1 (MP)DrugXL LV7
+1/1 (MP)DrugXL LV7
+1/2 (MP)DrugXL LV7
+1/2 (MP)DrugXL LV7
+1/1 SunPotion LV7
+1/2 SunPotion LV7
+1/1 SunPotion(M) LV7
+1/2 SunPotion(M) LV7
+
+1/10 ImpactDrug(L) LV7
+1/10 MagicDrug(L) LV7
+1/10 TaoistDrug(L) LV7
+1/10 StormDrug(L) LV7
+
+1/1 BenedictionOil LV7
+1/3 GoldenBenedictionOil LV7
+
+1/100 MirKingRune LV7
+
+
+
+1/20 AwakeningSoul0 LV7
+1/20 AwakeningSoul0 LV7
+
+;Weapons
+;Warrior
+1/75 JudgementMace LV7
+1/100 WarSpiritBlade LV7
+1/100 LitheBow LV7
+1/125 DragonSlayer LV7
+1/125 MaleficBow LV7
+1/150 SwordOfWarGod LV7
+1/150 BowOfForce LV7
+1/75 FiendBow LV7
+
+;Wizard
+1/75 WarMageStaff LV7
+1/100 MagicScythe LV7
+1/125 DragonStaff LV7
+1/150 BladeOfSorcery LV7
+
+;Taoist
+1/75 SoulSpringWand LV7
+1/100 StoneBambooFan LV7
+1/125 SoulSabre LV7
+1/150 HeavenSword LV7
+
+;Assassin
+1/75 BladesOfDarkness LV7
+1/100 FreezingBlades LV7
+1/125 RoyalBlades LV7
+1/150 BladesOfMagi LV7
+
+;Weapons Rare
+1/300 FrozenSabre LV7
+1/300 GrimBow LV7
+1/300 ConquerorSpear LV7
+1/300 BastardSword LV7
+1/300 ZincBlades LV7
+1/400 BlackTigerHammer LV7
+1/400 LethalBow LV7
+1/400 StaffOfLotus LV7
+1/400 FanOfCrane LV7
+1/400 ButcheringBlades LV7
+1/500 BarbarianSword LV7
+1/500 RawSword LV7
+1/500 ApusBow LV7
+1/500 BoneCarvedFan LV7
+1/500 MadDragonBlades LV7
+1/1700 MirSword LV7
+
+
+;Armour
+1/15 StuddedArmour(M) LV7
+1/15 StuddedArmour(F) LV7
+1/15 SteelArmour(M) LV7
+1/15 SteelArmour(F) LV7
+1/15 DragonRobe(M) LV7
+1/15 DragonRobe(F) LV7
+1/15 TitanArmour(M) LV7
+1/15 TitanArmour(F) LV7
+1/15 RoyalArmour(M) LV7
+1/15 RoyalArmour(F) LV7
+
+
+;Armour Rare
+1/1200 HeavenArmour(M) LV7
+1/1200 HeavenArmour(F) LV7
+1/1200 HeavenArcheyRobe(M) LV7
+1/1200 HeavenArcheyRobe(F) LV7
+1/1500 HeavenArmour(M) LV7
+1/1500 HeavenArmour(F) LV7
+1/1500 HeavenRedArmour(M) LV7
+1/1500 HeavenRedArmour(F) LV7
+1/1500 HeavenGrnArmour(M) LV7
+1/1500 HeavenGrnArmour(F) LV7
+1/1500 HeavenGoldArmour(M) LV7
+1/1500 HeavenGoldArmour(F) LV7
+1/1700 MirArmour(M) LV7
+1/1700 MirArmour(F) LV7
+
+
+;Helmets
+1/30 BlackIronHelmet LV7
+1/10 HelmetOfHero LV7
+1/35 GreatHelmet LV7
+1/40 WisdomCoronet LV7
+1/40 TaoCoronet LV7
+
+
+;Helmets Rare
+1/200 MajesticHelmet LV7
+1/400 ExternalHelmet LV7
+1/500 SparklingHelmet LV7
+1/600 PuiYuHelmet LV7
+1/2000 MirHelmet LV7
+
+
+;Necklace
+1/50 GreenBead LV7
+1/50 DemonicBells LV7
+1/50 SoulNecklace LV7
+1/90 HeroNecklace LV7
+1/90 AdamantineNecklace LV7
+1/90 RequiemNecklace LV7
+
+;Necklace Rare
+1/255 MajesticNecklace LV7
+1/400 ExternalNecklace LV7
+1/500 CuspidNecklace LV7
+1/500 SorceryAnchor LV7
+1/500 PurifiedMirror LV7
+1/750 EvilTriangle LV7
+1/750 CrossPurified LV7
+1/750 AdamantNecklace LV7
+1/2000 MirNecklace LV7
+
+
+;Bracelets
+1/170 8TrigramWheel LV7
+1/170 HangMaWheel LV7
+1/170 BokMaWheel LV7
+1/190 BaekTaGlove LV7
+1/190 SpiritReformer LV7
+1/190 HolyTaoWheel LV7
+
+;Bracelets Rare
+1/205 MajesticWheel LV7
+1/400 ExternalWheel LV7
+1/500 DualTitanAmulet LV7
+1/500 SacredAngelAmulet LV7
+1/500 EvilWhispAmulet LV7
+1/750 WildTitanAmulet LV7
+1/750 EnchantedAmulet LV7
+1/750 FiveElementAmulet LV7
+1/2000 MirWheel LV7
+
+
+;Rings
+1/50 OmaSpiritRing LV7
+1/60 NobleRing LV7
+1/60 SoulRing LV7
+1/70 BoundlessRing LV7
+1/70 ThunderRing LV7
+1/70 TaeGukRing LV7
+
+;Rings Rare
+1/200 MajesticRing LV7
+1/400 ExternalRing LV7
+1/500 PledgeRing LV7
+1/500 FiveElementRing LV7
+1/500 CrimsonRubyRing LV7
+1/750 DemonRubyRing LV7
+1/750 EvilExpelRing LV7
+1/750 GoldDragonRing LV7
+1/2000 MirRing LV7
+
+
+;Shoes
+1/30 DragonBoots LV7
+1/60 RedScaleBoots LV7
+
+;Shoes Rare
+1/490 MajesticBoots LV7
+1/400 ExternalBoots LV7
+1/2000 MirBoots LV7
+
+
+;Belts
+1/50 GoldBelt LV7
+1/70 AdamantineBelt LV7
+
+;Belts Rare
+1/490 MajesticBelt LV7
+1/400 ExternalBelt LV7
+1/2000 MirBelt LV7
+
+;Medals
+1/2000 MirMedal LV7
+
+;Shields
+1/2000 MirShield LV7
+
+
+;Pads
+1/2000 MirGuards LV7
+
+;Stone
+1/80 HolyDCStone LV7
+1/80 HolyMCStone LV7
+1/80 HolySCStone LV7
+1/80 HolyACStone LV7
+1/80 HolyAMCStone LV7
+1/80 HolyDefenseStone LV7
+1/1100 MirRock LV7
+
+
+;Gems/Orbs
+1/100 BraveryGem LV7
+1/100 SoulGem LV7
+1/100 StormGem LV7
+1/100 MagicGem LV7
+1/130 DurabilityGem LV7
+1/140 AccuracyGem LV7
+1/140 AgilityGem LV7
+1/300 PoisonGem LV7
+1/300 FreezingGem LV7
+1/200 EnduranceGem LV7
+1/200 DisillusionGem LV7
+
+1/100 BraveryOrb LV7
+1/100 SoulOrb LV7
+1/100 StormOrb LV7
+1/100 MagicOrb LV7
+1/130 DurabilityOrb LV7
+1/140 AccuracyOrb LV7
+1/140 AgilityOrb LV7
+1/300 PoisonOrb LV7
+1/300 FreezingOrb LV7
+1/200 EnduranceOrb LV7
+1/200 DisillusionOrb LV7
+
+
+;Books
+;Warrior
+1/25 FlamingSword LV7
+1/30 CrossHalfMoon LV7
+1/50 TwinDrakeBlade LV7
+1/50 LionRoar LV7
+1/50 Entrapment LV7
+1/60 BladeStorm LV7
+1/150 BladeAvalanche LV7
+1/1200 ProtectionField LV7
+1/1400 Rage LV7
+1/1600 Fury LV7
+1/2000 CounterAttack LV7
+1/2600 ImmortalSkin LV7
+
+;Wizard
+1/10 FrostCrunch LV7
+1/25 IceStorm LV7
+1/30 FlameDisruptor LV7
+1/400 FlameField LV7
+1/50 Vampirism LV7
+1/150 Mirroring LV7
+1/1200 Blizzard LV7
+1/1400 MagicBooster LV7
+1/1600 MeteorStrike LV7
+1/2000 FastMove LV7
+1/2200 IceThrust LV7
+1/2400 FrozenRains LV7
+1/2600 LavaKing LV7
+1/3000 StormEscape LV7
+
+
+;Taosit
+1/25 SummonShinsu LV7
+1/30 UltimateEnhancer LV7
+1/30 EnergyRepulsor LV7
+1/50 Purification LV7
+1/50 Hallucination LV7
+1/100 HealingCircle LV7
+1/200 SummonHolyDeva LV7
+1/1200 Curse LV7
+1/1400 PoisonCloud LV7
+1/1800 PetEnhancer LV7
+1/2000 EnergyShield LV7
+1/2300 HolyShield LV7
+1/2600 HeadShot LV7
+
+;Assassin
+1/25 CrescentSlash LV7
+1/30 Trap LV7
+1/30 PoisonSword LV7
+1/50 MoonLight LV7
+1/50 MPEater LV7
+1/100 SwiftFeet LV7
+1/200 DarkBody LV7
+1/1200 Hemorrhage LV7
+1/1400 FuryWaves LV7
+
+1/25 BindingShot LV7
+1/30 SummonToad LV7
+1/30 PoisonShot LV7
+1/50 CrippleShot LV7
+1/50 SummonSnakes LV7
+1/90 NapalmShot LV7
+1/1400 OneWithNature LV7
+
+
+;CraftingMaterials
+
+
+;Quests
+
+
+;Level 8
+;Gold
+1/1 Gold 15000 LV8
+
+;Pots + Other
+1/1 (HP)DrugLarge LV8
+1/1 (HP)DrugLarge LV8
+1/2 (HP)DrugLarge LV8
+1/2 (HP)DrugLarge LV8
+1/1 (MP)DrugLarge LV8
+1/1 (MP)DrugLarge LV8
+1/2 (MP)DrugLarge LV8
+1/2 (MP)DrugLarge LV8
+1/1 (HP)DrugXL LV8
+1/1 (HP)DrugXL LV8
+1/2 (HP)DrugXL LV8
+1/2 (HP)DrugXL LV8
+1/1 (MP)DrugXL LV8
+1/1 (MP)DrugXL LV8
+1/2 (MP)DrugXL LV8
+1/2 (MP)DrugXL LV8
+1/1 SunPotion LV8
+1/2 SunPotion LV8
+1/1 SunPotion(M) LV8
+1/2 SunPotion(M) LV8
+
+1/10 ImpactDrug(L) LV8
+1/10 MagicDrug(L) LV8
+1/10 TaoistDrug(L) LV8
+1/10 StormDrug(L) LV8
+
+1/1 BenedictionOil LV8
+1/3 GoldenBenedictionOil LV8
+
+1/100 MirKingRune LV8
+
+
+
+1/20 AwakeningSoul0 LV8
+1/20 AwakeningSoul0 LV8
+
+;Weapons
+;Warrior
+1/75 JudgementMace LV8
+1/75 FiendBow LV8
+1/100 WarSpiritBlade LV8
+1/100 LitheBow LV8
+1/125 DragonSlayer LV8
+1/125 MaleficBow LV8
+1/150 SwordOfWarGod LV8
+1/150 BowOfForce LV8
+
+;Wizard
+1/75 WarMageStaff LV8
+1/100 MagicScythe LV8
+1/125 DragonStaff LV8
+1/150 BladeOfSorcery LV8
+
+;Taoist
+1/75 SoulSpringWand LV8
+1/100 StoneBambooFan LV8
+1/125 SoulSabre LV8
+1/150 HeavenSword LV8
+
+;Assassin
+1/75 BladesOfDarkness LV8
+1/100 FreezingBlades LV8
+1/125 RoyalBlades LV8
+1/150 BladesOfMagi LV8
+
+;Weapons Rare
+1/300 FrozenSabre LV8
+1/300 GrimBow LV8
+1/300 ConquerorSpear LV8
+1/300 BastardSword LV8
+1/300 ZincBlades LV8
+1/400 BlackTigerHammer LV8
+1/400 LethalBow LV8
+1/400 StaffOfLotus LV8
+1/400 FanOfCrane LV8
+1/400 ButcheringBlades LV8
+1/500 BarbarianSword LV8
+1/500 RawSword LV8
+1/500 ApusBow LV8
+1/500 BoneCarvedFan LV8
+1/500 MadDragonBlades LV8
+1/1700 MirSword LV8
+
+
+;Armour
+1/15 StuddedArmour(M) LV8
+1/15 StuddedArmour(F) LV8
+1/15 SteelArmour(M) LV8
+1/15 SteelArmour(F) LV8
+1/15 DragonRobe(M) LV8
+1/15 DragonRobe(F) LV8
+1/15 TitanArmour(M) LV8
+1/15 TitanArmour(F) LV8
+1/15 RoyalArmour(M) LV8
+1/15 RoyalArmour(F) LV8
+
+
+;Armour Rare
+1/1200 HeavenArmour(M) LV8
+1/1200 HeavenArmour(F) LV8
+1/1200 HeavenArcheyRobe(M) LV8
+1/1200 HeavenArcheyRobe(F) LV8
+1/1500 HeavenArmour(M) LV8
+1/1500 HeavenArmour(F) LV8
+1/1500 HeavenRedArmour(M) LV8
+1/1500 HeavenRedArmour(F) LV8
+1/1500 HeavenGrnArmour(M) LV8
+1/1500 HeavenGrnArmour(F) LV8
+1/1500 HeavenGoldArmour(M) LV8
+1/1500 HeavenGoldArmour(F) LV8
+1/1700 MirArmour(M) LV8
+1/1700 MirArmour(F) LV8
+
+
+;Helmets
+1/30 BlackIronHelmet LV8
+1/10 HelmetOfHero LV8
+1/35 GreatHelmet LV8
+1/40 WisdomCoronet LV8
+1/40 TaoCoronet LV8
+
+
+;Helmets Rare
+1/200 MajesticHelmet LV8
+1/400 ExternalHelmet LV8
+1/500 SparklingHelmet LV8
+1/600 PuiYuHelmet LV8
+1/2000 MirHelmet LV8
+
+
+;Necklace
+1/50 GreenBead LV8
+1/50 DemonicBells LV8
+1/50 SoulNecklace LV8
+1/90 HeroNecklace LV8
+1/90 AdamantineNecklace LV8
+1/90 RequiemNecklace LV8
+
+;Necklace Rare
+1/255 MajesticNecklace LV8
+1/400 ExternalNecklace LV8
+1/500 CuspidNecklace LV8
+1/500 SorceryAnchor LV8
+1/500 PurifiedMirror LV8
+1/750 EvilTriangle LV8
+1/750 CrossPurified LV8
+1/750 AdamantNecklace LV8
+1/2000 MirNecklace LV8
+
+
+;Bracelets
+1/170 8TrigramWheel LV8
+1/170 HangMaWheel LV8
+1/170 BokMaWheel LV8
+1/190 BaekTaGlove LV8
+1/190 SpiritReformer LV8
+1/190 HolyTaoWheel LV8
+
+;Bracelets Rare
+1/205 MajesticWheel LV8
+1/400 ExternalWheel LV8
+1/500 DualTitanAmulet LV8
+1/500 SacredAngelAmulet LV8
+1/500 EvilWhispAmulet LV8
+1/750 WildTitanAmulet LV8
+1/750 EnchantedAmulet LV8
+1/750 FiveElementAmulet LV8
+1/2000 MirWheel LV8
+
+
+;Rings
+1/50 OmaSpiritRing LV8
+1/60 NobleRing LV8
+1/60 SoulRing LV8
+1/70 BoundlessRing LV8
+1/70 ThunderRing LV8
+1/70 TaeGukRing LV8
+
+;Rings Rare
+1/200 MajesticRing LV8
+1/400 ExternalRing LV8
+1/500 PledgeRing LV8
+1/500 FiveElementRing LV8
+1/500 CrimsonRubyRing LV8
+1/750 DemonRubyRing LV8
+1/750 EvilExpelRing LV8
+1/750 GoldDragonRing LV8
+1/2000 MirRing LV8
+
+
+;Shoes
+1/30 DragonBoots LV8
+1/60 RedScaleBoots LV8
+
+;Shoes Rare
+1/490 MajesticBoots LV8
+1/400 ExternalBoots LV8
+1/2000 MirBoots LV8
+
+
+;Belts
+1/50 GoldBelt LV8
+1/70 AdamantineBelt LV8
+
+;Belts Rare
+1/490 MajesticBelt LV8
+1/400 ExternalBelt LV8
+1/2000 MirBelt LV8
+
+;Medals
+1/2000 MirMedal LV8
+
+;Shields
+1/2000 MirShield LV8
+
+
+;Pads
+1/2000 MirGuards LV8
+
+;Stone
+1/80 HolyDCStone LV8
+1/80 HolyMCStone LV8
+1/80 HolySCStone LV8
+1/80 HolyACStone LV8
+1/80 HolyAMCStone LV8
+1/80 HolyDefenseStone LV8
+1/1100 MirRock LV8
+
+
+;Gems/Orbs
+1/100 BraveryGem LV8
+1/100 SoulGem LV8
+1/100 StormGem LV8
+1/100 MagicGem LV8
+1/130 DurabilityGem LV8
+1/140 AccuracyGem LV8
+1/140 AgilityGem LV8
+1/300 PoisonGem LV8
+1/300 FreezingGem LV8
+1/200 EnduranceGem LV8
+1/200 DisillusionGem LV8
+
+1/100 BraveryOrb LV8
+1/100 SoulOrb LV8
+1/100 StormOrb LV8
+1/100 MagicOrb LV8
+1/130 DurabilityOrb LV8
+1/140 AccuracyOrb LV8
+1/140 AgilityOrb LV8
+1/300 PoisonOrb LV8
+1/300 FreezingOrb LV8
+1/200 EnduranceOrb LV8
+1/200 DisillusionOrb LV8
+
+
+;Books
+;Warrior
+1/25 FlamingSword LV8
+1/30 CrossHalfMoon LV8
+1/50 TwinDrakeBlade LV8
+1/50 LionRoar LV8
+1/50 Entrapment LV8
+1/60 BladeStorm LV8
+1/150 BladeAvalanche LV8
+1/1200 ProtectionField LV8
+1/1400 Rage LV8
+1/1600 Fury LV8
+1/2000 CounterAttack LV8
+1/2600 ImmortalSkin LV8
+
+;Wizard
+1/10 FrostCrunch LV8
+1/25 IceStorm LV8
+1/30 FlameDisruptor LV8
+1/400 FlameField LV8
+1/50 Vampirism LV8
+1/150 Mirroring LV8
+1/1200 Blizzard LV8
+1/1400 MagicBooster LV8
+1/1600 MeteorStrike LV8
+1/2000 FastMove LV8
+1/2200 IceThrust LV8
+1/2400 FrozenRains LV8
+1/2600 LavaKing LV8
+1/3000 StormEscape LV8
+
+
+;Taosit
+1/25 SummonShinsu LV8
+1/30 UltimateEnhancer LV8
+1/30 EnergyRepulsor LV8
+1/50 Purification LV8
+1/50 Hallucination LV8
+1/100 HealingCircle LV8
+1/200 SummonHolyDeva LV8
+1/1200 Curse LV8
+1/1400 PoisonCloud LV8
+1/1800 PetEnhancer LV8
+1/2000 EnergyShield LV8
+1/2300 HolyShield LV8
+1/2600 HeadShot LV8
+
+;Assassin
+1/25 CrescentSlash LV8
+1/30 Trap LV8
+1/30 PoisonSword LV8
+1/50 MoonLight LV8
+1/50 MPEater LV8
+1/100 SwiftFeet LV8
+1/200 DarkBody LV8
+1/1200 Hemorrhage LV8
+1/1400 FuryWaves LV8
+
+1/25 BindingShot LV8
+1/30 SummonToad LV8
+1/30 PoisonShot LV8
+1/50 CrippleShot LV8
+1/50 SummonSnakes LV8
+1/90 NapalmShot LV8
+1/1400 OneWithNature LV8
+
+
+;CraftingMaterials
+
+
+;Quests
+

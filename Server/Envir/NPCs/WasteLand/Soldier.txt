@@ -1,0 +1,9 @@
+[@Main]
+#SAY
+This is a temporary base for the explorers.
+It's very dangerous around here,
+so there aren't many merchants out in the valley.
+You should get yourself prepared here
+if you are going to the valley.
+<Exit/@exit>
+

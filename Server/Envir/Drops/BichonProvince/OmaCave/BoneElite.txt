@@ -1,0 +1,112 @@
+;Gold
+1/1 Gold 1500
+
+;Pots + Other
+1/1 (HP)DrugMedium
+1/1 (MP)DrugMedium
+1/1 (HP)DrugMedium
+1/1 (MP)DrugMedium
+1/2 SunPotion
+1/2 SunPotion(M)
+ 
+1/30 ImpactDrug(S)
+1/30 MagicDrug(S)
+1/30 TaoistDrug(S)
+1/30 StormDrug(S)
+1/30 StaminaAid(S)
+1/30 MagicAid(S)
+
+1/5 AwakeningSoul0
+
+;Armours
+1/40 HeavyArmour(M) 
+1/40 HeavyArmour(F) 
+1/40 MagicRobe(M) 
+1/40 MagicRobe(F) 
+1/40 SoulArmour(M) 
+1/40 SoulArmour(F) 
+1/40 RelicArmour(M) 
+1/40 RelicArmour(F) 
+1/40 LightLeatherArmour(M) 
+1/40 LightLeatherArmour(F) 
+
+;Helmets
+1/25 MagicHelmet
+1/70 BrassHelmet
+1/100 ShamanHelmet
+1/100 SkeletonHelmet
+1/400 GoldenTiara
+
+;Weapons
+1/150 PrinceDagger
+1/150 MartialSword
+1/150 HookedSpear
+1/150 KrissSword
+1/150 IronBlades
+1/150 LongBow
+1/250 PowerAxe
+1/400 PurifierSword
+1/1000 FireBloodSword
+1/1000 GreatAxe
+1/1000 MageStaff
+1/1000 SerpentSword
+1/1000 DoubleBlades
+1/1000 SilverBow
+
+;Rings
+1/100 BlackRing
+1/100 SerpentEyeRing
+1/100 PearlRing
+1/100 GoldRing
+1/125 SkeletonRing
+1/100 IronRing
+1/150 CharmRing
+1/150 MoralRing
+
+;Bracelets
+1/80 HardGlove
+1/80 MagicBracelet
+1/90 StrainBracelet
+1/100 MonkBracelet
+1/100 EbonyBracelet
+1/140 DeathGauntlet
+1/150 GoldBracelet
+
+;Necklaces
+1/60 LanternNecklace
+1/60 TigerNecklace
+1/900 ElusionNecklace
+1/500 PlatinumNecklace
+1/110 BlueJadeNecklace
+1/110 BambooPipe
+1/110 ConvexLens
+
+;Belts
+1/200 BronzeBelt
+
+;Medals
+
+
+;Medals Rare
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+1/5 Bone
+1/10 LargeBone
+
+;Quests
+1/1 SkeletonHead Q
+2/1 SkeletonBone Q
+1/5 AncientScyther Q

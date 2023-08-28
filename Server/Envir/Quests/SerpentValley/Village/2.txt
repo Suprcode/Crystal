@@ -1,0 +1,29 @@
+[@Description]
+The Ring still look's perfect.
+Please can you deliver the ring to my Daughter 
+{Melissa/LimeGreen}. She also requires some help.
+
+[@TaskDescription]
+Please take the {JadeRing/LightSteelBlue} to {Melissa/LimeGreen}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+JadeRing 1
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+219
+
+[@GoldReward]
+300
+
+// Pickup - Merchant_Bradley 0120 7 8
+// Hand In - Merchant_Melissa 2 517 477

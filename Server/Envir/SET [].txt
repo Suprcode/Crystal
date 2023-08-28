@@ -1,0 +1,65 @@
+[500] - MissMi
+[501]
+[502]
+[503]
+[504]
+[505]
+[506]
+[507]
+[508]
+[509]
+[510]
+[511]
+[512]
+[513]
+[514]
+[515]
+[516]
+[517]
+[518]
+[519]
+[520] - MissMi
+
+
+[521] = WierdPillar, Quest {SecretPath}
+[522] = StrangePillar, Quest {SecretPath}
+[523] = MysteriousPillar, Quest {SecretPath}
+[524] = Ashes, Quest {Lost Soul}
+[525] = MysteriousStones, Quest {Find the Passage to Ruins}
+[526] = WhiteValley_Captain, 
+[527] = TrainerTaoist, Quest {HolySword Quest}
+[528] = TaoSchool Owner, Quest {HolySword Quest}
+[529] = TaoSchool Owner, Quest {HolySword Quest}
+[530] = BigTaoist, Quest {HolySword Quest}
+[531] = BigTaoist, Kill RME {HolySword Quest}
+[532] = Finished {HolySwordQuest}
+[533] = Library {AncientOmaCavern}
+[534] = Inn {AncientOmaCavern}
+[535] = Finally understand Scyther {AncientOmaCavern} //Far
+[536] = Return to the MysteriousStone {AncientOmaCaver}
+[537] = Sir.Mogu
+[538] = Emperor Far. (still to come)
+[539] = Emperor Morale 1 (Start at Commander Luke)
+[540] = Emperor Morale 2 (Start at Commander Luke)
+[541] = Emperor Morale 3 (Start at Commander Luke)
+
+[542] = CraftPortal - Bichon Wall
+[543] = CraftPortal - Border Village
+[544] = CraftPortal - Serpent Valley
+[545] = CraftPortal - MudWall
+[546] = CraftPortal - CastleGI-Ryoong
+[547] = CraftPortal - PrajnaIsland
+[548] = CraftPortal - PastBichon
+
+[951] = Disabled NPCS
+[952] = ISADMIN Show Gamemaster NPCS in R001. 
+
+[990] = Level 55 Effect.
+[991] = Level 65 Effect.
+[992] = Level 75 Effect.
+
+
+[993] = Rebirth 1 Effect (Level 60-69)
+[994] = Rebirth 2 Effect (Level 70-79)
+[995] = Rebirth 3 Effect (Level 80+)
+[1000] = Rebirthed Player (Used for NPC Flag check for RB players)

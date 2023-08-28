@@ -1,0 +1,30 @@
+[@Description]
+My grandpa lives in {WoomyonWoods/Yellow}. I used 
+to visit him offen, but I've just been too busy. 
+Could you visit {MasterShok/LimeGreen} in {WoomyonWoods/Yellow}
+and see how he's doing?
+
+[@TaskDescription]
+Visit {MasterShok/LimeGreen} Coordinates 312:73 
+{WoomyonWood's/Yellow}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+657
+
+[@GoldReward]
+900
+
+// Pickup - Merchant_Melissa 2 517 477
+// Hand In - Master_Shok 1 312 73

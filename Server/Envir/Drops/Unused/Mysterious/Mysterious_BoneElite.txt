@@ -1,0 +1,1174 @@
+;Level 1
+;Gold
+1/5 Gold 2553 LV1
+
+;Pots + Other
+1/10 (HP)DrugXL LV1
+1/10 (MP)DrugXL LV1
+1/150 MysteryWater LV1
+
+;Weapons
+1/1500 PowerAxe LV1
+1/1500 LongBow LV1
+1/2000 PurifierSword LV1
+1/2000 MartialSword LV1
+1/2000 HookedSpear LV1
+1/2000 KrissSword LV1
+
+;Armour
+1/15000 SteelArmour(M) LV1
+1/15000 SteelArmour(F) LV1
+1/15000 DragonRobe(M) LV1
+1/15000 DragonRobe(F) LV1
+1/15000 TitanArmour(M) LV1
+1/15000 TitanArmour(F) LV1
+1/50000 BlackTigerArmour(M) LV1
+1/50000 BlackTigerArmour(F) LV1
+1/50000 LotusArmour(F) LV1
+1/50000 LotusArmour(M) LV1
+1/50000 CraneArmour(F) LV1
+1/50000 CraneArmour(M) LV1
+
+;Helmets
+1/10000 GreatHelmet LV1
+1/10000 TaoCoronet LV1
+1/10000 WisdomCoronet LV1
+1/10000 MajesticHelmet LV1
+
+;Helmets Rare
+1/1500 MysteryCap[1d] LV1
+
+;Necklace
+1/3700 HeroNecklace LV1
+1/3700 AdamantineNecklace LV1
+1/3700 RequiemNecklace LV1
+
+;Bracelets
+1/6000 SteelGauntlet LV1
+1/6000 8TrigramWheel LV1
+1/6000 HangMaWheel LV1
+1/6000 BokMaWheel LV1
+1/7500 BaekTaGlove LV1
+1/7500 SpiritReformer LV1
+1/7500 HolyTaoWheel LV1
+
+;Bracelets Rare
+1/1300 MysteryWheel[1d] LV1
+
+;Rings
+1/3500 NobleRing LV1
+1/3500 SoulRing LV1
+1/3500 OmaSpiritRing LV1
+1/5500 TaeGukRing LV1
+1/5500 ThunderRing LV1
+1/5500 BoundlessRing LV1
+1/5500 MajesticRing LV1
+
+;Rings Rare
+1/1500 MysteryCircle[1d] LV1
+
+;Shoes
+1/700 SilkBoots LV1
+
+;Belts
+1/900 BronzeBelt LV1
+
+;Shields
+1/20000 PredatorShield LV1
+1/35000 PlasmaShield LV1
+
+;Medals
+1/25000 ArmouredMedal LV1
+1/30000 HollowMedal LV1
+
+;Pads
+1/1800 MysteriousGuards[1d] LV1
+
+;Stone
+1/500 DCStone(L) LV1
+1/500 MCStone(L) LV1
+1/500 SCStone(L) LV1
+1/1500 DCStone(XL) LV1
+1/1500 MCStone(XL) LV1
+1/1500 SCStone(XL) LV1
+1/3500 ItemMineJewl[1d] LV1
+1/3500 ExperienceMineJewl[1d] LV1
+1/5000 BloodJewl[1d] LV1
+
+;Books
+;Warrior
+1/5000 Slaying LV1
+1/5200 Thrusting LV1
+1/8000 HalfMoon LV1
+1/8500 ShoulderDash LV1
+
+;Wizard
+1/5000 Repulsion LV1
+1/5000 ElectricShock LV1
+1/8000 GreatFireBall LV1
+1/8000 HellFire LV1
+1/8000 ThunderBolt LV1
+1/8000 Teleport LV1
+1/10000 FireBang LV1
+1/10500 FireWall LV1
+
+;Taoist
+1/5000 SpiritSword LV1
+1/5000 Poisoning LV1
+1/8000 SoulFireBall LV1
+1/8000 SummonSkeleton LV1
+1/8500 Hiding LV1
+1/8500 MassHiding LV1
+1/8500 SoulShield LV1
+1/10000 Revelation LV1
+1/10000 BlessedArmour LV1
+
+;Assassion
+1/5000 FatalSword LV1
+1/8000 DoubleSlash LV1
+1/8000 Haste LV1
+1/10000 LightBody LV1
+
+1/5000 Focus LV1
+1/5000 StraightShot LV1
+1/5000 MentalState LV1
+1/8000 DoubleShot LV1
+1/8000 Meditation LV1
+1/8000 ElementalShot LV1
+1/10000 ExplosiveTrap LV1
+1/10000 Concentration LV1
+1/10000 VampireShot LV1
+
+;Gems
+1/3200 DurabilityGem LV1
+1/3200 ProtectionGem LV1
+1/3200 EvilSlayerGem LV1
+
+;Level 2
+;Gold
+1/5 Gold 2553 LV2
+
+;Pots + Other
+1/10 (HP)DrugXL LV2
+1/10 (MP)DrugXL LV2
+1/150 MysteryWater LV2
+
+;Weapons
+1/1500 LongBow LV2
+1/1500 PowerAxe LV2
+1/2000 PurifierSword LV2
+1/2000 MartialSword LV2
+1/2000 HookedSpear LV2
+1/2000 KrissSword LV2
+
+;Armour
+1/15000 SteelArmour(M) LV2
+1/15000 SteelArmour(F) LV2
+1/15000 DragonRobe(M) LV2
+1/15000 DragonRobe(F) LV2
+1/15000 TitanArmour(M) LV2
+1/15000 TitanArmour(F) LV2
+1/50000 BlackTigerArmour(M) LV2
+1/50000 BlackTigerArmour(F) LV2
+1/50000 LotusArmour(F) LV2
+1/50000 LotusArmour(M) LV2
+1/50000 CraneArmour(F) LV2
+1/50000 CraneArmour(M) LV2
+
+;Helmets
+1/10000 GreatHelmet LV2
+1/10000 TaoCoronet LV2
+1/10000 WisdomCoronet LV2
+1/10000 MajesticHelmet LV2
+
+;Helmets Rare
+1/1500 MysteryCap[1d] LV2
+
+;Necklace
+1/3700 HeroNecklace LV2
+1/3700 AdamantineNecklace LV2
+1/3700 RequiemNecklace LV2
+
+;Bracelets
+1/6000 SteelGauntlet LV2
+1/6000 8TrigramWheel LV2
+1/6000 HangMaWheel LV2
+1/6000 BokMaWheel LV2
+1/7500 BaekTaGlove LV2
+1/7500 SpiritReformer LV2
+1/7500 HolyTaoWheel LV2
+
+;Bracelets Rare
+1/1300 MysteryWheel[1d] LV2
+
+;Rings
+1/3500 NobleRing LV2
+1/3500 SoulRing LV2
+1/3500 OmaSpiritRing LV2
+1/5500 TaeGukRing LV2
+1/5500 ThunderRing LV2
+1/5500 BoundlessRing LV2
+1/5500 MajesticRing LV2
+
+;Rings Rare
+1/1500 MysteryCircle[1d] LV2
+
+;Shoes
+1/700 SilkBoots LV2
+
+;Belts
+1/900 BronzeBelt LV2
+
+;Shields
+1/20000 PredatorShield LV2
+1/35000 PlasmaShield LV2
+
+;Medals
+1/25000 ArmouredMedal LV2
+1/30000 HollowMedal LV2
+
+;Pads
+1/1800 MysteriousGuards[1d] LV2
+
+;Stone
+1/500 DCStone(L) LV2
+1/500 MCStone(L) LV2
+1/500 SCStone(L) LV2
+1/1500 DCStone(XL) LV2
+1/1500 MCStone(XL) LV2
+1/1500 SCStone(XL) LV2
+1/3500 ItemMineJewl[1d] LV2
+1/3500 ExperienceMineJewl[1d] LV2
+1/5000 BloodJewl[1d] LV2
+
+;Books
+;Warrior
+1/5000 Slaying LV2
+1/5200 Thrusting LV2
+1/8000 HalfMoon LV2
+1/8500 ShoulderDash LV2
+
+;Wizard
+1/5000 Repulsion LV2
+1/5000 ElectricShock LV2
+1/8000 GreatFireBall LV2
+1/8000 HellFire LV2
+1/8000 ThunderBolt LV2
+1/8000 Teleport LV2
+1/10000 FireBang LV2
+1/10500 FireWall LV2
+
+;Taoist
+1/5000 SpiritSword LV2
+1/5000 Poisoning LV2
+1/8000 SoulFireBall LV2
+1/8000 SummonSkeleton LV2
+1/8500 Hiding LV2
+1/8500 MassHiding LV2
+1/8500 SoulShield LV2
+1/10000 Revelation LV2
+1/10000 BlessedArmour LV2
+
+;Assassion
+1/5000 FatalSword LV2
+1/8000 DoubleSlash LV2
+1/8000 Haste LV2
+1/10000 LightBody LV2
+
+1/5000 Focus LV2
+1/5000 StraightShot LV2
+1/5000 MentalState LV2
+1/8000 DoubleShot LV2
+1/8000 Meditation LV2
+1/8000 ElementalShot LV2
+1/10000 ExplosiveTrap LV2
+1/10000 Concentration LV2
+1/10000 VampireShot LV2
+
+;Gems
+1/3200 DurabilityGem LV2
+1/3200 ProtectionGem LV2
+1/3200 EvilSlayerGem LV2
+
+
+;Level 3
+;Gold
+1/5 Gold 2553 LV3
+
+;Pots + Other
+1/10 (HP)DrugXL LV3
+1/10 (MP)DrugXL LV3
+1/150 MysteryWater LV3
+
+;Weapons
+1/1500 PowerAxe LV3
+1/1500 LongBow LV3
+1/2000 PurifierSword LV3
+1/2000 MartialSword LV3
+1/2000 HookedSpear LV3
+1/2000 KrissSword LV3
+
+;Armour
+1/15000 SteelArmour(M) LV3
+1/15000 SteelArmour(F) LV3
+1/15000 DragonRobe(M) LV3
+1/15000 DragonRobe(F) LV3
+1/15000 TitanArmour(M) LV3
+1/15000 TitanArmour(F) LV3
+1/50000 BlackTigerArmour(M) LV3
+1/50000 BlackTigerArmour(F) LV3
+1/50000 LotusArmour(F) LV3
+1/50000 LotusArmour(M) LV3
+1/50000 CraneArmour(F) LV3
+1/50000 CraneArmour(M) LV3
+
+;Helmets
+1/10000 GreatHelmet LV3
+1/10000 TaoCoronet LV3
+1/10000 WisdomCoronet LV3
+1/10000 MajesticHelmet LV3
+
+;Helmets Rare
+1/1500 MysteryCap[1d] LV3
+
+;Necklace
+1/3700 HeroNecklace LV3
+1/3700 AdamantineNecklace LV3
+1/3700 RequiemNecklace LV3
+
+;Bracelets
+1/6000 SteelGauntlet LV3
+1/6000 8TrigramWheel LV3
+1/6000 HangMaWheel LV3
+1/6000 BokMaWheel LV3
+1/7500 BaekTaGlove LV3
+1/7500 SpiritReformer LV3
+1/7500 HolyTaoWheel LV3
+
+;Bracelets Rare
+1/1300 MysteryWheel[1d] LV3
+
+;Rings
+1/3500 NobleRing LV3
+1/3500 SoulRing LV3
+1/3500 OmaSpiritRing LV3
+1/5500 TaeGukRing LV3
+1/5500 ThunderRing LV3
+1/5500 BoundlessRing LV3
+1/5500 MajesticRing LV3
+
+;Rings Rare
+1/1500 MysteryCircle[1d] LV3
+
+;Shoes
+1/700 SilkBoots LV3
+
+;Belts
+1/900 BronzeBelt LV3
+
+;Shields
+1/20000 PredatorShield LV3
+1/35000 PlasmaShield LV3
+
+;Medals
+1/25000 ArmouredMedal LV3
+1/30000 HollowMedal LV3
+
+;Pads
+1/1800 MysteriousGuards[1d] LV3
+
+;Stone
+1/500 DCStone(L) LV3
+1/500 MCStone(L) LV3
+1/500 SCStone(L) LV3
+1/1500 DCStone(XL) LV3
+1/1500 MCStone(XL) LV3
+1/1500 SCStone(XL) LV3
+1/3500 ItemMineJewl[1d] LV3
+1/3500 ExperienceMineJewl[1d] LV3
+1/5000 BloodJewl[1d] LV3
+
+;Books
+;Warrior
+1/5000 Slaying LV3
+1/5200 Thrusting LV3
+1/8000 HalfMoon LV3
+1/8500 ShoulderDash LV3
+
+;Wizard
+1/5000 Repulsion LV3
+1/5000 ElectricShock LV3
+1/8000 GreatFireBall LV3
+1/8000 HellFire LV3
+1/8000 ThunderBolt LV3
+1/8000 Teleport LV3
+1/10000 FireBang LV3
+1/10500 FireWall LV3
+
+;Taoist
+1/5000 SpiritSword LV3
+1/5000 Poisoning LV3
+1/8000 SoulFireBall LV3
+1/8000 SummonSkeleton LV3
+1/8500 Hiding LV3
+1/8500 MassHiding LV3
+1/8500 SoulShield LV3
+1/10000 Revelation LV3
+1/10000 BlessedArmour LV3
+
+;Assassion
+1/5000 FatalSword LV3
+1/8000 DoubleSlash LV3
+1/8000 Haste LV3
+1/10000 LightBody LV3
+
+1/5000 Focus LV3
+1/5000 StraightShot LV3
+1/5000 MentalState LV3
+1/8000 DoubleShot LV3
+1/8000 Meditation LV3
+1/8000 ElementalShot LV3
+1/10000 ExplosiveTrap LV3
+1/10000 Concentration LV3
+1/10000 VampireShot LV3
+
+;Gems
+1/3200 DurabilityGem LV3
+1/3200 ProtectionGem LV3
+1/3200 EvilSlayerGem LV3
+
+
+;Level 4
+;Gold
+1/5 Gold 2553 LV4
+
+;Pots + Other
+1/10 (HP)DrugXL LV4
+1/10 (MP)DrugXL LV4
+1/150 MysteryWater LV4
+
+;Weapons
+1/1500 PowerAxe LV4
+1/1500 LongBow LV4
+1/2000 PurifierSword LV4
+1/2000 MartialSword LV4
+1/2000 HookedSpear LV4
+1/2000 KrissSword LV4
+
+;Armour
+1/15000 SteelArmour(M) LV4
+1/15000 SteelArmour(F) LV4
+1/15000 DragonRobe(M) LV4
+1/15000 DragonRobe(F) LV4
+1/15000 TitanArmour(M) LV4
+1/15000 TitanArmour(F) LV4
+1/50000 BlackTigerArmour(M) LV4
+1/50000 BlackTigerArmour(F) LV4
+1/50000 LotusArmour(F) LV4
+1/50000 LotusArmour(M) LV4
+1/50000 CraneArmour(F) LV4
+1/50000 CraneArmour(M) LV4
+
+;Helmets
+1/10000 GreatHelmet LV4
+1/10000 TaoCoronet LV4
+1/10000 WisdomCoronet LV4
+1/10000 MajesticHelmet LV4
+
+;Helmets Rare
+1/1500 MysteryCap[1d] LV4
+
+;Necklace
+1/3700 HeroNecklace LV4
+1/3700 AdamantineNecklace LV4
+1/3700 RequiemNecklace LV4
+
+;Bracelets
+1/6000 SteelGauntlet LV4
+1/6000 8TrigramWheel LV4
+1/6000 HangMaWheel LV4
+1/6000 BokMaWheel LV4
+1/7500 BaekTaGlove LV4
+1/7500 SpiritReformer LV4
+1/7500 HolyTaoWheel LV4
+
+;Bracelets Rare
+1/1300 MysteryWheel[1d] LV4
+
+;Rings
+1/3500 NobleRing LV4
+1/3500 SoulRing LV4
+1/3500 OmaSpiritRing LV4
+1/5500 TaeGukRing LV4
+1/5500 ThunderRing LV4
+1/5500 BoundlessRing LV4
+1/5500 MajesticRing LV4
+
+;Rings Rare
+1/1500 MysteryCircle[1d] LV4
+
+;Shoes
+1/700 SilkBoots LV4
+
+;Belts
+1/900 BronzeBelt LV4
+
+;Shields
+1/20000 PredatorShield LV4
+1/35000 PlasmaShield LV4
+
+;Medals
+1/25000 ArmouredMedal LV4
+1/30000 HollowMedal LV4
+
+;Pads
+1/1800 MysteriousGuards[1d] LV4
+
+;Stone
+1/500 DCStone(L) LV4
+1/500 MCStone(L) LV4
+1/500 SCStone(L) LV4
+1/1500 DCStone(XL) LV4
+1/1500 MCStone(XL) LV4
+1/1500 SCStone(XL) LV4
+1/3500 ItemMineJewl[1d] LV4
+1/3500 ExperienceMineJewl[1d] LV4
+1/5000 BloodJewl[1d] LV4
+
+;Books
+;Warrior
+1/5000 Slaying LV4
+1/5200 Thrusting LV4
+1/8000 HalfMoon LV4
+1/8500 ShoulderDash LV4
+
+;Wizard
+1/5000 Repulsion LV4
+1/5000 ElectricShock LV4
+1/8000 GreatFireBall LV4
+1/8000 HellFire LV4
+1/8000 ThunderBolt LV4
+1/8000 Teleport LV4
+1/10000 FireBang LV4
+1/10500 FireWall LV4
+
+;Taoist
+1/5000 SpiritSword LV4
+1/5000 Poisoning LV4
+1/8000 SoulFireBall LV4
+1/8000 SummonSkeleton LV4
+1/8500 Hiding LV4
+1/8500 MassHiding LV4
+1/8500 SoulShield LV4
+1/10000 Revelation LV4
+1/10000 BlessedArmour LV4
+
+;Assassion
+1/5000 FatalSword LV4
+1/8000 DoubleSlash LV4
+1/8000 Haste LV4
+1/10000 LightBody LV4
+
+1/5000 Focus LV4
+1/5000 StraightShot LV4
+1/5000 MentalState LV4
+1/8000 DoubleShot LV4
+1/8000 Meditation LV4
+1/8000 ElementalShot LV4
+1/10000 ExplosiveTrap LV4
+1/10000 Concentration LV4
+1/10000 VampireShot LV4
+
+;Gems
+1/3200 DurabilityGem LV4
+1/3200 ProtectionGem LV4
+1/3200 EvilSlayerGem LV4
+
+
+;Level 5
+;Gold
+1/5 Gold 2553 LV5
+
+;Pots + Other
+1/10 (HP)DrugXL LV5
+1/10 (MP)DrugXL LV5
+1/150 MysteryWater LV5
+
+;Weapons
+1/1500 PowerAxe LV5
+1/1500 LongBow LV5
+1/2000 PurifierSword LV5
+1/2000 MartialSword LV5
+1/2000 HookedSpear LV5
+1/2000 KrissSword LV5
+
+;Armour
+1/15000 SteelArmour(M) LV5
+1/15000 SteelArmour(F) LV5
+1/15000 DragonRobe(M) LV5
+1/15000 DragonRobe(F) LV5
+1/15000 TitanArmour(M) LV5
+1/15000 TitanArmour(F) LV5
+1/50000 BlackTigerArmour(M) LV5
+1/50000 BlackTigerArmour(F) LV5
+1/50000 LotusArmour(F) LV5
+1/50000 LotusArmour(M) LV5
+1/50000 CraneArmour(F) LV5
+1/50000 CraneArmour(M) LV5
+
+;Helmets
+1/10000 GreatHelmet LV5
+1/10000 TaoCoronet LV5
+1/10000 WisdomCoronet LV5
+1/10000 MajesticHelmet LV5
+
+;Helmets Rare
+1/1500 MysteryCap[1d] LV5
+
+;Necklace
+1/3700 HeroNecklace LV5
+1/3700 AdamantineNecklace LV5
+1/3700 RequiemNecklace LV5
+
+;Bracelets
+1/6000 SteelGauntlet LV5
+1/6000 8TrigramWheel LV5
+1/6000 HangMaWheel LV5
+1/6000 BokMaWheel LV5
+1/7500 BaekTaGlove LV5
+1/7500 SpiritReformer LV5
+1/7500 HolyTaoWheel LV5
+
+;Bracelets Rare
+1/1300 MysteryWheel[1d] LV5
+
+;Rings
+1/3500 NobleRing LV5
+1/3500 SoulRing LV5
+1/3500 OmaSpiritRing LV5
+1/5500 TaeGukRing LV5
+1/5500 ThunderRing LV5
+1/5500 BoundlessRing LV5
+1/5500 MajesticRing LV5
+
+;Rings Rare
+1/1500 MysteryCircle[1d] LV5
+
+;Shoes
+1/700 SilkBoots LV5
+
+;Belts
+1/900 BronzeBelt LV5
+
+;Shields
+1/20000 PredatorShield LV5
+1/35000 PlasmaShield LV5
+
+;Medals
+1/25000 ArmouredMedal LV5
+1/30000 HollowMedal LV5
+
+;Pads
+1/1800 MysteriousGuards[1d] LV5
+
+;Stone
+1/500 DCStone(L) LV5
+1/500 MCStone(L) LV5
+1/500 SCStone(L) LV5
+1/1500 DCStone(XL) LV5
+1/1500 MCStone(XL) LV5
+1/1500 SCStone(XL) LV5
+1/3500 ItemMineJewl[1d] LV5
+1/3500 ExperienceMineJewl[1d] LV5
+1/5000 BloodJewl[1d] LV5
+
+;Books
+;Warrior
+1/5000 Slaying LV5
+1/5200 Thrusting LV5
+1/8000 HalfMoon LV5
+1/8500 ShoulderDash LV5
+
+;Wizard
+1/5000 Repulsion LV5
+1/5000 ElectricShock LV5
+1/8000 GreatFireBall LV5
+1/8000 HellFire LV5
+1/8000 ThunderBolt LV5
+1/8000 Teleport LV5
+1/10000 FireBang LV5
+1/10500 FireWall LV5
+
+;Taoist
+1/5000 SpiritSword LV5
+1/5000 Poisoning LV5
+1/8000 SoulFireBall LV5
+1/8000 SummonSkeleton LV5
+1/8500 Hiding LV5
+1/8500 MassHiding LV5
+1/8500 SoulShield LV5
+1/10000 Revelation LV5
+1/10000 BlessedArmour LV5
+
+;Assassion
+1/5000 FatalSword LV5
+1/8000 DoubleSlash LV5
+1/8000 Haste LV5
+1/10000 LightBody LV5
+
+1/5000 Focus LV5
+1/5000 StraightShot LV5
+1/5000 MentalState LV5
+1/8000 DoubleShot LV5
+1/8000 Meditation LV5
+1/8000 ElementalShot LV5
+1/10000 ExplosiveTrap LV5
+1/10000 Concentration LV5
+1/10000 VampireShot LV5
+
+;Gems
+1/3200 DurabilityGem LV5
+1/3200 ProtectionGem LV5
+1/3200 EvilSlayerGem LV5
+
+
+;Level 6
+;Gold
+1/5 Gold 2553 LV6
+
+;Pots + Other
+1/10 (HP)DrugXL LV6
+1/10 (MP)DrugXL LV6
+1/150 MysteryWater LV6
+
+;Weapons
+1/1500 PowerAxe LV6
+1/1500 LongBow LV6
+1/2000 PurifierSword LV6
+1/2000 MartialSword LV6
+1/2000 HookedSpear LV6
+1/2000 KrissSword LV6
+
+;Armour
+1/15000 SteelArmour(M) LV6
+1/15000 SteelArmour(F) LV6
+1/15000 DragonRobe(M) LV6
+1/15000 DragonRobe(F) LV6
+1/15000 TitanArmour(M) LV6
+1/15000 TitanArmour(F) LV6
+1/50000 BlackTigerArmour(M) LV6
+1/50000 BlackTigerArmour(F) LV6
+1/50000 LotusArmour(F) LV6
+1/50000 LotusArmour(M) LV6
+1/50000 CraneArmour(F) LV6
+1/50000 CraneArmour(M) LV6
+
+;Helmets
+1/10000 GreatHelmet LV6
+1/10000 TaoCoronet LV6
+1/10000 WisdomCoronet LV6
+1/10000 MajesticHelmet LV6
+
+;Helmets Rare
+1/1500 MysteryCap[1d] LV6
+
+;Necklace
+1/3700 HeroNecklace LV6
+1/3700 AdamantineNecklace LV6
+1/3700 RequiemNecklace LV6
+
+;Bracelets
+1/6000 SteelGauntlet LV6
+1/6000 8TrigramWheel LV6
+1/6000 HangMaWheel LV6
+1/6000 BokMaWheel LV6
+1/7500 BaekTaGlove LV6
+1/7500 SpiritReformer LV6
+1/7500 HolyTaoWheel LV6
+
+;Bracelets Rare
+1/1300 MysteryWheel[1d] LV6
+
+;Rings
+1/3500 NobleRing LV6
+1/3500 SoulRing LV6
+1/3500 OmaSpiritRing LV6
+1/5500 TaeGukRing LV6
+1/5500 ThunderRing LV6
+1/5500 BoundlessRing LV6
+1/5500 MajesticRing LV6
+
+;Rings Rare
+1/1500 MysteryCircle[1d] LV6
+
+;Shoes
+1/700 SilkBoots LV6
+
+;Belts
+1/900 BronzeBelt LV6
+
+;Shields
+1/20000 PredatorShield LV6
+1/35000 PlasmaShield LV6
+
+;Medals
+1/25000 ArmouredMedal LV6
+1/30000 HollowMedal LV6
+
+;Pads
+1/1800 MysteriousGuards[1d] LV6
+
+;Stone
+1/500 DCStone(L) LV6
+1/500 MCStone(L) LV6
+1/500 SCStone(L) LV6
+1/1500 DCStone(XL) LV6
+1/1500 MCStone(XL) LV6
+1/1500 SCStone(XL) LV6
+1/3500 ItemMineJewl[1d] LV6
+1/3500 ExperienceMineJewl[1d] LV6
+1/5000 BloodJewl[1d] LV6
+
+;Books
+;Warrior
+1/5000 Slaying LV6
+1/5200 Thrusting LV6
+1/8000 HalfMoon LV6
+1/8500 ShoulderDash LV6
+
+;Wizard
+1/5000 Repulsion LV6
+1/5000 ElectricShock LV6
+1/8000 GreatFireBall LV6
+1/8000 HellFire LV6
+1/8000 ThunderBolt LV6
+1/8000 Teleport LV6
+1/10000 FireBang LV6
+1/10500 FireWall LV6
+
+;Taoist
+1/5000 SpiritSword LV6
+1/5000 Poisoning LV6
+1/8000 SoulFireBall LV6
+1/8000 SummonSkeleton LV6
+1/8500 Hiding LV6
+1/8500 MassHiding LV6
+1/8500 SoulShield LV6
+1/10000 Revelation LV6
+1/10000 BlessedArmour LV6
+
+;Assassion
+1/5000 FatalSword LV6
+1/8000 DoubleSlash LV6
+1/8000 Haste LV6
+1/10000 LightBody LV6
+
+1/5000 Focus LV6
+1/5000 StraightShot LV6
+1/5000 MentalState LV6
+1/8000 DoubleShot LV6
+1/8000 Meditation LV6
+1/8000 ElementalShot LV6
+1/10000 ExplosiveTrap LV6
+1/10000 Concentration LV6
+1/10000 VampireShot LV6
+
+;Gems
+1/3200 DurabilityGem LV6
+1/3200 ProtectionGem LV6
+1/3200 EvilSlayerGem LV6
+
+
+;Level 7
+;Gold
+1/5 Gold 2553 LV7
+
+;Pots + Other
+1/10 (HP)DrugXL LV7
+1/10 (MP)DrugXL LV7
+1/150 MysteryWater LV7
+
+;Weapons
+1/1500 PowerAxe LV7
+1/1500 LongBow LV7
+1/2000 PurifierSword LV7
+1/2000 MartialSword LV7
+1/2000 HookedSpear LV7
+1/2000 KrissSword LV7
+
+;Armour
+1/15000 SteelArmour(M) LV7
+1/15000 SteelArmour(F) LV7
+1/15000 DragonRobe(M) LV7
+1/15000 DragonRobe(F) LV7
+1/15000 TitanArmour(M) LV7
+1/15000 TitanArmour(F) LV7
+1/50000 BlackTigerArmour(M) LV7
+1/50000 BlackTigerArmour(F) LV7
+1/50000 LotusArmour(F) LV7
+1/50000 LotusArmour(M) LV7
+1/50000 CraneArmour(F) LV7
+1/50000 CraneArmour(M) LV7
+
+;Helmets
+1/10000 GreatHelmet LV7
+1/10000 TaoCoronet LV7
+1/10000 WisdomCoronet LV7
+1/10000 MajesticHelmet LV7
+
+;Helmets Rare
+1/1500 MysteryCap[1d] LV7
+
+;Necklace
+1/3700 HeroNecklace LV7
+1/3700 AdamantineNecklace LV7
+1/3700 RequiemNecklace LV7
+
+;Bracelets
+1/6000 SteelGauntlet LV7
+1/6000 8TrigramWheel LV7
+1/6000 HangMaWheel LV7
+1/6000 BokMaWheel LV7
+1/7500 BaekTaGlove LV7
+1/7500 SpiritReformer LV7
+1/7500 HolyTaoWheel LV7
+
+;Bracelets Rare
+1/1300 MysteryWheel[1d] LV7
+
+;Rings
+1/3500 NobleRing LV7
+1/3500 SoulRing LV7
+1/3500 OmaSpiritRing LV7
+1/5500 TaeGukRing LV7
+1/5500 ThunderRing LV7
+1/5500 BoundlessRing LV7
+1/5500 MajesticRing LV7
+
+;Rings Rare
+1/1500 MysteryCircle[1d] LV7
+
+;Shoes
+1/700 SilkBoots LV7
+
+;Belts
+1/900 BronzeBelt LV7
+
+;Shields
+1/20000 PredatorShield LV7
+1/35000 PlasmaShield LV7
+
+;Medals
+1/25000 ArmouredMedal LV7
+1/30000 HollowMedal LV7
+
+;Pads
+1/1800 MysteriousGuards[1d] LV7
+
+;Stone
+1/500 DCStone(L) LV7
+1/500 MCStone(L) LV7
+1/500 SCStone(L) LV7
+1/1500 DCStone(XL) LV7
+1/1500 MCStone(XL) LV7
+1/1500 SCStone(XL) LV7
+1/3500 ItemMineJewl[1d] LV7
+1/3500 ExperienceMineJewl[1d] LV7
+1/5000 BloodJewl[1d] LV7
+
+;Books
+;Warrior
+1/5000 Slaying LV7
+1/5200 Thrusting LV7
+1/8000 HalfMoon LV7
+1/8500 ShoulderDash LV7
+
+;Wizard
+1/5000 Repulsion LV7
+1/5000 ElectricShock LV7
+1/8000 GreatFireBall LV7
+1/8000 HellFire LV7
+1/8000 ThunderBolt LV7
+1/8000 Teleport LV7
+1/10000 FireBang LV7
+1/10500 FireWall LV7
+
+;Taoist
+1/5000 SpiritSword LV7
+1/5000 Poisoning LV7
+1/8000 SoulFireBall LV7
+1/8000 SummonSkeleton LV7
+1/8500 Hiding LV7
+1/8500 MassHiding LV7
+1/8500 SoulShield LV7
+1/10000 Revelation LV7
+1/10000 BlessedArmour LV7
+
+;Assassion
+1/5000 FatalSword LV7
+1/8000 DoubleSlash LV7
+1/8000 Haste LV7
+1/10000 LightBody LV7
+
+1/5000 Focus LV7
+1/5000 StraightShot LV7
+1/5000 MentalState LV7
+1/8000 DoubleShot LV7
+1/8000 Meditation LV7
+1/8000 ElementalShot LV7
+1/10000 ExplosiveTrap LV7
+1/10000 Concentration LV7
+1/10000 VampireShot LV7
+
+;Gems
+1/3200 DurabilityGem LV7
+1/3200 ProtectionGem LV7
+1/3200 EvilSlayerGem LV7
+
+
+;Level 8
+;Gold
+1/5 Gold 2553 LV8
+
+;Pots + Other
+1/10 (HP)DrugXL LV8
+1/10 (MP)DrugXL LV8
+1/150 MysteryWater LV8
+
+;Weapons
+1/1500 PowerAxe LV8
+1/1500 LongBow LV8
+1/2000 PurifierSword LV8
+1/2000 MartialSword LV8
+1/2000 HookedSpear LV8
+1/2000 KrissSword LV8
+
+;Armour
+1/15000 SteelArmour(M) LV8
+1/15000 SteelArmour(F) LV8
+1/15000 DragonRobe(M) LV8
+1/15000 DragonRobe(F) LV8
+1/15000 TitanArmour(M) LV8
+1/15000 TitanArmour(F) LV8
+1/50000 BlackTigerArmour(M) LV8
+1/50000 BlackTigerArmour(F) LV8
+1/50000 LotusArmour(F) LV8
+1/50000 LotusArmour(M) LV8
+1/50000 CraneArmour(F) LV8
+1/50000 CraneArmour(M) LV8
+
+;Helmets
+1/10000 GreatHelmet LV8
+1/10000 TaoCoronet LV8
+1/10000 WisdomCoronet LV8
+1/10000 MajesticHelmet LV8
+
+;Helmets Rare
+1/1500 MysteryCap[1d] LV8
+
+;Necklace
+1/3700 HeroNecklace LV8
+1/3700 AdamantineNecklace LV8
+1/3700 RequiemNecklace LV8
+
+;Bracelets
+1/6000 SteelGauntlet LV8
+1/6000 8TrigramWheel LV8
+1/6000 HangMaWheel LV8
+1/6000 BokMaWheel LV8
+1/7500 BaekTaGlove LV8
+1/7500 SpiritReformer LV8
+1/7500 HolyTaoWheel LV8
+
+;Bracelets Rare
+1/1300 MysteryWheel[1d] LV8
+
+;Rings
+1/3500 NobleRing LV8
+1/3500 SoulRing LV8
+1/3500 OmaSpiritRing LV8
+1/5500 TaeGukRing LV8
+1/5500 ThunderRing LV8
+1/5500 BoundlessRing LV8
+1/5500 MajesticRing LV8
+
+;Rings Rare
+1/1500 MysteryCircle[1d] LV8
+
+;Shoes
+1/700 SilkBoots LV8
+
+;Belts
+1/900 BronzeBelt LV8
+
+;Shields
+1/20000 PredatorShield LV8
+1/35000 PlasmaShield LV8
+
+;Medals
+1/25000 ArmouredMedal LV8
+1/30000 HollowMedal LV8
+
+;Pads
+1/1800 MysteriousGuards[1d] LV8
+
+;Stone
+1/500 DCStone(L) LV8
+1/500 MCStone(L) LV8
+1/500 SCStone(L) LV8
+1/1500 DCStone(XL) LV8
+1/1500 MCStone(XL) LV8
+1/1500 SCStone(XL) LV8
+1/3500 ItemMineJewl[1d] LV8
+1/3500 ExperienceMineJewl[1d] LV8
+1/5000 BloodJewl[1d] LV8
+
+;Books
+;Warrior
+1/5000 Slaying LV8
+1/5200 Thrusting LV8
+1/8000 HalfMoon LV8
+1/8500 ShoulderDash LV8
+
+;Wizard
+1/5000 Repulsion LV8
+1/5000 ElectricShock LV8
+1/8000 GreatFireBall LV8
+1/8000 HellFire LV8
+1/8000 ThunderBolt LV8
+1/8000 Teleport LV8
+1/10000 FireBang LV8
+1/10500 FireWall LV8
+
+;Taoist
+1/5000 SpiritSword LV8
+1/5000 Poisoning LV8
+1/8000 SoulFireBall LV8
+1/8000 SummonSkeleton LV8
+1/8500 Hiding LV8
+1/8500 MassHiding LV8
+1/8500 SoulShield LV8
+1/10000 Revelation LV8
+1/10000 BlessedArmour LV8
+
+;Assassion
+1/5000 FatalSword LV8
+1/8000 DoubleSlash LV8
+1/8000 Haste LV8
+1/10000 LightBody LV8
+
+1/5000 Focus LV8
+1/5000 StraightShot LV8
+1/5000 MentalState LV8
+1/8000 DoubleShot LV8
+1/8000 Meditation LV8
+1/8000 ElementalShot LV8
+1/10000 ExplosiveTrap LV8
+1/10000 Concentration LV8
+1/10000 VampireShot LV8
+
+;Gems
+1/3200 DurabilityGem LV8
+1/3200 ProtectionGem LV8
+1/3200 EvilSlayerGem LV8
+

@@ -1,0 +1,46 @@
+[@MAIN]
+#IF
+GROUPLEADER
+#ACT
+GROUPGOTO @grouphere
+break
+#ELSESAY
+(*You hear a slight whisper in the wind:*)
+"Only party leaders with their parties may pass here."
+
+[@grouphere]
+#IF
+GROUPCOUNT > 4
+CHECKMAP FOX02
+CHECKRANGE 223 304 5
+#ACT
+goto @checkorb
+break
+#ELSESAY
+(*You hear a slight whisper in the wind:*)
+"You are a party leader but your party is not present.
+You may not pass.All Must be within 5 spots of npc."
+
+[@checkorb]
+#IF
+CHECKITEM AdmissionOrb 1
+#SAY
+(*You hear a slight whisper in the wind:*)
+"You are a party leader, Youre party is present,
+You have the forbidden Orb..."
+You may pass hunter!
+<Pass/@pass>                          <Do not pass/@exit>
+#ELSESAY
+(*You hear a slight whisper in the wind:*)
+"Only parties weilding the forbidden Orb may pass here."
+
+[@pass]
+#IF
+CHECKITEM AdmissionOrb 1
+#ACT
+TAKEITEM AdmissionOrb 1
+GROUPTELEPORT FOX03 47 21
+break
+#ELSESAY
+(*You hear a slight whisper in the wind:*)
+"Only parties weilding the forbidden Orb may pass here."

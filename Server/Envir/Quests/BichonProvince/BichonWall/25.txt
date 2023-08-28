@@ -1,0 +1,31 @@
+[@Description]
+My Teacher asked me to find ingredients for 
+medicine. You can only get them from 
+{RoninGhoul/Crimson}, but I cannot get close to them. 
+Could you get some {CorpsFlower/LightSteelBlue} for me?
+
+[@TaskDescription]
+Travel to PrajnaIsland and Collect 10 {CorpsFlower/LightSteelBlue} by 
+hunting {RoninGhoul's/Crimson}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+CorpsFlower 10
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+18500
+
+[@GoldReward]
+18500
+
+// Pickup - Alchemist_Samuel 324 291
+// Hand In - Alchemist_Samuel 324 291

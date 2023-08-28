@@ -1,0 +1,40 @@
+[@Main]
+#IF
+ISADMIN
+#SAY
+Hello {<$USERNAME>/KHAKI}, my name is {<$NPCNAME>/KHAKI}.
+<Buy/@Buy> Ore
+<Sell/@Sell> Ore
+
+#ELSEACT
+MOVE 0 300 300
+
+[@Sell]
+#SAY
+Sell
+ 
+<Back/@Main>
+
+[@Buy]
+#SAY
+Buy.
+ 
+<Back/@Main>
+
+
+[Types]
+14
+
+[Trade]
+CopperOre
+IronOre
+SilverOre
+GoldOre
+BlackIronOre
+Amethyst
+Ruby
+Platinum
+Nephrite
+AdamintineOre
+EmeraldOre
+OlivineOre

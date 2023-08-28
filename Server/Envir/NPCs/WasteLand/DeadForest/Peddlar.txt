@@ -1,0 +1,96 @@
+[@MAIN]
+#SAY
+Hello traveller, How may I help you?
+ 
+<View/@BuySell> Store. 
+<Ask/@Ask> about Item
+ 
+<Close/@exit>
+
+[@BuySell]
+#SAY
+What Item would you like to buy or sell?
+
+I see you're holding: {<$TORCH>/CORAL}
+I see you're holding: {<$AMULET>/CORAL}
+
+<BuyBack/@BuyBack>
+ 
+<Back/@Main>
+
+[@BuyBack]
+#SAY
+These are the items still available to purchase back.
+ 
+<Back/@Main>
+
+[@Ask]
+#SAY
+I deal with <Candle/candle>,<Dungeonescape/dungeonescape>,
+<RandomTeleport/randomteleport>,<RepairOil/repairoil> and so on forth.
+I have heard that there are <Townteleport/townteleport> which come
+from monsters only
+ 
+<Back/@Main>
+
+[@candle]
+#SAY
+Candles are needed when it's dark. without a candle
+you can not see anything-even your foot for darkness.
+ 
+<Back/@Ask>
+
+[@dungeonescape]
+#SAY
+A Dungeonescape scroll is a magic paper that moves you promptly
+to certain fields near the last village you visited.
+The power of Dungeonescape scroll is weak compared with
+TownTeleport scrolls but it could still save your liefe.
+ 
+<Back/@Ask>
+
+[@randomteleport]
+#SAY
+A Randomteleport scroll is a magic paper that can
+make you randonly move to another place in the same map.
+For example if you were in a dungeon 1st floor, you will
+move to another place on that floor by using the RT.
+If situation is dangerous but you still have potions, use this
+to help you out of a tight situation.
+ 
+<Back/@Ask>
+
+[@repairoil]
+#SAY
+A RepairOil makes the durabillity of you hand weapon rise,
+but this oil doesn't special repair your weapon, so
+remember that then maximum durabillity of the weapon
+goes down as time goes by.
+If the weapon at your hand was not expensive,
+repair with this oil sometimes during hunting.
+This will make hunts last longer.
+ 
+<Back/@Ask>
+
+[@townteleport]
+#SAY
+TownTeleport scrolls carn't be made now because the ancient
+skill is lost.... however....
+I have heard that it may come randomly from Monsters
+and you can return to a village promptly by using it...
+ 
+<Back/@Ask>
+
+[Types]
+8
+12
+
+[Trade]
+Candle
+Torch
+RandomTeleport
+DungeonEscape
+Amulet
+RepairOil
+GreenPoison
+RedPoison

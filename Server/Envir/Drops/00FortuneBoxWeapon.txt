@@ -1,0 +1,60 @@
+;Weapons
+
+;Level 26
+1/300 GreatAxe
+1/300 SilverBow
+1/300 MageStaff
+1/300 SerpentSword
+1/300 DoubleBlades
+
+;Level 26 rare
+
+
+;Stat Req
+1/550 DragonSword
+1/550 BloodStealerSword
+
+;Level 30
+1/900 JudgementMace
+1/900 FiendBow
+1/900 WarMageStaff
+1/900 SoulSpringWand
+1/900 BladesOfDarkness
+
+;Level 36
+1/1000 WarSpiritBlade
+1/1000 LitheBow
+1/1000 MagicScythe
+1/1000 StoneBambooFan
+1/1000 FreezingBlades
+
+;Level 40
+1/1200 MaleficBow
+1/1200 DragonSlayer
+1/1200 DragonStaff
+1/1200 SoulSabre
+1/1200 RoyalBlades
+
+;Level 43
+1/2000 SwordOfWarGod
+1/2000 BowOfForce
+1/2000 BladeOfSorcery
+1/2000 HeavenSword
+1/2000 BladesOfMagi
+
+;Level 45
+1/4500 BurstSword
+1/4500 DreadBow
+1/4500 HolyBloodSpear
+1/4500 DragonBloodSword
+1/4500 Stiletto
+
+;Level 48
+1/5000 FrozenSabre
+1/5000 GrimBow
+1/5000 ConquerorSpear
+1/5000 BastardSword
+1/5000 ZincBlades
+
+
+

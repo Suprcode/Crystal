@@ -1,0 +1,56 @@
+[@MAIN]
+#IF
+CHECKITEM Wine 1
+#ACT
+GOTO @MAIN-1
+#ELSEACT
+GOTO @MAIN-2
+
+[@MAIN-1]
+#IF
+CHECK [537] 1
+#ACT
+TAKEITEM Wine 1
+#SAY
+HAHA... Mogu sent you...
+Ah those symbols... Theres not much information about the Language.
+But this is what the Stone says. 
+      "{Dungeon of the Ancient Ones./Gray}"
+ 
+Thank you <Emperor Far/@THX2>
+#ELSEACT
+GOTO @MAIN-3
+
+[@MAIN-2]
+#IF
+CHECK [534] 1
+#SAY
+Ah those symbols... I helped Sir Mogu with them in the past.
+Theres not much information about the Language..
+But this is what the Stone says. 
+      "{Dungeon of the Ancient Ones./Gray}"
+ 
+Thank you <Emperor Far/@THX>
+#ELSEACT
+GOTO @MAIN-3
+
+[@THX]
+#ACT
+SET [535] 1
+#SAY
+Hmm... Think ive seen those symbols before...
+Sir Mogu was asking about that language many years ago.
+Travel to the Tavern and talk to him about it.
+<Thank You/@exit>
+
+[@THX2]
+#ACT
+SET [535] 1
+SET [538] 1
+
+[@MAIN-3]
+#SAY
+More to come.
+
+[Quests]
+-154

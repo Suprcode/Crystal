@@ -1,0 +1,29 @@
+[@Description]
+Rumours take it.. theres a very rare Sword in the 
+Mines north. Can you please bring me it?
+
+[@TaskDescription]
+Kill {HiGreatGhoul/Crimson} on {SerpentDeadMines 2F/Yellow}
+and retrieve the {BloodySword/LightSteelBlue}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+RedDagger 1
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+4700
+
+[@GoldReward]
+4700
+
+// Pickup - Merchant_Bradley 0120 7 8
+// Hand In - Merchant_Bradley 0120 7 8

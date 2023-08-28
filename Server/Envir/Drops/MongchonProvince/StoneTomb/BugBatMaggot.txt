@@ -1,0 +1,11 @@
+;Gold
+1/10 Gold 300
+
+;Potions
+1/10 (HP)DrugMedium 
+1/10 (MP)DrugMedium 
+1/20 SunPotion 
+1/40 SunPotion(M) 
+
+;Crafting Materials
+1/10 BugEye 

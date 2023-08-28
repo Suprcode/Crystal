@@ -1,0 +1,31 @@
+[@Description]
+Hello Mirian, We push these {Zombie's/Crimson} back quite 
+frequently. Could you render your assistance?
+ 
+[@TaskDescription]
+Eliminate {CursedZombie/Crimson}, {ShiZombie/Crimson} and 
+{HungryZombie's/Crimson} in {MineralMines/Yellow}.
+
+[@Completion]
+
+[@KillTasks]
+CursedZombie 50 "Eliminate the CursedZombie Threat"
+ShiZombie 30 "Reduce the ShiZombie's"
+HungryZombie 25 "Eliminate the HungryZombie Threat"
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+15000
+
+[@GoldReward]
+15000
+
+// Pickup - CaveGuide_Paddy 11 119 293
+// Hand In - CaveGuide_Paddy 11 119 293

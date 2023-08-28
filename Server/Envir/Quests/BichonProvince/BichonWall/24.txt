@@ -1,0 +1,27 @@
+[@Description]
+Speak to {CaveGuide/LimeGreen} in {TaoVillage/Yellow}
+
+[@TaskDescription]
+Head West of {TaoVillage/Yellow} and Speak 
+with {CaveGuide/LimeGreen}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+4144
+
+[@GoldReward]
+7750
+
+// Pickup - Examiner_Tony 0 340 257
+// Hand In - CaveGuide_Paddy 11 119 293

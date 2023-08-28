@@ -1,0 +1,58 @@
+[@Main]
+#SAY
+How are you. <$USERNAME>. I am the 'Guild Territory Steward'.
+How can I help you?
+Rental days remaining: <$GUILDGTRENTALDAYSLEFT>.
+I want to <Extend/@extend> the rental period.
+I want to <Summon/@summon> members to the territory.
+I want to <Apply or Cancel/@appcancel> sale of my guild territory.
+
+[@summon]
+#SAY
+I will summon the members scattered in the Mir continent now.
+<Total summon/@agitrecall>
+<Individual summon/@agitonerecall>
+<Back/@main>
+
+[@extend]
+#SAY
+<$GUILDEXTENDFEE> gold is required. 
+To extend the rental period of this territory for 7 additional days.
+After the rental period expiration, the guild is given 7 days
+to extend. If no fee is paid even within the additional 7 days,
+the ownership of the guild territory will be completely removed.
+<Extend rental period/@agitextend>
+<Back/@main>
+
+#ELSEACT
+LocalMessage "Come back when you own this territory!" Hint
+
+[@agitextend]
+#IF
+HASGT
+#ACT
+EXTENDGT
+LOCALMESSAGE "Rental extend 7 additional days." Hint
+
+[@agitrecall]
+#ACT
+AGITRECALL
+
+[@agitonerecall]
+<Who do you wish to summon?/@@summontest>
+
+[@@summontest]
+#ACT
+MOV A1 %INPUTSTR
+AGITONERRECALL <$OUTPUT(A1)>
+
+[@appcancel]
+#SAY
+I will start & cancel the sale of guild territory.
+After a successful transaction, the ownership shall be
+transferred to the buyer 24 hours later.
+The master and members of the guild that sold the territory
+willbe booted out automatically.
+<Apply for sale of Guild territory/@@agitforsale>
+<Cancel sale of Guild territory/@agitforsalecancel>
+<Back/@main>

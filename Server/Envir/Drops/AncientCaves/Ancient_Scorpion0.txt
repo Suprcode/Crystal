@@ -1,0 +1,9 @@
+;Gold
+1/3 gold 200
+
+;CraftingMaterials
+1/3 ScorpionTail
+
+;Quests
+1/2 ScorpionVenom Q
+

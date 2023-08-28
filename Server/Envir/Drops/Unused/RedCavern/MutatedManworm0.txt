@@ -1,0 +1,80 @@
+;Gold
+1/5 Gold 950
+
+;Pots + Other
+1/20 (HP)DrugLarge
+1/20 (MP)DrugLarge
+1/20 (HP)DrugXL
+1/20 (MP)DrugXL
+
+;Weapons
+1/16000 LitheBow
+1/16000 WarSpiritBlade
+1/16000 MagicScythe
+1/16000 StoneBambooFan
+1/16000 FreezingBlades
+1/18000 MaleficBow
+1/18000 DragonSlayer
+1/18000 DragonStaff
+1/18000 SoulSabre
+1/18000 RoyalBlades
+
+
+;Weapon Rare
+1/19500 SwordOfWarGod
+1/19500 BowOfForce
+1/19500 BladeOfSorcery
+1/19500 HeavenSword
+1/19500 BladesOfMagi
+
+
+;Armour
+1/3000 StuddedArmour(M)
+1/3000 StuddedArmour(F)
+1/3000 SteelArmour(M)
+1/3000 SteelArmour(F)
+1/3000 DragonRobe(M)
+1/3000 DragonRobe(F)
+1/3000 TitanArmour(M)
+1/3000 TitanArmour(F)
+1/3000 RoyalArmour(M)
+1/3000 RoyalArmour(F)
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+

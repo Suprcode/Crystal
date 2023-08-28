@@ -1,0 +1,22 @@
+;Gold
+1/5 Gold 1000
+
+;Potions
+1/15 (HP)DrugLarge
+1/15 (MP)DrugLarge
+
+;Crafting Material
+1/20 UndeadLeather
+1/10 BraveryFragment
+1/10 MagicFragment
+1/10 SoulFragment
+1/10 ProtectionFragment
+1/10 EvilSlayerFragment
+1/10 DurabilityFragment
+1/10 WindMarble
+1/10 EvasionMarble
+1/10 FocusMarble
+1/10 PoisonMarble
+1/10 IceMarble
+1/10 WillMarble
+1/10 AntidoteMarble

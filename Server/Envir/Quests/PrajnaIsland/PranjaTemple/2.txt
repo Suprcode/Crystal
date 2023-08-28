@@ -1,0 +1,27 @@
+[@Description]
+
+[@TaskDescription]
+Eliminate 20 {WindMinotaur/Crimson}, {ElecMinotaur/Crimson}, 
+{FireMinotaur/Crimson} and {IceMinotaur/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+ElecMinotaur 20
+FireMinotaur 20
+IceMinotaur 20
+WindMinotaur 20
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+54000
+
+[@GoldReward]
+54000

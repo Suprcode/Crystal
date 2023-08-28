@@ -1,0 +1,11 @@
+[EvilReindeer]
+Global=4
+
+[EvilReindeer0]
+Global=12
+
+[Carrot]
+Global=398
+
+[GlobalBuff]
+Global=2

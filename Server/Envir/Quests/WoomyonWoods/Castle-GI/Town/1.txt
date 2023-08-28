@@ -1,0 +1,31 @@
+[@Description]
+Do you know how to get to {CastleGi-Ryoong/Yellow}? I 
+need to send a CookBook to {Butcher Jim/LimeGreen} in
+{CastleGi-Ryoong/Yellow}? 
+
+
+[@TaskDescription]
+Head North through {WoomyonWoods/Yellow} and
+deliver the {CookBook/LightSteelBlue} to {Jim/LimeGreen} in {CastleGi-Ryoong/Yellow}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+CookBook 2
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+2634
+
+[@GoldReward]
+3480
+
+// Pickup - 
+// Hand In - Merchant_Jim 4 244 188

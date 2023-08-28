@@ -1,0 +1,62 @@
+;Gold
+1/10 Gold 800
+
+;Pots + Other
+1/30 (HP)DrugMedium
+1/30 (MP)DrugMedium
+1/70 (HP)DrugLarge
+1/70 (MP)DrugLarge
+
+;Weapons
+1/3000 GreatAxe
+1/3000 SilverBow
+1/3000 MageStaff
+1/3000 SerpentSword
+1/3000 DoubleBlades
+
+;Weapons Rare
+1/2550 DragonSword
+1/2550 BloodStealerSword
+1/2550 TaoistWidow
+1/2550 DragonSabers
+1/5600 VanguardBow
+1/5600 VanguardBlade
+1/5600 VanguardStaff
+1/5600 VanguardSerp
+1/5600 VanguardBlades
+
+;Armour
+1/400 LightLeatherArmour(M)
+1/400 LightLeatherArmour(F)
+1/400 HeavyArmour(M) 
+1/400 HeavyArmour(F) 
+1/400 MagicRobe(M) 
+1/400 MagicRobe(F) 
+1/400 SoulArmour(M) 
+1/400 SoulArmour(F) 
+1/400 RelicArmour(M)
+1/400 RelicArmour(F)
+
+;Armour Rare
+1/6600 VanguardArmour(M)
+1/6600 VanguardArmour(F)
+
+
+;Helmets Rare
+1/5600 VanguardHelmet
+
+;Necklace Rare
+1/5600 VanguardNecklace
+
+;Bracelets Rare
+1/5600 VanguardWheel
+
+;Rings Rare
+1/5600 VanguardRing
+
+;Shoes Rare
+1/5600 VanguardBoots
+
+;Belts Rare
+1/5600 VanguardBelt
+

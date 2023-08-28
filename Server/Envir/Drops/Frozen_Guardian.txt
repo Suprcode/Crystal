@@ -1,0 +1,104 @@
+;Gold
+1/3 Gold 5000
+
+;Pots + Other
+1/1 (HP)DrugMedium
+1/1 (HP)DrugMedium
+1/1 (HP)DrugMedium
+1/1 (HP)DrugMedium
+1/1 (HP)DrugMedium
+1/2 (HP)Druglarge
+1/2 (MP)Druglarge
+1/2 (MP)Druglarge
+1/2 (MP)Druglarge
+1/2 (MP)Druglarge
+1/2 (MP)Druglarge
+1/1 SunPotion
+1/2 SunPotion
+1/1 SunPotion(M)
+1/2 SunPotion(M)
+
+;Weapons
+1/1000 SilverBow
+1/1000 GreatAxe
+1/1000 MageStaff
+1/1000 SerpentSword
+1/1000 DoubleBlades
+
+;Weapons Rare
+1/550 DragonSword
+1/550 BloodStealerSword
+1/550 TaoistWidow
+1/550 DragonSabers
+1/600 VanguardBlade
+1/600 VanguardBow
+1/600 VanguardStaff
+1/600 VanguardSerp
+1/600 VanguardBlades
+
+;Armour
+1/400 LightLeatherArmour(M)
+1/400 LightLeatherArmour(F)
+1/400 HeavyArmour(M) 
+1/400 HeavyArmour(F) 
+1/400 MagicRobe(M) 
+1/400 MagicRobe(F) 
+1/400 SoulArmour(M) 
+1/400 SoulArmour(F) 
+1/400 RelicArmour(M)
+1/400 RelicArmour(F)
+
+;Armour Rare
+1/600 VanguardArmour(M)
+1/600 VanguardArmour(F)
+
+;Helmets Rare
+1/400 VanguardHelmet
+1/600 MajesticHelmet
+
+
+;Necklace Rare
+1/400 VanguardNecklace
+1/600 MajesticNecklace
+
+
+;Bracelets Rare
+1/400 VanguardWheel
+1/600 MajesticWheel
+
+
+;Rings Rare
+1/400 VanguardRing
+1/600 MajesticRing
+
+
+;Shoes Rare
+1/400 VanguardBoots
+1/600 MajesticBoots
+
+
+;Belts Rare
+1/400 VanguardBelt
+1/600 MajesticBelt
+
+
+;Medals
+1/200 BangleMedal
+1/200 GenocideMedal
+1/200 MoonMedal
+1/200 AztecMedal
+
+;Medals Rare
+1/250 LostMedal
+
+;Shields
+1/200 AfflictedShield
+1/200 PredatorShield
+1/200 PlasmaShield
+
+;Pads
+1/200 ProtectionGuards[14d]
+1/200 AssaultGuards[14d]
+
+;Quests
+1/2 WoomaHeart Q

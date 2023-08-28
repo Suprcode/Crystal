@@ -1,0 +1,68 @@
+;Gold 
+1/5 Gold 1000
+
+;Potions
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/20 (HP)DrugXL
+1/20 (MP)DrugXL
+1/10 (HP)DrugLarge
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/10 (MP)DrugLarge
+1/10 SunPotion
+1/20 SunPotion(M)
+1/100 TaoistDrug(M)
+1/100 ImpactDrug(M)
+1/100 MagicDrug(M)
+1/100 StormDrug(S)
+
+;Weapons
+1/5000 WarSpiritBlade
+1/5000 MagicScythe
+1/5000 StoneBambooFan
+1/5000 FreezingBlades
+1/5000 LitheBow
+
+;Armours
+1/700 IronArmour(M)
+1/700 IronArmour(F)
+1/700 WizardRobe(M)
+1/700 WitchRobe(F)
+1/700 PearlArmour(M)
+1/700 PearlArmour(F)
+1/700 AncientArmour(M)
+1/700 AncientArmour(F)
+1/700 TemperedArmour(M)
+1/700 TemperedArmour(F)
+1/1000 SteelArmour(M)
+
+;Boots
+1/1000 RedScaleBoots
+
+;Rings
+1/60 GoldRing
+1/100 PearlRing
+1/100 BlackRing
+1/100 SerpentEyeRing
+1/500 ExpelRing
+1/400 CoralRing
+1/100 CharmRing
+1/100 MoralRing
+
+;Necklaces
+1/140 ElusionNecklace
+1/100 ConvexLens
+1/100 BambooPipe
+1/100 BlueJadeNecklace
+
+;Stones
+1/600 DCStone(L)
+1/600 MCStone(L)
+1/600 SCStone(L)
+1/1000 DCStone(XL)
+1/1000 MCStone(XL)
+1/1000 SCStone(XL)
+1/3000 DCStone
+1/3000 MCStone
+1/3000 SCStone

@@ -1,0 +1,58 @@
+[@Main]
+#IF
+ISADMIN
+#SAY
+Hello {<$USERNAME>/KHAKI}, my name is {<$NPCNAME>/KHAKI}.
+I see you have {<$HP> | <$MAXHP> HP/RED} and {<$MP> | <$MAXMP> MP/ROYALBLUE}
+<Buy/@Buy> Potion
+<Sell/@Sell> Potion
+ 
+Tip: Use {@superman/LIMEGREEN} for an infinite amount of HP and MP.
+
+#ELSEACT
+MOVE 0 300 300
+
+[@Buy]
+#SAY
+Buy.
+ 
+<Back/@Main>
+
+
+[@Sell]
+#SAY
+Sell.
+ 
+<Back/@Main>
+
+
+[Types]
+13
+
+[Trade]
+MysteryWater
+SmallGobby
+Tinker
+Gobby
+Mackeral
+(HP)DrugSmall
+(HP)DrugMedium
+(HP)DrugLarge
+(HP)DrugXL
+(MP)DrugSmall
+(MP)DrugMedium
+(MP)DrugLarge
+(MP)DrugXL
+SunPotion
+SunPotion(M)
+Ginseng
+OldGinseng
+HealthBooster
+ManaBooster
+ImpactDrug
+MagicDrug
+TaoistDrug
+StormDrug
+StaminaAid
+MagicAid
+SpencerDrug

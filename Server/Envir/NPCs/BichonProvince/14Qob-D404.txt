@@ -1,0 +1,8 @@
+[@main]
+#SAY
+Looks like these bones been laying
+here for a long time.
+
+[Quests]
+-63
+64

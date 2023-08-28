@@ -1,0 +1,29 @@
+[@Description]
+I got a message from {WoomyonWoods/Yellow} asking for 
+some help. Can you go to {WoomyonWoods/Yellow} and 
+help then with the trouble in {InsectCave/Yellow}? 
+
+[@TaskDescription]
+Please go speak to {MasterShok/LimeGreen} in
+{WoomyonWoods/Yellow}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+1232
+
+[@GoldReward]
+1480
+
+// Pickup - Teleport_Kyle 0 371 314
+// Hand In - Master_Shok 1 312 73

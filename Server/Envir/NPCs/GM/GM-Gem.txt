@@ -1,0 +1,56 @@
+[@Main]
+#IF
+ISADMIN
+#SAY
+Hello {<$USERNAME>/KHAKI}, my name is {<$NPCNAME>/KHAKI}.
+<Buy/@Buy> Gem
+<Sell/@Sell> Gem
+
+#ELSEACT
+MOVE 0 300 300
+
+[@Sell]
+#SAY
+Sell.
+ 
+<Back/@Main>
+
+[@Buy]
+#SAY
+Buy.
+ 
+<Back/@Main>
+
+
+[Types]
+18
+
+[Trade]
+BraveryGem
+MagicGem
+SoulGem
+ProtectionGem
+EvilSlayerGem
+DurabilityGem
+StormGem
+AgilityGem
+AccuracyGem
+PoisonGem
+FreezingGem
+DisillusionGem
+EnduranceGem
+BraveryOrb
+MagicOrb
+SoulOrb
+ProtectionOrb
+EvilSlayerOrb
+DurabilityOrb
+StormOrb
+AgilityOrb
+AccuracyOrb
+PoisonOrb
+FreezingOrb
+DisillusionOrb
+EnduranceOrb
+SewingGoods
+BoneHammer

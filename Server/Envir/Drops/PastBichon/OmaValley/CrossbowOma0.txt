@@ -1,0 +1,77 @@
+;Gold 
+1/5 Gold 7000
+
+;Potions
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (HP)DrugXL
+1/2 (MP)DrugXL
+1/1 (HP)DrugLarge
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 SunPotion
+1/2 SunPotion(M)
+1/10 TaoistDrug(M)
+1/10 ImpactDrug(M)
+1/10 MagicDrug(M)
+1/10 StormDrug(S)
+
+;Weapons
+1/100 PowerAxe
+
+;Armours
+1/100 SteelArmour(M)
+1/100 SteelArmour(F)
+1/100 DragonRobe(M)
+1/100 DragonRobe(F)
+1/100 TitanArmour(M)
+1/100 TitanArmour(F)
+1/100 RoyalArmour(M)
+1/100 RoyalArmour(F)
+1/100 StuddedArmour(M)
+1/100 StuddedArmour(F)
+
+;Rings
+1/12 ExpelRing
+1/12 CoralRing
+1/100 DragonRing
+1/100 RubyRing
+1/100 PlatinumRing
+1/500 NobleRing
+1/500 OmaSpiritRing
+1/500 SoulRing
+
+
+;Bracelets
+1/400 HangMaWheel
+1/400 BokMaWheel
+1/400 8TrigramWheel
+1/30 EvadeBracelet
+1/30 GoldBracelet
+
+;Necklaces
+1/14 ElusionNecklace
+1/130 PearlNecklace
+1/130 LifeNecklace
+1/130 ClawNecklace
+1/20 ConvexLens
+1/20 BambooPipe
+1/20 BlueJadeNecklace
+1/40 AmethystNecklace
+
+;Stones
+1/8 HealthStone(L)
+1/8 MagicStone(L)
+1/8 PowerStone(L)
+1/20 DCStone(XL)
+1/20 MCStone(XL)
+1/20 SCStone(XL)
+
+;Crafting Material
+1/35 EvasionMarble
+1/35 FocusMarble
+1/4 DragonScale
+
+;Books
+1/100 TwinDrakeBlade

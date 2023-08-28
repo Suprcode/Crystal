@@ -1,0 +1,53 @@
+[@main]
+#IF
+CHECK [527] 1
+#ACT
+GOTO @Main-1
+#ELSEACT
+GOTO @CHECK2
+
+[@CHECK2]
+#IF
+CHECK [532] 1
+#ACT
+GOTO @Main-2
+#ELSEACT
+GOTO @Main-3
+
+[@Main-1]
+#SAY
+If you want to know it quickly.
+Go and see the owner of this school.
+<Okay/@exit>
+
+[@Main-2]
+#SAY
+The HolyWeapon... I would never believe it.
+<Close/@Exit>
+
+[@Main-3]
+#SAY
+Holysword? Huh.. don't believe in the apprentice's words
+it means nothing to us who stay in the Taoist world,
+it's just a piece of Iron...
+<Then, is the sword an actual thing?/@next> 
+<I see, I wont depend on it/@deney>
+
+
+[@deney]
+#IF
+#SAY
+What a good attitude you take!
+I'll scold these boys who are still silly
+Leave us alone, please!
+<Ok/@exit>
+
+[@next]
+#IF
+#SAY
+Defenitly there is such a legend from the past but...
+the owner of this school knows more details about it
+go and ask him about it.
+<Ok/@exit>
+#ACT
+SET [527] 1

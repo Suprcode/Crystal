@@ -1,0 +1,28 @@
+[@Description]
+From the rumours going around you have found
+the {Ancient Layer/Yellow} in {Stone Temple/Yellow} Return and 
+Collect {RelicRock's/LightSteelBlue} from the Ancient Layer of 
+{StoneTemple/Yellow}
+
+[@TaskDescription]
+Kill {AncientRedBoars/Crimson}, {AncientBlackBoars/Crimson} and 
+{AncientWhiteBoar's/Crimson} for {RelicRock's/LightSteelBlue}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+RelicRock 20
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+78000
+
+[@GoldReward]
+78000

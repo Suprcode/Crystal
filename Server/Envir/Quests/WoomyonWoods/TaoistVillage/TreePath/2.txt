@@ -1,0 +1,27 @@
+[@Description]
+Are you interested in a Bounty?
+
+[@TaskDescription]
+Find and Eliminate {EvilBigApe/LightSteelBlue} in {RedValley/Yellow}.
+
+[@Completion]
+
+[@KillTasks]
+EvilBigApe 1
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+40000
+
+[@GoldReward]
+40000
+
+// Pickup - Investigator_David 11 182 295
+// Hand In - Investigator_David 11 182 295

@@ -1,0 +1,33 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Hey! Jude, don't make it bad... Well customer get here..
+How do you feel about my song?
+<Weapon Refine/@Refine>
+<Retrieve Weapon/@RefineCollect>
+<Check Weapon/@RefineCheck>
+<Close/@exit>
+
+[@Refine]
+#SAY
+I can upgrade weapons for you for a small fee. To make an Upgrade you 
+need {BlackIronOre/LightSteelBlue}, Jewelery, Weapon and {Gold/Gold}. Do you have these 
+ready for me? 
+<Return/@main> <Close/@exit>
+
+[@RefineCollect]
+
+[@RefineCheck]
+#SAY
+I can't guarrantee successfull refining each and every time.
+<Ok/@exit>

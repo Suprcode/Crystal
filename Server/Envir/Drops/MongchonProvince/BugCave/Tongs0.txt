@@ -1,0 +1,96 @@
+;Gold
+1/1 Gold 4500
+
+;Weapons
+1/16 PrinceDagger 
+1/16 MartialSword 
+1/16 HookedSpear 
+1/16 KrissSword 
+1/16 IronBlades 
+1/16 LongBow 
+1/50 PowerAxe 
+1/100 PurifierSword 
+
+;Armours
+1/80 HeavyArmour(M) 
+1/80 HeavyArmour(F) 
+1/80 MagicRobe(M) 
+1/80 MagicRobe(F) 
+1/80 SoulArmour(M) 
+1/80 SoulArmour(F) 
+1/80 RelicArmour(M) 
+1/80 RelicArmour(F) 
+1/80 LightLeatherArmour(M) 
+1/80 LightLeatherArmour(F) 
+
+;Necklaces
+1/20 LanternNecklace 
+1/20 TigerNecklace 
+1/60 PlatinumNecklace 
+1/150 BlueJadeNecklace 
+1/150 ConvexLens 
+1/150 BambooPipe 
+
+;Bracelets
+1/16 StrainBracelet 
+1/16 MagicBracelet 
+1/16 HardGlove 
+1/50 EbonyBracelet 
+1/50 MonkBracelet 
+1/90 DeathGauntlet 
+1/40 GoldBracelet 
+1/2000 SteelGlove 
+
+;Rings
+1/16 BlackRing 
+1/16 SerpentEyeRing 
+1/16 PearlRing 
+1/20 GoldRing 
+1/50 SkeletonRing 
+1/50 IronRing 
+1/60 CharmRing 
+1/60 MoralRing 
+1/600 ExpelRing 
+1/600 CoralRing 
+
+;Stones
+1/150 HealthStone(M) 
+1/150 MagicStone(M) 
+1/150 PowerStone(M)
+1/150 DCStone(M) 
+1/150 MCStone(M) 
+1/150 SCStone(M) 
+1/200 HealthStone(L) 
+1/200 MagicStone(L) 
+1/200 PowerStone(L)
+1/200 DCStone(L) 
+1/200 MCStone(L) 
+1/200 SCStone(L) 
+
+;Potions
+1/2 (HP)DrugMedium 
+1/2 (MP)DrugMedium
+1/2 (HP)DrugMedium 
+1/2 (MP)DrugMedium
+1/2 (HP)DrugMedium 
+1/2 (MP)DrugMedium
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/10 SunPotion 
+1/20 SunPotion 
+1/40 SunPotion 
+1/60 SunPotion(M) 
+1/100 OldGinseng 
+1/200 StormDrug(S) 
+
+;Crafting Materials
+1/5 BugShell 
+
+;Books
+1/200 FrostCrunch 
+1/140 EnergyRepulsor 
+
+
+;Quest
+1/15 CharleySword Q
+

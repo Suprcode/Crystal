@@ -1,0 +1,59 @@
+;Gold
+1/5 Gold 200
+
+;Weapons
+1/60 WoodenSword 
+1/60 HoaSword 
+1/60 WoodenBow 
+1/90 Dagger 
+1/90 EbonySword 
+1/90 EbonyBow 
+1/100 BronzeSword 
+1/100 ShortBow 
+1/100 SharpHoaSword 
+1/120 IronSword 
+1/120 BoneBow 
+1/220 ShortSword 
+
+;Armours
+1/100 BaseDress(M) 
+1/100 BaseDress(F) 
+1/300 LightArmour(M) 
+1/300 LightArmour(F) 
+
+;Helmets
+1/150 BronzeHelmet 
+1/200 MagicHelmet 
+
+;Necklaces
+1/60 GoldNecklace 
+1/80 PrecisionNecklace 
+1/200 BlackNecklace 
+1/200 EbonyNecklace 
+1/200 YellowNecklace 
+
+;Bracelets
+1/80 IronBracelet 
+1/300 ThinBracelet 
+1/300 LeatherGlove 
+1/400 SilverBracelet 
+1/400 SteelBracelet 
+1/400 LargeBracelet 
+
+;Rings
+1/60 CopperRing 
+1/110 HornRing 
+1/110 HexagonalRing 
+1/110 GlassRing 
+1/200 BlueRing 
+
+;Potions
+1/60 (HP)DrugSmall 
+1/60 (MP)DrugSmall 
+1/100 (HP)DrugMedium 
+1/100 (MP)DrugMedium 
+1/200 SunPotion 
+
+;Scrolls
+1/500 WarGodOil 
+

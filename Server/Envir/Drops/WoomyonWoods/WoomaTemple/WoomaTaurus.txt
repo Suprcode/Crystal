@@ -1,0 +1,137 @@
+;Gold
+1/1 Gold 15000
+1/50 GoldBar
+
+;Potions
+1/1 (HP)DrugLarge
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/1 (HP)DrugXL
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (MP)DrugXL
+1/2 (HP)DrugXL
+1/2 (MP)DrugXL
+1/1 SunPotion
+1/1 SunPotion
+1/2 SunPotion
+1/2 SunPotion
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+
+1/5 BenedictionOil
+1/10 BenedictionOil
+1/40 WoomaHorn
+1/40 ImpactDrug(M)
+1/40 MagicDrug(M)
+1/40 TaoistDrug(M)
+
+;Armours
+1/10 HeavyArmour(M) 
+1/10 HeavyArmour(F) 
+1/10 MagicRobe(M) 
+1/10 MagicRobe(F) 
+1/10 SoulArmour(M) 
+1/10 SoulArmour(F) 
+1/10 RelicArmour(M) 
+1/10 RelicArmour(F) 
+1/10 LightLeatherArmour(M) 
+1/10 LightLeatherArmour(F) 
+1/40 IronArmour(M)
+1/40 IronArmour(F)
+1/40 WizardRobe(M)
+1/40 WitchRobe(F)
+1/40 PearlArmour(M)
+1/40 PearlArmour(F)
+1/40 AncientArmour(M)
+1/40 AncientArmour(F)
+1/40 TemperedArmour(F)
+1/40 TemperedArmour(M)
+
+;Helmets
+1/5 ShamanHelmet
+1/5 SkeletonHelmet
+1/10 SteelHelmet
+1/145 BlackIronHelmet
+1/160 SpiritHelmet
+
+;Sets
+1/85 RecallHelmet
+1/70 RecallNecklace
+1/85 RecallBracelet
+1/100 RecallRing
+
+;Weapons
+1/30 GreatAxe
+1/30 MageStaff
+1/30 SerpentSword
+1/30 DoubleBlades
+1/30 SilverBow
+1/55 DragonSword
+1/55 BloodStealerSword
+1/90 JudgementMace
+1/90 WarMageStaff
+1/90 SoulSpringWand
+1/90 BladesOfDarkness
+1/90 FiendBow
+
+;Rings
+1/12000 MuscleRing
+1/12000 TeleportRing
+1/5 CharmRing
+1/5 MoralRing
+1/8 ExpelRing
+1/8 CoralRing
+1/40 GaleRing
+1/40 DragonRing
+1/40 RubyRing
+1/40 PlatinumRing
+1/100 PowerRing
+1/100 VioletRing
+1/100 TitanRing
+1/80 SpiritRing
+
+;Bracelets
+1/95 KnightBracelet
+1/10 BronzeGlove
+1/50 SpellBracelet
+1/50 3rdEyeBracelet
+
+;Necklaces
+1/100 SkillNecklace
+1/90 GaleNecklace
+1/50 ClawNecklace
+1/50 LifeNecklace
+1/50 PearlNecklace
+1/90 GreenBead
+1/90 DemonicBells
+1/90 SoulNecklace
+
+;Stones
+1/40 DCStone(L)
+1/40 MCStone(L)
+1/40 SCStone(L)
+1/70 DCStone(XL)
+1/70 MCStone(XL)
+1/70 SCStone(XL)
+
+;Spells
+1/30  CrossHalfMoon
+1/30  FlameDisruptor
+1/30  trap
+1/30  UltimateEnhancer
+1/30   EnergyRepulsor
+1/50  TwinDrakeBlade
+1/50   Purification
+1/200   LionRoar
+1/200  Mirroring
+1/200  moonlight
+1/200  Entrapment
+
+;Other

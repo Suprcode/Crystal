@@ -1,0 +1,56 @@
+;;Location			  X:Y		Start - Finish
+;;BorderVillage 		287:606 	07:30 - 08:30
+;;BichonWall 			325:250 	09:00 - 10:01
+;;WoomyonWoods(S) Fortress 	316:82 		10:30 - 11:30
+;;CastleGI-Ryoong 		234:197 	12:00 - 13:01
+;;WoomyonWoods(N) TaoVillage 	192:300 	13:30 - 14:30
+;;SeokchoValley 		136:170 	15:00 - 16:01
+;;SerpentValley 		500:477 	17:00 - 18:01
+;;MudWall 			337:320 	18:30 - 19:30
+;;SabukWall 			656:303 	20:00 - 21:01
+;;PrajnaIsland 			147:328 	22:30 - 23:30
+;;WhiteValley 			296:251 	01:00 - 02:30
+
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Greetings {<$USERNAME>/GREENYELLOW}, I am {<$NPCNAME>/SEAGREEN} i travel all across 
+these lands. Do you have anything for sale?
+ 
+<Sell/@Sell> Items.
+<Close/@exit>
+
+[@Sell]
+#SAY
+What do you have for trade?
+
+[TYPES]
+5
+6
+7
+11
+16
+18
+20
+
+[Quests]
+82
+-82
+108
+-108
+109
+-109
+124
+-124
+136
+-136

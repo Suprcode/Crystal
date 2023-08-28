@@ -1,0 +1,32 @@
+[@Description]
+Did you come to help me? Are you really going to
+help? Thank you so much. I never settle at one
+place, so I never have any neighbors to help me.
+My daugther got bitten by a {RedSnake/Crimson} and the 
+poison is almost killing her. I heard there is a 
+famous doctor, {Sandford/LimeGreen} in {PrajnaIsland/Yellow}.
+
+[@TaskDescription]
+Please visit {Sandford/LimeGreen} and retrieve the cure my 
+daughter
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+807
+
+[@GoldReward]
+1110
+
+// Pickup - Merchant_Robert 2 505 479
+// Hand In - 

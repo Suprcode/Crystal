@@ -1,0 +1,37 @@
+[@Description]
+Recently we have discovered a new area called 
+{AncientRuins/Yellow}.  However,the olny way 
+to go there is by going through EvilHeart. 
+As you can see, I cant't go throught EvilHeart 
+due to all the monsters in there. Therefore, 
+I'm here trying to create a force that will 
+defeat the monsters. So.. will you be able to help me 
+out by killing the monsters inside of {RedCave/Yellow}? 
+If are less monsters then the force will be able to 
+complete their task more easily.
+
+[@TaskDescription]
+Eliminate 12 {GhastlyLeecher/Crimson}, {CyanoGhast/Crimson}, 
+{MutatedManworm/Crimson} and {CrazyManworm/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+GhastlyLeecher 12
+CyanoGhast 12
+MutatedManworm 12
+CrazyManworm 12
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+105000
+
+[@GoldReward]
+60000

@@ -1,0 +1,8 @@
+[@MAIN]
+#SAY
+The missing Trainee.. Not much left on him anymore.
+
+
+[Quests]
+-93
+94

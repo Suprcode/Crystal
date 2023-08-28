@@ -1,0 +1,11 @@
+;Gold
+1/10 Gold 100
+
+;Crafting Materials
+1/3 SpiderTeeth 
+1/10 SpiderWeb
+
+;Quest
+1/3 PoisonSack Q
+1/3 Web Q
+1/7 SpiderLeg Q

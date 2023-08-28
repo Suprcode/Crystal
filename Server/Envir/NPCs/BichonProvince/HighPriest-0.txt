@@ -1,0 +1,12 @@
+[@Main]
+#SAY
+Don't get to close.. I've lost everything..
+Who sent you?
+
+<Close/@exit>
+
+[Quests]
+-13
+14
+-14
+15

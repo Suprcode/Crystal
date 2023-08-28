@@ -1,0 +1,36 @@
+;;4F
+[@MAIN]
+#IF
+CHECKQUEST 153 1
+#ACT
+GOTO @MAIN-1
+#ELSESAY
+Nothing happens.
+
+[@MAIN-1]
+#IF
+LEVEL > 47
+LEVEL < 56
+#SAY
+A Mysterious Stone with Ancient symbols.
+"The Bones are crunching the Fear is <within/@prajnacavea>"
+{PrajnaHeart/LightSteelBlue} Required {Level48~55./KHAKI}
+ 
+<Close/@exit>
+#ELSESAY
+Nothing happens. 
+ 
+ 
+<Close/@exit>
+
+[@prajnacavea]
+#IF
+CHECKITEM PrajnaHeart 1
+#ACT
+TAKEITEM PrajnaHeart 1
+MOVE D2051A 113 174
+#ELSESAY
+Nothing happens.
+ 
+ 
+<Close/@exit>

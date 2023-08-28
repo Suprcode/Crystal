@@ -1,0 +1,22 @@
+[@Description]
+The {VillageChief/LimeGreen} is looking for you. 
+
+[@TaskDescription]
+Speak to the {VillageChief/LimeGreen} in {Prajna Island/Yellow}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+3912
+
+[@GoldReward]

@@ -1,0 +1,58 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Hello traveller, How may I help you?
+ 
+<View/@BuySell> Store. 
+ 
+<Close/@exit>
+
+[@BuySell]
+#SAY
+What Item would you like to buy or sell?
+<BuyBack/@BuyBack>
+ 
+<Back/@Main>
+
+[@BuyBack]
+#SAY
+These are the items still available to purchase back.
+ 
+<Back/@Main>
+
+[Types]
+13
+
+[Trade]
+(HP)DrugSmall 1
+(HP)DrugSmall 5
+(HP)DrugSmall 10
+(MP)DrugSmall 1
+(MP)DrugSmall 5
+(MP)DrugSmall 10
+(HP)DrugMedium 1
+(HP)DrugMedium 5
+(HP)DrugMedium 10
+(MP)DrugMedium 1
+(MP)DrugMedium 5
+(MP)DrugMedium 10
+(HP)DrugLarge 1
+(HP)DrugLarge 5
+(HP)DrugLarge 10
+(MP)DrugLarge 1
+(MP)DrugLarge 5
+(MP)DrugLarge 10
+
+[Quests]
+129
+-129

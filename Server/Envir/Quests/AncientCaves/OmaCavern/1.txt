@@ -1,0 +1,26 @@
+[@Description]
+A Mysterious Stone... with unknown ancient symbols.
+There must be a way to scyther these symbols.
+
+[@TaskDescription]
+Search {OmaCavern/Yellow} for the {AncientScyther/LightSteelBlue}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+AncientScyther 1
+
+[@FlagTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+3500
+
+[@GoldReward]

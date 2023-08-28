@@ -1,0 +1,119 @@
+;Gold
+1/1 Gold 30000
+
+;Pots + Other
+1/1 (HP)DrugXL
+1/2 (HP)DrugXL
+1/1 (MP)DrugXL
+1/2 (MP)DrugXL
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 SunPotion
+1/1 SunPotion
+1/2 SunPotion
+1/2 SunPotion
+1/1 SunPotion
+1/2 SunPotion
+
+
+1/1 BenedictionOil
+1/10 GoldenBenedictionOil
+
+
+1/10 AwakeningSoul0
+1/10 AwakeningSoul0
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gems/Orbs
+1/30 BraveryOrb
+1/30 MagicOrb
+1/30 SoulOrb
+1/25 ProtectionOrb
+1/25 EvilSlayerOrb
+1/20 DurabilityOrb
+1/40 PoisonOrb
+1/40 FreezingOrb
+1/40 AccuracyOrb
+1/40 StormOrb
+1/40 EnduranceOrb
+
+
+;Books
+1/100 SliceNDice
+1/200 SummonHolyDeva
+1/200 Mirroring
+1/200 SwiftFeet
+1/200 BladeAvalanche
+1/500 ProtectionField
+1/500 Reincarnation
+1/500 MeteorStrike
+1/500 PoisonCloud
+1/500 Rage
+1/500 Plague
+1/500 MagicBooster
+1/500 Hemorrhage
+1/500 CounterAttack
+1/900 SlashingBurst
+1/900 MoonMist
+1/900 StormEscape
+1/700 LavaKing
+1/750 FrozenRains
+1/850 HeadShot
+1/850 ShadowStep
+1/1280 SummonHolyDragon
+1/1280 FuryWaves
+1/1200 HolyShield
+
+;Archer
+1/100 DelayedExplosion
+1/200 ElementalBarrier
+1/500 BindingShot
+1/750 SummonToad
+1/800 PoisonShot
+1/900  CrippleShot
+1/1200 SummonSnakes
+1/90 NapalmShot
+1/1200 OneWithNature
+
+;CraftingMaterials
+
+
+;Quests
+

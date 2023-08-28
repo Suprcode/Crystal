@@ -1,0 +1,135 @@
+[@Main]
+#SAY
+Hello traveller, how may I help you?
+ 
+<View/@BuySell> Store. 
+<Repair/@Repair> Item.
+<Ask/@Ask> about Item.
+ 
+<Close/@exit>
+
+[@BuySell]
+#SAY
+What item would you like to buy or sell?
+<BuyBack/@BuyBack>
+ 
+<Back/@Main>
+
+[@BuyBack]
+#SAY
+These are the items still available to purchase back.
+ 
+<Back/@Main>
+
+[@Repair]
+#SAY
+You can repair various kinds of Torch's.
+
+[@Ask]
+#SAY
+I deal with <Candles/@candle>, <DungeonEscapes/@dungeonescape>, <RandomTeleports/@randomteleport>,
+<RepairOil/@repairoil> and so on forth.
+I have heard that there are <TownTeleport/@townteleport> which monsters
+drop sometimes.
+ 
+<Back/@Main>
+
+[@candle]
+#SAY
+Candles are needed when it's dark. Without a candle
+you can not see anything.
+ 
+<Back/@Ask>
+
+[@dungeonescape]
+#SAY
+A DungeonEscape scroll is a magic paper that moves you promptly
+to certain fields near the last village you visited.
+The power of Dungeonescape scroll is weak compared with
+TownTeleport scrolls but it could still save your life.
+ 
+<Back/@Ask>
+
+[@randomteleport]
+#SAY
+A Randomteleport scroll is a magic paper that can
+make you randomly move to another place in the same map.
+For example if you were in a dungeon 1st floor, you will
+move to another place on that floor by using the RT.
+If the situation is dangerous but you still have potions, use this
+to help you out of a tight situation.
+ 
+<Back/@Ask>
+
+[@repairoil]
+#SAY
+A RepairOil makes the durability of your hand weapon rise.
+This oil doesn't special repair your weapon, so
+remember that the maximum durability of the weapon
+goes down as time goes by.
+If the weapon was not expensive,
+repair with this oil occasionally during hunting.
+This will make hunts last longer.
+ 
+<Back/@Ask>
+
+[@townteleport]
+#SAY
+TownTeleport scrolls can't be made now because the ancient
+skill is lost.... however....
+I have heard that they might come randomly from monsters
+and you can return to a village promptly by using it...
+ 
+<Back/@Ask>
+
+[Types]
+8
+12
+38
+13
+
+[Trade]
+Candle
+Torch
+EternalFlame
+TownTeleport
+RandomTeleport
+DungeonEscape
+TeleportHome
+GtTeleport
+GtInvite
+Amulet 1
+Amulet 100
+Amulet(M) 1
+Amulet(M) 400
+Amulet(L) 1
+Amulet(L) 600
+Amulet(XL) 1
+Amulet(XL) 800
+AmuletRevival
+AmuletOfRevival(L)
+GreenPoison(S) 1
+GreenPoison(S) 100
+RedPoison(S) 1
+RedPoison(S) 100
+GreenPoison(M) 1
+GreenPoison(M) 400
+RedPoison(M) 1
+RedPoison(M) 400
+GreenPoison(L) 1
+GreenPoison(L) 600
+GreenPoison(XL) 1
+GreenPoison(XL) 800
+RedPoison(L) 1
+RedPoison(L) 600
+RedPoison(XL) 1
+RedPoison(XL) 800
+BluePoison(S) 1
+BluePoison(S) 200
+BluePoison(M) 1
+BluePoison(M) 400
+BluePoison(L) 1
+BluePoison(L) 600
+BluePoison(XL) 1
+BluePoison(XL) 800
+WarGodOil

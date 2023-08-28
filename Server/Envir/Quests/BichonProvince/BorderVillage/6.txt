@@ -1,0 +1,31 @@
+[@Description]
+Traveller.. I still think its to dangerous outside.
+Can you do a another favour for me?
+
+[@TaskDescription]
+Eliminate 10 {HookingCat's/Crimson}
+
+[@Completion]
+
+[@KillTasks]
+HookingCat 10
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+BronzeWarriorSword
+StrongHoaSword
+StrongWoodenBow
+
+[@ExpReward]
+150
+
+[@GoldReward]
+38
+
+// Pickup - Blacksmith_Smith 0 296 613
+// Hand In - Blacksmith_Smith 0 296 613

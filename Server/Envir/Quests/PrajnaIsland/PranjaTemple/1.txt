@@ -1,0 +1,24 @@
+[@Description]
+
+[@TaskDescription]
+Travel South-East to {PrajnaTemple/Yellow} and Kill 30 
+{Minotaur's/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+Minotaur 30
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+48000
+
+[@GoldReward]
+48000

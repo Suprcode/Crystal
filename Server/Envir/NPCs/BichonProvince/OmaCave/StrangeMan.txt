@@ -1,0 +1,7 @@
+[@MAIN]
+#SAY
+A strong monster called BoneElite lives in OmaCave
+It's difficult to kill the monster.. If you face
+the monster.. run away!
+<Ok/@exit>
+

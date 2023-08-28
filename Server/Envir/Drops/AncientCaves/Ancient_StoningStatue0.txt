@@ -1,0 +1,43 @@
+;Gold 
+1/2 Gold 25000
+1/10 GoldBar
+
+
+;Potions
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 BenedictionOil
+1/2 BenedictionOil
+
+;Orbs
+1/10 BraveryGem
+1/10 MagicGem 
+1/10 SoulGem
+1/5 ProtectionGem
+1/5 EvilSlayerGem
+1/5 DurabilityGem
+1/10 PoisonGem
+1/12 FreezingGem
+1/15 AccuracyGem
+1/15 StormGem
+1/10 EnduranceGem
+1/20 BraveryOrb
+1/20 MagicOrb 
+1/20 SoulOrb
+1/15 ProtectionOrb
+1/15 EvilSlayerOrb
+1/15 DurabilityOrb
+1/20 PoisonOrb
+1/20 FreezingOrb
+1/25 AccuracyOrb
+1/25 StormOrb
+1/20 EnduranceOrb

@@ -1,0 +1,34 @@
+[@Description]
+There's been a Monster Kill Order issued. 
+Please carry out this Order.
+
+[@TaskDescription]
+Eliminate 4 {GangSpider/Crimson}, {RootSpider/Crimson} 5 
+{LureSpider/Crimson} and {GreatSpider's/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+GangSpider 4
+RootSpider 5
+LureSpider 5
+GreatSpider 5
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+ThickArmour
+FireMagicRobe
+TaoArmour
+SpiritRobe
+LeatherArmour
+
+[@ExpReward]
+7100
+
+[@GoldReward]
+7100

@@ -1,0 +1,91 @@
+;Gold
+1/5 Gold 500
+
+;Weapons
+1/8 PrinceDagger 
+1/8 MartialSword 
+1/8 HookedSpear 
+1/8 KrissSword 
+1/8 IronBlades 
+1/8 LongBow 
+1/10 PowerAxe 
+1/30 PurifierSword 
+1/2400 GreatAxe 
+1/2400 MageStaff 
+1/2400 SerpentSword 
+1/2400 DoubleBlades 
+1/2400 SilverBow 
+1/5000 DragonSword 
+1/10000 ZumaJudgementMace 
+1/10000 ZumaWarMageStaff 
+1/10000 ZumaSoulSpringWand 
+1/10000 ZumaBlades 
+1/10000 ZumaFiendBow 
+
+;Armours
+1/120 HeavyArmour(M) 
+1/120 HeavyArmour(F) 
+1/120 MagicRobe(M) 
+1/120 MagicRobe(F) 
+1/120 SoulArmour(M) 
+1/120 SoulArmour(F) 
+1/120 RelicArmour(M) 
+1/120 RelicArmour(F) 
+1/120 LightLeatherArmour(M) 
+1/120 LightLeatherArmour(F) 
+1/500 IronArmour(M) 
+1/500 IronArmour(F) 
+1/500 WizardRobe(M) 
+1/500 WitchRobe(F) 
+1/500 PearlArmour(M) 
+1/500 PearlArmour(F) 
+1/500 AncientArmour(M) 
+1/500 AncientArmour(F) 
+1/500 TemperedArmour(M) 
+1/500 TemperedArmour(F) 
+
+;Helmets
+1/100 SkeletonHelmet 
+1/170 ShamanHelmet 
+
+;Necklaces
+1/110 LanternNecklace 
+1/110 TigerNecklace 
+1/110 PlatinumNecklace 
+1/120 BlueJadeNecklace 
+1/120 ConvexLens 
+1/120 BambooPipe 
+
+;Bracelets
+1/18 StrainBracelet 
+1/18 MagicBracelet 
+1/18 HardGlove 
+1/110 EbonyBracelet 
+1/110 MonkBracelet 
+1/110 DeathGauntlet 
+1/110 GoldBracelet 
+1/200 BronzeGlove 
+
+;Rings
+1/18 BlackRing 
+1/18 SerpentEyeRing 
+1/18 PearlRing 
+1/110 IronRing 
+1/110 GoldRing 
+1/110 SkeletonRing 
+1/110 CharmRing 
+1/110 MoralRing 
+1/10 ExpelRing 
+1/10 CoralRing 
+1/50 GaleRing 
+
+;Potions
+1/20 (HP)DrugMedium 
+1/20 (MP)DrugMedium 
+1/40 (HP)DrugLarge 
+1/40 (MP)DrugLarge 
+1/50 SunPotion 
+1/100 SunPotion 
+1/200 SunPotion 
+1/300 SunPotion(M) 
+1/300 OldGinseng 

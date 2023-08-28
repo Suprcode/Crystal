@@ -1,0 +1,33 @@
+;;2F
+[@MAIN]
+#IF
+CHECKQUEST 153 1
+#ACT
+GOTO @MAIN-1
+#ELSESAY
+Nothing happens.
+
+[@MAIN-1]
+#IF
+LEVEL > 42
+LEVEL < 48
+#SAY
+A Mysterious Stone. With Ancient symbols.
+"Banished Creatures <within./@Woomaa>"
+{WoomaHeart/LightSteelBlue} Required {Level 43~48./KHAI}
+ 
+<Close/@exit>
+#ELSESAY
+Nothing happens.
+ 
+ 
+<Close/@Exit>
+
+[@Woomaa]
+#IF
+CHECKITEM WoomaHeart 1
+#ACT
+TAKEITEM WoomaHeart 1
+MOVE D022A 340 358
+#ELSESAY
+Nothing happens.

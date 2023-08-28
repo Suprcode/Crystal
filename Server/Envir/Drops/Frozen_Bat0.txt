@@ -1,0 +1,54 @@
+;Gold
+1/5 Gold 35
+
+;Pots + Other
+1/15 (HP)DrugMedium
+1/15 (MP)DrugMedium
+
+1/30 TownTeleport 
+1/40 TownTeleport 
+1/50 TownTeleport 
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests

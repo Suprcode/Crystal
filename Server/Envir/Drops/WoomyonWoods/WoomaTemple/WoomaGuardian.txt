@@ -1,0 +1,116 @@
+;Gold
+1/1 Gold 7000
+
+;Potions
+1/1 (HP)DrugMedium
+1/1 (HP)DrugMedium
+1/1 (HP)DrugMedium
+1/1 (HP)DrugMedium
+1/1 (HP)DrugMedium
+1/2 (HP)Druglarge
+1/2 (MP)Druglarge
+1/2 (MP)Druglarge
+1/2 (MP)Druglarge
+1/2 (MP)Druglarge
+1/2 (MP)Druglarge
+1/15 OldGinseng
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 Sunpotion(M)
+1/1 Sunpotion(M)
+1/2 Sunpotion(M)
+1/2 Sunpotion(M)
+1/2 Sunpotion(M)
+1/2 Sunpotion(M)
+1/2 Sunpotion(M)
+1/15 StormDrug(S)
+1/15 ImpactDrug(S)
+1/15 MagicDrug(S)
+1/15 TaoistDrug(S)
+
+;Armours
+1/10 HeavyArmour(M) 
+1/10 HeavyArmour(F) 
+1/10 MagicRobe(M) 
+1/10 MagicRobe(F) 
+1/10 SoulArmour(M) 
+1/10 SoulArmour(F) 
+1/10 RelicArmour(M) 
+1/10 RelicArmour(F) 
+1/10 LightLeatherArmour(M) 
+1/10 LightLeatherArmour(F) 
+1/40 IronArmour(M)
+1/40 IronArmour(F)
+1/40 WizardRobe(M)
+1/40 WitchRobe(F)
+1/40 PearlArmour(M)
+1/40 PearlArmour(F)
+1/40 AncientArmour(M)
+1/40 AncientArmour(F)
+1/40 TemperedArmour(F)
+1/40 TemperedArmour(M)
+
+;Helmets
+1/10 ShamanHelmet
+1/10 SkeletonHelmet
+1/25 SteelHelmet
+
+;Weapons
+1/15 PrinceDagger
+1/15 MartialSword
+1/15 HookedSpear
+1/15 KrissSword
+1/15 IronBlades
+1/15 LongBow
+1/20 PowerAxe
+1/25 PurifierSword
+1/200 GreatAxe
+1/200 MageStaff
+1/200 SerpentSword
+1/200 DoubleBlades
+1/200 SilverBow
+
+;Shoes
+1/3000 SilkBoots
+
+;Rings
+1/8 SkeletonRing
+1/10 IronRing
+1/10 CharmRing
+1/10 MoralRing
+1/20 ExpelRing
+1/20 CoralRing
+1/30 GaleRing
+1/50 DragonRing
+1/50 RubyRing
+1/50 PlatinumRing
+1/300 PowerRing
+1/300 VioletRing
+1/300 TitanRing
+
+;Bracelets
+1/5 HardGlove
+1/5 MagicBracelet
+1/7 StrainBracelet
+1/7 MonkBracelet
+1/7 EbonyBracelet
+1/15 DeathGauntlet
+1/15 GoldBracelet
+1/20 BronzeGlove
+1/500 SteelGlove
+
+;Necklaces
+1/5 LanternNecklace
+1/5 TigerNecklace
+1/8 ElusionNecklace
+1/10 BlueJadeNecklace
+1/10 BambooPipe
+1/10 ConvexLens
+
+;Quest
+1/1 WoomasHorn Q
+1/5 WoomaHeart 

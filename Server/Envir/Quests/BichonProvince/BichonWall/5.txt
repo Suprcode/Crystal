@@ -1,0 +1,28 @@
+[@Description]
+You came right on time. {MongchonScout/LimeGreen} came 
+by earlier and left a message for you. Please go 
+to the {Tavern/Yellow}
+
+[@TaskDescription]
+Go speak to {MongchonScout/LimeGreen} in the {Tavern/Yellow}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+1104
+
+[@GoldReward]
+1200
+
+// Pickup - 
+// Hand In - MongchonScout_Brian 0100 4 10

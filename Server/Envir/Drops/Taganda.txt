@@ -1,0 +1,1723 @@
+;;Level 1
+;Gold
+1/1 Gold 30000 LV1
+
+;Pots + Other
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/2 SunPotion LV1
+1/1 SunPotion LV1
+1/2 SunPotion LV1
+1/1 SunPotion LV1
+1/2 SunPotion LV1
+
+1/1 BenedictionOil LV1
+1/10 GoldenBenedictionOil LV1
+1/150 TagandaRune LV1
+
+;Weapons
+1/600 TagandaSlayer LV1
+1/600 TagandaStaff LV1
+1/600 TagandaFan LV1
+1/600 TagandaSlayers LV1
+
+
+;Armour
+1/700 TagandaRobe(M) LV1
+1/700 TagandaRobe(F) LV1 
+1/700 TagandaCloak(M) LV1
+1/700 TagandaCloak(F) LV1
+1/700 TagandaArmour(M) LV1
+1/700 TagandaArmour(F) LV1
+1/700 TagandaSuit(M) LV1
+1/700 TagandaSuit(F) LV1
+1/1000 HeavenArmour(M) LV1
+1/1000 HeavenArmour(F) LV1
+1/1000 HeavenArcheyRobe(M) LV1
+1/1000 HeavenArcheyRobe(F) LV1
+1/1200 HeavenGrnArmour(M) LV1
+1/1200 HeavenGrnArmour(F) LV1
+1/1200 HeavenRedArmour(M) LV1
+1/1200 HeavenRedArmour(F) LV1
+1/1200 HeavenArmour(M) LV1
+1/1200 HeavenArmour(F) LV1
+1/1200 HeavenGoldArmour(M) LV1
+1/1200 HeavenGoldArmour(F) LV1
+
+;Helmets
+1/700 TagandaHelmet LV1
+
+;Necklace
+1/700 TagandaNecklace LV1
+
+;Bracelets
+1/700 TagandaBracelet LV1
+
+;Rings
+1/700 TagandaRing LV1
+1/320 FlameRing LV1
+1/1020 ProtectionRing LV1
+1/1020 ParalysisRing LV1
+1/820 RevivalRing LV1
+1/760 ClearRing LV1
+1/1320 TeleportRing LV1
+
+;Shoes
+1/700 TagandaBoots LV1
+1/100 SparklingBoots LV1
+
+;Belts
+1/700 TagandaBelt LV1
+1/100 SparklingBelt LV1
+
+;Medals
+1/300 TagandaMedal LV1
+1/200 OffensiveMedal LV1
+1/200 DefensiveMedal LV1
+
+;Shields
+1/600 TagandaShield LV1
+1/400 LunarPlate LV1
+1/500 OrcsShield LV1
+
+;Pads
+
+
+;Stone
+1/300 TagandaElement LV1
+
+;Runes
+1/100 PinPointRune LV1
+1/100 EvasiveRune LV1
+1/100 EnrageRune LV1
+1/150 IronWallRune LV1
+1/150 SpeedyMagicianRune LV1
+1/175 DamagePvPRune(-) LV1
+1/175 DamagPvPRune(+) LV1
+1/200 MeleeDamageRune LV1
+1/200 MagicDamageRune LV1
+1/200 SpiritualDamageRune LV1
+
+;Gems/Orbs
+1/10 BraveryGem LV1
+1/10 MagicGem LV1
+1/10 SoulGem LV1
+1/20 ProtectionGem LV1
+1/20 EvilSlayerGem LV1
+1/20 DurabilityGem LV1
+1/30 PoisonGem LV1
+1/30 FreezingGem LV1
+1/30 AccuracyGem LV1
+1/30 StormGem LV1
+1/30 EnduranceGem LV1
+1/50 CriticalDamgeForge LV1
+1/50 CriticalRateForge LV1
+1/50 HpDrainForge LV1
+1/50 ReflectForge LV1
+1/55 SocketForge(G) LV1
+
+1/100 BraveryOrb LV1
+1/100 SoulOrb LV1
+1/100 StormOrb LV1
+1/100 MagicOrb LV1
+1/130 DurabilityOrb LV1
+1/140 AccuracyOrb LV1
+1/140 AgilityOrb LV1
+1/300 PoisonOrb LV1
+1/300 FreezingOrb LV1
+1/200 EnduranceOrb LV1
+1/200 DisillusionOrb LV1
+
+;Books
+;Warrior
+1/25 FlamingSword LV1
+1/30 CrossHalfMoon LV1
+1/50 TwinDrakeBlade LV1
+1/50 LionRoar LV1
+1/50 Entrapment LV1
+1/60 BladeStorm LV1
+1/150 BladeAvalanche LV1
+1/120 ProtectionField LV1
+1/140 Rage LV1
+1/160 Fury LV1
+1/200 CounterAttack LV1
+1/260 ImmortalSkin LV1
+
+;Wizard
+1/10 FrostCrunch LV1
+1/25 IceStorm LV1
+1/30 FlameDisruptor LV1
+1/400 FlameField LV1
+1/50 Vampirism LV1
+1/150 Mirroring LV1
+1/120 Blizzard LV1
+1/140 MagicBooster LV1
+1/160 MeteorStrike LV1
+1/200 FastMove LV1
+1/220 IceThrust LV1
+1/240 FrozenRains LV1
+1/260 LavaKing LV1
+1/300 StormEscape LV1
+
+
+;Taosit
+1/25 SummonShinsu LV1
+1/30 UltimateEnhancer LV1
+1/30 EnergyRepulsor LV1
+1/50 Purification LV1
+1/50 Hallucination LV1
+1/100 HealingCircle LV1
+1/100 SummonHolyDeva LV1
+1/120 Curse LV1
+1/140 PoisonCloud LV1
+1/180 PetEnhancer LV1
+1/200 EnergyShield LV1
+1/230 HolyShield LV1
+1/260 HeadShot LV1
+
+;Assassin
+1/25 FireBurst LV1
+1/30 Trap LV1
+1/30 CrescentSlash LV1
+1/30 PoisonSword LV1
+1/50 MoonLight LV1
+1/50 MPEater LV1
+1/100 SwiftFeet LV1
+1/140 DarkBody LV1
+1/180 Hemorrhage LV1
+1/200 MoonMist LV1
+1/230 FuryWaves LV1
+1/260 ShadowStep LV1
+
+;Archer
+1/25 VampireShot LV1
+1/25 SummonVampire LV1
+1/30 BackStep LV1
+1/30 DelayedExplosion LV1
+1/50 ElementalBarrier LV1
+1/50 BindingShot LV1
+1/100 SummonToad LV1
+1/140 PoisonShot LV1
+1/180 CrippleShot LV1
+1/200 SummonSnakes LV1
+1/110 NapalmShot LV1
+
+
+;CraftingMaterials
+
+
+;Quests
+1/1 NumaTempleMap Q LV1
+
+;;Level 2
+;Gold
+1/1 Gold 30000 LV2
+
+;Pots + Other
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/2 SunPotion LV2
+1/1 SunPotion LV2
+1/2 SunPotion LV2
+1/1 SunPotion LV2
+1/2 SunPotion LV2
+
+1/1 BenedictionOil LV2
+1/10 GoldenBenedictionOil LV2
+1/150 TagandaRune LV2
+
+;Weapons
+1/600 TagandaSlayer LV2
+1/600 TagandaStaff LV2
+1/600 TagandaFan LV2
+1/600 TagandaSlayers LV2
+
+
+;Armour
+1/700 TagandaRobe(M) LV2
+1/700 TagandaRobe(F) LV2 
+1/700 TagandaCloak(M) LV2
+1/700 TagandaCloak(F) LV2
+1/700 TagandaArmour(M) LV2
+1/700 TagandaArmour(F) LV2
+1/700 TagandaSuit(M) LV2
+1/700 TagandaSuit(F) LV2
+1/1000 HeavenArmour(M) LV2
+1/1000 HeavenArmour(F) LV2
+1/1000 HeavenArcheyRobe(M) LV2
+1/1000 HeavenArcheyRobe(F) LV2
+1/1200 HeavenGrnArmour(M) LV2
+1/1200 HeavenGrnArmour(F) LV2
+1/1200 HeavenRedArmour(M) LV2
+1/1200 HeavenRedArmour(F) LV2
+1/1200 HeavenArmour(M) LV2
+1/1200 HeavenArmour(F) LV2
+1/1200 HeavenGoldArmour(M) LV2
+1/1200 HeavenGoldArmour(F) LV2
+
+;Helmets
+1/700 TagandaHelmet LV2
+
+;Necklace
+1/700 TagandaNecklace LV2
+
+;Bracelets
+1/700 TagandaBracelet LV2
+
+;Rings
+1/700 TagandaRing LV2
+1/320 FlameRing LV2
+1/1020 ProtectionRing LV2
+1/1020 ParalysisRing LV2
+1/820 RevivalRing LV2
+1/760 ClearRing LV2
+1/1320 TeleportRing LV2
+
+;Shoes
+1/700 TagandaBoots LV2
+1/100 SparklingBoots LV2
+
+;Belts
+1/700 TagandaBelt LV2
+1/100 SparklingBelt LV2
+
+;Medals
+1/300 TagandaMedal LV2
+1/200 OffensiveMedal LV2
+1/200 DefensiveMedal LV2
+
+;Shields
+1/600 TagandaShield LV2
+1/400 LunarPlate LV2
+1/500 OrcsShield LV2
+
+;Pads
+
+
+;Stone
+1/300 TagandaElement LV2
+
+;Runes
+1/100 PinPointRune LV2
+1/100 EvasiveRune LV2
+1/100 EnrageRune LV2
+1/150 IronWallRune LV2
+1/150 SpeedyMagicianRune LV2
+1/175 DamagePvPRune(-) LV2
+1/175 DamagPvPRune(+) LV2
+1/200 MeleeDamageRune LV2
+1/200 MagicDamageRune LV2
+1/200 SpiritualDamageRune LV2
+
+;Gems/Orbs
+1/10 BraveryGem LV2
+1/10 MagicGem LV2
+1/10 SoulGem LV2
+1/20 ProtectionGem LV2
+1/20 EvilSlayerGem LV2
+1/20 DurabilityGem LV2
+1/30 PoisonGem LV2
+1/30 FreezingGem LV2
+1/30 AccuracyGem LV2
+1/30 StormGem LV2
+1/30 EnduranceGem LV2
+1/50 CriticalDamgeForge LV2
+1/50 CriticalRateForge LV2
+1/50 HpDrainForge LV2
+1/50 ReflectForge LV2
+1/55 SocketForge(G) LV2
+
+1/100 BraveryOrb LV2
+1/100 SoulOrb LV2
+1/100 StormOrb LV2
+1/100 MagicOrb LV2
+1/130 DurabilityOrb LV2
+1/140 AccuracyOrb LV2
+1/140 AgilityOrb LV2
+1/300 PoisonOrb LV2
+1/300 FreezingOrb LV2
+1/200 EnduranceOrb LV2
+1/200 DisillusionOrb LV2
+
+;Books
+;Warrior
+1/25 FlamingSword LV2
+1/30 CrossHalfMoon LV2
+1/50 TwinDrakeBlade LV2
+1/50 LionRoar LV2
+1/50 Entrapment LV2
+1/60 BladeStorm LV2
+1/150 BladeAvalanche LV2
+1/120 ProtectionField LV2
+1/140 Rage LV2
+1/160 Fury LV2
+1/200 CounterAttack LV2
+1/260 ImmortalSkin LV2
+
+;Wizard
+1/10 FrostCrunch LV2
+1/25 IceStorm LV2
+1/30 FlameDisruptor LV2
+1/400 FlameField LV2
+1/50 Vampirism LV2
+1/150 Mirroring LV2
+1/120 Blizzard LV2
+1/140 MagicBooster LV2
+1/160 MeteorStrike LV2
+1/200 FastMove LV2
+1/220 IceThrust LV2
+1/240 FrozenRains LV2
+1/260 LavaKing LV2
+1/300 StormEscape LV2
+
+
+;Taosit
+1/25 SummonShinsu LV2
+1/30 UltimateEnhancer LV2
+1/30 EnergyRepulsor LV2
+1/50 Purification LV2
+1/50 Hallucination LV2
+1/100 HealingCircle LV2
+1/100 SummonHolyDeva LV2
+1/120 Curse LV2
+1/140 PoisonCloud LV2
+1/180 PetEnhancer LV2
+1/200 EnergyShield LV2
+1/230 HolyShield LV2
+1/260 HeadShot LV2
+
+;Assassin
+1/25 FireBurst LV2
+1/30 Trap LV2
+1/30 CrescentSlash LV2
+1/30 PoisonSword LV2
+1/50 MoonLight LV2
+1/50 MPEater LV2
+1/100 SwiftFeet LV2
+1/140 DarkBody LV2
+1/180 Hemorrhage LV2
+1/200 MoonMist LV2
+1/230 FuryWaves LV2
+1/260 ShadowStep LV2
+
+;Archer
+1/25 VampireShot LV2
+1/25 SummonVampire LV2
+1/30 BackStep LV2
+1/30 DelayedExplosion LV2
+1/50 ElementalBarrier LV2
+1/50 BindingShot LV2
+1/100 SummonToad LV2
+1/140 PoisonShot LV2
+1/180 CrippleShot LV2
+1/200 SummonSnakes LV2
+1/110 NapalmShot LV2
+
+
+;CraftingMaterials
+
+
+;Quests
+1/1 NumaTempleMap Q LV2
+
+;;Level 3
+;Gold
+1/1 Gold 30000 LV3
+
+;Pots + Other
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/2 SunPotion LV3
+1/1 SunPotion LV3
+1/2 SunPotion LV3
+1/1 SunPotion LV3
+1/2 SunPotion LV3
+
+1/1 BenedictionOil LV3
+1/10 GoldenBenedictionOil LV3
+1/150 TagandaRune LV3
+
+;Weapons
+1/600 TagandaSlayer LV3
+1/600 TagandaStaff LV3
+1/600 TagandaFan LV3
+1/600 TagandaSlayers LV3
+
+
+;Armour
+1/700 TagandaRobe(M) LV3
+1/700 TagandaRobe(F) LV3 
+1/700 TagandaCloak(M) LV3
+1/700 TagandaCloak(F) LV3
+1/700 TagandaArmour(M) LV3
+1/700 TagandaArmour(F) LV3
+1/700 TagandaSuit(M) LV3
+1/700 TagandaSuit(F) LV3
+1/1000 HeavenArmour(M) LV3
+1/1000 HeavenArmour(F) LV3
+1/1000 HeavenArcheyRobe(M) LV3
+1/1000 HeavenArcheyRobe(F) LV3
+1/1200 HeavenGrnArmour(M) LV3
+1/1200 HeavenGrnArmour(F) LV3
+1/1200 HeavenRedArmour(M) LV3
+1/1200 HeavenRedArmour(F) LV3
+1/1200 HeavenArmour(M) LV3
+1/1200 HeavenArmour(F) LV3
+1/1200 HeavenGoldArmour(M) LV3
+1/1200 HeavenGoldArmour(F) LV3
+
+;Helmets
+1/700 TagandaHelmet LV3
+
+;Necklace
+1/700 TagandaNecklace LV3
+
+;Bracelets
+1/700 TagandaBracelet LV3
+
+;Rings
+1/700 TagandaRing LV3
+1/320 FlameRing LV3
+1/1020 ProtectionRing LV3
+1/1020 ParalysisRing LV3
+1/820 RevivalRing LV3
+1/760 ClearRing LV3
+1/1320 TeleportRing LV3
+
+;Shoes
+1/700 TagandaBoots LV3
+1/100 SparklingBoots LV3
+
+;Belts
+1/700 TagandaBelt LV3
+1/100 SparklingBelt LV3
+
+;Medals
+1/300 TagandaMedal LV3
+1/200 OffensiveMedal LV3
+1/200 DefensiveMedal LV3
+
+;Shields
+1/600 TagandaShield LV3
+1/400 LunarPlate LV3
+1/500 OrcsShield LV3
+
+;Pads
+
+
+;Stone
+1/300 TagandaElement LV3
+
+;Runes
+1/100 PinPointRune LV3
+1/100 EvasiveRune LV3
+1/100 EnrageRune LV3
+1/150 IronWallRune LV3
+1/150 SpeedyMagicianRune LV3
+1/175 DamagePvPRune(-) LV3
+1/175 DamagPvPRune(+) LV3
+1/200 MeleeDamageRune LV3
+1/200 MagicDamageRune LV3
+1/200 SpiritualDamageRune LV3
+
+;Gems/Orbs
+1/10 BraveryGem LV3
+1/10 MagicGem LV3
+1/10 SoulGem LV3
+1/20 ProtectionGem LV3
+1/20 EvilSlayerGem LV3
+1/20 DurabilityGem LV3
+1/30 PoisonGem LV3
+1/30 FreezingGem LV3
+1/30 AccuracyGem LV3
+1/30 StormGem LV3
+1/30 EnduranceGem LV3
+1/50 CriticalDamgeForge LV3
+1/50 CriticalRateForge LV3
+1/50 HpDrainForge LV3
+1/50 ReflectForge LV3
+1/55 SocketForge(G) LV3
+
+1/100 BraveryOrb LV3
+1/100 SoulOrb LV3
+1/100 StormOrb LV3
+1/100 MagicOrb LV3
+1/130 DurabilityOrb LV3
+1/140 AccuracyOrb LV3
+1/140 AgilityOrb LV3
+1/300 PoisonOrb LV3
+1/300 FreezingOrb LV3
+1/200 EnduranceOrb LV3
+1/200 DisillusionOrb LV3
+
+;Books
+;Warrior
+1/25 FlamingSword LV3
+1/30 CrossHalfMoon LV3
+1/50 TwinDrakeBlade LV3
+1/50 LionRoar LV3
+1/50 Entrapment LV3
+1/60 BladeStorm LV3
+1/150 BladeAvalanche LV3
+1/120 ProtectionField LV3
+1/140 Rage LV3
+1/160 Fury LV3
+1/200 CounterAttack LV3
+1/260 ImmortalSkin LV3
+
+;Wizard
+1/10 FrostCrunch LV3
+1/25 IceStorm LV3
+1/30 FlameDisruptor LV3
+1/400 FlameField LV3
+1/50 Vampirism LV3
+1/150 Mirroring LV3
+1/120 Blizzard LV3
+1/140 MagicBooster LV3
+1/160 MeteorStrike LV3
+1/200 FastMove LV3
+1/220 IceThrust LV3
+1/240 FrozenRains LV3
+1/260 LavaKing LV3
+1/300 StormEscape LV3
+
+
+;Taosit
+1/25 SummonShinsu LV3
+1/30 UltimateEnhancer LV3
+1/30 EnergyRepulsor LV3
+1/50 Purification LV3
+1/50 Hallucination LV3
+1/100 HealingCircle LV3
+1/100 SummonHolyDeva LV3
+1/120 Curse LV3
+1/140 PoisonCloud LV3
+1/180 PetEnhancer LV3
+1/200 EnergyShield LV3
+1/230 HolyShield LV3
+1/260 HeadShot LV3
+
+;Assassin
+1/25 FireBurst LV3
+1/30 Trap LV3
+1/30 CrescentSlash LV3
+1/30 PoisonSword LV3
+1/50 MoonLight LV3
+1/50 MPEater LV3
+1/100 SwiftFeet LV3
+1/140 DarkBody LV3
+1/180 Hemorrhage LV3
+1/200 MoonMist LV3
+1/230 FuryWaves LV3
+1/260 ShadowStep LV3
+
+;Archer
+1/25 VampireShot LV3
+1/25 SummonVampire LV3
+1/30 BackStep LV3
+1/30 DelayedExplosion LV3
+1/50 ElementalBarrier LV3
+1/50 BindingShot LV3
+1/100 SummonToad LV3
+1/140 PoisonShot LV3
+1/180 CrippleShot LV3
+1/200 SummonSnakes LV3
+1/110 NapalmShot LV3
+
+
+;CraftingMaterials
+
+
+;Quests
+1/1 NumaTempleMap Q LV3
+
+;;Level 4
+;Gold
+1/1 Gold 30000 LV4
+
+;Pots + Other
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/2 SunPotion LV4
+1/1 SunPotion LV4
+1/2 SunPotion LV4
+1/1 SunPotion LV4
+1/2 SunPotion LV4
+
+1/1 BenedictionOil LV4
+1/10 GoldenBenedictionOil LV4
+1/150 TagandaRune LV4
+
+;Weapons
+1/600 TagandaSlayer LV4
+1/600 TagandaStaff LV4
+1/600 TagandaFan LV4
+1/600 TagandaSlayers LV4
+
+
+;Armour
+1/700 TagandaRobe(M) LV4
+1/700 TagandaRobe(F) LV4 
+1/700 TagandaCloak(M) LV4
+1/700 TagandaCloak(F) LV4
+1/700 TagandaArmour(M) LV4
+1/700 TagandaArmour(F) LV4
+1/700 TagandaSuit(M) LV4
+1/700 TagandaSuit(F) LV4
+1/1000 HeavenArmour(M) LV4
+1/1000 HeavenArmour(F) LV4
+1/1000 HeavenArcheyRobe(M) LV4
+1/1000 HeavenArcheyRobe(F) LV4
+1/1200 HeavenGrnArmour(M) LV4
+1/1200 HeavenGrnArmour(F) LV4
+1/1200 HeavenRedArmour(M) LV4
+1/1200 HeavenRedArmour(F) LV4
+1/1200 HeavenArmour(M) LV4
+1/1200 HeavenArmour(F) LV4
+1/1200 HeavenGoldArmour(M) LV4
+1/1200 HeavenGoldArmour(F) LV4
+
+;Helmets
+1/700 TagandaHelmet LV4
+
+;Necklace
+1/700 TagandaNecklace LV4
+
+;Bracelets
+1/700 TagandaBracelet LV4
+
+;Rings
+1/700 TagandaRing LV4
+1/320 FlameRing LV4
+1/1020 ProtectionRing LV4
+1/1020 ParalysisRing LV4
+1/820 RevivalRing LV4
+1/760 ClearRing LV4
+1/1320 TeleportRing LV4
+
+;Shoes
+1/700 TagandaBoots LV4
+1/100 SparklingBoots LV4
+
+;Belts
+1/700 TagandaBelt LV4
+1/100 SparklingBelt LV4
+
+;Medals
+1/300 TagandaMedal LV4
+1/200 OffensiveMedal LV4
+1/200 DefensiveMedal LV4
+
+;Shields
+1/600 TagandaShield LV4
+1/400 LunarPlate LV4
+1/500 OrcsShield LV4
+
+;Pads
+
+
+;Stone
+1/300 TagandaElement LV4
+
+;Runes
+1/100 PinPointRune LV4
+1/100 EvasiveRune LV4
+1/100 EnrageRune LV4
+1/150 IronWallRune LV4
+1/150 SpeedyMagicianRune LV4
+1/175 DamagePvPRune(-) LV4
+1/175 DamagPvPRune(+) LV4
+1/200 MeleeDamageRune LV4
+1/200 MagicDamageRune LV4
+1/200 SpiritualDamageRune LV4
+
+;Gems/Orbs
+1/10 BraveryGem LV4
+1/10 MagicGem LV4
+1/10 SoulGem LV4
+1/20 ProtectionGem LV4
+1/20 EvilSlayerGem LV4
+1/20 DurabilityGem LV4
+1/30 PoisonGem LV4
+1/30 FreezingGem LV4
+1/30 AccuracyGem LV4
+1/30 StormGem LV4
+1/30 EnduranceGem LV4
+1/50 CriticalDamgeForge LV4
+1/50 CriticalRateForge LV4
+1/50 HpDrainForge LV4
+1/50 ReflectForge LV4
+1/55 SocketForge(G) LV4
+
+1/100 BraveryOrb LV4
+1/100 SoulOrb LV4
+1/100 StormOrb LV4
+1/100 MagicOrb LV4
+1/130 DurabilityOrb LV4
+1/140 AccuracyOrb LV4
+1/140 AgilityOrb LV4
+1/300 PoisonOrb LV4
+1/300 FreezingOrb LV4
+1/200 EnduranceOrb LV4
+1/200 DisillusionOrb LV4
+
+;Books
+;Warrior
+1/25 FlamingSword LV4
+1/30 CrossHalfMoon LV4
+1/50 TwinDrakeBlade LV4
+1/50 LionRoar LV4
+1/50 Entrapment LV4
+1/60 BladeStorm LV4
+1/150 BladeAvalanche LV4
+1/120 ProtectionField LV4
+1/140 Rage LV4
+1/160 Fury LV4
+1/200 CounterAttack LV4
+1/260 ImmortalSkin LV4
+
+;Wizard
+1/10 FrostCrunch LV4
+1/25 IceStorm LV4
+1/30 FlameDisruptor LV4
+1/400 FlameField LV4
+1/50 Vampirism LV4
+1/150 Mirroring LV4
+1/120 Blizzard LV4
+1/140 MagicBooster LV4
+1/160 MeteorStrike LV4
+1/200 FastMove LV4
+1/220 IceThrust LV4
+1/240 FrozenRains LV4
+1/260 LavaKing LV4
+1/300 StormEscape LV4
+
+
+;Taosit
+1/25 SummonShinsu LV4
+1/30 UltimateEnhancer LV4
+1/30 EnergyRepulsor LV4
+1/50 Purification LV4
+1/50 Hallucination LV4
+1/100 HealingCircle LV4
+1/100 SummonHolyDeva LV4
+1/120 Curse LV4
+1/140 PoisonCloud LV4
+1/180 PetEnhancer LV4
+1/200 EnergyShield LV4
+1/230 HolyShield LV4
+1/260 HeadShot LV4
+
+;Assassin
+1/25 FireBurst LV4
+1/30 Trap LV4
+1/30 CrescentSlash LV4
+1/30 PoisonSword LV4
+1/50 MoonLight LV4
+1/50 MPEater LV4
+1/100 SwiftFeet LV4
+1/140 DarkBody LV4
+1/180 Hemorrhage LV4
+1/200 MoonMist LV4
+1/230 FuryWaves LV4
+1/260 ShadowStep LV4
+
+;Archer
+1/25 VampireShot LV4
+1/25 SummonVampire LV4
+1/30 BackStep LV4
+1/30 DelayedExplosion LV4
+1/50 ElementalBarrier LV4
+1/50 BindingShot LV4
+1/100 SummonToad LV4
+1/140 PoisonShot LV4
+1/180 CrippleShot LV4
+1/200 SummonSnakes LV4
+1/110 NapalmShot LV4
+
+;CraftingMaterials
+
+
+;Quests
+1/1 NumaTempleMap Q LV4
+
+;;Level 5
+;Gold
+1/1 Gold 30000 LV5
+
+;Pots + Other
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/2 SunPotion LV5
+1/1 SunPotion LV5
+1/2 SunPotion LV5
+1/1 SunPotion LV5
+1/2 SunPotion LV5
+
+1/1 BenedictionOil LV5
+1/10 GoldenBenedictionOil LV5
+1/150 TagandaRune LV5
+
+;Weapons
+1/600 TagandaSlayer LV5
+1/600 TagandaStaff LV5
+1/600 TagandaFan LV5
+1/600 TagandaSlayers LV5
+
+
+;Armour
+1/700 TagandaRobe(M) LV5
+1/700 TagandaRobe(F) LV5 
+1/700 TagandaCloak(M) LV5
+1/700 TagandaCloak(F) LV5
+1/700 TagandaArmour(M) LV5
+1/700 TagandaArmour(F) LV5
+1/700 TagandaSuit(M) LV5
+1/700 TagandaSuit(F) LV5
+1/1000 HeavenArmour(M) LV5
+1/1000 HeavenArmour(F) LV5
+1/1000 HeavenArcheyRobe(M) LV5
+1/1000 HeavenArcheyRobe(F) LV5
+1/1200 HeavenGrnArmour(M) LV5
+1/1200 HeavenGrnArmour(F) LV5
+1/1200 HeavenRedArmour(M) LV5
+1/1200 HeavenRedArmour(F) LV5
+1/1200 HeavenArmour(M) LV5
+1/1200 HeavenArmour(F) LV5
+1/1200 HeavenGoldArmour(M) LV5
+1/1200 HeavenGoldArmour(F) LV5
+
+;Helmets
+1/700 TagandaHelmet LV5
+
+;Necklace
+1/700 TagandaNecklace LV5
+
+;Bracelets
+1/700 TagandaBracelet LV5
+
+;Rings
+1/700 TagandaRing LV5
+1/320 FlameRing LV5
+1/1020 ProtectionRing LV5
+1/1020 ParalysisRing LV5
+1/820 RevivalRing LV5
+1/760 ClearRing LV5
+1/1320 TeleportRing LV5
+
+;Shoes
+1/700 TagandaBoots LV5
+1/100 SparklingBoots LV5
+
+;Belts
+1/700 TagandaBelt LV5
+1/100 SparklingBelt LV5
+
+;Medals
+1/300 TagandaMedal LV5
+1/200 OffensiveMedal LV5
+1/200 DefensiveMedal LV5
+
+;Shields
+1/600 TagandaShield LV5
+1/400 LunarPlate LV5
+1/500 OrcsShield LV5
+
+;Pads
+
+
+;Stone
+1/300 TagandaElement LV5
+
+;Runes
+1/100 PinPointRune LV5
+1/100 EvasiveRune LV5
+1/100 EnrageRune LV5
+1/150 IronWallRune LV5
+1/150 SpeedyMagicianRune LV5
+1/175 DamagePvPRune(-) LV5
+1/175 DamagPvPRune(+) LV5
+1/200 MeleeDamageRune LV5
+1/200 MagicDamageRune LV5
+1/200 SpiritualDamageRune LV5
+
+;Gems/Orbs
+1/10 BraveryGem LV5
+1/10 MagicGem LV5
+1/10 SoulGem LV5
+1/20 ProtectionGem LV5
+1/20 EvilSlayerGem LV5
+1/20 DurabilityGem LV5
+1/30 PoisonGem LV5
+1/30 FreezingGem LV5
+1/30 AccuracyGem LV5
+1/30 StormGem LV5
+1/30 EnduranceGem LV5
+1/50 CriticalDamgeForge LV5
+1/50 CriticalRateForge LV5
+1/50 HpDrainForge LV5
+1/50 ReflectForge LV5
+1/55 SocketForge(G) LV5
+
+1/100 BraveryOrb LV5
+1/100 SoulOrb LV5
+1/100 StormOrb LV5
+1/100 MagicOrb LV5
+1/130 DurabilityOrb LV5
+1/140 AccuracyOrb LV5
+1/140 AgilityOrb LV5
+1/300 PoisonOrb LV5
+1/300 FreezingOrb LV5
+1/200 EnduranceOrb LV5
+1/200 DisillusionOrb LV5
+
+;Books
+;Warrior
+1/25 FlamingSword LV5
+1/30 CrossHalfMoon LV5
+1/50 TwinDrakeBlade LV5
+1/50 LionRoar LV5
+1/50 Entrapment LV5
+1/60 BladeStorm LV5
+1/150 BladeAvalanche LV5
+1/120 ProtectionField LV5
+1/140 Rage LV5
+1/160 Fury LV5
+1/200 CounterAttack LV5
+1/260 ImmortalSkin LV5
+
+;Wizard
+1/10 FrostCrunch LV5
+1/25 IceStorm LV5
+1/30 FlameDisruptor LV5
+1/400 FlameField LV5
+1/50 Vampirism LV5
+1/150 Mirroring LV5
+1/120 Blizzard LV5
+1/140 MagicBooster LV5
+1/160 MeteorStrike LV5
+1/200 FastMove LV5
+1/220 IceThrust LV5
+1/240 FrozenRains LV5
+1/260 LavaKing LV5
+1/300 StormEscape LV5
+
+
+;Taosit
+1/25 SummonShinsu LV5
+1/30 UltimateEnhancer LV5
+1/30 EnergyRepulsor LV5
+1/50 Purification LV5
+1/50 Hallucination LV5
+1/100 HealingCircle LV5
+1/100 SummonHolyDeva LV5
+1/120 Curse LV5
+1/140 PoisonCloud LV5
+1/180 PetEnhancer LV5
+1/200 EnergyShield LV5
+1/230 HolyShield LV5
+1/260 HeadShot LV5
+
+;Assassin
+1/25 FireBurst LV5
+1/30 Trap LV5
+1/30 CrescentSlash LV5
+1/30 PoisonSword LV5
+1/50 MoonLight LV5
+1/50 MPEater LV5
+1/100 SwiftFeet LV5
+1/140 DarkBody LV5
+1/180 Hemorrhage LV5
+1/200 MoonMist LV5
+1/230 FuryWaves LV5
+1/260 ShadowStep LV5
+
+;Archer
+1/25 VampireShot LV5
+1/25 SummonVampire LV5
+1/30 BackStep LV5
+1/30 DelayedExplosion LV5
+1/50 ElementalBarrier LV5
+1/50 BindingShot LV5
+1/100 SummonToad LV5
+1/140 PoisonShot LV5
+1/180 CrippleShot LV5
+1/200 SummonSnakes LV5
+1/110 NapalmShot LV5
+
+
+;CraftingMaterials
+
+
+;Quests
+1/1 NumaTempleMap Q LV5
+
+;;Level 6
+;Gold
+1/1 Gold 30000 LV6
+
+;Pots + Other
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/2 SunPotion LV6
+1/1 SunPotion LV6
+1/2 SunPotion LV6
+1/1 SunPotion LV6
+1/2 SunPotion LV6
+
+1/1 BenedictionOil LV6
+1/10 GoldenBenedictionOil LV6
+1/150 TagandaRune LV6
+
+;Weapons
+1/600 TagandaSlayer LV6
+1/600 TagandaStaff LV6
+1/600 TagandaFan LV6
+1/600 TagandaSlayers LV6
+
+
+;Armour
+1/700 TagandaRobe(M) LV6
+1/700 TagandaRobe(F) LV6 
+1/700 TagandaCloak(M) LV6
+1/700 TagandaCloak(F) LV6
+1/700 TagandaArmour(M) LV6
+1/700 TagandaArmour(F) LV6
+1/700 TagandaSuit(M) LV6
+1/700 TagandaSuit(F) LV6
+1/1000 HeavenArmour(M) LV6
+1/1000 HeavenArmour(F) LV6
+1/1200 HeavenGrnArmour(M) LV6
+1/1000 HeavenArcheyRobe(M) LV6
+1/1000 HeavenArcheyRobe(F) LV6
+1/1200 HeavenGrnArmour(F) LV6
+1/1200 HeavenRedArmour(M) LV6
+1/1200 HeavenRedArmour(F) LV6
+1/1200 HeavenArmour(M) LV6
+1/1200 HeavenArmour(F) LV6
+1/1200 HeavenGoldArmour(M) LV6
+1/1200 HeavenGoldArmour(F) LV6
+
+;Helmets
+1/700 TagandaHelmet LV6
+
+;Necklace
+1/700 TagandaNecklace LV6
+
+;Bracelets
+1/700 TagandaBracelet LV6
+
+;Rings
+1/700 TagandaRing LV6
+1/320 FlameRing LV6
+1/1020 ProtectionRing LV6
+1/1020 ParalysisRing LV6
+1/820 RevivalRing LV6
+1/760 ClearRing LV6
+1/1320 TeleportRing LV6
+
+;Shoes
+1/700 TagandaBoots LV6
+1/100 SparklingBoots LV6
+
+;Belts
+1/700 TagandaBelt LV6
+1/100 SparklingBelt LV6
+
+;Medals
+1/300 TagandaMedal LV6
+1/200 OffensiveMedal LV6
+1/200 DefensiveMedal LV6
+
+;Shields
+1/600 TagandaShield LV6
+1/400 LunarPlate LV6
+1/500 OrcsShield LV6
+
+;Pads
+
+
+;Stone
+1/300 TagandaElement LV6
+
+;Runes
+1/100 PinPointRune LV6
+1/100 EvasiveRune LV6
+1/100 EnrageRune LV6
+1/150 IronWallRune LV6
+1/150 SpeedyMagicianRune LV6
+1/175 DamagePvPRune(-) LV6
+1/175 DamagPvPRune(+) LV6
+1/200 MeleeDamageRune LV6
+1/200 MagicDamageRune LV6
+1/200 SpiritualDamageRune LV6
+
+;Gems/Orbs
+1/10 BraveryGem LV6
+1/10 MagicGem LV6
+1/10 SoulGem LV6
+1/20 ProtectionGem LV6
+1/20 EvilSlayerGem LV6
+1/20 DurabilityGem LV6
+1/30 PoisonGem LV6
+1/30 FreezingGem LV6
+1/30 AccuracyGem LV6
+1/30 StormGem LV6
+1/30 EnduranceGem LV6
+1/50 CriticalDamgeForge LV6
+1/50 CriticalRateForge LV6
+1/50 HpDrainForge LV6
+1/50 ReflectForge LV6
+1/55 SocketForge(G) LV6
+
+1/100 BraveryOrb LV6
+1/100 SoulOrb LV6
+1/100 StormOrb LV6
+1/100 MagicOrb LV6
+1/130 DurabilityOrb LV6
+1/140 AccuracyOrb LV6
+1/140 AgilityOrb LV6
+1/300 PoisonOrb LV6
+1/300 FreezingOrb LV6
+1/200 EnduranceOrb LV6
+1/200 DisillusionOrb LV6
+
+;Books
+;Warrior
+1/25 FlamingSword LV6
+1/30 CrossHalfMoon LV6
+1/50 TwinDrakeBlade LV6
+1/50 LionRoar LV6
+1/50 Entrapment LV6
+1/60 BladeStorm LV6
+1/150 BladeAvalanche LV6
+1/120 ProtectionField LV6
+1/140 Rage LV6
+1/160 Fury LV6
+1/200 CounterAttack LV6
+1/260 ImmortalSkin LV6
+
+;Wizard
+1/10 FrostCrunch LV6
+1/25 IceStorm LV6
+1/30 FlameDisruptor LV6
+1/400 FlameField LV6
+1/50 Vampirism LV6
+1/150 Mirroring LV6
+1/120 Blizzard LV6
+1/140 MagicBooster LV6
+1/160 MeteorStrike LV6
+1/200 FastMove LV6
+1/220 IceThrust LV6
+1/240 FrozenRains LV6
+1/260 LavaKing LV6
+1/300 StormEscape LV6
+
+
+;Taosit
+1/25 SummonShinsu LV6
+1/30 UltimateEnhancer LV6
+1/30 EnergyRepulsor LV6
+1/50 Purification LV6
+1/50 Hallucination LV6
+1/100 HealingCircle LV6
+1/100 SummonHolyDeva LV6
+1/120 Curse LV6
+1/140 PoisonCloud LV6
+1/180 PetEnhancer LV6
+1/200 EnergyShield LV6
+1/230 HolyShield LV6
+1/260 HeadShot LV6
+
+;Assassin
+1/25 FireBurst LV6
+1/30 Trap LV6
+1/30 CrescentSlash LV6
+1/30 PoisonSword LV6
+1/50 MoonLight LV6
+1/50 MPEater LV6
+1/100 SwiftFeet LV6
+1/140 DarkBody LV6
+1/180 Hemorrhage LV6
+1/200 MoonMist LV6
+1/230 FuryWaves LV6
+1/260 ShadowStep LV6
+
+;Archer
+1/25 VampireShot LV6
+1/25 SummonVampire LV6
+1/30 BackStep LV6
+1/30 DelayedExplosion LV6
+1/50 ElementalBarrier LV6
+1/50 BindingShot LV6
+1/100 SummonToad LV6
+1/140 PoisonShot LV6
+1/180 CrippleShot LV6
+1/200 SummonSnakes LV6
+1/110 NapalmShot LV6
+
+;CraftingMaterials
+
+
+;Quests
+1/1 NumaTempleMap Q LV6
+
+;;Level 7
+;Gold
+1/1 Gold 30000 LV7
+
+;Pots + Other
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/2 SunPotion LV7
+1/1 SunPotion LV7
+1/2 SunPotion LV7
+1/1 SunPotion LV7
+1/2 SunPotion LV7
+
+1/1 BenedictionOil LV7
+1/10 GoldenBenedictionOil LV7
+1/150 TagandaRune LV7
+
+;Weapons
+1/600 TagandaSlayer LV7
+1/600 TagandaStaff LV7
+1/600 TagandaFan LV7
+1/600 TagandaSlayers LV7
+
+
+;Armour
+1/700 TagandaRobe(M) LV7
+1/700 TagandaRobe(F) LV7 
+1/700 TagandaCloak(M) LV7
+1/700 TagandaCloak(F) LV7
+1/700 TagandaArmour(M) LV7
+1/700 TagandaArmour(F) LV7
+1/700 TagandaSuit(M) LV7
+1/700 TagandaSuit(F) LV7
+1/1000 HeavenArmour(M) LV7
+1/1000 HeavenArmour(F) LV7
+1/1000 HeavenArcheyRobe(M) LV7
+1/1000 HeavenArcheyRobe(F) LV7
+1/1200 HeavenGrnArmour(M) LV7
+1/1200 HeavenGrnArmour(F) LV7
+1/1200 HeavenRedArmour(M) LV7
+1/1200 HeavenRedArmour(F) LV7
+1/1200 HeavenArmour(M) LV7
+1/1200 HeavenArmour(F) LV7
+1/1200 HeavenGoldArmour(M) LV7
+1/1200 HeavenGoldArmour(F) LV7
+
+;Helmets
+1/700 TagandaHelmet LV7
+
+;Necklace
+1/700 TagandaNecklace LV7
+
+;Bracelets
+1/700 TagandaBracelet LV7
+
+;Rings
+1/700 TagandaRing LV7
+1/320 FlameRing LV7
+1/1020 ProtectionRing LV7
+1/1020 ParalysisRing LV7
+1/820 RevivalRing LV7
+1/760 ClearRing LV7
+1/1320 TeleportRing LV7
+
+;Shoes
+1/700 TagandaBoots LV7
+1/100 SparklingBoots LV7
+
+;Belts
+1/700 TagandaBelt LV7
+1/100 SparklingBelt LV7
+
+;Medals
+1/300 TagandaMedal LV7
+1/200 OffensiveMedal LV7
+1/200 DefensiveMedal LV7
+
+;Shields
+1/600 TagandaShield LV7
+1/400 LunarPlate LV7
+1/500 OrcsShield LV7
+
+;Pads
+
+
+;Stone
+1/300 TagandaElement LV7
+
+;Runes
+1/100 PinPointRune LV7
+1/100 EvasiveRune LV7
+1/100 EnrageRune LV7
+1/150 IronWallRune LV7
+1/150 SpeedyMagicianRune LV7
+1/175 DamagePvPRune(-) LV7
+1/175 DamagPvPRune(+) LV7
+1/200 MeleeDamageRune LV7
+1/200 MagicDamageRune LV7
+1/200 SpiritualDamageRune LV7
+
+;Gems/Orbs
+1/10 BraveryGem LV7
+1/10 MagicGem LV7
+1/10 SoulGem LV7
+1/20 ProtectionGem LV7
+1/20 EvilSlayerGem LV7
+1/20 DurabilityGem LV7
+1/30 PoisonGem LV7
+1/30 FreezingGem LV7
+1/30 AccuracyGem LV7
+1/30 StormGem LV7
+1/30 EnduranceGem LV7
+1/50 CriticalDamgeForge LV7
+1/50 CriticalRateForge LV7
+1/50 HpDrainForge LV7
+1/50 ReflectForge LV7
+1/55 SocketForge(G) LV7
+
+1/100 BraveryOrb LV7
+1/100 SoulOrb LV7
+1/100 StormOrb LV7
+1/100 MagicOrb LV7
+1/130 DurabilityOrb LV7
+1/140 AccuracyOrb LV7
+1/140 AgilityOrb LV7
+1/300 PoisonOrb LV7
+1/300 FreezingOrb LV7
+1/200 EnduranceOrb LV7
+1/200 DisillusionOrb LV7
+
+;Books
+;Warrior
+1/25 FlamingSword LV7
+1/30 CrossHalfMoon LV7
+1/50 TwinDrakeBlade LV7
+1/50 LionRoar LV7
+1/50 Entrapment LV7
+1/60 BladeStorm LV7
+1/150 BladeAvalanche LV7
+1/120 ProtectionField LV7
+1/140 Rage LV7
+1/160 Fury LV7
+1/200 CounterAttack LV7
+1/260 ImmortalSkin LV7
+
+;Wizard
+1/10 FrostCrunch LV7
+1/25 IceStorm LV7
+1/30 FlameDisruptor LV7
+1/400 FlameField LV7
+1/50 Vampirism LV7
+1/150 Mirroring LV7
+1/120 Blizzard LV7
+1/140 MagicBooster LV7
+1/160 MeteorStrike LV7
+1/200 FastMove LV7
+1/220 IceThrust LV7
+1/240 FrozenRains LV7
+1/260 LavaKing LV7
+1/300 StormEscape LV7
+
+
+;Taosit
+1/25 SummonShinsu LV7
+1/30 UltimateEnhancer LV7
+1/30 EnergyRepulsor LV7
+1/50 Purification LV7
+1/50 Hallucination LV7
+1/100 HealingCircle LV7
+1/100 SummonHolyDeva LV7
+1/120 Curse LV7
+1/140 PoisonCloud LV7
+1/180 PetEnhancer LV7
+1/200 EnergyShield LV7
+1/230 HolyShield LV7
+1/260 HeadShot LV7
+
+;Assassin
+1/25 FireBurst LV7
+1/30 Trap LV7
+1/30 CrescentSlash LV7
+1/30 PoisonSword LV7
+1/50 MoonLight LV7
+1/50 MPEater LV7
+1/100 SwiftFeet LV7
+1/140 DarkBody LV7
+1/180 Hemorrhage LV7
+1/200 MoonMist LV7
+1/230 FuryWaves LV7
+1/260 ShadowStep LV7
+
+;Archer
+1/25 VampireShot LV7
+1/25 SummonVampire LV7
+1/30 BackStep LV7
+1/30 DelayedExplosion LV7
+1/50 ElementalBarrier LV7
+1/50 BindingShot LV7
+1/100 SummonToad LV7
+1/140 PoisonShot LV7
+1/180 CrippleShot LV7
+1/200 SummonSnakes LV7
+1/110 NapalmShot LV7
+
+;CraftingMaterials
+
+
+;Quests
+1/1 NumaTempleMap Q LV7
+
+;;Level 8
+;Gold
+1/1 Gold 30000 LV8
+
+;Pots + Other
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/2 SunPotion LV8
+1/1 SunPotion LV8
+1/2 SunPotion LV8
+1/1 SunPotion LV8
+1/2 SunPotion LV8
+
+1/1 BenedictionOil LV8
+1/10 GoldenBenedictionOil LV8
+1/150 TagandaRune LV8
+
+;Weapons
+1/600 TagandaSlayer LV8
+1/600 TagandaStaff LV8
+1/600 TagandaFan LV8
+1/600 TagandaSlayers LV8
+
+
+;Armour
+1/700 TagandaRobe(M) LV8
+1/700 TagandaRobe(F) LV8 
+1/700 TagandaCloak(M) LV8
+1/700 TagandaCloak(F) LV8
+1/700 TagandaArmour(M) LV8
+1/700 TagandaArmour(F) LV8
+1/700 TagandaSuit(M) LV8
+1/700 TagandaSuit(F) LV8
+1/1000 HeavenArmour(M) LV8
+1/1000 HeavenArmour(F) LV8
+1/1000 HeavenArcheyRobe(M) LV8
+1/1000 HeavenArcheyRobe(F) LV8
+1/1200 HeavenGrnArmour(M) LV8
+1/1200 HeavenGrnArmour(F) LV8
+1/1200 HeavenRedArmour(M) LV8
+1/1200 HeavenRedArmour(F) LV8
+1/1200 HeavenArmour(M) LV8
+1/1200 HeavenArmour(F) LV8
+1/1200 HeavenGoldArmour(M) LV8
+1/1200 HeavenGoldArmour(F) LV8
+
+;Helmets
+1/700 TagandaHelmet LV8
+
+;Necklace
+1/700 TagandaNecklace LV8
+
+;Bracelets
+1/700 TagandaBracelet LV8
+
+;Rings
+1/700 TagandaRing LV8
+1/320 FlameRing LV8
+1/1020 ProtectionRing LV8
+1/1020 ParalysisRing LV8
+1/820 RevivalRing LV8
+1/760 ClearRing LV8
+1/1320 TeleportRing LV8
+
+;Shoes
+1/700 TagandaBoots LV8
+1/100 SparklingBoots LV8
+
+;Belts
+1/700 TagandaBelt LV8
+1/100 SparklingBelt LV8
+
+;Medals
+1/300 TagandaMedal LV8
+1/200 OffensiveMedal LV8
+1/200 DefensiveMedal LV8
+
+;Shields
+1/600 TagandaShield LV8
+1/400 LunarPlate LV8
+1/500 OrcsShield LV8
+
+;Pads
+
+
+;Stone
+1/300 TagandaElement LV8
+
+;Runes
+1/100 PinPointRune LV8
+1/100 EvasiveRune LV8
+1/100 EnrageRune LV8
+1/150 IronWallRune LV8
+1/150 SpeedyMagicianRune LV8
+1/175 DamagePvPRune(-) LV8
+1/175 DamagPvPRune(+) LV8
+1/200 MeleeDamageRune LV8
+1/200 MagicDamageRune LV8
+1/200 SpiritualDamageRune LV8
+
+;Gems/Orbs
+1/10 BraveryGem LV8
+1/10 MagicGem LV8
+1/10 SoulGem LV8
+1/20 ProtectionGem LV8
+1/20 EvilSlayerGem LV8
+1/20 DurabilityGem LV8
+1/30 PoisonGem LV8
+1/30 FreezingGem LV8
+1/30 AccuracyGem LV8
+1/30 StormGem LV8
+1/30 EnduranceGem LV8
+1/50 CriticalDamgeForge LV8
+1/50 CriticalRateForge LV8
+1/50 HpDrainForge LV8
+1/50 ReflectForge LV8
+1/55 SocketForge(G) LV8
+
+1/100 BraveryOrb LV8
+1/100 SoulOrb LV8
+1/100 StormOrb LV8
+1/100 MagicOrb LV8
+1/130 DurabilityOrb LV8
+1/140 AccuracyOrb LV8
+1/140 AgilityOrb LV8
+1/300 PoisonOrb LV8
+1/300 FreezingOrb LV8
+1/200 EnduranceOrb LV8
+1/200 DisillusionOrb LV8
+
+;Books
+;Warrior
+1/25 FlamingSword LV8
+1/30 CrossHalfMoon LV8
+1/50 TwinDrakeBlade LV8
+1/50 LionRoar LV8
+1/50 Entrapment LV8
+1/60 BladeStorm LV8
+1/150 BladeAvalanche LV8
+1/120 ProtectionField LV8
+1/140 Rage LV8
+1/160 Fury LV8
+1/200 CounterAttack LV8
+1/260 ImmortalSkin LV8
+
+;Wizard
+1/10 FrostCrunch LV8
+1/25 IceStorm LV8
+1/30 FlameDisruptor LV8
+1/400 FlameField LV8
+1/50 Vampirism LV8
+1/150 Mirroring LV8
+1/120 Blizzard LV8
+1/140 MagicBooster LV8
+1/160 MeteorStrike LV8
+1/200 FastMove LV8
+1/220 IceThrust LV8
+1/240 FrozenRains LV8
+1/260 LavaKing LV8
+1/300 StormEscape LV8
+
+
+;Taosit
+1/25 SummonShinsu LV8
+1/30 UltimateEnhancer LV8
+1/30 EnergyRepulsor LV8
+1/50 Purification LV8
+1/50 Hallucination LV8
+1/100 HealingCircle LV8
+1/100 SummonHolyDeva LV8
+1/120 Curse LV8
+1/140 PoisonCloud LV8
+1/180 PetEnhancer LV8
+1/200 EnergyShield LV8
+1/230 HolyShield LV8
+1/260 HeadShot LV8
+
+;Assassin
+1/25 FireBurst LV8
+1/30 Trap LV8
+1/30 CrescentSlash LV8
+1/30 PoisonSword LV8
+1/50 MoonLight LV8
+1/50 MPEater LV8
+1/100 SwiftFeet LV8
+1/140 DarkBody LV8
+1/180 Hemorrhage LV8
+1/200 MoonMist LV8
+1/230 FuryWaves LV8
+1/260 ShadowStep LV8
+
+;Archer
+1/25 VampireShot LV8
+1/25 SummonVampire LV8
+1/30 BackStep LV8
+1/30 DelayedExplosion LV8
+1/50 ElementalBarrier LV8
+1/50 BindingShot LV8
+1/100 SummonToad LV8
+1/140 PoisonShot LV8
+1/180 CrippleShot LV8
+1/200 SummonSnakes LV8
+1/110 NapalmShot LV8
+
+;CraftingMaterials
+
+
+;Quests
+1/1 NumaTempleMap Q LV8

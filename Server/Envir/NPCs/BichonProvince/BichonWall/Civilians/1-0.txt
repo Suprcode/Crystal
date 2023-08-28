@@ -1,0 +1,38 @@
+[@MAIN]
+#IF
+CHECK [539] 1
+#ACT
+GOTO @MAIN-1
+#ELSEACT
+GOTO @MAIN-2
+
+[@MAIN-1]
+#SAY
+Hello again traveler.. How are you on this fine day? 
+ 
+<Close/@exit>
+
+[@MAIN-2]
+#IF
+CHECKQUEST 155 1
+#SAY
+Well you have proven yourself to me. 
+I shall inform those will <listen/@listen>.
+<Close/@exit>
+#ELSESAY
+How can I trust you? I don't even know who you are.
+Maybe you could do something for me? 
+ 
+<Close/@exit>
+
+[@listen]
+#ACT
+SET [539] 1
+#SAY
+Farewell traveler.
+ 
+<Close/@exit>
+
+[Quests]
+155
+-155

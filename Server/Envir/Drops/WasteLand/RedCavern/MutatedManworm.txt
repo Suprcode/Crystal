@@ -1,0 +1,20 @@
+;Gold
+1/15 Gold 4500
+
+;Potions
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/25 (HP)DrugLarge
+1/25 (MP)DrugLarge
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/25 (HP)DrugLarge
+1/25 (MP)DrugLarge
+1/25 SunPotion
+1/50 SunPotion(M)
+1/100 OldGinseng
+
+;Rings
+1/2200 RedDemonRing
+1/2200 CloudRing
+1/2100 PoisonRing

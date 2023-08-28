@@ -1,0 +1,70 @@
+[@Main]
+#IF
+ISADMIN
+#SAY
+Hello {<$USERNAME>/KHAKI}, my name is {<$NPCNAME>/KHAKI}.
+I see you're wearing: {<$BELT>/CORAL}
+<Buy/@Buy> Belt
+<Sell/@Sell> Belt
+<Repair/@Repair> Belt
+<Special Repair/@SRepair> Belt
+
+#ELSEACT
+MOVE 0 300 300
+ 
+[@Buy]
+#SAY
+Buy.
+ 
+<Back/@Main>
+
+[@Sell]
+#SAY
+Sell.
+ 
+<Back/@Main>
+
+[@Repair]
+#SAY
+Repair.
+ 
+<Back/@Main>
+
+[@SRepair]
+#SAY
+Special repair.
+ 
+<Back/@Main>
+
+
+[Types]
+9
+
+[Trade]
+MirBelt
+WhiteGoldBelt
+WhiteGoldBelt(H)
+RedJadeBelt
+RedJadeBelt(H)
+NephriteBelt
+NephriteBelt(H)
+BeltOfStrength1
+BeltOfStrength2
+BeltOfStrength3
+BeltOfStrength4
+BeltOfStrength5
+TarragonBelt
+SparklingBelt
+BeltOfDarkness
+CheongboBelt(WAR)
+CheongboBelt(WIZ)
+CheongboBelt(TAO)
+CheongboBelt(ASSA)
+CheongboBelt(ARCH)
+LeatherBelt
+ChainBelt
+BronzeBelt
+SteelBelt
+GoldBelt
+AdamantineBelt
+FlamingGrasp

@@ -1,0 +1,37 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Welcome <$USERNAME>, I am the Awakening Master.
+<Awaken/@Awakening> Item.
+<Disassemble/@Disassemble> Item.
+ 
+=== Resetting Features ===
+<Downgrade/@Downgrade> Item <Reset/@Reset> Item.
+
+[@Disassemble]
+#SAY
+Choose which Item you wish to Disassemble.
+ 
+<Back/@Main>
+
+[@Downgrade]
+#SAY
+Choose which Item you wish to Downgrade.
+ 
+<Back/@Main>
+
+[@Reset]
+#SAY
+Choose which Item you wish to Reset.
+ 
+<Back/@Main>

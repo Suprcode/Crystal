@@ -1,0 +1,28 @@
+;Gold
+1/10 Gold 1950
+1/10 SunPotion
+1/10 SunPotion
+
+;Potions
+1/30 SunPotion
+1/50 SunPotion(M)
+
+1/12000 SmasherRing
+1/12000 BlizzardRing
+1/12000 MistyRing
+1/12000 SlicerRing
+
+
+1/30000 DemonRubyRing
+1/30000 GoldDragonRing
+1/30000 EvilExpelRing
+1/30000 AdamantNecklace
+1/30000 EvilTriangle
+1/30000 CrossPurified
+1/30000 WildTitanAmulet
+1/30000 EnchantedAmulet
+1/30000 FiveElementAmulet
+1/40000 SparklingBelt
+1/40000 GoldPatternBoots
+1/40000 SparklingHelmet
+1/60000 ApesCrown

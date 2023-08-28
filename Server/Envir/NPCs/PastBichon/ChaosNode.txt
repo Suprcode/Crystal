@@ -1,0 +1,15 @@
+[@main]
+#IF
+CHECKITEM DragonScale 1 
+#ACT
+TAKEITEM DragonScale 1
+#SAY
+<Enter the Dragons Lair./@tele>
+#ELSESAY
+You do not have the {DragonScale/LightSteelBlue}!
+<Close/@exit>
+
+[@tele]
+#ACT
+MOVE D2081 30 50
+break

@@ -1,0 +1,36 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+If you really want to go back to the past, possess a piece
+of TimeStone. This piece of stone will help you to
+timetravel back to the past. But if your level is below 33,
+you can not timetravel even with the stone. I know it is
+expensive. If you don't want to buy it try the drops from
+monsters. It may take some time but you can save money...
+<Buy/@buystone> TimeStonePiece
+<Sell/@sell> TimeStonePiece
+<Close/@exit>
+
+
+[@buystone]
+#say
+20000 Gold for one piece...You want it?
+<Yes/@buystonenow>\
+<No. too expensive/@exit>
+
+[@buystonenow]
+#IF
+CHECKGOLD > 20000
+#ACT
+TAKEGOLD 20000
+GIVEITEM TimeStonePiece 1

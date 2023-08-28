@@ -1,0 +1,36 @@
+[@Main]
+#SAY
+
+<Use./@main-1> Shop moving function in village
+
+[@main-1]
+#SAY
+<Weapon shop/@weap>   <Armour shop/@cloth>
+<Accessory shop/@jewel>   <Reagent store/@pot>
+<Book store/@book>   <Grocery store/@ped>
+I will be back <later/@exit>
+
+[@book]
+#ACT
+MOVE 1004
+
+[@jewel]
+#ACT
+MOVE 1005
+
+[@cloth]
+#ACT
+MOVE 1001
+
+[@pot]
+#ACT
+MOVE 1006
+
+[@weap]
+#ACT
+MOVE 1007
+
+[@ped]
+#ACT
+MOVE 1006
+

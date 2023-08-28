@@ -1,0 +1,4 @@
+;Level1
+;Gold
+1/1 Gold 50000 LV1
+

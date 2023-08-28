@@ -1,0 +1,32 @@
+[@Description]
+Did anyone tell you about {Death Valley/Yellow}? It's a
+place with lots of cliffs and rocks. The insects in
+this area are growing abnormally big. I've been
+researching them for years. I was trying to get a
+{Specimen/LightSteelBlue} of {WhimperingBee/Crimson} a few days ago, but 
+I was attacked by them. 
+
+[@TaskDescription]
+Eliminate {WhimperingBee's/Crimson} to collect 
+{BugSpecimen/LightSteelBlue} which be found in {Death Valley/Yellow}
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+BugSpecimen 10
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+8800
+
+[@GoldReward]
+8800
+
+// Pickup - Merchant_Daniel 3 361 335
+// Hand In - Merchant_Daniel 3 361 335

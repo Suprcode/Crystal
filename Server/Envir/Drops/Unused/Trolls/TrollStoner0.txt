@@ -1,0 +1,6 @@
+;Gold
+1/10 Gold 1150
+
+;Potions
+1/30 SunPotion
+1/50 SunPotion(M)

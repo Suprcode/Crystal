@@ -1,0 +1,36 @@
+;Gold
+1/1 Gold 2000
+
+;Weapons
+1/5 WoodenSword 
+1/5 HoaSword 
+1/5 WoodenBow 
+1/10 Dagger 
+1/10 EbonySword 
+1/10 EbonyBow 
+
+;Armours
+1/10 BaseDress(M) 
+1/10 BaseDress(F) 
+
+;Necklaces
+1/8 GoldNecklace 
+1/10 PrecisionNecklace 
+
+;Rings
+1/20 CopperRing 
+1/20 HornRing 
+1/20 GlassRing 
+1/20 HexagonalRing 
+
+;Potions
+1/4 (HP)DrugSmall 
+1/6 (MP)DrugSmall 
+1/4 (HP)DrugSmall 
+1/6 (MP)DrugSmall 
+1/4 (HP)DrugSmall 
+1/6 (MP)DrugSmall 
+1/40 SunPotion 
+
+;Quest
+1/5 GingerTea Q

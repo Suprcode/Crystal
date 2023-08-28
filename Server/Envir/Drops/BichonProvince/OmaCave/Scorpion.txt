@@ -1,0 +1,8 @@
+;Gold
+1/5 Gold 100
+
+;Crafting Materials
+1/3 ScorpionTail 
+
+;Quest
+1/200 AncientScyther Q

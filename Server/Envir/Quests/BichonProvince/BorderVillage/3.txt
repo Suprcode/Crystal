@@ -1,0 +1,30 @@
+[@Description]
+Hello traveller..
+{Butcher John/LimeGreen} is loooking for some help.
+I think its an urgent matter.
+
+[@TaskDescription]
+Speak to {Butcher John/LimeGreen} at Coordinates 293:603
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+SharpDagger
+ToughHoaSword
+StiffWoodenBow
+
+[@ExpReward]
+10
+
+[@GoldReward]
+
+// Pickup - Assistant_Jane 0 284 606
+// Hand In - Merchant_John 0 292 604

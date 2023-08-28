@@ -1,0 +1,29 @@
+[@Description]
+Have you ever tasted {Bat Wings/LightSteelBlue} before? It's a 
+delicacy. I've been selling this a lot latley. Do You
+think you can help me get some more wings?
+
+[@TaskDescription]
+Collect 10 {BatWing's/LightSteelBlue} and return to {Sarah/LimeGreen}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+BatWings 10
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+2500
+
+[@GoldReward]
+2500
+
+// Pickup - Merchant_Sarah 0 313 271
+// Hand In - Merchant_Sarah 0 313 271

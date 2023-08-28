@@ -1,0 +1,59 @@
+;Gold
+1/1 Gold 2400
+
+;Potions
+1/8 SunPotion
+1/8 SunPotion
+
+
+;Bracelet
+;Bracelets Rare
+1/38000 DualTitanAmulet
+1/38000 SacredAngelAmulet
+1/38000 EvilWhispAmulet
+
+
+1/25000 DestinyRing 
+1/25000 OmaSpiritRing
+1/25000 NobleRing
+1/25000 SoulRing
+
+
+;Necklace
+
+
+;Helmet
+1/5000 BlackTigerArmour(M)
+1/5000 BlackTigerArmour(F)
+1/5000 LotusArmour(M)
+1/5000 LotusArmour(F)
+1/5000 CraneArmour(M)
+1/5000 CraneArmour(F)
+1/5000 StealthArmour(M)
+1/5000 StealthArmour(F)
+1/5000 LightTemperedArmour(M)
+1/5000 LightTemperedArmour(F)
+
+1/1125 BraveryFragment
+1/1125 MagicFragment
+1/1125 SoulFragment
+1/1125 ProtectionFragment
+1/1125 EvilSlayerFragment
+1/1125 DurabilityFragment
+1/1125 StormFragment
+1/1125 DisillusionFragment
+1/1125 AccuracyFragment
+1/1125 PoisonFragment
+1/1125 FreezingFragment
+1/1125 AgilityFragment
+1/1125 EnduranceFragment
+1/1130 IceMarble
+1/1900 Armourcasttool 
+1/1900 TranslucentCrystal
+1/1900 Armourbook(DC)
+1/1900 Armourbook(SC)
+1/1900 Armourbook(MC)
+1/1900 RustyArmour
+1/1900 BookofSpirit
+1/1900 HavocCrystal
+

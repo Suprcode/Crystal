@@ -1,0 +1,13 @@
+[@main]
+<Move/@move3nd> to the 3rd floor.
+<Move/@move1st> to the 1st floor.
+<Close/@exit>
+
+
+[@move3nd]
+#ACT
+move GA34 7 31
+
+[@move1st]
+#ACT
+move GA14 18 42

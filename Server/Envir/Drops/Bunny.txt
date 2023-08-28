@@ -1,0 +1,23 @@
+;Gold
+1/16 Gold 2141
+
+;Pots + Other
+1/40 (HP)Booster
+1/40 (MP)Booster 
+1/60 SunPotion 
+1/100 SunPotion(M)
+
+1/250 ImpactDrug(L) 
+1/250 MagicDrug(L) 
+1/250 TaoistDrug(L) 
+1/250 StormDrug(L) 
+1/250 StaminaAid(L) 
+1/250 MagicAid(L) 
+
+1/500 Awakeningbox
+1/500 AwakeningSoul0
+
+
+;;1/2500 EasterRobe(M)[7d]
+;;1/2500 EasterRobe(F)[7d]
+1/5000 CuteRatEgg

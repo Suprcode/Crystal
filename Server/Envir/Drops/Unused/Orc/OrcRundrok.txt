@@ -1,0 +1,8 @@
+;Gold
+1/5 Gold 1650
+
+;Potions
+1/5 (HP)DrugXL
+1/5 (MP)DrugXL
+1/10 SunPotion
+1/10 SunPotion

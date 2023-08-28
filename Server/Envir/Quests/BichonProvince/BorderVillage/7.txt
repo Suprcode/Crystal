@@ -1,0 +1,30 @@
+[@Description]
+Hello young traveller. Have you heard
+of the Warrior Instructor in this region?
+He is the master of all Warriors. I hear
+hes been looking for a new disciple lately.
+It could be a rumor.
+
+[@TaskDescription]
+Speak with {Master_Wa/LimeGreen} at Coordinates 110:317
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+48
+
+[@GoldReward]
+60
+
+// Pickup - Assistant_Jane 0 284 606
+// Hand In - Master_Wa 0 110 317

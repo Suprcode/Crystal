@@ -1,0 +1,36 @@
+[@Description]
+The materials I need for making weapons
+can be found in {DeadMineEntrance/Yellow}, but the area 
+is infested with {Zombies/Crimson}. 
+
+[@TaskDescription]
+Eliminate 5 of each {Zombie/Crimson} in the {Mines/Yellow}.
+
+[@Completion]
+
+[@KillTasks]
+Zombie5 5
+Zombie2 5
+Zombie3 5
+Zombie4 5
+Zombie1 5
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+OldNagaNecklace
+AmberPendant
+WornBeadofPhoenix
+
+[@ExpReward]
+2700
+
+[@GoldReward]
+675
+
+// Pickup - Blacksmith_Bill 0 302 221
+// Hand In - Blacksmith_Bill 0 302 221

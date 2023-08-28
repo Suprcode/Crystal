@@ -1,0 +1,35 @@
+;Pots + Other
+1/4500 MossyBox
+
+;Fish Market
+1/500 Trout
+1/500 Walleye
+1/500 SwordFish
+1/500 RockBass
+
+;Armour
+1/200 ArmourBook(DC)
+1/200 ArmourBook(MC)
+1/200 ArmourBook(SC)
+1/200 ArmourBook(ACC)
+1/200 RustyArmour
+1/200 Translucent
+1/200 HavocCrystal
+1/200 BookofMana
+1/200 BookofSpirit
+1/200 ArmourCastTool
+
+;Gems
+1/10000 BraveryGem
+1/10000 MagicGem
+1/10000 SoulGem
+1/10000 ProtectionGem
+1/10000 EvilSlayerGem
+1/10000 DurabilityGem
+1/10000 StormGem
+1/10000 AgilityGem
+1/10000 AccuracyGem
+1/10000 PoisonGem
+1/10000 FreezingGem
+1/10000 DisillusionGem
+1/10000 EnduranceGem

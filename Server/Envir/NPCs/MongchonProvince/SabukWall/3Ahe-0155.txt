@@ -1,0 +1,48 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Welcome, how may I help you?
+
+<Purchase/@BuySell> Helmets.
+<Repair/@Repair> Helmet.
+ 
+<Close/@Exit>
+
+[@BuySell]
+What Helmet do you want to buy or sell?
+<Buy Back/@BuyBack>
+ 
+<Back/@Main>
+
+[@BuyBack]
+Please Choose which item you wish to repurchase.
+ 
+<Back/@Main>
+
+[@Repair]
+You can repair Helmets here.
+
+<Back/@Main>
+
+
+[Types]
+9
+
+[Trade]
+BronzeHelmet
+MagicHelmet
+BrassHelmet
+GoldenTiara
+SkeletonHelmet
+ShamanHelmet
+

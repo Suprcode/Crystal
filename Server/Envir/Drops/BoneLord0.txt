@@ -1,0 +1,85 @@
+;Gold
+1/1 Gold 25000 
+
+;Pots+Other
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/3 (HP)DrugLarge
+1/3 (MP)DrugLarge
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/3 (HP)DrugLarge
+1/3 (MP)DrugLarge
+1/1 SunPotion
+1/2 SunPotion
+1/1 SunPotion(M)
+1/2 SunPotion(M)
+
+
+1/15 BenedictionOil
+1/1 AncientPrajnaSlime
+
+1/40 AwakeningSoul0
+1/40 AwakeningSoul0
+1/75 BoneLordRune
+
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Medals Rare
+
+
+;Shields
+
+
+;Shields Rare
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+1/1 Bone1 Q
+1/1 Bone1 Q
+1/1 LargeBone1 Q
+1/1 LargeBone1 Q 
+1/2 PrajnaStoneCaveMap Q
+1/4 AncPrajnaStoneMap Q

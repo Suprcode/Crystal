@@ -1,0 +1,12 @@
+[@main]
+#SAY
+My duty is to protect the general at all cost.
+<Talk/@talk>
+<Close/@exit>
+
+[@talk]
+#SAY
+My task is important but I feel sorry watching my fellow
+soldiers dying at the battlefield while fighting against
+the omas.
+<close/@exit>

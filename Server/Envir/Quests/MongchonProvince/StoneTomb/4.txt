@@ -1,0 +1,32 @@
+[@Description]
+Hello Mirian, there is a Darker Evil within 
+{Stone Temple/Yellow} There is a stone 
+within the layer's which cliams to have the capability
+to enter a passage into {Ancient Layer/Yellow}
+
+[@TaskDescription]
+Find the Stone within {Stone Temple/Yellow}
+
+[@Completion]
+
+[@FlagTasks]
+525 "Find the Stone in Stone Temple"
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+9612
+
+[@GoldReward]
+13600
+
+// Pickup - MonghconDelegate_Michael 3 330 332
+// Hand In - MongchonDelegate_Michael 3 330 332

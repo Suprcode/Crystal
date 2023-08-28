@@ -1,0 +1,33 @@
+[@Description]
+Hello young Mirian, I'm planning going to
+{MongchonProvince/Yellow} frequently, but i haven't left
+this town because of the snake on the way. 
+Do you think you can eliminate some of those 
+snakes?
+
+[@TaskDescription]
+Eliminate 15 {RedViper/Crimson} and {TigerViper's/Crimson}
+
+[@Completion]
+
+[@KillTasks]
+RedViper 15
+TigerViper 15
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+SolidBronzeAxe
+
+[@SelectRewards]
+
+[@ExpReward]
+1200
+
+[@GoldReward]
+300
+
+// Pickup - Merchant_Bradley 0120 7 8
+// Hand In - Merchant_Bradley 0120 7 8

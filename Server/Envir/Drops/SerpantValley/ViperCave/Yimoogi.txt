@@ -1,0 +1,144 @@
+;Gold
+1/5 Gold 15000
+
+;Weapons
+1/45 JudgementMace
+1/45 WarMageStaff
+1/45 SoulSpringWand
+1/45 BladesOfDarkness 
+1/45 FiendBow 
+1/70 WarSpiritBlade
+1/70 MagicScythe
+1/70 StoneBambooFan
+1/70 FreezingBlades
+1/70 LitheBow
+1/200 DragonSlayer
+1/200 DragonStaff
+1/200 SoulSabre
+1/200 RoyalBlades
+1/200 MaleficBow
+
+;Armours
+1/30 SteelArmour(M)
+1/30 SteelArmour(F)
+1/30 DragonRobe(M)
+1/30 DragonRobe(F)
+1/30 TitanArmour(M)
+1/30 TitanArmour(F)
+1/30 RoyalArmour(M)
+1/30 RoyalArmour(F)
+1/30 StuddedArmour(M)
+1/30 StuddedArmour(F)
+
+;Helmets
+1/20 BlackIronHelmet
+1/20 HelmetOfHero
+1/20 GreatHelmet
+1/20 WisdomCoronet
+1/20 TaoCoronet
+
+;Boots
+1/10 SilkBoots
+1/15 BlackBoots
+1/50 DragonBoots
+
+;Belts
+1/10 ChainBelt
+1/15 SteelBelt
+1/40 GoldBelt
+
+;Necklaces
+1/5 BlueJadeNecklace
+1/35 ClawNecklace
+1/35 LifeNecklace
+1/35 PearlNecklace
+1/55 GreenBead
+1/55 SoulNecklace
+1/55 DemonicBells
+1/120 HeroNecklace
+1/120 AdamantineNecklace
+1/120 RequiemNecklace
+1/90 GaleNecklace
+1/100 SkillNecklace
+
+;Bracelets
+1/5 GoldBracelet
+1/20 KnightBracelet
+1/20 SpellBracelet
+1/20 3rdEyeBracelet
+1/10 SteelGlove
+1/25 BlackIronBracelet
+1/40 DragonBracelet
+1/40 SoulSpringBracelet
+1/55 8TrigramWheel
+1/55 HangMaWheel
+1/60 BokMaWheel
+1/85 BaekTaGlove
+1/85 SpiritReformer
+1/85 HolyTaoWheel
+
+;Rings
+1/50 DragonRing
+1/50 RubyRing
+1/50 PlatinumRing
+1/75 PowerRing
+1/75 VioletRing
+1/75 TitanRing
+1/80 OmaSpiritRing
+1/80 NobleRing
+1/80 SoulRing
+1/140 BoundlessRing
+1/140 ThunderRing
+1/140 TaeGukRing
+
+;Potions
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/1 (HP)DrugLarge 
+1/1 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/1 (HP)DrugLarge 
+1/1 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/2 (HP)DrugXL
+1/2 (MP)DrugXL
+1/1 (HP)PotionSmall
+1/1 (MP)PotionSmall
+1/60 StormDrug(S) 
+1/60 MagicDrug(S) 
+1/60 ImpactDrug(S) 
+1/60 TaoistDrug(S) 
+1/60 StaminaAid(S) 
+1/60 MagicAid(S) 
+1/5 BenedictionOil
+1/10 BenedictionOil
+
+;Books
+1/50 Hallucination
+1/90 FlameField
+
+;Gems
+1/300 BraveryOrb
+1/200 SoulOrb
+1/350 MagicOrb
+1/300 ProtectionOrb
+1/300 EvilSlayerOrb
+1/125 DurabilityOrb
+1/500 PoisonOrb
+1/600 FreezingOrb

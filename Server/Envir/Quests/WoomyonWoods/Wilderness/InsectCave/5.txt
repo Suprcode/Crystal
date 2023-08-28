@@ -1,0 +1,29 @@
+[@Description]
+I got attacked a couple days ago, and I got 
+poisoned. I bought the {Antidote/LightSteelBlue} but the mobs 
+took my bag. 
+
+[@TaskDescription]
+Kill {KekTal's/Crimson} and find {Soho's/LimeGreen} {Antidote/LightSteelBlue}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+Antidote 1
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+3800
+
+[@GoldReward]
+3800
+
+// Pickup - Traveller_Soho D2042 114 155
+// Hand In - Traveller_Soho D2042 114 155

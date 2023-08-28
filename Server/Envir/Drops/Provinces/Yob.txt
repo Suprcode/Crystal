@@ -1,0 +1,28 @@
+;Gold
+1/10 Gold 50
+
+;Weapons
+1/40 WoodenSword 
+1/40 HoaSword 
+1/40 WoodenBow 
+1/40 Dagger 
+1/40 EbonySword 
+1/40 EbonyBow 
+
+;Armours
+1/40 BaseDress(M) 
+1/40 BaseDress(F) 
+
+;Necklaces
+1/40 GoldNecklace 
+1/40 PrecisionNecklace 
+
+;Bracelets
+1/40 IronBracelet 
+
+;Rings
+1/40 CopperRing 
+
+;Potions
+1/40 (HP)DrugSmall 
+1/40 (MP)DrugSmall 

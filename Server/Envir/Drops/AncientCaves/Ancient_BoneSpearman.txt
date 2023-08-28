@@ -1,0 +1,78 @@
+;Gold
+1/10 Gold 2000
+
+1/10 (HP)DrugMedium
+1/10 (MP)DrugMedium
+1/30 (HP)DrugLarge
+1/30 (MP)DrugLarge
+1/20 SunPotion
+1/60 SunPotion(M)
+1/300 RepairOil
+1/500 WarGodOil
+1/100 ImpactDrug(S)
+1/100 TaoistDrug(S)
+1/100 MagicDrug(S)
+
+;Crafting Material
+1/10 Bone
+1/20 LargeBone
+1/300 PoisonMarble
+1/300 AntidoteMarble
+
+;Weapons
+1/90000 WarSpiritBlade
+1/90000 MagicScythe
+1/90000 StoneBambooFan
+1/90000 FreezingBlades
+1/90000 LitheBow
+
+;Armours
+1/150 HeavyArmour(M)
+1/150 HeavyArmour(F)
+1/150 MagicRobe(M)
+1/150 MagicRobe(F)
+1/150 SoulArmour(M)
+1/150 SoulArmour(F)
+1/150 RelicArmour(M)
+1/150 RelicArmour(F)
+1/150 LightLeatherArmour(M)
+1/150 LightLeatherArmour(F)
+1/500 IronArmour(M)
+1/500 IronArmour(F)
+1/500 WizardRobe(M)
+1/500 WitchRobe(F)
+1/500 PearlArmour(M)
+1/500 PearlArmour(F)
+1/500 AncientArmour(M)
+1/500 AncientArmour(F)
+1/500 TemperedArmour(M)
+1/500 TemperedArmour(F)
+
+;Helmets
+1/200 SkeletonHelmet
+1/180 ShamanHelmet
+1/1000 SteelHelmet
+
+;Necklace
+1/150 AmberNecklace
+1/150 NagaNecklace
+1/150 PhoenixBead
+1/200 BlueJadeNecklace
+1/200 ConvexLens
+1/200 BambooPipe
+
+;Rings
+1/100 BlackRing
+1/100 SerpentEyeRing
+1/100 PearlRing
+1/200 SkeletonRing
+1/450 CoralRing
+1/450 ExpelRing
+1/1200 RedOrchidRing
+1/8000 FiveStringRing
+
+;Bracelet
+1/90 HardGlove
+1/90 MagicBracelet
+1/430 DeathGauntlet
+1/550 BronzeGlove

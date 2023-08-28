@@ -1,0 +1,290 @@
+;Gold
+1/1 Gold 30000
+1/20 GoldBar
+
+;Pots + Other
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+
+1/1 SunPotion
+1/1 SunPotion
+1/2 SunPotion
+1/2 SunPotion
+1/1 SunPotion
+1/2 SunPotion
+
+1/100 ImpactDrug(L)
+1/100 MagicDrug(L)
+1/100 TaoistDrug(L)
+
+1/1 BenedictionOil
+1/10 GoldenBenedictionOil
+
+
+1/1 Awakeningbox 
+1/1 AwakeningSoul0 
+
+
+;Weapons
+1/70 WarSpiritBlade
+1/70 LitheBow
+1/70 MagicScythe
+1/70 StoneBambooFan
+1/40 FreezingBlades
+1/60 BlackDragonSlayer
+1/60 CursedMaleficBow
+1/60 BlackDragonStaff
+1/60 BlackDragonSoulSabre
+1/200 DragonSlayer
+1/200 DragonStaff
+1/200 SoulSabre
+1/200 RoyalBlades
+1/450 SwordOfWarGod
+1/450 BowOfForce
+1/450 BladeOfSorcery
+1/450 HeavenSword
+1/450 BladesOfMagi
+1/150 Dragon'sRoyalBlades
+1/600 TagandaSlayer
+1/600 TagandaStaff
+1/600 TagandaFan 
+1/600 TagandaSlayers
+1/2000 LordSlayerBlade
+1/2000 LordSlayerStaff
+1/2000 LordSlayerFan
+1/2000 LordSlayerBlades
+
+
+;Armour
+1/30 StuddedArmour(M)
+1/30 StuddedArmour(F)
+1/30 SteelArmour(M)
+1/30 SteelArmour(F)
+1/30 DragonRobe(M)
+1/30 DragonRobe(F)
+1/30 TitanArmour(M)
+1/30 TitanArmour(F)
+1/30 RoyalArmour(M)
+1/30 RoyalArmour(F)
+1/700 TagandaRobe(M)
+1/700 TagandaRobe(F) 
+1/700 TagandaCloak(M)
+1/700 TagandaCloak(F)
+1/700 TagandaArmour(M)
+1/700 TagandaArmour(F)
+1/1000 HeavenArmour(M)
+1/1000 HeavenArmour(F)
+1/1000 HeavenArcheyRobe(M)
+1/1000 HeavenArcheyRobe(F)
+1/1200 HeavenGrnArmour(M)
+1/1200 HeavenGrnArmour(F)
+1/1200 HeavenRedArmour(M)
+1/1200 HeavenRedArmour(F)
+1/1200 HeavenArmour(M)
+1/1200 HeavenArmour(F)
+1/1200 HeavenGoldArmour(M)
+1/1200 HeavenGoldArmour(F)
+1/6000 LordSlayerArmour(M)
+1/6000 LordSlayerArmour(F)
+
+;Helmets
+1/55 TaoCoronet
+1/55 WisdomCoronet
+1/55 GreatHelmet
+1/45 MajesticHelmet
+1/75 ExternalHelmet
+1/700 TagandaHelmet
+1/6000 LordSlayerHelmet
+
+;Necklace
+1/20 ClawNecklace
+1/20 LifeNecklace
+1/20 PearlNecklace
+1/55 DemonicBells
+1/55 SoulNecklace
+1/55 GreenBead
+1/85 HeroNecklace
+1/85 AdamantineNecklace
+1/85 MeteoriteOfArchey 
+1/85 RequiemNecklace
+1/45 MajesticNecklace
+1/75 ExternalNecklace
+1/700 TagandaNecklace
+1/6000 LordSlayerNecklace
+
+
+;Bracelets
+1/20 SoulSpringBracelet
+1/20 KnightBracelet
+1/20 PurityBracelet
+1/65 HolyTaoWheel
+1/65 SpiritReformer
+1/65 BaekTaGlove
+1/45 MajesticWheel
+1/75 ExternalWheel
+1/700 TagandaBracelet
+1/6000 LordSlayerBracelet
+
+;Rings
+1/20 DragonRing
+1/20 RubyRing
+1/20 PlatinumRing
+1/45 PowerRing
+1/45 VioletRing
+1/45 TitanRing
+1/55 BoundlessRing
+1/55 TaeGukRing
+1/55 ThunderRing
+1/45 MajesticRing
+1/75 ExternalRing
+1/700 TagandaRing
+1/6000 LordSlayerRing
+
+
+1/320 FlameRing
+1/1020 ProtectionRing
+1/1020 ParalysisRing
+1/820 RevivalRing
+1/760 ClearRing
+1/1320 TeleportRing
+
+;Shoes
+1/40 MajesticBoots
+1/75 ExternalBoots
+1/700 TagandaBoots
+1/100 SparklingBoots
+1/6000 LordSlayerBoots
+
+;Belts
+1/40 MajesticBelt
+1/75 ExternalBelt
+1/700 TagandaBelt
+1/100 SparklingBelt
+1/6000 LordSlayerBelt
+
+;Medals
+1/300 TagandaMedal
+1/200 OffensiveMedal
+1/200 DefensiveMedal
+
+;Shields
+1/150 PredatorShield
+1/170 PlasmaShield
+1/190 SeekerShield
+1/150 FlechetteShield
+1/170 SpikeShield
+1/190 ArmouredShield
+1/600 TagandaShield
+1/400 LunarPlate
+1/600 OrcsShield
+
+;Pads
+
+
+;Stone
+1/300 TagandaElement
+
+;Runes
+1/400 PinPointRune
+1/400 EvasiveRune
+1/400 EnrageRune
+1/400 IronWallRune
+1/400 SpeedyMagicianRune
+
+;Gems/Orbs
+1/20 BraveryGem
+1/20 SoulGem
+1/20 MagicGem
+1/50 ProtectionGem
+1/50 EvilSlayerGem
+1/25 DurabilityGem
+1/50 PoisonGem
+1/50 FreezingGem
+
+1/100 BraveryOrb
+1/100 SoulOrb
+1/100 StormOrb
+1/100 MagicOrb
+1/130 DurabilityOrb
+1/140 AccuracyOrb
+1/140 AgilityOrb
+1/300 PoisonOrb
+1/300 FreezingOrb
+1/200 EnduranceOrb
+1/200 DisillusionOrb
+
+;Books
+;Warrior
+1/25 FlamingSword
+1/30 CrossHalfMoon
+1/50 TwinDrakeBlade
+1/50 LionRoar
+1/50 Entrapment
+1/60 BladeStorm
+1/150 BladeAvalanche
+1/120 ProtectionField
+1/140 Rage
+1/160 Fury
+1/180 SlashingBurst
+1/200 CounterAttack
+1/260 ImmortalSkin
+
+;Wizard
+1/10 FrostCrunch
+1/25 IceStorm
+1/30 FlameDisruptor
+1/400 FlameField
+1/50 Vampirism
+1/150 Mirroring
+1/120 Blizzard
+1/140 MagicBooster
+1/160 MeteorStrike
+1/200 FastMove
+1/220 IceThrust
+1/240 FrozenRains
+1/260 LavaKing
+1/300 StormEscape
+
+
+;Taosit
+1/25 SummonShinsu
+1/30 UltimateEnhancer
+1/30 EnergyRepulsor
+1/50 Purification
+1/50 Hallucination
+1/100 HealingCircle
+1/100 SummonHolyDeva
+1/120 Curse
+1/140 PoisonCloud
+1/180 PetEnhancer
+1/200 EnergyShield
+1/230 HolyShield
+1/260 HeadShot
+
+;Assassin
+1/25 CrescentSlash
+1/30 MoonLight
+1/50 MPEater
+1/100 SwiftFeet
+1/120 DarkBody
+1/140 Hemorrhage
+1/180 ShadowStep
+1/230 MoonMist
+1/260 FuryWaves
+
+;Archer
+1/25 BindingShot
+1/30 SummonToad
+1/50 PoisonShot
+1/100 CrippleShot
+1/140 SummonSnakes
+1/180 NapalmShot
+1/260 OneWithNature
+
+;CraftingMaterials

@@ -1,0 +1,79 @@
+;Gold
+1/10 Gold 250
+
+;Weapons
+1/200 PrinceDagger 
+1/200 MartialSword 
+1/200 HookedSpear 
+1/200 KrissSword 
+1/200 IronBlades 
+1/200 LongBow 
+1/900 PowerAxe 
+1/600 PurifierSword 
+
+;Armours
+1/800 HeavyArmour(M) 
+1/800 HeavyArmour(F) 
+1/800 MagicRobe(M) 
+1/800 MagicRobe(F) 
+1/800 SoulArmour(M) 
+1/800 SoulArmour(F) 
+1/800 RelicArmour(M) 
+1/800 RelicArmour(F) 
+1/800 LightLeatherArmour(M) 
+1/800 LightLeatherArmour(F) 
+
+;Helmets
+1/4000 SkeletonHelmet 
+1/2000 ShamanHelmet 
+
+;Necklaces
+1/200 LanternNecklace 
+1/200 TigerNecklace 
+1/600 PlatinumNecklace 
+1/1500 BlueJadeNecklace 
+1/1500 ConvexLens 
+1/1500 BambooPipe 
+1/300 WarriorNecklace 
+
+;Bracelets
+1/200 StrainBracelet 
+1/200 MagicBracelet 
+1/200 HardGlove 
+1/500 EbonyBracelet 
+1/500 MonkBracelet 
+1/900 DeathGauntlet 
+1/600 GoldBracelet 
+1/10000 BronzeGlove 
+
+;Rings
+1/200 BlackRing 
+1/200 SerpentEyeRing 
+1/200 PearlRing 
+1/200 GoldRing 
+1/500 SkeletonRing 
+1/500 IronRing 
+1/600 CharmRing 
+1/600 MoralRing 
+1/6000 ExpelRing 
+1/6000 CoralRing 
+1/20000 GaleRing 
+
+;Stones
+1/1500 HealthStone(M) 
+1/1500 MagicStone(M) 
+1/1500 PowerStone(M) 
+1/1500 DCStone(M) 
+1/1500 MCStone(M) 
+1/1500 SCStone(M) 
+
+;Potions
+1/60 (HP)DrugMedium 
+1/60 (MP)DrugMedium 
+1/400 SunPotion 
+1/600 SunPotion(M) 
+1/600 OldGinseng 
+
+;Crafting Materials
+1/15 BugShell 
+1/30 BlackThread 

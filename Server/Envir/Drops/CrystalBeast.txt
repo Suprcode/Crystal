@@ -1,0 +1,769 @@
+;Level 1
+;Gold
+1/1 Gold 100000 LV1
+
+;Pots + Other
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+
+1/1 BenedictionOil LV1
+1/2 GoldenBenedictionOil LV1
+1/1 AwakeningSoul0 LV1
+1/1 AwakeningSoul0 LV1
+
+;Weapons
+;Warrior
+1/100 FrozenSabre LV1
+1/100 GrimBow LV1
+1/250 BlackTigerHammer LV1
+1/250 LethalBow LV1
+1/550 BarbarianSword LV1
+1/550 ApusBow LV
+
+;Wizard
+1/100 ConquerorSpear LV1
+1/250 StaffOfLotus LV1
+1/550 RawSword LV1
+
+;Taoist
+1/100 BastardSword LV1
+1/250 FanOfCrane LV1
+1/550 BoneCarvedFan LV1
+
+;Assassin
+1/100 ZincBlades LV1
+1/250 ButcheringBlades LV1
+1/550 MadDragonBlades LV1
+1/650 TheRipper LV1
+
+;Weapon Rare
+1/2100 CrystalSlayer LV1
+1/2100 CrystalStaff LV1
+1/2100 CrystalGlaive LV1
+1/2100 CrystalBlades LV1
+
+;Armour
+
+
+;Armour Rare
+1/2100 WyvernArmour(M) LV1
+1/2100 WyvernArmour(F) LV1
+
+;Helmets
+1/2100 CrystalHelmet LV1
+
+;Necklace 
+1/2100 CrystalNecklace LV1
+
+;Bracelets
+1/2100 CrystalBracelet LV1
+
+;Rings
+1/2100 CrystalRing LV1
+
+;Shoes
+1/2100 CrystalBoots LV1
+
+;Belts
+1/2100 CrystalBelt LV1
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+1/1 SnowCaveMap Q LV1
+
+;Level 2
+;Gold
+1/1 Gold 100000 LV2
+
+;Pots + Other
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+
+1/1 BenedictionOil LV2
+1/2 GoldenBenedictionOil LV2
+
+
+
+1/1 AwakeningSoul0 LV2
+1/1 AwakeningSoul0 LV2
+
+;Weapons
+;Warrior
+1/100 FrozenSabre LV2
+1/100 GrimBow LV2
+1/250 BlackTigerHammer LV2
+1/250 LethalBow LV2
+1/550 ApusBow LV2
+1/550 BarbarianSword LV2
+
+;Wizard
+1/100 ConquerorSpear LV2
+1/250 StaffOfLotus LV2
+1/550 RawSword LV2
+
+;Taoist
+1/100 BastardSword LV2
+1/250 FanOfCrane LV2
+1/550 BoneCarvedFan LV2
+
+;Assassin
+1/100 ZincBlades LV2
+1/250 ButcheringBlades LV2
+1/550 MadDragonBlades LV2
+1/650 TheRipper LV2
+
+;Weapon Rare
+1/2100 CrystalSlayer LV2
+1/2100 CrystalStaff LV2
+1/2100 CrystalGlaive LV2
+1/2100 CrystalBlades LV2
+
+;Armour
+
+
+;Armour Rare
+1/2100 WyvernArmour(M) LV2
+1/2100 WyvernArmour(F) LV2
+
+;Helmets
+1/2100 CrystalHelmet LV2
+
+;Necklace 
+1/2100 CrystalNecklace LV2
+
+;Bracelets
+1/2100 CrystalBracelet LV2
+
+;Rings
+1/2100 CrystalRing LV2
+
+;Shoes
+1/2100 CrystalBoots LV2
+
+;Belts
+1/2100 CrystalBelt LV2
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+1/1 SnowCaveMap Q LV2
+
+;Level 3
+;Gold
+1/1 Gold 100000 LV3
+
+;Pots + Other
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+
+1/1 BenedictionOil LV3
+1/2 GoldenBenedictionOil LV3
+
+
+1/1 AwakeningSoul0 LV3
+1/1 AwakeningSoul0 LV3
+
+;Weapons
+;Warrior
+1/100 FrozenSabre LV3
+1/100 GrimBow LV3
+1/250 BlackTigerHammer LV3
+1/550 ApusBow LV3
+1/250 LethalBow LV3
+1/550 BarbarianSword LV3
+
+;Wizard
+1/100 ConquerorSpear LV3
+1/250 StaffOfLotus LV3
+1/550 RawSword LV3
+
+;Taoist
+1/100 BastardSword LV3
+1/250 FanOfCrane LV2
+1/550 BoneCarvedFan LV2
+
+;Assassin
+1/100 ZincBlades LV3
+1/250 ButcheringBlades LV3
+1/550 MadDragonBlades LV3
+1/650 TheRipper LV3
+
+;Weapon Rare
+1/2100 CrystalSlayer LV3
+1/2100 CrystalStaff LV3
+1/2100 CrystalGlaive LV3
+1/2100 CrystalBlades LV3
+
+;Armour
+
+
+;Armour Rare
+1/2100 WyvernArmour(M) LV3
+1/2100 WyvernArmour(F) LV3
+
+;Helmets
+1/2100 CrystalHelmet LV3
+
+;Necklace 
+1/2100 CrystalNecklace LV3
+
+;Bracelets
+1/2100 CrystalBracelet LV3
+
+;Rings
+1/2100 CrystalRing LV3
+
+;Shoes
+1/2100 CrystalBoots LV3
+
+;Belts
+1/2100 CrystalBelt LV3
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+1/1 SnowCaveMap Q LV3
+
+;Level 4
+;Gold
+1/1 Gold 100000 LV4
+
+;Pots + Other
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+
+1/1 BenedictionOil LV4
+1/2 GoldenBenedictionOil LV4
+
+
+1/1 AwakeningSoul0 LV4
+1/1 AwakeningSoul0 LV4
+
+;Weapons
+;Warrior
+1/100 FrozenSabre LV4
+1/100 GrimBow LV4
+1/250 BlackTigerHammer LV4
+1/250 LethalBow LV4
+1/550 ApusBow LV4
+1/550 BarbarianSword LV4
+
+;Wizard
+1/100 ConquerorSpear LV4
+1/250 StaffOfLotus LV4
+1/550 RawSword LV4
+
+;Taoist
+1/100 BastardSword LV4
+1/250 FanOfCrane LV4
+1/550 BoneCarvedFan LV4
+
+;Assassin
+1/100 ZincBlades LV4
+1/250 ButcheringBlades LV4
+1/550 MadDragonBlades LV4
+1/650 TheRipper LV4
+
+;Weapon Rare
+1/2100 CrystalSlayer LV4
+1/2100 CrystalStaff LV4
+1/2100 CrystalGlaive LV4
+1/2100 CrystalBlades LV4
+
+;Armour
+
+
+;Armour Rare
+1/2100 WyvernArmour(M) LV4
+1/2100 WyvernArmour(F) LV4
+
+;Helmets
+1/2100 CrystalHelmet LV4
+
+;Necklace 
+1/2100 CrystalNecklace LV4
+
+;Bracelets
+1/2100 CrystalBracelet LV4
+
+;Rings
+1/2100 CrystalRing LV4
+
+;Shoes
+1/2100 CrystalBoots LV4
+
+;Belts
+1/2100 CrystalBelt LV4
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+1/1 SnowCaveMap Q LV4
+
+;Level 5
+;Gold
+1/1 Gold 100000 LV5
+
+;Pots + Other
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+
+1/1 BenedictionOil LV5
+1/2 GoldenBenedictionOil LV5
+
+
+
+1/1 AwakeningSoul0 LV5
+1/1 AwakeningSoul0 LV5
+
+;Weapons
+;Warrior
+1/100 FrozenSabre LV5
+1/100 GrimBow LV5
+1/250 BlackTigerHammer LV5
+1/250 LethalBow LV5
+1/550 BarbarianSword LV5
+1/550 ApusBow LV5
+
+;Wizard
+1/100 ConquerorSpear LV5
+1/250 StaffOfLotus LV5
+1/550 RawSword LV5
+
+;Taoist
+1/100 BastardSword LV5
+1/250 FanOfCrane LV5
+1/550 BoneCarvedFan LV5
+
+;Assassin
+1/100 ZincBlades LV5
+1/250 ButcheringBlades LV5
+1/550 MadDragonBlades LV5
+1/650 TheRipper LV5
+
+;Weapon Rare
+1/2100 CrystalSlayer LV5
+1/2100 CrystalStaff LV5
+1/2100 CrystalGlaive LV5
+1/2100 CrystalBlades LV5
+
+;Armour
+
+
+;Armour Rare
+1/2100 WyvernArmour(M) LV5
+1/2100 WyvernArmour(F) LV5
+
+;Helmets
+1/2100 CrystalHelmet LV5
+
+;Necklace 
+1/2100 CrystalNecklace LV5
+
+;Bracelets
+1/2100 CrystalBracelet LV5
+
+;Rings
+1/2100 CrystalRing LV5
+
+;Shoes
+1/2100 CrystalBoots LV5
+
+;Belts
+1/2100 CrystalBelt LV5
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+1/1 SnowCaveMap Q LV5
+
+;Level 6
+;Gold
+1/1 Gold 100000 LV6
+
+;Pots + Other
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+
+1/1 BenedictionOil LV6
+1/2 GoldenBenedictionOil LV6
+
+
+1/1 AwakeningSoul0 LV6
+1/1 AwakeningSoul0 LV6
+
+;Weapons
+;Warrior
+1/100 FrozenSabre LV6
+1/100 GrimBow LV6
+1/250 BlackTigerHammer LV6
+1/550 ApusBow LV6
+1/250 LethalBow LV6
+1/550 BarbarianSword LV6
+
+;Wizard
+1/100 ConquerorSpear LV6
+1/250 StaffOfLotus LV6
+1/550 RawSword LV6
+
+;Taoist
+1/100 BastardSword LV6
+1/250 FanOfCrane LV6
+1/550 BoneCarvedFan LV6
+
+;Assassin
+1/100 ZincBlades LV6
+1/250 ButcheringBlades LV6
+1/550 MadDragonBlades LV6
+1/650 TheRipper LV6
+
+;Weapon Rare
+1/2100 CrystalSlayer LV6
+1/2100 CrystalStaff LV6
+1/2100 CrystalGlaive LV6
+1/2100 CrystalBlades LV6
+
+;Armour
+
+
+;Armour Rare
+1/2100 WyvernArmour(M) LV6
+1/2100 WyvernArmour(F) LV6
+
+;Helmets
+1/2100 CrystalHelmet LV6
+
+;Necklace 
+1/2100 CrystalNecklace LV6
+
+;Bracelets
+1/2100 CrystalBracelet LV6
+
+;Rings
+1/2100 CrystalRing LV6
+
+;Shoes
+1/2100 CrystalBoots LV6
+
+;Belts
+1/2100 CrystalBelt LV6
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+1/1 SnowCaveMap Q LV6
+
+;Level 7
+;Gold
+1/1 Gold 100000 LV7
+
+;Pots + Other
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+
+1/1 BenedictionOil LV7
+1/2 GoldenBenedictionOil LV7
+
+
+
+1/1 AwakeningSoul0 LV7
+1/1 AwakeningSoul0 LV7
+
+;Weapons
+;Warrior
+1/100 FrozenSabre LV7
+1/100 GrimBow LV7
+1/250 BlackTigerHammer LV7
+1/250 LethalBow LV7
+1/550 BarbarianSword LV7
+1/550 ApusBow LV7
+
+;Wizard
+1/100 ConquerorSpear LV7
+1/250 StaffOfLotus LV7
+1/550 RawSword LV7
+
+;Taoist
+1/100 BastardSword LV7
+1/250 FanOfCrane LV7
+1/550 BoneCarvedFan LV7
+
+;Assassin
+1/100 ZincBlades LV7
+1/250 ButcheringBlades LV7
+1/550 MadDragonBlades LV7
+1/650 TheRipper LV7
+
+;Weapon Rare
+1/2100 CrystalSlayer LV7
+1/2100 CrystalStaff LV7
+1/2100 CrystalGlaive LV7
+1/2100 CrystalBlades LV7
+
+;Armour
+
+
+;Armour Rare
+1/2100 WyvernArmour(M) LV7
+1/2100 WyvernArmour(F) LV7
+
+;Helmets
+1/2100 CrystalHelmet LV7
+
+;Necklace 
+1/2100 CrystalNecklace LV7
+
+;Bracelets
+1/2100 CrystalBracelet LV7
+
+;Rings
+1/2100 CrystalRing LV7
+
+;Shoes
+1/2100 CrystalBoots LV7
+
+;Belts
+1/2100 CrystalBelt LV7
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+1/1 SnowCaveMap Q LV7
+
+;Level 8
+;Gold
+1/1 Gold 100000 LV8
+
+;Pots + Other
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+
+1/1 BenedictionOil LV8
+1/2 GoldenBenedictionOil LV8
+
+
+
+1/1 AwakeningSoul0 LV8
+1/1 AwakeningSoul0 LV8
+
+;Weapons
+;Warrior
+1/100 FrozenSabre LV8
+1/100 GrimBow LV8
+1/250 BlackTigerHammer LV8
+1/250 LethalBow LV8
+1/550 ApusBow LV8
+1/550 BarbarianSword LV8
+
+;Wizard
+1/100 ConquerorSpear LV8
+1/250 StaffOfLotus LV8
+1/550 RawSword LV8
+
+;Taoist
+1/100 BastardSword LV8
+1/250 FanOfCrane LV8
+1/550 BoneCarvedFan LV8
+
+;Assassin
+1/100 ZincBlades LV8
+1/250 ButcheringBlades LV8
+1/550 MadDragonBlades LV8
+1/650 TheRipper LV8
+
+;Weapon Rare
+1/2100 CrystalSlayer LV8
+1/2100 CrystalStaff LV8
+1/2100 CrystalGlaive LV8
+1/2100 CrystalBlades LV8
+
+;Armour
+
+
+;Armour Rare
+1/2100 WyvernArmour(M) LV8
+1/2100 WyvernArmour(F) LV8
+
+;Helmets
+1/2100 CrystalHelmet LV8
+
+;Necklace 
+1/2100 CrystalNecklace LV8
+
+;Bracelets
+1/2100 CrystalBracelet LV8
+
+;Rings
+1/2100 CrystalRing LV8
+
+;Shoes
+1/2100 CrystalBoots LV8
+
+;Belts
+1/2100 CrystalBelt LV8
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+1/1 SnowCaveMap Q LV8

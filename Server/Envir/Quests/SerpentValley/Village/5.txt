@@ -1,0 +1,32 @@
+[@Description]
+Are you going to {Bichon/Yellow} anytime soon? If you 
+go there, could you deliver this {SercetRecipe/LightSteelBlue} 
+to {CraftsLady/LimeGreen}? I hear the {CraftsLady/LimeGreen} in {Bichon/Yellow} 
+wants my {SecretRecipe/LightSteelBlue}. I'm too busy to go 
+there myself.
+
+[@TaskDescription]
+Please delivery this recipe to {CraftsLady/LimeGreen} in
+{BichonWall/Yellow}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+SecretRecipe 2
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+538
+
+[@GoldReward]
+800
+
+// Pickup - 
+// Hand In - CraftsLady_Alice 0 321 265

@@ -1,0 +1,31 @@
+[@Description]
+Have you ever heard of {TreePath/Yellow}? It's such a 
+great place to gather resources. Please travel 
+there and collect the materials I require.
+
+[@TaskDescription]
+Please collect 10 {RedThread's/LightSteelBlue} and {BlackThread's/LightSteelBlue}
+by killing {VenomSpider's/Crimson} and {GreatSpider's/Crimson}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+RedThread 10
+BlackThread 10
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+5900
+
+[@GoldReward]
+5900
+
+// Pickup - Merchant_Sam 1003 13 16
+// Hand In - Merchant_Sam 1003 13 16

@@ -1,0 +1,14 @@
+[@main]
+#SAY
+He seems to be pisoned, He has cold sweat on his face.
+
+<Close/@exit>
+
+
+[Quests]
+-69
+70
+-70
+71
+-71
+72

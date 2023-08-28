@@ -1,0 +1,11 @@
+[@Main]
+#SAY
+I'm the Cave researcher in this area.
+
+<Close/@exit>
+
+[Quests]
+-117
+118
+-118
+119

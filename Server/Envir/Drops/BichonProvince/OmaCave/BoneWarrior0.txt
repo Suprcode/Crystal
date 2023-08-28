@@ -1,0 +1,77 @@
+;Gold
+1/1 Gold 2000
+
+;Weapons
+1/6 BronzeSword 
+1/6 ShortBow 
+1/6 SharpHoaSword 
+1/9 IronSword 
+1/9 BoneBow 
+1/10 ShortSword 
+1/15 BronzeAxe 
+1/15 SteelAxe 
+1/16 HookedSword 
+1/16 Trident 
+1/16 Scimitar 
+1/16 BladesOfVelocity 
+1/16 CompoundBow 
+1/20 SteelSword 
+
+;Armours
+1/20 LightArmour(M) 
+1/20 LightArmour(F) 
+
+;Helmets
+1/10 BronzeHelmet 
+1/15 MagicHelmet 
+
+;Necklaces
+1/8 BlackNecklace 
+1/8 EbonyNecklace 
+1/8 YellowNecklace 
+1/9 NagaNecklace 
+1/9 AmberNecklace 
+1/9 PhoenixBead 
+1/20 LanternNecklace 
+
+;Bracelets
+1/8 ThinBracelet 
+1/15 SilverBracelet 
+1/15 LargeBracelet 
+1/40 MagicBracelet 
+1/50 HardGlove 
+
+;Rings
+1/6 CopperRing 
+1/8 HornRing 
+1/8 HexagonalRing 
+1/8 GlassRing 
+1/20 BlueRing 
+1/30 BlackRing 
+1/30 SerpentEyeRing 
+1/30 PearlRing 
+
+;Stones
+1/100 HealthStone(S) 
+1/100 MagicStone(S)
+1/100 DCStone(S) 
+1/100 MCStone(S) 
+1/100 SCStone(S) 
+
+;Potions
+1/20 (HP)DrugMedium 
+1/20 (MP)DrugMedium 
+1/20 (HP)DrugMedium 
+1/20 (MP)DrugMedium 
+1/20 (HP)DrugMedium 
+1/20 (MP)DrugMedium 
+1/30 SunPotion 
+
+;Crafting Materials
+1/2 Bone 
+1/5 LargeBone 
+
+;Quest
+1/5 SkeletonBone Q
+1/5 Skull Q
+1/100 AncientScyther Q

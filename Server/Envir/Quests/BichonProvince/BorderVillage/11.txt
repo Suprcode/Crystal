@@ -1,0 +1,33 @@
+[@Description]
+{Assistant Jane/LimeGreen} sent you? 
+I can't reject anyone that she has
+recommended, but I cant just accept anyone 
+as my disciple. You will have to pass my test.
+
+[@TaskDescription]
+Eliminate 10 {Oma's/Crimson} and {RakingCat's/Crimson}
+
+[@Completion]
+
+[@KillTasks]
+Oma 10
+RakingCat 10
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+OldLoafer
+FireBall
+
+[@SelectRewards]
+
+[@ExpReward]
+180
+
+[@GoldReward]
+45
+
+// Pickup - ArchMage_Robert 0 8 11
+// Hand In - ArchMage_Robert 0 8 11

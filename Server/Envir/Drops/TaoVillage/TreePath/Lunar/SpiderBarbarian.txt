@@ -1,0 +1,68 @@
+;Gold
+1/5 Gold 1500
+
+;Potions
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/10 (HP)DrugXL
+1/10 (MP)DrugXL
+
+;Armours
+1/3000 SteelArmour(M)
+1/3000 SteelArmour(F)
+1/3000 DragonRobe(M)
+1/3000 DragonRobe(F)
+1/3000 TitanArmour(M)
+1/3000 TitanArmour(F)
+1/3000 RoyalArmour(M)
+1/3000 RoyalArmour(F)
+1/3000 StuddedArmour(M)
+1/3000 StuddedArmour(F)
+
+;Weapons
+1/6000 WarSpiritBlade
+1/6000 MagicScythe
+1/6000 StoneBambooFan
+1/6000 FreezingBlades
+1/6000 LitheBow
+
+;Belts
+1/1000 GoldBelt
+1/3000 AdamantineBelt
+
+;Shoes
+1/500 BlackBoots
+1/1500 DragonBoots
+1/2000 RedScaleBoots
+
+;Helmets
+1/4000 GreatHelmet
+1/4000 TaoCoronet
+1/4000 WisdomCoronet
+1/4000 RoyalHelmet
+
+;Rings
+1/1500 NobleRing
+1/1500 SoulRing
+1/1500 OmaSpiritRing
+1/3000 TaeGukRing
+1/3000 ThunderRing
+1/3000 BoundlessRing
+
+;Bracelets
+1/800 SteelGauntlet
+1/1900 8TrigramWheel
+1/1900 HangMaWheel
+1/1900 BokMaWheel
+1/3500 BaekTaGlove
+1/3500 SpiritReformer
+1/3500 HolyTaoWheel
+
+;Necklaces
+1/5000 HeroNecklace
+1/5000 AdamantineNecklace
+1/5000 RequiemNecklace
+
+;Crafting Materials
+1/10 SpiderWeb
+1/10 BlackThread

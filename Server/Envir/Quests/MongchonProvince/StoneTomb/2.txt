@@ -1,0 +1,33 @@
+[@Description]
+Welcome to {MongchonProvince/Yellow}. 
+We have been getting attacked by Boar looking 
+monsters. We got reports that these mobs are 
+coming from the {Underground Tomb/Yellow}. Can you 
+go there and eliminate the monsters?
+
+[@TaskDescription]
+Eliminate 15 {BlackBoar/Crimson} and {RedBoar's/Crimson} in 
+{StoneTomb/Yellow}
+
+[@Completion]
+
+[@KillTasks]
+BlackBoar 15
+RedBoar 15
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+13500
+
+[@GoldReward]
+13500
+
+// Pickup - MonghconDelegate_Michael 3 330 332
+// Hand In - MongchonDelegate_Michael 3 330 332

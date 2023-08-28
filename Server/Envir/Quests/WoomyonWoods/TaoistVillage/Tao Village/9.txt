@@ -1,0 +1,27 @@
+[@Description]
+Traveler.. Alittle help please. I was in {TreePath/Yellow}.
+Chopping {Wood/LightSteelBlue} when i was starteld and dropped 
+my {Axe/LightSteelBlue}
+
+[@TaskDescription]
+Locate and Kill {BloodyLureSpider/Crimson} and retrieve 
+the {WornAxe/LightSteelBlue}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+WornAxe 1
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+7000
+
+[@GoldReward]
+7000

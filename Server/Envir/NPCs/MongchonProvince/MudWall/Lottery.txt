@@ -1,0 +1,166 @@
+[@MAIN]
+#IF
+CHECKPKPOINT >= 100
+#ACT
+GOTO @YOUREAPKER
+#ELSEACT
+GOTO @NPCNUMBER
+
+[@YOUREAPKER]
+#SAY
+I will not speak to such a person like you.
+ 
+Your PK POINTS: <$PKPOINT>
+ 
+<Exit/@Exit>
+
+[@NPCNUMBER]
+#IF
+RANDOM 10
+#ACT
+MOV B3 1
+GOTO @MainPage
+#ELSEACT
+GOTO @NPCNUMBER1
+
+[@NPCNUMBER1]
+#IF
+RANDOM 9
+#ACT
+MOV B3 2
+GOTO @MainPage
+#ELSEACT
+GOTO @NPCNUMBER2
+
+[@NPCNUMBER2]
+#IF
+RANDOM 8
+#ACT
+MOV B3 3
+GOTO @MainPage
+#ELSEACT
+GOTO @NPCNUMBER3
+
+[@NPCNUMBER3]
+#IF
+RANDOM 7
+#ACT
+MOV B3 4
+GOTO @MainPage
+#ELSEACT
+GOTO @NPCNUMBER4
+
+[@NPCNUMBER4]
+#IF
+RANDOM 6
+#ACT
+MOV B3 5
+GOTO @MainPage
+#ELSEACT
+GOTO @NPCNUMBER5
+
+[@NPCNUMBER5]
+#IF
+RANDOM 5
+#ACT
+MOV B3 6
+GOTO @MainPage
+#ELSEACT
+GOTO @NPCNUMBER6
+
+[@NPCNUMBER6]
+#IF
+RANDOM 4
+#ACT
+MOV B3 7
+GOTO @MainPage
+#ELSEACT
+GOTO @NPCNUMBER7
+
+[@NPCNUMBER7]
+#IF
+RANDOM 3
+#ACT
+MOV B3 8
+GOTO @MainPage
+#ELSEACT
+GOTO @NPCNUMBER
+
+[@FailedNumber]
+#SAY
+NPC didnt select a number
+
+[@MainPage]
+#SAY
+Hello, Do you want to play a game?
+All you have to do is guess what number I'm thinking
+If you guess correctly you will be gifted 100,000 {Gold/GOLD}
+However if you guess wrongly you will lose 10,000 {Gold/GOLD}
+ 
+Would you like to <Play/@PLAY>?
+ 
+ 
+<Close/@EXIT>
+
+[@Play]
+The rules are simple. All you have to do is guess the number
+that I'm thinking of. What is your guess?
+<[ 1 ]/@Guess(1)>
+<[ 2 ]/@Guess(2)>
+<[ 3 ]/@Guess(3)>
+<[ 4 ]/@Guess(4)>
+<[ 5 ]/@Guess(5)>
+<[ 6 ]/@Guess(6)>
+<[ 7 ]/@Guess(7)>
+<[ 8 ]/@Guess(8)>
+
+
+[@Guess()]
+#IF
+CHECKCALC %B3 == %ARG(0)
+#ACT
+GOTO @WIN
+#ELSEACT
+GOTO @LOSE
+
+[@WIN]
+#IF
+CHECKGOLD < 10000
+#ACT
+GOTO @NotEnoughGold
+#ELSESAY
+Congratulations, you Won! Enjoy your 100,000 {Gold/GOLD} Coins.
+ 
+ 
+ 
+ 
+ 
+ 
+<Play again/@NPCNUMBER> - <Close/@EXIT>
+#ELSEACT
+GIVEGOLD 100000
+
+[@LOSE]
+#IF
+CHECKGOLD < 10000
+#ACT
+GOTO @NotEnoughGold
+#ELSESAY
+Unfortunately you lost, better luck next time.
+ 
+ 
+ 
+ 
+ 
+ 
+<Play again/@NPCNUMBER> - <Close/@EXIT>
+#ELSEACT
+TAKEGOLD 10000
+
+[@NotEnoughGold]
+You do not have 10,000 {Gold/GOLD}
+Please come back when you have the funds to gamble.
+ 
+ 
+ 
+<Close/@EXIT>

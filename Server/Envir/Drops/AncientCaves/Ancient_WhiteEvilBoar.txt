@@ -1,0 +1,123 @@
+;Gold
+1/5 Gold 6000
+
+
+;Pots + Other
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/30 ImpactDrug(S) 
+1/30 MagicDrug(S) 
+1/30 TaoistDrug(S) 
+1/30 StormDrug(S) 
+1/30 StaminaAid(S) 
+1/30 MagicAid(S) 
+
+;Weapons
+1/30 PurifierSword 
+1/100 GreatAxe 
+1/100 SilverBow
+1/100 MageStaff 
+1/100 DoubleBlades
+1/100 SerpentSword 
+1/200 DragonSword 
+1/400 JudgementMace 
+1/400 FiendBow
+1/400 WarMageStaff 
+1/400 SoulSpringWand 
+1/400 BladesOfDarkness
+1/800 WarSpiritBlade
+1/800 LitheBow
+1/800 MagicScythe
+1/800 FreezingBlades
+1/800 StoneBambooFan
+
+;Armour
+1/5 LightLeatherArmour(M)
+1/5 LightLeatherArmour(F)
+1/5 HeavyArmour(M) 
+1/5 HeavyArmour(F) 
+1/5 MagicRobe(M) 
+1/5 MagicRobe(F) 
+1/5 SoulArmour(M) 
+1/5 SoulArmour(F) 
+1/5 RelicArmour(M)
+1/5 RelicArmour(F)
+1/50 AncientArmour(M)
+1/50 AncientArmour(F)
+1/50 TemperedArmour(M)
+1/50 TemperedArmour(F)
+1/50 IronArmour(M)
+1/50 IronArmour(F)
+1/50 WizardRobe(M)
+1/50 WizardRobe(F)
+1/50 PearlArmour(M)
+1/50 PearlArmour(F)
+1/300 StuddedArmour(M)
+1/300 StuddedArmour(F)
+1/300 SteelArmour(M)
+1/300 SteelArmour(F)
+1/300 DragonRobe(M)
+1/300 DragonRobe(F)
+1/300 TitanArmour(M)
+1/300 TitanArmour(F)
+1/300 RoyalArmour(M)
+1/300 RoyalArmour(F)
+
+
+;Helmets
+1/400 GreatHelmet
+1/400 TaoCoronet
+1/400 WisdomCoronet
+
+;Necklace
+1/500 HeroNecklace
+1/500 AdamantineNecklace
+1/500 MeteoriteOfArchey 
+1/500 RequiemNecklace
+
+;Bracelets
+1/400 SteelGauntlet
+1/400 8TrigramWheel
+1/400 HangMaWheel
+1/500 BaekTaGlove
+1/500 SpiritReformer
+1/500 HolyTaoWheel
+
+;Rings
+1/60 RubyRing
+1/60 PlatinumRing
+1/60 DragonRing
+1/100 PowerRing
+1/100 VioletRing
+1/100 TitanRing
+1/400 NobleRing
+1/400 SoulRing
+1/400 OmaSpiritRing
+1/400 DestinyRing 
+1/500 TaeGukRing
+1/500 ThunderRing
+1/500 BoundlessRing
+
+;Shoes
+1/50 BlackBoots
+1/150 DragonBoots
+1/200 RedScaleBoots
+
+;Belts
+1/100 GoldBelt
+1/300 AdamantineBelt
+
+
+;Stone
+1/150 HealthStone(L) 
+1/150 MagicStone(L) 
+1/150 PowerStone(L) 
+1/150 DCStone(L) 
+1/150 MCStone(L) 
+1/150 SCStone(L)
+
+;Crafting Materials
+1/10 WhiteThread 
+1/15 WhiteThread

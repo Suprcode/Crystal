@@ -1,0 +1,75 @@
+;Gold
+1/12 Gold 600
+
+;Pots + Other
+1/30 (HP)DrugMedium
+1/30 (MP)DrugMedium
+1/70 (HP)DrugLarge
+1/70 (MP)DrugLarge
+
+;Weapons
+1/4000 SilverBow
+1/4000 GreatAxe
+1/4000 MageStaff
+1/4000 SerpentSword
+1/4000 DoubleBlades
+
+;Weapons Rare
+1/2650 DragonSword
+1/2650 BloodStealerSword
+1/7700 VanguardBlade
+1/7700 VanguardStaff
+1/7700 VanguardSerp
+1/7700 VanguardBlades
+
+;Armour
+1/800 LightLeatherArmour(M)
+1/800 LightLeatherArmour(F)
+1/800 HeavyArmour(M) 
+1/800 HeavyArmour(F) 
+1/800 MagicRobe(M) 
+1/800 MagicRobe(F) 
+1/800 SoulArmour(M) 
+1/800 SoulArmour(F) 
+1/800 RelicArmour(M)
+1/800 RelicArmour(F)
+
+;Armour Rare
+1/7900 VanguardArmour(M)
+1/7900 VanguardArmour(F)
+
+
+;Helmets Rare
+1/6900 VanguardHelmet
+
+
+;Necklace Rare
+1/6900 VanguardNecklace
+
+
+;Bracelets Rare
+1/6900 VanguardWheel
+
+
+;Rings Rare
+1/6900 VanguardRing
+
+
+;Shoes Rare
+1/6900 VanguardBoots
+
+
+;Belts Rare
+1/6900 VanguardBelt
+
+
+;Stone
+1/600 HealthStone(M)
+1/600 MagicStone(M)
+1/600 PowerStone(M)
+1/600 DCStone(M)
+1/600 MCStone(M)
+1/600 SCStone(M)
+1/600 ACStone(M)
+1/600 AMCStone(M)
+1/600 DefenseStone(M)

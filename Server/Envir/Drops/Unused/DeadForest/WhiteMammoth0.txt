@@ -1,0 +1,20 @@
+;Gold
+1/5 Gold 1000
+
+;Potions
+1/15 (HP)DrugLarge
+1/15 (MP)DrugLarge
+1/250 SunPotion
+1/500 SunPotion(M)
+
+;Crafting Material
+1/80 LargeBone
+1/60 MammothLeather
+1/80 ArmourBook(MC)
+1/80 RustyArmour
+1/10 BraveryFragment
+1/10 MagicFragment
+1/10 SoulFragment
+1/10 ProtectionFragment
+1/10 EvilSlayerFragment
+1/10 DurabilityFragment

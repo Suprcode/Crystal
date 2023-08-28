@@ -1,0 +1,8 @@
+[@_EventReward]
+#ACT
+GIVEEXP 12000
+GIVEGOLD 120000
+ADDATTRIBUTEPOINT 2
+#INCLUDE [Events\Event\Event41.txt] @Main
+LOCALMESSAGE "I see you Mete FlyingStatue!" Hint
+

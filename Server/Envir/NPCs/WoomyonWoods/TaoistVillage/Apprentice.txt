@@ -1,0 +1,10 @@
+[@main]
+A long time ago, a certain villian stole our {HolySword/LightSteelBlue},
+the best sword of our school,
+This sword was so holy that there is a legend,
+that when it smashes once storm blows and dragons appear
+well...who knows it is true or not? But if the sword exists
+it's power will is so big we cant even imagine its range.
+<Thanks/@exit>
+
+[Quests]

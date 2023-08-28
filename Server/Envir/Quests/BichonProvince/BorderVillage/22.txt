@@ -1,0 +1,28 @@
+[@Description]
+The {Border village/Yellow} is in trouble! More guards are
+getting injured with frequent attacks from 
+monsters. {Ruben/LimeGreen} asked for {Relics/LightSteelBlue} for the injured.
+
+[@TaskDescription]
+Collect 10 {Relics/LightSteelBlue} by hunting {CaveMaggots/Crimson}
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+Relics 10
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+1700
+
+[@GoldReward]
+1700
+
+// Pickup - Alchemist_Samuel 0 324 291
+// Hand In - Merchant_Ruben 0 288 608

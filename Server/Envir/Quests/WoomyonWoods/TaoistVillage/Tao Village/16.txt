@@ -1,0 +1,34 @@
+[@Description]
+You found the Book.. That's fantastic news. 
+It dosent look like it's been damaged. 
+
+[@TaskDescription]
+Return the {PrajnaHistory/LightSteelBlue} Book to {VillageChief/LimeGreen}
+in {PrajnaIsland/Yellow}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+PrajnaHistory 1
+
+[@FixedRewards]
+
+[@SelectRewards]
+FineIronArmour
+FireRobe
+YingYangRobe
+FlamingRedArmour
+HardTemperedArmour
+
+[@ExpReward]
+3912
+
+[@GoldReward]
+1500
+
+// Pickup - LeadTrainer 1002 11 8
+// Hand In - 

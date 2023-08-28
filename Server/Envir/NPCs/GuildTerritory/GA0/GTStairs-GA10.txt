@@ -1,0 +1,7 @@
+[@main]
+<Move/@move2nd> to the 2nd floor.
+<Close/@exit>
+
+[@move2nd]
+#ACT
+MOVE GA20 15 42

@@ -1,0 +1,51 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Glad to see you, how can I help you?
+ 
+<Purchase/@Buy> Fishing Stuff.
+<Sell/@sell> Fish.
+ 
+<Close/@exit>
+
+
+[@Buy]
+#SAY
+Please select what you want to buy
+<Buy Back/@BuyBack>
+ 
+<Back/@main>
+
+[@sell]
+#SAY
+Lay down your fishies to be sold
+ 
+ 
+ <Back/@main>
+
+[@BuyBack]
+#SAY
+Item's you are still able to purchase back.
+ 
+<Back/@Main>
+
+[Type]
+
+
+[Trade]
+BlueFishingRod
+FishingHook
+FishingFloat
+FishDetector
+FishingReel
+FishBait

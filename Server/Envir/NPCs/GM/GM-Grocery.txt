@@ -1,0 +1,48 @@
+[@Main]
+#IF
+ISADMIN
+#SAY
+Hello {<$USERNAME>/KHAKI}, my name is {<$NPCNAME>/KHAKI}.
+I see you're holding: {<$TORCH>/CORAL}
+<Buy/@Buy> Grocery
+<Sell/@Sell> Grocery
+
+#ELSEACT
+MOVE 0 300 300
+
+[@Buy]
+#SAY
+Buy.
+ 
+<Back/@Main>
+
+[@Sell]
+#SAY
+Sell.
+ 
+<Back/@Main>
+
+
+[Types]
+8
+12
+17
+
+[Trade]
+Candle
+Torch
+EnternalFlame
+PeddlerTorch
+DragonTorch
+RepairOil
+WarGodOil
+BenedictionOil
+RandomTeleport
+DungeonEscape
+TownTeleport
+TeleportHome
+AncTeleport
+GreenPoison
+RedPoison
+Amulet
+AmuletOfRevival

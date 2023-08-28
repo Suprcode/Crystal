@@ -1,0 +1,3 @@
+[@MAIN]
+#ACT
+MOVE 11yearvilliage 78 78

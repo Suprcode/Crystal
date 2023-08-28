@@ -1,0 +1,28 @@
+[@Description]
+There seem's to be a Dark and Evil Aura coming 
+from the {Mine/Yellow}
+
+[@TaskDescription]
+Investigate the source of Evil in 
+{SerpentDeadMine/Yellow}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+5594
+
+[@GoldReward]
+6000
+
+// Pickup - Merchant_Dr.Kim 0017 5 9
+// Hand In - SkeletonPile D422 220 89

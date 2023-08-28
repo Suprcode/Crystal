@@ -1,0 +1,29 @@
+[@Description]
+Welcome to {Border Village/Yellow} Young traveller.
+Before you get started with your journey
+would you please do me a quick favour? 
+
+[@TaskDescription]
+Transport {CannibalLeaves/LightSteelBlue} to {CraftLady/LimeGreen}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+CannibalLeaves 5
+
+[@FixedRewards]
+(HP)DrugSmall
+
+[@SelectRewards]
+
+[@ExpReward]
+10
+
+[@GoldReward]
+
+// Pickup - Assistant_Jane 0 284 606
+// Hand In - CraftsLady_Jude 0 294 619

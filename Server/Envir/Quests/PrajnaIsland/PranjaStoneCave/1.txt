@@ -1,0 +1,31 @@
+[@Description]
+{Prajna Cave/Yellow} is where lots of Warriors died
+fighting the monsters. A couple years ago, 
+we have seen these dead Warriors brought back to 
+life, but they do not remember a thing and 
+attack everyone that enters the cave. 
+Please help Eliminate them.
+
+[@TaskDescription]
+Head East to the {PrajnaStoneCave/Yellow} and Eliminate 
+15 {BoneArcher's/Crimson} and 15 {BoneSpearman/Crimson}
+
+[@Completion]
+
+[@KillTasks]
+BoneArcher 15
+BoneSpearman 15
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+19500
+
+[@GoldReward]
+19500

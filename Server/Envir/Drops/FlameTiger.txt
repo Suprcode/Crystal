@@ -1,0 +1,1528 @@
+;Level1
+;Gold
+1/1 Gold 12500 LV1
+
+;Potions
+1/1 SunPotion(M) LV1
+1/1 SunPotion(M) LV1
+1/1 SunPotion(M) LV1
+1/2 SunPotion(M) LV1
+1/2 SunPotion(M) LV1
+1/2 SunPotion(M) LV1
+1/1 (HP)DrugLarge LV1 
+1/1 (MP)DrugLarge LV1
+1/1 (HP)DrugLarge LV1 
+1/1 (MP)DrugLarge LV1 
+1/1 (HP)DrugXL LV1 
+1/1 (MP)DrugXL LV1 
+1/1 (HP)DrugXL LV1 
+1/1 (MP)DrugXL LV1
+1/2 (HP)DrugLarge LV1 
+1/2 (MP)DrugLarge LV1 
+1/2 (HP)DrugLarge LV1 
+1/2 (MP)DrugLarge LV1 
+1/2 (HP)DrugXL LV1 
+1/2 (MP)DrugXL LV1 
+1/2 (HP)DrugXL LV1 
+1/2 (MP)DrugXL LV1 
+1/2 (MP)DrugLarge LV1 
+1/2 (MP)DrugXL LV1 
+1/30 ImpactDrug(S) LV1 
+1/30 MagicDrug(S) LV1 
+1/30 TaoistDrug(S) LV1 
+1/30 StormDrug(S) LV1 
+1/30 StaminaAid(S) LV1 
+1/30 MagicAid(S) LV1
+
+
+;Armours
+1/60 IronArmour(M) LV1
+1/60 IronArmour(F) LV1
+1/60 WizardRobe(M) LV1
+1/60 WizardRobe(F) LV1
+1/60 PearlArmour(M) LV1
+1/60 TemperedArmour(M) LV1
+1/60 TemperedArmour(F) LV1
+1/60 PearlArmour(F) LV1
+1/60 AncientArmour(M) LV1
+1/60 AncientArmour(F) LV1
+
+;Rare Armours
+1/8000 HeavenArmour(M) LV1
+1/8000 HeavenArmour(F) LV1
+1/8000 HeavenArcheyRobe(M) LV1
+1/8000 HeavenArcheyRobe(F) LV1
+
+;Weapons
+1/250 JudgementMace  LV1
+1/250 FiendBow LV1
+1/250 WarMageStaff LV1 
+1/250 SoulSpringWand LV1
+1/250 BladesOfDarkness LV1
+1/4000 RoyalBlades LV1 
+1/4000 DragonSlayer LV1 
+1/4000 MaleficBow LV1
+1/4000 DragonStaff LV1 
+1/4000 SoulSabre  LV1
+
+
+;Helmets
+1/10 SkeletonHelmet LV1
+1/10 ShamanHelmet LV1 
+1/50 BlackIronHelmet LV1 
+1/600 MajesticHelmet LV1
+
+;Necklaces
+1/90 RedOrchidNecklace LV1 
+1/90 RedFlowerNecklace LV1 
+1/120 GreenBead LV1 
+1/120 DemonicBells LV1 
+1/120 SoulNecklace LV1 
+1/110 ClawNecklace LV1 
+1/110 PearlNecklace LV1 
+1/110 LifeNecklace LV1 
+1/60 SpiritNecklace LV1 
+1/150 GaleNecklace LV1 
+1/500 MajesticNecklace LV1
+
+;Bracelets
+1/90 RedOrchidBracelet LV1 
+1/90 RedFlowerBracelet LV1 
+1/105 KnightBracelet LV1 
+1/105 SoulSpringBracelet LV1 
+1/105 DragonBracelet LV1 
+1/500 MajesticWheel LV1
+
+;Rings
+1/90 RedOrchidRing LV1 
+1/90 RedFlowerRing LV1 
+1/50 DragonRing LV1 
+1/50 RubyRing LV1 
+1/50 PlatinumRing LV1 
+1/100 SpiritRing LV1 
+1/135 PowerRing LV1 
+1/135 VioletRing LV1 
+1/135 TitanRing LV1 
+1/2 ExpelRing LV1 
+1/2 CoralRing LV1 
+1/500 MajesticRing LV1
+
+;Rare Rings
+
+
+;Boots
+1/500 MajesticBoots LV1
+
+;Belts
+1/500 MajesticBelt LV1
+
+;Stones
+1/100 HolyHealthStone LV1 
+1/100 HolyMagicStone LV1 
+1/100 HolyPowerStone LV1 
+1/300 HolyDCStone LV1 
+1/300 HolyMCStone LV1 
+1/300 HolySCStone LV1  
+
+;Books
+1/50 ShoulderDash LV1 
+1/50 TwinDrakeBlade LV1 
+1/50 Entrapment LV1 
+1/50 FlamingSword LV1
+1/6000 ProtectionField LV1
+1/6000 Rage LV1
+1/6000 CounterAttack LV1
+1/15000 Fury LV1
+ 
+1/50 ThunderStorm LV1 
+1/50 IceStorm LV1 
+1/50 FlameDisruptor LV1 
+1/4000 Mirroring LV1 
+1/6000 FlameField LV1
+1/6000 MagicBooster LV1
+1/6000 MeteorStrike LV1
+1/6000 IceThrust LV1
+
+1/50 FireBurst LV1
+1/50 Trap LV1
+1/200 MoonLight LV1
+1/6000 Hemorrhage LV1
+1/6000 DarkBody LV1
+1/15000 MoonMist LV1
+ 
+1/50 Purification LV1 
+1/50 Hallucination LV1 
+1/200 Reincarnation LV1 
+1/200 SummonHolyDeva LV1 
+1/15000 Curse LV1 
+1/6000 PoisonCloud LV1 
+1/6000 Plague LV1
+1/6000 PoisonCloud LV1
+1/6000 EnergyShield LV1
+1/200 BladeStorm LV1
+1/200 DragNet LV1
+1/200 CrescentSlash LV1
+1/200 HealingCircle LV1
+1/800 SliceNDice LV1
+
+1/50 ElementalBarrier LV1
+1/50 BindingShot LV1
+1/200 SummonToad LV1
+1/200 PoisonShot LV1
+1/6000 CrippleShot LV1
+1/6000 SummonSnakes LV1
+1/100 NapalmShot LV1
+1/15000 OneWithNature LV1
+
+;Gems
+1/155 BraveryGem LV1
+1/155 MagicGem LV1
+1/155 SoulGem LV1
+1/155 StormGem  LV1
+1/160 AccuracyGem LV1
+1/160 DisillusionGem LV1
+1/200 StormGem LV1
+
+;Awakening Souls
+
+1/1 AwakeningSoul0 LV
+
+1/20 AwakeningSoul0 LV1
+
+;Level2
+;Gold
+1/1 Gold 12500 LV2
+
+;Potions
+1/1 SunPotion(M) LV2
+1/1 SunPotion(M) LV2
+1/1 SunPotion(M) LV2
+1/2 SunPotion(M) LV2
+1/2 SunPotion(M) LV2
+1/2 SunPotion(M) LV2
+1/1 (HP)DrugLarge LV2 
+1/1 (MP)DrugLarge LV2
+1/1 (HP)DrugLarge LV2 
+1/1 (MP)DrugLarge LV2 
+1/1 (HP)DrugXL LV2 
+1/1 (MP)DrugXL LV2 
+1/1 (HP)DrugXL LV2 
+1/1 (MP)DrugXL LV2
+1/2 (HP)DrugLarge LV2 
+1/2 (MP)DrugLarge LV2 
+1/2 (HP)DrugLarge LV2 
+1/2 (MP)DrugLarge LV2 
+1/2 (HP)DrugXL LV2 
+1/2 (MP)DrugXL LV2 
+1/2 (HP)DrugXL LV2 
+1/2 (MP)DrugXL LV2 
+1/2 (MP)DrugLarge LV2 
+1/2 (MP)DrugXL LV2 
+1/30 ImpactDrug(S) LV2 
+1/30 MagicDrug(S) LV2 
+1/30 TaoistDrug(S) LV2 
+1/30 StormDrug(S) LV2 
+1/30 StaminaAid(S) LV2 
+1/30 MagicAid(S) LV2
+
+
+;Armours
+1/60 IronArmour(M) LV2
+1/60 IronArmour(F) LV2
+1/60 WizardRobe(M) LV2
+1/60 WizardRobe(F) LV2
+1/60 PearlArmour(M) LV2
+1/60 PearlArmour(F) LV2
+1/60 TemperedArmour(M) LV2
+1/60 TemperedArmour(F) LV2
+1/60 AncientArmour(M) LV2
+1/60 AncientArmour(F) LV2
+
+;Rare Armours
+1/8000 HeavenArmour(M) LV2
+1/8000 HeavenArmour(F) LV2
+1/8000 HeavenArcheyRobe(M) LV2
+1/8000 HeavenArcheyRobe(F) LV2
+
+;Weapons
+1/250 JudgementMace  LV2
+1/250 FiendBow LV2
+1/250 WarMageStaff LV2 
+1/250 SoulSpringWand LV2
+1/250 BladesOfDarkness LV2
+1/4000 RoyalBlades LV2 
+1/4000 DragonSlayer LV2 
+1/4000 DragonStaff LV2 
+1/4000 MaleficBow LV2
+1/4000 SoulSabre  LV2
+
+
+;Helmets
+1/10 SkeletonHelmet LV2
+1/10 ShamanHelmet LV2 
+1/50 BlackIronHelmet LV2 
+1/600 MajesticHelmet LV2
+
+;Necklaces
+1/90 RedOrchidNecklace LV2 
+1/90 RedFlowerNecklace LV2 
+1/120 GreenBead LV2 
+1/120 DemonicBells LV2 
+1/120 SoulNecklace LV2 
+1/110 ClawNecklace LV2 
+1/110 PearlNecklace LV2 
+1/110 LifeNecklace LV2 
+1/60 SpiritNecklace LV2 
+1/150 GaleNecklace LV2 
+1/500 MajesticNecklace LV2
+
+;Bracelets
+1/90 RedOrchidBracelet LV2 
+1/90 RedFlowerBracelet LV2 
+1/105 KnightBracelet LV2 
+1/105 SoulSpringBracelet LV2 
+1/105 DragonBracelet LV2 
+1/500 MajesticWheel LV2
+
+;Rings
+1/90 RedOrchidRing LV2 
+1/90 RedFlowerRing LV2 
+1/50 DragonRing LV2 
+1/50 RubyRing LV2 
+1/50 PlatinumRing LV2 
+1/100 SpiritRing LV2 
+1/135 PowerRing LV2 
+1/135 VioletRing LV2 
+1/135 TitanRing LV2 
+1/2 ExpelRing LV2 
+1/2 CoralRing LV2 
+1/500 MajesticRing LV2
+
+;Rare Rings
+
+
+;Boots
+1/500 MajesticBoots LV2
+
+;Belts
+1/500 MajesticBelt LV2
+
+;Stones
+1/100 HolyHealthStone LV2 
+1/100 HolyMagicStone LV2 
+1/100 HolyPowerStone LV2 
+1/300 HolyDCStone LV2 
+1/300 HolyMCStone LV2 
+1/300 HolySCStone LV2  
+
+;Books
+1/50 ShoulderDash LV2 
+1/50 TwinDrakeBlade LV2 
+1/50 Entrapment LV2 
+1/50 FlamingSword LV2
+1/6000 ProtectionField LV2
+1/6000 Rage LV2
+1/6000 CounterAttack LV2
+1/15000 Fury LV2
+ 
+1/50 ThunderStorm LV2 
+1/50 IceStorm LV2 
+1/50 FlameDisruptor LV2 
+1/4000 Mirroring LV2 
+1/6000 FlameField LV2
+1/6000 MagicBooster LV2
+1/6000 MeteorStrike LV2
+1/6000 IceThrust LV2
+
+1/50 FireBurst LV2
+1/50 Trap LV2
+1/200 MoonLight LV2
+1/6000 Hemorrhage LV2
+1/6000 DarkBody LV2
+1/15000 MoonMist LV2
+ 
+1/50 Purification LV2 
+1/50 Hallucination LV2 
+1/200 Reincarnation LV2 
+1/200 SummonHolyDeva LV2 
+1/15000 Curse LV2 
+1/6000 PoisonCloud LV2 
+1/6000 Plague LV2
+1/6000 PoisonCloud LV2
+1/6000 EnergyShield LV2
+1/200 BladeStorm LV2
+1/200 DragNet LV2
+1/200 CrescentSlash LV2
+1/200 HealingCircle LV2
+1/800 SliceNDice LV2
+
+1/50 ElementalBarrier LV2
+1/50 BindingShot LV2
+1/200 SummonToad LV2
+1/200 PoisonShot LV2
+1/6000 CrippleShot LV2
+1/6000 SummonSnakes LV2
+1/100 NapalmShot LV2
+1/15000 OneWithNature LV2
+
+;Gems
+1/155 BraveryGem LV2
+1/155 MagicGem LV2
+1/155 SoulGem LV2
+1/155 StormGem  LV2
+1/160 AccuracyGem LV2
+1/160 DisillusionGem LV2
+1/200 StormGem LV2
+
+;Awakening Souls
+
+1/1 AwakeningSoul0 LV
+
+1/20 AwakeningSoul0 LV2
+
+;Level3
+;Gold
+1/1 Gold 12500 LV3
+
+;Potions
+1/1 SunPotion(M) LV3
+1/1 SunPotion(M) LV3
+1/1 SunPotion(M) LV3
+1/2 SunPotion(M) LV3
+1/2 SunPotion(M) LV3
+1/2 SunPotion(M) LV3
+1/1 (HP)DrugLarge LV3 
+1/1 (MP)DrugLarge LV3
+1/1 (HP)DrugLarge LV3 
+1/1 (MP)DrugLarge LV3 
+1/1 (HP)DrugXL LV3 
+1/1 (MP)DrugXL LV3 
+1/1 (HP)DrugXL LV3 
+1/1 (MP)DrugXL LV3
+1/2 (HP)DrugLarge LV3 
+1/2 (MP)DrugLarge LV3 
+1/2 (HP)DrugLarge LV3 
+1/2 (MP)DrugLarge LV3 
+1/2 (HP)DrugXL LV3 
+1/2 (MP)DrugXL LV3 
+1/2 (HP)DrugXL LV3 
+1/2 (MP)DrugXL LV3 
+1/2 (MP)DrugLarge LV3 
+1/2 (MP)DrugXL LV3 
+1/30 ImpactDrug(S) LV3 
+1/30 MagicDrug(S) LV3 
+1/30 TaoistDrug(S) LV3 
+1/30 StormDrug(S) LV3 
+1/30 StaminaAid(S) LV3 
+1/30 MagicAid(S) LV3
+
+
+;Armours
+1/60 IronArmour(M) LV3
+1/60 IronArmour(F) LV3
+1/60 WizardRobe(M) LV3
+1/60 WizardRobe(F) LV3
+1/60 PearlArmour(M) LV3
+1/60 TemperedArmour(M) LV3
+1/60 TemperedArmour(F) LV3
+1/60 PearlArmour(F) LV3
+1/60 AncientArmour(M) LV3
+1/60 AncientArmour(F) LV3
+
+;Rare Armours
+1/8000 HeavenArmour(M) LV3
+1/8000 HeavenArmour(F) LV3
+1/8000 HeavenArcheyRobe(M) LV3
+1/8000 HeavenArcheyRobe(F) LV3
+
+;Weapons
+1/250 JudgementMace  LV3
+1/250 FiendBow LV3
+1/250 WarMageStaff LV3 
+1/250 SoulSpringWand LV3
+1/250 BladesOfDarkness LV3
+1/4000 RoyalBlades LV3 
+1/4000 DragonSlayer LV3 
+1/4000 MaleficBow LV3
+1/4000 DragonStaff LV3 
+1/4000 SoulSabre  LV3
+
+
+;Helmets
+1/10 SkeletonHelmet LV3
+1/10 ShamanHelmet LV3 
+1/50 BlackIronHelmet LV3 
+1/600 MajesticHelmet LV3
+
+;Necklaces
+1/90 RedOrchidNecklace LV3 
+1/90 RedFlowerNecklace LV3 
+1/120 GreenBead LV3 
+1/120 DemonicBells LV3 
+1/120 SoulNecklace LV3 
+1/110 ClawNecklace LV3 
+1/110 PearlNecklace LV3 
+1/110 LifeNecklace LV3 
+1/60 SpiritNecklace LV3 
+1/150 GaleNecklace LV3 
+1/500 MajesticNecklace LV3
+
+;Bracelets
+1/90 RedOrchidBracelet LV3 
+1/90 RedFlowerBracelet LV3 
+1/105 KnightBracelet LV3 
+1/105 SoulSpringBracelet LV3 
+1/105 DragonBracelet LV3 
+1/500 MajesticWheel LV3
+
+;Rings
+1/90 RedOrchidRing LV3 
+1/90 RedFlowerRing LV3 
+1/50 DragonRing LV3 
+1/50 RubyRing LV3 
+1/50 PlatinumRing LV3 
+1/100 SpiritRing LV3 
+1/135 PowerRing LV3 
+1/135 VioletRing LV3 
+1/135 TitanRing LV3 
+1/2 ExpelRing LV3 
+1/2 CoralRing LV3 
+1/500 MajesticRing LV3
+
+;Rare Rings
+
+
+;Boots
+1/500 MajesticBoots LV3
+
+;Belts
+1/500 MajesticBelt LV3
+
+;Stones
+1/100 HolyHealthStone LV3 
+1/100 HolyMagicStone LV3 
+1/100 HolyPowerStone LV3 
+1/300 HolyDCStone LV3 
+1/300 HolyMCStone LV3 
+1/300 HolySCStone LV3  
+
+;Books
+1/50 ShoulderDash LV3 
+1/50 TwinDrakeBlade LV3 
+1/50 Entrapment LV3 
+1/50 FlamingSword LV3
+1/6000 ProtectionField LV3
+1/6000 Rage LV3
+1/6000 CounterAttack LV3
+1/15000 Fury LV3
+ 
+1/50 ThunderStorm LV3 
+1/50 IceStorm LV3 
+1/50 FlameDisruptor LV3 
+1/4000 Mirroring LV3 
+1/6000 FlameField LV3
+1/6000 MagicBooster LV3
+1/6000 MeteorStrike LV3
+1/6000 IceThrust LV3
+
+1/50 FireBurst LV3
+1/50 Trap LV3
+1/200 MoonLight LV3
+1/6000 Hemorrhage LV3
+1/6000 DarkBody LV3
+1/15000 MoonMist LV3
+ 
+1/50 Purification LV3 
+1/50 Hallucination LV3 
+1/200 Reincarnation LV3 
+1/200 SummonHolyDeva LV3 
+1/15000 Curse LV3 
+1/6000 PoisonCloud LV3 
+1/6000 Plague LV3
+1/6000 PoisonCloud LV3
+1/6000 EnergyShield LV3
+1/200 BladeStorm LV3
+1/200 DragNet LV3
+1/200 CrescentSlash LV3
+1/200 HealingCircle LV3
+1/800 SliceNDice LV3
+
+1/50 ElementalBarrier LV3
+1/50 BindingShot LV3
+1/200 SummonToad LV3
+1/200 PoisonShot LV3
+1/6000 CrippleShot LV3
+1/6000 SummonSnakes LV3
+1/100 NapalmShot LV3
+1/15000 OneWithNature LV3
+
+;Gems
+1/155 BraveryGem LV3
+1/155 MagicGem LV3
+1/155 SoulGem LV3
+1/155 StormGem  LV3
+1/160 AccuracyGem LV3
+1/160 DisillusionGem LV3
+1/200 StormGem LV3
+
+;Awakening Souls
+
+1/1 AwakeningSoul0 LV
+
+1/20 AwakeningSoul0 LV3
+
+;Level4
+;Gold
+1/1 Gold 12500 LV4
+
+;Potions
+1/1 SunPotion(M) LV4
+1/1 SunPotion(M) LV4
+1/1 SunPotion(M) LV4
+1/2 SunPotion(M) LV4
+1/2 SunPotion(M) LV4
+1/2 SunPotion(M) LV4
+1/1 (HP)DrugLarge LV4 
+1/1 (MP)DrugLarge LV4
+1/1 (HP)DrugLarge LV4 
+1/1 (MP)DrugLarge LV4 
+1/1 (HP)DrugXL LV4 
+1/1 (MP)DrugXL LV4 
+1/1 (HP)DrugXL LV4 
+1/1 (MP)DrugXL LV4
+1/2 (HP)DrugLarge LV4 
+1/2 (MP)DrugLarge LV4 
+1/2 (HP)DrugLarge LV4 
+1/2 (MP)DrugLarge LV4 
+1/2 (HP)DrugXL LV4 
+1/2 (MP)DrugXL LV4 
+1/2 (HP)DrugXL LV4 
+1/2 (MP)DrugXL LV4 
+1/2 (MP)DrugLarge LV4 
+1/2 (MP)DrugXL LV4 
+1/30 ImpactDrug(S) LV4 
+1/30 MagicDrug(S) LV4 
+1/30 TaoistDrug(S) LV4 
+1/30 StormDrug(S) LV4 
+1/30 StaminaAid(S) LV4 
+1/30 MagicAid(S) LV4
+
+
+;Armours
+1/60 IronArmour(M) LV4
+1/60 IronArmour(F) LV4
+1/60 WizardRobe(M) LV4
+1/60 WizardRobe(F) LV4
+1/60 TemperedArmour(M) LV4
+1/60 TemperedArmour(F) LV4
+1/60 PearlArmour(M) LV4
+1/60 PearlArmour(F) LV4
+1/60 AncientArmour(M) LV4
+1/60 AncientArmour(F) LV4
+
+;Rare Armours
+1/8000 HeavenArmour(M) LV4
+1/8000 HeavenArmour(F) LV4
+1/8000 HeavenArcheyRobe(M) LV4
+1/8000 HeavenArcheyRobe(F) LV4
+
+;Weapons
+1/250 JudgementMace  LV4
+1/250 WarMageStaff LV4 
+1/250 FiendBow LV4
+1/250 SoulSpringWand LV4
+1/250 BladesOfDarkness LV4
+1/4000 RoyalBlades LV4 
+1/4000 DragonSlayer LV4 
+1/4000 MaleficBow LV4
+1/4000 DragonStaff LV4 
+1/4000 SoulSabre  LV4
+
+
+;Helmets
+1/10 SkeletonHelmet LV4
+1/10 ShamanHelmet LV4 
+1/50 BlackIronHelmet LV4 
+1/600 MajesticHelmet LV4
+
+;Necklaces
+1/90 RedOrchidNecklace LV4 
+1/90 RedFlowerNecklace LV4 
+1/120 GreenBead LV4 
+1/120 DemonicBells LV4 
+1/120 SoulNecklace LV4 
+1/110 ClawNecklace LV4 
+1/110 PearlNecklace LV4 
+1/110 LifeNecklace LV4 
+1/60 SpiritNecklace LV4 
+1/150 GaleNecklace LV4 
+1/500 MajesticNecklace LV4
+
+;Bracelets
+1/90 RedOrchidBracelet LV4 
+1/90 RedFlowerBracelet LV4 
+1/105 KnightBracelet LV4 
+1/105 SoulSpringBracelet LV4 
+1/105 DragonBracelet LV4 
+1/500 MajesticWheel LV4
+
+;Rings
+1/90 RedOrchidRing LV4 
+1/90 RedFlowerRing LV4 
+1/50 DragonRing LV4 
+1/50 RubyRing LV4 
+1/50 PlatinumRing LV4 
+1/100 SpiritRing LV4 
+1/135 PowerRing LV4 
+1/135 VioletRing LV4 
+1/135 TitanRing LV4 
+1/2 ExpelRing LV4 
+1/2 CoralRing LV4 
+1/500 MajesticRing LV4
+
+;Rare Rings
+
+
+;Boots
+1/500 MajesticBoots LV4
+
+;Belts
+1/500 MajesticBelt LV4
+
+;Stones
+1/100 HolyHealthStone LV4 
+1/100 HolyMagicStone LV4 
+1/100 HolyPowerStone LV4 
+1/300 HolyDCStone LV4 
+1/300 HolyMCStone LV4 
+1/300 HolySCStone LV4  
+
+;Books
+1/50 ShoulderDash LV4 
+1/50 TwinDrakeBlade LV4 
+1/50 Entrapment LV4 
+1/50 FlamingSword LV4
+1/6000 ProtectionField LV4
+1/6000 Rage LV4
+1/6000 CounterAttack LV4
+1/15000 Fury LV4
+ 
+1/50 ThunderStorm LV4 
+1/50 IceStorm LV4 
+1/50 FlameDisruptor LV4 
+1/4000 Mirroring LV4 
+1/6000 FlameField LV4
+1/6000 MagicBooster LV4
+1/6000 MeteorStrike LV4
+1/6000 IceThrust LV4
+
+1/50 FireBurst LV4
+1/50 Trap LV4
+1/200 MoonLight LV4
+1/6000 Hemorrhage LV4
+1/6000 DarkBody LV4
+1/15000 MoonMist LV4
+ 
+1/50 Purification LV4 
+1/50 Hallucination LV4 
+1/200 Reincarnation LV4 
+1/200 SummonHolyDeva LV4 
+1/15000 Curse LV4 
+1/6000 PoisonCloud LV4 
+1/6000 Plague LV4
+1/6000 PoisonCloud LV4
+1/6000 EnergyShield LV4
+1/200 BladeStorm LV4
+1/200 DragNet LV4
+1/200 CrescentSlash LV4
+1/200 HealingCircle LV4
+1/800 SliceNDice LV4
+
+1/50 ElementalBarrier LV4
+1/50 BindingShot LV4
+1/200 SummonToad LV4
+1/200 PoisonShot LV4
+1/6000 CrippleShot LV4
+1/6000 SummonSnakes LV4
+1/100 NapalmShot LV4
+1/15000 OneWithNature LV4
+
+;Gems
+1/155 BraveryGem LV4
+1/155 MagicGem LV4
+1/155 SoulGem LV4
+1/155 StormGem  LV4
+1/160 AccuracyGem LV4
+1/160 DisillusionGem LV4
+1/200 StormGem LV4
+
+;Awakening Souls
+
+1/1 AwakeningSoul0 LV
+
+1/20 AwakeningSoul0 LV4
+
+;Level5
+;Gold
+1/1 Gold 12500 LV5
+
+;Potions
+1/1 SunPotion(M) LV5
+1/1 SunPotion(M) LV5
+1/1 SunPotion(M) LV5
+1/2 SunPotion(M) LV5
+1/2 SunPotion(M) LV5
+1/2 SunPotion(M) LV5
+1/1 (HP)DrugLarge LV5 
+1/1 (MP)DrugLarge LV5
+1/1 (HP)DrugLarge LV5 
+1/1 (MP)DrugLarge LV5 
+1/1 (HP)DrugXL LV5 
+1/1 (MP)DrugXL LV5 
+1/1 (HP)DrugXL LV5 
+1/1 (MP)DrugXL LV5
+1/2 (HP)DrugLarge LV5 
+1/2 (MP)DrugLarge LV5 
+1/2 (HP)DrugLarge LV5 
+1/2 (MP)DrugLarge LV5 
+1/2 (HP)DrugXL LV5 
+1/2 (MP)DrugXL LV5 
+1/2 (HP)DrugXL LV5 
+1/2 (MP)DrugXL LV5 
+1/2 (MP)DrugLarge LV5 
+1/2 (MP)DrugXL LV5 
+1/30 ImpactDrug(S) LV5 
+1/30 MagicDrug(S) LV5 
+1/30 TaoistDrug(S) LV5 
+1/30 StormDrug(S) LV5 
+1/30 StaminaAid(S) LV5 
+1/30 MagicAid(S) LV5
+
+
+;Armours
+1/60 IronArmour(M) LV5
+1/60 IronArmour(F) LV5
+1/60 WizardRobe(M) LV5
+1/60 WizardRobe(F) LV5
+1/60 TemperedArmour(M) LV5
+1/60 TemperedArmour(F) LV5
+1/60 PearlArmour(M) LV5
+1/60 PearlArmour(F) LV5
+1/60 AncientArmour(M) LV5
+1/60 AncientArmour(F) LV5
+
+;Rare Armours
+1/8000 HeavenArmour(M) LV5
+1/8000 HeavenArmour(F) LV5
+1/8000 HeavenArcheyRobe(M) LV5
+1/8000 HeavenArcheyRobe(F) LV5
+
+;Weapons
+1/250 JudgementMace  LV5
+1/250 FiendBow LV5
+1/250 WarMageStaff LV5 
+1/250 SoulSpringWand LV5
+1/250 BladesOfDarkness LV5
+1/4000 RoyalBlades LV5 
+1/4000 DragonSlayer LV5 
+1/4000 MaleficBow LV5
+1/4000 DragonStaff LV5 
+1/4000 SoulSabre  LV5
+
+
+;Helmets
+1/10 SkeletonHelmet LV5
+1/10 ShamanHelmet LV5 
+1/50 BlackIronHelmet LV5 
+1/600 MajesticHelmet LV5
+
+;Necklaces
+1/90 RedOrchidNecklace LV5 
+1/90 RedFlowerNecklace LV5 
+1/120 GreenBead LV5 
+1/120 DemonicBells LV5 
+1/120 SoulNecklace LV5 
+1/110 ClawNecklace LV5 
+1/110 PearlNecklace LV5 
+1/110 LifeNecklace LV5 
+1/60 SpiritNecklace LV5 
+1/150 GaleNecklace LV5 
+1/500 MajesticNecklace LV5
+
+;Bracelets
+1/90 RedOrchidBracelet LV5 
+1/90 RedFlowerBracelet LV5 
+1/105 KnightBracelet LV5 
+1/105 SoulSpringBracelet LV5 
+1/105 DragonBracelet LV5 
+1/500 MajesticWheel LV5
+
+;Rings
+1/90 RedOrchidRing LV5 
+1/90 RedFlowerRing LV5 
+1/50 DragonRing LV5 
+1/50 RubyRing LV5 
+1/50 PlatinumRing LV5 
+1/100 SpiritRing LV5 
+1/135 PowerRing LV5 
+1/135 VioletRing LV5 
+1/135 TitanRing LV5 
+1/2 ExpelRing LV5 
+1/2 CoralRing LV5 
+1/500 MajesticRing LV5
+
+;Rare Rings
+
+
+;Boots
+1/500 MajesticBoots LV5
+
+;Belts
+1/500 MajesticBelt LV5
+
+;Stones
+1/100 HolyHealthStone LV5 
+1/100 HolyMagicStone LV5 
+1/100 HolyPowerStone LV5 
+1/300 HolyDCStone LV5 
+1/300 HolyMCStone LV5 
+1/300 HolySCStone LV5  
+
+;Books
+1/50 ShoulderDash LV5 
+1/50 TwinDrakeBlade LV5 
+1/50 Entrapment LV5 
+1/50 FlamingSword LV5
+1/6000 ProtectionField LV5
+1/6000 Rage LV5
+1/6000 CounterAttack LV5
+1/15000 Fury LV5
+ 
+1/50 ThunderStorm LV5 
+1/50 IceStorm LV5 
+1/50 FlameDisruptor LV5 
+1/4000 Mirroring LV5 
+1/6000 FlameField LV5
+1/6000 MagicBooster LV5
+1/6000 MeteorStrike LV5
+1/6000 IceThrust LV5
+
+1/50 FireBurst LV5
+1/50 Trap LV5
+1/200 MoonLight LV5
+1/6000 Hemorrhage LV5
+1/6000 DarkBody LV5
+1/15000 MoonMist LV5
+ 
+1/50 Purification LV5 
+1/50 Hallucination LV5 
+1/200 Reincarnation LV5 
+1/200 SummonHolyDeva LV5 
+1/15000 Curse LV5 
+1/6000 PoisonCloud LV5 
+1/6000 Plague LV5
+1/6000 PoisonCloud LV5
+1/6000 EnergyShield LV5
+1/200 BladeStorm LV5
+1/200 DragNet LV5
+1/200 CrescentSlash LV5
+1/200 HealingCircle LV5
+1/800 SliceNDice LV5
+
+1/50 ElementalBarrier LV5
+1/50 BindingShot LV5
+1/200 SummonToad LV5
+1/200 PoisonShot LV5
+1/6000 CrippleShot LV5
+1/6000 SummonSnakes LV5
+1/100 NapalmShot LV5
+1/15000 OneWithNature LV5
+
+;Gems
+1/155 BraveryGem LV5
+1/155 MagicGem LV5
+1/155 SoulGem LV5
+1/155 StormGem  LV5
+1/160 AccuracyGem LV5
+1/160 DisillusionGem LV5
+1/200 StormGem LV5
+
+;Awakening Souls
+
+1/1 AwakeningSoul0 LV
+
+1/20 AwakeningSoul0 LV5
+
+;Level6
+;Gold
+1/1 Gold 12500 LV6
+
+;Potions
+1/1 SunPotion(M) LV6
+1/1 SunPotion(M) LV6
+1/1 SunPotion(M) LV6
+1/2 SunPotion(M) LV6
+1/2 SunPotion(M) LV6
+1/2 SunPotion(M) LV6
+1/1 (HP)DrugLarge LV6 
+1/1 (MP)DrugLarge LV6
+1/1 (HP)DrugLarge LV6 
+1/1 (MP)DrugLarge LV6 
+1/1 (HP)DrugXL LV6 
+1/1 (MP)DrugXL LV6 
+1/1 (HP)DrugXL LV6 
+1/1 (MP)DrugXL LV6
+1/2 (HP)DrugLarge LV6 
+1/2 (MP)DrugLarge LV6 
+1/2 (HP)DrugLarge LV6 
+1/2 (MP)DrugLarge LV6 
+1/2 (HP)DrugXL LV6 
+1/2 (MP)DrugXL LV6 
+1/2 (HP)DrugXL LV6 
+1/2 (MP)DrugXL LV6 
+1/2 (MP)DrugLarge LV6 
+1/2 (MP)DrugXL LV6 
+1/30 ImpactDrug(S) LV6 
+1/30 MagicDrug(S) LV6 
+1/30 TaoistDrug(S) LV6 
+1/30 StormDrug(S) LV6 
+1/30 StaminaAid(S) LV6 
+1/30 MagicAid(S) LV6
+
+
+;Armours
+1/60 IronArmour(M) LV6
+1/60 IronArmour(F) LV6
+1/60 TemperedArmour(M) LV6
+1/60 TemperedArmour(F) LV6
+1/60 WizardRobe(M) LV6
+1/60 WizardRobe(F) LV6
+1/60 PearlArmour(M) LV6
+1/60 PearlArmour(F) LV6
+1/60 AncientArmour(M) LV6
+1/60 AncientArmour(F) LV6
+
+;Rare Armours
+1/8000 HeavenArmour(M) LV6
+1/8000 HeavenArmour(F) LV6
+1/8000 HeavenArcheyRobe(M) LV6
+1/8000 HeavenArcheyRobe(F) LV6
+
+;Weapons
+1/250 JudgementMace  LV6
+1/250 WarMageStaff LV6 
+1/250 FiendBow LV6
+1/250 SoulSpringWand LV6
+1/250 BladesOfDarkness LV6
+1/4000 RoyalBlades LV6 
+1/4000 DragonSlayer LV6 
+1/4000 DragonStaff LV6 
+1/4000 MaleficBow LV6
+1/4000 SoulSabre  LV6
+
+
+;Helmets
+1/10 SkeletonHelmet LV6
+1/10 ShamanHelmet LV6 
+1/50 BlackIronHelmet LV6 
+1/600 MajesticHelmet LV6
+
+;Necklaces
+1/90 RedOrchidNecklace LV6 
+1/90 RedFlowerNecklace LV6 
+1/120 GreenBead LV6 
+1/120 DemonicBells LV6 
+1/120 SoulNecklace LV6 
+1/110 ClawNecklace LV6 
+1/110 PearlNecklace LV6 
+1/110 LifeNecklace LV6 
+1/60 SpiritNecklace LV6 
+1/150 GaleNecklace LV6 
+1/500 MajesticNecklace LV6
+
+;Bracelets
+1/90 RedOrchidBracelet LV6 
+1/90 RedFlowerBracelet LV6 
+1/105 KnightBracelet LV6 
+1/105 SoulSpringBracelet LV6 
+1/105 DragonBracelet LV6 
+1/500 MajesticWheel LV6
+
+;Rings
+1/90 RedOrchidRing LV6 
+1/90 RedFlowerRing LV6 
+1/50 DragonRing LV6 
+1/50 RubyRing LV6 
+1/50 PlatinumRing LV6 
+1/100 SpiritRing LV6 
+1/135 PowerRing LV6 
+1/135 VioletRing LV6 
+1/135 TitanRing LV6 
+1/2 ExpelRing LV6 
+1/2 CoralRing LV6 
+1/500 MajesticRing LV6
+
+;Rare Rings
+
+
+;Boots
+1/500 MajesticBoots LV6
+
+;Belts
+1/500 MajesticBelt LV6
+
+;Stones
+1/100 HolyHealthStone LV6 
+1/100 HolyMagicStone LV6 
+1/100 HolyPowerStone LV6 
+1/300 HolyDCStone LV6 
+1/300 HolyMCStone LV6 
+1/300 HolySCStone LV6  
+
+;Books
+1/50 ShoulderDash LV6 
+1/50 TwinDrakeBlade LV6 
+1/50 Entrapment LV6 
+1/50 FlamingSword LV6
+1/6000 ProtectionField LV6
+1/6000 Rage LV6
+1/6000 CounterAttack LV6
+1/15000 Fury LV6
+ 
+1/50 ThunderStorm LV6 
+1/50 IceStorm LV6 
+1/50 FlameDisruptor LV6 
+1/4000 Mirroring LV6 
+1/6000 FlameField LV6
+1/6000 MagicBooster LV6
+1/6000 MeteorStrike LV6
+1/6000 IceThrust LV6
+
+1/50 FireBurst LV6
+1/50 Trap LV6
+1/200 MoonLight LV6
+1/6000 Hemorrhage LV6
+1/6000 DarkBody LV6
+1/15000 MoonMist LV6
+ 
+1/50 Purification LV6 
+1/50 Hallucination LV6 
+1/200 Reincarnation LV6 
+1/200 SummonHolyDeva LV6 
+1/15000 Curse LV6 
+1/6000 PoisonCloud LV6 
+1/6000 Plague LV6
+1/6000 PoisonCloud LV6
+1/6000 EnergyShield LV6
+1/200 BladeStorm LV6
+1/200 DragNet LV6
+1/200 CrescentSlash LV6
+1/200 HealingCircle LV6
+1/800 SliceNDice LV6
+
+1/50 ElementalBarrier LV6
+1/50 BindingShot LV6
+1/200 SummonToad LV6
+1/200 PoisonShot LV6
+1/6000 CrippleShot LV6
+1/6000 SummonSnakes LV6
+1/100 NapalmShot LV6
+1/15000 OneWithNature LV6
+
+;Gems
+1/155 BraveryGem LV6
+1/155 MagicGem LV6
+1/155 SoulGem LV6
+1/155 StormGem  LV6
+1/160 AccuracyGem LV6
+1/160 DisillusionGem LV6
+1/200 StormGem LV6
+
+;Awakening Souls
+
+1/1 AwakeningSoul0 LV
+
+1/20 AwakeningSoul0 LV6
+
+;Level7
+;Gold
+1/1 Gold 12500 LV7
+
+;Potions
+1/1 SunPotion(M) LV7
+1/1 SunPotion(M) LV7
+1/1 SunPotion(M) LV7
+1/2 SunPotion(M) LV7
+1/2 SunPotion(M) LV7
+1/2 SunPotion(M) LV7
+1/1 (HP)DrugLarge LV7 
+1/1 (MP)DrugLarge LV7
+1/1 (HP)DrugLarge LV7 
+1/1 (MP)DrugLarge LV7 
+1/1 (HP)DrugXL LV7 
+1/1 (MP)DrugXL LV7 
+1/1 (HP)DrugXL LV7 
+1/1 (MP)DrugXL LV7
+1/2 (HP)DrugLarge LV7 
+1/2 (MP)DrugLarge LV7 
+1/2 (HP)DrugLarge LV7 
+1/2 (MP)DrugLarge LV7 
+1/2 (HP)DrugXL LV7 
+1/2 (MP)DrugXL LV7 
+1/2 (HP)DrugXL LV7 
+1/2 (MP)DrugXL LV7 
+1/2 (MP)DrugLarge LV7 
+1/2 (MP)DrugXL LV7 
+1/30 ImpactDrug(S) LV7 
+1/30 MagicDrug(S) LV7 
+1/30 TaoistDrug(S) LV7 
+1/30 StormDrug(S) LV7 
+1/30 StaminaAid(S) LV7 
+1/30 MagicAid(S) LV7
+
+
+;Armours
+1/60 IronArmour(M) LV7
+1/60 IronArmour(F) LV7
+1/60 TemperedArmour(M) LV7
+1/60 TemperedArmour(F) LV7
+1/60 WizardRobe(M) LV7
+1/60 WizardRobe(F) LV7
+1/60 PearlArmour(M) LV7
+1/60 PearlArmour(F) LV7
+1/60 AncientArmour(M) LV7
+1/60 AncientArmour(F) LV7
+
+;Rare Armours
+1/8000 HeavenArmour(M) LV7
+1/8000 HeavenArmour(F) LV7
+1/8000 HeavenArcheyRobe(M) LV7
+1/8000 HeavenArcheyRobe(F) LV7
+
+;Weapons
+1/250 JudgementMace  LV7
+1/250 WarMageStaff LV7 
+1/250 FiendBow LV7
+1/250 SoulSpringWand LV7
+1/250 BladesOfDarkness LV7
+1/4000 RoyalBlades LV7 
+1/4000 DragonSlayer LV7 
+1/4000 DragonStaff LV7 
+1/4000 MaleficBow LV7
+1/4000 SoulSabre  LV7
+
+
+;Helmets
+1/10 SkeletonHelmet LV7
+1/10 ShamanHelmet LV7 
+1/50 BlackIronHelmet LV7 
+1/600 MajesticHelmet LV7
+
+;Necklaces
+1/90 RedOrchidNecklace LV7 
+1/90 RedFlowerNecklace LV7 
+1/120 GreenBead LV7 
+1/120 DemonicBells LV7 
+1/120 SoulNecklace LV7 
+1/110 ClawNecklace LV7 
+1/110 PearlNecklace LV7 
+1/110 LifeNecklace LV7 
+1/60 SpiritNecklace LV7 
+1/150 GaleNecklace LV7 
+1/500 MajesticNecklace LV7
+
+;Bracelets
+1/90 RedOrchidBracelet LV7 
+1/90 RedFlowerBracelet LV7 
+1/105 KnightBracelet LV7 
+1/105 SoulSpringBracelet LV7 
+1/105 DragonBracelet LV7 
+1/500 MajesticWheel LV7
+
+;Rings
+1/90 RedOrchidRing LV7 
+1/90 RedFlowerRing LV7 
+1/50 DragonRing LV7 
+1/50 RubyRing LV7 
+1/50 PlatinumRing LV7 
+1/100 SpiritRing LV7 
+1/135 PowerRing LV7 
+1/135 VioletRing LV7 
+1/135 TitanRing LV7 
+1/2 ExpelRing LV7 
+1/2 CoralRing LV7 
+1/500 MajesticRing LV7
+
+;Rare Rings
+
+
+;Boots
+1/500 MajesticBoots LV7
+
+;Belts
+1/500 MajesticBelt LV7
+
+;Stones
+1/100 HolyHealthStone LV7 
+1/100 HolyMagicStone LV7 
+1/100 HolyPowerStone LV7 
+1/300 HolyDCStone LV7 
+1/300 HolyMCStone LV7 
+1/300 HolySCStone LV7  
+
+;Books
+1/50 ShoulderDash LV7 
+1/50 TwinDrakeBlade LV7 
+1/50 Entrapment LV7 
+1/50 FlamingSword LV7
+1/6000 ProtectionField LV7
+1/6000 Rage LV7
+1/6000 CounterAttack LV7
+1/15000 Fury LV7
+ 
+1/50 ThunderStorm LV7 
+1/50 IceStorm LV7 
+1/50 FlameDisruptor LV7 
+1/4000 Mirroring LV7 
+1/6000 FlameField LV7
+1/6000 MagicBooster LV7
+1/6000 MeteorStrike LV7
+1/6000 IceThrust LV7
+
+1/50 FireBurst LV7
+1/50 Trap LV7
+1/200 MoonLight LV7
+1/6000 Hemorrhage LV7
+1/6000 DarkBody LV7
+1/15000 MoonMist LV7
+ 
+1/50 Purification LV7 
+1/50 Hallucination LV7 
+1/200 Reincarnation LV7 
+1/200 SummonHolyDeva LV7 
+1/15000 Curse LV7 
+1/6000 PoisonCloud LV7 
+1/6000 Plague LV7
+1/6000 PoisonCloud LV7
+1/6000 EnergyShield LV7
+1/200 BladeStorm LV7
+1/200 DragNet LV7
+1/200 CrescentSlash LV7
+1/200 HealingCircle LV7
+1/800 SliceNDice LV7
+
+1/50 ElementalBarrier LV7
+1/50 BindingShot LV7
+1/200 SummonToad LV7
+1/200 PoisonShot LV7
+1/6000 CrippleShot LV7
+1/6000 SummonSnakes LV7
+1/100 NapalmShot LV7
+1/15000 OneWithNature LV7
+
+;Gems
+1/155 BraveryGem LV7
+1/155 MagicGem LV7
+1/155 SoulGem LV7
+1/155 StormGem  LV7
+1/160 AccuracyGem LV7
+1/160 DisillusionGem LV7
+1/200 StormGem LV7
+
+;Awakening Souls
+
+1/1 AwakeningSoul0 LV
+
+1/20 AwakeningSoul0 LV7
+
+;Level8
+;Gold
+1/1 Gold 12500 LV8
+
+;Potions
+1/1 SunPotion(M) LV8
+1/1 SunPotion(M) LV8
+1/1 SunPotion(M) LV8
+1/2 SunPotion(M) LV8
+1/2 SunPotion(M) LV8
+1/2 SunPotion(M) LV8
+1/1 (HP)DrugLarge LV8 
+1/1 (MP)DrugLarge LV8
+1/1 (HP)DrugLarge LV8 
+1/1 (MP)DrugLarge LV8 
+1/1 (HP)DrugXL LV8 
+1/1 (MP)DrugXL LV8 
+1/1 (HP)DrugXL LV8 
+1/1 (MP)DrugXL LV8
+1/2 (HP)DrugLarge LV8 
+1/2 (MP)DrugLarge LV8 
+1/2 (HP)DrugLarge LV8 
+1/2 (MP)DrugLarge LV8 
+1/2 (HP)DrugXL LV8 
+1/2 (MP)DrugXL LV8 
+1/2 (HP)DrugXL LV8 
+1/2 (MP)DrugXL LV8 
+1/2 (MP)DrugLarge LV8 
+1/2 (MP)DrugXL LV8 
+1/30 ImpactDrug(S) LV8 
+1/30 MagicDrug(S) LV8 
+1/30 TaoistDrug(S) LV8 
+1/30 StormDrug(S) LV8 
+1/30 StaminaAid(S) LV8 
+1/30 MagicAid(S) LV8
+
+
+;Armours
+1/60 IronArmour(M) LV8
+1/60 IronArmour(F) LV8
+1/60 TemperedArmour(M) LV8
+1/60 TemperedArmour(F) LV8
+1/60 WizardRobe(M) LV8
+1/60 WizardRobe(F) LV8
+1/60 PearlArmour(M) LV8
+1/60 PearlArmour(F) LV8
+1/60 AncientArmour(M) LV8
+1/60 AncientArmour(F) LV8
+
+;Rare Armours
+1/8000 HeavenArmour(M) LV8
+1/8000 HeavenArmour(F) LV8
+1/8000 HeavenArcheyRobe(M) LV8
+1/8000 HeavenArcheyRobe(F) LV8
+
+;Weapons
+1/250 JudgementMace  LV8
+1/250 WarMageStaff LV8 
+1/250 FiendBow LV8
+1/250 SoulSpringWand LV8
+1/250 BladesOfDarkness LV8
+1/4000 RoyalBlades LV8 
+1/4000 DragonSlayer LV8 
+1/4000 MaleficBow LV8
+1/4000 DragonStaff LV8 
+1/4000 SoulSabre  LV8
+
+
+;Helmets
+1/10 SkeletonHelmet LV8
+1/10 ShamanHelmet LV8 
+1/50 BlackIronHelmet LV8 
+1/600 MajesticHelmet LV8
+
+;Necklaces
+1/90 RedOrchidNecklace LV8 
+1/90 RedFlowerNecklace LV8 
+1/120 GreenBead LV8 
+1/120 DemonicBells LV8 
+1/120 SoulNecklace LV8 
+1/110 ClawNecklace LV8 
+1/110 PearlNecklace LV8 
+1/110 LifeNecklace LV8 
+1/60 SpiritNecklace LV8 
+1/150 GaleNecklace LV8 
+1/500 MajesticNecklace LV8
+
+;Bracelets
+1/90 RedOrchidBracelet LV8 
+1/90 RedFlowerBracelet LV8 
+1/105 KnightBracelet LV8 
+1/105 SoulSpringBracelet LV8 
+1/105 DragonBracelet LV8 
+1/500 MajesticWheel LV8
+
+;Rings
+1/90 RedOrchidRing LV8 
+1/90 RedFlowerRing LV8 
+1/50 DragonRing LV8 
+1/50 RubyRing LV8 
+1/50 PlatinumRing LV8 
+1/100 SpiritRing LV8 
+1/135 PowerRing LV8 
+1/135 VioletRing LV8 
+1/135 TitanRing LV8 
+1/2 ExpelRing LV8 
+1/2 CoralRing LV8 
+1/500 MajesticRing LV8
+
+;Rare Rings
+
+
+;Boots
+1/500 MajesticBoots LV8
+
+;Belts
+1/500 MajesticBelt LV8
+
+;Stones
+1/100 HolyHealthStone LV8 
+1/100 HolyMagicStone LV8 
+1/100 HolyPowerStone LV8 
+1/300 HolyDCStone LV8 
+1/300 HolyMCStone LV8 
+1/300 HolySCStone LV8  
+
+;Books
+1/50 ShoulderDash LV8 
+1/50 TwinDrakeBlade LV8 
+1/50 Entrapment LV8 
+1/50 FlamingSword LV8
+1/6000 ProtectionField LV8
+1/6000 Rage LV8
+1/6000 CounterAttack LV8
+1/15000 Fury LV8
+ 
+1/50 ThunderStorm LV8 
+1/50 IceStorm LV8 
+1/50 FlameDisruptor LV8 
+1/4000 Mirroring LV8 
+1/6000 FlameField LV8
+1/6000 MagicBooster LV8
+1/6000 MeteorStrike LV8
+1/6000 IceThrust LV8
+
+1/50 FireBurst LV8
+1/50 Trap LV8
+1/200 MoonLight LV8
+1/6000 Hemorrhage LV8
+1/6000 DarkBody LV8
+1/15000 MoonMist LV8
+ 
+1/50 Purification LV8 
+1/50 Hallucination LV8 
+1/200 Reincarnation LV8 
+1/200 SummonHolyDeva LV8 
+1/15000 Curse LV8 
+1/6000 PoisonCloud LV8 
+1/6000 Plague LV8
+1/6000 PoisonCloud LV8
+1/6000 EnergyShield LV8
+1/200 BladeStorm LV8
+1/200 DragNet LV8
+1/200 CrescentSlash LV8
+1/200 HealingCircle LV8
+1/800 SliceNDice LV8
+
+1/50 ElementalBarrier LV8
+1/50 BindingShot LV8
+1/200 SummonToad LV8
+1/200 PoisonShot LV8
+1/6000 CrippleShot LV8
+1/6000 SummonSnakes LV8
+1/100 NapalmShot LV8
+1/15000 OneWithNature LV8
+
+;Gems
+1/155 BraveryGem LV8
+1/155 MagicGem LV8
+1/155 SoulGem LV8
+1/155 StormGem  LV8
+1/160 AccuracyGem LV8
+1/160 DisillusionGem LV8
+1/200 StormGem LV8
+
+;Awakening Souls
+
+1/1 AwakeningSoul0 LV
+
+1/20 AwakeningSoul0 LV8
+

@@ -1,0 +1,49 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+I am the Examiner for Bichon.
+In order to go to restricted ares, you are required to have a
+Bichon Token.
+If you would like a Bichon Token you can purchase one from me.
+<Buy Bichon Token/@Buy>
+<Ask about Bichon Token/@Ask>
+<Close/@Exit>
+
+[@Ask]
+#SAY
+In a book written 100 years ago,there is a section where it
+explainshow to enter hell. It is said the patch to hell was discovered
+past the BorderVillage. To investigate this area, we have prepared
+many investigators. If you'd like to see this place too, you should go
+ask their leader.
+Also you will need the Bichon Token to go thought the cave.
+<Buy Bichon Token/@Buy>
+<Will get next time/@Exit>
+
+
+[@Buy]
+#SAY
+Please choose what you want to buy.
+ 
+ 
+<Back/@Main>
+
+
+[Trade]
+BichonToken
+
+[Quests]
+60
+-60
+117
+-119

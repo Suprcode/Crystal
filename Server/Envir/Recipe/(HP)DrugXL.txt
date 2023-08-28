@@ -1,0 +1,11 @@
+[Recipe]
+Amount 1
+Chance 100
+Gold 100
+
+[Tools]
+
+[Ingredients]
+EbonyFruit
+CannibalLeaf
+(HP)DrugLarge

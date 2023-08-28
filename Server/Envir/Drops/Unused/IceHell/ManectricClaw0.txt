@@ -1,0 +1,12 @@
+;Gold
+1/10 Gold 3000
+
+;Potions
+1/10 SunPotion
+1/10 SunPotion
+1/100 SunPotion
+1/150 ImpactDrug(M)
+1/150 MagicDrug(M)
+1/150 TaoistDrug(M)
+1/150 StormDrug(S)
+

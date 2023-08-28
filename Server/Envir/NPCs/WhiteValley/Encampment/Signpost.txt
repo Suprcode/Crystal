@@ -1,0 +1,35 @@
+[@Main]
+#SAY
+<Use./@main-1> teleport to the village stores
+
+
+[@main-1]
+#SAY
+<Weapon shop/@go-weap>   <Armour shop/@go-cloth>   <Accessory shop/@go-access>   
+<General Store/@go-pot>   <Book store/@go-book>
+
+<Close/@Exit>
+ 
+[@go-weap]
+#ACT
+MOVE whitevillage 286 234
+
+[@go-cloth]
+#ACT
+MOVE whitevillage 279 242
+
+[@go-access]
+#ACT
+MOVE whitevillage 329 237
+
+[@go-pot]
+#ACT
+MOVE whitevillage 270 248
+
+[@go-book]
+#ACT
+MOVE whitevilage 334 248
+
+[@go-Storage]
+#ACT
+MOVE WhiteVillage 312 278

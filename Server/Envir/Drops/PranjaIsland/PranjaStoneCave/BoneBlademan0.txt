@@ -1,0 +1,98 @@
+;Gold
+1/1 Gold 6500
+
+;Potions
+1/1 (HP)DrugMedium
+1/1 (MP)DrugMedium
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/2 SunPotion
+1/3 SunPotion(M)
+1/10 RepairOil
+
+;Crafting Material
+1/1 Bone
+1/2 LargeBone
+
+1/40 WillMarble
+1/100 IceMarble
+1/20 TimeStonePiece
+
+;Weapons
+1/7 PurifierSword
+1/500 DragonSword
+1/500 BloodStealerSword
+1/100 FireBloodSword
+1/100 GreatAxe
+1/100 MageStaff
+1/100 SerpentSword
+1/100 DoubleBlades
+1/100 SilverBow
+
+;Armours
+1/20 HeavyArmour(M)
+1/20 HeavyArmour(F)
+1/20 SoulArmour(M)
+1/20 SoulArmour(F)
+1/20 MagicRobe(M)
+1/20 MagicRobe(F)
+1/20 RelicArmour(M)
+1/20 RelicArmour(F)
+1/20 LightLeatherArmour(M)
+1/20 LightLeatherArmour(F)
+
+1/40 IronArmour(M)
+1/40 IronArmour(F)
+1/40 PearlArmour(M)
+1/40 PearlArmour(F)
+1/40 WizardRobe(M)
+1/40 WitchRobe(F)
+1/40 AncientArmour(M)
+1/40 AncientArmour(F)
+1/40 TemperedArmour(M)
+1/40 TemperedArmour(F)
+
+;Helmet
+1/6 SkeletonHelmet
+1/6 ShamanHelmet
+
+;Belts
+1/1000 GoldBelt
+
+;Rings
+1/3 BlackRing
+1/3 PearlRing
+1/3 SerpentEyeRing
+1/4 GoldRing
+1/4 MoralRing
+1/4 CharmRing
+1/24 CoralRing
+1/20 ExpelRing
+
+;Bracelet
+1/10 SharpBracelet
+1/12 EvadeBracelet
+
+;Necklace
+1/3 AmberNecklace
+1/3 NagaNecklace
+1/3 PhoenixBead
+1/3 LanternNecklace
+1/10 ElusionNecklace
+1/4 BlueJadeNecklace
+1/4 ConvexLens
+1/4 BambooPipe
+1/100 ClawNecklace
+1/100 LifeNecklace
+1/100 PearlNecklace
+
+;Books
+1/20 HalfMoon
+1/10 Thrusting
+1/50 TrapHexagon
+1/120 TwinDrakeBlade
+1/80 FireBurst
+1/200 Trap
+
+;Quest
+1/8 CleanSkull Q

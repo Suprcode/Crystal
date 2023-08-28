@@ -1,0 +1,80 @@
+;Gold
+1/10 Gold 500
+
+;Weapons
+1/160 PrinceDagger 
+1/160 MartialSword 
+1/160 HookedSpear 
+1/160 KrissSword 
+1/160 IronBlades 
+1/160 LongBow 
+1/300 PowerAxe 
+1/600 PurifierSword 
+1/8000 GreatAxe 
+1/8000 MageStaff 
+1/8000 SerpentSword 
+1/8000 DoubleBlades 
+1/8000 SilverBow 
+
+;Armours
+1/600 HeavyArmour(M) 
+1/600 HeavyArmour(F) 
+1/600 MagicRobe(M) 
+1/600 MagicRobe(F) 
+1/600 SoulArmour(M) 
+1/600 SoulArmour(F) 
+1/600 RelicArmour(M) 
+1/600 RelicArmour(F) 
+1/600 LightLeatherArmour(M) 
+1/600 LightLeatherArmour(F) 
+
+;Helmets
+1/3000 SkeletonHelmet 
+1/1500 ShamanHelmet 
+
+;Necklaces
+1/200 LanternNecklace 
+1/200 TigerNecklace 
+1/200 PlatinumNecklace 
+1/400 BlueJadeNecklace 
+1/400 ConvexLens 
+1/400 BambooPipe 
+
+;Bracelets
+1/160 StrainBracelet 
+1/160 MagicBracelet 
+1/160 HardGlove 
+1/300 EbonyBracelet 
+1/300 MonkBracelet 
+1/300 DeathGauntlet 
+1/200 GoldBracelet 
+
+;Rings
+1/160 BlackRing 
+1/160 SerpentEyeRing 
+1/160 PearlRing 
+1/200 GoldRing 
+1/100 IronRing 
+1/300 SkeletonRing 
+1/200 CharmRing 
+1/200 MoralRing 
+1/900 ExpelRing 
+1/900 CoralRing 
+1/4000 GaleRing 
+
+;Potions
+1/20 (HP)DrugMedium 
+1/20 (MP)DrugMedium 
+1/30 SunPotion 
+1/200 SunPotion(M) 
+1/600 SunPotion(M) 
+1/400 OldGinseng 
+
+;Crafting Materials
+1/35 BugShell 
+
+;Books
+1/1600 TwinDrakeBlade 
+1/2400 FlameDisruptor 
+1/1500 UltimateEnhancer 
+1/1500 Trap 

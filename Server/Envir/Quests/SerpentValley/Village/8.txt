@@ -1,0 +1,29 @@
+[@Description]
+Here's the {SnakeWine/LightSteelBlue} for {MongchonScout/LimeGreen} as 
+promised. Please enjoy.
+
+[@TaskDescription]
+Deliver the {SnakeWine/LightSteelBlue} to {MongchonScout/LimeGreen}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+SnakeWine 2
+
+[@FixedRewards]
+BrokenSword 
+
+[@SelectRewards]
+
+[@ExpReward]
+822
+
+[@GoldReward]
+300
+
+// Pickup - 
+// Hand In - MongchonScout_Brian 0100 4 10

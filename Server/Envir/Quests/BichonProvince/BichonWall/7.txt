@@ -1,0 +1,30 @@
+[@Description]
+Can you please do me a favour. Can you 
+deliver these to {Bradly/LimeGreen} in {SerpentValley/Yellow}? 
+Hes ran out of {RepairOil's/LightSteelBlue}. But he needs them 
+to repair weapons. Please deliver them quickly.
+
+[@TaskDescription]
+Deliver {RepairOil/LightSteelBlue} to {Bradly/LimeGreen}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+RepairOil 2
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+411
+
+[@GoldReward]
+600
+
+// Pickup - Blacksmith_Bill 0 302 221
+// Hand In - Merchant_Bradley 0120 7 8

@@ -1,0 +1,107 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Hello there <$USERNAME>,
+I'm currently on the look out for many types of materials
+ 
+Did you know material's can make many wonderful items
+which can help on your travels?
+I pay well.. if ever wish to sell anything come back
+and ill take alook.
+ 
+<Sell/@Sell> Materials.
+ 
+<Close/@exit>
+
+[@Sell]
+#SAY
+Show me the Material's..
+
+[RECIPE]	
+(HP)DrugXL
+(MP)DrugXL
+AmuletOfRevival
+PeddlerTorch
+GrenPoison
+RedPoison
+BlackThread
+WhiteThread
+RedThread
+Dumpling
+BeefDumpling
+BoneDumpling
+ChickenDumpling
+EggDumpling
+BoneBroth
+ChickenBroth
+EggBroth
+HerbalTea
+MeatSoup
+ZerkSoup
+LargeBone
+SewingGoods
+BoneHammer
+FishBait
+BoneDecapitator
+BoneHood
+BoneRobe(M)
+BoneRobe(F)
+BugBracelet
+BugNecklace
+BugRing
+NephriteBelt
+NephriteBracelet
+NephriteNecklace
+NephriteRing
+NephriteShoes
+RedJadeBelt
+RedJadeBracelet
+RedJadeNecklace
+RedJadeRing
+RedJadeShoes
+WhiteGoldBelt
+WhiteGoldBracelet
+WhiteGoldNecklace
+WhiteGoldRing
+WhiteGoldShoes
+NephriteBelt(H)
+NephriteBracelet(H)
+NephriteNecklace(H)
+NephriteRing(H)
+NephriteShoes(H)
+RedJadeBelt(H)
+RedJadeBracelet(H)
+RedJadeNecklace(H)
+RedJadeRing(H)
+RedJadeShoes(H)
+WhiteGoldBelt(H)
+WhiteGoldBracelet(H)
+WhiteGoldNecklace(H)
+WhiteGoldRing(H)
+WhiteGoldShoes(H)
+AccuracyGem
+AgilityGem
+BraveryGem
+EnduranceGem
+DisillusionGem
+DurabilityGem
+EvilSlayerGem
+FreezingGem
+MagicGem
+PoisonGem
+ProtectionGem
+SoulGem
+StormGem
+
+[Types]
+16

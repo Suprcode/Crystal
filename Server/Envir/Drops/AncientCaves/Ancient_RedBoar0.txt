@@ -1,0 +1,78 @@
+;Gold
+1/1 Gold 5000
+
+;Weapons
+1/16 PrinceDagger 
+1/16 MartialSword 
+1/16 HookedSpear 
+1/16 KrissSword 
+1/16 IronBlades 
+1/16 LongBow 
+1/50 PowerAxe 
+1/60 PurifierSword 
+1/800 GreatAxe 
+1/800 MageStaff 
+1/800 SerpentSword 
+1/800 DoubleBlades 
+1/800 SilverBow 
+
+;Armours
+1/80 HeavyArmour(M) 
+1/80 HeavyArmour(F) 
+1/80 MagicRobe(M) 
+1/80 MagicRobe(F) 
+1/80 SoulArmour(M) 
+1/80 SoulArmour(F) 
+1/80 RelicArmour(M) 
+1/80 RelicArmour(F) 
+1/80 LightLeatherArmour(M) 
+1/80 LightLeatherArmour(F) 
+
+;Helmets
+1/300 SkeletonHelmet 
+1/150 ShamanHelmet 
+
+;Necklaces
+1/20 LanternNecklace 
+1/20 TigerNecklace 
+1/20 PlatinumNecklace 
+1/40 BlueJadeNecklace 
+1/40 ConvexLens 
+1/40 BambooPipe 
+
+;Bracelets
+1/20 StrainBracelet 
+1/20 MagicBracelet 
+1/20 HardGlove 
+1/20 EbonyBracelet 
+1/20 MonkBracelet 
+1/30 DeathGauntlet 
+1/20 GoldBracelet 
+1/400 BronzeGlove 
+
+;Rings
+1/20 BlackRing 
+1/20 SerpentEyeRing 
+1/20 PearlRing 
+1/20 GoldRing 
+1/30 IronRing 
+1/30 SkeletonRing 
+1/40 CharmRing 
+1/40 MoralRing 
+1/150 ExpelRing 
+1/150 CoralRing 
+1/800 GaleRing 
+
+;Potions
+1/2 (HP)DrugMedium 
+1/2 (MP)DrugMedium 
+1/5 SunPotion 
+1/20 SunPotion(M) 
+1/60 SunPotion(M) 
+
+;Crafting Materials
+1/15 RedThread 
+
+;Quest
+1/6 RelicRock Q
+

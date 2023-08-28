@@ -1,0 +1,27 @@
+[@Description]
+A Scroll with a description. It must be important.
+
+[@TaskDescription]
+Deliver the {HiddenScroll/LightSteelBlue} to {Dr.Kim/LimeGreen}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+HiddenScroll 2 
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+2382
+
+[@GoldReward]
+3600
+
+// Pickup - SkeletonPile D2422 220 89
+// Hand In - Merchant_Dr.Kim 0017 5 9

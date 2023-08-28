@@ -1,0 +1,32 @@
+[@Description]
+Thankyou, I remember this Ring it used to 
+belong to my grandmother. Please take this Gift 
+back to {Bradly/LimeGreen} to show my gratitude.
+
+[@TaskDescription]
+Please take this {BluePill/LightSteelBlue} to {Bradly/LimeGreen}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+BluePill 1
+
+[@FixedRewards]
+
+[@SelectRewards]
+BlackCrystalPendant
+EbonyPendant
+YellowCrystalPendant
+
+[@ExpReward]
+219
+
+[@GoldReward]
+75
+
+// Pickup - Merchant_Melissa 2 517 477 
+// Hand In - Merchant_Bradley 0120 7 8

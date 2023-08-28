@@ -1,0 +1,86 @@
+;Gold
+1/1 Gold 3500
+
+;Weapons
+1/16 PrinceDagger 
+1/16 MartialSword 
+1/16 HookedSpear 
+1/16 KrissSword 
+1/16 IronBlades 
+1/16 LongBow 
+1/50 PowerAxe 
+1/50 PurifierSword 
+1/600 GreatAxe 
+1/600 MageStaff 
+1/600 SerpentSword 
+1/600 DoubleBlades 
+1/600 SilverBow 
+
+;Armours
+1/80 HeavyArmour(M) 
+1/80 HeavyArmour(F) 
+1/80 MagicRobe(M) 
+1/80 MagicRobe(F) 
+1/80 SoulArmour(M) 
+1/80 SoulArmour(F) 
+1/80 RelicArmour(M) 
+1/80 RelicArmour(F) 
+1/80 LightLeatherArmour(M) 
+1/80 LightLeatherArmour(F) 
+
+;Helmets
+1/40 SkeletonHelmet 
+1/40 ShamanHelmet 
+
+;Necklaces
+1/10 LanternNecklace 
+1/10 TigerNecklace 
+1/10 PlatinumNecklace 
+1/15 BlueJadeNecklace 
+1/15 ConvexLens 
+1/15 BambooPipe 
+
+;Bracelets
+1/10 StrainBracelet 
+1/10 MagicBracelet 
+1/10 HardGlove 
+1/15 EbonyBracelet 
+1/15 MonkBracelet 
+1/15 DeathGauntlet 
+1/15 GoldBracelet 
+1/100 BronzeGlove 
+1/2000 SteelGlove 
+
+;Rings
+1/10 BlackRing 
+1/10 SerpentEyeRing 
+1/10 PearlRing 
+1/10 GoldRing 
+1/15 SkeletonRing 
+1/15 IronRing 
+1/15 CharmRing 
+1/15 MoralRing 
+1/100 ExpelRing 
+1/100 CoralRing 
+1/200 GaleRing 
+
+;Stones
+1/200 HealthStone(M) 
+1/200 MagicStone(M) 
+1/200 PowerStone(M) 
+1/200 DCStone(M) 
+1/200 MCStone(M) 
+1/200 SCStone(M) 
+
+;Potions
+1/6 (HP)DrugMedium 
+1/6 (MP)DrugMedium 
+1/6 (HP)DrugMedium 
+1/6 (MP)DrugMedium 
+1/50 SunPotion 
+1/100 SunPotion(M) 
+1/100 OldGinseng 
+1/200 StormDrug(S)
+
+;Crafting Materials
+1/10 Mandible 

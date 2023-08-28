@@ -1,0 +1,30 @@
+[@Description]
+Good to see you again traveler. Please can you 
+take this order to {Sam/LimeGreen} the Drapery Merchant in 
+{TaoVillage/Yellow}.
+
+[@TaskDescription]
+Head North through {WoomyonWoods/Yellow} and deliver 
+the {TraineeSuit/LightSteelBlue} to {Drapery Sam/LimeGreen}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+TraineeSuit 2
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+2538
+
+[@GoldReward]
+4425
+
+// Pickup - Merchant_Melissa 2 517 477
+// Hand In - Merchant_Sam 1003 13 16

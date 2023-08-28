@@ -1,0 +1,64 @@
+[@_LevelUp]
+#IF
+LEVEL > 25
+#INCLUDE [SystemScripts\00Default\LevelUp\NewbieGuild.txt] @Main
+#ELSEACT
+GOTO @_LevelUp2
+
+[@_LevelUp2]
+#IF
+LEVEL > 21
+LEVEL < 23
+#INCLUDE [SystemScripts\00Default\LevelUp\AncientNaturalCave.txt] @Main
+#ELSEACT
+GOTO @_LevelUp3
+
+[@_LevelUp3]
+#IF
+LEVEL > 47
+LEVEL < 49
+#INCLUDE [SystemScripts\00Default\LevelUp\AncientWoomaTemple.txt] @Main
+#ELSEACT
+GOTO @_LevelUp4
+
+[@_LevelUp4]
+#IF
+LEVEL > 42
+LEVEL < 44
+#INCLUDE [SystemScripts\00Default\LevelUp\AncientStoneTemple.txt] @Main
+#ELSEACT
+GOTO @_LevelUp5
+
+[@_LevelUp5]
+#IF
+LEVEL > 69
+LEVEL < 71
+#INCLUDE [SystemScripts\00Default\LevelUp\AncientZumaTemple.txt] @Main
+#ELSEACT
+GOTO @_LevelUp6
+
+[@_LevelUp6]
+#IF
+LEVEL > 55
+LEVEL < 57
+#INCLUDE [SystemScripts\00Default\LevelUp\AncientPrajnaStoneCave.txt] @Main
+#ELSEACT
+GOTO @_LevelUp7
+
+[@_LevelUp7]
+#IF
+LEVEL == 20
+#ACT
+GLOBALMESSAGE "Congratulations to <$USERNAME> for reaching Level 20!" Announcement
+
+[@_LevelUp8]
+#IF
+LEVEL == 40
+#ACT
+GLOBALMESSAGE "Congratulations to <$USERNAME> for reaching Level 40!" Announcement
+
+[@_LevelUp9]
+#IF
+LEVEL == 60
+#ACT
+GLOBALMESSAGE "Congratulations to <$USERNAME> for reaching Level 60!" Announcement

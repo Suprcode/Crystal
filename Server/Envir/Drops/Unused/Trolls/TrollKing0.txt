@@ -1,0 +1,26 @@
+;Gold
+1/1 Gold 35000
+1/10 GoldBar
+
+;Pots + Other
+1/1 (HP)DrugXL
+1/2 (HP)DrugXL
+1/1 (MP)DrugXL
+1/2 (MP)DrugXL
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 SunPotion
+1/1 SunPotion
+1/2 SunPotion
+1/2 SunPotion
+1/1 SunPotion
+1/2 SunPotion
+
+
+1/1 BenedictionOil
+1/10 GoldenBenedictionOil
+
+1/10 AwakeningSoul0
+1/10 AwakeningSoul0

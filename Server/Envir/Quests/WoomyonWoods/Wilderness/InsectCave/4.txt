@@ -1,0 +1,29 @@
+[@Description]
+My friend went to {InsectCave/Yellow} to find herbs, but
+hasn't returned yet. Do you think you can go 
+find {Soho/LimeGreen} in {InsectCave/Yellow}?
+
+[@TaskDescription]
+Search for {Soho/LimeGreen} in the Second Floor of 
+{InsectCave/Yellow}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+1971
+
+[@GoldReward]
+2850
+
+// Pickup - Merchant_Helen 1 292 84
+// Hand In - Traveller_Soho D2042 114 155

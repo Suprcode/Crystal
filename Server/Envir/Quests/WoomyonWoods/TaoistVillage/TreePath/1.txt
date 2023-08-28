@@ -1,0 +1,28 @@
+[@Description]
+Please travel to the {RedValley/Yellow} and collect the
+Ingredient's. 
+
+[@TaskDescription]
+Kill {SpiderBat/Crimson} and collect 20 {BatPoison/LightSteelBlue}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+BatPoison 20
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+33000
+
+[@GoldReward]
+33000
+
+// Pickup - Merhcant_Janey 1006 9 10
+// Hand In - Merchant_Janey 1006 9 10

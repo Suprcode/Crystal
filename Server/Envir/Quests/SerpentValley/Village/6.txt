@@ -1,0 +1,29 @@
+[@Description]
+Have you heard of {SnakeWine/LightSteelBlue}? This Wine is made 
+with {Red Snake/Crimson} and {Striped Snakes/Crimson}. I had this 
+once near the {SerpentValley/Yellow} and i still can't 
+forget the taste of it.
+
+[@TaskDescription]
+Please go purchase some {SnakeWine/LightSteelBlue} from {Mary/LimeGreen}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+411
+
+[@GoldReward]
+600
+
+// Pickup - MongchonScout_Brian 0100 4 10
+// Hand In - 

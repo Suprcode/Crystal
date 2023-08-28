@@ -1,0 +1,58 @@
+[@Main]
+#IF
+ISADMIN
+#SAY
+Hello {<$USERNAME>/KHAKI}, my name is {<$NPCNAME>/KHAKI}.
+You appear to have {<$GAMEGOLD>/ORANGE} gold coins to spend.
+<Buy/@Buy> Script
+<Sell/@Sell> Script
+
+#ELSEACT
+MOVE 0 300 300
+
+[@Sell]
+#SAY
+Sell.
+ 
+<Back/@Main>
+
+[@Buy]
+#SAY
+Buy.
+ 
+<Back/@Main>
+
+
+[Types]
+21
+
+[Trade]
+HastePotion(A)
+HastePotion(B)
+HastePotion(C)
+SoulScroll(2)
+SoulScroll(4)
+SoulScroll(6)
+BlessedScroll(2)
+BlessedScroll(4)
+BlessedScroll(6)
+LightScroll(1)
+LightScroll(3)
+LightScroll(5)
+EnhancerScroll(1)
+EnhancerScroll(3)
+EnhancerScroll(5)
+ProtectionScroll(2)
+ProtectionScroll(4)
+ProtectionScroll(6)
+RageScroll(1)
+RageScroll(3)
+RageScroll(5)
+MoonScroll(1)
+MoonScroll(3)
+MoonScroll(5)
+Exp100%(1hr)
+Exp100%(3hr)
+Exp100%(5hr)
+ExtraDrop(1hr)
+ExtraDrop(3hr)

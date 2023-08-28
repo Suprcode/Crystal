@@ -1,0 +1,1460 @@
+;Gold
+1/1 Gold 10000 LV1
+
+;Potions
+1/1 (HP)DrugLarge LV1
+1/1 (MP)DrugLarge LV1
+1/1 (HP)DrugLarge LV1
+1/1 (MP)DrugLarge LV1
+1/1 (HP)DrugXL LV1
+1/1 (MP)DrugXL LV1
+1/1 (HP)DrugXL LV1
+1/1 (MP)DrugXL LV1
+1/1 SunPotion(M) LV1
+1/1 SunPotion(M) LV1
+1/1 SunPotion(M) LV1
+1/1 SunPotion(M) LV1
+1/1 SunPotion(M) LV1
+1/1 SunPotion(M) LV1
+1/3 BenedictionOil LV1
+1/10 BenedictionOil LV1
+1/5 WarGodOil LV1
+1/30 TaoistDrug(M) LV1
+1/30 MagicDrug(M) LV1
+1/30 ImpactDrug(M) LV1
+1/30 StormDrug(M) LV1
+
+1/70 goldbar LV1
+
+;Weapons
+1/45 JudgementMace LV1
+1/45 WarMageStaff LV1
+1/45 BladesOfDarkness LV1
+1/45 SoulSpringWand LV1
+1/125 WarSpiritBlade LV1
+1/125 LitheBow LV1
+1/125 MagicScythe LV1
+1/125 FreezingBlades LV1
+1/125 StoneBambooFan LV1
+1/500 MaleficBow LV1
+1/500 DragonSlayer LV1
+1/500 DragonStaff LV1
+1/500 SoulSabre LV1
+1/500 RoyalBlades LV1
+
+;Armours
+1/5 TemperedArmour(M) LV1
+1/5 TemperedArmour(F) LV1
+1/5 IronArmour(M) LV1
+1/5 IronArmour(F) LV1
+1/5 WizardRobe(M) LV1
+1/5 WizardRobe(F) LV1
+1/5 PearlArmour(M) LV1
+1/5 PearlArmour(F) LV1
+1/5 AncientArmour(M) LV1
+1/5 AncientArmour(F) LV1
+1/40 RoyalArmour(M) LV1
+1/40 RoyalArmour(F) LV1
+1/40 SteelArmour(M) LV1
+1/40 SteelArmour(F) LV1
+1/40 StuddedArmour(M) LV1
+1/40 StuddedArmour(F) LV1
+1/40 DragonRobe(M) LV1
+1/40 DragonRobe(F) LV1
+1/40 TitanArmour(M) LV1
+1/40 TitanArmour(F) LV1
+
+
+;Helmets
+1/70 BlackIronHelmet LV1
+1/150 GreatHelmet LV1
+1/150 WisdomCoronet LV1
+1/150 TaoCoronet LV1
+1/150 RoyalHelmet LV1
+1/10 BrassHelmet LV1
+1/15 SteelHelmet LV1
+1/5 ShamanHelmet LV1
+1/5 SkeletonHelmet LV1
+
+;Belts
+1/20 ChainBelt LV1
+1/30 BronzeBelt LV1
+1/30 GoldBelt LV1
+1/100 AdamantineBelt LV1
+
+;Shoes
+1/20 BlackBoots LV1
+1/20 SilkBoots LV1
+1/30 DragonBoots LV1
+1/45 RedScaleBoots LV1
+
+;Necklaces
+1/300 GaleNecklace LV1
+1/80 GreenBead LV1
+1/80 DemonicBells LV1
+1/80 SoulNecklace LV1
+1/55 ClawNecklace LV1
+1/55 LifeNecklace LV1
+1/55 PearlNecklace LV1
+
+;Rings
+1/105 DragonRing LV1
+1/105 RubyRing LV1
+1/105 PlatinumRing LV1
+1/70 PowerRing LV1
+1/70 VioletRing LV1
+1/70 TitanRing LV1
+1/200 OmaSpiritRing LV1
+1/200 NobleRing LV1
+1/200 SoulRing LV1
+1/350 BoundlessRing LV1
+1/350 ThunderRing LV1
+1/350 TaeGukRing LV1
+1/100 GaleRing LV1
+1/5 ExpelRing LV1
+1/5 CoralRing LV1
+
+1/150 DestinyRing LV1
+1/150 DestinyRing LV2
+1/150 DestinyRing LV3
+1/150 DestinyRing LV4
+1/150 DestinyRing LV5
+1/150 DestinyRing LV6
+1/150 DestinyRing LV7
+
+;Bracelets
+1/105 KnightBracelet LV1
+1/105 DragonBracelet LV1
+1/1055 SoulSpringBracelet LV1
+1/85 SteelGlove LV1
+1/70 SpellBracelet LV1
+1/70 3rdEyeBracelet LV1
+1/200 HangMaWheel LV1
+1/200 BokMaWheel LV1
+1/200 8TrigramWheel LV1
+1/350 SpiritReformer LV1
+1/350 HolyTaoWheel LV1
+1/350 BaekTaGlove LV1
+
+;Gems
+1/400 FreezingOrb LV1
+1/400 DurabilityOrb LV1
+1/400 BraveryOrb LV1
+1/400 MagicOrb LV1
+1/400 SoulOrb LV1
+1/400 StormOrb LV1
+1/400 ProtectionOrb LV1
+1/400 EvilSlayerOrb LV1
+1/400 PoisonOrb LV1
+1/400 AccuracyOrb LV1
+1/400 AgilityOrb LV1
+
+;Books
+1/35 IceStorm LV1
+1/35 MoonLight LV1
+1/35 SummonShinsu LV1
+1/35 FlamingSword LV1
+1/70 CrossHalfMoon LV1
+1/70 UltimateEnhancer LV1
+1/70 FlameDisruptor LV1
+1/500 SummonHolyDeva LV1
+1/600 Mirroring LV1
+1/600 SwiftFeet LV1
+1/100 BladeAvalanche LV1
+
+1/35 BindingShot LV1
+1/70 SummonToad LV1
+1/600 PoisonShot LV1
+
+
+1/300 MajesticRing LV1
+1/300 MajesticBoots LV1
+1/300 MajesticWheel LV1
+1/300 MajesticNecklace LV1
+1/300 MajesticHelmet LV1
+1/300 MajesticBelt LV1
+
+
+;shields
+1/150 PlasmaShield LV1
+1/150 SeekerShield LV1
+1/250 PredatorShield LV1
+1/400 FlechetteShield LV1
+1/400 SpikeShield LV1
+1/1000 ArmouredShield LV1
+
+
+;Other
+1/25 AwakeningSoul0 LV1
+
+;level2
+;Gold
+1/1 Gold 10000 LV2
+
+;Potions
+1/1 (HP)DrugLarge LV2
+1/1 (MP)DrugLarge LV2
+1/1 (HP)DrugLarge LV2
+1/1 (MP)DrugLarge LV2
+1/1 (HP)DrugXL LV2
+1/1 (MP)DrugXL LV2
+1/1 (HP)DrugXL LV2
+1/1 (MP)DrugXL LV2
+1/1 SunPotion(M) LV2
+1/1 SunPotion(M) LV2
+1/1 SunPotion(M) LV2
+1/1 SunPotion(M) LV2
+1/1 SunPotion(M) LV2
+1/1 SunPotion(M) LV2
+1/3 BenedictionOil LV2
+1/10 BenedictionOil LV2
+1/5 WarGodOil LV2
+1/30 TaoistDrug(M) LV2
+1/30 MagicDrug(M) LV2
+1/30 ImpactDrug(M) LV2
+1/30 StormDrug(M) LV2
+
+1/70 goldbar LV2
+
+;Weapons
+1/45 JudgementMace LV2
+1/45 WarMageStaff LV2
+1/45 BladesOfDarkness LV2
+1/45 SoulSpringWand LV2
+1/125 WarSpiritBlade LV2
+1/125 LitheBow LV2
+1/125 MagicScythe LV2
+1/125 FreezingBlades LV2
+1/125 StoneBambooFan LV2
+1/500 DragonSlayer LV2
+1/500 MaleficBow LV2
+1/500 DragonStaff LV2
+1/500 SoulSabre LV2
+1/500 RoyalBlades LV2
+
+;Armours
+1/5 TemperedArmour(M) LV2
+1/5 TemperedArmour(F) LV2
+1/5 IronArmour(M) LV2
+1/5 IronArmour(F) LV2
+1/5 WizardRobe(M) LV2
+1/5 WizardRobe(F) LV2
+1/5 PearlArmour(M) LV2
+1/5 PearlArmour(F) LV2
+1/5 AncientArmour(M) LV2
+1/5 AncientArmour(F) LV2
+1/40 RoyalArmour(M) LV2
+1/40 RoyalArmour(F) LV2
+1/40 SteelArmour(M) LV2
+1/40 SteelArmour(F) LV2
+1/40 StuddedArmour(M) LV2
+1/40 StuddedArmour(F) LV2
+1/40 DragonRobe(M) LV2
+1/40 DragonRobe(F) LV2
+1/40 TitanArmour(M) LV2
+1/40 TitanArmour(F) LV2
+
+
+;Helmets
+1/70 BlackIronHelmet LV2
+1/150 GreatHelmet LV2
+1/150 WisdomCoronet LV2
+1/150 TaoCoronet LV2
+1/150 RoyalHelmet LV2
+1/10 BrassHelmet LV2
+1/15 SteelHelmet LV2
+1/5 ShamanHelmet LV2
+1/5 SkeletonHelmet LV2
+
+;Belts
+1/20 ChainBelt LV2
+1/30 BronzeBelt LV2
+1/30 GoldBelt LV2
+1/100 AdamantineBelt LV2
+
+;Shoes
+1/20 BlackBoots LV2
+1/20 SilkBoots LV2
+1/30 DragonBoots LV2
+1/45 RedScaleBoots LV2
+
+;Necklaces
+1/300 GaleNecklace LV2
+1/80 GreenBead LV2
+1/80 DemonicBells LV2
+1/80 SoulNecklace LV2
+1/55 ClawNecklace LV2
+1/55 LifeNecklace LV2
+1/55 PearlNecklace LV2
+
+;Rings
+1/105 DragonRing LV2
+1/105 RubyRing LV2
+1/105 PlatinumRing LV2
+1/70 PowerRing LV2
+1/70 VioletRing LV2
+1/70 TitanRing LV2
+1/200 OmaSpiritRing LV2
+1/200 NobleRing LV2
+1/200 SoulRing LV2
+1/350 BoundlessRing LV2
+1/350 ThunderRing LV2
+1/350 TaeGukRing LV2
+1/100 GaleRing LV2
+1/5 ExpelRing LV2
+1/5 CoralRing LV2
+
+;Bracelets
+1/105 KnightBracelet LV2
+1/105 DragonBracelet LV2
+1/1055 SoulSpringBracelet LV2
+1/85 SteelGlove LV2
+1/70 SpellBracelet LV2
+1/70 3rdEyeBracelet LV2
+1/200 HangMaWheel LV2
+1/200 BokMaWheel LV2
+1/200 8TrigramWheel LV2
+1/350 SpiritReformer LV2
+1/350 HolyTaoWheel LV2
+1/350 BaekTaGlove LV2
+
+;Gems
+1/400 FreezingOrb LV2
+1/400 DurabilityOrb LV2
+1/400 BraveryOrb LV2
+1/400 MagicOrb LV2
+1/400 SoulOrb LV2
+1/400 StormOrb LV2
+1/400 ProtectionOrb LV2
+1/400 EvilSlayerOrb LV2
+1/400 PoisonOrb LV2
+1/400 AccuracyOrb LV2
+1/400 AgilityOrb LV2
+
+;Books
+1/35 IceStorm LV2
+1/35 MoonLight LV2
+1/35 SummonShinsu LV2
+1/35 FlamingSword LV2
+1/70 CrossHalfMoon LV2
+1/70 UltimateEnhancer LV2
+1/70 FlameDisruptor LV2
+1/500 SummonHolyDeva LV2
+1/600 Mirroring LV2
+1/600 SwiftFeet LV2
+1/100 BladeAvalanche LV2
+
+1/35 BindingShot LV2
+1/70 SummonToad LV2
+1/600 PoisonShot LV2
+
+
+1/300 MajesticRing LV2
+1/300 MajesticBoots LV2
+1/300 MajesticWheel LV2
+1/300 MajesticNecklace LV2
+1/300 MajesticHelmet LV2
+1/300 MajesticBelt LV2
+
+
+;shields
+1/150 PlasmaShield LV2
+1/150 SeekerShield LV2
+1/250 PredatorShield LV2
+1/400 FlechetteShield LV2
+1/400 SpikeShield LV2
+1/1000 ArmouredShield LV2
+
+
+;Other
+1/25 AwakeningSoul0 LV2
+
+;Level3
+;Gold
+1/1 Gold 10000 LV3
+
+;Potions
+1/1 (HP)DrugLarge LV3
+1/1 (MP)DrugLarge LV3
+1/1 (HP)DrugLarge LV3
+1/1 (MP)DrugLarge LV3
+1/1 (HP)DrugXL LV3
+1/1 (MP)DrugXL LV3
+1/1 (HP)DrugXL LV3
+1/1 (MP)DrugXL LV3
+1/1 SunPotion(M) LV3
+1/1 SunPotion(M) LV3
+1/1 SunPotion(M) LV3
+1/1 SunPotion(M) LV3
+1/1 SunPotion(M) LV3
+1/1 SunPotion(M) LV3
+1/3 BenedictionOil LV3
+1/10 BenedictionOil LV3
+1/5 WarGodOil LV3
+1/30 TaoistDrug(M) LV3
+1/30 MagicDrug(M) LV3
+1/30 ImpactDrug(M) LV3
+1/30 StormDrug(M) LV3
+
+1/70 goldbar LV3
+
+;Weapons
+1/45 JudgementMace LV3
+1/45 WarMageStaff LV3
+1/45 BladesOfDarkness LV3
+1/45 SoulSpringWand LV3
+1/125 LitheBow LV3
+1/125 WarSpiritBlade LV3
+1/125 MagicScythe LV3
+1/125 FreezingBlades LV3
+1/125 StoneBambooFan LV3
+1/500 DragonSlayer LV3
+1/500 MaleficBow LV3
+1/500 DragonStaff LV3
+1/500 SoulSabre LV3
+1/500 RoyalBlades LV3
+
+;Armours
+1/5 TemperedArmour(M) LV3
+1/5 TemperedArmour(F) LV3
+1/5 IronArmour(M) LV3
+1/5 IronArmour(F) LV3
+1/5 WizardRobe(M) LV3
+1/5 WizardRobe(F) LV3
+1/5 PearlArmour(M) LV3
+1/5 PearlArmour(F) LV3
+1/5 AncientArmour(M) LV3
+1/5 AncientArmour(F) LV3
+1/40 RoyalArmour(M) LV3
+1/40 RoyalArmour(F) LV3
+1/40 SteelArmour(M) LV3
+1/40 SteelArmour(F) LV3
+1/40 StuddedArmour(M) LV3
+1/40 StuddedArmour(F) LV3
+1/40 DragonRobe(M) LV3
+1/40 DragonRobe(F) LV3
+1/40 TitanArmour(M) LV3
+1/40 TitanArmour(F) LV3
+
+
+;Helmets
+1/70 BlackIronHelmet LV3
+1/150 GreatHelmet LV3
+1/150 WisdomCoronet LV3
+1/150 TaoCoronet LV3
+1/150 RoyalHelmet LV3
+1/10 BrassHelmet LV3
+1/15 SteelHelmet LV3
+1/5 ShamanHelmet LV3
+1/5 SkeletonHelmet LV3
+
+;Belts
+1/20 ChainBelt LV3
+1/30 BronzeBelt LV3
+1/30 GoldBelt LV3
+1/100 AdamantineBelt LV3
+
+;Shoes
+1/20 BlackBoots LV3
+1/20 SilkBoots LV3
+1/30 DragonBoots LV3
+1/45 RedScaleBoots LV3
+
+;Necklaces
+1/300 GaleNecklace LV3
+1/80 GreenBead LV3
+1/80 DemonicBells LV3
+1/80 SoulNecklace LV3
+1/55 ClawNecklace LV3
+1/55 LifeNecklace LV3
+1/55 PearlNecklace LV3
+
+;Rings
+1/105 DragonRing LV3
+1/105 RubyRing LV3
+1/105 PlatinumRing LV3
+1/70 PowerRing LV3
+1/70 VioletRing LV3
+1/70 TitanRing LV3
+1/200 OmaSpiritRing LV3
+1/200 NobleRing LV3
+1/200 SoulRing LV3
+1/350 BoundlessRing LV3
+1/350 ThunderRing LV3
+1/350 TaeGukRing LV3
+1/100 GaleRing LV3
+1/5 ExpelRing LV3
+1/5 CoralRing LV3
+
+;Bracelets
+1/105 KnightBracelet LV3
+1/105 DragonBracelet LV3
+1/1055 SoulSpringBracelet LV3
+1/85 SteelGlove LV3
+1/70 SpellBracelet LV3
+1/70 3rdEyeBracelet LV3
+1/200 HangMaWheel LV3
+1/200 BokMaWheel LV3
+1/200 8TrigramWheel LV3
+1/350 SpiritReformer LV3
+1/350 HolyTaoWheel LV3
+1/350 BaekTaGlove LV3
+
+;Gems
+1/400 FreezingOrb LV3
+1/400 DurabilityOrb LV3
+1/400 BraveryOrb LV3
+1/400 MagicOrb LV3
+1/400 SoulOrb LV3
+1/400 StormOrb LV3
+1/400 ProtectionOrb LV3
+1/400 EvilSlayerOrb LV3
+1/400 PoisonOrb LV3
+1/400 AccuracyOrb LV3
+1/400 AgilityOrb LV3
+
+;Books
+1/35 IceStorm LV3
+1/35 MoonLight LV3
+1/35 SummonShinsu LV3
+1/35 FlamingSword LV3
+1/70 CrossHalfMoon LV3
+1/70 UltimateEnhancer LV3
+1/70 FlameDisruptor LV3
+1/500 SummonHolyDeva LV3
+1/600 Mirroring LV3
+1/600 SwiftFeet LV3
+1/100 BladeAvalanche LV3
+
+
+1/35 BindingShot LV3
+1/70 SummonToad LV3
+1/600 PoisonShot LV3
+
+1/300 MajesticRing LV3
+1/300 MajesticBoots LV3
+1/300 MajesticWheel LV3
+1/300 MajesticNecklace LV3
+1/300 MajesticHelmet LV3
+1/300 MajesticBelt LV3
+
+
+;shields
+1/150 PlasmaShield LV3
+1/150 SeekerShield LV3
+1/250 PredatorShield LV3
+1/400 FlechetteShield LV3
+1/400 SpikeShield LV3
+1/1000 ArmouredShield LV3
+
+
+;Other
+1/25 AwakeningSoul0 LV3
+
+;Level4
+;Gold
+1/1 Gold 10000 LV4
+
+;Potions
+1/1 (HP)DrugLarge LV4
+1/1 (MP)DrugLarge LV4
+1/1 (HP)DrugLarge LV4
+1/1 (MP)DrugLarge LV4
+1/1 (HP)DrugXL LV4
+1/1 (MP)DrugXL LV4
+1/1 (HP)DrugXL LV4
+1/1 (MP)DrugXL LV4
+1/1 SunPotion(M) LV4
+1/1 SunPotion(M) LV4
+1/1 SunPotion(M) LV4
+1/1 SunPotion(M) LV4
+1/1 SunPotion(M) LV4
+1/1 SunPotion(M) LV4
+1/3 BenedictionOil LV4
+1/10 BenedictionOil LV4
+1/5 WarGodOil LV4
+1/30 TaoistDrug(M) LV4
+1/30 MagicDrug(M) LV4
+1/30 ImpactDrug(M) LV4
+1/30 StormDrug(M) LV4
+
+1/70 goldbar LV4
+
+;Weapons
+1/45 JudgementMace LV4
+1/45 WarMageStaff LV4
+1/45 BladesOfDarkness LV4
+1/45 SoulSpringWand LV4
+1/125 WarSpiritBlade LV4
+1/125 LitheBow LV4
+1/125 MagicScythe LV4
+1/125 FreezingBlades LV4
+1/125 StoneBambooFan LV4
+1/500 DragonSlayer LV4
+1/500 MaleficBow LV4
+1/500 DragonStaff LV4
+1/500 SoulSabre LV4
+1/500 RoyalBlades LV4
+
+;Armours
+1/5 TemperedArmour(M) LV4
+1/5 TemperedArmour(F) LV4
+1/5 IronArmour(M) LV4
+1/5 IronArmour(F) LV4
+1/5 WizardRobe(M) LV4
+1/5 WizardRobe(F) LV4
+1/5 PearlArmour(M) LV4
+1/5 PearlArmour(F) LV4
+1/5 AncientArmour(M) LV4
+1/5 AncientArmour(F) LV4
+1/40 RoyalArmour(M) LV4
+1/40 RoyalArmour(F) LV4
+1/40 SteelArmour(M) LV4
+1/40 SteelArmour(F) LV4
+1/40 StuddedArmour(M) LV4
+1/40 StuddedArmour(F) LV4
+1/40 DragonRobe(M) LV4
+1/40 DragonRobe(F) LV4
+1/40 TitanArmour(M) LV4
+1/40 TitanArmour(F) LV4
+
+
+;Helmets
+1/70 BlackIronHelmet LV4
+1/150 GreatHelmet LV4
+1/150 WisdomCoronet LV4
+1/150 TaoCoronet LV4
+1/150 RoyalHelmet LV4
+1/10 BrassHelmet LV4
+1/15 SteelHelmet LV4
+1/5 ShamanHelmet LV4
+1/5 SkeletonHelmet LV4
+
+;Belts
+1/20 ChainBelt LV4
+1/30 BronzeBelt LV4
+1/30 GoldBelt LV4
+1/100 AdamantineBelt LV4
+
+;Shoes
+1/20 BlackBoots LV4
+1/20 SilkBoots LV4
+1/30 DragonBoots LV4
+1/45 RedScaleBoots LV4
+
+;Necklaces
+1/300 GaleNecklace LV4
+1/80 GreenBead LV4
+1/80 DemonicBells LV4
+1/80 SoulNecklace LV4
+1/55 ClawNecklace LV4
+1/55 LifeNecklace LV4
+1/55 PearlNecklace LV4
+
+;Rings
+1/105 DragonRing LV4
+1/105 RubyRing LV4
+1/105 PlatinumRing LV4
+1/70 PowerRing LV4
+1/70 VioletRing LV4
+1/70 TitanRing LV4
+1/200 OmaSpiritRing LV4
+1/200 NobleRing LV4
+1/200 SoulRing LV4
+1/350 BoundlessRing LV4
+1/350 ThunderRing LV4
+1/350 TaeGukRing LV4
+1/100 GaleRing LV4
+1/5 ExpelRing LV4
+1/5 CoralRing LV4
+
+;Bracelets
+1/105 KnightBracelet LV4
+1/105 DragonBracelet LV4
+1/1055 SoulSpringBracelet LV4
+1/85 SteelGlove LV4
+1/70 SpellBracelet LV4
+1/70 3rdEyeBracelet LV4
+1/200 HangMaWheel LV4
+1/200 BokMaWheel LV4
+1/200 8TrigramWheel LV4
+1/350 SpiritReformer LV4
+1/350 HolyTaoWheel LV4
+1/350 BaekTaGlove LV4
+
+;Gems
+1/400 FreezingOrb LV4
+1/400 DurabilityOrb LV4
+1/400 BraveryOrb LV4
+1/400 MagicOrb LV4
+1/400 SoulOrb LV4
+1/400 StormOrb LV4
+1/400 ProtectionOrb LV4
+1/400 EvilSlayerOrb LV4
+1/400 PoisonOrb LV4
+1/400 AccuracyOrb LV4
+1/400 AgilityOrb LV4
+
+;Books
+1/35 IceStorm LV4
+1/35 MoonLight LV4
+1/35 SummonShinsu LV4
+1/35 FlamingSword LV4
+1/70 CrossHalfMoon LV4
+1/70 UltimateEnhancer LV4
+1/70 FlameDisruptor LV4
+1/500 SummonHolyDeva LV4
+1/600 Mirroring LV4
+1/600 SwiftFeet LV4
+1/100 BladeAvalanche LV4
+
+
+1/35 BindingShot LV4
+1/70 SummonToad LV4
+1/600 PoisonShot LV4
+
+1/300 MajesticRing LV4
+1/300 MajesticBoots LV4
+1/300 MajesticWheel LV4
+1/300 MajesticNecklace LV4
+1/300 MajesticHelmet LV4
+1/300 MajesticBelt LV4
+
+
+;shields
+1/150 PlasmaShield LV4
+1/150 SeekerShield LV4
+1/250 PredatorShield LV4
+1/400 FlechetteShield LV4
+1/400 SpikeShield LV4
+1/1000 ArmouredShield LV4
+
+
+;Other
+1/25 AwakeningSoul0 LV4
+
+;Level5
+;Gold
+1/1 Gold 10000 LV5
+
+;Potions
+1/1 (HP)DrugLarge LV5
+1/1 (MP)DrugLarge LV5
+1/1 (HP)DrugLarge LV5
+1/1 (MP)DrugLarge LV5
+1/1 (HP)DrugXL LV5
+1/1 (MP)DrugXL LV5
+1/1 (HP)DrugXL LV5
+1/1 (MP)DrugXL LV5
+1/1 SunPotion(M) LV5
+1/1 SunPotion(M) LV5
+1/1 SunPotion(M) LV5
+1/1 SunPotion(M) LV5
+1/1 SunPotion(M) LV5
+1/1 SunPotion(M) LV5
+1/3 BenedictionOil LV5
+1/10 BenedictionOil LV5
+1/5 WarGodOil LV5
+1/30 TaoistDrug(M) LV5
+1/30 MagicDrug(M) LV5
+1/30 ImpactDrug(M) LV5
+1/30 StormDrug(M) LV5
+
+1/70 goldbar LV5
+
+;Weapons
+1/45 JudgementMace LV5
+1/45 WarMageStaff LV5
+1/45 BladesOfDarkness LV5
+1/45 SoulSpringWand LV5
+1/125 WarSpiritBlade LV5
+1/125 LitheBow LV5
+1/125 MagicScythe LV5
+1/125 FreezingBlades LV5
+1/125 StoneBambooFan LV5
+1/500 DragonSlayer LV5
+1/500 DragonStaff LV5
+1/500 MaleficBow LV5
+1/500 SoulSabre LV5
+1/500 RoyalBlades LV5
+
+;Armours
+1/5 TemperedArmour(M) LV5
+1/5 TemperedArmour(F) LV5
+1/5 IronArmour(M) LV5
+1/5 IronArmour(F) LV5
+1/5 WizardRobe(M) LV5
+1/5 WizardRobe(F) LV5
+1/5 PearlArmour(M) LV5
+1/5 PearlArmour(F) LV5
+1/5 AncientArmour(M) LV5
+1/5 AncientArmour(F) LV5
+1/40 RoyalArmour(M) LV5
+1/40 RoyalArmour(F) LV5
+1/40 SteelArmour(M) LV5
+1/40 SteelArmour(F) LV5
+1/40 StuddedArmour(M) LV5
+1/40 StuddedArmour(F) LV5
+1/40 DragonRobe(M) LV5
+1/40 DragonRobe(F) LV5
+1/40 TitanArmour(M) LV5
+1/40 TitanArmour(F) LV5
+
+
+;Helmets
+1/70 BlackIronHelmet LV5
+1/150 GreatHelmet LV5
+1/150 WisdomCoronet LV5
+1/150 TaoCoronet LV5
+1/150 RoyalHelmet LV5
+1/10 BrassHelmet LV5
+1/15 SteelHelmet LV5
+1/5 ShamanHelmet LV5
+1/5 SkeletonHelmet LV5
+
+;Belts
+1/20 ChainBelt LV5
+1/30 BronzeBelt LV5
+1/30 GoldBelt LV5
+1/100 AdamantineBelt LV5
+
+;Shoes
+1/20 BlackBoots LV5
+1/20 SilkBoots LV5
+1/30 DragonBoots LV5
+1/45 RedScaleBoots LV5
+
+;Necklaces
+1/300 GaleNecklace LV5
+1/80 GreenBead LV5
+1/80 DemonicBells LV5
+1/80 SoulNecklace LV5
+1/55 ClawNecklace LV5
+1/55 LifeNecklace LV5
+1/55 PearlNecklace LV5
+
+;Rings
+1/105 DragonRing LV5
+1/105 RubyRing LV5
+1/105 PlatinumRing LV5
+1/70 PowerRing LV5
+1/70 VioletRing LV5
+1/70 TitanRing LV5
+1/200 OmaSpiritRing LV5
+1/200 NobleRing LV5
+1/200 SoulRing LV5
+1/350 BoundlessRing LV5
+1/350 ThunderRing LV5
+1/350 TaeGukRing LV5
+1/100 GaleRing LV5
+1/5 ExpelRing LV5
+1/5 CoralRing LV5
+
+;Bracelets
+1/105 KnightBracelet LV5
+1/105 DragonBracelet LV5
+1/1055 SoulSpringBracelet LV5
+1/85 SteelGlove LV5
+1/70 SpellBracelet LV5
+1/70 3rdEyeBracelet LV5
+1/200 HangMaWheel LV5
+1/200 BokMaWheel LV5
+1/200 8TrigramWheel LV5
+1/350 SpiritReformer LV5
+1/350 HolyTaoWheel LV5
+1/350 BaekTaGlove LV5
+
+;Gems
+1/400 FreezingOrb LV5
+1/400 DurabilityOrb LV5
+1/400 BraveryOrb LV5
+1/400 MagicOrb LV5
+1/400 SoulOrb LV5
+1/400 StormOrb LV5
+1/400 ProtectionOrb LV5
+1/400 EvilSlayerOrb LV5
+1/400 PoisonOrb LV5
+1/400 AccuracyOrb LV5
+1/400 AgilityOrb LV5
+
+;Books
+1/35 IceStorm LV5
+1/35 MoonLight LV5
+1/35 SummonShinsu LV5
+1/35 FlamingSword LV5
+1/70 CrossHalfMoon LV5
+1/70 UltimateEnhancer LV5
+1/70 FlameDisruptor LV5
+1/500 SummonHolyDeva LV5
+1/600 Mirroring LV5
+1/600 SwiftFeet LV5
+1/100 BladeAvalanche LV5
+
+1/35 BindingShot LV5
+1/70 SummonToad LV5
+1/600 PoisonShot LV5
+
+1/300 MajesticRing LV5
+1/300 MajesticBoots LV5
+1/300 MajesticWheel LV5
+1/300 MajesticNecklace LV5
+1/300 MajesticHelmet LV5
+1/300 MajesticBelt LV5
+
+
+;shields
+1/150 PlasmaShield LV5
+1/150 SeekerShield LV5
+1/250 PredatorShield LV5
+1/400 FlechetteShield LV5
+1/400 SpikeShield LV5
+1/1000 ArmouredShield LV5
+
+
+;Other
+1/25 AwakeningSoul0 LV5
+
+;level6
+;Gold
+1/1 Gold 10000 LV6
+
+;Potions
+1/1 (HP)DrugLarge LV6
+1/1 (MP)DrugLarge LV6
+1/1 (HP)DrugLarge LV6
+1/1 (MP)DrugLarge LV6
+1/1 (HP)DrugXL LV6
+1/1 (MP)DrugXL LV6
+1/1 (HP)DrugXL LV6
+1/1 (MP)DrugXL LV6
+1/1 SunPotion(M) LV6
+1/1 SunPotion(M) LV6
+1/1 SunPotion(M) LV6
+1/1 SunPotion(M) LV6
+1/1 SunPotion(M) LV6
+1/1 SunPotion(M) LV6
+1/3 BenedictionOil LV6
+1/10 BenedictionOil LV6
+1/5 WarGodOil LV6
+1/30 TaoistDrug(M) LV6
+1/30 MagicDrug(M) LV6
+1/30 ImpactDrug(M) LV6
+1/30 StormDrug(M) LV6
+
+1/70 goldbar LV6
+
+;Weapons
+1/45 JudgementMace LV6
+1/45 WarMageStaff LV6
+1/45 BladesOfDarkness LV6
+1/45 SoulSpringWand LV6
+1/125 WarSpiritBlade LV6
+1/125 LitheBow LV6
+1/125 MagicScythe LV6
+1/125 FreezingBlades LV6
+1/125 StoneBambooFan LV6
+1/500 DragonSlayer LV6
+1/500 MaleficBow LV6
+1/500 DragonStaff LV6
+1/500 SoulSabre LV6
+1/500 RoyalBlades LV6
+
+;Armours
+1/5 TemperedArmour(M) LV6
+1/5 TemperedArmour(F) LV6
+1/5 IronArmour(M) LV6
+1/5 IronArmour(F) LV6
+1/5 WizardRobe(M) LV6
+1/5 WizardRobe(F) LV6
+1/5 PearlArmour(M) LV6
+1/5 PearlArmour(F) LV6
+1/5 AncientArmour(M) LV6
+1/5 AncientArmour(F) LV6
+1/40 RoyalArmour(M) LV6
+1/40 RoyalArmour(F) LV6
+1/40 SteelArmour(M) LV6
+1/40 SteelArmour(F) LV6
+1/40 StuddedArmour(M) LV6
+1/40 StuddedArmour(F) LV6
+1/40 DragonRobe(M) LV6
+1/40 DragonRobe(F) LV6
+1/40 TitanArmour(M) LV6
+1/40 TitanArmour(F) LV6
+
+
+;Helmets
+1/70 BlackIronHelmet LV6
+1/150 GreatHelmet LV6
+1/150 WisdomCoronet LV6
+1/150 TaoCoronet LV6
+1/150 RoyalHelmet LV6
+1/10 BrassHelmet LV6
+1/15 SteelHelmet LV6
+1/5 ShamanHelmet LV6
+1/5 SkeletonHelmet LV6
+
+;Belts
+1/20 ChainBelt LV6
+1/30 BronzeBelt LV6
+1/30 GoldBelt LV6
+1/100 AdamantineBelt LV6
+
+;Shoes
+1/20 BlackBoots LV6
+1/20 SilkBoots LV6
+1/30 DragonBoots LV6
+1/45 RedScaleBoots LV6
+
+;Necklaces
+1/300 GaleNecklace LV6
+1/80 GreenBead LV6
+1/80 DemonicBells LV6
+1/80 SoulNecklace LV6
+1/55 ClawNecklace LV6
+1/55 LifeNecklace LV6
+1/55 PearlNecklace LV6
+
+;Rings
+1/105 DragonRing LV6
+1/105 RubyRing LV6
+1/105 PlatinumRing LV6
+1/70 PowerRing LV6
+1/70 VioletRing LV6
+1/70 TitanRing LV6
+1/200 OmaSpiritRing LV6
+1/200 NobleRing LV6
+1/200 SoulRing LV6
+1/350 BoundlessRing LV6
+1/350 ThunderRing LV6
+1/350 TaeGukRing LV6
+1/100 GaleRing LV6
+1/5 ExpelRing LV6
+1/5 CoralRing LV6
+
+;Bracelets
+1/105 KnightBracelet LV6
+1/105 DragonBracelet LV6
+1/1055 SoulSpringBracelet LV6
+1/85 SteelGlove LV6
+1/70 SpellBracelet LV6
+1/70 3rdEyeBracelet LV6
+1/200 HangMaWheel LV6
+1/200 BokMaWheel LV6
+1/200 8TrigramWheel LV6
+1/350 SpiritReformer LV6
+1/350 HolyTaoWheel LV6
+1/350 BaekTaGlove LV6
+
+;Gems
+1/400 FreezingOrb LV6
+1/400 DurabilityOrb LV6
+1/400 BraveryOrb LV6
+1/400 MagicOrb LV6
+1/400 SoulOrb LV6
+1/400 StormOrb LV6
+1/400 ProtectionOrb LV6
+1/400 EvilSlayerOrb LV6
+1/400 PoisonOrb LV6
+1/400 AccuracyOrb LV6
+1/400 AgilityOrb LV6
+
+;Books
+1/35 IceStorm LV6
+1/35 MoonLight LV6
+1/35 SummonShinsu LV6
+1/35 FlamingSword LV6
+1/70 CrossHalfMoon LV6
+1/70 UltimateEnhancer LV6
+1/70 FlameDisruptor LV6
+1/500 SummonHolyDeva LV6
+1/600 Mirroring LV6
+1/600 SwiftFeet LV6
+1/100 BladeAvalanche LV6
+
+1/35 BindingShot LV6
+1/70 SummonToad LV6
+1/600 PoisonShot LV6
+
+1/300 MajesticRing LV6
+1/300 MajesticBoots LV6
+1/300 MajesticWheel LV6
+1/300 MajesticNecklace LV6
+1/300 MajesticHelmet LV6
+1/300 MajesticBelt LV6
+
+
+;shields
+1/150 PlasmaShield LV6
+1/150 SeekerShield LV6
+1/250 PredatorShield LV6
+1/400 FlechetteShield LV6
+1/400 SpikeShield LV6
+1/1000 ArmouredShield LV6
+
+
+;Other
+1/25 AwakeningSoul0 LV6
+
+;Level7
+;Gold
+1/1 Gold 10000 LV7
+
+;Potions
+1/1 (HP)DrugLarge LV7
+1/1 (MP)DrugLarge LV7
+1/1 (HP)DrugLarge LV7
+1/1 (MP)DrugLarge LV7
+1/1 (HP)DrugXL LV7
+1/1 (MP)DrugXL LV7
+1/1 (HP)DrugXL LV7
+1/1 (MP)DrugXL LV7
+1/1 SunPotion(M) LV7
+1/1 SunPotion(M) LV7
+1/1 SunPotion(M) LV7
+1/1 SunPotion(M) LV7
+1/1 SunPotion(M) LV7
+1/1 SunPotion(M) LV7
+1/3 BenedictionOil LV7
+1/10 BenedictionOil LV7
+1/5 WarGodOil LV7
+1/30 TaoistDrug(M) LV7
+1/30 MagicDrug(M) LV7
+1/30 ImpactDrug(M) LV7
+1/30 StormDrug(M) LV7
+
+1/70 goldbar LV7
+
+;Weapons
+1/45 JudgementMace LV7
+1/45 WarMageStaff LV7
+1/45 BladesOfDarkness LV7
+1/45 SoulSpringWand LV7
+1/125 WarSpiritBlade LV7
+1/125 LitheBow LV7
+1/125 MagicScythe LV7
+1/125 FreezingBlades LV7
+1/125 StoneBambooFan LV7
+1/500 DragonSlayer LV7
+1/500 MaleficBow LV7
+1/500 DragonStaff LV7
+1/500 SoulSabre LV7
+1/500 RoyalBlades LV7
+
+;Armours
+1/5 TemperedArmour(M) LV7
+1/5 TemperedArmour(F) LV7
+1/5 IronArmour(M) LV7
+1/5 IronArmour(F) LV7
+1/5 WizardRobe(M) LV7
+1/5 WizardRobe(F) LV7
+1/5 PearlArmour(M) LV7
+1/5 PearlArmour(F) LV7
+1/5 AncientArmour(M) LV7
+1/5 AncientArmour(F) LV7
+1/40 RoyalArmour(M) LV7
+1/40 RoyalArmour(F) LV7
+1/40 SteelArmour(M) LV7
+1/40 SteelArmour(F) LV7
+1/40 StuddedArmour(M) LV7
+1/40 StuddedArmour(F) LV7
+1/40 DragonRobe(M) LV7
+1/40 DragonRobe(F) LV7
+1/40 TitanArmour(M) LV7
+1/40 TitanArmour(F) LV7
+
+
+;Helmets
+1/70 BlackIronHelmet LV7
+1/150 GreatHelmet LV7
+1/150 WisdomCoronet LV7
+1/150 TaoCoronet LV7
+1/150 RoyalHelmet LV7
+1/10 BrassHelmet LV7
+1/15 SteelHelmet LV7
+1/5 ShamanHelmet LV7
+1/5 SkeletonHelmet LV7
+
+;Belts
+1/20 ChainBelt LV7
+1/30 BronzeBelt LV7
+1/30 GoldBelt LV7
+1/100 AdamantineBelt LV7
+
+;Shoes
+1/20 BlackBoots LV7
+1/20 SilkBoots LV7
+1/30 DragonBoots LV7
+1/45 RedScaleBoots LV7
+
+;Necklaces
+1/300 GaleNecklace LV7
+1/80 GreenBead LV7
+1/80 DemonicBells LV7
+1/80 SoulNecklace LV7
+1/55 ClawNecklace LV7
+1/55 LifeNecklace LV7
+1/55 PearlNecklace LV7
+
+;Rings
+1/105 DragonRing LV7
+1/105 RubyRing LV7
+1/105 PlatinumRing LV7
+1/70 PowerRing LV7
+1/70 VioletRing LV7
+1/70 TitanRing LV7
+1/200 OmaSpiritRing LV7
+1/200 NobleRing LV7
+1/200 SoulRing LV7
+1/350 BoundlessRing LV7
+1/350 ThunderRing LV7
+1/350 TaeGukRing LV7
+1/100 GaleRing LV7
+1/5 ExpelRing LV7
+1/5 CoralRing LV7
+
+;Bracelets
+1/105 KnightBracelet LV7
+1/105 DragonBracelet LV7
+1/1055 SoulSpringBracelet LV7
+1/85 SteelGlove LV7
+1/70 SpellBracelet LV7
+1/70 3rdEyeBracelet LV7
+1/200 HangMaWheel LV7
+1/200 BokMaWheel LV7
+1/200 8TrigramWheel LV7
+1/350 SpiritReformer LV7
+1/350 HolyTaoWheel LV7
+1/350 BaekTaGlove LV7
+
+;Gems
+1/400 FreezingOrb LV7
+1/400 DurabilityOrb LV7
+1/400 BraveryOrb LV7
+1/400 MagicOrb LV7
+1/400 SoulOrb LV7
+1/400 StormOrb LV7
+1/400 ProtectionOrb LV7
+1/400 EvilSlayerOrb LV7
+1/400 PoisonOrb LV7
+1/400 AccuracyOrb LV7
+1/400 AgilityOrb LV7
+
+;Books
+1/35 IceStorm LV7
+1/35 MoonLight LV7
+1/35 SummonShinsu LV7
+1/35 FlamingSword LV7
+1/70 CrossHalfMoon LV7
+1/70 UltimateEnhancer LV7
+1/70 FlameDisruptor LV7
+1/500 SummonHolyDeva LV7
+1/600 Mirroring LV7
+1/600 SwiftFeet LV7
+1/100 BladeAvalanche LV7
+
+
+1/35 BindingShot LV7
+1/70 SummonToad LV7
+1/600 PoisonShot LV7
+
+1/300 MajesticRing LV7
+1/300 MajesticBoots LV7
+1/300 MajesticWheel LV7
+1/300 MajesticNecklace LV7
+1/300 MajesticHelmet LV7
+1/300 MajesticBelt LV7
+
+
+;shields
+1/150 PlasmaShield LV7
+1/150 SeekerShield LV7
+1/250 PredatorShield LV7
+1/400 FlechetteShield LV7
+1/400 SpikeShield LV7
+1/1000 ArmouredShield LV7
+
+
+;Other
+1/25 AwakeningSoul0 LV7
+
+;Level8
+;Gold
+1/1 Gold 10000 LV8
+
+;Potions
+1/1 (HP)DrugLarge LV8
+1/1 (MP)DrugLarge LV8
+1/1 (HP)DrugLarge LV8
+1/1 (MP)DrugLarge LV8
+1/1 (HP)DrugXL LV8
+1/1 (MP)DrugXL LV8
+1/1 (HP)DrugXL LV8
+1/1 (MP)DrugXL LV8
+1/1 SunPotion(M) LV8
+1/1 SunPotion(M) LV8
+1/1 SunPotion(M) LV8
+1/1 SunPotion(M) LV8
+1/1 SunPotion(M) LV8
+1/1 SunPotion(M) LV8
+1/3 BenedictionOil LV8
+1/10 BenedictionOil LV8
+1/5 WarGodOil LV8
+1/30 TaoistDrug(M) LV8
+1/30 MagicDrug(M) LV8
+1/30 ImpactDrug(M) LV8
+1/30 StormDrug(M) LV8
+
+1/70 goldbar LV8
+
+;Weapons
+1/45 JudgementMace LV8
+1/45 WarMageStaff LV8
+1/45 BladesOfDarkness LV8
+1/45 SoulSpringWand LV8
+1/125 WarSpiritBlade LV8
+1/125 LitheBow LV8
+1/125 MagicScythe LV8
+1/125 FreezingBlades LV8
+1/125 StoneBambooFan LV8
+1/500 DragonSlayer LV8
+1/500 MaleficBow LV8
+1/500 DragonStaff LV8
+1/500 SoulSabre LV8
+1/500 RoyalBlades LV8
+
+;Armours
+1/5 TemperedArmour(M) LV8
+1/5 TemperedArmour(F) LV8
+1/5 IronArmour(M) LV8
+1/5 IronArmour(F) LV8
+1/5 WizardRobe(M) LV8
+1/5 WizardRobe(F) LV8
+1/5 PearlArmour(M) LV8
+1/5 PearlArmour(F) LV8
+1/5 AncientArmour(M) LV8
+1/5 AncientArmour(F) LV8
+1/40 RoyalArmour(M) LV8
+1/40 RoyalArmour(F) LV8
+1/40 SteelArmour(M) LV8
+1/40 SteelArmour(F) LV8
+1/40 StuddedArmour(M) LV8
+1/40 StuddedArmour(F) LV8
+1/40 DragonRobe(M) LV8
+1/40 DragonRobe(F) LV8
+1/40 TitanArmour(M) LV8
+1/40 TitanArmour(F) LV8
+
+
+;Helmets
+1/70 BlackIronHelmet LV8
+1/150 GreatHelmet LV8
+1/150 WisdomCoronet LV8
+1/150 TaoCoronet LV8
+1/150 RoyalHelmet LV8
+1/10 BrassHelmet LV8
+1/15 SteelHelmet LV8
+1/5 ShamanHelmet LV8
+1/5 SkeletonHelmet LV8
+
+;Belts
+1/20 ChainBelt LV8
+1/30 BronzeBelt LV8
+1/30 GoldBelt LV8
+1/100 AdamantineBelt LV8
+
+;Shoes
+1/20 BlackBoots LV8
+1/20 SilkBoots LV8
+1/30 DragonBoots LV8
+1/45 RedScaleBoots LV8
+
+;Necklaces
+1/300 GaleNecklace LV8
+1/80 GreenBead LV8
+1/80 DemonicBells LV8
+1/80 SoulNecklace LV8
+1/55 ClawNecklace LV8
+1/55 LifeNecklace LV8
+1/55 PearlNecklace LV8
+
+;Rings
+1/105 DragonRing LV8
+1/105 RubyRing LV8
+1/105 PlatinumRing LV8
+1/70 PowerRing LV8
+1/70 VioletRing LV8
+1/70 TitanRing LV8
+1/200 OmaSpiritRing LV8
+1/200 NobleRing LV8
+1/200 SoulRing LV8
+1/350 BoundlessRing LV8
+1/350 ThunderRing LV8
+1/350 TaeGukRing LV8
+1/100 GaleRing LV8
+1/5 ExpelRing LV8
+1/5 CoralRing LV8
+
+;Bracelets
+1/105 KnightBracelet LV8
+1/105 DragonBracelet LV8
+1/1055 SoulSpringBracelet LV8
+1/85 SteelGlove LV8
+1/70 SpellBracelet LV8
+1/70 3rdEyeBracelet LV8
+1/200 HangMaWheel LV8
+1/200 BokMaWheel LV8
+1/200 8TrigramWheel LV8
+1/350 SpiritReformer LV8
+1/350 HolyTaoWheel LV8
+1/350 BaekTaGlove LV8
+
+;Gems
+1/400 FreezingOrb LV8
+1/400 DurabilityOrb LV8
+1/400 BraveryOrb LV8
+1/400 MagicOrb LV8
+1/400 SoulOrb LV8
+1/400 StormOrb LV8
+1/400 ProtectionOrb LV8
+1/400 EvilSlayerOrb LV8
+1/400 PoisonOrb LV8
+1/400 AccuracyOrb LV8
+1/400 AgilityOrb LV8
+
+;Books
+1/35 IceStorm LV8
+1/35 MoonLight LV8
+1/35 SummonShinsu LV8
+1/35 FlamingSword LV8
+1/70 CrossHalfMoon LV8
+1/70 UltimateEnhancer LV8
+1/70 FlameDisruptor LV8
+1/500 SummonHolyDeva LV8
+1/600 Mirroring LV8
+1/600 SwiftFeet LV8
+1/100 BladeAvalanche LV8
+
+1/35 BindingShot LV8
+1/70 SummonToad LV8
+1/600 PoisonShot LV8
+
+
+1/300 MajesticRing LV8
+1/300 MajesticBoots LV8
+1/300 MajesticWheel LV8
+1/300 MajesticNecklace LV8
+1/300 MajesticHelmet LV8
+1/300 MajesticBelt LV8
+
+
+;shields
+1/150 PlasmaShield LV8
+1/150 SeekerShield LV8
+1/250 PredatorShield LV8
+1/400 FlechetteShield LV8
+1/400 SpikeShield LV8
+1/1000 ArmouredShield LV8
+
+
+;Other
+1/25 AwakeningSoul0 LV8

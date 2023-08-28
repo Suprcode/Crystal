@@ -1,0 +1,70 @@
+[@Main]
+What brought you in this dangerous place?
+I wonder if you can get out of here easily...
+
+<Talk with/@talkwith_1>
+<Leave/@Exit>
+
+
+[@talkwith_1]
+#IF
+DAYOFWEEK SUNDAY
+HOUR 20
+MIN 20
+#ACT
+goto talkwith_2
+
+#IF
+DAYOFWEEK SATURADAY
+HOUR 20
+MIN 20
+#ACT
+goto talkwith_2
+#ELSEACT
+goto untalkwith
+   
+[@talkwith_2]
+As you came here and talked to me
+I'll give you good information... There is a cave that nobody knows around here.
+This cave is different from the others....
+I just have heard about it only one time
+I never been there, but you need a certificate to go there
+If you got a certificate, you can try.
+
+<Try/@talkwith_3>
+<Cancel/@Exit>
+
+[@talkwith_3]
+#SAY
+Hey you... I'll let you get into the dungeon
+You will be right here after 3 hours.. Take care of yourself
+
+<Get in/@talkwith_4>
+   
+[@talkwith_4]
+#SAY
+I want to show you the way, but I'm exhausted
+I can't help you... Just wait a little while..
+
+<Close/@Exit>
+
+#ELSEACT
+MOVE M001
+
+[@untalkwith]
+#SAY
+Have you ever heard about the unknown dungeon?
+I can't explain more..
+but the time to get into dungeon is at weekend evening
+If you came to me again at this time
+I can take you there
+see you then...
+
+<Back/@Main>
+
+#ELSESAY
+I have nothing to tell you...
+Get out of here please
+
+<Back/@Main>
+

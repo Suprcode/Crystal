@@ -1,0 +1,29 @@
+[@Description]
+Here is the Tea you asked for. Please deliver this 
+before it gets cold.
+
+[@TaskDescription]
+Deliver the {CanniTea/LightSteelBlue} to {MirGuide/LimeGreen}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+CanniTea 2
+
+[@FixedRewards]
+SteelBuckle
+
+[@SelectRewards]
+
+[@ExpReward]
+439
+
+[@GoldReward]
+145
+
+// Pickup - CraftsLady_Alice 0 321 265 
+// Hand In - 

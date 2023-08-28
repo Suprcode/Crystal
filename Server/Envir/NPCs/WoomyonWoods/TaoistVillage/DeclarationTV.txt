@@ -1,0 +1,18 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Hello traveler. I have the lastest Mirian News.
+<Close/@exit>
+
+[Quests]
+130

@@ -1,0 +1,29 @@
+[@Description]
+Thankyou Traveller the assistance you have 
+provided. I am so happy that my Friend {Soho/LimeGreen} 
+is alive and well. I have another task for you.
+
+[@TaskDescription]
+Deliver {MobBlood/LightSteelBlue} to {Dr.Kim/LimeGreen} in {SerpentValley/Yellow}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+MobBlood 2
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+1971
+
+[@GoldReward]
+2850
+
+// Pickup - Merchant_Helen 1 292 84
+// Hand In - Merchant_Dr.Kim 0017 5 3

@@ -1,0 +1,6 @@
+[@MAIN]
+#SAY
+I miss my farther.. 
+
+[Quests]
+95

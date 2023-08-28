@@ -1,0 +1,16 @@
+;Gold
+1/7 Gold 1000
+
+;Potions
+1/15 (HP)DrugLarge
+1/15 (MP)DrugLarge
+
+;Crafting Material
+1/60 BaboonLeather
+1/30 StormFragment
+1/30 DisillusionFragment
+1/30 AccuracyFragment
+1/30 PoisonFragment
+1/20 FreezingFragment
+1/20 AgilityFragment
+1/30 EnduranceFragment

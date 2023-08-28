@@ -1,0 +1,11 @@
+[@Main]
+#SAY
+Hello Traveler. Have you ventured into the caves?
+The Evil within are great. But the rewards can be greater.
+<Close/@exit>
+
+[Quests]
+138
+-138
+139
+-139

@@ -1,0 +1,55 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Hello Traveller. What can I do for you? 
+ 
+<View/@BuySell> Store.
+<Repair/@Repair> Drapery pieces.
+ 
+<Close/@exit>
+
+[@BuySell]
+#SAY
+Which item would you like to Buy or Sell?
+<Buy Back/@BuyBack>
+ 
+<Back/@main>
+
+[@BuyBack]
+#SAY
+These are the items still available to purchase back.
+ 
+<Back/@main>
+
+[@Repair]
+#SAY
+Would you like to repair a drapery piece?
+ 
+<Back/@main>
+
+
+[Types]
+2
+4
+9
+10
+
+[Trade]
+BaseDress(M)
+BaseDress(F)
+LightArmour(M)
+LightArmour(F)
+BronzeHelmet
+MagicHelmet
+LeatherBelt
+LowShoes

@@ -1,0 +1,63 @@
+;Gold
+1/2 Gold 25000
+
+;Pots + Other
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+
+
+1/10 AwakeningSoul0
+1/10 AwakeningSoul0
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+1/1 ArtifactToken
+
+;Quests
+

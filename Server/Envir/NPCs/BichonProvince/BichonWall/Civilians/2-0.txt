@@ -1,0 +1,37 @@
+[@MAIN]
+#IF
+CHECK [539] 1
+#ACT
+GOTO @Main-1
+#ELSEACT
+GOTO @CHECK2
+
+[@CHECK2]
+#IF
+CHECK [540] 1
+#ACT
+GOTO @Main-1
+#ELSEACT
+GOTO @CHECK3
+
+[@CHECK3]
+#IF
+CHECK [541] 1
+#ACT
+GOTO @Main-1
+#ELSEACT
+GOTO @Main-2
+
+[@Main-1]
+#SAY
+<$USERNAME>, Those rumors was correct. The Emperor has helped me.
+I am so Thankful to him.
+ 
+<Close/@exit>
+
+[@MAIN-2]
+#SAY
+<$USERNAME>, Have you heard the rumors? 
+The Emperor has been doing a lot for the people of the City.
+ 
+<Close/@exit>

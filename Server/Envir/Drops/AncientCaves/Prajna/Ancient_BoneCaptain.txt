@@ -1,0 +1,109 @@
+;Gold
+1/10 Gold 2000
+
+1/10 (HP)DrugMedium
+1/10 (MP)DrugMedium
+1/30 (HP)DrugLarge
+1/30 (MP)DrugLarge
+1/20 SunPotion
+1/60 SunPotion(M)
+1/100 RepairOil
+1/1200 WarGodOil
+1/10000 BenedictionOil
+
+;Crafting Material
+1/10 Bone
+1/20 LargeBone
+1/400 WindMarble
+1/400 PoisonMarble
+
+;Weapons
+1/2000 DragonSword
+1/2000 BloodStealerSword
+1/1500 FireBloodSword
+1/6000 JudgementMace
+1/6000 WarMageStaff
+1/6000 SoulSpringWand
+1/6000 BladesofDarkness
+1/6000 FiendBow
+1/12000 WarSpiritBlade
+1/12000 MagicScythe
+1/12000 StoneBambooFan
+1/12000 FreezingBlades
+1/12000 LitheBow
+
+;Armours
+1/300 IronArmour(M)
+1/300 IronArmour(F)
+1/300 WizardRobe(M)
+1/300 WitchRobe(F)
+1/300 PearlArmour(M)
+1/300 PearlArmour(F)
+1/300 AncientArmour(M)
+1/300 AncientArmour(F)
+1/300 TemperedArmour(M)
+1/300 TemperedArmour(F)
+1/2000 SteelArmour(M)
+1/2000 SteelArmour(F)
+1/2000 DragonRobe(M)
+1/2000 DragonRobe(F)
+1/2000 TitanArmour(M)
+1/2000 TitanArmour(F)
+1/2000 RoyalArmour(M)
+1/2000 RoyalArmour(F)
+1/2000 StuddedArmour(M)
+1/2000 StuddedArmour(F)
+
+;Belts
+1/650 SteelBelt
+1/1450 GoldBelt
+
+;Helmet
+1/100 SkeletonHelmet
+1/120 ShamanHelmet
+1/18000 HelmetOfHero
+1/25000 BlackIronHelmet
+
+;Stones
+1/30000 DCStone(XL)
+1/30000 MCStone(XL)
+1/30000 SCStone(XL)
+1/10000 HealthStone(XL)
+1/10000 MagicStone(XL)
+
+;Rings
+1/250 BlackRing
+1/250 SerpentEyeRing
+1/250 PearlRing
+1/200 SkeletonRing
+1/350 CoralRing
+1/350 ExpelRing
+1/1800 DragonRing
+1/1800 RubyRing
+1/1800 PlatinumRing
+1/10000 GaleRing
+
+;Necklaces
+1/250 AmberNecklace
+1/250 NagaNecklace
+1/250 PhoenixBead
+1/200 BlueJadeNecklace
+1/200 BambooPipe
+1/200 ConvexLens
+1/500 BlueThunderNecklace
+1/500 SpiritPowerNecklace
+1/500 AmethystNecklace
+
+;Bracelets
+1/160 StrainBracelet
+1/160 MonkBracelet
+1/160 EbonyBracelet
+1/150 DeathGauntlet
+1/20000 SoulSpringBracelet
+1/20000 DragonBracelet
+1/20000 KnightBracelet
+
+;Books
+1/280 FlamingSword
+1/400 ShoulderDash
+1/10000 TwinDrakeBlade

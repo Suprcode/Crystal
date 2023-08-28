@@ -1,0 +1,4 @@
+;Potion
+1/20 (HP)DrugXL
+1/30 (MP)DrugXL
+1/10 Medicine

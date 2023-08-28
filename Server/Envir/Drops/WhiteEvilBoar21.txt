@@ -1,0 +1,15 @@
+;Gold
+1/10 Gold 6000
+
+;Pots + Other
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/4 (HP)DrugLarge
+1/4 (MP)DrugLarge
+
+
+;CraftingMaterials
+1/15 WhiteThread 
+
+
+

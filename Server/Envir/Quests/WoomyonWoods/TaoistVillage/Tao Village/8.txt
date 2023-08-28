@@ -1,0 +1,28 @@
+[@Description]
+Please head back to {TreePath/Yellow} and gather more 
+{Materials/LightSteelBlue}.
+
+[@TaskDescription]
+Find 5 {AncientTree/LightSteelBlue} by killing {RootSpider's/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+AncientTree 5
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+7000
+
+[@GoldReward]
+7000
+
+// Pickup - Merchant_Jerald 1001 14 12
+// Hand In - Merchant_Jerald 1001 14 12

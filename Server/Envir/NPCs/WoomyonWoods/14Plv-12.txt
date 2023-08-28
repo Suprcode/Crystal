@@ -1,0 +1,22 @@
+[@main]
+#SAY
+I open the closed door to you. You are about to enter the land
+filled with Sin, Fear and Shame. Are you sure you want to enter into
+cursed land?
+ 
+<Yes, I want to enter./@next>
+<Place Ancient Post Piece on the pillar/@next2>
+<Exit/@exit>
+
+
+[@next]
+#SAY
+Your about to enter a world of death and frustration. My duty is to
+open the closed door. I can let you in, but you will not be able to
+return.
+
+<Move/@move1>
+#ACT
+MOVE hell301s 272 275
+BREAK
+CLOSE

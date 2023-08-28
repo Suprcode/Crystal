@@ -1,0 +1,157 @@
+;Gold
+1/1 Gold 25000
+
+;Potion
+1/1 (HP)DrugLarge
+1/1 (HP)DrugLarge
+1/2 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (MP)DrugLarge
+1/1 (HP)DrugXL
+1/2 (HP)DrugXL
+1/1 (MP)DrugXL
+1/2 (MP)DrugXL
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/2 SunPotion
+1/2 SunPotion
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+1/5 BenedictionOil
+1/30 ImpactDrug(S)
+1/30 MagicDrug(S)
+1/30 TaoistDrug(S)
+1/100 ImpactDrug(M)
+1/100 MagicDrug(M)
+1/100 TaoistDrug(M)
+
+;Weapons
+1/35 GreatAxe
+1/35 MageStaff
+1/35 SerpentSword
+1/35 DoubleBlades
+1/35 SilverBow
+1/70 DragonSword
+1/140 WarSpiritBlade
+1/140 MagicScythe
+1/140 StoneBambooFan
+1/140 FreezingBlades
+1/140 LitheBow
+1/300 BlackDragonSlayer
+1/300 BlackDragonStaff
+1/300 BlackDragonSoulSabre
+1/300 Dragon'sRoyalBlades
+1/300 CursedMaleficBow
+1/700 DragonSlayer
+1/700 DragonStaff
+1/700 SoulSabre
+1/700 RoyalBlades
+1/700 FiendBow
+
+;Armours
+1/6 IronArmour(M)
+1/6 IronArmour(F)
+1/6 WizardRobe(M)
+1/6 WitchRobe(F)
+1/6 PearlArmour(M)
+1/6 PearlArmour(F)
+1/6 AncientArmour(M)
+1/6 AncientArmour(F)
+1/6 LightLeatherArmour(M)
+1/6 LightLeatherArmour(F)
+1/30 SteelArmour(M)
+1/30 SteelArmour(F)
+1/30 DragonRobe(M)
+1/30 DragonRobe(F)
+1/30 TitanArmour(M)
+1/30 TitanArmour(F)
+1/30 RoyalArmour(M)
+1/30 RoyalArmour(F)
+1/30 StuddedArmour(M)
+1/30 StuddedArmour(F)
+
+;Helmets
+1/5 ShamanHelmet
+1/5 SkeletonHelmet
+1/50 HelmetOfHero
+1/55 BlackIronHelmet
+1/85 GreatHelmet
+1/85 TaoCoronet
+1/85 WisdomCoronet
+1/85 RoyalHelmet
+
+;Rings
+1/5 ExpelRing
+1/5 CoralRing
+1/15 GaleRing
+1/30 DragonRing
+1/30 RubyRing
+1/30 PlatinumRing
+1/55 PowerRing
+1/55 VioletRing
+1/55 TitanRing
+
+;Bracelets
+1/5 BronzeGlove
+1/10 SteelGlove
+1/65 KnightBracelet
+1/65 DragonBracelet
+1/65 SoulSpringBracelet
+
+;Necklaces
+1/25 AmethystNecklace
+1/25 SpiritPowerNecklace
+1/25 BlueThunderNecklace
+1/30 PearlNecklace
+1/30 LifeNecklace
+1/55 GreenBead
+1/55 DemonicBells
+1/55 SoulNecklace
+1/75 GaleNecklace
+1/1000 SkillNecklace
+
+;Orbs
+;Gems
+1/300 BraveryOrb
+1/200 SoulOrb
+1/350 MagicOrb
+1/300 ProtectionOrb
+1/300 EvilSlayerOrb
+1/125 DurabilityOrb
+1/500 PoisonOrb
+1/600 FreezingOrb
+
+;Books
+1/25  IceStorm
+1/25  SummonShinsu
+1/25  FlamingSword
+1/100 poisonsword
+1/275  flashdash
+1/30  CrossHalfMoon
+1/30  FlameDisruptor
+1/30  trap
+1/30  UltimateEnhancer
+1/30   EnergyRepulsor
+1/50  TwinDrakeBlade
+1/50   Purification
+1/100   LionRoar
+1/100  Mirroring
+1/100  moonlight
+1/100  Entrapment
+1/100  Hallucination
+1/100  Vampirism
+1/300  mpeater
+1/400  SummonHolyDeva
+1/400  FlameField
+1/100  BladeAvalanche
+1/400 ProtectionField
+1/400  Curse
+1/400 Darkbody
+1/800  swiftfeet
+1/800 MeteorStrike
+1/800 PoisonCloud
+1/800 Rage
+1/800 Blizzard

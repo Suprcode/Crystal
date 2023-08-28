@@ -1,0 +1,36 @@
+;Gold
+1/2 Gold 4969
+
+;Pots + Other
+1/2 (HP)Booster
+1/2 (HP)Booster
+1/2 (MP)Booster
+1/2 (MP)Booster
+1/2 SunPotion
+1/2 SunPotion
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+
+1/25 ImpactDrug(L) 
+1/25 MagicDrug(L) 
+1/25 TaoistDrug(L) 
+1/25 StormDrug(L) 
+1/25 StaminaAid(L) 
+1/25 MagicAid(L) 
+
+1/55 Awakeningbox
+1/80 AwakeningSoul0
+
+;;1/150 EasterRobe(M)[1d]
+;;1/150 EasterRobe(F)[1d]
+1/250 CuteRatEgg
+
+;Pads
+1/1530 MysteriousGuards[1d]
+
+;Stone
+1/1550 ItemMineJewl[1d]
+1/1550 ExperienceMineJewl[1d]
+1/2550 BloodJewl[1d]

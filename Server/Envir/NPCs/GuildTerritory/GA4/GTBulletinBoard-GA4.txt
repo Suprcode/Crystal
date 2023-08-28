@@ -1,0 +1,6 @@
+[@main]
+#SAY
+Hello <$USERNAME>!
+This is the Guild Territory Bulletin Board.
+<Look at/@TOWNBOARDLIST> the Guild Territory Bulletin Board.
+<Skip/@exit> the Guild Territory Bulletin Board.

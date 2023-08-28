@@ -1,0 +1,22 @@
+[@Main]
+{
+#IF
+RANDOM 1
+#ACT
+GIVEITEM FortuneWeapon 1
+
+#IF
+RANDOM 1
+#ACT
+GIVEITEM FortuneArmour 1
+
+#IF
+RANDOM 1
+#ACT
+GIVEITEM FortuneAccessory 1
+
+#IF
+RANDOM 1
+#ACT
+GIVEITEM FortuneOrb 1
+}

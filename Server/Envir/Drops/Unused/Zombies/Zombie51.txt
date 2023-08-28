@@ -1,0 +1,8 @@
+;Gold
+1/5 Gold 400
+
+
+;Quest
+1/15 BichonTales(1) Q
+1/15 BichonTales(2) Q
+1/15 BichonTales(3) Q

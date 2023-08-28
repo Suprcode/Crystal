@@ -1,0 +1,31 @@
+[@Description]
+You are the traveller {Jane/LimeGreen} recommended.
+Please can you hunt {Deer/Crimson} and bring me some 
+{Deer Meat/LightSteelBlue}. If you want to know more about 
+butchering please press "H".
+
+[@TaskDescription]
+Collect {Deer Meat/LightSteelBlue} by Hunting {Deer's/Crimson}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+DeerMeat 5
+
+[@CarryItems]
+
+[@FixedRewards]
+OldCopperRing
+
+[@SelectRewards]
+
+[@ExpReward]
+80
+
+[@GoldReward]
+20
+
+// Pickup - Merchant_John 0 292 604
+// Hand In - Merchant_John 0 292 604

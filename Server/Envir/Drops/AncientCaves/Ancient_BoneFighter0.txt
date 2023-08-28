@@ -1,0 +1,110 @@
+;Gold
+1/1 Gold 4000
+
+;Weapons
+1/6 BronzeSword 
+1/6 ShortBow 
+1/6 SharpHoaSword 
+1/9 IronSword 
+1/9 BoneBow 
+1/10 ShortSword 
+1/15 BronzeAxe 
+1/15 SteelAxe 
+1/16 HookedSword 
+1/16 Trident 
+1/16 Scimitar 
+1/16 BladesOfVelocity 
+1/16 CompoundBow 
+1/20 SteelSword 
+
+;Armours
+1/20 LightArmour(M) 
+1/20 LightArmour(F) 
+
+;Helmets
+1/10 BronzeHelmet 
+1/15 MagicHelmet 
+1/20 BrassHelmet 
+1/20 GoldenTiara 
+1/30 SkeletonHelmet 
+1/24 ShamanHelmet 
+
+;Necklaces
+1/8 BlackNecklace 
+1/8 EbonyNecklace 
+1/8 YellowNecklace 
+1/15 NagaNecklace 
+1/15 AmberNecklace 
+1/15 PhoenixBead 
+1/20 LanternNecklace 
+1/580 GreenBead 
+1/580 GaleNecklace 
+1/580 SoulNecklace 
+1/580 DemonicBells 
+
+;Bracelets
+1/8 ThinBracelet 
+1/15 SilverBracelet 
+1/15 LargeBracelet 
+1/15 SteelBracelet 
+1/40 MagicBracelet 
+1/50 HardGlove 
+1/30 EbonyBracelet 
+1/30 StrainBracelet 
+1/40 SharpBracelet 
+
+;Rings
+1/5 CopperRing 
+1/8 HornRing 
+1/8 HexagonalRing 
+1/8 GlassRing 
+1/20 BlueRing 
+1/30 BlackRing 
+1/30 SerpentEyeRing 
+1/30 PearlRing 
+1/30 SkeletonRing 
+1/300 RubyRing 
+1/300 DragonRing 
+1/300 PlatinumRing 
+
+;Stones
+1/100 HealthStone(S) 
+1/100 MagicStone(S) 
+1/140 HealthStone(M) 
+1/140 MagicStone(M) 
+
+;Potions
+1/20 (HP)DrugMedium 
+1/20 (MP)DrugMedium 
+1/20 (HP)DrugMedium 
+1/20 (MP)DrugMedium 
+1/20 (HP)DrugMedium 
+1/20 (MP)DrugMedium 
+1/30 SunPotion 
+
+;Crafting Materials
+1/2 Bone 
+1/5 LargeBone 
+
+;Books
+1/14 Poisoning 
+1/14 Repulsion 
+1/14 HellFire 
+1/14 ThunderBolt 
+1/14 FatalSword 
+1/8 ElectricShock 
+1/8 Slaying 
+1/8 GreatFireBall 
+1/8 SoulFireBall 
+1/10 Hiding 
+1/10 Teleport 
+1/10 SummonSkeleton 
+1/20 HalfMoon 
+1/40 FlashDash 
+1/40 LightBody 
+1/30 ExplosiveTrap 
+1/40 Meditation 
+1/50 SummonVampire 
+1/100 DelayedExplosion 
+1/140 BackStep 
+1/200 ElementalShot 

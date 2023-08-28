@@ -1,0 +1,80 @@
+;Gold
+1/2 Gold 25000
+
+;Pots + Other
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/2 Sunpotion
+1/2 Sunpotion
+1/2 Sunpotion(M)
+1/2 Sunpotion(M)
+1/2 Sunpotion(M)
+1/2 Sunpotion(M)
+1/2 Sunpotion(M)
+1/2 Sunpotion(M)
+
+1/1 BenedictionOil
+
+1/20 AwakeningSoul0
+1/20 AwakeningSoul0
+1/75 MinotaurKingRune
+
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Medals Rare
+
+
+;Shields
+
+
+;Shields Rare
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+1/2 PrajnaTempleMap Q

@@ -1,0 +1,61 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Hello i'm Kyle, the wandering warrior.
+I transport men and goods to other places fast and safe. 
+Just pay the fee then ill escort you to anywhere.
+So what do you say?
+ 
+I'll use this <Service/@tele>
+Maybe next <Time/@exit> 
+
+[@tele]
+#SAY
+Which place would you like to go?
+ 
+<<BorderVillage/@Border>>
+<<BichonWall/@BichonWall>>
+<<SerpentValley/@Serpent>>
+<<MudWall/@MudWall>>
+<<TaoistSchool/@TaoVillage>>
+<<CastleGi-Ryoong/@CastleGi>>
+
+[@Border]
+#ACT
+MOVE 0 289 617
+
+[@BichonWall]
+#ACT
+MOVE 0 296 222
+
+[@Serpent]
+#ACT
+MOVE 2 500 485
+
+[@MudWall]
+#ACT
+MOVE 3 361 342
+
+[@TaoVillage]
+#ACT
+MOVE 11 163 337
+
+[@CastleGi]
+#ACT
+MOVE 4 264 257
+
+[Quests]
+-57
+58
+-58
+61

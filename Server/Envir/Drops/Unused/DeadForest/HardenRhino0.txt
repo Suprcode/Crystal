@@ -1,0 +1,12 @@
+;Potions
+1/15 (HP)DrugLarge
+1/15 (MP)DrugLarge
+1/150 (HP)DrugLarge
+1/150 (MP)DrugLarge
+1/250 SunPotion
+1/500 SunPotion(M)
+
+
+;Crafting Material
+1/60 RhinoLeather
+1/80 LargeBone

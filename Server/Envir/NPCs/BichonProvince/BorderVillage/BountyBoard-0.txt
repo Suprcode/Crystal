@@ -1,0 +1,32 @@
+[@Main]
+#IF
+CHECKPKPOINT > 100
+#SAY
+Current Bounty List:
+                    
+                    === Special Bounty ===
+                    <Newbie Guild Recruitment/@NR1> {Level1~25./KHAKI}
+
+
+[@NR1]
+#IF
+LEVEL <= 25
+#ACT
+GOTO @NR2
+#ELSESAY
+Sorry <$USERNAME>, You are to high level.
+ 
+<Back/@Main>
+
+[@NR2]
+#IF
+INGUILD NewbieGuild
+#SAY
+<$USERNAME>, You are currently in a guild.
+Please leave this guild before trying again.
+ 
+<Back/@Main>
+#ELSEACT
+AddToGuild NewbieGuild
+ADDNAMELIST NewbieGuild
+LocalMessage "Congratulations, You have joined the NewbieGuild." Hint

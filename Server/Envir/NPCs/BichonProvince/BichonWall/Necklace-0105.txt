@@ -1,0 +1,50 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Welcome. What can I do for you?
+ 
+<View/@BuySell> Store.
+<Repair/@Repair> Necklace.
+ 
+<Close/@Exit>
+
+[@BuySell]
+#SAY
+Which necklace do you want to buy or sell?
+<Buy Back/@BuyBack> 
+ 
+<Back/@Main>
+
+[@BuyBack]
+#SAY
+These are the items still available to purchase back.
+ 
+<Back/@Main>
+
+[@Repair]
+#SAY
+Would you like to repair a necklace?
+ 
+ 
+<Back/@Main>
+
+[Types]
+5
+
+
+[Trade]
+GoldNecklace
+PrecisionNecklace
+BlackNecklace
+EbonyNecklace
+YellowNecklace

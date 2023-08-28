@@ -1,0 +1,31 @@
+[@Description]
+Hello traveller. Please listen to my story. I moved 
+to {Woomyon Woods/Yellow} 40 years ago. I was able 
+to hunt all the monsters around my home then, 
+but now that I'm old and weak, I'm afraid to go 
+out of my house.
+
+[@TaskDescription]
+Eliminate 10 {OmaFighter/Crimson} for {MasterShok/LimeGreen}
+
+[@Completion]
+
+[@KillTasks]
+OmaFighter 10
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+1100
+
+[@GoldReward]
+1100
+
+// Pickup - Master_Shok 1 312 73
+// Hand In - Master_Shok 1 312 73

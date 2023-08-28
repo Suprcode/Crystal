@@ -1,0 +1,74 @@
+[@Main]
+#IF
+ISADMIN
+#SAY
+Hello {<$USERNAME>/KHAKI}, my name is {<$NPCNAME>/KHAKI}.
+I see you're wearing: {<$HELMET>/CORAL}
+<Buy/@Buy> Helmet
+<Sell/@Sell> Helmet
+<Repair/@Repair> Helmet
+<Special Repair/@SRepair> Helmet
+
+#ELSEACT
+MOVE 0 300 300
+ 
+[@Buy]
+#SAY
+Buy.
+ 
+<Back/@Main>
+
+[@Sell]
+#SAY
+Sell.
+ 
+<Back/@Main>
+
+[@Repair]
+#SAY
+Repair.
+ 
+<Back/@Main>
+
+[@SRepair]
+#SAY
+Special repair.
+ 
+<Back/@Main>
+
+
+[Types]
+4
+
+[Trade]
+SpiritHelmet
+RecallHelmet
+MirHelmet
+BoneHood
+MysteryHelmet
+TarragonHelmet
+RaidersHelmet
+SparklingHelmet
+HelmetOfDarkness
+CheongboHelmet(WAR)
+CheongboHelmet(WIZ)
+CheongboHelmet(TAO)
+CheongboHelmet(ASSA)
+CheongboHelmet(ARCH)
+BronzeHelmet
+MagicHelmet
+BrassHelmet
+GoldenTiara
+SkeletonHelmet
+ShamanHelmet
+SteelHelmet
+HelmetOfHero
+BlackIronHelmet
+GreatHelmet
+WisdomCoronet
+TaoCoronet
+RoyalHelmet
+HelmetOfKings
+HelmetOfSorcery
+PurifiedMask
+DemonShadow

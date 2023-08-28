@@ -1,0 +1,11 @@
+[Recipe]
+Amount 1
+Chance 100
+Gold 1000
+
+[Tools]
+
+[Ingredients]
+SilverOre 1 12000
+BlueRing
+WhiteThread 10

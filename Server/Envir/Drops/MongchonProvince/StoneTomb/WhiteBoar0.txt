@@ -1,0 +1,37 @@
+;Gold
+1/10 Gold 3500
+
+;Potions
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M)
+
+;Crafting Materials
+1/10 WhiteThread 
+1/15 WhiteThread 

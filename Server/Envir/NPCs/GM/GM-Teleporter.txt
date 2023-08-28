@@ -1,0 +1,1119 @@
+//////////////////////////////////////////////////////////////////// MAIN MENUS
+[@Main]
+#IF
+ISADMIN
+#SAY
+To teleport back to this map: {@MOVE R001 100 100/LimeGreen} / Or use {@GM/LimeGreen}
+Tip: {@observer/LIMEGREEN} if you want to be invisible to other players.
+ 
+Teleport to <Towns/@TeleTownMain> , <Dungeons/@Dungeons> , <Dungeon Boss/@DungeonBoss>
+<Ancient Dungeons/@Ancient>
+ 
+ 
+<Exit/@Exit>
+#ELSEACT
+MOVE 0 300 300
+[@TeleTownMain]
+
+<Bichon Province/@TeleBichonProvince> , <Border Village/@TeleBorderVillage> , <Woomyon Woods/@TeleWoomyonWoods> , <Serpent Valley/@TeleSerpentValley>
+<Mongcon Province/@TeleMongconProvince> , <Sabuk Wall/@TeleSabukWall> , <Castle Gi-Ryoong/@TeleCastleGiRyoong> , <Prajna Island/@TelePrajnaIsland>
+<Past Bichon/@TelePastBichon> , <Tao Village/@TeleTaoVillage> , <Waste Land/@TeleWasteLand> , <Seokcho Valley/@TeleSeokchoValley> , <White Village/@TeleWhiteVillage>
+<Forgoten City/@ForgotenCity> , <TreePath/@TreePath>
+ 
+ 
+<Main Menu/@Main> - <Exit/@Exit>
+[@Ancient]
+
+<AncientNaturalCave/@ANC> , <AncientWoomaTemple/@AWT> , <AncientStoneTomb/@AST> , 
+<AncientZumaTemple/@AZT> , <AncientPrajnaCave/@APC>
+ 
+ 
+<Main Menu/@Main> - <Exit/@Exit>
+[@Dungeons]
+
+<Oma Cave/@OmaCave> , <Natural Cave/@NaturalCave> , <Wooma Temple/@WoomaTemple> , <Dead Mine/@DeadMine> , <Insect Cave/@InsectCave> ,
+<Fox Cave/@FoxCave> , <Zuma Temple/@ZumaTemple> , <Bug Cave/@BugCave> , <Stone Temple/@StoneTemple> , 
+<Ice Hell/@IceHell> , <Mineral Mine/@MineralMine> , <Hell Cavern/@HellCavern> , <Hell Fire/@HellFire> , 
+<Red Cavern/@RedCavern> , <Prajna Temple/@PrajnaTemple> , <Prajna Stone Cave/@PrajnaStoneCave> , 
+<Black Dragon Dungeon/@BlackDragonDungeon> , <Ghoul Cave/@GhoulCave> , <Mystery Cave/@MysteryCave> , 
+<Swamp/@Swamp> , <Red Valley/@RedValley> , <Lunar/@Lunar> , <Viper Path/@ViperPath> , <WhiteDragonPassage/@WDP> , 
+<Snow Cavern/@SnowCavern>
+ 
+<Main Menu/@Main> - <Exit/@Exit>
+[@DungeonBoss]
+Tip: {@gamemaster/LimeGreen} before you move.
+ 
+<Oma King Spirit/@OmaKingSpirit> , <Evil Centipede/@EvilCentipede> , <Evil Snake/@EvilSnake> , <Zuma Taurus/@ZumaTaurus>
+<Great Fox Spirit/@GreatFoxSpirit> , <Wooma Taurus/@WoomaTaurus> , <King Scorpion/@KingScorpion> , <King Hog/@KingHog>
+<Dark Devil/@DarkDevil> , <Red Moon Evil/@RedMoonEvil> , <Minotaur King/@MinotaurKing>
+ 
+ 
+<Main Menu/@Main> - <Exit/@Exit>
+‎ 
+‎ 
+‎ 
+‎ 
+‎ 
+
+//////////////////////////////////////////////////////////////////// PROVINCES/TOWNS
+//////////////////////////////////////////////////////////////////// BW
+[@TeleBichonProvince]
+#SAY
+<Weapon shop/@BWWEP>   <Armour shop/@BWCLOTHES>   <Inn/@BWINN>
+<Accessory shop/@BWJEWL>   <Reagent Store/@BWPOT>   <Bichon Inner Wall/@BWPAL>
+<Book store/@BWBOOK>  <Butcher's shop/@BWMEAT>   <Hairdresser/@BWHAIR>
+<Tavern/@BWTAVERN>  <Safezone/@BWSZ>  <Contest Room/@ContestRoom>  <Prison/@Prison>
+
+Caves: <Oma Cave/@OmaCave> , <Natural Cave/@NaturalCave> , <Dead Mines/@DeadMine>
+<Main Menu/@Main> - <Exit/@Exit>
+[@@BWWEP]
+#ACT
+Move 0103
+[@BWCLOTHES]
+#ACT
+Move 0106
+[@BWINN]
+#ACT
+Move 0125
+[@BWJEWL]
+#ACT
+Move 0105
+[@BWPOT]
+#ACT
+Move 0108
+[@BWPAL]
+#ACT
+Move 0122
+[@BWBOOK]
+#ACT
+Move 0104
+[@BWMEAT]
+#ACT
+Move 0102
+[@BWHAIR]
+#ACT
+MOVE 0107
+[@BWTAVERN]
+#ACT
+Move 0101
+[@BWSZ]
+#ACT
+MOVE 0 329 270
+[@ContestRoom]
+#ACT
+MOVE 0139 17 22
+[@Prison]
+#ACT
+MOVE 0127 8 11
+//////////////////////////////////////////////////////////////////// Border *No Shops*
+[@TeleBorderVillage]
+#ACT
+MOVE 0 288 616
+//////////////////////////////////////////////////////////////////// WW *No Shops*
+[@TeleWoomyonWoods]
+#SAY
+I will guide you to the desired store.
+Where shall I teleport you?
+
+<Safezone/@WWSZ>
+
+Caves: <Insect Cave/@InsectCave> , <WoomaTemple/@WoomaTemple>
+<Main Menu/@Main> - <Exit/@Exit>
+[@WWSZ]
+#ACT
+MOVE 1 315 82
+//////////////////////////////////////////////////////////////////// SV
+[@TeleSerpentValley]
+#SAY
+I will guide you to the desired store.
+Where shall I teleport you?
+
+<Weapon shop/@SVWEP>   <Reagent store/@SVPOT>  <Safezone/@SVSZ>
+
+Caves: <Serpent Dead Mine/@SDeadMine>
+<Main Menu/@Main> - <Exit/@Exit>
+[@SVWEP]
+#ACT
+MOVE 0120
+[@SVPOT]
+#ACT
+MOVE 0117
+[@SVSZ]
+#ACT
+MOVE 2 503 483
+//////////////////////////////////////////////////////////////////// Monghcon
+[@TeleMongconProvince]
+#SAY
+I can send you several places nearby.
+
+<Blacksmith/@MONWEP>   <Armour shop/@MONCLOTHES>
+<Book store/@MONBOOK>   <Accessory shop/@MONJEWL>
+<Inn/@MONINN>  <Safezone/@MONSZ>
+
+Caves: <Bug Cave/@BugCave> , <Zuma Temple/@ZumaTemple> , 
+<Fox Cave/@FoxCave> , <Swamp/@Swamp> , <Stone Temple/@StoneTemple>
+<Main Menu/@Main> - <Exit/@Exit>
+[@MONWEP]
+#ACT
+Move 0159
+[@MONCLOTHES]
+#ACT
+Move 0149
+[@MONJEWL]
+#ACT
+Move 0158
+[@MONINN]
+#ACT
+Move 0145
+[@MONBOOK]
+#ACT
+Move 0161
+[@MONSZ]
+MOVE 3 330 330
+//////////////////////////////////////////////////////////////////// Sabuk *No Shops*
+[@TeleSabukWall]
+#ACT
+MOVE 3 652 298
+//////////////////////////////////////////////////////////////////// CGR *No Shops*
+[@TeleCastleGiRyoong]
+#SAY
+I can send you several places nearby.
+
+<Safezone/@CGRSZ>
+
+Caves: <BlackDragonDungeon/@BlackDragonDungeon> , <White Dragon Passage/@WhiteDragonPassage>
+<Main Menu/@Main> - <Exit/@Exit>
+[@CGRSZ]
+#ACT
+MOVE 4 229 205
+//////////////////////////////////////////////////////////////////// PI
+[@TelePrajnaIsland]
+#SAY
+<Weapon shop/@PIWEP>   <Armour shop/@PICLOTHES>
+<Reagent store/@PIPOT>   <Accessory shop/@PIJEWL>
+<Village Chief House/@PICHIEF>  <Safezone@PISZ>
+
+Caves: <Prajna Temple/@PrajnaTemple> , <Prajna Stone Cave/@PrajnaStoneCave>
+<Main Menu/@Main> - <Exit/@Exit>
+[@PIJEWL]
+#ACT
+MOVE B352
+[@PICLOTHES]
+#ACT
+MOVE B353
+[@PIWEP]
+#ACT
+MOVE B351
+[@PIPOT]
+#ACT
+MOVE 5 160 316
+[@PICHIEF]
+#ACT
+MOVE B354
+[PISZ]
+#ACT
+MOVE 5 140 338
+//////////////////////////////////////////////////////////////////// PB *TO BE DONE*
+[@TelePastBichon]
+#ACT
+MOVE 6 124 157
+//////////////////////////////////////////////////////////////////// TV
+[@TeleTaoVillage]
+#SAY
+<Weapon shop/@TVWEP>   <Armour shop/@TVCLOTHES>
+<Accessory shop/@TVJEWL>   <Reagent store/@TVPOT>
+<Book store/@TVBOOK>   <Grocery store/@TVPED>  <Safezone/@TVSZ>
+
+Caves: <Mineral Mines/@MineralMine> , <Dark Forest/@DarkForest> ,
+<Red Valley/@RedValley> , <Lunar/@Lunar>
+<Main Menu/@Main> - <Exit/@Exit>
+[@TVBOOK]
+#ACT
+MOVE 1004
+[@TVJEWL]
+#ACT
+MOVE 1005
+[@TVCLOTHES]
+#ACT
+MOVE 1001
+
+[@TVPOT]
+#ACT
+MOVE 1006
+[@TVWEP]
+#ACT
+MOVE 1007
+[@TVPED]
+#ACT
+MOVE 1006
+[@TVSZ]
+MOVE 11 176 327
+//////////////////////////////////////////////////////////////////// Wastelands *TO BE DONE*
+[@TeleWasteLand]
+#ACT
+MOVE Hell00 49 227
+//////////////////////////////////////////////////////////////////// Seokcho Valley *TO BE DONE*
+[@TeleSeokchoValley]
+#ACT
+MOVE UMM 131 179
+//////////////////////////////////////////////////////////////////// White Village
+[@TeleWhiteVillage]
+#SAY
+<Weapon shop/@WVWEP>   <Armour shop/@WVCLOTHES>   <Accessory shop/@WVJEWL>   
+<General Store/@WVPOT>   <Book store/@WVBOOK>  <Storage/@WVINN>
+<Safezone/@WVSZ>
+
+Caves: <Snow Cavern/@SnowCavern>
+<Main Menu/@Main> - <Exit/@Exit>
+[@WVWEP]
+#ACT
+MOVE whitevillage 286 234
+[@WVCLOTHES]
+#ACT
+MOVE whitevillage 279 242
+[@WVJEWL]
+#ACT
+MOVE whitevillage 329 237
+[@WVPOT]
+#ACT
+MOVE whitevillage 270 248
+[@WVBOOK]
+#ACT
+MOVE whitevilage 334 248
+[@WVINN]
+#ACT
+MOVE WhiteVillage 312 278
+[@WVSZ]
+#ACT
+MOVE WhiteVillage 295 255
+//////////////////////////////////////////////////////////////////// Castle Ruins *TO BE DONE*
+[@TeleCastleRuins]
+#ACT
+MOVE NAMMAN2 202 156
+//////////////////////////////////////////////////////////////////// Forgoten City *TO BE DONE*
+[@ForgotenCity]
+#ACT
+MOVE MORAE 175 72
+//////////////////////////////////////////////////////////////////// Tree Path *TO BE DONE*
+[@TreePath]
+#SAY
+To Do
+<Main Menu/@Main> - <Exit/@Exit>
+//////////////////////////////////////////////////////////////////// CAVES
+//////////////////////////////////////////////////////////////////// Ghoul Cave
+[@GhoulCave]
+#ACT
+MOVE Q004 21 12
+//////////////////////////////////////////////////////////////////// MysteryCave
+[@MysteryCave]
+#ACT
+MOVE M001 395 196
+//////////////////////////////////////////////////////////////////// Serpent Valley Dead Mine *TO DO*
+[@SDeadMine]
+#SAY
+TO DO
+//////////////////////////////////////////////////////////////////// OC
+[@OmaCave]
+#SAY
+<OmaCave_1F/@OC1>
+<OmaCave_2/@OC2>
+<HiddenRoom/@OC3>
+<KingsTomb/@OC4>
+<OmaCave_3F/@OC5>
+ 
+ 
+<Main Menu/@Main> - <Exit/@Exit>
+[@OC1]
+#ACT
+MOVE D001 151 361
+[@OC2]
+#ACT
+MOVE D002 370 355
+[@OC3]
+#ACT
+MOVE DM001A 4 9
+[@OC4]
+#ACT
+MOVE DM002 8 27
+[@OC5]
+#ACT
+MOVE D003 109 85
+//////////////////////////////////////////////////////////////////// NC
+[@NaturalCave]
+#SAY
+<NaturalCave_1F/@NC1>
+<NaturalCave_2/@NC2>
+<HiddenRoom/@NC3>
+ 
+ 
+ 
+ 
+<Main Menu/@Main> - <Exit/@Exit>
+[@NC1]
+#ACT
+MOVE D011 150 364
+[@NC2]
+#ACT
+MOVE D012 211 225
+[@NC3]
+#ACT
+MOVE DM001 4 9
+//////////////////////////////////////////////////////////////////// IC
+[@InsectCave]
+#SAY
+<InsectCave_1F/@IC1>
+<InsectCave_2F/@IC2>
+<InsectCave_3F/@IC3>
+<InsectCave_4F/@IC4>
+ 
+ 
+ 
+<Main Menu/@Main> - <Exit/@Exit>
+[@IC1]
+#ACT
+MOVE D2041 65 283
+[@IC2]
+#ACT
+MOVE D2042 69 262
+[@IC3]
+#ACT
+MOVE D2043 231 266
+[@IC4]
+#ACT
+MOVE D2044 258 211
+//////////////////////////////////////////////////////////////////// WT
+[@WoomaTemple]
+#SAY
+<WoomaTempleEntrance/@WT1>
+<WoomaTemple_1F/@WT2>
+<WoomaTemple_2F/@WT3>
+<WoomaTemple (KR)/@WT4>
+ 
+ 
+ 
+<Main Menu/@Main> - <Exit/@Exit>
+[@WT1]
+#ACT
+MOVE D021 73 71
+[@WT2]
+#ACT
+MOVE D022 339 357
+[@WT3]
+#ACT
+MOVE D023 200 197
+[@WT4]
+#ACT
+MOVE D024 17 21
+//////////////////////////////////////////////////////////////////// DM
+[@DeadMine]
+#SAY
+<DeadMineEntrance/@DM1>
+<B1ofMine/@DM2>
+<B1ofMine/@DM3>
+<EastofDeadMine/@DM4>
+<B1ofMine/@DM5>
+<B2ofDeadMine/@DM6>
+<OverPass/@DM7>
+<1FofDeadMine/@DM8>
+<OverPass/@DM9>
+<OreStoragePlace/@DM10>
+<OverPass/@DM11>
+<SouthofDeadMine/@DM12>
+<Main Menu/@Main> - <Exit/@Exit>
+[@DM1]
+#ACT
+MOVE D401 25 181
+[@DM2]
+#ACT
+MOVE D411 58 10
+[@DM3]
+#ACT
+MOVE D413 11 10
+[@DM4]
+#ACT
+MOVE D402 11 145
+[@DM5]
+#ACT
+MOVE D414 15 78
+[@DM6]
+#ACT
+MOVE D404 11 150
+[@DM7]
+#ACT
+MOVE D416 8 57
+[@DM8]
+#ACT
+MOVE D403 11 104
+[@DM9]
+#ACT
+MOVE D412 55 26
+[@DM10]
+#ACT
+MOVE D405 12 145
+[@DM11]
+#ACT
+MOVE D415 9 84
+[@DM12]
+#ACT
+MOVE D406 185 122
+//////////////////////////////////////////////////////////////////// FC
+[@FoxCave]
+#SAY
+<SealedMaze/@FC1>
+<SacredFoxHill/@FC2>
+<SacredFoxTemple/@FC3>
+ 
+ 
+ 
+ 
+<Main Menu/@Main> - <Exit/@Exit>
+[@FC1]
+#ACT
+MOVE Fox01 117 21
+[@FC1]
+#ACT
+MOVE Fox02 26 34
+[@FC1]
+#ACT
+MOVE Fox03 33 51
+//////////////////////////////////////////////////////////////////// ZT
+[@ZumaTemple]
+#SAY
+<LobbyofZumaTemple/@ZT1> , <ZumaTemple_1F/@ZT2> , <ZumaTemple_2F/@ZT3> , <ZumaTemple_3F/@ZT4> , 
+<ZumaTemple_4F/@ZT5> , <ZumaTemple_5F/@ZT6> , 
+<ZumaTempleLobby_7F/@ZT7> , <ZumaTemple_7F/@ZT8> , <ZumaTemple_7F/@ZT9> , <ZumaTemple_7F/@ZT10> ,
+<ZumaTemple/@ZT11>
+<Main Menu/@Main> - <Exit/@Exit>
+[@ZT1]
+#ACT
+MOVE 0157 11 23
+[@ZT2]
+#ACT
+MOVE D501 167 215
+[@ZT3]
+#ACT
+MOVE D502 167 215
+[@ZT4]
+#ACT
+MOVE D503 167 215
+[@ZT5]
+#ACT
+MOVE D504 167 215
+[@ZT6]
+#ACT
+MOVE D505 99 99
+[@ZT7]
+#ACT
+MOVE D5071 9 12
+[@ZT8]
+#ACT
+MOVE D5072 8 53
+[@ZT9]
+#ACT
+MOVE D5073 11 68
+[@ZT10]
+#ACT
+MOVE D5074 46 88  
+[@ZT11]
+#ACT
+MOVE D515 15 30
+//////////////////////////////////////////////////////////////////// BC
+[@BugCave]
+#SAY
+<S_1FofDungeon/@BC1> , <W_1FofDungeon/@BC2> , <N_1FofDungeon/@BC3> , <W_2FofDungeon/@BC4> , 
+<N_2FofDungeon/@BC5> , <LifeDeathCoffin/@BC6> (KR) , <LostCave(MainCave)/@BC7> , <LostMiddleCave/@BC8> ,
+<SouthernLostCave/@BC9> , <WesternLostCave/@BC10> , <NorthernLostCave/@BC11> , <EasternLostCave/@BC12> , <FatallyPoisonousCave/@BC13>
+
+<StoneLanternRoom/@BC14> , <AmethystRoom/@BC15> , <StoneCarvedStream/@BC16> , <StrangeRocksRoom/@BC17> , <StrangeRocksPath/@BC18>
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@BC1]
+#ACT
+MOVE D601 207 236
+[@BC2]
+#ACT
+MOVE D602 47 24
+[@BC3]
+#ACT
+MOVE D603 79 84
+[@BC4]
+#ACT
+MOVE D604 153 41
+[@BC5]
+#ACT
+MOVE D605 44 22
+[@BC6]
+#ACT
+MOVE D606 11 28
+[@BC7]
+#ACT
+MOVE D612 13 19
+[@BC8]
+#ACT
+MOVE D613 9 52
+[@BC9]
+#ACT
+MOVE D614 15 22
+[@BC10]
+#ACT
+MOVE D615 86 78
+[@BC11]
+#ACT
+MOVE D616 84 20
+[@BC12]
+#ACT
+MOVE D617 87 13
+[@BC13]
+#ACT
+MOVE D618 51 23
+[@BC14]
+#ACT
+MOVE D607 
+[@BC15]
+#ACT
+MOVE D608 
+[@BC16]
+#ACT
+MOVE D609 
+[@BC17]
+#ACT
+MOVE D610 
+[@BC18]
+#ACT
+MOVE D611 
+//////////////////////////////////////////////////////////////////// ST
+[@StoneTemple]
+#SAY
+<AngledStoneTombEntrance/@ST8> , <B1_AngledStoneTomb/@ST1> , <B2_AngledStoneTomb/@ST2> ,
+<B3_AngledStoneTomb/@ST3> , <B4_AngledStoneTomb/@ST4> , <B5_AngledStoneTomb/@ST5> , 
+<B6_AngledStoneTomb/@ST6> , <B7_AngledStoneTomb/@ST7> (KR)
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@ST1]
+#ACT
+MOVE D711 203 201
+[@ST2]
+#ACT
+MOVE D712 367 225
+[@ST3]
+#ACT
+MOVE D713 347 246
+[@ST4]
+#ACT
+MOVE D714 385 189
+[@ST5]
+#ACT
+MOVE D715 32 343
+[@ST6]
+#ACT
+MOVE D716 23 28
+[@ST7]
+#ACT
+MOVE D717 29 73
+[@ST8]
+#ACT
+MOVE D710 28 20
+//////////////////////////////////////////////////////////////////// ICE HELL *Movements missing*
+[@IceHell]
+#SAY
+<IceHellCavern/@ICH1> , <IceHellTemple(S/@ICH2>) , <IceHellTemple(N)/@ICH3> , 
+<IceHellPass/@ICH4> , <DangerousCavern/@ICH5> , <IceHellTemple_KR/@ICH6>
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@ICH1]
+#ACT
+MOVE HELL201
+[@ICH2]
+#ACT
+MOVE HELL202
+[@ICH3]
+#ACT
+MOVE HELL203
+[@ICH4]
+#ACT
+MOVE HELL204
+[@ICH5]
+#ACT
+MOVE HELL205
+[@ICH6]
+#ACT
+MOVE HELL206
+//////////////////////////////////////////////////////////////////// MM
+[@MineralMine]
+#SAY
+<MineralMine_1F/@MM1>
+<MineralMine_2F/@MM2>
+<MineralMine_3F/@MM3>
+<MineralMine_4F/@MM4>
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@MM1]
+#ACT
+MOVE D2031 276 281
+[@MM2]
+#ACT
+MOVE D2032 186 265
+[@MM3]
+#ACT
+MOVE D2033 60 281
+[@MM4]
+#ACT
+MOVE D2034 274 44
+//////////////////////////////////////////////////////////////////// HELL CAVERN
+[@HellCavern]
+#SAY
+<HellCavern_1F/@HC1>
+<HellCavern_2F/@HC2>
+<HellOverpass/@HC3>
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@HC1]
+#ACT
+MOVE HELL01 24 45
+[@HC2]
+#ACT
+MOVE HELL02 16 31
+[@HC3]
+#ACT
+MOVE HELL03 20 275
+//////////////////////////////////////////////////////////////////// RED CAVERN
+[@RedCavern]
+#SAY
+<RedCavern_1F/@RC1> , <RedCavern_2F/@RC2> , <RedCavern_3F/@RC3> , <RedCavern_4F/@RC4> , 
+<RedCavern_5F/@RC5> , <RedCavern_6F/@RC6> , <RedCavern_7F/@RC7> , <RedCavern_8F/@RC8> , 
+<RedCavern_9F/@RC9> , <RedCavern_10F/@RC10> , <RedCavern_11F/@RC11> , <RedCavern_12F/@RC12> , 
+<RedCavern_KR/@RC13>
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@RC1]
+#ACT
+MOVE R01 50 33
+[@RC2]
+#ACT
+MOVE R02 18 144
+[@RC3]
+#ACT
+MOVE R03 25 75
+[@RC4]
+#ACT
+MOVE R04 21 74
+[@RC5]
+#ACT
+MOVE R05 19 78
+[@RC6]
+#ACT
+MOVE R06 25 75
+[@RC7]
+#ACT
+MOVE R07 20 74
+[@RC8]
+#ACT
+MOVE R08 19 77
+[@RC9]
+#ACT
+MOVE R09 26 75
+[@RC10]
+#ACT
+MOVE R010 21 76
+[@RC11]
+#ACT
+MOVE R011 20 79
+[@RC12]
+#ACT
+MOVE R012 26 76
+[@RC13]
+#ACT
+MOVE RCK 18 103
+//////////////////////////////////////////////////////////////////// PT
+[@PrajnaTemple]
+#SAY
+<PrajnaTempleLobby/@PT1> , <PrajnaTemple_1F/@PT2> , <PrajnaTemple_2F/@PT3> , <PrajnaTemple_3F/@PT4> , 
+<PrajnaTemple_4F/@PT5> , <PrajnaTemple(E)_5F/@PT6> , <PrajnaTemple(W)_5F/@PT7> , <PrajnaTemple_6F/@PT8> , 
+<PrajnaTemple_7F/@PT9> , <PrajnaTemple/@PT10> (KR)
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@PT1]
+#ACT
+MOVE D2070 32 36
+[@PT2]
+#ACT
+MOVE D2071 221 223
+[@PT3]
+#ACT
+MOVE D2072 149 116
+[@PT4]
+#ACT
+MOVE D2073 158 160
+[@PT5]
+#ACT
+MOVE D2074 35 28
+[@PT6]
+#ACT
+MOVE D2075 40 107
+[@PT7]
+#ACT
+MOVE D2076 93 129
+[@PT8]
+#ACT
+MOVE D2077 379 282
+[@PT9]
+#ACT
+MOVE D2078 159 162
+[@PT10]
+#ACT
+MOVE D2079 14 15
+//////////////////////////////////////////////////////////////////// PSC
+[@PrajnaStoneCave]
+#SAY
+<PrajnaStoneCave_1F/@PSC1> , <PrajnaStoneCave_2F/@PSC2> , <PrajnaStoneCave(E)_3F/@PSC3> , 
+<PrajnaStoneCave(W)_3F/@PSC4> , <PrajnaStoneCave_4F/@PSC5> , <PrajnaStoneCave_5F/@PSC6> , 
+<PrajnaStoneCave_6F/@PSC7> (KR)
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@PSC1]
+#ACT
+MOVE D2061 157 178
+[@PSC2]
+#ACT
+MOVE D2062 30 20
+[@PSC3]
+#ACT
+MOVE D2063 45 79
+[@PSC4]
+#ACT
+MOVE D2064 14 34
+[@PSC5]
+#ACT
+MOVE D2065 63 56
+[@PSC6]
+#ACT
+MOVE D2066 225 22
+[@PSC7]
+#ACT
+MOVE D2067 153 165
+//////////////////////////////////////////////////////////////////// BDD
+[@BlackDragonDungeon]
+#SAY
+<BlackDragonDungeon/@BDD1> , <BlackSnakePalace/@BDD2> ,<BlackDragonDungeon_1F/@BDD3> ,<BlackDragonDungeon_2F/@BDD4> ,
+<PurgatoryHall/@BDD5> ,<WoomaPalace/@BDD6> ,<HwanMaJin/@BDD7> ,<NobleHogPalace/@BDD8> ,
+<SoleSpiritHall/@BDD9> ,<HwanMaJin2/@BDD10> ,<ZumaPalace/@BDD11> ,<PrisonHall/@BDD12> ,
+<DarkDevilPalace/@BDD13>
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@BDD1]
+#ACT
+MOVE D2001 255 266
+[@BDD2]
+#ACT
+MOVE D2002 30 35
+[@BDD3]
+#ACT
+MOVE D2003 285 280
+[@BDD4]
+#ACT
+MOVE D2004 74 73
+[@BDD5]
+#ACT
+MOVE D2005 83 85
+[@BDD6]
+#ACT
+MOVE D2006 72 78
+[@BDD7]
+#ACT
+MOVE D2007 180 176
+[@BDD8]
+#ACT
+MOVE D2008 80 80
+[@BDD9]
+#ACT
+MOVE D2009 83 85 
+[@BDD10]
+#ACT
+MOVE D2010 285 279
+[@BDD11]
+#ACT
+MOVE D2011 82 86
+[@BDD12]
+#ACT
+MOVE D2012 82 83
+[@BDD13]
+#ACT
+MOVE D2013 81 81
+//////////////////////////////////////////////////////////////////// Hell Fire
+[@HellFire]
+#SAY
+<HellFire_1F/@HF1>
+<HellFire_2F/@HF2>
+<HellFire_3F/@HF3>
+<HellFire_KingsRoom/@HF4>
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@HF1]
+#ACT
+MOVE HF1 27 39
+[@HF2]
+#ACT
+MOVE HF2 16 382
+[@HF3]
+#ACT
+MOVE HF3 26 197
+[@HF4]
+#ACT
+MOVE HKR 15 35
+//////////////////////////////////////////////////////////////////// Red Valley *Movements missing*
+[@RedValley]
+#SAY
+<RedValley_1F/@RV1> , <RedValley_2F/@RV2> , <RedValley_3F/@RV3> , <RedValley_4F/@RV4> , 
+<RedValley_5F/@RV5> , <RedValley_6F/@RV6> , <RedValley_7F/@RV7> , <RedValley_8F/@RV8> , 
+<RedValley_9F/@RV9> , <RedValley_10F/@RV10> , <RedValley_11F/@RV11> , <Great_TaoTomb/@RV12> ,
+<RedMoonRoom/@RV13> (KR)
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@RV1]
+#ACT
+MOVE D10011
+[@RV2]
+#ACT
+MOVE D10012
+[@RV3]
+#ACT
+MOVE D10013
+[@RV4]
+#ACT
+MOVE D1002
+[@RV5]
+#ACT
+MOVE D10031
+[@RV6]
+#ACT
+MOVE D10032
+[@RV7]
+#ACT
+MOVE D1004
+[@RV8]
+#ACT
+MOVE D10051
+[@RV9]
+#ACT
+MOVE D10052
+[@RV10]
+#ACT
+MOVE D10053
+[@RV11]
+#ACT
+MOVE D10054
+[@RV12]
+#ACT
+MOVE D10061
+[@RV13]
+#ACT
+MOVE D10062
+//////////////////////////////////////////////////////////////////// Swamp *Movements missing*
+[@Swamp]
+#SAY
+<SwampCavern_1F/@S1>
+<SwampCavern_2F/@S2>
+<Swamp/@S3>
+<DarkSwamp/@S4>
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@S1]
+#ACT
+MOVE EBEE01
+[@S2]
+#ACT
+MOVE EBEE02
+[@S3]
+#ACT
+MOVE EBEE03
+[@S4]
+#ACT
+MOVE EBEEBOSS
+//////////////////////////////////////////////////////////////////// Lunar *Movements missing*
+[@Lunar]
+#SAY
+<Lunar_1F/@L1> , <Lunar_2F/@L2> , <Lunar_3F/@L3>
+<Lunar_4F/@L4> , <LunarRoom/@L5> (KR)
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@L1]
+#ACT
+MOVE Hell301s
+[@L2]
+#ACT
+MOVE Hell302s
+[@L3]
+#ACT
+MOVE Hell303s
+[@L4]
+#ACT
+MOVE Hell304s
+[@L5]
+#ACT
+MOVE Hell_Bosss
+//////////////////////////////////////////////////////////////////// Viper Path *TO BE DONE* Trello.
+[@ViperPath]
+#SAY
+CHECK TRELLO BOARD.
+(Title For Link/https://trello.com/c/9xZB8U2c/162-viperpath-cave)
+//////////////////////////////////////////////////////////////////// WhiteDragonPassage *Movements missing*
+[@WDP]
+#SAY
+<WhiteDragonPassage 1F/@WDP1> , <WhiteDragonPassage 2F/@WDP2> , <WhiteDragonHillSide/@WDP3> , 
+<WhiteDragonPassage 4F/@WDP4> , <WhiteDragonPassage 5F/@WDP5>
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@WDP1]
+#ACT
+MOVE bonguk1
+[@WDP2]
+#ACT
+MOVE bonguk2
+[@WDP3]
+#ACT
+MOVE bonguk3
+[@WDP4]
+#ACT
+MOVE bonguk4
+[@WDP5]
+#ACT
+MOVE bonguk5
+//////////////////////////////////////////////////////////////////// Snow Cavern
+[@SnowCavern]
+#SAY
+<SnowCavern_1F/@SC1> , <SnowCavern_2F/@SC2> , <TheSnowLair/@SC3> (KR)
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@SC1]
+#ACT
+MOVE SnowCave_1F 28 263
+[@SC2]
+#ACT
+MOVE SnowCave_2F 35 256 
+[@SC3]
+#ACT
+MOVE SnowCave_BOSS 27 33 
+//////////////////////////////////////////////////////////////////// Ancient Caves
+
+//////////////////////////////////////////////////////////////////// Ancient Natural Cave
+[@ANC]
+#SAY
+<AncientNaturalCave/@ANC1> , <AncientNaturalCave 2F/@ANC2> , <AncientNaturalCave 3F/@ANC3>
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@ANC1]
+#ACT
+MOVE D001A 152 361
+[@ANC2]
+#ACT
+MOVE D002A 369 354
+[@ANC3]
+#ACT
+MOVE D003A 108 86
+//////////////////////////////////////////////////////////////////// Ancient WT
+[@AWT]
+#SAY
+<AncientTempleEntrance/@AWT1> , <AncientTemple_1F/@AWT2> , 
+<AncientTemple_2F/@AWT3> , <AncientTemple/@AWT4> (KR)
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@AWT1]
+#ACT
+MOVE D021A 73 71
+[@AWT2]
+#ACT
+MOVE D022A 339 357
+[@AWT3]
+#ACT
+MOVE D023A 200 197
+[@AWT4]
+#ACT
+MOVE D024A 17 21
+//////////////////////////////////////////////////////////////////// AncientStoneTomb
+[@AST]
+#SAY
+<AncientSTombEntrance/@AST1> , <AncientSTomb_1F/@AST2> , 
+<AncientSTomb_2F/@AST3> , <AncientSTomb_3F/@AST4> (KR)
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@AST1]
+#ACT
+MOVE D710A 28 21
+[@AST2]
+#ACT
+MOVE D711A 202 201
+[@AST3]
+#ACT
+MOVE D712A 367 225
+[@AST4]
+#ACT
+MOVE D713A 34 189
+//////////////////////////////////////////////////////////////////// AncientZumaTemple
+[@AZT]
+#SAY
+<AncientZumaLobby/@AZT1> , <AncientZuma_1F/@AZT2> , 
+<AncientZuma_2F/@AZT3> , <AncientZuma_3F/@AZT4> (KR)
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@AZT1]
+#ACT
+MOVE 0157A 15 20
+[@AZT2]
+#ACT
+MOVE D501A 166 215
+[@AZT3]
+#ACT
+MOVE D502A 166 215
+[@AZT4]
+#ACT
+MOVE D503A 166 215
+//////////////////////////////////////////////////////////////////// AncientPrajnaCave
+[@APC]
+#SAY
+<AncientPrajna_1F/@APC1> , <AncientPrajna_2F/@APC2> , <AncientPrajna_3F/@APC3> (KR)
+
+<Main Menu/@Main> - <Exit/@Exit>
+[@APC1]
+#ACT
+MOVE D2051A 111 175
+[@APC2]
+#ACT
+MOVE D2054A 279 273
+[@APC3]
+#ACT
+MOVE D2055A 35 261
+//////////////////////////////////////////////////////////////////// Bosses
+[@OmaKingSpirit]
+#ACT
+MOVE DM002 21 12
+[@EvilCentipede]
+#ACT
+MOVE D606 83 171
+[@EvilSnake]
+#ACT
+MOVE D717 26 74
+[@ZumaTaurus]
+#ACT
+MOVE D515 14 29
+[@GreatFoxSpirit]
+#ACT
+MOVE FOX03 22 55
+[@WoomaTaurus]
+#ACT
+MOVE D024 48 50
+[@KingScorpion]
+#ACT
+MOVE D2002 13 25
+[@KingHog]
+#ACT
+MOVE D2008 81 80
+[@DarkDevil]
+#ACT
+MOVE D2013 23 24
+[@RedMoonEvil]
+#ACT
+MOVE D10062 21 21
+[@MinotaurKing]
+#ACT
+MOVE D2079 47 51
+//////////////////////////////////////////////////////////////////// End

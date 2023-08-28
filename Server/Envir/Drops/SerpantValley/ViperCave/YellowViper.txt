@@ -1,0 +1,22 @@
+;Gold
+1/10 Gold 2500
+
+;Stones
+1/1000 HealthStone(XL) 
+1/1000 MagicStone(XL)
+1/1000 DCStone(XL) 
+1/1000 MCStone(XL) 
+1/1000 SCStone(XL) 
+
+;Potions
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/25 (HP)DrugLarge
+1/25 (MP)DrugLarge
+1/25 (HP)DrugLarge
+1/25 (MP)DrugLarge
+1/20 SunPotion
+1/50 SunPotion(M)
+1/100 OldGinseng

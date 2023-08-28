@@ -1,0 +1,25 @@
+[@Description]
+Please Visit {SabukWall/Yellow} and speak with {Mr.Wang/LimeGreen}.
+
+[@TaskDescription]
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+1658
+
+[@GoldReward]
+3300
+
+// Pickup - MirGuide_James 2 505 483
+// Hand In - Merchant_Mr.Wang 3 663 304

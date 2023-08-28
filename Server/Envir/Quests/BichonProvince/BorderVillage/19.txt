@@ -1,0 +1,29 @@
+[@Description]
+Hello Traveller. Have you heard about the
+Archer Captain Currently protecting the
+region? Rumours say they are looking for
+disciples to aid in the war
+
+[@TaskDescription]
+Speak with {Jerald/LimeGreen} at Coordinates 320:476
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+48
+
+[@GoldReward]
+60
+
+// Pickup - Assistant_Jane 0 284 606
+// Hand In - Captain_Jerald 0 320 476

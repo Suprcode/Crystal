@@ -1,0 +1,25 @@
+[@Description]
+Please travel back to {TaoVillage/Yellow} and speak with 
+the {LeadTrainer/LimeGreen}.
+
+[@TaskDescription]
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+3912
+
+[@GoldReward]
+
+// Pickup - 
+// Hand In - LeadTrainer_Harry 1002 11 8

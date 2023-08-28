@@ -1,0 +1,26 @@
+;Gold
+1/10 Gold 1950
+1/10 SunPotion
+1/10 SunPotion
+
+;Potions
+1/30 SunPotion
+1/50 SunPotion(M)
+
+
+
+1/40000 SparklingBelt
+1/40000 SparklingBoots
+1/40000 SparklingHelmet
+1/60000 PuiYuHelmet
+
+1/25000 BlackTigerArmour(M)
+1/25000 BlackTigerArmour(F)
+1/25000 LotusArmour(M)
+1/25000 LotusArmour(F)
+1/25000 CraneArmour(M)
+1/25000 CraneArmour(F)
+1/25000 StealthArmour(M)
+1/25000 StealthArmour(F)
+1/25000 LightTemperedArmour(M)
+1/25000 LightTemperedArmour(F)

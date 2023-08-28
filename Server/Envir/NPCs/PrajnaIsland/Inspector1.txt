@@ -1,0 +1,26 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+I'm dispatched from the Bichon Wall,
+preventing the crossed force from Bottomless Pit breaking out..
+It may sound simple,but as a matter of fact,very difficult.
+The monsters attempt to break the seal endlessly.
+<We intend to protect the seal as well../@next>
+<I understand/@exit>
+
+
+
+[@next]
+What? Do you know what kind of danger you are stepping into?
+Even if it is to slay the monsters in BichonWall,
+I cannot get involved in such nonsense.

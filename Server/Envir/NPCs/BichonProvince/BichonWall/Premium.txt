@@ -1,0 +1,79 @@
+;;Checking whether you have PremiumPasses.
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#IF
+CHECKITEM PremiumPass[1d]
+#ACT
+GOTO @PremCaveMenu
+#ELSEACT
+GOTO @CHECKPASS2
+
+[@CHECKPASS2]
+#IF
+CHECKITEM PremiumPass[3d]
+#ACT
+GOTO @PremCaveMenu
+#ELSEACT
+GOTO @CHECKPASS3
+
+[@CHECKPASS3]
+#IF
+CHECKITEM PremiumPass[7d]
+#ACT
+GOTO @PremCaveMenu
+#ELSEACT
+GOTO @CHECKPASS4
+
+[@CHECKPASS4]
+#IF
+CHECKITEM PremiumPass[15d]
+#ACT
+GOTO @PremCaveMenu
+#ELSESAY
+You dont have a {Premium Pass/LightSteelBlue}.
+
+;;Premium Cave Menu.
+[@PremCaveMenu]
+#SAY
+Congratulations <$USERNAME>, 
+Thank You for your contribution. As a reward you now have access
+to the following Premium Dungeons which don't have any Restrictions.
+ 
+Quick Entry to:
+<Ancient Oma Cave/@AOC> | <Ancient Wooma Temple/@AWT> | <Ancient Stone Temple/@AST>
+<Ancient Zuma Temple/@AZT> | <Ancient Prajna Cave/@APC>
+
+[@AOC]
+#ACT
+MOVE D001A
+GIVEITEM TownTeleport 1
+
+[@AWT]
+#ACT
+MOVE D021A
+GIVEITEM TownTeleport 1
+
+[@AST]
+#ACT
+MOVE D710A
+GIVEITEM TownTeleport 1
+
+[@AZT]
+#ACT
+MOVE 0157A
+GIVEITEM TownTeleport 1
+
+[@APC]
+#ACT
+MOVE D2051A
+GIVEITEM TownTeleport 1

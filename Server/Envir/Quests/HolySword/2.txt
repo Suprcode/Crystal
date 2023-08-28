@@ -1,0 +1,27 @@
+[@Description]
+Travel to {TreePath/Yellow} and Eliminate {RootSpider/Crimson} 
+then return to {Perry/LimeGreen} in {TaoVillage/Yellow}
+
+[@TaskDescription]
+
+[@Completion]
+
+[@KillTasks]
+RootSpider 1 "Kill a RootSpider in TreePath"
+
+[@ItemTasks]
+
+[@FlagTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+
+[@GoldReward]
+
+// Pickup - Master_Perry 1002 14 13
+// Hand In - 

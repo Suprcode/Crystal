@@ -1,0 +1,97 @@
+;Gold
+1/1 Gold 60000
+1/30 GoldBar
+
+;Potions
+2/1 (HP)DrugLarge
+2/1 (MP)DrugLarge
+2/2 (HP)DrugLarge
+2/2 (MP)DrugLarge
+2/1 (HP)DrugXL
+2/2 (HP)DrugXL
+2/1 (MP)DrugXL
+2/2 (MP)DrugXL
+2/1 SunPotion
+2/2 SunPotion
+2/1 SunPotion(M)
+2/2 SunPotion(M)
+1/2 BenedictionOil
+1/5 BenedictionOil
+1/5 WarGodOil
+
+;Weapons
+1/400 BlackTigerHammer
+1/500 StaffOfLotus
+1/500 FanOfCrane
+1/450 ButcheringBlades
+1/500 LethalBow
+
+;Armour
+1/200 BlackTigerArmour(M)
+1/200 BlackTigerArmour(F)
+1/200 LotusArmour(M)
+1/200 LotusArmour(F)
+1/200 CraneArmour(M)
+1/200 CraneArmour(F)
+1/200 StealthArmour(M)
+1/200 StealthArmour(F)
+1/200 LightTemperedArmour(M)
+1/200 LightTemperedArmour(F)
+
+;Rings
+1/3000 TeleportRing
+1/3500 ProtectionRing
+1/3500 ParalysisRing
+1/5000 RevivalRing
+1/3000 ClearRing
+1/500 MuscleRing
+1/500 RecoveryRing
+1/250 FlameRing
+1/100 PledgeRing
+1/100 CrimsonRubyRing
+1/100 FiveElementRing
+
+;Bracelets
+1/100 DualTitanAmulet
+1/100 EvilWhispAmulet
+1/100 SacredAngelAmulet
+
+;Necklaces
+1/100 DemonMask
+1/100 VioletOrb
+1/100 KunroonTear
+
+;Gems
+1/250 BraveryOrb
+1/250 MagicOrb
+1/250 SoulOrb
+1/200 ProtectionOrb
+1/200 EvilSlayerOrb
+1/325 PoisonOrb
+1/325 FreezingOrb
+1/800 StormOrb
+1/800 AccuracyOrb
+1/800 AgilityOrb
+
+;Books
+1/50 TwinDrakeBlade
+1/50 Purification
+1/50 LionRoar
+1/50 Mirroring
+1/50 moonlight
+1/50 Entrapment
+1/50 Hallucination
+1/50 Vampirism
+1/50 Mpeater
+1/200 SummonHolyDeva
+1/200 FlameField
+1/50 BladeAvalanche
+1/200 ProtectionField
+1/200 Curse
+1/200 Darkbody
+1/400 swiftfeet
+1/400 MeteorStrike
+1/400 PoisonCloud
+1/400 Rage
+1/600 FireBurst
+1/600 EnergyShield

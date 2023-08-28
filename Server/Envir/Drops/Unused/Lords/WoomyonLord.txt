@@ -1,0 +1,1739 @@
+;Level1
+;Gold
+1/1 Gold 10000 LV1
+
+
+;Pots + Other
+1/1 (HP)DrugLarge LV1
+1/1 (MP)DrugLarge LV1
+1/2 (HP)DrugLarge LV1
+1/2 (MP)DrugLarge LV1
+1/1 (HP)DrugLarge LV1
+1/1 (MP)DrugLarge LV1
+1/2 (HP)DrugLarge LV1
+1/2 (MP)DrugLarge LV1
+1/3 (HP)DrugLarge LV1
+1/3 (MP)DrugLarge LV1
+1/1 (HP)DrugLarge LV1
+1/1 (MP)DrugLarge LV1
+1/2 (HP)DrugLarge LV1
+1/2 (MP)DrugLarge LV1
+1/3 (HP)DrugLarge LV1
+1/3 (MP)DrugLarge LV1
+1/1 SunPotion(M) LV1
+1/2 SunPotion(M) LV1
+1/1 SunPotion(M) LV1
+1/2 SunPotion(M) LV1
+1/1 SunPotion(M) LV1
+1/2 SunPotion(M) LV1
+1/1 SunPotion(M) LV1
+1/2 SunPotion(M) LV1
+1/1 SunPotion(M) LV1
+1/2 SunPotion(M) LV1
+
+
+;Other
+1/15 BenedictionOil LV1
+1/10 WoomaHorn LV1
+1/10 WoomaHeart LV1
+
+1/40 AwakeningSoul0 LV1
+1/40 AwakeningSoul0 LV1
+
+;Sets
+1/400 RecallHelmet LV1
+1/400 RecallRing LV1
+1/400 RecallHelmet LV1
+1/400 RecallBracelet LV1
+
+
+;Weapons
+1/30 GreatAxe LV1
+1/30 MageStaff LV1
+1/30 SilverBow LV1
+1/30 SerpentSword LV1
+1/30 DoubleBlades LV1
+1/40 VanguardBow LV1
+1/40 VanguardBlade LV1
+1/40 VanguardStaff LV1
+1/40 VanguardSerp LV1
+1/40 VanguardBlades LV1
+
+
+;Weapons Rare
+1/90 JudgementMace LV1
+1/90 WarMageStaff LV1
+1/90 FiendBow LV1
+1/90 SoulSpringWand LV1
+1/90 BladesOfDarkness LV1
+
+
+;Armour
+1/20 HeavyArmour(M) LV1 
+1/20 HeavyArmour(F) LV1 
+1/20 MagicRobe(M) LV1 
+1/20 MagicRobe(F) LV1 
+1/20 SoulArmour(M) LV1 
+1/20 SoulArmour(F) LV1
+1/20 RelicArmour(M) LV1
+1/20 RelicArmour(F) LV1
+
+
+;Armour Rare
+1/200 VanguardArmour(M)
+1/200 VanguardArmour(F)
+
+
+;Helmets
+1/5 SkeletonHelmet LV1
+1/5 ShamanHelmet LV1
+1/10 SteelHelmet LV1
+
+
+;Helmets Rare
+1/120 VanguardHelmet LV1
+
+
+;Necklace
+1/10 LanternNecklace LV1 
+1/10 TigerNecklace LV1
+1/15 BlueJadeNecklace LV1 
+1/15 ConvexLens LV1 
+1/15 BambooPipe LV1 
+1/50 ClawNecklace LV1
+1/50 LifeNecklace LV1
+1/50 PearlNecklace LV1
+
+;Necklace Rare
+1/120 VanguardNecklace LV1
+
+
+;Bracelets
+1/30 KnightBracelet LV1
+1/30 SpellBracelet LV1
+1/30 3rdEyeBracelet LV1
+
+;Bracelets Rare
+1/120 VanguardWheel LV1
+
+
+;Rings
+1/40 DragonRing LV1
+1/40 RubyRing LV1
+1/40 PlatinumRing LV1
+
+;Rings Rare
+1/120 VanguardRing LV1
+
+
+;Shoes
+1/50 SilkBoots LV1
+1/50 BlackBoots LV1
+
+;Shoes Rare
+1/120 VanguardBoots LV1
+
+
+;Belts
+1/50 BronzeStrap LV1
+1/50 BlackIronBelt LV1
+
+;Belts Rare
+1/120 VanguardBelt LV1
+
+
+;Medals
+1/250 BerserkerMedal LV1
+1/250 OutLawMedal LV1
+1/250 RuinedMedal LV1
+
+
+;Medals Rare
+1/200 BangleMedal LV1
+
+
+;Shields
+1/300 PaladinShield LV1
+1/300 KryptoniteShield LV1
+
+;Shields Rare
+1/400 AfflictedShield LV1
+
+
+;Pads
+1/175 ProtectionGuards[14d] LV1
+
+;Stone
+1/40 DCStone(M) LV1
+1/40 MCStone(M) LV1
+1/40 SCStone(M) LV1
+
+;Stones Rare
+
+;RuneStone
+1/30 WoomaTaurusRune LV1
+
+;Books
+;Warrior
+1/40 HalfMoon LV1
+1/100 BladeStorm LV1
+1/80 ShoulderDash LV1
+1/180 FlamingSword LV1
+1/120 TwinDrakeBlade LV1
+1/260 SliceNDice LV1
+
+;Wizard
+1/40 Lightning LV1
+1/80 ThunderStorm LV1
+1/100 DragNet LV1
+1/120 MagicShield LV1
+1/210 IceStorm LV1
+
+;Taoist
+1/40 BlessedArmour LV1
+1/80 EnergyRepulsor LV1
+1/120 TrapHexagon LV1
+1/110 UltimateEnhancer LV1
+1/100 HealingCircle LV1
+
+;Assassin
+1/40 LightBody LV1
+1/80 HeavenlySword LV1
+1/120 FireBurst LV1
+1/120 Trap LV1
+1/150 PoisonSword LV1
+1/100 CrescentSlash LV1
+
+1/40 SummonVampire LV1
+1/80 BackStep LV1
+1/100 DelayedExplosion LV1
+1/120 ElementalBarrier LV1
+1/150 BindingShot LV1
+
+;Quests
+1/1 WoomaHeart Q LV1
+1/10 HeartLocket Q LV1
+1/2 GuardianBlades Q LV1
+1/1 WoomaTempleMap Q LV1
+
+;Level2
+;Gold
+1/1 Gold 10000 LV2
+
+
+;Pots + Other
+1/1 (HP)DrugLarge LV2
+1/1 (MP)DrugLarge LV2
+1/2 (HP)DrugLarge LV2
+1/2 (MP)DrugLarge LV2
+1/1 (HP)DrugLarge LV2
+1/1 (MP)DrugLarge LV2
+1/2 (HP)DrugLarge LV2
+1/2 (MP)DrugLarge LV2
+1/3 (HP)DrugLarge LV2
+1/3 (MP)DrugLarge LV2
+1/1 (HP)DrugLarge LV2
+1/1 (MP)DrugLarge LV2
+1/2 (HP)DrugLarge LV2
+1/2 (MP)DrugLarge LV2
+1/3 (HP)DrugLarge LV2
+1/3 (MP)DrugLarge LV2
+1/1 SunPotion(M) LV2
+1/2 SunPotion(M) LV2
+1/1 SunPotion(M) LV2
+1/2 SunPotion(M) LV2
+1/1 SunPotion(M) LV2
+1/2 SunPotion(M) LV2
+1/1 SunPotion(M) LV2
+1/2 SunPotion(M) LV2
+1/1 SunPotion(M) LV2
+1/2 SunPotion(M) LV2
+
+
+;Other
+1/15 BenedictionOil LV2
+1/10 WoomaHorn LV2
+1/10 WoomaHeart LV2
+
+1/40 AwakeningSoul0 LV2
+1/40 AwakeningSoul0 LV2
+
+;Sets
+1/400 RecallHelmet LV2
+1/400 RecallRing LV2
+1/400 RecallHelmet LV2
+1/400 RecallBracelet LV2
+
+
+;Weapons
+1/30 GreatAxe LV2
+1/30 SilverBow LV2
+1/30 MageStaff LV2
+1/30 SerpentSword LV2
+1/30 DoubleBlades LV2
+1/40 VanguardBow LV2
+1/40 VanguardBlade LV2
+1/40 VanguardStaff LV2
+1/40 VanguardSerp LV2
+1/40 VanguardBlades LV2
+
+
+;Weapons Rare
+1/90 JudgementMace LV2
+1/90 FiendBow LV2
+1/90 WarMageStaff LV2
+1/90 SoulSpringWand LV2
+1/90 BladesOfDarkness LV2
+
+
+;Armour
+1/20 HeavyArmour(M) LV2 
+1/20 HeavyArmour(F) LV2 
+1/20 MagicRobe(M) LV2 
+1/20 MagicRobe(F) LV2 
+1/20 SoulArmour(M) LV2 
+1/20 SoulArmour(F) LV2
+1/20 RelicArmour(M) LV2
+1/20 RelicArmour(F) LV2
+
+
+;Armour Rare
+1/200 VanguardArmour(M)
+1/200 VanguardArmour(F)
+
+
+;Helmets
+1/5 SkeletonHelmet LV2
+1/5 ShamanHelmet LV2
+1/10 SteelHelmet LV2
+
+
+;Helmets Rare
+1/120 VanguardHelmet LV2
+
+
+;Necklace
+1/10 LanternNecklace LV2 
+1/10 TigerNecklace LV2
+1/15 BlueJadeNecklace LV2 
+1/15 ConvexLens LV2 
+1/15 BambooPipe LV2 
+1/50 ClawNecklace LV2
+1/50 LifeNecklace LV2
+1/50 PearlNecklace LV2
+
+;Necklace Rare
+1/120 VanguardNecklace LV2
+
+
+;Bracelets
+1/30 KnightBracelet LV2
+1/30 SpellBracelet LV2
+1/30 3rdEyeBracelet LV2
+
+;Bracelets Rare
+1/400 VanguardWheel LV2
+
+
+;Rings
+1/40 DragonRing LV2
+1/40 RubyRing LV2
+1/40 PlatinumRing LV2
+
+;Rings Rare
+1/120 VanguardRing LV2
+
+
+;Shoes
+1/50 SilkBoots LV2
+1/50 BlackBoots LV2
+
+;Shoes Rare
+1/120 VanguardBoots LV2
+
+
+;Belts
+1/50 BronzeStrap LV2
+1/50 BlackIronBelt LV2
+
+;Belts Rare
+1/120 VanguardBelt LV2
+
+
+;Medals
+1/250 BerserkerMedal LV2
+1/250 OutLawMedal LV2
+1/250 RuinedMedal LV2
+
+
+;Medals Rare
+1/200 BangleMedal LV2
+
+
+;Shields
+1/300 PaladinShield LV2
+1/300 KryptoniteShield LV2
+
+;Shields Rare
+1/400 AfflictedShield LV2
+
+
+;Pads
+1/175 ProtectionGuards[14d] LV2
+
+;Stone
+1/40 DCStone(M) LV2
+1/40 MCStone(M) LV2
+1/40 SCStone(M) LV2
+
+;Stones Rare
+
+;RuneStone
+1/30 WoomaTaurusRune LV2
+
+;Books
+;Warrior
+1/40 HalfMoon LV2
+1/100 BladeStorm LV2
+1/80 ShoulderDash LV2
+1/180 FlamingSword LV2
+1/120 TwinDrakeBlade LV2
+1/260 SliceNDice LV2
+
+;Wizard
+1/40 Lightning LV2
+1/80 ThunderStorm LV2
+1/100 DragNet LV2
+1/120 MagicShield LV2
+1/210 IceStorm LV2
+
+;Taoist
+1/40 BlessedArmour LV2
+1/80 EnergyRepulsor LV2
+1/120 TrapHexagon LV2
+1/110 UltimateEnhancer LV2
+1/100 HealingCircle LV2
+
+;Assassin
+1/40 LightBody LV2
+1/80 HeavenlySword LV2
+1/120 FireBurst LV2
+1/120 Trap LV2
+1/150 PoisonSword LV2
+1/100 CrescentSlash LV2
+
+1/40 SummonVampire LV2
+1/80 BackStep LV2
+1/100 DelayedExplosion LV2
+1/120 ElementalBarrier LV2
+1/150 BindingShot LV2
+
+;Quests
+1/1 WoomaHeart Q LV2
+1/10 HeartLocket Q LV2
+1/2 GuardianBlades Q LV2
+1/1 WoomaTempleMap Q LV2
+
+
+;Level3
+;Gold
+1/1 Gold 10000 LV3
+
+
+;Pots + Other
+1/1 (HP)DrugLarge LV3
+1/1 (MP)DrugLarge LV3
+1/2 (HP)DrugLarge LV3
+1/2 (MP)DrugLarge LV3
+1/1 (HP)DrugLarge LV3
+1/1 (MP)DrugLarge LV3
+1/2 (HP)DrugLarge LV3
+1/2 (MP)DrugLarge LV3
+1/3 (HP)DrugLarge LV3
+1/3 (MP)DrugLarge LV3
+1/1 (HP)DrugLarge LV3
+1/1 (MP)DrugLarge LV3
+1/2 (HP)DrugLarge LV3
+1/2 (MP)DrugLarge LV3
+1/3 (HP)DrugLarge LV3
+1/3 (MP)DrugLarge LV3
+1/1 SunPotion(M) LV3
+1/2 SunPotion(M) LV3
+1/1 SunPotion(M) LV3
+1/2 SunPotion(M) LV3
+1/1 SunPotion(M) LV3
+1/2 SunPotion(M) LV3
+1/1 SunPotion(M) LV3
+1/2 SunPotion(M) LV3
+1/1 SunPotion(M) LV3
+1/2 SunPotion(M) LV3
+
+
+;Other
+1/15 BenedictionOil LV3
+1/10 WoomaHorn LV3
+1/10 WoomaHeart LV3
+
+1/40 AwakeningSoul0 LV3
+1/40 AwakeningSoul0 LV3
+
+;Sets
+1/400 RecallHelmet LV3
+1/400 RecallRing LV3
+1/400 RecallHelmet LV3
+1/400 RecallBracelet LV3
+
+
+;Weapons
+1/30 GreatAxe LV3
+1/30 MageStaff LV3
+1/30 SilverBow LV3
+1/30 SerpentSword LV3
+1/30 DoubleBlades LV3
+1/40 VanguardBlade LV3
+1/40 VanguardBow LV3
+1/40 VanguardStaff LV3
+1/40 VanguardSerp LV3
+1/40 VanguardBlades LV3
+
+
+;Weapons Rare
+1/90 JudgementMace LV3
+1/90 FiendBow LV3
+1/90 WarMageStaff LV3
+1/90 SoulSpringWand LV3
+1/90 BladesOfDarkness LV3
+
+
+;Armour
+1/20 HeavyArmour(M) LV3 
+1/20 HeavyArmour(F) LV3 
+1/20 MagicRobe(M) LV3 
+1/20 MagicRobe(F) LV3 
+1/20 SoulArmour(M) LV3 
+1/20 SoulArmour(F) LV3
+1/20 RelicArmour(M) LV3
+1/20 RelicArmour(F) LV3
+
+
+;Armour Rare
+1/200 VanguardArmour(M)
+1/200 VanguardArmour(F)
+
+
+;Helmets
+1/5 SkeletonHelmet LV3
+1/5 ShamanHelmet LV3
+1/10 SteelHelmet LV3
+
+
+;Helmets Rare
+1/120 VanguardHelmet LV3
+
+
+;Necklace
+1/10 LanternNecklace LV3 
+1/10 TigerNecklace LV3
+1/15 BlueJadeNecklace LV3 
+1/15 ConvexLens LV3 
+1/15 BambooPipe LV3 
+1/50 ClawNecklace LV3
+1/50 LifeNecklace LV3
+1/50 PearlNecklace LV3
+
+;Necklace Rare
+1/120 VanguardNecklace LV3
+
+
+;Bracelets
+1/30 KnightBracelet LV3
+1/30 SpellBracelet LV3
+1/30 3rdEyeBracelet LV3
+
+;Bracelets Rare
+1/120 VanguardWheel LV3
+
+
+;Rings
+1/40 DragonRing LV3
+1/40 RubyRing LV3
+1/40 PlatinumRing LV3
+
+;Rings Rare
+1/120 VanguardRing LV3
+
+
+;Shoes
+1/50 SilkBoots LV3
+1/50 BlackBoots LV3
+
+;Shoes Rare
+1/120 VanguardBoots LV3
+
+
+;Belts
+1/50 BronzeStrap LV3
+1/50 BlackIronBelt LV3
+
+;Belts Rare
+1/120 VanguardBelt LV3
+
+
+;Medals
+1/250 BerserkerMedal LV3
+1/250 OutLawMedal LV3
+1/250 RuinedMedal LV3
+
+
+;Medals Rare
+1/200 BangleMedal LV3
+
+
+;Shields
+1/300 PaladinShield LV3
+1/300 KryptoniteShield LV3
+
+;Shields Rare
+1/400 AfflictedShield LV3
+
+
+;Pads
+1/175 ProtectionGuards[14d] LV3
+
+;Stone
+1/40 DCStone(M) LV3
+1/40 MCStone(M) LV3
+1/40 SCStone(M) LV3
+
+;Stones Rare
+
+;RuneStone
+1/30 WoomaTaurusRune LV3
+
+;Books
+;Warrior
+1/40 HalfMoon LV3
+1/100 BladeStorm LV3
+1/80 ShoulderDash LV3
+1/180 FlamingSword LV3
+1/120 TwinDrakeBlade LV3
+1/260 SliceNDice LV3
+
+;Wizard
+1/40 Lightning LV3
+1/80 ThunderStorm LV3
+1/100 DragNet LV3
+1/120 MagicShield LV3
+1/210 IceStorm LV3
+
+;Taoist
+1/40 BlessedArmour LV3
+1/80 EnergyRepulsor LV3
+1/120 TrapHexagon LV3
+1/110 UltimateEnhancer LV3
+1/100 HealingCircle LV3
+
+;Assassin
+1/40 LightBody LV3
+1/80 HeavenlySword LV3
+1/120 FireBurst LV3
+1/120 Trap LV3
+1/150 PoisonSword LV3
+1/100 CrescentSlash LV3
+
+1/40 SummonVampire LV3
+1/80 BackStep LV3
+1/100 DelayedExplosion LV3
+1/120 ElementalBarrier LV3
+1/150 BindingShot LV3
+
+;Quests
+1/1 WoomaHeart Q LV3
+1/10 HeartLocket Q LV3
+1/2 GuardianBlades Q LV3
+1/1 WoomaTempleMap Q LV3
+
+
+;Level4
+;Gold
+1/1 Gold 10000 LV4
+
+
+;Pots + Other
+1/1 (HP)DrugLarge LV4
+1/1 (MP)DrugLarge LV4
+1/2 (HP)DrugLarge LV4
+1/2 (MP)DrugLarge LV4
+1/1 (HP)DrugLarge LV4
+1/1 (MP)DrugLarge LV4
+1/2 (HP)DrugLarge LV4
+1/2 (MP)DrugLarge LV4
+1/3 (HP)DrugLarge LV4
+1/3 (MP)DrugLarge LV4
+1/1 (HP)DrugLarge LV4
+1/1 (MP)DrugLarge LV4
+1/2 (HP)DrugLarge LV4
+1/2 (MP)DrugLarge LV4
+1/3 (HP)DrugLarge LV4
+1/3 (MP)DrugLarge LV4
+1/1 SunPotion(M) LV4
+1/2 SunPotion(M) LV4
+1/1 SunPotion(M) LV4
+1/2 SunPotion(M) LV4
+1/1 SunPotion(M) LV4
+1/2 SunPotion(M) LV4
+1/1 SunPotion(M) LV4
+1/2 SunPotion(M) LV4
+1/1 SunPotion(M) LV4
+1/2 SunPotion(M) LV4
+
+
+;Other
+1/15 BenedictionOil LV4
+1/10 WoomaHorn LV4
+1/10 WoomaHeart LV4
+
+1/40 AwakeningSoul0 LV4
+1/40 AwakeningSoul0 LV4
+
+;Sets
+1/400 RecallHelmet LV4
+1/400 RecallRing LV4
+1/400 RecallHelmet LV4
+1/400 RecallBracelet LV4
+
+
+;Weapons
+1/30 GreatAxe LV4
+1/30 MageStaff LV4
+1/30 SilverBow LV4
+1/30 SerpentSword LV4
+1/30 DoubleBlades LV4
+1/40 VanguardBow LV4
+1/40 VanguardBlade LV4
+1/40 VanguardStaff LV4
+1/40 VanguardSerp LV4
+1/40 VanguardBlades LV4
+
+
+;Weapons Rare
+1/90 JudgementMace LV4
+1/90 WarMageStaff LV4
+1/90 FiendBow LV4
+1/90 SoulSpringWand LV4
+1/90 BladesOfDarkness LV4
+
+
+;Armour
+1/20 HeavyArmour(M) LV4 
+1/20 HeavyArmour(F) LV4 
+1/20 MagicRobe(M) LV4 
+1/20 MagicRobe(F) LV4 
+1/20 SoulArmour(M) LV4 
+1/20 SoulArmour(F) LV4
+1/20 RelicArmour(M) LV4
+1/20 RelicArmour(F) LV4
+
+
+;Armour Rare
+1/200 VanguardArmour(M)
+1/200 VanguardArmour(F)
+
+
+;Helmets
+1/5 SkeletonHelmet LV4
+1/5 ShamanHelmet LV4
+1/10 SteelHelmet LV4
+
+
+;Helmets Rare
+1/120 VanguardHelmet LV4
+
+
+;Necklace
+1/10 LanternNecklace LV4 
+1/10 TigerNecklace LV4
+1/15 BlueJadeNecklace LV4 
+1/15 ConvexLens LV4 
+1/15 BambooPipe LV4 
+1/50 ClawNecklace LV4
+1/50 LifeNecklace LV4
+1/50 PearlNecklace LV4
+
+;Necklace Rare
+1/120 VanguardNecklace LV4
+
+
+;Bracelets
+1/30 KnightBracelet LV4
+1/30 SpellBracelet LV4
+1/30 3rdEyeBracelet LV4
+
+;Bracelets Rare
+1/120 VanguardWheel LV4
+
+
+;Rings
+1/40 DragonRing LV4
+1/40 RubyRing LV4
+1/40 PlatinumRing LV4
+
+;Rings Rare
+1/120 VanguardRing LV4
+
+
+;Shoes
+1/50 SilkBoots LV4
+1/50 BlackBoots LV4
+
+;Shoes Rare
+1/120 VanguardBoots LV4
+
+
+;Belts
+1/50 BronzeStrap LV4
+1/50 BlackIronBelt LV4
+
+;Belts Rare
+1/120 VanguardBelt LV4
+
+
+;Medals
+1/250 BerserkerMedal LV4
+1/250 OutLawMedal LV4
+1/250 RuinedMedal LV4
+
+
+;Medals Rare
+1/200 BangleMedal LV4
+
+
+;Shields
+1/300 PaladinShield LV4
+1/300 KryptoniteShield LV4
+
+;Shields Rare
+1/400 AfflictedShield LV4
+
+
+;Pads
+1/175 ProtectionGuards[14d] LV4
+
+;Stone
+1/40 DCStone(M) LV4
+1/40 MCStone(M) LV4
+1/40 SCStone(M) LV4
+
+;Stones Rare
+
+;RuneStone
+1/30 WoomaTaurusRune LV4
+
+;Books
+;Warrior
+1/40 HalfMoon LV4
+1/100 BladeStorm LV4
+1/80 ShoulderDash LV4
+1/180 FlamingSword LV4
+1/120 TwinDrakeBlade LV4
+1/260 SliceNDice LV4
+
+;Wizard
+1/40 Lightning LV4
+1/80 ThunderStorm LV4
+1/100 DragNet LV4
+1/120 MagicShield LV4
+1/210 IceStorm LV4
+
+;Taoist
+1/40 BlessedArmour LV4
+1/80 EnergyRepulsor LV4
+1/120 TrapHexagon LV4
+1/110 UltimateEnhancer LV4
+1/100 HealingCircle LV4
+
+;Assassin
+1/40 LightBody LV4
+1/80 HeavenlySword LV4
+1/120 FireBurst LV4
+1/120 Trap LV4
+1/150 PoisonSword LV4
+1/100 CrescentSlash LV4
+
+1/40 SummonVampire LV4
+1/80 BackStep LV4
+1/100 DelayedExplosion LV4
+1/120 ElementalBarrier LV4
+1/150 BindingShot LV4
+
+;Quests
+1/1 WoomaHeart Q LV4
+1/10 HeartLocket Q LV4
+1/2 GuardianBlades Q LV4
+1/1 WoomaTempleMap Q LV4
+
+;Level5
+;Gold
+1/1 Gold 10000 LV5
+
+
+;Pots + Other
+1/1 (HP)DrugLarge LV5
+1/1 (MP)DrugLarge LV5
+1/2 (HP)DrugLarge LV5
+1/2 (MP)DrugLarge LV5
+1/1 (HP)DrugLarge LV5
+1/1 (MP)DrugLarge LV5
+1/2 (HP)DrugLarge LV5
+1/2 (MP)DrugLarge LV5
+1/3 (HP)DrugLarge LV5
+1/3 (MP)DrugLarge LV5
+1/1 (HP)DrugLarge LV5
+1/1 (MP)DrugLarge LV5
+1/2 (HP)DrugLarge LV5
+1/2 (MP)DrugLarge LV5
+1/3 (HP)DrugLarge LV5
+1/3 (MP)DrugLarge LV5
+1/1 SunPotion(M) LV5
+1/2 SunPotion(M) LV5
+1/1 SunPotion(M) LV5
+1/2 SunPotion(M) LV5
+1/1 SunPotion(M) LV5
+1/2 SunPotion(M) LV5
+1/1 SunPotion(M) LV5
+1/2 SunPotion(M) LV5
+1/1 SunPotion(M) LV5
+1/2 SunPotion(M) LV5
+
+
+;Other
+1/15 BenedictionOil LV5
+1/10 WoomaHorn LV5
+1/10 WoomaHeart LV5
+
+1/40 AwakeningSoul0 LV5
+1/40 AwakeningSoul0 LV5
+
+;Sets
+1/400 RecallHelmet LV5
+1/400 RecallRing LV5
+1/400 RecallHelmet LV5
+1/400 RecallBracelet LV5
+
+
+;Weapons
+1/30 GreatAxe LV5
+1/30 MageStaff LV5
+1/30 SilverBow LV5
+1/30 SerpentSword LV5
+1/30 DoubleBlades LV5
+1/40 VanguardBow LV5
+1/40 VanguardBlade LV5
+1/40 VanguardStaff LV5
+1/40 VanguardSerp LV5
+1/40 VanguardBlades LV5
+
+
+;Weapons Rare
+1/90 JudgementMace LV5
+1/90 WarMageStaff LV5
+1/90 FiendBow LV5
+1/90 SoulSpringWand LV5
+1/90 BladesOfDarkness LV5
+
+
+;Armour
+1/20 HeavyArmour(M) LV5 
+1/20 HeavyArmour(F) LV5 
+1/20 MagicRobe(M) LV5 
+1/20 MagicRobe(F) LV5 
+1/20 SoulArmour(M) LV5 
+1/20 SoulArmour(F) LV5
+1/20 RelicArmour(M) LV5
+1/20 RelicArmour(F) LV5
+
+
+;Armour Rare
+1/200 VanguardArmour(M)
+1/200 VanguardArmour(F)
+
+
+;Helmets
+1/5 SkeletonHelmet LV5
+1/5 ShamanHelmet LV5
+1/10 SteelHelmet LV5
+
+
+;Helmets Rare
+1/120 VanguardHelmet LV5
+
+
+;Necklace
+1/10 LanternNecklace LV5 
+1/10 TigerNecklace LV5
+1/15 BlueJadeNecklace LV5 
+1/15 ConvexLens LV5 
+1/15 BambooPipe LV5 
+1/50 ClawNecklace LV5
+1/50 LifeNecklace LV5
+1/50 PearlNecklace LV5
+
+;Necklace Rare
+1/120 VanguardNecklace LV5
+
+
+;Bracelets
+1/30 KnightBracelet LV5
+1/30 SpellBracelet LV5
+1/30 3rdEyeBracelet LV5
+
+;Bracelets Rare
+1/120 VanguardWheel LV5
+
+
+;Rings
+1/40 DragonRing LV5
+1/40 RubyRing LV5
+1/40 PlatinumRing LV5
+
+;Rings Rare
+1/120 VanguardRing LV5
+
+
+;Shoes
+1/50 SilkBoots LV5
+1/50 BlackBoots LV5
+
+;Shoes Rare
+1/120 VanguardBoots LV5
+
+
+;Belts
+1/50 BronzeStrap LV5
+1/50 BlackIronBelt LV5
+
+;Belts Rare
+1/120 VanguardBelt LV5
+
+
+;Medals
+1/250 BerserkerMedal LV5
+1/250 OutLawMedal LV5
+1/250 RuinedMedal LV5
+
+
+;Medals Rare
+1/200 BangleMedal LV5
+
+
+;Shields
+1/300 PaladinShield LV5
+1/300 KryptoniteShield LV5
+
+;Shields Rare
+1/400 AfflictedShield LV5
+
+
+;Pads
+1/175 ProtectionGuards[14d] LV5
+
+;Stone
+1/40 DCStone(M) LV5
+1/40 MCStone(M) LV5
+1/40 SCStone(M) LV5
+
+;Stones Rare
+
+;RuneStone
+1/30 WoomaTaurusRune LV5
+
+;Books
+;Warrior
+1/40 HalfMoon LV5
+1/100 BladeStorm LV5
+1/80 ShoulderDash LV5
+1/180 FlamingSword LV5
+1/120 TwinDrakeBlade LV5
+1/260 SliceNDice LV5
+
+;Wizard
+1/40 Lightning LV5
+1/80 ThunderStorm LV5
+1/100 DragNet LV5
+1/120 MagicShield LV5
+1/210 IceStorm LV5
+
+;Taoist
+1/40 BlessedArmour LV5
+1/80 EnergyRepulsor LV5
+1/120 TrapHexagon LV5
+1/110 UltimateEnhancer LV5
+1/100 HealingCircle LV5
+
+;Assassin
+1/40 LightBody LV5
+1/80 HeavenlySword LV5
+1/120 FireBurst LV5
+1/120 Trap LV5
+1/150 PoisonSword LV5
+1/100 CrescentSlash LV5
+
+1/40 SummonVampire LV5
+1/80 BackStep LV5
+1/100 DelayedExplosion LV5
+1/120 ElementalBarrier LV5
+1/150 BindingShot LV5
+
+;Gold
+1/1 Gold 10000 LV6
+
+
+;Pots + Other
+1/1 (HP)DrugLarge LV6
+1/1 (MP)DrugLarge LV6
+1/2 (HP)DrugLarge LV6
+1/2 (MP)DrugLarge LV6
+1/1 (HP)DrugLarge LV6
+1/1 (MP)DrugLarge LV6
+1/2 (HP)DrugLarge LV6
+1/2 (MP)DrugLarge LV6
+1/3 (HP)DrugLarge LV6
+1/3 (MP)DrugLarge LV6
+1/1 (HP)DrugLarge LV6
+1/1 (MP)DrugLarge LV6
+1/2 (HP)DrugLarge LV6
+1/2 (MP)DrugLarge LV6
+1/3 (HP)DrugLarge LV6
+1/3 (MP)DrugLarge LV6
+1/1 SunPotion(M) LV6
+1/2 SunPotion(M) LV6
+1/1 SunPotion(M) LV6
+1/2 SunPotion(M) LV6
+1/1 SunPotion(M) LV6
+1/2 SunPotion(M) LV6
+1/1 SunPotion(M) LV6
+1/2 SunPotion(M) LV6
+1/1 SunPotion(M) LV6
+1/2 SunPotion(M) LV6
+
+
+;Other
+1/15 BenedictionOil LV6
+1/10 WoomaHorn LV6
+1/10 WoomaHeart LV6
+
+1/40 AwakeningSoul0 LV6
+1/40 AwakeningSoul0 LV6
+
+;Sets
+1/400 RecallHelmet LV6
+1/400 RecallRing LV6
+1/400 RecallHelmet LV6
+1/400 RecallBracelet LV6
+
+
+;Weapons
+1/30 GreatAxe LV6
+1/30 SilverBow LV6
+1/30 MageStaff LV6
+1/30 SerpentSword LV6
+1/30 DoubleBlades LV6
+1/40 VanguardBlade LV6
+1/40 VanguardBow LV6
+1/40 VanguardStaff LV6
+1/40 VanguardSerp LV6
+1/40 VanguardBlades LV6
+
+
+;Weapons Rare
+1/90 JudgementMace LV6
+1/90 FiendBow LV6
+1/90 WarMageStaff LV6
+1/90 SoulSpringWand LV6
+1/90 BladesOfDarkness LV6
+
+
+;Armour
+1/20 HeavyArmour(M) LV6 
+1/20 HeavyArmour(F) LV6 
+1/20 MagicRobe(M) LV6 
+1/20 MagicRobe(F) LV6 
+1/20 SoulArmour(M) LV6 
+1/20 SoulArmour(F) LV6
+1/20 RelicArmour(M) LV6
+1/20 RelicArmour(F) LV6
+
+
+;Armour Rare
+1/200 VanguardArmour(M)
+1/200 VanguardArmour(F)
+
+
+;Helmets
+1/5 SkeletonHelmet LV6
+1/5 ShamanHelmet LV6
+1/10 SteelHelmet LV6
+
+
+;Helmets Rare
+1/120 VanguardHelmet LV6
+
+
+;Necklace
+1/10 LanternNecklace LV6 
+1/10 TigerNecklace LV6
+1/15 BlueJadeNecklace LV6 
+1/15 ConvexLens LV6 
+1/15 BambooPipe LV6 
+1/50 ClawNecklace LV6
+1/50 LifeNecklace LV6
+1/50 PearlNecklace LV6
+
+;Necklace Rare
+1/120 VanguardNecklace LV6
+
+
+;Bracelets
+1/30 KnightBracelet LV6
+1/30 SpellBracelet LV6
+1/30 3rdEyeBracelet LV6
+
+;Bracelets Rare
+1/120 VanguardWheel LV6
+
+
+;Rings
+1/40 DragonRing LV6
+1/40 RubyRing LV6
+1/40 PlatinumRing LV6
+
+;Rings Rare
+1/120 VanguardRing LV6
+
+
+;Shoes
+1/50 SilkBoots LV6
+1/50 BlackBoots LV6
+
+;Shoes Rare
+1/120 VanguardBoots LV6
+
+
+;Belts
+1/50 BronzeStrap LV6
+1/50 BlackIronBelt LV6
+
+;Belts Rare
+1/120 VanguardBelt LV6
+
+
+;Medals
+1/250 BerserkerMedal LV6
+1/250 OutLawMedal LV6
+1/250 RuinedMedal LV6
+
+
+;Medals Rare
+1/200 BangleMedal LV6
+
+
+;Shields
+1/300 PaladinShield LV6
+1/300 KryptoniteShield LV6
+
+;Shields Rare
+1/400 AfflictedShield LV6
+
+
+;Pads
+1/175 ProtectionGuards[14d] LV6
+
+;Stone
+1/40 DCStone(M) LV6
+1/40 MCStone(M) LV6
+1/40 SCStone(M) LV6
+
+;Stones Rare
+
+;RuneStone
+1/30 WoomaTaurusRune LV6
+
+;Books
+;Warrior
+1/40 HalfMoon LV6
+1/100 BladeStorm LV6
+1/80 ShoulderDash LV6
+1/180 FlamingSword LV6
+1/120 TwinDrakeBlade LV6
+1/260 SliceNDice LV6
+
+;Wizard
+1/40 Lightning LV6
+1/80 ThunderStorm LV6
+1/100 DragNet LV6
+1/120 MagicShield LV6
+1/210 IceStorm LV6
+
+;Taoist
+1/40 BlessedArmour LV6
+1/80 EnergyRepulsor LV6
+1/120 TrapHexagon LV6
+1/110 UltimateEnhancer LV6
+1/100 HealingCircle LV6
+
+;Assassin
+1/40 LightBody LV6
+1/80 HeavenlySword LV6
+1/120 FireBurst LV6
+1/120 Trap LV6
+1/150 PoisonSword LV6
+1/100 CrescentSlash LV6
+
+1/40 SummonVampire LV6
+1/80 BackStep LV6
+1/100 DelayedExplosion LV6
+1/120 ElementalBarrier LV6
+1/150 BindingShot LV6
+
+;Quests
+1/1 WoomaHeart Q LV6
+1/10 HeartLocket Q LV6
+1/2 GuardianBlades Q LV6
+1/1 WoomaTempleMap Q LV6
+
+;Level7
+;Gold
+1/1 Gold 10000 LV7
+
+
+;Pots + Other
+1/1 (HP)DrugLarge LV7
+1/1 (MP)DrugLarge LV7
+1/2 (HP)DrugLarge LV7
+1/2 (MP)DrugLarge LV7
+1/1 (HP)DrugLarge LV7
+1/1 (MP)DrugLarge LV7
+1/2 (HP)DrugLarge LV7
+1/2 (MP)DrugLarge LV7
+1/3 (HP)DrugLarge LV7
+1/3 (MP)DrugLarge LV7
+1/1 (HP)DrugLarge LV7
+1/1 (MP)DrugLarge LV7
+1/2 (HP)DrugLarge LV7
+1/2 (MP)DrugLarge LV7
+1/3 (HP)DrugLarge LV7
+1/3 (MP)DrugLarge LV7
+1/1 SunPotion(M) LV7
+1/2 SunPotion(M) LV7
+1/1 SunPotion(M) LV7
+1/2 SunPotion(M) LV7
+1/1 SunPotion(M) LV7
+1/2 SunPotion(M) LV7
+1/1 SunPotion(M) LV7
+1/2 SunPotion(M) LV7
+1/1 SunPotion(M) LV7
+1/2 SunPotion(M) LV7
+
+
+;Other
+1/15 BenedictionOil LV7
+1/10 WoomaHorn LV7
+1/10 WoomaHeart LV7
+
+1/40 AwakeningSoul0 LV7
+1/40 AwakeningSoul0 LV7
+
+;Sets
+1/400 RecallHelmet LV7
+1/400 RecallRing LV7
+1/400 RecallHelmet LV7
+1/400 RecallBracelet LV7
+
+
+;Weapons
+1/30 GreatAxe LV7
+1/30 SilverBow LV7
+1/30 MageStaff LV7
+1/30 SerpentSword LV7
+1/30 DoubleBlades LV7
+1/40 VanguardBlade LV7
+1/40 VanguardBow LV7
+1/40 VanguardStaff LV7
+1/40 VanguardSerp LV7
+1/40 VanguardBlades LV7
+
+
+;Weapons Rare
+1/90 JudgementMace LV7
+1/90 FiendBow LV7
+1/90 WarMageStaff LV7
+1/90 SoulSpringWand LV7
+1/90 BladesOfDarkness LV7
+
+
+;Armour
+1/20 HeavyArmour(M) LV7 
+1/20 HeavyArmour(F) LV7 
+1/20 MagicRobe(M) LV7 
+1/20 MagicRobe(F) LV7 
+1/20 SoulArmour(M) LV7 
+1/20 SoulArmour(F) LV7
+1/20 RelicArmour(M) LV7
+1/20 RelicArmour(F) LV7
+
+
+;Armour Rare
+1/200 VanguardArmour(M)
+1/200 VanguardArmour(F)
+
+
+;Helmets
+1/5 SkeletonHelmet LV7
+1/5 ShamanHelmet LV7
+1/10 SteelHelmet LV7
+
+
+;Helmets Rare
+1/400 VanguardHelmet LV7
+
+
+;Necklace
+1/10 LanternNecklace LV7 
+1/10 TigerNecklace LV7
+1/15 BlueJadeNecklace LV7 
+1/15 ConvexLens LV7 
+1/15 BambooPipe LV7 
+1/50 ClawNecklace LV7
+1/50 LifeNecklace LV7
+1/50 PearlNecklace LV7
+
+;Necklace Rare
+1/400 VanguardNecklace LV7
+
+
+;Bracelets
+1/30 KnightBracelet LV7
+1/30 SpellBracelet LV7
+1/30 3rdEyeBracelet LV7
+
+;Bracelets Rare
+1/400 VanguardWheel LV7
+
+
+;Rings
+1/40 DragonRing LV7
+1/40 RubyRing LV7
+1/40 PlatinumRing LV7
+
+;Rings Rare
+1/400 VanguardRing LV7
+
+
+;Shoes
+1/50 SilkBoots LV7
+1/50 BlackBoots LV7
+
+;Shoes Rare
+1/400 VanguardBoots LV7
+
+
+;Belts
+1/50 BronzeStrap LV7
+1/50 BlackIronBelt LV7
+
+;Belts Rare
+1/400 VanguardBelt LV7
+
+
+;Medals
+1/250 BerserkerMedal LV7
+1/250 OutLawMedal LV7
+1/250 RuinedMedal LV7
+
+
+;Medals Rare
+1/200 BangleMedal LV7
+
+
+;Shields
+1/300 PaladinShield LV7
+1/300 KryptoniteShield LV7
+
+;Shields Rare
+1/400 AfflictedShield LV7
+
+
+;Pads
+1/175 ProtectionGuards[14d] LV7
+
+;Stone
+1/40 DCStone(M) LV7
+1/40 MCStone(M) LV7
+1/40 SCStone(M) LV7
+
+;Stones Rare
+
+;RuneStone
+1/30 WoomaTaurusRune LV7
+
+;Books
+;Warrior
+1/40 HalfMoon LV7
+1/100 BladeStorm LV7
+1/80 ShoulderDash LV7
+1/180 FlamingSword LV7
+1/120 TwinDrakeBlade LV7
+1/260 SliceNDice LV7
+
+;Wizard
+1/40 Lightning LV7
+1/80 ThunderStorm LV7
+1/100 DragNet LV7
+1/120 MagicShield LV7
+1/210 IceStorm LV7
+
+;Taoist
+1/40 BlessedArmour LV7
+1/80 EnergyRepulsor LV7
+1/120 TrapHexagon LV7
+1/110 UltimateEnhancer LV7
+1/100 HealingCircle LV7
+
+;Assassin
+1/40 LightBody LV7
+1/80 HeavenlySword LV7
+1/120 FireBurst LV7
+1/120 Trap LV7
+1/150 PoisonSword LV7
+1/100 CrescentSlash LV7
+
+1/40 SummonVampire LV7
+1/80 BackStep LV7
+1/100 DelayedExplosion LV7
+1/120 ElementalBarrier LV7
+1/150 BindingShot LV7
+
+;Quests
+1/1 WoomaHeart Q LV7
+1/10 HeartLocket Q LV7
+1/2 GuardianBlades Q LV7
+1/1 WoomaTempleMap Q LV7
+
+;Level8
+;Gold
+1/1 Gold 10000 LV8
+
+
+;Pots + Other
+1/1 (HP)DrugLarge LV8
+1/1 (MP)DrugLarge LV8
+1/2 (HP)DrugLarge LV8
+1/2 (MP)DrugLarge LV8
+1/1 (HP)DrugLarge LV8
+1/1 (MP)DrugLarge LV8
+1/2 (HP)DrugLarge LV8
+1/2 (MP)DrugLarge LV8
+1/3 (HP)DrugLarge LV8
+1/3 (MP)DrugLarge LV8
+1/1 (HP)DrugLarge LV8
+1/1 (MP)DrugLarge LV8
+1/2 (HP)DrugLarge LV8
+1/2 (MP)DrugLarge LV8
+1/3 (HP)DrugLarge LV8
+1/3 (MP)DrugLarge LV8
+1/1 SunPotion(M) LV8
+1/2 SunPotion(M) LV8
+1/1 SunPotion(M) LV8
+1/2 SunPotion(M) LV8
+1/1 SunPotion(M) LV8
+1/2 SunPotion(M) LV8
+1/1 SunPotion(M) LV8
+1/2 SunPotion(M) LV8
+1/1 SunPotion(M) LV8
+1/2 SunPotion(M) LV8
+
+
+;Other
+1/15 BenedictionOil LV8
+1/10 WoomaHorn LV8
+1/10 WoomaHeart LV8
+
+1/40 AwakeningSoul0 LV8
+1/40 AwakeningSoul0 LV8
+
+;Sets
+1/400 RecallHelmet LV8
+1/400 RecallRing LV8
+1/400 RecallHelmet LV8
+1/400 RecallBracelet LV8
+
+
+;Weapons
+1/30 GreatAxe LV8
+1/30 SilverBow LV8
+1/30 MageStaff LV8
+1/30 SerpentSword LV8
+1/30 DoubleBlades LV8
+1/40 VanguardBlade LV8
+1/40 VanguardBow LV8
+1/40 VanguardStaff LV8
+1/40 VanguardSerp LV8
+1/40 VanguardBlades LV8
+
+
+;Weapons Rare
+1/90 JudgementMace LV8
+1/90 FiendBow LV8
+1/90 WarMageStaff LV8
+1/90 SoulSpringWand LV8
+1/90 BladesOfDarkness LV8
+
+
+;Armour
+1/20 HeavyArmour(M) LV8 
+1/20 HeavyArmour(F) LV8 
+1/20 MagicRobe(M) LV8 
+1/20 MagicRobe(F) LV8 
+1/20 SoulArmour(M) LV8 
+1/20 SoulArmour(F) LV8
+1/20 RelicArmour(M) LV8
+1/20 RelicArmour(F) LV8
+
+
+;Armour Rare
+1/200 VanguardArmour(M)
+1/200 VanguardArmour(F)
+
+
+;Helmets
+1/5 SkeletonHelmet LV8
+1/5 ShamanHelmet LV8
+1/10 SteelHelmet LV8
+
+
+;Helmets Rare
+1/400 VanguardHelmet LV8
+
+
+;Necklace
+1/10 LanternNecklace LV8 
+1/10 TigerNecklace LV8
+1/15 BlueJadeNecklace LV8 
+1/15 ConvexLens LV8 
+1/15 BambooPipe LV8 
+1/50 ClawNecklace LV8
+1/50 LifeNecklace LV8
+1/50 PearlNecklace LV8
+
+;Necklace Rare
+1/400 VanguardNecklace LV8
+
+
+;Bracelets
+1/30 KnightBracelet LV8
+1/30 SpellBracelet LV8
+1/30 3rdEyeBracelet LV8
+
+;Bracelets Rare
+1/400 VanguardWheel LV8
+
+
+;Rings
+1/40 DragonRing LV8
+1/40 RubyRing LV8
+1/40 PlatinumRing LV8
+
+;Rings Rare
+1/400 VanguardRing LV8
+
+
+;Shoes
+1/50 SilkBoots LV8
+1/50 BlackBoots LV8
+
+;Shoes Rare
+1/400 VanguardBoots LV8
+
+
+;Belts
+1/50 BronzeStrap LV8
+1/50 BlackIronBelt LV8
+
+;Belts Rare
+1/400 VanguardBelt LV8
+
+
+;Medals
+1/250 BerserkerMedal LV8
+1/250 OutLawMedal LV8
+1/250 RuinedMedal LV8
+
+
+;Medals Rare
+1/200 BangleMedal LV8
+
+
+;Shields
+1/300 PaladinShield LV8
+1/300 KryptoniteShield LV8
+
+;Shields Rare
+1/400 AfflictedShield LV8
+
+
+;Pads
+1/175 ProtectionGuards[14d] LV8
+
+;Stone
+1/40 DCStone(M) LV8
+1/40 MCStone(M) LV8
+1/40 SCStone(M) LV8
+
+;Stones Rare
+
+;RuneStone
+1/30 WoomaTaurusRune LV8
+
+;Books
+;Warrior
+1/40 HalfMoon LV8
+1/100 BladeStorm LV8
+1/80 ShoulderDash LV8
+1/180 FlamingSword LV8
+1/120 TwinDrakeBlade LV8
+1/260 SliceNDice LV8
+
+;Wizard
+1/40 Lightning LV8
+1/80 ThunderStorm LV8
+1/100 DragNet LV8
+1/120 MagicShield LV8
+1/210 IceStorm LV8
+
+;Taoist
+1/40 BlessedArmour LV8
+1/80 EnergyRepulsor LV8
+1/120 TrapHexagon LV8
+1/110 UltimateEnhancer LV8
+1/100 HealingCircle LV8
+
+;Assassin
+1/40 LightBody LV8
+1/80 HeavenlySword LV8
+1/120 FireBurst LV8
+1/120 Trap LV8
+1/150 PoisonSword LV8
+1/100 CrescentSlash LV8
+
+
+1/40 SummonVampire LV8
+1/80 BackStep LV8
+1/100 DelayedExplosion LV8
+1/120 ElementalBarrier LV8
+1/150 BindingShot LV8
+
+;Quests
+1/1 WoomaHeart Q LV8
+1/10 HeartLocket Q LV8
+1/2 GuardianBlades Q LV8
+1/1 WoomaTempleMap Q LV8

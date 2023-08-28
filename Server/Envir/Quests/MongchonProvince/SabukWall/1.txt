@@ -1,0 +1,27 @@
+[@Description]
+I'm a fool! I've lost the Oldest Book's around.
+I was visiting {SabukWall/Yellow} and fell then the
+next thing i knew. I was surround by {Zombies/Crimson}.
+
+[@TaskDescription]
+Find the Hidden Entrance in {SabukWall/Yellow} and find 
+the {BichonTales/LightSteelBlue}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+BichonTales(3) 1
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+9000
+
+[@GoldReward]
+9000

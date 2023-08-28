@@ -1,0 +1,32 @@
+[@Description]
+Now to get an {EvilHeart/LightSteelBlue}, You need to kill 
+{GreyEvilApes/Crimson}.You can find them when you 
+through a hidden door. You can find this door on 
+the 5th floor towards {KingsRoom(RedMoonEvil)/Yellow} 
+at 182:179 Walk in the corner and you will get through 
+the hidden door.
+
+[@TaskDescription]
+Kill {GreyEvilApes/Crimson} for the {EvilHeart/LightSteelBlue}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+EvilHeart 1
+
+[@FlagTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+
+[@GoldReward]
+
+// Pickup - BigTaoist D10061 11 16
+// Hand In - BigTaoist D10061 11 16

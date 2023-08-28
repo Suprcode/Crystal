@@ -1,0 +1,281 @@
+[@Main]
+{
+#IF
+CHECKITEM TestServerScroll 1
+#ACT
+GOTO @Main-1
+#ELSEACT
+GIVEITEM TestServerScroll 1
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Welcome to the Official Crystal Mir Test Server.
+Thankyou for testing.
+ 
+<Game Commands/@GCommands> 
+<Town & Caves/@TownCaves>
+
+[@TownCaves]
+#SAY
+<GameMaster/@R001>
+<Bichon/@GMBichon>
+<Woomyon/@GMWoomyon>
+<CastleGi/@GMCastle>
+<TaoVillage/@GMTaoVillage>
+<SerpentValley/@GMSerpent>
+<Mongchon/@GMMongchon>
+<PrajnaIsland/@GMPrajna>
+<PastBichon SafeZone/@GMPastBichon>
+<Back/@_UseItem(1)>
+
+[@R001]
+#ACT
+MOVE R001 100 100
+CLOSE
+
+[@GMPastBichon]
+#ACT
+MOVE 6 121 154
+CLOSE
+
+[@GMBichon]
+#SAY
+<BichonWall SafeZone/@BichonSZ>
+<OmaCave/@BichonOmaCave>
+<DeadMines/@BichonMines>
+<ContestRoom/@BichonContest>
+<Back/@_UseItem(1)>
+
+[@BichonContest]
+#ACT
+MOVE 0139
+CLOSE
+
+[@BichonSZ]
+#ACT
+MOVE 0 333 267
+CLOSE
+
+[@BichonOmaCave]
+#ACT
+MOVE 0 142 42
+CLOSE
+
+[@BichonMines]
+#ACT
+MOVE 0 660 219
+CLOSE
+
+[@GMWoomyon]
+#SAY
+<Woomyon SafeZone/@WoomyonSZ>
+<InsectCave/@WoomyonInsect>
+<WoomaTemple/@WoomyonWoomaT>
+<Back/@_UseItem(1)>
+
+[@WoomyonSZ]
+#ACT
+MOVE 1 315 81
+CLOSE
+
+[@WoomyonInsect]
+#ACT
+MOVE 1 210 524
+CLOSE
+
+[@WoomyonWoomaT]
+#ACT
+MOVE 1 87 284
+CLOSE
+
+[@GMSerpent]
+#SAY
+<SerpentValley SafeZone/@SerpentSZ>
+<SerpentMines/@SerpentMines>
+<Back/@_UseItem(1)>
+
+[@SerpentSZ]
+#ACT
+MOVE 2 503 484
+CLOSE
+
+[@SerpentMines]
+#ACT
+MOVE 2 561 174
+CLOSE
+
+[@GMMongchon]
+<MudWall SafeZone/@MWSafeZone>
+<BugCave/@MWBugCave>
+<StoneTemple/@MWStoneTemple>
+<ZumaTemple/@MWZumaTemple>
+<FoxCave/@MWFoxCave>
+<Penal/@MWPenal>
+<SabukWall/@MWSabuk>
+<SecretCave/@MWSabukSecret>
+<Swamp/@MWSwamp>
+<ForgottenCity/@MWForgottenCity>
+<Back/@_UseItem(1)>
+
+[@MWSafeZone]
+#ACT
+MOVE 3 328 330
+CLOSE
+
+[@MWBugCave]
+#ACT
+MOVE 3 144 93
+CLOSE
+
+[@MWStoneTemple]
+#ACT
+MOVE 3 298 338
+CLOSE
+
+[@MWZumaTemple]
+#ACT
+MOVE 3 859 179
+CLOSE
+
+[@MWFoxCave]
+#ACT
+MOVE 3 654 762
+CLOSE
+
+[@MWPenal]
+#ACT
+MOVE 3 849 673
+CLOSE
+
+[@MWSabuk]
+#ACT
+MOVE 3 637 284
+CLOSE
+
+[@MWSabukSecret]
+#ACT
+MOVE 3 660 273
+CLOSE
+
+[@MWSwamp]
+#ACT
+MOVE 3 645 254
+CLOSE
+
+[@MWForgottenCity]
+#ACT
+MOVE 3 411 200
+CLOSE
+
+[@GMCastle]
+#SAY
+<CastleGi SafeZone/@CastleGISZ>
+<BlackDragonDungeon/@BDD>
+<IceTemple/@CastleIceTemp>
+<DragonSwamp/@CastleDragonSwamp>
+<Back/@_UseItem(1)>
+
+[@CastleGISZ]
+#ACT
+MOVE 4 226 207
+CLOSE
+
+[@BDD]
+#ACT
+MOVE 4 60 71
+CLOSE
+
+[@CastleIceTemp]
+#ACT
+MOVE 4 139 69
+CLOSE
+
+[@CastleDragonSwamp]
+#ACT
+MOVE 4 45 211
+CLOSE
+
+[@GMPrajna]
+#SAY
+<PrajnaIsland SafeZone/@PrajnaSZ>
+<PrajnaCave/@PrajnaCave>
+<PrajnaTemple/@PrajnaTemple>
+<Back/@_UseItem(1)>
+
+[@PrajnaSZ]
+#ACT
+MOVE 5 141 334
+CLOSE
+
+[@PrajnaCave]
+#ACT
+MOVE 5 524 615
+CLOSE
+
+[@PrajnaTemple]
+#ACT
+MOVE 5 570 425
+CLOSE
+
+[@GMTaoVillage]
+#SAY
+<TaoVillage SafeZone/@TaoSafeZone>
+<MineralMines/@TaoMineralMines>
+<TreePath/@TaoTreePath>
+<DarkForest/@TaoDarkForest>
+<RedValley/@TaoRedValley>
+<Lunar/@TaoLunar>
+<Back/@_UseItem(1)>
+
+[@TaoSafeZone]
+#ACT
+MOVE 11 194 308
+CLOSE
+
+[@TaoMineralMines]
+#ACT
+MOVE 11 44 319
+CLOSE
+
+[@TaoTreePath]
+#ACT
+MOVE 11 358 248
+CLOSE
+
+[@TaoDarkForest]
+#ACT
+MOVE 11 180 194
+CLOSE
+
+[@TaoRedValley]
+#ACT
+MOVE 12 93 17
+CLOSE
+
+[@TaoLunar]
+#ACT
+MOVE 12 52 54
+CLOSE
+
+[@GCommands]
+#SAY
+Player:
+@AllowGuild     @LeaveGuild
+@AllowTrade     @Map
+@Move X,Y       @EnableGroupRecall
+@GroupRecall    @RecallMember (Name)
+@Time           @Roll
+@Find (Name)    @Ride
+@Die            @AddInventory
+@ToggleTransform
+
+GameMaster:
+@MapMove (Map,X,Y)  @Mob
+@Make               @Gamemaster
+@Superman           @Level
+@Goto               @RecallMob
+@GiveSkill          @Info
+<Back/@_UseItem(1)>
+
+}

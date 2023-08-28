@@ -1,0 +1,38 @@
+[@MAIN]
+<Use./@main-1> teleport to village stores
+
+[@main-1]
+#SAY
+I can send you several places nearby.
+
+<Weapon shop/@weapon>   <Armour shop/@Armour>
+<Book store/@book>   <Accessory shop/@access>
+<Inn/@store>
+
+I will be back <later/@Exit>
+
+[@weapon]
+#ACT
+Move 0159
+
+[@Armour]
+#ACT
+Move 0149
+
+[@access]
+#ACT
+Move 0158
+
+[@store]
+#IF
+#ACT
+Move 0145
+
+[@book]
+#IF
+#ACT
+Move 0161
+
+[Quests]
+142
+-142

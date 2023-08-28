@@ -1,0 +1,22 @@
+0 Gold 1000
+0 DurabilityOrb
+0 Gold 10000
+0 ProtectionOrb
+0 Gold 50000
+0 EvilSlayerOrb
+0 Gold 100000
+0 BraveryOrb
+0 Gold 250000
+0 SoulOrb
+0 Gold 400000
+0 MagicOrb
+0 Gold 550000
+0 PoisonOrb
+0 Gold 700000
+0 FreezingOrb
+0 Gold 850000
+0 EnduranceOrb
+0 Gold 1000000
+0 DisillusionOrb
+0 Gold 1050000
+0 StormOrb

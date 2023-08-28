@@ -1,0 +1,42 @@
+[@MAIN]
+#IF
+CHECK [539] 1
+#ACT
+GOTO @MAIN-1
+#ELSEACT
+GOTO @CHECK2
+
+[@CHECK2]
+#IF
+CHECK [541] 1
+#ACT
+GOTO @MAIN-2
+#ELSEACT
+GOTO @MAIN-3
+
+[@MAIN-1]
+#ACT
+SET [539] 0
+#SAY
+Ah your the traveler.. Ive been hearing about.
+Well I refuse to tell anyone about the Emperor!
+ 
+<Close/exit>
+
+[@MAIN-2]
+#ACT
+SET [541] 0
+#SAY
+Ah your the traveler.. Ive been hearing about.
+Well I refuse to tell anyone about the Emperor!
+ 
+<Close/exit>
+
+[@MAIN-3]
+#SAY
+Have you ever heard about the Emperor? 
+Hes such a lazy good for nothing fool. Sooner we remove him
+from the throne the better. Its time for the free folk to 
+govern these lands.
+ 
+<Close/@exit>

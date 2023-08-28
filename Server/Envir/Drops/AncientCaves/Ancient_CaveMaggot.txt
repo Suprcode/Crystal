@@ -1,0 +1,6 @@
+;Crafting Materials
+1/2 MaggotPill 
+1/10 MaggotPill 
+
+;Quests
+1/1 MaggotGuts Q

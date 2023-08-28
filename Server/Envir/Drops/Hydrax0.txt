@@ -1,0 +1,51 @@
+;Gold
+1/10 Gold 1150
+
+;Pots + Other
+1/15 (HP)DrugXL
+1/15 (MP)DrugXL
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+1/1900 HydraxHelmet
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+

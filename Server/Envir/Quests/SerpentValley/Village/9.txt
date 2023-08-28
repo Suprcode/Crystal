@@ -1,0 +1,26 @@
+[@Description]
+Hello traveller. I also need some fruit to make 
+this wine. Could you get me 10 {EbonyFruit/LightSteelBlue}.
+
+[@TaskDescription]
+Please collect 10 {EbonyFruit/LightSteelBlue}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+Ebony(Fruit) 10
+
+[@CarryItems]
+
+[@FixedRewards]
+SuperiorBronzeHelmet
+
+[@SelectRewards]
+
+[@ExpReward]
+1000
+
+[@GoldReward]
+250

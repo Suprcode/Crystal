@@ -1,0 +1,67 @@
+[@Main]
+#SAY
+Hello, I am Miss Do. I will be guiding the people of Level 1~30.
+The arena is a place to test your own power only
+so summoned mobs are prohibitied to be used. The fee is 3000 Gold.
+Time Limit is 2 hours. I hope you will pass all stages and
+go home safely.
+Pay 3000 Gold <and challenge./@start>
+<Return to/@oldman> OldManInfinity.
+<Let me think some more/@exit>
+
+[@oldman]
+#ACT
+MOVE 0 355 237
+
+[@start]
+#IF
+CHECKHUM 1 EM002
+#SAY
+There is already someone fighting!
+try again later...
+#ELSEACT
+GOTO @checklevel
+
+[@checklevel]
+#IF
+LEVEL >= 40
+#ACT
+SET [500] 0
+SET [501] 1
+SET [502] 1
+SET [503] 1
+SET [504] 1
+SET [505] 1
+SET [506] 1
+SET [507] 1
+SET [508] 1
+SET [509] 1
+SET [510] 1
+SET [511] 1
+SET [512] 1
+SET [513] 1
+SET [514] 1
+SET [515] 1
+SET [516] 1
+SET [517] 1
+SET [518] 1
+SET [519] 1
+SET [520] 1
+GOTO @start2
+
+#ELSESAY
+Your level is to high to fight here.
+Try one of my sisters, MissRe or MissMi
+<Close/@exit>
+
+[@start2]
+#IF
+CHECKGOLD 3000
+#ACT
+TAKEGOLD 3000
+MONCLEAR EM002
+TIMERECALL 3600
+MOVE EM002 13 16
+#ELSESAY
+You dont have the 3000 Gold entrance fee.
+<Close/@exit>

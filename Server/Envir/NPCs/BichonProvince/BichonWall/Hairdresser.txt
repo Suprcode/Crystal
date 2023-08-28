@@ -1,0 +1,91 @@
+[@MAIN]
+#SAY
+I am the local hairdresser, specialized in the cutting hair.
+I have been sent here to check the living conditions of people.
+Unfortunately, it seems that many people are still suffering from
+poverty and can't afford to get a hair cut.
+I'm happy to do it for 20,000 gold.
+
+However I must warn you, you will need to relog after changing your hair.
+
+<Haircut/@Haircut>
+
+[@Haircut]
+#SAY
+What haircut would you like?
+
+<Brown Hair/@Brown>
+<Long Blue Hair/@Blue>
+<Long Red Hair/@Red>
+<Brown Afro/@BAfro>
+<Red Afro/@RAfro>
+<Blue Afro/@BlAfro>
+
+
+<Exit/@exit>         <Back/@Main>
+
+[@Brown]
+#IF
+CHECKGOLD > 20000
+#ACT
+TAKEGOLD 20000
+CHANGEHAIR 0
+BREAK
+#ELSESAY
+You Dont Have enough {Gold/Gold} to use my Service!
+Be gone, don't waste my time again!
+
+[@Blue]
+#IF
+CHECKGOLD > 20000
+#ACT
+TAKEGOLD 20000
+CHANGEHAIR 1
+BREAK
+#ELSESAY
+You Dont Have enough {Gold/Gold} to use my Service!
+Be gone, don't waste my time again!
+
+[@Red]
+#IF
+CHECKGOLD > 20000
+#ACT
+TAKEGOLD 20000
+CHANGEHAIR 2
+BREAK
+#ELSESAY
+You Dont Have enough {Gold/Gold} to use my Service!
+Be gone, don't waste my time again!
+
+[@BAfro]
+#IF
+CHECKGOLD > 20000
+#ACT
+TAKEGOLD 20000
+CHANGEHAIR 3
+BREAK
+#ELSESAY
+You Dont Have enough {Gold/Gold} to use my Service!
+Be gone, don't waste my time again!
+
+[@RAfro]
+#IF
+CHECKGOLD > 20000
+#ACT
+TAKEGOLD 20000
+CHANGEHAIR 4
+BREAK
+#ELSESAY
+You Dont Have enough {Gold/Gold} to use my Service!
+Be gone, don't waste my time again!
+
+[@BlAfro]
+#IF
+CHECKGOLD > 20000
+#ACT
+TAKEGOLD 20000
+CHANGEHAIR 5
+BREAK
+#ELSESAY
+You Dont Have enough {Gold/Gold} to use my Service!
+Be gone, don't waste my time again!

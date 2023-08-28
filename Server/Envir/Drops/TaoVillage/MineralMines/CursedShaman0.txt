@@ -1,0 +1,94 @@
+;Gold
+1/1 Gold 3750
+
+;Weapons
+1/15 BronzeAxe 
+1/25 HookedSword 
+1/25 Trident 
+1/25 Scimitar 
+1/25 BladesOfVelocity 
+1/25 CompoundBow 
+1/30 SteelAxe 
+1/35 SteelSword 
+1/35 MartialSword 
+1/35 HookedSpear 
+1/35 KrissSword 
+1/35 IronBlades 
+1/35 LongBow 
+
+;Armours
+1/25 LightArmour(M) 
+1/25 LightArmour(F) 
+
+;Helmets
+1/15 BronzeHelmet 
+1/17 MagicHelmet 
+
+;Necklaces
+1/50 LanternNecklace 
+1/50 TigerNecklace 
+1/50 PlatinumNecklace 
+1/50 NagaNecklace 
+1/50 AmberNecklace 
+1/50 PhoenixBead 
+
+;Bracelets
+1/50 MagicBracelet 
+1/75 HardGlove 
+
+;Rings
+1/40 BlueRing 
+1/50 BlackRing 
+1/50 SerpentEyeRing 
+1/50 PearlRing 
+
+;Potions
+1/3 (HP)DrugMedium 
+1/3 (MP)DrugMedium 
+1/3 (HP)DrugMedium 
+1/3 (MP)DrugMedium 
+1/3 (HP)DrugMedium 
+1/3 (MP)DrugMedium 
+1/10 SunPotion 
+
+;Books
+1/10 Fencing 
+1/10 FireBall 
+1/10 Healing 
+1/10 FatalSword 
+1/10 Focus 
+1/10 Repulsion 
+1/10 ElectricShock 
+1/10 SpiritSword 
+1/10 Poisoning 
+1/20 StraightShot 
+1/20 ThunderBolt 
+1/20 GreatFireBall 
+1/20 SoulFireBall 
+1/20 SummonSkeleton 
+1/20 Teleport 
+1/20 Slaying 
+1/20 HellFire 
+1/20 DoubleSlash 
+1/25 Hiding 
+1/25 MassHiding 
+1/25 FireBang 
+1/25 FireWall 
+1/25 SoulShield 
+1/25 Haste 
+1/50 Thrusting 
+1/50 Lightning 
+1/50 Revelation 
+1/50 BlessedArmour 
+1/50 FlashDash 
+1/15 ExplosiveTrap 
+1/20 Meditation 
+1/25 SummonVampire 
+1/50 DelayedExplosion 
+1/70 BackStep 
+1/100 ElementalShot 
+1/40 DoubleShot 
+
+;Quest
+1/5 ZombieEye Q
+1/5 RareCopperOre Q

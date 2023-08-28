@@ -1,0 +1,29 @@
+[@Description]
+I'm making special armour useing {RareCopperOre/LightSteelBlue}.
+You can find these from the {Zombies/Crimson} in the 
+{Dead mine/Yellow}. 
+
+[@TaskDescription]
+Find 10 {RareCopperOre/LightSteelBlue} by hunting {Zombies/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+RareCopperOre 10
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+3000
+
+[@GoldReward]
+3000
+
+// Pickup - Blacksmith_Bill 0 302 221
+// Hand In - Blacksmith_Bill 0 302 221

@@ -1,0 +1,53 @@
+;Gold
+1/20 Gold 2500
+
+;Weapons
+1/600  GreatAxe
+1/600  SerpentSword
+1/600  MageStaff
+1/600  DoubleBlades
+
+;Necklaces
+1/640  RequiemNecklace
+1/640  RedJadeNecklace
+1/640  FiveStringNecklace
+
+;Bracelets
+1/540  TaoPowerBracelet
+
+;Rings
+1/560  RedJadeRing
+1/560  NokChiRing
+
+;Shoes
+1/380  BlackBoots
+1/580  DragonBoots
+
+;Belts
+1/500  BronzeBelt
+1/500  SteelBelt
+
+;Potions
+1/10    (HP)DrugLarge
+1/10    (MP)DrugLarge
+1/10    (HP)DrugLarge
+1/10    (MP)DrugLarge
+1/20   SunPotion(M)
+1/20   SunPotion(M)
+1/20   SunPotion(M)
+1/20   SunPotion(M)
+1/100  ImpactDrug(S)
+1/100  StaminaAid(S)
+1/100  StormDrug(S)
+
+;Nothing
+1/100  AdmissionOrb
+
+;Books
+1/400 ProtectionField
+1/600 Entrapment
+1/200 TwinDrakeBlade
+1/600 LionRoar
+1/200 moonlight
+1/800 BladeAvalanche
+1/800  mpeater

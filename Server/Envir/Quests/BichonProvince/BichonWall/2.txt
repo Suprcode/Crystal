@@ -1,0 +1,32 @@
+[@Description]
+There are creatures named {Oma/Crimson} outside
+{BichonWall/Yellow} and other towns. 
+They are very strong and violent. They have 
+been attacking the merchants. Hey, would you 
+be able to help us eliminate the danager?
+
+[@TaskDescription]
+Please hunt {Oma's/Crimson} and bring back 10 
+{OmaTeeth's/LightSteelBlue}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+OmaTeeth 10
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+BronzeShortSword
+BronzeHoaSword
+ElkWoodenBow
+
+[@ExpReward]
+300
+
+[@GoldReward]
+83

@@ -1,0 +1,29 @@
+[@Description]
+Did you want me to make you {CanniTea/LightSteelBlue}? Hmm.. 
+I ran out of Ingredients. Do you think you can 
+get me 10 {CannibalLeaf/LightSteelBlue} and 10 {CannibalSeed/LightSteelBlue}?
+
+[@TaskDescription]
+Collect 10 {CannibalLeaf/LightSteelBlue} and {CannibalSeed's/LightSteelBlue} from 
+{CannibalPlant's/Crimson}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+CannibalLeaf 10
+CannibalSeed 10
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+
+[@GoldReward]
+
+// Pickup - CraftsLady_Alice 0 321 265
+// Hand In - CraftsLady_Alice 0 321 265

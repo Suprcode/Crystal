@@ -1,0 +1,130 @@
+;Gold
+1/1 Gold 8500
+
+;Weapons
+1/25 HookedSword 
+1/25 Trident 
+1/25 Scimitar 
+1/25 BladesOfVelocity 
+1/25 CompoundBow 
+1/25 SteelAxe 
+1/30 SteelSword 
+1/50 PrinceDagger 
+1/50 MartialSword 
+1/50 HookedSpear 
+1/50 KrissSword 
+1/50 IronBlades 
+1/50 LongBow 
+
+;Armours
+1/15 LightArmour(M) 
+1/15 LightArmour(F) 
+
+;Helmets
+1/25 MagicHelmet 
+1/500 BrassHelmet 
+1/50 GoldenTiara 
+1/70 SkeletonHelmet 
+1/70 ShamanHelmet 
+
+
+;Necklaces
+1/10 BlackNecklace 
+1/10 EbonyNecklace 
+1/10 YellowNecklace 
+1/25 NagaNecklace 
+1/25 AmberNecklace 
+1/25 PhoenixBead 
+1/20 LanternNecklace 
+1/25 WarriorNecklace 
+1/240 GreenBead 
+1/240 GaleNecklace 
+1/240 SoulNecklace 
+1/240 DemonicBells 
+
+;Bracelets
+1/30 LargeBracelet 
+1/25 HardGlove 
+1/25 MagicBracelet 
+1/70 EbonyBracelet 
+1/70 MonkBracelet 
+1/70 StrainBracelet 
+1/100 SharpBracelet 
+
+;Rings
+1/10 BlueRing 
+1/40 BlackRing 
+1/40 SerpentEyeRing 
+1/40 PearlRing 
+1/50 GoldRing 
+1/45 SkeletonRing 
+1/55 GaleRing 
+1/150 RubyRing 
+1/150 DragonRing 
+1/150 PlatinumRing 
+
+;Stones
+1/50 HealthStone(S) 
+1/50 MagicStone(S) 
+1/50 PowerStone(S)
+1/50 DCStone(S) 
+1/50 MCStone(S) 
+1/50 SCStone(S) 
+
+;Potions
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/10 (HP)DrugLarge 
+1/10 (MP)DrugLarge 
+1/30 ImpactDrug(S) 
+1/30 MagicDrug(S) 
+1/30 TaoistDrug(S) 
+1/30 StormDrug(S) 
+1/30 StaminaAid(S) 
+1/30 MagicAid(S) 
+
+;Crafting Materials
+1/5 Bone 
+1/5 Bone 
+1/10 LargeBone 
+
+;Books
+1/12 Slaying 
+1/50 Thrusting 
+1/7 Repulsion 
+1/12 ElectricShock 
+1/25 HellFire 
+1/25 ThunderBolt 
+1/50 Teleport 
+1/15 GreatFireBall 
+1/15 SoulFireBall 
+1/50 Hiding 
+1/50 SummonSkeleton 
+1/10 Poisoning 
+1/15 DoubleSlash 
+1/60 Haste 
+1/15 ExplosiveTrap
+1/20 Meditation
+1/25 SummonVampire
+1/50 DelayedExplosion
+1/700 BackStep
+1/1000 ElementalShot

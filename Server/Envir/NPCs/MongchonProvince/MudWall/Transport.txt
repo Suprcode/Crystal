@@ -1,0 +1,96 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Hello I'm Edwin, the wandering warrior.
+I transport men and goods to other places fast and safe. 
+Just pay the fee then I'll escort you to anywhere.
+So what do you say?
+ 
+I'll use this <Service/@tele>
+Maybe next <Time/@exit> 
+
+[@tele]
+#SAY
+Which place would you like to go?
+ 
+My service fee is 2000 gold.
+
+<<BorderVillage/@Border>>
+<<BichonWall/@BichonWall>>
+<<SerpentValley/@Serpent>>
+<<TaoistSchool/@TaoVillage>>
+<<CastleGi-Ryoong/@CastleGi>>
+<<WoomyonCamp/@Camp>>
+
+[@Border]
+#IF
+CHECKGOLD > 1999
+#ACT
+MOVE 0 289 617
+TAKEGOLD 2000
+#ELSEACT
+GOTO @gold
+
+[@BichonWall]
+#IF
+CHECKGOLD > 1999
+#ACT
+MOVE 0 296 222
+TAKEGOLD 2000
+#ELSEACT
+GOTO @gold
+
+[@Serpent]
+#IF
+CHECKGOLD > 1999
+#ACT
+MOVE 2 500 485
+TAKEGOLD 2000
+#ELSEACT
+GOTO @gold
+
+[@TaoVillage]
+#IF
+CHECKGOLD > 1999
+#ACT
+MOVE 11 163 337
+TAKEGOLD 2000
+#ELSEACT
+GOTO @gold
+
+[@CastleGi]
+#IF
+CHECKGOLD > 1999
+#ACT
+MOVE 4 264 257
+TAKEGOLD 2000
+#ELSEACT
+GOTO @gold
+
+[@Camp]
+#IF
+CHECKGOLD > 1999
+#ACT
+MOVE 1 315 82
+TAKEGOLD 2000
+#ELSEACT
+GOTO @gold
+
+[@gold]
+#SAY
+Sorry you do not have enough gold.
+
+<Exit/@Exit>
+
+[Quests]
+-102

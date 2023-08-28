@@ -1,0 +1,43 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Welcome, what can I do for you?
+ 
+<Sell/@Sell> Meat.
+<Ask/@Meathelp> about how to gain meat.
+ 
+<Close/@Exit>
+
+[@Sell]
+#SAY
+I will buy high quality for high price.
+but if the meat is stained with soil or burned with fire
+I'll buy it at low price.
+ 
+<Back/@Main>
+
+[@Meathelp]
+#SAY
+Meat can be gained from {Hens/Crimson}, {Deer/Crimson}, {Sheep/Crimson}, and {Wolves/Crimson}.
+To get meat from any of the above, first of all kill the animal.
+Once you have killed it, press the ALT button, while left clicking
+on the dead body for a few seconds.
+You should then see a piece of meat appear in your inventory.
+Using magic to kill an animal burns the meat, reducing its quality to 0.
+ 
+<Back/@Main>
+
+[Types]
+15
+
+[Quests]

@@ -1,0 +1,19 @@
+;Gold
+1/5 Gold 1650
+
+;Potions
+1/5 (HP)DrugXL
+1/5 (MP)DrugXL
+1/10 SunPotion
+1/10 SunPotion
+
+
+1/12000 SmasherGlove
+1/12000 BlizzardGlove
+1/12000 MistyGlove
+1/12000 SlicerGlove
+
+1/40000 SparklingBelt
+1/40000 SparklingBoots
+1/40000 SparklingHelmet
+1/60000 PuiYuHelmet

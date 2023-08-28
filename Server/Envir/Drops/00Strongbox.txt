@@ -1,0 +1,11 @@
+;Pots + Other
+1/100 WonderDrug(EXP)
+1/100 WonderDrug(DROP)
+1/10 WonderDrug(HP)
+1/10 WonderDrug(MP)
+1/10 WonderDrug(AC)
+1/10 WonderDrug(MAC)
+1/10 WonderDrug(A.SPEED)
+1/100 Knapsack(S)
+1/200 Knapsack(M)
+1/300 Knapsack(L)

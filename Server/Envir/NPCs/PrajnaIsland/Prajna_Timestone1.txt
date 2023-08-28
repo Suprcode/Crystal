@@ -1,0 +1,31 @@
+[@main]
+Worship me you little thing, then you will be able to
+break the boundary of time and space to go to the past.
+<To the Past!/@tele>
+<I will stay here/@exit>
+
+[@tele]
+#IF
+LEVEL > 39
+#ACT
+goto @level40
+#ELSEACT
+goto @lowlevel
+
+[@lowlevel]
+#IF
+LEVEL > 32
+LEVEL < 40
+CHECKITEM TimeStonePiece 1
+#ACT
+TAKEITEM TimeStonePiece 1
+MOVE 6 63 247
+#ELSESAY
+I'm sorry you do not have a {TimeStonePiece/LightSteelBlue}.
+<Close/@exit>          
+
+[@level40]
+#ACT
+MOVE 6 63 247
+break
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      

@@ -1,0 +1,207 @@
+;Gold
+1/1 Gold 15000
+
+;Weapons
+1/50 PurifierSword 
+1/50 GreatAxe 
+1/50 MageStaff 
+1/50 SerpentSword 
+1/50 DoubleBlades 
+1/50 SilverBow 
+1/50 DragonSword 
+1/50 BloodStealerSword 
+1/280 JudgementMace 
+1/280 WarMageStaff 
+1/280 SoulSpringWand 
+1/280 BladesOfDarkness 
+1/280 FiendBow 
+1/225 WarSpiritBlade 
+1/225 MagicScythe 
+1/225 StoneBambooFan 
+1/225 FreezingBlades 
+1/225 LitheBow 
+1/550 DragonSlayer 
+1/550 DragonStaff 
+1/550 SoulSabre 
+1/550 RoyalBlades 
+1/550 MaleficBow 
+1/800 SwordOfWarGod 
+1/800 BladeOfSorcery 
+1/800 HeavenSword 
+1/800 BladesOfMagi 
+1/800 BowOfForce 
+1/170 ZumaJudgementMace 
+1/170 ZumaWarMageStaff 
+1/170 ZumaSoulSpringWand 
+1/170 ZumaBlades 
+1/170 ZumaFiendBow 
+
+;Armours
+1/5 HeavyArmour(M) 
+1/5 HeavyArmour(F) 
+1/5 MagicRobe(M) 
+1/5 MagicRobe(F) 
+1/5 SoulArmour(M) 
+1/5 SoulArmour(F) 
+1/5 RelicArmour(M) 
+1/5 RelicArmour(F) 
+1/5 LightLeatherArmour(M) 
+1/5 LightLeatherArmour(F) 
+1/55 SteelArmour(M) 
+1/55 SteelArmour(F) 
+1/55 DragonRobe(M) 
+1/55 DragonRobe(F) 
+1/55 TitanArmour(M) 
+1/55 TitanArmour(F) 
+1/55 RoyalArmour(M) 
+1/55 RoyalArmour(F) 
+1/55 StuddedArmour(M) 
+1/55 StuddedArmour(F) 
+1/1000 HeavenArmour(M) 
+1/1000 HeavenArmour(F) 
+
+;Helmets
+1/80 BlackIronHelmet 
+1/5 SkeletonHelmet 
+1/5 ShamanHelmet 
+1/80 HelmetOfHero 
+1/70 GreatHelmet 
+1/70 WisdomCoronet 
+1/70 TaoCoronet 
+
+;Necklaces
+1/100 GaleNecklace 
+1/65 GreenBead 
+1/65 DemonicBells 
+1/65 SoulNecklace 
+1/400 SkillNecklace 
+1/5 ConvexLens 
+1/5 BambooPipe 
+1/40 ClawNecklace 
+1/40 LifeNecklace 
+1/40 PearlNecklace 
+
+;Bracelets
+1/5 DeathGauntlet 
+1/5 GoldBracelet 
+1/5 BronzeGlove 
+1/40 SpellBracelet 
+1/40 3rdEyeBracelet 
+1/85 KnightBracelet 
+1/85 DragonBracelet 
+1/85 SoulSpringBracelet 
+1/35 BlackIronBracelet 
+1/65 SteelGlove 
+
+;Rings
+1/5 CharmRing 
+1/5 MoralRing 
+1/5 ExpelRing 
+1/5 CoralRing 
+1/10 GaleRing 
+1/35 DragonRing 
+1/35 RubyRing 
+1/35 PlatinumRing 
+1/95 PowerRing 
+1/95 VioletRing 
+1/95 TitanRing 
+1/4000 FlameRing 
+1/4000 RecoveryRing 
+1/40000 RevivalRing 
+1/40000 ProtectionRing 
+1/40000 ProtectionRing 
+1/40000 ParalysisRing 
+1/4000 ClearRing 
+1/10 GaleRing 
+
+;Amulets
+1/5 AmuletOfRevival 
+
+;Belts
+1/100 GoldBelt 
+1/150 AdamantineBelt 
+
+;Boots
+1/100 DragonBoots 
+1/150 RedScaleBoots 
+
+;Potions
+1/1 (HP)DrugLarge 
+1/1 (MP)DrugLarge 
+1/1 (HP)DrugLarge 
+1/1 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/30 ImpactDrug(M) 
+1/30 MagicDrug(M) 
+1/30 TaoistDrug(M) 
+1/30 StormDrug(M) 
+1/30 StaminaAid(M) 
+1/30 MagicAid(M) 
+1/1 (HP)DrugXL 
+1/1 (MP)DrugXL 
+1/2 (HP)DrugXL 
+1/2 (MP)DrugXL 
+
+;Crafting Materials
+1/10 ZumaRelic 
+
+;Scrolls
+1/2 BenedictionOil 
+1/5 BenedictionOil 
+
+;Gems
+1/350 BraveryOrb 
+1/350 MagicOrb 
+1/350 SoulOrb 
+
+;Books
+1/50 TwinDrakeBlade 
+1/50 Entrapment 
+1/25 FlamingSword 
+1/50 LionRoar 
+1/30 CrossHalfMoon 
+1/50 BladeAvalanche 
+1/400 ProtectionField 
+1/400 Rage 
+1/50 Vampirism 
+1/25 IceStorm 
+1/30 FlameDisruptor 
+1/50 Mirroring 
+1/200 FlameField 
+1/400 MeteorStrike 
+1/600 Blizzard 
+1/50 Hallucination 
+1/50 Purification 
+1/30 UltimateEnhancer 
+1/30 EnergyRepulsor 
+1/25 SummonShinsu 
+1/200 SummonHolyDeva 
+1/200 Curse 
+1/200 Reincarnation 
+1/400 PoisonCloud
+1/600 EnergyShield 
+1/175 FlashDash 
+1/50 PoisonSword 
+1/50 MoonLight 
+1/50 MPEater 
+1/200 DarkBody 
+1/400 SwiftFeet 
+1/400 FireBurst 
+
+;Nothing
+1/100 GoldBar 

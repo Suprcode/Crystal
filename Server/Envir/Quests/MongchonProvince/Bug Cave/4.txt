@@ -1,0 +1,27 @@
+[@Description]
+The Necklace is my {LifeStone/LightSteelBlue}.. This is why I have 
+returned. Please find my {LifeStone/LightSteelBlue}.
+
+[@TaskDescription]
+Hunt {GiantWorm's/Crimson} and return the {OldNecklace/LightSteelBlue}.
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+OldNecklace 1
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+8000
+
+[@GoldReward]
+8000
+
+// Pickup - LostSoul D601 202 204
+// Hand In - LostSoul D601 202 204

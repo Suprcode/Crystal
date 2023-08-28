@@ -1,0 +1,36 @@
+[@Description]
+Traveler Please return to the {SerpentDeadMines/Yellow} 
+and complete the task which was on the 
+{HiddenScroll/LightSteelBlue}. 
+
+[@TaskDescription]
+Eliminate {RotShamanZombie's/Crimson} and retrieve 
+{HeartOfDead/LightSteelBlue} from the {HiGreatGhoul/Crimson}
+
+[@Completion]
+
+[@KillTasks]
+RotShamanZombie 20
+
+[@ItemTasks]
+HeartOfDead 1
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+MartialSabre
+SpearWithHook
+KeenKrissSword
+BlackIronCrowSwords
+ToughLongBow
+
+[@ExpReward]
+4800
+
+[@GoldReward]
+4800
+
+// Pickup - Merchant_Dr.Kim 0017 5 9
+// Hand In - Merchant_Dr.Kim 0017 5 9

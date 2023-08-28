@@ -1,0 +1,35 @@
+[@Description]
+There are {Hidden Entrances/Yellow} around here. 
+They lead to some kind of Dungeon. Rumours 
+say they at Each Entrance. There are some kind 
+of Pillar's.
+
+[@TaskDescription]
+Find the {Hidden Entrances/Yellow} and Search for the 
+Pillar's
+
+[@Completion]
+
+[@KillTasks]
+
+[@FlagTasks]
+521 "Find the WierdPillar"
+522 "Find the StrangePillar"
+523 "Find the MysteriousPillar"
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+2764
+
+[@GoldReward]
+5500
+
+// Pickup - Merchant_Mr.Wang 3 663 304
+// Hand In - Merchant_Mr.Wang 3 663 304 

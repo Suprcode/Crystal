@@ -1,0 +1,47 @@
+;Gold
+1/20 Gold 2500
+
+;Weapons
+1/600  GreatAxe
+1/600  SerpentSword
+1/600  MageStaff
+1/600  DoubleBlades
+
+;Necklaces
+1/120 BlueFoxCollar
+1/1180 HeroNecklace
+1/780 PurityNecklace
+1/780 HwanDevilNecklace
+
+;Bracelets
+1/120 BlueFoxBracelet
+
+;Rings
+1/120 BlueFoxRing
+
+;Shoes
+1/360 SilkBoots
+
+;Belts
+1/580 AdamantineBelt
+
+;Potions
+1/10    (HP)DrugLarge
+1/10    (MP)DrugLarge
+1/10    (HP)DrugLarge
+1/10    (MP)DrugLarge
+1/20   SunPotion(M)
+1/20   SunPotion(M)
+1/20   SunPotion(M)
+1/20   SunPotion(M)
+1/100  ImpactDrug(S)
+1/100  StaminaAid(S)
+1/100  StormDrug(S)
+
+;Books
+1/200 LionRoar
+1/200 Vampirism
+1/2000 SummonHolyDeva
+1/800 Hallucination
+1/800 Purification
+1/800 swiftfeet

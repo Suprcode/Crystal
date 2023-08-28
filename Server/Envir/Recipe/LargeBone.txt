@@ -1,0 +1,9 @@
+[Recipe]
+Amount 1
+Chance 100
+Gold 10
+
+[Tools]
+
+[Ingredients]
+Bone 10

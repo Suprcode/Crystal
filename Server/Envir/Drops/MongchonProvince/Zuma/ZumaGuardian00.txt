@@ -1,0 +1,149 @@
+;Gold
+1/1 Gold 35000
+
+;Weapons
+1/5 PrinceDagger 
+1/5 MartialSword 
+1/5 HookedSpear 
+1/5 KrissSword 
+1/5 IronBlades 
+1/5 LongBow 
+1/25 PowerAxe 
+1/25 PurifierSword 
+1/40 GreatAxe 
+1/40 MageStaff 
+1/40 SerpentSword 
+1/40 DoubleBlades 
+1/40 SilverBow 
+1/3000 JudgementMace 
+1/3000 WarMageStaff 
+1/3000 SoulSpringWand 
+1/3000 BladesOfDarkness 
+1/3000 FiendBow 
+
+;Armours
+1/5 HeavyArmour(M) 
+1/5 HeavyArmour(F) 
+1/5 MagicRobe(M) 
+1/5 MagicRobe(F) 
+1/5 SoulArmour(M) 
+1/5 SoulArmour(F) 
+1/5 RelicArmour(M) 
+1/5 RelicArmour(F) 
+1/5 LightLeatherArmour(M) 
+1/5 LightLeatherArmour(F) 
+1/35 IronArmour(M) 
+1/35 IronArmour(F) 
+1/35 WizardRobe(M) 
+1/35 WitchRobe(F) 
+1/35 PearlArmour(M) 
+1/35 PearlArmour(F) 
+1/35 AncientArmour(M) 
+1/35 AncientArmour(F) 
+1/35 TemperedArmour(M) 
+1/35 TemperedArmour(F) 
+
+;Helmets
+1/55 RecallHelmet 
+1/30 SkeletonHelmet 
+1/30 ShamanHelmet 
+
+;Necklaces
+1/3 LanternNecklace 
+1/3 TigerNecklace 
+1/3 PlatinumNecklace 
+1/20 NagaNecklace 
+1/20 AmberNecklace 
+1/20 PhoenixBead 
+1/20 LanternNecklace 
+1/15 BlueJadeNecklace 
+1/15 ConvexLens 
+1/15 BambooPipe 
+1/30 ClawNecklace 
+1/30 LifeNecklace 
+1/30 PearlNecklace 
+1/55 GreenBead 
+1/55 DemonicBells 
+1/55 SoulNecklace 
+
+;Bracelets
+1/10 DeathGauntlet 
+1/5 GoldBracelet 
+1/3 EbonyBracelet 
+1/3 MonkBracelet 
+1/3 StrainBracelet 
+1/15 SteelBracelet 
+1/15 HardGlove 
+1/15 MagicBracelet 
+
+;Rings
+1/5 SkeletonRing 
+1/5 CharmRing 
+1/5 MoralRing 
+1/35 ExpelRing 
+1/35 CoralRing 
+1/20 BlueRing 
+1/50 DragonRing 
+1/50 RubyRing 
+1/50 PlatinumRing 
+
+;Potions
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/30 ImpactDrug(S) 
+1/30 MagicDrug(S) 
+1/30 TaoistDrug(S) 
+1/30 StormDrug(S) 
+1/30 StaminaAid(S) 
+1/30 MagicAid(S) 
+
+;Books
+1/20 Slaying 
+1/60 ThunderStorm 
+1/90 MagicShield 
+1/60 ShoulderDash 
+1/40 TrapHexagon 
+1/90 UltimateEnhancer 
+1/90 HeavenlySword 

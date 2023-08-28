@@ -1,0 +1,46 @@
+;;B5
+[@MAIN]
+#IF
+CHECKQUEST 135 0
+#ACT
+SET [525] 1
+LocalMessage "You've found the Stone in StoneTemple" Hint
+LocalMessage "Return to the MongchonDelegate" Hint
+GOTO @Check2
+#ELSEACT
+GOTO @Check2
+
+[@Check2]
+#IF
+CHECKQUEST 153 1
+#ACT
+GOTO @MAIN-1
+#ELSESAY
+Nothing happens.
+
+[@MAIN-1]
+#IF
+LEVEL > 21
+LEVEL < 43
+#SAY
+A Mysterious Stone. With Ancient symbols.
+"The noise rumbles the faint whispers are <creepy/@stonetomba>"
+{StoneHeart/LightSteelBlue} Required {Level22~43./KHAKI}
+ 
+<Close/@exit>
+#ELSESAY
+Nothing happens.
+ 
+ 
+<Close/@exit>
+
+[@stonetomba]
+#IF
+CHECKITEM StoneHeart 1
+#ACT
+TAKEITEM StoneHeart 1
+MOVE D710A 29 17
+#ELSESAY
+Nothing happens.
+ 
+<Close/@exit>

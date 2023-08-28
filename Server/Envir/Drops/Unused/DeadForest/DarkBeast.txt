@@ -1,0 +1,14 @@
+;Gold
+1/15 Gold 2500
+
+;Potions
+1/15 (HP)DrugLarge
+1/15 (MP)DrugLarge
+1/150 (HP)DrugLarge 6
+1/150 (MP)DrugLarge 6
+1/25 SunPotion
+1/50 SunPotion(M)
+
+;Crafting Material
+1/30 BeastLeather
+1/40 LargeBone

@@ -1,0 +1,151 @@
+;Gold
+1/2 Gold 12500
+
+;Potions
+1/1 (HP)DrugMedium
+1/1 (MP)DrugMedium
+1/1 (HP)DrugMedium
+1/1 (MP)DrugMedium
+1/2 (HP)DrugMedium
+1/2 (MP)DrugMedium
+1/2 (HP)DrugMedium
+1/2 (MP)DrugMedium
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/2 SunPotion
+1/2 SunPotion
+1/2 SunPotion
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+1/30 TaoistDrug(S)
+1/30 ImpactDrug(S)
+1/30 MagicDrug(S)
+1/30 StormDrug(S)
+
+;Armours
+1/6 IronArmour(M)
+1/6 IronArmour(F)
+1/6 WizardRobe(M)
+1/6 WitchRobe(F)
+1/6 PearlArmour(M)
+1/6 PearlArmour(F)
+1/6 AncientArmour(M)
+1/6 AncientArmour(F)
+1/6 LightLeatherArmour(M)
+1/6 LightLeatherArmour(F)
+1/1000 CrystalArmour(M)
+1/1000 CrystalArmour(F)
+
+;Weapons
+1/5 PrinceDagger
+1/5 MartialSword
+1/5 HookedSpear
+1/5 KrissSword
+1/5 IronBlades
+1/5 LongBow
+1/25 PowerAxe
+1/30 PurifierSword
+1/150 GreatAxe
+1/150 MageStaff
+1/150 SerpentSword
+1/150 DoubleBlades
+1/150 SilverBow
+1/400 JudgementMace
+1/400 WarMageStaff
+1/400 SoulSpringWand
+1/400 BladesOfDarkness 
+1/400 FiendBow 
+
+;Helmets
+1/10 ShamanHelmet
+1/15 SkeletonHelmet
+
+;Sets
+1/50 RedOrchidRing
+1/50 RedOrchidNecklace
+1/50 RedOrchidBracelet
+1/50 RedFlowerRing
+1/50 RedFlowerNecklace
+1/50 RedFlowerBracelet
+
+;Rings
+1/25 SkeletonRing
+1/25 IronRing
+1/30 CharmRing
+1/30 MoralRing
+1/25 ExpelRing
+1/25 CoralRing
+1/60 GaleRing
+1/50 DragonRing
+1/50 RubyRing
+1/50 PlatinumRing
+
+;Bracelets
+1/8 StrainBracelet
+1/8 HardGlove
+1/8 MagicBracelet
+1/25 MonkBracelet
+1/25 EbonyBracelet
+1/45 DeathGauntlet
+1/25 GoldBracelet
+1/50 BronzeGlove
+
+;Necklaces
+1/10 LanternNecklace
+1/10 TigerNecklace
+1/75 BlueJadeNecklace
+1/75 BambooPipe
+1/75 ConvexLens
+1/65 LifeNecklace
+1/65 PearlNecklace
+1/65 ClawNecklace
+
+;Stones
+1/200 DCStone(XL)
+1/200 MCStone(XL)
+1/200 SCStone(XL)
+1/600 DCStone
+1/600 MCStone
+1/600 SCStone
+
+;Gems
+1/155 BraveryOrb
+1/155 MagicOrb
+1/155 SoulOrb
+1/160 AccuracyOrb
+1/160 DisillusionOrb
+1/200 StormOrb
+
+;Books
+1/100 TrapHexagon
+1/100 ThunderStorm
+1/100 ShoulderDash
+1/100 fireburst
+1/300 Entrapment
+1/200 trap
+1/500 Lionroar
+1/300 icestorm
+1/300 flamingsword
+1/300 poisonsword
+1/500 Curse
+1/500 SummonHolyDeva
+1/500 Mirroring
+1/1500 Fury
+1/500 mpeater
+1/400 TwinDrakeBlade
+
+;Crafting Materials
+1/15 SpiderWeb
+1/10 RedThread

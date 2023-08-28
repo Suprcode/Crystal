@@ -1,0 +1,98 @@
+;Gold
+1/5 Gold 450
+
+;Weapons
+1/150 BronzeAxe 
+1/250 HookedSword 
+1/250 Trident 
+1/250 Scimitar 
+1/250 BladesOfVelocity 
+1/250 CompoundBow 
+1/300 SteelAxe 
+1/350 SteelSword 
+1/350 MartialSword 
+1/350 HookedSpear 
+1/350 KrissSword 
+1/350 IronBlades 
+1/350 LongBow 
+
+;Armours
+1/250 LightArmour(M) 
+1/250 LightArmour(F) 
+
+;Helmets
+1/150 BronzeHelmet 
+1/175 MagicHelmet 
+
+;Necklaces
+1/500 LanternNecklace 
+1/500 TigerNecklace 
+1/500 PlatinumNecklace 
+1/500 NagaNecklace 
+1/500 AmberNecklace 
+1/500 PhoenixBead 
+1/500 BlueCrystalNecklace
+1/1000 BlueThunderNecklace
+
+;Bracelets
+1/500 MagicBracelet 
+1/750 HardGlove 
+1/1000 SpellBracelet
+1/3000 FiveStringBracelet
+
+;Rings
+1/400 BlueRing 
+1/500 BlackRing 
+1/500 SerpentEyeRing 
+1/500 PearlRing 
+1/1000 EvilSlayerRing
+
+;Potions
+1/30 (HP)DrugMedium 
+1/30 (MP)DrugMedium 
+1/100 SunPotion 
+
+;Shoes 
+1/500 SilkBoots
+
+;Books
+1/100 Fencing 
+1/100 FireBall 
+1/100 Healing 
+1/100 FatalSword 
+1/100 Focus 
+1/100 Repulsion 
+1/100 ElectricShock 
+1/100 SpiritSword 
+1/100 Poisoning 
+1/200 StraightShot 
+1/200 ThunderBolt 
+1/200 GreatFireBall 
+1/200 SoulFireBall 
+1/200 SummonSkeleton 
+1/200 Teleport 
+1/200 Slaying 
+1/200 HellFire 
+1/200 DoubleSlash 
+1/250 Hiding 
+1/250 MassHiding 
+1/250 FireBang 
+1/250 FireWall 
+1/250 SoulShield 
+1/250 Haste 
+1/500 Thrusting 
+1/500 Lightning 
+1/500 Revelation 
+1/500 BlessedArmour 
+1/500 FlashDash 
+1/150 ExplosiveTrap 
+1/200 Meditation 
+1/250 SummonVampire 
+1/500 DelayedExplosion 
+1/700 BackStep 
+1/1000 ElementalShot 
+1/400 DoubleShot 
+
+;Quest
+1/5 ZombieEye Q
+1/5 RareCopperOre Q

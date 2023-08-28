@@ -1,0 +1,31 @@
+[@Description]
+The {Prajna Island/Yellow} {VillageChief/LimeGreen} has asked 
+for the {PrajnaHistory/LightSteelBlue} Book back..
+I'm sorry to inform you We have been ransacked 
+and many precious items have been stolen. 
+The Monster what attacked was a {Blue BigApe/Crimson}
+
+[@TaskDescription]
+Kill {EvilApeSobo/Crimson} and retrieve {PrajnaHistory/LightSteelBlue}.
+Travel to {RedValley/Yellow} and Search for the Attacker.
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+PrajnaHistory 1
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+26000
+
+[@GoldReward]
+20000
+
+// Pickup - LeadTrainer_Harry 1002 11 8
+// Hand In - LeadTrainer_Harry 1002 11 8

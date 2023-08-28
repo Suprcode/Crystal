@@ -1,0 +1,207 @@
+;;DungeonScroll
+[@_UseItem(4)]
+#SAY
+Which Dungeon would you like to visit?
+ 
+Teleport Region: <BichonProvince/@BPD1>
+Teleport Region: <SerpentValley/@SVD1>
+Teleport Region: <MongchonProvince/@MPD1>
+Teleport Region: <WoomyonWoods(S)/@WWSD1>
+Teleport Region: <WoomyonWoods(N)/@WWND1>
+Please <Show me some more/@DungeonPage2> Locations
+
+[@DungeonPage2]
+#SAY
+Teleport Region: <SeokchoValley/@SeoVD1>
+Teleport Region: <CastleGi-Ryoong/@CGCD1>
+Teleport Region: <PrajnaIsland/@PID1>
+Teleport Region: <PastBichon/@PBD1> Required Level43
+Teleport Region: <WasteLands/@WLD1>
+ 
+ 
+<Back/@_UseItem(50)>
+ 
+[@BPD1]
+#SAY
+Available Dungeons in BichonProvince.
+ 
+Teleport to: <OmaCavern/@OC1>
+Teleport to: <DeadMines/@DM1>
+<Back/@_UseItem(50)>
+
+[@SVD1]
+#SAY
+Available Dungeons in SerpentValley.
+ 
+Teleport to: <SerpentDeadMines/@SDM1>
+Teleport to: <ViperCave/@VC1>
+<Back/@_UseItem(50)>
+
+[@MPD1]
+#SAY
+Available Dungeons in MonchonProvince.
+ 
+Teleport to: <BugCave/@BC1>
+Teleport to: <StoneTemple/@ST1>
+Teleport to: <SabukSecretCave/@SSC1>
+Teleport to: <ZumaTemple/@ZT1>
+Teleport to: <FoxTemple/@FT1>
+<Back/@_UseItem(50)>
+
+[@WWSD1]
+#SAY
+Available Dungeons in WoomyonWoods(S).
+ 
+Teleport to: <InsectCave/@IC1>
+Teleport to: <WoomaTemple/@WT1>
+<Back/@_UseItem(50)>
+
+[@WWND1]
+#SAY
+Available Dungeons in WoomyonWoods(N).
+ 
+Teleport to: <MineralMines/@MM1>
+Teleport to: <TreePath/@TP1>
+Teleport to: <RedValley/@RV1>
+Teleport to: <DarkForest/@DF1>
+
+<Back/@_UseItem(50)>
+
+[@SeoVD1]
+#SAY
+Available Dungeons in SeokchoValley.
+ 
+Teleport to: <TrollMines/@TM1>
+<Back/@DungeonPage2>
+
+[@CGCD1]
+#SAY
+Available Dungeons in CastleGi-Ryoong.
+ 
+Teleport to: <BlackDragonDungeon/@BDD1>
+Teleport to: <DragonCavern/@DC1>
+<Back/@DungeonPage2>
+
+
+[@PID1]
+#SAY
+Available Dungeons in PrajnaIsland.
+ 
+Teleport to: <PrajnaStoneCave/@PSC1>
+Teleport to: <PrajnaTemple/@PT1>
+<Back/@DungeonPage2>
+
+[@PBD1]
+#IF
+LEVEL > 42
+#SAY
+Available Dungeons in PastBichon.
+ 
+Teleport to: <EvilMirPalace/@EM1>
+<Back/@DungeonPage2>
+
+#ELSESAY
+Sorry you aint the correct level.
+ 
+<Back/@DungeonPage2>
+
+[@WLD1]
+#SAY
+Available Dungeons in WasteLands.
+ 
+Teleport to: <RedCave/@RC1>
+Teleport to: <HellCavern/@HC1>
+<Back/@DungeonPage2>
+
+[@OC1]
+#ACT
+MOVE 0 144 40
+
+[@DM1]
+#ACT
+MOVE 0 659 219
+
+[@SDM1]
+#ACT
+MOVE 2 562 175
+
+[@VC1]
+#ACT
+MOVE LABY01
+
+[@BC1]
+#ACT
+MOVE 3 144 92
+
+[@ST1]
+#ACT
+MOVE D710 28 17
+
+[@SSC1]
+#ACT
+MOVE D701 166 132
+
+[@ZT1]
+#ACT
+MOVE 0157 15 19
+
+[@FT1]
+#ACT
+MOVE 3 654 763
+
+[@IC1]
+#ACT
+MOVE 1 209 523
+
+[@WT1]
+#ACT
+MOVE 1 88 203
+
+[@MM1]
+#ACT
+MOVE 11 44 318
+
+[@TP1]
+#ACT
+MOVE 11 354 243
+
+[@RV1]
+#ACT
+MOVE 12 319 129
+
+[@DF1]
+#ACT
+MOVE 11 180 195
+
+[@TM1]
+#ACT
+MOVE UMM 43 107
+
+[@BDD1]
+#ACT
+MOVE 4 61 70
+
+[@DC1]
+#ACT
+MOVE 4 47 212
+
+[@PSC1]
+#ACT
+MOVE 5 523 615
+
+[@PT1]
+#ACT
+MOVE 5 569 425
+
+[@RC1]
+#ACT
+MOVE HELL00  245 246
+
+[@HC1]
+#ACT
+MOVE HELL00 244 148
+
+[@EM1]
+#ACT
+MOVE D2081 30 50
+

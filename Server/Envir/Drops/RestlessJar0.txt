@@ -1,0 +1,5 @@
+;Gold
+1/2 Gold 1500
+
+;Nothing
+1/2 ArtifactToken

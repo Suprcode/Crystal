@@ -1,0 +1,53 @@
+;Gold
+1/5 Gold 850
+
+;Pots + Other
+1/20 (HP)DrugLarge
+1/20 (MP)DrugLarge
+1/25 (HP)DrugXL
+1/25 (MP)DrugXL
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+

@@ -1,0 +1,31 @@
+[@Description]
+Hmm.. The information seems to refer to the 
+{BoneElite/Crimson}. Can you help us and hunt 
+this monster? We cannot leave our town since 
+we are under attack as well. 
+
+[@TaskDescription]
+Please eliminate the {BoneElite/Crimson} and bring back his 
+{Head/LightSteelBlue}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+SkeletonHead 1
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+2500
+
+[@GoldReward]
+2500
+
+// Pickup - Teleport_Kyle 0 371 314
+// Hand In - Teleport_Kyle 0 371 314

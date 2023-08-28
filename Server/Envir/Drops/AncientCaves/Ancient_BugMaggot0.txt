@@ -1,0 +1,11 @@
+;Gold
+1/5 Gold 800
+
+;Pots + Other
+1/5 (HP)DrugMedium 
+1/5 (MP)DrugMedium 
+1/10 (HP)DrugLarge 
+1/10 (MP)DrugLarge 
+
+
+

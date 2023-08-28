@@ -1,0 +1,46 @@
+;Gold
+1/10 Gold 700
+
+;Potions
+1/10 (HP)DrugLarge
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/10 (MP)DrugLarge
+1/20 (HP)DrugLarge
+1/20 (MP)DrugLarge
+1/30 SunPotion
+1/60 SunPotion
+1/50 SunPotion(M)
+1/100 SunPotion(M)
+1/150 ImpactDrug(M)
+1/150 MagicDrug(M)
+1/150 TaoistDrug(M)
+1/150 StormDrug(S)
+
+;Stones
+1/2500 HealthStone(L)
+1/2500 MagicStone(L)
+1/3500 PowerStone(L)
+1/3500 DCStone(L)
+1/3500 MCStone(L)
+1/3500 SCStone(L)
+1/4000 HealthStone(XL)
+1/4000 MagicStone(XL)
+1/6500 PowerStone(XL)
+1/6500 DCStone(XL)
+1/6500 MCStone(XL)
+1/6500 SCStone(XL)
+
+;Boots
+1/9000 DragonBoots
+1/10000 RedScaleBoots
+
+;Rings
+1/35000 PledgeRing
+1/33000 FiveElementRing
+1/35000 CrimsonRubyRing
+
+;Bracelet
+1/30000 DualTitanAmulet
+1/30000 EvilWhispAmulet
+1/30000 SacredAngelAmulet

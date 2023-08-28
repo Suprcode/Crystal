@@ -1,0 +1,10 @@
+[Recipe]
+Amount 1
+Chance 100
+Gold 1000
+
+[Tools]
+
+[Ingredients]
+SunPotion(M)
+Amulet(Bundle)

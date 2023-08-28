@@ -1,0 +1,12 @@
+[Recipe]
+Amount 1
+Chance 100
+Gold 1000
+
+[Tools]
+
+[Ingredients]
+BugEye 20
+WarriorNecklace
+SilverOre 1 12000
+SpiderWeb 15

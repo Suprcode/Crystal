@@ -1,0 +1,129 @@
+[@Main]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+ You know. I'm already 90 years old and have lived here
+ all my life. If you want to know anything about the 
+ island, feel free to ask me at any time. 
+ 
+ <ask/@ask1> about the local legend
+ <ask/@ask2> about the monsters
+ <ask/@ask3> about the Bottomless Pit
+ <move outside/@Tmove>
+ <close/@exit>
+
+[@ask1]
+ According to the legend, 1000 years ago there was an
+ epic war, to decide the fate of the world. It happened
+ right here on this island... The evil forces from their
+ dark, underground lair rose from the earth, using the
+ island as a channel to invade the world. 
+ <Next/@next1>
+
+[@next1]
+ However, mighty heroes appeared, who bravely fought and
+ defeated the evil forces after many fierce battles.
+ These heroes sealed the path that led to the gateway of
+ the evil 
+ <Next/@next2>
+
+[@next2]
+ Later these heroes built a temple that was based on a maze,
+ on top of the sealed path, to block its access; however, as time
+ passed, the temple became buried deep into the ground and
+ no trace of it can now be found. 
+ <Next/@next3>
+
+[@next3]
+ What? Unbelievable you say? Ha ha ha...
+ of course, that's why I told you it is a legend! 
+ <close/@exit>
+
+[@ask2]
+ I believe that the monsters spotted recently must be
+ the ones mentioned in the legend. Otherwise, how can we
+ explain that such things exist in the world?
+ I am sure, positive, that they are the ones once defeated
+ by the legendary heroes, and are returning once more. 
+ <Next/@next4>
+
+[@next4]
+ It is the end of the world. The end, I tell you....
+ Why must something like this happen in the very twilight
+ of my life?
+ What misfortune... what sadness... bah! 
+ <close/@exit>
+
+[@ask3]
+ The "Bottomless Pit"? Now there's something I haven't
+ heard about in a very long time. It happened such a long
+ time ago, so the youngsters here do not know much about
+ this. Anyway, it is a true story. 
+ <Next/@next5>
+
+[@next5]
+ Long ago. there was a pit somewhere in this island.
+ whenever strange sound echoed through the pit,
+ people passing there nearby
+ disappeared all and never returned.
+ So it was called "Bottomless Pit. 
+ <Next/@next6>
+
+[@next6]
+ Ah one man.. there was one man
+ who came back alive. He came back covered
+ all over with wounds and told us there is
+ another world down there full of cruel monsters.
+ He spoke some more gibberish
+ we couldn't understand him and he died few days later. 
+ <Next/@next7>
+
+[@next7]
+ The frightened willagers could not bear any more
+ and called a famous shaman for an exorcism.
+ Maybe because of the exorcism or something
+ else, never again we have experienced
+ such indidenets of people disappearing. 
+ <Next/@next8>
+
+[@next8]
+ That's the story and already 70 years have
+ passed since then. Now no one remembers
+ where was the pit but it might appear again.
+ Village elders, who are aware of the incidents,
+ aew anxious about that. 
+ <close/@exit>
+
+[@Tmove]
+#IF
+random 2
+#ACT
+MOVE 5 125 324
+break
+
+#IF
+random 2
+#ACT
+MOVE 5 126 325
+break
+
+#ELSEACT
+goto @Tmove
+
+[Quests]
+-125
+126
+-128
+132
+-132
+133
+-133

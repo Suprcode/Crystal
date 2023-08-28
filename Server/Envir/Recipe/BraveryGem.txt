@@ -1,0 +1,11 @@
+[Recipe]
+Amount 1
+Chance 75
+Gold 10000
+
+[Tools]
+
+[Ingredients]
+IronOre 1 14000
+SilverOre 1 14000
+DCStone(S)

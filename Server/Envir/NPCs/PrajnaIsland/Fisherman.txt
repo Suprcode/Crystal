@@ -1,0 +1,17 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Hello there <$USERNAME>. I don't have any work that
+needs doing at the moment. Come back next week and I
+may be able to help you.
+<Ok/@exit>

@@ -1,0 +1,35 @@
+;Awakening
+1/25 BraveryGlyph0
+1/25 BraveryGlyph1
+1/25 BraveryGlyph2
+1/25 BraveryGlyph3
+
+1/25 MagicGlyph0
+1/25 MagicGlyph1
+1/25 MagicGlyph2
+1/25 MagicGlyph3
+
+1/25 SoulGlyph0
+1/25 SoulGlyph1
+1/25 SoulGlyph2
+1/25 SoulGlyph3
+
+1/25 ProtectionGlyph0
+1/25 ProtectionGlyph1
+1/25 ProtectionGlyph2
+1/25 ProtectionGlyph3
+
+1/25 EvilSlayerGlyph0
+1/25 EvilSlayerGlyph1
+1/25 EvilSlayerGlyph2
+1/25 EvilSlayerGlyph3
+
+1/25 BodyGlyph0
+1/25 BodyGlyph1
+1/25 BodyGlyph2
+1/25 BodyGlyph3
+
+1/25 AwakeningSoul0
+1/25 AwakeningSoul1
+1/25 AwakeningSoul2
+1/25 AwakeningSoul3

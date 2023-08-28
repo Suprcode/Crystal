@@ -1,0 +1,87 @@
+;Gold
+1/5 Gold 850
+
+;Pots + Other
+1/20 (HP)DrugLarge
+1/20 (MP)DrugLarge
+1/25 (HP)DrugXL
+1/25 (MP)DrugXL
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+1/15000 HeroNecklace
+1/15000 MeteoriteOfArchey 
+1/15000 AdamantineNecklace
+1/15000 RequiemNecklace
+
+
+;Necklace Rare
+1/18000 CuspidNecklace
+1/18000 SorceryAnchor
+1/18000 PurifiedMirror
+
+;Bracelets
+1/2800 SteelGauntlet
+1/3900 8TrigramWheel
+1/3900 HangMaWheel
+1/3900 BokMaWheel
+1/4500 BaekTaGlove
+1/4500 SpiritReformer
+1/4500 HolyTaoWheel
+
+
+;Bracelets Rare
+1/18000 DualTitanAmulet
+1/18000 SacredAngelAmulet
+1/18000 EvilWhispAmulet
+
+
+;Rings
+1/4000 TaeGukRing
+1/4000 ThunderRing
+1/4000 BoundlessRing
+1/5500 NobleRing
+1/5500 SoulRing
+1/5500 OmaSpiritRing
+1/5500 DestinyRing 
+
+
+;Rings Rare
+1/18000 PledgeRing
+1/18000 FiveElementRing
+1/18000 CrimsonRubyRing
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+

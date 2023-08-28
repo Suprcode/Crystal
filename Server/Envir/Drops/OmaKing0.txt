@@ -1,0 +1,89 @@
+;Gold
+1/1 Gold 15000
+
+;Pots + Other
+1/1 (HP)DrugLarge
+1/1 (HP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (MP)DrugLarge
+1/2 (MP)DrugLarge
+1/1 (HP)DrugXL
+1/1 (HP)DrugXL
+1/2 (HP)DrugXL
+1/2 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (MP)DrugXL
+1/2 (MP)DrugXL
+1/2 (MP)DrugXL
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+
+1/2 BenedictionOil
+1/5 BenedictionOil
+
+1/10 ImpactDrug(L)
+1/10 MagicDrug(L)
+1/10 TaoistDrug(L)
+1/10 StormDrug(L)
+
+
+
+1/5 AwakeningSoul0
+1/20 AwakeningSoul0
+
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+1/20 DragonScale
+1/40 RedEyeSkull
+
+
+;Quests
+1/2 PastBichonMap Q

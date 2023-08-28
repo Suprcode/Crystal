@@ -1,0 +1,28 @@
+[@Description]
+Oh Hello Traveler. 
+Have you ever heard of {MongchonProvince/Yellow}? 
+They are in need of help.
+
+[@TaskDescription]
+Talk to {Edwin/LimeGreen} in {MongchonProvince/Yellow}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+2534
+
+[@GoldReward]
+4750
+
+// Pickup - Teleport_Harrison 0 291 296
+// Hand In - Transport_Edwin 3 365 340

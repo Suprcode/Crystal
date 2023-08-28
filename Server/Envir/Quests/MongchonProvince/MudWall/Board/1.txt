@@ -1,0 +1,30 @@
+[@Description]
+MudWall Bounty, Has been submitted.
+
+[@TaskDescription]
+Travel to {StoneTemple/Yellow} Eliminate {Boar's/Crimson} and 
+collect {Boar Tooth's/LightSteelBlue}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+BoarTooth 75 "Collect the Boar's Tooth"
+
+[@FlagTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+10000
+
+[@GoldReward]
+25000
+
+// Pickup - MudWall_Board 3 330 325
+// Hand In - MudWall_Board 3 330 325

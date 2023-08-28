@@ -1,0 +1,1288 @@
+;Level 1
+;Gold
+1/1 Gold 30000 LV1
+1/20 GoldBar LV1
+
+;Pots + Other
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/2 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/2 SunPotion LV1
+1/1 SunPotion LV1
+1/2 SunPotion LV1
+1/1 SunPotion LV1
+1/2 SunPotion LV1
+1/1 SunPotion LV1
+1/3 SunPotion LV1
+
+1/1 BenedictionOil LV1
+1/10 GoldenBenedictionOil LV1
+
+1/2 AwakeningSoul0 LV1
+1/2 AwakeningSoul0 LV1
+
+
+
+;Weapons
+1/6000 JinchonSlayer LV1
+1/6000 JinchonStaff LV1
+1/6000 JinchonFeathers LV1
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gems/Orbs
+1/5 ProtectionGem LV1
+1/5 EvilSlayerGem LV1
+1/10 BraveryGem LV1
+1/10 MagicGem LV1
+1/10 SoulGem LV1
+1/15 AccuracyGem LV1
+1/15 AgilityGem LV1
+1/15 PoisonGem LV1
+1/15 FreezingGem LV1
+1/20 StormGem LV1
+1/20 DisillusionGem LV1
+1/20 EnduranceGem LV1
+
+1/75 ProtectionOrb LV1
+1/75 EvilSlayerOrb LV1
+1/100 BraveryOrb LV1
+1/100 MagicOrb LV1
+1/100 SoulOrb LV1
+1/200 AccuracyOrb LV1
+1/200 AgilityOrb LV1
+1/200 PoisonOrb LV1
+1/200 FreezingOrb LV1
+1/200 StormOrb LV1
+1/200 EnduranceOrb LV1
+1/200 DisillusionOrb LV1
+
+;Books
+;Warrior
+1/105 FlamingSword LV1
+1/110 LionRoar LV1
+1/115 BladeStorm LV1
+1/120 CrossHalfMoon LV1
+1/125 BladeAvalanche LV1
+1/130 ProtectionField LV1
+1/135 Rage LV1
+1/140 CounterAttack LV1
+1/145 SlashingBurst LV1
+1/150 Fury LV1
+1/155 ImmortalSkin LV1
+
+
+;Wizard
+1/90 Vampirism LV1
+1/105 IceStorm LV1
+1/110 FlameDisruptor LV1
+1/115 Mirroring LV1
+1/120 FlameField LV1
+1/125 Blizzard LV1
+1/130 FrozenRains LV1
+1/135 MagicBooster LV1
+1/140 MeteorStrike LV1
+1/145 LavaKing LV1
+1/150 IceThrust LV1
+1/155 StormEscape LV1
+1/160 FastMove LV1
+
+
+;Taoist
+1/90 UltimateEnhancer LV1
+1/100 HealingCircle LV1
+1/105 SummonShinsu LV1
+1/110 Reincarnation LV1
+1/115 SummonHolyDeva LV1
+1/120 Curse LV1
+1/125 Plague LV1
+1/130 PoisonCloud LV1
+1/135 EnergyShield LV1
+1/140 PetEnhancer LV1
+1/145 HeadShot LV1
+1/150 HolyShield LV1
+
+
+;Assassin
+1/80 FireBurst LV1
+1/85 CrescentSlash LV1
+1/105 Trap LV1
+1/110 PoisonSword LV1
+1/115 MoonLight LV1
+1/120 MPEater LV1
+1/125 SwiftFeet LV1
+1/150 DarkBody LV1
+
+1/80 ElementalBarrier LV1
+1/85 BindingShot LV1
+1/105 SummonToad LV1
+1/110 PoisonShot LV1
+1/125 CrippleShot LV1
+1/150 SummonSnakes LV1
+
+;CraftingMaterials
+
+
+;Quests
+
+;Level 2
+;Gold
+1/1 Gold 30000 LV2
+1/20 GoldBar LV2
+
+;Pots + Other
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/2 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/2 SunPotion LV2
+1/1 SunPotion LV2
+1/2 SunPotion LV2
+1/1 SunPotion LV2
+1/2 SunPotion LV2
+1/1 SunPotion LV2
+1/3 SunPotion LV2
+
+1/1 BenedictionOil LV2
+1/10 GoldenBenedictionOil LV2
+
+1/2 AwakeningSoul0 LV2
+1/2 AwakeningSoul0 LV2
+
+
+
+;Weapons
+1/6000 JinchonSlayer LV2
+1/6000 JinchonStaff LV2
+1/6000 JinchonFeathers LV2
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gems/Orbs
+1/5 ProtectionGem LV2
+1/5 EvilSlayerGem LV2
+1/10 BraveryGem LV2
+1/10 MagicGem LV2
+1/10 SoulGem LV2
+1/15 AccuracyGem LV2
+1/15 AgilityGem LV2
+1/15 PoisonGem LV2
+1/15 FreezingGem LV2
+1/20 StormGem LV2
+1/20 DisillusionGem LV2
+1/20 EnduranceGem LV2
+
+1/75 ProtectionOrb LV2
+1/75 EvilSlayerOrb LV2
+1/100 BraveryOrb LV2
+1/100 MagicOrb LV2
+1/100 SoulOrb LV2
+1/200 AccuracyOrb LV2
+1/200 AgilityOrb LV2
+1/200 PoisonOrb LV2
+1/200 FreezingOrb LV2
+1/200 StormOrb LV2
+1/200 EnduranceOrb LV2
+1/200 DisillusionOrb LV2
+
+;Books
+;Warrior
+1/105 FlamingSword LV2
+1/110 LionRoar LV2
+1/115 BladeStorm LV2
+1/120 CrossHalfMoon LV2
+1/125 BladeAvalanche LV2
+1/130 ProtectionField LV2
+1/135 Rage LV2
+1/140 CounterAttack LV2
+1/145 SlashingBurst LV2
+1/150 Fury LV2
+1/155 ImmortalSkin LV2
+
+
+;Wizard
+1/90 Vampirism LV2
+1/105 IceStorm LV2
+1/110 FlameDisruptor LV2
+1/115 Mirroring LV2
+1/120 FlameField LV2
+1/125 Blizzard LV2
+1/130 FrozenRains LV2
+1/135 MagicBooster LV2
+1/140 MeteorStrike LV2
+1/145 LavaKing LV2
+1/150 IceThrust LV2
+1/155 StormEscape LV2
+1/160 FastMove LV2
+
+
+;Taoist
+1/90 UltimateEnhancer LV2
+1/100 HealingCircle LV2
+1/105 SummonShinsu LV2
+1/110 Reincarnation LV2
+1/115 SummonHolyDeva LV2
+1/120 Curse LV2
+1/125 Plague LV2
+1/130 PoisonCloud LV2
+1/135 EnergyShield LV2
+1/140 PetEnhancer LV2
+1/145 HeadShot LV2
+1/150 HolyShield LV2
+
+
+;Assassin
+1/80 FireBurst LV2
+1/85 CrescentSlash LV2
+1/105 Trap LV2
+1/110 PoisonSword LV2
+1/115 MoonLight LV2
+1/120 MPEater LV2
+1/125 SwiftFeet LV2
+1/150 DarkBody LV2
+
+1/80 ElementalBarrier LV2
+1/85 BindingShot LV2
+1/105 SummonToad LV2
+1/110 PoisonShot LV2
+1/125 CrippleShot LV2
+1/150 SummonSnakes LV2
+
+
+;CraftingMaterials
+
+
+;Quests
+
+;Level 3
+;Gold
+1/1 Gold 30000 LV3
+1/20 GoldBar LV3
+
+;Pots + Other
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/2 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/2 SunPotion LV3
+1/1 SunPotion LV3
+1/2 SunPotion LV3
+1/1 SunPotion LV3
+1/2 SunPotion LV3
+1/1 SunPotion LV3
+1/3 SunPotion LV3
+
+1/1 BenedictionOil LV3
+1/10 GoldenBenedictionOil LV3
+
+1/2 AwakeningSoul0 LV3
+1/2 AwakeningSoul0 LV3
+
+
+
+
+;Weapons
+1/6000 JinchonSlayer LV3
+1/6000 JinchonStaff LV3
+1/6000 JinchonFeathers LV3
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gems/Orbs
+1/5 ProtectionGem LV3
+1/5 EvilSlayerGem LV3
+1/10 BraveryGem LV3
+1/10 MagicGem LV3
+1/10 SoulGem LV3
+1/15 AccuracyGem LV3
+1/15 AgilityGem LV3
+1/15 PoisonGem LV3
+1/15 FreezingGem LV3
+1/20 StormGem LV3
+1/20 DisillusionGem LV3
+1/20 EnduranceGem LV3
+
+1/75 ProtectionOrb LV3
+1/75 EvilSlayerOrb LV3
+1/100 BraveryOrb LV3
+1/100 MagicOrb LV3
+1/100 SoulOrb LV3
+1/200 AccuracyOrb LV3
+1/200 AgilityOrb LV3
+1/200 PoisonOrb LV3
+1/200 FreezingOrb LV3
+1/200 StormOrb LV3
+1/200 EnduranceOrb LV3
+1/200 DisillusionOrb LV3
+
+;Books
+;Warrior
+1/105 FlamingSword LV3
+1/110 LionRoar LV3
+1/115 BladeStorm LV3
+1/120 CrossHalfMoon LV3
+1/125 BladeAvalanche LV3
+1/130 ProtectionField LV3
+1/135 Rage LV3
+1/140 CounterAttack LV3
+1/145 SlashingBurst LV3
+1/150 Fury LV3
+1/155 ImmortalSkin LV3
+
+
+;Wizard
+1/90 Vampirism LV3
+1/105 IceStorm LV3
+1/110 FlameDisruptor LV3
+1/115 Mirroring LV3
+1/120 FlameField LV3
+1/125 Blizzard LV3
+1/130 FrozenRains LV3
+1/135 MagicBooster LV3
+1/140 MeteorStrike LV3
+1/145 LavaKing LV3
+1/150 IceThrust LV3
+1/155 StormEscape LV3
+1/160 FastMove LV3
+
+
+;Taoist
+1/90 UltimateEnhancer LV3
+1/100 HealingCircle LV3
+1/105 SummonShinsu LV3
+1/110 Reincarnation LV3
+1/115 SummonHolyDeva LV3
+1/120 Curse LV3
+1/125 Plague LV3
+1/130 PoisonCloud LV3
+1/135 EnergyShield LV3
+1/140 PetEnhancer LV3
+1/145 HeadShot LV3
+1/150 HolyShield LV3
+
+
+;Assassin
+1/80 FireBurst LV3
+1/85 CrescentSlash LV3
+1/105 Trap LV3
+1/110 PoisonSword LV3
+1/115 MoonLight LV3
+1/120 MPEater LV3
+1/125 SwiftFeet LV3
+1/150 DarkBody LV3
+
+1/80 ElementalBarrier LV3
+1/85 BindingShot LV3
+1/105 SummonToad LV3
+1/110 PoisonShot LV3
+1/125 CrippleShot LV3
+1/150 SummonSnakes LV3
+
+
+;CraftingMaterials
+
+
+;Quests
+
+;Level 4
+;Gold
+1/1 Gold 30000 LV4
+1/20 GoldBar LV4
+
+;Pots + Other
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/2 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/2 SunPotion LV4
+1/1 SunPotion LV4
+1/2 SunPotion LV4
+1/1 SunPotion LV4
+1/2 SunPotion LV4
+1/1 SunPotion LV4
+1/3 SunPotion LV4
+
+1/1 BenedictionOil LV4
+1/10 GoldenBenedictionOil LV4
+
+1/2 AwakeningSoul0 LV4
+1/2 AwakeningSoul0 LV4
+
+
+
+;Weapons
+1/6000 JinchonSlayer LV4
+1/6000 JinchonStaff LV4
+1/6000 JinchonFeathers LV4
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gems/Orbs
+1/5 ProtectionGem LV4
+1/5 EvilSlayerGem LV4
+1/10 BraveryGem LV4
+1/10 MagicGem LV4
+1/10 SoulGem LV4
+1/15 AccuracyGem LV4
+1/15 AgilityGem LV4
+1/15 PoisonGem LV4
+1/15 FreezingGem LV4
+1/20 StormGem LV4
+1/20 DisillusionGem LV4
+1/20 EnduranceGem LV4
+
+1/75 ProtectionOrb LV4
+1/75 EvilSlayerOrb LV4
+1/100 BraveryOrb LV4
+1/100 MagicOrb LV4
+1/100 SoulOrb LV4
+1/200 AccuracyOrb LV4
+1/200 AgilityOrb LV4
+1/200 PoisonOrb LV4
+1/200 FreezingOrb LV4
+1/200 StormOrb LV4
+1/200 EnduranceOrb LV4
+1/200 DisillusionOrb LV4
+
+;Books
+;Warrior
+1/105 FlamingSword LV4
+1/110 LionRoar LV4
+1/115 BladeStorm LV4
+1/120 CrossHalfMoon LV4
+1/125 BladeAvalanche LV4
+1/130 ProtectionField LV4
+1/135 Rage LV4
+1/140 CounterAttack LV4
+1/145 SlashingBurst LV4
+1/150 Fury LV4
+1/155 ImmortalSkin LV4
+
+
+;Wizard
+1/90 Vampirism LV4
+1/105 IceStorm LV4
+1/110 FlameDisruptor LV4
+1/115 Mirroring LV4
+1/120 FlameField LV4
+1/125 Blizzard LV4
+1/130 FrozenRains LV4
+1/135 MagicBooster LV4
+1/140 MeteorStrike LV4
+1/145 LavaKing LV4
+1/150 IceThrust LV4
+1/155 StormEscape LV4
+1/160 FastMove LV4
+
+
+;Taoist
+1/90 UltimateEnhancer LV4
+1/100 HealingCircle LV4
+1/105 SummonShinsu LV4
+1/110 Reincarnation LV4
+1/115 SummonHolyDeva LV4
+1/120 Curse LV4
+1/125 Plague LV4
+1/130 PoisonCloud LV4
+1/135 EnergyShield LV4
+1/140 PetEnhancer LV4
+1/145 HeadShot LV4
+1/150 HolyShield LV4
+
+
+;Assassin
+1/80 FireBurst LV4
+1/85 CrescentSlash LV4
+1/105 Trap LV4
+1/110 PoisonSword LV4
+1/115 MoonLight LV4
+1/120 MPEater LV4
+1/125 SwiftFeet LV4
+1/150 DarkBody LV4
+
+1/80 ElementalBarrier LV4
+1/85 BindingShot LV4
+1/105 SummonToad LV4
+1/110 PoisonShot LV4
+1/125 CrippleShot LV4
+1/150 SummonSnakes LV4
+
+
+;CraftingMaterials
+
+
+;Quests
+
+;Level 5
+;Gold
+1/1 Gold 30000 LV5
+1/20 GoldBar LV5
+
+;Pots + Other
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/2 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/2 SunPotion LV5
+1/1 SunPotion LV5
+1/2 SunPotion LV5
+1/1 SunPotion LV5
+1/2 SunPotion LV5
+1/1 SunPotion LV5
+1/3 SunPotion LV5
+
+1/1 BenedictionOil LV5
+1/10 GoldenBenedictionOil LV5
+
+1/2 AwakeningSoul0 LV5
+1/2 AwakeningSoul0 LV5
+
+
+
+;Weapons
+1/6000 JinchonSlayer LV5
+1/6000 JinchonStaff LV5
+1/6000 JinchonFeathers LV5
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gems/Orbs
+1/5 ProtectionGem LV5
+1/5 EvilSlayerGem LV5
+1/10 BraveryGem LV5
+1/10 MagicGem LV5
+1/10 SoulGem LV5
+1/15 AccuracyGem LV5
+1/15 AgilityGem LV5
+1/15 PoisonGem LV5
+1/15 FreezingGem LV5
+1/20 StormGem LV5
+1/20 DisillusionGem LV5
+1/20 EnduranceGem LV5
+
+1/75 ProtectionOrb LV5
+1/75 EvilSlayerOrb LV5
+1/100 BraveryOrb LV5
+1/100 MagicOrb LV5
+1/100 SoulOrb LV5
+1/200 AccuracyOrb LV5
+1/200 AgilityOrb LV5
+1/200 PoisonOrb LV5
+1/200 FreezingOrb LV5
+1/200 StormOrb LV5
+1/200 EnduranceOrb LV5
+1/200 DisillusionOrb LV5
+
+;Books
+;Warrior
+1/105 FlamingSword LV5
+1/110 LionRoar LV5
+1/115 BladeStorm LV5
+1/120 CrossHalfMoon LV5
+1/125 BladeAvalanche LV5
+1/130 ProtectionField LV5
+1/135 Rage LV5
+1/140 CounterAttack LV5
+1/145 SlashingBurst LV5
+1/150 Fury LV5
+1/155 ImmortalSkin LV5
+
+
+;Wizard
+1/90 Vampirism LV5
+1/105 IceStorm LV5
+1/110 FlameDisruptor LV5
+1/115 Mirroring LV5
+1/120 FlameField LV5
+1/125 Blizzard LV5
+1/130 FrozenRains LV5
+1/135 MagicBooster LV5
+1/140 MeteorStrike LV5
+1/145 LavaKing LV5
+1/150 IceThrust LV5
+1/155 StormEscape LV5
+1/160 FastMove LV5
+
+
+;Taoist
+1/90 UltimateEnhancer LV5
+1/100 HealingCircle LV5
+1/105 SummonShinsu LV5
+1/110 Reincarnation LV5
+1/115 SummonHolyDeva LV5
+1/120 Curse LV5
+1/125 Plague LV5
+1/130 PoisonCloud LV5
+1/135 EnergyShield LV5
+1/140 PetEnhancer LV5
+1/145 HeadShot LV5
+1/150 HolyShield LV5
+
+
+;Assassin
+1/80 FireBurst LV5
+1/85 CrescentSlash LV5
+1/105 Trap LV5
+1/110 PoisonSword LV5
+1/115 MoonLight LV5
+1/120 MPEater LV5
+1/125 SwiftFeet LV5
+1/150 DarkBody LV5
+
+1/80 ElementalBarrier LV5
+1/85 BindingShot LV5
+1/105 SummonToad LV5
+1/110 PoisonShot LV5
+1/125 CrippleShot LV5
+1/150 SummonSnakes LV5
+
+
+;CraftingMaterials
+
+
+;Quests
+
+;Level 6
+;Gold
+1/1 Gold 30000 LV6
+1/20 GoldBar LV6
+
+;Pots + Other
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/2 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/2 SunPotion LV6
+1/1 SunPotion LV6
+1/2 SunPotion LV6
+1/1 SunPotion LV6
+1/2 SunPotion LV6
+1/1 SunPotion LV6
+1/3 SunPotion LV6
+
+1/1 BenedictionOil LV6
+1/10 GoldenBenedictionOil LV6
+
+1/2 AwakeningSoul0 LV6
+1/2 AwakeningSoul0 LV6
+
+
+
+
+;Weapons
+1/6000 JinchonSlayer LV6
+1/6000 JinchonStaff LV6
+1/6000 JinchonFeathers LV6
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gems/Orbs
+1/5 ProtectionGem LV6
+1/5 EvilSlayerGem LV6
+1/10 BraveryGem LV6
+1/10 MagicGem LV6
+1/10 SoulGem LV6
+1/15 AccuracyGem LV6
+1/15 AgilityGem LV6
+1/15 PoisonGem LV6
+1/15 FreezingGem LV6
+1/20 StormGem LV6
+1/20 DisillusionGem LV6
+1/20 EnduranceGem LV6
+
+1/75 ProtectionOrb LV6
+1/75 EvilSlayerOrb LV6
+1/100 BraveryOrb LV6
+1/100 MagicOrb LV6
+1/100 SoulOrb LV6
+1/200 AccuracyOrb LV6
+1/200 AgilityOrb LV6
+1/200 PoisonOrb LV6
+1/200 FreezingOrb LV6
+1/200 StormOrb LV6
+1/200 EnduranceOrb LV6
+1/200 DisillusionOrb LV6
+
+;Books
+;Warrior
+1/105 FlamingSword LV6
+1/110 LionRoar LV6
+1/115 BladeStorm LV6
+1/120 CrossHalfMoon LV6
+1/125 BladeAvalanche LV6
+1/130 ProtectionField LV6
+1/135 Rage LV6
+1/140 CounterAttack LV6
+1/145 SlashingBurst LV6
+1/150 Fury LV6
+1/155 ImmortalSkin LV6
+
+
+;Wizard
+1/90 Vampirism LV6
+1/105 IceStorm LV6
+1/110 FlameDisruptor LV6
+1/115 Mirroring LV6
+1/120 FlameField LV6
+1/125 Blizzard LV6
+1/130 FrozenRains LV6
+1/135 MagicBooster LV6
+1/140 MeteorStrike LV6
+1/145 LavaKing LV6
+1/150 IceThrust LV6
+1/155 StormEscape LV6
+1/160 FastMove LV6
+
+
+;Taoist
+1/90 UltimateEnhancer LV6
+1/100 HealingCircle LV6
+1/105 SummonShinsu LV6
+1/110 Reincarnation LV6
+1/115 SummonHolyDeva LV6
+1/120 Curse LV6
+1/125 Plague LV6
+1/130 PoisonCloud LV6
+1/135 EnergyShield LV6
+1/140 PetEnhancer LV6
+1/145 HeadShot LV6
+1/150 HolyShield LV6
+
+
+;Assassin
+1/80 FireBurst LV6
+1/85 CrescentSlash LV6
+1/105 Trap LV6
+1/110 PoisonSword LV6
+1/115 MoonLight LV6
+1/120 MPEater LV6
+1/125 SwiftFeet LV6
+1/150 DarkBody LV6
+
+1/80 ElementalBarrier LV6
+1/85 BindingShot LV6
+1/105 SummonToad LV6
+1/110 PoisonShot LV6
+1/125 CrippleShot LV6
+1/150 SummonSnakes LV6
+
+
+;CraftingMaterials
+
+
+;Quests
+
+;Level 7
+;Gold
+1/1 Gold 30000 LV7
+1/20 GoldBar LV7
+
+;Pots + Other
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/2 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/2 SunPotion LV7
+1/1 SunPotion LV7
+1/2 SunPotion LV7
+1/1 SunPotion LV7
+1/2 SunPotion LV7
+1/1 SunPotion LV7
+1/3 SunPotion LV7
+
+1/1 BenedictionOil LV7
+1/10 GoldenBenedictionOil LV7
+
+1/2 AwakeningSoul0 LV7
+1/2 AwakeningSoul0 LV7
+
+
+
+;Weapons
+1/6000 JinchonSlayer LV7
+1/6000 JinchonStaff LV7
+1/6000 JinchonFeathers LV7
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gems/Orbs
+1/5 ProtectionGem LV7
+1/5 EvilSlayerGem LV7
+1/10 BraveryGem LV7
+1/10 MagicGem LV7
+1/10 SoulGem LV7
+1/15 AccuracyGem LV7
+1/15 AgilityGem LV7
+1/15 PoisonGem LV7
+1/15 FreezingGem LV7
+1/20 StormGem LV7
+1/20 DisillusionGem LV7
+1/20 EnduranceGem LV7
+
+1/75 ProtectionOrb LV7
+1/75 EvilSlayerOrb LV7
+1/100 BraveryOrb LV7
+1/100 MagicOrb LV7
+1/100 SoulOrb LV7
+1/200 AccuracyOrb LV7
+1/200 AgilityOrb LV7
+1/200 PoisonOrb LV7
+1/200 FreezingOrb LV7
+1/200 StormOrb LV7
+1/200 EnduranceOrb LV7
+1/200 DisillusionOrb LV7
+
+;Books
+;Warrior
+1/105 FlamingSword LV7
+1/110 LionRoar LV7
+1/115 BladeStorm LV7
+1/120 CrossHalfMoon LV7
+1/125 BladeAvalanche LV7
+1/130 ProtectionField LV7
+1/135 Rage LV7
+1/140 CounterAttack LV7
+1/145 SlashingBurst LV7
+1/150 Fury LV7
+1/155 ImmortalSkin LV7
+
+
+;Wizard
+1/90 Vampirism LV7
+1/105 IceStorm LV7
+1/110 FlameDisruptor LV7
+1/115 Mirroring LV7
+1/120 FlameField LV7
+1/125 Blizzard LV7
+1/130 FrozenRains LV7
+1/135 MagicBooster LV7
+1/140 MeteorStrike LV7
+1/145 LavaKing LV7
+1/150 IceThrust LV7
+1/155 StormEscape LV7
+1/160 FastMove LV7
+
+
+;Taoist
+1/90 UltimateEnhancer LV7
+1/100 HealingCircle LV7
+1/105 SummonShinsu LV7
+1/110 Reincarnation LV7
+1/115 SummonHolyDeva LV7
+1/120 Curse LV7
+1/125 Plague LV7
+1/130 PoisonCloud LV7
+1/135 EnergyShield LV7
+1/140 PetEnhancer LV7
+1/145 HeadShot LV7
+1/150 HolyShield LV7
+
+
+;Assassin
+1/80 FireBurst LV7
+1/85 CrescentSlash LV7
+1/105 Trap LV7
+1/110 PoisonSword LV7
+1/115 MoonLight LV7
+1/120 MPEater LV7
+1/125 SwiftFeet LV7
+1/150 DarkBody LV7
+
+1/80 ElementalBarrier LV7
+1/85 BindingShot LV7
+1/105 SummonToad LV7
+1/110 PoisonShot LV7
+1/125 CrippleShot LV7
+1/150 SummonSnakes LV7
+
+
+;CraftingMaterials
+
+
+;Quests
+
+;Level 8
+;Gold
+1/1 Gold 30000 LV8
+1/20 GoldBar LV8
+
+;Pots + Other
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/2 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/2 SunPotion LV8
+1/1 SunPotion LV8
+1/2 SunPotion LV8
+1/1 SunPotion LV8
+1/2 SunPotion LV8
+1/1 SunPotion LV8
+1/3 SunPotion LV8
+
+1/1 BenedictionOil LV8
+1/10 GoldenBenedictionOil LV8
+
+1/2 AwakeningSoul0 LV8
+1/2 AwakeningSoul0 LV8
+
+
+
+;Weapons
+1/6000 JinchonSlayer LV8
+1/6000 JinchonStaff LV8
+1/6000 JinchonFeathers LV8
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gems/Orbs
+1/5 ProtectionGem LV8
+1/5 EvilSlayerGem LV8
+1/10 BraveryGem LV8
+1/10 MagicGem LV8
+1/10 SoulGem LV8
+1/15 AccuracyGem LV8
+1/15 AgilityGem LV8
+1/15 PoisonGem LV8
+1/15 FreezingGem LV8
+1/20 StormGem LV8
+1/20 DisillusionGem LV8
+1/20 EnduranceGem LV8
+
+1/75 ProtectionOrb LV8
+1/75 EvilSlayerOrb LV8
+1/100 BraveryOrb LV8
+1/100 MagicOrb LV8
+1/100 SoulOrb LV8
+1/200 AccuracyOrb LV8
+1/200 AgilityOrb LV8
+1/200 PoisonOrb LV8
+1/200 FreezingOrb LV8
+1/200 StormOrb LV8
+1/200 EnduranceOrb LV8
+1/200 DisillusionOrb LV8
+
+;Books
+;Warrior
+1/105 FlamingSword LV8
+1/110 LionRoar LV8
+1/115 BladeStorm LV8
+1/120 CrossHalfMoon LV8
+1/125 BladeAvalanche LV8
+1/130 ProtectionField LV8
+1/135 Rage LV8
+1/140 CounterAttack LV8
+1/145 SlashingBurst LV8
+1/150 Fury LV8
+1/155 ImmortalSkin LV8
+
+
+;Wizard
+1/90 Vampirism LV8
+1/105 IceStorm LV8
+1/110 FlameDisruptor LV8
+1/115 Mirroring LV8
+1/120 FlameField LV8
+1/125 Blizzard LV8
+1/130 FrozenRains LV8
+1/135 MagicBooster LV8
+1/140 MeteorStrike LV8
+1/145 LavaKing LV8
+1/150 IceThrust LV8
+1/155 StormEscape LV8
+1/160 FastMove LV8
+
+
+;Taoist
+1/90 UltimateEnhancer LV8
+1/100 HealingCircle LV8
+1/105 SummonShinsu LV8
+1/110 Reincarnation LV8
+1/115 SummonHolyDeva LV8
+1/120 Curse LV8
+1/125 Plague LV8
+1/130 PoisonCloud LV8
+1/135 EnergyShield LV8
+1/140 PetEnhancer LV8
+1/145 HeadShot LV8
+1/150 HolyShield LV8
+
+
+;Assassin
+1/80 FireBurst LV8
+1/85 CrescentSlash LV8
+1/105 Trap LV8
+1/110 PoisonSword LV8
+1/115 MoonLight LV8
+1/120 MPEater LV8
+1/125 SwiftFeet LV8
+1/150 DarkBody LV8
+
+1/80 ElementalBarrier LV8
+1/85 BindingShot LV8
+1/105 SummonToad LV8
+1/110 PoisonShot LV8
+1/125 CrippleShot LV8
+1/150 SummonSnakes LV8
+
+;CraftingMaterials
+
+
+;Quests
+

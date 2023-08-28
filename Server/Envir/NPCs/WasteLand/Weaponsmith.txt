@@ -1,0 +1,75 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Hello, Are you looking for something particular? 
+How can I be of assistance.
+
+I see you're wearing: {<$WEAPON>/CORAL}
+
+<View/@BuySell> Store.
+<Repair/@Repair> Weapon.
+ 
+<Close/@exit>
+
+[@BuySell]
+#SAY
+Which item would you like to Buy or Sell?
+<Buy Back/@BuyBack>
+ 
+<Back/@main>
+
+[@BuyBack]
+#SAY
+These are the items still available to purchase back.
+ 
+<Back/@main>
+
+[@Repair]
+#SAY
+Would you like to repair a weapon?
+Show me the weapon that needs it.
+ 
+<Back/@main>
+
+
+[Types]
+1
+14
+
+[Trade]
+WoodenSword
+WoodenBow
+HoaSword
+Dagger
+EbonySword
+EbonyBow
+BronzeSword
+SharpHoaSword
+ShortSword
+ShortBow
+IronSword
+BoneBow
+BronzeAxe
+HookedSword
+Trident
+Scimitar
+BladesofVelocity
+CompoundBow
+SteelSword
+PrinceDagger
+MartialSword
+KrissSword
+HookedSpear
+IronBlades
+LongBow
+PickAxe

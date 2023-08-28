@@ -1,0 +1,27 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Hello <$USERNAME>, Are you a beginner in this game?
+Please press ('H') to bring up the help menu.
+ 
+<Close/@exit>
+
+[Quests]
+1
+-2
+3
+7
+10
+13
+16
+19

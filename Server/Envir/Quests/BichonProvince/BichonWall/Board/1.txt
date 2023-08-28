@@ -1,0 +1,29 @@
+[@Description]
+BichonWall Bounty, Has been submitted.
+
+[@TaskDescription]
+Collect {5 GoldChestnuts/LightSteelBlue}. 
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+GoldChestnut 5
+
+[@FlagTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+1500
+
+[@GoldReward]
+10000
+
+// Pickup - BichonWall_Board 0 334 259
+// Hand In - BichonWall_Board 0 334 259

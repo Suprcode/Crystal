@@ -1,0 +1,173 @@
+;Gold
+1/1 Gold 15000
+1/100 GoldBar
+
+;Potions
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/2 (HP)DrugXL
+1/2 (MP)DrugXL
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/2 SunPotion
+1/2 SunPotion
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+1/3 BenedictionOil
+1/10 BenedictionOil
+1/5 WarGodOil
+1/30 TaoistDrug(M)
+1/30 MagicDrug(M)
+1/30 ImpactDrug(M)
+1/30 StormDrug(M)
+
+;Weapons
+1/45 JudgementMace
+1/45 WarMageStaff
+1/45 SoulSpringWand
+1/45 BladesOfDarkness
+1/45 FiendBow
+1/125 WarSpiritBlade
+1/125 MagicScythe
+1/125 StoneBambooFan
+1/125 FreezingBlades
+1/125 LitheBow
+1/200 DragonSlayer
+1/200 DragonStaff
+1/200 SoulSabre
+1/200 RoyalBlades
+1/200 MaleficBow
+1/500 SwordOfWarGod
+1/500 BladeOfSorcery
+1/500 HeavenSword
+1/500 BladesOfMagi
+1/500 BowOfForce
+
+;Armours
+1/5 IronArmour(M)
+1/5 IronArmour(F)
+1/5 WizardRobe(M)
+1/5 WitchRobe(F)
+1/5 PearlArmour(M)
+1/5 PearlArmour(F)
+1/5 AncientArmour(M)
+1/5 AncientArmour(F)
+1/5 TemperedArmour(M)
+1/5 TemperedArmour(F)
+1/40 SteelArmour(M)
+1/40 SteelArmour(F)
+1/40 DragonRobe(M)
+1/40 DragonRobe(F)
+1/40 TitanArmour(M)
+1/40 TitanArmour(F)
+1/40 RoyalArmour(M)
+1/40 RoyalArmour(F)
+1/40 StuddedArmour(M)
+1/40 StuddedArmour(F)
+1/1800 HeavenArmour(M)
+1/1800 HeavenArmour(F)
+
+;Helmets
+1/70 BlackIronHelmet
+1/90 HelmetOfHero
+1/150 GreatHelmet
+1/150 WisdomCoronet
+1/150 TaoCoronet
+1/150 RoyalHelmet
+1/10 BrassHelmet
+1/15 SteelHelmet
+1/5 ShamanHelmet
+1/5 SkeletonHelmet
+
+;Belts
+1/20 ChainBelt
+1/30 BronzeBelt
+1/30 GoldBelt
+1/60 AdamantineBelt
+
+;Shoes
+1/20 BlackBoots
+1/20 SilkBoots
+1/30 DragonBoots
+1/45 RedScaleBoots
+
+;Necklaces
+1/80 GaleNecklace
+1/80 GreenBead
+1/80 DemonicBells
+1/80 SoulNecklace
+1/45 ClawNecklace
+1/45 LifeNecklace
+1/45 PearlNecklace
+1/5 LanternNecklace
+1/5 TigerNecklace
+
+;Rings
+1/25 DragonRing
+1/25 RubyRing
+1/25 PlatinumRing
+1/50 PowerRing
+1/50 VioletRing
+1/50 TitanRing
+1/100 OmaSpiritRing
+1/100 NobleRing
+1/100 SoulRing
+1/250 BoundlessRing
+1/250 ThunderRing
+1/250 TaeGukRing
+1/10 GaleRing
+1/5 ExpelRing
+1/5 CoralRing
+1/4000 ProtectionRing
+1/4000 ParalysisRing
+
+;Bracelets
+1/75 KnightBracelet
+1/75 DragonBracelet
+1/75 SoulSpringBracelet
+1/55 SteelGlove
+1/30 SpellBracelet
+1/30 3rdEyeBracelet
+1/100 HangMaWheel
+1/100 BokMaWheel
+1/100 8TrigramWheel
+1/250 SpiritReformer
+1/250 HolyTaoWheel
+1/250 BaekTaGlove
+
+;Gems
+1/300 FreezingOrb
+1/300 DurabilityOrb
+1/300 BraveryOrb
+1/300 MagicOrb
+1/300 SoulOrb
+1/300 ProtectionOrb
+1/300 EvilSlayerOrb
+1/300 PoisonOrb
+1/300 AccuracyOrb
+1/300 AgilityOrb
+
+;Books
+1/35   IceStorm
+1/35   SummonShinsu
+1/35   FlamingSword
+1/35   trap
+1/35   PoisonSword
+1/70   CrossHalfMoon
+1/70   UltimateEnhancer
+1/70   FlameDisruptor
+1/500  SummonHolyDeva
+1/600  Mirroring
+1/100  BladeAvalanche
+1/100  moonlight
+1/100  mpeater

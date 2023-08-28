@@ -1,0 +1,66 @@
+[@Main]
+#IF
+ISADMIN
+#SAY
+Hello {<$USERNAME>/KHAKI}, my name is {<$NPCNAME>/KHAKI}.
+I see you have: {<$MOUNT>/CORAL}
+Mount Loyalty: {<$MOUNTLOYALTY>/CORAL}
+You need to be Lebel 22 for mounts, Your Level: {<$LEVEL>/ORANGE}
+<Buy/@Buy> Mount Equipment
+<Sell/@Sell> Mount Equipment
+
+#ELSEACT
+MOVE 0 300 300
+ 
+[@Sell]
+#SAY
+Sell.
+ 
+<Back/@Main>
+
+[@Buy]
+#SAY
+Buy.
+ 
+<Back/@Main>
+
+
+[Types]
+19
+22
+23
+24
+25
+26
+27
+
+[Trade]
+BengalTiger
+BlueTiger
+BlackLeopard
+IceLeopard
+PantheraTiger
+RedTiger
+WhiteTiger
+Wolf
+BrownWolf
+BlueWolf
+BlackWolf
+WhiteWolf
+LeatherBridle
+GoldBridle
+BronzeBell
+SilverBell
+GoldBell
+GreenBell
+Saddle
+RedRibbon
+BlueRibbon
+BlackRibbon
+LeatherMask
+WhiteMask
+BlackMask
+SilverMask
+TitaniumMask
+RawMeat
+LeanMeat

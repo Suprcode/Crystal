@@ -1,0 +1,120 @@
+;Gold
+1/1 Gold 30000
+
+;Pots + Other
+1/1 (HP)DrugLarge
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (HP)DrugXL
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (MP)DrugXL
+
+1/2 SunPotion
+1/5 SunPotion(M)
+
+1/10 ImpactDrug(L)
+1/10 MagicDrug(L)
+1/10 TaoistDrug(L)
+1/10 StormDrug(L)
+
+1/15 BenedictionOil
+
+1/40 AwakeningSoul0
+1/40 AwakeningSoul0
+
+;Weapons
+1/250 MaleficBow
+1/250 DragonSlayer
+1/250 DragonStaff
+1/250 SoulSabre
+1/450 BurstSword
+1/450 DreadBow
+1/450 HolyBloodSpear
+1/450 DragonBloodSword
+
+;Armour
+1/20 StuddedArmour(M)
+1/20 StuddedArmour(F)
+1/20 SteelArmour(M)
+1/20 SteelArmour(F)
+1/20 DragonRobe(M)
+1/20 DragonRobe(F)
+1/20 TitanArmour(M)
+1/20 TitanArmour(F)
+
+;Helmets
+1/545 ApesCrown
+1/550 SparklingHelmet
+1/560 HelmetOfDarkness
+
+;Necklace
+1/100 CuspidNecklace
+1/100 SorceryAnchor
+1/100 PurifiedMirror
+
+;Bracelets
+1/100 DualTitanAmulet
+1/100 SacredAngelAmulet
+1/100 EvilWhispAmulet
+
+;Rings
+1/100 PledgeRing
+1/100 FiveElementRing
+1/100 CrimsonRubyRing
+
+;Shoes
+
+
+;Belts
+1/40 BoneBelt
+1/150 FlamingGrasp
+1/260 SparklingBelt
+1/165 BeltOfDarkness
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+;;Warrior
+1/500 BladeAvalanche
+1/700 ProtectionField
+1/900 Rage
+1/1500 CounterAttack
+
+;;Wizard
+1/60 FlameDisruptor
+1/500 Mirroring
+1/900 MeteorStrike
+1/1500 MagicBooster
+1/1500 IceThrust
+
+;;Toaist
+1/60 UltimateEnhancer
+1/500 SummonHolyDeva
+1/700 Reincarnation
+1/900 PoisonCloud
+1/900 Plague
+1/1500 PetEnhancer
+
+;;Assassion
+1/60 MPEater
+1/500 SwiftFeet
+1/900 DarkBody
+1/1500 Hemorrhage
+
+;CraftingMaterials
+
+
+;Quests
+

@@ -1,0 +1,31 @@
+;Gold
+1/4 Gold 320
+
+;Pots + Other
+1/20 (HP)DrugMedium 
+1/20 (MP)DrugMedium
+
+
+;Armour Rare
+1/1000 MediumArmour(M)
+1/1000 MediumArmour(F)
+ 
+
+;Shoes
+1/140 OldLoafer
+
+;Belts
+1/140 LeatherBelt
+
+
+;Shields
+1/100 RustlessShield
+
+
+;Stone
+1/1520 McStone(S)
+1/1520 ScStone(S)
+1/1520 DcStone(S)
+1/1920 mcStone(M)
+1/1920 McStone(M)
+1/1920 DcStone(M)

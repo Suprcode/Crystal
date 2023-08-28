@@ -1,0 +1,39 @@
+[@Description]
+You have been very helpful to many people in 
+{Bichon/Yellow}. Do you have any spare time to help me 
+as well? A long time ago, I had a friend that I 
+went hunting with. We went to {BichonDeadMine/Yellow} 
+one day when we where suuounded by 
+dangerous creatures. We tried to escape, but 
+there where just to many of them. My friend got 
+hurt in battle, and he decided to stay behide 
+while I escaped to get some help. I wanted 
+to get some help but no one was brave enough 
+to go help him with me. It's already to late 
+but can you go find the remains of my friend? 
+He always had his necklace on him.
+
+[@TaskDescription]
+Try find {Vincent's/LimeGreen} friend he was last seen on
+{B2 of DeadMine/Yellow}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+1848
+
+[@GoldReward]
+2220
+
+// Pickup - 
+// Hand In - OldSkeleton D404 104 101

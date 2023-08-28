@@ -1,0 +1,71 @@
+;Gold
+1/3 Gold 2500
+
+;Pots + Other
+1/15 SunPotion
+1/15 SunPotion
+1/15 SunPotion
+1/15 SunPotion
+
+
+1/30000 DualTitanAmulet
+1/30000 EvilWhispAmulet
+1/30000 SacredAngelAmulet
+1/40000 FlamingGrasp
+1/15000 CloudRing
+1/15000 RedDemonRing
+1/15000 PoisonRing
+1/15000 DemonMask
+1/15000 VioletOrb
+1/15000 KunroonTear
+1/20000 (H)WheelOfLunar
+1/7000 BenedictionOil
+1/25000 DestinyRing 
+1/25000 OmaSpiritRing
+1/25000 NobleRing
+1/25000 SoulRing
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+

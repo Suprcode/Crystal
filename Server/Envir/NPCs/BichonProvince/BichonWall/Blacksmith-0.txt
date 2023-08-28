@@ -1,0 +1,36 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Welcome Traveller, my name is Bill I'm a Master Artisan.. 
+I have specialized in Weaponry for many year's now.
+ 
+<Special/@SRepair> Repair Weapon.
+ 
+<Close/@exit>
+
+[@SRepair]
+#SAY
+Traveller, You are lucky... We have the materials to do Special repairs.
+ 
+ 
+<Close/@exit>
+
+[Types]
+1
+
+[Quests]
+29
+54
+-54
+59
+-59

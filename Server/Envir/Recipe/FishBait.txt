@@ -1,0 +1,12 @@
+[Recipe]
+Amount 1
+Chance 100
+Gold 100
+
+[Tools]
+
+[Ingredients]
+BugLeg 10
+OmaTeeth 10
+BugEye 10
+BugShell 10

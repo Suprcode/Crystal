@@ -1,0 +1,52 @@
+[@MAIN]
+#IF
+CHECK [540] 1
+#ACT
+GOTO @MAIN-1
+#ELSEACT
+GOTO @CHECK2
+
+[@CHECK2]
+#IF
+CHECK [541] 1
+#ACT
+GOTO @MAIN-2
+#ELSEACT
+GOTO @MAIN-3
+
+[@MAIN-1]
+#SAY
+Hello traveler.. I have been hearing good things about 
+the Emperors good deeds.
+ 
+<Close/@exit>
+
+[@MAIN-2]
+#SAY
+Hello again traveler.. Its a fine day is it not.
+ 
+<Close/@exit>
+
+[@MAIN-3]
+#IF
+CHECKQUEST 157 1
+#SAY
+Thankyou traveler you have saved me some time.
+And boy o boy doesn't she talk a lot of rubbish..
+ 
+So you want my help spreading the good deed's of the <Emperor/@Emperor>?
+<Close/@exit>
+#ELSESAY
+How about you do something for me first? 
+ 
+<Close@exit>
+
+[@Emperor]
+#ACT
+SET [541] 1
+#SAY
+Very well traveler.. 
+ 
+<Close/@exit>
+[Quests]
+156

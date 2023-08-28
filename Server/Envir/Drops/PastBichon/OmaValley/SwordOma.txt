@@ -1,0 +1,80 @@
+;Gold 
+1/5 Gold 500
+
+;Potions
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/20 (HP)DrugXL
+1/20 (MP)DrugXL
+1/10 (HP)DrugLarge
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/10 (MP)DrugLarge
+1/10 SunPotion
+1/20 SunPotion(M)
+1/100 TaoistDrug(M)
+1/100 ImpactDrug(M)
+1/100 MagicDrug(M)
+1/100 StormDrug(S)
+
+;Armours
+1/1000 SteelArmour(M)
+1/1000 SteelArmour(F)
+1/1000 DragonRobe(M)
+1/1000 DragonRobe(F)
+1/1000 TitanArmour(M)
+1/1000 TitanArmour(F)
+1/1000 RoyalArmour(M)
+1/1000 RoyalArmour(F)
+1/1000 StuddedArmour(M)
+1/1000 StuddedArmour(F)
+
+;Rings
+1/60 GoldRing
+1/100 PearlRing
+1/100 BlackRing
+1/100 SerpentEyeRing
+1/120 ExpelRing
+1/120 CoralRing
+1/100 CharmRing
+1/100 MoralRing
+1/1000 DragonRing
+1/1000 RubyRing
+1/1000 PlatinumRing
+1/5000 NobleRing
+1/5000 OmaSpiritRing
+1/5000 SoulRing
+1/7000 ThunderRing
+1/7000 BoundlessRing
+1/7000 TaeGukRing
+
+;Bracelets
+1/4000 HangMaWheel
+1/4000 BokMaWheel
+1/4000 8TrigramWheel
+1/1000 3rdEyeBracelet
+1/1000 SpellBracelet
+1/700 BronzeGlove
+
+;Necklaces
+1/140 ElusionNecklace
+1/1300 PearlNecklace
+1/1300 LifeNecklace
+1/1300 ClawNecklace
+1/200 ConvexLens
+1/200 BambooPipe
+1/200 BlueJadeNecklace
+
+;Stones
+1/80 HealthStone(L)
+1/80 MagicStone(L)
+1/80 PowerStone(L)
+1/250 DCStone(XL)
+1/250 MCStone(XL)
+1/250 SCStone(XL)
+
+;Crafting Material
+1/350 WillMarble
+
+;Books
+1/200 Purification

@@ -1,0 +1,19 @@
+;; Passive Rune
+1/400 PinPointRune
+1/400 EvasiveRune
+1/400 EnrageRune
+1/400 IronWallRune
+1/400 SpeedyMagicianRune
+
+;; Stat Rune
+
+;; PvE Rune
+1/300 MeleeDamageRune
+1/300 MagicDamageRune
+1/300 SpiritualDamageRune
+
+;; PvP Rune
+1/500 DamagePvPRune(-)
+1/500 DamagPvPRune(+)
+1/500 DamageRune(+)
+1/500 DamageRune(-)

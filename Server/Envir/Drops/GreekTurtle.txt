@@ -1,0 +1,7 @@
+;Gold
+1/20 Gold 1200
+
+;Pots + Other
+1/5 (HP)DrugXL
+1/5 (MP)DrugXL
+

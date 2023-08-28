@@ -1,0 +1,1362 @@
+;Level1
+;Gold
+1/1 Gold 50000 LV1
+
+;Pots + Other
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 BenedictionOil LV1
+1/10 GoldenBenedictionOil LV1
+
+1/5 AwakeningSoul0 LV1
+1/10 AwakeningSoul0 LV1
+
+
+
+;Weapons
+1/400 SwordOfWarGod LV1
+1/400 BowOfForce LV1
+1/400 BladeOfSorcery LV1
+1/400 HeavenSword LV1
+1/500 BurstSword LV1
+1/500 HolyBloodSpear LV1
+1/500 DreadBow LV1
+1/500 DragonBloodSword LV1
+1/600 FrozenSabre LV1
+1/600 ConquerorSpear LV1
+1/600 GrimBow LV1
+1/600 BastardSword LV1
+1/900 BlackTigerHammer LV1
+1/900 LethalBow LV1
+1/900 StaffOfLotus LV1
+1/900 FanOfCrane LV1
+1/1100 BarbarianSword LV1
+1/1100 RawSword LV1
+1/1100 BoneCarvedFan LV1
+1/1100 ApusBow LV1
+
+;Armour
+1/1000 HeavenArmour(M) LV1
+1/1000 HeavenArmour(F) LV1
+1/1000 HeavenArcheyRobe(M) LV1
+1/1000 HeavenArcheyRobe(F) LV1
+1/1200 HeavenGrnArmour(M) LV1
+1/1200 HeavenGrnArmour(F) LV1
+1/1200 HeavenRedArmour(M) LV1
+1/1200 HeavenRedArmour(F) LV1
+1/1200 HeavenArmour(M) LV1
+1/1200 HeavenArmour(F) LV1
+1/1200 HeavenGoldArmour(M) LV1
+1/1200 HeavenGoldArmour(F) LV1
+1/1300 WargBraveArmour(M) LV1
+1/1300 WargBraveArmour(F) LV1
+1/1300 WargMagicArmour(M) LV1
+1/1300 WargMagicArmour(F) LV1
+1/1300 WargSoulArmour(M) LV1
+1/1300 WargSoulArmour(F) LV1
+1/1300 WargArmour(M) LV1
+1/1300 WargArmour(F) LV1
+ 
+;Helmets
+
+
+;Necklace
+1/600 NecklaceOfAgony LV1
+
+;Bracelets
+1/600 BraceletOfAgony LV1
+
+;Rings
+1/320 FlameRing LV1
+1/1020 ProtectionRing LV1
+1/1020 ParalysisRing LV1
+1/820 RevivalRing LV1
+1/760 ClearRing LV1
+1/600 RingOfAgony LV1
+1/1320 TeleportRing LV1
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+1/820 WargMedal LV1
+
+;Shields
+1/830 WargShield LV1
+
+
+;Pads
+1/720 ShadowGuards[14d] LV1
+
+;Stone
+1/830 WargStone LV1
+
+;Gems/Orbs
+1/10 BraveryGem LV1
+1/10 MagicGem LV1
+1/10 SoulGem LV1
+1/20 ProtectionGem LV1
+1/20 EvilSlayerGem LV1
+1/20 DurabilityGem LV1
+1/30 PoisonGem LV1
+1/30 FreezingGem LV1
+1/30 AccuracyGem LV1
+1/30 StormGem LV1
+1/30 EnduranceGem LV1
+1/50 CriticalDamgeForge LV1
+1/50 CriticalRateForge LV1
+1/50 HpDrainForge LV1
+1/50 ReflectForge LV1
+1/55 SocketForge(G) LV1
+
+1/100 BraveryOrb LV1
+1/100 SoulOrb LV1
+1/100 StormOrb LV1
+1/100 MagicOrb LV1
+1/130 DurabilityOrb LV1
+1/140 AccuracyOrb LV1
+1/140 AgilityOrb LV1
+1/300 PoisonOrb LV1
+1/300 FreezingOrb LV1
+1/200 EnduranceOrb LV1
+1/200 DisillusionOrb LV1
+
+
+;Books
+;;Warrior
+1/200 ProtectionField LV1
+1/400 Rage LV1
+1/600 CounterAttack LV1
+1/600 SlashingBurst LV1
+ 
+;;Wizard
+1/300 MeteorStrike LV1
+1/500 MagicBooster LV1
+1/700 StormEscape LV1
+1/700 LavaKing LV1
+1/750 FrozenRains LV1
+
+;;Taoist
+1/300 PoisonCloud LV1
+1/400 Plague LV1
+1/750 HeadShot LV1
+1/900 HolyShield LV1
+
+;;Assassin
+1/500 Hemorrhage LV1
+1/700 MoonMist LV1
+1/750 ShadowStep LV1
+1/880 FuryWaves LV1
+
+;Archer
+1/110 NapalmShot LV1
+1/750 OneWithNature LV1
+
+;CraftingMaterials
+
+
+;Quests
+1/2 WargWorldMap Q LV1
+
+
+;Level2
+;Gold
+1/1 Gold 50000 LV2
+
+;Pots + Other
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 BenedictionOil LV2
+1/10 GoldenBenedictionOil LV2
+
+1/5 AwakeningSoul0 LV2
+1/10 AwakeningSoul0 LV2
+
+
+;Weapons
+1/400 SwordOfWarGod LV2
+1/400 BladeOfSorcery LV2
+1/400 BowOfForce LV2
+1/400 HeavenSword LV2
+1/500 DreadBow LV2
+1/500 BurstSword LV2
+1/500 HolyBloodSpear LV2
+1/500 DragonBloodSword LV2
+1/600 FrozenSabre LV2
+1/600 GrimBow LV2
+1/600 ConquerorSpear LV2
+1/600 BastardSword LV2
+1/900 BlackTigerHammer LV2
+1/900 LethalBow LV2
+1/900 StaffOfLotus LV2
+1/900 FanOfCrane LV2
+1/1100 BarbarianSword LV2
+1/1100 RawSword LV2
+1/1100 BoneCarvedFan LV2
+1/1100 ApusBow LV2
+
+;Armour
+1/1000 HeavenArmour(M) LV2
+1/1000 HeavenArmour(F) LV2
+1/1000 HeavenArcheyRobe(M) LV2
+1/1000 HeavenArcheyRobe(F) LV2
+1/1200 HeavenGrnArmour(M) LV2
+1/1200 HeavenGrnArmour(F) LV2
+1/1200 HeavenRedArmour(M) LV2
+1/1200 HeavenRedArmour(F) LV2
+1/1200 HeavenArmour(M) LV2
+1/1200 HeavenArmour(F) LV2
+1/1200 HeavenGoldArmour(M) LV2
+1/1200 HeavenGoldArmour(F) LV2
+1/1300 WargBraveArmour(M) LV2
+1/1300 WargBraveArmour(F) LV2
+1/1300 WargMagicArmour(M) LV2
+1/1300 WargMagicArmour(F) LV2
+1/1300 WargSoulArmour(M) LV2
+1/1300 WargSoulArmour(F) LV2
+1/1300 WargArmour(M) LV1
+1/1300 WargArmour(F) LV1
+ 
+;Helmets
+
+
+;Necklace
+1/600 NecklaceOfAgony LV2
+
+;Bracelets
+1/600 BraceletOfAgony LV2
+
+;Rings
+1/320 FlameRing LV2
+1/1020 ProtectionRing LV2
+1/1020 ParalysisRing LV2
+1/820 RevivalRing LV2
+1/760 ClearRing LV2
+1/600 RingOfAgony LV2
+1/1320 TeleportRing LV2
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+1/820 WargMedal LV2
+
+;Shields
+1/830 WargShield LV2
+
+
+;Pads
+1/720 ShadowGuards[14d] LV2
+
+;Stone
+1/830 WargStone LV2
+
+;Gems/Orbs
+1/10 BraveryGem LV2
+1/10 MagicGem LV2
+1/10 SoulGem LV2
+1/20 ProtectionGem LV2
+1/20 EvilSlayerGem LV2
+1/20 DurabilityGem LV2
+1/30 PoisonGem LV2
+1/30 FreezingGem LV2
+1/30 AccuracyGem LV2
+1/30 StormGem LV2
+1/30 EnduranceGem LV2
+1/50 CriticalDamgeForge LV2
+1/50 CriticalRateForge LV2
+1/50 HpDrainForge LV2
+1/50 ReflectForge LV2
+1/55 SocketForge(G) LV2
+
+1/100 BraveryOrb LV2
+1/100 SoulOrb LV2
+1/100 StormOrb LV2
+1/100 MagicOrb LV2
+1/130 DurabilityOrb LV2
+1/140 AccuracyOrb LV2
+1/140 AgilityOrb LV2
+1/300 PoisonOrb LV2
+1/300 FreezingOrb LV2
+1/200 EnduranceOrb LV2
+1/200 DisillusionOrb LV2
+
+
+;Books
+;;Warrior
+1/200 ProtectionField LV2
+1/400 Rage LV2
+1/600 CounterAttack LV2
+1/600 SlashingBurst LV2
+ 
+;;Wizard
+1/300 MeteorStrike LV2
+1/500 MagicBooster LV2
+1/700 StormEscape LV2
+1/700 LavaKing LV2
+1/750 FrozenRains LV2
+
+;;Taoist
+1/300 PoisonCloud LV2
+1/400 Plague LV2
+1/750 HeadShot LV2
+1/900 HolyShield LV2
+
+;;Assassin
+1/500 Hemorrhage LV2
+1/700 MoonMist LV2
+1/750 ShadowStep LV2
+1/880 FuryWaves LV2
+
+;Archer
+1/110 NapalmShot LV2
+1/750 OneWithNature LV2
+
+;CraftingMaterials
+
+
+;Quests
+1/2 WargWorldMap Q LV2
+
+;Level3
+;Gold
+1/1 Gold 50000 LV3
+
+;Pots + Other
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 BenedictionOil LV3
+1/10 GoldenBenedictionOil LV3
+
+1/5 AwakeningSoul0 LV3
+1/10 AwakeningSoul0 LV3
+
+
+
+;Weapons
+1/400 SwordOfWarGod LV3
+1/400 BowOfForce LV3
+1/400 BladeOfSorcery LV3
+1/400 HeavenSword LV3
+1/500 BurstSword LV3
+1/500 DreadBow LV3
+1/500 HolyBloodSpear LV3
+1/500 DragonBloodSword LV3
+1/600 FrozenSabre LV3
+1/600 GrimBow LV3
+1/600 ConquerorSpear LV3
+1/600 BastardSword LV3
+1/900 BlackTigerHammer LV3
+1/900 LethalBow LV3
+1/900 StaffOfLotus LV3
+1/900 FanOfCrane LV3
+1/1100 BarbarianSword LV3
+1/1100 RawSword LV3
+1/1100 BoneCarvedFan LV3
+1/1100 ApusBow LV3
+
+;Armour
+1/1000 HeavenArmour(M) LV3
+1/1000 HeavenArmour(F) LV3
+1/1200 HeavenGrnArmour(M) LV3
+1/1200 HeavenGrnArmour(F) LV3
+1/1000 HeavenArcheyRobe(M) LV3
+1/1000 HeavenArcheyRobe(F) LV3
+1/1200 HeavenRedArmour(M) LV3
+1/1200 HeavenRedArmour(F) LV3
+1/1200 HeavenArmour(M) LV3
+1/1200 HeavenArmour(F) LV3
+1/1200 HeavenGoldArmour(M) LV3
+1/1200 HeavenGoldArmour(F) LV3
+1/1300 WargBraveArmour(M) LV3
+1/1300 WargBraveArmour(F) LV3
+1/1300 WargMagicArmour(M) LV3
+1/1300 WargMagicArmour(F) LV3
+1/1300 WargSoulArmour(M) LV3
+1/1300 WargSoulArmour(F) LV3
+1/1300 WargArmour(M) LV3
+1/1300 WargArmour(F) LV3
+ 
+;Helmets
+
+
+;Necklace
+1/600 NecklaceOfAgony LV3
+
+;Bracelets
+1/600 BraceletOfAgony LV3
+
+;Rings
+1/320 FlameRing LV3
+1/1020 ProtectionRing LV3
+1/1020 ParalysisRing LV3
+1/820 RevivalRing LV3
+1/760 ClearRing LV3
+1/600 RingOfAgony LV3
+1/1320 TeleportRing LV3
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+1/820 WargMedal LV3
+
+;Shields
+1/830 WargShield LV3
+
+
+;Pads
+1/720 ShadowGuards[14d] LV3
+
+;Stone
+1/830 WargStone LV3
+
+;Gems/Orbs
+1/10 BraveryGem LV3
+1/10 MagicGem LV3
+1/10 SoulGem LV3
+1/20 ProtectionGem LV3
+1/20 EvilSlayerGem LV3
+1/20 DurabilityGem LV3
+1/30 PoisonGem LV3
+1/30 FreezingGem LV3
+1/30 AccuracyGem LV3
+1/30 StormGem LV3
+1/30 EnduranceGem LV3
+1/50 CriticalDamgeForge LV3
+1/50 CriticalRateForge LV3
+1/50 HpDrainForge LV3
+1/50 ReflectForge LV3
+1/55 SocketForge(G) LV3
+
+1/100 BraveryOrb LV3
+1/100 SoulOrb LV3
+1/100 StormOrb LV3
+1/100 MagicOrb LV3
+1/130 DurabilityOrb LV3
+1/140 AccuracyOrb LV3
+1/140 AgilityOrb LV3
+1/300 PoisonOrb LV3
+1/300 FreezingOrb LV3
+1/200 EnduranceOrb LV3
+1/200 DisillusionOrb LV3
+
+
+;Books
+;;Warrior
+1/200 ProtectionField LV3
+1/400 Rage LV3
+1/600 CounterAttack LV3
+1/600 SlashingBurst LV3
+ 
+;;Wizard
+1/300 MeteorStrike LV3
+1/500 MagicBooster LV3
+1/700 StormEscape LV3
+1/700 LavaKing LV3
+1/750 FrozenRains LV3
+
+;;Taoist
+1/300 PoisonCloud LV3
+1/400 Plague LV3
+1/750 HeadShot LV3
+1/900 HolyShield LV3
+
+;;Assassin
+1/500 Hemorrhage LV3
+1/700 MoonMist LV3
+1/750 ShadowStep LV3
+1/880 FuryWaves LV3
+
+
+;Archer
+1/110 NapalmShot LV3
+1/750 OneWithNature LV3
+
+;CraftingMaterials
+
+
+;Quests
+1/2 WargWorldMap Q LV3
+
+;Level4
+;Gold
+1/1 Gold 50000 LV4
+
+;Pots + Other
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 BenedictionOil LV4
+1/10 GoldenBenedictionOil LV4
+
+1/5 AwakeningSoul0 LV4
+1/10 AwakeningSoul0 LV4
+
+
+
+;Weapons
+1/400 SwordOfWarGod LV4
+1/400 BowOfForce LV4
+1/400 BladeOfSorcery LV4
+1/400 HeavenSword LV4
+1/500 BurstSword LV4
+1/500 DreadBow LV4
+1/500 HolyBloodSpear LV4
+1/500 DragonBloodSword LV4
+1/600 FrozenSabre LV4
+1/600 GrimBow LV4
+1/600 ConquerorSpear LV4
+1/600 BastardSword LV4
+1/900 BlackTigerHammer LV4
+1/900 LethalBow LV4
+1/900 StaffOfLotus LV4
+1/900 FanOfCrane LV4
+1/1100 BarbarianSword LV4
+1/1100 RawSword LV4
+1/1100 BoneCarvedFan LV4
+1/1100 ApusBow LV4
+
+;Armour
+1/1000 HeavenArmour(M) LV4
+1/1000 HeavenArmour(F) LV4
+1/1000 HeavenArcheyRobe(M) LV4
+1/1000 HeavenArcheyRobe(F) LV4
+1/1200 HeavenGrnArmour(M) LV4
+1/1200 HeavenGrnArmour(F) LV4
+1/1200 HeavenRedArmour(M) LV4
+1/1200 HeavenRedArmour(F) LV4
+1/1200 HeavenArmour(M) LV4
+1/1200 HeavenArmour(F) LV4
+1/1200 HeavenGoldArmour(M) LV4
+1/1200 HeavenGoldArmour(F) LV4
+1/1300 WargBraveArmour(M) LV4
+1/1300 WargBraveArmour(F) LV4
+1/1300 WargMagicArmour(M) LV4
+1/1300 WargMagicArmour(F) LV4
+1/1300 WargSoulArmour(M) LV4
+1/1300 WargSoulArmour(F) LV4
+1/1300 WargArmour(M) LV4
+1/1300 WargArmour(F) LV4
+
+
+;Helmets
+
+
+;Necklace
+1/600 NecklaceOfAgony LV4
+
+;Bracelets
+1/600 BraceletOfAgony LV4
+
+;Rings
+1/320 FlameRing LV4
+1/1020 ProtectionRing LV4
+1/1020 ParalysisRing LV4
+1/820 RevivalRing LV4
+1/760 ClearRing LV4
+1/600 RingOfAgony LV4
+1/1320 TeleportRing LV4
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+1/820 WargMedal LV4
+
+;Shields
+1/830 WargShield LV4
+
+
+;Pads
+1/720 ShadowGuards[14d] LV4
+
+;Stone
+1/830 WargStone LV4
+
+;Gems/Orbs
+1/10 BraveryGem LV4
+1/10 MagicGem LV4
+1/10 SoulGem LV4
+1/20 ProtectionGem LV4
+1/20 EvilSlayerGem LV4
+1/20 DurabilityGem LV4
+1/30 PoisonGem LV4
+1/30 FreezingGem LV4
+1/30 AccuracyGem LV4
+1/30 StormGem LV4
+1/30 EnduranceGem LV4
+1/50 CriticalDamgeForge LV4
+1/50 CriticalRateForge LV4
+1/50 HpDrainForge LV4
+1/50 ReflectForge LV4
+1/55 SocketForge(G) LV4
+
+1/100 BraveryOrb LV4
+1/100 SoulOrb LV4
+1/100 StormOrb LV4
+1/100 MagicOrb LV4
+1/130 DurabilityOrb LV4
+1/140 AccuracyOrb LV4
+1/140 AgilityOrb LV4
+1/300 PoisonOrb LV4
+1/300 FreezingOrb LV4
+1/200 EnduranceOrb LV4
+1/200 DisillusionOrb LV4
+
+
+;Books
+;;Warrior
+1/200 ProtectionField LV4
+1/400 Rage LV4
+1/600 CounterAttack LV4
+1/600 SlashingBurst LV4
+ 
+;;Wizard
+1/300 MeteorStrike LV4
+1/500 MagicBooster LV4
+1/700 StormEscape LV4
+1/700 LavaKing LV4
+1/750 FrozenRains LV4
+
+;;Taoist
+1/300 PoisonCloud LV4
+1/400 Plague LV4
+1/750 HeadShot LV4
+1/900 HolyShield LV4
+
+;;Assassin
+1/500 Hemorrhage LV4
+1/700 MoonMist LV4
+1/750 ShadowStep LV4
+1/880 FuryWaves LV4
+
+
+;Archer
+1/110 NapalmShot LV4
+1/750 OneWithNature LV4
+
+;CraftingMaterials
+
+
+;Quests
+1/2 WargWorldMap Q LV4
+
+
+;Level5
+;Gold
+1/1 Gold 50000 LV5
+
+;Pots + Other
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 BenedictionOil LV5
+1/10 GoldenBenedictionOil LV5
+
+1/5 AwakeningSoul0 LV5
+1/10 AwakeningSoul0 LV5
+
+
+
+;Weapons
+1/400 BowOfForce LV5
+1/400 SwordOfWarGod LV5
+1/400 BladeOfSorcery LV5
+1/400 HeavenSword LV5
+1/500 BurstSword LV5
+1/500 HolyBloodSpear LV5
+1/500 DreadBow LV5
+1/500 DragonBloodSword LV5
+1/600 FrozenSabre LV5
+1/600 GrimBow LV5
+1/600 ConquerorSpear LV5
+1/600 BastardSword LV5
+1/900 BlackTigerHammer LV5
+1/900 LethalBow LV5
+1/900 StaffOfLotus LV5
+1/900 FanOfCrane LV5
+1/1100 BarbarianSword LV5
+1/1100 ApusBow LV5
+1/1100 RawSword LV5
+1/1100 BoneCarvedFan LV5
+
+;Armour
+1/1000 HeavenArmour(M) LV5
+1/1000 HeavenArmour(F) LV5
+1/1000 HeavenArcheyRobe(M) LV5
+1/1000 HeavenArcheyRobe(F) LV5
+1/1200 HeavenGrnArmour(M) LV5
+1/1200 HeavenGrnArmour(F) LV5
+1/1200 HeavenRedArmour(M) LV5
+1/1200 HeavenRedArmour(F) LV5
+1/1200 HeavenArmour(M) LV5
+1/1200 HeavenArmour(F) LV5
+1/1200 HeavenGoldArmour(M) LV5
+1/1200 HeavenGoldArmour(F) LV5
+1/1300 WargBraveArmour(M) LV5
+1/1300 WargBraveArmour(F) LV5
+1/1300 WargMagicArmour(M) LV5
+1/1300 WargMagicArmour(F) LV5
+1/1300 WargSoulArmour(M) LV5
+1/1300 WargSoulArmour(F) LV5
+1/1300 WargArmour(M) LV5
+1/1300 WargArmour(F) LV5
+ 
+;Helmets
+
+
+;Necklace
+1/600 NecklaceOfAgony LV5
+
+;Bracelets
+1/600 BraceletOfAgony LV5
+
+;Rings
+1/320 FlameRing LV5
+1/1020 ProtectionRing LV5
+1/1020 ParalysisRing LV5
+1/820 RevivalRing LV5
+1/760 ClearRing LV5
+1/600 RingOfAgony LV5
+1/1320 TeleportRing LV5
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+1/820 WargMedal LV5
+
+;Shields
+1/830 WargShield LV5
+
+
+;Pads
+1/720 ShadowGuards[14d] LV5
+
+;Stone
+1/830 WargStone LV5
+
+;Gems/Orbs
+1/10 BraveryGem LV5
+1/10 MagicGem LV5
+1/10 SoulGem LV5
+1/20 ProtectionGem LV5
+1/20 EvilSlayerGem LV5
+1/20 DurabilityGem LV5
+1/30 PoisonGem LV5
+1/30 FreezingGem LV5
+1/30 AccuracyGem LV5
+1/30 StormGem LV5
+1/30 EnduranceGem LV5
+1/50 CriticalDamgeForge LV5
+1/50 CriticalRateForge LV5
+1/50 HpDrainForge LV5
+1/50 ReflectForge LV5
+1/55 SocketForge(G) LV5
+
+1/100 BraveryOrb LV5
+1/100 SoulOrb LV5
+1/100 StormOrb LV5
+1/100 MagicOrb LV5
+1/130 DurabilityOrb LV5
+1/140 AccuracyOrb LV5
+1/140 AgilityOrb LV5
+1/300 PoisonOrb LV5
+1/300 FreezingOrb LV5
+1/200 EnduranceOrb LV5
+1/200 DisillusionOrb LV5
+
+
+;Books
+;;Warrior
+1/200 ProtectionField LV5
+1/400 Rage LV5
+1/600 CounterAttack LV5
+1/600 SlashingBurst LV5
+ 
+;;Wizard
+1/300 MeteorStrike LV5
+1/500 MagicBooster LV5
+1/700 StormEscape LV5
+1/700 LavaKing LV5
+1/750 FrozenRains LV5
+
+;;Taoist
+1/300 PoisonCloud LV5
+1/400 Plague LV5
+1/750 HeadShot LV5
+1/900 HolyShield LV5
+
+;;Assassin
+1/500 Hemorrhage LV5
+1/700 MoonMist LV5
+1/750 ShadowStep LV5
+1/880 FuryWaves LV5
+
+
+;Archer
+1/110 NapalmShot LV5
+1/750 OneWithNature LV5
+
+;CraftingMaterials
+
+
+;Quests
+1/2 WargWorldMap Q LV5
+
+
+;Level
+;Gold
+1/1 Gold 50000 LV6
+
+;Pots + Other
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 BenedictionOil LV6
+1/10 GoldenBenedictionOil LV6
+
+1/5 AwakeningSoul0 LV6
+1/10 AwakeningSoul0 LV6
+
+
+
+;Weapons
+1/400 SwordOfWarGod LV6
+1/400 BladeOfSorcery LV6
+1/400 BowOfForce LV6
+1/400 HeavenSword LV6
+1/500 BurstSword LV6
+1/500 HolyBloodSpear LV6
+1/500 DragonBloodSword LV6
+1/500 DreadBow LV6
+1/600 FrozenSabre LV6
+1/600 GrimBow LV6
+1/600 ConquerorSpear LV6
+1/600 BastardSword LV6
+1/900 BlackTigerHammer LV6
+1/900 LethalBow LV6
+1/900 StaffOfLotus LV6
+1/900 FanOfCrane LV6
+1/1100 BarbarianSword LV6
+1/1100 RawSword LV6
+1/1100 BoneCarvedFan LV6
+1/1100 ApusBow LV6
+
+;Armour
+1/1000 HeavenArmour(M) LV6
+1/1000 HeavenArmour(F) LV6
+1/1000 HeavenArcheyRobe(M) LV6
+1/1000 HeavenArcheyRobe(F) LV6
+1/1200 HeavenGrnArmour(M) LV6
+1/1200 HeavenGrnArmour(F) LV6
+1/1200 HeavenRedArmour(M) LV6
+1/1200 HeavenRedArmour(F) LV6
+1/1200 HeavenArmour(M) LV6
+1/1200 HeavenArmour(F) LV6
+1/1200 HeavenGoldArmour(M) LV6
+1/1200 HeavenGoldArmour(F) LV6
+1/1300 WargBraveArmour(M) LV6
+1/1300 WargBraveArmour(F) LV6
+1/1300 WargMagicArmour(M) LV6
+1/1300 WargMagicArmour(F) LV6
+1/1300 WargSoulArmour(M) LV6
+1/1300 WargSoulArmour(F) LV6
+1/1300 WargArmour(M) LV6
+1/1300 WargArmour(F) LV6
+ 
+;Helmets
+
+
+;Necklace
+1/600 NecklaceOfAgony LV6
+
+;Bracelets
+1/600 BraceletOfAgony LV6
+
+;Rings
+1/320 FlameRing LV6
+1/1020 ProtectionRing LV6
+1/1020 ParalysisRing LV6
+1/820 RevivalRing LV6
+1/760 ClearRing LV6
+1/600 RingOfAgony LV6
+1/1320 TeleportRing LV6
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+1/820 WargMedal LV6
+
+;Shields
+1/830 WargShield LV6
+
+
+;Pads
+1/720 ShadowGuards[14d] LV6
+
+;Stone
+1/830 WargStone LV6
+
+;Gems/Orbs
+1/10 BraveryGem LV6
+1/10 MagicGem LV6
+1/10 SoulGem LV6
+1/20 ProtectionGem LV6
+1/20 EvilSlayerGem LV6
+1/20 DurabilityGem LV6
+1/30 PoisonGem LV6
+1/30 FreezingGem LV6
+1/30 AccuracyGem LV6
+1/30 StormGem LV6
+1/30 EnduranceGem LV6
+1/50 CriticalDamgeForge LV6
+1/50 CriticalRateForge LV6
+1/50 HpDrainForge LV6
+1/50 ReflectForge LV6
+1/55 SocketForge(G) LV6
+
+1/100 BraveryOrb LV6
+1/100 SoulOrb LV6
+1/100 StormOrb LV6
+1/100 MagicOrb LV6
+1/130 DurabilityOrb LV6
+1/140 AccuracyOrb LV6
+1/140 AgilityOrb LV6
+1/300 PoisonOrb LV6
+1/300 FreezingOrb LV6
+1/200 EnduranceOrb LV6
+1/200 DisillusionOrb LV6
+
+
+;Books
+;;Warrior
+1/200 ProtectionField LV6
+1/400 Rage LV6
+1/600 CounterAttack LV6
+1/600 SlashingBurst LV6
+ 
+;;Wizard
+1/300 MeteorStrike LV6
+1/500 MagicBooster LV6
+1/700 StormEscape LV6
+1/700 LavaKing LV6
+1/750 FrozenRains LV6
+
+;;Taoist
+1/300 PoisonCloud LV6
+1/400 Plague LV6
+1/750 HeadShot LV6
+1/900 HolyShield LV6
+
+;;Assassin
+1/500 Hemorrhage LV6
+1/700 MoonMist LV6
+1/750 ShadowStep LV6
+1/880 FuryWaves LV6
+
+
+;Archer
+1/110 NapalmShot LV6
+1/750 OneWithNature LV6
+
+;CraftingMaterials
+
+
+;Quests
+1/2 WargWorldMap Q LV6
+
+;Level7
+;Gold
+1/1 Gold 50000 LV7
+
+;Pots + Other
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 BenedictionOil LV7
+1/10 GoldenBenedictionOil LV7
+
+1/5 AwakeningSoul0 LV7
+1/10 AwakeningSoul0 LV7
+
+
+
+;Weapons
+1/400 BowOfForce LV7
+1/400 SwordOfWarGod LV7
+1/400 BladeOfSorcery LV7
+1/400 HeavenSword LV7
+1/500 BurstSword LV7
+1/500 DreadBow LV7
+1/500 HolyBloodSpear LV7
+1/500 DragonBloodSword LV7
+1/600 FrozenSabre LV7
+1/600 GrimBow LV7
+1/600 ConquerorSpear LV7
+1/600 BastardSword LV7
+1/900 BlackTigerHammer LV7
+1/900 LethalBow LV7
+1/900 StaffOfLotus LV7
+1/900 FanOfCrane LV7
+1/1100 BarbarianSword LV7
+1/1100 RawSword LV7
+1/1100 BoneCarvedFan LV7
+1/1100 ApusBow LV7
+
+;Armour
+1/1000 HeavenArmour(M) LV7
+1/1000 HeavenArmour(F) LV7
+1/1000 HeavenArcheyRobe(M) LV7
+1/1000 HeavenArcheyRobe(F) LV7
+1/1200 HeavenGrnArmour(M) LV7
+1/1200 HeavenGrnArmour(F) LV7
+1/1200 HeavenRedArmour(M) LV7
+1/1200 HeavenRedArmour(F) LV7
+1/1200 HeavenArmour(M) LV7
+1/1200 HeavenArmour(F) LV7
+1/1200 HeavenGoldArmour(M) LV7
+1/1200 HeavenGoldArmour(F) LV7
+1/1300 WargBraveArmour(M) LV7
+1/1300 WargBraveArmour(F) LV7
+1/1300 WargMagicArmour(M) LV7
+1/1300 WargMagicArmour(F) LV7
+1/1300 WargSoulArmour(M) LV7
+1/1300 WargSoulArmour(F) LV7
+1/1300 WargArmour(M) LV7
+1/1300 WargArmour(F) LV7
+
+;Helmets
+
+
+;Necklace
+1/600 NecklaceOfAgony LV7
+
+;Bracelets
+1/600 BraceletOfAgony LV7
+
+;Rings
+1/320 FlameRing LV7
+1/1020 ProtectionRing LV7
+1/1020 ParalysisRing LV7
+1/820 RevivalRing LV7
+1/760 ClearRing LV7
+1/600 RingOfAgony LV7
+1/1320 TeleportRing LV7
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+1/820 WargMedal LV7
+
+;Shields
+1/830 WargShield LV7
+
+
+;Pads
+1/720 ShadowGuards[14d] LV7
+
+;Stone
+1/830 WargStone LV7
+
+;Gems/Orbs
+1/10 BraveryGem LV7
+1/10 MagicGem LV7
+1/10 SoulGem LV7
+1/20 ProtectionGem LV7
+1/20 EvilSlayerGem LV7
+1/20 DurabilityGem LV7
+1/30 PoisonGem LV7
+1/30 FreezingGem LV7
+1/30 AccuracyGem LV7
+1/30 StormGem LV7
+1/30 EnduranceGem LV7
+1/50 CriticalDamgeForge LV7
+1/50 CriticalRateForge LV7
+1/50 HpDrainForge LV7
+1/50 ReflectForge LV7
+1/55 SocketForge(G) LV7
+
+1/100 BraveryOrb LV7
+1/100 SoulOrb LV7
+1/100 StormOrb LV7
+1/100 MagicOrb LV7
+1/130 DurabilityOrb LV7
+1/140 AccuracyOrb LV7
+1/140 AgilityOrb LV7
+1/300 PoisonOrb LV7
+1/300 FreezingOrb LV7
+1/200 EnduranceOrb LV7
+1/200 DisillusionOrb LV7
+
+
+;Books
+;;Warrior
+1/200 ProtectionField LV7
+1/400 Rage LV7
+1/600 CounterAttack LV7
+1/600 SlashingBurst LV7
+ 
+;;Wizard
+1/300 MeteorStrike LV7
+1/500 MagicBooster LV7
+1/700 StormEscape LV7
+1/700 LavaKing LV7
+1/750 FrozenRains LV7
+
+;;Taoist
+1/300 PoisonCloud LV7
+1/400 Plague LV7
+1/750 HeadShot LV7
+1/900 HolyShield LV7
+
+;;Assassin
+1/500 Hemorrhage LV7
+1/700 MoonMist LV7
+1/750 ShadowStep LV7
+1/880 FuryWaves LV7
+
+
+;Archer
+1/110 NapalmShot LV7
+1/750 OneWithNature LV7
+
+;CraftingMaterials
+
+
+;Quests
+1/2 WargWorldMap Q LV7
+
+
+
+;Level8
+;Gold
+1/1 Gold 50000 LV8
+
+;Pots + Other
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 BenedictionOil LV8
+1/10 GoldenBenedictionOil LV8
+
+1/5 AwakeningSoul0 LV8
+1/10 AwakeningSoul0 LV8
+
+
+
+;Weapons
+1/400 SwordOfWarGod LV8
+1/400 BowOfForce LV8
+1/400 BladeOfSorcery LV8
+1/400 HeavenSword LV8
+1/500 DreadBow LV8
+1/500 BurstSword LV8
+1/500 HolyBloodSpear LV8
+1/500 DragonBloodSword LV8
+1/600 FrozenSabre LV8
+1/600 GrimBow LV8
+1/600 ConquerorSpear LV8
+1/600 BastardSword LV8
+1/900 BlackTigerHammer LV8
+1/900 LethalBow LV8
+1/900 StaffOfLotus LV8
+1/900 FanOfCrane LV8
+1/1100 BarbarianSword LV8
+1/1100 RawSword LV8
+1/1100 BoneCarvedFan LV8
+1/1100 ApusBow LV8
+
+;Armour
+1/1000 HeavenArmour(M) LV8
+1/1000 HeavenArmour(F) LV8
+1/1000 HeavenArcheyRobe(M) LV8
+1/1000 HeavenArcheyRobe(F) LV8
+1/1200 HeavenGrnArmour(M) LV8
+1/1200 HeavenGrnArmour(F) LV8
+1/1200 HeavenRedArmour(M) LV8
+1/1200 HeavenRedArmour(F) LV8
+1/1200 HeavenArmour(M) LV8
+1/1200 HeavenArmour(F) LV8
+1/1200 HeavenGoldArmour(M) LV8
+1/1200 HeavenGoldArmour(F) LV8
+1/1300 WargBraveArmour(M) LV8
+1/1300 WargBraveArmour(F) LV8
+1/1300 WargMagicArmour(M) LV8
+1/1300 WargMagicArmour(F) LV8
+1/1300 WargSoulArmour(M) LV8
+1/1300 WargSoulArmour(F) LV8
+1/1300 WargArmour(M) LV8
+1/1300 WargArmour(F) LV8
+
+;Helmets
+
+
+;Necklace
+1/600 NecklaceOfAgony LV8
+
+;Bracelets
+1/600 BraceletOfAgony LV8
+
+;Rings
+1/320 FlameRing LV8
+1/1020 ProtectionRing LV8
+1/1020 ParalysisRing LV8
+1/820 RevivalRing LV8
+1/760 ClearRing LV8
+1/600 RingOfAgony LV8
+1/1320 TeleportRing LV8
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+1/820 WargMedal LV8
+
+;Shields
+1/830 WargShield LV8
+
+
+;Pads
+1/720 ShadowGuards[14d] LV8
+
+;Stone
+1/830 WargStone LV8
+
+;Gems/Orbs
+1/10 BraveryGem LV8
+1/10 MagicGem LV8
+1/10 SoulGem LV8
+1/20 ProtectionGem LV8
+1/20 EvilSlayerGem LV8
+1/20 DurabilityGem LV8
+1/30 PoisonGem LV8
+1/30 FreezingGem LV8
+1/30 AccuracyGem LV8
+1/30 StormGem LV8
+1/30 EnduranceGem LV8
+1/50 CriticalDamgeForge LV8
+1/50 CriticalRateForge LV8
+1/50 HpDrainForge LV8
+1/50 ReflectForge LV8
+1/55 SocketForge(G) LV8
+
+1/100 BraveryOrb LV8
+1/100 SoulOrb LV8
+1/100 StormOrb LV8
+1/100 MagicOrb LV8
+1/130 DurabilityOrb LV8
+1/140 AccuracyOrb LV8
+1/140 AgilityOrb LV8
+1/300 PoisonOrb LV8
+1/300 FreezingOrb LV8
+1/200 EnduranceOrb LV8
+1/200 DisillusionOrb LV8
+
+
+;Books
+;;Warrior
+1/200 ProtectionField LV8
+1/400 Rage LV8
+1/600 CounterAttack LV8
+1/600 SlashingBurst LV8
+ 
+;;Wizard
+1/300 MeteorStrike LV8
+1/500 MagicBooster LV8
+1/700 StormEscape LV8
+1/700 LavaKing LV8
+1/750 FrozenRains LV8
+
+;;Taoist
+1/300 PoisonCloud LV8
+1/400 Plague LV8
+1/750 HeadShot LV8
+1/900 HolyShield LV8
+
+;;Assassin
+1/500 Hemorrhage LV8
+1/700 MoonMist LV8
+1/750 ShadowStep LV8
+1/880 FuryWaves LV8
+
+
+;Archer
+1/110 NapalmShot LV8
+1/750 OneWithNature LV8
+
+;CraftingMaterials
+
+
+;Quests
+1/2 WargWorldMap Q LV8

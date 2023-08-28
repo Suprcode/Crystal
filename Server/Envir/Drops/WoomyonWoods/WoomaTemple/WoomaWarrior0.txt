@@ -1,0 +1,86 @@
+;Gold
+1/3 Gold 4000
+
+;Potions
+1/3 (HP)DrugMedium
+1/3 (MP)DrugMedium
+1/3 (HP)DrugMedium
+1/3 (MP)DrugMedium
+1/7 (HP)DrugLarge
+1/7 (MP)DrugLarge
+1/7 (HP)DrugLarge
+1/7 (MP)DrugLarge
+1/5 SunPotion
+1/10 SunPotion
+1/15 SunPotion(M)
+1/50 OldGinseng
+
+;Armours
+1/40 HeavyArmour(M) 
+1/40 HeavyArmour(F) 
+1/40 MagicRobe(M) 
+1/40 MagicRobe(F) 
+1/40 SoulArmour(M) 
+1/40 SoulArmour(F) 
+1/40 RelicArmour(M) 
+1/40 RelicArmour(F) 
+1/40 LightLeatherArmour(M) 
+1/40 LightLeatherArmour(F)
+
+;Helmets
+1/25 MagicHelmet
+1/70 BrassHelmet
+1/100 ShamanHelmet
+1/100 SkeletonHelmet
+1/400 GoldenTiara 
+
+;Weapons
+1/15 PrinceDagger
+1/15 MartialSword
+1/15 HookedSpear
+1/15 KrissSword
+1/15 IronBlades
+1/15 LongBow
+1/25 PowerAxe
+1/40 PurifierSword
+1/1000 FireBloodSword
+1/100000 GreatAxe
+1/100000 MageStaff
+1/100000 SerpentSword
+1/100000 DoubleBlades
+1/100000 SilverBow
+
+;Rings
+1/100 BlackRing
+1/100 SerpentEyeRing
+1/100 PearlRing
+1/100 GoldRing
+1/125 SkeletonRing
+1/100 IronRing
+1/150 CharmRing
+1/150 MoralRing
+
+;Bracelets
+1/80 HardGlove
+1/80 MagicBracelet
+1/90 StrainBracelet
+1/100 MonkBracelet
+1/100 EbonyBracelet
+1/140 DeathGauntlet
+1/150 GoldBracelet
+
+;Necklaces
+1/70 LanternNecklace
+1/70 TigerNecklace
+1/100 ElusionNecklace
+1/60 PlatinumNecklace
+1/125 BlueJadeNecklace
+1/125 BambooPipe
+1/125 ConvexLens
+
+;Belts
+1/250 BronzeBelt
+
+;Quest
+1/150 WoomaHeart 
+

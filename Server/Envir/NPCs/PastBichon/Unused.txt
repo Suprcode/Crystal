@@ -1,0 +1,109 @@
+[@main]
+#SAY
+Feature to come..
+
+
+[@mainremoved]
+It is every warrior's dream to own the best
+available weapon in the world. Don't you agree?
+I can make your ordinary weapon much more special.
+What do you say? 
+<Ask to refine weapon/@upgrade>
+<Take the refined weapon/@getbackupgnow>
+<Close/@exit>
+
+[@upgrade]
+#SAY
+So, Is this what you want to refine?
+Ir will cost <$UPGRADEWEAPONFEE>gold and You definately
+need <BlackIronOre/@Biron>, <accessories/@Etc>, <money/@Gold> and
+<Weapon/@Weapon> you wish to refine. The other materials can
+be procured from the things in your bag.
+You want to go for it? 
+<Accept refining/@upgradenow>
+<Back/@main>
+
+[@Biron]
+#SAY
+BlackIronOre is a strong metal used for making weapons.
+BlackIronOre can be obtained from the mines, the higher
+the purity, the better chance of a good upgrade.
+My eyesight is poor, so i will take all BlackIronOre
+that is in your Bag 
+<Back/@upgrade>
+
+[@Etc]
+#SAY
+Accessories are items such as Necklaces, Bracelets and
+Rings. The higher level needed to wear, the better
+the chance of the refine working. My eyesight is not
+very good, so i will take all accessories from your bag 
+<Back/@upgrade>
+
+[@Weapon]
+#SAY
+The weapon I will use is the weapon that is in your hand at 
+the time of the request. 
+<Back/@upgrade>
+
+[@Gold]
+#SAY
+I can't upgrade your weapon for free. As my work is of
+such a high standard i charge <$UPGRADEWEAPONFEE> per
+upgrade.
+<Back/@upgrade>
+
+[@upgradenow]
+#SAY
+I will take your <$USERWEAPON> from you to refine.
+My eyesight isn't very good so I will take 
+all the BlackIronOre and accessories in refinery window.
+Please place what you would like to use in there.
+<Cancel Upgrade/@main>
+
+
+[~@upgradenow_ok]
+#SAY
+It was hard but I think I have done a good job. 
+<Get back weapon now/@getbackupgnow>
+<Collect weapon later/@main>
+
+[~@upgradenow_ing]
+#SAY
+I am already working on an item for you
+Come back later... 
+<Back/@main>
+
+[~@upgradenow_fail]
+#SAY
+Hey <$USERNAME>. Are you trying to confuse me?
+You are missing one or more of the vital ingredients
+Check you are wearing a weapon, have the BlackIronOre, accessories
+and most importantly the money.
+Then try again 
+<Back/@main>
+
+[~@getbackupgnow_ok]
+#SAY
+Here is your weapon.
+I have done my best.
+You need to try the weapon to see if the upgrade was successful
+<More Information/@Success> 
+<Ok/@exit>
+
+[@Success]
+#SAY
+I can't guarrantee successfull refining each and every time.
+You will need to check yourself to see if it worked. 
+<Ok/@exit>
+
+[~@getbackupgnow_ing]
+#SAY
+The upgrade is not finished yet, come back later! 
+<Ok/@main>
+
+[~@getbackupgnow_fail]
+#SAY
+If you gave me a weapon a long time ago, you can forget about it now!
+You should have come back sooner! 
+<Ok/@main>

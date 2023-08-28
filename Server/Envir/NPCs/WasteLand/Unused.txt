@@ -1,0 +1,432 @@
+[@main]
+Hello traveler, I'm the craft NPC for this cave.
+What can I help you with?
+
+<Craft Items/@craft>.
+<Close/@exit>
+
+
+[@craft]
+#SAY
+The following are the items i can forge.
+
+- AncientHeavyArmour  <Forge/@arm1>
+- AncientRobe         <Forge/@arm2>
+- AncientPlate        <Forge/@arm3>
+- AncientSuit         <Forge/@arm4>
+- AncientLeather      <Forge/@arm5>
+   
+* It will cost 20,000 Gold to forge an item.
+
+<Exit/@exit>
+
+[@arm1]
+#SAY
+* AncientHeavyArmour
+* Defense stats : Ac 6-20 - Amc 3-7 - Dc 0-1 - Hp +10.
+* Items required for forging,
+- 40 RustyArmour
+- 34 RhinoLeather
+- 32 MammothLeather
+- 30 LargeBone
+- 12 ArmourBook(DC)
+- 10 Platinum
+-  5 StrongRope
+
+<Forge Now/@arm12>    <Back/@main>
+
+[@arm12]
+#IF
+GENDER MALE
+CHECKGOLD > 20000
+CHECKITEM RustyArmour 40
+CHECKITEM RhinoLeather 34
+CHECKITEM MammothLeather 32
+CHECKITEM LargeBone 30
+CHECKITEM ArmourBook(DC) 12
+CHECKITEM Platinum 10
+CHECKITEM StrongRope 5
+#ACT
+TAKEGOLD 20000
+TAKEITEM RustyArmour 40
+TAKEITEM RhinoLeather 34
+TAKEITEM MammothLeather 32
+TAKEITEM LargeBone 30
+TAKEITEM ArmourBook(DC) 12
+TAKEITEM Platinum 10
+TAKEITEM StrongRope 5
+GIVEITEM AncientHeavyArmour(M) 1
+LINEMESSAGE "You have forged AncientHeavyArmour." Hint
+BREAK
+CLOSE
+
+#ELSEACT
+GOTO @arm12F
+
+[@arm12F]
+#IF
+CHECKGOLD > 20000
+CHECKITEM RustyArmour 40
+CHECKITEM RhinoLeather 34
+CHECKITEM MammothLeather 32
+CHECKITEM LargeBone 30
+CHECKITEM ArmourBook(DC) 12
+CHECKITEM Platinum 10
+CHECKITEM StrongRope 5
+#ACT
+TAKEGOLD 20000
+TAKEITEM RustyArmour 40
+TAKEITEM RhinoLeather 34
+TAKEITEM MammothLeather 32
+TAKEITEM LargeBone 30
+TAKEITEM ArmourBook(DC) 12
+TAKEITEM Platinum 10
+TAKEITEM StrongRope 5
+GIVEITEM AncientHeavyArmour(F) 1
+LINEMESSAGE "You have forged AncientHeavyArmour." Hint
+BREAK
+CLOSE
+
+#ELSESAY
+You don't have enough ingredients.
+Please check again.In order to make the AncientHeavyArmour,
+* Items required for forging,
+- 40 RustyArmour
+- 34 RhinoLeather
+- 32 MammothLeather
+- 30 LargeBone
+- 12 ArmourBook(DC)
+- 10 Platinum
+-  5 StrongRope
+
+<Back/@main>
+              
+[@arm2]
+#SAY
+* AncientRobe
+* Defense stats : Ac 4-14 - Amc 5-8 - Mc 0-7 - Hp +10. 
+* Items required for forging, 
+- 40 RustyArmour
+- 34 BeastLeather
+- 32 UndeadLeather
+- 30 LargeBone
+- 12 ArmourBook(MC)
+- 10 Platinum
+-  5 StrongRope
+
+<Forge Now/@arm23>    <Back/@main>
+
+
+[@arm23]
+#IF
+GENDER MALE
+CHECKGOLD > 20000
+CHECKITEM RustyArmour 40
+CHECKITEM BeastLeather 34
+CHECKITEM UndeadLeather 32
+CHECKITEM LargeBone 30
+CHECKITEM ArmourBook(MC) 12
+CHECKITEM Platinum 10
+CHECKITEM StrongRope 5
+#ACT
+TAKEGOLD 20000
+TAKEITEM RustyArmour 40
+TAKEITEM BeastLeather 34
+TAKEITEM UndeadLeather 32
+TAKEITEM LargeBone 30
+TAKEITEM ArmourBook(MC) 12
+TAKEITEM Platinum 10
+TAKEITEM StrongRope 5
+GIVEITEM AncientRobe(M) 1
+LINEMESSAGE "You have forged AncientRobe." Hint
+BREAK
+CLOSE
+
+#ELSEACT
+GOTO @arm23F
+
+[@arm23F]
+#IF
+CHECKGOLD > 20000
+CHECKITEM RustyArmour 40
+CHECKITEM BeastLeather 34
+CHECKITEM UndeadLeather 32
+CHECKITEM LargeBone 30
+CHECKITEM ArmourBook(MC) 12
+CHECKITEM Platinum 10
+CHECKITEM StrongRope 5
+#ACT
+TAKEGOLD 20000
+TAKEITEM RustyArmour 40
+TAKEITEM BeastLeather 34
+TAKEITEM UndeadLeather 32
+TAKEITEM LargeBone 30
+TAKEITEM ArmourBook(MC) 12
+TAKEITEM Platinum 10
+TAKEITEM StrongRope 5
+GIVEITEM AncientRobe(F) 1
+LINEMESSAGE "You have forged AncientRobe." Hint
+BREAK
+CLOSE
+
+#ELSESAY
+You don't have enough ingredients.
+Please check again.In order to make the AncientRobe, 
+* Items required for forging, 
+- 40 RustyArmour
+- 34 BeastLeather
+- 32 UndeadLeather
+- 30 LargeBone
+- 12 ArmourBook(MC)
+- 10 Platinum
+-  5 StrongRope   
+
+<Back/@main>   
+
+
+[@arm3]
+#SAY
+* AncientPlate
+* Defense stats : Ac 6-15 - Amc 5-10 - Sc 0-6 - Hp +10. 
+* Items required for forging, 
+- 40 RustyArmour
+- 34 DemonLeather
+- 32 LightLeather
+- 30 LargeBone
+- 12 ArmourBook(SC)
+- 10 Platinum
+-  5 StrongRope
+
+<Forge Now/@arm33>    <Back/@main>
+
+
+[@arm33]
+#IF
+GENDER MALE
+CHECKGOLD > 20000
+CHECKITEM RustyArmour 40
+CHECKITEM DemonLeather 34
+CHECKITEM LightLeather 32
+CHECKITEM LargeBone 30
+CHECKITEM ArmourBook(SC) 12
+CHECKITEM Platinum 10
+CHECKITEM StrongRope 5
+#ACT
+TAKEGOLD 20000
+TAKEITEM RustyArmour 40
+TAKEITEM DemonLeather 34
+TAKEITEM LightLeather 32
+TAKEITEM LargeBone 30
+TAKEITEM ArmourBookSC) 12
+TAKEITEM Platinum 10
+TAKEITEM StrongRope 5
+GIVEitem AncientPlate(M) 1
+LINEMESSAGE "You have forged AncientPlate." Hint
+BREAK
+CLOSE
+
+#ELSEACT
+GOTO @arm33F
+
+[@arm33F]
+#IF
+CHECKGOLD > 20000
+CHECKITEM RustyArmour 40
+CHECKITEM DemonLeather 34
+CHECKITEM LightLeather 32
+CHECKITEM LargeBone 30
+CHECKITEM ArmourBook(SC) 12
+CHECKITEM Platinum 10
+CHECKITEM StrongRope 5
+#ACT
+TAKEGOLD 20000
+TAKEITEM RustyArmour 40
+TAKEITEM DemonLeather 34
+TAKEITEM LightLeather 32
+TAKEITEM LargeBone 30
+TAKEITEM ArmourBook(SC) 12
+TAKEITEM Platinum 10
+TAKEITEM StrongRope 5
+GIVEITEM AncientPlate(F) 1
+LINEMESSAGE "You have forged AncientPlate." Hint
+BREAK
+CLOSE
+
+#ELSESAY
+You don't have enough ingredients.
+Please check again.In order to make the AncientPlate, 
+* Items required for forging, 
+- 40 RustyArmour
+- 34 DemonLeather
+- 32 LightLeather
+- 30 LargeBone
+- 12 ArmourBook(SC)
+- 10 Platinum
+-  5 StrongRope   
+
+<Back/@main>
+
+
+[@arm4]
+#SAY
+* AncientSuit
+* Defense stats : Ac 6-15 - Amc 5-10 - Dc 0-1 - Hp +10. 
+* Items required for forging, 
+- 40 RustyArmour
+- 34 MammothLeather
+- 32 BaboonLeather
+- 30 LargeBone
+- 12 ArmourBook(DC)
+- 10 Platinum
+-  5 StrongRope
+
+<Forge Now/@arm43>    <Back/@main>
+
+
+[@arm43]
+#IF
+GENDER MALE
+CHECKGOLD > 20000
+CHECKITEM RustyArmour 40
+CHECKITEM MammothLeather 34
+CHECKITEM BaboonLeather 32
+CHECKITEM LargeBone 30
+CHECKITEM ArmourBook(DC) 12
+CHECKITEM Platinum 10
+CHECKITEM StrongRope 5
+#ACT
+TAKEGOLD 20000
+TAKEITEM RustyArmour 40
+TAKEITEM MammothLeather 34
+TAKEITEM BaboonLeather 32
+TAKEITEM LargeBone 30
+TAKEITEM ArmourBook(DC) 12
+TAKEITEM Platinum 10
+TAKEITEM StrongRope 5
+GIVEITEM AncientSuit(M) 1
+LINEMESSAGE "You have forged AncientSuit." Hint
+BREAK
+CLOSE
+
+#ELSEACT
+GOTO @arm43F
+
+[@arm43F]
+#IF
+CHECKGOLD > 20000
+CHECKITEM RustyArmour 40
+CHECKITEM MammothLeather 34
+CHECKITEM BaboonLeather 32
+CHECKITEM LargeBone 30
+CHECKITEM ArmourBook(DC) 12
+CHECKITEM Platinum 10
+CHECKITEM StrongRope 5
+#ACT
+TAKEGOLD 20000
+TAKEITEM RustyArmour 40
+TAKEITEM DemonLeather 34
+TAKEITEM BaboonLeather 32
+TAKEITEM LargeBone 30
+TAKEITEM ArmourBook(DC) 12
+TAKEITEM Platinum 10
+TAKEITEM StrongRope 5
+GIVEITEM AncientSuit(F) 1 
+LINEMESSAGE "You have forged AncientSuit." Hint
+BREAK
+CLOSE
+
+#ELSESAY
+You don't have enough ingredients.
+Please check again.In order to make the AncientSuit, 
+* Items required for forging, 
+- 40 RustyArmour
+- 34 MammothLeather
+- 32 BaboonLeather
+- 30 LargeBone
+- 12 ArmourBook(DC)
+- 10 Platinum
+-  5 StrongRope   
+
+<Back/@main>                       
+
+[@arm5]
+#SAY
+* AncientLeather
+* Defense stats : Ac 4-16 - Amc 6-10 - Mc 1-2 - Hp +10. 
+* Items required for forging, 
+- 40 RustyArmour
+- 34 BeastLeather
+- 32 MammothLeather
+- 30 LargeBone
+- 12 ArmourBook(MC)
+- 10 Platinum
+-  5 StrongRope
+
+<Forge Now/@arm53>    <Back/@main>
+
+
+[@arm53]
+#IF
+GENDER MALE
+CHECKGOLD > 20000
+CHECKITEM RustyArmour 40
+CHECKITEM BeastLeather 34
+CHECKITEM MammothLeather 32
+CHECKITEM LargeBone 30
+CHECKITEM ArmourBook(MC) 12
+CHECKITEM Platinum 10
+CHECKITEM StrongRope 5
+#ACT
+TAKEGOLD 20000
+TAKEITEM RustyArmour 40
+TAKEITEM BeastLeather 34
+TAKEITEM MammothLeather 32
+TAKEITEM LargeBone 30
+TAKEITEM ArmourBook(MC) 12
+TAKEITEM Platinum 10
+TAKEITEM StrongRope 5
+GIVEITEM AncientLeather(M) 1
+LINEMESSAGE "You have forged AncientLeather." Hint
+BREAK
+CLOSE
+
+#ELSEACT
+GOTO @arm53F
+
+[@arm53F]
+#IF
+CHECKGOLD > 20000
+CHECKITEM RustyArmour 40
+CHECKITEM BeastLeather 34
+CHECKITEM MammothLeather 32
+CHECKITEM LargeBone 30
+CHECKITEM ArmourBook(MC) 12
+CHECKITEM Platinum 10
+CHECKITEM StrongRope 5
+#ACT
+TAKEGOLD 20000
+TAKEITEM RustyArmour 40
+TAKEITEM BeastLeather 34
+TAKEITEM MammothLeather 32
+TAKEITEM LargeBone 30
+TAKEITEM ArmourBook(MC) 12
+TAKEITEM Platinum 10
+TAKEITEM StrongRope 5
+GIVEITEM AncientLeather(F) 1
+LINEMESSAGE "You have forged AncientLeather." Hint
+BREAK
+CLOSE
+
+#ELSESAY
+You don't have enough ingredients.
+Please check again.In order to make the AncientLeather, 
+* Items required for forging, 
+- 40 RustyArmour
+- 34 BeastLeather
+- 32 UndeadLeather
+- 30 LargeBone
+- 12 ArmourBook(MC)
+- 10 Platinum
+-  5 StrongRope   
+
+<Back/@main>                                                                                                                                                                                                                                               

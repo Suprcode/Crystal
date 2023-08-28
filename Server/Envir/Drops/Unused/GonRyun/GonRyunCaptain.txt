@@ -1,0 +1,1409 @@
+;Level1
+;Gold
+1/1 Gold 30000 LV1
+1/20 GoldBar LV1
+
+;Pots + Other
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/1 SunPotion LV1
+1/2 SunPotion LV1
+1/1 SunPotion LV1
+1/2 SunPotion LV1
+1/1 SunPotion LV1
+1/3 SunPotion LV1
+
+1/1 BenedictionOil LV1
+1/10 GoldenBenedictionOil LV1
+
+
+1/20 AwakeningSoul0 LV1
+1/20 AwakeningSoul0 LV1
+1/150 GonRyunCaptainRune LV1
+
+
+;Weapons
+1/1000 RyunBlade LV1
+1/1000 RyunsStuff LV1
+1/1000 FanOfRyun LV1
+1/1000 BladesOfRyun LV1
+
+
+;Armour
+1/700 GonRyunRobe(M) LV1
+1/700 GonRyunRobe(F) LV1 
+
+
+;Helmets
+1/700 CaptainsCap LV1
+
+;Necklace
+1/700 CaptainsLockit LV1
+
+;Bracelets
+1/700 GonRyunBand LV1
+
+;Rings
+1/700 EvilRyunRing LV1
+
+;Shoes
+
+
+;Belts
+1/700 CaptainsStrap LV1
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gems/Orbs
+1/100 BraveryGem LV1
+1/100 SoulGem LV1
+1/100 StormGem LV1
+1/100 MagicGem LV1
+1/130 DurabilityGem LV1
+1/140 AccuracyGem LV1
+1/140 AgilityGem LV1
+1/300 PoisonGem LV1
+1/300 FreezingGem LV1
+1/200 EnduranceGem LV1
+1/200 DisillusionGem LV1
+
+1/100 BraveryOrb LV1
+1/100 SoulOrb LV1
+1/100 StormOrb LV1
+1/100 MagicOrb LV1
+1/130 DurabilityOrb LV1
+1/140 AccuracyOrb LV1
+1/140 AgilityOrb LV1
+1/300 PoisonOrb LV1
+1/300 FreezingOrb LV1
+1/200 EnduranceOrb LV1
+1/200 DisillusionOrb LV1
+
+;Runes
+1/400 MeleeDamageRune LV1
+1/400 MagicDamageRune LV1
+1/400 SpiritualDamageRune LV1
+
+
+;Books
+;Warrior
+1/25 FlamingSword LV1
+1/30 CrossHalfMoon LV1
+1/50 TwinDrakeBlade LV1
+1/50 LionRoar LV1
+1/50 Entrapment LV1
+1/60 BladeStorm LV1
+1/150 BladeAvalanche LV1
+1/1200 ProtectionField LV1
+1/1400 Rage LV1
+1/1600 Fury LV1
+1/2000 CounterAttack LV1
+1/2600 ImmortalSkin LV1
+
+;Wizard
+1/10 FrostCrunch LV1
+1/25 IceStorm LV1
+1/30 FlameDisruptor LV1
+1/50 Vampirism LV1
+1/150 Mirroring LV1
+1/400 FlameField LV1
+1/1200 Blizzard LV1
+1/1400 MagicBooster LV1
+1/1600 MeteorStrike LV1
+1/2000 FastMove LV1
+1/2200 IceThrust LV1
+1/2400 FrozenRains LV1
+1/2600 LavaKing LV1
+1/3000 StormEscape LV1
+
+
+;Taosit
+1/25 SummonShinsu LV1
+1/30 UltimateEnhancer LV1
+1/30 EnergyRepulsor LV1
+1/50 Purification LV1
+1/50 Hallucination LV1
+1/100 HealingCircle LV1
+1/200 SummonHolyDeva LV1
+1/1200 Curse LV1
+1/1400 PoisonCloud LV1
+1/1800 PetEnhancer LV1
+1/2000 EnergyShield LV1
+1/2300 HolyShield LV1
+1/2600 HeadShot LV1
+
+
+;Assassin
+1/25 FireBurst LV1
+1/30 Trap LV1
+1/30 CrescentSlash LV1
+1/30 PoisonSword LV1
+1/50 MoonLight LV1
+1/50 MPEater LV1
+1/1000 SwiftFeet LV1
+1/1400 DarkBody LV1
+1/1800 Hemorrhage LV1
+1/2000 MoonMist LV1
+1/2300 FuryWaves LV1
+1/2600 ShadowStep LV1
+
+1/25 ElementalBarrier LV1
+1/30 BindingShot LV1
+1/50 SummonToad LV1
+1/1000 PoisonShot LV1
+1/1400 CrippleShot LV1
+1/1800 SummonSnakes LV1
+1/100 NapalmShot LV1
+
+
+;CraftingMaterials
+
+
+;Quests
+1/1 RyunWoodsMap Q LV1
+
+;Level2
+;Gold
+1/1 Gold 30000 LV2
+1/20 GoldBar LV2
+
+;Pots + Other
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/1 SunPotion LV2
+1/2 SunPotion LV2
+1/1 SunPotion LV2
+1/2 SunPotion LV2
+1/1 SunPotion LV2
+1/3 SunPotion LV2
+
+1/1 BenedictionOil LV2
+1/10 GoldenBenedictionOil LV2
+
+
+1/20 AwakeningSoul0 LV2
+1/20 AwakeningSoul0 LV2
+1/150 GonRyunCaptainRune LV2
+
+;Weapons
+1/1000 RyunBlade LV2
+1/1000 RyunsStuff LV2
+1/1000 FanOfRyun LV2
+1/1000 BladesOfRyun LV2
+
+
+;Armour
+1/700 GonRyunRobe(M) LV2
+1/700 GonRyunRobe(F) LV2 
+
+
+;Helmets
+1/700 CaptainsCap LV2
+
+;Necklace
+1/700 CaptainsLockit LV2
+
+;Bracelets
+1/700 GonRyunBand LV2
+
+;Rings
+1/700 EvilRyunRing LV2
+
+;Shoes
+
+
+;Belts
+1/700 CaptainsStrap LV2
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gems/Orbs
+1/100 BraveryGem LV2
+1/100 SoulGem LV2
+1/100 StormGem LV2
+1/100 MagicGem LV2
+1/130 DurabilityGem LV2
+1/140 AccuracyGem LV2
+1/140 AgilityGem LV2
+1/300 PoisonGem LV2
+1/300 FreezingGem LV2
+1/200 EnduranceGem LV2
+1/200 DisillusionGem LV2
+
+1/100 BraveryOrb LV2
+1/100 SoulOrb LV2
+1/100 StormOrb LV2
+1/100 MagicOrb LV2
+1/130 DurabilityOrb LV2
+1/140 AccuracyOrb LV2
+1/140 AgilityOrb LV2
+1/300 PoisonOrb LV2
+1/300 FreezingOrb LV2
+1/200 EnduranceOrb LV2
+1/200 DisillusionOrb LV2
+
+;Runes
+1/400 MeleeDamageRune LV2
+1/400 MagicDamageRune LV2
+1/400 SpiritualDamageRune LV2
+
+
+;Books
+;Warrior
+1/25 FlamingSword LV2
+1/30 CrossHalfMoon LV2
+1/50 TwinDrakeBlade LV2
+1/50 LionRoar LV2
+1/50 Entrapment LV2
+1/60 BladeStorm LV2
+1/150 BladeAvalanche LV2
+1/1200 ProtectionField LV2
+1/1400 Rage LV2
+1/1600 Fury LV2
+1/2000 CounterAttack LV2
+1/2600 ImmortalSkin LV2
+
+;Wizard
+1/10 FrostCrunch LV2
+1/25 IceStorm LV2
+1/30 FlameDisruptor LV2
+1/50 Vampirism LV2
+1/150 Mirroring LV2
+1/400 FlameField LV2
+1/1200 Blizzard LV2
+1/1400 MagicBooster LV2
+1/1600 MeteorStrike LV2
+1/2000 FastMove LV2
+1/2200 IceThrust LV2
+1/2400 FrozenRains LV2
+1/2600 LavaKing LV2
+1/3000 StormEscape LV2
+
+
+;Taosit
+1/25 SummonShinsu LV2
+1/30 UltimateEnhancer LV2
+1/30 EnergyRepulsor LV2
+1/50 Purification LV2
+1/50 Hallucination LV2
+1/100 HealingCircle LV2
+1/200 SummonHolyDeva LV2
+1/1200 Curse LV2
+1/1400 PoisonCloud LV2
+1/1800 PetEnhancer LV2
+1/2000 EnergyShield LV2
+1/2300 HolyShield LV2
+1/2600 HeadShot LV2
+
+
+;Assassin
+1/25 FireBurst LV2
+1/30 Trap LV2
+1/30 CrescentSlash LV2
+1/30 PoisonSword LV2
+1/50 MoonLight LV2
+1/50 MPEater LV2
+1/1000 SwiftFeet LV2
+1/1400 DarkBody LV2
+1/1800 Hemorrhage LV2
+1/2000 MoonMist LV2
+1/2300 FuryWaves LV2
+1/2600 ShadowStep LV2
+
+1/25 ElementalBarrier LV2
+1/30 BindingShot LV2
+1/50 SummonToad LV2
+1/1000 PoisonShot LV2
+1/1400 CrippleShot LV2
+1/1800 SummonSnakes LV2
+1/100 NapalmShot LV2
+
+
+;CraftingMaterials
+
+
+;Quests
+1/1 RyunWoodsMap Q LV2
+
+;Level3
+;Gold
+1/1 Gold 30000 LV3
+1/20 GoldBar LV3
+
+;Pots + Other
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/1 SunPotion LV3
+1/2 SunPotion LV3
+1/1 SunPotion LV3
+1/2 SunPotion LV3
+1/1 SunPotion LV3
+1/3 SunPotion LV3
+
+1/1 BenedictionOil LV3
+1/10 GoldenBenedictionOil LV3
+
+
+1/20 AwakeningSoul0 LV3
+1/20 AwakeningSoul0 LV3
+1/150 GonRyunCaptainRune LV3
+
+;Weapons
+1/1000 RyunBlade LV3
+1/1000 RyunsStuff LV3
+1/1000 FanOfRyun LV3
+1/1000 BladesOfRyun LV3
+
+
+;Armour
+1/700 GonRyunRobe(M) LV3
+1/700 GonRyunRobe(F) LV3 
+
+
+;Helmets
+1/700 CaptainsCap LV3
+
+;Necklace
+1/700 CaptainsLockit LV3
+
+;Bracelets
+1/700 GonRyunBand LV3
+
+;Rings
+1/700 EvilRyunRing LV3
+
+;Shoes
+
+
+;Belts
+1/700 CaptainsStrap LV3
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gems/Orbs
+1/100 BraveryGem LV3
+1/100 SoulGem LV3
+1/100 StormGem LV3
+1/100 MagicGem LV3
+1/130 DurabilityGem LV3
+1/140 AccuracyGem LV3
+1/140 AgilityGem LV3
+1/300 PoisonGem LV3
+1/300 FreezingGem LV3
+1/200 EnduranceGem LV3
+1/200 DisillusionGem LV3
+
+1/100 BraveryOrb LV3
+1/100 SoulOrb LV3
+1/100 StormOrb LV3
+1/100 MagicOrb LV3
+1/130 DurabilityOrb LV3
+1/140 AccuracyOrb LV3
+1/140 AgilityOrb LV3
+1/300 PoisonOrb LV3
+1/300 FreezingOrb LV3
+1/200 EnduranceOrb LV3
+1/200 DisillusionOrb LV3
+
+;Runes
+1/400 MeleeDamageRune LV3
+1/400 MagicDamageRune LV3
+1/400 SpiritualDamageRune LV3
+
+
+;Books
+;Warrior
+1/25 FlamingSword LV3
+1/30 CrossHalfMoon LV3
+1/50 TwinDrakeBlade LV3
+1/50 LionRoar LV3
+1/50 Entrapment LV3
+1/60 BladeStorm LV3
+1/150 BladeAvalanche LV3
+1/1200 ProtectionField LV3
+1/1400 Rage LV3
+1/1600 Fury LV3
+1/2000 CounterAttack LV3
+1/2600 ImmortalSkin LV3
+
+;Wizard
+1/10 FrostCrunch LV3
+1/25 IceStorm LV3
+1/30 FlameDisruptor LV3
+1/50 Vampirism LV3
+1/150 Mirroring LV3
+1/400 FlameField LV3
+1/1200 Blizzard LV3
+1/1400 MagicBooster LV3
+1/1600 MeteorStrike LV3
+1/2000 FastMove LV3
+1/2200 IceThrust LV3
+1/2400 FrozenRains LV3
+1/2600 LavaKing LV3
+1/3000 StormEscape LV3
+
+
+;Taosit
+1/25 SummonShinsu LV3
+1/30 UltimateEnhancer LV3
+1/30 EnergyRepulsor LV3
+1/50 Purification LV3
+1/50 Hallucination LV3
+1/100 HealingCircle LV3
+1/200 SummonHolyDeva LV3
+1/1200 Curse LV3
+1/1400 PoisonCloud LV3
+1/1800 PetEnhancer LV3
+1/2000 EnergyShield LV3
+1/2300 HolyShield LV3
+1/2600 HeadShot LV3
+
+
+
+;Assassin
+1/25 FireBurst LV3
+1/30 Trap LV3
+1/30 CrescentSlash LV3
+1/30 PoisonSword LV3
+1/50 MoonLight LV3
+1/50 MPEater LV3
+1/1000 SwiftFeet LV3
+1/1400 DarkBody LV3
+1/1800 Hemorrhage LV3
+1/2000 MoonMist LV3
+1/2300 FuryWaves LV3
+1/2600 ShadowStep LV3
+
+1/25 ElementalBarrier LV3
+1/30 BindingShot LV3
+1/50 SummonToad LV3
+1/1000 PoisonShot LV3
+1/1400 CrippleShot LV3
+1/1800 SummonSnakes LV3
+1/100 NapalmShot LV3
+
+;CraftingMaterials
+
+
+;Quests
+1/1 RyunWoodsMap Q LV3
+
+;Level4
+;Gold
+1/1 Gold 30000 LV4
+1/20 GoldBar LV4
+
+;Pots + Other
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/1 SunPotion LV4
+1/2 SunPotion LV4
+1/1 SunPotion LV4
+1/2 SunPotion LV4
+1/1 SunPotion LV4
+1/3 SunPotion LV4
+
+1/1 BenedictionOil LV4
+1/10 GoldenBenedictionOil LV4
+
+
+1/20 AwakeningSoul0 LV4
+1/20 AwakeningSoul0 LV4
+1/150 GonRyunCaptainRune LV4
+
+;Weapons
+1/1000 RyunBlade LV4
+1/1000 RyunsStuff LV4
+1/1000 FanOfRyun LV4
+1/1000 BladesOfRyun LV4
+
+
+;Armour
+1/700 GonRyunRobe(M) LV4
+1/700 GonRyunRobe(F) LV4 
+
+
+;Helmets
+1/700 CaptainsCap LV4
+
+;Necklace
+1/700 CaptainsLockit LV4
+
+;Bracelets
+1/700 GonRyunBand LV4
+
+;Rings
+1/700 EvilRyunRing LV4
+
+;Shoes
+
+
+;Belts
+1/700 CaptainsStrap LV4
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gems/Orbs
+1/100 BraveryGem LV4
+1/100 SoulGem LV4
+1/100 StormGem LV4
+1/100 MagicGem LV4
+1/130 DurabilityGem LV4
+1/140 AccuracyGem LV4
+1/140 AgilityGem LV4
+1/300 PoisonGem LV4
+1/300 FreezingGem LV4
+1/200 EnduranceGem LV4
+1/200 DisillusionGem LV4
+
+1/100 BraveryOrb LV4
+1/100 SoulOrb LV4
+1/100 StormOrb LV4
+1/100 MagicOrb LV4
+1/130 DurabilityOrb LV4
+1/140 AccuracyOrb LV4
+1/140 AgilityOrb LV4
+1/300 PoisonOrb LV4
+1/300 FreezingOrb LV4
+1/200 EnduranceOrb LV4
+1/200 DisillusionOrb LV4
+
+;Runes
+1/400 MeleeDamageRune LV4
+1/400 MagicDamageRune LV4
+1/400 SpiritualDamageRune LV4
+
+
+;Books
+;Warrior
+1/25 FlamingSword LV4
+1/30 CrossHalfMoon LV4
+1/50 TwinDrakeBlade LV4
+1/50 LionRoar LV4
+1/50 Entrapment LV4
+1/60 BladeStorm LV4
+1/150 BladeAvalanche LV4
+1/1200 ProtectionField LV4
+1/1400 Rage LV4
+1/1600 Fury LV4
+1/2000 CounterAttack LV4
+1/2600 ImmortalSkin LV4
+
+;Wizard
+1/10 FrostCrunch LV4
+1/25 IceStorm LV4
+1/30 FlameDisruptor LV4
+1/50 Vampirism LV4
+1/150 Mirroring LV4
+1/400 FlameField LV4
+1/1200 Blizzard LV4
+1/1400 MagicBooster LV4
+1/1600 MeteorStrike LV4
+1/2000 FastMove LV4
+1/2200 IceThrust LV4
+1/2400 FrozenRains LV4
+1/2600 LavaKing LV4
+1/3000 StormEscape LV4
+
+
+;Taosit
+1/25 SummonShinsu LV4
+1/30 UltimateEnhancer LV4
+1/30 EnergyRepulsor LV4
+1/50 Purification LV4
+1/50 Hallucination LV4
+1/100 HealingCircle LV4
+1/200 SummonHolyDeva LV4
+1/1200 Curse LV4
+1/1400 PoisonCloud LV4
+1/1800 PetEnhancer LV4
+1/2000 EnergyShield LV4
+1/2300 HolyShield LV4
+1/2600 HeadShot LV4
+
+;Assassin
+1/25 FireBurst LV4
+1/30 Trap LV4
+1/30 CrescentSlash LV4
+1/30 PoisonSword LV4
+1/50 MoonLight LV4
+1/50 MPEater LV4
+1/1000 SwiftFeet LV4
+1/1400 DarkBody LV4
+1/1800 Hemorrhage LV4
+1/2000 MoonMist LV4
+1/2300 FuryWaves LV4
+1/2600 ShadowStep LV4
+
+1/25 ElementalBarrier LV4
+1/30 BindingShot LV4
+1/50 SummonToad LV4
+1/1000 PoisonShot LV4
+1/1400 CrippleShot LV4
+1/1800 SummonSnakes LV4
+1/100 NapalmShot LV4
+
+
+;CraftingMaterials
+
+
+;Quests
+1/1 RyunWoodsMap Q LV4
+
+;Level5
+;Gold
+1/1 Gold 30000 LV5
+1/20 GoldBar LV5
+
+;Pots + Other
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/1 SunPotion LV5
+1/2 SunPotion LV5
+1/1 SunPotion LV5
+1/2 SunPotion LV5
+1/1 SunPotion LV5
+1/3 SunPotion LV5
+
+1/1 BenedictionOil LV5
+1/10 GoldenBenedictionOil LV5
+
+
+1/20 AwakeningSoul0 LV5
+1/20 AwakeningSoul0 LV5
+1/150 GonRyunCaptainRune LV5
+
+;Weapons
+1/1000 RyunBlade LV5
+1/1000 RyunsStuff LV5
+1/1000 FanOfRyun LV5
+1/1000 BladesOfRyun LV5
+
+
+;Armour
+1/700 GonRyunRobe(M) LV5
+1/700 GonRyunRobe(F) LV5 
+
+
+;Helmets
+1/700 CaptainsCap LV5
+
+;Necklace
+1/700 CaptainsLockit LV5
+
+;Bracelets
+1/700 GonRyunBand LV5
+
+;Rings
+1/700 EvilRyunRing LV5
+
+;Shoes
+
+
+;Belts
+1/700 CaptainsStrap LV5
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gems/Orbs
+1/100 BraveryGem LV5
+1/100 SoulGem LV5
+1/100 StormGem LV5
+1/100 MagicGem LV5
+1/130 DurabilityGem LV5
+1/140 AccuracyGem LV5
+1/140 AgilityGem LV5
+1/300 PoisonGem LV5
+1/300 FreezingGem LV5
+1/200 EnduranceGem LV5
+1/200 DisillusionGem LV5
+
+1/100 BraveryOrb LV5
+1/100 SoulOrb LV5
+1/100 StormOrb LV5
+1/100 MagicOrb LV5
+1/130 DurabilityOrb LV5
+1/140 AccuracyOrb LV5
+1/140 AgilityOrb LV5
+1/300 PoisonOrb LV5
+1/300 FreezingOrb LV5
+1/200 EnduranceOrb LV5
+1/200 DisillusionOrb LV5
+
+;Runes
+1/400 MeleeDamageRune LV5
+1/400 MagicDamageRune LV5
+1/400 SpiritualDamageRune LV5
+
+
+;Books
+;Warrior
+1/25 FlamingSword LV5
+1/30 CrossHalfMoon LV5
+1/50 TwinDrakeBlade LV5
+1/50 LionRoar LV5
+1/50 Entrapment LV5
+1/60 BladeStorm LV5
+1/150 BladeAvalanche LV5
+1/1200 ProtectionField LV5
+1/1400 Rage LV5
+1/1600 Fury LV5
+1/2000 CounterAttack LV5
+1/2600 ImmortalSkin LV5
+
+;Wizard
+1/10 FrostCrunch LV5
+1/25 IceStorm LV5
+1/30 FlameDisruptor LV5
+1/50 Vampirism LV5
+1/150 Mirroring LV5
+1/400 FlameField LV5
+1/1200 Blizzard LV5
+1/1400 MagicBooster LV5
+1/1600 MeteorStrike LV5
+1/2000 FastMove LV5
+1/2200 IceThrust LV5
+1/2400 FrozenRains LV5
+1/2600 LavaKing LV5
+1/3000 StormEscape LV5
+
+
+;Taosit
+1/25 SummonShinsu LV5
+1/30 UltimateEnhancer LV5
+1/30 EnergyRepulsor LV5
+1/50 Purification LV5
+1/50 Hallucination LV5
+1/100 HealingCircle LV5
+1/200 SummonHolyDeva LV5
+1/1200 Curse LV5
+1/1400 PoisonCloud LV5
+1/1800 PetEnhancer LV5
+1/2000 EnergyShield LV5
+1/2300 HolyShield LV5
+1/2600 HeadShot LV5
+
+
+;Assassin
+1/25 FireBurst LV5
+1/30 Trap LV5
+1/30 CrescentSlash LV5
+1/30 PoisonSword LV5
+1/50 MoonLight LV5
+1/50 MPEater LV5
+1/1000 SwiftFeet LV5
+1/1400 DarkBody LV5
+1/1800 Hemorrhage LV5
+1/2000 MoonMist LV5
+1/2300 FuryWaves LV5
+1/2600 ShadowStep LV5
+
+
+1/25 ElementalBarrier LV5
+1/30 BindingShot LV5
+1/50 SummonToad LV5
+1/1000 PoisonShot LV5
+1/1400 CrippleShot LV5
+1/1800 SummonSnakes LV5
+1/100 NapalmShot LV5
+
+;CraftingMaterials
+
+
+;Quests
+1/1 RyunWoodsMap Q LV5
+
+;Level6
+;Gold
+1/1 Gold 30000 LV6
+1/20 GoldBar LV6
+
+;Pots + Other
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/1 SunPotion LV6
+1/2 SunPotion LV6
+1/1 SunPotion LV6
+1/2 SunPotion LV6
+1/1 SunPotion LV6
+1/3 SunPotion LV6
+
+1/1 BenedictionOil LV6
+1/10 GoldenBenedictionOil LV6
+
+1/20 AwakeningSoul0 LV6
+1/20 AwakeningSoul0 LV6
+1/150 GonRyunCaptainRune LV6
+
+;Weapons
+1/1000 RyunBlade LV6
+1/1000 RyunsStuff LV6
+1/1000 FanOfRyun LV6
+1/1000 BladesOfRyun LV6
+
+
+;Armour
+1/700 GonRyunRobe(M) LV6
+1/700 GonRyunRobe(F) LV6 
+
+
+;Helmets
+1/700 CaptainsCap LV6
+
+;Necklace
+1/700 CaptainsLockit LV6
+
+;Bracelets
+1/700 GonRyunBand LV6
+
+;Rings
+1/700 EvilRyunRing LV6
+
+;Shoes
+
+
+;Belts
+1/700 CaptainsStrap LV6
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gems/Orbs
+1/100 BraveryGem LV6
+1/100 SoulGem LV6
+1/100 StormGem LV6
+1/100 MagicGem LV6
+1/130 DurabilityGem LV6
+1/140 AccuracyGem LV6
+1/140 AgilityGem LV6
+1/300 PoisonGem LV6
+1/300 FreezingGem LV6
+1/200 EnduranceGem LV6
+1/200 DisillusionGem LV6
+
+1/100 BraveryOrb LV6
+1/100 SoulOrb LV6
+1/100 StormOrb LV6
+1/100 MagicOrb LV6
+1/130 DurabilityOrb LV6
+1/140 AccuracyOrb LV6
+1/140 AgilityOrb LV6
+1/300 PoisonOrb LV6
+1/300 FreezingOrb LV6
+1/200 EnduranceOrb LV6
+1/200 DisillusionOrb LV6
+
+;Runes
+1/400 MeleeDamageRune LV6
+1/400 MagicDamageRune LV6
+1/400 SpiritualDamageRune LV6
+
+
+;Books
+;Warrior
+1/25 FlamingSword LV6
+1/30 CrossHalfMoon LV6
+1/50 TwinDrakeBlade LV6
+1/50 LionRoar LV6
+1/50 Entrapment LV6
+1/60 BladeStorm LV6
+1/150 BladeAvalanche LV6
+1/1200 ProtectionField LV6
+1/1400 Rage LV6
+1/1600 Fury LV6
+1/2000 CounterAttack LV6
+1/2600 ImmortalSkin LV6
+
+;Wizard
+1/10 FrostCrunch LV6
+1/25 IceStorm LV6
+1/30 FlameDisruptor LV6
+1/50 Vampirism LV6
+1/150 Mirroring LV6
+1/400 FlameField LV6
+1/1200 Blizzard LV6
+1/1400 MagicBooster LV6
+1/1600 MeteorStrike LV6
+1/2000 FastMove LV6
+1/2200 IceThrust LV6
+1/2400 FrozenRains LV6
+1/2600 LavaKing LV6
+1/3000 StormEscape LV6
+
+
+;Taosit
+1/25 SummonShinsu LV6
+1/30 UltimateEnhancer LV6
+1/30 EnergyRepulsor LV6
+1/50 Purification LV6
+1/50 Hallucination LV6
+1/100 HealingCircle LV6
+1/200 SummonHolyDeva LV6
+1/1200 Curse LV6
+1/1400 PoisonCloud LV6
+1/1800 PetEnhancer LV6
+1/2000 EnergyShield LV6
+1/2300 HolyShield LV6
+1/2600 HeadShot LV6
+
+
+;Assassin
+1/25 FireBurst LV6
+1/30 Trap LV6
+1/30 CrescentSlash LV6
+1/30 PoisonSword LV6
+1/50 MoonLight LV6
+1/50 MPEater LV6
+1/1000 SwiftFeet LV6
+1/1400 DarkBody LV6
+1/1800 Hemorrhage LV6
+1/2000 MoonMist LV6
+1/2300 FuryWaves LV6
+1/2600 ShadowStep LV6
+
+1/25 ElementalBarrier LV6
+1/30 BindingShot LV6
+1/50 SummonToad LV6
+1/1000 PoisonShot LV6
+1/1400 CrippleShot LV6
+1/1800 SummonSnakes LV6
+1/100 NapalmShot LV6
+
+;CraftingMaterials
+
+
+;Quests
+1/1 RyunWoodsMap Q LV6
+
+;Level7
+;Gold
+1/1 Gold 30000 LV7
+1/20 GoldBar LV7
+
+;Pots + Other
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/1 SunPotion LV7
+1/2 SunPotion LV7
+1/1 SunPotion LV7
+1/2 SunPotion LV7
+1/1 SunPotion LV7
+1/3 SunPotion LV7
+
+1/1 BenedictionOil LV7
+1/10 GoldenBenedictionOil LV7
+
+1/20 AwakeningSoul0 LV7
+1/20 AwakeningSoul0 LV7
+1/150 GonRyunCaptainRune LV7
+
+;Weapons
+1/1000 RyunBlade LV7
+1/1000 RyunsStuff LV7
+1/1000 FanOfRyun LV7
+1/1000 BladesOfRyun LV7
+
+
+;Armour
+1/700 GonRyunRobe(M) LV7
+1/700 GonRyunRobe(F) LV7 
+
+
+;Helmets
+1/700 CaptainsCap LV7
+
+;Necklace
+1/700 CaptainsLockit LV7
+
+;Bracelets
+1/700 GonRyunBand LV7
+
+;Rings
+1/700 EvilRyunRing LV7
+
+;Shoes
+
+
+;Belts
+1/700 CaptainsStrap LV7
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gems/Orbs
+1/100 BraveryGem LV7
+1/100 SoulGem LV7
+1/100 StormGem LV7
+1/100 MagicGem LV7
+1/130 DurabilityGem LV7
+1/140 AccuracyGem LV7
+1/140 AgilityGem LV7
+1/300 PoisonGem LV7
+1/300 FreezingGem LV7
+1/200 EnduranceGem LV7
+1/200 DisillusionGem LV7
+
+1/100 BraveryOrb LV7
+1/100 SoulOrb LV7
+1/100 StormOrb LV7
+1/100 MagicOrb LV7
+1/130 DurabilityOrb LV7
+1/140 AccuracyOrb LV7
+1/140 AgilityOrb LV7
+1/300 PoisonOrb LV7
+1/300 FreezingOrb LV7
+1/200 EnduranceOrb LV7
+1/200 DisillusionOrb LV7
+
+;Runes
+1/400 MeleeDamageRune LV7
+1/400 MagicDamageRune LV7
+1/400 SpiritualDamageRune LV7
+
+
+;Books
+;Warrior
+1/25 FlamingSword LV7
+1/30 CrossHalfMoon LV7
+1/50 TwinDrakeBlade LV7
+1/50 LionRoar LV7
+1/50 Entrapment LV7
+1/60 BladeStorm LV7
+1/150 BladeAvalanche LV7
+1/1200 ProtectionField LV7
+1/1400 Rage LV7
+1/1600 Fury LV7
+1/2000 CounterAttack LV7
+1/2600 ImmortalSkin LV7
+
+;Wizard
+1/10 FrostCrunch LV7
+1/25 IceStorm LV7
+1/30 FlameDisruptor LV7
+1/50 Vampirism LV7
+1/150 Mirroring LV7
+1/400 FlameField LV7
+1/1200 Blizzard LV7
+1/1400 MagicBooster LV7
+1/1600 MeteorStrike LV7
+1/2000 FastMove LV7
+1/2200 IceThrust LV7
+1/2400 FrozenRains LV7
+1/2600 LavaKing LV7
+1/3000 StormEscape LV7
+
+
+;Taosit
+1/25 SummonShinsu LV7
+1/30 UltimateEnhancer LV7
+1/30 EnergyRepulsor LV7
+1/50 Purification LV7
+1/50 Hallucination LV7
+1/100 HealingCircle LV7
+1/200 SummonHolyDeva LV7
+1/1200 Curse LV7
+1/1400 PoisonCloud LV7
+1/1800 PetEnhancer LV7
+1/2000 EnergyShield LV7
+1/2300 HolyShield LV7
+1/2600 HeadShot LV7
+
+
+;Assassin
+1/25 FireBurst LV7
+1/30 Trap LV7
+1/30 CrescentSlash LV7
+1/30 PoisonSword LV7
+1/50 MoonLight LV7
+1/50 MPEater LV7
+1/1000 SwiftFeet LV7
+1/1400 DarkBody LV7
+1/1800 Hemorrhage LV7
+1/2000 MoonMist LV7
+1/2300 FuryWaves LV7
+1/2600 ShadowStep LV7
+
+1/25 ElementalBarrier LV7
+1/30 BindingShot LV7
+1/50 SummonToad LV7
+1/1000 PoisonShot LV7
+1/1400 CrippleShot LV7
+1/1800 SummonSnakes LV7
+1/100 NapalmShot LV7
+
+;CraftingMaterials
+
+
+;Quests
+1/1 RyunWoodsMap Q LV7
+
+;Level8
+;Gold
+1/1 Gold 30000 LV8
+1/20 GoldBar LV8
+
+;Pots + Other
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/1 SunPotion LV8
+1/2 SunPotion LV8
+1/1 SunPotion LV8
+1/2 SunPotion LV8
+1/1 SunPotion LV8
+1/3 SunPotion LV8
+
+1/1 BenedictionOil LV8
+1/10 GoldenBenedictionOil LV8
+
+1/20 AwakeningSoul0 LV8
+1/20 AwakeningSoul0 LV8
+1/150 GonRyunCaptainRune LV8
+
+;Weapons
+1/1000 RyunBlade LV8
+1/1000 RyunsStuff LV8
+1/1000 FanOfRyun LV8
+1/1000 BladesOfRyun LV8
+
+
+;Armour
+1/700 GonRyunRobe(M) LV8
+1/700 GonRyunRobe(F) LV8 
+
+
+;Helmets
+1/700 CaptainsCap LV8
+
+;Necklace
+1/700 CaptainsLockit LV8
+
+;Bracelets
+1/700 GonRyunBand LV8
+
+;Rings
+1/700 EvilRyunRing LV8
+
+;Shoes
+
+
+;Belts
+1/700 CaptainsStrap LV8
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gems/Orbs
+1/100 BraveryGem LV8
+1/100 SoulGem LV8
+1/100 StormGem LV8
+1/100 MagicGem LV8
+1/130 DurabilityGem LV8
+1/140 AccuracyGem LV8
+1/140 AgilityGem LV8
+1/300 PoisonGem LV8
+1/300 FreezingGem LV8
+1/200 EnduranceGem LV8
+1/200 DisillusionGem LV8
+
+1/100 BraveryOrb LV8
+1/100 SoulOrb LV8
+1/100 StormOrb LV8
+1/100 MagicOrb LV8
+1/130 DurabilityOrb LV8
+1/140 AccuracyOrb LV8
+1/140 AgilityOrb LV8
+1/300 PoisonOrb LV8
+1/300 FreezingOrb LV8
+1/200 EnduranceOrb LV8
+1/200 DisillusionOrb LV8
+
+;Runes
+1/400 MeleeDamageRune LV8
+1/400 MagicDamageRune LV8
+1/400 SpiritualDamageRune LV8
+
+
+;Books
+;Warrior
+1/25 FlamingSword LV8
+1/30 CrossHalfMoon LV8
+1/50 TwinDrakeBlade LV8
+1/50 LionRoar LV8
+1/50 Entrapment LV8
+1/60 BladeStorm LV8
+1/150 BladeAvalanche LV8
+1/1200 ProtectionField LV8
+1/1400 Rage LV8
+1/1600 Fury LV8
+1/2000 CounterAttack LV8
+1/2600 ImmortalSkin LV8
+
+;Wizard
+1/10 FrostCrunch LV8
+1/25 IceStorm LV8
+1/30 FlameDisruptor LV8
+1/50 Vampirism LV8
+1/150 Mirroring LV8
+1/400 FlameField LV8
+1/1200 Blizzard LV8
+1/1400 MagicBooster LV8
+1/1600 MeteorStrike LV8
+1/2000 FastMove LV8
+1/2200 IceThrust LV8
+1/2400 FrozenRains LV8
+1/2600 LavaKing LV8
+1/3000 StormEscape LV8
+
+
+;Taosit
+1/25 SummonShinsu LV8
+1/30 UltimateEnhancer LV8
+1/30 EnergyRepulsor LV8
+1/50 Purification LV8
+1/50 Hallucination LV8
+1/100 HealingCircle LV8
+1/200 SummonHolyDeva LV8
+1/1200 Curse LV8
+1/1400 PoisonCloud LV8
+1/1800 PetEnhancer LV8
+1/2000 EnergyShield LV8
+1/2300 HolyShield LV8
+1/2600 HeadShot LV8
+
+;Assassin
+1/25 FireBurst LV8
+1/30 Trap LV8
+1/30 CrescentSlash LV8
+1/30 PoisonSword LV8
+1/50 MoonLight LV8
+1/50 MPEater LV8
+1/1000 SwiftFeet LV8
+1/1400 DarkBody LV8
+1/1800 Hemorrhage LV8
+1/2000 MoonMist LV8
+1/2300 FuryWaves LV8
+1/2600 ShadowStep LV8
+
+1/25 ElementalBarrier LV8
+1/30 BindingShot LV8
+1/50 SummonToad LV8
+1/1000 PoisonShot LV8
+1/1400 CrippleShot LV8
+1/1800 SummonSnakes LV8
+1/100 NapalmShot LV8
+
+;CraftingMaterials
+
+
+;Quests
+1/1 RyunWoodsMap Q LV8
+

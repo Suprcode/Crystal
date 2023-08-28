@@ -1,0 +1,54 @@
+1/1 Gold 750
+
+;Pots + Other
+1/6 (HP)DrugLarge
+1/6 (MP)DrugLarge
+
+1/40 AwakeningSoul0
+1/40 AwakeningSoul0
+
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+

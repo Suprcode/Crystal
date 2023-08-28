@@ -1,0 +1,29 @@
+[@Description]
+Hello traveller, I have another task which suit's your
+talent's.. I love my necklace in {InsectCave/Yellow}.
+Can you find and bring it back to me please?
+
+[@TaskDescription]
+Kill {SpiderFrog's/Crimson} and collect {BluJadeNecklace/LightSteelBlue}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+BluJadePendant 1
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+3800
+
+[@GoldReward]
+3800
+
+// Pickup - Merchant_Helen 1 292 84
+// Hand In - Merchant_Helen 1 292 84

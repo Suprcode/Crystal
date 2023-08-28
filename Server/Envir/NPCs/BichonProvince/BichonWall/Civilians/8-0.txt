@@ -1,0 +1,27 @@
+[@MAIN]
+#IF
+CHECK [540] 1
+#ACT
+GOTO @MAIN-1
+#ELSEACT
+GOTO @MAIN-2
+
+[@MAIN-1]
+#SAY
+Traveler Traveler.. There's people going around ruining everything.
+ 
+<Close/@exit>
+
+[@MAIN-2]
+#SAY
+Oh.. Sorry.. You startled me. Well Hello there..
+"Can you be of any assistance?"
+"I'm trying to spread a good word around about the <Emperor/@emperor>."
+ 
+<Close/@exit>
+
+[@emperor]
+#ACT
+SET [540] 1
+#SAY
+Oh sure <$USERNAME> but please visit me again soon.

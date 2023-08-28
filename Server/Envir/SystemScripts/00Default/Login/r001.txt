@@ -1,0 +1,9 @@
+;;Gamemaster SET to teleport to R001 on login.
+
+[@MAIN]
+{
+#IF
+ISADMIN
+#ACT
+MOVE R001 100 100
+}

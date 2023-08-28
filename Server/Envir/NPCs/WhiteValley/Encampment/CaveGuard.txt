@@ -1,0 +1,5 @@
+[@MAIN]
+#SAY
+<$USERNAME>, I'm The Watcher of this aweful place.
+The howling coming from within this Cave sends shivers 
+down my spine.

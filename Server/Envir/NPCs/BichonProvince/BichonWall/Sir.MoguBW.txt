@@ -1,0 +1,67 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+How can i help you? 
+ 
+<Purchase/@Buy> Wine.
+<Talk/@talk>
+<Close/@exit>
+
+[@Buy]
+#INCLUDE [SystemScripts/SharedNPCS/Tavern.txt] @Main
+
+[@talk]
+#IF
+CHECK [533] 1
+CHECK [534] 1
+#SAY
+Rumours... Rumours... What have people have saying about me now?
+ 
+"You once researched a Ancient <Language/@Lang>."
+"You are a crazy old <fool/@Fool>."
+"Would rather not say.. Have you seen this <before?/@Before1>"
+"Never <Mind/@exit>
+#ELSESAY
+Sorry, I dont have anything to tell you.
+ 
+<Close/@exit> 
+
+[@Lang]
+#ACT
+SET [537] 1
+#SAY
+Well guess the rumours are true this time.. 
+Yes I researched a Ancient Language... I didn't have much luck
+though. The most helpful information i found was at the Palace.
+Speak with Emperor Far, he is crazy though but also lazy... I would take
+him some Wine to motivate him.
+<Close/@exit>
+
+[@fool]
+#SAY
+What a crazy old fool, I would like to know told you that. 
+I will show them a crazy old fool.
+"Have you seen this Language <Before/@before1>?"
+<Close/@exit>
+
+[@before1>
+#ACT
+SET [537] 1
+#SAY
+Oh yes... I have seen that language before... I spent years 
+researching it. Go speak to Emperor Far in the Palace he knows
+quite alot about it.
+<Close/@exit>
+
+[Quests]
+-95

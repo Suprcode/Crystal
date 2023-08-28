@@ -1,0 +1,29 @@
+[@Description]
+Traveler, Can you please assist me? I placed an 
+order with {Ann/LimeGreen} in {BichonWall/Yellow} but this 
+was ages ago.. Can you enquire about my order.
+
+[@TaskDescription]
+Please travel to {BichonWall/Yellow} and speak to {Ann/LimeGreen}
+the Drapery Merchant.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+2895
+
+[@GoldReward]
+5250
+
+// Pickup - LeadTrainer_Harry 1002 11 8
+// Hand In - 

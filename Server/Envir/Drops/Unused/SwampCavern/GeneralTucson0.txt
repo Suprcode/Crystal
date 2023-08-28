@@ -1,0 +1,109 @@
+;Gold
+1/2 Gold 15000
+
+;Potions
+1/1 (HP)DrugLarge
+1/1 (HP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (MP)DrugLarge
+1/2 (MP)DrugLarge
+1/1 (HP)DrugXL
+1/1 (HP)DrugXL
+1/2 (HP)DrugXL
+1/2 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (MP)DrugXL
+1/2 (MP)DrugXL
+1/2 (MP)DrugXL
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+1/10 Apple
+1/15 Apple
+1/2 BenedictionOil
+1/5 BenedictionOil
+1/10 ImpactDrug(L)
+1/10 MagicDrug(L)
+1/10 TaoistDrug(L)
+1/10 StormDrug(L)
+
+
+
+;Armours
+1/15 StuddedArmour(M)
+1/15 StuddedArmour(F)
+1/15 SteelArmour(M)
+1/15 SteelArmour(F)
+1/15 DragonRobe(M)
+1/15 DragonRobe(F)
+1/15 TitanArmour(M)
+1/15 TitanArmour(F)
+1/15 RoyalArmour(M)
+1/15 RoyalArmour(F)
+
+
+;Helmets
+1/330 BlackIronHelmet
+1/310 HelmetOfHero
+1/335 GreatHelmet
+1/340 WisdomCoronet
+1/340 TaoCoronet
+1/590 MajesticHelmet
+1/890 ExternalHelmet
+
+;Belts
+1/310 BronzeBelt
+1/315 ChainBelt
+1/350 GoldBelt
+1/590 MajesticBelt
+1/890 ExternalBelt
+
+;Boots
+1/310 SilkBoots
+1/320 BlackBoots
+1/330 DragonBoots
+1/590 MajesticBoots
+1/890 ExternalBoots
+
+;Rings
+1/320 GaleRing
+1/350 DestinyRing 
+1/350 OmaSpiritRing
+1/360 NobleRing
+1/360 SoulRing
+1/370 BoundlessRing
+1/370 ThunderRing
+1/370 TaeGukRing
+1/590 MajesticRing
+1/890 ExternalRing
+
+;Bracelets
+1/370 8TrigramWheel
+1/370 HangMaWheel
+1/370 BokMaWheel
+1/390 BaekTaGlove
+1/390 SpiritReformer
+1/390 HolyTaoWheel
+1/515 MajesticWheel
+1/800 ExternalWheel
+
+;Necklace
+1/320 GaleNecklace
+1/350 DemonicBells
+1/350 SoulNecklace
+1/390 MeteoriteOfArchey 
+1/390 HeroNecklace
+1/390 AdamantineNecklace
+1/390 RequiemNecklace
+1/550 MajesticNecklace
+1/800 ExternalNecklace
+
+

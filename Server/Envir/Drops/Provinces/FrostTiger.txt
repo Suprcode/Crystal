@@ -1,0 +1,153 @@
+;Gold
+1/1 Gold 8500
+
+;Weapons
+1/50 PrinceDagger 
+1/50 MartialSword 
+1/50 HookedSpear 
+1/50 KrissSword 
+1/50 IronBlades 
+1/50 LongBow 
+1/250 PowerAxe 
+1/300 PurifierSword 
+1/800 FireBloodSword 
+1/800 GreatAxe 
+1/800 MageStaff 
+1/800 SerpentSword 
+1/800 SilverBow 
+1/2500 JudgementMace 
+1/2500 WarMageStaff 
+1/2500 SoulSpringWand 
+1/2500 BladesOfDarkness 
+1/2500 FiendBow 
+1/10000 WarSpiritBlade 
+1/10000 MagicScythe 
+1/10000 StoneBambooFan 
+1/10000 FreezingBlades 
+1/10000 LitheBow 
+
+;Armours
+1/600 MediumArmour(M) 
+1/600 MediumArmour(F) 
+1/60 HeavyArmour(M) 
+1/60 HeavyArmour(F) 
+1/60 MagicRobe(M) 
+1/60 MagicRobe(F) 
+1/60 SoulArmour(M) 
+1/60 SoulArmour(F) 
+1/60 RelicArmour(M) 
+1/60 RelicArmour(F) 
+1/60 LightLeatherArmour(M) 
+1/60 LightLeatherArmour(F) 
+
+;Helmets
+1/100 ShamanHelmet 
+1/150 SkeletonHelmet 
+
+;Necklaces
+1/100 LanternNecklace 
+1/100 TigerNecklace 
+1/650 BlueJadeNecklace 
+1/650 ConvexLens 
+1/650 BambooPipe 
+1/5000 GaleNecklace 
+1/4000 LifeNecklace 
+1/4000 ClawNecklace 
+1/4000 PearlNecklace 
+
+;Bracelets
+1/80 StrainBracelet 
+1/80 MagicBracelet 
+1/80 HardGlove 
+1/250 EbonyBracelet 
+1/250 MonkBracelet 
+1/450 DeathGauntlet 
+1/300 GoldBracelet 
+1/500 BronzeGlove 
+
+;Rings
+1/250 SkeletonRing 
+1/250 IronRing 
+1/300 CharmRing 
+1/300 MoralRing 
+1/800 DragonRing 
+1/800 RubyRing 
+1/800 PlatinumRing 
+1/200 ExpelRing 
+1/200 CoralRing 
+1/600 GaleRing 
+1/2500 PowerRing 
+1/2500 VioletRing 
+1/2500 TitanRing 
+
+;Stones
+1/2000 HealthStone(XL) 
+1/2000 MagicStone(XL) 
+1/2000 PowerStone(XL) 
+1/2000 DCStone(XL) 
+1/2000 MCStone(XL) 
+1/2000 SCStone(XL) 
+1/3000 HealthStone 
+1/3000 MagicStone 
+1/3000 PowerStone 
+1/3000 DCStone 
+1/3000 MCStone 
+1/3000 SCStone 
+
+;Potions
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/1 (HP)DrugLarge 
+1/1 (MP)DrugLarge 
+1/1 (HP)DrugLarge 
+1/1 (MP)DrugLarge 
+1/1 (HP)DrugXL 
+1/1 (MP)DrugXL 
+1/1 (HP)DrugXL 
+1/1 (MP)DrugXL 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 (HP)DrugXL 
+1/2 (MP)DrugXL 
+1/2 (HP)DrugXL 
+1/2 (MP)DrugXL 
+1/2 (MP)DrugLarge 
+1/2 (MP)DrugXL 
+1/30 ImpactDrug(S) 
+1/30 MagicDrug(S) 
+1/30 TaoistDrug(S) 
+1/30 StormDrug(S) 
+1/30 StaminaAid(S) 
+1/30 MagicAid(S) 
+
+;Books
+1/2000 ShoulderDash 
+1/5000 TwinDrakeBlade 
+1/4000 Entrapment 
+1/5000 FlamingSword 
+1/2000 ThunderStorm 
+1/5000 IceStorm 
+1/12000 FlameDisruptor 
+1/20000 Mirroring 
+1/50000 FlameField 
+1/5000 Purification 
+1/8000 Hallucination 
+1/20000 Reincarnation 
+1/24000 SummonHolyDeva 
+1/40000 Curse 
+1/50000 PoisonCloud 
+1/2000 HeavenlySword 
+1/5000 FireBurst 
+1/6000 Trap 
+1/12000 PoisonSword 
+1/5000 ElementalShot 
+1/12000 StoneTrap 
+1/15000 ElementalBarrier 
+1/25000 Concentration 
+1/45000 VampireShot 

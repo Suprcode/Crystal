@@ -1,0 +1,49 @@
+[@main]
+#SAY
+ The boat goes many places. The boat will depart soon
+ Passengers, Please board the ship.
+ 
+ <To Bichon Province/@wvmove> Pay 10,000 {Gold/Gold} and Board.
+ <To Prajna Island/@wvmove1> Pay 12,000 {Gold/Gold} and Board.
+ <Talk/@talk> about each frontiers.
+ 
+[@talk]
+#SAY
+ Which frontier do you want to talk about?
+
+ <Prajna Island/@talkPI> 
+ <Back/@main>
+
+[@talkPI]
+ Prajna Island is full of rampaging monsters.
+ Some braves may take this opportunity to boost and raise
+ their reputation and fame but for the locals,it ain't nothing but just hell.
+
+ <Back/@talk>
+
+
+[@wvmove]
+#IF
+CHECKGOLD > 10000
+#ACT
+TAKEGOLD 10000
+MOVE 0 253 673
+BREAK
+#ELSESAY
+You Dont Have enough {Gold/Gold} to use my Service!
+Be gone, don't waste my time again!
+ 
+<Exit/@exit>
+
+[@wvmove1]
+#IF
+CHECKGOLD > 12000
+#ACT
+TAKEGOLD 12000
+Move 5 124 353
+break
+#ELSESAY
+You Dont Have enough {Gold/Gold} to use my Service!
+Be gone, don't waste my time again!
+ 
+<Exit/@exit>

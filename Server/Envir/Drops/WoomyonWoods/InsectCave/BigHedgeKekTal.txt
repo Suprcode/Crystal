@@ -1,0 +1,12 @@
+;Gold
+1/30 Gold 2500
+
+;Potions
+1/40   (HP)DrugLarge
+1/40   (MP)DrugLarge
+1/40   (HP)DrugLarge
+1/40   (MP)DrugLarge
+1/40   SunPotion(M)
+1/40   SunPotion(M)
+1/40   SunPotion(M)
+1/40   SunPotion(M)

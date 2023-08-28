@@ -1,0 +1,18 @@
+[@Main]
+{
+#IF
+CHECKITEM GuardRental[7d]
+#ACT
+GOTO @Next-2
+#ELSEACT
+LocalMessage "You don't own a Guard Rental Scroll" Hint
+
+[@Next-2]
+#IF
+PETCOUNT > 0
+#ACT
+CLEARPETS
+#ELSEACT
+GIVEPET GameShop_Guard
+LocalMessage "A Guard as been summoned to assist you in your battle" Hint
+}

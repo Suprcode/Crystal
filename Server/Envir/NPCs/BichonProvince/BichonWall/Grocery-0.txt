@@ -1,0 +1,134 @@
+;;540
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Hello traveller, How may I help you?
+ 
+<View/@BuySell> Store. 
+<Ask/@Ask> about Item.
+ 
+<Close/@exit>
+
+[@BuySell]
+#SAY
+What Item would you like to buy or sell?
+<BuyBack/@BuyBack>
+ 
+<Back/@Main>
+
+[@BuyBack]
+#SAY
+These are the items still available to purchase back.
+ 
+<Back/@Main>
+
+[@Ask]
+#SAY
+I deal with <Candle/candle>,<Dungeonescape/dungeonescape>,
+<RandomTeleport/randomteleport>,<RepairOil/repairoil> and so on forth.
+I have heard that there are <Townteleport/townteleport> which come
+from monsters only
+ 
+<Back/@Main>
+
+[@candle]
+#SAY
+Candles are needed when it's dark. without a Candle
+you can not see anything-even your foot for darkness.
+ 
+<Back/@Ask>
+
+[@dungeonescape]
+#SAY
+A Dungeonescape scroll is a magic paper that moves you promptly
+to certain fields near the last village you visited.
+The power of Dungeonescape scroll is weak compared with
+TownTeleport scrolls but it could still save your life.
+ 
+<Back/@Ask>
+
+[@randomteleport]
+#SAY
+A Randomteleport scroll is a magic paper that can
+make you randonly move to another place in the same map.
+For example if you were in a dungeon 1st floor, you will
+move to another place on that floor by using the RT.
+If situation is dangerous but you still have potions, use this
+to help you out of a tight situation.
+ 
+<Back/@Ask>
+
+[@repairoil]
+#SAY
+A RepairOil makes the durabillity of you hand weapon rise,
+but this oil doesn't special repair your weapon, so
+remember that then maximum durabillity of the weapon
+goes down as time goes by.
+If the weapon at your hand was not expensive,
+repair with this oil sometimes during hunting.
+This will make hunts last longer.
+ 
+<Back/@Ask>
+
+[@townteleport]
+#SAY
+TownTeleport scrolls carn't be made now because the ancient
+skill is lost.... however....
+I have heard that it may come randomly from Monsters
+and you can return to a village promptly by using it...
+ 
+<Back/@Ask>
+
+[Types]
+8
+12
+17
+
+[Trade]
+Candle
+Torch
+RandomTeleport
+TownTeleport
+DungeonEscape
+Amulet
+RepairOil
+
+[Quests]
+42
+-42
+
+[@talk]
+#IF
+CHECK [540] 1
+#ACT
+GOTO @MAIN1-1
+#ELSEACT
+GOTO @MAIN1-2
+
+[@MAIN1-1]
+#ACT
+SET [540] 0
+#SAY
+Ah your the traveler.. Ive been hearing about.
+Well I refuse to tell anyone about the Emperor!
+ 
+<Close/exit>
+
+[@MAIN1-2]
+#SAY
+Have you ever heard about the Emperor? 
+Hes such a lazy good for nothing fool. Sooner we remove him
+from the throne the better. Its time for the free folk to 
+govern these lands.
+ 
+<Close/@exit>

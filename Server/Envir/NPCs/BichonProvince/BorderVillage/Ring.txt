@@ -1,0 +1,53 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Welcome. What can I do for you?
+I see you're wearing: {L: <$RING_L> R: <$RING_R>/CORAL}
+
+<View/@BuySell> Store.
+<Repair/@Repair> Ring.
+ 
+<Close/@Exit>
+
+[@BuySell]
+#SAY
+Which ring would you like to buy or sell?
+<Buy Back/@BuyBack>. 
+ 
+<Back/@Main>
+
+[@BuyBack]
+#SAY
+These are the items still available to purchase back.
+ 
+<Back/@Main>
+
+[@Repair]
+#SAY
+Would you like to repair a ring?
+ 
+ 
+ 
+<Back/@Main>
+
+[Types]
+7
+
+[Trade]
+CopperRing
+HexagonalRing
+GlassRing
+HornRing
+IronRing
+WhiteJadeRing
+BlueRing

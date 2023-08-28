@@ -1,0 +1,33 @@
+[@Description]
+Travel deep within {RedValley/Yellow} and Slay the
+{RedMoonEvil/Crimson}.
+
+[@TaskDescription]
+Eliminate the {RedMoonEvil/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+RedMoonEvil 1
+
+[@ItemTasks]
+
+[@FlagTasks]
+
+[@CarryItems]
+EvilApeOil 2
+EvilApeHeart 2
+
+[@FixedRewards]
+
+[@SelectRewards]
+RedMoonSword
+RedMoonBlades
+RedMoonBow
+
+[@ExpReward]
+
+[@GoldReward]
+
+// Pickup - BigTaoist D10061 11 16
+// Hand In - BigTaoist D10061 11 16

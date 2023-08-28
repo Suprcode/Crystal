@@ -1,0 +1,26 @@
+[@Description]
+Have you heard of the {SerpentDeadMine/Yellow}? I keep 
+hearing chain's. coming from the Mine its 
+driving me mad.
+
+[@TaskDescription]
+Eliminate 15 {ChainGhoul's/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+ChainGhoul 15
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+4800
+
+[@GoldReward]
+4800

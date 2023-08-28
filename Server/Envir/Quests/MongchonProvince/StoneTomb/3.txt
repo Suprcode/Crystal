@@ -1,0 +1,28 @@
+[@Description]
+How Deep have you been in {Stone Temple/Yellow}?
+The {WhiteBoar/Crimson} is located on Deep Within.
+
+[@TaskDescription]
+Eliminate the {WhiteBoar/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+WhiteBoar 1
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+13000
+
+[@GoldReward]
+13000
+
+// Pickup - MongchonDelegate_Michael 3 330 332
+// Hand In - MongchonDelegate_Michael 3 330 332

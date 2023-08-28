@@ -1,0 +1,80 @@
+;Gold
+1/5 Gold 15000
+
+;Potions
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (HP)DrugXL
+1/2 (MP)DrugXL
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/2 (HP)DrugXL
+1/2 (MP)DrugXL
+
+;Armours
+1/300 SteelArmour(M)
+1/300 SteelArmour(F)
+1/300 DragonRobe(M)
+1/300 DragonRobe(F)
+1/300 TitanArmour(M)
+1/300 TitanArmour(F)
+1/300 RoyalArmour(M)
+1/300 RoyalArmour(F)
+1/300 StuddedArmour(M)
+1/300 StuddedArmour(F)
+
+;Weapons
+1/600 WarSpiritBlade
+1/600 MagicScythe
+1/600 StoneBambooFan
+1/600 FreezingBlades
+1/600 LitheBow
+
+;Belts
+1/100 GoldBelt
+1/300 AdamantineBelt
+
+;Shoes
+1/50 BlackBoots
+1/150 DragonBoots
+1/200 RedScaleBoots
+
+;Helmets
+1/400 GreatHelmet
+1/400 TaoCoronet
+1/400 WisdomCoronet
+1/400 RoyalHelmet
+
+;Rings
+1/150 NobleRing
+1/150 SoulRing
+1/150 OmaSpiritRing
+1/300 TaeGukRing
+1/300 ThunderRing
+1/300 BoundlessRing
+
+;Bracelets
+1/80 SteelGauntlet
+1/190 8TrigramWheel
+1/190 HangMaWheel
+1/190 BokMaWheel
+1/350 BaekTaGlove
+1/350 SpiritReformer
+1/350 HolyTaoWheel
+
+;Necklaces
+1/500 HeroNecklace
+1/500 AdamantineNecklace
+1/500 RequiemNecklace
+
+;Crafting Materials
+1/5 SpiderWeb
+1/5 BlackThread

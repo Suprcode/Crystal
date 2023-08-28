@@ -1,0 +1,28 @@
+[@Description]
+Traveler... Traveler. I'm in dire need of your 
+help... I've just received new's regarding a 
+very rare creature in {SerpentDeadMines/Yellow} 
+the {WhiteSerpent/Crimson} sound's interesting 
+does it not? 
+
+[@TaskDescription]
+Eliminate {WhiteSerpent/Crimson} in {SerpentDeadMine/Yellow}.
+
+[@Completion]
+
+[@KillTasks]
+WhiteSerpent 1
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+5900
+
+[@GoldReward]
+5900

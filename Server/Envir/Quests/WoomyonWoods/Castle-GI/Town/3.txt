@@ -1,0 +1,32 @@
+[@Description]
+I want you to eliminate in the insects in 
+{InsectCave/Yellow} I'm a very light sleeper and i cannot 
+sleep with noise from all the insects. Please can 
+you help me.
+
+[@TaskDescription]
+Eliminate 10 {KekTal/Crimson} and {VioletKekTal/Crimson}
+
+[@Completion]
+
+[@KillTasks]
+KekTal 10
+VioletKekTal 10
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+BronzeStrap 
+
+[@SelectRewards]
+
+[@ExpReward]
+3000
+
+[@GoldReward]
+750
+
+// Pickup - Master_Shok 1 312 73
+// Hand In - Master_Shok 1 312 73

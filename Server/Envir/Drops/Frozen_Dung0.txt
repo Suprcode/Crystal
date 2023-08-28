@@ -1,0 +1,8 @@
+;Gold
+1/1 Gold 3000
+
+;Potions
+1/1 (HP)DrugMedium
+1/1 (MP)DrugMedium
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge

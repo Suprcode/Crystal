@@ -1,0 +1,26 @@
+[@Description]
+{Blacksmith Jang/LimeGreen}, has requested some help.
+Please can you go speak to him he is located
+in {WoomyonWoods/Yellow} If you follow the path North
+it will lead you to {WoomyonWoods/Yellow} town.
+
+[@TaskDescription]
+Travel to {WoomyonWoods/Yellow} and speak to {Jang/LimeGreen}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+120
+
+[@GoldReward]
+200

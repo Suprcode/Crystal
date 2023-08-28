@@ -1,0 +1,20 @@
+[@Main]
+<Use./@main-1> teleport to village stores
+
+[@main-1]
+#SAY
+I will guide you to the desired store.
+Where shall I teleport you?
+
+<Weapon shop/@Weapon>   <Reagent store/@reagent>
+
+I will be back <later/@Exit>
+
+[@reagent]
+#ACT
+MOVE 0117
+
+[@Weapon]
+#ACT
+MOVE 0120
+

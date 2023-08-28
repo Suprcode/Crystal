@@ -1,0 +1,39 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Hello Traveler. 
+Do you have anything for sale? 
+<Sell/@Sell> Items
+
+<Close/@exit>
+
+[@Sell]
+#SAY
+What do you have for trade?
+
+[TYPES]
+5
+6
+7
+11
+16
+18
+20
+
+[Quests]
+108
+-108
+109
+-109
+136
+-136

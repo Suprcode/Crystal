@@ -1,0 +1,274 @@
+;Gold
+1/1 Gold 20000 
+
+;Pots+Other
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/3 (HP)DrugLarge
+1/3 (MP)DrugLarge
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/3 (HP)DrugLarge
+1/3 (MP)DrugLarge
+1/1 SunPotion
+1/2 SunPotion
+1/1 SunPotion(M)
+1/2 SunPotion(M)
+
+
+1/15 BenedictionOil
+1/10 AncZumaRelic
+1/40 AwakeningSoul0
+1/40 AwakeningSoul0
+
+1/75 AncientZumaTaurusRune
+
+;Weapons
+1/170 ZumaJudgementMace
+1/170 ZumaFriendBow
+1/170 ZumaWarMageStaff
+1/170 ZumaSoulSpringWand
+1/225 WarSpiritBlade
+1/225 LitheBow
+1/225 MagicScythe
+1/225 StoneBambooFan
+1/300 JudgementMace
+1/300 FiendBow
+1/300 WarMageStaff 
+1/300 SoulSpringWand 
+
+;WeaponsRare
+1/550 MaleficBow
+1/550 DragonSlayer
+1/550 DragonStaff
+1/550 SoulSabre
+1/800 SwordOfWarGod 
+1/800 BowOfForce
+1/800 BladeOfSorcery 
+1/800 HeavenSword
+
+
+;Armour
+1/30 IronArmour(M)
+1/30 IronArmour(F)
+1/40 TemperedArmour(M)
+1/40 TemperedArmour(F)
+1/30 WizardRobe(M)
+1/30 WizardRobe(F)
+1/30 PearlArmour(M)
+1/30 PearlArmour(F)
+1/35 SteelArmour(M)
+1/35 SteelArmour(F)
+1/35 DragonRobe(M)
+1/35 DragonRobe(F)
+1/35 TitanArmour(M)
+1/35 TitanArmour(F)
+
+;ArmourRare
+1/10000 HeavenArmour(M)
+1/10000 HeavenArmour(F)
+1/10000 HeavenArcheyRobe(M)
+1/10000 HeavenArcheyRobe(F)
+
+;Helmets
+1/10 SkeletonHelmet
+1/10 ShamanHelmet
+1/15 GoldenTiara
+1/20 BlackIronHelmet
+1/20 HelmetOfHero
+
+
+;Helmets Rare
+1/70 GreatHelmet
+1/70 WisdomCoronet
+1/70 TaoCoronet
+1/70 RoyalHelmet 
+1/470 MajesticHelmet
+1/800 ExternalHelmet
+
+
+;Necklace
+1/10 LanternNecklace
+1/10 TigerNecklace
+1/15 BlueJadeNecklace
+1/15 ConvexLens
+1/15 BambooPipe
+1/30 ClawNecklace
+1/30 LifeNecklace
+1/30 PearlNecklace
+1/65 GreenBead
+1/65 DemonicBells
+1/65 SoulNecklace
+1/80 HeroNecklace
+1/80 MeteoriteOfArchey 
+1/80 AdamantineNecklace
+1/80 RequiemNecklace
+1/300 GaleNecklace
+
+;Necklace Rare
+1/470 MajesticNecklace
+1/275 BrutePendulum
+1/275 FiveStringNecklace
+1/275 SurvivalNecklace
+1/800 ExternalNecklace
+
+;Bracelets
+1/40 3rdEyeBracelet
+1/85 KnightBracelet
+1/85 DragonBracelet
+1/100 SteelGlove
+1/300 8TrigramWheel
+1/300 HangMaWheel
+1/300 BokMaWheel
+
+;Bracelets Rare
+1/470 MajesticWheel
+1/375 BruteSpiral
+1/375 FiveStringBracelet
+1/375 SurvivalBracelet
+1/800 ExternalWheel
+
+
+;Rings
+1/95 PowerRing
+1/95 VioletRing
+1/95 TitanRing
+1/100 GaleRing
+1/300 NobleRing
+1/300 OmaSpiritRing
+1/300 DestinyRing 
+1/300 SoulRing
+
+;Rings Rare
+1/470 MajesticRing
+1/320 BruteRing
+1/320 FiveStringRing
+1/320 SurvivalRing
+1/800 ExternalRing
+
+;Shoes
+1/10  SilkBoots
+1/20  BlackBoots
+1/30  DragonBoots
+1/50  RedScaleBoots
+
+;ShoesRare
+1/470 MajesticBoots
+1/800 ExternalBoots
+
+;Belts
+1/20 SteelBelt
+1/30 GoldBelt
+1/50 AdamantineBelt
+
+;BeltsRare
+1/470 MajesticBelt
+1/800 ExternalBelt
+
+;Medals
+1/215 AchievementMedal
+
+
+;Medals Rare
+1/215 MedalofHonor
+
+;Shields
+1/200 NanoShield
+
+
+;Shields Rare
+1/205 TrophyShield
+
+;Pads
+1/200 BoneGuards[14d]
+
+;Stone
+1/200 HolyHealthStone
+1/200 HolyMagicStone
+1/200 HolyPowerStone
+1/200 HolyDCStone
+1/200 HolyMCStone
+1/200 HolySCStone
+
+;StoneRare
+1/250 HolyAcStone
+1/250 HolyAmcStone
+1/250 HolyDefenseStone
+
+
+;Books
+;Warrior
+1/40 ShoulderDash
+1/45 SliceNDice
+1/50 TwinDrakeBlade
+1/55 Entrapment
+1/60 BladeStorm
+1/65 FlamingSword
+1/70 LionRoar
+1/75 BladeStorm
+1/80 CrossHalfMoon
+1/85 BladeAvalanche
+1/120 ProtectionField
+1/210 Rage
+
+;Wizard
+1/40 FireWall
+1/45 Lightning
+1/50 FrostCrunch
+1/55 ThunderStorm
+1/60 MagicShield
+1/65 IceStorm
+1/70 FlameDisruptor
+1/120 Mirroring
+1/210 FlameField
+
+;Taoist
+1/40 Revelation
+1/45 BlessedArmour
+1/50 EnergyRepulsor
+1/55 TrapHexagon
+1/60 Purification
+1/65 MassHealing
+1/70 Hallucination
+1/75 UltimateEnhancer
+1/80 HealingCircle
+1/85 SummonShinsu
+1/90 Reincarnation
+1/120 SummonHolyDeva
+1/210 Curse
+
+;Assassin
+1/40 Haste
+1/45 FlashDash
+1/50 LightBody
+1/55 HeavenlySword
+1/60 FireBurst
+1/65 CrescentSlash
+1/70 Trap
+1/75 PoisonSword
+1/80 MoonLight
+1/120 MPEater
+1/210 SwiftFeet
+
+;Archer
+1/40 Meditation
+1/40 ElementalShot
+1/40 ExplosiveTrap
+1/45 Concentration
+1/45 VampireShot
+1/50 SummonVampire
+1/55 BackStep
+1/60 DelayedExplosion
+1/60 ElementalBarrier
+1/120 BindingShot
+1/210 SummonToad
+1/210 PoisonShot
+1/210 CrippleShot
+
+
+;Quests
+1/2 AncZumaTempleMap Q

@@ -1,0 +1,31 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+What kind of Poison would you like to purchase?
+ 
+<Purchase/@Buy> Poison.
+ 
+<Close/@exit>
+
+[@Buy]
+#SAY
+What Posion's do you wish to buy?
+ 
+<Close/@exit>
+ 
+[Types]
+13
+
+[Trade]
+GrenPoison
+RedPoison

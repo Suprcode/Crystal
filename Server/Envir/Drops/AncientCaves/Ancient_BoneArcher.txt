@@ -1,0 +1,48 @@
+;Gold
+1/10 Gold 600
+
+;Potions
+1/10 (HP)DrugMedium
+1/10 (MP)DrugMedium
+1/30 (HP)DrugLarge
+1/30 (MP)DrugLarge
+1/20 SunPotion
+1/60 SunPotion(M)
+
+;Scrolls
+1/200 TownTeleport
+
+;Crafting Material
+1/10 Bone
+1/20 LargeBone
+1/400 FocusMarble
+1/400 EvasionMarble
+
+;Rings
+1/80 GoldRing
+1/60 SkeletonRing
+1/110 CoralRing
+1/100 ExpelRing
+1/500 TwinGoldRing
+1/500 EvilSlayerRing
+1/500 JadeSnowRing
+
+;Bracelet
+1/300 MagicBracelet
+1/60 GoldBracelet
+1/40 HardGlove
+1/300 SpellBracelet
+1/400 TaoPowerBracelet
+1/400 BracerOfMagic
+1/600 SteelGauntlet
+1/60 DeathGauntlet
+
+;Necklace
+1/80 BlueJadeNecklace
+1/80 BambooPipe
+1/80 ConvexLens
+
+
+;Helmet
+1/120 SkeletonHelmet
+1/100 ShamanHelmet

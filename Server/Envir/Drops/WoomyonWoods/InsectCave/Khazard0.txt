@@ -1,0 +1,167 @@
+;Gold
+1/1 Gold 8500
+1/50 GoldBar
+
+;Weapons
+1/160 GreatAxe
+1/160 MageStaff
+1/160 SerpentSword
+1/160 DoubleBlades
+1/160 SilverBow
+1/400 DragonSword
+1/240 BloodStealerSword
+1/475 JudgementMace
+1/475 WarMageStaff
+1/475 SoulSpringWand
+1/475 BladesOfDarkness
+1/475 FiendBow
+1/550 WarSpiritBlade
+1/550 MagicScythe
+1/550 StoneBambooFan
+1/550 FreezingBlades
+1/550 LitheBow
+1/2000 DragonSlayer
+1/2000 DragonStaff
+1/2000 SoulSabre
+1/2000 RoyalBlades
+1/2000 MaleficBow
+
+;Armours
+1/25 HeavyArmour(M) 
+1/25 HeavyArmour(F) 
+1/25 MagicRobe(M) 
+1/25 MagicRobe(F) 
+1/25 SoulArmour(M) 
+1/25 SoulArmour(F) 
+1/25 RelicArmour(M) 
+1/25 RelicArmour(F) 
+1/25 LightLeatherArmour(M) 
+1/25 LightLeatherArmour(F) 
+
+;Helmets
+1/5 BrassHelmet
+1/5 ShamanHelmet
+1/5 SkeletonHelmet
+1/35 SteelHelmet
+
+;Bracelets
+1/50 KnightBracelet
+
+;Necklaces
+1/600 SkillNecklace
+1/35 LifeNecklace
+1/35 PearlNecklace
+1/35 ClawNecklace
+
+;Rings
+1/500 MuscleRing
+1/500 RecoveryRing
+1/3000 TeleportRing
+1/2000 ProtectionRing 
+1/2000 ParalysisRing
+1/5000 RevivalRing 
+1/3000 ClearRing
+1/30 DragonRing
+1/30 RubyRing
+1/30 PlatinumRing
+
+;Belts
+1/10 BronzeBelt
+1/10 ChainBelt
+1/20 GoldBelt
+1/100 AdamantineBelt
+
+;Shoes
+1/20 BlackBoots
+1/25 SilkBoots
+1/100 DragonBoots
+1/200 RedScaleBoots
+
+;Potions
+1/1 (HP)DrugLarge
+1/2 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (MP)DrugLarge
+1/1 (HP)DrugLarge
+1/2 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (MP)DrugLarge
+1/1 Sunpotion(M)
+1/1 Sunpotion(M)
+1/1 Sunpotion
+1/1 Sunpotion
+1/2 Sunpotion(M)
+1/2 Sunpotion(M)
+1/2 Sunpotion
+1/2 Sunpotion
+1/1 (HP)DrugXL
+1/2 (HP)DrugXL
+1/1 (MP)DrugXL
+1/2 (MP)DrugXL
+
+1/2 BenedictionOil
+1/2 BenedictionOil
+1/8 BenedictionOil
+
+1/30 TaoistDrug(S)
+1/30 MagicDrug(S)
+1/30 StormDrug(S)
+
+;Ore
+1/20 BlackIronOre
+1/20 BlackIronOre
+1/20 BlackIronOre
+1/45 GoldOre
+1/45 GoldOre
+1/50 Platinum
+1/50 Platinum
+1/50 Platinum
+
+;Gems
+1/200 BraveryOrb
+1/200 SoulOrb
+1/200 MagicOrb
+1/200 ProtectionOrb
+1/300 EvilSlayerOrb
+1/300 DurabilityOrb
+1/300 PoisonOrb
+1/300 FreezingOrb
+1/300 EnduranceOrb
+1/600 StormOrb
+1/600 DisillusionOrb
+1/400 AccuracyOrb
+1/400 AgilityOrb
+
+;Books
+1/100 TwinDrakeBlade 
+1/100 Entrapment 
+1/50 FlamingSword 
+1/100 LionRoar 
+1/60 CrossHalfMoon 
+1/100 BladeAvalanche 
+1/800 ProtectionField 
+1/800 Rage 
+1/100 Vampirism 
+1/50 IceStorm 
+1/60 FlameDisruptor 
+1/100 Mirroring 
+1/400 FlameField 
+1/800 MeteorStrike 
+1/1200 Blizzard 
+1/100 Hallucination 
+1/100 Purification 
+1/60 UltimateEnhancer 
+1/60 EnergyRepulsor 
+1/50 SummonShinsu 
+1/400 SummonHolyDeva 
+1/400 Curse 
+1/400 Reincarnation 
+1/800 PoisonCloud
+1/1200 EnergyShield 
+1/350 FlashDash 
+1/100 PoisonSword 
+1/100 MoonLight 
+1/100 MPEater 
+1/200 DarkBody 
+1/800 SwiftFeet 
+1/800 FireBurst 

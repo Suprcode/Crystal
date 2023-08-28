@@ -1,0 +1,61 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Hello traveller, How may I help you?
+
+I see you're holding: {<$TORCH>/CORAL}
+I see you're holding: {<$AMULET>/CORAL}
+
+<View/@BuySell> Store. 
+ 
+<Close/@exit>
+
+[@BuySell]
+#SAY
+What Item would you like to buy or sell?
+<BuyBack/@BuyBack>
+ 
+<Back/@Main>
+
+[@BuyBack]
+#SAY
+These are the items still available to purchase back.
+ 
+<Back/@Main>
+
+[Types]
+8
+12
+13
+
+[Trade]
+(HP)DrugSmall 1
+(HP)DrugSmall 5
+(HP)DrugSmall 10
+(MP)DrugSmall 1
+(MP)DrugSmall 5
+(MP)DrugSmall 10
+(HP)DrugMedium 1
+(HP)DrugMedium 5
+(HP)DrugMedium 10
+(MP)DrugMedium 1
+(MP)DrugMedium 5
+(MP)DrugMedium 10
+Candle
+Torch
+RandomTeleport
+DungeonEscape
+Amulet
+
+[Quests]
+-48

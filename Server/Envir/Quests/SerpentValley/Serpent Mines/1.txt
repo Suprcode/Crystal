@@ -1,0 +1,29 @@
+[@Description]
+Traveler. Please enter the {SerpentDeadMine/Yellow} 
+and eliminate the threat.
+
+[@TaskDescription]
+Eliminate 10 {GhostZombie/Crimson} and {DarkPriestZombie/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+GhostZombie 10
+DarkPriestZombie 10
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+4900
+
+[@GoldReward]
+4900
+
+// Pickup - VulnerableSon_Alfie 2 562 172
+// Hand In - VulnerableSon_Alfie 2 562 172

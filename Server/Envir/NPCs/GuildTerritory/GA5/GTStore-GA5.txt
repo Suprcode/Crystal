@@ -1,0 +1,22 @@
+[@Main]
+#SAY
+Hello traveller. How can i help you?
+ 
+<Access/@Storage> Storage
+
+You have <$PARCELAMOUNT> parcels awaiting collection.
+
+<Send/@SendParcel> Parcel
+
+<Collect/@CollectParcel> Parcels
+ 
+<Close/@exit>
+
+
+
+[@Storage]
+#SAY
+What item do you want to store or withdraw?
+ 
+<Back/@Main> - <Close/@exit>
+

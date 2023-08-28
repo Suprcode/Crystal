@@ -1,0 +1,24 @@
+
+;;PremiumPass
+[@_UseItem(24)]
+#SAY
+Not added yet.
+PremiumPass.
+
+;;PremiumPass
+[@_UseItem(30)]
+#SAY
+Not added yet.
+PremiumPass.
+
+;;PremiumPass
+[@_UseItem(36)]
+#SAY
+Not added yet.
+PremiumPass.
+
+;;PremiumPass
+[@_UseItem(42)]
+#SAY
+Not added yet.
+PremiumPass.

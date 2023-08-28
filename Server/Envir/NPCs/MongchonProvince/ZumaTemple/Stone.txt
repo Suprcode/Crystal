@@ -1,0 +1,33 @@
+;;4F
+[@MAIN]
+#IF
+CHECKQUEST 153 1
+#ACT
+GOTO @MAIN-1
+#ELSESAY
+Nothing happens.
+
+[@MAIN-1]
+#IF
+LEVEL > 54
+LEVEL < 70
+#SAY
+A Mysterious Stone with Ancient symbols.
+"The still dont remain still for <long./@zumatemplea>"
+{ZumaHeart/LightSteelBlue} Required {Level55~70./KHAKI}
+ 
+<Close/@exit>
+#ELSESAY
+Nothing happens.
+ 
+ 
+<Close/@exit>
+
+[@zumatemplea]
+#IF
+CHECKITEM ZumaHeart 1
+#ACT
+TAKEITEM ZumaHeart 1
+MOVE 0157A 18 17
+#ELSESAY
+Nothing happens.

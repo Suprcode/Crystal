@@ -1,0 +1,31 @@
+[@Description]
+There is a small farm near {Bichon/Yellow}. This farm is
+being attacked by insects. The reports are
+saying that these insects live in {InsectCave/Yellow}.
+Could you hunt them in {InsectCave/Yellow} for me?
+
+[@TaskDescription]
+Follow the Path North to {WoomyonWoods/Yellow} and
+Eliminate 25 {SpiderFrog's/Crimson} in {InsectCave/Yellow}
+
+[@Completion]
+
+[@KillTasks]
+SpiderFrog 25
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+3100
+
+[@GoldReward]
+3100
+
+// Pickup - Examiner_Tony 0 340 257
+// Hand In - Examiner_Tony 0 340 257

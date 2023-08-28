@@ -1,0 +1,9 @@
+;;Gamemaster SET to view R001 NPCs
+
+[@MAIN]
+{
+#IF
+ISADMIN
+#ACT
+SET [952] 1
+}

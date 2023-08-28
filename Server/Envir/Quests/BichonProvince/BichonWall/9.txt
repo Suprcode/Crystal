@@ -1,0 +1,34 @@
+[@Description]
+{OmaCave/Yellow} are located in the west part of 
+{BichonProvince/Yellow}. This cave is filled with strong 
+monsters. It's very dark and almost like a maze 
+inside. Do you think you are ready to show your 
+courage?
+
+[@TaskDescription]
+Kill {Skeleton's/Crimson} in {OmaCave/Yellow} and Collect 
+{SkeletonBone's/LightSteelBlue}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+SkeletonBone 15
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+SharpSword
+SharpTrident
+SharpScimitar
+SharpSabre
+ToughBow
+
+[@ExpReward]
+1400
+
+[@GoldReward]
+350

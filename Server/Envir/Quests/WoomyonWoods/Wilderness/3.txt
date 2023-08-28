@@ -1,0 +1,32 @@
+[@Description]
+You remind me of my granschild. She went to
+{Bichon/Yellow} to make money. I heard she was working
+at a butcher's store. Could you let her know that
+I'm doing well?
+
+[@TaskDescription]
+Talk to {Sarah/LimeGreen} in {BichonWall/Yellow}.
+
+[@Completion]
+Thankyou traveller. I was getting worried about
+my grandad.
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+StrongLeatherShoes 
+
+[@SelectRewards]
+
+[@ExpReward]
+876
+
+[@GoldReward]
+300
+
+// Pickup - Master_Shok 1 312 73
+// Hand In - Merchant_Sarah 0 313 271

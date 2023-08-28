@@ -1,0 +1,188 @@
+[@main]
+#SAY
+Hello {<$USERNAME>/KHAKI}, Want a boost?
+
+<Yes/@Yes> <No/@Exit>
+
+[@YES]
+#IF
+CHECKCLASS Warrior
+#ACT
+GOTO @Warrior
+ELSESAY
+#IF
+CHECKCLASS Wizard
+#ACT
+GOTO @Wizard
+ELSESAY
+#IF
+CHECKCLASS Taoist
+#ACT
+GOTO @Taoist
+ELSESAY
+#IF
+CHECKCLASS Assassin
+#ACT
+GOTO @Assassin
+
+[@Warrior]
+#ACT
+GIVEITEM BlackTigerArmour(M) 1
+GIVEITEM BlackTigerArmour(F) 1
+GIVEITEM HelmetOfKings 1
+GIVEITEM BlackTigerHammer 1
+GIVEITEM TarragonNecklace 1	
+GIVEITEM DualTitanAmulet 2
+GIVEITEM PledgeRing	2
+GIVEITEM BeltOfDarkness	1
+GIVEITEM BootsOfDarkness 1
+GIVEITEM HolyDCStone 1
+#SAY
+<Spells/@SpellsWarrior>
+
+[@SpellsWarrior]
+#ACT
+GIVESKILL Fencing 3
+GIVESKILL Slaying 3
+GIVESKILL Thrusting 3
+GIVESKILL Half Moon 3
+GIVESKILL Shoulder Dash 3
+GIVESKILL Twin Drake Blade 3
+GIVESKILL Entrapment 3
+GIVESKILL LionRoar 3
+GIVESKILL CrossHalfMoon 3
+GIVESKILL BladeAvalanche 3
+GIVESKILL ProtectionField 3
+GIVESKILL Rage 3
+GIVESKILL Fury 3
+GIVESKILL CounterAttack 3
+GIVESKILL Fury 3
+GIVESKILL SlashingBurst 3
+GIVESKILL ImmortalSkin 3
+#SAY
+<Level/@Level>
+
+[@Wizard]
+#ACT
+GIVEITEM LotusArmour(M) 1
+GIVEITEM LotusArmour(F) 1
+GIVEITEM HelmetOfSorcery 1
+GIVEITEM TarragonNecklace 1
+GIVEITEM EvilWhispAmulet 2
+GIVEITEM CrimsonRubyRing 2
+GIVEITEM BeltOfDarkness	1
+GIVEITEM BootsOfDarkness 1
+GIVEITEM HolyMCStone 1
+GIVEITEM StaffOfLotus 1
+#SAY
+<Spells/@SpellsWizard>
+
+[@SpellsWizard]
+#ACT
+GIVESKILL Fireball 3
+GIVESKILL Repulse 3
+GIVESKILL ElectricShock 3
+GIVESKILL GreatFireball 3
+GIVESKILL HellFire 3
+GIVESKILL Thunderbolt 3
+GIVESKILL Teleport 3
+GIVESKILL Firewall 3
+GIVESKILL Lighning 3
+GIVESKILL Frostcrunch 3
+GIVESKILL Thunderstorm 3
+GIVESKILL Magicshield 3
+GIVESKILL Turnundead 3
+GIVESKILL Vampirism 3
+GIVESKILL Icestorm 3
+GIVESKILL Flamedisruptor 3
+GIVESKILL Mirroring 3
+GIVESKILL Flamefield 3
+GIVESKILL Blizzard 3
+GIVESKILL MagicBooster 3
+GIVESKILL MeteorStrike 3
+GIVESKILL Cataclysm 3
+GIVESKILL IceThrust 3
+GIVESKILL FireBounce 3
+#SAY
+<Level/@Level>
+
+[@Taoist]
+#ACT
+GIVEITEM CraneArmour(M) 1
+GIVEITEM CraneArmour(F) 1
+GIVEITEM PurifiedMask 1
+GIVEITEM TarragonNecklace 1
+GIVEITEM SacredAngelAmulet 2
+GIVEITEM FiveElementRing 2
+GIVEITEM BeltOfDarkness	1
+GIVEITEM BootsOfDarkness 1 
+GIVEITEM HolySCStone 1
+#SAY
+<Spells/@SpellsTaoist>
+
+[@SpellsTaoist]
+#ACT
+GIVESKILL Healing 3
+GIVESKILL SpiritSword 3
+GIVESKILL Poisoning 3
+GIVESKILL SoulFireball 3
+GIVESKILL SummonSkeleton 3
+GIVESKILL Hiding 3
+GIVESKILL MassHiding 3
+GIVESKILL SoulShield 3
+GIVESKILL Revelation 3
+GIVESKILL BlessedArmour 3
+GIVESKILL EnergyRepulsor 3
+GIVESKILL TrapHexagon 3
+GIVESKILL Purification 
+GIVESKILL MassHealing 3
+GIVESKILL Hallucination 3
+GIVESKILL UltimateEnhancer 3
+GIVESKILL SummonShinsu 3
+GIVESKILL Reincarnation 3
+GIVESKILL SummonHolyDeva 3
+GIVESKILL Curse 3
+GIVESKILL Plague 3
+GIVESKILL PoisonCloud 3
+GIVESKILL EnergyShield 3
+GIVESKILL PetEnhancer 3
+GIVESKILL HealingCircle 3
+#SAY
+<Level/@Level>
+
+[@Assassin]
+#ACT
+GIVEITEM StealthArmour(M) 1
+GIVEITEM StealthArmour(F) 1
+GIVEITEM DemonShadow 1
+GIVEITEM TarragonNecklace 1
+GIVEITEM DualTitanAmulet 2
+GIVEITEM PledgeRing	2
+GIVEITEM BeltOfDarkness	1
+GIVEITEM BootsOfDarkness 1
+GIVEITEM HolyDCStone 1
+#SAY
+<Spells/@SpellsAssassin>
+
+[@SpellsAssassin]
+#ACT
+GIVESKILL Fatalsword 3
+GIVESKILL Doubleslash 3
+GIVESKILL Haste 3
+GIVESKILL Lightbody 3
+GIVESKILL Heavenlysword 3
+GIVESKILL Fireburst 3
+GIVESKILL Trap 3
+GIVESKILL Poisonsword 3
+GIVESKILL Moonlight 3
+GIVESKILL Mpeater 3
+GIVESKILL Swiftfeet 3
+GIVESKILL DarkBody 3
+GIVESKILL Hemorrhage 3
+GIVESKILL MoonMist 3
+#SAY
+<Level/@Level>
+
+[@Level]
+#ACT
+CHANGELEVEL 55

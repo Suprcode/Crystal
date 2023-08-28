@@ -1,0 +1,53 @@
+;Gold
+1/6 Gold 2750
+
+;Pots + Other
+1/4 (HP)DrugXL
+1/4 (MP)DrugXL
+1/10 (HP)DrugXL
+1/10 (MP)DrugXL
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+1/200 AntidoteMarble
+
+;Quests
+

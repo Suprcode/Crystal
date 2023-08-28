@@ -1,0 +1,29 @@
+;Gems
+1/300 BraveryGem
+1/300 MagicGem
+1/300 SoulGem
+1/200 ProtectionGem
+1/200 EvilSlayerGem
+1/200 DurabilityGem
+1/400 PoisonGem
+1/400 FreezingGem
+1/450 AccuracyGem
+1/450 StormGem
+1/450 AgilityGem
+1/500 EnduranceGem
+1/500 DisillusionGem
+
+;Orbs
+1/300 BraveryOrb
+1/300 MagicOrb
+1/300 SoulOrb
+1/200 ProtectionOrb
+1/200 EvilSlayerOrb
+1/200 DurabilityOrb
+1/400 PoisonOrb
+1/400 FreezingOrb
+1/450 AccuracyOrb
+1/450 StormOrb
+1/450 AgilityOrb
+1/500 EnduranceOrb
+1/500 DisillusionOrb

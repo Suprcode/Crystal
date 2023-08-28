@@ -1,0 +1,34 @@
+[@Description]
+We have been receiving new report's.
+There is a New type of creature in the {Temple/Yellow}.
+
+[@TaskDescription]
+Eliminate 30 {WoomaWarrior's/Crimson} and a 
+{WoomaGaurdian/Crimson} and return his {Horn/LightSteelBlue}.
+
+[@Completion]
+
+[@KillTasks]
+WoomaWarrior 30
+WoomaGuardian 1
+
+[@ItemTasks]
+WoomasHorn 1
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+BlueJadePendant
+WizardRing
+RingOfMoral
+
+[@ExpReward]
+11000
+
+[@GoldReward]
+11000
+
+// Pickup - SubjugationManager_James 1 343 182
+// Hand In - 

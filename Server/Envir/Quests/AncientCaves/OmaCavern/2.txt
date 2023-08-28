@@ -1,0 +1,30 @@
+[@Description]
+There seem's tobe a pattern to the Scyther..
+Maybe someone in {CastleBichon/Yellow} can scyther the
+ancient symbols.
+
+[@TaskDescription]
+Return to {CastleBichon/Yellow} Enquire about the symbols.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@FlagTasks]
+533 "Enquire at the Library."
+534 "Enquire at the Inn."
+535 "Finally Understand how the Scyther Works."
+536 "Return to the MysteriousStone in OmaCavern."
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+3900
+
+[@GoldReward]

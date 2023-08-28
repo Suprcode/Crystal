@@ -1,0 +1,30 @@
+;Gold
+1/10 Gold 700
+
+;Potions
+1/10 (HP)DrugLarge
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/10 (MP)DrugLarge
+1/20 (HP)DrugLarge
+1/20 (MP)DrugLarge
+1/30 SunPotion
+1/60 SunPotion
+1/50 SunPotion(M)
+1/100 SunPotion(M)
+1/150 ImpactDrug(M)
+1/150 MagicDrug(M)
+1/150 TaoistDrug(M)
+1/150 StormDrug(S)
+
+;Necklaces
+1/50000 SkillNecklace
+
+;Belts
+1/1000 SteelBelt
+1/3000 GoldBelt
+1/3500 AdamantineBelt
+
+;Books
+1/10000 LionRoar
+1/8500 Vampirism

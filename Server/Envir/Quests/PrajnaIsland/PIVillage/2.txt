@@ -1,0 +1,27 @@
+[@Description]
+We have been getting more attacks from the monsters lately. 
+Do you think you can eliminate the threat? 
+
+[@TaskDescription]
+Travel the Island and Eliminate 15 {ToxicGhoul's/Crimson} 
+and 10 {RoninGhoul's/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+ToxicGhoul 15
+RoninGhoul 10
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+18500
+
+[@GoldReward]
+18500

@@ -1,0 +1,27 @@
+[@Description]
+I need your help. I have a Order.. A strange One. 
+Can you travel to the local Cave? and collect some 
+{CleanSkull's/LightSteelBlue}.
+
+[@TaskDescription]
+Collect 20 {CleanSkull's/LightSteelBlue} by hunting {BoneArcher's/Crimson}, 
+{BoneBlademan/Crimson} and {BoneSpearman/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+CleanSkull 20
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+18500
+
+[@GoldReward]
+18500

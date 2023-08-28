@@ -1,0 +1,17 @@
+[@MAIN]
+#SAY
+An Monument which read's 
+  
+"Those who dare enters will die"
+<Enter/@move1>
+ 
+<Close/@exit>
+
+[@move1]
+#IF
+CHECKEXACTMON SinseokMiner >= 1 SnowCave_BOSS
+#ACT
+MOVE SnowCave_BOSS 30 37
+LocalMessage "[Sinseok Miner] Who Dares enter my Lair. You shall die with a painful death!" Shout
+#ELSEACT
+MOVE SnowCave_BOSS 30 37

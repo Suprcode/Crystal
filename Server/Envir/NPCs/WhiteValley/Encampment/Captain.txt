@@ -1,0 +1,20 @@
+[@MAIN]
+#IF
+CHECK [526] 1
+#ACT
+GOTO @MAIN1
+#ELSEACT
+GOTO @MAIN2
+
+[@MAIN1]
+#SAY
+SET [526] 1
+
+[@MAIN2]
+#SAY
+Hello <$USERNAME>, It's very strange to see new travelers.
+People tend to keep away because of the temperatures.
+Becarful the creatures are strong. If you like a challanege 
+follow the path North. It will lead to the SnowCavern from 
+rumours some kind of Ancient Creature lives within.
+<Close/@exit>

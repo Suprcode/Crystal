@@ -1,0 +1,113 @@
+;Gold
+1/5 Gold 20000
+
+;Potions
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/2 (HP)DrugXL
+1/2 (MP)DrugXL
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/2 (HP)DrugXL
+1/2 (MP)DrugXL
+1/1 SunPotion
+1/1 SunPotion(M)
+1/1 SunPotion
+1/1 SunPotion(M)
+1/1 SunPotion
+1/1 SunPotion(M)
+1/1 SunPotion
+1/1 SunPotion(M)
+1/2 SunPotion
+1/2 SunPotion(M)
+1/2 SunPotion
+1/2 SunPotion(M)
+1/2 SunPotion
+1/2 SunPotion(M)
+1/2 SunPotion
+1/2 SunPotion(M)
+1/5 BenedictionOil
+1/5 BenedictionOil
+
+;Armours
+1/30 SteelArmour(M)
+1/30 SteelArmour(F)
+1/30 DragonRobe(M)
+1/30 DragonRobe(F)
+1/30 TitanArmour(M)
+1/30 TitanArmour(F)
+1/30 RoyalArmour(M)
+1/30 RoyalArmour(F)
+1/30 StuddedArmour(M)
+1/30 StuddedArmour(F)
+
+;Weapons
+1/600 WarSpiritBlade
+1/600 MagicScythe
+1/600 StoneBambooFan
+1/600 FreezingBlades
+1/600 LitheBow
+
+;Belts
+1/30 GoldBelt
+1/30 AdamantineBelt
+
+;Shoes
+1/20 BlackBoots
+1/50 DragonBoots
+1/70 RedScaleBoots
+
+;Helmets
+1/60 GreatHelmet
+1/60 TaoCoronet
+1/60 WisdomCoronet
+1/60 RoyalHelmet
+
+;Rings
+1/40 NobleRing
+1/40 SoulRing
+1/40 OmaSpiritRing
+1/40 TaeGukRing
+1/40 ThunderRing
+1/40 BoundlessRing
+
+;Bracelets
+1/50 SteelGauntlet
+1/50 8TrigramWheel
+1/50 HangMaWheel
+1/50 BokMaWheel
+1/90 BaekTaGlove
+1/90 SpiritReformer
+1/90 HolyTaoWheel
+
+;Necklaces
+1/110 HeroNecklace
+1/110 AdamantineNecklace
+1/110 RequiemNecklace
+
+;Books
+1/300 ProtectionField
+1/100 BladeAvalanche 
+1/100 Vampirism
+1/200 Mirroring
+1/500 Blizzard
+1/300 Reincarnation
+1/300 PoisonCloud
+1/100 UltimateEnhancer
+1/100 EnergyRepulsor
+1/100 SoulShield
+1/100 FireBurst
+1/100 Trap
+1/200 PoisonSword
+1/200 Moonlight
+1/300 MPEater
+1/500 SwiftFeet
+

@@ -1,0 +1,28 @@
+[@Description]
+You seem more like a well-trained Archer now.
+I have asked {Peter/LimeGreen} to give you some work
+to do. The reward should help you in many ways,
+
+[@TaskDescription]
+Speak to {MirGuide Peter/LimeGreen} Coordinates 328:258
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+48
+
+[@GoldReward]
+60
+
+// Pickup - Captain_Jerald 0 320 476
+// Hand In - MirGuide_Peter 0 328 258

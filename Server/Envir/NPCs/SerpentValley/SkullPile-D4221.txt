@@ -1,0 +1,30 @@
+[@Main]
+#SAY
+(Hmm?! There is a note left in the skeleton pile?)
+ 
+<Read/@Read>
+ 
+<Close/@exit>
+
+
+[@Read]
+#SAY
+"From another being who endlessly wanders this place,"
+"Obtain the book and bring it to me."
+ 
+(Is this the book?)
+(<I should try it out./@Enter>)
+
+
+[@Enter]
+#IF
+CHECKITEM ScrollOfSeal 1
+#ACT
+TAKEITEM ScrollOfSeal 1
+MOVE LABY01 
+
+#ELSESAY
+You need to have the {ScrollOfSeal/LightSteelBlue} to enter!
+ 
+<Close/@Exit>
+

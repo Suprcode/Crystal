@@ -1,0 +1,956 @@
+[@Main]
+#IF
+CHECK [500] 0
+#ACT
+GOTO @check0
+#ELSEACT
+GOTO @done
+[@done]
+#IF
+CHECK [500] 1
+#ACT
+GOTO @done2
+#ELSEACT
+GOTO @next1
+[@done2]
+#SAY
+You have already completed this quest!
+<Exit/@exit>
+[@next1]
+#IF
+CHECK [501] 1
+#ACT
+GOTO @check1
+#ELSEACT
+GOTO @next2
+[@next2]
+#IF
+CHECK [502] 1
+#ACT
+GOTO @check2
+#ELSEACT
+GOTO @next3
+[@next3]
+#IF
+CHECK [503] 1
+#ACT
+GOTO @check3
+#ELSEACT
+GOTO @next4
+[@next4]
+#IF
+CHECK [504] 1
+#ACT
+GOTO @check4
+#ELSEACT
+GOTO @next5
+[@next5]
+#IF
+CHECK [505] 1
+#ACT
+GOTO @check5
+#ELSEACT
+GOTO @next6
+[@next6]
+#IF
+CHECK [506] 1
+#ACT
+GOTO @check6
+#ELSEACT
+GOTO @next7
+[@next7]
+#IF
+CHECK [507] 1
+#ACT
+GOTO @check7
+#ELSEACT
+GOTO @next8
+[@next8]
+#IF
+CHECK [508] 1
+#ACT
+GOTO @check8
+#ELSEACT
+GOTO @next9
+[@next9]
+#IF
+CHECK [509] 1
+#ACT
+GOTO @check9
+#ELSEACT
+GOTO @next10
+[@next10]
+#IF
+CHECK [510] 1
+#ACT
+GOTO @check10
+#ELSEACT
+GOTO @next11
+[@next11]
+#IF
+CHECK [511] 1
+#ACT
+GOTO @check11
+#ELSEACT
+GOTO @next12
+[@next12]
+#IF
+CHECK [512] 1
+#ACT
+GOTO @check12
+#ELSEACT
+GOTO @next13
+[@next13]
+#IF
+CHECK [513] 1
+#ACT
+GOTO @check13
+#ELSEACT
+GOTO @next14
+[@next14]
+#IF
+CHECK [514] 1
+#ACT
+GOTO @check14
+#ELSEACT
+GOTO @next15
+[@next15]
+#IF
+CHECK [515] 1
+#ACT
+GOTO @check15
+#ELSEACT
+GOTO @next16
+[@next15]
+#IF
+CHECK [516] 1
+#ACT
+GOTO @check16
+#ELSEACT
+GOTO @next17
+[@next17]
+#IF
+CHECK [517] 1
+#ACT
+GOTO @check17
+#ELSEACT
+GOTO @next18
+[@next18]
+#IF
+CHECK [518] 1
+#ACT
+GOTO @check18
+#ELSEACT
+GOTO @next19
+[@next19]
+#IF
+CHECK [519] 1
+#ACT
+GOTO @check19
+#ELSEACT
+GOTO @next20
+[@next20]
+#IF
+CHECK [520] 1
+#ACT
+GOTO @check20
+
+[@check0]
+#IF
+CHECK [501] 1
+#ACT
+GOTO @check1
+#ELSEACT
+GOTO @next21
+[@next21]
+#IF
+CHECK [502] 1
+#ACT
+GOTO @check2
+#ELSEACT
+GOTO @next31
+[@next31]
+#IF
+CHECK [503] 1
+#ACT
+GOTO @check3
+#ELSEACT
+GOTO @next41
+[@next41]
+#IF
+CHECK [504] 1
+#ACT
+GOTO @check4
+#ELSEACT
+GOTO @next51
+[@next51]
+#IF
+CHECK [505] 1
+#ACT
+GOTO @check5
+#ELSEACT
+GOTO @next61
+[@next61]
+#IF
+CHECK [506] 1
+#ACT
+GOTO @check6
+#ELSEACT
+GOTO @next71
+[@next71]
+#IF
+CHECK [507] 1
+#ACT
+GOTO @check7
+#ELSEACT
+GOTO @next81
+[@next81]
+#IF
+CHECK [508] 1
+#ACT
+GOTO @check8
+#ELSEACT
+GOTO @next91
+[@next91]
+#IF
+CHECK [509] 1
+#ACT
+GOTO @check9
+#ELSEACT
+GOTO @next101
+[@next101]
+#IF
+CHECK [510] 1
+#ACT
+GOTO @check10
+#ELSEACT
+GOTO @next111
+[@next111]
+#IF
+CHECK [511] 1
+#ACT
+GOTO @check11
+#ELSEACT
+GOTO @next121
+[@next121]
+#IF
+CHECK [512] 1
+#ACT
+GOTO @check12
+#ELSEACT
+GOTO @next131
+[@next131]
+#IF
+CHECK [513] 1
+#ACT
+GOTO @check13
+#ELSEACT
+GOTO @next141
+[@next141]
+#IF
+CHECK [514] 1
+#ACT
+GOTO @check14
+#ELSEACT
+GOTO @next151
+[@next151]
+#IF
+CHECK [515] 1
+#ACT
+GOTO @check15
+#ELSEACT
+GOTO @next161
+[@next161]
+#IF
+CHECK [516] 1
+#ACT
+GOTO @check16
+#ELSEACT
+GOTO @next171
+[@next171]
+#IF
+CHECK [517] 1
+#ACT
+GOTO @check17
+#ELSEACT
+GOTO @next181
+[@next181]
+#IF
+CHECK [518] 1
+#ACT
+GOTO @check18
+#ELSEACT
+GOTO @next191
+[@next191]
+#IF
+CHECK [519] 1
+#ACT
+GOTO @check19
+#ELSEACT
+GOTO @next201
+[@next201]
+#IF
+CHECK [520] 1
+#ACT
+GOTO @check20
+#ELSEACT
+GOTO @starting
+[@starting]
+#SAY
+Welcome.
+From now on many monsters will appear in this chamber.
+Test what you are capable of by defeating the monsters.
+There are 20 stages altogether.
+I wonder if you can beat them all...
+Will you start the challenge?
+
+<I'm ready./@start1>
+
+[@oldman]
+#ACT
+MOVE 0 355 237
+
+[@start1]
+#ACT
+SET [500] 0
+SET [501] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen SpittingSpider 1
+MonGen Oma 2
+MonGen RakingCat 2
+[@check1]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say1
+#ELSEACT
+GOTO @say2
+[@say1]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say2]
+#SAY
+You defeated them all already.
+But there are still more to go.
+Will you continue the challenge?
+<Proceed./@start2>
+<I've had enough. Let me go./@oldman>
+[@start2]
+#ACT
+SET [501] 0
+SET [502] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen CaveMaggot 1
+MonGen AxeSkeleton 1
+MonGen BoneWarrior 1
+MonGen BoneFighter 3
+[@check2]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say3
+#ELSEACT
+GOTO @say4
+[@say3]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say4]
+#SAY
+You defeated them all already.
+But there are still more to go.
+Will you continue the challenge?
+<Proceed./@start3>
+<I've had enough. Let me go./@oldman>
+[@start3]
+#ACT
+SET [502] 0
+SET [503] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen CursedShaman 1
+MonGen CursedPriest 1
+MonGen ShamanZombie 1
+MonGen CrawlerZombie 2
+[@check3]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say5
+#ELSEACT
+GOTO @say6
+[@say5]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say6]
+#SAY
+You defeated them all already.
+But there are still more to go.
+Will you continue the challenge?
+<Proceed./@start4>
+<I've had enough. Let me go./@oldman>
+[@start4]
+#ACT
+SET [503] 0
+SET [504] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen SandWorm 3
+MonGen OmaFighter 2
+MonGen OmaWarrior 1
+[@check4]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say7
+#ELSEACT
+GOTO @say8
+[@say7]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say8]
+#SAY
+You defeated them all already.
+But there are still more to go.
+Will you continue the challenge?
+<Proceed./@start5>
+<I've had enough. Let me go./@oldman>
+[@start5]
+#ACT
+SET [504] 0
+SET [505] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen Dung 1
+MonGen Dark 1
+MonGen FlamingWooma 2
+MonGen WoomaFighter 2
+[@check5]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say9
+#ELSEACT
+GOTO @say10
+[@say9]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say10]
+#SAY
+You defeated them all already.
+But there are still more to go.
+Will you continue the challenge?
+<Proceed./@start6>
+<I've had enough. Let me go./@oldman>
+[@start6]
+#ACT
+SET [505] 0
+SET [506] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen GiantWorm 2
+MonGen Centipede 2
+MonGen Tongs 2
+[@check6]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say11
+#ELSEACT
+GOTO @say12
+[@say11]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say12]
+#SAY
+You defeated them all already.
+But there are still more to go.
+Will you continue the challenge?
+<Proceed./@start7>
+<I've had enough. Let me go./@oldman>
+[@start7]
+#ACT
+SET [506] 0
+SET [507] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen WedgeMoth 2
+MonGen RedBoar 1
+MonGen BlackBoar 2
+[@check7]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say13
+#ELSEACT
+GOTO @say14
+[@say13]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say14]
+#SAY
+You defeated them all already.
+But there are still more to go.
+Will you continue the challenge?
+<Proceed./@start8>
+<I've had enough. Let me go./@oldman>
+[@start8]
+#ACT
+SET [507] 0
+SET [508] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen SpiderBat 1
+MonGen GreatSpider 1
+MonGen LureSpider 1
+MonGen VenomSpider 2
+[@check8]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say15
+#ELSEACT
+GOTO @say16
+[@say15]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say16]
+#SAY
+You defeated them all already.
+But there are still more to go.
+Will you continue the challenge?
+<Proceed./@start9>
+<I've had enough. Let me go./@oldman>
+[@start9]
+#ACT
+SET [508] 0
+SET [509] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen BigApe 1
+MonGen EvilApe 1
+MonGen RedEvilApe 1
+[@check9]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say17
+#ELSEACT
+GOTO @say18
+[@say17]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say18]
+#SAY
+You defeated them all already.
+But there are still more to go.
+Will you continue the challenge?
+<Proceed./@start10>
+<I've had enough. Let me go./@oldman>
+[@start10]
+#ACT
+SET [509] 0
+SET [510] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen BoneArcher 1
+MonGen BoneBlademan 1
+MonGen BoneCaptain 1
+[@check10]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say19
+#ELSEACT
+GOTO @say20
+[@say19]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say20]
+#SAY
+You defeated them all already.
+But there are still more to go.
+Will you continue the challenge?
+<Proceed./@start11>
+<I've had enough. Let me go./@oldman>
+[@start11]
+#ACT
+SET [510] 0
+SET [511] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen LeftGuard 1
+MonGen WindMinotaur 1
+MonGen FireMinotaur 2
+[@check11]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say21
+#ELSEACT
+GOTO @say22
+[@say21]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say22]
+#SAY
+You defeated them all already.
+But there are still more to go.
+Will you continue the challenge?
+<Proceed./@start12>
+<I've had enough. Let me go./@oldman>
+[@start12]
+#ACT
+SET [511] 0
+SET [512] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen RightGuard 1
+MonGen FireMinotaur 1
+MonGen EvilApe 1
+[@check12]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say23
+#ELSEACT
+GOTO @say24
+[@say23]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say24]
+#SAY
+You defeated them all already.
+But there are still more to go.
+Will you continue the challenge?
+<Proceed./@start13>
+<I've had enough. Let me go./@oldman>
+[@start13]
+#ACT
+SET [512] 0
+SET [513] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen ZumaStatue 1
+[@check13]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say25
+#ELSEACT
+GOTO @say26
+[@say25]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say26]
+#SAY
+You defeated them all already.
+But there are still more to go.
+Will you continue the challenge?
+<Proceed./@start14>
+<I've had enough. Let me go./@oldman>
+[@start14]
+#ACT
+SET [513] 0
+SET [514] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen WedgeMoth 1
+MonGen RightGuard 1
+MonGen ZumaGuardian 1
+[@check14]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say27
+#ELSEACT
+GOTO @say28
+[@say27]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say28]
+#SAY
+You defeated them all already.
+But there are still more to go.
+Will you continue the challenge?
+<Proceed./@start15>
+<I've had enough. Let me go./@oldman>
+[@start15]
+#ACT
+SET [514] 0
+SET [515] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen AxeOma 1
+[@check15]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say29
+#ELSEACT
+GOTO @say30
+[@say29]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say30]
+#SAY
+You defeated them all already.
+But there are still more to go.
+Will you continue the challenge?
+<Proceed./@start16>
+<I've had enough. Let me go./@oldman>
+[@start16]
+#ACT
+SET [515] 0
+SET [516] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen OmaGuard 1
+[@check16]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say31
+#ELSEACT
+GOTO @say32
+[@say31]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say32]
+#SAY
+You defeated them all already.
+But there are still more to go.
+Will you continue the challenge?
+<Proceed./@start17>
+<I've had enough. Let me go./@oldman>
+[@start17]
+#ACT
+SET [516] 0
+SET [517] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen FlailOma 1
+[@check17]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say33
+#ELSEACT
+GOTO @say34
+[@say33]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say34]
+#SAY
+You defeated them all already.
+But there are still more to go.
+Will you continue the challenge?
+<Proceed./@start18>
+<I've had enough. Let me go./@oldman>
+[@start18]
+#ACT
+SET [517] 0
+SET [518] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen WoomaGuardian 1
+[@check18]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say35
+#ELSEACT
+GOTO @say36
+[@say35]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say36]
+#SAY
+You defeated them all already.
+But there are still more to go.
+Will you continue the challenge?
+<Proceed./@start19>
+<I've had enough. Let me go./@oldman>
+[@start19]
+#ACT
+SET [518] 0
+SET [519] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen Woomataurus 1
+[@check19]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say37
+#ELSEACT
+GOTO @say38
+[@say37]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say38]
+#SAY
+You defeated them all already.
+But there are still more to go.
+Will you continue the challenge?
+<Proceed./@start20>
+<I've had enough. Let me go./@oldman>
+[@start20]
+#ACT
+SET [519] 0
+SET [520] 1
+Param1 EM001
+Param2 13
+Param3 16
+MonGen EvilSnake 1
+[@check20]
+#IF
+CHECKMON >= 1 em001
+#ACT
+GOTO @say39
+#ELSEACT
+GOTO @say40
+[@say39]
+#SAY
+You haven't beat them yet.
+Before deafeating the monsters,
+You cannot proceed to the next stage.
+<Okay./@exit>
+[@say40]
+#SAY
+Wow, you defeated them all!!
+Oh... how can someone be so mighty...
+I'm so honored to meet you.
+You are the true hero can save the continent
+when the crisis arrives.
+I'll send you back to the village with a prize.
+<Thank you./@finish>
+[@finish]
+#IF
+CHECK [520] 1
+#ACT
+breaktimerecall
+SET [500] 1
+SET [501] 0
+SET [502] 0
+SET [503] 0
+SET [504] 0
+SET [505] 0
+SET [506] 0
+SET [507] 0
+SET [508] 0
+SET [509] 0
+SET [510] 0
+SET [511] 0
+SET [512] 0
+SET [513] 0
+SET [514] 0
+SET [515] 0
+SET [516] 0
+SET [517] 0
+SET [518] 0
+SET [519] 0
+SET [520] 0
+GIVEITEM BenedictionOil 1
+GIVEGOLD 50000
+MOVE 0 355 237
+#ELSEACT
+SET [500] 1
+SET [501] 0
+SET [502] 0
+SET [503] 0
+SET [504] 0
+SET [505] 0
+SET [506] 0
+SET [507] 0
+SET [508] 0
+SET [509] 0
+SET [510] 0
+SET [511] 0
+SET [512] 0
+SET [513] 0
+SET [514] 0
+SET [515] 0
+SET [516] 0
+SET [517] 0
+SET [518] 0
+SET [519] 0
+SET [520] 0
+MOVE 0 355 237

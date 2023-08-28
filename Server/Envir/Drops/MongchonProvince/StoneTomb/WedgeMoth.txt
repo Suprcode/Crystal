@@ -1,0 +1,18 @@
+;Stones
+1/1800 HealthStone(XL) 
+1/1800 MagicStone(XL) 
+1/1800 PowerStone(XL)
+1/1800 DCStone(XL) 
+1/1800 MCStone(XL) 
+1/1800 SCStone(XL) 
+1/3800 HealthStone 
+1/3800 MagicStone 
+1/3800 PowerStone 
+1/3800 DCStone 
+1/3800 MCStone 
+1/3800 SCStone 
+
+;Potions
+1/5 (HP)DrugMedium 
+1/5 (MP)DrugMedium 
+1/10 SunPotion 

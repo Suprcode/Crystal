@@ -1,0 +1,33 @@
+[@main]
+#SAY
+
+<Use./@main-1> teleport to the village stores
+
+[@main-1]
+#SAY
+<Weapon shop/@weap>   <Armour shop/@cloth>
+<Reagent store/@pot>   <Accessory shop/@jewel>
+<Village Chief House/@chief>  
+
+[@jewel]
+#ACT
+MOVE B352
+
+
+[@cloth]
+#ACT
+MOVE B353
+
+[@weap]
+#ACT
+MOVE B351
+
+[@pot]
+#ACT
+MOVE 5 160 316
+
+
+[@chief]
+#ACT
+MOVE B354
+

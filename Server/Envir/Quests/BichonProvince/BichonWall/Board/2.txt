@@ -1,0 +1,29 @@
+[@Description]
+BichonWall Bounty, Has been submitted.
+
+[@TaskDescription]
+Travel to {OmaCave/Yellow} and collect {Skeleton Bone's/LightSteelBlue}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+SkeletonBone 15
+
+[@FlagTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+6500
+
+[@GoldReward]
+5000
+
+// Pickup - BichonWall_Board 0 334 259
+// Hand In - BichonWall_Board 0 334 259

@@ -1,0 +1,33 @@
+[@Description]
+Could you please help me. I need to restock my 
+supplies. Could you please find the materials 
+from the {Caves/Yellow} near {Bichon/Yellow}?
+
+[@TaskDescription]
+Please collect 5 {BatTeeth/LightSteelBlue} and {Skull's/LightSteelBlue} from 
+{OmaCave/Yellow}, and {ZombieEye/LightSteelBlue} from {BichonDeadMine/Yellow}.
+
+[@Completion]
+Thankyou very much brave traveller.
+
+[@KillTasks]
+
+[@ItemTasks]
+BatTeeth 5
+Skull 5
+ZombieEye 5
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+2550
+
+[@GoldReward]
+2550
+
+// Pickup - CraftsLady_Alice 0 321 265
+// Hand In - CraftsLady_Alice 0 321 265

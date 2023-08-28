@@ -1,0 +1,22 @@
+0 Gold 1000
+0 DurabilityGem
+0 Gold 10000
+0 ProtectionGem
+0 Gold 50000
+0 EvilSlayerGem
+0 Gold 100000
+0 BraveryGem
+0 Gold 250000
+0 SoulGem
+0 Gold 400000
+0 MagicGem
+0 Gold 550000
+0 PoisonGem
+0 Gold 700000
+0 FreezingGem
+0 Gold 850000
+0 EnduranceGem
+0 Gold 1000000
+0 DisillusionGem
+0 Gold 1050000
+0 StormGem

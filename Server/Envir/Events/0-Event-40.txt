@@ -1,0 +1,6 @@
+[@_EventReward]
+#ACT
+GIVEEXP 12000
+GIVEGOLD 120000
+ADDATTRIBUTEPOINT 2
+LOCALMESSAGE "You've Completed Bichon Lord Event" Hint

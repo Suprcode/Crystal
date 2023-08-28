@@ -1,0 +1,107 @@
+;;Test Server Scroll
+[@_UseItem(1)]
+#INCLUDE [SystemScripts\00Default\TestServerScroll.txt] @Main
+
+;;PK Point Reduction
+[@_UseItem(2)]
+#ACT
+REDUCEPKPOINT 100
+
+;;Sex Change
+[@_UseItem(5)]
+#IF
+CHECKGENDER Male
+#ACT
+CHANGEGENDER
+LocalMessage "Gender Changed to Female. Please relog to take effect." Hint
+#ELSEACT
+CHANGEGENDER
+LocalMessage "Gender Changed to Male. Please relog to take effect." Hint
+
+;;ExtraDrop 24Hour
+[@_UseItem(6)]
+#ACT
+GIVEBUFF Drop 86400 20
+LocalMessage "Drop Increased by 20% for 1 Day." Hint
+
+;;BlueOctagonalBox
+[@_UseItem(7)]
+#ACT
+GIVEITEM EXP30%3 1
+GIVEITEM HealthWine 1
+GIVEITEM DestructionLiquor 1
+GIVEITEM DCTorch3 1
+GIVEITEM GalePotion 1
+GIVEITEM ResurrectionScroll 1
+
+;;RedOctagonalBox
+[@_UseItem(8)]
+#ACT
+GIVEITEM EXP30%3 1
+GIVEITEM HealthWine 1
+GIVEITEM MagicalLiquor 1
+GIVEITEM MCTorch3 1
+GIVEITEM ResurrectionScroll 1
+
+;;GreenOctagonalBox
+[@_UseItem(9)]
+#ACT
+GIVEITEM EXP30%3 1
+GIVEITEM HealthWine 1
+GIVEITEM SoulLiquor 1
+GIVEITEM SCTorch3 1
+GIVEITEM ResurrectionScroll 1
+
+[@_UseItem(10)]
+#ACT
+GIVEITEM AMULET 3000
+
+;;PK Point Medicine
+[@_UseItem(11)]
+#ACT
+REDUCEPKPOINT 10
+
+;;BoxOfHolyWater 1 Day
+[@_UseItem(12)]
+#ACT
+GIVEITEM ElixirOfMight[1d] 1
+GIVEITEM ElixirOfDefensive[1d] 1
+GIVEITEM ElixirOfGinseng[1d] 1
+GIVEITEM EXP20%[1d] 1
+
+;;FishingPackage
+[@_UseItem(13)]
+#ACT
+GIVEITEM RedFishingRod[6M] 1
+GIVEITEM PremiumReel 1
+GIVEITEM PremiumFloat 1
+GIVEITEM PremiumFinder 1
+GIVEITEM PremiumBait 7200
+
+;;GoldBar/GoldBarBundle/GoldChest
+[@_UseItem(500)]
+#IF
+CHECKGOLD <= 4293967295
+#ACT
+GIVEGOLD 1000000
+LocalMessage "Gained 1 Million Gold" Hint
+#ELSEACT
+GIVEITEM GoldBar 1
+
+[@_UseItem(501)]
+#IF
+CHECKGOLD <= 4289967295
+#ACT
+GIVEGOLD 5000000
+LocalMessage "Gained 5 Million Gold" Hint
+#ELSEACT
+GIVEITEM GoldBarBundle 1
+
+[@_UseItem(502)]
+#IF
+CHECKGOLD <= 4284967295
+#ACT
+GIVEGOLD 10000000
+LocalMessage "Gained 10 Million Gold" Hint
+#ELSEACT
+GIVEITEM GoldChest 1

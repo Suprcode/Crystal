@@ -1,0 +1,106 @@
+;Gold
+1/10 Gold 4000
+
+;Potions
+1/9 (HP)DrugMedium
+1/9 (MP)DrugMedium
+1/9 (HP)DrugMedium
+1/9 (MP)DrugMedium
+1/9 (HP)DrugMedium
+1/9 (MP)DrugMedium
+1/9 (HP)DrugMedium
+1/9 (MP)DrugMedium
+1/9 (HP)DrugLarge
+1/9 (MP)DrugLarge
+1/9 (HP)DrugLarge
+1/9 (MP)DrugLarge
+1/9 (HP)DrugLarge
+1/9 (MP)DrugLarge
+1/9 (HP)DrugLarge
+1/9 (MP)DrugLarge
+1/8 SunPotion
+1/8 SunPotion
+1/8 SunPotion
+1/8 SunPotion
+1/8 SunPotion
+1/8 SunPotion
+1/10 SunPotion(M)
+1/10 SunPotion(M)
+1/10 SunPotion(M)
+1/10 SunPotion(M)
+1/10 SunPotion(M)
+
+;Armours
+1/300 IronArmour(M)
+1/300 IronArmour(F)
+1/300 WizardRobe(M)
+1/300 WitchRobe(F)
+1/300 PearlArmour(M)
+1/300 PearlArmour(F)
+1/300 AncientArmour(M)
+1/300 AncientArmour(F)
+1/300 LightLeatherArmour(M)
+1/300 LightLeatherArmour(F)
+
+;Sets
+1/200 RedOrchidRing
+1/200 RedOrchidNecklace
+1/200 RedOrchidBracelet
+1/200 RedFlowerRing
+1/200 RedFlowerNecklace
+1/200 RedFlowerBracelet
+
+;Weapons
+1/400 GreatAxe
+1/400 MageStaff
+1/400 SerpentSword
+1/400 DoubleBlades
+1/400 SilverBow
+1/3000 JudgementMace
+1/3000 WarMageStaff
+1/3000 SoulSpringWand
+1/3000 BladesOfDarkness 
+1/3000 FiendBow 
+
+;Stones
+1/800 DCStone(XL)
+1/800 MCStone(XL)
+1/800 SCStone(XL)
+1/800 HealthStone(XL)
+1/800 MagicStone(XL)
+1/1000 DCStone
+1/1000 MCStone
+1/1000 SCStone
+1/1000 HealthStone
+1/1000 MagicStone
+
+;Crafting Materials
+1/10 BlackThread
+1/10 RedThread
+
+;Helmets
+1/600 BlackIronHelmet
+1/660 HelmetOfHero
+1/400 SteelHelmet
+1/250 GoldenTiara
+
+;Rings
+1/200 DragonRing
+1/200 PlatinumRing
+1/200 RubyRing
+1/600 PowerRing
+1/600 VioletRing
+1/600 TitanRing
+
+;Bracelets
+1/600 KnightBracelet
+1/600 DragonBracelet
+1/600 SoulSpringBracelet
+
+;Necklaces
+1/600 GreenBead
+1/600 SoulNecklace
+1/600 DemonicBells
+1/200 LifeNecklace
+1/200 PearlNecklace
+1/200 ClawNecklace

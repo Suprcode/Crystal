@@ -1,0 +1,46 @@
+;Gold
+1/15 Gold 1600
+
+;Potions
+1/5 (HP)DrugLarge 
+1/5 (MP)DrugLarge 
+1/5 (HP)DrugLarge 
+1/5 (MP)DrugLarge 
+
+1/25 ImpactDrug(M) 
+1/25 MagicDrug(M) 
+1/25 TaoistDrug(M) 
+1/25 StormDrug(M) 
+1/25 StaminaAid(M) 
+1/25 MagicAid(M) 
+
+;Nothing
+1/100 AdmissionOrb
+
+
+;Helmet Rare
+1/1600 ExternalHelmet
+
+
+;Necklaces Rare
+1/1600 ExternalNecklace
+
+
+;Bracelets Rare
+1/1600 ExternalWheel
+
+
+;Ring Rare
+1/1600 ExternalRing
+
+
+;Shoes Rare
+1/1500 ExternalBoots
+
+
+;Belts Rare
+1/1500 ExternalBelt
+
+
+;Quests
+1/10 FoxSkull Q

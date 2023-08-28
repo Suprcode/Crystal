@@ -1,0 +1,28 @@
+[@Description]
+I went to hunt in {DeathValley/Yellow}. I ran into some 
+{Tongs/Crimson} I thought it was a Boss Monster. 
+While retreating I dropped my beloved Sword.
+
+
+[@TaskDescription]
+Travel to {Death Valley/Yellow} and retrieve {CharleySword/LightSteelBlue} 
+by killing {Tongs/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+CharleySword 1
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+9500
+
+[@GoldReward]
+9500

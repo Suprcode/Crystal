@@ -1,0 +1,31 @@
+;Gold
+1/5 Gold 1650
+
+;Potions
+1/5 (HP)DrugXL
+1/5 (MP)DrugXL
+1/10 SunPotion
+1/10 SunPotion
+
+1/15000 SmasherRing
+1/15000 BlizzardRing
+1/15000 MistyRing
+1/15000 SlicerRing
+
+;Assassin
+1/45100 ZincBlades
+1/55250 ButcheringBlades
+1/55550 MadDragonBlades
+1/55650 TheRipper
+
+1/4000 HolyHealthStone
+1/4000 HolyMagicStone
+1/4000 HolyPowerStone
+1/4000 HolyDCStone
+1/4000 HolyMCStone
+1/4000 HolySCStone
+1/4000 HolyAcStone
+1/4000 HolyDefenseStone
+
+1/2000 BenedictionOil
+

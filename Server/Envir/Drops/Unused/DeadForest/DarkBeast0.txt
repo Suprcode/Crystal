@@ -1,0 +1,12 @@
+;Gold
+1/5 Gold 1000
+
+;Potions
+1/15 (HP)DrugLarge
+1/15 (MP)DrugLarge
+
+;Crafting Material
+1/60 BeastLeather
+1/40 LargeBone
+1/80 ArmourBook(SC)
+1/80 RustyArmour

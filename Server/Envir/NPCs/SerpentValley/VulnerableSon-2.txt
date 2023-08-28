@@ -1,0 +1,10 @@
+[@Main]
+#SAY
+Stranger.. Stranger.. Help. I'm scared. 
+My Father entered the Mines looking for possible Loot!
+
+<Close/@exit>
+
+[Quests]
+74
+-74

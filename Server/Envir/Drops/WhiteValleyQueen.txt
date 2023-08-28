@@ -1,0 +1,163 @@
+;Gold
+1/1 Gold 35000
+1/10 GoldBar
+
+;Pots + Other
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/2 SunPotion
+1/2 SunPotion
+1/2 SunPotion
+1/2 SunPotion
+1/2 SunPotion
+1/2 SunPotion
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/2 (HP)DrugXL
+1/2 (MP)DrugXL
+1/2 (HP)DrugXL
+1/2 (MP)DrugXL
+1/1 SunPotion 
+1/1 SunPotion  
+1/2 SunPotion  
+1/2 SunPotion  
+1/2 SunPotion  
+1/2 SunPotion  
+1/2 SunPotion  
+
+1/1  BenedictionOil
+1/10 GoldenBenedictionOil
+
+
+
+1/15 AwakeningSoul0
+1/15 AwakeningSoul0
+
+;Weapons
+1/400 FrozenSabre
+1/400 GrimBow
+1/400 ConquerorSpear
+1/400 BastardSword
+1/800 BlackTigerHammer
+1/800 LethalBow
+1/800 StaffOfLotus
+1/800 FanOfCrane
+1/1800 FrozenSlayer
+1/1800 FrozenStaff
+1/1800 FrozenWand
+
+;Armour
+1/200 BlackTigerArmour(M)
+1/200 BlackTigerArmour(F)
+1/200 LotusArmour(M)
+1/200 LotusArmour(F)
+1/200 CraneArmour(M)
+1/200 CraneArmour(F)
+1/700 WatcherSuit(M)
+1/700 WatcherSuit(F)
+1/1400 FrozenArmour(M)
+1/1400 FrozenArmour(F)
+
+;Helmets
+1/550 WatcherHelmet
+1/570 PuiYuHelmet
+1/570 HelmetOfDarkness
+1/1470 FrozenHelmet
+
+;Necklace
+1/100 AdamantNecklace
+1/100 EvilTriangle
+1/100 CrossPurified
+1/1400 FrozenNecklace
+
+;Bracelets
+1/100 WildTitanAmulet
+1/100 EnchantedAmulet
+1/100 FiveElementAmulet
+1/500 WatcherGloves
+1/1400 FrozenWheel
+
+;Rings
+1/100 GoldDragonRing
+1/100 DemonRubyRing
+1/100 EvilExpelRing
+1/1400 FrozenRing
+
+;Shoes
+1/550 WatcherBoots
+1/500 BootsOfDarkness
+1/1450 FrozenBoots
+
+;Belts
+1/100 BeltOfDarkness
+1/1400 FrozenBelt
+
+;Medals
+
+
+;Shields
+1/1300 FrozenShield
+
+;Pads
+
+
+;Stone
+1/800 FrozenStone
+
+;Gems/Orbs
+1/25 BraveryGem
+1/25 MagicGem
+1/25 SoulGem
+1/20 ProtectionGem
+1/20 EvilSlayerGem
+1/32 PoisonGem
+1/32 FreezingGem
+1/80 StormGem
+1/80 AccuracyGem
+1/80 AgilityGem
+1/25 BraveryOrb
+1/25 MagicOrb
+1/25 SoulOrb
+1/20 ProtectionOrb
+1/20 EvilSlayerOrb
+1/32 PoisonOrb
+1/32 FreezingOrb
+1/80 StormOrb
+1/80 AccuracyOrb
+1/80 AgilityOrb
+
+
+;Books
+;;Warrior
+1/500 Rage
+1/800 SlashingBurst
+
+;;Wizard
+1/700 MagicBooster
+1/800 IceThrust
+1/900 LavaKing
+1/900 FrozenRains
+
+;;Taoist
+1/500 PoisonCloud
+1/700 Plague
+1/800 PetEnhancer
+1/900 HeadShot
+1/950 HolyShield
+
+
+;;Assassin
+1/900 MoonMist
+1/900 FuryWaves
+
+;Archer
+1/500 CrippleShot
+1/700 SummonSnakes
+1/800 NapalmShot
+
+
+;CraftingMaterials

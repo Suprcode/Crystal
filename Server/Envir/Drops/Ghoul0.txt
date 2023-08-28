@@ -1,0 +1,88 @@
+;Gold
+1/1 Gold 2000
+
+;Pots + Other
+1/1 SunPotion    
+1/1 SunPotion(M)  
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+
+1/30 ImpactDrug(S) 
+1/30 MagicDrug(S) 
+1/30 TaoistDrug(S) 
+1/30 StormDrug(S) 
+1/30 StaminaAid(S) 
+1/30 MagicAid(S) 
+
+
+;Weapons
+
+
+;Weapons Rare
+
+
+;Armour
+
+
+;Armour Rare
+
+
+;Helmets
+
+
+;Helmets Rare
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+;Warrior
+
+
+;Wizard
+
+
+;Taoist
+
+
+;Asassion
+
+
+;CraftingMaterials
+1/1 CopperOre
+1/1 IronOre
+1/1 SilverOre
+1/5 BlackIronOre
+1/5 GoldOre
+
+;Quests
+1/1 GhoulsChain Q
+1/2 DeadMineMap Q
+

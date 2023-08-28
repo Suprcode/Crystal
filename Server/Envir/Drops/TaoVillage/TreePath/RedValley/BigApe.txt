@@ -1,0 +1,108 @@
+;Gold
+1/5 Gold 500
+
+;Potions
+1/10 (HP)DrugMedium
+1/10 (MP)DrugMedium
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/10 SunPotion
+1/40 SunPotion(M)
+1/100 OldGinseng
+1/200 StormDrug(S)
+1/200 StaminaAid(S)
+1/200 MagicAid(S)
+1/200 ImpactDrug(S)
+1/200 MagicDrug(S)
+1/200 TaoistDrug(S)
+1/1000 Apple
+
+;Armours
+1/200 HeavyArmour(M)
+1/200 HeavyArmour(F)
+1/200 MagicRobe(M)
+1/200 MagicRobe(F)
+1/200 SoulArmour(M)
+1/200 SoulArmour(F)
+1/200 RelicArmour(M)
+1/200 RelicArmour(F)
+1/200 LightLeatherArmour(M)
+1/200 LightLeatherArmour(F)
+
+;Helmets
+1/200 ShamanHelmet
+1/400 SkeletonHelmet
+1/3400 BlackIronHelmet
+
+;Weapons
+1/80 PrinceDagger
+1/80 MartialSword
+1/80 HookedSpear
+1/80 KrissSword
+1/80 IronBlades
+1/80 LongBow
+1/200 PowerAxe
+1/300 PurifierSword
+1/2000 GreatAxe
+1/2000 MageStaff
+1/2000 SerpentSword
+1/2000 DoubleBlades
+1/2000 SilverBow
+
+;Rings
+1/60 BlackRing
+1/60 SerpentEyeRing
+1/60 PearlRing
+1/80 GoldRing
+1/80 SkeletonRing
+1/60 IronRing
+1/60 MoralRing
+1/60 CharmRing
+1/400 ExpelRing
+1/400 CoralRing
+1/800 GaleRing
+1/1000 EvilSlayerRing
+1/4000 DragonRing
+1/4000 RubyRing
+1/4000 PlatinumRing
+1/95000 PowerRing
+1/95000 VioletRing
+1/95000 TitanRing
+1/1000 TwinGoldRing
+
+;Bracelets
+1/60 StrainBracelet
+1/60 MagicBracelet
+1/60 HardGlove
+1/80 MonkBracelet
+1/80 EbonyBracelet
+1/100 DeathGauntlet
+1/100 GoldBracelet
+1/20000 SteelGlove
+1/95000 SoulSpringBracelet
+1/90000 KnightBracelet
+1/90000 DragonBracelet
+
+;Necklace
+1/60 PlatinumNecklace
+1/80 LanternNecklace
+1/80 TigerNecklace
+1/160 BlueJadeNecklace
+1/160 BambooPipe
+1/160 ConvexLens
+1/95000 GreenBead
+1/95000 DemonicBells
+1/95000 SoulNecklace
+1/90000 GaleNecklace
+
+;Crafting Materals
+1/10 BlackThread
+1/10 SpiderWeb
+
+;Books
+1/700 Purification
+1/1000 UltimateEnhancer
+
+
+;Quests
+1/10 JadeCrystal Q

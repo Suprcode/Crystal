@@ -1,0 +1,31 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Welcome <$USERNAME>, I Purchase Awakening Items
+ 
+<Sell/@Sell> Awakening Items.
+<Disassemble/@Disassemble> Items.
+ 
+[@Sell]
+#SAY
+Show me the Item you wish to Sell.
+ 
+<Back/@main>
+
+[@Disassemble]
+#SAY
+Choose which Item you wish to Disassemble.
+ 
+<Back/@Main>
+
+[Types]

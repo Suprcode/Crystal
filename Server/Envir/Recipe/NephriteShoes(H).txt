@@ -1,0 +1,12 @@
+[Recipe]
+Amount 1
+Chance 100
+Gold 5000
+
+[Tools]
+
+[Ingredients]
+SilverOre 2 12000
+NephriteShoes
+LargeBone 40
+BlackThread 80

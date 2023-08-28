@@ -1,0 +1,17 @@
+;Gold
+1/5 Gold 1650
+
+;Potions
+1/5 (HP)DrugXL
+1/5 (MP)DrugXL
+1/10 SunPotion
+1/10 SunPotion
+
+
+1/45100 FrozenSabre
+1/45100 GrimBow
+1/55250 BlackTigerHammer
+1/55250 LethalBow
+1/55550 BarbarianSword
+1/55550 ApusBow
+

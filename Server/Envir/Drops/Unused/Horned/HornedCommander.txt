@@ -1,0 +1,61 @@
+;Gold
+1/1 Gold 25000
+
+;Pots + Other
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 BenedictionOil
+1/10 AwakeningSoul0
+1/10 AwakeningSoul0
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+

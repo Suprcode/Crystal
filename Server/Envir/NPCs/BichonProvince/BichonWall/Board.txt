@@ -1,0 +1,198 @@
+[@Main]
+#SAY
+<Use./@main-1> teleport to the village stores
+<News/@ask> of the village
+
+Learn about <Rebirth/@RebirthMain>
+
+<<Create Hero/@CreateHero/Green>>
+<<ReviveHero/@ReviveHero/Red>>
+<<SealHero/@SealHero/Yellow>>
+
+[@main-1]
+#SAY
+<Weapon shop/@go-weap>   <Armour shop/@go-cloth>   <Inn/@go-inn>
+<Accessory shop/@go-access>   <Reagent Store/@go-pot>   <Bichon Inner Wall/@go-palace>
+<Book store/@go-book>  <Butcher's shop/@go-meat>   <Hairdresser/@go-hairdresser>
+
+<Close/@Exit>
+
+[@ask]
+#SAY
+News: 
+Travelling Merchant Damian visists everyday between 9:30 to 10:30
+You can sell all your loot to him.
+He always hangs out near the book store.
+
+<Back/@Main>
+
+[@go-weap]
+#ACT
+Move 0103
+
+[@go-cloth]
+#ACT
+Move 0106
+
+[@go-inn]
+#ACT
+Move 0125
+
+[@go-access]
+#ACT
+Move 0105
+
+[@go-pot]
+#ACT
+Move 0108
+
+[@go-palace]
+#ACT
+Move 0122
+
+[@go-book]
+#ACT
+Move 0104
+
+[@go-meat]
+#ACT
+Move 0102
+
+[@go-merchant]
+#ACT
+Move 0 263 256
+
+[@go-tavern]
+#ACT
+Move 0101
+
+[@go-statues]
+#ACT
+Move 0 351 243
+
+[@go-hairdresser]
+#ACT
+MOVE 0107
+
+[@ReviveHero]
+#ACT
+ReviveHero
+
+[@SealHero]
+#ACT
+SealHero
+
+[@RebirthMain]
+#SAY
+Rebirth starts at Level 60 and grants you a Rebirth Effect
+depending on your level after rebirth.
+
+Rebirth 1 - <Level 60-69/@RB1>
+Rebirth 2 - <Level 70-79/@RB2>
+Rebirth 3 - <Level 80+/@RB3>
+
+Check your rebirth eligibility above.
+
+[@RB1]
+#IF
+LEVEL < 60
+#SAY
+You need to be above Level 60 to rebirth.
+
+<Back/@RebirthMain>     <Exit/@EXIT>
+#ELSEACT
+GOTO @RB1CHECK
+
+[@RB1CHECK]
+#IF
+CHECK [993] 0
+#SAY
+Would you like to rebirth?
+
+<Yes/@RB1APPLY>       <No/@RebirthMain>
+#ELSESAY
+You are already Rebirth 1.
+
+<Back/@RebirthMain>     <Exit/@EXIT>
+
+[@RB1APPLY]
+#ACT
+SET [993] 1
+SET [1000] 1
+ADDNAMELIST ../NameLists/Rebirth1.txt
+#SAY
+You are now Reborn.
+
+<Back/@RebirthMain>     <Exit/@EXIT>
+
+[@RB2]
+#IF
+LEVEL < 70
+#SAY
+You need to be above Level 70 to rebirth.
+
+<Back/@RebirthMain>     <Exit/@EXIT>
+#ELSEACT
+GOTO @RB2CHECK
+
+[@RB2CHECK]
+#IF
+CHECK [994] 0
+#SAY
+Would you like to rebirth?
+
+<Yes/@RB2APPLY>       <No/@RebirthMain>
+#ELSESAY
+You are already Rebirth 2.
+
+<Back/@RebirthMain>     <Exit/@EXIT>
+
+[@RB2APPLY]
+#ACT
+SET [993] 0
+SET [994] 1
+DELNAMELIST ../NameLists/Rebirth1.txt
+ADDNAMELIST ../NameLists/Rebirth2.txt
+#SAY
+You are now Reborn.
+
+<Back/@RebirthMain>     <Exit/@EXIT>
+
+[@RB3]
+#IF
+LEVEL < 80
+#SAY
+You need to be above Level 80 to rebirth.
+
+<Back/@RebirthMain>     <Exit/@EXIT>
+#ELSEACT
+GOTO @RB3CHECK
+
+[@RB3CHECK]
+#IF
+CHECK [995] 0
+#SAY
+Would you like to rebirth?
+
+<Yes/@RB3APPLY>       <No/@RebirthMain>
+#ELSESAY
+You are already Rebirth 3.
+
+<Back/@RebirthMain>     <Exit/@EXIT>
+
+[@RB3APPLY]
+#ACT
+SET [994] 0
+SET [995] 1
+DELNAMELIST ../NameLists/Rebirth2.txt
+ADDNAMELIST ../NameLists/Rebirth3.txt
+#SAY
+You are now Reborn.
+
+<Back/@RebirthMain>     <Exit/@EXIT>
+
+[Quests]
+140
+-140
+141
+-141

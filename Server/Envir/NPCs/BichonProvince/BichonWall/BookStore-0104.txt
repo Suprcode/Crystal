@@ -1,0 +1,211 @@
+[@Main]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Welcome, How many i help you?
+ 
+<View/@BuySell> Store.
+Listen to the <explanation/@helpbooks> about skills.
+Seeking <Information/@information>
+ 
+<Close/@exit>
+
+[@BuySell]
+#SAY
+Please select the Book you either want to Buy or Sell.
+<Buy Back/@BuyBack>
+ 
+<Back/@Main>
+
+[@helpbooks]
+#SAY
+What kind of Books are you interested in?
+ 
+Warrior:  <Skill List/@War1>
+Wizard:   <Skill List/@Wiz1>
+Taoist:   <Skill List/@Tao1>
+Assassin: <Skill List/@Assa1>
+Archer:   <Skill List/@Arc1>
+
+
+[@War1]
+#SAY
+Level  7: Fencing
+Level 15: Slaying
+Level 22: Thrusting
+Level 26: HalfMoon
+Level 30: ShoulderDash
+Level 32: TwinDragonBlade
+Level 32: Entrapment
+<More/@War2> <Back/@helpbooks>
+
+[@War2]
+#SAY
+Level 35: FlamingSword
+Level 36: LionRoar
+Level 38: CrossHalfMoon
+Level 38: BladeAvalanche
+Level 39: ProtectionField
+Level 44: Rage
+Level 50: SlashingBurst
+<Back/@helpbooks>
+
+[@Wiz1]
+#SAY
+Level  7: FireBall
+Level 12: Repulsion
+Level 13: ElectricShock
+Level 15: GreatFireball
+Level 16: Hellfire
+Level 17: Thunderbolt
+<More/@Wiz2> <Back/@helpbooks>
+
+[@Wiz2]
+#SAY
+Level 19: Teleport
+Level 22: FireBang
+Level 24: FireWall
+Level 26: Lightning
+Level 28: FrostCrunch
+Level 30: Thunderstorm
+Level 31: MagicShield
+Level 32: TurnUndead
+<More/@Wiz3> <Back/@helpBooks>
+
+[@Wiz3]
+#SAY
+Level 33: Vampirism
+Level 35: IceStrom
+Level 38: FlameDisruptor
+Level 41: Mirroring
+Level 42: FlameField
+Level 44: Blizzard
+Level 49: MeteorStrike
+Level 53: IceFreeze
+<Back/@helpBooks>
+
+[@Tao1]
+#SAY
+Level  7: Healing
+Level  9: SpiritSword
+Level 14: Poisoning
+Level 18: SoulFireBall
+Level 19: SummonSkeletonton
+Level 20: Hiding
+<More/@Tao2> <Back/@helpbooks>
+
+[@Tao2]
+#SAY
+Level 21: MassHiding
+Level 22: SoulShield
+Level 23: Revelation
+Level 25: BlessedArmour
+Level 27: EnergyRepulsor
+Level 28: TrapHexagon
+Level 30: Purification
+<More/@Tao3> <Back/@helpBooks>
+
+[@Tao3]
+#SAY
+Level 31: MassHealing
+Level 31: Hallucination
+Level 33: UltimateEnhancer
+Level 35: SummonShinsu
+Level 37: Reincarnation
+Level 38: SummonHolyDeva
+Level 40: Curse
+Level 43: PoisonCloud
+Level 48: CelestalShield
+<Back/@helpBooks>
+
+
+[@Assa1]
+#SAY
+Level  7: FatalSword
+Level 15: DoubleSlash
+Level 20: Haste
+Level 25: FlashDash
+Level 27: LightBody
+Level 30: HeavenlySword
+Level 33: FireBurst
+<More/@Assa2> <Back/@helpBooks>
+
+[@Assa2]
+#SAY
+Level 33: Trap
+Level 34: PoisonSword
+Level 36: MoonLight
+Level 38: MPEater
+Level 40: SwiftFeet
+Level 46: DarkBody
+Level 50: MoonBlade
+<Back/@helpBooks>
+
+
+[@Arc1]
+#SAY
+Level  7: Focus
+Level  9: StraightShot
+Level 11: MentalState
+Level 14: DoubleShot
+Level 19: Meditation
+Level 20: ElementalShot
+Level 22: ExplosiveTrap
+<More/@Arc2> <Back/@helpBooks>
+
+[@Arc2]
+#SAY
+Level 23: Concentration
+Level 26: VampireShot
+Level 28: SummonVampire
+Level 30: BackStep
+Level 31: DelayedExplosion
+Level 33: ElementalBarrier
+Level 35: BindingShot
+<More/@Arc3> <Back/@helpBooks>
+
+[@Arc3]
+#SAY
+Level 37: SummonToad
+Level 40: PoisonShot
+Level 43: CrippleShot
+Level 46: SummonSnakes
+Level 48: NapalmShot
+Level 50: OneWithNature
+<Back/@helpBooks>
+
+[@Information]
+#IF
+CHECKQUEST 152 1
+#ACT
+SET [533] 1
+#SAY
+Hmm... Think ive seen those symbols before...
+Sir Mogu was asking about that language many years ago.
+Travel to the Tavern and talk to him about it.
+<Thank You/@exit>
+
+
+[Types]
+20
+
+[Trade]
+Fencing
+Slaying
+FireBall
+Repulsion
+Healing
+SpiritSword
+FatalSword
+DoubleSlash
+Focus
+StraightShot

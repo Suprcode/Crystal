@@ -1,0 +1,11 @@
+[@main]
+#SAY
+ Have you heard of the legends of Ice Hell?
+I can allow you through the gate but only if
+you're brave enough.
+
+<Take me in/@Go>  <No thankyou/@Exit>
+
+[@Go]
+#ACT
+MOVE HELL201 408 426

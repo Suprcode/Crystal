@@ -1,0 +1,4 @@
+[@main]
+Ugh... I have pain in my legs..
+Where can I take a rest?
+<Close/@exit>

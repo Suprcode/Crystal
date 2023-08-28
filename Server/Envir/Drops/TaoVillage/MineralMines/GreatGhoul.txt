@@ -1,0 +1,184 @@
+;Gold
+1/5 Gold 8500
+
+;Weapons 
+1/7 PrinceDagger 
+1/7 MartialSword 
+1/7 HookedSpear 
+1/7 KrissSword 
+1/7 IronBlades 
+1/7 LongBow 
+1/6 SteelAxe 
+1/10 SteelSword 
+1/50 PurifierSword
+1/100 FireBloodSword
+
+;Armours
+1/55 HeavyArmour(M) 
+1/55 HeavyArmour(F) 
+1/55 MagicRobe(M) 
+1/55 MagicRobe(F) 
+1/55 SoulArmour(M) 
+1/55 SoulArmour(F) 
+1/55 RelicArmour(M) 
+1/55 RelicArmour(F) 
+1/55 LightLeatherArmour(M) 
+1/55 LightLeatherArmour(F) 
+1/250 MediumArmour(M) 
+1/250 MediumArmour(F) 
+
+;Helmets
+1/35 ShamanHelmet
+1/40 SkeletonHelmet
+1/2500 BlackIronHelmet
+
+;Necklaces
+1/25 BlueJadeNecklace 
+1/25 ConvexLens 
+1/25 BambooPipe 
+1/6 LanternNecklace 
+1/6 TigerNecklace 
+1/6 PlatinumNecklace 
+1/5 NagaNecklace 
+1/5 AmberNecklace 
+1/5 PhoenixBead 
+1/200 BlueCrystalNecklace
+1/300 BlueThunderNecklace
+1/15 JadeNecklace
+1/300 SpiritPowerNecklace
+1/15 WarriorNecklace
+
+;Bracelets
+1/30 DeathGauntlet 
+1/20 GoldBracelet 
+1/6 EbonyBracelet 
+1/6 MonkBracelet 
+1/6 StrainBracelet 
+1/5 SteelBracelet 
+1/10 HardGlove 
+1/10 MagicBracelet 
+1/100 3rdEyeBracelet
+1/500 BronzeGlove
+1/300 FiveStringBracelet
+1/100 SpellBracelet
+1/300 SteelGlove
+1/300 TaoPowerBracelet
+
+;Rings
+1/10 GoldRing 
+1/10 CharmRing 
+1/10 MoralRing 
+1/6 BlackRing 
+1/6 SerpentEyeRing 
+1/6 PearlRing 
+1/6 SkeletonRing 
+1/5 BlueRing 
+1/20 ExpelRing
+1/300 DragonRing
+1/300 PlatinumRing
+1/300 RubyRing
+1/3000 TwinGoldRing
+1/50 WhiteJadeRing
+
+;Belts
+1/10 LeatherBelt
+1/15 ChainBelt
+1/35 BronzeBelt
+1/50 SteelBelt
+
+;Boots
+1/15 LeatherBelt
+1/20 SilkBoots
+1/45 BlackBoots
+
+;Stones
+1/30 DCStone(M)
+1/65 DCStone(L)
+1/30 MCStone(M)
+1/65 MCStone(L)
+1/30 SCStone(M)
+1/65 SCStone(L)
+
+;Potions
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/2 (HP)DrugMedium 
+1/2 (MP)DrugMedium 
+1/2 (HP)DrugMedium 
+1/2 (MP)DrugMedium 
+1/1 (HP)DrugLarge 
+1/1 (MP)DrugLarge 
+1/1 (HP)DrugLarge 
+1/1 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/30 ImpactDrug(S) 
+1/30 MagicDrug(S) 
+1/30 TaoistDrug(S) 
+1/30 StormDrug(S) 
+1/30 StaminaAid(S) 
+1/30 MagicAid(S) 
+
+;Ores
+1/3 BlackIronOre
+1/3 BlackIronOre
+1/3 BlackIronOre
+1/10 GoldOre
+1/10 GoldOre
+
+;Gems
+1/150 BraveryGem
+1/150 MagicGem
+1/150 SoulGem
+1/150 ProtectionGem
+1/150 EvilSlayerGem
+
+;Books
+1/10 Slaying 
+1/10 Thrusting 
+1/100 HalfMoon 
+1/100 ShoulderDash 
+1/250 FlamingSword 
+1/10 ThunderBolt 
+1/10 FireWall 
+1/50 Lightning 
+1/100 ThunderStorm 
+1/150 MagicShield 
+1/200 TurnUndead 
+1/250 IceStorm 
+1/10 SoulFireBall 
+1/10 SoulShield 
+1/50 BlessedArmour 
+1/100 TrapHexagon 
+1/25 Revelation 
+1/150 MassHealing 
+1/250 SummonShinsu 
+1/10 DoubleSlash 
+1/25 Haste 
+1/100 FlashDash 
+1/100 LightBody 
+1/150 HeavenlySword 
+1/250 PoisonSword
+1/15 ExplosiveTrap 
+1/20 Meditation 
+1/25 SummonVampire 
+1/50 DelayedExplosion 
+1/70 BackStep 
+1/100 ElementalShot 
+1/40 DoubleShot 

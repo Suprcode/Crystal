@@ -1,0 +1,49 @@
+[@Main]
+#SAY
+Hello Mirian, I'm currently protecting the Entrance to the Swamp.
+ 
+<Bribe/@next1> to enter the swamp.
+<Show Relic/@next2> - (Quest Reward Item).
+<Close/@exit>
+
+[@next1]
+#SAY
+Are you crazy? The swamp is very dangerous.
+ 
+<Bribe/@next1_1> 150,000 Gold
+<Close/@exit>
+
+[@next1_1]
+#IF
+CHECKGOLD 150000
+#ACT
+TAKEGOLD 150000
+MOVE EBEE01 15 271
+BREAK 
+CLOSE
+#ELSESAY
+You don't have enough funds..
+ 
+<Close/@exit>
+
+[@next2]
+#IF
+CHECKITEM SwampRelic
+#SAY
+Ah that Relic, such a beautiful piece of work.
+Be safe traveler.
+
+<Enter/@next2_1> the swamp.
+<Close/@exit>
+#ELSESAY
+Please don't try trick me.
+ 
+<Close/@exit>
+
+[@next2_1]
+#IF
+CHECKITEM SwampRelic
+#ACT
+MOVE EBEE01 15 271
+BREAK
+CLOSE

@@ -1,0 +1,11 @@
+#INSERT [SystemScripts\00Default\Login.txt] @Main
+#INSERT [SystemScripts\00Default\UseItems.txt] @Main
+#INSERT [SystemScripts\00Default\CustomCommands.txt] @Main
+#INSERT [SystemScripts\00Default\OnAcceptQuests.txt] @Main
+#INSERT [SystemScripts\00Default\LevelUp.txt] @Main
+#INSERT [SystemScripts\00Default\TownScroll.txt] @Main
+#INSERT [SystemScripts\00Default\DungeonScroll.txt] @Main
+#INSERT [SystemScripts\00Default\HeroUseItems.txt] @Main
+#INSERT [SystemScripts\00Default\MapCoords.txt] @Main
+#INSERT [SystemScripts\00Default\OnFinishQuests.txt] @Main
+

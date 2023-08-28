@@ -1,0 +1,181 @@
+;Gold
+1/10 Gold 13000
+
+;Weapons
+1/5 SteelSword 
+1/5 MartialSword 
+1/5 HookedSpear 
+1/5 KrissSword 
+1/5 IronBlades 
+1/5 LongBow 
+1/25 PowerAxe 
+1/30 PurifierSword 
+1/50 GreatAxe 
+1/50 MageStaff 
+1/50 SerpentSword 
+1/50 DoubleBlades 
+1/50 SilverBow 
+1/150 DragonSword 
+1/300 JudgementMace 
+1/300 WarMageStaff 
+1/300 SoulSpringWand 
+1/300 BladesOfDarkness 
+1/300 FiendBow 
+1/5000 DragonSlayer 
+1/5000 DragonStaff 
+1/5000 SoulSabre 
+1/5000 RoyalBlades 
+1/5000 MaleficBow 
+
+;Armours
+1/3 HeavyArmour(M) 
+1/3 HeavyArmour(F) 
+1/3 MagicRobe(M) 
+1/3 MagicRobe(F) 
+1/3 SoulArmour(M) 
+1/3 SoulArmour(F) 
+1/3 RelicArmour(M) 
+1/3 RelicArmour(F) 
+1/3 LightLeatherArmour(M) 
+1/3 LightLeatherArmour(F) 
+1/55 IronArmour(M) 
+1/55 IronArmour(F) 
+1/55 WizardRobe(M) 
+1/55 WitchRobe(F) 
+1/55 PearlArmour(M) 
+1/55 PearlArmour(F) 
+1/55 AncientArmour(M) 
+1/55 AncientArmour(F) 
+1/55 TemperedArmour(M) 
+1/55 TemperedArmour(F) 
+1/150 SteelArmour(M) 
+1/150 SteelArmour(F) 
+1/150 DragonRobe(M) 
+1/150 DragonRobe(F) 
+1/150 TitanArmour(M) 
+1/150 TitanArmour(F) 
+1/150 RoyalArmour(M) 
+1/150 RoyalArmour(F) 
+1/150 StuddedArmour(M) 
+1/150 StuddedArmour(F) 
+
+;Helmets
+1/10 SkeletonHelmet 
+1/10 ShamanHelmet 
+1/100 RecallHelmet 
+1/80 SpiritHelmet 
+
+;Necklaces
+1/100 RecallNecklace 
+1/10 LanternNecklace 
+1/10 TigerNecklace 
+1/15 BlueJadeNecklace 
+1/15 ConvexLens 
+1/15 BambooPipe 
+1/100 ClawNecklace 
+1/100 LifeNecklace 
+1/100 PearlNecklace 
+1/250 GreenBead 
+1/250 DemonicBells 
+1/250 SoulNecklace 
+1/550 SkillNecklace 
+
+;Bracelets
+1/100 RecallBracelet 
+1/8 StrainBracelet 
+1/8 MagicBracelet 
+1/8 HardGlove 
+1/10 EbonyBracelet 
+1/10 MonkBracelet 
+1/15 DeathGauntlet 
+1/10 GoldBracelet 
+1/20 BronzeGlove 
+1/100 SpellBracelet 
+1/100 3rdEyeBracelet 
+1/100 SteelGlove 
+1/200 KnightBracelet 
+1/200 DragonBracelet 
+1/200 SoulSpringBracelet 
+
+;Rings
+1/500 RecallRing 
+1/10 SkeletonRing 
+1/5 IronRing 
+1/15 CharmRing 
+1/15 MoralRing 
+1/7 ExpelRing 
+1/7 CoralRing 
+1/40 GaleRing 
+1/30 DragonRing 
+1/30 RubyRing 
+1/30 PlatinumRing 
+1/150 FlameRing 
+
+;Belts
+1/45 GoldBelt 
+1/100 AdamantineBelt 
+
+;Boots
+1/50 DragonBoots 
+1/100 RedScaleBoots 
+
+;Stones
+1/150 HealthStone(XL) 
+1/150 MagicStone(XL) 
+1/150 PowerStone(XL) 
+1/150 DCStone(XL) 
+1/150 MCStone(XL) 
+1/150 SCStone(XL) 
+1/550 HealthStone 
+1/550 MagicStone 
+1/550 PowerStone 
+1/550 DCStone 
+1/550 MCStone 
+1/550 SCStone 
+
+;Potions
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/1 SunPotion 
+1/1 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/30 ImpactDrug(S) 
+1/30 MagicDrug(S) 
+1/30 TaoistDrug(S) 
+1/30 StormDrug(S) 
+1/30 StaminaAid(S) 
+1/30 MagicAid(S) 
+
+;Scrolls
+1/5 BenedictionOil 
+1/10 BenedictionOil 
+
+;Books
+1/65 FlamingSword 
+1/65 IceStorm 
+1/65 SummonShinsu 
+1/65 PoisonSword 
+1/100 TwinDrakeBlade 
+1/300 CrossHalfMoon 
+1/300 FlameDisruptor 
+1/300 UltimateEnhancer 
+1/300 MPEater 

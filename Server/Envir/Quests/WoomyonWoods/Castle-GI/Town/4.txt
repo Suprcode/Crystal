@@ -1,0 +1,28 @@
+[@Description]
+Traveler. Please Warn the {SubjugationLead/LimeGreen} in 
+{WoomyonWoods/Yellow} about the pending threat.
+
+[@TaskDescription]
+Travel to {WoomyonWoods/Yellow} and warm them 
+about the pending Threat.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+1380
+
+[@GoldReward]
+2563
+
+// Pickup - SubjagationManager_James 0 343 182
+// Hand In - SubjugationLead_Eric 1 317 71

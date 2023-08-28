@@ -1,0 +1,19 @@
+;MasterShok Woomyon Woods
+[@main]
+#SAY
+I had to seek refuge in this town.. My Cabin is gone.
+
+<Close/@exit>
+
+[Quests]
+-39
+40
+-40
+41
+-61
+62
+-62
+66
+-66
+101
+-101

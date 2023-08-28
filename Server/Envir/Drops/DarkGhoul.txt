@@ -1,0 +1,172 @@
+;Gold
+1/2 Gold 2500
+
+;Potions
+1/2 SunPotion 
+1/2 SunPotion(M) 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/1 (HP)DrugLarge 
+1/1 (MP)DrugLarge
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/1 (HP)DrugLarge 
+1/1 (MP)DrugLarge 
+1/30 ImpactDrug(S) 
+1/30 MagicDrug(S) 
+1/30 TaoistDrug(S) 
+1/30 StormDrug(S) 
+1/30 StaminaAid(S) 
+1/30 MagicAid(S)
+
+;Weapons
+1/15 PowerAxe
+1/15 LongBow
+1/25 PurifierSword  
+1/10 MartialSword
+1/10 HookedSpear 
+1/10 IronBlades
+1/25 BloodStealerSword
+1/10 Scimitar
+1/15 KrissSword
+
+;Armours
+1/15 LightLeatherArmour(M)
+1/15 LightLeatherArmour(F)
+1/15 MediumArmour(M) 
+1/15 MediumArmour(F) 
+1/15 HeavyArmour(M)
+1/15 HeavyArmour(F)
+1/15 SoulArmour(M)
+1/15 SoulArmour(F)
+1/15 MagicRobe(M)
+1/15 MagicRobe(F)
+1/15 RelicArmour(M)
+1/15 RelicArmour(F)
+
+;Helmets
+1/15 BronzeHelmet 
+1/17 MagicHelmet 
+1/20 ShamanHelmet
+1/20 SkeletonHelmet
+1/250 BlackIronHelmet
+
+;Necklaces
+1/15 BlueJadeNecklace 
+1/15 ConvexLens 
+1/15 BambooPipe 
+1/6 LanternNecklace 
+1/6 TigerNecklace 
+1/6 PlatinumNecklace 
+1/5 NagaNecklace 
+1/5 AmberNecklace 
+1/5 PhoenixBead 
+
+;Bracelets
+1/10 DeathGauntlet 
+1/10 GoldBracelet 
+1/6 EbonyBracelet 
+1/6 MonkBracelet 
+1/6 StrainBracelet 
+1/5 SteelBracelet 
+1/15 SoulSpringBracelet
+1/10 HardGlove 
+1/10 MagicBracelet 
+1/10 MundaneGlove
+1/10 NokChiWheel
+1/10 TaoProtectBracelet
+
+;Rings
+1/10 GoldRing 
+1/10 CharmRing 
+1/10 MoralRing 
+1/6 BlackRing 
+1/6 SerpentEyeRing 
+1/6 PearlRing 
+1/6 SkeletonRing 
+1/5 BlueRing 
+1/10 MundaneRing
+1/10 NokChiRing
+1/10 TaoProtectRing
+
+;Belts
+1/10 LeatherBelt
+1/15 ChainBelt
+1/15 BronzeBelt
+1/20 SteelBelt
+
+;Boots
+1/15 LeatherBoots
+1/20 SilkBoots
+1/45 BlackBoots
+
+;Stones
+1/30 DCStone(M)
+1/65 DCStone(L)
+1/30 MCStone(M)
+1/65 MCStone(L)
+1/30 SCStone(M)
+1/65 SCStone(L) 
+
+;Gems
+1/450 BraveryGem
+1/450 MagicGem
+1/450 SoulGem
+1/150 ProtectionGem
+1/150 EvilSlayerGem
+
+1/1400 MajesticRing
+1/1400 MajesticNecklace
+1/1400 MajesticWheel
+1/1400 MajesticBoots
+1/1400 MajesticBelt
+
+;Books
+;Warrior
+1/30 Slaying
+1/35 Thrusting
+1/40 HalfMoon
+1/50 ShoulderDash
+1/100 SliceNDice
+1/210 TwinDrakeBlade
+
+;Wizard
+1/30 Thunderbolt
+1/35 Teleport
+1/40 FireBang
+1/45 FireWall
+1/50 Lightning
+1/55 FrostCrunch
+1/100 ThunderStorm
+1/210 MagicShield
+
+;Taoist
+1/30 SoulFireBall
+1/35 SummonSkeleton
+1/40 Hiding
+1/45 MassHiding
+1/50 SoulShield
+1/55 Revelation
+1/60 BlessedArmour
+1/65 EnergyRepulsor
+1/70 TrapHexagon
+1/100 Purification
+1/210 MassHealing
+
+;Assassin
+1/30 DoubleSlash
+1/35 Haste
+1/40 FlashDash
+1/45 LightBody
+1/100 HeavenlySword
+1/210 FireBurst
+
+;Archer
+1/30 Focus
+1/35 StraightShot
+1/40 MentalState
+1/45 DoubleShot
+1/100 Meditation
+
+;quests
+1/1 GhoulChains Q

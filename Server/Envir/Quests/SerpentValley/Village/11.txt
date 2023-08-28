@@ -1,0 +1,29 @@
+[@Description]
+Do you know where {SerpentValley/Yellow} is? It's a
+small town northwest of here. {Robert/LimeGreen} in that
+town is looking for some help. 
+Are you interested?
+
+[@TaskDescription]
+Speak to {Robert/LimeGreen} in {SerpentValley/Yellow}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+672
+
+[@GoldReward]
+925
+
+// Pickup - 
+// Hand In - Merchant_Robert 2 505 479

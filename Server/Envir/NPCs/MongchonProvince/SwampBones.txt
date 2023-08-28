@@ -1,0 +1,11 @@
+[@MAIN]
+#SAY
+<Search/@next1> the bones.
+<Close/@exit>
+
+[@next1]
+#ACT
+MOVE EBEEBOSS
+LocalMessage "You fell through a hidden hole!" Hint
+BREAK
+CLOSE

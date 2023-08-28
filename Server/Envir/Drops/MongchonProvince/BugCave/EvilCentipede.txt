@@ -1,0 +1,116 @@
+;Gold
+1/10 Gold 25000
+
+;Weapons
+1/50 BloodStealerSword 
+1/10 GreatAxe 
+1/10 MageStaff 
+1/10 SerpentSword 
+1/10 DoubleBlades 
+1/10 SilverBow 
+1/25 DragonSword 
+1/50 JudgementMace 
+1/50 WarMageStaff 
+1/50 SoulSpringWand 
+1/50 BladesOfDarkness 
+1/50 FiendBow 
+1/250 DragonSlayer 
+1/250 DragonStaff 
+1/250 SoulSabre 
+1/250 RoyalBlades 
+1/250 MaleficBow 
+
+;Helmets
+1/10 SkeletonHelmet 
+1/10 ShamanHelmet 
+1/50 BlackIronHelmet 
+
+;Necklaces
+1/500 RedOrchidNecklace 
+1/500 RedFlowerNecklace 
+1/50 GreenBead 
+1/50 DemonicBells 
+1/50 SoulNecklace 
+1/35 ClawNecklace 
+1/35 PearlNecklace 
+1/35 LifeNecklace 
+1/50 SpiritNecklace 
+1/50 GaleNecklace 
+
+;Bracelets
+1/500 RedOrchidBracelet 
+1/500 RedFlowerBracelet 
+1/35 KnightBracelet 
+1/35 SoulSpringBracelet 
+1/35 DragonBracelet 
+
+;Rings
+1/500 RedOrchidRing 
+1/500 RedFlowerRing 
+1/10 DragonRing 
+1/10 RubyRing 
+1/10 PlatinumRing 
+1/35 SpiritRing 
+1/35 PowerRing 
+1/35 VioletRing 
+1/35 TitanRing 
+1/2 ExpelRing 
+1/2 CoralRing 
+1/5000 ClearRing 
+1/5000 MuscleRing 
+1/1000 FlameRing 
+1/1000 RecoveryRing 
+1/50000 ParalysisRing 
+1/50000 TeleportRing 
+1/50000 RevivalRing 
+1/50000 ProtectionRing 
+
+;Potions
+1/1 (HP)DrugLarge 
+1/1 (MP)DrugLarge 
+1/1 (HP)DrugLarge 
+1/1 (MP)DrugLarge 
+1/1 (HP)DrugLarge 
+1/1 (MP)DrugLarge 
+1/1 (HP)DrugLarge 
+1/1 (MP)DrugLarge 
+1/1 (HP)DrugLarge 
+1/1 (MP)DrugLarge 
+1/1 (HP)DrugLarge 
+1/1 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/5 ImpactDrug(M)
+1/5 MagicDrug(M) 
+1/5 TaoistDrug(M) 
+1/5 StormDrug(M) 
+1/5 StaminaAid(M) 
+1/5 MagicAid(M) 
+
+;Scrolls
+1/5 BenedictionOil 
+1/5 BenedictionOil 
+1/5 BenedictionOil 
+1/5 BenedictionOil 
+1/5 BenedictionOil 
+1/5 BenedictionOil 
+1/5 BenedictionOil 
+1/5 BenedictionOil 
+
+;Nothing
+1/10 GoldBar 
+1/100 GoldBarBundle 
+1/1000 GoldChest 

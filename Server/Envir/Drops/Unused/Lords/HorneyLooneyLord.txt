@@ -1,0 +1,158 @@
+;Gold
+1/1 Gold 45000
+1/10 GoldBar
+
+;Pots + Other
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/2 (HP)DrugXL
+1/2 (MP)DrugXL
+1/2 (HP)DrugXL
+1/2 (MP)DrugXL
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/2 SunPotion
+1/2 SunPotion
+1/2 SunPotion
+1/2 SunPotion
+1/2 SunPotion
+1/2 SunPotion
+1/1 SunPotion 
+1/1 SunPotion  
+1/2 SunPotion  
+1/2 SunPotion  
+1/2 SunPotion  
+1/2 SunPotion  
+1/2 SunPotion  
+
+1/1  BenedictionOil
+1/10 GoldenBenedictionOil
+
+
+1/15 AwakeningSoul0
+1/15 AwakeningSoul0
+
+;Weapons
+1/1150 BarbarianSword
+1/1150 ApusBow
+1/1150 RawSword
+1/1150 BoneCarvedFan
+1/1150 MadDragonBlades
+1/1150 HorneySlayer
+1/1150 HorneyScepter
+1/1150 HorneyFeathers
+1/1150 HorneyKives
+1/2000 LordSlayerBlade
+1/2000 LordSlayerStaff
+1/2000 LordSlayerFan
+1/2000 LordSlayerBlades
+
+;Armour
+1/950 HorneySuit(M)
+1/950 HorneySuit(F)
+1/2500 HeavenArmour(M)
+1/2500 HeavenArmour(F)
+1/2500 HeavenRedArmour(M)
+1/2500 HeavenRedArmour(F)
+1/2500 HeavenGrnArmour(M)
+1/2500 HeavenGrnArmour(F)
+1/2500 HeavenGoldArmour(M)
+1/2500 HeavenGoldArmour(F)
+1/2000 LordSlayerArmour(M)
+1/2000 LordSlayerArmour(F)
+
+;Helmets
+1/2000 LordSlayerHelmet
+
+;Necklace
+1/2000 LordSlayerNecklace
+
+;Bracelets
+1/2000 LordSlayerBracelet
+
+;Rings
+1/2000 LordSlayerRing
+
+;Shoes
+1/2000 LordSlayerBoots
+
+;Belts
+1/2000 LordSlayerBelt
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gems/Orbs
+1/10 BraveryGem
+1/10 MagicGem 
+1/10 SoulGem
+1/15 ProtectionGem
+1/15 EvilSlayerGem
+1/15 DurabilityGem
+1/30 PoisonGem
+1/32 FreezingGem
+1/35 AccuracyGem
+1/35 StormGem
+1/40 EnduranceGem
+1/50 QualityGem
+1/55 CriticalDamgeForge
+1/55 CriticalRateForge
+1/55 HpDrainForge
+1/55 ReflectForge
+
+
+;Books
+;;Warrior
+1/200 BladeAvalanche
+1/400 ProtectionField
+1/500 Rage
+1/600 CounterAttack
+
+;;Wizard
+1/200 Mirroring
+1/400 MeteorStrike
+1/500 MagicBooster
+1/600 IceThrust
+1/700 LavaKing
+1/850 FrozenRains
+
+;;Taoist
+1/400 Reincarnation
+1/400 PoisonCloud
+1/500 Plague
+1/700 PetEnhancer
+1/850 HeadShot
+1/1000 HolyShield
+
+;;Assassion
+1/200 SwiftFeet
+1/400 DarkBody
+1/600 Hemorrhage
+1/700 Moonmist
+1/850 ShadowStep
+1/900 FuryWaves
+
+1/200 PoisonShot
+1/400 CrippleShot
+1/700 SummonSnakes
+1/850 NapalmShot
+1/900 OneWithNature
+
+;CraftingMaterials
+
+
+;Quests
+

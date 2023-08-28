@@ -1,0 +1,5 @@
+[@MAIN]
+#SAY
+Me and my Squad was ambushed! becareful Traveler.
+ 
+<Close/@exit>

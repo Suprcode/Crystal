@@ -1,0 +1,19 @@
+;Gold
+1/10 Gold 1000
+
+;Potions
+1/15 (HP)DrugLarge
+1/15 (MP)DrugLarge
+
+;Crafting Material
+1/100 StrongRope
+1/40 LargeBone
+1/80 ArmourBook(MC)
+1/80 RustyArmour
+1/10 StormFragment
+1/10 DisillusionFragment
+1/10 AccuracyFragment
+1/10 PoisonFragment
+1/10 FreezingFragment
+1/10 AgilityFragment
+1/10 EnduranceFragment

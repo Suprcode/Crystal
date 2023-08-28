@@ -1,0 +1,36 @@
+[@Description]
+Now, let me test you once more
+Pass through an ordeal I have prepared and bring me some
+EvilApeOil. If you do this, then I'll tell you the way to
+get the RedMoonSword
+
+[@TaskDescription]
+
+[@Completion]
+What is in the bottle is the foul blood of a RedMoonEvil I killed...
+If you disguised yourself as a demon of a man by
+smearing it on your clothes and holding an EvilHeart
+You can get the RedMoonSword. To kill the RedMoonEvil and
+To get rid of the origin of the demon depends upon you.
+It is hard for you to kill a RedMoonEvil alone,
+Band together with many other heroes..
+
+[@KillTasks]
+
+[@ItemTasks]
+EvilApeOil 1
+
+[@FlagTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+
+[@GoldReward]
+
+// Pickup - BigTaoist D10061 11 16
+// Hand In - BigTaoist D10061 11 16

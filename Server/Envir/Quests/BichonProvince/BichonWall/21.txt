@@ -1,0 +1,31 @@
+[@Description]
+That body seems to be one {Vincent/LimeGreen} is looking 
+for. The necklace matches the description 
+{Vincent/LimeGreen} gave.
+
+[@TaskDescription]
+Return the {OldNecklace/LightSteelBlue} to {Vincent/LimeGreen}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+OldNecklace 1
+
+[@FixedRewards]
+
+[@SelectRewards]
+ToughGlove
+MagicBangle
+
+[@ExpReward]
+3616
+
+[@GoldReward]
+935
+
+// Pickup - OldSkeleton D404 104 101 
+// Hand In - 

@@ -1,0 +1,25 @@
+;Gold
+1/10 Gold 1350
+1/5 SunPotion
+1/5 SunPotion
+
+;Potions
+1/30 SunPotion
+1/50 SunPotion(M)
+
+
+1/12000 HolyHealthStone
+1/12000 HolyMagicStone
+1/12000 HolyPowerStone
+1/12000 HolyDCStone
+1/12000 HolyMCStone
+1/12000 HolySCStone
+1/12000 HolyAcStone
+1/12000 HolyDefenseStone
+
+1/40000 SparklingBelt
+1/40000 SparklingBoots
+1/40000 SparklingHelmet
+1/60000 PuiYuHelmet
+
+1/7000 BenedictionOil

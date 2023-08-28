@@ -1,0 +1,807 @@
+;Level1
+;Gold
+1/1 Gold 50000 LV1
+
+;Pots + Other
+1/1 (HP)DrugXL LV1
+1/1 (MP)DrugXL LV1
+1/1 (HP)DrugXL LV1
+1/1 (MP)DrugXL LV1
+1/1 SunPotion(M) LV1
+1/1 SunPotion(M) LV1
+1/1 SunPotion(M) LV1
+1/5 SunPotion(M) LV1
+1/5 SunPotion(M) LV1
+1/5 SunPotion(M) LV1
+1/1 BenedictionOil LV1
+
+;Weapons
+
+
+;Weapons Rare
+1/370 MaleficBow LV1
+1/370 DragonSlayer LV1
+1/370 DragonStaff LV1
+1/370 SoulSabre LV1
+1/370 RoyalBlades LV1
+
+
+;Armour
+1/20 StuddedArmour(M) LV1
+1/20 StuddedArmour(F) LV1
+1/20 SteelArmour(M) LV1
+1/20 SteelArmour(F) LV1
+1/20 DragonRobe(M) LV1
+1/20 DragonRobe(F) LV1
+1/20 TitanArmour(M) LV1
+1/20 TitanArmour(F) LV1
+1/20 RoyalArmour(M) LV1
+1/20 RoyalArmour(F) LV1
+
+
+;Helmets
+1/200 MajesticHelmet LV1
+1/350 ExternalHelmet LV1
+
+;Necklace
+1/200 MajesticNecklace LV1
+1/350 ExternalNecklace LV1
+
+;Bracelets
+1/200 MajesticWheel LV1
+1/350 ExternalWheel LV1
+
+;Rings
+1/200 MajesticRing LV1
+1/350 ExternalRing LV1
+
+;Shoes
+1/200 MajesticBoots LV1
+1/350 ExternalBoots LV1
+
+;Belts
+1/200 MajesticBelt LV1
+1/350 ExternalBelt LV1
+
+
+;Shields
+1/130 SpikeShield LV1
+1/140 ArmouredShield LV1
+1/160 DomeShield LV1
+1/180 NanoShield LV1
+
+;Shields Rare
+1/190 TrophyShield LV1
+
+;Gems/Orbs
+1/70 BraveryOrb LV1
+1/70 MagicOrb LV1
+1/70 SoulOrb LV1
+1/70 ProtectionOrb LV1
+1/70 EvilSlayerOrb LV1
+1/70 DurabilityOrb LV1
+1/90 PoisonOrb LV1
+1/90 FreezingOrb LV1
+1/90 AccuracyOrb LV1
+1/90 StormOrb LV1
+1/90 AgilityOrb LV1
+1/90 EnduranceOrb LV1
+
+
+1/140 VanguardBlade LV1
+1/140 VanguardStaff LV1
+1/140 VanguardSerp LV1
+1/140 VanguardBlades LV1
+1/180 VanguardHelmet LV1
+1/250 VanguardNecklace LV1
+1/250 VanguardWheel LV1
+1/250 VanguardRing LV1
+1/190 VanguardBelt LV1
+1/190 VanguardBoots LV1
+
+;Level2
+;Gold
+1/1 Gold 50000 LV2
+
+;Pots + Other
+1/1 (HP)DrugXL LV2
+1/1 (MP)DrugXL LV2
+1/1 (HP)DrugXL LV2
+1/1 (MP)DrugXL LV2
+1/1 SunPotion(M) LV2
+1/1 SunPotion(M) LV2
+1/1 SunPotion(M) LV2
+1/5 SunPotion(M) LV2
+1/5 SunPotion(M) LV2
+1/5 SunPotion(M) LV2
+1/1 BenedictionOil LV2
+
+;Weapons
+
+
+;Weapons Rare
+1/370 MaleficBow LV2
+1/370 DragonSlayer LV2
+1/370 DragonStaff LV2
+1/370 SoulSabre LV2
+1/370 RoyalBlades LV2
+
+
+;Armour
+1/20 StuddedArmour(M) LV2
+1/20 StuddedArmour(F) LV2
+1/20 SteelArmour(M) LV2
+1/20 SteelArmour(F) LV2
+1/20 DragonRobe(M) LV2
+1/20 DragonRobe(F) LV2
+1/20 TitanArmour(M) LV2
+1/20 TitanArmour(F) LV2
+1/20 RoyalArmour(M) LV2
+1/20 RoyalArmour(F) LV2
+
+
+;Helmets
+1/200 MajesticHelmet LV2
+1/350 ExternalHelmet LV2
+
+;Necklace
+1/200 MajesticNecklace LV2
+1/350 ExternalNecklace LV2
+
+;Bracelets
+1/200 MajesticWheel LV2
+1/350 ExternalWheel LV2
+
+;Rings
+1/200 MajesticRing LV2
+1/350 ExternalRing LV2
+
+;Shoes
+1/200 MajesticBoots LV2
+1/350 ExternalBoots LV2
+
+;Belts
+1/200 MajesticBelt LV2
+1/350 ExternalBelt LV2
+
+
+;Shields
+1/130 SpikeShield LV2
+1/140 ArmouredShield LV2
+1/160 DomeShield LV2
+1/180 NanoShield LV2
+
+;Shields Rare
+1/190 TrophyShield LV2
+
+;Gems/Orbs
+1/70 BraveryOrb LV2
+1/70 MagicOrb LV2
+1/70 SoulOrb LV2
+1/70 ProtectionOrb LV2
+1/70 EvilSlayerOrb LV2
+1/70 DurabilityOrb LV2
+1/90 PoisonOrb LV2
+1/90 FreezingOrb LV2
+1/90 AccuracyOrb LV2
+1/90 StormOrb LV2
+1/90 AgilityOrb LV2
+1/90 EnduranceOrb LV2
+
+
+1/140 VanguardBlade LV2
+1/140 VanguardStaff LV2
+1/140 VanguardSerp LV2
+1/140 VanguardBlades LV2
+1/180 VanguardHelmet LV2
+1/250 VanguardNecklace LV2
+1/250 VanguardWheel LV2
+1/250 VanguardRing LV2
+1/190 VanguardBelt LV2
+1/190 VanguardBoots LV2
+
+;Level3
+;Gold
+1/1 Gold 50000 LV3
+
+;Pots + Other
+1/1 (HP)DrugXL LV3
+1/1 (MP)DrugXL LV3
+1/1 (HP)DrugXL LV3
+1/1 (MP)DrugXL LV3
+1/1 SunPotion(M) LV3
+1/1 SunPotion(M) LV3
+1/1 SunPotion(M) LV3
+1/5 SunPotion(M) LV3
+1/5 SunPotion(M) LV3
+1/5 SunPotion(M) LV3
+1/1 BenedictionOil LV3
+
+;Weapons
+
+
+;Weapons Rare
+1/370 MaleficBow LV3
+1/370 DragonSlayer LV3
+1/370 DragonStaff LV3
+1/370 SoulSabre LV3
+1/370 RoyalBlades LV3
+
+
+;Armour
+1/20 StuddedArmour(M) LV3
+1/20 StuddedArmour(F) LV3
+1/20 SteelArmour(M) LV3
+1/20 SteelArmour(F) LV3
+1/20 DragonRobe(M) LV3
+1/20 DragonRobe(F) LV3
+1/20 TitanArmour(M) LV3
+1/20 TitanArmour(F) LV3
+1/20 RoyalArmour(M) LV3
+1/20 RoyalArmour(F) LV3
+
+
+;Helmets
+1/200 MajesticHelmet LV3
+1/350 ExternalHelmet LV3
+
+;Necklace
+1/200 MajesticNecklace LV3
+1/350 ExternalNecklace LV3
+
+;Bracelets
+1/200 MajesticWheel LV3
+1/350 ExternalWheel LV3
+
+;Rings
+1/200 MajesticRing LV3
+1/350 ExternalRing LV3
+
+;Shoes
+1/200 MajesticBoots LV3
+1/350 ExternalBoots LV3
+
+;Belts
+1/200 MajesticBelt LV3
+1/350 ExternalBelt LV3
+
+
+;Shields
+1/130 SpikeShield LV3
+1/140 ArmouredShield LV3
+1/160 DomeShield LV3
+1/180 NanoShield LV3
+
+;Shields Rare
+1/190 TrophyShield LV3
+
+;Gems/Orbs
+1/70 BraveryOrb LV3
+1/70 MagicOrb LV3
+1/70 SoulOrb LV3
+1/70 ProtectionOrb LV3
+1/70 EvilSlayerOrb LV3
+1/70 DurabilityOrb LV3
+1/90 PoisonOrb LV3
+1/90 FreezingOrb LV3
+1/90 AccuracyOrb LV3
+1/90 StormOrb LV3
+1/90 AgilityOrb LV3
+1/90 EnduranceOrb LV3
+
+
+1/140 VanguardBlade LV3
+1/140 VanguardStaff LV3
+1/140 VanguardSerp LV3
+1/140 VanguardBlades LV3
+1/180 VanguardHelmet LV3
+1/250 VanguardNecklace LV3
+1/250 VanguardWheel LV3
+1/250 VanguardRing LV3
+1/190 VanguardBelt LV3
+1/190 VanguardBoots LV3
+
+;Level4
+;Gold
+1/1 Gold 50000 LV4
+
+;Pots + Other
+1/1 (HP)DrugXL LV4
+1/1 (MP)DrugXL LV4
+1/1 (HP)DrugXL LV4
+1/1 (MP)DrugXL LV4
+1/1 SunPotion(M) LV4
+1/1 SunPotion(M) LV4
+1/1 SunPotion(M) LV4
+1/5 SunPotion(M) LV4
+1/5 SunPotion(M) LV4
+1/5 SunPotion(M) LV4
+1/1 BenedictionOil LV4
+
+;Weapons
+
+
+;Weapons Rare
+1/370 MaleficBow LV4
+1/370 DragonSlayer LV4
+1/370 DragonStaff LV4
+1/370 SoulSabre LV4
+1/370 RoyalBlades LV4
+
+
+;Armour
+1/20 StuddedArmour(M) LV4
+1/20 StuddedArmour(F) LV4
+1/20 SteelArmour(M) LV4
+1/20 SteelArmour(F) LV4
+1/20 DragonRobe(M) LV4
+1/20 DragonRobe(F) LV4
+1/20 TitanArmour(M) LV4
+1/20 TitanArmour(F) LV4
+1/20 RoyalArmour(M) LV4
+1/20 RoyalArmour(F) LV4
+
+
+;Helmets
+1/200 MajesticHelmet LV4
+1/350 ExternalHelmet LV4
+
+;Necklace
+1/200 MajesticNecklace LV4
+1/350 ExternalNecklace LV4
+
+;Bracelets
+1/200 MajesticWheel LV4
+1/350 ExternalWheel LV4
+
+;Rings
+1/200 MajesticRing LV4
+1/350 ExternalRing LV4
+
+;Shoes
+1/200 MajesticBoots LV4
+1/350 ExternalBoots LV4
+
+;Belts
+1/200 MajesticBelt LV4
+1/350 ExternalBelt LV4
+
+
+;Shields
+1/130 SpikeShield LV4
+1/140 ArmouredShield LV4
+1/160 DomeShield LV4
+1/180 NanoShield LV4
+
+;Shields Rare
+1/190 TrophyShield LV4
+
+;Gems/Orbs
+1/70 BraveryOrb LV4
+1/70 MagicOrb LV4
+1/70 SoulOrb LV4
+1/70 ProtectionOrb LV4
+1/70 EvilSlayerOrb LV4
+1/70 DurabilityOrb LV4
+1/90 PoisonOrb LV4
+1/90 FreezingOrb LV4
+1/90 AccuracyOrb LV4
+1/90 StormOrb LV4
+1/90 AgilityOrb LV4
+1/90 EnduranceOrb LV4
+
+
+1/140 VanguardBlade LV4
+1/140 VanguardStaff LV4
+1/140 VanguardSerp LV4
+1/140 VanguardBlades LV4
+1/180 VanguardHelmet LV4
+1/250 VanguardNecklace LV4
+1/250 VanguardWheel LV4
+1/250 VanguardRing LV4
+1/190 VanguardBelt LV4
+1/190 VanguardBoots LV4
+
+;Level5
+;Gold
+1/1 Gold 50000 LV5
+
+;Pots + Other
+1/1 (HP)DrugXL LV5
+1/1 (MP)DrugXL LV5
+1/1 (HP)DrugXL LV5
+1/1 (MP)DrugXL LV5
+1/1 SunPotion(M) LV5
+1/1 SunPotion(M) LV5
+1/1 SunPotion(M) LV5
+1/5 SunPotion(M) LV5
+1/5 SunPotion(M) LV5
+1/5 SunPotion(M) LV5
+1/1 BenedictionOil LV5
+
+;Weapons
+
+
+;Weapons Rare
+1/370 MaleficBow LV5
+1/370 DragonSlayer LV5
+1/370 DragonStaff LV5
+1/370 SoulSabre LV5
+1/370 RoyalBlades LV5
+
+
+;Armour
+1/20 StuddedArmour(M) LV5
+1/20 StuddedArmour(F) LV5
+1/20 SteelArmour(M) LV5
+1/20 SteelArmour(F) LV5
+1/20 DragonRobe(M) LV5
+1/20 DragonRobe(F) LV5
+1/20 TitanArmour(M) LV5
+1/20 TitanArmour(F) LV5
+1/20 RoyalArmour(M) LV5
+1/20 RoyalArmour(F) LV5
+
+
+;Helmets
+1/200 MajesticHelmet LV5
+1/350 ExternalHelmet LV5
+
+;Necklace
+1/200 MajesticNecklace LV5
+1/350 ExternalNecklace LV5
+
+;Bracelets
+1/200 MajesticWheel LV5
+1/350 ExternalWheel LV5
+
+;Rings
+1/200 MajesticRing LV5
+1/350 ExternalRing LV5
+
+;Shoes
+1/200 MajesticBoots LV5
+1/350 ExternalBoots LV5
+
+;Belts
+1/200 MajesticBelt LV5
+1/350 ExternalBelt LV5
+
+
+;Shields
+1/130 SpikeShield LV5
+1/140 ArmouredShield LV5
+1/160 DomeShield LV5
+1/180 NanoShield LV5
+
+;Shields Rare
+1/190 TrophyShield LV5
+
+;Gems/Orbs
+1/70 BraveryOrb LV5
+1/70 MagicOrb LV5
+1/70 SoulOrb LV5
+1/70 ProtectionOrb LV5
+1/70 EvilSlayerOrb LV5
+1/70 DurabilityOrb LV5
+1/90 PoisonOrb LV5
+1/90 FreezingOrb LV5
+1/90 AccuracyOrb LV5
+1/90 StormOrb LV5
+1/90 AgilityOrb LV5
+1/90 EnduranceOrb LV5
+
+
+1/140 VanguardBlade LV5
+1/140 VanguardStaff LV5
+1/140 VanguardSerp LV5
+1/140 VanguardBlades LV5
+1/180 VanguardHelmet LV5
+1/250 VanguardNecklace LV5
+1/250 VanguardWheel LV5
+1/250 VanguardRing LV5
+1/190 VanguardBelt LV5
+1/190 VanguardBoots LV5
+
+;Level6
+;Gold
+1/1 Gold 50000 LV6
+
+;Pots + Other
+1/1 (HP)DrugXL LV6
+1/1 (MP)DrugXL LV6
+1/1 (HP)DrugXL LV6
+1/1 (MP)DrugXL LV6
+1/1 SunPotion(M) LV6
+1/1 SunPotion(M) LV6
+1/1 SunPotion(M) LV6
+1/5 SunPotion(M) LV6
+1/5 SunPotion(M) LV6
+1/5 SunPotion(M) LV6
+1/1 BenedictionOil LV6
+
+;Weapons
+
+
+;Weapons Rare
+1/370 MaleficBow LV6
+1/370 DragonSlayer LV6
+1/370 DragonStaff LV6
+1/370 SoulSabre LV6
+1/370 RoyalBlades LV6
+
+
+;Armour
+1/20 StuddedArmour(M) LV6
+1/20 StuddedArmour(F) LV6
+1/20 SteelArmour(M) LV6
+1/20 SteelArmour(F) LV6
+1/20 DragonRobe(M) LV6
+1/20 DragonRobe(F) LV6
+1/20 TitanArmour(M) LV6
+1/20 TitanArmour(F) LV6
+1/20 RoyalArmour(M) LV6
+1/20 RoyalArmour(F) LV6
+
+
+;Helmets
+1/200 MajesticHelmet LV6
+1/350 ExternalHelmet LV6
+
+;Necklace
+1/200 MajesticNecklace LV6
+1/350 ExternalNecklace LV6
+
+;Bracelets
+1/200 MajesticWheel LV6
+1/350 ExternalWheel LV6
+
+;Rings
+1/200 MajesticRing LV6
+1/350 ExternalRing LV6
+
+;Shoes
+1/200 MajesticBoots LV6
+1/350 ExternalBoots LV6
+
+;Belts
+1/200 MajesticBelt LV6
+1/350 ExternalBelt LV6
+
+
+;Shields
+1/130 SpikeShield LV6
+1/140 ArmouredShield LV6
+1/160 DomeShield LV6
+1/180 NanoShield LV6
+
+;Shields Rare
+1/190 TrophyShield LV6
+
+;Gems/Orbs
+1/70 BraveryOrb LV6
+1/70 MagicOrb LV6
+1/70 SoulOrb LV6
+1/70 ProtectionOrb LV6
+1/70 EvilSlayerOrb LV6
+1/70 DurabilityOrb LV6
+1/90 PoisonOrb LV6
+1/90 FreezingOrb LV6
+1/90 AccuracyOrb LV6
+1/90 StormOrb LV6
+1/90 AgilityOrb LV6
+1/90 EnduranceOrb LV6
+
+
+1/140 VanguardBlade LV6
+1/140 VanguardStaff LV6
+1/140 VanguardSerp LV6
+1/140 VanguardBlades LV6
+1/180 VanguardHelmet LV6
+1/250 VanguardNecklace LV6
+1/250 VanguardWheel LV6
+1/250 VanguardRing LV6
+1/190 VanguardBelt LV6
+1/190 VanguardBoots LV6
+
+;Level7
+;Gold
+1/1 Gold 50000 LV7
+
+;Pots + Other
+1/1 (HP)DrugXL LV7
+1/1 (MP)DrugXL LV7
+1/1 (HP)DrugXL LV7
+1/1 (MP)DrugXL LV7
+1/1 SunPotion(M) LV7
+1/1 SunPotion(M) LV7
+1/1 SunPotion(M) LV7
+1/5 SunPotion(M) LV7
+1/5 SunPotion(M) LV7
+1/5 SunPotion(M) LV7
+1/1 BenedictionOil LV7
+
+;Weapons
+
+
+;Weapons Rare
+1/370 MaleficBow LV7
+1/370 DragonSlayer LV7
+1/370 DragonStaff LV7
+1/370 SoulSabre LV7
+1/370 RoyalBlades LV7
+
+
+;Armour
+1/20 StuddedArmour(M) LV7
+1/20 StuddedArmour(F) LV7
+1/20 SteelArmour(M) LV7
+1/20 SteelArmour(F) LV7
+1/20 DragonRobe(M) LV7
+1/20 DragonRobe(F) LV7
+1/20 TitanArmour(M) LV7
+1/20 TitanArmour(F) LV7
+1/20 RoyalArmour(M) LV7
+1/20 RoyalArmour(F) LV7
+
+
+;Helmets
+1/200 MajesticHelmet LV7
+1/350 ExternalHelmet LV7
+
+;Necklace
+1/200 MajesticNecklace LV7
+1/350 ExternalNecklace LV7
+
+;Bracelets
+1/200 MajesticWheel LV7
+1/350 ExternalWheel LV7
+
+;Rings
+1/200 MajesticRing LV7
+1/350 ExternalRing LV7
+
+;Shoes
+1/200 MajesticBoots LV7
+1/350 ExternalBoots LV7
+
+;Belts
+1/200 MajesticBelt LV7
+1/350 ExternalBelt LV7
+
+
+;Shields
+1/130 SpikeShield LV7
+1/140 ArmouredShield LV7
+1/160 DomeShield LV7
+1/180 NanoShield LV7
+
+;Shields Rare
+1/190 TrophyShield LV7
+
+;Gems/Orbs
+1/70 BraveryOrb LV7
+1/70 MagicOrb LV7
+1/70 SoulOrb LV7
+1/70 ProtectionOrb LV7
+1/70 EvilSlayerOrb LV7
+1/70 DurabilityOrb LV7
+1/90 PoisonOrb LV7
+1/90 FreezingOrb LV7
+1/90 AccuracyOrb LV7
+1/90 StormOrb LV7
+1/90 AgilityOrb LV7
+1/90 EnduranceOrb LV7
+
+
+1/140 VanguardBlade LV7
+1/140 VanguardStaff LV7
+1/140 VanguardSerp LV7
+1/140 VanguardBlades LV7
+1/180 VanguardHelmet LV7
+1/250 VanguardNecklace LV7
+1/250 VanguardWheel LV7
+1/250 VanguardRing LV7
+1/190 VanguardBelt LV7
+1/190 VanguardBoots LV7
+
+;Gold
+1/1 Gold 50000 LV8
+
+;Pots + Other
+1/1 (HP)DrugXL LV8
+1/1 (MP)DrugXL LV8
+1/1 (HP)DrugXL LV8
+1/1 (MP)DrugXL LV8
+1/1 SunPotion(M) LV8
+1/1 SunPotion(M) LV8
+1/1 SunPotion(M) LV8
+1/5 SunPotion(M) LV8
+1/5 SunPotion(M) LV8
+1/5 SunPotion(M) LV8
+1/1 BenedictionOil LV8
+
+;Weapons
+
+
+;Weapons Rare
+1/370 MaleficBow LV8
+1/370 DragonSlayer LV8
+1/370 DragonStaff LV8
+1/370 SoulSabre LV8
+1/370 RoyalBlades LV8
+
+
+;Armour
+1/20 StuddedArmour(M) LV8
+1/20 StuddedArmour(F) LV8
+1/20 SteelArmour(M) LV8
+1/20 SteelArmour(F) LV8
+1/20 DragonRobe(M) LV8
+1/20 DragonRobe(F) LV8
+1/20 TitanArmour(M) LV8
+1/20 TitanArmour(F) LV8
+1/20 RoyalArmour(M) LV8
+1/20 RoyalArmour(F) LV8
+
+
+;Helmets
+1/200 MajesticHelmet LV8
+1/350 ExternalHelmet LV8
+
+;Necklace
+1/200 MajesticNecklace LV8
+1/350 ExternalNecklace LV8
+
+;Bracelets
+1/200 MajesticWheel LV8
+1/350 ExternalWheel LV8
+
+;Rings
+1/200 MajesticRing LV8
+1/350 ExternalRing LV8
+
+;Shoes
+1/200 MajesticBoots LV8
+1/350 ExternalBoots LV8
+
+;Belts
+1/200 MajesticBelt LV8
+1/350 ExternalBelt LV8
+
+
+;Shields
+1/130 SpikeShield LV8
+1/140 ArmouredShield LV8
+1/160 DomeShield LV8
+1/180 NanoShield LV8
+
+;Shields Rare
+1/190 TrophyShield LV8
+
+;Gems/Orbs
+1/70 BraveryOrb LV8
+1/70 MagicOrb LV8
+1/70 SoulOrb LV8
+1/70 ProtectionOrb LV8
+1/70 EvilSlayerOrb LV8
+1/70 DurabilityOrb LV8
+1/90 PoisonOrb LV8
+1/90 FreezingOrb LV8
+1/90 AccuracyOrb LV8
+1/90 StormOrb LV8
+1/90 AgilityOrb LV8
+1/90 EnduranceOrb LV8
+
+
+1/140 VanguardBlade LV8
+1/140 VanguardStaff LV8
+1/140 VanguardSerp LV8
+1/140 VanguardBlades LV8
+1/180 VanguardHelmet LV8
+1/250 VanguardNecklace LV8
+1/250 VanguardWheel LV8
+1/250 VanguardRing LV8
+1/190 VanguardBelt LV8
+1/190 VanguardBoots LV8
+

@@ -1,0 +1,34 @@
+[@Description]
+Please return my {LifeStone/LightSteelBlue} to my Daughter
+{Rachel/LimeGreen}. She will know what it will mean.
+
+Thankyou for your assistance I'm now at peace.
+
+[@TaskDescription]
+Please take {OldNecklace/LightSteelBlue} to {Rachel/LimeGreen}.
+in {MongchonProvince/Yellow}
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+OldNecklace 1
+
+[@FixedRewards]
+SolidBlackBoots
+
+[@SelectRewards]
+ClawPendant
+FireConvexLens
+StrongBambooFlute
+
+[@ExpReward]
+3801
+
+[@GoldReward]
+1781
+
+// Pickup - LostSoul D601 202 204
+// Hand In - Merchant_Rachel 0158 4 21

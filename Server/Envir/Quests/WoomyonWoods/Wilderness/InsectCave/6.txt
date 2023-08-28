@@ -1,0 +1,35 @@
+[@Description]
+I lost my bag because of the insects in the cave.
+They took all my belongings. Could you please
+get my stuff back? 
+
+[@TaskDescription]
+Kill {VoiletKekTal/Crimson}, {KekTal/Crimson} and {BlueHoroBlaster's/Crimson} 
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+GatheringGlove 1
+GatheringTool 1
+GreenHerb 5
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+HardSteelSword
+EbonyBangle
+MonkBangle
+SilkShoes
+
+[@ExpReward]
+3800
+
+[@GoldReward]
+950
+
+// Pickup - Traveller_Soho D2042 114 155
+// Hand In - Traveller_Soho D2042 114 155

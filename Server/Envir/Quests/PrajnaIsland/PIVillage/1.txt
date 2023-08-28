@@ -1,0 +1,31 @@
+[@Description]
+{RedSnake/Crimson} bite? Please tell {Robert/LimeGreen} that the Teeth
+of the {RedSnake/Crimson} is the main ingredient for the 
+cure. You don't have much time. Go and kill some 
+{RedSnake's/Crimson} for the Teeth.
+
+[@TaskDescription]
+Collect {RedSnakeTeeth/LightSteelBlue} for the Cure
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+RedSnakeTeeth 1
+
+[@CarryItems]
+
+[@FixedRewards]
+BoxofHolyWater(3)
+
+[@SelectRewards]
+
+[@ExpReward]
+1200
+
+[@GoldReward]
+300
+
+// Pickup - 
+// Hand In - Merchant_Robert 2 505 479

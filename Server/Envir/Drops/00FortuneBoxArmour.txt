@@ -1,0 +1,85 @@
+;Armour
+
+;Level 20
+1/300 CrystalArmour(M)
+1/300 CrystalArmour(F)
+
+;Level 22
+1/300 LightLeatherArmour(M)
+1/300 LightLeatherArmour(F)
+1/300 HeavyArmour(M)
+1/300 HeavyArmour(F)
+1/300 MagicRobe(M)
+1/300 MagicRobe(F)
+1/300 SoulArmour(M)
+1/300 SoulArmour(F)
+1/300 RelicArmour(M)
+1/300 RelicArmour(F)
+
+;Level 26 rare
+1/400 VanguardArmour(M)
+1/400 VanguardArmour(F)
+
+;Level 33
+1/550 TemperedArmour(M)
+1/550 TemperedArmour(F)
+1/550 IronArmour(M)
+1/550 IronArmour(F)
+1/550 WizardRobe(M)
+1/550 WizardRobe(F)
+1/550 PearlArmour(M)
+1/550 PearlArmour(F)
+1/550 AncientArmour(M)
+1/550 AncientArmour(F)
+
+;Level 40
+1/900 StuddedArmour(M)
+1/900 StuddedArmour(F)
+1/900 SteelArmour(M)
+1/900 SteelArmour(F)
+1/900 DragonRobe(M)
+1/900 DragonRobe(F)
+1/900 TitanArmour(M)
+1/900 TitanArmour(F)
+1/900 RoyalArmour(M)
+1/900 RoyalArmour(F)
+
+;Level 42
+1/1000 RuinArmour(M)
+1/1000 RuinArmour(F)
+1/1000 AncientRobe(M)
+1/1000 AncientRobe(F)
+1/1000 AncientPlate(M)
+1/1000 AncientPlate(F)
+1/1000 AncientSuit(M)
+1/1000 AncientSuit(F)
+
+;Level 44
+1/1200 BlueDarkArmour(M)
+1/1200 BlueDarkArmour(F)
+1/1200 ScaledArmour(M)
+1/1200 ScaledArmour(F)
+1/1200 RedDarkArmour(M)
+1/1200 RedDarkArmour(F)
+1/1200 GreenDarkArmour(M)
+1/1200 GreenDarkArmour(F)
+1/1200 GoldDarkArmour(M)
+1/1200 GoldDarkArmour(F)
+
+;Level 46
+1/4500 BlackTigerArmour(M)
+1/4500 BlackTigerArmour(F)
+1/4500 LotusArmour(M)
+1/4500 LotusArmour(F)
+1/4500 CraneArmour(M)
+1/4500 CraneArmour(F)
+1/4500 StealthArmour(M)
+1/4500 StealthArmour(F)
+
+;Level 48
+1/4500 WatcherSuit(M)
+1/4500 WatcherSuit(M)
+
+;Level 50
+1/4500 BloodDragonArmour(M)
+1/4500 BloodDragonArmour(F)

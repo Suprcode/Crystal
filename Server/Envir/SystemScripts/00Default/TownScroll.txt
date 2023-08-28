@@ -1,0 +1,76 @@
+;;TownScroll
+[@_UseItem(3)]
+#SAY
+Which Town or Village would you like to visit? 
+ 
+Teleport to: <Border Village/@BVV&T1>
+Teleport to: <Bichon Wall/@BWV&T1>
+Teleport to: <Serpent Village/@SVV&T1>
+Teleport to: <Mud Wall/@MWV&T1>
+Teleport to: <Sabuk Castle/@SCV&T1>
+Please <Show me some more/@MoreV&T1> Locations
+
+[@MoreV&T1]
+#SAY
+Teleport to: <Fortress/@FV&T1>
+Teleport to: <Seokcho Village/@SeoVV&T1>
+Teleport to: <CastleGi-Ryoong Castle/@CRCV&T1>
+Teleport to: <Taoist Village/@TVV&T1>
+Teleport to: <Prajna Town/@PTV&T1> 
+Teleport to: <PastBichon Village/@PBV&T1> Required Level30
+Teleport to: <WasteLands/@WLV&T1>
+<Back/@_UseItem(49)>
+
+[@BVV&T1]
+#ACT
+MOVE 0 289 617
+
+[@BWV&T1]
+#ACT
+MOVE 0 333 267
+
+[@SVV&T1]
+#ACT
+MOVE 2 502 485
+
+[@MWV&T1]
+#ACT
+MOVE 3 334 332
+
+[@SCV&T1]
+#ACT
+MOVE 3 638 284
+
+[@FV&T1]
+#ACT
+MOVE 1 318 84
+
+[@SeoVV&T1]
+#ACT
+MOVE UMM 132 173
+
+[@CRCV&T1]
+#ACT
+MOVE 4 227 207
+
+[@TVV&T1]
+#ACT
+MOVE 11 187 304
+
+[@PTV&T1]
+#ACT
+MOVE 5 142 334
+
+[@PBV&T1]
+#IF
+CHECKLEVEL > 30
+#ACT
+MOVE 6 124 157
+#ELSESAY
+Sorry you are not the correct level.
+ 
+<Back/@_UseItem(49)>
+
+[@WLV&T1]
+#ACT
+MOVE HELL00 48 223

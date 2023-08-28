@@ -1,0 +1,27 @@
+[@Description]
+Hello traveller, One of the {Zombies/Crimson} killed my pet 
+a couple days ago. Please help me with my 
+revenge on the {Zombies/Crimson}!
+
+[@TaskDescription]
+Eliminate 30 {Shaman Zombies/Crimson} in 
+{BichonDeadMines/Yellow}.
+
+[@Completion]
+
+[@KillTasks]
+Zombie1 30
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+3000
+
+[@GoldReward]
+3000

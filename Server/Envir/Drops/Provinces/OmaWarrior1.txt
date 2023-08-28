@@ -1,0 +1,117 @@
+;Gold
+1/1 Gold 5500
+
+;Weapons
+1/15 Dagger 
+1/15 EbonySword 
+1/15 EbonyBow 
+1/15 BronzeSword 
+1/15 ShortBow 
+1/15 IronSword 
+1/15 BoneBow 
+1/15 SharpHoaSword 
+1/15 ShortSword 
+1/25 HookedSword 
+1/25 Trident 
+1/25 Scimitar 
+1/25 BladesOfVelocity 
+1/25 CompoundBow 
+
+;Armours
+1/15 BaseDress(M) 
+1/15 BaseDress(F) 
+1/25 LightArmour(M) 
+1/25 LightArmour(F) 
+1/2500 MediumArmour(M) 
+1/2500 MediumArmour(F) 
+
+;Helmets
+1/15 BronzeHelmet 
+1/25 MagicHelmet 
+
+;Necklaces
+1/15 GoldNecklace 
+1/15 PrecisionNecklace 
+1/15 BlackNecklace 
+1/15 EbonyNecklace 
+1/15 YellowNecklace 
+1/25 NagaNecklace 
+1/25 AmberNecklace 
+1/25 PhoenixBead 
+
+;Bracelets
+1/15 IronBracelet 
+1/15 LeatherGlove 
+1/15 ThinBracelet 
+1/15 SilverBracelet 
+1/15 SteelBracelet 
+1/15 LargeBracelet 
+1/15 HardGlove 
+1/15 MagicBracelet 
+
+;Rings
+1/15 CopperRing 
+1/15 HornRing 
+1/15 HexagonalRing 
+1/15 GlassRing 
+1/26 BlueRing 
+1/40 BlackRing 
+1/40 SerpentEyeRing 
+1/40 PearlRing 
+1/40 GoldRing 
+1/60 SkeletonRing 
+
+;Potions
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/8 (HP)DrugLarge 
+1/8 (MP)DrugLarge 
+1/45 StormDrug(S) 
+1/45 MagicDrug(S) 
+1/45 ImpactDrug(S) 
+1/45 TaoistDrug(S) 
+1/45 StaminaAid(S) 
+1/45 MagicAid(S) 
+
+;Books
+1/6 Fencing 
+1/6 FireBall 
+1/6 Healing 
+1/6 FatalSword 
+1/6 Focus 
+1/9 SpiritSword 
+1/9 StraightShot 
+1/10 Poisoning 
+1/10 Repulsion 
+1/30 ElectricShock 
+1/30 Slaying 
+1/30 GreatFireBall 
+1/20 HellFire 
+1/30 ThunderBolt 
+1/30 DoubleSlash 
+1/80 Thrusting 
+1/20 ExplosiveTrap 
+1/20 Meditation 
+1/40 SummonVampire 
+1/85 DelayedExplosion 
+1/120 BackStep 
+1/150 ElementalShot 
+1/65 DoubleShot 

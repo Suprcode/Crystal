@@ -1,0 +1,81 @@
+;Gold
+1/5 Gold 165
+
+;Pots + Other
+1/8 (HP)DrugSmall
+1/8 (MP)DrugSmall
+1/20 (HP)DrugMedium
+1/20 (MP)DrugMedium
+
+;Weapons
+1/110 BronzeSword 
+1/110 ShortSword 
+1/110 ShortBow
+1/110 IronSword 
+1/110 BronzeAxe 
+1/210 HookedSword 
+1/210 Trident 
+1/210 Scimitar 
+1/280 SteelAxe 
+1/250 SteelSword 
+1/250 MartialSword 
+1/250 HookedSpear 
+1/250 KrissSword 
+1/200 BladesOfVelocity
+1/250 IronBlades
+1/110 CompoundBow
+1/250 LongBow
+
+;Armour
+1/200 LightArmour(M) 
+1/200 LightArmour(F) 
+
+;Helmets
+1/100 BronzeHelmet 
+1/125 MagicHelmet 
+
+;Necklace
+1/400 LanternNecklace 
+1/400 TigerNecklace 
+1/400 PlatinumNecklace 
+1/400 NagaNecklace 
+1/400 AmberNecklace 
+1/400 PhoenixBead 
+
+;Bracelets
+1/400 MagicBracelet 
+1/550 HardGlove 
+
+;Rings
+1/300 BlueRing 
+1/400 BlackRing 
+1/400 SerpentEyeRing 
+1/400 PearlRing 
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+
+
+;Quests
+1/2 ZombiEeye Q
+1/2 Entrails Q

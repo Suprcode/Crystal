@@ -1,0 +1,22 @@
+;Gold
+1/1 Gold 25000
+
+;Pots + Other
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 BenedictionOil
+1/10 GoldenBenedictionOil
+
+
+1/10 AwakeningSoul0
+1/20 AwakeningSoul0
+
+;Quests
+1/1 OrcCombsMap Q

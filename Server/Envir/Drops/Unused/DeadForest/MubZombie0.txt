@@ -1,0 +1,12 @@
+;Gold
+1/10 Gold 1000
+
+;Potions
+1/15 (HP)DrugLarge
+1/15 (MP)DrugLarge
+1/250 SunPotion
+1/500 SunPotion(M)
+
+;Crafting Material
+1/100 StrongRope
+1/40 LargeBone

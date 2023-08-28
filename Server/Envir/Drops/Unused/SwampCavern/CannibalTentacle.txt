@@ -1,0 +1,253 @@
+;Gold
+1/2 Gold 20000
+
+;Potions
+1/1 (HP)DrugLarge
+1/1 (HP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (MP)DrugLarge
+1/2 (MP)DrugLarge
+1/1 (HP)DrugXL
+1/1 (HP)DrugXL
+1/2 (HP)DrugXL
+1/2 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (MP)DrugXL
+1/2 (MP)DrugXL
+1/2 (MP)DrugXL
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+1/30 Apple
+1/45 Apple
+1/2 BenedictionOil
+1/5 BenedictionOil
+1/30 ImpactDrug(L)
+1/30 MagicDrug(L)
+1/30 TaoistDrug(L)
+1/30 StormDrug(L)
+
+
+;Weapons
+1/90 JudgementMace
+1/90 WarMageStaff
+1/90 FiendBow
+1/90 SoulSpringWand
+1/90 BladesOfDarkness
+1/4100 WarSpiritBlade
+1/4100 MagicScythe
+1/4100 StoneBambooFan
+1/4100 FreezingBlades
+1/1000 RoyalBlades
+1/1000 DragonSlayer
+1/1000 DragonStaff
+1/1000 MaleficBow
+1/1000 SoulSabre
+1/3000 BladesOfMagi
+1/3000 SwordOfWarGod
+1/3000 BowOfForce
+1/3000 BladeOfSorcery
+1/3000 HeavenSword
+
+
+;Armours
+1/45 StuddedArmour(M)
+1/45 StuddedArmour(F)
+1/45 SteelArmour(M)
+1/45 SteelArmour(F)
+1/45 DragonRobe(M)
+1/45 DragonRobe(F)
+1/45 TitanArmour(M)
+1/45 TitanArmour(F)
+1/45 RoyalArmour(M)
+1/45 RoyalArmour(F)
+1/1300 RedDarkArmour(M)
+1/1300 RedDarkArmour(F)
+1/1300 BlueDarkArmour(M)
+1/1300 BlueDarkArmour(F)
+1/1300 ScaledArmour(M)
+1/1300 ScaledArmour(F)
+1/1300 GreenDarkArmour(M)
+1/1300 GreenDarkArmour(F)
+1/1300 GoldDarkArmour(M)
+1/1300 GoldDarkArmour(F)
+
+;Upgrade Armour
+1/11200 HeavenArmour(M)
+1/11200 HeavenArmour(F)
+1/11200 HeavenRedArmour(M)
+1/11200 HeavenRedArmour(F)
+1/11200 HeavenGrnArmour(M)
+1/11200 HeavenGrnArmour(F)
+1/11200 HeavenGoldArmour(M)
+1/11200 HeavenGoldArmour(F)
+
+
+;Helmets
+1/120 BlackIronHelmet
+1/30 HelmetOfHero
+1/70 GreatHelmet
+1/80 WisdomCoronet
+1/80 TaoCoronet
+1/580 MajesticHelmet
+1/980 ExternalHelmet
+
+;Belts
+1/30 BronzeBelt
+1/45 ChainBelt
+1/100 GoldBelt
+1/580 MajesticBelt
+1/980 ExternalBelt
+
+;Boots
+1/30 SilkBoots
+1/120 BlackBoots
+1/120 DragonBoots
+1/580 MajesticBoots
+1/980 ExternalBoots
+
+;Rings
+1/120 GaleRing
+1/100 DestinyRing 
+1/100 OmaSpiritRing
+1/120 NobleRing
+1/120 SoulRing
+1/70 BoundlessRing
+1/70 ThunderRing
+1/70 TaeGukRing
+1/580 MajesticRing
+1/980 ExternalRing
+
+;Bracelets
+1/170 8TrigramWheel
+1/170 HangMaWheel
+1/170 BokMaWheel
+1/190 BaekTaGlove
+1/190 SpiritReformer
+1/190 HolyTaoWheel
+1/245 MajesticWheel
+1/800 ExternalWheel
+
+;Necklace
+1/120 GaleNecklace
+1/100 DemonicBells
+1/100 SoulNecklace
+1/90 HeroNecklace
+1/90 AdamantineNecklace
+1/90 RequiemNecklace
+1/90 MeteoriteOfArchey 
+1/2100 MajesticNecklace
+1/800 ExternalNecklace
+
+
+;Gems
+1/4100 BraveryGem
+1/4100 SoulGem
+1/4100 StormGem
+1/4100 MagicGem
+1/1120 DurabilityGem
+1/1180 AccuracyGem
+1/1180 AgilityGem
+1/1180 PoisonGem
+1/1180 FreezingGem
+1/1180 EnduranceGem
+1/1180 DisillusionGem
+1/1200 BraveryOrb
+1/1200 SoulOrb
+1/1200 StormOrb
+1/1200 MagicOrb
+1/2120 DurabilityOrb
+1/1280 AccuracyOrb
+1/1280 AgilityOrb
+1/1200 PoisonOrb
+1/1200 FreezingOrb
+1/1200 EnduranceOrb
+1/1200 DisillusionOrb
+
+;Books
+1/30 FrostCrunch
+1/25 IceStorm
+1/120 FlameDisruptor
+1/800 FlameField
+1/100 Vampirism
+1/4100 Mirroring
+1/11200 Blizzard
+1/1800 MagicBooster
+1/111200 MeteorStrike
+1/12000 FastMove
+1/21200 IceThrust
+1/2800 FrozenRains
+1/211200 LavaKing
+1/12000 StormEscape
+
+1/25 FlamingSword
+1/120 CrossHalfMoon
+1/100 TwinDrakeBlade
+1/100 LionRoar
+1/100 Entrapment
+1/120 BladeStorm
+1/4100 BladeAvalanche
+1/11200 ProtectionField
+1/1800 Rage
+1/111200 Fury
+1/12000 CounterAttack
+1/211200 ImmortalSkin
+
+
+1/25 CrescentSlash
+1/120 MoonLight
+1/100 MPEater
+1/4100 SwiftFeet
+1/1800 DarkBody
+
+
+1/25 BindingShot
+1/120 SummonToad
+1/100 PoisonShot
+1/4100 CrippleShot
+1/1800 SummonSnakes
+
+
+1/25 SummonShinsu
+1/120 UltimateEnhancer
+1/120 EnergyRepulsor
+1/100 Purification
+1/100 Hallucination
+1/4100 HealingCircle
+1/1200 SummonHolyDeva
+1/11200 Curse
+1/1800 PoisonCloud
+1/13000 PetEnhancer
+1/12000 EnergyShield
+1/21200 HolyShield
+1/21200 HeadShot
+
+
+;Shields
+
+1/90 RustyShield
+1/125 RustlessShield
+1/4100 DruidShield
+
+;medals
+1/90 Hollowmedal
+1/85 Faithmedal
+1/95 TombMedal
+
+;Awakening Souls
+1/5 AwakeningSoul0
+1/5 AwakeningSoul0
+
+;Event
+
+
+;Other
+1/120 AwakeningSoul0

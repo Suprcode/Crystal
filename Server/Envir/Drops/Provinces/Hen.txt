@@ -1,0 +1,5 @@
+;Meat
+1/1 Chicken 
+
+1/20 Feather
+;CraftingMaterial

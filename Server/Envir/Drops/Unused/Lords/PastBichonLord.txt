@@ -1,0 +1,246 @@
+;Gold
+1/1 Gold 90000 
+
+1/1 (HP)DrugXL 
+1/1 (HP)DrugXL 
+1/1 (MP)DrugXL 
+1/1 (MP)DrugXL 
+1/1 SunPotion 
+1/2 SunPotion 
+1/1 SunPotion(M) 
+1/2 SunPotion(M) 
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/2 SunPotion 
+
+1/1 BenedictionOil 
+
+
+1/1 Awakeningbox 
+1/1 AwakeningSoul0 
+
+;Weapons
+1/50 FrozenSabre 
+1/50 GrimBow
+1/50 ConquerorSpear 
+1/50 BastardSword 
+1/100 BlackTigerHammer 
+1/100 StaffOfLotus 
+1/100 LethalBow
+1/100 FanOfCrane 
+
+;Weapon Rare
+1/3000 EvilMirSword
+1/3000 EvilMirStaff
+1/3000 EvilMirFan
+1/3000 EvilMirBlades
+1/3000 LordSlayerBlade
+1/3000 LordSlayerStaff
+1/3000 LordSlayerFan
+1/3000 LordSlayerBlades
+
+;Armour
+1/100 BlackTigerArmour(M) 
+1/100 BlackTigerArmour(F) 
+1/100 LotusArmour(M) 
+1/100 LotusArmour(F) 
+1/100 CraneArmour(M) 
+1/100 CraneArmour(F) 
+1/200 WatcherSuit(M) 
+1/200 WatcherSuit(F) 
+
+;Armour Rare
+1/700 HeavenArmour(M) 
+1/700 HeavenArmour(F) 
+1/700 HeavenArcheyRobe(M)
+1/700 HeavenArcheyRobe(F)
+1/750 HeavenArmour(M) 
+1/750 HeavenArmour(F) 
+1/750 HeavenRedArmour(M) 
+1/750 HeavenRedArmour(F) 
+1/750 HeavenGrnArmour(M) 
+1/750 HeavenGrnArmour(F) 
+1/750 HeavenGoldArmour(M) 
+1/750 HeavenGoldArmour(F) 
+1/3000 EvilMirArmour(M) 
+1/3000 EvilMirArmour(F) 
+1/3000 LordSlayerArmour(M)
+1/3000 LordSlayerArmour(F)
+
+;Helmets
+1/20 SparklingHelmet 
+1/25 PuiYuHelmet 
+
+;Helmets Rare
+1/3000 EvilMirHelmet
+1/3000 LordSlayerHelmet 
+
+;Necklace
+1/75 CuspidNecklace 
+1/75 SorceryAnchor 
+1/75 PurifiedMirror 
+1/150 EvilTriangle 
+1/150 CrossPurified 
+1/150 AdamantNecklace 
+
+;Necklace Rare
+1/3000 EvilMirNecklace 
+1/3000 LordSlayerNecklace
+
+;Bracelets
+1/50 DualTitanAmulet 
+1/50 SacredAngelAmulet 
+1/50 EvilWhispAmulet 
+1/100 WildTitanAmulet 
+1/100 EnchantedAmulet 
+1/100 FiveElementAmulet 
+
+
+;Bracelets Rare
+1/3000 EvilMirWheel
+1/3000 LordSlayerBracelet 
+
+;Rings
+1/50 PledgeRing 
+1/50 FiveElementRing 
+1/50 CrimsonRubyRing 
+1/100 DemonRubyRing 
+1/100 EvilExpelRing 
+1/100 GoldDragonRing 
+
+
+;Rings Rare
+1/3000 EvilMirRing 
+1/3000 LordSlayerRing
+
+
+;Shoes
+1/20 SparklingBoots
+
+
+;Shoes Rare
+1/3000 EvilMirBelt 
+1/3000 LordSlayerBoots
+
+
+;Belts
+1/20 SparklingBelt 
+
+;Belts Rare
+1/3000 EvilMirBoots 
+1/3000 LordSlayerBelt
+
+;Medals
+1/215 AchievementMedal 
+1/215 ArmouredMedal 
+1/215 MedalofHonor 
+
+
+;Medals Rare
+1/315 OffensiveMedal 
+1/315 DefensiveMedal 
+1/3000 EvilMirMedal 
+
+
+;Shields
+1/200 MidnightShield 
+
+
+;Shields Rare 
+1/440 LunarPlate 
+1/3000 EvilMirShield
+
+;Pads
+1/200 EvolutionPads[14d] 
+1/215 MinoGuards[14d] 
+1/3000 EvilMirGuards 
+
+
+
+;Books
+;Warrior
+1/105 FlamingSword 
+1/110 LionRoar 
+1/115 BladeStorm 
+1/120 CrossHalfMoon 
+1/125 BladeAvalanche 
+1/130 ProtectionField 
+1/135 Rage 
+1/140 CounterAttack 
+1/145 SlashingBurst 
+1/150 Fury 
+1/155 ImmortalSkin 
+
+
+;Wizard
+1/90 Vampirism 
+1/105 IceStorm 
+1/110 FlameDisruptor 
+1/115 Mirroring 
+1/120 FlameField 
+1/125 Blizzard 
+1/130 FrozenRains 
+1/135 MagicBooster 
+1/140 MeteorStrike 
+1/145 LavaKing 
+1/150 IceThrust 
+1/155 StormEscape 
+1/160 FastMove 
+
+
+;Taoist
+1/90 UltimateEnhancer 
+1/100 HealingCircle 
+1/105 SummonShinsu 
+1/110 Reincarnation 
+1/115 SummonHolyDeva 
+1/120 Curse 
+1/125 Plague 
+1/130 PoisonCloud 
+1/135 EnergyShield 
+1/140 PetEnhancer 
+1/145 HeadShot 
+1/150 HolyShield 
+
+
+;Assassin
+1/80 FireBurst 
+1/85 CrescentSlash 
+1/105 Trap 
+1/110 PoisonSword 
+1/115 MoonLight 
+1/120 MPEater 
+1/125 SwiftFeet 
+1/150 DarkBody 
+
+1/80 ElementalBarrier
+1/85 BindingShot
+1/110 SummonToad
+1/120 PoisonShot
+1/125 CrippleShot
+1/150 SummonSnakes
+
+;Gems/Orbs
+
+1/10 BraveryOrb 
+1/10 MagicOrb 
+1/10 SoulOrb 
+1/10 ProtectionOrb 
+1/10 EvilSlayerOrb 
+1/25 AccuracyOrb 
+1/25 AgilityOrb 
+1/25 PoisonOrb 
+1/25 FreezingOrb 
+1/25 StormOrb 
+1/25 EnduranceOrb 
+1/25 DisillusionOrb 
+
+
+;CraftingMaterials
+1/2 LunarPiece 
+1/2 DragonScale 

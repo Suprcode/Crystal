@@ -1,0 +1,77 @@
+Todo:
+
+List can be found here: https://trello.com/b/uN3mvn7Q/database
+
+Add more Daily Quests
+Add Quest to enter Palace
+
+
+Add HellFire Spawns
+Add IceHell Spawns
+
+Add Remaining Drops
+
+Add NPC Dialog to Rankings + Master
+Add Guild Levels (Need official information)
+Add Guild Skills (Need official Information)
+Tiger Package
+Add Premium Dungeons (Awaiting Expiry)
+
+Add Stats to following Monsters:
+
+SandStorm - Image
+
+FineSoul
+Bear
+TurtleGrass
+Leopard
+Minion_Warrior
+Minion_Warlock
+Minion_Priest
+Minion_Rouge
+Chieftain_Warrior
+Chieftain_Warlock
+Chieftain_Priest
+Chieftain_Rouge
+Chieftain_Archer
+Master_DragonYang
+Jar1
+Jar2
+FightingCat
+FireCat
+CatWidow
+StainHammerCat
+BlackHammerCat
+StrayCat
+CatShaman
+SeedingsGeneral
+RestlessJar
+GeneralJinmYo
+TucsonEgg
+YoungTucson
+Armadillo
+ArmadilloElder
+VisceralWorm2
+SandSnail
+CannibalTentacles
+Tucson
+TucsonFighter
+TucsonMage
+TucsonWarrior
+GeneralTucson
+FrozenSolider
+FrozenFighter
+FrozenArcher
+FrozenKnight
+FrozenGolem
+IcePhantom
+SnowWolf
+FrozenWarewolf
+FrozenMiner
+FrozenAxeman
+FrozenMagician
+SnowYeti
+IceCrystalSolider
+DarkWraith
+DarkSpirit
+SinseokMiner

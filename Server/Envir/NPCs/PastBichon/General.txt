@@ -1,0 +1,10 @@
+[@main]
+#SAY
+We've come here to subdue the Omas and already 3 months
+have passed. Many soldiers were killed in action due to
+fierece attacks from the Omas.
+I can not afford to lose my precious men any more so I need
+a new strategy to deal with the Omas.
+Do you have any good idea?
+<Close/@exit>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      

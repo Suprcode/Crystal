@@ -1,0 +1,20 @@
+;Gold
+1/1 Gold 60000
+1/30 GoldBar
+
+;Potions
+2/1 (HP)DrugLarge
+2/1 (MP)DrugLarge
+2/2 (HP)DrugLarge
+2/2 (MP)DrugLarge
+2/1 (HP)DrugXL
+2/2 (HP)DrugXL
+2/1 (MP)DrugXL
+2/2 (MP)DrugXL
+2/1 SunPotion
+2/2 SunPotion
+2/1 SunPotion(M)
+2/2 SunPotion(M)
+1/2 BenedictionOil
+1/5 BenedictionOil
+1/5 WarGodOil

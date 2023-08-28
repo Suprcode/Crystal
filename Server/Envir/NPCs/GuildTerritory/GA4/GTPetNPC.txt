@@ -1,0 +1,1017 @@
+[@main]
+#IF
+CHECKCLASS Wizard
+#SAY
+Hello!
+
+<Buy 5 Pets Level 0/@buyp>  ~  <Price List/@PL>
+<Buy 5 Pets Level 7/@buysev>  ~  <Price List/@PSEV>
+<Buy 1 Elite Pet Level 0/@buysp>  ~  <Price List/@PLS>
+<Buy 1 Elite Pet Level 7/@buyspsev>  ~  <Price List/@PLSEV>
+<Store Pets/@storep>
+<Retrieve Pets/@retP>
+
+#ELSESAY
+You have no business here...
+
+
+[@BuyP]
+#IF 
+PETCOUNT == 0
+#ACT
+GOTO @BuyP1
+#ELSESAY
+You can't have any activate pets to use this feature
+
+
+[@BuyP1]
+#SAY
+
+Hello!
+What pets would you like to purchase? <Main/@Main>
+
+<RedViper/@pet1>  {Level 20+/Red}
+<WickedTong/@pet2>  {Level 25+/Red}
+<WildBeast/@pet3>  {Level 30+/Red}
+<BloodRat/@pet4>  {Level 35+/Red}
+<SeaCreature/@pet5>  {Level 40+/Red}
+<ClawBeast/@pet6>  {Level 45+/Red}
+<DemonSlasher/@pet7>  {Level 50+/Red}
+<DemonFighter/@pet8>  {Level 55+/Red}
+<FrozenBasher/@pet9>  {Level 60+/Red}
+
+
+
+[@pet1]
+#IF
+LEVEL > 19
+LEVEL < 100
+CHECKGOLD >= 250000
+#ACT
+TAKEGOLD 25000
+GIVEPET RedViper 5
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@pet2]
+#IF
+LEVEL > 24
+LEVEL < 100
+CHECKGOLD >= 45000
+#ACT
+TAKEGOLD 45000
+GIVEPET WickedTong 5
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@pet3]
+#IF
+LEVEL > 29
+LEVEL < 100
+CHECKGOLD >= 75000
+#ACT
+TAKEGOLD 75000
+GIVEPET WildBeast 5
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@pet4]
+#IF
+LEVEL > 34
+LEVEL < 100
+CHECKGOLD >= 100000
+#ACT
+TAKEGOLD 100000
+GIVEPET BloodRat 5
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@pet5]
+#IF
+LEVEL > 39
+LEVEL < 100
+CHECKGOLD >= 150000
+#ACT
+TAKEGOLD 150000
+GIVEPET SeaCreature 5
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@pet6]
+#IF
+LEVEL > 44
+LEVEL < 100
+CHECKGOLD >= 200000
+#ACT
+TAKEGOLD 200000
+GIVEPET ClawBeast 5
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@pet7]
+#IF
+LEVEL > 49
+LEVEL < 100
+CHECKGOLD >= 250000
+#ACT
+TAKEGOLD 250000
+GIVEPET DemonSlasher 5
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@pet8]
+#IF
+LEVEL > 54
+LEVEL < 100
+CHECKGOLD >= 300000
+#ACT
+TAKEGOLD 300000
+GIVEPET DemonFighter 5
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+
+[@pet9]
+#IF
+LEVEL > 59
+LEVEL < 100
+CHECKGOLD >= 350000
+#ACT
+TAKEGOLD 350000
+GIVEPET FrozenBasher 5
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+
+[@PL]
+<Main/@Main>
+{RedViper's/Red} are 25000 gold
+{WickedTong's/Red} are 45000 gold
+{WildBeast's/Red} are 75000 gold
+{BloodRat's/Red} are 100000 gold
+{SeaCreature's/Red} are 150000 gold
+{ClawBeast's/Red} are 200000 gold
+{DemonSlasher's/Red} are 250000 gold
+{DemonFighter's/Red} are 300000 gold
+{FrozenBasher's/Red} are 350000 gold
+
+
+[@Buysev]
+#IF 
+PETCOUNT == 0
+#ACT
+GOTO @BuysevP1
+#ELSESAY
+You can't have any activate pets to use this feature
+
+
+[@BuysevP1]
+#SAY
+
+Hello!
+What pets would you like to purchase?  <Main/@Main>
+
+<RedViper/@petsev1>  {Level 20+/Red}
+<WickedTong/@petsev2>  {Level 25+/Red}
+<WildBeast/@petsev3>  {Level 30+/Red}
+<BloodRat/@petsev4>  {Level 35+/Red}
+<SeaCreature/@petsev5>  {Level 40+/Red}
+<ClawBeast/@petsev6>  {Level 45+/Red}
+<DemonSlasher/@petsev7>  {Level 50+/Red}
+<DemonFighter/@petsev8>  {Level 55+/Red}
+<FrozenBasher/@petsev9>  {Level 60+/Red}
+
+
+[@petsev1]
+#IF
+LEVEL > 19
+LEVEL < 100
+CHECKGOLD >= 50000
+#ACT
+TAKEGOLD 50000
+GIVEPET RedViper 5 7
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@petsev2]
+#IF
+LEVEL > 24
+LEVEL < 100
+CHECKGOLD >= 90000
+#ACT
+TAKEGOLD 90000
+GIVEPET WickedTong 5 7
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@petsev3]
+#IF
+LEVEL > 29
+LEVEL < 100
+CHECKGOLD >= 150000
+#ACT
+TAKEGOLD 150000
+GIVEPET WildBeast 5 7
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@petsev4]
+#IF
+LEVEL > 34
+LEVEL < 100
+CHECKGOLD >= 200000
+#ACT
+TAKEGOLD 200000
+GIVEPET BloodRat 5 7
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@petsev5]
+#IF
+LEVEL > 39
+LEVEL < 100
+CHECKGOLD >= 300000
+#ACT
+TAKEGOLD 300000
+GIVEPET SeaCreature 5 7
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@petsev6]
+#IF
+LEVEL > 44
+LEVEL < 100
+CHECKGOLD >= 400000
+#ACT
+TAKEGOLD 400000
+GIVEPET ClawBeast 5 7
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@petsev7]
+#IF
+LEVEL > 49
+LEVEL < 100
+CHECKGOLD >= 500000
+#ACT
+TAKEGOLD 500000
+GIVEPET DemonSlasher 5 7
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@petsev8]
+#IF
+LEVEL > 54
+LEVEL < 100
+CHECKGOLD >= 500000
+#ACT
+TAKEGOLD 500000
+GIVEPET DemonFighter 5 7
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@petsev9]
+#IF
+LEVEL > 59
+LEVEL < 100
+CHECKGOLD >= 500000
+#ACT
+TAKEGOLD 500000
+GIVEPET FrozenBasher 5 7
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+
+
+[@PSEV]
+<Main/@Main>
+{RedViper's/Red} are 50000 gold
+{WickedTong's/Red} are 90000 gold
+{WildBeast's/Red} are 150000 gold
+{BloodRat's/Red} are 200000 gold
+{SeaCreature's/Red} are 300000 gold
+{ClawBeast's/Red} are 400000 gold
+{DemonSlasher's/Red} are 500000 gold
+{DemonFighter's/Red} are 500000 gold
+{FrozenBasher's/Red} are 500000 gold
+
+[@BUYSP]
+#IF 
+PETCOUNT == 0
+#ACT
+GOTO @BuySP2
+#ELSESAY
+You can't have any activate pets to use this feature
+
+[@BuySP2]
+#SAY
+
+Hello!
+What pets would you like to purchase?  <Main/@Main>
+                               
+<CrystalCrawler/@solo1>  {Level 40+/Red}
+<DragonWarrior/@solo2>  {Level 44+/Red}
+<TwinHeadBeast/@solo3>  {Level 48+/Red}
+<BlackTortoise/@solo4>  {Level 52+/Red}
+<SnowLord/@solo5>  {Level 56+/Red}
+<SeedingsClaw/@solo6>  {Level 60+/Red}
+<SnowBlest/@solo7>  {Level 64+/Red}
+
+
+[@solo1]
+#IF
+LEVEL > 39
+LEVEL < 100
+CHECKGOLD >= 150000
+#ACT
+TAKEGOLD 150000
+GIVEPET CrystalCrawler 1
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@solo2]
+#IF
+LEVEL > 43
+LEVEL < 100
+CHECKGOLD >= 200000
+#ACT
+TAKEGOLD 200000
+GIVEPET DragonWarrior 1
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@solo3]
+#IF
+LEVEL > 47
+LEVEL < 100
+CHECKGOLD >= 250000
+#ACT
+TAKEGOLD 250000
+GIVEPET TwinHeadBeast 1
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@solo4]
+#IF
+LEVEL > 51
+LEVEL < 100
+CHECKGOLD >= 300000
+#ACT
+TAKEGOLD 300000
+GIVEPET BlackTortoise  1
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@solo5]
+#IF
+LEVEL > 55
+LEVEL < 100
+CHECKGOLD >= 350000
+#ACT
+TAKEGOLD 350000
+GIVEPET SnowLord 1
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@solo6]
+#IF
+LEVEL > 59
+LEVEL < 100
+CHECKGOLD >= 400000
+#ACT
+TAKEGOLD 400000
+GIVEPET SeedingsClaw 1
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@solo7]
+#IF
+LEVEL > 63
+LEVEL < 100
+CHECKGOLD >= 450000
+#ACT
+TAKEGOLD 450000
+GIVEPET SnowBlest 1
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@PLS]
+<Main/@Main>
+{CrystalCrawler/Red} is 150000 Gold
+{DragonWarrior/Red} is 200000 Gold
+{TwinHeadBeast/Red} is 250000 Gold
+{BlackTortoise/Red} is 300000 Gold
+{SnowLord/Red} is 350000 Gold
+{SeedingsClaw/Red} is 400000 Gold
+{SnowBlest/Red} is 450000 Gold
+
+[@BUYSPSEV]
+#IF 
+PETCOUNT == 0
+#ACT
+GOTO @BuySPSEV2
+#ELSESAY
+You can't have any activate pets to use this feature
+
+[@BuySPSEV2]
+#SAY
+
+Hello!
+What pets would you like to purchase?  <Main/@Main>
+
+<CrystalCrawler/@solosev1>  {Level 40+/Red}
+<DragonWarrior/@solosev2>  {Level 44+/Red}
+<TwinHeadBeast/@solosev3>  {Level 48+/Red}
+<BlackTortoise/@solosev4>  {Level 52+/Red}
+<SnowLord/@solosev5>  {Level 56+/Red}
+<SeedingsClaw/@solosev6>  {Level 60+/Red}
+<SnowBlest/@solosev7>  {Level 64+/Red}
+
+
+[@solosev1]
+#IF
+LEVEL > 39
+LEVEL < 100
+CHECKGOLD >= 350000
+#ACT
+TAKEGOLD 350000
+GIVEPET CrystalCrawler 1 7
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@solosev2]
+#IF
+LEVEL > 43
+LEVEL < 100
+CHECKGOLD >= 400000
+#ACT
+TAKEGOLD 400000
+GIVEPET DragonWarrior 1 7
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@solosev3]
+#IF
+LEVEL > 47
+LEVEL < 100
+CHECKGOLD >= 450000
+#ACT
+TAKEGOLD 450000
+GIVEPET TwinHeadBeast 1 7
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@solosev4]
+#IF
+LEVEL > 51
+LEVEL < 100
+CHECKGOLD >= 500000
+#ACT
+TAKEGOLD 500000
+GIVEPET BlackTortoise 1 7
+#ELSESAY
+You are not the right level or to poor.
+<Main/@Main>
+
+[@solosev5]
+#IF
+LEVEL > 55
+LEVEL < 100
+CHECKGOLD >= 550000
+#ACT
+TAKEGOLD 550000
+GIVEPET SnowLord 1 7
+#ELSESAY 
+You are not the right level or to poor.
+<Main/@Main>
+
+[@solosev6]
+#IF
+LEVEL > 59
+LEVEL < 100
+CHECKGOLD >= 550000
+#ACT
+TAKEGOLD 550000
+GIVEPET SeedingsClaw 1 7
+#ELSESAY 
+You are not the right level or to poor.
+<Main/@Main>
+
+[@solosev5]
+#IF
+LEVEL > 63
+LEVEL < 100
+CHECKGOLD >= 550000
+#ACT
+TAKEGOLD 550000
+GIVEPET SnowBlest 1 7
+#ELSESAY 
+You are not the right level or to poor.
+<Main/@Main>
+
+[@PLSEV]
+<Main/@Main>
+{CrystalCrawler/Red} is 350000 Gold
+{DragonWarrior/Red} is 400000 Gold
+{TwinHeadBeast/Red} is 450000 Gold
+{BlackTortoise/Red} is 500000 Gold
+{SnowLord/Red} is 550000 Gold
+{SeedingsClaw/Red} is 550000 Gold
+{SnowBlest/Red} is 550000 Gold
+
+
+
+[@storep]
+I can store certain creatures for you..
+I will give you a token to retrieve them whenever you fancy
+THEY MUST ALL BE LEVEL 7 AND STILL ALIVE to store them and 
+all be the same type of creature.
+
+<Store Pets/@Store1>
+<Store Elite Pets/@Store2>
+<Main/@Main>
+
+[@Store1]
+<Main/@Main>
+<Store RedViper's/@Storepet1>
+<Store WickedTong's/@Storepet2>
+<Store WildBeast's/@Storepet3>
+<Store BloodRat's/@Storepet4>
+<Store SeaCreature's/@Storepet5>
+<Store ClawBeast's/@Storepet6>
+<Store DemonSlasher's/@Storepet7>
+<Store DemonFighter's/@Storepet8>
+<Store FrozenBasher's/@Storepet9>
+
+[@Storepet1]
+#IF
+CHECKPET RedViper
+PETLEVEL == 7
+PETCOUNT == 5
+#ACT
+CLEARPETS
+GIVEITEM RedViperToken 1
+#ELSESAY
+Sorry you don't meet the requirements to store your pets!
+<Main/@Main>
+
+[@Storepet2]
+#IF
+CHECKPET WickedTong
+PETLEVEL == 7
+PETCOUNT == 5
+#ACT
+CLEARPETS
+GIVEITEM WickedTongToken 1
+#ELSESAY
+Sorry you don't meet the requirements to store your pets!
+<Main/@Main>
+
+[@Storepet3]
+#IF
+CHECKPET WildBeast
+PETLEVEL == 7
+PETCOUNT == 5
+#ACT
+CLEARPETS
+GIVEITEM WildBeastToken 1
+#ELSESAY
+Sorry you don't meet the requirements to store your pets!
+<Main/@Main>
+
+[@Storepet4]
+#IF
+CHECKPET BloodRat
+PETLEVEL == 7
+PETCOUNT == 5
+#ACT
+CLEARPETS
+GIVEITEM BloodRatToken 1
+#ELSESAY
+Sorry you don't meet the requirements to store your pets!
+<Main/@Main>
+
+[@Storepet5]
+#IF
+CHECKPET SeaCreature
+PETLEVEL == 7
+PETCOUNT == 5
+#ACT
+CLEARPETS
+GIVEITEM SeaCreatureToken 1
+#ELSESAY
+Sorry you don't meet the requirements to store your pets!
+<Main/@Main>
+
+[@Storepet6]
+#IF
+CHECKPET ClawBeast
+PETLEVEL == 7
+PETCOUNT == 5
+#ACT
+CLEARPETS
+GIVEITEM ClawBeastToken 1
+#ELSESAY
+Sorry you don't meet the requirements to store your pets!
+<Main/@Main>
+
+[@Storepet7]
+#IF
+CHECKPET DemonSlasher
+PETLEVEL == 7
+PETCOUNT == 5
+#ACT
+CLEARPETS
+GIVEITEM DemonSlasherToken 1
+#ELSESAY
+Sorry you don't meet the requirements to store your pets!
+<Main/@Main>
+
+[@Storepet8]
+#IF
+CHECKPET DemonFighter
+PETLEVEL == 7
+PETCOUNT == 5
+#ACT
+CLEARPETS
+GIVEITEM DemonFighterToken 1
+#ELSESAY
+Sorry you don't meet the requirements to store your pets!
+<Main/@Main>
+
+[@Storepet9]
+#IF
+CHECKPET FrozenBasher
+PETLEVEL == 7
+PETCOUNT == 5
+#ACT
+CLEARPETS
+GIVEITEM FrozenBasherToken 1
+#ELSESAY
+Sorry you don't meet the requirements to store your pets!
+<Main/@Main>
+
+[@Store2]
+<Main/@Main>
+<Store CrystalCrawler/@Storesolo1>
+<Store DragonWarrior/@Storesolo2>
+<Store TwinHeadBeast/@Storesolo3>
+<Store BlackTortoise/@Storesolo4>
+<Store SnowLord/@Storesolo5>
+<Store SeedingsClaw/@Storesolo6>
+<Store SnowBlest/@Storesolo7>
+
+
+[@Storesolo1]
+#IF
+CHECKPET CrystalCrawler
+PETLEVEL == 7
+PETCOUNT == 1
+#ACT
+CLEARPETS
+GIVEITEM CrystalCrawlerToken 1
+#ELSESAY
+Sorry you don't meet the requirements to store your pets!
+<Main/@Main>
+
+[@Storesolo2]
+#IF
+CHECKPET DragonWarrior
+PETLEVEL == 7
+PETCOUNT == 1
+#ACT
+CLEARPETS
+GIVEITEM DragonWarriorToken 1
+#ELSESAY
+Sorry you don't meet the requirements to store your pets!
+<Main/@Main>
+
+[@Storesolo3]
+#IF
+CHECKPET TwinHeadBeast
+PETLEVEL == 7
+PETCOUNT == 1
+#ACT
+CLEARPETS
+GIVEITEM TwinHeadBeastToken 1
+#ELSESAY
+Sorry you don't meet the requirements to store your pets!
+<Main/@Main>
+
+[@Storesolo4]
+#IF
+CHECKPET BlackTortoise
+PETLEVEL == 7
+PETCOUNT == 1
+#ACT
+CLEARPETS
+GIVEITEM BlackTortoiseToken 1
+#ELSESAY
+Sorry you don't meet the requirements to store your pets!
+<Main/@Main>
+
+[@Storesolo5]
+#IF
+CHECKPET SnowLord
+PETLEVEL == 7
+PETCOUNT == 1
+#ACT
+CLEARPETS
+GIVEITEM SnowLordToken 1
+#ELSESAY
+Sorry you don't meet the requirements to store your pets!
+<Main/@Main>
+
+[@Storesolo6]
+#IF
+CHECKPET SeedingsClaw
+PETLEVEL == 7
+PETCOUNT == 1
+#ACT
+CLEARPETS
+GIVEITEM SeedingsClawToken 1
+#ELSESAY
+Sorry you don't meet the requirements to store your pets!
+<Main/@Main>
+
+[@Storesolo7]
+#IF
+CHECKPET SnowBlest
+PETLEVEL == 7
+PETCOUNT == 1
+#ACT
+CLEARPETS
+GIVEITEM SnowBlestToken 1
+#ELSESAY
+Sorry you don't meet the requirements to store your pets!
+<Main/@Main>
+
+
+
+
+[@retp]
+#IF 
+PETCOUNT == 0
+#ACT
+GOTO @retp1
+#ELSESAY
+You can't have any activate pets to use this feature
+<Main/@Main>
+
+[@retp1]
+So you want to retreive your pets?
+Make sure you have your token!
+
+<Normal Pets/@retnorm>
+<Elite Pets/@retelite>
+<Main/@Main>
+[@retnorm]
+<Main/@Main>
+<RedViper's/@Retpet1>
+<WickedTong's/@Retpet2>
+<WildBeast's/@Retpet3>
+<BloodRat's/@Retpet4>
+<SeaCreature's/@Retpet5>
+<ClawBeast's/@Retpet6>
+<DemonSlasher's/@Retpet7>
+<DemonFighter's/@Retpet8>
+<FrozenBasher's/@Retpet9>
+
+[@retelite]
+<Main/@Main>
+<CrystalCrawler/@Retsolo1>
+<DragonWarrior/@Retsolo2>
+<TwinHeadBeast/@Retsolo3>
+<BlackTortoise/@Retsolo4>
+<SnowLord/@Retsolo5>
+<SeedingsClaw/@Retsolo6>
+<SnowBlest/@Retsolo7>
+
+
+
+[@Retpet1]
+#IF
+LEVEL > 19
+LEVEL < 100
+CHECKITEM RedViperToken 1
+#ACT
+TAKEITEM RedViperToken 1
+GIVEPET RedViper 5 7
+#ELSESAY
+You need to bring me your token!
+<Main/@Main>
+
+
+[@Retpet2]
+#IF
+LEVEL > 24
+LEVEL < 100
+CHECKITEM WickedTongToken 1
+#ACT
+TAKEITEM WickedTongToken 1
+GIVEPET WickedTong 5 7
+#ELSESAY
+You need to bring me your token!
+<Main/@Main>
+
+[@Retpet3]
+#IF
+LEVEL > 29
+LEVEL < 100
+CHECKITEM WildBeastToken 1
+#ACT
+TAKEITEM WildBeastToken 1
+GIVEPET WildBeast 5 7
+#ELSESAY
+You need to bring me your token!
+<Main/@Main>
+
+[@Retpet4]
+#IF
+LEVEL > 34
+LEVEL < 100
+CHECKITEM BloodRatToken 1
+#ACT
+TAKEITEM BloodRatToken 1
+GIVEPET BloodRat 5 7
+#ELSESAY
+You need to bring me your token!
+<Main/@Main>
+
+[@Retpet5]
+#IF
+LEVEL > 39
+LEVEL < 100
+CHECKITEM SeaCreatureToken 1
+#ACT
+TAKEITEM SeaCreatureToken 1
+GIVEPET SeaCreature 5 7
+#ELSESAY
+You need to bring me your token!
+<Main/@Main>
+
+[@Retpet6]
+#IF
+LEVEL > 44
+LEVEL < 100
+CHECKITEM ClawBeastToken 1
+#ACT
+TAKEITEM ClawBeastToken 1
+GIVEPET ClawBeast 5 7
+#ELSESAY
+You need to bring me your token!
+<Main/@Main>
+
+[@Retpet7]
+#IF
+LEVEL > 49
+LEVEL < 100
+CHECKITEM DemonSlasherToken 1
+#ACT
+TAKEITEM DemonSlasherToken 1
+GIVEPET DemonSlasher 5 7
+#ELSESAY
+You need to bring me your token!
+<Main/@Main>
+
+[@Retpet8]
+#IF
+LEVEL > 54
+LEVEL < 100
+CHECKITEM DemonFighterToken 1
+#ACT
+TAKEITEM DemonFighterToken 1
+GIVEPET DemonFighter 5 7
+#ELSESAY
+You need to bring me your token!
+<Main/@Main>
+
+[@Retpet9]
+#IF
+LEVEL > 59
+LEVEL < 100
+CHECKITEM FrozenBasherToken 1
+#ACT
+TAKEITEM FrozenBasherToken 1
+GIVEPET FrozenBasher 5 7
+#ELSESAY
+You need to bring me your token!
+<Main/@Main>
+
+
+
+
+[@Retsolo1]
+#IF
+LEVEL > 39
+LEVEL < 100
+CHECKITEM CrystalCrawlerToken 1
+#ACT
+TAKEITEM CrystalCrawlerToken 1
+GIVEPET CrystalCrawler 1 7
+#ELSESAY
+You need to bring me your token!
+<Main/@Main>
+
+[@Retsolo2]
+#IF
+LEVEL > 43
+LEVEL < 100
+CHECKITEM DragonWarriorToken 1
+#ACT
+TAKEITEM DragonWarriorToken 1
+GIVEPET DragonWarrior 1 7
+#ELSESAY
+You need to bring me your token!
+<Main/@Main>
+
+[@Retsolo3]
+#IF
+LEVEL > 47
+LEVEL < 100
+CHECKITEM TwinHeadBeastToken 1
+#ACT
+TAKEITEM TwinHeadBeastToken 1
+GIVEPET TwinHeadBeast 1 7
+#ELSESAY
+You need to bring me your token!
+<Main/@Main>
+
+[@Retsolo4]
+#IF
+LEVEL > 51
+LEVEL < 100
+CHECKITEM BlackTortoiseToken 1
+#ACT
+TAKEITEM BlackTortoiseToken 1
+GIVEPET BlackTortoise 1 7
+#ELSESAY
+You need to bring me your token!
+<Main/@Main>
+
+[@Retsolo5]
+#IF
+LEVEL > 55
+LEVEL < 100
+CHECKITEM SnowLordToken 1
+#ACT
+TAKEITEM SnowLordToken 1
+GIVEPET SnowLord 1 7
+#ELSESAY
+You need to bring me your token!
+<Main/@Main>
+
+[@Retsolo6]
+#IF
+LEVEL > 59
+LEVEL < 100
+CHECKITEM SeedingsClawToken 1
+#ACT
+TAKEITEM SeedingsClawToken 1
+GIVEPET SeedingsClaw 1 7
+#ELSESAY
+You need to bring me your token!
+<Main/@Main>
+
+[@Retsolo7]
+#IF
+LEVEL > 63
+LEVEL < 100
+CHECKITEM SnowBlestToken 1
+#ACT
+TAKEITEM SnowBlestToken 1
+GIVEPET SnowBlest 1 7
+#ELSESAY
+You need to bring me your token!
+<Main/@Main>
+
+
+

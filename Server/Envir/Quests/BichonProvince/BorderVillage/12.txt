@@ -1,0 +1,28 @@
+[@Description]
+You seem more like a well-trained Wizard now.
+I have asked Peter to give you some work
+to do. The reward should help you in many ways,
+
+[@TaskDescription]
+Speak to {MirGuide Peter/LimeGreen} Coordinates 328:258
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+48
+
+[@GoldReward]
+60
+
+// Pickup - ArchMage_Robert 0 8 11
+// Hand In - MirGuide_Peter 0 328 258

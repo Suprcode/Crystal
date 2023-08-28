@@ -1,0 +1,207 @@
+;Gold
+1/1 Gold 35000
+1/10 GoldBar
+
+;Pots + Other
+1/1 (HP)DrugXL
+1/2 (HP)DrugXL
+1/1 (MP)DrugXL
+1/2 (MP)DrugXL
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 SunPotion
+1/1 SunPotion
+1/2 SunPotion
+1/2 SunPotion
+1/1 SunPotion
+1/2 SunPotion
+
+
+1/1 BenedictionOil
+1/10 GoldenBenedictionOil
+
+
+1/1 Awakeningbox 
+1/1 AwakeningSoul0 
+
+;Weapons
+1/200 MaleficBow
+1/200 DragonSlayer
+1/200 DragonStaff
+1/200 SoulSabre
+1/450 SwordOfWarGod
+1/450 BowOfForce
+1/450 BladeOfSorcery
+1/450 HeavenSword
+1/800 FrozenSabre
+1/800 ConquerorSpear
+1/800 BastardSword
+1/1000 BlackTigerHammer
+1/1000 LethalBow
+1/1000 StaffOfLotus
+1/1000 FanOfCrane
+
+;Weapons Rare
+1/1400 HellYamaBlade
+1/1600 WidowsWail
+1/1600 ThorsBattleAxe
+1/1600 OathKeeper
+1/6000 LordSlayerBlade
+1/6000 LordSlayerStaff
+1/6000 LordSlayerFan
+1/6000 LordSlayerBlades
+
+;Armour
+1/300 BlackTigerArmour(M)
+1/300 BlackTigerArmour(F)
+1/300 LotusArmour(M)
+1/300 LotusArmour(F)
+1/300 CraneArmour(M)
+1/300 CraneArmour(F)
+
+;Armour Rare
+1/1000 TrollsRobe(M)
+1/1000 TrollsRobe(F)
+1/6000 LordSlayerArmour(M)
+1/6000 LordSlayerArmour(F)
+
+;Helmets
+1/40 GreatHelmet
+1/40 WisdomCoronet
+1/40 TaoCoronet
+1/40 RoyalHelmet
+1/450 SparklingHelmet
+1/460 PuiYuHelmet
+
+;Helmets Rare
+1/600 CannibalHelmet
+1/1000 TrollCap
+1/1000 InfernoHelmet
+1/6000 LordSlayerHelmet
+
+;Necklace
+1/100 CuspidNecklace
+1/100 SorceryAnchor
+1/100 PurifiedMirror
+1/205 EvilTriangle
+1/205 CrossPurified
+1/205 AdamantNecklace
+1/600 DefenderNecklace
+1/800 AscendedNecklace
+
+;Necklace Rare
+1/600 PirateNecklace
+1/1000 TrollChains
+1/1000 InfernoNecklace
+1/6000 LordSlayerNecklace
+
+;Bracelets
+1/100 DualTitanAmulet
+1/100 SacredAngelAmulet
+1/100 EvilWhispAmulet
+1/205 WildTitanAmulet
+1/205 EnchantedAmulet
+1/205 FiveElementAmulet
+1/600 DefenderGlove
+1/800 AscendedWheel
+
+;Bracelets Rare
+1/600 DemonWheel
+1/1000 TrollBand
+1/1000 InfernoWheel
+1/6000 LordSlayerBracelet
+
+;Rings
+1/100 PledgeRing
+1/100 FiveElementRing
+1/100 CrimsonRubyRing
+1/205 DemonRubyRing
+1/205 EvilExpelRing
+1/205 GoldDragonRing
+1/600 DefenderRing
+1/800 AscendedRing
+
+;Rings Rare
+1/600 SlasherRing
+1/1000 TrollRing
+1/1000 InfernoRing
+1/6000 LordSlayerRing
+
+;Shoes
+1/600 KeeperBoots
+1/800 AscendedBoots
+1/1075 TrollLeathers
+1/1000 InfernoBoots
+1/6000 LordSlayerBoots
+
+;Belts
+1/600 WitchBelt
+1/1050 StrapofTrolls
+1/800 AscendedBelt
+1/1000 InfernoBelt
+1/6000 LordSlayerBelt
+
+;Medals
+
+
+;Shields
+1/1000 InfernoShield
+
+;Pads
+
+
+;Stone
+
+;Gems/Orbs
+1/30 BraveryOrb
+1/30 MagicOrb
+1/30 SoulOrb
+1/25 ProtectionOrb
+1/25 EvilSlayerOrb
+1/20 DurabilityOrb
+1/40 PoisonOrb
+1/40 FreezingOrb
+1/40 AccuracyOrb
+1/40 StormOrb
+1/40 EnduranceOrb
+
+
+;Books
+1/100 SliceNDice
+1/200 SummonHolyDeva
+1/200 Mirroring
+1/200 SwiftFeet
+1/200 BladeAvalanche
+1/500 ProtectionField
+1/500 Reincarnation
+1/500 MeteorStrike
+1/500 PoisonCloud
+1/500 Rage
+1/500 Plague
+1/500 MagicBooster
+1/500 Hemorrhage
+1/500 CounterAttack
+1/900 SlashingBurst
+1/900 MoonMist
+1/900 StormEscape
+1/700 LavaKing
+1/750 FrozenRains
+1/850 HeadShot
+1/850 ShadowStep
+1/1280 SummonHolyDragon
+1/1280 FuryWaves
+1/1200 HolyShield
+
+1/100 PoisonShot 
+1/200 CrippleShot
+1/500 SummonSnakes 		
+1/90 NapalmShot 		
+1/1200 OneWithNature
+
+
+;CraftingMaterials
+
+
+;Quests

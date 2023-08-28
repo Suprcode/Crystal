@@ -1,0 +1,40 @@
+;;3F
+;;Quest 153
+[@MAIN]
+#IF
+CHECKQUEST 153 1
+#SAY
+A Mysterious Stone with Ancient symbols.
+"Dungeon of the Ancient <Ones/@omacavea>" {Level10~22./KHAKI}
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @MAIN-1
+#ELSESAY
+A Mysterious Stone with Unknown symbols.
+
+[@MAIN-1]
+#IF
+CHECK [535] 1
+#ACT
+SET [536] 1
+#ELSESAY
+A Mysterious Stone with Unknown symbols.
+ 
+ 
+<Close/@exit>
+
+[@omacavea]
+#IF
+LEVEL > 9 
+LEVEL < 22
+#ACT
+MOVE D001A
+#ELSESAY
+Nothing happens.
+
+[Quests]
+152
+-152
+153
+-153

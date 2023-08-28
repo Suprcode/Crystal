@@ -1,0 +1,168 @@
+;Gold
+1/1 Gold 30000
+
+;Pots + Other
+1/1 (HP)DrugLarge
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (HP)DrugXL
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (MP)DrugXL
+1/1 SunPotion
+1/2 SunPotion
+1/3 SunPotion(M)
+1/5 SunPotion(M)
+
+1/10 ImpactDrug(L)
+1/10 MagicDrug(L)
+1/10 TaoistDrug(L)
+1/10 StormDrug(L)
+
+1/15 BenedictionOil
+1/40 GoldenBenedictionOil
+
+1/40 AwakeningSoul0
+1/40 AwakeningSoul0
+
+;Weapons
+1/250 MaleficBow
+1/250 DragonSlayer
+1/250 DragonStaff
+1/250 SoulSabre
+1/450 BurstSword
+1/450 DreadBow
+1/450 HolyBloodSpear
+1/450 DragonBloodSword
+
+;Weapon Rare
+1/900 BlackTigerHammer
+1/900 StaffOfLotus
+1/900 LethalBow
+1/900 FanOfCrane
+
+;Armour
+1/20 StuddedArmour(M)
+1/20 StuddedArmour(F)
+1/20 SteelArmour(M)
+1/20 SteelArmour(F)
+1/20 DragonRobe(M)
+1/20 DragonRobe(F)
+1/20 TitanArmour(M)
+1/20 TitanArmour(F)
+
+;Armour Rare
+1/500 BlackTigerArmour(M)
+1/500 BlackTigerArmour(F)
+1/500 LotusArmour(F)
+1/500 LotusArmour(M)
+1/500 CraneArmour(F)
+1/500 CraneArmour(M)
+
+;Helmets
+1/545 ApesCrown
+1/550 SparklingHelmet
+1/560 HelmetOfDarkness
+
+;Helmets Rare
+1/400 AscendedHelmet
+
+;Necklace
+1/205 EvilTriangle
+1/205 CrossPurified
+1/205 AdamantNecklace
+
+;Necklace Rare
+1/400 AscendedNecklace
+
+;Bracelets
+1/205 WildTitanAmulet
+1/205 EnchantedAmulet
+1/205 FiveElementAmulet
+
+;Bracelets Rare
+1/400 AscendedWheel
+
+;Rings
+1/205 DemonRubyRing
+1/205 EvilExpelRing
+1/205 GoldDragonRing
+
+;Ring Rare
+1/400 AscendedRing
+
+
+;Shoes
+
+
+;Shoes Rare
+1/400 AscendedBoots
+
+;Belts
+1/40 BoneBelt
+1/150 FlamingGrasp
+1/260 SparklingBelt
+1/165 BeltOfDarkness
+
+;Belt Rare
+1/400 AscendedBelt
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Gems/Orbs
+1/50 FreezingOrb
+1/50 DurabilityOrb
+1/50 BraveryOrb
+1/50 MagicOrb
+1/50 SoulOrb
+1/50 ProtectionOrb
+1/50 EvilSlayerOrb
+1/50 PoisonOrb
+1/50 AccuracyOrb
+1/50 AgilityOrb
+
+
+;Books
+;;Warrior
+1/500 BladeAvalanche
+1/700 ProtectionField
+1/900 Rage
+1/1500 CounterAttack
+
+;;Wizard
+1/60 FlameDisruptor
+1/500 Mirroring
+1/900 MeteorStrike
+1/1500 MagicBooster
+1/1500 IceThrust
+
+;;Toaist
+1/60 UltimateEnhancer
+1/500 SummonHolyDeva
+1/700 Reincarnation
+1/900 PoisonCloud
+1/900 Plague
+1/1500 PetEnhancer
+
+;;Assassion
+1/60 MPEater
+1/500 SwiftFeet
+1/900 DarkBody
+1/1500 Hemorrhage
+
+;CraftingMaterials
+
+
+;Quests
+

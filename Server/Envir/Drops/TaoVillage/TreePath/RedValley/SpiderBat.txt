@@ -1,0 +1,18 @@
+;Gold
+1/5 Gold 500
+
+;Potions
+1/10 (HP)DrugMedium
+1/10 (MP)DrugMedium
+1/20 (HP)DrugLarge
+1/20 (MP)DrugLarge
+
+;Scrolls
+1/40 TownTeleport
+
+;Rings
+1/1000000 ParalysisRing
+
+
+;Quest
+1/6 BatPoison Q

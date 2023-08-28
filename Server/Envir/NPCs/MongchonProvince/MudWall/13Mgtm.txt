@@ -1,0 +1,65 @@
+[@main]
+#SAY
+How are you? Mirian <$USERNAME>!
+I am the Guild Territory Merchant and
+I'm in charge of guild territory rent and sales.
+
+<What is/@info> a guild territory?
+I want to <rent/@rent> a guild territory.
+I want to <go/@move> to my guild territory.
+I want to check the <list/@agitbuy> of guild territories.
+I want to <trade/@trade> my guild territory.
+
+[@info]
+#SAY
+Guild territory is an exclusive space for a guild,
+where the members stay for privacy. Members of the
+guild that has its own territory do not have
+to have secret meeting at the hidden corners of villages,
+where privacy is still not guaranteed. Guild members may
+have private conversations and socialize with other members.
+In short, it is a residence for clans.
+
+<Back/@main>
+
+[@rent]
+#SAY
+You need 10,000,000 {Gold/Gold} to rent a guild territory and the initial
+period for rent is 7 days.
+If you want to extend, talk to the 'GT Steward' in the territory.
+After paying the fee of 1,000,000 {Gold/Gold},
+the rent will be extended for an additional 7 days.
+
+Do you still want to rent a territory? <Rent/@agitreg> <Cancel/@exit>
+
+[@move]
+#SAY
+Then I will teleport you to the territory of you guild.
+However, only the guild masters or the members who
+have their own territories can be transported.
+If you wish to return to castles or villages, look
+for the Armed Transporter at the entrance of the
+guild territory.
+
+Do you want to move to the guild territory? <Move/@agitmove> <Cancel/@exit>
+
+[@agitbuy]
+#SAY
+Here, you can see all the information about ownership, trades,
+and sales of guild territories at once. If you intend to
+purchase a guild territory from the list, send a 'note'
+to the guild master who owns the territory. And if you wish to
+purchase the guild territory after reaching agreement,
+use the 'trade' menu of the main screen.
+
+<Back/@main>
+
+[@trade]
+#SAY
+By facing the guild master and selecting 'trade',
+the transaction is complete. After a successful transaction,
+the ownership is transferred in 24 hours and the previous owners
+are automatically 'kicked out' from the territory.
+So, please think carefully berfore trading the guild territory.
+
+Will you trade? <Trade/@agittrade> <Cancel/@exit>

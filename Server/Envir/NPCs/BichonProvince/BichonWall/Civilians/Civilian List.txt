@@ -1,0 +1,15 @@
+Quest 154 Start at Commander Luke.
+========================================================
+Civilian 1 Adds SET [539]
+Civilian 2 Does nothing
+========================================================
+Civilian 3 Does nothing (Add Future Quest)
+Civilian 4 Does nothing
+Civilian 5 Adds SET [541] Cannot have SET [540] Active.
+Civilian 6 Does nothing
+========================================================
+Civilian 7 Removes SET [539] & [541]
+Civilian 8 Adds SET [540] (Add Future Quests)
+Civilian 9 Removes SET [540]
+========================================================
+Civilian 10 Does nothing

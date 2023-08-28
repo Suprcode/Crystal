@@ -1,0 +1,33 @@
+[@Description]
+Hello traveller. You are quite famous around 
+here. Could you help me as well? 
+The demand for medicine has been increasing, 
+and we are short on the ingredients for the 
+medicine. We are especially short on {Web's/LightSteelBlue} 
+which can be found from {SpittingSpiders/Crimson} could you 
+please get some for me?
+
+[@TaskDescription]
+Please collect 10 {Web's/LightSteelBlue} from {SpittingSpider's/Crimson}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+Web 10
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+500
+
+[@GoldReward]
+500
+
+// Pickup - Alchemist_Samuel 0 324 291
+// Hand In - Alchemist_Samuel 0 324 291

@@ -1,0 +1,12 @@
+[@MAIN]
+#IF
+CHECKQUEST 110 0
+#SAY
+What a mysterious pillar.
+#ELSESAY
+You get an eerie feeling when touching then pillar..
+#ELSEACT
+SET [523] 1
+LOCALMESSAGE "MysteriousPillar has been found!" Hint
+BREAK
+CLOSE

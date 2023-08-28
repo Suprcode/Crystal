@@ -1,0 +1,34 @@
+[@Description]
+Hello traveller. Thankyou for coming.
+The reason I asked for you was to get some
+help keeping {WoomyonWoods/Yellow} safe. You 
+probably have seen some {CannibalPlant's/Crimson} 
+on the way here from {BichonWall/Yellow}. We need 
+to hunt them down to keep merchants safe 
+from dangerous attacks.
+
+[@TaskDescription]
+Please collect 10 {CannibalStem/LightSteelBlue} and 
+{CannibalLeafs/LightSteelBlue} From {CannibalPlant's/Crimson} and deliver 
+to {MirGuide/LimeGreen} in {BichonWall/Yellow}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+CannibalStem 10
+CannibalLeaf 10
+
+[@CarryItems]
+
+[@FixedRewards]
+SteelBangle
+
+[@SelectRewards]
+
+[@ExpReward]
+450
+
+[@GoldReward]
+113

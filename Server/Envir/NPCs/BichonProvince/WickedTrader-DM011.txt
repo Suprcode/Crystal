@@ -1,0 +1,69 @@
+[@Main]
+Welcome, how may I help you?
+ 
+<View/@BuySell> Store.
+<Repair/@repair> Items.
+<Close/@exit>
+
+[@BuySell]
+What item do you want to buy or sell?
+<Buy Back/@BuyBack>
+ 
+<Back/@main>
+
+[@BuyBack]
+#SAY
+Item's you are still able to purchase back.
+ 
+<Back/@Main>
+
+[@Repair]
+Show me the items you wish to repair.
+ 
+<Back/@main>
+
+[Types]
+1
+2
+4
+9
+10
+
+[Trade]
+(HP)DrugSmall 1
+(HP)DrugSmall 5
+(HP)DrugSmall 10
+(MP)DrugSmall 1
+(MP)DrugSmall 5
+(MP)DrugSmall 10
+(HP)DrugMedium 1
+(HP)DrugMedium 5
+(HP)DrugMedium 10
+(MP)DrugMedium 1
+(MP)DrugMedium 5
+(MP)DrugMedium 10
+WoodenSword
+WoodenBow
+Dagger
+EbonySword
+EbonyBow
+BronzeSword
+ShortBow
+ShortSword
+SharpHoaSword
+BoneBow
+IronSword
+BronzeAxe
+Trident
+HookedSword
+Scimitar
+BladesOfVelocity
+CompoundBow
+SteelSword
+Candle
+DungeonEscape
+RandomTeleport
+BaseDress(M)
+BaseDress(F)
+LightArmour(M)
+LightArmour(F)

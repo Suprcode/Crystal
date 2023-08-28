@@ -1,0 +1,13 @@
+[Recipe]
+Amount 1
+Chance 20
+Gold 10000
+
+[Tools]
+CraftingBook
+
+[Ingredients]
+SCStone
+TaoistDrug(L)
+(MP)DrugLarge
+(HP)DrugLarge

@@ -1,0 +1,27 @@
+;Gold
+1/10 Gold 950
+1/5 SunPotion
+1/5 SunPotion
+
+;Potions
+1/30 SunPotion
+1/50 SunPotion(M)
+
+
+1/33310 InfernoRing
+1/33310 InfernoNecklace
+1/33310 InfernoWheel
+1/33310 InfernoBoots
+1/33310 InfernoBelt
+
+
+1/55000 SwordOfWarGod
+1/55000 BladeOfSorcery
+1/55000 HeavenSword
+1/55000 BladesOfMagi
+1/55000 BowOfForce
+1/75000 BurstSword
+1/75000 HolyBloodSpear
+1/75000 DragonBloodSword
+1/75000 Stiletto
+1/75000 DreadBow

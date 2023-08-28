@@ -1,0 +1,87 @@
+;Gold 
+1/5 Gold 8000
+
+;Potions
+1/1 (HP)DrugMedium
+1/1 (MP)DrugMedium
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+2/1 (HP)DrugMedium
+2/1 (MP)DrugMedium
+2/2 (HP)DrugLarge
+2/2 (MP)DrugLarge
+1/5 SunPotion
+1/10 SunPotion(M)
+1/17 RepairOil
+1/35 WarGodOil
+
+;Weapon
+1/14 PurifierSword
+1/400 WarSpiritBlade
+1/400 StoneBambooFan
+1/400 MagicScythe
+1/400 FreezingBlades
+1/400 LitheBow
+
+;Armour
+1/20 HeavyArmour(M)
+1/20 HeavyArmour(F)
+1/20 SoulArmour(M)
+1/20 SoulArmour(F)
+1/20 MagicRobe(M)
+1/20 MagicRobe(F)
+1/20 RelicArmour(M)
+1/20 RelicArmour(F)
+1/20 LightLeatherArmour(M)
+1/20 LightLeatherArmour(F)
+
+;Belts 
+1/10 LeatherBelt
+1/160 GoldBelt
+
+;Ring
+1/40 ExpelRing
+1/40 CoralRing
+1/10 MoralRing
+1/200 PlatinumRing
+1/200 DragonRing
+1/200 RubyRing
+1/50 NokChiRing
+1/50 MundaneRing
+1/50 TaoProtectRing
+1/160 FiveStringRing
+
+;Bracelets
+1/40 3rdEyeBracelet
+1/190 FiveStringBracelet
+1/50 NokChiWheel
+1/50 MundaneGlove
+1/50 TaoPowerBracelet
+
+;Necklaces
+1/190 FiveStringNecklace
+1/90 SpiritPowerNecklace
+1/90 BlueThunderNecklace
+1/90 AmethystNecklace
+1/20 WarriorNecklace
+
+;Scroll
+1/1 RandomTeleport
+1/5 TownTeleport
+
+;Stones
+1/25 DCStone(L)
+1/50 DCStone(XL)
+1/25 MCStone(L)
+1/50 MCStone(XL)
+1/25 SCStone(L)
+1/50 SCStone(XL)
+
+;Books
+1/19 MassHealing
+1/15 MagicShield
+1/20 FrostCrunch
+1/15 HalfMoon
+
+;Quest
+1/7 CorpsFlower Q

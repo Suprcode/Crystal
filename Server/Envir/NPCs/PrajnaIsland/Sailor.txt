@@ -1,0 +1,46 @@
+[@main]
+#SAY
+ The boat goes many places. The boat will depart soon
+ Passengers, Please board the ship.
+ 
+ <To Bichon Province/@brdmove> Pay 2,000 {Gold/Gold} and Board.
+ <To White Valley/@brdmove1> Pay 12,000 {Gold/Gold} and Board.
+ <Talk/@talk> about each frontiers.
+ 
+[@talk]
+#SAY
+ Which frontier do you want to talk about?
+  
+ <White Valley/@talkWV>
+ <Back/@main>
+
+[@talkWV]
+#SAY
+ WhiteValley is new fontier which has just been discovered.
+ The evil within is great. But the Riches are greater.
+ 
+ <Back/@talk>
+
+[@brdmove]
+#IF
+CHECKGOLD > 2000
+#ACT
+TAKEGOLD 2000
+MOVE 0 253 673
+#ELSESAY
+You Dont Have enough {Gold/Gold} to use my Service!
+Be gone, don't waste my time again!
+ 
+<Exit/@exit>
+
+[@brdmove1]
+#IF
+CHECKGOLD > 12000
+#ACT
+TAKEGOLD 12000
+MOVE WHITEVILLAGE 67 93
+#ELSESAY
+You Dont Have enough {Gold/Gold} to use my Service!
+Be gone, don't waste my time again!
+ 
+<Exit/@exit>

@@ -1,0 +1,29 @@
+[@Description]
+The Howling oh the Howling.. Search for the 
+Source and Kill the creature.
+
+[@TaskDescription]
+Eliminate the {OmaWarrior/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+OmaWarrior 1
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+BlackIronBelt
+
+[@SelectRewards]
+
+[@ExpReward]
+8200
+
+[@GoldReward]
+2050
+
+// Pickup - Master_Shok 1 312 73
+// Hand In - Master_Shok 1 312 73

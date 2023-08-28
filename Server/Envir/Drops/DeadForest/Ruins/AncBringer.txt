@@ -1,0 +1,152 @@
+;Potions
+1/3 (HP)DrugLarge
+1/3 (MP)DrugLarge
+1/3 (HP)DrugLarge
+1/3 (MP)DrugLarge
+1/3 (HP)DrugXL
+1/3 (MP)DrugXL
+1/25 (HP)DrugLarge
+1/25 (MP)DrugLarge
+1/25 (HP)DrugLarge
+1/25 (MP)DrugLarge
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+1/3 BenedictionOil
+1/10 BenedictionOil
+
+;Weapons
+1/15 FireBloodSword
+1/2500 HellYamaBlade
+1/45 DragonSlayer
+1/45 DragonStaff
+1/45 SoulSabre
+1/45 RoyalBlades
+1/45 MaleficBow
+1/100 SwordOfWarGod
+1/100 BladeOfSorcery
+1/100 HeavenSword
+1/100 BladesOfMagi
+1/100 BowOfForce
+1/120 BurstSword
+1/120 HolyBloodSpear
+1/120 DragonBloodSword
+1/120 Stiletto
+1/120 DreadBow
+1/90 FrozenSabre
+1/90 ConquerorSpear
+1/90 BastardSword
+1/90 ZincBlades
+1/90 GrimBow
+1/350 BlackTigerHammer
+1/350 StaffOfLotus
+1/350 FanOfCrane
+1/350 ButcheringBlades
+1/350 LethalBow
+1/1000 BarbarianSword
+1/1000 RawSword
+1/1000 BoneCarvedFan
+1/1000 TheRipper
+1/1000 ApusBow
+
+
+;Armours
+1/25 SteelArmour(M)
+1/25 SteelArmour(F)
+1/25 DragonRobe(M)
+1/25 DragonRobe(F)
+1/25 TitanArmour(M)
+1/25 TitanArmour(F)
+1/25 RoyalArmour(M)
+1/25 RoyalArmour(F)
+1/25 StuddedArmour(M)
+1/25 StuddedArmour(F)
+1/200 BlackTigerArmour(M)
+1/200 BlackTigerArmour(F)
+1/200 LotusArmour(M)
+1/200 LotusArmour(F)
+1/200 CraneArmour(M)
+1/200 CraneArmour(F)
+1/200 StealthArmour(M)
+1/200 StealthArmour(F)
+1/200 LightTemperedArmour(M)
+1/200 LightTemperedArmour(F)
+1/5000 HeavenArmour(M)
+1/5000 HeavenArmour(F)
+
+;Helmet
+1/20 GreatHelmet
+1/20 WisdomCoronet
+1/20 TaoCoronet
+1/20 RoyalHelmet
+1/125 HelmetOfKings
+1/125 HelmetOfSorcery
+1/125 PurifiedMask
+1/125 DemonShadow
+
+;Belts
+1/35 GoldBelt
+1/65 AdamantineBelt
+1/155 FlamingGrasp
+
+;Boots
+1/20 DragonBoots
+1/55 RedScaleBoots
+1/120 GoldPatternBoots
+
+;Rings
+1/55 PledgeRing
+1/55 CrimsonRubyRing
+1/55 FiveElementRing
+1/145 GoldDragonRing
+1/145 DemonRubyRing
+1/145 EvilExpelRing
+1/450 SealRing
+1/300 TajiRing
+
+;Bracelet
+1/65 DualTitanAmulet
+1/65 EvilWhispAmulet
+1/65 SacredAngelAmulet
+1/250 WildTitanAmulet
+1/250 EnchantedAmulet
+1/250 FiveElementAmulet
+
+;Necklaces
+1/50 CuspidNecklace
+1/50 SorceryAnchor
+1/50 PurifiedMirror
+1/100 AdamantNecklace
+1/100 EvilTriangle
+1/100 CrossPurified
+
+;Crafting Material
+1/5 AncientLeather
+1/10 AncientLeather
+1/5 LargeBone
+1/10 LargeBone
+1/10 StrongRope
+1/50 StrongRope
+
+;Gems
+1/150 BraveryOrb
+1/150 MagicOrb
+1/150 SoulOrb
+1/100 ProtectionOrb
+1/100 EvilSlayerOrb
+1/100 DurabilityOrb
+1/225 PoisonOrb
+1/225 FreezingOrb
+1/300 StormOrb
+1/300 AccuracyOrb
+1/300 AgilityOrb
+
+;Gems
+1/600 SlashingBurst
+1/600 EnergyShield
+1/600 IceThrust
+1/600 MoonLight

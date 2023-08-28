@@ -1,0 +1,78 @@
+[@Main]
+#IF
+ISADMIN
+#SAY
+Hello {<$USERNAME>/KHAKI}, my name is {<$NPCNAME>/KHAKI}.
+I see you're wearing: {<$BOOTS>/CORAL}
+
+<Buy/@Buy> Boot
+<Sell/@Sell> Boot
+<Repair/@Repair> Boot
+<Special Repair/@SRepair> Boot
+
+#ELSEACT
+MOVE 0 300 300
+ 
+[@Buy]
+#SAY
+Buy.
+ 
+<Back/@Main>
+
+[@Sell]
+#SAY
+Sell.
+ 
+<Back/@Main>
+
+[@Repair]
+#SAY
+Repair.
+ 
+<Back/@Main>
+
+[@SRepair]
+#SAY
+Special repair.
+ 
+<Back/@Main>
+
+
+[Types]
+10
+
+[Trade]
+MirBoots
+WhiteGoldShoes
+WhiteGoldShoes(H)
+RedJadeShoes
+RedJadeShoes(H)
+NephriteShoes
+NephriteShoes(H)
+BootsOfStrength1
+BootsOfStrength2
+BootsOfStrength3
+BootsOfStrength4
+BootsOfStrength5
+TarragonBoots
+RaidersBoots
+RaidersBoots1
+RaidersBoots2
+RaidersBoots3
+RaidersBoots4
+RaidersBoots5
+SparklingBoots
+BootsOfDarkness
+CheongboBoots(WAR)
+CheongboBoots(WIZ)
+CheongboBoots(TAO)
+CheongboBoots(ASSA)
+CheongboBoots(ARCH)
+RottenShoes
+LowShoes
+LeatherBoots
+SilkBoots
+BlackBoots
+DragonBoots
+RedScaleBoots
+GoldPatternBoots

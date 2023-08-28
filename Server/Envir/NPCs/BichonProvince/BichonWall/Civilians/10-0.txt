@@ -1,0 +1,36 @@
+[@MAIN]
+#IF
+CHECK [539] 1
+#ACT
+GOTO @Main-1
+#ELSEACT
+GOTO @CHECK2
+
+[@CHECK2]
+#IF
+CHECK [540] 1
+#ACT
+GOTO @Main-1
+#ELSEACT
+GOTO @CHECK3
+
+[@CHECK3]
+#IF
+CHECK [541] 1
+#ACT
+GOTO @Main-1
+#ELSEACT
+GOTO @Main-2
+
+[@Main-1]
+#SAY
+Greeting's Traveler. How are you doing on this fine day?
+ 
+<Close/@exit>
+
+[@MAIN-2]
+#SAY
+Greeting's Traveler. I wish times could be better..
+The Emperor needs to visit his people.. 
+ 
+<Close/@exit>

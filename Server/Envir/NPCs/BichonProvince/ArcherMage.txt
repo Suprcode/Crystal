@@ -1,0 +1,12 @@
+[@Main]
+#SAY
+I am the MasterMage Don, What's your name?
+Welcome to my house..
+
+<Close/@exit>
+
+[Quests]
+-10
+11
+-11
+12

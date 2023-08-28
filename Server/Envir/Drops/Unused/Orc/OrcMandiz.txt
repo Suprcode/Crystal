@@ -1,0 +1,31 @@
+;Gold
+1/6 Gold 2650
+
+;Potions
+1/5 (HP)DrugXL
+1/5 (MP)DrugXL
+1/10 SunPotion
+1/10 SunPotion
+
+;Wizard
+1/45100 ConquerorSpear
+1/55250 StaffOfLotus
+1/55550 RawSword
+
+;Taoist
+1/45100 BastardSword
+1/55250 FanOfCrane
+1/55550 BoneCarvedFan
+
+1/25000 BlackTigerArmour(M)
+1/25000 BlackTigerArmour(F)
+1/25000 LotusArmour(M)
+1/25000 LotusArmour(F)
+1/25000 CraneArmour(M)
+1/25000 CraneArmour(F)
+1/25000 StealthArmour(M)
+1/25000 StealthArmour(F)
+1/25000 LightTemperedArmour(M)
+1/25000 LightTemperedArmour(F)
+
+

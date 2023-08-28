@@ -1,0 +1,25 @@
+[@Description]
+Template.
+
+[@TaskDescription]
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@FlagTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+
+[@GoldReward]
+
+// Pickup - Teleport_Jason 0 292 216
+// Hand In - Teleport_Kyle 0 371 314

@@ -1,0 +1,164 @@
+;Gold
+1/1 Gold 35000
+
+;Weapons
+1/15 DragonSword
+1/40 WarSpiritBlade
+1/40 StoneBambooFan
+1/40 MagicScythe
+1/40 FreezingBlades
+1/40 LitheBow
+1/300 DragonSlayer
+1/300 DragonStaff
+1/300 SoulSabre
+1/300 RoyalBlades
+1/300 MaleficBow
+1/500 SwordOfWarGod
+1/500 BladeOfSorcery
+1/500 HeavenSword
+1/500 BladesOfMagi
+1/500 BowOfForce
+
+;Armours
+1/55 SteelArmour(M) 
+1/55 SteelArmour(F) 
+1/55 DragonRobe(M) 
+1/55 DragonRobe(F) 
+1/55 TitanArmour(M) 
+1/55 TitanArmour(F) 
+1/55 RoyalArmour(M) 
+1/55 RoyalArmour(F) 
+1/55 StuddedArmour(M) 
+1/55 StuddedArmour(F) 
+1/1000 HeavenArmour(M) 
+1/1000 HeavenArmour(F) 
+
+;Helmets
+1/5 ShamanHelmet
+1/5 SkeletonHelmet
+1/25 BlackIronHelmet
+1/30 GreatHelmet
+1/30 TaoCoronet
+1/30 WisdomCoronet
+1/30 RoyalHelmet
+
+;Necklaces
+1/110 PurpleFoxCollar
+1/110 RedFoxCollar
+1/110 BlueFoxCollar
+1/180 GreatPurpleFoxCollar
+1/180 GreatRedFoxCollar
+1/180 GreatBlueFoxCollar
+
+;Bracelets
+1/500 DualTitanAmulet
+1/500 SacredAngelAmulet
+1/500 EvilWhispAmulet
+1/110 PurpleFoxBracelet
+1/110 RedFoxBracelet
+1/110 BlueFoxBracelet
+1/180 GreatPurpleFoxBrace
+1/180 GreatRedFoxBrace
+1/180 GreatBlueFoxBrace
+
+;Rings
+1/500 PledgeRing
+1/500 FiveElementRing
+1/500 CrimsonRubyRing
+1/500 RecoveryRing  
+1/500 MuscleRing
+1/5000 RevivalRing   
+1/3000 TeleportRing
+1/2000 ProtectionRing
+1/2000 ParalysisRing
+1/3000 ClearRing
+1/110 PurpleFoxRing
+1/110 RedFoxRing
+1/110 BlueFoxRing
+1/180 GreatPurpleFoxRing
+1/180 GreatRedFoxRing
+1/180 GreatBlueFoxRing
+
+;Belts
+1/5 ChainBelt
+1/10 GoldBelt
+1/100 AdamantineBelt
+
+;Shoes
+1/10 BlackBoots
+1/10 SilkBoots
+1/30 DragonBoots
+1/35 RedScaleBoots
+
+;Potions
+1/1 (HP)DrugLarge
+1/1 (HP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (MP)DrugLarge
+1/2 (MP)DrugLarge
+1/1 (HP)DrugXL
+1/2 (HP)DrugXL
+1/2 (HP)DrugXL
+1/1 (MP)DrugXL
+1/2 (MP)DrugXL
+1/2 (MP)DrugXL
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+1/30 ImpactDrug(L)
+1/30 MagicDrug(L)
+1/30 TaoistDrug(L)
+1/2 BenedictionOil
+1/2 BenedictionOil
+1/8 BenedictionOil
+
+;Gems
+1/250  BraveryOrb
+1/250  SoulOrb
+1/250  MagicOrb
+1/200  ProtectionOrb
+1/200  EvilSlayerOrb
+1/350  DurabilityOrb
+1/325  PoisonOrb
+1/325  FreezingOrb
+1/330  StormOrb
+1/330  AccuracyOrb
+1/330  AgilityOrb
+
+;Books
+1/25 IceStorm
+1/25 SummonShinsu
+1/25 FlamingSword
+1/50 Poisonsword
+1/175 FlashDash
+1/30 CrossHalfMoon
+1/30 FlameDisruptor
+1/30 Trap
+1/30 UltimateEnhancer
+1/30 EnergyRepulsor
+1/50 TwinDrakeBlade
+1/50 Purification
+1/50 LionRoar
+1/50 Mirroring
+1/50 moonlight
+1/50 Entrapment
+1/50 Hallucination
+1/50 Vampirism
+1/50 mpeater
+1/200 SummonHolyDeva
+1/200 FlameField
+1/50 BladeAvalanche
+1/200 ProtectionField
+1/200 Curse
+1/200 Darkbody
+1/400 swiftfeet
+1/400 MeteorStrike
+1/400 PoisonCloud
+1/400 Rage

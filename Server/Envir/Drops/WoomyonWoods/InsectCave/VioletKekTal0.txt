@@ -1,0 +1,48 @@
+;Gold
+1/1 Gold 2000
+
+;Armours
+1/200 MediumArmour(M)
+1/200 MediumArmour(F)
+1/50 HeavyArmour(M)
+1/50 HeavyArmour(F)
+1/50 MagicRobe(M)
+1/50 MagicRobe(F)
+1/50 SoulArmour(M)
+1/50 SoulArmour(F)
+1/50 RelicArmour(M)
+1/50 RelicArmour(F)
+1/50 LightLeatherArmour(M) 
+1/50 LightLeatherArmour(M) 
+
+;Helmets
+1/10 MagicHelmet
+1/15 BrassHelmet
+1/30 ShamanHelmet
+1/50 SkeletonHelmet
+
+;Rings
+1/140 GaleRing
+
+;Potions
+1/1 (HP)DrugMedium
+1/1 (MP)DrugMedium
+1/2 (HP)DrugMedium
+1/2 (MP)DrugMedium
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/5 SunPotion
+1/5 SunPotion
+1/10 SunPotion
+1/100 StormDrug(S)
+
+;Crafting Materials
+1/2 BugLeg
+1/3 BugEye
+1/4 Mandible
+
+;Quest
+1/8 GatheringGlove Q
+1/8 GatheringTool Q
+1/8 GreenHerb Q
+

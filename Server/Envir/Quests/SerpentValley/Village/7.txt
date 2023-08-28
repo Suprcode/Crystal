@@ -1,0 +1,26 @@
+[@Description]
+I'm sorry but we are sold out of {SnakeWine/LightSteelBlue}.
+I can make you some, But you will have to bring 
+me the ingredients.
+
+[@TaskDescription]
+Please collect 10 {SnakeBody's/LightSteelBlue} from Snakes.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+SnakeBody 10
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+800
+
+[@GoldReward]
+800

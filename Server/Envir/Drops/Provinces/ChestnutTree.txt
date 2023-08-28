@@ -1,0 +1,17 @@
+;Crafting Materials
+
+1/6 BrownChestnut 
+1/6 BrownChestnut 
+1/8 BrownChestnut 
+
+1/8 BronzeChestnut 
+1/8 BronzeChestnut 
+
+1/10 SilverChestnut 
+1/10 SilverChestnut 
+
+1/12 GoldChestnut 
+1/12 GoldChestnut 
+
+1/10 Timber
+1/20 Timber

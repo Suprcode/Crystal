@@ -1,0 +1,30 @@
+[@Description]
+Hello Traveller. Have you heard of the
+Wizard Instructor in this region?
+He is the Master of all the Wizards. I hear
+hes been looking for a new disciple lately.
+It could be a rumor
+
+[@TaskDescription]
+Speak with {MasterMage/LimeGreen} at Coordinates 314:474
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+48
+
+[@GoldReward]
+60
+
+// Pickup - Assistant_Jane 0 284 606
+// Hand In - ArchMage_Robert 0 8 11

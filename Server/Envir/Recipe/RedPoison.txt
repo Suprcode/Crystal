@@ -1,0 +1,11 @@
+[Recipe]
+Amount 5
+Chance 100
+Gold 100
+
+[Tools]
+
+[Ingredients]
+MaggotPill
+ScorpionTail
+CannibalLeaf 4

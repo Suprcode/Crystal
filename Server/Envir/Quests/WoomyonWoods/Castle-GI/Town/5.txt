@@ -1,0 +1,31 @@
+[@Description]
+We need to damage this threat quickly. Head to 
+South-West to the {Temple/Yellow} and try weaken 
+it's resolve.
+
+[@TaskDescription]
+Eliminate 20 {Dung/Crimson} and {WoomaSoldiers/Crimson}.
+
+[@Completion]
+Your back, Let's hope your actions has weaken the threat.
+
+[@KillTasks]
+Dung 20
+WoomaSoldier 20
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+8200
+
+[@GoldReward]
+8200
+
+// Pickup - SubjugationLead_Eric 1 317 71
+// Hand In - SubjugationLead_Eric 1 317 71

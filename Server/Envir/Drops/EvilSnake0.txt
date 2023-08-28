@@ -1,0 +1,65 @@
+;Gold
+1/1 Gold 17500
+
+;Pots + Other
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/3 (HP)DrugLarge
+1/3 (MP)DrugLarge
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/3 (HP)DrugLarge
+1/3 (MP)DrugLarge
+1/1 SunPotion
+1/2 SunPotion
+1/1 SunPotion(M)
+1/2 SunPotion(M)
+
+
+
+;Other
+1/15 BenedictionOil
+1/1 AncientStoneCrystal
+
+1/40 AwakeningSoul0
+1/40 AwakeningSoul0
+
+
+;Weapons
+
+
+;Armours
+
+
+;Helmets
+
+
+;Necklaces
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Belts
+
+
+;Boots
+
+
+;Stones
+
+
+;Books
+
+
+;Shields
+
+
+;Quests

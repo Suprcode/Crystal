@@ -1,0 +1,40 @@
+[@Main]
+#IF
+ISADMIN
+#SAY
+Hello {<$USERNAME>/KHAKI}, my name is {<$NPCNAME>/KHAKI}.
+<Buy/@Buy> Nothing!
+<Sell/@Sell> Nothing!
+
+#ELSEACT
+MOVE 0 300 300
+
+[@Buy]
+#SAY
+Buy.
+ 
+<Back/@Main>
+
+
+[@Sell]
+#SAY
+Sell.
+ 
+<Back/@Main>
+
+
+[Types]
+0
+
+[Trade]
+GoldBar
+GoldBarBundle
+GoldChest
+GambleChip
+Dice
+UnknownOrb
+AdmissionOrb
+ScrollOfSeal
+GuardianOrb
+BichonToken
+TimeStonePiece

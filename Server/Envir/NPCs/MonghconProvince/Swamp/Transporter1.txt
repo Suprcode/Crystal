@@ -1,0 +1,24 @@
+[@main]
+#SAY
+I can take you to the Dark Swamp.
+Please be careful, monsters are strong there.
+Are you ready?
+
+<Yes/@yes>  <No/@no>
+
+[@no]
+#SAY
+Please turn back and never come back.
+
+<Exit/@exit>
+
+[@yes]
+#SAY
+You must prepare yourself
+Please let me know when you're ready and i'll take you.
+
+<I'm ready/@transport> <I'm still not ready/@exit>
+
+[@transport]
+#ACT
+MOVE EBEEBOSS 41 86

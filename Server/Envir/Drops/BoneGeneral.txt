@@ -1,0 +1,157 @@
+;Gold
+1/10 Gold 1450
+
+;Pots + Other
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/5 (HP)DrugLarge
+1/5 (MP)DrugLarge
+1/15 (HP)DrugXL
+1/15 (MP)DrugXL
+
+1/100 RepairOil
+1/1200 WarGodOil
+
+
+1/25 AwakeningSoul0
+1/200 AncientPrajnaSlime
+
+;Weapons
+1/2000 DragonSword
+1/2000 BloodStealerSword
+1/1000 GreatAxe
+1/1000 MageStaff
+1/1000 SerpentSword
+1/3000 DoubleBlades
+
+;Weapons Rare
+1/6000 FiendBow
+1/6000 JudgementMace
+1/6000 WarMageStaff
+1/6000 SoulSpringWand
+1/6000 BladesOfDarkness
+1/7000 WarSpiritBlade
+1/7000 MagicScythe
+1/7000 LitheBow
+1/7000 StoneBambooFan
+1/7000 FreezingBlades
+
+;Armour
+1/300 IronArmour(M)
+1/300 IronArmour(F)
+1/300 WizardRobe(M)
+1/300 WizardRobe(F)
+1/300 PearlArmour(M)
+1/300 PearlArmour(F)
+1/300 AncientArmour(M)
+1/300 AncientArmour(F)
+
+;Armour Rare
+1/1000 StuddedArmour(M)
+1/1000 StuddedArmour(F)
+1/1000 SteelArmour(M)
+1/1000 SteelArmour(F)
+1/1000 DragonRobe(M)
+1/1000 DragonRobe(F)
+1/1000 TitanArmour(M)
+1/1000 TitanArmour(F)
+1/2000 RoyalArmour(M)
+1/2000 RoyalArmour(F)
+
+;Helmets
+1/8000 HelmetOfHero
+1/10000 BlackIronHelmet
+
+;Helmets Rare
+1/15000 GreatHelmet
+1/15000 WisdomCoronet
+1/15000 TaoCoronet
+1/15000 RoyalHelmet
+1/25000 MajesticHelmet
+
+;Necklace
+1/15 LanternNecklace
+1/15 TigerNecklace
+1/1500 ClawNecklace
+1/1500 LifeNecklace
+1/1500 PearlNecklace
+
+;Necklace Rare
+1/1800 GreenBead
+1/1800 DemonicBells
+1/1800 SoulNecklace
+1/2800 MajesticNecklace
+
+;Bracelets
+1/2000 SoulSpringBracelet
+1/2000 DragonBracelet
+1/2000 KnightBracelet
+
+;Bracelets Rare
+1/3000 HangMaWheel
+1/3000 BokMaWheel
+1/3000 8TrigramWheel
+1/4000 MajesticWheel
+
+;Rings
+1/1800 DragonRing
+1/1800 RubyRing
+1/1800 PlatinumRing
+
+;Rings Rare
+1/2000 PowerRing
+1/2000 VioletRing
+1/2000 TitanRing
+1/3000 MajesticRing
+
+;Shoes
+1/650 SilkBoots
+1/750 DragonBoots
+
+;Shoes Rare
+1/1000 RedScaleBoots
+1/2000 MajesticBoots
+
+;Belts
+1/650 SteelBelt
+1/750 GoldBelt
+
+;Belts Rare
+1/1000 AdamantineBelt
+1/2000 MajesticBelt
+
+;Medals
+1/600 GrimMedal
+1/700 HollowMedal
+
+;Shields
+1/1000 ArmouredShield
+
+;Shields Rare
+1/1200 DomeShield
+1/1500 NanoShield
+1/1500 TrophyShield
+
+;Pads
+1/500 DefenderPads[14d]
+
+;Pads Rare
+1/600 BrutalPads[14d]
+1/700 EvolutionPads[14d]
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+1/10 Bone
+1/20 LargeBone
+1/400 WindMarble
+1/400 PoisonMarble
+
+;Quests
+1/5 BoneSoul Q
+1/10 Bone1 Q
+1/25 LargeBone1 Q

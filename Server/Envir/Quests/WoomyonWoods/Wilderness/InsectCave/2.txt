@@ -1,0 +1,30 @@
+[@Description]
+{BlueHoroBlaster/Crimson} is in {InsectCave/Yellow}. The blood of
+this bug can be purified to be used as a 
+medicine. Could you bring me 12 {BugBlood/LightSteelBlue}?
+
+[@TaskDescription]
+Kill {BlueHoroBlaster's/Crimson} in {InsectCave/Yellow} and collect 12 
+{BugBlood/LightSteelBlue}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+BugBlood 12
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+3800
+
+[@GoldReward]
+3800
+
+// Pickup - Merchant_Helen 1 292 84
+// Hand In - Merchant_Helen 1 292 84

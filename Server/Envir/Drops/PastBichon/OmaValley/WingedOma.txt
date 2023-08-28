@@ -1,0 +1,71 @@
+;Gold 
+1/5 Gold 700
+
+;Potions
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/20 (HP)DrugXL
+1/20 (MP)DrugXL
+1/10 (HP)DrugLarge
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/10 (MP)DrugLarge
+1/10 SunPotion
+1/20 SunPotion(M)
+1/100 TaoistDrug(M)
+1/100 ImpactDrug(M)
+1/100 MagicDrug(M)
+1/100 StormDrug(S)
+
+;Armours
+1/700 IronArmour(M)
+1/700 IronArmour(F)
+1/700 WizardRobe(M)
+1/700 WitchRobe(F)
+1/700 PearlArmour(M)
+1/700 PearlArmour(F)
+1/700 AncientArmour(M)
+1/700 AncientArmour(F)
+1/700 TemperedArmour(M)
+1/700 TemperedArmour(F)
+1/1000 SteelArmour(M)
+1/1000 SteelArmour(F)
+1/1000 DragonRobe(M)
+1/1000 DragonRobe(F)
+1/1000 TitanArmour(M)
+1/1000 TitanArmour(F)
+1/1000 RoyalArmour(M)
+1/1000 RoyalArmour(F)
+1/1000 StuddedArmour(M)
+1/1000 StuddedArmour(F)
+
+;Rings
+1/100 BlackRing
+1/100 SerpentEyeRing
+1/100 PearlRing
+1/120 ExpelRing
+1/120 CoralRing
+
+;Bracelets
+1/4000 HangMaWheel
+1/4000 BokMaWheel
+1/4000 8TrigramWheel
+1/300 EvadeBracelet
+1/300 GoldBracelet
+
+;Necklaces
+1/200 ConvexLens
+1/200 BambooPipe
+1/200 BlueJadeNecklace
+
+;Stones
+1/200 DCStone(L)
+1/200 MCStone(L)
+1/200 SCStone(L)
+1/400 DCStone(XL)
+1/400 MCStone(XL)
+1/400 SCStone(XL)
+
+;Crafting Material
+1/350 WindMarble
+1/40 DragonScale

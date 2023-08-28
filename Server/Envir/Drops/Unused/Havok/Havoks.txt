@@ -1,0 +1,27 @@
+;Gold 
+1/3 Gold 2500
+
+;Potions
+1/5 SunPotion
+1/5 SunPotion
+1/5 SunPotion
+1/5 SunPotion
+
+
+;Armours
+
+;Rings
+
+;Bracelets
+
+;Necklaces
+
+;Stones
+
+;Crafting Material
+
+;Books
+
+;Other
+1/100 HavokToken
+1/300 GroupToken

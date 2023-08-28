@@ -1,0 +1,15 @@
+;Gold
+1/5 Gold 50
+
+;Potions
+1/5 (HP)DrugSmall 
+1/5 (MP)DrugSmall 
+
+;Scrolls
+1/50 TownTeleport 
+1/40 TownTeleport 
+1/50 TownTeleport 
+
+;Crafting Materials
+1/100 SkyStingerEgg
+1/100 SkyStingerEgg

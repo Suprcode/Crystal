@@ -1,0 +1,30 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Hello traveller. How can i help you?
+ 
+<Access/@Storage> Storage
+
+You have <$PARCELAMOUNT> parcels waiting for you.
+Please visit Jessica inside the Inn
+ 
+<Close/@exit>
+
+
+
+[@Storage]
+#SAY
+What item do you want to store or withdraw?
+ 
+<Back/@Main> - <Close/@exit>
+

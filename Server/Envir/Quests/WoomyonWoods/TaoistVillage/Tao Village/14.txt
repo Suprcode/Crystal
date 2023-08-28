@@ -1,0 +1,27 @@
+[@Description]
+Please report back to the {BichonExaminer/LimeGreen} 
+
+[@TaskDescription]
+Talk to {BichonExaminer/LimeGreen} in {BichonProvince/Yellow}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+BlackIronBangle
+
+[@SelectRewards]
+
+[@ExpReward]
+5180
+
+[@GoldReward]
+2422
+
+// Pickup - CaveGuide_Paddy 11 119 293
+// Hand In - Examiner_Tony 0 340 257

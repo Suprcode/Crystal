@@ -1,0 +1,28 @@
+[@Description]
+After searching the {CrushedBone's/LimeGreen} it's missing 
+the {TraineeRing/LightSteelBlue}.
+
+[@TaskDescription]
+Retrieve the {TraineeRing/LightSteelBlue} by killing {VenomSpider/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+TraineeRing 1
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+7000
+
+[@GoldReward]
+7000
+
+// Pickup - CrushedBones 12 36 368
+// Hand In - 

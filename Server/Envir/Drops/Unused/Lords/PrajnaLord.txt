@@ -1,0 +1,206 @@
+;Gold
+1/1 Gold 22000
+
+;Pots + Other
+1/1 (HP)DrugLarge
+1/1 (HP)DrugLarge
+1/1 (HP)DrugLarge
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 Sunpotion
+1/1 Sunpotion
+1/2 Sunpotion
+1/1 Sunpotion(M)
+1/1 Sunpotion(M)
+1/2 Sunpotion(M)
+
+1/2 BenedictionOil
+
+
+1/1 Awakeningbox 
+1/1 AwakeningSoul0 
+
+;Weapons
+1/90 DragonSlayer
+1/90 MaleficBow
+1/90 RoyalBlades
+1/90 DragonStaff
+1/90 SoulSabre
+1/165 BladesOfMagi
+1/115 SwordOfWarGod
+1/115 BowOfForce
+1/115 BladeOfSorcery
+1/115 HeavenSword
+1/215 BlackTigerHammer
+1/215 LethalBow
+1/215 StaffOfLotus
+1/215 FanOfCrane
+1/215 ButcheringBlades
+1/3000 LordSlayerBlade
+1/3000 LordSlayerStaff
+1/3000 LordSlayerFan
+1/3000 LordSlayerBlades
+
+;Armours
+1/3000 LordSlayerArmour(M)
+1/3000 LordSlayerArmour(F)
+
+;Helmet
+1/3000 LordSlayerHelmet
+
+;Necklace
+1/45 ClawNecklace
+1/45 LifeNecklace
+1/45 PearlNecklace
+1/60 GreenBead
+1/60 DemonicBells
+1/60 SoulNecklace
+1/95 CuspidNecklace
+1/95 SorceryAnchor
+1/95 PurifiedMirror
+1/197 EvilTriangle
+1/197 CrossPurified
+1/197 AdamantNecklace
+
+;Necklace Rare
+1/1400 TerrapinNecklace
+1/3000 LordSlayerNecklace
+
+;Bracelets
+1/10 HangMaWheel
+1/10 BokMaWheel
+1/10 8TrigramWheel
+1/25 SpiritReformer
+1/25 HolyTaoWheel
+1/25 BaekTaGlove
+1/95 DualTitanAmulet
+1/95 SacredAngelAmulet
+1/95 EvilWhispAmulet
+1/195 WildTitanAmulet
+1/195 EnchantedAmulet
+1/195 FiveElementAmulet
+
+;Bracelets Rare
+1/1300 TerrapinBracelet
+1/3000 LordSlayerBracelet
+
+;Rings
+1/10 OmaSpiritRing
+1/10 DestinyRing 
+1/10 NobleRing
+1/10 SoulRing
+1/15 BoundlessRing
+1/15 ThunderRing
+1/15 TaeGukRing
+1/95 PledgeRing
+1/95 FiveElementRing
+1/95 CrimsonRubyRing
+1/195 DemonRubyRing
+1/195 EvilExpelRing
+1/195 GoldDragonRing
+
+;Rings Rare
+1/1300 TerrapinRing
+1/3000 LordSlayerRing
+
+;Shields
+1/1300 TerrapinShield
+
+;Shoes
+1/15 SilkBoots
+1/20 BlackBoots
+1/30 DragonBoots
+1/60 RedScaleBoots
+1/3000 LordSlayerBoots
+
+;Belt
+1/3000 LordSlayerBelt
+
+;Stone
+1/50 HolyDCStone
+1/50 HolyMCStone
+1/50 HolySCStone
+1/50 HolyHealthStone
+1/50 HolyMagicStone
+1/50 HolyACStone
+1/50 HolyAMCStone
+1/50 HolyDefenseStone
+
+;Books
+;Warrior
+1/60 BladeStorm
+1/65 FlamingSword
+1/70 LionRoar
+1/75 BladeStorm
+1/80 CrossHalfMoon
+1/85 BladeAvalanche
+1/90 ProtectionField
+1/95 Rage
+1/100 Fury
+1/220 CounterAttack
+
+;Wizard
+1/60 MagicShield
+1/65 IceStorm
+1/70 FlameDisruptor
+1/75 Mirroring
+1/80 FlameField
+1/85 Blizzard
+1/220 MagicBooster
+
+;Taoist
+1/60 UltimateEnhancer
+1/65 HealingCircle
+1/70 SummonShinsu
+1/75 Reincarnation
+1/80 SummonHolyDeva
+1/85 Curse
+1/90 PoisonCloud
+1/95 PetEnhancer
+1/220 EnergyShield
+
+;Assassin
+1/40 Haste
+1/45 FlashDash
+1/50 LightBody
+1/55 HeavenlySword
+1/60 FireBurst
+1/65 CrescentSlash
+1/70 Trap
+1/75 PoisonSword
+1/80 MoonLight
+1/120 MPEater
+1/210 SwiftFeet
+
+;Archer
+1/40 DoubleShot
+1/45 Meditation
+1/50 ElementalShot
+1/55 ExplosiveTrap
+1/60 Concentration
+1/65 VampireShot
+1/70 SummonVampire
+1/75 BackStep
+1/80 DelayedExplosion
+1/120 ElementalBarrier
+1/120 BindingShot
+1/210 SummonToad
+1/210 PoisonShot
+
+;CraftingMaterials
+1/25 BraveryFragment
+1/25 MagicFragment
+1/25 SoulFragment
+1/25 ProtectionFragment
+1/25 EvilSlayerFragment
+1/25 DurabilityFragment
+1/25 StormFragment
+1/25 DisillusionFragment
+1/25 AccuracyFragment
+1/25 PoisonFragment
+1/25 FreezingFragment
+1/25 AgilityFragment
+1/25 EnduranceFragment

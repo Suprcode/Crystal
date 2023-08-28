@@ -1,0 +1,26 @@
+;Gold
+1/1 Gold 10000
+
+;Potions
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/3 (HP)DrugLarge
+1/3 (MP)DrugLarge
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/3 (HP)DrugLarge
+1/3 (MP)DrugLarge
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+1/2 SunPotion(M)
+
+;Quests
+1/1 FrozenTempleMap Q
+1/1 WoomaHeart Q

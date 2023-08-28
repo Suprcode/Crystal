@@ -1,0 +1,28 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+This alcohol tastes great...
+The drinks taster even better after the job is done.
+You know what the best wine is? The best wine is the {snakeWine/LightSteelBlue}.
+The wine that was made with a {Red Snake/Crimson} and {Tiger Snake/Crimson}
+tastes the best.
+That was about ... 20... 48... years ago....
+ 
+(He's a drunk... lets ignore hine.)
+ 
+<Close/@exit>
+
+[Quests]
+-27
+35
+-37

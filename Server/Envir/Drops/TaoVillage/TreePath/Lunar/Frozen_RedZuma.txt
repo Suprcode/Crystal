@@ -1,0 +1,155 @@
+;Gold
+1/5 Gold 20000
+
+;Potions
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (HP)DrugXL
+1/1 (MP)DrugXL
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/2 (HP)DrugXL
+1/2 (MP)DrugXL
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/2 (HP)DrugXL
+1/2 (MP)DrugXL
+1/1 SunPotion
+1/1 SunPotion(M)
+1/1 SunPotion
+1/1 SunPotion(M)
+1/1 SunPotion
+1/1 SunPotion(M)
+1/1 SunPotion
+1/1 SunPotion(M)
+1/2 SunPotion
+1/2 SunPotion(M)
+1/2 SunPotion
+1/2 SunPotion(M)
+1/2 SunPotion
+1/2 SunPotion(M)
+1/2 SunPotion
+1/2 SunPotion(M)
+1/5 BenedictionOil
+1/5 BenedictionOil
+
+;Armours
+1/30 SteelArmour(M)
+1/30 SteelArmour(F)
+1/30 DragonRobe(M)
+1/30 DragonRobe(F)
+1/30 TitanArmour(M)
+1/30 TitanArmour(F)
+1/30 RoyalArmour(M)
+1/30 RoyalArmour(F)
+1/30 StuddedArmour(M)
+1/30 StuddedArmour(F)
+1/350 BlackTigerArmour(M)
+1/350 BlackTigerArmour(F)
+1/350 LotusArmour(M)
+1/350 LotusArmour(F)
+1/350 CraneArmour(M)
+1/350 CraneArmour(F)
+1/350 StealthArmour(M)
+1/350 StealthArmour(F)
+
+;Weapons
+1/60 WarSpiritBlade
+1/60 MagicScythe
+1/60 StoneBambooFan
+1/60 FreezingBlades
+1/60 LitheBow
+1/350 BlackTigerHammer
+1/350 StaffOfLotus
+1/350 FanOfCrane
+1/350 ButcheringBlades
+
+;Belts
+1/30 GoldBelt
+1/30 AdamantineBelt
+
+;Shoes
+1/20 BlackBoots
+1/50 DragonBoots
+1/70 RedScaleBoots
+
+;Helmets
+1/60 GreatHelmet
+1/60 TaoCoronet
+1/60 WisdomCoronet
+1/60 RoyalHelmet
+
+;Rings
+1/40 NobleRing
+1/40 SoulRing
+1/40 OmaSpiritRing
+1/40 TaeGukRing
+1/40 ThunderRing
+1/40 BoundlessRing
+1/300 CrimsonRubyRing
+1/300 PledgeRing
+1/300 FiveElementRing
+
+;Bracelets
+1/50 SteelGauntlet
+1/50 8TrigramWheel
+1/50 HangMaWheel
+1/50 BokMaWheel
+1/90 BaekTaGlove
+1/90 SpiritReformer
+1/90 HolyTaoWheel
+1/300 DualTitanAmulet
+1/300 EvilWhispAmulet
+1/300 SacredAngelAmulet
+
+;Necklaces
+1/110 HeroNecklace
+1/110 AdamantineNecklace
+1/110 RequiemNecklace
+1/300 DemonMask
+1/300 VioletOrb
+1/300 KunroonTear
+
+;Books
+1/300 ProtectionField
+1/100 BladeAvalanche 
+1/100 Vampirism
+1/200 Mirroring
+1/500 Blizzard
+1/300 Reincarnation
+1/300 PoisonCloud
+1/100 UltimateEnhancer
+1/100 EnergyRepulsor
+1/100 SoulShield
+1/100 FireBurst
+1/100 Trap
+1/200 PoisonSword
+1/200 Moonlight
+1/300 MPEater
+1/500 SwiftFeet
+1/1000 FlameField
+1/1000 Curse
+1/1000 BladeAvalanche
+1/1000 Reincarnation
+1/1000 mpeater
+1/1000 Hemorrhage
+1/1000 Plague 
+1/1000 MagicBooster 
+1/1000 CounterAttack 
+
+;Gems
+1/200 BraveryOrb
+1/200  SoulOrb
+1/200  MagicOrb
+1/200  ProtectionOrb
+1/200  EvilSlayerOrb
+1/200  DurabilityOrb
+1/200  PoisonOrb
+1/200  FreezingOrb
+1/200  AccuracyOrb
+1/200  StormOrb
+1/200  EnduranceOrb

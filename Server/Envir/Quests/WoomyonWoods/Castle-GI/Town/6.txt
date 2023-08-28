@@ -1,0 +1,31 @@
+[@Description]
+Travel, I have another task. 
+I'm still worried by this threat. I have decided we 
+should send these creatures a message.
+
+[@TaskDescription]
+Eliminate 20 {FlamingWooma's/Crimson} and 
+{WoomaFighter's/Crimson} in {WoomaTemple/Yellow}.
+
+[@Completion]
+
+[@KillTasks]
+FlamingWooma 20
+WoomaFighter 20
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+8300
+
+[@GoldReward]
+8300
+
+// Pickup - SubjugationLead_Eric 1 317 71
+// Hand In - SubjugationLead_Eric 1 317 71

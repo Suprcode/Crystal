@@ -1,0 +1,27 @@
+[@Description]
+Student's like to take risk's.. but there's one 
+missing.
+
+[@TaskDescription]
+Search for the Missing Student. 
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+3860
+
+[@GoldReward]
+7000
+
+// Pickup - 
+// Hand In - CrushedBones 12 36 368

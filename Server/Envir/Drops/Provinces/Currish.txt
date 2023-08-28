@@ -1,0 +1,6 @@
+;Meat
+1/5 Meat
+1/10 Meat
+
+;Quest
+1/3 JadeRing Q

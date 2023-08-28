@@ -1,0 +1,60 @@
+[@Main]
+#IF
+ISADMIN
+#SAY
+Hello {<$USERNAME>/KHAKI}, my name is {<$NPCNAME>/KHAKI}.
+I see you're wearing: {<$STONE>/CORAL}
+<Buy/@Buy> Stone
+<Sell/@Sell> Stone
+
+#ELSEACT
+MOVE 0 300 300
+
+[@Sell]
+#SAY
+Sell.
+ 
+<Back/@Main>
+
+[@Buy]
+#SAY
+Buy.
+ 
+<Back/@Main>
+
+
+[Types]
+11
+
+[Trade]
+HealthStone(S)
+HealthStone(M)
+HealthStone(L)
+HealthStone(XL)
+HealthStone
+MagicStone(S)
+MagicStone(M)
+MagicStone(L)
+MagicStone(XL)
+MagicStone
+PowerStone(S)
+PowerStone(M)
+PowerStone(L)
+PowerStone(XL)
+PowerStone
+DCStone(S)
+DCStone(M)
+DCStone(L)
+DCStone(XL)
+DCStone
+MCStone(S)
+MCStone(M)
+MCStone(L)
+MCStone(XL)
+MCStone
+SCStone(S)
+SCStone(M)
+SCStone(L)
+SCStone(XL)
+SCStone
+FrozenStone

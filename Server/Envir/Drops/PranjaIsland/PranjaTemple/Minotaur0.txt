@@ -1,0 +1,87 @@
+;Gold
+1/1 Gold 2250
+
+;Potions
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/5 (HP)DrugLarge
+1/5 (MP)DrugLarge
+1/4 SunPotion
+1/5 SunPotion(M)
+
+;Armours
+1/20 HeavyArmour(M)
+1/20 HeavyArmour(F)
+1/20 MagicRobe(M)
+1/20 MagicRobe(F)
+1/20 SoulArmour(M)
+1/20 SoulArmour(F)
+1/20 RelicArmour(M)
+1/20 RelicArmour(F)
+1/20 LightLeatherArmour(M)
+1/20 LightLeatherArmour(F)
+1/175 SteelArmour(M)
+1/175 SteelArmour(F)
+1/175 DragonRobe(M)
+1/175 DragonRobe(F)
+1/175 TitanArmour(M)
+1/175 TitanArmour(F)
+1/175 RoyalArmour(M)
+1/175 RoyalArmour(F)
+1/175 StuddedArmour(M)
+1/175 StuddedArmour(F)
+
+;Weapons
+1/6 PrinceDagger
+1/6 MartialSword
+1/6 HookedSpear
+1/6 KrissSword
+1/6 IronBlades
+1/6 LongBow
+1/15 PowerAxe
+1/22 PurifierSword
+
+;Helmet
+1/50 ShamanHelmet
+1/50 SkeletonHelmet
+
+;Rings
+1/35 GoldRing
+1/40 SkeletonRing
+1/75 ExpelRing
+1/75 CoralRing
+1/100 MoralRing
+1/100 CharmRing
+1/1000 GaleRing
+1/150 TwinGoldRing
+1/150 JadeSnowRing
+1/150 EvilSlayerRing
+1/800 HwanDevilRing
+1/750 SmashRing
+
+;Bracelet
+1/18 HardGlove
+1/18 MagicBracelet
+1/75 BronzeGlove
+1/30 MonkBracelet
+1/30 EbonyBracelet
+1/45 DeathGauntlet
+1/750 SmashWheel
+1/800 HwanDevilBracelet
+
+;Necklaces
+1/20 LanternNecklace
+1/20 TigerNecklace
+1/15 PlatinumNecklace
+1/45 BlueJadeNecklace
+1/45 BambooPipe
+1/45 ConvexLens
+1/300 GaleNecklace
+1/750 SmashPendulum
+1/800 HwanDevilNecklace
+
+;Stones
+1/3000 DCStone(L)
+1/3000 MCStone(L)
+1/3000 SCStone(L)
+

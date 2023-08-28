@@ -1,0 +1,37 @@
+[@MAIN]
+#IF
+CHECK [539] 1
+#ACT
+GOTO @Main-1
+#ELSEACT
+GOTO @CHECK2
+
+[@CHECK2]
+#IF
+CHECK [540] 1
+#ACT
+GOTO @Main-1
+#ELSEACT
+GOTO @CHECK3
+
+[@CHECK3]
+#IF
+CHECK [541] 1
+#ACT
+GOTO @Main-1
+#ELSEACT
+GOTO @Main-2
+
+[@Main-1]
+#SAY
+<$USERNAME>, Forgive me I shouldn't of judged him based on my anger.
+I am thankful to him.. He keeps us Safe.
+ 
+<Close/@exit>
+
+[@MAIN-2]
+#SAY
+<$USERNAME>, I'm starving... What does that Emperor do? Nothing!
+In his palace probably waiting for his FEAST!
+ 
+<Close/@exit>

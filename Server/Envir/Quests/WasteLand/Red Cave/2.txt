@@ -1,0 +1,32 @@
+[@Description]
+Thanks for the hard work!
+However there are still many dangerous monsters 
+in {RedCave/Yellow} The monsters {DreamDevourer/Crimson} 
+and {DarkSoulDevouer/Crimson} still roam the area. 
+These monsters have been troubing by 
+useing its abillties to stop the movement of our 
+people. Can you go rid these monsters for us?
+
+[@TaskDescription]
+Travel to {RedCave/Yellow} and Eliminate 3 {DreamDevourer/Crimson} 
+and {DarkSoulDevourer/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+DreamDevourer 3
+DarkDevouer 3
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+BoxofHolyWater(1)
+
+[@SelectRewards]
+
+[@ExpReward]
+105000
+[@GoldReward]
+60000

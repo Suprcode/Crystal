@@ -1,0 +1,246 @@
+;Gold
+1/1 Gold 17500
+
+;Pots + Other
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/3 (HP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/3 (HP)DrugLarge
+1/3 (MP)DrugLarge
+1/1 SunPotion
+1/2 SunPotion
+1/1 SunPotion(M)
+1/2 SunPotion(M)
+
+1/15 BenedictionOil
+
+1/40 AwakeningSoul0
+1/40 AwakeningSoul0
+
+
+;Weapon
+;Warrior
+1/45 PowerAxe
+1/50 GreatAxe
+1/50 SilverBow
+1/55 DragonSword
+1/90 FiendBow
+1/90 JudgementMace
+
+;Wizard
+1/20 HookedSpear
+1/30 MageStaff
+1/50 BloodStealerSword
+1/90 WarMageStaff 
+
+;Taoist
+1/20 KrissSword
+1/30 SerpentSword
+1/50 TaoistWidow
+1/90 SoulSpringWand
+
+
+;Weapons Rare
+1/125 LitheBow
+1/125 WarSpiritBlade 
+1/125 MagicScythe 
+1/125 StoneBambooFan
+1/150 CommanderSword
+
+;Armours
+1/40 TemperedArmour(M)
+1/40 TemperedArmour(F)
+1/30 IronArmour(M) 
+1/30 IronArmour(F) 
+1/30 WizardRobe(M) 
+1/30 WizardRobe(F) 
+1/30 PearlArmour(M) 
+1/30 PearlArmour(F) 
+
+;Armours Rare
+1/130 AntArmour(M)
+1/130 AntArmour(F)
+
+
+;Helmets
+1/10 SkeletonHelmet 
+1/10 ShamanHelmet 
+1/15 GoldenTiara
+1/40 BlackIronHelmet 
+
+;Helmets Rare
+1/180 MajesticHelmet
+
+;Necklaces
+;Warrior
+1/15 BlueJadeNecklace 
+1/30 ClawNecklace 
+1/60 AmethystNecklace
+1/70 GreenBead
+
+;Wizard
+1/15 ConvexLens 
+1/30 BlueThunderNecklace
+1/30 LifeNecklace
+1/70 Demonicbells
+
+;Taoist
+1/15 BambooPipe 
+1/30 SpiritPowerNecklace
+1/30 PearlNecklace 
+1/70 SoulNecklace
+
+
+;Necklaces Rare
+1/250 MajesticNecklace
+1/110 SmashPendulum
+1/110 HwanDevilNecklace
+1/110 PurityNecklace
+1/110 DarkGhostChain
+
+;Bracelets
+;Warrior
+1/20 BronzeGlove 
+1/25 BlackIronBracelet
+1/30 SteelGlove
+1/100 KnightBracelet 
+
+;Wizard
+1/100 SpellBracelet
+1/100 DragonBracelet 
+1/100 BraceletOfMagic
+
+;Taoist 
+1/100 3rdEyeBracelet 
+1/100 SoulSpringBracelet
+1/100 TaoPowerBracelet
+
+;Bracelets Rare
+1/325 MajesticWheel
+1/80 SmashWheel
+1/80 DarkGhostBracelet
+1/80 HangMaWheel
+1/80 PurityBracelet
+
+;Rings
+;Warrior
+1/30 DragonRing 
+
+;Wizard
+1/15 EvilSlayerRing
+1/30 RubyRing 
+
+;Taoist
+1/15 JadeSnowRing
+1/30 PlatinumRing 
+
+;Rings Rare
+1/220 MajesticRing
+1/120 SmashRing
+1/120 DarkGhostRing
+1/120 HwanDevilRing
+1/120 PurityRing
+
+;Shoes
+1/30 BlackBoots
+1/50 DragonBoots
+
+;Shoes Rare
+1/270 MajesticBoots
+
+;Belts
+1/55 SteelBelt
+1/75 GoldBelt 
+
+;Belts Rare
+1/65 BlackIronBelt
+1/365 MajesticBelt
+
+
+;Medals
+1/290 HollowMedal
+
+
+;Medals Rare
+1/300 Soldier'sMedal
+
+;Shields
+1/285 SpikeShield
+
+
+;Shields Rare
+1/290 ArmouredShield
+
+;Pads
+1/300 DefenderPads[14d]
+
+;Stones
+1/60 HealthStone(L) 
+1/60 MagicStone(L) 
+1/60 PowerStone(L) 
+1/65 DCStone(L) 
+1/65 MCStone(L) 
+1/65 SCStone(L) 
+
+;Stones Rare
+1/100 ACStone(L)
+1/100 AMCStone(L)
+1/100 DefenseStone(L)
+
+
+;Books
+;Warrior
+1/40 Thrusting
+1/45 HalfMoon
+1/50 ShoulderDash
+1/55 SliceNDice
+1/60 TwinDrakeBlade
+1/65 Entrapment
+1/100 BladeStorm
+1/210 FlamingSword
+
+;Wizard
+1/40 Teleport
+1/45 FireBang
+1/50 FireWall
+1/55 Lightning
+1/60 FrostCrunch
+1/65 ThunderStorm
+1/120 MagicShield
+1/210 IceStorm
+
+;Taoist
+1/40 MassHiding
+1/45 SoulShield
+1/50 Revelation
+1/55 BlessedArmour
+1/60 EnergyRepulsor
+1/65 TrapHexagon
+1/70 Purification
+1/120 MassHealing
+1/210 Hallucination
+
+;Assassin
+1/40 FlashDash
+1/45 LightBody
+1/50 HeavenlySword
+1/55 FireBurst
+1/60 Trap
+1/120 CrescentSlash
+1/210 PoisonSword
+
+;Archer
+1/40 Meditation 
+1/45 ElementalShot
+1/50 ExplosiveTrap
+1/55 Concentration
+1/60 VampireShot
+1/65 SummonVampire
+1/70 BackStep
+1/120 DelayedExplosion
+1/120 ElementalBarrier
+1/210 BindingShot

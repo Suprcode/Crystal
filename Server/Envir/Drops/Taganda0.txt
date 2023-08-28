@@ -1,0 +1,20 @@
+;Gold
+1/1 Gold 30000
+1/20 GoldBar
+
+;Pots + Other
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/2 SunPotion
+1/1 SunPotion
+1/2 SunPotion
+1/1 SunPotion
+1/3 SunPotion
+
+1/1 BenedictionOil
+1/10 GoldenBenedictionOil

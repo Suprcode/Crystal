@@ -1,0 +1,35 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Welcome traveller,
+I sell Items for your Tiger! Please take alook!
+ 
+<View/@BuySell> Store.
+ 
+<Close/@exit>
+
+
+[@BuySell]
+#SAY
+What would you like to purchase?
+ 
+<Back/@main>
+
+[Type]
+19
+
+[Trade]
+BengalTiger
+Saddle
+RawMeat
+LeanMeat

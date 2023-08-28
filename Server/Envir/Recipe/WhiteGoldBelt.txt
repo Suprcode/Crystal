@@ -1,0 +1,4 @@
+WhiteThread 15
+BugShell 20
+BronzeBelt 1
+Platinum 1

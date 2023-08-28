@@ -1,0 +1,12 @@
+[@Main]
+#SAY
+I'm the Leader of this Town.. Our wall's are strong to keep
+away to creatures.
+
+[Quests]
+-97
+98
+-98
+99
+-99
+100

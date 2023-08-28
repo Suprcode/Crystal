@@ -1,0 +1,11 @@
+;Gold
+1/10 Gold 300
+
+;Potions
+1/10 (HP)DrugMedium
+1/10 (MP)DrugMedium
+1/20 (HP)DrugMedium
+1/20 (MP)DrugMedium
+1/35 (HP)DrugLarge
+1/35 (MP)DrugLarge
+1/10000  BenedictionOil

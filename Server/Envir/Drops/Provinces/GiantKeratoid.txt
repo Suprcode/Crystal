@@ -1,0 +1,94 @@
+;Gold
+1/10 Gold 4000
+
+;Weapons
+1/2 BronzeSword 
+1/2 ShortBow 
+1/2 SharpHoaSword 
+1/5 IronSword 
+1/5 BoneBow 
+1/5 ShortSword 
+1/5 BronzeAxe 
+1/8 SteelAxe 
+1/10 HookedSword 
+1/10 Trident 
+1/10 Scimitar 
+1/10 BladesOfVelocity 
+1/10 CompoundBow 
+1/10 SteelSword 
+
+;Armours
+1/5 LightArmour(M) 
+1/5 LightArmour(F) 
+
+;Helmets
+1/5 BronzeHelmet 
+1/5 MagicHelmet 
+
+;Necklaces
+1/5 BlackNecklace 
+1/5 EbonyNecklace 
+1/5 YellowNecklace 
+1/10 NagaNecklace 
+1/10 AmberNecklace 
+1/10 PhoenixBead 
+1/10 LanternNecklace 
+
+;Bracelets
+1/2 ThinBracelet 
+1/2 LeatherGlove 
+1/2 SilverBracelet 
+1/2 SteelBracelet 
+1/2 LargeBracelet 
+1/10 HardGlove 
+1/10 MagicBracelet 
+1/50 SharpBracelet 
+
+;Rings
+1/2 HornRing 
+1/2 HexagonalRing 
+1/2 GlassRing 
+1/10 BlueRing 
+
+;Potions
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/2 (HP)DrugMedium 
+1/2 (MP)DrugMedium 
+1/2 (HP)DrugMedium 
+1/2 (MP)DrugMedium 
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+
+;Crafting Materials
+1/5 BugShell 
+
+;Books
+1/10 Slaying 
+1/10 ThunderBolt 
+1/10 HellFire 
+1/5 ElectricShock 
+1/15 Teleport 
+1/10 Poisoning 
+1/15 SoulFireBall 
+1/15 SummonSkeleton 
+1/15 DoubleSlash 
+1/15 Haste 
+1/10 StraightShot 

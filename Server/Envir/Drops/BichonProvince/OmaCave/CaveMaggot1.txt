@@ -1,0 +1,58 @@
+;Gold
+1/5 Gold 25
+
+;Pots + Other
+1/1 (HP)DrugSmall 
+1/1 (MP)DrugSmall 
+1/5 (HP)DrugSmall 
+1/5 (MP)DrugSmall
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;CraftingMaterials
+1/2 MaggotPill 
+1/10 MaggotPill 
+
+;Quests
+1/1 MaggotGuts Q
+1/1 MaggotShells Q
+1/1 MaggotParts Q
+1/4 Relics Q
+1/200 AncientScyther Q

@@ -1,0 +1,45 @@
+[@MAIN]
+#IF
+CHECKQUEST 154 COMPLETE
+#ACT
+GOTO @MAIN-1
+#ELSEACT
+GOTO @MayNotEnter
+
+[@MayNotEnter]
+#SAY
+HALT! You may not pass.
+I am the loyal Commander to the Emperor Far.
+"I can <Offer/@Bribe> you Gold to let me past."
+"I need to <see/@see> the Emperor!"
+<Close/@exit>
+
+[@see]
+#SAY
+Sorry traveller I don't trust you. 
+If you complete a task for me, I shall escort you to the Emperor!
+ 
+<Close/@exit>
+
+[@Bribe]
+#SAY
+Traveller.. You are trying to bribe the Commander of the 7th Rank.
+You do know how serious that is? 
+<Yes/@yes> I'm aware. 
+<No/@no> I'm not aware.
+<Close/@exit>
+
+[@no]
+#SAY
+I would suggest you leave before you spend some time behind bars.
+ 
+<Close/@exit>
+
+[@yes]
+#ACT
+GIVEBUFF PRISON 3600
+MOVE 0127 7 11
+LOCALMESSAGE "[Commander Luke] Take some time to think." Hint
+
+[Quests]
+154

@@ -1,0 +1,155 @@
+;Gold
+1/1 Gold 25000
+
+;Pots + Other 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/1 (HP)DrugMedium 
+1/1 (MP)DrugMedium 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion(M) 
+1/2 SunPotion(M)
+1/30 ImpactDrug(S) 
+1/30 MagicDrug(S) 
+1/30 TaoistDrug(S) 
+1/30 StormDrug(S) 
+1/30 StaminaAid(S) 
+1/30 MagicAid(S)
+
+1/20 BenedictionOil 
+
+1/30 Awakeningbox
+1/50 AwakeningSoul0
+
+;Weapons
+1/20 HookedSword 
+1/20 Trident
+1/20 BladesOfVelocity 
+1/20 Scimitar 
+1/30 SteelAxe 
+1/30 SteelSword 
+1/50 PrinceDagger 
+1/50 MartialSword 
+1/50 HookedSpear
+1/50 IronBlades 
+1/50 KrissSword
+1/30 CompoundBow
+
+;Weapons Rare
+1/100 BoneBow
+1/100 BoneDecapitator 
+
+;Armour
+1/15 LightArmour(M) 
+1/15 LightArmour(F)
+
+;Armour Rare
+1/40 MediumArmour(M)
+1/40 MediumArmour(F)
+1/100 BoneRobe(M)
+1/100 BoneRobe(F)
+
+;Helmets
+1/25 MagicHelmet
+
+;Helmets Rare
+1/100 BoneHood 
+
+;Necklace
+1/10 BlackNecklace 
+1/10 EbonyNecklace 
+1/10 YellowNecklace 
+1/25 NagaNecklace 
+1/25 AmberNecklace 
+1/25 PhoenixBead 
+1/20 LanternNecklace 
+1/25 WarriorNecklace
+
+;Bracelets
+1/30 LargeBracelet 
+1/25 HardGlove 
+1/25 MagicBracelet 
+1/70 EbonyBracelet 
+1/70 MonkBracelet 
+1/70 StrainBracelet 
+1/100 SharpBracelet 
+
+;Rings
+1/10 BlueRing 
+1/40 BlackRing 
+1/40 SerpentEyeRing 
+1/40 PearlRing 
+1/50 GoldRing 
+1/45 SkeletonRing 
+
+
+;Shields
+1/50 RustyShield
+1/70 RustlessShield
+1/550 DruidShield
+1/650 PaladinShield
+1/700 KryptoniteShield
+1/800 AfflictedShield
+
+
+;Stone
+1/30 HealthStone(M) 
+1/30 MagicStone(M) 
+1/30 PowerStone(M)
+1/50 DCStone(M) 
+1/50 MCStone(M) 
+1/50 SCStone(M)
+
+;Stone Rare
+1/40 ACStone(M)
+1/40 AMCStone(M)
+1/40 DefenseStone(M)
+
+
+;Books
+;Warrior
+1/10 Fencing
+1/20 Slaying
+1/30 Thrusting
+1/40 HalfMoon
+
+;Wizard
+1/10 FireBall
+1/20 Repulsion 
+1/30 HellFire
+1/40 GreatFireBall
+1/40 ElectricShock
+1/40 ThunderBolt 
+
+;Taoist
+1/10 Healing
+1/16 SpiritSword
+1/20 Poisoning
+1/30 SoulFireBall
+
+;Assassin 
+1/10 FatalSword
+1/40 DoubleSlash
+1/40 Haste
+
+;Archer
+1/10 Focus
+1/15 StraightShot
+1/20 MentalState
+
+
+;CraftingMaterials
+1/5 Bone 
+1/5 Bone 
+1/10 LargeBone
+1/2  BraveryFragment
+1/2  MagicFragment
+1/2  SoulFragment
+1/2  ProtectionFragment
+1/2  EvilSlayerFragment
+1/2  DurabilityFragment
+
+;Quests
+1/1 BoneHeart Q
+1/1 OmaNaturalMap Q

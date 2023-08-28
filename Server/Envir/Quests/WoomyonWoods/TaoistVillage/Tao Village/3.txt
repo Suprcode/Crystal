@@ -1,0 +1,29 @@
+[@Description]
+Myths and Rumours say that Collecting 
+{Zombie Heart's/LightSteelBlue} for a special Ridual.
+repells them from the Area.
+
+[@TaskDescription]
+Collect 10 {ZombiesHeart/LightSteelBlue} from {CursedPriest's/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+ZombiesHeart 10
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+7000
+
+[@GoldReward]
+7000
+
+// Pickup - MasterMK_Deric 11 165 296
+// Hand In - MasterMK_Deric 11 165 296

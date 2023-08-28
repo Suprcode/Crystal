@@ -1,0 +1,49 @@
+[@Main]
+#IF
+ISADMIN
+#SAY
+Hello {<$USERNAME>/KHAKI}, my name is {<$NPCNAME>/KHAKI}.
+<Buy/@Buy> Fishing Equipment
+<Sell/@Sell> Fishing Equipment
+
+#ELSEACT
+MOVE 0 300 300
+
+[@Sell]
+#SAY
+Sell.
+ 
+<Back/@Main>
+
+[@Buy]
+#SAY
+Buy.
+ 
+<Back/@Main>
+
+
+[Types]
+1
+28
+29
+30
+31
+32
+33
+
+[Trade]
+BlueFishingRod
+RedFishingRod
+FishingHook
+FishingFloat
+PremiumFloat
+FishBait
+PremiumBait
+FishDetector
+PremiumFinder
+FishingReel
+PremiumReel
+Walleye
+SwordFish
+RockBass
+Trout

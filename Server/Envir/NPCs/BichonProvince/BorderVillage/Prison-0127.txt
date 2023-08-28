@@ -1,0 +1,10 @@
+[@MAIN]
+#IF
+CHECKBUFF PRISON
+#ACT
+MOVE 0127 13 16
+LOCALMESSAGE "[Prison Guard] <$USERNAME> you are now free togo." Hint
+#ELSESAY
+<$USERNAME> You cannot leave just yet. 
+ 
+<Close/@exit>

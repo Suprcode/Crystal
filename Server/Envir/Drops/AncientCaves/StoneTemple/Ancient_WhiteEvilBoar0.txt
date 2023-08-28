@@ -1,0 +1,8 @@
+;Gold
+1/5 Gold 7500
+
+;Pots + Other
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 SunPotion(M) 
+1/2 SunPotion(M)

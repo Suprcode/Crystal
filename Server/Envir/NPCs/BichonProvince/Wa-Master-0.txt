@@ -1,0 +1,12 @@
+[@Main]
+#SAY
+My beloved house..
+It was burned to the ground thanks to this war!
+I'm still waiting to hear back from the castle..
+<Close/@exit>
+
+[Quests]
+-7
+8
+-8
+9

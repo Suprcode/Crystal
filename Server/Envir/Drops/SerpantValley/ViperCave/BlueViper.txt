@@ -1,0 +1,42 @@
+;Gold
+1/10 Gold 4500
+
+;Weapons
+1/5000 GreatAxe
+1/5000 MageStaff
+1/5000 SerpentSword
+1/5000 DoubleBlades
+1/5000 SilverBow
+
+;Necklaces
+1/4000 AmethystNecklace
+1/4000 LifeNecklace
+1/4000 PearlNecklace
+1/10000 GreenBead
+1/10000 DemonicBells
+1/10000 SoulNecklace
+
+;Rings
+1/5000 DragonRing
+1/5000 RubyRing
+1/5000 PlatinumRing
+
+;Stones
+1/1000 HealthStone(L) 
+1/1000 MagicStone(L) 
+1/1000 DCStone(L) 
+1/1000 MCStone(L) 
+1/1000 SCStone(L) 
+
+;Potions
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/25 (HP)DrugLarge
+1/25 (MP)DrugLarge
+1/25 (HP)DrugLarge
+1/25 (MP)DrugLarge
+1/20 SunPotion
+1/50 SunPotion(M)
+1/100 OldGinseng

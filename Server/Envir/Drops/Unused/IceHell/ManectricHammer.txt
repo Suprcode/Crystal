@@ -1,0 +1,44 @@
+;Gold
+1/10 Gold 700
+
+;Potions
+1/10 (HP)DrugLarge
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/10 (MP)DrugLarge
+1/20 (HP)DrugLarge
+1/20 (MP)DrugLarge
+1/30 SunPotion
+1/60 SunPotion
+1/50 SunPotion(M)
+1/100 SunPotion(M)
+1/150 ImpactDrug(M)
+1/150 MagicDrug(M)
+1/150 TaoistDrug(M)
+1/150 StormDrug(S)
+
+;Weapons
+1/95000 BlackTigerHammer
+1/95000 StaffOfLotus
+1/95000 FanOfCrane
+1/90000 ButcheringBlades
+1/92000 LethalBow
+
+;Stones
+1/2500 HealthStone(L)
+1/2500 MagicStone(L)
+1/3500 PowerStone(L)
+1/3500 DCStone(L)
+1/3500 MCStone(L)
+1/3500 SCStone(L)
+1/4000 HealthStone(XL)
+1/4000 MagicStone(XL)
+1/6500 PowerStone(XL)
+1/6500 DCStone(XL)
+1/6500 MCStone(XL)
+1/6500 SCStone(XL)
+
+;Belts
+1/1500 SteelBelt
+1/5000 GoldBelt
+1/6500 AdamantineBelt

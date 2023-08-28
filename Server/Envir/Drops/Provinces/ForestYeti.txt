@@ -1,0 +1,77 @@
+;Gold
+1/10 Gold 100
+
+;Weapons
+1/60 WoodenSword 
+1/60 HoaSword 
+1/60 WoodenBow 
+1/90 Dagger 
+1/90 EbonySword 
+1/90 EbonyBow 
+1/140 BronzeSword 
+1/140 ShortBow 
+1/140 SharpHoaSword 
+1/180 IronSword 
+1/180 BoneBow 
+1/220 ShortSword 
+1/400 HookedSword 
+1/400 Trident 
+1/400 Scimitar 
+1/400 BladesOfVelocity 
+1/400 CompoundBow 
+
+;Armours
+1/100 BaseDress(M) 
+1/100 BaseDress(F) 
+1/300 LightArmour(M) 
+1/300 LightArmour(F) 
+
+;Helmets
+1/150 BronzeHelmet 
+1/200 MagicHelmet 
+
+;Necklaces
+1/60 GoldNecklace 
+1/80 PrecisionNecklace 
+1/200 BlackNecklace 
+1/200 EbonyNecklace 
+1/200 YellowNecklace 
+1/700 NagaNecklace 
+1/700 AmberNecklace 
+1/700 PhoenixBead 
+
+;Bracelets
+1/80 IronBracelet 
+1/300 ThinBracelet 
+1/300 LeatherGlove 
+1/400 SilverBracelet 
+1/400 SteelBracelet 
+1/400 LargeBracelet 
+
+;Rings
+1/60 CopperRing 
+1/110 HornRing 
+1/110 HexagonalRing 
+1/110 GlassRing 
+1/200 BlueRing 
+
+;Belts
+1/500 LeatherBelt 
+
+;Boots
+1/540 LowShoes 
+
+;Stones
+1/1500 HealthStone(S) 
+1/1500 MagicStone(S) 
+1/1500 PowerStone(S) 
+1/1500 DCStone(S) 
+1/1500 MCStone(S) 
+1/1500 SCStone(S) 
+
+;Potions
+1/60 (HP)DrugSmall 
+1/60 (MP)DrugSmall 
+1/200 (HP)DrugMedium 
+1/200 (MP)DrugMedium 
+1/600 SunPotion 

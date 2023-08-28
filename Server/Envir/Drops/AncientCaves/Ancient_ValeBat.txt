@@ -1,0 +1,10 @@
+;Gold
+1/5 Gold 1500
+
+;Potions
+
+1/8 SunPotion
+1/8 SunPotion
+
+;Nothing
+1/20 LunarPiece

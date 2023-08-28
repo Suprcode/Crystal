@@ -1,0 +1,106 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Welcome, What can I do for you?
+ 
+<View/@BuySell> Store.
+<Repair/@Repair> Item.
+ 
+<Close/@exit>
+
+[@BuySell]
+#SAY
+Which item would you like to Buy or Sell?
+<Buy Back/@BuyBack>
+ 
+<Back/@main>
+
+[@BuyBack]
+#SAY
+These are the items still available to purchase back.
+ 
+<Back/@main>
+
+[@Repair]
+#SAY
+You can repair various kinds of Items.
+  
+<Back/@main>
+
+[Types]
+1
+2
+4
+5
+6
+7
+9
+10
+14
+
+[Trade]
+(HP)DrugSmall 1
+(HP)DrugSmall 5
+(HP)DrugSmall 10
+(MP)DrugSmall 1
+(MP)DrugSmall 5
+(MP)DrugSmall 10
+(HP)DrugMedium 1
+(HP)DrugMedium 5
+(HP)DrugMedium 10
+(MP)DrugMedium 1
+(MP)DrugMedium 5
+(MP)DrugMedium 10
+WoodenSword
+WoodenBow
+Dagger
+EbonySword
+EbonyBow
+BronzeSword
+ShortBow
+ShortSword
+SharpHoaSword
+BoneBow
+IronSword
+BronzeAxe
+Trident
+HookedSword
+Scimitar
+BladesOfVelocity
+CompoundBow
+LightArmour(M)
+LightArmour(F)
+BronzeHelmet
+MagicHelmet
+BrassHelmet
+LeatherBelt
+ChainBelt
+LowShoes
+LeatherBoots
+NagaNecklace
+PheonixBead
+AmberNecklace
+LanternNecklace
+HornRing
+IronRing
+WhiteJadeRing
+BlueRing
+BlackRing
+SerpentEyeRing
+PearlRing
+GoldRing
+SteelBracelet
+LargeBracelet
+StrainBracelet
+MonkBracelet
+EbonyBracelet

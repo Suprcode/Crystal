@@ -1,0 +1,11 @@
+[Recipe]
+Amount 4
+Chance 100
+Gold 100
+
+[Tools]
+
+[Ingredients]
+EbonyFruit
+SpiderTeeth 2
+CannibalLeaf 4

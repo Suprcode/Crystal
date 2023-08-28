@@ -1,0 +1,174 @@
+;Gold
+1/1 Gold 30000
+
+;Pots + Other
+1/1 (HP)DrugLarge
+1/1 (HP)DrugLarge
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (HP)DrugXL
+1/2 (HP)DrugXL
+1/1 (MP)DrugXL
+1/2 (MP)DrugXL
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/1 BenedictionOil
+1/4 BenedictionOil
+
+
+1/10 AwakeningSoul0
+1/75 BehemothRune
+
+;Weapons
+1/150 DragonSlayer
+1/150 MaleficBow
+1/150 DragonStaff
+1/150 SoulSabre
+1/150 RoyalBlades
+1/200 SwordOfWarGod
+1/200 BladeOfSorcery
+1/200 HeavenSword
+1/200 BladesOfMagi
+
+;Weapons Rare
+1/400 BurstSword
+1/400 DreadBow
+1/400 HolyBloodSpear
+1/400 DragonBloodSword
+1/400 Stiletto
+
+;Armour
+1/200 BlackTigerArmour(M)
+1/200 BlackTigerArmour(F)
+1/200 LotusArmour(M)
+1/200 LotusArmour(F)
+1/200 CraneArmour(M)
+1/200 CraneArmour(F)
+1/200 StealthArmour(M)
+1/200 StealthArmour(F)
+
+
+;Armour Rare
+1/11500 HeavenArmour(M)
+1/11500 HeavenArmour(F)
+1/11500 HeavenRedArmour(M)
+1/11500 HeavenRedArmour(F)
+1/11500 HeavenGrnArmour(M)
+1/11500 HeavenGrnArmour(F)
+1/1500 HeavenGoldArmour(M)
+1/1500 HeavenGoldArmour(F)
+
+;Helmets
+1/345 ApesCrown
+1/250 SparklingHelmet
+1/350 ExternalHelmet
+1/450 PuiYuHelmet
+
+;Necklace
+1/100 ExternalNecklace
+1/150 CuspidNecklace
+1/150 SorceryAnchor
+1/150 PurifiedMirror
+
+;Bracelets
+1/100 ExternalWheel
+1/150 DualTitanAmulet
+1/150 SacredAngelAmulet
+1/150 EvilWhispAmulet
+
+;Rings
+1/100 ExternalRing
+1/150 PledgeRing
+1/150 FiveElementRing
+1/150 CrimsonRubyRing
+
+;Shoes
+1/350 ExternalBoots
+1/400 SparklingBoots
+
+;Belts
+1/40 BoneBelt
+1/50 FlamingGrasp
+1/350 ExternalBelt
+1/400 SparklingBelt
+
+;Medals
+
+
+;Shields
+
+
+;Pads
+1/700 DoomGuards[14d]
+
+;Stone
+
+
+;Gems/Orbs
+1/10 BraveryGem
+1/10 SoulGem
+1/10 MagicGem
+1/10 ProtectionGem
+1/10 EvilSlayerGem
+1/10 DurabilityGem
+1/20 PoisonGem
+1/20 FreezingGem
+1/30 AgilityGem
+1/30 AccuracyGem
+1/30 DisillusionGem
+1/30 EnduranceGem
+1/30 StormGem
+1/20 BraveryOrb
+1/20 SoulOrb
+1/20 MagicOrb
+1/50 AccuracyOrb
+1/50 AgilityOrb
+1/80 FreezingOrb
+1/80 PoisonOrb
+
+
+;Books
+;Warrior
+1/105 FlamingSword
+1/110 LionRoar
+1/115 BladeStorm
+1/120 CrossHalfMoon
+1/125 BladeAvalanche
+1/130 ProtectionField
+
+;Wizard
+1/105 IceStorm
+1/110 FlameDisruptor
+1/115 Mirroring
+1/120 FlameField
+
+;Archer
+1/105 BindingShot
+1/110 SummonToad
+1/115 PoisonShot
+1/120 CrippleShot
+
+
+;Taoist
+1/105 SummonShinsu
+1/110 Reincarnation
+1/115 SummonHolyDeva
+1/120 Curse
+1/125 PoisonCloud
+
+;Assassin
+1/105 Trap
+1/110 PoisonSword
+1/115 MoonLight
+1/120 MPEater
+1/125 SwiftFeet
+
+;CraftingMaterials
+
+
+;Quests
+1/2 CoiledSnakeCaveMap Q

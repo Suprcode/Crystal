@@ -1,0 +1,32 @@
+;Gold
+1/5 Gold 700
+
+;Potions
+1/5 (HP)DrugLarge
+1/5 (HP)DrugLarge
+1/5 (MP)DrugLarge
+1/5 (MP)DrugLarge
+1/5 (HP)DrugLarge
+1/5 (MP)DrugLarge
+1/15 SunPotion
+1/30 SunPotion
+1/25 SunPotion(M)
+1/70 SunPotion(M)
+1/100 ImpactDrug(M)
+1/100 MagicDrug(M)
+1/110 TaoistDrug(M)
+1/110 StormDrug(S)
+
+;Stones
+1/250 HealthStone(L)
+1/250 MagicStone(L)
+1/350 PowerStone(L)
+1/350 DCStone(L)
+1/350 MCStone(L)
+1/350 SCStone(L)
+1/400 HealthStone(XL)
+1/400 MagicStone(XL)
+1/650 PowerStone(XL)
+1/650 DCStone(XL)
+1/650 MCStone(XL)
+1/650 SCStone(XL)

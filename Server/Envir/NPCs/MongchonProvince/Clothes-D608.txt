@@ -1,0 +1,19 @@
+[@Main]
+#SAY
+Welcome, how may I help you?
+ 
+<Repair/@Repair> Clothes
+ 
+<Close/@Exit>
+
+
+[@Repair]
+You can repair Clothes here.
+
+<Back/@Main>
+
+[Types]
+2
+4
+9
+10

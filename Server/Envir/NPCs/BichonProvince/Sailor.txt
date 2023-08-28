@@ -1,0 +1,53 @@
+[@main]
+#SAY
+ The boat goes many places. The boat will depart soon
+ Passengers, Please board the ship.
+ 
+ <To Prajna Island/@brdmove> Pay 2,000 Gold and Board.
+ <To White Valley/@brdmove1> Pay 10,000 Gold and Board.
+ <Talk/@talk> about each frontiers.
+
+[@talk]
+#SAY
+ Which frontier do you want to talk about?
+ <Prajna Island/@talkPI>
+ <White Valley/@talkWV>
+ <Back/@main>
+
+[@talkPI]
+ Prajna Island is full of rampaging monsters.
+ Some braves may take this opportunity to boost and raise
+ their reputation and fame but for the locals,it ain't nothing but just hell.
+
+ <Back/@talk>
+
+[@talkWV]
+#SAY
+ WhiteValley is new fontier which has just been discovered.
+ The evil within is great. But the Riches are greater.
+
+ <Back/@talk>
+ 
+[@brdmove]
+#IF
+CHECKGOLD > 2000
+#ACT
+TAKEGOLD 2000
+Move 5 124 353
+#ELSESAY
+You Dont Have enough {Gold/Gold} to use my Service!
+Be gone, don't waste my time again!
+
+<Exit/@exit>
+
+[@brdmove1]
+#IF
+CHECKGOLD > 10000
+#ACT
+TAKEGOLD 10000
+MOVE WHITEVILLAGE 67 93
+#ELSESAY
+You Dont Have enough {Gold/Gold} to use my Service!
+Be gone, don't waste my time again!
+
+<Exit/@exit>

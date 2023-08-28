@@ -1,0 +1,26 @@
+;Gold 
+1/2 Gold 2500
+
+;Potions
+1/2 SunPotion
+1/2 SunPotion
+1/2 SunPotion
+1/2 SunPotion
+1/12 SunPotion
+
+;Armours
+
+;Rings
+
+;Bracelets
+
+;Necklaces
+
+;Stones
+
+;Crafting Material
+
+;Books
+
+;Other
+1/20 HavokToken Q

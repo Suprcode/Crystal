@@ -1,0 +1,34 @@
+[@Description]
+The {Emperor/LIMEGREEN} is under my protection.
+The morale of the City is desire. Prove you are 
+worthey
+ 
+[@TaskDescription]
+Spread good morale about the {Emperor/LIMEGREEN} in the 
+City. And I will accompany you to give him 
+the status of the current morale.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+
+[@FlagTasks]
+539 "Spread morale of the Emperor"
+540 "Spread morale of the Emperor"
+541 "Spread morale of the Emperor"
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+550
+
+[@GoldReward]
+
+[@CreditReward]
+150

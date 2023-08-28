@@ -1,0 +1,51 @@
+;Gold
+1/1 Gold 2000
+
+;Weapons
+1/9 Dagger 
+1/9 EbonySword 
+1/9 EbonyBow 
+1/10 BronzeSword 
+1/10 ShortBow 
+1/10 SharpHoaSword 
+1/12 IronSword 
+1/12 BoneBow 
+1/22 ShortSword 
+
+;Armours
+1/7 LightArmour(M) 
+1/7 LightArmour(F) 
+
+;Helmets
+1/7 BronzeHelmet 
+1/11 MagicHelmet 
+
+;Necklaces
+1/6 GoldNecklace 
+1/8 PrecisionNecklace 
+1/16 BlackNecklace 
+1/16 EbonyNecklace 
+1/16 YellowNecklace 
+1/70 NagaNecklace 
+1/70 AmberNecklace 
+1/70 PhoenixBead 
+
+;Bracelets
+1/8 IronBracelet 
+1/30 ThinBracelet 
+1/30 LeatherGlove 
+1/40 SteelBracelet 
+1/40 SilverBracelet 
+1/40 LargeBracelet 
+
+;Rings
+1/6 CopperRing 
+1/11 HornRing 
+1/11 HexagonalRing 
+1/11 GlassRing 
+1/20 BlueRing 
+
+;Potions
+1/4 (HP)DrugMedium 
+1/4 (MP)DrugMedium 
+1/60 SunPotion 

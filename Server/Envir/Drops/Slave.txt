@@ -1,0 +1,8 @@
+;Gold
+1/5 Gold 1750
+
+;Pots + Other
+1/15 (HP)DrugLarge
+1/15 (MP)DrugLarge
+
+

@@ -1,0 +1,187 @@
+;Gold
+1/1 Gold 20000
+
+;Pots + Other
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 SunPotion
+1/1 BenedictionOil
+1/10 GoldenBenedictionOil
+
+
+1/10 AwakeningSoul0
+1/10 AwakeningSoul0
+
+;Weapons
+1/2150 BarbarianSword
+1/2150 ApusBow
+1/2150 RawSword
+1/2150 BoneCarvedFan
+1/2150 MadDragonBlades
+1/3150 HorneySlayer
+1/3150 HorneyScepter
+1/3150 HorneyFeathers
+1/3150 HorneyKives
+
+;Armour
+1/400 BlackTigerArmour(M)
+1/400 BlackTigerArmour(F)
+1/400 LotusArmour(M)
+1/400 LotusArmour(F)
+1/400 CraneArmour(M)
+1/400 CraneArmour(F)
+1/400 StealthArmour(M)
+1/400 StealthArmour(F)
+1/550 RedDarkArmour(M)
+1/550 RedDarkArmour(F)
+1/550 BlueDarkArmour(M)
+1/550 BlueDarkArmour(F)
+1/550 ScaledArmour(M)
+1/550 ScaledArmour(F)
+1/550 GreenDarkArmour(M)
+1/550 GreenDarkArmour(F)
+1/550 GoldDarkArmour(M)
+1/550 GoldDarkArmour(F)
+1/850 WatcherSuit(M)
+1/850 WatcherSuit(F)
+1/950 HorneySuit(M)
+1/950 HorneySuit(F)
+
+;Armour Rare
+1/5500 HeavenArmour(M)
+1/5500 HeavenArmour(F)
+1/5500 HeavenRedArmour(M)
+1/5500 HeavenRedArmour(F)
+1/5500 HeavenGrnArmour(M)
+1/5500 HeavenGrnArmour(F)
+1/5500 HeavenGoldArmour(M)
+1/5500 HeavenGoldArmour(F)
+
+;Helmets
+1/50 GreatHelmet
+1/50 WisdomCoronet
+1/50 TaoCoronet
+1/50 RoyalHelmet
+1/350 SparklingHelmet
+1/360 PuiYuHelmet
+1/670 WatcherHelmet
+
+;Helmets Rare
+1/700 HydraxHelmet
+
+;Necklace
+1/60 CuspidNecklace
+1/60 SorceryAnchor
+1/60 PurifiedMirror
+1/375 EvilTriangle
+1/375 CrossPurified
+1/375 AdamantNecklace
+1/600 DefenderNecklace
+
+;Necklace Rare
+1/700 HornedSorcerersPendant
+
+;Bracelets
+1/60 DualTitanAmulet
+1/60 SacredAngelAmulet
+1/60 EvilWhispAmulet
+1/370 WildTitanAmulet
+1/375 EnchantedAmulet
+1/375 FiveElementAmulet
+1/675 WatcherGloves
+1/600 DefenderGlove
+
+;Bracelets Rare
+1/700 SackWarriorsGlove
+
+;Rings
+1/60 PledgeRing
+1/60 FiveElementRing
+1/60 CrimsonRubyRing
+1/375 DemonRubyRing
+1/375 EvilExpelRing
+1/375 GoldDragonRing
+1/600 DefenderRing
+
+;Rings Rare
+1/700 HornedWarriorsRing
+
+;Shoes
+1/650 WatcherBoots
+1/700 HornedCommandersBoots
+
+;Belts
+1/700 HornedSorcerersBelt
+
+;Medals
+1/700 HornedMedallion
+
+;Shields
+1/700 WereTigerShield
+
+;Pads
+1/700 HornedMagePads
+
+;Stone
+1/700 EyeOfKingHydrax
+
+;Gems/Orbs
+1/10 BraveryGem
+1/10 MagicGem 
+1/10 SoulGem
+1/15 ProtectionGem
+1/15 EvilSlayerGem
+1/15 DurabilityGem
+1/30 PoisonGem
+1/32 FreezingGem
+1/35 AccuracyGem
+1/35 StormGem
+1/40 EnduranceGem
+1/50 QualityGem
+1/55 CriticalDamgeForge
+1/55 CriticalRateForge
+1/55 HpDrainForge
+1/55 ReflectForge
+
+
+;Books
+;;Warrior
+1/200 BladeAvalanche
+1/400 ProtectionField
+1/500 Rage
+1/600 CounterAttack
+
+;;Wizard
+1/200 Mirroring
+1/400 MeteorStrike
+1/500 MagicBooster
+1/600 IceThrust
+1/700 LavaKing
+1/850 FrozenRains
+
+;;Taoist
+1/400 Reincarnation
+1/400 PoisonCloud
+1/500 Plague
+1/700 PetEnhancer
+1/850 HeadShot
+1/1000 HolyShield
+
+;;Assassion
+1/200 SwiftFeet
+1/400 DarkBody
+1/600 Hemorrhage
+1/700 Moonmist
+1/850 ShadowStep
+1/900 FuryWaves
+
+;CraftingMaterials
+
+
+;Quests

@@ -1,0 +1,80 @@
+;Gold 
+1/5 Gold 1000
+
+;Potions
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/20 (HP)DrugXL
+1/20 (MP)DrugXL
+1/10 (HP)DrugLarge
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/10 (MP)DrugLarge
+1/10 SunPotion
+1/20 SunPotion(M)
+1/100 TaoistDrug(M)
+1/100 ImpactDrug(M)
+1/100 MagicDrug(M)
+1/100 StormDrug(S)
+
+;Weapons
+1/1000 GreatAxe
+1/1000 MageStaff
+1/1000 SerpentSword
+1/1000 DoubleBlades
+1/1000 SilverBow
+
+;Armours
+1/700 IronArmour(M)
+1/700 IronArmour(F)
+1/700 WizardRobe(M)
+1/700 WitchRobe(F)
+1/700 PearlArmour(M)
+1/700 PearlArmour(F)
+1/700 AncientArmour(M)
+1/700 AncientArmour(F)
+1/700 TemperedArmour(M)
+1/700 TemperedArmour(F)
+1/1000 SteelArmour(M)
+1/1000 SteelArmour(F)
+1/1000 DragonRobe(M)
+1/1000 DragonRobe(F)
+1/1000 TitanArmour(M)
+1/1000 TitanArmour(F)
+1/1000 RoyalArmour(M)
+1/1000 RoyalArmour(F)
+1/1000 StuddedArmour(M)
+1/1000 StuddedArmour(F)
+
+;Rings
+1/60 GoldRing
+1/100 PearlRing
+1/100 BlackRing
+1/100 SerpentEyeRing
+1/500 ExpelRing
+1/400 CoralRing
+1/100 CharmRing
+1/100 MoralRing
+1/1200 PowerRing
+1/1200 VioletRing
+1/1200 TitanRing
+1/4000 NobleRing
+1/4000 OmaSpiritRing
+1/4000 SoulRing
+1/5000 ThunderRing
+1/5000 BoundlessRing
+1/5000 TaeGukRing
+
+;Bracelets
+1/4000 SpiritReformer
+1/4000 HolyTaoWheel
+1/4000 BaekTaGlove
+1/1000 SteelGlove
+
+;Necklaces
+1/140 ElusionNecklace
+
+;Crafting Material
+1/350 PoisonMarble
+1/400 IceMarble
+1/25 DragonScale

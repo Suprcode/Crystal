@@ -1,0 +1,119 @@
+;Gold
+1/5 Gold 2500
+
+;Pots + Other
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/1 (HP)DrugLarge
+1/1 (MP)DrugLarge
+1/2 (HP)DrugLarge
+1/2 (MP)DrugLarge
+1/2 (HP)DrugLarge
+1/1 SunPotion(M)
+1/1 SunPotion(M)
+1/2 SunPotion(M)
+1/30 ImpactDrug(S) 
+1/30 MagicDrug(S) 
+1/30 TaoistDrug(S) 
+1/30 StormDrug(S) 
+1/30 StaminaAid(S) 
+1/30 MagicAid(S) 
+
+1/10 AncientStoneCrystal
+
+;Weapons
+1/30 PurifierSword 
+1/200 GreatAxe 
+1/200 SilverBow
+1/200 MageStaff 
+1/200 DoubleBlades
+1/200 SerpentSword 
+1/400 DragonSword 
+1/500 JudgementMace 
+1/500 FiendBow
+1/500 WarMageStaff 
+1/500 SoulSpringWand 
+1/500 BladesOfDarkness
+1/60 CompoundBow
+1/200 LongBow
+1/400 SilverBow
+1/500 FiendBow
+
+;Armours
+1/6 LightLeatherArmour(M)
+1/6 LightLeatherArmour(F)
+1/5 HeavyArmour(M) 
+1/5 HeavyArmour(F) 
+1/5 MagicRobe(M) 
+1/5 MagicRobe(F) 
+1/5 SoulArmour(M) 
+1/5 SoulArmour(F) 
+1/5 RelicArmour(M)
+1/5 RelicArmour(F)
+1/150 AncientArmour(M)
+1/150 AncientArmour(F)
+1/150 IronArmour(M)
+1/150 IronArmour(F)
+1/150 WizardRobe(M)
+1/150 WizardRobe(F)
+1/150 PearlArmour(M)
+1/150 PearlArmour(F)
+
+;Helmets
+1/700 RecallHelmet 
+1/10 GoldenTiara
+1/10 SkeletonHelmet 
+1/10 ShamanHelmet 
+1/25 SteelHelmet
+1/150 BlackIronHelmet
+
+;Necklaces
+1/30 ConvexLens
+1/30 BambooPipe
+1/30 BlueJadeNecklace 
+1/200 ClawNecklace 
+1/200 LifeNecklace 
+1/200 PearlNecklace 
+1/500 GreenBead 
+1/500 DemonicBells 
+1/500 SoulNecklace 
+1/5000 SkillNecklace 
+
+;Bracelets
+1/1100 RecallBracelet 
+1/50 SteelGlove 
+1/150 WhiskerBracelet
+1/150 SpellBracelet 
+1/150 3rdEyeBracelet 
+1/200 KnightBracelet 
+1/200 DragonBracelet 
+1/200 SoulSpringBracelet 
+
+;Rings
+1/270 GaleRing 
+1/200 DragonRing 
+1/200 RubyRing 
+1/200 PlatinumRing 
+1/500 FlameRing 
+
+;Stones
+1/50 HealthStone(M) 
+1/50 MagicStone(M) 
+1/50 PowerStone(M)
+1/50 DCStone(M) 
+1/50 MCStone(M) 
+1/50 SCStone(M) 
+1/150 HealthStone(L) 
+1/150 MagicStone(L) 
+1/150 PowerStone(L) 
+1/150 DCStone(L) 
+1/150 MCStone(L) 
+1/150 SCStone(L) 
+
+
+;Crafting Materials
+1/10 WhiteThread 
+1/15 WhiteThread
+
+;Quests
+1/1 BoarBones Q

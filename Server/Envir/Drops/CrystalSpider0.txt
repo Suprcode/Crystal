@@ -1,0 +1,79 @@
+;Gold
+1/1 Gold 12500
+
+;Potions
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 (HP)DrugLarge 
+1/1 (MP)DrugLarge 
+1/1 (HP)DrugLarge 
+1/1 (MP)DrugLarge 
+1/1 (HP)DrugXL 
+1/1 (MP)DrugXL 
+1/1 (HP)DrugXL 
+1/1 (MP)DrugXL 
+ 
+1/30 ImpactDrug(S) 
+1/30 MagicDrug(S) 
+1/30 TaoistDrug(S) 
+1/30 StormDrug(S) 
+1/30 StaminaAid(S) 
+1/30 MagicAid(S)
+
+1/50 AwakeningSoul0
+1/1 AwakeningSoul0
+
+
+;Weapons
+
+
+;Armour
+
+
+;Helmets
+
+
+;Necklace
+
+
+;Bracelets
+
+
+;Rings
+
+
+;Shoes
+
+
+;Belts
+
+
+;Medals
+
+
+;Medals Rare
+
+
+;Shields
+
+
+;Shields Rare
+
+
+;Pads
+
+
+;Stone
+
+
+;Books
+
+
+;Crafting Materials
+1/15 SpiderWeb
+1/10 RedThread
+1/10 LunarPiece
+
+;Quests
+1/1 CrystalShard Q
+

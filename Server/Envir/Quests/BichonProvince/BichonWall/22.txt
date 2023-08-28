@@ -1,0 +1,29 @@
+[@Description]
+The {Butcher/LimeGreen} in {WoomyonWoods/Yellow} just opened a
+new store. He asked me for some help. 
+
+[@TaskDescription]
+Collect 10 {BeefRib/LightSteelBlue} by Killing {WoomaSoldier's/Crimson}
+and deliver to the {Butcher/LimeGreen} in {WoomyonWoods/Yellow}
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+BeefRib 10
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+8200
+
+[@GoldReward]
+8200
+
+// Pickup - 
+// Hand In - Merchant_Hans 1 328 86

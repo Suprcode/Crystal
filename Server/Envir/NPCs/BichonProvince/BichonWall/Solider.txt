@@ -1,0 +1,21 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+The empty lot across the bridge is the site
+where stone statues of the top 10 World Heroes
+and 10 Continental Heroes, who brought the glory to
+Mir continent, will be erected.
+If you wish to know the names of the heroes,
+go over there and look at the statues.
+ 
+<Close/@exit>

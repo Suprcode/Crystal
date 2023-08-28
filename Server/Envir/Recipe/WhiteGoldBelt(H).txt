@@ -1,0 +1,4 @@
+LargeBone 80
+WhiteThread 120
+WhiteGoldBelt 1
+Platinum 2

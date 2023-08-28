@@ -1,0 +1,69 @@
+[@MAIN]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Hello traveler, What can i do for you? 
+ 
+<Exchange/@mbind> Stuff
+ 
+<Close/@exit>
+
+[@mbind]
+#SAY
+I can exchange GoldBars,Bundles and Chests back in {Gold/Gold}.
+Tell me your wishes.
+ 
+Exchange: <GoldBar/@GBar> into {Gold/GOLD} - Commission {(2000 Gold)/Gold}
+Exchange: <GoldBarBundle/@GBBundle> into {Gold/GOLD} - Commission {(10000 Gold)/Gold}
+Exchange: <GoldChest/@GChest> into {Gold/GOLD} - Commission {(20000 Gold)/Gold}
+<Back/@main> - <Close/@exit>
+
+[@GBar]
+#IF
+CHECKITEM GoldBar 1
+#ACT
+TAKEITEM GoldBar 1
+GIVEGOLD 998000
+#ELSESAY
+You have no GoldBar for me to Exchange...
+Come back only if u do have one.
+ 
+<Back/@mbind> - <Close/@exit>
+
+[@GBBundle]
+#IF
+CHECKITEM GoldBarBundle 1
+#ACT
+TAKEITEM GoldBarBundle 1
+GIVEGOLD 4990000
+#ELSESAY
+You have no GoldBarBundle for me to Exchange...
+Come back only if u do have one.
+ 
+<Back/@mbind> - <Close/@exit>
+
+[@GChest]
+#IF
+CHECKITEM GoldChest 1
+#ACT
+TAKEITEM GoldChest 1
+GIVEGOLD 9980000
+#ELSESAY
+You have no GoldChest for me to Exchange...
+Come back only if u do have one.
+ 
+<Back/@mbind> - <Close/@exit>
+
+[Quests]
+-77
+78
+-78

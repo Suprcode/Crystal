@@ -1,0 +1,11 @@
+BichonProvince/BichonWall/Ranking/Master,0,354,240,Master_Patrick,163,100
+BichonProvince/BichonWall/Ranking/WarM,0,355,234,MaleWarrior_Ranking,125,100
+BichonProvince/BichonWall/Ranking/WarF,0,360,238,FemaleWarrior_Ranking,126,100
+BichonProvince/BichonWall/Ranking/WizM,0,360,230,MaleWizard_Ranking,127,100
+BichonProvince/BichonWall/Ranking/WizF,0,364,234,FemaleWizard_Ranking,128,100
+BichonProvince/BichonWall/Ranking/TaoM,0,364,226,MaleTaoist_Ranking,129,100
+BichonProvince/BichonWall/Ranking/TaoF,0,368,230,FemaleTaoist_Ranking,130,100
+BichonProvince/BichonWall/Ranking/AssaM,0,368,222,MaleAssassin_Ranking,131,100
+BichonProvince/BichonWall/Ranking/AssaF,0,372,226,FemaleAssassin_Ranking,132,100
+BichonProvince/BichonWall/Ranking/ArchM,0,372,218,MaleArcher_Ranking,90,100
+BichonProvince/BichonWall/Ranking/ArchF,0,376,222,FemaleArcher_Ranking,90,100

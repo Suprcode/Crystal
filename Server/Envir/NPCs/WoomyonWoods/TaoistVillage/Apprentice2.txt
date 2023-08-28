@@ -1,0 +1,8 @@
+[@main]
+Some woods called the Tree Path are located in the area to the
+north of this Taoist School
+A lot of trees are gathered thickly there and
+it is dark there even during the day.
+Even the local natives often lose their way
+When you go there, take great care!
+<Ok/@exit>

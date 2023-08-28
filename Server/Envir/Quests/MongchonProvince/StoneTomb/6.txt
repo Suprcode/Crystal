@@ -1,0 +1,28 @@
+[@Description]
+Is it true? Youve been to the {Ancient Layer/Yellow}? Can
+you return and Collect 17 {BloodPill/LightSteelBlue} by killing 
+{AncientSnakeScorpion's/Crimson}
+
+[@TaskDescription]
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+BloodPill 17
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+88500
+
+[@GoldReward]
+88500
+
+// Pickup - Merchant_Kevin 3 346 334
+// Hand In - Merchant_Kevin 3 346 334

@@ -1,0 +1,25 @@
+;Gold 
+1/10 Gold 5000
+
+;Potions
+1/5 SunPotion
+1/5 SunPotion
+1/5 SunPotion
+1/5 SunPotion
+1/5 SunPotion
+
+;Armours
+
+;Rings
+
+;Bracelets
+
+;Necklaces
+
+;Stones
+
+;Crafting Material
+
+;Books
+
+;Other

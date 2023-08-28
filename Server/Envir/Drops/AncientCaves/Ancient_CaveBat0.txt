@@ -1,0 +1,16 @@
+;Potions
+1/1 (HP)DrugSmall 
+1/1 (MP)DrugSmall 
+1/3 (HP)DrugSmall 
+1/3 (MP)DrugSmall 
+
+;Scrolls
+1/1 TownTeleport 
+1/2 TownTeleport 
+1/3 TownTeleport 
+1/4 TownTeleport 
+1/5 TownTeleport 
+
+;quests
+1/1 Batwing Q
+1/1 BatBlood Q

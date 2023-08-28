@@ -1,0 +1,143 @@
+;Gold
+1/10 Gold 8500
+
+;Weapons
+1/30 PurifierSword 
+1/200 GreatAxe 
+1/200 MageStaff 
+1/200 SerpentSword 
+1/200 DoubleBlades 
+1/200 SilverBow 
+1/1000 DragonSword 
+1/2500 JudgementMace 
+1/2500 WarMageStaff 
+1/2500 SoulSpringWand 
+1/2500 BladesOfDarkness 
+1/2500 FiendBow 
+
+;Armours
+1/5 HeavyArmour(M) 
+1/5 HeavyArmour(F) 
+1/5 MagicRobe(M) 
+1/5 MagicRobe(F) 
+1/5 SoulArmour(M) 
+1/5 SoulArmour(F) 
+1/5 RelicArmour(M) 
+1/5 RelicArmour(F) 
+1/5 LightLeatherArmour(M) 
+1/5 LightLeatherArmour(F) 
+
+;Helmets
+1/100 RecallHelmet 
+1/10 SkeletonHelmet 
+1/10 ShamanHelmet 
+
+;Necklaces
+1/100 RecallNecklace 
+1/10 LanternNecklace 
+1/10 TigerNecklace 
+1/10 PlatinumNecklace 
+1/13 BlueJadeNecklace 
+1/13 ConvexLens 
+1/13 BambooPipe 
+1/300 ClawNecklace 
+1/300 LifeNecklace 
+1/300 PearlNecklace 
+1/2000 GreenBead 
+1/2000 DemonicBells 
+1/2000 SoulNecklace 
+1/5000 SkillNecklace 
+
+;Bracelets
+1/100 RecallBracelet 
+1/8 StrainBracelet 
+1/8 MagicBracelet 
+1/8 HardGlove 
+1/10 EbonyBracelet 
+1/10 MonkBracelet 
+1/15 DeathGauntlet 
+1/15 GoldBracelet 
+1/100 BronzeGlove 
+1/100 SteelGlove 
+1/250 SpellBracelet 
+1/250 3rdEyeBracelet 
+1/400 KnightBracelet 
+1/400 DragonBracelet 
+1/400 SoulSpringBracelet 
+
+;Rings
+1/300 RecallRing 
+1/15 SkeletonRing 
+1/10 CharmRing 
+1/10 MoralRing 
+1/55 ExpelRing 
+1/55 CoralRing 
+1/70 GaleRing 
+1/300 DragonRing 
+1/300 RubyRing 
+1/300 PlatinumRing 
+1/500 FlameRing 
+
+;Stones
+1/100 HealthStone(M) 
+1/100 MagicStone(M) 
+1/100 PowerStone(M) 
+1/100 DCStone(M) 
+1/100 MCStone(M) 
+1/100 SCStone(M) 
+1/350 HealthStone(L) 
+1/350 MagicStone(L) 
+1/350 PowerStone(L)
+1/350 DCStone(L) 
+1/350 MCStone(L) 
+1/350 SCStone(L) 
+1/550 HealthStone(XL) 
+1/550 MagicStone(XL) 
+1/550 PowerStone(XL) 
+1/550 DCStone(XL) 
+1/550 MCStone(XL) 
+1/550 SCStone(XL) 
+
+;Potions
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/2 (HP)DrugLarge 
+1/2 (MP)DrugLarge 
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/1 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/2 SunPotion 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/1 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/2 SunPotion(M) 
+1/30 ImpactDrug(S) 
+1/30 MagicDrug(S) 
+1/30 TaoistDrug(S) 
+1/30 StormDrug(S) 
+1/30 StaminaAid(S) 
+1/30 MagicAid(S) 
+
+;Crafting Materials
+1/10 WhiteThread 
+1/15 WhiteThread 
+
+;Quest
+1/3 RelicRock Q

@@ -1,0 +1,61 @@
+[@Main]
+#IF
+CHECKPKPOINT > 199
+#SAY
+I will not help an evil person like you...
+ 
+ 
+<Close/@exit>
+#ELSEACT
+GOTO @Main-1
+
+[@Main-1]
+#SAY
+Hello. I am the 'Commission Merchant'. I am in charge
+of commission sales. We are located at five places of
+Bichon Province, Mongchon Province, Tao Village, Prajna
+Island and Past Bichon, the item sales information are
+all shared by the five merchants.
+ 
+<Consign/@Consign> Item  <View Market/@Market>.
+<View Consignments/@Consignment>
+<Close/@exit> <Help/@help>
+
+
+[@Consign]
+#SAY
+The following are 'cautions' in the commission sale.
+1. Consignment fee: After confirming the sale,
+   1% of the selling price is paid.
+2. Trust money: when it is consigned, '1,000 {Gold/Gold}' is paid.
+3. Commission period: After 100 days of item sale registration,
+   the item will be automatically deleted from the list.
+4. Number of commission items: Maximum 30 items are allowed
+   for sale
+5. Trust money amount: can be set in the range of
+   1,000 - 50,000,000 {Gold/Gold}.
+ 
+Do you agree?
+<Leave/@exit> <Back/@main>
+
+[@help]
+#SAY
+The following are 'cautions' in the commission sale.
+1. Consignment fee: After confirming the sale,
+   1% of the selling price is paid.
+2. Trust money: when it is consigned, '1,000 {Gold/Gold}' is paid.
+3. Commission period: After 100 days of item sale registration,
+   the item will be automatically deleted from the list.
+4. Number of commission items: Maximum 30 items are allowed
+   for sale
+5. Trust money amount: can be set in the range of
+   1,000 - 50,000,000 {Gold/Gold}. 
+<Back/@main>
+
+[@Market]
+#SAY
+
+
+[@Consignment]
+#SAY
+What would you like to sell?

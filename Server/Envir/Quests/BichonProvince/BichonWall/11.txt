@@ -1,0 +1,33 @@
+[@Description]
+Have you been to the dungeon near {Bichon/Yellow}?
+The {Skeletons/Crimson} are there. The Guard near the
+dungeon reported that the number of {Skeletons/Crimson}
+have been increasing lately. Do you think you
+can go eliminate 25 {Skeletons/Crimson}? This is for the
+safety of {Bichon/Yellow}.
+
+[@TaskDescription]
+Eliminate 25 {Skeleton's/Crimson}
+
+[@Completion]
+
+[@KillTasks]
+Skeleton 25
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+SuperiorMagicHelmet
+
+[@SelectRewards]
+
+[@ExpReward]
+1500
+
+[@GoldReward]
+375
+
+// Pickup - Teleport_Jason 0 292 216
+// Hand In - Teleport_Jason 0 292 216

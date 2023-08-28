@@ -1,0 +1,10 @@
+;Gold
+1/4 Gold 220
+
+;Pots + Other
+1/10 (HP)DrugSmall 
+1/10 (MP)DrugSmall 
+1/10 (HP)DrugSmall 
+1/10 (MP)DrugSmall 
+1/200 (HP)DrugMedium 
+1/200 (MP)DrugMedium

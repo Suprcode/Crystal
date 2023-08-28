@@ -1,0 +1,28 @@
+[@Description]
+Travel through {TreePath/Yellow} and enter the {RedValley/Yellow}
+
+[@TaskDescription]
+Retrieve the {JadeCrystal/LightSteelBlue} by killing {BigApes/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+
+[@ItemTasks]
+JadeCrystal 1
+
+[@FlagTasks]
+530 "Travel to RedValley_5F and Take the JadeCrystal to BigTaoist"
+
+[@CarryItems]
+
+[@FixedRewards]
+
+[@SelectRewards]
+
+[@ExpReward]
+
+[@GoldReward]
+
+// Pickup - 
+// Hand In - BigTaoist D10061 11 16

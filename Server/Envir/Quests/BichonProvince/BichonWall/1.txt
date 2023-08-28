@@ -1,0 +1,27 @@
+[@Description]
+I've been getting reports that {ForestYeti's/Crimson} are
+attacking only the new Warrior's lately.
+Do you think you can help?
+
+[@TaskDescription]
+Eliminate 5 {ForestYeti's/Crimson}.
+
+[@Completion]
+
+[@KillTasks]
+ForestYeti 5
+
+[@ItemTasks]
+
+[@CarryItems]
+
+[@FixedRewards]
+PrecisionPendant
+
+[@SelectRewards]
+
+[@ExpReward]
+200
+
+[@GoldReward]
+50

@@ -1,0 +1,49 @@
+;Gold
+1/10 Gold 1450
+
+;Pots + Other
+1/10 (HP)DrugLarge
+1/10 (MP)DrugLarge
+1/30 (HP)DrugXL
+1/30 (MP)DrugXL
+
+;Helmets
+1/960 SkeletonHelmet
+1/960 ShamanHelmet
+
+;Necklace
+1/940 BlueJadeNecklace
+1/940 ConvexLens
+1/940 BambooPipe
+1/11000 ClawNecklace
+1/11000 LifeNecklace
+1/11000 PearlNecklace
+1/11200 ThunderRing
+1/11200 NobleRing
+
+
+1/4200 SoulRing
+
+;Bracelets
+1/900 SharpBracelet
+1/920 EvadeBracelet
+1/925 MundaneGlove
+1/925 NokChiWheel
+1/925 TaoProtectBracelet
+1/14200 KnightBracelet
+1/14200 BaekTaGlove
+1/14200 8TrigramWheel
+
+1/14200 HangMaWheel
+1/14200 SpiritReformer
+
+1/14200 BokMaWheel
+1/14200 HolyTaoWheel
+
+;Rings
+1/940 CoralRing
+1/900 ExpelRing
+
+
+;Belts
+1/10000 GoldBelt

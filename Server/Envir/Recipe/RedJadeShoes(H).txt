@@ -1,0 +1,12 @@
+[Recipe]
+Amount 1
+Chance 100
+Gold 5000
+
+[Tools]
+
+[Ingredients]
+CopperOre 2 12000
+RedJadeShoes
+LargeBone 60
+RedThread 90

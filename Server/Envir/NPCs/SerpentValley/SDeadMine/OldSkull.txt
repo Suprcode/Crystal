@@ -1,0 +1,9 @@
+[@Main]
+#SAY
+A pile of skull and bones.
+ 
+<Close/@exit>
+
+
+[Quests]
+77

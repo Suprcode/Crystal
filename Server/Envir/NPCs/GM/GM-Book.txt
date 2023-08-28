@@ -1,0 +1,246 @@
+[@Main]
+#IF
+ISADMIN
+#SAY
+Hello {<$USERNAME>/KHAKI}, my name is {<$NPCNAME>/KHAKI}.
+<Buy/@Buy> Book
+<Sell/@Sell> Book
+ 
+Learn all <Warrior/@Warrior> , <Wizard/@Wizard> , <Taoist/@Taoist> , <Archer/@Archer> , <Assassin/@Assassin> spells.
+
+#ELSEACT
+MOVE 0 300 300
+ 
+[@Sell]
+#SAY
+Sell.
+ 
+<Back/@Main>
+
+[@Buy]
+#SAY
+Buy.
+ 
+<Back/@Main>
+
+[@Warrior]
+#Act
+GIVESKILL Fencing 3
+GIVESKILL Slaying 3
+GIVESKILL Thrusting 3
+GIVESKILL HalfMoon 3
+GIVESKILL ShoulderDash 3
+GIVESKILL TwinDrakeBlade 3
+GIVESKILL Entrapment 3
+GIVESKILL FlamingSword 3
+GIVESKILL LionRoar 3
+GIVESKILL CrossHalfMoon 3
+GIVESKILL BladeAvalanche 3
+GIVESKILL ProtectionField 3
+GIVESKILL Rage 3
+GIVESKILL CounterAttack 3
+GIVESKILL SlashingBurst 3
+GIVESKILL Fury 3
+GIVESKILL ImmortalSkin 3
+[@Wizard]
+#ACT
+GIVESKILL FireBall 3
+GIVESKILL Repulsion 3
+GIVESKILL ElectricShock 3
+GIVESKILL GreatFireBall 3
+GIVESKILL HellFire 3
+GIVESKILL ThunderBolt 3
+GIVESKILL Teleport 3
+GIVESKILL FireBang 3
+GIVESKILL FireWall 3
+GIVESKILL Lightning 3
+GIVESKILL FrostCrunch 3
+GIVESKILL ThunderStorm 3
+GIVESKILL MagicShield 3
+GIVESKILL TurnUndead 3
+GIVESKILL Vampirism 3
+GIVESKILL IceStorm 3
+GIVESKILL FlameDisruptor 3
+GIVESKILL Mirroring 3
+GIVESKILL FlameField 3
+GIVESKILL Blizzard 3
+GIVESKILL MagicBooster 3
+GIVESKILL MeteorStrike 3
+GIVESKILL IceThrust 3
+GIVESKILL StormEscape 3
+GIVESKILL FastMove 3
+[@Taoist]
+#ACT
+GIVESKILL Healing 3
+GIVESKILL SpiritSword 3
+GIVESKILL Poisoning 3
+GIVESKILL SoulFireBall 3
+GIVESKILL SummonSkeleton 3
+GIVESKILL Hiding 3
+GIVESKILL MassHiding 3
+GIVESKILL SoulShield 3
+GIVESKILL Revelation 3
+GIVESKILL BlessedArmour 3
+GIVESKILL EnergyRepulsor 3
+GIVESKILL TrapHexagon 3
+GIVESKILL Purification 3
+GIVESKILL MassHealing 3
+GIVESKILL Hallucination 3
+GIVESKILL UltimateEnhancer 3
+GIVESKILL SummonShinsu 3
+GIVESKILL Reincarnation 3
+GIVESKILL SummonHolyDeva 3
+GIVESKILL Curse 3
+GIVESKILL Plague 3
+GIVESKILL PoisonCloud 3
+GIVESKILL EnergyShield 3
+GIVESKILL HealingCircle 3
+[@Assassin]
+#ACT
+GIVESKILL FatalSword 3
+GIVESKILL DoubleSlash 3
+GIVESKILL Haste 3
+GIVESKILL FlashDash 3
+GIVESKILL LightBody 3
+GIVESKILL HeavenlySword 3
+GIVESKILL FireBurst 3
+GIVESKILL Trap 3
+GIVESKILL PoisonSword 3
+GIVESKILL MoonLight 3
+GIVESKILL MPEater 3
+GIVESKILL SwiftFeet 3
+GIVESKILL DarkBody 3
+GIVESKILL Hemorrhage 3
+GIVESKILL CrescentSlash 3
+GIVESKILL MoonMist 3
+GIVESKILL CatTongue 3
+[@Archer]
+#ACT
+GIVESKILL Focus 
+GIVESKILL StraightShot 3
+GIVESKILL DoubleShot 3
+GIVESKILL ExplosiveTrap 3
+GIVESKILL DelayedExplosion 3
+GIVESKILL Meditation 3
+GIVESKILL BackStep 3
+GIVESKILL ElementalShot 3
+GIVESKILL Concentration 3
+GIVESKILL ElementalBarrier 3
+GIVESKILL SummonVampire 3
+GIVESKILL VampireShot 3
+GIVESKILL SummonToad 3
+GIVESKILL PoisonShot 3
+GIVESKILL CrippleShot 3
+GIVESKILL SummonSnakes 3
+GIVESKILL NapalmShot 3
+GIVESKILL OneWithNature 3
+GIVESKILL StoneTrap 3
+GIVESKILL Portal 3
+
+[Types]
+20
+
+[Trade]
+Fencing
+Slaying
+Thrusting
+HalfMoon
+ShoulderDash
+TwinDrakeBlade
+Entrapment
+FlamingSword
+LionRoar
+CrossHalfMoon
+BladeAvalanche
+ProtectionField
+Rage
+CounterAttack
+SlashingBurst
+Fury
+ImmortalSkin
+FireBall
+Repulsion
+ElectricShock
+GreatFireBall
+HellFire
+ThunderBolt
+Teleport
+FireBang
+FireWall
+Lightning
+FrostCrunch
+ThunderStorm
+MagicShield
+TurnUndead
+Vampirism
+IceStorm
+FlameDisruptor
+Mirroring
+FlameField
+Blizzard
+MagicBooster
+MeteorStrike
+IceThrust
+StormEscape
+FastMove
+Healing
+SpiritSword
+Poisoning
+SoulFireBall
+SummonSkeleton
+Hiding
+MassHiding
+SoulShield
+Revelation
+BlessedArmour
+EnergyRepulsor
+TrapHexagon
+Purification
+MassHealing
+Hallucination
+UltimateEnhancer
+SummonShinsu
+Reincarnation
+SummonHolyDeva
+Curse
+Plague
+PoisonCloud
+EnergyShield
+HealingCircle
+FatalSword
+DoubleSlash
+Haste
+FlashDash
+LightBody
+HeavenlySword
+FireBurst
+Trap
+PoisonSword
+MoonLight
+MPEater
+SwiftFeet
+DarkBody
+Hemorrhage
+CresentSlash
+MoonMist
+CatTongue
+Focus
+StraightShot
+DoubleShot
+ExplosiveTrap
+DelayedExplosion
+Meditation
+BackStep
+ElementalShot
+Concentration
+ElementalBarrier
+SummonVampire
+VampireShot
+SummonToad
+PoisonShot
+CrippleShot
+SummonSnakes
+NapalmShot
+OneWithNature
+StoneTrap
+Portal
