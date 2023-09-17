@@ -1,5 +1,4 @@
 ﻿using log4net;
-using log4net.Config;
 using System.Reflection;
 
 namespace Server.MirForms
