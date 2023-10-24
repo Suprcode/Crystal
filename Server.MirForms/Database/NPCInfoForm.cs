@@ -7,7 +7,7 @@ namespace Server
 {
     public partial class NPCInfoForm : Form
     {
-        public string NPCListPath = Path.Combine(Settings.ExportPath, "NPCList.txt");
+        public string NPCListPath = Path.Combine(Settings.ExportPath, "NPCList.csv");
 
         public Envir Envir => SMain.EditEnvir;
 
@@ -305,7 +305,7 @@ namespace Server
 
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.InitialDirectory = Path.Combine(Application.StartupPath, "Exports");
-            sfd.Filter = "Text File|*.txt";
+            sfd.Filter = "CSV File|*.csv";
             sfd.ShowDialog();
 
             if (sfd.FileName == string.Empty) return;
@@ -325,7 +325,7 @@ namespace Server
             string Path = string.Empty;
 
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Text File|*.txt";
+            ofd.Filter = "CSV File|*.csv";
             ofd.ShowDialog();
 
             if (ofd.FileName == string.Empty) return;
@@ -357,7 +357,7 @@ namespace Server
         {
             if (NFileNameTextBox.Text == string.Empty) return;
 
-            var scriptPath = Path.Combine(Settings.NPCPath, NFileNameTextBox.Text + ".txt");
+            var scriptPath = Path.Combine(Settings.NPCPath, NFileNameTextBox.Text + ".csv");
 
             if (File.Exists(scriptPath))
             {
