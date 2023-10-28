@@ -376,7 +376,7 @@ namespace Server
         {
             if (QFileNameTextBox.Text == string.Empty) return;
 
-            var scriptPath = Path.Combine(Settings.QuestPath, QFileNameTextBox.Text + ".csv");
+            var scriptPath = Path.Combine(Settings.QuestPath, QFileNameTextBox.Text + ".txt");
 
             if (File.Exists(scriptPath))
             {
