@@ -652,9 +652,9 @@ namespace Client
             DXManager.Device.Present();
             DXManager.ResetDevice();
 
-            Program.Form.CenterToScreen();
+            if (!Settings.FullScreen)
+                Program.Form.CenterToScreen();
         }
-            
 
         #region ScreenCapture
 
