@@ -5662,7 +5662,7 @@ namespace Server.MirObjects
 
         private bool FireBounce(MapObject target, UserMagic magic, MapObject source, int bounce = -1)
         {
-            if (target == null || !target.IsAttackTarget(this) || !CanFly(target.CurrentLocation) || bounce == 0) return false;
+            if (target == null || !target.IsAttackTarget(this) || !source.CanFly(target.CurrentLocation) || bounce == 0) return false;
 
             int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
 
@@ -5796,7 +5796,7 @@ namespace Server.MirObjects
 
                     if (target.Race == ObjectType.Monster)
                     {
-                        var targets = ((MonsterObject)target).FindAllNearby(3, target.CurrentLocation).Where(x => x != target && x.IsAttackTarget(this)).ToList();
+                        var targets = ((MonsterObject)target).FindAllNearby(3, target.CurrentLocation).Where(x => x != target && x.IsAttackTarget(this) && target.CanFly(x.CurrentLocation)).ToList();
 
                         if (targets.Count > 0)
                         {
