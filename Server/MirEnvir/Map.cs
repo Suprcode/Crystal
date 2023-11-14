@@ -1919,6 +1919,23 @@ namespace Server.MirEnvir
 
                             for (int i = 0; i <= 2; i++)
                             {
+                                bool skip = false;
+                                //for the extra spots make sure to not overlap new traps with old ones since it creates invisible double/tripple /... trap spots
+                                if (i > 0)
+                                {
+                                    cell = GetCell(traps[i]);
+
+                                    if (cell.Objects != null)
+                                        for (int o = 0; o < cell.Objects.Count; o++)
+                                        {
+                                            MapObject target = cell.Objects[o];
+                                            if (target.Race != ObjectType.Spell || (((SpellObject)target).Spell != Spell.FireWall && ((SpellObject)target).Spell != Spell.ExplosiveTrap)) continue;
+
+                                            skip = true;
+                                            break;
+                                        }
+                                }
+                                if (skip) continue;
                                 SpellObject ob = new SpellObject
                                 {
                                     Spell = Spell.ExplosiveTrap,
