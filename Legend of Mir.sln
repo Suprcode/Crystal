@@ -13,8 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server.MirForms\S
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{F75359D0-CBBC-49F2-9BB7-3AAC3B4D775F}"
 	ProjectSection(SolutionItems) = preProject
-		..\crystal-mir2\MonsterAttackMethods.txt = ..\crystal-mir2\MonsterAttackMethods.txt
-		..\crystal-mir2\MonsterReferenceVideos.txt = ..\crystal-mir2\MonsterReferenceVideos.txt
+		dotnet-upgrade.txt = dotnet-upgrade.txt
+		MonsterAttackMethods.txt = MonsterAttackMethods.txt
+		MonsterReferenceVideos.txt = MonsterReferenceVideos.txt
 		SoundRules.txt = SoundRules.txt
 	EndProjectSection
 EndProject
