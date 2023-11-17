@@ -1354,6 +1354,7 @@ public enum BuffType : byte
     Rested,
     Skill,
     ClearRing,
+    Newbie,
 
     //Stats
     Impact = 200,
