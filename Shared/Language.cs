@@ -217,6 +217,10 @@
                          ItemTypeDeco = "Deco",
                          ItemTypeMonsterSpawn = "SpawnEgg",
                          ItemTypeSealedHero = "SealedHero",
+                         ItemTypePads = "Pads", 
+                         ItemTypePoison = "Poison",
+                         ItemTypeMedal = "Medal",
+                         ItemTypeTalisman = "Talisman",
 
                          ItemGradeCommon = "Common",
                          ItemGradeRare = "Rare",
@@ -499,7 +503,12 @@
         GameLanguage.ItemTypePets = reader.ReadString("Language", "ItemTypePets", GameLanguage.ItemTypePets);
         GameLanguage.ItemTypeTransform = reader.ReadString("Language", "ItemTypeTransform", GameLanguage.ItemTypeTransform);
         GameLanguage.ItemTypeSealedHero = reader.ReadString("Language", "ItemTypeSealedHero", GameLanguage.ItemTypeSealedHero);
+        GameLanguage.ItemTypePads = reader.ReadString("Language", "ItemTypePads", GameLanguage.ItemTypePads);
+        GameLanguage.ItemTypePoison = reader.ReadString("Language", "ItemTypePoison", GameLanguage.ItemTypePoison);
+        GameLanguage.ItemTypeMedal = reader.ReadString("Language", "ItemTypeMedal", GameLanguage.ItemTypeMedal);
+        GameLanguage.ItemTypeTalisman = reader.ReadString("Language", "ItemTypeTalisman", GameLanguage.ItemTypeTalisman);
 
+        
         GameLanguage.ItemGradeCommon = reader.ReadString("Language", "ItemGradeCommon", GameLanguage.ItemGradeCommon);
         GameLanguage.ItemGradeRare = reader.ReadString("Language", "ItemGradeRare", GameLanguage.ItemGradeRare);
         GameLanguage.ItemGradeLegendary = reader.ReadString("Language", "ItemGradeLegendary", GameLanguage.ItemGradeLegendary);
@@ -736,6 +745,10 @@
         reader.Write("Language", "ItemTypePets", GameLanguage.ItemTypePets);
         reader.Write("Language", "ItemTypeTransform", GameLanguage.ItemTypeTransform);
         reader.Write("Language", "ItemTypeSealedHero", GameLanguage.ItemTypeSealedHero);
+        reader.Write("Language", "ItemTypePads", GameLanguage.ItemTypePads);
+        reader.Write("Language", "ItemTypePoison", GameLanguage.ItemTypePoison);
+        reader.Write("Language", "ItemTypeMedal", GameLanguage.ItemTypeMedal);
+        reader.Write("Language", "ItemTypeTalisman", GameLanguage.ItemTypeTalisman);
 
         reader.Write("Language", "ItemGradeCommon", GameLanguage.ItemGradeCommon);
         reader.Write("Language", "ItemGradeRare", GameLanguage.ItemGradeRare);

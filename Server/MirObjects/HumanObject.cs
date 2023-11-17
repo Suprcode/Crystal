@@ -502,7 +502,7 @@ namespace Server.MirObjects
                 AddBuff(BuffType.ClearRing, this, 0, new Stats());
             }
 
-             if (MyGuild != null && Myguild.Name == Settings.NewbieGuild)
+             if (MyGuild != null && MyGuild.Name == Settings.NewbieGuild)
             {
                 AddBuff(BuffType.Newbie, this, 0, new Stats { [Stat.ExpRatePercent] = Settings.NewbieExpBuff });
             }
@@ -7566,6 +7566,24 @@ namespace Server.MirObjects
                     break;
                 default:
                     return false;
+             case EquipmentSlot.Pads:
+                  if (item.Info.Type != ItemType.Pads)
+                     return false;
+                    break;
+            case EquipmentSlot.Poison:
+               if (item.Info.Type != ItemType.Poison)
+                   return false;
+                 break;
+            case EquipmentSlot.Medal:
+                if (item.Info.Type != ItemType.Medal)
+                  return false;
+              break;
+          case EquipmentSlot.Talisman:
+               if (item.Info.Type != ItemType.Talisman)
+                 return false;
+              break;
+            default:
+     return false;
             }
 
 

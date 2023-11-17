@@ -650,6 +650,11 @@ namespace Client.MirScenes.Dialogs
             accessory.SubFilters.Add(new Filter { Index = 301, Title = "Necklaces", Type = ItemType.Necklace });
             accessory.SubFilters.Add(new Filter { Index = 302, Title = "Bracelets", Type = ItemType.Bracelet });
             accessory.SubFilters.Add(new Filter { Index = 303, Title = "Rings", Type = ItemType.Ring });
+            accessory.SubFilters.Add(new Filter { Index = 304, Title = "Pads", Type = ItemType.Pads });
+            accessory.SubFilters.Add(new Filter { Index = 305, Title = "Poison", Type = ItemType.Poison });
+            accessory.SubFilters.Add(new Filter { Index = 306, Title = "Medal", Type = ItemType.Medal });
+            accessory.SubFilters.Add(new Filter { Index = 307, Title = "Talisman", Type = ItemType.Talisman });
+
 
             consumable.SubFilters.Add(new Filter { Index = 401, Title = "Recovery Pots", Type = ItemType.Potion, MaxShape = 2 });
             consumable.SubFilters.Add(new Filter { Index = 402, Title = "Buff Pots", Type = ItemType.Potion, MinShape = 3, MaxShape = 4 });

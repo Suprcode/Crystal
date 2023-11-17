@@ -7088,6 +7088,18 @@ namespace Client.MirScenes
                 case ItemType.SealedHero:
                     baseText = GameLanguage.ItemTypeSealedHero;
                     break;
+                case ItemType.Pads:
+                   baseText = GameLanguage.ItemTypePads;
+                   break;
+                case ItemType.Poison:
+                   baseText = GameLanguage.ItemTypePoison;
+                   break;
+               case ItemType.Medal:
+                  baseText = GameLanguage.ItemTypeMedal;
+                  break;
+              case ItemType.Talisman:
+                 baseText = GameLanguage.ItemTypeTalisman;
+                 break;
             }
 
             if (HoverItem.WeddingRing != -1)
