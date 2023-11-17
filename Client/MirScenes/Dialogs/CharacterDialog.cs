@@ -346,7 +346,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = CharacterPage,
                 Location = new Point(203, 62),
             };
-            
+
             Grid[(int)EquipmentSlot.Pads] = new MirItemCell
             {
                 ItemSlot = (int)EquipmentSlot.Pads,

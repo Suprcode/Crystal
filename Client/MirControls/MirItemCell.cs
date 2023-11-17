@@ -505,32 +505,30 @@ namespace Client.MirControls
                         Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.Torch });
                         dialog.Grid[(int)EquipmentSlot.Torch].Locked = true;
                         Locked = true;
-                    }
-                    break;
-               case ItemType.Poison:
+                    }               case ItemType.Poison:
                    if (dialog.Grid[(int)EquipmentSlot.Poison].CanWearItem(actor, Item))
                    {
                       Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.Poison });
                       dialog.Grid[(int)EquipmentSlot.Poison].Locked = true;
                       Locked = true;
                    }
-                 break;
-            case ItemType.Medal:
-               if (dialog.Grid[(int)EquipmentSlot.Medal].CanWearItem(actor, Item))
-               {
-                 Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.Medal });
-                 dialog.Grid[(int)EquipmentSlot.Medal].Locked = true;
-                 Locked = true;
-               }
-               break;
-          case ItemType.Talisman:
-             if (dialog.Grid[(int)EquipmentSlot.Talisman].CanWearItem(actor, Item))
-             {
-                Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.Talisman });
-               dialog.Grid[(int)EquipmentSlot.Talisman].Locked = true;
-               Locked = true;
-             }
-             break;
+                   break;
+                case ItemType.Medal:
+                   if (dialog.Grid[(int)EquipmentSlot.Medal].CanWearItem(actor, Item))
+                   {
+                     Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.Medal });
+                     dialog.Grid[(int)EquipmentSlot.Medal].Locked = true;
+                     Locked = true;
+                   }
+                   break;
+                case ItemType.Talisman:
+                   if (dialog.Grid[(int)EquipmentSlot.Talisman].CanWearItem(actor, Item))
+                   {
+                     Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.Talisman });
+                     dialog.Grid[(int)EquipmentSlot.Talisman].Locked = true;
+                     Locked = true;
+                   }
+                   break;
                 case ItemType.Potion:
                 case ItemType.Scroll:
                 case ItemType.Book:
@@ -2122,13 +2120,14 @@ namespace Client.MirControls
                     return type == ItemType.Stone;
                 case EquipmentSlot.Mount:
                     return type == ItemType.Mount;
+                default:
                case EquipmentSlot.Pads:
                    return type == ItemType.Pads;
-               case EquipmentSlot.Poison:
+                case EquipmentSlot.Poison:
                    return type == ItemType.Poison;
-              case EquipmentSlot.Medal:
+                case EquipmentSlot.Medal:
                   return type == ItemType.Medal;
-             case EquipmentSlot.Talisman:
+                case EquipmentSlot.Talisman:
                   return type == ItemType.Talisman;
                 default:
                 return false;
