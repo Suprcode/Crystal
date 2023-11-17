@@ -506,6 +506,7 @@ namespace Client.MirControls
                         dialog.Grid[(int)EquipmentSlot.Torch].Locked = true;
                         Locked = true;
                     }
+                    break;
                case ItemType.Poison:
                    if (dialog.Grid[(int)EquipmentSlot.Poison].CanWearItem(actor, Item))
                    {
