@@ -82,7 +82,7 @@ namespace Server.MirDatabase
                 new BuffInfo { Type = BuffType.Knapsack, Properties = BuffProperty.None, StackType = BuffStackType.StackDuration },
 
                 //NewbieGuild
-                 new BuffInfo { Type = BuffType.Newbie, Properties = BuffProperty.None, StackType = BuffStackType.Infinite }
+                 new BuffInfo { Type = BuffType.Newbie, Properties = BuffProperty.None, StackType = BuffStackType.Infinite },
             };
 
             return info;
