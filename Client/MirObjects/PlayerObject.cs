@@ -5308,7 +5308,7 @@ namespace Client.MirObjects
                 BackColour = Color.Transparent,
                 ForeColour = NameColour,
                 OutLine = true,
-                OutLineColour = Color.Black,
+                OutLineColour = Color.SteelBlue,
                 Text = Name,
             };
             NameLabel.Disposing += (o, e) => LabelList.Remove(NameLabel);
@@ -5335,7 +5335,7 @@ namespace Client.MirObjects
                 BackColour = Color.Transparent,
                 ForeColour = NameColour,
                 OutLine = true,
-                OutLineColour = Color.Black,
+                OutLineColour = Color.Purple,
                 Text = GuildName,
             };
             GuildLabel.Disposing += (o, e) => LabelList.Remove(GuildLabel);
