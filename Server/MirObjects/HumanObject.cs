@@ -7564,8 +7564,9 @@ namespace Server.MirObjects
                     if (item.Info.Type != ItemType.Mount)
                         return false;
                     break;
-                case EquipmentSlot.Pads:
-                    if (item.Info.Type != ItemType.Pads)
+                    return false;
+             case EquipmentSlot.Pads:
+                  if (item.Info.Type != ItemType.Pads)
                      return false;
                     break;
                 case EquipmentSlot.Poison:
