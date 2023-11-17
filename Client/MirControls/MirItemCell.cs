@@ -2122,7 +2122,6 @@ namespace Client.MirControls
                     return type == ItemType.Stone;
                 case EquipmentSlot.Mount:
                     return type == ItemType.Mount;
-                default:
                case EquipmentSlot.Pads:
                    return type == ItemType.Pads;
                case EquipmentSlot.Poison:
