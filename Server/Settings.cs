@@ -94,6 +94,10 @@ namespace Server
         public static int SaveDelay = 5;
         public static short CredxGold = 30;
 
+		//NewbieGuild
+		public static string NewbieGuild ="NewbieGuild";
+		public static int NewbieExpBuff =10;
+
         //Game
         public static List<long> ExperienceList = new List<long>();
         public static List<long> OrbsExpList = new List<long>();

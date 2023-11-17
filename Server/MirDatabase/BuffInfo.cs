@@ -80,6 +80,9 @@ namespace Server.MirDatabase
                 new BuffInfo { Type = BuffType.MagicDefence, Properties = BuffProperty.None, StackType = BuffStackType.StackDuration },
                 new BuffInfo { Type = BuffType.WonderDrug, Properties = BuffProperty.None, StackType = BuffStackType.StackDuration },
                 new BuffInfo { Type = BuffType.Knapsack, Properties = BuffProperty.None, StackType = BuffStackType.StackDuration }
+
+                //NewbieGuild
+                 new BuffInfo { Type = BuffType.Newbie, Properties = BuffProperty.None, StackType = BuffStackType.Infinite }
             };
 
             return info;
