@@ -11782,6 +11782,7 @@ namespace Client.MirScenes
             switch (magic.Spell)
             {
                 case Spell.FireBall:
+                case Spell.SuperFireBall:
                 case Spell.GreatFireBall:
                 case Spell.ElectricShock:
                 case Spell.Poisoning:

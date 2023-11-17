@@ -1166,6 +1166,7 @@ public enum Spell : byte
     IceThrust = 53,
     FastMove = 54,
     StormEscape = 55,
+    SuperFireBall = 56,
 
     //Taoist
     Healing = 61,

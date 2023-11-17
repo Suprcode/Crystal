@@ -3467,9 +3467,11 @@ namespace Server.MirObjects
             switch (spell)
             {
                 case Spell.FireBall:
+                case Spell.SuperFireBall:
                 case Spell.GreatFireBall:
                 case Spell.FrostCrunch:
                     if (!Fireball(target, magic)) targetID = 0;
+                    if(!SuperFireball(target, magic)) targetID = 0;
                     break;
                 case Spell.Healing:
                     if (target == null)
@@ -3905,6 +3907,21 @@ namespace Server.MirObjects
 
         #region Wizard Skills
         private bool Fireball(MapObject target, UserMagic magic)
+        {
+            if (target == null || !target.IsAttackTarget(this) || !CanFly(target.CurrentLocation)) return false;
+
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
+
+            int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500; //50 MS per Step
+
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target, target.CurrentLocation);
+
+            ActionList.Add(action);
+
+            return true;
+        }
+
+        private bool SuperFireball(MapObject target, UserMagic magic)
         {
             if (target == null || !target.IsAttackTarget(this) || !CanFly(target.CurrentLocation)) return false;
 
@@ -5769,9 +5786,10 @@ namespace Server.MirObjects
 
             switch (magic.Spell)
             {
-                #region FireBall, GreatFireBall, ThunderBolt, SoulFireBall, FlameDisruptor
+                #region FireBall, SuperFireBall, GreatFireBall, ThunderBolt, SoulFireBall, FlameDisruptor
 
                 case Spell.FireBall:
+                case Spell.SuperFireBall:
                 case Spell.GreatFireBall:
                 case Spell.ThunderBolt:
                 case Spell.SoulFireBall:

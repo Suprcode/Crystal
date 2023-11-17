@@ -1659,6 +1659,15 @@ namespace Client.MirObjects
 
                             #endregion
 
+                            #region SuperFireBall
+
+                            case Spell.SuperFireBall:
+                                Effects.Add(new Effect(Libraries.Magic4, 2420, 10, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+
                             #region Healing
 
                             case Spell.Healing:
@@ -2949,6 +2958,25 @@ namespace Client.MirObjects
 
                                     #endregion
 
+                                    #region SuperFireBall
+
+                                    case Spell.SuperFireBall:
+                                        SoundManager.PlaySound(20000 + (ushort)Spell * 2090 + 1);
+                                        missile = CreateProjectile(10, Libraries.Magic4, true, 6, 30, 4);
+
+                                        if (missile.Target != null)
+                                        {
+                                            missile.Complete += (o, e) =>
+                                            {
+                                                if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                missile.Target.Effects.Add(new Effect(Libraries.Magic4, 170, 10, 600, missile.Target));
+                                                SoundManager.PlaySound(20000 + (ushort)Spell * 2090 + 2);
+                                            };
+                                        }
+                                        break;
+
+                                    #endregion
+
                                     #region GreatFireBall
 
                                     case Spell.GreatFireBall:
@@ -3080,6 +3108,7 @@ namespace Client.MirObjects
 
                                     #endregion
 
+           
                                     #region EnergyShield
 
                                     case Spell.EnergyShield:

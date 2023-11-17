@@ -111,6 +111,13 @@ namespace Server.MirObjects
                 BeginMagic(magic.Spell, Direction, Target.ObjectID, Target.CurrentLocation);
                 return;
             }
+
+            magic = GetMagic(Spell.SuperFireBall);
+            if (CanUseMagic(magic))
+            {
+                BeginMagic(magic.Spell, Direction, Target.ObjectID, Target.CurrentLocation);
+                return;
+            }
         }
 
         protected override void ProcessTarget()
