@@ -7566,6 +7566,24 @@ namespace Server.MirObjects
                     break;
                 default:
                     return false;
+             case EquipmentSlot.Pads:
+                  if (item.Info.Type != ItemType.Pads)
+                     return false;
+                    break;
+            case EquipmentSlot.Poison:
+               if (item.Info.Type != ItemType.Poison)
+                   return false;
+                 break;
+            case EquipmentSlot.Medal:
+                if (item.Info.Type != ItemType.Medal)
+                  return false;
+              break;
+          case EquipmentSlot.Talisman:
+               if (item.Info.Type != ItemType.Talisman)
+                 return false;
+              break;
+            default:
+     return false;
             }
 
 
