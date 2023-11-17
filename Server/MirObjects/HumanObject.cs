@@ -7564,7 +7564,6 @@ namespace Server.MirObjects
                     if (item.Info.Type != ItemType.Mount)
                         return false;
                     break;
-                default:
                     return false;
              case EquipmentSlot.Pads:
                   if (item.Info.Type != ItemType.Pads)
