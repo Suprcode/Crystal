@@ -347,6 +347,38 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(203, 62),
             };
 
+            Grid[(int)EquipmentSlot.Pads] = new MirItemCell
+            {
+                ItemSlot = (int)EquipmentSlot.Pads,
+                GridType = gridType,
+                Parent = CharacterPage,
+                Location = new Point(83, 7),
+            };
+
+            Grid[(int)EquipmentSlot.Poison] = new MirItemCell
+            {
+                ItemSlot = (int)EquipmentSlot.Poison,
+                GridType = gridType,
+                Parent = CharacterPage,
+                Location = new Point(8, 134),
+            };
+
+            Grid[(int)EquipmentSlot.Medal] = new MirItemCell
+            {
+                ItemSlot = (int)EquipmentSlot.Medal,
+                GridType = gridType,
+                Parent = CharacterPage,
+                Location = new Point(167, 243),
+            };
+
+            Grid[(int)EquipmentSlot.Talisman] = new MirItemCell
+            {
+                ItemSlot = (int)EquipmentSlot.Talisman,
+                GridType = gridType,
+                Parent = CharacterPage,
+                Location = new Point(8, 98),
+            };
+
             // STATS I
             HealthLabel = new MirLabel
             {
