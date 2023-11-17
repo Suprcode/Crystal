@@ -891,6 +891,10 @@ public enum ItemType : byte
     MonsterSpawn = 40,
     SiegeAmmo = 41, //TODO
     SealedHero = 42
+    Pads = 43,
+    Poison = 44,
+    Medal = 45,
+    Talisman = 46,
 }
 
 public enum MirGridType : byte
@@ -938,6 +942,10 @@ public enum EquipmentSlot : byte
     Boots = 11,
     Stone = 12,
     Mount = 13
+      Pads = 14,
+  Poison = 15,
+  Medal = 16,
+  Talisman = 17,
 }
 
 public enum MountSlot : byte
