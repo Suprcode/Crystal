@@ -505,7 +505,9 @@ namespace Client.MirControls
                         Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.Torch });
                         dialog.Grid[(int)EquipmentSlot.Torch].Locked = true;
                         Locked = true;
-                    }               case ItemType.Poison:
+                    }
+                    break;
+                case ItemType.Poison:
                    if (dialog.Grid[(int)EquipmentSlot.Poison].CanWearItem(actor, Item))
                    {
                       Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.Poison });
@@ -2120,7 +2122,6 @@ namespace Client.MirControls
                     return type == ItemType.Stone;
                 case EquipmentSlot.Mount:
                     return type == ItemType.Mount;
-                default:
                case EquipmentSlot.Pads:
                    return type == ItemType.Pads;
                 case EquipmentSlot.Poison:

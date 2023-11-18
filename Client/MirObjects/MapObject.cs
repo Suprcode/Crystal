@@ -415,7 +415,7 @@ namespace Client.MirObjects
                 BackColour = Color.Transparent,
                 ForeColour = NameColour,
                 OutLine = true,
-                OutLineColour = Color.SteelBlue,
+                OutLineColour = Color.Black,
                 Text = Name,
             };
             NameLabel.Disposing += (o, e) => LabelList.Remove(NameLabel);

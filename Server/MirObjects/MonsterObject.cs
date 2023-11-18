@@ -777,25 +777,25 @@ namespace Server.MirObjects
             switch (PetLevel)
             {
                 case 1:
-                    colour = Color.Aqua;
+                    colour = Color.DarkRed;
                     break;
                 case 2:
-                    colour = Color.Aquamarine;
+                    colour = Color.DarkRed;
                     break;
                 case 3:
-                    colour = Color.LightSeaGreen;
+                    colour = Color.DarkRed;
                     break;
                 case 4:
-                    colour = Color.SlateBlue;
+                    colour = Color.DarkRed;
                     break;
                 case 5:
-                    colour = Color.SteelBlue;
+                    colour = Color.DarkRed;
                     break;
                 case 6:
-                    colour = Color.Blue;
+                    colour = Color.DarkRed;
                     break;
                 case 7:
-                    colour = Color.Navy;
+                    colour = Color.DarkRed;
                     break;
             }
 

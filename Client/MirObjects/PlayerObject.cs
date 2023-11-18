@@ -1662,7 +1662,7 @@ namespace Client.MirObjects
                             #region SuperFireBall
 
                             case Spell.SuperFireBall:
-                                Effects.Add(new Effect(Libraries.Magic4, 2420, 10, Frame.Count * FrameInterval, this));
+                                Effects.Add(new Effect(Libraries.Magic4, 4216, 10, Frame.Count * FrameInterval, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                 break;
 
@@ -2961,16 +2961,16 @@ namespace Client.MirObjects
                                     #region SuperFireBall
 
                                     case Spell.SuperFireBall:
-                                        SoundManager.PlaySound(20000 + (ushort)Spell * 2090 + 1);
-                                        missile = CreateProjectile(10, Libraries.Magic4, true, 6, 30, 4);
+                                        SoundManager.PlaySound(20000 + (ushort)Spell * 4216 + 1);
+                                        missile = CreateProjectile(10, Libraries.Magic4, true, 3, 56, 7);
 
                                         if (missile.Target != null)
                                         {
                                             missile.Complete += (o, e) =>
                                             {
                                                 if (missile.Target.CurrentAction == MirAction.Dead) return;
-                                                missile.Target.Effects.Add(new Effect(Libraries.Magic4, 170, 10, 600, missile.Target));
-                                                SoundManager.PlaySound(20000 + (ushort)Spell * 2090 + 2);
+                                                missile.Target.Effects.Add(new Effect(Libraries.Magic4, 4216, 56, 600, missile.Target));
+                                                SoundManager.PlaySound(20000 + (ushort)Spell * 56 + 2);
                                             };
                                         }
                                         break;
