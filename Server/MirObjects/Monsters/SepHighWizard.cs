@@ -60,6 +60,12 @@ namespace Server.MirObjects.Monsters
 
                 return;
             }
+            {
+                Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.Bladestorm, TargetID = Target.ObjectID, Target = Target.CurrentLocation });
+                ProjectileAttack(damage);
+
+                return;
+            }
 
             if (Envir.Random.Next(3) == 0)
             {

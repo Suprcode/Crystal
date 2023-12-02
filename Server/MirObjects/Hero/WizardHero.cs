@@ -69,6 +69,12 @@ namespace Server.MirObjects
                     return;
                 }
 
+                magic = GetMagic(Spell.Bladestorm);
+                if (CanUseMagic(magic))
+                {
+                    BeginMagic(magic.Spell, Direction, Target.ObjectID, Target.CurrentLocation);
+                    return;
+                }
                 magic = GetMagic(Spell.ThunderStorm);
                 if (CanUseMagic(magic))
                 {

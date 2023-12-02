@@ -1139,6 +1139,7 @@ public enum Spell : byte
     SlashingBurst = 15,
     Fury = 16,
     ImmortalSkin = 17,
+    Bladestorm = 18,
 
     //Wizard
     FireBall = 31,
@@ -1167,6 +1168,7 @@ public enum Spell : byte
     FastMove = 54,
     StormEscape = 55,
     SuperFireBall = 56,
+ 
 
     //Taoist
     Healing = 61,

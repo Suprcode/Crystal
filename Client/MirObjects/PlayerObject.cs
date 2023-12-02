@@ -1481,6 +1481,11 @@ namespace Client.MirObjects
                                     GameScene.SpellTime = Spell == Spell.FlameField ? CMain.Time + 2500 : CMain.Time + 1800;
                                     MapControl.NextAction = CMain.Time + 2500;
                                 }
+                                if (Spell == Spell.Bladestorm)
+                                {
+                                    GameScene.SpellTime = Spell == Spell.Bladestorm ? CMain.Time + 2500 : CMain.Time + 1800;
+                                    MapControl.NextAction = CMain.Time + 2500;
+                                }
                             }
                             break;                         
                         case MirAction.Harvest:
@@ -1662,7 +1667,7 @@ namespace Client.MirObjects
                             #region SuperFireBall
 
                             case Spell.SuperFireBall:
-                                Effects.Add(new Effect(Libraries.Magic4, 4216, 10, Frame.Count * FrameInterval, this));
+                                Effects.Add(new Effect(Libraries.Magic4, 4216, 3, Frame.Count * FrameInterval, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                 break;
 
@@ -1918,6 +1923,14 @@ namespace Client.MirObjects
 
                             case Spell.FlameField:
                                 MapControl.Effects.Add(new Effect(Libraries.Magic2, 910, 23, 1800, CurrentLocation));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+                            #region BladeStorm
+
+                            case Spell.Bladestorm:
+                                MapControl.Effects.Add(new Effect(Libraries.Magic4, 4205, 11, 1800, CurrentLocation));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                 break;
 
@@ -2961,16 +2974,16 @@ namespace Client.MirObjects
                                     #region SuperFireBall
 
                                     case Spell.SuperFireBall:
-                                        SoundManager.PlaySound(20000 + (ushort)Spell * 4216 + 1);
-                                        missile = CreateProjectile(10, Libraries.Magic4, true, 3, 56, 7);
+                                        SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
+                                        missile = CreateProjectile(10, Libraries.Magic4, true, 4261, 56, 7);
 
                                         if (missile.Target != null)
                                         {
                                             missile.Complete += (o, e) =>
                                             {
                                                 if (missile.Target.CurrentAction == MirAction.Dead) return;
-                                                missile.Target.Effects.Add(new Effect(Libraries.Magic4, 4216, 56, 600, missile.Target));
-                                                SoundManager.PlaySound(20000 + (ushort)Spell * 56 + 2);
+                                                missile.Target.Effects.Add(new Effect(Libraries.Magic4, 4216, 10, 600, missile.Target));
+                                                SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 2);
                                             };
                                         }
                                         break;

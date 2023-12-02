@@ -1293,6 +1293,7 @@ namespace Server.MirEnvir
 
                 case Spell.ThunderStorm:
                 case Spell.FlameField:
+                case Spell.Bladestorm:
                 case Spell.NapalmShot:
                 case Spell.StormEscape:
                     value = (int)data[2];

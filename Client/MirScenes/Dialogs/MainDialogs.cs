@@ -576,8 +576,8 @@ namespace Client.MirScenes.Dialogs
 
             ChatTextBox = new MirTextBox
             {
-                BackColour = Color.DarkGray,
-                ForeColour = Color.Black,
+                BackColour = Color.Indigo,
+                ForeColour = Color.Navy,
                 Parent = this,
                 Size = new Size(Settings.Resolution != 800 ? 627 : 403, 13),
                 Location = new Point(1, 54),
@@ -3507,6 +3507,9 @@ namespace Client.MirScenes.Dialogs
                     break;
                 case Spell.FlameField:
                     SkillButton.Hint = string.Format("FlameField \n\nInstant Casting\nMana Cost {2}\n\nA powerful spell of fire is used to \ndamage surrounding enemies.\n\nCurrent Skill Level {0}\nNext Level {1}", Magic.Level, Magic.Level == 0 ? Magic.Level1 : Magic.Level == 1 ? Magic.Level2 : Magic.Level == 2 ? Magic.Level3 : 0, Magic.BaseCost);
+                    break;
+                case Spell.Bladestorm:
+                    SkillButton.Hint = string.Format("BladeStorm \n\nInstant Casting\nMana Cost {2}\n\nA powerful spell of Electric is used to \ndamage surrounding enemies.\n\nCurrent Skill Level {0}\nNext Level {1}", Magic.Level, Magic.Level == 0 ? Magic.Level1 : Magic.Level == 1 ? Magic.Level2 : Magic.Level == 2 ? Magic.Level3 : 0, Magic.BaseCost);
                     break;
                 case Spell.Vampirism:
                     SkillButton.Hint = string.Format("Vampirism \n\nInstant Casting\nMana Cost {2}\n\nUsing Mp take away monsters Hp to\nincrease your Hp.\n\nCurrent Skill Level {0}\nNext Level {1}", Magic.Level, Magic.Level == 0 ? Magic.Level1 : Magic.Level == 1 ? Magic.Level2 : Magic.Level == 2 ? Magic.Level3 : 0, Magic.BaseCost);

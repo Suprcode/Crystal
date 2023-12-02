@@ -3548,10 +3548,14 @@ namespace Server.MirObjects
                     ShoulderDash(magic);
                     return;
                 case Spell.ThunderStorm:
+
                 case Spell.FlameField:
+                case Spell.Bladestorm:
                 case Spell.StormEscape:
                     ThunderStorm(magic);
                     if (spell == Spell.FlameField)
+                        SpellTime = Envir.Time + 2500; //Spell Delay
+                    if (spell == Spell.Bladestorm)
                         SpellTime = Envir.Time + 2500; //Spell Delay
                     if (spell == Spell.StormEscape)
                         //Start teleport.
