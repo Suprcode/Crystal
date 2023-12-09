@@ -2,7 +2,7 @@
 
 Visit our forum at [LOMCN](https://www.lomcn.net/forum/forums/crystalm2-files-open-source.633/) for discussions, help, and updates.
 
-# Usefull Links:
+# Useful Links:
 
 [Build Guide](https://www.lomcn.net/forum/threads/crystal-files-download-guide-new.105428/) //
 [Wiki](https://www.lomcn.net/wiki/index.php/Crystal) //
