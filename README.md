@@ -8,4 +8,4 @@ Visit our forum at [LOMCN](https://www.lomcn.net/forum/forums/crystalm2-files-op
 [Wiki](https://www.lomcn.net/wiki/index.php/Crystal) //
 [Databases](https://github.com/Suprcode/mir2-database) //
 [Help](https://www.lomcn.net/forum/forums/crystalm2-help.663/) //
-[Tutorials](https://www.lomcn.net/forum/forums/crystalm2-tutorials.634/)
+[Tutorials](https://www.lomcn.net/forum/forums/carbon-tutorials.839/)
