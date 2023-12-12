@@ -7,7 +7,7 @@ using NAudio.Wave;
 
 namespace Client.MirSounds.Libraries
 {
-    internal class NAudioLibrary : ISoundLibrary, IDisposable
+    internal class LoopProvider : ISoundLibrary, IDisposable
     {
         public int Index { get; set; }
         public long ExpireTime { get; set; }
@@ -20,7 +20,7 @@ namespace Client.MirSounds.Libraries
         private bool _loop;
         private bool _isDisposing;
 
-        public static NAudioLibrary TryCreate(int index, string fileName, int volume, bool loop)
+        public static LoopProvider TryCreate(int index, string fileName, int volume, bool loop)
         {
             fileName = Path.Combine(Settings.SoundPath, fileName);
             string fileType = Path.GetExtension(fileName);
@@ -43,7 +43,7 @@ namespace Client.MirSounds.Libraries
             if (SoundManager.SupportedFileTypes.Contains(fileType) &&
                 File.Exists(fileName))
             {
-                return new NAudioLibrary(index, fileName, volume, loop);
+                return new LoopProvider(index, fileName, volume, loop);
             }
             else
             {
@@ -51,7 +51,7 @@ namespace Client.MirSounds.Libraries
             }
         }
 
-        public NAudioLibrary(int index, string fileName, int volume, bool loop)
+        public LoopProvider(int index, string fileName, int volume, bool loop)
         {
             Index = index;
             _loop = loop;
@@ -89,7 +89,15 @@ namespace Client.MirSounds.Libraries
             // loop or sound already cached
             if (outputDevice?.PlaybackState == PlaybackState.Stopped)
             {
-                audioFile.Seek(0, SeekOrigin.Begin);
+                try
+                {
+                    audioFile.Seek(0, SeekOrigin.Begin);
+                }
+                catch
+                {
+                    audioFile = new AudioFileReader(_fileName);
+                    outputDevice.Init(audioFile);
+                }
             }
 
             outputDevice.Volume = ScaleVolume(volume);

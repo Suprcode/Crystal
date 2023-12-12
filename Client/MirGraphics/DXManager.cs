@@ -580,12 +580,8 @@ namespace Client.MirGraphics
         {
             CleanUp();
 
-            Device.Direct3D?.Dispose();
-
-            if (Program.Form.WindowState != FormWindowState.Normal)
-            {
-                Device.Dispose();
-            }
+            Device?.Direct3D?.Dispose();
+            Device?.Dispose();
 
             NormalPixelShader?.Dispose();
             GrayScalePixelShader?.Dispose();

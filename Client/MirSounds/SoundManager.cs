@@ -1,23 +1,27 @@
 ﻿using Client.MirSounds.Libraries;
-using SlimDX.Direct3D9;
-using SlimDX.DirectSound;
-using System;
+using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
 
 namespace Client.MirSounds
 {
-    static class SoundManager
+    public static class SoundManager
     {
-        private static readonly List<ISoundLibrary> Sounds = new List<ISoundLibrary>();
-        private static readonly Dictionary<int, string> IndexList = new Dictionary<int, string>();
+        private static Dictionary<int, string> _indexList => SoundList.Indexes;
+        private static List<KeyValuePair<long, int>> _delayList = new List<KeyValuePair<long, int>>();
+        private static Dictionary<int, CachedSound> _cachedOneShots = new Dictionary<int, CachedSound>();
 
-        private static readonly List<KeyValuePair<long, int>> DelayList = new List<KeyValuePair<long, int>>();
-
-        public static readonly List<string> SupportedFileTypes;
-
-        public static ISoundLibrary Music;
-        private static long _checkSoundTime;
+        private static Dictionary<int, LoopProvider> _loopingSounds = new Dictionary<int, LoopProvider>();
+        private static LoopProvider _music;
+        private static WaveOutEvent _OneShots;
+        private static MixingSampleProvider mixer;
 
         private static int _vol;
+        private static int _musicVol;
+
+        public static readonly List<string> SupportedFileTypes;
+        private static long _checkSoundTime;
+        public static ISoundLibrary Music => _music;
+        
         public static int Vol
         {
             get { return _vol; }
@@ -25,11 +29,11 @@ namespace Client.MirSounds
             {
                 if (_vol == value) return;
                 _vol = value;
+
                 AdjustAllVolumes();
             }
         }
 
-        private static int _musicVol;
         public static int MusicVol
         {
             get { return _musicVol; }
@@ -37,324 +41,193 @@ namespace Client.MirSounds
             {
                 if (_musicVol == value) return;
                 _musicVol = value;
-                AdjustMusicVolume();
+
+                _music?.SetVolume(MusicVol);
             }
         }
 
         static SoundManager()
         {
+            _checkSoundTime = CMain.Time + 30 * 1000;
+
             SupportedFileTypes = new List<string>
             {
                 ".wav",
                 ".mp3"
             };
-        }
 
-        public static void ProcessDelayedSounds()
-        {
-            if (DelayList.Count == 0) return;
-
-            var sounds = DelayList.Where(x => x.Key <= CMain.Time).ToList();
-
-            foreach (var sound in sounds)
-            {
-                DelayList.Remove(sound);
-
-                PlaySound(sound.Value);
-            }
+            SoundList.LoadSoundList();
         }
 
         public static void Create()
         {
-            if (Program.Form == null || Program.Form.IsDisposed) return;
+            int sampleRate = 44100;
+            int channelCount = 2;
 
-            LoadSoundList();
-        }
-        public static void LoadSoundList()
-        {
-            string fileName = Path.Combine(Settings.SoundPath, "SoundList.lst");
-
-            if (!File.Exists(fileName)) return;
-
-            string[] lines = File.ReadAllLines(fileName);
-
-            for (int i = 0; i < lines.Length; i++)
-            {
-                string[] split = lines[i].Replace(" ", "").Split(':', '\t');
-
-                int index;
-                if (split.Length <= 1 || !int.TryParse(split[0], out index)) continue;
-
-                if (!IndexList.ContainsKey(index))
-                    IndexList.Add(index, split[split.Length - 1]);
-            }
-        }
-
-        public static void StopSound(int index)
-        {
-            for (int i = 0; i < Sounds.Count; i++)
-            {
-                if (Sounds[i].Index != index) continue;
-                
-                Sounds[i].Stop();
-                return;
-            }
+            _OneShots = new WaveOutEvent();
+            mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, channelCount));
+            mixer.ReadFully = true;
+            _OneShots.Init(mixer);
+            _OneShots.Volume = ScaleVolume(_vol);
+            _OneShots.Play();
         }
 
         public static void PlaySound(int index, bool loop = false, int delay = 0)
         {
-            if (delay > 0)
-            {
-                DelayList.Add(new KeyValuePair<long, int>(CMain.Time + delay, index));
-                return;
-            }
-      
             CheckSoundTimeOut();
 
-            for (int i = 0; i < Sounds.Count; i++)
+            if (delay > 0)
             {
-                if (Sounds[i].Index != index) continue;
-                Sounds[i].Play(Vol);
+                _delayList.Add(new KeyValuePair<long, int>(CMain.Time + delay, index));
                 return;
             }
 
-            if (IndexList.ContainsKey(index))
-                Sounds.Add(GetSound(index, IndexList[index], Vol, loop));
+            if (!_indexList.ContainsKey(index))
+            {
+                string filename = index > 20000 ?
+                                    string.Format("M{0:0}-{1:0}", (index - 20000) / 10, index % 10) :
+                                    string.Format("{0:000}-{1:0}", index / 10, index % 10);
+
+                _indexList.Add(index, filename);
+            }
+
+            if (!loop)
+            {
+                if (!_cachedOneShots.TryGetValue(index, out CachedSound cachedSound))
+                {
+                    cachedSound = new CachedSound(index, _indexList[index]);
+                    _cachedOneShots.Add(index, cachedSound);
+                }
+
+                if (cachedSound.AudioData?.Length > 0)
+                {
+                    AddMixerInput(new OneShotProvider(cachedSound));
+                    cachedSound.ExpireTime = CMain.Time + Settings.SoundCleanMinutes * 60 * 1000;
+                }
+            }
             else
             {
-                string filename;
-                if (index > 20000)
+                var sound = LoopProvider.TryCreate(index, _indexList[index], MusicVol, loop);
+                if (sound != null)
                 {
-                    index -= 20000;
-                    filename = string.Format("M{0:0}-{1:0}", index/10, index%10);
+                    _loopingSounds.Add(index, sound);
+                    _loopingSounds[index].Play(Vol);
+                }
+            }
+            
+        }
 
-                    Sounds.Add(GetSound(index + 20000, filename, Vol, loop));
-                }
-                else if (index < 10000)
-                {
-                    filename = string.Format("{0:000}-{1:0}", index/10, index%10);
-                    
-                    Sounds.Add(GetSound(index, filename, Vol, loop));
-                }
+        public static void StopSound(int index)
+        {
+            if (_loopingSounds.ContainsKey(index))
+            {
+                _loopingSounds[index].Stop();
             }
         }
 
         public static void PlayMusic(int index, bool loop = false)
         {
-            if (IndexList.TryGetValue(index, out string value))
+            StopMusic();
+
+            if (_indexList.TryGetValue(index, out string value))
             {
-                Music = GetSound(index, value, MusicVol, loop);
+                _music = LoopProvider.TryCreate(index, value, MusicVol, loop);
             }
         }
 
         public static void StopMusic()
         {
-            Music?.Stop();
-            Music?.Dispose();
+            _music?.Stop();
+            _music?.Dispose();
         }
 
-        static void AdjustMusicVolume()
+        public static void ProcessDelayedSounds()
         {
-            Music?.SetVolume(MusicVol);
-        }
+            if (_delayList.Count == 0) return;
 
-        static void AdjustAllVolumes()
-        {
-            for (int i = 0; i < Sounds.Count; i++)
+            var sounds = _delayList.Where(x => x.Key <= CMain.Time).ToList();
+
+            foreach (var sound in sounds)
             {
-                Sounds[i].SetVolume(Vol);
-            }        
+                _delayList.Remove(sound);
+
+                PlaySound(sound.Value);
+            }
         }
 
-        static void CheckSoundTimeOut()
+        private static void AdjustAllVolumes()
+        {
+            if (_OneShots != null)
+            {
+                _OneShots.Volume = ScaleVolume(Vol);
+            }
+
+            foreach (int key in _loopingSounds.Keys)
+            {
+                _loopingSounds[key].SetVolume(Vol);
+            }
+        }
+
+        private static float ScaleVolume(int volume)
+        {
+            float scaled = 0.0f + (float)(volume - 0) / (100 - 0) * (1.0f - 0.0f);
+            return scaled;
+        }
+
+        private static void AddMixerInput(ISampleProvider input)
+        {
+            mixer.AddMixerInput(ConvertToRightChannelCount(input));
+        }
+
+        private static ISampleProvider ConvertToRightChannelCount(ISampleProvider input)
+        {
+            if (input.WaveFormat.Channels == mixer.WaveFormat.Channels)
+            {
+                return input;
+            }
+            if (input.WaveFormat.Channels == 1 && mixer.WaveFormat.Channels == 2)
+            {
+                return new MonoToStereoSampleProvider(input);
+            }
+            throw new NotImplementedException("Not yet implemented this channel count conversion");
+        }
+
+        private static void CheckSoundTimeOut()
         {
             if (CMain.Time >= _checkSoundTime)
             {
                 _checkSoundTime = CMain.Time + 30 * 1000;
 
-                for (int i = Sounds.Count - 1; i >= 0; i--)
+                List<int> keysToRemove = new List<int>();
+                foreach (var key in _cachedOneShots.Keys)
                 {
-                    var sound = Sounds[i];
-
-                    if (!sound.IsPlaying())
+                    if (CMain.Time > _cachedOneShots[key].ExpireTime)
                     {
-                        if (CMain.Time >= sound.ExpireTime)
-                        {
-                            sound.Dispose();
-                            Sounds.RemoveAt(i);
-                            continue;
-                        }
+                        keysToRemove.Add(key);
                     }
                 }
+
+                keysToRemove.ForEach(key => { _cachedOneShots.Remove(key); });
+                
+                keysToRemove.Clear();
+                foreach(var key in _loopingSounds.Keys)
+                {
+                    if (CMain.Time > _loopingSounds[key].ExpireTime)
+                    {
+                        keysToRemove.Add(key);
+                    }
+                }
+
+                keysToRemove.ForEach(key => { _loopingSounds.Remove(key); });
             }
-        }
-
-        static ISoundLibrary GetSound(int index, string fileName, int volume, bool loop)
-        {
-            var sound = NAudioLibrary.TryCreate(index, fileName, volume, loop);
-
-            return sound == null ? new NullLibrary(index, fileName, loop) : sound;
         }
 
         public static void Dispose()
         {
-            DelayList.Clear();
+            _OneShots?.Dispose();
+            _music?.Dispose();
 
-            for (int i = Sounds.Count - 1; i >= 0; i--)
-            {
-                Sounds[i]?.Dispose();
-            }
-
-            Music?.Dispose();
+            foreach (var sound in _loopingSounds.Values) { sound.Stop(); }
         }
-    }
-
-    public static class SoundList
-    {
-        public static int
-            None = 0,
-            Music = 0,
-
-            IntroMusic = 10146,
-            SelectMusic = 10147,
-            LoginEffect = 10100,
-
-            ButtonA = 10103,
-            ButtonB = 10104,
-            ButtonC = 10105,
-            Gold = 10106,
-            EatDrug = 10107,
-            ClickDrug = 10108,
-
-            Teleport = 10110,
-            LevelUp = 10156,
-
-            ClickWeapon = 10111,
-            ClickArmour = 10112,
-            ClickRing = 10113,
-            ClickBracelet = 10114,
-            ClickNecklace = 10115,
-            ClickHelmet = 10116,
-            ClickBoots = 10117,
-            ClickItem = 10118,
-
-            //Movement
-            WalkGroundL = 10001,
-            WalkGroundR = 10002,
-            RunGroundL = 10003,
-            RunGroundR = 10004,
-            WalkStoneL = 10005,
-            WalkStoneR = 10006,
-            RunStoneL = 10007,
-            RunStoneR = 10008,
-            WalkLawnL = 10009,
-            WalkLawnR = 10010,
-            RunLawnL = 10011,
-            RunLawnR = 10012,
-            WalkRoughL = 10013,
-            WalkRoughR = 10014,
-            RunRoughL = 10015,
-            RunRoughR = 10016,
-            WalkWoodL = 10017,
-            WalkWoodR = 10018,
-            RunWoodL = 10019,
-            RunWoodR = 10020,
-            WalkCaveL = 10021,
-            WalkCaveR = 10022,
-            RunCaveL = 10023,
-            RunCaveR = 10024,
-            WalkRoomL = 10025,
-            WalkRoomR = 10026,
-            RunRoomL = 10027,
-            RunRoomR = 10028,
-            WalkWaterL = 10029,
-            WalkWaterR = 10030,
-            RunWaterL = 10031,
-            RunWaterR = 10032,
-            HorseWalkL = 10033,
-            HorseWalkR = 10034,
-            HorseRun = 10035,
-            WalkSnowL = 10036,
-            WalkSnowR = 10037,
-            RunSnowL = 10038,
-            RunSnowR = 10039,
-
-            //Weapon Swing
-            SwingShort = 10050,
-            SwingWood = 10051,
-            SwingSword = 10052,
-            SwingSword2 = 10053,
-            SwingAxe = 10054,
-            SwingClub = 10055,
-            SwingLong = 10056,
-            SwingFist = 10056,
-
-            //Struck
-            StruckShort = 10060,
-            StruckWooden = 10061,
-            StruckSword = 10062,
-            StruckSword2 = 10063,
-            StruckAxe = 10064,
-            StruckClub = 10065,
-
-            StruckBodySword = 10070,
-            StruckBodyAxe = 10071,
-            StruckBodyLongStick = 10072,
-            StruckBodyFist = 10073,
-
-            StruckArmourSword = 10080,
-            StruckArmourAxe = 10081,
-            StruckArmourLongStick = 10082,
-            StruckArmourFist = 10083,
-
-            StruckEvilMir = 10090,
-
-            MaleFlinch = 10138,
-            FemaleFlinch = 10139,
-            MaleDie = 10144,
-            FemaleDie = 10145,
-
-            Revive = 20791,
-            ZombieRevive = 0705,
-            
-            //Mounts
-            MountWalkL = 10176,
-            MountWalkR = 10177,
-            MountRun = 10178,
-            TigerStruck1 = 10179,
-            TigerStruck2 = 10180,
-            TigerAttack1 = 10181,
-            TigerAttack2 = 10182,
-            TigerAttack3 = 10183,
-
-            FishingThrow = 10184,
-            FishingPull = 10185,
-            Fishing = 10186,
-
-            WolfRide1 = 10188,
-            WolfRide2 = 10189,
-            WolfAttack1 = 10190,
-            WolfAttack2 = 10191,
-            WolfAttack3 = 10192,
-            WolfStruck1 = 10193,
-            WolfStruck2 = 10194,
-            TigerRide1 = 10218,
-            TigerRide2 = 10219,
-
-            PetPig = 10500,
-            PetChick = 10501,
-            PetKitty = 10502,
-            PetSkeleton = 10503,
-            PetPigman = 10504,
-            PetWemade = 10505,
-            PetBlackKitten = 10506,
-            PetDragon = 10507,
-            PetOlympic = 10508,
-            PetFrog = 10510,
-            PetMonkey = 10511,
-            PetAngryBird = 10512,
-            PetFoxey = 10513,
-            PetMedicalRat = 10514,
-            PetPickup = 10520;
     }
 }
