@@ -27,7 +27,8 @@ namespace Server
             RoutePath = Path.Combine(EnvirPath, "Routes"),
             NameListPath = Path.Combine(EnvirPath, "NameLists"),
             ValuePath = Path.Combine(EnvirPath, "Values"),
-            NoticePath = Path.Combine(EnvirPath, "Notice.txt");
+            NoticePath = Path.Combine(EnvirPath, "Notice.txt"),
+            MinimapsPath = Path.Combine(EnvirPath, "Minimaps");
 
         private static readonly InIReader Reader = new InIReader(Path.Combine(ConfigPath, "Setup.ini"));
 
