@@ -9749,34 +9749,43 @@ namespace Client.MirScenes
 
         public MirControl GMMadeLabel(UserItem item)
         {
-            ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
-
-            MirLabel GMLabel = new MirLabel
+            if (item.GMMade)
             {
-                AutoSize = true,
-                ForeColour = Color.Orchid,
-                Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
-                OutLine = true,
-                Parent = ItemLabel,
-                Text = "Created by Game Master"
-            };
 
-            ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, GMLabel.DisplayRectangle.Right + 4),
-                Math.Max(ItemLabel.Size.Height, GMLabel.DisplayRectangle.Bottom));
 
-            MirControl outLine = new MirControl
+                ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
+
+                MirLabel GMLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.Orchid,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = "Created by Game Master"
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, GMLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, GMLabel.DisplayRectangle.Bottom));
+
+                MirControl outLine = new MirControl
+                {
+                    BackColour = Color.FromArgb(255, 50, 50, 50),
+                    Border = true,
+                    BorderColour = Color.Gray,
+                    NotControl = true,
+                    Parent = ItemLabel,
+                    Opacity = 0.4F,
+                    Location = new Point(0, 0)
+                };
+                outLine.Size = ItemLabel.Size;
+
+                return outLine;
+            }
+            else
             {
-                BackColour = Color.FromArgb(255, 50, 50, 50),
-                Border = true,
-                BorderColour = Color.Gray,
-                NotControl = true,
-                Parent = ItemLabel,
-                Opacity = 0.4F,
-                Location = new Point(0, 0)
-            };
-            outLine.Size = ItemLabel.Size;
-
-            return outLine;
+                return null;
+            }
         }
 
         public void CreateItemLabel(UserItem item, bool inspect = false, bool hideDura = false, bool hideAdded = false)
