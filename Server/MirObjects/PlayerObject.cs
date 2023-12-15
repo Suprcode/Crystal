@@ -2206,14 +2206,16 @@ namespace Server.MirObjects
                                 if (iInfo.StackSize >= itemCount)
                                 {
                                     item = Envir.CreateDropItem(iInfo);
+                                    item.GMMade = true;
                                     item.Count = itemCount;
-
+                                    
                                     if (CanGainItem(item)) GainItem(item);
 
                                     return;
                                 }
                                 item = Envir.CreateDropItem(iInfo);
-                                item.Count = iInfo.StackSize;
+                                item.GMMade = true;
+                                item.Count = iInfo.StackSize;                               
                                 itemCount -= iInfo.StackSize;
 
                                 if (!CanGainItem(item)) return;
