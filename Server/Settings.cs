@@ -509,6 +509,8 @@ namespace Server
                 Directory.CreateDirectory(NameListPath);
             if (!Directory.Exists(RecipePath))
                 Directory.CreateDirectory(RecipePath);
+            if (!Directory.Exists(MinimapsPath))
+                Directory.CreateDirectory(MinimapsPath);
 
             string fileName = Path.Combine(Settings.NPCPath, DefaultNPCFilename + ".txt");
 
