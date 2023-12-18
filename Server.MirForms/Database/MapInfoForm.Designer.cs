@@ -33,1545 +33,1673 @@ namespace Server
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.MapTabs = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.label11 = new System.Windows.Forms.Label();
-            this.MusicTextBox = new System.Windows.Forms.TextBox();
-            this.label33 = new System.Windows.Forms.Label();
-            this.MineComboBox = new System.Windows.Forms.ComboBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.BigMapTextBox = new System.Windows.Forms.TextBox();
-            this.LightsComboBox = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.MapIndexTextBox = new System.Windows.Forms.TextBox();
-            this.MiniMapTextBox = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.MapNameTextBox = new System.Windows.Forms.TextBox();
-            this.FileNameTextBox = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.NoReincarnation = new System.Windows.Forms.CheckBox();
-            this.NoTownTeleportCheckbox = new System.Windows.Forms.CheckBox();
-            this.NoFightCheckbox = new System.Windows.Forms.CheckBox();
-            this.NeedBridleCheckbox = new System.Windows.Forms.CheckBox();
-            this.NoMountCheckbox = new System.Windows.Forms.CheckBox();
-            this.label19 = new System.Windows.Forms.Label();
-            this.MapDarkLighttextBox = new System.Windows.Forms.TextBox();
-            this.NoNamesCheckbox = new System.Windows.Forms.CheckBox();
-            this.NoDropMonsterCheckbox = new System.Windows.Forms.CheckBox();
-            this.NoDropPlayerCheckbox = new System.Windows.Forms.CheckBox();
-            this.NoThrowItemCheckbox = new System.Windows.Forms.CheckBox();
-            this.NoPositionCheckbox = new System.Windows.Forms.CheckBox();
-            this.NoDrugCheckbox = new System.Windows.Forms.CheckBox();
-            this.NoRecallCheckbox = new System.Windows.Forms.CheckBox();
-            this.NoEscapeCheckbox = new System.Windows.Forms.CheckBox();
-            this.NoRandomCheckbox = new System.Windows.Forms.CheckBox();
-            this.LightningTextbox = new System.Windows.Forms.TextBox();
-            this.FireTextbox = new System.Windows.Forms.TextBox();
-            this.NoReconnectTextbox = new System.Windows.Forms.TextBox();
-            this.LightningCheckbox = new System.Windows.Forms.CheckBox();
-            this.FireCheckbox = new System.Windows.Forms.CheckBox();
-            this.FightCheckbox = new System.Windows.Forms.CheckBox();
-            this.NoReconnectCheckbox = new System.Windows.Forms.CheckBox();
-            this.NoTeleportCheckbox = new System.Windows.Forms.CheckBox();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.RemoveSZButton = new System.Windows.Forms.Button();
-            this.AddSZButton = new System.Windows.Forms.Button();
-            this.SafeZoneInfoPanel = new System.Windows.Forms.Panel();
-            this.label12 = new System.Windows.Forms.Label();
-            this.SZYTextBox = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.SizeTextBox = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.SZXTextBox = new System.Windows.Forms.TextBox();
-            this.StartPointCheckBox = new System.Windows.Forms.CheckBox();
-            this.SafeZoneInfoListBox = new System.Windows.Forms.ListBox();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.RPasteButton = new System.Windows.Forms.Button();
-            this.RCopyButton = new System.Windows.Forms.Button();
-            this.RemoveRButton = new System.Windows.Forms.Button();
-            this.AddRButton = new System.Windows.Forms.Button();
-            this.RespawnInfoListBox = new System.Windows.Forms.ListBox();
-            this.RespawnInfoPanel = new System.Windows.Forms.Panel();
-            this.chkrespawnsave = new System.Windows.Forms.CheckBox();
-            this.chkRespawnEnableTick = new System.Windows.Forms.CheckBox();
-            this.Randomtextbox = new System.Windows.Forms.TextBox();
-            this.label23 = new System.Windows.Forms.Label();
-            this.label34 = new System.Windows.Forms.Label();
-            this.RoutePathTextBox = new System.Windows.Forms.TextBox();
-            this.label24 = new System.Windows.Forms.Label();
-            this.DirectionTextBox = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.DelayTextBox = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.MonsterInfoComboBox = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.SpreadTextBox = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.RYTextBox = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.CountTextBox = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.RXTextBox = new System.Windows.Forms.TextBox();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.RemoveMButton = new System.Windows.Forms.Button();
-            this.AddMButton = new System.Windows.Forms.Button();
-            this.MovementInfoPanel = new System.Windows.Forms.Panel();
-            this.label25 = new System.Windows.Forms.Label();
-            this.ConquestComboBox = new System.Windows.Forms.ComboBox();
-            this.NeedMoveMCheckBox = new System.Windows.Forms.CheckBox();
-            this.NeedHoleMCheckBox = new System.Windows.Forms.CheckBox();
-            this.label22 = new System.Windows.Forms.Label();
-            this.DestMapComboBox = new System.Windows.Forms.ComboBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.DestYTextBox = new System.Windows.Forms.TextBox();
-            this.label21 = new System.Windows.Forms.Label();
-            this.DestXTextBox = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.SourceYTextBox = new System.Windows.Forms.TextBox();
-            this.label20 = new System.Windows.Forms.Label();
-            this.SourceXTextBox = new System.Windows.Forms.TextBox();
-            this.MovementInfoListBox = new System.Windows.Forms.ListBox();
-            this.tabPage7 = new System.Windows.Forms.TabPage();
-            this.MZDeletebutton = new System.Windows.Forms.Button();
-            this.MZAddbutton = new System.Windows.Forms.Button();
-            this.MineZonepanel = new System.Windows.Forms.Panel();
-            this.label27 = new System.Windows.Forms.Label();
-            this.MineZoneComboBox = new System.Windows.Forms.ComboBox();
-            this.label30 = new System.Windows.Forms.Label();
-            this.MZYtextBox = new System.Windows.Forms.TextBox();
-            this.label31 = new System.Windows.Forms.Label();
-            this.MZSizetextBox = new System.Windows.Forms.TextBox();
-            this.label32 = new System.Windows.Forms.Label();
-            this.MZXtextBox = new System.Windows.Forms.TextBox();
-            this.MZListlistBox = new System.Windows.Forms.ListBox();
-            this.RemoveButton = new System.Windows.Forms.Button();
-            this.AddButton = new System.Windows.Forms.Button();
-            this.MapInfoListBox = new System.Windows.Forms.ListBox();
-            this.PasteMapButton = new System.Windows.Forms.Button();
-            this.CopyMapButton = new System.Windows.Forms.Button();
-            this.ImportMapInfoButton = new System.Windows.Forms.Button();
-            this.ExportMapInfoButton = new System.Windows.Forms.Button();
-            this.ImportMongenButton = new System.Windows.Forms.Button();
-            this.ExportMongenButton = new System.Windows.Forms.Button();
-            this.VisualizerButton = new System.Windows.Forms.Button();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.ShowBigMapCheckBox = new System.Windows.Forms.CheckBox();
-            this.label26 = new System.Windows.Forms.Label();
-            this.BigMapIconTextBox = new System.Windows.Forms.TextBox();
-            this.MapTabs.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage6.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            this.SafeZoneInfoPanel.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.RespawnInfoPanel.SuspendLayout();
-            this.tabPage4.SuspendLayout();
-            this.MovementInfoPanel.SuspendLayout();
-            this.tabPage7.SuspendLayout();
-            this.MineZonepanel.SuspendLayout();
-            this.SuspendLayout();
+            components = new Container();
+            MapTabs = new TabControl();
+            tabPage1 = new TabPage();
+            pictureBox1 = new PictureBox();
+            label11 = new Label();
+            MusicTextBox = new TextBox();
+            label33 = new Label();
+            MineComboBox = new ComboBox();
+            label15 = new Label();
+            BigMapTextBox = new TextBox();
+            LightsComboBox = new ComboBox();
+            label5 = new Label();
+            label1 = new Label();
+            label4 = new Label();
+            MapIndexTextBox = new TextBox();
+            MiniMapTextBox = new TextBox();
+            label2 = new Label();
+            MapNameTextBox = new TextBox();
+            FileNameTextBox = new TextBox();
+            label3 = new Label();
+            tabPage6 = new TabPage();
+            NoReincarnation = new CheckBox();
+            NoTownTeleportCheckbox = new CheckBox();
+            NoFightCheckbox = new CheckBox();
+            NeedBridleCheckbox = new CheckBox();
+            NoMountCheckbox = new CheckBox();
+            label19 = new Label();
+            MapDarkLighttextBox = new TextBox();
+            NoNamesCheckbox = new CheckBox();
+            NoDropMonsterCheckbox = new CheckBox();
+            NoDropPlayerCheckbox = new CheckBox();
+            NoThrowItemCheckbox = new CheckBox();
+            NoPositionCheckbox = new CheckBox();
+            NoDrugCheckbox = new CheckBox();
+            NoRecallCheckbox = new CheckBox();
+            NoEscapeCheckbox = new CheckBox();
+            NoRandomCheckbox = new CheckBox();
+            LightningTextbox = new TextBox();
+            FireTextbox = new TextBox();
+            NoReconnectTextbox = new TextBox();
+            LightningCheckbox = new CheckBox();
+            FireCheckbox = new CheckBox();
+            FightCheckbox = new CheckBox();
+            NoReconnectCheckbox = new CheckBox();
+            NoTeleportCheckbox = new CheckBox();
+            tabPage3 = new TabPage();
+            RemoveSZButton = new Button();
+            AddSZButton = new Button();
+            SafeZoneInfoPanel = new Panel();
+            label12 = new Label();
+            SZYTextBox = new TextBox();
+            label14 = new Label();
+            SizeTextBox = new TextBox();
+            label17 = new Label();
+            SZXTextBox = new TextBox();
+            StartPointCheckBox = new CheckBox();
+            SafeZoneInfoListBox = new ListBox();
+            tabPage2 = new TabPage();
+            RPasteButton = new Button();
+            RCopyButton = new Button();
+            RemoveRButton = new Button();
+            AddRButton = new Button();
+            RespawnInfoListBox = new ListBox();
+            RespawnInfoPanel = new Panel();
+            chkrespawnsave = new CheckBox();
+            chkRespawnEnableTick = new CheckBox();
+            Randomtextbox = new TextBox();
+            label23 = new Label();
+            label34 = new Label();
+            RoutePathTextBox = new TextBox();
+            label24 = new Label();
+            DirectionTextBox = new TextBox();
+            label8 = new Label();
+            DelayTextBox = new TextBox();
+            label7 = new Label();
+            MonsterInfoComboBox = new ComboBox();
+            label6 = new Label();
+            SpreadTextBox = new TextBox();
+            label9 = new Label();
+            RYTextBox = new TextBox();
+            label10 = new Label();
+            CountTextBox = new TextBox();
+            label13 = new Label();
+            RXTextBox = new TextBox();
+            tabPage4 = new TabPage();
+            RemoveMButton = new Button();
+            AddMButton = new Button();
+            MovementInfoPanel = new Panel();
+            label26 = new Label();
+            BigMapIconTextBox = new TextBox();
+            ShowBigMapCheckBox = new CheckBox();
+            label25 = new Label();
+            ConquestComboBox = new ComboBox();
+            NeedMoveMCheckBox = new CheckBox();
+            NeedHoleMCheckBox = new CheckBox();
+            label22 = new Label();
+            DestMapComboBox = new ComboBox();
+            label18 = new Label();
+            DestYTextBox = new TextBox();
+            label21 = new Label();
+            DestXTextBox = new TextBox();
+            label16 = new Label();
+            SourceYTextBox = new TextBox();
+            label20 = new Label();
+            SourceXTextBox = new TextBox();
+            MovementInfoListBox = new ListBox();
+            tabPage7 = new TabPage();
+            MZDeletebutton = new Button();
+            MZAddbutton = new Button();
+            MineZonepanel = new Panel();
+            label27 = new Label();
+            MineZoneComboBox = new ComboBox();
+            label30 = new Label();
+            MZYtextBox = new TextBox();
+            label31 = new Label();
+            MZSizetextBox = new TextBox();
+            label32 = new Label();
+            MZXtextBox = new TextBox();
+            MZListlistBox = new ListBox();
+            RemoveButton = new Button();
+            AddButton = new Button();
+            MapInfoListBox = new ListBox();
+            PasteMapButton = new Button();
+            CopyMapButton = new Button();
+            ImportMapInfoButton = new Button();
+            ExportMapInfoButton = new Button();
+            ImportMongenButton = new Button();
+            ExportMongenButton = new Button();
+            VisualizerButton = new Button();
+            toolTip1 = new ToolTip(components);
+            MapTabs.SuspendLayout();
+            tabPage1.SuspendLayout();
+            ((ISupportInitialize)pictureBox1).BeginInit();
+            tabPage6.SuspendLayout();
+            tabPage3.SuspendLayout();
+            SafeZoneInfoPanel.SuspendLayout();
+            tabPage2.SuspendLayout();
+            RespawnInfoPanel.SuspendLayout();
+            tabPage4.SuspendLayout();
+            MovementInfoPanel.SuspendLayout();
+            tabPage7.SuspendLayout();
+            MineZonepanel.SuspendLayout();
+            SuspendLayout();
             // 
             // MapTabs
             // 
-            this.MapTabs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.MapTabs.Controls.Add(this.tabPage1);
-            this.MapTabs.Controls.Add(this.tabPage6);
-            this.MapTabs.Controls.Add(this.tabPage3);
-            this.MapTabs.Controls.Add(this.tabPage2);
-            this.MapTabs.Controls.Add(this.tabPage4);
-            this.MapTabs.Controls.Add(this.tabPage7);
-            this.MapTabs.Location = new System.Drawing.Point(207, 62);
-            this.MapTabs.Name = "MapTabs";
-            this.MapTabs.SelectedIndex = 0;
-            this.MapTabs.Size = new System.Drawing.Size(540, 273);
-            this.MapTabs.TabIndex = 8;
+            MapTabs.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            MapTabs.Controls.Add(tabPage1);
+            MapTabs.Controls.Add(tabPage6);
+            MapTabs.Controls.Add(tabPage3);
+            MapTabs.Controls.Add(tabPage2);
+            MapTabs.Controls.Add(tabPage4);
+            MapTabs.Controls.Add(tabPage7);
+            MapTabs.Location = new Point(241, 72);
+            MapTabs.Margin = new Padding(4, 3, 4, 3);
+            MapTabs.Name = "MapTabs";
+            MapTabs.SelectedIndex = 0;
+            MapTabs.Size = new Size(630, 315);
+            MapTabs.TabIndex = 8;
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.label11);
-            this.tabPage1.Controls.Add(this.MusicTextBox);
-            this.tabPage1.Controls.Add(this.label33);
-            this.tabPage1.Controls.Add(this.MineComboBox);
-            this.tabPage1.Controls.Add(this.label15);
-            this.tabPage1.Controls.Add(this.BigMapTextBox);
-            this.tabPage1.Controls.Add(this.LightsComboBox);
-            this.tabPage1.Controls.Add(this.label5);
-            this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.label4);
-            this.tabPage1.Controls.Add(this.MapIndexTextBox);
-            this.tabPage1.Controls.Add(this.MiniMapTextBox);
-            this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.MapNameTextBox);
-            this.tabPage1.Controls.Add(this.FileNameTextBox);
-            this.tabPage1.Controls.Add(this.label3);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(532, 247);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Info";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            tabPage1.Controls.Add(pictureBox1);
+            tabPage1.Controls.Add(label11);
+            tabPage1.Controls.Add(MusicTextBox);
+            tabPage1.Controls.Add(label33);
+            tabPage1.Controls.Add(MineComboBox);
+            tabPage1.Controls.Add(label15);
+            tabPage1.Controls.Add(BigMapTextBox);
+            tabPage1.Controls.Add(LightsComboBox);
+            tabPage1.Controls.Add(label5);
+            tabPage1.Controls.Add(label1);
+            tabPage1.Controls.Add(label4);
+            tabPage1.Controls.Add(MapIndexTextBox);
+            tabPage1.Controls.Add(MiniMapTextBox);
+            tabPage1.Controls.Add(label2);
+            tabPage1.Controls.Add(MapNameTextBox);
+            tabPage1.Controls.Add(FileNameTextBox);
+            tabPage1.Controls.Add(label3);
+            tabPage1.Location = new Point(4, 24);
+            tabPage1.Margin = new Padding(4, 3, 4, 3);
+            tabPage1.Name = "tabPage1";
+            tabPage1.Padding = new Padding(4, 3, 4, 3);
+            tabPage1.Size = new Size(622, 287);
+            tabPage1.TabIndex = 0;
+            tabPage1.Text = "Info";
+            tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Location = new Point(265, 0);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(357, 287);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 19;
+            pictureBox1.TabStop = false;
             // 
             // label11
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(38, 181);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(38, 13);
-            this.label11.TabIndex = 18;
-            this.label11.Text = "Music:";
+            label11.AutoSize = true;
+            label11.Location = new Point(44, 209);
+            label11.Margin = new Padding(4, 0, 4, 0);
+            label11.Name = "label11";
+            label11.Size = new Size(42, 15);
+            label11.TabIndex = 18;
+            label11.Text = "Music:";
             // 
             // MusicTextBox
             // 
-            this.MusicTextBox.Location = new System.Drawing.Point(82, 178);
-            this.MusicTextBox.Name = "MusicTextBox";
-            this.MusicTextBox.Size = new System.Drawing.Size(92, 20);
-            this.MusicTextBox.TabIndex = 17;
-            this.MusicTextBox.TextChanged += new System.EventHandler(this.MusicTextBox_TextChanged);
+            MusicTextBox.Location = new Point(96, 205);
+            MusicTextBox.Margin = new Padding(4, 3, 4, 3);
+            MusicTextBox.Name = "MusicTextBox";
+            MusicTextBox.Size = new Size(107, 23);
+            MusicTextBox.TabIndex = 17;
+            MusicTextBox.TextChanged += MusicTextBox_TextChanged;
             // 
             // label33
             // 
-            this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(16, 153);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(60, 13);
-            this.label33.TabIndex = 16;
-            this.label33.Text = "Mine Type:";
+            label33.AutoSize = true;
+            label33.Location = new Point(19, 177);
+            label33.Margin = new Padding(4, 0, 4, 0);
+            label33.Name = "label33";
+            label33.Size = new Size(64, 15);
+            label33.TabIndex = 16;
+            label33.Text = "Mine Type:";
             // 
             // MineComboBox
             // 
-            this.MineComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.MineComboBox.FormattingEnabled = true;
-            this.MineComboBox.Location = new System.Drawing.Point(82, 150);
-            this.MineComboBox.Name = "MineComboBox";
-            this.MineComboBox.Size = new System.Drawing.Size(92, 21);
-            this.MineComboBox.TabIndex = 15;
-            this.MineComboBox.SelectedIndexChanged += new System.EventHandler(this.MineComboBox_SelectedIndexChanged);
+            MineComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            MineComboBox.FormattingEnabled = true;
+            MineComboBox.Location = new Point(96, 173);
+            MineComboBox.Margin = new Padding(4, 3, 4, 3);
+            MineComboBox.Name = "MineComboBox";
+            MineComboBox.Size = new Size(107, 23);
+            MineComboBox.TabIndex = 15;
+            MineComboBox.SelectedIndexChanged += MineComboBox_SelectedIndexChanged;
             // 
             // label15
             // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(129, 99);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(49, 13);
-            this.label15.TabIndex = 14;
-            this.label15.Text = "Big Map:";
+            label15.AutoSize = true;
+            label15.Location = new Point(150, 114);
+            label15.Margin = new Padding(4, 0, 4, 0);
+            label15.Name = "label15";
+            label15.Size = new Size(54, 15);
+            label15.TabIndex = 14;
+            label15.Text = "Big Map:";
             // 
             // BigMapTextBox
             // 
-            this.BigMapTextBox.Location = new System.Drawing.Point(184, 96);
-            this.BigMapTextBox.MaxLength = 5;
-            this.BigMapTextBox.Name = "BigMapTextBox";
-            this.BigMapTextBox.Size = new System.Drawing.Size(37, 20);
-            this.BigMapTextBox.TabIndex = 13;
-            this.BigMapTextBox.TextChanged += new System.EventHandler(this.BigMapTextBox_TextChanged);
+            BigMapTextBox.Location = new Point(215, 111);
+            BigMapTextBox.Margin = new Padding(4, 3, 4, 3);
+            BigMapTextBox.MaxLength = 5;
+            BigMapTextBox.Name = "BigMapTextBox";
+            BigMapTextBox.Size = new Size(42, 23);
+            BigMapTextBox.TabIndex = 13;
+            BigMapTextBox.TextChanged += BigMapTextBox_TextChanged;
             // 
             // LightsComboBox
             // 
-            this.LightsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.LightsComboBox.FormattingEnabled = true;
-            this.LightsComboBox.Location = new System.Drawing.Point(82, 122);
-            this.LightsComboBox.Name = "LightsComboBox";
-            this.LightsComboBox.Size = new System.Drawing.Size(92, 21);
-            this.LightsComboBox.TabIndex = 11;
-            this.LightsComboBox.SelectedIndexChanged += new System.EventHandler(this.LightsComboBox_SelectedIndexChanged);
+            LightsComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            LightsComboBox.FormattingEnabled = true;
+            LightsComboBox.Location = new Point(96, 141);
+            LightsComboBox.Margin = new Padding(4, 3, 4, 3);
+            LightsComboBox.Name = "LightsComboBox";
+            LightsComboBox.Size = new Size(107, 23);
+            LightsComboBox.TabIndex = 11;
+            LightsComboBox.SelectedIndexChanged += LightsComboBox_SelectedIndexChanged;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(38, 125);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(38, 13);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "Lights:";
+            label5.AutoSize = true;
+            label5.Location = new Point(44, 144);
+            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(42, 15);
+            label5.TabIndex = 12;
+            label5.Text = "Lights:";
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 18);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Map Index:";
+            label1.AutoSize = true;
+            label1.Location = new Point(19, 21);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(66, 15);
+            label1.TabIndex = 4;
+            label1.Text = "Map Index:";
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(23, 99);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(53, 13);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "Mini Map:";
+            label4.AutoSize = true;
+            label4.Location = new Point(27, 114);
+            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(61, 15);
+            label4.TabIndex = 10;
+            label4.Text = "Mini Map:";
             // 
             // MapIndexTextBox
             // 
-            this.MapIndexTextBox.Location = new System.Drawing.Point(82, 15);
-            this.MapIndexTextBox.Name = "MapIndexTextBox";
-            this.MapIndexTextBox.ReadOnly = true;
-            this.MapIndexTextBox.Size = new System.Drawing.Size(47, 20);
-            this.MapIndexTextBox.TabIndex = 0;
+            MapIndexTextBox.Location = new Point(96, 17);
+            MapIndexTextBox.Margin = new Padding(4, 3, 4, 3);
+            MapIndexTextBox.Name = "MapIndexTextBox";
+            MapIndexTextBox.ReadOnly = true;
+            MapIndexTextBox.Size = new Size(54, 23);
+            MapIndexTextBox.TabIndex = 0;
             // 
             // MiniMapTextBox
             // 
-            this.MiniMapTextBox.Location = new System.Drawing.Point(82, 96);
-            this.MiniMapTextBox.MaxLength = 5;
-            this.MiniMapTextBox.Name = "MiniMapTextBox";
-            this.MiniMapTextBox.Size = new System.Drawing.Size(37, 20);
-            this.MiniMapTextBox.TabIndex = 9;
-            this.MiniMapTextBox.TextChanged += new System.EventHandler(this.MiniMapTextBox_TextChanged);
+            MiniMapTextBox.Location = new Point(96, 111);
+            MiniMapTextBox.Margin = new Padding(4, 3, 4, 3);
+            MiniMapTextBox.MaxLength = 5;
+            MiniMapTextBox.Name = "MiniMapTextBox";
+            MiniMapTextBox.Size = new Size(42, 23);
+            MiniMapTextBox.TabIndex = 9;
+            MiniMapTextBox.TextChanged += MiniMapTextBox_TextChanged;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(19, 47);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(57, 13);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "File Name:";
+            label2.AutoSize = true;
+            label2.Location = new Point(22, 54);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(63, 15);
+            label2.TabIndex = 6;
+            label2.Text = "File Name:";
             // 
             // MapNameTextBox
             // 
-            this.MapNameTextBox.Location = new System.Drawing.Point(82, 70);
-            this.MapNameTextBox.Name = "MapNameTextBox";
-            this.MapNameTextBox.Size = new System.Drawing.Size(92, 20);
-            this.MapNameTextBox.TabIndex = 2;
-            this.MapNameTextBox.TextChanged += new System.EventHandler(this.MapNameTextBox_TextChanged);
+            MapNameTextBox.Location = new Point(96, 81);
+            MapNameTextBox.Margin = new Padding(4, 3, 4, 3);
+            MapNameTextBox.Name = "MapNameTextBox";
+            MapNameTextBox.Size = new Size(107, 23);
+            MapNameTextBox.TabIndex = 2;
+            MapNameTextBox.TextChanged += MapNameTextBox_TextChanged;
             // 
             // FileNameTextBox
             // 
-            this.FileNameTextBox.Location = new System.Drawing.Point(82, 44);
-            this.FileNameTextBox.Name = "FileNameTextBox";
-            this.FileNameTextBox.Size = new System.Drawing.Size(47, 20);
-            this.FileNameTextBox.TabIndex = 1;
-            this.FileNameTextBox.TextChanged += new System.EventHandler(this.FileNameTextBox_TextChanged);
+            FileNameTextBox.Location = new Point(96, 51);
+            FileNameTextBox.Margin = new Padding(4, 3, 4, 3);
+            FileNameTextBox.Name = "FileNameTextBox";
+            FileNameTextBox.Size = new Size(54, 23);
+            FileNameTextBox.TabIndex = 1;
+            FileNameTextBox.TextChanged += FileNameTextBox_TextChanged;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(14, 73);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(62, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Map Name:";
+            label3.AutoSize = true;
+            label3.Location = new Point(16, 84);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(69, 15);
+            label3.TabIndex = 8;
+            label3.Text = "Map Name:";
             // 
             // tabPage6
             // 
-            this.tabPage6.Controls.Add(this.NoReincarnation);
-            this.tabPage6.Controls.Add(this.NoTownTeleportCheckbox);
-            this.tabPage6.Controls.Add(this.NoFightCheckbox);
-            this.tabPage6.Controls.Add(this.NeedBridleCheckbox);
-            this.tabPage6.Controls.Add(this.NoMountCheckbox);
-            this.tabPage6.Controls.Add(this.label19);
-            this.tabPage6.Controls.Add(this.MapDarkLighttextBox);
-            this.tabPage6.Controls.Add(this.NoNamesCheckbox);
-            this.tabPage6.Controls.Add(this.NoDropMonsterCheckbox);
-            this.tabPage6.Controls.Add(this.NoDropPlayerCheckbox);
-            this.tabPage6.Controls.Add(this.NoThrowItemCheckbox);
-            this.tabPage6.Controls.Add(this.NoPositionCheckbox);
-            this.tabPage6.Controls.Add(this.NoDrugCheckbox);
-            this.tabPage6.Controls.Add(this.NoRecallCheckbox);
-            this.tabPage6.Controls.Add(this.NoEscapeCheckbox);
-            this.tabPage6.Controls.Add(this.NoRandomCheckbox);
-            this.tabPage6.Controls.Add(this.LightningTextbox);
-            this.tabPage6.Controls.Add(this.FireTextbox);
-            this.tabPage6.Controls.Add(this.NoReconnectTextbox);
-            this.tabPage6.Controls.Add(this.LightningCheckbox);
-            this.tabPage6.Controls.Add(this.FireCheckbox);
-            this.tabPage6.Controls.Add(this.FightCheckbox);
-            this.tabPage6.Controls.Add(this.NoReconnectCheckbox);
-            this.tabPage6.Controls.Add(this.NoTeleportCheckbox);
-            this.tabPage6.Location = new System.Drawing.Point(4, 22);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(532, 247);
-            this.tabPage6.TabIndex = 5;
-            this.tabPage6.Text = "Attributes";
-            this.tabPage6.UseVisualStyleBackColor = true;
+            tabPage6.Controls.Add(NoReincarnation);
+            tabPage6.Controls.Add(NoTownTeleportCheckbox);
+            tabPage6.Controls.Add(NoFightCheckbox);
+            tabPage6.Controls.Add(NeedBridleCheckbox);
+            tabPage6.Controls.Add(NoMountCheckbox);
+            tabPage6.Controls.Add(label19);
+            tabPage6.Controls.Add(MapDarkLighttextBox);
+            tabPage6.Controls.Add(NoNamesCheckbox);
+            tabPage6.Controls.Add(NoDropMonsterCheckbox);
+            tabPage6.Controls.Add(NoDropPlayerCheckbox);
+            tabPage6.Controls.Add(NoThrowItemCheckbox);
+            tabPage6.Controls.Add(NoPositionCheckbox);
+            tabPage6.Controls.Add(NoDrugCheckbox);
+            tabPage6.Controls.Add(NoRecallCheckbox);
+            tabPage6.Controls.Add(NoEscapeCheckbox);
+            tabPage6.Controls.Add(NoRandomCheckbox);
+            tabPage6.Controls.Add(LightningTextbox);
+            tabPage6.Controls.Add(FireTextbox);
+            tabPage6.Controls.Add(NoReconnectTextbox);
+            tabPage6.Controls.Add(LightningCheckbox);
+            tabPage6.Controls.Add(FireCheckbox);
+            tabPage6.Controls.Add(FightCheckbox);
+            tabPage6.Controls.Add(NoReconnectCheckbox);
+            tabPage6.Controls.Add(NoTeleportCheckbox);
+            tabPage6.Location = new Point(4, 24);
+            tabPage6.Margin = new Padding(4, 3, 4, 3);
+            tabPage6.Name = "tabPage6";
+            tabPage6.Padding = new Padding(4, 3, 4, 3);
+            tabPage6.Size = new Size(622, 287);
+            tabPage6.TabIndex = 5;
+            tabPage6.Text = "Attributes";
+            tabPage6.UseVisualStyleBackColor = true;
             // 
             // NoReincarnation
             // 
-            this.NoReincarnation.AutoSize = true;
-            this.NoReincarnation.Location = new System.Drawing.Point(15, 198);
-            this.NoReincarnation.Name = "NoReincarnation";
-            this.NoReincarnation.Size = new System.Drawing.Size(109, 17);
-            this.NoReincarnation.TabIndex = 45;
-            this.NoReincarnation.Text = "No Reincarnation";
-            this.NoReincarnation.UseVisualStyleBackColor = true;
-            this.NoReincarnation.CheckedChanged += new System.EventHandler(this.NoReincarnation_CheckedChanged);
+            NoReincarnation.AutoSize = true;
+            NoReincarnation.Location = new Point(18, 228);
+            NoReincarnation.Margin = new Padding(4, 3, 4, 3);
+            NoReincarnation.Name = "NoReincarnation";
+            NoReincarnation.Size = new Size(118, 19);
+            NoReincarnation.TabIndex = 45;
+            NoReincarnation.Text = "No Reincarnation";
+            NoReincarnation.UseVisualStyleBackColor = true;
+            NoReincarnation.CheckedChanged += NoReincarnation_CheckedChanged;
             // 
             // NoTownTeleportCheckbox
             // 
-            this.NoTownTeleportCheckbox.AutoSize = true;
-            this.NoTownTeleportCheckbox.Location = new System.Drawing.Point(340, 119);
-            this.NoTownTeleportCheckbox.Name = "NoTownTeleportCheckbox";
-            this.NoTownTeleportCheckbox.Size = new System.Drawing.Size(109, 17);
-            this.NoTownTeleportCheckbox.TabIndex = 44;
-            this.NoTownTeleportCheckbox.Text = "No TownTeleport";
-            this.NoTownTeleportCheckbox.UseVisualStyleBackColor = true;
-            this.NoTownTeleportCheckbox.CheckedChanged += new System.EventHandler(this.NoTownTeleportCheckbox_CheckedChanged);
+            NoTownTeleportCheckbox.AutoSize = true;
+            NoTownTeleportCheckbox.Location = new Point(397, 137);
+            NoTownTeleportCheckbox.Margin = new Padding(4, 3, 4, 3);
+            NoTownTeleportCheckbox.Name = "NoTownTeleportCheckbox";
+            NoTownTeleportCheckbox.Size = new Size(115, 19);
+            NoTownTeleportCheckbox.TabIndex = 44;
+            NoTownTeleportCheckbox.Text = "No TownTeleport";
+            NoTownTeleportCheckbox.UseVisualStyleBackColor = true;
+            NoTownTeleportCheckbox.CheckedChanged += NoTownTeleportCheckbox_CheckedChanged;
             // 
             // NoFightCheckbox
             // 
-            this.NoFightCheckbox.AutoSize = true;
-            this.NoFightCheckbox.Location = new System.Drawing.Point(174, 137);
-            this.NoFightCheckbox.Name = "NoFightCheckbox";
-            this.NoFightCheckbox.Size = new System.Drawing.Size(66, 17);
-            this.NoFightCheckbox.TabIndex = 43;
-            this.NoFightCheckbox.Text = "No Fight";
-            this.NoFightCheckbox.UseVisualStyleBackColor = true;
-            this.NoFightCheckbox.CheckedChanged += new System.EventHandler(this.NoFightCheckbox_CheckedChanged);
+            NoFightCheckbox.AutoSize = true;
+            NoFightCheckbox.Location = new Point(203, 158);
+            NoFightCheckbox.Margin = new Padding(4, 3, 4, 3);
+            NoFightCheckbox.Name = "NoFightCheckbox";
+            NoFightCheckbox.Size = new Size(72, 19);
+            NoFightCheckbox.TabIndex = 43;
+            NoFightCheckbox.Text = "No Fight";
+            NoFightCheckbox.UseVisualStyleBackColor = true;
+            NoFightCheckbox.CheckedChanged += NoFightCheckbox_CheckedChanged;
             // 
             // NeedBridleCheckbox
             // 
-            this.NeedBridleCheckbox.AutoSize = true;
-            this.NeedBridleCheckbox.Location = new System.Drawing.Point(174, 160);
-            this.NeedBridleCheckbox.Name = "NeedBridleCheckbox";
-            this.NeedBridleCheckbox.Size = new System.Drawing.Size(81, 17);
-            this.NeedBridleCheckbox.TabIndex = 42;
-            this.NeedBridleCheckbox.Text = "Need Bridle";
-            this.NeedBridleCheckbox.UseVisualStyleBackColor = true;
-            this.NeedBridleCheckbox.CheckedChanged += new System.EventHandler(this.NeedBridleCheckbox_CheckedChanged);
+            NeedBridleCheckbox.AutoSize = true;
+            NeedBridleCheckbox.Location = new Point(203, 185);
+            NeedBridleCheckbox.Margin = new Padding(4, 3, 4, 3);
+            NeedBridleCheckbox.Name = "NeedBridleCheckbox";
+            NeedBridleCheckbox.Size = new Size(87, 19);
+            NeedBridleCheckbox.TabIndex = 42;
+            NeedBridleCheckbox.Text = "Need Bridle";
+            NeedBridleCheckbox.UseVisualStyleBackColor = true;
+            NeedBridleCheckbox.CheckedChanged += NeedBridleCheckbox_CheckedChanged;
             // 
             // NoMountCheckbox
             // 
-            this.NoMountCheckbox.AutoSize = true;
-            this.NoMountCheckbox.Location = new System.Drawing.Point(174, 113);
-            this.NoMountCheckbox.Name = "NoMountCheckbox";
-            this.NoMountCheckbox.Size = new System.Drawing.Size(73, 17);
-            this.NoMountCheckbox.TabIndex = 41;
-            this.NoMountCheckbox.Text = "No Mount";
-            this.NoMountCheckbox.UseVisualStyleBackColor = true;
-            this.NoMountCheckbox.CheckedChanged += new System.EventHandler(this.NoMountCheckbox_CheckedChanged);
+            NoMountCheckbox.AutoSize = true;
+            NoMountCheckbox.Location = new Point(203, 130);
+            NoMountCheckbox.Margin = new Padding(4, 3, 4, 3);
+            NoMountCheckbox.Name = "NoMountCheckbox";
+            NoMountCheckbox.Size = new Size(81, 19);
+            NoMountCheckbox.TabIndex = 41;
+            NoMountCheckbox.Text = "No Mount";
+            NoMountCheckbox.UseVisualStyleBackColor = true;
+            NoMountCheckbox.CheckedChanged += NoMountCheckbox_CheckedChanged;
             // 
             // label19
             // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(338, 94);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(80, 13);
-            this.label19.TabIndex = 40;
-            this.label19.Text = "Map Dark Light";
+            label19.AutoSize = true;
+            label19.Location = new Point(394, 108);
+            label19.Margin = new Padding(4, 0, 4, 0);
+            label19.Name = "label19";
+            label19.Size = new Size(88, 15);
+            label19.TabIndex = 40;
+            label19.Text = "Map Dark Light";
             // 
             // MapDarkLighttextBox
             // 
-            this.MapDarkLighttextBox.Location = new System.Drawing.Point(443, 91);
-            this.MapDarkLighttextBox.Name = "MapDarkLighttextBox";
-            this.MapDarkLighttextBox.Size = new System.Drawing.Size(49, 20);
-            this.MapDarkLighttextBox.TabIndex = 39;
-            this.MapDarkLighttextBox.TextChanged += new System.EventHandler(this.MapDarkLighttextBox_TextChanged);
+            MapDarkLighttextBox.Location = new Point(517, 105);
+            MapDarkLighttextBox.Margin = new Padding(4, 3, 4, 3);
+            MapDarkLighttextBox.Name = "MapDarkLighttextBox";
+            MapDarkLighttextBox.Size = new Size(56, 23);
+            MapDarkLighttextBox.TabIndex = 39;
+            MapDarkLighttextBox.TextChanged += MapDarkLighttextBox_TextChanged;
             // 
             // NoNamesCheckbox
             // 
-            this.NoNamesCheckbox.AutoSize = true;
-            this.NoNamesCheckbox.Location = new System.Drawing.Point(174, 89);
-            this.NoNamesCheckbox.Name = "NoNamesCheckbox";
-            this.NoNamesCheckbox.Size = new System.Drawing.Size(76, 17);
-            this.NoNamesCheckbox.TabIndex = 38;
-            this.NoNamesCheckbox.Text = "No Names";
-            this.NoNamesCheckbox.UseVisualStyleBackColor = true;
-            this.NoNamesCheckbox.CheckedChanged += new System.EventHandler(this.NoNamesCheckbox_CheckedChanged);
+            NoNamesCheckbox.AutoSize = true;
+            NoNamesCheckbox.Location = new Point(203, 103);
+            NoNamesCheckbox.Margin = new Padding(4, 3, 4, 3);
+            NoNamesCheckbox.Name = "NoNamesCheckbox";
+            NoNamesCheckbox.Size = new Size(82, 19);
+            NoNamesCheckbox.TabIndex = 38;
+            NoNamesCheckbox.Text = "No Names";
+            NoNamesCheckbox.UseVisualStyleBackColor = true;
+            NoNamesCheckbox.CheckedChanged += NoNamesCheckbox_CheckedChanged;
             // 
             // NoDropMonsterCheckbox
             // 
-            this.NoDropMonsterCheckbox.AutoSize = true;
-            this.NoDropMonsterCheckbox.Location = new System.Drawing.Point(174, 65);
-            this.NoDropMonsterCheckbox.Name = "NoDropMonsterCheckbox";
-            this.NoDropMonsterCheckbox.Size = new System.Drawing.Size(113, 17);
-            this.NoDropMonsterCheckbox.TabIndex = 37;
-            this.NoDropMonsterCheckbox.Text = "No Drop (Monster)";
-            this.NoDropMonsterCheckbox.UseVisualStyleBackColor = true;
-            this.NoDropMonsterCheckbox.CheckedChanged += new System.EventHandler(this.NoDropMonsterCheckbox_CheckedChanged);
+            NoDropMonsterCheckbox.AutoSize = true;
+            NoDropMonsterCheckbox.Location = new Point(203, 75);
+            NoDropMonsterCheckbox.Margin = new Padding(4, 3, 4, 3);
+            NoDropMonsterCheckbox.Name = "NoDropMonsterCheckbox";
+            NoDropMonsterCheckbox.Size = new Size(126, 19);
+            NoDropMonsterCheckbox.TabIndex = 37;
+            NoDropMonsterCheckbox.Text = "No Drop (Monster)";
+            NoDropMonsterCheckbox.UseVisualStyleBackColor = true;
+            NoDropMonsterCheckbox.CheckedChanged += NoDropMonsterCheckbox_CheckedChanged;
             // 
             // NoDropPlayerCheckbox
             // 
-            this.NoDropPlayerCheckbox.AutoSize = true;
-            this.NoDropPlayerCheckbox.Location = new System.Drawing.Point(174, 41);
-            this.NoDropPlayerCheckbox.Name = "NoDropPlayerCheckbox";
-            this.NoDropPlayerCheckbox.Size = new System.Drawing.Size(104, 17);
-            this.NoDropPlayerCheckbox.TabIndex = 36;
-            this.NoDropPlayerCheckbox.Text = "No Drop (Player)";
-            this.NoDropPlayerCheckbox.UseVisualStyleBackColor = true;
-            this.NoDropPlayerCheckbox.CheckedChanged += new System.EventHandler(this.NoDropPlayerCheckbox_CheckedChanged);
+            NoDropPlayerCheckbox.AutoSize = true;
+            NoDropPlayerCheckbox.Location = new Point(203, 47);
+            NoDropPlayerCheckbox.Margin = new Padding(4, 3, 4, 3);
+            NoDropPlayerCheckbox.Name = "NoDropPlayerCheckbox";
+            NoDropPlayerCheckbox.Size = new Size(114, 19);
+            NoDropPlayerCheckbox.TabIndex = 36;
+            NoDropPlayerCheckbox.Text = "No Drop (Player)";
+            NoDropPlayerCheckbox.UseVisualStyleBackColor = true;
+            NoDropPlayerCheckbox.CheckedChanged += NoDropPlayerCheckbox_CheckedChanged;
             // 
             // NoThrowItemCheckbox
             // 
-            this.NoThrowItemCheckbox.AutoSize = true;
-            this.NoThrowItemCheckbox.Location = new System.Drawing.Point(174, 17);
-            this.NoThrowItemCheckbox.Name = "NoThrowItemCheckbox";
-            this.NoThrowItemCheckbox.Size = new System.Drawing.Size(96, 17);
-            this.NoThrowItemCheckbox.TabIndex = 35;
-            this.NoThrowItemCheckbox.Text = "No Throw Item";
-            this.NoThrowItemCheckbox.UseVisualStyleBackColor = true;
-            this.NoThrowItemCheckbox.CheckedChanged += new System.EventHandler(this.NoThrowItemCheckbox_CheckedChanged);
+            NoThrowItemCheckbox.AutoSize = true;
+            NoThrowItemCheckbox.Location = new Point(203, 20);
+            NoThrowItemCheckbox.Margin = new Padding(4, 3, 4, 3);
+            NoThrowItemCheckbox.Name = "NoThrowItemCheckbox";
+            NoThrowItemCheckbox.Size = new Size(105, 19);
+            NoThrowItemCheckbox.TabIndex = 35;
+            NoThrowItemCheckbox.Text = "No Throw Item";
+            NoThrowItemCheckbox.UseVisualStyleBackColor = true;
+            NoThrowItemCheckbox.CheckedChanged += NoThrowItemCheckbox_CheckedChanged;
             // 
             // NoPositionCheckbox
             // 
-            this.NoPositionCheckbox.AutoSize = true;
-            this.NoPositionCheckbox.Location = new System.Drawing.Point(15, 160);
-            this.NoPositionCheckbox.Name = "NoPositionCheckbox";
-            this.NoPositionCheckbox.Size = new System.Drawing.Size(80, 17);
-            this.NoPositionCheckbox.TabIndex = 34;
-            this.NoPositionCheckbox.Text = "No Position";
-            this.NoPositionCheckbox.UseVisualStyleBackColor = true;
-            this.NoPositionCheckbox.CheckedChanged += new System.EventHandler(this.NoPositionCheckbox_CheckedChanged);
+            NoPositionCheckbox.AutoSize = true;
+            NoPositionCheckbox.Location = new Point(18, 185);
+            NoPositionCheckbox.Margin = new Padding(4, 3, 4, 3);
+            NoPositionCheckbox.Name = "NoPositionCheckbox";
+            NoPositionCheckbox.Size = new Size(88, 19);
+            NoPositionCheckbox.TabIndex = 34;
+            NoPositionCheckbox.Text = "No Position";
+            NoPositionCheckbox.UseVisualStyleBackColor = true;
+            NoPositionCheckbox.CheckedChanged += NoPositionCheckbox_CheckedChanged;
             // 
             // NoDrugCheckbox
             // 
-            this.NoDrugCheckbox.AutoSize = true;
-            this.NoDrugCheckbox.Location = new System.Drawing.Point(16, 137);
-            this.NoDrugCheckbox.Name = "NoDrugCheckbox";
-            this.NoDrugCheckbox.Size = new System.Drawing.Size(66, 17);
-            this.NoDrugCheckbox.TabIndex = 33;
-            this.NoDrugCheckbox.Text = "No Drug";
-            this.NoDrugCheckbox.UseVisualStyleBackColor = true;
-            this.NoDrugCheckbox.CheckedChanged += new System.EventHandler(this.NoDrugCheckbox_CheckedChanged);
+            NoDrugCheckbox.AutoSize = true;
+            NoDrugCheckbox.Location = new Point(19, 158);
+            NoDrugCheckbox.Margin = new Padding(4, 3, 4, 3);
+            NoDrugCheckbox.Name = "NoDrugCheckbox";
+            NoDrugCheckbox.Size = new Size(71, 19);
+            NoDrugCheckbox.TabIndex = 33;
+            NoDrugCheckbox.Text = "No Drug";
+            NoDrugCheckbox.UseVisualStyleBackColor = true;
+            NoDrugCheckbox.CheckedChanged += NoDrugCheckbox_CheckedChanged;
             // 
             // NoRecallCheckbox
             // 
-            this.NoRecallCheckbox.AutoSize = true;
-            this.NoRecallCheckbox.Location = new System.Drawing.Point(16, 113);
-            this.NoRecallCheckbox.Name = "NoRecallCheckbox";
-            this.NoRecallCheckbox.Size = new System.Drawing.Size(73, 17);
-            this.NoRecallCheckbox.TabIndex = 32;
-            this.NoRecallCheckbox.Text = "No Recall";
-            this.NoRecallCheckbox.UseVisualStyleBackColor = true;
-            this.NoRecallCheckbox.CheckedChanged += new System.EventHandler(this.NoRecallCheckbox_CheckedChanged);
+            NoRecallCheckbox.AutoSize = true;
+            NoRecallCheckbox.Location = new Point(19, 130);
+            NoRecallCheckbox.Margin = new Padding(4, 3, 4, 3);
+            NoRecallCheckbox.Name = "NoRecallCheckbox";
+            NoRecallCheckbox.Size = new Size(76, 19);
+            NoRecallCheckbox.TabIndex = 32;
+            NoRecallCheckbox.Text = "No Recall";
+            NoRecallCheckbox.UseVisualStyleBackColor = true;
+            NoRecallCheckbox.CheckedChanged += NoRecallCheckbox_CheckedChanged;
             // 
             // NoEscapeCheckbox
             // 
-            this.NoEscapeCheckbox.AutoSize = true;
-            this.NoEscapeCheckbox.Location = new System.Drawing.Point(16, 89);
-            this.NoEscapeCheckbox.Name = "NoEscapeCheckbox";
-            this.NoEscapeCheckbox.Size = new System.Drawing.Size(79, 17);
-            this.NoEscapeCheckbox.TabIndex = 31;
-            this.NoEscapeCheckbox.Text = "No Escape";
-            this.NoEscapeCheckbox.UseVisualStyleBackColor = true;
-            this.NoEscapeCheckbox.CheckedChanged += new System.EventHandler(this.NoEscapeCheckbox_CheckedChanged);
+            NoEscapeCheckbox.AutoSize = true;
+            NoEscapeCheckbox.Location = new Point(19, 103);
+            NoEscapeCheckbox.Margin = new Padding(4, 3, 4, 3);
+            NoEscapeCheckbox.Name = "NoEscapeCheckbox";
+            NoEscapeCheckbox.Size = new Size(81, 19);
+            NoEscapeCheckbox.TabIndex = 31;
+            NoEscapeCheckbox.Text = "No Escape";
+            NoEscapeCheckbox.UseVisualStyleBackColor = true;
+            NoEscapeCheckbox.CheckedChanged += NoEscapeCheckbox_CheckedChanged;
             // 
             // NoRandomCheckbox
             // 
-            this.NoRandomCheckbox.AutoSize = true;
-            this.NoRandomCheckbox.Location = new System.Drawing.Point(16, 65);
-            this.NoRandomCheckbox.Name = "NoRandomCheckbox";
-            this.NoRandomCheckbox.Size = new System.Drawing.Size(83, 17);
-            this.NoRandomCheckbox.TabIndex = 30;
-            this.NoRandomCheckbox.Text = "No Random";
-            this.NoRandomCheckbox.UseVisualStyleBackColor = true;
-            this.NoRandomCheckbox.CheckedChanged += new System.EventHandler(this.NoRandomCheckbox_CheckedChanged);
+            NoRandomCheckbox.AutoSize = true;
+            NoRandomCheckbox.Location = new Point(19, 75);
+            NoRandomCheckbox.Margin = new Padding(4, 3, 4, 3);
+            NoRandomCheckbox.Name = "NoRandomCheckbox";
+            NoRandomCheckbox.Size = new Size(90, 19);
+            NoRandomCheckbox.TabIndex = 30;
+            NoRandomCheckbox.Text = "No Random";
+            NoRandomCheckbox.UseVisualStyleBackColor = true;
+            NoRandomCheckbox.CheckedChanged += NoRandomCheckbox_CheckedChanged;
             // 
             // LightningTextbox
             // 
-            this.LightningTextbox.Location = new System.Drawing.Point(443, 65);
-            this.LightningTextbox.Name = "LightningTextbox";
-            this.LightningTextbox.Size = new System.Drawing.Size(49, 20);
-            this.LightningTextbox.TabIndex = 29;
-            this.LightningTextbox.TextChanged += new System.EventHandler(this.LightningTextbox_TextChanged);
+            LightningTextbox.Location = new Point(517, 75);
+            LightningTextbox.Margin = new Padding(4, 3, 4, 3);
+            LightningTextbox.Name = "LightningTextbox";
+            LightningTextbox.Size = new Size(56, 23);
+            LightningTextbox.TabIndex = 29;
+            LightningTextbox.TextChanged += LightningTextbox_TextChanged;
             // 
             // FireTextbox
             // 
-            this.FireTextbox.Location = new System.Drawing.Point(443, 41);
-            this.FireTextbox.Name = "FireTextbox";
-            this.FireTextbox.Size = new System.Drawing.Size(49, 20);
-            this.FireTextbox.TabIndex = 28;
-            this.FireTextbox.TextChanged += new System.EventHandler(this.FireTextbox_TextChanged);
+            FireTextbox.Location = new Point(517, 47);
+            FireTextbox.Margin = new Padding(4, 3, 4, 3);
+            FireTextbox.Name = "FireTextbox";
+            FireTextbox.Size = new Size(56, 23);
+            FireTextbox.TabIndex = 28;
+            FireTextbox.TextChanged += FireTextbox_TextChanged;
             // 
             // NoReconnectTextbox
             // 
-            this.NoReconnectTextbox.Location = new System.Drawing.Point(118, 39);
-            this.NoReconnectTextbox.Name = "NoReconnectTextbox";
-            this.NoReconnectTextbox.Size = new System.Drawing.Size(49, 20);
-            this.NoReconnectTextbox.TabIndex = 27;
-            this.NoReconnectTextbox.TextChanged += new System.EventHandler(this.NoReconnectTextbox_TextChanged);
+            NoReconnectTextbox.Location = new Point(138, 45);
+            NoReconnectTextbox.Margin = new Padding(4, 3, 4, 3);
+            NoReconnectTextbox.Name = "NoReconnectTextbox";
+            NoReconnectTextbox.Size = new Size(56, 23);
+            NoReconnectTextbox.TabIndex = 27;
+            NoReconnectTextbox.TextChanged += NoReconnectTextbox_TextChanged;
             // 
             // LightningCheckbox
             // 
-            this.LightningCheckbox.AutoSize = true;
-            this.LightningCheckbox.Location = new System.Drawing.Point(341, 65);
-            this.LightningCheckbox.Name = "LightningCheckbox";
-            this.LightningCheckbox.Size = new System.Drawing.Size(69, 17);
-            this.LightningCheckbox.TabIndex = 26;
-            this.LightningCheckbox.Text = "Lightning";
-            this.LightningCheckbox.UseVisualStyleBackColor = true;
-            this.LightningCheckbox.CheckedChanged += new System.EventHandler(this.LightningCheckbox_CheckedChanged);
+            LightningCheckbox.AutoSize = true;
+            LightningCheckbox.Location = new Point(398, 75);
+            LightningCheckbox.Margin = new Padding(4, 3, 4, 3);
+            LightningCheckbox.Name = "LightningCheckbox";
+            LightningCheckbox.Size = new Size(77, 19);
+            LightningCheckbox.TabIndex = 26;
+            LightningCheckbox.Text = "Lightning";
+            LightningCheckbox.UseVisualStyleBackColor = true;
+            LightningCheckbox.CheckedChanged += LightningCheckbox_CheckedChanged;
             // 
             // FireCheckbox
             // 
-            this.FireCheckbox.AutoSize = true;
-            this.FireCheckbox.Location = new System.Drawing.Point(341, 41);
-            this.FireCheckbox.Name = "FireCheckbox";
-            this.FireCheckbox.Size = new System.Drawing.Size(43, 17);
-            this.FireCheckbox.TabIndex = 25;
-            this.FireCheckbox.Text = "Fire";
-            this.FireCheckbox.UseVisualStyleBackColor = true;
-            this.FireCheckbox.CheckStateChanged += new System.EventHandler(this.FireCheckbox_CheckStateChanged);
+            FireCheckbox.AutoSize = true;
+            FireCheckbox.Location = new Point(398, 47);
+            FireCheckbox.Margin = new Padding(4, 3, 4, 3);
+            FireCheckbox.Name = "FireCheckbox";
+            FireCheckbox.Size = new Size(45, 19);
+            FireCheckbox.TabIndex = 25;
+            FireCheckbox.Text = "Fire";
+            FireCheckbox.UseVisualStyleBackColor = true;
+            FireCheckbox.CheckStateChanged += FireCheckbox_CheckStateChanged;
             // 
             // FightCheckbox
             // 
-            this.FightCheckbox.AutoSize = true;
-            this.FightCheckbox.Location = new System.Drawing.Point(341, 16);
-            this.FightCheckbox.Name = "FightCheckbox";
-            this.FightCheckbox.Size = new System.Drawing.Size(49, 17);
-            this.FightCheckbox.TabIndex = 23;
-            this.FightCheckbox.Text = "Fight";
-            this.FightCheckbox.UseVisualStyleBackColor = true;
-            this.FightCheckbox.CheckedChanged += new System.EventHandler(this.FightCheckbox_CheckedChanged);
+            FightCheckbox.AutoSize = true;
+            FightCheckbox.Location = new Point(398, 18);
+            FightCheckbox.Margin = new Padding(4, 3, 4, 3);
+            FightCheckbox.Name = "FightCheckbox";
+            FightCheckbox.Size = new Size(53, 19);
+            FightCheckbox.TabIndex = 23;
+            FightCheckbox.Text = "Fight";
+            FightCheckbox.UseVisualStyleBackColor = true;
+            FightCheckbox.CheckedChanged += FightCheckbox_CheckedChanged;
             // 
             // NoReconnectCheckbox
             // 
-            this.NoReconnectCheckbox.AutoSize = true;
-            this.NoReconnectCheckbox.Location = new System.Drawing.Point(16, 41);
-            this.NoReconnectCheckbox.Name = "NoReconnectCheckbox";
-            this.NoReconnectCheckbox.Size = new System.Drawing.Size(96, 17);
-            this.NoReconnectCheckbox.TabIndex = 22;
-            this.NoReconnectCheckbox.Text = "No Reconnect";
-            this.NoReconnectCheckbox.UseVisualStyleBackColor = true;
-            this.NoReconnectCheckbox.CheckedChanged += new System.EventHandler(this.NoReconnectCheckbox_CheckedChanged);
+            NoReconnectCheckbox.AutoSize = true;
+            NoReconnectCheckbox.Location = new Point(19, 47);
+            NoReconnectCheckbox.Margin = new Padding(4, 3, 4, 3);
+            NoReconnectCheckbox.Name = "NoReconnectCheckbox";
+            NoReconnectCheckbox.Size = new Size(101, 19);
+            NoReconnectCheckbox.TabIndex = 22;
+            NoReconnectCheckbox.Text = "No Reconnect";
+            NoReconnectCheckbox.UseVisualStyleBackColor = true;
+            NoReconnectCheckbox.CheckedChanged += NoReconnectCheckbox_CheckedChanged;
             // 
             // NoTeleportCheckbox
             // 
-            this.NoTeleportCheckbox.AutoSize = true;
-            this.NoTeleportCheckbox.Location = new System.Drawing.Point(16, 17);
-            this.NoTeleportCheckbox.Name = "NoTeleportCheckbox";
-            this.NoTeleportCheckbox.Size = new System.Drawing.Size(82, 17);
-            this.NoTeleportCheckbox.TabIndex = 21;
-            this.NoTeleportCheckbox.Text = "No Teleport";
-            this.NoTeleportCheckbox.UseVisualStyleBackColor = true;
-            this.NoTeleportCheckbox.CheckedChanged += new System.EventHandler(this.NoTeleportCheckbox_CheckedChanged);
+            NoTeleportCheckbox.AutoSize = true;
+            NoTeleportCheckbox.Location = new Point(19, 20);
+            NoTeleportCheckbox.Margin = new Padding(4, 3, 4, 3);
+            NoTeleportCheckbox.Name = "NoTeleportCheckbox";
+            NoTeleportCheckbox.Size = new Size(87, 19);
+            NoTeleportCheckbox.TabIndex = 21;
+            NoTeleportCheckbox.Text = "No Teleport";
+            NoTeleportCheckbox.UseVisualStyleBackColor = true;
+            NoTeleportCheckbox.CheckedChanged += NoTeleportCheckbox_CheckedChanged;
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.RemoveSZButton);
-            this.tabPage3.Controls.Add(this.AddSZButton);
-            this.tabPage3.Controls.Add(this.SafeZoneInfoPanel);
-            this.tabPage3.Controls.Add(this.SafeZoneInfoListBox);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(532, 247);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Safe Zones";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            tabPage3.Controls.Add(RemoveSZButton);
+            tabPage3.Controls.Add(AddSZButton);
+            tabPage3.Controls.Add(SafeZoneInfoPanel);
+            tabPage3.Controls.Add(SafeZoneInfoListBox);
+            tabPage3.Location = new Point(4, 24);
+            tabPage3.Margin = new Padding(4, 3, 4, 3);
+            tabPage3.Name = "tabPage3";
+            tabPage3.Size = new Size(622, 287);
+            tabPage3.TabIndex = 2;
+            tabPage3.Text = "Safe Zones";
+            tabPage3.UseVisualStyleBackColor = true;
             // 
             // RemoveSZButton
             // 
-            this.RemoveSZButton.Location = new System.Drawing.Point(108, 7);
-            this.RemoveSZButton.Name = "RemoveSZButton";
-            this.RemoveSZButton.Size = new System.Drawing.Size(75, 23);
-            this.RemoveSZButton.TabIndex = 8;
-            this.RemoveSZButton.Text = "Remove";
-            this.RemoveSZButton.UseVisualStyleBackColor = true;
-            this.RemoveSZButton.Click += new System.EventHandler(this.RemoveSZButton_Click);
+            RemoveSZButton.Location = new Point(126, 8);
+            RemoveSZButton.Margin = new Padding(4, 3, 4, 3);
+            RemoveSZButton.Name = "RemoveSZButton";
+            RemoveSZButton.Size = new Size(88, 27);
+            RemoveSZButton.TabIndex = 8;
+            RemoveSZButton.Text = "Remove";
+            RemoveSZButton.UseVisualStyleBackColor = true;
+            RemoveSZButton.Click += RemoveSZButton_Click;
             // 
             // AddSZButton
             // 
-            this.AddSZButton.Location = new System.Drawing.Point(6, 7);
-            this.AddSZButton.Name = "AddSZButton";
-            this.AddSZButton.Size = new System.Drawing.Size(75, 23);
-            this.AddSZButton.TabIndex = 7;
-            this.AddSZButton.Text = "Add";
-            this.AddSZButton.UseVisualStyleBackColor = true;
-            this.AddSZButton.Click += new System.EventHandler(this.AddSZButton_Click);
+            AddSZButton.Location = new Point(7, 8);
+            AddSZButton.Margin = new Padding(4, 3, 4, 3);
+            AddSZButton.Name = "AddSZButton";
+            AddSZButton.Size = new Size(88, 27);
+            AddSZButton.TabIndex = 7;
+            AddSZButton.Text = "Add";
+            AddSZButton.UseVisualStyleBackColor = true;
+            AddSZButton.Click += AddSZButton_Click;
             // 
             // SafeZoneInfoPanel
             // 
-            this.SafeZoneInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SafeZoneInfoPanel.Controls.Add(this.label12);
-            this.SafeZoneInfoPanel.Controls.Add(this.SZYTextBox);
-            this.SafeZoneInfoPanel.Controls.Add(this.label14);
-            this.SafeZoneInfoPanel.Controls.Add(this.SizeTextBox);
-            this.SafeZoneInfoPanel.Controls.Add(this.label17);
-            this.SafeZoneInfoPanel.Controls.Add(this.SZXTextBox);
-            this.SafeZoneInfoPanel.Controls.Add(this.StartPointCheckBox);
-            this.SafeZoneInfoPanel.Enabled = false;
-            this.SafeZoneInfoPanel.Location = new System.Drawing.Point(189, 35);
-            this.SafeZoneInfoPanel.Name = "SafeZoneInfoPanel";
-            this.SafeZoneInfoPanel.Size = new System.Drawing.Size(197, 139);
-            this.SafeZoneInfoPanel.TabIndex = 10;
+            SafeZoneInfoPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            SafeZoneInfoPanel.Controls.Add(label12);
+            SafeZoneInfoPanel.Controls.Add(SZYTextBox);
+            SafeZoneInfoPanel.Controls.Add(label14);
+            SafeZoneInfoPanel.Controls.Add(SizeTextBox);
+            SafeZoneInfoPanel.Controls.Add(label17);
+            SafeZoneInfoPanel.Controls.Add(SZXTextBox);
+            SafeZoneInfoPanel.Controls.Add(StartPointCheckBox);
+            SafeZoneInfoPanel.Enabled = false;
+            SafeZoneInfoPanel.Location = new Point(220, 40);
+            SafeZoneInfoPanel.Margin = new Padding(4, 3, 4, 3);
+            SafeZoneInfoPanel.Name = "SafeZoneInfoPanel";
+            SafeZoneInfoPanel.Size = new Size(230, 160);
+            SafeZoneInfoPanel.TabIndex = 10;
             // 
             // label12
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(124, 25);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(17, 13);
-            this.label12.TabIndex = 10;
-            this.label12.Text = "Y:";
+            label12.AutoSize = true;
+            label12.Location = new Point(145, 29);
+            label12.Margin = new Padding(4, 0, 4, 0);
+            label12.Name = "label12";
+            label12.Size = new Size(17, 15);
+            label12.TabIndex = 10;
+            label12.Text = "Y:";
             // 
             // SZYTextBox
             // 
-            this.SZYTextBox.Location = new System.Drawing.Point(147, 22);
-            this.SZYTextBox.MaxLength = 5;
-            this.SZYTextBox.Name = "SZYTextBox";
-            this.SZYTextBox.Size = new System.Drawing.Size(37, 20);
-            this.SZYTextBox.TabIndex = 3;
-            this.SZYTextBox.TextChanged += new System.EventHandler(this.SZYTextBox_TextChanged);
+            SZYTextBox.Location = new Point(172, 25);
+            SZYTextBox.Margin = new Padding(4, 3, 4, 3);
+            SZYTextBox.MaxLength = 5;
+            SZYTextBox.Name = "SZYTextBox";
+            SZYTextBox.Size = new Size(42, 23);
+            SZYTextBox.TabIndex = 3;
+            SZYTextBox.TextChanged += SZYTextBox_TextChanged;
             // 
             // label14
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(25, 51);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(30, 13);
-            this.label14.TabIndex = 8;
-            this.label14.Text = "Size:";
+            label14.AutoSize = true;
+            label14.Location = new Point(29, 59);
+            label14.Margin = new Padding(4, 0, 4, 0);
+            label14.Name = "label14";
+            label14.Size = new Size(30, 15);
+            label14.TabIndex = 8;
+            label14.Text = "Size:";
             // 
             // SizeTextBox
             // 
-            this.SizeTextBox.Location = new System.Drawing.Point(61, 48);
-            this.SizeTextBox.MaxLength = 5;
-            this.SizeTextBox.Name = "SizeTextBox";
-            this.SizeTextBox.Size = new System.Drawing.Size(37, 20);
-            this.SizeTextBox.TabIndex = 4;
-            this.SizeTextBox.TextChanged += new System.EventHandler(this.SizeTextBox_TextChanged);
+            SizeTextBox.Location = new Point(71, 55);
+            SizeTextBox.Margin = new Padding(4, 3, 4, 3);
+            SizeTextBox.MaxLength = 5;
+            SizeTextBox.Name = "SizeTextBox";
+            SizeTextBox.Size = new Size(42, 23);
+            SizeTextBox.TabIndex = 4;
+            SizeTextBox.TextChanged += SizeTextBox_TextChanged;
             // 
             // label17
             // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(38, 25);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(17, 13);
-            this.label17.TabIndex = 3;
-            this.label17.Text = "X:";
+            label17.AutoSize = true;
+            label17.Location = new Point(44, 29);
+            label17.Margin = new Padding(4, 0, 4, 0);
+            label17.Name = "label17";
+            label17.Size = new Size(17, 15);
+            label17.TabIndex = 3;
+            label17.Text = "X:";
             // 
             // SZXTextBox
             // 
-            this.SZXTextBox.Location = new System.Drawing.Point(61, 22);
-            this.SZXTextBox.MaxLength = 5;
-            this.SZXTextBox.Name = "SZXTextBox";
-            this.SZXTextBox.Size = new System.Drawing.Size(37, 20);
-            this.SZXTextBox.TabIndex = 2;
-            this.SZXTextBox.TextChanged += new System.EventHandler(this.SZXTextBox_TextChanged);
+            SZXTextBox.Location = new Point(71, 25);
+            SZXTextBox.Margin = new Padding(4, 3, 4, 3);
+            SZXTextBox.MaxLength = 5;
+            SZXTextBox.Name = "SZXTextBox";
+            SZXTextBox.Size = new Size(42, 23);
+            SZXTextBox.TabIndex = 2;
+            SZXTextBox.TextChanged += SZXTextBox_TextChanged;
             // 
             // StartPointCheckBox
             // 
-            this.StartPointCheckBox.AutoSize = true;
-            this.StartPointCheckBox.Location = new System.Drawing.Point(61, 89);
-            this.StartPointCheckBox.Name = "StartPointCheckBox";
-            this.StartPointCheckBox.Size = new System.Drawing.Size(75, 17);
-            this.StartPointCheckBox.TabIndex = 5;
-            this.StartPointCheckBox.Text = "Start Point";
-            this.StartPointCheckBox.UseVisualStyleBackColor = true;
-            this.StartPointCheckBox.CheckedChanged += new System.EventHandler(this.StartPointCheckBox_CheckedChanged);
+            StartPointCheckBox.AutoSize = true;
+            StartPointCheckBox.Location = new Point(71, 103);
+            StartPointCheckBox.Margin = new Padding(4, 3, 4, 3);
+            StartPointCheckBox.Name = "StartPointCheckBox";
+            StartPointCheckBox.Size = new Size(81, 19);
+            StartPointCheckBox.TabIndex = 5;
+            StartPointCheckBox.Text = "Start Point";
+            StartPointCheckBox.UseVisualStyleBackColor = true;
+            StartPointCheckBox.CheckedChanged += StartPointCheckBox_CheckedChanged;
             // 
             // SafeZoneInfoListBox
             // 
-            this.SafeZoneInfoListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.SafeZoneInfoListBox.FormattingEnabled = true;
-            this.SafeZoneInfoListBox.Location = new System.Drawing.Point(6, 35);
-            this.SafeZoneInfoListBox.Name = "SafeZoneInfoListBox";
-            this.SafeZoneInfoListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.SafeZoneInfoListBox.Size = new System.Drawing.Size(177, 134);
-            this.SafeZoneInfoListBox.TabIndex = 9;
-            this.SafeZoneInfoListBox.SelectedIndexChanged += new System.EventHandler(this.SafeZoneInfoListBox_SelectedIndexChanged);
+            SafeZoneInfoListBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            SafeZoneInfoListBox.FormattingEnabled = true;
+            SafeZoneInfoListBox.ItemHeight = 15;
+            SafeZoneInfoListBox.Location = new Point(7, 40);
+            SafeZoneInfoListBox.Margin = new Padding(4, 3, 4, 3);
+            SafeZoneInfoListBox.Name = "SafeZoneInfoListBox";
+            SafeZoneInfoListBox.SelectionMode = SelectionMode.MultiExtended;
+            SafeZoneInfoListBox.Size = new Size(206, 154);
+            SafeZoneInfoListBox.TabIndex = 9;
+            SafeZoneInfoListBox.SelectedIndexChanged += SafeZoneInfoListBox_SelectedIndexChanged;
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.RPasteButton);
-            this.tabPage2.Controls.Add(this.RCopyButton);
-            this.tabPage2.Controls.Add(this.RemoveRButton);
-            this.tabPage2.Controls.Add(this.AddRButton);
-            this.tabPage2.Controls.Add(this.RespawnInfoListBox);
-            this.tabPage2.Controls.Add(this.RespawnInfoPanel);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(532, 247);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Respawns";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            tabPage2.Controls.Add(RPasteButton);
+            tabPage2.Controls.Add(RCopyButton);
+            tabPage2.Controls.Add(RemoveRButton);
+            tabPage2.Controls.Add(AddRButton);
+            tabPage2.Controls.Add(RespawnInfoListBox);
+            tabPage2.Controls.Add(RespawnInfoPanel);
+            tabPage2.Location = new Point(4, 24);
+            tabPage2.Margin = new Padding(4, 3, 4, 3);
+            tabPage2.Name = "tabPage2";
+            tabPage2.Padding = new Padding(4, 3, 4, 3);
+            tabPage2.Size = new Size(622, 287);
+            tabPage2.TabIndex = 1;
+            tabPage2.Text = "Respawns";
+            tabPage2.UseVisualStyleBackColor = true;
             // 
             // RPasteButton
             // 
-            this.RPasteButton.Location = new System.Drawing.Point(270, 7);
-            this.RPasteButton.Name = "RPasteButton";
-            this.RPasteButton.Size = new System.Drawing.Size(75, 23);
-            this.RPasteButton.TabIndex = 22;
-            this.RPasteButton.Text = "Paste";
-            this.RPasteButton.UseVisualStyleBackColor = true;
-            this.RPasteButton.Click += new System.EventHandler(this.RPasteButton_Click);
+            RPasteButton.Location = new Point(315, 8);
+            RPasteButton.Margin = new Padding(4, 3, 4, 3);
+            RPasteButton.Name = "RPasteButton";
+            RPasteButton.Size = new Size(88, 27);
+            RPasteButton.TabIndex = 22;
+            RPasteButton.Text = "Paste";
+            RPasteButton.UseVisualStyleBackColor = true;
+            RPasteButton.Click += RPasteButton_Click;
             // 
             // RCopyButton
             // 
-            this.RCopyButton.Location = new System.Drawing.Point(189, 7);
-            this.RCopyButton.Name = "RCopyButton";
-            this.RCopyButton.Size = new System.Drawing.Size(75, 23);
-            this.RCopyButton.TabIndex = 21;
-            this.RCopyButton.Text = "Copy";
-            this.RCopyButton.UseVisualStyleBackColor = true;
+            RCopyButton.Location = new Point(220, 8);
+            RCopyButton.Margin = new Padding(4, 3, 4, 3);
+            RCopyButton.Name = "RCopyButton";
+            RCopyButton.Size = new Size(88, 27);
+            RCopyButton.TabIndex = 21;
+            RCopyButton.Text = "Copy";
+            RCopyButton.UseVisualStyleBackColor = true;
             // 
             // RemoveRButton
             // 
-            this.RemoveRButton.Location = new System.Drawing.Point(108, 7);
-            this.RemoveRButton.Name = "RemoveRButton";
-            this.RemoveRButton.Size = new System.Drawing.Size(75, 23);
-            this.RemoveRButton.TabIndex = 16;
-            this.RemoveRButton.Text = "Remove";
-            this.RemoveRButton.UseVisualStyleBackColor = true;
-            this.RemoveRButton.Click += new System.EventHandler(this.RemoveRButton_Click);
+            RemoveRButton.Location = new Point(126, 8);
+            RemoveRButton.Margin = new Padding(4, 3, 4, 3);
+            RemoveRButton.Name = "RemoveRButton";
+            RemoveRButton.Size = new Size(88, 27);
+            RemoveRButton.TabIndex = 16;
+            RemoveRButton.Text = "Remove";
+            RemoveRButton.UseVisualStyleBackColor = true;
+            RemoveRButton.Click += RemoveRButton_Click;
             // 
             // AddRButton
             // 
-            this.AddRButton.Location = new System.Drawing.Point(6, 7);
-            this.AddRButton.Name = "AddRButton";
-            this.AddRButton.Size = new System.Drawing.Size(75, 23);
-            this.AddRButton.TabIndex = 15;
-            this.AddRButton.Text = "Add";
-            this.AddRButton.UseVisualStyleBackColor = true;
-            this.AddRButton.Click += new System.EventHandler(this.AddRButton_Click);
+            AddRButton.Location = new Point(7, 8);
+            AddRButton.Margin = new Padding(4, 3, 4, 3);
+            AddRButton.Name = "AddRButton";
+            AddRButton.Size = new Size(88, 27);
+            AddRButton.TabIndex = 15;
+            AddRButton.Text = "Add";
+            AddRButton.UseVisualStyleBackColor = true;
+            AddRButton.Click += AddRButton_Click;
             // 
             // RespawnInfoListBox
             // 
-            this.RespawnInfoListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.RespawnInfoListBox.FormattingEnabled = true;
-            this.RespawnInfoListBox.Location = new System.Drawing.Point(6, 35);
-            this.RespawnInfoListBox.Name = "RespawnInfoListBox";
-            this.RespawnInfoListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.RespawnInfoListBox.Size = new System.Drawing.Size(260, 147);
-            this.RespawnInfoListBox.TabIndex = 14;
-            this.RespawnInfoListBox.SelectedIndexChanged += new System.EventHandler(this.RespawnInfoListBox_SelectedIndexChanged);
+            RespawnInfoListBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            RespawnInfoListBox.FormattingEnabled = true;
+            RespawnInfoListBox.ItemHeight = 15;
+            RespawnInfoListBox.Location = new Point(7, 40);
+            RespawnInfoListBox.Margin = new Padding(4, 3, 4, 3);
+            RespawnInfoListBox.Name = "RespawnInfoListBox";
+            RespawnInfoListBox.SelectionMode = SelectionMode.MultiExtended;
+            RespawnInfoListBox.Size = new Size(303, 169);
+            RespawnInfoListBox.TabIndex = 14;
+            RespawnInfoListBox.SelectedIndexChanged += RespawnInfoListBox_SelectedIndexChanged;
             // 
             // RespawnInfoPanel
             // 
-            this.RespawnInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.RespawnInfoPanel.Controls.Add(this.chkrespawnsave);
-            this.RespawnInfoPanel.Controls.Add(this.chkRespawnEnableTick);
-            this.RespawnInfoPanel.Controls.Add(this.Randomtextbox);
-            this.RespawnInfoPanel.Controls.Add(this.label23);
-            this.RespawnInfoPanel.Controls.Add(this.label34);
-            this.RespawnInfoPanel.Controls.Add(this.RoutePathTextBox);
-            this.RespawnInfoPanel.Controls.Add(this.label24);
-            this.RespawnInfoPanel.Controls.Add(this.DirectionTextBox);
-            this.RespawnInfoPanel.Controls.Add(this.label8);
-            this.RespawnInfoPanel.Controls.Add(this.DelayTextBox);
-            this.RespawnInfoPanel.Controls.Add(this.label7);
-            this.RespawnInfoPanel.Controls.Add(this.MonsterInfoComboBox);
-            this.RespawnInfoPanel.Controls.Add(this.label6);
-            this.RespawnInfoPanel.Controls.Add(this.SpreadTextBox);
-            this.RespawnInfoPanel.Controls.Add(this.label9);
-            this.RespawnInfoPanel.Controls.Add(this.RYTextBox);
-            this.RespawnInfoPanel.Controls.Add(this.label10);
-            this.RespawnInfoPanel.Controls.Add(this.CountTextBox);
-            this.RespawnInfoPanel.Controls.Add(this.label13);
-            this.RespawnInfoPanel.Controls.Add(this.RXTextBox);
-            this.RespawnInfoPanel.Enabled = false;
-            this.RespawnInfoPanel.Location = new System.Drawing.Point(272, 35);
-            this.RespawnInfoPanel.Name = "RespawnInfoPanel";
-            this.RespawnInfoPanel.Size = new System.Drawing.Size(254, 205);
-            this.RespawnInfoPanel.TabIndex = 11;
+            RespawnInfoPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            RespawnInfoPanel.Controls.Add(chkrespawnsave);
+            RespawnInfoPanel.Controls.Add(chkRespawnEnableTick);
+            RespawnInfoPanel.Controls.Add(Randomtextbox);
+            RespawnInfoPanel.Controls.Add(label23);
+            RespawnInfoPanel.Controls.Add(label34);
+            RespawnInfoPanel.Controls.Add(RoutePathTextBox);
+            RespawnInfoPanel.Controls.Add(label24);
+            RespawnInfoPanel.Controls.Add(DirectionTextBox);
+            RespawnInfoPanel.Controls.Add(label8);
+            RespawnInfoPanel.Controls.Add(DelayTextBox);
+            RespawnInfoPanel.Controls.Add(label7);
+            RespawnInfoPanel.Controls.Add(MonsterInfoComboBox);
+            RespawnInfoPanel.Controls.Add(label6);
+            RespawnInfoPanel.Controls.Add(SpreadTextBox);
+            RespawnInfoPanel.Controls.Add(label9);
+            RespawnInfoPanel.Controls.Add(RYTextBox);
+            RespawnInfoPanel.Controls.Add(label10);
+            RespawnInfoPanel.Controls.Add(CountTextBox);
+            RespawnInfoPanel.Controls.Add(label13);
+            RespawnInfoPanel.Controls.Add(RXTextBox);
+            RespawnInfoPanel.Enabled = false;
+            RespawnInfoPanel.Location = new Point(317, 40);
+            RespawnInfoPanel.Margin = new Padding(4, 3, 4, 3);
+            RespawnInfoPanel.Name = "RespawnInfoPanel";
+            RespawnInfoPanel.Size = new Size(296, 237);
+            RespawnInfoPanel.TabIndex = 11;
             // 
             // chkrespawnsave
             // 
-            this.chkrespawnsave.AutoSize = true;
-            this.chkrespawnsave.Location = new System.Drawing.Point(25, 109);
-            this.chkrespawnsave.Name = "chkrespawnsave";
-            this.chkrespawnsave.Size = new System.Drawing.Size(164, 17);
-            this.chkrespawnsave.TabIndex = 25;
-            this.chkrespawnsave.Text = "Save respawnticks on reboot";
-            this.chkrespawnsave.UseVisualStyleBackColor = true;
-            this.chkrespawnsave.CheckedChanged += new System.EventHandler(this.chkrespawnsave_CheckedChanged);
+            chkrespawnsave.AutoSize = true;
+            chkrespawnsave.Location = new Point(29, 126);
+            chkrespawnsave.Margin = new Padding(4, 3, 4, 3);
+            chkrespawnsave.Name = "chkrespawnsave";
+            chkrespawnsave.Size = new Size(176, 19);
+            chkrespawnsave.TabIndex = 25;
+            chkrespawnsave.Text = "Save respawnticks on reboot";
+            chkrespawnsave.UseVisualStyleBackColor = true;
+            chkrespawnsave.CheckedChanged += chkrespawnsave_CheckedChanged;
             // 
             // chkRespawnEnableTick
             // 
-            this.chkRespawnEnableTick.AutoSize = true;
-            this.chkRespawnEnableTick.Location = new System.Drawing.Point(25, 92);
-            this.chkRespawnEnableTick.Name = "chkRespawnEnableTick";
-            this.chkRespawnEnableTick.Size = new System.Drawing.Size(137, 17);
-            this.chkRespawnEnableTick.TabIndex = 24;
-            this.chkRespawnEnableTick.Text = "Use tickbased respawn";
-            this.chkRespawnEnableTick.UseVisualStyleBackColor = true;
-            this.chkRespawnEnableTick.CheckedChanged += new System.EventHandler(this.chkRespawnEnableTick_CheckedChanged);
+            chkRespawnEnableTick.AutoSize = true;
+            chkRespawnEnableTick.Location = new Point(29, 106);
+            chkRespawnEnableTick.Margin = new Padding(4, 3, 4, 3);
+            chkRespawnEnableTick.Name = "chkRespawnEnableTick";
+            chkRespawnEnableTick.Size = new Size(145, 19);
+            chkRespawnEnableTick.TabIndex = 24;
+            chkRespawnEnableTick.Text = "Use tickbased respawn";
+            chkRespawnEnableTick.UseVisualStyleBackColor = true;
+            chkRespawnEnableTick.CheckedChanged += chkRespawnEnableTick_CheckedChanged;
             // 
             // Randomtextbox
             // 
-            this.Randomtextbox.Location = new System.Drawing.Point(158, 130);
-            this.Randomtextbox.MaxLength = 10;
-            this.Randomtextbox.Multiline = true;
-            this.Randomtextbox.Name = "Randomtextbox";
-            this.Randomtextbox.Size = new System.Drawing.Size(37, 20);
-            this.Randomtextbox.TabIndex = 23;
-            this.toolTip1.SetToolTip(this.Randomtextbox, "Allows random + or - added to each spawn time");
-            this.Randomtextbox.TextChanged += new System.EventHandler(this.RandomTextBox_TextChanged);
+            Randomtextbox.Location = new Point(184, 150);
+            Randomtextbox.Margin = new Padding(4, 3, 4, 3);
+            Randomtextbox.MaxLength = 10;
+            Randomtextbox.Multiline = true;
+            Randomtextbox.Name = "Randomtextbox";
+            Randomtextbox.Size = new Size(42, 22);
+            Randomtextbox.TabIndex = 23;
+            toolTip1.SetToolTip(Randomtextbox, "Allows random + or - added to each spawn time");
+            Randomtextbox.TextChanged += RandomTextBox_TextChanged;
             // 
             // label23
             // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(135, 133);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(18, 13);
-            this.label23.TabIndex = 22;
-            this.label23.Text = "R:";
+            label23.AutoSize = true;
+            label23.Location = new Point(158, 153);
+            label23.Margin = new Padding(4, 0, 4, 0);
+            label23.Name = "label23";
+            label23.Size = new Size(17, 15);
+            label23.TabIndex = 22;
+            label23.Text = "R:";
             // 
             // label34
             // 
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(22, 159);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(39, 13);
-            this.label34.TabIndex = 21;
-            this.label34.Text = "Route:";
+            label34.AutoSize = true;
+            label34.Location = new Point(26, 183);
+            label34.Margin = new Padding(4, 0, 4, 0);
+            label34.Name = "label34";
+            label34.Size = new Size(41, 15);
+            label34.TabIndex = 21;
+            label34.Text = "Route:";
             // 
             // RoutePathTextBox
             // 
-            this.RoutePathTextBox.Location = new System.Drawing.Point(65, 156);
-            this.RoutePathTextBox.Name = "RoutePathTextBox";
-            this.RoutePathTextBox.Size = new System.Drawing.Size(130, 20);
-            this.RoutePathTextBox.TabIndex = 20;
-            this.RoutePathTextBox.TextChanged += new System.EventHandler(this.RoutePathTextBox_TextChanged);
+            RoutePathTextBox.Location = new Point(76, 180);
+            RoutePathTextBox.Margin = new Padding(4, 3, 4, 3);
+            RoutePathTextBox.Name = "RoutePathTextBox";
+            RoutePathTextBox.Size = new Size(151, 23);
+            RoutePathTextBox.TabIndex = 20;
+            RoutePathTextBox.TextChanged += RoutePathTextBox_TextChanged;
             // 
             // label24
             // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(22, 185);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(23, 13);
-            this.label24.TabIndex = 18;
-            this.label24.Text = "Dir:";
+            label24.AutoSize = true;
+            label24.Location = new Point(26, 213);
+            label24.Margin = new Padding(4, 0, 4, 0);
+            label24.Name = "label24";
+            label24.Size = new Size(25, 15);
+            label24.TabIndex = 18;
+            label24.Text = "Dir:";
             // 
             // DirectionTextBox
             // 
-            this.DirectionTextBox.Location = new System.Drawing.Point(65, 182);
-            this.DirectionTextBox.MaxLength = 5;
-            this.DirectionTextBox.Name = "DirectionTextBox";
-            this.DirectionTextBox.Size = new System.Drawing.Size(37, 20);
-            this.DirectionTextBox.TabIndex = 17;
-            this.DirectionTextBox.TextChanged += new System.EventHandler(this.DirectionTextBox_TextChanged);
+            DirectionTextBox.Location = new Point(76, 210);
+            DirectionTextBox.Margin = new Padding(4, 3, 4, 3);
+            DirectionTextBox.MaxLength = 5;
+            DirectionTextBox.Name = "DirectionTextBox";
+            DirectionTextBox.Size = new Size(42, 23);
+            DirectionTextBox.TabIndex = 17;
+            DirectionTextBox.TextChanged += DirectionTextBox_TextChanged;
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(22, 133);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(37, 13);
-            this.label8.TabIndex = 16;
-            this.label8.Text = "Delay:";
+            label8.AutoSize = true;
+            label8.Location = new Point(26, 153);
+            label8.Margin = new Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(39, 15);
+            label8.TabIndex = 16;
+            label8.Text = "Delay:";
             // 
             // DelayTextBox
             // 
-            this.DelayTextBox.Location = new System.Drawing.Point(65, 130);
-            this.DelayTextBox.MaxLength = 10;
-            this.DelayTextBox.Multiline = true;
-            this.DelayTextBox.Name = "DelayTextBox";
-            this.DelayTextBox.Size = new System.Drawing.Size(62, 20);
-            this.DelayTextBox.TabIndex = 15;
-            this.toolTip1.SetToolTip(this.DelayTextBox, "if you use tick based spawn: this is ignored!");
-            this.DelayTextBox.TextChanged += new System.EventHandler(this.DelayTextBox_TextChanged);
+            DelayTextBox.Location = new Point(76, 150);
+            DelayTextBox.Margin = new Padding(4, 3, 4, 3);
+            DelayTextBox.MaxLength = 10;
+            DelayTextBox.Multiline = true;
+            DelayTextBox.Name = "DelayTextBox";
+            DelayTextBox.Size = new Size(72, 22);
+            DelayTextBox.TabIndex = 15;
+            toolTip1.SetToolTip(DelayTextBox, "if you use tick based spawn: this is ignored!");
+            DelayTextBox.TextChanged += DelayTextBox_TextChanged;
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(11, 16);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(48, 13);
-            this.label7.TabIndex = 14;
-            this.label7.Text = "Monster:";
+            label7.AutoSize = true;
+            label7.Location = new Point(13, 18);
+            label7.Margin = new Padding(4, 0, 4, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(54, 15);
+            label7.TabIndex = 14;
+            label7.Text = "Monster:";
             // 
             // MonsterInfoComboBox
             // 
-            this.MonsterInfoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.MonsterInfoComboBox.FormattingEnabled = true;
-            this.MonsterInfoComboBox.Location = new System.Drawing.Point(65, 13);
-            this.MonsterInfoComboBox.Name = "MonsterInfoComboBox";
-            this.MonsterInfoComboBox.Size = new System.Drawing.Size(130, 21);
-            this.MonsterInfoComboBox.TabIndex = 13;
-            this.MonsterInfoComboBox.SelectedIndexChanged += new System.EventHandler(this.MonsterInfoComboBox_SelectedIndexChanged);
+            MonsterInfoComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            MonsterInfoComboBox.FormattingEnabled = true;
+            MonsterInfoComboBox.Location = new Point(76, 15);
+            MonsterInfoComboBox.Margin = new Padding(4, 3, 4, 3);
+            MonsterInfoComboBox.Name = "MonsterInfoComboBox";
+            MonsterInfoComboBox.Size = new Size(151, 23);
+            MonsterInfoComboBox.TabIndex = 13;
+            MonsterInfoComboBox.SelectedIndexChanged += MonsterInfoComboBox_SelectedIndexChanged;
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(108, 69);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(44, 13);
-            this.label6.TabIndex = 12;
-            this.label6.Text = "Spread:";
+            label6.AutoSize = true;
+            label6.Location = new Point(126, 80);
+            label6.Margin = new Padding(4, 0, 4, 0);
+            label6.Name = "label6";
+            label6.Size = new Size(46, 15);
+            label6.TabIndex = 12;
+            label6.Text = "Spread:";
             // 
             // SpreadTextBox
             // 
-            this.SpreadTextBox.Location = new System.Drawing.Point(158, 66);
-            this.SpreadTextBox.MaxLength = 5;
-            this.SpreadTextBox.Name = "SpreadTextBox";
-            this.SpreadTextBox.Size = new System.Drawing.Size(37, 20);
-            this.SpreadTextBox.TabIndex = 11;
-            this.SpreadTextBox.TextChanged += new System.EventHandler(this.SpreadTextBox_TextChanged);
+            SpreadTextBox.Location = new Point(184, 76);
+            SpreadTextBox.Margin = new Padding(4, 3, 4, 3);
+            SpreadTextBox.MaxLength = 5;
+            SpreadTextBox.Name = "SpreadTextBox";
+            SpreadTextBox.Size = new Size(42, 23);
+            SpreadTextBox.TabIndex = 11;
+            SpreadTextBox.TextChanged += SpreadTextBox_TextChanged;
             // 
             // label9
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(135, 43);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(17, 13);
-            this.label9.TabIndex = 10;
-            this.label9.Text = "Y:";
+            label9.AutoSize = true;
+            label9.Location = new Point(158, 50);
+            label9.Margin = new Padding(4, 0, 4, 0);
+            label9.Name = "label9";
+            label9.Size = new Size(17, 15);
+            label9.TabIndex = 10;
+            label9.Text = "Y:";
             // 
             // RYTextBox
             // 
-            this.RYTextBox.Location = new System.Drawing.Point(158, 40);
-            this.RYTextBox.MaxLength = 5;
-            this.RYTextBox.Name = "RYTextBox";
-            this.RYTextBox.Size = new System.Drawing.Size(37, 20);
-            this.RYTextBox.TabIndex = 3;
-            this.RYTextBox.TextChanged += new System.EventHandler(this.RYTextBox_TextChanged);
+            RYTextBox.Location = new Point(184, 46);
+            RYTextBox.Margin = new Padding(4, 3, 4, 3);
+            RYTextBox.MaxLength = 5;
+            RYTextBox.Name = "RYTextBox";
+            RYTextBox.Size = new Size(42, 23);
+            RYTextBox.TabIndex = 3;
+            RYTextBox.TextChanged += RYTextBox_TextChanged;
             // 
             // label10
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(21, 69);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(38, 13);
-            this.label10.TabIndex = 8;
-            this.label10.Text = "Count:";
+            label10.AutoSize = true;
+            label10.Location = new Point(24, 80);
+            label10.Margin = new Padding(4, 0, 4, 0);
+            label10.Name = "label10";
+            label10.Size = new Size(43, 15);
+            label10.TabIndex = 8;
+            label10.Text = "Count:";
             // 
             // CountTextBox
             // 
-            this.CountTextBox.Location = new System.Drawing.Point(65, 66);
-            this.CountTextBox.MaxLength = 5;
-            this.CountTextBox.Name = "CountTextBox";
-            this.CountTextBox.Size = new System.Drawing.Size(37, 20);
-            this.CountTextBox.TabIndex = 4;
-            this.CountTextBox.TextChanged += new System.EventHandler(this.CountTextBox_TextChanged);
+            CountTextBox.Location = new Point(76, 76);
+            CountTextBox.Margin = new Padding(4, 3, 4, 3);
+            CountTextBox.MaxLength = 5;
+            CountTextBox.Name = "CountTextBox";
+            CountTextBox.Size = new Size(42, 23);
+            CountTextBox.TabIndex = 4;
+            CountTextBox.TextChanged += CountTextBox_TextChanged;
             // 
             // label13
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(42, 43);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(17, 13);
-            this.label13.TabIndex = 3;
-            this.label13.Text = "X:";
+            label13.AutoSize = true;
+            label13.Location = new Point(49, 50);
+            label13.Margin = new Padding(4, 0, 4, 0);
+            label13.Name = "label13";
+            label13.Size = new Size(17, 15);
+            label13.TabIndex = 3;
+            label13.Text = "X:";
             // 
             // RXTextBox
             // 
-            this.RXTextBox.Location = new System.Drawing.Point(65, 40);
-            this.RXTextBox.MaxLength = 5;
-            this.RXTextBox.Name = "RXTextBox";
-            this.RXTextBox.Size = new System.Drawing.Size(37, 20);
-            this.RXTextBox.TabIndex = 2;
-            this.RXTextBox.TextChanged += new System.EventHandler(this.RXTextBox_TextChanged);
+            RXTextBox.Location = new Point(76, 46);
+            RXTextBox.Margin = new Padding(4, 3, 4, 3);
+            RXTextBox.MaxLength = 5;
+            RXTextBox.Name = "RXTextBox";
+            RXTextBox.Size = new Size(42, 23);
+            RXTextBox.TabIndex = 2;
+            RXTextBox.TextChanged += RXTextBox_TextChanged;
             // 
             // tabPage4
             // 
-            this.tabPage4.Controls.Add(this.RemoveMButton);
-            this.tabPage4.Controls.Add(this.AddMButton);
-            this.tabPage4.Controls.Add(this.MovementInfoPanel);
-            this.tabPage4.Controls.Add(this.MovementInfoListBox);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(532, 247);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Movements";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            tabPage4.Controls.Add(RemoveMButton);
+            tabPage4.Controls.Add(AddMButton);
+            tabPage4.Controls.Add(MovementInfoPanel);
+            tabPage4.Controls.Add(MovementInfoListBox);
+            tabPage4.Location = new Point(4, 24);
+            tabPage4.Margin = new Padding(4, 3, 4, 3);
+            tabPage4.Name = "tabPage4";
+            tabPage4.Padding = new Padding(4, 3, 4, 3);
+            tabPage4.Size = new Size(622, 287);
+            tabPage4.TabIndex = 3;
+            tabPage4.Text = "Movements";
+            tabPage4.UseVisualStyleBackColor = true;
             // 
             // RemoveMButton
             // 
-            this.RemoveMButton.Location = new System.Drawing.Point(108, 7);
-            this.RemoveMButton.Name = "RemoveMButton";
-            this.RemoveMButton.Size = new System.Drawing.Size(75, 23);
-            this.RemoveMButton.TabIndex = 12;
-            this.RemoveMButton.Text = "Remove";
-            this.RemoveMButton.UseVisualStyleBackColor = true;
-            this.RemoveMButton.Click += new System.EventHandler(this.RemoveMButton_Click);
+            RemoveMButton.Location = new Point(126, 8);
+            RemoveMButton.Margin = new Padding(4, 3, 4, 3);
+            RemoveMButton.Name = "RemoveMButton";
+            RemoveMButton.Size = new Size(88, 27);
+            RemoveMButton.TabIndex = 12;
+            RemoveMButton.Text = "Remove";
+            RemoveMButton.UseVisualStyleBackColor = true;
+            RemoveMButton.Click += RemoveMButton_Click;
             // 
             // AddMButton
             // 
-            this.AddMButton.Location = new System.Drawing.Point(6, 7);
-            this.AddMButton.Name = "AddMButton";
-            this.AddMButton.Size = new System.Drawing.Size(75, 23);
-            this.AddMButton.TabIndex = 11;
-            this.AddMButton.Text = "Add";
-            this.AddMButton.UseVisualStyleBackColor = true;
-            this.AddMButton.Click += new System.EventHandler(this.AddMButton_Click);
+            AddMButton.Location = new Point(7, 8);
+            AddMButton.Margin = new Padding(4, 3, 4, 3);
+            AddMButton.Name = "AddMButton";
+            AddMButton.Size = new Size(88, 27);
+            AddMButton.TabIndex = 11;
+            AddMButton.Text = "Add";
+            AddMButton.UseVisualStyleBackColor = true;
+            AddMButton.Click += AddMButton_Click;
             // 
             // MovementInfoPanel
             // 
-            this.MovementInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.MovementInfoPanel.Controls.Add(this.label26);
-            this.MovementInfoPanel.Controls.Add(this.BigMapIconTextBox);
-            this.MovementInfoPanel.Controls.Add(this.ShowBigMapCheckBox);
-            this.MovementInfoPanel.Controls.Add(this.label25);
-            this.MovementInfoPanel.Controls.Add(this.ConquestComboBox);
-            this.MovementInfoPanel.Controls.Add(this.NeedMoveMCheckBox);
-            this.MovementInfoPanel.Controls.Add(this.NeedHoleMCheckBox);
-            this.MovementInfoPanel.Controls.Add(this.label22);
-            this.MovementInfoPanel.Controls.Add(this.DestMapComboBox);
-            this.MovementInfoPanel.Controls.Add(this.label18);
-            this.MovementInfoPanel.Controls.Add(this.DestYTextBox);
-            this.MovementInfoPanel.Controls.Add(this.label21);
-            this.MovementInfoPanel.Controls.Add(this.DestXTextBox);
-            this.MovementInfoPanel.Controls.Add(this.label16);
-            this.MovementInfoPanel.Controls.Add(this.SourceYTextBox);
-            this.MovementInfoPanel.Controls.Add(this.label20);
-            this.MovementInfoPanel.Controls.Add(this.SourceXTextBox);
-            this.MovementInfoPanel.Enabled = false;
-            this.MovementInfoPanel.Location = new System.Drawing.Point(239, 35);
-            this.MovementInfoPanel.Name = "MovementInfoPanel";
-            this.MovementInfoPanel.Size = new System.Drawing.Size(256, 205);
-            this.MovementInfoPanel.TabIndex = 14;
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(3, 149);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(55, 13);
-            this.label25.TabIndex = 20;
-            this.label25.Text = "Conquest:";
-            // 
-            // ConquestComboBox
-            // 
-            this.ConquestComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ConquestComboBox.FormattingEnabled = true;
-            this.ConquestComboBox.Location = new System.Drawing.Point(64, 146);
-            this.ConquestComboBox.Name = "ConquestComboBox";
-            this.ConquestComboBox.Size = new System.Drawing.Size(182, 21);
-            this.ConquestComboBox.TabIndex = 19;
-            this.ConquestComboBox.SelectedIndexChanged += new System.EventHandler(this.ConquestComboBox_SelectedIndexChanged);
-            // 
-            // NeedMoveMCheckBox
-            // 
-            this.NeedMoveMCheckBox.AutoSize = true;
-            this.NeedMoveMCheckBox.Location = new System.Drawing.Point(14, 123);
-            this.NeedMoveMCheckBox.Name = "NeedMoveMCheckBox";
-            this.NeedMoveMCheckBox.Size = new System.Drawing.Size(82, 17);
-            this.NeedMoveMCheckBox.TabIndex = 18;
-            this.NeedMoveMCheckBox.Text = "Need Move";
-            this.NeedMoveMCheckBox.UseVisualStyleBackColor = true;
-            this.NeedMoveMCheckBox.CheckedChanged += new System.EventHandler(this.NeedScriptMCheckBox_CheckedChanged);
-            // 
-            // NeedHoleMCheckBox
-            // 
-            this.NeedHoleMCheckBox.AutoSize = true;
-            this.NeedHoleMCheckBox.Location = new System.Drawing.Point(14, 100);
-            this.NeedHoleMCheckBox.Name = "NeedHoleMCheckBox";
-            this.NeedHoleMCheckBox.Size = new System.Drawing.Size(77, 17);
-            this.NeedHoleMCheckBox.TabIndex = 17;
-            this.NeedHoleMCheckBox.Text = "Need Hole";
-            this.NeedHoleMCheckBox.UseVisualStyleBackColor = true;
-            this.NeedHoleMCheckBox.CheckedChanged += new System.EventHandler(this.NeedHoleMCheckBox_CheckedChanged);
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(11, 37);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(47, 13);
-            this.label22.TabIndex = 16;
-            this.label22.Text = "To Map:";
-            // 
-            // DestMapComboBox
-            // 
-            this.DestMapComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.DestMapComboBox.FormattingEnabled = true;
-            this.DestMapComboBox.Location = new System.Drawing.Point(64, 33);
-            this.DestMapComboBox.Name = "DestMapComboBox";
-            this.DestMapComboBox.Size = new System.Drawing.Size(182, 21);
-            this.DestMapComboBox.TabIndex = 15;
-            this.DestMapComboBox.SelectedIndexChanged += new System.EventHandler(this.DestMapComboBox_SelectedIndexChanged);
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(118, 63);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(33, 13);
-            this.label18.TabIndex = 14;
-            this.label18.Text = "To Y:";
-            // 
-            // DestYTextBox
-            // 
-            this.DestYTextBox.Location = new System.Drawing.Point(157, 60);
-            this.DestYTextBox.MaxLength = 5;
-            this.DestYTextBox.Name = "DestYTextBox";
-            this.DestYTextBox.Size = new System.Drawing.Size(37, 20);
-            this.DestYTextBox.TabIndex = 12;
-            this.DestYTextBox.TextChanged += new System.EventHandler(this.DestYTextBox_TextChanged);
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label21.Location = new System.Drawing.Point(23, 63);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(33, 13);
-            this.label21.TabIndex = 13;
-            this.label21.Text = "To X:";
-            // 
-            // DestXTextBox
-            // 
-            this.DestXTextBox.Location = new System.Drawing.Point(62, 60);
-            this.DestXTextBox.MaxLength = 5;
-            this.DestXTextBox.Name = "DestXTextBox";
-            this.DestXTextBox.Size = new System.Drawing.Size(37, 20);
-            this.DestXTextBox.TabIndex = 11;
-            this.DestXTextBox.TextChanged += new System.EventHandler(this.DestXTextBox_TextChanged);
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(108, 11);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(43, 13);
-            this.label16.TabIndex = 10;
-            this.label16.Text = "From Y:";
-            // 
-            // SourceYTextBox
-            // 
-            this.SourceYTextBox.Location = new System.Drawing.Point(157, 7);
-            this.SourceYTextBox.MaxLength = 5;
-            this.SourceYTextBox.Name = "SourceYTextBox";
-            this.SourceYTextBox.Size = new System.Drawing.Size(37, 20);
-            this.SourceYTextBox.TabIndex = 3;
-            this.SourceYTextBox.TextChanged += new System.EventHandler(this.SourceYTextBox_TextChanged);
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(13, 11);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(43, 13);
-            this.label20.TabIndex = 3;
-            this.label20.Text = "From X:";
-            // 
-            // SourceXTextBox
-            // 
-            this.SourceXTextBox.Location = new System.Drawing.Point(62, 7);
-            this.SourceXTextBox.MaxLength = 5;
-            this.SourceXTextBox.Name = "SourceXTextBox";
-            this.SourceXTextBox.Size = new System.Drawing.Size(37, 20);
-            this.SourceXTextBox.TabIndex = 2;
-            this.SourceXTextBox.TextChanged += new System.EventHandler(this.SourceXTextBox_TextChanged);
-            // 
-            // MovementInfoListBox
-            // 
-            this.MovementInfoListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.MovementInfoListBox.FormattingEnabled = true;
-            this.MovementInfoListBox.Location = new System.Drawing.Point(6, 35);
-            this.MovementInfoListBox.Name = "MovementInfoListBox";
-            this.MovementInfoListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.MovementInfoListBox.Size = new System.Drawing.Size(227, 173);
-            this.MovementInfoListBox.TabIndex = 13;
-            this.MovementInfoListBox.SelectedIndexChanged += new System.EventHandler(this.MovementInfoListBox_SelectedIndexChanged);
-            // 
-            // tabPage7
-            // 
-            this.tabPage7.Controls.Add(this.MZDeletebutton);
-            this.tabPage7.Controls.Add(this.MZAddbutton);
-            this.tabPage7.Controls.Add(this.MineZonepanel);
-            this.tabPage7.Controls.Add(this.MZListlistBox);
-            this.tabPage7.Location = new System.Drawing.Point(4, 22);
-            this.tabPage7.Name = "tabPage7";
-            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(532, 247);
-            this.tabPage7.TabIndex = 6;
-            this.tabPage7.Text = "MineZones";
-            this.tabPage7.UseVisualStyleBackColor = true;
-            // 
-            // MZDeletebutton
-            // 
-            this.MZDeletebutton.Location = new System.Drawing.Point(108, 7);
-            this.MZDeletebutton.Name = "MZDeletebutton";
-            this.MZDeletebutton.Size = new System.Drawing.Size(75, 23);
-            this.MZDeletebutton.TabIndex = 12;
-            this.MZDeletebutton.Text = "Remove";
-            this.MZDeletebutton.UseVisualStyleBackColor = true;
-            this.MZDeletebutton.Click += new System.EventHandler(this.MZDeletebutton_Click);
-            // 
-            // MZAddbutton
-            // 
-            this.MZAddbutton.Location = new System.Drawing.Point(6, 7);
-            this.MZAddbutton.Name = "MZAddbutton";
-            this.MZAddbutton.Size = new System.Drawing.Size(75, 23);
-            this.MZAddbutton.TabIndex = 11;
-            this.MZAddbutton.Text = "Add";
-            this.MZAddbutton.UseVisualStyleBackColor = true;
-            this.MZAddbutton.Click += new System.EventHandler(this.MZAddbutton_Click);
-            // 
-            // MineZonepanel
-            // 
-            this.MineZonepanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.MineZonepanel.Controls.Add(this.label27);
-            this.MineZonepanel.Controls.Add(this.MineZoneComboBox);
-            this.MineZonepanel.Controls.Add(this.label30);
-            this.MineZonepanel.Controls.Add(this.MZYtextBox);
-            this.MineZonepanel.Controls.Add(this.label31);
-            this.MineZonepanel.Controls.Add(this.MZSizetextBox);
-            this.MineZonepanel.Controls.Add(this.label32);
-            this.MineZonepanel.Controls.Add(this.MZXtextBox);
-            this.MineZonepanel.Enabled = false;
-            this.MineZonepanel.Location = new System.Drawing.Point(189, 35);
-            this.MineZonepanel.Name = "MineZonepanel";
-            this.MineZonepanel.Size = new System.Drawing.Size(241, 139);
-            this.MineZonepanel.TabIndex = 14;
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(12, 17);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(60, 13);
-            this.label27.TabIndex = 14;
-            this.label27.Text = "Mine Type:";
-            // 
-            // MineZoneComboBox
-            // 
-            this.MineZoneComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.MineZoneComboBox.FormattingEnabled = true;
-            this.MineZoneComboBox.Location = new System.Drawing.Point(78, 14);
-            this.MineZoneComboBox.Name = "MineZoneComboBox";
-            this.MineZoneComboBox.Size = new System.Drawing.Size(124, 21);
-            this.MineZoneComboBox.TabIndex = 13;
-            this.MineZoneComboBox.SelectedIndexChanged += new System.EventHandler(this.MineZoneComboBox_SelectedIndexChanged);
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(142, 53);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(17, 13);
-            this.label30.TabIndex = 10;
-            this.label30.Text = "Y:";
-            // 
-            // MZYtextBox
-            // 
-            this.MZYtextBox.Location = new System.Drawing.Point(165, 50);
-            this.MZYtextBox.MaxLength = 5;
-            this.MZYtextBox.Name = "MZYtextBox";
-            this.MZYtextBox.Size = new System.Drawing.Size(37, 20);
-            this.MZYtextBox.TabIndex = 3;
-            this.MZYtextBox.TextChanged += new System.EventHandler(this.MZYtextBox_TextChanged);
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(42, 99);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(30, 13);
-            this.label31.TabIndex = 8;
-            this.label31.Text = "Size:";
-            // 
-            // MZSizetextBox
-            // 
-            this.MZSizetextBox.Location = new System.Drawing.Point(78, 96);
-            this.MZSizetextBox.MaxLength = 5;
-            this.MZSizetextBox.Name = "MZSizetextBox";
-            this.MZSizetextBox.Size = new System.Drawing.Size(37, 20);
-            this.MZSizetextBox.TabIndex = 4;
-            this.MZSizetextBox.TextChanged += new System.EventHandler(this.MZSizetextBox_TextChanged);
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(55, 57);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(17, 13);
-            this.label32.TabIndex = 3;
-            this.label32.Text = "X:";
-            // 
-            // MZXtextBox
-            // 
-            this.MZXtextBox.Location = new System.Drawing.Point(78, 54);
-            this.MZXtextBox.MaxLength = 5;
-            this.MZXtextBox.Name = "MZXtextBox";
-            this.MZXtextBox.Size = new System.Drawing.Size(37, 20);
-            this.MZXtextBox.TabIndex = 2;
-            this.MZXtextBox.TextChanged += new System.EventHandler(this.MZXtextBox_TextChanged);
-            // 
-            // MZListlistBox
-            // 
-            this.MZListlistBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.MZListlistBox.FormattingEnabled = true;
-            this.MZListlistBox.Location = new System.Drawing.Point(6, 35);
-            this.MZListlistBox.Name = "MZListlistBox";
-            this.MZListlistBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.MZListlistBox.Size = new System.Drawing.Size(177, 134);
-            this.MZListlistBox.TabIndex = 13;
-            this.MZListlistBox.SelectedIndexChanged += new System.EventHandler(this.MZListlistBox_SelectedIndexChanged);
-            // 
-            // RemoveButton
-            // 
-            this.RemoveButton.Location = new System.Drawing.Point(126, 33);
-            this.RemoveButton.Name = "RemoveButton";
-            this.RemoveButton.Size = new System.Drawing.Size(75, 23);
-            this.RemoveButton.TabIndex = 6;
-            this.RemoveButton.Text = "Remove";
-            this.RemoveButton.UseVisualStyleBackColor = true;
-            this.RemoveButton.Click += new System.EventHandler(this.RemoveButton_Click);
-            // 
-            // AddButton
-            // 
-            this.AddButton.Location = new System.Drawing.Point(12, 33);
-            this.AddButton.Name = "AddButton";
-            this.AddButton.Size = new System.Drawing.Size(75, 23);
-            this.AddButton.TabIndex = 5;
-            this.AddButton.Text = "Add";
-            this.AddButton.UseVisualStyleBackColor = true;
-            this.AddButton.Click += new System.EventHandler(this.AddButton_Click);
-            // 
-            // MapInfoListBox
-            // 
-            this.MapInfoListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.MapInfoListBox.FormattingEnabled = true;
-            this.MapInfoListBox.Location = new System.Drawing.Point(12, 62);
-            this.MapInfoListBox.Name = "MapInfoListBox";
-            this.MapInfoListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.MapInfoListBox.Size = new System.Drawing.Size(189, 264);
-            this.MapInfoListBox.TabIndex = 7;
-            this.MapInfoListBox.SelectedIndexChanged += new System.EventHandler(this.MapInfoListBox_SelectedIndexChanged);
-            // 
-            // PasteMapButton
-            // 
-            this.PasteMapButton.Location = new System.Drawing.Point(288, 33);
-            this.PasteMapButton.Name = "PasteMapButton";
-            this.PasteMapButton.Size = new System.Drawing.Size(75, 23);
-            this.PasteMapButton.TabIndex = 24;
-            this.PasteMapButton.Text = "Paste";
-            this.PasteMapButton.UseVisualStyleBackColor = true;
-            this.PasteMapButton.Click += new System.EventHandler(this.PasteMapButton_Click);
-            // 
-            // CopyMapButton
-            // 
-            this.CopyMapButton.Location = new System.Drawing.Point(207, 33);
-            this.CopyMapButton.Name = "CopyMapButton";
-            this.CopyMapButton.Size = new System.Drawing.Size(75, 23);
-            this.CopyMapButton.TabIndex = 23;
-            this.CopyMapButton.Text = "Copy";
-            this.CopyMapButton.UseVisualStyleBackColor = true;
-            // 
-            // ImportMapInfoButton
-            // 
-            this.ImportMapInfoButton.Location = new System.Drawing.Point(564, 4);
-            this.ImportMapInfoButton.Name = "ImportMapInfoButton";
-            this.ImportMapInfoButton.Size = new System.Drawing.Size(87, 23);
-            this.ImportMapInfoButton.TabIndex = 25;
-            this.ImportMapInfoButton.Text = "Import MapInfo";
-            this.ImportMapInfoButton.UseVisualStyleBackColor = true;
-            this.ImportMapInfoButton.Click += new System.EventHandler(this.ImportMapInfoButton_Click);
-            // 
-            // ExportMapInfoButton
-            // 
-            this.ExportMapInfoButton.Location = new System.Drawing.Point(564, 33);
-            this.ExportMapInfoButton.Name = "ExportMapInfoButton";
-            this.ExportMapInfoButton.Size = new System.Drawing.Size(87, 23);
-            this.ExportMapInfoButton.TabIndex = 26;
-            this.ExportMapInfoButton.Text = "Export MapInfo";
-            this.ExportMapInfoButton.UseVisualStyleBackColor = true;
-            this.ExportMapInfoButton.Click += new System.EventHandler(this.ExportMapInfoButton_Click);
-            // 
-            // ImportMongenButton
-            // 
-            this.ImportMongenButton.Location = new System.Drawing.Point(657, 3);
-            this.ImportMongenButton.Name = "ImportMongenButton";
-            this.ImportMongenButton.Size = new System.Drawing.Size(86, 23);
-            this.ImportMongenButton.TabIndex = 27;
-            this.ImportMongenButton.Text = "Import Spawns";
-            this.ImportMongenButton.UseVisualStyleBackColor = true;
-            this.ImportMongenButton.Click += new System.EventHandler(this.ImportMonGenButton_Click);
-            // 
-            // ExportMongenButton
-            // 
-            this.ExportMongenButton.Location = new System.Drawing.Point(657, 33);
-            this.ExportMongenButton.Name = "ExportMongenButton";
-            this.ExportMongenButton.Size = new System.Drawing.Size(86, 23);
-            this.ExportMongenButton.TabIndex = 28;
-            this.ExportMongenButton.Text = "Export Spawns";
-            this.ExportMongenButton.UseVisualStyleBackColor = true;
-            this.ExportMongenButton.Click += new System.EventHandler(this.ExportMonGenButton_Click);
-            // 
-            // VisualizerButton
-            // 
-            this.VisualizerButton.Location = new System.Drawing.Point(483, 4);
-            this.VisualizerButton.Name = "VisualizerButton";
-            this.VisualizerButton.Size = new System.Drawing.Size(75, 23);
-            this.VisualizerButton.TabIndex = 31;
-            this.VisualizerButton.Text = "Visualizer";
-            this.VisualizerButton.UseVisualStyleBackColor = true;
-            this.VisualizerButton.Click += new System.EventHandler(this.VisualizerButton_Click);
-            // 
-            // ShowBigMapCheckBox
-            // 
-            this.ShowBigMapCheckBox.AutoSize = true;
-            this.ShowBigMapCheckBox.Location = new System.Drawing.Point(14, 182);
-            this.ShowBigMapCheckBox.Name = "ShowBigMapCheckBox";
-            this.ShowBigMapCheckBox.Size = new System.Drawing.Size(107, 17);
-            this.ShowBigMapCheckBox.TabIndex = 21;
-            this.ShowBigMapCheckBox.Text = "Show on BigMap";
-            this.ShowBigMapCheckBox.UseVisualStyleBackColor = true;
-            this.ShowBigMapCheckBox.CheckedChanged += new System.EventHandler(this.ShowBigMapCheckBox_CheckedChanged);
+            MovementInfoPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            MovementInfoPanel.Controls.Add(label26);
+            MovementInfoPanel.Controls.Add(BigMapIconTextBox);
+            MovementInfoPanel.Controls.Add(ShowBigMapCheckBox);
+            MovementInfoPanel.Controls.Add(label25);
+            MovementInfoPanel.Controls.Add(ConquestComboBox);
+            MovementInfoPanel.Controls.Add(NeedMoveMCheckBox);
+            MovementInfoPanel.Controls.Add(NeedHoleMCheckBox);
+            MovementInfoPanel.Controls.Add(label22);
+            MovementInfoPanel.Controls.Add(DestMapComboBox);
+            MovementInfoPanel.Controls.Add(label18);
+            MovementInfoPanel.Controls.Add(DestYTextBox);
+            MovementInfoPanel.Controls.Add(label21);
+            MovementInfoPanel.Controls.Add(DestXTextBox);
+            MovementInfoPanel.Controls.Add(label16);
+            MovementInfoPanel.Controls.Add(SourceYTextBox);
+            MovementInfoPanel.Controls.Add(label20);
+            MovementInfoPanel.Controls.Add(SourceXTextBox);
+            MovementInfoPanel.Enabled = false;
+            MovementInfoPanel.Location = new Point(279, 40);
+            MovementInfoPanel.Margin = new Padding(4, 3, 4, 3);
+            MovementInfoPanel.Name = "MovementInfoPanel";
+            MovementInfoPanel.Size = new Size(299, 237);
+            MovementInfoPanel.TabIndex = 14;
             // 
             // label26
             // 
-            this.label26.AutoSize = true;
-            this.label26.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label26.Location = new System.Drawing.Point(154, 182);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(31, 13);
-            this.label26.TabIndex = 23;
-            this.label26.Text = "Icon:";
+            label26.AutoSize = true;
+            label26.Location = new Point(180, 210);
+            label26.Margin = new Padding(4, 0, 4, 0);
+            label26.Name = "label26";
+            label26.Size = new Size(33, 15);
+            label26.TabIndex = 23;
+            label26.Text = "Icon:";
             // 
             // BigMapIconTextBox
             // 
-            this.BigMapIconTextBox.Location = new System.Drawing.Point(193, 179);
-            this.BigMapIconTextBox.MaxLength = 5;
-            this.BigMapIconTextBox.Name = "BigMapIconTextBox";
-            this.BigMapIconTextBox.Size = new System.Drawing.Size(37, 20);
-            this.BigMapIconTextBox.TabIndex = 22;
-            this.BigMapIconTextBox.TextChanged += new System.EventHandler(this.BigMapIconTextBox_TextChanged);
+            BigMapIconTextBox.Location = new Point(225, 207);
+            BigMapIconTextBox.Margin = new Padding(4, 3, 4, 3);
+            BigMapIconTextBox.MaxLength = 5;
+            BigMapIconTextBox.Name = "BigMapIconTextBox";
+            BigMapIconTextBox.Size = new Size(42, 23);
+            BigMapIconTextBox.TabIndex = 22;
+            BigMapIconTextBox.TextChanged += BigMapIconTextBox_TextChanged;
+            // 
+            // ShowBigMapCheckBox
+            // 
+            ShowBigMapCheckBox.AutoSize = true;
+            ShowBigMapCheckBox.Location = new Point(16, 210);
+            ShowBigMapCheckBox.Margin = new Padding(4, 3, 4, 3);
+            ShowBigMapCheckBox.Name = "ShowBigMapCheckBox";
+            ShowBigMapCheckBox.Size = new Size(116, 19);
+            ShowBigMapCheckBox.TabIndex = 21;
+            ShowBigMapCheckBox.Text = "Show on BigMap";
+            ShowBigMapCheckBox.UseVisualStyleBackColor = true;
+            ShowBigMapCheckBox.CheckedChanged += ShowBigMapCheckBox_CheckedChanged;
+            // 
+            // label25
+            // 
+            label25.AutoSize = true;
+            label25.Location = new Point(4, 172);
+            label25.Margin = new Padding(4, 0, 4, 0);
+            label25.Name = "label25";
+            label25.Size = new Size(61, 15);
+            label25.TabIndex = 20;
+            label25.Text = "Conquest:";
+            // 
+            // ConquestComboBox
+            // 
+            ConquestComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            ConquestComboBox.FormattingEnabled = true;
+            ConquestComboBox.Location = new Point(75, 168);
+            ConquestComboBox.Margin = new Padding(4, 3, 4, 3);
+            ConquestComboBox.Name = "ConquestComboBox";
+            ConquestComboBox.Size = new Size(212, 23);
+            ConquestComboBox.TabIndex = 19;
+            ConquestComboBox.SelectedIndexChanged += ConquestComboBox_SelectedIndexChanged;
+            // 
+            // NeedMoveMCheckBox
+            // 
+            NeedMoveMCheckBox.AutoSize = true;
+            NeedMoveMCheckBox.Location = new Point(16, 142);
+            NeedMoveMCheckBox.Margin = new Padding(4, 3, 4, 3);
+            NeedMoveMCheckBox.Name = "NeedMoveMCheckBox";
+            NeedMoveMCheckBox.Size = new Size(87, 19);
+            NeedMoveMCheckBox.TabIndex = 18;
+            NeedMoveMCheckBox.Text = "Need Move";
+            NeedMoveMCheckBox.UseVisualStyleBackColor = true;
+            NeedMoveMCheckBox.CheckedChanged += NeedScriptMCheckBox_CheckedChanged;
+            // 
+            // NeedHoleMCheckBox
+            // 
+            NeedHoleMCheckBox.AutoSize = true;
+            NeedHoleMCheckBox.Location = new Point(16, 115);
+            NeedHoleMCheckBox.Margin = new Padding(4, 3, 4, 3);
+            NeedHoleMCheckBox.Name = "NeedHoleMCheckBox";
+            NeedHoleMCheckBox.Size = new Size(82, 19);
+            NeedHoleMCheckBox.TabIndex = 17;
+            NeedHoleMCheckBox.Text = "Need Hole";
+            NeedHoleMCheckBox.UseVisualStyleBackColor = true;
+            NeedHoleMCheckBox.CheckedChanged += NeedHoleMCheckBox_CheckedChanged;
+            // 
+            // label22
+            // 
+            label22.AutoSize = true;
+            label22.Location = new Point(13, 43);
+            label22.Margin = new Padding(4, 0, 4, 0);
+            label22.Name = "label22";
+            label22.Size = new Size(49, 15);
+            label22.TabIndex = 16;
+            label22.Text = "To Map:";
+            // 
+            // DestMapComboBox
+            // 
+            DestMapComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            DestMapComboBox.FormattingEnabled = true;
+            DestMapComboBox.Location = new Point(75, 38);
+            DestMapComboBox.Margin = new Padding(4, 3, 4, 3);
+            DestMapComboBox.Name = "DestMapComboBox";
+            DestMapComboBox.Size = new Size(212, 23);
+            DestMapComboBox.TabIndex = 15;
+            DestMapComboBox.SelectedIndexChanged += DestMapComboBox_SelectedIndexChanged;
+            // 
+            // label18
+            // 
+            label18.AutoSize = true;
+            label18.Location = new Point(138, 73);
+            label18.Margin = new Padding(4, 0, 4, 0);
+            label18.Name = "label18";
+            label18.Size = new Size(32, 15);
+            label18.TabIndex = 14;
+            label18.Text = "To Y:";
+            // 
+            // DestYTextBox
+            // 
+            DestYTextBox.Location = new Point(183, 69);
+            DestYTextBox.Margin = new Padding(4, 3, 4, 3);
+            DestYTextBox.MaxLength = 5;
+            DestYTextBox.Name = "DestYTextBox";
+            DestYTextBox.Size = new Size(42, 23);
+            DestYTextBox.TabIndex = 12;
+            DestYTextBox.TextChanged += DestYTextBox_TextChanged;
+            // 
+            // label21
+            // 
+            label21.AutoSize = true;
+            label21.Location = new Point(27, 73);
+            label21.Margin = new Padding(4, 0, 4, 0);
+            label21.Name = "label21";
+            label21.Size = new Size(32, 15);
+            label21.TabIndex = 13;
+            label21.Text = "To X:";
+            // 
+            // DestXTextBox
+            // 
+            DestXTextBox.Location = new Point(72, 69);
+            DestXTextBox.Margin = new Padding(4, 3, 4, 3);
+            DestXTextBox.MaxLength = 5;
+            DestXTextBox.Name = "DestXTextBox";
+            DestXTextBox.Size = new Size(42, 23);
+            DestXTextBox.TabIndex = 11;
+            DestXTextBox.TextChanged += DestXTextBox_TextChanged;
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Location = new Point(126, 13);
+            label16.Margin = new Padding(4, 0, 4, 0);
+            label16.Name = "label16";
+            label16.Size = new Size(48, 15);
+            label16.TabIndex = 10;
+            label16.Text = "From Y:";
+            // 
+            // SourceYTextBox
+            // 
+            SourceYTextBox.Location = new Point(183, 8);
+            SourceYTextBox.Margin = new Padding(4, 3, 4, 3);
+            SourceYTextBox.MaxLength = 5;
+            SourceYTextBox.Name = "SourceYTextBox";
+            SourceYTextBox.Size = new Size(42, 23);
+            SourceYTextBox.TabIndex = 3;
+            SourceYTextBox.TextChanged += SourceYTextBox_TextChanged;
+            // 
+            // label20
+            // 
+            label20.AutoSize = true;
+            label20.Location = new Point(15, 13);
+            label20.Margin = new Padding(4, 0, 4, 0);
+            label20.Name = "label20";
+            label20.Size = new Size(48, 15);
+            label20.TabIndex = 3;
+            label20.Text = "From X:";
+            // 
+            // SourceXTextBox
+            // 
+            SourceXTextBox.Location = new Point(72, 8);
+            SourceXTextBox.Margin = new Padding(4, 3, 4, 3);
+            SourceXTextBox.MaxLength = 5;
+            SourceXTextBox.Name = "SourceXTextBox";
+            SourceXTextBox.Size = new Size(42, 23);
+            SourceXTextBox.TabIndex = 2;
+            SourceXTextBox.TextChanged += SourceXTextBox_TextChanged;
+            // 
+            // MovementInfoListBox
+            // 
+            MovementInfoListBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            MovementInfoListBox.FormattingEnabled = true;
+            MovementInfoListBox.ItemHeight = 15;
+            MovementInfoListBox.Location = new Point(7, 40);
+            MovementInfoListBox.Margin = new Padding(4, 3, 4, 3);
+            MovementInfoListBox.Name = "MovementInfoListBox";
+            MovementInfoListBox.SelectionMode = SelectionMode.MultiExtended;
+            MovementInfoListBox.Size = new Size(264, 199);
+            MovementInfoListBox.TabIndex = 13;
+            MovementInfoListBox.SelectedIndexChanged += MovementInfoListBox_SelectedIndexChanged;
+            // 
+            // tabPage7
+            // 
+            tabPage7.Controls.Add(MZDeletebutton);
+            tabPage7.Controls.Add(MZAddbutton);
+            tabPage7.Controls.Add(MineZonepanel);
+            tabPage7.Controls.Add(MZListlistBox);
+            tabPage7.Location = new Point(4, 24);
+            tabPage7.Margin = new Padding(4, 3, 4, 3);
+            tabPage7.Name = "tabPage7";
+            tabPage7.Padding = new Padding(4, 3, 4, 3);
+            tabPage7.Size = new Size(622, 287);
+            tabPage7.TabIndex = 6;
+            tabPage7.Text = "MineZones";
+            tabPage7.UseVisualStyleBackColor = true;
+            // 
+            // MZDeletebutton
+            // 
+            MZDeletebutton.Location = new Point(126, 8);
+            MZDeletebutton.Margin = new Padding(4, 3, 4, 3);
+            MZDeletebutton.Name = "MZDeletebutton";
+            MZDeletebutton.Size = new Size(88, 27);
+            MZDeletebutton.TabIndex = 12;
+            MZDeletebutton.Text = "Remove";
+            MZDeletebutton.UseVisualStyleBackColor = true;
+            MZDeletebutton.Click += MZDeletebutton_Click;
+            // 
+            // MZAddbutton
+            // 
+            MZAddbutton.Location = new Point(7, 8);
+            MZAddbutton.Margin = new Padding(4, 3, 4, 3);
+            MZAddbutton.Name = "MZAddbutton";
+            MZAddbutton.Size = new Size(88, 27);
+            MZAddbutton.TabIndex = 11;
+            MZAddbutton.Text = "Add";
+            MZAddbutton.UseVisualStyleBackColor = true;
+            MZAddbutton.Click += MZAddbutton_Click;
+            // 
+            // MineZonepanel
+            // 
+            MineZonepanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            MineZonepanel.Controls.Add(label27);
+            MineZonepanel.Controls.Add(MineZoneComboBox);
+            MineZonepanel.Controls.Add(label30);
+            MineZonepanel.Controls.Add(MZYtextBox);
+            MineZonepanel.Controls.Add(label31);
+            MineZonepanel.Controls.Add(MZSizetextBox);
+            MineZonepanel.Controls.Add(label32);
+            MineZonepanel.Controls.Add(MZXtextBox);
+            MineZonepanel.Enabled = false;
+            MineZonepanel.Location = new Point(220, 40);
+            MineZonepanel.Margin = new Padding(4, 3, 4, 3);
+            MineZonepanel.Name = "MineZonepanel";
+            MineZonepanel.Size = new Size(281, 160);
+            MineZonepanel.TabIndex = 14;
+            // 
+            // label27
+            // 
+            label27.AutoSize = true;
+            label27.Location = new Point(14, 20);
+            label27.Margin = new Padding(4, 0, 4, 0);
+            label27.Name = "label27";
+            label27.Size = new Size(64, 15);
+            label27.TabIndex = 14;
+            label27.Text = "Mine Type:";
+            // 
+            // MineZoneComboBox
+            // 
+            MineZoneComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            MineZoneComboBox.FormattingEnabled = true;
+            MineZoneComboBox.Location = new Point(91, 16);
+            MineZoneComboBox.Margin = new Padding(4, 3, 4, 3);
+            MineZoneComboBox.Name = "MineZoneComboBox";
+            MineZoneComboBox.Size = new Size(144, 23);
+            MineZoneComboBox.TabIndex = 13;
+            MineZoneComboBox.SelectedIndexChanged += MineZoneComboBox_SelectedIndexChanged;
+            // 
+            // label30
+            // 
+            label30.AutoSize = true;
+            label30.Location = new Point(166, 61);
+            label30.Margin = new Padding(4, 0, 4, 0);
+            label30.Name = "label30";
+            label30.Size = new Size(17, 15);
+            label30.TabIndex = 10;
+            label30.Text = "Y:";
+            // 
+            // MZYtextBox
+            // 
+            MZYtextBox.Location = new Point(192, 58);
+            MZYtextBox.Margin = new Padding(4, 3, 4, 3);
+            MZYtextBox.MaxLength = 5;
+            MZYtextBox.Name = "MZYtextBox";
+            MZYtextBox.Size = new Size(42, 23);
+            MZYtextBox.TabIndex = 3;
+            MZYtextBox.TextChanged += MZYtextBox_TextChanged;
+            // 
+            // label31
+            // 
+            label31.AutoSize = true;
+            label31.Location = new Point(49, 114);
+            label31.Margin = new Padding(4, 0, 4, 0);
+            label31.Name = "label31";
+            label31.Size = new Size(30, 15);
+            label31.TabIndex = 8;
+            label31.Text = "Size:";
+            // 
+            // MZSizetextBox
+            // 
+            MZSizetextBox.Location = new Point(91, 111);
+            MZSizetextBox.Margin = new Padding(4, 3, 4, 3);
+            MZSizetextBox.MaxLength = 5;
+            MZSizetextBox.Name = "MZSizetextBox";
+            MZSizetextBox.Size = new Size(42, 23);
+            MZSizetextBox.TabIndex = 4;
+            MZSizetextBox.TextChanged += MZSizetextBox_TextChanged;
+            // 
+            // label32
+            // 
+            label32.AutoSize = true;
+            label32.Location = new Point(64, 66);
+            label32.Margin = new Padding(4, 0, 4, 0);
+            label32.Name = "label32";
+            label32.Size = new Size(17, 15);
+            label32.TabIndex = 3;
+            label32.Text = "X:";
+            // 
+            // MZXtextBox
+            // 
+            MZXtextBox.Location = new Point(91, 62);
+            MZXtextBox.Margin = new Padding(4, 3, 4, 3);
+            MZXtextBox.MaxLength = 5;
+            MZXtextBox.Name = "MZXtextBox";
+            MZXtextBox.Size = new Size(42, 23);
+            MZXtextBox.TabIndex = 2;
+            MZXtextBox.TextChanged += MZXtextBox_TextChanged;
+            // 
+            // MZListlistBox
+            // 
+            MZListlistBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            MZListlistBox.FormattingEnabled = true;
+            MZListlistBox.ItemHeight = 15;
+            MZListlistBox.Location = new Point(7, 40);
+            MZListlistBox.Margin = new Padding(4, 3, 4, 3);
+            MZListlistBox.Name = "MZListlistBox";
+            MZListlistBox.SelectionMode = SelectionMode.MultiExtended;
+            MZListlistBox.Size = new Size(206, 154);
+            MZListlistBox.TabIndex = 13;
+            MZListlistBox.SelectedIndexChanged += MZListlistBox_SelectedIndexChanged;
+            // 
+            // RemoveButton
+            // 
+            RemoveButton.Location = new Point(147, 38);
+            RemoveButton.Margin = new Padding(4, 3, 4, 3);
+            RemoveButton.Name = "RemoveButton";
+            RemoveButton.Size = new Size(88, 27);
+            RemoveButton.TabIndex = 6;
+            RemoveButton.Text = "Remove";
+            RemoveButton.UseVisualStyleBackColor = true;
+            RemoveButton.Click += RemoveButton_Click;
+            // 
+            // AddButton
+            // 
+            AddButton.Location = new Point(14, 38);
+            AddButton.Margin = new Padding(4, 3, 4, 3);
+            AddButton.Name = "AddButton";
+            AddButton.Size = new Size(88, 27);
+            AddButton.TabIndex = 5;
+            AddButton.Text = "Add";
+            AddButton.UseVisualStyleBackColor = true;
+            AddButton.Click += AddButton_Click;
+            // 
+            // MapInfoListBox
+            // 
+            MapInfoListBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            MapInfoListBox.FormattingEnabled = true;
+            MapInfoListBox.ItemHeight = 15;
+            MapInfoListBox.Location = new Point(14, 72);
+            MapInfoListBox.Margin = new Padding(4, 3, 4, 3);
+            MapInfoListBox.Name = "MapInfoListBox";
+            MapInfoListBox.SelectionMode = SelectionMode.MultiExtended;
+            MapInfoListBox.Size = new Size(220, 304);
+            MapInfoListBox.TabIndex = 7;
+            MapInfoListBox.SelectedIndexChanged += MapInfoListBox_SelectedIndexChanged;
+            // 
+            // PasteMapButton
+            // 
+            PasteMapButton.Location = new Point(336, 38);
+            PasteMapButton.Margin = new Padding(4, 3, 4, 3);
+            PasteMapButton.Name = "PasteMapButton";
+            PasteMapButton.Size = new Size(88, 27);
+            PasteMapButton.TabIndex = 24;
+            PasteMapButton.Text = "Paste";
+            PasteMapButton.UseVisualStyleBackColor = true;
+            PasteMapButton.Click += PasteMapButton_Click;
+            // 
+            // CopyMapButton
+            // 
+            CopyMapButton.Location = new Point(241, 38);
+            CopyMapButton.Margin = new Padding(4, 3, 4, 3);
+            CopyMapButton.Name = "CopyMapButton";
+            CopyMapButton.Size = new Size(88, 27);
+            CopyMapButton.TabIndex = 23;
+            CopyMapButton.Text = "Copy";
+            CopyMapButton.UseVisualStyleBackColor = true;
+            // 
+            // ImportMapInfoButton
+            // 
+            ImportMapInfoButton.Location = new Point(658, 5);
+            ImportMapInfoButton.Margin = new Padding(4, 3, 4, 3);
+            ImportMapInfoButton.Name = "ImportMapInfoButton";
+            ImportMapInfoButton.Size = new Size(102, 27);
+            ImportMapInfoButton.TabIndex = 25;
+            ImportMapInfoButton.Text = "Import MapInfo";
+            ImportMapInfoButton.UseVisualStyleBackColor = true;
+            ImportMapInfoButton.Click += ImportMapInfoButton_Click;
+            // 
+            // ExportMapInfoButton
+            // 
+            ExportMapInfoButton.Location = new Point(658, 38);
+            ExportMapInfoButton.Margin = new Padding(4, 3, 4, 3);
+            ExportMapInfoButton.Name = "ExportMapInfoButton";
+            ExportMapInfoButton.Size = new Size(102, 27);
+            ExportMapInfoButton.TabIndex = 26;
+            ExportMapInfoButton.Text = "Export MapInfo";
+            ExportMapInfoButton.UseVisualStyleBackColor = true;
+            ExportMapInfoButton.Click += ExportMapInfoButton_Click;
+            // 
+            // ImportMongenButton
+            // 
+            ImportMongenButton.Location = new Point(766, 3);
+            ImportMongenButton.Margin = new Padding(4, 3, 4, 3);
+            ImportMongenButton.Name = "ImportMongenButton";
+            ImportMongenButton.Size = new Size(100, 27);
+            ImportMongenButton.TabIndex = 27;
+            ImportMongenButton.Text = "Import Spawns";
+            ImportMongenButton.UseVisualStyleBackColor = true;
+            ImportMongenButton.Click += ImportMonGenButton_Click;
+            // 
+            // ExportMongenButton
+            // 
+            ExportMongenButton.Location = new Point(766, 38);
+            ExportMongenButton.Margin = new Padding(4, 3, 4, 3);
+            ExportMongenButton.Name = "ExportMongenButton";
+            ExportMongenButton.Size = new Size(100, 27);
+            ExportMongenButton.TabIndex = 28;
+            ExportMongenButton.Text = "Export Spawns";
+            ExportMongenButton.UseVisualStyleBackColor = true;
+            ExportMongenButton.Click += ExportMonGenButton_Click;
+            // 
+            // VisualizerButton
+            // 
+            VisualizerButton.Location = new Point(564, 5);
+            VisualizerButton.Margin = new Padding(4, 3, 4, 3);
+            VisualizerButton.Name = "VisualizerButton";
+            VisualizerButton.Size = new Size(88, 27);
+            VisualizerButton.TabIndex = 31;
+            VisualizerButton.Text = "Visualizer";
+            VisualizerButton.UseVisualStyleBackColor = true;
+            VisualizerButton.Click += VisualizerButton_Click;
             // 
             // MapInfoForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(759, 336);
-            this.Controls.Add(this.VisualizerButton);
-            this.Controls.Add(this.ExportMongenButton);
-            this.Controls.Add(this.ImportMongenButton);
-            this.Controls.Add(this.ExportMapInfoButton);
-            this.Controls.Add(this.ImportMapInfoButton);
-            this.Controls.Add(this.PasteMapButton);
-            this.Controls.Add(this.CopyMapButton);
-            this.Controls.Add(this.MapTabs);
-            this.Controls.Add(this.RemoveButton);
-            this.Controls.Add(this.AddButton);
-            this.Controls.Add(this.MapInfoListBox);
-            this.Name = "MapInfoForm";
-            this.Text = "Map Info";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MapInfoForm_FormClosed);
-            this.MapTabs.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            this.tabPage6.ResumeLayout(false);
-            this.tabPage6.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
-            this.SafeZoneInfoPanel.ResumeLayout(false);
-            this.SafeZoneInfoPanel.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.RespawnInfoPanel.ResumeLayout(false);
-            this.RespawnInfoPanel.PerformLayout();
-            this.tabPage4.ResumeLayout(false);
-            this.MovementInfoPanel.ResumeLayout(false);
-            this.MovementInfoPanel.PerformLayout();
-            this.tabPage7.ResumeLayout(false);
-            this.MineZonepanel.ResumeLayout(false);
-            this.MineZonepanel.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(886, 388);
+            Controls.Add(VisualizerButton);
+            Controls.Add(ExportMongenButton);
+            Controls.Add(ImportMongenButton);
+            Controls.Add(ExportMapInfoButton);
+            Controls.Add(ImportMapInfoButton);
+            Controls.Add(PasteMapButton);
+            Controls.Add(CopyMapButton);
+            Controls.Add(MapTabs);
+            Controls.Add(RemoveButton);
+            Controls.Add(AddButton);
+            Controls.Add(MapInfoListBox);
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "MapInfoForm";
+            Text = "Map Info";
+            FormClosed += MapInfoForm_FormClosed;
+            MapTabs.ResumeLayout(false);
+            tabPage1.ResumeLayout(false);
+            tabPage1.PerformLayout();
+            ((ISupportInitialize)pictureBox1).EndInit();
+            tabPage6.ResumeLayout(false);
+            tabPage6.PerformLayout();
+            tabPage3.ResumeLayout(false);
+            SafeZoneInfoPanel.ResumeLayout(false);
+            SafeZoneInfoPanel.PerformLayout();
+            tabPage2.ResumeLayout(false);
+            RespawnInfoPanel.ResumeLayout(false);
+            RespawnInfoPanel.PerformLayout();
+            tabPage4.ResumeLayout(false);
+            MovementInfoPanel.ResumeLayout(false);
+            MovementInfoPanel.PerformLayout();
+            tabPage7.ResumeLayout(false);
+            MineZonepanel.ResumeLayout(false);
+            MineZonepanel.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion
@@ -1704,5 +1832,6 @@ namespace Server
         private Label label26;
         private TextBox BigMapIconTextBox;
         private CheckBox ShowBigMapCheckBox;
+        private PictureBox pictureBox1;
     }
 }

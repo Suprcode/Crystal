@@ -625,20 +625,32 @@ namespace Server
         }
         private void MiniMapTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (ActiveControl != sender) return;
-
-            ushort temp;
-
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(MiniMapTextBox.Text, out ushort temp))
             {
-                ActiveControl.BackColor = Color.Red;
+                MiniMapTextBox.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
+            MiniMapTextBox.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
                 _selectedMapInfos[i].MiniMap = temp;
+
+            LoadImage(temp);
+        }
+        private void LoadImage(ushort miniMapValue)
+        {
+            string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Envir", "Minimaps", miniMapValue + ".bmp");
+
+            if (File.Exists(imagePath))
+            {
+                pictureBox1.Image = Image.FromFile(imagePath);
+                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            }
+            else
+            {
+                pictureBox1.Image = null;
+            }
         }
         private void LightsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
