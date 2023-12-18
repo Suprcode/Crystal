@@ -2796,6 +2796,8 @@ namespace Server.MirObjects
                                 return;
                             }
 
+                            monster.GMMade = true;
+
                             if (spread == 0)
                                 monster.Spawn(CurrentMap, Front);
                             else

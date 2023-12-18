@@ -9766,7 +9766,7 @@ namespace Client.MirScenes
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, GMLabel.DisplayRectangle.Right + 4),
-                    Math.Max(ItemLabel.Size.Height, GMLabel.DisplayRectangle.Bottom));
+                    Math.Max(ItemLabel.Size.Height + 4, GMLabel.DisplayRectangle.Bottom + 4));
 
                 MirControl outLine = new MirControl
                 {
