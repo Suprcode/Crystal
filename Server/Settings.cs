@@ -28,7 +28,8 @@ namespace Server
             NameListPath = Path.Combine(EnvirPath, "NameLists"),
             ValuePath = Path.Combine(EnvirPath, "Values"),
             NoticePath = Path.Combine(EnvirPath, "Notice.txt"),
-            MinimapsPath = Path.Combine(EnvirPath, "Minimaps");
+            MinimapsPath = Path.Combine(EnvirPath, "Minimaps"),
+            NPCPreviewPath = Path.Combine(EnvirPath, "NPCPreviewPath");
 
         private static readonly InIReader Reader = new InIReader(Path.Combine(ConfigPath, "Setup.ini"));
 
@@ -511,6 +512,8 @@ namespace Server
                 Directory.CreateDirectory(RecipePath);
             if (!Directory.Exists(MinimapsPath))
                 Directory.CreateDirectory(MinimapsPath);
+            if (!Directory.Exists(NPCPreviewPath))
+                Directory.CreateDirectory(NPCPreviewPath);
 
             string fileName = Path.Combine(Settings.NPCPath, DefaultNPCFilename + ".txt");
 
