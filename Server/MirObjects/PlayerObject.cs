@@ -2027,7 +2027,13 @@ namespace Server.MirObjects
                                 ReceiveChat(string.Format("Could not find {0}", parts[0]), ChatType.System);
                                 return;
                             }
-                            if (!player.GMNeverDie) player.Die();
+
+                            if (!player.GMNeverDie)
+                            {
+                                player.Die();
+
+                                Helpers.ChatSystem.SystemMessage(chatMessage: $"{player} was totally killed by GM: {Name}");
+                            }
                         }
                         else
                         {
@@ -2077,6 +2083,8 @@ namespace Server.MirObjects
                         ReceiveChat(string.Format("Player {0} has been changed to {1}", data.Name, data.Gender), ChatType.System);
                         MessageQueue.Enqueue(string.Format("Player {0} has been changed to {1} by {2}", data.Name, data.Gender, Name));
 
+                        Helpers.ChatSystem.SystemMessage(chatMessage: $"{data.Player.Name} had gender change to {data.Gender.ToString()} by GM: {Name}");
+
                         if (data.Player != null)
                             data.Player.Connection.LogOut();
 
@@ -2100,8 +2108,10 @@ namespace Server.MirObjects
                                 player.Level = level;
                                 player.LevelUp();
 
-                                ReceiveChat(string.Format("Player {0} has been Leveled {1} -> {2}.", player.Name, old, player.Level), ChatType.System);
-                                MessageQueue.Enqueue(string.Format("Player {0} has been Leveled {1} -> {2} by {3}", player.Name, old, player.Level, Name));
+                                ReceiveChat(string.Format("Player {0} has been Levelled {1} -> {2}.", player.Name, old, player.Level), ChatType.System);
+                                MessageQueue.Enqueue(string.Format("Player {0} has been Levelled {1} -> {2} by {3}", player.Name, old, player.Level, Name));
+                                Helpers.ChatSystem.SystemMessage(chatMessage: $"Player {player.Name} has been Levelled: {old} -> {player.Level} by GM: {Name}");
+
                                 return;
                             }
                         }
@@ -2146,8 +2156,9 @@ namespace Server.MirObjects
                                 hero.Level = level;
                                 hero.LevelUp();
 
-                                ReceiveChat(string.Format("Player {0}'s hero has been Leveled {1} -> {2}.", player.Name, old, hero.Level), ChatType.System);
-                                MessageQueue.Enqueue(string.Format("Player {0}'s hero has been Leveled {1} -> {2} by {3}", player.Name, old, hero.Level, Name));
+                                ReceiveChat(string.Format("Player {0}'s hero has been Levelled {1} -> {2}.", player.Name, old, hero.Level), ChatType.System);
+                                MessageQueue.Enqueue(string.Format("Player {0}'s hero has been Levelled {1} -> {2} by {3}", player.Name, old, hero.Level, Name));
+                                Helpers.ChatSystem.SystemMessage(chatMessage: $"Player {player.Name}'s hero has been Levelled: {old} -> {hero.Level} by GM: {Name}");
                                 return;
                             }
                         }
@@ -2206,14 +2217,16 @@ namespace Server.MirObjects
                                 if (iInfo.StackSize >= itemCount)
                                 {
                                     item = Envir.CreateDropItem(iInfo);
+                                    item.GMMade = true;
                                     item.Count = itemCount;
-
+                                    
                                     if (CanGainItem(item)) GainItem(item);
 
                                     return;
                                 }
                                 item = Envir.CreateDropItem(iInfo);
-                                item.Count = iInfo.StackSize;
+                                item.GMMade = true;
+                                item.Count = iInfo.StackSize;                               
                                 itemCount -= iInfo.StackSize;
 
                                 if (!CanGainItem(item)) return;
@@ -2794,6 +2807,8 @@ namespace Server.MirObjects
                                 return;
                             }
 
+                            monster.GMMade = true;
+
                             if (spread == 0)
                                 monster.Spawn(CurrentMap, Front);
                             else
@@ -2909,7 +2924,11 @@ namespace Server.MirObjects
                             count = uint.MaxValue - player.Account.Gold;
 
                         player.GainGold(count);
-                        MessageQueue.Enqueue(string.Format("Player {0} has been given {1} gold", player.Name, count));
+                        
+                        string goldMsg = $"Player {player.Name} has been given {count} gold by GM: {Name}";
+                        MessageQueue.Enqueue(goldMsg);
+                        Helpers.ChatSystem.SystemMessage(chatMessage: goldMsg);
+
                         break;
 
                     case "GIVEPEARLS":
@@ -2937,10 +2956,13 @@ namespace Server.MirObjects
                             count = (uint)(int.MaxValue - player.Info.PearlCount);
 
                         player.IntelligentCreatureGainPearls((int)count);
-                        if (count > 1)
-                            MessageQueue.Enqueue(string.Format("Player {0} has been given {1} pearls", player.Name, count));
-                        else
-                            MessageQueue.Enqueue(string.Format("Player {0} has been given {1} pearl", player.Name, count));
+
+                        string pearlMsg = count == 1 ? $"Player {player.Name} has been given 1 pearl by GM: {Name}"
+                                                     : $"Player {player.Name} has been given {count} pearls by GM: {Name}";
+
+                        MessageQueue.Enqueue(pearlMsg);
+                        Helpers.ChatSystem.SystemMessage(chatMessage: pearlMsg);
+
                         break;
                     case "GIVECREDIT":
                         if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
@@ -2967,7 +2989,12 @@ namespace Server.MirObjects
                             count = uint.MaxValue - player.Account.Credit;
 
                         player.GainCredit(count);
+
+                        string creditMsg = $"Player {player.Name} has been given {count} credit by GM: {Name}";
+
                         MessageQueue.Enqueue(string.Format("Player {0} has been given {1} credit", player.Name, count));
+                        Helpers.ChatSystem.SystemMessage(chatMessage: creditMsg);
+
                         break;
                     case "GIVESKILL":
                         if ((!IsGM && !Settings.TestServer) || parts.Length < 3) return;
@@ -3001,7 +3028,12 @@ namespace Server.MirObjects
                         if (player.Info.Magics.Any(e => e.Spell == skill))
                         {
                             player.Info.Magics.FirstOrDefault(e => e.Spell == skill).Level = spellLevel;
+
+                            string skillChangeMsg = $"{player} Spell {skill.ToString()} changed to level {spellLevel} by GM: {Name}";
+
                             player.ReceiveChat(string.Format("Spell {0} changed to level {1}", skill.ToString(), spellLevel), ChatType.Hint);
+                            Helpers.ChatSystem.SystemMessage(chatMessage: skillChangeMsg);
+
                             return;
                         }
                         else
@@ -3012,6 +3044,9 @@ namespace Server.MirObjects
                             {
                                 ReceiveChat(string.Format("{0} has learned {1} at level {2}", player.Name, skill.ToString(), spellLevel), ChatType.Hint);
                             }
+
+                            string skillLearnedMg = $"{player} Spell {skill.ToString()} learnt and set to level {spellLevel} by GM: {Name}";
+                            Helpers.ChatSystem.SystemMessage(chatMessage: skillLearnedMg);
 
                             player.Info.Magics.Add(magic);
                         }
@@ -3239,8 +3274,10 @@ namespace Server.MirObjects
                         ReceiveChat(string.Format("Player {0} has been changed to {1}", data.Name, data.Class), ChatType.System);
                         MessageQueue.Enqueue(string.Format("Player {0} has been changed to {1} by {2}", data.Name, data.Class, Name));
 
+                        Helpers.ChatSystem.SystemMessage(chatMessage: $"{data.Player.Name} class changed to {data.Class.ToString()} by GM: {Name}");
+
                         if (data.Player != null)
-                            data.Player.Connection.LogOut();
+                        data.Player.Connection.LogOut();
                         break;
 
                     case "DIE":
@@ -3843,6 +3880,8 @@ namespace Server.MirObjects
                             if (player == null) return;
 
                             player.Revive(MaxHealth, true);
+
+                            Helpers.ChatSystem.SystemMessage(chatMessage: $"{player} was revived to full health by GM: {Name}");
                         }
                         break;
                     case "DELETESKILL":
@@ -3887,6 +3926,8 @@ namespace Server.MirObjects
                         {
                             ReceiveChat(string.Format("You have deleted skill {0} from player {1}", skill1.ToString(), player.Name), ChatType.Hint);
                             player.ReceiveChat(string.Format("{0} has been removed from you.", skill1), ChatType.Hint);
+
+                            Helpers.ChatSystem.SystemMessage(chatMessage: $"{player} Skill {skill1.ToString()} was removed by GM: {Name}");
                         }
                         else
                         {

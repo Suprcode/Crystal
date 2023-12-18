@@ -11,6 +11,7 @@ using C = ClientPackets;
 using Effect = Client.MirObjects.Effect;
 using Client.MirScenes.Dialogs;
 using Client.Utils;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Client.MirScenes
 {
@@ -9746,6 +9747,47 @@ namespace Client.MirScenes
             return null;
         }
 
+        public MirControl GMMadeLabel(UserItem item)
+        {
+            if (item.GMMade)
+            {
+
+
+                ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
+
+                MirLabel GMLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.Orchid,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = "Created by Game Master"
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, GMLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height + 4, GMLabel.DisplayRectangle.Bottom + 4));
+
+                MirControl outLine = new MirControl
+                {
+                    BackColour = Color.FromArgb(255, 50, 50, 50),
+                    Border = true,
+                    BorderColour = Color.Gray,
+                    NotControl = true,
+                    Parent = ItemLabel,
+                    Opacity = 0.4F,
+                    Location = new Point(0, 0)
+                };
+                outLine.Size = ItemLabel.Size;
+
+                return outLine;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public void CreateItemLabel(UserItem item, bool inspect = false, bool hideDura = false, bool hideAdded = false)
         {
             CMain.DebugText = CMain.Random.Next(1, 100).ToString();
@@ -9779,7 +9821,7 @@ namespace Client.MirScenes
             };
 
             //Name Info Label
-            MirControl[] outlines = new MirControl[10];
+            MirControl[] outlines = new MirControl[11];
             outlines[0] = NameInfoLabel(item, inspect, hideDura);
             //Attribute Info1 Label - Attack Info
             outlines[1] = AttackInfoLabel(item, inspect, hideAdded);
@@ -9799,6 +9841,8 @@ namespace Client.MirScenes
             outlines[8] = OverlapInfoLabel(item, inspect);
             //Story Label
             outlines[9] = StoryInfoLabel(item, inspect);
+            //GM Made
+            outlines[10] = GMMadeLabel(item);
 
             foreach (var outline in outlines)
             {
