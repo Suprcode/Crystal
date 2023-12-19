@@ -5007,7 +5007,7 @@ namespace Server.MirObjects
                 _target?.Attacked(this, magic.GetDamage(0), DefenceType.None, false);
                 LevelMagic(magic);
 
-                Broadcast(new S.ObjectDash { ObjectID = ObjectID, Direction = Direction, Location = Front });
+                // Broadcast(new S.ObjectDash { ObjectID = ObjectID, Direction = Direction, Location = Front });
             }
 
             long now = Envir.Time;
