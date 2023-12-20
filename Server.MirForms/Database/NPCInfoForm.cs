@@ -89,6 +89,7 @@ namespace Server
                 ShowBigMapCheckBox.Checked = false;
                 BigMapIconTextBox.Text = string.Empty;
                 ConquestVisible_checkbox.Checked = true;
+                pictureBox1.Image = null;
                 return;
             }
 
@@ -120,7 +121,6 @@ namespace Server
             BigMapIconTextBox.Text = info.BigMapIcon.ToString();
             TeleportToCheckBox.Checked = info.CanTeleportTo;
             ConquestVisible_checkbox.Checked = info.ConquestVisible;
-
 
             for (int i = 1; i < _selectedNPCInfos.Count; i++)
             {
@@ -155,6 +155,16 @@ namespace Server
         private void NPCInfoListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateInterface();
+
+            if (_selectedNPCInfos.Count > 0)
+            {
+                NPCInfo info = _selectedNPCInfos[0];
+                LoadImage(info.Image);
+            }
+            else
+            {
+                LoadImage(0);
+            }
         }
 
         private void NFileNameTextBox_TextChanged(object sender, EventArgs e)
@@ -220,6 +230,7 @@ namespace Server
             if (!ushort.TryParse(ActiveControl.Text, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
+                pictureBox1.Image = null;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
@@ -228,6 +239,25 @@ namespace Server
             for (int i = 0; i < _selectedNPCInfos.Count; i++)
                 _selectedNPCInfos[i].Image = temp;
 
+            LoadImage(temp);
+        }
+        private void LoadImage(ushort imageValue)
+        {
+            string filename = $"{imageValue}.bmp";
+
+            string imagePath = Path.Combine(Environment.CurrentDirectory, "Envir", "NPCPreview", filename);
+
+            if (File.Exists(imagePath))
+            {
+                using (FileStream fs = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
+                {
+                    pictureBox1.Image = Image.FromStream(fs);
+                }
+            }
+            else
+            {
+                pictureBox1.Image = null;
+            }
         }
         private void NRateTextBox_TextChanged(object sender, EventArgs e)
         {
