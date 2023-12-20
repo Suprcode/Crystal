@@ -36,7 +36,7 @@ namespace Server
             components = new Container();
             MapTabs = new TabControl();
             tabPage1 = new TabPage();
-            pictureBox1 = new PictureBox();
+            MinimapPreview = new PictureBox();
             label11 = new Label();
             MusicTextBox = new TextBox();
             label33 = new Label();
@@ -165,7 +165,7 @@ namespace Server
             toolTip1 = new ToolTip(components);
             MapTabs.SuspendLayout();
             tabPage1.SuspendLayout();
-            ((ISupportInitialize)pictureBox1).BeginInit();
+            ((ISupportInitialize)MinimapPreview).BeginInit();
             tabPage6.SuspendLayout();
             tabPage3.SuspendLayout();
             SafeZoneInfoPanel.SuspendLayout();
@@ -195,7 +195,7 @@ namespace Server
             // 
             // tabPage1
             // 
-            tabPage1.Controls.Add(pictureBox1);
+            tabPage1.Controls.Add(MinimapPreview);
             tabPage1.Controls.Add(label11);
             tabPage1.Controls.Add(MusicTextBox);
             tabPage1.Controls.Add(label33);
@@ -221,14 +221,14 @@ namespace Server
             tabPage1.Text = "Info";
             tabPage1.UseVisualStyleBackColor = true;
             // 
-            // pictureBox1
+            // MinimapPreview
             // 
-            pictureBox1.Location = new Point(265, 0);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(357, 287);
-            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox1.TabIndex = 19;
-            pictureBox1.TabStop = false;
+            MinimapPreview.Location = new Point(265, 0);
+            MinimapPreview.Name = "MinimapPreview";
+            MinimapPreview.Size = new Size(357, 287);
+            MinimapPreview.SizeMode = PictureBoxSizeMode.StretchImage;
+            MinimapPreview.TabIndex = 19;
+            MinimapPreview.TabStop = false;
             // 
             // label11
             // 
@@ -1684,7 +1684,7 @@ namespace Server
             MapTabs.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
-            ((ISupportInitialize)pictureBox1).EndInit();
+            ((ISupportInitialize)MinimapPreview).EndInit();
             tabPage6.ResumeLayout(false);
             tabPage6.PerformLayout();
             tabPage3.ResumeLayout(false);
@@ -1832,6 +1832,6 @@ namespace Server
         private Label label26;
         private TextBox BigMapIconTextBox;
         private CheckBox ShowBigMapCheckBox;
-        private PictureBox pictureBox1;
+        private PictureBox MinimapPreview;
     }
 }
