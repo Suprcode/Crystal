@@ -640,16 +640,16 @@ namespace Server
         }
         private void LoadImage(ushort miniMapValue)
         {
-            string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Envir", "Minimaps", miniMapValue + ".bmp");
+            string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Envir", "Previews", "Minimaps", miniMapValue + ".bmp");
 
             if (File.Exists(imagePath))
             {
-                pictureBox1.Image = Image.FromFile(imagePath);
-                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+                MinimapPreview.Image = Image.FromFile(imagePath);
+                MinimapPreview.SizeMode = PictureBoxSizeMode.StretchImage;
             }
             else
             {
-                pictureBox1.Image = null;
+                MinimapPreview.Image = null;
             }
         }
         private void LightsComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -659,8 +659,6 @@ namespace Server
             for (int i = 0; i < _selectedMapInfos.Count; i++)
                 _selectedMapInfos[i].Light = (LightSetting)LightsComboBox.SelectedItem;
         }
-
-
         private void AddSZButton_Click(object sender, EventArgs e)
         {
             if (_info == null) return;
@@ -746,8 +744,6 @@ namespace Server
 
             RefreshSafeZoneList();
         }
-
-
 
         private void AddRButton_Click(object sender, EventArgs e)
         {
@@ -949,9 +945,6 @@ namespace Server
             UpdateRespawnInterface();
         }
         //RCopy
-
-
-
 
         private void AddMButton_Click(object sender, EventArgs e)
         {

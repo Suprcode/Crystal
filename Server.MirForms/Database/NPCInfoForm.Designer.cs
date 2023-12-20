@@ -30,6 +30,7 @@
         {
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
+            NPCPreview = new PictureBox();
             TeleportToCheckBox = new CheckBox();
             label15 = new Label();
             BigMapIconTextBox = new TextBox();
@@ -85,6 +86,7 @@
             ExportSelectedButton = new Button();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)NPCPreview).BeginInit();
             tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)EndMin_num).BeginInit();
             ((System.ComponentModel.ISupportInitialize)StartMin_num).BeginInit();
@@ -99,11 +101,12 @@
             tabControl1.Margin = new Padding(4, 3, 4, 3);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(606, 339);
+            tabControl1.Size = new Size(820, 339);
             tabControl1.TabIndex = 16;
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(NPCPreview);
             tabPage1.Controls.Add(TeleportToCheckBox);
             tabPage1.Controls.Add(label15);
             tabPage1.Controls.Add(BigMapIconTextBox);
@@ -132,10 +135,18 @@
             tabPage1.Margin = new Padding(4, 3, 4, 3);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(4, 3, 4, 3);
-            tabPage1.Size = new Size(598, 311);
+            tabPage1.Size = new Size(812, 311);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Info";
             tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // NPCPreview
+            // 
+            NPCPreview.Location = new Point(437, 0);
+            NPCPreview.Name = "NPCPreview";
+            NPCPreview.Size = new Size(375, 310);
+            NPCPreview.TabIndex = 64;
+            NPCPreview.TabStop = false;
             // 
             // TeleportToCheckBox
             // 
@@ -408,7 +419,7 @@
             tabPage2.Location = new Point(4, 24);
             tabPage2.Margin = new Padding(4, 3, 4, 3);
             tabPage2.Name = "tabPage2";
-            tabPage2.Size = new Size(598, 311);
+            tabPage2.Size = new Size(812, 311);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Visibility";
             tabPage2.UseVisualStyleBackColor = true;
@@ -723,7 +734,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(917, 400);
+            ClientSize = new Size(1131, 400);
             Controls.Add(ExportSelectedButton);
             Controls.Add(ImportButton);
             Controls.Add(ExportButton);
@@ -741,6 +752,7 @@
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)NPCPreview).EndInit();
             tabPage2.ResumeLayout(false);
             tabPage2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)EndMin_num).EndInit();
@@ -805,5 +817,6 @@
         private System.Windows.Forms.CheckBox ShowBigMapCheckBox;
         private System.Windows.Forms.CheckBox TeleportToCheckBox;
         private CheckBox ConquestVisible_checkbox;
+        private PictureBox NPCPreview;
     }
 }
