@@ -57,6 +57,7 @@ namespace Server.MirEnvir
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
         public static readonly string BackUpPath = Path.Combine(".", "Back Up");
+        public static readonly string AccountsBackUpPath = Path.Combine(".", "Back Up", "Accounts");
         public static readonly string ArchivePath = Path.Combine(".", "Archive");
         public bool ResetGS = false;
         public bool GuildRefreshNeeded;
@@ -1224,11 +1225,11 @@ namespace Server.MirEnvir
             {
                 if (File.Exists(AccountPath))
                 {
-                    if (!Directory.Exists(BackUpPath)) Directory.CreateDirectory(BackUpPath);
+                    if (!Directory.Exists(AccountsBackUpPath)) Directory.CreateDirectory(AccountsBackUpPath);
                     var fileName =
                         $"Accounts {Now.Year:0000}-{Now.Month:00}-{Now.Day:00} {Now.Hour:00}-{Now.Minute:00}-{Now.Second:00}.bak";
-                    if (File.Exists(Path.Combine(BackUpPath, fileName))) File.Delete(Path.Combine(BackUpPath, fileName));
-                    File.Move(AccountPath, Path.Combine(BackUpPath, fileName));
+                    if (File.Exists(Path.Combine(AccountsBackUpPath, fileName))) File.Delete(Path.Combine(AccountsBackUpPath, fileName));
+                    File.Move(AccountPath, Path.Combine(AccountsBackUpPath, fileName));
                 }
 
                 SaveAccounts(mStream);
