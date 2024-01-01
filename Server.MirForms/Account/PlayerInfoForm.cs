@@ -39,7 +39,7 @@ namespace Server
 
             if (Character.Player != null)
                 CurrentMapLabel.Text =
-                    $"{Character.Player.CurrentMap.Info.FileName} {Character.CurrentLocation.X}:{Character.CurrentLocation.Y}";
+                    $"{Character.Player.CurrentMap.Info.Title} {Character.Player.CurrentMap.Info.FileName} {Character.CurrentLocation.X}:{Character.CurrentLocation.Y}";
             else
                 CurrentMapLabel.Text = "OFFLINE";
 
@@ -133,5 +133,40 @@ namespace Server
             form.ShowDialog();
         }
 
+        private void FlagSearchBox_TextChanged(object sender, EventArgs e)
+        {
+            TextBox flagTextBox = (TextBox)sender;
+
+            if (string.IsNullOrWhiteSpace(flagTextBox.Text))
+            {
+                ResultLabel.Text = string.Empty;
+                return;
+            }
+
+            if (int.TryParse(flagTextBox.Text, out int flagIndex))
+            {
+                if (flagIndex >= 0 && flagIndex < Character.Flags.Length)
+                {
+                    bool flagValue = Character.Flags[flagIndex];
+
+                    if (flagValue)
+                    {
+                        ResultLabel.Text = $"Flag {flagIndex} ACTIVE.";
+                        ResultLabel.ForeColor = Color.Green;
+                    }
+                    else
+                    {
+                        ResultLabel.Text = $"Flag {flagIndex} INACTIVE.";
+                        ResultLabel.ForeColor = Color.Red;
+                    }
+                }
+                else
+                {
+                    ResultLabel.Text = "Invalid flag index";
+                    ResultLabel.ForeColor = Color.Red;
+                }
+            }
+        }
     }
 }
+
