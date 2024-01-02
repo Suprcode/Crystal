@@ -28,370 +28,516 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.NameTextBox = new System.Windows.Forms.TextBox();
-            this.IndexTextBox = new System.Windows.Forms.TextBox();
-            this.LevelTextBox = new System.Windows.Forms.TextBox();
-            this.UpdateButton = new System.Windows.Forms.Button();
-            this.KickButton = new System.Windows.Forms.Button();
-            this.SendMessageTextBox = new System.Windows.Forms.TextBox();
-            this.SendMessageButton = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.SafeZoneButton = new System.Windows.Forms.Button();
-            this.label9 = new System.Windows.Forms.Label();
-            this.ChatBanExpiryTextBox = new System.Windows.Forms.TextBox();
-            this.ChatBanButton = new System.Windows.Forms.Button();
-            this.KillPetsButton = new System.Windows.Forms.Button();
-            this.KillButton = new System.Windows.Forms.Button();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.CurrentMapLabel = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.PKPointsLabel = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.OnlineTimeLabel = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.GoldLabel = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.CurrentIPLabel = new System.Windows.Forms.Label();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.OpenAccountButton = new System.Windows.Forms.Button();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            this.SuspendLayout();
+            label1 = new Label();
+            label2 = new Label();
+            label3 = new Label();
+            NameTextBox = new TextBox();
+            IndexTextBox = new TextBox();
+            LevelTextBox = new TextBox();
+            UpdateButton = new Button();
+            KickButton = new Button();
+            SendMessageTextBox = new TextBox();
+            SendMessageButton = new Button();
+            groupBox1 = new GroupBox();
+            groupBox2 = new GroupBox();
+            OpenAccountButton = new Button();
+            SafeZoneButton = new Button();
+            label9 = new Label();
+            ChatBanExpiryTextBox = new TextBox();
+            ChatBanButton = new Button();
+            KillPetsButton = new Button();
+            KillButton = new Button();
+            groupBox3 = new GroupBox();
+            CurrentMapLabel = new Label();
+            label5 = new Label();
+            label4 = new Label();
+            PKPointsLabel = new Label();
+            label6 = new Label();
+            OnlineTimeLabel = new Label();
+            label7 = new Label();
+            GoldLabel = new Label();
+            label8 = new Label();
+            CurrentIPLabel = new Label();
+            groupBox4 = new GroupBox();
+            ResultLabel = new Label();
+            FlagSearchBox = new TextBox();
+            FlagSearch = new Label();
+            FlagUp = new Button();
+            FlagDown = new Button();
+            QuestDown = new Button();
+            QuestUp = new Button();
+            QuestResultLabel = new Label();
+            QuestSearchBox = new TextBox();
+            label10 = new Label();
+            groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
+            groupBox3.SuspendLayout();
+            groupBox4.SuspendLayout();
+            SuspendLayout();
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 46);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(44, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Name : ";
+            label1.AutoSize = true;
+            label1.Location = new Point(8, 53);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(48, 15);
+            label1.TabIndex = 1;
+            label1.Text = "Name : ";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 20);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(42, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Index : ";
+            label2.AutoSize = true;
+            label2.Location = new Point(10, 23);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(45, 15);
+            label2.TabIndex = 2;
+            label2.Text = "Index : ";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 74);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(42, 13);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "Level : ";
+            label3.AutoSize = true;
+            label3.Location = new Point(10, 85);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(43, 15);
+            label3.TabIndex = 3;
+            label3.Text = "Level : ";
             // 
             // NameTextBox
             // 
-            this.NameTextBox.Location = new System.Drawing.Point(60, 43);
-            this.NameTextBox.Name = "NameTextBox";
-            this.NameTextBox.Size = new System.Drawing.Size(100, 20);
-            this.NameTextBox.TabIndex = 4;
+            NameTextBox.Location = new Point(70, 50);
+            NameTextBox.Margin = new Padding(4, 3, 4, 3);
+            NameTextBox.Name = "NameTextBox";
+            NameTextBox.Size = new Size(116, 23);
+            NameTextBox.TabIndex = 4;
             // 
             // IndexTextBox
             // 
-            this.IndexTextBox.Enabled = false;
-            this.IndexTextBox.Location = new System.Drawing.Point(60, 17);
-            this.IndexTextBox.Name = "IndexTextBox";
-            this.IndexTextBox.Size = new System.Drawing.Size(100, 20);
-            this.IndexTextBox.TabIndex = 5;
+            IndexTextBox.Enabled = false;
+            IndexTextBox.Location = new Point(70, 20);
+            IndexTextBox.Margin = new Padding(4, 3, 4, 3);
+            IndexTextBox.Name = "IndexTextBox";
+            IndexTextBox.Size = new Size(116, 23);
+            IndexTextBox.TabIndex = 5;
             // 
             // LevelTextBox
             // 
-            this.LevelTextBox.Location = new System.Drawing.Point(60, 71);
-            this.LevelTextBox.Name = "LevelTextBox";
-            this.LevelTextBox.Size = new System.Drawing.Size(100, 20);
-            this.LevelTextBox.TabIndex = 6;
+            LevelTextBox.Location = new Point(70, 82);
+            LevelTextBox.Margin = new Padding(4, 3, 4, 3);
+            LevelTextBox.Name = "LevelTextBox";
+            LevelTextBox.Size = new Size(116, 23);
+            LevelTextBox.TabIndex = 6;
             // 
             // UpdateButton
             // 
-            this.UpdateButton.Location = new System.Drawing.Point(87, 97);
-            this.UpdateButton.Name = "UpdateButton";
-            this.UpdateButton.Size = new System.Drawing.Size(75, 23);
-            this.UpdateButton.TabIndex = 7;
-            this.UpdateButton.Text = "Update Details";
-            this.UpdateButton.UseVisualStyleBackColor = true;
-            this.UpdateButton.Click += new System.EventHandler(this.UpdateButton_Click);
+            UpdateButton.Location = new Point(102, 112);
+            UpdateButton.Margin = new Padding(4, 3, 4, 3);
+            UpdateButton.Name = "UpdateButton";
+            UpdateButton.Size = new Size(88, 27);
+            UpdateButton.TabIndex = 7;
+            UpdateButton.Text = "Update Details";
+            UpdateButton.UseVisualStyleBackColor = true;
+            UpdateButton.Click += UpdateButton_Click;
             // 
             // KickButton
             // 
-            this.KickButton.Location = new System.Drawing.Point(6, 19);
-            this.KickButton.Name = "KickButton";
-            this.KickButton.Size = new System.Drawing.Size(75, 23);
-            this.KickButton.TabIndex = 8;
-            this.KickButton.Text = "Kick Player";
-            this.KickButton.UseVisualStyleBackColor = true;
-            this.KickButton.Click += new System.EventHandler(this.KickButton_Click);
+            KickButton.Location = new Point(7, 22);
+            KickButton.Margin = new Padding(4, 3, 4, 3);
+            KickButton.Name = "KickButton";
+            KickButton.Size = new Size(88, 27);
+            KickButton.TabIndex = 8;
+            KickButton.Text = "Kick Player";
+            KickButton.UseVisualStyleBackColor = true;
+            KickButton.Click += KickButton_Click;
             // 
             // SendMessageTextBox
             // 
-            this.SendMessageTextBox.Location = new System.Drawing.Point(6, 19);
-            this.SendMessageTextBox.Name = "SendMessageTextBox";
-            this.SendMessageTextBox.Size = new System.Drawing.Size(298, 20);
-            this.SendMessageTextBox.TabIndex = 9;
+            SendMessageTextBox.Location = new Point(7, 22);
+            SendMessageTextBox.Margin = new Padding(4, 3, 4, 3);
+            SendMessageTextBox.Name = "SendMessageTextBox";
+            SendMessageTextBox.Size = new Size(347, 23);
+            SendMessageTextBox.TabIndex = 9;
             // 
             // SendMessageButton
             // 
-            this.SendMessageButton.Location = new System.Drawing.Point(310, 17);
-            this.SendMessageButton.Name = "SendMessageButton";
-            this.SendMessageButton.Size = new System.Drawing.Size(58, 23);
-            this.SendMessageButton.TabIndex = 10;
-            this.SendMessageButton.Text = "Send";
-            this.SendMessageButton.UseVisualStyleBackColor = true;
-            this.SendMessageButton.Click += new System.EventHandler(this.SendMessageButton_Click);
+            SendMessageButton.Location = new Point(362, 20);
+            SendMessageButton.Margin = new Padding(4, 3, 4, 3);
+            SendMessageButton.Name = "SendMessageButton";
+            SendMessageButton.Size = new Size(68, 27);
+            SendMessageButton.TabIndex = 10;
+            SendMessageButton.Text = "Send";
+            SendMessageButton.UseVisualStyleBackColor = true;
+            SendMessageButton.Click += SendMessageButton_Click;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.NameTextBox);
-            this.groupBox1.Controls.Add(this.IndexTextBox);
-            this.groupBox1.Controls.Add(this.UpdateButton);
-            this.groupBox1.Controls.Add(this.LevelTextBox);
-            this.groupBox1.Location = new System.Drawing.Point(6, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(168, 136);
-            this.groupBox1.TabIndex = 11;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Character Info";
+            groupBox1.Controls.Add(label2);
+            groupBox1.Controls.Add(label1);
+            groupBox1.Controls.Add(label3);
+            groupBox1.Controls.Add(NameTextBox);
+            groupBox1.Controls.Add(IndexTextBox);
+            groupBox1.Controls.Add(UpdateButton);
+            groupBox1.Controls.Add(LevelTextBox);
+            groupBox1.Location = new Point(7, 14);
+            groupBox1.Margin = new Padding(4, 3, 4, 3);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new Padding(4, 3, 4, 3);
+            groupBox1.Size = new Size(196, 157);
+            groupBox1.TabIndex = 11;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Character Info";
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.OpenAccountButton);
-            this.groupBox2.Controls.Add(this.SafeZoneButton);
-            this.groupBox2.Controls.Add(this.label9);
-            this.groupBox2.Controls.Add(this.ChatBanExpiryTextBox);
-            this.groupBox2.Controls.Add(this.ChatBanButton);
-            this.groupBox2.Controls.Add(this.KillPetsButton);
-            this.groupBox2.Controls.Add(this.KillButton);
-            this.groupBox2.Controls.Add(this.KickButton);
-            this.groupBox2.Location = new System.Drawing.Point(180, 12);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(278, 136);
-            this.groupBox2.TabIndex = 12;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Actions";
-            // 
-            // SafeZoneButton
-            // 
-            this.SafeZoneButton.Location = new System.Drawing.Point(87, 19);
-            this.SafeZoneButton.Name = "SafeZoneButton";
-            this.SafeZoneButton.Size = new System.Drawing.Size(75, 23);
-            this.SafeZoneButton.TabIndex = 22;
-            this.SafeZoneButton.Text = "Safezone";
-            this.SafeZoneButton.UseVisualStyleBackColor = true;
-            this.SafeZoneButton.Click += new System.EventHandler(this.SafeZoneButton_Click);
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(93, 110);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(50, 13);
-            this.label9.TabIndex = 21;
-            this.label9.Text = "Expires : ";
-            // 
-            // ChatBanExpiryTextBox
-            // 
-            this.ChatBanExpiryTextBox.Location = new System.Drawing.Point(149, 107);
-            this.ChatBanExpiryTextBox.Name = "ChatBanExpiryTextBox";
-            this.ChatBanExpiryTextBox.Size = new System.Drawing.Size(118, 20);
-            this.ChatBanExpiryTextBox.TabIndex = 20;
-            this.ChatBanExpiryTextBox.TextChanged += new System.EventHandler(this.ChatBanExpiryTextBox_TextChanged);
-            // 
-            // ChatBanButton
-            // 
-            this.ChatBanButton.Location = new System.Drawing.Point(6, 105);
-            this.ChatBanButton.Name = "ChatBanButton";
-            this.ChatBanButton.Size = new System.Drawing.Size(75, 23);
-            this.ChatBanButton.TabIndex = 19;
-            this.ChatBanButton.Text = "Chat Ban";
-            this.ChatBanButton.UseVisualStyleBackColor = true;
-            this.ChatBanButton.Click += new System.EventHandler(this.ChatBanButton_Click);
-            // 
-            // KillPetsButton
-            // 
-            this.KillPetsButton.Location = new System.Drawing.Point(6, 77);
-            this.KillPetsButton.Name = "KillPetsButton";
-            this.KillPetsButton.Size = new System.Drawing.Size(75, 23);
-            this.KillPetsButton.TabIndex = 18;
-            this.KillPetsButton.Text = "Kill Pets";
-            this.KillPetsButton.UseVisualStyleBackColor = true;
-            this.KillPetsButton.Click += new System.EventHandler(this.KillPetsButton_Click);
-            // 
-            // KillButton
-            // 
-            this.KillButton.Location = new System.Drawing.Point(6, 48);
-            this.KillButton.Name = "KillButton";
-            this.KillButton.Size = new System.Drawing.Size(75, 23);
-            this.KillButton.TabIndex = 17;
-            this.KillButton.Text = "Kill Player";
-            this.KillButton.UseVisualStyleBackColor = true;
-            this.KillButton.Click += new System.EventHandler(this.KillButton_Click);
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.SendMessageTextBox);
-            this.groupBox3.Controls.Add(this.SendMessageButton);
-            this.groupBox3.Location = new System.Drawing.Point(6, 273);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(374, 49);
-            this.groupBox3.TabIndex = 13;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Send Message";
-            // 
-            // CurrentMapLabel
-            // 
-            this.CurrentMapLabel.AutoSize = true;
-            this.CurrentMapLabel.Location = new System.Drawing.Point(113, 31);
-            this.CurrentMapLabel.Name = "CurrentMapLabel";
-            this.CurrentMapLabel.Size = new System.Drawing.Size(33, 13);
-            this.CurrentMapLabel.TabIndex = 15;
-            this.CurrentMapLabel.Text = "$map";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(10, 31);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(94, 13);
-            this.label5.TabIndex = 16;
-            this.label5.Text = "Current Location : ";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(10, 48);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(62, 13);
-            this.label4.TabIndex = 17;
-            this.label4.Text = "PK Points : ";
-            // 
-            // PKPointsLabel
-            // 
-            this.PKPointsLabel.AutoSize = true;
-            this.PKPointsLabel.Location = new System.Drawing.Point(113, 48);
-            this.PKPointsLabel.Name = "PKPointsLabel";
-            this.PKPointsLabel.Size = new System.Drawing.Size(48, 13);
-            this.PKPointsLabel.TabIndex = 18;
-            this.PKPointsLabel.Text = "$pkpoint";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(10, 65);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(72, 13);
-            this.label6.TabIndex = 19;
-            this.label6.Text = "Online Time : ";
-            // 
-            // OnlineTimeLabel
-            // 
-            this.OnlineTimeLabel.AutoSize = true;
-            this.OnlineTimeLabel.Location = new System.Drawing.Point(113, 65);
-            this.OnlineTimeLabel.Name = "OnlineTimeLabel";
-            this.OnlineTimeLabel.Size = new System.Drawing.Size(60, 13);
-            this.OnlineTimeLabel.TabIndex = 20;
-            this.OnlineTimeLabel.Text = "$onlinetime";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(10, 16);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(65, 13);
-            this.label7.TabIndex = 21;
-            this.label7.Text = "Total Gold : ";
-            // 
-            // GoldLabel
-            // 
-            this.GoldLabel.AutoSize = true;
-            this.GoldLabel.Location = new System.Drawing.Point(113, 16);
-            this.GoldLabel.Name = "GoldLabel";
-            this.GoldLabel.Size = new System.Drawing.Size(33, 13);
-            this.GoldLabel.TabIndex = 22;
-            this.GoldLabel.Text = "$gold";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(10, 82);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(63, 13);
-            this.label8.TabIndex = 23;
-            this.label8.Text = "Current IP : ";
-            // 
-            // CurrentIPLabel
-            // 
-            this.CurrentIPLabel.AutoSize = true;
-            this.CurrentIPLabel.Location = new System.Drawing.Point(113, 82);
-            this.CurrentIPLabel.Name = "CurrentIPLabel";
-            this.CurrentIPLabel.Size = new System.Drawing.Size(23, 13);
-            this.CurrentIPLabel.TabIndex = 24;
-            this.CurrentIPLabel.Text = "$IP";
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.label7);
-            this.groupBox4.Controls.Add(this.CurrentIPLabel);
-            this.groupBox4.Controls.Add(this.CurrentMapLabel);
-            this.groupBox4.Controls.Add(this.label8);
-            this.groupBox4.Controls.Add(this.label5);
-            this.groupBox4.Controls.Add(this.GoldLabel);
-            this.groupBox4.Controls.Add(this.label4);
-            this.groupBox4.Controls.Add(this.PKPointsLabel);
-            this.groupBox4.Controls.Add(this.OnlineTimeLabel);
-            this.groupBox4.Controls.Add(this.label6);
-            this.groupBox4.Location = new System.Drawing.Point(6, 154);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(197, 113);
-            this.groupBox4.TabIndex = 25;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Details";
+            groupBox2.Controls.Add(OpenAccountButton);
+            groupBox2.Controls.Add(SafeZoneButton);
+            groupBox2.Controls.Add(label9);
+            groupBox2.Controls.Add(ChatBanExpiryTextBox);
+            groupBox2.Controls.Add(ChatBanButton);
+            groupBox2.Controls.Add(KillPetsButton);
+            groupBox2.Controls.Add(KillButton);
+            groupBox2.Controls.Add(KickButton);
+            groupBox2.Location = new Point(210, 14);
+            groupBox2.Margin = new Padding(4, 3, 4, 3);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Padding = new Padding(4, 3, 4, 3);
+            groupBox2.Size = new Size(324, 157);
+            groupBox2.TabIndex = 12;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Actions";
             // 
             // OpenAccountButton
             // 
-            this.OpenAccountButton.Location = new System.Drawing.Point(168, 19);
-            this.OpenAccountButton.Name = "OpenAccountButton";
-            this.OpenAccountButton.Size = new System.Drawing.Size(99, 23);
-            this.OpenAccountButton.TabIndex = 23;
-            this.OpenAccountButton.Text = "Open Account";
-            this.OpenAccountButton.UseVisualStyleBackColor = true;
-            this.OpenAccountButton.Click += new System.EventHandler(this.OpenAccountButton_Click);
+            OpenAccountButton.Location = new Point(196, 22);
+            OpenAccountButton.Margin = new Padding(4, 3, 4, 3);
+            OpenAccountButton.Name = "OpenAccountButton";
+            OpenAccountButton.Size = new Size(115, 27);
+            OpenAccountButton.TabIndex = 23;
+            OpenAccountButton.Text = "Open Account";
+            OpenAccountButton.UseVisualStyleBackColor = true;
+            OpenAccountButton.Click += OpenAccountButton_Click;
+            // 
+            // SafeZoneButton
+            // 
+            SafeZoneButton.Location = new Point(102, 22);
+            SafeZoneButton.Margin = new Padding(4, 3, 4, 3);
+            SafeZoneButton.Name = "SafeZoneButton";
+            SafeZoneButton.Size = new Size(88, 27);
+            SafeZoneButton.TabIndex = 22;
+            SafeZoneButton.Text = "Safezone";
+            SafeZoneButton.UseVisualStyleBackColor = true;
+            SafeZoneButton.Click += SafeZoneButton_Click;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(108, 127);
+            label9.Margin = new Padding(4, 0, 4, 0);
+            label9.Name = "label9";
+            label9.Size = new Size(53, 15);
+            label9.TabIndex = 21;
+            label9.Text = "Expires : ";
+            // 
+            // ChatBanExpiryTextBox
+            // 
+            ChatBanExpiryTextBox.Location = new Point(174, 123);
+            ChatBanExpiryTextBox.Margin = new Padding(4, 3, 4, 3);
+            ChatBanExpiryTextBox.Name = "ChatBanExpiryTextBox";
+            ChatBanExpiryTextBox.Size = new Size(137, 23);
+            ChatBanExpiryTextBox.TabIndex = 20;
+            ChatBanExpiryTextBox.TextChanged += ChatBanExpiryTextBox_TextChanged;
+            // 
+            // ChatBanButton
+            // 
+            ChatBanButton.Location = new Point(7, 121);
+            ChatBanButton.Margin = new Padding(4, 3, 4, 3);
+            ChatBanButton.Name = "ChatBanButton";
+            ChatBanButton.Size = new Size(88, 27);
+            ChatBanButton.TabIndex = 19;
+            ChatBanButton.Text = "Chat Ban";
+            ChatBanButton.UseVisualStyleBackColor = true;
+            ChatBanButton.Click += ChatBanButton_Click;
+            // 
+            // KillPetsButton
+            // 
+            KillPetsButton.Location = new Point(7, 89);
+            KillPetsButton.Margin = new Padding(4, 3, 4, 3);
+            KillPetsButton.Name = "KillPetsButton";
+            KillPetsButton.Size = new Size(88, 27);
+            KillPetsButton.TabIndex = 18;
+            KillPetsButton.Text = "Kill Pets";
+            KillPetsButton.UseVisualStyleBackColor = true;
+            KillPetsButton.Click += KillPetsButton_Click;
+            // 
+            // KillButton
+            // 
+            KillButton.Location = new Point(7, 55);
+            KillButton.Margin = new Padding(4, 3, 4, 3);
+            KillButton.Name = "KillButton";
+            KillButton.Size = new Size(88, 27);
+            KillButton.TabIndex = 17;
+            KillButton.Text = "Kill Player";
+            KillButton.UseVisualStyleBackColor = true;
+            KillButton.Click += KillButton_Click;
+            // 
+            // groupBox3
+            // 
+            groupBox3.Controls.Add(SendMessageTextBox);
+            groupBox3.Controls.Add(SendMessageButton);
+            groupBox3.Location = new Point(7, 315);
+            groupBox3.Margin = new Padding(4, 3, 4, 3);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Padding = new Padding(4, 3, 4, 3);
+            groupBox3.Size = new Size(436, 57);
+            groupBox3.TabIndex = 13;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Send Message";
+            // 
+            // CurrentMapLabel
+            // 
+            CurrentMapLabel.AutoSize = true;
+            CurrentMapLabel.Location = new Point(132, 36);
+            CurrentMapLabel.Margin = new Padding(4, 0, 4, 0);
+            CurrentMapLabel.Name = "CurrentMapLabel";
+            CurrentMapLabel.Size = new Size(37, 15);
+            CurrentMapLabel.TabIndex = 15;
+            CurrentMapLabel.Text = "$map";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(12, 36);
+            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(105, 15);
+            label5.TabIndex = 16;
+            label5.Text = "Current Location : ";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(12, 55);
+            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(66, 15);
+            label4.TabIndex = 17;
+            label4.Text = "PK Points : ";
+            // 
+            // PKPointsLabel
+            // 
+            PKPointsLabel.AutoSize = true;
+            PKPointsLabel.Location = new Point(132, 55);
+            PKPointsLabel.Margin = new Padding(4, 0, 4, 0);
+            PKPointsLabel.Name = "PKPointsLabel";
+            PKPointsLabel.Size = new Size(54, 15);
+            PKPointsLabel.TabIndex = 18;
+            PKPointsLabel.Text = "$pkpoint";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(12, 75);
+            label6.Margin = new Padding(4, 0, 4, 0);
+            label6.Name = "label6";
+            label6.Size = new Size(80, 15);
+            label6.TabIndex = 19;
+            label6.Text = "Online Time : ";
+            // 
+            // OnlineTimeLabel
+            // 
+            OnlineTimeLabel.AutoSize = true;
+            OnlineTimeLabel.Location = new Point(132, 75);
+            OnlineTimeLabel.Margin = new Padding(4, 0, 4, 0);
+            OnlineTimeLabel.Name = "OnlineTimeLabel";
+            OnlineTimeLabel.Size = new Size(70, 15);
+            OnlineTimeLabel.TabIndex = 20;
+            OnlineTimeLabel.Text = "$onlinetime";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(12, 18);
+            label7.Margin = new Padding(4, 0, 4, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(69, 15);
+            label7.TabIndex = 21;
+            label7.Text = "Total Gold : ";
+            // 
+            // GoldLabel
+            // 
+            GoldLabel.AutoSize = true;
+            GoldLabel.Location = new Point(132, 18);
+            GoldLabel.Margin = new Padding(4, 0, 4, 0);
+            GoldLabel.Name = "GoldLabel";
+            GoldLabel.Size = new Size(37, 15);
+            GoldLabel.TabIndex = 22;
+            GoldLabel.Text = "$gold";
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(12, 95);
+            label8.Margin = new Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(69, 15);
+            label8.TabIndex = 23;
+            label8.Text = "Current IP : ";
+            // 
+            // CurrentIPLabel
+            // 
+            CurrentIPLabel.AutoSize = true;
+            CurrentIPLabel.Location = new Point(132, 95);
+            CurrentIPLabel.Margin = new Padding(4, 0, 4, 0);
+            CurrentIPLabel.Name = "CurrentIPLabel";
+            CurrentIPLabel.Size = new Size(23, 15);
+            CurrentIPLabel.TabIndex = 24;
+            CurrentIPLabel.Text = "$IP";
+            // 
+            // groupBox4
+            // 
+            groupBox4.Controls.Add(label7);
+            groupBox4.Controls.Add(CurrentIPLabel);
+            groupBox4.Controls.Add(CurrentMapLabel);
+            groupBox4.Controls.Add(label8);
+            groupBox4.Controls.Add(label5);
+            groupBox4.Controls.Add(GoldLabel);
+            groupBox4.Controls.Add(label4);
+            groupBox4.Controls.Add(PKPointsLabel);
+            groupBox4.Controls.Add(OnlineTimeLabel);
+            groupBox4.Controls.Add(label6);
+            groupBox4.Location = new Point(7, 178);
+            groupBox4.Margin = new Padding(4, 3, 4, 3);
+            groupBox4.Name = "groupBox4";
+            groupBox4.Padding = new Padding(4, 3, 4, 3);
+            groupBox4.Size = new Size(364, 130);
+            groupBox4.TabIndex = 25;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "Details";
+            // 
+            // ResultLabel
+            // 
+            ResultLabel.AutoSize = true;
+            ResultLabel.Location = new Point(403, 218);
+            ResultLabel.Name = "ResultLabel";
+            ResultLabel.Size = new Size(0, 15);
+            ResultLabel.TabIndex = 30;
+            // 
+            // FlagSearchBox
+            // 
+            FlagSearchBox.Location = new Point(403, 192);
+            FlagSearchBox.Name = "FlagSearchBox";
+            FlagSearchBox.Size = new Size(100, 23);
+            FlagSearchBox.TabIndex = 29;
+            FlagSearchBox.TextChanged += FlagSearchBox_TextChanged;
+            // 
+            // FlagSearch
+            // 
+            FlagSearch.AutoSize = true;
+            FlagSearch.Location = new Point(421, 174);
+            FlagSearch.Name = "FlagSearch";
+            FlagSearch.Size = new Size(67, 15);
+            FlagSearch.TabIndex = 28;
+            FlagSearch.Text = "Flag Search";
+            // 
+            // FlagUp
+            // 
+            FlagUp.Location = new Point(510, 192);
+            FlagUp.Name = "FlagUp";
+            FlagUp.Size = new Size(24, 23);
+            FlagUp.TabIndex = 31;
+            FlagUp.Text = "+";
+            FlagUp.UseVisualStyleBackColor = true;
+            FlagUp.Click += FlagUp_Click;
+            // 
+            // FlagDown
+            // 
+            FlagDown.Location = new Point(373, 192);
+            FlagDown.Name = "FlagDown";
+            FlagDown.Size = new Size(24, 23);
+            FlagDown.TabIndex = 32;
+            FlagDown.Text = "-";
+            FlagDown.UseVisualStyleBackColor = true;
+            FlagDown.Click += FlagDown_Click;
+            // 
+            // QuestDown
+            // 
+            QuestDown.Location = new Point(372, 269);
+            QuestDown.Name = "QuestDown";
+            QuestDown.Size = new Size(24, 23);
+            QuestDown.TabIndex = 44;
+            QuestDown.Text = "-";
+            QuestDown.UseVisualStyleBackColor = true;
+            QuestDown.Click += QuestDown_Click;
+            // 
+            // QuestUp
+            // 
+            QuestUp.Location = new Point(509, 269);
+            QuestUp.Name = "QuestUp";
+            QuestUp.Size = new Size(24, 23);
+            QuestUp.TabIndex = 43;
+            QuestUp.Text = "+";
+            QuestUp.UseVisualStyleBackColor = true;
+            QuestUp.Click += QuestUp_Click;
+            // 
+            // QuestResultLabel
+            // 
+            QuestResultLabel.AutoSize = true;
+            QuestResultLabel.Location = new Point(403, 296);
+            QuestResultLabel.Name = "QuestResultLabel";
+            QuestResultLabel.Size = new Size(0, 15);
+            QuestResultLabel.TabIndex = 42;
+            // 
+            // QuestSearchBox
+            // 
+            QuestSearchBox.Location = new Point(403, 270);
+            QuestSearchBox.Name = "QuestSearchBox";
+            QuestSearchBox.Size = new Size(100, 23);
+            QuestSearchBox.TabIndex = 41;
+            QuestSearchBox.TextChanged += QuestSearchBox_TextChanged;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(421, 252);
+            label10.Name = "label10";
+            label10.Size = new Size(76, 15);
+            label10.TabIndex = 40;
+            label10.Text = "Quest Search";
             // 
             // PlayerInfoForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(466, 328);
-            this.Controls.Add(this.groupBox4);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
-            this.Name = "PlayerInfoForm";
-            this.Text = "PlayerInfoForm";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(544, 378);
+            Controls.Add(QuestDown);
+            Controls.Add(QuestUp);
+            Controls.Add(QuestResultLabel);
+            Controls.Add(QuestSearchBox);
+            Controls.Add(label10);
+            Controls.Add(FlagDown);
+            Controls.Add(FlagUp);
+            Controls.Add(ResultLabel);
+            Controls.Add(FlagSearchBox);
+            Controls.Add(FlagSearch);
+            Controls.Add(groupBox4);
+            Controls.Add(groupBox3);
+            Controls.Add(groupBox2);
+            Controls.Add(groupBox1);
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "PlayerInfoForm";
+            Text = "PlayerInfoForm";
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
+            groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
+            groupBox4.ResumeLayout(false);
+            groupBox4.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -427,5 +573,15 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button SafeZoneButton;
         private System.Windows.Forms.Button OpenAccountButton;
+        private Label ResultLabel;
+        private TextBox FlagSearchBox;
+        private Label FlagSearch;
+        private Button FlagUp;
+        private Button FlagDown;
+        private Button QuestDown;
+        private Button QuestUp;
+        private Label QuestResultLabel;
+        private TextBox QuestSearchBox;
+        private Label label10;
     }
 }

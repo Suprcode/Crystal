@@ -39,7 +39,7 @@ namespace Server
 
             if (Character.Player != null)
                 CurrentMapLabel.Text =
-                    $"{Character.Player.CurrentMap.Info.FileName} {Character.CurrentLocation.X}:{Character.CurrentLocation.Y}";
+                    $"{Character.Player.CurrentMap.Info.Title} {Character.Player.CurrentMap.Info.FileName} {Character.CurrentLocation.X}:{Character.CurrentLocation.Y}";
             else
                 CurrentMapLabel.Text = "OFFLINE";
 
@@ -133,5 +133,131 @@ namespace Server
             form.ShowDialog();
         }
 
+        private void FlagSearchBox_TextChanged(object sender, EventArgs e)
+        {
+            TextBox flagTextBox = (TextBox)sender;
+
+            if (string.IsNullOrWhiteSpace(flagTextBox.Text))
+            {
+                ResultLabel.Text = string.Empty;
+                return;
+            }
+
+            if (int.TryParse(flagTextBox.Text, out int flagIndex))
+            {
+                if (flagIndex >= 0 && flagIndex < Character.Flags.Length)
+                {
+                    bool flagValue = Character.Flags[flagIndex];
+
+                    if (flagValue)
+                    {
+                        ResultLabel.Text = $"Flag {flagIndex} is Active";
+                        ResultLabel.ForeColor = Color.Green;
+                    }
+                    else
+                    {
+                        ResultLabel.Text = $"Flag {flagIndex} is Inactive";
+                        ResultLabel.ForeColor = Color.Red;
+                    }
+                }
+                else
+                {
+                    ResultLabel.Text = "Invalid Flag Number";
+                    ResultLabel.ForeColor = Color.Red;
+                }
+            }
+        }
+
+        private void FlagUp_Click(object sender, EventArgs e)
+        {
+            if (int.TryParse(FlagSearchBox.Text, out int currentValue))
+            {
+                int newValue = currentValue + 1;
+
+                FlagSearchBox.Text = newValue.ToString();
+            }
+            else
+            {
+                FlagSearchBox.Text = "1";
+            }
+        }
+
+        private void FlagDown_Click(object sender, EventArgs e)
+        {
+            if (int.TryParse(FlagSearchBox.Text, out int currentValue))
+            {
+                int newValue = currentValue - 1;
+
+                newValue = Math.Max(0, newValue);
+
+                FlagSearchBox.Text = newValue.ToString();
+            }
+        }
+
+        private void QuestSearchBox_TextChanged(object sender, EventArgs e)
+        {
+            TextBox questTextBox = (TextBox)sender;
+
+            if (string.IsNullOrWhiteSpace(questTextBox.Text))
+            {
+                QuestResultLabel.Text = string.Empty;
+                return;
+            }
+
+            if (int.TryParse(questTextBox.Text, out int questID))
+            {
+                if (questID < 1)
+                {
+                    QuestResultLabel.Text = "Invalid Quest Index";
+                    QuestResultLabel.ForeColor = Color.Red;
+                    return;
+                }
+
+                bool isQuestActive = Character.CurrentQuests.Any(x => x.Index == questID);
+                bool isQuestComplete = Character.CompletedQuests.Contains(questID);
+
+                if (isQuestActive)
+                {
+                    QuestResultLabel.Text = $"Quest {questID} is Active";
+                    QuestResultLabel.ForeColor = Color.Blue;
+                }
+                else
+                {
+                    QuestResultLabel.Text = $"Quest {questID} is {(isQuestComplete ? "Completed" : "Not Picked-up")}";
+                    QuestResultLabel.ForeColor = isQuestComplete ? Color.Green : Color.Red;
+                }
+            }
+            else
+            {
+                QuestResultLabel.Text = "Invalid Quest Index";
+                QuestResultLabel.ForeColor = Color.Red;
+            }
+        }
+
+        private void QuestUp_Click(object sender, EventArgs e)
+        {
+            if (int.TryParse(QuestSearchBox.Text, out int currentValue))
+            {
+                int newValue = currentValue + 1;
+
+                QuestSearchBox.Text = newValue.ToString();
+            }
+            else
+            {
+                QuestSearchBox.Text = "1";
+            }
+        }
+
+        private void QuestDown_Click(object sender, EventArgs e)
+        {
+            if (int.TryParse(QuestSearchBox.Text, out int currentValue))
+            {
+                int newValue = currentValue - 1;
+
+                newValue = Math.Max(0, newValue);
+
+                QuestSearchBox.Text = newValue.ToString();
+            }
+        }
     }
 }
