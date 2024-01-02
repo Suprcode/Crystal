@@ -167,6 +167,31 @@ namespace Server
                 }
             }
         }
+
+        private void FlagUp_Click(object sender, EventArgs e)
+        {
+            if (int.TryParse(FlagSearchBox.Text, out int currentValue))
+            {
+                int newValue = currentValue + 1;
+
+                FlagSearchBox.Text = newValue.ToString();
+            }
+            else
+            {
+                FlagSearchBox.Text = "1";
+            }
+        }
+
+        private void FlagDown_Click(object sender, EventArgs e)
+        {
+            if (int.TryParse(FlagSearchBox.Text, out int currentValue))
+            {
+                int newValue = currentValue - 1;
+
+                newValue = Math.Max(0, newValue);
+
+                FlagSearchBox.Text = newValue.ToString();
+            }
+        }
     }
 }
-

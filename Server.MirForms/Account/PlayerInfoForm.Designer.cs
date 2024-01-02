@@ -62,6 +62,8 @@
             ResultLabel = new Label();
             FlagSearchBox = new TextBox();
             FlagSearch = new Label();
+            FlagUp = new Button();
+            FlagDown = new Button();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -430,15 +432,37 @@
             FlagSearch.AutoSize = true;
             FlagSearch.Location = new Point(421, 174);
             FlagSearch.Name = "FlagSearch";
-            FlagSearch.Size = new Size(64, 15);
+            FlagSearch.Size = new Size(67, 15);
             FlagSearch.TabIndex = 28;
-            FlagSearch.Text = "FlagSearch";
+            FlagSearch.Text = "Flag Search";
+            // 
+            // FlagUp
+            // 
+            FlagUp.Location = new Point(510, 192);
+            FlagUp.Name = "FlagUp";
+            FlagUp.Size = new Size(24, 23);
+            FlagUp.TabIndex = 31;
+            FlagUp.Text = "+";
+            FlagUp.UseVisualStyleBackColor = true;
+            FlagUp.Click += FlagUp_Click;
+            // 
+            // FlagDown
+            // 
+            FlagDown.Location = new Point(373, 192);
+            FlagDown.Name = "FlagDown";
+            FlagDown.Size = new Size(24, 23);
+            FlagDown.TabIndex = 32;
+            FlagDown.Text = "-";
+            FlagDown.UseVisualStyleBackColor = true;
+            FlagDown.Click += FlagDown_Click;
             // 
             // PlayerInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(544, 378);
+            Controls.Add(FlagDown);
+            Controls.Add(FlagUp);
             Controls.Add(ResultLabel);
             Controls.Add(FlagSearchBox);
             Controls.Add(FlagSearch);
@@ -497,5 +521,7 @@
         private Label ResultLabel;
         private TextBox FlagSearchBox;
         private Label FlagSearch;
+        private Button FlagUp;
+        private Button FlagDown;
     }
 }
