@@ -208,19 +208,28 @@ namespace Server
             {
                 if (questID < 1)
                 {
-                    QuestResultLabel.Text = "Invalid Quest ID";
+                    QuestResultLabel.Text = "Invalid Quest Index";
                     QuestResultLabel.ForeColor = Color.Red;
                     return;
                 }
 
+                bool isQuestActive = Character.CurrentQuests.Any(x => x.Index == questID);
                 bool isQuestComplete = Character.CompletedQuests.Contains(questID);
 
-                QuestResultLabel.Text = $"Quest {questID} is {(isQuestComplete ? "Complete" : "Not complete")}";
-                QuestResultLabel.ForeColor = isQuestComplete ? Color.Green : Color.Red;
+                if (isQuestActive)
+                {
+                    QuestResultLabel.Text = $"Quest {questID} is Active";
+                    QuestResultLabel.ForeColor = Color.Blue;
+                }
+                else
+                {
+                    QuestResultLabel.Text = $"Quest {questID} is {(isQuestComplete ? "Completed" : "Not Picked-up")}";
+                    QuestResultLabel.ForeColor = isQuestComplete ? Color.Green : Color.Red;
+                }
             }
             else
             {
-                QuestResultLabel.Text = "Invalid input";
+                QuestResultLabel.Text = "Invalid Quest Index";
                 QuestResultLabel.ForeColor = Color.Red;
             }
         }
