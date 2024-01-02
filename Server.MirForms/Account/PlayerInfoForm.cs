@@ -193,5 +193,62 @@ namespace Server
                 FlagSearchBox.Text = newValue.ToString();
             }
         }
+
+        private void QuestSearchBox_TextChanged(object sender, EventArgs e)
+        {
+            TextBox questTextBox = (TextBox)sender;
+
+            if (string.IsNullOrWhiteSpace(questTextBox.Text))
+            {
+                QuestResultLabel.Text = string.Empty;
+                return;
+            }
+
+            if (int.TryParse(questTextBox.Text, out int questID))
+            {
+                if (questID < 1)
+                {
+                    QuestResultLabel.Text = "Invalid Quest ID";
+                    QuestResultLabel.ForeColor = Color.Red;
+                    return;
+                }
+
+                bool isQuestComplete = Character.CompletedQuests.Contains(questID);
+
+                QuestResultLabel.Text = $"Quest {questID} is {(isQuestComplete ? "Complete" : "Not complete")}";
+                QuestResultLabel.ForeColor = isQuestComplete ? Color.Green : Color.Red;
+            }
+            else
+            {
+                QuestResultLabel.Text = "Invalid input";
+                QuestResultLabel.ForeColor = Color.Red;
+            }
+        }
+
+        private void QuestUp_Click(object sender, EventArgs e)
+        {
+            if (int.TryParse(QuestSearchBox.Text, out int currentValue))
+            {
+                int newValue = currentValue + 1;
+
+                QuestSearchBox.Text = newValue.ToString();
+            }
+            else
+            {
+                QuestSearchBox.Text = "1";
+            }
+        }
+
+        private void QuestDown_Click(object sender, EventArgs e)
+        {
+            if (int.TryParse(QuestSearchBox.Text, out int currentValue))
+            {
+                int newValue = currentValue - 1;
+
+                newValue = Math.Max(0, newValue);
+
+                QuestSearchBox.Text = newValue.ToString();
+            }
+        }
     }
 }

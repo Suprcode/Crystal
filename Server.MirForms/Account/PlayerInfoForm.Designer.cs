@@ -64,6 +64,11 @@
             FlagSearch = new Label();
             FlagUp = new Button();
             FlagDown = new Button();
+            QuestDown = new Button();
+            QuestUp = new Button();
+            QuestResultLabel = new Label();
+            QuestSearchBox = new TextBox();
+            label10 = new Label();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -414,7 +419,7 @@
             // ResultLabel
             // 
             ResultLabel.AutoSize = true;
-            ResultLabel.Location = new Point(403, 229);
+            ResultLabel.Location = new Point(403, 218);
             ResultLabel.Name = "ResultLabel";
             ResultLabel.Size = new Size(0, 15);
             ResultLabel.TabIndex = 30;
@@ -456,11 +461,61 @@
             FlagDown.UseVisualStyleBackColor = true;
             FlagDown.Click += FlagDown_Click;
             // 
+            // QuestDown
+            // 
+            QuestDown.Location = new Point(372, 269);
+            QuestDown.Name = "QuestDown";
+            QuestDown.Size = new Size(24, 23);
+            QuestDown.TabIndex = 44;
+            QuestDown.Text = "-";
+            QuestDown.UseVisualStyleBackColor = true;
+            QuestDown.Click += QuestDown_Click;
+            // 
+            // QuestUp
+            // 
+            QuestUp.Location = new Point(509, 269);
+            QuestUp.Name = "QuestUp";
+            QuestUp.Size = new Size(24, 23);
+            QuestUp.TabIndex = 43;
+            QuestUp.Text = "+";
+            QuestUp.UseVisualStyleBackColor = true;
+            QuestUp.Click += QuestUp_Click;
+            // 
+            // QuestResultLabel
+            // 
+            QuestResultLabel.AutoSize = true;
+            QuestResultLabel.Location = new Point(403, 296);
+            QuestResultLabel.Name = "QuestResultLabel";
+            QuestResultLabel.Size = new Size(0, 15);
+            QuestResultLabel.TabIndex = 42;
+            // 
+            // QuestSearchBox
+            // 
+            QuestSearchBox.Location = new Point(403, 270);
+            QuestSearchBox.Name = "QuestSearchBox";
+            QuestSearchBox.Size = new Size(100, 23);
+            QuestSearchBox.TabIndex = 41;
+            QuestSearchBox.TextChanged += QuestSearchBox_TextChanged;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(421, 252);
+            label10.Name = "label10";
+            label10.Size = new Size(76, 15);
+            label10.TabIndex = 40;
+            label10.Text = "Quest Search";
+            // 
             // PlayerInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(544, 378);
+            Controls.Add(QuestDown);
+            Controls.Add(QuestUp);
+            Controls.Add(QuestResultLabel);
+            Controls.Add(QuestSearchBox);
+            Controls.Add(label10);
             Controls.Add(FlagDown);
             Controls.Add(FlagUp);
             Controls.Add(ResultLabel);
@@ -523,5 +578,10 @@
         private Label FlagSearch;
         private Button FlagUp;
         private Button FlagDown;
+        private Button QuestDown;
+        private Button QuestUp;
+        private Label QuestResultLabel;
+        private TextBox QuestSearchBox;
+        private Label label10;
     }
 }
