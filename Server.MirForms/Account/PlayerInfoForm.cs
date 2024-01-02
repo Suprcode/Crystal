@@ -151,18 +151,18 @@ namespace Server
 
                     if (flagValue)
                     {
-                        ResultLabel.Text = $"Flag {flagIndex} ACTIVE.";
+                        ResultLabel.Text = $"Flag {flagIndex} is active.";
                         ResultLabel.ForeColor = Color.Green;
                     }
                     else
                     {
-                        ResultLabel.Text = $"Flag {flagIndex} INACTIVE.";
+                        ResultLabel.Text = $"Flag {flagIndex} is inactive.";
                         ResultLabel.ForeColor = Color.Red;
                     }
                 }
                 else
                 {
-                    ResultLabel.Text = "Invalid flag index";
+                    ResultLabel.Text = "Invalid Flag Number";
                     ResultLabel.ForeColor = Color.Red;
                 }
             }
