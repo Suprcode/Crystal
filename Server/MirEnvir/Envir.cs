@@ -3646,6 +3646,29 @@ namespace Server.MirEnvir
             MessageQueue.Enqueue("Drops Loaded.");
         }
 
+        public void ReloadLineMessages()
+        {
+            LineMessages.Clear();
+
+            var path = Path.Combine(Settings.EnvirPath, "LineMessage.txt");
+
+            if (!File.Exists(path))
+            {
+                File.WriteAllText(path, "");
+            }
+            else
+            {
+                var lines = File.ReadAllLines(path);
+
+                for (var i = 0; i < lines.Length; i++)
+                {
+                    if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
+                    LineMessages.Add(lines[i]);
+                }
+                MessageQueue.Enqueue("LineMessages reloaded.");
+            }
+        }
+
         private WorldMapIcon ValidateWorldMap()
         {
             foreach (WorldMapIcon wmi in Settings.WorldMapSetup.Icons)
