@@ -394,6 +394,7 @@
             CurrentIPLabel.Size = new Size(23, 15);
             CurrentIPLabel.TabIndex = 24;
             CurrentIPLabel.Text = "$IP";
+            CurrentIPLabel.Click += CurrentIPLabel_Click;
             // 
             // groupBox4
             // 

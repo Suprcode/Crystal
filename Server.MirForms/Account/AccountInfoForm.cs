@@ -29,7 +29,7 @@ namespace Server
             RefreshInterface();
             AutoResize();
 
-            AccountIDTextBox.MaxLength = Globals.MaxAccountIDLength;            
+            AccountIDTextBox.MaxLength = Globals.MaxAccountIDLength;
 
             UserNameTextBox.MaxLength = 20;
             BirthDateTextBox.MaxLength = 10;
@@ -61,7 +61,7 @@ namespace Server
 
         private ListViewItem CreateListView(AccountInfo account)
         {
-            ListViewItem ListItem = new ListViewItem(account.Index.ToString()) {Tag = account};
+            ListViewItem ListItem = new ListViewItem(account.Index.ToString()) { Tag = account };
 
             ListItem.SubItems.Add(account.AccountID);
             ListItem.SubItems.Add(account.UserName);
@@ -83,10 +83,10 @@ namespace Server
 
             List<AccountInfo> accounts = SMain.Envir.AccountList;
 
-            if(FilterTextBox.Text.Length > 0)
+            if (FilterTextBox.Text.Length > 0)
                 accounts = SMain.Envir.MatchAccounts(FilterTextBox.Text, MatchFilterCheckBox.Checked);
 
-            else if(FilterPlayerTextBox.Text.Length > 0)
+            else if (FilterPlayerTextBox.Text.Length > 0)
                 accounts = SMain.Envir.MatchAccountsByPlayer(FilterPlayerTextBox.Text, MatchFilterCheckBox.Checked);
 
             if (AccountInfoListView.Items.Count != accounts.Count)
@@ -142,7 +142,7 @@ namespace Server
 
             CreationIPTextBox.Text = info.CreationIP;
             CreationDateTextBox.Text = info.CreationDate.ToString();
-            
+
             LastIPTextBox.Text = info.LastIP;
             LastDateTextBox.Text = info.LastDate.ToString();
 
@@ -251,7 +251,7 @@ namespace Server
         private void QuestionTextBox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
-            
+
             for (int i = 0; i < _selectedAccountInfos.Count; i++)
                 _selectedAccountInfos[i].SecretQuestion = ActiveControl.Text;
         }
@@ -272,7 +272,7 @@ namespace Server
             for (int i = 0; i < _selectedAccountInfos.Count; i++)
                 _selectedAccountInfos[i].EMailAddress = ActiveControl.Text;
         }
-        
+
         private void DayBanButton_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Are you sure you want to ban the selected Accounts?", "Ban Selected.", MessageBoxButtons.YesNoCancel) != DialogResult.Yes) return;
@@ -346,7 +346,7 @@ namespace Server
         private void BanReasonTextBox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
-            
+
             AccountInfoListView.BeginUpdate();
             for (int i = 0; i < _selectedAccountInfos.Count; i++)
             {
@@ -468,6 +468,46 @@ namespace Server
             }
             AutoResize();
             AccountInfoListView.EndUpdate();
+        }
+
+        private void CreationIPSearch_Click(object sender, EventArgs e)
+        {
+            string ipAddress = CreationIPTextBox.Text;
+
+            string url = $"https://whatismyipaddress.com/ip/{ipAddress}";
+
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url)
+                {
+                    UseShellExecute = true
+                });
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening URL: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void LastIPSearch_Click(object sender, EventArgs e)
+        {
+            string ipAddress = LastIPTextBox.Text;
+
+            string url = $"https://whatismyipaddress.com/ip/{ipAddress}";
+
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url)
+                {
+                    UseShellExecute = true
+                });
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening URL: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

@@ -259,5 +259,26 @@ namespace Server
                 QuestSearchBox.Text = newValue.ToString();
             }
         }
+
+        private void CurrentIPLabel_Click(object sender, EventArgs e)
+        {
+            string ipAddress = CurrentIPLabel.Text;
+
+            string url = $"https://whatismyipaddress.com/ip/{ipAddress}";
+
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url)
+                {
+                    UseShellExecute = true
+                });
+
+                CurrentIPLabel.ForeColor = Color.Blue;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening URL: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }
