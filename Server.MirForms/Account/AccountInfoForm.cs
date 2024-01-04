@@ -48,6 +48,8 @@ namespace Server
             bannedHeader.Width = -2;
             banReasonHeader.Width = -2;
             expiryDateHeader.Width = -2;
+            Gold.Width = -2;
+            GameGold.Width = -2;
         }
 
         private void Update(ListViewItem ListItem, AccountInfo account)
@@ -59,6 +61,8 @@ namespace Server
             ListItem.SubItems[4].Text = account.Banned.ToString();
             ListItem.SubItems[5].Text = account.BanReason;
             ListItem.SubItems[6].Text = account.ExpiryDate.ToString();
+            ListItem.SubItems[7].Text = account.Gold.ToString();
+            ListItem.SubItems[8].Text = account.Credit.ToString();
         }
 
         private ListViewItem CreateListView(AccountInfo account)
@@ -71,6 +75,8 @@ namespace Server
             ListItem.SubItems.Add(account.Banned.ToString());
             ListItem.SubItems.Add(account.BanReason);
             ListItem.SubItems.Add(account.ExpiryDate.ToString());
+            ListItem.SubItems.Add(account.Gold.ToString());
+            ListItem.SubItems.Add(account.Credit.ToString());
 
             return ListItem;
         }

@@ -34,6 +34,12 @@ namespace Server
             FilterTextBox = new TextBox();
             RefreshButton = new Button();
             AccountInfoPanel = new Panel();
+            CharactersListView = new ListView();
+            characterName = new ColumnHeader();
+            characterClass = new ColumnHeader();
+            characterLevel = new ColumnHeader();
+            characterPKPoints = new ColumnHeader();
+            characterGuild = new ColumnHeader();
             LastIPSearch = new Button();
             CreationIPSearch = new Button();
             PasswordChangeCheckBox = new CheckBox();
@@ -80,12 +86,8 @@ namespace Server
             expiryDateHeader = new ColumnHeader();
             MatchFilterCheckBox = new CheckBox();
             WipeCharButton = new Button();
-            CharactersListView = new ListView();
-            characterName = new ColumnHeader();
-            characterClass = new ColumnHeader();
-            characterLevel = new ColumnHeader();
-            characterPKPoints = new ColumnHeader();
-            characterGuild = new ColumnHeader();
+            Gold = new ColumnHeader();
+            GameGold = new ColumnHeader();
             AccountInfoPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -172,6 +174,42 @@ namespace Server
             AccountInfoPanel.Name = "AccountInfoPanel";
             AccountInfoPanel.Size = new Size(1073, 243);
             AccountInfoPanel.TabIndex = 14;
+            // 
+            // CharactersListView
+            // 
+            CharactersListView.Columns.AddRange(new ColumnHeader[] { characterName, characterClass, characterLevel, characterPKPoints, characterGuild });
+            CharactersListView.GridLines = true;
+            CharactersListView.Location = new Point(701, 0);
+            CharactersListView.Name = "CharactersListView";
+            CharactersListView.Scrollable = false;
+            CharactersListView.Size = new Size(371, 163);
+            CharactersListView.TabIndex = 39;
+            CharactersListView.UseCompatibleStateImageBehavior = false;
+            CharactersListView.View = View.Details;
+            // 
+            // characterName
+            // 
+            characterName.Text = "Name";
+            characterName.Width = 80;
+            // 
+            // characterClass
+            // 
+            characterClass.Text = "Class";
+            characterClass.Width = 80;
+            // 
+            // characterLevel
+            // 
+            characterLevel.Text = "Level";
+            // 
+            // characterPKPoints
+            // 
+            characterPKPoints.Text = "PKPoints";
+            characterPKPoints.Width = 59;
+            // 
+            // characterGuild
+            // 
+            characterGuild.Text = "Guild";
+            characterGuild.Width = 90;
             // 
             // LastIPSearch
             // 
@@ -533,7 +571,7 @@ namespace Server
             // 
             AccountInfoListView.AllowColumnReorder = true;
             AccountInfoListView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            AccountInfoListView.Columns.AddRange(new ColumnHeader[] { indexHeader, accountIDHeader, userNameHeader, adminHeader, bannedHeader, banReasonHeader, expiryDateHeader });
+            AccountInfoListView.Columns.AddRange(new ColumnHeader[] { indexHeader, accountIDHeader, userNameHeader, adminHeader, bannedHeader, banReasonHeader, expiryDateHeader, Gold, GameGold });
             AccountInfoListView.FullRowSelect = true;
             AccountInfoListView.GridLines = true;
             AccountInfoListView.Location = new Point(12, 75);
@@ -602,41 +640,15 @@ namespace Server
             WipeCharButton.UseVisualStyleBackColor = true;
             WipeCharButton.Click += WipeCharButton_Click;
             // 
-            // CharactersListView
+            // Gold
             // 
-            CharactersListView.Columns.AddRange(new ColumnHeader[] { characterName, characterClass, characterLevel, characterPKPoints, characterGuild });
-            CharactersListView.GridLines = true;
-            CharactersListView.Location = new Point(701, 0);
-            CharactersListView.Name = "CharactersListView";
-            CharactersListView.Scrollable = false;
-            CharactersListView.Size = new Size(371, 163);
-            CharactersListView.TabIndex = 39;
-            CharactersListView.UseCompatibleStateImageBehavior = false;
-            CharactersListView.View = View.Details;
+            Gold.Text = "Gold";
+            Gold.Width = 90;
             // 
-            // characterName
+            // GameGold
             // 
-            characterName.Text = "Name";
-            characterName.Width = 80;
-            // 
-            // characterClass
-            // 
-            characterClass.Text = "Class";
-            characterClass.Width = 80;
-            // 
-            // characterLevel
-            // 
-            characterLevel.Text = "Level";
-            // 
-            // characterPKPoints
-            // 
-            characterPKPoints.Text = "PKPoints";
-            characterPKPoints.Width = 59;
-            // 
-            // characterGuild
-            // 
-            characterGuild.Text = "Guild";
-            characterGuild.Width = 90;
+            GameGold.Text = "GameGold";
+            GameGold.Width = 70;
             // 
             // AccountInfoForm
             // 
@@ -722,5 +734,7 @@ namespace Server
         private ColumnHeader characterLevel;
         private ColumnHeader characterPKPoints;
         private ColumnHeader characterGuild;
+        private ColumnHeader Gold;
+        private ColumnHeader GameGold;
     }
 }
