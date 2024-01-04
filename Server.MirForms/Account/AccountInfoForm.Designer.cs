@@ -80,6 +80,12 @@ namespace Server
             expiryDateHeader = new ColumnHeader();
             MatchFilterCheckBox = new CheckBox();
             WipeCharButton = new Button();
+            CharactersListView = new ListView();
+            characterName = new ColumnHeader();
+            characterClass = new ColumnHeader();
+            characterLevel = new ColumnHeader();
+            characterPKPoints = new ColumnHeader();
+            characterGuild = new ColumnHeader();
             AccountInfoPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -126,6 +132,7 @@ namespace Server
             // AccountInfoPanel
             // 
             AccountInfoPanel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            AccountInfoPanel.Controls.Add(CharactersListView);
             AccountInfoPanel.Controls.Add(LastIPSearch);
             AccountInfoPanel.Controls.Add(CreationIPSearch);
             AccountInfoPanel.Controls.Add(PasswordChangeCheckBox);
@@ -163,7 +170,7 @@ namespace Server
             AccountInfoPanel.Location = new Point(14, 277);
             AccountInfoPanel.Margin = new Padding(4, 3, 4, 3);
             AccountInfoPanel.Name = "AccountInfoPanel";
-            AccountInfoPanel.Size = new Size(719, 241);
+            AccountInfoPanel.Size = new Size(1073, 243);
             AccountInfoPanel.TabIndex = 14;
             // 
             // LastIPSearch
@@ -532,7 +539,7 @@ namespace Server
             AccountInfoListView.Location = new Point(12, 75);
             AccountInfoListView.Margin = new Padding(4, 3, 4, 3);
             AccountInfoListView.Name = "AccountInfoListView";
-            AccountInfoListView.Size = new Size(720, 194);
+            AccountInfoListView.Size = new Size(1074, 194);
             AccountInfoListView.Sorting = SortOrder.Ascending;
             AccountInfoListView.TabIndex = 8;
             AccountInfoListView.UseCompatibleStateImageBehavior = false;
@@ -595,11 +602,47 @@ namespace Server
             WipeCharButton.UseVisualStyleBackColor = true;
             WipeCharButton.Click += WipeCharButton_Click;
             // 
+            // CharactersListView
+            // 
+            CharactersListView.Columns.AddRange(new ColumnHeader[] { characterName, characterClass, characterLevel, characterPKPoints, characterGuild });
+            CharactersListView.GridLines = true;
+            CharactersListView.Location = new Point(701, 0);
+            CharactersListView.Name = "CharactersListView";
+            CharactersListView.Scrollable = false;
+            CharactersListView.Size = new Size(371, 163);
+            CharactersListView.TabIndex = 39;
+            CharactersListView.UseCompatibleStateImageBehavior = false;
+            CharactersListView.View = View.Details;
+            // 
+            // characterName
+            // 
+            characterName.Text = "Name";
+            characterName.Width = 80;
+            // 
+            // characterClass
+            // 
+            characterClass.Text = "Class";
+            characterClass.Width = 80;
+            // 
+            // characterLevel
+            // 
+            characterLevel.Text = "Level";
+            // 
+            // characterPKPoints
+            // 
+            characterPKPoints.Text = "PKPoints";
+            characterPKPoints.Width = 59;
+            // 
+            // characterGuild
+            // 
+            characterGuild.Text = "Guild";
+            characterGuild.Width = 90;
+            // 
             // AccountInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(747, 532);
+            ClientSize = new Size(1101, 532);
             Controls.Add(WipeCharButton);
             Controls.Add(MatchFilterCheckBox);
             Controls.Add(FilterPlayerTextBox);
@@ -673,5 +716,11 @@ namespace Server
         private System.Windows.Forms.CheckBox PasswordChangeCheckBox;
         private Button LastIPSearch;
         private Button CreationIPSearch;
+        private ListView CharactersListView;
+        private ColumnHeader characterName;
+        private ColumnHeader characterClass;
+        private ColumnHeader characterLevel;
+        private ColumnHeader characterPKPoints;
+        private ColumnHeader characterGuild;
     }
 }

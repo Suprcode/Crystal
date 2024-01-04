@@ -1,5 +1,6 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
+using Server.MirObjects;
 
 namespace Server
 {
@@ -7,6 +8,7 @@ namespace Server
     {
         private List<AccountInfo> _selectedAccountInfos;
 
+        public Envir AccountEnvir => SMain.Envir;
         public AccountInfoForm()
         {
             InitializeComponent();
@@ -105,6 +107,7 @@ namespace Server
             }
 
             _selectedAccountInfos = new List<AccountInfo>();
+            CharactersListView.Items.Clear();
 
 
             for (int i = 0; i < AccountInfoListView.SelectedItems.Count; i++)
@@ -176,6 +179,26 @@ namespace Server
                 if (ExpiryDateTextBox.Text != info.ExpiryDate.ToString()) ExpiryDateTextBox.Text = string.Empty;
                 if (AdminCheckBox.Checked != info.AdminAccount) AdminCheckBox.CheckState = CheckState.Indeterminate;
                 if (PasswordChangeCheckBox.Checked != info.RequirePasswordChange) PasswordChangeCheckBox.CheckState = CheckState.Indeterminate;
+
+                foreach (var character in info.Characters)
+                {
+                    var listItem = new ListViewItem(character.Name) { Tag = character };
+                    listItem.SubItems.Add(character.Class.ToString());
+                    listItem.SubItems.Add(character.Level.ToString());
+                    listItem.SubItems.Add(character.PKPoints.ToString());
+
+                    GuildObject guild = null;
+                    if (character.GuildIndex != -1)
+                    {
+                        guild = AccountEnvir.GetGuild(character.GuildIndex);
+                        if (guild != null)
+                        {
+                            listItem.SubItems.Add(guild.Name.ToString());
+                        }
+                    }
+
+                    CharactersListView.Items.Add(listItem);
+                }
             }
         }
 
