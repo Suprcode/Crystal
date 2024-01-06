@@ -411,16 +411,6 @@ namespace Server
             form.ShowDialog();
         }
 
-        private void reloadNPCsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Envir.ReloadNPCs();
-        }
-
-        private void reloadDropsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Envir.ReloadDrops();
-        }
-
         private void gameshopToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GameShop form = new GameShop();
@@ -451,6 +441,21 @@ namespace Server
         private void clearBlockedIPsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Envir.IPBlocks.Clear();
+        }
+
+        private void nPCsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Envir.ReloadNPCs();
+        }
+
+        private void dropsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Envir.ReloadDrops();
+        }
+
+        private void lineMessageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Envir.ReloadLineMessages();
         }
     }
 }

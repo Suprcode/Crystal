@@ -1,5 +1,6 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
+using Server.MirObjects;
 
 namespace Server
 {
@@ -7,6 +8,7 @@ namespace Server
     {
         private List<AccountInfo> _selectedAccountInfos;
 
+        public Envir AccountEnvir => SMain.Envir;
         public AccountInfoForm()
         {
             InitializeComponent();
@@ -29,7 +31,7 @@ namespace Server
             RefreshInterface();
             AutoResize();
 
-            AccountIDTextBox.MaxLength = Globals.MaxAccountIDLength;            
+            AccountIDTextBox.MaxLength = Globals.MaxAccountIDLength;
 
             UserNameTextBox.MaxLength = 20;
             BirthDateTextBox.MaxLength = 10;
@@ -46,6 +48,8 @@ namespace Server
             bannedHeader.Width = -2;
             banReasonHeader.Width = -2;
             expiryDateHeader.Width = -2;
+            Gold.Width = -2;
+            GameGold.Width = -2;
         }
 
         private void Update(ListViewItem ListItem, AccountInfo account)
@@ -57,11 +61,13 @@ namespace Server
             ListItem.SubItems[4].Text = account.Banned.ToString();
             ListItem.SubItems[5].Text = account.BanReason;
             ListItem.SubItems[6].Text = account.ExpiryDate.ToString();
+            ListItem.SubItems[7].Text = account.Gold.ToString();
+            ListItem.SubItems[8].Text = account.Credit.ToString();
         }
 
         private ListViewItem CreateListView(AccountInfo account)
         {
-            ListViewItem ListItem = new ListViewItem(account.Index.ToString()) {Tag = account};
+            ListViewItem ListItem = new ListViewItem(account.Index.ToString()) { Tag = account };
 
             ListItem.SubItems.Add(account.AccountID);
             ListItem.SubItems.Add(account.UserName);
@@ -69,6 +75,8 @@ namespace Server
             ListItem.SubItems.Add(account.Banned.ToString());
             ListItem.SubItems.Add(account.BanReason);
             ListItem.SubItems.Add(account.ExpiryDate.ToString());
+            ListItem.SubItems.Add(account.Gold.ToString());
+            ListItem.SubItems.Add(account.Credit.ToString());
 
             return ListItem;
         }
@@ -83,10 +91,10 @@ namespace Server
 
             List<AccountInfo> accounts = SMain.Envir.AccountList;
 
-            if(FilterTextBox.Text.Length > 0)
+            if (FilterTextBox.Text.Length > 0)
                 accounts = SMain.Envir.MatchAccounts(FilterTextBox.Text, MatchFilterCheckBox.Checked);
 
-            else if(FilterPlayerTextBox.Text.Length > 0)
+            else if (FilterPlayerTextBox.Text.Length > 0)
                 accounts = SMain.Envir.MatchAccountsByPlayer(FilterPlayerTextBox.Text, MatchFilterCheckBox.Checked);
 
             if (AccountInfoListView.Items.Count != accounts.Count)
@@ -105,6 +113,7 @@ namespace Server
             }
 
             _selectedAccountInfos = new List<AccountInfo>();
+            CharactersListView.Items.Clear();
 
 
             for (int i = 0; i < AccountInfoListView.SelectedItems.Count; i++)
@@ -142,7 +151,7 @@ namespace Server
 
             CreationIPTextBox.Text = info.CreationIP;
             CreationDateTextBox.Text = info.CreationDate.ToString();
-            
+
             LastIPTextBox.Text = info.LastIP;
             LastDateTextBox.Text = info.LastDate.ToString();
 
@@ -176,6 +185,26 @@ namespace Server
                 if (ExpiryDateTextBox.Text != info.ExpiryDate.ToString()) ExpiryDateTextBox.Text = string.Empty;
                 if (AdminCheckBox.Checked != info.AdminAccount) AdminCheckBox.CheckState = CheckState.Indeterminate;
                 if (PasswordChangeCheckBox.Checked != info.RequirePasswordChange) PasswordChangeCheckBox.CheckState = CheckState.Indeterminate;
+
+                foreach (var character in info.Characters)
+                {
+                    var listItem = new ListViewItem(character.Name) { Tag = character };
+                    listItem.SubItems.Add(character.Class.ToString());
+                    listItem.SubItems.Add(character.Level.ToString());
+                    listItem.SubItems.Add(character.PKPoints.ToString());
+
+                    GuildObject guild = null;
+                    if (character.GuildIndex != -1)
+                    {
+                        guild = AccountEnvir.GetGuild(character.GuildIndex);
+                        if (guild != null)
+                        {
+                            listItem.SubItems.Add(guild.Name.ToString());
+                        }
+                    }
+
+                    CharactersListView.Items.Add(listItem);
+                }
             }
         }
 
@@ -251,7 +280,7 @@ namespace Server
         private void QuestionTextBox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
-            
+
             for (int i = 0; i < _selectedAccountInfos.Count; i++)
                 _selectedAccountInfos[i].SecretQuestion = ActiveControl.Text;
         }
@@ -272,7 +301,7 @@ namespace Server
             for (int i = 0; i < _selectedAccountInfos.Count; i++)
                 _selectedAccountInfos[i].EMailAddress = ActiveControl.Text;
         }
-        
+
         private void DayBanButton_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Are you sure you want to ban the selected Accounts?", "Ban Selected.", MessageBoxButtons.YesNoCancel) != DialogResult.Yes) return;
@@ -346,7 +375,7 @@ namespace Server
         private void BanReasonTextBox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
-            
+
             AccountInfoListView.BeginUpdate();
             for (int i = 0; i < _selectedAccountInfos.Count; i++)
             {
@@ -468,6 +497,46 @@ namespace Server
             }
             AutoResize();
             AccountInfoListView.EndUpdate();
+        }
+
+        private void CreationIPSearch_Click(object sender, EventArgs e)
+        {
+            string ipAddress = CreationIPTextBox.Text;
+
+            string url = $"https://whatismyipaddress.com/ip/{ipAddress}";
+
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url)
+                {
+                    UseShellExecute = true
+                });
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening URL: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void LastIPSearch_Click(object sender, EventArgs e)
+        {
+            string ipAddress = LastIPTextBox.Text;
+
+            string url = $"https://whatismyipaddress.com/ip/{ipAddress}";
+
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url)
+                {
+                    UseShellExecute = true
+                });
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening URL: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
