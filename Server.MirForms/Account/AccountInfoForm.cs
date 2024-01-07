@@ -202,6 +202,30 @@ namespace Server
                             listItem.SubItems.Add(guild.Name.ToString());
                         }
                     }
+                    else
+                    {
+                        listItem.SubItems.Add("No Guild");
+                    }
+
+                    string status = $"";
+
+                    if (character.LastLoginDate > character.LastLogoutDate)
+                    {
+                        status = $"Online: {(SMain.Envir.Now - character.LastLoginDate).TotalMinutes.ToString("##")} minutes";
+                        listItem.ForeColor = Color.Green;
+                    }
+                    else
+                    {
+                        status = $"Offline: {character.LastLogoutDate}";
+                    }
+
+                    if (character.Deleted)
+                    {
+                        status = $"Deleted: {character.DeleteDate}";
+                        listItem.ForeColor = Color.Red;
+                    }
+
+                    listItem.SubItems.Add(status.ToString());
 
                     CharactersListView.Items.Add(listItem);
                 }
