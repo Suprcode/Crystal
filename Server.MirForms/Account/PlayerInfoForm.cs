@@ -34,8 +34,10 @@ namespace Server
             IndexTextBox.Text = Character.Index.ToString();
             NameTextBox.Text = Character.Name;
             LevelTextBox.Text = Character.Level.ToString();
-
-            GoldLabel.Text = $"{Character.AccountInfo.Gold:n0}";
+            ExpTextBox.Text = Character.Experience.ToString();
+            PKPointsTextBox.Text = Character.PKPoints.ToString();
+            GoldTextBox.Text = $"{Character.AccountInfo.Gold:n0}";
+            GameGoldTextBox.Text = String.Format("{0:n0}", Character.AccountInfo.Credit);
 
             if (Character.Player != null)
                 CurrentMapLabel.Text =
@@ -43,7 +45,6 @@ namespace Server
             else
                 CurrentMapLabel.Text = "OFFLINE";
 
-            PKPointsLabel.Text = Character.PKPoints.ToString();
             CurrentIPLabel.Text = Character.AccountInfo.LastIP;
             OnlineTimeLabel.Text = Character.LastLoginDate > Character.LastLogoutDate ? (SMain.Envir.Now - Character.LastLoginDate).TotalMinutes.ToString("##") + " minutes" : "Offline";
 
@@ -59,8 +60,16 @@ namespace Server
         {
             CharacterInfo info = Character;
 
+            string tempGold = GoldTextBox.Text.Replace(",", "");
+            string tempCredit = GameGoldTextBox.Text.Replace(",", "");
+            string tempEXP = ExpTextBox.Text.Replace(",", "");
+
             info.Name = NameTextBox.Text;
             info.Level = Convert.ToByte(LevelTextBox.Text);
+            info.Experience = Convert.ToInt64(tempEXP);
+            info.PKPoints = Convert.ToInt32(PKPointsTextBox.Text);
+            info.AccountInfo.Gold = Convert.ToUInt32(tempGold);
+            info.AccountInfo.Credit = Convert.ToUInt32(tempCredit);
         }
 
         private void SendMessageButton_Click(object sender, EventArgs e)

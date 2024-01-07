@@ -50,12 +50,8 @@
             groupBox3 = new GroupBox();
             CurrentMapLabel = new Label();
             label5 = new Label();
-            label4 = new Label();
-            PKPointsLabel = new Label();
             label6 = new Label();
             OnlineTimeLabel = new Label();
-            label7 = new Label();
-            GoldLabel = new Label();
             label8 = new Label();
             CurrentIPLabel = new Label();
             groupBox4 = new GroupBox();
@@ -69,6 +65,14 @@
             QuestResultLabel = new Label();
             QuestSearchBox = new TextBox();
             label10 = new Label();
+            GameGold = new Label();
+            GameGoldTextBox = new TextBox();
+            Gold = new Label();
+            GoldTextBox = new TextBox();
+            PKPoints = new Label();
+            PKPointsTextBox = new TextBox();
+            label12 = new Label();
+            ExpTextBox = new TextBox();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -132,7 +136,7 @@
             // 
             // UpdateButton
             // 
-            UpdateButton.Location = new Point(102, 112);
+            UpdateButton.Location = new Point(108, 238);
             UpdateButton.Margin = new Padding(4, 3, 4, 3);
             UpdateButton.Name = "UpdateButton";
             UpdateButton.Size = new Size(88, 27);
@@ -173,6 +177,14 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(GameGold);
+            groupBox1.Controls.Add(GameGoldTextBox);
+            groupBox1.Controls.Add(Gold);
+            groupBox1.Controls.Add(GoldTextBox);
+            groupBox1.Controls.Add(PKPoints);
+            groupBox1.Controls.Add(PKPointsTextBox);
+            groupBox1.Controls.Add(label12);
+            groupBox1.Controls.Add(ExpTextBox);
             groupBox1.Controls.Add(label2);
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(label3);
@@ -184,7 +196,7 @@
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
-            groupBox1.Size = new Size(196, 157);
+            groupBox1.Size = new Size(196, 265);
             groupBox1.TabIndex = 11;
             groupBox1.TabStop = false;
             groupBox1.Text = "Character Info";
@@ -286,7 +298,7 @@
             // 
             groupBox3.Controls.Add(SendMessageTextBox);
             groupBox3.Controls.Add(SendMessageButton);
-            groupBox3.Location = new Point(7, 315);
+            groupBox3.Location = new Point(7, 365);
             groupBox3.Margin = new Padding(4, 3, 4, 3);
             groupBox3.Name = "groupBox3";
             groupBox3.Padding = new Padding(4, 3, 4, 3);
@@ -298,7 +310,7 @@
             // CurrentMapLabel
             // 
             CurrentMapLabel.AutoSize = true;
-            CurrentMapLabel.Location = new Point(132, 36);
+            CurrentMapLabel.Location = new Point(128, 19);
             CurrentMapLabel.Margin = new Padding(4, 0, 4, 0);
             CurrentMapLabel.Name = "CurrentMapLabel";
             CurrentMapLabel.Size = new Size(37, 15);
@@ -308,37 +320,17 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(12, 36);
+            label5.Location = new Point(8, 19);
             label5.Margin = new Padding(4, 0, 4, 0);
             label5.Name = "label5";
             label5.Size = new Size(105, 15);
             label5.TabIndex = 16;
             label5.Text = "Current Location : ";
             // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(12, 55);
-            label4.Margin = new Padding(4, 0, 4, 0);
-            label4.Name = "label4";
-            label4.Size = new Size(66, 15);
-            label4.TabIndex = 17;
-            label4.Text = "PK Points : ";
-            // 
-            // PKPointsLabel
-            // 
-            PKPointsLabel.AutoSize = true;
-            PKPointsLabel.Location = new Point(132, 55);
-            PKPointsLabel.Margin = new Padding(4, 0, 4, 0);
-            PKPointsLabel.Name = "PKPointsLabel";
-            PKPointsLabel.Size = new Size(54, 15);
-            PKPointsLabel.TabIndex = 18;
-            PKPointsLabel.Text = "$pkpoint";
-            // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(12, 75);
+            label6.Location = new Point(8, 37);
             label6.Margin = new Padding(4, 0, 4, 0);
             label6.Name = "label6";
             label6.Size = new Size(80, 15);
@@ -348,37 +340,17 @@
             // OnlineTimeLabel
             // 
             OnlineTimeLabel.AutoSize = true;
-            OnlineTimeLabel.Location = new Point(132, 75);
+            OnlineTimeLabel.Location = new Point(128, 37);
             OnlineTimeLabel.Margin = new Padding(4, 0, 4, 0);
             OnlineTimeLabel.Name = "OnlineTimeLabel";
             OnlineTimeLabel.Size = new Size(70, 15);
             OnlineTimeLabel.TabIndex = 20;
             OnlineTimeLabel.Text = "$onlinetime";
             // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Location = new Point(12, 18);
-            label7.Margin = new Padding(4, 0, 4, 0);
-            label7.Name = "label7";
-            label7.Size = new Size(69, 15);
-            label7.TabIndex = 21;
-            label7.Text = "Total Gold : ";
-            // 
-            // GoldLabel
-            // 
-            GoldLabel.AutoSize = true;
-            GoldLabel.Location = new Point(132, 18);
-            GoldLabel.Margin = new Padding(4, 0, 4, 0);
-            GoldLabel.Name = "GoldLabel";
-            GoldLabel.Size = new Size(37, 15);
-            GoldLabel.TabIndex = 22;
-            GoldLabel.Text = "$gold";
-            // 
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(12, 95);
+            label8.Location = new Point(8, 57);
             label8.Margin = new Padding(4, 0, 4, 0);
             label8.Name = "label8";
             label8.Size = new Size(69, 15);
@@ -388,7 +360,7 @@
             // CurrentIPLabel
             // 
             CurrentIPLabel.AutoSize = true;
-            CurrentIPLabel.Location = new Point(132, 95);
+            CurrentIPLabel.Location = new Point(128, 57);
             CurrentIPLabel.Margin = new Padding(4, 0, 4, 0);
             CurrentIPLabel.Name = "CurrentIPLabel";
             CurrentIPLabel.Size = new Size(23, 15);
@@ -398,21 +370,17 @@
             // 
             // groupBox4
             // 
-            groupBox4.Controls.Add(label7);
             groupBox4.Controls.Add(CurrentIPLabel);
             groupBox4.Controls.Add(CurrentMapLabel);
             groupBox4.Controls.Add(label8);
             groupBox4.Controls.Add(label5);
-            groupBox4.Controls.Add(GoldLabel);
-            groupBox4.Controls.Add(label4);
-            groupBox4.Controls.Add(PKPointsLabel);
             groupBox4.Controls.Add(OnlineTimeLabel);
             groupBox4.Controls.Add(label6);
-            groupBox4.Location = new Point(7, 178);
+            groupBox4.Location = new Point(7, 285);
             groupBox4.Margin = new Padding(4, 3, 4, 3);
             groupBox4.Name = "groupBox4";
             groupBox4.Padding = new Padding(4, 3, 4, 3);
-            groupBox4.Size = new Size(364, 130);
+            groupBox4.Size = new Size(364, 74);
             groupBox4.TabIndex = 25;
             groupBox4.TabStop = false;
             groupBox4.Text = "Details";
@@ -507,11 +475,84 @@
             label10.TabIndex = 40;
             label10.Text = "Quest Search";
             // 
+            // GameGold
+            // 
+            GameGold.AutoSize = true;
+            GameGold.Font = new Font("Segoe UI", 8F);
+            GameGold.Location = new Point(0, 201);
+            GameGold.Margin = new Padding(4, 0, 4, 0);
+            GameGold.Name = "GameGold";
+            GameGold.Size = new Size(70, 13);
+            GameGold.TabIndex = 22;
+            GameGold.Text = "GameGold : ";
+            // 
+            // GameGoldTextBox
+            // 
+            GameGoldTextBox.Location = new Point(70, 198);
+            GameGoldTextBox.Margin = new Padding(4, 3, 4, 3);
+            GameGoldTextBox.Name = "GameGoldTextBox";
+            GameGoldTextBox.Size = new Size(116, 23);
+            GameGoldTextBox.TabIndex = 23;
+            // 
+            // Gold
+            // 
+            Gold.AutoSize = true;
+            Gold.Location = new Point(10, 172);
+            Gold.Margin = new Padding(4, 0, 4, 0);
+            Gold.Name = "Gold";
+            Gold.Size = new Size(41, 15);
+            Gold.TabIndex = 20;
+            Gold.Text = "Gold : ";
+            // 
+            // GoldTextBox
+            // 
+            GoldTextBox.Location = new Point(70, 169);
+            GoldTextBox.Margin = new Padding(4, 3, 4, 3);
+            GoldTextBox.Name = "GoldTextBox";
+            GoldTextBox.Size = new Size(116, 23);
+            GoldTextBox.TabIndex = 21;
+            // 
+            // PKPoints
+            // 
+            PKPoints.AutoSize = true;
+            PKPoints.Location = new Point(10, 143);
+            PKPoints.Margin = new Padding(4, 0, 4, 0);
+            PKPoints.Name = "PKPoints";
+            PKPoints.Size = new Size(58, 15);
+            PKPoints.TabIndex = 18;
+            PKPoints.Text = "PKPoint : ";
+            // 
+            // PKPointsTextBox
+            // 
+            PKPointsTextBox.Location = new Point(70, 140);
+            PKPointsTextBox.Margin = new Padding(4, 3, 4, 3);
+            PKPointsTextBox.Name = "PKPointsTextBox";
+            PKPointsTextBox.Size = new Size(116, 23);
+            PKPointsTextBox.TabIndex = 19;
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Location = new Point(10, 114);
+            label12.Margin = new Padding(4, 0, 4, 0);
+            label12.Name = "label12";
+            label12.Size = new Size(36, 15);
+            label12.TabIndex = 16;
+            label12.Text = "EXP : ";
+            // 
+            // ExpTextBox
+            // 
+            ExpTextBox.Location = new Point(70, 111);
+            ExpTextBox.Margin = new Padding(4, 3, 4, 3);
+            ExpTextBox.Name = "ExpTextBox";
+            ExpTextBox.Size = new Size(116, 23);
+            ExpTextBox.TabIndex = 17;
+            // 
             // PlayerInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(544, 378);
+            ClientSize = new Size(544, 424);
             Controls.Add(QuestDown);
             Controls.Add(QuestUp);
             Controls.Add(QuestResultLabel);
@@ -560,12 +601,8 @@
         private System.Windows.Forms.Label CurrentMapLabel;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button KillPetsButton;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label PKPointsLabel;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label OnlineTimeLabel;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label GoldLabel;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label CurrentIPLabel;
         private System.Windows.Forms.GroupBox groupBox4;
@@ -584,5 +621,13 @@
         private Label QuestResultLabel;
         private TextBox QuestSearchBox;
         private Label label10;
+        private Label GameGold;
+        private TextBox GameGoldTextBox;
+        private Label Gold;
+        private TextBox GoldTextBox;
+        private Label PKPoints;
+        private TextBox PKPointsTextBox;
+        private Label label12;
+        private TextBox ExpTextBox;
     }
 }
