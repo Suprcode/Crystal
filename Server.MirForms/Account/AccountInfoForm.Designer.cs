@@ -89,6 +89,10 @@ namespace Server
             GameGold = new ColumnHeader();
             MatchFilterCheckBox = new CheckBox();
             WipeCharButton = new Button();
+            ServerGoldTextBox = new TextBox();
+            TotalServerGold = new Label();
+            ServerCreditTextBox = new TextBox();
+            TotalServerCredit = new Label();
             AccountInfoPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -656,11 +660,49 @@ namespace Server
             WipeCharButton.UseVisualStyleBackColor = true;
             WipeCharButton.Click += WipeCharButton_Click;
             // 
+            // ServerGoldTextBox
+            // 
+            ServerGoldTextBox.Location = new Point(356, 16);
+            ServerGoldTextBox.Name = "ServerGoldTextBox";
+            ServerGoldTextBox.ReadOnly = true;
+            ServerGoldTextBox.Size = new Size(153, 23);
+            ServerGoldTextBox.TabIndex = 22;
+            // 
+            // TotalServerGold
+            // 
+            TotalServerGold.AutoSize = true;
+            TotalServerGold.Location = new Point(252, 19);
+            TotalServerGold.Name = "TotalServerGold";
+            TotalServerGold.Size = new Size(98, 15);
+            TotalServerGold.TabIndex = 21;
+            TotalServerGold.Text = "Total Server Gold:";
+            // 
+            // ServerCreditTextBox
+            // 
+            ServerCreditTextBox.Location = new Point(624, 19);
+            ServerCreditTextBox.Name = "ServerCreditTextBox";
+            ServerCreditTextBox.ReadOnly = true;
+            ServerCreditTextBox.Size = new Size(153, 23);
+            ServerCreditTextBox.TabIndex = 24;
+            // 
+            // TotalServerCredit
+            // 
+            TotalServerCredit.AutoSize = true;
+            TotalServerCredit.Location = new Point(520, 22);
+            TotalServerCredit.Name = "TotalServerCredit";
+            TotalServerCredit.Size = new Size(105, 15);
+            TotalServerCredit.TabIndex = 23;
+            TotalServerCredit.Text = "Total Server Credit:";
+            // 
             // AccountInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1276, 532);
+            Controls.Add(ServerCreditTextBox);
+            Controls.Add(TotalServerCredit);
+            Controls.Add(ServerGoldTextBox);
+            Controls.Add(TotalServerGold);
             Controls.Add(WipeCharButton);
             Controls.Add(MatchFilterCheckBox);
             Controls.Add(FilterPlayerTextBox);
@@ -743,5 +785,9 @@ namespace Server
         private ColumnHeader Gold;
         private ColumnHeader GameGold;
         private ColumnHeader characterStatus;
+        private TextBox ServerGoldTextBox;
+        private Label TotalServerGold;
+        private TextBox ServerCreditTextBox;
+        private Label TotalServerCredit;
     }
 }

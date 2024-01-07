@@ -1,6 +1,7 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirObjects;
+using System.Globalization;
 
 namespace Server
 {
@@ -90,6 +91,27 @@ namespace Server
             }
 
             List<AccountInfo> accounts = SMain.Envir.AccountList;
+
+            long totalgold = 0;
+            foreach (var account in accounts)
+            {
+                if (!account.AdminAccount && !account.Banned)
+                    totalgold += account.Gold;
+                ServerGoldTextBox.Text = totalgold.ToString();
+            }
+            CultureInfo culture = new CultureInfo("en-GB");
+            string formattedgold = totalgold.ToString("N0", culture);
+            ServerGoldTextBox.Text = formattedgold;
+
+            long totalcredit = 0;
+            foreach (var account in accounts)
+            {
+                if (!account.AdminAccount && !account.Banned)
+                    totalcredit += account.Credit;
+                ServerCreditTextBox.Text = totalcredit.ToString();
+            }
+            string formattedcredit = totalcredit.ToString("N0", culture);
+            ServerCreditTextBox.Text = formattedcredit;
 
             if (FilterTextBox.Text.Length > 0)
                 accounts = SMain.Envir.MatchAccounts(FilterTextBox.Text, MatchFilterCheckBox.Checked);
