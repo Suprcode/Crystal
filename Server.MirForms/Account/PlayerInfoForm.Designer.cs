@@ -39,6 +39,23 @@
             SendMessageTextBox = new TextBox();
             SendMessageButton = new Button();
             groupBox1 = new GroupBox();
+            ATKSPDBox = new TextBox();
+            AGILBox = new TextBox();
+            ACCBox = new TextBox();
+            SCBox = new TextBox();
+            MCBox = new TextBox();
+            DCBox = new TextBox();
+            AMCBox = new TextBox();
+            ACBox = new TextBox();
+            StatsLabel = new Label();
+            GameGold = new Label();
+            GameGoldTextBox = new TextBox();
+            Gold = new Label();
+            GoldTextBox = new TextBox();
+            PKPoints = new Label();
+            PKPointsTextBox = new TextBox();
+            label12 = new Label();
+            ExpTextBox = new TextBox();
             groupBox2 = new GroupBox();
             OpenAccountButton = new Button();
             SafeZoneButton = new Button();
@@ -56,33 +73,32 @@
             CurrentIPLabel = new Label();
             groupBox4 = new GroupBox();
             ResultLabel = new Label();
-            FlagSearchBox = new TextBox();
             FlagSearch = new Label();
-            FlagUp = new Button();
-            FlagDown = new Button();
-            QuestDown = new Button();
-            QuestUp = new Button();
             QuestResultLabel = new Label();
-            QuestSearchBox = new TextBox();
             label10 = new Label();
-            GameGold = new Label();
-            GameGoldTextBox = new TextBox();
-            Gold = new Label();
-            GoldTextBox = new TextBox();
-            PKPoints = new Label();
-            PKPointsTextBox = new TextBox();
-            label12 = new Label();
-            ExpTextBox = new TextBox();
+            SearchBox = new GroupBox();
+            FlagSearchBox = new NumericUpDown();
+            QuestSearchBox = new NumericUpDown();
+            PetView = new ListView();
+            Pet = new ColumnHeader();
+            Level = new ColumnHeader();
+            HP = new ColumnHeader();
+            Location = new ColumnHeader();
+            Pets = new GroupBox();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
             groupBox4.SuspendLayout();
+            SearchBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)FlagSearchBox).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)QuestSearchBox).BeginInit();
+            Pets.SuspendLayout();
             SuspendLayout();
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(8, 53);
+            label1.Location = new Point(10, 53);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
             label1.Size = new Size(48, 15);
@@ -136,7 +152,7 @@
             // 
             // UpdateButton
             // 
-            UpdateButton.Location = new Point(108, 238);
+            UpdateButton.Location = new Point(86, 227);
             UpdateButton.Margin = new Padding(4, 3, 4, 3);
             UpdateButton.Name = "UpdateButton";
             UpdateButton.Size = new Size(88, 27);
@@ -161,12 +177,12 @@
             SendMessageTextBox.Location = new Point(7, 22);
             SendMessageTextBox.Margin = new Padding(4, 3, 4, 3);
             SendMessageTextBox.Name = "SendMessageTextBox";
-            SendMessageTextBox.Size = new Size(347, 23);
+            SendMessageTextBox.Size = new Size(244, 23);
             SendMessageTextBox.TabIndex = 9;
             // 
             // SendMessageButton
             // 
-            SendMessageButton.Location = new Point(362, 20);
+            SendMessageButton.Location = new Point(266, 22);
             SendMessageButton.Margin = new Padding(4, 3, 4, 3);
             SendMessageButton.Name = "SendMessageButton";
             SendMessageButton.Size = new Size(68, 27);
@@ -177,6 +193,15 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(ATKSPDBox);
+            groupBox1.Controls.Add(AGILBox);
+            groupBox1.Controls.Add(ACCBox);
+            groupBox1.Controls.Add(SCBox);
+            groupBox1.Controls.Add(MCBox);
+            groupBox1.Controls.Add(DCBox);
+            groupBox1.Controls.Add(AMCBox);
+            groupBox1.Controls.Add(ACBox);
+            groupBox1.Controls.Add(StatsLabel);
             groupBox1.Controls.Add(GameGold);
             groupBox1.Controls.Add(GameGoldTextBox);
             groupBox1.Controls.Add(Gold);
@@ -196,10 +221,173 @@
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
-            groupBox1.Size = new Size(196, 265);
+            groupBox1.Size = new Size(341, 265);
             groupBox1.TabIndex = 11;
             groupBox1.TabStop = false;
             groupBox1.Text = "Character Info";
+            // 
+            // ATKSPDBox
+            // 
+            ATKSPDBox.Enabled = false;
+            ATKSPDBox.Location = new Point(261, 229);
+            ATKSPDBox.Margin = new Padding(4, 3, 4, 3);
+            ATKSPDBox.Name = "ATKSPDBox";
+            ATKSPDBox.ReadOnly = true;
+            ATKSPDBox.Size = new Size(73, 23);
+            ATKSPDBox.TabIndex = 32;
+            // 
+            // AGILBox
+            // 
+            AGILBox.Enabled = false;
+            AGILBox.Location = new Point(261, 200);
+            AGILBox.Margin = new Padding(4, 3, 4, 3);
+            AGILBox.Name = "AGILBox";
+            AGILBox.ReadOnly = true;
+            AGILBox.Size = new Size(73, 23);
+            AGILBox.TabIndex = 31;
+            // 
+            // ACCBox
+            // 
+            ACCBox.Enabled = false;
+            ACCBox.Location = new Point(261, 168);
+            ACCBox.Margin = new Padding(4, 3, 4, 3);
+            ACCBox.Name = "ACCBox";
+            ACCBox.ReadOnly = true;
+            ACCBox.Size = new Size(73, 23);
+            ACCBox.TabIndex = 30;
+            // 
+            // SCBox
+            // 
+            SCBox.Enabled = false;
+            SCBox.Location = new Point(261, 139);
+            SCBox.Margin = new Padding(4, 3, 4, 3);
+            SCBox.Name = "SCBox";
+            SCBox.ReadOnly = true;
+            SCBox.Size = new Size(73, 23);
+            SCBox.TabIndex = 29;
+            // 
+            // MCBox
+            // 
+            MCBox.Enabled = false;
+            MCBox.Location = new Point(261, 110);
+            MCBox.Margin = new Padding(4, 3, 4, 3);
+            MCBox.Name = "MCBox";
+            MCBox.ReadOnly = true;
+            MCBox.Size = new Size(73, 23);
+            MCBox.TabIndex = 28;
+            // 
+            // DCBox
+            // 
+            DCBox.Enabled = false;
+            DCBox.Location = new Point(261, 81);
+            DCBox.Margin = new Padding(4, 3, 4, 3);
+            DCBox.Name = "DCBox";
+            DCBox.ReadOnly = true;
+            DCBox.Size = new Size(73, 23);
+            DCBox.TabIndex = 27;
+            // 
+            // AMCBox
+            // 
+            AMCBox.Enabled = false;
+            AMCBox.Location = new Point(261, 49);
+            AMCBox.Margin = new Padding(4, 3, 4, 3);
+            AMCBox.Name = "AMCBox";
+            AMCBox.ReadOnly = true;
+            AMCBox.Size = new Size(73, 23);
+            AMCBox.TabIndex = 26;
+            // 
+            // ACBox
+            // 
+            ACBox.Enabled = false;
+            ACBox.Location = new Point(261, 20);
+            ACBox.Margin = new Padding(4, 3, 4, 3);
+            ACBox.Name = "ACBox";
+            ACBox.ReadOnly = true;
+            ACBox.Size = new Size(73, 23);
+            ACBox.TabIndex = 24;
+            // 
+            // StatsLabel
+            // 
+            StatsLabel.AutoSize = true;
+            StatsLabel.Location = new Point(197, 23);
+            StatsLabel.Margin = new Padding(4, 0, 4, 0);
+            StatsLabel.Name = "StatsLabel";
+            StatsLabel.Size = new Size(54, 225);
+            StatsLabel.TabIndex = 25;
+            StatsLabel.Text = "AC:\r\n\r\nAMC:\r\n\r\nDC:\r\n\r\nMC:\r\n\r\nSC:\r\n\r\nACC:\r\n\r\nAGIL:\r\n\r\nATK SPD:";
+            // 
+            // GameGold
+            // 
+            GameGold.AutoSize = true;
+            GameGold.Font = new Font("Segoe UI", 8F);
+            GameGold.Location = new Point(10, 201);
+            GameGold.Margin = new Padding(4, 0, 4, 0);
+            GameGold.Name = "GameGold";
+            GameGold.Size = new Size(52, 13);
+            GameGold.TabIndex = 22;
+            GameGold.Text = "Credits : ";
+            // 
+            // GameGoldTextBox
+            // 
+            GameGoldTextBox.Location = new Point(70, 198);
+            GameGoldTextBox.Margin = new Padding(4, 3, 4, 3);
+            GameGoldTextBox.Name = "GameGoldTextBox";
+            GameGoldTextBox.Size = new Size(116, 23);
+            GameGoldTextBox.TabIndex = 23;
+            // 
+            // Gold
+            // 
+            Gold.AutoSize = true;
+            Gold.Location = new Point(10, 172);
+            Gold.Margin = new Padding(4, 0, 4, 0);
+            Gold.Name = "Gold";
+            Gold.Size = new Size(41, 15);
+            Gold.TabIndex = 20;
+            Gold.Text = "Gold : ";
+            // 
+            // GoldTextBox
+            // 
+            GoldTextBox.Location = new Point(70, 169);
+            GoldTextBox.Margin = new Padding(4, 3, 4, 3);
+            GoldTextBox.Name = "GoldTextBox";
+            GoldTextBox.Size = new Size(116, 23);
+            GoldTextBox.TabIndex = 21;
+            // 
+            // PKPoints
+            // 
+            PKPoints.AutoSize = true;
+            PKPoints.Location = new Point(10, 143);
+            PKPoints.Margin = new Padding(4, 0, 4, 0);
+            PKPoints.Name = "PKPoints";
+            PKPoints.Size = new Size(58, 15);
+            PKPoints.TabIndex = 18;
+            PKPoints.Text = "PKPoint : ";
+            // 
+            // PKPointsTextBox
+            // 
+            PKPointsTextBox.Location = new Point(70, 140);
+            PKPointsTextBox.Margin = new Padding(4, 3, 4, 3);
+            PKPointsTextBox.Name = "PKPointsTextBox";
+            PKPointsTextBox.Size = new Size(116, 23);
+            PKPointsTextBox.TabIndex = 19;
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Location = new Point(10, 114);
+            label12.Margin = new Padding(4, 0, 4, 0);
+            label12.Name = "label12";
+            label12.Size = new Size(36, 15);
+            label12.TabIndex = 16;
+            label12.Text = "EXP : ";
+            // 
+            // ExpTextBox
+            // 
+            ExpTextBox.Location = new Point(70, 111);
+            ExpTextBox.Margin = new Padding(4, 3, 4, 3);
+            ExpTextBox.Name = "ExpTextBox";
+            ExpTextBox.Size = new Size(116, 23);
+            ExpTextBox.TabIndex = 17;
             // 
             // groupBox2
             // 
@@ -211,7 +399,7 @@
             groupBox2.Controls.Add(KillPetsButton);
             groupBox2.Controls.Add(KillButton);
             groupBox2.Controls.Add(KickButton);
-            groupBox2.Location = new Point(210, 14);
+            groupBox2.Location = new Point(356, 14);
             groupBox2.Margin = new Padding(4, 3, 4, 3);
             groupBox2.Name = "groupBox2";
             groupBox2.Padding = new Padding(4, 3, 4, 3);
@@ -298,11 +486,11 @@
             // 
             groupBox3.Controls.Add(SendMessageTextBox);
             groupBox3.Controls.Add(SendMessageButton);
-            groupBox3.Location = new Point(7, 365);
+            groupBox3.Location = new Point(8, 386);
             groupBox3.Margin = new Padding(4, 3, 4, 3);
             groupBox3.Name = "groupBox3";
             groupBox3.Padding = new Padding(4, 3, 4, 3);
-            groupBox3.Size = new Size(436, 57);
+            groupBox3.Size = new Size(341, 57);
             groupBox3.TabIndex = 13;
             groupBox3.TabStop = false;
             groupBox3.Text = "Send Message";
@@ -380,7 +568,7 @@
             groupBox4.Margin = new Padding(4, 3, 4, 3);
             groupBox4.Name = "groupBox4";
             groupBox4.Padding = new Padding(4, 3, 4, 3);
-            groupBox4.Size = new Size(364, 74);
+            groupBox4.Size = new Size(341, 95);
             groupBox4.TabIndex = 25;
             groupBox4.TabStop = false;
             groupBox4.Text = "Details";
@@ -388,181 +576,113 @@
             // ResultLabel
             // 
             ResultLabel.AutoSize = true;
-            ResultLabel.Location = new Point(403, 218);
+            ResultLabel.Location = new Point(31, 64);
             ResultLabel.Name = "ResultLabel";
             ResultLabel.Size = new Size(0, 15);
             ResultLabel.TabIndex = 30;
             // 
-            // FlagSearchBox
-            // 
-            FlagSearchBox.Location = new Point(403, 192);
-            FlagSearchBox.Name = "FlagSearchBox";
-            FlagSearchBox.Size = new Size(100, 23);
-            FlagSearchBox.TabIndex = 29;
-            FlagSearchBox.TextChanged += FlagSearchBox_TextChanged;
-            // 
             // FlagSearch
             // 
             FlagSearch.AutoSize = true;
-            FlagSearch.Location = new Point(421, 174);
+            FlagSearch.Location = new Point(57, 12);
             FlagSearch.Name = "FlagSearch";
             FlagSearch.Size = new Size(67, 15);
             FlagSearch.TabIndex = 28;
             FlagSearch.Text = "Flag Search";
             // 
-            // FlagUp
-            // 
-            FlagUp.Location = new Point(510, 192);
-            FlagUp.Name = "FlagUp";
-            FlagUp.Size = new Size(24, 23);
-            FlagUp.TabIndex = 31;
-            FlagUp.Text = "+";
-            FlagUp.UseVisualStyleBackColor = true;
-            FlagUp.Click += FlagUp_Click;
-            // 
-            // FlagDown
-            // 
-            FlagDown.Location = new Point(373, 192);
-            FlagDown.Name = "FlagDown";
-            FlagDown.Size = new Size(24, 23);
-            FlagDown.TabIndex = 32;
-            FlagDown.Text = "-";
-            FlagDown.UseVisualStyleBackColor = true;
-            FlagDown.Click += FlagDown_Click;
-            // 
-            // QuestDown
-            // 
-            QuestDown.Location = new Point(372, 269);
-            QuestDown.Name = "QuestDown";
-            QuestDown.Size = new Size(24, 23);
-            QuestDown.TabIndex = 44;
-            QuestDown.Text = "-";
-            QuestDown.UseVisualStyleBackColor = true;
-            QuestDown.Click += QuestDown_Click;
-            // 
-            // QuestUp
-            // 
-            QuestUp.Location = new Point(509, 269);
-            QuestUp.Name = "QuestUp";
-            QuestUp.Size = new Size(24, 23);
-            QuestUp.TabIndex = 43;
-            QuestUp.Text = "+";
-            QuestUp.UseVisualStyleBackColor = true;
-            QuestUp.Click += QuestUp_Click;
-            // 
             // QuestResultLabel
             // 
             QuestResultLabel.AutoSize = true;
-            QuestResultLabel.Location = new Point(403, 296);
+            QuestResultLabel.Location = new Point(174, 64);
             QuestResultLabel.Name = "QuestResultLabel";
             QuestResultLabel.Size = new Size(0, 15);
             QuestResultLabel.TabIndex = 42;
             // 
-            // QuestSearchBox
-            // 
-            QuestSearchBox.Location = new Point(403, 270);
-            QuestSearchBox.Name = "QuestSearchBox";
-            QuestSearchBox.Size = new Size(100, 23);
-            QuestSearchBox.TabIndex = 41;
-            QuestSearchBox.TextChanged += QuestSearchBox_TextChanged;
-            // 
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(421, 252);
+            label10.Location = new Point(196, 13);
             label10.Name = "label10";
             label10.Size = new Size(76, 15);
             label10.TabIndex = 40;
             label10.Text = "Quest Search";
             // 
-            // GameGold
+            // SearchBox
             // 
-            GameGold.AutoSize = true;
-            GameGold.Font = new Font("Segoe UI", 8F);
-            GameGold.Location = new Point(0, 201);
-            GameGold.Margin = new Padding(4, 0, 4, 0);
-            GameGold.Name = "GameGold";
-            GameGold.Size = new Size(70, 13);
-            GameGold.TabIndex = 22;
-            GameGold.Text = "GameGold : ";
+            SearchBox.Controls.Add(FlagSearchBox);
+            SearchBox.Controls.Add(QuestSearchBox);
+            SearchBox.Controls.Add(FlagSearch);
+            SearchBox.Controls.Add(ResultLabel);
+            SearchBox.Controls.Add(QuestResultLabel);
+            SearchBox.Controls.Add(label10);
+            SearchBox.Location = new Point(356, 177);
+            SearchBox.Name = "SearchBox";
+            SearchBox.Size = new Size(324, 102);
+            SearchBox.TabIndex = 45;
+            SearchBox.TabStop = false;
+            SearchBox.Text = "Search";
             // 
-            // GameGoldTextBox
+            // FlagSearchBox
             // 
-            GameGoldTextBox.Location = new Point(70, 198);
-            GameGoldTextBox.Margin = new Padding(4, 3, 4, 3);
-            GameGoldTextBox.Name = "GameGoldTextBox";
-            GameGoldTextBox.Size = new Size(116, 23);
-            GameGoldTextBox.TabIndex = 23;
+            FlagSearchBox.Location = new Point(31, 35);
+            FlagSearchBox.Name = "FlagSearchBox";
+            FlagSearchBox.Size = new Size(120, 23);
+            FlagSearchBox.TabIndex = 46;
+            FlagSearchBox.ValueChanged += FlagSearchBox_ValueChanged;
             // 
-            // Gold
+            // QuestSearchBox
             // 
-            Gold.AutoSize = true;
-            Gold.Location = new Point(10, 172);
-            Gold.Margin = new Padding(4, 0, 4, 0);
-            Gold.Name = "Gold";
-            Gold.Size = new Size(41, 15);
-            Gold.TabIndex = 20;
-            Gold.Text = "Gold : ";
+            QuestSearchBox.Location = new Point(174, 35);
+            QuestSearchBox.Name = "QuestSearchBox";
+            QuestSearchBox.Size = new Size(120, 23);
+            QuestSearchBox.TabIndex = 47;
+            QuestSearchBox.ValueChanged += QuestSearchBox_ValueChanged;
             // 
-            // GoldTextBox
+            // PetView
             // 
-            GoldTextBox.Location = new Point(70, 169);
-            GoldTextBox.Margin = new Padding(4, 3, 4, 3);
-            GoldTextBox.Name = "GoldTextBox";
-            GoldTextBox.Size = new Size(116, 23);
-            GoldTextBox.TabIndex = 21;
+            PetView.Columns.AddRange(new ColumnHeader[] { Pet, Level, HP, Location });
+            PetView.Location = new Point(6, 14);
+            PetView.Name = "PetView";
+            PetView.Size = new Size(459, 144);
+            PetView.TabIndex = 0;
+            PetView.UseCompatibleStateImageBehavior = false;
+            PetView.View = View.Details;
             // 
-            // PKPoints
+            // Pet
             // 
-            PKPoints.AutoSize = true;
-            PKPoints.Location = new Point(10, 143);
-            PKPoints.Margin = new Padding(4, 0, 4, 0);
-            PKPoints.Name = "PKPoints";
-            PKPoints.Size = new Size(58, 15);
-            PKPoints.TabIndex = 18;
-            PKPoints.Text = "PKPoint : ";
+            Pet.Text = "Pet";
+            Pet.Width = 150;
             // 
-            // PKPointsTextBox
+            // Level
             // 
-            PKPointsTextBox.Location = new Point(70, 140);
-            PKPointsTextBox.Margin = new Padding(4, 3, 4, 3);
-            PKPointsTextBox.Name = "PKPointsTextBox";
-            PKPointsTextBox.Size = new Size(116, 23);
-            PKPointsTextBox.TabIndex = 19;
+            Level.Text = "Level";
             // 
-            // label12
+            // HP
             // 
-            label12.AutoSize = true;
-            label12.Location = new Point(10, 114);
-            label12.Margin = new Padding(4, 0, 4, 0);
-            label12.Name = "label12";
-            label12.Size = new Size(36, 15);
-            label12.TabIndex = 16;
-            label12.Text = "EXP : ";
+            HP.Text = "HP";
             // 
-            // ExpTextBox
+            // Location
             // 
-            ExpTextBox.Location = new Point(70, 111);
-            ExpTextBox.Margin = new Padding(4, 3, 4, 3);
-            ExpTextBox.Name = "ExpTextBox";
-            ExpTextBox.Size = new Size(116, 23);
-            ExpTextBox.TabIndex = 17;
+            Location.Text = "Location";
+            Location.Width = 250;
+            // 
+            // Pets
+            // 
+            Pets.Controls.Add(PetView);
+            Pets.Location = new Point(356, 285);
+            Pets.Name = "Pets";
+            Pets.Size = new Size(471, 171);
+            Pets.TabIndex = 46;
+            Pets.TabStop = false;
+            Pets.Text = "Pets";
             // 
             // PlayerInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(544, 424);
-            Controls.Add(QuestDown);
-            Controls.Add(QuestUp);
-            Controls.Add(QuestResultLabel);
-            Controls.Add(QuestSearchBox);
-            Controls.Add(label10);
-            Controls.Add(FlagDown);
-            Controls.Add(FlagUp);
-            Controls.Add(ResultLabel);
-            Controls.Add(FlagSearchBox);
-            Controls.Add(FlagSearch);
+            ClientSize = new Size(827, 446);
+            Controls.Add(Pets);
+            Controls.Add(SearchBox);
             Controls.Add(groupBox4);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
@@ -578,8 +698,12 @@
             groupBox3.PerformLayout();
             groupBox4.ResumeLayout(false);
             groupBox4.PerformLayout();
+            SearchBox.ResumeLayout(false);
+            SearchBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)FlagSearchBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)QuestSearchBox).EndInit();
+            Pets.ResumeLayout(false);
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -612,14 +736,8 @@
         private System.Windows.Forms.Button SafeZoneButton;
         private System.Windows.Forms.Button OpenAccountButton;
         private Label ResultLabel;
-        private TextBox FlagSearchBox;
         private Label FlagSearch;
-        private Button FlagUp;
-        private Button FlagDown;
-        private Button QuestDown;
-        private Button QuestUp;
         private Label QuestResultLabel;
-        private TextBox QuestSearchBox;
         private Label label10;
         private Label GameGold;
         private TextBox GameGoldTextBox;
@@ -629,5 +747,23 @@
         private TextBox PKPointsTextBox;
         private Label label12;
         private TextBox ExpTextBox;
+        private TextBox ATKSPDBox;
+        private TextBox AGILBox;
+        private TextBox ACCBox;
+        private TextBox SCBox;
+        private TextBox MCBox;
+        private TextBox DCBox;
+        private TextBox AMCBox;
+        private TextBox ACBox;
+        private Label StatsLabel;
+        private GroupBox SearchBox;
+        private NumericUpDown QuestSearchBox;
+        private NumericUpDown FlagSearchBox;
+        private ListView PetView;
+        private ColumnHeader Pet;
+        private ColumnHeader Level;
+        private ColumnHeader HP;
+        private ColumnHeader Location;
+        private GroupBox Pets;
     }
 }
