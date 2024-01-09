@@ -85,6 +85,7 @@
             HP = new ColumnHeader();
             Location = new ColumnHeader();
             Pets = new GroupBox();
+            AccountBanButton = new Button();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -392,6 +393,7 @@
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(AccountBanButton);
             groupBox2.Controls.Add(OpenAccountButton);
             groupBox2.Controls.Add(SafeZoneButton);
             groupBox2.Controls.Add(label9);
@@ -434,7 +436,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(108, 127);
+            label9.Location = new Point(108, 110);
             label9.Margin = new Padding(4, 0, 4, 0);
             label9.Name = "label9";
             label9.Size = new Size(53, 15);
@@ -443,7 +445,7 @@
             // 
             // ChatBanExpiryTextBox
             // 
-            ChatBanExpiryTextBox.Location = new Point(174, 123);
+            ChatBanExpiryTextBox.Location = new Point(174, 106);
             ChatBanExpiryTextBox.Margin = new Padding(4, 3, 4, 3);
             ChatBanExpiryTextBox.Name = "ChatBanExpiryTextBox";
             ChatBanExpiryTextBox.Size = new Size(137, 23);
@@ -463,7 +465,7 @@
             // 
             // KillPetsButton
             // 
-            KillPetsButton.Location = new Point(7, 89);
+            KillPetsButton.Location = new Point(103, 55);
             KillPetsButton.Margin = new Padding(4, 3, 4, 3);
             KillPetsButton.Name = "KillPetsButton";
             KillPetsButton.Size = new Size(88, 27);
@@ -677,6 +679,17 @@
             Pets.TabStop = false;
             Pets.Text = "Pets";
             // 
+            // AccountBanButton
+            // 
+            AccountBanButton.Location = new Point(7, 88);
+            AccountBanButton.Margin = new Padding(4, 3, 4, 3);
+            AccountBanButton.Name = "AccountBanButton";
+            AccountBanButton.Size = new Size(88, 27);
+            AccountBanButton.TabIndex = 25;
+            AccountBanButton.Text = "Acount Ban";
+            AccountBanButton.UseVisualStyleBackColor = true;
+            AccountBanButton.Click += AccountBanButton_Click;
+            // 
             // PlayerInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -766,5 +779,6 @@
         private ColumnHeader HP;
         private ColumnHeader Location;
         private GroupBox Pets;
+        private Button AccountBanButton;
     }
 }

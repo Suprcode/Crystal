@@ -140,6 +140,8 @@ namespace Server
 
         private void ChatBanButton_Click(object sender, EventArgs e)
         {
+            if (Character.AccountInfo.AdminAccount) return;
+
             Character.ChatBanned = true;
 
             DateTime date;
@@ -265,6 +267,22 @@ namespace Server
                 ResultLabel.Text = "Invalid Flag Number";
                 ResultLabel.ForeColor = Color.Red;
             }
+        }
+
+        private void AccountBanButton_Click(object sender, EventArgs e)
+        {
+            if (Character.AccountInfo.AdminAccount) return;
+            Character.AccountInfo.Banned = true;
+
+            DateTime date;
+
+            DateTime.TryParse(ChatBanExpiryTextBox.Text, out date);
+
+            Character.AccountInfo.ExpiryDate = date;
+
+            if (Character.Player == null) return;
+
+            Character.Player.Connection.SendDisconnect(6);
         }
     }
 }
