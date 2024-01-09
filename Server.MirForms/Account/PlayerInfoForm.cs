@@ -35,7 +35,7 @@ namespace Server
             IndexTextBox.Text = Character.Index.ToString();
             NameTextBox.Text = Character.Name;
             LevelTextBox.Text = Character.Level.ToString();
-            ExpTextBox.Text = Character.Experience.ToString();
+            ExpTextBox.Text = $"{string.Format("{0:#0.##%}", Character.Player.Experience / (double)Character.Player.MaxExperience)}";
             PKPointsTextBox.Text = Character.PKPoints.ToString();
             GoldTextBox.Text = $"{Character.AccountInfo.Gold:n0}";
             GameGoldTextBox.Text = String.Format("{0:n0}", Character.AccountInfo.Credit);
@@ -81,6 +81,8 @@ namespace Server
 
         private void UpdateButton_Click(object sender, EventArgs e)
         {
+            if (MessageBox.Show("Are you sure you want to Update?", "Update.", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+
             SaveChanges();
         }
 
@@ -90,11 +92,9 @@ namespace Server
 
             string tempGold = GoldTextBox.Text.Replace(",", "");
             string tempCredit = GameGoldTextBox.Text.Replace(",", "");
-            string tempEXP = ExpTextBox.Text.Replace(",", "");
 
             info.Name = NameTextBox.Text;
             info.Level = Convert.ToByte(LevelTextBox.Text);
-            info.Experience = Convert.ToInt64(tempEXP);
             info.PKPoints = Convert.ToInt32(PKPointsTextBox.Text);
             info.AccountInfo.Gold = Convert.ToUInt32(tempGold);
             info.AccountInfo.Credit = Convert.ToUInt32(tempCredit);

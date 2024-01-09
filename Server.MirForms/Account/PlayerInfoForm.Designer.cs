@@ -386,6 +386,7 @@
             ExpTextBox.Location = new Point(70, 111);
             ExpTextBox.Margin = new Padding(4, 3, 4, 3);
             ExpTextBox.Name = "ExpTextBox";
+            ExpTextBox.ReadOnly = true;
             ExpTextBox.Size = new Size(116, 23);
             ExpTextBox.TabIndex = 17;
             // 
