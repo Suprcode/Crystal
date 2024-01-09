@@ -422,6 +422,8 @@ namespace Server.MirObjects
                     return string.Format("{0} Has logged out. Reason: Kicked by admin", Name);
                 case 5:
                     return string.Format("{0} Has logged out. Reason: Maximum connections reached", Name);
+                case 6:
+                    return string.Format("{0} Has logged out. Reason: Account has been Banned!", Name);
                 case 10:
                     return string.Format("{0} Has logged out. Reason: Wrong client version", Name);
                 case 20:
