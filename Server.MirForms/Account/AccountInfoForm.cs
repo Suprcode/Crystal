@@ -92,26 +92,18 @@ namespace Server
 
             List<AccountInfo> accounts = SMain.Envir.AccountList;
 
-            long totalgold = 0;
-            foreach (var account in accounts)
-            {
-                if (!account.AdminAccount && !account.Banned)
-                    totalgold += account.Gold;
-                ServerGoldTextBox.Text = totalgold.ToString();
-            }
-            CultureInfo culture = new CultureInfo("en-GB");
-            string formattedgold = totalgold.ToString("N0", culture);
-            ServerGoldTextBox.Text = formattedgold;
+            long totalGold = accounts
+            .Where(account => !account.AdminAccount && !account.Banned)
+            .Sum(account => account.Gold);
 
-            long totalcredit = 0;
-            foreach (var account in accounts)
-            {
-                if (!account.AdminAccount && !account.Banned)
-                    totalcredit += account.Credit;
-                ServerCreditTextBox.Text = totalcredit.ToString();
-            }
-            string formattedcredit = totalcredit.ToString("N0", culture);
-            ServerCreditTextBox.Text = formattedcredit;
+            ServerGoldTextBox.Text = totalGold.ToString("N0", CultureInfo.GetCultureInfo("en-GB"));
+
+
+            long totalCredit = accounts
+            .Where(account => !account.AdminAccount && !account.Banned)
+            .Sum(account => account.Credit);
+
+            ServerCreditTextBox.Text = totalCredit.ToString("N0", CultureInfo.GetCultureInfo("en-GB"));
 
             if (FilterTextBox.Text.Length > 0)
                 accounts = SMain.Envir.MatchAccounts(FilterTextBox.Text, MatchFilterCheckBox.Checked);
