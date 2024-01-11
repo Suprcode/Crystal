@@ -57,6 +57,7 @@
             label12 = new Label();
             ExpTextBox = new TextBox();
             groupBox2 = new GroupBox();
+            AccountBanButton = new Button();
             OpenAccountButton = new Button();
             SafeZoneButton = new Button();
             label9 = new Label();
@@ -85,7 +86,6 @@
             HP = new ColumnHeader();
             Location = new ColumnHeader();
             Pets = new GroupBox();
-            AccountBanButton = new Button();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -158,7 +158,7 @@
             UpdateButton.Name = "UpdateButton";
             UpdateButton.Size = new Size(88, 27);
             UpdateButton.TabIndex = 7;
-            UpdateButton.Text = "Update Details";
+            UpdateButton.Text = "Update";
             UpdateButton.UseVisualStyleBackColor = true;
             UpdateButton.Click += UpdateButton_Click;
             // 
@@ -183,7 +183,7 @@
             // 
             // SendMessageButton
             // 
-            SendMessageButton.Location = new Point(266, 22);
+            SendMessageButton.Location = new Point(265, 22);
             SendMessageButton.Margin = new Padding(4, 3, 4, 3);
             SendMessageButton.Name = "SendMessageButton";
             SendMessageButton.Size = new Size(68, 27);
@@ -313,9 +313,9 @@
             StatsLabel.Location = new Point(197, 23);
             StatsLabel.Margin = new Padding(4, 0, 4, 0);
             StatsLabel.Name = "StatsLabel";
-            StatsLabel.Size = new Size(54, 225);
+            StatsLabel.Size = new Size(57, 225);
             StatsLabel.TabIndex = 25;
-            StatsLabel.Text = "AC:\r\n\r\nAMC:\r\n\r\nDC:\r\n\r\nMC:\r\n\r\nSC:\r\n\r\nACC:\r\n\r\nAGIL:\r\n\r\nATK SPD:";
+            StatsLabel.Text = "AC :\r\n\r\nAMC :\r\n\r\nDC :\r\n\r\nMC :\r\n\r\nSC :\r\n\r\nACC :\r\n\r\nAGIL :\r\n\r\nATK SPD :";
             // 
             // GameGold
             // 
@@ -410,6 +410,17 @@
             groupBox2.TabIndex = 12;
             groupBox2.TabStop = false;
             groupBox2.Text = "Actions";
+            // 
+            // AccountBanButton
+            // 
+            AccountBanButton.Location = new Point(7, 88);
+            AccountBanButton.Margin = new Padding(4, 3, 4, 3);
+            AccountBanButton.Name = "AccountBanButton";
+            AccountBanButton.Size = new Size(88, 27);
+            AccountBanButton.TabIndex = 25;
+            AccountBanButton.Text = "Account Ban";
+            AccountBanButton.UseVisualStyleBackColor = true;
+            AccountBanButton.Click += AccountBanButton_Click;
             // 
             // OpenAccountButton
             // 
@@ -678,17 +689,6 @@
             Pets.TabIndex = 46;
             Pets.TabStop = false;
             Pets.Text = "Pets";
-            // 
-            // AccountBanButton
-            // 
-            AccountBanButton.Location = new Point(7, 88);
-            AccountBanButton.Margin = new Padding(4, 3, 4, 3);
-            AccountBanButton.Name = "AccountBanButton";
-            AccountBanButton.Size = new Size(88, 27);
-            AccountBanButton.TabIndex = 25;
-            AccountBanButton.Text = "Acount Ban";
-            AccountBanButton.UseVisualStyleBackColor = true;
-            AccountBanButton.Click += AccountBanButton_Click;
             // 
             // PlayerInfoForm
             // 
