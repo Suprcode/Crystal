@@ -6,7 +6,7 @@ namespace Server
     public partial class MapInfoForm : Form
     {
         public Envir Envir => SMain.EditEnvir;
-
+      
         private List<MapInfo> _selectedMapInfos;
         private List<SafeZoneInfo> _selectedSafeZoneInfos;
         private List<RespawnInfo> _selectedRespawnInfos;

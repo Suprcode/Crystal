@@ -1,6 +1,7 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirObjects;
+using System.Globalization;
 
 namespace Server
 {
@@ -90,6 +91,19 @@ namespace Server
             }
 
             List<AccountInfo> accounts = SMain.Envir.AccountList;
+
+            long totalGold = accounts
+            .Where(account => !account.AdminAccount && !account.Banned)
+            .Sum(account => account.Gold);
+
+            ServerGoldTextBox.Text = totalGold.ToString("N0", CultureInfo.GetCultureInfo("en-GB"));
+
+
+            long totalCredit = accounts
+            .Where(account => !account.AdminAccount && !account.Banned)
+            .Sum(account => account.Credit);
+
+            ServerCreditTextBox.Text = totalCredit.ToString("N0", CultureInfo.GetCultureInfo("en-GB"));
 
             if (FilterTextBox.Text.Length > 0)
                 accounts = SMain.Envir.MatchAccounts(FilterTextBox.Text, MatchFilterCheckBox.Checked);
@@ -202,6 +216,30 @@ namespace Server
                             listItem.SubItems.Add(guild.Name.ToString());
                         }
                     }
+                    else
+                    {
+                        listItem.SubItems.Add("No Guild");
+                    }
+
+                    string status = $"";
+
+                    if (character.LastLoginDate > character.LastLogoutDate)
+                    {
+                        status = $"Online: {(SMain.Envir.Now - character.LastLoginDate).TotalMinutes.ToString("##")} minutes";
+                        listItem.ForeColor = Color.Green;
+                    }
+                    else
+                    {
+                        status = $"Offline: {character.LastLogoutDate}";
+                    }
+
+                    if (character.Deleted)
+                    {
+                        status = $"Deleted: {character.DeleteDate}";
+                        listItem.ForeColor = Color.Red;
+                    }
+
+                    listItem.SubItems.Add(status.ToString());
 
                     CharactersListView.Items.Add(listItem);
                 }

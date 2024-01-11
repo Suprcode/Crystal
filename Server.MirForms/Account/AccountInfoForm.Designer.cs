@@ -40,6 +40,7 @@ namespace Server
             characterLevel = new ColumnHeader();
             characterPKPoints = new ColumnHeader();
             characterGuild = new ColumnHeader();
+            characterStatus = new ColumnHeader();
             LastIPSearch = new Button();
             CreationIPSearch = new Button();
             PasswordChangeCheckBox = new CheckBox();
@@ -84,10 +85,14 @@ namespace Server
             bannedHeader = new ColumnHeader();
             banReasonHeader = new ColumnHeader();
             expiryDateHeader = new ColumnHeader();
-            MatchFilterCheckBox = new CheckBox();
-            WipeCharButton = new Button();
             Gold = new ColumnHeader();
             GameGold = new ColumnHeader();
+            MatchFilterCheckBox = new CheckBox();
+            WipeCharButton = new Button();
+            ServerGoldTextBox = new TextBox();
+            TotalServerGold = new Label();
+            ServerCreditTextBox = new TextBox();
+            TotalServerCredit = new Label();
             AccountInfoPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -172,17 +177,17 @@ namespace Server
             AccountInfoPanel.Location = new Point(14, 277);
             AccountInfoPanel.Margin = new Padding(4, 3, 4, 3);
             AccountInfoPanel.Name = "AccountInfoPanel";
-            AccountInfoPanel.Size = new Size(1073, 243);
+            AccountInfoPanel.Size = new Size(1248, 243);
             AccountInfoPanel.TabIndex = 14;
             // 
             // CharactersListView
             // 
-            CharactersListView.Columns.AddRange(new ColumnHeader[] { characterName, characterClass, characterLevel, characterPKPoints, characterGuild });
+            CharactersListView.Columns.AddRange(new ColumnHeader[] { characterName, characterClass, characterLevel, characterPKPoints, characterGuild, characterStatus });
             CharactersListView.GridLines = true;
             CharactersListView.Location = new Point(701, 0);
             CharactersListView.Name = "CharactersListView";
             CharactersListView.Scrollable = false;
-            CharactersListView.Size = new Size(371, 163);
+            CharactersListView.Size = new Size(546, 163);
             CharactersListView.TabIndex = 39;
             CharactersListView.UseCompatibleStateImageBehavior = false;
             CharactersListView.View = View.Details;
@@ -209,7 +214,12 @@ namespace Server
             // characterGuild
             // 
             characterGuild.Text = "Guild";
-            characterGuild.Width = 90;
+            characterGuild.Width = 100;
+            // 
+            // characterStatus
+            // 
+            characterStatus.Text = "Status";
+            characterStatus.Width = 163;
             // 
             // LastIPSearch
             // 
@@ -577,7 +587,7 @@ namespace Server
             AccountInfoListView.Location = new Point(12, 75);
             AccountInfoListView.Margin = new Padding(4, 3, 4, 3);
             AccountInfoListView.Name = "AccountInfoListView";
-            AccountInfoListView.Size = new Size(1074, 194);
+            AccountInfoListView.Size = new Size(1249, 194);
             AccountInfoListView.Sorting = SortOrder.Ascending;
             AccountInfoListView.TabIndex = 8;
             AccountInfoListView.UseCompatibleStateImageBehavior = false;
@@ -618,6 +628,16 @@ namespace Server
             expiryDateHeader.Text = "Expiry Date";
             expiryDateHeader.Width = 81;
             // 
+            // Gold
+            // 
+            Gold.Text = "Gold";
+            Gold.Width = 100;
+            // 
+            // GameGold
+            // 
+            GameGold.Text = "GameGold";
+            GameGold.Width = 70;
+            // 
             // MatchFilterCheckBox
             // 
             MatchFilterCheckBox.AutoSize = true;
@@ -640,21 +660,49 @@ namespace Server
             WipeCharButton.UseVisualStyleBackColor = true;
             WipeCharButton.Click += WipeCharButton_Click;
             // 
-            // Gold
+            // ServerGoldTextBox
             // 
-            Gold.Text = "Gold";
-            Gold.Width = 90;
+            ServerGoldTextBox.Location = new Point(356, 16);
+            ServerGoldTextBox.Name = "ServerGoldTextBox";
+            ServerGoldTextBox.ReadOnly = true;
+            ServerGoldTextBox.Size = new Size(153, 23);
+            ServerGoldTextBox.TabIndex = 22;
             // 
-            // GameGold
+            // TotalServerGold
             // 
-            GameGold.Text = "GameGold";
-            GameGold.Width = 70;
+            TotalServerGold.AutoSize = true;
+            TotalServerGold.Location = new Point(252, 19);
+            TotalServerGold.Name = "TotalServerGold";
+            TotalServerGold.Size = new Size(98, 15);
+            TotalServerGold.TabIndex = 21;
+            TotalServerGold.Text = "Total Server Gold:";
+            // 
+            // ServerCreditTextBox
+            // 
+            ServerCreditTextBox.Location = new Point(624, 19);
+            ServerCreditTextBox.Name = "ServerCreditTextBox";
+            ServerCreditTextBox.ReadOnly = true;
+            ServerCreditTextBox.Size = new Size(153, 23);
+            ServerCreditTextBox.TabIndex = 24;
+            // 
+            // TotalServerCredit
+            // 
+            TotalServerCredit.AutoSize = true;
+            TotalServerCredit.Location = new Point(520, 22);
+            TotalServerCredit.Name = "TotalServerCredit";
+            TotalServerCredit.Size = new Size(105, 15);
+            TotalServerCredit.TabIndex = 23;
+            TotalServerCredit.Text = "Total Server Credit:";
             // 
             // AccountInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1101, 532);
+            ClientSize = new Size(1276, 532);
+            Controls.Add(ServerCreditTextBox);
+            Controls.Add(TotalServerCredit);
+            Controls.Add(ServerGoldTextBox);
+            Controls.Add(TotalServerGold);
             Controls.Add(WipeCharButton);
             Controls.Add(MatchFilterCheckBox);
             Controls.Add(FilterPlayerTextBox);
@@ -736,5 +784,10 @@ namespace Server
         private ColumnHeader characterGuild;
         private ColumnHeader Gold;
         private ColumnHeader GameGold;
+        private ColumnHeader characterStatus;
+        private TextBox ServerGoldTextBox;
+        private Label TotalServerGold;
+        private TextBox ServerCreditTextBox;
+        private Label TotalServerCredit;
     }
 }

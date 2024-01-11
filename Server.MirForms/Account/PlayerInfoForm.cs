@@ -27,6 +27,7 @@ namespace Server
             Character = SMain.Envir.GetCharacterInfo(player.Name);
 
             UpdatePlayerInfo();
+            UpdatePetInfo();
         }
 
         private void UpdatePlayerInfo()
@@ -34,8 +35,19 @@ namespace Server
             IndexTextBox.Text = Character.Index.ToString();
             NameTextBox.Text = Character.Name;
             LevelTextBox.Text = Character.Level.ToString();
+            ExpTextBox.Text = $"{string.Format("{0:#0.##%}", Character.Player.Experience / (double)Character.Player.MaxExperience)}";
+            PKPointsTextBox.Text = Character.PKPoints.ToString();
+            GoldTextBox.Text = $"{Character.AccountInfo.Gold:n0}";
+            GameGoldTextBox.Text = String.Format("{0:n0}", Character.AccountInfo.Credit);
 
-            GoldLabel.Text = $"{Character.AccountInfo.Gold:n0}";
+            ACBox.Text = $"{Character.Player.Stats[Stat.MinAC]}-{Character.Player.Stats[Stat.MaxAC]}";
+            AMCBox.Text = $"{Character.Player.Stats[Stat.MinMAC]}-{Character.Player.Stats[Stat.MaxMAC]}";
+            DCBox.Text = $"{Character.Player.Stats[Stat.MinDC]}-{Character.Player.Stats[Stat.MaxDC]}";
+            MCBox.Text = $"{Character.Player.Stats[Stat.MinMC]}-{Character.Player.Stats[Stat.MaxMC]}";
+            SCBox.Text = $"{Character.Player.Stats[Stat.MinSC]}-{Character.Player.Stats[Stat.MaxSC]}";
+            ACCBox.Text = $"{Character.Player.Stats[Stat.Accuracy]}";
+            AGILBox.Text = $"{Character.Player.Stats[Stat.Agility]}";
+            ATKSPDBox.Text = $"{Character.Player.Stats[Stat.AttackSpeed]}";
 
             if (Character.Player != null)
                 CurrentMapLabel.Text =
@@ -43,15 +55,34 @@ namespace Server
             else
                 CurrentMapLabel.Text = "OFFLINE";
 
-            PKPointsLabel.Text = Character.PKPoints.ToString();
             CurrentIPLabel.Text = Character.AccountInfo.LastIP;
             OnlineTimeLabel.Text = Character.LastLoginDate > Character.LastLogoutDate ? (SMain.Envir.Now - Character.LastLoginDate).TotalMinutes.ToString("##") + " minutes" : "Offline";
 
             ChatBanExpiryTextBox.Text = Character.ChatBanExpiryDate.ToString();
         }
 
+        private void UpdatePetInfo()
+        {
+            foreach (MonsterObject Pet in Character.Player.Pets)
+            {
+                var listItem = new ListViewItem(Pet.Name) { Tag = Pet };
+                listItem.SubItems.Add(Pet.PetLevel.ToString());
+                listItem.SubItems.Add($"{Pet.Health}/{Pet.MaxHealth}");
+                listItem.SubItems.Add($"Map: {Pet.CurrentMap.Info.Title}, X: {Pet.CurrentLocation.X}, Y: {Pet.CurrentLocation.Y}");
+
+                PetView.Items.Add(listItem);
+            }
+        }
+
+        private void ClearPetInfo()
+        {
+            PetView.Items.Clear();
+        }
+
         private void UpdateButton_Click(object sender, EventArgs e)
         {
+            if (MessageBox.Show("Are you sure you want to Update?", "Update.", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+
             SaveChanges();
         }
 
@@ -59,8 +90,14 @@ namespace Server
         {
             CharacterInfo info = Character;
 
+            string tempGold = GoldTextBox.Text.Replace(",", "");
+            string tempCredit = GameGoldTextBox.Text.Replace(",", "");
+
             info.Name = NameTextBox.Text;
             info.Level = Convert.ToByte(LevelTextBox.Text);
+            info.PKPoints = Convert.ToInt32(PKPointsTextBox.Text);
+            info.AccountInfo.Gold = Convert.ToUInt32(tempGold);
+            info.AccountInfo.Credit = Convert.ToUInt32(tempCredit);
         }
 
         private void SendMessageButton_Click(object sender, EventArgs e)
@@ -93,6 +130,8 @@ namespace Server
 
             for (int i = Character.Player.Pets.Count - 1; i >= 0; i--)
                 Character.Player.Pets[i].Die();
+
+            ClearPetInfo();
         }
         private void SafeZoneButton_Click(object sender, EventArgs e)
         {
@@ -101,6 +140,8 @@ namespace Server
 
         private void ChatBanButton_Click(object sender, EventArgs e)
         {
+            if (Character.AccountInfo.AdminAccount) return;
+
             Character.ChatBanned = true;
 
             DateTime date;
@@ -133,132 +174,8 @@ namespace Server
             form.ShowDialog();
         }
 
-        private void FlagSearchBox_TextChanged(object sender, EventArgs e)
-        {
-            TextBox flagTextBox = (TextBox)sender;
 
-            if (string.IsNullOrWhiteSpace(flagTextBox.Text))
-            {
-                ResultLabel.Text = string.Empty;
-                return;
-            }
 
-            if (int.TryParse(flagTextBox.Text, out int flagIndex))
-            {
-                if (flagIndex >= 0 && flagIndex < Character.Flags.Length)
-                {
-                    bool flagValue = Character.Flags[flagIndex];
-
-                    if (flagValue)
-                    {
-                        ResultLabel.Text = $"Flag {flagIndex} is Active";
-                        ResultLabel.ForeColor = Color.Green;
-                    }
-                    else
-                    {
-                        ResultLabel.Text = $"Flag {flagIndex} is Inactive";
-                        ResultLabel.ForeColor = Color.Red;
-                    }
-                }
-                else
-                {
-                    ResultLabel.Text = "Invalid Flag Number";
-                    ResultLabel.ForeColor = Color.Red;
-                }
-            }
-        }
-
-        private void FlagUp_Click(object sender, EventArgs e)
-        {
-            if (int.TryParse(FlagSearchBox.Text, out int currentValue))
-            {
-                int newValue = currentValue + 1;
-
-                FlagSearchBox.Text = newValue.ToString();
-            }
-            else
-            {
-                FlagSearchBox.Text = "1";
-            }
-        }
-
-        private void FlagDown_Click(object sender, EventArgs e)
-        {
-            if (int.TryParse(FlagSearchBox.Text, out int currentValue))
-            {
-                int newValue = currentValue - 1;
-
-                newValue = Math.Max(0, newValue);
-
-                FlagSearchBox.Text = newValue.ToString();
-            }
-        }
-
-        private void QuestSearchBox_TextChanged(object sender, EventArgs e)
-        {
-            TextBox questTextBox = (TextBox)sender;
-
-            if (string.IsNullOrWhiteSpace(questTextBox.Text))
-            {
-                QuestResultLabel.Text = string.Empty;
-                return;
-            }
-
-            if (int.TryParse(questTextBox.Text, out int questID))
-            {
-                if (questID < 1)
-                {
-                    QuestResultLabel.Text = "Invalid Quest Index";
-                    QuestResultLabel.ForeColor = Color.Red;
-                    return;
-                }
-
-                bool isQuestActive = Character.CurrentQuests.Any(x => x.Index == questID);
-                bool isQuestComplete = Character.CompletedQuests.Contains(questID);
-
-                if (isQuestActive)
-                {
-                    QuestResultLabel.Text = $"Quest {questID} is Active";
-                    QuestResultLabel.ForeColor = Color.Blue;
-                }
-                else
-                {
-                    QuestResultLabel.Text = $"Quest {questID} is {(isQuestComplete ? "Completed" : "Not Picked-up")}";
-                    QuestResultLabel.ForeColor = isQuestComplete ? Color.Green : Color.Red;
-                }
-            }
-            else
-            {
-                QuestResultLabel.Text = "Invalid Quest Index";
-                QuestResultLabel.ForeColor = Color.Red;
-            }
-        }
-
-        private void QuestUp_Click(object sender, EventArgs e)
-        {
-            if (int.TryParse(QuestSearchBox.Text, out int currentValue))
-            {
-                int newValue = currentValue + 1;
-
-                QuestSearchBox.Text = newValue.ToString();
-            }
-            else
-            {
-                QuestSearchBox.Text = "1";
-            }
-        }
-
-        private void QuestDown_Click(object sender, EventArgs e)
-        {
-            if (int.TryParse(QuestSearchBox.Text, out int currentValue))
-            {
-                int newValue = currentValue - 1;
-
-                newValue = Math.Max(0, newValue);
-
-                QuestSearchBox.Text = newValue.ToString();
-            }
-        }
 
         private void CurrentIPLabel_Click(object sender, EventArgs e)
         {
@@ -279,6 +196,93 @@ namespace Server
             {
                 MessageBox.Show($"Error opening URL: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void QuestSearchBox_ValueChanged(object sender, EventArgs e)
+        {
+            int questID = 0;
+
+            if (string.IsNullOrWhiteSpace(QuestSearchBox.Value.ToString()))
+            {
+                QuestResultLabel.Text = string.Empty;
+                return;
+            }
+            else
+            {
+                questID = Decimal.ToInt32(QuestSearchBox.Value);
+            }
+
+            if (questID < 1)
+            {
+                QuestResultLabel.Text = "Invalid Quest Index";
+                QuestResultLabel.ForeColor = Color.Red;
+                return;
+            }
+
+            bool isQuestActive = Character.CurrentQuests.Any(x => x.Index == questID);
+            bool isQuestComplete = Character.CompletedQuests.Contains(questID);
+
+            if (isQuestActive)
+            {
+                QuestResultLabel.Text = $"Quest {questID} is Active";
+                QuestResultLabel.ForeColor = Color.Blue;
+            }
+            else
+            {
+                QuestResultLabel.Text = $"Quest {questID} is {(isQuestComplete ? "Completed" : "Inactive")}";
+                QuestResultLabel.ForeColor = isQuestComplete ? Color.Green : Color.Red;
+            }
+        }
+
+        private void FlagSearchBox_ValueChanged(object sender, EventArgs e)
+        {
+            int flagIndex = 0;
+            if (string.IsNullOrWhiteSpace(FlagSearchBox.Value.ToString()))
+            {
+                ResultLabel.Text = string.Empty;
+                return;
+            }
+            else
+            {
+                flagIndex = Decimal.ToInt32(FlagSearchBox.Value);
+            }
+
+            if (flagIndex >= 0 && flagIndex < Character.Flags.Length)
+            {
+                bool flagValue = Character.Flags[flagIndex];
+
+                if (flagValue)
+                {
+                    ResultLabel.Text = $"Flag {flagIndex} is Active";
+                    ResultLabel.ForeColor = Color.Green;
+                }
+                else
+                {
+                    ResultLabel.Text = $"Flag {flagIndex} is Inactive";
+                    ResultLabel.ForeColor = Color.Red;
+                }
+            }
+            else
+            {
+                ResultLabel.Text = "Invalid Flag Number";
+                ResultLabel.ForeColor = Color.Red;
+            }
+        }
+
+        private void AccountBanButton_Click(object sender, EventArgs e)
+        {
+            if (Character.AccountInfo.AdminAccount) return;
+            Character.AccountInfo.Banned = true;
+
+            DateTime date;
+
+            DateTime.TryParse(ChatBanExpiryTextBox.Text, out date);
+
+            Character.AccountInfo.ExpiryDate = date;
+
+            if (Character.Player == null) return;
+
+            Character.Player.Connection.SendDisconnect(6);
         }
     }
 }
