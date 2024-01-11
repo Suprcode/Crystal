@@ -1,7 +1,10 @@
-﻿using Server.MirEnvir;
-using Server.MirDatabase;
-using Server.MirForms.Systems;
+﻿using CustomFormControl;
 using Server.Database;
+using Server.MirDatabase;
+using Server.MirEnvir;
+using Server.MirForms.Systems;
+using Server.MirObjects;
+using Server.Systems;
 
 namespace Server
 {
@@ -108,6 +111,7 @@ namespace Server
                 }
 
                 ProcessPlayersOnlineTab();
+                ProcessGuildViewTab();
             }
             catch (Exception ex)
             {
@@ -456,6 +460,92 @@ namespace Server
         private void lineMessageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Envir.ReloadLineMessages();
+        }
+
+        public void ProcessGuildViewTab()
+        {
+            if (GuildListView.Items.Count != Envir.GuildList.Count)
+            {
+                GuildListView.Items.Clear();
+
+                foreach (GuildInfo guild in Envir.GuildList)
+                {
+                    ListViewItem tempItem = new ListViewItem(guild.GuildIndex.ToString()) { Tag = this };
+
+                    tempItem.SubItems.Add(guild.Name);
+
+                    if (guild.Ranks.Count > 0 && guild.Ranks[0].Members.Count > 0)
+                    {
+                        tempItem.SubItems.Add(guild.Ranks[0].Members[0].Name);
+                    }
+                    else
+                    {
+                        tempItem.SubItems.Add("NO LEADER (DELETED)");
+                        tempItem.ForeColor = Color.Red;
+                    }
+
+                    tempItem.SubItems.Add(guild.Membercount.ToString());
+                    tempItem.SubItems.Add(guild.Level.ToString());
+                    tempItem.SubItems.Add(guild.Gold.ToString());
+
+                    GuildListView.Items.Add(tempItem);
+                }
+            }
+        }
+
+        private void MainTabs_Click(object sender, EventArgs e)
+        {
+            ProcessGuildViewTab();
+        }
+
+        private void GuildListView_DoubleClick(object sender, EventArgs e)
+        {
+            ListViewNF list = (ListViewNF)sender;
+
+            if (list.SelectedItems.Count <= 0) return;
+
+            ListViewItem item = list.SelectedItems[0];
+            int index = Int32.Parse(item.Text);
+
+            GuildObject Guild = Envir.GetGuild(index);
+
+            GuildItemForm form = new GuildItemForm
+            {
+                GuildName = Guild.Name,
+                main = this,
+            };
+
+            if (Guild == null) return;
+
+            foreach (var i in Guild.StoredItems)
+            {
+                if (i == null) continue;
+                ListViewItem tempItem = new ListViewItem(i.Item.UniqueID.ToString()) { Tag = this };
+
+                CharacterInfo character = Envir.GetCharacterInfo((int)i.UserId);
+                if (character != null)
+                    tempItem.SubItems.Add(character.Name);
+                else if (i.UserId == -1)
+                    tempItem.SubItems.Add("Server");
+                else
+                    tempItem.SubItems.Add("Unknown");
+
+                tempItem.SubItems.Add(i.Item.FriendlyName);
+                tempItem.SubItems.Add(i.Item.Count.ToString());
+                tempItem.SubItems.Add(i.Item.CurrentDura + "/" + i.Item.MaxDura);
+
+                form.GuildItemListView.Items.Add(tempItem);
+            }
+
+            foreach (var r in Guild.Ranks)
+                foreach (var m in r.Members)
+                {
+                    ListViewItem tempItem = new ListViewItem(m.Name) { Tag = this };
+                    tempItem.SubItems.Add(r.Name);
+                    form.MemberListView.Items.Add(tempItem);
+                }
+
+            form.ShowDialog();
         }
     }
 }

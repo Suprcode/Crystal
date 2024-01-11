@@ -55,6 +55,9 @@
     <Compile Update="Systems\GuildInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Systems\GuildItemForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Systems\MiningInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>

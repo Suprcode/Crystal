@@ -73,27 +73,47 @@
             label8 = new Label();
             CurrentIPLabel = new Label();
             groupBox4 = new GroupBox();
-            ResultLabel = new Label();
-            FlagSearch = new Label();
-            QuestResultLabel = new Label();
-            label10 = new Label();
+            tabControl1 = new TabControl();
+            PlayerInfoTab = new TabPage();
             SearchBox = new GroupBox();
             FlagSearchBox = new NumericUpDown();
-            QuestSearchBox = new NumericUpDown();
+            FlagSearch = new Label();
+            ResultLabel = new Label();
+            QuestInfoTab = new TabPage();
+            QuestInfoListViewNF = new CustomFormControl.ListViewNF();
+            QuestIndexHeader = new ColumnHeader();
+            QuestStatusHeader = new ColumnHeader();
+            ItemInfoTab = new TabPage();
+            PlayerItemInfoListViewNF = new CustomFormControl.ListViewNF();
+            UIDHeader = new ColumnHeader();
+            LocationHeader = new ColumnHeader();
+            NameHeader = new ColumnHeader();
+            CountHeader = new ColumnHeader();
+            DurabilityHeader = new ColumnHeader();
+            MagicInfoTab = new TabPage();
+            MagicListViewNF = new CustomFormControl.ListViewNF();
+            MagicNameHeader = new ColumnHeader();
+            MagicLevelHeader = new ColumnHeader();
+            MagicExperienceHeader = new ColumnHeader();
+            Key = new ColumnHeader();
+            PetInfoTab = new TabPage();
             PetView = new ListView();
-            Pet = new ColumnHeader();
+            PetName = new ColumnHeader();
             Level = new ColumnHeader();
             HP = new ColumnHeader();
             Location = new ColumnHeader();
-            Pets = new GroupBox();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
             groupBox4.SuspendLayout();
+            tabControl1.SuspendLayout();
+            PlayerInfoTab.SuspendLayout();
             SearchBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)FlagSearchBox).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)QuestSearchBox).BeginInit();
-            Pets.SuspendLayout();
+            QuestInfoTab.SuspendLayout();
+            ItemInfoTab.SuspendLayout();
+            MagicInfoTab.SuspendLayout();
+            PetInfoTab.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -218,7 +238,7 @@
             groupBox1.Controls.Add(IndexTextBox);
             groupBox1.Controls.Add(UpdateButton);
             groupBox1.Controls.Add(LevelTextBox);
-            groupBox1.Location = new Point(7, 14);
+            groupBox1.Location = new Point(4, 3);
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
@@ -402,7 +422,7 @@
             groupBox2.Controls.Add(KillPetsButton);
             groupBox2.Controls.Add(KillButton);
             groupBox2.Controls.Add(KickButton);
-            groupBox2.Location = new Point(356, 14);
+            groupBox2.Location = new Point(353, 3);
             groupBox2.Margin = new Padding(4, 3, 4, 3);
             groupBox2.Name = "groupBox2";
             groupBox2.Padding = new Padding(4, 3, 4, 3);
@@ -500,7 +520,7 @@
             // 
             groupBox3.Controls.Add(SendMessageTextBox);
             groupBox3.Controls.Add(SendMessageButton);
-            groupBox3.Location = new Point(8, 386);
+            groupBox3.Location = new Point(5, 375);
             groupBox3.Margin = new Padding(4, 3, 4, 3);
             groupBox3.Name = "groupBox3";
             groupBox3.Padding = new Padding(4, 3, 4, 3);
@@ -578,7 +598,7 @@
             groupBox4.Controls.Add(label5);
             groupBox4.Controls.Add(OnlineTimeLabel);
             groupBox4.Controls.Add(label6);
-            groupBox4.Location = new Point(7, 285);
+            groupBox4.Location = new Point(4, 274);
             groupBox4.Margin = new Padding(4, 3, 4, 3);
             groupBox4.Name = "groupBox4";
             groupBox4.Padding = new Padding(4, 3, 4, 3);
@@ -587,13 +607,54 @@
             groupBox4.TabStop = false;
             groupBox4.Text = "Details";
             // 
-            // ResultLabel
+            // tabControl1
             // 
-            ResultLabel.AutoSize = true;
-            ResultLabel.Location = new Point(31, 64);
-            ResultLabel.Name = "ResultLabel";
-            ResultLabel.Size = new Size(0, 15);
-            ResultLabel.TabIndex = 30;
+            tabControl1.Controls.Add(PlayerInfoTab);
+            tabControl1.Controls.Add(QuestInfoTab);
+            tabControl1.Controls.Add(ItemInfoTab);
+            tabControl1.Controls.Add(MagicInfoTab);
+            tabControl1.Controls.Add(PetInfoTab);
+            tabControl1.Location = new Point(-1, 2);
+            tabControl1.Name = "tabControl1";
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new Size(693, 465);
+            tabControl1.TabIndex = 47;
+            tabControl1.SelectedIndexChanged += tabControl1_SelectedIndexChanged;
+            // 
+            // PlayerInfoTab
+            // 
+            PlayerInfoTab.Controls.Add(SearchBox);
+            PlayerInfoTab.Controls.Add(groupBox1);
+            PlayerInfoTab.Controls.Add(groupBox2);
+            PlayerInfoTab.Controls.Add(groupBox3);
+            PlayerInfoTab.Controls.Add(groupBox4);
+            PlayerInfoTab.Location = new Point(4, 24);
+            PlayerInfoTab.Name = "PlayerInfoTab";
+            PlayerInfoTab.Padding = new Padding(3);
+            PlayerInfoTab.Size = new Size(685, 437);
+            PlayerInfoTab.TabIndex = 0;
+            PlayerInfoTab.Text = "Player Info";
+            PlayerInfoTab.UseVisualStyleBackColor = true;
+            // 
+            // SearchBox
+            // 
+            SearchBox.Controls.Add(FlagSearchBox);
+            SearchBox.Controls.Add(FlagSearch);
+            SearchBox.Controls.Add(ResultLabel);
+            SearchBox.Location = new Point(354, 171);
+            SearchBox.Name = "SearchBox";
+            SearchBox.Size = new Size(189, 97);
+            SearchBox.TabIndex = 48;
+            SearchBox.TabStop = false;
+            SearchBox.Text = "Search";
+            // 
+            // FlagSearchBox
+            // 
+            FlagSearchBox.Location = new Point(31, 35);
+            FlagSearchBox.Name = "FlagSearchBox";
+            FlagSearchBox.Size = new Size(120, 23);
+            FlagSearchBox.TabIndex = 46;
+            FlagSearchBox.ValueChanged += FlagSearchBox_ValueChanged_1;
             // 
             // FlagSearch
             // 
@@ -604,68 +665,162 @@
             FlagSearch.TabIndex = 28;
             FlagSearch.Text = "Flag Search";
             // 
-            // QuestResultLabel
+            // ResultLabel
             // 
-            QuestResultLabel.AutoSize = true;
-            QuestResultLabel.Location = new Point(174, 64);
-            QuestResultLabel.Name = "QuestResultLabel";
-            QuestResultLabel.Size = new Size(0, 15);
-            QuestResultLabel.TabIndex = 42;
+            ResultLabel.AutoSize = true;
+            ResultLabel.Location = new Point(31, 64);
+            ResultLabel.Name = "ResultLabel";
+            ResultLabel.Size = new Size(0, 15);
+            ResultLabel.TabIndex = 30;
             // 
-            // label10
+            // QuestInfoTab
             // 
-            label10.AutoSize = true;
-            label10.Location = new Point(196, 13);
-            label10.Name = "label10";
-            label10.Size = new Size(76, 15);
-            label10.TabIndex = 40;
-            label10.Text = "Quest Search";
+            QuestInfoTab.Controls.Add(QuestInfoListViewNF);
+            QuestInfoTab.Location = new Point(4, 24);
+            QuestInfoTab.Name = "QuestInfoTab";
+            QuestInfoTab.Padding = new Padding(3);
+            QuestInfoTab.Size = new Size(685, 437);
+            QuestInfoTab.TabIndex = 1;
+            QuestInfoTab.Text = "Quest Info";
+            QuestInfoTab.UseVisualStyleBackColor = true;
             // 
-            // SearchBox
+            // QuestInfoListViewNF
             // 
-            SearchBox.Controls.Add(FlagSearchBox);
-            SearchBox.Controls.Add(QuestSearchBox);
-            SearchBox.Controls.Add(FlagSearch);
-            SearchBox.Controls.Add(ResultLabel);
-            SearchBox.Controls.Add(QuestResultLabel);
-            SearchBox.Controls.Add(label10);
-            SearchBox.Location = new Point(356, 177);
-            SearchBox.Name = "SearchBox";
-            SearchBox.Size = new Size(324, 102);
-            SearchBox.TabIndex = 45;
-            SearchBox.TabStop = false;
-            SearchBox.Text = "Search";
+            QuestInfoListViewNF.Columns.AddRange(new ColumnHeader[] { QuestIndexHeader, QuestStatusHeader });
+            QuestInfoListViewNF.Dock = DockStyle.Fill;
+            QuestInfoListViewNF.GridLines = true;
+            QuestInfoListViewNF.Location = new Point(3, 3);
+            QuestInfoListViewNF.Name = "QuestInfoListViewNF";
+            QuestInfoListViewNF.Size = new Size(679, 431);
+            QuestInfoListViewNF.TabIndex = 1;
+            QuestInfoListViewNF.UseCompatibleStateImageBehavior = false;
+            QuestInfoListViewNF.View = View.Details;
             // 
-            // FlagSearchBox
+            // QuestIndexHeader
             // 
-            FlagSearchBox.Location = new Point(31, 35);
-            FlagSearchBox.Name = "FlagSearchBox";
-            FlagSearchBox.Size = new Size(120, 23);
-            FlagSearchBox.TabIndex = 46;
-            FlagSearchBox.ValueChanged += FlagSearchBox_ValueChanged;
+            QuestIndexHeader.Text = "Index";
+            QuestIndexHeader.Width = 100;
             // 
-            // QuestSearchBox
+            // QuestStatusHeader
             // 
-            QuestSearchBox.Location = new Point(174, 35);
-            QuestSearchBox.Name = "QuestSearchBox";
-            QuestSearchBox.Size = new Size(120, 23);
-            QuestSearchBox.TabIndex = 47;
-            QuestSearchBox.ValueChanged += QuestSearchBox_ValueChanged;
+            QuestStatusHeader.Text = "Status";
+            QuestStatusHeader.Width = 100;
+            // 
+            // ItemInfoTab
+            // 
+            ItemInfoTab.Controls.Add(PlayerItemInfoListViewNF);
+            ItemInfoTab.Location = new Point(4, 24);
+            ItemInfoTab.Name = "ItemInfoTab";
+            ItemInfoTab.Size = new Size(685, 437);
+            ItemInfoTab.TabIndex = 2;
+            ItemInfoTab.Text = "Item Info";
+            ItemInfoTab.UseVisualStyleBackColor = true;
+            // 
+            // PlayerItemInfoListViewNF
+            // 
+            PlayerItemInfoListViewNF.Columns.AddRange(new ColumnHeader[] { UIDHeader, LocationHeader, NameHeader, CountHeader, DurabilityHeader });
+            PlayerItemInfoListViewNF.Dock = DockStyle.Fill;
+            PlayerItemInfoListViewNF.GridLines = true;
+            PlayerItemInfoListViewNF.Location = new Point(0, 0);
+            PlayerItemInfoListViewNF.Name = "PlayerItemInfoListViewNF";
+            PlayerItemInfoListViewNF.Size = new Size(685, 437);
+            PlayerItemInfoListViewNF.TabIndex = 2;
+            PlayerItemInfoListViewNF.UseCompatibleStateImageBehavior = false;
+            PlayerItemInfoListViewNF.View = View.Details;
+            // 
+            // UIDHeader
+            // 
+            UIDHeader.Text = "UID";
+            UIDHeader.Width = 100;
+            // 
+            // LocationHeader
+            // 
+            LocationHeader.Text = "Location";
+            LocationHeader.Width = 150;
+            // 
+            // NameHeader
+            // 
+            NameHeader.Text = "Name";
+            NameHeader.Width = 150;
+            // 
+            // CountHeader
+            // 
+            CountHeader.Text = "Count";
+            CountHeader.Width = 80;
+            // 
+            // DurabilityHeader
+            // 
+            DurabilityHeader.Text = "Durability";
+            DurabilityHeader.Width = 90;
+            // 
+            // MagicInfoTab
+            // 
+            MagicInfoTab.Controls.Add(MagicListViewNF);
+            MagicInfoTab.Location = new Point(4, 24);
+            MagicInfoTab.Name = "MagicInfoTab";
+            MagicInfoTab.Size = new Size(685, 437);
+            MagicInfoTab.TabIndex = 3;
+            MagicInfoTab.Text = "Magic Info";
+            MagicInfoTab.UseVisualStyleBackColor = true;
+            // 
+            // MagicListViewNF
+            // 
+            MagicListViewNF.Columns.AddRange(new ColumnHeader[] { MagicNameHeader, MagicLevelHeader, MagicExperienceHeader, Key });
+            MagicListViewNF.Dock = DockStyle.Fill;
+            MagicListViewNF.GridLines = true;
+            MagicListViewNF.Location = new Point(0, 0);
+            MagicListViewNF.Name = "MagicListViewNF";
+            MagicListViewNF.Size = new Size(685, 437);
+            MagicListViewNF.TabIndex = 2;
+            MagicListViewNF.UseCompatibleStateImageBehavior = false;
+            MagicListViewNF.View = View.Details;
+            // 
+            // MagicNameHeader
+            // 
+            MagicNameHeader.Text = "Spell Name";
+            MagicNameHeader.Width = 150;
+            // 
+            // MagicLevelHeader
+            // 
+            MagicLevelHeader.Text = "Level";
+            MagicLevelHeader.Width = 50;
+            // 
+            // MagicExperienceHeader
+            // 
+            MagicExperienceHeader.Text = "Experience";
+            MagicExperienceHeader.Width = 150;
+            // 
+            // Key
+            // 
+            Key.Text = "Key";
+            Key.Width = 80;
+            // 
+            // PetInfoTab
+            // 
+            PetInfoTab.Controls.Add(PetView);
+            PetInfoTab.Location = new Point(4, 24);
+            PetInfoTab.Name = "PetInfoTab";
+            PetInfoTab.Size = new Size(685, 437);
+            PetInfoTab.TabIndex = 4;
+            PetInfoTab.Text = "Pet Info";
+            PetInfoTab.UseVisualStyleBackColor = true;
             // 
             // PetView
             // 
-            PetView.Columns.AddRange(new ColumnHeader[] { Pet, Level, HP, Location });
-            PetView.Location = new Point(6, 14);
+            PetView.Columns.AddRange(new ColumnHeader[] { PetName, Level, HP, Location });
+            PetView.Dock = DockStyle.Fill;
+            PetView.GridLines = true;
+            PetView.Location = new Point(0, 0);
             PetView.Name = "PetView";
-            PetView.Size = new Size(459, 144);
-            PetView.TabIndex = 0;
+            PetView.Size = new Size(685, 437);
+            PetView.TabIndex = 1;
             PetView.UseCompatibleStateImageBehavior = false;
             PetView.View = View.Details;
             // 
-            // Pet
+            // PetName
             // 
-            Pet.Text = "Pet";
-            Pet.Width = 150;
+            PetName.Text = "Name";
+            PetName.Width = 150;
             // 
             // Level
             // 
@@ -678,29 +833,14 @@
             // Location
             // 
             Location.Text = "Location";
-            Location.Width = 250;
-            // 
-            // Pets
-            // 
-            Pets.Controls.Add(PetView);
-            Pets.Location = new Point(356, 285);
-            Pets.Name = "Pets";
-            Pets.Size = new Size(471, 171);
-            Pets.TabIndex = 46;
-            Pets.TabStop = false;
-            Pets.Text = "Pets";
+            Location.Width = 240;
             // 
             // PlayerInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(827, 446);
-            Controls.Add(Pets);
-            Controls.Add(SearchBox);
-            Controls.Add(groupBox4);
-            Controls.Add(groupBox3);
-            Controls.Add(groupBox2);
-            Controls.Add(groupBox1);
+            ClientSize = new Size(692, 471);
+            Controls.Add(tabControl1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "PlayerInfoForm";
             Text = "PlayerInfoForm";
@@ -712,11 +852,15 @@
             groupBox3.PerformLayout();
             groupBox4.ResumeLayout(false);
             groupBox4.PerformLayout();
+            tabControl1.ResumeLayout(false);
+            PlayerInfoTab.ResumeLayout(false);
             SearchBox.ResumeLayout(false);
             SearchBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)FlagSearchBox).EndInit();
-            ((System.ComponentModel.ISupportInitialize)QuestSearchBox).EndInit();
-            Pets.ResumeLayout(false);
+            QuestInfoTab.ResumeLayout(false);
+            ItemInfoTab.ResumeLayout(false);
+            MagicInfoTab.ResumeLayout(false);
+            PetInfoTab.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -749,10 +893,6 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button SafeZoneButton;
         private System.Windows.Forms.Button OpenAccountButton;
-        private Label ResultLabel;
-        private Label FlagSearch;
-        private Label QuestResultLabel;
-        private Label label10;
         private Label GameGold;
         private TextBox GameGoldTextBox;
         private Label Gold;
@@ -770,15 +910,35 @@
         private TextBox AMCBox;
         private TextBox ACBox;
         private Label StatsLabel;
+        private Button AccountBanButton;
+        private TabControl tabControl1;
+        private TabPage PlayerInfoTab;
+        private TabPage QuestInfoTab;
+        private TabPage ItemInfoTab;
+        private TabPage MagicInfoTab;
+        private TabPage PetInfoTab;
         private GroupBox SearchBox;
-        private NumericUpDown QuestSearchBox;
         private NumericUpDown FlagSearchBox;
+        private Label FlagSearch;
+        private Label ResultLabel;
+        private CustomFormControl.ListViewNF QuestInfoListViewNF;
+        private ColumnHeader QuestIndexHeader;
+        private ColumnHeader QuestStatusHeader;
+        private CustomFormControl.ListViewNF MagicListViewNF;
+        private ColumnHeader MagicNameHeader;
+        private ColumnHeader MagicLevelHeader;
+        private ColumnHeader MagicExperienceHeader;
+        private ColumnHeader Key;
         private ListView PetView;
-        private ColumnHeader Pet;
+        private ColumnHeader PetName;
         private ColumnHeader Level;
         private ColumnHeader HP;
         private ColumnHeader Location;
-        private GroupBox Pets;
-        private Button AccountBanButton;
+        private CustomFormControl.ListViewNF PlayerItemInfoListViewNF;
+        private ColumnHeader UIDHeader;
+        private ColumnHeader LocationHeader;
+        private ColumnHeader NameHeader;
+        private ColumnHeader CountHeader;
+        private ColumnHeader DurabilityHeader;
     }
 }
