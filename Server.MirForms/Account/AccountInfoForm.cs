@@ -537,6 +537,7 @@ namespace Server
             AccountInfoListView.EndUpdate();
         }
 
+        #region IPSearch
         private void CreationIPSearch_Click(object sender, EventArgs e)
         {
             string ipAddress = CreationIPTextBox.Text;
@@ -576,5 +577,6 @@ namespace Server
                 MessageBox.Show($"Error opening URL: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        #endregion
     }
 }

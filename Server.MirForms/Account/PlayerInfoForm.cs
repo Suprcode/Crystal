@@ -29,6 +29,7 @@ namespace Server
             UpdateTabs();
         }
 
+        #region PlayerInfo
         private void UpdatePlayerInfo()
         {
             IndexTextBox.Text = Character.Index.ToString();
@@ -59,7 +60,9 @@ namespace Server
 
             ChatBanExpiryTextBox.Text = Character.ChatBanExpiryDate.ToString();
         }
+        #endregion
 
+        #region PlayerPets
         private void UpdatePetInfo()
         {
             ClearPetInfo();
@@ -79,7 +82,9 @@ namespace Server
         {
             PetView.Items.Clear();
         }
+        #endregion
 
+        #region PlayerMagics
         private void UpdatePlayerMagics()
         {
             MagicListViewNF.Items.Clear();
@@ -128,7 +133,9 @@ namespace Server
                 MagicListViewNF.Items.Add(ListItem);
             }
         }
+        #endregion
 
+        #region PlayerQuests
         private void UpdatePlayerQuests()
         {
             QuestInfoListViewNF.Items.Clear();
@@ -141,7 +148,9 @@ namespace Server
                 QuestInfoListViewNF.Items.Add(item);
             }
         }
+        #endregion
 
+        #region PlayerItems
         private void UpdatePlayerItems()
         {
             PlayerItemInfoListViewNF.Items.Clear();
@@ -207,7 +216,7 @@ namespace Server
                 }
                 else
                 {
-                    storeItemListItem.SubItems.Add($"Storage II | Slot: [{i -79}]");
+                    storeItemListItem.SubItems.Add($"Storage II | Slot: [{i - 79}]");
                 }
 
                 storeItemListItem.SubItems.Add($"{storeItem.FriendlyName}");
@@ -234,7 +243,9 @@ namespace Server
                 PlayerItemInfoListViewNF.Items.Add(equipItemListItem);
             }
         }
+        #endregion
 
+        #region Buttons
         private void UpdateButton_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Are you sure you want to Update?", "Update.", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) != DialogResult.Yes) return;
@@ -330,9 +341,6 @@ namespace Server
             form.ShowDialog();
         }
 
-
-
-
         private void CurrentIPLabel_Click(object sender, EventArgs e)
         {
             string ipAddress = CurrentIPLabel.Text;
@@ -369,7 +377,9 @@ namespace Server
 
             Character.Player.Connection.SendDisconnect(6);
         }
+        #endregion
 
+        #region PlayerFlagSearch
         private void FlagSearchBox_ValueChanged_1(object sender, EventArgs e)
         {
             int flagIndex = 0;
@@ -404,7 +414,9 @@ namespace Server
                 ResultLabel.ForeColor = Color.Red;
             }
         }
-        
+        #endregion
+
+        #region UpdateTabs
         private void UpdateTabs()
         {
             UpdatePlayerInfo();
@@ -413,7 +425,9 @@ namespace Server
             UpdatePlayerMagics();
             UpdatePlayerQuests();
         }
+        #endregion
 
+        #region Tab Resize
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (tabControl1.SelectedIndex)
@@ -437,5 +451,6 @@ namespace Server
 
             UpdateTabs();
         }
+        #endregion
     }
 }
