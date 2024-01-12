@@ -20,6 +20,7 @@ namespace Server.Systems
             InitializeComponent();
         }
 
+        #region Delete Button
         private void DeleteButton_Click(object sender, EventArgs e)
         {
             if (MemberListView == null) return;
@@ -38,5 +39,6 @@ namespace Server.Systems
                 break;
             }
         }
+        #endregion
     }
 }
