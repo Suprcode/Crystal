@@ -444,6 +444,34 @@ namespace Server.MirObjects
             return true;
         }
 
+        public void DeleteMember(string name)
+        {//carefull this can lead to guild with no ranks or members(or no leader)
+            
+            GuildMember Member = null;
+            GuildRank MemberRank = null;
+            for (int i = 0; i < Ranks.Count; i++)
+                for (int j = 0; j < Ranks[i].Members.Count; j++)
+                {
+
+                    Member = Ranks[i].Members[j];
+                    MemberRank = Ranks[i];
+
+                    if (Member.Name != name) continue;
+
+                    MemberDeleted(Member.Name, (PlayerObject)Member.Player, true);
+                    if (Member.Player != null)
+                    {
+                        PlayerObject LeavingMember = (PlayerObject)Member.Player;
+                        LeavingMember.RefreshStats();
+                    }
+                    MemberRank.Members.Remove(Member);
+                    NeedSave = true;
+                    Info.Membercount--;
+
+                    break;
+                }
+        }
+
         public void MemberDeleted(string name, PlayerObject formerMember, bool kickSelf)
         {
             for (int i = 0; i < Ranks.Count; i++)

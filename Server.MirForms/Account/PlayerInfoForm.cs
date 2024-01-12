@@ -26,8 +26,7 @@ namespace Server
 
             Character = SMain.Envir.GetCharacterInfo(player.Name);
 
-            UpdatePlayerInfo();
-            UpdatePetInfo();
+            UpdateTabs();
         }
 
         private void UpdatePlayerInfo()
@@ -63,6 +62,8 @@ namespace Server
 
         private void UpdatePetInfo()
         {
+            ClearPetInfo();
+
             foreach (MonsterObject Pet in Character.Player.Pets)
             {
                 var listItem = new ListViewItem(Pet.Name) { Tag = Pet };
@@ -77,6 +78,161 @@ namespace Server
         private void ClearPetInfo()
         {
             PetView.Items.Clear();
+        }
+
+        private void UpdatePlayerMagics()
+        {
+            MagicListViewNF.Items.Clear();
+
+            for (int i = 0; i < Character.Magics.Count; i++)
+            {
+                UserMagic magic = Character.Magics[i];
+                if (magic == null) continue;
+
+                ListViewItem ListItem = new ListViewItem(magic.Info.Name.ToString()) { Tag = this };
+
+                ListItem.SubItems.Add(magic.Level.ToString());
+
+                switch (magic.Level)
+                {
+                    case 0:
+                        ListItem.SubItems.Add($"{magic.Experience}/{magic.Info.Need1}");
+                        break;
+                    case 1:
+                        ListItem.SubItems.Add($"{magic.Experience}/{magic.Info.Need2}");
+                        break;
+                    case 2:
+                        ListItem.SubItems.Add($"{magic.Experience}/{magic.Info.Need3}");
+                        break;
+                    case 3:
+                        ListItem.SubItems.Add($"-");
+                        break;
+                }
+
+                if (magic.Key > 8)
+                {
+                    var key = magic.Key % 8;
+
+                    ListItem.SubItems.Add(string.Format("CTRL+F{0}", key != 0 ? key : 8));
+                }
+                else if (magic.Key > 0)
+                {
+                    ListItem.SubItems.Add(string.Format("F{0}", magic.Key));
+                }
+                else if (magic.Key == 0)
+                {
+                    ListItem.SubItems.Add(string.Format("No Key", magic.Key));
+                }
+
+                ListItem.SubItems.Add(magic.Key.ToString());
+                MagicListViewNF.Items.Add(ListItem);
+            }
+        }
+
+        private void UpdatePlayerQuests()
+        {
+            QuestInfoListViewNF.Items.Clear();
+
+            foreach (int completedQuestID in Character.CompletedQuests)
+            {
+                // Display the completed quest in the listview
+                ListViewItem item = new ListViewItem(completedQuestID.ToString());
+                item.SubItems.Add("Completed");
+                QuestInfoListViewNF.Items.Add(item);
+            }
+        }
+
+        private void UpdatePlayerItems()
+        {
+            PlayerItemInfoListViewNF.Items.Clear();
+
+            if (Character == null) return;
+
+            for (int i = 0; i < Character.Inventory.Length; i++)
+            {
+                UserItem inventoryItem = Character.Inventory[i];
+
+                if (inventoryItem == null) continue;
+
+                ListViewItem inventoryItemListItem = new ListViewItem($"{inventoryItem.UniqueID}");
+
+                if (i < 6)
+                {
+                    inventoryItemListItem.SubItems.Add($"Belt | Slot: [{i + 1}]");
+                }
+                else if (i >= 6 && i < 46)
+                {
+                    inventoryItemListItem.SubItems.Add($"Inventory Bag I | Slot: [{i - 5}]");
+                }
+                else
+                {
+                    inventoryItemListItem.SubItems.Add($"Inventory Bag II | Slot: [{i - 45}]");
+                }
+
+                inventoryItemListItem.SubItems.Add($"{inventoryItem.FriendlyName}");
+                inventoryItemListItem.SubItems.Add($"{inventoryItem.Count}/{inventoryItem.Info.StackSize}");
+                inventoryItemListItem.SubItems.Add($"{inventoryItem.CurrentDura}/{inventoryItem.MaxDura}");
+
+                PlayerItemInfoListViewNF.Items.Add(inventoryItemListItem);
+            }
+
+
+            for (int i = 0; i < Character.QuestInventory.Length; i++)
+            {
+                UserItem questItem = Character.QuestInventory[i];
+
+                if (questItem == null) continue;
+
+                ListViewItem questItemListItem = new ListViewItem($"{questItem.UniqueID}");
+                questItemListItem.SubItems.Add($"Quest Bag | Slot: [{i + 1}]");
+
+                questItemListItem.SubItems.Add($"{questItem.FriendlyName}");
+                questItemListItem.SubItems.Add($"{questItem.Count}/{questItem.Info.StackSize}");
+                questItemListItem.SubItems.Add($"{questItem.CurrentDura}/{questItem.MaxDura}");
+
+                PlayerItemInfoListViewNF.Items.Add(questItemListItem);
+            }
+
+            for (int i = 0; i < Character.AccountInfo.Storage.Length; i++)
+            {
+                UserItem storeItem = Character.AccountInfo.Storage[i];
+
+                if (storeItem == null) continue;
+
+                ListViewItem storeItemListItem = new ListViewItem($"{storeItem.UniqueID}");
+
+                if (i < 80)
+                {
+                    storeItemListItem.SubItems.Add($"Storage I | Slot: [{i + 1}]");
+                }
+                else
+                {
+                    storeItemListItem.SubItems.Add($"Storage II | Slot: [{i -79}]");
+                }
+
+                storeItemListItem.SubItems.Add($"{storeItem.FriendlyName}");
+                storeItemListItem.SubItems.Add($"{storeItem.Count}/{storeItem.Info.StackSize}");
+                storeItemListItem.SubItems.Add($"{storeItem.CurrentDura}/{storeItem.MaxDura}");
+
+                PlayerItemInfoListViewNF.Items.Add(storeItemListItem);
+            }
+
+            for (int i = 0; i < Character.Equipment.Length; i++)
+            {
+                UserItem equipItem = Character.Equipment[i];
+
+                if (equipItem == null) continue;
+
+                ListViewItem equipItemListItem = new ListViewItem($"{equipItem.UniqueID}");
+
+                equipItemListItem.SubItems.Add($"Equipment | Slot: [{i + 1}]");
+
+                equipItemListItem.SubItems.Add($"{equipItem.FriendlyName}");
+                equipItemListItem.SubItems.Add($"{equipItem.Count}/{equipItem.Info.StackSize}");
+                equipItemListItem.SubItems.Add($"{equipItem.CurrentDura}/{equipItem.MaxDura}");
+
+                PlayerItemInfoListViewNF.Items.Add(equipItemListItem);
+            }
         }
 
         private void UpdateButton_Click(object sender, EventArgs e)
@@ -198,43 +354,23 @@ namespace Server
             }
         }
 
-        private void QuestSearchBox_ValueChanged(object sender, EventArgs e)
+        private void AccountBanButton_Click(object sender, EventArgs e)
         {
-            int questID = 0;
+            if (Character.AccountInfo.AdminAccount) return;
+            Character.AccountInfo.Banned = true;
 
-            if (string.IsNullOrWhiteSpace(QuestSearchBox.Value.ToString()))
-            {
-                QuestResultLabel.Text = string.Empty;
-                return;
-            }
-            else
-            {
-                questID = Decimal.ToInt32(QuestSearchBox.Value);
-            }
+            DateTime date;
 
-            if (questID < 1)
-            {
-                QuestResultLabel.Text = "Invalid Quest Index";
-                QuestResultLabel.ForeColor = Color.Red;
-                return;
-            }
+            DateTime.TryParse(ChatBanExpiryTextBox.Text, out date);
 
-            bool isQuestActive = Character.CurrentQuests.Any(x => x.Index == questID);
-            bool isQuestComplete = Character.CompletedQuests.Contains(questID);
+            Character.AccountInfo.ExpiryDate = date;
 
-            if (isQuestActive)
-            {
-                QuestResultLabel.Text = $"Quest {questID} is Active";
-                QuestResultLabel.ForeColor = Color.Blue;
-            }
-            else
-            {
-                QuestResultLabel.Text = $"Quest {questID} is {(isQuestComplete ? "Completed" : "Inactive")}";
-                QuestResultLabel.ForeColor = isQuestComplete ? Color.Green : Color.Red;
-            }
+            if (Character.Player == null) return;
+
+            Character.Player.Connection.SendDisconnect(6);
         }
 
-        private void FlagSearchBox_ValueChanged(object sender, EventArgs e)
+        private void FlagSearchBox_ValueChanged_1(object sender, EventArgs e)
         {
             int flagIndex = 0;
             if (string.IsNullOrWhiteSpace(FlagSearchBox.Value.ToString()))
@@ -268,21 +404,38 @@ namespace Server
                 ResultLabel.ForeColor = Color.Red;
             }
         }
-
-        private void AccountBanButton_Click(object sender, EventArgs e)
+        
+        private void UpdateTabs()
         {
-            if (Character.AccountInfo.AdminAccount) return;
-            Character.AccountInfo.Banned = true;
+            UpdatePlayerInfo();
+            UpdatePetInfo();
+            UpdatePlayerItems();
+            UpdatePlayerMagics();
+            UpdatePlayerQuests();
+        }
 
-            DateTime date;
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (tabControl1.SelectedIndex)
+            {
+                case 0:
+                    Size = new Size(725, 510);
+                    break;
+                case 1:
+                    Size = new Size(423, 510);
+                    break;
+                case 2:
+                    Size = new Size(597, 510);
+                    break;
+                case 3:
+                    Size = new Size(458, 510);
+                    break;
+                case 4:
+                    Size = new Size(663, 510);
+                    break;
+            }
 
-            DateTime.TryParse(ChatBanExpiryTextBox.Text, out date);
-
-            Character.AccountInfo.ExpiryDate = date;
-
-            if (Character.Player == null) return;
-
-            Character.Player.Connection.SendDisconnect(6);
+            UpdateTabs();
         }
     }
 }

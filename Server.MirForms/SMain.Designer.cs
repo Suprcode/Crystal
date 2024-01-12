@@ -52,6 +52,14 @@ namespace Server
             levelHeader = new ColumnHeader();
             classHeader = new ColumnHeader();
             genderHeader = new ColumnHeader();
+            tabPage5 = new TabPage();
+            GuildListView = new CustomFormControl.ListViewNF();
+            columnHeader1 = new ColumnHeader();
+            columnHeader2 = new ColumnHeader();
+            columnHeader3 = new ColumnHeader();
+            columnHeader4 = new ColumnHeader();
+            columnHeader5 = new ColumnHeader();
+            columnHeader6 = new ColumnHeader();
             StatusBar = new StatusStrip();
             PlayersLabel = new ToolStripStatusLabel();
             MonsterLabel = new ToolStripStatusLabel();
@@ -107,6 +115,7 @@ namespace Server
             tabPage3.SuspendLayout();
             groupBox1.SuspendLayout();
             tabPage4.SuspendLayout();
+            tabPage5.SuspendLayout();
             StatusBar.SuspendLayout();
             MainMenu.SuspendLayout();
             SuspendLayout();
@@ -117,6 +126,7 @@ namespace Server
             MainTabs.Controls.Add(tabPage2);
             MainTabs.Controls.Add(tabPage3);
             MainTabs.Controls.Add(tabPage4);
+            MainTabs.Controls.Add(tabPage5);
             MainTabs.Dock = DockStyle.Fill;
             MainTabs.Location = new Point(0, 24);
             MainTabs.Margin = new Padding(4, 3, 4, 3);
@@ -124,6 +134,7 @@ namespace Server
             MainTabs.SelectedIndex = 0;
             MainTabs.Size = new Size(566, 407);
             MainTabs.TabIndex = 5;
+            MainTabs.Click += MainTabs_Click;
             // 
             // tabPage1
             // 
@@ -286,6 +297,61 @@ namespace Server
             genderHeader.Text = "Gender";
             genderHeader.Width = 98;
             // 
+            // tabPage5
+            // 
+            tabPage5.Controls.Add(GuildListView);
+            tabPage5.Location = new Point(4, 24);
+            tabPage5.Name = "tabPage5";
+            tabPage5.Padding = new Padding(3);
+            tabPage5.Size = new Size(558, 379);
+            tabPage5.TabIndex = 4;
+            tabPage5.Text = "Guilds";
+            tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // GuildListView
+            // 
+            GuildListView.Activation = ItemActivation.OneClick;
+            GuildListView.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2, columnHeader3, columnHeader4, columnHeader5, columnHeader6 });
+            GuildListView.Dock = DockStyle.Fill;
+            GuildListView.FullRowSelect = true;
+            GuildListView.GridLines = true;
+            GuildListView.Location = new Point(3, 3);
+            GuildListView.Name = "GuildListView";
+            GuildListView.Size = new Size(552, 373);
+            GuildListView.TabIndex = 1;
+            GuildListView.UseCompatibleStateImageBehavior = false;
+            GuildListView.View = View.Details;
+            GuildListView.DoubleClick += GuildListView_DoubleClick;
+            // 
+            // columnHeader1
+            // 
+            columnHeader1.Text = "Index";
+            // 
+            // columnHeader2
+            // 
+            columnHeader2.Text = "Name";
+            columnHeader2.Width = 115;
+            // 
+            // columnHeader3
+            // 
+            columnHeader3.Text = "Leader";
+            columnHeader3.Width = 130;
+            // 
+            // columnHeader4
+            // 
+            columnHeader4.Text = "Member Count";
+            columnHeader4.Width = 100;
+            // 
+            // columnHeader5
+            // 
+            columnHeader5.Text = "Level";
+            columnHeader5.Width = 75;
+            // 
+            // columnHeader6
+            // 
+            columnHeader6.Text = "Gold";
+            columnHeader6.Width = 75;
+            // 
             // StatusBar
             // 
             StatusBar.Items.AddRange(new ToolStripItem[] { PlayersLabel, MonsterLabel, ConnectionsLabel, BlockedIPsLabel, CycleDelayLabel });
@@ -352,45 +418,45 @@ namespace Server
             // startServerToolStripMenuItem
             // 
             startServerToolStripMenuItem.Name = "startServerToolStripMenuItem";
-            startServerToolStripMenuItem.Size = new Size(180, 22);
+            startServerToolStripMenuItem.Size = new Size(164, 22);
             startServerToolStripMenuItem.Text = "Start Server";
             startServerToolStripMenuItem.Click += startServerToolStripMenuItem_Click;
             // 
             // stopServerToolStripMenuItem
             // 
             stopServerToolStripMenuItem.Name = "stopServerToolStripMenuItem";
-            stopServerToolStripMenuItem.Size = new Size(180, 22);
+            stopServerToolStripMenuItem.Size = new Size(164, 22);
             stopServerToolStripMenuItem.Text = "Stop Server";
             stopServerToolStripMenuItem.Click += stopServerToolStripMenuItem_Click;
             // 
             // rebootServerToolStripMenuItem
             // 
             rebootServerToolStripMenuItem.Name = "rebootServerToolStripMenuItem";
-            rebootServerToolStripMenuItem.Size = new Size(180, 22);
+            rebootServerToolStripMenuItem.Size = new Size(164, 22);
             rebootServerToolStripMenuItem.Text = "Reboot Server";
             rebootServerToolStripMenuItem.Click += rebootServerToolStripMenuItem_Click;
             // 
             // clearBlockedIPsToolStripMenuItem
             // 
             clearBlockedIPsToolStripMenuItem.Name = "clearBlockedIPsToolStripMenuItem";
-            clearBlockedIPsToolStripMenuItem.Size = new Size(180, 22);
+            clearBlockedIPsToolStripMenuItem.Size = new Size(164, 22);
             clearBlockedIPsToolStripMenuItem.Text = "Clear Blocked IPs";
             clearBlockedIPsToolStripMenuItem.Click += clearBlockedIPsToolStripMenuItem_Click;
             // 
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(177, 6);
+            toolStripMenuItem1.Size = new Size(161, 6);
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(177, 6);
+            toolStripSeparator1.Size = new Size(161, 6);
             // 
             // closeServerToolStripMenuItem
             // 
             closeServerToolStripMenuItem.Name = "closeServerToolStripMenuItem";
-            closeServerToolStripMenuItem.Size = new Size(180, 22);
+            closeServerToolStripMenuItem.Size = new Size(164, 22);
             closeServerToolStripMenuItem.Text = "Close Server";
             closeServerToolStripMenuItem.Click += closeServerToolStripMenuItem_Click;
             // 
@@ -398,27 +464,27 @@ namespace Server
             // 
             reloadToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { nPCsToolStripMenuItem, dropsToolStripMenuItem, lineMessageToolStripMenuItem });
             reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            reloadToolStripMenuItem.Size = new Size(180, 22);
+            reloadToolStripMenuItem.Size = new Size(164, 22);
             reloadToolStripMenuItem.Text = "Reload";
             // 
             // nPCsToolStripMenuItem
             // 
             nPCsToolStripMenuItem.Name = "nPCsToolStripMenuItem";
-            nPCsToolStripMenuItem.Size = new Size(180, 22);
+            nPCsToolStripMenuItem.Size = new Size(145, 22);
             nPCsToolStripMenuItem.Text = "NPCs";
             nPCsToolStripMenuItem.Click += nPCsToolStripMenuItem_Click;
             // 
             // dropsToolStripMenuItem
             // 
             dropsToolStripMenuItem.Name = "dropsToolStripMenuItem";
-            dropsToolStripMenuItem.Size = new Size(180, 22);
+            dropsToolStripMenuItem.Size = new Size(145, 22);
             dropsToolStripMenuItem.Text = "Drops";
             dropsToolStripMenuItem.Click += dropsToolStripMenuItem_Click;
             // 
             // lineMessageToolStripMenuItem
             // 
             lineMessageToolStripMenuItem.Name = "lineMessageToolStripMenuItem";
-            lineMessageToolStripMenuItem.Size = new Size(180, 22);
+            lineMessageToolStripMenuItem.Size = new Size(145, 22);
             lineMessageToolStripMenuItem.Text = "Line Message";
             lineMessageToolStripMenuItem.Click += lineMessageToolStripMenuItem_Click;
             // 
@@ -659,6 +725,7 @@ namespace Server
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             tabPage4.ResumeLayout(false);
+            tabPage5.ResumeLayout(false);
             StatusBar.ResumeLayout(false);
             StatusBar.PerformLayout();
             MainMenu.ResumeLayout(false);
@@ -735,6 +802,14 @@ namespace Server
         private ToolStripMenuItem nPCsToolStripMenuItem;
         private ToolStripMenuItem dropsToolStripMenuItem;
         private ToolStripMenuItem lineMessageToolStripMenuItem;
+        private TabPage tabPage5;
+        private CustomFormControl.ListViewNF GuildListView;
+        private ColumnHeader columnHeader1;
+        private ColumnHeader columnHeader2;
+        private ColumnHeader columnHeader3;
+        private ColumnHeader columnHeader4;
+        private ColumnHeader columnHeader5;
+        private ColumnHeader columnHeader6;
     }
 }
 
