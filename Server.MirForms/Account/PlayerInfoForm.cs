@@ -32,11 +32,9 @@ namespace Server
         #region PlayerInfo
         private void UpdatePlayerInfo()
         {
+            if (Character?.Player == null) return;
 
-            if (Character == null) return;
-            if (Character.Player == null) return;
-
-                IndexTextBox.Text = Character.Index.ToString();
+            IndexTextBox.Text = Character.Index.ToString();
             NameTextBox.Text = Character.Name;
             LevelTextBox.Text = Character.Level.ToString();
             PKPointsTextBox.Text = Character.PKPoints.ToString();
@@ -44,7 +42,7 @@ namespace Server
             GameGoldTextBox.Text = String.Format("{0:n0}", Character.AccountInfo.Credit);
 
 
-            if (Character.Player != null)
+            if (Character?.Player != null)
             {
                 CurrentMapLabel.Text = $"{Character.Player.CurrentMap.Info.Title} {Character.Player.CurrentMap.Info.FileName} {Character.CurrentLocation.X}:{Character.CurrentLocation.Y}";
 
@@ -75,8 +73,7 @@ namespace Server
         {
             ClearPetInfo();
 
-            if (Character == null) return;
-            if (Character.Player == null) return;
+            if (Character?.Player == null) return;
 
             foreach (MonsterObject Pet in Character.Player.Pets)
             {
@@ -259,8 +256,7 @@ namespace Server
         #region Buttons
         private void UpdateButton_Click(object sender, EventArgs e)
         {
-            if (Character == null) return;
-            if (Character.Player == null) return;
+            if (Character?.Player == null) return;
 
             if (MessageBox.Show("Are you sure you want to Update?", "Update.", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) != DialogResult.Yes) return;
 
@@ -285,8 +281,7 @@ namespace Server
 
         private void SendMessageButton_Click(object sender, EventArgs e)
         {
-            if (Character == null) return;
-            if (Character.Player == null) return;
+            if (Character?.Player == null) return;
 
             if (SendMessageTextBox.Text.Length < 1) return;
 
@@ -295,8 +290,7 @@ namespace Server
 
         private void KickButton_Click(object sender, EventArgs e)
         {
-            if (Character == null) return;
-            if (Character.Player == null) return;
+            if (Character?.Player == null) return;
 
             Character.Player.Connection.SendDisconnect(4);
             //also update account so player can't log back in for x minutes?
@@ -304,16 +298,14 @@ namespace Server
 
         private void KillButton_Click(object sender, EventArgs e)
         {
-            if (Character == null) return;
-            if (Character.Player == null) return;
+            if (Character?.Player == null) return;
 
             Character.Player.Die();
         }
 
         private void KillPetsButton_Click(object sender, EventArgs e)
         {
-            if (Character == null) return;
-            if (Character.Player == null) return;
+            if (Character?.Player == null) return;
 
             for (int i = Character.Player.Pets.Count - 1; i >= 0; i--)
                 Character.Player.Pets[i].Die();
@@ -322,16 +314,14 @@ namespace Server
         }
         private void SafeZoneButton_Click(object sender, EventArgs e)
         {
-            if (Character == null) return;
-            if (Character.Player == null) return;
+            if (Character?.Player == null) return;
 
             Character.Player.Teleport(SMain.Envir.GetMap(Character.BindMapIndex), Character.BindLocation);
         }
 
         private void ChatBanButton_Click(object sender, EventArgs e)
         {
-            if (Character == null) return;
-            if (Character.Player == null) return;
+            if (Character?.Player == null) return;
             if (Character.AccountInfo.AdminAccount) return;
 
             Character.ChatBanned = true;
@@ -359,8 +349,7 @@ namespace Server
 
         private void OpenAccountButton_Click(object sender, EventArgs e)
         {
-            if (Character == null) return;
-            if (Character.Player == null) return;
+            if (Character?.Player == null) return;
 
             string accountId = Character.AccountInfo.AccountID;
 
@@ -392,8 +381,7 @@ namespace Server
 
         private void AccountBanButton_Click(object sender, EventArgs e)
         {
-            if (Character == null) return;
-            if (Character.Player == null) return;
+            if (Character?.Player == null) return;
             if (Character.AccountInfo.AdminAccount) return;
 
             Character.AccountInfo.Banned = true;
