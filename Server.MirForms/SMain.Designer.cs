@@ -134,7 +134,7 @@ namespace Server
             MainTabs.SelectedIndex = 0;
             MainTabs.Size = new Size(566, 407);
             MainTabs.TabIndex = 5;
-            MainTabs.Click += MainTabs_Click;
+            MainTabs.SelectedIndexChanged += MainTabs_SelectedIndexChanged;
             // 
             // tabPage1
             // 
