@@ -32,8 +32,6 @@ namespace Server
         #region PlayerInfo
         private void UpdatePlayerInfo()
         {
-            if (Character?.Player == null) return;
-
             IndexTextBox.Text = Character.Index.ToString();
             NameTextBox.Text = Character.Name;
             LevelTextBox.Text = Character.Level.ToString();
