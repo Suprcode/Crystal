@@ -462,6 +462,7 @@ namespace Server
             Envir.ReloadLineMessages();
         }
 
+        #region Guild View Tab
         public void ProcessGuildViewTab(bool forced = false)
         {
             if (GuildListView.Items.Count != Envir.GuildList.Count || forced == true)
@@ -480,13 +481,13 @@ namespace Server
                     }
                     else
                     {
-                        tempItem.SubItems.Add("NO LEADER (DELETED)");
+                        tempItem.SubItems.Add("DELETED");
                         tempItem.ForeColor = Color.Red;
                     }
 
                     tempItem.SubItems.Add(guild.Membercount.ToString());
                     tempItem.SubItems.Add(guild.Level.ToString());
-                    tempItem.SubItems.Add(guild.Gold.ToString());
+                    tempItem.SubItems.Add($"{guild.Gold}");
 
                     GuildListView.Items.Add(tempItem);
                 }
@@ -542,6 +543,7 @@ namespace Server
 
             form.ShowDialog();
         }
+        #endregion
 
         private void MainTabs_SelectedIndexChanged(object sender, EventArgs e)
         {
