@@ -254,8 +254,6 @@ namespace Server
         #region Buttons
         private void UpdateButton_Click(object sender, EventArgs e)
         {
-            if (Character?.Player == null) return;
-
             if (MessageBox.Show("Are you sure you want to Update?", "Update.", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) != DialogResult.Yes) return;
 
             SaveChanges();
@@ -347,8 +345,6 @@ namespace Server
 
         private void OpenAccountButton_Click(object sender, EventArgs e)
         {
-            if (Character?.Player == null) return;
-
             string accountId = Character.AccountInfo.AccountID;
 
             AccountInfoForm form = new AccountInfoForm(accountId, true);
@@ -379,7 +375,6 @@ namespace Server
 
         private void AccountBanButton_Click(object sender, EventArgs e)
         {
-            if (Character?.Player == null) return;
             if (Character.AccountInfo.AdminAccount) return;
 
             Character.AccountInfo.Banned = true;
@@ -390,8 +385,10 @@ namespace Server
 
             Character.AccountInfo.ExpiryDate = date;
 
-
-            Character.Player.Connection.SendDisconnect(6);
+            if (Character?.Player != null)
+            {
+                Character.Player.Connection.SendDisconnect(6);
+            }
         }
         #endregion
 
