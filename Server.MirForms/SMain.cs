@@ -110,8 +110,8 @@ namespace Server
                     ChatLogTextBox.AppendText(message);
                 }
 
-                ProcessPlayersOnlineTab();
-                ProcessGuildViewTab();
+                ProcessPlayersOnlineTab(false);
+                ProcessGuildViewTab(false);
             }
             catch (Exception ex)
             {
@@ -131,9 +131,9 @@ namespace Server
             return ListItem;
         }
 
-        private void ProcessPlayersOnlineTab()
+        private void ProcessPlayersOnlineTab(bool forced = false)
         {
-            if (PlayersOnlineListView.Items.Count != Envir.Players.Count)
+            if (PlayersOnlineListView.Items.Count != Envir.Players.Count || forced == true)
             {
                 PlayersOnlineListView.Items.Clear();
 
@@ -462,9 +462,9 @@ namespace Server
             Envir.ReloadLineMessages();
         }
 
-        public void ProcessGuildViewTab()
+        public void ProcessGuildViewTab(bool forced = false)
         {
-            if (GuildListView.Items.Count != Envir.GuildList.Count)
+            if (GuildListView.Items.Count != Envir.GuildList.Count || forced == true)
             {
                 GuildListView.Items.Clear();
 
@@ -491,11 +491,6 @@ namespace Server
                     GuildListView.Items.Add(tempItem);
                 }
             }
-        }
-
-        private void MainTabs_Click(object sender, EventArgs e)
-        {
-            ProcessGuildViewTab();
         }
 
         private void GuildListView_DoubleClick(object sender, EventArgs e)
@@ -546,6 +541,12 @@ namespace Server
                 }
 
             form.ShowDialog();
+        }
+
+        private void MainTabs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ProcessPlayersOnlineTab(true);
+            ProcessGuildViewTab(true);
         }
     }
 }
