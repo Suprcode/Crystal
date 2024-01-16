@@ -173,8 +173,8 @@ namespace Server.MirDatabase
         }
         public string ToText()
         {
-            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}",
-                FileName, EditEnvir.MapInfoList.Where(d => d.Index == MapIndex).FirstOrDefault().FileName, Location.X, Location.Y, Name, Image, Rate, ShowOnBigMap, BigMapIcon, CanTeleportTo);
+            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
+                FileName, EditEnvir.MapInfoList.Where(d => d.Index == MapIndex).FirstOrDefault().FileName, Location.X, Location.Y, Name, Image, Rate, ShowOnBigMap, BigMapIcon, CanTeleportTo, ConquestVisible);
         }
 
         public override string ToString()
