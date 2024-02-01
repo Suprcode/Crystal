@@ -29,540 +29,698 @@ namespace Server
         /// </summary>
         private void InitializeComponent()
         {
-            this.CreateButton = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.FilterTextBox = new System.Windows.Forms.TextBox();
-            this.RefreshButton = new System.Windows.Forms.Button();
-            this.AccountInfoPanel = new System.Windows.Forms.Panel();
-            this.setPasswordButton = new System.Windows.Forms.Button();
-            this.AdminCheckBox = new System.Windows.Forms.CheckBox();
-            this.PermBanButton = new System.Windows.Forms.Button();
-            this.WeekBanButton = new System.Windows.Forms.Button();
-            this.DayBanButton = new System.Windows.Forms.Button();
-            this.BannedCheckBox = new System.Windows.Forms.CheckBox();
-            this.ExpiryDateTextBox = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.BanReasonTextBox = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.LastDateTextBox = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.LastIPTextBox = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.CreationDateTextBox = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.CreationIPTextBox = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.EMailTextBox = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.AnswerTextBox = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.QuestionTextBox = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.BirthDateTextBox = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.UserNameTextBox = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.AccountIDTextBox = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.FilterPlayerTextBox = new System.Windows.Forms.TextBox();
-            this.AccountInfoListView = new CustomFormControl.ListViewNF();
-            this.indexHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.accountIDHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.userNameHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.adminHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.bannedHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.banReasonHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.expiryDateHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.MatchFilterCheckBox = new System.Windows.Forms.CheckBox();
-            this.WipeCharButton = new System.Windows.Forms.Button();
-            this.PasswordChangeCheckBox = new System.Windows.Forms.CheckBox();
-            this.AccountInfoPanel.SuspendLayout();
-            this.SuspendLayout();
+            CreateButton = new Button();
+            label1 = new Label();
+            FilterTextBox = new TextBox();
+            RefreshButton = new Button();
+            AccountInfoPanel = new Panel();
+            CharactersListView = new ListView();
+            characterName = new ColumnHeader();
+            characterClass = new ColumnHeader();
+            characterLevel = new ColumnHeader();
+            characterPKPoints = new ColumnHeader();
+            characterGuild = new ColumnHeader();
+            characterStatus = new ColumnHeader();
+            LastIPSearch = new Button();
+            CreationIPSearch = new Button();
+            PasswordChangeCheckBox = new CheckBox();
+            setPasswordButton = new Button();
+            AdminCheckBox = new CheckBox();
+            PermBanButton = new Button();
+            WeekBanButton = new Button();
+            DayBanButton = new Button();
+            BannedCheckBox = new CheckBox();
+            ExpiryDateTextBox = new TextBox();
+            label14 = new Label();
+            BanReasonTextBox = new TextBox();
+            label13 = new Label();
+            LastDateTextBox = new TextBox();
+            label11 = new Label();
+            LastIPTextBox = new TextBox();
+            label12 = new Label();
+            CreationDateTextBox = new TextBox();
+            label9 = new Label();
+            CreationIPTextBox = new TextBox();
+            label10 = new Label();
+            EMailTextBox = new TextBox();
+            label8 = new Label();
+            AnswerTextBox = new TextBox();
+            label7 = new Label();
+            QuestionTextBox = new TextBox();
+            label6 = new Label();
+            BirthDateTextBox = new TextBox();
+            label5 = new Label();
+            UserNameTextBox = new TextBox();
+            label4 = new Label();
+            label3 = new Label();
+            AccountIDTextBox = new TextBox();
+            label2 = new Label();
+            label15 = new Label();
+            FilterPlayerTextBox = new TextBox();
+            AccountInfoListView = new CustomFormControl.ListViewNF();
+            indexHeader = new ColumnHeader();
+            accountIDHeader = new ColumnHeader();
+            userNameHeader = new ColumnHeader();
+            adminHeader = new ColumnHeader();
+            bannedHeader = new ColumnHeader();
+            banReasonHeader = new ColumnHeader();
+            expiryDateHeader = new ColumnHeader();
+            Gold = new ColumnHeader();
+            GameGold = new ColumnHeader();
+            MatchFilterCheckBox = new CheckBox();
+            WipeCharButton = new Button();
+            ServerGoldTextBox = new TextBox();
+            TotalServerGold = new Label();
+            ServerCreditTextBox = new TextBox();
+            TotalServerCredit = new Label();
+            AccountInfoPanel.SuspendLayout();
+            SuspendLayout();
             // 
             // CreateButton
             // 
-            this.CreateButton.Location = new System.Drawing.Point(12, 12);
-            this.CreateButton.Name = "CreateButton";
-            this.CreateButton.Size = new System.Drawing.Size(75, 23);
-            this.CreateButton.TabIndex = 9;
-            this.CreateButton.Text = "Create";
-            this.CreateButton.UseVisualStyleBackColor = true;
-            this.CreateButton.Click += new System.EventHandler(this.CreateButton_Click);
+            CreateButton.Location = new Point(14, 14);
+            CreateButton.Margin = new Padding(4, 3, 4, 3);
+            CreateButton.Name = "CreateButton";
+            CreateButton.Size = new Size(88, 27);
+            CreateButton.TabIndex = 9;
+            CreateButton.Text = "Create";
+            CreateButton.UseVisualStyleBackColor = true;
+            CreateButton.Click += CreateButton_Click;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 42);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(89, 13);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "Filter Account ID:";
+            label1.AutoSize = true;
+            label1.Location = new Point(14, 48);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(98, 15);
+            label1.TabIndex = 11;
+            label1.Text = "Filter Account ID:";
             // 
             // FilterTextBox
             // 
-            this.FilterTextBox.Location = new System.Drawing.Point(107, 39);
-            this.FilterTextBox.Name = "FilterTextBox";
-            this.FilterTextBox.Size = new System.Drawing.Size(100, 20);
-            this.FilterTextBox.TabIndex = 12;
+            FilterTextBox.Location = new Point(125, 45);
+            FilterTextBox.Margin = new Padding(4, 3, 4, 3);
+            FilterTextBox.Name = "FilterTextBox";
+            FilterTextBox.Size = new Size(116, 23);
+            FilterTextBox.TabIndex = 12;
             // 
             // RefreshButton
             // 
-            this.RefreshButton.Location = new System.Drawing.Point(390, 37);
-            this.RefreshButton.Name = "RefreshButton";
-            this.RefreshButton.Size = new System.Drawing.Size(75, 23);
-            this.RefreshButton.TabIndex = 13;
-            this.RefreshButton.Text = "Refresh";
-            this.RefreshButton.UseVisualStyleBackColor = true;
-            this.RefreshButton.Click += new System.EventHandler(this.RefreshButton_Click);
+            RefreshButton.Location = new Point(455, 43);
+            RefreshButton.Margin = new Padding(4, 3, 4, 3);
+            RefreshButton.Name = "RefreshButton";
+            RefreshButton.Size = new Size(88, 27);
+            RefreshButton.TabIndex = 13;
+            RefreshButton.Text = "Refresh";
+            RefreshButton.UseVisualStyleBackColor = true;
+            RefreshButton.Click += RefreshButton_Click;
             // 
             // AccountInfoPanel
             // 
-            this.AccountInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.AccountInfoPanel.Controls.Add(this.PasswordChangeCheckBox);
-            this.AccountInfoPanel.Controls.Add(this.setPasswordButton);
-            this.AccountInfoPanel.Controls.Add(this.AdminCheckBox);
-            this.AccountInfoPanel.Controls.Add(this.PermBanButton);
-            this.AccountInfoPanel.Controls.Add(this.WeekBanButton);
-            this.AccountInfoPanel.Controls.Add(this.DayBanButton);
-            this.AccountInfoPanel.Controls.Add(this.BannedCheckBox);
-            this.AccountInfoPanel.Controls.Add(this.ExpiryDateTextBox);
-            this.AccountInfoPanel.Controls.Add(this.label14);
-            this.AccountInfoPanel.Controls.Add(this.BanReasonTextBox);
-            this.AccountInfoPanel.Controls.Add(this.label13);
-            this.AccountInfoPanel.Controls.Add(this.LastDateTextBox);
-            this.AccountInfoPanel.Controls.Add(this.label11);
-            this.AccountInfoPanel.Controls.Add(this.LastIPTextBox);
-            this.AccountInfoPanel.Controls.Add(this.label12);
-            this.AccountInfoPanel.Controls.Add(this.CreationDateTextBox);
-            this.AccountInfoPanel.Controls.Add(this.label9);
-            this.AccountInfoPanel.Controls.Add(this.CreationIPTextBox);
-            this.AccountInfoPanel.Controls.Add(this.label10);
-            this.AccountInfoPanel.Controls.Add(this.EMailTextBox);
-            this.AccountInfoPanel.Controls.Add(this.label8);
-            this.AccountInfoPanel.Controls.Add(this.AnswerTextBox);
-            this.AccountInfoPanel.Controls.Add(this.label7);
-            this.AccountInfoPanel.Controls.Add(this.QuestionTextBox);
-            this.AccountInfoPanel.Controls.Add(this.label6);
-            this.AccountInfoPanel.Controls.Add(this.BirthDateTextBox);
-            this.AccountInfoPanel.Controls.Add(this.label5);
-            this.AccountInfoPanel.Controls.Add(this.UserNameTextBox);
-            this.AccountInfoPanel.Controls.Add(this.label4);
-            this.AccountInfoPanel.Controls.Add(this.label3);
-            this.AccountInfoPanel.Controls.Add(this.AccountIDTextBox);
-            this.AccountInfoPanel.Controls.Add(this.label2);
-            this.AccountInfoPanel.Location = new System.Drawing.Point(12, 240);
-            this.AccountInfoPanel.Name = "AccountInfoPanel";
-            this.AccountInfoPanel.Size = new System.Drawing.Size(616, 209);
-            this.AccountInfoPanel.TabIndex = 14;
-            // 
-            // setPasswordButton
-            // 
-            this.setPasswordButton.Location = new System.Drawing.Point(95, 41);
-            this.setPasswordButton.Name = "setPasswordButton";
-            this.setPasswordButton.Size = new System.Drawing.Size(84, 23);
-            this.setPasswordButton.TabIndex = 33;
-            this.setPasswordButton.Text = "Set Password";
-            this.setPasswordButton.UseVisualStyleBackColor = true;
-            this.setPasswordButton.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // AdminCheckBox
-            // 
-            this.AdminCheckBox.AutoSize = true;
-            this.AdminCheckBox.Location = new System.Drawing.Point(207, 17);
-            this.AdminCheckBox.Name = "AdminCheckBox";
-            this.AdminCheckBox.Size = new System.Drawing.Size(86, 17);
-            this.AdminCheckBox.TabIndex = 32;
-            this.AdminCheckBox.Text = "Administrator";
-            this.AdminCheckBox.UseVisualStyleBackColor = true;
-            this.AdminCheckBox.CheckedChanged += new System.EventHandler(this.AdminCheckBox_CheckedChanged);
-            // 
-            // PermBanButton
-            // 
-            this.PermBanButton.Location = new System.Drawing.Point(511, 178);
-            this.PermBanButton.Name = "PermBanButton";
-            this.PermBanButton.Size = new System.Drawing.Size(75, 23);
-            this.PermBanButton.TabIndex = 31;
-            this.PermBanButton.Text = "Perm Ban";
-            this.PermBanButton.UseVisualStyleBackColor = true;
-            this.PermBanButton.Click += new System.EventHandler(this.PermBanButton_Click);
-            // 
-            // WeekBanButton
-            // 
-            this.WeekBanButton.Location = new System.Drawing.Point(430, 180);
-            this.WeekBanButton.Name = "WeekBanButton";
-            this.WeekBanButton.Size = new System.Drawing.Size(75, 23);
-            this.WeekBanButton.TabIndex = 30;
-            this.WeekBanButton.Text = "Week Ban";
-            this.WeekBanButton.UseVisualStyleBackColor = true;
-            this.WeekBanButton.Click += new System.EventHandler(this.WeekBanButton_Click);
-            // 
-            // DayBanButton
-            // 
-            this.DayBanButton.Location = new System.Drawing.Point(349, 180);
-            this.DayBanButton.Name = "DayBanButton";
-            this.DayBanButton.Size = new System.Drawing.Size(75, 23);
-            this.DayBanButton.TabIndex = 29;
-            this.DayBanButton.Text = "Day Ban";
-            this.DayBanButton.UseVisualStyleBackColor = true;
-            this.DayBanButton.Click += new System.EventHandler(this.DayBanButton_Click);
-            // 
-            // BannedCheckBox
-            // 
-            this.BannedCheckBox.AutoSize = true;
-            this.BannedCheckBox.Location = new System.Drawing.Point(523, 156);
-            this.BannedCheckBox.Name = "BannedCheckBox";
-            this.BannedCheckBox.Size = new System.Drawing.Size(63, 17);
-            this.BannedCheckBox.TabIndex = 28;
-            this.BannedCheckBox.Text = "Banned";
-            this.BannedCheckBox.UseVisualStyleBackColor = true;
-            this.BannedCheckBox.CheckedChanged += new System.EventHandler(this.BannedCheckBox_CheckedChanged);
-            // 
-            // ExpiryDateTextBox
-            // 
-            this.ExpiryDateTextBox.Location = new System.Drawing.Point(394, 154);
-            this.ExpiryDateTextBox.Name = "ExpiryDateTextBox";
-            this.ExpiryDateTextBox.Size = new System.Drawing.Size(120, 20);
-            this.ExpiryDateTextBox.TabIndex = 27;
-            this.ExpiryDateTextBox.TextChanged += new System.EventHandler(this.ExpiryDateTextBox_TextChanged);
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(324, 157);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(64, 13);
-            this.label14.TabIndex = 26;
-            this.label14.Text = "Expiry Date:";
-            // 
-            // BanReasonTextBox
-            // 
-            this.BanReasonTextBox.Location = new System.Drawing.Point(394, 128);
-            this.BanReasonTextBox.Name = "BanReasonTextBox";
-            this.BanReasonTextBox.Size = new System.Drawing.Size(192, 20);
-            this.BanReasonTextBox.TabIndex = 25;
-            this.BanReasonTextBox.TextChanged += new System.EventHandler(this.BanReasonTextBox_TextChanged);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(319, 131);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(69, 13);
-            this.label13.TabIndex = 24;
-            this.label13.Text = "Ban Reason:";
-            // 
-            // LastDateTextBox
-            // 
-            this.LastDateTextBox.Location = new System.Drawing.Point(394, 95);
-            this.LastDateTextBox.Name = "LastDateTextBox";
-            this.LastDateTextBox.ReadOnly = true;
-            this.LastDateTextBox.Size = new System.Drawing.Size(120, 20);
-            this.LastDateTextBox.TabIndex = 23;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(332, 98);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(56, 13);
-            this.label11.TabIndex = 22;
-            this.label11.Text = "Last Date:";
-            // 
-            // LastIPTextBox
-            // 
-            this.LastIPTextBox.Location = new System.Drawing.Point(394, 69);
-            this.LastIPTextBox.Name = "LastIPTextBox";
-            this.LastIPTextBox.ReadOnly = true;
-            this.LastIPTextBox.Size = new System.Drawing.Size(100, 20);
-            this.LastIPTextBox.TabIndex = 21;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(345, 72);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(43, 13);
-            this.label12.TabIndex = 20;
-            this.label12.Text = "Last IP:";
-            // 
-            // CreationDateTextBox
-            // 
-            this.CreationDateTextBox.Location = new System.Drawing.Point(394, 43);
-            this.CreationDateTextBox.Name = "CreationDateTextBox";
-            this.CreationDateTextBox.ReadOnly = true;
-            this.CreationDateTextBox.Size = new System.Drawing.Size(120, 20);
-            this.CreationDateTextBox.TabIndex = 19;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(313, 46);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(75, 13);
-            this.label9.TabIndex = 18;
-            this.label9.Text = "Creation Date:";
-            // 
-            // CreationIPTextBox
-            // 
-            this.CreationIPTextBox.Location = new System.Drawing.Point(394, 17);
-            this.CreationIPTextBox.Name = "CreationIPTextBox";
-            this.CreationIPTextBox.ReadOnly = true;
-            this.CreationIPTextBox.Size = new System.Drawing.Size(100, 20);
-            this.CreationIPTextBox.TabIndex = 17;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(326, 20);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(62, 13);
-            this.label10.TabIndex = 16;
-            this.label10.Text = "Creation IP:";
-            // 
-            // EMailTextBox
-            // 
-            this.EMailTextBox.Location = new System.Drawing.Point(95, 180);
-            this.EMailTextBox.Name = "EMailTextBox";
-            this.EMailTextBox.Size = new System.Drawing.Size(192, 20);
-            this.EMailTextBox.TabIndex = 15;
-            this.EMailTextBox.TextChanged += new System.EventHandler(this.EMailTextBox_TextChanged);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(12, 183);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(77, 13);
-            this.label8.TabIndex = 14;
-            this.label8.Text = "EMail Address:";
-            // 
-            // AnswerTextBox
-            // 
-            this.AnswerTextBox.Location = new System.Drawing.Point(95, 154);
-            this.AnswerTextBox.Name = "AnswerTextBox";
-            this.AnswerTextBox.Size = new System.Drawing.Size(132, 20);
-            this.AnswerTextBox.TabIndex = 13;
-            this.AnswerTextBox.TextChanged += new System.EventHandler(this.AnswerTextBox_TextChanged);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(44, 157);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(45, 13);
-            this.label7.TabIndex = 12;
-            this.label7.Text = "Answer:";
-            // 
-            // QuestionTextBox
-            // 
-            this.QuestionTextBox.Location = new System.Drawing.Point(95, 128);
-            this.QuestionTextBox.Name = "QuestionTextBox";
-            this.QuestionTextBox.Size = new System.Drawing.Size(132, 20);
-            this.QuestionTextBox.TabIndex = 11;
-            this.QuestionTextBox.TextChanged += new System.EventHandler(this.QuestionTextBox_TextChanged);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(37, 131);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(52, 13);
-            this.label6.TabIndex = 10;
-            this.label6.Text = "Question:";
-            // 
-            // BirthDateTextBox
-            // 
-            this.BirthDateTextBox.Location = new System.Drawing.Point(95, 102);
-            this.BirthDateTextBox.Name = "BirthDateTextBox";
-            this.BirthDateTextBox.Size = new System.Drawing.Size(73, 20);
-            this.BirthDateTextBox.TabIndex = 9;
-            this.BirthDateTextBox.TextChanged += new System.EventHandler(this.BirthDateTextBox_TextChanged);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(32, 105);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(57, 13);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "Birth Date:";
-            // 
-            // UserNameTextBox
-            // 
-            this.UserNameTextBox.Location = new System.Drawing.Point(95, 76);
-            this.UserNameTextBox.Name = "UserNameTextBox";
-            this.UserNameTextBox.Size = new System.Drawing.Size(100, 20);
-            this.UserNameTextBox.TabIndex = 7;
-            this.UserNameTextBox.TextChanged += new System.EventHandler(this.UserNameTextBox_TextChanged);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(26, 79);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(63, 13);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "User Name:";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(33, 43);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(56, 13);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Password:";
-            // 
-            // AccountIDTextBox
-            // 
-            this.AccountIDTextBox.Location = new System.Drawing.Point(95, 14);
-            this.AccountIDTextBox.Name = "AccountIDTextBox";
-            this.AccountIDTextBox.Size = new System.Drawing.Size(100, 20);
-            this.AccountIDTextBox.TabIndex = 3;
-            this.AccountIDTextBox.TextChanged += new System.EventHandler(this.AccountIDTextBox_TextChanged);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(25, 17);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(64, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Account ID:";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(214, 42);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(64, 13);
-            this.label15.TabIndex = 15;
-            this.label15.Text = "Filter Player:";
-            // 
-            // FilterPlayerTextBox
-            // 
-            this.FilterPlayerTextBox.Location = new System.Drawing.Point(284, 39);
-            this.FilterPlayerTextBox.Name = "FilterPlayerTextBox";
-            this.FilterPlayerTextBox.Size = new System.Drawing.Size(100, 20);
-            this.FilterPlayerTextBox.TabIndex = 16;
-            // 
-            // AccountInfoListView
-            // 
-            this.AccountInfoListView.AllowColumnReorder = true;
-            this.AccountInfoListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.AccountInfoListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.indexHeader,
-            this.accountIDHeader,
-            this.userNameHeader,
-            this.adminHeader,
-            this.bannedHeader,
-            this.banReasonHeader,
-            this.expiryDateHeader});
-            this.AccountInfoListView.FullRowSelect = true;
-            this.AccountInfoListView.GridLines = true;
-            this.AccountInfoListView.HideSelection = false;
-            this.AccountInfoListView.Location = new System.Drawing.Point(10, 65);
-            this.AccountInfoListView.Name = "AccountInfoListView";
-            this.AccountInfoListView.Size = new System.Drawing.Size(618, 169);
-            this.AccountInfoListView.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this.AccountInfoListView.TabIndex = 8;
-            this.AccountInfoListView.UseCompatibleStateImageBehavior = false;
-            this.AccountInfoListView.View = System.Windows.Forms.View.Details;
-            this.AccountInfoListView.SelectedIndexChanged += new System.EventHandler(this.AccountInfoListView_SelectedIndexChanged);
-            // 
-            // indexHeader
-            // 
-            this.indexHeader.Text = "Index";
-            // 
-            // accountIDHeader
-            // 
-            this.accountIDHeader.Text = "Account ID";
-            this.accountIDHeader.Width = 92;
-            // 
-            // userNameHeader
-            // 
-            this.userNameHeader.Text = "User Name";
-            this.userNameHeader.Width = 75;
-            // 
-            // adminHeader
-            // 
-            this.adminHeader.Text = "Administrator";
-            this.adminHeader.Width = 73;
-            // 
-            // bannedHeader
-            // 
-            this.bannedHeader.Text = "Banned";
-            this.bannedHeader.Width = 54;
-            // 
-            // banReasonHeader
-            // 
-            this.banReasonHeader.Text = "Ban Reason";
-            this.banReasonHeader.Width = 74;
-            // 
-            // expiryDateHeader
-            // 
-            this.expiryDateHeader.Text = "Expiry Date";
-            this.expiryDateHeader.Width = 81;
-            // 
-            // MatchFilterCheckBox
-            // 
-            this.MatchFilterCheckBox.AutoSize = true;
-            this.MatchFilterCheckBox.Location = new System.Drawing.Point(472, 42);
-            this.MatchFilterCheckBox.Name = "MatchFilterCheckBox";
-            this.MatchFilterCheckBox.Size = new System.Drawing.Size(81, 17);
-            this.MatchFilterCheckBox.TabIndex = 17;
-            this.MatchFilterCheckBox.Text = "Match Filter";
-            this.MatchFilterCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // WipeCharButton
-            // 
-            this.WipeCharButton.Location = new System.Drawing.Point(93, 12);
-            this.WipeCharButton.Name = "WipeCharButton";
-            this.WipeCharButton.Size = new System.Drawing.Size(115, 23);
-            this.WipeCharButton.TabIndex = 18;
-            this.WipeCharButton.Text = "Wipe All Characters";
-            this.WipeCharButton.UseVisualStyleBackColor = true;
-            this.WipeCharButton.Click += new System.EventHandler(this.WipeCharButton_Click);
+            AccountInfoPanel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            AccountInfoPanel.Controls.Add(CharactersListView);
+            AccountInfoPanel.Controls.Add(LastIPSearch);
+            AccountInfoPanel.Controls.Add(CreationIPSearch);
+            AccountInfoPanel.Controls.Add(PasswordChangeCheckBox);
+            AccountInfoPanel.Controls.Add(setPasswordButton);
+            AccountInfoPanel.Controls.Add(AdminCheckBox);
+            AccountInfoPanel.Controls.Add(PermBanButton);
+            AccountInfoPanel.Controls.Add(WeekBanButton);
+            AccountInfoPanel.Controls.Add(DayBanButton);
+            AccountInfoPanel.Controls.Add(BannedCheckBox);
+            AccountInfoPanel.Controls.Add(ExpiryDateTextBox);
+            AccountInfoPanel.Controls.Add(label14);
+            AccountInfoPanel.Controls.Add(BanReasonTextBox);
+            AccountInfoPanel.Controls.Add(label13);
+            AccountInfoPanel.Controls.Add(LastDateTextBox);
+            AccountInfoPanel.Controls.Add(label11);
+            AccountInfoPanel.Controls.Add(LastIPTextBox);
+            AccountInfoPanel.Controls.Add(label12);
+            AccountInfoPanel.Controls.Add(CreationDateTextBox);
+            AccountInfoPanel.Controls.Add(label9);
+            AccountInfoPanel.Controls.Add(CreationIPTextBox);
+            AccountInfoPanel.Controls.Add(label10);
+            AccountInfoPanel.Controls.Add(EMailTextBox);
+            AccountInfoPanel.Controls.Add(label8);
+            AccountInfoPanel.Controls.Add(AnswerTextBox);
+            AccountInfoPanel.Controls.Add(label7);
+            AccountInfoPanel.Controls.Add(QuestionTextBox);
+            AccountInfoPanel.Controls.Add(label6);
+            AccountInfoPanel.Controls.Add(BirthDateTextBox);
+            AccountInfoPanel.Controls.Add(label5);
+            AccountInfoPanel.Controls.Add(UserNameTextBox);
+            AccountInfoPanel.Controls.Add(label4);
+            AccountInfoPanel.Controls.Add(label3);
+            AccountInfoPanel.Controls.Add(AccountIDTextBox);
+            AccountInfoPanel.Controls.Add(label2);
+            AccountInfoPanel.Location = new Point(14, 277);
+            AccountInfoPanel.Margin = new Padding(4, 3, 4, 3);
+            AccountInfoPanel.Name = "AccountInfoPanel";
+            AccountInfoPanel.Size = new Size(1248, 243);
+            AccountInfoPanel.TabIndex = 14;
+            // 
+            // CharactersListView
+            // 
+            CharactersListView.Columns.AddRange(new ColumnHeader[] { characterName, characterClass, characterLevel, characterPKPoints, characterGuild, characterStatus });
+            CharactersListView.GridLines = true;
+            CharactersListView.Location = new Point(701, 0);
+            CharactersListView.Name = "CharactersListView";
+            CharactersListView.Scrollable = false;
+            CharactersListView.Size = new Size(546, 163);
+            CharactersListView.TabIndex = 39;
+            CharactersListView.UseCompatibleStateImageBehavior = false;
+            CharactersListView.View = View.Details;
+            // 
+            // characterName
+            // 
+            characterName.Text = "Name";
+            characterName.Width = 80;
+            // 
+            // characterClass
+            // 
+            characterClass.Text = "Class";
+            characterClass.Width = 80;
+            // 
+            // characterLevel
+            // 
+            characterLevel.Text = "Level";
+            // 
+            // characterPKPoints
+            // 
+            characterPKPoints.Text = "PKPoints";
+            characterPKPoints.Width = 59;
+            // 
+            // characterGuild
+            // 
+            characterGuild.Text = "Guild";
+            characterGuild.Width = 100;
+            // 
+            // characterStatus
+            // 
+            characterStatus.Text = "Status";
+            characterStatus.Width = 163;
+            // 
+            // LastIPSearch
+            // 
+            LastIPSearch.Location = new Point(583, 81);
+            LastIPSearch.Name = "LastIPSearch";
+            LastIPSearch.Size = new Size(25, 23);
+            LastIPSearch.TabIndex = 38;
+            LastIPSearch.Text = "🔎";
+            LastIPSearch.UseVisualStyleBackColor = true;
+            LastIPSearch.Click += LastIPSearch_Click;
+            // 
+            // CreationIPSearch
+            // 
+            CreationIPSearch.Location = new Point(583, 21);
+            CreationIPSearch.Name = "CreationIPSearch";
+            CreationIPSearch.Size = new Size(25, 23);
+            CreationIPSearch.TabIndex = 37;
+            CreationIPSearch.Text = "🔎";
+            CreationIPSearch.UseVisualStyleBackColor = true;
+            CreationIPSearch.Click += CreationIPSearch_Click;
             // 
             // PasswordChangeCheckBox
             // 
-            this.PasswordChangeCheckBox.AutoSize = true;
-            this.PasswordChangeCheckBox.Location = new System.Drawing.Point(185, 43);
-            this.PasswordChangeCheckBox.Name = "PasswordChangeCheckBox";
-            this.PasswordChangeCheckBox.Size = new System.Drawing.Size(103, 17);
-            this.PasswordChangeCheckBox.TabIndex = 34;
-            this.PasswordChangeCheckBox.Text = "Require Change";
-            this.PasswordChangeCheckBox.UseVisualStyleBackColor = true;
-            this.PasswordChangeCheckBox.CheckedChanged += new System.EventHandler(this.PasswordChangeCheckBox_CheckedChanged);
+            PasswordChangeCheckBox.AutoSize = true;
+            PasswordChangeCheckBox.Location = new Point(216, 50);
+            PasswordChangeCheckBox.Margin = new Padding(4, 3, 4, 3);
+            PasswordChangeCheckBox.Name = "PasswordChangeCheckBox";
+            PasswordChangeCheckBox.Size = new Size(110, 19);
+            PasswordChangeCheckBox.TabIndex = 34;
+            PasswordChangeCheckBox.Text = "Require Change";
+            PasswordChangeCheckBox.UseVisualStyleBackColor = true;
+            PasswordChangeCheckBox.CheckedChanged += PasswordChangeCheckBox_CheckedChanged;
+            // 
+            // setPasswordButton
+            // 
+            setPasswordButton.Location = new Point(111, 47);
+            setPasswordButton.Margin = new Padding(4, 3, 4, 3);
+            setPasswordButton.Name = "setPasswordButton";
+            setPasswordButton.Size = new Size(98, 27);
+            setPasswordButton.TabIndex = 33;
+            setPasswordButton.Text = "Set Password";
+            setPasswordButton.UseVisualStyleBackColor = true;
+            setPasswordButton.Click += button1_Click;
+            // 
+            // AdminCheckBox
+            // 
+            AdminCheckBox.AutoSize = true;
+            AdminCheckBox.Location = new Point(241, 20);
+            AdminCheckBox.Margin = new Padding(4, 3, 4, 3);
+            AdminCheckBox.Name = "AdminCheckBox";
+            AdminCheckBox.Size = new Size(99, 19);
+            AdminCheckBox.TabIndex = 32;
+            AdminCheckBox.Text = "Administrator";
+            AdminCheckBox.UseVisualStyleBackColor = true;
+            AdminCheckBox.CheckedChanged += AdminCheckBox_CheckedChanged;
+            // 
+            // PermBanButton
+            // 
+            PermBanButton.Location = new Point(596, 205);
+            PermBanButton.Margin = new Padding(4, 3, 4, 3);
+            PermBanButton.Name = "PermBanButton";
+            PermBanButton.Size = new Size(88, 27);
+            PermBanButton.TabIndex = 31;
+            PermBanButton.Text = "Perm Ban";
+            PermBanButton.UseVisualStyleBackColor = true;
+            PermBanButton.Click += PermBanButton_Click;
+            // 
+            // WeekBanButton
+            // 
+            WeekBanButton.Location = new Point(502, 208);
+            WeekBanButton.Margin = new Padding(4, 3, 4, 3);
+            WeekBanButton.Name = "WeekBanButton";
+            WeekBanButton.Size = new Size(88, 27);
+            WeekBanButton.TabIndex = 30;
+            WeekBanButton.Text = "Week Ban";
+            WeekBanButton.UseVisualStyleBackColor = true;
+            WeekBanButton.Click += WeekBanButton_Click;
+            // 
+            // DayBanButton
+            // 
+            DayBanButton.Location = new Point(407, 208);
+            DayBanButton.Margin = new Padding(4, 3, 4, 3);
+            DayBanButton.Name = "DayBanButton";
+            DayBanButton.Size = new Size(88, 27);
+            DayBanButton.TabIndex = 29;
+            DayBanButton.Text = "Day Ban";
+            DayBanButton.UseVisualStyleBackColor = true;
+            DayBanButton.Click += DayBanButton_Click;
+            // 
+            // BannedCheckBox
+            // 
+            BannedCheckBox.AutoSize = true;
+            BannedCheckBox.Location = new Point(610, 180);
+            BannedCheckBox.Margin = new Padding(4, 3, 4, 3);
+            BannedCheckBox.Name = "BannedCheckBox";
+            BannedCheckBox.Size = new Size(66, 19);
+            BannedCheckBox.TabIndex = 28;
+            BannedCheckBox.Text = "Banned";
+            BannedCheckBox.UseVisualStyleBackColor = true;
+            BannedCheckBox.CheckedChanged += BannedCheckBox_CheckedChanged;
+            // 
+            // ExpiryDateTextBox
+            // 
+            ExpiryDateTextBox.Location = new Point(460, 178);
+            ExpiryDateTextBox.Margin = new Padding(4, 3, 4, 3);
+            ExpiryDateTextBox.Name = "ExpiryDateTextBox";
+            ExpiryDateTextBox.Size = new Size(139, 23);
+            ExpiryDateTextBox.TabIndex = 27;
+            ExpiryDateTextBox.TextChanged += ExpiryDateTextBox_TextChanged;
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(378, 181);
+            label14.Margin = new Padding(4, 0, 4, 0);
+            label14.Name = "label14";
+            label14.Size = new Size(69, 15);
+            label14.TabIndex = 26;
+            label14.Text = "Expiry Date:";
+            // 
+            // BanReasonTextBox
+            // 
+            BanReasonTextBox.Location = new Point(460, 148);
+            BanReasonTextBox.Margin = new Padding(4, 3, 4, 3);
+            BanReasonTextBox.Name = "BanReasonTextBox";
+            BanReasonTextBox.Size = new Size(223, 23);
+            BanReasonTextBox.TabIndex = 25;
+            BanReasonTextBox.TextChanged += BanReasonTextBox_TextChanged;
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Location = new Point(372, 151);
+            label13.Margin = new Padding(4, 0, 4, 0);
+            label13.Name = "label13";
+            label13.Size = new Size(71, 15);
+            label13.TabIndex = 24;
+            label13.Text = "Ban Reason:";
+            // 
+            // LastDateTextBox
+            // 
+            LastDateTextBox.Location = new Point(460, 110);
+            LastDateTextBox.Margin = new Padding(4, 3, 4, 3);
+            LastDateTextBox.Name = "LastDateTextBox";
+            LastDateTextBox.ReadOnly = true;
+            LastDateTextBox.Size = new Size(139, 23);
+            LastDateTextBox.TabIndex = 23;
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Location = new Point(387, 113);
+            label11.Margin = new Padding(4, 0, 4, 0);
+            label11.Name = "label11";
+            label11.Size = new Size(58, 15);
+            label11.TabIndex = 22;
+            label11.Text = "Last Date:";
+            // 
+            // LastIPTextBox
+            // 
+            LastIPTextBox.Location = new Point(460, 80);
+            LastIPTextBox.Margin = new Padding(4, 3, 4, 3);
+            LastIPTextBox.Name = "LastIPTextBox";
+            LastIPTextBox.ReadOnly = true;
+            LastIPTextBox.Size = new Size(116, 23);
+            LastIPTextBox.TabIndex = 21;
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Location = new Point(402, 83);
+            label12.Margin = new Padding(4, 0, 4, 0);
+            label12.Name = "label12";
+            label12.Size = new Size(44, 15);
+            label12.TabIndex = 20;
+            label12.Text = "Last IP:";
+            // 
+            // CreationDateTextBox
+            // 
+            CreationDateTextBox.Location = new Point(460, 50);
+            CreationDateTextBox.Margin = new Padding(4, 3, 4, 3);
+            CreationDateTextBox.Name = "CreationDateTextBox";
+            CreationDateTextBox.ReadOnly = true;
+            CreationDateTextBox.Size = new Size(139, 23);
+            CreationDateTextBox.TabIndex = 19;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(365, 53);
+            label9.Margin = new Padding(4, 0, 4, 0);
+            label9.Name = "label9";
+            label9.Size = new Size(82, 15);
+            label9.TabIndex = 18;
+            label9.Text = "Creation Date:";
+            // 
+            // CreationIPTextBox
+            // 
+            CreationIPTextBox.Location = new Point(460, 20);
+            CreationIPTextBox.Margin = new Padding(4, 3, 4, 3);
+            CreationIPTextBox.Name = "CreationIPTextBox";
+            CreationIPTextBox.ReadOnly = true;
+            CreationIPTextBox.Size = new Size(116, 23);
+            CreationIPTextBox.TabIndex = 17;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(380, 23);
+            label10.Margin = new Padding(4, 0, 4, 0);
+            label10.Name = "label10";
+            label10.Size = new Size(68, 15);
+            label10.TabIndex = 16;
+            label10.Text = "Creation IP:";
+            // 
+            // EMailTextBox
+            // 
+            EMailTextBox.Location = new Point(111, 208);
+            EMailTextBox.Margin = new Padding(4, 3, 4, 3);
+            EMailTextBox.Name = "EMailTextBox";
+            EMailTextBox.Size = new Size(223, 23);
+            EMailTextBox.TabIndex = 15;
+            EMailTextBox.TextChanged += EMailTextBox_TextChanged;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(14, 211);
+            label8.Margin = new Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(84, 15);
+            label8.TabIndex = 14;
+            label8.Text = "EMail Address:";
+            // 
+            // AnswerTextBox
+            // 
+            AnswerTextBox.Location = new Point(111, 178);
+            AnswerTextBox.Margin = new Padding(4, 3, 4, 3);
+            AnswerTextBox.Name = "AnswerTextBox";
+            AnswerTextBox.Size = new Size(153, 23);
+            AnswerTextBox.TabIndex = 13;
+            AnswerTextBox.TextChanged += AnswerTextBox_TextChanged;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(51, 181);
+            label7.Margin = new Padding(4, 0, 4, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(49, 15);
+            label7.TabIndex = 12;
+            label7.Text = "Answer:";
+            // 
+            // QuestionTextBox
+            // 
+            QuestionTextBox.Location = new Point(111, 148);
+            QuestionTextBox.Margin = new Padding(4, 3, 4, 3);
+            QuestionTextBox.Name = "QuestionTextBox";
+            QuestionTextBox.Size = new Size(153, 23);
+            QuestionTextBox.TabIndex = 11;
+            QuestionTextBox.TextChanged += QuestionTextBox_TextChanged;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(43, 151);
+            label6.Margin = new Padding(4, 0, 4, 0);
+            label6.Name = "label6";
+            label6.Size = new Size(58, 15);
+            label6.TabIndex = 10;
+            label6.Text = "Question:";
+            // 
+            // BirthDateTextBox
+            // 
+            BirthDateTextBox.Location = new Point(111, 118);
+            BirthDateTextBox.Margin = new Padding(4, 3, 4, 3);
+            BirthDateTextBox.Name = "BirthDateTextBox";
+            BirthDateTextBox.Size = new Size(84, 23);
+            BirthDateTextBox.TabIndex = 9;
+            BirthDateTextBox.TextChanged += BirthDateTextBox_TextChanged;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(37, 121);
+            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(62, 15);
+            label5.TabIndex = 8;
+            label5.Text = "Birth Date:";
+            // 
+            // UserNameTextBox
+            // 
+            UserNameTextBox.Location = new Point(111, 88);
+            UserNameTextBox.Margin = new Padding(4, 3, 4, 3);
+            UserNameTextBox.Name = "UserNameTextBox";
+            UserNameTextBox.Size = new Size(116, 23);
+            UserNameTextBox.TabIndex = 7;
+            UserNameTextBox.TextChanged += UserNameTextBox_TextChanged;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(30, 91);
+            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(68, 15);
+            label4.TabIndex = 6;
+            label4.Text = "User Name:";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(38, 50);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(60, 15);
+            label3.TabIndex = 4;
+            label3.Text = "Password:";
+            // 
+            // AccountIDTextBox
+            // 
+            AccountIDTextBox.Location = new Point(111, 16);
+            AccountIDTextBox.Margin = new Padding(4, 3, 4, 3);
+            AccountIDTextBox.Name = "AccountIDTextBox";
+            AccountIDTextBox.Size = new Size(116, 23);
+            AccountIDTextBox.TabIndex = 3;
+            AccountIDTextBox.TextChanged += AccountIDTextBox_TextChanged;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(29, 20);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(69, 15);
+            label2.TabIndex = 2;
+            label2.Text = "Account ID:";
+            // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Location = new Point(250, 48);
+            label15.Margin = new Padding(4, 0, 4, 0);
+            label15.Name = "label15";
+            label15.Size = new Size(71, 15);
+            label15.TabIndex = 15;
+            label15.Text = "Filter Player:";
+            // 
+            // FilterPlayerTextBox
+            // 
+            FilterPlayerTextBox.Location = new Point(331, 45);
+            FilterPlayerTextBox.Margin = new Padding(4, 3, 4, 3);
+            FilterPlayerTextBox.Name = "FilterPlayerTextBox";
+            FilterPlayerTextBox.Size = new Size(116, 23);
+            FilterPlayerTextBox.TabIndex = 16;
+            // 
+            // AccountInfoListView
+            // 
+            AccountInfoListView.AllowColumnReorder = true;
+            AccountInfoListView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            AccountInfoListView.Columns.AddRange(new ColumnHeader[] { indexHeader, accountIDHeader, userNameHeader, adminHeader, bannedHeader, banReasonHeader, expiryDateHeader, Gold, GameGold });
+            AccountInfoListView.FullRowSelect = true;
+            AccountInfoListView.GridLines = true;
+            AccountInfoListView.Location = new Point(12, 75);
+            AccountInfoListView.Margin = new Padding(4, 3, 4, 3);
+            AccountInfoListView.Name = "AccountInfoListView";
+            AccountInfoListView.Size = new Size(1249, 194);
+            AccountInfoListView.Sorting = SortOrder.Ascending;
+            AccountInfoListView.TabIndex = 8;
+            AccountInfoListView.UseCompatibleStateImageBehavior = false;
+            AccountInfoListView.View = View.Details;
+            AccountInfoListView.SelectedIndexChanged += AccountInfoListView_SelectedIndexChanged;
+            // 
+            // indexHeader
+            // 
+            indexHeader.Text = "Index";
+            // 
+            // accountIDHeader
+            // 
+            accountIDHeader.Text = "Account ID";
+            accountIDHeader.Width = 92;
+            // 
+            // userNameHeader
+            // 
+            userNameHeader.Text = "User Name";
+            userNameHeader.Width = 75;
+            // 
+            // adminHeader
+            // 
+            adminHeader.Text = "Administrator";
+            adminHeader.Width = 73;
+            // 
+            // bannedHeader
+            // 
+            bannedHeader.Text = "Banned";
+            bannedHeader.Width = 54;
+            // 
+            // banReasonHeader
+            // 
+            banReasonHeader.Text = "Ban Reason";
+            banReasonHeader.Width = 74;
+            // 
+            // expiryDateHeader
+            // 
+            expiryDateHeader.Text = "Expiry Date";
+            expiryDateHeader.Width = 81;
+            // 
+            // Gold
+            // 
+            Gold.Text = "Gold";
+            Gold.Width = 100;
+            // 
+            // GameGold
+            // 
+            GameGold.Text = "GameGold";
+            GameGold.Width = 70;
+            // 
+            // MatchFilterCheckBox
+            // 
+            MatchFilterCheckBox.AutoSize = true;
+            MatchFilterCheckBox.Location = new Point(551, 48);
+            MatchFilterCheckBox.Margin = new Padding(4, 3, 4, 3);
+            MatchFilterCheckBox.Name = "MatchFilterCheckBox";
+            MatchFilterCheckBox.Size = new Size(89, 19);
+            MatchFilterCheckBox.TabIndex = 17;
+            MatchFilterCheckBox.Text = "Match Filter";
+            MatchFilterCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // WipeCharButton
+            // 
+            WipeCharButton.Location = new Point(108, 14);
+            WipeCharButton.Margin = new Padding(4, 3, 4, 3);
+            WipeCharButton.Name = "WipeCharButton";
+            WipeCharButton.Size = new Size(134, 27);
+            WipeCharButton.TabIndex = 18;
+            WipeCharButton.Text = "Wipe All Characters";
+            WipeCharButton.UseVisualStyleBackColor = true;
+            WipeCharButton.Click += WipeCharButton_Click;
+            // 
+            // ServerGoldTextBox
+            // 
+            ServerGoldTextBox.Location = new Point(356, 16);
+            ServerGoldTextBox.Name = "ServerGoldTextBox";
+            ServerGoldTextBox.ReadOnly = true;
+            ServerGoldTextBox.Size = new Size(153, 23);
+            ServerGoldTextBox.TabIndex = 22;
+            // 
+            // TotalServerGold
+            // 
+            TotalServerGold.AutoSize = true;
+            TotalServerGold.Location = new Point(252, 19);
+            TotalServerGold.Name = "TotalServerGold";
+            TotalServerGold.Size = new Size(98, 15);
+            TotalServerGold.TabIndex = 21;
+            TotalServerGold.Text = "Total Server Gold:";
+            // 
+            // ServerCreditTextBox
+            // 
+            ServerCreditTextBox.Location = new Point(624, 19);
+            ServerCreditTextBox.Name = "ServerCreditTextBox";
+            ServerCreditTextBox.ReadOnly = true;
+            ServerCreditTextBox.Size = new Size(153, 23);
+            ServerCreditTextBox.TabIndex = 24;
+            // 
+            // TotalServerCredit
+            // 
+            TotalServerCredit.AutoSize = true;
+            TotalServerCredit.Location = new Point(520, 22);
+            TotalServerCredit.Name = "TotalServerCredit";
+            TotalServerCredit.Size = new Size(105, 15);
+            TotalServerCredit.TabIndex = 23;
+            TotalServerCredit.Text = "Total Server Credit:";
             // 
             // AccountInfoForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(640, 461);
-            this.Controls.Add(this.WipeCharButton);
-            this.Controls.Add(this.MatchFilterCheckBox);
-            this.Controls.Add(this.FilterPlayerTextBox);
-            this.Controls.Add(this.label15);
-            this.Controls.Add(this.AccountInfoPanel);
-            this.Controls.Add(this.RefreshButton);
-            this.Controls.Add(this.FilterTextBox);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.CreateButton);
-            this.Controls.Add(this.AccountInfoListView);
-            this.Name = "AccountInfoForm";
-            this.Text = "AccountInfoForm";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.AccountInfoForm_FormClosed);
-            this.AccountInfoPanel.ResumeLayout(false);
-            this.AccountInfoPanel.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1276, 532);
+            Controls.Add(ServerCreditTextBox);
+            Controls.Add(TotalServerCredit);
+            Controls.Add(ServerGoldTextBox);
+            Controls.Add(TotalServerGold);
+            Controls.Add(WipeCharButton);
+            Controls.Add(MatchFilterCheckBox);
+            Controls.Add(FilterPlayerTextBox);
+            Controls.Add(label15);
+            Controls.Add(AccountInfoPanel);
+            Controls.Add(RefreshButton);
+            Controls.Add(FilterTextBox);
+            Controls.Add(label1);
+            Controls.Add(CreateButton);
+            Controls.Add(AccountInfoListView);
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "AccountInfoForm";
+            Text = "AccountInfoForm";
+            FormClosed += AccountInfoForm_FormClosed;
+            AccountInfoPanel.ResumeLayout(false);
+            AccountInfoPanel.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -616,5 +774,20 @@ namespace Server
         private System.Windows.Forms.Button WipeCharButton;
         private System.Windows.Forms.Button setPasswordButton;
         private System.Windows.Forms.CheckBox PasswordChangeCheckBox;
+        private Button LastIPSearch;
+        private Button CreationIPSearch;
+        private ListView CharactersListView;
+        private ColumnHeader characterName;
+        private ColumnHeader characterClass;
+        private ColumnHeader characterLevel;
+        private ColumnHeader characterPKPoints;
+        private ColumnHeader characterGuild;
+        private ColumnHeader Gold;
+        private ColumnHeader GameGold;
+        private ColumnHeader characterStatus;
+        private TextBox ServerGoldTextBox;
+        private Label TotalServerGold;
+        private TextBox ServerCreditTextBox;
+        private Label TotalServerCredit;
     }
 }

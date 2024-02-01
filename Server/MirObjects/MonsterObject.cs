@@ -596,6 +596,7 @@ namespace Server.MirObjects
 
         public int RoutePoint;
         public bool Waiting;
+        public bool GMMade;
         
         public List<MonsterObject> SlaveList = new List<MonsterObject>();
         public List<RouteInfo> Route = new List<RouteInfo>();
@@ -1022,6 +1023,11 @@ namespace Server.MirObjects
                         UserItem item = Envir.CreateDropItem(dropItem);
 
                         if (item == null) continue;
+
+                        if (GMMade)
+                        {
+                            item.GMMade = true;
+                        }
 
                         if (EXPOwner != null && EXPOwner.Race == ObjectType.Player)
                         {

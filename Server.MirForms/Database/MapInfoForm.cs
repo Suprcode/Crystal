@@ -6,7 +6,7 @@ namespace Server
     public partial class MapInfoForm : Form
     {
         public Envir Envir => SMain.EditEnvir;
-
+      
         private List<MapInfo> _selectedMapInfos;
         private List<SafeZoneInfo> _selectedSafeZoneInfos;
         private List<RespawnInfo> _selectedRespawnInfos;
@@ -625,20 +625,32 @@ namespace Server
         }
         private void MiniMapTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (ActiveControl != sender) return;
-
-            ushort temp;
-
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
+            if (!ushort.TryParse(MiniMapTextBox.Text, out ushort temp))
             {
-                ActiveControl.BackColor = Color.Red;
+                MiniMapTextBox.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
+            MiniMapTextBox.BackColor = SystemColors.Window;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
                 _selectedMapInfos[i].MiniMap = temp;
+
+            LoadImage(temp);
+        }
+        private void LoadImage(ushort miniMapValue)
+        {
+            string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Envir", "Previews", "Minimaps", miniMapValue + ".bmp");
+
+            if (File.Exists(imagePath))
+            {
+                MinimapPreview.Image = Image.FromFile(imagePath);
+                MinimapPreview.SizeMode = PictureBoxSizeMode.StretchImage;
+            }
+            else
+            {
+                MinimapPreview.Image = null;
+            }
         }
         private void LightsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -647,8 +659,6 @@ namespace Server
             for (int i = 0; i < _selectedMapInfos.Count; i++)
                 _selectedMapInfos[i].Light = (LightSetting)LightsComboBox.SelectedItem;
         }
-
-
         private void AddSZButton_Click(object sender, EventArgs e)
         {
             if (_info == null) return;
@@ -734,8 +744,6 @@ namespace Server
 
             RefreshSafeZoneList();
         }
-
-
 
         private void AddRButton_Click(object sender, EventArgs e)
         {
@@ -937,9 +945,6 @@ namespace Server
             UpdateRespawnInterface();
         }
         //RCopy
-
-
-
 
         private void AddMButton_Click(object sender, EventArgs e)
         {

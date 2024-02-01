@@ -507,7 +507,8 @@ namespace Server.MirEnvir
                 MessageQueue.Enqueue(ex);
             }
 
-            MessageQueue.Enqueue("Failed to Load Map: " + Info.FileName);
+            MessageQueue.Enqueue("Failed to Load Map: " + Info.Title);
+            MessageQueue.Enqueue("Filename: " + Info.FileName);
             return false;
         }
 
@@ -1269,6 +1270,7 @@ namespace Server.MirEnvir
                                 {
                                     case ObjectType.Monster:
                                     case ObjectType.Player:
+                                    case ObjectType.Hero:
                                         //Only targets
                                         if (target.IsFriendlyTarget(player))
                                         {

@@ -120,6 +120,7 @@ namespace Server
             BigMapIconTextBox.Text = info.BigMapIcon.ToString();
             TeleportToCheckBox.Checked = info.CanTeleportTo;
             ConquestVisible_checkbox.Checked = info.ConquestVisible;
+            LoadImage(info.Image);
 
 
             for (int i = 1; i < _selectedNPCInfos.Count; i++)
@@ -154,7 +155,35 @@ namespace Server
 
         private void NPCInfoListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_selectedNPCInfos.Count > 0)
+            {
+                NPCInfo info = _selectedNPCInfos[0];
+                LoadImage(info.Image);
+            }
+            else
+            {
+                LoadImage(0);
+            }
+
             UpdateInterface();
+
+        }
+        private void LoadImage(ushort imageValue)
+        {
+            string filename = $"{imageValue}.bmp";
+            string imagePath = Path.Combine(Environment.CurrentDirectory, "Envir", "Previews", "NPC", filename);
+
+            if (File.Exists(imagePath))
+            {
+                using (FileStream fs = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
+                {
+                    NPCPreview.Image = Image.FromStream(fs);
+                }
+            }
+            else
+            {
+                NPCPreview.Image = null;
+            }
         }
 
         private void NFileNameTextBox_TextChanged(object sender, EventArgs e)
@@ -228,6 +257,7 @@ namespace Server
             for (int i = 0; i < _selectedNPCInfos.Count; i++)
                 _selectedNPCInfos[i].Image = temp;
 
+            LoadImage(temp);
         }
         private void NRateTextBox_TextChanged(object sender, EventArgs e)
         {
