@@ -1928,6 +1928,12 @@ namespace Server.MirNetwork
 
             Player.NPCData["NPCInputStr"] = p.Value;
 
+            if (p.NPCID == Envir.DefaultNPC.LoadedObjectID && Player.NPCObjectID == Envir.DefaultNPC.LoadedObjectID)
+            {
+                Player.CallDefaultNPC(p.PageName);
+                return;
+            }
+
             Player.CallNPC(Player.NPCObjectID, p.PageName);
         }
 
