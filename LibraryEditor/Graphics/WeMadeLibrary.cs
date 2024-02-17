@@ -96,6 +96,7 @@ namespace LibraryEditor
 
                 if (_nType == 0)
                 {
+                    _fStream.Seek(48, SeekOrigin.Begin);
                     _palette = new int[_bReader.ReadInt32()];
                     _fStream.Seek(4, SeekOrigin.Current);
                     _version = _bReader.ReadInt32();
