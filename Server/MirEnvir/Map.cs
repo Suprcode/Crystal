@@ -92,7 +92,7 @@ namespace Server.MirEnvir
                 return 1;
 
             //shanda's 2012 format and one of shandas(wemades) older formats share same header info, only difference is the filesize
-            if ((input[4] == 0x0F) && (input[18] == 0x0D) && (input[19] == 0x0A))
+            if ((input[4] == 0x0F) || (input[4] == 0x03) && (input[18] == 0x0D) && (input[19] == 0x0A))
             {
                 int W = input[0] + (input[1] << 8);
                 int H = input[2] + (input[3] << 8);

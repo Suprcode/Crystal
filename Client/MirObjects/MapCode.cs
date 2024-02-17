@@ -304,6 +304,9 @@
                             };
                         offSet++;
 
+                        if (MapCells[x, y].FrontIndex >= 255)
+                            MapCells[x, y].FrontIndex = -1;
+
                         if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                             MapCells[x, y].FishingCell = true;
                     }

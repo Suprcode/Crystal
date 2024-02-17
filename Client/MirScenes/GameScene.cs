@@ -11196,6 +11196,9 @@ namespace Client.MirScenes
                     if (x < 0) continue;
                     if (x >= Width) break;
                     int imageIndex = (M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;
+                    if (imageIndex == -1) continue;
+                    int fileIndex = M2CellInfo[x, y].FrontIndex;
+                    if (fileIndex == -1) continue;
                     if (M2CellInfo[x, y].Light <= 0 || M2CellInfo[x, y].Light >= 10) continue;
                     if (M2CellInfo[x, y].Light == 0) continue;
 
@@ -11226,8 +11229,6 @@ namespace Client.MirScenes
                     {
                         lightIntensity = GetBlindLight(lightIntensity);
                     }
-
-                    int fileIndex = M2CellInfo[x, y].FrontIndex;
 
                     p = new Point(
                         (x + OffSetX - MapObject.User.Movement.X) * CellWidth + MapObject.User.OffSetMove.X,
