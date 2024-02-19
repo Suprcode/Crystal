@@ -347,9 +347,10 @@ namespace Server.MirObjects
 
             OperateTime = Envir.Time + Envir.Random.Next(OperateDelay);
 
-            InSafeZone = CurrentMap != null && CurrentMap.GetSafeZone(CurrentLocation) != null;
             BroadcastInfo();
             BroadcastHealthChange();
+
+            InSafeZone = CurrentMap != null && CurrentMap.GetSafeZone(CurrentLocation) != null;
         }
         public virtual void Despawn()
         {
