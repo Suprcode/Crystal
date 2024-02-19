@@ -510,26 +510,31 @@ namespace LibraryEditor
 
             try
             {
-                ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = 8 };
-                Parallel.For(0, OpenWeMadeDialog.FileNames.Length, options, i =>
+                Task.Factory.StartNew(() =>
+                {
+                    ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = 8 };
+                    Parallel.For(0, OpenWeMadeDialog.FileNames.Length, options, i =>
                             {
-                                if (Path.GetExtension(OpenWeMadeDialog.FileNames[i]) == ".wtl")
+                                var fileName = OpenWeMadeDialog.FileNames[i];
+                                var ext = Path.GetExtension(fileName).ToUpper();
+                                if (ext == ".WTL")
                                 {
-                                    WTLLibrary WTLlib = new WTLLibrary(OpenWeMadeDialog.FileNames[i]);
+                                    WTLLibrary WTLlib = new WTLLibrary(fileName);
                                     WTLlib.ToMLibrary();
                                 }
-                                else if (Path.GetExtension(OpenWeMadeDialog.FileNames[i]) == ".Lib")
+                                else if (ext == ".LIB")
                                 {
-                                    MLibraryV1 v1Lib = new MLibraryV1(OpenWeMadeDialog.FileNames[i]);
+                                    MLibraryV1 v1Lib = new MLibraryV1(fileName);
                                     v1Lib.ToMLibrary();
                                 }
                                 else
                                 {
-                                    WeMadeLibrary WILlib = new WeMadeLibrary(OpenWeMadeDialog.FileNames[i]);
+                                    WeMadeLibrary WILlib = new WeMadeLibrary(fileName);
                                     WILlib.ToMLibrary();
                                 }
-                                toolStripProgressBar.Value++;
+                                Invoke(new Action(() => { toolStripProgressBar.Value++; }));
                             });
+                });
             }
             catch (Exception ex)
             {
