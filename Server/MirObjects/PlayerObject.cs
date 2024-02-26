@@ -3545,6 +3545,7 @@ namespace Server.MirObjects
                             if (parts.Length < 2)
                             {
                                 Point target = Functions.PointMove(CurrentLocation, Direction, 1);
+                                if (!CurrentMap.ValidPoint(target)) return;
                                 Cell cell = CurrentMap.GetCell(target);
 
                                 if (cell.Objects == null || cell.Objects.Count < 1) return;
@@ -9798,6 +9799,8 @@ namespace Server.MirObjects
             }
 
             Point target = Functions.PointMove(CurrentLocation, Direction, 1);
+
+            if (!CurrentMap.ValidPoint(target)) return;
             Cell cell = CurrentMap.GetCell(target);
             PlayerObject player = null;
 
@@ -12263,6 +12266,8 @@ namespace Server.MirObjects
             }
 
             Point target = Functions.PointMove(CurrentLocation, Direction, 1);
+
+            if (!CurrentMap.ValidPoint(target)) return;
             Cell cell = CurrentMap.GetCell(target);
             PlayerObject player = null;
 
@@ -12402,6 +12407,7 @@ namespace Server.MirObjects
 
 
             Point target = Functions.PointMove(CurrentLocation, Direction, 1);
+            if (!CurrentMap.ValidPoint(target)) return;
             Cell cell = CurrentMap.GetCell(target);
             PlayerObject player = null;
 
@@ -13105,6 +13111,7 @@ namespace Server.MirObjects
             }
 
             var targetPosition = Functions.PointMove(CurrentLocation, Direction, 1);
+            if (!CurrentMap.ValidPoint(targetPosition)) return;
             var targetCell = CurrentMap.GetCell(targetPosition);
             PlayerObject targetPlayer = null;
 
