@@ -1121,13 +1121,14 @@ namespace Server.MirObjects
                 Enqueue(new S.UpdateNotice { Notice = Settings.Notice });
             }
 
-            Spawned();
-
             SetLevelEffects();
 
             GetItemInfo(Connection);
             GetMapInfo(Connection);
             GetUserInfo(Connection);
+
+            Spawned();
+
             GetQuestInfo();
             GetRecipeInfo();
 
