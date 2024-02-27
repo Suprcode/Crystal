@@ -528,9 +528,8 @@ namespace Launcher
         {
             try
             {
-                if (Completed)
+                if (Completed && ActiveDownloads.Count == 0)
                 {
-
                     ActionLabel.Text = "";
                     CurrentFile_label.Text = "Up to date.";
                     SpeedLabel.Text = "";
