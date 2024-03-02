@@ -2086,4 +2086,10 @@ namespace Server.MirNetwork
             SentHeroInfo.Add(item.UniqueID);
         }
     }
+
+    public class MirConnectionLog {
+        public string IPAddress = "";
+        public List<long> AccountsMade = new List<long>();
+        public List<long> CharactersMade = new List<long>();
+    }
 }
