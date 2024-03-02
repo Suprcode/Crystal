@@ -1,4 +1,5 @@
-﻿using Server.Library.Utils;
+﻿using ClientPackets;
+using Server.Library.Utils;
 using Server.MirDatabase;
 using Server.MirNetwork;
 using Server.MirObjects;
@@ -77,6 +78,8 @@ namespace Server.MirEnvir
         private static List<string> LineMessages = new List<string>();
 
         public static ConcurrentDictionary<string, DateTime> IPBlocks = new ConcurrentDictionary<string, DateTime>();
+
+        public static ConcurrentDictionary<string, MirConnectionLog> ConnectionLogs = new ConcurrentDictionary<string, MirConnectionLog>();
 
         public DateTime Now =>
             _startTime.AddMilliseconds(Time);
@@ -1445,12 +1448,17 @@ namespace Server.MirEnvir
                     AccountList.Clear();
                     CharacterList.Clear();
 
+                    int TrueAccount = 0;
                     for (var i = 0; i < count; i++)
                     {
-                        AccountList.Add(new AccountInfo(reader));
-                        CharacterList.AddRange(AccountList[i].Characters);
+                        AccountInfo NextAccount = new AccountInfo(reader);
+                        if (i > 0 &&  NextAccount.Characters.Count == 0)
+                            continue;
+                        AccountList.Add(NextAccount);
+                        CharacterList.AddRange(AccountList[TrueAccount].Characters);
                         if (LoadVersion > 98 && LoadVersion < 103)
-                            AccountList[i].Characters.ForEach(character => HeroList.AddRange(character.Heroes));
+                            AccountList[TrueAccount].Characters.ForEach(character => HeroList.AddRange(character.Heroes));
+                        TrueAccount++;
                     }
 
                     foreach (var auction in Auctions)
@@ -2044,6 +2052,31 @@ namespace Server.MirEnvir
                 return;
             }
 
+            
+            if (ConnectionLogs.TryGetValue(c.IPAddress, out MirConnectionLog currentlog))
+            {
+                if (currentlog.AccountsMade.Count > 2)
+                {
+                    IPBlocks[c.IPAddress] = Now.AddHours(24);
+                    c.Enqueue(new ServerPackets.NewAccount { Result = 0 });
+                    return;
+                }
+                currentlog.AccountsMade.Add(Time);
+                for (int i = 0; i < currentlog.AccountsMade.Count; i++)
+                {
+                    if ((currentlog.AccountsMade[i] + 60 * 60 * 1000) < Time)
+                    {
+                        currentlog.AccountsMade.RemoveAt(i);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                ConnectionLogs[c.IPAddress] = new MirConnectionLog() { IPAddress = c.IPAddress};
+            }
+
+
             if (!AccountIDReg.IsMatch(p.AccountID))
             {
                 c.Enqueue(new ServerPackets.NewAccount { Result = 1 });
@@ -2346,6 +2379,30 @@ namespace Server.MirEnvir
                 c.Enqueue(new ServerPackets.NewCharacter { Result = 0 });
                 return;
             }
+
+            if (ConnectionLogs.TryGetValue(c.IPAddress, out MirConnectionLog currentlog))
+            {
+                if (currentlog.CharactersMade.Count > 4)
+                {
+                    IPBlocks[c.IPAddress] = Now.AddHours(24);
+                    c.Enqueue(new ServerPackets.NewCharacter { Result = 0 });
+                    return;
+                }
+                currentlog.CharactersMade.Add(Time);
+                for (int i = 0; i < currentlog.CharactersMade.Count; i++)
+                {
+                    if ((currentlog.CharactersMade[i] + 60 * 60 * 1000) < Time)
+                    {
+                        currentlog.CharactersMade.RemoveAt(i);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                ConnectionLogs[c.IPAddress] = new MirConnectionLog() { IPAddress = c.IPAddress };
+            }
+
 
             if (!CharacterReg.IsMatch(p.Name))
             {
