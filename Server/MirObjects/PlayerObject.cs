@@ -20,6 +20,7 @@ namespace Server.MirObjects
         public bool GMLogin, EnableGroupRecall, EnableGuildInvite, AllowMarriage, AllowLoverRecall, AllowMentor, HasMapShout, HasServerShout; //TODO - Remove        
 
         public long LastRecallTime, LastTeleportTime, LastProbeTime;
+        public long NextMailTime;
         public long MenteeEXP;        
 
         public bool WarZone = false;
@@ -10836,11 +10837,31 @@ namespace Server.MirObjects
 
         public void SendMail(string name, string message)
         {
+            if (Envir.Time < NextMailTime)
+            {
+                //not even an error: users shouldnt be sending mails so fast only bots do.
+                return;
+            }
+
+            NextMailTime = Envir.Time + 10000;
+
+            if (message.Length > 500)
+            {
+                ReceiveChat(string.Format("Sorry your text exceeds the size limit for mails"), ChatType.System);
+                return;
+            }
+
             CharacterInfo player = Envir.GetCharacterInfo(name);
 
             if (player == null)
             {
                 ReceiveChat(string.Format(GameLanguage.CouldNotFindPlayer, name), ChatType.System);
+                return;
+            }
+
+            if (player.Mail.Count > 50)
+            {
+                ReceiveChat("Recipients mailbox is full.", ChatType.System);
                 return;
             }
 
@@ -10869,11 +10890,31 @@ namespace Server.MirObjects
 
         public void SendMail(string name, string message, uint gold, ulong[] items, bool stamped)
         {
+            if (Envir.Time < NextMailTime)
+            {
+                //not even an error: users shouldnt be sending mails so fast only bots do.
+                return;
+            }
+
+            NextMailTime = Envir.Time + 10000;
+
+            if (message.Length > 500)
+            {
+                ReceiveChat(string.Format("Sorry your text exceeds the size limit for mails"), ChatType.System);
+                return;
+            }
+
             CharacterInfo player = Envir.GetCharacterInfo(name);
 
             if (player == null)
             {
                 ReceiveChat(string.Format(GameLanguage.CouldNotFindPlayer, name), ChatType.System);
+                return;
+            }
+
+            if (player.Mail.Count > 50)
+            {
+                ReceiveChat("Recipients mailbox is full.", ChatType.System);
                 return;
             }
 
