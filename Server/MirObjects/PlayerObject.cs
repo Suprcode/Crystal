@@ -12952,7 +12952,7 @@ namespace Server.MirObjects
                     canAfford = true;
                     CreditCost = cost;
                 }
-                else
+                else if (Product.CanBuyGold)
                 {
                     //Needs to attempt to pay with gold and credits
                     var totalCost = ((Product.GoldPrice * Quantity) / cost) * (cost - Account.Credit);
