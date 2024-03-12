@@ -9288,7 +9288,11 @@ namespace Server.MirObjects
                 ReceiveChat("You have not been invited to a guild.", ChatType.System);
                 return;
             }
-            if (!accept) return;
+            if (!accept)
+            {
+                PendingGuildInvite = null;
+                return;
+            }
             if (!PendingGuildInvite.HasRoom())
             {
                 ReceiveChat(String.Format("{0} is full.", PendingGuildInvite.Name), ChatType.System);
