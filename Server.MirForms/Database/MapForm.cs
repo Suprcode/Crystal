@@ -73,7 +73,7 @@ namespace Server.MirForms
                     if (newMapInfo.NoReconnect)
                     {
                         int index = mapAttributes.FindIndex(x => x.StartsWith("NORECONNECT(".ToUpper()));
-                        newMapInfo.NoReconnectMap = newMapInfo.NoReconnectMap == string.Empty ? "0" : mapAttributes[index].TrimStart("NORECONNECT(".ToCharArray()).TrimEnd(')');
+                        newMapInfo.NoReconnectMap = mapAttributes[index].TrimStart("NORECONNECT(".ToCharArray()).TrimEnd(')');
                     }
 
                     if (mapAttributes.Any(x => x.StartsWith("MINIMAP(".ToUpper())))
