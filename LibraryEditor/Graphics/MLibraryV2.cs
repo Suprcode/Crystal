@@ -226,25 +226,25 @@ namespace LibraryEditor
             return image.Preview;
         }
 
-        public void AddImage(Bitmap image, short x, short y)
+        public void AddImage(Bitmap image, short x, short y, bool removeBlack = true)
         {
-            MImage mImage = new MImage(image) { X = x, Y = y };
+            MImage mImage = new MImage(image, removeBlack) { X = x, Y = y };
 
             Count++;
             Images.Add(mImage);
         }
 
-        public void AddImage(Bitmap image, Bitmap maskImage, short x, short y)
+        public void AddImage(Bitmap image, Bitmap maskImage, short x, short y, bool removeBlack = true)
         {
-            MImage mImage = new MImage(image, maskImage) { X = x, Y = y };
+            MImage mImage = new MImage(image, maskImage, removeBlack) { X = x, Y = y };
 
             Count++;
             Images.Add(mImage);
         }
 
-        public void ReplaceImage(int Index, Bitmap image, short x, short y)
+        public void ReplaceImage(int Index, Bitmap image, short x, short y, bool removeBlack = true)
         {
-            MImage mImage = new MImage(image) { X = x, Y = y };
+            MImage mImage = new MImage(image, removeBlack) { X = x, Y = y };
 
             Images[Index] = mImage;
         }
@@ -359,7 +359,7 @@ namespace LibraryEditor
                 FBytes = ConvertBitmapToArray(Image, removeBlack);
             }
 
-            public MImage(Bitmap image, Bitmap Maskimage)
+            public MImage(Bitmap image, Bitmap Maskimage, bool removeBlack = true)
             {
                 if (image == null)
                 {
@@ -370,7 +370,7 @@ namespace LibraryEditor
                 Width = (short)image.Width;
                 Height = (short)image.Height;
                 Image = image;// FixImageSize(image);
-                FBytes = ConvertBitmapToArray(Image);
+                FBytes = ConvertBitmapToArray(Image, removeBlack);
                 if (Maskimage == null)
                 {
                     MaskFBytes = new byte[0];
@@ -380,7 +380,7 @@ namespace LibraryEditor
                 MaskWidth = (short)Maskimage.Width;
                 MaskHeight = (short)Maskimage.Height;
                 MaskImage = Maskimage;// FixImageSize(Maskimage);
-                MaskFBytes = ConvertBitmapToArray(MaskImage);
+                MaskFBytes = ConvertBitmapToArray(MaskImage, removeBlack);
             }
 
             private Bitmap FixImageSize(Bitmap input)

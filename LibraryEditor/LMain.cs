@@ -338,7 +338,7 @@ namespace LibraryEditor
                         short.TryParse(placements[1], out y);
                 }
 
-                _library.AddImage(image, x, y);
+                _library.AddImage(image, x, y, checkboxRemoveBlackOnImport.Checked);
                 toolStripProgressBar.Value++;
                 //image.Dispose();
             }
@@ -427,7 +427,7 @@ namespace LibraryEditor
                     g.DrawImage(shadowImage.Image, new Point(offSetX > 0 ? offSetX : 0, offSetY > 0 ? offSetY : 0));
                 }
 
-                _library.ReplaceImage(i, newBitmap, mImage.X, mImage.Y);
+                _library.ReplaceImage(i, newBitmap, mImage.X, mImage.Y, checkboxRemoveBlackOnImport.Checked);
             }
 
             PreviewListView.VirtualListSize = _library.Images.Count;
@@ -565,7 +565,7 @@ namespace LibraryEditor
             for (int i = 0; i < copyList.Count; i++)
             {
                 MLibraryV2.MImage image = _library.GetMImage(copyList[i]);
-                tempLibrary.AddImage(image.Image, image.MaskImage, image.X, image.Y);
+                tempLibrary.AddImage(image.Image, image.MaskImage, image.X, image.Y, checkboxRemoveBlackOnImport.Checked);
             }
 
             tempLibrary.Save();
@@ -894,7 +894,7 @@ namespace LibraryEditor
 
             ImageList.Images.Clear();
             _indexList.Clear();
-            _library.ReplaceImage(PreviewListView.SelectedIndices[0], newBmp, 0, 0);
+            _library.ReplaceImage(PreviewListView.SelectedIndices[0], newBmp, 0, 0, checkboxRemoveBlackOnImport.Checked);
             PreviewListView.VirtualListSize = _library.Images.Count;
 
             try
