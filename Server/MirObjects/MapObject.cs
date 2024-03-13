@@ -419,13 +419,22 @@ namespace Server.MirObjects
         {
             Broadcast(GetInfo());
             return;
-        } 
+        }
 
         public bool IsAttackTarget(MapObject attacker)
         {
             if (attacker == null || attacker.Node == null) return false;
-            if (Dead || InSafeZone || attacker.InSafeZone || attacker == this) return false;
-            
+            if (Dead || attacker == this) return false;
+
+            var flag = true;
+            if (Race == ObjectType.Monster)
+            {
+                // Check if we are a training AI - we can be attacked in safezones
+                if (((MonsterObject)this).Info.AI == 56)
+                    flag = false;
+            }
+            if (flag && (InSafeZone || attacker.InSafeZone)) return false;
+
             switch (attacker.Race)
             {
                 case ObjectType.Player:
