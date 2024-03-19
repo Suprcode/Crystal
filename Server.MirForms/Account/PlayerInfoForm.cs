@@ -42,7 +42,8 @@ namespace Server
 
             if (Character?.Player != null)
             {
-                CurrentMapLabel.Text = $"{Character.Player.CurrentMap.Info.Title} {Character.Player.CurrentMap.Info.FileName} {Character.CurrentLocation.X}:{Character.CurrentLocation.Y}";
+                CurrentMapLabel.Text = $"{Character.Player.CurrentMap.Info.Title} / {Character.Player.CurrentMap.Info.FileName}";
+                CurrentXY.Text = $"X:{Character.CurrentLocation.X}: Y:{Character.CurrentLocation.Y}";
 
                 ExpTextBox.Text = $"{string.Format("{0:#0.##%}", Character.Player.Experience / (double)Character.Player.MaxExperience)}";
                 ACBox.Text = $"{Character.Player.Stats[Stat.MinAC]}-{Character.Player.Stats[Stat.MaxAC]}";
@@ -57,6 +58,7 @@ namespace Server
             else
             {
                 CurrentMapLabel.Text = "OFFLINE";
+                CurrentXY.Text = "OFFLINE";
             }
 
             CurrentIPLabel.Text = Character.AccountInfo.LastIP;

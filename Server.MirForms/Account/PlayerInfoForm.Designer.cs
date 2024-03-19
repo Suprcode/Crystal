@@ -73,6 +73,8 @@
             label8 = new Label();
             CurrentIPLabel = new Label();
             groupBox4 = new GroupBox();
+            CurrentXY = new Label();
+            label7 = new Label();
             tabControl1 = new TabControl();
             PlayerInfoTab = new TabPage();
             SearchBox = new GroupBox();
@@ -545,14 +547,14 @@
             label5.Location = new Point(8, 19);
             label5.Margin = new Padding(4, 0, 4, 0);
             label5.Name = "label5";
-            label5.Size = new Size(105, 15);
+            label5.Size = new Size(83, 15);
             label5.TabIndex = 16;
-            label5.Text = "Current Location : ";
+            label5.Text = "Current Map : ";
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(8, 37);
+            label6.Location = new Point(8, 56);
             label6.Margin = new Padding(4, 0, 4, 0);
             label6.Name = "label6";
             label6.Size = new Size(80, 15);
@@ -562,7 +564,7 @@
             // OnlineTimeLabel
             // 
             OnlineTimeLabel.AutoSize = true;
-            OnlineTimeLabel.Location = new Point(128, 37);
+            OnlineTimeLabel.Location = new Point(128, 56);
             OnlineTimeLabel.Margin = new Padding(4, 0, 4, 0);
             OnlineTimeLabel.Name = "OnlineTimeLabel";
             OnlineTimeLabel.Size = new Size(70, 15);
@@ -572,7 +574,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(8, 57);
+            label8.Location = new Point(8, 76);
             label8.Margin = new Padding(4, 0, 4, 0);
             label8.Name = "label8";
             label8.Size = new Size(69, 15);
@@ -582,7 +584,7 @@
             // CurrentIPLabel
             // 
             CurrentIPLabel.AutoSize = true;
-            CurrentIPLabel.Location = new Point(128, 57);
+            CurrentIPLabel.Location = new Point(128, 76);
             CurrentIPLabel.Margin = new Padding(4, 0, 4, 0);
             CurrentIPLabel.Name = "CurrentIPLabel";
             CurrentIPLabel.Size = new Size(23, 15);
@@ -592,6 +594,8 @@
             // 
             // groupBox4
             // 
+            groupBox4.Controls.Add(CurrentXY);
+            groupBox4.Controls.Add(label7);
             groupBox4.Controls.Add(CurrentIPLabel);
             groupBox4.Controls.Add(CurrentMapLabel);
             groupBox4.Controls.Add(label8);
@@ -606,6 +610,26 @@
             groupBox4.TabIndex = 25;
             groupBox4.TabStop = false;
             groupBox4.Text = "Details";
+            // 
+            // CurrentXY
+            // 
+            CurrentXY.AutoSize = true;
+            CurrentXY.Location = new Point(128, 38);
+            CurrentXY.Margin = new Padding(4, 0, 4, 0);
+            CurrentXY.Name = "CurrentXY";
+            CurrentXY.Size = new Size(30, 15);
+            CurrentXY.TabIndex = 25;
+            CurrentXY.Text = "$x/y";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(8, 38);
+            label7.Margin = new Padding(4, 0, 4, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(105, 15);
+            label7.TabIndex = 26;
+            label7.Text = "Current Location : ";
             // 
             // tabControl1
             // 
@@ -940,5 +964,7 @@
         private ColumnHeader NameHeader;
         private ColumnHeader CountHeader;
         private ColumnHeader DurabilityHeader;
+        private Label CurrentXY;
+        private Label label7;
     }
 }
