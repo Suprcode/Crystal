@@ -108,6 +108,7 @@ namespace Server
             respawnsToolStripMenuItem = new ToolStripMenuItem();
             monsterTunerToolStripMenuItem = new ToolStripMenuItem();
             dropBuilderToolStripMenuItem = new ToolStripMenuItem();
+            UpTimeLabel = new ToolStripTextBox();
             InterfaceTimer = new Timer(components);
             MainTabs.SuspendLayout();
             tabPage1.SuspendLayout();
@@ -400,7 +401,8 @@ namespace Server
             // 
             // MainMenu
             // 
-            MainMenu.Items.AddRange(new ToolStripItem[] { controlToolStripMenuItem, accountToolStripMenuItem, databaseFormsToolStripMenuItem, configToolStripMenuItem1 });
+            MainMenu.BackColor = Color.Transparent;
+            MainMenu.Items.AddRange(new ToolStripItem[] { controlToolStripMenuItem, accountToolStripMenuItem, databaseFormsToolStripMenuItem, configToolStripMenuItem1, UpTimeLabel });
             MainMenu.Location = new Point(0, 0);
             MainMenu.Name = "MainMenu";
             MainMenu.Padding = new Padding(7, 2, 0, 2);
@@ -694,6 +696,15 @@ namespace Server
             dropBuilderToolStripMenuItem.Text = "Drop Builder";
             dropBuilderToolStripMenuItem.Click += dropBuilderToolStripMenuItem_Click;
             // 
+            // UpTimeLabel
+            // 
+            UpTimeLabel.Alignment = ToolStripItemAlignment.Right;
+            UpTimeLabel.BorderStyle = BorderStyle.None;
+            UpTimeLabel.Name = "UpTimeLabel";
+            UpTimeLabel.ReadOnly = true;
+            UpTimeLabel.Size = new Size(200, 20);
+            UpTimeLabel.Text = "Uptime:";
+            // 
             // InterfaceTimer
             // 
             InterfaceTimer.Enabled = true;
@@ -712,7 +723,7 @@ namespace Server
             Margin = new Padding(4, 3, 4, 3);
             MaximizeBox = false;
             Name = "SMain";
-            Text = "Legend of Mir Server";
+            Text = "Legend of Mir 2 Server";
             FormClosing += SMain_FormClosing;
             Load += SMain_Load;
             MainTabs.ResumeLayout(false);
@@ -810,6 +821,7 @@ namespace Server
         private ColumnHeader columnHeader4;
         private ColumnHeader columnHeader5;
         private ColumnHeader columnHeader6;
+        private ToolStripTextBox UpTimeLabel;
     }
 }
 

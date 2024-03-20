@@ -34,6 +34,7 @@ namespace Server
             FilterTextBox = new TextBox();
             RefreshButton = new Button();
             AccountInfoPanel = new Panel();
+            Delaccbtn = new Button();
             CharactersListView = new ListView();
             characterName = new ColumnHeader();
             characterClass = new ColumnHeader();
@@ -93,7 +94,6 @@ namespace Server
             TotalServerGold = new Label();
             ServerCreditTextBox = new TextBox();
             TotalServerCredit = new Label();
-            Delaccbtn = new Button();
             AccountInfoPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -181,6 +181,17 @@ namespace Server
             AccountInfoPanel.Name = "AccountInfoPanel";
             AccountInfoPanel.Size = new Size(1248, 243);
             AccountInfoPanel.TabIndex = 14;
+            // 
+            // Delaccbtn
+            // 
+            Delaccbtn.Location = new Point(694, 207);
+            Delaccbtn.Margin = new Padding(4, 3, 4, 3);
+            Delaccbtn.Name = "Delaccbtn";
+            Delaccbtn.Size = new Size(88, 27);
+            Delaccbtn.TabIndex = 40;
+            Delaccbtn.Text = "Delete Acc";
+            Delaccbtn.UseVisualStyleBackColor = true;
+            Delaccbtn.Click += Delaccbtn_Click;
             // 
             // CharactersListView
             // 
@@ -291,7 +302,7 @@ namespace Server
             // 
             // WeekBanButton
             // 
-            WeekBanButton.Location = new Point(502, 208);
+            WeekBanButton.Location = new Point(502, 207);
             WeekBanButton.Margin = new Padding(4, 3, 4, 3);
             WeekBanButton.Name = "WeekBanButton";
             WeekBanButton.Size = new Size(88, 27);
@@ -302,7 +313,7 @@ namespace Server
             // 
             // DayBanButton
             // 
-            DayBanButton.Location = new Point(407, 208);
+            DayBanButton.Location = new Point(407, 207);
             DayBanButton.Margin = new Padding(4, 3, 4, 3);
             DayBanButton.Name = "DayBanButton";
             DayBanButton.Size = new Size(88, 27);
@@ -695,17 +706,6 @@ namespace Server
             TotalServerCredit.Size = new Size(105, 15);
             TotalServerCredit.TabIndex = 23;
             TotalServerCredit.Text = "Total Server Credit:";
-            // 
-            // Delaccbtn
-            // 
-            Delaccbtn.Location = new Point(694, 208);
-            Delaccbtn.Margin = new Padding(4, 3, 4, 3);
-            Delaccbtn.Name = "Delaccbtn";
-            Delaccbtn.Size = new Size(88, 27);
-            Delaccbtn.TabIndex = 40;
-            Delaccbtn.Text = "Delete Acc";
-            Delaccbtn.UseVisualStyleBackColor = true;
-            Delaccbtn.Click += Delaccbtn_Click;
             // 
             // AccountInfoForm
             // 

@@ -69,6 +69,7 @@ namespace Server
                 MonsterLabel.Text = $"Monsters: {Envir.MonsterCount}";
                 ConnectionsLabel.Text = $"Connections: {Envir.Connections.Count}";
                 BlockedIPsLabel.Text = $"Blocked IPs: {Envir.IPBlocks.Count(x => x.Value > Envir.Now)}";
+                UpTimeLabel.Text = $"Uptime: {Envir.Stopwatch.ElapsedMilliseconds / 1000 / 60 / 60 / 24}d:{Envir.Stopwatch.ElapsedMilliseconds / 1000 / 60 / 60 % 24}h:{Envir.Stopwatch.ElapsedMilliseconds / 1000 / 60 % 60}m:{Envir.Stopwatch.ElapsedMilliseconds / 1000 % 60}s";
 
                 if (Settings.Multithreaded && (Envir.MobThreads != null))
                 {
