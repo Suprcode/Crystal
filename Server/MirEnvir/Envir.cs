@@ -2603,7 +2603,52 @@ namespace Server.MirEnvir
 
             return list;
         }
+        public List<AccountInfo> MatchAccountsByLastIP(string ipAddress, bool match = false)
+        {
+            if (string.IsNullOrEmpty(ipAddress)) return new List<AccountInfo>(AccountList);
 
+            var list = new List<AccountInfo>();
+
+            for (var i = 0; i < AccountList.Count; i++)
+            {
+
+                if (match)
+                {
+                    if (AccountList[i].LastIP.Equals(ipAddress, StringComparison.OrdinalIgnoreCase))
+                        list.Add(AccountList[i]);
+                }
+                else
+                {
+                    if (AccountList[i].LastIP.IndexOf(ipAddress, StringComparison.OrdinalIgnoreCase) >= 0)
+                        list.Add(AccountList[i]);
+                }
+            }
+
+            return list;
+        }
+        public List<AccountInfo> MatchAccountsByCreationIP(string ipAddress, bool match = false)
+        {
+            if (string.IsNullOrEmpty(ipAddress)) return new List<AccountInfo>(AccountList);
+
+            var list = new List<AccountInfo>();
+
+            for (var i = 0; i < AccountList.Count; i++)
+            {
+
+                if (match)
+                {
+                    if (AccountList[i].CreationIP.Equals(ipAddress, StringComparison.OrdinalIgnoreCase))
+                        list.Add(AccountList[i]);
+                }
+                else
+                {
+                    if (AccountList[i].CreationIP.IndexOf(ipAddress, StringComparison.OrdinalIgnoreCase) >= 0)
+                        list.Add(AccountList[i]);
+                }
+            }
+
+            return list;
+        }
         public void CreateAccountInfo()
         {
             AccountList.Add(new AccountInfo {Index = ++NextAccountID});

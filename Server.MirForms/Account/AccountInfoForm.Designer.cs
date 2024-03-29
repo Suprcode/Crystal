@@ -94,6 +94,10 @@ namespace Server
             TotalServerGold = new Label();
             ServerCreditTextBox = new TextBox();
             TotalServerCredit = new Label();
+            FilterLastIPTextBox = new TextBox();
+            label16 = new Label();
+            FilterCreationIPTextBox = new TextBox();
+            label17 = new Label();
             AccountInfoPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -128,7 +132,7 @@ namespace Server
             // 
             // RefreshButton
             // 
-            RefreshButton.Location = new Point(455, 43);
+            RefreshButton.Location = new Point(885, 42);
             RefreshButton.Margin = new Padding(4, 3, 4, 3);
             RefreshButton.Name = "RefreshButton";
             RefreshButton.Size = new Size(88, 27);
@@ -654,7 +658,7 @@ namespace Server
             // MatchFilterCheckBox
             // 
             MatchFilterCheckBox.AutoSize = true;
-            MatchFilterCheckBox.Location = new Point(551, 48);
+            MatchFilterCheckBox.Location = new Point(981, 47);
             MatchFilterCheckBox.Margin = new Padding(4, 3, 4, 3);
             MatchFilterCheckBox.Name = "MatchFilterCheckBox";
             MatchFilterCheckBox.Size = new Size(89, 19);
@@ -707,11 +711,51 @@ namespace Server
             TotalServerCredit.TabIndex = 23;
             TotalServerCredit.Text = "Total Server Credit:";
             // 
+            // FilterLastIPTextBox
+            // 
+            FilterLastIPTextBox.Location = new Point(545, 45);
+            FilterLastIPTextBox.Margin = new Padding(4, 3, 4, 3);
+            FilterLastIPTextBox.Name = "FilterLastIPTextBox";
+            FilterLastIPTextBox.Size = new Size(116, 23);
+            FilterLastIPTextBox.TabIndex = 26;
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Location = new Point(464, 48);
+            label16.Margin = new Padding(4, 0, 4, 0);
+            label16.Name = "label16";
+            label16.Size = new Size(73, 15);
+            label16.TabIndex = 25;
+            label16.Text = "Filter Last IP:";
+            // 
+            // FilterCreationIPTextBox
+            // 
+            FilterCreationIPTextBox.Location = new Point(750, 45);
+            FilterCreationIPTextBox.Margin = new Padding(4, 3, 4, 3);
+            FilterCreationIPTextBox.Name = "FilterCreationIPTextBox";
+            FilterCreationIPTextBox.Size = new Size(116, 23);
+            FilterCreationIPTextBox.TabIndex = 28;
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Location = new Point(669, 48);
+            label17.Margin = new Padding(4, 0, 4, 0);
+            label17.Name = "label17";
+            label17.Size = new Size(73, 15);
+            label17.TabIndex = 27;
+            label17.Text = "Filter Last IP:";
+            // 
             // AccountInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1276, 532);
+            Controls.Add(FilterCreationIPTextBox);
+            Controls.Add(label17);
+            Controls.Add(FilterLastIPTextBox);
+            Controls.Add(label16);
             Controls.Add(ServerCreditTextBox);
             Controls.Add(TotalServerCredit);
             Controls.Add(ServerGoldTextBox);
@@ -803,5 +847,9 @@ namespace Server
         private TextBox ServerCreditTextBox;
         private Label TotalServerCredit;
         private Button Delaccbtn;
+        private TextBox FilterLastIPTextBox;
+        private Label label16;
+        private TextBox FilterCreationIPTextBox;
+        private Label label17;
     }
 }
