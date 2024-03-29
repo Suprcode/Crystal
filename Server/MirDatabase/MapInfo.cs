@@ -27,6 +27,7 @@ namespace Server.MirDatabase
 
         public string NoReconnectMap = string.Empty;
         public int FireDamage, LightningDamage;
+        public bool DisablePickUpPets = false;
 
         public List<SafeZoneInfo> SafeZones = new List<SafeZoneInfo>();
         public List<MovementInfo> Movements = new List<MovementInfo>();
@@ -94,6 +95,7 @@ namespace Server.MirDatabase
             NoTownTeleport = reader.ReadBoolean();
             if (Envir.LoadVersion < 79) return;
             NoReincarnation = reader.ReadBoolean();
+            DisablePickUpPets = reader.ReadBoolean();
         }
 
         public void Save(BinaryWriter writer)
@@ -148,7 +150,7 @@ namespace Server.MirDatabase
             writer.Write(Music);
             writer.Write(NoTownTeleport);
             writer.Write(NoReincarnation);
-
+            writer.Write(DisablePickUpPets);
         }
 
 

@@ -113,6 +113,18 @@ namespace Server.MirObjects
             if (Target != null && (Target.CurrentMap != CurrentMap || !Functions.InRange(CurrentLocation, Target.CurrentLocation, Globals.DataRange)))
                 Target = null;
 
+            if (CurrentMap != null && CurrentMap.Info.DisablePickUpPets)
+            {
+                CurrentMap.RemoveObject(this);
+                if (Master != null)
+                {
+                    Master.Pets.Remove(this);
+                    Master = null;
+                }
+                Despawn();
+                return;
+            }
+
             if (Dead && Envir.Time >= DeadTime)
             {
                 CurrentMap.RemoveObject(this);

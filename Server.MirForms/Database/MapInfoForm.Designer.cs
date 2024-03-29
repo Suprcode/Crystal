@@ -163,6 +163,7 @@ namespace Server
             ExportMongenButton = new Button();
             VisualizerButton = new Button();
             toolTip1 = new ToolTip(components);
+            NoPickUpPets = new CheckBox();
             MapTabs.SuspendLayout();
             tabPage1.SuspendLayout();
             ((ISupportInitialize)MinimapPreview).BeginInit();
@@ -390,6 +391,7 @@ namespace Server
             // 
             // tabPage6
             // 
+            tabPage6.Controls.Add(NoPickUpPets);
             tabPage6.Controls.Add(NoReincarnation);
             tabPage6.Controls.Add(NoTownTeleportCheckbox);
             tabPage6.Controls.Add(NoFightCheckbox);
@@ -1661,6 +1663,18 @@ namespace Server
             VisualizerButton.UseVisualStyleBackColor = true;
             VisualizerButton.Click += VisualizerButton_Click;
             // 
+            // NoPickUpPets
+            // 
+            NoPickUpPets.AutoSize = true;
+            NoPickUpPets.Location = new Point(203, 228);
+            NoPickUpPets.Margin = new Padding(4, 3, 4, 3);
+            NoPickUpPets.Name = "NoPickUpPets";
+            NoPickUpPets.Size = new Size(110, 19);
+            NoPickUpPets.TabIndex = 46;
+            NoPickUpPets.Text = "No Pick Up Pets";
+            NoPickUpPets.UseVisualStyleBackColor = true;
+            NoPickUpPets.CheckedChanged += NoPickUpPets_CheckedChanged;
+            // 
             // MapInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1833,5 +1847,6 @@ namespace Server
         private TextBox BigMapIconTextBox;
         private CheckBox ShowBigMapCheckBox;
         private PictureBox MinimapPreview;
+        private CheckBox NoPickUpPets;
     }
 }

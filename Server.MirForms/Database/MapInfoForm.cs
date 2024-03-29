@@ -6,7 +6,7 @@ namespace Server
     public partial class MapInfoForm : Form
     {
         public Envir Envir => SMain.EditEnvir;
-      
+
         private List<MapInfo> _selectedMapInfos;
         private List<SafeZoneInfo> _selectedSafeZoneInfos;
         private List<RespawnInfo> _selectedRespawnInfos;
@@ -18,7 +18,7 @@ namespace Server
         {
             InitializeComponent();
 
-            List<string> mineItems = new(){ { "Disabled" } };
+            List<string> mineItems = new() { { "Disabled" } };
             Settings.MineSetList.ForEach(x => mineItems.Add(x.Name));
             MineComboBox.DataSource = mineItems;
 
@@ -137,6 +137,8 @@ namespace Server
             //MineIndextextBox.Text = mi.MineIndex.ToString();
             NoTownTeleportCheckbox.Checked = mi.NoTownTeleport;
             NoReincarnation.Checked = mi.NoReincarnation;
+            NoPickUpPets.Checked = mi.DisablePickUpPets;
+
             for (int i = 1; i < _selectedMapInfos.Count; i++)
             {
                 mi = _selectedMapInfos[i];
@@ -539,15 +541,15 @@ namespace Server
 
             List<bool> selected = new List<bool>();
 
-            for (int i = 0; i < RespawnInfoListBox.Items.Count; i++) 
+            for (int i = 0; i < RespawnInfoListBox.Items.Count; i++)
                 selected.Add(RespawnInfoListBox.GetSelected(i));
 
             RespawnInfoListBox.Items.Clear();
 
-            for (int i = 0; i < _info.Respawns.Count; i++) 
+            for (int i = 0; i < _info.Respawns.Count; i++)
                 RespawnInfoListBox.Items.Add(_info.Respawns[i]);
 
-            for (int i = 0; i < selected.Count; i++) 
+            for (int i = 0; i < selected.Count; i++)
                 RespawnInfoListBox.SetSelected(i, selected[i]);
 
             RespawnInfoListBox.SelectedIndexChanged += RespawnInfoListBox_SelectedIndexChanged;
@@ -1732,7 +1734,7 @@ namespace Server
                     }
                 }
             }
-                
+
             RefreshMovementList();
         }
 
@@ -1776,6 +1778,17 @@ namespace Server
                 _selectedMovementInfos[i].Icon = temp;
 
             RefreshMovementList();
+        }
+
+        private void NoPickUpPets_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
+                _selectedMapInfos[i].DisablePickUpPets = NoPickUpPets.Checked;
+
+            }
         }
     }
 }
