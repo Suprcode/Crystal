@@ -11830,7 +11830,7 @@ namespace Client.MirScenes
                 case Spell.Vampirism:
                 case Spell.Revelation:
                 case Spell.Entrapment:
-                case Spell.EntrapmentCheat:
+                case Spell.EntrapmentCheats:
                 case Spell.Hallucination:
                 case Spell.DarkBody:
                 case Spell.FireBounce:
