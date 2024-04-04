@@ -2097,6 +2097,16 @@ namespace Client.MirObjects
 
                             #endregion
 
+
+                            #region EntrapmentCheats
+
+                            case Spell.EntrapmentCheats:
+                                Effects.Add(new Effect(Libraries.Magic3, 4370, 10, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell.Entrapment * 10);
+                                break;
+
+                            #endregion
+
                             #region BladeAvalanche
 
                             case Spell.BladeAvalanche:

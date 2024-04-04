@@ -4730,6 +4730,10 @@ namespace Client.MirScenes
                         ob.Effects.Add(new Effect(Libraries.Magic2, 1010, 10, 1500, ob));
                         ob.Effects.Add(new Effect(Libraries.Magic2, 1020, 8, 1200, ob));
                         break;
+                    case SpellEffect.EntrapmentCheats:
+                        ob.Effects.Add(new Effect(Libraries.Magic3, 4390, 10, 1500, ob));
+                        ob.Effects.Add(new Effect(Libraries.Magic3, 4400, 8, 1200, ob));
+                        break;
                     case SpellEffect.Critical:
                         //ob.Effects.Add(new Effect(Libraries.CustomEffects, 0, 12, 60, ob));
                         break;
@@ -11826,6 +11830,7 @@ namespace Client.MirScenes
                 case Spell.Vampirism:
                 case Spell.Revelation:
                 case Spell.Entrapment:
+                case Spell.EntrapmentCheat:
                 case Spell.Hallucination:
                 case Spell.DarkBody:
                 case Spell.FireBounce:

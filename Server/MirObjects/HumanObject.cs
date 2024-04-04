@@ -3588,6 +3588,9 @@ namespace Server.MirObjects
                 case Spell.Entrapment:
                     Entrapment(target, magic);
                     break;
+                case Spell.EntrapmentCheats:
+                    EntrapmentCheats(target, magic);
+                    break;
                 case Spell.BladeAvalanche:
                     BladeAvalanche(magic);
                     break;
@@ -4760,6 +4763,17 @@ namespace Server.MirObjects
 
         #region Warrior Skills
         private void Entrapment(MapObject target, UserMagic magic)
+        {
+            if (target == null || !target.IsAttackTarget(this)) return;
+
+            int damage = 0;
+
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, damage, target);
+
+            ActionList.Add(action);
+        }
+
+        private void EntrapmentCheats(MapObject target, UserMagic magic)
         {
             if (target == null || !target.IsAttackTarget(this)) return;
 
@@ -6185,6 +6199,33 @@ namespace Server.MirObjects
                     if (duration > 0) target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = duration, TickSpeed = 1000 }, this);
                     CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.Entrapment }, target.CurrentLocation);
                     if (target.Pushed(this, pulldirection, pulldistance) > 0) LevelMagic(magic);
+                    break;
+
+                #endregion
+
+                #region EntrapmentCheats
+
+                case Spell.EntrapmentCheats:
+                    value = (int)data[1];
+                    target = (MapObject)data[2];
+
+                    if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null ||
+                        Functions.MaxDistance(CurrentLocation, target.CurrentLocation) > 7 || target.Level >= Level + 5 + Envir.Random.Next(8)) return;
+
+                    MirDirection Passivepulldirection = (MirDirection)((byte)(Direction - 4) % 8);
+                    int Passivepulldistance = 0;
+                    if ((byte)Passivepulldirection % 2 > 0)
+                        Passivepulldistance = Math.Max(0, Math.Min(Math.Abs(CurrentLocation.X - target.CurrentLocation.X), Math.Abs(CurrentLocation.Y - target.CurrentLocation.Y)));
+                    else
+                        Passivepulldistance = Passivepulldirection == MirDirection.Up || Passivepulldirection == MirDirection.Down ? Math.Abs(CurrentLocation.Y - target.CurrentLocation.Y) - 2 : Math.Abs(CurrentLocation.X - target.CurrentLocation.X) - 2;
+
+                    int Passivelevelgap = (target.Race == ObjectType.Player || target.Race != ObjectType.Hero) ? Level - target.Level + 4 : Level - target.Level + 9;
+                    if (Envir.Random.Next(30) >= ((magic.Level + 1) * 3) + Passivelevelgap) return;
+
+                    int Passiveduration = target.Race == ObjectType.Player? (int)Math.Round((magic.Level + 1) * 1.6) : (int)Math.Round((magic.Level + 1) * 0.8);
+                    if (Passiveduration > 0) target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = Passiveduration, TickSpeed = 1000 }, this);
+                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.EntrapmentCheats }, target.CurrentLocation);
+                    if (target.Pushed(this, Passivepulldirection, Passivepulldistance) > 0) LevelMagic(magic);
                     break;
 
                 #endregion

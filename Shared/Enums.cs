@@ -1132,6 +1132,8 @@ public enum Spell : byte
     Fury = 16,
     ImmortalSkin = 17,
 
+    EntrapmentCheats = 18,
+
     //Wizard
     FireBall = 31,
     Repulsion = 32,
@@ -1293,7 +1295,8 @@ public enum SpellEffect : byte
     FlamingMutantWeb,
     FurbolgWarriorCritical,
     Tester,
-    MoonMist
+    MoonMist,
+    EntrapmentCheats
 }
 
 
