@@ -251,6 +251,15 @@ namespace Server.MirObjects
             }
             return original;
         }
+
+        public long GetSlowAttackDelay(long origSpeed)
+        {
+            if (CurrentPoison.HasFlag(PoisonType.Slow))
+            {
+                return origSpeed * 2;
+            }
+            return origSpeed;
+        }
         public override void Process()
         {
             if ((Race == ObjectType.Player && Connection == null) || Node == null || Info == null) return;
@@ -3416,7 +3425,7 @@ namespace Server.MirObjects
                 dir = Direction;
 
             Direction = dir;
-            if (spell != Spell.ShoulderDash && spell != Spell.BackStep && spell != Spell.FlashDash)
+            if (spell != Spell.ShoulderDash && spell != Spell.BackStep && spell != Spell.FlashDash && spell != Spell.FlashDashCheats)
                 Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
 
             MapObject target = null;
@@ -3663,6 +3672,9 @@ namespace Server.MirObjects
                     break;
                 case Spell.FlashDash:
                     FlashDash(magic);
+                    return;
+                case Spell.FlashDashCheats:
+                    FlashDashCheats(magic);
                     return;
                 case Spell.CrescentSlash:
                     CrescentSlash(magic);
@@ -5376,7 +5388,106 @@ namespace Server.MirObjects
             magic.CastTime = Envir.Time;
             Enqueue(new S.MagicCast { Spell = magic.Spell });
         }
+
+        private void FlashDashCheats(UserMagic magic)//FlashDashCheats
+        {
+            bool success = false;
+            ActionTime = Envir.Time;
+
+            int travel = 0;
+            bool blocked = false;
+            int jumpDistance = (magic.Level <= 1) ? 0 : magic.Level;//3 max
+            Point location = CurrentLocation;
+            for (int i = 0; i < jumpDistance; i++)
+            {
+                location = Functions.PointMove(location, Direction, 1);
+                if (!CurrentMap.ValidPoint(location)) break;
+
+                Cell cInfo = CurrentMap.GetCell(location);
+                if (cInfo.Objects != null)
+                {
+                    for (int c = 0; c < cInfo.Objects.Count; c++)
+                    {
+                        MapObject ob = cInfo.Objects[c];
+                        if (!ob.Blocking) continue;
+                        blocked = true;
+                        if ((cInfo.Objects == null) || blocked) break;
+                    }
+                }
+                if (blocked) break;
+                travel++;
+            }
+
+            jumpDistance = travel;
+
+            if (jumpDistance > 0)
+            {
+                location = Functions.PointMove(CurrentLocation, Direction, jumpDistance);
+                CurrentMap.GetCell(CurrentLocation).Remove(this);
+                RemoveObjects(Direction, 1);
+                CurrentLocation = location;
+                CurrentMap.GetCell(CurrentLocation).Add(this);
+                AddObjects(Direction, 1);
+                Enqueue(new S.UserDashAttack { Direction = Direction, Location = location });
+                Broadcast(new S.ObjectDashAttack { ObjectID = ObjectID, Direction = Direction, Location = location, Distance = jumpDistance });
+            }
+            else
+            {
+                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            }
+
+            if (travel == 0) location = CurrentLocation;
+
+            int attackDelay = (AttackSpeed - 120) <= 300 ? 300 : (AttackSpeed - 120);
+            AttackTime = Envir.Time + GetSlowAttackDelay(attackDelay);
+            SpellTime = Envir.Time + 300;
+
+            location = Functions.PointMove(location, Direction, 1);
+            if (CurrentMap.ValidPoint(location))
+            {
+                Cell cInfo = CurrentMap.GetCell(location);
+                if (cInfo.Objects != null)
+                {
+                    for (int c = 0; c < cInfo.Objects.Count; c++)
+                    {
+                        MapObject ob = cInfo.Objects[c];
+                        switch (ob.Race)
+                        {
+                            case ObjectType.Monster:
+                            case ObjectType.Player:
+                                //Only targets
+                                if (ob.IsAttackTarget(this))
+                                {
+                                    DelayedAction action = new DelayedAction(DelayedType.Damage, AttackTime, ob, magic.GetDamage(GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC])), DefenceType.ACAgility, true);
+                                    ActionList.Add(action);
+                                    success = true;
+                                    if (Envir.Random.Next(10) <= 4)
+                                    {
+                                          DelayedAction pa = new DelayedAction(DelayedType.Poison, AttackTime, ob, PoisonType.Stun, SpellEffect.TwinDrakeBlade, magic.Level + 4, 1000, DefenceType.ACAgility, true);
+                                          ActionList.Add(pa);
+                                    }
+                                    else
+                                    {
+                                          DelayedAction pa = new DelayedAction(DelayedType.Poison, AttackTime, ob, PoisonType.Paralysis, SpellEffect.TwinDrakeBlade, magic.Level + 3, 1000);
+                                          ActionList.Add(pa);
+                                    }
+                                    
+                                }
+                                break;
+                        }
+                    }
+                }
+            }
+            if (success) //technicaly this makes flashdash lvl when it casts rather then when it hits (it wont lvl if it's not hitting!)
+                LevelMagic(magic);
+
+            magic.CastTime = Envir.Time;
+            Enqueue(new S.MagicCast { Spell = magic.Spell });
+        }
+
         #endregion
+
+
 
         #region Archer Skills
         private int ApplyArcherState(int damage)

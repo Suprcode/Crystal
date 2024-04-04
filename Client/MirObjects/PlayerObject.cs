@@ -1158,6 +1158,7 @@ namespace Client.MirObjects
                                 }
                                 break;
                             case Spell.FlashDash:
+                            case Spell.FlashDashCheats:
                                 {
                                     int sLevel = (byte)action.Params[3];
 
@@ -1471,7 +1472,7 @@ namespace Client.MirObjects
 
                                 Network.Enqueue(new C.Magic { ObjectID = GameScene.User.ObjectID, Spell = Spell, Direction = Direction, TargetID = targetID, Location = location });
 
-                                if (Spell == Spell.FlashDash)
+                                if (Spell == Spell.FlashDash || Spell == Spell.FlashDashCheats)
                                 {
                                     GameScene.SpellTime = CMain.Time + 250;
                                     MapControl.NextAction = CMain.Time;
@@ -1601,6 +1602,7 @@ namespace Client.MirObjects
                                 EffectFrameInterval = EffectFrameInterval * 9 / 10;
                                 break;
                             case Spell.FlashDash:
+                            case Spell.FlashDashCheats:
                                 int attackDelay = (User.AttackSpeed - 120) <= 300 ? 300 : (User.AttackSpeed - 120);
 
                                 float attackRate = (float)(attackDelay / 300F * 10F);
@@ -2151,6 +2153,7 @@ namespace Client.MirObjects
                             #region FlashDash
 
                             case Spell.FlashDash:
+                            case Spell.FlashDashCheats:
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10 + (Gender == MirGender.Male ? 0 : 1));
                                 int attackDelay = (User.AttackSpeed - 120) <= 300 ? 300 : (User.AttackSpeed - 120);
 
@@ -3521,6 +3524,18 @@ namespace Client.MirObjects
                                         break;
 
                                     #endregion
+
+                                    #region FlashDashCheats
+
+                                    case Spell.FlashDashCheats:
+                                        SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 1);
+                                        if (ob == null)
+                                            MapControl.Effects.Add(new Effect(Libraries.Magic, 380, 10, 800, TargetPoint));
+                                        else
+                                            ob.Effects.Add(new Effect(Libraries.Magic, 380, 10, 800, ob));
+                                        break;
+
+                                        #endregion
 
                                 }
 

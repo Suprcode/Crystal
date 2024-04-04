@@ -11965,6 +11965,13 @@ namespace Client.MirScenes
                     }
                     //isTargetSpell = false;
                     break;
+                case Spell.FlashDashCheats:
+                    if (actor.GetMagic(Spell.FlashDashCheats).Level <= 1 && actor.IsDashAttack() == false)
+                    {
+                        actor.ClearMagic();
+                        return;
+                    }
+                    break;
                 default:
                     //isTargetSpell = false;
                         break;

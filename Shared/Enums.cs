@@ -1207,6 +1207,8 @@ public enum Spell : byte
     MoonMist = 106,
     CatTongue = 107,
 
+    FlashDashCheats = 108,
+
     //Archer
     Focus = 121,
     StraightShot = 122,
