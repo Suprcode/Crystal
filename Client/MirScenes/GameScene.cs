@@ -4730,6 +4730,10 @@ namespace Client.MirScenes
                         ob.Effects.Add(new Effect(Libraries.Magic2, 1010, 10, 1500, ob));
                         ob.Effects.Add(new Effect(Libraries.Magic2, 1020, 8, 1200, ob));
                         break;
+                    case SpellEffect.EntrapmentCheats:
+                        ob.Effects.Add(new Effect(Libraries.Magic3, 4390, 10, 1500, ob));
+                        ob.Effects.Add(new Effect(Libraries.Magic3, 4400, 8, 1200, ob));
+                        break;
                     case SpellEffect.Critical:
                         //ob.Effects.Add(new Effect(Libraries.CustomEffects, 0, 12, 60, ob));
                         break;
@@ -11826,6 +11830,7 @@ namespace Client.MirScenes
                 case Spell.Vampirism:
                 case Spell.Revelation:
                 case Spell.Entrapment:
+                case Spell.EntrapmentCheats:
                 case Spell.Hallucination:
                 case Spell.DarkBody:
                 case Spell.FireBounce:
@@ -11959,6 +11964,13 @@ namespace Client.MirScenes
                         return;
                     }
                     //isTargetSpell = false;
+                    break;
+                case Spell.FlashDashCheats:
+                    if (actor.GetMagic(Spell.FlashDashCheats).Level <= 1 && actor.IsDashAttack() == false)
+                    {
+                        actor.ClearMagic();
+                        return;
+                    }
                     break;
                 default:
                     //isTargetSpell = false;
