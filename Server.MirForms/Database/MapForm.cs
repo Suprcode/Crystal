@@ -36,7 +36,7 @@ namespace Server.MirForms
                     string[] b = a[0].Split(' ');
 
                     newMapInfo.FileName = b[0].TrimStart('['); // Assign MapFile from variable and trim leading '[' char
-                    newMapInfo.Title = b[1]; // Assign MapName from variable
+                    newMapInfo.Title = b[1].Replace("*", " "); // Assign MapName from variable, replacing asterisk with space
 
                     List<string> mapAttributes = new List<string>(); // Group of all attributes associated with that map
                     mapAttributes.AddRange(a[1].Split(' '));
