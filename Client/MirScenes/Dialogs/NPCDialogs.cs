@@ -822,6 +822,11 @@ namespace Client.MirScenes.Dialogs
             Goods.Clear();
             DisplayGoods.Clear();
 
+            AddGoods(list);
+        }
+
+        public void AddGoods(IEnumerable<UserItem> list)
+        {
             if (PType == PanelType.BuySub)
             {
                 StartIndex = 0;
