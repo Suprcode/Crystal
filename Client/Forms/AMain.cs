@@ -161,13 +161,13 @@ namespace Launcher
             {
                 using MemoryStream stream = new MemoryStream(data);
                 using BinaryReader reader = new BinaryReader(stream);
-                //string test = reader.ReadString();
-                if (reader.PeekChar() == 60)
+
+                if (reader.ReadByte() == 60)
                 {
                     //assume we got a html page back with an error code so it's not a patchlist
                     return;
                 }
-                //reader.BaseStream.Seek(0,SeekOrigin.Begin);
+                reader.BaseStream.Seek(0,SeekOrigin.Begin);
                 int count = reader.ReadInt32();
 
                 for (int i = 0; i < count; i++)
