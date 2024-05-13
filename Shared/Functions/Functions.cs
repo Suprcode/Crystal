@@ -454,4 +454,31 @@ public static class Functions
             return deserialized;
         }
     }
+
+    /// <summary>
+    /// Chop a List into chunks
+    /// </summary>
+    /// <param name="width">The amount of Chunks desired</param>
+    /// <param name="originalList">The list to Chop into Chunks</param>
+    /// <returns>Original List in Chunks within a List</returns>
+    public static List<List<T>> SplitList<T>(int width, List<T> originalList)
+    {
+        var _tempChunks = new List<List<T>>();
+
+        if (width == 0)
+            _tempChunks.Add(originalList);
+        else
+        {
+            // Determine how many lists are required 
+            var numberOfLists = (originalList.Count / width);
+
+            for (var i = 0; i <= numberOfLists; i++)
+            {
+                var newChunk = originalList.Skip(i * width).Take(width).ToList();
+                _tempChunks.Add(newChunk);
+            }
+        }
+
+        return _tempChunks;
+    }
 }

@@ -13794,5 +13794,28 @@ namespace Server.MirObjects
 
             Enqueue(p);
         }
+
+        public void SendNPCGoods(S.NPCGoods goods)
+        {
+            var chunks = Functions.SplitList(10, goods.List); // Split into chunks of 10..
+            if (chunks.Count == 1)
+            {
+                goods.Progress = 3;
+                Enqueue(goods);
+                return;
+            }
+
+            //  Loop through the chunks
+            for (var i = 0; i < chunks.Count; i++)
+            {
+                byte prog;
+
+                if (i == 0) prog = 1; // First List
+                else if (i == chunks.Count - 1) prog = 3; // Final List
+                else prog = 2; // Middle
+
+                Enqueue(new S.NPCGoods { Progress = prog, List = chunks[i], Rate = goods.Rate, Type = goods.Type, HideAddedStats = goods.HideAddedStats });
+            }
+        }
     }
 }
