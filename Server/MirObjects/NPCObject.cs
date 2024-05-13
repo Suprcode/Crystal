@@ -90,20 +90,14 @@ namespace Server.MirObjects
                             continue;
                         }
 
-                        var multiCount = UsedGoods.Count(x => x.Info.Index == item.Info.Index);
-
-                        if (multiCount >= Settings.GoodsMaxStored)
+                        if (UsedGoods.Count >= Settings.GoodsMaxStored)
                         {
                             UserItem nonAddedItem = UsedGoods.FirstOrDefault(e => e.IsAdded == false);
 
                             if (nonAddedItem != null)
-                            {
                                 UsedGoods.Remove(nonAddedItem);
-                            }
                             else
-                            {
                                 UsedGoods.RemoveAt(0);
-                            }
                         }
 
                         UsedGoods.Add(item);
@@ -111,9 +105,9 @@ namespace Server.MirObjects
                     }
                 }
 
-                for (int i = 0; i < deleteList.Count; i++)
+                foreach (var item in deleteList)
                 {
-                    BuyBack[playerGoods.Key].Remove(deleteList[i]);
+                    BuyBack[playerGoods.Key].Remove(item);
                 }
             }
         }
