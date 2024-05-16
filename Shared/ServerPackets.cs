@@ -414,6 +414,7 @@ namespace ServerPackets
         public LightSetting Lights;
         public bool Lightning, Fire;
         public byte MapDarkLight;
+        public WeatherSetting WeatherParticles = WeatherSetting.None;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -428,6 +429,7 @@ namespace ServerPackets
             if ((bools & 0x02) == 0x02) Fire = true;
             MapDarkLight = reader.ReadByte();
             Music = reader.ReadUInt16();
+            WeatherParticles = (WeatherSetting)reader.ReadUInt16();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -444,6 +446,9 @@ namespace ServerPackets
             writer.Write(bools);
             writer.Write(MapDarkLight);
             writer.Write(Music);
+            writer.Write(Music);
+
+            writer.Write((UInt16)WeatherParticles);
         }
     }
 
@@ -2905,6 +2910,7 @@ namespace ServerPackets
         public Point Location;
         public MirDirection Direction;
         public byte MapDarkLight;
+        public WeatherSetting Weather = WeatherSetting.None;
 
 
         protected override void ReadPacket(BinaryReader reader)
@@ -2919,6 +2925,7 @@ namespace ServerPackets
             Direction = (MirDirection)reader.ReadByte();
             MapDarkLight = reader.ReadByte();
             Music = reader.ReadUInt16();
+            Weather = (WeatherSetting)reader.ReadUInt16();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
@@ -2933,6 +2940,8 @@ namespace ServerPackets
             writer.Write((byte)Direction);
             writer.Write(MapDarkLight);
             writer.Write(Music);
+            
+            writer.Write((UInt16)Weather);
         }
     }
     public sealed class ObjectTeleportOut : Packet
@@ -2986,7 +2995,6 @@ namespace ServerPackets
     {
         public override short Index { get { return (short)ServerPacketIds.NPCGoods; } }
 
-        public byte Progress; // 1: Start, 2: Middle, 3: End
         public List<UserItem> List = new List<UserItem>();
         public float Rate;
         public PanelType Type;
@@ -2994,9 +3002,8 @@ namespace ServerPackets
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            Progress = reader.ReadByte();
-
             int count = reader.ReadInt32();
+
             for (int i = 0; i < count; i++)
                 List.Add(new UserItem(reader));
 
@@ -3007,9 +3014,8 @@ namespace ServerPackets
         }
         protected override void WritePacket(BinaryWriter writer)
         {
-            writer.Write(Progress);
-
             writer.Write(List.Count);
+
             for (int i = 0; i < List.Count; i++)
                 List[i].Save(writer);
 

@@ -34,6 +34,7 @@ namespace Server.MirDatabase
         public List<NPCInfo> NPCs = new List<NPCInfo>();
         public List<MineZone> MineZones = new List<MineZone>();
         public List<Point> ActiveCoords = new List<Point>();
+        public WeatherSetting WeatherParticles = WeatherSetting.None;
 
         public MapInfo()
         {
@@ -94,6 +95,11 @@ namespace Server.MirDatabase
             NoTownTeleport = reader.ReadBoolean();
             if (Envir.LoadVersion < 79) return;
             NoReincarnation = reader.ReadBoolean();
+
+            if (Envir.LoadVersion >= 110)
+            {
+                WeatherParticles = (WeatherSetting)reader.ReadUInt16();
+            }
         }
 
         public void Save(BinaryWriter writer)
@@ -149,6 +155,8 @@ namespace Server.MirDatabase
             writer.Write(NoTownTeleport);
             writer.Write(NoReincarnation);
 
+            writer.Write((UInt16)WeatherParticles);
+            
         }
 
 

@@ -1374,6 +1374,7 @@ namespace Server.MirObjects
                 MapIndex = CurrentMap.Info.Index,
                 FileName = CurrentMap.Info.FileName,
                 Title = CurrentMap.Info.Title,
+                Weather = CurrentMap.Info.WeatherParticles,
                 MiniMap = CurrentMap.Info.MiniMap,
                 BigMap = CurrentMap.Info.BigMap,
                 Lights = CurrentMap.Info.Light,
@@ -1567,6 +1568,7 @@ namespace Server.MirObjects
                 MiniMap = CurrentMap.Info.MiniMap,
                 Lights = CurrentMap.Info.Light,
                 BigMap = CurrentMap.Info.BigMap,
+                WeatherParticles = CurrentMap.Info.WeatherParticles,
                 Lightning = CurrentMap.Info.Lightning,
                 Fire = CurrentMap.Info.Fire,
                 MapDarkLight = CurrentMap.Info.MapDarkLight,
@@ -4349,6 +4351,7 @@ namespace Server.MirObjects
                 MapIndex = CurrentMap.Info.Index,
                 FileName = CurrentMap.Info.FileName,
                 Title = CurrentMap.Info.Title,
+                Weather = CurrentMap.Info.WeatherParticles,
                 MiniMap = CurrentMap.Info.MiniMap,
                 BigMap = CurrentMap.Info.BigMap,
                 Lights = CurrentMap.Info.Light,
@@ -13793,29 +13796,6 @@ namespace Server.MirObjects
             }
 
             Enqueue(p);
-        }
-
-        public void SendNPCGoods(S.NPCGoods goods)
-        {
-            var chunks = Functions.SplitList(10, goods.List); // Split into chunks of 10..
-            if (chunks.Count == 1)
-            {
-                goods.Progress = 3;
-                Enqueue(goods);
-                return;
-            }
-
-            //  Loop through the chunks
-            for (var i = 0; i < chunks.Count; i++)
-            {
-                byte prog;
-
-                if (i == 0) prog = 1; // First List
-                else if (i == chunks.Count - 1) prog = 3; // Final List
-                else prog = 2; // Middle
-
-                Enqueue(new S.NPCGoods { Progress = prog, List = chunks[i], Rate = goods.Rate, Type = goods.Type, HideAddedStats = goods.HideAddedStats });
-            }
         }
     }
 }

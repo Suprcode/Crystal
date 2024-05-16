@@ -1,12 +1,13 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
 
+
 namespace Server
 {
     public partial class MapInfoForm : Form
     {
         public Envir Envir => SMain.EditEnvir;
-      
+
         private List<MapInfo> _selectedMapInfos;
         private List<SafeZoneInfo> _selectedSafeZoneInfos;
         private List<RespawnInfo> _selectedRespawnInfos;
@@ -18,7 +19,7 @@ namespace Server
         {
             InitializeComponent();
 
-            List<string> mineItems = new(){ { "Disabled" } };
+            List<string> mineItems = new() { { "Disabled" } };
             Settings.MineSetList.ForEach(x => mineItems.Add(x.Name));
             MineComboBox.DataSource = mineItems;
 
@@ -33,6 +34,8 @@ namespace Server
             List<String> conquestItems = new() { { "None" } };
             Envir.ConquestInfoList.ForEach(x => conquestItems.Add(x.Name));
             ConquestComboBox.DataSource = conquestItems;
+
+            lstParticles.Items.AddRange(Enum.GetValues(typeof(WeatherSetting)).Cast<object>().ToArray());
 
             UpdateInterface();
         }
@@ -50,6 +53,7 @@ namespace Server
             {
                 MapInfoListBox.Items.Clear();
                 DestMapComboBox.Items.Clear();
+                lstParticles.SelectedItems.Clear();
 
                 for (int i = 0; i < Envir.MapInfoList.Count; i++)
                 {
@@ -72,7 +76,7 @@ namespace Server
                 LightsComboBox.SelectedItem = null;
                 MineComboBox.SelectedItem = null;
                 MusicTextBox.Text = string.Empty;
-
+                lstParticles.SelectedItems.Clear();
                 NoTeleportCheckbox.Checked = false;
                 NoReconnectCheckbox.Checked = false;
                 NoRandomCheckbox.Checked = false;
@@ -111,6 +115,33 @@ namespace Server
             MineComboBox.SelectedIndex = mi.MineIndex;
             MusicTextBox.Text = mi.Music.ToString();
 
+            //sorry jev i dont know the clean way of doing this :(
+            if (mi.WeatherParticles != WeatherSetting.None)
+            {
+                for (int i = 0; i <  lstParticles.Items.Count; i++)
+                {
+                    var item = lstParticles.Items[i];
+                    if (item != null) 
+                    {
+                        if (((mi.WeatherParticles & (WeatherSetting)item)) == (WeatherSetting)item)
+                            lstParticles.SetSelected(i, true);
+                            continue;
+                    }
+                }
+            }
+
+            /*
+            if (mi.WeatherParticles.Any())
+            {
+                //mi.WeatherParticles.ForEach(c => lstParticles.SetSelected(c, true));
+
+
+                mi.WeatherParticles.Select(sd => lstParticles.Items.IndexOf(sd)).Where(i => i >= 0)
+                    .ToList().ForEach(i => lstParticles.SetSelected(i, true));
+            }
+            else
+                lstParticles.SelectedItems.Clear();
+            */
             //map attributes
             NoTeleportCheckbox.Checked = mi.NoTeleport;
             NoReconnectCheckbox.Checked = mi.NoReconnect;
@@ -137,6 +168,7 @@ namespace Server
             //MineIndextextBox.Text = mi.MineIndex.ToString();
             NoTownTeleportCheckbox.Checked = mi.NoTownTeleport;
             NoReincarnation.Checked = mi.NoReincarnation;
+
             for (int i = 1; i < _selectedMapInfos.Count; i++)
             {
                 mi = _selectedMapInfos[i];
@@ -539,15 +571,15 @@ namespace Server
 
             List<bool> selected = new List<bool>();
 
-            for (int i = 0; i < RespawnInfoListBox.Items.Count; i++) 
+            for (int i = 0; i < RespawnInfoListBox.Items.Count; i++)
                 selected.Add(RespawnInfoListBox.GetSelected(i));
 
             RespawnInfoListBox.Items.Clear();
 
-            for (int i = 0; i < _info.Respawns.Count; i++) 
+            for (int i = 0; i < _info.Respawns.Count; i++)
                 RespawnInfoListBox.Items.Add(_info.Respawns[i]);
 
-            for (int i = 0; i < selected.Count; i++) 
+            for (int i = 0; i < selected.Count; i++)
                 RespawnInfoListBox.SetSelected(i, selected[i]);
 
             RespawnInfoListBox.SelectedIndexChanged += RespawnInfoListBox_SelectedIndexChanged;
@@ -605,6 +637,8 @@ namespace Server
             RespawnInfoListBox.Items.Clear();
             MovementInfoListBox.Items.Clear();
             MZListlistBox.Items.Clear();
+            lstParticles.SelectedItems.Clear();
+
             UpdateInterface();
         }
         private void FileNameTextBox_TextChanged(object sender, EventArgs e)
@@ -1732,7 +1766,7 @@ namespace Server
                     }
                 }
             }
-                
+
             RefreshMovementList();
         }
 
@@ -1776,6 +1810,27 @@ namespace Server
                 _selectedMovementInfos[i].Icon = temp;
 
             RefreshMovementList();
+        }
+
+        private void lstParticles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            //first get the new value
+            WeatherSetting newvalue = WeatherSetting.None;
+            foreach (WeatherSetting item in lstParticles.SelectedItems)
+                newvalue = newvalue | item;
+
+            //now assign it to all selected maps
+
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+            {
+                _selectedMapInfos[i].WeatherParticles = newvalue;
+
+                //_selectedMapInfos[i].WeatherParticles = lstParticles.SelectedItems.Cast<WeatherSetting>().ToList();
+
+            }
+            //UpdateInterface();
         }
     }
 }

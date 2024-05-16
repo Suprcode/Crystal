@@ -53,7 +53,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int MinVersion = 60;
-        public const int Version = 108;
+        public const int Version = 110;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
@@ -2598,31 +2598,6 @@ namespace Server.MirEnvir
                         if (AccountList[i].Characters[j].Name.IndexOf(playerName, StringComparison.OrdinalIgnoreCase) >= 0)
                             list.Add(AccountList[i]);
                     }
-                }
-            }
-
-            return list;
-        }
-
-        public List<AccountInfo> MatchAccountsByIP(string ipAddress, bool matchLastIP = false, bool match = false)
-        {
-            if (string.IsNullOrEmpty(ipAddress)) return new List<AccountInfo>(AccountList);
-
-            var list = new List<AccountInfo>();
-
-            for (var i = 0; i < AccountList.Count; i++)
-            {
-                string ipToMatch = matchLastIP ? AccountList[i].LastIP : AccountList[i].CreationIP;
-
-                if (match)
-                {
-                    if (ipToMatch.Equals(ipAddress, StringComparison.OrdinalIgnoreCase))
-                        list.Add(AccountList[i]);
-                }
-                else
-                {
-                    if (ipToMatch.IndexOf(ipAddress, StringComparison.OrdinalIgnoreCase) >= 0)
-                        list.Add(AccountList[i]);
                 }
             }
 
