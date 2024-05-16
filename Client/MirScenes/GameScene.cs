@@ -4143,19 +4143,39 @@ namespace Client.MirScenes
             {
                 case PanelType.Buy:
                     NPCGoodsDialog.UsePearls = false;
-                    NPCGoodsDialog.NewGoods(p.List);
-                    NPCGoodsDialog.Show();
+
+                    if (p.Progress == 1)
+                        NPCGoodsDialog.NewGoods(p.List);
+                    else
+                        NPCGoodsDialog.AddGoods(p.List);
+
+                    if (p.Progress == 3)
+                        NPCGoodsDialog.Show();
                     break;
                 case PanelType.BuySub:
                     NPCSubGoodsDialog.UsePearls = false;
-                    NPCSubGoodsDialog.NewGoods(p.List);
-                    NPCSubGoodsDialog.Show();
+
+                    if (p.Progress == 1)
+                        NPCSubGoodsDialog.NewGoods(p.List);
+                    else
+                        NPCSubGoodsDialog.AddGoods(p.List);
+
+                    if (p.Progress == 3)
+                        NPCSubGoodsDialog.Show();
                     break;
                 case PanelType.Craft:
                     NPCCraftGoodsDialog.UsePearls = false;
-                    NPCCraftGoodsDialog.NewGoods(p.List);
-                    NPCCraftGoodsDialog.Show();
-                    CraftDialog.Show();
+
+                    if (p.Progress == 1)
+                        NPCCraftGoodsDialog.NewGoods(p.List);
+                    else
+                        NPCCraftGoodsDialog.AddGoods(p.List);
+
+                    if (p.Progress == 3)
+                    {
+                        NPCCraftGoodsDialog.Show();
+                        CraftDialog.Show();
+                    }
                     break;
             }
         }
