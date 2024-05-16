@@ -27,18 +27,6 @@ namespace Client.MirGraphics.Particles
             NextUpdateTime = CMain.Now.AddMilliseconds(50);
             Position += Velocity;
         }
-
-        //protected override void OnPositionChanged()
-        //{
-        //    if (Position.Y < -ImageInfo. Size.Height * 2)
-        //        Position += yreset;
-        //    else if (Position.Y > Settings.ScreenHeight + ImageInfo.Size.Height)
-        //        Position -= yreset;
-        //    else if (Position.X < -ImageInfo.Size.Width * 2)
-        //        Position += xreset;
-        //    else if (Position.X > Settings.ScreenWidth + ImageInfo.Size.Width)
-        //        Position -= xreset;
-        //}
     }
     public class SandParticle : Particle
     {

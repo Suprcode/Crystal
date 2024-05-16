@@ -12297,8 +12297,6 @@ namespace Client.MirScenes
                 if ((Weather & itemWeather) != itemWeather)
                     continue;
 
-            //foreach (WeatherSetting itemWeather in Weather)
-            //{
                 switch (itemWeather)
                 {
                     case WeatherSetting.Leaves:

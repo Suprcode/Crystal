@@ -104,40 +104,11 @@ namespace Client.MirGraphics.Particles
             int drawx = (int)Position.X;
             int drawy = (int)Position.Y;
 
-            //if (CMain.Time < ImageInfo.Start) return;
-
-      
             if (Blend)
                 ImageInfo.Library.DrawBlend(ImageInfo.BaseIndex + ImageInfo.CurrentFrame, new Point(drawx, drawy), Color, true, BlendRate);
             else
-                //Library.Draw(BaseIndex + CurrentFrame, DrawLocation, Color.White, true);
+
             ImageInfo.Library.Draw(ImageInfo.BaseIndex + ImageInfo.CurrentFrame, new Point(drawx, drawy), Color, true, BlendRate);
-
-
-            //int offSet = 0;
-            //if (DrawFrame >= Effect.Count)
-            //    DrawFrame = 0;
-
-            //offSet = DrawFrame;
-
-
-
-            //if (Blend)
-            //{
-            //    //float oldOpacity = DXManager.Opacity;
-            //    //DXManager.SetOpacity(0.01F);
-            //    Effect.Library.DrawBlend(Effect.Index + offSet, new Point(drawx, drawy), Color, true, BlendRate, BlendMode.NORMAL);
-            //    //DXManager.SetOpacity(oldOpacity);
-
-            //}
-            //else
-            //    Effect.Library.Draw(Effect.Index + offSet, new Point(drawx, drawy), Color, true, BlendRate);
-
-            //if (CMain.Now < NextDraw) return;
-
-            //NextDraw = CMain.Now + Effect.DrawFrameMS;
-            //DrawFrame++;
-
         }
         public void ProcessImage()
         {

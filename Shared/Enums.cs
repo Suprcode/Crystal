@@ -9,7 +9,6 @@
     Trash,
     Upgrade
 }
-//[Flags]
 public enum WeatherSetting : ushort
 {
     None = 0,

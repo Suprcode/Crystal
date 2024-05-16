@@ -47,8 +47,6 @@ namespace Server
 
         private void UpdateInterface()
         {
-            //Group<MapInfo> orderedMapInfoList = Envir.MapInfoList.OrderBy(m => m.Title).ToList();
-
             if (MapInfoListBox.Items.Count != Envir.MapInfoList.Count)
             {
                 MapInfoListBox.Items.Clear();
@@ -115,7 +113,6 @@ namespace Server
             MineComboBox.SelectedIndex = mi.MineIndex;
             MusicTextBox.Text = mi.Music.ToString();
 
-            //sorry jev i dont know the clean way of doing this :(
             if (mi.WeatherParticles != WeatherSetting.None)
             {
                 for (int i = 0; i <  lstParticles.Items.Count; i++)
@@ -130,18 +127,6 @@ namespace Server
                 }
             }
 
-            /*
-            if (mi.WeatherParticles.Any())
-            {
-                //mi.WeatherParticles.ForEach(c => lstParticles.SetSelected(c, true));
-
-
-                mi.WeatherParticles.Select(sd => lstParticles.Items.IndexOf(sd)).Where(i => i >= 0)
-                    .ToList().ForEach(i => lstParticles.SetSelected(i, true));
-            }
-            else
-                lstParticles.SelectedItems.Clear();
-            */
             //map attributes
             NoTeleportCheckbox.Checked = mi.NoTeleport;
             NoReconnectCheckbox.Checked = mi.NoReconnect;
@@ -1826,11 +1811,7 @@ namespace Server
             for (int i = 0; i < _selectedMapInfos.Count; i++)
             {
                 _selectedMapInfos[i].WeatherParticles = newvalue;
-
-                //_selectedMapInfos[i].WeatherParticles = lstParticles.SelectedItems.Cast<WeatherSetting>().ToList();
-
             }
-            //UpdateInterface();
         }
     }
 }
