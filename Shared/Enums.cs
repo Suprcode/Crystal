@@ -9,7 +9,21 @@
     Trash,
     Upgrade
 }
-
+//[Flags]
+public enum WeatherSetting : ushort
+{
+    None = 0,
+    Fog = 1,
+    RedEmber = 2,
+    WhiteEmber = 4,
+    YellowEmber = 8,
+    FireParticle = 16,
+    Snow = 32,
+    Rain = 64,
+    Leaves = 128,
+    FireyLeaves = 256,
+    PurpleLeaves = 512,
+}
 public enum PanelType : byte
 {
     Buy,

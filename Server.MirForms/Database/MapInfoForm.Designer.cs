@@ -36,6 +36,8 @@ namespace Server
             components = new Container();
             MapTabs = new TabControl();
             tabPage1 = new TabPage();
+            label48 = new Label();
+            lstParticles = new ListBox();
             MinimapPreview = new PictureBox();
             label11 = new Label();
             MusicTextBox = new TextBox();
@@ -190,11 +192,13 @@ namespace Server
             MapTabs.Margin = new Padding(4, 3, 4, 3);
             MapTabs.Name = "MapTabs";
             MapTabs.SelectedIndex = 0;
-            MapTabs.Size = new Size(630, 315);
+            MapTabs.Size = new Size(630, 552);
             MapTabs.TabIndex = 8;
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(label48);
+            tabPage1.Controls.Add(lstParticles);
             tabPage1.Controls.Add(MinimapPreview);
             tabPage1.Controls.Add(label11);
             tabPage1.Controls.Add(MusicTextBox);
@@ -216,14 +220,34 @@ namespace Server
             tabPage1.Margin = new Padding(4, 3, 4, 3);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(4, 3, 4, 3);
-            tabPage1.Size = new Size(622, 287);
+            tabPage1.Size = new Size(622, 524);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Info";
             tabPage1.UseVisualStyleBackColor = true;
             // 
+            // label48
+            // 
+            label48.AutoSize = true;
+            label48.Location = new Point(451, 3);
+            label48.Name = "label48";
+            label48.Size = new Size(164, 15);
+            label48.TabIndex = 20;
+            label48.Text = "Weather (Can Select Multiple)";
+            // 
+            // lstParticles
+            // 
+            lstParticles.FormattingEnabled = true;
+            lstParticles.ItemHeight = 15;
+            lstParticles.Location = new Point(454, 21);
+            lstParticles.Name = "lstParticles";
+            lstParticles.SelectionMode = SelectionMode.MultiSimple;
+            lstParticles.Size = new Size(165, 244);
+            lstParticles.TabIndex = 0;
+            lstParticles.SelectedIndexChanged += lstParticles_SelectedIndexChanged;
+            // 
             // MinimapPreview
             // 
-            MinimapPreview.Location = new Point(265, 0);
+            MinimapPreview.Location = new Point(3, 234);
             MinimapPreview.Name = "MinimapPreview";
             MinimapPreview.Size = new Size(357, 287);
             MinimapPreview.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -418,7 +442,7 @@ namespace Server
             tabPage6.Margin = new Padding(4, 3, 4, 3);
             tabPage6.Name = "tabPage6";
             tabPage6.Padding = new Padding(4, 3, 4, 3);
-            tabPage6.Size = new Size(622, 287);
+            tabPage6.Size = new Size(622, 524);
             tabPage6.TabIndex = 5;
             tabPage6.Text = "Attributes";
             tabPage6.UseVisualStyleBackColor = true;
@@ -706,7 +730,7 @@ namespace Server
             tabPage3.Location = new Point(4, 24);
             tabPage3.Margin = new Padding(4, 3, 4, 3);
             tabPage3.Name = "tabPage3";
-            tabPage3.Size = new Size(622, 287);
+            tabPage3.Size = new Size(622, 524);
             tabPage3.TabIndex = 2;
             tabPage3.Text = "Safe Zones";
             tabPage3.UseVisualStyleBackColor = true;
@@ -847,7 +871,7 @@ namespace Server
             tabPage2.Margin = new Padding(4, 3, 4, 3);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(4, 3, 4, 3);
-            tabPage2.Size = new Size(622, 287);
+            tabPage2.Size = new Size(622, 524);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Respawns";
             tabPage2.UseVisualStyleBackColor = true;
@@ -1156,7 +1180,7 @@ namespace Server
             tabPage4.Margin = new Padding(4, 3, 4, 3);
             tabPage4.Name = "tabPage4";
             tabPage4.Padding = new Padding(4, 3, 4, 3);
-            tabPage4.Size = new Size(622, 287);
+            tabPage4.Size = new Size(622, 524);
             tabPage4.TabIndex = 3;
             tabPage4.Text = "Movements";
             tabPage4.UseVisualStyleBackColor = true;
@@ -1411,7 +1435,7 @@ namespace Server
             tabPage7.Margin = new Padding(4, 3, 4, 3);
             tabPage7.Name = "tabPage7";
             tabPage7.Padding = new Padding(4, 3, 4, 3);
-            tabPage7.Size = new Size(622, 287);
+            tabPage7.Size = new Size(622, 524);
             tabPage7.TabIndex = 6;
             tabPage7.Text = "MineZones";
             tabPage7.UseVisualStyleBackColor = true;
@@ -1581,7 +1605,7 @@ namespace Server
             MapInfoListBox.Margin = new Padding(4, 3, 4, 3);
             MapInfoListBox.Name = "MapInfoListBox";
             MapInfoListBox.SelectionMode = SelectionMode.MultiExtended;
-            MapInfoListBox.Size = new Size(220, 304);
+            MapInfoListBox.Size = new Size(220, 529);
             MapInfoListBox.TabIndex = 7;
             MapInfoListBox.SelectedIndexChanged += MapInfoListBox_SelectedIndexChanged;
             // 
@@ -1665,7 +1689,7 @@ namespace Server
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(886, 388);
+            ClientSize = new Size(886, 625);
             Controls.Add(VisualizerButton);
             Controls.Add(ExportMongenButton);
             Controls.Add(ImportMongenButton);
@@ -1833,5 +1857,7 @@ namespace Server
         private TextBox BigMapIconTextBox;
         private CheckBox ShowBigMapCheckBox;
         private PictureBox MinimapPreview;
+        private ListBox lstParticles;
+        private Label label48;
     }
 }
