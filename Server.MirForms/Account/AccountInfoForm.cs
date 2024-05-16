@@ -112,9 +112,6 @@ namespace Server
             else if (FilterPlayerTextBox.Text.Length > 0)
                 accounts = SMain.Envir.MatchAccountsByPlayer(FilterPlayerTextBox.Text, MatchFilterCheckBox.Checked);
 
-            else if (FilterIPTextBox.Text.Length > 0)
-                accounts = SMain.Envir.MatchAccountsByIP(FilterIPTextBox.Text, MatchFilterCheckBox.Checked);
-
             if (AccountInfoListView.Items.Count != accounts.Count)
             {
                 AccountInfoListView.SelectedIndexChanged -= AccountInfoListView_SelectedIndexChanged;

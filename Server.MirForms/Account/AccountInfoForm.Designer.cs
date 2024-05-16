@@ -94,8 +94,6 @@ namespace Server
             TotalServerGold = new Label();
             ServerCreditTextBox = new TextBox();
             TotalServerCredit = new Label();
-            FilterIPTextBox = new TextBox();
-            label16 = new Label();
             AccountInfoPanel.SuspendLayout();
             SuspendLayout();
             // 
@@ -130,7 +128,7 @@ namespace Server
             // 
             // RefreshButton
             // 
-            RefreshButton.Location = new Point(678, 45);
+            RefreshButton.Location = new Point(455, 43);
             RefreshButton.Margin = new Padding(4, 3, 4, 3);
             RefreshButton.Name = "RefreshButton";
             RefreshButton.Size = new Size(88, 27);
@@ -656,7 +654,7 @@ namespace Server
             // MatchFilterCheckBox
             // 
             MatchFilterCheckBox.AutoSize = true;
-            MatchFilterCheckBox.Location = new Point(774, 50);
+            MatchFilterCheckBox.Location = new Point(551, 48);
             MatchFilterCheckBox.Margin = new Padding(4, 3, 4, 3);
             MatchFilterCheckBox.Name = "MatchFilterCheckBox";
             MatchFilterCheckBox.Size = new Size(89, 19);
@@ -709,31 +707,11 @@ namespace Server
             TotalServerCredit.TabIndex = 23;
             TotalServerCredit.Text = "Total Server Credit:";
             // 
-            // FilterIPTextBox
-            // 
-            FilterIPTextBox.Location = new Point(541, 45);
-            FilterIPTextBox.Margin = new Padding(4, 3, 4, 3);
-            FilterIPTextBox.Name = "FilterIPTextBox";
-            FilterIPTextBox.Size = new Size(116, 23);
-            FilterIPTextBox.TabIndex = 26;
-            // 
-            // label16
-            // 
-            label16.AutoSize = true;
-            label16.Location = new Point(460, 48);
-            label16.Margin = new Padding(4, 0, 4, 0);
-            label16.Name = "label16";
-            label16.Size = new Size(49, 15);
-            label16.TabIndex = 25;
-            label16.Text = "Filter IP:";
-            // 
             // AccountInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1276, 532);
-            Controls.Add(FilterIPTextBox);
-            Controls.Add(label16);
             Controls.Add(ServerCreditTextBox);
             Controls.Add(TotalServerCredit);
             Controls.Add(ServerGoldTextBox);
@@ -825,7 +803,5 @@ namespace Server
         private TextBox ServerCreditTextBox;
         private Label TotalServerCredit;
         private Button Delaccbtn;
-        private TextBox FilterIPTextBox;
-        private Label label16;
     }
 }
