@@ -197,6 +197,9 @@ namespace Client
         public static bool P_AutoStart = false;
         public static int P_Concurrency = 1;
 
+        //WebForm WebAddress
+        public static string GameGoldLink = "https://www.lomcn.net";
+
         public static void Load()
         {
             GameLanguage.LoadClientLanguage(@".\Language.ini");
@@ -296,7 +299,10 @@ namespace Client
             P_ServerName = Reader.ReadString("Launcher", "ServerName", P_ServerName);
             P_BrowserAddress = Reader.ReadString("Launcher", "Browser", P_BrowserAddress);
             P_Concurrency = Reader.ReadInt32("Launcher", "ConcurrentDownloads", P_Concurrency);
-            
+
+
+            //WebForm WebAddress
+            GameGoldLink = Reader.ReadString("WebForm", "GameGoldLink", GameGoldLink);
 
             if (!P_Host.EndsWith("/")) P_Host += "/";
             if (P_Host.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) P_Host = P_Host.Insert(0, "http://");
@@ -390,6 +396,9 @@ namespace Client
             Reader.Write("Launcher", "Browser", P_BrowserAddress);
             Reader.Write("Launcher", "AutoStart", P_AutoStart);
             Reader.Write("Launcher", "ConcurrentDownloads", P_Concurrency);
+
+            //WebForm WebAddress
+            Reader.Write("WebForm", "GameGoldLink", GameGoldLink);
         }
 
         public static void LoadTrackedQuests(string charName)

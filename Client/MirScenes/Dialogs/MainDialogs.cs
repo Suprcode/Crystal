@@ -4091,4 +4091,65 @@ namespace Client.MirScenes.Dialogs
             GetCharacterDura();
         }
     }
+
+    public sealed class WebFormDialog : MirImageControl
+    {
+        public MirButton CloseButton;
+        public MirLabel TitleLable;
+        public MirWebForm WebForm;
+
+        public WebFormDialog()
+        {
+            Index = 18;
+            Library = Libraries.ChrSel;
+            Location = Center;
+
+            CloseButton = new MirButton
+            {
+                Index = 360,
+                HoverIndex = 361,
+                Library = Libraries.Prguse2,
+                Location = new Point(998, 2),
+                Parent = this,
+                Sound = SoundList.ButtonA,
+                PressedIndex = 362,
+            };
+            CloseButton.Click += (o, e) => Hide();
+
+        }
+        public override void Hide()
+        {
+            WebForm.Hide();
+
+            if (!Visible) return;
+            Visible = false;
+        }
+        public override void Show()
+        {
+            if (Visible) Hide();
+            else
+            {
+                Visible = true;
+                CreateWebForm();
+                WebForm.Show();
+            }
+        }
+
+        public void CreateWebForm()
+        {
+            if (GameScene.Scene.GameShopDialog.Visible)
+                GameScene.Scene.GameShopDialog.Hide();
+
+            WebForm = new MirWebForm()
+            {
+                Size = new Size(1000, 700),
+                Location = new Point(12,50),
+                Parent = this,
+            };
+            WebForm.WebForm.Source = new Uri(Settings.GameGoldLink);
+            WebForm.Visible = true;
+        }
+    }
+
+
 }

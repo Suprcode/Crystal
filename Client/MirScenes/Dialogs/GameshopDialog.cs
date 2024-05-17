@@ -8,7 +8,7 @@ namespace Client.MirScenes.Dialogs
     {
         public GameShopViewer Viewer;
         public MirLabel PageNumberLabel, totalGold, totalCredits;
-        public MirButton ALL, War, Sin, Tao, Wiz, Arch;
+        public MirButton ALL, War, Sin, Tao, Wiz, Arch, BuyGameGold;
         public MirButton allItems, topItems, Deals, New;
         public MirButton CloseButton, PreviousButton, NextButton;
         public MirButton UpButton, DownButton, PositionBar;
@@ -75,6 +75,18 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
             };
             CloseButton.Click += (o, e) => Hide();
+
+            BuyGameGold = new MirButton
+            {
+                Index = 778,
+                HoverIndex = 779,
+                PressedIndex = 780,
+                Location = new Point(20, 40),
+                Library = Libraries.Title,
+                Parent = this,
+                Sound = SoundList.ButtonA,
+            };
+            BuyGameGold.Click += (o, e) => GameScene.Scene.WebFormDialog.Show();
 
             totalGold = new MirLabel
             {
@@ -758,6 +770,5 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.GameShopDialog.Viewer.Visible = false;
 
         }
-
     }
 }

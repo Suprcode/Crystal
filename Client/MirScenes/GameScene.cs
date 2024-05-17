@@ -146,6 +146,10 @@ namespace Client.MirScenes
         public CompassDialog CompassControl;
         public RollDialog RollControl;
 
+        public WebFormDialog WebFormDialog;
+
+        
+
 
         public static List<ItemInfo> ItemInfoList = new List<ItemInfo>();
         public static List<UserId> UserIdList = new List<UserId>();
@@ -312,6 +316,10 @@ namespace Client.MirScenes
             TimerControl = new TimerDialog { Parent = this, Visible = false };
             CompassControl = new CompassDialog { Parent = this, Visible = false };
             RollControl = new RollDialog { Parent = this, Visible = false };
+
+            WebFormDialog = new WebFormDialog { Parent = this, Visible = false };
+
+            
 
             for (int i = 0; i < OutputLines.Length; i++)
                 OutputLines[i] = new MirLabel
