@@ -2939,6 +2939,7 @@ namespace ServerPackets
             writer.Write((byte)Direction);
             writer.Write(MapDarkLight);
             writer.Write(Music);
+            writer.Write((ushort)Weather);
         }
     }
     public sealed class ObjectTeleportOut : Packet

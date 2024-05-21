@@ -489,7 +489,7 @@ namespace Client.MirObjects
                     if (GroupDialog.GroupList.Contains(name) || name == User.Name) index = 11;
                     break;
                 case ObjectType.Hero:
-                    if (GroupDialog.GroupList.Contains(name) || name == GameScene.Hero.Name) index = 11;
+                    if (GroupDialog.GroupList.Contains(name) || name == GameScene.Hero?.Name) index = 11;
                     break;
             }
 

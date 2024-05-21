@@ -2604,6 +2604,31 @@ namespace Server.MirEnvir
             return list;
         }
 
+        public List<AccountInfo> MatchAccountsByIP(string ipAddress, bool matchLastIP = false, bool match = false)
+        {
+            if (string.IsNullOrEmpty(ipAddress)) return new List<AccountInfo>(AccountList);
+
+            var list = new List<AccountInfo>();
+
+            for (var i = 0; i < AccountList.Count; i++)
+            {
+                string ipToMatch = matchLastIP ? AccountList[i].LastIP : AccountList[i].CreationIP;
+
+                if (match)
+                {
+                    if (ipToMatch.Equals(ipAddress, StringComparison.OrdinalIgnoreCase))
+                        list.Add(AccountList[i]);
+                }
+                else
+                {
+                    if (ipToMatch.IndexOf(ipAddress, StringComparison.OrdinalIgnoreCase) >= 0)
+                        list.Add(AccountList[i]);
+                }
+            }
+
+            return list;
+        }
+
         public void CreateAccountInfo()
         {
             AccountList.Add(new AccountInfo {Index = ++NextAccountID});
