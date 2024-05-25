@@ -1,4 +1,5 @@
-﻿using Client.MirControls;
+﻿using Client.Forms;
+using Client.MirControls;
 
 namespace Client.MirObjects
 {

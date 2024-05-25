@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
+using Shared.Data;
 
-namespace ServerPackets {
+namespace Shared {
     public static class ServerPacket {
         public sealed class KeepAlive : Packet {
             public override short Index => (short)ServerPacketIds.KeepAlive;

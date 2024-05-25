@@ -10,11 +10,13 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirScenes;
 using Client.MirSounds;
+using Shared;
+using Shared.Functions;
 using SlimDX.Direct3D9;
 using SlimDX.Windows;
 using Font = System.Drawing.Font;
 
-namespace Client
+namespace Client.Forms
 {
     public partial class CMain : RenderForm
     {

@@ -1,4 +1,5 @@
 ﻿using Server.Library.MirDatabase;
+using Shared;
 
 namespace Server.Library.MirObjects.Monsters
 {

@@ -2,6 +2,8 @@ using System.Drawing;
 using Server.Library.MirEnvir;
 using Server.Library.MirNetwork;
 using Server.Library.MirObjects;
+using Shared;
+using Shared.Data;
 
 namespace Server.Library.MirDatabase
 {
@@ -108,7 +110,7 @@ namespace Server.Library.MirDatabase
 
         public CharacterInfo() { }
 
-        public CharacterInfo(ClientPackets.ClientPacket.NewCharacter p, MirConnection c)
+        public CharacterInfo(ClientPacket.NewCharacter p, MirConnection c)
         {
             Name = p.Name;
             Class = p.Class;

@@ -1,4 +1,4 @@
-﻿namespace LibraryViewer
+﻿namespace CMirLibraryViewer
 {
     public partial class LoadSettings : Form
     {

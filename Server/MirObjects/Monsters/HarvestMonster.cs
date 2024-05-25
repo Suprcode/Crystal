@@ -1,5 +1,6 @@
 ﻿using Server.Library.MirDatabase;
-using ServerPackets;
+using Shared;
+using Shared.Data;
 
 namespace Server.Library.MirObjects.Monsters
 {

@@ -1,5 +1,8 @@
 ﻿using System.Drawing;
 using System.Runtime.Serialization.Formatters.Binary;
+using Shared.Data;
+
+namespace Shared.Functions;
 
 public static class Functions
 {

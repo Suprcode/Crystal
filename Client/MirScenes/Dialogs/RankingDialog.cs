@@ -1,6 +1,9 @@
-﻿using Client.MirControls;
+﻿using Client.Forms;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirSounds;
+using Shared;
+using Shared.Data;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -276,7 +279,7 @@ namespace Client.MirScenes.Dialogs
         public void RequestRanks(byte RankType)
         {
             if (RankType > 6) return;
-            MirNetwork.Network.Enqueue(new ClientPackets.ClientPacket.GetRanking { RankType = RankType, RankIndex = RowOffset, OnlineOnly = OnlineOnly});
+            MirNetwork.Network.Enqueue(new ClientPacket.GetRanking { RankType = RankType, RankIndex = RowOffset, OnlineOnly = OnlineOnly});
         }
 
         public void RecieveRanks(List<RankCharacterInfo> Ranking, byte rankType, int MyRank, int Count)
@@ -371,7 +374,7 @@ namespace Client.MirScenes.Dialogs
 
                 GameScene.InspectTime = CMain.Time + 500;
                 InspectDialog.InspectID = (uint)Index;
-                MirNetwork.Network.Enqueue(new ClientPackets.ClientPacket.Inspect { ObjectID = (uint)Index, Ranking = true });
+                MirNetwork.Network.Enqueue(new ClientPacket.Inspect { ObjectID = (uint)Index, Ranking = true });
             }
 
             public void Clear()

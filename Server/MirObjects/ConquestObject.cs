@@ -1,6 +1,8 @@
 using System.Drawing;
 using Server.Library.MirDatabase;
 using Server.Library.MirEnvir;
+using Shared;
+using Shared.Functions;
 
 namespace Server.Library.MirObjects
 {
@@ -643,7 +645,7 @@ namespace Server.Library.MirObjects
                     if (player != null)
                     {
                         tempGuild.SendGuildStatus(player);
-                        p = new ServerPackets.ServerPacket.ObjectGuildNameChanged { ObjectID = player.ObjectID, GuildName = player.MyGuild.GetName()};
+                        p = new ServerPacket.ObjectGuildNameChanged { ObjectID = player.ObjectID, GuildName = player.MyGuild.GetName()};
                         BroadcastGuildName(player, p);
                     }
                 }

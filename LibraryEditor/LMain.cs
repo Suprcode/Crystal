@@ -1,6 +1,8 @@
 ﻿using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using LibraryEditor.Graphics;
+using Shared;
 using Shared.Extensions;
 
 namespace LibraryEditor

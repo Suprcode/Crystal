@@ -1,4 +1,5 @@
-﻿using Client.MirGraphics;
+﻿using Client.Forms;
+using Client.MirGraphics;
 
 namespace Client.MirControls
 {

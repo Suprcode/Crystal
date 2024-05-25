@@ -1,8 +1,9 @@
 ﻿using System.Diagnostics;
-using Launcher;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using Client.Forms;
 using Client.Resolution;
+using Shared;
 
 namespace Client
 {
@@ -42,7 +43,7 @@ namespace Client
 
                 CheckResolutionSetting();
 
-                if (Settings.P_Patcher) Application.Run(PForm = new Launcher.AMain());
+                if (Settings.P_Patcher) Application.Run(PForm = new AMain());
                 else Application.Run(Form = new CMain());
 
                 Settings.Save();

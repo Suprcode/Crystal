@@ -1,7 +1,7 @@
 ﻿using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace ShadowMerger
+namespace LibraryEditor.Functions
 {
     public class LockBitmap
     {

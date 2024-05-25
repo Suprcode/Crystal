@@ -2,6 +2,8 @@ using System.Drawing;
 using Server.Library.MirDatabase;
 using Server.Library.MirObjects;
 using Server.Library.MirObjects.Monsters;
+using Shared;
+using Shared.Data;
 
 namespace Server.Library.MirEnvir
 {

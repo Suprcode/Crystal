@@ -1,5 +1,5 @@
 using System.Drawing;
-using ServerPackets;
+using Shared;
 
 namespace Server.Library.MirObjects
 {

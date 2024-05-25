@@ -6,8 +6,9 @@ using Server.Library.MirNetwork;
 using Server.Library.MirObjects.Hero;
 using Server.Library.MirObjects.NPC;
 using Server.Library.MirObjects.Player;
-using ServerPackets;
-using ClientPackets;
+using Shared;
+using Shared.Data;
+using Shared.Functions;
 using Timer = Server.Library.MirEnvir.Timer;
 
 namespace Server.Library.MirObjects

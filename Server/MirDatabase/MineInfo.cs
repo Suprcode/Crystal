@@ -1,4 +1,6 @@
 using System.Drawing;
+using Shared.Data;
+using Shared.Functions;
 
 namespace Server.Library.MirDatabase
 {

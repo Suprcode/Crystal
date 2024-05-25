@@ -1,6 +1,6 @@
 ﻿using Client.MirGraphics;
 using Client.MirScenes;
-using ServerPackets;
+using Shared;
 
 namespace Client.MirObjects
 {

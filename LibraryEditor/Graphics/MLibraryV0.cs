@@ -1,9 +1,9 @@
-﻿using ManagedSquish;
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using ManagedSquish;
 
-namespace LibraryEditor
+namespace LibraryEditor.Graphics
 {
     /// <summary>
     /// V0 Library
@@ -268,7 +268,7 @@ namespace LibraryEditor
                 if (image.Width != w || image.Height != h)
                 {
                     Bitmap temp = new Bitmap(w, h);
-                    using (Graphics g = Graphics.FromImage(temp))
+                    using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(temp))
                     {
                         g.Clear(Color.Transparent);
                         g.DrawImage(image, 0, 0);
@@ -361,7 +361,7 @@ namespace LibraryEditor
 
                 Preview = new Bitmap(64, 64);
 
-                using (Graphics g = Graphics.FromImage(Preview))
+                using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(Preview))
                 {
                     g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                     g.Clear(Color.Transparent);

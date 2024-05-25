@@ -1,4 +1,4 @@
-﻿namespace Client.MirSounds
+﻿namespace Client.MirSounds.Libraries
 {
     public interface ISoundLibrary
     {

@@ -1,4 +1,6 @@
-﻿public class Notice
+﻿namespace Shared.Data;
+
+public class Notice
 {
     public string Title = string.Empty;
     public string Message = string.Empty;

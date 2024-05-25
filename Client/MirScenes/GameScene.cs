@@ -1,4 +1,5 @@
-﻿using Client.MirControls;
+﻿using Client.Forms;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
@@ -6,12 +7,13 @@ using Client.MirSounds;
 using SlimDX;
 using SlimDX.Direct3D9;
 using Font = System.Drawing.Font;
-using ServerPackets;
-using ClientPackets;
 using Effect = Client.MirObjects.Effect;
 using Client.MirScenes.Dialogs;
 using Client.Utils;
 using Client.MirGraphics.Particles;
+using Shared;
+using Shared.Data;
+using Shared.Functions;
 
 namespace Client.MirScenes
 {

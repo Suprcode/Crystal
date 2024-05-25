@@ -4,6 +4,8 @@ using System.IO.Compression;
 using Frame = Client.MirObjects.Frame;
 using Client.MirObjects;
 using System.Text.RegularExpressions;
+using Client.Forms;
+using Shared;
 
 namespace Client.MirGraphics
 {

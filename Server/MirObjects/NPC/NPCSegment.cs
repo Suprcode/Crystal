@@ -3,7 +3,9 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using Server.Library.MirDatabase;
 using Server.Library.MirEnvir;
-using ServerPackets;
+using Shared;
+using Shared.Data;
+using Shared.Functions;
 using Timer = Server.Library.MirEnvir.Timer;
 
 namespace Server.Library.MirObjects.NPC

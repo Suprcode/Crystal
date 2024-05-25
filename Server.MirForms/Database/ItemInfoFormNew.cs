@@ -2,6 +2,9 @@
 using System.Text;
 using Microsoft.VisualBasic;
 using Server.Library.MirEnvir;
+using Shared;
+using Shared.Data;
+using Shared.Functions;
 
 namespace Server.Database
 {
@@ -607,7 +610,7 @@ namespace Server.Database
 
             var filterType = ((KeyValuePair<string, string>)drpFilterType.SelectedItem).Value;
 
-            if (filterType == global::ItemType.Gem.ToString())
+            if (filterType == global::Shared.ItemType.Gem.ToString())
             {
                 SwapGemContext(true);
             }
@@ -1020,7 +1023,7 @@ namespace Server.Database
                 itemInfoGridView.CurrentRow.Index != -1)
             {
                 var itemType = itemInfoGridView.CurrentRow.Cells["ItemType"];
-                bool isGemSelected = (global::ItemType)itemType.Value == global::ItemType.Gem;
+                bool isGemSelected = (global::Shared.ItemType)itemType.Value == global::Shared.ItemType.Gem;
                 SwapGemContext(isGemSelected);
             }   
         }

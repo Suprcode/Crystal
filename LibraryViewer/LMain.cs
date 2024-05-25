@@ -2,7 +2,7 @@
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace LibraryViewer
+namespace CMirLibraryViewer
 {
     public partial class LMain : Form
     {

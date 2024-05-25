@@ -2,9 +2,10 @@
 using Client.MirGraphics;
 using Client.MirSounds;
 using System.Globalization;
+using Client.Forms;
 using Client.MirNetwork;
-
-using ClientPackets;
+using Shared;
+using Shared.Data;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -132,7 +133,7 @@ namespace Client.MirScenes.Dialogs
                 return;
             
             _lastRequestTime = CMain.Now.AddSeconds(60);
-            Network.Enqueue(new ClientPackets.ClientPacket.GetRentedItems());
+            Network.Enqueue(new ClientPacket.GetRentedItems());
         }
 
         private sealed class ItemRow : MirControl

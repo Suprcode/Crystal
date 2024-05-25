@@ -1,4 +1,4 @@
-﻿namespace Launcher
+﻿namespace Client.Forms
 {
     partial class Config
     {

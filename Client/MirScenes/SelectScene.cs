@@ -1,10 +1,12 @@
-﻿using Client.MirControls;
+﻿using Client.Forms;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirScenes.Dialogs;
 using Client.MirSounds;
-using ClientPackets;
-using ServerPackets;
+using Shared;
+using Shared.Data;
+
 namespace Client.MirScenes
 {
     public class SelectScene : MirScene

@@ -1,6 +1,6 @@
 ﻿using System.Drawing.Imaging;
 
-namespace LibraryEditor
+namespace LibraryEditor.Graphics
 {
     public class WeMadeLibrary
     {

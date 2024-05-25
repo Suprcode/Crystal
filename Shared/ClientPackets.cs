@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
+using Shared.Data;
 
-namespace ClientPackets {
+namespace Shared {
     public static class ClientPacket {
         public sealed class ClientVersion : Packet {
             public override short Index => (short)ClientPacketIds.ClientVersion;

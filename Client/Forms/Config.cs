@@ -1,7 +1,7 @@
-﻿using Client;
-using Client.Resolution;
+﻿using Client.Resolution;
+using Shared;
 
-namespace Launcher
+namespace Client.Forms
 {
 
     public partial class Config : Form

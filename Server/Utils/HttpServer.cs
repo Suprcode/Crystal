@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using Server.Library.MirEnvir;
-using ServerPackets;
+using Shared;
 
 namespace Server.Library.Utils
 {
@@ -54,7 +54,7 @@ namespace Server.Library.Utils
                         var question = request.QueryString["question"];
                         var answer = request.QueryString["answer"];
                         var ip = request.QueryString["ip"];
-                        var p = new ClientPackets.ClientPacket.NewAccount();
+                        var p = new ClientPacket.NewAccount();
                         p.AccountID = id;
                         p.Password = psd;
                         p.EMailAddress = email;

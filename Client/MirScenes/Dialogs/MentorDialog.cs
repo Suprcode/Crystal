@@ -2,7 +2,7 @@
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
-using ClientPackets;
+using Shared;
 
 namespace Client.MirScenes.Dialogs
 {

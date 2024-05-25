@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Compression;
-using System.Net;
-using System.Windows.Forms;
-using System.Drawing;
-
-namespace Launcher
+﻿namespace Client.Forms
 {
     partial class AMain
     {

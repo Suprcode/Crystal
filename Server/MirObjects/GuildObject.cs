@@ -1,5 +1,7 @@
 ﻿using Server.Library.MirDatabase;
 using Server.Library.MirEnvir;
+using Shared;
+using Shared.Data;
 
 namespace Server.Library.MirObjects
 {
@@ -142,7 +144,7 @@ namespace Server.Library.MirObjects
                 }
             }
 
-            SendServerPacket(new ServerPackets.ServerPacket.GuildMemberChange() {Name = member.Name, Status = (byte)(New? 2: online? 1: 0)});
+            SendServerPacket(new ServerPacket.GuildMemberChange() {Name = member.Name, Status = (byte)(New? 2: online? 1: 0)});
 
             if (online && !New)
             {
@@ -159,7 +161,7 @@ namespace Server.Library.MirObjects
                 gName += "[" + Conquest.Info.Name + "]";
             }
 
-            member.Enqueue(new ServerPackets.ServerPacket.GuildStatus()
+            member.Enqueue(new ServerPacket.GuildStatus()
                 {
                     GuildName = gName,
                     GuildRankName = member.MyGuildRank != null? member.MyGuildRank.Name: "",
@@ -252,7 +254,7 @@ namespace Server.Library.MirObjects
             if (player != null)
             {
                 player.MyGuildRank = Ranks[rankIndex];
-                player.Enqueue(new ServerPackets.ServerPacket.GuildMemberChange() { Name = self.Info.Name, Status = (byte)8, Ranks = NewRankList });
+                player.Enqueue(new ServerPacket.GuildMemberChange() { Name = self.Info.Name, Status = (byte)8, Ranks = NewRankList });
                 player.BroadcastInfo();
             }
 
@@ -261,7 +263,7 @@ namespace Server.Library.MirObjects
                     if ((Ranks[i].Members[j].Player != null) && (Ranks[i].Members[j].Player != Member.Player))
                     {
                         player = (PlayerObject)Ranks[i].Members[j].Player;
-                        player.Enqueue(new ServerPackets.ServerPacket.GuildMemberChange() { Name = Member.Name, Status = (byte)5, RankIndex = (byte)MemberRank.Index });
+                        player.Enqueue(new ServerPacket.GuildMemberChange() { Name = Member.Name, Status = (byte)5, RankIndex = (byte)MemberRank.Index });
                         player.GuildMembersChanged = true;
                     }
             return true;
@@ -282,7 +284,7 @@ namespace Server.Library.MirObjects
             {
                 NewRank
             };
-            SendServerPacket(new ServerPackets.ServerPacket.GuildMemberChange() { Name = Self.Name, Status = (byte)6, Ranks = NewRankList});
+            SendServerPacket(new ServerPacket.GuildMemberChange() { Name = Self.Name, Status = (byte)6, Ranks = NewRankList});
             NeedSave = true;
             return true;
         }
@@ -309,7 +311,7 @@ namespace Server.Library.MirObjects
             {
                 Ranks[RankIndex]
             };
-            SendServerPacket(new ServerPackets.ServerPacket.GuildMemberChange() { Name = Self.Name, Status = (byte)7, Ranks = NewRankList });
+            SendServerPacket(new ServerPacket.GuildMemberChange() { Name = Self.Name, Status = (byte)7, Ranks = NewRankList });
             NeedSave = true;
             return true;
         }
@@ -352,7 +354,7 @@ namespace Server.Library.MirObjects
                     PlayerObject player = (PlayerObject)Ranks[i].Members[j].Player;
                     if (player != null)
                     {
-                        player.Enqueue(new ServerPackets.ServerPacket.GuildMemberChange() { Name = Self.Info.Name, Status = (byte)7, Ranks = NewRankList });
+                        player.Enqueue(new ServerPacket.GuildMemberChange() { Name = Self.Info.Name, Status = (byte)7, Ranks = NewRankList });
                         player.GuildMembersChanged = true;
                         if (i == RankIndex)
                         {
@@ -481,7 +483,7 @@ namespace Server.Library.MirObjects
                     if ((Ranks[i].Members[j].Player != null) && (Ranks[i].Members[j].Player != formerMember))
                     {
                         PlayerObject player = (PlayerObject)Ranks[i].Members[j].Player;
-                        player.Enqueue(new ServerPackets.ServerPacket.GuildMemberChange() { Name = name, Status = (byte)(kickSelf ? 4 : 3) });
+                        player.Enqueue(new ServerPacket.GuildMemberChange() { Name = name, Status = (byte)(kickSelf ? 4 : 3) });
                         player.GuildMembersChanged = true;
                     }
                 }
@@ -494,7 +496,7 @@ namespace Server.Library.MirObjects
                 formerMember.MyGuildRank = null;
                 formerMember.ReceiveChat(kickSelf ? "You have left your guild." : "You have been removed from your guild.", ChatType.Guild);
                 formerMember.RefreshStats();
-                formerMember.Enqueue(new ServerPackets.ServerPacket.GuildStatus() { GuildName = "", GuildRankName = "", MyOptions = (GuildRankOptions)0 });
+                formerMember.Enqueue(new ServerPacket.GuildStatus() { GuildName = "", GuildRankName = "", MyOptions = (GuildRankOptions)0 });
                 formerMember.BroadcastInfo();
             }
         }
@@ -532,7 +534,7 @@ namespace Server.Library.MirObjects
                 }
             }
 
-            SendServerPacket(new ServerPackets.ServerPacket.GuildNoticeChange() { update = -1 });
+            SendServerPacket(new ServerPacket.GuildNoticeChange() { update = -1 });
         }
 
         public void SendServerPacket(Packet p)
@@ -634,7 +636,7 @@ namespace Server.Library.MirObjects
                 if (NextExpUpdate < Envir.Time)
                 {
                     NextExpUpdate = Envir.Time + 10000;
-                    SendServerPacket(new ServerPackets.ServerPacket.GuildExpGain() { Amount = expAmount });
+                    SendServerPacket(new ServerPacket.GuildExpGain() { Amount = expAmount });
                 }
             }
         }
@@ -671,7 +673,7 @@ namespace Server.Library.MirObjects
                     if (player != null)
                     {
                         //player.Enqueue(player.GetInfoEx(player));
-                        player.Enqueue(new ServerPackets.ServerPacket.ColourChanged { NameColour = player.GetNameColour(player) });
+                        player.Enqueue(new ServerPacket.ColourChanged { NameColour = player.GetNameColour(player) });
                         player.BroadcastInfo();
                     }
                 }
@@ -754,7 +756,7 @@ namespace Server.Library.MirObjects
             {
                 if (UpdatedBuffs.Count > 0)
                 {
-                    SendServerPacket(new ServerPackets.ServerPacket.GuildBuffList { ActiveBuffs = UpdatedBuffs });
+                    SendServerPacket(new ServerPacket.GuildBuffList { ActiveBuffs = UpdatedBuffs });
                 }
 
                 RefreshAllStats();
@@ -802,7 +804,7 @@ namespace Server.Library.MirObjects
                 buff
             };
 
-            SendServerPacket(new ServerPackets.ServerPacket.GuildBuffList { ActiveBuffs = NewBuff });
+            SendServerPacket(new ServerPacket.GuildBuffList { ActiveBuffs = NewBuff });
 
             //now tell everyone our new sparepoints
             for (int i = 0; i < Ranks.Count; i++)
@@ -846,8 +848,8 @@ namespace Server.Library.MirObjects
                 buff
             };
 
-            SendServerPacket(new ServerPackets.ServerPacket.GuildBuffList { ActiveBuffs = NewBuff });
-            SendServerPacket(new ServerPackets.ServerPacket.GuildStorageGoldChange() { Type = 2, Name = "", Amount = (uint)buff.Info.ActivationCost });
+            SendServerPacket(new ServerPacket.GuildBuffList { ActiveBuffs = NewBuff });
+            SendServerPacket(new ServerPacket.GuildStorageGoldChange() { Type = 2, Name = "", Amount = (uint)buff.Info.ActivationCost });
 
             NeedSave = true;
 
@@ -857,7 +859,7 @@ namespace Server.Library.MirObjects
         public void RemoveAllBuffs()
         {
             //note this removes them all but doesnt reset the sparepoints!(should make some sort of 'refreshpoints' procedure for that
-            SendServerPacket(new ServerPackets.ServerPacket.GuildBuffList {Remove = 1, ActiveBuffs = BuffList});
+            SendServerPacket(new ServerPacket.GuildBuffList {Remove = 1, ActiveBuffs = BuffList});
 
             BuffList.Clear();
             RefreshAllStats();

@@ -1,7 +1,9 @@
 ﻿using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using Client.Forms;
 using Client.MirControls;
 using Client.MirScenes;
+using Shared;
 using SlimDX;
 using SlimDX.Direct3D9;
 using Blend = SlimDX.Direct3D9.Blend;

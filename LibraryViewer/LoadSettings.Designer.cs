@@ -1,4 +1,4 @@
-﻿namespace LibraryViewer
+﻿namespace CMirLibraryViewer
 {
     partial class LoadSettings
     {

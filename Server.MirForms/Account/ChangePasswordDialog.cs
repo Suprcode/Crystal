@@ -1,4 +1,6 @@
-﻿namespace Server.Account
+﻿using Shared;
+
+namespace Server.Account
 {
     public partial class ChangePasswordDialog : Form
     {

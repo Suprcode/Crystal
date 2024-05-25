@@ -1,4 +1,5 @@
-﻿using SlimDX;
+﻿using Client.Forms;
+using SlimDX;
 
 namespace Client.MirGraphics.Particles
 {

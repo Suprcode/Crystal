@@ -1,6 +1,8 @@
 ﻿using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirSounds;
+using Shared;
+using Shared.Data;
 
 namespace Client.MirScenes.Dialogs
 {

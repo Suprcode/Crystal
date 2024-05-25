@@ -2,6 +2,8 @@
 using Server.Library;
 using Server.Library.MirDatabase;
 using Server.Library.MirEnvir;
+using Shared;
+using Shared.Data;
 
 namespace Server.Database
 {

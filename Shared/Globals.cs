@@ -1,4 +1,6 @@
-﻿public static class Globals
+﻿namespace Shared;
+
+public static class Globals
 {
     public const string ProductCodename = "Crystal";
 
@@ -37,13 +39,13 @@
     public static float Commission = 0.05F;
 
     public const uint SearchDelay = 500,
-                      ConsignmentLength = 7,
-                      ConsignmentCost = 5000,
-                      MinConsignment = 5000,
-                      MaxConsignment = 50000000,
-                      AuctionCost = 5000,
-                      MinStartingBid = 0,
-                      MaxStartingBid = 50000;
+        ConsignmentLength = 7,
+        ConsignmentCost = 5000,
+        MinConsignment = 5000,
+        MaxConsignment = 50000000,
+        AuctionCost = 5000,
+        MinStartingBid = 0,
+        MaxStartingBid = 50000;
 
     public static int[] FishingRodShapes = new int[] { 49, 50 };
 

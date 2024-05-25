@@ -1,4 +1,6 @@
 ﻿using Server.Library.MirDatabase;
+using Shared;
+using Shared.Functions;
 
 namespace Server.Library.MirObjects.Hero
 {

@@ -1,6 +1,9 @@
-﻿using Client.MirGraphics;
+﻿using Client.Forms;
+using Client.MirGraphics;
 using Client.MirScenes;
 using Client.MirSounds;
+using Shared;
+using Shared.Functions;
 
 namespace Client.MirObjects
 {
