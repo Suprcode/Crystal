@@ -10,6 +10,7 @@ namespace Server.Helpers
             get { return Envir.Main; }
         }
 
+         // Random change
         public static void SystemMessage(string chatMessage, bool triggerBroadcastInfo = false)
         {
             if (String.IsNullOrEmpty(chatMessage))
