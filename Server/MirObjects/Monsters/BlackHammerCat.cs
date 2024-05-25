@@ -1,5 +1,4 @@
 using Server.MirDatabase;
-using Server.MirEnvir;
 using ServerPackets;
 
 namespace Server.MirObjects.Monsters

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using Server.MirDatabase;
-using Server.MirEnvir;
 using ServerPackets;
 
 namespace Server.MirObjects.Monsters

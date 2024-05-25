@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Windows.Forms;
-
-namespace LibraryEditor
+﻿namespace LibraryEditor
 {
     internal static class Program
     {

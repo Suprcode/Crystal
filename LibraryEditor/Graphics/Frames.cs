@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Collections.Generic;
-
-namespace LibraryEditor
+﻿namespace LibraryEditor
 {
     public class FrameSet : Dictionary<MirAction, Frame>
     {

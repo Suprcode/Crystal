@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-
-public class InputDialog : Form
+﻿public class InputDialog : Form
 {
     private Label _label1;
     private Label _label2;

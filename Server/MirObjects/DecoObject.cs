@@ -1,5 +1,4 @@
 using System.Drawing;
-﻿using Server.MirEnvir;
 using ServerPackets;
 
 namespace Server.MirObjects

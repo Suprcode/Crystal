@@ -2,7 +2,6 @@
 using Server.MirEnvir;
 using Server.MirObjects;
 using System.Globalization;
-using System.Security.Principal;
 
 namespace Server
 {

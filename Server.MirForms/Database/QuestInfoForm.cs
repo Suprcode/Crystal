@@ -1,6 +1,5 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
-using System.Diagnostics;
 
 namespace Server
 {

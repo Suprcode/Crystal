@@ -1,6 +1,4 @@
 ﻿using Client;
-using System.Resources;
-using System.Reflection;
 using Client.Resolution;
 
 namespace Launcher
