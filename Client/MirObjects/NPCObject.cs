@@ -1,7 +1,7 @@
 ﻿using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirScenes;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Client.MirObjects
 {
@@ -47,7 +47,7 @@ namespace Client.MirObjects
         {
         }
 
-        public void Load(S.ServerPacket.ObjectNpc info)
+        public void Load(ServerPacket.ObjectNpc info)
         {
             Name = info.Name;
             NameColour = info.NameColour;

@@ -1,6 +1,6 @@
 ﻿using Client.MirScenes;
 using Client.MirScenes.Dialogs;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Client.MirObjects
 {
@@ -20,7 +20,7 @@ namespace Client.MirObjects
             Frames = FrameSet.Player;
         }
 
-        public override void Load(S.ServerPacket.UserInformation info)
+        public override void Load(ServerPacket.UserInformation info)
         {
             Name = info.Name;
             NameColour = info.NameColour;

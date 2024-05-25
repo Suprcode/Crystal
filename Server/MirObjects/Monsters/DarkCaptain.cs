@@ -1,6 +1,6 @@
 using System.Drawing;
 ﻿using Server.MirDatabase;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -36,7 +36,7 @@ namespace Server.MirObjects.Monsters
 
                 _ThunderTime = Envir.Time + 10000 + Envir.Random.Next(0, 10000);
 
-                Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+                Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
                 int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                 if (damage == 0) return;
@@ -52,7 +52,7 @@ namespace Server.MirObjects.Monsters
 
                 _MassThunderTime = Envir.Time + 20000 + Envir.Random.Next(0, 30000);
 
-                Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
                 int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                 if (damage == 0) return;
@@ -68,7 +68,7 @@ namespace Server.MirObjects.Monsters
 
                 _OrbTime = Envir.Time + 30000 + Envir.Random.Next(0, 10000);
 
-                Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+                Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
 
                 var attempts = 4;
                 var distance = 4;
@@ -86,7 +86,7 @@ namespace Server.MirObjects.Monsters
 
             if (Envir.Random.Next(5) == 0)
             {
-                Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
 
                 TeleportBehindWeakerTarget();
                 return;
@@ -97,7 +97,7 @@ namespace Server.MirObjects.Monsters
                 AttackTime = Envir.Time + AttackSpeed;
 
                 //Sword Attack
-                Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
@@ -108,7 +108,7 @@ namespace Server.MirObjects.Monsters
             {
                 AttackTime = Envir.Time + AttackSpeed;
 
-                Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
                 //PushAttack
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);

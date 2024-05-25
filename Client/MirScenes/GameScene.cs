@@ -6,7 +6,7 @@ using Client.MirSounds;
 using SlimDX;
 using SlimDX.Direct3D9;
 using Font = System.Drawing.Font;
-using S = ServerPackets;
+using ServerPackets;
 using C = ClientPackets;
 using Effect = Client.MirObjects.Effect;
 using Client.MirScenes.Dialogs;
@@ -1225,572 +1225,572 @@ namespace Client.MirScenes
             switch (p.Index)
             {
                 case (short)ServerPacketIds.KeepAlive:
-                    KeepAlive((S.ServerPacket.KeepAlive)p);
+                    KeepAlive((ServerPacket.KeepAlive)p);
                     break;
                 case (short)ServerPacketIds.MapInformation: //MapInfo
-                    MapInformation((S.ServerPacket.MapInformation)p);
+                    MapInformation((ServerPacket.MapInformation)p);
                     break;
                 case (short)ServerPacketIds.NewMapInfo:
-                    NewMapInfo((S.ServerPacket.NewMapInfo)p);
+                    NewMapInfo((ServerPacket.NewMapInfo)p);
                     break;
                 case (short)ServerPacketIds.WorldMapSetup:
-                    WorldMapSetup((S.ServerPacket.WorldMapSetupInfo)p);
+                    WorldMapSetup((ServerPacket.WorldMapSetupInfo)p);
                     break;
                 case (short)ServerPacketIds.SearchMapResult:
-                    SearchMapResult((S.ServerPacket.SearchMapResult)p);
+                    SearchMapResult((ServerPacket.SearchMapResult)p);
                     break;
                 case (short)ServerPacketIds.UserInformation:
-                    UserInformation((S.ServerPacket.UserInformation)p);
+                    UserInformation((ServerPacket.UserInformation)p);
                     break;
                 case (short)ServerPacketIds.UserSlotsRefresh:
-                    UserSlotsRefresh((S.ServerPacket.UserSlotsRefresh)p);
+                    UserSlotsRefresh((ServerPacket.UserSlotsRefresh)p);
                     break;
                 case (short)ServerPacketIds.UserLocation:
-                    UserLocation((S.ServerPacket.UserLocation)p);
+                    UserLocation((ServerPacket.UserLocation)p);
                     break;
                 case (short)ServerPacketIds.ObjectPlayer:
-                    ObjectPlayer((S.ServerPacket.ObjectPlayer)p);
+                    ObjectPlayer((ServerPacket.ObjectPlayer)p);
                     break;
                 case (short)ServerPacketIds.ObjectHero:
-                    ObjectHero((S.ServerPacket.ObjectHero)p);
+                    ObjectHero((ServerPacket.ObjectHero)p);
                     break;
                 case (short)ServerPacketIds.ObjectRemove:
-                    ObjectRemove((S.ServerPacket.ObjectRemove)p);
+                    ObjectRemove((ServerPacket.ObjectRemove)p);
                     break;
                 case (short)ServerPacketIds.ObjectTurn:
-                    ObjectTurn((S.ServerPacket.ObjectTurn)p);
+                    ObjectTurn((ServerPacket.ObjectTurn)p);
                     break;
                 case (short)ServerPacketIds.ObjectWalk:
-                    ObjectWalk((S.ServerPacket.ObjectWalk)p);
+                    ObjectWalk((ServerPacket.ObjectWalk)p);
                     break;
                 case (short)ServerPacketIds.ObjectRun:
-                    ObjectRun((S.ServerPacket.ObjectRun)p);
+                    ObjectRun((ServerPacket.ObjectRun)p);
                     break;
                 case (short)ServerPacketIds.Chat:
-                    ReceiveChat((S.ServerPacket.Chat)p);
+                    ReceiveChat((ServerPacket.Chat)p);
                     break;
                 case (short)ServerPacketIds.ObjectChat:
-                    ObjectChat((S.ServerPacket.ObjectChat)p);
+                    ObjectChat((ServerPacket.ObjectChat)p);
                     break;
                 case (short)ServerPacketIds.MoveItem:
-                    MoveItem((S.ServerPacket.MoveItem)p);
+                    MoveItem((ServerPacket.MoveItem)p);
                     break;
                 case (short)ServerPacketIds.EquipItem:
-                    EquipItem((S.ServerPacket.EquipItem)p);
+                    EquipItem((ServerPacket.EquipItem)p);
                     break;
                 case (short)ServerPacketIds.MergeItem:
-                    MergeItem((S.ServerPacket.MergeItem)p);
+                    MergeItem((ServerPacket.MergeItem)p);
                     break;
                 case (short)ServerPacketIds.RemoveItem:
-                    RemoveItem((S.ServerPacket.RemoveItem)p);
+                    RemoveItem((ServerPacket.RemoveItem)p);
                     break;
                 case (short)ServerPacketIds.RemoveSlotItem:
-                    RemoveSlotItem((S.ServerPacket.RemoveSlotItem)p);
+                    RemoveSlotItem((ServerPacket.RemoveSlotItem)p);
                     break;
                 case (short)ServerPacketIds.TakeBackItem:
-                    TakeBackItem((S.ServerPacket.TakeBackItem)p);
+                    TakeBackItem((ServerPacket.TakeBackItem)p);
                     break;
                 case (short)ServerPacketIds.StoreItem:
-                    StoreItem((S.ServerPacket.StoreItem)p);
+                    StoreItem((ServerPacket.StoreItem)p);
                     break;
                 case (short)ServerPacketIds.DepositRefineItem:
-                    DepositRefineItem((S.ServerPacket.DepositRefineItem)p);
+                    DepositRefineItem((ServerPacket.DepositRefineItem)p);
                     break;
                 case (short)ServerPacketIds.RetrieveRefineItem:
-                    RetrieveRefineItem((S.ServerPacket.RetrieveRefineItem)p);
+                    RetrieveRefineItem((ServerPacket.RetrieveRefineItem)p);
                     break;
                 case (short)ServerPacketIds.RefineCancel:
-                    RefineCancel((S.ServerPacket.RefineCancel)p);
+                    RefineCancel((ServerPacket.RefineCancel)p);
                     break;
                 case (short)ServerPacketIds.RefineItem:
-                    RefineItem((S.ServerPacket.RefineItem)p);
+                    RefineItem((ServerPacket.RefineItem)p);
                     break;
                 case (short)ServerPacketIds.DepositTradeItem:
-                    DepositTradeItem((S.ServerPacket.DepositTradeItem)p);
+                    DepositTradeItem((ServerPacket.DepositTradeItem)p);
                     break;
                 case (short)ServerPacketIds.RetrieveTradeItem:
-                    RetrieveTradeItem((S.ServerPacket.RetrieveTradeItem)p);
+                    RetrieveTradeItem((ServerPacket.RetrieveTradeItem)p);
                     break;
                 case (short)ServerPacketIds.SplitItem:
-                    SplitItem((S.ServerPacket.SplitItem)p);
+                    SplitItem((ServerPacket.SplitItem)p);
                     break;
                 case (short)ServerPacketIds.SplitItem1:
-                    SplitItem1((S.ServerPacket.SplitItem1)p);
+                    SplitItem1((ServerPacket.SplitItem1)p);
                     break;
                 case (short)ServerPacketIds.UseItem:
-                    UseItem((S.ServerPacket.UseItem)p);
+                    UseItem((ServerPacket.UseItem)p);
                     break;
                 case (short)ServerPacketIds.DropItem:
-                    DropItem((S.ServerPacket.DropItem)p);
+                    DropItem((ServerPacket.DropItem)p);
                     break;
                 case (short)ServerPacketIds.TakeBackHeroItem:
-                    TakeBackHeroItem((S.ServerPacket.TakeBackHeroItem)p);
+                    TakeBackHeroItem((ServerPacket.TakeBackHeroItem)p);
                     break;
                 case (short)ServerPacketIds.TransferHeroItem:
-                    TransferHeroItem((S.ServerPacket.TransferHeroItem)p);
+                    TransferHeroItem((ServerPacket.TransferHeroItem)p);
                     break;
                 case (short)ServerPacketIds.PlayerUpdate:
-                    PlayerUpdate((S.ServerPacket.PlayerUpdate)p);
+                    PlayerUpdate((ServerPacket.PlayerUpdate)p);
                     break;
                 case (short)ServerPacketIds.PlayerInspect:
-                    PlayerInspect((S.ServerPacket.PlayerInspect)p);
+                    PlayerInspect((ServerPacket.PlayerInspect)p);
                     break;
                 case (short)ServerPacketIds.LogOutSuccess:
-                    LogOutSuccess((S.ServerPacket.LogOutSuccess)p);
+                    LogOutSuccess((ServerPacket.LogOutSuccess)p);
                     break;
                 case (short)ServerPacketIds.LogOutFailed:
-                    LogOutFailed((S.ServerPacket.LogOutFailed)p);
+                    LogOutFailed((ServerPacket.LogOutFailed)p);
                     break;
                 case (short)ServerPacketIds.ReturnToLogin:
-                    ReturnToLogin((S.ServerPacket.ReturnToLogin)p);
+                    ReturnToLogin((ServerPacket.ReturnToLogin)p);
                     break;
                 case (short)ServerPacketIds.TimeOfDay:
-                    TimeOfDay((S.ServerPacket.TimeOfDay)p);
+                    TimeOfDay((ServerPacket.TimeOfDay)p);
                     break;
                 case (short)ServerPacketIds.ChangeAMode:
-                    ChangeAMode((S.ServerPacket.ChangeAMode)p);
+                    ChangeAMode((ServerPacket.ChangeAMode)p);
                     break;
                 case (short)ServerPacketIds.ChangePMode:
-                    ChangePMode((S.ServerPacket.ChangePMode)p);
+                    ChangePMode((ServerPacket.ChangePMode)p);
                     break;
                 case (short)ServerPacketIds.ObjectItem:
-                    ObjectItem((S.ServerPacket.ObjectItem)p);
+                    ObjectItem((ServerPacket.ObjectItem)p);
                     break;
                 case (short)ServerPacketIds.ObjectGold:
-                    ObjectGold((S.ServerPacket.ObjectGold)p);
+                    ObjectGold((ServerPacket.ObjectGold)p);
                     break;
                 case (short)ServerPacketIds.GainedItem:
-                    GainedItem((S.ServerPacket.GainedItem)p);
+                    GainedItem((ServerPacket.GainedItem)p);
                     break;
                 case (short)ServerPacketIds.GainedGold:
-                    GainedGold((S.ServerPacket.GainedGold)p);
+                    GainedGold((ServerPacket.GainedGold)p);
                     break;
                 case (short)ServerPacketIds.LoseGold:
-                    LoseGold((S.ServerPacket.LoseGold)p);
+                    LoseGold((ServerPacket.LoseGold)p);
                     break;
                 case (short)ServerPacketIds.GainedCredit:
-                    GainedCredit((S.ServerPacket.GainedCredit)p);
+                    GainedCredit((ServerPacket.GainedCredit)p);
                     break;
                 case (short)ServerPacketIds.LoseCredit:
-                    LoseCredit((S.ServerPacket.LoseCredit)p);
+                    LoseCredit((ServerPacket.LoseCredit)p);
                     break;
                 case (short)ServerPacketIds.ObjectMonster:
-                    ObjectMonster((S.ServerPacket.ObjectMonster)p);
+                    ObjectMonster((ServerPacket.ObjectMonster)p);
                     break;
                 case (short)ServerPacketIds.ObjectAttack:
-                    ObjectAttack((S.ServerPacket.ObjectAttack)p);
+                    ObjectAttack((ServerPacket.ObjectAttack)p);
                     break;
                 case (short)ServerPacketIds.Struck:
-                    Struck((S.ServerPacket.Struck)p);
+                    Struck((ServerPacket.Struck)p);
                     break;
                 case (short)ServerPacketIds.DamageIndicator:
-                    DamageIndicator((S.ServerPacket.DamageIndicator)p);
+                    DamageIndicator((ServerPacket.DamageIndicator)p);
                     break;
                 case (short)ServerPacketIds.ObjectStruck:
-                    ObjectStruck((S.ServerPacket.ObjectStruck)p);
+                    ObjectStruck((ServerPacket.ObjectStruck)p);
                     break;
                 case (short)ServerPacketIds.DuraChanged:
-                    DuraChanged((S.ServerPacket.DuraChanged)p);
+                    DuraChanged((ServerPacket.DuraChanged)p);
                     break;
                 case (short)ServerPacketIds.HealthChanged:
-                    HealthChanged((S.ServerPacket.HealthChanged)p);
+                    HealthChanged((ServerPacket.HealthChanged)p);
                     break;
                 case (short)ServerPacketIds.HeroHealthChanged:
-                    HeroHealthChanged((S.ServerPacket.HeroHealthChanged)p);
+                    HeroHealthChanged((ServerPacket.HeroHealthChanged)p);
                     break;
                 case (short)ServerPacketIds.DeleteItem:
-                    DeleteItem((S.ServerPacket.DeleteItem)p);
+                    DeleteItem((ServerPacket.DeleteItem)p);
                     break;
                 case (short)ServerPacketIds.Death:
-                    Death((S.ServerPacket.Death)p);
+                    Death((ServerPacket.Death)p);
                     break;
                 case (short)ServerPacketIds.ObjectDied:
-                    ObjectDied((S.ServerPacket.ObjectDied)p);
+                    ObjectDied((ServerPacket.ObjectDied)p);
                     break;
                 case (short)ServerPacketIds.ColourChanged:
-                    ColourChanged((S.ServerPacket.ColourChanged)p);
+                    ColourChanged((ServerPacket.ColourChanged)p);
                     break;
                 case (short)ServerPacketIds.ObjectColourChanged:
-                    ObjectColourChanged((S.ServerPacket.ObjectColourChanged)p);
+                    ObjectColourChanged((ServerPacket.ObjectColourChanged)p);
                     break;
                 case (short)ServerPacketIds.ObjectGuildNameChanged:
-                    ObjectGuildNameChanged((S.ServerPacket.ObjectGuildNameChanged)p);
+                    ObjectGuildNameChanged((ServerPacket.ObjectGuildNameChanged)p);
                     break;
                 case (short)ServerPacketIds.GainExperience:
-                    GainExperience((S.ServerPacket.GainExperience)p);
+                    GainExperience((ServerPacket.GainExperience)p);
                     break;
                 case (short)ServerPacketIds.GainHeroExperience:
-                    GainHeroExperience((S.ServerPacket.GainHeroExperience)p);
+                    GainHeroExperience((ServerPacket.GainHeroExperience)p);
                     break;
                 case (short)ServerPacketIds.LevelChanged:
-                    LevelChanged((S.ServerPacket.LevelChanged)p);
+                    LevelChanged((ServerPacket.LevelChanged)p);
                     break;
                 case (short)ServerPacketIds.HeroLevelChanged:
-                    HeroLevelChanged((S.ServerPacket.HeroLevelChanged)p);
+                    HeroLevelChanged((ServerPacket.HeroLevelChanged)p);
                     break;
                 case (short)ServerPacketIds.ObjectLeveled:
-                    ObjectLeveled((S.ServerPacket.ObjectLeveled)p);
+                    ObjectLeveled((ServerPacket.ObjectLeveled)p);
                     break;
                 case (short)ServerPacketIds.ObjectHarvest:
-                    ObjectHarvest((S.ServerPacket.ObjectHarvest)p);
+                    ObjectHarvest((ServerPacket.ObjectHarvest)p);
                     break;
                 case (short)ServerPacketIds.ObjectHarvested:
-                    ObjectHarvested((S.ServerPacket.ObjectHarvested)p);
+                    ObjectHarvested((ServerPacket.ObjectHarvested)p);
                     break;
                 case (short)ServerPacketIds.ObjectNpc:
-                    ObjectNpc((S.ServerPacket.ObjectNpc)p);
+                    ObjectNpc((ServerPacket.ObjectNpc)p);
                     break;
                 case (short)ServerPacketIds.NpcResponse:
-                    NpcResponse((S.ServerPacket.NpcResponse)p);
+                    NpcResponse((ServerPacket.NpcResponse)p);
                     break;
                 case (short)ServerPacketIds.ObjectHide:
-                    ObjectHide((S.ServerPacket.ObjectHide)p);
+                    ObjectHide((ServerPacket.ObjectHide)p);
                     break;
                 case (short)ServerPacketIds.ObjectShow:
-                    ObjectShow((S.ServerPacket.ObjectShow)p);
+                    ObjectShow((ServerPacket.ObjectShow)p);
                     break;
                 case (short)ServerPacketIds.Poisoned:
-                    Poisoned((S.ServerPacket.Poisoned)p);
+                    Poisoned((ServerPacket.Poisoned)p);
                     break;
                 case (short)ServerPacketIds.ObjectPoisoned:
-                    ObjectPoisoned((S.ServerPacket.ObjectPoisoned)p);
+                    ObjectPoisoned((ServerPacket.ObjectPoisoned)p);
                     break;
                 case (short)ServerPacketIds.MapChanged:
-                    MapChanged((S.ServerPacket.MapChanged)p);
+                    MapChanged((ServerPacket.MapChanged)p);
                     break;
                 case (short)ServerPacketIds.ObjectTeleportOut:
-                    ObjectTeleportOut((S.ServerPacket.ObjectTeleportOut)p);
+                    ObjectTeleportOut((ServerPacket.ObjectTeleportOut)p);
                     break;
                 case (short)ServerPacketIds.ObjectTeleportIn:
-                    ObjectTeleportIn((S.ServerPacket.ObjectTeleportIn)p);
+                    ObjectTeleportIn((ServerPacket.ObjectTeleportIn)p);
                     break;
                 case (short)ServerPacketIds.TeleportIn:
                     TeleportIn();
                     break;
                 case (short)ServerPacketIds.NpcGoods:
-                    NpcGoods((S.ServerPacket.NpcGoods)p);
+                    NpcGoods((ServerPacket.NpcGoods)p);
                     break;
                 case (short)ServerPacketIds.NpcSell:
                     NpcSell();
                     break;
                 case (short)ServerPacketIds.NpcRepair:
-                    NpcRepair((S.ServerPacket.NpcRepair)p);
+                    NpcRepair((ServerPacket.NpcRepair)p);
                     break;
                 case (short)ServerPacketIds.NpcSRepair:
-                    NpcSRepair((S.ServerPacket.NpcSRepair)p);
+                    NpcSRepair((ServerPacket.NpcSRepair)p);
                     break;
                 case (short)ServerPacketIds.NpcRefine:
-                    NpcRefine((S.ServerPacket.NpcRefine)p);
+                    NpcRefine((ServerPacket.NpcRefine)p);
                     break;
                 case (short)ServerPacketIds.NpcCheckRefine:
-                    NpcCheckRefine((S.ServerPacket.NpcCheckRefine)p);
+                    NpcCheckRefine((ServerPacket.NpcCheckRefine)p);
                     break;
                 case (short)ServerPacketIds.NpcCollectRefine:
-                    NpcCollectRefine((S.ServerPacket.NpcCollectRefine)p);
+                    NpcCollectRefine((ServerPacket.NpcCollectRefine)p);
                     break;
                 case (short)ServerPacketIds.NpcReplaceWedRing:
-                    NpcReplaceWedRing((S.ServerPacket.NpcReplaceWedRing)p);
+                    NpcReplaceWedRing((ServerPacket.NpcReplaceWedRing)p);
                     break;
                 case (short)ServerPacketIds.NpcStorage:
                     NpcStorage();
                     break;
                 case (short)ServerPacketIds.NpcRequestInput:
-                    NpcRequestInput((S.ServerPacket.NpcRequestInput)p);
+                    NpcRequestInput((ServerPacket.NpcRequestInput)p);
                     break;
                 case (short)ServerPacketIds.SellItem:
-                    SellItem((S.ServerPacket.SellItem)p);
+                    SellItem((ServerPacket.SellItem)p);
                     break;
                 case (short)ServerPacketIds.CraftItem:
-                    CraftItem((S.ServerPacket.CraftItem)p);
+                    CraftItem((ServerPacket.CraftItem)p);
                     break;
                 case (short)ServerPacketIds.RepairItem:
-                    RepairItem((S.ServerPacket.RepairItem)p);
+                    RepairItem((ServerPacket.RepairItem)p);
                     break;
                 case (short)ServerPacketIds.ItemRepaired:
-                    ItemRepaired((S.ServerPacket.ItemRepaired)p);
+                    ItemRepaired((ServerPacket.ItemRepaired)p);
                     break;
                 case (short)ServerPacketIds.ItemSlotSizeChanged:
-                    ItemSlotSizeChanged((S.ServerPacket.ItemSlotSizeChanged)p);
+                    ItemSlotSizeChanged((ServerPacket.ItemSlotSizeChanged)p);
                     break;
                 case (short)ServerPacketIds.ItemSealChanged:
-                    ItemSealChanged((S.ServerPacket.ItemSealChanged)p);
+                    ItemSealChanged((ServerPacket.ItemSealChanged)p);
                     break;
                 case (short)ServerPacketIds.NewMagic:
-                    NewMagic((S.ServerPacket.NewMagic)p);
+                    NewMagic((ServerPacket.NewMagic)p);
                     break;
                 case (short)ServerPacketIds.MagicLeveled:
-                    MagicLeveled((S.ServerPacket.MagicLeveled)p);
+                    MagicLeveled((ServerPacket.MagicLeveled)p);
                     break;
                 case (short)ServerPacketIds.Magic:
-                    Magic((S.ServerPacket.Magic)p);
+                    Magic((ServerPacket.Magic)p);
                     break;
                 case (short)ServerPacketIds.MagicDelay:
-                    MagicDelay((S.ServerPacket.MagicDelay)p);
+                    MagicDelay((ServerPacket.MagicDelay)p);
                     break;
                 case (short)ServerPacketIds.MagicCast:
-                    MagicCast((S.ServerPacket.MagicCast)p);
+                    MagicCast((ServerPacket.MagicCast)p);
                     break;
                 case (short)ServerPacketIds.ObjectMagic:
-                    ObjectMagic((S.ServerPacket.ObjectMagic)p);
+                    ObjectMagic((ServerPacket.ObjectMagic)p);
                     break;
                 case (short)ServerPacketIds.ObjectProjectile:
-                    ObjectProjectile((S.ServerPacket.ObjectProjectile)p);
+                    ObjectProjectile((ServerPacket.ObjectProjectile)p);
                     break;
                 case (short)ServerPacketIds.ObjectEffect:
-                    ObjectEffect((S.ServerPacket.ObjectEffect)p);
+                    ObjectEffect((ServerPacket.ObjectEffect)p);
                     break;
                 case (short)ServerPacketIds.RangeAttack:
-                    RangeAttack((S.ServerPacket.RangeAttack)p);
+                    RangeAttack((ServerPacket.RangeAttack)p);
                     break;
                 case (short)ServerPacketIds.Pushed:
-                    Pushed((S.ServerPacket.Pushed)p);
+                    Pushed((ServerPacket.Pushed)p);
                     break;
                 case (short)ServerPacketIds.ObjectPushed:
-                    ObjectPushed((S.ServerPacket.ObjectPushed)p);
+                    ObjectPushed((ServerPacket.ObjectPushed)p);
                     break;
                 case (short)ServerPacketIds.ObjectName:
-                    ObjectName((S.ServerPacket.ObjectName)p);
+                    ObjectName((ServerPacket.ObjectName)p);
                     break;
                 case (short)ServerPacketIds.UserStorage:
-                    UserStorage((S.ServerPacket.UserStorage)p);
+                    UserStorage((ServerPacket.UserStorage)p);
                     break;
                 case (short)ServerPacketIds.SwitchGroup:
-                    SwitchGroup((S.ServerPacket.SwitchGroup)p);
+                    SwitchGroup((ServerPacket.SwitchGroup)p);
                     break;
                 case (short)ServerPacketIds.DeleteGroup:
                     DeleteGroup();
                     break;
                 case (short)ServerPacketIds.DeleteMember:
-                    DeleteMember((S.ServerPacket.DeleteMember)p);
+                    DeleteMember((ServerPacket.DeleteMember)p);
                     break;
                 case (short)ServerPacketIds.GroupInvite:
-                    GroupInvite((S.ServerPacket.GroupInvite)p);
+                    GroupInvite((ServerPacket.GroupInvite)p);
                     break;
                 case (short)ServerPacketIds.AddMember:
-                    AddMember((S.ServerPacket.AddMember)p);
+                    AddMember((ServerPacket.AddMember)p);
                     break;
                 case (short)ServerPacketIds.GroupMembersMap:
-                    GroupMembersMap((S.ServerPacket.GroupMembersMap)p);
+                    GroupMembersMap((ServerPacket.GroupMembersMap)p);
                     break;
                 case (short)ServerPacketIds.SendMemberLocation:
-                    SendMemberLocation((S.ServerPacket.SendMemberLocation)p);
+                    SendMemberLocation((ServerPacket.SendMemberLocation)p);
                     break;
                 case (short)ServerPacketIds.Revived:
                     Revived();
                     break;
                 case (short)ServerPacketIds.ObjectRevived:
-                    ObjectRevived((S.ServerPacket.ObjectRevived)p);
+                    ObjectRevived((ServerPacket.ObjectRevived)p);
                     break;
                 case (short)ServerPacketIds.SpellToggle:
-                    SpellToggle((S.ServerPacket.SpellToggle)p);
+                    SpellToggle((ServerPacket.SpellToggle)p);
                     break;
                 case (short)ServerPacketIds.ObjectHealth:
-                    ObjectHealth((S.ServerPacket.ObjectHealth)p);
+                    ObjectHealth((ServerPacket.ObjectHealth)p);
                     break;
                 case (short)ServerPacketIds.ObjectMana:
-                    ObjectMana((S.ServerPacket.ObjectMana)p);
+                    ObjectMana((ServerPacket.ObjectMana)p);
                     break;
                 case (short)ServerPacketIds.MapEffect:
-                    MapEffect((S.ServerPacket.MapEffect)p);
+                    MapEffect((ServerPacket.MapEffect)p);
                     break;
                 case (short)ServerPacketIds.AllowObserve:
-                    AllowObserve = ((S.ServerPacket.AllowObserve)p).Allow;
+                    AllowObserve = ((ServerPacket.AllowObserve)p).Allow;
                     break;
                 case (short)ServerPacketIds.ObjectRangeAttack:
-                    ObjectRangeAttack((S.ServerPacket.ObjectRangeAttack)p);
+                    ObjectRangeAttack((ServerPacket.ObjectRangeAttack)p);
                     break;
                 case (short)ServerPacketIds.AddBuff:
-                    AddBuff((S.ServerPacket.AddBuff)p);
+                    AddBuff((ServerPacket.AddBuff)p);
                     break;
                 case (short)ServerPacketIds.RemoveBuff:
-                    RemoveBuff((S.ServerPacket.RemoveBuff)p);
+                    RemoveBuff((ServerPacket.RemoveBuff)p);
                     break;
                 case (short)ServerPacketIds.PauseBuff:
-                    PauseBuff((S.ServerPacket.PauseBuff)p);
+                    PauseBuff((ServerPacket.PauseBuff)p);
                     break;
                 case (short)ServerPacketIds.ObjectHidden:
-                    ObjectHidden((S.ServerPacket.ObjectHidden)p);
+                    ObjectHidden((ServerPacket.ObjectHidden)p);
                     break;
                 case (short)ServerPacketIds.RefreshItem:
-                    RefreshItem((S.ServerPacket.RefreshItem)p);
+                    RefreshItem((ServerPacket.RefreshItem)p);
                     break;
                 case (short)ServerPacketIds.ObjectSpell:
-                    ObjectSpell((S.ServerPacket.ObjectSpell)p);
+                    ObjectSpell((ServerPacket.ObjectSpell)p);
                     break;
                 case (short)ServerPacketIds.UserDash:
-                    UserDash((S.ServerPacket.UserDash)p);
+                    UserDash((ServerPacket.UserDash)p);
                     break;
                 case (short)ServerPacketIds.ObjectDash:
-                    ObjectDash((S.ServerPacket.ObjectDash)p);
+                    ObjectDash((ServerPacket.ObjectDash)p);
                     break;
                 case (short)ServerPacketIds.UserDashFail:
-                    UserDashFail((S.ServerPacket.UserDashFail)p);
+                    UserDashFail((ServerPacket.UserDashFail)p);
                     break;
                 case (short)ServerPacketIds.ObjectDashFail:
-                    ObjectDashFail((S.ServerPacket.ObjectDashFail)p);
+                    ObjectDashFail((ServerPacket.ObjectDashFail)p);
                     break;
                 case (short)ServerPacketIds.NpcConsign:
                     NpcConsign();
                     break;
                 case (short)ServerPacketIds.NpcMarket:
-                    NpcMarket((S.ServerPacket.NpcMarket)p);
+                    NpcMarket((ServerPacket.NpcMarket)p);
                     break;
                 case (short)ServerPacketIds.NpcMarketPage:
-                    NpcMarketPage((S.ServerPacket.NpcMarketPage)p);
+                    NpcMarketPage((ServerPacket.NpcMarketPage)p);
                     break;
                 case (short)ServerPacketIds.ConsignItem:
-                    ConsignItem((S.ServerPacket.ConsignItem)p);
+                    ConsignItem((ServerPacket.ConsignItem)p);
                     break;
                 case (short)ServerPacketIds.MarketFail:
-                    MarketFail((S.ServerPacket.MarketFail)p);
+                    MarketFail((ServerPacket.MarketFail)p);
                     break;
                 case (short)ServerPacketIds.MarketSuccess:
-                    MarketSuccess((S.ServerPacket.MarketSuccess)p);
+                    MarketSuccess((ServerPacket.MarketSuccess)p);
                     break;
                 case (short)ServerPacketIds.ObjectSitDown:
-                    ObjectSitDown((S.ServerPacket.ObjectSitDown)p);
+                    ObjectSitDown((ServerPacket.ObjectSitDown)p);
                     break;
                 case (short)ServerPacketIds.InTrapRock:
-                    S.ServerPacket.InTrapRock packetdata = (S.ServerPacket.InTrapRock)p;
+                    ServerPacket.InTrapRock packetdata = (ServerPacket.InTrapRock)p;
                     User.InTrapRock = packetdata.Trapped;
                     break;
                 case (short)ServerPacketIds.RemoveMagic:
-                    RemoveMagic((S.ServerPacket.RemoveMagic)p);
+                    RemoveMagic((ServerPacket.RemoveMagic)p);
                     break;
                 case (short)ServerPacketIds.BaseStatsInfo:
-                    BaseStatsInfo((S.ServerPacket.BaseStatsInfo)p);
+                    BaseStatsInfo((ServerPacket.BaseStatsInfo)p);
                     break;
                 case (short)ServerPacketIds.HeroBaseStatsInfo:
-                    HeroBaseStatsInfo((S.ServerPacket.HeroBaseStatsInfo)p);
+                    HeroBaseStatsInfo((ServerPacket.HeroBaseStatsInfo)p);
                     break;
                 case (short)ServerPacketIds.UserName:
-                    UserName((S.ServerPacket.UserName)p);
+                    UserName((ServerPacket.UserName)p);
                     break;
                 case (short)ServerPacketIds.ChatItemStats:
-                    ChatItemStats((S.ServerPacket.ChatItemStats)p);
+                    ChatItemStats((ServerPacket.ChatItemStats)p);
                     break;
                 case (short)ServerPacketIds.GuildInvite:
-                    GuildInvite((S.ServerPacket.GuildInvite)p);
+                    GuildInvite((ServerPacket.GuildInvite)p);
                     break;
                 case (short)ServerPacketIds.GuildMemberChange:
-                    GuildMemberChange((S.ServerPacket.GuildMemberChange)p);
+                    GuildMemberChange((ServerPacket.GuildMemberChange)p);
                     break;
                 case (short)ServerPacketIds.GuildNoticeChange:
-                    GuildNoticeChange((S.ServerPacket.GuildNoticeChange)p);
+                    GuildNoticeChange((ServerPacket.GuildNoticeChange)p);
                     break;
                 case (short)ServerPacketIds.GuildStatus:
-                    GuildStatus((S.ServerPacket.GuildStatus)p);
+                    GuildStatus((ServerPacket.GuildStatus)p);
                     break;
                 case (short)ServerPacketIds.GuildExpGain:
-                    GuildExpGain((S.ServerPacket.GuildExpGain)p);
+                    GuildExpGain((ServerPacket.GuildExpGain)p);
                     break;
                 case (short)ServerPacketIds.GuildNameRequest:
-                    GuildNameRequest((S.ServerPacket.GuildNameRequest)p);
+                    GuildNameRequest((ServerPacket.GuildNameRequest)p);
                     break;
                 case (short)ServerPacketIds.GuildStorageGoldChange:
-                    GuildStorageGoldChange((S.ServerPacket.GuildStorageGoldChange)p);
+                    GuildStorageGoldChange((ServerPacket.GuildStorageGoldChange)p);
                     break;
                 case (short)ServerPacketIds.GuildStorageItemChange:
-                    GuildStorageItemChange((S.ServerPacket.GuildStorageItemChange)p);
+                    GuildStorageItemChange((ServerPacket.GuildStorageItemChange)p);
                     break;
                 case (short)ServerPacketIds.GuildStorageList:
-                    GuildStorageList((S.ServerPacket.GuildStorageList)p);
+                    GuildStorageList((ServerPacket.GuildStorageList)p);
                     break;
                 case (short)ServerPacketIds.GuildRequestWar:
-                    GuildRequestWar((S.ServerPacket.GuildRequestWar)p);
+                    GuildRequestWar((ServerPacket.GuildRequestWar)p);
                     break;
                 case (short)ServerPacketIds.HeroCreateRequest:
-                    HeroCreateRequest((S.ServerPacket.HeroCreateRequest)p);
+                    HeroCreateRequest((ServerPacket.HeroCreateRequest)p);
                     break;
                 case (short)ServerPacketIds.NewHero:
-                    NewHero((S.ServerPacket.NewHero)p);
+                    NewHero((ServerPacket.NewHero)p);
                     break;
                 case (short)ServerPacketIds.HeroInformation:
-                    HeroInformation((S.ServerPacket.HeroInformation)p);
+                    HeroInformation((ServerPacket.HeroInformation)p);
                     break;
                 case (short)ServerPacketIds.UpdateHeroSpawnState:
-                    UpdateHeroSpawnState((S.ServerPacket.UpdateHeroSpawnState)p);
+                    UpdateHeroSpawnState((ServerPacket.UpdateHeroSpawnState)p);
                     break;
                 case (short)ServerPacketIds.UnlockHeroAutoPot:
                     UnlockHeroAutoPot(true);
                     break;
                 case (short)ServerPacketIds.SetAutoPotValue:
-                    SetAutoPotValue((S.ServerPacket.SetAutoPotValue)p);
+                    SetAutoPotValue((ServerPacket.SetAutoPotValue)p);
                     break;
                 case (short)ServerPacketIds.SetHeroBehaviour:
-                    SetHeroBehaviour((S.ServerPacket.SetHeroBehaviour)p);
+                    SetHeroBehaviour((ServerPacket.SetHeroBehaviour)p);
                     break;
                 case (short)ServerPacketIds.SetAutoPotItem:
-                    SetAutoPotItem((S.ServerPacket.SetAutoPotItem)p);
+                    SetAutoPotItem((ServerPacket.SetAutoPotItem)p);
                     break;
                 case (short)ServerPacketIds.ManageHeroes:
-                    ManageHeroes((S.ServerPacket.ManageHeroes)p);
+                    ManageHeroes((ServerPacket.ManageHeroes)p);
                     break;
                 case (short)ServerPacketIds.ChangeHero:
-                    ChangeHero((S.ServerPacket.ChangeHero)p);
+                    ChangeHero((ServerPacket.ChangeHero)p);
                     break;
                 case (short)ServerPacketIds.DefaultNpc:
-                    DefaultNpc((S.ServerPacket.DefaultNpc)p);
+                    DefaultNpc((ServerPacket.DefaultNpc)p);
                     break;
                 case (short)ServerPacketIds.NpcUpdate:
-                    NpcUpdate((S.ServerPacket.NpcUpdate)p);
+                    NpcUpdate((ServerPacket.NpcUpdate)p);
                     break;
                 case (short)ServerPacketIds.NpcImageUpdate:
-                    NpcImageUpdate((S.ServerPacket.NpcImageUpdate)p);
+                    NpcImageUpdate((ServerPacket.NpcImageUpdate)p);
                     break;
                 case (short)ServerPacketIds.MarriageRequest:
-                    MarriageRequest((S.ServerPacket.MarriageRequest)p);
+                    MarriageRequest((ServerPacket.MarriageRequest)p);
                     break;
                 case (short)ServerPacketIds.DivorceRequest:
-                    DivorceRequest((S.ServerPacket.DivorceRequest)p);
+                    DivorceRequest((ServerPacket.DivorceRequest)p);
                     break;
                 case (short)ServerPacketIds.MentorRequest:
-                    MentorRequest((S.ServerPacket.MentorRequest)p);
+                    MentorRequest((ServerPacket.MentorRequest)p);
                     break;
                 case (short)ServerPacketIds.TradeRequest:
-                    TradeRequest((S.ServerPacket.TradeRequest)p);
+                    TradeRequest((ServerPacket.TradeRequest)p);
                     break;
                 case (short)ServerPacketIds.TradeAccept:
-                    TradeAccept((S.ServerPacket.TradeAccept)p);
+                    TradeAccept((ServerPacket.TradeAccept)p);
                     break;
                 case (short)ServerPacketIds.TradeGold:
-                    TradeGold((S.ServerPacket.TradeGold)p);
+                    TradeGold((ServerPacket.TradeGold)p);
                     break;
                 case (short)ServerPacketIds.TradeItem:
-                    TradeItem((S.ServerPacket.TradeItem)p);
+                    TradeItem((ServerPacket.TradeItem)p);
                     break;
                 case (short)ServerPacketIds.TradeConfirm:
                     TradeConfirm();
                     break;
                 case (short)ServerPacketIds.TradeCancel:
-                    TradeCancel((S.ServerPacket.TradeCancel)p);
+                    TradeCancel((ServerPacket.TradeCancel)p);
                     break;
                 case (short)ServerPacketIds.MountUpdate:
-                    MountUpdate((S.ServerPacket.MountUpdate)p);
+                    MountUpdate((ServerPacket.MountUpdate)p);
                     break;
                 case (short)ServerPacketIds.TransformUpdate:
-                    TransformUpdate((S.ServerPacket.TransformUpdate)p);
+                    TransformUpdate((ServerPacket.TransformUpdate)p);
                     break;
                 case (short)ServerPacketIds.EquipSlotItem:
-                    EquipSlotItem((S.ServerPacket.EquipSlotItem)p);
+                    EquipSlotItem((ServerPacket.EquipSlotItem)p);
                     break;
                 case (short)ServerPacketIds.FishingUpdate:
-                    FishingUpdate((S.ServerPacket.FishingUpdate)p);
+                    FishingUpdate((ServerPacket.FishingUpdate)p);
                     break;
                 case (short)ServerPacketIds.ChangeQuest:
-                    ChangeQuest((S.ServerPacket.ChangeQuest)p);
+                    ChangeQuest((ServerPacket.ChangeQuest)p);
                     break;
                 case (short)ServerPacketIds.CompleteQuest:
-                    CompleteQuest((S.ServerPacket.CompleteQuest)p);
+                    CompleteQuest((ServerPacket.CompleteQuest)p);
                     break;
                 case (short)ServerPacketIds.ShareQuest:
-                    ShareQuest((S.ServerPacket.ShareQuest)p);
+                    ShareQuest((ServerPacket.ShareQuest)p);
                     break;
                 case (short)ServerPacketIds.GainedQuestItem:
-                    GainedQuestItem((S.ServerPacket.GainedQuestItem)p);
+                    GainedQuestItem((ServerPacket.GainedQuestItem)p);
                     break;
                 case (short)ServerPacketIds.DeleteQuestItem:
-                    DeleteQuestItem((S.ServerPacket.DeleteQuestItem)p);
+                    DeleteQuestItem((ServerPacket.DeleteQuestItem)p);
                     break;
                 case (short)ServerPacketIds.CancelReincarnation:
                     User.ReincarnationStopTime = 0;
@@ -1800,49 +1800,49 @@ namespace Client.MirScenes
                     RequestReincarnation();
                     break;
                 case (short)ServerPacketIds.UserBackStep:
-                    UserBackStep((S.ServerPacket.UserBackStep)p);
+                    UserBackStep((ServerPacket.UserBackStep)p);
                     break;
                 case (short)ServerPacketIds.ObjectBackStep:
-                    ObjectBackStep((S.ServerPacket.ObjectBackStep)p);
+                    ObjectBackStep((ServerPacket.ObjectBackStep)p);
                     break;
                 case (short)ServerPacketIds.UserDashAttack:
-                    UserDashAttack((S.ServerPacket.UserDashAttack)p);
+                    UserDashAttack((ServerPacket.UserDashAttack)p);
                     break;
                 case (short)ServerPacketIds.ObjectDashAttack:
-                    ObjectDashAttack((S.ServerPacket.ObjectDashAttack)p);
+                    ObjectDashAttack((ServerPacket.ObjectDashAttack)p);
                     break;
                 case (short)ServerPacketIds.UserAttackMove://Warrior Skill - SlashingBurst
-                    UserAttackMove((S.ServerPacket.UserAttackMove)p);
+                    UserAttackMove((ServerPacket.UserAttackMove)p);
                     break;
                 case (short)ServerPacketIds.CombineItem:
-                    CombineItem((S.ServerPacket.CombineItem)p);
+                    CombineItem((ServerPacket.CombineItem)p);
                     break;
                 case (short)ServerPacketIds.ItemUpgraded:
-                    ItemUpgraded((S.ServerPacket.ItemUpgraded)p);
+                    ItemUpgraded((ServerPacket.ItemUpgraded)p);
                     break;
                 case (short)ServerPacketIds.SetConcentration:
-                    SetConcentration((S.ServerPacket.SetConcentration)p);
+                    SetConcentration((ServerPacket.SetConcentration)p);
                     break;
                 case (short)ServerPacketIds.SetElemental:
-                    SetElemental((S.ServerPacket.SetElemental)p);
+                    SetElemental((ServerPacket.SetElemental)p);
                     break;
                 case (short)ServerPacketIds.RemoveDelayedExplosion:
-                    RemoveDelayedExplosion((S.ServerPacket.RemoveDelayedExplosion)p);
+                    RemoveDelayedExplosion((ServerPacket.RemoveDelayedExplosion)p);
                     break;
                 case (short)ServerPacketIds.ObjectDeco:
-                    ObjectDeco((S.ServerPacket.ObjectDeco)p);
+                    ObjectDeco((ServerPacket.ObjectDeco)p);
                     break;
                 case (short)ServerPacketIds.ObjectSneaking:
-                    ObjectSneaking((S.ServerPacket.ObjectSneaking)p);
+                    ObjectSneaking((ServerPacket.ObjectSneaking)p);
                     break;
                 case (short)ServerPacketIds.ObjectLevelEffects:
-                    ObjectLevelEffects((S.ServerPacket.ObjectLevelEffects)p);
+                    ObjectLevelEffects((ServerPacket.ObjectLevelEffects)p);
                     break;
                 case (short)ServerPacketIds.SetBindingShot:
-                    SetBindingShot((S.ServerPacket.SetBindingShot)p);
+                    SetBindingShot((ServerPacket.SetBindingShot)p);
                     break;
                 case (short)ServerPacketIds.SendOutputMessage:
-                    SendOutputMessage((S.ServerPacket.SendOutputMessage)p);
+                    SendOutputMessage((ServerPacket.SendOutputMessage)p);
                     break;
                 case (short)ServerPacketIds.NpcAwakening:
                     NpcAwakening();
@@ -1857,133 +1857,133 @@ namespace Client.MirScenes
                     NpcReset();
                     break;
                 case (short)ServerPacketIds.AwakeningNeedMaterials:
-                    AwakeningNeedMaterials((S.ServerPacket.AwakeningNeedMaterials)p);
+                    AwakeningNeedMaterials((ServerPacket.AwakeningNeedMaterials)p);
                     break;
                 case (short)ServerPacketIds.AwakeningLockedItem:
-                    AwakeningLockedItem((S.ServerPacket.AwakeningLockedItem)p);
+                    AwakeningLockedItem((ServerPacket.AwakeningLockedItem)p);
                     break;
                 case (short)ServerPacketIds.Awakening:
-                    Awakening((S.ServerPacket.Awakening)p);
+                    Awakening((ServerPacket.Awakening)p);
                     break;
                 case (short)ServerPacketIds.ReceiveMail:
-                    ReceiveMail((S.ServerPacket.ReceiveMail)p);
+                    ReceiveMail((ServerPacket.ReceiveMail)p);
                     break;
                 case (short)ServerPacketIds.MailLockedItem:
-                    MailLockedItem((S.ServerPacket.MailLockedItem)p);
+                    MailLockedItem((ServerPacket.MailLockedItem)p);
                     break;
                 case (short)ServerPacketIds.MailSent:
-                    MailSent((S.ServerPacket.MailSent)p);
+                    MailSent((ServerPacket.MailSent)p);
                     break;
                 case (short)ServerPacketIds.MailSendRequest:
-                    MailSendRequest((S.ServerPacket.MailSendRequest)p);
+                    MailSendRequest((ServerPacket.MailSendRequest)p);
                     break;
                 case (short)ServerPacketIds.ParcelCollected:
-                    ParcelCollected((S.ServerPacket.ParcelCollected)p);
+                    ParcelCollected((ServerPacket.ParcelCollected)p);
                     break;
                 case (short)ServerPacketIds.MailCost:
-                    MailCost((S.ServerPacket.MailCost)p);
+                    MailCost((ServerPacket.MailCost)p);
                     break;
                 case (short)ServerPacketIds.ResizeInventory:
-                    ResizeInventory((S.ServerPacket.ResizeInventory)p);
+                    ResizeInventory((ServerPacket.ResizeInventory)p);
                     break;
                 case (short)ServerPacketIds.ResizeStorage:
-                    ResizeStorage((S.ServerPacket.ResizeStorage)p);
+                    ResizeStorage((ServerPacket.ResizeStorage)p);
                     break;
                 case (short)ServerPacketIds.NewIntelligentCreature:
-                    NewIntelligentCreature((S.ServerPacket.NewIntelligentCreature)p);
+                    NewIntelligentCreature((ServerPacket.NewIntelligentCreature)p);
                     break;
                 case (short)ServerPacketIds.UpdateIntelligentCreatureList:
-                    UpdateIntelligentCreatureList((S.ServerPacket.UpdateIntelligentCreatureList)p);
+                    UpdateIntelligentCreatureList((ServerPacket.UpdateIntelligentCreatureList)p);
                     break;
                 case (short)ServerPacketIds.IntelligentCreatureEnableRename:
-                    IntelligentCreatureEnableRename((S.ServerPacket.IntelligentCreatureEnableRename)p);
+                    IntelligentCreatureEnableRename((ServerPacket.IntelligentCreatureEnableRename)p);
                     break;
                 case (short)ServerPacketIds.IntelligentCreaturePickup:
-                    IntelligentCreaturePickup((S.ServerPacket.IntelligentCreaturePickup)p);
+                    IntelligentCreaturePickup((ServerPacket.IntelligentCreaturePickup)p);
                     break;
                 case (short)ServerPacketIds.NpcPearlGoods:
-                    NpcPearlGoods((S.ServerPacket.NpcPearlGoods)p);
+                    NpcPearlGoods((ServerPacket.NpcPearlGoods)p);
                     break;
                 case (short)ServerPacketIds.FriendUpdate:
-                    FriendUpdate((S.ServerPacket.FriendUpdate)p);
+                    FriendUpdate((ServerPacket.FriendUpdate)p);
                     break;
                 case (short)ServerPacketIds.LoverUpdate:
-                    LoverUpdate((S.ServerPacket.LoverUpdate)p);
+                    LoverUpdate((ServerPacket.LoverUpdate)p);
                     break;
                 case (short)ServerPacketIds.MentorUpdate:
-                    MentorUpdate((S.ServerPacket.MentorUpdate)p);
+                    MentorUpdate((ServerPacket.MentorUpdate)p);
                     break;
                 case (short)ServerPacketIds.GuildBuffList:
-                    GuildBuffList((S.ServerPacket.GuildBuffList)p);
+                    GuildBuffList((ServerPacket.GuildBuffList)p);
                     break;
                 case (short)ServerPacketIds.GameShopInfo:
-                    GameShopUpdate((S.ServerPacket.GameShopInfo)p);
+                    GameShopUpdate((ServerPacket.GameShopInfo)p);
                     break;
                 case (short)ServerPacketIds.GameShopStock:
-                    GameShopStock((S.ServerPacket.GameShopStock)p);
+                    GameShopStock((ServerPacket.GameShopStock)p);
                     break;
                 case (short)ServerPacketIds.Rankings:
-                    Rankings((S.ServerPacket.Rankings)p);
+                    Rankings((ServerPacket.Rankings)p);
                     break;
                 case (short)ServerPacketIds.Opendoor:
-                    Opendoor((S.ServerPacket.Opendoor)p);
+                    Opendoor((ServerPacket.Opendoor)p);
                     break;
                 case (short)ServerPacketIds.GetRentedItems:
-                    RentedItems((S.ServerPacket.GetRentedItems) p);
+                    RentedItems((ServerPacket.GetRentedItems) p);
                     break;
                 case (short)ServerPacketIds.ItemRentalRequest:
-                    ItemRentalRequest((S.ServerPacket.ItemRentalRequest)p);
+                    ItemRentalRequest((ServerPacket.ItemRentalRequest)p);
                     break;
                 case (short)ServerPacketIds.ItemRentalFee:
-                    ItemRentalFee((S.ServerPacket.ItemRentalFee)p);
+                    ItemRentalFee((ServerPacket.ItemRentalFee)p);
                     break;
                 case (short)ServerPacketIds.ItemRentalPeriod:
-                    ItemRentalPeriod((S.ServerPacket.ItemRentalPeriod)p);
+                    ItemRentalPeriod((ServerPacket.ItemRentalPeriod)p);
                     break;
                 case (short)ServerPacketIds.DepositRentalItem:
-                    DepositRentalItem((S.ServerPacket.DepositRentalItem)p);
+                    DepositRentalItem((ServerPacket.DepositRentalItem)p);
                     break;
                 case (short)ServerPacketIds.RetrieveRentalItem:
-                    RetrieveRentalItem((S.ServerPacket.RetrieveRentalItem)p);
+                    RetrieveRentalItem((ServerPacket.RetrieveRentalItem)p);
                     break;
                 case (short)ServerPacketIds.UpdateRentalItem:
-                    UpdateRentalItem((S.ServerPacket.UpdateRentalItem)p);
+                    UpdateRentalItem((ServerPacket.UpdateRentalItem)p);
                     break;
                 case (short)ServerPacketIds.CancelItemRental:
-                    CancelItemRental((S.ServerPacket.CancelItemRental)p);
+                    CancelItemRental((ServerPacket.CancelItemRental)p);
                     break;
                 case (short)ServerPacketIds.ItemRentalLock:
-                    ItemRentalLock((S.ServerPacket.ItemRentalLock)p);
+                    ItemRentalLock((ServerPacket.ItemRentalLock)p);
                     break;
                 case (short)ServerPacketIds.ItemRentalPartnerLock:
-                    ItemRentalPartnerLock((S.ServerPacket.ItemRentalPartnerLock)p);
+                    ItemRentalPartnerLock((ServerPacket.ItemRentalPartnerLock)p);
                     break;
                 case (short)ServerPacketIds.CanConfirmItemRental:
-                    CanConfirmItemRental((S.ServerPacket.CanConfirmItemRental)p);
+                    CanConfirmItemRental((ServerPacket.CanConfirmItemRental)p);
                     break;
                 case (short)ServerPacketIds.ConfirmItemRental:
-                    ConfirmItemRental((S.ServerPacket.ConfirmItemRental)p);
+                    ConfirmItemRental((ServerPacket.ConfirmItemRental)p);
                     break;
                 case (short)ServerPacketIds.OpenBrowser:                  
-                    OpenBrowser((S.ServerPacket.OpenBrowser)p);
+                    OpenBrowser((ServerPacket.OpenBrowser)p);
                     break;
                 case (short)ServerPacketIds.PlaySound:
-                    PlaySound((S.ServerPacket.PlaySound)p);
+                    PlaySound((ServerPacket.PlaySound)p);
                     break;
                 case (short)ServerPacketIds.SetTimer:
-                    SetTimer((S.ServerPacket.SetTimer)p);
+                    SetTimer((ServerPacket.SetTimer)p);
                     break;
                 case (short)ServerPacketIds.ExpireTimer:
-                    ExpireTimer((S.ServerPacket.ExpireTimer)p);
+                    ExpireTimer((ServerPacket.ExpireTimer)p);
                     break;
                 case (short)ServerPacketIds.UpdateNotice:
-                    ShowNotice((S.ServerPacket.UpdateNotice)p);
+                    ShowNotice((ServerPacket.UpdateNotice)p);
                     break;
                 case (short)ServerPacketIds.Roll:
-                    Roll((S.ServerPacket.Roll)p);
+                    Roll((ServerPacket.Roll)p);
                     break;
                 case (short)ServerPacketIds.SetCompass:
-                    SetCompass((S.ServerPacket.SetCompass)p);
+                    SetCompass((ServerPacket.SetCompass)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -1991,12 +1991,12 @@ namespace Client.MirScenes
             }
         }
 
-        private void KeepAlive(S.ServerPacket.KeepAlive p)
+        private void KeepAlive(ServerPacket.KeepAlive p)
         {
             if (p.Time == 0) return;
             CMain.PingTime = (CMain.Time - p.Time);
         }
-        private void MapInformation(S.ServerPacket.MapInformation p)
+        private void MapInformation(ServerPacket.MapInformation p)
         {
             if (MapControl != null && !MapControl.IsDisposed)
                 MapControl.Dispose();
@@ -2006,13 +2006,13 @@ namespace Client.MirScenes
             InsertControl(0, MapControl);
         }
 
-        private void WorldMapSetup(S.ServerPacket.WorldMapSetupInfo info)
+        private void WorldMapSetup(ServerPacket.WorldMapSetupInfo info)
         {
             BigMapDialog.WorldMapSetup(info.Setup);
             TeleportToNpcCost = info.TeleportToNpcCost;
         }        
 
-        private void NewMapInfo(S.ServerPacket.NewMapInfo info)
+        private void NewMapInfo(ServerPacket.NewMapInfo info)
         {
             BigMapRecord newRecord = new BigMapRecord() { Index = info.MapIndex, MapInfo = info.Info };
             CreateBigMapButtons(newRecord);           
@@ -2062,7 +2062,7 @@ namespace Client.MirScenes
                 CreateBigMapButtons(record);
         }
 
-        private void SearchMapResult(S.ServerPacket.SearchMapResult info)
+        private void SearchMapResult(ServerPacket.SearchMapResult info)
         {
             if (info.MapIndex == -1 && info.NpcIndex == 0)
             {
@@ -2078,7 +2078,7 @@ namespace Client.MirScenes
             BigMapDialog.SetTargetMap(info.MapIndex);
             BigMapDialog.SetTargetNpc(info.NpcIndex);
         }
-        private void UserInformation(S.ServerPacket.UserInformation p)
+        private void UserInformation(ServerPacket.UserInformation p)
         {
             User = new UserObject(p.ObjectID);
             User.Load(p);
@@ -2095,19 +2095,19 @@ namespace Client.MirScenes
             AllowObserve = p.AllowObserve;
             Observing = p.Observer;
         }
-        private void UserSlotsRefresh(S.ServerPacket.UserSlotsRefresh p)
+        private void UserSlotsRefresh(ServerPacket.UserSlotsRefresh p)
         {
             User.SetSlots(p);
         }
 
-        private void UserLocation(S.ServerPacket.UserLocation p)
+        private void UserLocation(ServerPacket.UserLocation p)
         {
             MapControl.NextAction = 0;
             if (User.CurrentLocation == p.Location && User.Direction == p.Direction) return;
 
             if (Settings.DebugMode)
             {
-                ReceiveChat(new S.ServerPacket.Chat { Message = "Displacement", Type = ChatType.System });
+                ReceiveChat(new ServerPacket.Chat { Message = "Displacement", Type = ChatType.System });
             }
 
             MapControl.RemoveObject(User);
@@ -2131,17 +2131,17 @@ namespace Client.MirScenes
 
             User.SetAction();
         }
-        private void ReceiveChat(S.ServerPacket.Chat p)
+        private void ReceiveChat(ServerPacket.Chat p)
         {
             ChatDialog.ReceiveChat(p.Message, p.Type);
         }
-        private void ObjectPlayer(S.ServerPacket.ObjectPlayer p)
+        private void ObjectPlayer(ServerPacket.ObjectPlayer p)
         {
             PlayerObject player = new PlayerObject(p.ObjectID);
             player.Load(p);
         }
 
-        private void ObjectHero(S.ServerPacket.ObjectHero p)
+        private void ObjectHero(ServerPacket.ObjectHero p)
         {
             HeroObject hero = new HeroObject(p.ObjectID);
             hero.Load(p);
@@ -2150,7 +2150,7 @@ namespace Client.MirScenes
                 HeroObject = hero;
         }
 
-        private void ObjectRemove(S.ServerPacket.ObjectRemove p)
+        private void ObjectRemove(ServerPacket.ObjectRemove p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
@@ -2162,7 +2162,7 @@ namespace Client.MirScenes
                 ob.Remove();
             }
         }
-        private void ObjectTurn(S.ServerPacket.ObjectTurn p)
+        private void ObjectTurn(ServerPacket.ObjectTurn p)
         {
             if (p.ObjectID == User.ObjectID && !Observing) return;
 
@@ -2174,7 +2174,7 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void ObjectWalk(S.ServerPacket.ObjectWalk p)
+        private void ObjectWalk(ServerPacket.ObjectWalk p)
         {
             if (p.ObjectID == User.ObjectID && !Observing) return;
 
@@ -2189,7 +2189,7 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void ObjectRun(S.ServerPacket.ObjectRun p)
+        private void ObjectRun(ServerPacket.ObjectRun p)
         {
             if (p.ObjectID == User.ObjectID && !Observing) return;
 
@@ -2204,7 +2204,7 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void ObjectChat(S.ServerPacket.ObjectChat p)
+        private void ObjectChat(ServerPacket.ObjectChat p)
         {
             ChatDialog.ReceiveChat(p.Text, p.Type);
 
@@ -2217,7 +2217,7 @@ namespace Client.MirScenes
             }
 
         }
-        private void MoveItem(S.ServerPacket.MoveItem p)
+        private void MoveItem(ServerPacket.MoveItem p)
         {
             MirItemCell toCell, fromCell;
 
@@ -2280,7 +2280,7 @@ namespace Client.MirScenes
             User.RefreshStats();
             CharacterDuraPanel.GetCharacterDura();
         }
-        private void EquipItem(S.ServerPacket.EquipItem p)
+        private void EquipItem(ServerPacket.EquipItem p)
         {
             MirItemCell fromCell, toCell;
 
@@ -2325,7 +2325,7 @@ namespace Client.MirScenes
             else
                 User.RefreshStats();
         }
-        private void EquipSlotItem(S.ServerPacket.EquipSlotItem p)
+        private void EquipSlotItem(ServerPacket.EquipSlotItem p)
         {
             MirItemCell fromCell;
             MirItemCell toCell;
@@ -2370,7 +2370,7 @@ namespace Client.MirScenes
             User.RefreshStats();
         }
 
-        private void CombineItem(S.ServerPacket.CombineItem p)
+        private void CombineItem(ServerPacket.CombineItem p)
         {
             MirItemCell fromCell = null;
             MirItemCell toCell = null;
@@ -2408,7 +2408,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void MergeItem(S.ServerPacket.MergeItem p)
+        private void MergeItem(ServerPacket.MergeItem p)
         {
             MirItemCell toCell, fromCell;
 
@@ -2488,7 +2488,7 @@ namespace Client.MirScenes
 
             User.RefreshStats();
         }
-        private void RemoveItem(S.ServerPacket.RemoveItem p)
+        private void RemoveItem(ServerPacket.RemoveItem p)
         {
             MirItemCell toCell;
 
@@ -2543,7 +2543,7 @@ namespace Client.MirScenes
                 User.RefreshStats();
 
         }
-        private void RemoveSlotItem(S.ServerPacket.RemoveSlotItem p)
+        private void RemoveSlotItem(ServerPacket.RemoveSlotItem p)
         {
             MirItemCell fromCell;
             MirItemCell toCell;
@@ -2586,7 +2586,7 @@ namespace Client.MirScenes
             CharacterDuraPanel.GetCharacterDura();
             User.RefreshStats();
         }
-        private void TakeBackItem(S.ServerPacket.TakeBackItem p)
+        private void TakeBackItem(ServerPacket.TakeBackItem p)
         {
             MirItemCell fromCell = StorageDialog.Grid[p.From];
 
@@ -2603,7 +2603,7 @@ namespace Client.MirScenes
             User.RefreshStats();
             CharacterDuraPanel.GetCharacterDura();
         }
-        private void StoreItem(S.ServerPacket.StoreItem p)
+        private void StoreItem(ServerPacket.StoreItem p)
         {
             MirItemCell fromCell = p.From < User.BeltIdx ? BeltDialog.Grid[p.From] : InventoryDialog.Grid[p.From - User.BeltIdx];
 
@@ -2619,7 +2619,7 @@ namespace Client.MirScenes
             fromCell.Item = null;
             User.RefreshStats();
         }
-        private void DepositRefineItem(S.ServerPacket.DepositRefineItem p)
+        private void DepositRefineItem(ServerPacket.DepositRefineItem p)
         {
             MirItemCell fromCell = p.From < User.BeltIdx ? BeltDialog.Grid[p.From] : InventoryDialog.Grid[p.From - User.BeltIdx];
 
@@ -2636,7 +2636,7 @@ namespace Client.MirScenes
             User.RefreshStats();
         }
 
-        private void RetrieveRefineItem(S.ServerPacket.RetrieveRefineItem p)
+        private void RetrieveRefineItem(ServerPacket.RetrieveRefineItem p)
         {
             MirItemCell fromCell = RefineDialog.Grid[p.From];
             MirItemCell toCell = p.To < User.BeltIdx ? BeltDialog.Grid[p.To] : InventoryDialog.Grid[p.To - User.BeltIdx];
@@ -2652,12 +2652,12 @@ namespace Client.MirScenes
             User.RefreshStats();
         }
 
-        private void RefineCancel(S.ServerPacket.RefineCancel p)
+        private void RefineCancel(ServerPacket.RefineCancel p)
         {
             RefineDialog.RefineReset();  
         }
 
-        private void RefineItem(S.ServerPacket.RefineItem p)
+        private void RefineItem(ServerPacket.RefineItem p)
         {
             RefineDialog.RefineReset();
             for (int i = 0; i < User.Inventory.Length; i++)
@@ -2670,7 +2670,7 @@ namespace Client.MirScenes
             }
             NpcDialog.Hide();
         }
-        private void DepositTradeItem(S.ServerPacket.DepositTradeItem p)
+        private void DepositTradeItem(ServerPacket.DepositTradeItem p)
         {
             MirItemCell fromCell = p.From < User.BeltIdx ? BeltDialog.Grid[p.From] : InventoryDialog.Grid[p.From - User.BeltIdx];
 
@@ -2687,7 +2687,7 @@ namespace Client.MirScenes
             fromCell.Item = null;
             User.RefreshStats();
         }
-        private void RetrieveTradeItem(S.ServerPacket.RetrieveTradeItem p)
+        private void RetrieveTradeItem(ServerPacket.RetrieveTradeItem p)
         {
             MirItemCell fromCell = TradeDialog.Grid[p.From];
             MirItemCell toCell = p.To < User.BeltIdx ? BeltDialog.Grid[p.To] : InventoryDialog.Grid[p.To - User.BeltIdx];
@@ -2703,7 +2703,7 @@ namespace Client.MirScenes
             fromCell.Item = null;
             User.RefreshStats();
         }
-        private void SplitItem(S.ServerPacket.SplitItem p)
+        private void SplitItem(ServerPacket.SplitItem p)
         {
             Bind(p.Item);
 
@@ -2761,7 +2761,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void SplitItem1(S.ServerPacket.SplitItem1 p)
+        private void SplitItem1(ServerPacket.SplitItem1 p)
         {
             MirItemCell cell;
 
@@ -2785,7 +2785,7 @@ namespace Client.MirScenes
             cell.Item.Count -= p.Count;
             User.RefreshStats();
         }
-        private void UseItem(S.ServerPacket.UseItem p)
+        private void UseItem(ServerPacket.UseItem p)
         {
             MirItemCell cell = null;
             bool hero = false;
@@ -2813,7 +2813,7 @@ namespace Client.MirScenes
             else
                 User.RefreshStats();
         }
-        private void DropItem(S.ServerPacket.DropItem p)
+        private void DropItem(ServerPacket.DropItem p)
         {
             MirItemCell cell;
             if (p.HeroItem)
@@ -2848,7 +2848,7 @@ namespace Client.MirScenes
             
         }
 
-        private void TakeBackHeroItem(S.ServerPacket.TakeBackHeroItem p)
+        private void TakeBackHeroItem(ServerPacket.TakeBackHeroItem p)
         {
             MirItemCell fromCell = p.From < User.HeroBeltIdx ? HeroBeltDialog.Grid[p.From] : HeroInventoryDialog.Grid[p.From - User.HeroBeltIdx];
 
@@ -2867,7 +2867,7 @@ namespace Client.MirScenes
             CharacterDuraPanel.GetCharacterDura();
         }
 
-        private void TransferHeroItem(S.ServerPacket.TransferHeroItem p)
+        private void TransferHeroItem(ServerPacket.TransferHeroItem p)
         {
             MirItemCell fromCell = p.From < User.BeltIdx ? BeltDialog.Grid[p.From] : InventoryDialog.Grid[p.From - User.BeltIdx];
 
@@ -2886,7 +2886,7 @@ namespace Client.MirScenes
             CharacterDuraPanel.GetCharacterDura();
         }
 
-        private void MountUpdate(S.ServerPacket.MountUpdate p)
+        private void MountUpdate(ServerPacket.MountUpdate p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -2910,7 +2910,7 @@ namespace Client.MirScenes
             GameScene.Scene.Redraw();
         }
 
-        private void TransformUpdate(S.ServerPacket.TransformUpdate p)
+        private void TransformUpdate(ServerPacket.TransformUpdate p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -2924,7 +2924,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void FishingUpdate(S.ServerPacket.FishingUpdate p)
+        private void FishingUpdate(ServerPacket.FishingUpdate p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -2954,12 +2954,12 @@ namespace Client.MirScenes
             Redraw();
         }
 
-        private void CompleteQuest(S.ServerPacket.CompleteQuest p)
+        private void CompleteQuest(ServerPacket.CompleteQuest p)
         {
             User.CompletedQuests = p.CompletedQuests;
         }
 
-        private void ShareQuest(S.ServerPacket.ShareQuest p)
+        private void ShareQuest(ServerPacket.ShareQuest p)
         {
             ClientQuestInfo quest = GameScene.QuestInfoList.FirstOrDefault(e => e.Index == p.QuestIndex);
             
@@ -2972,7 +2972,7 @@ namespace Client.MirScenes
             messageBox.Show();
         }
 
-        private void ChangeQuest(S.ServerPacket.ChangeQuest p)
+        private void ChangeQuest(ServerPacket.ChangeQuest p)
         {
             switch(p.QuestState)
             {
@@ -3031,7 +3031,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void PlayerUpdate(S.ServerPacket.PlayerUpdate p)
+        private void PlayerUpdate(ServerPacket.PlayerUpdate p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3042,7 +3042,7 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void PlayerInspect(S.ServerPacket.PlayerInspect p)
+        private void PlayerInspect(ServerPacket.PlayerInspect p)
         {
             InspectDialog.Items = p.Equipment;
 
@@ -3059,7 +3059,7 @@ namespace Client.MirScenes
             InspectDialog.RefreshInferface(p.IsHero);
             InspectDialog.Show();
         }
-        private void LogOutSuccess(S.ServerPacket.LogOutSuccess p)
+        private void LogOutSuccess(ServerPacket.LogOutSuccess p)
         {
             for (int i = 0; i <= 3; i++)//Fix for orbs sound
                 SoundManager.StopSound(20000 + 126 * 10 + 5 + i);
@@ -3074,12 +3074,12 @@ namespace Client.MirScenes
 
             Dispose();
         }
-        private void LogOutFailed(S.ServerPacket.LogOutFailed p)
+        private void LogOutFailed(ServerPacket.LogOutFailed p)
         {
             Enabled = true;
         }
 
-        private void ReturnToLogin(S.ServerPacket.ReturnToLogin p)
+        private void ReturnToLogin(ServerPacket.ReturnToLogin p)
         {
             User = null;
             if (Settings.Resolution != 1024)
@@ -3090,7 +3090,7 @@ namespace Client.MirScenes
             MirMessageBox.Show("The person you was observing has logged off.");
         }
 
-        private void TimeOfDay(S.ServerPacket.TimeOfDay p)
+        private void TimeOfDay(ServerPacket.TimeOfDay p)
         {
             Lights = p.Lights;
             switch (Lights)
@@ -3110,7 +3110,7 @@ namespace Client.MirScenes
                     break;
             }
         }
-        private void ChangeAMode(S.ServerPacket.ChangeAMode p)
+        private void ChangeAMode(ServerPacket.ChangeAMode p)
         {
             AMode = p.Mode;
 
@@ -3136,7 +3136,7 @@ namespace Client.MirScenes
                     break;
             }
         }
-        private void ChangePMode(S.ServerPacket.ChangePMode p)
+        private void ChangePMode(ServerPacket.ChangePMode p)
         {
             PMode = p.Mode;
             switch (p.Mode)
@@ -3159,7 +3159,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void ObjectItem(S.ServerPacket.ObjectItem p)
+        private void ObjectItem(ServerPacket.ObjectItem p)
         {
             ItemObject ob = new ItemObject(p.ObjectID);
             ob.Load(p);
@@ -3171,12 +3171,12 @@ namespace Client.MirScenes
             }
             */
         }
-        private void ObjectGold(S.ServerPacket.ObjectGold p)
+        private void ObjectGold(ServerPacket.ObjectGold p)
         {
             ItemObject ob = new ItemObject(p.ObjectID);
             ob.Load(p);
         }
-        private void GainedItem(S.ServerPacket.GainedItem p)
+        private void GainedItem(ServerPacket.GainedItem p)
         {
             Bind(p.Item);
             AddItem(p.Item);
@@ -3184,13 +3184,13 @@ namespace Client.MirScenes
 
             OutputMessage(string.Format(GameLanguage.YouGained, p.Item.FriendlyName));
         }
-        private void GainedQuestItem(S.ServerPacket.GainedQuestItem p)
+        private void GainedQuestItem(ServerPacket.GainedQuestItem p)
         {
             Bind(p.Item);
             AddQuestItem(p.Item);
         }
 
-        private void GainedGold(S.ServerPacket.GainedGold p)
+        private void GainedGold(ServerPacket.GainedGold p)
         {
             if (p.Gold == 0) return;
 
@@ -3198,12 +3198,12 @@ namespace Client.MirScenes
             SoundManager.PlaySound(SoundList.Gold);
             OutputMessage(string.Format(GameLanguage.YouGained2, p.Gold, GameLanguage.Gold));
         }
-        private void LoseGold(S.ServerPacket.LoseGold p)
+        private void LoseGold(ServerPacket.LoseGold p)
         {
             Gold -= p.Gold;
             SoundManager.PlaySound(SoundList.Gold);
         }
-        private void GainedCredit(S.ServerPacket.GainedCredit p)
+        private void GainedCredit(ServerPacket.GainedCredit p)
         {
             if (p.Credit == 0) return;
 
@@ -3211,12 +3211,12 @@ namespace Client.MirScenes
             SoundManager.PlaySound(SoundList.Gold);
             OutputMessage(string.Format(GameLanguage.YouGained2, p.Credit, GameLanguage.Credit));
         }
-        private void LoseCredit(S.ServerPacket.LoseCredit p)
+        private void LoseCredit(ServerPacket.LoseCredit p)
         {
             Credit -= p.Credit;
             SoundManager.PlaySound(SoundList.Gold);
         }
-        private void ObjectMonster(S.ServerPacket.ObjectMonster p)
+        private void ObjectMonster(ServerPacket.ObjectMonster p)
         {
             var found = false;
             var mob = (MonsterObject)MapControl.Objects.Find(ob => ob.ObjectID == p.ObjectID);
@@ -3226,7 +3226,7 @@ namespace Client.MirScenes
                 mob = new MonsterObject(p.ObjectID);
             mob.Load(p, found);
         }
-        private void ObjectAttack(S.ServerPacket.ObjectAttack p)
+        private void ObjectAttack(ServerPacket.ObjectAttack p)
         {
             if (p.ObjectID == User.ObjectID && !Observing) return;
 
@@ -3277,7 +3277,7 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void Struck(S.ServerPacket.Struck p)
+        private void Struck(ServerPacket.Struck p)
         {
             LogTime = CMain.Time + Globals.LogDelay;
 
@@ -3331,7 +3331,7 @@ namespace Client.MirScenes
             User.ActionFeed.Add(action);
 
         }
-        private void ObjectStruck(S.ServerPacket.ObjectStruck p)
+        private void ObjectStruck(ServerPacket.ObjectStruck p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
@@ -3378,7 +3378,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void DamageIndicator(S.ServerPacket.DamageIndicator p)
+        private void DamageIndicator(ServerPacket.DamageIndicator p)
         {
             if (Settings.DisplayDamage)
             {
@@ -3405,7 +3405,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void DuraChanged(S.ServerPacket.DuraChanged p)
+        private void DuraChanged(ServerPacket.DuraChanged p)
         {
             UserItem item = null;
             for (int i = 0; i < User.Inventory.Length; i++)
@@ -3466,14 +3466,14 @@ namespace Client.MirScenes
 
             CharacterDuraPanel.UpdateCharacterDura(item);
         }
-        private void HealthChanged(S.ServerPacket.HealthChanged p)
+        private void HealthChanged(ServerPacket.HealthChanged p)
         {
             User.HP = p.HP;
             User.MP = p.MP;
 
             User.PercentHealth = (byte)(User.HP / (float)User.Stats[Stat.HP] * 100);
         }
-        private void HeroHealthChanged(S.ServerPacket.HeroHealthChanged p)
+        private void HeroHealthChanged(ServerPacket.HeroHealthChanged p)
         {
             Hero.HP = p.HP;
             Hero.MP = p.MP;
@@ -3482,7 +3482,7 @@ namespace Client.MirScenes
             Hero.PercentMana = (byte)(Hero.MP / (float)Hero.Stats[Stat.MP] * 100);
         }
 
-        private void DeleteQuestItem(S.ServerPacket.DeleteQuestItem p)
+        private void DeleteQuestItem(ServerPacket.DeleteQuestItem p)
         {
             for (int i = 0; i < User.QuestInventory.Length; i++)
             {
@@ -3498,7 +3498,7 @@ namespace Client.MirScenes
             } 
         }
 
-        private void DeleteItem(S.ServerPacket.DeleteItem p)
+        private void DeleteItem(ServerPacket.DeleteItem p)
         {
             UserObject actor = null;
             for (int i = 0; i < User.Inventory.Length; i++)
@@ -3650,7 +3650,7 @@ namespace Client.MirScenes
             }
             actor?.RefreshStats();
         }
-        private void Death(S.ServerPacket.Death p)
+        private void Death(ServerPacket.Death p)
         {
             User.Dead = true;
 
@@ -3659,7 +3659,7 @@ namespace Client.MirScenes
 
             LogTime = 0;
         }
-        private void ObjectDied(S.ServerPacket.ObjectDied p)
+        private void ObjectDied(ServerPacket.ObjectDied p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
@@ -3687,11 +3687,11 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void ColourChanged(S.ServerPacket.ColourChanged p)
+        private void ColourChanged(ServerPacket.ColourChanged p)
         {
             User.NameColour = p.NameColour;
         }
-        private void ObjectColourChanged(S.ServerPacket.ObjectColourChanged p)
+        private void ObjectColourChanged(ServerPacket.ObjectColourChanged p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
@@ -3704,7 +3704,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void ObjectGuildNameChanged(S.ServerPacket.ObjectGuildNameChanged p)
+        private void ObjectGuildNameChanged(ServerPacket.ObjectGuildNameChanged p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
@@ -3717,18 +3717,18 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void GainExperience(S.ServerPacket.GainExperience p)
+        private void GainExperience(ServerPacket.GainExperience p)
         {
             OutputMessage(string.Format(GameLanguage.ExperienceGained, p.Amount));
             MapObject.User.Experience += p.Amount;
         }
 
-        private void GainHeroExperience(S.ServerPacket.GainHeroExperience p)
+        private void GainHeroExperience(ServerPacket.GainHeroExperience p)
         {
             OutputMessage(string.Format(GameLanguage.HeroExperienceGained, p.Amount));
             MapObject.Hero.Experience += p.Amount;
         }
-        private void LevelChanged(S.ServerPacket.LevelChanged p)
+        private void LevelChanged(ServerPacket.LevelChanged p)
         {
             User.Level = p.Level;
             User.Experience = p.Experience;
@@ -3739,7 +3739,7 @@ namespace Client.MirScenes
             SoundManager.PlaySound(SoundList.LevelUp);
             ChatDialog.ReceiveChat(GameLanguage.LevelUp, ChatType.LevelUp); 
         }
-        private void HeroLevelChanged(S.ServerPacket.HeroLevelChanged p)
+        private void HeroLevelChanged(ServerPacket.HeroLevelChanged p)
         {
             Hero.Level = p.Level;
             Hero.Experience = p.Experience;
@@ -3751,7 +3751,7 @@ namespace Client.MirScenes
             //ChatDialog.ReceiveChat(GameLanguage.LevelUp, ChatType.LevelUp);
             MainDialog.HeroInfoPanel.Update();
         }
-        private void ObjectLeveled(S.ServerPacket.ObjectLeveled p)
+        private void ObjectLeveled(ServerPacket.ObjectLeveled p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3762,7 +3762,7 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void ObjectHarvest(S.ServerPacket.ObjectHarvest p)
+        private void ObjectHarvest(ServerPacket.ObjectHarvest p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3772,7 +3772,7 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void ObjectHarvested(S.ServerPacket.ObjectHarvested p)
+        private void ObjectHarvested(ServerPacket.ObjectHarvested p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3782,12 +3782,12 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void ObjectNpc(S.ServerPacket.ObjectNpc p)
+        private void ObjectNpc(ServerPacket.ObjectNpc p)
         {
             NpcObject ob = new NpcObject(p.ObjectID);
             ob.Load(p);
         }
-        private void NpcResponse(S.ServerPacket.NpcResponse p)
+        private void NpcResponse(ServerPacket.NpcResponse p)
         {
             NpcTime = 0;
             NpcDialog.BigButtons.Clear();
@@ -3811,12 +3811,12 @@ namespace Client.MirScenes
             QuestListDialog.Hide();
         }
 
-        private void NpcUpdate(S.ServerPacket.NpcUpdate p)
+        private void NpcUpdate(ServerPacket.NpcUpdate p)
         {
             GameScene.NpcID = p.NpcID; //Updates the client with the correct Npc ID if it's manually called from the client
         }
 
-        private void NpcImageUpdate(S.ServerPacket.NpcImageUpdate p)
+        private void NpcImageUpdate(ServerPacket.NpcImageUpdate p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3831,13 +3831,13 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void DefaultNpc(S.ServerPacket.DefaultNpc p)
+        private void DefaultNpc(ServerPacket.DefaultNpc p)
         {
             GameScene.DefaultNpcID = p.ObjectID; //Updates the client with the correct Default Npc ID
         }
 
 
-        private void ObjectHide(S.ServerPacket.ObjectHide p)
+        private void ObjectHide(ServerPacket.ObjectHide p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3847,7 +3847,7 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void ObjectShow(S.ServerPacket.ObjectShow p)
+        private void ObjectShow(ServerPacket.ObjectShow p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3857,7 +3857,7 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void Poisoned(S.ServerPacket.Poisoned p)
+        private void Poisoned(ServerPacket.Poisoned p)
         {
             var previousPoisons = User.Poison;
 
@@ -3873,7 +3873,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void ObjectPoisoned(S.ServerPacket.ObjectPoisoned p)
+        private void ObjectPoisoned(ServerPacket.ObjectPoisoned p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -3883,7 +3883,7 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void MapChanged(S.ServerPacket.MapChanged p)
+        private void MapChanged(ServerPacket.MapChanged p)
         {
             var isCurrentMap = (MapControl.Index == p.MapIndex);
 
@@ -3923,7 +3923,7 @@ namespace Client.MirScenes
 
             MapControl.UpdateWeather();
         }
-        private void ObjectTeleportOut(S.ServerPacket.ObjectTeleportOut p)
+        private void ObjectTeleportOut(ServerPacket.ObjectTeleportOut p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4026,7 +4026,7 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void ObjectTeleportIn(S.ServerPacket.ObjectTeleportIn p)
+        private void ObjectTeleportIn(ServerPacket.ObjectTeleportIn p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4127,7 +4127,7 @@ namespace Client.MirScenes
             User.Effects.Add(new Effect(Libraries.Magic, 260, 10, 500, User));
             SoundManager.PlaySound(SoundList.Teleport);
         }
-        private void NpcGoods(S.ServerPacket.NpcGoods p)
+        private void NpcGoods(ServerPacket.NpcGoods p)
         {
             for (int i = 0; i < p.List.Count; i++)
             {
@@ -4179,7 +4179,7 @@ namespace Client.MirScenes
                     break;
             }
         }
-        private void NpcPearlGoods(S.ServerPacket.NpcPearlGoods p)
+        private void NpcPearlGoods(ServerPacket.NpcPearlGoods p)
         {
             for (int i = 0; i < p.List.Count; i++)
             {
@@ -4201,7 +4201,7 @@ namespace Client.MirScenes
             NpcDropDialog.PType = PanelType.Sell;
             NpcDropDialog.Show();
         }
-        private void NpcRepair(S.ServerPacket.NpcRepair p)
+        private void NpcRepair(ServerPacket.NpcRepair p)
         {
             NpcRate = p.Rate;
             if (!NpcDialog.Visible) return;
@@ -4213,7 +4213,7 @@ namespace Client.MirScenes
             if (NpcDialog.Visible)
                 StorageDialog.Show();
         }
-        private void NpcRequestInput(S.ServerPacket.NpcRequestInput p)
+        private void NpcRequestInput(ServerPacket.NpcRequestInput p)
         {
             MirInputBox inputBox = new MirInputBox("Please enter the required information.");
 
@@ -4225,7 +4225,7 @@ namespace Client.MirScenes
             inputBox.Show();
         }
 
-        private void NpcSRepair(S.ServerPacket.NpcSRepair p)
+        private void NpcSRepair(ServerPacket.NpcSRepair p)
         {
             NpcRate = p.Rate;
             if (!NpcDialog.Visible) return;
@@ -4233,7 +4233,7 @@ namespace Client.MirScenes
             NpcDropDialog.Show();
         }
 
-        private void NpcRefine(S.ServerPacket.NpcRefine p)
+        private void NpcRefine(ServerPacket.NpcRefine p)
         {
             NpcRate = p.Rate;
             if (!NpcDialog.Visible) return;
@@ -4247,20 +4247,20 @@ namespace Client.MirScenes
                 NpcDropDialog.Show();
         }
 
-        private void NpcCheckRefine(S.ServerPacket.NpcCheckRefine p)
+        private void NpcCheckRefine(ServerPacket.NpcCheckRefine p)
         {
             if (!NpcDialog.Visible) return;
             NpcDropDialog.PType = PanelType.CheckRefine;
             NpcDropDialog.Show();
         }
 
-        private void NpcCollectRefine(S.ServerPacket.NpcCollectRefine p)
+        private void NpcCollectRefine(ServerPacket.NpcCollectRefine p)
         {
             if (!NpcDialog.Visible) return;
             NpcDialog.Hide();
         }
 
-        private void NpcReplaceWedRing(S.ServerPacket.NpcReplaceWedRing p)
+        private void NpcReplaceWedRing(ServerPacket.NpcReplaceWedRing p)
         {
             if (!NpcDialog.Visible) return;
             NpcRate = p.Rate;
@@ -4269,7 +4269,7 @@ namespace Client.MirScenes
         }
 
 
-        private void SellItem(S.ServerPacket.SellItem p)
+        private void SellItem(ServerPacket.SellItem p)
         {
             MirItemCell cell = InventoryDialog.GetCell(p.UniqueID) ?? BeltDialog.GetCell(p.UniqueID);
 
@@ -4286,7 +4286,7 @@ namespace Client.MirScenes
 
             User.RefreshStats();
         }
-        private void RepairItem(S.ServerPacket.RepairItem p)
+        private void RepairItem(ServerPacket.RepairItem p)
         {
             MirItemCell cell = InventoryDialog.GetCell(p.UniqueID) ?? BeltDialog.GetCell(p.UniqueID);
 
@@ -4294,14 +4294,14 @@ namespace Client.MirScenes
 
             cell.Locked = false;
         }
-        private void CraftItem(S.ServerPacket.CraftItem p)
+        private void CraftItem(ServerPacket.CraftItem p)
         {
             if (!p.Success) return;
 
             CraftDialog.UpdateCraftCells();
             User.RefreshStats();
         }
-        private void ItemRepaired(S.ServerPacket.ItemRepaired p)
+        private void ItemRepaired(ServerPacket.ItemRepaired p)
         {
             UserItem item = null;
             for (int i = 0; i < User.Inventory.Length; i++)
@@ -4364,7 +4364,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void ItemSlotSizeChanged(S.ServerPacket.ItemSlotSizeChanged p)
+        private void ItemSlotSizeChanged(ServerPacket.ItemSlotSizeChanged p)
         {
             UserItem item = null;
             for (int i = 0; i < User.Inventory.Length; i++)
@@ -4420,7 +4420,7 @@ namespace Client.MirScenes
             item.SetSlotSize(p.SlotSize);
         }
 
-        private void ItemSealChanged(S.ServerPacket.ItemSealChanged p)
+        private void ItemSealChanged(ServerPacket.ItemSealChanged p)
         {
             UserItem item = null;
             for (int i = 0; i < User.Inventory.Length; i++)
@@ -4482,7 +4482,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void ItemUpgraded(S.ServerPacket.ItemUpgraded p)
+        private void ItemUpgraded(ServerPacket.ItemUpgraded p)
         {
             UserItem item = null;
             MirGridType grid = MirGridType.Inventory;
@@ -4534,7 +4534,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void NewMagic(S.ServerPacket.NewMagic p)
+        private void NewMagic(ServerPacket.NewMagic p)
         {
             ClientMagic magic = p.Magic;
 
@@ -4550,7 +4550,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void RemoveMagic(S.ServerPacket.RemoveMagic p)
+        private void RemoveMagic(ServerPacket.RemoveMagic p)
         {
             User.Magics.RemoveAt(p.PlaceId);
             User.RefreshStats();
@@ -4560,7 +4560,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void MagicLeveled(S.ServerPacket.MagicLeveled p)
+        private void MagicLeveled(ServerPacket.MagicLeveled p)
         {
             UserObject actor = p.ObjectID == Hero?.ObjectID ? Hero : User;
 
@@ -4579,7 +4579,7 @@ namespace Client.MirScenes
                 break;
             }
         }
-        private void Magic(S.ServerPacket.Magic p)
+        private void Magic(ServerPacket.Magic p)
         {
             User.Spell = p.Spell;
             User.Cast = p.Cast;
@@ -4594,7 +4594,7 @@ namespace Client.MirScenes
             magic.CastTime = CMain.Time;
         }
 
-        private void MagicDelay(S.ServerPacket.MagicDelay p)
+        private void MagicDelay(ServerPacket.MagicDelay p)
         {
             ClientMagic magic;
             if (p.ObjectID == Hero?.ObjectID)
@@ -4604,13 +4604,13 @@ namespace Client.MirScenes
             magic.Delay = p.Delay;
         }
 
-        private void MagicCast(S.ServerPacket.MagicCast p)
+        private void MagicCast(ServerPacket.MagicCast p)
         {
             ClientMagic magic = User.GetMagic(p.Spell);
             magic.CastTime = CMain.Time;
         }
 
-        private void ObjectMagic(S.ServerPacket.ObjectMagic p)
+        private void ObjectMagic(ServerPacket.ObjectMagic p)
         {
             if (p.SelfBroadcast == false && p.ObjectID == User.ObjectID && !Observing) return;
 
@@ -4638,7 +4638,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void ObjectProjectile(S.ServerPacket.ObjectProjectile p)
+        private void ObjectProjectile(ServerPacket.ObjectProjectile p)
         {
             MapObject source = MapControl.GetObject(p.Source);
 
@@ -4668,7 +4668,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void ObjectEffect(S.ServerPacket.ObjectEffect p)
+        private void ObjectEffect(ServerPacket.ObjectEffect p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -4889,19 +4889,19 @@ namespace Client.MirScenes
             }
         }
 
-        private void RangeAttack(S.ServerPacket.RangeAttack p)
+        private void RangeAttack(ServerPacket.RangeAttack p)
         {
             User.TargetID = p.TargetID;
             User.TargetPoint = p.Target;
             User.Spell = p.Spell;
         }
 
-        private void Pushed(S.ServerPacket.Pushed p)
+        private void Pushed(ServerPacket.Pushed p)
         {
             User.ActionFeed.Add(new QueuedAction { Action = MirAction.Pushed, Direction = p.Direction, Location = p.Location });
         }
 
-        private void ObjectPushed(S.ServerPacket.ObjectPushed p)
+        private void ObjectPushed(ServerPacket.ObjectPushed p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
@@ -4915,7 +4915,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void ObjectName(S.ServerPacket.ObjectName p)
+        private void ObjectName(ServerPacket.ObjectName p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
@@ -4927,7 +4927,7 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void UserStorage(S.ServerPacket.UserStorage p)
+        private void UserStorage(ServerPacket.UserStorage p)
         {
             if(Storage.Length != p.Storage.Length)
             {
@@ -4942,7 +4942,7 @@ namespace Client.MirScenes
                 Bind(Storage[i]);
             }
         }
-        private void SwitchGroup(S.ServerPacket.SwitchGroup p)
+        private void SwitchGroup(ServerPacket.SwitchGroup p)
         {
             GroupDialog.AllowGroup = p.AllowGroup;
 
@@ -4958,7 +4958,7 @@ namespace Client.MirScenes
             ChatDialog.ReceiveChat("You have left the group.", ChatType.Group);
         }
 
-        private void DeleteMember(S.ServerPacket.DeleteMember p)
+        private void DeleteMember(ServerPacket.DeleteMember p)
         {
             GroupDialog.GroupList.Remove(p.Name);
             GroupDialog.GroupMembersMap.Remove(p.Name);
@@ -4966,7 +4966,7 @@ namespace Client.MirScenes
             ChatDialog.ReceiveChat(string.Format("-{0} has left the group.", p.Name), ChatType.Group);
         }
 
-        private void GroupInvite(S.ServerPacket.GroupInvite p)
+        private void GroupInvite(ServerPacket.GroupInvite p)
         {
             MirMessageBox messageBox = new MirMessageBox(string.Format("Do you want to group with {0}?", p.Name), MirMessageBoxButtons.YesNo);
 
@@ -4978,12 +4978,12 @@ namespace Client.MirScenes
             messageBox.NoButton.Click += (o, e) => Network.Enqueue(new C.GroupInvite { AcceptInvite = false });
             messageBox.Show();
         }
-        private void AddMember(S.ServerPacket.AddMember p)
+        private void AddMember(ServerPacket.AddMember p)
         {
             GroupDialog.GroupList.Add(p.Name);
             ChatDialog.ReceiveChat(string.Format("-{0} has joined the group.", p.Name), ChatType.Group);
         }
-        private void GroupMembersMap(S.ServerPacket.GroupMembersMap p)
+        private void GroupMembersMap(ServerPacket.GroupMembersMap p)
         {
             if (!GroupDialog.GroupMembersMap.ContainsKey(p.PlayerName))
                 GroupDialog.GroupMembersMap.Add(p.PlayerName, p.PlayerMap);
@@ -4993,7 +4993,7 @@ namespace Client.MirScenes
                 GroupDialog.GroupMembersMap.Add(p.PlayerName, p.PlayerMap);
             }
         }
-        private void SendMemberLocation(S.ServerPacket.SendMemberLocation p)
+        private void SendMemberLocation(ServerPacket.SendMemberLocation p)
         {
             if (!BigMapViewPort.PlayerLocations.ContainsKey(p.MemberName))
                 BigMapViewPort.PlayerLocations.Add(p.MemberName, p.MemberLocation);
@@ -5010,7 +5010,7 @@ namespace Client.MirScenes
             User.Effects.Add(new Effect(Libraries.Magic2, 1220, 20, 2000, User));
             SoundManager.PlaySound(SoundList.Revive);
         }
-        private void ObjectRevived(S.ServerPacket.ObjectRevived p)
+        private void ObjectRevived(ServerPacket.ObjectRevived p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -5027,7 +5027,7 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void SpellToggle(S.ServerPacket.SpellToggle p)
+        private void SpellToggle(ServerPacket.SpellToggle p)
         {
             UserObject actor = User;
             string prefix = string.Empty;
@@ -5070,7 +5070,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void ObjectHealth(S.ServerPacket.ObjectHealth p)
+        private void ObjectHealth(ServerPacket.ObjectHealth p)
         {
             if (p.ObjectID == Hero?.ObjectID)
                 Hero.PercentHealth = p.Percent;
@@ -5085,7 +5085,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void ObjectMana(S.ServerPacket.ObjectMana p)
+        private void ObjectMana(ServerPacket.ObjectMana p)
         {
             if (p.ObjectID == Hero?.ObjectID)
                 Hero.PercentMana = p.Percent;
@@ -5099,7 +5099,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void MapEffect(S.ServerPacket.MapEffect p)
+        private void MapEffect(ServerPacket.MapEffect p)
         {
             switch (p.Effect)
             {
@@ -5115,7 +5115,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void ObjectRangeAttack(S.ServerPacket.ObjectRangeAttack p)
+        private void ObjectRangeAttack(ServerPacket.ObjectRangeAttack p)
         {
             if (p.ObjectID == User.ObjectID &&
                 !Observing) return;
@@ -5168,7 +5168,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void AddBuff(S.ServerPacket.AddBuff p)
+        private void AddBuff(ServerPacket.AddBuff p)
         {
             ClientBuff buff = p.Buff;
 
@@ -5230,7 +5230,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void RemoveBuff(S.ServerPacket.RemoveBuff p)
+        private void RemoveBuff(ServerPacket.RemoveBuff p)
         {
             if (User.ObjectID == p.ObjectID)
             {
@@ -5290,7 +5290,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void PauseBuff(S.ServerPacket.PauseBuff p)
+        private void PauseBuff(ServerPacket.PauseBuff p)
         {
             if (User.ObjectID == p.ObjectID)
             {
@@ -5339,7 +5339,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void ObjectHidden(S.ServerPacket.ObjectHidden p)
+        private void ObjectHidden(ServerPacket.ObjectHidden p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -5350,7 +5350,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void ObjectSneaking(S.ServerPacket.ObjectSneaking p)
+        private void ObjectSneaking(ServerPacket.ObjectSneaking p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -5361,7 +5361,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void ObjectLevelEffects(S.ServerPacket.ObjectLevelEffects p)
+        private void ObjectLevelEffects(ServerPacket.ObjectLevelEffects p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -5377,7 +5377,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void RefreshItem(S.ServerPacket.RefreshItem p)
+        private void RefreshItem(ServerPacket.RefreshItem p)
         {
             Bind(p.Item);
 
@@ -5434,19 +5434,19 @@ namespace Client.MirScenes
             }
         }
 
-        private void ObjectSpell(S.ServerPacket.ObjectSpell p)
+        private void ObjectSpell(ServerPacket.ObjectSpell p)
         {
             SpellObject ob = new SpellObject(p.ObjectID);
             ob.Load(p);
         }
 
-        private void ObjectDeco(S.ServerPacket.ObjectDeco p)
+        private void ObjectDeco(ServerPacket.ObjectDeco p)
         {
             DecoObject ob = new DecoObject(p.ObjectID);
             ob.Load(p);
         }
 
-        private void UserDash(S.ServerPacket.UserDash p)
+        private void UserDash(ServerPacket.UserDash p)
         {
             if (User.Direction == p.Direction && User.CurrentLocation == p.Location)
             {
@@ -5471,13 +5471,13 @@ namespace Client.MirScenes
             User.ActionFeed.Add(new QueuedAction { Action = action, Direction = p.Direction, Location = p.Location });
         }
 
-        private void UserDashFail(S.ServerPacket.UserDashFail p)
+        private void UserDashFail(ServerPacket.UserDashFail p)
         {
             MapControl.NextAction = 0;
             User.ActionFeed.Add(new QueuedAction { Action = MirAction.DashFail, Direction = p.Direction, Location = p.Location });
         }
 
-        private void ObjectDash(S.ServerPacket.ObjectDash p)
+        private void ObjectDash(ServerPacket.ObjectDash p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
@@ -5497,7 +5497,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void ObjectDashFail(S.ServerPacket.ObjectDashFail p)
+        private void ObjectDashFail(ServerPacket.ObjectDashFail p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
@@ -5512,7 +5512,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void UserBackStep(S.ServerPacket.UserBackStep p)
+        private void UserBackStep(ServerPacket.UserBackStep p)
         {
             if (User.Direction == p.Direction && User.CurrentLocation == p.Location)
             {
@@ -5522,7 +5522,7 @@ namespace Client.MirScenes
             User.ActionFeed.Add(new QueuedAction { Action = MirAction.Jump, Direction = p.Direction, Location = p.Location });
         }
 
-        private void ObjectBackStep(S.ServerPacket.ObjectBackStep p)
+        private void ObjectBackStep(ServerPacket.ObjectBackStep p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
@@ -5539,7 +5539,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void UserDashAttack(S.ServerPacket.UserDashAttack p)
+        private void UserDashAttack(ServerPacket.UserDashAttack p)
         {
             if (User.Direction == p.Direction && User.CurrentLocation == p.Location)
             {
@@ -5550,7 +5550,7 @@ namespace Client.MirScenes
             User.ActionFeed.Add(new QueuedAction { Action = MirAction.DashAttack, Direction = p.Direction, Location = p.Location });
         }
 
-        private void ObjectDashAttack(S.ServerPacket.ObjectDashAttack p)
+        private void ObjectDashAttack(ServerPacket.ObjectDashAttack p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
@@ -5567,7 +5567,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void UserAttackMove(S.ServerPacket.UserAttackMove p)//Warrior Skill - SlashingBurst
+        private void UserAttackMove(ServerPacket.UserAttackMove p)//Warrior Skill - SlashingBurst
         {
             MapControl.NextAction = 0;
             if (User.CurrentLocation == p.Location && User.Direction == p.Direction) return;
@@ -5602,7 +5602,7 @@ namespace Client.MirScenes
             User.ActionFeed.Add(new QueuedAction { Action = MirAction.Standing, Direction = p.Direction, Location = p.Location });
         }
 
-        private void SetConcentration(S.ServerPacket.SetConcentration p)
+        private void SetConcentration(ServerPacket.SetConcentration p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -5628,7 +5628,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void SetElemental(S.ServerPacket.SetElemental p)
+        private void SetElemental(ServerPacket.SetElemental p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -5650,7 +5650,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void RemoveDelayedExplosion(S.ServerPacket.RemoveDelayedExplosion p)
+        private void RemoveDelayedExplosion(ServerPacket.RemoveDelayedExplosion p)
         {
             //if (p.ObjectID == User.ObjectID) return;
 
@@ -5659,7 +5659,7 @@ namespace Client.MirScenes
                 DelayedExplosionEffect.effectlist[effectid].Remove();
         }
 
-        private void SetBindingShot(S.ServerPacket.SetBindingShot p)
+        private void SetBindingShot(ServerPacket.SetBindingShot p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
@@ -5694,7 +5694,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void SendOutputMessage(S.ServerPacket.SendOutputMessage p)
+        private void SendOutputMessage(ServerPacket.SendOutputMessage p)
         {
             OutputMessage(p.Message, p.Type);
         }
@@ -5705,7 +5705,7 @@ namespace Client.MirScenes
             NpcDropDialog.PType = PanelType.Consign;
             NpcDropDialog.Show();
         }
-        private void NpcMarket(S.ServerPacket.NpcMarket p)
+        private void NpcMarket(ServerPacket.NpcMarket p)
         {
             for (int i = 0; i < p.Listings.Count; i++)
                 Bind(p.Listings[i].Item);
@@ -5717,7 +5717,7 @@ namespace Client.MirScenes
             TrustMerchantDialog.PageCount = p.Pages;
             TrustMerchantDialog.UpdateInterface();
         }
-        private void NpcMarketPage(S.ServerPacket.NpcMarketPage p)
+        private void NpcMarketPage(ServerPacket.NpcMarketPage p)
         {
             if (!TrustMerchantDialog.Visible) return;
 
@@ -5728,7 +5728,7 @@ namespace Client.MirScenes
             TrustMerchantDialog.Page = (TrustMerchantDialog.Listings.Count - 1) / 10;
             TrustMerchantDialog.UpdateInterface();
         }
-        private void ConsignItem(S.ServerPacket.ConsignItem p)
+        private void ConsignItem(ServerPacket.ConsignItem p)
         {
             MirItemCell cell = InventoryDialog.GetCell(p.UniqueID) ?? BeltDialog.GetCell(p.UniqueID);
 
@@ -5742,7 +5742,7 @@ namespace Client.MirScenes
 
             User.RefreshStats();
         }
-        private void MarketFail(S.ServerPacket.MarketFail p)
+        private void MarketFail(ServerPacket.MarketFail p)
         {
             TrustMerchantDialog.MarketTime = 0;
             switch (p.Reason)
@@ -5783,12 +5783,12 @@ namespace Client.MirScenes
             }
 
         }
-        private void MarketSuccess(S.ServerPacket.MarketSuccess p)
+        private void MarketSuccess(ServerPacket.MarketSuccess p)
         {
             TrustMerchantDialog.MarketTime = 0;
             MirMessageBox.Show(p.Message);
         }
-        private void ObjectSitDown(S.ServerPacket.ObjectSitDown p)
+        private void ObjectSitDown(ServerPacket.ObjectSitDown p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
@@ -5803,13 +5803,13 @@ namespace Client.MirScenes
             }
         }
 
-        private void BaseStatsInfo(S.ServerPacket.BaseStatsInfo p)
+        private void BaseStatsInfo(ServerPacket.BaseStatsInfo p)
         {
             User.CoreStats = p.Stats;
             User.RefreshStats();
         }
 
-        private void HeroBaseStatsInfo(S.ServerPacket.HeroBaseStatsInfo p)
+        private void HeroBaseStatsInfo(ServerPacket.HeroBaseStatsInfo p)
         {
             if (Hero == null) return;
 
@@ -5817,7 +5817,7 @@ namespace Client.MirScenes
             Hero.RefreshStats();
         }
 
-        private void UserName(S.ServerPacket.UserName p)
+        private void UserName(ServerPacket.UserName p)
         {
             for (int i = 0; i < UserIdList.Count; i++)
                 if (UserIdList[i].Id == p.Id)
@@ -5829,7 +5829,7 @@ namespace Client.MirScenes
             HoverItem = null;
         }
 
-        private void ChatItemStats(S.ServerPacket.ChatItemStats p)
+        private void ChatItemStats(ServerPacket.ChatItemStats p)
         {
             //for (int i = 0; i < ChatItemList.Count; i++)
             //    if (ChatItemList[i].ID == p.ChatItemId)
@@ -5839,7 +5839,7 @@ namespace Client.MirScenes
             //    }
         }
 
-        private void GuildInvite(S.ServerPacket.GuildInvite p)
+        private void GuildInvite(ServerPacket.GuildInvite p)
         {
             MirMessageBox messageBox = new MirMessageBox(string.Format("Do you want to join the {0} guild?", p.Name), MirMessageBoxButtons.YesNo);
 
@@ -5849,7 +5849,7 @@ namespace Client.MirScenes
             messageBox.Show();
         }
 
-        private void GuildNameRequest(S.ServerPacket.GuildNameRequest p)
+        private void GuildNameRequest(ServerPacket.GuildNameRequest p)
         {
             MirInputBox inputBox = new MirInputBox("Please enter a guild name, length must be 3~20 characters.");
             inputBox.InputTextBox.TextBox.KeyPress += (o, e) =>
@@ -5871,7 +5871,7 @@ namespace Client.MirScenes
             inputBox.Show();
         }
 
-        private void GuildRequestWar(S.ServerPacket.GuildRequestWar p)
+        private void GuildRequestWar(ServerPacket.GuildRequestWar p)
         {
             MirInputBox inputBox = new MirInputBox("Please enter the guild you would like to go to war with.");
 
@@ -5883,14 +5883,14 @@ namespace Client.MirScenes
             inputBox.Show();
         }
 
-        private void GuildNoticeChange(S.ServerPacket.GuildNoticeChange p)
+        private void GuildNoticeChange(ServerPacket.GuildNoticeChange p)
         {
             if (p.update == -1)
                 GuildDialog.NoticeChanged = true;
             else
                 GuildDialog.NoticeChange(p.notice);
         }
-        private void GuildMemberChange(S.ServerPacket.GuildMemberChange p)
+        private void GuildMemberChange(ServerPacket.GuildMemberChange p)
         {
             switch (p.Status)
             {
@@ -5935,7 +5935,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void GuildStatus(S.ServerPacket.GuildStatus p)
+        private void GuildStatus(ServerPacket.GuildStatus p)
         {
             if ((User.GuildName == "") && (p.GuildName != ""))
             {
@@ -5972,18 +5972,18 @@ namespace Client.MirScenes
             {
                 GuildDialog.EnabledBuffs.Clear();
                 GuildDialog.UpdateActiveStats();
-                RemoveBuff(new S.ServerPacket.RemoveBuff { ObjectID = User.ObjectID, Type = BuffType.Guild });
+                RemoveBuff(new ServerPacket.RemoveBuff { ObjectID = User.ObjectID, Type = BuffType.Guild });
                 User.RefreshStats();
             }
         }
 
-        private void GuildExpGain(S.ServerPacket.GuildExpGain p)
+        private void GuildExpGain(ServerPacket.GuildExpGain p)
         {
             //OutputMessage(string.Format("Guild Experience Gained {0}.", p.Amount));
             GuildDialog.Experience += p.Amount;
         }
 
-        private void GuildStorageGoldChange(S.ServerPacket.GuildStorageGoldChange p)
+        private void GuildStorageGoldChange(ServerPacket.GuildStorageGoldChange p)
         {
             switch (p.Type)
             {
@@ -6010,7 +6010,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void GuildStorageItemChange(S.ServerPacket.GuildStorageItemChange p)
+        private void GuildStorageItemChange(ServerPacket.GuildStorageItemChange p)
         {
             MirItemCell fromCell = null;
             MirItemCell toCell = null;
@@ -6093,7 +6093,7 @@ namespace Client.MirScenes
                     break;
             }
         }
-        private void GuildStorageList(S.ServerPacket.GuildStorageList p)
+        private void GuildStorageList(ServerPacket.GuildStorageList p)
         {
             for (int i = 0; i < p.Items.Length; i++)
             {
@@ -6108,7 +6108,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void HeroCreateRequest(S.ServerPacket.HeroCreateRequest p)
+        private void HeroCreateRequest(ServerPacket.HeroCreateRequest p)
         {            
             NewHeroDialog.WarriorButton.Visible = p.CanCreateClass[(int)MirClass.Warrior];
             NewHeroDialog.WizardButton.Visible = p.CanCreateClass[(int)MirClass.Wizard];
@@ -6119,7 +6119,7 @@ namespace Client.MirScenes
             NewHeroDialog.Show();            
         }
 
-        private void ManageHeroes(S.ServerPacket.ManageHeroes p)
+        private void ManageHeroes(ServerPacket.ManageHeroes p)
         {
             if (p.Heroes != null)
             {
@@ -6132,7 +6132,7 @@ namespace Client.MirScenes
             HeroManageDialog.Show();
         }
 
-        private void ChangeHero(S.ServerPacket.ChangeHero p)
+        private void ChangeHero(ServerPacket.ChangeHero p)
         {
             ClientHeroInformation temp = HeroStorage[p.FromIndex];
             HeroStorage[p.FromIndex] = HeroManageDialog.CurrentAvatar.Info;
@@ -6150,7 +6150,7 @@ namespace Client.MirScenes
             HeroInventoryDialog.RefreshInterface();
         }
 
-        private void SetAutoPotValue(S.ServerPacket.SetAutoPotValue p)
+        private void SetAutoPotValue(ServerPacket.SetAutoPotValue p)
         {
             if (Hero == null) return;
 
@@ -6162,7 +6162,7 @@ namespace Client.MirScenes
             HeroInventoryDialog.RefreshInterface();
         }
 
-        private void SetAutoPotItem(S.ServerPacket.SetAutoPotItem p)
+        private void SetAutoPotItem(ServerPacket.SetAutoPotItem p)
         {
             if (Hero == null) return;
 
@@ -6172,13 +6172,13 @@ namespace Client.MirScenes
                 Hero.MPItem[0] = p.ItemIndex > 0 ? new UserItem(GetItemInfo(p.ItemIndex)) : null;
         }
 
-        private void SetHeroBehaviour(S.ServerPacket.SetHeroBehaviour p)
+        private void SetHeroBehaviour(ServerPacket.SetHeroBehaviour p)
         {
             if (Hero == null) return;
             HeroBehaviourPanel.UpdateBehaviour(p.Behaviour);
         }
 
-        private void NewHero(S.ServerPacket.NewHero p)
+        private void NewHero(ServerPacket.NewHero p)
         {
             NewHeroDialog.OKButton.Enabled = true;
 
@@ -6217,7 +6217,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void HeroInformation(S.ServerPacket.HeroInformation p)
+        private void HeroInformation(ServerPacket.HeroInformation p)
         {
             Hero = new UserHeroObject(p.ObjectID);
             Hero.Load(p);
@@ -6247,7 +6247,7 @@ namespace Client.MirScenes
             Hero.RefreshStats();
         }
 
-        private void UpdateHeroSpawnState(S.ServerPacket.UpdateHeroSpawnState p)
+        private void UpdateHeroSpawnState(ServerPacket.UpdateHeroSpawnState p)
         {
             HeroSpawnState = p.State;
 
@@ -6266,7 +6266,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void MarriageRequest(S.ServerPacket.MarriageRequest p)
+        private void MarriageRequest(ServerPacket.MarriageRequest p)
         {
             MirMessageBox messageBox = new MirMessageBox(string.Format("{0} has asked for your hand in marriage.", p.Name), MirMessageBoxButtons.YesNo);
 
@@ -6276,7 +6276,7 @@ namespace Client.MirScenes
             messageBox.Show();
         }
 
-        private void DivorceRequest(S.ServerPacket.DivorceRequest p)
+        private void DivorceRequest(ServerPacket.DivorceRequest p)
         {
             MirMessageBox messageBox = new MirMessageBox(string.Format("{0} has requested a divorce", p.Name), MirMessageBoxButtons.YesNo);
 
@@ -6286,7 +6286,7 @@ namespace Client.MirScenes
             messageBox.Show();
         }
 
-        private void MentorRequest(S.ServerPacket.MentorRequest p)
+        private void MentorRequest(ServerPacket.MentorRequest p)
         {
             MirMessageBox messageBox = new MirMessageBox(string.Format("{0} (Level {1}) has requested you teach him the ways of the {2}.", p.Name, p.Level, GameScene.User.Class.ToString()), MirMessageBoxButtons.YesNo);
 
@@ -6314,7 +6314,7 @@ namespace Client.MirScenes
             return false;
         }
 
-        private void GuildBuffList(S.ServerPacket.GuildBuffList p)
+        private void GuildBuffList(ServerPacket.GuildBuffList p)
         {
             //getting the list of all guildbuffs on server?
             if (p.GuildBuffs.Count > 0)
@@ -6360,13 +6360,13 @@ namespace Client.MirScenes
             }
             else
             {
-                RemoveBuff(new S.ServerPacket.RemoveBuff { ObjectID = User.ObjectID, Type = BuffType.Guild });
+                RemoveBuff(new ServerPacket.RemoveBuff { ObjectID = User.ObjectID, Type = BuffType.Guild });
             }
 
             User.RefreshStats();
         }
 
-        private void TradeRequest(S.ServerPacket.TradeRequest p)
+        private void TradeRequest(ServerPacket.TradeRequest p)
         {
             MirMessageBox messageBox = new MirMessageBox(string.Format("Player {0} has requested to trade with you.", p.Name), MirMessageBoxButtons.YesNo);
 
@@ -6375,18 +6375,18 @@ namespace Client.MirScenes
 
             messageBox.Show();
         }
-        private void TradeAccept(S.ServerPacket.TradeAccept p)
+        private void TradeAccept(ServerPacket.TradeAccept p)
         {
             GuestTradeDialog.GuestName = p.Name;
             TradeDialog.TradeAccept();
         }
-        private void TradeGold(S.ServerPacket.TradeGold p)
+        private void TradeGold(ServerPacket.TradeGold p)
         {
             GuestTradeDialog.GuestGold = p.Amount;
             TradeDialog.ChangeLockState(false);
             TradeDialog.RefreshInterface();
         }
-        private void TradeItem(S.ServerPacket.TradeItem p)
+        private void TradeItem(ServerPacket.TradeItem p)
         {
             GuestTradeDialog.GuestItems = p.TradeItems;
             TradeDialog.ChangeLockState(false);
@@ -6396,7 +6396,7 @@ namespace Client.MirScenes
         {
             TradeDialog.TradeReset();
         }
-        private void TradeCancel(S.ServerPacket.TradeCancel p)
+        private void TradeCancel(ServerPacket.TradeCancel p)
         {
             if (p.Unlock)
             {
@@ -6433,17 +6433,17 @@ namespace Client.MirScenes
             NpcDropDialog.PType = PanelType.Reset;
             NpcDropDialog.Show();
         }
-        private void AwakeningNeedMaterials(S.ServerPacket.AwakeningNeedMaterials p)
+        private void AwakeningNeedMaterials(ServerPacket.AwakeningNeedMaterials p)
         {
             NpcAwakeDialog.setNeedItems(p.Materials, p.MaterialsCount);
         }
-        private void AwakeningLockedItem(S.ServerPacket.AwakeningLockedItem p)
+        private void AwakeningLockedItem(ServerPacket.AwakeningLockedItem p)
         {
             MirItemCell cell = InventoryDialog.GetCell(p.UniqueID);
             if (cell != null)
                 cell.Locked = p.Locked;
         }
-        private void Awakening(S.ServerPacket.Awakening p)
+        private void Awakening(ServerPacket.Awakening p)
         {
             if (NpcAwakeDialog.Visible)
                 NpcAwakeDialog.Hide();
@@ -6507,7 +6507,7 @@ namespace Client.MirScenes
             if (messageBox != null) messageBox.Show();
         }
 
-        private void ReceiveMail(S.ServerPacket.ReceiveMail p)
+        private void ReceiveMail(ServerPacket.ReceiveMail p)
         {
             NewMail = false;
             NewMailCounter = 0;
@@ -6532,14 +6532,14 @@ namespace Client.MirScenes
             GameScene.Scene.MailListDialog.UpdateInterface();
         }
 
-        private void MailLockedItem(S.ServerPacket.MailLockedItem p)
+        private void MailLockedItem(ServerPacket.MailLockedItem p)
         {
             MirItemCell cell = InventoryDialog.GetCell(p.UniqueID);
             if (cell != null)
                 cell.Locked = p.Locked;
         }
 
-        private void MailSendRequest(S.ServerPacket.MailSendRequest p)
+        private void MailSendRequest(ServerPacket.MailSendRequest p)
         {
             MirInputBox inputBox = new MirInputBox("Please enter the name of the person you would like to mail.");
 
@@ -6555,7 +6555,7 @@ namespace Client.MirScenes
             inputBox.Show();
         }
 
-        private void MailSent(S.ServerPacket.MailSent p)
+        private void MailSent(ServerPacket.MailSent p)
         {
             for (int i = 0; i < InventoryDialog.Grid.Length; i++)
             {
@@ -6576,7 +6576,7 @@ namespace Client.MirScenes
             GameScene.Scene.MailComposeParcelDialog.Hide();
         }
 
-        private void ParcelCollected(S.ServerPacket.ParcelCollected p)
+        private void ParcelCollected(ServerPacket.ParcelCollected p)
         {
             switch(p.Result)
             {
@@ -6594,13 +6594,13 @@ namespace Client.MirScenes
             }
         }
 
-        private void ResizeInventory(S.ServerPacket.ResizeInventory p)
+        private void ResizeInventory(ServerPacket.ResizeInventory p)
         {
             Array.Resize(ref User.Inventory, p.Size);
             InventoryDialog.RefreshInventory2();
         }
 
-        private void ResizeStorage(S.ServerPacket.ResizeStorage p)
+        private void ResizeStorage(ServerPacket.ResizeStorage p)
         {
             Array.Resize(ref Storage, p.Size);
             User.HasExpandedStorage = p.HasExpandedStorage;
@@ -6609,7 +6609,7 @@ namespace Client.MirScenes
             StorageDialog.RefreshStorage2();
         }
 
-        private void MailCost(S.ServerPacket.MailCost p)
+        private void MailCost(ServerPacket.MailCost p)
         {
             if(GameScene.Scene.MailComposeParcelDialog.Visible)
             {
@@ -6661,7 +6661,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void NewIntelligentCreature(S.ServerPacket.NewIntelligentCreature p)
+        private void NewIntelligentCreature(ServerPacket.NewIntelligentCreature p)
         {
             User.IntelligentCreatures.Add(p.Creature);
 
@@ -6677,7 +6677,7 @@ namespace Client.MirScenes
             inputBox.Show();
         }
 
-        private void UpdateIntelligentCreatureList(S.ServerPacket.UpdateIntelligentCreatureList p)
+        private void UpdateIntelligentCreatureList(ServerPacket.UpdateIntelligentCreatureList p)
         {
             User.CreatureSummoned = p.CreatureSummoned;
             User.SummonedCreatureType = p.SummonedCreatureType;
@@ -6701,13 +6701,13 @@ namespace Client.MirScenes
             }
         }
 
-        private void IntelligentCreatureEnableRename(S.ServerPacket.IntelligentCreatureEnableRename p)
+        private void IntelligentCreatureEnableRename(ServerPacket.IntelligentCreatureEnableRename p)
         {
             IntelligentCreatureDialog.CreatureRenameButton.Visible = true;
             if (IntelligentCreatureDialog.Visible) IntelligentCreatureDialog.Update();
         }
 
-        private void IntelligentCreaturePickup(S.ServerPacket.IntelligentCreaturePickup p)
+        private void IntelligentCreaturePickup(ServerPacket.IntelligentCreaturePickup p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
@@ -6720,7 +6720,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void FriendUpdate(S.ServerPacket.FriendUpdate p)
+        private void FriendUpdate(ServerPacket.FriendUpdate p)
         {
             GameScene.Scene.FriendDialog.Friends = p.Friends;
 
@@ -6730,7 +6730,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void LoverUpdate(S.ServerPacket.LoverUpdate p)
+        private void LoverUpdate(ServerPacket.LoverUpdate p)
         {
             GameScene.Scene.RelationshipDialog.LoverName = p.Name;
             GameScene.Scene.RelationshipDialog.Date = p.Date;
@@ -6739,7 +6739,7 @@ namespace Client.MirScenes
             GameScene.Scene.RelationshipDialog.UpdateInterface();
         }
 
-        private void MentorUpdate(S.ServerPacket.MentorUpdate p)
+        private void MentorUpdate(ServerPacket.MentorUpdate p)
         {
             GameScene.Scene.MentorDialog.MentorName = p.Name;
             GameScene.Scene.MentorDialog.MentorLevel = p.Level;
@@ -6749,14 +6749,14 @@ namespace Client.MirScenes
             GameScene.Scene.MentorDialog.UpdateInterface();
         }
 
-        private void GameShopUpdate(S.ServerPacket.GameShopInfo p)
+        private void GameShopUpdate(ServerPacket.GameShopInfo p)
         {
             p.Item.Stock = p.StockLevel;
             GameShopInfoList.Add(p.Item);
             if (p.Item.Date > CMain.Now.AddDays(-7)) GameShopDialog.New.Visible = true;
         }
 
-        private void GameShopStock(S.ServerPacket.GameShopStock p)
+        private void GameShopStock(ServerPacket.GameShopStock p)
         {
             for (int i = 0; i < GameShopInfoList.Count; i++)
             {
@@ -10031,7 +10031,7 @@ namespace Client.MirScenes
             public OutputMessageType Type;
         }
 
-        public void Rankings(S.ServerPacket.Rankings p)
+        public void Rankings(ServerPacket.Rankings p)
         {
             foreach (RankCharacterInfo info in p.ListingDetails)
             {
@@ -10047,17 +10047,17 @@ namespace Client.MirScenes
             RankingDialog.RecieveRanks(listings, p.RankType, p.MyRank, p.Count);
         }
 
-        public void Opendoor(S.ServerPacket.Opendoor p)
+        public void Opendoor(ServerPacket.Opendoor p)
         {
             MapControl.OpenDoor(p.DoorIndex, p.Close);
         }
 
-        private void RentedItems(S.ServerPacket.GetRentedItems p)
+        private void RentedItems(ServerPacket.GetRentedItems p)
         {
             ItemRentalDialog.ReceiveRentedItems(p.RentedItems);
         }
 
-        private void ItemRentalRequest(S.ServerPacket.ItemRentalRequest p)
+        private void ItemRentalRequest(ServerPacket.ItemRentalRequest p)
         {
             if (!p.Renting)
             {
@@ -10073,19 +10073,19 @@ namespace Client.MirScenes
             ItemRentalDialog.Visible = false;
         }
 
-        private void ItemRentalFee(S.ServerPacket.ItemRentalFee p)
+        private void ItemRentalFee(ServerPacket.ItemRentalFee p)
         {
             GuestItemRentDialog.SetGuestFee(p.Amount);
             ItemRentDialog.RefreshInterface();
         }
 
-        private void ItemRentalPeriod(S.ServerPacket.ItemRentalPeriod p)
+        private void ItemRentalPeriod(ServerPacket.ItemRentalPeriod p)
         {
             GuestItemRentingDialog.GuestRentalPeriod = p.Days;
             ItemRentingDialog.RefreshInterface();
         }
 
-        private void DepositRentalItem(S.ServerPacket.DepositRentalItem p)
+        private void DepositRentalItem(ServerPacket.DepositRentalItem p)
         {
             var fromCell = p.From < User.BeltIdx ? BeltDialog.Grid[p.From] : InventoryDialog.Grid[p.From - User.BeltIdx];
             var toCell = ItemRentingDialog.ItemCell;
@@ -10107,7 +10107,7 @@ namespace Client.MirScenes
                 ItemRentingDialog.InputRentalPeroid();
         }
 
-        private void RetrieveRentalItem(S.ServerPacket.RetrieveRentalItem p)
+        private void RetrieveRentalItem(ServerPacket.RetrieveRentalItem p)
         {
             var fromCell = ItemRentingDialog.ItemCell;
             var toCell = p.To < User.BeltIdx ? BeltDialog.Grid[p.To] : InventoryDialog.Grid[p.To - User.BeltIdx];
@@ -10126,13 +10126,13 @@ namespace Client.MirScenes
             User.RefreshStats();
         }
 
-        private void UpdateRentalItem(S.ServerPacket.UpdateRentalItem p)
+        private void UpdateRentalItem(ServerPacket.UpdateRentalItem p)
         {
             GuestItemRentingDialog.GuestLoanItem = p.LoanItem;
             ItemRentDialog.RefreshInterface();
         }
 
-        private void CancelItemRental(S.ServerPacket.CancelItemRental p)
+        private void CancelItemRental(ServerPacket.CancelItemRental p)
         {
             User.RentalGoldLocked = false;
             User.RentalItemLocked = false;
@@ -10145,7 +10145,7 @@ namespace Client.MirScenes
             messageBox.Show();
         }
 
-        private void ItemRentalLock(S.ServerPacket.ItemRentalLock p)
+        private void ItemRentalLock(ServerPacket.ItemRentalLock p)
         {
             if (!p.Success)
                 return;
@@ -10159,7 +10159,7 @@ namespace Client.MirScenes
                 ItemRentingDialog.Lock();
         }
 
-        private void ItemRentalPartnerLock(S.ServerPacket.ItemRentalPartnerLock p)
+        private void ItemRentalPartnerLock(ServerPacket.ItemRentalPartnerLock p)
         {
             if (p.GoldLocked)
                 GuestItemRentDialog.Lock();
@@ -10167,12 +10167,12 @@ namespace Client.MirScenes
                 GuestItemRentingDialog.Lock();
         }
 
-        private void CanConfirmItemRental(S.ServerPacket.CanConfirmItemRental p)
+        private void CanConfirmItemRental(ServerPacket.CanConfirmItemRental p)
         {
             ItemRentingDialog.EnableConfirmButton();
         }
 
-        private void ConfirmItemRental(S.ServerPacket.ConfirmItemRental p)
+        private void ConfirmItemRental(ServerPacket.ConfirmItemRental p)
         {
             User.RentalGoldLocked = false;
             User.RentalItemLocked = false;
@@ -10181,35 +10181,35 @@ namespace Client.MirScenes
             ItemRentDialog.Reset();
         }
 
-        private void OpenBrowser(S.ServerPacket.OpenBrowser p) {
+        private void OpenBrowser(ServerPacket.OpenBrowser p) {
             BrowserHelper.OpenDefaultBrowser(p.Url);
         }
 
-        public void PlaySound(S.ServerPacket.PlaySound p)
+        public void PlaySound(ServerPacket.PlaySound p)
         {
             SoundManager.PlaySound(p.Sound, false);
         }
-        private void SetTimer(S.ServerPacket.SetTimer p)
+        private void SetTimer(ServerPacket.SetTimer p)
         {
             GameScene.Scene.TimerControl.AddTimer(p);
         }
 
-        private void ExpireTimer(S.ServerPacket.ExpireTimer p)
+        private void ExpireTimer(ServerPacket.ExpireTimer p)
         {
             GameScene.Scene.TimerControl.ExpireTimer(p.Key);
         }
 
-        private void SetCompass(S.ServerPacket.SetCompass p)
+        private void SetCompass(ServerPacket.SetCompass p)
         {
             GameScene.Scene.CompassControl.SetPoint(p.Location);
         }
 
-        private void Roll(S.ServerPacket.Roll p)
+        private void Roll(ServerPacket.Roll p)
         {
             GameScene.Scene.RollControl.Setup(p.Type, p.Page, p.Result, p.AutoRoll);
         }
 
-        public void ShowNotice(S.ServerPacket.UpdateNotice p)
+        public void ShowNotice(ServerPacket.UpdateNotice p)
         {
             NoticeDialog.Update(p.Notice);
         }

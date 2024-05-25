@@ -4,7 +4,7 @@ using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
-using S = ServerPackets;
+using ServerPackets;
 using C = ClientPackets;
 
 namespace Client.MirScenes
@@ -104,25 +104,25 @@ namespace Client.MirScenes
                     SendVersion();
                     break;
                 case (short)ServerPacketIds.ClientVersion:
-                    ClientVersion((S.ServerPacket.ClientVersion) p);
+                    ClientVersion((ServerPacket.ClientVersion) p);
                     break;
                 case (short)ServerPacketIds.NewAccount:
-                    NewAccount((S.ServerPacket.NewAccount) p);
+                    NewAccount((ServerPacket.NewAccount) p);
                     break;
                 case (short)ServerPacketIds.ChangePassword:
-                    ChangePassword((S.ServerPacket.ChangePassword) p);
+                    ChangePassword((ServerPacket.ChangePassword) p);
                     break;
                 case (short)ServerPacketIds.ChangePasswordBanned:
-                    ChangePassword((S.ServerPacket.ChangePasswordBanned) p);
+                    ChangePassword((ServerPacket.ChangePasswordBanned) p);
                     break;
                 case (short)ServerPacketIds.Login:
-                    Login((S.ServerPacket.Login) p);
+                    Login((ServerPacket.Login) p);
                     break;
                 case (short)ServerPacketIds.LoginBanned:
-                    Login((S.ServerPacket.LoginBanned) p);
+                    Login((ServerPacket.LoginBanned) p);
                     break;
                 case (short)ServerPacketIds.LoginSuccess:
-                    Login((S.ServerPacket.LoginSuccess) p);
+                    Login((ServerPacket.LoginSuccess) p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -150,7 +150,7 @@ namespace Client.MirScenes
                 if (Settings.LogErrors) CMain.SaveError(ex.ToString());
             }
         }
-        private void ClientVersion(S.ServerPacket.ClientVersion p)
+        private void ClientVersion(ServerPacket.ClientVersion p)
         {
             switch (p.Result)
             {
@@ -175,7 +175,7 @@ namespace Client.MirScenes
             _password.CurrentPasswordTextBox.Text = autoFillPassword;
             _password.Disposing += (o1, e1) => _login.Show();
         }
-        private void NewAccount(S.ServerPacket.NewAccount p)
+        private void NewAccount(ServerPacket.NewAccount p)
         {
             _account.OKButton.Enabled = true;
             switch (p.Result)
@@ -219,7 +219,7 @@ namespace Client.MirScenes
                     break;
             }
         }
-        private void ChangePassword(S.ServerPacket.ChangePassword p)
+        private void ChangePassword(ServerPacket.ChangePassword p)
         {
             _password.OKButton.Enabled = true;
 
@@ -256,7 +256,7 @@ namespace Client.MirScenes
                     break;
             }
         }
-        private void ChangePassword(S.ServerPacket.ChangePasswordBanned p)
+        private void ChangePassword(ServerPacket.ChangePasswordBanned p)
         {
             _password.Dispose();
 
@@ -264,7 +264,7 @@ namespace Client.MirScenes
             MirMessageBox.Show(string.Format("This account is banned.\n\nReason: {0}\nExpiryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds", p.Reason,
                                              p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds ));
         }
-        private void Login(S.ServerPacket.Login p)
+        private void Login(ServerPacket.Login p)
         {
             _login.OKButton.Enabled = true;
             switch (p.Result)
@@ -297,7 +297,7 @@ namespace Client.MirScenes
                     break;
             }
         }
-        private void Login(S.ServerPacket.LoginBanned p)
+        private void Login(ServerPacket.LoginBanned p)
         {
             _login.OKButton.Enabled = true;
 
@@ -305,7 +305,7 @@ namespace Client.MirScenes
             MirMessageBox.Show(string.Format("This account is banned.\n\nReason: {0}\nExpiryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds", p.Reason,
                                              p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds));
         }
-        private void Login(S.ServerPacket.LoginSuccess p)
+        private void Login(ServerPacket.LoginSuccess p)
         {
             Enabled = false;
             _login.Dispose();

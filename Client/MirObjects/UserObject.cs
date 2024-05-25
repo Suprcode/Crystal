@@ -1,6 +1,6 @@
 ﻿using Client.MirScenes;
 using Client.MirScenes.Dialogs;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Client.MirObjects
 {
@@ -65,7 +65,7 @@ namespace Client.MirObjects
             Stats = new Stats();
         }
 
-        public virtual void Load(S.ServerPacket.UserInformation info)
+        public virtual void Load(ServerPacket.UserInformation info)
         {
             Id = info.RealId;
             Name = info.Name;
@@ -116,7 +116,7 @@ namespace Client.MirObjects
             SetAction();
         }
 
-        public void SetSlots(S.ServerPacket.UserSlotsRefresh p)
+        public void SetSlots(ServerPacket.UserSlotsRefresh p)
         {
             Inventory = p.Inventory;
             Equipment = p.Equipment;

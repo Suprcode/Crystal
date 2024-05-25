@@ -1,5 +1,5 @@
 ﻿using Server.MirEnvir;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirDatabase
 {
@@ -145,7 +145,7 @@ namespace Server.MirDatabase
 
         public Packet GetInfo(bool hero)
         {
-            return new S.ServerPacket.NewMagic
+            return new ServerPacket.NewMagic
                 {
                     Magic = CreateClientMagic(),
                     Hero = hero

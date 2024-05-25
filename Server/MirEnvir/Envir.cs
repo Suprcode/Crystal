@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirEnvir
 {
@@ -638,7 +638,7 @@ namespace Server.MirEnvir
                         if (Time >= userTime)
                         {
                             userTime = Time + Settings.Minute * 5;
-                            Broadcast(new S.ServerPacket.Chat
+                            Broadcast(new ServerPacket.Chat
                             {
                                 Message = string.Format(GameLanguage.OnlinePlayers, Players.Count),
                                 Type = ChatType.Hint
@@ -648,7 +648,7 @@ namespace Server.MirEnvir
                         if (LineMessages.Count > 0 && Time >= lineMessageTime)
                         {
                             lineMessageTime = Time + Settings.Minute * Settings.LineMessageTimer;
-                            Broadcast(new S.ServerPacket.Chat
+                            Broadcast(new ServerPacket.Chat
                             {
                                 Message = LineMessages[Random.Next(LineMessages.Count)],
                                 Type = ChatType.LineMessage
@@ -785,7 +785,7 @@ namespace Server.MirEnvir
 
             if (oldLights == Lights) return;
 
-            Broadcast(new S.ServerPacket.TimeOfDay { Lights = Lights });
+            Broadcast(new ServerPacket.TimeOfDay { Lights = Lights });
         }
 
         public void Process()
@@ -2468,37 +2468,37 @@ namespace Server.MirEnvir
         {
             if (!Settings.AllowNewHero)
             {
-                c.Enqueue(new S.ServerPacket.NewHero { Result = 0 });
+                c.Enqueue(new ServerPacket.NewHero { Result = 0 });
                 return false;
             }
 
             if (!CharacterReg.IsMatch(p.Name))
             {
-                c.Enqueue(new S.ServerPacket.NewHero { Result = 1 });
+                c.Enqueue(new ServerPacket.NewHero { Result = 1 });
                 return false;
             }
 
             if (!IsGm && DisabledCharNames.Contains(p.Name.ToUpper()))
             {
-                c.Enqueue(new S.ServerPacket.NewHero { Result = 1 });
+                c.Enqueue(new ServerPacket.NewHero { Result = 1 });
                 return false;
             }
 
             if (p.Gender != MirGender.Male && p.Gender != MirGender.Female)
             {
-                c.Enqueue(new S.ServerPacket.NewHero { Result = 2 });
+                c.Enqueue(new ServerPacket.NewHero { Result = 2 });
                 return false;
             }
 
             if (p.Class != MirClass.Warrior && p.Class != MirClass.Wizard && p.Class != MirClass.Taoist && p.Class != MirClass.Assassin && p.Class != MirClass.Archer)
             {
-                c.Enqueue(new S.ServerPacket.NewHero { Result = 3 });
+                c.Enqueue(new ServerPacket.NewHero { Result = 3 });
                 return false;
             }
 
             if (p.Class == MirClass.Assassin && !Settings.AllowCreateAssassin || p.Class == MirClass.Archer && !Settings.AllowCreateArcher)
             {
-                c.Enqueue(new S.ServerPacket.NewHero { Result = 3 });
+                c.Enqueue(new ServerPacket.NewHero { Result = 3 });
                 return false;
             }
 
@@ -2506,7 +2506,7 @@ namespace Server.MirEnvir
             {
                 if (CharacterExists(p.Name))
                 {
-                    c.Enqueue(new S.ServerPacket.NewHero { Result = 5 });
+                    c.Enqueue(new ServerPacket.NewHero { Result = 5 });
                     return false;
                 }
             }
@@ -3195,7 +3195,7 @@ namespace Server.MirEnvir
                         }
 
                         rentingPlayer.Player.ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
-                        rentingPlayer.Player.Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                        rentingPlayer.Player.Enqueue(new ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                         rentingPlayer.Player.RefreshStats();
                     }
 
@@ -3223,7 +3223,7 @@ namespace Server.MirEnvir
                         }
 
                         rentingPlayer.Player.ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
-                        rentingPlayer.Player.Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                        rentingPlayer.Player.Enqueue(new ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                         rentingPlayer.Player.RefreshStats();
                     }
                 }
@@ -3394,7 +3394,7 @@ namespace Server.MirEnvir
                 }
             }
 
-            con.Enqueue(new S.ServerPacket.PlayerInspect
+            con.Enqueue(new ServerPacket.PlayerInspect
             {
                 Name = player.Name,
                 Equipment = player.Equipment,
@@ -3444,7 +3444,7 @@ namespace Server.MirEnvir
 
             var ownerName = heroObject.Owner.Name;
 
-            con.Enqueue(new S.ServerPacket.PlayerInspect
+            con.Enqueue(new ServerPacket.PlayerInspect
             {
                 Name = $"{ownerName}'s Hero",
                 Equipment = heroInfo.Equipment,
@@ -3478,7 +3478,7 @@ namespace Server.MirEnvir
 
             if (RankIndex >= listings.Count || RankIndex < 0) return;
 
-            var p = new S.ServerPacket.Rankings
+            var p = new ServerPacket.Rankings
             {
                 RankType = RankType,
                 Count = OnlineOnly ? OnlineRankingCount[RankType] : listings.Count

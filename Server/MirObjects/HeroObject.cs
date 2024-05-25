@@ -2,7 +2,7 @@ using System.Drawing;
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirNetwork;
-using S = ServerPackets;
+using ServerPackets;
 using Server.MirObjects.Monsters;
 
 namespace Server.MirObjects
@@ -193,7 +193,7 @@ namespace Server.MirObjects
 
             NameColour = colour;
             if ((Owner.MyGuild == null) || (!Owner.MyGuild.IsAtWar()))
-                Enqueue(new S.ServerPacket.ColourChanged { NameColour = NameColour });
+                Enqueue(new ServerPacket.ColourChanged { NameColour = NameColour });
 
             BroadcastColourChange();
         }
@@ -304,7 +304,7 @@ namespace Server.MirObjects
         public override MapObject DefaultMagicTarget => Owner;
         public override void UseItem(ulong id)
         {
-            var p = new S.ServerPacket.UseItem { UniqueID = id, Grid = MirGridType.HeroInventory, Success = false };
+            var p = new ServerPacket.UseItem { UniqueID = id, Grid = MirGridType.HeroInventory, Success = false };
 
             UserItem item = null;
             int index = -1;
@@ -429,7 +429,7 @@ namespace Server.MirObjects
                             temp.DuraChanged = false;
 
                             ReceiveChat("Your weapon has been partially repaired", ChatType.Hint);
-                            Owner.Enqueue(new S.ServerPacket.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
+                            Owner.Enqueue(new ServerPacket.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
                             break;
                         case 5: //WarGodOil
                             temp = Info.Equipment[(int)EquipmentSlot.Weapon];
@@ -447,7 +447,7 @@ namespace Server.MirObjects
                             temp.DuraChanged = false;
 
                             ReceiveChat("Your weapon has been completely repaired", ChatType.Hint);
-                            Owner.Enqueue(new S.ServerPacket.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
+                            Owner.Enqueue(new ServerPacket.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
                             break;
                         case 6: //ResurrectionScroll
                             if (CurrentMap.Info.NoReincarnation)
@@ -498,7 +498,7 @@ namespace Server.MirObjects
                     temp.DuraChanged = false;
 
                     ReceiveChat("Your mount has been fed.", ChatType.Hint);
-                    Owner.Enqueue(new S.ServerPacket.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
+                    Owner.Enqueue(new ServerPacket.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
 
                     RefreshStats();
                     break;                
@@ -597,7 +597,7 @@ namespace Server.MirObjects
                     if (!(item.Info.Unique.HasFlag(SpecialItemMode.Revival)) || item.CurrentDura < 1000) continue;
                     SetHP(Stats[Stat.HP]);
                     item.CurrentDura = (ushort)(item.CurrentDura - 1000);
-                    Enqueue(new S.ServerPacket.DuraChanged { UniqueID = item.UniqueID, CurrentDura = item.CurrentDura });
+                    Enqueue(new ServerPacket.DuraChanged { UniqueID = item.UniqueID, CurrentDura = item.CurrentDura });
                     RefreshStats();
                     ReceiveChat("You have been given a second chance at life", ChatType.System);
                     return;
@@ -622,8 +622,8 @@ namespace Server.MirObjects
             LogTime = Envir.Time;
             BrownTime = Envir.Time;
 
-            Broadcast(new S.ServerPacket.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-            Owner.Enqueue(new S.ServerPacket.UpdateHeroSpawnState { State = HeroSpawnState.Dead });
+            Broadcast(new ServerPacket.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Owner.Enqueue(new ServerPacket.UpdateHeroSpawnState { State = HeroSpawnState.Dead });
 
             for (int i = 0; i < Buffs.Count; i++)
             {
@@ -646,32 +646,32 @@ namespace Server.MirObjects
             SetMP(Stats[Stat.MP]);
 
             CurrentMap.RemoveObject(this);
-            Broadcast(new S.ServerPacket.ObjectRemove { ObjectID = ObjectID });
+            Broadcast(new ServerPacket.ObjectRemove { ObjectID = ObjectID });
 
             Dead = false;
             ActionTime = Envir.Time + RevivalDelay;
 
             CurrentMap.AddObject(this);
             BroadcastInfo();
-            Broadcast(new S.ServerPacket.ObjectRevived { ObjectID = ObjectID, Effect = effect });
+            Broadcast(new ServerPacket.ObjectRevived { ObjectID = ObjectID, Effect = effect });
         }
 
         public override void LevelUp()
         {
             base.LevelUp();
 
-            Owner.Enqueue(new S.ServerPacket.HeroLevelChanged { Level = Level, Experience = Experience, MaxExperience = MaxExperience });
+            Owner.Enqueue(new ServerPacket.HeroLevelChanged { Level = Level, Experience = Experience, MaxExperience = MaxExperience });
         }
         protected override void SendHealthChanged()
         {
-            Owner.Enqueue(new S.ServerPacket.HeroHealthChanged { HP = HP, MP = MP });
+            Owner.Enqueue(new ServerPacket.HeroHealthChanged { HP = HP, MP = MP });
             base.SendHealthChanged();
         }
 
         public override void BroadcastHealthChange()
         {
             byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
-            var p = new S.ServerPacket.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time };
+            var p = new ServerPacket.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time };
 
             if (Envir.Time < RevTime)
             {
@@ -702,7 +702,7 @@ namespace Server.MirObjects
 
         public void BroadcastManaChange()
         {
-            Packet p = new S.ServerPacket.ObjectMana { ObjectID = ObjectID, Percent = PercentMana };
+            Packet p = new ServerPacket.ObjectMana { ObjectID = ObjectID, Percent = PercentMana };
             Owner.Enqueue(p);
         }
 
@@ -1121,7 +1121,7 @@ namespace Server.MirObjects
 
             Experience += amount;
 
-            Owner.Enqueue(new S.ServerPacket.GainHeroExperience { Amount = amount });
+            Owner.Enqueue(new ServerPacket.GainHeroExperience { Amount = amount });
 
             if (Experience < MaxExperience) return;
             if (Level >= ushort.MaxValue) return;
@@ -1147,7 +1147,7 @@ namespace Server.MirObjects
         private void SendInfo()
         {
             GetItemInfo();
-            var packet = new S.ServerPacket.HeroInformation
+            var packet = new ServerPacket.HeroInformation
             {
                 ObjectID = ObjectID,
                 Name = Name,
@@ -1185,12 +1185,12 @@ namespace Server.MirObjects
 
         protected override void SendBaseStats()
         {
-            Owner.Enqueue(new S.ServerPacket.HeroBaseStatsInfo { Stats = Settings.ClassBaseStats[(byte)Class] });
+            Owner.Enqueue(new ServerPacket.HeroBaseStatsInfo { Stats = Settings.ClassBaseStats[(byte)Class] });
         }
 
         public override Packet GetInfo()
         {
-            return new S.ServerPacket.ObjectHero
+            return new ServerPacket.ObjectHero
             {
                 ObjectID = ObjectID,
                 Name = CurrentMap.Info.NoNames ? "?????" : Name,

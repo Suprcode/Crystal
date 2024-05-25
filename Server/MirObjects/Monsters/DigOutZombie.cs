@@ -1,6 +1,6 @@
 using System.Drawing;
 ﻿using Server.MirDatabase;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -52,7 +52,7 @@ namespace Server.MirObjects.Monsters
                     Visible = true;
                     CellTime = Envir.Time + 500;
                     Broadcast(GetInfo());
-                    Broadcast(new S.ServerPacket.ObjectShow { ObjectID = ObjectID });
+                    Broadcast(new ServerPacket.ObjectShow { ObjectID = ObjectID });
                     ActionTime = Envir.Time + 2000;
                     DigOutTime = Envir.Time;
                     DigOutLocation = CurrentLocation;

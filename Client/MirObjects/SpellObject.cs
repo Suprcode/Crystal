@@ -1,7 +1,7 @@
 ﻿using Client.MirGraphics;
 using Client.MirScenes;
 using Client.MirSounds;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Client.MirObjects
 {
@@ -27,7 +27,7 @@ namespace Client.MirObjects
         {
         }
 
-        public void Load(S.ServerPacket.ObjectSpell info)
+        public void Load(ServerPacket.ObjectSpell info)
         {
             CurrentLocation = info.Location;
             MapLocation = info.Location;

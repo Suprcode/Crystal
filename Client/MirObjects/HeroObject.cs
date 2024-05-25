@@ -1,5 +1,5 @@
 ﻿using Client.MirControls;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Client.MirObjects
 {
@@ -22,9 +22,9 @@ namespace Client.MirObjects
         {
         }
 
-        public void Load(S.ServerPacket.ObjectHero info)
+        public void Load(ServerPacket.ObjectHero info)
         {
-            Load((S.ServerPacket.ObjectPlayer)info);
+            Load((ServerPacket.ObjectPlayer)info);
             OwnerName = info.OwnerName;
 
             if (info.ObjectID == Hero?.ObjectID)

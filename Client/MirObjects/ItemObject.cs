@@ -1,6 +1,6 @@
 ﻿using Client.MirGraphics;
 using Client.MirScenes;
-using S = ServerPackets;
+using ServerPackets;
 using System.Text.RegularExpressions;
 
 namespace Client.MirObjects
@@ -24,7 +24,7 @@ namespace Client.MirObjects
         }
 
 
-        public void Load(S.ServerPacket.ObjectItem info)
+        public void Load(ServerPacket.ObjectItem info)
         {
             Name = info.Name;
             NameColour = info.NameColour;
@@ -41,7 +41,7 @@ namespace Client.MirObjects
             DrawY = CurrentLocation.Y;
 
         }
-        public void Load(S.ServerPacket.ObjectGold info)
+        public void Load(ServerPacket.ObjectGold info)
         {
             Name = string.Format("Gold ({0:###,###,###})", info.Gold);
 

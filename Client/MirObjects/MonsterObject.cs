@@ -1,7 +1,7 @@
 ﻿using Client.MirGraphics;
 using Client.MirScenes;
 using Client.MirSounds;
-using S = ServerPackets;
+using ServerPackets;
 using Client.MirControls;
 
 namespace Client.MirObjects
@@ -67,7 +67,7 @@ namespace Client.MirObjects
 
         public MonsterObject(uint objectID) : base(objectID) { }
 
-        public void Load(S.ServerPacket.ObjectMonster info, bool update = false)
+        public void Load(ServerPacket.ObjectMonster info, bool update = false)
         {
             Name = info.Name;
             NameColour = info.NameColour;

@@ -1,5 +1,5 @@
 ﻿using Server.MirDatabase;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -121,7 +121,7 @@ namespace Server.MirObjects.Monsters
             {
                 MassAttack = false;
                 Direction = SetDirection(Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation));
-                Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+                Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
                 int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 620; //50 MS per Step
 
                 ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + delay));
@@ -129,7 +129,7 @@ namespace Server.MirObjects.Monsters
             else
             {
                 MassAttack = true;
-                Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + 500));
             }
             ActionTime = Envir.Time + 300;
